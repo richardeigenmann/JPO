@@ -391,6 +391,11 @@ public class ThumbnailDescriptionJPanel
 	public void treeNodesChanged ( TreeModelEvent e ) {
 		// find out whether our node was changed
 		Object[] children = e.getChildren();
+		if ( children == null ) {
+			// the root node does not have children as it doesn't have a parent
+			return;
+		}
+
 		for ( int i = 0; i < children.length; i++ ) {
 			if ( children[i] == referringNode ) {
 				// we are displaying a changed node. What changed?

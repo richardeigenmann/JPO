@@ -432,11 +432,12 @@ public class JpoResources_de extends ListResourceBundle {
 		{"deleteJButton", "Löschen"},
 		{"closeJButton", "Schliessen"},
 		{"filenameJCheckBox", "nur Dateinamen überprüfen (schneller)"},
-		
+		{"refreshJButtonError", "Speichern Sie erst Ihre Aenderungen!"},
+
 
 		// Camera
 		{"countingChecksum", "Prüfsummen werden berechnet"},
-		{"countingChecksumComplete", "Prüfsummen berechnet"},
+		{"countingChecksumComplete", " Prüfsummen berechnet"},
 		{"newCamera", "Neue Kamera"},
 		
 		

@@ -70,25 +70,25 @@ public class ConsolidateGroupThread extends Thread {
 	/**
 	 *  the node to start from
 	 */
-	SortableDefaultMutableTreeNode startNode;
+	private SortableDefaultMutableTreeNode startNode;
 
 
 
 	/**
 	 *  flag that indicates that the subgroups should also be considered
 	 */
-	boolean recurseGroups;
+	private boolean recurseGroups;
 
 
 	/**
 	 *   This object holds a reference to the progress GUI for the user.
 	 */
-	ProgressGui progGui;
+	private ProgressGui progGui;
 	
 	/**
 	 *  This flag says whether to consolidate Lowres images too
 	 */
-	boolean moveLowres;
+	private boolean moveLowres;
 	
 	
 
@@ -117,7 +117,7 @@ public class ConsolidateGroupThread extends Thread {
 	 *  method that is invoked by the thread to do things asynchroneousely
 	 */
 	public void run() {
-		progGui = new ProgressGui( Tools.countPictures( startNode ),
+		progGui = new ProgressGui( Tools.countPictures( startNode, recurseGroups ),
 			Settings.jpoResources.getString("ConsolitdateProgBarTitle"),
 			Settings.jpoResources.getString("ConsolitdateProgBarDone") );
 		enumerateGroup( startNode );

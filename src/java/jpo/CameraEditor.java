@@ -96,10 +96,6 @@ public class CameraEditor
 	 */
 	private JCheckBox filenameJCheckBox = new JCheckBox( Settings.jpoResources.getString("filenameJCheckBox") );
 
-	/**
-	 *  button to refresh the old image of the camera
-	 **/
-	private JButton refreshJButton = new JButton ( Settings.jpoResources.getString("refreshJButton") );
 
 
 	/**
@@ -284,6 +280,7 @@ public class CameraEditor
 		constraints.gridy++; constraints.gridx = 1;
 		checksumJPanel.add( memorisedPicturesJLabel );
 		
+		JButton refreshJButton = new JButton ( Settings.jpoResources.getString("refreshJButton") );
 		refreshJButton.setPreferredSize( Settings.defaultButtonDimension );
 	        refreshJButton.setMinimumSize( Settings.defaultButtonDimension );
 	        refreshJButton.setMaximumSize( Settings.defaultButtonDimension );
@@ -291,6 +288,13 @@ public class CameraEditor
 		refreshJButton.addActionListener( new ActionListener() {
 			public void actionPerformed( ActionEvent e ) {
         			Camera cam = (Camera) cameraNameJComboBox.getSelectedItem();
+				if ( ! cam.getRootDir().equals( cameraDirJTextField.getText() ) ) {
+					JOptionPane.showMessageDialog( CameraEditor.this, 
+						Settings.jpoResources.getString("refreshJButtonError"), 
+						Settings.jpoResources.getString("genericError"), 
+						JOptionPane.ERROR_MESSAGE );
+					return;
+				}
 				cam.buildOldImage();
 				updateMemorisedPicturesJLabel();
 			}

@@ -114,17 +114,5 @@ public interface ApplicationMenuInterface {
 	 */
 	public void requestEditSettings();
 
-	/**
-	 *   Signals that the user wants to view the Help|About screen.
-	 */
-	public void requestHelpAbout();
-
-
-	/**
-	 *   Signals that the user wants to view the Help|License screen.
-	 */
-	public void requestHelpLicense();
-
-
 }
 

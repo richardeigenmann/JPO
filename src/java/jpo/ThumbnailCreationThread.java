@@ -134,12 +134,20 @@ public class ThumbnailCreationThread extends Thread {
 
 		// test if highres is readable
 		try {
-			InputStream highresStream = highresUrl.openStream();
-			highresStream.close();
+			highresUrl.openStream().close();
 		} catch ( IOException x ) {
 			// highres could not be opened
-			loadBrokenThumbnailImage( currentThumb );
-			return;
+			// can we read the lowres instead?
+			try { 
+				lowresUrl.openStream().close();
+				ImageIcon icon = new ImageIcon( lowresUrl );
+				currentThumb.setThumbnail( icon );
+				return;
+			} catch ( IOException ioe ) {
+				// we have nothing to display				
+				loadBrokenThumbnailImage( currentThumb );
+				return;
+			}
 		}
 
 
@@ -411,9 +419,17 @@ public class ThumbnailCreationThread extends Thread {
 						Tools.log("Lowres URL was Malformed: " + pi.getLowresLocation() );
 						continue;
 					}
+
+					try {
+						//Tools.log( "Trying to load Thumbnail for Miniicon" );
+						lowresUrl.openStream().close();
+						sclPic.loadPictureImd( lowresUrl, 0 );
+					} catch ( IOException ioe ) {
+						// Tools.log( "Thumbnail failed. Loading Highres for Miniicon" );
+						sclPic.loadPictureImd( pi.getHighresURL(), pi.getRotation() );
+					}
 					
 					
-					sclPic.loadPictureImd( lowresUrl, 0 );
 					sclPic.setScaleSize( Settings.miniThumbnailSize );
 					sclPic.scalePicture();
 					x += ( Settings.miniThumbnailSize.width - sclPic.getScaledWidth() ) / 2;

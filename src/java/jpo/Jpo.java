@@ -332,43 +332,6 @@ public class Jpo extends JFrame
 
 
 
-	/**
-	 *   displays the Help|About window
-	 */
-	public void showHelpAboutDialog() {
-		JOptionPane.showMessageDialog(this, 
-			Settings.jpoResources.getString("HelpAboutText")
-			+ Settings.jpoResources.getString("HelpAboutUser")
-				+ System.getProperty( "user.name" )
-				+ "\n"
-			+ Settings.jpoResources.getString("HelpAboutOs")
-				+ System.getProperty("os.name")
-				+ " "
-				+ System.getProperty("os.version")
-				+ " "
-				+ System.getProperty("os.arch")
-				+ "\n"
-			+ Settings.jpoResources.getString("HelpAboutJvm")
-				+ System.getProperty("java.vendor")
-				+ " "
-				+ System.getProperty("java.version")
-				+ "\n"
-			+ Settings.jpoResources.getString("HelpAboutJvmMemory")
-				+ Long.toString( Runtime.getRuntime().maxMemory() /1024/1024, 0)
-				+ " MB\n"
-			+ Settings.jpoResources.getString("HelpAboutJvmFreeMemory")
-				+ Long.toString( Runtime.getRuntime().freeMemory() /1024/1024, 0)
-				+ " MB\n"
-			);
-
-		// while we're at it dump the stuff to the log
-		Tools.log ("Help About showed the following information" );
-		Tools.log ("User: " + System.getProperty( "user.name" ) );
-		Tools.log ("Operating System: " + System.getProperty( "os.name" ) + "  " + System.getProperty( "os.version" ));
-		Tools.log ("Java: " + System.getProperty( "java.version" ) );
-		Tools.log ("Max Memory: " + Long.toString( Runtime.getRuntime().maxMemory( )/1024/1024, 0 ) + " MB" );
-		Tools.log ("Free Memory: " + Long.toString( Runtime.getRuntime().freeMemory( )/1024/1024, 0 ) + " MB" );
-	}
 
 
 
@@ -519,61 +482,9 @@ public class Jpo extends JFrame
 		new CameraEditor();
 	}
 
-
-	/**
-	 *   Calls {@link #showHelpAboutDialog} to display general information
-	 *   about the application and the current system environment.
-	 */
-	public void requestHelpAbout() {
-		showHelpAboutDialog();
-	}
+		
 
 
-	/**
-	 *   Displays a <code>JFrame</code> that shows the GPL licence under
-	 *   which the Jpo application is licenced.
-	 */
-	public void requestHelpLicense() {
-		JTextArea licenseJTextArea  = new JTextArea("read the file gpl.txt");
-	        licenseJTextArea.setWrapStyleWord(true); 
-	        licenseJTextArea.setLineWrap(true); 
-	        licenseJTextArea.setEditable(false); 
-		// licenseJTextArea.setPreferredSize( new Dimension (500, 400) );
-		JScrollPane jsp = new JScrollPane( licenseJTextArea, 
-			JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, 
-			JScrollPane.HORIZONTAL_SCROLLBAR_NEVER );
-		jsp.setPreferredSize( new Dimension (500, 400) );
-			
-		ClassLoader cl = this.getClass().getClassLoader();
-		BufferedReader bin = new BufferedReader( new InputStreamReader( cl.getResourceAsStream("jpo/gpl.txt") ) ); 
-			
-		String sb = new String("");
-		String textLine;
-		try {
-			while ( ( textLine = bin.readLine() ) != null ) {
-				sb += textLine + "\n";
-			}
-		} catch (IOException e) {
-			Tools.log( "Jpo.java: Error while reading gpl.txt: " + e.getMessage() );
-		}
-		licenseJTextArea.setText( sb );
-		licenseJTextArea.setCaretPosition( 0 );
-
-		Object[] License = {jsp};
-
-		final String btnString1 = "OK";
-		Object[] options = {btnString1};
-
-		JOptionPane pane = new JOptionPane(License, 
-               	           JOptionPane.INFORMATION_MESSAGE,
-                       	   JOptionPane.OK_OPTION,
-                           null,
-                           options,
-       	                   options[0]);
-
-		JDialog dialog = pane.createDialog(this, "GNU General Public License");
-		dialog.show();
-	}
 
 
 

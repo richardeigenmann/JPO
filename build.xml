@@ -71,6 +71,11 @@
                 <include name="**/*.dtd"/>
             </fileset>
         </copy>
+        <copy todir="${build.dtd.dir}">
+            <fileset dir="${src.dtd.dir}">
+                <include name="**/gpl.txt"/>
+            </fileset>
+        </copy>
     </target>
 
     <target name="rebuild"

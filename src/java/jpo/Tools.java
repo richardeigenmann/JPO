@@ -391,19 +391,30 @@ public class Tools {
 	}	
 
 
-	
-	
 	/**
 	 *   count the number of pictures in a subtree. Useful for progress monitors.
 	 */
 	public static int countPictures ( SortableDefaultMutableTreeNode startNode ) {
+		return countPictures ( startNode, true );
+	}
+
+
+	
+	
+	/**
+	 *   count the number of pictures in a subtree. Useful for progress monitors.
+	 *
+	 *   @param startNode	the node from which to count
+	 *   @param recurseSubgroups  indicator to say whether the next levels of groups should be counted too or not.
+	 */
+	public static int countPictures ( SortableDefaultMutableTreeNode startNode, boolean recurseSubgroups ) {
 		int count = 0;
 		Enumeration nodes = startNode.children();
 		while ( nodes.hasMoreElements() ) {
 			SortableDefaultMutableTreeNode n = (SortableDefaultMutableTreeNode) nodes.nextElement();
 			if ( n.getUserObject() instanceof PictureInfo)
 				count++;
-			if ( n.getChildCount() > 0 )
+			if ( recurseSubgroups && ( n.getChildCount() > 0 ) )
 				count += countPictures ( n );
 		}
 		return count;
@@ -475,7 +486,7 @@ public class Tools {
 		while ( nodes.hasMoreElements() ) {
 			SortableDefaultMutableTreeNode n = (SortableDefaultMutableTreeNode) nodes.nextElement();
 			if ( n.getChildCount() > 0 )
-				count += countNodes ( n ) + 1;
+				count += countNodes ( n );
 			else 
 				count++;
 		}

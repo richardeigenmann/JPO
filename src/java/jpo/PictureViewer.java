@@ -226,7 +226,7 @@ public class PictureViewer extends JPanel
 	/**
 	 *  Button to bring up the popup menu to do things to the image.
 	 */
-	private JButton popupMenuJButton = new JButton(new ImageIcon(ClassLoader.getSystemResource("jpo/images/icon_minimise.gif")));
+	private JButton popupMenuJButton = new JButton(new ImageIcon( Settings.cl.getResource( "jpo/images/icon_minimise.gif")));
 	
 	/**
 	 *  Button to turn on the blending in of info or turn it off.
@@ -572,11 +572,9 @@ public class PictureViewer extends JPanel
 	public void switchDecorations ( boolean newDecorations ) {
 		if ( decorateWindow != newDecorations ) {
 			decorateWindow = newDecorations;
-			//createWindow();
 			if ( myJFrame.isDisplayable() ) {
 				myJFrame.dispose();
 				myJFrame.setUndecorated( ! decorateWindow );
-				myJFrame.pack();
 				myJFrame.show();
 			} else {
 				myJFrame.setUndecorated( ! decorateWindow );

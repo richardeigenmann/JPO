@@ -166,7 +166,7 @@ public class Camera implements Serializable {
 			zapOldImage();
 			
 			buildOldImage( rootDir.listFiles(), progGui );
-			
+			progGui.switchToDoneMode();
 	}
 
 	
@@ -241,5 +241,12 @@ public class Camera implements Serializable {
 		}
 	}
 
+
+	/**
+	 *  This method returns the root dir of the camera to any caller
+	 */
+	public String getRootDir() {
+		return rootDir;
+	}
 
 }

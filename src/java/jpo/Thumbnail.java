@@ -197,13 +197,12 @@ public class Thumbnail extends JPanel
 	 *
 	 *  @param  node   The node which should be displayed. Can be null if the Thumbnail is to be muted.
 	 */
-	public void setNode( SortableDefaultMutableTreeNode node ) {
+	public synchronized void setNode( SortableDefaultMutableTreeNode node ) {
 		if ( this.referringNode == node ) {
 			// Don't refresh the node if it hasn't changed
 			return;
 		}
 
-		synchronized ( this ) {
 		unqueue();
 		
 		// unattach the change Listener
@@ -222,7 +221,6 @@ public class Thumbnail extends JPanel
 			pi.addPictureInfoChangeListener( this );
 		}
 
-		}
 
 		if ( node == null ) {
 			img = null;
@@ -236,6 +234,7 @@ public class Thumbnail extends JPanel
 		//}
 		
 		showSlectionStatus();
+		determineImageStatus( referringNode );
 	}
 
 
@@ -248,7 +247,7 @@ public class Thumbnail extends JPanel
 	 *
 	 *  @param  icon  The imageicon that should be displayed
 	 */
-	public void setThumbnail( ImageIcon icon ) {
+	public synchronized void setThumbnail( ImageIcon icon ) {
 		img = icon.getImage();
 		imgOb = icon.getImageObserver();
 		setVisible( true );
@@ -345,6 +344,31 @@ public class Thumbnail extends JPanel
 		}
 	}
 
+
+	/**
+	 *  This method determines whether the source image is available online and sets the\
+	 *  indicator accordingly.
+	 */
+	public void determineImageStatus( DefaultMutableTreeNode n ) {
+		if ( n == null ) {
+			drawOfflineIcon = false;
+			return;
+		}
+		
+		Object userObject = n.getUserObject();
+		if ( userObject instanceof PictureInfo ) {
+			try {
+				( (PictureInfo) userObject ).getHighresURL().openStream().close();
+				drawOfflineIcon = false;
+			} catch ( MalformedURLException x ) {
+				drawOfflineIcon = true;
+			} catch ( IOException x ) {
+				drawOfflineIcon = true;
+			}
+		} else {
+			drawOfflineIcon = false;
+		}
+	}
 
 	/**
 	 *  Inner class to handle the mouse events on the Thumbnail
@@ -464,6 +488,11 @@ public class Thumbnail extends JPanel
 	public void treeNodesChanged ( TreeModelEvent e ) {
 		// find out whether our node was changed
 		Object[] children = e.getChildren();
+		if ( children == null ) {
+			// the root node does not have children as it doesn't have a parent
+			return;
+		}
+		
 		for ( int i = 0; i < children.length; i++ ) {
 			if ( children[i] == referringNode ) {
 				// Tools.log( "Thumbnail detected a treeNodesChanged event" );

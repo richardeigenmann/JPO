@@ -432,11 +432,13 @@ public class JpoResources extends ListResourceBundle {
 		{"deleteJButton", "Delete"},
 		{"closeJButton", "Close"},
 		{"filenameJCheckBox", "rely on filenames to remember pictures (faster)"},
+		{"refreshJButtonError", "Save your changes first!"},
+		
 		
 
 		// Camera
 		{"countingChecksum", "Building Checksums"},
-		{"countingChecksumComplete", "checksums calculated"},
+		{"countingChecksumComplete", " checksums calculated"},
 		{"newCamera", "New Camera"},
 		
 		

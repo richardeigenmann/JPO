@@ -12,7 +12,7 @@
   </tr>
   <tr>
     <td width="100" bgcolor="#97a4da" valign="top">
-        <a href="jpo-stable.jnlp"">Run Immediately</a><p>
+        <a href="jpo-devel.jnlp"">Start JPO</a><p>
         <a href="#Introduction">Introduction</a><br>
         <a href="#Features">Features</a><br>
         <a href="#Screenshot">Screenshot</a><br>
@@ -107,29 +107,50 @@
     <hr>
     <h2><a name="Download">Download</h2>
 
-    The simplest way to run JPO is using the <b>Java Web Start</b> technology. Simply click on the
-    link below to install and run the application:<p>
+    <p>The simplest way to run JPO is using the <b>Java Web Start</b> technology. Simply click on the
+    link below to install and run the application:</p>
 
-    <a href="jpo-stable.jnlp"><b>JPO (latest stable version currently 0.8.3)</b></a><br>
+    <p><a href="jpo-stable.jnlp"><b>JPO (latest stable version currently 0.8.3)</b></a><br>
     <a href="jpo-devel.jnlp">JPO (latest development version currently 0.8.4)</a><br>
     <a href="jpo-0.8.jnlp">Frozen Version 0.8</a><br>
     <a href="jpo-0.8.2.jnlp">Frozen Version 0.8.2</a><br>
-    <a href="jpo-0.8.3.jnlp">Frozen Version 0.8.3</a><p>
-    <a href="jpo-src-0.8.zip">Source environment (v0.8 .zip 4.1MB)</a><br>
+    <a href="jpo-0.8.3.jnlp">Frozen Version 0.8.3</a></p>
+    
+    <p><b><font color="red">NEW:</font></b> For Windows users there is now a packaged Windows 
+    version available. Download it from the regular Sourceforge download area:</p>
+    <p><a href="http://sourceforge.net/project/showfiles.php?group_id=71359&package_id=70920">Windows Executable</a></p>
+    
+
+    <p>The following links allow you to download the source environment so that you can build JPO yourself.
+    Note that I have now transitioned to sourceforge CVS and therefore your better choice is to download
+    the JPO source from CVS as this is always up to date.</p>
+    <p><a href="jpo-src-0.8.zip">Source environment (v0.8 .zip 4.1MB)</a><br>
     <a href="jpo-src-0.8.2.zip">Source environment (v0.8.2 zip 4.2MB)</a><br>
-    <a href="jpo-src-0.8.3.zip">Source environment (v0.8.3 zip 4.2MB)</a><p>
-    <a href="jpo-src-0.8.4.zip">Source environment 18.3.2004 (v0.8.4 zip 9MB)</a><p>
+    <a href="jpo-src-0.8.3.zip">Source environment (v0.8.3 zip 4.2MB)</a><br>
+    <a href="jpo-src-0.8.4.zip">Source environment 18.3.2004 (v0.8.4 zip 9MB)</a></p>
 
-	<p><strong>Note:</strong> You will see the following waring screen:</p>
-
-	<p><img src="jpo_scr_4.jpg" width="493" height="240" border="0"></p>
-
-	You get this warning message because I haven't splashed out to buy myself a 100 USD certificate with which to sign the packaged programs. JPO does need access to your hard disk or you won't have much joy organising your pictures. You must judge whetehr you whish to run JPO just like you must judge this with anything you download from the Internet. If you don't trust me, download the source programs, analyse them and compile your own version. If you actually do this please let me know your suggestions on how to improve the code!
 
 <hr>
 <h2><a name="Installation">Installation using Java Web Start</h2>
 
-<p>Java Web Start installation is usually quite easy. You do have to have a recent Java installed on your PC. This typically installs a programm called javaws which is the local client. Depending on your operating system the java installation process does a good or poor job of registering the file type .jnlp in your web browser for the javaws program. What your web browser must do when it gets the request to load a .jnlp file is to start javaws. That program then uses the web to download the Jpo program files and starts them. Java Web Start also checks each time you run the program that it is up to date and if I've released a new Version asks you if you want to upgrade.</p>
+<p>Java Web Start installation is usually quite easy. All you need is a recent Java Runtime Environment installed on 
+your PC. Then you click on the link to the Java Web Start program in your browser and the program starts.
+
+<p><strong>Note:</strong> You will see the following warning screen:</p>
+
+<p><img src="jpo_scr_4.jpg" width="493" height="240" border="0"></p>
+
+<p>You get this warning message because I haven't splashed out to buy myself 
+a 100 USD certificate with which to sign the packaged programs. JPO does need 
+access to your hard disk or you won't have much joy organising your pictures.</P>
+
+
+<p> Java Web Start typically installs a programm called javaws which is the local client. 
+Depending on your operating system the java installation process does a good or poor job 
+of registering the file type .jnlp in your web browser for the javaws program. What your 
+web browser must do when it gets the request to load a .jnlp file is to start javaws. 
+That program then uses the web to download the Jpo program files and starts them. Java Web Start 
+also checks each time you run the program that it is up to date and if I've released a new Version asks you if you want to upgrade.</p>
 
 Basically the mime type <code>application/x-java-jnlp-file</code> with the extension <code>.jnlp</code> needs to be associated with the <code>javaws.exe</code> program.
 
@@ -219,6 +240,15 @@ Unofficial Java Web Start/JNLP FAQ: <a href="http://www.vamphq.com/jwsfaq.html">
 
     <table>
     <tr><td colspan=2><b>Unfinished Version 0.8.4</b></td></tr>
+    <tr><td valign="top">02.08.2004</td><td> Bugfix Count of Nodes was giving too high a number</td></tr>
+    <tr><td valign="top">02.08.2004</td><td> Bugfix Consolidation counted nodes wrongly when not consolidating sub groups.</td></tr>
+    <tr><td valign="top">02.08.2004</td><td> Bugfix switching to Window without Frame would make the picture verz small.</td></tr>
+    <tr><td valign="top">02.08.2004</td><td> Dialog Errors on Add from Camera fixed</td></tr>
+    <tr><td valign="top">02.08.2004</td><td> Images that do not have the highres online are indicated with a CD icon. This can happen if the highres is on CD.</td></tr>
+    <tr><td valign="top">02.08.2004</td><td> Renaming of the Root Node no longer gives an error.</td></tr>
+    <tr><td valign="top">02.08.2004</td><td> Group Folder icons now use highres pictures if Thumbnails are not available</td></tr>
+    <tr><td valign="top">30.07.2004</td><td> Picture browser would not start up because of a Classloader statement that prevented the icon being loaded</td></tr>
+    <tr><td valign="top">30.07.2004</td><td> Fixed a problem with the build file that didn't copy the license and therefore it could not be displayed</td></tr>
     <tr><td valign="top">28.07.2004</td><td> Groups now show miniicons in folder.</td></tr>
     <tr><td valign="top">24.07.2004</td><td> Improved selection highlighting (borders) of Thumbnails.</td></tr>
     <tr><td valign="top">24.07.2004</td><td> Tracked down the setUndavedChanges call to the add routine and stopped it there. This prevents JPO from telling you that there are unsaved changes after you opened a file.</td></tr>
@@ -480,7 +510,7 @@ Unofficial Java Web Start/JNLP FAQ: <a href="http://www.vamphq.com/jwsfaq.html">
     Botanical Gardens, Restaurants, Bars and Swimming Pools.
 
     <p>
-    Last update to this page: 24.7.2004<br>
+    Last update to this page: 30.7.2004<br>
     Copyright 2003-2004 by Richard Eigenmann, Z&uuml;rich, Switzerland
 
 

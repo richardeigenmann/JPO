@@ -2,7 +2,8 @@ package jpo;
 
 import java.awt.event.*;
 import javax.swing.*;
-
+import java.awt.*;
+import java.io.*;
 
 /*
 ApplicationJMenuBar.java:  main menu for the application
@@ -58,7 +59,7 @@ public class ApplicationJMenuBar extends JMenuBar
 
 	
 	/** 
-	 *  The Help menu which is part of the JMenuBar for the Jpo application.
+	 *  The g menu which is part of the JMenuBar for the Jpo application.
 	 **/	 	 
 	private JMenu HelpJMenu;
 	
@@ -161,20 +162,6 @@ public class ApplicationJMenuBar extends JMenuBar
 	private JMenuItem EditCategoriesJMenuItem;
 
 
-	
-	/** 
-	 *  Menu item that allows the user to see application information.
-	 **/	 	 
-	private JMenuItem HelpAboutJMenuItem;
-
-
-	/** 
-	 *  Menu item that allows the user to see the license.
-	 **/	 	 
-	private JMenuItem HelpLicenseJMenuItem;
-
-
-	
 	/**
 	 *  Object that must implement the functions dealing with the user
 	 *  request.
@@ -187,7 +174,7 @@ public class ApplicationJMenuBar extends JMenuBar
 	 *
 	 *  @param caller  The object that is going to get the requests.
 	 */
-	public ApplicationJMenuBar ( ApplicationMenuInterface caller ) {
+	public ApplicationJMenuBar ( final ApplicationMenuInterface caller ) {
 		this.caller = caller;
 
 		//Build the file menu.
@@ -315,15 +302,23 @@ public class ApplicationJMenuBar extends JMenuBar
 		add( HelpJMenu );
 
 
-		HelpAboutJMenuItem = new JMenuItem( Settings.jpoResources.getString("HelpAboutMenuItemText") ); 
+		JMenuItem HelpAboutJMenuItem = new JMenuItem( Settings.jpoResources.getString("HelpAboutMenuItemText") ); 
 		HelpAboutJMenuItem.setMnemonic(KeyEvent.VK_A);
-		HelpAboutJMenuItem.addActionListener(this);
-		HelpJMenu.add(HelpAboutJMenuItem);
+		HelpAboutJMenuItem.addActionListener( new ActionListener() {
+			public void actionPerformed( ActionEvent e ) {
+				showHelpAboutDialog();
+			}
+		} );
+		HelpJMenu.add( HelpAboutJMenuItem );
 
-		HelpLicenseJMenuItem = new JMenuItem( Settings.jpoResources.getString("HelpLicenseMenuItemText") ); 
+		JMenuItem HelpLicenseJMenuItem = new JMenuItem( Settings.jpoResources.getString("HelpLicenseMenuItemText") ); 
 		HelpLicenseJMenuItem.setMnemonic(KeyEvent.VK_L);
-		HelpLicenseJMenuItem.addActionListener(this);
-		HelpJMenu.add(HelpLicenseJMenuItem);
+		HelpLicenseJMenuItem.addActionListener( new ActionListener() {
+			public void actionPerformed( ActionEvent e ) {
+				showLicense();
+			}
+		} );
+		HelpJMenu.add( HelpLicenseJMenuItem );
 		
 		recentFilesChanged();
 	}
@@ -377,14 +372,6 @@ public class ApplicationJMenuBar extends JMenuBar
 			caller.requestEditCameras();
 		else 	if (e.getSource() == EditSettingsJMenuItem) 
 			caller.requestEditSettings();
-
-			
-		// Help Menu
-		else 	if (e.getSource() ==  HelpAboutJMenuItem) 
-			caller.requestHelpAbout();
-		else 	if (e.getSource() ==  HelpLicenseJMenuItem) 
-			caller.requestHelpLicense();
-
 		else {
 			boolean notFound = true;
 			for ( int i = 0; (i < Settings.recentFiles) && notFound ; i++ ) {
@@ -404,6 +391,93 @@ public class ApplicationJMenuBar extends JMenuBar
 	}
 
 
+
+	/**
+	 *   Displays a <code>JFrame</code> that shows the GPL licence under
+	 *   which the Jpo application is licenced.
+	 */
+	public void showLicense() {
+		JTextArea licenseJTextArea  = new JTextArea("read the file gpl.txt");
+	        licenseJTextArea.setWrapStyleWord(true); 
+	        licenseJTextArea.setLineWrap(true); 
+	        licenseJTextArea.setEditable(false); 
+		// licenseJTextArea.setPreferredSize( new Dimension (500, 400) );
+		JScrollPane jsp = new JScrollPane( licenseJTextArea, 
+			JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, 
+			JScrollPane.HORIZONTAL_SCROLLBAR_NEVER );
+		jsp.setPreferredSize( new Dimension (500, 400) );
+			
+		//ClassLoader cl = this.getClass().getClassLoader();
+		//BufferedReader bin = new BufferedReader( new InputStreamReader( cl.getResourceAsStream("jpo/gpl.txt") ) ); 
+		//BufferedReader bin = new BufferedInputStream( ApplicationJMenuBar.class.getResourceAsStream( "jpo/gpl.txt" ) );
+			
+		String sb = new String("");
+		String textLine;
+		try {
+			InputStream in = ApplicationJMenuBar.class.getResourceAsStream( "gpl.txt" );
+			BufferedReader bin = new BufferedReader( new InputStreamReader( in ) ); 
+			while ( ( textLine = bin.readLine() ) != null ) {
+				sb += textLine + "\n";
+			}
+		} catch (IOException e) {
+			Tools.log( "Jpo.java: Error while reading gpl.txt: " + e.getMessage() );
+		}
+		licenseJTextArea.setText( sb );
+		licenseJTextArea.setCaretPosition( 0 );
+
+		Object[] License = {jsp};
+
+		final String btnString1 = "OK";
+		Object[] options = {btnString1};
+
+		JOptionPane pane = new JOptionPane(License, 
+               	           JOptionPane.INFORMATION_MESSAGE,
+                       	   JOptionPane.OK_OPTION,
+                           null,
+                           options,
+       	                   options[0]);
+
+		JDialog dialog = pane.createDialog( Settings.anchorFrame, "GNU General Public License");
+		dialog.show();
+	}
+
+	/**
+	 *   displays the Help|About window
+	 */
+	public void showHelpAboutDialog() {
+		JOptionPane.showMessageDialog( Settings.anchorFrame , 
+			Settings.jpoResources.getString("HelpAboutText")
+			+ Settings.jpoResources.getString("HelpAboutUser")
+				+ System.getProperty( "user.name" )
+				+ "\n"
+			+ Settings.jpoResources.getString("HelpAboutOs")
+				+ System.getProperty("os.name")
+				+ " "
+				+ System.getProperty("os.version")
+				+ " "
+				+ System.getProperty("os.arch")
+				+ "\n"
+			+ Settings.jpoResources.getString("HelpAboutJvm")
+				+ System.getProperty("java.vendor")
+				+ " "
+				+ System.getProperty("java.version")
+				+ "\n"
+			+ Settings.jpoResources.getString("HelpAboutJvmMemory")
+				+ Long.toString( Runtime.getRuntime().maxMemory() /1024/1024, 0)
+				+ " MB\n"
+			+ Settings.jpoResources.getString("HelpAboutJvmFreeMemory")
+				+ Long.toString( Runtime.getRuntime().freeMemory() /1024/1024, 0)
+				+ " MB\n"
+			);
+
+		// while we're at it dump the stuff to the log
+		Tools.log ("Help About showed the following information" );
+		Tools.log ("User: " + System.getProperty( "user.name" ) );
+		Tools.log ("Operating System: " + System.getProperty( "os.name" ) + "  " + System.getProperty( "os.version" ));
+		Tools.log ("Java: " + System.getProperty( "java.version" ) );
+		Tools.log ("Max Memory: " + Long.toString( Runtime.getRuntime().maxMemory( )/1024/1024, 0 ) + " MB" );
+		Tools.log ("Free Memory: " + Long.toString( Runtime.getRuntime().freeMemory( )/1024/1024, 0 ) + " MB" );
+	}
 
 
 	
