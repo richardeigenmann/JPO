@@ -530,6 +530,9 @@ public class JpoResources_de extends ListResourceBundle {
 		{"emailSize4", "Gross (1000 x 800)"},
 		{"emailSize5", "Nur Originale"},
 		{"emailOriginals", "Original Anhängen"},
+		{"emailNoNodes", "Keine Bilder zum Versand ausgewählt. Mit dem Rechts-click Popupmenu auf den Bildern werden Bilder ausgewählt."},
+		{"emailNoServer", "Keine Email Server eingestellt. Konfigurieren Sie den Server unter Editieren > Einstellungen > EmailServer."},
+		
 		
 		{"Template", "Template"},
 		{"Template", "Template"}
