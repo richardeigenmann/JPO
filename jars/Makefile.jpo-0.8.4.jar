@@ -1,0 +1,6 @@
+JAR_CONTENT = \
+       jpo \
+
+MANIFEST = Manifest.jpo.jar
+
+include $(JAVA_DEV_ROOT)/Makefile
