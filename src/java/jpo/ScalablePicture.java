@@ -627,6 +627,17 @@ public class ScalablePicture implements SourcePictureListener {
 
 
 	/**
+	 *  This method allows the ScalablePicture's scaled BufferedImage to be written 
+	 *  to the desired output stream.
+	 *
+	 *  @param	writeStream	The Stream that shall receive the jpg data
+	 */
+	public void writeScaledJpg( OutputStream writeStream ) {
+		writeJpg ( writeStream, scaledPicture, jpgQuality);
+	}
+
+
+	/**
 	 *  This static method writes the indicated renderedImage (BufferedImage)
 	 *  to the indicated file.
 	 *
@@ -635,6 +646,7 @@ public class ScalablePicture implements SourcePictureListener {
 	 *  @param	jpgQuality	The quality with which to compress to jpg
 	 */
 	public static void writeJpg( File writeFile, RenderedImage renderedImage, float jpgQuality) {
+		// should be rewritten to use the method below after creating the FileOutputstream, RE 9.1.2005
 		Iterator writers = ImageIO.getImageWritersByFormatName("jpg");
 		ImageWriter writer = (ImageWriter) writers.next();
 		JPEGImageWriteParam params = new JPEGImageWriteParam( null );
@@ -658,6 +670,38 @@ public class ScalablePicture implements SourcePictureListener {
 		writer.dispose(); //1.4.1 documentation says to do this.
 	}
 
+
+	/**
+	 *  This static method writes the indicated renderedImage (BufferedImage)
+	 *  to the indicated file.
+	 *
+	 *  @param	writeStream	The File that shall receive the jpg data
+	 *  @param	renderedImage	The RenderedImage (BufferedImage) to be written
+	 *  @param	jpgQuality	The quality with which to compress to jpg
+	 */
+	public static void writeJpg( OutputStream writeStream, RenderedImage renderedImage, float jpgQuality) {
+		Iterator writers = ImageIO.getImageWritersByFormatName("jpg");
+		ImageWriter writer = (ImageWriter) writers.next();
+		JPEGImageWriteParam params = new JPEGImageWriteParam( null );
+		params.setCompressionMode( ImageWriteParam.MODE_EXPLICIT );
+		params.setCompressionQuality( jpgQuality );
+		params.setProgressiveMode( ImageWriteParam.MODE_DISABLED );
+		params.setDestinationType(new ImageTypeSpecifier(java.awt.image.IndexColorModel.getRGBdefault(), 
+			IndexColorModel.getRGBdefault().createCompatibleSampleModel(16,16)));
+
+		try {
+			ImageOutputStream ios = ImageIO.createImageOutputStream( writeStream );
+			writer.setOutput(ios);
+			writer.write(null, new IIOImage( renderedImage, null, null), params);
+			ios.close();
+			
+ 		} catch (IOException e) {
+				Tools.log("ScalablePicture.writeJpg caught IOException: " +  e.getMessage() );
+				e.printStackTrace();
+		}
+		//writer = null;
+		writer.dispose(); //1.4.1 documentation says to do this.
+	}
 
 
 

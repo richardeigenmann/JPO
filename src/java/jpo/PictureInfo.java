@@ -1209,6 +1209,37 @@ public class PictureInfo implements Serializable {
 	}
 
 
+	//-------------------------------------------
+
+	/**
+	 *  Creates a PictureChangedEvent and sends it to inform listening 
+	 *  objects that the node was mailSelected. Strictly speaking this is not a 
+	 *  PictureInfo level event but a node level event. However, because I have 
+	 *  the PictureInfoChangeEvent structure in place this is a good place to 
+	 *  put this notification.
+	 */
+	public void sendWasMailSelectedEvent() {
+		PictureInfoChangeEvent pce = new PictureInfoChangeEvent( this );
+		pce.setWasMailSelected();
+		sendPictureInfoChangedEvent( pce );
+	}
+
+
+	//-------------------------------------------
+
+	/**
+	 *  Creates a PictureChangedEvent and sends it to inform listening 
+	 *  objects that the node was mailUnselected. Strictly speaking this is not a 
+	 *  PictureInfo level event but a node level event. However, because I have 
+	 *  the PictureInfoChangeEvent structure in place this is a good place to 
+	 *  put this notification.
+	 */
+	public void sendWasMailUnselectedEvent() {
+		PictureInfoChangeEvent pce = new PictureInfoChangeEvent( this );
+		pce.setWasMailUnselected();
+		sendPictureInfoChangedEvent( pce );
+	}
+
 
 	//-------------------------------------------
 	

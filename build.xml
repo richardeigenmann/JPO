@@ -49,7 +49,7 @@
         <javac destdir="${build.base.classes.dir}"
 	       debug="off"
 	       optimize="off"
-	       verbose="on"
+	       verbose="off"
 	       memoryMaximumSize="500m"
 	       fork="yes"
 	       listfiles="yes"
@@ -83,7 +83,7 @@
             depends="clean, compile"
             description="Cleans and recompiles the project"/>
 
-    <target name="document"
+    <target name="javadoc"
             description="Creates the JavaDoc of the project">
         <copy todir="${build.docs.dir}">
             <fileset dir="${src.docs.dir}">
@@ -102,7 +102,7 @@
                  use="true"
 		 private="true"
 		 source="1.4"
-		 classpath="libs/metadata-extractor-2.2.2.jar; libs/jnlp.jar" 
+		 classpath="libs/metadata-extractor-2.2.2.jar; libs/jnlp.jar; libs/activation.jar; libs/email.jar" 
 		 >
             <sourcepath path="${src.java.dir}" />
 	    <link href="http://java.sun.com/j2se/1.4.2/docs/api/" />
@@ -137,6 +137,16 @@
 		storepass="${env.JARPWD}"
 	/>
 	<signjar jar="libs/metadata-extractor-2.2.2.jar" 
+		alias="myself"
+		keystore="${env.KEYSTORE}"
+		storepass="${env.JARPWD}"
+	/>
+	<signjar jar="libs/activation.jar" 
+		alias="myself"
+		keystore="${env.KEYSTORE}"
+		storepass="${env.JARPWD}"
+	/>
+	<signjar jar="libs/mail.jar" 
 		alias="myself"
 		keystore="${env.KEYSTORE}"
 		storepass="${env.JARPWD}"
@@ -192,6 +202,16 @@
 		trust="yes"
 	/>
    	<scp file="libs/metadata-extractor-2.2.2.jar" 
+		todir="${env.SOURCFORGEUSER}@shell.sourceforge.net:/home/groups/j/j-/j-po/htdocs"
+		password="${env.SOURCFORGEPWD}"
+		trust="yes"
+	/>
+   	<scp file="libs/activation.jar" 
+		todir="${env.SOURCFORGEUSER}@shell.sourceforge.net:/home/groups/j/j-/j-po/htdocs"
+		password="${env.SOURCFORGEPWD}"
+		trust="yes"
+	/>
+   	<scp file="libs/email.jar" 
 		todir="${env.SOURCFORGEUSER}@shell.sourceforge.net:/home/groups/j/j-/j-po/htdocs"
 		password="${env.SOURCFORGEPWD}"
 		trust="yes"

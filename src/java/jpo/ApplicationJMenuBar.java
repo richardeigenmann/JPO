@@ -58,6 +58,19 @@ public class ApplicationJMenuBar extends JMenuBar
 	private JMenu ToolsMenu;
 
 	
+
+	/** 
+	 *  The Action menu which is part of the JMenuBar for the Jpo application.
+	 **/	 	 
+	private JMenu actionJMenu = new JMenu( Settings.jpoResources.getString("actionJMenu") ); ;
+
+
+	/** 
+	 *  Menu item that will request a Action | Send Email
+	 **/	 	 
+	private JMenuItem emailJMenuItem = new JMenuItem( Settings.jpoResources.getString("emailJMenuItem") ); 
+
+
 	/** 
 	 *  The g menu which is part of the JMenuBar for the Jpo application.
 	 **/	 	 
@@ -294,9 +307,21 @@ public class ApplicationJMenuBar extends JMenuBar
 		EditJMenu.add( EditSettingsJMenuItem );
 
 
+		// Build the Action menu
+		emailJMenuItem.setMnemonic( KeyEvent.VK_E );
+		emailJMenuItem.addActionListener( new ActionListener() {
+			public void actionPerformed( ActionEvent e ) {
+				new EmailerJFrame();
+			}
+		} );
+		actionJMenu.add( emailJMenuItem );
 
 
-		//Build the Help menu.
+		actionJMenu.setMnemonic( KeyEvent.VK_A );
+		add( actionJMenu );
+
+
+		// Build the Help menu.
 		HelpJMenu = new JMenu( Settings.jpoResources.getString("HelpJMenuText") ); 
 		HelpJMenu.setMnemonic( KeyEvent.VK_H );
 		add( HelpJMenu );

@@ -239,8 +239,7 @@ public class GroupInfo implements Serializable {
 				+ "\" collection_created=\"" 
 				+ DateFormat.getDateInstance().format(Calendar.getInstance().getTime()) 
 				+ "\""
-				+ ( protection ? " collection_protected=\"No\"" : " collection_protected=\"Yes\"" )
-				+ ">");
+				+ ( protection ? " collection_protected=\"No\"" : " collection_protected=\"Yes\"" ) );
 		} else {
 			out.write("<group group_name=\"" + Tools.escapeXML( getGroupName() ) + "\"");
 		}
@@ -255,10 +254,8 @@ public class GroupInfo implements Serializable {
 			out.write( Tools.escapeXML( lowres ) + "\"");
 		}
 
-		if ( ! rootNode ) {
-			out.write( ">");
-			out.newLine();
-		}
+		out.write( ">");
+		out.newLine();
 	}
 
 	public synchronized void endGroupXML ( BufferedWriter out, boolean rootNode ) 

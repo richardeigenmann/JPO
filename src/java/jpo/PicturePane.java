@@ -284,6 +284,17 @@ class PicturePane extends JComponent implements ScalablePictureListener {
 		}
 	}
 
+	/**
+	 *  method that zooms the image to 100%.
+	 *  This method calls
+	 * {@link ScalablePicture#createScaledPictureInThread(int)} which in
+	 * turn will tell this oject by means of the status update that
+	 * the image is ready and should be repainted.
+	 */
+	public void zoomFull() {
+		sclPic.setScaleFactor( 1);
+		sclPic.createScaledPictureInThread( Thread.MAX_PRIORITY );
+	}
 
 
 

@@ -92,6 +92,7 @@ public class JpoResources extends ListResourceBundle {
 			+ "<left>,<right>,<up>,<down>: scroll image\n"
 			+ "<PgUp>: Zoom In\n"
 			+ "<PgDown>: Zoom Out\n"
+			+ "1: Zoom to 100%\n"
 			+ "F: Window size menu\n"
 			+ "M: Popup menu"},
 		{"PictureViewerKeycodesTitle", "Keyboard Shortcuts"},
@@ -151,7 +152,16 @@ public class JpoResources extends ListResourceBundle {
 		{"userFunctionCmdJLabel", "Cmd:"},
 		{"userFunctionHelpJTextArea", "%f will be substituted by the filename\n%u will be substituted by the URL of the picture"},
 
-
+		{"emailJPanel", "Email Server"},
+		{"emailJLabel", "Email Server Details"},
+		{"predefinedEmailJLabel", "Predefined Server:"},
+		{"emailServerJLabel", "Email Server:"},
+		{"emailPortJLabel", "Port:"},
+		{"emailUserJLabel", "Username:"},
+		{"emailPasswordJLabel", "Password:"},
+		
+		
+		
 		// Settings
 		{"thumbNoExistError", "The directory for the thumbnails doesn't exist.\nPlease select Edit | Settings to set this correctly.\nThumbnail caching has been turned off."},
 		{"thumbNoWriteError", "The directory for the thumbnails is not writeable.\nPlease select Edit | Settings to set this correctly.\nThumbnail caching has been turned off."},
@@ -304,6 +314,7 @@ public class JpoResources extends ListResourceBundle {
 		{"FileRenameLabel2", "\nto: "},
 		{"fileDeleteJMenuItem", "Delete"},
 		{"pictureRefreshJMenuItem", "Refresh Thumbnail"},
+		{"pictureMailSelectJMenuItem", "Select for email"},
 		{"rotation", "Rotation"},
 		{"rotate90", "Rotate Right 90"},
 		{"rotate180", "Rotate 180"},
@@ -379,6 +390,8 @@ public class JpoResources extends ListResourceBundle {
 		{"EditCamerasJMenuItem", "Cameras"},
 		{"EditCategoriesJMenuItem", "Categories"},
 		{"EditSettingsMenuItemText", "Settings"},
+		{"actionJMenu", "Action"},
+		{"emailJMenuItem", "Send email"},
 		{"HelpJMenuText", "Help"},
 		{"HelpAboutMenuItemText", "About"},
 		{"HelpLicenseMenuItemText", "License"},
@@ -498,7 +511,29 @@ public class JpoResources extends ListResourceBundle {
 		{"doneJButton", "Done"},
 		{"countCategoryUsageWarning1", "There are "},
 		{"countCategoryUsageWarning2", " nodes using this category.\nAre you sure you want to remove it?"},
+
 		
+		// EmailerJFrame
+		{"EmailerJFrame", "Send email"},
+		{"imagesCountJLabel", "Number of Pictures Selected: "},
+		{"emailJButton", "Send"},
+		{"noNodesSelected", "There are no selected nodes. Please select them with the popup menu on the picture nodes."},
+		{"fromJLabel", "From:"},
+		{"toJLabel", "To:"},
+		{"messageJLabel", "Message:"},
+		{"subjectJLabel", "Subject:"},
+		{"emailSendError", "The following error occured:\n"},
+		{"emailOK", "The mail was sent successfully."},
+		{"emailSizesJLabel", "Sizes:"},
+		{"emailResizeJLabel", "Resize to:"},
+		{"emailSize1", "Small (350 x 300)"},
+		{"emailSize2", "Medium (700 x 550)"},
+		{"emailSize3", "Medium plus Original"},
+		{"emailSize4", "Large (1000 x 800)"},
+		{"emailSize5", "Originals only"},
+		{"emailOriginals", "Attach Original Images"},
+
+				
 		{"Template", "Template"},
 		{"Template", "Template"}
 		

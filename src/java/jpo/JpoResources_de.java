@@ -92,6 +92,7 @@ public class JpoResources_de extends ListResourceBundle {
 			+ "<links>,<rechts>,<rauf>,<runter>: Bild in Pfeilrichtung verschieben\n"
 			+ "<PgUp>: Reinzoomen\n"
 			+ "<PgDown>: Rauszoomen\n"
+			+ "1: auf 100% zoomen\n"
 			+ "F: Fenstergrösse-Menu\n"
 			+ "M: Popup Menu"},
 		{"PictureViewerKeycodesTitle", "Tastatur-Abkürzungen"},
@@ -151,6 +152,14 @@ public class JpoResources_de extends ListResourceBundle {
 		{"userFunctionCmdJLabel", "Kommando:"},
 		{"userFunctionHelpJTextArea", "%f wird durch den Filenamen substituiert\n%u wird durch die URL des Bildes substituiert"},
 
+		{"emailJPanel", "Email Server"},
+		{"emailJLabel", "Email Server Einstellungen"},
+		{"predefinedEmailJLabel", "Vordefinierter Server:"},
+		{"emailServerJLabel", "Email Server:"},
+		{"emailPortJLabel", "Port:"},
+		{"emailUserJLabel", "Benutzername:"},
+		{"emailPasswordJLabel", "Password:"},
+		
 
 		// Settings
 		{"thumbNoExistError", "Das Verzeichnis füt die Verkleinerungen existiert nicht.\nBitte geben sie es unter Bearbeiten | Einstellungen ein.\nZwischenspeicherung von Verkleinerungen wurde deaktiviert."},
@@ -304,6 +313,7 @@ public class JpoResources_de extends ListResourceBundle {
 		{"FileRenameLabel2", "\nun in: "},
 		{"fileDeleteJMenuItem", "Löschen"},
 		{"pictureRefreshJMenuItem", "Verkleinerung erneuern"},
+		{"pictureMailSelectJMenuItem", "Auswählen für eMail"},
 		{"rotation", "Rotation"},
 		{"rotate90", "Nach Rechts 90"},
 		{"rotate180", "Um 180"},
@@ -379,6 +389,8 @@ public class JpoResources_de extends ListResourceBundle {
 		{"EditCamerasJMenuItem", "Kameras"},
 		{"EditCategoriesJMenuItem", "Kategorien"},
 		{"EditSettingsMenuItemText", "Einstellungen"},
+		{"actionJMenu", "Aktivitäten"},
+		{"emailJMenuItem", "Email verschicken"},
 		{"HelpJMenuText", "Hilfe"},
 		{"HelpAboutMenuItemText", "Über"},
 		{"HelpLicenseMenuItemText", "Lizenz"},
@@ -497,6 +509,27 @@ public class JpoResources_de extends ListResourceBundle {
 		{"doneJButton", "Done"},
 		{"countCategoryUsageWarning1", "Diese Kategorie wird von "},
 		{"countCategoryUsageWarning2", " Knoten verwendet.\nBestätigen Sie, dass Sie sie entfernen wollen."},
+
+		
+		// EmailerJFrame
+		{"EmailerJFrame", "Email versenden"},
+		{"imagesCountJLabel", "Anzahl ausgewählte Bilder: "},
+		{"emailJButton", "Senden"},
+		{"noNodesSelected", "Es sind keine Bilder ausgewählt. Wählen Sie diese bitte erst mit dem PopupMenu auf den einzelnen Bildern."},
+		{"fromJLabel", "Von:"},
+		{"toJLabel", "An:"},
+		{"messageJLabel", "Mitteilung:"},
+		{"subjectJLabel", "Betreff:"},
+		{"emailSendError", "Folgender Fehler trat auf:\n"},
+		{"emailOK", "Das Email wurde erfolgreich versandt."},
+		{"emailSizesJLabel", "Grösse:"},
+		{"emailResizeJLabel", "Verkleinern auf:"},
+		{"emailSize1", "Klein (350 x 300)"},
+		{"emailSize2", "Mittel (700 x 550)"},
+		{"emailSize3", "Mittel plus Original"},
+		{"emailSize4", "Gross (1000 x 800)"},
+		{"emailSize5", "Nur Originale"},
+		{"emailOriginals", "Original Anhängen"},
 		
 		{"Template", "Template"},
 		{"Template", "Template"}

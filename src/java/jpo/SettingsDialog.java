@@ -89,13 +89,6 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 
 
 
-	/**
-	 *   contrainer to neatly group the 2 buttons
-	 */
-	private Container buttonContainer = new Container();
-
-
-
 
 	/**
 	 *   maximum number of pictures to cache
@@ -273,12 +266,32 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 	private	JComboBox languageJComboBox = new JComboBox( supportedLanguages );
 
 
+	/**
+	 *   Text Field that holds the address of the email server
+	 */
+	private JTextField emailServerJTextField = new JTextField();
+
+	/**
+	 *   Text Field that holds the port of the email server
+	 */
+	private JTextField emailPortJTextField = new JTextField();
+
+
+	/**
+	 *   Text Field that holds the user for the email server
+	 */
+	private JTextField emailUserJTextField = new JTextField();
+
+	/**
+	 *   Text Field that holds the password for the email server
+	 */
+	private JTextField emailPasswordJTextField = new JTextField();
+
 	/** 
     	 *   Constructor to create the GUI
 	 */
 	public SettingsDialog( JFrame parent, boolean modal) {
 		super (parent, modal);
-		//setMinimumSize( new Dimension( 500, 400) );
 
 		initComponents ();
 		initValues ();
@@ -382,13 +395,15 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 		
 		c.gridx = 0; c.gridy ++;
 		c.gridwidth = 1;
-	        mainX.setPreferredSize(new Dimension(60, 25));
-	        mainX.setMinimumSize(new Dimension(60, 25));
+	        mainX.setPreferredSize( Settings.shortNumberPreferredSize );
+	        mainX.setMinimumSize( Settings.shortNumberMinimumSize );
+	        mainX.setMaximumSize( Settings.shortNumberMaximumSize );
 	        browserWindowSettingsJPanel.add ( mainX, c );
 
 		c.gridx++;
-	        mainY.setPreferredSize(new Dimension(60, 25));
-	        mainY.setMinimumSize(new Dimension(60, 25));
+	        mainY.setPreferredSize( Settings.shortNumberPreferredSize );
+	        mainY.setMinimumSize( Settings.shortNumberMinimumSize );
+	        mainY.setMaximumSize( Settings.shortNumberMaximumSize );
 	        browserWindowSettingsJPanel.add ( mainY, c );
 
 		c.gridx = 0; c.gridy ++;
@@ -398,14 +413,16 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 
 		c.gridx = 0; c.gridy ++;
 		c.gridwidth = 1;
-	        mainWidth.setPreferredSize(new Dimension(60, 25));
-	        mainWidth.setMinimumSize(new Dimension(60, 25));
+	        mainWidth.setPreferredSize( Settings.shortNumberPreferredSize );
+	        mainWidth.setMinimumSize( Settings.shortNumberMinimumSize );
+	        mainWidth.setMaximumSize( Settings.shortNumberMaximumSize );
 	        browserWindowSettingsJPanel.add ( mainWidth, c );
 
 		c.gridx++;
 		c.gridwidth = 1;
-	        mainHeight.setPreferredSize(new Dimension(60, 25));
-	        mainHeight.setMinimumSize(new Dimension(60, 25));
+	        mainHeight.setPreferredSize( Settings.shortNumberPreferredSize );
+	        mainHeight.setMinimumSize( Settings.shortNumberMinimumSize );
+	        mainHeight.setMaximumSize( Settings.shortNumberMaximumSize );
 	        browserWindowSettingsJPanel.add ( mainHeight, c );
 
 
@@ -423,9 +440,9 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 
 		c.gridx = 2;		
 		c.gridwidth = 1;
-		maximumPictureSizeJTextField.setPreferredSize( new Dimension(50, 20) );
-		maximumPictureSizeJTextField.setMinimumSize( new Dimension(50, 20) );
-		maximumPictureSizeJTextField.setMaximumSize( new Dimension(100, 20) );
+		maximumPictureSizeJTextField.setPreferredSize(  Settings.shortNumberPreferredSize  );
+		maximumPictureSizeJTextField.setMinimumSize( Settings.shortNumberMinimumSize  );
+		maximumPictureSizeJTextField.setMaximumSize(  Settings.shortNumberMaximumSize  );
 	        pictureViewerJPanel.add ( maximumPictureSizeJTextField, c );
 
 		c.gridx = 0; c.gridy++;
@@ -435,9 +452,9 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 
 		c.gridx = 2;		
 		c.gridwidth = 1;
-		maxCacheJTextField.setPreferredSize( new Dimension(50, 20) );
-		maxCacheJTextField.setMinimumSize( new Dimension(50, 20) );
-		maxCacheJTextField.setMaximumSize( new Dimension(100, 20) );
+		maxCacheJTextField.setPreferredSize(  Settings.shortNumberPreferredSize  );
+		maxCacheJTextField.setMinimumSize( Settings.shortNumberMinimumSize );
+		maxCacheJTextField.setMaximumSize( Settings.shortNumberMaximumSize );
 	        pictureViewerJPanel.add ( maxCacheJTextField, c );
 
 		c.gridx = 0; c.gridy++;
@@ -448,9 +465,10 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 
 		c.gridx = 2;
 		c.gridwidth = 1;
-	        taskbarSpaceJTextField.setPreferredSize(new Dimension(60, 25));
-	        taskbarSpaceJTextField.setMinimumSize(new Dimension(60, 25));
-	        pictureViewerJPanel.add (taskbarSpaceJTextField, c);
+	        taskbarSpaceJTextField.setPreferredSize( Settings.shortNumberPreferredSize );
+	        taskbarSpaceJTextField.setMinimumSize( Settings.shortNumberMinimumSize );
+		taskbarSpaceJTextField.setMaximumSize(  Settings.shortNumberMaximumSize  );
+	        pictureViewerJPanel.add( taskbarSpaceJTextField, c);
 
 
 		c.gridx = 0; c.gridy++;
@@ -464,13 +482,15 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 		
 		c.gridx = 0; c.gridy ++;
 		c.gridwidth = 1;
-	        pictureX.setPreferredSize(new Dimension(60, 25));
-	        pictureX.setMinimumSize(new Dimension(60, 25));
-	        pictureViewerJPanel.add ( pictureX, c );
+	        pictureX.setPreferredSize( Settings.shortNumberPreferredSize );
+	        pictureX.setMinimumSize( Settings.shortNumberMinimumSize );
+		pictureX.setMaximumSize(  Settings.shortNumberMaximumSize  );
+	        pictureViewerJPanel.add( pictureX, c );
 
 		c.gridx++;
-	        pictureY.setPreferredSize(new Dimension(60, 25));
-	        pictureY.setMinimumSize(new Dimension(60, 25));
+	        pictureY.setPreferredSize( Settings.shortNumberPreferredSize );
+	        pictureY.setMinimumSize( Settings.shortNumberMinimumSize );
+		pictureY.setMaximumSize(  Settings.shortNumberMaximumSize  );
 	        pictureViewerJPanel.add ( pictureY, c );
 
 		c.gridx = 0; c.gridy ++;
@@ -480,14 +500,16 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 
 		c.gridx = 0; c.gridy ++;
 		c.gridwidth = 1;
-	        pictureWidth.setPreferredSize( new Dimension(60, 25) );
-	        pictureWidth.setMinimumSize( new Dimension(60, 25) );
+	        pictureWidth.setPreferredSize( Settings.shortNumberPreferredSize );
+	        pictureWidth.setMinimumSize( Settings.shortNumberMinimumSize );
+		pictureWidth.setMaximumSize(  Settings.shortNumberMaximumSize  );
 	        pictureViewerJPanel.add ( pictureWidth, c );
 
 		c.gridx++;
 		c.gridwidth = 1;
-	        pictureHeight.setPreferredSize( new Dimension(60, 25) );
-	        pictureHeight.setMinimumSize( new Dimension(60, 25) );
+	        pictureHeight.setPreferredSize( Settings.shortNumberPreferredSize );
+	        pictureHeight.setMinimumSize( Settings.shortNumberMinimumSize );
+		pictureHeight.setMaximumSize(  Settings.shortNumberMaximumSize  );
 	        pictureViewerJPanel.add ( pictureHeight, c );
 
 		c.gridx = 0; c.gridy++;
@@ -524,9 +546,9 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 		c.gridwidth = 3;
 		c.fill = GridBagConstraints.NONE;
 		zapThumbnailsJButton.addActionListener( this );
-		zapThumbnailsJButton.setPreferredSize( new Dimension( 250, 25 ) );
-		zapThumbnailsJButton.setMinimumSize( new Dimension( 250, 25 ) ) ;
-		zapThumbnailsJButton.setMaximumSize( new Dimension( 250, 25 ) );
+		zapThumbnailsJButton.setPreferredSize( Settings.defaultButtonDimension );
+		zapThumbnailsJButton.setMinimumSize( Settings.defaultButtonDimension ) ;
+		zapThumbnailsJButton.setMaximumSize( Settings.defaultButtonDimension );
 	        thumbnailSettingsJPanel.add ( zapThumbnailsJButton, c );
 
 
@@ -539,9 +561,10 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
         	thumbnailSettingsJPanel.add ( maxThumbnailsLabel, c );
 
 		c.gridx++; 
-	        maxThumbnails.setPreferredSize(new Dimension(60, 25));
-	        maxThumbnails.setMinimumSize(new Dimension(60, 25));
-	        thumbnailSettingsJPanel.add (maxThumbnails, c);
+	        maxThumbnails.setPreferredSize( Settings.shortNumberPreferredSize );
+	        maxThumbnails.setMinimumSize( Settings.shortNumberMinimumSize );
+		maxThumbnails.setMaximumSize(  Settings.shortNumberMaximumSize  );
+	        thumbnailSettingsJPanel.add( maxThumbnails, c );
 
 		c.gridx = 0; c.gridy++;
 		JLabel thumbnailSizeLabel = new JLabel( Settings.jpoResources.getString("thumbnailSizeLabel") );
@@ -549,8 +572,9 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 	        thumbnailSettingsJPanel.add( thumbnailSizeLabel, c );
 
 		c.gridx++; 
-	        thumbnailSize.setPreferredSize( new Dimension(60, 25));
-	        thumbnailSize.setMinimumSize( new Dimension(60, 25));
+	        thumbnailSize.setPreferredSize( Settings.shortNumberPreferredSize );
+	        thumbnailSize.setMinimumSize( Settings.shortNumberMinimumSize );
+		thumbnailSize.setMaximumSize(  Settings.shortNumberMaximumSize  );
 	        thumbnailSettingsJPanel.add( thumbnailSize, c);
 
 
@@ -597,16 +621,16 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 		c.gridwidth = 1;
 		userFunctionJPanel.add( new JLabel( Settings.jpoResources.getString("userFunctionNameJLabel") ), c );
 		c.gridx = 1;
-		userFunction1NameJTextField.setPreferredSize( Settings.shortFieldPreferredSize );
-		userFunction1NameJTextField.setMinimumSize( Settings.shortFieldMinimumSize );
-		userFunction1NameJTextField.setMaximumSize( Settings.shortFieldMaximumSize );
+		userFunction1NameJTextField.setPreferredSize( Settings.textfieldPreferredSize );
+		userFunction1NameJTextField.setMinimumSize( Settings.textfieldMinimumSize );
+		userFunction1NameJTextField.setMaximumSize( Settings.textfieldMaximumSize );
 		userFunctionJPanel.add( userFunction1NameJTextField, c );
 		c.gridx = 0; c.gridy++;
 		userFunctionJPanel.add( new JLabel( Settings.jpoResources.getString("userFunctionCmdJLabel") ), c );
 		c.gridx = 1;
-		userFunction1CmdJTextField.setPreferredSize( Settings.shortFieldPreferredSize );
-		userFunction1CmdJTextField.setMinimumSize( Settings.shortFieldMinimumSize );
-		userFunction1CmdJTextField.setMaximumSize( Settings.shortFieldMaximumSize );
+		userFunction1CmdJTextField.setPreferredSize( Settings.textfieldPreferredSize );
+		userFunction1CmdJTextField.setMinimumSize( Settings.textfieldMinimumSize );
+		userFunction1CmdJTextField.setMaximumSize( Settings.textfieldMaximumSize );
 		userFunctionJPanel.add( userFunction1CmdJTextField, c );
 
 		c.gridx = 0; c.gridy++;
@@ -618,16 +642,16 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 		c.gridwidth = 1;
 		userFunctionJPanel.add( new JLabel( Settings.jpoResources.getString("userFunctionNameJLabel") ), c );
 		c.gridx = 1;
-		userFunction2NameJTextField.setPreferredSize( Settings.shortFieldPreferredSize );
-		userFunction2NameJTextField.setMinimumSize( Settings.shortFieldMinimumSize );
-		userFunction2NameJTextField.setMaximumSize( Settings.shortFieldMaximumSize );
+		userFunction2NameJTextField.setPreferredSize( Settings.textfieldPreferredSize );
+		userFunction2NameJTextField.setMinimumSize( Settings.textfieldMinimumSize );
+		userFunction2NameJTextField.setMaximumSize( Settings.textfieldMaximumSize );
 		userFunctionJPanel.add( userFunction2NameJTextField, c );
 		c.gridx = 0; c.gridy++;
 		userFunctionJPanel.add( new JLabel( Settings.jpoResources.getString("userFunctionCmdJLabel") ), c );
 		c.gridx = 1;
-		userFunction2CmdJTextField.setPreferredSize( Settings.shortFieldPreferredSize );
-		userFunction2CmdJTextField.setMinimumSize( Settings.shortFieldMinimumSize );
-		userFunction2CmdJTextField.setMaximumSize( Settings.shortFieldMaximumSize );
+		userFunction2CmdJTextField.setPreferredSize( Settings.textfieldPreferredSize );
+		userFunction2CmdJTextField.setMinimumSize( Settings.textfieldMinimumSize );
+		userFunction2CmdJTextField.setMaximumSize( Settings.textfieldMaximumSize );
 		userFunctionJPanel.add( userFunction2CmdJTextField, c );
 
 		c.gridx = 0; c.gridy++;
@@ -639,16 +663,16 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 		c.gridwidth = 1;
 		userFunctionJPanel.add( new JLabel( Settings.jpoResources.getString("userFunctionNameJLabel") ), c );
 		c.gridx = 1;
-		userFunction3NameJTextField.setPreferredSize( Settings.shortFieldPreferredSize );
-		userFunction3NameJTextField.setMinimumSize( Settings.shortFieldMinimumSize );
-		userFunction3NameJTextField.setMaximumSize( Settings.shortFieldMaximumSize );
+		userFunction3NameJTextField.setPreferredSize( Settings.textfieldPreferredSize );
+		userFunction3NameJTextField.setMinimumSize( Settings.textfieldMinimumSize );
+		userFunction3NameJTextField.setMaximumSize( Settings.textfieldMaximumSize );
 		userFunctionJPanel.add( userFunction3NameJTextField, c );
 		c.gridx = 0; c.gridy++;
 		userFunctionJPanel.add( new JLabel( Settings.jpoResources.getString("userFunctionCmdJLabel") ), c );
 		c.gridx = 1;
-		userFunction3CmdJTextField.setPreferredSize( Settings.shortFieldPreferredSize );
-		userFunction3CmdJTextField.setMinimumSize( Settings.shortFieldMinimumSize );
-		userFunction3CmdJTextField.setMaximumSize( Settings.shortFieldMaximumSize );
+		userFunction3CmdJTextField.setPreferredSize( Settings.textfieldPreferredSize );
+		userFunction3CmdJTextField.setMinimumSize( Settings.textfieldMinimumSize );
+		userFunction3CmdJTextField.setMaximumSize( Settings.textfieldMaximumSize );
 		userFunctionJPanel.add( userFunction3CmdJTextField, c );
 
 		c.gridx = 0; c.gridy++;
@@ -658,6 +682,81 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 		userFunctionHelpJTextArea.setWrapStyleWord( true );
 		userFunctionHelpJTextArea.setLineWrap( true );
 		userFunctionJPanel.add( userFunctionHelpJTextArea, c );
+
+
+
+		// Email Server
+		JPanel emailJPanel = new JPanel();
+		emailJPanel.setLayout( new GridBagLayout() );
+		emailJPanel.setBorder( BorderFactory.createEmptyBorder() );
+
+		c.gridx = 0; c.gridy = 0;
+		c.gridwidth = 2;
+		JLabel emailJLabel = new JLabel( Settings.jpoResources.getString("emailJLabel") );
+		emailJPanel.add( emailJLabel, c );
+
+		JComboBox predefinedEmailJComboBox = new JComboBox();
+		predefinedEmailJComboBox.addItem( (String) "Localhost" );
+		predefinedEmailJComboBox.addItem( (String) "Hotmail" );
+		predefinedEmailJComboBox.addItem( (String) "Compuserve" );
+		predefinedEmailJComboBox.addActionListener( new ActionListener() {
+			public void actionPerformed( ActionEvent e ) {
+				JComboBox cb = (JComboBox) e.getSource();
+			        String cbSelection = (String) cb.getSelectedItem();
+				if ( cbSelection.equals( "Localhost" ) ) {
+					emailServerJTextField.setText("localhost");
+					emailPortJTextField.setText("25");
+					emailUserJTextField.setText( "" );
+					emailPasswordJTextField.setText( "" );
+				} else if ( cbSelection.equals( "Compuserve" ) ) {
+					emailServerJTextField.setText("smtp.compuserve.com");
+					emailPortJTextField.setText("25");
+					emailUserJTextField.setText( "set your username" );
+					emailPasswordJTextField.setText( "set your password" );
+				}
+			}
+		});
+
+		c.gridy++;
+		c.gridwidth = 1;
+		emailJPanel.add( new JLabel( Settings.jpoResources.getString("predefinedEmailJLabel") ), c );
+		c.gridx++;
+		emailJPanel.add( predefinedEmailJComboBox,c );
+
+
+		c.gridx = 0; c.gridy++;
+		emailJPanel.add( new JLabel( Settings.jpoResources.getString("emailServerJLabel") ), c );
+		c.gridx++;
+		emailServerJTextField.setPreferredSize( Settings.textfieldPreferredSize );
+		emailServerJTextField.setMinimumSize( Settings.textfieldMinimumSize );
+		emailServerJTextField.setMaximumSize( Settings.textfieldMaximumSize );
+		emailJPanel.add( emailServerJTextField, c );
+
+		c.gridx = 0; c.gridy++;
+		emailJPanel.add( new JLabel( Settings.jpoResources.getString("emailPortJLabel") ), c );
+		c.gridx++;
+		emailPortJTextField.setPreferredSize( Settings.shortNumberPreferredSize );
+		emailPortJTextField.setMinimumSize( Settings.shortNumberMinimumSize );
+		emailPortJTextField.setMaximumSize( Settings.shortNumberMaximumSize );
+		emailJPanel.add( emailPortJTextField, c );
+
+		c.gridx = 0; c.gridy++;
+		emailJPanel.add( new JLabel( Settings.jpoResources.getString("emailUserJLabel") ), c );
+		c.gridx++;
+		emailUserJTextField.setPreferredSize( Settings.textfieldPreferredSize );
+		emailUserJTextField.setMinimumSize( Settings.textfieldMinimumSize );
+		emailUserJTextField.setMaximumSize( Settings.textfieldMaximumSize );
+		emailJPanel.add( emailUserJTextField, c );
+
+		c.gridx = 0; c.gridy++;
+		emailJPanel.add( new JLabel( Settings.jpoResources.getString("emailPasswordJLabel") ), c );
+		c.gridx++;
+		emailPasswordJTextField.setPreferredSize( Settings.textfieldPreferredSize );
+		emailPasswordJTextField.setMinimumSize( Settings.textfieldMinimumSize );
+		emailPasswordJTextField.setMaximumSize( Settings.textfieldMaximumSize );
+		emailJPanel.add( emailPasswordJTextField, c );
+		
+
 
 
 		// set up the main part of the dialog				
@@ -672,9 +771,14 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 		tp.add( Settings.jpoResources.getString("pictureViewerJPanel"), pictureViewerJPanel );
 		tp.add( Settings.jpoResources.getString("thumbnailSettingsJPanel"), thumbnailSettingsJPanel );
 		tp.add( Settings.jpoResources.getString("userFunctionJPanel"), userFunctionJPanel );
+		tp.add( Settings.jpoResources.getString("emailJPanel"), emailJPanel );
 		
 		getContentPane().add(tp, BorderLayout.NORTH);
 
+		/**
+		 *   contrainer to neatly group the 2 buttons
+		 */
+		Container buttonContainer = new Container();
 
 		buttonContainer.setLayout( new FlowLayout() );
 
@@ -759,6 +863,11 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 		userFunction1CmdJTextField.setText( Settings.userFunctionCmd[0] );
 		userFunction2CmdJTextField.setText( Settings.userFunctionCmd[1] );
 		userFunction3CmdJTextField.setText( Settings.userFunctionCmd[2] );
+
+		emailServerJTextField.setText( Settings.emailServer );
+		emailPortJTextField.setText( Settings.emailPort );
+		emailUserJTextField.setText( Settings.emailUser );
+		emailPasswordJTextField.setText( Settings.emailPassword );
 
 
 		// deliberately placed here to stop change events being triggered while the fields are
@@ -853,6 +962,18 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 		Settings.userFunctionCmd[0] = userFunction1CmdJTextField.getText();
 		Settings.userFunctionCmd[1] = userFunction2CmdJTextField.getText();
 		Settings.userFunctionCmd[2] = userFunction3CmdJTextField.getText();
+
+
+		if ( ! emailServerJTextField.equals( "" ) ) {
+			Settings.emailServer = emailServerJTextField.getText();
+		}
+		Settings.emailPort = emailPortJTextField.getText();
+		if ( ! emailUserJTextField.equals( "" ) ) {
+			Settings.emailUser = emailUserJTextField.getText();
+		}
+		if ( ! emailPasswordJTextField.equals( "" ) ) {
+			Settings.emailPassword = emailPasswordJTextField.getText();
+		}
 		
 		Settings.validateSettings();
 		Settings.notifyUserFunctionsChanged();
@@ -904,7 +1025,7 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 	 *   returns false to the caller. If all is fine it returns true;
 	 */
 	public boolean checkAutoLoad( String validationFile ) {
-		Tools.log("SettingsDialog.checkAutoLoad: called on: "+ validationFile);
+		//Tools.log("SettingsDialog.checkAutoLoad: called on: "+ validationFile);
 		File testFile = new File ( validationFile );
 
 		if ( validationFile.equals("") ) {
@@ -913,12 +1034,12 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 		}			
 			
 		if ( ! testFile.exists() ) {
-			Tools.log("SettingsDialog.checkAutoLoad: " + testFile.toString() + " doesn't exist.");
+			//Tools.log("SettingsDialog.checkAutoLoad: " + testFile.toString() + " doesn't exist.");
 			autoLoadJTextField.setForeground( Color.red );
 			return false;
 		} else {
 			if  ( ! testFile.canRead() ) {
-				Tools.log("SettingsDialog.checkAutoLoad: " + testFile.toString() + " can't read.");
+				//Tools.log("SettingsDialog.checkAutoLoad: " + testFile.toString() + " can't read.");
 				autoLoadJTextField.setForeground( Color.red );
 				return false;
 			}

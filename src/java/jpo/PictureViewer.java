@@ -684,6 +684,8 @@ public class PictureViewer extends JPanel
 						pictureJPanel.zoomIn();
 					else if ((k == KeyEvent.VK_PAGE_DOWN)) 
 						pictureJPanel.zoomOut();
+					else if ((k == KeyEvent.VK_1)) 
+						pictureJPanel.zoomFull();
 					else if ((k == KeyEvent.VK_UP) || (k == KeyEvent.VK_KP_UP)) 
 						pictureJPanel.scrollDown();
 		 			else if ((k == KeyEvent.VK_DOWN) || (k == KeyEvent.VK_KP_DOWN)) 

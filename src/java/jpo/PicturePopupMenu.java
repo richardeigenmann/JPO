@@ -115,9 +115,10 @@ public class PicturePopupMenu extends JPopupMenu
 
 
 	/** 
-	 *  menu item that allows the user to request the Exif Information to be shown
-	 **
-	private JMenuItem pictureViewExifJMenuItem;  */
+	 *  menu item that allows the image to be selected for mailing
+	 **/
+	private JMenuItem pictureMailSelectJMenuItem 
+		= new JMenuItem( Settings.jpoResources.getString("pictureMailSelectJMenuItem") );
 
 
 	/**
@@ -287,6 +288,15 @@ public class PicturePopupMenu extends JPopupMenu
 			}
 		});
 		add( pictureEditJMenuItem );
+
+
+		pictureMailSelectJMenuItem.addActionListener( new ActionListener() {
+			public void actionPerformed( ActionEvent e ) {
+				popupNode.toggleMailSelected();
+			}
+		});
+		add( pictureMailSelectJMenuItem );
+
 
 
 		for ( int i = 0; i < Settings.maxUserFunctions; i++ ) {

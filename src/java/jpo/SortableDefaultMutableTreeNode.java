@@ -69,6 +69,8 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 
 	/**
 	 *   Constructor for a new node.
+	 *   If this is a root node then the selection HashSet is initialised as 
+	 *   well as the categories HashMap. The initialiseNewCollection method is also fired.
 	 *
 	 *   @param	isRoot	Indicates that a root node should be created
 	 */
@@ -77,6 +79,7 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 		if ( isRoot ) {
 			this.createDefaultTreeModel();
 			this.selection = new HashSet();
+			this.mailSelection = new HashSet();
 			this.categories = new HashMap();
 			initialiseNewCollection();
 		}
@@ -731,6 +734,90 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 		return this.getRootNode().selection.toArray();
 	}
 
+
+
+
+
+	/**
+	 *   This Hash Set hold references to the selected nodes for mailing. It works just like the selection 
+	 *   HashSet only that the purpose is a different one. As such it has different behaviour.
+	 */
+	public HashSet mailSelection;
+
+	/**
+	 *  This method places the current SDMTN into the mailSelection HashSet.
+	 */
+	public void setMailSelected() {
+		this.getRootNode().mailSelection.add( this );
+		Object userObject = this.getUserObject();
+		if ( userObject instanceof PictureInfo ) {
+			((PictureInfo) userObject).sendWasMailSelectedEvent();
+		}
+	}
+
+	/**
+	 *  This method inverts the status of the node on the mail selection HashSet
+	 */
+	public void toggleMailSelected() {
+		if ( this.isMailSelected() ) {
+			this.removeFromMailSelection();
+		} else {
+			this.setMailSelected();
+		}
+	}
+
+	/**
+	 *  This method clears the mailSelection HashSet.
+	 */
+	public void clearMailSelection() {
+		Iterator i = this.getRootNode().mailSelection.iterator();
+		Object o;
+		Object userObject;
+		while ( i.hasNext() ) {
+			o = i.next();
+			i.remove();
+			userObject = ((SortableDefaultMutableTreeNode) o).getUserObject(); 
+			if ( userObject instanceof PictureInfo ) {
+				((PictureInfo) userObject).sendWasMailUnselectedEvent();
+				
+			}
+		}
+		//this.getRootNode().mailSelection.clear();
+	}
+
+
+	/**
+	 *  This method removes the current SDMTN from the mailSelection HashSet.
+	 */
+	public void removeFromMailSelection() {
+		this.getRootNode().mailSelection.remove( this );
+		Object userObject = this.getUserObject();
+		if ( userObject instanceof PictureInfo ) {
+			((PictureInfo) userObject).sendWasMailUnselectedEvent();
+		}
+	}
+
+
+	/**
+	 *  This returns whether the SDMTN is part of the mailSelection HashSet.
+	 */
+	public boolean isMailSelected() {
+		try {
+			return this.getRootNode().mailSelection.contains( this );
+		} catch ( NullPointerException x ) {
+			return false;
+		}
+	}
+
+
+	/**
+	 *  returns an array of the mailSelected nodes.
+	 */
+	public Object [] getMailSelectedNodes() {
+		return this.getRootNode().mailSelection.toArray();
+	}
+
+
 	
 
 	/**
@@ -741,7 +828,7 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 	 *   @param event The event the listening object received.
 	 */
 	public void executeDrop ( DropTargetDropEvent event ) {
-		Tools.log( "SDMTN.executeDrop: invoked");
+		//Tools.log( "SDMTN.executeDrop: invoked");
 		
 		if ( ! event.isLocalTransfer() ) {
 			Tools.log( "SDMTN.executeDrop: detected that the drop is not a local Transfer. These are not supported. Aborting drop.");
@@ -776,11 +863,8 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 		
 		try {
 			Transferable t = event.getTransferable();
-			//Integer originalHashCodeInteger = (Integer) t.getTransferData( JpoTransferable.originalHashCodeFlavor );
-			//originalHashCode = originalHashCodeInteger.intValue();
 			Object o =  t.getTransferData( JpoTransferable.dmtnFlavor );
 			arrayOfNodes = (Object[]) o;
-			//sourceNode = (SortableDefaultMutableTreeNode) o;
 		} catch ( java.awt.datatransfer.UnsupportedFlavorException x ) {
 			Tools.log( "SDMTN.executeDrop caught an UnsupportedFlavorException: message: " + x.getMessage() );
 			event.dropComplete( false );
@@ -795,37 +879,22 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 			return;
 		}
 		
-
-		// check if the drop is happening on the source node.		
-		/*if ( originalHashCode == this.hashCode() ) {
-			Tools.log("SDMTN.executeDrop: drop attempted on itself. Ignored.");
-			event.dropComplete( false );
-			return;
-		}*/
-
-			
-		/* a really messy hack to find out if the node being moved is being
-		   moved to a child of itself. This would loose the whole branch of 
-		   the tree. The problem is that the transferable comes in as a new 
-		   Object rather than a reference to the old one. I tried several things
-		   But it is quite clever. In the end I went for the internal hash code
-		   Of the object and checking whether that is anywhere on the target path.
-		*
-		Object[] targetComponents = this.getPath();
-		Object testHash;
-		for (int i = 0; i < targetComponents.length; i++) {
-			testHash = targetComponents[i];
-			
-			if ( testHash.hashCode() == originalHashCode ) {
+		
+		/* We must ensure that if the action is a move it does not drop into 
+		itself or into a child of itself. */
+		for ( int i=0; i<arrayOfNodes.length; i++ ) {
+			sourceNode = (SortableDefaultMutableTreeNode) arrayOfNodes[ i ];
+			if ( this.isNodeAncestor( sourceNode ) ) {
 				JOptionPane.showMessageDialog( Settings.anchorFrame, 
 					Settings.jpoResources.getString("moveNodeError"), 
 					Settings.jpoResources.getString("genericError"), 
 					JOptionPane.ERROR_MESSAGE);
 				event.dropComplete( false );
 				return;
-			}
+			}			
 		}
-			*/		
+		
+		
 
 		// The drop is a valid one.
 		
@@ -1276,7 +1345,7 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 		Tools.log( "SDMTN.deleteNode: invoked on:" + this.toString() );
 		if ( this.isRoot() ) {
 			Tools.log( "SDMTN.deleteNode: attempted on Root node. Can't do this! Aborted." );
-			JOptionPane.showMessageDialog( Settings.anchorFrame, 
+			JOptionPane.showMessageDialog( null, //very annoying if the main window is used as it forces itself into focus.
 				Settings.jpoResources.getString("deleteRootNodeError"), 
 				Settings.jpoResources.getString("genericError"), 
 				JOptionPane.ERROR_MESSAGE);
@@ -1716,7 +1785,7 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 			return;
 
 		int option = JOptionPane.showConfirmDialog(
-			Settings.anchorFrame,
+			null, //very annoying if the main window is used as it forces itself into focus.
 			Settings.jpoResources.getString("FileDeleteLabel") 
 				+ highresFile.toString()
 				+ "\n"

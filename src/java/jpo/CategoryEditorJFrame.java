@@ -9,7 +9,7 @@ import javax.swing.event.ListSelectionEvent;
 import java.util.Iterator;
 
 /*
-QueryJFrame.java:  creates a GUI to allow the user to specify his search
+CategoryEditorJFrame.java:  creates a GUI to allow the user to specify his search
 
 Copyright (C) 2002  Richard Eigenmann.
 This program is free software; you can redistribute it and/or

@@ -395,6 +395,53 @@ public class PictureInfoChangeEvent {
 		return wasUnselected;
 	}
 
+//-----------------
+
+	/**
+	 *  indicates whether the node was mailSelected
+	 */
+	private boolean wasMailSelected = false;
+
+
+	/**
+	 *  sets the event to reflect that the selection was set
+	 **/			      
+	public void setWasMailSelected() {
+		wasMailSelected = true;
+	}
+
+
+	/**
+	 *  returns whether the event was about the selection status being set
+	 */
+	public boolean getWasMailSelected() {
+		return wasMailSelected;
+	}
+
+
+//-----------------
+
+	/**
+	 *  indicates whether the node was mailUnselected
+	 */
+	private boolean wasMailUnselected = false;
+
+
+	/**
+	 *  sets the event to reflect that the selection was removed
+	 **/			      
+	public void setWasMailUnselected() {
+		wasMailUnselected = true;
+	}
+
+
+	/**
+	 *  returns whether the selection was removed
+	 */
+	public boolean getWasMailUnselected() {
+		return wasMailUnselected;
+	}
+
 
 
 

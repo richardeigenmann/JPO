@@ -290,6 +290,7 @@ public class Settings {
 	public static final Dimension filenameFieldMaximumSize = new Dimension(1000,20);
 
 
+
 	/**
 	 *  standard size for all JTextFields that need to record a short text.
 	 */
@@ -304,6 +305,41 @@ public class Settings {
 	 *  standard size for all JTextFields that need to record a short text
 	 */
 	public static final Dimension shortFieldMaximumSize = new Dimension(1000,20);
+
+
+
+	/**
+	 *  standard size for all JTextFields that need to record a normal length text
+	 */
+	public static final Dimension textfieldPreferredSize = new Dimension(350,20);
+
+	/**
+	 *  standard size for all JTextFields that need to record a normal length text
+	 */
+	public static final Dimension textfieldMinimumSize = new Dimension(150,20);
+
+	/**
+	 *  standard size for all JTextFields that need to record a normal length text
+	 */
+	public static final Dimension textfieldMaximumSize = new Dimension(1000,20);
+
+
+
+	/**
+	 *  standard size for all JTextFields that need to record a normal length text
+	 */
+	public static final Dimension shortNumberPreferredSize = new Dimension(60,20);
+
+	/**
+	 *  standard size for all JTextFields that need to record a normal length text
+	 */
+	public static final Dimension shortNumberMinimumSize = new Dimension(60,20);
+
+	/**
+	 *  standard size for all JTextFields that need to record a normal length text
+	 */
+	public static final Dimension shortNumberMaximumSize = new Dimension(100,20);
+
 
 
 	/**
@@ -509,6 +545,73 @@ public class Settings {
 	 *	list of cameras
 	 */
 	public static Vector Cameras = new Vector(); 
+
+
+	/**
+	 *	list of email senders
+	 */
+	public static TreeSet emailSenders = new TreeSet() {
+		public boolean add( Object o ) {
+			boolean b = super.add( o );
+			if ( b ) unsavedSettingChanges = true;
+			return b;
+		}
+	
+	}; 
+
+
+	/**
+	 *	list of email senders
+	 */
+	public static TreeSet emailRecipients = new TreeSet(){
+		public boolean add( Object o ) {
+			boolean b = super.add( o );
+			if ( b ) unsavedSettingChanges = true;
+			return b;
+		}
+	
+	};  
+
+
+
+	/**
+	 *	Email Server
+	 */
+	public static String emailServer = "";
+	
+	/**
+	 *	Email Server port
+	 */
+	public static String emailPort = "25";
+
+	/**
+	 *	Email User
+	 */
+	public static String emailUser = "";
+
+	/**
+	 *	Email Password
+	 */
+	public static String emailPassword = "";
+
+
+	/**
+	 *	Should emails have scaled images
+	 */
+	public static boolean emailScaleImages = true;
+
+	/**
+	 *	The last size we scaled images to in the email dialog
+	 */
+	public static Dimension emailDimensions = new Dimension( 350, 300);
+
+	/**
+	 *	Should emails contain the original images
+	 */
+	public static boolean emailSendOriginal = false;
+	
+	
+
 
 	/**
 	 *  constructor
@@ -767,9 +870,37 @@ public class Settings {
 						pictureViewerFastScale = true;
 					else 
 						pictureViewerFastScale = false;
+				} else if (sb.startsWith("emailSender")) {
+					emailSenders.add(sb.substring(sb.indexOf("=") + 2) );
+				} else if (sb.startsWith("emailRecipient")) {
+					emailRecipients.add(sb.substring(sb.indexOf("=") + 2) );
+				} else if (sb.startsWith("emailServer")) {
+					emailServer = sb.substring( sb.indexOf("=") + 2 ); 
+				} else if (sb.startsWith("emailPort")) {
+					emailPort = sb.substring( sb.indexOf("=") + 2 ); 
+				} else if (sb.startsWith("emailUser")) {
+					emailUser = sb.substring( sb.indexOf("=") + 2 ); 
+				} else if (sb.startsWith("emailPassword")) {
+					emailPassword = sb.substring( sb.indexOf("=") + 2 ); 
+				} else if (sb.startsWith("emailScaleImages")) {
+					if ( (sb.substring(sb.indexOf("=") + 2)).startsWith( "True" ) )
+						emailScaleImages = true;
+					else 
+						emailScaleImages = false;
+				} else if (sb.startsWith("emailSendOriginal")) {
+					if ( (sb.substring(sb.indexOf("=") + 2)).startsWith( "True" ) )
+						emailSendOriginal = true;
+					else 
+						emailSendOriginal = false;
+				} else if (sb.startsWith("emailDimensions.width")) {
+					String Value = sb.substring(sb.indexOf("=") + 2);
+					emailDimensions.width = Integer.parseInt(Value);
+				} else if (sb.startsWith("emailDimensions.height")) {
+					String Value = sb.substring(sb.indexOf("=") + 2);
+					emailDimensions.height = Integer.parseInt(Value);
 				} else if ( sb.startsWith("#") || sb.equals("") ) {
 				} else {
-					System.out.println("Can'd decode ini line: " + sb);
+					System.out.println("Can't decode ini line: " + sb);
 				}
 
 
@@ -1071,6 +1202,50 @@ public class Settings {
 				out.write( "pictureViewerFastScale = False" );
 			out.newLine();
 
+
+			Iterator i = emailSenders.iterator();
+			while ( i.hasNext() ) {
+				out.write( "emailSender = " + (String) i.next() );
+				out.newLine();
+			}
+
+			i = emailRecipients.iterator();
+			while ( i.hasNext() ) {
+				out.write( "emailRecipient = " + (String) i.next() );
+				out.newLine();
+			}
+
+
+			out.write( "emailServer = " + emailServer );
+			out.newLine();
+
+			out.write( "emailPort = " + emailPort );
+			out.newLine();
+
+			out.write( "emailUser = " + emailUser );
+			out.newLine();
+
+			out.write( "emailPassword = " + emailPassword );
+			out.newLine();
+
+
+			if ( emailScaleImages ) 
+				out.write( "emailScaleImages = True" );
+			else
+				out.write( "emailScaleImages = False" );
+			out.newLine();
+
+			if ( emailSendOriginal ) 
+				out.write( "emailSendOriginal = True" );
+			else
+				out.write( "emailSendOriginal = False" );
+			out.newLine();
+
+			out.write("emailDimensions.width = " + String.valueOf( emailDimensions.width ) );
+			out.newLine();
+
+			out.write("emailDimensions.height = " + String.valueOf( Settings.emailDimensions.height ) );
+			out.newLine();
 
 
 			out.close();

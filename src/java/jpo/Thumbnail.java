@@ -89,9 +89,20 @@ public class Thumbnail extends JPanel
 	
 
 	/**
+	 *  The icon to superimpose on the picture if the highres picture is not available
+	 */
+	protected static final ImageIcon mailIcon = new ImageIcon( Settings.cl.getResource( "jpo/images/icon_mail.gif" ) ); 
+
+
+	/**
 	 *  This flag indicates whether the offline icon should be drawn or not.
 	 */
 	public boolean drawOfflineIcon = false;
+
+	/**
+	 *  This flag indicates whether the mail icon should be drawn or not.
+	 */
+	public boolean drawMailIcon = false;
 
 	/**
 	 *  a reference to the ThumbnailJScrollPane where group Info objects can refer their mouseclicks back to.
@@ -259,6 +270,7 @@ public class Thumbnail extends JPanel
 		//}
 		
 		showSlectionStatus();
+		determineMailSlectionStatus();
 		determineImageStatus( referringNode );
 	}
 
@@ -360,6 +372,10 @@ public class Thumbnail extends JPanel
 			g2d.drawImage( img, AffineTransform.getTranslateInstance((int) X_Offset, (int) Y_Offset), imgOb);
 			if ( drawOfflineIcon ) {
 				g2d.drawImage( offlineIcon.getImage(), (int) X_Offset + 10, (int) Y_Offset + 10, offlineIcon.getImageObserver() );
+			}
+			if ( drawMailIcon ) {
+				int additionalOffset = drawOfflineIcon ? 40 : 0;
+				g2d.drawImage( mailIcon.getImage(), (int) X_Offset + 10 + additionalOffset, (int) Y_Offset + 10, mailIcon.getImageObserver() );
 			}
 		} else {
 			// paint a black square
@@ -466,6 +482,9 @@ public class Thumbnail extends JPanel
 			showAsSelected();
 		} else if ( e.getWasUnselected() ) {
 			showAsUnselected();
+		} else if ( ( e.getWasMailSelected() ) || ( e.getWasMailUnselected() ) ) {
+			determineMailSlectionStatus();
+			repaint();
 		}
 	}
 
@@ -501,6 +520,19 @@ public class Thumbnail extends JPanel
 		}
 	}
 
+
+	/**
+	 *  determines if the thumbnail is part of the mail selection and changes the drawMailIcon
+	 *  flag to ensure that the mail icon will be place over the image.
+	 */
+	public void determineMailSlectionStatus() {
+		if ( ( referringNode != null )
+		  && ( referringNode.isMailSelected() ) ) {
+			drawMailIcon = true;
+		} else {
+			drawMailIcon = false;
+		}
+	}
 
 
 
