@@ -1,0 +1,577 @@
+package jpo;
+
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+import javax.swing.JOptionPane;
+
+import java.net.InetAddress;
+import java.util.Properties;
+import javax.mail.*;
+import javax.mail.internet.*;
+import java.io.*;
+import java.util.*;
+import javax.activation.*;
+import java.net.URL;
+
+/*
+EmailerJFrame.java:  creates a GUI to allow the user to specify his search
+
+Copyright (C) 2004  Richard Eigenmann.
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or any later version. This program is distributed 
+in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+without even the implied warranty of MERCHANTABILITY or FITNESS 
+FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
+more details. You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+The license is in gpl.txt.
+See http://www.gnu.org/copyleft/gpl.html for the details.
+*/
+
+
+/**
+ * EmailerJFrame.java:  Creates a GUI to edit the categories of the collection
+ *
+ **/
+public class EmailerJFrame extends JFrame {
+
+
+	/**
+	 *  Internal array that holds the nodes to be send by email.
+	 */
+	private Object[] emailSelected;
+
+
+	/**
+	 *  Field for the Sender's address
+	 */
+	private JComboBox fromJComboBox = new JComboBox();
+
+
+	/**
+	 *  Field for the Recipient's address
+	 */
+	private JComboBox toJComboBox = new JComboBox();
+	
+	/**
+	 *  Field for the Subject of the mail 
+	 */
+	private JTextField subjectJTextField = new JTextField( 200 );
+
+
+	/**
+	 *  Box for an optional message
+	 */
+	private JTextArea messageJTextArea = new JTextArea();
+
+
+	/**
+	 *  Scrollpane for the messageJTextArea
+	 */
+	private JScrollPane messageJScrollPane = new JScrollPane( messageJTextArea );
+
+
+	/**
+	 *  Combobox that offers predefined sizse settings
+	 */
+	private JComboBox sizesJComboBox = new JComboBox();
+
+	/**
+	 *  tickbox that indicates whether to send the originals
+	 */
+	private JCheckBox scalePicturesJCheckBox = new JCheckBox( Settings.jpoResources.getString("emailResizeJLabel") );
+
+	/**
+	 *   Maximum width for emailed images
+	 */
+	private WholeNumberField imageWidthWholeNumberField = new WholeNumberField( 0, 6 );
+
+
+	/**
+	 *   Maximum height for emailed images
+	 */
+	private WholeNumberField imageHeightWholeNumberField = new WholeNumberField( 0, 6 );
+
+
+	/**
+	 *  tickbox that indicates whether to send the originals
+	 */
+	private JCheckBox sendOriginalsJCheckBox = new JCheckBox( Settings.jpoResources.getString("emailOriginals") );
+
+
+	/**
+	 *  Creates a GUI to edit the categories of the collection
+	 *
+	 **/
+	public EmailerJFrame() {
+
+		emailSelected = Settings.top.getMailSelectedNodes();
+	
+		if ( emailSelected.length < 1) {
+			JOptionPane.showMessageDialog( this, 
+				Settings.jpoResources.getString( "emailNoNodes" ), 
+				Settings.jpoResources.getString( "genericError" ), 
+				JOptionPane.ERROR_MESSAGE);
+			//getRid();
+			return;
+		}
+
+		if ( Settings.emailServer.equals("") ) { //perhaps make this a better test of the server
+			JOptionPane.showMessageDialog( this, 
+				Settings.jpoResources.getString( "emailNoServer" ), 
+				Settings.jpoResources.getString( "genericError" ), 
+				JOptionPane.ERROR_MESSAGE);
+			//getRid();
+			return;
+		}
+
+		addWindowListener(new WindowAdapter() {
+			public void windowClosing( WindowEvent e ) {
+				setDefaultCloseOperation( DO_NOTHING_ON_CLOSE );
+				getRid();
+			}
+	        });  
+		
+		setTitle ( Settings.jpoResources.getString("EmailerJFrame") );
+
+		final JPanel jPanel = new JPanel();
+		jPanel.setBorder( BorderFactory.createEmptyBorder( 8,8,8,8 ) );
+		jPanel.setLayout( new GridBagLayout() );
+		
+		GridBagConstraints c = new GridBagConstraints();
+		
+		c.gridx= 0;
+		c.gridy= 0;
+
+
+		
+		
+		final JLabel imagesCountJLabel = 
+			new JLabel( Settings.jpoResources.getString("imagesCountJLabel") 
+				+ Integer.toString( emailSelected.length ) );
+		imagesCountJLabel.setHorizontalAlignment( JLabel.LEFT );
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.weightx = 0;
+		c.weighty = 0;
+		c.anchor = GridBagConstraints.LINE_START;
+		c.gridwidth = 2;
+		c.insets = new Insets( 3,0,3,5 );
+		jPanel.add( imagesCountJLabel, c );
+
+		c.gridy++;
+		c.fill = GridBagConstraints.NONE;
+		c.gridwidth = 1;
+		jPanel.add( new JLabel( Settings.jpoResources.getString("fromJLabel") ), c );
+		
+		fromJComboBox.setEditable( true );
+		fromJComboBox.setPreferredSize( Settings.filenameFieldPreferredSize );
+		fromJComboBox.setMinimumSize( Settings.filenameFieldMinimumSize );
+		fromJComboBox.setMaximumSize( Settings.filenameFieldMaximumSize );
+
+		c.gridx++;
+		jPanel.add( fromJComboBox, c );
+
+		c.gridx = 0; c.gridy++;
+		jPanel.add( new JLabel( Settings.jpoResources.getString("toJLabel") ), c );
+
+		toJComboBox.setEditable( true );
+		toJComboBox.setPreferredSize( Settings.filenameFieldPreferredSize );
+		toJComboBox.setMinimumSize( Settings.filenameFieldMinimumSize );
+		toJComboBox.setMaximumSize( Settings.filenameFieldMaximumSize );
+		c.gridx++;
+		jPanel.add( toJComboBox, c );
+
+		c.gridx = 0; c.gridy++;
+		jPanel.add( new JLabel( Settings.jpoResources.getString("subjectJLabel") ), c );
+
+		subjectJTextField.setPreferredSize( Settings.filenameFieldPreferredSize );
+		subjectJTextField.setMinimumSize( Settings.filenameFieldMinimumSize );
+		subjectJTextField.setMaximumSize( Settings.filenameFieldMaximumSize );
+		c.gridx++;
+		jPanel.add( subjectJTextField, c );
+
+		c.gridx = 0; c.gridy++;
+		jPanel.add( new JLabel( Settings.jpoResources.getString("messageJLabel") ), c );
+
+		//messageJTextArea.setRows( 12 );
+		messageJScrollPane.setBorder( BorderFactory.createEmptyBorder(0,0,0,0) );
+		messageJScrollPane.setHorizontalScrollBarPolicy( JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED );
+		messageJScrollPane.setVerticalScrollBarPolicy( JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED );
+		messageJTextArea.setWrapStyleWord( true ); 
+		messageJTextArea.setLineWrap( true ); 
+		messageJTextArea.setEditable( true ); 
+		messageJTextArea.setBorder( BorderFactory.createEmptyBorder(2,2,8,2) ); 
+		messageJScrollPane.setPreferredSize( new Dimension( 550,200 ) );
+		messageJScrollPane.setMinimumSize( new Dimension( 300,150 ) );
+		messageJScrollPane.setMaximumSize( new Dimension( 800,500 ) );
+		c.gridx++;
+		jPanel.add( messageJScrollPane, c );
+
+
+
+		c.gridx = 0; c.gridy++;
+		jPanel.add( new JLabel( Settings.jpoResources.getString("emailSizesJLabel") ), c );
+
+		JComboBox sizesJComboBox = new JComboBox();
+		sizesJComboBox.addItem(  Settings.jpoResources.getString("emailSize1") );
+		sizesJComboBox.addItem(  Settings.jpoResources.getString("emailSize2") );
+		sizesJComboBox.addItem(  Settings.jpoResources.getString("emailSize3") );
+		sizesJComboBox.addItem(  Settings.jpoResources.getString("emailSize4") );
+		sizesJComboBox.addItem(  Settings.jpoResources.getString("emailSize5") );
+		sizesJComboBox.addActionListener( new ActionListener() {
+			public void actionPerformed( ActionEvent e ) {
+				JComboBox cb = (JComboBox) e.getSource();
+			        String cbSelection = (String) cb.getSelectedItem();
+				if ( cbSelection.equals( Settings.jpoResources.getString("emailSize1") ) ) {
+					imageWidthWholeNumberField.setText("350");
+					imageHeightWholeNumberField.setText("300");
+					scalePicturesJCheckBox.setSelected( true );
+					sendOriginalsJCheckBox.setSelected( false );
+				} else if ( cbSelection.equals( Settings.jpoResources.getString("emailSize2") ) ) {
+					imageWidthWholeNumberField.setText("700");
+					imageHeightWholeNumberField.setText("550");
+					scalePicturesJCheckBox.setSelected( true );
+					sendOriginalsJCheckBox.setSelected( false );
+				} else if ( cbSelection.equals( Settings.jpoResources.getString("emailSize3") ) ) {
+					imageWidthWholeNumberField.setText("700");
+					imageHeightWholeNumberField.setText("550");
+					sendOriginalsJCheckBox.setSelected( true );
+					scalePicturesJCheckBox.setSelected( true );
+				} else if ( cbSelection.equals( Settings.jpoResources.getString("emailSize4") ) ) {
+					imageWidthWholeNumberField.setText("1000");
+					imageHeightWholeNumberField.setText("800");
+					scalePicturesJCheckBox.setSelected( true );
+					sendOriginalsJCheckBox.setSelected( false );
+				} else if ( cbSelection.equals( Settings.jpoResources.getString("emailSize5") ) ) {
+					imageWidthWholeNumberField.setText("0");
+					imageHeightWholeNumberField.setText("0");
+					scalePicturesJCheckBox.setSelected( false );
+					sendOriginalsJCheckBox.setSelected( true );
+				}
+			}
+		});
+		sizesJComboBox.setPreferredSize( Settings.filenameFieldPreferredSize );
+		sizesJComboBox.setMinimumSize( Settings.filenameFieldMinimumSize );
+		sizesJComboBox.setMaximumSize( Settings.filenameFieldMaximumSize );
+		c.gridx++;
+		jPanel.add( sizesJComboBox, c );
+
+
+
+		JPanel scaleSizeJPanel = new JPanel();
+		FlowLayout fl = new FlowLayout();
+		fl.setAlignment( FlowLayout.LEADING );
+		fl.setHgap(  0 );
+		scaleSizeJPanel.setLayout( fl );
+		scaleSizeJPanel.setPreferredSize( new Dimension( 550, 25) );
+		scaleSizeJPanel.setMinimumSize( new Dimension( 450, 25));
+		scaleSizeJPanel.setMaximumSize(new Dimension( 1000, 25));
+		//scaleSizeJPanel.setInsets( new Insets(0,0,0,0) );
+		
+		scalePicturesJCheckBox.addItemListener( new ItemListener() {
+			public void itemStateChanged( ItemEvent e ) {
+				if ( e.getStateChange() == ItemEvent.DESELECTED ) {
+					imageWidthWholeNumberField.setEnabled( false );
+					imageHeightWholeNumberField.setEnabled( false );
+				} else if ( e.getStateChange() == ItemEvent.SELECTED ) {
+					imageWidthWholeNumberField.setEnabled( true );
+					imageHeightWholeNumberField.setEnabled( true );
+				}
+			}
+		} );
+		//scalePicturesJCheckBox.setInsets( new Insets(0,0,0,0) );
+		scaleSizeJPanel.add( scalePicturesJCheckBox );
+
+	        imageWidthWholeNumberField.setPreferredSize( Settings.shortNumberPreferredSize );
+	        imageWidthWholeNumberField.setMinimumSize( Settings.shortNumberMinimumSize );
+	        imageWidthWholeNumberField.setMaximumSize( Settings.shortNumberMaximumSize );
+		imageWidthWholeNumberField.setVisible( true );
+	        scaleSizeJPanel.add( imageWidthWholeNumberField );
+		
+		scaleSizeJPanel.add ( new JLabel ( " x " ) );
+		
+	        imageHeightWholeNumberField.setPreferredSize( Settings.shortNumberPreferredSize );
+	        imageHeightWholeNumberField.setMinimumSize( Settings.shortNumberMinimumSize );
+	        imageHeightWholeNumberField.setMaximumSize( Settings.shortNumberMaximumSize );
+		imageHeightWholeNumberField.setVisible( true );
+	        scaleSizeJPanel.add( imageHeightWholeNumberField );
+
+		c.gridx = 0; c.gridy++;
+		c.gridwidth = 2;
+		jPanel.add( scaleSizeJPanel, c );
+
+		c.gridx = 0; c.gridy++;
+		jPanel.add( sendOriginalsJCheckBox, c );
+
+
+		final JPanel buttonJPanel = new JPanel();
+		final JButton emailJButton = new JButton( Settings.jpoResources.getString( "emailJButton" ) );
+		emailJButton.setPreferredSize( Settings.defaultButtonDimension );
+		emailJButton.setMinimumSize( Settings.defaultButtonDimension );
+		emailJButton.setMaximumSize( Settings.defaultButtonDimension );
+		emailJButton.addActionListener( new ActionListener() {
+			public void actionPerformed (ActionEvent evt ) {
+				prepareSend();
+				getRid();
+			}
+		} );
+		buttonJPanel.add( emailJButton );
+
+
+		final JButton cancelJButton = new JButton( Settings.jpoResources.getString( "genericCancelText" ) );
+		cancelJButton.setPreferredSize( Settings.defaultButtonDimension );
+		cancelJButton.setMinimumSize( Settings.defaultButtonDimension );
+		cancelJButton.setMaximumSize( Settings.defaultButtonDimension );
+		cancelJButton.addActionListener( new ActionListener() {
+			public void actionPerformed (ActionEvent evt ) {
+				getRid();
+			}
+		} );
+		buttonJPanel.add( cancelJButton );
+
+		c.gridy++;
+		jPanel.add( buttonJPanel, c );
+
+		jPanel.setPreferredSize( new Dimension (600, 500) );
+		jPanel.setMaximumSize( new Dimension (600, 500) );
+		jPanel.setMinimumSize( new Dimension (600, 500) );
+		getContentPane().add( jPanel, BorderLayout.CENTER );
+			
+	 	//  As per http://java.sun.com/developer/JDCTechTips/2003/tt1208.html#1
+		Runnable runner = new FrameShower( this, Settings.anchorFrame );
+        	EventQueue.invokeLater( runner );
+		
+		getSettings();
+	}
+
+
+	/**
+	 *  method that closes te frame and gets rid of it
+	 */
+	private void getRid() {
+		setVisible ( false );
+		dispose ();
+	}
+
+
+	/**
+	 *  Populates the comboboxes with values that came from the Settings.
+	 */
+	private void getSettings() {
+		Iterator i = Settings.emailSenders.iterator();
+		while ( i.hasNext() ) {
+			fromJComboBox.addItem( (String) i.next() );
+		}
+
+		i = Settings.emailRecipients.iterator();
+		while ( i.hasNext() ) {
+			toJComboBox.addItem( (String) i.next() );
+		}
+		
+		scalePicturesJCheckBox.setSelected( Settings.emailScaleImages );
+		sendOriginalsJCheckBox.setSelected( Settings.emailSendOriginal );
+		imageWidthWholeNumberField.setValue( Settings.emailDimensions.width );
+		imageHeightWholeNumberField.setValue( Settings.emailDimensions.height );
+	}
+
+
+	/**
+	 *  makes sure that the new addresses (if any) are recorded in the TreeSets of the Settings.
+	 */
+	private void putSettings() {
+		Settings.emailSenders.add( fromJComboBox.getSelectedItem().toString() );
+		Settings.emailRecipients.add( toJComboBox.getSelectedItem().toString() );
+		Settings.emailScaleImages = scalePicturesJCheckBox.isSelected();
+		Settings.emailSendOriginal = sendOriginalsJCheckBox.isSelected();
+		Settings.emailDimensions = new Dimension( imageWidthWholeNumberField.getValue(), imageHeightWholeNumberField.getValue() );
+	}
+
+
+	/**
+	 *  method that analyses the GUI fiels and prepares stuff for sending
+	 */
+	private void prepareSend() {
+		if ( emailSelected.length < 1 ) {
+			JOptionPane.showMessageDialog( this, 
+				Settings.jpoResources.getString("noNodesSelected"), 
+				Settings.jpoResources.getString("genericError"), 
+				JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+
+
+		
+		InternetAddress senderAddress;
+		try {
+			senderAddress = new InternetAddress( fromJComboBox.getSelectedItem().toString() );
+		} catch ( AddressException x ) {
+			Tools.log("EmailerJFrame trapped an AddressException on the senderAddress: " + x.getMessage() );
+			return;
+		}
+
+		InternetAddress destinationAddress;
+		try {
+			destinationAddress = new InternetAddress( toJComboBox.getSelectedItem().toString() );
+		} catch ( AddressException x ) {
+			Tools.log("EmailerJFrame trapped an AddressException on the destinationAddress: " + x.getMessage() );
+			return;
+		}
+
+
+		boolean scaleImages = scalePicturesJCheckBox.isSelected();
+		boolean sendOriginal = sendOriginalsJCheckBox.isSelected();
+
+		Dimension scaleSize = new Dimension( imageWidthWholeNumberField.getValue(), imageWidthWholeNumberField.getValue() );
+	
+		putSettings(); // placed here so that we don't store addresses that fail in the AddressExceptions
+		sendEmail( emailSelected, senderAddress, destinationAddress, scaleImages, scaleSize, sendOriginal );
+	}
+	
+
+	/**
+	 *  method that sends the email
+	 */
+	private void sendEmail( Object [] emailSelected, 
+		InternetAddress senderAddress, 
+		InternetAddress destinationAddress, 
+		boolean scaleImages, 
+		Dimension scaleSize, 
+		boolean sendOriginal  ) {
+
+
+		// Get system properties
+		Properties props = System.getProperties();
+
+		// Setup mail server
+		props.setProperty("mail.smtp.host", Settings.emailServer );
+
+
+		// Get session
+		Session session = Session.getDefaultInstance(props, null);
+
+		// Define message
+		MimeMessage message;
+		try {
+			message = new MimeMessage( session );
+			message.setFrom( senderAddress );
+			message.addRecipient( Message.RecipientType.TO, destinationAddress );
+			message.setSubject( subjectJTextField.getText() );
+
+			Multipart mp = new MimeMultipart();
+
+			MimeBodyPart mbp1 = new MimeBodyPart();
+			mbp1.setText( messageJTextArea.getText() );
+			mp.addBodyPart(mbp1);
+
+
+			MimeBodyPart scaledPictureMimeBodyPart;
+			MimeBodyPart originalPictureMimeBodyPart;
+			MimeBodyPart pictureDescriptionMimeBodyPart;
+			ScalablePicture scalablePicture = new ScalablePicture();
+			scalablePicture.setScaleSize( scaleSize );
+
+			URL highresURL;
+			PictureInfo pi;
+			DataSource ds;
+			ByteArrayOutputStream baos;
+			EncodedDataSource encds;
+			for ( int i=0; i < emailSelected.length; i++ ) {
+				pictureDescriptionMimeBodyPart = new MimeBodyPart();
+				pi = (PictureInfo) ( (SortableDefaultMutableTreeNode) emailSelected[i] ).getUserObject();
+				pictureDescriptionMimeBodyPart.setText( pi.getDescription(), "iso-8859-1" );
+				mp.addBodyPart( pictureDescriptionMimeBodyPart );
+
+				if ( scaleImages ) {
+					scalablePicture.loadPictureImd( pi.getHighresURLOrNull(), pi.getRotation() );
+					scalablePicture.scalePicture();
+					baos = new ByteArrayOutputStream();
+					scalablePicture.writeScaledJpg( baos );
+					encds = new EncodedDataSource( "image/jpeg", "filename.jpg", baos );
+					scaledPictureMimeBodyPart = new MimeBodyPart();
+					scaledPictureMimeBodyPart.setDataHandler( new DataHandler( encds ) );
+					scaledPictureMimeBodyPart.setFileName( pi.getHighresFilename() );
+					mp.addBodyPart( scaledPictureMimeBodyPart );
+				}
+
+
+				if ( sendOriginal ) {
+					// create the message part fro the original image
+					originalPictureMimeBodyPart = new MimeBodyPart();
+					highresURL = pi.getHighresURLOrNull();
+					// attach the file to the message
+					ds = new URLDataSource( highresURL  );
+					originalPictureMimeBodyPart.setDataHandler( new DataHandler( ds ) );
+					originalPictureMimeBodyPart.setFileName( pi.getHighresFilename() );
+					// create the Multipart and add its parts to it
+					mp.addBodyPart( originalPictureMimeBodyPart );
+				}
+
+			}
+			// add the Multipart to the message
+			message.setContent(mp);
+
+
+		} catch ( MessagingException x ) {
+			Tools.log("EmailerJFrame trapped a MessagingException while preparing the message: " + x.getMessage() );
+			return;
+		}
+
+		// Send message
+		try {
+		
+			//Transport.send( message );
+			Transport transport = session.getTransport( "smtp" );
+			transport.connect( Settings.emailServer, Settings.emailUser, Settings.emailPassword );
+			transport.send( message );
+		} catch ( MessagingException x ) {
+			Tools.log("EmailerJFrame trapped a MessagingException while sending the message: " + x.getMessage() );
+			x.printStackTrace();
+			JOptionPane.showMessageDialog( this, 
+				Settings.jpoResources.getString( "emailSendError" ) + x.getMessage(), 
+				Settings.jpoResources.getString( "genericError" ), 
+				JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+
+		JOptionPane.showMessageDialog( this, 
+			Settings.jpoResources.getString( "emailOK" ), 
+			Settings.jpoResources.getString( "genericOKText" ), 
+			JOptionPane.INFORMATION_MESSAGE);
+		
+	}
+
+
+
+	private class EncodedDataSource implements DataSource {
+	
+		EncodedDataSource ( String contentType, String filename, ByteArrayOutputStream baos ) {
+			this.contentType = contentType;
+			this.filename = filename;
+			this.baos = baos;
+		}
+		
+		String contentType;
+		String filename;
+		ByteArrayOutputStream baos;
+		
+		public InputStream getInputStream() throws IOException { 
+			return new ByteArrayInputStream( baos.toByteArray() );
+		}
+		public OutputStream getOutputStream() throws IOException {
+			return null;//new OutputStream();
+		}
+		public String getContentType() {
+			return contentType;
+		}
+		public String getName() {
+			return filename;
+		}
+		
+	}
+		
+
+}
