@@ -162,6 +162,9 @@ public class Jpo extends JFrame
 		Settings.loadSettings();
 		Settings.validateSettings();
 		
+		// does this give us any performance gains?? RE 7.6.2004
+		javax.imageio.ImageIO.setUseCache( false );
+		
 		this.setTitle ( Settings.jpoResources.getString("ApplicationTitle"));
 			
 

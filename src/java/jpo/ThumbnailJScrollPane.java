@@ -194,6 +194,13 @@ public class ThumbnailJScrollPane
 	 *   The amount of vertical padding between the thumbnails and descriptions.
 	 */
 	private static final int verticalPadding = 10;
+
+	/**
+	 *  This varaible keeps track of how many thumbnails per page the component was initialised
+	 *  with. If the number changes because the user changed it in the settings then the difference
+	 *  is recognized and the arrays are recreated.
+	 */
+	private int initialisedMaxThumbnails = Integer.MIN_VALUE;
 	
 	/** 
 	 *   creates a new JScrollPane with an embedded JPanel and provides a set of  
@@ -218,15 +225,7 @@ public class ThumbnailJScrollPane
 
 		
 		calculateCols();
-		thumbnails = new Thumbnail[ Settings.maxThumbnails ];
-		thumbnailDescriptionJPanels = new ThumbnailDescriptionJPanel[ Settings.maxThumbnails ];
-		for ( int i=0;  i < Settings.maxThumbnails; i++ ) {
-			thumbnails[i] = new Thumbnail( this );
-			thumbnailDescriptionJPanels[i] = new ThumbnailDescriptionJPanel( i, this );
-			calculateConstraints( i );
-			ThumbnailPane.add( thumbnails[i], thumbnailConstraints );
-			ThumbnailPane.add( thumbnailDescriptionJPanels[i], descriptionConstraints);
-		}
+		initThumbnailsArray();
 		ThumbnailPane.validate();
 		
 		// register this component so that it receives notifications from the Model
@@ -331,6 +330,23 @@ public class ThumbnailJScrollPane
  
  
 
+	/**
+	 *  creates the arrays for the thumbnails and the descriptions and adds them to the ThubnailPane.
+	 */
+	public void initThumbnailsArray () {
+		thumbnails = new Thumbnail[ Settings.maxThumbnails ];
+		thumbnailDescriptionJPanels = new ThumbnailDescriptionJPanel[ Settings.maxThumbnails ];
+		ThumbnailPane.removeAll();
+		initialisedMaxThumbnails = Settings.maxThumbnails;
+		for ( int i=0;  i < Settings.maxThumbnails; i++ ) {
+			thumbnails[i] = new Thumbnail( this );
+			thumbnailDescriptionJPanels[i] = new ThumbnailDescriptionJPanel( i, this );
+			calculateConstraints( i );
+			ThumbnailPane.add( thumbnails[i], thumbnailConstraints );
+			ThumbnailPane.add( thumbnailDescriptionJPanels[i], descriptionConstraints);
+		}
+	}
+
 
 
 	/**
@@ -377,6 +393,11 @@ public class ThumbnailJScrollPane
 			return;
 		}
 		setTitle( currentGroupNode.toString() );
+		
+		if ( initialisedMaxThumbnails != Settings.maxThumbnails ) {
+			initThumbnailsArray();
+		}
+		
 		// JA For the pagecount in the title
 		int groupCount = currentGroupNode.getChildCount();
 		pageCount = groupCount / Settings.maxThumbnails;
