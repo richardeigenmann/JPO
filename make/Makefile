@@ -28,7 +28,8 @@
 CLASS_DIR        = $(JAVA_DEV_ROOT)/build/classes
 DOC_DIR          = $(JAVA_DEV_ROOT)/docs
 MAKE_DIR         = $(JAVA_DEV_ROOT)/make
-JAR_DIR          = $(JAVA_DEV_ROOT)/libs
+JAR_DIR          = $(JAVA_DEV_ROOT)/jars
+JAR_3DPARTYDIR   = $(JAVA_DEV_ROOT)/libs
 
 ifdef JAVA_DEV_LOCAL
 SOURCE_DIR       = $(JAVA_DEV_LOCAL)/src
@@ -80,7 +81,7 @@ SPACE            = $(EMPTY) $(EMPTY)
 LOCAL_JARTMP     = $(patsubst %,$(JAR_DIR)/%,$(JARS))
 LOCAL_JARLIST    = $(subst $(SPACE),$(SEP),$(LOCAL_JARTMP))
 
-OTHER_JARTMP     = $(patsubst %,$(JAR_DIR)/%,$(JARS_3RDPARTY))
+OTHER_JARTMP     = $(patsubst %,$(JAR_3DPARTYDIR)/%,$(JARS_3RDPARTY))
 OTHER_JARLIST    = $(subst $(SPACE),$(SEP),$(OTHER_JARTMP))
 
 JRE              = $(JAVA_HOME)/jre/lib/rt.jar

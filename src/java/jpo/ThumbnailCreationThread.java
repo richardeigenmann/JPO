@@ -45,12 +45,6 @@ public class ThumbnailCreationThread extends Thread {
 	 */
 	private static final ImageIcon loadingIcon = new ImageIcon( Settings.cl.getResource( "jpo/images/loading_thumbnail.gif" ) );
 
-	/**
-	 *  The icon being displayed for the groups in the Thumbnail Pane. 
-	 *  The filename is jpo/images/icon_folder.gif
-	 */
-	protected static final ImageIcon folderIcon = new ImageIcon( Settings.cl.getResource( "jpo/images/icon_folder.gif" ) ); 
-
 
 	/**
 	 *  Constructor
@@ -378,7 +372,8 @@ public class ThumbnailCreationThread extends Thread {
 		Tools.log("ThumbnailCreationThread.createNewGroupThumbnail: Creating Thumbnail " + ((GroupInfo) referringNode.getUserObject()).getLowresLocation() + " from " + ((GroupInfo) referringNode.getUserObject()).getLowresLocation());
 
 		try{
-			BufferedImage groupThumbnail = ImageIO.read( Settings.cl.getResource( "jpo/images/icon_folder_large.jpg" ) );
+			//ImageIO.setUseCache( false );
+			BufferedImage groupThumbnail = ImageIO.read( new BufferedInputStream( ThumbnailCreationThread.class.getResourceAsStream( "images/icon_folder_large.jpg" ) ) );
 			Graphics2D groupThumbnailGraphics = groupThumbnail.createGraphics();
 		
 			int leftMargin = 15;
@@ -424,7 +419,6 @@ public class ThumbnailCreationThread extends Thread {
 					x += ( Settings.miniThumbnailSize.width - sclPic.getScaledWidth() ) / 2;
 					y += Settings.miniThumbnailSize.height - sclPic.getScaledHeight();
 					
-					//ImageIcon offlineIcon = new ImageIcon( Settings.cl.getResource( "jpo/images/icon_offline.gif" ) ); 
 					groupThumbnailGraphics.drawImage( sclPic.getScaledPicture(),  x,  y, null );
 				}
 			}
