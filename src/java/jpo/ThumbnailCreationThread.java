@@ -261,8 +261,13 @@ public class ThumbnailCreationThread extends Thread {
 				pi.sendThumbnailChangedEvent();
 			}
 
-			ImageIcon icon = new ImageIcon( currentPicture.getScaledPicture() );
-			currentThumb.setThumbnail( icon );
+			if ( ! Settings.keepThumbnails ) {
+				// This branch is nescessary because it sets the thumbnail only when the
+				// Thumbnail is not written to disk. Where it is written to disk the
+				// sent ThumbnailChangedEvent ensures that the new image is loaded.
+				ImageIcon icon = new ImageIcon( currentPicture.getScaledPicture() );
+				currentThumb.setThumbnail( icon );
+			}
 			
 			// clean the cache
 			ImageIcon cleanCache = new ImageIcon( pi.getLowresURLOrNull() );
