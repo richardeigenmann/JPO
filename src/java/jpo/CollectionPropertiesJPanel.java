@@ -42,6 +42,11 @@ public class CollectionPropertiesJPanel
 	private JLabel collectionGroupsLabel = new JLabel ();
 	private JLabel collectionPicturesLabel = new JLabel ();
 	private JLabel collectionSizeJLabel = new JLabel ();
+	
+	/**
+	 *  Indicates how many jobs are on the thumbnail creation queue.
+	 */
+	private JLabel queCountJLabel = new JLabel ();
 
 
 	/** 
@@ -69,6 +74,9 @@ public class CollectionPropertiesJPanel
 
 		constraints.gridy++;
 		add( collectionSizeJLabel, constraints );
+
+		constraints.gridy++;
+		add( queCountJLabel, constraints );
 	}
 
 
@@ -85,7 +93,16 @@ public class CollectionPropertiesJPanel
 		collectionGroupsLabel.setText( Settings.jpoResources.getString("CollectionGroupCountLabel") + Integer.toString( numberOfGroups ) );
 		collectionPicturesLabel.setText( Settings.jpoResources.getString("CollectionPictureCountLabel") + Integer.toString( numberOfPictures ) );
 		collectionSizeJLabel.setText( Settings.jpoResources.getString("CollectionSizeJLabel") + sizeOfPictures );
+		updateQueueCount();		
 	}		
 	
+
+	/**
+	 *  This method updates the label showing the entries on the queue. This was split out for performance
+	 *  as counting the filesize could be very slow and doesn't change that often
+	 */
+	public void updateQueueCount() {
+		queCountJLabel.setText( Settings.jpoResources.getString("queCountJLabel") + ThumbnailCreationQueue.countQueueRequests() );
+	}
 
 }

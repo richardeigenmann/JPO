@@ -452,6 +452,7 @@ public class JpoResources_de extends ListResourceBundle {
 		{"CollectionGroupCountLabel", "Anzahl Gruppen: "},
 		{"CollectionPictureCountLabel", "Anzahl Bilder: "},
 		{"CollectionSizeJLabel", "Belegter Speicherplatz: "},
+		{"queCountJLabel", "Pendente Verkleinerungen: "},
 		{"editProtectJCheckBoxLabel", "Sammlung vor Änderungen schützen"},
 		
 		// Tools

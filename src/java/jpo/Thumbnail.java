@@ -126,6 +126,12 @@ public class Thumbnail extends JPanel
 	 */
 	private static final Color  UNSELECTED_COLOR = Color.WHITE;
 
+
+	/** 
+	 * The priority this Thumbnail should have on the ThumbnailCreationQueue
+	 */
+	private int priority = ThumbnailCreationQueue.MEDIUM_PRIORITY;
+
 	/**
 	 *   Creates a new Thumbnail object.
 	 *
@@ -160,12 +166,31 @@ public class Thumbnail extends JPanel
 	 *
 	 *   @param	thumbnailSize	The size in which the thumbnail is to be created
 	 *
+	 *   @param     priority	One of ThumbnailCreationQueue.MEDIUM_PRIORITY,ThumbnailCreationQueue.HIGH_PRORITY, ThumbnailCreationQueue.LOW_PRIORITY
+	 *
+	 **/
+	public Thumbnail ( SortableDefaultMutableTreeNode referringNode, int thumbnailSize, int priority ) {
+		this( thumbnailSize );
+		this.priority = priority;
+		setNode( referringNode );
+	}
+
+
+	/**
+	 *   Creates a new Thumbnail object and sets it to the supplied node. Has been deprecated as 
+	 *   the priority should be passed as a third argument.
+	 *
+	 *   @param 	referringNode	The SortableDefaultMutableTreeNode for which this Thumbnail is
+	 *				being created.
+	 *
+	 *   @param	thumbnailSize	The size in which the thumbnail is to be created
+	 *
+	 *   @deprecated
+	 *
 	 *
 	 **/
 	public Thumbnail ( SortableDefaultMutableTreeNode referringNode, int thumbnailSize ) {
-		//Tools.log("Thumbnail: constructor called for: " + referringNode.toString() );
-		this( thumbnailSize );
-		setNode( referringNode );
+		this( referringNode, thumbnailSize, ThumbnailCreationQueue.MEDIUM_PRIORITY );
 	}
 
 
@@ -228,7 +253,7 @@ public class Thumbnail extends JPanel
 			setVisible( false );
 		} else { //if ( node.getUserObject() instanceof PictureInfo ) {
 			ThumbnailCreationQueue.requestThumbnailCreation( 
-				this, ThumbnailCreationQueue.MEDIUM_PRIORITY );
+				this, priority );
 		} // else {
 			// setThumbnail( folderIcon );
 		//}

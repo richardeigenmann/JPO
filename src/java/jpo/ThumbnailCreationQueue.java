@@ -170,5 +170,13 @@ public class ThumbnailCreationQueue {
 		thumbQueue.remove( req );
 		return req;
 	}
+
+
+	/**
+	 * returns the number of Requests currently on the queue
+	 */
+	public static int countQueueRequests() {
+		return thumbQueue.size();
+	}
 			
 }

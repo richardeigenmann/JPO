@@ -2092,7 +2092,10 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 		SortableDefaultMutableTreeNode newNode = new SortableDefaultMutableTreeNode( newPictureInfo );	
 		this.add( newNode );
 		// This is not elegant but for now forces the creation of the Thumbnail image
-		Thumbnail t = new Thumbnail( newNode, Settings.thumbnailSize );
+		// It is 
+		// unfortunate that the queue will not recognize duplicates because it is working 
+		//  off Thumbnail objects instead of Picturefiles. This also makes urgent requests come too late
+		Thumbnail t = new Thumbnail( newNode, Settings.thumbnailSize, ThumbnailCreationQueue.LOW_PRIORITY );
 		this.setUnsavedUpdates();
 				
 		try {

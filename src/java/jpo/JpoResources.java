@@ -453,6 +453,7 @@ public class JpoResources extends ListResourceBundle {
 		{"CollectionGroupCountLabel", "Number of Groups: "},
 		{"CollectionPictureCountLabel", "Number of Pictures: "},
 		{"CollectionSizeJLabel", "Disk space used: "},
+		{"queCountJLabel", "Thumbnails on queue: "},
 		{"editProtectJCheckBoxLabel", "Protect Collection from Edits"},
 		
 		// Tools

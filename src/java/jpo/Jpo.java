@@ -165,6 +165,9 @@ public class Jpo extends JFrame
 		// does this give us any performance gains?? RE 7.6.2004
 		javax.imageio.ImageIO.setUseCache( false );
 		
+		// Activate OpenGL performance improvements
+		//System.setProperty("sun.java2d.opengl", "true");
+		
 		this.setTitle ( Settings.jpoResources.getString("ApplicationTitle"));
 			
 

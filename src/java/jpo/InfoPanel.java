@@ -1,15 +1,9 @@
 package jpo; 
  
 import javax.swing.*; 
-import javax.swing.border.*; 
+import javax.swing.Timer;
 import java.awt.event.*; 
 import java.awt.*; 
-
-import java.awt.image.*; 
-import javax.swing.tree.*; 
-import javax.swing.text.*; 
-import javax.swing.event.*; 
-import java.util.*; 
  
 /*
 InfoPanel.java:  a JScrollPane that shows information after selection events.
@@ -47,9 +41,20 @@ public class InfoPanel
 	/**
 	 *  StatisticsPanel
 	 */
-	private	CollectionPropertiesJPanel statsJPanel = new CollectionPropertiesJPanel();
+	private	final CollectionPropertiesJPanel statsJPanel = new CollectionPropertiesJPanel();
 
 
+	/**
+	 *  how often to update the statistics panel
+	 */
+	private static final int delay = 500; //milliseconds
+
+	/**
+	 *  A timer to fire off the refresh of the Thumbnail Queue display
+	 */
+	private Timer t;
+
+ 
  
 	/** 
 	 *   creates a new JScrollPane with an embedded JPanel and provides a set of  
@@ -65,10 +70,15 @@ public class InfoPanel
 		
 		//  set the amount by which the panel scrolls down when the user clicks the 
 		//  little down or up arrow in the scrollbar
-		getVerticalScrollBar().setUnitIncrement(80);
+		getVerticalScrollBar().setUnitIncrement( 80 );
 		
 		thumbnail = new Thumbnail( Settings.thumbnailSize );
-
+		final ActionListener taskPerformer = new ActionListener() {
+			public void actionPerformed( ActionEvent evt ) {
+				statsJPanel.updateQueueCount();
+		      	}
+		};
+		t = new Timer( delay, taskPerformer );
 	} 
  
  
@@ -76,20 +86,19 @@ public class InfoPanel
 
 	/**
 	 *   Invoked to tell that we should display something
-	 *   @param node 	The GroupNode to be displayed.
+	 *   @param node 	The Group or Picture node to be displayed.
 	 */
 	public void showInfo ( SortableDefaultMutableTreeNode node ) {
 		if ( node.getUserObject() instanceof GroupInfo ) {
-			statsJPanel.updateStats( node );
+			statsJPanel.updateStats( node );  // everything
 			setViewportView( statsJPanel ); 
+			t.start();  // updates the queue-count
 		} else {
 			thumbnail.setNode( node );
 			setViewportView( thumbnail ); 
-			//Tools.log ("InfoPanel.showInfo invoked with a PictureInfo node.");
-			return;
+			t.stop();
 		}
 	}
-
 
 }
 	
