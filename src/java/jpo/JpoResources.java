@@ -56,7 +56,7 @@ public class JpoResources extends ListResourceBundle {
 		
 		// Help About Dialog
 		{"HelpAboutText", "JPO Version 0.8.4 is a Java/Swing program\n" 
-			+ "written by Richard Eigenmann, Zürich, Switzerland\n" 
+			+ "written by Richard Eigenmann, Zrich, Switzerland\n" 
 			+ "Copyright 2000 - 2004\n"
 			+ "richard_eigenmann@compuserve.com\n"
 			+ "http://j-po.sourceforge.net\n"
@@ -303,9 +303,9 @@ public class JpoResources extends ListResourceBundle {
 		{"fileDeleteJMenuItem", "Delete"},
 		{"pictureRefreshJMenuItem", "Refresh Thumbnail"},
 		{"rotation", "Rotation"},
-		{"rotate90", "Rotate Right 90°"},
-		{"rotate180", "Rotate 180°"},
-		{"rotate270", "Rotate Left 270°"},
+		{"rotate90", "Rotate Right 90"},
+		{"rotate180", "Rotate 180"},
+		{"rotate270", "Rotate Left 270"},
 		{"rotate0", "No Rotation"},
 		{"userFunctionsJMenu", "User Function"},
 		{"pictureNodeRemove", "Remove Node"},

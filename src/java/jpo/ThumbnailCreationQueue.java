@@ -30,10 +30,22 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  **/
 public class ThumbnailCreationQueue {
 
+	/**
+	 *  The thumnail creation Queue.
+	 */
 	private static Vector thumbQueue = new Vector();
-	private static ThumbnailCreationThread thubnailFactory1 = new ThumbnailCreationThread();
-	private static ThumbnailCreationThread thubnailFactory2 = new ThumbnailCreationThread();
 	
+	/**
+	 *  The first ThumbnailCreationThread.
+	 */
+	private static ThumbnailCreationThread thubnailFactory1 = new ThumbnailCreationThread();
+	
+	/**
+	 *  The second ThumbnailCreationThread.
+	 */
+	private static ThumbnailCreationThread thubnailFactory2 = new ThumbnailCreationThread();
+
+		
 	/**
 	 *  a constant to indicate a high priority
 	 */
@@ -60,7 +72,6 @@ public class ThumbnailCreationQueue {
 	 *   An icon that indicates an image on the queue
 	 */
 	private static final ImageIcon queueIcon = new ImageIcon( Settings.cl.getResource( "jpo/images/queued_thumbnail.gif" ) );
-
 
 
 	/** 

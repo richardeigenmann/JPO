@@ -54,8 +54,6 @@ public class Thumbnail extends JPanel
 	 **/
 	public SortableDefaultMutableTreeNode referringNode;
 
-	
-
 	/**
 	 *  the desired size for the thumbnail
 	 **/
@@ -66,12 +64,10 @@ public class Thumbnail extends JPanel
 	 */
 	public DragSource dragSource = DragSource.getDefaultDragSource();
 
-
 	/**
 	 *   enables this component to be a dropTarget
 	 */
 	public DropTarget dropTarget;
-
 
 	/**
 	 *   The DragGestureListener for a thumbnail.
@@ -99,7 +95,7 @@ public class Thumbnail extends JPanel
 	/**
 	 *    The image that should be displayed
 	 */
-	private Image img;
+	private Image img = null;
 
 	/**
 	 *    The Image Observer of the image that should be displayed
@@ -238,8 +234,13 @@ public class Thumbnail extends JPanel
 		img = icon.getImage();
 		imgOb = icon.getImageObserver();
 		setVisible( true );
-	}	
+	}
 
+	public Image getThumbnail() {
+		return img;
+	}
+
+	
 
 	/**
 	 *   Overridden method to allow the setting of the size when not visible. This
@@ -486,12 +487,6 @@ public class Thumbnail extends JPanel
 
 
 
-
-
-
-
-
-
 	/**
 	 *  this method rotates the Thumbnail by the angle indicated. If the rotateAngle is 0 
 	 *  then the Image is not rotated but reloaded from the source.
@@ -662,8 +657,5 @@ public class Thumbnail extends JPanel
 		public void dragDropEnd ( DragSourceDropEvent event ) {   
 		}
 	}
-
-
-
 
 }

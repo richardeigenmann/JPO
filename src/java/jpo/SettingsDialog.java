@@ -525,9 +525,9 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 		c.gridwidth = 3;
 		c.fill = GridBagConstraints.NONE;
 		zapThumbnailsJButton.addActionListener( this );
-		zapThumbnailsJButton.setPreferredSize( new Dimension( 200, 25 ) );
-		zapThumbnailsJButton.setMinimumSize( new Dimension( 200, 25 ) ) ;
-		zapThumbnailsJButton.setMaximumSize( new Dimension( 200, 25 ) );
+		zapThumbnailsJButton.setPreferredSize( new Dimension( 250, 25 ) );
+		zapThumbnailsJButton.setMinimumSize( new Dimension( 250, 25 ) ) ;
+		zapThumbnailsJButton.setMaximumSize( new Dimension( 250, 25 ) );
 	        thumbnailSettingsJPanel.add ( zapThumbnailsJButton, c );
 
 
@@ -1066,7 +1066,7 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 				+ thumbnailDir
 				+ "\n"
 				+ Settings.jpoResources.getString("areYouSure"), 
-			Settings.jpoResources.getString("FileDelete"), 
+			Settings.jpoResources.getString("FileDeleteTitle"), 
 			JOptionPane.OK_CANCEL_OPTION);
 			
 		if ( option == 0 ) {

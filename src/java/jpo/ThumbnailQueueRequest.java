@@ -25,7 +25,13 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  *  with which the request was submitted
  */
 public class ThumbnailQueueRequest {
+
+	/**
+	 *  a referenc to the Thumbnail for which the request is to be performed.
+	 */
 	private Thumbnail thumb;
+	
+	
 	private int priority;
 	private boolean force;
 

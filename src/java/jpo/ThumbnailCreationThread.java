@@ -89,32 +89,30 @@ public class ThumbnailCreationThread extends Thread {
 			return;
 		}
 
-
-
 		PictureInfo pi = (PictureInfo) referringNode.getUserObject();
-		URL lowresUrl;
+		URL lowresUrl = null;
 		
-		try {
-			lowresUrl = pi.getLowresURL();
-		} catch ( MalformedURLException x ) {
-			Tools.log("Lowres URL was Malformed: " + pi.getLowresLocation() + "  Creating a new URL." );
-			pi.setLowresLocation( Tools.lowresFilename() );
+		if ( Settings.keepThumbnails ) {
 			try {
 				lowresUrl = pi.getLowresURL();
-			} catch ( MalformedURLException x1 ) {
-				Tools.log( "The system is generating broken URL's! Aborting Thumbnail creation!");
-				loadBrokenThumbnailImage( currentThumb );
+			} catch ( MalformedURLException x ) {
+				Tools.log("Lowres URL was Malformed: " + pi.getLowresLocation() + "  Creating a new URL." );
+				pi.setLowresLocation( Tools.lowresFilename() );
+				try {
+					lowresUrl = pi.getLowresURL();
+				} catch ( MalformedURLException x1 ) {
+					Tools.log( "The system is generating broken URL's! Aborting Thumbnail creation!");
+					loadBrokenThumbnailImage( currentThumb );
+					return;
+				}
+				createNewThumbnail( currentThumb );
 				return;
 			}
-			createNewThumbnail( currentThumb );
-			return;
+			// if we get here we have a good lowres URL
 		}
-		// if we get here we have a good lowres URL
-		
-	
 
 
-		URL highresUrl;
+		URL highresUrl = null;
 		try {
 			highresUrl = pi.getHighresURL();
 		} catch ( MalformedURLException x ) {
@@ -122,7 +120,6 @@ public class ThumbnailCreationThread extends Thread {
 			loadBrokenThumbnailImage( currentThumb );
 			return;
 		}
-			
 
 		// test if highres is readable
 		try {
@@ -143,36 +140,39 @@ public class ThumbnailCreationThread extends Thread {
 
 
 		// test if lowres is readable
-		try {
-			InputStream lowresStream = lowresUrl.openStream();
-			lowresStream.close();
-		} catch  ( IOException x ) {
-			//if we can't open the stream we should re-create the image
-			createNewThumbnail( currentThumb );
-			return;
-		}
-
-		// is lowres up to date?		
-		try {
-			URLConnection lowresUC = lowresUrl.openConnection();
-			URLConnection highresUC = highresUrl.openConnection();
-			long lowresModDate = lowresUC.getLastModified();
-			long highresModDate = highresUC.getLastModified();
-			lowresUC.getInputStream().close();
-			highresUC.getInputStream().close();
-			
-			if ( lowresModDate < highresModDate) {
-				Tools.log( "Thumbnail out of date: " + pi.getLowresLocation() );
+		if ( Settings.keepThumbnails ) {
+			try {
+				InputStream lowresStream = lowresUrl.openStream();
+				lowresStream.close();
+			} catch  ( IOException x ) {
+				Tools.log("ThumbnailCreationThread.createThumbnail: is requesting the creation of a numbnail because if we can't open the lowres stream we should re-create the image.");
 				createNewThumbnail( currentThumb );
 				return;
 			}
-		} catch  ( IOException x ) {
-			//if we can't open the stream we should re-create the image
+		
+			// is lowres up to date?		
+			try {
+				URLConnection lowresUC = lowresUrl.openConnection();
+				URLConnection highresUC = highresUrl.openConnection();
+				long lowresModDate = lowresUC.getLastModified();
+				long highresModDate = highresUC.getLastModified();
+				lowresUC.getInputStream().close();
+				highresUC.getInputStream().close();
+			
+				if ( lowresModDate < highresModDate) {
+					Tools.log( "ThumbnailCreationThread.createThumbnail: is requesting the creation of a numbnail because Thumbnail is out of date: " + pi.getLowresLocation() );
+					createNewThumbnail( currentThumb );
+					return;
+				}
+			} catch  ( IOException x ) {
+				//if we can't open the stream we should re-create the image
+				createNewThumbnail( currentThumb );
+				return;
+			}
+		} else {
 			createNewThumbnail( currentThumb );
 			return;
 		}
-			
-
 
 		// Thumbnail up to date is size ok?
 		ImageIcon icon = new ImageIcon( lowresUrl );
@@ -184,9 +184,9 @@ public class ThumbnailCreationThread extends Thread {
 			createNewThumbnail( currentThumb );
 		}
 
-		return;				
+		return;
 	}
-	
+
 
 	/**
 	 *  creates a thumbnail by loading the highres image and scaling it down
@@ -198,7 +198,7 @@ public class ThumbnailCreationThread extends Thread {
 		}
 		
 		SortableDefaultMutableTreeNode referringNode = currentThumb.referringNode;
-		Tools.log("Creating Thumbnail " + ((PictureInfo) referringNode.getUserObject()).getLowresLocation() + " from " + ((PictureInfo) referringNode.getUserObject()).getHighresLocation());
+		Tools.log("ThumbnailCreationThread.createNewThumbnail: Creating Thumbnail " + ((PictureInfo) referringNode.getUserObject()).getLowresLocation() + " from " + ((PictureInfo) referringNode.getUserObject()).getHighresLocation());
 		try {
 			// create a new thumbnail from the highres
 			ScalablePicture currentPicture = new ScalablePicture();
@@ -258,6 +258,7 @@ public class ThumbnailCreationThread extends Thread {
 					}
 				}
 				currentPicture.writeScaledJpg( pi.getLowresFile() );
+				pi.sendThumbnailChangedEvent();
 			}
 
 			ImageIcon icon = new ImageIcon( currentPicture.getScaledPicture() );
@@ -267,7 +268,6 @@ public class ThumbnailCreationThread extends Thread {
 			ImageIcon cleanCache = new ImageIcon( pi.getLowresURLOrNull() );
 			cleanCache.getImage().flush(); 
 			
-			pi.sendThumbnailChangedEvent();
 			//currentPicture = null;
 		} catch ( IOException x ) {
 			loadBrokenThumbnailImage( currentThumb );
@@ -287,7 +287,6 @@ public class ThumbnailCreationThread extends Thread {
 	 *  image is available
 	 */
 	private static void loadBrokenThumbnailImage( Thumbnail targetThumbnail ) {
-
 		targetThumbnail.setThumbnail( brokenThumbnailPicture );
 	}
 
