@@ -1,6 +1,5 @@
 package jpo;
 
-
 /*
 ScaleThread.java:  class that calls scalePicture methods of a ScalablePicture
 
@@ -22,33 +21,35 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 
 
 /**
- *  a thread object that calls the ScalablePicture scalePicture method
+ *  a Thread object that is called from a ScalablePicture 
+ *  and calls it back on teh scalePicture method from a new Thread.
  */
 
 public class ScaleThread extends Thread {
 
-	private ScalablePicture sclPic;
+
+	/**
+	 *  The reference to the scalablepicture on which to invoke the
+	 *  thread.	
+	 */
+	private final ScalablePicture sclPic;
 
 
 	/**
-	 *  @param sclPic	The picture we are doing this for
+	 *  Constructor for the thread
+	 *  @param sclPic The picture we are doing this for
 	 */
-	ScaleThread ( ScalablePicture sclPic ) {
-		//Tools.log("Constructing ScaleThread object");
+	public ScaleThread ( ScalablePicture sclPic ) {
 		this.sclPic = sclPic;
 	}
 		
 	
 	/**
-	 *  method that is invoked by the thread to do things asynchroneousely
+	 *  method that is invoked by the thread to do 
+	 *  things asynchroneousely
 	 */
 	public void run() {
 		sclPic.scalePicture();
-	}
-
-
-	public void finalize() {
-		//Tools.log( "ScaleThread.finalize: " + sclPic.imageUrl.toString() );	
 	}
 
 }
