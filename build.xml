@@ -211,7 +211,7 @@
 		password="${env.SOURCFORGEPWD}"
 		trust="yes"
 	/>
-   	<scp file="libs/email.jar" 
+   	<scp file="libs/mail.jar" 
 		todir="${env.SOURCFORGEUSER}@shell.sourceforge.net:/home/groups/j/j-/j-po/htdocs"
 		password="${env.SOURCFORGEPWD}"
 		trust="yes"
