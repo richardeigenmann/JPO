@@ -229,8 +229,6 @@ public class Jpo extends JFrame
 				thumbnailJScrollPane.showGroup( Settings.top );
 			}
 		}
-		Settings.top.setUnsavedUpdates( false );
-
 
 
 		/**
@@ -413,7 +411,7 @@ public class Jpo extends JFrame
 	public void requestFileLoad() {
 		if ( Settings.top.checkUnsavedChanges() ) return;
 		Settings.top.fileLoad();
-		Settings.top.setUnsavedUpdates( false );
+		//Settings.top.setUnsavedUpdates( false );
 		positionToNode( Settings.top );
 	}
 

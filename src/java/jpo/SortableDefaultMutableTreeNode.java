@@ -326,7 +326,7 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 	 *   
 	 */
 	public void setUnsavedUpdates() {
-		getRootNode().unsavedUpdates = true;
+		setUnsavedUpdates( true );
 	}
 
 
@@ -337,6 +337,7 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 	 *   @see #unsavedUpdates
 	 */
 	public void setUnsavedUpdates( boolean b ) {
+		//Tools.log("SDMTN.setUnsavedUpdates inkoked. Setting to: " + Boolean.toString(b));
 		getRootNode().unsavedUpdates = b;
 	}
 
@@ -1327,8 +1328,12 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 
 
 	/**
-	 *   Overriden method which will do the default befaviour and then sends a notification to 
-	 *   the Tree Model.
+	 *   This method adds a new node to the data model of the tree. It is the overriden add 
+	 *   method which will first do the default befaviour and then send a notification to 
+	 *   the Tree Model if model updates are being requested. Likewise the unsaved changes
+	 *   of the collection are only being updated when model updates are not being reported.
+	 *   This allows the loading of collections (which of course massively change the collection
+	 *   in memory) to report nothing changed.
 	 */
 	public void add ( SortableDefaultMutableTreeNode newNode ) {
 		//Tools.log( "SDMTN.add was called for node: " + newNode.toString() );
@@ -1336,8 +1341,8 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 		if ( getSendModelUpdates() ) {
 			int index = this.getIndex( newNode );
 			getTreeModel().nodesWereInserted( this, new int[] { index } );
+			newNode.setUnsavedUpdates();
 		}
-		newNode.setUnsavedUpdates();
 	}
 
 
