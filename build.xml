@@ -1,0 +1,116 @@
+<?xml version="1.0"?>
+<project name="Java Picture Organizer" default="usage">
+
+    <property name="app.main.package" value="jpo"/>
+    <property name="app.main.class" value="${app.main.package}.Jpo"/>
+
+    <property name="build.dir" value="build"/>
+    <property name="build.base.classes.dir" value="${build.dir}/classes"/>
+    <property name="build.images.dir" value="${build.base.classes.dir}/${app.main.package}/images"/>
+<!--    <property name="build.dtd.dir" value="${build.base.classes.dir}/dtd"/> -->
+    <property name="build.dtd.dir" value="${build.base.classes.dir}/${app.main.package}"/>
+    <property name="build.docs.dir" value="${build.dir}/docs"/>
+    <property name="build.api.dir" value="${build.dir}/api"/>
+
+    <property name="libs.dir" value="libs"/>
+    <property name="src.dir" value="src"/>
+    <property name="src.java.dir" value="${src.dir}/java"/>
+    <property name="src.images.dir" value="${src.dir}/images"/>
+    <property name="src.docs.dir" value="${src.dir}/docsrc"/>
+    <property name="src.dtd.dir" value="${src.dir}/dtd"/>
+
+    <path id="base.path">
+        <pathelement location="${build.base.classes.dir}"/>
+        <fileset dir="${libs.dir}">
+            <include name="*.jar"/>
+        </fileset>
+    </path>
+
+    <target name="prepare">
+        <mkdir dir="${build.dir}"/>
+        <mkdir dir="${build.base.classes.dir}"/>
+        <mkdir dir="${build.docs.dir}"/>
+        <mkdir dir="${build.api.dir}"/>
+    </target>
+
+    <target name="clean" description="Deletes the generated files" >
+        <delete dir="${build.dir}"/>
+    </target>
+
+    <target name="compile"
+            depends="prepare"
+            description="Compiles the java files">
+        <javac destdir="${build.base.classes.dir}"
+	       debug="on"
+	       optimize="off"
+	       verbose="off"
+	       memoryMaximumSize="500m"
+	       fork="yes"
+	       listfiles="yes"
+	       compiler="modern">
+            <src path="${src.java.dir}"/>
+            <classpath refid="base.path"/>
+        </javac>
+        <copy todir="${build.images.dir}">
+            <fileset dir="${src.images.dir}">
+                <include name="**/*.gif"/>
+            </fileset>
+        </copy>
+        <copy todir="${build.images.dir}">
+            <fileset dir="${src.images.dir}">
+                <include name="**/*.jpg"/>
+            </fileset>
+        </copy>
+        <copy todir="${build.dtd.dir}">
+            <fileset dir="${src.dtd.dir}">
+                <include name="**/*.dtd"/>
+            </fileset>
+        </copy>
+    </target>
+
+    <target name="rebuild"
+            depends="clean, compile"
+            description="Cleans and recompiles the project"/>
+
+    <target name="document"
+            description="Creates the JavaDoc of the project">
+        <copy todir="${build.docs.dir}">
+            <fileset dir="${src.docs.dir}">
+                <include name="**/*.png"/>
+            </fileset>
+        </copy>
+        <javadoc destdir="${build.docs.dir}"
+	         packagenames="jpo.*"
+		 Overview="src/docsrc/Overview.html"
+		 Doctitle="JPO application documentation"
+		 Windowtitle="JPO application documentation"
+		 Header="JPO application documentation"
+		 Bottom="&lt;font size=&quot;-1&quot;&gt;Copyright (c) 2002 - 2004 by Richard Eigenmann &lt;a href=&quot;http://ourworld.compuserve.com/richard_eigenmann&quot;&gt;ourworld.compuserve.com/richard_eigenmann&lt;/a&gt;&lt;/font&gt;"
+		 author="true"
+        	 version="true"
+                 use="true"
+		 private="true"
+		 source="1.4"
+		 classpath="libs/metadata-extractor-2.2.jar; libs/jnlp.jar" 
+		 >
+            <sourcepath path="${src.java.dir}" />
+	    <link href="http://java.sun.com/j2se/1.4.2/docs/api/" />
+        </javadoc>
+    </target>
+	    
+
+    <target name="go"
+            depends="compile, run"
+            description="Compile and run the project"/>
+
+
+
+    <target name="run" description="Runs the program">
+        <java classname="${app.main.class}"
+              fork="yes"
+	      maxmemory="1000m" >
+            <classpath refid="base.path"/>
+        </java>
+    </target>
+
+</project>
