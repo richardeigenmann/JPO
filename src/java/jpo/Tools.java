@@ -385,6 +385,12 @@ public class Tools {
 					//Tools.log ( "Another picture node was using the same lowres URL. Node changed: " + ( (PictureInfo) nodeObject ).getDescription() );
 					((PictureInfo) nodeObject ).setLowresLocation( targetFile.toURI().toURL() );
 				}
+			} else {
+				if ( ( ! node.isRoot() )
+				  && ( (GroupInfo) nodeObject ).getLowresFile().equals( sourceFile ) ) {
+					//Tools.log ( "Another group node was using the same lowres URL. Node changed: " + ( (PictureInfo) nodeObject ).getDescription() );
+					((GroupInfo) nodeObject ).setLowresLocation( targetFile.toURI().toURL() );
+				}
 			}
 		}
 		return true;

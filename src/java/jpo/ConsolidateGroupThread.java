@@ -36,6 +36,11 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 public class ConsolidateGroupThread extends Thread {
 
 
+	/**
+	 *  temporary variable to hold the userObject from the node of the data model
+	 */
+	private Object o;
+
 
 	/**
 	 *  temporary variable to hold the group information from the user object of the node
@@ -47,6 +52,24 @@ public class ConsolidateGroupThread extends Thread {
 	 *  temporary variable to hold the picture information from the user object of the node
 	 */
 	private PictureInfo p;
+
+
+	/** 
+	 *  temp var
+	 */
+	private File oldFileParent;
+
+
+	/** 
+	 *  temp var
+	 */
+	private URL oldFileURL;
+
+	/** 
+	 *  temp var
+	 */
+	private String oldFile;
+
 
 	/**
 	 *  temporary node used in the Enumeration of the kids of the Group
@@ -98,7 +121,7 @@ public class ConsolidateGroupThread extends Thread {
 	 *  @param recurseGroups	Flag indicating subgroups should be included
 	 *  @param moveLowres
 	 */
-	ConsolidateGroupThread ( File targetDirectory, SortableDefaultMutableTreeNode startNode, boolean recurseGroups, boolean moveLowres ) {
+	public ConsolidateGroupThread ( File targetDirectory, SortableDefaultMutableTreeNode startNode, boolean recurseGroups, boolean moveLowres ) {
 		this.targetDirectory = targetDirectory;
 		this.startNode = startNode;
 		this.recurseGroups = recurseGroups;
@@ -133,6 +156,17 @@ public class ConsolidateGroupThread extends Thread {
 	 */
 	private boolean enumerateGroup ( SortableDefaultMutableTreeNode groupNode )  {
 		g = (GroupInfo) groupNode.getUserObject();
+		if ( moveLowres  && ( ! groupNode.isRoot() ) ) {
+			if ( ! moveLowresPicture ( groupNode ) ) {
+				JOptionPane.showMessageDialog(
+					Settings.anchorFrame, 
+					Settings.jpoResources.getString("ConsolidateFailure"), 
+					Settings.jpoResources.getString("genericError"), 
+					JOptionPane.ERROR_MESSAGE);
+				return false;
+			}
+		}
+				
 		Enumeration kids = groupNode.children();
 		while ( kids.hasMoreElements() && ( ! progGui.interrupt ) ) {
 			n = (SortableDefaultMutableTreeNode) kids.nextElement();
@@ -217,30 +251,37 @@ public class ConsolidateGroupThread extends Thread {
 	 *   @return 	True if the move was successfull or False if it was not.
 	 */
 	private boolean moveLowresPicture ( SortableDefaultMutableTreeNode n ) {
-		//Tools.log("ConsolidateGroupThread.moveLowresPicture: invoked");
-		p = (PictureInfo) n.getUserObject();
 		try {		
-			if ( ! Tools.isUrlFile ( p.getLowresURL () ) ) {
-				Tools.log ( "ConsolidateGroupThread.moveLowresPicture: Not a \"file:\" URL. Ignoring: " + p.getLowresLocation() );
+			o = n.getUserObject();
+			if ( o instanceof GroupInfo ) {
+				oldFileURL = ( (GroupInfo) o ).getLowresURL ();
+				oldFile = ( (GroupInfo) o ).getLowresFilename();
+				oldFileParent = ( (GroupInfo) o ).getLowresFile().getParentFile();
+			} else {
+				oldFileURL = ( (PictureInfo) o ).getLowresURL ();
+				oldFile = ( (PictureInfo) o ).getLowresFilename();
+				oldFileParent = ( (PictureInfo) o ).getLowresFile().getParentFile();
+			}
+		
+
+			if ( ! Tools.isUrlFile ( oldFileURL ) ) {
+				Tools.log ( "ConsolidateGroupThread.moveLowresPicture: Not a \"file:\" URL. Ignoring: " + oldFileURL.toString() );
 				return true;
 			}
-			URL oldFile = p.getLowresURL ();
-			URL newFile = Tools.inventPicURL( targetLowresDirectory, p.getLowresFilename() );
-			File oldFileParent = p.getLowresFile().getParentFile();
+			URL newFile = Tools.inventPicURL( targetLowresDirectory, oldFile );
 			if ( ( oldFileParent != null ) && ( oldFileParent.equals( targetLowresDirectory ) ) ) {
-				Tools.log("ConsolidateGroupThread.moveLowresPicture: path is identical (" + oldFileParent.toString() + "==" + p.getLowresFile().getParentFile().toString() + ") . Not Moving Picture: " + p.getHighresLocation() );
+				Tools.log("ConsolidateGroupThread.moveLowresPicture: path is identical " + oldFileParent.toString() + " not moving picture." );
 				return true;
 			}
 			
-			if ( Tools.movePicture ( oldFile, newFile ) ) {
-				//p.setLowresLocation ( newFile.toString() );
+			if ( Tools.movePicture ( oldFileURL, newFile ) ) {
 				return true;
 			} else {
 				Tools.log("ConsolidateGroupThread.moveLowresPicture: failed to move " + oldFile.toString() + " to " + newFile.toString());
 				return false;
 			}
 		} catch ( IOException x ) {
-			Tools.log ( "Got an IOException: " + x + "\nAborting the move of this image.");
+			Tools.log ( "ConsolidateGroupThread.moveLowresPicture: Got an IOException: " + x.getMessage() + " aborting the move of this image.");
 			return false;
 		}
 	}
