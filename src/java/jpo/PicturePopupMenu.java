@@ -318,7 +318,7 @@ public class PicturePopupMenu extends JPopupMenu
 			});
 			rotate0JMenuItem.addActionListener(  new ActionListener() {
 				public void actionPerformed( ActionEvent e ) {
-					popupNode.rotatePicture( 0 );
+					popupNode.setPictureRotation( 0 );
 				}
 			});
 			rotationJMenu.add( rotate90JMenuItem );

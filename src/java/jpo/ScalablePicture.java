@@ -197,7 +197,13 @@ public class ScalablePicture implements SourcePictureListener {
 		Tools.log("ScalablePicture.loadAndScalePictureInThread: checking if picture " + imageUrl + " is already being loaded.");
 		if ( ( sourcePicture != null ) && ( sourcePicture.getUrl().equals( imageUrl ) ) ) {
 			Tools.log("ScalablePicture.loadAndScalePictureInThread: the SourcePicture is already loading the sourcePictureimage");
-			alreadyLoading = true;
+			if ( sourcePicture.getRotation() == rotation ) {
+				alreadyLoading = true;
+				Tools.log ("ScalablePicture.loadAndScalePictureInThread: Picture was even rotated to the correct angle!");
+			} else {
+				alreadyLoading = false;
+				Tools.log ("ScalablePicture.loadAndScalePictureInThread: Picture was in cache but with wrong rotation. Forcing reload.");
+			}
 		} else if ( PictureCache.isInCache( imageUrl ) ) {
 			// in case the old image has a listener connected remove it
 			//  fist time round the sourcePicture is still null therefore the if.

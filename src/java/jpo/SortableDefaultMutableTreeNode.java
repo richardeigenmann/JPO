@@ -2150,12 +2150,26 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 	public void rotatePicture( int angle ) {
 		if ( ! ( this.getUserObject() instanceof PictureInfo ) ) {
 			Tools.log("SDMTN.rotateImage called on a node that doesn't contain a picture! Ignoring request.");
+			return;
+		}
+		PictureInfo pi = (PictureInfo) this.getUserObject();
+		setPictureRotation( (int) ( pi.getRotation() + angle ) % 360 );
+	}
+
+	/**
+	 *  this method can be called to rotate the image of the node.
+	 */
+	public void setPictureRotation( int angle ) {
+		if ( ! ( this.getUserObject() instanceof PictureInfo ) ) {
+			Tools.log("SDMTN.setPictureRotation called on a node that doesn't contain a picture! Ignoring request.");
+			return;
 		}
 		PictureInfo pi = (PictureInfo) this.getUserObject();
 		pi.setRotation( angle );
 		setUnsavedUpdates();
 		this.refreshThumbnail();
 	}
+
 
 	
 }
