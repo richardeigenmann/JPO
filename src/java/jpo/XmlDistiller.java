@@ -115,11 +115,11 @@ public class XmlDistiller extends Thread {
 				lowresTargetDir.mkdirs();
 			}
 
-					
-			out = new BufferedWriter(new FileWriter(outputFile));			
+			FileWriter fw = new FileWriter( outputFile );
+			out = new BufferedWriter( fw );			
 
 			// header			
-			out.write("<?xml version='1.0' encoding='ISO-8859-1'?>");
+			out.write("<?xml version='1.0' encoding='" + fw.getEncoding() + "'?>");
 			out.newLine();
 			out.write("<!DOCTYPE collection SYSTEM \"" + Settings.COLLECTION_DTD + "\">");
 			out.newLine();
@@ -178,7 +178,15 @@ public class XmlDistiller extends Thread {
 	 */
 	private void enumerateGroup (SortableDefaultMutableTreeNode groupNode) throws IOException {
 		g = (GroupInfo) groupNode.getUserObject();
-		if (groupNode == startNode) 
+
+		if ( copyPics ) {
+			File targetLowresFile = Tools.inventPicFilename( lowresTargetDir, p.getLowresFilename() );
+			Tools.copyPicture( g.getLowresURL (), targetLowresFile );
+			g.dumpToXml ( out, targetLowresFile.toURI().toURL().toString(), groupNode == startNode, groupNode.getAllowEdits() );
+		} else {
+			g.dumpToXml ( out, groupNode == startNode, groupNode.getAllowEdits() );
+		}
+/*		if (groupNode == startNode) 
 			out.write("<collection collection_name=\"" 
 				+ Tools.escapeXML( g.getGroupName() )
 				+ "\" collection_created=\"" 
@@ -188,7 +196,7 @@ public class XmlDistiller extends Thread {
 				+ ">");
 		else 
 			out.write("<group group_name=\"" + Tools.escapeXML( g.getGroupName() ) + "\">");
-		out.newLine();
+		out.newLine();*/
 		
 
 		Enumeration kids = groupNode.children();
@@ -201,11 +209,12 @@ public class XmlDistiller extends Thread {
 			}
 		}
 		
-		if (groupNode != startNode) 
+		g.endGroupXML( out, groupNode == startNode );
+/*		if (groupNode != startNode) 
 			out.write("</group>");
 		//else
 			//out.write("</collection>");
-		out.newLine();
+		out.newLine();*/
 	}	
 
 

@@ -374,6 +374,18 @@ public class CleverJTree extends JTree
 	 *  requests the group to be shown.
 	 *  @see  GroupPopupInterface
 	 */
+	public void requestShowGroup() {
+		setSelectedNode( popupNode );
+		if ( associatedThumbnailJScrollPane != null ) {
+			associatedThumbnailJScrollPane.showGroup( popupNode );
+		}
+	}
+
+
+	/**
+	 *  requests the pictures to be shown.
+	 *  @see  GroupPopupInterface
+	 */
 	public void requestSlideshow() {
 		SortableDefaultMutableTreeNode firstPicNode = popupNode.findFirstPicture();
 		if ( firstPicNode != null ) 

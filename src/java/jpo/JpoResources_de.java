@@ -260,9 +260,11 @@ public class JpoResources_de extends ListResourceBundle {
 		{"groupDescriptionLabel", "Gruppenbeschreibung:"},
 		
 		// GroupPopupMenu
-		{"groupSlideshowJMenuItemLabel", "Bilder anzeigen"},
+		{"groupShowJMenuItem", "Gruppe zeigen"},
+		{"groupSlideshowJMenuItem", "Bilder zeigen"},
 		{"groupFindJMenuItemLabel", "Suchen"},
-		{"groupEditJMenuItemLabel", "Umbenennen"},
+		{"groupEditJMenuItem", "Umbenennen"},
+		{"groupRefreshJMenuItem", "Icon regenerieren"},
 		{"groupTableJMenuItemLabel", "Als Tabelle bearbeiten"},
 		{"addGroupJMenuLabel", "Hinzufügen"},
 		{"addNewGroupJMenuItemLabel", "Neue Gruppe"},

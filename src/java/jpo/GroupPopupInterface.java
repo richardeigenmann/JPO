@@ -35,6 +35,12 @@ public interface GroupPopupInterface {
 	 * the implementing class must trap and do something when the user wants to
 	 * show the Group.
 	 */
+	public void requestShowGroup();
+
+	/**
+	 * the implementing class must trap and do something when the user wants to
+	 * show the Pictures.
+	 */
 	public void requestSlideshow();
 
 

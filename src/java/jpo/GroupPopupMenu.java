@@ -39,10 +39,6 @@ class GroupPopupMenu extends JPopupMenu
 	private JMenuItem groupFindJMenuItem  = new JMenuItem( Settings.jpoResources.getString("groupFindJMenuItemLabel") ); 
 
 
-	/** 
-	 *  menu item that allows the user to edit the group description
-	 **/
-	private JMenuItem groupEditJMenuItem = new JMenuItem( Settings.jpoResources.getString("groupEditJMenuItemLabel") ); 
 
 	/** 
 	 *  menu item that allows the user to edit the group data as a Table
@@ -83,12 +79,6 @@ class GroupPopupMenu extends JPopupMenu
 		= new JMenuItem( Settings.jpoResources.getString("groupExportJarMenuText") );
 
 
-	/** 
-	 *  menu item that allows the user to rejuest the group to be shown. 
-	 * 
-	 **/
-	private JMenuItem groupSlideshowJMenuItem
-		= new JMenuItem( Settings.jpoResources.getString( "groupSlideshowJMenuItemLabel" ) );
 
 
 	/**
@@ -269,11 +259,26 @@ class GroupPopupMenu extends JPopupMenu
 	 *   @param  caller   the caller that will get the requests to do things
 	 *   @param  node 	the node for which the popup menu is being created.
 	 */
-	public GroupPopupMenu ( GroupPopupInterface caller, SortableDefaultMutableTreeNode node ) {
+	public GroupPopupMenu ( final GroupPopupInterface caller, final SortableDefaultMutableTreeNode node ) {
 		this.caller = caller;
 		this.popupNode = node;
 
-		groupSlideshowJMenuItem.addActionListener( this );
+		JMenuItem groupShowJMenuItem
+			= new JMenuItem( Settings.jpoResources.getString( "groupShowJMenuItem" ) );
+		groupShowJMenuItem.addActionListener( new ActionListener() {
+			public void actionPerformed( ActionEvent e ) {
+				caller.requestShowGroup();				
+			}
+		});
+		add( groupShowJMenuItem );
+
+		JMenuItem groupSlideshowJMenuItem
+			= new JMenuItem( Settings.jpoResources.getString( "groupSlideshowJMenuItem" ) );
+		groupSlideshowJMenuItem.addActionListener( new ActionListener() {
+			public void actionPerformed( ActionEvent e ) {
+				caller.requestSlideshow();				
+			}
+		});
 		add( groupSlideshowJMenuItem );
 
 		groupFindJMenuItem.addActionListener( this );
@@ -283,8 +288,23 @@ class GroupPopupMenu extends JPopupMenu
 
 		if ( Settings.top.getAllowEdits() ) {
 
-			groupEditJMenuItem.addActionListener( this );
-			add( groupEditJMenuItem) ;
+			JMenuItem groupEditJMenuItem 
+				= new JMenuItem( Settings.jpoResources.getString( "groupEditJMenuItem" ) ); 
+			groupEditJMenuItem.addActionListener( new ActionListener() {
+				public void actionPerformed( ActionEvent e ) {
+					caller.requestEditGroupNode();				
+				}
+			});
+			add( groupEditJMenuItem ) ;
+
+			JMenuItem groupRefreshJMenuItem 
+				= new JMenuItem( Settings.jpoResources.getString( "groupRefreshJMenuItem" ) ); 
+			groupRefreshJMenuItem.addActionListener( new ActionListener() {
+				public void actionPerformed( ActionEvent e ) {
+					node.refreshThumbnail();				
+				}
+			});
+			add( groupRefreshJMenuItem ) ;
 
 			addSeparator();
 
@@ -429,14 +449,8 @@ class GroupPopupMenu extends JPopupMenu
 	public void actionPerformed( ActionEvent e ) {
 		// Group popup menu				
 
-		if ( e.getSource() == groupSlideshowJMenuItem )
-			caller.requestSlideshow();				
-
-		else if ( e.getSource() == groupFindJMenuItem )
+		if ( e.getSource() == groupFindJMenuItem )
 			caller.requestFind();
-			
-		else if ( e.getSource() == groupEditJMenuItem )
-			caller.requestEditGroupNode();				
 
 		else if ( e.getSource() == groupTableJMenuItem )
 			caller.requestEditGroupTable();

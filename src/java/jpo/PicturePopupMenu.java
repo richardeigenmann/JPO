@@ -34,12 +34,6 @@ public class PicturePopupMenu extends JPopupMenu
 				   UserFunctionsChangeListener {
 
 
-	/** 
-	 *  menu item that brings up a PictureViewer.
-	 * 
-	 **/
-	private JMenuItem pictureShowJMenuItem
-		= new JMenuItem( Settings.jpoResources.getString("pictureShowJMenuItemLabel") );
 
 
 	/** 
@@ -278,6 +272,8 @@ public class PicturePopupMenu extends JPopupMenu
 		Settings.addCopyLocationsChangeListener( this );
 		Settings.addUserFunctionsChangeListener( this );
 		
+		JMenuItem pictureShowJMenuItem
+			= new JMenuItem( Settings.jpoResources.getString("pictureShowJMenuItemLabel") );
 		pictureShowJMenuItem.addActionListener( new ActionListener() {
 			public void actionPerformed( ActionEvent e ) {
 				popupNode.showLargePicture();

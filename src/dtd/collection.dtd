@@ -5,11 +5,13 @@
 	collection_name  CDATA  #REQUIRED
 	collection_created  CDATA  #REQUIRED
 	collection_protected  CDATA  #REQUIRED
+	collection_icon CDATA ""
 >
 
 <!ELEMENT group (picture* | group* )*>
 <!ATTLIST group
 	group_name  CDATA  #REQUIRED
+	group_icon CDATA ""
 >
 
 

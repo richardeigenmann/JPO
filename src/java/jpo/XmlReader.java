@@ -49,7 +49,12 @@ public class XmlReader extends DefaultHandler {
 	 *	through the parser.
 	 */
 	private int interpretChars;
-	 
+
+
+	/**
+	 *  Temporary variable to hold the GroupInfo of the group being created.
+	 */
+	private GroupInfo gi;	 
 
 	/**
 	 *   Constructor an XML parser that can read our picture list XML files.
@@ -124,16 +129,17 @@ public class XmlReader extends DefaultHandler {
                              String qName, // qualified name
                              Attributes attrs)
 	throws SAXException {
-		if ((qName == "collection") && (attrs != null) ) {
-			// set the top node to the name
-			currentGroup.setUserObject(new GroupInfo(attrs.getValue("collection_name")));
+		if ( ( qName == "collection" ) && ( attrs != null ) ) {
+			gi = new GroupInfo( attrs.getValue( "collection_name" ) );
+			gi.setLowresLocation( attrs.getValue( "collection_icon" ) );
+			currentGroup.setUserObject( gi );
 			currentGroup.setAllowEdits( attrs.getValue( "collection_protected" ).equals("No") );
-		} else if (qName == "group") {
+		} else if ( qName == "group" ) {
+			gi = new GroupInfo( attrs.getValue("group_name") );
+			gi.setLowresLocation( attrs.getValue( "group_icon" ) );
 			SortableDefaultMutableTreeNode nextCurrentGroup = 
-				new SortableDefaultMutableTreeNode(
-					new GroupInfo( attrs.getValue("group_name") ) );
-//			if (! currentGroup.isRoot())  // if root node replace it.
-			currentGroup.add(nextCurrentGroup);
+				new SortableDefaultMutableTreeNode( gi );
+			currentGroup.add( nextCurrentGroup );
 			currentGroup = nextCurrentGroup;
 		} else if (qName == "picture") {
 			currentPicture = new SortableDefaultMutableTreeNode( new PictureInfo() );

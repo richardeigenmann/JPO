@@ -2133,9 +2133,9 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 	 *  event.
 	 */
 	public void refreshThumbnail() {
-		if ( ! ( this.getUserObject() instanceof PictureInfo ) ) {
+		/*if ( ! ( this.getUserObject() instanceof PictureInfo ) ) {
 			Tools.log("SDMTN.refresh Thumbnail called on a node that doesn't contain a picture! Ignoring request.");
-		}
+		}*/
 		Thumbnail t = new Thumbnail ( this, Settings.thumbnailSize );
 		ThumbnailCreationQueue.forceThumbnailCreation( t, ThumbnailCreationQueue.HIGH_PRIORITY );
 	}

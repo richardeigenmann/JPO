@@ -43,7 +43,8 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 public class Thumbnail extends JPanel
 	implements DropTargetListener,
-		PictureInfoChangeListener {
+		PictureInfoChangeListener, 
+		TreeModelListener {
 
 
 
@@ -82,11 +83,15 @@ public class Thumbnail extends JPanel
 	private DragSourceListener myDragSourceListener = new ThumbnailDragSourceListener();
 
 	/**
-	 *  The icon being displayed for the groups in the Thumbnail Pane. 
-	 *  The filename is jpo/images/icon_folder.gif
+	 *  The icon to superimpose on the picture if the highres picture is not available
 	 */
-	protected static final ImageIcon folderIcon = new ImageIcon( Settings.cl.getResource( "jpo/images/icon_folder.gif" ) ); 
+	protected static final ImageIcon offlineIcon = new ImageIcon( Settings.cl.getResource( "jpo/images/icon_offline.gif" ) ); 
+	
 
+	/**
+	 *  This flag indicates whether the offline icon should be drawn or not.
+	 */
+	public boolean drawOfflineIcon = false;
 
 	/**
 	 *  a reference to the ThumbnailJScrollPane where group Info objects can refer their mouseclicks back to.
@@ -134,6 +139,10 @@ public class Thumbnail extends JPanel
 		setBackground( UNSELECTED_COLOR );
 		setBorder( BorderFactory.createEmptyBorder(0,0,0,0) );
 		addMouseListener( new ThumbnailMouseAdapter() );
+
+		// attach the Thumbnail to the Tree Model to get notifications.
+		Settings.top.getTreeModel().addTreeModelListener( this );
+
 
 		// set up drag & drop
 		dropTarget = new DropTarget (this, this);
@@ -188,12 +197,13 @@ public class Thumbnail extends JPanel
 	 *
 	 *  @param  node   The node which should be displayed. Can be null if the Thumbnail is to be muted.
 	 */
-	public synchronized void setNode( SortableDefaultMutableTreeNode node ) {
+	public void setNode( SortableDefaultMutableTreeNode node ) {
 		if ( this.referringNode == node ) {
 			// Don't refresh the node if it hasn't changed
 			return;
 		}
 
+		synchronized ( this ) {
 		unqueue();
 		
 		// unattach the change Listener
@@ -203,7 +213,6 @@ public class Thumbnail extends JPanel
 			pi.removePictureInfoChangeListener( this );
 		}
 
-		
 		this.referringNode = node;
 
 		// attach the change Listener
@@ -213,16 +222,18 @@ public class Thumbnail extends JPanel
 			pi.addPictureInfoChangeListener( this );
 		}
 
+		}
+
 		if ( node == null ) {
 			img = null;
 			imgOb = null;
 			setVisible( false );
-		} else if ( node.getUserObject() instanceof PictureInfo ) {
+		} else { //if ( node.getUserObject() instanceof PictureInfo ) {
 			ThumbnailCreationQueue.requestThumbnailCreation( 
 				this, ThumbnailCreationQueue.MEDIUM_PRIORITY );
-		} else {
-			setThumbnail( folderIcon );
-		}
+		} // else {
+			// setThumbnail( folderIcon );
+		//}
 		
 		showSlectionStatus();
 	}
@@ -322,7 +333,10 @@ public class Thumbnail extends JPanel
 			              clipBounds.width, 
 			      	      clipBounds.height);
 
-			g2d.drawImage(img, AffineTransform.getTranslateInstance((int) X_Offset, (int) Y_Offset), imgOb);
+			g2d.drawImage( img, AffineTransform.getTranslateInstance((int) X_Offset, (int) Y_Offset), imgOb);
+			if ( drawOfflineIcon ) {
+				g2d.drawImage( offlineIcon.getImage(), (int) X_Offset + 10, (int) Y_Offset + 10, offlineIcon.getImageObserver() );
+			}
 		} else {
 			// paint a black square
 			g.setClip(0, 0, WindowWidth, WindowHeight);
@@ -437,6 +451,53 @@ public class Thumbnail extends JPanel
 			showAsUnselected();
 		}
 	}
+
+
+
+
+	// Here we are not that interested in TreeModel change events other than to find out if our
+	// current node was removed in which case we close the Window.
+	
+	/**
+	 *   implemented here to satisfy the TreeModelListener interface; not used.
+	 */
+	public void treeNodesChanged ( TreeModelEvent e ) {
+		// find out whether our node was changed
+		Object[] children = e.getChildren();
+		for ( int i = 0; i < children.length; i++ ) {
+			if ( children[i] == referringNode ) {
+				// Tools.log( "Thumbnail detected a treeNodesChanged event" );
+				// we are displaying a changed node. What changed?
+				Object userObject = referringNode.getUserObject();
+				if ( userObject instanceof GroupInfo ) {
+					// determine if the icon changed
+					// Tools.log( "Thumbnail should be reloading the icon..." );
+					ThumbnailCreationQueue.requestThumbnailCreation( 
+						this, ThumbnailCreationQueue.HIGH_PRIORITY );
+				}
+			}
+		}
+	}
+
+
+	/**
+	 *   implemented here to satisfy the TreeModelListener interface; not used.
+	 */
+	public void treeNodesInserted ( TreeModelEvent e ) {
+	}
+
+	/**
+	 *  The TreeModelListener interface tells us of tree node removal events. 
+	 */
+	public void treeNodesRemoved ( TreeModelEvent e ) {
+	}
+
+	/**
+	 *   implemented here to satisfy the TreeModelListener interface; not used.
+	 */
+	public void treeStructureChanged ( TreeModelEvent e ) {
+	}
+
 
 
 

@@ -74,6 +74,12 @@ public class ThumbnailCreationQueue {
 	private static final ImageIcon queueIcon = new ImageIcon( Settings.cl.getResource( "jpo/images/queued_thumbnail.gif" ) );
 
 
+	/**
+	 *   An icon that indicates an image on the queue
+	 */
+	private static final ImageIcon largeFolderIcon = new ImageIcon( Settings.cl.getResource( "jpo/images/icon_folder_large.jpg" ) );
+
+
 	/** 
 	 *  This method puts a ThumbnailCreationRequest on the queue. 
 	 *  If a suitable cached image exists it will be used instead.
@@ -107,7 +113,11 @@ public class ThumbnailCreationQueue {
 	 *				if using a cached version is ok.
 	 */
 	public static synchronized void requestThumbnailCreation( Thumbnail thumb, int priority, boolean force ) {
-		thumb.setThumbnail( queueIcon );
+		if ( thumb.referringNode.getUserObject() instanceof PictureInfo ) {
+			thumb.setThumbnail( queueIcon );
+		} else {
+			thumb.setThumbnail( largeFolderIcon );
+		}
 		thumbQueue.add( new ThumbnailQueueRequest ( thumb, priority, force ) );
 	}
 

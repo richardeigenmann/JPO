@@ -142,6 +142,11 @@ public class Settings {
 	public static int thumbnailSize;
 
 	
+	/**
+	 *  the dimension of minithumbnails in the group folders
+	 */
+	public static final Dimension miniThumbnailSize = new Dimension( 100, 75 );
+	
 
 	/** 
 	 *  The KDE Panel has the unfortunate habit of insisting on being on top so this

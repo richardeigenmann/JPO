@@ -2,6 +2,7 @@ package jpo;
 
 import javax.swing.*;
 import java.awt.*;
+import javax.swing.event.*;
 
 /*
 ThumbnailDescriptionJPanel.java:  class that creates a panel showing the details of a thumbnail
@@ -30,8 +31,10 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  *   It can be mute.
  *   It knows it's x and y position.
  */
-public class ThumbnailDescriptionJPanel extends JPanel implements 
-	PictureInfoChangeListener {
+public class ThumbnailDescriptionJPanel 
+	extends JPanel 
+	implements PictureInfoChangeListener,
+		   TreeModelListener {
 	
 	/**
 	 *  a link to the SortableDefaultMutableTreeNode in the data model.
@@ -145,6 +148,9 @@ public class ThumbnailDescriptionJPanel extends JPanel implements
 	public ThumbnailDescriptionJPanel ( int position, ThumbnailJScrollPane associatedPanel  ) {
 		this.position = position;
 		this.associatedPanel = associatedPanel;
+		
+		// attach this panel to the tree model so that it is notified about changes
+		Settings.top.getTreeModel().addTreeModelListener( this );
 
 		this.setBackground( Color.WHITE );
 		
@@ -263,7 +269,6 @@ public class ThumbnailDescriptionJPanel extends JPanel implements
 			lowresLocationJTextField.setText( "" );
 			setVisible( true );
 		}
-
 		pictureDescriptionJTA.setText( legend );
 		
 		formatDescription();
@@ -374,6 +379,51 @@ public class ThumbnailDescriptionJPanel extends JPanel implements
 		} */
 		
 	}
+
+
+
+	// Here we are not that interested in TreeModel change events other than to find out if our
+	// current node was removed in which case we close the Window.
+	
+	/**
+	 *   implemented here to satisfy the TreeModelListener interface; not used.
+	 */
+	public void treeNodesChanged ( TreeModelEvent e ) {
+		// find out whether our node was changed
+		Object[] children = e.getChildren();
+		for ( int i = 0; i < children.length; i++ ) {
+			if ( children[i] == referringNode ) {
+				// we are displaying a changed node. What changed?
+				Object userObject = referringNode.getUserObject();
+				if ( userObject instanceof GroupInfo ) {
+					String legend = ((GroupInfo) userObject).getGroupName();
+					if ( ! legend.equals( pictureDescriptionJTA.getText() ) ) {
+						pictureDescriptionJTA.setText( legend );
+					}
+				}
+			}
+		}
+	}
+
+
+	/**
+	 *   implemented here to satisfy the TreeModelListener interface; not used.
+	 */
+	public void treeNodesInserted ( TreeModelEvent e ) {
+	}
+
+	/**
+	 *  The TreeModelListener interface tells us of tree node removal events. 
+	 */
+	public void treeNodesRemoved ( TreeModelEvent e ) {
+	}
+
+	/**
+	 *   implemented here to satisfy the TreeModelListener interface; not used.
+	 */
+	public void treeStructureChanged ( TreeModelEvent e ) {
+	}
+
 
 
 

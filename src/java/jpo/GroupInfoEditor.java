@@ -29,7 +29,7 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  *   main event queue.
  */
 
-public class GroupInfoEditor implements ActionListener {
+public class GroupInfoEditor {
 
 	/**
 	 *   JFrame that holds all the dialog components for editing the window.
@@ -41,6 +41,24 @@ public class GroupInfoEditor implements ActionListener {
 	 */
 	private JTextArea descriptionJTextArea = new JTextArea();
 	
+	/**
+	 *   The location of the lowres image file
+	 */
+	private JTextField lowresLocationJTextField = new JTextField();
+
+	/**
+	 *  Dimension for the edit fields
+	 */
+	private static Dimension inputDimension = new Dimension(400, 20);
+
+	/**
+	 *   An informative message about what sort of error we have if any on the lowres image
+	 */
+	private JLabel lowresErrorJLabel = new JLabel( "" );
+
+
+
+
 	/**
 	 *  the OK button
 	 */
@@ -65,7 +83,7 @@ public class GroupInfoEditor implements ActionListener {
 	 *
 	 *   @param   editNode	The node being edited.
 	 */
-	public GroupInfoEditor( SortableDefaultMutableTreeNode editNode ) {
+	public GroupInfoEditor( final SortableDefaultMutableTreeNode editNode ) {
 		this.editNode = editNode;
 	
 		jFrame.addWindowListener(new WindowAdapter() {
@@ -91,7 +109,10 @@ public class GroupInfoEditor implements ActionListener {
 		c.anchor = GridBagConstraints.WEST;  
 		jPanel.add( descriptionJLabel, c );
 
-		descriptionJTextArea.setText( ( (GroupInfo) editNode.getUserObject() ).getGroupName ());
+
+		final GroupInfo gi = ( (GroupInfo) editNode.getUserObject() );
+	
+		descriptionJTextArea.setText( gi.getGroupName ());
 	        descriptionJTextArea.setPreferredSize( new Dimension(400, 150) );
 	        descriptionJTextArea.setWrapStyleWord( true ); 
 	        descriptionJTextArea.setLineWrap( true ); 
@@ -100,6 +121,26 @@ public class GroupInfoEditor implements ActionListener {
 		jPanel.add( descriptionJTextArea, c );
 		
 
+		JPanel lowresJPanel = new JPanel();
+		
+		JLabel lowresLocationJLabel = new JLabel ( Settings.jpoResources.getString("lowresLocationLabel") );
+		lowresErrorJLabel.setFont ( new Font ( "Arial", Font.PLAIN, 10 ) );
+		lowresJPanel.add ( lowresLocationJLabel );
+		lowresJPanel.add ( lowresErrorJLabel );
+		
+		c.gridx = 0; c.gridy++;
+		c.insets = new Insets(4,0,0,0); 
+		jPanel.add( lowresJPanel, c );
+
+		
+	        lowresLocationJTextField.setPreferredSize( inputDimension );
+		lowresLocationJTextField.setText( gi.getLowresLocation() );
+		c.gridy++;
+		c.insets = new Insets(0,0,0,0); 
+		jPanel.add( lowresLocationJTextField, c );
+
+
+
 		JPanel buttonJPanel = new JPanel();
 
 	        OkJButton.setPreferredSize( Settings.defaultButtonDimension );
@@ -107,7 +148,14 @@ public class GroupInfoEditor implements ActionListener {
 	        OkJButton.setMaximumSize( Settings.defaultButtonDimension );
 		OkJButton.setBorder(BorderFactory.createRaisedBevelBorder());
 		OkJButton.setAlignmentX(Component.LEFT_ALIGNMENT);
-	        OkJButton.addActionListener(this);
+	        OkJButton.addActionListener( new ActionListener() {
+			public void actionPerformed( ActionEvent e ) {
+				gi.setGroupName( descriptionJTextArea.getText() );
+				gi.setLowresLocation( lowresLocationJTextField.getText() );
+				editNode.getTreeModel().nodeChanged( editNode );
+				getRid();
+			}
+		});
 		OkJButton.setDefaultCapable( true );
 		jFrame.getRootPane().setDefaultButton ( OkJButton );
 		buttonJPanel.add( OkJButton );
@@ -118,7 +166,11 @@ public class GroupInfoEditor implements ActionListener {
 	        CancelButton.setMaximumSize( Settings.defaultButtonDimension );
 		CancelButton.setBorder(BorderFactory.createRaisedBevelBorder());
 		CancelButton.setAlignmentX(Component.RIGHT_ALIGNMENT);
-	        CancelButton.addActionListener(this);
+	        CancelButton.addActionListener( new ActionListener() {
+			public void actionPerformed( ActionEvent e ) {
+				getRid();				
+			}
+		});
 		buttonJPanel.add( CancelButton );
 
 		c.gridy++;
@@ -140,25 +192,4 @@ public class GroupInfoEditor implements ActionListener {
 	}
 
 
-
-	/**
-	 *  method that writes the changed data back to the GroupInfo object
-	 */
-	private void okButtonEvent() {
-		((GroupInfo) editNode.getUserObject()).setGroupName( descriptionJTextArea.getText() );
-		editNode.getTreeModel().nodeChanged( editNode );
-		getRid();
-	}
-
-
-
-	/** 
-	 *  method that analyses the user initiated action and performs what the user reuqested
-	 **/
-	public void actionPerformed(java.awt.event.ActionEvent e) {
-		if (e.getSource() == OkJButton)
-			okButtonEvent();
-		else 	if (e.getSource() == CancelButton)
-			getRid();
-	}
 }
