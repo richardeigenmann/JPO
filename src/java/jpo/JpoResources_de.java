@@ -41,7 +41,7 @@ public class JpoResources_de extends ListResourceBundle {
          	{"genericCancelText", "Abbruch"},
 		{"genericSaveButtonLabel", "Speichern"},
          	{"genericOKText", "OK"},             
-		{"genericSelectText", "Ausw‰hlen"},
+		{"genericSelectText", "Ausw√§hlen"},
 		{"threeDotText", "..."},
 		{"genericExportButtonText", "Export"},
 		{"genericSecurityException", "Sicherheits-Ausnahme"},
@@ -49,7 +49,7 @@ public class JpoResources_de extends ListResourceBundle {
 		{"internalError", "oder"},
 		{"genericWarning", "Warnung"},
 		{"genericExit", "Exit"},
-		{"outOfMemoryError", "Ein \"Out of Memory Error\" wurde ausge‰hlt"},
+		{"outOfMemoryError", "Ein \"Out of Memory Error\" wurde ausgew√§hlt"},
 		{"areYouSure", "Sind Sie sicher?"},
 		
 		
@@ -77,32 +77,32 @@ public class JpoResources_de extends ListResourceBundle {
 		{"advancedFindJButtonClose", "Einfache Suche"},
 		{"noSearchResults", "Es wurden keine Bilder zu den Kriterien gefunden."},
 		{"lowerDateJLabel", "Zwischen:"},
-		{"dateRangeError", "Entschuldigung, der Datatumsbereich macht keinen Sinn."},
+		{"dateRangeError", "Entschuldigung, der Datumsbereich macht keinen Sinn."},
 		
 
 
 		
 		// PictureViewer Texts
 		{"PictureViewerTitle", "JPO Bilder Betrachter"},
-		{"PictureViewerKeycodes", "Die folgenden Tasten k‰hnen benutzt werden:\n" 
-			+ "N: N‰hhstes Bild\n"
+		{"PictureViewerKeycodes", "Die folgenden Tasten k√∂nnen benutzt werden:\n" 
+			+ "N: N√§chstes Bild\n"
 			+ "P: Vorhergehendes Bild\n"
 			+ "I: Informationen ein | aus\n"
 			+ "<space>,<home>: Auf Vollbild zoomen\n"
-			+ "<links>,<rechts>,<rauf>,<runter>: bild in Pfeilrichtung verschieben\n"
+			+ "<links>,<rechts>,<rauf>,<runter>: Bild in Pfeilrichtung verschieben\n"
 			+ "<PgUp>: Reinzoomen\n"
 			+ "<PgDown>: Rauszoomen\n"
-			+ "F: Fenstergr‰hse-Menu\n"
+			+ "F: Fenstergr√∂sse-Menu\n"
 			+ "M: Popup Menu"},
-		{"PictureViewerKeycodesTitle", "Tastatur-Abkrzungen"},
+		{"PictureViewerKeycodesTitle", "Tastatur-Abk√ºrzungen"},
 		{"NavigationPanel", "Navigations Werkzeuge"},
 		{"fullScreenJButton.ToolTipText", "Vollbild"},
 		{"popupMenuJButton.ToolTipText", "Popup Menu"},
-		{"nextJButton.ToolTipText", "N‰hhstes Bild"},
+		{"nextJButton.ToolTipText", "N√§chstes Bild"},
 		{"previousJButton.ToolTipText", "Vorheriges Bild"},
 		{"infoJButton.ToolTipText", "Informationen"},
 		{"resetJButton.ToolTipText", "Reset"},
-		{"clockJButton.ToolTipText", "Automatscher Bildwechsel"},
+		{"clockJButton.ToolTipText", "Automatischer Bildwechsel"},
 		{"closeJButton.ToolTipText", "Fenster schliessen"},
 
 		// SettingsDialog Texts
@@ -113,50 +113,50 @@ public class JpoResources_de extends ListResourceBundle {
 		{"autoLoadJLabelLabel", "Automatisch laden:"},
 		{"logfileJCheckBoxLabel", "Logdatei schreiben"},
 		{"logfileJLabelLabel", "Pfad der Logdatei und Filenamen:"},
-		{"saveSizeJCheckBoxLabel", "Fensterposition und Gr‰hse bei Applikationsende speichern"},
+		{"saveSizeJCheckBoxLabel", "Fensterposition und Gr√∂sse bei Applikationsende speichern"},
 		{"MainCoordinates", "Koordinaten des Hauptfensters (x/y):"},
-		{"MainSize", "Gr‰hse des Hauptfensters (b/h):"},
+		{"MainSize", "Gr√∂sse des Hauptfensters (b/h):"},
 		
 		{"pictureViewerJPanel", "Bilder Betrachter"},
-		{"maximumPictureSizeLabel", "Maximale Bild Vergr‰hserung:"},
-		{"maxCacheLabel", "Maximal zwischengespeichterte Bilder:"},
+		{"maximumPictureSizeLabel", "Maximale Bild Vergr√∂sserung:"},
+		{"maxCacheLabel", "Maximal zwischengespeicherte Bilder:"},
 		{"leaveSpaceLabel", "Abstand nach unten:"},
-		{"dontEnlargeJCheckBoxLabel", "Kleine Bilder nicht vergr‰hsern"},
+		{"dontEnlargeJCheckBoxLabel", "Kleine Bilder nicht vergr√∂ssern"},
 		{"pictureCoordinates", "Default Koordinaten des Bilder Betrachter Fensters (x/y):"},
-		{"pictureSize", "Default Grˆsse des Bilder Betrachter Fensters (b/h):"},
-		{"pictureViewerFastScale", "Geschwindigkeit statt Qualit‰h optimieren beim vergr‰hsen"},
+		{"pictureSize", "Default Gr√∂sse des Bilder Betrachter Fensters (b/h):"},
+		{"pictureViewerFastScale", "Geschwindigkeit statt Qualit√§t optimieren beim vergr√∂ssern"},
 		
 		{"thumbnailSettingsJPanel", "Verkleinerungen"},
-		{"thumbnailDirLabel", "Verzeichnis f¸r die Verkleinerungen:"},
+		{"thumbnailDirLabel", "Verzeichnis f√ºr die Verkleinerungen:"},
 		{"keepThumbnailsJCheckBoxLabel", "Verkleinerungen auf Disk schreiben"},
 		{"maxThumbnailsLabelText", "Maximale Anzahl Verkleinerungen pro Seite:"},
-		{"thumbnailSizeLabel", "Grˆsse der Verkleinerungen:"},
-		{"thumbnailFastScale", "Geschwindigkeit statt Qualit√§t‰hbeim verkleinern"},
-		{"zapThumbnails", "Alle Verkleinerungen lˆschen"},
-		{"thumbnailsDeleted", " Verkleinerungen gelˆscht"},
+		{"thumbnailSizeLabel", "Gr√∂sse der Verkleinerungen:"},
+		{"thumbnailFastScale", "Geschwindigkeit statt Qualit√§t beim verkleinern"},
+		{"zapThumbnails", "Alle Verkleinerungen l√∂schen"},
+		{"thumbnailsDeleted", " Verkleinerungen gel√∂scht"},
 		
-		{"autoLoadChooserTitle", "Datei die automatich geladen wird"},
-		{"logfileChooserTitle", "Logdatei w‰hlen"},
-		{"thumbDirChooserTitle", "Verzeichnis f¸r Verkleinerungen wahlen"},
+		{"autoLoadChooserTitle", "Datei die automatisch geladen wird"},
+		{"logfileChooserTitle", "Logdatei w√§hlen"},
+		{"thumbDirChooserTitle", "Verzeichnis f√ºr Verkleinerungen w√§hlen"},
 		
 		{"settingsError", "Fehler der Einstellungen"},
 		{"generalLogFileError", "Es besteht ein mit der Logdatei. Logmeldungen werden nicht geschrieben."},
 		{"thumbnailDirError", "Etwas ist ernsthaft falsch mit dem Verkleinerungs-Verzeichnis"},
 
-		{"userFunctionJPanel", "Benuterfunktionen"},
-		{"userFunction1JLabel", "Benuterfunktion 1"},
-		{"userFunction2JLabel", "Benuterfunktion 2"},
-		{"userFunction3JLabel", "Benuterfunktion 3"},
+		{"userFunctionJPanel", "Benutzerfunktionen"},
+		{"userFunction1JLabel", "Benutzerfunktion 1"},
+		{"userFunction2JLabel", "Benutzerfunktion 2"},
+		{"userFunction3JLabel", "Benutzerfunktion 3"},
 		{"userFunctionNameJLabel", "Name:"},
 		{"userFunctionCmdJLabel", "Kommando:"},
 		{"userFunctionHelpJTextArea", "%f wird durch den Filenamen substituiert\n%u wird durch die URL des Bildes substituiert"},
 
 
 		// Settings
-		{"thumbNoExistError", "Das Verzeichnis fr die Verkleinerungen existiert nicht.\nBitte geben sie es unter Bearbeiten | Einstellungen ein.\nZwischenspeicherung von Verkleinerungen wurde deaktiviert."},
+		{"thumbNoExistError", "Das Verzeichnis f√ºt die Verkleinerungen existiert nicht.\nBitte geben sie es unter Bearbeiten | Einstellungen ein.\nZwischenspeicherung von Verkleinerungen wurde deaktiviert."},
 		{"thumbNoWriteError", "Das Verzeichnis der Verkleinerungen erlaubt keine Schreibzugriffe.\nBitte geben sie es unter Bearbeiten | Einstellungen ein.\nZwischenspeicherung von Verkleinerungen wurde deaktiviert."},
-		{"thumbNoDirError", "Das Verzeichnis fr die Verkleinerungen ist kein Verzeichnis.\nBitte geben sie es unter Bearbeiten | Einstellungen ein.\nZwischenspeicherung von Verkleinerungen wurde deaktiviert.."},
-		{"logFileCanWriteError", "Die Logdatei erlaubt keine Schreibzugriffe.\nBitte geben sie es unter Bearbeiten | Einstellungen ein.\nLogging wurde augeschaltet"},
+		{"thumbNoDirError", "Das Verzeichnis f√ºr die Verkleinerungen ist kein Verzeichnis.\nBitte geben sie es unter Bearbeiten | Einstellungen ein.\nZwischenspeicherung von Verkleinerungen wurde deaktiviert.."},
+		{"logFileCanWriteError", "Die Logdatei erlaubt keine Schreibzugriffe.\nBitte geben sie es unter Bearbeiten | Einstellungen ein.\nLogging wurde ausgeschaltet"},
 		{"logFileIsFileError", "Die Logdatei der Einstellungen ist kein Datei.\nBitte geben sie es unter Bearbeiten | Einstellungen ein.\nLogging wurde augeschaltet"},
 		{"generalLogFileError", "Es besteht ein Problem mit der Logdatei. Logging wurde deaktiviert."},
 		{"cantWriteIniFile", "Fehler beim Schreiben der ini Datei:\n"},
@@ -168,18 +168,18 @@ public class JpoResources_de extends ListResourceBundle {
 		// HtmlDistillerJFrame
 		{"HtmlDistillerJFrameHeading", "Export nach HTML"},
 		{"HtmlDistillerThreadTitle", "Extraktion nach HTML"}, 
-		{"HtmlDistillerChooserTitle", "Zielverzeichnis fr HTML"},
+		{"HtmlDistillerChooserTitle", "Zielverzeichnis f√ºr HTML"},
 		{"exportHighresJCheckBox", "Originalbilder exportieren"},
 		{"linkToHighresJCheckBox", "Link auf Originalbilder im aktuellen Verzeichnis erstellen"},
 		{"generateDHTMLJCheckBox", "DHTML mouseover Effekte generieren"},
 		{"picsPerRowText", "Spalten"},
-		{"thubnailSizeJLabel", "Grˆsse der Verkleinerungen"},
+		{"thubnailSizeJLabel", "Gr√∂sse der Verkleinerungen"},
 		{"htmlDistCrtDirError", "Konnte das Export Verzeichnis nicht generieren!"},
 		{"htmlDistIsDirError", "Das ist kein Verzeichnis!"},
 		{"htmlDistCanWriteError", "Dies ist kein Beschreibbares Verzeichnis!"},
-		{"htmlDistIsNotEmptyWarning", "Das Zielverzeichnis ist nicht leer.\nBest‰tigen sie, dass JPO fortfahren soll und allenfalls Dateien berschreibt."},
-		{"midresSizeJLabel", "Grˆsse mittlere Auflˆsung"},
-		{"jpgQualitySlider", "Jpg Qualit‰t"},
+		{"htmlDistIsNotEmptyWarning", "Das Zielverzeichnis ist nicht leer.\nBest√§tigen sie, dass JPO fortfahren soll und allenfalls Dateien berschreibt."},
+		{"midresSizeJLabel", "Gr√∂sse mittlere Aufl√∂sung"},
+		{"jpgQualitySlider", "Jpg Qualit√§t"},
 		{"jpgQualityBad", "Gering"},
 		{"jpgQualityGood", "Gut"},
 		{"jpgQualityBest", "Beste"},
@@ -191,19 +191,19 @@ public class JpoResources_de extends ListResourceBundle {
 			
 
 		// ReconcileJFrame
-		{"ReconcileJFrameTitle", "Verzeichnisabgleich gegenber der Sammlung"},
-		{"ReconcileBlaBlaLabel", "<HTML>Diese Funktion berprft ob die Dateien im angegebenen Verzeichnis in der Sammlung vorhanden sind.</htm>"},
-		{"directoryJLabelLabel", "Verzeichnis fr den Abgleich:"},
-		{"directoryCheckerChooserTitle", "Verzeichnis fr den Abgleich"},
+		{"ReconcileJFrameTitle", "Verzeichnisabgleich gegen√ºber der Sammlung"},
+		{"ReconcileBlaBlaLabel", "<HTML>Diese Funktion √ºberpr√ºft ob die Dateien im angegebenen Verzeichnis in der Sammlung vorhanden sind.</htm>"},
+		{"directoryJLabelLabel", "Verzeichnis f√ºr den Abgleich:"},
+		{"directoryCheckerChooserTitle", "Verzeichnis f√ºr den Abgleich"},
 		{"ReconcileFound", " in Sammlung gefunden als "},
 		{"ReconcileNotFound", "Nicht in der Sammlung: "},
 		{"ReconcileDone", "Fertig.\n"},
 		{"ReconcileInterrupted", "Unterbrochen.\n"},
-		{"ReconcileListPositives", "List Positive matches"},
+		{"ReconcileListPositives", "Gefundene auch anzeigen"},
 		{"ReconcileOkButtonLabel", "Abgleich"},
 		{"ReconcileSubdirectories", "Unterverzeichnisse abgleichen"},
 		{"ReconcileCantReadError", "Lesefehler: "},
-		{"ReconcileNullFileError", "Ungltiges Verzeichnis"},
+		{"ReconcileNullFileError", "Ung√ºltiges Verzeichnis"},
 		{"ReconcileStart", "Abgleichsverzeichnis: "},
 		{"ReconcileNoFiles", "Keine Dateien gefunden.\n"},
 
@@ -212,17 +212,17 @@ public class JpoResources_de extends ListResourceBundle {
 		{"CollectionDistillerJFrameFrameHeading", "Export in eine neue Sammlung"},
 		{"collectionExportPicturesText", "Bilder Exportieren"},
 		{"xmlFileNameLabel", "Name fr die XML Datei:"},
-		{"collectionExportChooserTitle", "Zielverzeichnis fr die Sammlung"},
+		{"collectionExportChooserTitle", "Zielverzeichnis f√ºr die Sammlung"},
 
 
 		// ConsolidateGroupJFrame
-		{"ConsolidateDirChooserTitle", "Konsolidierungsverzeichnis ausw‰hlen"},
+		{"ConsolidateDirChooserTitle", "Konsolidierungsverzeichnis ausw√§hlen"},
 		{"RecurseSubgroupsLabel", "Untergruppen einbeziehen"},
-		{"ConsolidateGroupBlaBlaLabel", "<HTML>Diese Funktion wird all Bilder der ausgew‰hlten Gruppe in das Zielverzeichnis verschieben. Es korrigiert Verweise<br>auf diese Bilder in dieser Sammlung. Die Dateien werden physisch verschoben.<br><p> <font color=red>Sind Sie sicher, dass sie dies wollen?<br></font></htm>"},
+		{"ConsolidateGroupBlaBlaLabel", "<HTML>Diese Funktion wird all Bilder der ausgew√§hlten Gruppe in das Zielverzeichnis verschieben. Es korrigiert Verweise<br>auf diese Bilder in dieser Sammlung. Die Dateien werden physisch verschoben.<br><p> <font color=red>Sind Sie sicher, dass sie dies wollen?<br></font></htm>"},
 		{"ConsolidateGroupJFrameHeading", "Konsolidierung / Bilder Verschieben"},
 		{"ConsolidateButton", "Konsolidieren"},
 		{"ConsolidateFailure", "Konsolidierung generierte einen Fehler und wurde abgebrochen"},
-		{"ConsolitdateProgBarTitle", "Konsolidierung l‰uft"},
+		{"ConsolitdateProgBarTitle", "Konsolidierung l√§uft"},
 		{"ConsolitdateProgBarDone", " Bilder konsolidiert"},
 		{"lowresJCheckBox", "Auch Verkleinerungen konsolidieren"},
 		
@@ -231,11 +231,11 @@ public class JpoResources_de extends ListResourceBundle {
 		// JarDistillerJFrame
 		{"groupExportJarTitleText", "Export in ein Jar"},
 		{"JarDistillerLabel", "Jar (Java Archive) zu erstellen:"},
-		{"SelectJarFileTitle", "Zielverzeichnis fr Bilder"},
+		{"SelectJarFileTitle", "Zielverzeichnis f√ºr Bilder"},
 		
 		// PictureInfoEditor
 		{"PictureInfoEditorHeading", "Eigenschaften"},
-		{"highresChooserTitle", "Originalbild ausw‰hlen"},
+		{"highresChooserTitle", "Originalbild ausw√§hlen"},
 		{"pictureDescriptionLabel", "Bildbeschreibung:"},
 		{"creationTimeLabel", "Erstellungsdatum und Zeit:"},
 		{"highresLocationLabel", "Original-Pfad:"},
@@ -248,23 +248,23 @@ public class JpoResources_de extends ListResourceBundle {
 		{"resetLabel", "Reset"},
 		{"checksumJButton", "erneuern"},
 		{"checksumJLabel", "Adler32 Checksum: "},
-		{"parsedAs", "Entschlsselt als: "},
-		{"failedToParse", "Kann nicht als Datum entschlsselt werden"},
+		{"parsedAs", "Entschl√ºsselt als: "},
+		{"failedToParse", "Kann nicht als Datum entschl√ºsselt werden"},
 		{"categoriesJLabel-2", "Kategorien:"},
 		{"setupCategories", ">> Kategorien erstellen <<"},
 		{"noCategories", ">> Keine <<"},
 
 		
 		//GroupInfoEditor
-		{"GroupInfoEditorHeading", "Gruppenbeschreibung ‰ndern"},
-		{"groupDescriptionLabel", "Grouppenbeschreibung:"},
+		{"GroupInfoEditorHeading", "Gruppenbeschreibung √§ndern"},
+		{"groupDescriptionLabel", "Gruppenbeschreibung:"},
 		
 		// GroupPopupMenu
 		{"groupSlideshowJMenuItemLabel", "Bilder anzeigen"},
 		{"groupFindJMenuItemLabel", "Suchen"},
 		{"groupEditJMenuItemLabel", "Umbenennen"},
-		{"groupTableJMenuItemLabel", "Als Tablle bearbeiten"},
-		{"addGroupJMenuLabel", "Hinzufgen"},
+		{"groupTableJMenuItemLabel", "Als Tabelle bearbeiten"},
+		{"addGroupJMenuLabel", "Hinzuf√ºgen"},
 		{"addNewGroupJMenuItemLabel", "Neue Gruppe"},
 		{"addPicturesJMenuItemLabel", "Bilder"},
 		{"addCollectionJMenuItemLabel", "Sammlung"},
@@ -275,8 +275,8 @@ public class JpoResources_de extends ListResourceBundle {
 		{"moveGroupUpJMenuItem", "rauf"},
 		{"moveGroupDownJMenuItem", "runter"},
 		{"moveGroupToBottomJMenuItem", "zuunterst"},
-		{"indentJMenuItem", "einrcken"},
-		{"outdentJMenuItem", "ausrcken"},
+		{"indentJMenuItem", "einr√ºcken"},
+		{"outdentJMenuItem", "ausr√ºcken"},
 		{"groupRemoveLabel", "Gruppe entfernen"},
 		{"consolidateMoveLabel", "Konsolidieren/Verschieben"},
 		{"sortJMenu", "Sortieren nach"},
@@ -295,12 +295,12 @@ public class JpoResources_de extends ListResourceBundle {
 		{"pictureShowJMenuItemLabel", "Bild anzeigen"},
 		{"pictureEditJMenuItemLabel", "Eigenschaften"},
 		{"copyImageJMenuLabel", "Bild Kopieren"},
-		{"copyToNewLocationJMenuItem", "Zielverzeichnis ausw‰hlen"},
+		{"copyToNewLocationJMenuItem", "Zielverzeichnis ausw√§hlen"},
 		{"FileOperations", "Dateio Operationen"},
 		{"fileRenameJMenuItem", "Umbenennen"},
-		{"FileRenameLabel1", "Bennene \n"},
+		{"FileRenameLabel1", "Benenne \n"},
 		{"FileRenameLabel2", "\nun in: "},
-		{"fileDeleteJMenuItem", "Lˆschen"},
+		{"fileDeleteJMenuItem", "L√∂schen"},
 		{"pictureRefreshJMenuItem", "Verkleinerung erneuern"},
 		{"rotation", "Rotation"},
 		{"rotate90", "Nach Rechts 90"},
@@ -317,7 +317,7 @@ public class JpoResources_de extends ListResourceBundle {
 
 
 		// ThumbnailJScrollPane
-		{"ThumbnailSearchResults", "Suchresultate fr: "},
+		{"ThumbnailSearchResults", "Suchresultate f√ºr: "},
 		{"ThumbnailSearchResults2", " in "},
 
 		//ChangeWindowPopupMenu
@@ -336,36 +336,36 @@ public class JpoResources_de extends ListResourceBundle {
 		// CleverJTree
 		{"DefaultRootNodeText", "Neue Sammlung"},
 		{"CopyImageDialogButton", "Kopieren"},
-		{"CopyImageDialogTitle", "Zieldatei angeben fr: "},
-		{"CopyImageNullError", "validateAndCopyPicture mit null arguments aufgerufen! Kopieren abgebrochen."},
+		{"CopyImageDialogTitle", "Zieldatei angeben f√ºr: "},
+		{"CopyImageNullError", "validateAndCopyPicture mit null Argumenten aufgerufen! Kopieren abgebrochen."},
 		{"CopyImageDirError", "Zielverzeichnis kann nicht erstellt werden. Kopieren abgebrochen.\n"},
-		{"fileOpenButtonText", "ˆffnen"},
-		{"fileOpenHeading", "Sammlung ˆffnen"},
+		{"fileOpenButtonText", "√∂ffnen"},
+		{"fileOpenHeading", "Sammlung √∂ffnen"},
 		{"fileSaveAsTitle", "Sammlung speichern als"},
 		{"collectionSaveTitle", "Sammlung gespeichert"},
 		{"collectionSaveBody", "Sammlung gespeichert als:\n"},
-		{"addSinglePictureTitle", "Bild ausw‰hlen"},
-		{"addSinglePictureButtonLabel", "Ausw‰hlen"},
-		{"addFlatFileTitle", "Einfache Datei ausw‰hlen"},
+		{"addSinglePictureTitle", "Bild ausw√§hlen"},
+		{"addSinglePictureButtonLabel", "Ausw√§hlen"},
+		{"addFlatFileTitle", "Einfache Datei ausw√§hlen"},
 		{"saveFlatFileTitle", "Bilderliste als Einfache Datei speichern"},
 		{"saveFlatFileButtonLabel", "Speichern"},
-		{"moveNodeError", "Ziel ist Abkˆmmling von Quelle. Verschieben abgebrochen."},
-		{"unsavedChanges", "Es sind ungespeicherte ‰nderungen vorhanden."},
-		{"confirmSaveAs", "Zieldatei existiert!\nFortfahren und berschreiben?"},
+		{"moveNodeError", "Ziel ist Abk√∂mmling von Quelle. Verschieben abgebrochen."},
+		{"unsavedChanges", "Es sind ungespeicherte √Ñnderungen vorhanden."},
+		{"confirmSaveAs", "Zieldatei existiert!\nFortfahren und √ºberschreiben?"},
 		{"discardChanges", "Verwerfen"},
 		{"noPicsForSlideshow", "Diese Gruppe hat keine Bilder."},
 		{"fileRenameTitle", "Datei Umbenennen"},
-		{"fileDeleteTitle", "Datei Lˆschen"},
-		{"fileDeleteError", "Die Datei konnte nicht gelˆscht werden:\n"},
+		{"fileDeleteTitle", "Datei L√∂schen"},
+		{"fileDeleteError", "Die Datei konnte nicht gel√∂scht werden:\n"},
 		{"deleteRootNodeError", "Die Wurzelgruppe kann nicht entfernt werden."},
 				
 		// ApplicationJMenuBar
 		{"FileMenuText", "Datei"},
 		{"FileNewJMenuItem", "Neue Sammlung"},
-		{"FileLoadMenuItemText", "Sammlung ˆffnen"},
-		{"FileOpenRecentItemText", "Krzlich verwendet ˆffnen"},
-		{"FileAddMenuItemText", "Bilder hinzufgen"},
-		{"FileCameraJMenuItem", "Von Kamera hinzufgen"},
+		{"FileLoadMenuItemText", "Sammlung √∂ffnen"},
+		{"FileOpenRecentItemText", "K√ºrzlich verwendet √∂ffnen"},
+		{"FileAddMenuItemText", "Bilder hinzuf√ºgen"},
+		{"FileCameraJMenuItem", "Von Kamera hinzuf√ºgen"},
 		{"FileSaveMenuItemText", "Sammlung Speichern"},
 		{"FileSaveAsMenuItemText", "Speichern unter"},
 		{"FileExitMenuItemText", "Abbruch"},
@@ -373,19 +373,19 @@ public class JpoResources_de extends ListResourceBundle {
 		{"EditFindJMenuItemText", "Suchen"},
 		{"EditCheckDirectoriesJMenuItemText", "Abgleichen"},
 		{"EditCollectionPropertiesJMenuItem", "Eigenschaften Sammlung"},
-		{"EditCheckIntegrityJMenuItem", "Integrit‰t ¸berpr¸fen"},
+		{"EditCheckIntegrityJMenuItem", "Integrit√§t √ºberpr√ºfen"},
 		{"EditCamerasJMenuItem", "Kameras"},
 		{"EditCategoriesJMenuItem", "Kategorien"},
 		{"EditSettingsMenuItemText", "Einstellungen"},
 		{"HelpJMenuText", "Hilfe"},
-		{"HelpAboutMenuItemText", "‹ber"},
+		{"HelpAboutMenuItemText", "√úber"},
 		{"HelpLicenseMenuItemText", "Lizenz"},
 		
 		// PictureViewer
-		{"autoAdvanceDialogTitle", "Automatichen Bildwechsel starten"},
+		{"autoAdvanceDialogTitle", "Automatischen Bildwechsel starten"},
 		{"randomAdvanceJRadioButtonLabel", "Zufallsauswahl"},
 		{"sequentialAdvanceJRadioButtonLabel", "Sequentiell"},
-		{"restrictToGroupJRadioButtonLabel", "Auf aktuelle Gruppe beschr‰nken"},
+		{"restrictToGroupJRadioButtonLabel", "Auf aktuelle Gruppe beschr√§nken"},
 		{"useAllPicturesJRadioButtonLabel", "Alle Bilder"},
 		{"timerSecondsJLabelLabel", "Wartezeit (Sekunden)"},
 
@@ -394,27 +394,27 @@ public class JpoResources_de extends ListResourceBundle {
 		{"noExifTags", "Keine EXIF tags gefunden"},
 		
 		// PictureAdder
-		{"PictureAdderDialogTitle", "Bilder und Verzeichnisse hinzufgen"},
-		{"PictureAdderProgressDialogTitle", "Fge Bilder hinzu"},
+		{"PictureAdderDialogTitle", "Bilder und Verzeichnisse hinzuf√ºgen"},
+		{"PictureAdderProgressDialogTitle", "F√ºge Bilder hinzu"},
 		{"notADir", "Kein Verzeichnis:\n"},
 		{"notGroupInfo", "Knoten ist kein Gruppen-Knoten."},
-		{"fileChooserAddButtonLabel", "Hinzufgen"},
+		{"fileChooserAddButtonLabel", "Hinzuf√ºgen"},
 		{"recurseSubdirectoriesTitle", "Unterverzeichnisse Einbeziehen"},
 		{"recurseSubdirectoriesMessage", "Es sind Unterverzeichnisse in Ihrer Auswahl vorhanden.\nSollen diese auch einbezogen werden?"},
-		{"recurseSubdirectoriesOk", "Hinzufgen"},
+		{"recurseSubdirectoriesOk", "Hinzuf√ºgen"},
 		{"recurseSubdirectoriesNo", "Nein"},
-		{"picturesAdded", " Bilder hinzugefgt"},
+		{"picturesAdded", " Bilder hinzugef√ºgt"},
 
 		// AddFromCamera
-		{"AddFromCamera", "Bilder von der Kamera hinzufgen"},
+		{"AddFromCamera", "Bilder von der Kamera hinzuf√ºgen"},
 		{"cameraNameJLabel", "Name der Kamera:"},
 		{"cameraDirJLabel", "Wurzelverzeichnis der Kamera im Verzeichnisbaum des Rechners:"},
 		{"cameraConnectJLabel", "Kommando um die Kamera anzuschliessen:"},
 		{"cameraDisconnectJLabel", "Kommando um die Kamera vom Dateisystem zu trennen:"},
-		{"allPicturesJRadioButton", "Alle Bilder der Kamera zur Sammlung hinzufgen"},
-		{"newPicturesJRadioButton", "Nur neue Bilder der Kamera hinzufgen"},
-		{"missingPicturesJRadioButton", "Bilder die in der Sammlung fehlen von der Kamera hinzufgen"},
-		{"targetDirJLabel", "Zielverzeichnis fr die Bilder:"},
+		{"allPicturesJRadioButton", "Alle Bilder der Kamera zur Sammlung hinzuf√ºgen"},
+		{"newPicturesJRadioButton", "Nur neue Bilder der Kamera hinzuf√ºgen"},
+		{"missingPicturesJRadioButton", "Bilder die in der Sammlung fehlen von der Kamera hinzuf√ºgen"},
+		{"targetDirJLabel", "Zielverzeichnis f√ºr die Bilder:"},
 		{"AddFromCameraOkJButton", "Start"},
 		{"editCameraJButton", "Kameraeinstellungen"},
 		
@@ -426,15 +426,15 @@ public class JpoResources_de extends ListResourceBundle {
 		{"memorisedPicsJLabel", "Anzahl vermerkter Bilder beim letzten Import:"},
 		{"refreshJButton", "Erneuern"},
 		{"zeroJButton", "Abbruch"},
-		{"addJButton", "Hinzufgen"},
-		{"deleteJButton", "Lˆschen"},
+		{"addJButton", "Hinzuf√ºgen"},
+		{"deleteJButton", "L√∂schen"},
 		{"closeJButton", "Schliessen"},
-		{"filenameJCheckBox", "nur Dateinamen berprfen (schneller)"},
+		{"filenameJCheckBox", "nur Dateinamen √ºberpr√ºfen (schneller)"},
 		
 
 		// Camera
-		{"countingChecksum", "Prfsummen werden berechnet"},
-		{"countingChecksumComplete", "Prfsummen berechnet"},
+		{"countingChecksum", "Pr√ºfsummen werden berechnet"},
+		{"countingChecksumComplete", "Pr√ºfsummen berechnet"},
 		{"newCamera", "Neue Kamera"},
 		
 		
@@ -449,7 +449,7 @@ public class JpoResources_de extends ListResourceBundle {
 		{"CollectionGroupCountLabel", "Anzahl Gruppen: "},
 		{"CollectionPictureCountLabel", "Anzahl Bilder: "},
 		{"CollectionSizeJLabel", "Belegter Speicherplatz: "},
-		{"editProtectJCheckBoxLabel", "Sammlung vor ƒderungen sch¸tzen"},
+		{"editProtectJCheckBoxLabel", "Sammlung vor √Ñnderungen sch√ºtzen"},
 		
 		// Tools
 		{"copyPictureError1", "Konnte \n"},
@@ -458,28 +458,28 @@ public class JpoResources_de extends ListResourceBundle {
 
 		// PictureAdder
 		{"recurseJCheckBox", "Unterverzeichnisse einbeziehen"},
-		{"newOnlyJCheckBox", "Ausschliesslich neue Bilder hinzufgen"},
+		{"newOnlyJCheckBox", "Ausschliesslich neue Bilder hinzuf√ºgen"},
 		{"showThumbnailJCheckBox", "Verkleinerung anzeigen"},
 
 		// IntegrityChecker
-		{"IntegrityCheckerTitle", "‹berpr¸fen der Integrit‰t§der Sammlung"},
-		{"integrityCheckerLabel", "Integrit‰t ¸berpr¸fen:"},
-		{"check1", "‹berpr¸fe Datums-codierung"},
-		{"check1done", "Dat¸mmer die nicht decodiert werden kˆnnen: "},
-		{"check2", "Pr¸fsummen ¸berpr¸fen"},
-		{"check2progress", "‹berpr¸fe Pr¸fsummen (l‰uft): "},
-		{"check2done", "Korrigierte Pr¸fsummen: "},
+		{"IntegrityCheckerTitle", "√úberpr√ºfen der Integrit√§t¬§der Sammlung"},
+		{"integrityCheckerLabel", "Integrit√§t √ºberpr√ºfen:"},
+		{"check1", "√úberpr√ºfe Datums-codierung"},
+		{"check1done", "Dat√ºmmer die nicht decodiert werden k√∂nnen: "},
+		{"check2", "Pr√ºfsummen √ºberpr√ºfen"},
+		{"check2progress", "√úberpr√ºfe Pr√ºfsummen (l√§uft): "},
+		{"check2done", "Korrigierte Pr√ºfsummen: "},
 		{"check3", "Check 3"},
 		
 		// SortableDefaultMutableTreeNode
-		{"GDPMdropBefore", "vor Ziel einfgen"},
-		{"GDPMdropAfter", "nach Ziel einfgen"},
-		{"GDPMdropIntoFirst", "an erste Stelle einfgen"},
-		{"GDPMdropIntoLast", "an letzter Stelle einfgen"},
+		{"GDPMdropBefore", "vor Ziel einf√ºgen"},
+		{"GDPMdropAfter", "nach Ziel einf√ºgen"},
+		{"GDPMdropIntoFirst", "an erste Stelle einf√ºgen"},
+		{"GDPMdropIntoLast", "an letzter Stelle einf√ºgen"},
 		{"GDPMdropCancel", "verschieben abbrechen"},
 		{"copyAddPicturesNoPicturesError", "Keine Bilder gefunden. Operation abgebrochen."},
-		{"FileDeleteTitle", "Lˆschen"},
-		{"FileDeleteLabel", "Datei Lˆschen\n"},
+		{"FileDeleteTitle", "L√∂schen"},
+		{"FileDeleteLabel", "Datei L√∂schen\n"},
 		{"newGroup", "Neue Gruppe"},
 
 
@@ -487,12 +487,12 @@ public class JpoResources_de extends ListResourceBundle {
 		{"CategoryEditorJFrameTitle", "Kategorien Bearbeiten"},
 		{"categoryJLabel", "Kategorie"},
 		{"categoriesJLabel", "Kategorien"},
-		{"addCateogryJButton", "Kategorie Hinzufgen"},
-		{"deleteCateogryJButton", "Kategorie Lˆschen"},
+		{"addCateogryJButton", "Kategorie Hinzuf√ºgen"},
+		{"deleteCateogryJButton", "Kategorie L√∂schen"},
 		{"renameCateogryJButton", "Kategorie Umbenennen"},
 		{"doneJButton", "Done"},
 		{"countCategoryUsageWarning1", "Diese Kategorie wird von "},
-		{"countCategoryUsageWarning2", " Knoten verwendet.\nBest‰tigen Sie, dass Sie sie entfernen wollen."},
+		{"countCategoryUsageWarning2", " Knoten verwendet.\nBest√§tigen Sie, dass Sie sie entfernen wollen."},
 		
 		{"Template", "Template"},
 		{"Template", "Template"}
