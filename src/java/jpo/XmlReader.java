@@ -109,7 +109,7 @@ public class XmlReader extends DefaultHandler {
 		}
 		
 		correctJarReferences( startNode );
-		new IntegrityChecker( startNode );
+		// new IntegrityChecker( startNode );
 	}
 
 

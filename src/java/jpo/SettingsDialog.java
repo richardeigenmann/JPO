@@ -50,7 +50,6 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 	private JButton autoLoadJButton = new JButton();
 
 
-
 	/**
 	 *  tickbox that indicates where status information should be written to the log
 	 */
