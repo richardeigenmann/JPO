@@ -12,7 +12,7 @@
     <property name="build.docs.dir" value="${build.dir}/docs"/>
     <property name="build.api.dir" value="${build.dir}/api"/>
     <property name="build.jars.dir" value="jars"/>
-    <property name="version" value="0.8.4"/>
+    <property name="version" value="0.8.5"/>
 
     <property name="libs.dir" value="libs"/>
     <property name="src.dir" value="src"/>
@@ -22,6 +22,7 @@
     <property name="src.dtd.dir" value="${src.dir}/dtd"/>
     <property environment="env"/>
     <!-- <echo message="KEYSTORE is set to = ${env.KEYSTORE}"/> -->
+    <!-- <echo message="env.JAVA_HOME is set to = ${env.JAVA_HOME}"/> -->
 
 
     <path id="base.path">
@@ -48,7 +49,7 @@
         <javac destdir="${build.base.classes.dir}"
 	       debug="on"
 	       optimize="off"
-	       verbose="off"
+	       verbose="on"
 	       memoryMaximumSize="500m"
 	       fork="yes"
 	       listfiles="yes"
@@ -175,11 +176,24 @@
 		password="${env.SOURCFORGEPWD}"
 		trust="yes"
 	/>
+   	<scp file="web/jpo-devel.jnlp" 
+		todir="${env.SOURCFORGEUSER}@shell.sourceforge.net:/home/groups/j/j-/j-po/htdocs"
+		password="${env.SOURCFORGEPWD}"
+		trust="yes"
+	/>
+   	<scp file="web/jpo-stable.jnlp" 
+		todir="${env.SOURCFORGEUSER}@shell.sourceforge.net:/home/groups/j/j-/j-po/htdocs"
+		password="${env.SOURCFORGEPWD}"
+		trust="yes"
+	/>
     </target>    
+
+	      <!-- jvm="${env.JAVA_HOME}/bin/java"-->
     
     <target name="run" description="Runs the program">
         <java classname="${app.main.class}"
               fork="yes"
+	      jvm="${env.JVM}/bin/java"
 	      maxmemory="1000m" >
             <classpath refid="base.path"/>
         </java>

@@ -32,7 +32,7 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 
 
 /** 
- *   PictureViewer manages a window which diplays a picture. It provides navigation control 
+ *   PictureViewer manages a window which displays a picture. It provides navigation control 
  *   the collection as well as mouse and keyboard control over the zooming
  *
  *   <img src="../PictureViewer.png" border=0>
@@ -879,22 +879,34 @@ public class PictureViewer extends JPanel
 
 	/**
 	 *  The TreeModelListener interface tells us of tree node removal events.
+	 *  If we receive a removal event we need to find out if the PictureViewer is 
+	 *  displaying an image and if it is whether this is the node being removed or 
+	 *  a descendant of it. If so it must switch to the next node. If the next node 
+	 *  is a group then the viewer is closed.
 	 */
 	public void treeNodesRemoved ( TreeModelEvent e ) {
-		//Tools.log("PictureViewer.treeNodesRemoved was invoked");
+		Tools.log("PictureViewer.treeNodesRemoved was invoked");
+		if ( currentNode == null ) return;
 		TreePath removedChild;
 		TreePath currentNodeTreePath = new TreePath( currentNode.getPath() );
 		Object [] children = e.getChildren();
-		for ( int i = 0; i<children.length; i++ ) {
+		for ( int i = 0; i < children.length; i++ ) {
 			removedChild = new TreePath( children[ i ] );
 			if ( removedChild.isDescendant( currentNodeTreePath ) ) {
+				Tools.log("PictureViewer.treeNodesRemoved: " 
+					+ currentNodeTreePath.toString() 
+					+ " is a descendant of "
+					+  removedChild.toString() );
 				int[] childIndices = e.getChildIndices();
 				SortableDefaultMutableTreeNode parentNode =
 					(SortableDefaultMutableTreeNode) e.getTreePath().getLastPathComponent();
 				try {
 					SortableDefaultMutableTreeNode nextChild = 
 						(SortableDefaultMutableTreeNode) parentNode.getChildAt( childIndices[i] );
-					changePicture( nextChild );
+					if ( nextChild.getUserObject() instanceof PictureInfo ) 
+						changePicture( nextChild );
+					else 
+						closeViewer();
 				} catch ( ArrayIndexOutOfBoundsException x ) {
 					closeViewer();
 				}
@@ -971,12 +983,20 @@ public class PictureViewer extends JPanel
 	 *   advance the picture. It calls {@link SortableDefaultMutableTreeNode#getNextPicture} to find
 	 *   the image. If the call returned a non null node {@link #changePicture}
 	 *   is called to request the loading and display of the new picture.
+	 *
+	 *  @return  true if the next picture was located, false if none available
 	 * 
 	 * @see #requestPriorPicture()
   	*/
-	public void requestNextPicture() {
+	public boolean requestNextPicture() {
 		SortableDefaultMutableTreeNode nextNode = currentNode.getNextPicture();
-		if ( nextNode != null )  changePicture( nextNode );
+		if ( nextNode != null )  {
+			changePicture( nextNode );
+			return true;
+		} else {
+		
+			return false;
+		}
 	}
 
 

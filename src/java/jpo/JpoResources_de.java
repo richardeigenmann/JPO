@@ -55,7 +55,7 @@ public class JpoResources_de extends ListResourceBundle {
 		
 		
 		// Help About Dialog
-		{"HelpAboutText", "JPO Version 0.8.4 ist ein Java/Swing Programm\n" 
+		{"HelpAboutText", "JPO Version 0.8.5 ist ein Java/Swing Programm\n" 
 			+ "geschrieben von Richard Eigenmann, Zrich, Schweiz\n" 
 			+ "Copyright 2000 - 2004\n"
 			+ "richard_eigenmann@compuserve.com\n"

@@ -58,7 +58,7 @@
          system that the file does not need
          to be downloaded before the
          application can be run -->
-    <jar href="jpo-0.8.4.jar"/>
+    <jar href="jpo-0.8.5.jar"/>
     <jar href="metadata-extractor-2.2.jar"/>
     
   </resources>

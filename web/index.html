@@ -110,11 +110,12 @@
     <p>The simplest way to run JPO is using the <b>Java Web Start</b> technology. Simply click on the
     link below to install and run the application:</p>
 
-    <p><a href="jpo-stable.jnlp"><b>JPO (latest stable version currently 0.8.3)</b></a><br>
-    <a href="jpo-devel.jnlp">JPO (latest development version currently 0.8.4)</a><br>
+    <p><a href="jpo-stable.jnlp"><b>JPO (latest stable version currently 0.8.4)</b></a><br>
+    <a href="jpo-devel.jnlp">JPO (latest development version currently 0.8.5)</a><br>
     <a href="jpo-0.8.jnlp">Frozen Version 0.8</a><br>
     <a href="jpo-0.8.2.jnlp">Frozen Version 0.8.2</a><br>
     <a href="jpo-0.8.3.jnlp">Frozen Version 0.8.3</a></p>
+    <a href="jpo-0.8.3.jnlp">Frozen Version 0.8.4</a></p>
     
     <p><b><font color="red">NEW:</font></b> For Windows users there is now a packaged Windows 
     version available. Download it from the regular Sourceforge download area:</p>
@@ -173,7 +174,7 @@ Basically the mime type <code>application/x-java-jnlp-file</code> with the exten
 <h2 id="Installation">Local Installation</h2>
 <p>If you don't like Java Web Start or want more control you can download the program files and run Jpo locally. Unfortunately Jpo can't just be started with a doubleclick as it needs the memory parameters specified and it needs to be told where the added libraries reside. Follow these instructions:</p>
 
-<p>First download the jar files: <a href="http://j-po.sourceforge.net/jpo-0.8.4.jar">jpo-0.8.4.jar</a>,
+<p>First download the jar files: <a href="http://j-po.sourceforge.net/jpo-0.8.5.jar">jpo-0.8.5.jar</a>,
 <a href="http://j-po.sourceforge.net/metadata-extractor-2.2.jar">metadata-extractor-2.2.jar</a>,
 <a href="http://j-po.sourceforge.net/jnlp.jar">jnlp.jar</a>.</p>
 
@@ -182,7 +183,7 @@ Basically the mime type <code>application/x-java-jnlp-file</code> with the exten
 <p><font color="darkRed"><code>/PATH/TO/YOUR/JAVA/bin/java -Xms80M -Xmx200M
 -classpath /PATH/TO/YOUR/JPO/JARS/jnlp.jar:
 /PATH/TO/YOUR/JPO/JARS/metadata-extractor-2.2.jar:
-/PATH/TO/YOUR/JPO/JARS/jpo-0.8.4.jar jpo.Jpo</code></font></p>
+/PATH/TO/YOUR/JPO/JARS/jpo-0.8.5.jar jpo.Jpo</code></font></p>
 
 <p>On a particular Windows XP machine I installed Jpo into c:\Program Fils\Jpo. The resulting Batch file looks like this: (you can download it here: <a href="Jpo.bat">Jpo.bat</a></p>
 
@@ -190,7 +191,7 @@ Basically the mime type <code>application/x-java-jnlp-file</code> with the exten
 c:\windows\system32\java -Xms80M -Xmx200M -classpath
 "c:\Program Files\Jpo\jnlp.jar";
 "c:\Program Files\Jpo\metadata-extractor-2.2.jar";
-"c:\Program Files\Jpo\jpo-0.8.4.jar" jpo.Jpo
+"c:\Program Files\Jpo\jpo-0.8.5.jar" jpo.Jpo
 </code></p>
 
 <p><strong>Note:</strong> On <font color="red">Windows</font> machines the classpath must be separated by semicolons (;) on Linux machines by colons (:)</p>
@@ -239,6 +240,8 @@ Unofficial Java Web Start/JNLP FAQ: <a href="http://www.vamphq.com/jwsfaq.html">
     <h2><a name="Changelog">Changelog</h2>
 
     <table>
+    <tr><td colspan=2><b>Version 0.8.5</b></td></tr>
+    <tr><td valign="top">28.09.2004</td><td> Fixed the logic of what happens when you are showing an image and then rmove it's node or it's parent node</td></tr>
     <tr><td colspan=2><b>Version 0.8.4</b></td></tr>
     <tr><td valign="top">20.08.2004</td><td> Consolidate now also consolidates the group thumbnails</td></tr>
     <tr><td valign="top">20.08.2004</td><td> Bugfix: im thumbnail size was not exactly specified thumbnail size or original image was smaller than thumbnail then thumbnail creation could loop</td></tr>
