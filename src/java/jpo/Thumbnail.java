@@ -12,6 +12,7 @@ import java.awt.event.*;
 import java.awt.dnd.*;
 import java.awt.datatransfer.*;
 import javax.swing.event.*;
+import javax.swing.border.*;
 
 import java.awt.image.*;
 import java.awt.geom.*;
@@ -106,8 +107,14 @@ public class Thumbnail extends JPanel
 	/**
 	 *  The color to use when the thumbnail has been selected
 	 */
-	private static final Color  SELECTION_COLOR = Color.BLUE;
+	private static final Color  HIGHLIGHT_COLOR = Color.DARK_GRAY;
 	
+
+	/**
+	 *  The color to use when the thumbnail has been selected
+	 */
+	private static final Color  SHADOW_COLOR = Color.LIGHT_GRAY;
+
 	
 	/**
 	 *  The color to use when the thumbnail has been selected
@@ -181,7 +188,7 @@ public class Thumbnail extends JPanel
 	 *
 	 *  @param  node   The node which should be displayed. Can be null if the Thumbnail is to be muted.
 	 */
-	public void setNode( SortableDefaultMutableTreeNode node ) {
+	public synchronized void setNode( SortableDefaultMutableTreeNode node ) {
 		if ( this.referringNode == node ) {
 			// Don't refresh the node if it hasn't changed
 			return;
@@ -404,14 +411,18 @@ public class Thumbnail extends JPanel
 	 *  changes the color so that the user sees that the thumbnail is part of the selection
 	 */
 	public void showAsSelected() {
-		setBackground( SELECTION_COLOR );
+		//setBackground( HIGHLIGHT_COLOR );
+		setBorder( BorderFactory.createCompoundBorder( 
+			BorderFactory.createBevelBorder( BevelBorder.LOWERED, HIGHLIGHT_COLOR, SHADOW_COLOR ),
+			BorderFactory.createBevelBorder( BevelBorder.RAISED, HIGHLIGHT_COLOR, SHADOW_COLOR ) ) );
 	}
 
 	/**
 	 *  changes the color so that the user sees that the thumbnail is not part of the selection
 	 */
 	public void showAsUnselected() {
-		setBackground( UNSELECTED_COLOR );
+		//setBackground( UNSELECTED_COLOR );
+		setBorder( BorderFactory.createEmptyBorder() );
 	}
 
 
