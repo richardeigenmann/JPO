@@ -475,7 +475,7 @@ public class ScalablePicture implements SourcePictureListener {
 	 *  invoke this method to tell the scale process to figure out the scal factor 
 	 *  so that the image fits either by height or by width into the indicated dimension.
 	 */
-	public void setScaleSize(Dimension newSize) {
+	public void setScaleSize( Dimension newSize ) {
 		scaleToSize = true;
 		TargetSize = newSize;
 	}
@@ -676,7 +676,7 @@ public class ScalablePicture implements SourcePictureListener {
 	 * Method that sets the status of the ScalablePicture object and notifies 
 	 * intereasted objects of a change in status (not built yet).
 	 */
-	private void setStatus(int statusCode, String statusMessage) {
+	private void setStatus( int statusCode, String statusMessage ) {
 		String filename =  ( imageUrl == null ) ? "" : imageUrl.toString();
 		Tools.log("ScalablePicture.setStatus: sending: " + statusMessage + " to all Listeners from Image: " + filename );
 

@@ -369,6 +369,8 @@ public class SourcePicture implements Cloneable {
 	}
 
 
+
+
 	/**
 	 *   return the height of the image or Zero if there is none
 	 */	

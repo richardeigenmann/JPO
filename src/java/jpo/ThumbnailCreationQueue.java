@@ -87,7 +87,7 @@ public class ThumbnailCreationQueue {
 	 *  @param	thumb	The Thumbnail which is to be loaded
 	 *  @param	priority	The priority with which the rquest is to be treated on the queue
 	 */
-	public static synchronized void requestThumbnailCreation( Thumbnail thumb, int priority ) {
+	public static void requestThumbnailCreation( Thumbnail thumb, int priority ) {
 		requestThumbnailCreation( thumb, priority, false );
 	}
 	
@@ -99,7 +99,7 @@ public class ThumbnailCreationQueue {
 	 *  @param	thumb	The Thumbnail which is to be loaded
 	 *  @param	priority	The priority with which the rquest is to be treated on the queue
 	 */
-	public static synchronized void forceThumbnailCreation( Thumbnail thumb, int priority ) {
+	public static void forceThumbnailCreation( Thumbnail thumb, int priority ) {
 		requestThumbnailCreation( thumb, priority, true );
 	}
 	
@@ -112,12 +112,13 @@ public class ThumbnailCreationQueue {
 	 *  @param	force		Set to true if the thumbnail needs to be rebuilt from source, false
 	 *				if using a cached version is ok.
 	 */
-	public static synchronized void requestThumbnailCreation( Thumbnail thumb, int priority, boolean force ) {
+	public static void requestThumbnailCreation( Thumbnail thumb, int priority, boolean force ) {
 		if ( thumb.referringNode.getUserObject() instanceof PictureInfo ) {
 			thumb.setThumbnail( queueIcon );
 		} else {
 			thumb.setThumbnail( largeFolderIcon );
 		}
+		thumbQueue.remove( thumb ); // remove it if it was there already
 		thumbQueue.add( new ThumbnailQueueRequest ( thumb, priority, force ) );
 	}
 
@@ -128,7 +129,7 @@ public class ThumbnailCreationQueue {
 	 *
 	 *   @param  thumb  The thumbnail to be removed
 	 */
-	public static synchronized void remove( Thumbnail thumb ) {
+	public static void remove( Thumbnail thumb ) {
 		boolean notFound = true;
 		ThumbnailQueueRequest test;
 		Enumeration e = thumbQueue.elements();		
@@ -145,7 +146,7 @@ public class ThumbnailCreationQueue {
 	/**
 	 *   removes all queue requests from the queue.
 	 */
-	public static synchronized void removeAll() {
+	public static void removeAll() {
 		thumbQueue.removeAllElements();
 	}
 
@@ -154,7 +155,7 @@ public class ThumbnailCreationQueue {
 	 *  this method returns the highest priority request on the queue. If there
 	 *  are no elements it returns null.
 	 */
-	public static synchronized ThumbnailQueueRequest getRequest() {
+	public static ThumbnailQueueRequest getRequest() {
 		ThumbnailQueueRequest req = null;
 		ThumbnailQueueRequest test;
 		int prio = COMPARISON_PRIORITY;

@@ -197,7 +197,7 @@ public class Thumbnail extends JPanel
 	 *
 	 *  @param  node   The node which should be displayed. Can be null if the Thumbnail is to be muted.
 	 */
-	public synchronized void setNode( SortableDefaultMutableTreeNode node ) {
+	public void setNode( SortableDefaultMutableTreeNode node ) {
 		if ( this.referringNode == node ) {
 			// Don't refresh the node if it hasn't changed
 			return;
@@ -247,7 +247,7 @@ public class Thumbnail extends JPanel
 	 *
 	 *  @param  icon  The imageicon that should be displayed
 	 */
-	public synchronized void setThumbnail( ImageIcon icon ) {
+	public void setThumbnail( ImageIcon icon ) {
 		img = icon.getImage();
 		imgOb = icon.getImageObserver();
 		setVisible( true );
@@ -760,6 +760,7 @@ public class Thumbnail extends JPanel
 		 *   has ended. 
 		 */
 		public void dragDropEnd ( DragSourceDropEvent event ) {   
+			referringNode.clearSelection();
 		}
 	}
 

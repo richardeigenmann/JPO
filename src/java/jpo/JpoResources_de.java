@@ -298,7 +298,7 @@ public class JpoResources_de extends ListResourceBundle {
 		{"pictureEditJMenuItemLabel", "Eigenschaften"},
 		{"copyImageJMenuLabel", "Bild Kopieren"},
 		{"copyToNewLocationJMenuItem", "Zielverzeichnis auswählen"},
-		{"FileOperations", "Dateio Operationen"},
+		{"FileOperations", "Datei Operationen"},
 		{"fileRenameJMenuItem", "Umbenennen"},
 		{"FileRenameLabel1", "Benenne \n"},
 		{"FileRenameLabel2", "\nun in: "},

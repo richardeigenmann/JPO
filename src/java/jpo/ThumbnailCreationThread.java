@@ -195,11 +195,25 @@ public class ThumbnailCreationThread extends Thread {
 
 		// Thumbnail up to date is size ok?
 		ImageIcon icon = new ImageIcon( lowresUrl );
-		if ((icon.getIconWidth() == currentThumb.thumbnailSize) || (icon.getIconHeight() == currentThumb.thumbnailSize)) {
+		// bug when doesn't scale to exact size --> tolerance
+		final float tolerance = 1.02f; 
+		if ( //the thumbnail is within the tolerance
+  		     (  ( icon.getIconWidth() > currentThumb.thumbnailSize / tolerance ) 
+		     && ( icon.getIconWidth() < currentThumb.thumbnailSize * tolerance ) )
+		   || ( ( icon.getIconHeight() > currentThumb.thumbnailSize / tolerance ) 
+		     && ( icon.getIconHeight() < currentThumb.thumbnailSize * tolerance ) ) 
+		   || //the original could be small. Problem: how to get the orignial size quickly here?
+		     (	Settings.dontEnlargeSmallImages	
+		     && ( ( icon.getIconWidth() < currentThumb.thumbnailSize * tolerance )
+		       || ( icon.getIconHeight() < currentThumb.thumbnailSize * tolerance ) )
+		     && (  icon.getIconWidth() > 1 )
+		     && (  icon.getIconHeight() > 1 )
+		     )
+		 ) {
 			// all ist fine
 			currentThumb.setThumbnail( icon );
 		} else {
-			Tools.log( "Thumbnail is wrong size: " + icon.getIconWidth()  + " x " +  icon.getIconHeight() );
+			Tools.log( "ThumbnailCreationThread.createPictureThumbnail: Thumbnail is wrong size: " + icon.getIconWidth()  + " x " +  icon.getIconHeight() + " therefore thrown on queue");
 			createNewThumbnail( currentThumb );
 		}
 
@@ -207,17 +221,22 @@ public class ThumbnailCreationThread extends Thread {
 	}
 
 
+
 	/**
 	 *  creates a thumbnail by loading the highres image and scaling it down
 	 */
 	public static void createNewThumbnail ( Thumbnail currentThumb ) {
-		if ( currentThumb == null ) {
-			Tools.log( "ThumbnailCreationThread.createNewThumbnail called with null parameter! Aborting.");
-			return;
+		SortableDefaultMutableTreeNode referringNode = null;
+		synchronized ( currentThumb ) {
+			if ( currentThumb == null ) {
+				Tools.log( "ThumbnailCreationThread.createNewThumbnail called with null parameter! Aborting.");
+				return;
+			}
+		
+			referringNode = currentThumb.referringNode;
+			Tools.log("ThumbnailCreationThread.createNewThumbnail: Creating Thumbnail " + ((PictureInfo) referringNode.getUserObject()).getLowresLocation() + " from " + ((PictureInfo) referringNode.getUserObject()).getHighresLocation());
 		}
 		
-		SortableDefaultMutableTreeNode referringNode = currentThumb.referringNode;
-		Tools.log("ThumbnailCreationThread.createNewThumbnail: Creating Thumbnail " + ((PictureInfo) referringNode.getUserObject()).getLowresLocation() + " from " + ((PictureInfo) referringNode.getUserObject()).getHighresLocation());
 		try {
 			// create a new thumbnail from the highres
 			ScalablePicture currentPicture = new ScalablePicture();
@@ -290,8 +309,15 @@ public class ThumbnailCreationThread extends Thread {
 				// Thumbnail is not written to disk. Where it is written to disk the
 				// sent ThumbnailChangedEvent ensures that the new image is loaded.
 				ImageIcon icon = new ImageIcon( currentPicture.getScaledPicture() );
-				currentThumb.setThumbnail( icon );
+				synchronized ( currentThumb ) {
+					if ( ( currentThumb.referringNode != null )
+					  && ( currentThumb.referringNode == referringNode ) ) {
+					  	// could have changed in the mean time
+						currentThumb.setThumbnail( icon );
+					}
+				}
 			}
+			
 			//currentPicture = null;
 		} catch ( IOException x ) {
 			loadBrokenThumbnailImage( currentThumb );
@@ -370,14 +396,16 @@ public class ThumbnailCreationThread extends Thread {
 	 *  creates a thumbnail by loading the highres image and scaling it down
 	 */
 	public static void createNewGroupThumbnail ( Thumbnail currentThumb ) {
-		if ( currentThumb == null ) {
-			Tools.log( "ThumbnailCreationThread.createNewGroupThumbnail called with null parameter! Aborting.");
-			return;
-		}
+		SortableDefaultMutableTreeNode referringNode = null;
+		synchronized ( currentThumb ) {
+			if ( currentThumb == null ) {
+				Tools.log( "ThumbnailCreationThread.createNewGroupThumbnail called with null parameter! Aborting.");
+				return;
+			}
 		
-		synchronized (currentThumb) {
-		SortableDefaultMutableTreeNode referringNode = currentThumb.referringNode;
-		Tools.log("ThumbnailCreationThread.createNewGroupThumbnail: Creating Thumbnail " + ((GroupInfo) referringNode.getUserObject()).getLowresLocation() + " from " + ((GroupInfo) referringNode.getUserObject()).getLowresLocation());
+			referringNode = currentThumb.referringNode;
+			Tools.log("ThumbnailCreationThread.createNewGroupThumbnail: Creating Thumbnail " + ((GroupInfo) referringNode.getUserObject()).getLowresLocation() + " from " + ((GroupInfo) referringNode.getUserObject()).getLowresLocation());
+		}
 
 		try{
 			//ImageIO.setUseCache( false );
@@ -444,7 +472,7 @@ public class ThumbnailCreationThread extends Thread {
 			if ( Settings.keepThumbnails ) {
 				// Test that the file can be written to
 				// Note that we are using files here because java doesn't want to let me use output streams on URL's.
-				GroupInfo gi = (GroupInfo) currentThumb.referringNode.getUserObject();
+				GroupInfo gi = (GroupInfo) referringNode.getUserObject();
 				if ( ! gi.getLowresFile().exists() ) {
 					// the file doesn't yet exist. Can we write to it?
 					try {
@@ -468,16 +496,21 @@ public class ThumbnailCreationThread extends Thread {
 				ImageIcon cleanCache = new ImageIcon( gi.getLowresURLOrNull() );
 				cleanCache.getImage().flush(); 
 
-				currentThumb.referringNode.getTreeModel().nodeChanged( currentThumb.referringNode );
+				referringNode.getTreeModel().nodeChanged( referringNode );
 				//pi.sendThumbnailChangedEvent();
 			}
 
 
-			currentThumb.setThumbnail( new ImageIcon( groupThumbnail ) );
+			synchronized ( currentThumb ) {
+				if ( ( currentThumb.referringNode != null )
+				  && ( currentThumb.referringNode == referringNode ) ) {
+				  	// in the meantime it might be displaying something completely else
+					currentThumb.setThumbnail( new ImageIcon( groupThumbnail ) );
+				}
+			}
 		} catch ( IOException x ) {
 			Tools.log ("ThumbnailCreationThread.createNewGroupThumbnail: caught an IOException: " + x.getMessage());
 			loadBrokenThumbnailImage( currentThumb );
-		}
 		}
 	}
 	
@@ -494,10 +527,25 @@ public class ThumbnailCreationThread extends Thread {
 	
 	/**
 	 *  method that loads the brokenThumbnail image. Intended for use when the URLs are all messed up and no 
-	 *  image is available
+	 *  image is available. Use the other method as this checks if the node was updated in the meantime.
+	 *  @deprecated
 	 */
 	private static void loadBrokenThumbnailImage( Thumbnail targetThumbnail ) {
 		targetThumbnail.setThumbnail( brokenThumbnailPicture );
+	}
+
+
+	/**
+	 *  method that loads the brokenThumbnail image. Intended for use when the URLs are all messed up and no 
+	 *  image is available
+	 */
+	private static void loadBrokenThumbnailImage( Thumbnail targetThumbnail, SortableDefaultMutableTreeNode intendedTarget ) {
+		synchronized ( targetThumbnail ) {
+			if ( ( targetThumbnail.referringNode != null )
+			  && ( targetThumbnail.referringNode == intendedTarget ) ) {
+				targetThumbnail.setThumbnail( brokenThumbnailPicture );
+			}
+		}
 	}
 
 	
