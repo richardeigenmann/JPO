@@ -376,7 +376,7 @@ public class Tools {
 			node = (SortableDefaultMutableTreeNode) enum.nextElement();
 			nodeObject = node.getUserObject();
 			if  (nodeObject instanceof PictureInfo) {
-				//Tools.log( "Checking: " + ( (PictureInfo) nodeObject ).getHighresLocation() + " against " + sourceFile );
+				//Tools.log( "Tools.movePicture: checking: " + ( (PictureInfo) nodeObject ).getHighresLocation() + " against " + sourceFile );
 				if ( ((PictureInfo) nodeObject ).getHighresFile().equals( sourceFile ) )   {
 					//Tools.log ( "Another picture node was using the same highres URL. Node changed: " + ( (PictureInfo) nodeObject ).getDescription() );
 					((PictureInfo) nodeObject ).setHighresLocation( targetFile.toURI().toURL() );

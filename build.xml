@@ -11,6 +11,8 @@
     <property name="build.dtd.dir" value="${build.base.classes.dir}/${app.main.package}"/>
     <property name="build.docs.dir" value="${build.dir}/docs"/>
     <property name="build.api.dir" value="${build.dir}/api"/>
+    <property name="build.jars.dir" value="jars"/>
+    <property name="version" value="0.8.4"/>
 
     <property name="libs.dir" value="libs"/>
     <property name="src.dir" value="src"/>
@@ -18,6 +20,9 @@
     <property name="src.images.dir" value="${src.dir}/images"/>
     <property name="src.docs.dir" value="${src.dir}/docsrc"/>
     <property name="src.dtd.dir" value="${src.dir}/dtd"/>
+    <property environment="env"/>
+    <!-- <echo message="KEYSTORE is set to = ${env.KEYSTORE}"/> -->
+
 
     <path id="base.path">
         <pathelement location="${build.base.classes.dir}"/>
@@ -103,8 +108,70 @@
             depends="compile, run"
             description="Compile and run the project"/>
 
+	    
+    <target name="buildjar">
+    	<jar destfile="${build.jars.dir}/jpo-${version}.jar"
+		basedir="${build.base.classes.dir}"
+		compress="yes"
+		manifest="${build.jars.dir}/Manifest.jpo.jar"
+		duplicate="fail"
+		excludes="docs/ api/"
+	/>
+    </target>
 
+    
+    <!-- This target will only be of use to the person who wants to sign the jar file for deployment on a web server.
+         It relies on the environment variables KEYSTORE and JARPWD to find the keystore and password to access this
+    -->
+    <target name="signjar"
+        depends="buildjar" >
+	<signjar jar="${build.jars.dir}/jpo-${version}.jar" 
+	alias="myself"
+	keystore="${env.KEYSTORE}"
+	storepass="${env.JARPWD}"
+	/>
+    </target>
 
+    
+    <!-- Not the following one doesn't exclude properly though if run on the command line it works.
+    	so simply run:
+    	zip  -9 -r web/jpo-src-0.8.4.zip ../Jpo -x  \*.zip \*.class \*.ini \*.dta
+     -->
+    <target name="sourcezip">
+        <delete file="${basedir}/web/jpo-src-${version}.zip"/>
+        <exec dir=".." executable="zip">
+		<arg line="-9 -r ${basedir}/web/jpo-src-${version}.zip Jpo -x \*.zip \*.class \*.ini \*.dta  "/> 
+	</exec>
+    </target>
+      
+<!--		
+		basedir="${basedir}"
+		include="libs/jnlp.jar, libs/metadata-extractor-2.2.jar, .cvsignore"
+
+		 -->
+    
+    <!-- This target will only be of use to the person who does the deployment of JPO to souceforge.
+         It relies on the environment variables SOURCEFORGEUSER and SORUVEFORGEPWD for the authentication.
+    -->
+    <target name="publish"
+        depends="signjar">
+   	<scp file="${build.jars.dir}/jpo-${version}.jar" 
+		todir="${env.SOURCFORGEUSER}@shell.sourceforge.net:/home/groups/j/j-/j-po/htdocs"
+		password="${env.SOURCFORGEPWD}"
+		trust="yes"
+	/>
+   	<scp file="web/index.html" 
+		todir="${env.SOURCFORGEUSER}@shell.sourceforge.net:/home/groups/j/j-/j-po/htdocs"
+		password="${env.SOURCFORGEPWD}"
+		trust="yes"
+	/>
+   	<scp file="web/jpo-${version}.jnlp" 
+		todir="${env.SOURCFORGEUSER}@shell.sourceforge.net:/home/groups/j/j-/j-po/htdocs"
+		password="${env.SOURCFORGEPWD}"
+		trust="yes"
+	/>
+    </target>    
+    
     <target name="run" description="Runs the program">
         <java classname="${app.main.class}"
               fork="yes"
