@@ -353,8 +353,12 @@ public class Thumbnail extends JPanel
 							referringNode.setSelected();
 						}
 					} else {
-						referringNode.clearSelection();
-						referringNode.setSelected();
+						if ( referringNode.isSelected() ) {
+							referringNode.clearSelection();
+						} else {
+							referringNode.clearSelection();
+							referringNode.setSelected();
+						}
 					}
 				}
 			} else {
