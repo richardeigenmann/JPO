@@ -440,7 +440,10 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
  
 	/**
 	 *   This method returns true if the indicated file is already a member 
-	 *   of the collection. Otherwise it returns false.
+	 *   of the collection. Otherwise it returns false. Enhanced on 9.6.2004 to
+	 *   check against Lowres pictures too as we might be adding in pictures that have a 
+	 *   Lowres Subdirectory and we don't wan't to add the Lowres of the collection
+	 *   back in.
 	 *
 	 *   @param	f	The File object of the file to check for
 	 */
@@ -455,6 +458,8 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 				//Tools.log( "Checking: " + ( (PictureInfo) nodeObject ).getHighresLocation() );
 				if ( ((PictureInfo) nodeObject ).getHighresFile().compareTo( f ) == 0 )  {
 					//Tools.log ( "CleverJTree.isInCollection found a match on: " + ( (PictureInfo) nodeObject ).getDescription() );
+					return true;
+				} else if ( ((PictureInfo) nodeObject ).getLowresFile().compareTo( f ) == 0 )  {
 					return true;
 				}
 			}
@@ -2028,8 +2033,11 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 					newNode.addDirectory( fileArray[i], newOnly, recurseDirectories, progGui );
 				}
 			} else {
-				newNode.addSinglePicture( fileArray[i], newOnly );
-				progGui.progressIncrement();
+				if ( newNode.addSinglePicture( fileArray[i], newOnly ) ) {
+					progGui.progressIncrement();
+				} else {
+					progGui.decrementTotal();
+				}
 			}
 		}
 	}
