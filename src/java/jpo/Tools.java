@@ -387,6 +387,7 @@ public class Tools {
 				}
 			} else {
 				if ( ( ! node.isRoot() )
+				  && ( ! ( (GroupInfo) nodeObject ).getLowresLocation().equals("") ) 
 				  && ( (GroupInfo) nodeObject ).getLowresFile().equals( sourceFile ) ) {
 					//Tools.log ( "Another group node was using the same lowres URL. Node changed: " + ( (PictureInfo) nodeObject ).getDescription() );
 					((GroupInfo) nodeObject ).setLowresLocation( targetFile.toURI().toURL() );

@@ -156,7 +156,7 @@ public class ConsolidateGroupThread extends Thread {
 	 */
 	private boolean enumerateGroup ( SortableDefaultMutableTreeNode groupNode )  {
 		g = (GroupInfo) groupNode.getUserObject();
-		if ( moveLowres  && ( ! groupNode.isRoot() ) ) {
+		if ( moveLowres  && ( ! groupNode.isRoot() ) && ( ( ! g.getLowresLocation().equals("") ) ) ) {
 			if ( ! moveLowresPicture ( groupNode ) ) {
 				JOptionPane.showMessageDialog(
 					Settings.anchorFrame, 
