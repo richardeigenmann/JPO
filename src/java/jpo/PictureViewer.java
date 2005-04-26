@@ -192,6 +192,27 @@ public class PictureViewer extends JPanel
 	private static final ImageIcon iconNoPrev = new ImageIcon( Settings.cl.getResource( "jpo/images/icon_noprev.gif" ) );
 
 
+	/**
+	 *   icon to rotate right
+	 */
+	private static final ImageIcon iconRotateRight = new ImageIcon( Settings.cl.getResource( "jpo/images/icon_RotCWDown.gif" ) );
+
+	/**
+	 *  button to rotate right
+	 */
+	private JButton rotateRightJButton = new JButton( iconRotateRight );
+
+	/**
+	 *   icon to rotate left
+	 */
+	private static final ImageIcon iconRotateLeft = new ImageIcon( Settings.cl.getResource( "jpo/images/icon_RotCCDown.gif" ) );
+
+
+	/**
+	 *  button to rotate left
+	 */
+	private JButton rotateLeftJButton = new JButton( iconRotateLeft );
+
 
 	/**
 	 *  Button that is put in the {@link #NavigationPanel} to allow the user to navigate to the previous
@@ -221,12 +242,14 @@ public class PictureViewer extends JPanel
 	/**
 	 *  Button to expand the windo to full screen or a different window size.
 	 */
-	private JButton fullScreenJButton = new JButton( new ImageIcon( Settings.cl.getResource( "jpo/images/icon_maximise.gif" ) ) );
+//	private JButton fullScreenJButton = new JButton( new ImageIcon( Settings.cl.getResource( "jpo/images/icon_maximise.gif" ) ) );
+	private JButton fullScreenJButton = new JButton( new ImageIcon( Settings.cl.getResource( "jpo/images/icon_Frames.gif" ) ) );
 	
 	/**
 	 *  Button to bring up the popup menu to do things to the image.
 	 */
-	private JButton popupMenuJButton = new JButton(new ImageIcon( Settings.cl.getResource( "jpo/images/icon_minimise.gif")));
+//	private JButton popupMenuJButton = new JButton(new ImageIcon( Settings.cl.getResource( "jpo/images/icon_minimise.gif")));
+	private JButton popupMenuJButton = new JButton(new ImageIcon( Settings.cl.getResource( "jpo/images/icon_FingerUp.gif")));
 	
 	/**
 	 *  Button to turn on the blending in of info or turn it off.
@@ -247,7 +270,8 @@ public class PictureViewer extends JPanel
 	/**
 	 *   icon to close the image
 	 */	
-	private static final ImageIcon closeIcon = new ImageIcon( Settings.cl.getResource( "jpo/images/icon_close.gif" ) );
+//	private static final ImageIcon closeIcon = new ImageIcon( Settings.cl.getResource( "jpo/images/icon_close.gif" ) );
+	private static final ImageIcon closeIcon = new ImageIcon( Settings.cl.getResource( "jpo/images/icon_close2.gif" ) );
 		
 	/**
 	 *  button to close the window
@@ -432,6 +456,38 @@ public class PictureViewer extends JPanel
 		nextJButton.setBackground(Color.black);
 		nextJButton.setPreferredSize( navButtonSize );
 		NavigationPanel.add(nextJButton);
+
+
+		rotateLeftJButton.setMnemonic(KeyEvent.VK_L);
+		rotateLeftJButton.addActionListener( new ActionListener() {
+			public void actionPerformed( ActionEvent e ) {
+				//requestNextPicture();
+				currentNode.rotatePicture( 270 );
+				myJFrame.getGlassPane().requestFocus();
+			}
+		});
+		rotateLeftJButton.setToolTipText( Settings.jpoResources.getString("rotateLeftJButton.ToolTipText") );
+		rotateLeftJButton.setBorderPainted( false );
+		rotateLeftJButton.setBackground( Color.black );
+		rotateLeftJButton.setPreferredSize( navButtonSize );
+		NavigationPanel.add( rotateLeftJButton );
+
+
+
+
+		rotateRightJButton.setMnemonic(KeyEvent.VK_R);
+		rotateRightJButton.addActionListener( new ActionListener() {
+			public void actionPerformed( ActionEvent e ) {
+				//requestNextPicture();
+				currentNode.rotatePicture( 90 );
+				myJFrame.getGlassPane().requestFocus();
+			}
+		});
+		rotateRightJButton.setToolTipText( Settings.jpoResources.getString("rotateRightJButton.ToolTipText") );
+		rotateRightJButton.setBorderPainted( false );
+		rotateRightJButton.setBackground( Color.black );
+		rotateRightJButton.setPreferredSize( navButtonSize );
+		NavigationPanel.add( rotateRightJButton );
 
 
 		fullScreenJButton.setMnemonic( KeyEvent.VK_F );

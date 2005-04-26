@@ -143,6 +143,12 @@ public class Thumbnail extends JPanel
 	 */
 	private int priority = ThumbnailCreationQueue.MEDIUM_PRIORITY;
 
+
+	/**
+	 *   The factor which is multiplied with the Thumbnail to determine how large it is shown.
+	 */
+	private float thumbnailSizeFactor = 1;
+
 	/**
 	 *   Creates a new Thumbnail object.
 	 *
@@ -305,23 +311,33 @@ public class Thumbnail extends JPanel
 	 */
 	public void setVisible( boolean visibility ) {
 		super.setVisible( visibility );
+		Tools.log("Thumbnail.setVisible: thumbnailSize: " + Integer.toString( thumbnailSize ) + " (int) ( thumbnailSize * thumbnailSizeFactor ): " 
+			+ Integer.toString( (int) ( thumbnailSize * thumbnailSizeFactor ) ) );
 		if ( visibility ) {
-			setPreferredSize( new Dimension( thumbnailSize, img.getHeight(imgOb) ) );
-			setMaximumSize( new Dimension( thumbnailSize, img.getHeight(imgOb) ) ); 
-			setMinimumSize( new Dimension( thumbnailSize, img.getHeight(imgOb) ) ); 
-			setSize( new Dimension( thumbnailSize, img.getHeight(imgOb) ) ); 
+			setPreferredSize( new Dimension( (int) ( thumbnailSize * thumbnailSizeFactor ), (int) ( img.getHeight(imgOb) * thumbnailSizeFactor ) ) );
+			setMaximumSize( new Dimension( (int) ( thumbnailSize * thumbnailSizeFactor ), (int) ( img.getHeight(imgOb) * thumbnailSizeFactor ) ) ); 
+			setMinimumSize( new Dimension( (int) ( thumbnailSize * thumbnailSizeFactor ), (int) ( img.getHeight(imgOb) * thumbnailSizeFactor ) ) ); 
+			setSize( new Dimension( (int) ( thumbnailSize * thumbnailSizeFactor ), (int) ( img.getHeight(imgOb) * thumbnailSizeFactor ) ) ); 
 			revalidate();
 			repaint();
 		} else {
-			setPreferredSize( new Dimension( thumbnailSize, 0 ));
-			setMaximumSize( new Dimension( thumbnailSize, 0 )); 
-			setMinimumSize( new Dimension( thumbnailSize, 0 )); 
-			setSize( new Dimension( thumbnailSize, 0 ));
+			setPreferredSize( new Dimension( (int) ( thumbnailSize * thumbnailSizeFactor ), 0 ));
+			setMaximumSize( new Dimension( (int) ( thumbnailSize * thumbnailSizeFactor ), 0 )); 
+			setMinimumSize( new Dimension( (int) ( thumbnailSize * thumbnailSizeFactor ), 0 )); 
+			setSize( new Dimension( (int) ( thumbnailSize * thumbnailSizeFactor ), 0 ));
 			revalidate();
 		}
 	}
 
 
+	/**
+	 *  This method sets the scaling factor for the display of a thumbnail.
+	 */
+	public void setFactor( float thumbnailSizeFactor ) {
+		//Tools.log("Thumbnail.setFactor: " + Float.toString( thumbnailSizeFactor ) );
+		this.thumbnailSizeFactor = thumbnailSizeFactor;
+		setVisible( isVisible() );
+	}
 
 	/**
 	 *  Removes any request for this thumbnail from the ThumbnailCreationQueue. No problem if
@@ -355,8 +371,8 @@ public class Thumbnail extends JPanel
 		if ( img != null ) {
 			Graphics2D g2d = (Graphics2D)g;
 			
-			int focusPointx = (int) ( img.getWidth(imgOb) / 2 );
-			int focusPointy = (int) ( img.getHeight(imgOb) / 2 );
+			int focusPointx = (int) ( img.getWidth(imgOb) * thumbnailSizeFactor / 2 );
+			int focusPointy = (int) ( img.getHeight(imgOb) * thumbnailSizeFactor / 2 );
 
 			int X_Offset = (int) ((double) ( WindowWidth / 2 ) - ( focusPointx ));
 			int Y_Offset = (int) ((double) ( WindowHeight / 2 ) - ( focusPointy ));
@@ -369,7 +385,13 @@ public class Thumbnail extends JPanel
 			              clipBounds.width, 
 			      	      clipBounds.height);
 
-			g2d.drawImage( img, AffineTransform.getTranslateInstance((int) X_Offset, (int) Y_Offset), imgOb);
+			AffineTransform af1 = AffineTransform.getTranslateInstance((int) X_Offset, (int) Y_Offset);
+			AffineTransform af2 = AffineTransform.getScaleInstance((double) thumbnailSizeFactor, (double) thumbnailSizeFactor);
+			af2.concatenate( af1 );
+			//op = new AffineTransformOp( af2, AffineTransformOp.TYPE_NEAREST_NEIGHBOR );
+			
+
+			g2d.drawImage( img, af2, imgOb);
 			if ( drawOfflineIcon ) {
 				g2d.drawImage( offlineIcon.getImage(), (int) X_Offset + 10, (int) Y_Offset + 10, offlineIcon.getImageObserver() );
 			}

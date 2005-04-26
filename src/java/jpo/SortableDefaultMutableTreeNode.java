@@ -1893,8 +1893,9 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 	 * 
 	 *  @param newOnly indicates whether to check if the picture is already in the collection
 	 *  @param recurseDirectories  indicates whether to scan down into directories for more pictures. 
+	 *  @param retainDirectories  indicates whether to preserve the directory structure.
 	 */
-	public void addPictures( File[] chosenFiles, boolean newOnly, boolean recurseDirectories ) {
+	public void addPictures( File[] chosenFiles, boolean newOnly, boolean recurseDirectories, boolean retainDirectories ) {
 		ProgressGui progGui = new ProgressGui( Tools.countfiles( chosenFiles ),
 			Settings.jpoResources.getString("PictureAdderProgressDialogTitle"),
 			Settings.jpoResources.getString("picturesAdded") );
@@ -1909,9 +1910,9 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 				} else {
 					progGui.decrementTotal();
 				}
-		} else {
+			} else {
 				if ( Tools.hasPictures( addFile ) ) {
-					addDirectory( addFile, newOnly, recurseDirectories, progGui );
+					addDirectory( addFile, newOnly, recurseDirectories, retainDirectories, progGui );
 				} else {
 					Tools.log ("PictureAdder.run: no pictures in directory " + addFile.toString() );
 				}
@@ -1931,9 +1932,10 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 	/**
 	 *  Copies the pictures from the source tree to the target directory and adds them to the collection.
 	 *  @param  newOnly  If true only pictures not yet in the collection will be added.
+	 *  @param  retainDirectories  indicates that the directory structure should be preserved.
 	 * 
 	 */
-	public SortableDefaultMutableTreeNode copyAddPictures( File sourceDir, File targetDir, String groupName, boolean newOnly ) {
+	public SortableDefaultMutableTreeNode copyAddPictures( File sourceDir, File targetDir, String groupName, boolean newOnly, boolean retainDirectories ) {
 		File[] files = sourceDir.listFiles();
 		ProgressGui progGui = new ProgressGui( Tools.countfiles( files ),
 			Settings.jpoResources.getString("PictureAdderProgressDialogTitle"),
@@ -1947,7 +1949,7 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 		setSendModelUpdates( false );
 
 
-		boolean picturesAdded = copyAddPictures1( files, targetDir, newGroup, progGui, newOnly );
+		boolean picturesAdded = copyAddPictures1( files, targetDir, newGroup, progGui, newOnly, retainDirectories );
 		progGui.switchToDoneMode();
 		setSendModelUpdates( true );
 
@@ -1972,7 +1974,8 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 		File targetDir, 
 		SortableDefaultMutableTreeNode receivingNode, 
 		ProgressGui progGui, 
-		boolean newOnly ) {
+		boolean newOnly,
+		boolean retainDirectories ) {
 		
 		boolean picturesAdded = false;
 		// add all the files from the array as nodes to the start node.
@@ -1991,8 +1994,13 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 				}
 			} else {
 				if ( Tools.hasPictures( addFile ) ) {
-					SortableDefaultMutableTreeNode subNode = receivingNode.addGroupNode( addFile.getName() );
-					boolean a = copyAddPictures1( addFile.listFiles(), targetDir, subNode, progGui, newOnly );
+					SortableDefaultMutableTreeNode subNode;
+					if ( retainDirectories ) {
+						subNode = receivingNode.addGroupNode( addFile.getName() );
+					} else {
+						subNode = receivingNode;
+					}
+					boolean a = copyAddPictures1( addFile.listFiles(), targetDir, subNode, progGui, newOnly, retainDirectories );
 					picturesAdded = a || picturesAdded;
 				} else {
 					Tools.log ("SDMTN.copyAddPictures: no pictures in directory " + addFile.toString() );
@@ -2010,7 +2018,7 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 	 *  @param  cam  The camera object with knows the checksums of the pictures seen before.
 	 * 
 	 */
-	public SortableDefaultMutableTreeNode copyAddPictures( File sourceDir, File targetDir, String groupName, Camera cam ) {
+	public SortableDefaultMutableTreeNode copyAddPictures( File sourceDir, File targetDir, String groupName, Camera cam, boolean retainDirectories ) {
 		File[] files = sourceDir.listFiles();
 		ProgressGui progGui = new ProgressGui( Tools.countfiles( files ),
 			Settings.jpoResources.getString("PictureAdderProgressDialogTitle"),
@@ -2022,7 +2030,7 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 		setSendModelUpdates( false );
 
 		cam.zapNewImage();
-		boolean picturesAdded = copyAddPictures1( files, targetDir, newGroup, progGui, cam );
+		boolean picturesAdded = copyAddPictures1( files, targetDir, newGroup, progGui, cam, retainDirectories );
 
 		cam.storeNewImage();
 		Settings.writeCameraSettings();
@@ -2048,7 +2056,8 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 		File targetDir, 
 		SortableDefaultMutableTreeNode receivingNode, 
 		ProgressGui progGui, 
-		Camera cam ) {
+		Camera cam,
+		boolean retainDirectories ) {
 		
 		
 		boolean picturesAdded = false;
@@ -2075,8 +2084,14 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 				}
 			} else {
 				if ( Tools.hasPictures( addFile ) ) {
-					SortableDefaultMutableTreeNode subNode = receivingNode.addGroupNode( addFile.getName() );
-					boolean a = copyAddPictures1( addFile.listFiles(), targetDir, subNode, progGui, cam );
+					SortableDefaultMutableTreeNode subNode;
+					if ( retainDirectories ) {
+						subNode = receivingNode.addGroupNode( addFile.getName() );
+					} else {
+						subNode = receivingNode;
+					}
+					
+					boolean a = copyAddPictures1( addFile.listFiles(), targetDir, subNode, progGui, cam, retainDirectories );
 					picturesAdded = a || picturesAdded;
 				} else {
 					Tools.log ("SDMTN.copyAddPictures: no pictures in directory " + addFile.toString() );
@@ -2094,17 +2109,24 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 	 *  a new group to the tree and then adds all the pictures found therein to that
 	 *  group. The ImageIO.getImageReaders method is queried to see whether a reader
 	 *  exists for the image that is attempted to be loaded.
+	 *  @param retainDirectories  indicates whether to preserve the directory structure
 	 */
-	private void addDirectory( File dir, boolean newOnly, boolean recurseDirectories, ProgressGui progGui ) {
-		SortableDefaultMutableTreeNode newNode = new SortableDefaultMutableTreeNode( new GroupInfo( dir.getName() ) );
-		add( newNode );
-		setUnsavedUpdates();
+	private void addDirectory( File dir, boolean newOnly, boolean recurseDirectories, boolean retainDirectories, ProgressGui progGui ) {
+		//Tools.log("addDirectory called with retainDirectories " + (retainDirectories ? "true" : "false") + " on dir: " + dir.toString() );
+		SortableDefaultMutableTreeNode newNode;
+		if ( retainDirectories) {
+			newNode = new SortableDefaultMutableTreeNode( new GroupInfo( dir.getName() ) );
+			add( newNode );
+			setUnsavedUpdates();
+		} else {
+			newNode = this;
+		}
 
 		File[] fileArray = dir.listFiles();
 		for (int i = 0; (i < fileArray.length) && ( ! progGui.interrupt ); i++) {
-			if (fileArray[i].isDirectory() && recurseDirectories) {
+			if ( fileArray[i].isDirectory() && recurseDirectories ) {
 				if ( Tools.hasPictures( fileArray[i] ) ) {
-					newNode.addDirectory( fileArray[i], newOnly, recurseDirectories, progGui );
+					newNode.addDirectory( fileArray[i], newOnly, recurseDirectories, retainDirectories, progGui );
 				}
 			} else {
 				if ( newNode.addSinglePicture( fileArray[i], newOnly ) ) {

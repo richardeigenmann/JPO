@@ -84,6 +84,11 @@ public class AddFromCamera
 	 */
 	private JRadioButton missingPicturesJRadioButton = new JRadioButton( Settings.jpoResources.getString("missingPicturesJRadioButton") );
 
+	/**
+	 *  Checkbox that allows the user to specifiy whether directory structures should be retained
+	 */
+	private JCheckBox retainDirectoriesJCheckBox = new JCheckBox( Settings.jpoResources.getString("retainDirectoriesJCheckBox") );
+
 
 
 	/** 
@@ -166,6 +171,12 @@ public class AddFromCamera
 		group.add( newPicturesJRadioButton );
 		group.add( missingPicturesJRadioButton );
 		newPicturesJRadioButton.setSelected( true );
+
+
+		retainDirectoriesJCheckBox.setSelected( false );
+		constraints.gridy++;
+		controlJPanel.add( retainDirectoriesJCheckBox, constraints );
+
 
 
 		JLabel targetDirJLabel = new JLabel ( Settings.jpoResources.getString("targetDirJLabel") );
@@ -264,13 +275,13 @@ public class AddFromCamera
 					SortableDefaultMutableTreeNode newNode = null;
 					if ( allPicturesJRadioButton.isSelected() ) {
 						Tools.log ("AddFromCamera.run: AllPictures should be loaded from camera");
-						newNode = rootNode.copyAddPictures( sourceDir, targetDir, groupName, false );
+						newNode = rootNode.copyAddPictures( sourceDir, targetDir, groupName, false, retainDirectoriesJCheckBox.isSelected()  );
 					} else if ( newPicturesJRadioButton.isSelected() ) {
 						Tools.log ("AddFromCamera.run: only new pictures should be loaded from camera");
-						newNode = rootNode.copyAddPictures( sourceDir, targetDir, groupName, cam );
+						newNode = rootNode.copyAddPictures( sourceDir, targetDir, groupName, cam, retainDirectoriesJCheckBox.isSelected() );
 					} else if ( missingPicturesJRadioButton.isSelected() ) {
 						Tools.log ("AddFromCamera.run: only missing pictures should be loaded from camera");
-						newNode = rootNode.copyAddPictures( sourceDir, targetDir, groupName, true );
+						newNode = rootNode.copyAddPictures( sourceDir, targetDir, groupName, true, retainDirectoriesJCheckBox.isSelected() );
 					}
 					
 					if ( newNode != null ) {

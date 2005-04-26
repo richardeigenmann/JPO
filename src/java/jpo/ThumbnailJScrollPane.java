@@ -201,6 +201,31 @@ public class ThumbnailJScrollPane
 	 *  is recognized and the arrays are recreated.
 	 */
 	private int initialisedMaxThumbnails = Integer.MIN_VALUE;
+
+
+	/**
+	 *  The largest size for the thumbnail slider
+	 */
+	private static final int THUMBNAILSIZE_MIN = 1;
+	/**
+	 *  The smallest size for the thumbnail slider
+	 */
+	private static final int THUMBNAILSIZE_MAX = 4;
+	/**
+	 *  The starting position for the thumbnail slider
+	 */
+	private static final int THUMBNAILSIZE_INIT = 1;   
+	
+	/**
+	 *   Slider to control the size of the thumbnails
+	 */
+	JSlider resizeJSlider = new JSlider( JSlider.HORIZONTAL,
+                                      THUMBNAILSIZE_MIN, THUMBNAILSIZE_MAX, THUMBNAILSIZE_INIT);
+
+	/**
+	 *  Factor for the Thumbnails
+	 */
+	private float thumbnailSizeFactor = 1;
 	
 	/** 
 	 *   creates a new JScrollPane with an embedded JPanel and provides a set of  
@@ -316,6 +341,39 @@ public class ThumbnailJScrollPane
 		lblPage.setBorder(BorderFactory.createEmptyBorder(0,10,0,10));					// JA
 		titleJPanel.add( lblPage );
 		titleJPanel.add( title );
+		resizeJSlider.setInverted( true );
+		resizeJSlider.setSnapToTicks( true );
+		resizeJSlider.setMaximumSize( new Dimension ( 80,40 ) );
+		resizeJSlider.setMajorTickSpacing( 1 );
+		resizeJSlider.setMinorTickSpacing( 0 );
+		resizeJSlider.setPaintTicks( true );
+		resizeJSlider.setPaintLabels( false );
+		titleJPanel.add( resizeJSlider );
+		
+		resizeJSlider.addChangeListener( new ChangeListener() {
+			public void stateChanged(ChangeEvent e) {
+				JSlider source = (JSlider)e.getSource();
+				if ( ! source.getValueIsAdjusting() ) {
+					thumbnailSizeFactor = 1 / (float) source.getValue();
+					Tools.log ("New Value: " + Float.toString( thumbnailSizeFactor ) );
+					if ( calculateCols() ) { 
+						for ( int i = 0; i < thumbnails.length; i++) {
+							thumbnails[i].setFactor( thumbnailSizeFactor );
+							thumbnailDescriptionJPanels[i].setFactor( thumbnailSizeFactor );
+							calculateConstraints( i );
+							ThumbnailLayout.setConstraints( thumbnails[i], thumbnailConstraints );
+							ThumbnailLayout.setConstraints( thumbnailDescriptionJPanels[i], descriptionConstraints );
+						}
+	 				
+						ThumbnailPane.validate();
+						validate();
+					}
+				}
+			}
+		} );
+
+
+
 
 		previousThumbnailsButton.setVisible( false );
 		nextThumbnailsButton.setVisible( false );
@@ -565,7 +623,7 @@ public class ThumbnailJScrollPane
 	 */
  	public boolean calculateCols() {
 		int width = getViewportBorderBounds().width;
-		int newCols = (int) ( width / (Settings.thumbnailSize + (horizontalPadding * 2) ));  
+		int newCols = (int) ( width / ( ( Settings.thumbnailSize * thumbnailSizeFactor ) + ( horizontalPadding * 2 ) ));  
 		if ( newCols < 1 ) { newCols = 1; } 
 		//Tools.log("ThumbnailJScrollPane.calculateCols: width: " + Integer.toString( width ) +
 		//	" newCols: " + Integer.toString( newCols ) + " oldCols: " + Integer.toString(getCols()));

@@ -137,6 +137,12 @@ public class ThumbnailDescriptionJPanel
 	 */
 	//private int displayMode = MINI_INFO;
 	private int displayMode = LARGE_DESCRIPTION;
+
+
+	/**
+	 *   The factor which is multiplied with the ThumbnailDescription to determine how large it is shown.
+	 */
+	private float thumbnailSizeFactor = 1;
 		
 	
 	/**
@@ -162,7 +168,7 @@ public class ThumbnailDescriptionJPanel
 		pictureDescriptionJTA.setCaret( dumbCaret ); 
 		//pictureDescriptionJTA.setMaximumSize( new Dimension( Settings.thumbnailSize, Settings.thumbnailDescriptionHeight) );
 		//pictureDescriptionJTA.setPreferredSize( new Dimension( Settings.thumbnailSize, 50) );
-		pictureDescriptionJTA.setMinimumSize( new Dimension( Settings.thumbnailSize, 20) );
+		pictureDescriptionJTA.setMinimumSize( new Dimension( (int) ( Settings.thumbnailSize * thumbnailSizeFactor ), 20) );
 		pictureDescriptionJTA.setAlignmentX( Component.CENTER_ALIGNMENT );
 		pictureDescriptionJTA.setInputVerifier( new InputVerifier() {
 			public boolean verify ( JComponent component ) {
@@ -186,15 +192,15 @@ public class ThumbnailDescriptionJPanel
 		
 		
 
-		highresLocationJTextField.setMinimumSize( new Dimension( Settings.thumbnailSize, 20) );
-		highresLocationJTextField.setMaximumSize( new Dimension( Settings.thumbnailSize, 20) );
-		highresLocationJTextField.setPreferredSize( new Dimension( Settings.thumbnailSize, 20) );
+		highresLocationJTextField.setMinimumSize( new Dimension( (int) ( Settings.thumbnailSize * thumbnailSizeFactor ), 20) );
+		highresLocationJTextField.setMaximumSize( new Dimension( (int) ( Settings.thumbnailSize * thumbnailSizeFactor ), 20) );
+		highresLocationJTextField.setPreferredSize( new Dimension( (int) ( Settings.thumbnailSize * thumbnailSizeFactor ), 20) );
 //		add ( highresLocationJTextField );
 
 
-		lowresLocationJTextField.setMinimumSize( new Dimension( Settings.thumbnailSize, 20) );
-		lowresLocationJTextField.setMaximumSize( new Dimension( Settings.thumbnailSize, 20) );
-		lowresLocationJTextField.setPreferredSize( new Dimension( Settings.thumbnailSize, 20) );
+		lowresLocationJTextField.setMinimumSize( new Dimension( (int) ( Settings.thumbnailSize * thumbnailSizeFactor ), 20) );
+		lowresLocationJTextField.setMaximumSize( new Dimension( (int) ( Settings.thumbnailSize * thumbnailSizeFactor ), 20) );
+		lowresLocationJTextField.setPreferredSize( new Dimension( (int) ( Settings.thumbnailSize * thumbnailSizeFactor ), 20) );
 //		add ( lowresLocationJTextField );
 		
 	}
@@ -315,9 +321,24 @@ public class ThumbnailDescriptionJPanel
 	 *  sets the size of the TextArea
 	 */
 	public void setTextAreaSize() {
-		Dimension pdDimension = Tools.getJTextAreaDimension( pictureDescriptionJTA, Settings.thumbnailSize );
-		pictureDescriptionJTA.setPreferredSize( pdDimension );
-		pictureDescriptionJTA.setMaximumSize( pdDimension );
+		//Tools.log ( "ThumbnailDescriptionJPanel.setTextAreaSize invoked with a size of: " 
+		//	+ Integer.toString( (int) ( Settings.thumbnailSize * thumbnailSizeFactor ) ) );
+		pictureDescriptionJTA.setMinimumSize( new Dimension( (int) ( Settings.thumbnailSize * thumbnailSizeFactor ), 20) );
+		highresLocationJTextField.setMinimumSize( new Dimension( (int) ( Settings.thumbnailSize * thumbnailSizeFactor ), 20) );
+		highresLocationJTextField.setMaximumSize( new Dimension( (int) ( Settings.thumbnailSize * thumbnailSizeFactor ), 20) );
+		highresLocationJTextField.setPreferredSize( new Dimension( (int) ( Settings.thumbnailSize * thumbnailSizeFactor ), 20) );
+		highresLocationJTextField.revalidate();
+		lowresLocationJTextField.setMinimumSize( new Dimension( (int) ( Settings.thumbnailSize * thumbnailSizeFactor ), 20) );
+		lowresLocationJTextField.setMaximumSize( new Dimension( (int) ( Settings.thumbnailSize * thumbnailSizeFactor ), 20) );
+		lowresLocationJTextField.setPreferredSize( new Dimension( (int) ( Settings.thumbnailSize * thumbnailSizeFactor ), 20) );
+		lowresLocationJTextField.revalidate();
+
+		
+		pictureDescriptionJTA.setSize( new Dimension( (int) ( Settings.thumbnailSize * thumbnailSizeFactor ), 20 ) );
+		// this hack actually gets Swing to keep the width and adjust the height !
+		pictureDescriptionJTA.setText( pictureDescriptionJTA.getText() );
+		pictureDescriptionJTA.setMaximumSize( pictureDescriptionJTA.getPreferredSize() );
+		pictureDescriptionJTA.revalidate();
 	}
 
 	/**
@@ -328,6 +349,15 @@ public class ThumbnailDescriptionJPanel
 		pictureDescriptionJTA.setVisible( visibility );
 		pictureDescriptionJSP.setVisible( visibility );
 		validate();
+	}
+
+	/**
+	 *  This method sets the scaling factor for the display of a thumbnail description
+	 */
+	public void setFactor( float thumbnailSizeFactor ) {
+		this.thumbnailSizeFactor = thumbnailSizeFactor;
+		setTextAreaSize();
+		setVisible( isVisible() );
 	}
 
 

@@ -36,6 +36,11 @@ public class PictureAdder implements PropertyChangeListener {
 	 *  in the subdirectories should be added or not.
 	 */
 	private JCheckBox recurseJCheckBox = new JCheckBox( Settings.jpoResources.getString("recurseJCheckBox") );
+
+	/**
+	 *  Checkbox that allows the user to specifiy whether directory structures should be retained
+	 */
+	private JCheckBox retainDirectoriesJCheckBox = new JCheckBox( Settings.jpoResources.getString("retainDirectoriesJCheckBox") );
 	
 	
 	/**
@@ -100,12 +105,14 @@ public class PictureAdder implements PropertyChangeListener {
 		recurseJCheckBox.setSelected( true );
 		newOnlyJCheckBox.setSelected( true );
 		showThumbnailJCheckBox.setSelected( showThumbnail );
+		retainDirectoriesJCheckBox.setSelected( true );
 
 		JPanel optionsJPanel = new JPanel();
 		optionsJPanel.setLayout( new BoxLayout( optionsJPanel, BoxLayout.Y_AXIS ) );
 		optionsJPanel.add( recurseJCheckBox, BorderLayout.WEST );
 		optionsJPanel.add( newOnlyJCheckBox, BorderLayout.WEST );
 		optionsJPanel.add( showThumbnailJCheckBox, BorderLayout.WEST );
+		optionsJPanel.add( retainDirectoriesJCheckBox, BorderLayout.WEST );
 		optionsJPanel.setPreferredSize( new Dimension( PREFERRED_WIDTH, PREFERRED_HEIGHT ) );
 
 		thumbnailJLabel.setPreferredSize( new Dimension( PREFERRED_WIDTH, PREFERRED_HEIGHT ) );
@@ -134,7 +141,7 @@ public class PictureAdder implements PropertyChangeListener {
 			Thread t = new Thread() {
 				public void run() {
 					//Tools.log("PictureAdder.run starting for files: " + Integer.toString(chosenFiles.length) );
-					startNode.addPictures( chosenFiles, newOnlyJCheckBox.isSelected(), recurseJCheckBox.isSelected() );
+					startNode.addPictures( chosenFiles, newOnlyJCheckBox.isSelected(), recurseJCheckBox.isSelected(), retainDirectoriesJCheckBox.isSelected() );
 				}
 			};
 				

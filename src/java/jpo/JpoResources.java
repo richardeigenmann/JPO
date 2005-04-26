@@ -105,6 +105,8 @@ public class JpoResources extends ListResourceBundle {
 		{"resetJButton.ToolTipText", "Reset"},
 		{"clockJButton.ToolTipText", "Automatic Advance"},
 		{"closeJButton.ToolTipText", "close window"},
+		{"rotateLeftJButton.ToolTipText", "Rotate Left"},
+		{"rotateRightJButton.ToolTipText", "Rotate Right"},
 
 		// SettingsDialog Texts
 		{"settingsDialogTitle", "Edit Settings"},
@@ -476,6 +478,7 @@ public class JpoResources extends ListResourceBundle {
 
 		// PictureAdder
 		{"recurseJCheckBox", "Recurse subdirectories"},
+		{"retainDirectoriesJCheckBox", "Retain directory structure"},
 		{"newOnlyJCheckBox", "Add new pictures only"},
 		{"showThumbnailJCheckBox", "Show Thumbnail"},
 
