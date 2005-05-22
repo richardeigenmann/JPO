@@ -307,10 +307,10 @@ public class ReconcileJFrame
 				//Tools.log ("should reconciling File: " + fileArray[i].getPath());
 				SortableDefaultMutableTreeNode node;
 				Object nodeObject;
-				Enumeration enum = rootNode.preorderEnumeration();
+				Enumeration e = rootNode.preorderEnumeration();
 				boolean found = false;
-				while ( enum.hasMoreElements() && (! found) ) {
-					node = (SortableDefaultMutableTreeNode) enum.nextElement();
+				while ( e.hasMoreElements() && (! found) ) {
+					node = (SortableDefaultMutableTreeNode) e.nextElement();
 					nodeObject = node.getUserObject();
 					if  (nodeObject instanceof PictureInfo) {
 //						logJTextArea.append("Comparing: " + fileArray[i].toURI().toString() + " against: " + ((PictureInfo) nodeObject ).getHighresURIOrNull().toString() + "\n");

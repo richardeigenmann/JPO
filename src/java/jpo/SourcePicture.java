@@ -462,7 +462,7 @@ public class SourcePicture implements Cloneable {
 	 * intereasted objects of a change in status (not built yet).
 	 */
 	private void setStatus(int statusCode, String statusMessage) {
-		Tools.log("\nSourcePicture.setStatus: sending status: " + statusMessage );
+		// Tools.log("\nSourcePicture.setStatus: sending status: " + statusMessage );
 		pictureStatusCode = statusCode;
 		pictureStatusMessage = statusMessage;
 		

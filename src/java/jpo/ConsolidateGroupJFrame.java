@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.*;
 import javax.swing.*;
+import javax.swing.event.*;
 import java.io.*;
 import java.util.*;
 
@@ -45,13 +46,21 @@ public class ConsolidateGroupJFrame extends JFrame  {
 
 
 	/**
-	 *  The extended JTextField that holds the directory that the group is 
+	 *  The extended JTextField that holds the directory that the highres images of the group is 
 	 *  to be consolidated to
 	 **/
-	private DirectoryChooser targetDirJTextField =  
-		new DirectoryChooser( Settings.jpoResources.getString("HtmlDistillerChooserTitle"),
+	private DirectoryChooser highresTargetDirJTextField =  
+		new DirectoryChooser( Settings.jpoResources.getString("highresTargetDirJTextField"),
 				      DirectoryChooser.DIR_MUST_BE_WRITABLE );
 
+
+	/**
+	 *  The extended JTextField that holds the directory that the lowres images of the group is 
+	 *  to be consolidated to
+	 **/
+	private DirectoryChooser lowresTargetDirJTextField =  
+		new DirectoryChooser( Settings.jpoResources.getString("lowresTargetDirJTextField"),
+				      DirectoryChooser.DIR_MUST_BE_WRITABLE );
 
 	
 	/**
@@ -131,7 +140,25 @@ public class ConsolidateGroupJFrame extends JFrame  {
 		constraints.gridwidth = 1;
 		constraints.weightx = 0.8;
 		constraints.insets = new Insets(4, 4, 4, 4);
-		contentJPanel.add(targetDirJTextField, constraints);
+		contentJPanel.add(highresTargetDirJTextField, constraints);
+		highresTargetDirJTextField.directoryJTextField.getDocument().addDocumentListener( new DocumentListener () {
+			public void insertUpdate( DocumentEvent e ) {
+				setLowresLocation();
+			}
+			public void removeUpdate( DocumentEvent e ) {
+				setLowresLocation();
+			}
+			public void changedUpdate( DocumentEvent e ) {
+				setLowresLocation();
+			}
+		});
+		highresTargetDirJTextField.directoryJTextField.addFocusListener( new FocusListener () {
+			public void focusGained( FocusEvent e ) {}
+			public void focusLost( FocusEvent e ) {
+				setLowresLocation();
+			}
+		}) ;
+		
 
 		recurseSubgroupsJCheckBox.setSelected ( true );
 		constraints.gridx = 0; constraints.gridy++;
@@ -140,15 +167,38 @@ public class ConsolidateGroupJFrame extends JFrame  {
 		constraints.insets = new Insets(4, 4, 4, 4);
 		contentJPanel.add( recurseSubgroupsJCheckBox, constraints );
 
+
+		final JLabel targetLowresDirJLabel = new JLabel ( Settings.jpoResources.getString("genericTargetDirText") );
+
 		lowresJCheckBox.setSelected ( true );
 		constraints.gridx = 0; constraints.gridy++;
 		constraints.gridwidth = 2;
 		constraints.weightx = 1.0;
 		constraints.insets = new Insets(4, 4, 4, 4);
 		contentJPanel.add( lowresJCheckBox, constraints );
+		lowresJCheckBox.addActionListener( new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setLowresLocation();
+				lowresTargetDirJTextField.setVisible( lowresJCheckBox.isSelected() );
+				targetLowresDirJLabel.setVisible( lowresJCheckBox.isSelected() );
+			}
+		});
+		
+
+		constraints.gridx = 0; constraints.gridy ++;
+		constraints.gridwidth = 2;
+		constraints.weightx = 1.0;
+		constraints.insets = new Insets(4, 4, 4, 4);
+		contentJPanel.add(targetLowresDirJLabel, constraints);
+
+		constraints.gridx = 0; constraints.gridy ++;
+		constraints.gridwidth = 1;
+		constraints.weightx = 0.8;
+		constraints.insets = new Insets(4, 4, 4, 4);
+		contentJPanel.add(lowresTargetDirJTextField, constraints);
 		
 		
-		// crate a JPanel for the buttons
+		// create a JPanel for the buttons
 		JPanel buttonJPanel = new JPanel ();
 			
 		// add the consolidate button
@@ -190,6 +240,14 @@ public class ConsolidateGroupJFrame extends JFrame  {
 	}
 
 
+	/**
+	 * This method sets the lowres location to the highres location with an additional /Lowres at the end.
+	 * It is typically invoked when the highres location changes.
+	 */
+	private void setLowresLocation() {
+		lowresTargetDirJTextField.setFile (
+			new File( highresTargetDirJTextField.getFile(), "/Lowres/" ) ); 
+	}
 
 
 	/**
@@ -209,7 +267,7 @@ public class ConsolidateGroupJFrame extends JFrame  {
 	 *  method that outputs the selected group to a directory
 	 */
 	private void consolidateToDirectory() {
-		File exportDirectory = new File( targetDirJTextField.getText() );
+		File exportDirectory = highresTargetDirJTextField.getFile();
 
 		if (! exportDirectory.exists() ) 
 			try {
@@ -226,10 +284,30 @@ public class ConsolidateGroupJFrame extends JFrame  {
 				return;
 			} 
 
-		new ConsolidateGroupThread( exportDirectory, 
+		File lowresDirectory = lowresTargetDirJTextField.getFile();
+
+		if ( ( lowresJCheckBox.isSelected() ) && (! lowresDirectory.exists() ) ) 
+			try {
+				lowresDirectory.mkdirs();
+			} catch (SecurityException e) {
+				e.printStackTrace();
+				JOptionPane.showMessageDialog(
+					Settings.anchorFrame, 
+					Settings.jpoResources.getString("ConsolidateCreateDirFailure")
+						+ exportDirectory + "\n" 
+						+ e.getMessage(), 
+					Settings.jpoResources.getString("genericError"), 
+					JOptionPane.ERROR_MESSAGE);
+				return;
+			} 
+			
+
+		new ConsolidateGroupThread( 
+			exportDirectory, 
 			startNode, 
 			recurseSubgroupsJCheckBox.isSelected(),
-			lowresJCheckBox.isSelected() );
+			lowresJCheckBox.isSelected(),
+			lowresDirectory );
 		Settings.memorizeCopyLocation( exportDirectory.toString() );
 
 	}

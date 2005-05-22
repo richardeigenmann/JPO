@@ -274,7 +274,7 @@ public class ThumbnailJScrollPane
 		// I then need to know the width minus the vertical scrollbar to determine the columns.
 		this.addComponentListener(new ComponentAdapter() { 
 			public void componentResized( ComponentEvent e ) { 
-				Tools.log("ThumbnailJScrollPane.componentResized activated.");
+				//Tools.log("ThumbnailJScrollPane.componentResized activated.");
 				if ( calculateCols() ){ 
 					for ( int i = 0; i < thumbnails.length; i++) {
 						calculateConstraints( i );

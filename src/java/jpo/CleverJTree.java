@@ -177,7 +177,7 @@ public class CleverJTree extends JTree
 	 *   Moves the highlighted row to the indicated one and makes sure it is on the screen.
 	 */
 	public void setSelectedNode( SortableDefaultMutableTreeNode selectedNode ) {
-		Tools.log("CleverJTree.setSelectedNode: called for node: " + selectedNode.toString() );
+		// Tools.log("CleverJTree.setSelectedNode: called for node: " + selectedNode.toString() );
 		TreePath tp = new TreePath( selectedNode.getPath() );
 		setSelectionPath( tp );
 		Settings.top.clearSelection();
@@ -202,7 +202,7 @@ public class CleverJTree extends JTree
 	
 		TreePath selected = getSelectionPath();
 		SortableDefaultMutableTreeNode dmtn = (SortableDefaultMutableTreeNode) selected.getLastPathComponent();
-		Tools.log("CleverJTree.dragGestureRecognized: Drag started on node: " + dmtn.getUserObject().toString() );
+		// Tools.log("CleverJTree.dragGestureRecognized: Drag started on node: " + dmtn.getUserObject().toString() );
 		if ( dmtn.isRoot() ) {
 			Tools.log( "The Root node must not be dragged. Dragging disabled." );
 			return;

@@ -311,8 +311,8 @@ public class Thumbnail extends JPanel
 	 */
 	public void setVisible( boolean visibility ) {
 		super.setVisible( visibility );
-		Tools.log("Thumbnail.setVisible: thumbnailSize: " + Integer.toString( thumbnailSize ) + " (int) ( thumbnailSize * thumbnailSizeFactor ): " 
-			+ Integer.toString( (int) ( thumbnailSize * thumbnailSizeFactor ) ) );
+		//Tools.log("Thumbnail.setVisible: thumbnailSize: " + Integer.toString( thumbnailSize ) + " (int) ( thumbnailSize * thumbnailSizeFactor ): " 
+		//	+ Integer.toString( (int) ( thumbnailSize * thumbnailSizeFactor ) ) );
 		if ( visibility ) {
 			setPreferredSize( new Dimension( (int) ( thumbnailSize * thumbnailSizeFactor ), (int) ( img.getHeight(imgOb) * thumbnailSizeFactor ) ) );
 			setMaximumSize( new Dimension( (int) ( thumbnailSize * thumbnailSizeFactor ), (int) ( img.getHeight(imgOb) * thumbnailSizeFactor ) ) ); 

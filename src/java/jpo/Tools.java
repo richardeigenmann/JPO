@@ -346,21 +346,23 @@ public class Tools {
 	 *  It checks whether the file was mentioned in the highres or lowres fields of other nodes
 	 *  and corrects those references if found.
 	 */
-	public static boolean movePicture (URL a, URL b) throws IOException {
+	public static boolean movePicture (File sourceFile, URL b) throws IOException {
 
-		File sourceFile = new File ( a.getFile() );
+		//File sourceFile = new File ( a.getFile() );
 		File targetFile = new File ( b.getFile() );
 		
-		if ( targetFile.exists() ) throw new IOException ("Target File " + b.toString() + " already exists. Move aborted!");
+		if ( targetFile.exists() ) throw new IOException ("Tools.movePicture:Target File " + b.toString() + " already exists. Move aborted!");
 		
 		if ( sourceFile.renameTo ( targetFile )) {
-			Tools.log ( "Picture " + a.toString() + " moved to " + b.toString() );		
+			Tools.log ( "Picture " + sourceFile.toString() + " moved to " + b.toString() );		
 		} else {
 			// perhaps target was on a different filesystem. Trying copying
-			Tools.log ( "Rename from " + a.toString() + " to " + b.toString() + " failed. Trying copying" );		
-			if ( copyPicture(a, targetFile) > Long.MIN_VALUE ) {
-				Tools.log ( "Copy worked. Deleting source file." );
-				sourceFile.delete();
+			Tools.log ( "Tools.movePicture: Failed: Rename from " + sourceFile.toString() + " to " + b.toString() + " failed. Trying copying" );		
+			if ( copyPicture(sourceFile, targetFile) > Long.MIN_VALUE ) {
+				Tools.log ( "Tools.movePicture: Copy worked. Deleting source file." );
+				if ( ! sourceFile.delete() ) {
+					Tools.log ( "Tools.movePicture: FAILED: Deleting source file failed." );
+				}
 			} else {
 				Tools.log ( "Copy failed too." );
 				return false;
@@ -371,9 +373,9 @@ public class Tools {
 		//  search for other picture nodes in the tree using this image file
 		SortableDefaultMutableTreeNode node;
 		Object nodeObject;
-		Enumeration enum = Settings.top.preorderEnumeration();
-		while ( enum.hasMoreElements() ) {
-			node = (SortableDefaultMutableTreeNode) enum.nextElement();
+		Enumeration e = Settings.top.preorderEnumeration();
+		while ( e.hasMoreElements() ) {
+			node = (SortableDefaultMutableTreeNode) e.nextElement();
 			nodeObject = node.getUserObject();
 			if  (nodeObject instanceof PictureInfo) {
 				//Tools.log( "Tools.movePicture: checking: " + ( (PictureInfo) nodeObject ).getHighresLocation() + " against " + sourceFile );
@@ -771,7 +773,8 @@ public class Tools {
 
 	/** 
 	 *  Calculates a checksum from the supplied input stream
-	 *  originally taken from: Java ist auch eine Insel (2. Aufl.) von Christian Ullenboom Programmieren für die Java 2-Plattform in der Version 1.4
+	 *  originally taken from: Java ist auch eine Insel (2. Aufl.) 
+	 * von Christian Ullenboom Programmieren fuer die Java 2-Plattform in der Version 1.4
 	 *
 	 *  @return  returns the checksum as a Long or Long.MIN_VALUE to indicate failure.
 	 */

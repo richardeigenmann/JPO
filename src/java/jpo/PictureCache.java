@@ -66,14 +66,14 @@ public class PictureCache  {
 	 *  Enumeration finds no elements and we don't get an endless loop.
 	 */
 	public static synchronized void removeLeastPopular() {
-		Tools.log("PictureCache.removeLeastPopular:");
+		//Tools.log("PictureCache.removeLeastPopular:");
 		//reportCache();
 
 		Enumeration e = removalQueue.elements();
 		while ( ( e.hasMoreElements() ) 
 		    &&  ( pictureCache.size() >= Settings.maxCache ) ) {
 		     	String removeElement = (String) e.nextElement();
-		     	Tools.log ("PictureCache.remove: " + removeElement );
+		     	//Tools.log ("PictureCache.remove: " + removeElement );
 			pictureCache.remove( removeElement );
 			removalQueue.remove( removeElement );
 		}
@@ -82,7 +82,7 @@ public class PictureCache  {
 		while ( ( pictureCache.size() >= Settings.maxCache ) 
 		     && ( e.hasMoreElements() ) ) {
 		     	String removeElement = (String) e.nextElement();
-		     	Tools.log ("PictureCache.remove: " + removeElement );
+		     	//Tools.log ("PictureCache.remove: " + removeElement );
 			pictureCache.remove( removeElement );
 		} 
 		System.gc();
@@ -132,19 +132,19 @@ public class PictureCache  {
 	 *  @param sp	The picture to be stored
 	 */
 	public static synchronized void add( URL url, SourcePicture sp ) {
-		Tools.log("PictureCache.add: " + url.toString() );
+		// Tools.log("PictureCache.add: " + url.toString() );
 		if ( sp.getSourceBufferedImage() == null ) {
 			Tools.log ("PictureCache.add: invoked with a null picture! Not cached!");
 			return;
 		}
 		
 		if ( ( Settings.maxCache < 1 ) ) {
-			Tools.log("PictureCache.add: cache is diabled. Not adding picture.");
+			//Tools.log("PictureCache.add: cache is diabled. Not adding picture.");
 			return;
 		}
 		
 		if ( isInCache( url ) ) {
-			Tools.log( "Picture " + url.toString() + " is already in the cache. Not adding again.");
+			//Tools.log( "PictureCache.add: Picture " + url.toString() + " is already in the cache. Not adding again.");
 			return;
 		}
 		
@@ -182,7 +182,7 @@ public class PictureCache  {
 	 *  clears out all images in the cache. Important after OutOfMemoryErrors
 	 */
 	public static void clear() {
-		Tools.log("PictureCache.clear: Zapping entire cache");
+		// Tools.log("PictureCache.clear: Zapping entire cache");
 		pictureCache.clear();
 		Tools.freeMem();
 	}

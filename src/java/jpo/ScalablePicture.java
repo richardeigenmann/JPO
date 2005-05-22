@@ -194,15 +194,15 @@ public class ScalablePicture implements SourcePictureListener {
 		this.imageUrl = imageUrl;
 
 		boolean alreadyLoading = false;
-		Tools.log("ScalablePicture.loadAndScalePictureInThread: checking if picture " + imageUrl + " is already being loaded.");
+		//Tools.log("ScalablePicture.loadAndScalePictureInThread: checking if picture " + imageUrl + " is already being loaded.");
 		if ( ( sourcePicture != null ) && ( sourcePicture.getUrl().equals( imageUrl ) ) ) {
-			Tools.log("ScalablePicture.loadAndScalePictureInThread: the SourcePicture is already loading the sourcePictureimage");
+			// Tools.log("ScalablePicture.loadAndScalePictureInThread: the SourcePicture is already loading the sourcePictureimage");
 			if ( sourcePicture.getRotation() == rotation ) {
 				alreadyLoading = true;
-				Tools.log ("ScalablePicture.loadAndScalePictureInThread: Picture was even rotated to the correct angle!");
+				// Tools.log ("ScalablePicture.loadAndScalePictureInThread: Picture was even rotated to the correct angle!");
 			} else {
 				alreadyLoading = false;
-				Tools.log ("ScalablePicture.loadAndScalePictureInThread: Picture was in cache but with wrong rotation. Forcing reload.");
+				// Tools.log ("ScalablePicture.loadAndScalePictureInThread: Picture was in cache but with wrong rotation. Forcing reload.");
 			}
 		} else if ( PictureCache.isInCache( imageUrl ) ) {
 			// in case the old image has a listener connected remove it
@@ -212,14 +212,14 @@ public class ScalablePicture implements SourcePictureListener {
 			sourcePicture = PictureCache.getSourcePicture( imageUrl );
 			String status = sourcePicture.getStatusMessage();
 			if ( status == null ) status = "";
-			Tools.log ("ScalablePicture.loadAndScalePictureInThread: Picture in cache! Status: " + status );
+			// Tools.log ("ScalablePicture.loadAndScalePictureInThread: Picture in cache! Status: " + status );
 
 			if ( sourcePicture.getRotation() == rotation ) {
 				alreadyLoading = true;
-				Tools.log ("ScalablePicture.loadAndScalePictureInThread: Picture was even rotated to the correct angle!");
+				// Tools.log ("ScalablePicture.loadAndScalePictureInThread: Picture was even rotated to the correct angle!");
 			} else {
 				alreadyLoading = false;
-				Tools.log ("ScalablePicture.loadAndScalePictureInThread: Picture was in cache but with wrong rotation. Forcing reload.");
+				// Tools.log ("ScalablePicture.loadAndScalePictureInThread: Picture was in cache but with wrong rotation. Forcing reload.");
 			}
 		}
 		
@@ -228,32 +228,32 @@ public class ScalablePicture implements SourcePictureListener {
 			switch ( sourcePicture.getStatusCode() ) {
 				case SourcePicture.UNINITIALISED:
 					alreadyLoading = false;
-					Tools.log("ScalablePicture.loadAndScalePictureInThread: pictureStatus was: UNINITIALISED");
+					// Tools.log("ScalablePicture.loadAndScalePictureInThread: pictureStatus was: UNINITIALISED");
 					break;
 				case SourcePicture.ERROR:
 					alreadyLoading = false;
-					Tools.log("ScalablePicture.loadAndScalePictureInThread: pictureStatus was: ERROR");
+					// Tools.log("ScalablePicture.loadAndScalePictureInThread: pictureStatus was: ERROR");
 					break;
 				case SourcePicture.LOADING:
-					Tools.log("ScalablePicture.loadAndScalePictureInThread: pictureStatus was: LOADING");
+					// Tools.log("ScalablePicture.loadAndScalePictureInThread: pictureStatus was: LOADING");
 					sourcePicture.addListener( this );
 					setStatus( LOADING, "Loading: " + imageUrl.toString() );
 					sourceLoadProgressNotification( SourcePicture.LOADING_PROGRESS, sourcePicture.getPercentLoaded() );
 					scaleAfterLoad = true;
 					break;
 				case SourcePicture.ROTATING:
-					Tools.log("ScalablePicture.loadAndScalePictureInThread: pictureStatus was: ROTATING");
+					// Tools.log("ScalablePicture.loadAndScalePictureInThread: pictureStatus was: ROTATING");
 					setStatus( LOADING, "Rotating: " + imageUrl.toString() );
 					sourceLoadProgressNotification( SourcePicture.LOADING_PROGRESS, sourcePicture.getPercentLoaded() );
 					scaleAfterLoad = true;
 					break;
 				case SourcePicture.READY:
-					Tools.log("ScalablePicture.loadAndScalePictureInThread: pictureStatus was: READY. Sending SCALING status.");
+					//Tools.log("ScalablePicture.loadAndScalePictureInThread: pictureStatus was: READY. Sending SCALING status.");
 					setStatus( SCALING, "Scaling: " + imageUrl.toString() );
 					createScaledPictureInThread( priority );
 					break;
 				default:
-					Tools.log("ScalablePicture.loadAndScalePictureInThread: Don't know what status this is:" + Integer.toString(sourcePicture.getStatusCode()) );
+					// Tools.log("ScalablePicture.loadAndScalePictureInThread: Don't know what status this is:" + Integer.toString(sourcePicture.getStatusCode()) );
 					break;
 					
 			}
@@ -319,24 +319,24 @@ public class ScalablePicture implements SourcePictureListener {
 
 		switch ( statusCode ) {
 			case SourcePicture.UNINITIALISED:
-				Tools.log("ScalablePicture.sourceStatusChange: pictureStatus was: UNINITIALISED message: " + statusMessage );
+				// Tools.log("ScalablePicture.sourceStatusChange: pictureStatus was: UNINITIALISED message: " + statusMessage );
 				setStatus( UNINITIALISED, statusMessage );
 				break;
 			case SourcePicture.ERROR:
-				Tools.log("ScalablePicture.sourceStatusChange: pictureStatus was: ERROR message: " + statusMessage );
+				// Tools.log("ScalablePicture.sourceStatusChange: pictureStatus was: ERROR message: " + statusMessage );
 				setStatus( ERROR, statusMessage );
 				sourcePicture.removeListener( this );
 				break;
 			case SourcePicture.LOADING:
-				Tools.log("ScalablePicture.sourceStatusChange: pictureStatus was: LOADING message: " + statusMessage );
+				// Tools.log("ScalablePicture.sourceStatusChange: pictureStatus was: LOADING message: " + statusMessage );
 				setStatus( LOADING, statusMessage );
 				break;
 			case SourcePicture.ROTATING:
-				Tools.log("ScalablePicture.sourceStatusChange: pictureStatus was: ROTATING message: " + statusMessage );
+				// Tools.log("ScalablePicture.sourceStatusChange: pictureStatus was: ROTATING message: " + statusMessage );
 				setStatus( LOADING, statusMessage );
 				break;
 			case SourcePicture.READY:
-				Tools.log("ScalablePicture.sourceStatusChange: pictureStatus was: READY message: " + statusMessage );
+				// Tools.log("ScalablePicture.sourceStatusChange: pictureStatus was: READY message: " + statusMessage );
 				setStatus( LOADED, statusMessage );
 				sourcePicture.removeListener( this );
 				if ( scaleAfterLoad ) {
@@ -345,7 +345,7 @@ public class ScalablePicture implements SourcePictureListener {
 				}
 				break;
 			default:
-				Tools.log("ScalablePicture.sourceStatusChange: Don't recognize this status: " + statusMessage );
+				// Tools.log("ScalablePicture.sourceStatusChange: Don't recognize this status: " + statusMessage );
 				break;
 			
 		}
@@ -386,7 +386,7 @@ public class ScalablePicture implements SourcePictureListener {
 	 *  method that is called to create a scaled version of the image.
 	 **/
 	public void scalePicture() {
-	    Tools.log("ScalablePicture.scalePicture invoked" );
+	    // Tools.log("ScalablePicture.scalePicture invoked" );
 	    try {
 		setStatus(SCALING, "Scaling picture.");
 				
@@ -394,9 +394,9 @@ public class ScalablePicture implements SourcePictureListener {
 			if ( scaleToSize ) {
 				int WindowWidth = TargetSize.width;
 				int WindowHeight = TargetSize.height;
-				Tools.log("ScalablePicture.scalePicture: scaleToSize: Windowsize: " 
-					+ Integer.toString( WindowWidth ) + "x" 
-					+ Integer.toString( WindowHeight ) );
+				//Tools.log("ScalablePicture.scalePicture: scaleToSize: Windowsize: " 
+				//	+ Integer.toString( WindowWidth ) + "x" 
+				//	+ Integer.toString( WindowHeight ) );
 			
 				int PictureWidth = sourcePicture.getWidth();
 				int PictureHeight = sourcePicture.getHeight();
@@ -414,7 +414,7 @@ public class ScalablePicture implements SourcePictureListener {
 					ScaleFactor = 1;
        			}
 		
-			Tools.log("ScalablePicture.scalePicture: doing an AffineTransform with Factor: " + Double.toString(ScaleFactor) ); 
+			// Tools.log("ScalablePicture.scalePicture: doing an AffineTransform with Factor: " + Double.toString(ScaleFactor) ); 
 			AffineTransform af = AffineTransform.getScaleInstance((double) ScaleFactor, (double) ScaleFactor);
 			if ( fastScale )
 				op = new AffineTransformOp( af, AffineTransformOp.TYPE_NEAREST_NEIGHBOR );
@@ -428,7 +428,7 @@ public class ScalablePicture implements SourcePictureListener {
 			setStatus( READY, "Scaled Picture is ready." );
 		} else {
 			if ( getStatusCode() == LOADING ) {
-				Tools.log ("ScalablePicture.scalePicture invoked while image is still loading. I wonder why?");
+				// Tools.log ("ScalablePicture.scalePicture invoked while image is still loading. I wonder why?");
 				return;
 			} else {
 				setStatus(ERROR, "Could not scale image as SourceImage is null.");
@@ -728,7 +728,7 @@ public class ScalablePicture implements SourcePictureListener {
 	 */
 	private void setStatus( int statusCode, String statusMessage ) {
 		String filename =  ( imageUrl == null ) ? "" : imageUrl.toString();
-		Tools.log("ScalablePicture.setStatus: sending: " + statusMessage + " to all Listeners from Image: " + filename );
+		// Tools.log("ScalablePicture.setStatus: sending: " + statusMessage + " to all Listeners from Image: " + filename );
 
 		pictureStatusCode = statusCode;
 		pictureStatusMessage = statusMessage;

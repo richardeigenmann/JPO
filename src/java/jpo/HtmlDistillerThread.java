@@ -805,7 +805,7 @@ public class HtmlDistillerThread extends Thread {
 			midresHtmlWriter.newLine();
 			midresHtmlWriter.write( "<!-- ");
 			midresHtmlWriter.newLine();
-			midresHtmlWriter.write( "/* Textual Tooltip Script- © Dynamic Drive (www.dynamicdrive.com) For full source code, installation instructions, 100's more DHTML scripts, and Terms Of Use, visit dynamicdrive.com */ ");
+			midresHtmlWriter.write( "/* Textual Tooltip Script- (c) Dynamic Drive (www.dynamicdrive.com) For full source code, installation instructions, 100's more DHTML scripts, and Terms Of Use, visit dynamicdrive.com */ ");
 			midresHtmlWriter.newLine();
 			midresHtmlWriter.write( "var content=new Array() ");
 			midresHtmlWriter.newLine();

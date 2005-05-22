@@ -132,7 +132,7 @@
     <target name="signjar"
         depends="buildjar" >
 	<signjar jar="${build.jars.dir}/jpo-${version}.jar" 
-		alias="myself"
+		alias="mykey"
 		keystore="${env.KEYSTORE}"
 		storepass="${env.JARPWD}"
 	/>

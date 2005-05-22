@@ -68,7 +68,7 @@ public class ConsolidateGroupThread extends Thread {
 	/** 
 	 *  temp var
 	 */
-	private String oldFile;
+	private File oldFile;
 
 
 	/**
@@ -119,17 +119,15 @@ public class ConsolidateGroupThread extends Thread {
 	 *  @param targetDirectory	Where we want the files moved to
 	 *  @param startNode		The node from which this is all to be built.
 	 *  @param recurseGroups	Flag indicating subgroups should be included
-	 *  @param moveLowres
+	 *  @param moveLowres		Flag indication that Lowres should be moved tto
+	 *  @param targetLowresDirectory  Where to move the lowres files to. Only used if the moveLowres flag is true
 	 */
-	public ConsolidateGroupThread ( File targetDirectory, SortableDefaultMutableTreeNode startNode, boolean recurseGroups, boolean moveLowres ) {
+	public ConsolidateGroupThread ( File targetDirectory, SortableDefaultMutableTreeNode startNode, boolean recurseGroups, boolean moveLowres, File targetLowresDirectory ) {
 		this.targetDirectory = targetDirectory;
 		this.startNode = startNode;
 		this.recurseGroups = recurseGroups;
 		this.moveLowres = moveLowres;
-		if ( moveLowres ) {
-			targetLowresDirectory = new File( targetDirectory, "/Lowres/" );
-			targetLowresDirectory.mkdirs();
-		}
+		this.targetLowresDirectory = targetLowresDirectory;
 	
 		start();
 	}
@@ -216,19 +214,19 @@ public class ConsolidateGroupThread extends Thread {
 		//Tools.log("ConsolidateGroupThread.moveHighresPicture: invoked");
 		p = (PictureInfo) n.getUserObject();
 		try {		
-			if ( ! Tools.isUrlFile ( p.getHighresURL () ) ) {
-				Tools.log ( "ConsolidateGroupThread.moveHighresPicture: Not a \"file:\" URL. Ignoring: " + p.getHighresLocation() );
-				return true;
+			File oldFile = p.getHighresFile();
+			if ( oldFile == null ) {
+				Tools.log("ConsolidateGroupTread.moveHighresPicture: FAILED: can only move picture Files. "  + p.getHighresLocation());
+				return false;
 			}
-			URL oldFile = p.getHighresURL ();
-			URL newFile = Tools.inventPicURL( targetDirectory, p.getHighresFilename() );
+
 			File oldFileParent = p.getHighresFile().getParentFile();
-			
 			if ( ( oldFileParent != null ) && ( oldFileParent.equals( targetDirectory) ) ) {
 				Tools.log("ConsolidateGroupThread.moveHighresPicture: path is identical (" + oldFileParent.toString() + "==" + p.getHighresFile().getParentFile().toString() + ") . Not Moving Picture: " + p.getHighresLocation() );
 				return true;
 			}
 			
+			URL newFile = Tools.inventPicURL( targetDirectory, p.getHighresFilename() );
 			if ( Tools.movePicture ( oldFile, newFile ) ) {
 				//p.setHighresLocation ( newFile.toString() );
 				return true;
@@ -254,27 +252,32 @@ public class ConsolidateGroupThread extends Thread {
 		try {		
 			o = n.getUserObject();
 			if ( o instanceof GroupInfo ) {
-				oldFileURL = ( (GroupInfo) o ).getLowresURL ();
-				oldFile = ( (GroupInfo) o ).getLowresFilename();
+				//oldFileURL = ( (GroupInfo) o ).getLowresURL ();
+				oldFile = ( (GroupInfo) o ).getLowresFile();
 				oldFileParent = ( (GroupInfo) o ).getLowresFile().getParentFile();
 			} else {
-				oldFileURL = ( (PictureInfo) o ).getLowresURL ();
-				oldFile = ( (PictureInfo) o ).getLowresFilename();
+				//oldFileURL = ( (PictureInfo) o ).getLowresURL ();
+				oldFile = ( (PictureInfo) o ).getLowresFile();
 				oldFileParent = ( (PictureInfo) o ).getLowresFile().getParentFile();
 			}
 		
 
-			if ( ! Tools.isUrlFile ( oldFileURL ) ) {
+			// if ( ! Tools.isUrlFile ( oldFileURL ) ) {
+			if ( oldFile == null ) {
 				Tools.log ( "ConsolidateGroupThread.moveLowresPicture: Not a \"file:\" URL. Ignoring: " + oldFileURL.toString() );
 				return true;
 			}
-			URL newFile = Tools.inventPicURL( targetLowresDirectory, oldFile );
+			URL newFile = Tools.inventPicURL( targetLowresDirectory, oldFile.getName() );
 			if ( ( oldFileParent != null ) && ( oldFileParent.equals( targetLowresDirectory ) ) ) {
 				Tools.log("ConsolidateGroupThread.moveLowresPicture: path is identical " + oldFileParent.toString() + " not moving picture." );
 				return true;
 			}
 			
-			if ( Tools.movePicture ( oldFileURL, newFile ) ) {
+			if ( ! oldFile.exists() ) {
+				Tools.log("ConsolidateGoupThread.moveLowresPicture: There was no Lowres Image to move. Enhancement: The URL should be corrected anyway.");
+				return true;
+			}
+			if ( Tools.movePicture ( oldFile, newFile ) ) {
 				return true;
 			} else {
 				Tools.log("ConsolidateGroupThread.moveLowresPicture: failed to move " + oldFile.toString() + " to " + newFile.toString());

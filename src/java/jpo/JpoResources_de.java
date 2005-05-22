@@ -227,7 +227,8 @@ public class JpoResources_de extends ListResourceBundle {
 
 
 		// ConsolidateGroupJFrame
-		{"ConsolidateDirChooserTitle", "Konsolidierungsverzeichnis auswählen"},
+		{"highresTargetDirJTextField", "Konsolidierungsverzeichnis für Highres auswählen"},
+		{"lowresTargetDirJTextField", "Konsolidierungsverzeichnis für Lowres auswählen"},
 		{"RecurseSubgroupsLabel", "Untergruppen einbeziehen"},
 		{"ConsolidateGroupBlaBlaLabel", "<HTML>Diese Funktion wird all Bilder der ausgewählten Gruppe in das Zielverzeichnis verschieben. Es korrigiert Verweise<br>auf diese Bilder in dieser Sammlung. Die Dateien werden physisch verschoben.<br><p> <font color=red>Sind Sie sicher, dass sie dies wollen?<br></font></htm>"},
 		{"ConsolidateGroupJFrameHeading", "Konsolidierung / Bilder Verschieben"},

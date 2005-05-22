@@ -247,7 +247,7 @@ public class Jpo extends JFrame
 		//masterSplitPane.setPreferredSize( Settings.mainFrameDimensions.getSize() );
 		infoPanel.addComponentListener(new ComponentAdapter() {
 		        public void componentResized( ComponentEvent event ) {
-				Tools.log( "Jpo:InfoPanelcomponentResized invoked" );
+				// Tools.log( "Jpo:InfoPanelcomponentResized invoked" );
 				int leftDividerSpot = leftSplitPane.getDividerLocation();
 				if ( leftDividerSpot != Settings.preferredLeftDividerSpot ) {
 					Settings.preferredLeftDividerSpot = leftDividerSpot;
@@ -273,7 +273,7 @@ public class Jpo extends JFrame
 		masterSplitPane.setPreferredSize( Settings.mainFrameDimensions.getSize() );
 		cleverJTree.addComponentListener(new ComponentAdapter() {
 		        public void componentResized( ComponentEvent event ) {
-				Tools.log( "Jpo.ThumbnailJScrollPane.componentResized invoked" );
+				// Tools.log( "Jpo.ThumbnailJScrollPane.componentResized invoked" );
 				int dividerSpot = masterSplitPane.getDividerLocation();
 				if ( dividerSpot != Settings.preferredMasterDividerSpot ) {
 					Settings.preferredMasterDividerSpot = dividerSpot;

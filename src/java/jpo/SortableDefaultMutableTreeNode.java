@@ -454,9 +454,9 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 	public boolean isInCollection ( File f ) {
 		SortableDefaultMutableTreeNode node;
 		Object nodeObject;
-		Enumeration enum = getRootNode().preorderEnumeration();
-		while ( enum.hasMoreElements() ) {
-			node = (SortableDefaultMutableTreeNode) enum.nextElement();
+		Enumeration e = getRootNode().preorderEnumeration();
+		while ( e.hasMoreElements() ) {
+			node = (SortableDefaultMutableTreeNode) e.nextElement();
 			nodeObject = node.getUserObject();
 			if  (nodeObject instanceof PictureInfo) {
 				//Tools.log( "Checking: " + ( (PictureInfo) nodeObject ).getHighresLocation() );
@@ -483,9 +483,9 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 	public boolean isInCollection ( long checksum ) {
 		SortableDefaultMutableTreeNode node;
 		Object nodeObject;
-		Enumeration enum = getRootNode().preorderEnumeration();
-		while ( enum.hasMoreElements() ) {
-			node = (SortableDefaultMutableTreeNode) enum.nextElement();
+		Enumeration e = getRootNode().preorderEnumeration();
+		while ( e.hasMoreElements() ) {
+			node = (SortableDefaultMutableTreeNode) e.nextElement();
 			nodeObject = node.getUserObject();
 			if  (nodeObject instanceof PictureInfo) {
 				//Tools.log( "Checking: " + ( (PictureInfo) nodeObject ).getHighresLocation() );

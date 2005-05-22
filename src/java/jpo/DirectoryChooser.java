@@ -67,7 +67,7 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 	/**
 	 *   field that allows the user to capture the directory which is a sub object of the JComboBox
 	 */
-	private JTextField directoryJTextField;
+	public JTextField directoryJTextField;
 
 
 	/**
@@ -167,6 +167,13 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 	}
 		
 
+	/**
+	 *  sets the choice to the indicated File
+	 */
+	public void setFile( File f ) {
+		directoryJComboBox.setSelectedItem( makeObj( f.toString() ) );
+	}
+
 
 	/**
 	 *  gets the text from the field
@@ -174,6 +181,13 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 	public String getText() {
 		//return directoryJComboBox.getText();
 		return directoryJComboBox.getSelectedItem().toString();
+	}
+
+	/**
+	 *  gets the text from the field
+	 */
+	public File getFile() {
+		return new File( getText() );
 	}
 
 
@@ -278,4 +292,4 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  
  } 
  
- 
+

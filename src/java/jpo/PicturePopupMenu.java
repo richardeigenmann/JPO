@@ -68,7 +68,7 @@ public class PicturePopupMenu extends JPopupMenu
 
 	/** 
 	 *  menu item that allows the user to request regeneration of the 
-	 *  thumbnail with a 90° rotation.
+	 *  thumbnail with a 90 Deg rotation.
 	 * 
 	 **/
 	private JMenuItem rotate90JMenuItem 
@@ -76,7 +76,7 @@ public class PicturePopupMenu extends JPopupMenu
 
 	/** 
 	 *  menu item that allows the user to request regeneration of the 
-	 *  thumbnail with a 180° rotation.
+	 *  thumbnail with a 180 Deg rotation.
 	 * 
 	 **/
 	private JMenuItem rotate180JMenuItem 
@@ -84,7 +84,7 @@ public class PicturePopupMenu extends JPopupMenu
 
 	/** 
 	 *  menu item that allows the user to request regeneration of the 
-	 *  thumbnail with a 270° rotation.
+	 *  thumbnail with a 270 Deg rotation.
 	 * 
 	 **/
 	private JMenuItem rotate270JMenuItem
@@ -92,7 +92,7 @@ public class PicturePopupMenu extends JPopupMenu
 
 	/** 
 	 *  menu item that allows the user to request regeneration of the 
-	 *  thumbnail with a 0° rotation.
+	 *  thumbnail with a 0 Deg rotation.
 	 * 
 	 **/
 	private JMenuItem rotate0JMenuItem
