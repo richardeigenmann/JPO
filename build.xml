@@ -21,7 +21,7 @@
     <property name="src.docs.dir" value="${src.dir}/docsrc"/>
     <property name="src.dtd.dir" value="${src.dir}/dtd"/>
     <property environment="env"/>
-    <!-- <echo message="KEYSTORE is set to = ${env.KEYSTORE}"/> -->
+    <echo message="KEYSTORE is set to = ${env.KEYSTORE}"/> 
     <!-- <echo message="env.JAVA_HOME is set to = ${env.JAVA_HOME}"/> -->
 
 
@@ -132,22 +132,12 @@
     <target name="signjar"
         depends="buildjar" >
 	<signjar jar="${build.jars.dir}/jpo-${version}.jar" 
-		alias="mykey"
+		alias="richi"
 		keystore="${env.KEYSTORE}"
 		storepass="${env.JARPWD}"
 	/>
 	<signjar jar="libs/metadata-extractor-2.2.2.jar" 
-		alias="myself"
-		keystore="${env.KEYSTORE}"
-		storepass="${env.JARPWD}"
-	/>
-	<signjar jar="libs/activation.jar" 
-		alias="myself"
-		keystore="${env.KEYSTORE}"
-		storepass="${env.JARPWD}"
-	/>
-	<signjar jar="libs/mail.jar" 
-		alias="myself"
+		alias="richi"
 		keystore="${env.KEYSTORE}"
 		storepass="${env.JARPWD}"
 	/>
@@ -174,8 +164,8 @@
     <!-- This target will only be of use to the person who does the deployment of JPO to souceforge.
          It relies on the environment variables SOURCEFORGEUSER and SORUVEFORGEPWD for the authentication.
     -->
-    <target name="publish"
-        depends="signjar">
+    <target name="publish">
+        <!--depends="signjar"-->
    	<scp file="${build.jars.dir}/jpo-${version}.jar" 
 		todir="${env.SOURCFORGEUSER}@shell.sourceforge.net:/home/groups/j/j-/j-po/htdocs"
 		password="${env.SOURCFORGEPWD}"
@@ -197,6 +187,21 @@
 		trust="yes"
 	/>
    	<scp file="web/jpo-stable.jnlp" 
+		todir="${env.SOURCFORGEUSER}@shell.sourceforge.net:/home/groups/j/j-/j-po/htdocs"
+		password="${env.SOURCFORGEPWD}"
+		trust="yes"
+	/>
+   	<scp file="web/jnlp.jnlp" 
+		todir="${env.SOURCFORGEUSER}@shell.sourceforge.net:/home/groups/j/j-/j-po/htdocs"
+		password="${env.SOURCFORGEPWD}"
+		trust="yes"
+	/>
+   	<scp file="web/activation.jnlp" 
+		todir="${env.SOURCFORGEUSER}@shell.sourceforge.net:/home/groups/j/j-/j-po/htdocs"
+		password="${env.SOURCFORGEPWD}"
+		trust="yes"
+	/>
+   	<scp file="web/mail.jnlp" 
 		todir="${env.SOURCFORGEUSER}@shell.sourceforge.net:/home/groups/j/j-/j-po/htdocs"
 		password="${env.SOURCFORGEPWD}"
 		trust="yes"

@@ -275,7 +275,6 @@ class PicturePane extends JComponent implements ScalablePictureListener {
 	 *
 	 */
 	public void zoomToFit() {
-		//Tools.log("zoomToFit invoked");
 		sclPic.setScaleSize( getSize() );
 		// prevent useless rescale events when the picture is not ready
 		if ( sclPic.getStatusCode() == sclPic.LOADED 
@@ -335,7 +334,7 @@ class PicturePane extends JComponent implements ScalablePictureListener {
 			focusPoint.y = focusPoint.y + (int) (getSize().height * 0.1 / sclPic.getScaleFactor()) ;
 			repaint();
 		} else  {
-			//Tools.log ("Scrollup rejected because bottom of picture is already showing.");
+			Tools.log ("PicturePane.scrollUp rejected because bottom of picture is already showing.");
 		}
 	}
 	
@@ -355,7 +354,7 @@ class PicturePane extends JComponent implements ScalablePictureListener {
 			focusPoint.y = focusPoint.y - (int) (getSize().height * 0.1 / sclPic.getScaleFactor()) ;
 			repaint();
 		} else {
-			//Tools.log ("Scroll down rejected because top edge is aready visible");
+			Tools.log ("PicturePane.scrollDown rejected because top edge is aready visible");
 		}
 	}
 
@@ -376,7 +375,7 @@ class PicturePane extends JComponent implements ScalablePictureListener {
 			focusPoint.x = focusPoint.x + (int) (getSize().width * 0.1 / sclPic.getScaleFactor()) ;
 			repaint();
 		} else {
-			//Tools.log("Scrollup rejected because right edge of picture is already showing.");
+			Tools.log("PicturePane.scrollLeft rejected because right edge of picture is already showing.");
 		}
 	}
 
@@ -397,7 +396,7 @@ class PicturePane extends JComponent implements ScalablePictureListener {
 			focusPoint.x = focusPoint.x - (int) (getSize().width * 0.1 / sclPic.getScaleFactor()) ;
 			repaint();
 		} else {
-			//Tools.log ("Scroll left rejected because left edge is aready visible");
+			Tools.log ("PicturePane.scrollRight rejected because left edge is aready visible");
 		}
 	}
 
@@ -407,7 +406,6 @@ class PicturePane extends JComponent implements ScalablePictureListener {
 	 *  method to set the center of the image to the true coordinates in the picture but doesn't call <code>repaint()</code>
 	 **/
 	public void setCenterLocation(int Xparameter, int Yparameter) {
-		//Tools.log("setCenterLocation invoked with "+Xparameter+" x " + Yparameter);
 		focusPoint.setLocation(Xparameter, Yparameter);
 	}
 
@@ -495,34 +493,31 @@ class PicturePane extends JComponent implements ScalablePictureListener {
 
 
 	/**
-	 *  class that deals with the mouse events. Is built so that the picture can be dragged if
+	 *  This class deals with the mouse events. Is built so that the picture can be dragged if
 	 *  the mouse button is pressed and the mouse moved. If the left button is clicked the picture is 
 	 *  zoomed in, middle resets to full screen, right zooms out.
 	 */
 	class Listener extends MouseInputAdapter {
 	
 		/**
-		 *   overriden mouseClicket event. Is used to zoom in, zoom out and reset the picture
+		 *   This method traps the mouse events and changes the scale and position of the displayed
+		 *   picture.
 		 */
-		public void mouseClicked(MouseEvent e) {
-			
-			// Right Mousebutton zooms out
-			if (e.getButton() == 3) {
+		public void mouseClicked( MouseEvent e ) {
+			if ( Dragging == true ) {
+				//Dragging has ended
+				Dragging = false;
+				setCursor( new Cursor( Cursor.DEFAULT_CURSOR ) );
+			} else if ( e.getButton() == 3 ) {
+				// Right Mousebutton zooms out
 				centerWhenScaled = false;
 				zoomOut();
-			} 
-
-
-			// Middle Mousebutton resets
-			if (e.getButton() == 2) {
+			} else if ( e.getButton() == 2 ) {
+				// Middle Mousebutton resets
 				zoomToFit();
-//				centerImage();
 				centerWhenScaled = true;
-			}
-
-
-			// Left Mousebutton zooms in on selected spot
-			if (e.getButton() == 1) {
+			} else if ( e.getButton() == 1 ) {
+				// Left Mousebutton zooms in on selected spot
 				// Convert screen coordinates of the mouse click into true
 				// coordinates on the picture:
 
@@ -535,42 +530,26 @@ class PicturePane extends JComponent implements ScalablePictureListener {
 				setCenterLocation(
 					focusPoint.x + (int) (X_Offset / sclPic.getScaleFactor()), 
 					focusPoint.y + (int) (Y_Offset / sclPic.getScaleFactor())
-					);
-				
-				
+				);
 				centerWhenScaled = false;
 				zoomIn ();
-
 	 		}
 		}
 			
 		
-		/**
-		 *   method that is invoked if the mouse is released. If the mouse was dragging the
-		 *   image then the dragging flag is turned off and the cursor is reset.
-		 */
-		public void mouseReleased(MouseEvent e) {
-			if (Dragging == true) {
-				//Dragging has ended
-				Dragging = false;
-				setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-				//repaint();
-			}
-		}
-
 
 		/**
 		 * method that is invoked when the
 		 * user drags the mouse with a button pressed. Moves the picture around
 		 */
 		public void mouseDragged(MouseEvent e) {
-			if (Dragging == false) {
+			if ( Dragging == false ) {
 				// Switch into dragging mode and record current coordinates
 				last_x = e.getX(); 
 				last_y = e.getY();
 				
 				Dragging = true;
-				setCursor(new Cursor(Cursor.MOVE_CURSOR));
+				setCursor( new Cursor( Cursor.MOVE_CURSOR ) );
 
 			} else {
 				// was already dragging
@@ -613,16 +592,16 @@ class PicturePane extends JComponent implements ScalablePictureListener {
 	 *  to the listener. The method {@link #centerImage} is called and a repaint is requested.
 	 */
 	public void scalableStatusChange(int pictureStatusCode, String pictureStatusMessage) {
-		Tools.log("PicturePane.scalableStatusChange: got a status change: " + pictureStatusMessage);
+		//Tools.log("PicturePane.scalableStatusChange: got a status change: " + pictureStatusMessage);
 
 		if ( pictureStatusCode == ScalablePicture.READY ) {
-			Tools.log("PicturePane.scalableStatusChange: a READY status");
+			//Tools.log("PicturePane.scalableStatusChange: a READY status");
 			pictureStatusMessage = legend;
 			if ( centerWhenScaled ) {
-				Tools.log("PicturePane.scalableStatusChange: centering image");
+				//Tools.log("PicturePane.scalableStatusChange: centering image");
 				centerImage();
 			}
-			Tools.log("PicturePane.scalableStatusChange: forcing Panel repaint");
+			//Tools.log("PicturePane.scalableStatusChange: forcing Panel repaint");
 			repaint();
 		}
 
@@ -687,7 +666,7 @@ class PicturePane extends JComponent implements ScalablePictureListener {
 	 *  tidy up when closing down object
 	 */
 	public void finalize() {
-		Tools.log("PicturePane.finalize: called");
+		//Tools.log("PicturePane.finalize: called");
 		sclPic = null;
 	}
 
