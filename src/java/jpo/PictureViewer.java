@@ -788,6 +788,7 @@ public class PictureViewer extends JPanel
 	 *   with different options upon user request.
 	 */
 	private void closeViewer() {	
+		Settings.top.getTreeModel().removeTreeModelListener( this );
 		stopTimer();
 		closeMyWindow ();
 	}
@@ -941,9 +942,10 @@ public class PictureViewer extends JPanel
 	 *  displaying an image and if it is whether this is the node being removed or 
 	 *  a descendant of it. If so it must switch to the next node. If the next node 
 	 *  is a group then the viewer is closed.
+	 *  If the picture browser is not in the foreground it is closed.
 	 */
 	public void treeNodesRemoved ( TreeModelEvent e ) {
-		Tools.log("PictureViewer.treeNodesRemoved was invoked");
+		//Tools.log("PictureViewer.treeNodesRemoved was invoked");
 		if ( currentNode == null ) return;
 		TreePath removedChild;
 		TreePath currentNodeTreePath = new TreePath( currentNode.getPath() );
@@ -951,10 +953,10 @@ public class PictureViewer extends JPanel
 		for ( int i = 0; i < children.length; i++ ) {
 			removedChild = new TreePath( children[ i ] );
 			if ( removedChild.isDescendant( currentNodeTreePath ) ) {
-				Tools.log("PictureViewer.treeNodesRemoved: " 
+				/*Tools.log("PictureViewer.treeNodesRemoved: " 
 					+ currentNodeTreePath.toString() 
 					+ " is a descendant of "
-					+  removedChild.toString() );
+					+  removedChild.toString() ); */
 				int[] childIndices = e.getChildIndices();
 				SortableDefaultMutableTreeNode parentNode =
 					(SortableDefaultMutableTreeNode) e.getTreePath().getLastPathComponent();
