@@ -145,17 +145,7 @@ public class PictureViewer extends JPanel
 	 **/
 	private JTextArea descriptionJTextField = new JTextArea();
 
-	
 
-
-
-	/**
-	 *   the Navigation Panel which holds the icons
-	 **/
-	private JToolBar NavigationPanel = new JToolBar( Settings.jpoResources.getString("NavigationPanel") );
-
-
-	
 
 	/** 
 	 *   icon for the simple next picture
@@ -242,13 +232,11 @@ public class PictureViewer extends JPanel
 	/**
 	 *  Button to expand the windo to full screen or a different window size.
 	 */
-//	private JButton fullScreenJButton = new JButton( new ImageIcon( Settings.cl.getResource( "jpo/images/icon_maximise.gif" ) ) );
 	private JButton fullScreenJButton = new JButton( new ImageIcon( Settings.cl.getResource( "jpo/images/icon_Frames.gif" ) ) );
 	
 	/**
 	 *  Button to bring up the popup menu to do things to the image.
 	 */
-//	private JButton popupMenuJButton = new JButton(new ImageIcon( Settings.cl.getResource( "jpo/images/icon_minimise.gif")));
 	private JButton popupMenuJButton = new JButton(new ImageIcon( Settings.cl.getResource( "jpo/images/icon_FingerUp.gif")));
 	
 	/**
@@ -334,9 +322,8 @@ public class PictureViewer extends JPanel
 		Settings.top.getTreeModel().addTreeModelListener( this );
 
 
-		GridBagLayout gridbag = new GridBagLayout();
 		GridBagConstraints c = new GridBagConstraints();
-		this.setLayout(gridbag);
+		this.setLayout( new GridBagLayout() );
 
 
 		// Picture Painter Pane
@@ -347,31 +334,35 @@ public class PictureViewer extends JPanel
 		c.weightx = 1;
 		c.weighty = 0.99f;
 		c.fill = GridBagConstraints.BOTH;
-		c.gridwidth = 2;
+		c.gridwidth = 3;
 		c.gridx = 0;
 		c.gridy = 0;
-		c.anchor = GridBagConstraints.CENTER;
-		gridbag.setConstraints(pictureJPanel, c);
-		add( pictureJPanel );
+		c.anchor = GridBagConstraints.NORTH;
+		add( pictureJPanel, c );
 
 
 		pictureJPanel.addStatusListener( this );
 
-		
-
 		loadJProgressBar.setPreferredSize( new Dimension( 80, 20 ) );
 		loadJProgressBar.setMaximumSize( new Dimension( 80, 20 ) );
-		loadJProgressBar.setAlignmentX( 0f );
+		loadJProgressBar.setMinimumSize( new Dimension( 80, 20 ) );
 		loadJProgressBar.setBackground( Color.black ); 
 		loadJProgressBar.setBorderPainted( true );
-		//loadJProgressBar.setInsets( 0, 5, 2,0 );
 		loadJProgressBar.setBorder( BorderFactory.createLineBorder( Color.gray, 1 ) );
 		
-		//loadJProgressBar.setBorder( new EmptyBorder( 0, 5, 2, 0 ) ); 
 		loadJProgressBar.setMinimum( 0 ); 
 		loadJProgressBar.setMaximum( 100 ); 
 		loadJProgressBar.setStringPainted( true ); 
 		loadJProgressBar.setVisible( false );
+
+		c.weightx = 0;
+		c.weighty = 0;
+		c.fill = GridBagConstraints.NONE;
+		c.gridwidth = 1;
+		c.gridx = 0;
+		c.gridy = 1;
+		c.anchor = GridBagConstraints.EAST;
+		add( loadJProgressBar, c );
 
 
 		// The Description_Panel
@@ -382,53 +373,37 @@ public class PictureViewer extends JPanel
 		descriptionJTextField.setForeground( Color.white );
 		descriptionJTextField.setBackground( Color.black );
 		descriptionJTextField.setOpaque( true );
-		descriptionJTextField.setBorder( new EmptyBorder(2,10,0,0) );
+		descriptionJTextField.setBorder( new EmptyBorder(2,12,0,0) );
+		descriptionJTextField.setMinimumSize( new Dimension( 80, 26 ) );
 
-		GridBagConstraints gbc = new GridBagConstraints();
-		JPanel descriptionJPanel = new JPanel();
-		descriptionJPanel.setLayout( new GridBagLayout() );
-		descriptionJPanel.setBackground( Color.black );
-		gbc.gridx=0; gbc.gridy=0;
-		gbc.fill = GridBagConstraints.NONE;
-		gbc.anchor = GridBagConstraints.EAST;
-		gbc.weightx = 0f;
-		gbc.insets= new Insets( 0, 5, 2, 0);
-		descriptionJPanel.add( loadJProgressBar, gbc );
-		
-		gbc.gridx=1;
-		gbc.fill = GridBagConstraints.BOTH;
-		gbc.anchor = GridBagConstraints.EAST;
-		gbc.weightx = 0.9f;
-		gbc.insets= new Insets( 0, 0, 2, 0);
-		descriptionJPanel.add( descriptionJTextField, gbc );
-
-		JScrollPane descriptionJScrollPane = new JScrollPane(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		descriptionJScrollPane.setViewportView( descriptionJPanel );
+		JScrollPane descriptionJScrollPane = new JScrollPane( JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER );
+		descriptionJScrollPane.setViewportView( descriptionJTextField );
 		descriptionJScrollPane.setBorder(new EmptyBorder(0,0,0,0));
 		descriptionJScrollPane.setBackground( Color.black );
 		descriptionJScrollPane.setOpaque(true);
-		c.weightx = 0.9;
+		c.weightx = 1;
 		c.weighty = 0.01;
-		c.fill = GridBagConstraints.HORIZONTAL;
+		c.fill = GridBagConstraints.BOTH;
 		c.gridwidth = 1;
-		c.gridx = 0;
+		c.gridx = 1;
 		c.gridy = 1;
-		c.anchor = GridBagConstraints.SOUTHWEST; //bottom of space
-		gridbag.setConstraints(descriptionJScrollPane, c);
-		add( descriptionJScrollPane) ;
+		c.anchor = GridBagConstraints.FIRST_LINE_START;
+		add( descriptionJScrollPane, c ) ;
 
 
 
 		//  The NavigationPanel
 		final int numButtons = 8;
 		final Dimension navButtonSize = new Dimension( 24, 24);
-		NavigationPanel.setBackground(Color.black);
-		NavigationPanel.setFloatable(true);
+		final JToolBar NavigationPanel = new JToolBar( Settings.jpoResources.getString("NavigationPanel") );
+
+		NavigationPanel.setBackground( Color.black );
+		NavigationPanel.setFloatable( true );
 		NavigationPanel.setMinimumSize(new Dimension(36 * numButtons, 26));
 		NavigationPanel.setPreferredSize(new Dimension(36 * numButtons, 26));
 		NavigationPanel.setMaximumSize(new Dimension(36 * numButtons, 50));
 		NavigationPanel.setRollover( true );
-
+		NavigationPanel.setBorderPainted( false );
 
 		previousJButton.setMnemonic(KeyEvent.VK_P);
 		previousJButton.addActionListener( new ActionListener() {
@@ -572,12 +547,10 @@ public class PictureViewer extends JPanel
 		c.weighty = 0;
 		c.fill = GridBagConstraints.NONE;
 		c.gridwidth = 1;
-		c.gridx = 1;
+		c.gridx = 2;
 		c.gridy = 1;
-		c.anchor = GridBagConstraints.SOUTHEAST; //bottom of space
-		gridbag.setConstraints(NavigationPanel, c);
-
-		this.add(NavigationPanel);
+		c.anchor = GridBagConstraints.LAST_LINE_END;
+		this.add( NavigationPanel ,c );
 	}
 
 
