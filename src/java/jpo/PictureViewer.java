@@ -1264,7 +1264,7 @@ public class PictureViewer extends JPanel
 	 *   the progress bar.
 	 **/
 	public void scalableStatusChange(int pictureStatusCode, String pictureStatusMessage) {
-		Tools.log("PictureViewer.scalableStatusChange: Got a status change: " + pictureStatusMessage);
+		//Tools.log("PictureViewer.scalableStatusChange: Got a status change: " + pictureStatusMessage);
 		descriptionJTextField.setText( pictureStatusMessage );
 		switch( pictureStatusCode ) {
 			case ScalablePicture.UNINITIALISED:
