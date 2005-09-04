@@ -296,8 +296,12 @@ public class HtmlDistillerThread extends Thread {
 			
 				int count;
 				byte data[] = new byte[ 2048 ];;
-				while (( count = bin.read( data, 0, 2048 )) != -1)
+				while (( count = bin.read( data, 0, 2048 )) != -1) {
 					bout.write(data, 0, count);
+				}
+					
+				bin.close();
+				bout.close();
 
 				inStream.close();
 				outStream.close();
@@ -607,12 +611,12 @@ public class HtmlDistillerThread extends Thread {
 		String groupDescription =
 			( (SortableDefaultMutableTreeNode) n.getParent() ).getUserObject().toString();
 			
-		midresHtmlWriter.write("<HTML>\n<HEAD>\n\t<LINK rel=\"StyleSheet\" href=\"jpo.css\" type=\"text/css\" media=\"screen\">\n\t<TITLE>" + groupDescription + "</TITLE>\n</HEAD>");
+		midresHtmlWriter.write("<HTML>\n<HEAD>\n\t<LINK rel=\"StyleSheet\" href=\"jpo.css\" type=\"text/css\" media=\"screen\">\n\t<TITLE>" + stringToHTMLString( groupDescription ) + "</TITLE>\n</HEAD>");
 		midresHtmlWriter.newLine();
 		midresHtmlWriter.write("<BODY onLoad=\"changetext(content[0])\"><CENTER>");
 		midresHtmlWriter.newLine();
 		midresHtmlWriter.write("<TABLE cellpadding=0 cellspacing=10>");
-		midresHtmlWriter.write("<TR><TD colspan=2><CENTER><H2>" + groupDescription  + "</H2></CENTER></TD></TR>");
+		midresHtmlWriter.write("<TR><TD colspan=2><CENTER><H2>" + stringToHTMLString( groupDescription )  + "</H2></CENTER></TD></TR>");
 		midresHtmlWriter.newLine();
 		midresHtmlWriter.newLine();
 		midresHtmlWriter.write("<TR><TD align=\"CENTER\" valign=\"TOP\" width=" + Integer.toString( midresWidth ) + ">");
@@ -627,7 +631,7 @@ public class HtmlDistillerThread extends Thread {
 		else 
 			midresHtmlWriter.write( imgTag );		
 		midresHtmlWriter.newLine();
-		midresHtmlWriter.write( "<P>" + p.getDescription() );
+		midresHtmlWriter.write( "<P>" + stringToHTMLString( p.getDescription() ) );
 		midresHtmlWriter.newLine();
 		midresHtmlWriter.write( "</TD>" );
 		midresHtmlWriter.newLine();
@@ -653,7 +657,7 @@ public class HtmlDistillerThread extends Thread {
 								+ " of " + Integer.toString( childCount )
 								+ ":<p>"
 								+ "<b>Description:</b><br>"
-								+ p.getDescription().replaceAll("\'", "\\\\'").replaceAll("\n", " ")
+								+ stringToHTMLString( p.getDescription().replaceAll("\'", "\\\\'").replaceAll("\n", " ") )
 								+ "<p>" );
 		if ( p.getCreationTime() != "" )
 			dhtmlArray.append( "<b>Date:</b><br>" 
@@ -720,7 +724,7 @@ public class HtmlDistillerThread extends Thread {
 							+  Integer.toString( matrixWidth-10 )
 							+  ">"
 							+ "</center><p><i>"
-							+ ((PictureInfo) nde.getUserObject() ).getDescription().replaceAll("\'", "\\\\'").replaceAll("\n", " ")
+							+ stringToHTMLString( ((PictureInfo) nde.getUserObject() ).getDescription().replaceAll("\'", "\\\\'").replaceAll("\n", " ") )
 							+ "</i></font>'\n" );
 					} else {
 						dhtmlArray.append( font
