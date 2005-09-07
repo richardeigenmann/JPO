@@ -155,7 +155,15 @@ public class HtmlDistillerThread extends Thread {
 	 *   compression and crap quality, 1 means best quality minimal compression. 
 	 *   0.8 is a good value.
 	 */
-	private float jpgQuality;
+	private float lowresJpgQuality;
+
+
+	/**
+	 *   The compression rate passed to the jpg compressor 0 - 1. A value of 0 means maximum
+	 *   compression and crap quality, 1 means best quality minimal compression. 
+	 *   0.8 is a good value.
+	 */
+	private float midresJpgQuality;
 
 
 	/**
@@ -190,7 +198,8 @@ public class HtmlDistillerThread extends Thread {
 	 *  @param  exportHighres	An indicator whether to copy the highres imgaes to the target dir structure
 	 *  @param  linkToHighres	An indicator whether a link to the highres 
 	 *				pictures should be build into the output html 
-	 *  @param  jpgQuality		The Quality with which to compress the jpg images.
+	 *  @param  lowresJpgQuality	The Quality with which to compress the lowres jpg images.
+	 *  @param  midresJpgQuality	The Quality with which to compress the medium resolution jpg images.
 	 *  @param startNode		The node from which this is all to be built.
 	 *  @param generateDHTML	Set to true if DHTML effects should be generated
 	 *  @param backgroundColor	The background color for the web page.
@@ -205,7 +214,8 @@ public class HtmlDistillerThread extends Thread {
 		int cellspacing,
 		boolean exportHighres,
 		boolean linkToHighres,
-		float jpgQuality,
+		float lowresJpgQuality,
+		float midresJpgQuality,
 		SortableDefaultMutableTreeNode startNode,
 		boolean generateDHTML,
 		Color backgroundColor,
@@ -223,7 +233,8 @@ public class HtmlDistillerThread extends Thread {
 		this.cellspacing = cellspacing;
 		this.exportHighres = exportHighres;
 		this.linkToHighres = linkToHighres;
-		this.jpgQuality = jpgQuality;
+		this.lowresJpgQuality = lowresJpgQuality;
+		this.midresJpgQuality = midresJpgQuality;
 		this.startNode = startNode;
 		this.generateDHTML = generateDHTML;
 		this.backgroundColor = backgroundColor;
@@ -282,7 +293,7 @@ public class HtmlDistillerThread extends Thread {
 		progressFrame.show();
 		progressFrame.setLocationRelativeTo ( Settings.anchorFrame );
 
-		scp.setJpgQuality( jpgQuality );
+		//scp.setQualityScale();
 		writeStylesheet( htmlDirectory );
 		writeAsHtml ( startNode );
 
@@ -565,6 +576,7 @@ public class HtmlDistillerThread extends Thread {
 			progressLabel.setText("scaling " + p.getHighresLocation());
 			scp.scalePicture();
 			progressLabel.setText("writing " + lowresFilename.toString() );
+			scp.setJpgQuality( lowresJpgQuality );
 			scp.writeScaledJpg( lowresFilename );
 			w = scp.getScaledWidth();
 			h = scp.getScaledHeight();
@@ -599,6 +611,7 @@ public class HtmlDistillerThread extends Thread {
 		progressLabel.setText("scaling " + p.getHighresLocation());
 		scp.scalePicture();
 		progressLabel.setText("writing " + midresFilename.toString() );
+		scp.setJpgQuality( midresJpgQuality );
 		scp.writeScaledJpg( midresFilename );
 		w = scp.getScaledWidth();
 		h = scp.getScaledHeight();

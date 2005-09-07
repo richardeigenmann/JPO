@@ -90,11 +90,22 @@ public class HtmlDistillerJFrame extends JFrame {
 	private JCheckBox generateDHTMLJCheckBox = new JCheckBox( Settings.jpoResources.getString("generateDHTMLJCheckBox") );
 	
 	/**
-	 *  Slider that allows the quality of the jpg's to be specified.
+	 *  Slider that allows the quality of the lowres jpg's to be specified.
 	 */
-	private JSlider jpgQualityJSlider = new JSlider(JSlider.HORIZONTAL,
-                	0, 100, (int) (Settings.defaultJpgQuality * 100));
+	private JSlider lowresJpgQualityJSlider = 
+		new JSlider( 
+			JSlider.HORIZONTAL,
+                	0, 100, 
+			(int) ( Settings.defaultJpgQuality * 100 ) );
 
+	/**
+	 *  Slider that allows the quality of the lowres jpg's to be specified.
+	 */
+	private JSlider midresJpgQualityJSlider = 
+		new JSlider( 
+			JSlider.HORIZONTAL,
+                	0, 100, 
+			(int) ( Settings.defaultJpgQuality * 100 ) );
 
 
 	/**
@@ -294,24 +305,43 @@ public class HtmlDistillerJFrame extends JFrame {
 		contentJPanel.add( generateDHTMLJCheckBox, constraints );
 		
 	
-		//jpgQualityJSlider.addChangeListener( new SliderListener() );
 		//Create the label table
 		Hashtable labelTable = new Hashtable();
 		labelTable.put( new Integer( 0 ), new JLabel( Settings.jpoResources.getString("jpgQualityBad") ) );
 		labelTable.put( new Integer( 80 ), new JLabel( Settings.jpoResources.getString("jpgQualityGood") ) );
 		labelTable.put( new Integer( 100 ), new JLabel( Settings.jpoResources.getString("jpgQualityBest") ) );
-		jpgQualityJSlider.setLabelTable( labelTable );
+		lowresJpgQualityJSlider.setLabelTable( labelTable );
 		
-		jpgQualityJSlider.setMajorTickSpacing( 10 );
-		jpgQualityJSlider.setMinorTickSpacing( 5) ;
-		jpgQualityJSlider.setPaintTicks( true );
-		jpgQualityJSlider.setPaintLabels( true );
-		jpgQualityJSlider.setBorder( 
+		lowresJpgQualityJSlider.setMajorTickSpacing( 10 );
+		lowresJpgQualityJSlider.setMinorTickSpacing( 5) ;
+		lowresJpgQualityJSlider.setPaintTicks( true );
+		lowresJpgQualityJSlider.setPaintLabels( true );
+		lowresJpgQualityJSlider.setBorder( 
 			BorderFactory.createTitledBorder( 
-				Settings.jpoResources.getString ("jpgQualitySlider" ) ) );
+				Settings.jpoResources.getString ("lowresJpgQualitySlider" ) ) );
 		constraints.gridx = 0; constraints.gridy++;
-		constraints.gridwidth = 3;
-		contentJPanel.add( jpgQualityJSlider, constraints );
+		constraints.gridwidth = 1;
+		contentJPanel.add( lowresJpgQualityJSlider, constraints );
+
+
+		//Create the label table
+		Hashtable labelTable1 = new Hashtable();
+		labelTable1.put( new Integer( 0 ), new JLabel( Settings.jpoResources.getString("jpgQualityBad") ) );
+		labelTable1.put( new Integer( 80 ), new JLabel( Settings.jpoResources.getString("jpgQualityGood") ) );
+		labelTable1.put( new Integer( 100 ), new JLabel( Settings.jpoResources.getString("jpgQualityBest") ) );
+		midresJpgQualityJSlider.setLabelTable( labelTable1 );
+		
+		midresJpgQualityJSlider.setMajorTickSpacing( 10 );
+		midresJpgQualityJSlider.setMinorTickSpacing( 5) ;
+		midresJpgQualityJSlider.setPaintTicks( true );
+		midresJpgQualityJSlider.setPaintLabels( true );
+		midresJpgQualityJSlider.setBorder( 
+			BorderFactory.createTitledBorder( 
+				Settings.jpoResources.getString ("midresJpgQualitySlider" ) ) );
+		constraints.gridx = 1; // constraints.gridy++;
+		constraints.gridwidth = 1;
+		contentJPanel.add( midresJpgQualityJSlider, constraints );
+
 
 
 		JButton okJButton = new JButton ( Settings.jpoResources.getString("genericExportButtonText") );
@@ -457,7 +487,8 @@ public class HtmlDistillerJFrame extends JFrame {
 			10,
 			exportHighresJCheckBox.isSelected(),
 			linkToHighresJCheckBox.isSelected(),
-			(float) jpgQualityJSlider.getValue() / 100,
+			(float) lowresJpgQualityJSlider.getValue() / 100,
+			(float) midresJpgQualityJSlider.getValue() / 100,
 			startNode,
 			generateDHTMLJCheckBox.isSelected(),
 			previewPanel.getBackground(),

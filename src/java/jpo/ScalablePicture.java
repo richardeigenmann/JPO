@@ -137,7 +137,9 @@ public class ScalablePicture implements SourcePictureListener {
 
 
 	/**
-	 *   which method to use on scaling, a fast one or a good quality one
+	 *   which method to use on scaling, a fast one or a good quality one. Unfortunately the 
+	 *   good quality AffineTransformOp converts the image to a colorspace in the output JPEG file
+	 *   which most programs can't read so this flag is currently not considered. RE 7.9.2005
 	 */
 	public boolean fastScale = true; 
 	
@@ -145,12 +147,12 @@ public class ScalablePicture implements SourcePictureListener {
 	/**
 	 *  Rendering Hints object for good quality.
 	 */
-	private static RenderingHints rh_quality = new RenderingHints(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+	//private static RenderingHints rh_quality = new RenderingHints(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 
 	/**
 	 *  Rendering Hints object for using the bicubic method.
 	 */
-	private static RenderingHints rh_bicubic = new RenderingHints(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+	//private static RenderingHints rh_bicubic = new RenderingHints(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
 
 
 	/**
@@ -383,10 +385,10 @@ public class ScalablePicture implements SourcePictureListener {
 
 
 	/**
-	 *  method that is called to create a scaled version of the image.
+	 *  call this method when the affine transform op is to be executed. 
+	 *
 	 **/
 	public void scalePicture() {
-	    // Tools.log("ScalablePicture.scalePicture invoked" );
 	    try {
 		setStatus(SCALING, "Scaling picture.");
 				
@@ -394,9 +396,6 @@ public class ScalablePicture implements SourcePictureListener {
 			if ( scaleToSize ) {
 				int WindowWidth = TargetSize.width;
 				int WindowHeight = TargetSize.height;
-				//Tools.log("ScalablePicture.scalePicture: scaleToSize: Windowsize: " 
-				//	+ Integer.toString( WindowWidth ) + "x" 
-				//	+ Integer.toString( WindowHeight ) );
 			
 				int PictureWidth = sourcePicture.getWidth();
 				int PictureHeight = sourcePicture.getHeight();
@@ -414,12 +413,16 @@ public class ScalablePicture implements SourcePictureListener {
 					ScaleFactor = 1;
        			}
 		
-			// Tools.log("ScalablePicture.scalePicture: doing an AffineTransform with Factor: " + Double.toString(ScaleFactor) ); 
+			/* note that I have tried to use other AffineTransformOps such as TYPE_BILINEAR and 
+			   TYPE_BICUBIC. Only they don't work as they muck about with the color channels
+			   and we end up with a non JFIF compliant JPEG image. This doesn't display well
+			   in most programs which makes this format useless. This is thoroughly explained 
+			   in the following article. The workaround doesn't work though.
+			   http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4503132  
+			   RE, 7.9.2005  */
+
 			AffineTransform af = AffineTransform.getScaleInstance((double) ScaleFactor, (double) ScaleFactor);
-			if ( fastScale )
-				op = new AffineTransformOp( af, AffineTransformOp.TYPE_NEAREST_NEIGHBOR );
-			else 
-				op = new AffineTransformOp( af, AffineTransformOp.TYPE_BILINEAR );
+			op = new AffineTransformOp( af, AffineTransformOp.TYPE_NEAREST_NEIGHBOR );
 			scaledPicture = op.filter( sourcePicture.getSourceBufferedImage(), null );
 
 			int PictureWidth = scaledPicture.getWidth();
@@ -443,8 +446,8 @@ public class ScalablePicture implements SourcePictureListener {
 			PictureCache.clear();
 
 			JOptionPane.showMessageDialog( Settings.anchorFrame, 
-				Settings.jpoResources.getString("outOfMemoryError"), 
-				Settings.jpoResources.getString("genericError"), 
+				Settings.jpoResources.getString( "outOfMemoryError" ), 
+				Settings.jpoResources.getString( "genericError" ), 
 				JOptionPane.ERROR_MESSAGE);
 
 			System.gc();
@@ -653,13 +656,15 @@ public class ScalablePicture implements SourcePictureListener {
 		params.setCompressionMode( ImageWriteParam.MODE_EXPLICIT );
 		params.setCompressionQuality( jpgQuality );
 		params.setProgressiveMode( ImageWriteParam.MODE_DISABLED );
-		params.setDestinationType(new ImageTypeSpecifier(java.awt.image.IndexColorModel.getRGBdefault(), 
-			IndexColorModel.getRGBdefault().createCompatibleSampleModel(16,16)));
+		params.setDestinationType( 
+			new ImageTypeSpecifier( IndexColorModel.getRGBdefault(), 
+				IndexColorModel.getRGBdefault().createCompatibleSampleModel(16,16) ) );
 
 		try {
-			ImageOutputStream ios = ImageIO.createImageOutputStream( new FileOutputStream(writeFile) );
+			ImageOutputStream ios = ImageIO.createImageOutputStream( 
+				new FileOutputStream( writeFile ) );
 			writer.setOutput(ios);
-			writer.write(null, new IIOImage( renderedImage, null, null), params);
+			writer.write( null, new IIOImage( renderedImage, null, null), params );
 			ios.close();
 			
  		} catch (IOException e) {
