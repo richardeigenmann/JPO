@@ -39,6 +39,13 @@ public interface GroupPopupInterface {
 
 	/**
 	 * the implementing class must trap and do something when the user wants to
+	 * show the Group.
+	 */
+	public void requestShowGroup( SortableDefaultMutableTreeNode newNode );
+
+
+	/**
+	 * the implementing class must trap and do something when the user wants to
 	 * show the Pictures.
 	 */
 	public void requestSlideshow();

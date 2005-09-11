@@ -354,8 +354,8 @@ public class Jpo extends JFrame
 	 *   {@link CleverJTree}.
 	 */
 	public void requestFileAdd() {
-		new PictureAdder( Settings.top );
-		positionToNode( Settings.top );
+		cleverJTree.popupNode = Settings.top;
+		cleverJTree.requestAdd();
 	}
 	
 	

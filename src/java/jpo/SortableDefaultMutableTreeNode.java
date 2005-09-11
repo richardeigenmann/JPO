@@ -1894,12 +1894,16 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 	 *  @param newOnly indicates whether to check if the picture is already in the collection
 	 *  @param recurseDirectories  indicates whether to scan down into directories for more pictures. 
 	 *  @param retainDirectories  indicates whether to preserve the directory structure.
+	 *  @return In case this is of interest to the caller we return here the node to be displayed.
 	 */
-	public void addPictures( File[] chosenFiles, boolean newOnly, boolean recurseDirectories, boolean retainDirectories ) {
+	public SortableDefaultMutableTreeNode addPictures( File[] chosenFiles, boolean newOnly, boolean recurseDirectories, boolean retainDirectories ) {
 		ProgressGui progGui = new ProgressGui( Tools.countfiles( chosenFiles ),
 			Settings.jpoResources.getString("PictureAdderProgressDialogTitle"),
 			Settings.jpoResources.getString("picturesAdded") );
 		setSendModelUpdates( false );
+		
+		SortableDefaultMutableTreeNode displayNode = null;
+		SortableDefaultMutableTreeNode addedNode = null;
 	
 		// add all the files from the array as nodes to the start node.
 		for ( int i = 0; (i < chosenFiles.length) && ( ! progGui.interrupt ); i++ ) {
@@ -1912,7 +1916,10 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 				}
 			} else {
 				if ( Tools.hasPictures( addFile ) ) {
-					addDirectory( addFile, newOnly, recurseDirectories, retainDirectories, progGui );
+					addedNode = addDirectory( addFile, newOnly, recurseDirectories, retainDirectories, progGui );
+					if ( displayNode == null ) {
+						displayNode = addedNode;
+					}
 				} else {
 					Tools.log ("PictureAdder.run: no pictures in directory " + addFile.toString() );
 				}
@@ -1924,6 +1931,10 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 		getTreeModel().nodeStructureChanged( this );
 		
 		progGui.switchToDoneMode();
+		if ( displayNode == null ) {
+			displayNode = this;
+		}
+		return displayNode;
 	}
 
 
@@ -2110,9 +2121,9 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 	 *  group. The ImageIO.getImageReaders method is queried to see whether a reader
 	 *  exists for the image that is attempted to be loaded.
 	 *  @param retainDirectories  indicates whether to preserve the directory structure
+	 *  @return returns the node that was added.
 	 */
-	private void addDirectory( File dir, boolean newOnly, boolean recurseDirectories, boolean retainDirectories, ProgressGui progGui ) {
-		//Tools.log("addDirectory called with retainDirectories " + (retainDirectories ? "true" : "false") + " on dir: " + dir.toString() );
+	private SortableDefaultMutableTreeNode addDirectory( File dir, boolean newOnly, boolean recurseDirectories, boolean retainDirectories, ProgressGui progGui ) {
 		SortableDefaultMutableTreeNode newNode;
 		if ( retainDirectories) {
 			newNode = new SortableDefaultMutableTreeNode( new GroupInfo( dir.getName() ) );
@@ -2136,6 +2147,7 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 				}
 			}
 		}
+		return newNode;
 	}
 
 

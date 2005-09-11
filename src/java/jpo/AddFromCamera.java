@@ -237,7 +237,6 @@ public class AddFromCamera
 	 *  method that analyses the user initiated action and performs what the user requested
 	 **/
 	public void actionPerformed( ActionEvent e ) {
-		//Tools.log ("actionperformed!!");
 		if ( e.getSource() == cancelJButton ) {
 			File targetDir = new File( targetDirJTextField.getText() );
 			if ( targetDir.exists() ) {

@@ -80,19 +80,22 @@ public class PictureAdder implements PropertyChangeListener {
 	private static final int PREFERRED_HEIGHT = 180;
 
 	
+	/**
+	 *  node to display after adding pictures
+	 */
+	private SortableDefaultMutableTreeNode displayNode = null;
+	
 
 	/**
 	 *  Constructor for a PictureAdder. It creates a JFilechooser GUI and then fires off a 
 	 *  thread to load the pictures in the background.
 	 *
-	 *  @param  startNode   The node to which the selected pictures are to be added.
+	 *  @param  startNode   The node to which the selected pictures are to be added. 
+	 *                      It must be a GroupInfo Node.
 	 */
 	public PictureAdder ( final SortableDefaultMutableTreeNode startNode ) {
 		
-		//this.startNode = startNode;
-
 		if ( ! ( startNode.getUserObject() instanceof GroupInfo ) ) {
-			//Tools.log( "PictureAdder was invoked with a startNode that was not a GroupInfo class node. The node is of class " + startNode.getUserObject().getClass().toString() );
 			JOptionPane.showMessageDialog( 
 				Settings.anchorFrame, 
 				Settings.jpoResources.getString("notGroupInfo"), 
@@ -140,8 +143,10 @@ public class PictureAdder implements PropertyChangeListener {
 			
 			Thread t = new Thread() {
 				public void run() {
-					//Tools.log("PictureAdder.run starting for files: " + Integer.toString(chosenFiles.length) );
-					startNode.addPictures( chosenFiles, newOnlyJCheckBox.isSelected(), recurseJCheckBox.isSelected(), retainDirectoriesJCheckBox.isSelected() );
+					displayNode = startNode.addPictures( chosenFiles, newOnlyJCheckBox.isSelected(), recurseJCheckBox.isSelected(), retainDirectoriesJCheckBox.isSelected() );
+					if ( target != null ) {
+						target.requestShowGroup( displayNode );
+					}
 				}
 			};
 				
@@ -176,5 +181,19 @@ public class PictureAdder implements PropertyChangeListener {
 				thumbnailJLabel.setIcon(icon);
 			}
 		}
+	}
+	
+
+
+	/**
+	 *  This object refers to the target object that wil receive notification when the adding is done.
+	 */
+	private GroupPopupInterface target = null;
+	
+	/**
+	 *  this method logs the object to call back when the pictures have been added.
+	 */
+	public void setNotificationTarget( GroupPopupInterface target ) {
+		this.target = target;
 	}
 }

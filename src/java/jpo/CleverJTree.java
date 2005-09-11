@@ -376,11 +376,20 @@ public class CleverJTree extends JTree
 	 *  @see  GroupPopupInterface
 	 */
 	public void requestShowGroup() {
-		setSelectedNode( popupNode );
+		requestShowGroup( popupNode );
+	}
+
+	/**
+	 *  requests the group to be shown.
+	 *  @see  GroupPopupInterface
+	 */
+	public void requestShowGroup( SortableDefaultMutableTreeNode newNode ) {
+		setSelectedNode( newNode );
 		if ( associatedThumbnailJScrollPane != null ) {
-			associatedThumbnailJScrollPane.showGroup( popupNode );
+			associatedThumbnailJScrollPane.showGroup( newNode );
 		}
 	}
+
 
 
 	/**
@@ -444,12 +453,8 @@ public class CleverJTree extends JTree
 	 *  @see  GroupPopupInterface
 	 */
 	public void requestAdd() {
-		new PictureAdder( popupNode );
-		setSelectedNode ( popupNode );
-		expandPath( new TreePath ( popupNode.getPath()) );
-		if ( associatedThumbnailJScrollPane != null ) {
-			associatedThumbnailJScrollPane.showGroup( popupNode );
-		}
+		PictureAdder pa = new PictureAdder( popupNode );
+		pa.setNotificationTarget( this );
 	}
 
 
