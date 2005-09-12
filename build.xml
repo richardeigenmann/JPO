@@ -7,7 +7,6 @@
     <property name="build.dir" value="build"/>
     <property name="build.base.classes.dir" value="${build.dir}/classes"/>
     <property name="build.images.dir" value="${build.base.classes.dir}/${app.main.package}/images"/>
-<!--    <property name="build.dtd.dir" value="${build.base.classes.dir}/dtd"/> -->
     <property name="build.dtd.dir" value="${build.base.classes.dir}/${app.main.package}"/>
     <property name="build.docs.dir" value="${build.dir}/docs"/>
     <property name="build.api.dir" value="${build.dir}/api"/>
@@ -131,7 +130,7 @@
     -->
     <target name="signjar"
         depends="buildjar" >
-	<signjar jar="${build.jars.dir}/jpo-${version}.jar" 
+	<!-- <signjar jar="${build.jars.dir}/jpo-${version}.jar" 
 		alias="richi"
 		keystore="${env.KEYSTORE}"
 		storepass="${env.JARPWD}"
@@ -140,7 +139,7 @@
 		alias="richi"
 		keystore="${env.KEYSTORE}"
 		storepass="${env.JARPWD}"
-	/>
+	/> -->
     </target>
 
     
@@ -155,11 +154,6 @@
 	</exec>
     </target>
       
-<!--		
-		basedir="${basedir}"
-		include="libs/jnlp.jar, libs/metadata-extractor-2.2.2.jar, .cvsignore"
-
-		 -->
     
     <!-- This target will only be of use to the person who does the deployment of JPO to souceforge.
          It relies on the environment variables SOURCEFORGEUSER and SORUVEFORGEPWD for the authentication.

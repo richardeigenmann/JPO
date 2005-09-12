@@ -62,7 +62,7 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  *
  *
  * @author 	Richard Eigenmann, richard_eigenmann@compuserve.com
- * @version 	0.8.4
+ * @version 	0.8.5
  * @since       JDK1.4.0
  *
  **/
@@ -142,7 +142,7 @@ public class Jpo extends JFrame
 	 *
 	 **/
 	public Jpo() {
-		System.out.println ("\nJPO version 0.8.4\n"
+		System.out.println ("\nJPO version 0.8.5\n"
 			+ "Copyright (C) 2000-2003 Richard Eigenmann\n" 
 			+ "JPO comes with ABSOLUTELY NO WARRANTY;\n"
 			+ "for details Look at the Help | License menu item.\n"
