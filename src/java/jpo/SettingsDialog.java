@@ -579,7 +579,7 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 
 
 		JLabel jpgQualitySlider =  
-			new JLabel( Settings.jpoResources.getString("jpgQualitySlider") );
+			new JLabel( Settings.jpoResources.getString("lowresJpgQualitySlider") );
 		c.gridx = 0; c.gridy ++;
 		c.gridwidth = 3;
 	        thumbnailSettingsJPanel.add( jpgQualitySlider, c);

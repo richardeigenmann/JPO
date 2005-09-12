@@ -130,7 +130,7 @@
     -->
     <target name="signjar"
         depends="buildjar" >
-	<!-- <signjar jar="${build.jars.dir}/jpo-${version}.jar" 
+	<signjar jar="${build.jars.dir}/jpo-${version}.jar" 
 		alias="richi"
 		keystore="${env.KEYSTORE}"
 		storepass="${env.JARPWD}"
@@ -139,7 +139,7 @@
 		alias="richi"
 		keystore="${env.KEYSTORE}"
 		storepass="${env.JARPWD}"
-	/> -->
+	/>
     </target>
 
     
@@ -158,9 +158,9 @@
     <!-- This target will only be of use to the person who does the deployment of JPO to souceforge.
          It relies on the environment variables SOURCEFORGEUSER and SORUVEFORGEPWD for the authentication.
     -->
-    <target name="publish">
-        <!--depends="signjar"-->
-   	<scp file="${build.jars.dir}/jpo-${version}.jar" 
+    <target name="publish" 
+        depends="signjar" >
+   	<!--  <scp file="${build.jars.dir}/jpo-${version}.jar" 
 		todir="${env.SOURCFORGEUSER}@shell.sourceforge.net:/home/groups/j/j-/j-po/htdocs"
 		password="${env.SOURCFORGEPWD}"
 		trust="yes"
@@ -214,7 +214,7 @@
 		todir="${env.SOURCFORGEUSER}@shell.sourceforge.net:/home/groups/j/j-/j-po/htdocs"
 		password="${env.SOURCFORGEPWD}"
 		trust="yes"
-	/>
+	/> -->
     </target>    
 
 	      <!-- jvm="${env.JAVA_HOME}/bin/java"-->
