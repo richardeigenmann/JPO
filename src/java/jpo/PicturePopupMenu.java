@@ -288,7 +288,21 @@ public class PicturePopupMenu extends JPopupMenu
 			= new JMenuItem( Settings.jpoResources.getString("categoryUsagetJMenuItem") );
 		categoryUsagetJMenuItem.addActionListener( new ActionListener() {
 			public void actionPerformed( ActionEvent e ) {
-				popupNode.showCategoryUsageGUI();
+				if ( associatedPanel == null ) {
+					popupNode.showCategoryUsageGUI();
+				} else {
+					if ( associatedPanel.countSelectedNodes() < 1 ) {
+						popupNode.showCategoryUsageGUI();
+					} else {
+						if ( ! associatedPanel.isSelected( popupNode ) ) {
+							associatedPanel.clearSelection();
+							popupNode.showCategoryUsageGUI();
+						} else {
+							CategoryUsageJFrame cujf = new CategoryUsageJFrame();
+							cujf.setSelection( associatedPanel.getSelectedNodesAsVector() );
+						}
+					}
+				}
 			}
 		});
 		add( categoryUsagetJMenuItem );
@@ -569,14 +583,14 @@ public class PicturePopupMenu extends JPopupMenu
 	/**
 	 *  This reference allows us to find out whether there is a selection in operation
 	 */
-	private ThumbnailJScrollPane associcatedPanel = null;
+	private ThumbnailJScrollPane associatedPanel = null;
 
 	/**
 	 * here you can pass in the ThumbnailJScrollPane that would hold a selection object
 	 * in case the popup function is supposed to work on multiple selected images.
 	 */
-	public void setSelection( ThumbnailJScrollPane associcatedPanel ) {
-		this.associcatedPanel = associcatedPanel;
+	public void setSelection( ThumbnailJScrollPane associatedPanel ) {
+		this.associatedPanel = associatedPanel;
 	}
 
 }

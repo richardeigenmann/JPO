@@ -802,6 +802,14 @@ public class ThumbnailJScrollPane
 
 
 	/**
+	 *  returns a Vector of the selected nodes.
+	 */
+	public Vector getSelectedNodesAsVector() {
+		return new Vector( selection );
+	}
+
+
+	/**
 	 *  returns the amount of selected nodes
 	 */
 	public int countSelectedNodes() {
