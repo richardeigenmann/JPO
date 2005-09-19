@@ -36,13 +36,6 @@ public class PicturePopupMenu extends JPopupMenu
 
 
 
-	/** 
-	 *  menu item that allows the user to edit the picture information
-	 * 
-	 **/
-	private JMenuItem pictureEditJMenuItem
-		= new JMenuItem( Settings.jpoResources.getString("pictureEditJMenuItemLabel") );
-
 
 
 	/**
@@ -282,12 +275,23 @@ public class PicturePopupMenu extends JPopupMenu
 		});
 		add( pictureShowJMenuItem );
 
+		JMenuItem pictureEditJMenuItem
+			= new JMenuItem( Settings.jpoResources.getString("pictureEditJMenuItemLabel") );
 		pictureEditJMenuItem.addActionListener( new ActionListener() {
 			public void actionPerformed( ActionEvent e ) {
 				popupNode.showEditGUI();
 			}
 		});
 		add( pictureEditJMenuItem );
+
+		JMenuItem categoryUsagetJMenuItem
+			= new JMenuItem( Settings.jpoResources.getString("categoryUsagetJMenuItem") );
+		categoryUsagetJMenuItem.addActionListener( new ActionListener() {
+			public void actionPerformed( ActionEvent e ) {
+				popupNode.showCategoryUsageGUI();
+			}
+		});
+		add( categoryUsagetJMenuItem );
 
 
 		pictureMailSelectJMenuItem.addActionListener( new ActionListener() {
@@ -561,5 +565,18 @@ public class PicturePopupMenu extends JPopupMenu
 		}
 	}
 
+
+	/**
+	 *  This reference allows us to find out whether there is a selection in operation
+	 */
+	private ThumbnailJScrollPane associcatedPanel = null;
+
+	/**
+	 * here you can pass in the ThumbnailJScrollPane that would hold a selection object
+	 * in case the popup function is supposed to work on multiple selected images.
+	 */
+	public void setSelection( ThumbnailJScrollPane associcatedPanel ) {
+		this.associcatedPanel = associcatedPanel;
+	}
 
 }

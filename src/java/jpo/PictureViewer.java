@@ -604,7 +604,7 @@ public class PictureViewer extends JPanel
 			if ( myJFrame.isDisplayable() ) {
 				myJFrame.dispose();
 				myJFrame.setUndecorated( ! decorateWindow );
-				myJFrame.show();
+				myJFrame.setVisible( true );
 			} else {
 				myJFrame.setUndecorated( ! decorateWindow );
 			}				

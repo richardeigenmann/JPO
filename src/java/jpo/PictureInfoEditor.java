@@ -254,20 +254,17 @@ public class PictureInfoEditor
 		leftJPanel.setLayout( new GridBagLayout() );
 
 
-		thumbnail = new Thumbnail( editNode, Settings.thumbnailSize );
+		thumbnail = new Thumbnail( editNode, Settings.thumbnailSize, ThumbnailCreationQueue.MEDIUM_PRIORITY );
 		c.gridy = 0; c.gridx = 0; 
 		c.gridwidth = 3;
 		c.anchor = GridBagConstraints.CENTER;  
 		leftJPanel.add( thumbnail, c );
 
 
-		//JPanel buttonJPanel = new JPanel();
-
 	        OkJButton.setPreferredSize( Settings.defaultButtonDimension );
 	        OkJButton.setMinimumSize( Settings.defaultButtonDimension );
 	        OkJButton.setMaximumSize( Settings.defaultButtonDimension );
 		OkJButton.setBorder( BorderFactory.createRaisedBevelBorder() );
-		// OkJButton.setAlignmentX( Component.LEFT_ALIGNMENT );
 	        OkJButton.addActionListener( this );
 		OkJButton.setDefaultCapable( true );
 		getRootPane().setDefaultButton ( OkJButton );

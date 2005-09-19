@@ -183,5 +183,13 @@ public interface GroupPopupInterface {
 	 */
 	public void requestSort( int sortCriteria );
 
+
+	/**
+	 * the implementing class must trap and do something when the user wants to
+	 * edit the categories
+	 */
+	public void showCategoryUsageGUI();
+
+
 }
 

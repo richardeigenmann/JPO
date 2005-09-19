@@ -290,7 +290,7 @@ public class HtmlDistillerThread extends Thread {
 		progressFrame = new JFrame( Settings.jpoResources.getString("HtmlDistillerThreadTitle") );
 		progressFrame.getContentPane().add(progPanel);
 		progressFrame.pack();
-		progressFrame.show();
+		progressFrame.setVisible( true );
 		progressFrame.setLocationRelativeTo ( Settings.anchorFrame );
 
 		//scp.setQualityScale();

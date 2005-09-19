@@ -330,7 +330,7 @@ public class JpoResources_de extends ListResourceBundle {
 		{"movePictureDownJMenuItem", "runter"},
 		{"movePictureToBottomJMenuItem", "zuunterst"},
 		{"recentDropNodePrefix", "Zu Gruppe: "},
-
+		{"categoryUsagetJMenuItem", "Kategorien"},
 
 		// ThumbnailJScrollPane
 		{"ThumbnailSearchResults", "Suchresultate für: "},
@@ -514,6 +514,14 @@ public class JpoResources_de extends ListResourceBundle {
 		{"doneJButton", "Done"},
 		{"countCategoryUsageWarning1", "Diese Kategorie wird von "},
 		{"countCategoryUsageWarning2", " Knoten verwendet.\nBestätigen Sie, dass Sie sie entfernen wollen."},
+
+		// CategoryUsageJFrame
+		{"CategoryUsageJFrameTitle", "Kategorienzuteilung"},
+		{"numberOfPicturesJLabel", " Bild(er) ausgewählt"},
+		{"updateJButton", "Sichern"},
+		{"refreshJButtonCUJF", "Neu laden"},
+		{"modifyCateogryJButton", "Kategorien"},
+		{"cancelJButton", "Abbrechen"},
 
 		
 		// EmailerJFrame

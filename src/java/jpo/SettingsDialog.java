@@ -299,7 +299,7 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 		
 		pack ();
 		setLocationRelativeTo ( Settings.anchorFrame );
-		show ();
+		setVisible( true );
 	}
 
 

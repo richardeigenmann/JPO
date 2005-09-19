@@ -78,7 +78,6 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 		super ();
 		if ( isRoot ) {
 			this.createDefaultTreeModel();
-			this.selection = new HashSet();
 			this.mailSelection = new HashSet();
 			this.categories = new HashMap();
 			initialiseNewCollection();
@@ -629,8 +628,9 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 	public static int countCategoryUsage( Object key, SortableDefaultMutableTreeNode startNode ) {
 		Enumeration nodes = startNode.children();
 		int count = 0;
+		SortableDefaultMutableTreeNode n;
 		while ( nodes.hasMoreElements() ) {
-			SortableDefaultMutableTreeNode n = (SortableDefaultMutableTreeNode) nodes.nextElement();
+			n = (SortableDefaultMutableTreeNode) nodes.nextElement();
 			if ( n.getUserObject() instanceof PictureInfo)
 				if ( ( (PictureInfo) n.getUserObject() ).containsCategory( key ) )
 					count++;
@@ -661,77 +661,6 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 	 */
 	public int countCategories() {
 		return this.getRootNode().categories.size();
-	}
-
-
-
-	/**
-	 *   This Hash Set hold references to the selected nodes. It should only be populated on
-	 *   the RootNode of the tree. It is not a static object as there could theoretically be
-	 *   more than one Root Node in the JVM.
-	 */
-	public HashSet selection;
-
-	/**
-	 *  This method places the current SDMTN into the selection HashSet.
-	 */
-	public void setSelected() {
-		this.getRootNode().selection.add( this );
-		Object userObject = this.getUserObject();
-		if ( userObject instanceof PictureInfo ) {
-			((PictureInfo) userObject).sendWasSelectedEvent();
-		}
-	}
-
-	/**
-	 *  This method clears selection HashSet.
-	 */
-	public void clearSelection() {
-		Iterator i = this.getRootNode().selection.iterator();
-		Object o;
-		Object userObject;
-		while ( i.hasNext() ) {
-			o = i.next();
-			i.remove();
-			userObject = ((SortableDefaultMutableTreeNode) o).getUserObject(); 
-			if ( userObject instanceof PictureInfo ) {
-				((PictureInfo) userObject).sendWasUnselectedEvent();
-				
-			}
-		}
-		//this.getRootNode().selection.clear();
-	}
-
-
-	/**
-	 *  This method removes the current SDMTN from the selection HashSet.
-	 */
-	public void removeFromSelection() {
-		this.getRootNode().selection.remove( this );
-		Object userObject = this.getUserObject();
-		if ( userObject instanceof PictureInfo ) {
-			((PictureInfo) userObject).sendWasUnselectedEvent();
-		}
-	}
-
-
-	/**
-	 *  This returns whether the SDMTN is part of the selection HashSet.
-	 */
-	public boolean isSelected() {
-		try {
-			return this.getRootNode().selection.contains( this );
-		} catch ( NullPointerException x ) {
-			return false;
-		}
-	}
-
-
-	/**
-	 *  returns an array of the selected nodes.
-	 */
-	public Object [] getSelectedNodes() {
-		return this.getRootNode().selection.toArray();
 	}
 
 
@@ -1357,7 +1286,7 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 		int[] childIndices = { parentNode.getIndex( this ) };
 		Object[] removedChildren = { this };
 
-		this.removeFromSelection();
+		//this.removeFromSelection();
 
 		super.removeFromParent();
 
@@ -1870,6 +1799,25 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 	}
 
 
+	/**
+	 *  This function opens the CateGoryUsageEditor.
+	 */
+	public void showCategoryUsageGUI() {
+		Tools.log("SDMTN.showCategoryUsageGUI invoked");
+		if ( this.getUserObject() instanceof PictureInfo ) {
+			CategoryUsageJFrame cujf = new CategoryUsageJFrame();
+			Vector nodes = new Vector();
+			nodes.add( this );
+			cujf.setSelection( nodes );
+		} else  if ( this.getUserObject() instanceof GroupInfo ) {
+			CategoryUsageJFrame cujf = new CategoryUsageJFrame();
+			cujf.setGroupSelection( this, false );
+		} else{
+			Tools.log( "SortableDefaultMutableTreeNode.showCategoryUsageGUI: doesn't know what kind of editor to use. Irngoring request.");
+		}
+	}
+
+
 
 	/**
 	 *  Adds a new Group with the indicated description.
@@ -1883,7 +1831,7 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 		return newNode;
 	}
 	
-			
+
 
 
 	/**
@@ -2242,7 +2190,7 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 		/*if ( ! ( this.getUserObject() instanceof PictureInfo ) ) {
 			Tools.log("SDMTN.refresh Thumbnail called on a node that doesn't contain a picture! Ignoring request.");
 		}*/
-		Thumbnail t = new Thumbnail ( this, Settings.thumbnailSize );
+		Thumbnail t = new Thumbnail ( this, Settings.thumbnailSize, ThumbnailCreationQueue.HIGH_PRIORITY );
 		ThumbnailCreationQueue.forceThumbnailCreation( t, ThumbnailCreationQueue.HIGH_PRIORITY );
 	}
 	

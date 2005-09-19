@@ -30,6 +30,15 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 public class Category implements Serializable {
 	public Object key;
 	public Object value;
+	
+	
+	public static final int undefined = 0;
+	public static final int selected = undefined + 1;
+	public static final int unSelected = selected + 1;
+	public static final int both = unSelected + 1;
+	
+	
+	private int status = 0;
 		
 	public Category ( Object key, Object value ) {
 		setKey( key );
@@ -57,4 +66,21 @@ public class Category implements Serializable {
 	}
 	
 	
+	/**
+	 *  Call this method to set the state of the Category to selected or not selected.
+	 */
+	public void setStatus( int newState ) {
+		status = newState;
+	}
+	
+
+	/**
+	 *  Call this method to find out if the Category is selected
+	 *  @return  true if it is selected, false if it is not selected or partially selected
+	 */
+	public int getStatus() {
+		return status;
+	}
+
+
 }

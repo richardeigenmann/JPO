@@ -127,7 +127,7 @@ public class ExifViewerJFrame extends JFrame implements ActionListener {
 		this.setLocationRelativeTo ( Settings.anchorFrame );
 		this.getContentPane().add( contentJPanel );
 		this.pack();
-		this.show();
+		this.setVisible( true );
 
 		try {
 

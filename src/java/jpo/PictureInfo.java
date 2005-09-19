@@ -1074,6 +1074,7 @@ public class PictureInfo implements Serializable {
 	 */
 	public void clearCategoryAssignments() {
 		if ( categoryAssignments != null ) {
+			sendCategoryAssignmentsChangedEvent();
 			categoryAssignments.clear();
 		}
 	}
@@ -1117,13 +1118,16 @@ public class PictureInfo implements Serializable {
 
 	
 	/** 
-	 * Adds to the categoryAssignment HashSet.
+	 * Adds the supplied Object to the categoryAssignment HashSet. If the Object already existed
+	 * it doesn't get added a second time.
 	 */
        	public synchronized void addCategoryAssignment( Object key ) {
 		if ( categoryAssignments == null ) {
 			categoryAssignments = new HashSet();
 		}
-		categoryAssignments.add( key );
+		if ( categoryAssignments.add( key ) ) {
+			sendCategoryAssignmentsChangedEvent();
+		}
 	}
 
 	
@@ -1154,11 +1158,13 @@ public class PictureInfo implements Serializable {
 
 
 	/**
-	 *  Returns whether the category is part of the attributes of the picture
+	 *  Removes the supplied category from the picture if it was there
 	 */
 	public void removeCategory( Object key ) {
 		if ( categoryAssignments != null ) {
-			categoryAssignments.remove( key );
+			if ( categoryAssignments.remove( key ) ) {
+				sendCategoryAssignmentsChangedEvent();
+			}
 		}
 	}
 

@@ -297,6 +297,16 @@ class GroupPopupMenu extends JPopupMenu
 			});
 			add( groupEditJMenuItem ) ;
 
+			JMenuItem categoryUsagetJMenuItem
+				= new JMenuItem( Settings.jpoResources.getString("categoryUsagetJMenuItem") );
+			categoryUsagetJMenuItem.addActionListener( new ActionListener() {
+				public void actionPerformed( ActionEvent e ) {
+					caller.showCategoryUsageGUI();
+				}
+			});
+			add( categoryUsagetJMenuItem );
+
+
 			JMenuItem groupRefreshJMenuItem 
 				= new JMenuItem( Settings.jpoResources.getString( "groupRefreshJMenuItem" ) ); 
 			groupRefreshJMenuItem.addActionListener( new ActionListener() {

@@ -463,7 +463,7 @@ public class ApplicationJMenuBar extends JMenuBar
        	                   options[0]);
 
 		JDialog dialog = pane.createDialog( Settings.anchorFrame, "GNU General Public License");
-		dialog.show();
+		dialog.setVisible( true );
 	}
 
 	/**

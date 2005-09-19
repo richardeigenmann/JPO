@@ -180,7 +180,6 @@ public class CleverJTree extends JTree
 		// Tools.log("CleverJTree.setSelectedNode: called for node: " + selectedNode.toString() );
 		TreePath tp = new TreePath( selectedNode.getPath() );
 		setSelectionPath( tp );
-		Settings.top.clearSelection();
 		scrollPathToVisible( tp );
 		if ( associatedInfoPanel != null ) {
 			associatedInfoPanel.showInfo( selectedNode );
@@ -435,6 +434,13 @@ public class CleverJTree extends JTree
 	}
 
 
+	/**
+	 *  this method ivokes the Category editor and allows the user to set the categories for all the pictures in the Group.
+	 */
+	public void showCategoryUsageGUI() {
+		popupNode.showCategoryUsageGUI();
+	}
+
 
 	/**
 	 *  requests a new empty group to be added.
@@ -661,8 +667,6 @@ public class CleverJTree extends JTree
 				if ( clickNode.getUserObject() instanceof GroupInfo ) {
 					if ( associatedThumbnailJScrollPane != null ) {
 						associatedThumbnailJScrollPane.showGroup( clickNode );
-						Settings.top.clearSelection();
-
 					}
 				}
 			} else 	if ( e.getClickCount() > 1 && (! e.isPopupTrigger() ) ) {

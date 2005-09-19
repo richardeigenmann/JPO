@@ -107,7 +107,7 @@ public class Thumbnail extends JPanel
 	/**
 	 *  a reference to the ThumbnailJScrollPane where group Info objects can refer their mouseclicks back to.
 	 */
-	private ThumbnailJScrollPane associcatedPanel;
+	private ThumbnailJScrollPane associatedPanel;
 
 	/**
 	 *    The image that should be displayed
@@ -215,12 +215,12 @@ public class Thumbnail extends JPanel
 	 *   Creates a new Thumbnail object with a reference to the ThumbnailJScrollPane which
 	 *   must receive notifications that a new node should be selected.
 	 *
-	 *   @param	associcatedPanel	The ThumbnailJScrollpane that will be notified when the 
+	 *   @param	associatedPanel	The ThumbnailJScrollpane that will be notified when the 
 	 *					user want a different selection shown
 	 **/
-	public Thumbnail ( ThumbnailJScrollPane associcatedPanel ) {
+	public Thumbnail ( ThumbnailJScrollPane associatedPanel ) {
 		this ( Settings.thumbnailSize );
-		setAssocicatedPanel( associcatedPanel );
+		setassociatedPanel( associatedPanel );
 	}
 
 
@@ -352,8 +352,8 @@ public class Thumbnail extends JPanel
 	 *   sets the associated ThumbnailJScrollPane that will be told to display another group
 	 *   if the user clicks on a group node.
 	 */
-	public void setAssocicatedPanel( ThumbnailJScrollPane associcatedPanel ) {
-		this.associcatedPanel = associcatedPanel;
+	public void setassociatedPanel( ThumbnailJScrollPane associatedPanel ) {
+		this.associatedPanel = associatedPanel;
 	}
 
 
@@ -451,30 +451,31 @@ public class Thumbnail extends JPanel
 					referringNode.showLargePicture();
 				}  else if ( e.getButton() == 3 ) { // popup menu only on 3rd mouse button.
 					PicturePopupMenu picturePopupMenu = new PicturePopupMenu( referringNode );
+					picturePopupMenu.setSelection( associatedPanel );
 					picturePopupMenu.show(e.getComponent(), e.getX(), e.getY());
-				}  else if ( e.getButton() == 1) { // first button
+				}  else if ( ( e.getButton() == 1) && ( associatedPanel != null ) ) { // first button
 					// I.e. selection
 					if ( e.isControlDown() ) {
-						if ( referringNode.isSelected() ) {
-							referringNode.removeFromSelection();
+						if ( associatedPanel.isSelected( referringNode ) ) {
+							associatedPanel.removeFromSelection( referringNode );
 						} else {
-							referringNode.setSelected();
+							associatedPanel.setSelected( referringNode );
 						}
 					} else {
-						if ( referringNode.isSelected() ) {
-							referringNode.clearSelection();
+						if ( associatedPanel.isSelected( referringNode ) ) {
+							associatedPanel.clearSelection();
 						} else {
-							referringNode.clearSelection();
-							referringNode.setSelected();
+							associatedPanel.clearSelection();
+							associatedPanel.setSelected( referringNode );
 						}
 					}
 				}
 			} else {
-				if ( associcatedPanel != null ) {		
+				if ( associatedPanel != null ) {		
 					if  ( e.getClickCount() > 1 ) {
-						associcatedPanel.requestShowGroup( referringNode );
+						associatedPanel.requestShowGroup( referringNode );
 					}  else if ( e.getButton() == 3 ) { // popup menu only on 3rd mouse button.
-						CleverJTree cleverJTree = associcatedPanel.getAssociatedCleverJTree();
+						CleverJTree cleverJTree = associatedPanel.getAssociatedCleverJTree();
 						if ( cleverJTree != null ) {
 							cleverJTree.popupNode = referringNode;
 							GroupPopupMenu groupPopupMenu = new GroupPopupMenu( cleverJTree, referringNode );
@@ -534,8 +535,8 @@ public class Thumbnail extends JPanel
 	 *  changes the color so that the user sees whether the thumbnail is part of the selection
 	 */
 	public void showSlectionStatus() {
-		if ( ( referringNode != null )
-		  && ( referringNode.isSelected() ) ) {
+		if ( ( associatedPanel != null )
+		  && ( associatedPanel.isSelected( referringNode ) ) ) {
 			showAsSelected();
 		} else {
 			showAsUnselected();
@@ -598,7 +599,11 @@ public class Thumbnail extends JPanel
 	 *  The TreeModelListener interface tells us of tree node removal events. 
 	 */
 	public void treeNodesRemoved ( TreeModelEvent e ) {
+		/*if ( associatedPanel != null ) {
+			associatedPanel.removeFromSelection( referringNode );
+		}*/
 	}
+	
 
 	/**
 	 *   implemented here to satisfy the TreeModelListener interface; not used.
@@ -671,97 +676,6 @@ public class Thumbnail extends JPanel
 
 
 
-	/**
-	 *  this method rotates the Thumbnail by the angle indicated. If the rotateAngle is 0 
-	 *  then the Image is not rotated but reloaded from the source.
-	 *  @param  rotateAngle  The angle by which the thumbnail is to be rotated.
-	 *
-	public void requestRotation( int rotateAngle ) {
-		if ( Settings.logFunctions ) {
-			Tools.log ( "Thumbnail.requestRotation invoked with angle: " + Integer.toString( rotateAngle ) );
-		}
-		
-		double newAngle;
-		if ( rotateAngle != 0 ) {
-			double oldAngle = ( (PictureInfo) referringNode.getUserObject()).getRotation();
-			newAngle = ( oldAngle + rotateAngle ) % 360;
-		} else {
-			newAngle = 0;
-		}
-
-		Tools.log ("Setting new angle to: " + Double.toString( newAngle	) );
-		( (PictureInfo) referringNode.getUserObject()).setRotation( newAngle );
-		referringNode.setUnsavedUpdates();
-
-
-		if ( newAngle == 0 ) {
-			// don't rotate but rebuild the thumbnail from source
-			ThumbnailCreationQueue.requestThumbnailCreation( this, ThumbnailCreationQueue.HIGH_PRIORITY, true );
-			return;
-		}
-
-
-		PictureInfo pi = (PictureInfo) referringNode.getUserObject();
-		URL lowresUrl;
-		
-		try {
-			lowresUrl = pi.getLowresURL();
-		} catch ( MalformedURLException x ) {
-			Tools.log("Lowres URL was Malformed: " + pi.getLowresLocation() );
-			ThumbnailCreationQueue.requestThumbnailCreation( this, ThumbnailCreationQueue.HIGH_PRIORITY, true );
-			return;
-		}
-
-		// Rotate the Thumbnail
-		//Image currentThumbnail = ( (ImageIcon) getIcon() ).getImage();
-		BufferedImage currentThumbnail;
-		try {
-			currentThumbnail = ImageIO.read( lowresUrl );
-		} catch ( IOException x ) {
-			Tools.log("Error: Thumbnail.requestRotation: IOException while loading: " + lowresUrl.toString() );
-			ThumbnailCreationQueue.requestThumbnailCreation( this, ThumbnailCreationQueue.HIGH_PRIORITY, true );
-			return;
-		}
-		
-
-		try {
-		int xRot = currentThumbnail.getWidth() / 2;
-		int yRot = currentThumbnail.getHeight() / 2;
-//		AffineTransform rotateAf = AffineTransform.getRotateInstance( Math.toRadians( newAngle ), xRot, yRot );
-		AffineTransform rotateAf = AffineTransform.getRotateInstance( Math.toRadians( rotateAngle ), xRot, yRot );
-		AffineTransformOp op = new AffineTransformOp( rotateAf, AffineTransformOp.TYPE_BILINEAR );
-		Rectangle2D newBounds = op.getBounds2D( currentThumbnail );
-		// a simple AffineTransform would give negative top left coordinates -->
-		// do another transform to get 0,0 as top coordinates again.
-		double minX = newBounds.getMinX();
-		double minY = newBounds.getMinY();
-		AffineTransform translateAf = AffineTransform.getTranslateInstance( minX * (-1), minY * (-1) );
-		rotateAf.preConcatenate( translateAf );
-		op = new AffineTransformOp( rotateAf, AffineTransformOp.TYPE_BILINEAR );
-		newBounds = op.getBounds2D( currentThumbnail );
-		// this piece of code is so essential!!! Otherwise the internal image format
-		// is totally altered and either the AffineTransformOp decides it doesn't
-		// want to rotate the image or web browsers can't read the resulting image.
-		BufferedImage targetImage = new BufferedImage(
-			(int) newBounds.getWidth(),
-			(int) newBounds.getHeight(),
-			BufferedImage.TYPE_USHORT_565_RGB );
-
-		targetImage = op.filter( currentThumbnail, targetImage );
-		setIcon( new ImageIcon( targetImage ) );
-
-		setPreferredSize( new Dimension( thumbnailSize, getIcon().getIconHeight() ) );
-		setMaximumSize( new Dimension( thumbnailSize, getIcon().getIconHeight() ) ); 
-		setMinimumSize( new Dimension( thumbnailSize, getIcon().getIconHeight() ) ); 
-
-		ScalablePicture.writeJpg( pi.getLowresFile(), targetImage, Settings.defaultJpgQuality );
-		} catch ( ImagingOpException x ) {
-			Tools.log ("Error: Thumbnail.requestRotation caught an ImaginOpException. requesting a rebuild.\nThe reason for the error was: " + x.toString() );
-			ThumbnailCreationQueue.requestThumbnailCreation( this, ThumbnailCreationQueue.HIGH_PRIORITY, true );
-		}				
-	}*/
-
-
 
 	/**
 	 *   This class extends a DragGestureListener and allows DnD on Thumbnails.
@@ -777,12 +691,20 @@ public class Thumbnail extends JPanel
 				return;
 			}
 
-			referringNode.setSelected();
-	
-			//JpoTransferable t = new JpoTransferable( referringNode );
-			JpoTransferable t = new JpoTransferable( referringNode.getSelectedNodes() );
+			JpoTransferable t;
+			if ( associatedPanel == null ) {
+				Object[] nodes = { referringNode };
+				t = new JpoTransferable( nodes );
+			} else {
+				if ( associatedPanel.countSelectedNodes() < 1 ) {
+					Object[] nodes = { referringNode };
+					t = new JpoTransferable( nodes );
+				} else {
+					t = new JpoTransferable( associatedPanel.getSelectedNodes() );
+				}
+			}
+			
 			try {
-				//event.startDrag( DragSource.DefaultMoveDrop, t, myDragSourceListener );
 				event.startDrag( DragSource.DefaultMoveNoDrop, t, myDragSourceListener );
 				Tools.log("Thumbnail.dragGestureRecognized: Drag started on node: " + referringNode.getUserObject().toString() );
 			} catch ( InvalidDnDOperationException x ) {
@@ -838,8 +760,10 @@ public class Thumbnail extends JPanel
 		 *   this callback message goes to DragSourceListener, informing it that the dragging 
 		 *   has ended. 
 		 */
-		public void dragDropEnd ( DragSourceDropEvent event ) {   
-			referringNode.clearSelection();
+		public void dragDropEnd ( DragSourceDropEvent event ) { 
+			if ( associatedPanel != null ) {
+				associatedPanel.clearSelection();
+			}
 		}
 	}
 

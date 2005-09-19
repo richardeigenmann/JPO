@@ -331,6 +331,7 @@ public class JpoResources extends ListResourceBundle {
 		{"movePictureDownJMenuItem", "Down"},
 		{"movePictureToBottomJMenuItem", "to Bottom"},
 		{"recentDropNodePrefix", "To Group: "},
+		{"categoryUsagetJMenuItem", "Categories"},
 
 
 		// ThumbnailJScrollPane
@@ -516,6 +517,14 @@ public class JpoResources extends ListResourceBundle {
 		{"doneJButton", "Done"},
 		{"countCategoryUsageWarning1", "There are "},
 		{"countCategoryUsageWarning2", " nodes using this category.\nAre you sure you want to remove it?"},
+
+		// CategoryUsageJFrame
+		{"CategoryUsageJFrameTitle", "Cateogry Usage"},
+		{"numberOfPicturesJLabel", " pictures selected"},
+		{"updateJButton", "Update"},
+		{"refreshJButtonCUJF", "Refresh"},
+		{"modifyCateogryJButton", "Categories"},
+		{"cancelJButton", "Cancel"},
 
 		
 		// EmailerJFrame

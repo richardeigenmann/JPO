@@ -52,6 +52,7 @@
 	       memoryMaximumSize="500m"
 	       fork="yes"
 	       listfiles="yes"
+	       deprecation="yes"
 	       compiler="modern">
             <src path="${src.java.dir}"/>
             <classpath refid="base.path"/>

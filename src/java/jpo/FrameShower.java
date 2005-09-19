@@ -55,7 +55,7 @@ public class FrameShower
 		if ( anchor != null ) {
 			frame.setLocationRelativeTo( anchor );
 		}
-		frame.show();
+		frame.setVisible( true );
 		
 	}
 }

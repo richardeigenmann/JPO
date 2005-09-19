@@ -433,7 +433,8 @@ public class ThumbnailJScrollPane
 			//Tools.log ("ThumbnailJScrollpane.showGroup invoked with a non GroupInfo node. Inoring request!");
 			return;
 		}
-		currentGroupNode = showNode; 
+		currentGroupNode = showNode;
+		clearSelection();
 		getVerticalScrollBar().setValue(0);				 
 		startIndex = 0; 
 		curPage = 1;
@@ -729,6 +730,83 @@ public class ThumbnailJScrollPane
 			nextThumbnailsButton.setVisible( false ); 
 	}
  
+
+
+
+
+	/**
+	 *   This Hash Set hold references to the selected nodes. 
+	 */
+	public final HashSet selection = new HashSet();
+
+	/**
+	 *  This method places the current SDMTN into the selection HashSet.
+	 */
+	public void setSelected( SortableDefaultMutableTreeNode node ) {
+		selection.add( node );
+		Object userObject = node.getUserObject();
+		if ( userObject instanceof PictureInfo ) {
+			((PictureInfo) userObject).sendWasSelectedEvent();
+		}
+	}
+
+	/**
+	 *  This method clears selection HashSet.
+	 */
+	public void clearSelection() {
+		Iterator i = selection.iterator();
+		Object o;
+		Object userObject;
+		while ( i.hasNext() ) {
+			o = i.next();
+			i.remove();
+			userObject = ((SortableDefaultMutableTreeNode) o).getUserObject(); 
+			if ( userObject instanceof PictureInfo ) {
+				((PictureInfo) userObject).sendWasUnselectedEvent();
+				
+			}
+		}
+	}
+
+
+	/**
+	 *  This method removes the current SDMTN from the selection HashSet.
+	 */
+	public void removeFromSelection( SortableDefaultMutableTreeNode node ) {
+		selection.remove( node );
+		Object userObject = node.getUserObject();
+		if ( userObject instanceof PictureInfo ) {
+			((PictureInfo) userObject).sendWasUnselectedEvent();
+		}
+	}
+
+
+	/**
+	 *  This returns whether the SDMTN is part of the selection HashSet.
+	 */
+	public boolean isSelected( SortableDefaultMutableTreeNode node ) {
+		try {
+			return selection.contains( node );
+		} catch ( NullPointerException x ) {
+			return false;
+		}
+	}
+
+
+	/**
+	 *  returns an array of the selected nodes.
+	 */
+	public Object [] getSelectedNodes() {
+		return selection.toArray();
+	}
+
+
+	/**
+	 *  returns the amount of selected nodes
+	 */
+	public int countSelectedNodes() {
+		return selection.size();
+	}
 
 
 
