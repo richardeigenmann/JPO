@@ -227,6 +227,12 @@ public class ThumbnailJScrollPane
 	 */
 	private float thumbnailSizeFactor = 1;
 	
+	
+	/**
+	 *  Point where the mouse was pressed
+	 */
+	private Point mousePressedPoint;
+	
 	/** 
 	 *   creates a new JScrollPane with an embedded JPanel and provides a set of  
 	 *   methods that allow thumbnails to be displayed. <p> 
@@ -265,8 +271,6 @@ public class ThumbnailJScrollPane
 		//  little down or up arrow in the scrollbar
 		getVerticalScrollBar().setUnitIncrement(80);
 
-		//final ThumbnailJScrollPane tjsp = this;
- 
 		// register a component listener to track resize events. 
 		// Got a bit confused: I am attaching the resize listener to the JScrollPane because 
 		// I want to reconstrain the thumbnails if the display size can accomodate more or less
@@ -274,7 +278,7 @@ public class ThumbnailJScrollPane
 		// I then need to know the width minus the vertical scrollbar to determine the columns.
 		this.addComponentListener(new ComponentAdapter() { 
 			public void componentResized( ComponentEvent e ) { 
-				//Tools.log("ThumbnailJScrollPane.componentResized activated.");
+				Tools.log("ThumbnailJScrollPane.componentResized activated.");
 				if ( calculateCols() ){ 
 					for ( int i = 0; i < thumbnails.length; i++) {
 						calculateConstraints( i );
@@ -381,9 +385,97 @@ public class ThumbnailJScrollPane
 		setColumnHeaderView( titleJPanel ); 
 		 
 		JPanel whiteArea = new JPanel(); 
-		//whiteArea.setOpaque( true ); 
-		//whiteArea.setBackground( Color.white ); 
 		setCorner( JScrollPane.UPPER_RIGHT_CORNER, whiteArea ); 
+		
+		ThumbnailPane.addMouseListener( new MouseInputAdapter() {
+			public void mousePressed( MouseEvent e ) {
+				//Tools.log("Thumbnail pane registered a mousePressed event");
+				mousePressedPoint = e.getPoint();
+			}
+			
+			public void mouseReleased( MouseEvent e ) {
+				//Tools.log("Thumbnail pane registered a mouseReleased event");
+				Graphics g = ThumbnailPane.getGraphics();
+				ThumbnailPane.paint(g); //cheap way of undoing old rectancle...
+				
+				//now find the thumbnails that touch the rectangle
+				Point mouseMovedToPoint = e.getPoint();
+				Rectangle r = new Rectangle( mousePressedPoint, 
+					new Dimension( mouseMovedToPoint.x - mousePressedPoint.x,
+						mouseMovedToPoint.y - mousePressedPoint.y ) );
+				if ( mouseMovedToPoint.x < mousePressedPoint.x ) {
+					r.x = mouseMovedToPoint.x;
+					r.width = mousePressedPoint.x - mouseMovedToPoint.x;
+				}
+				if ( mouseMovedToPoint.y < mousePressedPoint.y ) {
+					r.y = mouseMovedToPoint.y;
+					r.height = mousePressedPoint.y - mouseMovedToPoint.y;
+				}
+				
+				clearSelection();
+				Rectangle thumbnailRectangle = new Rectangle();
+				SortableDefaultMutableTreeNode n;
+				for ( int i = 0; i < thumbnails.length; i++) {
+					thumbnails[i].getBounds( thumbnailRectangle );
+					if ( r.intersects( thumbnailRectangle ) ) {
+						n = thumbnails[i].referringNode;
+						if ( n != null ) {
+							setSelected( n );
+						}
+					}
+				}
+				
+				
+			}
+		} );
+
+		ThumbnailPane.addMouseMotionListener( new MouseInputAdapter() {
+			public void mouseDragged( MouseEvent e ) {
+				//Tools.log("Thumbnail pane registered a mouseDragged event");
+				Point mouseMovedToPoint = e.getPoint();
+				Rectangle r = new Rectangle( mousePressedPoint, 
+					new Dimension( mouseMovedToPoint.x - mousePressedPoint.x,
+						mouseMovedToPoint.y - mousePressedPoint.y ) );
+				if ( mouseMovedToPoint.x < mousePressedPoint.x ) {
+					r.x = mouseMovedToPoint.x;
+					r.width = mousePressedPoint.x - mouseMovedToPoint.x;
+				}
+				if ( mouseMovedToPoint.y < mousePressedPoint.y ) {
+					r.y = mouseMovedToPoint.y;
+					r.height = mousePressedPoint.y - mouseMovedToPoint.y;
+				}
+				Graphics g = ThumbnailPane.getGraphics();
+				ThumbnailPane.paint(g); //cheap way of undoing old rectancle...
+				g.drawRect( r.x, r.y, r.width, r.height );
+				
+				// find out if we need to scroll the window
+				Rectangle viewRect = getViewport().getViewRect();
+				JScrollBar verticalScrollBar = getVerticalScrollBar();
+				final int scrolltrigger = 40; 
+				if ( mouseMovedToPoint.y - viewRect.y - viewRect.height > - scrolltrigger ) {
+					// Tools.log("must scroll down");
+					int increment = verticalScrollBar.getUnitIncrement( 1 );
+					int position = verticalScrollBar.getValue();
+					if ( position < verticalScrollBar.getMaximum() ) {
+						verticalScrollBar.setValue( position + increment );
+					}
+				} else if ( mouseMovedToPoint.y - viewRect.y < scrolltrigger ) {
+					//Tools.log("must scroll up");
+					int increment = verticalScrollBar.getUnitIncrement( 1 );
+					int position = verticalScrollBar.getValue();
+					if ( position > verticalScrollBar.getMinimum() ) {
+						verticalScrollBar.setValue( position - increment );
+					}
+					
+				}
+				
+			}
+		} );
+
+
+
+
+			
 	} 
  
  

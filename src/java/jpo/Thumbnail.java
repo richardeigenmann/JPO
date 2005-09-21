@@ -121,6 +121,12 @@ public class Thumbnail extends JPanel
 
 
 	/**
+	 *   This variable will hold the darkend or otherwise processed Thumbnail that will be
+	 *   painted when the Thumbnail is on a selected node.
+	 */
+	private BufferedImage selectedThumbnail = null;
+
+	/**
 	 *  The color to use when the thumbnail has been selected
 	 */
 	private static final Color  HIGHLIGHT_COLOR = Color.DARK_GRAY;
@@ -293,6 +299,22 @@ public class Thumbnail extends JPanel
 	public void setThumbnail( ImageIcon icon ) {
 		img = icon.getImage();
 		imgOb = icon.getImageObserver();
+		
+		/*short[] threshold = new short[256];
+		for (int i = 0; i < 256; i++) threshold[i] = (i < 128) ? (short)0 : (short)255;
+		BufferedImageOp thresholdOp = new LookupOp(new ShortLookupTable(0, threshold), null);
+		BufferedImage destination = thresholdOp.filter(source, null);
+
+		short[] invert = new short[256];
+		for (int i = 0; i < 256; i++) invert[i] = (short)(255 - i);
+		BufferedImageOp invertOp = new LookupOp(new ShortLookupTable(0, invert), null);
+		BufferedImage destination = invertOp.filter(source, null); */
+
+		RescaleOp darkenOp = new RescaleOp( .6f, 0, null );
+		BufferedImage source = new BufferedImage(img.getWidth(imgOb),img.getHeight(imgOb),BufferedImage.TYPE_INT_BGR);
+		source.createGraphics().drawImage( img, 0,0, null );
+		selectedThumbnail = darkenOp.filter( source, null );
+
 		setVisible( true );
 	}
 
@@ -390,8 +412,17 @@ public class Thumbnail extends JPanel
 			af2.concatenate( af1 );
 			//op = new AffineTransformOp( af2, AffineTransformOp.TYPE_NEAREST_NEIGHBOR );
 			
+			
+			if ( associatedPanel != null ) { 
+				if ( associatedPanel.isSelected( referringNode ) ) {
+					g2d.drawImage( selectedThumbnail, af2, imgOb);
+				} else {
+					g2d.drawImage( img, af2, imgOb);
+				}
+			} else {
+				g2d.drawImage( img, af2, imgOb);
+			} 
 
-			g2d.drawImage( img, af2, imgOb);
 			if ( drawOfflineIcon ) {
 				g2d.drawImage( offlineIcon.getImage(), (int) X_Offset + 10, (int) Y_Offset + 10, offlineIcon.getImageObserver() );
 			}
