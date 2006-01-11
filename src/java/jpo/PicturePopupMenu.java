@@ -92,12 +92,6 @@ public class PicturePopupMenu extends JPopupMenu
 		= new JMenuItem( Settings.jpoResources.getString("rotate0") );; 
 
 
-	/** 
-	 *  menu item that allows the user to request regeneration of the thumbnail
-	 * 
-	 **/
-	private JMenuItem pictureRefreshJMenuItem 
-		= new JMenuItem( Settings.jpoResources.getString("pictureRefreshJMenuItem") ); 
 
 
 	/** 
@@ -356,9 +350,20 @@ public class PicturePopupMenu extends JPopupMenu
 		}
 		
 
+		JMenuItem pictureRefreshJMenuItem = new JMenuItem( Settings.jpoResources.getString("pictureRefreshJMenuItem") ); 
 		pictureRefreshJMenuItem.addActionListener( new ActionListener() {
 			public void actionPerformed( ActionEvent e ) {
-				popupNode.refreshThumbnail();
+				if ( associatedPanel == null ) {
+					popupNode.refreshThumbnail();
+				} else if ( ! associatedPanel.isSelected( popupNode ) ) {
+					associatedPanel.clearSelection();
+					popupNode.refreshThumbnail();
+				} else {
+					Object [] o = associatedPanel.getSelectedNodes();
+					for ( int i = 0; i < o.length; i++ ) {
+						((SortableDefaultMutableTreeNode) o[i]).refreshThumbnail();
+					}
+				}
 			}
 		});
 		add( pictureRefreshJMenuItem );

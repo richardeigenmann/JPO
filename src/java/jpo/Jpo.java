@@ -11,7 +11,6 @@ import javax.swing.tree.*;
 import java.lang.*;
 import javax.jnlp.*;
 
-
 /*
 Jpo.java:  main class of the JPO application
 
@@ -186,14 +185,26 @@ public class Jpo extends JFrame
 		setJMenuBar( menuBar );
 
 
+
 		
 		// Create a first node for the tree 
 		Settings.top = new SortableDefaultMutableTreeNode( true ) ;
-		
+				
 		// Create and attach the JTree object
-		JScrollPane TreePane = new JScrollPane();
+		JScrollPane collectionJScrollPane = new JScrollPane();
 		cleverJTree = new CleverJTree( this, Settings.top );		
-       		TreePane.setViewportView( cleverJTree );
+       		collectionJScrollPane.setViewportView( cleverJTree );
+
+
+		JScrollPane categoriesJScrollPane = new JScrollPane();
+		CategoriesJTree categoriesJTree = new CategoriesJTree();
+       		categoriesJScrollPane.setViewportView( categoriesJTree );
+
+
+		JScrollPane searchesJScrollPane = new JScrollPane();
+		JLabel searchesJTree = new JLabel( "A JTree with searches will go here" );
+       		searchesJScrollPane.setViewportView( searchesJTree );
+
 
 
 		// Set up the Thumbnail Pane
@@ -241,7 +252,11 @@ public class Jpo extends JFrame
 		final JSplitPane leftSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
 		leftSplitPane.setDividerSize( Settings.dividerWidth );
 		leftSplitPane.setOneTouchExpandable( true );
-		leftSplitPane.setTopComponent( TreePane );
+		JTabbedPane jpoNavigatorJTabbedPane = new JTabbedPane();
+		jpoNavigatorJTabbedPane.add( "Collection", collectionJScrollPane );
+		jpoNavigatorJTabbedPane.add( "Categories", categoriesJScrollPane );
+		jpoNavigatorJTabbedPane.add( "Searches", searchesJScrollPane );
+		leftSplitPane.setTopComponent( jpoNavigatorJTabbedPane );
 		leftSplitPane.setBottomComponent( infoPanel );
 		leftSplitPane.setDividerLocation( Settings.preferredLeftDividerSpot );
 		//masterSplitPane.setPreferredSize( Settings.mainFrameDimensions.getSize() );
