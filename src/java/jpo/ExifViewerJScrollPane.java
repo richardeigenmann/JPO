@@ -15,7 +15,7 @@ import com.drew.imaging.jpeg.*;
 import com.drew.imaging.jpeg.JpegSegmentReader.*;
 
 /*
-ExifViewerJFrame.java: GUI to display the Exif tags extracted with Drew's programs
+ExifViewerJScrollPane.java: GUI to display the Exif tags extracted with Drew's programs
 
 Copyright (C) 2002  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
@@ -114,7 +114,7 @@ public class ExifViewerJScrollPane extends JScrollPane {
 						exifTagsJTextArea.append( "Problem with tag: "
 							+ tag.toString()
 							+ "\n");
-						Tools.log ("ExifViewerJFrame: problem wiht tag: " + x.getMessage());
+						Tools.log ("ExifViewerJScrollPane: problem wiht tag: " + x.getMessage());
 					}	
 				}
 			}

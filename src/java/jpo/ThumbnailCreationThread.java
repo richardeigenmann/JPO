@@ -99,8 +99,11 @@ public class ThumbnailCreationThread extends Thread {
 
 
 	private static void createPictureThumbnail (  ThumbnailQueueRequest req ) {
+		if ( req == null ) { Tools.log("createPictureThumbnail: invoked with a null request. Aborting."); return; }
 		Thumbnail currentThumb = req.getThumbnail();
+		if ( currentThumb == null ) { Tools.log("createPictureThumbnail: invoked request with a null Thumbnail. Aborting."); return; }
 		PictureInfo pi = (PictureInfo) currentThumb.referringNode.getUserObject();
+		if ( pi == null ) { Tools.log("createPictureThumbnail: could not find PictureInfo. Aborting."); return; }
 		URL lowresUrl = null;
 		
 		if ( Settings.keepThumbnails ) {
