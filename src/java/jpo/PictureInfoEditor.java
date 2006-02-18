@@ -256,10 +256,13 @@ public class PictureInfoEditor
 
 		thumbnail = new Thumbnail( editNode, Settings.thumbnailSize, ThumbnailCreationQueue.MEDIUM_PRIORITY );
 		c.gridy = 0; c.gridx = 0; 
-		c.gridwidth = 3;
+		c.gridwidth = 1;
 		c.anchor = GridBagConstraints.CENTER;  
 		leftJPanel.add( thumbnail, c );
 
+		
+		JPanel buttonJPanel = new JPanel();
+		buttonJPanel.setLayout( new FlowLayout() );
 
 	        OkJButton.setPreferredSize( Settings.defaultButtonDimension );
 	        OkJButton.setMinimumSize( Settings.defaultButtonDimension );
@@ -268,37 +271,53 @@ public class PictureInfoEditor
 	        OkJButton.addActionListener( this );
 		OkJButton.setDefaultCapable( true );
 		getRootPane().setDefaultButton ( OkJButton );
-		c.gridwidth = 1;
-		c.gridy++; c.gridx = 0; 
-		c.anchor = GridBagConstraints.CENTER;  
-		leftJPanel.add( OkJButton, c );
-		
+		buttonJPanel.add( OkJButton );
 		
 	        CancelButton.setPreferredSize( Settings.defaultButtonDimension );
 	        CancelButton.setMinimumSize( Settings.defaultButtonDimension );
 	        CancelButton.setMaximumSize( Settings.defaultButtonDimension );
 		CancelButton.setBorder(BorderFactory.createRaisedBevelBorder());
-		//CancelButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 	        CancelButton.addActionListener( this );
-		c.gridx++; 
-		leftJPanel.add( CancelButton, c );
+		buttonJPanel.add( CancelButton );
 
 	        resetJButton.setPreferredSize( Settings.defaultButtonDimension );
 	        resetJButton.setMinimumSize( Settings.defaultButtonDimension );
 	        resetJButton.setMaximumSize( Settings.defaultButtonDimension );
 		resetJButton.setBorder( BorderFactory.createRaisedBevelBorder() );
-		//resetJButton.setAlignmentX( Component.RIGHT_ALIGNMENT );
 	        resetJButton.addActionListener(this);
-		c.gridx++; 
-		leftJPanel.add( resetJButton, c );
+		buttonJPanel.add( resetJButton );
+
+		c.gridy++;
+		leftJPanel.add( buttonJPanel, c );
 
 
 
-		// Add Exif panel here
-		c.gridwidth = 3;
-		c.gridy++; c.gridx = 0; 
-		c.fill = GridBagConstraints.BOTH;
-		leftJPanel.add( new ExifViewerJScrollPane( editNode ), c );
+		// Add Exif panel 
+		JTextArea exifTagsJTextArea = new JTextArea(); // out here so we can use it in the catch stmt
+		exifTagsJTextArea.setWrapStyleWord( true );
+		exifTagsJTextArea.setLineWrap( false );
+		exifTagsJTextArea.setEditable( true );
+		exifTagsJTextArea.setRows ( 17 );
+		exifTagsJTextArea.setColumns ( 35 );
+		
+		// stop undesired scrolling in the window when doing append
+		NonFocussedCaret dumbCaret = new NonFocussedCaret(); 
+		exifTagsJTextArea.setCaret( dumbCaret ); 
+
+		JScrollPane exifJScrollPane = new JScrollPane();
+		exifJScrollPane.setViewportView( exifTagsJTextArea );//, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS );
+		exifJScrollPane.setWheelScrollingEnabled( true );
+
+		ExifInfo ei = new ExifInfo( ((PictureInfo) editNode.getUserObject()).getHighresURLOrNull() );
+		ei.decodeExifTags();
+		exifTagsJTextArea.append( Settings.jpoResources.getString("ExifTitle") );
+		exifTagsJTextArea.append( ei.getComprehensivePhotographicSummary() );
+		exifTagsJTextArea.append( "-------------------------\nAll Tags:\n" );
+		exifTagsJTextArea.append( ei.getAllTags() );
+
+		
+		c.gridy++;
+		leftJPanel.add( exifJScrollPane, c );
 
 
 		c.gridx=0; c.gridy=0;

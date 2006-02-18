@@ -205,7 +205,7 @@ public class PictureViewer extends JPanel
 
 
 	/**
-	 *  Button that is put in the {@link #NavigationPanel} to allow the user to navigate to the previous
+	 *  Button that is put in the NavigationPanel to allow the user to navigate to the previous
 	 *  picture. The {@link #changePicture} analyses the context (previous pictures in the group, picture
 	 *  in previous group, beginning of pictures) and displayes the icon {@link #iconPrevious}, {@link #iconPrevPrev}
 	 *  {@link #iconNoPrev} as appropriate.
@@ -436,7 +436,6 @@ public class PictureViewer extends JPanel
 		rotateLeftJButton.setMnemonic(KeyEvent.VK_L);
 		rotateLeftJButton.addActionListener( new ActionListener() {
 			public void actionPerformed( ActionEvent e ) {
-				//requestNextPicture();
 				currentNode.rotatePicture( 270 );
 				myJFrame.getGlassPane().requestFocus();
 			}
@@ -453,7 +452,6 @@ public class PictureViewer extends JPanel
 		rotateRightJButton.setMnemonic(KeyEvent.VK_R);
 		rotateRightJButton.addActionListener( new ActionListener() {
 			public void actionPerformed( ActionEvent e ) {
-				//requestNextPicture();
 				currentNode.rotatePicture( 90 );
 				myJFrame.getGlassPane().requestFocus();
 			}
@@ -496,7 +494,7 @@ public class PictureViewer extends JPanel
 		infoJButton.setMnemonic(KeyEvent.VK_I);
 		infoJButton.addActionListener( new ActionListener() {
 			public void actionPerformed( ActionEvent e ) {
-				pictureJPanel.showInfoPanel();
+				pictureJPanel.cylceInfoDisplay();
 				myJFrame.getGlassPane().requestFocus();
 			}
 		});
@@ -698,7 +696,7 @@ public class PictureViewer extends JPanel
 				public void keyPressed(KeyEvent e) {
 					int k = e.getKeyCode();
 					if ((k == KeyEvent.VK_I)) 
-						pictureJPanel.showInfoPanel();
+						pictureJPanel.cylceInfoDisplay();
 					else if ((k == KeyEvent.VK_N)) 
 						requestNextPicture();
 					else if ((k == KeyEvent.VK_M)) 

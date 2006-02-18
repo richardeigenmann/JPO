@@ -226,20 +226,15 @@ public class XmlReader extends DefaultHandler {
 		// Tools.log(s);
 		switch (interpretChars) {
 			case Settings.DESCRIPTION:
-				//((PictureInfo) currentPicture.getUserObject()).setDescription(s);
-				//Tools.log ( "appending: " + s );
 				((PictureInfo) currentPicture.getUserObject()).appendToDescription( s );
 				break;
 			case Settings.FILE_URL:
-				//((PictureInfo) currentPicture.getUserObject()).setHighresLocation(s);
 				((PictureInfo) currentPicture.getUserObject()).appendToHighresLocation( s );
 				break;
 			case Settings.FILE_LOWRES_URL:
-				//((PictureInfo) currentPicture.getUserObject()).setLowresLocation(s);
 				((PictureInfo) currentPicture.getUserObject()).appendToLowresLocation( s );
 				break;
 			case Settings.FILM_REFERENCE:
-				//((PictureInfo) currentPicture.getUserObject()).setLowresLocation(s);
 				((PictureInfo) currentPicture.getUserObject()).appendToFilmReference( s );
 				break;
 			case Settings.CREATION_TIME:
@@ -267,7 +262,6 @@ public class XmlReader extends DefaultHandler {
 				Tools.log( "XmlReader: parsing string on CATEGORY: " + s );
 				break;
 			case Settings.CATEGORY_DESCRIPTION:
-				//Tools.log( "XmlReader: category description concatenating: " + s );
 				temporaryCategory = temporaryCategory.concat( s );
 				break;
 		}

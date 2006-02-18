@@ -3,6 +3,7 @@ package jpo;
 import java.awt.event.*;
 import javax.swing.*;
 import java.io.*;
+import java.util.*;
 
 /*
 PicturePopupMenu.java:  a popup menu for pictures
@@ -468,7 +469,19 @@ public class PicturePopupMenu extends JPopupMenu
 
 			fileDeleteJMenuItem.addActionListener( new ActionListener() {
 				public void actionPerformed( ActionEvent e ) {
-					popupNode.fileDelete();
+					if (( associatedPanel == null ) || ( associatedPanel.countSelectedNodes() < 1 ) ){
+						popupNode.fileDelete();
+					} else {
+						Enumeration selection = associatedPanel.getSelectedNodesAsVector().elements();
+						SortableDefaultMutableTreeNode n;
+						while ( selection.hasMoreElements() ) {
+							n = (SortableDefaultMutableTreeNode) selection.nextElement();
+							if ( n.getUserObject() instanceof PictureInfo ) {
+								n.fileDelete();
+							}
+						}
+						associatedPanel.clearSelection();
+					}
 				}
 			});
 			fileOperationsJMenu.add( fileDeleteJMenuItem );

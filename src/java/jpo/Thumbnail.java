@@ -297,7 +297,9 @@ public class Thumbnail extends JPanel
 	 *  @param  icon  The imageicon that should be displayed
 	 */
 	public void setThumbnail( ImageIcon icon ) {
+		if ( icon == null ) { return;}
 		img = icon.getImage();
+		if ( img == null ) { return; }
 		imgOb = icon.getImageObserver();
 		
 		/*short[] threshold = new short[256];

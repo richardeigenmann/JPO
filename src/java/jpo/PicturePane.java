@@ -103,26 +103,40 @@ class PicturePane extends JComponent implements ScalablePictureListener {
 	/**
 	 *   location of the info texts if shown
 	 */
-	private Point infoPoint = new Point(15, 15);
+	private static final Point infoPoint = new Point(15, 15);
 	
 	
 	/**
 	 *   line spacing for the info text that can be superimposed on the picture
 	 */
-	private int lineSpacing = 12;
+	private static final int lineSpacing = 12;
 	
+	/**
+	 *   line spacing for the info text that can be superimposed on the picture
+	 */
+	private static final int tabstop = 90;
 	
 	/**
 	 *   Font for the info if shown.
 	 */
-	private Font infoFont =  new Font("Arial", Font.PLAIN, 10);
+	private static final Font infoFont =  new Font("Arial", Font.PLAIN, 10);
+	
+	/**
+	 *  Color for the info overly
+	 */
+	private static final Color infoFontColor = Color.white;
 	
 	
 	
 	/**
-	 *  Flag to tell if we want to show info over the picture.
+	 *  This object is a reference to an Exif Info object that tries to keep tabs on the 
+	 *  information in the image.
 	 */
-	private boolean showInfo = false;
+	 
+	private ExifInfo ei = new ExifInfo();
+	
+	
+	
 	
 	
 	/**
@@ -204,6 +218,8 @@ class PicturePane extends JComponent implements ScalablePictureListener {
 		
 		sclPic.stopLoadingExcept( filenameURL );
 		sclPic.loadAndScalePictureInThread( filenameURL, Thread.MAX_PRIORITY, rotation );
+		ei.setUrl( filenameURL );
+		ei.decodeExifTags();
 	}
 
 
@@ -439,7 +455,7 @@ class PicturePane extends JComponent implements ScalablePictureListener {
 
 			// clear damaged component area
 		 	Rectangle clipBounds = g2d.getClipBounds();
-			g2d.setColor(getBackground()); 
+			g2d.setColor( getBackground() ); 
 			g2d.fillRect(clipBounds.x, 
 				     clipBounds.y,
 			             clipBounds.width, 
@@ -448,10 +464,59 @@ class PicturePane extends JComponent implements ScalablePictureListener {
 
 			g2d.drawRenderedImage(sclPic.getScaledPicture(), AffineTransform.getTranslateInstance((int) X_Offset, (int) Y_Offset));
 
-			if (showInfo) {
-				g2d.setColor(Color.white);
-				g2d.drawString(legend, infoPoint.x, infoPoint.y);
-				g2d.drawString("Size: " 
+			g2d.setColor( infoFontColor );
+			switch ( showInfo ) {
+				case DISPLAY_NONE:
+					break;
+				case DISPLAY_PHOTOGRAPHIC:
+					g2d.drawString( "Camera:"
+						, infoPoint.x
+						, infoPoint.y + ( 0 * lineSpacing ));
+					g2d.drawString( ei.camera
+						, infoPoint.x + tabstop
+						, infoPoint.y + ( 0 * lineSpacing ));
+					g2d.drawString( "Lens:"
+						, infoPoint.x
+						, infoPoint.y + ( 1 * lineSpacing ));
+					g2d.drawString( ei.lens
+						, infoPoint.x + tabstop
+						, infoPoint.y + ( 1 * lineSpacing ));
+					g2d.drawString( "Shutter Speed:"
+						, infoPoint.x
+						, infoPoint.y + ( 2 * lineSpacing ));
+					g2d.drawString( ei.shutterSpeed
+						, infoPoint.x + tabstop
+						, infoPoint.y + ( 2 * lineSpacing ));
+					g2d.drawString( "Aperture:"
+						, infoPoint.x
+						, infoPoint.y + ( 3 * lineSpacing ));
+					g2d.drawString( ei.aperture
+						, infoPoint.x + tabstop
+						, infoPoint.y + ( 3 * lineSpacing ));
+					g2d.drawString( "Focal Length:" 
+						, infoPoint.x
+						, infoPoint.y + ( 4 * lineSpacing ));
+					g2d.drawString( ei.focalLength
+						, infoPoint.x + tabstop
+						, infoPoint.y + ( 4 * lineSpacing ));
+					g2d.drawString( "ISO:"
+						, infoPoint.x
+						, infoPoint.y + ( 5 * lineSpacing ));
+					g2d.drawString( ei.iso
+						, infoPoint.x + tabstop
+						, infoPoint.y + ( 5 * lineSpacing ));
+					g2d.drawString( "Time stamp:"
+						, infoPoint.x
+						, infoPoint.y + ( 6 * lineSpacing ));
+					g2d.drawString( ei.dateTime
+						, infoPoint.x + tabstop
+						, infoPoint.y + ( 6 * lineSpacing ));
+					break;
+				case DISPLAY_APPLICATION:
+					g2d.drawString( legend
+						, infoPoint.x
+						, infoPoint.y + ( 0 * lineSpacing ));
+					g2d.drawString("Size: " 
 						+ Integer.toString(sclPic.getOriginalWidth())
 						+ " x " 
 						+ Integer.toString(sclPic.getOriginalHeight()) 
@@ -461,20 +526,21 @@ class PicturePane extends JComponent implements ScalablePictureListener {
 						+ Integer.toString(focusPoint.y) 
 						+ " Scale: " 
 						+ twoDecimalFormatter.format(sclPic.getScaleFactor())
-						,infoPoint.x, infoPoint.y + lineSpacing);
-				g2d.drawString("File: " + sclPic.getFilename()
+						,infoPoint.x, infoPoint.y + ( 1 * lineSpacing ) );
+					g2d.drawString("File: " + sclPic.getFilename()
 						, infoPoint.x
-						, infoPoint.y + (2 * lineSpacing) );
-				g2d.drawString("Loaded in: " 
+						, infoPoint.y + ( 2 * lineSpacing ) );
+					g2d.drawString("Loaded in: " 
 						+ twoDecimalFormatter.format( sclPic.getSourcePicture().loadTime / 1000F )
 						+ " Seconds"
 						, infoPoint.x
-						, infoPoint.y + (3 * lineSpacing) );
-				g2d.drawString("Free memory: " 
+						, infoPoint.y + ( 3 * lineSpacing ) );
+					g2d.drawString("Free memory: " 
 						+ Long.toString( Runtime.getRuntime().freeMemory( )/1024/1024, 0 ) 
 						+ " MB"
 						, infoPoint.x
-						, infoPoint.y + (4 * lineSpacing) );
+						, infoPoint.y + ( 4 * lineSpacing ) );
+					break;
 			}
 		} else {
 			// paint a black square
@@ -569,14 +635,44 @@ class PicturePane extends JComponent implements ScalablePictureListener {
 
 
 
-
+	/**
+	 *  Constant to indicate that no information should be overlaid on the picture
+	 */
+	public static final int DISPLAY_NONE = 0;
+	
+	/**
+	 *  Constant to indicate that photographic information should be displayed on the picture
+	 */
+	public static final int DISPLAY_PHOTOGRAPHIC = DISPLAY_NONE + 1;
+	
+	/**
+	 *  Constant to indicate that Application related information should be displayed on the picture
+	 */
+	public static final int DISPLAY_APPLICATION = DISPLAY_PHOTOGRAPHIC + 1;
 
 
 	/**
-	 *  display a JDialog with lots of information
+	 *  Code that determines what info is to be displayed over the picture.
+	 */
+	private int showInfo = DISPLAY_NONE;
+
+
+	/**
+	 *  This function cyles to the next info display. The first is DISPLAY_NONE, DISPLAY_PHOTOGRAPHIC 
+	 *  and DISPLAY_APPLICATION
 	 **/
-	public void showInfoPanel() {
-		showInfo = ! showInfo;
+	public void cylceInfoDisplay() {
+		switch ( showInfo ) {
+			case DISPLAY_NONE:
+				showInfo = DISPLAY_PHOTOGRAPHIC;
+				break;
+			case DISPLAY_PHOTOGRAPHIC:
+				showInfo = DISPLAY_APPLICATION;
+				break;
+			case DISPLAY_APPLICATION:
+				showInfo = DISPLAY_NONE;
+				break;
+		}
 		repaint();
 	}
 	

@@ -32,7 +32,7 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  
 /** 
  *  The ThumbnailJScrollPane manages a JPanel in a JScrollPane that displays a group of pictures
- *  in a grid of thumbnails or ad hoc search results.. Real pictures are shown as a thumbnail 
+ *  in a grid of thumbnails or ad hoc search results. Real pictures are shown as a thumbnail 
  *  of the image whilst sub-groups are shown as a folder icon. Each thumbnail has it's caption 
  *  under the image. <p>
  *
@@ -42,8 +42,7 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  */ 
   
 public class ThumbnailJScrollPane 
-	extends JScrollPane 
-	implements TreeModelListener { 
+	extends JScrollPane { 
  
 	/**
 	 *  color for title
@@ -73,10 +72,12 @@ public class ThumbnailJScrollPane
 	 * JLabel for holding the page count text 
 	 * */
 	private JLabel lblPage = new JLabel();										// JA
+	
 	/** 
 	 * Number of pages currently needed for displaying a group 
 	 * */
 	private int pageCount;														// JA
+	
 	/** 
 	 * currently displayed page 
 	 * */
@@ -118,10 +119,10 @@ public class ThumbnailJScrollPane
 	private GridBagConstraints descriptionConstraints = new GridBagConstraints();
  
  
-	/** 
-	 *  This variable holds the node of the group whose pictures and subgroups are being shown.
-	 */ 
-	public SortableDefaultMutableTreeNode currentGroupNode; 
+	/**
+	 *  This object refers to the set of Nodes that is being browsed in the ThumbnailJScrollPane
+	 */
+	public ThumbnailBrowserInterface mySetOfNodes;
  
  
 	/** 
@@ -259,9 +260,6 @@ public class ThumbnailJScrollPane
 		initThumbnailsArray();
 		ThumbnailPane.validate();
 		
-		// register this component so that it receives notifications from the Model
-		rootNode.getTreeModel().addTreeModelListener( this );
-
 		ThumbnailPane.setLayout( ThumbnailLayout ); 
 		ThumbnailPane.setBackground(Color.white); 
 		setViewportView( ThumbnailPane ); 
@@ -522,10 +520,22 @@ public class ThumbnailJScrollPane
 	 */
 	public void showGroup ( SortableDefaultMutableTreeNode showNode ) {
 		if ( ! ( showNode.getUserObject() instanceof GroupInfo ) ) {
-			//Tools.log ("ThumbnailJScrollpane.showGroup invoked with a non GroupInfo node. Inoring request!");
 			return;
 		}
-		currentGroupNode = showNode;
+		if ( mySetOfNodes == null ) {
+			mySetOfNodes = new GroupBrowser( showNode );
+			mySetOfNodes.addRelayoutListener( this );
+		} else if ( mySetOfNodes instanceof GroupBrowser ) {
+			// we are switching groups; don't change listeners and stuff
+			( (GroupBrowser) mySetOfNodes).setNode( showNode );
+		} else {
+			// must have been a different type of ThumbnailBrowserInterface
+			mySetOfNodes.removeRelayoutListener( this );
+			mySetOfNodes.cleanup();
+			mySetOfNodes = new GroupBrowser( showNode );
+			mySetOfNodes.addRelayoutListener( this );
+		}
+			
 		clearSelection();
 		getVerticalScrollBar().setValue(0);				 
 		startIndex = 0; 
@@ -540,17 +550,18 @@ public class ThumbnailJScrollPane
 	 *  correct node. It also sets the tile of the JScrollPane.
 	*/ 
 	private void layoutThumbnails() { 
-		if ((currentGroupNode == null) || ( ! ( currentGroupNode.getUserObject() instanceof GroupInfo) ) ) {
+		if (mySetOfNodes == null) {
 			return;
 		}
-		setTitle( currentGroupNode.toString() );
+		
+		setTitle( mySetOfNodes.getTitle() );
 		
 		if ( initialisedMaxThumbnails != Settings.maxThumbnails ) {
 			initThumbnailsArray();
 		}
 		
-		// JA For the pagecount in the title
-		int groupCount = currentGroupNode.getChildCount();
+		int groupCount = mySetOfNodes.getNumberOfNodes();
+		
 		pageCount = groupCount / Settings.maxThumbnails;
 		if (groupCount % Settings.maxThumbnails > 0) {
 			pageCount++;
@@ -559,8 +570,9 @@ public class ThumbnailJScrollPane
 		
 		setButtonVisibility();
 		for ( int i=0;  i < Settings.maxThumbnails; i++ ) {
-			thumbnails[i].setNode( whichNode( i ) );
-			thumbnailDescriptionJPanels[i].setNode( whichNode( i ) );
+			SortableDefaultMutableTreeNode newNode = mySetOfNodes.getNode( i + startIndex );
+			thumbnails[i].setNode( newNode );
+			thumbnailDescriptionJPanels[i].setNode( newNode );
 		}
 	} 
  
@@ -569,30 +581,12 @@ public class ThumbnailJScrollPane
 	/**
 	 *   This method fires off a Thread that lays out the Thumbnails on the Pane.
 	 */
-	private void layoutThumbnailsInThread() { 
+	public void layoutThumbnailsInThread() { 
 		killThread(); 
 		tl = new ThumbnailLoaderThread( this ); 
 	}
 
 
-
-	/**
-	 *  this method returns the SDMTN node for the position on the panel (0..maxThumbnails).
-	 *  If there are more Thumbnails than nodes in the group it returns null.
-	 *
-	 *  @param componentNumber   The component 0..n which should be translated into the proper node
-	 */
- 	public SortableDefaultMutableTreeNode whichNode( int componentNumber ) {
-		//Tools.log("ThumbnailJScrollPane.whichNode called for node: " + Integer.toString(componentNumber));
-		SortableDefaultMutableTreeNode modelNode;
-		int childCount = currentGroupNode.getChildCount();
-		int indexPosition = componentNumber + startIndex;
-		if  ( indexPosition >= childCount )
-			return null;
-		else 
-			return (SortableDefaultMutableTreeNode) currentGroupNode.getChildAt( indexPosition );	
-		
-	}
 
  
 
@@ -643,49 +637,6 @@ public class ThumbnailJScrollPane
 
 	
 
-	/** 
-	 *   This method is defined by the TreeModelListener interface and gives the 
-	 *   JThumnailScrollPane a notification that some nodes changed in a non dramatic way.
-	 *   The nodes that were changed have their Constraints reevaluated and a revalidate
-	 *   is called to update the screen.
-	 */
-	public void treeNodesChanged (TreeModelEvent e) {
-		layoutThumbnailsInThread(); 
-	}
-	
-	/** 
-	 *   This method is defined by the TreeModelListener interface and gives the 
-	 *   JThumnailScrollPane a notification if additional nodes were inserted.
-	 *   The additional nodes are added and the existing nodes are reevaluated
-	 *   as to whether they are at the right place. Revalidate is called to update
-	 *   the screen.
-	 */
-	public void treeNodesInserted (TreeModelEvent e) {
-		layoutThumbnailsInThread(); 
-	}
-
-	/** 
-	 *   This method is defined by the TreeModelListener interface and gives the 
-	 *   JThumnailScrollPane a notification that some nodes were removed. It steps
-	 *   through all the Thumbnail Components and makes sure they all are at the correct
-	 *   location. The dead ones are removed.
-	 */
-	public void treeNodesRemoved ( TreeModelEvent e ) {
-		layoutThumbnailsInThread(); 
-	}
-
-	/** 
-	 *   This method is defined by the TreeModelListener interface and gives the 
-	 *   JThumnailScrollPane a notification if there was a massive structure change in the 
-	 *   tree. In this event all laying out shall stop and the group should be laid out from 
-	 *   scratch.
-	 */
-	public void treeStructureChanged (TreeModelEvent e) {
-		if ( ( currentGroupNode != null )
-		  && currentGroupNode.isNodeDescendant( (SortableDefaultMutableTreeNode) e.getTreePath().getLastPathComponent() ) ){
-			layoutThumbnailsInThread(); 
-		}
-	}
 
 
 
@@ -797,8 +748,6 @@ public class ThumbnailJScrollPane
  
 	/**
 	 * Sets the text in the title for displaying page count information
-	 * @param curPage
-	 * @todo Generated comment
 	 */
 	private void setPageStats() {												// JA
 		lblPage.setText("Page "+curPage+"/"+pageCount);							// JA	
@@ -814,7 +763,7 @@ public class ThumbnailJScrollPane
 		else
 			previousThumbnailsButton.setVisible( true );
 
-		int count = currentGroupNode.getChildCount();
+		int count = mySetOfNodes.getNumberOfNodes();
 		lblPage.setVisible(count != 0);
 		if ( ( startIndex + Settings.maxThumbnails ) < count )
 			nextThumbnailsButton.setVisible( true );
@@ -843,7 +792,7 @@ public class ThumbnailJScrollPane
 	}
 
 	/**
-	 *  This method clears selection HashSet.
+	 *  This method clears selection HashSet that refers to the selected highlighted thumbnails.
 	 */
 	public void clearSelection() {
 		Iterator i = selection.iterator();
