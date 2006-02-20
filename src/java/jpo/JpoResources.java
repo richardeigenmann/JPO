@@ -437,6 +437,7 @@ public class JpoResources extends ListResourceBundle {
 		{"targetDirJLabel", "Target directory for the pictures:"},
 		{"AddFromCameraOkJButton", "Go"},
 		{"editCameraJButton", "Edit Cameras"},
+		{"categoriesJButton", "Categories"},
 		
 		// CameraEditor
 		{"CameraEditor", "Edit Camera Settings"},

@@ -1892,9 +1892,10 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 	 *  Copies the pictures from the source tree to the target directory and adds them to the collection.
 	 *  @param  newOnly  If true only pictures not yet in the collection will be added.
 	 *  @param  retainDirectories  indicates that the directory structure should be preserved.
+	 *  @param  selectedCategories  the categories to be applied to the newly loaded pictures.
 	 * 
 	 */
-	public SortableDefaultMutableTreeNode copyAddPictures( File sourceDir, File targetDir, String groupName, boolean newOnly, boolean retainDirectories ) {
+	public SortableDefaultMutableTreeNode copyAddPictures( File sourceDir, File targetDir, String groupName, boolean newOnly, boolean retainDirectories, HashSet selectedCategories ) {
 		File[] files = sourceDir.listFiles();
 		ProgressGui progGui = new ProgressGui( Tools.countfiles( files ),
 			Settings.jpoResources.getString("PictureAdderProgressDialogTitle"),
@@ -1908,7 +1909,7 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 		setSendModelUpdates( false );
 
 
-		boolean picturesAdded = copyAddPictures1( files, targetDir, newGroup, progGui, newOnly, retainDirectories );
+		boolean picturesAdded = copyAddPictures1( files, targetDir, newGroup, progGui, newOnly, retainDirectories, selectedCategories );
 		progGui.switchToDoneMode();
 		setSendModelUpdates( true );
 
@@ -1934,7 +1935,8 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 		SortableDefaultMutableTreeNode receivingNode, 
 		ProgressGui progGui, 
 		boolean newOnly,
-		boolean retainDirectories ) {
+		boolean retainDirectories,
+		HashSet selectedCategories ) {
 		
 		boolean picturesAdded = false;
 		// add all the files from the array as nodes to the start node.
@@ -1947,7 +1949,7 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 					targetFile.delete();
 					progGui.decrementTotal();
 				} else {
-					receivingNode.addPicture( targetFile );
+					receivingNode.addPicture( targetFile, selectedCategories );
 					progGui.progressIncrement();
 					picturesAdded = true;
 				}
@@ -1959,7 +1961,7 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 					} else {
 						subNode = receivingNode;
 					}
-					boolean a = copyAddPictures1( addFile.listFiles(), targetDir, subNode, progGui, newOnly, retainDirectories );
+					boolean a = copyAddPictures1( addFile.listFiles(), targetDir, subNode, progGui, newOnly, retainDirectories, selectedCategories );
 					picturesAdded = a || picturesAdded;
 				} else {
 					Tools.log ("SDMTN.copyAddPictures: no pictures in directory " + addFile.toString() );
@@ -1977,7 +1979,7 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 	 *  @param  cam  The camera object with knows the checksums of the pictures seen before.
 	 * 
 	 */
-	public SortableDefaultMutableTreeNode copyAddPictures( File sourceDir, File targetDir, String groupName, Camera cam, boolean retainDirectories ) {
+	public SortableDefaultMutableTreeNode copyAddPictures( File sourceDir, File targetDir, String groupName, Camera cam, boolean retainDirectories, HashSet selectedCategories ) {
 		File[] files = sourceDir.listFiles();
 		ProgressGui progGui = new ProgressGui( Tools.countfiles( files ),
 			Settings.jpoResources.getString("PictureAdderProgressDialogTitle"),
@@ -1989,7 +1991,7 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 		setSendModelUpdates( false );
 
 		cam.zapNewImage();
-		boolean picturesAdded = copyAddPictures1( files, targetDir, newGroup, progGui, cam, retainDirectories );
+		boolean picturesAdded = copyAddPictures1( files, targetDir, newGroup, progGui, cam, retainDirectories, selectedCategories );
 
 		cam.storeNewImage();
 		Settings.writeCameraSettings();
@@ -2016,7 +2018,8 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 		SortableDefaultMutableTreeNode receivingNode, 
 		ProgressGui progGui, 
 		Camera cam,
-		boolean retainDirectories ) {
+		boolean retainDirectories,
+		HashSet selectedCategories ) {
 		
 		
 		boolean picturesAdded = false;
@@ -2050,7 +2053,7 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 						subNode = receivingNode;
 					}
 					
-					boolean a = copyAddPictures1( addFile.listFiles(), targetDir, subNode, progGui, cam, retainDirectories );
+					boolean a = copyAddPictures1( addFile.listFiles(), targetDir, subNode, progGui, cam, retainDirectories, selectedCategories );
 					picturesAdded = a || picturesAdded;
 				} else {
 					Tools.log ("SDMTN.copyAddPictures: no pictures in directory " + addFile.toString() );
@@ -2124,6 +2127,18 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 	 *  @return  true if the picture was valid, false if not.
 	 */
 	public boolean addPicture ( File addFile ) {
+		return ( addPicture (addFile, null) );
+	}
+
+
+	
+	/**
+	 *  this method adds a new Picture to the current node if the JVM has a reader for it.
+	 *
+	 *  @param  addFile  the file that should be added
+	 *  @return  true if the picture was valid, false if not.
+	 */
+	public boolean addPicture ( File addFile, HashSet categoryAssignment ) {
 		Tools.log("SDMTN.addPicture: invoked on: " + addFile.toString() + " for " + this.toString() );
 		PictureInfo newPictureInfo = new PictureInfo();
 		try {
@@ -2134,6 +2149,9 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 			newPictureInfo.setLowresLocation ( Tools.lowresFilename() );
 			newPictureInfo.setDescription( Tools.stripOutFilenameRoot( addFile ) );
 			newPictureInfo.setChecksum( Tools.calculateChecksum( addFile ) );
+			if ( categoryAssignment != null ) {
+				newPictureInfo.setCategoryAssignment( categoryAssignment );
+			}
 		} catch ( MalformedURLException x ) {
 			Tools.log( "PictureAdder.addSinglePicture: MalformedURLException: " + addFile.getPath() + "\nError: " + x.getMessage());
 			return false;
@@ -2178,6 +2196,7 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 		
 		return true;
 	}
+
 
 
 	/**

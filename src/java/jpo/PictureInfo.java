@@ -1130,6 +1130,15 @@ public class PictureInfo implements Serializable {
 		}
 	}
 
+	/** 
+	 * sets the supplied HashSet as the valid HashSet for the Categories of the picture
+	 */
+       	public synchronized void setCategoryAssignment( HashSet ca ) {
+		if ( ca != null) {
+			categoryAssignments = ca;
+		}
+	}
+
 	
 	/**
 	 *  Converts the temporary categoryAssignmentString to a categoryAssignment.

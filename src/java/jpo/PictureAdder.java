@@ -5,12 +5,14 @@ import javax.swing.*;
 import java.awt.*;
 import java.beans.*;
 import javax.swing.filechooser.*;
+import java.util.*;
+import java.awt.event.*;
 
 /*
 PictureAdder.java:  a class that first brings up a filechooser and then invokes itself as a thread
 
 
-Copyright (C) 2002, 2004  Richard Eigenmann.
+Copyright (C) 2002, 2006  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -30,7 +32,7 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  *   Brings up a Filechooser and then loads the selected pictures into the collection. It has 
  *   an asseccory panel that shows a thumbnail of the image.
  */
-public class PictureAdder implements PropertyChangeListener {
+public class PictureAdder implements PropertyChangeListener, CategoryGuiListenerInterface {
 	/**
 	 *  Checkbox that allows the user to specifiy whether pictures 
 	 *  in the subdirectories should be added or not.
@@ -55,6 +57,12 @@ public class PictureAdder implements PropertyChangeListener {
 	 *  in the collection should be ignored.
 	 */
 	private JCheckBox showThumbnailJCheckBox = new JCheckBox( Settings.jpoResources.getString("showThumbnailJCheckBox") );
+
+
+	/**
+	 *  Category Button
+	 **/
+	private JButton categoriesJButton = new JButton ( Settings.jpoResources.getString("categoriesJButton") );
 
 
 	/**
@@ -87,6 +95,12 @@ public class PictureAdder implements PropertyChangeListener {
 	
 
 	/**
+	 *  this vector holds the list of categories to be applied to newly loaded pictures.
+	 */
+	private HashSet selectedCategories = null;
+
+
+	/**
 	 *  Constructor for a PictureAdder. It creates a JFilechooser GUI and then fires off a 
 	 *  thread to load the pictures in the background.
 	 *
@@ -110,12 +124,26 @@ public class PictureAdder implements PropertyChangeListener {
 		showThumbnailJCheckBox.setSelected( showThumbnail );
 		retainDirectoriesJCheckBox.setSelected( true );
 
+		/*categoriesJButton.setPreferredSize( Settings.defaultButtonDimension );
+	        categoriesJButton.setMinimumSize( Settings.defaultButtonDimension );
+	        categoriesJButton.setMaximumSize( Settings.defaultButtonDimension );
+		categoriesJButton.setBorder(BorderFactory.createRaisedBevelBorder());
+	        categoriesJButton.addActionListener( new ActionListener() {
+			public void actionPerformed( ActionEvent e ) {
+				CategoryUsageJFrame cujf = new CategoryUsageJFrame();
+				cujf.updateCategories();
+				cujf.addCategoryGuiListener( PictureAdder.this );
+			}
+		} );*/
+
+
 		JPanel optionsJPanel = new JPanel();
 		optionsJPanel.setLayout( new BoxLayout( optionsJPanel, BoxLayout.Y_AXIS ) );
 		optionsJPanel.add( recurseJCheckBox, BorderLayout.WEST );
 		optionsJPanel.add( newOnlyJCheckBox, BorderLayout.WEST );
 		optionsJPanel.add( showThumbnailJCheckBox, BorderLayout.WEST );
 		optionsJPanel.add( retainDirectoriesJCheckBox, BorderLayout.WEST );
+		//optionsJPanel.add( categoriesJButton, BorderLayout.WEST );
 		optionsJPanel.setPreferredSize( new Dimension( PREFERRED_WIDTH, PREFERRED_HEIGHT ) );
 
 		thumbnailJLabel.setPreferredSize( new Dimension( PREFERRED_WIDTH, PREFERRED_HEIGHT ) );
@@ -196,4 +224,14 @@ public class PictureAdder implements PropertyChangeListener {
 	public void setNotificationTarget( GroupPopupInterface target ) {
 		this.target = target;
 	}
+
+
+	
+	/**
+	 *  This method gets invoked from the CategoryUsageJFrame object when a selection has been made.
+	 */
+	public void categoriesChosen(  HashSet selectedCategories  ) {
+		this.selectedCategories = selectedCategories;
+	}
+
 }

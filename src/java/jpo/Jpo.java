@@ -392,7 +392,6 @@ public class Jpo extends JFrame
 	public void requestFileLoad() {
 		if ( Settings.top.checkUnsavedChanges() ) return;
 		Settings.top.fileLoad();
-		//Settings.top.setUnsavedUpdates( false );
 		positionToNode( Settings.top );
 	}
 

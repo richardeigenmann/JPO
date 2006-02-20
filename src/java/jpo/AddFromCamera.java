@@ -4,6 +4,7 @@ import java.io.*;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+import java.util.*;
 
 /*
 AddFromCamera.java:  
@@ -32,7 +33,7 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 public class AddFromCamera 
 	extends 	JFrame 
-	implements 	ActionListener {
+	implements 	ActionListener, CategoryGuiListenerInterface {
 
 
 
@@ -65,6 +66,12 @@ public class AddFromCamera
 
 
 	/**
+	 *  Category Button
+	 **/
+	private JButton categoriesJButton = new JButton ( Settings.jpoResources.getString("categoriesJButton") );
+
+
+	/**
 	 *  a reference to the root node with which shall be added to.
 	 */
 	private SortableDefaultMutableTreeNode rootNode;	 		
@@ -89,6 +96,12 @@ public class AddFromCamera
 	 */
 	private JCheckBox retainDirectoriesJCheckBox = new JCheckBox( Settings.jpoResources.getString("retainDirectoriesJCheckBox") );
 
+
+	/**
+	 *  this vector holds the list of categories to be applied to newly loaded pictures.
+	 */
+	private HashSet selectedCategories = null;
+	 
 
 
 	/** 
@@ -152,9 +165,25 @@ public class AddFromCamera
 		// end of Camera Panel
 
 
+		constraints.gridx = 0; constraints.gridy++;
+		constraints.fill = GridBagConstraints.NONE;
+		categoriesJButton.setPreferredSize( Settings.defaultButtonDimension );
+	        categoriesJButton.setMinimumSize( Settings.defaultButtonDimension );
+	        categoriesJButton.setMaximumSize( Settings.defaultButtonDimension );
+		categoriesJButton.setBorder(BorderFactory.createRaisedBevelBorder());
+	        categoriesJButton.addActionListener( new ActionListener() {
+			public void actionPerformed( ActionEvent e ) {
+				CategoryUsageJFrame cujf = new CategoryUsageJFrame();
+				cujf.updateCategories();
+				cujf.addCategoryGuiListener( AddFromCamera.this );
+			}
+		} );
+		controlJPanel.add( categoriesJButton, constraints );
+
+
 
 		//Create the radio buttons.
-		constraints.gridx = 0; constraints.gridy = 4;
+		constraints.gridx = 0; constraints.gridy++;
 		constraints.insets = new Insets(0, 4, 0, 0);
 		controlJPanel.add( allPicturesJRadioButton, constraints );
 
@@ -178,7 +207,6 @@ public class AddFromCamera
 		controlJPanel.add( retainDirectoriesJCheckBox, constraints );
 
 
-
 		JLabel targetDirJLabel = new JLabel ( Settings.jpoResources.getString("targetDirJLabel") );
 		constraints.gridy++; constraints.gridx = 0;
 		constraints.gridwidth = 2;
@@ -187,9 +215,9 @@ public class AddFromCamera
 		constraints.gridy++;
 		controlJPanel.add( targetDirJTextField, constraints );
 
-		constraints.gridwidth = 1;
-		constraints.gridy++;
-		constraints.fill = GridBagConstraints.NONE;
+
+		JPanel buttonJPanel = new JPanel();
+		
 		okJButton.setPreferredSize( Settings.defaultButtonDimension );
 	        okJButton.setMinimumSize( Settings.defaultButtonDimension );
 	        okJButton.setMaximumSize( Settings.defaultButtonDimension );
@@ -197,17 +225,20 @@ public class AddFromCamera
 		okJButton.setDefaultCapable( true );
 		getRootPane().setDefaultButton ( okJButton );
 	        okJButton.addActionListener( this );
-		controlJPanel.add( okJButton, constraints );
+		buttonJPanel.add( okJButton );
 
 
-		constraints.gridx++; //constraints.gridy++;
 		cancelJButton.setPreferredSize( Settings.defaultButtonDimension );
 	        cancelJButton.setMinimumSize( Settings.defaultButtonDimension );
 	        cancelJButton.setMaximumSize( Settings.defaultButtonDimension );
 		cancelJButton.setBorder(BorderFactory.createRaisedBevelBorder());
 	        cancelJButton.addActionListener( this );
-		controlJPanel.add( cancelJButton, constraints );
+		buttonJPanel.add( cancelJButton );
 
+		constraints.gridwidth = 2;
+		constraints.gridy++; constraints.gridx=0;
+		constraints.fill = GridBagConstraints.NONE;
+		controlJPanel.add( buttonJPanel, constraints );
 		
 		getContentPane().add( controlJPanel );
 		
@@ -274,13 +305,13 @@ public class AddFromCamera
 					SortableDefaultMutableTreeNode newNode = null;
 					if ( allPicturesJRadioButton.isSelected() ) {
 						Tools.log ("AddFromCamera.run: AllPictures should be loaded from camera");
-						newNode = rootNode.copyAddPictures( sourceDir, targetDir, groupName, false, retainDirectoriesJCheckBox.isSelected()  );
+						newNode = rootNode.copyAddPictures( sourceDir, targetDir, groupName, false, retainDirectoriesJCheckBox.isSelected(), selectedCategories  );
 					} else if ( newPicturesJRadioButton.isSelected() ) {
 						Tools.log ("AddFromCamera.run: only new pictures should be loaded from camera");
-						newNode = rootNode.copyAddPictures( sourceDir, targetDir, groupName, cam, retainDirectoriesJCheckBox.isSelected() );
+						newNode = rootNode.copyAddPictures( sourceDir, targetDir, groupName, cam, retainDirectoriesJCheckBox.isSelected(), selectedCategories );
 					} else if ( missingPicturesJRadioButton.isSelected() ) {
 						Tools.log ("AddFromCamera.run: only missing pictures should be loaded from camera");
-						newNode = rootNode.copyAddPictures( sourceDir, targetDir, groupName, true, retainDirectoriesJCheckBox.isSelected() );
+						newNode = rootNode.copyAddPictures( sourceDir, targetDir, groupName, true, retainDirectoriesJCheckBox.isSelected(), selectedCategories );
 					}
 					
 					if ( newNode != null ) {
@@ -293,6 +324,14 @@ public class AddFromCamera
 			t.start();
 			getRid(); 
 		} 
+	}
+
+
+	/**
+	 *  This method gets invoked from the CategoryUsageJFrame object when a selection has been made.
+	 */
+	public void categoriesChosen(  HashSet selectedCategories  ) {
+		this.selectedCategories = selectedCategories;
 	}
 
 }
