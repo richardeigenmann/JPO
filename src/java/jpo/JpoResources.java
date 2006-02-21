@@ -319,6 +319,8 @@ public class JpoResources extends ListResourceBundle {
 		{"fileDeleteJMenuItem", "Delete"},
 		{"pictureRefreshJMenuItem", "Refresh Thumbnail"},
 		{"pictureMailSelectJMenuItem", "Select for email"},
+		{"pictureMailUnselectJMenuItem", "Unselect for email"},
+		{"pictureMailUnselectAllJMenuItem", "Clear email selection"},
 		{"rotation", "Rotation"},
 		{"rotate90", "Rotate Right 90"},
 		{"rotate180", "Rotate 180"},

@@ -318,6 +318,8 @@ public class JpoResources_de extends ListResourceBundle {
 		{"fileDeleteJMenuItem", "Löschen"},
 		{"pictureRefreshJMenuItem", "Verkleinerung erneuern"},
 		{"pictureMailSelectJMenuItem", "Auswählen für eMail"},
+		{"pictureMailUnselectJMenuItem", "Nicht emailen"},
+		{"pictureMailUnselectAllJMenuItem", "Email Auswahl zurücksetzen"},
 		{"rotation", "Rotation"},
 		{"rotate90", "Nach Rechts 90"},
 		{"rotate180", "Um 180"},

@@ -102,13 +102,6 @@ public class PicturePopupMenu extends JPopupMenu
 		= new JMenuItem( Settings.jpoResources.getString("pictureNodeRemove") );
 
 
-	/** 
-	 *  menu item that allows the image to be selected for mailing
-	 **/
-	private JMenuItem pictureMailSelectJMenuItem 
-		= new JMenuItem( Settings.jpoResources.getString("pictureMailSelectJMenuItem") );
-
-
 	/**
 	 *  submenu which presents the user with several copy targets
 	 */
@@ -303,12 +296,35 @@ public class PicturePopupMenu extends JPopupMenu
 		add( categoryUsagetJMenuItem );
 
 
-		pictureMailSelectJMenuItem.addActionListener( new ActionListener() {
-			public void actionPerformed( ActionEvent e ) {
-				popupNode.toggleMailSelected();
-			}
-		});
-		add( pictureMailSelectJMenuItem );
+		JMenuItem pictureMailSelectJMenuItem = new JMenuItem();
+		JMenuItem pictureMailUnselectAllJMenuItem 
+			= new JMenuItem( Settings.jpoResources.getString("pictureMailUnselectAllJMenuItem") );
+		if ( popupNode.isMailSelected() ) {
+			pictureMailSelectJMenuItem.setText( Settings.jpoResources.getString("pictureMailUnselectJMenuItem") );
+			pictureMailSelectJMenuItem.addActionListener( new ActionListener() {
+				public void actionPerformed( ActionEvent e ) {
+					popupNode.removeFromMailSelection();
+				}
+			});
+			add( pictureMailSelectJMenuItem );
+
+			pictureMailUnselectAllJMenuItem.addActionListener( new ActionListener() {
+				public void actionPerformed( ActionEvent e ) {
+					popupNode.clearMailSelection();
+				}
+			});
+			add( pictureMailUnselectAllJMenuItem );
+		} else {
+			pictureMailSelectJMenuItem.setText( Settings.jpoResources.getString("pictureMailSelectJMenuItem") );
+			pictureMailSelectJMenuItem.addActionListener( new ActionListener() {
+				public void actionPerformed( ActionEvent e ) {
+					popupNode.setMailSelected();
+				}
+			});
+			add( pictureMailSelectJMenuItem );
+		}
+
+		
 
 
 
