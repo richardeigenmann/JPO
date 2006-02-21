@@ -547,6 +547,14 @@ public class JpoResources_de extends ListResourceBundle {
 		{"emailNoNodes", "Keine Bilder zum Versand ausgewählt. Mit dem Rechts-click Popupmenu auf den Bildern werden Bilder ausgewählt."},
 		{"emailNoServer", "Keine Email Server eingestellt. Konfigurieren Sie den Server unter Editieren > Einstellungen > EmailServer."},
 		
+		//Emailer Thread
+		{"EmailerLoading", "Laden:  "},
+		{"EmailerScaling", "Verkleinern:  "},
+		{"EmailerWriting", "Schreiben:  "},
+		{"EmailerAdding", "Dazufügen:  "},
+		{"EmailerSending", "Mail verschicken"},
+		{"EmailerSent", "Mail an Server ausgeliefert"},
+
 		
 		{"Template", "Template"},
 		{"Template", "Template"}

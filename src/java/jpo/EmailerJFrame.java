@@ -3,16 +3,8 @@ package jpo;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-import javax.swing.JOptionPane;
-
-import java.net.InetAddress;
-import java.util.Properties;
-import javax.mail.*;
 import javax.mail.internet.*;
-import java.io.*;
 import java.util.*;
-import javax.activation.*;
-import java.net.URL;
 
 /*
 EmailerJFrame.java:  creates a GUI to allow the user to specify his search
@@ -428,150 +420,14 @@ public class EmailerJFrame extends JFrame {
 		Dimension scaleSize = new Dimension( imageWidthWholeNumberField.getValue(), imageWidthWholeNumberField.getValue() );
 	
 		putSettings(); // placed here so that we don't store addresses that fail in the AddressExceptions
-		sendEmail( emailSelected, senderAddress, destinationAddress, scaleImages, scaleSize, sendOriginal );
+		EmailerThread et = new EmailerThread( emailSelected, senderAddress, destinationAddress, subjectJTextField.getText(), messageJTextArea.getText(), scaleImages, scaleSize, sendOriginal );
+		// sendEmail( emailSelected, senderAddress, destinationAddress, scaleImages, scaleSize, sendOriginal );
 	}
 	
 
-	/**
-	 *  method that sends the email
-	 */
-	private void sendEmail( Object [] emailSelected, 
-		InternetAddress senderAddress, 
-		InternetAddress destinationAddress, 
-		boolean scaleImages, 
-		Dimension scaleSize, 
-		boolean sendOriginal  ) {
-
-
-		// Get system properties
-		Properties props = System.getProperties();
-
-		// Setup mail server
-		props.setProperty("mail.smtp.host", Settings.emailServer );
-
-
-		// Get session
-		Session session = Session.getDefaultInstance(props, null);
-
-		// Define message
-		MimeMessage message;
-		try {
-			message = new MimeMessage( session );
-			message.setFrom( senderAddress );
-			message.addRecipient( Message.RecipientType.TO, destinationAddress );
-			message.setSubject( subjectJTextField.getText() );
-
-			Multipart mp = new MimeMultipart();
-
-			MimeBodyPart mbp1 = new MimeBodyPart();
-			mbp1.setText( messageJTextArea.getText() );
-			mp.addBodyPart(mbp1);
-
-
-			MimeBodyPart scaledPictureMimeBodyPart;
-			MimeBodyPart originalPictureMimeBodyPart;
-			MimeBodyPart pictureDescriptionMimeBodyPart;
-			ScalablePicture scalablePicture = new ScalablePicture();
-			scalablePicture.setScaleSize( scaleSize );
-
-			URL highresURL;
-			PictureInfo pi;
-			DataSource ds;
-			ByteArrayOutputStream baos;
-			EncodedDataSource encds;
-			for ( int i=0; i < emailSelected.length; i++ ) {
-				pictureDescriptionMimeBodyPart = new MimeBodyPart();
-				pi = (PictureInfo) ( (SortableDefaultMutableTreeNode) emailSelected[i] ).getUserObject();
-				pictureDescriptionMimeBodyPart.setText( pi.getDescription(), "iso-8859-1" );
-				mp.addBodyPart( pictureDescriptionMimeBodyPart );
-
-				if ( scaleImages ) {
-					scalablePicture.loadPictureImd( pi.getHighresURLOrNull(), pi.getRotation() );
-					scalablePicture.scalePicture();
-					baos = new ByteArrayOutputStream();
-					scalablePicture.writeScaledJpg( baos );
-					encds = new EncodedDataSource( "image/jpeg", "filename.jpg", baos );
-					scaledPictureMimeBodyPart = new MimeBodyPart();
-					scaledPictureMimeBodyPart.setDataHandler( new DataHandler( encds ) );
-					scaledPictureMimeBodyPart.setFileName( pi.getHighresFilename() );
-					mp.addBodyPart( scaledPictureMimeBodyPart );
-				}
-
-
-				if ( sendOriginal ) {
-					// create the message part fro the original image
-					originalPictureMimeBodyPart = new MimeBodyPart();
-					highresURL = pi.getHighresURLOrNull();
-					// attach the file to the message
-					ds = new URLDataSource( highresURL  );
-					originalPictureMimeBodyPart.setDataHandler( new DataHandler( ds ) );
-					originalPictureMimeBodyPart.setFileName( pi.getHighresFilename() );
-					// create the Multipart and add its parts to it
-					mp.addBodyPart( originalPictureMimeBodyPart );
-				}
-
-			}
-			// add the Multipart to the message
-			message.setContent(mp);
-
-
-		} catch ( MessagingException x ) {
-			Tools.log("EmailerJFrame trapped a MessagingException while preparing the message: " + x.getMessage() );
-			return;
-		}
-
-		// Send message
-		try {
-		
-			//Transport.send( message );
-			Transport transport = session.getTransport( "smtp" );
-			transport.connect( Settings.emailServer, Settings.emailUser, Settings.emailPassword );
-			transport.send( message );
-		} catch ( MessagingException x ) {
-			Tools.log("EmailerJFrame trapped a MessagingException while sending the message: " + x.getMessage() );
-			x.printStackTrace();
-			JOptionPane.showMessageDialog( this, 
-				Settings.jpoResources.getString( "emailSendError" ) + x.getMessage(), 
-				Settings.jpoResources.getString( "genericError" ), 
-				JOptionPane.ERROR_MESSAGE);
-			return;
-		}
-
-		JOptionPane.showMessageDialog( this, 
-			Settings.jpoResources.getString( "emailOK" ), 
-			Settings.jpoResources.getString( "genericOKText" ), 
-			JOptionPane.INFORMATION_MESSAGE);
-		
-	}
 
 
 
-	private class EncodedDataSource implements DataSource {
-	
-		EncodedDataSource ( String contentType, String filename, ByteArrayOutputStream baos ) {
-			this.contentType = contentType;
-			this.filename = filename;
-			this.baos = baos;
-		}
-		
-		String contentType;
-		String filename;
-		ByteArrayOutputStream baos;
-		
-		public InputStream getInputStream() throws IOException { 
-			return new ByteArrayInputStream( baos.toByteArray() );
-		}
-		public OutputStream getOutputStream() throws IOException {
-			return null;//new OutputStream();
-		}
-		public String getContentType() {
-			return contentType;
-		}
-		public String getName() {
-			return filename;
-		}
-		
-	}
 		
 
 }
