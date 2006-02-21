@@ -1064,6 +1064,7 @@ public class HtmlDistillerThread extends Thread {
 
 	/**
 	 *  A button listener for the cancel button on the progress frame.
+	 *  ToDo: Remove this class and integrate it into the button
 	 */
 	private class ButtonListener implements ActionListener {
 		/**

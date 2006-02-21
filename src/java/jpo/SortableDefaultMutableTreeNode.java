@@ -1248,7 +1248,6 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 			}
 			in.close();
 			getTreeModel().nodeStructureChanged( this );
-			// setSelectionPath ( new TreePath (newNode.getPath()) );
 			getRootNode().setUnsavedUpdates( false );
 		} catch (IOException e) {
 			Tools.log( "IOException " + e.getMessage() );
@@ -2239,6 +2238,28 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 		setUnsavedUpdates();
 		this.refreshThumbnail();
 	}
+
+
+	/**
+	 *  This method returns whether the supplied node is a descendent of the deletions that 
+	 *  have been detected in the TreeModelListener delivered TreeModelEvent.
+	 *  @param  affectedNode  The node to check whether it is or is a descendent of the deleted node.
+	 *  @param  e the TreenModelEvent that was detected
+	 */
+	public static boolean wasNodeDeleted( SortableDefaultMutableTreeNode affectedNode, TreeModelEvent e ) {
+		Tools.log( "SDMTN.wasNodeDeleted invoked for: " + affectedNode.toString() + " / " + e.toString() );
+		TreePath removedChild;
+		TreePath currentNodeTreePath = new TreePath( affectedNode.getPath() );
+		Object [] children = e.getChildren();
+		for ( int i = 0; i<children.length; i++ ) {
+			removedChild = new TreePath( children[ i ] );
+			if ( removedChild.isDescendant( currentNodeTreePath ) ) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 
 
 	

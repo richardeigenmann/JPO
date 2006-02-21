@@ -835,16 +835,9 @@ public class PictureInfoEditor
 	 *  of the removed nodes. If so we close the window.
 	 */
 	public void treeNodesRemoved ( TreeModelEvent e ) {
-		//Tools.log("PictureInfoEditor.treeNodesRemoved was invoked");
-		TreePath removedChild;
-		TreePath currentNodeTreePath = new TreePath( editNode.getPath() );
-		Object [] children = e.getChildren();
-		for ( int i = 0; i<children.length; i++ ) {
-			removedChild = new TreePath( children[ i ] );
-			if ( removedChild.isDescendant( currentNodeTreePath ) ) {
-				getRid();
-			}
-		}	
+		if ( SortableDefaultMutableTreeNode.wasNodeDeleted( editNode, e ) ) {
+			getRid();
+		}
 	}
 
 	/**
