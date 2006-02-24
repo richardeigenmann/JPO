@@ -183,6 +183,7 @@ public class JpoResources_de extends ListResourceBundle {
 		{"exportHighresJCheckBox", "Originalbilder exportieren"},
 		{"linkToHighresJCheckBox", "Link auf Originalbilder im aktuellen Verzeichnis erstellen"},
 		{"generateDHTMLJCheckBox", "DHTML mouseover Effekte generieren"},
+		{"generateZipfileJCheckBox", "Zipfile für Download der hoch auflösenden Bilder generieren"},
 		{"picsPerRowText", "Spalten"},
 		{"thubnailSizeJLabel", "Grösse der Verkleinerungen"},
 		{"htmlDistCrtDirError", "Konnte das Export Verzeichnis nicht generieren!"},

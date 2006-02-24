@@ -184,6 +184,7 @@ public class JpoResources extends ListResourceBundle {
 		{"exportHighresJCheckBox", "Export high resolution pictures"},
 		{"linkToHighresJCheckBox", "Link to high resoloution pictures at current locations"},
 		{"generateDHTMLJCheckBox", "Generate DHTML mouseover effects"},
+		{"generateZipfileJCheckBox", "Generate Zipfile for download of Highres Pictures"},
 		{"picsPerRowText", "Columns"},
 		{"thubnailSizeJLabel", "Thumbnail size"},
 		{"htmlDistCrtDirError", "Could not create Export directory!"},

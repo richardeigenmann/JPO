@@ -8,6 +8,7 @@ import java.util.*;
 import java.awt.*;
 import javax.swing.*;
 import java.awt.event.*;
+import java.util.zip.*;
 
 /*
 HtmlDistillerThread.java:  class that can write html files
@@ -170,6 +171,23 @@ public class HtmlDistillerThread extends Thread {
 	 *   A flag to indicate whether DHTML elements should be generated. 
 	 */
 	private boolean generateDHTML ;
+
+	/**
+	 *   A flag to indicate whether a Zipfile with Highres Images should be generated. 
+	 */
+	private boolean generateZipfile ;
+
+	/**
+	 *  Handle for the zipfile
+	 */
+	private ZipOutputStream zipFile;
+
+	
+	/**
+	 *  static size of the buffer to be used in copy operations
+	 */
+	private static final int BUFFER = 2048;
+
 	
 	/**
 	 *  The background color for the web pages
@@ -180,6 +198,8 @@ public class HtmlDistillerThread extends Thread {
 	 *  The color to be used for the fonts.
 	 */
 	private Color fontColor;
+	
+	
 
 	/**
 	 *  Creates and starts a Thread that writes the picture nodes from the specified
@@ -202,6 +222,7 @@ public class HtmlDistillerThread extends Thread {
 	 *  @param  midresJpgQuality	The Quality with which to compress the medium resolution jpg images.
 	 *  @param startNode		The node from which this is all to be built.
 	 *  @param generateDHTML	Set to true if DHTML effects should be generated
+	 *  @param generateZipfile	Set to true if a Zipfile with highres images should be generated
 	 *  @param backgroundColor	The background color for the web page.
 	 *  @param fontColor		The color to be used for texts.
 	 */
@@ -218,6 +239,7 @@ public class HtmlDistillerThread extends Thread {
 		float midresJpgQuality,
 		SortableDefaultMutableTreeNode startNode,
 		boolean generateDHTML,
+		boolean generateZipfile,
 		Color backgroundColor,
 		Color fontColor ) {
 
@@ -237,6 +259,7 @@ public class HtmlDistillerThread extends Thread {
 		this.midresJpgQuality = midresJpgQuality;
 		this.startNode = startNode;
 		this.generateDHTML = generateDHTML;
+		this.generateZipfile = generateZipfile;
 		this.backgroundColor = backgroundColor;
 		this.fontColor = fontColor;
 
@@ -293,9 +316,33 @@ public class HtmlDistillerThread extends Thread {
 		progressFrame.setVisible( true );
 		progressFrame.setLocationRelativeTo ( Settings.anchorFrame );
 
+
+		// create zip
+		try {
+			if ( generateZipfile ) {
+				FileOutputStream dest = new FileOutputStream( new File( htmlDirectory, "Download.zip" ) );
+				zipFile = new ZipOutputStream( new BufferedOutputStream( dest ) ); 
+			}
+		} catch  ( IOException x ) {
+			Tools.log( "HtmlDistillerThread.run: Error creating Zipfile. Coninuing without Zip\n" + x.toString() );
+			generateZipfile = false;
+		}
+
+
 		//scp.setQualityScale();
 		writeStylesheet( htmlDirectory );
 		writeAsHtml ( startNode );
+
+
+		try {
+			if ( generateZipfile ) {
+				zipFile.close();
+			}
+		} catch  ( IOException x ) {
+			Tools.log( "HtmlDistillerThread.run: Error closing Zipfile. Coninuing.\n" + x.toString() );
+			generateZipfile = false;
+		}
+
 
 		if ( folderIconRequired ) {
 			try {
@@ -389,8 +436,13 @@ public class HtmlDistillerThread extends Thread {
 		out.write("<H2>" + stringToHTMLString ( ((GroupInfo) groupNode.getUserObject()).getGroupName() ) + "</H2>");
 		out.newLine();
 		
-		//link to parent
-		if ( ! groupNode.equals( startNode ) ) {
+		if ( groupNode.equals( startNode ) ) {
+			if ( generateZipfile ) {
+				out.write( "<a href=\"Download.zip\">Download High Resolution Pictures as a Zipfile</a>" );
+				out.newLine();
+			}
+		} else {
+			//link to parent
 			SortableDefaultMutableTreeNode parentNode = (SortableDefaultMutableTreeNode) groupNode.getParent();
 			String parentLink = "jpo_" + Integer.toString( parentNode.hashCode() ) + ".htm";
 			if ( parentNode.equals( startNode ) ) parentLink = "index.htm";
@@ -531,7 +583,32 @@ public class HtmlDistillerThread extends Thread {
 				+ highresFilename.toString());
 			Tools.copyPicture ( p.getHighresURL(), highresFilename );
 		}
-	
+
+
+		if ( generateZipfile ) {
+			progressLabel.setText( "adding to zipfile: " + highresFilename.toString() );
+			try {
+				InputStream in  = p.getHighresURL().openStream();
+				BufferedInputStream bin = new BufferedInputStream(in);
+
+				ZipEntry entry = new ZipEntry( highresFilename.getName() );
+				zipFile.putNextEntry( entry );
+
+				int count;
+				byte data[] = new byte[BUFFER];;
+				while (( count = bin.read( data, 0, BUFFER )) != -1)
+					zipFile.write(data, 0, count);
+			
+				bin.close();
+				in.close();
+			} catch ( IOException e ) {
+				Tools.log( "HtmDistillerThrea.run: Could not create zipfile entry for " + highresFilename.toString() + "\n" + e.toString() );
+			} catch ( Exception e ) {
+				Tools.log( "HtmDistillerThrea.run: Could not create zipfile entry for " + highresFilename.toString() + "\n" + e.toString() );
+			}
+		}
+
+
 
 		progressLabel.setText("testing size of thumbnail " + p.getLowresURL().toString());
 		
@@ -540,7 +617,6 @@ public class HtmlDistillerThread extends Thread {
 		
 		int w = 0;
 		int h = 0;
-		//if (new File(p.getLowresLocation()).exists()) {
 		try {
 			InputStream inputStream = p.getLowresURL().openStream();
 			inputStream.close();
@@ -795,6 +871,12 @@ public class HtmlDistillerThread extends Thread {
 			midresHtmlWriter.write( "<A HREF=\"" + "jpo_" + Integer.toString( hashCode ) + ".htm\">Next</A>" );
 			midresHtmlWriter.newLine();
 		}
+		if ( generateZipfile ) {
+			midresHtmlWriter.write( "<br><a href=\"Download.zip\">Download Zip</a>" );
+			midresHtmlWriter.newLine();
+		}
+
+
 		midresHtmlWriter.newLine();
 		midresHtmlWriter.write( "<P>" + Settings.jpoResources.getString("LinkToJpo") ); 
 		midresHtmlWriter.newLine();

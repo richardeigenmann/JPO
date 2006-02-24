@@ -2,12 +2,9 @@ package jpo;
 
 import java.io.*;
 import java.net.*;
-import java.awt.image.BufferedImage;
-import java.awt.Dimension;
 import java.util.*;
 import javax.swing.*;
 import java.text.*;
-import java.lang.Math.*;
 import java.util.jar.*;
 
 /*
@@ -398,9 +395,9 @@ public class JarDistillerThread extends Thread {
 	 *  method to copy any file from a source location to a target location
 	 */
 	public void copyFileToJar (URL a, String targetFileName, JarOutputStream jarOut) {
-		//System.out.println("URL: " + a);
-		//System.out.println("targetFileName: " + targetFileName);
-		//System.out.println("jarOut: " + jarOut);
+		//Tools.log("URL: " + a);
+		//Tools.log("targetFileName: " + targetFileName);
+		//Tools.log("jarOut: " + jarOut);
 		try {
 			InputStream in  = a.openStream();
 			BufferedInputStream bin = new BufferedInputStream(in);
@@ -415,12 +412,12 @@ public class JarDistillerThread extends Thread {
 			
 			in.close();
 		} catch (IOException e) {
-			System.err.println( "Could not copy " + a );
-			System.err.println( "Reason: " + e );
+			Tools.log( "Could not copy " + a );
+			Tools.log( "Reason: " + e );
 			e.printStackTrace();
 		} catch (Exception e) {
-			System.err.println( "Could not copy " + a );
-			System.err.println( "Reason: " + e );
+			Tools.log( "Could not copy " + a );
+			Tools.log( "Reason: " + e );
 			e.printStackTrace();
 		}
 	}	

@@ -1,17 +1,14 @@
 package jpo;
 
 import java.io.*;
-import java.awt.image.BufferedImage;
-import java.awt.Dimension;
 import java.util.*;
 import javax.swing.*;
-import java.text.*;
-import java.lang.Math.*;
-//import java.util.zip.*;
-import java.util.jar.*;
+
+
+
 
 /*
-FlatFileDistiller.java:  class that writes pictures to a flat file
+FlatFileDistiller.java:  class that writes the filenames of the pictures to a flat file
 Copyright (C) 2002  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License

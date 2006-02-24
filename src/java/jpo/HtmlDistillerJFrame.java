@@ -4,7 +4,6 @@ import java.util.*;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-import javax.swing.tree.*;
 import javax.swing.filechooser.*;
 import java.io.*;
 import javax.swing.colorchooser.*;
@@ -88,6 +87,12 @@ public class HtmlDistillerJFrame extends JFrame {
 	 *  Tickbox that indicates whether DHTML tags and effects should be generated.
 	 **/
 	private JCheckBox generateDHTMLJCheckBox = new JCheckBox( Settings.jpoResources.getString("generateDHTMLJCheckBox") );
+
+
+	/**
+	 *  Tickbox that indicates whether a Zipfile should be created to download the highres pictures
+	 **/
+	private JCheckBox generateZipfileJCheckBox = new JCheckBox( Settings.jpoResources.getString("generateZipfileJCheckBox") );
 	
 	/**
 	 *  Slider that allows the quality of the lowres jpg's to be specified.
@@ -245,7 +250,6 @@ public class HtmlDistillerJFrame extends JFrame {
 		midresSizeJPanel.add( midresHeightWholeNumberField );
 		
 		constraints.gridx++;  // y = 1, x = 2
-		//constraints.gridwidth = 1;
 		contentJPanel.add( midresSizeJPanel, constraints );
 
 
@@ -289,18 +293,18 @@ public class HtmlDistillerJFrame extends JFrame {
 
 
 		// create checkbox for highres export
-		constraints.gridx = 0; constraints.gridy++;
-		constraints.gridwidth = 3;
+		constraints.gridy++;
 		contentJPanel.add( exportHighresJCheckBox, constraints );
 
+		constraints.gridy++;
+		generateZipfileJCheckBox.setSelected( false );
+		contentJPanel.add( generateZipfileJCheckBox, constraints );
 
 		// create checkbox for linking to highres
-		constraints.gridx = 0; constraints.gridy++;
-		//constraints.gridwidth = 2;
+		constraints.gridy++;
 		contentJPanel.add( linkToHighresJCheckBox, constraints );
 		
-		constraints.gridx = 0; constraints.gridy++;
-		//constraints.gridwidth = 2;
+		constraints.gridy++;
 		generateDHTMLJCheckBox.setSelected(true);
 		contentJPanel.add( generateDHTMLJCheckBox, constraints );
 		
@@ -491,6 +495,7 @@ public class HtmlDistillerJFrame extends JFrame {
 			(float) midresJpgQualityJSlider.getValue() / 100,
 			startNode,
 			generateDHTMLJCheckBox.isSelected(),
+			generateZipfileJCheckBox.isSelected(),
 			previewPanel.getBackground(),
 			previewPanel.getForeground()
 			);
