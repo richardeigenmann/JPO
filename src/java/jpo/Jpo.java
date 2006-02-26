@@ -43,7 +43,7 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  * <code>SortableDefaultMutableTreeNode</code>s that represent the structure of the collection. 
  * Each node has an associated object of {@link GroupInfo} or {@link PictureInfo} type.
  *
- * The {@link CleverJTree} visualises the model and allows the user to 
+ * The {@link CollectionJTree} visualises the model and allows the user to 
  * expand and collapse branches of the tree with the mouse. If a node is clicked this generates
  * a <code>valueChanged</code> event from the model which is sent to all listening objects.<p>
  * 
@@ -55,7 +55,7 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  * or need to be informed of a change can connect to the model in this manner and 
  * need no other contorls.
  * 
- * @see CleverJTree
+ * @see CollectionJTree
  * @see ThumbnailJScrollPane
  * @see PictureViewer
  *
@@ -66,7 +66,7 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  *
  **/
 public class Jpo extends JFrame 
-		 implements CleverJTreeInterface,
+		 implements CollectionJTreeInterface,
 			    ApplicationMenuInterface {
 			    
 
@@ -74,9 +74,9 @@ public class Jpo extends JFrame
 	 *  This object does all the tree work. It can load and save the nodes of the tree, listens to 
 	 *  events happening on the tree and calls back with any actions that should be performed.
 	 * 
-	 *  @see CleverJTree
+	 *  @see CollectionJTree
 	 */
-	public static CleverJTree cleverJTree;
+	public static CollectionJTree collectionJTree;
 
 
 
@@ -136,13 +136,13 @@ public class Jpo extends JFrame
 
 	/**
 	 *  Constructor for the Jpo application that creates the main JFrame, attaches an 
-	 *  {@link ApplicationJMenuBar}, adds a JSplitPane to which it adds the {@link CleverJTree} 
+	 *  {@link ApplicationJMenuBar}, adds a JSplitPane to which it adds the {@link CollectionJTree} 
 	 *  on the left side and a {@link ThumbnailJScrollPane} on the right side.
 	 *
 	 **/
 	public Jpo() {
 		System.out.println ("\nJPO version 0.8.5\n"
-			+ "Copyright (C) 2000-2003 Richard Eigenmann\n" 
+			+ "Copyright (C) 2000-2006 Richard Eigenmann\n" 
 			+ "JPO comes with ABSOLUTELY NO WARRANTY;\n"
 			+ "for details Look at the Help | License menu item.\n"
 			+ "This is free software, and you are welcome\n"
@@ -192,8 +192,8 @@ public class Jpo extends JFrame
 				
 		// Create and attach the JTree object
 		JScrollPane collectionJScrollPane = new JScrollPane();
-		cleverJTree = new CleverJTree( this, Settings.top );		
-       		collectionJScrollPane.setViewportView( cleverJTree );
+		collectionJTree = new CollectionJTree( this, Settings.top );		
+       		collectionJScrollPane.setViewportView( collectionJTree );
 
 
 		JScrollPane categoriesJScrollPane = new JScrollPane();
@@ -202,7 +202,7 @@ public class Jpo extends JFrame
 
 
 		JScrollPane searchesJScrollPane = new JScrollPane();
-		JLabel searchesJTree = new JLabel( "A JTree with searches will go here" );
+		QueriesJTree searchesJTree = new QueriesJTree( Settings.top.getQueriesTreeModel() );
        		searchesJScrollPane.setViewportView( searchesJTree );
 
 
@@ -215,10 +215,13 @@ public class Jpo extends JFrame
 		
 		// Set up the communication between the JTree and the Thumbnail Pane
 		
-		cleverJTree.setAssociatedThumbnailJScrollpane( thumbnailJScrollPane ) ;
-		cleverJTree.setAssociatedInfoPanel( infoPanel ) ;
-		thumbnailJScrollPane.setAssociatedCleverJTree( cleverJTree );
+		collectionJTree.setAssociatedThumbnailJScrollpane( thumbnailJScrollPane ) ;
+		collectionJTree.setAssociatedInfoPanel( infoPanel ) ;
+		searchesJTree.setAssociatedThumbnailJScrollpane( thumbnailJScrollPane ) ;
+		searchesJTree.setAssociatedInfoPanel( infoPanel ) ;
+		thumbnailJScrollPane.setAssociatedCollectionJTree( collectionJTree );
 		thumbnailJScrollPane.setAssociatedInfoPanel( infoPanel ) ;
+		
 
 
 
@@ -229,17 +232,17 @@ public class Jpo extends JFrame
 			Tools.log( "Trying to load picturelist from jar: " + Settings.jarAutostartList.toString() );
 			try {
 				Settings.top.streamLoad( Settings.jarAutostartList.openStream() );
-				cleverJTree.setSelectedNode ( Settings.top );
+				collectionJTree.setSelectedNode ( Settings.top );
 				thumbnailJScrollPane.showGroup( Settings.top );
 			} catch ( IOException x ) {
 				Tools.log( Settings.jarAutostartList.toString() + " could not be loaded\nReason: " + x.getMessage() );
 			}
 		} else if ( Settings.autoLoad != "" ) {
 			File xmlFile =  new File( Settings.autoLoad );
-			Tools.log("Trying to load picturelist from ini: " + Settings.autoLoad );
+			Tools.log("Jpo.constructor: Trying to load picturelist from ini: " + Settings.autoLoad );
 			if ( xmlFile.exists() ) {
 				Settings.top.fileLoad( xmlFile );
-				cleverJTree.setSelectedNode ( Settings.top );
+				collectionJTree.setSelectedNode ( Settings.top );
 				thumbnailJScrollPane.showGroup( Settings.top );
 			}
 		}
@@ -253,9 +256,9 @@ public class Jpo extends JFrame
 		leftSplitPane.setDividerSize( Settings.dividerWidth );
 		leftSplitPane.setOneTouchExpandable( true );
 		JTabbedPane jpoNavigatorJTabbedPane = new JTabbedPane();
-		jpoNavigatorJTabbedPane.add( "Collection", collectionJScrollPane );
-		jpoNavigatorJTabbedPane.add( "Categories", categoriesJScrollPane );
-		jpoNavigatorJTabbedPane.add( "Searches", searchesJScrollPane );
+		jpoNavigatorJTabbedPane.add( Settings.jpoResources.getString("jpoTabbedPaneCollection"), collectionJScrollPane );
+		jpoNavigatorJTabbedPane.add( Settings.jpoResources.getString("jpoTabbedPaneCategories"), categoriesJScrollPane );
+		jpoNavigatorJTabbedPane.add( Settings.jpoResources.getString("jpoTabbedPaneSearches"), searchesJScrollPane );
 		leftSplitPane.setTopComponent( jpoNavigatorJTabbedPane );
 		leftSplitPane.setBottomComponent( infoPanel );
 		leftSplitPane.setDividerLocation( Settings.preferredLeftDividerSpot );
@@ -286,7 +289,7 @@ public class Jpo extends JFrame
 		masterSplitPane.setRightComponent( thumbnailJScrollPane );
 		masterSplitPane.setDividerLocation( Settings.preferredMasterDividerSpot );
 		masterSplitPane.setPreferredSize( Settings.mainFrameDimensions.getSize() );
-		cleverJTree.addComponentListener(new ComponentAdapter() {
+		collectionJTree.addComponentListener(new ComponentAdapter() {
 		        public void componentResized( ComponentEvent event ) {
 				// Tools.log( "Jpo.ThumbnailJScrollPane.componentResized invoked" );
 				int dividerSpot = masterSplitPane.getDividerLocation();
@@ -313,7 +316,7 @@ public class Jpo extends JFrame
 	 *  Brings up a QueryJFrame GUI.
   	*/
 	public void find( SortableDefaultMutableTreeNode startSearchNode ) {
-		new QueryJFrame( startSearchNode, cleverJTree, thumbnailJScrollPane );
+		new QueryJFrame( startSearchNode, collectionJTree, thumbnailJScrollPane );
 	}
 
 
@@ -331,7 +334,7 @@ public class Jpo extends JFrame
 				&& Settings.mainFrameDimensions.getLocation().equals( this.getLocationOnScreen() ) )
 			)
 		) {
-			Tools.log ("A settings save is required because the window has a different shape.");
+			Tools.log ("Jpo.closeJpo: A settings save is required because the window has a different shape.");
 			Settings.mainFrameDimensions.setLocation( this.getLocationOnScreen() );
 			Settings.mainFrameDimensions.setSize( this.getContentPane().getSize() );
 			Settings.unsavedSettingChanges = true;
@@ -366,18 +369,18 @@ public class Jpo extends JFrame
 	/**
 	 *   Creates a {@link PictureAdder} object and tells it to
 	 *   add the selected pictures to the root node of the 
-	 *   {@link CleverJTree}.
+	 *   {@link CollectionJTree}.
 	 */
 	public void requestFileAdd() {
-		cleverJTree.popupNode = Settings.top;
-		cleverJTree.requestAdd();
+		collectionJTree.popupNode = Settings.top;
+		collectionJTree.requestAdd();
 	}
 	
 	
 	/**
 	 *   Creates a {@link PictureAdder} object and tells it to
 	 *   add the selected pictures to the root node of the 
-	 *   {@link CleverJTree}.
+	 *   {@link CollectionJTree}.
 	 */
 	public void requestFileAddFromCamera() {
 		new AddFromCamera( Settings.top );
@@ -401,7 +404,7 @@ public class Jpo extends JFrame
 	 *  on the supplied node.
 	 */
 	public static void positionToNode( SortableDefaultMutableTreeNode displayNode ) {
-		cleverJTree.setSelectedNode( displayNode );
+		collectionJTree.setSelectedNode( displayNode );
 		thumbnailJScrollPane.showGroup( displayNode );
 	}
 

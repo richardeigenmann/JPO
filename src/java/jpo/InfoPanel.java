@@ -3,12 +3,13 @@ package jpo;
 import javax.swing.*; 
 import javax.swing.Timer;
 import java.awt.event.*; 
-import java.awt.*; 
+import java.awt.*;
+import javax.swing.tree.*;
  
 /*
 InfoPanel.java:  a JScrollPane that shows information after selection events.
 
-Copyright (C) 2002  Richard Eigenmann.
+Copyright (C) 2002-2006  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -45,6 +46,12 @@ public class InfoPanel
 
 
 	/**
+	 *  Unknown Type of Node
+	 */
+	private	final JLabel unknownJPanel = new JLabel("Unknown Node");
+
+
+	/**
 	 *  how often to update the statistics panel
 	 */
 	private static final int delay = 500; //milliseconds
@@ -65,6 +72,7 @@ public class InfoPanel
 	 *  
 	 */ 
 	public InfoPanel() { 
+		Tools.log("InfoPanel.constructor");
 		statsJPanel.setBackground( Color.white ); 
 		setWheelScrollingEnabled (true ); 
 		
@@ -88,27 +96,20 @@ public class InfoPanel
 	 *   Invoked to tell that we should display something
 	 *   @param node 	The Group or Picture node to be displayed.
 	 */
-	public void showInfo ( SortableDefaultMutableTreeNode node ) {
-		if ( node.getUserObject() instanceof GroupInfo ) {
-			statsJPanel.updateStats( node );  // everything
-			setViewportView( statsJPanel ); 
+	public void showInfo ( DefaultMutableTreeNode node ) {
+		if ( node == null ) {
+			setViewportView( unknownJPanel );
+			t.stop();
 			t.start();  // updates the queue-count
-		} else {
-			thumbnail.setNode( node );
+		} else if ( node.getUserObject() instanceof PictureInfo ) {
+			thumbnail.setNode( (SortableDefaultMutableTreeNode) node );
 			setViewportView( thumbnail ); 
 			t.stop();
+		} else {
+			statsJPanel.updateStats( node );
+			setViewportView( statsJPanel ); 
+			t.start();  // updates the queue-count
 		}
 	}
 
 }
-	
-
-
- 
- 
- 
- 
- 
- 
- 
- 

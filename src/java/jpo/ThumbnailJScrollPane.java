@@ -504,8 +504,8 @@ public class ThumbnailJScrollPane
 	 */
 	public void requestShowGroup ( SortableDefaultMutableTreeNode showNode ) {
 		showGroup( showNode );
-		if ( associatedCleverJTree != null ) {
-			associatedCleverJTree.setSelectedNode( showNode );
+		if ( associatedCollectionJTree != null ) {
+			associatedCollectionJTree.setSelectedNode( showNode );
 		}
 		if ( associatedInfoPanel != null ) {
 			associatedInfoPanel.showInfo( showNode );
@@ -535,6 +535,22 @@ public class ThumbnailJScrollPane
 			mySetOfNodes = new GroupBrowser( showNode );
 			mySetOfNodes.addRelayoutListener( this );
 		}
+			
+		clearSelection();
+		getVerticalScrollBar().setValue(0);				 
+		startIndex = 0; 
+		curPage = 1;
+		layoutThumbnailsInThread(); 
+	}
+
+
+ 	/**
+	 *   forces the specified set of nodes to be displayed
+	 *   @param mySetOfNodes 	The Interface with the collection of nodes
+	 */
+	public void show ( ThumbnailBrowserInterface mySetOfNodes ) {
+		this.mySetOfNodes = mySetOfNodes;
+		mySetOfNodes.addRelayoutListener( this );
 			
 		clearSelection();
 		getVerticalScrollBar().setValue(0);				 
@@ -595,10 +611,10 @@ public class ThumbnailJScrollPane
 
 
 	/**
-	 *   This is a reference to the assoicated CleverJTree which allows group show requests 
+	 *   This is a reference to the assoicated CollectionJTree which allows group show requests 
 	 *   to be passed between the Thumbnail pane and the JTree.
 	 */
-	private CleverJTree associatedCleverJTree;
+	private CollectionJTree associatedCollectionJTree;
 
 	/**
 	 *   This is a reference to the assoicated InfoPanel which shows info from selections
@@ -610,8 +626,8 @@ public class ThumbnailJScrollPane
 	/**
 	 *   sets the assoiciated JTree
 	 */
-	public void setAssociatedCleverJTree ( CleverJTree associatedCleverJTree ) {
-		this.associatedCleverJTree = associatedCleverJTree;
+	public void setAssociatedCollectionJTree ( CollectionJTree associatedCollectionJTree ) {
+		this.associatedCollectionJTree = associatedCollectionJTree;
 	}
 	/**
 	 *   sets the assoiciated InfoPanel
@@ -623,8 +639,8 @@ public class ThumbnailJScrollPane
 	/**
 	 *   returns the associated JTree
 	 */
-	public CleverJTree getAssociatedCleverJTree() {
-		return associatedCleverJTree;
+	public CollectionJTree getAssociatedCollectionJTree() {
+		return associatedCollectionJTree;
 	}
 	/**
 	 *   returns the associated InfoPanel

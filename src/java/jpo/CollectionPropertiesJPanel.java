@@ -11,10 +11,9 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.border.*;
 
 /*
-CollectionPropertiesJFrame.java:  
-a class that creates a GUI, asks for a directory and then tells you if the files are in your collection.
+CollectionPropertiesJPanel.java: a panel that shows some counts about the collection
 
-Copyright (C) 2002  Richard Eigenmann.
+Copyright (C) 2002-2006  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -31,22 +30,42 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 
 
 /**
- *  class that presents a GUI and shows the user which files
- *  are in his collection and which are not. It also tells what 
- *  it can find out about the file.
+ *  a panel that shows some counts about the collection
  */
 public class CollectionPropertiesJPanel 
 	extends JPanel {
 
+	/**
+	 *   Number of Nodes in the tree including the current node
+	 */
 	private JLabel collectionItemsLabel = new JLabel ();
+	
+	/**
+	 *  Number of Groups in the tree excluding the current node
+	 */
 	private JLabel collectionGroupsLabel = new JLabel ();
+	
+	/**
+	 *  Number of Pictures in the tree
+	 */
 	private JLabel collectionPicturesLabel = new JLabel ();
+	
+	/**
+	 *  Number of Jobs on the Thumbnail queue
+	 */
 	private JLabel collectionSizeJLabel = new JLabel ();
+
+	/**
+	 *  Free Application Memory
+	 */
+	private JLabel freeMemoryJLabel = new JLabel ();
 	
 	/**
 	 *  Indicates how many jobs are on the thumbnail creation queue.
 	 */
 	private JLabel queCountJLabel = new JLabel ();
+
+
 
 
 	/** 
@@ -76,6 +95,9 @@ public class CollectionPropertiesJPanel
 		add( collectionSizeJLabel, constraints );
 
 		constraints.gridy++;
+		add( freeMemoryJLabel, constraints );
+
+		constraints.gridy++;
 		add( queCountJLabel, constraints );
 	}
 
@@ -83,16 +105,20 @@ public class CollectionPropertiesJPanel
 
 
 
-	public void updateStats( SortableDefaultMutableTreeNode statisticsNode ) {
-		int numberOfPictures = Tools.countPictures( statisticsNode );
-		String sizeOfPictures = Tools.sizeOfPictures( statisticsNode );
+	public void updateStats( DefaultMutableTreeNode statisticsNode ) {
+		Tools.log("CollectionPropertiesJPanel.updateStats: inkoved on " + statisticsNode.toString() );
 		int numberOfNodes = Tools.countNodes( statisticsNode );
-		int numberOfGroups = Tools.countGroups( statisticsNode );
-
 		collectionItemsLabel.setText( Settings.jpoResources.getString("CollectionNodeCountLabel") + Integer.toString( numberOfNodes ) );
+
+		int numberOfGroups = Tools.countGroups( statisticsNode );
 		collectionGroupsLabel.setText( Settings.jpoResources.getString("CollectionGroupCountLabel") + Integer.toString( numberOfGroups ) );
+
+		int numberOfPictures = Tools.countPictures( statisticsNode );
 		collectionPicturesLabel.setText( Settings.jpoResources.getString("CollectionPictureCountLabel") + Integer.toString( numberOfPictures ) );
+
+		String sizeOfPictures = Tools.sizeOfPictures( statisticsNode );
 		collectionSizeJLabel.setText( Settings.jpoResources.getString("CollectionSizeJLabel") + sizeOfPictures );
+
 		updateQueueCount();		
 	}		
 	
@@ -102,6 +128,7 @@ public class CollectionPropertiesJPanel
 	 *  as counting the filesize could be very slow and doesn't change that often
 	 */
 	public void updateQueueCount() {
+		freeMemoryJLabel.setText( Tools.freeMemory() );
 		queCountJLabel.setText( Settings.jpoResources.getString("queCountJLabel") + ThumbnailCreationQueue.countQueueRequests() );
 	}
 

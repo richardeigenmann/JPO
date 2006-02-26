@@ -16,7 +16,7 @@ import javax.swing.Timer;
 /*
 QueryJFrame.java:  creates a GUI to allow the user to specify his search
 
-Copyright (C) 2002  Richard Eigenmann.
+Copyright (C) 2002-2006  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -54,7 +54,7 @@ public class QueryJFrame extends JFrame {
 	 *  the component that says whether the results should be added to the
 	 *  tree or not
 	 */
-	private JCheckBox saveResults = new JCheckBox( Settings.jpoResources.getString("searchDialogSaveResultsLabel"), true);
+	//private JCheckBox saveResults = new JCheckBox( Settings.jpoResources.getString("searchDialogSaveResultsLabel"), true);
 
 	/**
 	 *  the lower date for a specified range
@@ -69,9 +69,9 @@ public class QueryJFrame extends JFrame {
 
 
 	/** 
-	 *  a reference to the cleverJTree that should show the results
+	 *  a reference to the collectionJTree that should show the results
 	 */
-	private CleverJTree cleverJTree;
+	private CollectionJTree collectionJTree;
 	
 	/**
 	 *  a reference to the ThumbnailJScrollpane that should show the results
@@ -87,12 +87,12 @@ public class QueryJFrame extends JFrame {
 	 *
 	 **/
 	public QueryJFrame( SortableDefaultMutableTreeNode startSearchNode, 
-		CleverJTree cleverJTree, 
+		CollectionJTree collectionJTree, 
 		ThumbnailJScrollPane thumbnailJScrollPane ) {
 		
 		
 		this.startSearchNode = startSearchNode;
-		this.cleverJTree = cleverJTree;
+		this.collectionJTree = collectionJTree;
 		this.thumbnailJScrollPane = thumbnailJScrollPane;
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
@@ -188,8 +188,8 @@ public class QueryJFrame extends JFrame {
 		
 		
 
-		c.gridy++;
-		jPanel.add( saveResults, c );
+		//c.gridy++;
+		//jPanel.add( saveResults, c );
 
 		
 		JButton okJButton = new JButton( Settings.jpoResources.getString( "genericOKText" ) );
@@ -266,7 +266,20 @@ public class QueryJFrame extends JFrame {
 			return;
 		}
 
+
+		TreeModel tm = Settings.top.getQueriesTreeModel();
+		Object queriesRootNodeObject = tm.getRoot();
+		if ( ( queriesRootNodeObject != null ) && ( queriesRootNodeObject instanceof DefaultMutableTreeNode ) ) {
+			DefaultMutableTreeNode queriesRootNode = (DefaultMutableTreeNode) queriesRootNodeObject;
+			Tools.log( "adding query node to model: " + Settings.top.getQueriesTreeModel().toString() );
+			DefaultMutableTreeNode newNode = new DefaultMutableTreeNode( q );
+			queriesRootNode.add( newNode );
+			( (DefaultTreeModel) tm ).nodesWereInserted( queriesRootNode, new int[] { queriesRootNode.getIndex( newNode ) } );
+		}
 		
+		getRid();
+
+		/*
 		SortableDefaultMutableTreeNode resultNode = 
 			Settings.top.getRootNode().findAndSave( q );
 		if ( resultNode == null ) {
@@ -276,11 +289,11 @@ public class QueryJFrame extends JFrame {
 				Settings.jpoResources.getString("searchDialogTitle"), 
 				JOptionPane.INFORMATION_MESSAGE);
 		} else {
-			cleverJTree.setSelectedNode( resultNode );
-			cleverJTree.expandPath( new TreePath ( resultNode.getPath()) );
+			collectionJTree.setSelectedNode( resultNode );
+			collectionJTree.expandPath( new TreePath ( resultNode.getPath()) );
 			thumbnailJScrollPane.showGroup( resultNode );
 			getRid();
-		}
+		}*/
 	}
 
 

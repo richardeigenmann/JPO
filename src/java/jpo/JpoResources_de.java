@@ -3,9 +3,9 @@ package jpo;
 import java.util.*;
 
 /*
-JpoResources.java:  class that holds the generic labels for the JPO application
+JpoResources_de.java:  class that holds the German Language generic labels for the JPO application
 
-Copyright (C) 2002  Richard Eigenmann.
+Copyright (C) 2002-2006  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -33,7 +33,10 @@ public class JpoResources_de extends ListResourceBundle {
 	}
 	static final Object[][] contents = {
 		// Jpo
-		{"ApplicationTitle", "JPO - Java Picture Organizer"},  
+		{"ApplicationTitle", "JPO - Java Picture Organizer"},
+		{"jpoTabbedPaneCollection", "Sammlung"},
+		{"jpoTabbedPaneCategories", "Kategorien"},
+		{"jpoTabbedPaneSearches", "Abfragen"},
 		
 	
 		// Generic texts
@@ -352,7 +355,7 @@ public class JpoResources_de extends ListResourceBundle {
 		{"windowNoDecorationsLabel", "Kein Rahmen"},
 
 
-		// CleverJTree
+		// CollectionJTree
 		{"DefaultRootNodeText", "Neue Sammlung"},
 		{"CopyImageDialogButton", "Kopieren"},
 		{"CopyImageDialogTitle", "Zieldatei angeben für: "},
@@ -479,6 +482,7 @@ public class JpoResources_de extends ListResourceBundle {
 		{"copyPictureError1", "Konnte \n"},
 		{"copyPictureError2", "\nnicht nach: "},
 		{"copyPictureError3", "\nkopieren weil: "},
+		{"freeMemory", "Freier Arbeitsspeicher: "},
 
 		// PictureAdder
 		{"recurseJCheckBox", "Unterverzeichnisse einbeziehen"},
@@ -506,6 +510,7 @@ public class JpoResources_de extends ListResourceBundle {
 		{"FileDeleteTitle", "Löschen"},
 		{"FileDeleteLabel", "Datei Löschen\n"},
 		{"newGroup", "Neue Gruppe"},
+		{"queriesTreeModelRootNode", "Abfragen"},
 
 
 		// CategoryEditorJFrame

@@ -78,6 +78,7 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 		super ();
 		if ( isRoot ) {
 			this.createDefaultTreeModel();
+			this.createQueriesTreeModel();
 			this.mailSelection = new HashSet();
 			this.categories = new HashMap();
 			initialiseNewCollection();
@@ -92,6 +93,7 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 		if ( checkUnsavedChanges() ) return;
 
 		getRootNode().removeAllChildren();
+		clearQueriesTreeModel();
 		Settings.clearRecentDropNodes();
 		ThumbnailCreationQueue.removeAll();
 		getRootNode().setUserObject( new GroupInfo ( Settings.jpoResources.getString("DefaultRootNodeText") ) );
@@ -107,7 +109,7 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 
 	/**
 	 *   This variable is initialised only on the root node. It references the 
-	 *   treeModel that will handle otification of changes.
+	 *   treeModel that will handle notification of changes.
 	 */
 	private DefaultTreeModel treeModel;
 
@@ -139,6 +141,52 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 	 */
 	public SortableDefaultMutableTreeNode getRootNode() {
 		return (SortableDefaultMutableTreeNode) this.getRoot();
+	}
+
+
+	/**
+	 *   This variable holds the reference to the queries executed against the collection
+	 *   It is initialised only on the root node
+	 */
+	private TreeModel queriesTreeModel;
+
+
+	/**
+	 *   Call this method when you need the TreeModel for the queries
+	 */
+	public TreeModel getQueriesTreeModel() {
+		//Tools.log("SDMTN.getQueriesTreeModel: returning " + getRootNode().queriesTreeModel.toString() );
+		return( getRootNode().queriesTreeModel );
+	}
+
+
+	/**
+	 *   Call this method when you need to set the TreeModel for the queries
+	 */
+	public void setQueriesTreeModel( TreeModel tm ) {
+		//Tools.log("SDMTN.setQueriesTreeModel: setting to " + tm.toString() );
+		getRootNode().queriesTreeModel = tm;
+	}
+
+	/**
+	 *   Call this method when you need to create a new TreeModel for the queries. This
+	 *   is called by the constructor of the root SDMTN.
+	 */
+	public void createQueriesTreeModel() {
+		//Tools.log("SDMTN.createQueriesTreeModel: running");
+		setQueriesTreeModel( new DefaultTreeModel( new DefaultMutableTreeNode ( Settings.jpoResources.getString("queriesTreeModelRootNode") ) ) );
+	}
+
+
+	/**
+	 *   Clear out the nodes in the exisitng queries Tree Model
+	 */
+	public void clearQueriesTreeModel() {
+		//Tools.log("SDMTN.clearQueriesTreeModel: running");
+		TreeModel tm = getQueriesTreeModel();
+		if ( tm != null ) {
+			((DefaultMutableTreeNode) tm.getRoot()).removeAllChildren();
+		}
 	}
 
 
@@ -460,7 +508,7 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 			if  (nodeObject instanceof PictureInfo) {
 				//Tools.log( "Checking: " + ( (PictureInfo) nodeObject ).getHighresLocation() );
 				if ( ((PictureInfo) nodeObject ).getHighresFile().compareTo( f ) == 0 )  {
-					//Tools.log ( "CleverJTree.isInCollection found a match on: " + ( (PictureInfo) nodeObject ).getDescription() );
+					//Tools.log ( "CollectionJTree.isInCollection found a match on: " + ( (PictureInfo) nodeObject ).getDescription() );
 					return true;
 				} else if ( ((PictureInfo) nodeObject ).getLowresFile().compareTo( f ) == 0 )  {
 					return true;
@@ -489,7 +537,7 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 			if  (nodeObject instanceof PictureInfo) {
 				//Tools.log( "Checking: " + ( (PictureInfo) nodeObject ).getHighresLocation() );
 				if ( ((PictureInfo) nodeObject ).getChecksum() == checksum )  {
-					//Tools.log ( "CleverJTree.isInCollection found a match on: " + ( (PictureInfo) nodeObject ).getDescription() );
+					//Tools.log ( "CollectionJTree.isInCollection found a match on: " + ( (PictureInfo) nodeObject ).getDescription() );
 					return true;
 				}
 			}
@@ -1470,7 +1518,6 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 			try {
 				String sourceFilename = new File( new URI( originalUrl.toString() ) ).getName();
 				targetFile = Tools.inventPicFilename( targetFile, sourceFilename);
-				//Tools.log("CleverJTree:validateAndCopyPicture: originalUrl: " + originalUrl.toString() + "\nsourceFilename: " + sourceFilename + "  targetFile: " + targetFile.toString());
 			} catch ( URISyntaxException x) {
 				JOptionPane.showMessageDialog( Settings.anchorFrame , 
 					"URISyntaxException: " + x, 
@@ -1760,7 +1807,7 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 	 *  @param q	 The Query object which specifies the search criteria
 	 *  @return  The new node in the tree or null if nothing was found
 	 */
-	public SortableDefaultMutableTreeNode findAndSave( Query q ) {
+	/*public SortableDefaultMutableTreeNode findAndSave( Query q ) {
 		SortableDefaultMutableTreeNode resultsGroupNode = 
 			new SortableDefaultMutableTreeNode ( new GroupInfo ( q.getTitle() ) );
 		SortableDefaultMutableTreeNode TestNode; 
@@ -1779,7 +1826,7 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 		} else {
 			return null;
 		}
-	}
+	}*/
 
 
 

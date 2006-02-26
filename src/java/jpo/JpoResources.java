@@ -5,7 +5,7 @@ import java.util.*;
 /*
 JpoResources.java:  class that holds the generic labels for the JPO application
 
-Copyright (C) 2002  Richard Eigenmann.
+Copyright (C) 2002-2006  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -33,7 +33,10 @@ public class JpoResources extends ListResourceBundle {
 	}
 	static final Object[][] contents = {
 		// Jpo
-		{"ApplicationTitle", "JPO - Java Picture Organizer"},  
+		{"ApplicationTitle", "JPO - Java Picture Organizer"},
+		{"jpoTabbedPaneCollection", "Collection"},
+		{"jpoTabbedPaneCategories", "Categories"},
+		{"jpoTabbedPaneSearches", "Searches"},
 		
 	
 		// Generic texts
@@ -354,7 +357,7 @@ public class JpoResources extends ListResourceBundle {
 		{"windowNoDecorationsLabel", "No Frame"},
 
 
-		// CleverJTree
+		// CollectionJTree
 		{"DefaultRootNodeText", "New Collection"},
 		{"CopyImageDialogButton", "Copy"},
 		{"CopyImageDialogTitle", "Specify target for: "},
@@ -482,6 +485,7 @@ public class JpoResources extends ListResourceBundle {
 		{"copyPictureError1", "Could not copy\n"},
 		{"copyPictureError2", "\nto: "},
 		{"copyPictureError3", "\nbecause: "},
+		{"freeMemory", "Free Memory: "},
 
 		// PictureAdder
 		{"recurseJCheckBox", "Recurse subdirectories"},
@@ -509,6 +513,7 @@ public class JpoResources extends ListResourceBundle {
 		{"FileDeleteTitle", "Delete"},
 		{"FileDeleteLabel", "Delete File\n"},
 		{"newGroup", "New Group"},
+		{"queriesTreeModelRootNode", "Searches"},
 
 
 		// CategoryEditorJFrame

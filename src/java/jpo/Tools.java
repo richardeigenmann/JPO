@@ -20,7 +20,7 @@ import java.awt.*;
 /*
 Tools.java:  utilities for the JPO application
 
-Copyright (C) 2002  Richard Eigenmann.
+Copyright (C) 2002-2006  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -403,7 +403,7 @@ public class Tools {
 	/**
 	 *   count the number of pictures in a subtree. Useful for progress monitors.
 	 */
-	public static int countPictures ( SortableDefaultMutableTreeNode startNode ) {
+	public static int countPictures ( DefaultMutableTreeNode startNode ) {
 		return countPictures ( startNode, true );
 	}
 
@@ -411,16 +411,27 @@ public class Tools {
 	
 	
 	/**
-	 *   count the number of pictures in a subtree. Useful for progress monitors.
+	 *   count the number of pictures in a subtree. Useful for progress monitors. If called with
+	 *   a null start node it returns 0. If called wiht a node that is actually a Query object it 
+	 *   asks the Query for the count.
 	 *
 	 *   @param startNode	the node from which to count
 	 *   @param recurseSubgroups  indicator to say whether the next levels of groups should be counted too or not.
 	 */
-	public static int countPictures ( SortableDefaultMutableTreeNode startNode, boolean recurseSubgroups ) {
+	public static int countPictures ( DefaultMutableTreeNode startNode, boolean recurseSubgroups ) {
+		//Tools.log("Tools.countPictures: invoked on " + startNode.toString());
+		if ( startNode == null ) { return 0; }
+		
+		if ( startNode.getUserObject() instanceof Query ) {
+			return ( (Query) startNode.getUserObject() ).getNumberOfResults();
+		}
+		
 		int count = 0;
+		DefaultMutableTreeNode n;
 		Enumeration nodes = startNode.children();
 		while ( nodes.hasMoreElements() ) {
-			SortableDefaultMutableTreeNode n = (SortableDefaultMutableTreeNode) nodes.nextElement();
+			n = (DefaultMutableTreeNode) nodes.nextElement();
+			Tools.log("Tools.countPictures: counting " + n.toString());
 			if ( n.getUserObject() instanceof PictureInfo)
 				count++;
 			if ( recurseSubgroups && ( n.getChildCount() > 0 ) )
@@ -430,13 +441,6 @@ public class Tools {
 	}
 
 	
-	/**
-	 *   sums the filesize of the pictures in a subtree. 
-	 */
-	public static String sizeOfPictures ( SortableDefaultMutableTreeNode startNode ) {
-		long size = sizeOfPicturesLong ( startNode );
-		return fileSizeToString( size );
-	}
 
 
 	/**
@@ -465,22 +469,51 @@ public class Tools {
 	}
 
 	/**
-	 *   sums the filesize of the pictures in a subtree.
+	 *   sums the filesize of the pictures in a subtree. 
 	 */
-	public static long sizeOfPicturesLong ( SortableDefaultMutableTreeNode startNode ) {
+	public static String sizeOfPictures ( DefaultMutableTreeNode startNode ) {
+		long size = sizeOfPicturesLong ( startNode );
+		return fileSizeToString( size );
+	}
+
+
+	/**
+	 *   Adds the filesize of the pictures in a subtree. If the node holds a query the query is enumerated.
+	 *
+	 *   @param startNode   The node for which to add up the size of the pctures
+	 */
+	public static long sizeOfPicturesLong ( DefaultMutableTreeNode startNode ) {
+		if ( startNode == null ) { return 0; }
+
 		long size = 0;
 		File testfile;
-		Enumeration nodes = startNode.children();
-		while ( nodes.hasMoreElements() ) {
-			SortableDefaultMutableTreeNode n = (SortableDefaultMutableTreeNode) nodes.nextElement();
-			if ( n.getUserObject() instanceof PictureInfo) {
-				testfile = ((PictureInfo) n.getUserObject()).getHighresFile();
-				if ( testfile != null ) 
-					size += testfile.length();
+		DefaultMutableTreeNode n;
+
+		
+		if ( startNode.getUserObject() instanceof Query ) {
+			Query q = (Query) startNode.getUserObject();
+			for ( int i = 0; i < q.getNumberOfResults() ; i++ ) {
+				n = (DefaultMutableTreeNode) q.getIndex( i );
+				if ( n.getUserObject() instanceof PictureInfo) {
+					testfile = ((PictureInfo) n.getUserObject()).getHighresFile();
+					if ( testfile != null ) 
+						size += testfile.length();
+				}
 			}
-			if ( n.getChildCount() > 0 )
-				size += sizeOfPicturesLong ( n );
+		} else {
+			Enumeration nodes = startNode.children();
+			while ( nodes.hasMoreElements() ) {
+				n = (DefaultMutableTreeNode) nodes.nextElement();
+				if ( n.getUserObject() instanceof PictureInfo) {
+					testfile = ((PictureInfo) n.getUserObject()).getHighresFile();
+					if ( testfile != null ) 
+						size += testfile.length();
+				}
+				if ( n.getChildCount() > 0 )
+					size += sizeOfPicturesLong ( n );
+			}
 		}
+		
  		return size;
 	}
 
@@ -489,11 +522,12 @@ public class Tools {
 	/**
 	 *   count the number of nodes in a subtree. 
 	 */
-	public static int countNodes ( SortableDefaultMutableTreeNode startNode ) {
+	public static int countNodes ( TreeNode startNode ) {
 		int count = 1;
+		TreeNode n;
 		Enumeration nodes = startNode.children();
 		while ( nodes.hasMoreElements() ) {
-			SortableDefaultMutableTreeNode n = (SortableDefaultMutableTreeNode) nodes.nextElement();
+			n = (TreeNode) nodes.nextElement();
 			if ( n.getChildCount() > 0 )
 				count += countNodes ( n );
 			else 
@@ -507,11 +541,11 @@ public class Tools {
 	/**
 	 *   count the number of groups excluding the starting one
 	 */
-	public static int countGroups ( SortableDefaultMutableTreeNode startNode ) {
+	public static int countGroups ( DefaultMutableTreeNode startNode ) {
 		int count = 0;
 		Enumeration nodes = startNode.children();
 		while ( nodes.hasMoreElements() ) {
-			SortableDefaultMutableTreeNode n = (SortableDefaultMutableTreeNode) nodes.nextElement();
+			DefaultMutableTreeNode n = (DefaultMutableTreeNode) nodes.nextElement();
 			if ( n.getUserObject() instanceof GroupInfo )
 				count++;
 			if ( n.getChildCount() > 0 )
@@ -683,6 +717,17 @@ public class Tools {
 		return memory;
 	}
 
+	/**
+	 *  convenience method to log the amount of free memory. Shows freeMemory, totalMemory and maxMemory
+	 **/
+	public static String freeMemory() {
+		int freeMemory = (int) Runtime.getRuntime().freeMemory()/1024/1024;
+		int totalMemory = (int) Runtime.getRuntime().totalMemory()/1024/1024;
+		int maxMemory = (int) Runtime.getRuntime().maxMemory()/1024/1024;		
+		return (Settings.jpoResources.getString("freeMemory") + Integer.toString( freeMemory ) + "MB / "
+			+ Integer.toString( totalMemory ) + "MB / "
+			+ Integer.toString( maxMemory ) + "MB");
+	}
 
 
 
@@ -735,13 +780,10 @@ public class Tools {
 		DragSourceContext context = event.getDragSourceContext();
 		int dndCode = event.getDropAction();
 		if( ( dndCode & DnDConstants.ACTION_COPY ) != 0) {
-			//Tools.log( "CleverJTree.setDragCursor: figures it is a Copy Event");
 			context.setCursor( DragSource.DefaultCopyDrop );	  
 		} else if( ( dndCode & DnDConstants.ACTION_MOVE ) != 0 ) {
-			//Tools.log( "CleverJTree.setDragCursor: figures it is a Move Event");
 			context.setCursor( DragSource.DefaultMoveDrop );	  
 		} else {
-			//Tools.log( "CleverJTree.setDragCursor: figures it is an Invalid Event: Code: " +Integer.toString(dndCode));
 			//Tools.log( "ACTION_COPY is: " + Integer.toString( DnDConstants.ACTION_COPY ) );
 			//Tools.log( "ACTION_COPY_OR_MOVE is: " + Integer.toString( DnDConstants.ACTION_COPY_OR_MOVE ) );
 			//Tools.log( "ACTION_LINK is: " + Integer.toString( DnDConstants.ACTION_LINK ) );

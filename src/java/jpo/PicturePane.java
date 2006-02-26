@@ -21,7 +21,7 @@ import java.util.Enumeration;
 /*
 PicturePane.java:  a component that can display an image
 
-Copyright (C) 2002  Richard Eigenmann.
+Copyright (C) 2002-2006 Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -536,8 +536,7 @@ class PicturePane extends JComponent implements ScalablePictureListener {
 						, infoPoint.x
 						, infoPoint.y + ( 3 * lineSpacing ) );
 					g2d.drawString("Free memory: " 
-						+ Long.toString( Runtime.getRuntime().freeMemory( )/1024/1024, 0 ) 
-						+ " MB"
+						+ Tools.freeMemory()
 						, infoPoint.x
 						, infoPoint.y + ( 4 * lineSpacing ) );
 					break;

@@ -41,7 +41,7 @@ public class Query implements Serializable {
 	 *  This flag indicates whether a clone of the original node should be returned or
 	 *  whether we want the node which matches.
 	 */
-	public boolean clone = true;  // must be for the time being because we change the parent of the node later on
+	//public boolean clone = true;  // must be for the time being because we change the parent of the node later on
  	
 	/**
 	 *  This flag indicates whether dates that can't be parsed should be 
@@ -113,25 +113,64 @@ public class Query implements Serializable {
 
 
 	/**
+	 *  Variable for the resultSet so that the query is not reexecuted every time some object wants
+	 *  to know something.
+	 */
+	private ArrayList searchResults = null;
+
+
+	/**
 	 *  Returns an ArrayList of nodes which match the query criteria beneath the supplied node.
 	 *
 	 *  @return  The ArrayList of nodes.
 	*/
 	public ArrayList getSearchResults() {
+		if ( searchResults == null ) {
+			searchResults = extractSearchResults();
+		}
+		return searchResults;
+	}
+
+	
+	/**
+	 *  On a group we return the number of children in the group.
+	 */
+	public int getNumberOfResults() {
+		if ( searchResults == null ) {
+			searchResults = extractSearchResults();
+		} 
+		return searchResults.size();
+	}
+
+
+	/**
+	 *  This method returns the SDMTN node for the indicated position in the group
+	 *  If there are more Thumbnails than nodes in the group it returns null.
+	 *
+	 *  @param index   The component index that is to be returned.
+	 */
+ 	public SortableDefaultMutableTreeNode getIndex( int index ) {
+		if  ( index >= getNumberOfResults() ) // forces execute of query if not yet executed
+			return null;
+		else 
+			return (SortableDefaultMutableTreeNode) searchResults.get( index );
+	}
+
+
+
+	/**
+	 *  Returns an ArrayList of nodes which match the query criteria beneath the supplied node.
+	 *
+	 *  @return  The ArrayList of nodes.
+	*/
+	public ArrayList extractSearchResults() {
 		SortableDefaultMutableTreeNode testNode;
 		ArrayList searchResults = new ArrayList();
 
 		for (Enumeration e = startNode.breadthFirstEnumeration() ; e.hasMoreElements() ;) { 
 			testNode =  (SortableDefaultMutableTreeNode) e.nextElement(); 
 			if ( isMatch ( testNode ) ) {
-				if ( clone ) {
-					searchResults.add( 
-						new SortableDefaultMutableTreeNode( 
-							( (PictureInfo) testNode.getUserObject())
-								.getClone() ) );
-				} else {
-					searchResults.add( testNode );
-				}
+				searchResults.add( testNode );
 			}
 		} 
 		return searchResults;
@@ -183,7 +222,7 @@ public class Query implements Serializable {
 
 
 	/**
-	 *  returns a itle for the search that can be used to display the search results under.
+	 *  returns a title for the search that can be used to display the search results under.
 	 */
 	public String getTitle() {
 		String nodeDescription = ( startNode == null ) ? "" : startNode.getUserObject().toString();
@@ -193,6 +232,14 @@ public class Query implements Serializable {
 			+ Settings.jpoResources.getString("ThumbnailSearchResults2")
 			+ nodeDescription;
 		return title;
+	}
+
+
+	/**
+	 *  returns a the title for the search that can be used to display the search results under.
+	 */
+	public String toString() {
+		return getTitle();
 	}
 
 }

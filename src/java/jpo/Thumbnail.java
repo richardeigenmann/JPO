@@ -508,10 +508,10 @@ public class Thumbnail extends JPanel
 					if  ( e.getClickCount() > 1 ) {
 						associatedPanel.requestShowGroup( referringNode );
 					}  else if ( e.getButton() == 3 ) { // popup menu only on 3rd mouse button.
-						CleverJTree cleverJTree = associatedPanel.getAssociatedCleverJTree();
-						if ( cleverJTree != null ) {
-							cleverJTree.popupNode = referringNode;
-							GroupPopupMenu groupPopupMenu = new GroupPopupMenu( cleverJTree, referringNode );
+						CollectionJTree CollectionJTree = associatedPanel.getAssociatedCollectionJTree();
+						if ( CollectionJTree != null ) {
+							CollectionJTree.popupNode = referringNode;
+							GroupPopupMenu groupPopupMenu = new GroupPopupMenu( CollectionJTree, referringNode );
 							groupPopupMenu.show( e.getComponent(), e.getX(), e.getY() );
 						}
 					}
@@ -665,7 +665,7 @@ public class Thumbnail extends JPanel
 	 *   dragged over the Thumbnail. We could do some highlighting if
 	 *   we so desired.
 	 *
-	 *   @see	CleverJTree#dragOver(DropTargetDragEvent)
+	 *   @see	CollectionJTree#dragOver(DropTargetDragEvent)
 	 */
 	public void dragOver ( DropTargetDragEvent event ) {
 		if ( ! event.isDataFlavorSupported ( JpoTransferable.dmtnFlavor)) {
@@ -682,7 +682,7 @@ public class Thumbnail extends JPanel
 	 *   operation. This method could intercept this change and could modify the event
 	 *   if it needs to.  On Thumbnails this does nothing.
 	 *
-	 *   @see	CleverJTree#dropActionChanged(DropTargetDragEvent)
+	 *   @see	CollectionJTree#dropActionChanged(DropTargetDragEvent)
 	 */
 	public void dropActionChanged ( DropTargetDragEvent event ) {
 	}
