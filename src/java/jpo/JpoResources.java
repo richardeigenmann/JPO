@@ -430,6 +430,9 @@ public class JpoResources extends ListResourceBundle {
 		{"recurseSubdirectoriesOk", "Add"},
 		{"recurseSubdirectoriesNo", "No"},
 		{"picturesAdded", " pictures Added"},
+		{"pictureAdderOptionsTab", "Options"},
+		{"pictureAdderThumbnailTab", "Thumbnail"},
+		{"pictureAdderCategoryTab", "Categories"},
 
 		// AddFromCamera
 		{"AddFromCamera", "Add pictures from camera"},

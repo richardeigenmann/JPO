@@ -12,7 +12,7 @@ import java.util.*;
 /*
 CategoryUsageJFrame.java:  Creates a Window in which the categories are shown
 
-Copyright (C) 2002  Richard Eigenmann.
+Copyright (C) 2002-2006  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -34,7 +34,7 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  *  it allows to update the pictures with the Categories being clicked.
  *
  **/
-public class CategoryUsageJFrame extends JFrame implements ListSelectionListener {
+public class CategoryUsageJFrame extends JFrame  {
 
 
 	/**
@@ -43,9 +43,10 @@ public class CategoryUsageJFrame extends JFrame implements ListSelectionListener
 	private JTextField categoryJTextField = new JTextField();
 	
 
-	private final DefaultListModel listModel = new DefaultListModel();
-
-	private	final JList categoriesJList = new JList( listModel );
+	private DefaultListModel listModel;
+	
+	private final CategoryJScrollPane categoryJScrollPane;	
+	
 
 	private Vector selectedNodes = null;
 
@@ -84,24 +85,16 @@ public class CategoryUsageJFrame extends JFrame implements ListSelectionListener
 		final Dimension defaultButtonSize = new Dimension( 150, 25);
 		final Dimension maxButtonSize = new Dimension( 150, 25);
 
+		categoryJScrollPane = new CategoryJScrollPane();
+		listModel = categoryJScrollPane.getDefaultListModel();
 
-		categoriesJList.setPreferredSize( new Dimension( 180, 250) );
-		categoriesJList.setMinimumSize( new Dimension( 180, 50) );
-		categoriesJList.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
-		categoriesJList.addListSelectionListener( this );
-		categoriesJList.setCellRenderer( new CategoryListCellRenderer() );
-
-
-		final JScrollPane listJScrollPane = new JScrollPane( categoriesJList );
-		listJScrollPane.setPreferredSize( new Dimension( 200, 270) );
-		listJScrollPane.setMinimumSize( new Dimension( 200, 50) );
 		c.gridx++;
 		c.anchor = GridBagConstraints.FIRST_LINE_START;
 		c.weightx = 0.6;
 		c.weighty = 0.6;
 		c.fill = GridBagConstraints.BOTH;
 		c.insets = new Insets( 0,0,0,0 );
-		jPanel.add( listJScrollPane, c );
+		jPanel.add( categoryJScrollPane, c );
 
 	
 		final JPanel buttonJPanel = new JPanel();
@@ -194,34 +187,6 @@ public class CategoryUsageJFrame extends JFrame implements ListSelectionListener
 
 
 	/**
-	 *  Method from the ListSelectionListener implementation that tracks when an 
-	 *  element was selected.
-	 */
-	public void valueChanged( ListSelectionEvent e ) {
-		if (e.getValueIsAdjusting())
-			return;
-		JList theList = (JList)e.getSource();
-    		if ( ! theList.isSelectionEmpty() ) {
-			int index = theList.getSelectedIndex();
-			Category cat = (Category) theList.getModel().getElementAt( index );
-			int status = cat.getStatus();
-			if ( status == Category.undefined ) {
-				cat.setStatus( Category.selected );
-			} else if ( status == Category.selected ) {
-				cat.setStatus( Category.unSelected );
-			} else if ( status == Category.unSelected ) {
-				cat.setStatus( Category.selected );
-			} else if ( status == Category.both ) {
-				cat.setStatus( Category.selected );
-			}
-			theList.clearSelection();
-			categoriesJList.validate();
-		}
-	}
-	
-
-
-	/**
 	 *  This method receives the selection the Category Editor is working on
 	 */
 	public void setSelection( Vector nodes ) {
@@ -256,27 +221,16 @@ public class CategoryUsageJFrame extends JFrame implements ListSelectionListener
 	 *  This method reads the nodes and sets the categories accordingly
 	 */
 	public void updateCategories() {
-		// load categories
-		listModel.clear();
-		Iterator i = Settings.top.getCategoryIterator();
-		Integer key;
-		String category;
-		Category categoryObject;
-		while ( i.hasNext() ) {
-			key = (Integer) i.next();
-			category = (String) Settings.top.getCategory( key );
-			categoryObject = new Category( key, category );
-			listModel.addElement( categoryObject );
-		}
+		//Tools.log("Reading categories...");
+		numberOfPicturesJLabel.setText( Integer.toString( selectedNodes.size() ) 
+			+ Settings.jpoResources.getString("numberOfPicturesJLabel") );
 
+		categoryJScrollPane.loadCategories();
 
 		if ( selectedNodes == null ) {
 			Tools.log("selectedNodes is null!");
 			return;
 		}
-		//Tools.log("Reading categories...");
-		numberOfPicturesJLabel.setText( Integer.toString( selectedNodes.size() ) 
-			+ Settings.jpoResources.getString("numberOfPicturesJLabel") );
 		
 		// zero out the categories
 		Category c;
@@ -349,9 +303,11 @@ public class CategoryUsageJFrame extends JFrame implements ListSelectionListener
 		int status;
 		Category c; 
 		Enumeration e;
+
+		HashSet selectedCategories = categoryJScrollPane.getSelectedCategories();
 		
 		// build a vector of the selected categories
-		HashSet selectedCategories = new HashSet();
+		/*HashSet selectedCategories = new HashSet();
 		e = listModel.elements();
 		while ( e.hasMoreElements() ) {
 			c = (Category) e.nextElement();
@@ -359,7 +315,7 @@ public class CategoryUsageJFrame extends JFrame implements ListSelectionListener
 			if ( status == Category.selected ) {
 				selectedCategories.add( c.getKey() );
 			}
-		}
+		}*/
 		
 		// send the selected categories to listeners such as the AddFromCamera screen
 		e = categoryGuiListeners.elements();
@@ -393,7 +349,7 @@ public class CategoryUsageJFrame extends JFrame implements ListSelectionListener
 
 
 	/**
-	 *  This Vector hold references to categoryGuiListeners
+	 *  This Vector holds references to categoryGuiListeners
 	 */
 	protected Vector categoryGuiListeners = new Vector();
 

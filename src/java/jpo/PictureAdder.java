@@ -60,12 +60,6 @@ public class PictureAdder implements PropertyChangeListener, CategoryGuiListener
 
 
 	/**
-	 *  Category Button
-	 **/
-	private JButton categoriesJButton = new JButton ( Settings.jpoResources.getString("categoriesJButton") );
-
-
-	/**
 	 *   static global variable that remembers whether the user wanted to see thumbnails or not.
 	 */
 	private static boolean showThumbnail = true;
@@ -124,18 +118,6 @@ public class PictureAdder implements PropertyChangeListener, CategoryGuiListener
 		showThumbnailJCheckBox.setSelected( showThumbnail );
 		retainDirectoriesJCheckBox.setSelected( true );
 
-		/*categoriesJButton.setPreferredSize( Settings.defaultButtonDimension );
-	        categoriesJButton.setMinimumSize( Settings.defaultButtonDimension );
-	        categoriesJButton.setMaximumSize( Settings.defaultButtonDimension );
-		categoriesJButton.setBorder(BorderFactory.createRaisedBevelBorder());
-	        categoriesJButton.addActionListener( new ActionListener() {
-			public void actionPerformed( ActionEvent e ) {
-				CategoryUsageJFrame cujf = new CategoryUsageJFrame();
-				cujf.updateCategories();
-				cujf.addCategoryGuiListener( PictureAdder.this );
-			}
-		} );*/
-
 
 		JPanel optionsJPanel = new JPanel();
 		optionsJPanel.setLayout( new BoxLayout( optionsJPanel, BoxLayout.Y_AXIS ) );
@@ -148,11 +130,15 @@ public class PictureAdder implements PropertyChangeListener, CategoryGuiListener
 
 		thumbnailJLabel.setPreferredSize( new Dimension( PREFERRED_WIDTH, PREFERRED_HEIGHT ) );
 
+		final CategoryJScrollPane categoryJScrollPane = new CategoryJScrollPane();
+		categoryJScrollPane.loadCategories();
+
 
 		JTabbedPane tabbedPane = new JTabbedPane();
 		tabbedPane.setBorder( BorderFactory.createEmptyBorder( 0, 5, 0, 0 ) );
-		tabbedPane.add( "Options", optionsJPanel );
-		tabbedPane.add( "Thumbnail", thumbnailJLabel );
+		tabbedPane.add( Settings.jpoResources.getString("pictureAdderOptionsTab"), optionsJPanel );
+		tabbedPane.add( Settings.jpoResources.getString("pictureAdderThumbnailTab"), thumbnailJLabel );
+		tabbedPane.add( Settings.jpoResources.getString("pictureAdderCategoryTab"), categoryJScrollPane );
 		
 		
  		JFileChooser jFileChooser = new JFileChooser();
@@ -171,7 +157,7 @@ public class PictureAdder implements PropertyChangeListener, CategoryGuiListener
 			
 			Thread t = new Thread() {
 				public void run() {
-					displayNode = startNode.addPictures( chosenFiles, newOnlyJCheckBox.isSelected(), recurseJCheckBox.isSelected(), retainDirectoriesJCheckBox.isSelected() );
+					displayNode = startNode.addPictures( chosenFiles, newOnlyJCheckBox.isSelected(), recurseJCheckBox.isSelected(), retainDirectoriesJCheckBox.isSelected(), categoryJScrollPane.getSelectedCategories() );
 					if ( target != null ) {
 						target.requestShowGroup( displayNode );
 					}

@@ -1890,7 +1890,7 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 	 *  @param retainDirectories  indicates whether to preserve the directory structure.
 	 *  @return In case this is of interest to the caller we return here the node to be displayed.
 	 */
-	public SortableDefaultMutableTreeNode addPictures( File[] chosenFiles, boolean newOnly, boolean recurseDirectories, boolean retainDirectories ) {
+	public SortableDefaultMutableTreeNode addPictures( File[] chosenFiles, boolean newOnly, boolean recurseDirectories, boolean retainDirectories, HashSet selectedCategories ) {
 		ProgressGui progGui = new ProgressGui( Tools.countfiles( chosenFiles ),
 			Settings.jpoResources.getString("PictureAdderProgressDialogTitle"),
 			Settings.jpoResources.getString("picturesAdded") );
@@ -1903,14 +1903,14 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 		for ( int i = 0; (i < chosenFiles.length) && ( ! progGui.interrupt ); i++ ) {
 			File addFile = chosenFiles[i];
 			if ( ! addFile.isDirectory() ) {
-				if ( addSinglePicture( addFile, newOnly ) ) {
+				if ( addSinglePicture( addFile, newOnly, selectedCategories ) ) {
 					progGui.progressIncrement();
 				} else {
 					progGui.decrementTotal();
 				}
 			} else {
 				if ( Tools.hasPictures( addFile ) ) {
-					addedNode = addDirectory( addFile, newOnly, recurseDirectories, retainDirectories, progGui );
+					addedNode = addDirectory( addFile, newOnly, recurseDirectories, retainDirectories, progGui, selectedCategories );
 					if ( displayNode == null ) {
 						displayNode = addedNode;
 					}
@@ -2085,7 +2085,7 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 						targetFile.delete();
 						progGui.decrementTotal();
 					} else {
-						receivingNode.addPicture( targetFile );
+						receivingNode.addPicture( targetFile, selectedCategories );
 						progGui.progressIncrement();
 						picturesAdded = true;
 					}
@@ -2120,7 +2120,7 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 	 *  @param retainDirectories  indicates whether to preserve the directory structure
 	 *  @return returns the node that was added.
 	 */
-	private SortableDefaultMutableTreeNode addDirectory( File dir, boolean newOnly, boolean recurseDirectories, boolean retainDirectories, ProgressGui progGui ) {
+	private SortableDefaultMutableTreeNode addDirectory( File dir, boolean newOnly, boolean recurseDirectories, boolean retainDirectories, ProgressGui progGui, HashSet selectedCategories ) {
 		SortableDefaultMutableTreeNode newNode;
 		if ( retainDirectories) {
 			newNode = new SortableDefaultMutableTreeNode( new GroupInfo( dir.getName() ) );
@@ -2134,10 +2134,10 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 		for (int i = 0; (i < fileArray.length) && ( ! progGui.interrupt ); i++) {
 			if ( fileArray[i].isDirectory() && recurseDirectories ) {
 				if ( Tools.hasPictures( fileArray[i] ) ) {
-					newNode.addDirectory( fileArray[i], newOnly, recurseDirectories, retainDirectories, progGui );
+					newNode.addDirectory( fileArray[i], newOnly, recurseDirectories, retainDirectories, progGui, selectedCategories );
 				}
 			} else {
-				if ( newNode.addSinglePicture( fileArray[i], newOnly ) ) {
+				if ( newNode.addSinglePicture( fileArray[i], newOnly, selectedCategories ) ) {
 					progGui.progressIncrement();
 				} else {
 					progGui.decrementTotal();
@@ -2155,12 +2155,12 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 	 *  @param  newOnly whether to check if the picture is in the collection already
 	 *  @return  true if the picture was valid, false if not.
 	 */
-	public boolean addSinglePicture ( File addFile, boolean newOnly ) {
+	public boolean addSinglePicture ( File addFile, boolean newOnly, HashSet selectedCategories ) {
 		Tools.log("SDMTN.addSinglePicture: invoked on: " + addFile.toString() + " for " + this.toString() );
 		if ( newOnly && isInCollection( addFile ) ) {
 		    	return false; // only add pics not in the collection already
 		} else {
-			return addPicture( addFile );
+			return addPicture( addFile, selectedCategories );
 		}
 	}
 				
@@ -2171,10 +2171,10 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 	 *
 	 *  @param  addFile  the file that should be added
 	 *  @return  true if the picture was valid, false if not.
-	 */
-	public boolean addPicture ( File addFile ) {
-		return ( addPicture (addFile, null) );
-	}
+	 *
+	public boolean addPicture ( File addFile, HashSet selectedCategories ) {
+		return ( addPicture (addFile, selectedCategories) );
+	}*/
 
 
 	

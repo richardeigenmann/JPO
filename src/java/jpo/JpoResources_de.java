@@ -428,6 +428,9 @@ public class JpoResources_de extends ListResourceBundle {
 		{"recurseSubdirectoriesOk", "Hinzufügen"},
 		{"recurseSubdirectoriesNo", "Nein"},
 		{"picturesAdded", " Bilder hinzugefügt"},
+		{"pictureAdderOptionsTab", "Optionen"},
+		{"pictureAdderThumbnailTab", "Vorschau"},
+		{"pictureAdderCategoryTab", "Kategorien"},
 
 		// AddFromCamera
 		{"AddFromCamera", "Bilder von der Kamera hinzufügen"},
