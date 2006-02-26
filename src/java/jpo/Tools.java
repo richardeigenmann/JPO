@@ -431,7 +431,7 @@ public class Tools {
 		Enumeration nodes = startNode.children();
 		while ( nodes.hasMoreElements() ) {
 			n = (DefaultMutableTreeNode) nodes.nextElement();
-			Tools.log("Tools.countPictures: counting " + n.toString());
+			//Tools.log("Tools.countPictures: counting " + n.toString());
 			if ( n.getUserObject() instanceof PictureInfo)
 				count++;
 			if ( recurseSubgroups && ( n.getChildCount() > 0 ) )

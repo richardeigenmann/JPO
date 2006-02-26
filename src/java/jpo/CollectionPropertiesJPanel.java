@@ -106,7 +106,7 @@ public class CollectionPropertiesJPanel
 
 
 	public void updateStats( DefaultMutableTreeNode statisticsNode ) {
-		Tools.log("CollectionPropertiesJPanel.updateStats: inkoved on " + statisticsNode.toString() );
+		//Tools.log("CollectionPropertiesJPanel.updateStats: inkoved on " + statisticsNode.toString() );
 		int numberOfNodes = Tools.countNodes( statisticsNode );
 		collectionItemsLabel.setText( Settings.jpoResources.getString("CollectionNodeCountLabel") + Integer.toString( numberOfNodes ) );
 

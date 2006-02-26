@@ -9,7 +9,7 @@ import java.util.*;
 /*
 EmailerJFrame.java:  creates a GUI to allow the user to specify his search
 
-Copyright (C) 2004  Richard Eigenmann.
+Copyright (C) 2004-2006  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -95,6 +95,9 @@ public class EmailerJFrame extends JFrame {
 	private JCheckBox sendOriginalsJCheckBox = new JCheckBox( Settings.jpoResources.getString("emailOriginals") );
 
 
+	private JPanel imagesJPanel = new JPanel();
+
+
 	/**
 	 *  Creates a GUI to edit the categories of the collection
 	 *
@@ -153,6 +156,20 @@ public class EmailerJFrame extends JFrame {
 		c.gridwidth = 2;
 		c.insets = new Insets( 3,0,3,5 );
 		jPanel.add( imagesCountJLabel, c );
+
+		
+		imagesJPanel.setMinimumSize( new Dimension( 300, 145 ) );
+		imagesJPanel.setPreferredSize( new Dimension( 500, 160 ) );
+		imagesJPanel.setLayout( new GridBagLayout() );
+		final JScrollPane imagesJScrollPane = new JScrollPane( imagesJPanel,ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS );
+		imagesJScrollPane.setMinimumSize( new Dimension( 300, 165 ) );
+		imagesJScrollPane.setPreferredSize( new Dimension( 500, 165 ) );
+
+		c.gridx = 0; c.gridy++;
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridwidth = 2;
+		jPanel.add( imagesJScrollPane, c );
+		
 
 		c.gridy++;
 		c.fill = GridBagConstraints.NONE;
@@ -328,9 +345,9 @@ public class EmailerJFrame extends JFrame {
 		c.gridy++;
 		jPanel.add( buttonJPanel, c );
 
-		jPanel.setPreferredSize( new Dimension (600, 500) );
-		jPanel.setMaximumSize( new Dimension (600, 500) );
-		jPanel.setMinimumSize( new Dimension (600, 500) );
+		jPanel.setPreferredSize( new Dimension (600, 600) );
+		jPanel.setMaximumSize( new Dimension (600, 600) );
+		jPanel.setMinimumSize( new Dimension (600, 600) );
 		getContentPane().add( jPanel, BorderLayout.CENTER );
 			
 	 	//  As per http://java.sun.com/developer/JDCTechTips/2003/tt1208.html#1
@@ -368,6 +385,8 @@ public class EmailerJFrame extends JFrame {
 		sendOriginalsJCheckBox.setSelected( Settings.emailSendOriginal );
 		imageWidthWholeNumberField.setValue( Settings.emailDimensions.width );
 		imageHeightWholeNumberField.setValue( Settings.emailDimensions.height );
+		
+		loadThumbnails();		
 	}
 
 
@@ -382,6 +401,32 @@ public class EmailerJFrame extends JFrame {
 		Settings.emailDimensions = new Dimension( imageWidthWholeNumberField.getValue(), imageHeightWholeNumberField.getValue() );
 	}
 
+
+	/**
+	 *  loads the thumbnails into the preview panel
+	 */
+	private void loadThumbnails() {
+		int thumbnailSize = Settings.thumbnailSize;
+		int desiredSize = 140;
+		float factor = (float) desiredSize / (float) thumbnailSize;
+		GridBagConstraints c = new GridBagConstraints();
+		c.fill = GridBagConstraints.NONE;
+		c.anchor = GridBagConstraints.CENTER;
+		c.insets = new Insets(4, 4, 4, 4);
+
+		for ( int i=0; i < emailSelected.length ; i++ ) {
+			//Tools.log("EmailerJFrame.loadThumbnails: running on " + emailSelected[i].toString() );
+			Thumbnail t = new Thumbnail( (SortableDefaultMutableTreeNode) emailSelected[i], thumbnailSize, ThumbnailCreationQueue.LOW_PRIORITY );
+			t.setDecorateThumbnails( false );
+			t.determineMailSlectionStatus();
+			t.setFactor( factor );
+			c.gridx = i;
+			imagesJPanel.add( t, c );
+			t.setVisible( true );
+		}
+		imagesJPanel.revalidate();
+		
+	}
 
 	/**
 	 *  method that analyses the GUI fiels and prepares stuff for sending

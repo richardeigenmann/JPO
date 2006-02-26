@@ -104,6 +104,12 @@ public class Thumbnail extends JPanel
 	 */
 	public boolean drawMailIcon = false;
 
+
+	/**
+	 *  This flag indicates where decorations should be drawn at all
+	 */
+	private boolean decorateThumbnails = true;
+
 	/**
 	 *  a reference to the ThumbnailJScrollPane where group Info objects can refer their mouseclicks back to.
 	 */
@@ -578,12 +584,21 @@ public class Thumbnail extends JPanel
 
 
 	/**
+	 *  Determines whether decorations should be drawn or not
+	 */
+	public void setDecorateThumbnails( boolean b ) {
+		decorateThumbnails = b;
+	}
+
+
+	/**
 	 *  determines if the thumbnail is part of the mail selection and changes the drawMailIcon
 	 *  flag to ensure that the mail icon will be place over the image.
 	 */
 	public void determineMailSlectionStatus() {
 		if ( ( referringNode != null )
-		  && ( referringNode.isMailSelected() ) ) {
+		  && decorateThumbnails 
+		  && referringNode.isMailSelected() ) {
 			drawMailIcon = true;
 		} else {
 			drawMailIcon = false;
