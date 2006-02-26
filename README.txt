@@ -49,7 +49,7 @@ It does the following:
 	export JAVA_KEY_STORE
 	export JAVA_KEY_STORE_KEY
 
-	cd /path_to_my_sources/Jpo/src/jpo
+	cd /path_to_my_sources/Jpo
 
 
 I have changed to the apache-ant build tools on 4.5.2004. Csaba Nagy kindly helped put together
@@ -62,36 +62,21 @@ the build.xml for me. So to get you going:
 			  build/classes   by their package (which is jpo)
 	ant run		- runs the application from build/classes
 	ant clean	- deletes the compiled classes
-	ant rebuild	- runc clean and compile
-	ant document	- creates the javadoc in the directory
+	ant rebuild	- run clean and compile
+	ant javadoc	- creates the javadoc in the directory
 			  build/docs/index.html
 	ant go          - compiles and runs the application
+	ant buildjar    - builds the jar files
+	ant signjar	- signs the jar files (if yout have the keys...)
 	
 	
 I always work in the src/jpo subdirectory of the main Jpo directory on my Linux machine.
 
-From there use the following commands:
-
-	make 		- compiles everything requiring a compilation
-	make run	- runs JPO directly from the classes
-	make jar	- creates and signs the jar file
-	make runjar	- runs JPO from the jar files
-	make clean	- deletes all precompiled stuff
-	make javadoc	- creates the javadoc documentation
-
-	
-You can concatenate some commands which can make sense. I frequently use:
-
-	make && make run
-	
-This compiles the modified sources and only if there were no compile errors starts the application.
-	
-	
 
 
 Have fun
 
 Richard Eigenmann
-14.1.2003
+26.2.2006
 
 
