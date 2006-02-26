@@ -175,7 +175,7 @@ public class ExifInfo {
 		} catch ( IOException x ) {
 			Tools.log( "IOException: " + x.getMessage() );
 		} catch ( JpegProcessingException x ) { 
-			x.printStackTrace();
+			//x.printStackTrace();
 			exifDump.append( "No EXIF header found\n" + x.getMessage() );
 		}
 	}
