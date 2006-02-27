@@ -78,7 +78,6 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 		super ();
 		if ( isRoot ) {
 			this.createDefaultTreeModel();
-			this.createQueriesTreeModel();
 			this.mailSelection = new HashSet();
 			this.categories = new HashMap();
 			initialiseNewCollection();
@@ -93,7 +92,6 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 		if ( checkUnsavedChanges() ) return;
 
 		getRootNode().removeAllChildren();
-		clearQueriesTreeModel();
 		Settings.clearRecentDropNodes();
 		ThumbnailCreationQueue.removeAll();
 		getRootNode().setUserObject( new GroupInfo ( Settings.jpoResources.getString("DefaultRootNodeText") ) );
@@ -143,51 +141,6 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 		return (SortableDefaultMutableTreeNode) this.getRoot();
 	}
 
-
-	/**
-	 *   This variable holds the reference to the queries executed against the collection
-	 *   It is initialised only on the root node
-	 */
-	private TreeModel queriesTreeModel;
-
-
-	/**
-	 *   Call this method when you need the TreeModel for the queries
-	 */
-	public TreeModel getQueriesTreeModel() {
-		//Tools.log("SDMTN.getQueriesTreeModel: returning " + getRootNode().queriesTreeModel.toString() );
-		return( getRootNode().queriesTreeModel );
-	}
-
-
-	/**
-	 *   Call this method when you need to set the TreeModel for the queries
-	 */
-	public void setQueriesTreeModel( TreeModel tm ) {
-		//Tools.log("SDMTN.setQueriesTreeModel: setting to " + tm.toString() );
-		getRootNode().queriesTreeModel = tm;
-	}
-
-	/**
-	 *   Call this method when you need to create a new TreeModel for the queries. This
-	 *   is called by the constructor of the root SDMTN.
-	 */
-	public void createQueriesTreeModel() {
-		//Tools.log("SDMTN.createQueriesTreeModel: running");
-		setQueriesTreeModel( new DefaultTreeModel( new DefaultMutableTreeNode ( Settings.jpoResources.getString("queriesTreeModelRootNode") ) ) );
-	}
-
-
-	/**
-	 *   Clear out the nodes in the exisitng queries Tree Model
-	 */
-	public void clearQueriesTreeModel() {
-		//Tools.log("SDMTN.clearQueriesTreeModel: running");
-		TreeModel tm = getQueriesTreeModel();
-		if ( tm != null ) {
-			((DefaultMutableTreeNode) tm.getRoot()).removeAllChildren();
-		}
-	}
 
 
 	/**
@@ -633,6 +586,10 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 			}
 		}
 		this.getRootNode().categories.put( key, category );
+		
+		// add a new CategoryQuery to the Searches tree
+		CategoryQuery q = new CategoryQuery( key );
+		Settings.pictureCollection.addQueryToTreeModel( q );
 		return key;
 	}
 
@@ -710,7 +667,6 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 	public int countCategories() {
 		return this.getRootNode().categories.size();
 	}
-
 
 
 
@@ -1130,6 +1086,8 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 			}
 		}
 	}
+
+
 
 
 	/**

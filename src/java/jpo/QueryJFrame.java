@@ -250,7 +250,7 @@ public class QueryJFrame extends JFrame {
 			return ;
 		}
 
-		Query q = new Query( anyFieldJTextField.getText() );
+		TextQuery q = new TextQuery( anyFieldJTextField.getText() );
 		q.setLowerDateRange( Tools.parseDate( lowerDateJTextField.getText() ) );
 		q.setUpperDateRange( Tools.parseDate( upperDateJTextField.getText() ) );
 		q.setStartNode( startSearchNode );
@@ -267,15 +267,7 @@ public class QueryJFrame extends JFrame {
 		}
 
 
-		TreeModel tm = Settings.top.getQueriesTreeModel();
-		Object queriesRootNodeObject = tm.getRoot();
-		if ( ( queriesRootNodeObject != null ) && ( queriesRootNodeObject instanceof DefaultMutableTreeNode ) ) {
-			DefaultMutableTreeNode queriesRootNode = (DefaultMutableTreeNode) queriesRootNodeObject;
-			Tools.log( "adding query node to model: " + Settings.top.getQueriesTreeModel().toString() );
-			DefaultMutableTreeNode newNode = new DefaultMutableTreeNode( q );
-			queriesRootNode.add( newNode );
-			( (DefaultTreeModel) tm ).nodesWereInserted( queriesRootNode, new int[] { queriesRootNode.getIndex( newNode ) } );
-		}
+		Settings.pictureCollection.addQueryToTreeModel( q );
 		
 		getRid();
 

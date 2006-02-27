@@ -53,6 +53,14 @@ public class Settings {
 
 
 	/**
+	 *  A static reference to the Collection being displayed. In future perhaps we will 
+	 *  allow multiple collections to be loaded.
+	 **/
+	public static PictureCollection pictureCollection;
+
+
+
+	/**
 	 *  the name of the ini file
 	 **/
 	public static File iniFile = new File( new File( System.getProperty("user.dir")), "JPO.ini");

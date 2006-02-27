@@ -86,6 +86,11 @@ public class Jpo extends JFrame
 	private static ThumbnailJScrollPane thumbnailJScrollPane;
 
 
+	/**
+	 *  A reference to the collection object
+	 */
+	private PictureCollection pictureCollection;
+
 
 
 	/**
@@ -186,13 +191,18 @@ public class Jpo extends JFrame
 
 
 
+		// Create a Collection
+		pictureCollection = new PictureCollection();
+		Settings.pictureCollection = pictureCollection;
 		
-		// Create a first node for the tree 
-		Settings.top = new SortableDefaultMutableTreeNode( true ) ;
-				
+
+		// Settings.top should be deprecated
+		Settings.top =  pictureCollection.getRootNode();
+
+						
 		// Create and attach the JTree object
 		JScrollPane collectionJScrollPane = new JScrollPane();
-		collectionJTree = new CollectionJTree( this, Settings.top );		
+		collectionJTree = new CollectionJTree( this, pictureCollection.getRootNode() );		
        		collectionJScrollPane.setViewportView( collectionJTree );
 
 
@@ -202,13 +212,13 @@ public class Jpo extends JFrame
 
 
 		JScrollPane searchesJScrollPane = new JScrollPane();
-		QueriesJTree searchesJTree = new QueriesJTree( Settings.top.getQueriesTreeModel() );
+		QueriesJTree searchesJTree = new QueriesJTree( pictureCollection.getQueriesTreeModel() );
        		searchesJScrollPane.setViewportView( searchesJTree );
 
 
 
 		// Set up the Thumbnail Pane
-		thumbnailJScrollPane = new ThumbnailJScrollPane( Settings.top );
+		thumbnailJScrollPane = new ThumbnailJScrollPane( pictureCollection.getRootNode() );
 
 		// Set up the Info Panel
 		InfoPanel infoPanel = new InfoPanel();
@@ -232,8 +242,8 @@ public class Jpo extends JFrame
 			Tools.log( "Trying to load picturelist from jar: " + Settings.jarAutostartList.toString() );
 			try {
 				Settings.top.streamLoad( Settings.jarAutostartList.openStream() );
-				collectionJTree.setSelectedNode ( Settings.top );
-				thumbnailJScrollPane.showGroup( Settings.top );
+				collectionJTree.setSelectedNode ( pictureCollection.getRootNode() );
+				thumbnailJScrollPane.showGroup( pictureCollection.getRootNode() );
 			} catch ( IOException x ) {
 				Tools.log( Settings.jarAutostartList.toString() + " could not be loaded\nReason: " + x.getMessage() );
 			}
@@ -242,8 +252,8 @@ public class Jpo extends JFrame
 			Tools.log("Jpo.constructor: Trying to load picturelist from ini: " + Settings.autoLoad );
 			if ( xmlFile.exists() ) {
 				Settings.top.fileLoad( xmlFile );
-				collectionJTree.setSelectedNode ( Settings.top );
-				thumbnailJScrollPane.showGroup( Settings.top );
+				collectionJTree.setSelectedNode ( pictureCollection.getRootNode() );
+				thumbnailJScrollPane.showGroup( pictureCollection.getRootNode() );
 			}
 		}
 
@@ -372,7 +382,7 @@ public class Jpo extends JFrame
 	 *   {@link CollectionJTree}.
 	 */
 	public void requestFileAdd() {
-		collectionJTree.popupNode = Settings.top;
+		collectionJTree.popupNode = pictureCollection.getRootNode();
 		collectionJTree.requestAdd();
 	}
 	
@@ -383,8 +393,8 @@ public class Jpo extends JFrame
 	 *   {@link CollectionJTree}.
 	 */
 	public void requestFileAddFromCamera() {
-		new AddFromCamera( Settings.top );
-		positionToNode( Settings.top );
+		new AddFromCamera( pictureCollection.getRootNode() );
+		positionToNode( pictureCollection.getRootNode() );
 	}
 
 
@@ -395,7 +405,7 @@ public class Jpo extends JFrame
 	public void requestFileLoad() {
 		if ( Settings.top.checkUnsavedChanges() ) return;
 		Settings.top.fileLoad();
-		positionToNode( Settings.top );
+		positionToNode( pictureCollection.getRootNode() );
 	}
 
 
@@ -416,7 +426,7 @@ public class Jpo extends JFrame
 	 */
 	public void requestOpenRecent( int i ) {
 		Settings.top.fileLoad( new File( Settings.recentCollections[ i ] ) );
-		positionToNode( Settings.top );
+		positionToNode( pictureCollection.getRootNode() );
 	}
 	
 

@@ -152,7 +152,4 @@ public class QueryBrowser implements ThumbnailBrowserInterface {
 		}
 	}
 
-
-	
-	
 }
