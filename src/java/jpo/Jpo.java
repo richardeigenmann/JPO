@@ -14,7 +14,7 @@ import javax.jnlp.*;
 /*
 Jpo.java:  main class of the JPO application
 
-Copyright (C) 2002  Richard Eigenmann.
+Copyright (C) 2002-2006  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -196,9 +196,6 @@ public class Jpo extends JFrame
 		Settings.pictureCollection = pictureCollection;
 		
 
-		// Settings.top should be deprecated
-		Settings.top =  pictureCollection.getRootNode();
-
 						
 		// Create and attach the JTree object
 		JScrollPane collectionJScrollPane = new JScrollPane();
@@ -241,7 +238,7 @@ public class Jpo extends JFrame
 			Settings.jarRoot = Settings.jarAutostartList.toString().substring(0, Settings.jarAutostartList.toString().indexOf("!") + 1);
 			Tools.log( "Trying to load picturelist from jar: " + Settings.jarAutostartList.toString() );
 			try {
-				Settings.top.streamLoad( Settings.jarAutostartList.openStream() );
+				pictureCollection.getRootNode().streamLoad( Settings.jarAutostartList.openStream() );
 				collectionJTree.setSelectedNode ( pictureCollection.getRootNode() );
 				thumbnailJScrollPane.showGroup( pictureCollection.getRootNode() );
 			} catch ( IOException x ) {
@@ -251,7 +248,7 @@ public class Jpo extends JFrame
 			File xmlFile =  new File( Settings.autoLoad );
 			Tools.log("Jpo.constructor: Trying to load picturelist from ini: " + Settings.autoLoad );
 			if ( xmlFile.exists() ) {
-				Settings.top.fileLoad( xmlFile );
+				pictureCollection.fileLoad( xmlFile );
 				collectionJTree.setSelectedNode ( pictureCollection.getRootNode() );
 				thumbnailJScrollPane.showGroup( pictureCollection.getRootNode() );
 			}
@@ -372,7 +369,7 @@ public class Jpo extends JFrame
 	 */
 	public void requestFileNew() {
 		pictureCollection.clearCollection();				
-		positionToNode( Settings.top );
+		positionToNode( pictureCollection.getRootNode() );
 	}
 
 

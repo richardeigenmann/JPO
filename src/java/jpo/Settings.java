@@ -45,12 +45,6 @@ public class Settings {
 	public static final ClassLoader cl = Settings.class.getClassLoader();
 
 
-	/**
-	 *  The top node of the tree data model. It holds all the branches 
-	 *  to the groups and	pictures
-	 **/
-	public static SortableDefaultMutableTreeNode top;
-
 
 	/**
 	 *  A static reference to the Collection being displayed. In future perhaps we will 

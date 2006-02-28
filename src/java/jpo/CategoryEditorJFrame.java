@@ -170,7 +170,7 @@ public class CategoryEditorJFrame extends JFrame implements ListSelectionListene
 				int index = categoriesJList.getSelectedIndex();
 				if ( index < 0 ) return; // nothing selected
 				Category cat = (Category) categoriesJList.getModel().getElementAt( index );
-				int count = Settings.pictureCollection.countCategoryUsage( cat.key, Settings.top );
+				int count = Settings.pictureCollection.countCategoryUsage( cat.key, Settings.pictureCollection.getRootNode() );
 				if ( count > 0 ) {
 					int answer = JOptionPane.showConfirmDialog( CategoryEditorJFrame.this, 
 						Settings.jpoResources.getString("countCategoryUsageWarning1")
@@ -182,7 +182,7 @@ public class CategoryEditorJFrame extends JFrame implements ListSelectionListene
 					if ( answer == JOptionPane.CANCEL_OPTION ) {
 						return;
 					} else {
-						Settings.pictureCollection.removeCategoryUsage( cat.key, Settings.top );
+						Settings.pictureCollection.removeCategoryUsage( cat.key, Settings.pictureCollection.getRootNode() );
 					}
 
 				}
