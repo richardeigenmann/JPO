@@ -16,7 +16,7 @@ import java.util.Enumeration;
 /*
 PictureInfoEditor:  Edits the description of an image
 
-Copyright (C) 2002  Richard Eigenmann.
+Copyright (C) 2002-2006  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -222,7 +222,7 @@ public class PictureInfoEditor
 
 		// set this up so that we can close the GUI if the picture node is removed while we 
 		// are displaying it.
-		editNode.getTreeModel().addTreeModelListener( this );
+		editNode.getPictureCollection().getTreeModel().addTreeModelListener( this );
 
 		
 		if ( ! ( editNode.getUserObject()instanceof PictureInfo ) ) {
@@ -545,14 +545,14 @@ public class PictureInfoEditor
 		listModel.addElement( setupCategories );
 		listModel.addElement( noCategories );
 
-		Iterator i = Settings.top.getCategoryIterator();
+		Iterator i = editNode.getPictureCollection().getCategoryIterator();
 		Integer key;
 		String category;
 		Category categoryObject;
 		Vector selections = new Vector();
 		while ( i.hasNext() ) {
 			key = (Integer) i.next();
-			category = (String) Settings.top.getCategory( key );
+			category = (String) editNode.getPictureCollection().getCategory( key );
 			categoryObject = new Category( key, category );
 			listModel.addElement( categoryObject );
 			
@@ -703,8 +703,8 @@ public class PictureInfoEditor
 	 *  method that closes the window.
 	 */
 	private void getRid() {
-		if ( editNode.getTreeModel() != null ) {
-			editNode.getTreeModel().removeTreeModelListener( this );
+		if ( editNode.getPictureCollection().getTreeModel() != null ) {
+			editNode.getPictureCollection().getTreeModel().removeTreeModelListener( this );
 		}
 		pi.removePictureInfoChangeListener( this );
 		setVisible ( false );
@@ -720,7 +720,7 @@ public class PictureInfoEditor
 	
 		if ( pi.getRotation() != Double.parseDouble( rotationJTextField.getText() ) ) {
 			pi.setRotation( Double.parseDouble( rotationJTextField.getText() ) );
-			editNode.setUnsavedUpdates();
+			editNode.getPictureCollection().setUnsavedUpdates();
 			editNode.refreshThumbnail();
 		}
 	
@@ -744,8 +744,8 @@ public class PictureInfoEditor
 			pi.setFilmReference( filmReferenceJTextField.getText() );
 			pi.setCopyrightHolder( copyrightHolderJTextField.getText() );
 			
-			editNode.getTreeModel().nodeChanged( editNode );
-			editNode.setUnsavedUpdates();
+			editNode.getPictureCollection().getTreeModel().nodeChanged( editNode );
+			editNode.getPictureCollection().setUnsavedUpdates();
 		}
 		
 		int[] indexes = categoriesJList.getSelectedIndices();

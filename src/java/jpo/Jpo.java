@@ -202,7 +202,7 @@ public class Jpo extends JFrame
 						
 		// Create and attach the JTree object
 		JScrollPane collectionJScrollPane = new JScrollPane();
-		collectionJTree = new CollectionJTree( this, pictureCollection.getRootNode() );		
+		collectionJTree = new CollectionJTree( this, pictureCollection.getTreeModel() );		
        		collectionJScrollPane.setViewportView( collectionJTree );
 
 
@@ -336,7 +336,7 @@ public class Jpo extends JFrame
 	 *  also checks for unsaved changes before closing the application.
 	 */
 	public void closeJpo() {
-		if ( Settings.top.checkUnsavedChanges() ) return;
+		if ( pictureCollection.checkUnsavedUpdates() ) return;
 		
 		if ( Settings.saveSizeOnExit &&
 			( ! 
@@ -371,7 +371,7 @@ public class Jpo extends JFrame
 	 *   Call to do the File|New function
 	 */
 	public void requestFileNew() {
-		Settings.top.initialiseNewCollection();				
+		pictureCollection.clearCollection();				
 		positionToNode( Settings.top );
 	}
 
@@ -403,8 +403,8 @@ public class Jpo extends JFrame
 	 *   to be loaded. Calls {@link SortableDefaultMutableTreeNode#fileLoad}
 	 */
 	public void requestFileLoad() {
-		if ( Settings.top.checkUnsavedChanges() ) return;
-		Settings.top.fileLoad();
+		if ( pictureCollection.checkUnsavedUpdates() ) return;
+		pictureCollection.fileLoad();
 		positionToNode( pictureCollection.getRootNode() );
 	}
 
@@ -425,7 +425,7 @@ public class Jpo extends JFrame
 	 *   {@link ApplicationMenuInterface#requestOpenRecent}.
 	 */
 	public void requestOpenRecent( int i ) {
-		Settings.top.fileLoad( new File( Settings.recentCollections[ i ] ) );
+		pictureCollection.fileLoad( new File( Settings.recentCollections[ i ] ) );
 		positionToNode( pictureCollection.getRootNode() );
 	}
 	
@@ -437,7 +437,7 @@ public class Jpo extends JFrame
 	 *   saved before brings up a popup window.
 	 */
 	public void requestFileSave() {
-		Settings.top.fileSave();				
+		pictureCollection.fileSave();				
 	}
 
 
@@ -447,7 +447,7 @@ public class Jpo extends JFrame
 	 *   save under.
 	 */
 	public void requestFileSaveAs() {
-		Settings.top.fileSaveAs();				
+		pictureCollection.fileSaveAs();				
 	}
 
 
@@ -465,7 +465,7 @@ public class Jpo extends JFrame
 	 *   Calls {@link #find} to bring up a find dialog box.
 	 */
 	public void requestEditFind() {
-		find( Settings.top.getRootNode() );
+		find( pictureCollection.getRootNode() );
 	}
 
 
@@ -475,7 +475,7 @@ public class Jpo extends JFrame
 	 *   against the current collection.
 	 */
 	public void requestCheckDirectories() {
-		new ReconcileJFrame( Settings.top );
+		new ReconcileJFrame( pictureCollection.getRootNode() );
 	}
 
 
@@ -485,14 +485,14 @@ public class Jpo extends JFrame
 	 *   protect it from edits.
 	 */
 	public void requestCollectionProperties() {
-		new CollectionPropertiesJFrame( Settings.top );
+		new CollectionPropertiesJFrame( pictureCollection.getRootNode() );
 	}
 
 	/**
 	 *  Creates an IntegrityChecker that does it's magic on the collection.
 	 */
 	public void requestCheckIntegrity() {
-		new IntegrityChecker( Settings.top );
+		new IntegrityChecker( pictureCollection.getRootNode() );
 	}
 
 
@@ -511,14 +511,5 @@ public class Jpo extends JFrame
 	public void requestEditCameras() {
 		new CameraEditor();
 	}
-
-		
-
-
-
-
-
-
-
 
 }

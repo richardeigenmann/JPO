@@ -133,7 +133,7 @@ public class XmlReader extends DefaultHandler {
 			gi = new GroupInfo( attrs.getValue( "collection_name" ) );
 			gi.setLowresLocation( attrs.getValue( "collection_icon" ) );
 			currentGroup.setUserObject( gi );
-			currentGroup.setAllowEdits( attrs.getValue( "collection_protected" ).equals("No") );
+			currentGroup.getPictureCollection().setAllowEdits( attrs.getValue( "collection_protected" ).equals("No") );
 		} else if ( qName == "group" ) {
 			gi = new GroupInfo( attrs.getValue("group_name") );
 			gi.setLowresLocation( attrs.getValue( "group_icon" ) );
@@ -208,7 +208,7 @@ public class XmlReader extends DefaultHandler {
 			//Tools.log("CHECKSUM here");
 			((PictureInfo) currentPicture.getUserObject()).parseChecksum();
 		} else if (qName == "categoryDescription") {
-			currentGroup.addCategory( new Integer( Integer.parseInt( temporaryCategoryIndex ) ), temporaryCategory );
+			currentGroup.getPictureCollection().addCategory( new Integer( Integer.parseInt( temporaryCategoryIndex ) ), temporaryCategory );
 			temporaryCategory = "";
 		}
 	}

@@ -140,7 +140,7 @@ public class CategoriesJTree extends JTree
 		//popupListener.setHandle( this );
 		addMouseListener( popupListener );
 
-		setModel( new DefaultTreeModel( new JTree.DynamicUtilTreeNode("Root", Settings.top.categories ) ) );
+		setModel( new DefaultTreeModel( new JTree.DynamicUtilTreeNode("Root", Settings.pictureCollection.getCategories() ) ) );
 		//top.getTreeModel().addTreeModelListener( new MyTreeModelListener() );
 	}
 
@@ -462,8 +462,8 @@ public class CategoriesJTree extends JTree
 	 */
 	public void requestAddCollection() {
 		SortableDefaultMutableTreeNode newNode = popupNode.addGroupNode( "New Group" );
-		newNode.fileLoad();
-		top.setUnsavedUpdates( true );
+		//newNode.fileLoad();
+		//top.setUnsavedUpdates( true );
 		setSelectedNode ( newNode );
 		expandPath( new TreePath ( newNode.getPath()) );
 		if ( associatedThumbnailJScrollPane != null ) {

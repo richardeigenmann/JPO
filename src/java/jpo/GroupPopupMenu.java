@@ -5,7 +5,7 @@ import javax.swing.*;
 
 /*
 GroupPopupMenu.java: popup menu for groups
-Copyright (C) 2002  Richard Eigenmann.
+Copyright (C) 2002-2006  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -286,7 +286,7 @@ class GroupPopupMenu extends JPopupMenu
 
 		addSeparator();
 
-		if ( Settings.top.getAllowEdits() ) {
+		if ( popupNode.getPictureCollection().getAllowEdits() ) {
 
 			JMenuItem groupEditJMenuItem 
 				= new JMenuItem( Settings.jpoResources.getString( "groupEditJMenuItem" ) ); 

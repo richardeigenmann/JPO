@@ -8,7 +8,7 @@ import java.util.*;
 /*
 PicturePopupMenu.java:  a popup menu for pictures
 
-Copyright (C) 2002  Richard Eigenmann.
+Copyright (C) 2002-2006  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -299,18 +299,18 @@ public class PicturePopupMenu extends JPopupMenu
 		JMenuItem pictureMailSelectJMenuItem = new JMenuItem();
 		JMenuItem pictureMailUnselectAllJMenuItem 
 			= new JMenuItem( Settings.jpoResources.getString("pictureMailUnselectAllJMenuItem") );
-		if ( popupNode.isMailSelected() ) {
+		if ( popupNode.getPictureCollection().isMailSelected( popupNode ) ) {
 			pictureMailSelectJMenuItem.setText( Settings.jpoResources.getString("pictureMailUnselectJMenuItem") );
 			pictureMailSelectJMenuItem.addActionListener( new ActionListener() {
 				public void actionPerformed( ActionEvent e ) {
-					popupNode.removeFromMailSelection();
+					popupNode.getPictureCollection().removeFromMailSelection( popupNode );
 				}
 			});
 			add( pictureMailSelectJMenuItem );
 
 			pictureMailUnselectAllJMenuItem.addActionListener( new ActionListener() {
 				public void actionPerformed( ActionEvent e ) {
-					popupNode.clearMailSelection();
+					popupNode.getPictureCollection().clearMailSelection();
 				}
 			});
 			add( pictureMailUnselectAllJMenuItem );
@@ -318,7 +318,7 @@ public class PicturePopupMenu extends JPopupMenu
 			pictureMailSelectJMenuItem.setText( Settings.jpoResources.getString("pictureMailSelectJMenuItem") );
 			pictureMailSelectJMenuItem.addActionListener( new ActionListener() {
 				public void actionPerformed( ActionEvent e ) {
-					popupNode.setMailSelected();
+					popupNode.getPictureCollection().setMailSelected( popupNode );
 				}
 			});
 			add( pictureMailSelectJMenuItem );
@@ -338,7 +338,7 @@ public class PicturePopupMenu extends JPopupMenu
 		  	
 
 
-		if ( Settings.top.getAllowEdits() ) {
+		if ( node.getPictureCollection().getAllowEdits() ) {
 			add( rotationJMenu );
 			rotate90JMenuItem.addActionListener( new ActionListener() {
 				public void actionPerformed( ActionEvent e ) {
@@ -386,7 +386,7 @@ public class PicturePopupMenu extends JPopupMenu
 		add( pictureRefreshJMenuItem );
 
 
-		if ( Settings.top.getAllowEdits() ) {
+		if ( node.getPictureCollection().getAllowEdits() ) {
 			add( movePictureNodeJMenu );
 
 			for ( int i = 0; i < Settings.maxDropNodes; i++ ) {
@@ -464,7 +464,7 @@ public class PicturePopupMenu extends JPopupMenu
 		}
 		copyLocationsChanged();
 
-		if ( Settings.top.getAllowEdits() ) {
+		if ( node.getPictureCollection().getAllowEdits() ) {
 
 			pictureNodeRemove.addActionListener( new ActionListener() {
 				public void actionPerformed( ActionEvent e ) {

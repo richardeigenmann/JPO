@@ -90,7 +90,7 @@ public class CollectionPropertiesJFrame
 		constraints.gridx =0;
 
 		constraints.gridy = 6;
-		editProtectJCheckBox.setSelected( ! statisticsNode.getAllowEdits() );
+		editProtectJCheckBox.setSelected( ! statisticsNode.getPictureCollection().getAllowEdits() );
 		controlJPanel.add( editProtectJCheckBox, constraints );
 
 
@@ -133,9 +133,9 @@ public class CollectionPropertiesJFrame
 	 **/
 	public void actionPerformed( ActionEvent e ) {
 		if (e.getSource() == okJButton) {
-			if ( statisticsNode.getAllowEdits() == editProtectJCheckBox.isSelected() ) {
-				statisticsNode.setAllowEdits( ! editProtectJCheckBox.isSelected() );
-				statisticsNode.setUnsavedUpdates( true );
+			if ( statisticsNode.getPictureCollection().getAllowEdits() == editProtectJCheckBox.isSelected() ) {
+				statisticsNode.getPictureCollection().setAllowEdits( ! editProtectJCheckBox.isSelected() );
+				statisticsNode.getPictureCollection().setUnsavedUpdates( true );
 			}
 				
 			getRid();

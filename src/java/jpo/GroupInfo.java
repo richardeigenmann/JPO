@@ -80,8 +80,8 @@ public class GroupInfo implements Serializable {
 	public synchronized void setGroupName( String name ) {
 		GroupDescription = name;
 
-		if ( (Settings.top != null) && (Settings.top.getSendModelUpdates()) ) {
-			Settings.top.setUnsavedUpdates();
+		if ( (Settings.pictureCollection != null) && (Settings.pictureCollection.getSendModelUpdates()) ) {
+			Settings.pictureCollection.setUnsavedUpdates();
 		}
 	}
 
@@ -159,8 +159,8 @@ public class GroupInfo implements Serializable {
        	public synchronized void setLowresLocation(String s) {
 		if ( ! Lowres_Name.equals( s ) ) {
 			Lowres_Name = s;
-			if ( (Settings.top != null) && (Settings.top.getSendModelUpdates()) ) {
-				Settings.top.setUnsavedUpdates();
+			if ( (Settings.pictureCollection != null) && (Settings.pictureCollection.getSendModelUpdates()) ) {
+				Settings.pictureCollection.setUnsavedUpdates();
 			}
 		}
        	}
@@ -175,8 +175,8 @@ public class GroupInfo implements Serializable {
 		String s = u.toString();
 		if ( ! Lowres_Name.equals( s ) ) {
 			Lowres_Name = s;
-			if ( Settings.top.getSendModelUpdates() ) {
-					Settings.top.setUnsavedUpdates();
+			if ( Settings.pictureCollection.getSendModelUpdates() ) {
+					Settings.pictureCollection.setUnsavedUpdates();
 			}
 		}
        	}
@@ -189,8 +189,8 @@ public class GroupInfo implements Serializable {
        	public synchronized void appendToLowresLocation( String s ) {
 		if ( s.length() > 0 ) {
 			Lowres_Name = Lowres_Name.concat(s);
-			if ( (Settings.top != null) && (Settings.top.getSendModelUpdates()) ) {
-				Settings.top.setUnsavedUpdates();
+			if ( (Settings.pictureCollection != null) && (Settings.pictureCollection.getSendModelUpdates()) ) {
+				Settings.pictureCollection.setUnsavedUpdates();
 			}
 		}		
        	}

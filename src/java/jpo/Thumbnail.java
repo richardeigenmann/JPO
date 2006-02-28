@@ -176,7 +176,7 @@ public class Thumbnail extends JPanel
 		addMouseListener( new ThumbnailMouseAdapter() );
 
 		// attach the Thumbnail to the Tree Model to get notifications.
-		Settings.top.getTreeModel().addTreeModelListener( this );
+		Settings.pictureCollection.getTreeModel().addTreeModelListener( this );
 
 
 		// set up drag & drop
@@ -598,7 +598,7 @@ public class Thumbnail extends JPanel
 	public void determineMailSlectionStatus() {
 		if ( ( referringNode != null )
 		  && decorateThumbnails 
-		  && referringNode.isMailSelected() ) {
+		  && Settings.pictureCollection.isMailSelected( referringNode ) ) {
 			drawMailIcon = true;
 		} else {
 			drawMailIcon = false;

@@ -156,7 +156,7 @@ public class ThumbnailDescriptionJPanel
 		this.associatedPanel = associatedPanel;
 		
 		// attach this panel to the tree model so that it is notified about changes
-		Settings.top.getTreeModel().addTreeModelListener( this );
+		Settings.pictureCollection.getTreeModel().addTreeModelListener( this );
 
 		this.setBackground( Color.WHITE );
 		
@@ -224,7 +224,7 @@ public class ThumbnailDescriptionJPanel
 		}
 		setTextAreaSize();
 		pictureDescriptionJTA.revalidate();
-		referringNode.getTreeModel().nodeChanged( referringNode );
+		Settings.pictureCollection.getTreeModel().nodeChanged( referringNode );
 	}
 
 

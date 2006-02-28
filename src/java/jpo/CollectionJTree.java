@@ -126,9 +126,9 @@ public class CollectionJTree extends JTree
 	 *
 	 *  @param	rootNode	The root node of the tree.
 	 */
-	public CollectionJTree( CollectionJTreeInterface caller, SortableDefaultMutableTreeNode rootNode ) {
+	public CollectionJTree( CollectionJTreeInterface caller, TreeModel tm ) {
 		this.caller = caller;
-		this.top = rootNode;
+		this.top = Settings.pictureCollection.getRootNode();
 	
 		getSelectionModel().setSelectionMode( TreeSelectionModel.SINGLE_TREE_SELECTION );
 		putClientProperty( "JTree.lineStyle", "Angled" );
@@ -147,7 +147,7 @@ public class CollectionJTree extends JTree
 		CollectionMouseAdapter mouseAdapter = new CollectionMouseAdapter( this );
 		addMouseListener( mouseAdapter );
 
-		setModel( top.getTreeModel() );
+		setModel( tm );
 	}
 
 	
@@ -469,7 +469,7 @@ public class CollectionJTree extends JTree
 	public void requestAddCollection() {
 		SortableDefaultMutableTreeNode newNode = popupNode.addGroupNode( "New Group" );
 		newNode.fileLoad();
-		top.setUnsavedUpdates( true );
+		newNode.getPictureCollection().setUnsavedUpdates( true );
 		setSelectedNode ( newNode );
 		expandPath( new TreePath ( newNode.getPath()) );
 		if ( associatedThumbnailJScrollPane != null ) {

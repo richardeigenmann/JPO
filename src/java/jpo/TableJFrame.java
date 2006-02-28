@@ -228,7 +228,7 @@ public class TableJFrame extends JFrame {
 						break;
 				}
 			}
-			queryNode.setUnsavedUpdates();
+			queryNode.getPictureCollection().setUnsavedUpdates();
     		}
 	}
 

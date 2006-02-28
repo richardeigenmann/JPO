@@ -272,7 +272,7 @@ public class ThumbnailCreationThread extends Thread {
 			if ( ! Tools.isUrlFile ( pi.getLowresURL() ) ) {
 				Tools.log("The URL is not a file:// type. Getting new name. Type was: " + pi.getLowresURL().getProtocol().equals("file"));
 				pi.setLowresLocation( Tools.lowresFilename() );
-				referringNode.setUnsavedUpdates();
+				referringNode.getPictureCollection().setUnsavedUpdates();
 			} 
 				
 			
@@ -288,14 +288,14 @@ public class ThumbnailCreationThread extends Thread {
 					} catch (IOException x) {
 						Tools.log("Lowres URL is not writable: " + pi.getLowresLocation() + " " + x.getMessage() + "  Creating a new URL." );
 						pi.setLowresLocation( Tools.lowresFilename() );
-						referringNode.setUnsavedUpdates();
+						referringNode.getPictureCollection().setUnsavedUpdates();
 					}
 				} else  {
 					// the file does exist, can we write to it?
 					if ( ! pi.getLowresFile().canWrite() ) {
 						Tools.log("Lowres URL is not writable: " + pi.getLowresLocation() + ".  Creating a new URL." );
 						pi.setLowresLocation( Tools.lowresFilename() );
-						referringNode.setUnsavedUpdates();
+						referringNode.getPictureCollection().setUnsavedUpdates();
 					}
 				}
 				currentPicture.writeScaledJpg( pi.getLowresFile() );
@@ -483,14 +483,14 @@ public class ThumbnailCreationThread extends Thread {
 					} catch (IOException ioe) {
 						Tools.log("Lowres URL is not writable: " + gi.getLowresLocation() + " " + ioe.getMessage() + "  Creating a new URL." );
 						gi.setLowresLocation( Tools.lowresFilename() );
-						referringNode.setUnsavedUpdates();
+						referringNode.getPictureCollection().setUnsavedUpdates();
 					}
 				} else  {
 					// the file does exist, can we write to it?
 					if ( ! gi.getLowresFile().canWrite() ) {
 						Tools.log("Lowres URL is not writable: " + gi.getLowresLocation() + ".  Creating a new URL." );
 						gi.setLowresLocation( Tools.lowresFilename() );
-						referringNode.setUnsavedUpdates();
+						referringNode.getPictureCollection().setUnsavedUpdates();
 					}
 				}
 				ScalablePicture.writeJpg( gi.getLowresFile(), groupThumbnail, 0.8f );
@@ -499,7 +499,7 @@ public class ThumbnailCreationThread extends Thread {
 				ImageIcon cleanCache = new ImageIcon( gi.getLowresURLOrNull() );
 				cleanCache.getImage().flush(); 
 
-				referringNode.getTreeModel().nodeChanged( referringNode );
+				referringNode.getPictureCollection().getTreeModel().nodeChanged( referringNode );
 				//pi.sendThumbnailChangedEvent();
 			}
 

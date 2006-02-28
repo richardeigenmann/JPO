@@ -68,72 +68,6 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 
 
 	/**
-	 *   Constructor for a new node.
-	 *   If this is a root node then the selection HashSet is initialised as 
-	 *   well as the categories HashMap. The initialiseNewCollection method is also fired.
-	 *
-	 *   @param	isRoot	Indicates that a root node should be created
-	 */
-	public SortableDefaultMutableTreeNode ( boolean isRoot ) {
-		super ();
-		if ( isRoot ) {
-			this.createDefaultTreeModel();
-			this.mailSelection = new HashSet();
-			this.categories = new HashMap();
-			initialiseNewCollection();
-		}
-	}
-
-
-	/** 
-	 *  method that sets up a new collection
-	 */
-	public void initialiseNewCollection() {
-		if ( checkUnsavedChanges() ) return;
-
-		getRootNode().removeAllChildren();
-		Settings.clearRecentDropNodes();
-		ThumbnailCreationQueue.removeAll();
-		getRootNode().setUserObject( new GroupInfo ( Settings.jpoResources.getString("DefaultRootNodeText") ) );
-		getRootNode().setUnsavedUpdates( false );
-		this.categories.clear();
-		
-		getTreeModel().reload();
-		setXmlFile( null );
-		setAllowEdits( true );
-	}
-
-
-
-	/**
-	 *   This variable is initialised only on the root node. It references the 
-	 *   treeModel that will handle notification of changes.
-	 */
-	private DefaultTreeModel treeModel;
-
-	/**
-	 *   Call this method when you create the root node of the tree. The 
-	 *   DefaultTreeModel allows notification of tree change events to listening 
-	 *   objects.
-	 */
-	public void createDefaultTreeModel() {
-		treeModel = new DefaultTreeModel( getRootNode() );
-	}
-
-
-	/**
-	 *   Call this method when you create the root node of the tree. The 
-	 *   DefaultTreeModel allows notification of tree change events to listening 
-	 *   objects. The DefaultTreeModel is the one from the root node regardless
-	 *   of which node you call this method on.
-	 */
-	public DefaultTreeModel getTreeModel() {
-		return( getRootNode().treeModel );
-	}
-
-
-
-	/**
 	 *   returns the root node. This is a convenience method.
 	 *   @return 	The root node of the JTree.
 	 */
@@ -141,6 +75,13 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 		return (SortableDefaultMutableTreeNode) this.getRoot();
 	}
 
+
+	/**
+	 *   returns the collection associated with this node
+	 */
+	public PictureCollection getPictureCollection() {
+		return Settings.pictureCollection;
+	}
 
 
 	/**
@@ -159,15 +100,15 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 		Arrays.sort( childNodes );
 		
 	        //Remove all children from the node
-		setSendModelUpdates( false );
+		getPictureCollection().setSendModelUpdates( false );
 	        removeAllChildren();
 	        //Add the new array of nodes to top
         	for ( int i = 0; i < childNodes.length; i++ ){
 			add( childNodes[i] );
 			Tools.log("Adding back to group: " + childNodes[i].toString() );
 		}
-		setSendModelUpdates( true );
-		getTreeModel().nodeStructureChanged( this );
+		getPictureCollection().setSendModelUpdates( true );
+		getPictureCollection().getTreeModel().nodeStructureChanged( this );
 	}
 
 
@@ -307,196 +248,17 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 
 
 
-
 	/**
-	 *   This variable indicates whether uncommited changes exist for this collection. 
-	 *   Care should be taken when adding removing or changing nodes to update this flag. 
-	 *   It should be queried before exiting the application. Also when a new collection is
-	 *   loaded this flag should be checked so as not to loose modifications.
-	 *   This flag should be set only on the root node.
-	 *
-	 *   @see  #setUnsavedUpdates()
-	 *   @see  #setUnsavedUpdates(boolean)
-	 *   @see  #getUnsavedUpdates()
-	 */
-	private boolean unsavedUpdates = false;
-
-
-	/**
-	 *   This method marks the root node of the tree as having unsaved updates.
-	 *
-	 *   @see #unsavedUpdates
-	 *   
+	 * @deprecated
 	 */
 	public void setUnsavedUpdates() {
-		setUnsavedUpdates( true );
-	}
-
-
-	/**
-	 *   This method allows the programmer to set whether the tree has unsaved updates or not.
-	 *   
-	 *   @param b  Set to true if there are unsaved updates, false if there are none
-	 *   @see #unsavedUpdates
-	 */
-	public void setUnsavedUpdates( boolean b ) {
-		//Tools.log("SDMTN.setUnsavedUpdates inkoked. Setting to: " + Boolean.toString(b));
-		getRootNode().unsavedUpdates = b;
-	}
-
-
-	/**
-	 *   This method returns true is the tree has unsaved updates, false if it has none
-	 *
-	 *   @see #unsavedUpdates
-	 *   
-	 */
-	public boolean getUnsavedUpdates() {
-		return getRootNode().unsavedUpdates;
-	}
-
-
-	/** 
-	 *  This flag controls whether this collection can be edited. This is queried by several 
-	 *  menus and will restrict the options a use has if it returns true.
-	 */
-	private boolean allowEdits;
-
-
-	/**
-	 *  Returns true if edits are allowed on this collection
-	 */
-	public boolean getAllowEdits() {
-		return getRootNode().allowEdits;
-	}	
-	 
-
-	/**
-	 *  sets the allow edit status of this collection
-	 */
-	public void setAllowEdits( boolean status ) {
-		getRootNode().allowEdits = status;
+		Settings.pictureCollection.setUnsavedUpdates() ;
 	}	
 
-
-
-	/** 
-	 *  controls whether updates should be fired from add, delete, insert methods
-	 */
-	public static boolean sendModelUpdates = true;
-	
-
-	/**
-	 *  returns true if edits are allowed on this collection
-	 */
-	public boolean getSendModelUpdates() {
-		return sendModelUpdates;
-	}	
-	 
-
-	/**
-	 *  sets the allow edit status of this collection
-	 */
-	public void setSendModelUpdates( boolean status ) {
-		sendModelUpdates = status;
-	}	
-
-
-
-	/**
-	 *  method that checks for unsaved changes in the data model and asks if you really want to discard them.
-	 *  It returns true if the user want to cancel the close.
-	 */
-	public boolean checkUnsavedChanges () {
-		if ( getUnsavedUpdates() ) {
-			Object[] options = {
-				Settings.jpoResources.getString("discardChanges"), 
-				Settings.jpoResources.getString("genericSaveButtonLabel"), 
-				Settings.jpoResources.getString("FileSaveAsMenuItemText"), 
-				Settings.jpoResources.getString("genericCancelText")};
-			int option = JOptionPane.showOptionDialog( 
-				Settings.anchorFrame, 
-				Settings.jpoResources.getString("unsavedChanges"), 
-				Settings.jpoResources.getString("genericWarning"), 
-				JOptionPane.OK_CANCEL_OPTION,
-				JOptionPane.WARNING_MESSAGE,
-				null,
-				options,
-				options[0]);
-			switch ( option ) {
-				case 0:
-					return false;
-				case 1:
-					fileSave();
-					return getUnsavedUpdates();
-				case 2:
-					fileSaveAs();
-					return getUnsavedUpdates();
-				case 3:
-					return true;
-			}
-		}
-		return false;
-	}
 
 
 
  
-	/**
-	 *   This method returns true if the indicated file is already a member 
-	 *   of the collection. Otherwise it returns false. Enhanced on 9.6.2004 to
-	 *   check against Lowres pictures too as we might be adding in pictures that have a 
-	 *   Lowres Subdirectory and we don't wan't to add the Lowres of the collection
-	 *   back in.
-	 *
-	 *   @param	f	The File object of the file to check for
-	 */
-	public boolean isInCollection ( File f ) {
-		SortableDefaultMutableTreeNode node;
-		Object nodeObject;
-		Enumeration e = getRootNode().preorderEnumeration();
-		while ( e.hasMoreElements() ) {
-			node = (SortableDefaultMutableTreeNode) e.nextElement();
-			nodeObject = node.getUserObject();
-			if  (nodeObject instanceof PictureInfo) {
-				//Tools.log( "Checking: " + ( (PictureInfo) nodeObject ).getHighresLocation() );
-				if ( ((PictureInfo) nodeObject ).getHighresFile().compareTo( f ) == 0 )  {
-					//Tools.log ( "CollectionJTree.isInCollection found a match on: " + ( (PictureInfo) nodeObject ).getDescription() );
-					return true;
-				} else if ( ((PictureInfo) nodeObject ).getLowresFile().compareTo( f ) == 0 )  {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-
-
-
-	 
-	/**
-	 *   This method returns true if the indicated checksum is already a member 
-	 *   of the collection. Otherwise it returns false.
-	 *
-	 *   @param	checksum	The checksum of the picture to check for
-	 */
-	public boolean isInCollection ( long checksum ) {
-		SortableDefaultMutableTreeNode node;
-		Object nodeObject;
-		Enumeration e = getRootNode().preorderEnumeration();
-		while ( e.hasMoreElements() ) {
-			node = (SortableDefaultMutableTreeNode) e.nextElement();
-			nodeObject = node.getUserObject();
-			if  (nodeObject instanceof PictureInfo) {
-				//Tools.log( "Checking: " + ( (PictureInfo) nodeObject ).getHighresLocation() );
-				if ( ((PictureInfo) nodeObject ).getChecksum() == checksum )  {
-					//Tools.log ( "CollectionJTree.isInCollection found a match on: " + ( (PictureInfo) nodeObject ).getDescription() );
-					return true;
-				}
-			}
-		}
-		return false;
-	}
 
 
 	/**
@@ -558,197 +320,6 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 	}
 
 
-	/**
-	 *  This HashMap holds the categories that will be available for this collection.
-	 *  It is only populated on the root node.
-	 */
-	public HashMap categories;
-	
-	/**
-	 *  This adds a category to the HashMap
-	 */
-	public void addCategory( Integer index, String category ) {
-		//Tools.log("SDMTN.addCategory: adding " + category);
-		this.getRootNode().categories.put( index, category );
-	}
-
-	/**
-	 *  This adds a category to the HashMap
-	 */
-	public Object addCategory( String category ) {
-		//Tools.log("SDMTN.addCategory: adding " + category);
-		HashMap categories = this.getRootNode().categories;
-		Integer key = null;
-		for ( int i = 0; i < Integer.MAX_VALUE; i ++ ) {
-			key = new Integer( i );
-			if ( ! categories.containsKey( key ) ) {
-				break;
-			}
-		}
-		this.getRootNode().categories.put( key, category );
-		
-		// add a new CategoryQuery to the Searches tree
-		CategoryQuery q = new CategoryQuery( key );
-		Settings.pictureCollection.addQueryToTreeModel( q );
-		return key;
-	}
-
-
-	/**
-	 *  Renames a category in the HashMap
-	 */
-	public void renameCategory( Object key, String category ) {
-		this.getRootNode().categories.remove( key );
-		this.getRootNode().categories.put( key, category );
-	}
-
-
-	/**
-	 *  returns an iterator through the categories keys
-	 */
-	public Iterator getCategoryIterator() {
-		return this.getRootNode().categories.keySet().iterator();
-	}
-	
-	
-	/**
-	 *  returns an iterator through the categories
-	 */
-	public Object getCategory( Object key ) {
-		return this.getRootNode().categories.get( key );
-	}
-
-
-	/**
-	 *  returns an iterator through the categories
-	 */
-	public Object removeCategory( Object key ) {
-		return this.getRootNode().categories.remove( key );
-	}
-
-
-	/**
-	 *  counts the number of nodes using the category
-	 */
-	public static int countCategoryUsage( Object key, SortableDefaultMutableTreeNode startNode ) {
-		Enumeration nodes = startNode.children();
-		int count = 0;
-		SortableDefaultMutableTreeNode n;
-		while ( nodes.hasMoreElements() ) {
-			n = (SortableDefaultMutableTreeNode) nodes.nextElement();
-			if ( n.getUserObject() instanceof PictureInfo)
-				if ( ( (PictureInfo) n.getUserObject() ).containsCategory( key ) )
-					count++;
-			if ( n.getChildCount() > 0 )
-				count += countCategoryUsage ( key, n );
-		}
-		return count;
-	}
-
-
-	/**
-	 *  removes the category from the nodes using it
-	 */
-	public void removeCategoryUsage( Object key, SortableDefaultMutableTreeNode startNode  ) {
-		Enumeration nodes = startNode.children();
-		while ( nodes.hasMoreElements() ) {
-			SortableDefaultMutableTreeNode n = (SortableDefaultMutableTreeNode) nodes.nextElement();
-			if ( n.getUserObject() instanceof PictureInfo)
-				( (PictureInfo) n.getUserObject() ).removeCategory( key );
-			if ( n.getChildCount() > 0 )
-				 removeCategoryUsage ( key, n );
-		}
-	}
-
-
-	/**
-	 *  returns the number of categories available.
-	 */
-	public int countCategories() {
-		return this.getRootNode().categories.size();
-	}
-
-
-
-
-	/**
-	 *   This Hash Set hold references to the selected nodes for mailing. It works just like the selection 
-	 *   HashSet only that the purpose is a different one. As such it has different behaviour.
-	 */
-	public HashSet mailSelection;
-
-	/**
-	 *  This method places the current SDMTN into the mailSelection HashSet.
-	 */
-	public void setMailSelected() {
-		this.getRootNode().mailSelection.add( this );
-		Object userObject = this.getUserObject();
-		if ( userObject instanceof PictureInfo ) {
-			((PictureInfo) userObject).sendWasMailSelectedEvent();
-		}
-	}
-
-	/**
-	 *  This method inverts the status of the node on the mail selection HashSet
-	 */
-	public void toggleMailSelected() {
-		if ( this.isMailSelected() ) {
-			this.removeFromMailSelection();
-		} else {
-			this.setMailSelected();
-		}
-	}
-
-	/**
-	 *  This method clears the mailSelection HashSet.
-	 */
-	public void clearMailSelection() {
-		Iterator i = this.getRootNode().mailSelection.iterator();
-		Object o;
-		Object userObject;
-		while ( i.hasNext() ) {
-			o = i.next();
-			i.remove();
-			userObject = ((SortableDefaultMutableTreeNode) o).getUserObject(); 
-			if ( userObject instanceof PictureInfo ) {
-				((PictureInfo) userObject).sendWasMailUnselectedEvent();
-				
-			}
-		}
-		//this.getRootNode().mailSelection.clear();
-	}
-
-
-	/**
-	 *  This method removes the current SDMTN from the mailSelection HashSet.
-	 */
-	public void removeFromMailSelection() {
-		this.getRootNode().mailSelection.remove( this );
-		Object userObject = this.getUserObject();
-		if ( userObject instanceof PictureInfo ) {
-			((PictureInfo) userObject).sendWasMailUnselectedEvent();
-		}
-	}
-
-
-	/**
-	 *  This returns whether the SDMTN is part of the mailSelection HashSet.
-	 */
-	public boolean isMailSelected() {
-		try {
-			return this.getRootNode().mailSelection.contains( this );
-		} catch ( NullPointerException x ) {
-			return false;
-		}
-	}
-
-
-	/**
-	 *  returns an array of the mailSelected nodes.
-	 */
-	public Object [] getMailSelectedNodes() {
-		return this.getRootNode().mailSelection.toArray();
-	}
 
 
 	
@@ -1041,157 +612,6 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 
 
 
-	/**
-	 *  A file reference to the file that was loaded. It will come in handy when 
-	 *  a save instruction comes along.
-	 */
-	public File xmlFile = null;
-
-
-
-	/**
-	 *   Creates a JFileChooser GUI and allows the user to select an XML file
-	 *   which is then loaded.
-	 */
-	public void fileLoad() {
-		File fileToLoad = Tools.chooseXmlFile();
-		fileLoad( fileToLoad );
-	}
-
-
-
-	/**
-	 *   Loads the collection indicated by the File at the 
-	 *   specified node.
-	 *
-	 *   @param  fileToLoad		The File object that is to be loaded.
-	 */
-	public void fileLoad( File fileToLoad ) {
-		if ( fileToLoad != null ) {
-			try {
-				InputStream is = new FileInputStream( fileToLoad );
-				if ( this.isRoot() ) {
-					initialiseNewCollection();
-				}
-				streamLoad( is );
-				if ( this.isRoot() ) {
-					setXmlFile( fileToLoad );
-				}
-				Settings.pushRecentCollection( fileToLoad.toString() );
-			} catch ( FileNotFoundException x ) {
-				JOptionPane.showMessageDialog( Settings.anchorFrame, 
-					"File not found:\n" + fileToLoad.getPath(), 
-					Settings.jpoResources.getString("genericError"), 
-					JOptionPane.ERROR_MESSAGE);
-			}
-		}
-	}
-
-
-
-
-	/**
-	 *   Loads the collection indicated by the File at the 
-	 *   specified node.
-	 *
-	 *   @param  is	The inputstream that is to be loaded.
-	 */
-	public void streamLoad( InputStream is ) {
-		setSendModelUpdates( false ); // turn off model notification of each add for performance
-		new XmlReader( is, this );
-		getTreeModel().nodeStructureChanged( this );
-		setSendModelUpdates( true );
-	}
-
-
-
-
-
-	/**
-	 *   method that saves the entire index in XML format. It prompts for the
-	 *   filename first.
-	 */
-	public void fileSave() {
-		if (xmlFile == null)  
-			fileSaveAs();
-		else {
-			
-			File temporaryFile = new File( xmlFile.getPath() + ".!!!" );
-			new XmlDistiller( temporaryFile, getRootNode(), false, false );
-			File originalFile = new File(xmlFile.getPath() + ".orig");
-			xmlFile.renameTo( originalFile );
-			temporaryFile.renameTo( xmlFile );
-			getRootNode().setUnsavedUpdates( false );
-			originalFile.delete();
-			Settings.pushRecentCollection( xmlFile.toString() );
-			JOptionPane.showMessageDialog( Settings.anchorFrame, 
-				Settings.jpoResources.getString("collectionSaveBody") + xmlFile.toString(), 
-				Settings.jpoResources.getString("collectionSaveTitle"), 
-				JOptionPane.INFORMATION_MESSAGE);
-		}
-	}
-
-	
-
-
-	/**
-	 *   method that saves the entire index in XML format. It prompts for the
-	 *   filename first.
-	 */
-	public void fileSaveAs() {
-		JFileChooser jFileChooser = new JFileChooser();
-		jFileChooser.setFileSelectionMode( JFileChooser.FILES_ONLY );
-		jFileChooser.setDialogType( JFileChooser.SAVE_DIALOG );
-		jFileChooser.setDialogTitle( Settings.jpoResources.getString( "fileSaveAsTitle" ) );
-		jFileChooser.setMultiSelectionEnabled( false );
-		jFileChooser.setFileFilter( new XmlFilter() );
-		if (xmlFile != null )
-			jFileChooser.setCurrentDirectory( xmlFile );
-		else 
-			jFileChooser.setCurrentDirectory( Settings.getMostRecentCopyLocation() );
-				
-		int returnVal = jFileChooser.showSaveDialog( Settings.anchorFrame );
-		if ( returnVal == JFileChooser.APPROVE_OPTION ) {
-			File chosenFile = jFileChooser.getSelectedFile();
-			chosenFile = Tools.correctFilenameExtension( "xml", chosenFile );
-			if ( chosenFile.exists() ) {
-				int answer = JOptionPane.showConfirmDialog( Settings.anchorFrame, 
-					Settings.jpoResources.getString("confirmSaveAs"), 
-					Settings.jpoResources.getString("genericWarning"), 
-					JOptionPane.OK_CANCEL_OPTION,
-					JOptionPane.QUESTION_MESSAGE );
-				if ( answer == JOptionPane.CANCEL_OPTION )
-					return;
-			}
-					
-			new XmlDistiller( chosenFile, getRootNode(), false, false );
-			JOptionPane.showMessageDialog( Settings.anchorFrame, 
-				Settings.jpoResources.getString("collectionSaveBody") + chosenFile.toString(), 
-				Settings.jpoResources.getString("collectionSaveTitle"), 
-				JOptionPane.INFORMATION_MESSAGE);
-			
-			Settings.memorizeCopyLocation( chosenFile.getParent() );
-			Settings.pushRecentCollection( chosenFile.toString() );
-			getRootNode().setUnsavedUpdates( false );
-			setXmlFile( chosenFile );
-		}
-		
-	}
-
-
-	/**
-	 *  This method sets the file which represents the current collection.
-	 *  It updates the title of the main application window too.
-	 */
-	public void setXmlFile( File f ) {
-		xmlFile = f;
-		if ( f != null ) {
-			Settings.anchorFrame.setTitle ( Settings.jpoResources.getString("ApplicationTitle") + ":  " + xmlFile.toString() );
-		} else {
-			Settings.anchorFrame.setTitle ( Settings.jpoResources.getString("ApplicationTitle") );
-		}
-			
-	}
 
 
 
@@ -1253,8 +673,8 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 				}
 			}
 			in.close();
-			getTreeModel().nodeStructureChanged( this );
-			getRootNode().setUnsavedUpdates( false );
+			getPictureCollection().getTreeModel().nodeStructureChanged( this );
+			getPictureCollection().setUnsavedUpdates( false );
 		} catch (IOException e) {
 			Tools.log( "IOException " + e.getMessage() );
 			JOptionPane.showMessageDialog(Settings.anchorFrame, 
@@ -1295,8 +715,8 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 
 		super.removeFromParent();
 
-		if ( getSendModelUpdates() ) {
-			parentNode.getTreeModel().nodesWereRemoved( parentNode, childIndices, removedChildren );
+		if ( getPictureCollection().getSendModelUpdates() ) {
+			getPictureCollection().getTreeModel().nodesWereRemoved( parentNode, childIndices, removedChildren );
 		}
 		
 		/**  remove the move targets here **/
@@ -1321,8 +741,8 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 		int oldParentIndex = oldParentNode.getIndex( this );
 		Tools.log("SDMTN.removeFromParent: Currentnode: " + this.toString() + " Parent Node:" + oldParentNode.toString() );
 		super.removeFromParent();
-		if ( getSendModelUpdates() ) {
-			oldParentNode.getTreeModel().nodesWereRemoved( oldParentNode, 
+		if ( getPictureCollection().getSendModelUpdates() ) {
+			getPictureCollection().getTreeModel().nodesWereRemoved( oldParentNode, 
 						new int[]  { oldParentIndex },
 						new Object[] { this } );
 		}
@@ -1341,9 +761,9 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 	public void add ( SortableDefaultMutableTreeNode newNode ) {
 		//Tools.log( "SDMTN.add was called for node: " + newNode.toString() );
 		super.add( newNode );
-		if ( getSendModelUpdates() ) {
+		if ( getPictureCollection().getSendModelUpdates() ) {
 			int index = this.getIndex( newNode );
-			getTreeModel().nodesWereInserted( this, new int[] { index } );
+			getPictureCollection().getTreeModel().nodesWereInserted( this, new int[] { index } );
 			newNode.setUnsavedUpdates();
 		}
 	}
@@ -1356,8 +776,8 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 	public void insert ( SortableDefaultMutableTreeNode node, int index ) {
 		Tools.log( "SDMTN.insert was called for node: " + node.toString() );
 		super.insert( node, index );
-		if ( getSendModelUpdates() ) {
-			getTreeModel().nodesWereInserted( this, new int[]  { index } );
+		if ( getPictureCollection().getSendModelUpdates() ) {
+			getPictureCollection().getTreeModel().nodesWereInserted( this, new int[]  { index } );
 		}
 	}
 
@@ -1852,7 +1272,7 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 		ProgressGui progGui = new ProgressGui( Tools.countfiles( chosenFiles ),
 			Settings.jpoResources.getString("PictureAdderProgressDialogTitle"),
 			Settings.jpoResources.getString("picturesAdded") );
-		setSendModelUpdates( false );
+		getPictureCollection().setSendModelUpdates( false );
 		
 		SortableDefaultMutableTreeNode displayNode = null;
 		SortableDefaultMutableTreeNode addedNode = null;
@@ -1877,10 +1297,10 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 				}
 			}
 		}
-		setSendModelUpdates( true );
+		getPictureCollection().setSendModelUpdates( true );
 		
 		// Force an update in the tree
-		getTreeModel().nodeStructureChanged( this );
+		getPictureCollection().getTreeModel().nodeStructureChanged( this );
 		
 		progGui.switchToDoneMode();
 		if ( displayNode == null ) {
@@ -1910,12 +1330,12 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 			new SortableDefaultMutableTreeNode(
 				new GroupInfo( groupName ));
 
-		setSendModelUpdates( false );
+		getPictureCollection().setSendModelUpdates( false );
 
 
 		boolean picturesAdded = copyAddPictures1( files, targetDir, newGroup, progGui, newOnly, retainDirectories, selectedCategories );
 		progGui.switchToDoneMode();
-		setSendModelUpdates( true );
+		getPictureCollection().setSendModelUpdates( true );
 
 		if ( picturesAdded) {
 			add ( newGroup );
@@ -1949,7 +1369,7 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 			if ( ! addFile.isDirectory() ) {
 				File targetFile = Tools.inventPicFilename( targetDir, addFile.getName() );
 				long crc = Tools.copyPicture( addFile, targetFile );
-				if ( newOnly && receivingNode.isInCollection( crc ) ) {
+				if ( newOnly && Settings.pictureCollection.isInCollection( crc ) ) {
 					targetFile.delete();
 					progGui.decrementTotal();
 				} else {
@@ -1992,7 +1412,7 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 			new SortableDefaultMutableTreeNode(
 				new GroupInfo( groupName ));
 
-		setSendModelUpdates( false );
+		getPictureCollection().setSendModelUpdates( false );
 
 		cam.zapNewImage();
 		boolean picturesAdded = copyAddPictures1( files, targetDir, newGroup, progGui, cam, retainDirectories, selectedCategories );
@@ -2000,7 +1420,7 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 		cam.storeNewImage();
 		Settings.writeCameraSettings();
 		
-		setSendModelUpdates( true );
+		getPictureCollection().setSendModelUpdates( true );
 		progGui.switchToDoneMode();
 		
 		if ( picturesAdded ) {
@@ -2009,6 +1429,57 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 			newGroup = null;
 		}
 		return newGroup;
+	}
+
+
+	/**
+	 *   Creates a JFileChooser GUI and allows the user to select an XML file
+	 *   which is then loaded current node of the collection
+	 */
+	public void fileLoad() {
+		File fileToLoad = Tools.chooseXmlFile();
+		fileLoad( fileToLoad );
+	}
+
+
+
+	/**
+	 *   Loads the collection indicated by the File at the 
+	 *   specified node.
+	 *
+	 *   @param  fileToLoad		The File object that is to be loaded.
+	 */
+	public void fileLoad( File fileToLoad ) {
+		if ( fileToLoad != null ) {
+			try {
+				InputStream is = new FileInputStream( fileToLoad );
+				if ( this.isRoot() ) {
+					getPictureCollection().clearCollection();
+					getPictureCollection().setXmlFile( fileToLoad );
+				}
+				streamLoad( is );
+				Settings.pushRecentCollection( fileToLoad.toString() );
+			} catch ( FileNotFoundException x ) {
+				JOptionPane.showMessageDialog( Settings.anchorFrame, 
+					"File not found:\n" + fileToLoad.getPath(), 
+					Settings.jpoResources.getString("genericError"), 
+					JOptionPane.ERROR_MESSAGE);
+			}
+		}
+	}
+
+
+	/**
+	 *   Loads the collection indicated by the File at the 
+	 *   specified node.
+	 *
+	 *   @param  is	The inputstream that is to be loaded.
+	 */
+	public void streamLoad( InputStream is ) {
+		getPictureCollection().setSendModelUpdates( false ); // turn off model notification of each add for performance
+		new XmlReader( is, this );
+		getPictureCollection().getTreeModel().nodeStructureChanged( this );
+		getPictureCollection().setSendModelUpdates( true );
 	}
 
 
@@ -2115,7 +1586,7 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 	 */
 	public boolean addSinglePicture ( File addFile, boolean newOnly, HashSet selectedCategories ) {
 		Tools.log("SDMTN.addSinglePicture: invoked on: " + addFile.toString() + " for " + this.toString() );
-		if ( newOnly && isInCollection( addFile ) ) {
+		if ( newOnly && getPictureCollection().isInCollection( addFile ) ) {
 		    	return false; // only add pics not in the collection already
 		} else {
 			return addPicture( addFile, selectedCategories );

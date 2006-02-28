@@ -104,7 +104,7 @@ public class EmailerJFrame extends JFrame {
 	 **/
 	public EmailerJFrame() {
 
-		emailSelected = Settings.top.getMailSelectedNodes();
+		emailSelected = Settings.pictureCollection.getMailSelectedNodes();
 	
 		if ( emailSelected.length < 1) {
 			JOptionPane.showMessageDialog( this, 

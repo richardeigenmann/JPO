@@ -130,12 +130,12 @@ public class XmlDistiller extends Thread {
 			out.write("<categories>");
 			out.newLine();
 
-			Iterator i = startNode.getCategoryIterator();
+			Iterator i = startNode.getPictureCollection().getCategoryIterator();
 			Integer key;
 			String category;
 			while ( i.hasNext() ) {
 				key = (Integer) i.next();
-				category = (String) startNode.getCategory( key );
+				category = (String) startNode.getPictureCollection().getCategory( key );
 				out.write( "\t<category index=\"" + key.toString() + "\">");
 				out.newLine();
 				out.write( "\t\t<categoryDescription><![CDATA[" + category + "]]></categoryDescription>" );
@@ -182,9 +182,9 @@ public class XmlDistiller extends Thread {
 		if ( copyPics ) {
 			File targetLowresFile = Tools.inventPicFilename( lowresTargetDir, p.getLowresFilename() );
 			Tools.copyPicture( g.getLowresURL (), targetLowresFile );
-			g.dumpToXml ( out, targetLowresFile.toURI().toURL().toString(), groupNode == startNode, groupNode.getAllowEdits() );
+			g.dumpToXml ( out, targetLowresFile.toURI().toURL().toString(), groupNode == startNode, groupNode.getPictureCollection().getAllowEdits() );
 		} else {
-			g.dumpToXml ( out, groupNode == startNode, groupNode.getAllowEdits() );
+			g.dumpToXml ( out, groupNode == startNode, groupNode.getPictureCollection().getAllowEdits() );
 		}
 /*		if (groupNode == startNode) 
 			out.write("<collection collection_name=\"" 

@@ -59,13 +59,13 @@ public class GroupBrowser implements ThumbnailBrowserInterface, TreeModelListene
 	public void setNode ( SortableDefaultMutableTreeNode node ) {
 		if ( ! ( node.getUserObject() instanceof GroupInfo ) ) {
 			if ( myNode != null ) {
-				myNode.getTreeModel().removeTreeModelListener( this );
+				myNode.getPictureCollection().getTreeModel().removeTreeModelListener( this );
 				myNode = null;
 			}
 		} else {
 			myNode = node;
 			// register this component so that it receives notifications from the Model
-			myNode.getTreeModel().addTreeModelListener( this );
+			myNode.getPictureCollection().getTreeModel().addTreeModelListener( this );
 		}
 	}
 
@@ -114,7 +114,7 @@ public class GroupBrowser implements ThumbnailBrowserInterface, TreeModelListene
 	 */
 	public void cleanup () {
 		if ( myNode != null ) {
-			myNode.getTreeModel().removeTreeModelListener( this );
+			myNode.getPictureCollection().getTreeModel().removeTreeModelListener( this );
 			myNode = null;
 		}
 		relayoutListeners.clear();

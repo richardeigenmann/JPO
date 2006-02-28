@@ -15,7 +15,7 @@ import java.io.*;
 /*
 PictureViewer.java:  class that displays a window in which a picture is shown.
 
-Copyright (C) 2002  Richard Eigenmann.
+Copyright (C) 2002-2006  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -319,7 +319,7 @@ public class PictureViewer extends JPanel
 
 		// set this up so that we can close the GUI if the picture node is s while we 
 		// are displaying it.
-		Settings.top.getTreeModel().addTreeModelListener( this );
+		currentNode.getPictureCollection().getTreeModel().addTreeModelListener( this );
 
 
 		GridBagConstraints c = new GridBagConstraints();
@@ -759,7 +759,7 @@ public class PictureViewer extends JPanel
 	 *   with different options upon user request.
 	 */
 	private void closeViewer() {	
-		Settings.top.getTreeModel().removeTreeModelListener( this );
+		currentNode.getPictureCollection().getTreeModel().removeTreeModelListener( this );
 		stopTimer();
 		closeMyWindow ();
 	}

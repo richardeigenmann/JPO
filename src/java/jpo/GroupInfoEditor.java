@@ -152,7 +152,7 @@ public class GroupInfoEditor {
 			public void actionPerformed( ActionEvent e ) {
 				gi.setGroupName( descriptionJTextArea.getText() );
 				gi.setLowresLocation( lowresLocationJTextField.getText() );
-				editNode.getTreeModel().nodeChanged( editNode );
+				editNode.getPictureCollection().getTreeModel().nodeChanged( editNode );
 				getRid();
 			}
 		});

@@ -97,7 +97,7 @@ public class CategoryEditorJFrame extends JFrame implements ListSelectionListene
 		addCateogryJButton.addActionListener( new ActionListener() {
 			public void actionPerformed (ActionEvent evt ) {
 				String category = categoryJTextField.getText();
-				Object key = Settings.top.addCategory( category );
+				Object key = Settings.pictureCollection.addCategory( category );
 				Category categoryObject = new Category( key, category );
 				listModel.addElement( categoryObject );
 				categoryJTextField.setText( "" );
@@ -129,13 +129,13 @@ public class CategoryEditorJFrame extends JFrame implements ListSelectionListene
 		categoriesJList.addListSelectionListener( this );
 
 
-		Iterator i = Settings.top.getCategoryIterator();
+		Iterator i = Settings.pictureCollection.getCategoryIterator();
 		Integer key;
 		String category;
 		Category categoryObject;
 		while ( i.hasNext() ) {
 			key = (Integer) i.next();
-			category = (String) Settings.top.getCategory( key );
+			category = (String) Settings.pictureCollection.getCategory( key );
 			categoryObject = new Category( key, category );
 			listModel.addElement( categoryObject );
 		}
@@ -170,7 +170,7 @@ public class CategoryEditorJFrame extends JFrame implements ListSelectionListene
 				int index = categoriesJList.getSelectedIndex();
 				if ( index < 0 ) return; // nothing selected
 				Category cat = (Category) categoriesJList.getModel().getElementAt( index );
-				int count = Settings.top.countCategoryUsage( cat.key, Settings.top );
+				int count = Settings.pictureCollection.countCategoryUsage( cat.key, Settings.top );
 				if ( count > 0 ) {
 					int answer = JOptionPane.showConfirmDialog( CategoryEditorJFrame.this, 
 						Settings.jpoResources.getString("countCategoryUsageWarning1")
@@ -182,12 +182,12 @@ public class CategoryEditorJFrame extends JFrame implements ListSelectionListene
 					if ( answer == JOptionPane.CANCEL_OPTION ) {
 						return;
 					} else {
-						Settings.top.removeCategoryUsage( cat.key, Settings.top );
+						Settings.pictureCollection.removeCategoryUsage( cat.key, Settings.top );
 					}
 
 				}
 				listModel.remove( index );
-				Settings.top.removeCategory( cat.key );
+				Settings.pictureCollection.removeCategory( cat.key );
 				//Tools.log("I want to delete: " + cat.value.toString());
 			}
 		} );
@@ -207,7 +207,7 @@ public class CategoryEditorJFrame extends JFrame implements ListSelectionListene
 				listModel.remove( index );
 
 				String category = categoryJTextField.getText();
-				Settings.top.renameCategory( cat.key, category );
+				Settings.pictureCollection.renameCategory( cat.key, category );
 				Category categoryObject = new Category( cat.key, category );
 				listModel.insertElementAt( categoryObject, index );
 				categoryJTextField.setText( "" );
