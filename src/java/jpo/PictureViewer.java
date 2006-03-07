@@ -312,14 +312,14 @@ public class PictureViewer extends JPanel
 	 *  information display and keyboard keys.
 	 **/
 	public PictureViewer() {
-		setBackground(Color.black);
-		setOpaque(true);
-		setFocusable(false);
+		setBackground( Color.black );
+		setOpaque( true );
+		setFocusable( false );
 
 
-		// set this up so that we can close the GUI if the picture node is s while we 
+		// set this up so that we can close the GUI if the picture node is deleted while we 
 		// are displaying it.
-		currentNode.getPictureCollection().getTreeModel().addTreeModelListener( this );
+		Settings.pictureCollection.getTreeModel().addTreeModelListener( this );
 
 
 		GridBagConstraints c = new GridBagConstraints();
@@ -759,7 +759,7 @@ public class PictureViewer extends JPanel
 	 *   with different options upon user request.
 	 */
 	private void closeViewer() {	
-		currentNode.getPictureCollection().getTreeModel().removeTreeModelListener( this );
+		Settings.pictureCollection.getTreeModel().removeTreeModelListener( this );
 		stopTimer();
 		closeMyWindow ();
 	}
