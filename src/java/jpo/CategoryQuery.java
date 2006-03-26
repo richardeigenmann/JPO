@@ -25,12 +25,29 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 
 
 /** 
- *  An Interface that specifies what a query must implement so it can be shown
+ *  This class implements the Query interface to show all the nodes attached to a category.
  */
 
 public class CategoryQuery implements Query {
 
+	/**
+	 * the category key for the Query
+	 */
+	private Object key = null;
+
+
+	/**
+	 * An ArrayList of the nodes that represent these images
+	 */
+	private ArrayList resultList = null;
+	
+
+	/**
+	 * Constructor for a Category Query
+	 */
 	public CategoryQuery( Object key ) {
+		this.key = key;
+		this.refresh();
 	}
 
 	
@@ -38,7 +55,11 @@ public class CategoryQuery implements Query {
 	 *  The query must be able to say how many results it will return.
 	 */
 	public int getNumberOfResults() {
-		return 0;
+		if ( resultList == null) {
+			Tools.log("CategoryQuery.getNumberOfResults: called on a null result set.");
+			return 0;
+		}
+		return resultList.size();
 	}
 	
 
@@ -49,7 +70,14 @@ public class CategoryQuery implements Query {
 	 *  @param index   The component index that is to be returned.
 	 */
  	public SortableDefaultMutableTreeNode getIndex( int index ) {
-		return null;
+		if ( resultList == null) {
+			Tools.log("CategoryQuery.getIndex: called on a null result set.");
+			return null;
+		}
+		if ( ( index < 0 ) || ( index >= resultList.size() ) ) {
+			return null;
+		}
+		return (SortableDefaultMutableTreeNode) resultList.get( index );
 	}
 
 
@@ -64,13 +92,16 @@ public class CategoryQuery implements Query {
 	 *  returns a the title for the search that can be used to display the search results under.
 	 */
 	public String toString() {
-		return "Empty Category Query";
+		return Settings.jpoResources.getString("CategoryQuery") + Settings.pictureCollection.getCategory( key ).toString();
 	}
 
+
 	/**
-	 *  Forces the results to be refreshed
+	 *  This method retrieves a new ArrayList of nodes that match the category.
 	 */
 	public void refresh() {
+		resultList = null;
+		resultList = Settings.pictureCollection.getCategoryUsageNodes( key, Settings.pictureCollection.getRootNode() );
 	}
 
 }

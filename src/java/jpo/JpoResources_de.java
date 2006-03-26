@@ -35,7 +35,6 @@ public class JpoResources_de extends ListResourceBundle {
 		// Jpo
 		{"ApplicationTitle", "JPO - Java Picture Organizer"},
 		{"jpoTabbedPaneCollection", "Sammlung"},
-		{"jpoTabbedPaneCategories", "Kategorien"},
 		{"jpoTabbedPaneSearches", "Abfragen"},
 		
 	
@@ -566,8 +565,10 @@ public class JpoResources_de extends ListResourceBundle {
 		{"EmailerSending", "Mail verschicken"},
 		{"EmailerSent", "Mail an Server ausgeliefert"},
 
-		
-		{"Template", "Template"},
+		//CategoryQuery
+		{"CategoryQuery", "Kategorie: "},
+
+
 		{"Template", "Template"}
 		
 		

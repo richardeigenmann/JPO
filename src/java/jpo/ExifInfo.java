@@ -178,6 +178,14 @@ public class ExifInfo {
 			//x.printStackTrace();
 			exifDump.append( "No EXIF header found\n" + x.getMessage() );
 		}
+		if ( camera == null ) { camera = ""; }
+		if ( lens == null ) { lens = ""; }
+		if ( aperture == null ) { aperture = ""; }
+		if ( shutterSpeed == null ) { shutterSpeed = ""; }
+		if ( focalLength == null ) { focalLength = ""; }
+		if ( iso == null ) { iso = ""; }
+		if ( dateTime == null ) { dateTime = ""; }
+
 	}
 
 	/**

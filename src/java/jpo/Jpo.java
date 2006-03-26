@@ -203,10 +203,6 @@ public class Jpo extends JFrame
        		collectionJScrollPane.setViewportView( collectionJTree );
 
 
-		JScrollPane categoriesJScrollPane = new JScrollPane();
-		CategoriesJTree categoriesJTree = new CategoriesJTree();
-       		categoriesJScrollPane.setViewportView( categoriesJTree );
-
 
 		JScrollPane searchesJScrollPane = new JScrollPane();
 		QueriesJTree searchesJTree = new QueriesJTree( pictureCollection.getQueriesTreeModel() );
@@ -264,7 +260,6 @@ public class Jpo extends JFrame
 		leftSplitPane.setOneTouchExpandable( true );
 		JTabbedPane jpoNavigatorJTabbedPane = new JTabbedPane();
 		jpoNavigatorJTabbedPane.add( Settings.jpoResources.getString("jpoTabbedPaneCollection"), collectionJScrollPane );
-		jpoNavigatorJTabbedPane.add( Settings.jpoResources.getString("jpoTabbedPaneCategories"), categoriesJScrollPane );
 		jpoNavigatorJTabbedPane.add( Settings.jpoResources.getString("jpoTabbedPaneSearches"), searchesJScrollPane );
 		leftSplitPane.setTopComponent( jpoNavigatorJTabbedPane );
 		leftSplitPane.setBottomComponent( infoPanel );

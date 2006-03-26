@@ -402,6 +402,24 @@ public class PictureCollection {
 		return count;
 	}
 
+	/**
+	 *  returns an ArrayList of the nodes that match this category
+	 */
+	public static ArrayList getCategoryUsageNodes( Object key, SortableDefaultMutableTreeNode startNode ) {
+		ArrayList resultList = new ArrayList();
+		Enumeration nodes = startNode.children();
+		SortableDefaultMutableTreeNode n;
+		while ( nodes.hasMoreElements() ) {
+			n = (SortableDefaultMutableTreeNode) nodes.nextElement();
+			if ( n.getUserObject() instanceof PictureInfo)
+				if ( ( (PictureInfo) n.getUserObject() ).containsCategory( key ) )
+					resultList.add( n );
+			if ( n.getChildCount() > 0 )
+				resultList.addAll( getCategoryUsageNodes( key, n ) );
+		}
+		return resultList;
+	}
+
 
 	/**
 	 *  removes the category from the nodes using it
