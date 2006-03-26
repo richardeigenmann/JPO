@@ -147,6 +147,11 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 		   )
 		 	return ((PictureInfo) myObject).getDescription().compareTo( ((GroupInfo) otherObject).getGroupName() );
 		
+		if ( (myObject instanceof GroupInfo) || (otherObject instanceof GroupInfo ) ) {
+			// we can't compare Groups against the other types of field other than the description.
+			return 0;
+		}
+		
 		// at this point there can only two PictureInfo Objects
 		PictureInfo myPi = (PictureInfo) myObject;
 		PictureInfo otherPi = (PictureInfo) otherObject;
