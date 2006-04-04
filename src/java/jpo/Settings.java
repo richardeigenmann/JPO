@@ -657,18 +657,21 @@ public class Settings {
 
 
 	public static void setLanguage ( Locale currentLocale ) {
+		//System.out.println("Settings.setLanguage(Locale): setting language to locale " + currentLocale.toString() );
 		// overriden for testing
 		// currentLocale = Locale.GERMANY;
 		// currentLocale = Locale.JAPAN;
 		try {
 			jpoResources = ResourceBundle.getBundle("jpo.JpoResources", currentLocale);
 		} catch ( MissingResourceException mre ) {
-			Tools.log("Settings.setDefaults: MissingResourceException: " + mre.getMessage());
+			System.out.println("Settings.setDefaults: MissingResourceException: " + mre.getMessage());
 			jpoResources = ResourceBundle.getBundle("jpo.JpoResources", Locale.ENGLISH);
 		}
+		//System.out.println( "setLanguage checking language: " + Settings.jpoResources.getString("HelpAboutText") );
 	}
 	
 	public static void setLanguage ( String language ) {
+		//System.out.println("Settings.setLanguage(String): called with language " + language);
 		if ( language.equals("Deutsch") ) {
 			setLanguage( Locale.GERMANY );
 			currentLanguage = language;
@@ -747,6 +750,7 @@ public class Settings {
 					String Value = sb.substring(sb.indexOf("=") + 2);
 					maxThumbnails = Integer.parseInt(Value);
 				} else if (sb.startsWith("currentLanguage")) {
+					//System.out.println("Settings.loadSettings: parsing tag currentLanguage as " + sb.substring(sb.indexOf("=") + 2) );
 					setLanguage ( sb.substring(sb.indexOf("=") + 2) );
 				} else if (sb.startsWith("thumbnailSize")) {
 					String Value = sb.substring(sb.indexOf("=") + 2);
@@ -1055,6 +1059,7 @@ public class Settings {
 			out.newLine();
 
 
+			Tools.log("writeSettings: writing language as " + currentLanguage );
 			out.write("currentLanguage = " + String.valueOf( currentLanguage ) );
 			out.newLine();
 
