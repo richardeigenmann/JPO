@@ -240,14 +240,16 @@ public class Jpo extends JFrame
 			} catch ( IOException x ) {
 				Tools.log( Settings.jarAutostartList.toString() + " could not be loaded\nReason: " + x.getMessage() );
 			}
-		} else if ( Settings.autoLoad != "" ) {
+		} else if ( ( Settings.autoLoad != null ) && ( Settings.autoLoad.length() > 0 ) ) {
 			File xmlFile =  new File( Settings.autoLoad );
-			Tools.log("Jpo.constructor: Trying to load picturelist from ini: " + Settings.autoLoad );
+			Tools.log("Jpo.constructor: Trying to load collection from location in stored settings: " + Settings.autoLoad   );
 			if ( xmlFile.exists() ) {
 				pictureCollection.fileLoad( xmlFile );
 				collectionJTree.setSelectedNode ( pictureCollection.getRootNode() );
 				thumbnailJScrollPane.showGroup( pictureCollection.getRootNode() );
 			}
+		} else {
+			requestFileNew();
 		}
 
 
