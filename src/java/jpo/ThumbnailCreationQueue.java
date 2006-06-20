@@ -8,7 +8,7 @@ import java.awt.Dimension;
 /*
 ThumbnailCreationQueue.java:  queue that holds requests to create Thumbnails from Highres Images
 
-Copyright (C) 2003  Richard Eigenmann.
+Copyright (C) 2003-2006  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -113,10 +113,16 @@ public class ThumbnailCreationQueue {
 	 *				if using a cached version is ok.
 	 */
 	public static void requestThumbnailCreation( Thumbnail thumb, int priority, boolean force ) {
-		if ( thumb.referringNode.getUserObject() instanceof PictureInfo ) {
-			thumb.setThumbnail( queueIcon );
-		} else {
-			thumb.setThumbnail( largeFolderIcon );
+		// prevent concurrent use of Thumbnail:
+		synchronized( thumb ) {
+			if ( thumb.referringNode == null ) {
+				Tools.log( "ThumbnailCreationQueue.requestThumbnailCreation: referring node was null! How did this happen?");
+				return;
+			} else if ( thumb.referringNode.getUserObject() instanceof PictureInfo ) {
+				thumb.setThumbnail( queueIcon );
+			} else {
+				thumb.setThumbnail( largeFolderIcon );
+			}
 		}
 		thumbQueue.remove( thumb ); // remove it if it was there already
 		thumbQueue.add( new ThumbnailQueueRequest ( thumb, priority, force ) );

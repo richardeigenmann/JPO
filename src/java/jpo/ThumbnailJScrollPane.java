@@ -14,7 +14,7 @@ import java.util.*;
 /*
 ThumbnailJScrollPane.java:  a JScrollPane that shows thumbnails
 
-Copyright (C) 2002  Richard Eigenmann.
+Copyright (C) 2002-2006  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -105,7 +105,7 @@ public class ThumbnailJScrollPane
 	/** 
 	 * the layout object that handles all layouting in the ThumbnailPane 
 	 */ 
-	public GridBagLayout ThumbnailLayout = new GridBagLayout(); 
+	public GridBagLayout ThumbnailLayout; 
  
  
  	/**
@@ -220,7 +220,7 @@ public class ThumbnailJScrollPane
 	/**
 	 *   Slider to control the size of the thumbnails
 	 */
-	JSlider resizeJSlider = new JSlider( JSlider.HORIZONTAL,
+	private JSlider resizeJSlider = new JSlider( JSlider.HORIZONTAL,
                                       THUMBNAILSIZE_MIN, THUMBNAILSIZE_MAX, THUMBNAILSIZE_INIT);
 
 	/**
@@ -256,11 +256,11 @@ public class ThumbnailJScrollPane
 		descriptionConstraints.ipady = verticalPadding;
 
 		
+		ThumbnailLayout = new GridBagLayout(); 
+		ThumbnailPane.setLayout( ThumbnailLayout ); 
 		calculateCols();
 		initThumbnailsArray();
-		ThumbnailPane.validate();
 		
-		ThumbnailPane.setLayout( ThumbnailLayout ); 
 		ThumbnailPane.setBackground(Color.white); 
 		setViewportView( ThumbnailPane ); 
 		setWheelScrollingEnabled (true ); 
@@ -276,7 +276,7 @@ public class ThumbnailJScrollPane
 		// I then need to know the width minus the vertical scrollbar to determine the columns.
 		this.addComponentListener(new ComponentAdapter() { 
 			public void componentResized( ComponentEvent e ) { 
-				//Tools.log("ThumbnailJScrollPane.componentResized activated.");
+				Tools.log("ThumbnailJScrollPane.componentResized activated.");
 				if ( calculateCols() ){ 
 					for ( int i = 0; i < thumbnails.length; i++) {
 						calculateConstraints( i );
@@ -284,8 +284,7 @@ public class ThumbnailJScrollPane
 						ThumbnailLayout.setConstraints( thumbnailDescriptionJPanels[i], descriptionConstraints );
 					}
 	 			}
-				ThumbnailPane.validate();
-				validate();
+				Tools.log("ThumbnailJScrollPane.componentResized ran calling validate.");
 			} 
 	        });   
  
@@ -482,6 +481,7 @@ public class ThumbnailJScrollPane
 	 *  creates the arrays for the thumbnails and the descriptions and adds them to the ThubnailPane.
 	 */
 	public void initThumbnailsArray () {
+		//Tools.log("ThumbnailJscrollPane.initThumbnailsArray: invoked.");
 		thumbnails = new Thumbnail[ Settings.maxThumbnails ];
 		thumbnailDescriptionJPanels = new ThumbnailDescriptionJPanel[ Settings.maxThumbnails ];
 		ThumbnailPane.removeAll();
@@ -490,9 +490,11 @@ public class ThumbnailJScrollPane
 			thumbnails[i] = new Thumbnail( this );
 			thumbnailDescriptionJPanels[i] = new ThumbnailDescriptionJPanel( i, this );
 			calculateConstraints( i );
+			//Tools.log("ThumbnailJScropplPane.initThumbnailsArray: Adding thumbnail " + Integer.toString(i) + " with constraints: x=" + Integer.toString( thumbnailConstraints.gridx ) + " y=" + Integer.toString( thumbnailConstraints.gridy ) );
 			ThumbnailPane.add( thumbnails[i], thumbnailConstraints );
 			ThumbnailPane.add( thumbnailDescriptionJPanels[i], descriptionConstraints);
 		}
+		//Tools.log("ThumbnailJscrollPane.initThumbnailsArray: exit.");
 	}
 
 
@@ -585,6 +587,13 @@ public class ThumbnailJScrollPane
 		setPageStats();
 		
 		setButtonVisibility();
+		// take the thumbnails off the creation queue if they were on it.
+		// as setNode is now internally synchronised this can slow doen removal 
+		// from the queue
+		for ( int i=0;  i < Settings.maxThumbnails; i++ ) {
+			thumbnails[i].unqueue();
+		}
+
 		for ( int i=0;  i < Settings.maxThumbnails; i++ ) {
 			SortableDefaultMutableTreeNode newNode = mySetOfNodes.getNode( i + startIndex );
 			thumbnails[i].setNode( newNode );
@@ -685,8 +694,8 @@ public class ThumbnailJScrollPane
 		int width = getViewportBorderBounds().width;
 		int newCols = (int) ( width / ( ( Settings.thumbnailSize * thumbnailSizeFactor ) + ( horizontalPadding * 2 ) ));  
 		if ( newCols < 1 ) { newCols = 1; } 
-		//Tools.log("ThumbnailJScrollPane.calculateCols: width: " + Integer.toString( width ) +
-		//	" newCols: " + Integer.toString( newCols ) + " oldCols: " + Integer.toString(getCols()));
+		Tools.log("ThumbnailJScrollPane.calculateCols: width: " + Integer.toString( width ) +
+			" newCols: " + Integer.toString( newCols ) + " oldCols: " + Integer.toString(getCols()));
 		if ( newCols != getCols() ) {
 			setCols( newCols );
 			return true;
@@ -709,10 +718,13 @@ public class ThumbnailJScrollPane
 		
 		/*Tools.log( "ThumbnailJScrollPane.calculateConstraints(): position=" 
 			+ Integer.toString( position ) 
+			+ " cols= "
+			+ Integer.toString( cols )
 			+ " y= "
 			+ Integer.toString( thumbnailConstraints.gridy ) 
 			+ " x= "
-			+ Integer.toString( thumbnailConstraints.gridx ) );*/
+			+ Integer.toString( thumbnailConstraints.gridx ) );
+		*/
 	}
 
 

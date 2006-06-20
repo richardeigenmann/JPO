@@ -17,10 +17,12 @@ import javax.swing.border.*;
 import java.awt.image.*;
 import java.awt.geom.*;
 import javax.imageio.*;
+import java.awt.Dimension;
+
 /*
 Thumbnail.java:  class that displays a visual respresentation of the specified node
 
-Copyright (C) 2002  Richard Eigenmann.
+Copyright (C) 2002-2006  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -266,7 +268,12 @@ public class Thumbnail extends JPanel
 			pi.removePictureInfoChangeListener( this );
 		}
 
-		this.referringNode = node;
+		// don't change while another thread might be using the Thumbnail
+		// in particular the ThumbnailCreationThread.createThumbnail doesn't like it
+		// if this node is changed while it is rendering a thumbnail.
+		synchronized( this ) {
+			this.referringNode = node;
+		}
 
 		// attach the change Listener
 		if ( ( referringNode != null ) 
@@ -286,7 +293,7 @@ public class Thumbnail extends JPanel
 		} // else {
 			// setThumbnail( folderIcon );
 		//}
-		
+	
 		showSlectionStatus();
 		determineMailSlectionStatus();
 		determineImageStatus( referringNode );
@@ -606,6 +613,15 @@ public class Thumbnail extends JPanel
 	}
 
 
+
+	/**
+	 *   Returns the preferred size for the Thumbnail as a Dimension using the thumbnailSize 
+	 *   as widht and height.
+	 */
+	public Dimension getPreferredSize() {
+		return new Dimension( thumbnailSize, thumbnailSize );
+	}
+		
 
 	// Here we are not that interested in TreeModel change events other than to find out if our
 	// current node was removed in which case we close the Window.
