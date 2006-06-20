@@ -217,12 +217,15 @@ public class ThumbnailCreationThread extends Thread {
 			return;
 		}
 
+
 		// Thumbnail up to date is size ok?
+		Tools.log("ThubnailCreationThread.loadOrCreatePictureThumbnail: Thumbnail is up to date. Checking size");
 		ImageIcon icon = new ImageIcon( lowresUrl );
-		 if ( isThumbnailSizeOk( new Dimension( icon.getIconWidth(), icon.getIconHeight() ),
+		if ( isThumbnailSizeOk( new Dimension( icon.getIconWidth(), icon.getIconHeight() ),
 	  	      currentThumb.getPreferredSize() ) ) {
 			// all ist fine
 			currentThumb.setThumbnail( icon );
+			currentThumb.validate();
 		} else {
 			Tools.log( "ThumbnailCreationThread.createPictureThumbnail: Thumbnail is wrong size: " + icon.getIconWidth()  + " x " +  icon.getIconHeight() + " therefore thrown on queue");
 			createNewThumbnail( currentThumb );

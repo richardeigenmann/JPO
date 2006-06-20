@@ -2,7 +2,7 @@ package jpo;
 
 import java.util.*;
 import javax.swing.event.*; 
- 
+import javax.swing.tree.*; 
  
 /*
 GroupBrower.java:  an implementation of the ThumbnailBrowserInterface for browsing groups.
@@ -57,11 +57,14 @@ public class GroupBrowser implements ThumbnailBrowserInterface, TreeModelListene
 	 *  @param  node   The SortableDefaultMutableTreeNode that refers to the Group that should be displayed.
 	 */
 	public void setNode ( SortableDefaultMutableTreeNode node ) {
+		// deregister from prior TreeModelListener (could be that the new group is from a different tree)
+		if ( myNode != null ) {
+			myNode.getPictureCollection().getTreeModel().removeTreeModelListener( this );
+		}
+		
+		// validate that we are dealing with a GroupInfo node
 		if ( ! ( node.getUserObject() instanceof GroupInfo ) ) {
-			if ( myNode != null ) {
-				myNode.getPictureCollection().getTreeModel().removeTreeModelListener( this );
-				myNode = null;
-			}
+			myNode = null;
 		} else {
 			myNode = node;
 			// register this component so that it receives notifications from the Model
@@ -168,7 +171,18 @@ public class GroupBrowser implements ThumbnailBrowserInterface, TreeModelListene
 	 */
 	public void treeNodesChanged (TreeModelEvent e) {
 		Tools.log("GroupBrowser.treeNodesChanged: " + e.toString() );
-		notifyRelayoutListeners(); 
+		if ( myNode == null ) {
+			Tools.log("GroupBrowser.treeNodesChanged: ERROR! This should not have been called as there is not group showing and therefore there should be no tree listener firing off. Ignoring notification.");
+			return;
+		}
+
+		// don't get excited and force a relayout unless the inserted node is part 
+		// of the current group
+		TreePath myPath = new TreePath( myNode.getPath() );
+		if ( myPath.equals( e.getTreePath() ) ) {
+			Tools.log("GroupBrowser.treeNodesChanged: The changed node's parent is the group being shown. We must therefore relayout the children; myNode: " + myPath.toString() + " comparison:" +  ((SortableDefaultMutableTreeNode) e.getTreePath().getLastPathComponent() ).toString() );
+			notifyRelayoutListeners(); 
+		}
 	}
 	
 	/** 
@@ -180,7 +194,18 @@ public class GroupBrowser implements ThumbnailBrowserInterface, TreeModelListene
 	 */
 	public void treeNodesInserted (TreeModelEvent e) {
 		Tools.log("GroupBrowser.treeNodesInserted: " + e.toString() );
-		notifyRelayoutListeners(); 
+		if ( myNode == null ) {
+			Tools.log("GroupBrowser.treeNodesInserted: ERROR! This should not have been called as there is not group showing and therefore there should be no tree listener firing off. Ignoring notification.");
+			return;
+		}
+
+		// don't get excited and force a relayout unless the inserted node is part 
+		// of the current group
+		TreePath myPath = new TreePath( myNode.getPath() );
+		if ( myPath.equals( e.getTreePath() ) ) {
+			Tools.log("GroupBrowser.treeNodesInserted: The inserted node's parent is the group being shown. We must therefore relayout the children; myNode: " + myPath.toString() + " comparison:" +  ((SortableDefaultMutableTreeNode) e.getTreePath().getLastPathComponent() ).toString() );
+			notifyRelayoutListeners(); 
+		}
 	}
 
 	/** 
@@ -191,11 +216,27 @@ public class GroupBrowser implements ThumbnailBrowserInterface, TreeModelListene
 	 */
 	public void treeNodesRemoved ( TreeModelEvent e ) {
 		Tools.log("GroupBrowser.treeNodesRemoved: " + e.toString() );
-		if ( ( myNode != null ) && ( SortableDefaultMutableTreeNode.wasNodeDeleted( myNode, e ) ) ) {
-			setNode( (SortableDefaultMutableTreeNode) e.getTreePath().getLastPathComponent() );
+		if ( myNode == null ) {
+			Tools.log("GroupBrowser.treeNodesRemoved: ERROR! This should not have been called as there is not group showing and therefore there should be no tree listener firing off. Ignoring notification.");
+			return;
 		}
-		notifyRelayoutListeners(); 
+		
+		// if the current node is part of the tree that was deleted then we need to 
+		//  reposition the group at the parent node that remains.
+		if ( SortableDefaultMutableTreeNode.wasNodeDeleted( myNode, e ) ) {
+			Tools.log("GroupBrowser.treeNodesRemoved: determined that a child node of the currently displaying node was deleted and therefore executing a setNode on the parent that remains.");
+			setNode( (SortableDefaultMutableTreeNode) e.getTreePath().getLastPathComponent() );
+		} else {
+			// don't get excited and force a relayout unless the partent of the deleted 
+			// node is the current group
+			TreePath myPath = new TreePath( myNode.getPath() );
+			if ( myPath.equals( e.getTreePath() ) ) {
+				Tools.log("GroupBrowser.treeNodesRemoved: The removed node's parent is the group being shown. We must therefore relayout the children; myNode: " + myPath.toString() + " comparison:" +  ((SortableDefaultMutableTreeNode) e.getTreePath().getLastPathComponent() ).toString() );
+				notifyRelayoutListeners(); 
+			}
+		}
 	}
+
 
 	/** 
 	 *   This method is defined by the TreeModelListener interface and gives the 
@@ -205,8 +246,11 @@ public class GroupBrowser implements ThumbnailBrowserInterface, TreeModelListene
 	 */
 	public void treeStructureChanged (TreeModelEvent e) {
 		Tools.log("GroupBrowser.treeStructureChanged: " + e.toString() );
-		if ( ( myNode != null )
-		  && myNode.isNodeDescendant( (SortableDefaultMutableTreeNode) e.getTreePath().getLastPathComponent() ) ){
+		if ( myNode == null ) {
+			Tools.log("GroupBrowser.treeStructureChanged: ERROR! This should not have been called as there is not group showing and therefore there should be no tree listener firing off. Ignoring notification.");
+			return;
+		}
+		if ( myNode.isNodeDescendant( (SortableDefaultMutableTreeNode) e.getTreePath().getLastPathComponent() ) ){
 			notifyRelayoutListeners(); 
 		}
 	}

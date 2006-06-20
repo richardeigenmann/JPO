@@ -254,8 +254,10 @@ public class Thumbnail extends JPanel
 	 *  @param  node   The node which should be displayed. Can be null if the Thumbnail is to be muted.
 	 */
 	public void setNode( SortableDefaultMutableTreeNode node ) {
+		//Tools.log("Thumbnail.setNode: called.");
 		if ( this.referringNode == node ) {
 			// Don't refresh the node if it hasn't changed
+			//Tools.log("Thumbnail.setNode: determined that this node is being set to the same.");
 			return;
 		}
 
@@ -288,11 +290,10 @@ public class Thumbnail extends JPanel
 			imgOb = null;
 			setVisible( false );
 		} else { //if ( node.getUserObject() instanceof PictureInfo ) {
+			//Tools.log("Thumbnail.setNode: called on node: " + node.getUserObject().toString());
 			ThumbnailCreationQueue.requestThumbnailCreation( 
 				this, priority );
-		} // else {
-			// setThumbnail( folderIcon );
-		//}
+		} 
 	
 		showSlectionStatus();
 		determineMailSlectionStatus();

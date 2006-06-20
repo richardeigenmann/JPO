@@ -701,7 +701,7 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 	 *
  	 */
 	public boolean deleteNode() {
-		Tools.log( "SDMTN.deleteNode: invoked on:" + this.toString() );
+		Tools.log( "SDMTN.deleteNode: invoked on: " + this.toString() );
 		if ( this.isRoot() ) {
 			Tools.log( "SDMTN.deleteNode: attempted on Root node. Can't do this! Aborted." );
 			JOptionPane.showMessageDialog( null, //very annoying if the main window is used as it forces itself into focus.

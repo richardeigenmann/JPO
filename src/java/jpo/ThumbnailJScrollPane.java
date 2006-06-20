@@ -567,7 +567,8 @@ public class ThumbnailJScrollPane
 	 *  this method runs through all the thumbnails on the panel and makes sure they are set to the
 	 *  correct node. It also sets the tile of the JScrollPane.
 	*/ 
-	private void layoutThumbnails() { 
+	private void layoutThumbnails() {
+		Tools.log("ThumbnailJScrollPane.layoutThumbnails: running through thumbnails"); 
 		if (mySetOfNodes == null) {
 			return;
 		}
@@ -599,7 +600,9 @@ public class ThumbnailJScrollPane
 			thumbnails[i].setNode( newNode );
 			thumbnailDescriptionJPanels[i].setNode( newNode );
 		}
+		//ThumbnailPane.validate();		
 	} 
+
  
 
 

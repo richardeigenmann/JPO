@@ -2,7 +2,6 @@ package jpo;
 
 import java.util.*;
 import javax.swing.ImageIcon;
-import java.awt.Dimension;
 
 
 /*
@@ -174,6 +173,10 @@ public class ThumbnailCreationQueue {
 			}
 		}
 		thumbQueue.remove( req );
+		/*if ( req == null )
+			Tools.log("ThumbnailCreationQueue.getRequest: picking up a null thumbnail request.");
+		else
+			Tools.log("ThumbnailCreationQueue.getRequest: picking up thumbnail request: " + req.toString());*/
 		return req;
 	}
 
