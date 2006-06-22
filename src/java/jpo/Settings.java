@@ -395,6 +395,18 @@ public class Settings {
 
 
 	/**
+	 *  Supported Languages
+	 */
+	public static final String[] supportedLanguages = { "English", "Deutsch", "Simplified Chinese", "Traditional Chinese" };
+
+	/**
+	 *  Locales for the languages in supportedLanguages
+	 */
+	public static final Locale[] languageLocale = { Locale.ENGLISH, Locale.GERMANY, Locale.SIMPLIFIED_CHINESE, Locale.TRADITIONAL_CHINESE };
+
+
+
+	/**
 	 *  The default number of pictures per row for the Html export
 	 */
 	public static int defaultHtmlPicsPerRow = 3;
@@ -663,7 +675,7 @@ public class Settings {
 
 
 	public static void setLanguage ( Locale currentLocale ) {
-		//System.out.println("Settings.setLanguage(Locale): setting language to locale " + currentLocale.toString() );
+		System.out.println("Settings.setLanguage(Locale): setting language to locale " + currentLocale.toString() );
 		// overriden for testing
 		// currentLocale = Locale.GERMANY;
 		// currentLocale = Locale.JAPAN;
@@ -676,15 +688,42 @@ public class Settings {
 		//System.out.println( "setLanguage checking language: " + Settings.jpoResources.getString("HelpAboutText") );
 	}
 	
+	
+	/**
+	 *  Call this method to set the language of the settings. The supported languages are
+	 *  enumerated int he supportedLanguages Array. This mehtod calls the setLanguage(Locale)
+	 *  method which changes the Locale which is the thing that matters. This one just maps the text
+	 *  to the Locale.
+	 */
 	public static void setLanguage ( String language ) {
+		boolean notfound = true;
+		for ( int i=0; (i < Settings.supportedLanguages.length) && notfound; i++ ) {
+			if ( language.equals( Settings.supportedLanguages[i] ) ) {
+				currentLanguage = language;
+				setLanguage( Settings.languageLocale[i] );
+				notfound = false;
+			}
+		}
+		if ( notfound ) {
+			Tools.log("Settings.setLanguage: Language " + language + " not in list of supported languages\nSupported languages are:");
+			System.out.println("Settings.setLanguage: Language " + language + " not in list of supported languages\nSupported languages are:");
+			for ( int i=0; (i < Settings.supportedLanguages.length); i++ ) {
+				Tools.log(Settings.supportedLanguages[i]);
+				System.out.println(Settings.supportedLanguages[i]);
+			}
+			setLanguage( Locale.ENGLISH );
+			currentLanguage = "English";
+		}
+		
+
 		//System.out.println("Settings.setLanguage(String): called with language " + language);
-		if ( language.equals("Deutsch") ) {
+		/*if ( language.equals("Deutsch") ) {
 			setLanguage( Locale.GERMANY );
 			currentLanguage = language;
 		} else {
 			setLanguage( Locale.ENGLISH );
 			currentLanguage = "English";
-		}
+		}*/
 	}
 	
 
@@ -1066,7 +1105,7 @@ public class Settings {
 
 
 			Tools.log("writeSettings: writing language as " + currentLanguage );
-			out.write("currentLanguage = " + String.valueOf( currentLanguage ) );
+			out.write("currentLanguage = " + currentLanguage );
 			out.newLine();
 
 			out.write("maximumPictureSize = " + String.valueOf( maximumPictureSize ) );

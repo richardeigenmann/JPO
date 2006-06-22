@@ -256,14 +256,9 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 
 
 	/**
-	 *  Supported Languages
-	 */
-	private String[] supportedLanguages = { "English", "Deutsch" };
-
-	/**
 	 *  Drop down box that shows the languages
 	 */
-	private	JComboBox languageJComboBox = new JComboBox( supportedLanguages );
+	private	JComboBox languageJComboBox = new JComboBox( Settings.supportedLanguages );
 
 
 	/**
@@ -821,11 +816,17 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 	 *   Settings object's values are
 	 */
 	private void initValues () {
-		if ( Settings.currentLanguage.equals("Deutsch") ) {
+		for ( int i=0; i < Settings.supportedLanguages.length; i++ ) {
+			if ( Settings.currentLanguage.equals( Settings.supportedLanguages[i] ) ) {
+				languageJComboBox.setSelectedIndex( i );
+			}
+		}
+				
+		/*if ( Settings.currentLanguage.equals("Deutsch") ) {
 			languageJComboBox.setSelectedIndex( 1 );
 		} else {
 			languageJComboBox.setSelectedIndex( 0 );
-		}
+		}*/
 		
 		autoLoadJTextField.setText(Settings.autoLoad);
 		logfileJCheckBox.setSelected( Settings.writeLog );
@@ -910,11 +911,27 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 	 *   the GUI fields and writes them to the Settings object.
 	 */
 	private void writeValues () {
-		if ( languageJComboBox.getSelectedIndex() == 1 ) {
+		Settings.setLanguage( Settings.supportedLanguages[ languageJComboBox.getSelectedIndex() ] );
+		/*switch( languageJComboBox.getSelectedIndex() ) {
+			case 1:
+				Settings.setLanguage( "Deutsch" );
+				break;
+			case 2:
+				Settings.setLanguage( "Simplified Chinese" );
+				break;
+			case 3:
+				Settings.setLanguage( "Traditional Chinese" );
+				break;
+			otherwise:
+				Settings.setLanguage( "English" );
+				break;
+		]*/
+				
+		/* if ( languageJComboBox.getSelectedIndex() == 1 ) {
 			Settings.setLanguage( "Deutsch" );
 		} else {
 			Settings.setLanguage( "English" );
-		}
+		} */
 
 		Settings.autoLoad = autoLoadJTextField.getText();
 		if ( ! logfileJTextField.getText().equals( Settings.logfile.getPath() ) 
