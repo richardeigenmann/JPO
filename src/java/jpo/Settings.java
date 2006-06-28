@@ -359,12 +359,14 @@ public class Settings {
 	/**
 	 *  the font used to display the title. Currently Arial Bold 20.
 	 */
-	public static final Font titleFont = new Font("Arial", Font.BOLD, 20);
+	//public static final Font titleFont = new Font("Arial", Font.BOLD, 20);
+	public static Font titleFont;// = Font.decode( Settings.jpoResources.getString("SettingsTitleFont") );
  
 	/**
 	 *  the font used to display the captions. Currently Arial Plain 16
 	 */
-	public static final Font captionFont = new Font("Arial", Font.PLAIN, 16) ;
+	//public static final Font captionFont = new Font("Arial", Font.PLAIN, 16) ;
+	public static Font captionFont;// = Font.decode( Settings.jpoResources.getString("SettingsCaptionFont") );
 
 
 	/**
@@ -675,7 +677,7 @@ public class Settings {
 
 
 	public static void setLanguage ( Locale currentLocale ) {
-		System.out.println("Settings.setLanguage(Locale): setting language to locale " + currentLocale.toString() );
+		//System.out.println("Settings.setLanguage(Locale): setting language to locale " + currentLocale.toString() );
 		// overriden for testing
 		// currentLocale = Locale.GERMANY;
 		// currentLocale = Locale.JAPAN;
@@ -685,6 +687,10 @@ public class Settings {
 			System.out.println("Settings.setDefaults: MissingResourceException: " + mre.getMessage());
 			jpoResources = ResourceBundle.getBundle("jpo.JpoResources", Locale.ENGLISH);
 		}
+		titleFont = Font.decode( Settings.jpoResources.getString("SettingsTitleFont") );
+		captionFont = Font.decode( Settings.jpoResources.getString("SettingsCaptionFont") );
+
+
 		//System.out.println( "setLanguage checking language: " + Settings.jpoResources.getString("HelpAboutText") );
 	}
 	
@@ -706,7 +712,7 @@ public class Settings {
 		}
 		if ( notfound ) {
 			Tools.log("Settings.setLanguage: Language " + language + " not in list of supported languages\nSupported languages are:");
-			System.out.println("Settings.setLanguage: Language " + language + " not in list of supported languages\nSupported languages are:");
+			//System.out.println("Settings.setLanguage: Language " + language + " not in list of supported languages\nSupported languages are:");
 			for ( int i=0; (i < Settings.supportedLanguages.length); i++ ) {
 				Tools.log(Settings.supportedLanguages[i]);
 				System.out.println(Settings.supportedLanguages[i]);
@@ -714,16 +720,7 @@ public class Settings {
 			setLanguage( Locale.ENGLISH );
 			currentLanguage = "English";
 		}
-		
 
-		//System.out.println("Settings.setLanguage(String): called with language " + language);
-		/*if ( language.equals("Deutsch") ) {
-			setLanguage( Locale.GERMANY );
-			currentLanguage = language;
-		} else {
-			setLanguage( Locale.ENGLISH );
-			currentLanguage = "English";
-		}*/
 	}
 	
 

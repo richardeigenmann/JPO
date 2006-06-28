@@ -4,11 +4,12 @@ import java.awt.event.*;
 import javax.swing.*;
 import java.awt.*;
 import java.io.*;
+import java.util.*;
 
 /*
 ApplicationJMenuBar.java:  main menu for the application
 
-Copyright (C) 2002  Richard Eigenmann.
+Copyright (C) 2002 -2006 Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -62,7 +63,7 @@ public class ApplicationJMenuBar extends JMenuBar
 	/** 
 	 *  The Action menu which is part of the JMenuBar for the Jpo application.
 	 **/	 	 
-	private JMenu actionJMenu = new JMenu( Settings.jpoResources.getString("actionJMenu") ); ;
+	private JMenu actionJMenu = new JMenu();
 
 
 	/** 
@@ -80,7 +81,7 @@ public class ApplicationJMenuBar extends JMenuBar
 	/** 
 	 *  Menu item that will request a File|New operation.
 	 **/	 	 
-	private JMenuItem FileNewJMenuItem = new JMenuItem( Settings.jpoResources.getString("FileNewJMenuItem") ); 
+	private JMenuItem FileNewJMenuItem = new JMenuItem(); 
 	
 
 	/** 
@@ -148,14 +149,12 @@ public class ApplicationJMenuBar extends JMenuBar
 	/** 
 	 *  Menu item that allows the user to change the application settings.
 	 **/	 	 
-	private JMenuItem EditCollectionPropertiesJMenuItem = 
-		new JMenuItem( Settings.jpoResources.getString("EditCollectionPropertiesJMenuItem") ); 
+	private JMenuItem EditCollectionPropertiesJMenuItem = new JMenuItem(); 
 
 	/** 
 	 *  Menu item that allows the user to have the collection integrity checked.
 	 **/	 	 
-	private JMenuItem EditCheckIntegrityJMenuItem = 
-		new JMenuItem( Settings.jpoResources.getString("EditCheckIntegrityJMenuItem") ); 
+	private JMenuItem EditCheckIntegrityJMenuItem = new JMenuItem(); 
 
 
 	/** 
@@ -183,6 +182,11 @@ public class ApplicationJMenuBar extends JMenuBar
 
 
 	/**
+	 *  Remember the Locale of the last check so we can detect language changes
+	 */
+	private Locale localeOfLastCheck;
+
+	/**
 	 *  Creates a menu object for use in the main frame of the application.
 	 *
 	 *  @param caller  The object that is going to get the requests.
@@ -191,7 +195,7 @@ public class ApplicationJMenuBar extends JMenuBar
 		this.caller = caller;
 
 		//Build the file menu.
-		FileJMenu = new JMenu( Settings.jpoResources.getString("FileMenuText") ); 
+		FileJMenu = new JMenu(); 
 		FileJMenu.setMnemonic(KeyEvent.VK_F);
 		add( FileJMenu );
 
@@ -202,12 +206,12 @@ public class ApplicationJMenuBar extends JMenuBar
 		FileJMenu.add( FileNewJMenuItem );
 
 
-		FileAddJMenuItem = new JMenuItem( Settings.jpoResources.getString("FileAddMenuItemText") ); 
+		FileAddJMenuItem = new JMenuItem(); 
 		FileAddJMenuItem.setMnemonic( KeyEvent.VK_A );
 		FileAddJMenuItem.addActionListener( this );
 		FileJMenu.add( FileAddJMenuItem );
 		
-		FileCameraJMenuItem = new JMenuItem( Settings.jpoResources.getString("FileCameraJMenuItem") ); 
+		FileCameraJMenuItem = new JMenuItem(); 
 		FileCameraJMenuItem.setMnemonic( KeyEvent.VK_C );
 		FileCameraJMenuItem.addActionListener( this );
 		FileJMenu.add( FileCameraJMenuItem );
@@ -344,8 +348,27 @@ public class ApplicationJMenuBar extends JMenuBar
 			}
 		} );
 		HelpJMenu.add( HelpLicenseJMenuItem );
-		
+
+		setMenuTexts();		
 		recentFilesChanged();
+	}
+
+	/**
+	 *  This menu sets the texts of the menu. As the language could be changed it stores 
+	 *  The Locale of the last derivation which allows us to detect a language change and 
+	 *  re-set the texts.
+	 */
+	private void setMenuTexts() {
+		localeOfLastCheck = (Locale) Settings.currentLocale.clone();
+
+		FileJMenu.setText( Settings.jpoResources.getString("FileMenuText") ); 
+		FileNewJMenuItem.setText( Settings.jpoResources.getString("FileNewJMenuItem") ); 
+		actionJMenu.setText( Settings.jpoResources.getString("actionJMenu") );
+		EditCollectionPropertiesJMenuItem.setText( Settings.jpoResources.getString("EditCollectionPropertiesJMenuItem") ); 
+		EditCheckIntegrityJMenuItem.setText( Settings.jpoResources.getString("EditCheckIntegrityJMenuItem") ); 
+		FileAddJMenuItem.setText( Settings.jpoResources.getString("FileAddMenuItemText") );
+		FileCameraJMenuItem.setText( Settings.jpoResources.getString("FileCameraJMenuItem") ); 
+		
 	}
 
 
@@ -368,6 +391,10 @@ public class ApplicationJMenuBar extends JMenuBar
 	 *  Method that analyses the user initiated action and performs what the user reuqested.
 	 **/
 	public void actionPerformed(ActionEvent e) {
+		if ( Settings.currentLocale != localeOfLastCheck ) {
+			setMenuTexts();
+		}
+	
 		//  File Menu
 		if ( e.getSource() == FileNewJMenuItem )
 			caller.requestFileNew();

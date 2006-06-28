@@ -20,7 +20,7 @@ import java.util.Enumeration;
 /*
 ScalablePicture.java:  class that can load and save images
 
-Copyright (C) 2002  Richard Eigenmann.
+Copyright (C) 2002-2006  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -167,8 +167,8 @@ public class ScalablePicture implements SourcePictureListener {
 	 *   Constructor
 	 */
 	public ScalablePicture() {
-		setStatus(UNINITIALISED, "Creating uninitialised ScalablePicture object.");
-		setScaleFactor((double) 1);
+		setStatus( UNINITIALISED, Settings.jpoResources.getString("ScalablePictureUninitialisedStatus") );
+		setScaleFactor( (double) 1 );
 	}
 
 
@@ -239,19 +239,19 @@ public class ScalablePicture implements SourcePictureListener {
 				case SourcePicture.LOADING:
 					// Tools.log("ScalablePicture.loadAndScalePictureInThread: pictureStatus was: LOADING");
 					sourcePicture.addListener( this );
-					setStatus( LOADING, "Loading: " + imageUrl.toString() );
+					setStatus( LOADING, Settings.jpoResources.getString("ScalablePictureLoadingStatus")  );
 					sourceLoadProgressNotification( SourcePicture.LOADING_PROGRESS, sourcePicture.getPercentLoaded() );
 					scaleAfterLoad = true;
 					break;
 				case SourcePicture.ROTATING:
 					// Tools.log("ScalablePicture.loadAndScalePictureInThread: pictureStatus was: ROTATING");
-					setStatus( LOADING, "Rotating: " + imageUrl.toString() );
+					setStatus( LOADING, Settings.jpoResources.getString("ScalablePictureRotatingStatus") );
 					sourceLoadProgressNotification( SourcePicture.LOADING_PROGRESS, sourcePicture.getPercentLoaded() );
 					scaleAfterLoad = true;
 					break;
 				case SourcePicture.READY:
 					//Tools.log("ScalablePicture.loadAndScalePictureInThread: pictureStatus was: READY. Sending SCALING status.");
-					setStatus( SCALING, "Scaling: " + imageUrl.toString() );
+					setStatus( SCALING, Settings.jpoResources.getString("ScalablePictureScalingStatus")  );
 					createScaledPictureInThread( priority );
 					break;
 				default:
@@ -266,7 +266,7 @@ public class ScalablePicture implements SourcePictureListener {
 			if ( sourcePicture != null ) sourcePicture.removeListener( this );
 			sourcePicture = new SourcePicture();
 			sourcePicture.addListener( this );
-			setStatus( LOADING, "Loading: " + imageUrl.toString() );
+			setStatus( LOADING, Settings.jpoResources.getString("ScalablePictureLoadingStatus") );
 			scaleAfterLoad = true;
 			sourcePicture.loadPictureInThread( imageUrl, priority, rotation );
 			// when the thread is done it sends a sourceStatusChange message to us
@@ -287,7 +287,7 @@ public class ScalablePicture implements SourcePictureListener {
 		if ( sourcePicture != null ) sourcePicture.removeListener( this );
 		sourcePicture = new SourcePicture();
 		sourcePicture.addListener( this );
-		setStatus( LOADING, "Loading: " + imageUrl.toString() );
+		setStatus( LOADING, Settings.jpoResources.getString("ScalablePictureLoadingStatus") );
 		scaleAfterLoad = false;
 		sourcePicture.loadPicture( imageUrl, rotation );
 	}

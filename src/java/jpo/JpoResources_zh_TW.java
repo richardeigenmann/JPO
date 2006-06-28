@@ -87,7 +87,7 @@ public class JpoResources_zh_TW extends ListResourceBundle {
 
 
 		
-		// PictureViewer Texts
+		// PictureViewer
 		{"PictureViewerTitle", "JPO圖片瀏覽"},
 		{"PictureViewerKeycodes", "可以使用以下的快捷方式\n" 
 			+ "N: 下一張\n"
@@ -112,6 +112,11 @@ public class JpoResources_zh_TW extends ListResourceBundle {
 		{"closeJButton.ToolTipText", "關閉窗口"},
 		{"rotateLeftJButton.ToolTipText", "左旋轉"},
 		{"rotateRightJButton.ToolTipText", "右旋轉"},
+		{"PictureViewerDescriptionFont", ""},
+
+		// Settings
+		{"SettingsTitleFont", ""},
+		{"SettingsCaptionFont", ""},
 
 		// SettingsDialog Texts
 		{"settingsDialogTitle", "設置"},
@@ -206,12 +211,12 @@ public class JpoResources_zh_TW extends ListResourceBundle {
 		{"LinkToJpo", "制作工具：<A HREF=http://j-po.sourceforge.net\">JPO</A>"},
 		{"htmlDistillerInterrupt", "操作已被停止"},
 		{"CssCopyError", "不能拷貝樣式文件jpo.css\n"},
+		{"HtmlDistillerPreviewFont", ""},
 
-				
 
 		// ReconcileJFrame
 		{"ReconcileJFrameTitle", "圖片集与文件夾相應文件檢查"},
-		{"ReconcileBlaBlaLabel", "<HTML>檢查文件夾中的文件是否出現在圖片集中</htm>"},
+		{"ReconcileBlaBlaLabel", "<HTML>檢查文件夾中的文件是否出現在圖片集中</HTML>"},
 		{"directoryJLabelLabel", "需要檢查的文件夾"},
 		{"directoryCheckerChooserTitle", "選擇需要檢查的文件夾"},
 		{"ReconcileFound", "在圖片集中監測到的文件"},
@@ -273,6 +278,7 @@ public class JpoResources_zh_TW extends ListResourceBundle {
 		{"categoriesJLabel-2", "類目："},
 		{"setupCategories", ">>設置類目<<"},
 		{"noCategories", ">> 不屬于任何類目 <<"},
+		{"PictureInfoEditorErrorFont", ""},
 
 		
 		//GroupInfoEditor
@@ -345,6 +351,9 @@ public class JpoResources_zh_TW extends ListResourceBundle {
 		// ThumbnailJScrollPane
 		{"ThumbnailSearchResults", "搜索結果"},
 		{"ThumbnailSearchResults2", "在"},
+		{"ThumbnailToolTipPrevious", "Previous Page"}, //Franklin, please correct
+		{"ThumbnailToolTipNext", "Next Page"}, //Franklin, please correct
+		{"ThumbnailJScrollPanePage", "Page "}, //Franklin, please correct
 
 		//ChangeWindowPopupMenu
 		{"fullScreenLabel", "全屏"},
@@ -573,6 +582,38 @@ public class JpoResources_zh_TW extends ListResourceBundle {
 
 		//CategoryQuery
 		{"CategoryQuery", "類目查詢"},
+
+		//PicturePanel
+		{"PicturePaneInfoFont", ""},    //Franklin, please correct
+		{"PicturePaneSize", "Size: "},  //Franklin, please correct
+		{"PicturePaneMidpoint", " Midpoint: "},  //Franklin, please correct
+		{"PicturePaneLoadTime", "Loaded in: "},  //Franklin, please correct
+		{"PicturePaneSeconds", " seconds"},  //Franklin, please correct
+		{"PicturePaneFreeMemory", "Free Memory: "},  //Franklin, please correct
+		{"PicturePaneReadyStatus", "Ready"}, //Franklin, please correct
+
+
+		//ExifInfo
+		{"ExifInfoCamera", "Camera:"}, //Franklin, please correct
+		{"ExifInfoLens", "Lens:"}, //Franklin, please correct
+		{"ExifInfoShutterSpeed", "Shutter Speed:"}, //Franklin, please correct
+		{"ExifInfoAperture", "Aperture:"}, //Franklin, please correct
+		{"ExifInfoFocalLength", "Focal Length:"}, //Franklin, please correct
+		{"ExifInfoISO", "ISO:"}, //Franklin, please correct
+		{"ExifInfoTimeStamp", "Time stamp:"}, //Franklin, please correct
+
+		//ThumbnailDescriptionJPanel
+		{"ThumbnailDescriptionJPanelLargeFont", ""},
+		{"ThumbnailDescriptionJPanelSmallFont", ""},
+		{"ThumbnailDescriptionNoNodeError", "No node for this position."}, //Franklin, please correct
+
+		// ScalablePicture
+		{"ScalablePictureUninitialisedStatus", "Uninitialised"}, //Franklin, please correct
+		{"ScalablePictureLoadingStatus", "Loading"}, //Franklin, please correct
+		{"ScalablePictureRotatingStatus", "Rotating"}, //Franklin, please correct
+		{"ScalablePictureScalingStatus", "Scaling"}, //Franklin, please correct
+		{"ScalablePictureErrorStatus", "Error"}, //Franklin, please correct
+
 
 		{"Template", "模板"}
 		

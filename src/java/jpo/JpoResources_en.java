@@ -84,7 +84,7 @@ public class JpoResources_en extends ListResourceBundle {
 
 
 		
-		// PictureViewer Texts
+		// PictureViewer
 		{"PictureViewerTitle", "JPO Picture Browser"},
 		{"PictureViewerKeycodes", "The following keyboard shortcuts can be used:\n" 
 			+ "N: Next Image\n"
@@ -109,6 +109,11 @@ public class JpoResources_en extends ListResourceBundle {
 		{"closeJButton.ToolTipText", "close window"},
 		{"rotateLeftJButton.ToolTipText", "Rotate Left"},
 		{"rotateRightJButton.ToolTipText", "Rotate Right"},
+		{"PictureViewerDescriptionFont", "Arial-BOLD-12"},
+
+		// Settings
+		{"SettingsTitleFont", "Arial-BOLD-20"},
+		{"SettingsCaptionFont", "Arial-PLAIN-16"},
 
 		// SettingsDialog Texts
 		{"settingsDialogTitle", "Edit Settings"},
@@ -203,12 +208,13 @@ public class JpoResources_en extends ListResourceBundle {
 		{"LinkToJpo", "Made with <A HREF=\"http://j-po.sourceforge.net\">JPO</A>"},
 		{"htmlDistillerInterrupt", "interrupting gracefully"},
 		{"CssCopyError", "Could not copy Stylesheet jpo.css\n"},
+		{"HtmlDistillerPreviewFont", "SansSerif-BOLD-18"},
 
 				
 
 		// ReconcileJFrame
 		{"ReconcileJFrameTitle", "Reconcile Directory vs Collection"},
-		{"ReconcileBlaBlaLabel", "<HTML>This function will check whether the files in the indicated directory are present <br>in the current collection</htm>"},
+		{"ReconcileBlaBlaLabel", "<HTML>This function will check whether the files in the indicated directory are present <br>in the current collection</HTML>"},
 		{"directoryJLabelLabel", "Directory to reconcile:"},
 		{"directoryCheckerChooserTitle", "Directory to reconcile"},
 		{"ReconcileFound", " found in collection as "},
@@ -342,6 +348,9 @@ public class JpoResources_en extends ListResourceBundle {
 		// ThumbnailJScrollPane
 		{"ThumbnailSearchResults", "Search Results for "},
 		{"ThumbnailSearchResults2", " in "},
+		{"ThumbnailToolTipPrevious", "Previous Page"},
+		{"ThumbnailToolTipNext", "Next Page"},
+		{"ThumbnailJScrollPanePage", "Page "},
 
 		//ChangeWindowPopupMenu
 		{"fullScreenLabel", "Fullscreen"},
@@ -570,6 +579,37 @@ public class JpoResources_en extends ListResourceBundle {
 
 		//CategoryQuery
 		{"CategoryQuery", "Category: "},
+
+		//PicturePanel
+		{"PicturePaneInfoFont", "Arial-PLAIN-10"},
+		{"PicturePaneSize", "Size: "},
+		{"PicturePaneMidpoint", " Midpoint: "},
+		{"PicturePaneLoadTime", "Loaded in: "},
+		{"PicturePaneSeconds", " seconds"},
+		{"PicturePaneFreeMemory", "Free Memory: "},
+		{"PicturePaneReadyStatus", "Ready"},
+
+		//ExifInfo
+		{"ExifInfoCamera", "Camera:"},
+		{"ExifInfoLens", "Lens:"},
+		{"ExifInfoShutterSpeed", "Shutter Speed:"},
+		{"ExifInfoAperture", "Aperture:"},
+		{"ExifInfoFocalLength", "Focal Length:"},
+		{"ExifInfoISO", "ISO:"},
+		{"ExifInfoTimeStamp", "Time stamp:"},
+
+
+		//ThumbnailDescriptionJPanel
+		{"ThumbnailDescriptionJPanelLargeFont", "Arial-PLAIN-12"},
+		{"ThumbnailDescriptionJPanelSmallFont", "Arial-PLAIN-9"},
+		{"ThumbnailDescriptionNoNodeError", "No node for this position."},
+
+		// ScalablePicture
+		{"ScalablePictureUninitialisedStatus", "Uninitialised"},
+		{"ScalablePictureLoadingStatus", "Loading"},
+		{"ScalablePictureRotatingStatus", "Rotating"},
+		{"ScalablePictureScalingStatus", "Scaling"},
+		{"ScalablePictureErrorStatus", "Error"},
 
 		{"Template", "Template"}
 		

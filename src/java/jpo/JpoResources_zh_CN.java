@@ -87,7 +87,7 @@ public class JpoResources_zh_CN extends ListResourceBundle {
 
 
 		
-		// PictureViewer Texts
+		// PictureViewer
 		{"PictureViewerTitle", "JPO图片浏览"},
 		{"PictureViewerKeycodes", "可以使用以下的快捷方式\n" 
 			+ "N: 下一张\n"
@@ -112,6 +112,11 @@ public class JpoResources_zh_CN extends ListResourceBundle {
 		{"closeJButton.ToolTipText", "关闭窗口"},
 		{"rotateLeftJButton.ToolTipText", "左旋转"},
 		{"rotateRightJButton.ToolTipText", "右旋转"},
+		{"PictureViewerDescriptionFont", ""},
+
+		// Settings
+		{"SettingsTitleFont", ""},
+		{"SettingsCaptionFont", ""},
 
 		// SettingsDialog Texts
 		{"settingsDialogTitle", "设置"},
@@ -206,12 +211,12 @@ public class JpoResources_zh_CN extends ListResourceBundle {
 		{"LinkToJpo", "制作工具：<A HREF=\"http://j-po.sourceforge.net\">JPO</A>"},
 		{"htmlDistillerInterrupt", "操作已被停止"},
 		{"CssCopyError", "不能拷贝样式文件jpo.css\n"},
+		{"HtmlDistillerPreviewFont", ""},
 
-				
 
 		// ReconcileJFrame
 		{"ReconcileJFrameTitle", "图片集与文件夹相应文件检查"},
-		{"ReconcileBlaBlaLabel", "<HTML>检查文件夹中的文件是否出现在图片集中</htm>"},
+		{"ReconcileBlaBlaLabel", "<HTML>检查文件夹中的文件是否出现在图片集中</HTML>"},
 		{"directoryJLabelLabel", "需要检查的文件夹"},
 		{"directoryCheckerChooserTitle", "选择需要检查的文件夹"},
 		{"ReconcileFound", "在图片集中监测到的文件"},
@@ -273,6 +278,7 @@ public class JpoResources_zh_CN extends ListResourceBundle {
 		{"categoriesJLabel-2", "类目："},
 		{"setupCategories", ">>设置类目<<"},
 		{"noCategories", ">> 不属于任何类目 <<"},
+		{"PictureInfoEditorErrorFont", ""},
 
 		
 		//GroupInfoEditor
@@ -345,6 +351,9 @@ public class JpoResources_zh_CN extends ListResourceBundle {
 		// ThumbnailJScrollPane
 		{"ThumbnailSearchResults", "搜索结果"},
 		{"ThumbnailSearchResults2", "在"},
+		{"ThumbnailToolTipPrevious", "Previous Page"}, //Franklin, please correct
+		{"ThumbnailToolTipNext", "Next Page"}, //Franklin, please correct
+		{"ThumbnailJScrollPanePage", "Page "}, //Franklin, please correct
 
 		//ChangeWindowPopupMenu
 		{"fullScreenLabel", "全屏"},
@@ -573,6 +582,39 @@ public class JpoResources_zh_CN extends ListResourceBundle {
 
 		//CategoryQuery
 		{"CategoryQuery", "类目查询"},
+
+		//PicturePanel
+		{"PicturePaneInfoFont", ""},    //Franklin, please correct
+		{"PicturePaneSize", "Size: "},  //Franklin, please correct
+		{"PicturePaneMidpoint", " Midpoint: "},  //Franklin, please correct
+		{"PicturePaneLoadTime", "Loaded in: "},  //Franklin, please correct
+		{"PicturePaneSeconds", " seconds"},  //Franklin, please correct
+		{"PicturePaneFreeMemory", "Free Memory: "},  //Franklin, please correct
+		{"PicturePaneReadyStatus", "Ready"}, //Franklin, please correct
+
+
+		//ExifInfo
+		{"ExifInfoCamera", "Camera:"}, //Franklin, please correct
+		{"ExifInfoLens", "Lens:"}, //Franklin, please correct
+		{"ExifInfoShutterSpeed", "Shutter Speed:"}, //Franklin, please correct
+		{"ExifInfoAperture", "Aperture:"}, //Franklin, please correct
+		{"ExifInfoFocalLength", "Focal Length:"}, //Franklin, please correct
+		{"ExifInfoISO", "ISO:"}, //Franklin, please correct
+		{"ExifInfoTimeStamp", "Time stamp:"}, //Franklin, please correct
+
+		//ThumbnailDescriptionJPanel
+		{"ThumbnailDescriptionJPanelLargeFont", ""},
+		{"ThumbnailDescriptionJPanelSmallFont", ""},
+		{"ThumbnailDescriptionNoNodeError", "No node for this position."}, //Franklin, please correct
+
+		// ScalablePicture
+		{"ScalablePictureUninitialisedStatus", "Uninitialised"}, //Franklin, please correct
+		{"ScalablePictureLoadingStatus", "Loading"}, //Franklin, please correct
+		{"ScalablePictureRotatingStatus", "Rotating"}, //Franklin, please correct
+		{"ScalablePictureScalingStatus", "Scaling"}, //Franklin, please correct
+		{"ScalablePictureErrorStatus", "Error"}, //Franklin, please correct
+
+
 
 		{"Template", "模板"}
 		

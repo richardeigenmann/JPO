@@ -328,9 +328,9 @@ public class PictureViewer extends JPanel
 
 		// Picture Painter Pane
 		pictureJPanel.setBackground(Color.black);
-		pictureJPanel.setVisible(true);
-		pictureJPanel.setOpaque(true);
-		pictureJPanel.setFocusable(false);
+		pictureJPanel.setVisible( true );
+		pictureJPanel.setOpaque( true );
+		pictureJPanel.setFocusable( false );
 		c.weightx = 1;
 		c.weighty = 0.99f;
 		c.fill = GridBagConstraints.BOTH;
@@ -343,8 +343,8 @@ public class PictureViewer extends JPanel
 
 		pictureJPanel.addStatusListener( this );
 
-		loadJProgressBar.setPreferredSize( new Dimension( 80, 20 ) );
-		loadJProgressBar.setMaximumSize( new Dimension( 80, 20 ) );
+		loadJProgressBar.setPreferredSize( new Dimension( 120, 20 ) );
+		loadJProgressBar.setMaximumSize( new Dimension( 140, 20 ) );
 		loadJProgressBar.setMinimumSize( new Dimension( 80, 20 ) );
 		loadJProgressBar.setBackground( Color.black ); 
 		loadJProgressBar.setBorderPainted( true );
@@ -366,15 +366,38 @@ public class PictureViewer extends JPanel
 
 
 		// The Description_Panel
-		descriptionJTextField.setFont( new Font( "Arial", Font.BOLD, 12 ) );
+		descriptionJTextField.setFont( Font.decode( Settings.jpoResources.getString("PictureViewerDescriptionFont") ) );
 		descriptionJTextField.setWrapStyleWord( true );
 		descriptionJTextField.setLineWrap( true );
-		descriptionJTextField.setEditable( false );
+		descriptionJTextField.setEditable( true );
 		descriptionJTextField.setForeground( Color.white );
 		descriptionJTextField.setBackground( Color.black );
 		descriptionJTextField.setOpaque( true );
 		descriptionJTextField.setBorder( new EmptyBorder(2,12,0,0) );
 		descriptionJTextField.setMinimumSize( new Dimension( 80, 26 ) );
+		/*descriptionJTextField.getDocument().addDocumentListener( new DocumentListener() {
+			public void insertUpdate( DocumentEvent e ) {
+				Tools.log( "insert received" + e.toString() );
+				changeDescription();
+			}
+			public void removeUpdate( DocumentEvent e ) {
+				Tools.log( "remove received" );
+				changeDescription();
+			}
+			public void changedUpdate( DocumentEvent e ) {
+				Tools.log( "changed received" );
+				changeDescription();
+			}
+			public void changeDescription() {
+				Tools.log("got a document event");
+				/*Object uo = currentNode.getUserObject();
+				if ( uo != null ) {
+					if ( uo instanceof PictureInfo ) {
+						((PictureInfo) uo).setDescription( descriptionJTextField.getText () );
+					}
+				}* /
+			}
+		}); */
 
 		JScrollPane descriptionJScrollPane = new JScrollPane( JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER );
 		descriptionJScrollPane.setViewportView( descriptionJTextField );
@@ -730,8 +753,8 @@ public class PictureViewer extends JPanel
 				}
 			}
 		);
-		myJFrame.getGlassPane().setVisible(true);
-		myJFrame.getGlassPane().setFocusable(true);
+		myJFrame.getGlassPane().setVisible( true );
+		myJFrame.getGlassPane().setFocusable( true );
 		myJFrame.getGlassPane().requestFocus();
 
 	}
@@ -789,7 +812,8 @@ public class PictureViewer extends JPanel
 
 	/**  
 	 *   Changes the displayed picture to that of the supplied node. It calls setIconDecorations
-	 *   to set the previous and next button icon accordingly.
+	 *   to set the previous and next button icon accordingly. It also checks if the user changed 
+	 *   the description and saves it.
 	 *
 	 *   @param	node	The node whose userObject of type PictureInfo
 	 *                      the PictureViewer is supposed to display.
@@ -807,7 +831,7 @@ public class PictureViewer extends JPanel
 		}
 
 		if ( currentNode == node) {
-			Tools.log( "PictureViewer:changePicture: ignoring request because new node is the same as the current one");
+			Tools.log( "PictureViewer.changePicture: ignoring request because new node is the same as the current one");
 			return;
 		}
 
@@ -815,22 +839,30 @@ public class PictureViewer extends JPanel
 			createWindow();
 		}
 
-		// unattach the change listener
+		// unattach the change listener  and figure out if the description was changed and update
+		// it if edits to the collection are allowed.
 		if ( ( this.currentNode != null ) 
 		  && ( this.currentNode.getUserObject() instanceof  PictureInfo ) ) {
 			PictureInfo pi = (PictureInfo) currentNode.getUserObject();
 			pi.removePictureInfoChangeListener( this );
+			
+			if ( ( ! getDescription().equals( descriptionJTextField.getText() ) )
+			   && ( currentNode.getPictureCollection().getAllowEdits() ) ) {
+				Tools.log("PictureViewer.changePicture: The description was modified and is being saved");
+				pi.setDescription( descriptionJTextField.getText () );
+			}	
 		}
 
-		pictureJPanel.setPicture( (PictureInfo) node.getUserObject() ); 
+
+		
 		currentNode = node;
+		descriptionJTextField.setText( getDescription() );
+		pictureJPanel.setPicture( (PictureInfo) node.getUserObject() ); 
+
 
 		// attach the change listener
-		if ( ( this.currentNode != null ) 
-		  && ( this.currentNode.getUserObject() instanceof  PictureInfo ) ) {
-			PictureInfo pi = (PictureInfo) currentNode.getUserObject();
-			pi.addPictureInfoChangeListener( this );
-		}
+		PictureInfo pi = (PictureInfo) currentNode.getUserObject();
+		pi.addPictureInfoChangeListener( this );
 
 		
 		setIconDecorations();
@@ -1233,33 +1265,35 @@ public class PictureViewer extends JPanel
 	 *   to notifying of status changes. It updates the description 
 	 *   panel at the bottom of the screen with the status. If the 
 	 *   status was a notification of the image starting to load
-	 *   the progress bar is made visible. Any other status hides
+	 *   the progress bar is made le. Any other status hides
 	 *   the progress bar.
 	 **/
 	public void scalableStatusChange(int pictureStatusCode, String pictureStatusMessage) {
 		//Tools.log("PictureViewer.scalableStatusChange: Got a status change: " + pictureStatusMessage);
-		descriptionJTextField.setText( pictureStatusMessage );
+		loadJProgressBar.setString( pictureStatusMessage );
 		switch( pictureStatusCode ) {
 			case ScalablePicture.UNINITIALISED:
-				loadJProgressBar.setVisible( false );;
+				loadJProgressBar.setVisible( false );
 				break;
 			case ScalablePicture.GARBAGE_COLLECTION:
-				loadJProgressBar.setVisible( false );;
+				loadJProgressBar.setVisible( false );
 				break;
 			case ScalablePicture.LOADING:
 				if ( myJFrame != null )
-					loadJProgressBar.setVisible( true );;
+					loadJProgressBar.setVisible( true );
 				break;
 			case ScalablePicture.LOADED:
-				loadJProgressBar.setVisible( false );;
+				loadJProgressBar.setVisible( false );
+				//descriptionJTextField.setText( getDescription() );
 				break;
 			case ScalablePicture.SCALING:
-				loadJProgressBar.setVisible( false );;
+				loadJProgressBar.setVisible( false );
 				break;
 			case ScalablePicture.READY:
-				loadJProgressBar.setVisible( false );;
+				loadJProgressBar.setVisible( false );
 				if ( myJFrame != null )
 					myJFrame.toFront();
+				//descriptionJTextField.setText( getDescription() );
 				break;
 			case ScalablePicture.ERROR:
 				loadJProgressBar.setVisible( false );;
@@ -1268,6 +1302,24 @@ public class PictureViewer extends JPanel
 				Tools.log( "PictureViewer.scalableStatusChange: get called with a code that is not understood: " + Integer.toString( pictureStatusCode ) + " " + pictureStatusMessage );
 				break;
 				
+		}
+	}
+
+
+	/**
+	 *  This helper method returns the description of the node and if that is not available for 
+	 *  some reason it returns a blank string.
+	 */
+	private String getDescription() {
+		Object uo = currentNode.getUserObject();
+		if ( uo != null ) {
+			if ( uo instanceof PictureInfo ) {
+				return ((PictureInfo) uo).getDescription() ;
+			} else {
+				return "";
+			}
+		} else {
+			return "";
 		}
 	}
 
@@ -1287,8 +1339,8 @@ public class PictureViewer extends JPanel
 				loadJProgressBar.setVisible( true );
 				break;
 			case SourcePicture.LOADING_COMPLETED:
-				loadJProgressBar.setValue( 100 );
 				loadJProgressBar.setVisible( false );
+				loadJProgressBar.setValue( 0 ); // prepare for the next load
 				break;
 			}
 	}

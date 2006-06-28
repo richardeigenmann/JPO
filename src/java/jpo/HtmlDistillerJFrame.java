@@ -12,7 +12,7 @@ import javax.swing.event.*;
 /*
 HtmlDistillerJFrame.java: GUI for the HTML Distiller
 
-Copyright (C) 2002  Richard Eigenmann.
+Copyright (C) 2002-2006  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -508,7 +508,8 @@ public class HtmlDistillerJFrame extends JFrame {
 	 */
 	public class PreviewPanel extends JPanel {
 	
-		private final Font previewFont = new Font( "SansSerif", Font.BOLD, 18  );
+		//private final Font previewFont = new Font( "SansSerif", Font.BOLD, 18  );
+		private final Font previewFont = Font.decode( Settings.jpoResources.getString("HtmlDistillerPreviewFont") );
 	
 		/**
 		 *  Constructor

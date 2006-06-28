@@ -204,7 +204,8 @@ public class PictureInfoEditor
 	/**
 	 *  Font used to show the error label
 	 */
-	private static Font errorLabelFont = new Font ( "Arial", Font.PLAIN, 10 );
+	//private static Font errorLabelFont = new Font ( "Arial", Font.PLAIN, 10 );
+	private static Font errorLabelFont = Font.decode( Settings.jpoResources.getString("ThumbnailDescriptionJPanelLargeFont") );
 
 
 	/**
@@ -407,7 +408,7 @@ public class PictureInfoEditor
 		JPanel lowresJPanel = new JPanel();
 		
 		JLabel lowresLocationJLabel = new JLabel ( Settings.jpoResources.getString("lowresLocationLabel") );
-		lowresErrorJLabel.setFont ( new Font ( "Arial", Font.PLAIN, 10 ) );
+		lowresErrorJLabel.setFont ( errorLabelFont );
 		lowresJPanel.add ( lowresLocationJLabel );
 		lowresJPanel.add ( lowresErrorJLabel );
 		

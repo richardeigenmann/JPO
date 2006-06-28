@@ -7,7 +7,7 @@ import javax.swing.tree.*;
 
 /*
 GroupInfoEditor.java:  GUI for editing groups
-Copyright (C) 2002  Richard Eigenmann.
+Copyright (C) 2002-2006  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -50,12 +50,6 @@ public class GroupInfoEditor {
 	 *  Dimension for the edit fields
 	 */
 	private static Dimension inputDimension = new Dimension(400, 20);
-
-	/**
-	 *   An informative message about what sort of error we have if any on the lowres image
-	 */
-	private JLabel lowresErrorJLabel = new JLabel( "" );
-
 
 
 
@@ -124,9 +118,7 @@ public class GroupInfoEditor {
 		JPanel lowresJPanel = new JPanel();
 		
 		JLabel lowresLocationJLabel = new JLabel ( Settings.jpoResources.getString("lowresLocationLabel") );
-		lowresErrorJLabel.setFont ( new Font ( "Arial", Font.PLAIN, 10 ) );
 		lowresJPanel.add ( lowresLocationJLabel );
-		lowresJPanel.add ( lowresErrorJLabel );
 		
 		c.gridx = 0; c.gridy++;
 		c.insets = new Insets(4,0,0,0); 

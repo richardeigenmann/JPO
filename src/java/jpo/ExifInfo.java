@@ -11,7 +11,7 @@ import com.drew.imaging.jpeg.*;
 /*
 ExifInfo.java: This class interacts with Drew Noake's library and extracts the Exif information
 
-Copyright (C) 2002  Richard Eigenmann.
+Copyright (C) 2002-2006  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -221,10 +221,10 @@ public class ExifInfo {
 	 */
 	public String getBriefPhotographicSummary() {
 		return
-			"Camera:\t" + camera + "\n" +
-			"Shutter Speed:\t" + shutterSpeed + "\n" +
-			"Aperture:\t" + aperture + "\n" +
-			"Time stamp:\t" + dateTime + "\n";
+			Settings.jpoResources.getString("ExifInfoCamera") + "\t" + camera + "\n" +
+			Settings.jpoResources.getString("ExifInfoShutterSpeed") + "\t" + shutterSpeed + "\n" +
+			Settings.jpoResources.getString("ExifInfoAperture") + "\t" + aperture + "\n" +
+			Settings.jpoResources.getString("ExifInfoTimeStamp") + "\t" + dateTime + "\n";
 	}
 
 
@@ -233,13 +233,13 @@ public class ExifInfo {
 	 */
 	public String getComprehensivePhotographicSummary() {
 		return
-			"Camera:\t" + camera + "\n" +
-			"Lens:\t" + lens + "\n" +
-			"Shutter Speed:\t" + shutterSpeed + "\n" +
-			"Aperture:\t" + aperture + "\n" +
-			"Focal Length:\t" + focalLength + "\n" +
-			"ISO:\t" + iso + "\n" +
-			"Time stamp:\t" + dateTime + "\n";
+			Settings.jpoResources.getString("ExifInfoCamera") + "\t" + camera + "\n" +
+			Settings.jpoResources.getString("ExifInfoLens") + "\t" + lens + "\n" +
+			Settings.jpoResources.getString("ExifInfoShutterSpeed") + "\t" + shutterSpeed + "\n" +
+			Settings.jpoResources.getString("ExifInfoAperture") + "\t" + aperture + "\n" +
+			Settings.jpoResources.getString("ExifInfoFocalLength") + "\t" + focalLength + "\n" +
+			Settings.jpoResources.getString("ExifInfoISO") + "\t" + iso + "\n" +
+			Settings.jpoResources.getString("ExifInfoTimeStamp") + "\t" + dateTime + "\n";
 			
 	}
 			

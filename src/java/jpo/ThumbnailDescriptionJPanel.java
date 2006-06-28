@@ -7,7 +7,7 @@ import javax.swing.event.*;
 /*
 ThumbnailDescriptionJPanel.java:  class that creates a panel showing the details of a thumbnail
 
-Copyright (C) 2002  Richard Eigenmann.
+Copyright (C) 2002-2006  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -121,13 +121,14 @@ public class ThumbnailDescriptionJPanel
 	/**
 	 *  Font to be used for Large Texts:
 	 */	 
-	private static Font largeFont = new Font ( "Arial", Font.PLAIN, 12 );
-	
+	//private static Font largeFont = new Font ( "Arial", Font.PLAIN, 12 );
+	private static Font largeFont = Font.decode( Settings.jpoResources.getString("ThumbnailDescriptionJPanelLargeFont") );	
 
 	/**
 	 *  Font to be used for small texts:
 	 */	 
-	private static Font smallFont = new Font ( "Arial", Font.PLAIN, 9 );
+	//private static Font smallFont = new Font ( "Arial", Font.PLAIN, 9 );
+	private static Font smallFont = Font.decode( Settings.jpoResources.getString("ThumbnailDescriptionJPanelSmallFont") );	
 	
 
 	/**
@@ -260,7 +261,7 @@ public class ThumbnailDescriptionJPanel
 
 		String legend;
 		if ( referringNode == null ) {
-			legend = "No node for this position";
+			legend = Settings.jpoResources.getString("ThumbnailDescriptionNoNodeError");
 			setVisible( false );
 		} else if ( referringNode.getUserObject() instanceof  PictureInfo ) {
 			PictureInfo pi = (PictureInfo) referringNode.getUserObject(); 

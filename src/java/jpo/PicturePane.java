@@ -119,7 +119,12 @@ class PicturePane extends JComponent implements ScalablePictureListener {
 	/**
 	 *   Font for the info if shown.
 	 */
-	private static final Font infoFont =  new Font("Arial", Font.PLAIN, 10);
+	//private static final Font infoFont =  new Font("Arial", Font.PLAIN, 10);
+	private static final Font infoFont =  Font.decode( Settings.jpoResources.getString("PicturePaneInfoFont") );
+	
+
+
+	
 	
 	/**
 	 *  Color for the info overly
@@ -469,43 +474,43 @@ class PicturePane extends JComponent implements ScalablePictureListener {
 				case DISPLAY_NONE:
 					break;
 				case DISPLAY_PHOTOGRAPHIC:
-					g2d.drawString( "Camera:"
+					g2d.drawString( Settings.jpoResources.getString("ExifInfoCamera")
 						, infoPoint.x
 						, infoPoint.y + ( 0 * lineSpacing ));
 					g2d.drawString( ei.camera
 						, infoPoint.x + tabstop
 						, infoPoint.y + ( 0 * lineSpacing ));
-					g2d.drawString( "Lens:"
+					g2d.drawString( Settings.jpoResources.getString("ExifInfoLens")
 						, infoPoint.x
 						, infoPoint.y + ( 1 * lineSpacing ));
 					g2d.drawString( ei.lens
 						, infoPoint.x + tabstop
 						, infoPoint.y + ( 1 * lineSpacing ));
-					g2d.drawString( "Shutter Speed:"
+					g2d.drawString( Settings.jpoResources.getString("ExifInfoShutterSpeed")
 						, infoPoint.x
 						, infoPoint.y + ( 2 * lineSpacing ));
 					g2d.drawString( ei.shutterSpeed
 						, infoPoint.x + tabstop
 						, infoPoint.y + ( 2 * lineSpacing ));
-					g2d.drawString( "Aperture:"
+					g2d.drawString( Settings.jpoResources.getString("ExifInfoAperture")
 						, infoPoint.x
 						, infoPoint.y + ( 3 * lineSpacing ));
 					g2d.drawString( ei.aperture
 						, infoPoint.x + tabstop
 						, infoPoint.y + ( 3 * lineSpacing ));
-					g2d.drawString( "Focal Length:" 
+					g2d.drawString( Settings.jpoResources.getString("ExifInfoFocalLength")
 						, infoPoint.x
 						, infoPoint.y + ( 4 * lineSpacing ));
 					g2d.drawString( ei.focalLength
 						, infoPoint.x + tabstop
 						, infoPoint.y + ( 4 * lineSpacing ));
-					g2d.drawString( "ISO:"
+					g2d.drawString( Settings.jpoResources.getString("ExifInfoISO")
 						, infoPoint.x
 						, infoPoint.y + ( 5 * lineSpacing ));
 					g2d.drawString( ei.iso
 						, infoPoint.x + tabstop
 						, infoPoint.y + ( 5 * lineSpacing ));
-					g2d.drawString( "Time stamp:"
+					g2d.drawString( Settings.jpoResources.getString( "ExifInfoTimeStamp" )
 						, infoPoint.x
 						, infoPoint.y + ( 6 * lineSpacing ));
 					g2d.drawString( ei.dateTime
@@ -516,11 +521,11 @@ class PicturePane extends JComponent implements ScalablePictureListener {
 					g2d.drawString( legend
 						, infoPoint.x
 						, infoPoint.y + ( 0 * lineSpacing ));
-					g2d.drawString("Size: " 
+					g2d.drawString( Settings.jpoResources.getString( "PicturePaneSize" )
 						+ Integer.toString(sclPic.getOriginalWidth())
 						+ " x " 
 						+ Integer.toString(sclPic.getOriginalHeight()) 
-						+ " Mid: " 
+						+ Settings.jpoResources.getString( "PicturePaneMidpoint" ) 
 						+ Integer.toString(focusPoint.x)
 						+ " x "
 						+ Integer.toString(focusPoint.y) 
@@ -530,12 +535,12 @@ class PicturePane extends JComponent implements ScalablePictureListener {
 					g2d.drawString("File: " + sclPic.getFilename()
 						, infoPoint.x
 						, infoPoint.y + ( 2 * lineSpacing ) );
-					g2d.drawString("Loaded in: " 
+					g2d.drawString( Settings.jpoResources.getString( "PicturePaneLoadTime" ) 
 						+ twoDecimalFormatter.format( sclPic.getSourcePicture().loadTime / 1000F )
-						+ " Seconds"
+						+ Settings.jpoResources.getString( "PicturePaneSeconds" ) 
 						, infoPoint.x
 						, infoPoint.y + ( 3 * lineSpacing ) );
-					g2d.drawString("Free memory: " 
+					g2d.drawString( Settings.jpoResources.getString( "PicturePaneFreeMemory" ) 
 						+ Tools.freeMemory()
 						, infoPoint.x
 						, infoPoint.y + ( 4 * lineSpacing ) );
@@ -691,7 +696,8 @@ class PicturePane extends JComponent implements ScalablePictureListener {
 
 		if ( pictureStatusCode == ScalablePicture.READY ) {
 			//Tools.log("PicturePane.scalableStatusChange: a READY status");
-			pictureStatusMessage = legend;
+			//pictureStatusMessage = legend;
+			pictureStatusMessage = Settings.jpoResources.getString("PicturePaneReadyStatus");
 			if ( centerWhenScaled ) {
 				//Tools.log("PicturePane.scalableStatusChange: centering image");
 				centerImage();

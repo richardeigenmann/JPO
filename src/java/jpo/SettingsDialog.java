@@ -822,12 +822,6 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 			}
 		}
 				
-		/*if ( Settings.currentLanguage.equals("Deutsch") ) {
-			languageJComboBox.setSelectedIndex( 1 );
-		} else {
-			languageJComboBox.setSelectedIndex( 0 );
-		}*/
-		
 		autoLoadJTextField.setText(Settings.autoLoad);
 		logfileJCheckBox.setSelected( Settings.writeLog );
 		logfileJTextField.setText( Settings.logfile.getPath() );
@@ -912,26 +906,6 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 	 */
 	private void writeValues () {
 		Settings.setLanguage( Settings.supportedLanguages[ languageJComboBox.getSelectedIndex() ] );
-		/*switch( languageJComboBox.getSelectedIndex() ) {
-			case 1:
-				Settings.setLanguage( "Deutsch" );
-				break;
-			case 2:
-				Settings.setLanguage( "Simplified Chinese" );
-				break;
-			case 3:
-				Settings.setLanguage( "Traditional Chinese" );
-				break;
-			otherwise:
-				Settings.setLanguage( "English" );
-				break;
-		]*/
-				
-		/* if ( languageJComboBox.getSelectedIndex() == 1 ) {
-			Settings.setLanguage( "Deutsch" );
-		} else {
-			Settings.setLanguage( "English" );
-		} */
 
 		Settings.autoLoad = autoLoadJTextField.getText();
 		if ( ! logfileJTextField.getText().equals( Settings.logfile.getPath() ) 

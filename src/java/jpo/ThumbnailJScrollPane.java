@@ -289,13 +289,13 @@ public class ThumbnailJScrollPane
 	        });   
  
  
-		previousThumbnailsButton.setBorder(BorderFactory.createEmptyBorder(1,1,1,1)); 	// JA changed to none 
+		previousThumbnailsButton.setBorder( BorderFactory.createEmptyBorder(1,1,1,1) ); 	// JA changed to none 
 		//previousThumbnailsButton.setBorder(BorderFactory.createLineBorder(Color.black)); 
-		previousThumbnailsButton.setPreferredSize(new Dimension(25, 25)); 
-		previousThumbnailsButton.setVerticalAlignment(JLabel.CENTER); 
-		previousThumbnailsButton.setOpaque(false); 
-		previousThumbnailsButton.setFocusPainted(false);
-		previousThumbnailsButton.setToolTipText("Previous page");						// JA
+		previousThumbnailsButton.setPreferredSize( new Dimension(25, 25) ); 
+		previousThumbnailsButton.setVerticalAlignment( JLabel.CENTER ); 
+		previousThumbnailsButton.setOpaque( false ); 
+		previousThumbnailsButton.setFocusPainted( false );
+		previousThumbnailsButton.setToolTipText( Settings.jpoResources.getString("ThumbnailToolTipPrevious") );
 		previousThumbnailsButton.addActionListener( new ActionListener() {
 			public void actionPerformed( ActionEvent e ) {
 				startIndex = startIndex - Settings.maxThumbnails; 
@@ -312,7 +312,7 @@ public class ThumbnailJScrollPane
 		nextThumbnailsButton.setFocusPainted(false); 
 		//nextThumbnailsButton.setBorder(BorderFactory.createLineBorder(Color.black)); 
 		nextThumbnailsButton.setBorder(BorderFactory.createEmptyBorder(1,1,1,1));    	// JA Changed to none 
-		nextThumbnailsButton.setToolTipText("Next page");
+		nextThumbnailsButton.setToolTipText( Settings.jpoResources.getString("ThumbnailToolTipNext") );
 		nextThumbnailsButton.setPreferredSize(new Dimension(25, 25)); 
 		nextThumbnailsButton.addActionListener( new ActionListener() {
 			public void actionPerformed( ActionEvent e ) {
@@ -780,9 +780,12 @@ public class ThumbnailJScrollPane
 	/**
 	 * Sets the text in the title for displaying page count information
 	 */
-	private void setPageStats() {												// JA
-		lblPage.setText("Page "+curPage+"/"+pageCount);							// JA	
-	}																			// JA
+	private void setPageStats() {
+		lblPage.setText(Settings.jpoResources.getString("ThumbnailJScrollPanePage")
+			+ curPage
+			+ "/" 
+			+ pageCount );
+	}
 
 
 	/**
