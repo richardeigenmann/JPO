@@ -574,11 +574,8 @@ class PicturePane extends JComponent implements ScalablePictureListener {
 		 *   picture.
 		 */
 		public void mouseClicked( MouseEvent e ) {
-			if ( Dragging == true ) {
-				//Dragging has ended
-				Dragging = false;
-				setCursor( new Cursor( Cursor.DEFAULT_CURSOR ) );
-			} else if ( e.getButton() == 3 ) {
+			//Tools.log("PicturePane.mouseClicked");
+			if ( e.getButton() == 3 ) {
 				// Right Mousebutton zooms out
 				centerWhenScaled = false;
 				zoomOut();
@@ -613,8 +610,9 @@ class PicturePane extends JComponent implements ScalablePictureListener {
 		 * user drags the mouse with a button pressed. Moves the picture around
 		 */
 		public void mouseDragged(MouseEvent e) {
-			if ( Dragging == false ) {
+			if ( ! Dragging ) {
 				// Switch into dragging mode and record current coordinates
+				//Tools.log("PicturePane.mouseDragged: Switching to drag mode.");
 				last_x = e.getX(); 
 				last_y = e.getY();
 				
@@ -634,6 +632,20 @@ class PicturePane extends JComponent implements ScalablePictureListener {
 			}
 			centerWhenScaled = false;
 		}
+		
+		/**
+		 * method that is invoked when the
+		 * user releases the mouse button.
+		 */
+		public void mouseReleased( MouseEvent e ) {
+			//Tools.log("PicturePane.mouseReleased.");
+			if ( Dragging ) {
+				//Dragging has ended
+				Dragging = false;
+				setCursor( new Cursor( Cursor.DEFAULT_CURSOR ) );
+			} 
+		}		
+		
 	}  //end class Listener
 
 

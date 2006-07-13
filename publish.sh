@@ -6,6 +6,7 @@ rsync -vz -e "ssh -l richieigenmann"  --stats --progress web/index.html richieig
 rsync -vz -e "ssh -l richieigenmann"  --stats --progress web/jnlp.jnlp richieigenmann@shell.sourceforge.net:/home/groups/j/j-/j-po/htdocs
 rsync -vz -e "ssh -l richieigenmann"  --stats --progress libs/jnlp.jar richieigenmann@shell.sourceforge.net:/home/groups/j/j-/j-po/htdocs
 rsync -vz -e "ssh -l richieigenmann"  --stats --progress web/jpo-devel.jnlp richieigenmann@shell.sourceforge.net:/home/groups/j/j-/j-po/htdocs
+rsync -vz -e "ssh -l richieigenmann"  --stats --progress --copy-links web/jpo-stable.jnlp richieigenmann@shell.sourceforge.net:/home/groups/j/j-/j-po/htdocs
 rsync -vz -e "ssh -l richieigenmann"  --stats --progress web/activation.jnlp richieigenmann@shell.sourceforge.net:/home/groups/j/j-/j-po/htdocs
 rsync -vz -e "ssh -l richieigenmann"  --stats --progress libs/activation.jar richieigenmann@shell.sourceforge.net:/home/groups/j/j-/j-po/htdocs
 rsync -vz -e "ssh -l richieigenmann"  --stats --progress web/mail.jnlp richieigenmann@shell.sourceforge.net:/home/groups/j/j-/j-po/htdocs
