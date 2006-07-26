@@ -33,7 +33,8 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 
 
 /** 
- *  A thread that polls Queue and then creates thumbnails for the requests on the queue
+ *  A thread that polls the static {@link ThumbnailCreationQueue} and then 
+ *  creates thumbnails for the {@link ThumbnailQueueRequests} on the queue.
  **/
 public class ThumbnailCreationThread extends Thread {
 
@@ -51,7 +52,8 @@ public class ThumbnailCreationThread extends Thread {
 
 
 	/**
-	 *  Constructor
+	 *  Constructor that creates the thread. It creates the thread with a Thread.MIN_PRIOTITY priority
+	 *  to ensure good overall response.
 	 */
 	ThumbnailCreationThread() {
 		setPriority( Thread.MIN_PRIORITY );
@@ -60,8 +62,8 @@ public class ThumbnailCreationThread extends Thread {
 	
 	
 	/**
-	 *  The run method for the thread that keeps checking whether there are any thumbnails on 
-	 *  the queue to be rendered.
+	 *  The run method for the thread that keeps checking whether there are any {@link ThumbnailQueueRequest} objects
+	 *  on the queue to be rendered.
 	 */
 	public void run() {
 		while ( ! endThread ) {
@@ -81,9 +83,9 @@ public class ThumbnailCreationThread extends Thread {
 	
 	/**
 	 *  This method picks up the thumbnail creation request, sets a loadingIcon and passes the 
-	 *  request to the createPictureThumbnail or the loadOrCreateGroupThumbnail method.
+	 *  request to the {@link #createPictureThumbnail} or the {@link #loadOrCreateGroupThumbnail} method.
 	 *
-	 *  @param  req		the ThumbnailQueueRequest for which to create the Thumbnail
+	 *  @param  req		the {@link ThumbnailQueueRequest} for which to create the Thumbnail
 	 */
 	private void createThumbnail ( ThumbnailQueueRequest req ) {
 		Thumbnail currentThumb = req.getThumbnail();

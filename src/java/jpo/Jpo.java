@@ -426,7 +426,7 @@ public class Jpo extends JFrame
 
 
 	/**
-	 *   Calls the {@link SortableDefaultMutableTreeNode#fileSave} method that saves the 
+	 *   Calls the {@link PictureCollection#fileSave} method that saves the 
 	 *   current collection under it's present name and if it was never
 	 *   saved before brings up a popup window.
 	 */
@@ -436,7 +436,7 @@ public class Jpo extends JFrame
 
 
 	/**
-	 *   Calls the {@link SortableDefaultMutableTreeNode#fileSaveAs} method to bring up 
+	 *   Calls the {@link PictureCollection#fileSaveAs} method to bring up 
 	 *   a filechooser where the user can select the filename to
 	 *   save under.
 	 */
@@ -500,8 +500,8 @@ public class Jpo extends JFrame
 
 
 	/**
-	 *   Camera Editor GUI.
-	 */
+	 *   opens up the Camera Editor GUI. See {@link CameraEditor}
+ 	 */
 	public void requestEditCameras() {
 		new CameraEditor();
 	}

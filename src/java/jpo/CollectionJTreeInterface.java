@@ -26,7 +26,7 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 
 /**
  *  This interface defines the method that an object must implement if it 
- *  wants to create a {@link CategoryJTree}.
+ *  wants to create a {@link CollectionJTree}.
  *  
  **/
  
@@ -34,11 +34,11 @@ public interface CollectionJTreeInterface {
 
 
 	/**
-	 *   The GUI for the find command is not implemented in the {@link CategoryJTree} because
+	 *   The GUI for the find command is not implemented in the {@link CollectionJTree} because
 	 *   the user might want to display the search results only in the Thumbnail pane.
 	 *   In order to facilitate this the find requests are passed back to the creator
 	 *   (the {@link Jpo} object) that then passes the requested action down to
-	 *   the {@link CategoryJTree} object or the {@link ThumbnailJScrollPane} object.
+	 *   the {@link CollectionJTree} object or the {@link ThumbnailJScrollPane} object.
 	 *
 	 *   @param startSearchNode	The node from which the search will run.
 	 */

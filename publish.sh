@@ -12,3 +12,4 @@ rsync -vz -e "ssh -l richieigenmann"  --stats --progress libs/activation.jar ric
 rsync -vz -e "ssh -l richieigenmann"  --stats --progress web/mail.jnlp richieigenmann@shell.sourceforge.net:/home/groups/j/j-/j-po/htdocs
 rsync -vz -e "ssh -l richieigenmann"  --stats --progress libs/mail.jar richieigenmann@shell.sourceforge.net:/home/groups/j/j-/j-po/htdocs
 rsync -vz -e "ssh -l richieigenmann"  --stats --progress web/Jpo.bat richieigenmann@shell.sourceforge.net:/home/groups/j/j-/j-po/htdocs
+rsync -vz -e "ssh -l richieigenmann"  --stats --progress web/fontconfig richieigenmann@shell.sourceforge.net:/home/groups/j/j-/j-po/htdocs

@@ -156,6 +156,14 @@ public class Settings {
 	 */
 	public static final int ThumbnailCreationThreadPollingTime = 500;	
 
+
+	/**
+	 *  The number of thumbnail creation threads to spawn.
+	 *  @see ThumbnailCreationThread
+	 */
+	public static final int numberOfThumbnailCreationThreads = 2;
+
+
 	/** 
 	 *  The KDE Panel has the unfortunate habit of insisting on being on top so this
 	 *  parameter allows you to specify how much space should be left from the bottom of

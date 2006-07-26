@@ -124,7 +124,7 @@ public class CollectionJTree extends JTree
 	 *  @param	caller		The object to which the find request should be delegated back to.
 	 *				This will be the main application.
 	 *
-	 *  @param	rootNode	The root node of the tree.
+	 *  @param	tm		The TreeModel of the tree.
 	 */
 	public CollectionJTree( CollectionJTreeInterface caller, TreeModel tm ) {
 		this.caller = caller;
@@ -413,8 +413,7 @@ public class CollectionJTree extends JTree
 	 *  to the object that created the tree because there are two versions: either the
 	 *  search results are attached to the tree or the search results are only displayed
 	 *  in the thumbnail pane. The caller created the instances and thus must delegate
-	 *  the search. If the results are to be saved the called currently calls the 
-	 *  {@link SortableDefaultMutableTreeNode#findAndSave} method.
+	 *  the search. 
 	 *
 	 *  @see  GroupPopupInterface
 	 */

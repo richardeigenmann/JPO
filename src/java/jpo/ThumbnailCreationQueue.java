@@ -30,51 +30,58 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 public class ThumbnailCreationQueue {
 
 	/**
-	 *  The thumnail creation Queue.
+	 *  The thumnail creation Queue. It is implemented as a Vector.
 	 */
 	private static Vector thumbQueue = new Vector();
 	
 	/**
-	 *  The first ThumbnailCreationThread.
+	 *  This Vector allows us to keep track of the number of ThumbnailCreationThreads 
+	 *  we have fired off. Could be enhanced to dynamically start more or less.
 	 */
-	private static ThumbnailCreationThread thubnailFactory1 = new ThumbnailCreationThread();
-	
+	private static Vector thumbnailFactories = new Vector();
+
+
 	/**
-	 *  The second ThumbnailCreationThread.
+	 *  static initializer for the ThumbnailCreationThreads
 	 */
-	private static ThumbnailCreationThread thubnailFactory2 = new ThumbnailCreationThread();
+	static {
+		for ( int i = 1; i <= Settings.numberOfThumbnailCreationThreads; i++ ) {
+			thumbnailFactories.add( new ThumbnailCreationThread() );
+		}
+	}
+	
 
 		
 	/**
-	 *  a constant to indicate a high priority
+	 *  a constant to indicate a high queue priority. It is implemented as the value 0.
 	 */
 	public static final int HIGH_PRIORITY = 0;
 
 	/**
-	 *  a constant to indicate a medium priority
+	 *  a constant to indicate a medium queue priority. It is implemented as the value 1. 
 	 */
 	public static final int MEDIUM_PRIORITY = HIGH_PRIORITY + 1;
 
 	/**
-	 *  a constant to indicate a low priority
+	 *  a constant to indicate a low queue priority. It is implemented as the value 2.
 	 */
 	public static final int LOW_PRIORITY = MEDIUM_PRIORITY + 1;
 	
 	/**
 	 *  a constant to used in the process of finding the highest priority queue item. 
-	 *  It must be 1 more than the Low Priority.
+	 *  It must be 1 more than the Low Priority. Do not use this in the assignment.
 	 */
-	protected static final int COMPARISON_PRIORITY = LOW_PRIORITY + 1;
+	protected static final int LOWEST_PRIORITY = LOW_PRIORITY + 1;
 	
 
 	/**
-	 *   An icon that indicates an image on the queue
+	 *   This icon indicates that the thumbnail creation is sitting on the queue.
 	 */
 	private static final ImageIcon queueIcon = new ImageIcon( Settings.cl.getResource( "jpo/images/queued_thumbnail.gif" ) );
 
 
 	/**
-	 *   An icon that indicates an image on the queue
+	 *   This icon shows a large yellow folder.
 	 */
 	private static final ImageIcon largeFolderIcon = new ImageIcon( Settings.cl.getResource( "jpo/images/icon_folder_large.jpg" ) );
 
@@ -85,6 +92,7 @@ public class ThumbnailCreationQueue {
 	 *
 	 *  @param	thumb	The Thumbnail which is to be loaded
 	 *  @param	priority	The priority with which the rquest is to be treated on the queue
+	 *  @deprecated  Use requestThumbnailCreation Thumbnail, priority, force instead.
 	 */
 	public static void requestThumbnailCreation( Thumbnail thumb, int priority ) {
 		requestThumbnailCreation( thumb, priority, false );
@@ -97,6 +105,7 @@ public class ThumbnailCreationQueue {
 	 *
 	 *  @param	thumb	The Thumbnail which is to be loaded
 	 *  @param	priority	The priority with which the rquest is to be treated on the queue
+	 *  @deprecated  Use requestThumbnailCreation Thumbnail, priority, force instead.
 	 */
 	public static void forceThumbnailCreation( Thumbnail thumb, int priority ) {
 		requestThumbnailCreation( thumb, priority, true );
@@ -104,7 +113,8 @@ public class ThumbnailCreationQueue {
 	
 
 	/** 
-	 *  This method puts a ThumbnailCreationRequest on the queue. 
+	 *  This method creates {@link ThumbnailQueueRequest} and sticks it 
+	 *  on the {@link ThumbnailCreationQueue}. 
 	 *
 	 *  @param	thumb	The Thumbnail which is to be loaded
 	 *  @param	priority	The priority with which the rquest is to be treated on the queue
@@ -113,18 +123,35 @@ public class ThumbnailCreationQueue {
 	 */
 	public static void requestThumbnailCreation( Thumbnail thumb, int priority, boolean force ) {
 		// prevent concurrent use of Thumbnail:
-		synchronized( thumb ) {
-			if ( thumb.referringNode == null ) {
-				Tools.log( "ThumbnailCreationQueue.requestThumbnailCreation: referring node was null! How did this happen?");
-				return;
-			} else if ( thumb.referringNode.getUserObject() instanceof PictureInfo ) {
-				thumb.setThumbnail( queueIcon );
+		//Tools.log("ThumbnailCreationQueue.requestThumbnailCreation: Thumbnail: " + thumb.toString() + " Priority: " + Integer.toString(priority) + " Force: " + Boolean.toString(force));
+		synchronized( thumbQueue ) {
+			//Tools.log("   got past thumbQueue synchronization.");
+			ThumbnailQueueRequest req = findQueueRequest( thumb );
+			if ( req == null ) {
+				//Tools.log("   trying to synchronize on Thumbnail.");
+				//synchronized( thumb ) {
+					//Tools.log("   got past thumb synchronization.");
+					if ( thumb.referringNode == null ) {
+						Tools.log( "ThumbnailCreationQueue.requestThumbnailCreation: referring node was null! How did this happen?");
+						return;
+					} else if ( thumb.referringNode.getUserObject() instanceof PictureInfo ) {
+						thumb.setThumbnail( queueIcon );
+					} else {
+						thumb.setThumbnail( largeFolderIcon );
+					}
+				//}
+				thumbQueue.add( new ThumbnailQueueRequest ( thumb, priority, force ) );
 			} else {
-				thumb.setThumbnail( largeFolderIcon );
+				// thumbnail already on queue
+				Tools.log("ThumbnailCreationQueue.requestThumbnailCreation: Thumbnail already on queue: " + thumb.toString());
+				if ( req.getPriority() > priority ) {
+					req.setPriority( priority );
+				}
+				if ( req.getForce() || force ) {
+					req.setForce( true );
+				}
 			}
 		}
-		thumbQueue.remove( thumb ); // remove it if it was there already
-		thumbQueue.add( new ThumbnailQueueRequest ( thumb, priority, force ) );
 	}
 
 
@@ -135,6 +162,13 @@ public class ThumbnailCreationQueue {
 	 *   @param  thumb  The thumbnail to be removed
 	 */
 	public static void remove( Thumbnail thumb ) {
+		synchronized( thumbQueue ) {
+			ThumbnailQueueRequest req = findQueueRequest( thumb );
+			if ( req != null ) {
+				thumbQueue.remove( req );
+			}
+		}
+	/*
 		boolean notFound = true;
 		ThumbnailQueueRequest test;
 		Enumeration e = thumbQueue.elements();		
@@ -144,40 +178,78 @@ public class ThumbnailCreationQueue {
 				thumbQueue.remove( test );
 				notFound = false;
 			}
-		}
+		}*/
 	}
 
 
-	/**
-	 *   removes all queue requests from the queue.
-	 */
-	public static void removeAll() {
-		thumbQueue.removeAllElements();
-	}
-
 
 	/**
-	 *  this method returns the highest priority request on the queue. If there
-	 *  are no elements it returns null.
+	 *   This method returns the {@link ThumbnailQueueRequest} for the supplied Thumbnail if such 
+	 *   a request exists. Otherwise it returns null.
+	 *
+	 *   @param  thumb  The {@link Thumbnail} for which the request is to be found
+	 *   @return   The ThumbnailQueueRequest if it exists. 
 	 */
-	public static ThumbnailQueueRequest getRequest() {
-		ThumbnailQueueRequest req = null;
-		ThumbnailQueueRequest test;
-		int prio = COMPARISON_PRIORITY;
-		Enumeration e = thumbQueue.elements();		
-		while ( e.hasMoreElements() && ( prio > HIGH_PRIORITY ) ) {
-			test = (ThumbnailQueueRequest) e.nextElement();
-			if ( test.getPriority() < prio ) {
-				req = test;
-				prio = test.getPriority();
+	public static ThumbnailQueueRequest findQueueRequest( Thumbnail thumb ) {
+		synchronized( thumbQueue ) {
+			boolean notFound = true;
+			ThumbnailQueueRequest test = null;
+			Enumeration e = thumbQueue.elements();		
+			while ( e.hasMoreElements() && notFound ) {
+				test = (ThumbnailQueueRequest) e.nextElement();
+				if ( test.getThumbnail() == thumb ) {
+					notFound = false;
+				}
+			}
+			if ( notFound ) {
+				return null;
+			} else {
+				return test;
 			}
 		}
-		thumbQueue.remove( req );
-		/*if ( req == null )
-			Tools.log("ThumbnailCreationQueue.getRequest: picking up a null thumbnail request.");
-		else
-			Tools.log("ThumbnailCreationQueue.getRequest: picking up thumbnail request: " + req.toString());*/
-		return req;
+	}
+
+
+
+
+	/**
+	 *   Remove all queue requests from the queue.
+	 */
+	public static void removeAll() {
+		synchronized( thumbQueue ) {
+			thumbQueue.removeAllElements();
+		}
+	}
+
+
+	/**
+	 *  Returns the highest priority request on the queue. If there
+	 *  are no elements it returns null. The way it finds the highest 
+	 *  priority request is by enumerating the elements on the queue.
+	 *  It then loops through the elements and checks whether the element 
+	 *  has a higher priority than initially a priority lower than the lowest assignable
+	 *  priority. If this is the case this element is marked unless the next 
+	 *  element has a higher priority. This is repeated till there are no more 
+	 *  elements or a request with the highest priority is found.
+	 *
+	 *  @return  The highest priority request on the queue.
+	 */
+	public static ThumbnailQueueRequest getRequest() {
+		synchronized ( thumbQueue ) { // prevent any other thread from messing with the queue until we are done.
+			ThumbnailQueueRequest req = null;
+			ThumbnailQueueRequest test;
+			int prio = LOWEST_PRIORITY;
+			Enumeration e = thumbQueue.elements();		
+			while ( e.hasMoreElements() && ( prio > HIGH_PRIORITY ) ) {
+				test = (ThumbnailQueueRequest) e.nextElement();
+				if ( test.getPriority() < prio ) {
+					req = test;
+					prio = test.getPriority();
+				}
+			}
+			thumbQueue.remove( req );
+			return req;
+		}
 	}
 
 
