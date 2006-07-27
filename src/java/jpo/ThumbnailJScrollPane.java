@@ -5,9 +5,6 @@ import javax.swing.border.*;
 import java.awt.event.*; 
 import java.awt.*; 
 
-import java.awt.image.*; 
-import javax.swing.tree.*; 
-import javax.swing.text.*; 
 import javax.swing.event.*; 
 import java.util.*; 
  
@@ -505,7 +502,7 @@ public class ThumbnailJScrollPane
 	 *   @see #showGroup
 	 */
 	public void requestShowGroup ( SortableDefaultMutableTreeNode showNode ) {
-		showGroup( showNode );
+		show( new GroupBrowser( showNode ) );
 		if ( associatedCollectionJTree != null ) {
 			associatedCollectionJTree.setSelectedNode( showNode );
 		}
@@ -515,42 +512,16 @@ public class ThumbnailJScrollPane
 	}
 
 
- 	/**
-	 *   forces the specified group to be displayed.
-	 *   @param showNode 	The GroupNode to be displayed.
-	 *   @see #requestShowGroup
-	 */
-	public void showGroup ( SortableDefaultMutableTreeNode showNode ) {
-		if ( ! ( showNode.getUserObject() instanceof GroupInfo ) ) {
-			return;
-		}
-		if ( mySetOfNodes == null ) {
-			mySetOfNodes = new GroupBrowser( showNode );
-			mySetOfNodes.addRelayoutListener( this );
-		} else if ( mySetOfNodes instanceof GroupBrowser ) {
-			// we are switching groups; don't change listeners and stuff
-			( (GroupBrowser) mySetOfNodes).setNode( showNode );
-		} else {
-			// must have been a different type of ThumbnailBrowserInterface
-			mySetOfNodes.removeRelayoutListener( this );
-			mySetOfNodes.cleanup();
-			mySetOfNodes = new GroupBrowser( showNode );
-			mySetOfNodes.addRelayoutListener( this );
-		}
-			
-		clearSelection();
-		getVerticalScrollBar().setValue(0);				 
-		startIndex = 0; 
-		curPage = 1;
-		layoutThumbnailsInThread(); 
-	}
-
 
  	/**
 	 *   forces the specified set of nodes to be displayed
 	 *   @param mySetOfNodes 	The Interface with the collection of nodes
 	 */
 	public void show ( ThumbnailBrowserInterface mySetOfNodes ) {
+		if ( this.mySetOfNodes != null ) {
+			this.mySetOfNodes.removeRelayoutListener( this );
+			this.mySetOfNodes.cleanup();
+		}
 		this.mySetOfNodes = mySetOfNodes;
 		mySetOfNodes.addRelayoutListener( this );
 			
@@ -596,11 +567,10 @@ public class ThumbnailJScrollPane
 		}
 
 		for ( int i=0;  i < Settings.maxThumbnails; i++ ) {
-			SortableDefaultMutableTreeNode newNode = mySetOfNodes.getNode( i + startIndex );
-			thumbnails[i].setNode( newNode );
-			thumbnailDescriptionJPanels[i].setNode( newNode );
+			//SortableDefaultMutableTreeNode newNode = mySetOfNodes.getNode( i + startIndex );
+			thumbnails[i].setNode( mySetOfNodes, i + startIndex );
+			thumbnailDescriptionJPanels[i].setNode( mySetOfNodes.getNode( i + startIndex ) );
 		}
-		//ThumbnailPane.validate();		
 	} 
 
  
@@ -815,7 +785,7 @@ public class ThumbnailJScrollPane
 	public final HashSet selection = new HashSet();
 
 	/**
-	 *  This method places the current SDMTN into the selection HashSet.
+	 *  This method places the current {@link SortableDefaultMutableTreeNode} into the selection HashSet.
 	 */
 	public void setSelected( SortableDefaultMutableTreeNode node ) {
 		selection.add( node );

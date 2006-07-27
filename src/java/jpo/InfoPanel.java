@@ -102,7 +102,7 @@ public class InfoPanel
 			t.stop();
 			t.start();  // updates the queue-count
 		} else if ( node.getUserObject() instanceof PictureInfo ) {
-			thumbnail.setNode( (SortableDefaultMutableTreeNode) node );
+			thumbnail.setNode( new SingleNodeBrowser( (SortableDefaultMutableTreeNode) node), 0 );
 			setViewportView( thumbnail ); 
 			t.stop();
 		} else {

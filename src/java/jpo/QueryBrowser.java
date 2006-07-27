@@ -25,8 +25,8 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 
 
 /** 
- *  This class implements the ThumbnailBrowserInterface in the specific manner that is required for 
- *  displaying Queries in the Thumbnail JScrollPane.
+ *  This class implements the {@link ThumbnailBrowserInterface} in the specific manner that is required for 
+ *  displaying {@link Query} in the {@link ThumbnailJScrollPane}.
  */
 
 public class QueryBrowser implements ThumbnailBrowserInterface {
@@ -34,12 +34,7 @@ public class QueryBrowser implements ThumbnailBrowserInterface {
 	/**
 	 *  A reference to the query group that shall be browsed
 	 */
-	private DefaultMutableTreeNode myNode;
-
-	/**
-	 *  A reference to the query group that shall be browsed
-	 */
-	private Query myQuery;
+	protected Query myQuery;
 
 	
 	/**
@@ -48,22 +43,23 @@ public class QueryBrowser implements ThumbnailBrowserInterface {
 	public QueryBrowser () {
 	}
 
-	
+
 	/**
-	 *  call this method to specify the node that this QueryBrowser should refer to.
+	 *  call this method to specify the query that should be browsed.
 	 *
-	 *  @param  node   The DefaultMutableTreeNode that refers to the Group that should be displayed.
+	 *  @param  queryToBrowse   The {@link Query} which should be browsed.
 	 */
-	public void setNode ( DefaultMutableTreeNode node ) {
-		if ( ( node == null ) 
-		  || ( node.getUserObject() == null )
-		  || ( ! ( node.getUserObject() instanceof Query ) ) ) {
-		  	return;
-		}
-		
-		myNode = node;
-		myQuery = (Query) myNode.getUserObject();
+	public void setQuery ( Query queryToBrowse ) {
+		myQuery = queryToBrowse;
 		myQuery.refresh();
+	}
+
+
+	/**
+	 *  returns the {@link Query} for this QueryBrowser
+	 */
+	public Query getQuery() {
+		return myQuery;
 	}
 
 
@@ -71,11 +67,7 @@ public class QueryBrowser implements ThumbnailBrowserInterface {
 	 *  returns the name of the Group being displayed
 	 */
 	public String getTitle() {
-		if ( myNode != null ) {
-			return myNode.toString();
-		} else {
-			return "<no query>";
-		}
+		return getQuery().getTitle();
 	}
 
 

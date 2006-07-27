@@ -52,19 +52,19 @@ public class PictureViewer extends JPanel
 	 *  itself to a JFrame. The JFrame will be destroyed and recrecated depending
 	 *  on how the user would like to see this window.
 	 **/
-	public JFrame myJFrame;
+	private JFrame myJFrame;
 
 	
 	/**
 	 *  flag that specifies whether the window should be drawn with decoration or not
 	 */
-	public boolean decorateWindow = true;
+	private boolean decorateWindow = true;
 	
 	
 	/**
 	 *  flag that specifies whether the navication components should be added
 	 */
-	public boolean displayNavigationControls = true;
+	private boolean displayNavigationControls = true;
 
 
 
@@ -127,6 +127,16 @@ public class PictureViewer extends JPanel
 	private SortableDefaultMutableTreeNode currentNode = null;
 
 
+	/**
+	 *  the context of the browsing
+	 */
+	private ThumbnailBrowserInterface mySetOfNodes = null;
+	
+	/**
+	 *  the position in the context being shown
+	 */
+	private int myIndex = 0;
+	
 
 	/**
 	 *   The pane that handles the image drawing aspects.
@@ -137,7 +147,7 @@ public class PictureViewer extends JPanel
 	/**
 	 *   progress bar to track the pictures loaded so far
 	 */
-	public JProgressBar loadJProgressBar = new JProgressBar();
+	private JProgressBar loadJProgressBar = new JProgressBar();
 
 
 	/**
@@ -207,7 +217,7 @@ public class PictureViewer extends JPanel
 	/**
 	 *  Button that is put in the NavigationPanel to allow the user to navigate to the previous
 	 *  picture. The {@link #changePicture} analyses the context (previous pictures in the group, picture
-	 *  in previous group, beginning of pictures) and displayes the icon {@link #iconPrevious}, {@link #iconPrevPrev}
+	 *  in previous group, beginning of pictures) and displayes the icon {@link #iconPrloadJProgressBarevious}, {@link #iconPrevPrev}
 	 *  {@link #iconNoPrev} as appropriate.
 	 */
 	private JButton previousJButton = new JButton( iconPrevious );
@@ -258,7 +268,6 @@ public class PictureViewer extends JPanel
 	/**
 	 *   icon to close the image
 	 */	
-//	private static final ImageIcon closeIcon = new ImageIcon( Settings.cl.getResource( "jpo/images/icon_close.gif" ) );
 	private static final ImageIcon closeIcon = new ImageIcon( Settings.cl.getResource( "jpo/images/icon_close2.gif" ) );
 		
 	/**
@@ -807,6 +816,75 @@ public class PictureViewer extends JPanel
 	}
 
 
+	/**
+	 *  call this method to request a picture to be shown.
+	 *
+	 *  @param myQuery  The {@link Query} conforming object which holds the links to the images
+	 *  @param myIndex  The index (0..{@link Query.getNumberOfResults}) of the pictures to be shown.
+	 */
+	public void changePicture( ThumbnailBrowserInterface mySetOfNodes, int myIndex ) {
+		Tools.log("PictureViewer.changePicture: called the good new way.");
+		this.mySetOfNodes = mySetOfNodes;
+		this.myIndex = myIndex;
+		SortableDefaultMutableTreeNode node = mySetOfNodes.getNode( myIndex );
+		if ( node == null ) {
+			Tools.log("PictureViewer.changePicture: null node recieved. Not valid, aborting.");
+			return;
+		}
+
+		if ( ! ( node.getUserObject() instanceof PictureInfo) ) {
+			Tools.log( "PictureViewer:changePicture: ignoring request because new node is not a PictureInfo");
+			return;
+		}
+
+		if ( currentNode == node) {
+			Tools.log( "PictureViewer.changePicture: ignoring request because new node is the same as the current one");
+			return;
+		}
+
+		if (myJFrame == null) {
+			createWindow();
+		}
+
+		// unattach the change listener  and figure out if the description was changed and update
+		// it if edits to the collection are allowed.
+		if ( ( this.currentNode != null ) 
+		  && ( this.currentNode.getUserObject() instanceof  PictureInfo ) ) {
+			PictureInfo pi = (PictureInfo) currentNode.getUserObject();
+			pi.removePictureInfoChangeListener( this );
+			
+			if ( ( ! getDescription().equals( descriptionJTextField.getText() ) )
+			   && ( currentNode.getPictureCollection().getAllowEdits() ) ) {
+				Tools.log("PictureViewer.changePicture: The description was modified and is being saved");
+				pi.setDescription( descriptionJTextField.getText () );
+			}	
+		}
+
+
+		
+		currentNode = node;
+		descriptionJTextField.setText( getDescription() );
+		pictureJPanel.setPicture( (PictureInfo) node.getUserObject() ); 
+
+
+		// attach the change listener
+		PictureInfo pi = (PictureInfo) currentNode.getUserObject();
+		pi.addPictureInfoChangeListener( this );
+
+		
+		setIconDecorations();
+
+		// request cacheing of next pictures		
+		SortableDefaultMutableTreeNode cacheNextNode = node.getNextPicture();
+		if ( ( cacheNextNode != null ) && Settings.maxCache > 2 ) {
+			new PictureCacheLoader( cacheNextNode );
+			
+			SortableDefaultMutableTreeNode cacheAfterNextNode = cacheNextNode.getNextPicture();
+			if ( ( cacheAfterNextNode != null ) && Settings.maxCache > 3 ) {
+				new PictureCacheLoader( cacheAfterNextNode );
+			}
+		}
+	}
 
 
 
@@ -817,9 +895,11 @@ public class PictureViewer extends JPanel
 	 *
 	 *   @param	node	The node whose userObject of type PictureInfo
 	 *                      the PictureViewer is supposed to display.
+	 *   @deprecated use the changePicture above.
 	 **/
 
 	public void changePicture( SortableDefaultMutableTreeNode node ) {
+		//Tools.log("PictureViewer.changePicture: called the old way.");
 		if ( node == null ) {
 			Tools.log("PictureViewer.changePicture: null node recieved. Not valid, aborting.");
 			return;
@@ -1052,13 +1132,25 @@ public class PictureViewer extends JPanel
 	 * @see #requestPriorPicture()
   	*/
 	public boolean requestNextPicture() {
-		SortableDefaultMutableTreeNode nextNode = currentNode.getNextPicture();
-		if ( nextNode != null )  {
-			changePicture( nextNode );
-			return true;
+		if ( mySetOfNodes == null ) {
+			Tools.log("PictureViewer.requestNextPicture: using non context aware step forward");
+			SortableDefaultMutableTreeNode nextNode = currentNode.getNextPicture();
+			if ( nextNode != null )  {
+				changePicture( nextNode );
+				return true;
+			} else {
+				return false;
+			}
 		} else {
-		
-			return false;
+			// use context aware step forward
+			Tools.log("PictureViewer.requestNextPicture: using the context aware step forward. The browser contains: " + Integer.toString( mySetOfNodes.getNumberOfNodes() ) + " pictures");
+			if ( mySetOfNodes.getNumberOfNodes() > myIndex ) {
+				Tools.log("PictureViewer.requestNextPicture: requesting node: " + Integer.toString( myIndex + 1) );
+				changePicture( mySetOfNodes, myIndex + 1 );
+				return true;
+			} else {
+				return false;
+			}
 		}
 	}
 
@@ -1150,12 +1242,22 @@ public class PictureViewer extends JPanel
 			cycleAll = useAllPicturesJRadioButton.isSelected();
 			
 			if ( randomAdvance ) {
-				pictureNodesArrayList = new ArrayList( 1000 );
 				if ( cycleAll ) 
-					enumerateAndAddToList( pictureNodesArrayList, (SortableDefaultMutableTreeNode) currentNode.getRoot()  );
+					//enumerateAndAddToList( pictureNodesArrayList, (SortableDefaultMutableTreeNode) currentNode.getRoot()  );
+					mySetOfNodes = new RandomBrowser( (SortableDefaultMutableTreeNode) currentNode.getRoot() );
 				else
-					enumerateAndAddToList( pictureNodesArrayList, (SortableDefaultMutableTreeNode) currentNode.getParent() );
+					//enumerateAndAddToList( pictureNodesArrayList, (SortableDefaultMutableTreeNode) currentNode.getParent() );
+					mySetOfNodes = new RandomBrowser( (SortableDefaultMutableTreeNode) currentNode.getParent() );
+			} else {
+				if ( cycleAll ) 
+					mySetOfNodes = new SequentialBrowser( (SortableDefaultMutableTreeNode) currentNode.getRoot() );
+				else
+					mySetOfNodes = new SequentialBrowser( (SortableDefaultMutableTreeNode) currentNode.getParent() );
+				myIndex = 0;
+				changePicture( mySetOfNodes, myIndex );
 			}
+			myIndex = 0;
+			changePicture( mySetOfNodes, myIndex );
 			advanceTimer = new AdvanceTimer( this, timerSecondsField.getValue() );
 			clockJButton.setIcon( iconClockOn );
 
@@ -1165,7 +1267,7 @@ public class PictureViewer extends JPanel
 
 	/**
 	 *  method that enumerates groupNodes and adds picture nodes to an ArrayList
-	 */
+	 *
 	public void enumerateAndAddToList (ArrayList myList, SortableDefaultMutableTreeNode startNode) {
 		Enumeration kids = startNode.children();
 		SortableDefaultMutableTreeNode n;
@@ -1177,14 +1279,14 @@ public class PictureViewer extends JPanel
 			else if (n.getUserObject() instanceof PictureInfo) 
 				myList.add(n);
 		}
-	}
+	}*/
 
 
 
 	/**
 	 *   this method is invoked from the timer thread that notifies
 	 *   our oject that it is time to advance to the next picture.
-	 */
+	 *
 	public void requestAdvance() {
 		SortableDefaultMutableTreeNode nextNode = null;
 		
@@ -1209,9 +1311,20 @@ public class PictureViewer extends JPanel
 			changePicture( nextNode );
 		}
 
+	} */
+
+	/**
+	 *   this method is invoked from the timer thread that notifies
+	 *   our oject that it is time to advance to the next picture.
+	 */
+	public void requestAdvance() {
+		requestNextPicture();
+		/*myIndex++;
+		if ( myIndex >= mySetOfNodes.getNumberOfNodes() ) {
+			myIndex = 0;
+		}
+		changePicture( mySetOfNodes, myIndex );*/
 	}
-
-
 
 
 	/**
@@ -1231,11 +1344,11 @@ public class PictureViewer extends JPanel
 	/**
 	 *  returns the next node in the group and if it reaches the end of the list 
 	 *  starts from the of the group. If there are no nodes it returns null.
-	 */
+	 *
 	public SortableDefaultMutableTreeNode getRandomNode() {
 		int nodeIndex = (int) (Math.random() * pictureNodesArrayList.size()) ;
 		return (SortableDefaultMutableTreeNode) pictureNodesArrayList.get( nodeIndex );
-	}
+	}*/
 
 
 
@@ -1247,10 +1360,19 @@ public class PictureViewer extends JPanel
 	 * @see #requestNextPicture()
   	*/
 	private void requestPriorPicture() {
-		if (currentNode != null) {
-			SortableDefaultMutableTreeNode prevNode = currentNode.getPreviousPicture();
-			if ( prevNode != null ) {
-				changePicture( prevNode );
+		if ( mySetOfNodes == null ) {
+			Tools.log("PictureViewer.requestPriorPicture: using non context aware step backward");
+			if (currentNode != null) {
+				SortableDefaultMutableTreeNode prevNode = currentNode.getPreviousPicture();
+				if ( prevNode != null ) {
+					changePicture( prevNode );
+				}
+			}
+		} else {
+			// use context aware step forward
+			Tools.log("PictureViewer.requestPriorPicture: using the context aware step backward");
+			if ( myIndex > 0 ) {
+				changePicture( mySetOfNodes, myIndex - 1 );
 			}
 		}
 	}
@@ -1269,8 +1391,8 @@ public class PictureViewer extends JPanel
 	 *   the progress bar.
 	 **/
 	public void scalableStatusChange(int pictureStatusCode, String pictureStatusMessage) {
-		//Tools.log("PictureViewer.scalableStatusChange: Got a status change: " + pictureStatusMessage);
-		loadJProgressBar.setString( pictureStatusMessage );
+		Tools.log("PictureViewer.scalableStatusChange: Got a status change: " + pictureStatusMessage);
+		//loadJProgressBar.setString( pictureStatusMessage );
 		switch( pictureStatusCode ) {
 			case ScalablePicture.UNINITIALISED:
 				loadJProgressBar.setVisible( false );

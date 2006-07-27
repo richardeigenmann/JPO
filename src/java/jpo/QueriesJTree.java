@@ -129,7 +129,12 @@ public class QueriesJTree extends JTree {
 
 			if ( e.getClickCount() == 1 && (! e.isPopupTrigger() ) ) {
 				if ( associatedThumbnailJScrollPane != null ) {
-					queryBrowser.setNode( clickNode );
+					if ( ( clickNode == null ) 
+					  || ( clickNode.getUserObject() == null )
+					  || ( ! ( clickNode.getUserObject() instanceof Query ) ) ) {
+					  	return;
+					}
+					queryBrowser.setQuery( (Query) clickNode.getUserObject() );
 					associatedThumbnailJScrollPane.show( queryBrowser );
 				}
 			}

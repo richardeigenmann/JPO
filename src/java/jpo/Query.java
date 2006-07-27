@@ -37,8 +37,9 @@ public interface Query {
 	public int getNumberOfResults();
 
 	/**
-	 *  This method returns the SDMTN node for the indicated position in the query. If the 
-	 *  index is out of bounds it returns null.
+	 *  This method returns the {@link SortableDefaultMutableTreeNode} node for the indicated position 
+	 *  in the query. If the 
+	 *  index is out of bounds it returns null. The valid range is from 0 to {@link #getNumberOfResults}.
 	 *
 	 *  @param index   The component index that is to be returned.
 	 */

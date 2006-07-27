@@ -1070,20 +1070,6 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 
 
 
-
-
-
-
-	/**
-	 *    Opens up a PictureViewer and positions it at the indicated node.
-	 */
-	public void showLargePicture() {
-		PictureViewer pictureViewer = new PictureViewer();
-		pictureViewer.changePicture( this );
-	}
-
-
-
 	/**
 	 *   Renames the file of the indicated node.
 	 */
@@ -1644,7 +1630,7 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 		// It is 
 		// unfortunate that the queue will not recognize duplicates because it is working 
 		//  off Thumbnail objects instead of Picturefiles. This also makes urgent requests come too late
-		Thumbnail t = new Thumbnail( newNode, Settings.thumbnailSize, ThumbnailCreationQueue.LOW_PRIORITY );
+		Thumbnail t = new Thumbnail( new SingleNodeBrowser( newNode ), 0, Settings.thumbnailSize, ThumbnailCreationQueue.LOW_PRIORITY );
 		this.setUnsavedUpdates();
 				
 		try {
@@ -1689,8 +1675,8 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 		/*if ( ! ( this.getUserObject() instanceof PictureInfo ) ) {
 			Tools.log("SDMTN.refresh Thumbnail called on a node that doesn't contain a picture! Ignoring request.");
 		}*/
-		Thumbnail t = new Thumbnail ( this, Settings.thumbnailSize, ThumbnailCreationQueue.HIGH_PRIORITY );
-		ThumbnailCreationQueue.forceThumbnailCreation( t, ThumbnailCreationQueue.HIGH_PRIORITY );
+		Thumbnail t = new Thumbnail ( new SingleNodeBrowser( this ), 0, Settings.thumbnailSize, ThumbnailCreationQueue.HIGH_PRIORITY );
+		ThumbnailCreationQueue.requestThumbnailCreation( t, ThumbnailCreationQueue.HIGH_PRIORITY, true );
 	}
 	
 

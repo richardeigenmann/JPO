@@ -255,7 +255,7 @@ public class PictureInfoEditor
 		leftJPanel.setLayout( new GridBagLayout() );
 
 
-		thumbnail = new Thumbnail( editNode, Settings.thumbnailSize, ThumbnailCreationQueue.MEDIUM_PRIORITY );
+		thumbnail = new Thumbnail( new SingleNodeBrowser( editNode), 0, Settings.thumbnailSize, ThumbnailCreationQueue.MEDIUM_PRIORITY );
 		c.gridy = 0; c.gridx = 0; 
 		c.gridwidth = 1;
 		c.anchor = GridBagConstraints.CENTER;  

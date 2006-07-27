@@ -413,10 +413,12 @@ public class EmailerJFrame extends JFrame {
 		c.fill = GridBagConstraints.NONE;
 		c.anchor = GridBagConstraints.CENTER;
 		c.insets = new Insets(4, 4, 4, 4);
+		ArrayListBrowser alb = new ArrayListBrowser();
 
 		for ( int i=0; i < emailSelected.length ; i++ ) {
 			//Tools.log("EmailerJFrame.loadThumbnails: running on " + emailSelected[i].toString() );
-			Thumbnail t = new Thumbnail( (SortableDefaultMutableTreeNode) emailSelected[i], thumbnailSize, ThumbnailCreationQueue.LOW_PRIORITY );
+			alb.addNode( (SortableDefaultMutableTreeNode) emailSelected[i] );
+			Thumbnail t = new Thumbnail( alb, i, thumbnailSize, ThumbnailCreationQueue.LOW_PRIORITY );
 			t.setDecorateThumbnails( false );
 			t.determineMailSlectionStatus();
 			t.setFactor( factor );

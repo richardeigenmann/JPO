@@ -383,7 +383,7 @@ public class CollectionJTree extends JTree
 	public void requestShowGroup( SortableDefaultMutableTreeNode newNode ) {
 		setSelectedNode( newNode );
 		if ( associatedThumbnailJScrollPane != null ) {
-			associatedThumbnailJScrollPane.showGroup( newNode );
+			associatedThumbnailJScrollPane.show( new GroupBrowser( newNode ) );
 		}
 	}
 
@@ -395,13 +395,17 @@ public class CollectionJTree extends JTree
 	 */
 	public void requestSlideshow() {
 		SortableDefaultMutableTreeNode firstPicNode = popupNode.findFirstPicture();
-		if ( firstPicNode != null ) 
-			firstPicNode.showLargePicture();
-		else 
+		if ( firstPicNode != null ) {
+			//firstPicNode.showLargePicture();
+			SequentialBrowser sb = new SequentialBrowser( popupNode );
+			PictureViewer pictureViewer = new PictureViewer();
+			pictureViewer.changePicture( sb, 0 );
+		} else {
 			JOptionPane.showMessageDialog( Settings.anchorFrame, 
 				Settings.jpoResources.getString( "noPicsForSlideshow" ), 
 				Settings.jpoResources.getString( "genericError" ), 
 				JOptionPane.ERROR_MESSAGE);
+		}
 	}
 
 
@@ -472,7 +476,7 @@ public class CollectionJTree extends JTree
 		setSelectedNode ( newNode );
 		expandPath( new TreePath ( newNode.getPath()) );
 		if ( associatedThumbnailJScrollPane != null ) {
-			associatedThumbnailJScrollPane.showGroup( popupNode );
+			associatedThumbnailJScrollPane.show( new GroupBrowser( popupNode ) );
 		}
 		if ( associatedInfoPanel != null ) {
 			associatedInfoPanel.showInfo( popupNode );
@@ -661,12 +665,22 @@ public class CollectionJTree extends JTree
 			if ( e.getClickCount() == 1 && (! e.isPopupTrigger() ) ) {
 				if ( clickNode.getUserObject() instanceof GroupInfo ) {
 					if ( associatedThumbnailJScrollPane != null ) {
-						associatedThumbnailJScrollPane.showGroup( clickNode );
+						associatedThumbnailJScrollPane.show( new GroupBrowser( clickNode ) );
 					}
 				}
 			} else 	if ( e.getClickCount() > 1 && (! e.isPopupTrigger() ) ) {
 				if ( clickNode.getUserObject() instanceof PictureInfo ) {
-					clickNode.showLargePicture();
+					//clickNode.showLargePicture();
+					SequentialBrowser sb = new SequentialBrowser( (SortableDefaultMutableTreeNode) clickNode.getParent() );
+					int index = 0;
+					for ( int i=0; i <= sb.getNumberOfNodes(); i++ ) {
+						if ( sb.getNode( i ).equals( clickNode ) ) {
+							index = i;
+							i = sb.getNumberOfNodes() + 1;
+						}
+					}
+					PictureViewer pictureViewer = new PictureViewer();
+					pictureViewer.changePicture( sb, index );
 				}  
 			}
 		}
@@ -702,7 +716,15 @@ public class CollectionJTree extends JTree
 					GroupPopupMenu groupPopupMenu = new GroupPopupMenu( collectionJTree, popupNode );				
 					groupPopupMenu.show(e.getComponent(), e.getX(), e.getY());
 				} else if (nodeInfo instanceof PictureInfo) {
-					PicturePopupMenu picturePopupMenu = new PicturePopupMenu( popupNode );
+					SequentialBrowser sb = new SequentialBrowser( (SortableDefaultMutableTreeNode) popupNode.getParent() );
+					int index = 0;
+					for ( int i=0; i <= sb.getNumberOfNodes(); i++ ) {
+						if ( sb.getNode( i ).equals( popupNode ) ) {
+							index = i;
+							i = sb.getNumberOfNodes() + 1;
+						}
+					}
+					PicturePopupMenu picturePopupMenu = new PicturePopupMenu( sb, index, null );
 					picturePopupMenu.show(e.getComponent(), e.getX(), e.getY());
 				}
 			}

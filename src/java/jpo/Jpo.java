@@ -236,7 +236,7 @@ public class Jpo extends JFrame
 			try {
 				pictureCollection.getRootNode().streamLoad( Settings.jarAutostartList.openStream() );
 				collectionJTree.setSelectedNode ( pictureCollection.getRootNode() );
-				thumbnailJScrollPane.showGroup( pictureCollection.getRootNode() );
+				thumbnailJScrollPane.show( new GroupBrowser( pictureCollection.getRootNode() ) );
 			} catch ( IOException x ) {
 				Tools.log( Settings.jarAutostartList.toString() + " could not be loaded\nReason: " + x.getMessage() );
 			}
@@ -246,7 +246,7 @@ public class Jpo extends JFrame
 			if ( xmlFile.exists() ) {
 				pictureCollection.fileLoad( xmlFile );
 				collectionJTree.setSelectedNode ( pictureCollection.getRootNode() );
-				thumbnailJScrollPane.showGroup( pictureCollection.getRootNode() );
+				thumbnailJScrollPane.show( new GroupBrowser( pictureCollection.getRootNode() ) );
 			}
 		} else {
 			requestFileNew();
@@ -409,7 +409,7 @@ public class Jpo extends JFrame
 	 */
 	public static void positionToNode( SortableDefaultMutableTreeNode displayNode ) {
 		collectionJTree.setSelectedNode( displayNode );
-		thumbnailJScrollPane.showGroup( displayNode );
+		thumbnailJScrollPane.show( new GroupBrowser( displayNode ) );
 	}
 
 	/**

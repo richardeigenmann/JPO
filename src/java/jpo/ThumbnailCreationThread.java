@@ -34,7 +34,7 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 
 /** 
  *  A thread that polls the static {@link ThumbnailCreationQueue} and then 
- *  creates thumbnails for the {@link ThumbnailQueueRequests} on the queue.
+ *  creates thumbnails for the {@link ThumbnailQueueRequest} on the queue.
  **/
 public class ThumbnailCreationThread extends Thread {
 
@@ -83,7 +83,7 @@ public class ThumbnailCreationThread extends Thread {
 	
 	/**
 	 *  This method picks up the thumbnail creation request, sets a loadingIcon and passes the 
-	 *  request to the {@link #createPictureThumbnail} or the {@link #loadOrCreateGroupThumbnail} method.
+	 *  request to the {@link #loadOrCreatePictureThumbnail} or the {@link #loadOrCreateGroupThumbnail} method.
 	 *
 	 *  @param  req		the {@link ThumbnailQueueRequest} for which to create the Thumbnail
 	 */

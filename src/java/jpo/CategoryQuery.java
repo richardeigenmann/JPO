@@ -25,7 +25,7 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 
 
 /** 
- *  This class implements the Query interface to show all the nodes attached to a category.
+ *  This class implements the {@link Query} interface to show all the nodes attached to a category.
  */
 
 public class CategoryQuery implements Query {

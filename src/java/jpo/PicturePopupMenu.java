@@ -225,13 +225,24 @@ public class PicturePopupMenu extends JPopupMenu
 
 
 	/**
+	 *  Reference to the {@link ThumbnailBrowserInterface} which indicates the nodes being displayed.
+	 */
+	private ThumbnailBrowserInterface mySetOfNodes = null;
+	
+	/**
+	 *  Index of the {@link #mySetOfNodes} being popped up.
+	 */
+	private int index = 0;
+
+
+	/**
 	 *  Reference to the picture viewer so that we can reposition.
 	 */
 	private final PictureViewer pictureViewer;
 
 
 	/**
-	 *  Special Constructor for the PopupMenu on a PictureViewer panel
+	 *   Constructor for the PicturePopupMenu when we don't have a target {@link PictureViewer} panel.
 	 *
 	 *   @param  node   The node that the popup was invoked upon
 	 */
@@ -241,10 +252,29 @@ public class PicturePopupMenu extends JPopupMenu
 	
 
 	/**
-	 *   Special Constructor for the PopupMenu on a PictureViewer panel
+	 *   Constructor for the PicturePopupMenu where we do have a {@link PictureViewer} that should 
+	 *   receive the picture.
 	 *
 	 *   @param  node   The node that the popup was invoked upon
 	 *   @param  pictureViewer  the PictureViewer to notify
+	 */
+	public PicturePopupMenu( ThumbnailBrowserInterface mySetOfNodes, int index, PictureViewer pictureViewer  ) {
+		this( mySetOfNodes.getNode( index ), pictureViewer );
+		Tools.log("PicturePopupMenu: constructor called with context.");
+		this.mySetOfNodes = mySetOfNodes;
+		this.index = index;
+		//this.pictureViewer = pictureViewer;
+		//this.popupNode = mySetOfNodes.getNode( index );
+	}
+
+	/**
+	 *   Constructor for the PicturePopupMenu where we do have a {@link PictureViewer} that should 
+	 *   receive the picture.
+	 *
+	 *   @param  node   The node that the popup was invoked upon
+	 *   @param  pictureViewer  the PictureViewer to notify
+	 *   @deprecated
+	 *
 	 */
 	public PicturePopupMenu ( SortableDefaultMutableTreeNode node, PictureViewer pictureViewer  ) {
 		this.pictureViewer = pictureViewer;
@@ -258,7 +288,20 @@ public class PicturePopupMenu extends JPopupMenu
 			= new JMenuItem( Settings.jpoResources.getString("pictureShowJMenuItemLabel") );
 		pictureShowJMenuItem.addActionListener( new ActionListener() {
 			public void actionPerformed( ActionEvent e ) {
-				popupNode.showLargePicture();
+				PictureViewer pictureViewer = new PictureViewer();
+				if ( mySetOfNodes == null ) {
+					Tools.log("PicturePopupMenu.constructor: why does this PicturePopupMenu not know the context it is showing pictures in?");
+					mySetOfNodes = new SequentialBrowser( (SortableDefaultMutableTreeNode) popupNode.getParent() );
+					index = 0;
+					for ( int i=0; i <= mySetOfNodes.getNumberOfNodes(); i++ ) {
+						if ( mySetOfNodes.getNode( i ).equals( popupNode ) ) {
+							index = i;
+							i = mySetOfNodes.getNumberOfNodes() + 1;
+						}
+					}
+					//pictureViewer.changePicture( popupNode );
+				}
+				pictureViewer.changePicture( mySetOfNodes, index );
 			}
 		});
 		add( pictureShowJMenuItem );
@@ -587,7 +630,18 @@ public class PicturePopupMenu extends JPopupMenu
 				Settings.memorizeGroupOfDropLocation( Settings.recentDropNodes[ i ] );
 				
 				if ( pictureViewer != null ) {
-					pictureViewer.changePicture( nextChild );
+					if ( mySetOfNodes == null ) {
+						Tools.log("PicturePopupMenu.constructor: why does this PicturePopupMenu not know the context it is showing pictures in?");
+						mySetOfNodes = new SequentialBrowser( (SortableDefaultMutableTreeNode) nextChild.getParent() );
+						index = 0;
+						for ( int j=0; j <= mySetOfNodes.getNumberOfNodes(); j++ ) {
+							if ( mySetOfNodes.getNode( i ).equals( nextChild ) ) {
+								index = j;
+								j = mySetOfNodes.getNumberOfNodes() + 1;
+							}
+						}
+					}
+					pictureViewer.changePicture( mySetOfNodes, index );
 				}
 				return;
 			}

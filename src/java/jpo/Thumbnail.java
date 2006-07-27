@@ -58,6 +58,13 @@ public class Thumbnail extends JPanel
 	 **/
 	public SortableDefaultMutableTreeNode referringNode;
 
+	
+	private ThumbnailBrowserInterface myThumbnailBrowser = null;
+	
+	
+	private int myIndex = 0;
+
+
 	/**
 	 *  the desired size for the thumbnail
 	 **/
@@ -200,29 +207,14 @@ public class Thumbnail extends JPanel
 	 *   @param     priority	One of ThumbnailCreationQueue.MEDIUM_PRIORITY,ThumbnailCreationQueue.HIGH_PRORITY, ThumbnailCreationQueue.LOW_PRIORITY
 	 *
 	 **/
-	public Thumbnail ( SortableDefaultMutableTreeNode referringNode, int thumbnailSize, int priority ) {
+	public Thumbnail ( ThumbnailBrowserInterface mySetOfNodes, int index, int thumbnailSize, int priority ) {
 		this( thumbnailSize );
 		this.priority = priority;
-		setNode( referringNode );
+		this.myThumbnailBrowser = mySetOfNodes;
+		this.myIndex = index;
+		setNode( mySetOfNodes, index );
 	}
 
-
-	/**
-	 *   Creates a new Thumbnail object and sets it to the supplied node. Has been deprecated as 
-	 *   the priority should be passed as a third argument.
-	 *
-	 *   @param 	referringNode	The SortableDefaultMutableTreeNode for which this Thumbnail is
-	 *				being created.
-	 *
-	 *   @param	thumbnailSize	The size in which the thumbnail is to be created
-	 *
-	 *   @deprecated
-	 *
-	 *
-	 **/
-	public Thumbnail ( SortableDefaultMutableTreeNode referringNode, int thumbnailSize ) {
-		this( referringNode, thumbnailSize, ThumbnailCreationQueue.MEDIUM_PRIORITY );
-	}
 
 
 	/**
@@ -239,22 +231,19 @@ public class Thumbnail extends JPanel
 
 
 
-
 	/**
-	 *  changes the node that is being deiplayed. This does several things: 
-	 *  It disconnects the {@link PictureInfoChangeListener} from the old
-	 *  node and reconnects such a listener to the new node (to receive notification).
-	 *  That allows the Thumbnail to be informed if anything changes such as the 
-	 *  file location of the node which would cause the image to have to be redisplayed.
-	 *  The setNode method fires off a {@link ThumbnailCreationQueue#requestThumbnailCreation}.
-	 *  This puts the request on a quee and when the ThumbnailCreationThread picks 
-	 *  the request up it will update the image by calling the {@link #setThumbnail} method 
-	 *  on this object.
+	 *  This version of setNode is context aware and knows what sort of {@link ThumbnailBrowserInterface}
+	 *  is being 
+	 *  tracked and what position it occupies.
 	 *
-	 *  @param  node   The node which should be displayed. Can be null if the Thumbnail is to be muted.
+	 *  @param mySetOfNodes  The {@link ThumbnailBrowserInterface} being tracked
+	 *  @param index	The position of this object to be displayed.
 	 */
-	public void setNode( SortableDefaultMutableTreeNode node ) {
-		//Tools.log("Thumbnail.setNode: called.");
+	 public void setNode( ThumbnailBrowserInterface mySetOfNodes, int index ) {
+	 	//setNode( mySetOfNodes.getNode( index ) );
+		this.myThumbnailBrowser = mySetOfNodes;
+		this.myIndex = index;
+		SortableDefaultMutableTreeNode node = mySetOfNodes.getNode( index );
 		if ( this.referringNode == node ) {
 			// Don't refresh the node if it hasn't changed
 			//Tools.log("Thumbnail.setNode: determined that this node is being set to the same.");
@@ -292,7 +281,7 @@ public class Thumbnail extends JPanel
 		} else { //if ( node.getUserObject() instanceof PictureInfo ) {
 			//Tools.log("Thumbnail.setNode: called on node: " + node.getUserObject().toString());
 			ThumbnailCreationQueue.requestThumbnailCreation( 
-				this, priority );
+				this, priority, false );
 		} 
 	
 		showSlectionStatus();
@@ -495,9 +484,22 @@ public class Thumbnail extends JPanel
 			}
 			if ( referringNode.getUserObject() instanceof PictureInfo ) {
 				if  ( e.getClickCount() > 1 ) {
-					referringNode.showLargePicture();
-				}  else if ( e.getButton() == 3 ) { // popup menu only on 3rd mouse button.
-					PicturePopupMenu picturePopupMenu = new PicturePopupMenu( referringNode );
+					PictureViewer pictureViewer = new PictureViewer();
+					if ( myThumbnailBrowser == null ) {
+						Tools.log("Thumbnail.mouseClicked: why does this Thumbnail not know the context it is showing pictures in?");
+						myThumbnailBrowser = new SequentialBrowser( (SortableDefaultMutableTreeNode) referringNode.getParent() );
+						int myIndex = 0;
+						for ( int i=0; i <= myThumbnailBrowser.getNumberOfNodes(); i++ ) {
+							if ( myThumbnailBrowser.getNode( i ).equals( referringNode ) ) {
+								myIndex = i;
+								i = myThumbnailBrowser.getNumberOfNodes() + 1;
+							}
+						}
+					}
+					pictureViewer.changePicture( myThumbnailBrowser, myIndex );
+				} else if ( e.getButton() == 3 ) { // popup menu only on 3rd mouse button.
+					//PicturePopupMenu picturePopupMenu = new PicturePopupMenu( referringNode );
+					PicturePopupMenu picturePopupMenu = new PicturePopupMenu( myThumbnailBrowser, myIndex, null );
 					picturePopupMenu.setSelection( associatedPanel );
 					picturePopupMenu.show(e.getComponent(), e.getX(), e.getY());
 				}  else if ( ( e.getButton() == 1) && ( associatedPanel != null ) ) { // first button
@@ -547,7 +549,7 @@ public class Thumbnail extends JPanel
 		  || e.getThumbnailChanged()
 		  || e.getRotationChanged() ) {
 			ThumbnailCreationQueue.requestThumbnailCreation( 
-				this, ThumbnailCreationQueue.HIGH_PRIORITY );
+				this, ThumbnailCreationQueue.HIGH_PRIORITY, false );
 		} else if ( e.getWasSelected() ) {
 			showAsSelected();
 		} else if ( e.getWasUnselected() ) {
@@ -647,7 +649,7 @@ public class Thumbnail extends JPanel
 					// determine if the icon changed
 					// Tools.log( "Thumbnail should be reloading the icon..." );
 					ThumbnailCreationQueue.requestThumbnailCreation( 
-						this, ThumbnailCreationQueue.HIGH_PRIORITY );
+						this, ThumbnailCreationQueue.HIGH_PRIORITY, false );
 				}
 			}
 		}

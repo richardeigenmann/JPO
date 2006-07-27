@@ -337,8 +337,10 @@ public class SourcePicture implements Cloneable {
 	 *  is being loaded. Otherwise it returns false.
 	 */
 	public boolean stopLoadingExcept( URL exemptionURL ) {
-		if ( imageUrl == null ) 
+		if ( ( imageUrl == null ) || ( exemptionURL == null ) ) {
+			Tools.log("SourcePicture.stopLoadingExcept: exiting on a null parameter. How did this happen?");
 			return false; // has never been used yet
+		}
 
 		if ( pictureStatusCode != LOADING ) {
 			Tools.log( "SourcePicture.stopLoadingExcept: called but pointless since image is not LOADING: " + imageUrl.toString());
