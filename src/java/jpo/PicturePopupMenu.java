@@ -255,7 +255,8 @@ public class PicturePopupMenu extends JPopupMenu
 	 *   Constructor for the PicturePopupMenu where we do have a {@link PictureViewer} that should 
 	 *   receive the picture.
 	 *
-	 *   @param  node   The node that the popup was invoked upon
+	 *   @param  mySetOfNodes   The set of nodes from which the popup picture is coming
+	 *   @param  index		The picture of the set for which the popup is being shown.
 	 *   @param  pictureViewer  the PictureViewer to notify
 	 */
 	public PicturePopupMenu( ThumbnailBrowserInterface mySetOfNodes, int index, PictureViewer pictureViewer  ) {
@@ -346,7 +347,18 @@ public class PicturePopupMenu extends JPopupMenu
 			pictureMailSelectJMenuItem.setText( Settings.jpoResources.getString("pictureMailUnselectJMenuItem") );
 			pictureMailSelectJMenuItem.addActionListener( new ActionListener() {
 				public void actionPerformed( ActionEvent e ) {
-					popupNode.getPictureCollection().removeFromMailSelection( popupNode );
+					if (( associatedPanel == null ) || ( associatedPanel.countSelectedNodes() < 1 ) ){
+						popupNode.getPictureCollection().removeFromMailSelection( popupNode );
+					} else {
+						Enumeration selection = associatedPanel.getSelectedNodesAsVector().elements();
+						SortableDefaultMutableTreeNode n;
+						while ( selection.hasMoreElements() ) {
+							n = (SortableDefaultMutableTreeNode) selection.nextElement();
+							if ( n.getUserObject() instanceof PictureInfo ) {
+								n.getPictureCollection().removeFromMailSelection( n );
+							}
+						}
+					}
 				}
 			});
 			add( pictureMailSelectJMenuItem );
@@ -361,7 +373,18 @@ public class PicturePopupMenu extends JPopupMenu
 			pictureMailSelectJMenuItem.setText( Settings.jpoResources.getString("pictureMailSelectJMenuItem") );
 			pictureMailSelectJMenuItem.addActionListener( new ActionListener() {
 				public void actionPerformed( ActionEvent e ) {
-					popupNode.getPictureCollection().setMailSelected( popupNode );
+					if (( associatedPanel == null ) || ( associatedPanel.countSelectedNodes() < 1 ) ){
+						popupNode.getPictureCollection().setMailSelected( popupNode );
+					} else {
+						Enumeration selection = associatedPanel.getSelectedNodesAsVector().elements();
+						SortableDefaultMutableTreeNode n;
+						while ( selection.hasMoreElements() ) {
+							n = (SortableDefaultMutableTreeNode) selection.nextElement();
+							if ( n.getUserObject() instanceof PictureInfo ) {
+								n.getPictureCollection().setMailSelected( n );
+							}
+						}
+					}
 				}
 			});
 			add( pictureMailSelectJMenuItem );
@@ -443,42 +466,108 @@ public class PicturePopupMenu extends JPopupMenu
 		
 			movePictureToTopJMenuItem.addActionListener( new ActionListener() {
 				public void actionPerformed( ActionEvent e ) {
-					popupNode.moveNodeToTop();
+					if (( associatedPanel == null ) || ( associatedPanel.countSelectedNodes() < 1 ) ){
+						popupNode.moveNodeToTop();
+					} else {
+						Enumeration selection = associatedPanel.getSelectedNodesAsVector().elements();
+						SortableDefaultMutableTreeNode n;
+						while ( selection.hasMoreElements() ) {
+							n = (SortableDefaultMutableTreeNode) selection.nextElement();
+							if ( n.getUserObject() instanceof PictureInfo ) {
+								n.moveNodeToTop();
+							}
+						}
+					}
 				}
 			});
 			movePictureNodeJMenu.add( movePictureToTopJMenuItem );
 		
 			movePictureUpJMenuItem.addActionListener( new ActionListener() {
 				public void actionPerformed( ActionEvent e ) {
-					popupNode.moveNodeUp();
+					if (( associatedPanel == null ) || ( associatedPanel.countSelectedNodes() < 1 ) ){
+						popupNode.moveNodeUp();
+					} else {
+						Enumeration selection = associatedPanel.getSelectedNodesAsVector().elements();
+						SortableDefaultMutableTreeNode n;
+						while ( selection.hasMoreElements() ) {
+							n = (SortableDefaultMutableTreeNode) selection.nextElement();
+							if ( n.getUserObject() instanceof PictureInfo ) {
+								n.moveNodeUp();
+							}
+						}
+					}
 				}
 			});
 			movePictureNodeJMenu.add( movePictureUpJMenuItem );
 
 			movePictureDownJMenuItem.addActionListener( new ActionListener() {
 				public void actionPerformed( ActionEvent e ) {
-					popupNode.moveNodeDown();
+					if (( associatedPanel == null ) || ( associatedPanel.countSelectedNodes() < 1 ) ){
+						popupNode.moveNodeDown();
+					} else {
+						Enumeration selection = associatedPanel.getSelectedNodesAsVector().elements();
+						SortableDefaultMutableTreeNode n;
+						while ( selection.hasMoreElements() ) {
+							n = (SortableDefaultMutableTreeNode) selection.nextElement();
+							if ( n.getUserObject() instanceof PictureInfo ) {
+								n.moveNodeDown();
+							}
+						}
+					}
 				}
 			});
 			movePictureNodeJMenu.add( movePictureDownJMenuItem );
 
 			movePictureToBottomJMenuItem.addActionListener( new ActionListener() {
 				public void actionPerformed( ActionEvent e ) {
-					popupNode.moveNodeToBottom();
+					if (( associatedPanel == null ) || ( associatedPanel.countSelectedNodes() < 1 ) ){
+						popupNode.moveNodeToBottom();
+					} else {
+						Enumeration selection = associatedPanel.getSelectedNodesAsVector().elements();
+						SortableDefaultMutableTreeNode n;
+						while ( selection.hasMoreElements() ) {
+							n = (SortableDefaultMutableTreeNode) selection.nextElement();
+							if ( n.getUserObject() instanceof PictureInfo ) {
+								n.moveNodeToBottom();
+							}
+						}
+					}
 				}
 			});
 			movePictureNodeJMenu.add( movePictureToBottomJMenuItem );
 
 			indentJMenuItem.addActionListener( new ActionListener() {
 				public void actionPerformed( ActionEvent e ) {
-					popupNode.indentNode();
+					if (( associatedPanel == null ) || ( associatedPanel.countSelectedNodes() < 1 ) ){
+						popupNode.indentNode();
+					} else {
+						Enumeration selection = associatedPanel.getSelectedNodesAsVector().elements();
+						SortableDefaultMutableTreeNode n;
+						while ( selection.hasMoreElements() ) {
+							n = (SortableDefaultMutableTreeNode) selection.nextElement();
+							if ( n.getUserObject() instanceof PictureInfo ) {
+								n.copyToNewLocation();
+							}
+						}
+					}
 				}
 			});
 			movePictureNodeJMenu.add( indentJMenuItem );
 
 			outdentJMenuItem.addActionListener( new ActionListener() {
 				public void actionPerformed( ActionEvent e ) {
-					popupNode.outdentNode();
+					if (( associatedPanel == null ) || ( associatedPanel.countSelectedNodes() < 1 ) ){
+						popupNode.outdentNode();
+					} else {
+						Enumeration selection = associatedPanel.getSelectedNodesAsVector().elements();
+						SortableDefaultMutableTreeNode n;
+						while ( selection.hasMoreElements() ) {
+							n = (SortableDefaultMutableTreeNode) selection.nextElement();
+							if ( n.getUserObject() instanceof PictureInfo ) {
+								n.copyToNewLocation();
+							}
+						}
+					}
 				}
 			});
 			movePictureNodeJMenu.add( outdentJMenuItem );
@@ -491,7 +580,18 @@ public class PicturePopupMenu extends JPopupMenu
 
 		copyToNewLocationJMenuItem.addActionListener( new ActionListener() {
 				public void actionPerformed( ActionEvent e ) {
-					popupNode.copyToNewLocation();
+					if (( associatedPanel == null ) || ( associatedPanel.countSelectedNodes() < 1 ) ){
+						popupNode.copyToNewLocation();
+					} else {
+						Enumeration selection = associatedPanel.getSelectedNodesAsVector().elements();
+						SortableDefaultMutableTreeNode n;
+						while ( selection.hasMoreElements() ) {
+							n = (SortableDefaultMutableTreeNode) selection.nextElement();
+							if ( n.getUserObject() instanceof PictureInfo ) {
+								n.copyToNewLocation();
+							}
+						}
+					}
 				}
 			});
 		copyImageJMenu.add( copyToNewLocationJMenuItem );
@@ -511,7 +611,19 @@ public class PicturePopupMenu extends JPopupMenu
 
 			pictureNodeRemove.addActionListener( new ActionListener() {
 				public void actionPerformed( ActionEvent e ) {
-					popupNode.deleteNode();
+					if (( associatedPanel == null ) || ( associatedPanel.countSelectedNodes() < 1 ) ){
+						popupNode.deleteNode();
+						
+					} else {
+						Enumeration selection = associatedPanel.getSelectedNodesAsVector().elements();
+						SortableDefaultMutableTreeNode n;
+						while ( selection.hasMoreElements() ) {
+							n = (SortableDefaultMutableTreeNode) selection.nextElement();
+							if ( n.getUserObject() instanceof PictureInfo ) {
+								n.deleteNode();
+							}
+						}
+					}
 				}
 			});
 			add( pictureNodeRemove );
@@ -521,7 +633,18 @@ public class PicturePopupMenu extends JPopupMenu
 
 			fileRenameJMenuItem.addActionListener( new ActionListener() {
 				public void actionPerformed( ActionEvent e ) {
-					popupNode.fileRename();
+					if (( associatedPanel == null ) || ( associatedPanel.countSelectedNodes() < 1 ) ){
+						popupNode.fileRename();
+					} else {
+						Enumeration selection = associatedPanel.getSelectedNodesAsVector().elements();
+						SortableDefaultMutableTreeNode n;
+						while ( selection.hasMoreElements() ) {
+							n = (SortableDefaultMutableTreeNode) selection.nextElement();
+							if ( n.getUserObject() instanceof PictureInfo ) {
+								n.fileRename();
+							}
+						}
+					}
 				}
 			});
 			fileOperationsJMenu.add( fileRenameJMenuItem );

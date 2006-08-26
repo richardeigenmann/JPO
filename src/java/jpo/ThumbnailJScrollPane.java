@@ -499,7 +499,6 @@ public class ThumbnailJScrollPane
 	/**
 	 *   calls showGroup but also makes sure the JTree positions itself on the selected group.
 	 *   @param showNode 	The GroupNode to be displayed.
-	 *   @see #showGroup
 	 */
 	public void requestShowGroup ( SortableDefaultMutableTreeNode showNode ) {
 		show( new GroupBrowser( showNode ) );

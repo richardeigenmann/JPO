@@ -199,8 +199,10 @@ public class Thumbnail extends JPanel
 	/**
 	 *   Creates a new Thumbnail object and sets it to the supplied node.
 	 *
-	 *   @param 	referringNode	The SortableDefaultMutableTreeNode for which this Thumbnail is
+	 *   @param 	mySetOfNodes	The set for which this Thumbnail is
 	 *				being created.
+	 *
+	 *   @param	index		the position of the image in the set
 	 *
 	 *   @param	thumbnailSize	The size in which the thumbnail is to be created
 	 *

@@ -217,7 +217,7 @@ public class PictureViewer extends JPanel
 	/**
 	 *  Button that is put in the NavigationPanel to allow the user to navigate to the previous
 	 *  picture. The {@link #changePicture} analyses the context (previous pictures in the group, picture
-	 *  in previous group, beginning of pictures) and displayes the icon {@link #iconPrloadJProgressBarevious}, {@link #iconPrevPrev}
+	 *  in previous group, beginning of pictures) and displayes the icon {@link #iconPrevious}, {@link #iconPrevPrev}
 	 *  {@link #iconNoPrev} as appropriate.
 	 */
 	private JButton previousJButton = new JButton( iconPrevious );
@@ -819,8 +819,8 @@ public class PictureViewer extends JPanel
 	/**
 	 *  call this method to request a picture to be shown.
 	 *
-	 *  @param myQuery  The {@link Query} conforming object which holds the links to the images
-	 *  @param myIndex  The index (0..{@link Query.getNumberOfResults}) of the pictures to be shown.
+	 *  @param mySetOfNodes  The set of nodes which holds the links to the images
+	 *  @param myIndex  The index of the pictures to be shown.
 	 */
 	public void changePicture( ThumbnailBrowserInterface mySetOfNodes, int myIndex ) {
 		Tools.log("PictureViewer.changePicture: called the good new way.");
