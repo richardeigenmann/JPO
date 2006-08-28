@@ -213,6 +213,7 @@ public class JpoResources_zh_TW extends ListResourceBundle {
 		{"CssCopyError", "不能拷貝樣式文件jpo.css\n"},
 		{"HtmlDistillerPreviewFont", ""},
 
+				
 
 		// ReconcileJFrame
 		{"ReconcileJFrameTitle", "圖片集与文件夾相應文件檢查"},
@@ -278,7 +279,6 @@ public class JpoResources_zh_TW extends ListResourceBundle {
 		{"categoriesJLabel-2", "類目："},
 		{"setupCategories", ">>設置類目<<"},
 		{"noCategories", ">> 不屬于任何類目 <<"},
-		{"PictureInfoEditorErrorFont", ""},
 
 		
 		//GroupInfoEditor
@@ -351,9 +351,9 @@ public class JpoResources_zh_TW extends ListResourceBundle {
 		// ThumbnailJScrollPane
 		{"ThumbnailSearchResults", "搜索結果"},
 		{"ThumbnailSearchResults2", "在"},
-		{"ThumbnailToolTipPrevious", "Previous Page"}, //Franklin, please correct
-		{"ThumbnailToolTipNext", "Next Page"}, //Franklin, please correct
-		{"ThumbnailJScrollPanePage", "Page "}, //Franklin, please correct
+		{"ThumbnailToolTipPrevious", "前一頁"},
+		{"ThumbnailToolTipNext", "后一頁"},
+		{"ThumbnailJScrollPanePage", "頁"},
 
 		//ChangeWindowPopupMenu
 		{"fullScreenLabel", "全屏"},
@@ -584,35 +584,34 @@ public class JpoResources_zh_TW extends ListResourceBundle {
 		{"CategoryQuery", "類目查詢"},
 
 		//PicturePanel
-		{"PicturePaneInfoFont", ""},    //Franklin, please correct
-		{"PicturePaneSize", "Size: "},  //Franklin, please correct
-		{"PicturePaneMidpoint", " Midpoint: "},  //Franklin, please correct
-		{"PicturePaneLoadTime", "Loaded in: "},  //Franklin, please correct
-		{"PicturePaneSeconds", " seconds"},  //Franklin, please correct
-		{"PicturePaneFreeMemory", "Free Memory: "},  //Franklin, please correct
-		{"PicturePaneReadyStatus", "Ready"}, //Franklin, please correct
-
+		{"PicturePaneInfoFont", ""},   
+		{"PicturePaneSize", "尺寸："}, 
+		{"PicturePaneMidpoint", " 中心點"}, 
+		{"PicturePaneLoadTime", "載入："}, 
+		{"PicturePaneSeconds", "秒"}, 
+		{"PicturePaneFreeMemory", "可用內存空間："}, 
+		{"PicturePaneReadyStatus", "就緒"},
 
 		//ExifInfo
-		{"ExifInfoCamera", "Camera:"}, //Franklin, please correct
-		{"ExifInfoLens", "Lens:"}, //Franklin, please correct
-		{"ExifInfoShutterSpeed", "Shutter Speed:"}, //Franklin, please correct
-		{"ExifInfoAperture", "Aperture:"}, //Franklin, please correct
-		{"ExifInfoFocalLength", "Focal Length:"}, //Franklin, please correct
-		{"ExifInfoISO", "ISO:"}, //Franklin, please correct
-		{"ExifInfoTimeStamp", "Time stamp:"}, //Franklin, please correct
+		{"ExifInfoCamera", "照相机："},
+		{"ExifInfoLens", "鏡頭："},
+		{"ExifInfoShutterSpeed", "快門速度："},
+		{"ExifInfoAperture", "光圈："},
+		{"ExifInfoFocalLength", "焦距："},
+		{"ExifInfoISO", "感光度ISO："},
+		{"ExifInfoTimeStamp", "拍攝時間："},
 
-		//ThumbnailDescriptionJPanel
+		//ThumbnailDescriptionJPane
+
 		{"ThumbnailDescriptionJPanelLargeFont", ""},
 		{"ThumbnailDescriptionJPanelSmallFont", ""},
-		{"ThumbnailDescriptionNoNodeError", "No node for this position."}, //Franklin, please correct
+		{"ThumbnailDescriptionNoNodeError", "此位置上沒有圖片。"},
 
 		// ScalablePicture
-		{"ScalablePictureUninitialisedStatus", "Uninitialised"}, //Franklin, please correct
-		{"ScalablePictureLoadingStatus", "Loading"}, //Franklin, please correct
-		{"ScalablePictureRotatingStatus", "Rotating"}, //Franklin, please correct
-		{"ScalablePictureScalingStatus", "Scaling"}, //Franklin, please correct
-		{"ScalablePictureErrorStatus", "Error"}, //Franklin, please correct
+		{"ScalablePictureUninitialisedStatus", "沒有初始化"},
+		{"ScalablePictureLoadingStatus", "正在裝入"},
+		{"ScalablePictureRotatingStatus", "正在翻轉"},
+		{"ScalablePictureScalingStatus", "正在縮放"},
 
 
 		{"Template", "模板"}
@@ -620,5 +619,4 @@ public class JpoResources_zh_TW extends ListResourceBundle {
 		
 	};
 }
-
 

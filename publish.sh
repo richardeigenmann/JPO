@@ -3,6 +3,9 @@ rsync -vz -e "ssh -l richieigenmann"  --stats --progress web/jpo-0.8.5.jnlp rich
 rsync -vz -e "ssh -l richieigenmann"  --stats --progress jars/jpo-0.8.5.jar richieigenmann@shell.sourceforge.net:/home/groups/j/j-/j-po/htdocs
 rsync -vz -e "ssh -l richieigenmann"  --stats --progress libs/metadata-extractor-2.3.0.jar richieigenmann@shell.sourceforge.net:/home/groups/j/j-/j-po/htdocs
 rsync -vz -e "ssh -l richieigenmann"  --stats --progress web/index.html richieigenmann@shell.sourceforge.net:/home/groups/j/j-/j-po/htdocs
+rsync -vz -e "ssh -l richieigenmann"  --stats --progress web/installation.html richieigenmann@shell.sourceforge.net:/home/groups/j/j-/j-po/htdocs
+rsync -vz -e "ssh -l richieigenmann"  --stats --progress web/about.html richieigenmann@shell.sourceforge.net:/home/groups/j/j-/j-po/htdocs
+rsync -vz -e "ssh -l richieigenmann"  --stats --progress web/changelog.html richieigenmann@shell.sourceforge.net:/home/groups/j/j-/j-po/htdocs
 rsync -vz -e "ssh -l richieigenmann"  --stats --progress web/jnlp.jnlp richieigenmann@shell.sourceforge.net:/home/groups/j/j-/j-po/htdocs
 rsync -vz -e "ssh -l richieigenmann"  --stats --progress libs/jnlp.jar richieigenmann@shell.sourceforge.net:/home/groups/j/j-/j-po/htdocs
 rsync -vz -e "ssh -l richieigenmann"  --stats --progress web/jpo-devel.jnlp richieigenmann@shell.sourceforge.net:/home/groups/j/j-/j-po/htdocs

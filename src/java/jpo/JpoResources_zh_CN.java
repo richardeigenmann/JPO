@@ -118,6 +118,7 @@ public class JpoResources_zh_CN extends ListResourceBundle {
 		{"SettingsTitleFont", ""},
 		{"SettingsCaptionFont", ""},
 
+
 		// SettingsDialog Texts
 		{"settingsDialogTitle", "设置"},
 		
@@ -213,6 +214,7 @@ public class JpoResources_zh_CN extends ListResourceBundle {
 		{"CssCopyError", "不能拷贝样式文件jpo.css\n"},
 		{"HtmlDistillerPreviewFont", ""},
 
+				
 
 		// ReconcileJFrame
 		{"ReconcileJFrameTitle", "图片集与文件夹相应文件检查"},
@@ -278,7 +280,6 @@ public class JpoResources_zh_CN extends ListResourceBundle {
 		{"categoriesJLabel-2", "类目："},
 		{"setupCategories", ">>设置类目<<"},
 		{"noCategories", ">> 不属于任何类目 <<"},
-		{"PictureInfoEditorErrorFont", ""},
 
 		
 		//GroupInfoEditor
@@ -351,9 +352,9 @@ public class JpoResources_zh_CN extends ListResourceBundle {
 		// ThumbnailJScrollPane
 		{"ThumbnailSearchResults", "搜索结果"},
 		{"ThumbnailSearchResults2", "在"},
-		{"ThumbnailToolTipPrevious", "Previous Page"}, //Franklin, please correct
-		{"ThumbnailToolTipNext", "Next Page"}, //Franklin, please correct
-		{"ThumbnailJScrollPanePage", "Page "}, //Franklin, please correct
+		{"ThumbnailToolTipPrevious", "前一页"},
+		{"ThumbnailToolTipNext", "后一页"},
+		{"ThumbnailJScrollPanePage", "页"},
 
 		//ChangeWindowPopupMenu
 		{"fullScreenLabel", "全屏"},
@@ -584,36 +585,33 @@ public class JpoResources_zh_CN extends ListResourceBundle {
 		{"CategoryQuery", "类目查询"},
 
 		//PicturePanel
-		{"PicturePaneInfoFont", ""},    //Franklin, please correct
-		{"PicturePaneSize", "Size: "},  //Franklin, please correct
-		{"PicturePaneMidpoint", " Midpoint: "},  //Franklin, please correct
-		{"PicturePaneLoadTime", "Loaded in: "},  //Franklin, please correct
-		{"PicturePaneSeconds", " seconds"},  //Franklin, please correct
-		{"PicturePaneFreeMemory", "Free Memory: "},  //Franklin, please correct
-		{"PicturePaneReadyStatus", "Ready"}, //Franklin, please correct
-
+		{"PicturePaneInfoFont", ""},   
+		{"PicturePaneSize", "尺寸："}, 
+		{"PicturePaneMidpoint", " 中心点"}, 
+		{"PicturePaneLoadTime", "载入："}, 
+		{"PicturePaneSeconds", "秒"}, 
+		{"PicturePaneFreeMemory", "可用內存空间："}, 
+		{"PicturePaneReadyStatus", "就绪"},
 
 		//ExifInfo
-		{"ExifInfoCamera", "Camera:"}, //Franklin, please correct
-		{"ExifInfoLens", "Lens:"}, //Franklin, please correct
-		{"ExifInfoShutterSpeed", "Shutter Speed:"}, //Franklin, please correct
-		{"ExifInfoAperture", "Aperture:"}, //Franklin, please correct
-		{"ExifInfoFocalLength", "Focal Length:"}, //Franklin, please correct
-		{"ExifInfoISO", "ISO:"}, //Franklin, please correct
-		{"ExifInfoTimeStamp", "Time stamp:"}, //Franklin, please correct
+		{"ExifInfoCamera", "照相机："},
+		{"ExifInfoLens", "镜头："},
+		{"ExifInfoShutterSpeed", "快门速度："},
+		{"ExifInfoAperture", "光圈："},
+		{"ExifInfoFocalLength", "焦距："},
+		{"ExifInfoISO", "感光度ISO："},
+		{"ExifInfoTimeStamp", "拍摄时间："},
 
-		//ThumbnailDescriptionJPanel
+		//ThumbnailDescriptionJPane
 		{"ThumbnailDescriptionJPanelLargeFont", ""},
 		{"ThumbnailDescriptionJPanelSmallFont", ""},
-		{"ThumbnailDescriptionNoNodeError", "No node for this position."}, //Franklin, please correct
+		{"ThumbnailDescriptionNoNodeError", "此位置上没有图片。"},
 
 		// ScalablePicture
-		{"ScalablePictureUninitialisedStatus", "Uninitialised"}, //Franklin, please correct
-		{"ScalablePictureLoadingStatus", "Loading"}, //Franklin, please correct
-		{"ScalablePictureRotatingStatus", "Rotating"}, //Franklin, please correct
-		{"ScalablePictureScalingStatus", "Scaling"}, //Franklin, please correct
-		{"ScalablePictureErrorStatus", "Error"}, //Franklin, please correct
-
+		{"ScalablePictureUninitialisedStatus", "没有初始化"},
+		{"ScalablePictureLoadingStatus", "正在装入"},
+		{"ScalablePictureRotatingStatus", "正在翻转"},
+		{"ScalablePictureScalingStatus", "正在缩放"},
 
 
 		{"Template", "模板"}

@@ -276,7 +276,6 @@ public class JpoResources_de extends ListResourceBundle {
 		{"categoriesJLabel-2", "Kategorien:"},
 		{"setupCategories", ">> Kategorien erstellen <<"},
 		{"noCategories", ">> Keine <<"},
-		{"PictureInfoEditorErrorFont", "Arial-PLAIN-10"},
 
 		
 		//GroupInfoEditor
