@@ -105,10 +105,11 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 	        //Add the new array of nodes to top
         	for ( int i = 0; i < childNodes.length; i++ ){
 			add( childNodes[i] );
-			Tools.log("Adding back to group: " + childNodes[i].toString() );
+			//Tools.log("Adding back to group: " + childNodes[i].toString() );
 		}
+		setUnsavedUpdates();
 		getPictureCollection().setSendModelUpdates( true );
-		getPictureCollection().getTreeModel().nodeStructureChanged( this );
+		//getPictureCollection().getTreeModel().nodeStructureChanged( this );
 	}
 
 

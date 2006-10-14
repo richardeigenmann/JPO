@@ -94,8 +94,16 @@ public class EmailerJFrame extends JFrame {
 	 */
 	private JCheckBox sendOriginalsJCheckBox = new JCheckBox( Settings.jpoResources.getString("emailOriginals") );
 
-
+	/**
+	 *  Panel showing the images to be emailed.
+	 */
 	private JPanel imagesJPanel = new JPanel();
+
+	/**
+	 *  The Jscrollpane to show the images panel
+	 */
+	private JScrollPane imagesJScrollPane = new JScrollPane( imagesJPanel,ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS );
+
 
 
 	/**
@@ -158,10 +166,9 @@ public class EmailerJFrame extends JFrame {
 		jPanel.add( imagesCountJLabel, c );
 
 		
-		imagesJPanel.setMinimumSize( new Dimension( 300, 145 ) );
-		imagesJPanel.setPreferredSize( new Dimension( 500, 160 ) );
+		//imagesJPanel.setMinimumSize( new Dimension( 300, 145 ) );
+		//imagesJPanel.setPreferredSize( new Dimension( 500, 160 ) );
 		imagesJPanel.setLayout( new GridBagLayout() );
-		final JScrollPane imagesJScrollPane = new JScrollPane( imagesJPanel,ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS );
 		imagesJScrollPane.setMinimumSize( new Dimension( 300, 165 ) );
 		imagesJScrollPane.setPreferredSize( new Dimension( 500, 165 ) );
 
@@ -410,9 +417,10 @@ public class EmailerJFrame extends JFrame {
 		int desiredSize = 140;
 		float factor = (float) desiredSize / (float) thumbnailSize;
 		GridBagConstraints c = new GridBagConstraints();
-		c.fill = GridBagConstraints.NONE;
-		c.anchor = GridBagConstraints.CENTER;
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.anchor = GridBagConstraints.LINE_START;
 		c.insets = new Insets(4, 4, 4, 4);
+		c.gridy = 0;
 		ArrayListBrowser alb = new ArrayListBrowser();
 
 		for ( int i=0; i < emailSelected.length ; i++ ) {
@@ -423,11 +431,11 @@ public class EmailerJFrame extends JFrame {
 			t.determineMailSlectionStatus();
 			t.setFactor( factor );
 			c.gridx = i;
+			Tools.log( c.toString() + " x= " + Integer.toString(c.gridx) + " y= " + Integer.toString(c.gridy));
 			imagesJPanel.add( t, c );
 			t.setVisible( true );
 		}
 		imagesJPanel.revalidate();
-		
 	}
 
 	/**

@@ -43,7 +43,7 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  *   Thumbnail displays a visual representation of the specified node. On a Picture this 
  *   is a Thumbnail thereof, on a Group it is a folder icon.
  */
-public class Thumbnail extends JPanel
+public class Thumbnail extends JComponent
 	implements DropTargetListener,
 		PictureInfoChangeListener, 
 		TreeModelListener {
@@ -59,16 +59,30 @@ public class Thumbnail extends JPanel
 	public SortableDefaultMutableTreeNode referringNode;
 
 	
+	/**
+	 *  A set of picture nodes of which one indicated by {@link #myIndex} is to be shown
+	 */
 	private ThumbnailBrowserInterface myThumbnailBrowser = null;
 	
-	
-	private int myIndex = 0;
+
+	/**
+	 *  the Index positon in the {@link #myThumbnailBrowser} which is being shown by this 
+	 *  component.
+	 */	
+	public int myIndex = 0;
 
 
 	/**
 	 *  the desired size for the thumbnail
 	 **/
 	public int thumbnailSize;
+
+
+	/**
+	 *  I've put in this variable because I have having real trouble with the getPreferredSize method
+	 *  not being able to access the ImageObserver to query the height of the thumbnail.
+	 */
+	private int thumbnailHeight = 0;
 
 	/**
 	 *   enables this component to be a Drag Source
@@ -234,21 +248,20 @@ public class Thumbnail extends JPanel
 
 
 	/**
-	 *  This version of setNode is context aware and knows what sort of {@link ThumbnailBrowserInterface}
-	 *  is being 
-	 *  tracked and what position it occupies.
+	 *  Sets the node being visualised by this Thumbnail object.
 	 *
 	 *  @param mySetOfNodes  The {@link ThumbnailBrowserInterface} being tracked
 	 *  @param index	The position of this object to be displayed.
 	 */
 	 public void setNode( ThumbnailBrowserInterface mySetOfNodes, int index ) {
-	 	//setNode( mySetOfNodes.getNode( index ) );
+	 	//Tools.log("Thumbnail.setNode: assigning node number " + Integer.toString( index ) );
 		this.myThumbnailBrowser = mySetOfNodes;
 		this.myIndex = index;
 		SortableDefaultMutableTreeNode node = mySetOfNodes.getNode( index );
 		if ( this.referringNode == node ) {
 			// Don't refresh the node if it hasn't changed
-			//Tools.log("Thumbnail.setNode: determined that this node is being set to the same.");
+
+			//Tools.log("Thumbnail.setNode: " + Integer.toString(index) + " determined that this node is being set to the same.");
 			return;
 		}
 
@@ -295,9 +308,7 @@ public class Thumbnail extends JPanel
 
 	/**
 	 *  sets the Thumbnail to the specified icon  
-	 *  This is called from the ThumbnailCreationThread.
-	 *  The call to setVisible adjusts the size and forces the
-	 *  LayoutManager to reconsider layouts by calling revalidate().
+ 	 *  This is called from the ThumbnailCreationThread.
 	 *
 	 *  @param  icon  The imageicon that should be displayed
 	 */
@@ -306,25 +317,23 @@ public class Thumbnail extends JPanel
 		img = icon.getImage();
 		if ( img == null ) { return; }
 		imgOb = icon.getImageObserver();
+		thumbnailHeight = img.getHeight(imgOb);
 		
-		/*short[] threshold = new short[256];
-		for (int i = 0; i < 256; i++) threshold[i] = (i < 128) ? (short)0 : (short)255;
-		BufferedImageOp thresholdOp = new LookupOp(new ShortLookupTable(0, threshold), null);
-		BufferedImage destination = thresholdOp.filter(source, null);
-
-		short[] invert = new short[256];
-		for (int i = 0; i < 256; i++) invert[i] = (short)(255 - i);
-		BufferedImageOp invertOp = new LookupOp(new ShortLookupTable(0, invert), null);
-		BufferedImage destination = invertOp.filter(source, null); */
-
 		RescaleOp darkenOp = new RescaleOp( .6f, 0, null );
-		BufferedImage source = new BufferedImage(img.getWidth(imgOb),img.getHeight(imgOb),BufferedImage.TYPE_INT_BGR);
+		BufferedImage source = new BufferedImage(img.getWidth(imgOb), thumbnailHeight, BufferedImage.TYPE_INT_BGR);
 		source.createGraphics().drawImage( img, 0,0, null );
 		selectedThumbnail = darkenOp.filter( source, null );
 
+		// force update of layout
+		setVisible( false );
 		setVisible( true );
 	}
 
+
+	/**
+	 *  Returns the Image of the Thumbnail.
+	 *  @return The image of the Thumbnail.
+	 */
 	public Image getThumbnail() {
 		return img;
 	}
@@ -340,22 +349,44 @@ public class Thumbnail extends JPanel
 	 */
 	public void setVisible( boolean visibility ) {
 		super.setVisible( visibility );
-		//Tools.log("Thumbnail.setVisible: thumbnailSize: " + Integer.toString( thumbnailSize ) + " (int) ( thumbnailSize * thumbnailSizeFactor ): " 
-		//	+ Integer.toString( (int) ( thumbnailSize * thumbnailSizeFactor ) ) );
 		if ( visibility ) {
-			setPreferredSize( new Dimension( (int) ( thumbnailSize * thumbnailSizeFactor ), (int) ( img.getHeight(imgOb) * thumbnailSizeFactor ) ) );
-			setMaximumSize( new Dimension( (int) ( thumbnailSize * thumbnailSizeFactor ), (int) ( img.getHeight(imgOb) * thumbnailSizeFactor ) ) ); 
-			setMinimumSize( new Dimension( (int) ( thumbnailSize * thumbnailSizeFactor ), (int) ( img.getHeight(imgOb) * thumbnailSizeFactor ) ) ); 
-			setSize( new Dimension( (int) ( thumbnailSize * thumbnailSizeFactor ), (int) ( img.getHeight(imgOb) * thumbnailSizeFactor ) ) ); 
-			revalidate();
-			repaint();
-		} else {
-			setPreferredSize( new Dimension( (int) ( thumbnailSize * thumbnailSizeFactor ), 0 ));
-			setMaximumSize( new Dimension( (int) ( thumbnailSize * thumbnailSizeFactor ), 0 )); 
-			setMinimumSize( new Dimension( (int) ( thumbnailSize * thumbnailSizeFactor ), 0 )); 
-			setSize( new Dimension( (int) ( thumbnailSize * thumbnailSizeFactor ), 0 ));
-			revalidate();
+			if ( getSize().height != thumbnailHeight ) {
+				//Tools.log("Thumbnail.setVisible: The Size is not right!");
+				// finally I found the solution to the size issue! Unless it's set to 
+				//  non visible the whole rendering engine sees no point in fixing the size.
+				super.setVisible( false );
+				super.setVisible( true );
+			}
 		}
+	}
+
+
+
+	/**
+	 *   Returns the preferred size for the Thumbnail as a Dimension using the thumbnailSize 
+	 *   as width and height.
+	 */
+	public Dimension getPreferredSize() {
+		return new Dimension( (int) ( thumbnailSize * thumbnailSizeFactor ), (int) ( thumbnailHeight * thumbnailSizeFactor ) ); 
+	}
+	
+
+
+
+	/**
+	 *   Returns the maximum (scaled) size for the Thumbnail as a Dimension using the thumbnailSize 
+	 *   as width and height.
+	 */
+	public Dimension getMaximumSize() {
+		return new Dimension( (int) ( thumbnailSize * thumbnailSizeFactor ), (int) ( thumbnailSize * thumbnailSizeFactor ) ); 
+	}
+
+	/**
+	 *   Returns the maximum unscaled size for the Thumbnail as a Dimension using the thumbnailSize 
+	 *   as width and height.
+	 */
+	public Dimension getMaximumUnscaledSize() {
+		return new Dimension( thumbnailSize, thumbnailSize ); 
 	}
 
 
@@ -447,7 +478,7 @@ public class Thumbnail extends JPanel
 
 
 	/**
-	 *  This method determines whether the source image is available online and sets the\
+	 *  This method determines whether the source image is available online and sets the {@link drawOfflineIcon}
 	 *  indicator accordingly.
 	 */
 	public void determineImageStatus( DefaultMutableTreeNode n ) {
@@ -619,13 +650,6 @@ public class Thumbnail extends JPanel
 
 
 
-	/**
-	 *   Returns the preferred size for the Thumbnail as a Dimension using the thumbnailSize 
-	 *   as widht and height.
-	 */
-	public Dimension getPreferredSize() {
-		return new Dimension( thumbnailSize, thumbnailSize );
-	}
 		
 
 	// Here we are not that interested in TreeModel change events other than to find out if our

@@ -128,7 +128,7 @@ public class SingleNodeBrowser implements ThumbnailBrowserInterface, TreeModelLi
 
 		Enumeration e = nonmodifiedVector.elements();
 		while ( e.hasMoreElements() ) {
-			((ThumbnailJScrollPane) e.nextElement()).layoutThumbnailsInThread();
+			((ThumbnailJScrollPane) e.nextElement()).assignThumbnails();
 		}
 	}
 

@@ -141,7 +141,7 @@ public class QueryBrowser implements ThumbnailBrowserInterface {
 
 		Enumeration e = nonmodifiedVector.elements();
 		while ( e.hasMoreElements() ) {
-			((ThumbnailJScrollPane) e.nextElement()).layoutThumbnailsInThread();
+			((ThumbnailJScrollPane) e.nextElement()).assignThumbnails();
 		}
 	}
 

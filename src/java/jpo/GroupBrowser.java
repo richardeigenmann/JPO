@@ -158,7 +158,7 @@ public class GroupBrowser implements ThumbnailBrowserInterface, TreeModelListene
 
 		Enumeration e = nonmodifiedVector.elements();
 		while ( e.hasMoreElements() ) {
-			((ThumbnailJScrollPane) e.nextElement()).layoutThumbnailsInThread();
+			((ThumbnailJScrollPane) e.nextElement()).assignThumbnails();
 		}
 	}
 

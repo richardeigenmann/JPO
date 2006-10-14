@@ -29,9 +29,6 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 
 
 
-
-
-
 /** 
  *  A thread that polls the static {@link ThumbnailCreationQueue} and then 
  *  creates thumbnails for the {@link ThumbnailQueueRequest} on the queue.
@@ -89,6 +86,7 @@ public class ThumbnailCreationThread extends Thread {
 	 */
 	private void createThumbnail ( ThumbnailQueueRequest req ) {
 		Thumbnail currentThumb = req.getThumbnail();
+		//Tools.log("ThumbnailCreationThread.createThumbnail: running on Thumbnail: " + Integer.toString(currentThumb.myIndex));
 		// now block other threads from accessing the Thumbnail
 		synchronized ( currentThumb ) {
 			currentThumb.setThumbnail( loadingIcon );
@@ -101,6 +99,7 @@ public class ThumbnailCreationThread extends Thread {
 			
 			// validate we were called on the right type of node
 			if ( referringNode.getUserObject() instanceof PictureInfo ) {
+				//Tools.log("ThumbnailCreationThread.createThumbnail: Throwing Thumbnail " + Integer.toString(currentThumb.myIndex) + " on queue");
 				loadOrCreatePictureThumbnail( req );
 			} else if ( referringNode.getUserObject() instanceof GroupInfo ) {
 				loadOrCreateGroupThumbnail( req );
@@ -124,6 +123,7 @@ public class ThumbnailCreationThread extends Thread {
 	private void loadOrCreatePictureThumbnail (  ThumbnailQueueRequest req ) {
 		if ( req == null ) { Tools.log("ThumbnailCreationThread.createPictureThumbnail: invoked with a null request. Aborting."); return; }
 		Thumbnail currentThumb = req.getThumbnail();
+		//Tools.log("ThumbnailCreationThread.loadOrCreatePictureThumbnail: running on Thumbnail: " + Integer.toString(currentThumb.myIndex));
 		if ( currentThumb == null ) { Tools.log("ThumbnailCreationThread.createPictureThumbnail: invoked request with a null Thumbnail. Aborting."); return; }
 		PictureInfo pi = (PictureInfo) currentThumb.referringNode.getUserObject();
 		if ( pi == null ) { Tools.log("ThumbnailCreationThread.createPictureThumbnail: could not find PictureInfo. Aborting."); return; }
@@ -221,13 +221,12 @@ public class ThumbnailCreationThread extends Thread {
 
 
 		// Thumbnail up to date is size ok?
-		Tools.log("ThubnailCreationThread.loadOrCreatePictureThumbnail: Thumbnail is up to date. Checking size");
+		//Tools.log("ThubnailCreationThread.loadOrCreatePictureThumbnail: Thumbnail is up to date. Checking size");
 		ImageIcon icon = new ImageIcon( lowresUrl );
 		if ( isThumbnailSizeOk( new Dimension( icon.getIconWidth(), icon.getIconHeight() ),
-	  	      currentThumb.getPreferredSize() ) ) {
+	  	      currentThumb.getMaximumUnscaledSize() ) ) {
 			// all ist fine
 			currentThumb.setThumbnail( icon );
-			currentThumb.validate();
 		} else {
 			Tools.log( "ThumbnailCreationThread.createPictureThumbnail: Thumbnail is wrong size: " + icon.getIconWidth()  + " x " +  icon.getIconHeight() + " therefore thrown on queue");
 			createNewThumbnail( currentThumb );
@@ -244,20 +243,26 @@ public class ThumbnailCreationThread extends Thread {
 	 *  @return   	true if inside dimension, false if outside.
 	 */
 	private boolean isThumbnailSizeOk( Dimension iconDimension, Dimension desiredDimension ) {
-		final float tolerance = 1.02f; 
-		return ( //the thumbnail is within the tolerance
-  		     (  ( iconDimension.width > desiredDimension.width / tolerance ) 
-		     && ( iconDimension.width < desiredDimension.width * tolerance ) )
-		   || ( ( iconDimension.height > desiredDimension.height / tolerance ) 
-		     && ( iconDimension.height < desiredDimension.height * tolerance ) ) 
-		   || //the original could be small. Problem: how to get the orignial size quickly here?
-		     (	Settings.dontEnlargeSmallImages	
+		final float tolerance = 1.02f;
+		//Tools.log("ThumbnailCreationThread.isThumbnailSizeOk: called with check dimension: " + iconDimension.toString() + " desiredDimension: " + desiredDimension.toString() );
+		boolean widthOk = ( iconDimension.width > desiredDimension.width / tolerance ) 
+		     && ( iconDimension.width < desiredDimension.width * tolerance );
+		boolean heightOk = ( iconDimension.height > desiredDimension.height / tolerance ) 
+		     && ( iconDimension.height < desiredDimension.height * tolerance );
+		if ( widthOk || heightOk ) {
+			return true;
+		}
+
+		 //the original could be small. Problem: how to get the orignial size quickly here?
+		 if ( Settings.dontEnlargeSmallImages	
 		     && ( ( iconDimension.width < desiredDimension.width * tolerance )
-		       || ( iconDimension.height < desiredDimension.height * tolerance ) )
+		       || ( iconDimension.height < desiredDimension.height * tolerance ) )  
 		     && (  iconDimension.width > 1 )
-		     && (  iconDimension.height > 1 )
-		     )
-		) ;
+		     && (  iconDimension.height > 1 ) ) {
+		       	return true;
+		}
+		
+		return false;
 	}
 
 
@@ -410,11 +415,11 @@ public class ThumbnailCreationThread extends Thread {
 		// Thumbnail up to date is size ok?
 		ImageIcon icon = new ImageIcon( lowresUrl );
 		if ( isThumbnailSizeOk( new Dimension( icon.getIconWidth(), icon.getIconHeight() ),
-		     currentThumb.getPreferredSize() ) ) {
+		     currentThumb.getMaximumUnscaledSize() ) ) {
 			// all ist fine
 			currentThumb.setThumbnail( icon );
 		} else {
-			Tools.log( "ThumbnailCreationThread.loadOrCreateGroupThumbnail: Thumbnail is wrong size: " + icon.getIconWidth()  + " x " +  icon.getIconHeight() );
+			//Tools.log( "ThumbnailCreationThread.loadOrCreateGroupThumbnail: Thumbnail is wrong size: " + icon.getIconWidth()  + " x " +  icon.getIconHeight() );
 			createNewGroupThumbnail( currentThumb );
 		}
 

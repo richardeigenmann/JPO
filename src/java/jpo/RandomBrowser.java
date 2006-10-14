@@ -156,7 +156,7 @@ public class RandomBrowser implements ThumbnailBrowserInterface, TreeModelListen
 
 		Enumeration e = nonmodifiedVector.elements();
 		while ( e.hasMoreElements() ) {
-			((ThumbnailJScrollPane) e.nextElement()).layoutThumbnailsInThread();
+			((ThumbnailJScrollPane) e.nextElement()).assignThumbnails();
 		}
 	}
 

@@ -81,16 +81,10 @@ public class ThumbnailJScrollPane
 	private int curPage = 1;
 	
 	
-	/**
-	 *   progress bar to track the pictures loaded so far
-	 */
-	//public JProgressBar loadProgress = new JProgressBar();
- 
- 
 	/** 
 	 *   A Thread that will load the images.
-	 */ 
-	private ThumbnailLoaderThread tl = null; 
+	 *
+	private ThumbnailLoaderThread tl = null; */
 	 
 	
 	/**
@@ -99,37 +93,12 @@ public class ThumbnailJScrollPane
 	public boolean stopThread; 
 	 
 	 
-	/** 
-	 * the layout object that handles all layouting in the ThumbnailPane 
-	 */ 
-	public GridBagLayout ThumbnailLayout; 
- 
- 
- 	/**
-	 *  a GridBagConstraints object to position the Thumbnails on the panel;
-	 */
-	private GridBagConstraints thumbnailConstraints = new GridBagConstraints();
-
- 	/**
-	 *  a GridBagConstraints object to position theDescriptions on the panel;
-	 */
-	private GridBagConstraints descriptionConstraints = new GridBagConstraints();
- 
- 
 	/**
 	 *  This object refers to the set of Nodes that is being browsed in the ThumbnailJScrollPane
 	 */
 	public ThumbnailBrowserInterface mySetOfNodes;
  
  
-	/** 
-	 * the number of columns that are being displayed in the pane. When the  
-	 * pane is resized the ComponentListener fires off code with repositions the 
-	 * thumbnails if the number of columns has changed. 
-	 */ 
-	private int cols = 1; 
- 
-
  
 	/** 
 	 *  a variable to hold the current starting position of thumbnails being
@@ -141,7 +110,6 @@ public class ThumbnailJScrollPane
 	 *
 	 **/ 
 	private int startIndex;  
-	  
 	  
 
  
@@ -231,6 +199,14 @@ public class ThumbnailJScrollPane
 	 */
 	private Point mousePressedPoint;
 	
+	
+	/**
+	 *  Layout Manager for the Thumbnails
+	 */
+	private final ThumbnailLayoutManager thumbnailLayout = new ThumbnailLayoutManager();
+	//private final LayoutManager thumbnailLayout = new java.awt.FlowLayout();
+	 
+	 
 	/** 
 	 *   creates a new JScrollPane with an embedded JPanel and provides a set of  
 	 *   methods that allow thumbnails to be displayed. <p> 
@@ -242,20 +218,8 @@ public class ThumbnailJScrollPane
 	public ThumbnailJScrollPane( SortableDefaultMutableTreeNode rootNode ) { 
 		this.rootNode = rootNode;
 		
-		thumbnailConstraints.fill = GridBagConstraints.NONE;
-		thumbnailConstraints.anchor = GridBagConstraints.SOUTH;
-		thumbnailConstraints.ipadx = horizontalPadding;
-		thumbnailConstraints.ipady = verticalPadding;
-
-		descriptionConstraints.fill = GridBagConstraints.NONE;
-		descriptionConstraints.anchor = GridBagConstraints.NORTH;
-		descriptionConstraints.ipadx = horizontalPadding;
-		descriptionConstraints.ipady = verticalPadding;
-
 		
-		ThumbnailLayout = new GridBagLayout(); 
-		ThumbnailPane.setLayout( ThumbnailLayout ); 
-		calculateCols();
+		ThumbnailPane.setLayout( thumbnailLayout );
 		initThumbnailsArray();
 		
 		ThumbnailPane.setBackground(Color.white); 
@@ -266,28 +230,7 @@ public class ThumbnailJScrollPane
 		//  little down or up arrow in the scrollbar
 		getVerticalScrollBar().setUnitIncrement(80);
 
-		// register a component listener to track resize events. 
-		// Got a bit confused: I am attaching the resize listener to the JScrollPane because 
-		// I want to reconstrain the thumbnails if the display size can accomodate more or less
-		// columns.
-		// I then need to know the width minus the vertical scrollbar to determine the columns.
-		this.addComponentListener(new ComponentAdapter() { 
-			public void componentResized( ComponentEvent e ) { 
-				Tools.log("ThumbnailJScrollPane.componentResized activated.");
-				if ( calculateCols() ){ 
-					for ( int i = 0; i < thumbnails.length; i++) {
-						calculateConstraints( i );
-						ThumbnailLayout.setConstraints( thumbnails[i], thumbnailConstraints );
-						ThumbnailLayout.setConstraints( thumbnailDescriptionJPanels[i], descriptionConstraints );
-					}
-	 			}
-				Tools.log("ThumbnailJScrollPane.componentResized ran calling validate.");
-			} 
-	        });   
- 
- 
 		previousThumbnailsButton.setBorder( BorderFactory.createEmptyBorder(1,1,1,1) ); 	// JA changed to none 
-		//previousThumbnailsButton.setBorder(BorderFactory.createLineBorder(Color.black)); 
 		previousThumbnailsButton.setPreferredSize( new Dimension(25, 25) ); 
 		previousThumbnailsButton.setVerticalAlignment( JLabel.CENTER ); 
 		previousThumbnailsButton.setOpaque( false ); 
@@ -296,10 +239,10 @@ public class ThumbnailJScrollPane
 		previousThumbnailsButton.addActionListener( new ActionListener() {
 			public void actionPerformed( ActionEvent e ) {
 				startIndex = startIndex - Settings.maxThumbnails; 
-				if (startIndex < 0) {startIndex = 0;}
+				if (startIndex < 0) { startIndex = 0; }
 				getVerticalScrollBar().setValue(0);
 				curPage--;
-				layoutThumbnailsInThread();
+				assignThumbnails();
 				setButtonVisibility();
 			}
 		} ); 
@@ -307,7 +250,6 @@ public class ThumbnailJScrollPane
 		nextThumbnailsButton.setVerticalAlignment(JLabel.CENTER); 
 		nextThumbnailsButton.setOpaque(false); 
 		nextThumbnailsButton.setFocusPainted(false); 
-		//nextThumbnailsButton.setBorder(BorderFactory.createLineBorder(Color.black)); 
 		nextThumbnailsButton.setBorder(BorderFactory.createEmptyBorder(1,1,1,1));    	// JA Changed to none 
 		nextThumbnailsButton.setToolTipText( Settings.jpoResources.getString("ThumbnailToolTipNext") );
 		nextThumbnailsButton.setPreferredSize(new Dimension(25, 25)); 
@@ -316,24 +258,19 @@ public class ThumbnailJScrollPane
 				startIndex = startIndex + Settings.maxThumbnails;
 				getVerticalScrollBar().setValue(0);
 				curPage++;
-				layoutThumbnailsInThread(); 
+				assignThumbnails(); 
 				setButtonVisibility();
 			}
 		} ); 
  
 		title.setFont( Settings.titleFont ); 
-		//title.setBackground( Color.white ); 
-		//title.setBorder( BorderFactory.createEmptyBorder(4,5,3,5) ); 
-		//title.setOpaque( true ); 
 
 		JPanel titleJPanel = new JPanel(); 
 		BoxLayout bl = new BoxLayout( titleJPanel , BoxLayout.X_AXIS );
 		titleJPanel.setBorder( BorderFactory.createBevelBorder(BevelBorder.RAISED) );	// JA
 		titleJPanel.setLayout( bl );
-		//titleJPanel.setBackground( Color.white );
 		titleJPanel.setBackground( Color.LIGHT_GRAY ); 
 		titleJPanel.add( Box.createRigidArea( new Dimension(5,0) ) );
-		//titleJPanel.add( loadProgress );
 		titleJPanel.add( previousThumbnailsButton );
 		titleJPanel.add( nextThumbnailsButton );
 		lblPage.setBorder(BorderFactory.createEmptyBorder(0,10,0,10));					// JA
@@ -353,19 +290,12 @@ public class ThumbnailJScrollPane
 				JSlider source = (JSlider)e.getSource();
 				if ( ! source.getValueIsAdjusting() ) {
 					thumbnailSizeFactor = 1 / (float) source.getValue();
-					Tools.log ("New Value: " + Float.toString( thumbnailSizeFactor ) );
-					if ( calculateCols() ) { 
-						for ( int i = 0; i < thumbnails.length; i++) {
-							thumbnails[i].setFactor( thumbnailSizeFactor );
-							thumbnailDescriptionJPanels[i].setFactor( thumbnailSizeFactor );
-							calculateConstraints( i );
-							ThumbnailLayout.setConstraints( thumbnails[i], thumbnailConstraints );
-							ThumbnailLayout.setConstraints( thumbnailDescriptionJPanels[i], descriptionConstraints );
-						}
-	 				
-						ThumbnailPane.validate();
-						validate();
+					Tools.log ("resizeJSlider.addChangeListener: New Value: " + Float.toString( thumbnailSizeFactor ) );
+					thumbnailLayout.setThumbnailWidth( (int) (350 * thumbnailSizeFactor) );
+					for ( int i=0;  i < Settings.maxThumbnails; i++ ) {
+						thumbnails[i].setFactor( thumbnailSizeFactor );
 					}
+					thumbnailLayout.layoutContainer( ThumbnailPane );
 				}
 			}
 		} );
@@ -478,7 +408,6 @@ public class ThumbnailJScrollPane
 	 *  creates the arrays for the thumbnails and the descriptions and adds them to the ThubnailPane.
 	 */
 	public void initThumbnailsArray () {
-		//Tools.log("ThumbnailJscrollPane.initThumbnailsArray: invoked.");
 		thumbnails = new Thumbnail[ Settings.maxThumbnails ];
 		thumbnailDescriptionJPanels = new ThumbnailDescriptionJPanel[ Settings.maxThumbnails ];
 		ThumbnailPane.removeAll();
@@ -486,12 +415,9 @@ public class ThumbnailJScrollPane
 		for ( int i=0;  i < Settings.maxThumbnails; i++ ) {
 			thumbnails[i] = new Thumbnail( this );
 			thumbnailDescriptionJPanels[i] = new ThumbnailDescriptionJPanel( i, this );
-			calculateConstraints( i );
-			//Tools.log("ThumbnailJScropplPane.initThumbnailsArray: Adding thumbnail " + Integer.toString(i) + " with constraints: x=" + Integer.toString( thumbnailConstraints.gridx ) + " y=" + Integer.toString( thumbnailConstraints.gridy ) );
-			ThumbnailPane.add( thumbnails[i], thumbnailConstraints );
-			ThumbnailPane.add( thumbnailDescriptionJPanels[i], descriptionConstraints);
+			ThumbnailPane.add( thumbnails[i] );
+			ThumbnailPane.add( thumbnailDescriptionJPanels[i] );
 		}
-		//Tools.log("ThumbnailJscrollPane.initThumbnailsArray: exit.");
 	}
 
 
@@ -528,7 +454,7 @@ public class ThumbnailJScrollPane
 		getVerticalScrollBar().setValue(0);				 
 		startIndex = 0; 
 		curPage = 1;
-		layoutThumbnailsInThread(); 
+		assignThumbnails(); 
 	}
 
  
@@ -537,8 +463,8 @@ public class ThumbnailJScrollPane
 	 *  this method runs through all the thumbnails on the panel and makes sure they are set to the
 	 *  correct node. It also sets the tile of the JScrollPane.
 	*/ 
-	private void layoutThumbnails() {
-		Tools.log("ThumbnailJScrollPane.layoutThumbnails: running through thumbnails"); 
+	public void assignThumbnails() {
+		Tools.log("ThumbnailJScrollPane.assignThumbnails: running through thumbnails"); 
 		if (mySetOfNodes == null) {
 			return;
 		}
@@ -559,14 +485,13 @@ public class ThumbnailJScrollPane
 		
 		setButtonVisibility();
 		// take the thumbnails off the creation queue if they were on it.
-		// as setNode is now internally synchronised this can slow doen removal 
+		// as setNode is now internally synchronised this can slow down removal 
 		// from the queue
 		for ( int i=0;  i < Settings.maxThumbnails; i++ ) {
 			thumbnails[i].unqueue();
 		}
 
 		for ( int i=0;  i < Settings.maxThumbnails; i++ ) {
-			//SortableDefaultMutableTreeNode newNode = mySetOfNodes.getNode( i + startIndex );
 			thumbnails[i].setNode( mySetOfNodes, i + startIndex );
 			thumbnailDescriptionJPanels[i].setNode( mySetOfNodes.getNode( i + startIndex ) );
 		}
@@ -577,11 +502,11 @@ public class ThumbnailJScrollPane
 
 	/**
 	 *   This method fires off a Thread that lays out the Thumbnails on the Pane.
-	 */
-	public void layoutThumbnailsInThread() { 
+	 *
+	public void assignThumbnailsInThread() { 
 		killThread(); 
 		tl = new ThumbnailLoaderThread( this ); 
-	}
+	}*/
 
 
 
@@ -632,84 +557,13 @@ public class ThumbnailJScrollPane
 
 
 
-	
-
-
-
-
-
-
- 
- 
- 
- 	/**
-	 *  tells how many colums we have on the panel;
-	 */
- 	public int getCols() {
-		return cols;
-	}
- 
- 
- 	/**
-	 *  sets the number of colums we have on the panel;
-	 */
- 	public void setCols( int cols ) {
-		this.cols = cols;
-	}
- 
-
- 	/**
-	 *  calculates the number of colums we have on the panel;
-	 *  @return  true if the number of columns changed, false if not changed
-	 */
- 	public boolean calculateCols() {
-		int width = getViewportBorderBounds().width;
-		int newCols = (int) ( width / ( ( Settings.thumbnailSize * thumbnailSizeFactor ) + ( horizontalPadding * 2 ) ));  
-		if ( newCols < 1 ) { newCols = 1; } 
-		Tools.log("ThumbnailJScrollPane.calculateCols: width: " + Integer.toString( width ) +
-			" newCols: " + Integer.toString( newCols ) + " oldCols: " + Integer.toString(getCols()));
-		if ( newCols != getCols() ) {
-			setCols( newCols );
-			return true;
-		} else {
-			return false;
-		}
-	}
- 
-
-	/**
-	 *  this method returns a GridBagContraint object which has the x and y of the 
-	 *  component in the panel. This depends on the position and the number of columns
-	 */
-	private void calculateConstraints( int position ) {
-		thumbnailConstraints.gridy = ((int) ( position / cols ) ) * 2;
-		descriptionConstraints.gridy = thumbnailConstraints.gridy + 1;
-		
-		thumbnailConstraints.gridx = position % cols;
-		descriptionConstraints.gridx = thumbnailConstraints.gridx;
-		
-		/*Tools.log( "ThumbnailJScrollPane.calculateConstraints(): position=" 
-			+ Integer.toString( position ) 
-			+ " cols= "
-			+ Integer.toString( cols )
-			+ " y= "
-			+ Integer.toString( thumbnailConstraints.gridy ) 
-			+ " x= "
-			+ Integer.toString( thumbnailConstraints.gridx ) );
-		*/
-	}
-
-
-
-
-  
 	/** 
 	 *   method that requests the thread to die nicely and waits 300ms for it to complete.
 	 *   It is stopped nicely by setting the variable stopThread to true. The loop checks
 	 *   this variable every time round and aborts cleanly if this is set. The variable is
 	 *   set to false when the method exits.
 	 *  
-	 */ 
+	 *
 	public void killThread() { 
 		if (tl != null) 
 			if (tl.isAlive()) { 
@@ -729,7 +583,7 @@ public class ThumbnailJScrollPane
 				} 
 				stopThread = false;  
 			} 
-	} 
+	} */
  
  
  
@@ -873,19 +727,19 @@ public class ThumbnailJScrollPane
 	 *  This was done so as not to have more than one type of thread which would need to be checked 
 	 *  and killed.
 	 *
-	 */
+	 *
 	public class ThumbnailLoaderThread extends Thread {
 
 		/**
 		 * reference to the calling object
-		 */
+		 *
 		ThumbnailJScrollPane caller;
 	
 		/**
 		 *  Constructor for the thread that loads thumbnails
 		 *  @param caller 	a handle back to the calling object to notify of 
 		 *   		  	status changes.
-		 */
+		 *
 		public ThumbnailLoaderThread ( ThumbnailJScrollPane caller ) {
 			this.caller = caller;
 			caller.stopThread = false;
@@ -896,13 +750,13 @@ public class ThumbnailJScrollPane
 		 *  we call back the method defined in the calling object in our new thread.
 		 *  The title of the Thumbnail pane is made grey and when the job is done it is 
 		 *  made black.
-		 */
+		 *
 		public void run() {
 			caller.title.setForeground( Color.gray );
-			caller.layoutThumbnails();
+			caller.assignThumbnails();
 			caller.title.setForeground( Color.black );
 		}
-	}  // end of inner class ThumbnailLoaderThread
+	}  // end of inner class ThumbnailLoaderThread*/
 
 
 } 

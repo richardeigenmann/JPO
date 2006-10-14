@@ -325,6 +325,8 @@ public class ThumbnailDescriptionJPanel
 		//Tools.log ( "ThumbnailDescriptionJPanel.setTextAreaSize invoked with a size of: " 
 		//	+ Integer.toString( (int) ( Settings.thumbnailSize * thumbnailSizeFactor ) ) );
 		pictureDescriptionJTA.setMinimumSize( new Dimension( (int) ( Settings.thumbnailSize * thumbnailSizeFactor ), 20) );
+		pictureDescriptionJTA.setMaximumSize( new Dimension( (int) ( Settings.thumbnailSize * thumbnailSizeFactor ), 20) );
+		pictureDescriptionJTA.setPreferredSize( new Dimension( (int) ( Settings.thumbnailSize * thumbnailSizeFactor ), 20) );
 		highresLocationJTextField.setMinimumSize( new Dimension( (int) ( Settings.thumbnailSize * thumbnailSizeFactor ), 20) );
 		highresLocationJTextField.setMaximumSize( new Dimension( (int) ( Settings.thumbnailSize * thumbnailSizeFactor ), 20) );
 		highresLocationJTextField.setPreferredSize( new Dimension( (int) ( Settings.thumbnailSize * thumbnailSizeFactor ), 20) );
@@ -335,7 +337,7 @@ public class ThumbnailDescriptionJPanel
 		lowresLocationJTextField.revalidate();
 
 		
-		pictureDescriptionJTA.setSize( new Dimension( (int) ( Settings.thumbnailSize * thumbnailSizeFactor ), 20 ) );
+		//pictureDescriptionJTA.setSize( new Dimension( (int) ( Settings.thumbnailSize * thumbnailSizeFactor ), 20 ) );
 		// this hack actually gets Swing to keep the width and adjust the height !
 		pictureDescriptionJTA.setText( pictureDescriptionJTA.getText() );
 		pictureDescriptionJTA.setMaximumSize( pictureDescriptionJTA.getPreferredSize() );
