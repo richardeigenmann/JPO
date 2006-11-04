@@ -49,7 +49,7 @@
          allowed, in which case they are
          considered to be in order of
          preference -->
-    <j2se version="1.4.1 1.4 1.4+ 1.5+" initial-heap-size="64m" max-heap-size="512m"/>
+    <j2se version="1.5+" initial-heap-size="64m" max-heap-size="512m"/>
 <!--     -->
     
     <!-- Specify the relative URL of a .jar

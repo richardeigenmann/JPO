@@ -95,9 +95,17 @@ public class Settings {
 	
 	/**
 	 *  the dimensions of the main frame
+	 *  @deprecated
 	 */
 	 
 	public static Rectangle mainFrameDimensions;
+	
+	
+	/**
+	 *  Flag to inicate if the JPO window should be maximised on startup or left for the 
+	 *  OS to decide on the size together with the JVM
+	 */
+	public static boolean maximiseJpoOnStartup = true;
 
 
 	/**
@@ -367,14 +375,12 @@ public class Settings {
 	/**
 	 *  the font used to display the title. Currently Arial Bold 20.
 	 */
-	//public static final Font titleFont = new Font("Arial", Font.BOLD, 20);
-	public static Font titleFont;// = Font.decode( Settings.jpoResources.getString("SettingsTitleFont") );
+	public static Font titleFont;
  
 	/**
 	 *  the font used to display the captions. Currently Arial Plain 16
 	 */
-	//public static final Font captionFont = new Font("Arial", Font.PLAIN, 16) ;
-	public static Font captionFont;// = Font.decode( Settings.jpoResources.getString("SettingsCaptionFont") );
+	public static Font captionFont;
 
 
 	/**
@@ -864,6 +870,9 @@ public class Settings {
 				} else if (sb.startsWith("keepThumbnails")) {
 					if ( (sb.substring(sb.indexOf("=") + 2)).startsWith( "False" ) )
 						keepThumbnails = false;
+				} else if (sb.startsWith("maximiseJpoOnStartup")) {
+					if ( (sb.substring(sb.indexOf("=") + 2)).startsWith( "False" ) )
+						maximiseJpoOnStartup = false;
 				} else if (sb.startsWith("thumbnailPath")) {
 					thumbnailPath = new File( sb.substring(sb.indexOf("=") + 2));
 				} else if (sb.startsWith("dontEnlargeSmallImages")) {
@@ -1131,6 +1140,12 @@ public class Settings {
 				out.write( "saveSizeOnExit = False" );
 			out.newLine();
 
+			if ( maximiseJpoOnStartup ) 
+				out.write( "maximiseJpoOnStartup = True" );
+			else
+				out.write( "maximiseJpoOnStartup = False" );
+			out.newLine();
+
 			out.write("mainFrameDimensions-X = " + String.valueOf( (int) mainFrameDimensions.getX() ) );
 			out.newLine();
 
@@ -1203,6 +1218,7 @@ public class Settings {
 			else
 				out.write( "keepThumbnails = False" );
 			out.newLine();
+
 
 			out.write("thumbnailPath = " + thumbnailPath.getPath() );
 			out.newLine();

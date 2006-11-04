@@ -123,6 +123,7 @@ public class JpoResources_en extends ListResourceBundle {
 		{"autoLoadJLabelLabel", "Automatically load:"},
 		{"logfileJCheckBoxLabel", "Write logfile"},
 		{"logfileJLabelLabel", "Logfile path and filename:"},
+		{"maximiseJpoOnStartupJCheckBoxLabel", "Maximise JPO window when program starts"},
 		{"saveSizeJCheckBoxLabel", "Save Window Position on Exit"},
 		{"MainCoordinates", "Coordinates of main window (x/y):"},
 		{"MainSize", "Size of main window (w/h):"},

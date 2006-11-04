@@ -67,6 +67,14 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 	 **/
 	private JButton logfileJButton = new JButton();
 
+
+
+
+	/**
+	 *  checkbox to indicate that JPO should be maximised on startup
+	 */
+	private JCheckBox maximiseJpoOnStartupJCheckBox = new JCheckBox();
+
 	
 	/**
 	 *  checkbox to indicate that the screen position should be saved upon exit.
@@ -378,6 +386,15 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 		logfileJButton.setMaximumSize( Settings.threeDotButtonSize );
 		logfileJButton.addActionListener(this);
 		browserWindowSettingsJPanel.add( logfileJButton, c );
+
+
+
+		c.gridx = 0; c.gridy ++;
+		c.gridwidth = 2;
+		maximiseJpoOnStartupJCheckBox.setText( Settings.jpoResources.getString("maximiseJpoOnStartupJCheckBoxLabel") );
+		browserWindowSettingsJPanel.add( maximiseJpoOnStartupJCheckBox, c );
+
+
 
 		c.gridx = 0; c.gridy ++;
 		c.gridwidth = 2;
@@ -825,6 +842,7 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 		autoLoadJTextField.setText(Settings.autoLoad);
 		logfileJCheckBox.setSelected( Settings.writeLog );
 		logfileJTextField.setText( Settings.logfile.getPath() );
+		maximiseJpoOnStartupJCheckBox.setSelected( Settings.maximiseJpoOnStartup );
 		saveSizeJCheckBox.setSelected( Settings.saveSizeOnExit );
 		mainX.setValue( Settings.mainFrameDimensions.x );
 		mainY.setValue( Settings.mainFrameDimensions.y );
@@ -915,6 +933,8 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 		Settings.logfile = new File ( logfileJTextField.getText() );
 		Settings.writeLog = logfileJCheckBox.isSelected();
 
+
+		Settings.maximiseJpoOnStartup = maximiseJpoOnStartupJCheckBox.isSelected ();
 		Settings.saveSizeOnExit = saveSizeJCheckBox.isSelected ();
 
 		Settings.mainFrameDimensions.x = mainX.getValue();

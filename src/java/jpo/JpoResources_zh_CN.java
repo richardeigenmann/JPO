@@ -127,6 +127,7 @@ public class JpoResources_zh_CN extends ListResourceBundle {
 		{"autoLoadJLabelLabel", "启动加载："},
 		{"logfileJCheckBoxLabel", "保存日志"},
 		{"logfileJLabelLabel", "日志文件路径以及文件名："},
+		{"maximiseJpoOnStartupJCheckBoxLabel", "Maximise JPO window when program starts"},
 		{"saveSizeJCheckBoxLabel", "在退出时保存窗口的位置"},
 		{"MainCoordinates", "主窗口坐标(横坐标/纵坐标):"},
 		{"MainSize", "主窗口大小(宽度/高度):"},

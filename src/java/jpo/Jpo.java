@@ -70,28 +70,6 @@ public class Jpo extends JFrame
 			    ApplicationMenuInterface {
 			    
 
-	/**
-	 *  This object does all the tree work. It can load and save the nodes of the tree, listens to 
-	 *  events happening on the tree and calls back with any actions that should be performed.
-	 * 
-	 *  @see CollectionJTree
-	 */
-	public static CollectionJTree collectionJTree;
-
-
-
-	/**
-	 *  This oject holds all the thumbnails and deals with all the thumbnail events.
-	 **/
-	private static ThumbnailJScrollPane thumbnailJScrollPane;
-
-
-	/**
-	 *  A reference to the collection object
-	 */
-	private PictureCollection pictureCollection;
-
-
 
 	/**
 	 *   the main method is the entry point for this application (or any) 
@@ -119,20 +97,21 @@ public class Jpo extends JFrame
 		String jvmMainVersion = jvmVersion.substring(0, jvmVersion.lastIndexOf("."));
 		float jvmVersionFloat = Float.parseFloat( jvmMainVersion );
 		if ( jvmVersionFloat < 1.4f ) {
-			JOptionPane.showMessageDialog(Settings.anchorFrame, 
-				"The JPO application uses new graphics features\n"
+			String message = "The JPO application uses new graphics features\n"
 				+  "that were added to the Java language in version\n"
 				+  "1.4.0. You are using version "
 				+  jvmVersion
-				+  " and must upgrade.\n"
-				+  "Visit http://java.sun.com", 
-				"Old Version Error", 
-				JOptionPane.ERROR_MESSAGE);
+				+  " and must upgrade.\n";
+			System.out.println( message );
+			JOptionPane.showMessageDialog(Settings.anchorFrame, message, "Old Version Error", JOptionPane.ERROR_MESSAGE);
 			System.exit(1);
 		}
 
-		new Jpo();
-
+        	EventQueue.invokeLater( new Runnable() {
+			public void run() {
+				new Jpo().setVisible( true );
+			} 
+		} );
 		
 	}  
 
@@ -165,6 +144,10 @@ public class Jpo extends JFrame
 
 		Settings.loadSettings();
 		Settings.validateSettings();
+
+		Tools.log ("------------------------------------------------------------");
+		Tools.log ("Starting JPO on " + DateFormat.getDateTimeInstance().format(Calendar.getInstance().getTime() ) );
+
 		
 		// does this give us any performance gains?? RE 7.6.2004
 		javax.imageio.ImageIO.setUseCache( false );
@@ -172,17 +155,51 @@ public class Jpo extends JFrame
 		// Activate OpenGL performance improvements
 		//System.setProperty("sun.java2d.opengl", "true");
 		
+		initComponents();
+
+
+		loadCollectionOnStartup();
+	}
+
+
+
+
+
+	/**
+	 *  This object does all the tree work. It can load and save the nodes of the tree, listens to 
+	 *  events happening on the tree and calls back with any actions that should be performed.
+	 * 
+	 *  @see CollectionJTree
+	 */
+	public static CollectionJTree collectionJTree;
+
+
+
+	/**
+	 *  This oject holds all the thumbnails and deals with all the thumbnail events.
+	 **/
+	private static ThumbnailJScrollPane thumbnailJScrollPane;
+
+
+	/**
+	 *  A reference to the collection object
+	 */
+	private PictureCollection pictureCollection;
+
+
+
+	/**
+	 *  This method initialises the GUI components of the main window.
+	 */
+	private void initComponents() {
+			
 		this.setTitle ( Settings.jpoResources.getString("ApplicationTitle"));
 			
 
-		Tools.log ("------------------------------------------------------------");
-		Tools.log ("Starting JPO on " + DateFormat.getDateTimeInstance().format(Calendar.getInstance().getTime() ) );
-
-		
 		Settings.anchorFrame = (JFrame) this;
 
-		this.setSize( Settings.mainFrameDimensions.getSize() );
-		this.setLocation( Settings.mainFrameDimensions.getLocation() );
+		//this.setSize( Settings.mainFrameDimensions.getSize() );
+		//this.setLocation( Settings.mainFrameDimensions.getLocation() );
 
 
 		//Create the menu bar.
@@ -226,31 +243,6 @@ public class Jpo extends JFrame
 		thumbnailJScrollPane.setAssociatedInfoPanel( infoPanel ) ;
 		
 
-
-
-		// load from jar or load from autoload instruction
-		Settings.jarAutostartList = ClassLoader.getSystemResource("autostartJarPicturelist.xml");
-		if ( Settings.jarAutostartList != null ) {
-			Settings.jarRoot = Settings.jarAutostartList.toString().substring(0, Settings.jarAutostartList.toString().indexOf("!") + 1);
-			Tools.log( "Trying to load picturelist from jar: " + Settings.jarAutostartList.toString() );
-			try {
-				pictureCollection.getRootNode().streamLoad( Settings.jarAutostartList.openStream() );
-				collectionJTree.setSelectedNode ( pictureCollection.getRootNode() );
-				thumbnailJScrollPane.show( new GroupBrowser( pictureCollection.getRootNode() ) );
-			} catch ( IOException x ) {
-				Tools.log( Settings.jarAutostartList.toString() + " could not be loaded\nReason: " + x.getMessage() );
-			}
-		} else if ( ( Settings.autoLoad != null ) && ( Settings.autoLoad.length() > 0 ) ) {
-			File xmlFile =  new File( Settings.autoLoad );
-			Tools.log("Jpo.constructor: Trying to load collection from location in stored settings: " + Settings.autoLoad   );
-			if ( xmlFile.exists() ) {
-				pictureCollection.fileLoad( xmlFile );
-				collectionJTree.setSelectedNode ( pictureCollection.getRootNode() );
-				thumbnailJScrollPane.show( new GroupBrowser( pictureCollection.getRootNode() ) );
-			}
-		} else {
-			requestFileNew();
-		}
 
 
 		/**
@@ -308,10 +300,10 @@ public class Jpo extends JFrame
 
 		//Add the split pane to this frame.
 		getContentPane().add( masterSplitPane, BorderLayout.CENTER );
-
-	 	//  As per http://java.sun.com/developer/JDCTechTips/2003/tt1208.html#1
-		Runnable runner = new FrameShower( this );
-        	EventQueue.invokeLater(runner);
+		pack();
+		if ( Settings.maximiseJpoOnStartup ) {
+			setExtendedState( MAXIMIZED_BOTH );
+		}
 	}
 
 
@@ -357,6 +349,37 @@ public class Jpo extends JFrame
 
 
 
+
+	/**
+	 *  This method should be called after the application has started up. It tries to load a 
+	 *  collection indicated in the ini file or collection jar.
+	 */
+	public void loadCollectionOnStartup() {
+		// load from jar or load from autoload instruction
+		Settings.jarAutostartList = ClassLoader.getSystemResource("autostartJarPicturelist.xml");
+		if ( Settings.jarAutostartList != null ) {
+			Settings.jarRoot = Settings.jarAutostartList.toString().substring(0, Settings.jarAutostartList.toString().indexOf("!") + 1);
+			Tools.log( "Trying to load picturelist from jar: " + Settings.jarAutostartList.toString() );
+			try {
+				pictureCollection.getRootNode().streamLoad( Settings.jarAutostartList.openStream() );
+				collectionJTree.setSelectedNode ( pictureCollection.getRootNode() );
+				thumbnailJScrollPane.show( new GroupBrowser( pictureCollection.getRootNode() ) );
+			} catch ( IOException x ) {
+				Tools.log( Settings.jarAutostartList.toString() + " could not be loaded\nReason: " + x.getMessage() );
+			}
+		} else if ( ( Settings.autoLoad != null ) && ( Settings.autoLoad.length() > 0 ) ) {
+			File xmlFile =  new File( Settings.autoLoad );
+			Tools.log("Jpo.constructor: Trying to load collection from location in stored settings: " + Settings.autoLoad   );
+			if ( xmlFile.exists() ) {
+				pictureCollection.fileLoad( xmlFile );
+				positionToNode( pictureCollection.getRootNode() );
+				//collectionJTree.setSelectedNode ( pictureCollection.getRootNode() );
+				//thumbnailJScrollPane.show( new GroupBrowser( pictureCollection.getRootNode() ) );
+			}
+		} else {
+			requestFileNew();
+		}
+	}
 
 
 
