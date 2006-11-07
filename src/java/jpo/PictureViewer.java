@@ -303,7 +303,7 @@ public class PictureViewer extends JPanel
 	 *  Nodes (or rather a reference to them) to the ArrayList and then use random
 	 *  to access an element
 	 */
-	private ArrayList pictureNodesArrayList = null;
+	//private ArrayList pictureNodesArrayList = null;
 	
 
 
@@ -1334,7 +1334,7 @@ public class PictureViewer extends JPanel
 		if ( advanceTimer != null )
 			advanceTimer.stopThread();
 		advanceTimer = null;
-		pictureNodesArrayList = null; 
+		//pictureNodesArrayList = null; 
 	}
 
 

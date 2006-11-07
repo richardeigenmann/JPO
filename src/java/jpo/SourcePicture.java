@@ -57,7 +57,7 @@ public class SourcePicture implements Cloneable {
 	/**
 	 *  variable to track the status of the picture
 	 */
-	private int pictureStatusCode;
+	private int pictureStatusCode = UNINITIALISED;
 	
 
 	/**
@@ -257,7 +257,6 @@ public class SourcePicture implements Cloneable {
 			
 			iis.close();
 			reader.removeIIOReadProgressListener( imageProgressListener );
-			//Tools.log("!!dispose being called!!");
 			reader.dispose();
 			i=null;
 
@@ -316,18 +315,11 @@ public class SourcePicture implements Cloneable {
 	 *  this method can be invoked to stop the current reader
 	 */
 	public void stopLoading() {
-		if ( imageUrl == null ) 
-			return; // SourcePicture has never been used yet
-	
-		Tools.log("SourcePicture.stopLoading: called on " + imageUrl );
-		if ( pictureStatusCode == LOADING ) {
+		Tools.log("SourcePicture.stopLoading(): called");
+		if ( ( pictureStatusCode == LOADING ) && ( reader != null ) ) {
 			reader.abort();
-			abortFlag = true;
-			//reader.dispose();
-			//setStatus( ERROR, "Cache Loading was stopped " + imageUrl.toString() );
-			//sourcePictureBufferedImage = null; 
-			// actually the thread reading the image continues
 		}
+		abortFlag = true;
 	}
 	
 
