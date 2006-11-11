@@ -7,6 +7,7 @@ import java.awt.*;
 import javax.swing.JOptionPane;
 import javax.swing.JFrame;
 import javax.jnlp.*;
+import java.util.prefs.Preferences;
 
 
 /*
@@ -647,14 +648,18 @@ public class Settings {
 	public static boolean emailSendOriginal = false;
 	
 	
+	/**
+	 *  handle to the user Preferences
+	 */
+	public static Preferences prefs = Preferences.userNodeForPackage( Jpo.class );
 
 
 	/**
 	 *  constructor
-	 */
+	 *
 	public Settings() {
 		setDefaults();
-	}
+	}*/
 
 
 	/**
@@ -749,8 +754,120 @@ public class Settings {
 		setDefaults();
 		
 		loadCameraSettings();
-		createFirstCameraIfEmpty();	
+		createFirstCameraIfEmpty();
+
+		currentLanguage = prefs.get( "currentLanguage", currentLanguage );
+		maximumPictureSize = prefs.getInt( "maximumPictureSize", maximumPictureSize );
+		leaveForPanel = prefs.getInt( "leaveForPanel", leaveForPanel );
+		maxThumbnails = prefs.getInt( "maxThumbnails", maxThumbnails );
+		thumbnailSize = prefs.getInt( "thumbnailSize", thumbnailSize );
+		saveSizeOnExit = prefs.getBoolean( "saveSizeOnExit", saveSizeOnExit );
+		maximiseJpoOnStartup = prefs.getBoolean( "maximiseJpoOnStartup", maximiseJpoOnStartup );
+		mainFrameDimensions.x = prefs.getInt( "mainFrameDimensions.x", mainFrameDimensions.x );
+		mainFrameDimensions.y = prefs.getInt( "mainFrameDimensions.y", mainFrameDimensions.y );
+		mainFrameDimensions.width = prefs.getInt( "mainFrameDimensions.width", mainFrameDimensions.width );
+		mainFrameDimensions.height = prefs.getInt( "mainFrameDimensions.height", mainFrameDimensions.height );
+		preferredMasterDividerSpot = prefs.getInt( "preferredMasterDividerSpot", preferredMasterDividerSpot );
+		preferredLeftDividerSpot = prefs.getInt( "preferredLeftDividerSpot", preferredLeftDividerSpot );
+		dividerWidth = prefs.getInt( "dividerWidth", dividerWidth );
+		autoLoad = prefs.get( "autoload", autoLoad );
+		prefs.getInt( "pictureViewerDefaultDimensions.x", pictureViewerDefaultDimensions.x );
+		prefs.getInt( "pictureViewerDefaultDimensions.y", pictureViewerDefaultDimensions.y );
+		prefs.getInt( "pictureViewerDefaultDimensions.width", pictureViewerDefaultDimensions.width );
+		prefs.getInt( "pictureViewerDefaultDimensions.height", pictureViewerDefaultDimensions.height );
+		int i;
+		for ( i = 0; i < Settings.maxCopyLocations; i++ ) {
+			copyLocations[ i ] = prefs.get( "copyLocations-" + Integer.toString( i ), null );
+		}
+		for ( i = 0; i < Settings.recentFiles; i++ ) {
+			recentCollections[ i ] = prefs.get( "recentCollections-" + Integer.toString( i ), null );
+		}
+		for ( i = 0; i < Settings.maxUserFunctions; i++ ) {
+			userFunctionNames[ i ] = prefs.get( "userFunctionName-" + Integer.toString( i ), null );
+			userFunctionCmd[ i ] = prefs.get( "userFunctionCmd-" + Integer.toString( i ), null );
+		}
+		keepThumbnails = prefs.getBoolean( "keepThumbnails", keepThumbnails );
+		thumbnailPath = new File( prefs.get( "thumbnailPath", thumbnailPath.getPath() ) ); // inefficient RE, 11.11.2006
+		dontEnlargeSmallImages = prefs.getBoolean( "dontEnlargeSmallImages", dontEnlargeSmallImages );
+		thumbnailCounter = prefs.getInt( "thumbnailCounter", thumbnailCounter );
+		writeLog = prefs.getBoolean( "writeLog", writeLog );
+		logfile = new File( prefs.get( "logfile", logfile.getPath() ) ); // inefficient, RE, 11.11.2006
+		maxCache = prefs.getInt( "maxCache", maxCache );
+		defaultHtmlPicsPerRow = prefs.getInt( "defaultHtmlPicsPerRow", defaultHtmlPicsPerRow );
+		defaultHtmlThumbnailWidth = prefs.getInt( "defaultHtmlThumbnailWidth", defaultHtmlThumbnailWidth );
+		defaultHtmlThumbnailHeight = prefs.getInt( "defaultHtmlThumbnailHeight", defaultHtmlThumbnailHeight );
+		defaultHtmlMidresWidth = prefs.getInt( "defaultHtmlMidresWidth", defaultHtmlMidresWidth );
+		defaultHtmlMidresHeight = prefs.getInt( "defaultHtmlMidresHeight", defaultHtmlMidresHeight );
+		defaultJpgQuality = prefs.getFloat( "defaultJpgQuality", defaultJpgQuality );
+		thumbnailFastScale = prefs.getBoolean( "thumbnailFastScale", thumbnailFastScale ) ;
+		pictureViewerFastScale = prefs.getBoolean( "pictureViewerFastScale", pictureViewerFastScale );
+		int n = prefs.getInt( "emailSenders", 0 );
+		for ( i = 0; i < n; i++ ) {
+			emailSenders.add( prefs.get( "emailSender-" + Integer.toString( i ), "" ) );
+		}
+		n = prefs.getInt( "emailRecipients", 0 );
+		for ( i = 0; i < n; i++ ) {
+			emailRecipients.add( prefs.get( "emailRecipient-" + Integer.toString( i ), "" ) );
+		}
+		emailServer = prefs.get( "emailServer", emailServer );
+		emailPort = prefs.get( "emailPort", emailPort );
+		emailUser = prefs.get( "emailUser", emailUser );
+		emailPassword = prefs.get( "emailPassword", emailPassword );
+		emailScaleImages = prefs.getBoolean( "emailScaleImages", emailScaleImages );
+		emailSendOriginal = prefs.getBoolean( "emailSendOriginal", emailSendOriginal );
+		emailDimensions.width = prefs.getInt( "emailDimensions.width", emailDimensions.width );
+		emailDimensions.height = prefs.getInt( "emailDimensions.height", emailDimensions.height );
+
+		convertOldSettings();
+		validateCopyLocations();
+	}
+	
+
+	/**
+	 *  This method converts the settings stored in the PersistenceService or ini file by
+	 *  loading them, writing the Preferences and deleting the old store. It will be removed 
+	 *  on 11.11.2007, a year after implementing the Preferences in Jpo.
+	 */
+	private static void convertOldSettings() {
+		Tools.log( "Settings.convertOldSettings: invoked." );
+		try {
+			PersistenceService ps = (PersistenceService) ServiceManager.lookup( "javax.jnlp.PersistenceService" );
+			BasicService bs = (BasicService) ServiceManager.lookup( "javax.jnlp.BasicService" );
+			try {
+				URL baseURL = bs.getCodeBase();
+				URL settingsURL = new URL( baseURL, "Settings" );
+				ps.get( settingsURL );
+				//FileContents fc = ps.get( settingsURL );
+				//in = new BufferedReader( new InputStreamReader( fc.getInputStream() ) );
+				Tools.log("Setting.loadSettings: Running in Java Web Start Mode and found PersistenceService for Settings." );
+				
+				loadSettingsOld();
+				writeSettings();
+				ps.delete( settingsURL );				
+			} catch ( MalformedURLException x ) {
+				Tools.log( "Settings.convertOldSettings: We had a MalformedURLException: " + x.getMessage() );
+				return;
+			} catch ( IOException x ) {
+				Tools.log( "Settings.convertOldSettings: Running in a Java Web Start context but there are no settings that could be read from the PersistenceService. Good." );
+				return;
+			}
+		} catch ( UnavailableServiceException x ) {
+			if ( iniFile.exists() ) {
+				Tools.log("Settings.convertOldSettings: Convertng and removing ini File: " + iniFile.getPath() );
+				loadSettingsOld();
+				writeSettings();
+				iniFile.delete();
+			}
+		}
+	}
+	
 		
+
+	/**
+	 *  old way of loading settings from an Ini file or the jnlp PersistenceService.
+	 *  Will be removed in a year: on 11.11.2007
+	 */
+	public static void loadSettingsOld() {
 		BufferedReader in = null;
 
 		try {
@@ -968,10 +1085,7 @@ public class Settings {
 					System.out.println("Can't decode ini line: " + sb);
 				}
 
-
 			}
-			validateCopyLocations();
-			//validateSettings();
 		} catch (IOException e) {
 			Tools.log( "IOException " + e.getMessage() );
 			JOptionPane.showMessageDialog(
@@ -980,7 +1094,6 @@ public class Settings {
 				Settings.jpoResources.getString("settingsError"), 
 				JOptionPane.ERROR_MESSAGE);
 		}
-
 	}
 
 
@@ -1065,9 +1178,103 @@ public class Settings {
 
 
 	/**
-	 *  method that writes the Jpo.ini file
+	 *  This method writes the settings to the Preferences object which was added to Java with 1.4
 	 */
 	public static void writeSettings() {
+		Tools.log( "Settings.writeSettings" );
+		prefs.put( "currentLanguage", currentLanguage );
+		prefs.putInt( "maximumPictureSize", maximumPictureSize );
+		prefs.putInt( "leaveForPanel", leaveForPanel );
+		prefs.putInt( "maxThumbnails", maxThumbnails );
+		prefs.putInt( "thumbnailSize", thumbnailSize );
+		prefs.putBoolean( "saveSizeOnExit", saveSizeOnExit );
+		prefs.putBoolean( "maximiseJpoOnStartup", maximiseJpoOnStartup );
+		prefs.putInt( "mainFrameDimensions.x", mainFrameDimensions.x );
+		prefs.putInt( "mainFrameDimensions.y", mainFrameDimensions.y );
+		prefs.putInt( "mainFrameDimensions.width", mainFrameDimensions.width );
+		prefs.putInt( "mainFrameDimensions.height", mainFrameDimensions.height );
+		prefs.putInt( "preferredMasterDividerSpot", preferredMasterDividerSpot );
+		prefs.putInt( "preferredLeftDividerSpot", preferredLeftDividerSpot );
+		prefs.putInt( "dividerWidth", dividerWidth );
+		prefs.put( "autoload", autoLoad );
+		prefs.putInt( "pictureViewerDefaultDimensions.x", pictureViewerDefaultDimensions.x );
+		prefs.putInt( "pictureViewerDefaultDimensions.y", pictureViewerDefaultDimensions.y );
+		prefs.putInt( "pictureViewerDefaultDimensions.width", pictureViewerDefaultDimensions.width );
+		prefs.putInt( "pictureViewerDefaultDimensions.height", pictureViewerDefaultDimensions.height );
+		int i;
+		int n = 0;
+		for ( i = 0; i < Settings.maxCopyLocations; i++ ) {
+			if ( copyLocations[ i ] != null ) {
+				prefs.put( "copyLocations-" + Integer.toString( n ), copyLocations[ i ] );
+				n++;
+			}
+		}
+		n = 0;
+		for ( i = 0; i < Settings.recentFiles; i++ ) {
+			if ( recentCollections[ i ] != null ) {
+				prefs.put( "recentCollections-" + Integer.toString( n ), recentCollections[ i ] );
+				n++;
+			}
+		}
+		n = 0;
+		for ( i = 0; i < Settings.maxUserFunctions; i++ ) {
+			if (( userFunctionNames[ i ] != null ) 
+			 && ( userFunctionNames[ i ].length() > 0 ) 
+			 && ( userFunctionCmd[ i ] != null )
+			 && ( userFunctionCmd[ i ].length() > 0 ) ) {
+				prefs.put( "userFunctionName-" + Integer.toString( n ), userFunctionNames[ i ] );
+				prefs.put( "userFunctionCmd-" + Integer.toString( n ), userFunctionCmd[ i ] );
+				n++;
+			}
+		}
+		prefs.putBoolean( "keepThumbnails", keepThumbnails );
+		prefs.put( "thumbnailPath", thumbnailPath.getPath() );
+		prefs.putBoolean( "dontEnlargeSmallImages", dontEnlargeSmallImages );
+		prefs.putInt( "thumbnailCounter", thumbnailCounter );
+		prefs.putBoolean( "writeLog", writeLog );
+		prefs.put( "logfile", logfile.getPath() );
+		prefs.putInt( "maxCache", maxCache );
+		prefs.putInt( "defaultHtmlPicsPerRow", defaultHtmlPicsPerRow );
+		prefs.putInt( "defaultHtmlThumbnailWidth", defaultHtmlThumbnailWidth );
+		prefs.putInt( "defaultHtmlThumbnailHeight", defaultHtmlThumbnailHeight );
+		prefs.putInt( "defaultHtmlMidresWidth", defaultHtmlMidresWidth );
+		prefs.putInt( "defaultHtmlMidresHeight", defaultHtmlMidresHeight );
+		prefs.putFloat( "defaultJpgQuality", defaultJpgQuality );
+		prefs.putBoolean( "thumbnailFastScale", thumbnailFastScale ) ;
+		prefs.putBoolean( "pictureViewerFastScale", pictureViewerFastScale );
+		n = 0;
+		Iterator itr = emailSenders.iterator();
+		while ( itr.hasNext() ) {
+			prefs.put( "emailSender-" + Integer.toString( n ), (String) itr.next() );
+			n++;
+		}
+		prefs.putInt( "emailSenders", n );
+		n = 0;
+		itr = emailRecipients.iterator();
+		while ( itr.hasNext() ) {
+			prefs.put( "emailRecipient-" + Integer.toString( n ), (String) itr.next() );
+			n++;
+		}
+		prefs.putInt( "emailRecipients", n );
+		prefs.put( "emailServer", emailServer );
+		prefs.put( "emailPort", emailPort );
+		prefs.put( "emailUser", emailUser );
+		prefs.put( "emailPassword", emailPassword );
+		prefs.putBoolean( "emailScaleImages", emailScaleImages );
+		prefs.putBoolean( "emailSendOriginal", emailSendOriginal );
+		prefs.putInt( "emailDimensions.width", emailDimensions.width );
+		prefs.putInt( "emailDimensions.height", emailDimensions.height );
+
+		unsavedSettingChanges = false;
+	}
+
+
+
+
+	/**
+	 *  method that writes the Jpo.ini file
+	 */
+	public static void writeSettingsOld() {
 		//Tools.log( "Settings.writeSettings" );
 		BufferedWriter out = null;
 		
