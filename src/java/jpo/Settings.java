@@ -654,13 +654,6 @@ public class Settings {
 	public static Preferences prefs = Preferences.userNodeForPackage( Jpo.class );
 
 
-	/**
-	 *  constructor
-	 *
-	public Settings() {
-		setDefaults();
-	}*/
-
 
 	/**
 	 *  method that set the default parameters
@@ -1273,6 +1266,7 @@ public class Settings {
 
 	/**
 	 *  method that writes the Jpo.ini file
+	 *  @deprecated
 	 */
 	public static void writeSettingsOld() {
 		//Tools.log( "Settings.writeSettings" );

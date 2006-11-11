@@ -13,7 +13,7 @@ import java.util.*;
 /*
 ConsolidateGroupJFrame.java:  creates a GUI for consolidation
 
-Copyright (C) 2002  Richard Eigenmann.
+Copyright (C) 2002, 2006  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2

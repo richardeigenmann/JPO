@@ -342,19 +342,33 @@ public class Tools {
 
 
 	/**
-	 *  method to move any file from a source location to a target location.
-	 *  It checks whether the file was mentioned in the highres or lowres fields of other nodes
+	 *  This method moves any file to the target URL.
+	 *  It checks whether the filename was mentioned in the highres or lowres fields of other nodes
 	 *  and corrects those references if found.
+	 *
+	 *  @param sourceFile   The file to be moved
+	 *  @param b  The target URL it is to be moved to.
+	 *  @return  true if successfull, false if not.
 	 */
-	public static boolean movePicture (File sourceFile, URL b) throws IOException {
-
-		//File sourceFile = new File ( a.getFile() );
-		File targetFile = new File ( b.getFile() );
+	public static boolean movePicture ( File sourceFile, URL b ) throws IOException {
+		File targetFile = null;
+		try {
+			targetFile = new File ( b.toURI() );
+		} catch ( URISyntaxException x ) {
+			throw new IOException ("Tools.movePicture: URL caused a URISyntaxException. Move aborted! " + x.getMessage() );
+		}
 		
-		if ( targetFile.exists() ) throw new IOException ("Tools.movePicture:Target File " + b.toString() + " already exists. Move aborted!");
+		//Tools.log("Tools.movePicture: after decomposing the target URL the Path reads: " + targetFile.getPath());
+		
+		if ( targetFile.exists() ) {
+			throw new IOException ("Tools.movePicture: Target File " + b.toString() + " already exists. Move aborted!");
+		}
+		if ( ! sourceFile.canWrite() ) {
+			throw new IOException ("Tools.movePicture: Source File is not writable and hence can't be deleted. Move aborted!: " + sourceFile.getPath() );
+		}
 		
 		if ( sourceFile.renameTo ( targetFile )) {
-			Tools.log ( "Picture " + sourceFile.toString() + " moved to " + b.toString() );		
+			//Tools.log ( "Tools.movePicture: File " + sourceFile.toString() + " renamed to " + b.toString() );
 		} else {
 			// perhaps target was on a different filesystem. Trying copying
 			Tools.log ( "Tools.movePicture: Failed: Rename from " + sourceFile.toString() + " to " + b.toString() + " failed. Trying copying" );		
@@ -364,7 +378,7 @@ public class Tools {
 					Tools.log ( "Tools.movePicture: FAILED: Deleting source file failed." );
 				}
 			} else {
-				Tools.log ( "Copy failed too." );
+				Tools.log ( "Tools.movePicture: Copy failed too." );
 				return false;
 			}
 		}
