@@ -82,26 +82,6 @@ public class CollectionJTree extends JTree
 
 
 
-
-
-	/**
-	 *  a reference back to the creating object for functions that that object must implement.
-	 *  Currently this is used only for the find method as this should be delegated back to the 
-	 *  Application Frame.
-	 */
-	private CollectionJTreeInterface caller;
-
-
-	
-		
-
-	/**
-	 *  The top node of the tree data model. It holds all the branches 
-	 *  to the groups and	pictures
-	 **/
-	private SortableDefaultMutableTreeNode top;
-
-
 	/**
 	 *   a reference to the Thumbnail Pane that is displaying pictures. This
 	 *   allows the CollectionJTree to tell the Thumbnail Pane to display groups 
@@ -121,21 +101,17 @@ public class CollectionJTree extends JTree
 	/**
 	 * Constructs a JTree.
 	 *
-	 *  @param	caller		The object to which the find request should be delegated back to.
-	 *				This will be the main application.
-	 *
-	 *  @param	tm		The TreeModel of the tree.
 	 */
-	public CollectionJTree( CollectionJTreeInterface caller, TreeModel tm ) {
-		this.caller = caller;
-		this.top = Settings.pictureCollection.getRootNode();
-	
+	public CollectionJTree() {
 		getSelectionModel().setSelectionMode( TreeSelectionModel.SINGLE_TREE_SELECTION );
 		putClientProperty( "JTree.lineStyle", "Angled" );
 		setOpaque( true );
 		setEditable(false);
 		setShowsRootHandles( true );
 		setCellRenderer( new JpoTreeCellRenderer() );
+		setBackground( Settings.JPO_BACKGROUND_COLOR );
+		setMinimumSize( Settings.jpoNavigatorJTabbedPaneMinimumSize );
+		setPreferredSize( Settings.jpoNavigatorJTabbedPanePreferredSize );
 		
 
 		// set up drag & drop
@@ -147,7 +123,7 @@ public class CollectionJTree extends JTree
 		CollectionMouseAdapter mouseAdapter = new CollectionMouseAdapter( this );
 		addMouseListener( mouseAdapter );
 
-		setModel( tm );
+		setModel( Settings.pictureCollection.getTreeModel() );
 	}
 
 	
@@ -413,16 +389,12 @@ public class CollectionJTree extends JTree
 
 
 	/**
-	 *  This method can be invoked by the GroupPopupMenu. The find request is delegated up 
-	 *  to the object that created the tree because there are two versions: either the
-	 *  search results are attached to the tree or the search results are only displayed
-	 *  in the thumbnail pane. The caller created the instances and thus must delegate
-	 *  the search. 
+	 *  This method can be invoked by the GroupPopupMenu. 
 	 *
 	 *  @see  GroupPopupInterface
 	 */
 	public void requestFind() {
-		caller.find ( popupNode );
+		new QueryJFrame( popupNode, this, associatedThumbnailJScrollPane );
 	}
 
 

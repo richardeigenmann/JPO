@@ -50,15 +50,17 @@ public class QueriesJTree extends JTree {
 	/**
 	 * Constructs a JTree for the queries
 	 */
-	public QueriesJTree( TreeModel tm ) {
+	public QueriesJTree() {
 		//Tools.log("QueriesJTree.constructor: Setting model to: " + tm.toString() );
 		getSelectionModel().setSelectionMode( TreeSelectionModel.SINGLE_TREE_SELECTION );
 		putClientProperty( "JTree.lineStyle", "Angled" );
 		setOpaque( true );
 		setEditable(false);
 		setShowsRootHandles( true );
+		setMinimumSize( Settings.jpoNavigatorJTabbedPaneMinimumSize );
+		setPreferredSize( Settings.jpoNavigatorJTabbedPanePreferredSize );
 		//setCellRenderer( new JpoTreeCellRenderer() );
-		setModel( tm );
+		setModel( Settings.pictureCollection.getQueriesTreeModel() );
 
 		//Add listener to components that can bring up groupPopupJPopupMenu menus.
 		QueriesMouseAdapter mouseAdapter = new QueriesMouseAdapter();

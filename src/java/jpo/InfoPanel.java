@@ -30,8 +30,7 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  *  picture details or the information about the group.
  */ 
   
-public class InfoPanel 
-	extends JScrollPane {
+public class InfoPanel extends JScrollPane {
  
 	/** 
 	 * ThumbnailComponent to show the picture that has been selected
@@ -72,8 +71,13 @@ public class InfoPanel
 	 *  
 	 */ 
 	public InfoPanel() { 
-		Tools.log("InfoPanel.constructor");
-		statsJPanel.setBackground( Color.white ); 
+		//Tools.log("InfoPanel.constructor");
+		statsJPanel.setBackground( Settings.JPO_BACKGROUND_COLOR );
+		statsJPanel.setMinimumSize( Settings.infoPanelMinimumSize );
+		statsJPanel.setPreferredSize( Settings.infoPanelPreferredSize );
+		setMinimumSize( Settings.infoPanelMinimumSize );
+		setPreferredSize( Settings.infoPanelPreferredSize );
+		
 		setWheelScrollingEnabled (true ); 
 		
 		//  set the amount by which the panel scrolls down when the user clicks the 

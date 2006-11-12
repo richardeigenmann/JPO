@@ -51,7 +51,7 @@ public class Settings {
 	 *  A static reference to the Collection being displayed. In future perhaps we will 
 	 *  allow multiple collections to be loaded.
 	 **/
-	public static PictureCollection pictureCollection;
+	public static PictureCollection pictureCollection = new PictureCollection();
 
 
 
@@ -126,7 +126,7 @@ public class Settings {
 	/**
 	 *  the default place for the divider. 
 	 **/
-	public static int preferredMasterDividerSpot;
+	public static int preferredMasterDividerSpot = 350;
 	
 	/**
 	 *  the default place for the left side divider. 
@@ -137,7 +137,7 @@ public class Settings {
 	/**
 	 *  the default width of the divider
 	 **/
-	public static int dividerWidth;
+	public static int dividerWidth = 12;
 
 
 	/**
@@ -148,15 +148,89 @@ public class Settings {
 
 
 	/**
-	 * the width of the thumbnails
+	 * Setting for the width of the thumbnails. Set by default to 350 pixels.
 	 */
-	public static int thumbnailSize;
+	public static int thumbnailSize = 350;
 
 	
 	/**
 	 *  the dimension of minithumbnails in the group folders
 	 */
 	public static final Dimension miniThumbnailSize = new Dimension( 100, 75 );
+
+
+
+	/**
+	 *   The minimum width for the left panels
+	 */
+	public static final int leftPanelMinimumWidth = 240;
+	
+
+
+	/**
+	 *  the minimum Dimension for the InfoPanel
+	 */
+	public static final Dimension infoPanelMinimumSize = new Dimension( leftPanelMinimumWidth, 150 );
+
+
+	/**
+	 *  the preferred Dimension for the InfoPanel
+	 */
+	public static final Dimension infoPanelPreferredSize = new Dimension( preferredMasterDividerSpot, 300 );
+
+
+	/**
+	 *  the minimum Dimension for the Navigator Panel
+	 */
+	public static final Dimension jpoNavigatorJTabbedPaneMinimumSize = new Dimension( leftPanelMinimumWidth, 300 );
+
+
+	/**
+	 *  the preferred Dimension for the Navigator Panel
+	 */
+	public static final Dimension jpoNavigatorJTabbedPanePreferredSize = new Dimension( preferredMasterDividerSpot, 500 );
+
+
+	/**
+	 *  the minimum Dimension for the Thumbnail Panel
+	 */
+	public static final Dimension thumbnailJScrollPaneMinimumSize = new Dimension( (int) ( thumbnailSize * 1.4f ), (int) ( thumbnailSize * 1.8f ) );
+
+
+	/**
+	 *  the preferred Dimension for the Thumbnail Panel
+	 */
+	public static final Dimension thumbnailJScrollPanePreferredSize = new Dimension( (int) ( thumbnailSize * 2.2f ), 800 );
+
+
+	/**
+	 *  the minimum Dimension for the JPO Window
+	 */
+	public static final Dimension jpoJFrameMinimumSize = 
+		new Dimension( jpoNavigatorJTabbedPaneMinimumSize.width 
+			       + dividerWidth 
+			       + thumbnailJScrollPaneMinimumSize.width,
+			       Math.max ( jpoNavigatorJTabbedPaneMinimumSize.height 
+			                  + dividerWidth
+					  + infoPanelMinimumSize.height,
+					  thumbnailJScrollPaneMinimumSize.height )
+		);
+
+	/**
+	 *  the preferred Dimension for the JPO Window
+	 */
+	public static final Dimension jpoJFramePreferredSize = 
+		new Dimension( jpoNavigatorJTabbedPanePreferredSize.width 
+			       + dividerWidth 
+			       + thumbnailJScrollPanePreferredSize.width,
+			       Math.max ( jpoNavigatorJTabbedPanePreferredSize.height 
+			                  + dividerWidth
+					  + infoPanelPreferredSize.height,
+					  thumbnailJScrollPanePreferredSize.height )
+		);
+
+
+
 
 
 	/**
@@ -296,7 +370,6 @@ public class Settings {
 	 *  the resourceBundle is a Java thing that sorts out language customisation
 	 */
 	public static ResourceBundle jpoResources;
-
 
 
 	/**
@@ -646,6 +719,14 @@ public class Settings {
 	 *	Should emails contain the original images
 	 */
 	public static boolean emailSendOriginal = false;
+
+
+
+	/**
+	 *   The default application background color.
+	 */	
+	public static final Color JPO_BACKGROUND_COLOR = Color.WHITE;
+
 	
 	
 	/**
@@ -667,10 +748,8 @@ public class Settings {
 		logfile = new File( new File( System.getProperty("java.io.tmpdir")), "JPO.log");
 		saveSizeOnExit = false;
 		mainFrameDimensions = new Rectangle( screenDimensions );
-		preferredMasterDividerSpot = 350;
 		preferredLeftDividerSpot = screenDimensions.height - 200;
 		if ( preferredLeftDividerSpot < 0 ) { preferredLeftDividerSpot = 100; };
-		dividerWidth = 12;
 	
 
 		maximumPictureSize = 6000;
@@ -680,7 +759,6 @@ public class Settings {
 		pictureViewerDefaultDimensions = new Rectangle( screenDimensions );
 
 		maxThumbnails = 50;
-		thumbnailSize = 350;
 		keepThumbnails = true;
 		thumbnailPath = new File( new File( System.getProperty("java.io.tmpdir")) , "JPO_thumbnails" + File.separator);
 		

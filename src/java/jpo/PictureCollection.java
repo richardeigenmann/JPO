@@ -36,7 +36,7 @@ public class PictureCollection {
 	public PictureCollection() {
 		rootNode = new SortableDefaultMutableTreeNode( true );
 		treeModel = new DefaultTreeModel( getRootNode() );
-		createQueriesTreeModel();
+		//createQueriesTreeModel();
 		categories = new HashMap();
 		mailSelection = new HashSet();
 		setAllowEdits( true );
@@ -251,13 +251,14 @@ public class PictureCollection {
 	/**
 	 *   This variable holds the reference to the queries executed against the collection.
 	 */
-	private TreeModel queriesTreeModel;
+	private TreeModel queriesTreeModel = null;
 
 
 	/**
 	 *   Call this method when you need the TreeModel for the queries
 	 */
 	public TreeModel getQueriesTreeModel() {
+		if ( queriesTreeModel == null ) createQueriesTreeModel();
 		return( queriesTreeModel );
 	}
 

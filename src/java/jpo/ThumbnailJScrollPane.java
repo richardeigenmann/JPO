@@ -38,8 +38,7 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  *
  */ 
   
-public class ThumbnailJScrollPane 
-	extends JScrollPane { 
+public class ThumbnailJScrollPane extends JScrollPane { 
  
 	/**
 	 *  color for title
@@ -132,12 +131,6 @@ public class ThumbnailJScrollPane
 		new JButton( new ImageIcon( Settings.cl.getResource( "jpo/images/Back24.gif" ) ) );  
  
  
-	/**
-	 *   A reference to the root node of the tree. This allows the Thumbnail pane to
-	 *   communicate with the data model and receive notifactions from it.
-	 */
-	public SortableDefaultMutableTreeNode rootNode;
-
 
 	/**
 	 *   An array that holds the 50 or so ThumbnailComponents that are being displayed
@@ -214,16 +207,16 @@ public class ThumbnailJScrollPane
 	 *   The passing in of the caller is obsolete and should be removed when  
 	 *   a better interface type solution has been built. 
 	 *  
-	 */ 
-	public ThumbnailJScrollPane( SortableDefaultMutableTreeNode rootNode ) { 
-		this.rootNode = rootNode;
-		
-		
+	 */
+	public ThumbnailJScrollPane() { 
 		ThumbnailPane.setLayout( thumbnailLayout );
 		initThumbnailsArray();
 		
-		ThumbnailPane.setBackground(Color.white); 
-		setViewportView( ThumbnailPane ); 
+		ThumbnailPane.setBackground( Settings.JPO_BACKGROUND_COLOR ); 
+		setMinimumSize( Settings.thumbnailJScrollPaneMinimumSize );
+		setPreferredSize( Settings.thumbnailJScrollPanePreferredSize );
+		
+		setViewportView( ThumbnailPane );
 		setWheelScrollingEnabled (true ); 
 		
 		//  set the amount by which the panel scrolls down when the user clicks the 

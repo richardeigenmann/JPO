@@ -66,8 +66,7 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  *
  **/
 public class Jpo extends JFrame 
-		 implements CollectionJTreeInterface,
-			    ApplicationMenuInterface {
+		 implements ApplicationMenuInterface {
 			    
 
 
@@ -81,10 +80,10 @@ public class Jpo extends JFrame
 	 **/
 	public static void main(String[] args) {
 		try {
-			final String GTK = "com.sun.java.swing.plaf.gtk.GTKLookAndFeel";
+			//final String GTK = "com.sun.java.swing.plaf.gtk.GTKLookAndFeel";
 			final String Windows = "com.sun.java.swing.plaf.windows.WindowsLookAndFeel";
-			final String Metal = "javax.swing.plaf.metal.MetalLookAndFeel";
-			final String CDE = "com.sun.java.swing.plaf.motif.MotifLookAndFeel";
+			//final String Metal = "javax.swing.plaf.metal.MetalLookAndFeel";
+			//final String CDE = "com.sun.java.swing.plaf.motif.MotifLookAndFeel";
 			
 			UIManager.setLookAndFeel( Windows );
 		} catch ( Exception e ) { 
@@ -155,10 +154,9 @@ public class Jpo extends JFrame
 		// Activate OpenGL performance improvements
 		//System.setProperty("sun.java2d.opengl", "true");
 		
-		initComponents();
+		initComponentsInThread();
 
 
-		loadCollectionOnStartup();
 	}
 
 
@@ -182,9 +180,18 @@ public class Jpo extends JFrame
 
 
 	/**
-	 *  A reference to the collection object
+	 *  This method initialises the GUI components of the main window.
 	 */
-	private PictureCollection pictureCollection;
+	private void initComponentsInThread() {
+		Thread t = new Thread() {
+			public void run() {
+				setPriority( Thread.MIN_PRIORITY );
+				initComponents();
+				loadCollectionOnStartup();
+			} 
+		};
+		t.start();
+	}
 
 
 
@@ -192,88 +199,47 @@ public class Jpo extends JFrame
 	 *  This method initialises the GUI components of the main window.
 	 */
 	private void initComponents() {
-			
-		this.setTitle ( Settings.jpoResources.getString("ApplicationTitle"));
-			
+		setTitle ( Settings.jpoResources.getString("ApplicationTitle"));
+		Settings.anchorFrame = this;
 
-		Settings.anchorFrame = (JFrame) this;
-
-		//this.setSize( Settings.mainFrameDimensions.getSize() );
-		//this.setLocation( Settings.mainFrameDimensions.getLocation() );
-
+		setMinimumSize( Settings.jpoJFrameMinimumSize );
+		setPreferredSize( Settings.jpoJFramePreferredSize );
+		//setLocation( Settings.mainFrameDimensions.getLocation() );
 
 		//Create the menu bar.
 		JMenuBar menuBar = new ApplicationJMenuBar( this ); 
 		setJMenuBar( menuBar );
 
-
-
-		// Create a Collection
-		pictureCollection = new PictureCollection();
-		Settings.pictureCollection = pictureCollection;
-		
-
 						
 		// Create and attach the JTree object
 		JScrollPane collectionJScrollPane = new JScrollPane();
-		collectionJTree = new CollectionJTree( this, pictureCollection.getTreeModel() );		
-       		collectionJScrollPane.setViewportView( collectionJTree );
-
+		collectionJScrollPane.setMinimumSize( Settings.jpoNavigatorJTabbedPaneMinimumSize );
+		collectionJScrollPane.setPreferredSize( Settings.jpoNavigatorJTabbedPanePreferredSize );
 
 
 		JScrollPane searchesJScrollPane = new JScrollPane();
-		QueriesJTree searchesJTree = new QueriesJTree( pictureCollection.getQueriesTreeModel() );
-       		searchesJScrollPane.setViewportView( searchesJTree );
-
-
-
-		// Set up the Thumbnail Pane
-		thumbnailJScrollPane = new ThumbnailJScrollPane( pictureCollection.getRootNode() );
+		searchesJScrollPane.setMinimumSize( Settings.jpoNavigatorJTabbedPaneMinimumSize );
+		searchesJScrollPane.setPreferredSize( Settings.jpoNavigatorJTabbedPanePreferredSize );
 
 		// Set up the Info Panel
 		InfoPanel infoPanel = new InfoPanel();
-		
-		// Set up the communication between the JTree and the Thumbnail Pane
-		
-		collectionJTree.setAssociatedThumbnailJScrollpane( thumbnailJScrollPane ) ;
-		collectionJTree.setAssociatedInfoPanel( infoPanel ) ;
-		searchesJTree.setAssociatedThumbnailJScrollpane( thumbnailJScrollPane ) ;
-		searchesJTree.setAssociatedInfoPanel( infoPanel ) ;
-		thumbnailJScrollPane.setAssociatedCollectionJTree( collectionJTree );
-		thumbnailJScrollPane.setAssociatedInfoPanel( infoPanel ) ;
-		
-
-
 
 		/**
 		 *  The pane that holds the main window. On the left will go the tree, on the
 		 *  right will go the thumbnails
 		 **/
-		final JSplitPane leftSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+		final JSplitPane leftSplitPane = new JSplitPane( JSplitPane.VERTICAL_SPLIT );
 		leftSplitPane.setDividerSize( Settings.dividerWidth );
 		leftSplitPane.setOneTouchExpandable( true );
-		JTabbedPane jpoNavigatorJTabbedPane = new JTabbedPane();
-		jpoNavigatorJTabbedPane.add( Settings.jpoResources.getString("jpoTabbedPaneCollection"), collectionJScrollPane );
-		jpoNavigatorJTabbedPane.add( Settings.jpoResources.getString("jpoTabbedPaneSearches"), searchesJScrollPane );
+
+		final JTabbedPane jpoNavigatorJTabbedPane = new JTabbedPane();
+		jpoNavigatorJTabbedPane.setMinimumSize( Settings.jpoNavigatorJTabbedPaneMinimumSize );
+		jpoNavigatorJTabbedPane.setPreferredSize( Settings.jpoNavigatorJTabbedPanePreferredSize );
+		
 		leftSplitPane.setTopComponent( jpoNavigatorJTabbedPane );
 		leftSplitPane.setBottomComponent( infoPanel );
 		leftSplitPane.setDividerLocation( Settings.preferredLeftDividerSpot );
-		//masterSplitPane.setPreferredSize( Settings.mainFrameDimensions.getSize() );
-		infoPanel.addComponentListener(new ComponentAdapter() {
-		        public void componentResized( ComponentEvent event ) {
-				// Tools.log( "Jpo:InfoPanelcomponentResized invoked" );
-				int leftDividerSpot = leftSplitPane.getDividerLocation();
-				if ( leftDividerSpot != Settings.preferredLeftDividerSpot ) {
-					Settings.preferredLeftDividerSpot = leftDividerSpot;
-					Settings.unsavedSettingChanges = true;
-				}
-		        }
-		});
-
 		
-
-
-
 		/**
 		 *  The pane that holds the main window. On the left will go the tree, on the
 		 *  right will go the thumbnails
@@ -281,13 +247,57 @@ public class Jpo extends JFrame
 		final JSplitPane masterSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 		masterSplitPane.setDividerSize( Settings.dividerWidth );
 		masterSplitPane.setOneTouchExpandable( true );
+		masterSplitPane.setDividerLocation( Settings.preferredMasterDividerSpot );
+
+
+		//Add the split pane to this frame.
+		getContentPane().add( masterSplitPane, BorderLayout.CENTER );
+		pack();
+
+		if ( Settings.maximiseJpoOnStartup ) {
+			setExtendedState( MAXIMIZED_BOTH );
+		}
+
+
+		collectionJTree = new CollectionJTree();		
+       		collectionJScrollPane.setViewportView( collectionJTree );
+		jpoNavigatorJTabbedPane.add( Settings.jpoResources.getString("jpoTabbedPaneCollection"), collectionJScrollPane );
+		jpoNavigatorJTabbedPane.add( Settings.jpoResources.getString("jpoTabbedPaneSearches"), searchesJScrollPane );
+
+		// Set up the Thumbnail Pane
+		thumbnailJScrollPane = new ThumbnailJScrollPane();
 		masterSplitPane.setLeftComponent( leftSplitPane );
 		masterSplitPane.setRightComponent( thumbnailJScrollPane );
-		masterSplitPane.setDividerLocation( Settings.preferredMasterDividerSpot );
-		masterSplitPane.setPreferredSize( Settings.mainFrameDimensions.getSize() );
-		collectionJTree.addComponentListener(new ComponentAdapter() {
+
+
+		QueriesJTree searchesJTree = new QueriesJTree();
+       		searchesJScrollPane.setViewportView( searchesJTree );
+		searchesJScrollPane.setMinimumSize( Settings.jpoNavigatorJTabbedPaneMinimumSize );
+		searchesJScrollPane.setPreferredSize( Settings.jpoNavigatorJTabbedPanePreferredSize );
+
+
+		// Set up the communication between the JTree and the Thumbnail Pane
+		collectionJTree.setAssociatedThumbnailJScrollpane( thumbnailJScrollPane ) ;
+		collectionJTree.setAssociatedInfoPanel( infoPanel ) ;
+		searchesJTree.setAssociatedThumbnailJScrollpane( thumbnailJScrollPane ) ;
+		searchesJTree.setAssociatedInfoPanel( infoPanel ) ;
+		thumbnailJScrollPane.setAssociatedCollectionJTree( collectionJTree );
+		thumbnailJScrollPane.setAssociatedInfoPanel( infoPanel ) ;
+
+		infoPanel.addComponentListener(new ComponentAdapter() {
 		        public void componentResized( ComponentEvent event ) {
-				// Tools.log( "Jpo.ThumbnailJScrollPane.componentResized invoked" );
+				Tools.log( "Jpo:InfoPanelcomponentResized invoked" );
+				int leftDividerSpot = leftSplitPane.getDividerLocation();
+				if ( leftDividerSpot != Settings.preferredLeftDividerSpot ) {
+					Settings.preferredLeftDividerSpot = leftDividerSpot;
+					Settings.unsavedSettingChanges = true;
+				}
+		        }
+		});
+		
+		jpoNavigatorJTabbedPane.addComponentListener( new ComponentAdapter() {
+		        public void componentResized( ComponentEvent event ) {
+				Tools.log( "Jpo.collectionJTree.componentResized invoked" );
 				int dividerSpot = masterSplitPane.getDividerLocation();
 				if ( dividerSpot != Settings.preferredMasterDividerSpot ) {
 					Settings.preferredMasterDividerSpot = dividerSpot;
@@ -295,16 +305,8 @@ public class Jpo extends JFrame
 				}
 		        }
 		});
-
-
-
-		//Add the split pane to this frame.
-		getContentPane().add( masterSplitPane, BorderLayout.CENTER );
-		pack();
-		if ( Settings.maximiseJpoOnStartup ) {
-			setExtendedState( MAXIMIZED_BOTH );
-		}
 	}
+
 
 
 
@@ -322,9 +324,9 @@ public class Jpo extends JFrame
 	 *  also checks for unsaved changes before closing the application.
 	 */
 	public void closeJpo() {
-		if ( pictureCollection.checkUnsavedUpdates() ) return;
+		if ( Settings.pictureCollection.checkUnsavedUpdates() ) return;
 		
-		if ( Settings.saveSizeOnExit &&
+		/*if ( Settings.saveSizeOnExit &&
 			( ! 
 				( Settings.mainFrameDimensions.getSize().equals( this.getSize() ) 
 				&& Settings.mainFrameDimensions.getLocation().equals( this.getLocationOnScreen() ) )
@@ -334,7 +336,7 @@ public class Jpo extends JFrame
 			Settings.mainFrameDimensions.setLocation( this.getLocationOnScreen() );
 			Settings.mainFrameDimensions.setSize( this.getContentPane().getSize() );
 			Settings.unsavedSettingChanges = true;
-		}
+		}*/
 		
 		
 		if ( Settings.unsavedSettingChanges )
@@ -361,9 +363,9 @@ public class Jpo extends JFrame
 			Settings.jarRoot = Settings.jarAutostartList.toString().substring(0, Settings.jarAutostartList.toString().indexOf("!") + 1);
 			Tools.log( "Trying to load picturelist from jar: " + Settings.jarAutostartList.toString() );
 			try {
-				pictureCollection.getRootNode().streamLoad( Settings.jarAutostartList.openStream() );
-				collectionJTree.setSelectedNode ( pictureCollection.getRootNode() );
-				thumbnailJScrollPane.show( new GroupBrowser( pictureCollection.getRootNode() ) );
+				Settings.pictureCollection.getRootNode().streamLoad( Settings.jarAutostartList.openStream() );
+				collectionJTree.setSelectedNode ( Settings.pictureCollection.getRootNode() );
+				thumbnailJScrollPane.show( new GroupBrowser( Settings.pictureCollection.getRootNode() ) );
 			} catch ( IOException x ) {
 				Tools.log( Settings.jarAutostartList.toString() + " could not be loaded\nReason: " + x.getMessage() );
 			}
@@ -371,8 +373,8 @@ public class Jpo extends JFrame
 			File xmlFile =  new File( Settings.autoLoad );
 			Tools.log("Jpo.constructor: Trying to load collection from location in stored settings: " + Settings.autoLoad   );
 			if ( xmlFile.exists() ) {
-				pictureCollection.fileLoad( xmlFile );
-				positionToNode( pictureCollection.getRootNode() );
+				Settings.pictureCollection.fileLoad( xmlFile );
+				positionToNode( Settings.pictureCollection.getRootNode() );
 				//collectionJTree.setSelectedNode ( pictureCollection.getRootNode() );
 				//thumbnailJScrollPane.show( new GroupBrowser( pictureCollection.getRootNode() ) );
 			}
@@ -388,8 +390,8 @@ public class Jpo extends JFrame
 	 *   Call to do the File|New function
 	 */
 	public void requestFileNew() {
-		pictureCollection.clearCollection();				
-		positionToNode( pictureCollection.getRootNode() );
+		Settings.pictureCollection.clearCollection();				
+		positionToNode( Settings.pictureCollection.getRootNode() );
 	}
 
 
@@ -399,7 +401,7 @@ public class Jpo extends JFrame
 	 *   {@link CollectionJTree}.
 	 */
 	public void requestFileAdd() {
-		collectionJTree.popupNode = pictureCollection.getRootNode();
+		collectionJTree.popupNode = Settings.pictureCollection.getRootNode();
 		collectionJTree.requestAdd();
 	}
 	
@@ -410,8 +412,8 @@ public class Jpo extends JFrame
 	 *   {@link CollectionJTree}.
 	 */
 	public void requestFileAddFromCamera() {
-		new AddFromCamera( pictureCollection.getRootNode() );
-		positionToNode( pictureCollection.getRootNode() );
+		new AddFromCamera( Settings.pictureCollection.getRootNode() );
+		positionToNode( Settings.pictureCollection.getRootNode() );
 	}
 
 
@@ -420,9 +422,9 @@ public class Jpo extends JFrame
 	 *   to be loaded. Calls {@link SortableDefaultMutableTreeNode#fileLoad}
 	 */
 	public void requestFileLoad() {
-		if ( pictureCollection.checkUnsavedUpdates() ) return;
-		pictureCollection.fileLoad();
-		positionToNode( pictureCollection.getRootNode() );
+		if ( Settings.pictureCollection.checkUnsavedUpdates() ) return;
+		Settings.pictureCollection.fileLoad();
+		positionToNode( Settings.pictureCollection.getRootNode() );
 	}
 
 
@@ -442,8 +444,8 @@ public class Jpo extends JFrame
 	 *   {@link ApplicationMenuInterface#requestOpenRecent}.
 	 */
 	public void requestOpenRecent( int i ) {
-		pictureCollection.fileLoad( new File( Settings.recentCollections[ i ] ) );
-		positionToNode( pictureCollection.getRootNode() );
+		Settings.pictureCollection.fileLoad( new File( Settings.recentCollections[ i ] ) );
+		positionToNode( Settings.pictureCollection.getRootNode() );
 	}
 	
 
@@ -454,7 +456,7 @@ public class Jpo extends JFrame
 	 *   saved before brings up a popup window.
 	 */
 	public void requestFileSave() {
-		pictureCollection.fileSave();				
+		Settings.pictureCollection.fileSave();				
 	}
 
 
@@ -464,7 +466,7 @@ public class Jpo extends JFrame
 	 *   save under.
 	 */
 	public void requestFileSaveAs() {
-		pictureCollection.fileSaveAs();				
+		Settings.pictureCollection.fileSaveAs();				
 	}
 
 
@@ -482,7 +484,7 @@ public class Jpo extends JFrame
 	 *   Calls {@link #find} to bring up a find dialog box.
 	 */
 	public void requestEditFind() {
-		find( pictureCollection.getRootNode() );
+		find( Settings.pictureCollection.getRootNode() );
 	}
 
 
@@ -492,7 +494,7 @@ public class Jpo extends JFrame
 	 *   against the current collection.
 	 */
 	public void requestCheckDirectories() {
-		new ReconcileJFrame( pictureCollection.getRootNode() );
+		new ReconcileJFrame( Settings.pictureCollection.getRootNode() );
 	}
 
 
@@ -502,14 +504,14 @@ public class Jpo extends JFrame
 	 *   protect it from edits.
 	 */
 	public void requestCollectionProperties() {
-		new CollectionPropertiesJFrame( pictureCollection.getRootNode() );
+		new CollectionPropertiesJFrame( Settings.pictureCollection.getRootNode() );
 	}
 
 	/**
 	 *  Creates an IntegrityChecker that does it's magic on the collection.
 	 */
 	public void requestCheckIntegrity() {
-		new IntegrityChecker( pictureCollection.getRootNode() );
+		new IntegrityChecker( Settings.pictureCollection.getRootNode() );
 	}
 
 
