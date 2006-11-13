@@ -47,18 +47,30 @@ public class ThumbnailLayoutManager implements LayoutManager {
 	 * Returns the preferredLayoutSize for the managed component
 	 */
 	public Dimension preferredLayoutSize( Container parent ) {
-		//Tools.log("ThumbnailLayoutManager.preferredLayoutSize: called. Waiting for synchronisation");
-		int numberOfComponents;
-		int columns;
+		Tools.log("ThumbnailLayoutManager.preferredLayoutSize: requested");
 		synchronized ( parent.getTreeLock() ) {
-			numberOfComponents = parent.getComponentCount();
-			columns = calculateCols( getParentComponentWidth( parent ) );
+			calculateCols( parent );
+			int cols = getCols();
+			int width = cols * ( getThumbnailWidth() + getHorizontalGutter() );
+			int height = 0;
+
+			int rowComponentHeight;
+			int logicalThumbnail;
+			for ( int i = 0; i < parent.getComponentCount(); i = i + 2 ) {
+				logicalThumbnail = (int) i / 2;
+				if ( ( logicalThumbnail % cols ) == 0 ) {
+					rowComponentHeight = getHeightOfRow( parent, i, cols ) // Thumbnails
+					                   + getHeightOfRow( parent, i + 1, cols ); // Descriptions
+					if ( rowComponentHeight > 0 ) {
+						height += rowComponentHeight + ( 2 * getVerticalGutter() );
+					}
+				}
+			}
+			Tools.log("ThumbnailLayoutManager.preferredLayoutSize: returning width: " + Integer.toString(width) + " height: " + Integer.toString(height) );
+			return new Dimension( width, height );
 		}
-		int width = columns * ( getThumbnailWidth() + getHorizontalGutter() );
-		int height = (int) ( numberOfComponents / columns * 350 );
-		//Tools.log("ThumbnailLayoutManager.preferredLayoutSize: called. Returning width= " + Integer.toString(width) + " height= " + Integer.toString(height) );
-		return new Dimension( width, height );
 	}
+
 
 	/**
 	 * Returns the minimumLayoutSize for the managed component
@@ -147,45 +159,36 @@ public class ThumbnailLayoutManager implements LayoutManager {
 	 *  Thumbnail description objects and puts them to the right place.
 	 */
 	public void layoutContainer( Container parent ) {
-		//Tools.log(">>>>ThumbnailLayoutManager.layoutContainer: called");
 		synchronized ( parent.getTreeLock() ) {
-		calculateCols( parent );
-		
-		int logicalThumbnail;
-		int cols = getCols();
-		int row = 0;
-		int column = 0;
-		int rowBaseline = 0;
-		int previousDescriptionRowHeight = 0;
-		for ( int i = 0; i < parent.getComponentCount(); i = i + 2 ) {
-			logicalThumbnail = (int) i / 2;
-			if ( ( logicalThumbnail % cols ) == 0 ) {
-				//Tools.log ("ThumbnailLayoutManager.layoutContainer: starting a new row at i= " + Integer.toString(i) ); 
-				row++;
-				previousDescriptionRowHeight = 0;
-				rowBaseline = rowBaseline + getHeightOfRow( parent, i, cols ) + previousDescriptionRowHeight + (2 * ( row + 1 ) * getVerticalGutter() );
-				column = 0;
-			}
-		
-			// coordinates for a Thumbnail
-			int width = getThumbnailWidth();
-			int height = parent.getComponent(i).getPreferredSize().height;
-			int x = (column * width ) + (( 1 + column) * getHorizontalGutter() );
-			//Tools.log("ThumbnailLayoutManager.layoutContainer: reporting height as: " + Integer.toString( height ) + " for Object: " + parent.getComponent(i).toString() );
-			//int y = rowBaseline - components[i].getPreferredSize().height;
-			int y = rowBaseline - height;
-			//Tools.log("i = " + Integer.toString(i) + " logicalThumbnail= " + Integer.toString(logicalThumbnail) + " x= " + Integer.toString( x )+ " y= " + Integer.toString( y ) );
-			parent.getComponent(i).setBounds( x, y, width, height );
-			
-			// coordinates for the ThumbnailDescription
-			y = rowBaseline + getVerticalGutter();
-			//Tools.log("i = " + Integer.toString(i+1) + " logicalThumbnail= " + Integer.toString(logicalThumbnail) + " x= " + Integer.toString( x )+ " y= " + Integer.toString( y ) );
-			height = parent.getComponent(i+1).getPreferredSize().height;
-			previousDescriptionRowHeight = Math.max( previousDescriptionRowHeight, height );
-			parent.getComponent(i+1).setBounds( x, y, width, height );
+			calculateCols( parent );
+			int cols = getCols();
 
-			column++;
-		}
+			int column = 0;
+			int rowBaseline = 0 - getVerticalGutter();
+			int previousDescriptionRowHeight = 0;
+			int logicalThumbnail;
+			for ( int i = 0; i < parent.getComponentCount(); i = i + 2 ) {
+				logicalThumbnail = (int) i / 2;
+				if ( ( logicalThumbnail % cols ) == 0 ) {
+					rowBaseline = rowBaseline + getHeightOfRow( parent, i, cols ) + previousDescriptionRowHeight + (2 * getVerticalGutter() );
+					column = 0;
+				}
+		
+				// coordinates for a Thumbnail
+				int width = getThumbnailWidth();
+				int height = parent.getComponent(i).getPreferredSize().height;
+				int x = (column * width ) + (( 1 + column) * getHorizontalGutter() );
+				int y = rowBaseline - height;
+				parent.getComponent(i).setBounds( x, y, width, height );
+			
+				// coordinates for the ThumbnailDescription
+				y = rowBaseline + getVerticalGutter();
+				height = parent.getComponent(i+1).getPreferredSize().height;
+				previousDescriptionRowHeight = Math.max( previousDescriptionRowHeight, height );
+				parent.getComponent(i+1).setBounds( x, y, width, height );
+
+				column++;
+			}
 		}
 	}
 
@@ -204,7 +207,7 @@ public class ThumbnailLayoutManager implements LayoutManager {
 			height = Math.max( height, parent.getComponent( index + ( 2 * i ) ).getPreferredSize().height );
 			//Tools.log("ThumbnailLayoutManager.getHeightOfRow: height of component " + Integer.toString(index + ( 2 * i )) + " is " + parent.getComponent( index + ( 2 * i ) ).getPreferredSize().height);
 		}
-		//Tools.log("ThumbnailLayoutManager.getHeightOfRow: returning " + Integer.toString(height));
+		//Tools.log("ThumbnailLayoutManager.getHeightOfRow: index=" + Integer.toString(index) + " / height=" + Integer.toString(height) );
 		return height;
 	}
 

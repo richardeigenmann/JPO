@@ -211,16 +211,6 @@ public class Jpo extends JFrame
 		setJMenuBar( menuBar );
 
 						
-		// Create and attach the JTree object
-		JScrollPane collectionJScrollPane = new JScrollPane();
-		collectionJScrollPane.setMinimumSize( Settings.jpoNavigatorJTabbedPaneMinimumSize );
-		collectionJScrollPane.setPreferredSize( Settings.jpoNavigatorJTabbedPanePreferredSize );
-
-
-		JScrollPane searchesJScrollPane = new JScrollPane();
-		searchesJScrollPane.setMinimumSize( Settings.jpoNavigatorJTabbedPaneMinimumSize );
-		searchesJScrollPane.setPreferredSize( Settings.jpoNavigatorJTabbedPanePreferredSize );
-
 		// Set up the Info Panel
 		InfoPanel infoPanel = new InfoPanel();
 
@@ -236,7 +226,7 @@ public class Jpo extends JFrame
 		jpoNavigatorJTabbedPane.setMinimumSize( Settings.jpoNavigatorJTabbedPaneMinimumSize );
 		jpoNavigatorJTabbedPane.setPreferredSize( Settings.jpoNavigatorJTabbedPanePreferredSize );
 		
-		leftSplitPane.setTopComponent( jpoNavigatorJTabbedPane );
+		//leftSplitPane.setTopComponent( jpoNavigatorJTabbedPane );
 		leftSplitPane.setBottomComponent( infoPanel );
 		leftSplitPane.setDividerLocation( Settings.preferredLeftDividerSpot );
 		
@@ -260,20 +250,24 @@ public class Jpo extends JFrame
 
 
 		collectionJTree = new CollectionJTree();		
-       		collectionJScrollPane.setViewportView( collectionJTree );
+		JScrollPane collectionJScrollPane = new JScrollPane( collectionJTree );
+		collectionJScrollPane.setMinimumSize( Settings.jpoNavigatorJTabbedPaneMinimumSize );
+		collectionJScrollPane.setPreferredSize( Settings.jpoNavigatorJTabbedPanePreferredSize );
+
+		QueriesJTree searchesJTree = new QueriesJTree();
+       		JScrollPane searchesJScrollPane = new JScrollPane( searchesJTree );
+		searchesJScrollPane.setMinimumSize( Settings.jpoNavigatorJTabbedPaneMinimumSize );
+		searchesJScrollPane.setPreferredSize( Settings.jpoNavigatorJTabbedPanePreferredSize );
+
 		jpoNavigatorJTabbedPane.add( Settings.jpoResources.getString("jpoTabbedPaneCollection"), collectionJScrollPane );
 		jpoNavigatorJTabbedPane.add( Settings.jpoResources.getString("jpoTabbedPaneSearches"), searchesJScrollPane );
+		leftSplitPane.setTopComponent( jpoNavigatorJTabbedPane );
+
 
 		// Set up the Thumbnail Pane
 		thumbnailJScrollPane = new ThumbnailJScrollPane();
 		masterSplitPane.setLeftComponent( leftSplitPane );
 		masterSplitPane.setRightComponent( thumbnailJScrollPane );
-
-
-		QueriesJTree searchesJTree = new QueriesJTree();
-       		searchesJScrollPane.setViewportView( searchesJTree );
-		searchesJScrollPane.setMinimumSize( Settings.jpoNavigatorJTabbedPaneMinimumSize );
-		searchesJScrollPane.setPreferredSize( Settings.jpoNavigatorJTabbedPanePreferredSize );
 
 
 		// Set up the communication between the JTree and the Thumbnail Pane
@@ -287,6 +281,8 @@ public class Jpo extends JFrame
 		infoPanel.addComponentListener(new ComponentAdapter() {
 		        public void componentResized( ComponentEvent event ) {
 				Tools.log( "Jpo:InfoPanelcomponentResized invoked" );
+				Tools.log( "collectionJTree.preferredSize: " + collectionJTree.getPreferredSize().toString() );
+				Tools.log( "jpoNavigatorJTabbedPane.preferredSize: " + jpoNavigatorJTabbedPane.getPreferredSize().toString() );
 				int leftDividerSpot = leftSplitPane.getDividerLocation();
 				if ( leftDividerSpot != Settings.preferredLeftDividerSpot ) {
 					Settings.preferredLeftDividerSpot = leftDividerSpot;
@@ -314,7 +310,7 @@ public class Jpo extends JFrame
 	 *  Brings up a QueryJFrame GUI.
   	*/
 	public void find( SortableDefaultMutableTreeNode startSearchNode ) {
-		new QueryJFrame( startSearchNode, collectionJTree, thumbnailJScrollPane );
+		new QueryJFrame( startSearchNode, thumbnailJScrollPane );
 	}
 
 
@@ -364,7 +360,7 @@ public class Jpo extends JFrame
 			Tools.log( "Trying to load picturelist from jar: " + Settings.jarAutostartList.toString() );
 			try {
 				Settings.pictureCollection.getRootNode().streamLoad( Settings.jarAutostartList.openStream() );
-				collectionJTree.setSelectedNode ( Settings.pictureCollection.getRootNode() );
+				//collectionJTree.setSelectedNode ( Settings.pictureCollection.getRootNode() );
 				thumbnailJScrollPane.show( new GroupBrowser( Settings.pictureCollection.getRootNode() ) );
 			} catch ( IOException x ) {
 				Tools.log( Settings.jarAutostartList.toString() + " could not be loaded\nReason: " + x.getMessage() );

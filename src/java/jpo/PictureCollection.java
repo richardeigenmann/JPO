@@ -590,6 +590,12 @@ public class PictureCollection {
 
 
 	/**
+	 *  status variable to find out if a thread is loading a file
+	 */
+	public boolean fileLoading = false;
+
+
+	/**
 	 *  A file reference to the file that was loaded. It will come in handy when 
 	 *  a save instruction comes along.
 	 */
@@ -632,8 +638,14 @@ public class PictureCollection {
 	 *   Loads the specified file into the root node of the collection
 	 */
 	public void fileLoad( File f ) {
+		if ( fileLoading ) {
+			Tools.log("PictureCollection.fileLoad: already busy loading another file. Aborting");
+			return;
+		}
 		setXmlFile( f );
+		fileLoading = true;
 		getRootNode().fileLoad( getXmlFile() );
+		fileLoading = false;
 	}
 
 

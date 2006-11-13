@@ -171,6 +171,7 @@ public class Thumbnail extends JComponent
 	 *  The color to use when the thumbnail has been selected
 	 */
 	private static final Color  UNSELECTED_COLOR = Color.WHITE;
+	//private static final Color  UNSELECTED_COLOR = Color.BLUE;
 
 
 	/** 
@@ -195,7 +196,8 @@ public class Thumbnail extends JComponent
 		setVisible( false );
 		setOpaque( false );
 		setBackground( UNSELECTED_COLOR );
-		setBorder( BorderFactory.createEmptyBorder(0,0,0,0) );
+		//setBorder( BorderFactory.createEmptyBorder(0,0,0,0) );
+		//setBorder( BorderFactory.createLineBorder( Color.RED ) );
 		addMouseListener( new ThumbnailMouseAdapter() );
 
 		// attach the Thumbnail to the Tree Model to get notifications.
@@ -367,7 +369,11 @@ public class Thumbnail extends JComponent
 	 *   as width and height.
 	 */
 	public Dimension getPreferredSize() {
-		return new Dimension( (int) ( thumbnailSize * thumbnailSizeFactor ), (int) ( thumbnailHeight * thumbnailSizeFactor ) ); 
+		int height = 0;
+		if ( isVisible() ) {
+			height = (int) ( thumbnailHeight * thumbnailSizeFactor );
+		}
+		return new Dimension( (int) ( thumbnailSize * thumbnailSizeFactor ), height ); 
 	}
 	
 
@@ -610,6 +616,8 @@ public class Thumbnail extends JComponent
 	public void showAsUnselected() {
 		//setBackground( UNSELECTED_COLOR );
 		setBorder( BorderFactory.createEmptyBorder() );
+		//setBorder( BorderFactory.createLineBorder( Color.RED ) );
+
 	}
 
 

@@ -58,7 +58,7 @@ public class QueriesJTree extends JTree {
 		setEditable(false);
 		setShowsRootHandles( true );
 		setMinimumSize( Settings.jpoNavigatorJTabbedPaneMinimumSize );
-		setPreferredSize( Settings.jpoNavigatorJTabbedPanePreferredSize );
+		//setPreferredSize( Settings.jpoNavigatorJTabbedPanePreferredSize );
 		//setCellRenderer( new JpoTreeCellRenderer() );
 		setModel( Settings.pictureCollection.getQueriesTreeModel() );
 

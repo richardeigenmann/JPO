@@ -111,7 +111,7 @@ public class CollectionJTree extends JTree
 		setCellRenderer( new JpoTreeCellRenderer() );
 		setBackground( Settings.JPO_BACKGROUND_COLOR );
 		setMinimumSize( Settings.jpoNavigatorJTabbedPaneMinimumSize );
-		setPreferredSize( Settings.jpoNavigatorJTabbedPanePreferredSize );
+		//setPreferredSize( Settings.jpoNavigatorJTabbedPanePreferredSize );
 		
 
 		// set up drag & drop
@@ -151,14 +151,13 @@ public class CollectionJTree extends JTree
 	 *   Moves the highlighted row to the indicated one and makes sure it is on the screen.
 	 */
 	public void setSelectedNode( SortableDefaultMutableTreeNode selectedNode ) {
-		// Tools.log("CollectionJTree.setSelectedNode: called for node: " + selectedNode.toString() );
+		//Tools.log("CollectionJTree.setSelectedNode: called for node: " + selectedNode.toString() );
 		TreePath tp = new TreePath( selectedNode.getPath() );
 		setSelectionPath( tp );
 		scrollPathToVisible( tp );
 		if ( associatedInfoPanel != null ) {
 			associatedInfoPanel.showInfo( selectedNode );
 		}
-
 	}
 
 
@@ -394,7 +393,7 @@ public class CollectionJTree extends JTree
 	 *  @see  GroupPopupInterface
 	 */
 	public void requestFind() {
-		new QueryJFrame( popupNode, this, associatedThumbnailJScrollPane );
+		new QueryJFrame( popupNode, associatedThumbnailJScrollPane );
 	}
 
 

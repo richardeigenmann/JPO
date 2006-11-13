@@ -68,11 +68,6 @@ public class QueryJFrame extends JFrame {
 	private JTextField upperDateJTextField = new JTextField("");
 
 
-	/** 
-	 *  a reference to the collectionJTree that should show the results
-	 */
-	private CollectionJTree collectionJTree;
-	
 	/**
 	 *  a reference to the ThumbnailJScrollpane that should show the results
 	 */
@@ -86,13 +81,8 @@ public class QueryJFrame extends JFrame {
 	 *  Creates a GUI to specify the search criteria.
 	 *
 	 **/
-	public QueryJFrame( SortableDefaultMutableTreeNode startSearchNode, 
-		CollectionJTree collectionJTree, 
-		ThumbnailJScrollPane thumbnailJScrollPane ) {
-		
-		
+	public QueryJFrame( SortableDefaultMutableTreeNode startSearchNode, ThumbnailJScrollPane thumbnailJScrollPane ) {
 		this.startSearchNode = startSearchNode;
-		this.collectionJTree = collectionJTree;
 		this.thumbnailJScrollPane = thumbnailJScrollPane;
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
@@ -270,22 +260,6 @@ public class QueryJFrame extends JFrame {
 		Settings.pictureCollection.addQueryToTreeModel( q );
 		
 		getRid();
-
-		/*
-		SortableDefaultMutableTreeNode resultNode = 
-			Settings.top.getRootNode().findAndSave( q );
-		if ( resultNode == null ) {
-			JOptionPane.showMessageDialog(
-				this, 
-				Settings.jpoResources.getString("noSearchResults"),
-				Settings.jpoResources.getString("searchDialogTitle"), 
-				JOptionPane.INFORMATION_MESSAGE);
-		} else {
-			collectionJTree.setSelectedNode( resultNode );
-			collectionJTree.expandPath( new TreePath ( resultNode.getPath()) );
-			thumbnailJScrollPane.showGroup( resultNode );
-			getRid();
-		}*/
 	}
 
 

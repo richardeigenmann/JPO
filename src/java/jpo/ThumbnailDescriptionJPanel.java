@@ -3,6 +3,8 @@ package jpo;
 import javax.swing.*;
 import java.awt.*;
 import javax.swing.event.*;
+import java.awt.event.AdjustmentListener;
+import java.awt.event.AdjustmentEvent;
 
 /*
 ThumbnailDescriptionJPanel.java:  class that creates a panel showing the details of a thumbnail
@@ -47,7 +49,7 @@ public class ThumbnailDescriptionJPanel
 	 *  The GridBagConstrains for this ThumbnailDescriptionJPanel which help to 
 	 *  position it in the panel
 	 */
-	protected GridBagConstraints c = new GridBagConstraints(); 
+	//protected GridBagConstraints c = new GridBagConstraints(); 
 
 
 	/** 
@@ -59,7 +61,10 @@ public class ThumbnailDescriptionJPanel
 	 *   This JScrollPane holds the JTextArea pictureDescriptionJTA so that it can have 
 	 *   multiple lines of text if this is required.
 	 */
-	private JScrollPane pictureDescriptionJSP = new JScrollPane( pictureDescriptionJTA );
+	private JScrollPane pictureDescriptionJSP 
+		= new JScrollPane( pictureDescriptionJTA, 
+			JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, 
+			JScrollPane.HORIZONTAL_SCROLLBAR_NEVER );
 
 
 	
@@ -85,27 +90,6 @@ public class ThumbnailDescriptionJPanel
 
 
 	/**
-	 *  This variable indicates the position number the Thumbnail component is on the panel.
-	 *  The grid is arranged as follows:
-	 *  <pre>
-	 *    0   1   2   3
-	 *    4   5   6   7
-	 *    8   9   10
-	 *  </pre>
-	 */
-	private int position;
-
-
-	
-	/**
-	 *  This is a reference to the panel in which the component is being shown
-	 */
-	private ThumbnailJScrollPane associatedPanel;
-	
-
-
-
-	/**
 	 *   Constant that indicates that the description should be formatted as
 	 *   a large description meaning large font and just the image description
 	 */
@@ -121,13 +105,11 @@ public class ThumbnailDescriptionJPanel
 	/**
 	 *  Font to be used for Large Texts:
 	 */	 
-	//private static Font largeFont = new Font ( "Arial", Font.PLAIN, 12 );
 	private static Font largeFont = Font.decode( Settings.jpoResources.getString("ThumbnailDescriptionJPanelLargeFont") );	
 
 	/**
 	 *  Font to be used for small texts:
 	 */	 
-	//private static Font smallFont = new Font ( "Arial", Font.PLAIN, 9 );
 	private static Font smallFont = Font.decode( Settings.jpoResources.getString("ThumbnailDescriptionJPanelSmallFont") );	
 	
 
@@ -149,28 +131,26 @@ public class ThumbnailDescriptionJPanel
 	/**
 	 *   Construct a new ThumbnailDescrciptionJPanel
 	 *
-	 *   @param   position   The position this component is on the panel
- 	 *   @param   associatedPanel   The ThumbnailJScrollPane it is being displayed on
 	 **/
-	public ThumbnailDescriptionJPanel ( int position, ThumbnailJScrollPane associatedPanel  ) {
-		this.position = position;
-		this.associatedPanel = associatedPanel;
-		
+	public ThumbnailDescriptionJPanel() {
 		// attach this panel to the tree model so that it is notified about changes
 		Settings.pictureCollection.getTreeModel().addTreeModelListener( this );
 
-		this.setBackground( Color.WHITE );
+		setBackground( Color.WHITE );
+		//setBorder( BorderFactory.createLineBorder( Color.RED ) );
+
 		
 		//pictureDescriptionJTA.setFont( Settings.captionFont ); 
 		pictureDescriptionJTA.setWrapStyleWord( true ); 
 		pictureDescriptionJTA.setLineWrap( true ); 
 		pictureDescriptionJTA.setEditable( true ); 
-		pictureDescriptionJTA.setBorder( BorderFactory.createEmptyBorder(2,2,8,2) ); 
 		pictureDescriptionJTA.setCaret( dumbCaret ); 
-		//pictureDescriptionJTA.setMaximumSize( new Dimension( Settings.thumbnailSize, Settings.thumbnailDescriptionHeight) );
-		//pictureDescriptionJTA.setPreferredSize( new Dimension( Settings.thumbnailSize, 50) );
-		pictureDescriptionJTA.setMinimumSize( new Dimension( (int) ( Settings.thumbnailSize * thumbnailSizeFactor ), 20) );
-		pictureDescriptionJTA.setAlignmentX( Component.CENTER_ALIGNMENT );
+
+		// it is the Scrollpane you must constrain, not the TextArea
+		pictureDescriptionJSP.setMinimumSize( new Dimension( Settings.thumbnailSize, 25) );
+		pictureDescriptionJSP.setMaximumSize( new Dimension( Settings.thumbnailSize, 250) );
+		
+		//pictureDescriptionJTA.setAlignmentX( Component.CENTER_ALIGNMENT );
 		pictureDescriptionJTA.setInputVerifier( new InputVerifier() {
 			public boolean verify ( JComponent component ) {
 				// doUpdate();
@@ -182,18 +162,34 @@ public class ThumbnailDescriptionJPanel
 			}
 		} );
 
-		c.fill = c.BOTH; 
-		c.anchor = c.NORTH;
+	        pictureDescriptionJTA.getDocument().addDocumentListener( new DocumentListener() {
+        		public void insertUpdate(DocumentEvent e) { setTextAreaSize(); }
+			public void removeUpdate(DocumentEvent e) { setTextAreaSize(); }
+			public void changedUpdate(DocumentEvent e) { setTextAreaSize(); }
+		} );
+       
+	        pictureDescriptionJSP.getVerticalScrollBar().addAdjustmentListener( new AdjustmentListener() {
+        		public void adjustmentValueChanged(AdjustmentEvent e) {
+				setTextAreaSize();
+			}
+		} );
+		
+		setVisible( false );
+
+
+		//c.fill = c.BOTH; 
+		//c.anchor = c.NORTH;
 
 
 //		this.setLayout( new BoxLayout( this, BoxLayout.Y_AXIS ) );
 		//add ( pictureDescriptionJTA, BorderLayout.NORTH);
-		pictureDescriptionJSP.setBorder( BorderFactory.createEmptyBorder(0,0,0,0) );
+		//pictureDescriptionJSP.setBorder( BorderFactory.createEmptyBorder(0,0,0,0) );
+		//pictureDescriptionJSP.setBorder( BorderFactory.createLineBorder( Color.GREEN ) );
 		add ( pictureDescriptionJSP );
 		
 		
 
-		highresLocationJTextField.setMinimumSize( new Dimension( (int) ( Settings.thumbnailSize * thumbnailSizeFactor ), 20) );
+		/*highresLocationJTextField.setMinimumSize( new Dimension( (int) ( Settings.thumbnailSize * thumbnailSizeFactor ), 20) );
 		highresLocationJTextField.setMaximumSize( new Dimension( (int) ( Settings.thumbnailSize * thumbnailSizeFactor ), 20) );
 		highresLocationJTextField.setPreferredSize( new Dimension( (int) ( Settings.thumbnailSize * thumbnailSizeFactor ), 20) );
 //		add ( highresLocationJTextField );
@@ -202,7 +198,7 @@ public class ThumbnailDescriptionJPanel
 		lowresLocationJTextField.setMinimumSize( new Dimension( (int) ( Settings.thumbnailSize * thumbnailSizeFactor ), 20) );
 		lowresLocationJTextField.setMaximumSize( new Dimension( (int) ( Settings.thumbnailSize * thumbnailSizeFactor ), 20) );
 		lowresLocationJTextField.setPreferredSize( new Dimension( (int) ( Settings.thumbnailSize * thumbnailSizeFactor ), 20) );
-//		add ( lowresLocationJTextField );
+//		add ( lowresLocationJTextField );*/
 		
 	}
 
@@ -216,15 +212,15 @@ public class ThumbnailDescriptionJPanel
 		if ( referringNode == null ) {
 			return;
 		}
-		pictureDescriptionJTA.setBackground( Color.white );
+		//pictureDescriptionJTA.setBackground( Color.white );
 		if ( ! pictureDescriptionJTA.getText().equals( referringNode.getUserObject().toString() ) ) {
 			if ( referringNode.getUserObject() instanceof PictureInfo )
 				( (PictureInfo) referringNode.getUserObject() ).setDescription( pictureDescriptionJTA.getText() );
 			else if ( referringNode.getUserObject() instanceof GroupInfo )
 				( (GroupInfo) referringNode.getUserObject() ).setGroupName( pictureDescriptionJTA.getText() );
 		}
-		setTextAreaSize();
-		pictureDescriptionJTA.revalidate();
+		//setTextAreaSize();
+		//pictureDescriptionJTA.revalidate();
 		Settings.pictureCollection.getTreeModel().nodeChanged( referringNode );
 	}
 
@@ -322,27 +318,22 @@ public class ThumbnailDescriptionJPanel
 	 *  sets the size of the TextArea
 	 */
 	public void setTextAreaSize() {
-		//Tools.log ( "ThumbnailDescriptionJPanel.setTextAreaSize invoked with a size of: " 
-		//	+ Integer.toString( (int) ( Settings.thumbnailSize * thumbnailSizeFactor ) ) );
-		pictureDescriptionJTA.setMinimumSize( new Dimension( (int) ( Settings.thumbnailSize * thumbnailSizeFactor ), 20) );
-		pictureDescriptionJTA.setMaximumSize( new Dimension( (int) ( Settings.thumbnailSize * thumbnailSizeFactor ), 20) );
-		pictureDescriptionJTA.setPreferredSize( new Dimension( (int) ( Settings.thumbnailSize * thumbnailSizeFactor ), 20) );
-		highresLocationJTextField.setMinimumSize( new Dimension( (int) ( Settings.thumbnailSize * thumbnailSizeFactor ), 20) );
-		highresLocationJTextField.setMaximumSize( new Dimension( (int) ( Settings.thumbnailSize * thumbnailSizeFactor ), 20) );
-		highresLocationJTextField.setPreferredSize( new Dimension( (int) ( Settings.thumbnailSize * thumbnailSizeFactor ), 20) );
-		highresLocationJTextField.revalidate();
-		lowresLocationJTextField.setMinimumSize( new Dimension( (int) ( Settings.thumbnailSize * thumbnailSizeFactor ), 20) );
-		lowresLocationJTextField.setMaximumSize( new Dimension( (int) ( Settings.thumbnailSize * thumbnailSizeFactor ), 20) );
-		lowresLocationJTextField.setPreferredSize( new Dimension( (int) ( Settings.thumbnailSize * thumbnailSizeFactor ), 20) );
-		lowresLocationJTextField.revalidate();
+	        Dimension textAreaSize = pictureDescriptionJTA.getPreferredSize();
+	        
+        	int targetHeight = 0;
+	        if ( textAreaSize.height < pictureDescriptionJSP.getMinimumSize().height ) targetHeight = pictureDescriptionJSP.getMinimumSize().height;
+        	else if ( textAreaSize.height > pictureDescriptionJSP.getMaximumSize().height ) targetHeight = pictureDescriptionJSP.getMaximumSize().height;
+	        else targetHeight = ( ( (int) (textAreaSize.height / 30) + 1 ) * 30) ;
 
-		
-		//pictureDescriptionJTA.setSize( new Dimension( (int) ( Settings.thumbnailSize * thumbnailSizeFactor ), 20 ) );
-		// this hack actually gets Swing to keep the width and adjust the height !
-		pictureDescriptionJTA.setText( pictureDescriptionJTA.getText() );
-		pictureDescriptionJTA.setMaximumSize( pictureDescriptionJTA.getPreferredSize() );
-		pictureDescriptionJTA.revalidate();
+		Dimension scrollPaneSize = pictureDescriptionJSP.getPreferredSize();
+		int targetWidth = (int) ( Settings.thumbnailSize * thumbnailSizeFactor );
+		if ( ( targetHeight != scrollPaneSize.height) || ( targetWidth != scrollPaneSize.width )) {
+		        pictureDescriptionJSP.setPreferredSize( new Dimension( targetWidth,targetHeight ) );
+			Tools.log("ThumbnailDescriptionJPanel.setTextAreaSize set to: " + Integer.toString(targetWidth) + " / " + Integer.toString(targetHeight) );
+		}			
+		//pictureDescriptionJSP.getParent().validate();
 	}
+
 
 	/**
 	 *   Overridden method to allow the better tuning of visibility
@@ -351,8 +342,22 @@ public class ThumbnailDescriptionJPanel
 		super.setVisible( visibility );
 		pictureDescriptionJTA.setVisible( visibility );
 		pictureDescriptionJSP.setVisible( visibility );
-		validate();
+		//validate();
 	}
+
+	/**
+	 *   Returns the preferred size for the ThumbnailDescription as a Dimension using the thumbnailSize 
+	 *   as width and height.
+	 */
+	public Dimension getPreferredSize() {
+		Dimension d = super.getPreferredSize();
+		int height = 0;
+		if ( isVisible() ) {
+			height = d.height;
+		}
+		return new Dimension( d.width, height ); 
+	}
+
 
 	/**
 	 *  This method sets the scaling factor for the display of a thumbnail description
@@ -360,7 +365,7 @@ public class ThumbnailDescriptionJPanel
 	public void setFactor( float thumbnailSizeFactor ) {
 		this.thumbnailSizeFactor = thumbnailSizeFactor;
 		setTextAreaSize();
-		setVisible( isVisible() );
+		//setVisible( isVisible() );
 	}
 
 

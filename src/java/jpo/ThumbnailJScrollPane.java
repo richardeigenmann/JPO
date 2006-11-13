@@ -287,6 +287,7 @@ public class ThumbnailJScrollPane extends JScrollPane {
 					thumbnailLayout.setThumbnailWidth( (int) (350 * thumbnailSizeFactor) );
 					for ( int i=0;  i < Settings.maxThumbnails; i++ ) {
 						thumbnails[i].setFactor( thumbnailSizeFactor );
+						thumbnailDescriptionJPanels[i].setFactor( thumbnailSizeFactor );
 					}
 					thumbnailLayout.layoutContainer( ThumbnailPane );
 				}
@@ -407,7 +408,7 @@ public class ThumbnailJScrollPane extends JScrollPane {
 		initialisedMaxThumbnails = Settings.maxThumbnails;
 		for ( int i=0;  i < Settings.maxThumbnails; i++ ) {
 			thumbnails[i] = new Thumbnail( this );
-			thumbnailDescriptionJPanels[i] = new ThumbnailDescriptionJPanel( i, this );
+			thumbnailDescriptionJPanels[i] = new ThumbnailDescriptionJPanel();
 			ThumbnailPane.add( thumbnails[i] );
 			ThumbnailPane.add( thumbnailDescriptionJPanels[i] );
 		}
