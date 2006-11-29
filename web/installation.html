@@ -209,19 +209,26 @@
 			<hr>
 			<h2 id="source">Installing the source:</h2>
 
-			<p>Download the source and unzip it to your target directory. Then follow the instructions in the README.txt file.</p>
+			<p>Naturally there are some prerequisites: 
+			a Java Software Development Kit (SDK), Apache Ant a CVS client</p>
+			<p>Pitfalls to be aware of: Ant can be very fussy and annoying with cryptic, 
+			incomprehensible error messages. One very important environment variable that needs to 
+			be set is the location of the JVM. On a Linux system you might set this with:</p>
+			<code>export JVM=/usr/java/jdk1.5.0_07</code>
+			<p>Test it with this command:</p>
+			<code>$JVM/bin/java -version</code>
+			<p>If you get something like the following it's ok, otherwise sort out your Java SDK installation first!</p>
+			<code>Java(TM) 2 Runtime Environment, Standard Edition (build 1.5.0_07-b03)<br>
+			Java HotSpot(TM) Client VM (build 1.5.0_07-b03, mixed mode, sharing)</code>
 
-
-			<p>The following links allow you to download the source environment so that you can build JPO yourself.
-			Note that I have now transitioned to sourceforge CVS and therefore your better choice is to download
-			the JPO source from CVS as this is always up to date.</p>
-
-			<p><a href="jpo-src-0.8.zip">Source environment (v0.8 .zip 4.1MB)</a><br>
-			<a href="jpo-src-0.8.2.zip">Source environment (v0.8.2 zip 4.2MB)</a><br>
-			<a href="jpo-src-0.8.3.zip">Source environment (v0.8.3 zip 4.2MB)</a><br>
-			<a href="jpo-src-0.8.4.zip">Source environment 18.3.2004 (v0.8.4 zip 9MB)</a></p>
-
-			<p>I now use SourceForge's CVS repository. If you ask me nicely I will put instructions here how to download a build environment.</p>
+			<p>Use the following command to checkout the latest cvs source from sourceforge:</p>
+			<code>cvs -z3 -d:pserver:anonymous@j-po.cvs.sourceforge.net:/cvsroot/j-po checkout Jpo</code>
+			<p>You would then cd to the Jpo directory:</p>
+			<code>cd Jpo</code>
+			<p>There is a README.txt file there. You compile the code with the command</p>
+			<code>ant compile</code>
+			<p>And then run it with</p>
+			<code>ant go</code>
 
 
 			<hr>
@@ -253,7 +260,7 @@
 
 
 			<hr>
-			<p>Last update to this page: 27.8.2006<br>
+			<p>Last update to this page: 29.11.2006<br>
 			Copyright 2003-2006 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
 		</td>
 	</tr>
