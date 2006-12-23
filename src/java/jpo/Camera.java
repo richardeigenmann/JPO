@@ -7,7 +7,7 @@ import java.util.*;
 /*
 Camera.java:  information about the digital camera as seen by the filesystem
 
-Copyright (C) 2002  Richard Eigenmann.
+Copyright (C) 2002-2006  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -57,17 +57,19 @@ public class Camera implements Serializable {
 	public boolean useFilename = true;
 
 
+	/**
+	 *  This HashMap records the old images held on the camera so that we can determine
+	 *  which pictures are new.
+	 */
 	private HashMap oldImage = new HashMap();
 	
+	/**
+	 *  This HashMap is used temporarily when getting new pictures. It should be empty unless 
+	 *  pictures are being loaded.
+	 */
 	private HashMap newImage = new HashMap();
 
 
-
-	/**
-	 *   Constructor to create a new Camera object. 
-	 **/			      
-	public Camera() {
-	}
 
 	/**
 	 *   toString method that returns the descrition of the camera
@@ -81,7 +83,7 @@ public class Camera implements Serializable {
 	/**
 	 *   stores the checksum and file in the provided HashMap
 	 */
-	public void storePicture( HashMap hm, File f, long checksum ) {
+	public static void storePicture( HashMap hm, File f, long checksum ) {
 		hm.put( f, new Long( checksum ) );
 	}
 
@@ -147,7 +149,8 @@ public class Camera implements Serializable {
 	}
 
 	/**
-	 *   builds old image from the files on the camera.
+	 *   build a list of old image from the files on the camera-directory. This method
+	 *   creates a ProgressGui.
 	 */
 	public void buildOldImage() {
 			File rootDir = new File( this.rootDir );
@@ -172,7 +175,7 @@ public class Camera implements Serializable {
 	
 	/**
 	 *   this method recursively gos through the directories to identify the checksums 
-	 *   of the pictures in the camera
+	 *   of the pictures in the camera directory.
 	 */
 	protected void buildOldImage( File[] files, ProgressGui progGui ) {
 			for ( int i = 0; (i < files.length) && ( ! progGui.interrupt ); i++ ) {
@@ -195,6 +198,7 @@ public class Camera implements Serializable {
 	 */
 	public void storeNewImage() {
 		oldImage.putAll( newImage );
+		zapNewImage();
 	}
 
 	/**

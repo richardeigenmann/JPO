@@ -10,7 +10,7 @@ import java.util.*;
 AddFromCamera.java:  
 a class that creates a GUI and then adds the pictures from the camera to your collection.
 
-Copyright (C) 2002  Richard Eigenmann.
+Copyright (C) 2002-2006 Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -279,51 +279,67 @@ public class AddFromCamera
 			Thread t = new Thread() {
         			public void run() {
 					Camera cam = (Camera) cameraNameJComboBox.getSelectedItem();
-					cam.runConnectScript();
-					Tools.log("AddFromCamera.actionPerformed: running");
-					File sourceDir = new File( cam.rootDir );
-					// give the OS time to mount properly:
-					try { sleep (1000); } catch ( InterruptedException x) {}
-					if ( ! Tools.hasPictures( sourceDir ) ) {
-						JOptionPane.showMessageDialog(
-							Settings.anchorFrame, 
-							Settings.jpoResources.getString("copyAddPicturesNoPicturesError"),
-							Settings.jpoResources.getString("genericError"), 
-							JOptionPane.ERROR_MESSAGE);
-						return;
-					}
-
 					File targetDir = new File( targetDirJTextField.getText() );
-					targetDir.mkdirs();
 					Settings.memorizeCopyLocation( targetDir.toString() );
-					
-					String groupName = cam.description 
-						+ " " 
-						+ Tools.currentDate( Settings.addFromCameraDateFormat );
-		
-		
-					SortableDefaultMutableTreeNode newNode = null;
-					if ( allPicturesJRadioButton.isSelected() ) {
-						Tools.log ("AddFromCamera.run: AllPictures should be loaded from camera");
-						newNode = rootNode.copyAddPictures( sourceDir, targetDir, groupName, false, retainDirectoriesJCheckBox.isSelected(), selectedCategories  );
-					} else if ( newPicturesJRadioButton.isSelected() ) {
-						Tools.log ("AddFromCamera.run: only new pictures should be loaded from camera");
-						newNode = rootNode.copyAddPictures( sourceDir, targetDir, groupName, cam, retainDirectoriesJCheckBox.isSelected(), selectedCategories );
-					} else if ( missingPicturesJRadioButton.isSelected() ) {
-						Tools.log ("AddFromCamera.run: only missing pictures should be loaded from camera");
-						newNode = rootNode.copyAddPictures( sourceDir, targetDir, groupName, true, retainDirectoriesJCheckBox.isSelected(), selectedCategories );
-					}
-					
-					if ( newNode != null ) {
-						Jpo.positionToNode( newNode );
-					}
-
-					cam.runDisconnectScript();
-        			}
-    			};
+					addPictures( rootNode, cam, targetDir, newPicturesJRadioButton.isSelected(), missingPicturesJRadioButton.isSelected(), retainDirectoriesJCheckBox.isSelected(), selectedCategories );
+    				}
+			};
 			t.start();
 			getRid(); 
 		} 
+	}
+
+	/**
+	 *  this method adds the pictures from the camera. It will best be 
+	 *  called from inside another thread.
+	 *
+	 *   @param  rootNode   The node at which to add the pictures
+	 *   @param  cam  The Camera object for which the pictures are to be loaded. 
+	 *   @param  targetDir  The target directory. It doesn't have to exist; it and it's parents will be created.
+	 *   @param  newPictures  Indicates that only the new pictures should be added.
+	 *   @param  missingPictures  Indicates that only the missing pictures should be added.
+	 *   @param  retainDirectories  Indicates that the directory structure should be retained in the added pictures.
+	 *   @param  selectedCategories Categories that are applied to the loaded pictures.
+	 */
+	public static void addPictures( SortableDefaultMutableTreeNode rootNode, Camera cam, File targetDir, boolean newPictures, boolean missingPictures, boolean retainDirectories, HashSet selectedCategories ) {
+		cam.runConnectScript();
+		Tools.log("AddFromCamera.addPictures: running");
+		File sourceDir = new File( cam.rootDir );
+		// give the OS time to mount properly:
+		// try { sleep (1000); } catch ( InterruptedException x) {}
+		if ( ! Tools.hasPictures( sourceDir ) ) {
+		       JOptionPane.showMessageDialog(
+			       Settings.anchorFrame, 
+			       Settings.jpoResources.getString("copyAddPicturesNoPicturesError"),
+			       Settings.jpoResources.getString("genericError"), 
+			       JOptionPane.ERROR_MESSAGE);
+		       return;
+		}
+
+		targetDir.mkdirs();
+
+		String groupName = cam.description 
+		       + " " 
+		       + Tools.currentDate( Settings.addFromCameraDateFormat );
+
+
+		SortableDefaultMutableTreeNode newNode = null;
+		if ( newPictures ) {
+		       Tools.log ("AddFromCamera.addPictures: only new pictures should be loaded from camera");
+		       newNode = rootNode.copyAddPictures( sourceDir, targetDir, groupName, cam, retainDirectories, selectedCategories );
+		} else if ( missingPictures ) {
+		       Tools.log ("AddFromCamera.addPictures: only missing pictures should be loaded from camera");
+		       newNode = rootNode.copyAddPictures( sourceDir, targetDir, groupName, true, retainDirectories, selectedCategories );
+		} else {
+		       Tools.log ("AddFromCamera.addPictures: AllPictures should be loaded from camera");
+		       newNode = rootNode.copyAddPictures( sourceDir, targetDir, groupName, false, retainDirectories, selectedCategories  );
+		}
+
+		if ( newNode != null ) {
+		       Jpo.positionToNode( newNode );
+		}
+
+		cam.runDisconnectScript();
 	}
 
 

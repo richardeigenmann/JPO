@@ -824,9 +824,6 @@ public class Settings {
 	public static void loadSettings() {
 		setDefaults();
 		
-		loadCameraSettings();
-		createFirstCameraIfEmpty();
-
 		currentLanguage = prefs.get( "currentLanguage", currentLanguage );
 		maximumPictureSize = prefs.getInt( "maximumPictureSize", maximumPictureSize );
 		leaveForPanel = prefs.getInt( "leaveForPanel", leaveForPanel );
@@ -891,6 +888,8 @@ public class Settings {
 
 		convertOldSettings();
 		validateCopyLocations();
+		
+		loadCameraSettings();
 	}
 	
 
@@ -910,7 +909,7 @@ public class Settings {
 				ps.get( settingsURL );
 				//FileContents fc = ps.get( settingsURL );
 				//in = new BufferedReader( new InputStreamReader( fc.getInputStream() ) );
-				Tools.log("Setting.loadSettings: Running in Java Web Start Mode and found PersistenceService for Settings." );
+				Tools.log("Setting.convertOldSettings: Running in Java Web Start Mode and found PersistenceService for Settings." );
 				
 				loadSettingsOld();
 				writeSettings();
@@ -924,10 +923,12 @@ public class Settings {
 			}
 		} catch ( UnavailableServiceException x ) {
 			if ( iniFile.exists() ) {
-				Tools.log("Settings.convertOldSettings: Convertng and removing ini File: " + iniFile.getPath() );
+				Tools.log("Settings.convertOldSettings: Converting and removing ini File: " + iniFile.getPath() );
 				loadSettingsOld();
 				writeSettings();
 				iniFile.delete();
+			} else {
+				Tools.log("Settings.convertOldSettings: no old settings found to convert." );
 			}
 		}
 	}
@@ -950,24 +951,24 @@ public class Settings {
 				ps.get( settingsURL );
 				FileContents fc = ps.get( settingsURL );
 				in = new BufferedReader( new InputStreamReader( fc.getInputStream() ) );
-				Tools.log("Setting.loadSettings: Running in Java Web Start Mode and found PersistenceService for Settings." );
+				Tools.log("Setting.loadSettingsOld: Running in Java Web Start Mode and found PersistenceService for Settings." );
 			} catch ( MalformedURLException x ) {
-				Tools.log( "We had a MalformedURLException: " + x.getMessage() );
+				Tools.log( "Setting.loadSettingsOld: We had a MalformedURLException: " + x.getMessage() );
 				return;
 			} catch ( IOException x ) {
-				Tools.log( "Settings.loadSettings: There are no settings that could be read." );
+				Tools.log( "Settings.loadSettingsOld: There are no settings that could be read." );
 				return;
 			}
 		} catch ( UnavailableServiceException x ) {
-			Tools.log( "Settings.loadSettings: Running in local file mode. Trying to locate ini file " + iniFile.getPath() );
+			Tools.log( "Settings.loadSettingsOld: Running in local file mode. Trying to locate ini file " + iniFile.getPath() );
 			if ( ! iniFile.exists() ) {
-				Tools.log("Settings.loadSettings: Can't find ini File. Using defaults." );
+				Tools.log("Settings.loadSettingsOld: Can't find ini File. Using defaults." );
 				return;
 			}
 			try {
 				in = new BufferedReader(new FileReader( iniFile ));
 			} catch ( FileNotFoundException y ) {
-				Tools.log("Settings.loadSettings: Can't find ini File. Using defaults." );
+				Tools.log("Settings.loadSettingsOld: Can't find ini File. Using defaults." );
 				return;
 			}
 		}
@@ -1158,7 +1159,7 @@ public class Settings {
 
 			}
 		} catch (IOException e) {
-			Tools.log( "IOException " + e.getMessage() );
+			Tools.log( "Settings.loadSettingsOld: IOException " + e.getMessage() );
 			JOptionPane.showMessageDialog(
 				Settings.anchorFrame, 
 				Settings.jpoResources.getString("cantReadIniFile") + e.getMessage(), 
@@ -1664,6 +1665,9 @@ public class Settings {
 	}
 
 
+	/**
+	 *  this method attempts to load the cameras
+	 */
 	public static void loadCameraSettings () {		
 		Tools.log( "Settings.loadCameraSettings: Loading Camera Settings" );
 		InputStream in;
@@ -1676,24 +1680,24 @@ public class Settings {
 				ps.get( camerasURL );
 				FileContents fc = ps.get( camerasURL );
 				in = fc.getInputStream();
-				Tools.log("Setting.loadSettings: Running in Java Web Start Mode and found PersistenceService for Settings." );
+				Tools.log("Setting.loadCameraSettings: Running in Java Web Start Mode and found PersistenceService for Settings." );
 			} catch ( MalformedURLException x ) {
-				Tools.log( "We had a MalformedURLException: " + x.getMessage() );
+				Tools.log( "Setting.loadCameraSettings: We had a MalformedURLException: " + x.getMessage() );
 				return;
 			} catch ( IOException x ) {
-				Tools.log( "Settings.loadSettings: There are no settings that could be read." );
+				Tools.log( "Settings.loadCameraSettings: There are no settings that could be read." );
 				return;
 			}
 		} catch ( UnavailableServiceException x ) {
-			Tools.log( "Settings.loadSettings: Running in local file mode. Trying to locate ini file " + camerasFile.getPath() );
-			if ( ! iniFile.exists() ) {
-				Tools.log("Settings.loadSettings: Can't find ini File. Using defaults." );
+			Tools.log( "Settings.loadCameraSettings: Running in local file mode. Trying to locate file " + camerasFile.getPath() );
+			if ( ! camerasFile.exists() ) {
+				Tools.log("Settings.loadCameraSettings: Can't find file. Using defaults." );
 				return;
 			}
 			try {
 				in = new FileInputStream( camerasFile );
 			} catch ( FileNotFoundException y ) {
-				Tools.log("Settings.loadSettings: Can't find ini File. Using defaults." );
+				Tools.log("Settings.loadCameraSettings: Can't find ini File. Using defaults." );
 				return;
 			}
 		}
@@ -1708,6 +1712,7 @@ public class Settings {
 		} catch ( ClassNotFoundException x ) {
 			Tools.log ("Settings.loadCameraSettings failed with an ClassNotFoundException: " + x.getMessage());
 		}
+		createFirstCameraIfEmpty();
 	}
 
 
