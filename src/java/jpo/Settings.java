@@ -727,7 +727,19 @@ public class Settings {
 	 */	
 	public static final Color JPO_BACKGROUND_COLOR = Color.WHITE;
 
+
+	/**
+	 *  The background color for the picture Viewer
+	 */
+	public static final Color PICTUREVIEWER_BACKGROUND_COLOR = Color.BLACK;
 	
+
+	/**
+	 *  The text color for the picture Viewer
+	 */
+	public static final Color PICTUREVIEWER_TEXT_COLOR = Color.WHITE;
+	
+	 	
 	
 	/**
 	 *  handle to the user Preferences

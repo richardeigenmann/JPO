@@ -321,7 +321,7 @@ public class PictureViewer extends JPanel
 	 *  information display and keyboard keys.
 	 **/
 	public PictureViewer() {
-		setBackground( Color.black );
+		setBackground( Settings.PICTUREVIEWER_BACKGROUND_COLOR );
 		setOpaque( true );
 		setFocusable( false );
 
@@ -336,7 +336,7 @@ public class PictureViewer extends JPanel
 
 
 		// Picture Painter Pane
-		pictureJPanel.setBackground(Color.black);
+		pictureJPanel.setBackground( Settings.PICTUREVIEWER_BACKGROUND_COLOR );
 		pictureJPanel.setVisible( true );
 		pictureJPanel.setOpaque( true );
 		pictureJPanel.setFocusable( false );
@@ -355,7 +355,7 @@ public class PictureViewer extends JPanel
 		loadJProgressBar.setPreferredSize( new Dimension( 120, 20 ) );
 		loadJProgressBar.setMaximumSize( new Dimension( 140, 20 ) );
 		loadJProgressBar.setMinimumSize( new Dimension( 80, 20 ) );
-		loadJProgressBar.setBackground( Color.black ); 
+		loadJProgressBar.setBackground( Settings.PICTUREVIEWER_BACKGROUND_COLOR ); 
 		loadJProgressBar.setBorderPainted( true );
 		loadJProgressBar.setBorder( BorderFactory.createLineBorder( Color.gray, 1 ) );
 		
@@ -379,8 +379,8 @@ public class PictureViewer extends JPanel
 		descriptionJTextField.setWrapStyleWord( true );
 		descriptionJTextField.setLineWrap( true );
 		descriptionJTextField.setEditable( true );
-		descriptionJTextField.setForeground( Color.white );
-		descriptionJTextField.setBackground( Color.black );
+		descriptionJTextField.setForeground( Settings.PICTUREVIEWER_TEXT_COLOR );
+		descriptionJTextField.setBackground( Settings.PICTUREVIEWER_BACKGROUND_COLOR );
 		descriptionJTextField.setOpaque( true );
 		descriptionJTextField.setBorder( new EmptyBorder(2,12,0,0) );
 		descriptionJTextField.setMinimumSize( new Dimension( 80, 26 ) );
@@ -411,7 +411,7 @@ public class PictureViewer extends JPanel
 		JScrollPane descriptionJScrollPane = new JScrollPane( JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER );
 		descriptionJScrollPane.setViewportView( descriptionJTextField );
 		descriptionJScrollPane.setBorder(new EmptyBorder(0,0,0,0));
-		descriptionJScrollPane.setBackground( Color.black );
+		descriptionJScrollPane.setBackground( Settings.PICTUREVIEWER_BACKGROUND_COLOR );
 		descriptionJScrollPane.setOpaque(true);
 		c.weightx = 1;
 		c.weighty = 0.01;
@@ -429,7 +429,7 @@ public class PictureViewer extends JPanel
 		final Dimension navButtonSize = new Dimension( 24, 24);
 		final JToolBar NavigationPanel = new JToolBar( Settings.jpoResources.getString("NavigationPanel") );
 
-		NavigationPanel.setBackground( Color.black );
+		NavigationPanel.setBackground( Settings.PICTUREVIEWER_BACKGROUND_COLOR );
 		NavigationPanel.setFloatable( true );
 		NavigationPanel.setMinimumSize(new Dimension(36 * numButtons, 26));
 		NavigationPanel.setPreferredSize(new Dimension(36 * numButtons, 26));
@@ -446,7 +446,7 @@ public class PictureViewer extends JPanel
 		});
 		previousJButton.setToolTipText( Settings.jpoResources.getString("previousJButton.ToolTipText") );
 		previousJButton.setBorderPainted(false);
-		previousJButton.setBackground(Color.black);
+		previousJButton.setBackground( Settings.PICTUREVIEWER_BACKGROUND_COLOR );
 		previousJButton.setPreferredSize( navButtonSize );
 		NavigationPanel.add(previousJButton);
 
@@ -460,7 +460,7 @@ public class PictureViewer extends JPanel
 		});
 		nextJButton.setToolTipText( Settings.jpoResources.getString("nextJButton.ToolTipText") );
 		nextJButton.setBorderPainted(false);
-		nextJButton.setBackground(Color.black);
+		nextJButton.setBackground( Settings.PICTUREVIEWER_BACKGROUND_COLOR );
 		nextJButton.setPreferredSize( navButtonSize );
 		NavigationPanel.add(nextJButton);
 
@@ -474,7 +474,7 @@ public class PictureViewer extends JPanel
 		});
 		rotateLeftJButton.setToolTipText( Settings.jpoResources.getString("rotateLeftJButton.ToolTipText") );
 		rotateLeftJButton.setBorderPainted( false );
-		rotateLeftJButton.setBackground( Color.black );
+		rotateLeftJButton.setBackground( Settings.PICTUREVIEWER_BACKGROUND_COLOR );
 		rotateLeftJButton.setPreferredSize( navButtonSize );
 		NavigationPanel.add( rotateLeftJButton );
 
@@ -490,7 +490,7 @@ public class PictureViewer extends JPanel
 		});
 		rotateRightJButton.setToolTipText( Settings.jpoResources.getString("rotateRightJButton.ToolTipText") );
 		rotateRightJButton.setBorderPainted( false );
-		rotateRightJButton.setBackground( Color.black );
+		rotateRightJButton.setBackground( Settings.PICTUREVIEWER_BACKGROUND_COLOR );
 		rotateRightJButton.setPreferredSize( navButtonSize );
 		NavigationPanel.add( rotateRightJButton );
 
@@ -504,7 +504,7 @@ public class PictureViewer extends JPanel
 		});
 		fullScreenJButton.setBorderPainted( false );
 		fullScreenJButton.setToolTipText( Settings.jpoResources.getString("fullScreenJButton.ToolTipText") );
-		fullScreenJButton.setBackground( Color.black );
+		fullScreenJButton.setBackground( Settings.PICTUREVIEWER_BACKGROUND_COLOR );
 		fullScreenJButton.setPreferredSize( navButtonSize );
 		NavigationPanel.add( fullScreenJButton );
 
@@ -518,7 +518,7 @@ public class PictureViewer extends JPanel
 		});
 		popupMenuJButton.setBorderPainted( false );
 		popupMenuJButton.setToolTipText( Settings.jpoResources.getString("popupMenuJButton.ToolTipText") );
-		popupMenuJButton.setBackground( Color.black );
+		popupMenuJButton.setBackground( Settings.PICTUREVIEWER_BACKGROUND_COLOR );
 		popupMenuJButton.setPreferredSize( navButtonSize );
 		popupMenuJButton.setVisible( true );
 		NavigationPanel.add( popupMenuJButton );
@@ -532,7 +532,7 @@ public class PictureViewer extends JPanel
 		});
 		infoJButton.setBorderPainted(false);
 		infoJButton.setToolTipText( Settings.jpoResources.getString("infoJButton.ToolTipText") );
-		infoJButton.setBackground(Color.black);
+		infoJButton.setBackground( Settings.PICTUREVIEWER_BACKGROUND_COLOR );
 		infoJButton.setPreferredSize( navButtonSize );
 		NavigationPanel.add(infoJButton);
 
@@ -543,9 +543,9 @@ public class PictureViewer extends JPanel
 				myJFrame.getGlassPane().requestFocus();
 			}
 		});
-		resetJButton.setBorderPainted(false);
+		resetJButton.setBorderPainted( false );
 		resetJButton.setToolTipText( Settings.jpoResources.getString("resetJButton.ToolTipText") );
-		resetJButton.setBackground(Color.black);
+		resetJButton.setBackground( Settings.PICTUREVIEWER_BACKGROUND_COLOR );
 		resetJButton.setPreferredSize( navButtonSize );
 		NavigationPanel.add(resetJButton);
 
@@ -555,9 +555,9 @@ public class PictureViewer extends JPanel
 				myJFrame.getGlassPane().requestFocus();
 			}
 		});
-		clockJButton.setBorderPainted(false);
+		clockJButton.setBorderPainted( false );
 		clockJButton.setToolTipText( Settings.jpoResources.getString("clockJButton.ToolTipText") );
-		clockJButton.setBackground( Color.black );
+		clockJButton.setBackground( Settings.PICTUREVIEWER_BACKGROUND_COLOR );
 		clockJButton.setPreferredSize( navButtonSize );
 		NavigationPanel.add( clockJButton );
 		
@@ -568,8 +568,8 @@ public class PictureViewer extends JPanel
 			}
 		});
 		closeJButton.setToolTipText( Settings.jpoResources.getString("closeJButton.ToolTipText") );
-		closeJButton.setBorderPainted(false);
-		closeJButton.setBackground(Color.black);
+		closeJButton.setBorderPainted( false );
+		closeJButton.setBackground( Settings.PICTUREVIEWER_BACKGROUND_COLOR );
 		closeJButton.setPreferredSize( navButtonSize );
 		NavigationPanel.add( closeJButton );
 
@@ -714,8 +714,8 @@ public class PictureViewer extends JPanel
 		myJFrame.getContentPane().setLayout(new BorderLayout() );
 		myJFrame.getContentPane().add( "Center", this);
 
-		myJFrame.setBackground(Color.black );
-		myJFrame.setVisible(true);
+		myJFrame.setBackground( Settings.PICTUREVIEWER_BACKGROUND_COLOR );
+		myJFrame.setVisible( true );
 
 		// set up the glass pane over the window so that 
 		// it intercepts the keystrokes. The Glass pane needs

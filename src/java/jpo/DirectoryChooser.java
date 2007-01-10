@@ -176,11 +176,16 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 
 
 	/**
-	 *  gets the text from the field
+	 *  Returns a string representation of the currently selected item in the dropdown list
+	 *  @return the selected dropdown entry as a string or "" if none is selected.
 	 */
 	public String getText() {
-		//return directoryJComboBox.getText();
-		return directoryJComboBox.getSelectedItem().toString();
+		Object o = directoryJComboBox.getSelectedItem();
+		if ( o != null ) {
+			return o.toString();
+		} else {
+			return "";
+		}
 	}
 
 	/**
