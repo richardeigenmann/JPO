@@ -1,13 +1,12 @@
 <?xml version="1.0"?>
-<project name="Java Picture Organizer" default="usage">
+<project name="Java Picture Organizer" default="run">
     
-    <property name="app.main.package" value="jpo"/>
-    <property name="app.main.class" value="${app.main.package}.Jpo"/>
+    <property name="app.main.class" value="jpo.Jpo"/>
     
     <property name="build.dir" value="build"/>
     <property name="build.base.classes.dir" value="${build.dir}/classes"/>
     <property name="unit.test.classes.dir" value="${build.dir}/unittestclasses"/>
-    <property name="build.images.dir" value="${build.base.classes.dir}/${app.main.package}/images"/>
+    <property name="build.images.dir" value="${build.base.classes.dir}/jpo/images"/>
     <property name="build.dtd.dir" value="${build.base.classes.dir}/${app.main.package}"/>
     <property name="build.docs.dir" value="${build.dir}/docs"/>
     <property name="build.jars.dir" value="jars"/>
@@ -19,23 +18,31 @@
     <property name="src.images.dir" value="${src.dir}/images"/>
     <property name="src.docs.dir" value="${src.dir}/docsrc"/>
     <property name="src.dtd.dir" value="${src.dir}/dtd"/>
-    <property name="results" location="/richi/ToDo"/>
+    <property name="results" location="/tmp"/>
     
     <property name="testdir" value="${src.dir}/test/java"/>
     <property name="TALK" value="true" />
-    
-    
-    <property environment="env"/>
-    <echo message="KEYSTORE is set to = ${env.KEYSTORE}"/> 
-    <!-- <echo message="env.JAVA_HOME is set to = ${env.JAVA_HOME}"/> -->
-
-
     <path id="base.path">
         <pathelement location="${build.base.classes.dir}"/>
         <fileset dir="${libs.dir}">
             <include name="*.jar"/>
         </fileset>
     </path>
+    <property environment="env"/>
+    
+    
+    <echo message="This ant build.xml file is using the following settings:"/>
+    <echo message="The environment's JAVA_HOME is set to:     ${env.JAVA_HOME}"/>
+    <echo message="The environment's JVM is set to:           ${env.JVM}"/>
+    <echo message="The environment's ANT_HOME is set to:      ${env.ANT_HOME}"/>
+    <echo message="The environment's PATH is set to:          ${env.PATH}"/>
+    <echo/>
+    <echo message="The java source files are being read from: ${src.java.dir}"/>
+    <echo message="The compiled Java .class files will go to: ${build.base.classes.dir}"/>
+    <echo message="The new jar file will go to:               ${build.jars.dir}"/>
+    <echo message="KEYSTORE is set to = ${env.KEYSTORE}"/> 
+
+
     
     <target name="prepare">
         <mkdir dir="${build.dir}"/>
@@ -83,6 +90,7 @@
             </fileset>
         </copy>
     </target>
+    
     
     <target name="rebuild"
             depends="clean, compile"
