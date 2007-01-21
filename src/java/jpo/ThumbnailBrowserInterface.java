@@ -5,7 +5,7 @@ package jpo;
 ThumbnailBrowserInterface.java:  an interface that defines the methods that a class 
 must implement so that the ThumbnailJScrollPane can identify the Thumbnails to be displayed.
 
-Copyright (C) 2002  Richard Eigenmann.
+Copyright (C) 2002-2007  Richard Eigenmann, Zürich, Switzerland
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -54,13 +54,13 @@ public interface ThumbnailBrowserInterface {
 	/**
 	 *  method to register a ThumbnailJScrollPane as a listener
 	 */
-	public void addRelayoutListener ( ThumbnailJScrollPane listener ); 
+	public void addRelayoutListener ( RelayoutListener listener ); 
 
 
 	/**
 	 *  method to remove a ThumbnailJScrollPane as a listener
 	 */
-	public void removeRelayoutListener ( ThumbnailJScrollPane listener );
+	public void removeRelayoutListener ( RelayoutListener listener );
 
 
 	/**

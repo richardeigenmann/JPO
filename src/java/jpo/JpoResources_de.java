@@ -5,7 +5,7 @@ import java.util.*;
 /*
 JpoResources_de.java:  class that holds the German Language generic labels for the JPO application
 
-Copyright (C) 2002-2006  Richard Eigenmann.
+Copyright (C) 2002-2007  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -59,8 +59,8 @@ public class JpoResources_de extends ListResourceBundle {
 		// Help About Dialog
 		{"HelpAboutText", "JPO Version 0.8.5 ist ein Java/Swing Programm\n" 
 			+ "geschrieben von Richard Eigenmann, Zrich, Schweiz\n" 
-			+ "Copyright 2000 - 2004\n"
-			+ "richard_eigenmann@compuserve.com\n"
+			+ "Copyright 2000 - 2007\n"
+			+ "richard.eigenmann@gmail.com\n"
 			+ "http://j-po.sourceforge.net\n"
 			+ "\nDie Exif Extraktion wurde von Drew Noakes entwickelt\n"
 			+  "Der Tablen Sortierer stammt von Philip Milne\n\n"},
@@ -411,6 +411,7 @@ public class JpoResources_de extends ListResourceBundle {
 		{"EditSettingsMenuItemText", "Einstellungen"},
 		{"actionJMenu", "Aktivitäten"},
 		{"emailJMenuItem", "Email verschicken"},
+		{"RandomSlideshowJMenuItem", "Zufällige Bildershow"},
 		{"HelpJMenuText", "Hilfe"},
 		{"HelpAboutMenuItemText", "Über"},
 		{"HelpLicenseMenuItemText", "Lizenz"},

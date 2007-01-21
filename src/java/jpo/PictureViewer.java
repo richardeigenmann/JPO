@@ -1,21 +1,16 @@
 package jpo;
 
-import java.util.*;
-import java.net.*;
 import javax.swing.*;
 import javax.swing.border.*;
-import javax.swing.WindowConstants.*;
 import java.awt.event.*;
 import java.awt.*;
 import javax.swing.event.*;
 import javax.swing.tree.*;
-import java.io.*;
-
 
 /*
 PictureViewer.java:  class that displays a window in which a picture is shown.
 
-Copyright (C) 2002-2006  Richard Eigenmann.
+Copyright (C) 2002-2007  Richard Eigenmann, Zürich, Switzerland
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -441,7 +436,7 @@ public class PictureViewer extends JPanel
 		previousJButton.addActionListener( new ActionListener() {
 			public void actionPerformed( ActionEvent e ) {
 				requestPriorPicture();
-				myJFrame.getGlassPane().requestFocus();
+				myJFrame.getGlassPane().requestFocusInWindow();
 			}
 		});
 		previousJButton.setToolTipText( Settings.jpoResources.getString("previousJButton.ToolTipText") );
@@ -455,7 +450,7 @@ public class PictureViewer extends JPanel
 		nextJButton.addActionListener( new ActionListener() {
 			public void actionPerformed( ActionEvent e ) {
 				requestNextPicture();
-				myJFrame.getGlassPane().requestFocus();
+				myJFrame.getGlassPane().requestFocusInWindow();
 			}
 		});
 		nextJButton.setToolTipText( Settings.jpoResources.getString("nextJButton.ToolTipText") );
@@ -469,7 +464,7 @@ public class PictureViewer extends JPanel
 		rotateLeftJButton.addActionListener( new ActionListener() {
 			public void actionPerformed( ActionEvent e ) {
 				currentNode.rotatePicture( 270 );
-				myJFrame.getGlassPane().requestFocus();
+				myJFrame.getGlassPane().requestFocusInWindow();
 			}
 		});
 		rotateLeftJButton.setToolTipText( Settings.jpoResources.getString("rotateLeftJButton.ToolTipText") );
@@ -485,7 +480,7 @@ public class PictureViewer extends JPanel
 		rotateRightJButton.addActionListener( new ActionListener() {
 			public void actionPerformed( ActionEvent e ) {
 				currentNode.rotatePicture( 90 );
-				myJFrame.getGlassPane().requestFocus();
+				myJFrame.getGlassPane().requestFocusInWindow();
 			}
 		});
 		rotateRightJButton.setToolTipText( Settings.jpoResources.getString("rotateRightJButton.ToolTipText") );
@@ -499,7 +494,7 @@ public class PictureViewer extends JPanel
 		fullScreenJButton.addActionListener( new ActionListener() {
 			public void actionPerformed( ActionEvent e ) {
 				requestScreenSizeMenu();
-				myJFrame.getGlassPane().requestFocus();
+				myJFrame.getGlassPane().requestFocusInWindow();
 			}
 		});
 		fullScreenJButton.setBorderPainted( false );
@@ -513,7 +508,7 @@ public class PictureViewer extends JPanel
 		popupMenuJButton.addActionListener( new ActionListener() {
 			public void actionPerformed( ActionEvent e ) {
 				requestPopupMenu();
-				myJFrame.getGlassPane().requestFocus();
+				myJFrame.getGlassPane().requestFocusInWindow();
 			}
 		});
 		popupMenuJButton.setBorderPainted( false );
@@ -527,7 +522,7 @@ public class PictureViewer extends JPanel
 		infoJButton.addActionListener( new ActionListener() {
 			public void actionPerformed( ActionEvent e ) {
 				pictureJPanel.cylceInfoDisplay();
-				myJFrame.getGlassPane().requestFocus();
+				myJFrame.getGlassPane().requestFocusInWindow();
 			}
 		});
 		infoJButton.setBorderPainted(false);
@@ -540,7 +535,7 @@ public class PictureViewer extends JPanel
 		resetJButton.addActionListener( new ActionListener() {
 			public void actionPerformed( ActionEvent e ) {
 				resetPicture();
-				myJFrame.getGlassPane().requestFocus();
+				myJFrame.getGlassPane().requestFocusInWindow();
 			}
 		});
 		resetJButton.setBorderPainted( false );
@@ -552,7 +547,7 @@ public class PictureViewer extends JPanel
 		clockJButton.addActionListener( new ActionListener() {
 			public void actionPerformed( ActionEvent e ) {
 				requestAutoAdvance();
-				myJFrame.getGlassPane().requestFocus();
+				myJFrame.getGlassPane().requestFocusInWindow();
 			}
 		});
 		clockJButton.setBorderPainted( false );
@@ -586,7 +581,13 @@ public class PictureViewer extends JPanel
 
 
 	/**
-	 *  request that the window mode be changed.
+	 *  request that the window showing the picture be changed be changed.
+	 *  @param  newMode  {@link PictureViewer#WINDOW_FULLSCREEN}, {@link PictureViewer#WINDOW_LEFT}, 
+	 *		{@link PictureViewer#WINDOW_RIGHT},  {@link PictureViewer#WINDOW_TOP_LEFT}, 
+	 *		{@link PictureViewer#WINDOW_TOP_RIGHT}, {@link PictureViewer#WINDOW_BOTTOM_LEFT}, 
+	 *		{@link PictureViewer#WINDOW_BOTTOM_RIGHT} or {@link PictureViewer#WINDOW_DEFAULT} 
+	 *		need to be indicated.
+	 *
 	 */
 	public void switchWindowMode ( int newMode ) {
 		windowMode = newMode;
@@ -651,7 +652,9 @@ public class PictureViewer extends JPanel
 		// if the window exists, get rid of it.	
 		closeMyWindow();
 
-		myJFrame = new JFrame( Settings.jpoResources.getString("PictureViewerTitle") );
+		
+
+		myJFrame = new JFrame( Settings.jpoResources.getString("PictureViewerTitle"), ScreenHelper.getSecondaryScreenGraphicsConfiguration() );
 		myJFrame.setUndecorated( ! decorateWindow );
 		myJFrame.addWindowListener( new WindowAdapter() {
 			public void windowClosing(WindowEvent we) {
@@ -660,29 +663,17 @@ public class PictureViewer extends JPanel
 		});
 
 
-		Rectangle virtualBounds = Tools.getScreenDimensions();
+		Rectangle virtualBounds = ScreenHelper.getSecondaryScreenBounds();
 		virtualBounds.height = virtualBounds.height - Settings.leaveForPanel;
 
 		if ( windowMode == WINDOW_FULLSCREEN ) {
 			myJFrame.setBounds( virtualBounds );
 		} else if ( windowMode == WINDOW_LEFT ) {
-			myJFrame.setBounds( new Rectangle (
-				0, 
-				0,
-				(int) virtualBounds.width / 2,
-				virtualBounds.height ) );
+			myJFrame.setBounds( ScreenHelper.getLeftScreenBounds() );
 		} else if ( windowMode == WINDOW_RIGHT ) {
-			myJFrame.setBounds( new Rectangle (
-				(int) virtualBounds.width / 2, 
-				0,
-				(int) virtualBounds.width / 2,
-				virtualBounds.height ) );
+			myJFrame.setBounds( ScreenHelper.getRightScreenBounds() );
 		} else if ( windowMode == WINDOW_TOP_LEFT ) {
-			myJFrame.setBounds( new Rectangle (
-				0, 
-				0,
-				(int) virtualBounds.width / 2,
-				(int) virtualBounds.height / 2) );
+			myJFrame.setBounds( ScreenHelper.getTopLeftScreenBounds() );
 		} else if ( windowMode == WINDOW_TOP_RIGHT ) {
 			myJFrame.setBounds( new Rectangle (
 				(int) virtualBounds.width / 2, 
@@ -690,11 +681,7 @@ public class PictureViewer extends JPanel
 				(int) virtualBounds.width / 2,
 				(int) virtualBounds.height / 2 ) );
 		} else if ( windowMode == WINDOW_BOTTOM_LEFT ) {
-			myJFrame.setBounds( new Rectangle (
-				0,
-				(int) virtualBounds.height / 2, 
-				(int) virtualBounds.width / 2,
-				(int) virtualBounds.height / 2 ) );
+			myJFrame.setBounds( ScreenHelper.getBottomLeftScreenBounds() );
 		} else if ( windowMode == WINDOW_BOTTOM_RIGHT ) {
 			myJFrame.setBounds( new Rectangle (
 				(int) virtualBounds.width / 2,
@@ -702,10 +689,8 @@ public class PictureViewer extends JPanel
 				(int) virtualBounds.width / 2,
 				(int) virtualBounds.height / 2 ) );
 		} else if ( windowMode == WINDOW_DEFAULT ) {
-			
 			myJFrame.setSize( Settings.pictureViewerDefaultDimensions.getSize() );
 			myJFrame.setLocation( Settings.pictureViewerDefaultDimensions.getLocation() );
-			
 		}
 
 
@@ -758,13 +743,13 @@ public class PictureViewer extends JPanel
 							Settings.jpoResources.getString("PictureViewerKeycodes"), 
 							Settings.jpoResources.getString("PictureViewerKeycodesTitle"), 
 							JOptionPane.INFORMATION_MESSAGE);
-					myJFrame.getGlassPane().requestFocus();
+					myJFrame.getGlassPane().requestFocusInWindow();
 				}
 			}
 		);
 		myJFrame.getGlassPane().setVisible( true );
 		myJFrame.getGlassPane().setFocusable( true );
-		myJFrame.getGlassPane().requestFocus();
+		myJFrame.getGlassPane().requestFocusInWindow();
 
 	}
 
@@ -802,7 +787,7 @@ public class PictureViewer extends JPanel
 	 **/
 	private void requestScreenSizeMenu() {
 		changeWindowPopupMenu.show( fullScreenJButton, 0, (int) (0 - changeWindowPopupMenu.getSize().getHeight()) );
-		myJFrame.getGlassPane().requestFocus();
+		myJFrame.getGlassPane().requestFocusInWindow();
 	}
 
 
@@ -1258,11 +1243,20 @@ public class PictureViewer extends JPanel
 			}
 			myIndex = 0;
 			changePicture( mySetOfNodes, myIndex );
-			advanceTimer = new AdvanceTimer( this, timerSecondsField.getValue() );
-			clockJButton.setIcon( iconClockOn );
-
+			startAdvanceTimer( timerSecondsField.getValue() );
 		}
 	}
+
+
+	/** 
+	 * This method sets up the Advance Timer 
+	 */
+	public void startAdvanceTimer( int seconds ) {
+		advanceTimer = new AdvanceTimer( this, seconds );
+		clockJButton.setIcon( iconClockOn );
+	}
+	
+
 
 
 	/**

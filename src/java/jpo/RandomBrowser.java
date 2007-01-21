@@ -7,7 +7,7 @@ import javax.swing.tree.*;
 /*
 RandomBrower.java:  an implementation of the ThumbnailBrowserInterface for browsing random pictures.
 
-Copyright (C) 2006  Richard Eigenmann.
+Copyright (C) 2006-2007  Richard Eigenmann, Zürich, Switzerland
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -29,7 +29,7 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  *  displaying Groups in the Thumbnail JScrollPane.
  */
 
-public class RandomBrowser implements ThumbnailBrowserInterface, TreeModelListener {
+public class RandomBrowser extends ThumbnailBrowser {
 
 	/**
 	 *  Constructor for a RandomBrowser. 
@@ -116,142 +116,13 @@ public class RandomBrowser implements ThumbnailBrowserInterface, TreeModelListen
 	 *  This method unregisters the TreeModelListener and sets the variables to null;
 	 */
 	public void cleanup () {
+            super.cleanup();
 		randomNodes = null;
 		allPictures = null;
-		relayoutListeners.clear();
 	}
 
 	
 
-
-
-	/**
-	 *  A vector that holds all the listeners that need to be notified if there is a structural change.
-	 */
-	private Vector relayoutListeners = new Vector();
-
-
-	/**
-	 *  method to register a ThumbnailJScrollPane as a listener
-	 */
-	public void addRelayoutListener ( ThumbnailJScrollPane listener ) {
-		relayoutListeners.add( listener );
-	}
-
-
-	/**
-	 *  method to remove a ThumbnailJScrollPane as a listener
-	 */
-	public void removeRelayoutListener ( ThumbnailJScrollPane listener ) {
-		relayoutListeners.remove( listener );
-	}
-
-
-	/**
-	 * Method that notifies the relayoutListeners of a structural change that they need to 
-	 * respond to.
-	 */
-	private void notifyRelayoutListeners() {
-		Vector nonmodifiedVector = (Vector) relayoutListeners.clone();
-
-		Enumeration e = nonmodifiedVector.elements();
-		while ( e.hasMoreElements() ) {
-			((ThumbnailJScrollPane) e.nextElement()).assignThumbnails();
-		}
-	}
-
-
-	/** 
-	 *   This method is defined by the TreeModelListener interface and gives the 
-	 *   JThumnailScrollPane a notification that some nodes changed in a non dramatic way.
-	 *   The nodes that were changed have their Constraints reevaluated and a revalidate
-	 *   is called to update the screen.
-	 */
-	public void treeNodesChanged (TreeModelEvent e) {
-		/*Tools.log("GroupBrowser.treeNodesChanged: " + e.toString() );
-		if ( myNode == null ) {
-			Tools.log("GroupBrowser.treeNodesChanged: ERROR! This should not have been called as there is not group showing and therefore there should be no tree listener firing off. Ignoring notification.");
-			return;
-		}
-
-		// don't get excited and force a relayout unless the inserted node is part 
-		// of the current group
-		TreePath myPath = new TreePath( myNode.getPath() );
-		if ( myPath.equals( e.getTreePath() ) ) {
-			Tools.log("GroupBrowser.treeNodesChanged: The changed node's parent is the group being shown. We must therefore relayout the children; myNode: " + myPath.toString() + " comparison:" +  ((SortableDefaultMutableTreeNode) e.getTreePath().getLastPathComponent() ).toString() );
-			notifyRelayoutListeners(); 
-		}*/
-	}
-	
-	/** 
-	 *   This method is defined by the TreeModelListener interface and gives the 
-	 *   JThumnailScrollPane a notification if additional nodes were inserted.
-	 *   The additional nodes are added and the existing nodes are reevaluated
-	 *   as to whether they are at the right place. Revalidate is called to update
-	 *   the screen.
-	 */
-	public void treeNodesInserted (TreeModelEvent e) {
-		/*Tools.log("GroupBrowser.treeNodesInserted: " + e.toString() );
-		if ( myNode == null ) {
-			Tools.log("GroupBrowser.treeNodesInserted: ERROR! This should not have been called as there is not group showing and therefore there should be no tree listener firing off. Ignoring notification.");
-			return;
-		}
-
-		// don't get excited and force a relayout unless the inserted node is part 
-		// of the current group
-		TreePath myPath = new TreePath( myNode.getPath() );
-		if ( myPath.equals( e.getTreePath() ) ) {
-			Tools.log("GroupBrowser.treeNodesInserted: The inserted node's parent is the group being shown. We must therefore relayout the children; myNode: " + myPath.toString() + " comparison:" +  ((SortableDefaultMutableTreeNode) e.getTreePath().getLastPathComponent() ).toString() );
-			notifyRelayoutListeners(); 
-		}*/
-	}
-
-	/** 
-	 *   This method is defined by the TreeModelListener interface and gives the 
-	 *   JThumnailScrollPane a notification that some nodes were removed. It steps
-	 *   through all the Thumbnail Components and makes sure they all are at the correct
-	 *   location. The dead ones are removed.
-	 */
-	public void treeNodesRemoved ( TreeModelEvent e ) {
-		/*Tools.log("GroupBrowser.treeNodesRemoved: " + e.toString() );
-		if ( myNode == null ) {
-			Tools.log("GroupBrowser.treeNodesRemoved: ERROR! This should not have been called as there is not group showing and therefore there should be no tree listener firing off. Ignoring notification.");
-			return;
-		}
-		
-		// if the current node is part of the tree that was deleted then we need to 
-		//  reposition the group at the parent node that remains.
-		if ( SortableDefaultMutableTreeNode.wasNodeDeleted( myNode, e ) ) {
-			Tools.log("GroupBrowser.treeNodesRemoved: determined that a child node of the currently displaying node was deleted and therefore executing a setNode on the parent that remains.");
-			setNode( (SortableDefaultMutableTreeNode) e.getTreePath().getLastPathComponent() );
-		} else {
-			// don't get excited and force a relayout unless the partent of the deleted 
-			// node is the current group
-			TreePath myPath = new TreePath( myNode.getPath() );
-			if ( myPath.equals( e.getTreePath() ) ) {
-				Tools.log("GroupBrowser.treeNodesRemoved: The removed node's parent is the group being shown. We must therefore relayout the children; myNode: " + myPath.toString() + " comparison:" +  ((SortableDefaultMutableTreeNode) e.getTreePath().getLastPathComponent() ).toString() );
-				notifyRelayoutListeners(); 
-			}
-		}*/
-	}
-
-
-	/** 
-	 *   This method is defined by the TreeModelListener interface and gives the 
-	 *   JThumnailScrollPane a notification if there was a massive structure change in the 
-	 *   tree. In this event all laying out shall stop and the group should be laid out from 
-	 *   scratch.
-	 */
-	public void treeStructureChanged (TreeModelEvent e) {
-		/*Tools.log("GroupBrowser.treeStructureChanged: " + e.toString() );
-		if ( myNode == null ) {
-			Tools.log("GroupBrowser.treeStructureChanged: ERROR! This should not have been called as there is not group showing and therefore there should be no tree listener firing off. Ignoring notification.");
-			return;
-		}
-		if ( myNode.isNodeDescendant( (SortableDefaultMutableTreeNode) e.getTreePath().getLastPathComponent() ) ){
-			notifyRelayoutListeners(); 
-		}*/
-	}
 
 	
 	

@@ -52,7 +52,7 @@ public class WholeNumberField extends JTextField {
 	 */
 	public WholeNumberField(int value, int columns) {
 		super( columns );
-		integerFormatter = NumberFormat.getNumberInstance( Settings.currentLocale );
+		integerFormatter = NumberFormat.getNumberInstance( Settings.getCurrentLocale() );
 		integerFormatter.setParseIntegerOnly( true );
 		setValue( value );
 	}

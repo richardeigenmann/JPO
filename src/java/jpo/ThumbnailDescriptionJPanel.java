@@ -9,7 +9,7 @@ import java.awt.event.AdjustmentEvent;
 /*
 ThumbnailDescriptionJPanel.java:  class that creates a panel showing the details of a thumbnail
 
-Copyright (C) 2002-2006  Richard Eigenmann.
+Copyright (C) 2002-2007  Richard Eigenmann, Zürich, Switzerland
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -329,7 +329,7 @@ public class ThumbnailDescriptionJPanel
 		int targetWidth = (int) ( Settings.thumbnailSize * thumbnailSizeFactor );
 		if ( ( targetHeight != scrollPaneSize.height) || ( targetWidth != scrollPaneSize.width )) {
 		        pictureDescriptionJSP.setPreferredSize( new Dimension( targetWidth,targetHeight ) );
-			Tools.log("ThumbnailDescriptionJPanel.setTextAreaSize set to: " + Integer.toString(targetWidth) + " / " + Integer.toString(targetHeight) );
+			//Tools.log("ThumbnailDescriptionJPanel.setTextAreaSize set to: " + Integer.toString(targetWidth) + " / " + Integer.toString(targetHeight) );
 		}			
 		//pictureDescriptionJSP.getParent().validate();
 	}

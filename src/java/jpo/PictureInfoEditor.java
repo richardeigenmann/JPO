@@ -556,7 +556,7 @@ public class PictureInfoEditor
 			category = (String) editNode.getPictureCollection().getCategory( key );
 			categoryObject = new Category( key, category );
 			listModel.addElement( categoryObject );
-			
+
 			if ( ( pi.categoryAssignments != null ) 
 			  && ( pi.categoryAssignments.contains( key ) ) ) {
 				selections.add( new Integer( listModel.indexOf( categoryObject ) ) );

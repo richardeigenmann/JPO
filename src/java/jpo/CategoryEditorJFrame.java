@@ -170,7 +170,7 @@ public class CategoryEditorJFrame extends JFrame implements ListSelectionListene
 				int index = categoriesJList.getSelectedIndex();
 				if ( index < 0 ) return; // nothing selected
 				Category cat = (Category) categoriesJList.getModel().getElementAt( index );
-				int count = Settings.pictureCollection.countCategoryUsage( cat.key, Settings.pictureCollection.getRootNode() );
+				int count = Settings.pictureCollection.countCategoryUsage( cat.getKey(), Settings.pictureCollection.getRootNode() );
 				if ( count > 0 ) {
 					int answer = JOptionPane.showConfirmDialog( CategoryEditorJFrame.this, 
 						Settings.jpoResources.getString("countCategoryUsageWarning1")
@@ -182,12 +182,12 @@ public class CategoryEditorJFrame extends JFrame implements ListSelectionListene
 					if ( answer == JOptionPane.CANCEL_OPTION ) {
 						return;
 					} else {
-						Settings.pictureCollection.removeCategoryUsage( cat.key, Settings.pictureCollection.getRootNode() );
+						Settings.pictureCollection.removeCategoryUsage( cat.getKey(), Settings.pictureCollection.getRootNode() );
 					}
 
 				}
 				listModel.remove( index );
-				Settings.pictureCollection.removeCategory( cat.key );
+				Settings.pictureCollection.removeCategory( cat.getKey() );
 				//Tools.log("I want to delete: " + cat.value.toString());
 			}
 		} );
@@ -207,8 +207,8 @@ public class CategoryEditorJFrame extends JFrame implements ListSelectionListene
 				listModel.remove( index );
 
 				String category = categoryJTextField.getText();
-				Settings.pictureCollection.renameCategory( cat.key, category );
-				Category categoryObject = new Category( cat.key, category );
+				Settings.pictureCollection.renameCategory( cat.getKey(), category );
+				Category categoryObject = new Category( cat.getKey(), category );
 				listModel.insertElementAt( categoryObject, index );
 				categoryJTextField.setText( "" );
 			}
@@ -266,7 +266,7 @@ public class CategoryEditorJFrame extends JFrame implements ListSelectionListene
     		if ( ! theList.isSelectionEmpty() ) {
 			int index = theList.getSelectedIndex();
 			Category cat = (Category) theList.getModel().getElementAt( index );
-			categoryJTextField.setText( cat.value.toString() );
+			categoryJTextField.setText( cat.getValue().toString() );
 		}
 	}
 	

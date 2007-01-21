@@ -1,24 +1,30 @@
 <?xml version="1.0"?>
 <project name="Java Picture Organizer" default="usage">
-
+    
     <property name="app.main.package" value="jpo"/>
     <property name="app.main.class" value="${app.main.package}.Jpo"/>
-
+    
     <property name="build.dir" value="build"/>
     <property name="build.base.classes.dir" value="${build.dir}/classes"/>
+    <property name="unit.test.classes.dir" value="${build.dir}/unittestclasses"/>
     <property name="build.images.dir" value="${build.base.classes.dir}/${app.main.package}/images"/>
     <property name="build.dtd.dir" value="${build.base.classes.dir}/${app.main.package}"/>
     <property name="build.docs.dir" value="${build.dir}/docs"/>
-    <property name="build.api.dir" value="${build.dir}/api"/>
     <property name="build.jars.dir" value="jars"/>
     <property name="version" value="0.8.5"/>
-
+    
     <property name="libs.dir" value="libs"/>
     <property name="src.dir" value="src"/>
     <property name="src.java.dir" value="${src.dir}/java"/>
     <property name="src.images.dir" value="${src.dir}/images"/>
     <property name="src.docs.dir" value="${src.dir}/docsrc"/>
     <property name="src.dtd.dir" value="${src.dir}/dtd"/>
+    <property name="results" location="/richi/ToDo"/>
+    
+    <property name="testdir" value="test/java"/>
+    <property name="TALK" value="true" />
+    
+    
     <property environment="env"/>
     <echo message="KEYSTORE is set to = ${env.KEYSTORE}"/> 
     <!-- <echo message="env.JAVA_HOME is set to = ${env.JAVA_HOME}"/> -->
@@ -30,30 +36,29 @@
             <include name="*.jar"/>
         </fileset>
     </path>
-
+    
     <target name="prepare">
         <mkdir dir="${build.dir}"/>
         <mkdir dir="${build.base.classes.dir}"/>
         <mkdir dir="${build.docs.dir}"/>
-        <mkdir dir="${build.api.dir}"/>
     </target>
-
+    
     <target name="clean" description="Deletes the generated files" >
         <delete dir="${build.dir}"/>
     </target>
-
+    
     <target name="compile"
             depends="prepare"
             description="Compiles the java files">
         <javac destdir="${build.base.classes.dir}"
-	       debug="off"
-	       optimize="off"
-	       verbose="off"
-	       memoryMaximumSize="500m"
-	       fork="yes"
-	       listfiles="yes"
-	       deprecation="yes"
-	       compiler="modern">
+               debug="off"
+               optimize="off"
+               verbose="off"
+               memoryMaximumSize="500m"
+               fork="yes"
+               listfiles="yes"
+               deprecation="yes"
+               compiler="modern">
             <src path="${src.java.dir}"/>
             <classpath refid="base.path"/>
         </javac>
@@ -78,11 +83,11 @@
             </fileset>
         </copy>
     </target>
-
+    
     <target name="rebuild"
             depends="clean, compile"
             description="Cleans and recompiles the project"/>
-
+    
     <target name="javadoc"
             description="Creates the JavaDoc of the project">
         <copy todir="${build.docs.dir}">
@@ -91,58 +96,58 @@
             </fileset>
         </copy>
         <javadoc destdir="${build.docs.dir}"
-	         packagenames="jpo.*"
-		 Overview="src/docsrc/Overview.html"
-		 Doctitle="JPO application documentation"
-		 Windowtitle="JPO application documentation"
-		 Header="JPO application documentation"
-		 Bottom="&lt;font size=&quot;-1&quot;&gt;Copyright (c) 2002 - 2006 by Richard Eigenmann &lt;a href=&quot;http://www.lomumba.ch/richi&quot;&gt;wwwlomumba.ch/richi&lt;/a&gt;&lt;/font&gt;"
-		 author="true"
-        	 version="true"
+                 packagenames="jpo.*"
+                 Overview="src/docsrc/Overview.html"
+                 Doctitle="JPO application documentation"
+                 Windowtitle="JPO application documentation"
+                 Header="JPO application documentation"
+                 Bottom="&lt;font size=&quot;-1&quot;&gt;Copyright (c) 2002 - 2006 by Richard Eigenmann &lt;a href=&quot;http://www.lomumba.ch/richi&quot;&gt;wwwlomumba.ch/richi&lt;/a&gt;&lt;/font&gt;"
+                 author="true"
+                 version="true"
                  use="true"
-		 private="true"
-		 source="1.5"
-		 classpath="libs/metadata-extractor-2.3.0.jar; libs/jnlp.jar; libs/activation.jar; libs/mail.jar" 
-		 >
+                 private="true"
+                 source="1.5"
+                 classpath="libs/metadata-extractor-2.3.0.jar; libs/jnlp.jar; libs/activation.jar; libs/mail.jar" 
+        >
             <sourcepath path="${src.java.dir}" />
-	    <link href="http://java.sun.com/j2se/1.5.0/docs/api/" />
+            <link href="http://java.sun.com/j2se/1.5.0/docs/api/" />
         </javadoc>
     </target>
-	    
-
+    
+    
     <target name="go"
             depends="compile, run"
             description="Compile and run the project"/>
-
-	    
+    
+    
     <target name="buildjar">
-    	<jar destfile="${build.jars.dir}/jpo-${version}.jar"
-		basedir="${build.base.classes.dir}"
-		compress="yes"
-		manifest="${build.jars.dir}/Manifest.jpo.jar"
-		duplicate="fail"
-		excludes="docs/ api/"
-	/>
+        <jar destfile="${build.jars.dir}/jpo-${version}.jar"
+             basedir="${build.base.classes.dir}"
+             compress="yes"
+             manifest="${build.jars.dir}/Manifest.jpo.jar"
+             duplicate="fail"
+             excludes="docs/ api/"
+        />
     </target>
-
+    
     
     <!-- This target will only be of use to the person who wants to sign the jar file for deployment on a web server.
          It relies on the environment variables KEYSTORE and JARPWD to find the keystore and password to access this
     -->
     <target name="signjar"
-        depends="buildjar" >
-	<signjar jar="${build.jars.dir}/jpo-${version}.jar" 
-		alias="richi"
-		keystore="${env.KEYSTORE}"
-		storepass="${env.JARPWD}"
-	/>
-	<signjar jar="libs/metadata-extractor-2.3.0.jar" 
-		alias="richi"
-		keystore="${env.KEYSTORE}"
-		storepass="${env.JARPWD}"
-	/>
+            depends="buildjar" >
+        <signjar jar="${build.jars.dir}/jpo-${version}.jar" 
+                 alias="richi"
+                 keystore="${env.KEYSTORE}"
+                 storepass="${env.JARPWD}"
+        />
+        <signjar jar="libs/metadata-extractor-2.3.0.jar" 
+                 alias="richi"
+                 keystore="${env.KEYSTORE}"
+                 storepass="${env.JARPWD}"
+        />
     </target>
-
+    
     
     <!-- Not the following one doesn't exclude properly though if run on the command line it works.
     	so simply run:
@@ -151,17 +156,17 @@
     <target name="sourcezip">
         <delete file="${basedir}/web/jpo-src-${version}.zip"/>
         <exec dir=".." executable="zip">
-		<arg line="-9 -r ${basedir}/web/jpo-src-${version}.zip Jpo -x \*.zip \*.class \*.ini \*.dta  "/> 
-	</exec>
+            <arg line="-9 -r ${basedir}/web/jpo-src-${version}.zip Jpo -x \*.zip \*.class \*.ini \*.dta  "/> 
+        </exec>
     </target>
-      
+    
     
     <!-- This target will only be of use to the person who does the deployment of JPO to souceforge.
          It relies on the environment variables SOURCEFORGEUSER and SORUVEFORGEPWD for the authentication.
     -->
     <target name="publish" 
-        depends="signjar" >
-   	<!--  <scp file="${build.jars.dir}/jpo-${version}.jar" 
+            depends="signjar" >
+        <!--  <scp file="${build.jars.dir}/jpo-${version}.jar" 
 		todir="${env.SOURCFORGEUSER}@shell.sourceforge.net:/home/groups/j/j-/j-po/htdocs"
 		password="${env.SOURCFORGEPWD}"
 		trust="yes"
@@ -217,16 +222,79 @@
 		trust="yes"
 	/> -->
     </target>    
-
-	      <!-- jvm="${env.JAVA_HOME}/bin/java"-->
     
-    <target name="run" description="Runs the program">
+    <!-- jvm="${env.JAVA_HOME}/bin/java"-->
+    
+    <target name="run" description="Runs the program" depends="compile">
         <java classname="${app.main.class}"
               fork="yes"
-	      jvm="${env.JVM}/bin/java"
-	      maxmemory="1000m" >
+              jvm="${env.JVM}/bin/java"
+              maxmemory="1000m" >
             <classpath refid="base.path"/>
         </java>
     </target>
-
+    
+    
+    <target name="compile-test" depends="JUNIT">
+        <mkdir dir="${unit.test.classes.dir}"/>
+        <javac srcdir="${testdir}"
+               verbose="${TALK}"
+               destdir="${unit.test.classes.dir}"
+               classpath="${build.base.classes.dir}"
+        >
+        </javac>
+    </target>
+    
+    <target name="clean-compile-test">
+        <delete verbose="${TALK}">
+            <fileset dir="${testdir}" includes="**/*.class" />
+        </delete>
+    </target>
+    
+    <target name="test-direct" description="Run the Unit tests" depends="compile-test" >
+        <property name="junit-text" value="junit.textui.TestRunner"/>
+        <property name="junit-swing" value="junit.swingui.TestRunner"/>
+        <java fork="true" classname="${junit-text}"
+              taskname="junit" failonerror="true">
+            <arg value="jpo.CategoryTest" />
+            <arg value="jpo.ApplicationJMenuBarTest" />
+            <classpath>
+                <pathelement location="${build.base.classes.dir}" />
+                <pathelement location="${unit.test.classes.dir}" />
+                <pathelement path="" />
+                <pathelement path="${java.class.path}" />
+            </classpath>
+        </java>
+    </target>
+    
+    <target name="test" depends="compile, compile-test">
+        <junit
+            printsummary="yes"
+            errorProperty="test.failed"
+            failureproperty="test.failed"
+            haltonfailure="yes" 
+            fork="yes"
+            showoutput="yes">
+            <formatter type="plain"/>
+            <classpath>
+                <pathelement location="${build.base.classes.dir}" />
+                <pathelement location="${unit.test.classes.dir}" />
+                <pathelement path="libs/metadata-extractor-2.3.0.jar; libs/jnlp.jar; libs/activation.jar; libs/mail.jar" />
+            </classpath>
+            <!--<test todir="${results}" name="jpo.ApplicationJMenuBarTest"/>-->
+            <batchtest todir="${results}">
+                <fileset dir="${unit.test.classes.dir}">
+                    <include name="**/*Test.class"/>
+                </fileset>
+            </batchtest>
+        </junit>
+        <fail message="Tests failed!" if="test.failed"/>
+    </target>
+    
+    
+    <target name="JUNIT">
+        <available property="junit.present" classname="junit.framework.TestCase" />
+    </target>
+    
+    
 </project>

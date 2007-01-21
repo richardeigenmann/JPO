@@ -7,7 +7,7 @@ import javax.swing.tree.*;
 /*
 QueryBrower.java:  an implementation of the ThumbnailBrowserInterface for browsing groups.
 
-Copyright (C) 2006  Richard Eigenmann.
+Copyright (C) 2006-2007  Richard Eigenmann, Zürich Switzerland
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -29,7 +29,7 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  *  displaying {@link Query} in the {@link ThumbnailJScrollPane}.
  */
 
-public class QueryBrowser implements ThumbnailBrowserInterface {
+public class QueryBrowser extends ThumbnailBrowser {
 
 	/**
 	 *  A reference to the query group that shall be browsed
@@ -103,46 +103,8 @@ public class QueryBrowser implements ThumbnailBrowserInterface {
 	 *  This method unregisters the TreeModelListener and sets the variables to null;
 	 */
 	public void cleanup () {
-		relayoutListeners.clear();
+            super.cleanup();
 	}
 
-	
-
-
-
-	/**
-	 *  A vector that holds all the listeners that need to be notified if there is a structural change.
-	 */
-	private Vector relayoutListeners = new Vector();
-
-
-	/**
-	 *  method to register a ThumbnailJScrollPane as a listener
-	 */
-	public void addRelayoutListener ( ThumbnailJScrollPane listener ) {
-		relayoutListeners.add( listener );
-	}
-
-
-	/**
-	 *  method to remove a ThumbnailJScrollPane as a listener
-	 */
-	public void removeRelayoutListener ( ThumbnailJScrollPane listener ) {
-		relayoutListeners.remove( listener );
-	}
-
-
-	/**
-	 * Method that notifies the relayoutListeners of a structural change that they need to 
-	 * respond to.
-	 */
-	private void notifyRelayoutListeners() {
-		Vector nonmodifiedVector = (Vector) relayoutListeners.clone();
-
-		Enumeration e = nonmodifiedVector.elements();
-		while ( e.hasMoreElements() ) {
-			((ThumbnailJScrollPane) e.nextElement()).assignThumbnails();
-		}
-	}
 
 }

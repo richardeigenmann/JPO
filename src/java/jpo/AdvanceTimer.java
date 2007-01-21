@@ -3,7 +3,7 @@ package jpo;
 /*
 AdvanceTimer.java:  a class that can wait a period of time and wake up a caller class
 
-Copyright (C) 2002  Richard Eigenmann.
+Copyright (C) 2002-2007  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -20,8 +20,10 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 
 
 /**
- *  This class implements a Thread waits a period of time and then calls the method 
- *  requestAdvance on it's calling object. 
+ *  This class implements a Thread that waits a period of time and then calls the method 
+ *  {@link AdvanceTimerInterface#requestAdvance()} on it's calling object. 
+ *
+ *  @see AdvanceTimerInterface
  */
 public class AdvanceTimer extends Thread {
 

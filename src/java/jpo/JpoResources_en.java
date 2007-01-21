@@ -58,9 +58,9 @@ public class JpoResources_en extends ListResourceBundle {
 		
 		// Help About Dialog
 		{"HelpAboutText", "JPO Version 0.8.5 is a Java/Swing program\n" 
-			+ "written by Richard Eigenmann, Zrich, Switzerland\n" 
-			+ "Copyright 2000 - 2004\n"
-			+ "richard_eigenmann@compuserve.com\n"
+			+ "written by Richard Eigenmann, Zürich, Switzerland\n" 
+			+ "Copyright 2000 - 2007\n"
+			+ "richard.eigenmann@gmail.com\n"
 			+ "http://j-po.sourceforge.net\n"
 			+ "\nThe Exif extration is courtesy of Drew Noakes\n"
 			+  "The Table sorter is courtesy of Philip Milne\n\n"},
@@ -412,6 +412,7 @@ public class JpoResources_en extends ListResourceBundle {
 		{"EditSettingsMenuItemText", "Settings"},
 		{"actionJMenu", "Action"},
 		{"emailJMenuItem", "Send email"},
+		{"RandomSlideshowJMenuItem", "Random Slideshow"},
 		{"HelpJMenuText", "Help"},
 		{"HelpAboutMenuItemText", "About"},
 		{"HelpLicenseMenuItemText", "License"},
