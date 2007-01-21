@@ -21,7 +21,7 @@
     <property name="src.dtd.dir" value="${src.dir}/dtd"/>
     <property name="results" location="/richi/ToDo"/>
     
-    <property name="testdir" value="test/java"/>
+    <property name="testdir" value="${src.dir}/test/java"/>
     <property name="TALK" value="true" />
     
     
