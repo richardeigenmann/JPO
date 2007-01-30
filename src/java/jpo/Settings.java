@@ -557,6 +557,14 @@ public class Settings {
      */
     public static Dimension threeDotButtonDimension = new Dimension(25, 25);
     
+    /**
+     *  This object is a handy reference for any component that wants to tell the 
+     *  main JTree for the collection to reposition itself.
+     *  ToDo: make this an interface.
+     */
+    public static CollectionJTree mainCollectionJTree = null;
+    
+    
     
     
     /**

@@ -24,7 +24,7 @@ import javax.swing.DefaultListModel;
 /*
 CollectionJTree.java:  class that creates a JTree for the collection
 
-Copyright (C) 2002-2006  Richard Eigenmann.
+Copyright (C) 2002-2007  Richard Eigenmann, Zurich, Switzerland
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -147,18 +147,6 @@ public class CollectionJTree extends JTree
 
 
 
-	/**
-	 *   Moves the highlighted row to the indicated one and makes sure it is on the screen.
-	 */
-	public void setSelectedNode( SortableDefaultMutableTreeNode selectedNode ) {
-		//Tools.log("CollectionJTree.setSelectedNode: called for node: " + selectedNode.toString() );
-		TreePath tp = new TreePath( selectedNode.getPath() );
-		setSelectionPath( tp );
-		scrollPathToVisible( tp );
-		if ( associatedInfoPanel != null ) {
-			associatedInfoPanel.showInfo( selectedNode );
-		}
-	}
 
 
 
@@ -343,16 +331,12 @@ public class CollectionJTree extends JTree
 
 
 
-	/**
-	 *  requests the group to be shown.
-	 *  @see  GroupPopupInterface
-	 */
-	public void requestShowGroup() {
-		requestShowGroup( popupNode );
-	}
 
+        
 	/**
-	 *  requests the group to be shown.
+	 *  Requests the group to be shown using the {@link #setSelectedNode()} method. Additionally requests
+         *  the Group to be shown in the ThumbnailJScrollPane.
+         *  @param newNode  The Node to which to jump
 	 *  @see  GroupPopupInterface
 	 */
 	public void requestShowGroup( SortableDefaultMutableTreeNode newNode ) {
@@ -363,6 +347,21 @@ public class CollectionJTree extends JTree
 	}
 
 
+	/**
+	 *  Moves the highlighted row to the indicated one and expands the tree if necessary. 
+         *  Also ensures that the associatedInfoPanel is updated
+         *  @param newNode  The node which should be highlighted
+	 */
+	public void setSelectedNode( SortableDefaultMutableTreeNode newNode ) {
+		//Tools.log("CollectionJTree.setSelectedNode: called for node: " + selectedNode.toString() );
+		TreePath tp = new TreePath( newNode.getPath() );
+		setSelectionPath( tp );
+		scrollPathToVisible( tp );
+		if ( associatedInfoPanel != null ) {
+			associatedInfoPanel.showInfo( newNode );
+		}
+	}
+        
 
 	/**
 	 *  requests the pictures to be shown.

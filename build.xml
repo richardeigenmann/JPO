@@ -1,12 +1,13 @@
 <?xml version="1.0"?>
 <project name="Java Picture Organizer" default="run">
     
-    <property name="app.main.class" value="jpo.Jpo"/>
+    <property name="app.main.package" value="jpo"/>
+    <property name="app.main.class" value="${app.main.package}.Jpo"/>
     
     <property name="build.dir" value="build"/>
     <property name="build.base.classes.dir" value="${build.dir}/classes"/>
     <property name="unit.test.classes.dir" value="${build.dir}/unittestclasses"/>
-    <property name="build.images.dir" value="${build.base.classes.dir}/jpo/images"/>
+    <property name="build.images.dir" value="${build.base.classes.dir}/${app.main.package}/images"/>
     <property name="build.dtd.dir" value="${build.base.classes.dir}/${app.main.package}"/>
     <property name="build.docs.dir" value="${build.dir}/docs"/>
     <property name="build.jars.dir" value="jars"/>
@@ -31,7 +32,10 @@
     <property environment="env"/>
     
     
-    <echo message="This ant build.xml file is using the following settings:"/>
+    <echo message="${ant.version} is using the following settings"/>
+    <echo message="for project &quot;${ant.project.name}&quot;:"/>
+    <echo message="Ant build file:                            ${ant.file}"/>
+    <echo message="The base directory for the project         ${basedir}"/>
     <echo message="The environment's JAVA_HOME is set to:     ${env.JAVA_HOME}"/>
     <echo message="The environment's JVM is set to:           ${env.JVM}"/>
     <echo message="The environment's ANT_HOME is set to:      ${env.ANT_HOME}"/>
@@ -40,23 +44,26 @@
     <echo message="The java source files are being read from: ${src.java.dir}"/>
     <echo message="The compiled Java .class files will go to: ${build.base.classes.dir}"/>
     <echo message="The new jar file will go to:               ${build.jars.dir}"/>
-    <echo message="KEYSTORE is set to = ${env.KEYSTORE}"/> 
+    <echo message="KEYSTORE is set to:                        ${env.KEYSTORE}"/> 
 
 
     
-    <target name="prepare">
+    <target name="prepare" description="Makes the build directory tree with mkdir">
         <mkdir dir="${build.dir}"/>
         <mkdir dir="${build.base.classes.dir}"/>
         <mkdir dir="${build.docs.dir}"/>
     </target>
     
-    <target name="clean" description="Deletes the generated files" >
+    <target name="clean" description="Deletes the build directory and all classes and jars contained in it" >
+        <delete verbose="${TALK}">
+            <fileset dir="${testdir}" includes="**/*.class" />
+        </delete>
         <delete dir="${build.dir}"/>
     </target>
     
     <target name="compile"
             depends="prepare"
-            description="Compiles the java files">
+            description="Compiles the .java files">
         <javac destdir="${build.base.classes.dir}"
                debug="off"
                optimize="off"
@@ -72,29 +79,17 @@
         <copy todir="${build.images.dir}">
             <fileset dir="${src.images.dir}">
                 <include name="**/*.gif"/>
-            </fileset>
-        </copy>
-        <copy todir="${build.images.dir}">
-            <fileset dir="${src.images.dir}">
                 <include name="**/*.jpg"/>
             </fileset>
         </copy>
         <copy todir="${build.dtd.dir}">
             <fileset dir="${src.dtd.dir}">
                 <include name="**/*.dtd"/>
-            </fileset>
-        </copy>
-        <copy todir="${build.dtd.dir}">
-            <fileset dir="${src.dtd.dir}">
                 <include name="**/gpl.txt"/>
             </fileset>
         </copy>
     </target>
     
-    
-    <target name="rebuild"
-            depends="clean, compile"
-            description="Cleans and recompiles the project"/>
     
     <target name="javadoc"
             description="Creates the JavaDoc of the project">
@@ -128,7 +123,7 @@
             description="Compile and run the project"/>
     
     
-    <target name="buildjar">
+    <target name="buildjar" depends="clean, test" description="Builds the jar file with the Jpo Classes">
         <jar destfile="${build.jars.dir}/jpo-${version}.jar"
              basedir="${build.base.classes.dir}"
              compress="yes"
@@ -142,8 +137,7 @@
     <!-- This target will only be of use to the person who wants to sign the jar file for deployment on a web server.
          It relies on the environment variables KEYSTORE and JARPWD to find the keystore and password to access this
     -->
-    <target name="signjar"
-            depends="buildjar" >
+    <target name="signjar" depends="buildjar" description="Signs the Jpo jar file">
         <signjar jar="${build.jars.dir}/jpo-${version}.jar" 
                  alias="richi"
                  keystore="${env.KEYSTORE}"
@@ -160,20 +154,19 @@
     <!-- Not the following one doesn't exclude properly though if run on the command line it works.
     	so simply run:
     	zip  -9 -r web/jpo-src-0.8.4.zip ../Jpo -x  \*.zip \*.class \*.ini \*.dta
-     -->
     <target name="sourcezip">
         <delete file="${basedir}/web/jpo-src-${version}.zip"/>
         <exec dir=".." executable="zip">
             <arg line="-9 -r ${basedir}/web/jpo-src-${version}.zip Jpo -x \*.zip \*.class \*.ini \*.dta  "/> 
         </exec>
     </target>
+     -->
     
     
     <!-- This target will only be of use to the person who does the deployment of JPO to souceforge.
          It relies on the environment variables SOURCEFORGEUSER and SORUVEFORGEPWD for the authentication.
     -->
-    <target name="publish" 
-            depends="signjar" >
+    <target name="publish" depends="signjar" description="Publishes the lates Jpo Version to the SourceForge project">
         <!--  <scp file="${build.jars.dir}/jpo-${version}.jar" 
 		todir="${env.SOURCFORGEUSER}@shell.sourceforge.net:/home/groups/j/j-/j-po/htdocs"
 		password="${env.SOURCFORGEPWD}"
@@ -231,7 +224,6 @@
 	/> -->
     </target>    
     
-    <!-- jvm="${env.JAVA_HOME}/bin/java"-->
     
     <target name="run" description="Runs the program" depends="compile">
         <java classname="${app.main.class}"
@@ -241,9 +233,10 @@
             <classpath refid="base.path"/>
         </java>
     </target>
+
+   
     
-    
-    <target name="compile-test" depends="JUNIT">
+    <target name="compile-test" depends="JUNIT, compile" description="Compiles the JUnit test cases">
         <mkdir dir="${unit.test.classes.dir}"/>
         <javac srcdir="${testdir}"
                verbose="${TALK}"
@@ -253,13 +246,8 @@
         </javac>
     </target>
     
-    <target name="clean-compile-test">
-        <delete verbose="${TALK}">
-            <fileset dir="${testdir}" includes="**/*.class" />
-        </delete>
-    </target>
     
-    <target name="test-direct" description="Run the Unit tests" depends="compile-test" >
+    <target name="test-direct" description="Run individual Unit tests" depends="compile-test" >
         <property name="junit-text" value="junit.textui.TestRunner"/>
         <property name="junit-swing" value="junit.swingui.TestRunner"/>
         <java fork="true" classname="${junit-text}"
@@ -275,7 +263,8 @@
         </java>
     </target>
     
-    <target name="test" depends="compile, compile-test">
+
+    <target name="test" depends="compile-test" description="Runs the unit tests">
         <junit
             printsummary="yes"
             errorProperty="test.failed"
@@ -283,7 +272,7 @@
             haltonfailure="yes" 
             fork="yes"
             showoutput="yes">
-            <formatter type="plain"/>
+            <formatter type="plain" usefile="false"/>
             <classpath>
                 <pathelement location="${build.base.classes.dir}" />
                 <pathelement location="${unit.test.classes.dir}" />
@@ -300,7 +289,7 @@
     </target>
     
     
-    <target name="JUNIT">
+    <target name="JUNIT" description="Checks if JUnit is available">
         <available property="junit.present" classname="junit.framework.TestCase" />
     </target>
     

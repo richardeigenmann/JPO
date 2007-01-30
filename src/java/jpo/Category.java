@@ -63,7 +63,7 @@ public class Category implements Serializable {
     
     /**
      *  variable that records the state of the Category
-     *  @see #undefined, #selected, #unSelected, #both
+     *  @see Category#undefined , Category#selected , Category#unSelected , Category#both
      */
     private int status = 0;
     

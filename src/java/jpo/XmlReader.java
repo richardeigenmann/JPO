@@ -13,7 +13,7 @@ import javax.swing.tree.*;
 /*
 XmlReader.java:  class that reads the xml file
 
-Copyright (C) 2002, 2006  Richard Eigenmann.
+Copyright (C) 2002, 2007  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -65,19 +65,18 @@ public class XmlReader extends DefaultHandler {
 	 *                      the context and is not set by the parser.
 	 */
 	public XmlReader ( InputStream inputStream, SortableDefaultMutableTreeNode startNode ) {
-
 		BufferedInputStream bufferedInputStream = new BufferedInputStream ( inputStream );
-		
-		// Tools.log( "Reading: " + inputFile );
+
+		//Tools.log( "Reading: " + inputFile );
 		currentGroup = startNode;
-		// currentGroup.removeAllChildren();
 		
 		// Use the validating parser
 		SAXParserFactory factory = SAXParserFactory.newInstance();
 		factory.setValidating( true );
+		//factory.setValidating( false );
+                //factory.setSchema( null );
 		//factory.setNamespaceAware(true);
 		try {
-
 			// Parse the input
 			SAXParser saxParser = factory.newSAXParser();
 			//saxParser.getXMLReader().setEntityResolver( this );
@@ -105,12 +104,12 @@ public class XmlReader extends DefaultHandler {
 			//x.printStackTrace();
 
 		} catch (ParserConfigurationException pce) {
-			Tools.log("XmlReader: Parser with specified options can't be built");
+			Tools.log("XmlReader: Parser with specified options can't be built" + pce.getMessage() );
 			//pce.printStackTrace();
 
 		} catch (IOException ioe) {
-			Tools.log("XmlReader: I/O error");
-			//ioe.printStackTrace();
+			Tools.log( "XmlReader: I/O error: " + ioe.getMessage() );
+			ioe.printStackTrace();
 		}
 		
 		correctJarReferences( startNode );
@@ -287,7 +286,6 @@ public class XmlReader extends DefaultHandler {
 	 *  try to resolve where the file belongs
 	 */
 	public InputSource resolveEntity (String publicId, String systemId) {
-		//ClassLoader cl = this.getClass().getClassLoader();
 		return  new InputSource( Settings.cl.getResourceAsStream( "jpo/collection.dtd" ) );
 	}
 

@@ -270,12 +270,13 @@ public class Jpo extends JFrame
         
         
         // Set up the communication between the JTree and the Thumbnail Pane
-        collectionJTree.setAssociatedThumbnailJScrollpane( thumbnailJScrollPane ) ;
-        collectionJTree.setAssociatedInfoPanel( infoPanel ) ;
-        searchesJTree.setAssociatedThumbnailJScrollpane( thumbnailJScrollPane ) ;
-        searchesJTree.setAssociatedInfoPanel( infoPanel ) ;
+        collectionJTree.setAssociatedThumbnailJScrollpane( thumbnailJScrollPane );
+        collectionJTree.setAssociatedInfoPanel( infoPanel );
+        searchesJTree.setAssociatedThumbnailJScrollpane( thumbnailJScrollPane );
+        searchesJTree.setAssociatedInfoPanel( infoPanel );
         thumbnailJScrollPane.setAssociatedCollectionJTree( collectionJTree );
-        thumbnailJScrollPane.setAssociatedInfoPanel( infoPanel ) ;
+        thumbnailJScrollPane.setAssociatedInfoPanel( infoPanel );
+        Settings.mainCollectionJTree = collectionJTree;
         
         infoPanel.addComponentListener(new ComponentAdapter() {
             public void componentResized( ComponentEvent event ) {

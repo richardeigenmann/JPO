@@ -24,7 +24,7 @@ import javax.swing.DefaultListModel;
 /*
 QueriesJTree.java:  class that creates a JTree to display the queries
 
-Copyright (C) 2006  Richard Eigenmann.
+Copyright (C) 2006-2007  Richard Eigenmann, Zurich, Switzerland
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2

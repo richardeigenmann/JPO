@@ -16,7 +16,7 @@ import javax.swing.Timer;
 /*
 IntegrityChecker.java:  creates a frame and checks the integrity of the collection
 
-Copyright (C) 2002  Richard Eigenmann.
+Copyright (C) 2002-2007  Richard Eigenmann, Zurich, Switzerland
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2

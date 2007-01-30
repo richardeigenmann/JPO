@@ -663,11 +663,11 @@ public class PictureViewer extends JPanel
 		});
 
 
-		Rectangle virtualBounds = ScreenHelper.getSecondaryScreenBounds();
-		virtualBounds.height = virtualBounds.height - Settings.leaveForPanel;
+		//Rectangle virtualBounds = ScreenHelper.getSecondaryScreenBounds();
+		//virtualBounds.height = virtualBounds.height - Settings.leaveForPanel;
 
 		if ( windowMode == WINDOW_FULLSCREEN ) {
-			myJFrame.setBounds( virtualBounds );
+			myJFrame.setBounds( ScreenHelper.getFullScreenBounds() );
 		} else if ( windowMode == WINDOW_LEFT ) {
 			myJFrame.setBounds( ScreenHelper.getLeftScreenBounds() );
 		} else if ( windowMode == WINDOW_RIGHT ) {
@@ -675,19 +675,11 @@ public class PictureViewer extends JPanel
 		} else if ( windowMode == WINDOW_TOP_LEFT ) {
 			myJFrame.setBounds( ScreenHelper.getTopLeftScreenBounds() );
 		} else if ( windowMode == WINDOW_TOP_RIGHT ) {
-			myJFrame.setBounds( new Rectangle (
-				(int) virtualBounds.width / 2, 
-				0,
-				(int) virtualBounds.width / 2,
-				(int) virtualBounds.height / 2 ) );
+			myJFrame.setBounds( ScreenHelper.getTopRightScreenBounds() );
 		} else if ( windowMode == WINDOW_BOTTOM_LEFT ) {
 			myJFrame.setBounds( ScreenHelper.getBottomLeftScreenBounds() );
 		} else if ( windowMode == WINDOW_BOTTOM_RIGHT ) {
-			myJFrame.setBounds( new Rectangle (
-				(int) virtualBounds.width / 2,
-				(int) virtualBounds.height / 2, 
-				(int) virtualBounds.width / 2,
-				(int) virtualBounds.height / 2 ) );
+			myJFrame.setBounds( ScreenHelper.getBottomRightScreenBounds() );
 		} else if ( windowMode == WINDOW_DEFAULT ) {
 			myJFrame.setSize( Settings.pictureViewerDefaultDimensions.getSize() );
 			myJFrame.setLocation( Settings.pictureViewerDefaultDimensions.getLocation() );
@@ -795,7 +787,7 @@ public class PictureViewer extends JPanel
 	 *  method to toggle to a frameless window.
 	 **/
 	private void requestPopupMenu() {
-		PicturePopupMenu pm = new PicturePopupMenu( currentNode );
+		PicturePopupMenu pm = new PicturePopupMenu( mySetOfNodes, myIndex, this );
 		pm.show( fullScreenJButton, 0, (int) (0 - pm.getSize().getHeight()) );
 		myJFrame.getGlassPane().requestFocus();
 	}

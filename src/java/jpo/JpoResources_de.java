@@ -5,7 +5,7 @@ import java.util.*;
 /*
 JpoResources_de.java:  class that holds the German Language generic labels for the JPO application
 
-Copyright (C) 2002-2007  Richard Eigenmann.
+Copyright (C) 2002-2007  Richard Eigenmann, Zürich, Switzerland
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -344,6 +344,8 @@ public class JpoResources_de extends ListResourceBundle {
 		{"movePictureToBottomJMenuItem", "zuunterst"},
 		{"recentDropNodePrefix", "Zu Gruppe: "},
 		{"categoryUsagetJMenuItem", "Kategorien"},
+                {"navigationJMenu", "Springe zu"},
+
 
 		// ThumbnailJScrollPane
 		{"ThumbnailSearchResults", "Suchresultate für: "},

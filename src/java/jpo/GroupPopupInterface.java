@@ -34,8 +34,8 @@ public interface GroupPopupInterface {
 	/**
 	 * the implementing class must trap and do something when the user wants to
 	 * show the Group.
-	 */
-	public void requestShowGroup();
+	 *
+	public void requestShowGroup();*/
 
 	/**
 	 * the implementing class must trap and do something when the user wants to

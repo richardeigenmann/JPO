@@ -267,7 +267,7 @@ class GroupPopupMenu extends JPopupMenu
 			= new JMenuItem( Settings.jpoResources.getString( "groupShowJMenuItem" ) );
 		groupShowJMenuItem.addActionListener( new ActionListener() {
 			public void actionPerformed( ActionEvent e ) {
-				caller.requestShowGroup();				
+				caller.requestShowGroup( node );				
 			}
 		});
 		add( groupShowJMenuItem );
@@ -281,7 +281,11 @@ class GroupPopupMenu extends JPopupMenu
 		});
 		add( groupSlideshowJMenuItem );
 
-		groupFindJMenuItem.addActionListener( this );
+		groupFindJMenuItem.addActionListener( new ActionListener() {
+			public void actionPerformed( ActionEvent e ) {
+				caller.requestFind();				
+			}
+		});
 		add(groupFindJMenuItem);
 
 		addSeparator();
@@ -318,20 +322,36 @@ class GroupPopupMenu extends JPopupMenu
 
 			addSeparator();
 
-			groupTableJMenuItem.addActionListener( this );
+			groupTableJMenuItem.addActionListener( new ActionListener() {
+				public void actionPerformed( ActionEvent e ) {
+					caller.requestEditGroupTable();
+				}
+			});
 			add( groupTableJMenuItem );
 
 			addSeparator();
 
 			add( addGroupJMenu );
 
-			addNewGroupJMenuItem.addActionListener( this );
+			addNewGroupJMenuItem.addActionListener( new ActionListener() {
+				public void actionPerformed( ActionEvent e ) {
+					caller.requestAddGroup();
+				}
+			});
 			addGroupJMenu.add( addNewGroupJMenuItem );
 
-			addPicturesJMenuItem.addActionListener( this );
+			addPicturesJMenuItem.addActionListener( new ActionListener() {
+				public void actionPerformed( ActionEvent e ) {
+					caller.requestAdd();
+				}
+			});
 			addGroupJMenu.add( addPicturesJMenuItem );
 
-			addCollectionJMenuItem.addActionListener( this );
+			addCollectionJMenuItem.addActionListener( new ActionListener() {
+				public void actionPerformed( ActionEvent e ) {
+					caller.requestAddCollection();
+				}
+			});
 			addGroupJMenu.add( addCollectionJMenuItem );
 
 
@@ -457,19 +477,7 @@ class GroupPopupMenu extends JPopupMenu
 	 *  method that analyses the user initiated action and performs what the user reuqested.
 	 **/
 	public void actionPerformed( ActionEvent e ) {
-		// Group popup menu				
-
-		if ( e.getSource() == groupFindJMenuItem )
-			caller.requestFind();
-
-		else if ( e.getSource() == groupTableJMenuItem )
-			caller.requestEditGroupTable();
-
-		else if ( e.getSource() == addNewGroupJMenuItem )
-			caller.requestAddGroup();				
-		else if ( e.getSource() == addPicturesJMenuItem )
-			caller.requestAdd();				
-		else if ( e.getSource() == addCollectionJMenuItem )
+                if ( e.getSource() == addCollectionJMenuItem )
 			caller.requestAddCollection();				
 		else if ( e.getSource() == groupExportHtml ) 
 			caller.requestGroupExportHtml();
@@ -499,25 +507,23 @@ class GroupPopupMenu extends JPopupMenu
 		}
 
 
-		else if (e.getSource() == sortByDescriptionJMenuItem )			
+		else if (e.getSource() == sortByDescriptionJMenuItem )
 			caller.requestSort( Settings.DESCRIPTION );
-		else if (e.getSource() == sortByFilmReferenceJMenuItem )			
+		else if (e.getSource() == sortByFilmReferenceJMenuItem )
 			caller.requestSort( Settings.FILM_REFERENCE );
-		else if (e.getSource() == sortByCreationTimeJMenuItem )			
+		else if (e.getSource() == sortByCreationTimeJMenuItem )
 			caller.requestSort( Settings.CREATION_TIME );
-		else if (e.getSource() == sortByCommentJMenuItem )			
+		else if (e.getSource() == sortByCommentJMenuItem )
 			caller.requestSort( Settings.COMMENT );
-		else if (e.getSource() == sortByPhotographerJMenuItem )			
+		else if (e.getSource() == sortByPhotographerJMenuItem )
 			caller.requestSort( Settings.PHOTOGRAPHER );
-		else if (e.getSource() == sortByCopyrightHolderTimeJMenuItem )			
+		else if (e.getSource() == sortByCopyrightHolderTimeJMenuItem )
 			caller.requestSort( Settings.COPYRIGHT_HOLDER );
-
-		else 
-			JOptionPane.showMessageDialog(null, 
-				"GroupPopupMenu.java: Unknown event", 
-				"Error", 
+		else
+			JOptionPane.showMessageDialog(null,
+				"GroupPopupMenu.java: Unknown event",
+				"Error",
 				JOptionPane.ERROR_MESSAGE);
-			
 	}
 
 
