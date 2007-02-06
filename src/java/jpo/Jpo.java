@@ -5,6 +5,10 @@ import java.util.*;
 import java.text.*;
 import java.awt.*;
 import java.awt.event.*;
+import javax.jnlp.BasicService;
+import javax.jnlp.PersistenceService;
+import javax.jnlp.ServiceManager;
+import javax.jnlp.UnavailableServiceException;
 import javax.swing.*;
 
 /*
@@ -91,10 +95,10 @@ public class Jpo extends JFrame
         String jvmVersion = System.getProperty( "java.version");
         String jvmMainVersion = jvmVersion.substring(0, jvmVersion.lastIndexOf("."));
         float jvmVersionFloat = Float.parseFloat( jvmMainVersion );
-        if ( jvmVersionFloat < 1.4f ) {
+        if ( jvmVersionFloat < 1.5f ) {
             String message = "The JPO application uses new graphics features\n"
                     +  "that were added to the Java language in version\n"
-                    +  "1.4.0. You are using version "
+                    +  "1.5.0. You are using version "
                     +  jvmVersion
                     +  " and must upgrade.\n";
             System.out.println( message );
@@ -121,13 +125,12 @@ public class Jpo extends JFrame
      **/
     public Jpo() {
         System.out.println("\nJPO version 0.8.5\n"
-                + "Copyright (C) 2000-2006 Richard Eigenmann\n"
+                + "Copyright (C) 2000-2007 Richard Eigenmann\n"
                 + "JPO comes with ABSOLUTELY NO WARRANTY;\n"
                 + "for details Look at the Help | License menu item.\n"
                 + "This is free software, and you are welcome\n"
                 + "to redistribute it under certain conditions;\n"
                 + "see Help | License for details.\n\n");
-        
         
         addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
@@ -135,7 +138,6 @@ public class Jpo extends JFrame
                 closeJpo();
             }
         });
-        
         
         Settings.loadSettings();
         

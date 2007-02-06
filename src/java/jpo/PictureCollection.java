@@ -34,7 +34,7 @@ public class PictureCollection {
      *  Constructs a new PictureCollection object.
      */
     public PictureCollection() {
-        rootNode = new SortableDefaultMutableTreeNode( true );
+        rootNode = new SortableDefaultMutableTreeNode( new Object() );
         treeModel = new DefaultTreeModel( getRootNode() );
         //createQueriesTreeModel();
         categories = new HashMap();

@@ -862,7 +862,6 @@ public class Settings {
      *  on 11.11.2007, a year after implementing the Preferences in Jpo.
      */
     private static void convertOldSettings() {
-        Tools.log( "Settings.convertOldSettings: invoked." );
         try {
             PersistenceService ps = (PersistenceService) ServiceManager.lookup( "javax.jnlp.PersistenceService" );
             BasicService bs = (BasicService) ServiceManager.lookup( "javax.jnlp.BasicService" );

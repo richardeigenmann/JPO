@@ -10,7 +10,7 @@
     <property name="build.images.dir" value="${build.base.classes.dir}/${app.main.package}/images"/>
     <property name="build.dtd.dir" value="${build.base.classes.dir}/${app.main.package}"/>
     <property name="build.docs.dir" value="${build.dir}/docs"/>
-    <property name="build.jars.dir" value="jars"/>
+    <property name="build.jars.dir" value="${build.dir}/jars"/>
     <property name="version" value="0.8.5"/>
     
     <property name="libs.dir" value="libs"/>
@@ -32,19 +32,19 @@
     <property environment="env"/>
     
     
-    <echo message="${ant.version} is using the following settings"/>
-    <echo message="for project &quot;${ant.project.name}&quot;:"/>
-    <echo message="Ant build file:                            ${ant.file}"/>
-    <echo message="The base directory for the project         ${basedir}"/>
-    <echo message="The environment's JAVA_HOME is set to:     ${env.JAVA_HOME}"/>
-    <echo message="The environment's JVM is set to:           ${env.JVM}"/>
-    <echo message="The environment's ANT_HOME is set to:      ${env.ANT_HOME}"/>
-    <echo message="The environment's PATH is set to:          ${env.PATH}"/>
-    <echo/>
-    <echo message="The java source files are being read from: ${src.java.dir}"/>
-    <echo message="The compiled Java .class files will go to: ${build.base.classes.dir}"/>
-    <echo message="The new jar file will go to:               ${build.jars.dir}"/>
-    <echo message="KEYSTORE is set to:                        ${env.KEYSTORE}"/> 
+    <echo message="${ant.version} is using the "/>
+    <echo message="build file ${ant.file} to build the project"/>
+    <echo message="&quot;${ant.project.name}&quot; Use the &quot;-debug&quot; switch to see loads of"/>
+    <echo message="debug information, &quot;ant --help&quot; reminds you of what other options"/>
+    <echo message="there are and &quot;ant -p&quot; tells you what targets this build file supports."/>
+    
+    <!-- <echo message="The base directory for the project         ${basedir}"/> -->
+    <!-- <echo message="The environment's JAVA_HOME is set to:     ${env.JAVA_HOME}"/> -->
+    <!-- <echo message="The environment's PATH is set to:          ${env.PATH}"/> -->
+    <!-- <echo message="The java source files are being read from: ${src.java.dir}"/> -->
+    <!-- <echo message="The compiled Java .class files will go to: ${build.base.classes.dir}"/> -->
+    <!-- <echo message="The new jar file will go to:               ${build.jars.dir}"/> -->
+    <!-- <echo message="KEYSTORE is set to:                        ${env.KEYSTORE}"/>  -->
 
 
     
@@ -52,6 +52,7 @@
         <mkdir dir="${build.dir}"/>
         <mkdir dir="${build.base.classes.dir}"/>
         <mkdir dir="${build.docs.dir}"/>
+        <mkdir dir="${build.jars.dir}"/>
     </target>
     
     <target name="clean" description="Deletes the build directory and all classes and jars contained in it" >
@@ -65,14 +66,15 @@
             depends="prepare"
             description="Compiles the .java files">
         <javac destdir="${build.base.classes.dir}"
-               debug="off"
+               debug="on"
                optimize="off"
                verbose="off"
                memoryMaximumSize="500m"
                fork="yes"
                listfiles="yes"
                deprecation="yes"
-               compiler="modern">
+               compiler="modern"
+               source="1.5">
             <src path="${src.java.dir}"/>
             <classpath refid="base.path"/>
         </javac>
@@ -100,11 +102,11 @@
         </copy>
         <javadoc destdir="${build.docs.dir}"
                  packagenames="jpo.*"
-                 Overview="src/docsrc/Overview.html"
+                 Overview="${src.docs.dir}/Overview.html"
                  Doctitle="JPO application documentation"
                  Windowtitle="JPO application documentation"
                  Header="JPO application documentation"
-                 Bottom="&lt;font size=&quot;-1&quot;&gt;Copyright (c) 2002 - 2006 by Richard Eigenmann &lt;a href=&quot;http://www.lomumba.ch/richi&quot;&gt;wwwlomumba.ch/richi&lt;/a&gt;&lt;/font&gt;"
+                 Bottom="&lt;font size=&quot;-1&quot;&gt;Copyright (c) 2002 - 2007 by Richard Eigenmann &lt;a href=&quot;http://www.lomumba.ch/richi&quot;&gt;wwwlomumba.ch/richi&lt;/a&gt;&lt;/font&gt;"
                  author="true"
                  version="true"
                  use="true"
@@ -123,118 +125,87 @@
             description="Compile and run the project"/>
     
     
-    <target name="buildjar" depends="clean, test" description="Builds the jar file with the Jpo Classes">
+    <target name="buildjar" depends="compile, test" description="Builds the  file containing the Jpo Classes">
         <jar destfile="${build.jars.dir}/jpo-${version}.jar"
              basedir="${build.base.classes.dir}"
              compress="yes"
-             manifest="${build.jars.dir}/Manifest.jpo.jar"
-             duplicate="fail"
-             excludes="docs/ api/"
-        />
+             duplicate="fail" >
+            <manifest>
+                <attribute name="Main-Class" value="${app.main.class}"/>
+                <attribute name="Class-Path" value="metadata-extractor-2.3.0.jar jnlp.jar activation.jar mail.jar" />
+                <section name="Copyright">
+                    <attribute name="Copy" value="(c) 2001-2007, Richard Eigenmann, Zürich, Switzerland"/>
+                </section>
+            </manifest>
+        </jar>
+        <copy todir="${build.jars.dir}">
+            <fileset dir="${libs.dir}">
+                <include name="**/*.jar"/>
+            </fileset>
+        </copy>
     </target>
     
     
     <!-- This target will only be of use to the person who wants to sign the jar file for deployment on a web server.
          It relies on the environment variables KEYSTORE and JARPWD to find the keystore and password to access this
+	 buildjar
     -->
-    <target name="signjar" depends="buildjar" description="Signs the Jpo jar file">
+    <target name="signjar" depends="buildjar" description="Signs the jpo-${version}.jar jar file with the key in the keystore ${env.KEYSTORE} using the password ${env.JARPWD}">
         <signjar jar="${build.jars.dir}/jpo-${version}.jar" 
                  alias="richi"
                  keystore="${env.KEYSTORE}"
                  storepass="${env.JARPWD}"
         />
-        <signjar jar="libs/metadata-extractor-2.3.0.jar" 
+        <signjar jar="${build.jars.dir}/metadata-extractor-2.3.0.jar" 
                  alias="richi"
                  keystore="${env.KEYSTORE}"
                  storepass="${env.JARPWD}"
         />
     </target>
-    
-    
-    <!-- Not the following one doesn't exclude properly though if run on the command line it works.
-    	so simply run:
-    	zip  -9 -r web/jpo-src-0.8.4.zip ../Jpo -x  \*.zip \*.class \*.ini \*.dta
-    <target name="sourcezip">
-        <delete file="${basedir}/web/jpo-src-${version}.zip"/>
-        <exec dir=".." executable="zip">
-            <arg line="-9 -r ${basedir}/web/jpo-src-${version}.zip Jpo -x \*.zip \*.class \*.ini \*.dta  "/> 
-        </exec>
+
+    <target name="runjar" description="Runs the program from the jar" depends="buildjar">
+        <java jar="${build.jars.dir}/jpo-${version}.jar"
+              fork="yes"
+              maxmemory="1000m">
+        </java>
     </target>
-     -->
+    
     
     
     <!-- This target will only be of use to the person who does the deployment of JPO to souceforge.
          It relies on the environment variables SOURCEFORGEUSER and SORUVEFORGEPWD for the authentication.
     -->
     <target name="publish" depends="signjar" description="Publishes the lates Jpo Version to the SourceForge project">
-        <!--  <scp file="${build.jars.dir}/jpo-${version}.jar" 
-		todir="${env.SOURCFORGEUSER}@shell.sourceforge.net:/home/groups/j/j-/j-po/htdocs"
-		password="${env.SOURCFORGEPWD}"
+   	<scp localfile="web/index.html" 
+		todir="${env.SOURCFORGEUSER}:${env.SOURCFORGEPWD}@shell.sourceforge.net:/home/groups/j/j-/j-po/htdocs"
 		trust="yes"
-	/>
-   	<scp file="web/index.html" 
-		todir="${env.SOURCFORGEUSER}@shell.sourceforge.net:/home/groups/j/j-/j-po/htdocs"
-		password="${env.SOURCFORGEPWD}"
-		trust="yes"
-	/>
-   	<scp file="web/jpo-${version}.jnlp" 
-		todir="${env.SOURCFORGEUSER}@shell.sourceforge.net:/home/groups/j/j-/j-po/htdocs"
-		password="${env.SOURCFORGEPWD}"
-		trust="yes"
-	/>
-   	<scp file="web/jpo-devel.jnlp" 
-		todir="${env.SOURCFORGEUSER}@shell.sourceforge.net:/home/groups/j/j-/j-po/htdocs"
-		password="${env.SOURCFORGEPWD}"
-		trust="yes"
-	/>
-   	<scp file="web/jpo-stable.jnlp" 
-		todir="${env.SOURCFORGEUSER}@shell.sourceforge.net:/home/groups/j/j-/j-po/htdocs"
-		password="${env.SOURCFORGEPWD}"
-		trust="yes"
-	/>
-   	<scp file="web/jnlp.jnlp" 
-		todir="${env.SOURCFORGEUSER}@shell.sourceforge.net:/home/groups/j/j-/j-po/htdocs"
-		password="${env.SOURCFORGEPWD}"
-		trust="yes"
-	/>
-   	<scp file="web/activation.jnlp" 
-		todir="${env.SOURCFORGEUSER}@shell.sourceforge.net:/home/groups/j/j-/j-po/htdocs"
-		password="${env.SOURCFORGEPWD}"
-		trust="yes"
-	/>
-   	<scp file="web/mail.jnlp" 
-		todir="${env.SOURCFORGEUSER}@shell.sourceforge.net:/home/groups/j/j-/j-po/htdocs"
-		password="${env.SOURCFORGEPWD}"
-		trust="yes"
-	/>
-   	<scp file="libs/metadata-extractor-2.3.0.jar" 
-		todir="${env.SOURCFORGEUSER}@shell.sourceforge.net:/home/groups/j/j-/j-po/htdocs"
-		password="${env.SOURCFORGEPWD}"
-		trust="yes"
-	/>
-   	<scp file="libs/activation.jar" 
-		todir="${env.SOURCFORGEUSER}@shell.sourceforge.net:/home/groups/j/j-/j-po/htdocs"
-		password="${env.SOURCFORGEPWD}"
-		trust="yes"
-	/>
-   	<scp file="libs/mail.jar" 
-		todir="${env.SOURCFORGEUSER}@shell.sourceforge.net:/home/groups/j/j-/j-po/htdocs"
-		password="${env.SOURCFORGEPWD}"
-		trust="yes"
-	/> -->
+                verbose="no" >
+                    <fileset dir="web">
+                        <include name="**/*.html"/>
+                        <include name="**/*.jnlp"/>
+                        <include name="**/fontconfig"/>
+                    </fileset>
+                    <!-- <fileset dir="${build.jars.dir}">
+                        <include name="**/*.jar"/>
+                    </fileset>  -->
+       </scp>
     </target>    
     
     
     <target name="run" description="Runs the program" depends="compile">
         <java classname="${app.main.class}"
               fork="yes"
-              jvm="${env.JVM}/bin/java"
               maxmemory="1000m" >
             <classpath refid="base.path"/>
         </java>
     </target>
+    
+    
 
-   
+    
+    
+    
+    
     
     <target name="compile-test" depends="JUNIT, compile" description="Compiles the JUnit test cases">
         <mkdir dir="${unit.test.classes.dir}"/>
@@ -263,7 +234,7 @@
         </java>
     </target>
     
-
+    
     <target name="test" depends="compile-test" description="Runs the unit tests">
         <junit
             printsummary="yes"
@@ -292,6 +263,10 @@
     <target name="JUNIT" description="Checks if JUnit is available">
         <available property="junit.present" classname="junit.framework.TestCase" />
     </target>
-    
+
+   <target name="JSCH" description="Checks if JSch is available">
+        <available property="jsch.present" classname="jsch.JSCh" />
+    </target>
+
     
 </project>
