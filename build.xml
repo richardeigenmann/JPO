@@ -272,14 +272,19 @@
     <!-- <property name="cvsroot" value=":ext:richieigenmann@j-po.cvs.sourceforge.net:/cvsroot/j-po"/> -->
     <property name="cvsroot" value=":pserver:anonymous@j-po.cvs.sourceforge.net:/cvsroot/j-po"/>
     
-    <target name="cvscheckout" description="">
+    <target name="cvscheckout" description="Checks out a new version of the Jpo source from Sourceforge">
         <!-- Sourceforge doesn't use .cvspass instead uses the user's ssh public key <cvspass cvsroot="${cvsroot}" password="${SOURCEFORGEPWD}"/> -->
         <cvs cvsroot="${cvsroot}" command="checkout Jpo"/>
     </target>
     
-    <target name="cvsupdate" description="">
+    <target name="cvsupdate" description="Updates the Jpo source from Sourceforge">
         <!-- Sourceforge doesn't use .cvspass instead uses the user's ssh public key <cvspass cvsroot="${cvsroot}" password="${SOURCEFORGEPWD}"/> -->
         <cvs cvsroot="${cvsroot}" command="update -P"/>
+    </target>
+    
+    <target name="cvscommit" description="Updates the Jpo source from Sourceforge">
+        <!-- Sourceforge doesn't use .cvspass instead uses the user's ssh public key <cvspass cvsroot="${cvsroot}" password="${SOURCEFORGEPWD}"/> -->
+        <cvs cvsroot="${cvsroot}" command="commit"/>
     </target>
     
 </project>
