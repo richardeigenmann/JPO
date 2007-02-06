@@ -162,7 +162,7 @@
                  storepass="${env.JARPWD}"
         />
     </target>
-
+    
     <target name="runjar" description="Runs the program from the jar" depends="buildjar">
         <java jar="${build.jars.dir}/jpo-${version}.jar"
               fork="yes"
@@ -176,19 +176,19 @@
          It relies on the environment variables SOURCEFORGEUSER and SORUVEFORGEPWD for the authentication.
     -->
     <target name="publish" depends="signjar" description="Publishes the lates Jpo Version to the SourceForge project">
-   	<scp localfile="web/index.html" 
-		todir="${env.SOURCFORGEUSER}:${env.SOURCFORGEPWD}@shell.sourceforge.net:/home/groups/j/j-/j-po/htdocs"
-		trust="yes"
-                verbose="no" >
-                    <fileset dir="web">
-                        <include name="**/*.html"/>
-                        <include name="**/*.jnlp"/>
-                        <include name="**/fontconfig"/>
-                    </fileset>
-                    <!-- <fileset dir="${build.jars.dir}">
+        <scp localfile="web/index.html" 
+         todir="${env.SOURCFORGEUSER}:${env.SOURCFORGEPWD}@shell.sourceforge.net:/home/groups/j/j-/j-po/htdocs"
+         trust="yes"
+         verbose="no" >
+            <fileset dir="web">
+                <include name="**/*.html"/>
+                <include name="**/*.jnlp"/>
+                <include name="**/fontconfig"/>
+            </fileset>
+            <!-- <fileset dir="${build.jars.dir}">
                         <include name="**/*.jar"/>
                     </fileset>  -->
-       </scp>
+        </scp>
     </target>    
     
     
@@ -201,7 +201,7 @@
     </target>
     
     
-
+    
     
     
     
@@ -263,10 +263,18 @@
     <target name="JUNIT" description="Checks if JUnit is available">
         <available property="junit.present" classname="junit.framework.TestCase" />
     </target>
-
-   <target name="JSCH" description="Checks if JSch is available">
+    
+    <target name="JSCH" description="Checks if JSch is available">
         <available property="jsch.present" classname="jsch.JSCh" />
     </target>
 
+    
+    <!-- <property name="cvsroot" value=":ext:richieigenmann@j-po.cvs.sourceforge.net:/cvsroot/j-po"/> -->
+    <property name="cvsroot" value=":pserver:anonymous@j-po.cvs.sourceforge.net:/cvsroot/j-po"/>
+    
+    <target name="cvstoy" description="">
+        <!-- Sourceforge doesn't use .cvspass instead uses the user's ssh public key <cvspass cvsroot="${cvsroot}" password="${SOURCEFORGEPWD}"/> -->
+        <cvs cvsroot="${cvsroot}" command="checkout Jpo"/>
+    </target>
     
 </project>
