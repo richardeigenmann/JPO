@@ -177,9 +177,9 @@
     -->
     <target name="publish" depends="signjar" description="Publishes the lates Jpo Version to the SourceForge project">
         <scp localfile="web/index.html" 
-         todir="${env.SOURCFORGEUSER}:${env.SOURCFORGEPWD}@shell.sourceforge.net:/home/groups/j/j-/j-po/htdocs"
-         trust="yes"
-         verbose="no" >
+             todir="${env.SOURCFORGEUSER}:${env.SOURCFORGEPWD}@shell.sourceforge.net:/home/groups/j/j-/j-po/htdocs"
+             trust="yes"
+             verbose="no" >
             <fileset dir="web">
                 <include name="**/*.html"/>
                 <include name="**/*.jnlp"/>
@@ -267,14 +267,19 @@
     <target name="JSCH" description="Checks if JSch is available">
         <available property="jsch.present" classname="jsch.JSCh" />
     </target>
-
+    
     
     <!-- <property name="cvsroot" value=":ext:richieigenmann@j-po.cvs.sourceforge.net:/cvsroot/j-po"/> -->
     <property name="cvsroot" value=":pserver:anonymous@j-po.cvs.sourceforge.net:/cvsroot/j-po"/>
     
-    <target name="cvstoy" description="">
+    <target name="cvscheckout" description="">
         <!-- Sourceforge doesn't use .cvspass instead uses the user's ssh public key <cvspass cvsroot="${cvsroot}" password="${SOURCEFORGEPWD}"/> -->
         <cvs cvsroot="${cvsroot}" command="checkout Jpo"/>
+    </target>
+    
+    <target name="cvsupdate" description="">
+        <!-- Sourceforge doesn't use .cvspass instead uses the user's ssh public key <cvspass cvsroot="${cvsroot}" password="${SOURCEFORGEPWD}"/> -->
+        <cvs cvsroot="${cvsroot}" command="update -P"/>
     </target>
     
 </project>
