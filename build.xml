@@ -236,6 +236,8 @@
     
     
     <target name="test" depends="compile-test" description="Runs the unit tests">
+        <splash imageurl="http://www.bar-solutions.com/software/ant_splash.jpg"
+        showduration="5000"/>
         <junit
             printsummary="yes"
             errorProperty="test.failed"
@@ -283,8 +285,16 @@
     </target>
     
     <target name="cvscommit" description="Updates the Jpo source from Sourceforge">
-        <!-- Sourceforge doesn't use .cvspass instead uses the user's ssh public key <cvspass cvsroot="${cvsroot}" password="${SOURCEFORGEPWD}"/> -->
         <cvs cvsroot="${cvsroot}" command="commit"/>
+    </target>
+
+    <target name="antstructure" description="Generated a dtd of the ant tasks">
+        <antstructure output="build/antstructure.dtd" />
+    </target>
+
+    <target name="splash">
+        <splash imageurl="http://jakarta.apache.org/images/jakarta-logo.gif"
+        showduration="5000"/>
     </target>
     
 </project>

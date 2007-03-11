@@ -630,7 +630,7 @@ public class HtmlDistillerThread extends Thread {
 		
 
 		boolean loaded = false;
-		if ((wOrig == thumbnailWidth) || (hOrig == thumbnailWidth) ) {
+		if ((wOrig == thumbnailWidth) || (hOrig == thumbnailHeight) ) {
 			progressLabel.setText("copying picture " 
 				+ p.getLowresLocation()
 				+ " to " 
