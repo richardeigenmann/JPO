@@ -421,8 +421,13 @@ public class Jpo extends JFrame
      */
     public void requestFileLoad() {
         if ( Settings.pictureCollection.checkUnsavedUpdates() ) return;
-        Settings.pictureCollection.fileLoad();
-        positionToNode( Settings.pictureCollection.getRootNode() );
+        Thread t = new Thread() {
+            public void run() {
+                Settings.pictureCollection.fileLoad();
+                positionToNode( Settings.pictureCollection.getRootNode() );
+            }
+        };
+        t.start();
     }
     
     
@@ -442,9 +447,15 @@ public class Jpo extends JFrame
      *   {@link ApplicationJMenuBar} through the interface method
      *   {@link ApplicationMenuInterface#requestOpenRecent}.
      */
-    public void requestOpenRecent( int i ) {
-        Settings.pictureCollection.fileLoad( new File( Settings.recentCollections[ i ] ) );
-        positionToNode( Settings.pictureCollection.getRootNode() );
+    public void requestOpenRecent( final int i ) {
+        if ( Settings.pictureCollection.checkUnsavedUpdates() ) return;
+        Thread t = new Thread() {
+            public void run() {
+                Settings.pictureCollection.fileLoad( new File( Settings.recentCollections[ i ] ) );
+                positionToNode( Settings.pictureCollection.getRootNode() );
+            }
+        };
+        t.start();
     }
     
     

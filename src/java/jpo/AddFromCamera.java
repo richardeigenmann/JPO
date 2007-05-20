@@ -10,7 +10,7 @@ import java.util.*;
 AddFromCamera.java:  
 a class that creates a GUI and then adds the pictures from the camera to your collection.
 
-Copyright (C) 2002-2006 Richard Eigenmann.
+Copyright (C) 2002-2007 Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2

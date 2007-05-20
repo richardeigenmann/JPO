@@ -69,7 +69,6 @@
                debug="on"
                optimize="off"
                verbose="off"
-               memoryMaximumSize="500m"
                fork="yes"
                listfiles="yes"
                deprecation="yes"
@@ -166,7 +165,7 @@
     <target name="runjar" description="Runs the program from the jar" depends="buildjar">
         <java jar="${build.jars.dir}/jpo-${version}.jar"
               fork="yes"
-              maxmemory="1000m">
+              >
         </java>
     </target>
     
@@ -181,13 +180,13 @@
              trust="yes"
              verbose="no" >
             <fileset dir="web">
-                <include name="**/*.html"/>
-                <include name="**/*.jnlp"/>
-                <include name="**/fontconfig"/>
+                <include name="*.html" />
+                <include name="*.jnlp" />
+                <include name="fontconfig" />
             </fileset>
-            <!-- <fileset dir="${build.jars.dir}">
-                        <include name="**/*.jar"/>
-                    </fileset>  -->
+            <fileset dir="${build.jars.dir}">
+                <include name="*.jar" />
+            </fileset> 
         </scp>
     </target>    
     
@@ -195,7 +194,7 @@
     <target name="run" description="Runs the program" depends="compile">
         <java classname="${app.main.class}"
               fork="yes"
-              maxmemory="1000m" >
+              maxmemory="200m" >
             <classpath refid="base.path"/>
         </java>
     </target>

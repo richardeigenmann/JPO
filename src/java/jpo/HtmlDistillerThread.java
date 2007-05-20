@@ -611,6 +611,7 @@ public class HtmlDistillerThread extends Thread {
 
 
 		progressLabel.setText("testing size of thumbnail " + p.getLowresURL().toString());
+		Tools.log("testing size of thumbnail " + p.getLowresURL().toString());
 		
 		int wOrig = 0;
 		int hOrig = 0;
@@ -623,6 +624,7 @@ public class HtmlDistillerThread extends Thread {
 			scp.loadPictureImd( p.getLowresURL(), p.getRotation() );
 			wOrig = scp.getOriginalWidth();
 			hOrig = scp.getOriginalHeight();
+                        Tools.log("Image: " + p.getLowresURL().toString() + " is size: w=" + Integer.toString(wOrig) + " h=" + Integer.toString(hOrig));
 			
 		} catch (IOException x) {
 			Tools.log("got an IO error on opening " + p.getLowresURL());
@@ -635,6 +637,10 @@ public class HtmlDistillerThread extends Thread {
 				+ p.getLowresLocation()
 				+ " to " 
 				+ lowresFilename.toString() );
+			Tools.log("copying picture " 
+				+ p.getLowresLocation()
+				+ " to " 
+				+ lowresFilename.toString() + " w=" + Integer.toString(wOrig) + " h=" + Integer.toString(hOrig) );
 			Tools.copyPicture ( p.getLowresURL(), lowresFilename );
 			w = wOrig;
 			h = hOrig;
