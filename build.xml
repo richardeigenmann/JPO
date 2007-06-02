@@ -194,7 +194,7 @@
     <target name="run" description="Runs the program" depends="compile">
         <java classname="${app.main.class}"
               fork="yes"
-              maxmemory="200m" >
+              maxmemory="500m" >
             <classpath refid="base.path"/>
         </java>
     </target>

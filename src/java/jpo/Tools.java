@@ -876,11 +876,17 @@ public class Tools {
 		String[] patterns = {"dd.MM.yyyy HH:mm",
 			"yyyy:MM:dd HH:mm:ss",
 			"dd.MM.yyyy",
+			"MM.yyyy",
+			"MM-yyyy",
+			"dd-MM-yyyy",
 			"dd.MM.yy",
+			"dd-MM-yy",
 			"MM/dd/yy",
 			"MM/dd/yyyy",
 			"dd MMM yyyy",
-			"dd MMM yy"};
+			"dd MMM yy",
+			"yyyy"
+                };
 		Date d = null;
 		boolean notFound = true;
 		for ( int i=0; ( i< patterns.length ) && notFound ; i++ ) {
