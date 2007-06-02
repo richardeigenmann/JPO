@@ -531,22 +531,22 @@ public class JpoResources_en extends ListResourceBundle {
 
 
 		// CategoryEditorJFrame
-		{"CategoryEditorJFrameTitle", "Cateogry Editor"},
+		{"CategoryEditorJFrameTitle", "Category Editor"},
 		{"categoryJLabel", "Category"},
 		{"categoriesJLabel", "Categories"},
-		{"addCateogryJButton", "Add Category"},
-		{"deleteCateogryJButton", "Remove Category"},
-		{"renameCateogryJButton", "Rename Category"},
+		{"addCategoryJButton", "Add Category"},
+		{"deleteCategoryJButton", "Remove Category"},
+		{"renameCategoryJButton", "Rename Category"},
 		{"doneJButton", "Done"},
 		{"countCategoryUsageWarning1", "There are "},
 		{"countCategoryUsageWarning2", " nodes using this category.\nAre you sure you want to remove it?"},
 
 		// CategoryUsageJFrame
-		{"CategoryUsageJFrameTitle", "Cateogry Usage"},
+		{"CategoryUsageJFrameTitle", "Category Usage"},
 		{"numberOfPicturesJLabel", " pictures selected"},
 		{"updateJButton", "Update"},
 		{"refreshJButtonCUJF", "Refresh"},
-		{"modifyCateogryJButton", "Categories"},
+		{"modifyCategoryJButton", "Categories"},
 		{"cancelJButton", "Cancel"},
 
 		

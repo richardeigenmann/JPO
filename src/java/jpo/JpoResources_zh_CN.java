@@ -538,9 +538,9 @@ public class JpoResources_zh_CN extends ListResourceBundle {
 		{"CategoryEditorJFrameTitle", "类目编辑器"},
 		{"categoryJLabel", "类目"},
 		{"categoriesJLabel", "类目"},
-		{"addCateogryJButton", "添加类目"},
-		{"deleteCateogryJButton", "删除类目"},
-		{"renameCateogryJButton", "重命名类目"},
+		{"addCategoryJButton", "添加类目"},
+		{"deleteCategoryJButton", "删除类目"},
+		{"renameCategoryJButton", "重命名类目"},
 		{"doneJButton", "完成"},
 		{"countCategoryUsageWarning1", "共计"},
 		{"countCategoryUsageWarning2", "还有属于该类的图片\n确信要删除该类吗？"},
@@ -550,7 +550,7 @@ public class JpoResources_zh_CN extends ListResourceBundle {
 		{"numberOfPicturesJLabel", "图片被选中"},
 		{"updateJButton", "更新"},
 		{"refreshJButtonCUJF", "刷新"},
-		{"modifyCateogryJButton", "类目"},
+		{"modifyCategoryJButton", "类目"},
 		{"cancelJButton", "取消"},
 
 		

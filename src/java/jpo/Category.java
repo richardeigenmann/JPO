@@ -73,18 +73,23 @@ public class Category implements Serializable {
      * @param  value the value
      **/
     public Category( Object key, Object value ) {
+        //Tools.log("Creating Category Object: key: "+key.toString()+" value: "+ value.toString() );
         setKey( key );
         setValue( value );
     }
-    
-        /*public String toString() {
-                return (String) value;
-        }*/
-    
+
+    /**
+     *  Returns the key of the Category
+     *  @return  They key of the Category
+     **/
     public Object getKey() {
         return key;
     }
     
+    /**
+     *  Sets the key of the Category
+     *  @param key   The new key
+     */
     public void setKey( Object key ) {
         this.key = key;
     }
@@ -106,14 +111,30 @@ public class Category implements Serializable {
         return status;
     }
     
+    /**
+     *  Returns the value of the Category
+     *  @return  They value of the Category
+     **/
     public Object getValue() {
+        //Tools.log("Category.getValue: called. Returning: " + value.toString() );
         return value;
     }
+
     
+    /**
+     *  Sets the value of the Category
+     *  @param value  The new value
+     */
     public void setValue( Object value ) {
         this.value = value;
     }
     
-    
+    /**
+     *  Returns the value of the Category.
+     *  @return the value of the Category
+     */
+    public String toString() {
+        return getValue().toString();
+    }
     
 }

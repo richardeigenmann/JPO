@@ -107,17 +107,17 @@ public class CategoryUsageJFrame extends JFrame  {
 		numberOfPicturesJLabel.setHorizontalAlignment( JLabel.LEFT );
 		buttonJPanel.add( numberOfPicturesJLabel, bc );
 
-		final JButton modifyCateogryJButton = new JButton( Settings.jpoResources.getString( "modifyCateogryJButton" ) );
-		modifyCateogryJButton.setPreferredSize( defaultButtonSize );
-		modifyCateogryJButton.setMinimumSize( defaultButtonSize );
-		modifyCateogryJButton.setMaximumSize( maxButtonSize );
-		modifyCateogryJButton.addActionListener( new ActionListener() {
+		final JButton modifyCategoryJButton = new JButton( Settings.jpoResources.getString( "modifyCategoryJButton" ) );
+		modifyCategoryJButton.setPreferredSize( defaultButtonSize );
+		modifyCategoryJButton.setMinimumSize( defaultButtonSize );
+		modifyCategoryJButton.setMaximumSize( maxButtonSize );
+		modifyCategoryJButton.addActionListener( new ActionListener() {
 			public void actionPerformed (ActionEvent evt ) {
 				new CategoryEditorJFrame();
 			}
 		} );
 		bc.gridy++;
-		buttonJPanel.add( modifyCateogryJButton, bc );
+		buttonJPanel.add( modifyCategoryJButton, bc );
 
 
 		final JButton refreshJButton = new JButton( Settings.jpoResources.getString( "refreshJButtonCUJF" ) );

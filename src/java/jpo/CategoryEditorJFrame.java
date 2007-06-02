@@ -11,7 +11,7 @@ import java.util.Iterator;
 /*
 CategoryEditorJFrame.java:  creates a GUI to allow the user to specify his search
 
-Copyright (C) 2002  Richard Eigenmann.
+Copyright (C) 2002-2007  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -90,11 +90,11 @@ public class CategoryEditorJFrame extends JFrame implements ListSelectionListene
 		final Dimension maxButtonSize = new Dimension( 150, 25);
 		
 
-		final JButton addCateogryJButton = new JButton( Settings.jpoResources.getString( "addCateogryJButton" ) );
-		addCateogryJButton.setPreferredSize( defaultButtonSize );
-		addCateogryJButton.setMinimumSize( defaultButtonSize );
-		addCateogryJButton.setMaximumSize( maxButtonSize );
-		addCateogryJButton.addActionListener( new ActionListener() {
+		final JButton addCategoryJButton = new JButton( Settings.jpoResources.getString( "addCategoryJButton" ) );
+		addCategoryJButton.setPreferredSize( defaultButtonSize );
+		addCategoryJButton.setMinimumSize( defaultButtonSize );
+		addCategoryJButton.setMaximumSize( maxButtonSize );
+		addCategoryJButton.addActionListener( new ActionListener() {
 			public void actionPerformed (ActionEvent evt ) {
 				String category = categoryJTextField.getText();
 				Object key = Settings.pictureCollection.addCategory( category );
@@ -108,7 +108,7 @@ public class CategoryEditorJFrame extends JFrame implements ListSelectionListene
 		c.weightx = 0.1;
 		c.anchor = GridBagConstraints.FIRST_LINE_END;
 		c.fill = GridBagConstraints.NONE;
-		jPanel.add( addCateogryJButton, c );
+		jPanel.add( addCategoryJButton, c );
 
 
 		final JLabel categoriesJLabel = new JLabel( Settings.jpoResources.getString("categoriesJLabel") );
@@ -160,11 +160,11 @@ public class CategoryEditorJFrame extends JFrame implements ListSelectionListene
 		bc.fill = GridBagConstraints.NONE;
 
 
-		final JButton deleteCateogryJButton = new JButton( Settings.jpoResources.getString( "deleteCateogryJButton" ) );
-		deleteCateogryJButton.setPreferredSize( defaultButtonSize );
-		deleteCateogryJButton.setMinimumSize( defaultButtonSize );
-		deleteCateogryJButton.setMaximumSize( maxButtonSize );
-		deleteCateogryJButton.addActionListener( new ActionListener() {
+		final JButton deleteCategoryJButton = new JButton( Settings.jpoResources.getString( "deleteCategoryJButton" ) );
+		deleteCategoryJButton.setPreferredSize( defaultButtonSize );
+		deleteCategoryJButton.setMinimumSize( defaultButtonSize );
+		deleteCategoryJButton.setMaximumSize( maxButtonSize );
+		deleteCategoryJButton.addActionListener( new ActionListener() {
 			public void actionPerformed (ActionEvent evt ) {
 				//Tools.log("I want to remove the selected category " );
 				int index = categoriesJList.getSelectedIndex();
@@ -191,14 +191,14 @@ public class CategoryEditorJFrame extends JFrame implements ListSelectionListene
 				//Tools.log("I want to delete: " + cat.value.toString());
 			}
 		} );
-		buttonJPanel.add( deleteCateogryJButton, bc );
+		buttonJPanel.add( deleteCategoryJButton, bc );
 
 
-		final JButton renameCateogryJButton = new JButton( Settings.jpoResources.getString( "renameCateogryJButton" ) );
-		renameCateogryJButton.setPreferredSize( defaultButtonSize );
-		renameCateogryJButton.setMinimumSize( defaultButtonSize );
-		renameCateogryJButton.setMaximumSize( maxButtonSize );
-		renameCateogryJButton.addActionListener( new ActionListener() {
+		final JButton renameCategoryJButton = new JButton( Settings.jpoResources.getString( "renameCategoryJButton" ) );
+		renameCategoryJButton.setPreferredSize( defaultButtonSize );
+		renameCategoryJButton.setMinimumSize( defaultButtonSize );
+		renameCategoryJButton.setMaximumSize( maxButtonSize );
+		renameCategoryJButton.addActionListener( new ActionListener() {
 			public void actionPerformed (ActionEvent evt ) {
 				Tools.log("I want to rename the selected category " );
 				int index = categoriesJList.getSelectedIndex();
@@ -214,7 +214,7 @@ public class CategoryEditorJFrame extends JFrame implements ListSelectionListene
 			}
 		} );
 		bc.gridy++;
-		buttonJPanel.add( renameCateogryJButton, bc );
+		buttonJPanel.add( renameCategoryJButton, bc );
 		
 
 		final JButton doneJButton = new JButton( Settings.jpoResources.getString( "doneJButton" ) );

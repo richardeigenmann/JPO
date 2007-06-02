@@ -533,9 +533,9 @@ public class JpoResources_de extends ListResourceBundle {
 		{"CategoryEditorJFrameTitle", "Kategorien Bearbeiten"},
 		{"categoryJLabel", "Kategorie"},
 		{"categoriesJLabel", "Kategorien"},
-		{"addCateogryJButton", "Kategorie Hinzufügen"},
-		{"deleteCateogryJButton", "Kategorie Löschen"},
-		{"renameCateogryJButton", "Kategorie Umbenennen"},
+		{"addCategoryJButton", "Kategorie Hinzufügen"},
+		{"deleteCategoryJButton", "Kategorie Löschen"},
+		{"renameCategoryJButton", "Kategorie Umbenennen"},
 		{"doneJButton", "Done"},
 		{"countCategoryUsageWarning1", "Diese Kategorie wird von "},
 		{"countCategoryUsageWarning2", " Knoten verwendet.\nBestätigen Sie, dass Sie sie entfernen wollen."},
@@ -545,7 +545,7 @@ public class JpoResources_de extends ListResourceBundle {
 		{"numberOfPicturesJLabel", " Bild(er) ausgewählt"},
 		{"updateJButton", "Sichern"},
 		{"refreshJButtonCUJF", "Neu laden"},
-		{"modifyCateogryJButton", "Kategorien"},
+		{"modifyCategoryJButton", "Kategorien"},
 		{"cancelJButton", "Abbrechen"},
 
 		
