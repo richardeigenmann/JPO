@@ -520,6 +520,16 @@ public class ScalablePicture implements SourcePictureListener {
 	}
 
 
+        /**
+	 *   return the scaled image
+	 */	
+	public ImageIcon getScaledImageIcon() {
+		return new ImageIcon( scaledPicture );
+	}
+
+        
+        
+
 	/**
 	 *   return the size of the scaled image or Zero if there is none
 	 */	
