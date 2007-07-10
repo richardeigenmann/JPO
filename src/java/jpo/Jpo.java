@@ -209,6 +209,12 @@ public class Jpo extends JFrame
         ApplicationJMenuBar menuBar = new ApplicationJMenuBar( this );
         setJMenuBar( menuBar );
         
+
+        // Set Tooltipps to snappy mode
+        ToolTipManager ttm = ToolTipManager.sharedInstance();
+        ttm.setDismissDelay( 600 );
+        ttm.setInitialDelay( 100 );
+
         
         
         // Set up the Info Panel
