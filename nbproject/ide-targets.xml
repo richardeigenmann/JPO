@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir=".." name="Java Picture Organizer-IDE">
+    <import file="../build.xml"/>
+    <!-- TODO: edit the following target according to your needs -->
+    <!-- (more info: http://www.netbeans.org/kb/41/freeform-config.html#debugj2se) -->
+    <target depends="compile" description="Runs the program" name="debug-nb">
+        <nbjpdastart addressproperty="jpda.address" name="Java Picture Organizer" transport="dt_socket">
+            <classpath refid="base.path"/>
+        </nbjpdastart>
+        <!-- <java classname="${app.main.class}" fork="yes" maxmemory="1000m"> -->
+        <java jar="${build.jars.dir}/jpo-${version}.jar" fork="yes" maxmemory="1000m">
+            <classpath refid="base.path"/>
+            <jvmarg value="-Xdebug"/>
+            <jvmarg value="-Xnoagent"/>
+            <jvmarg value="-Djava.compiler=none"/>
+            <jvmarg value="-Xrunjdwp:transport=dt_socket,address=${jpda.address}"/>
+        </java>
+    </target>
+</project>

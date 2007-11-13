@@ -641,15 +641,10 @@ public class Settings {
     
     
     /**
-     *	list of cameras
+     *	Collection of Cameras
      */
-    public static Vector<Camera> Cameras = new Vector() {
-        public boolean add( Object o ) {
-            Tools.log("Object: " + o.toString() );
-            return super.add( o );
-        }
-    };
-    
+    public static Vector<Camera> Cameras = new Vector();
+
     
     /**
      *	list of email senders

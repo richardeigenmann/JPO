@@ -251,7 +251,6 @@ public class Camera implements Serializable {
         if ( getCameraMountPoint() == null ) return newPics;
         File rootDir = new File( getCameraMountPoint() );
         if ( rootDir == null ) return newPics;
-        Tools.log( getClass().toString() + ".getNewPictures invoked on directory: " + rootDir.toString() );
         return getNewPicturesLoop( rootDir.listFiles(), newPics );
     }
     
@@ -260,9 +259,7 @@ public class Camera implements Serializable {
      *  This method returns a collection of new pictures found on the camera not previously found there
      */
     protected Collection<File> getNewPicturesLoop( File [] files, Collection<File> newFiles ) {
-        Tools.log( getClass().toString() + ".getNewPicturesLoop invoked on files: " + files.toString() );
         for ( File f : files ) {
-            Tools.log("Checking file: " + f.toString() );
             if ( ! f.isDirectory() ) {
                 if ( Tools.jvmHasReader( f ) ) {
                     if ( ! inOldImage( f ) ) {
