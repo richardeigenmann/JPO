@@ -1,5 +1,6 @@
 package jpo;
 
+import java.awt.GridBagLayout;
 import javax.swing.tree.*;
 import java.util.*;
 import javax.swing.*;
@@ -639,12 +640,20 @@ public class PictureCollection {
      */
     public void fileLoad( File f ) {
         if ( fileLoading ) {
-            Tools.log("PictureCollection.fileLoad: already busy loading another file. Aborting");
+            Tools.log( this.getClass().toString() + ".fileLoad: already busy loading another file. Aborting");
             return;
         }
         setXmlFile( f );
         fileLoading = true;
-        getRootNode().fileLoad( getXmlFile() );
+        try {
+            getRootNode().fileLoad( getXmlFile() );
+        } catch ( FileNotFoundException x) {
+            Tools.log( this.getClass().toString() + ".fileToLoad: FileNotFoundExecption: "+ x.getMessage() );
+            JOptionPane.showMessageDialog( Settings.anchorFrame,
+                    x.getMessage(),
+                    Settings.jpoResources.getString("genericError"),
+                    JOptionPane.ERROR_MESSAGE);
+        }
         fileLoading = false;
     }
     
@@ -666,10 +675,23 @@ public class PictureCollection {
             setUnsavedUpdates( false );
             originalFile.delete();
             Settings.pushRecentCollection( xmlFile.toString() );
-            JOptionPane.showMessageDialog( Settings.anchorFrame,
+            /*JOptionPane.showMessageDialog( Settings.anchorFrame,
                     Settings.jpoResources.getString("collectionSaveBody") + xmlFile.toString(),
                     Settings.jpoResources.getString("collectionSaveTitle"),
-                    JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.INFORMATION_MESSAGE);*/
+            JPanel p = new JPanel();
+            p.setLayout( new BoxLayout( p, BoxLayout.Y_AXIS ) );
+            p.add( new JLabel( Settings.jpoResources.getString("collectionSaveBody") + xmlFile.toString() ) );
+            JCheckBox setAutoload = new JCheckBox(Settings.jpoResources.getString("setAutoload") );
+            p.add( setAutoload );
+            JOptionPane.showMessageDialog( Settings.anchorFrame,
+                    p,
+                    Settings.jpoResources.getString("collectionSaveTitle"),
+                    JOptionPane.INFORMATION_MESSAGE );
+            if ( setAutoload.isSelected() ) {
+                Settings.autoLoad = xmlFile.toString();
+                Settings.writeSettings();
+            }
         }
     }
     

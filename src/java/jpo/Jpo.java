@@ -5,10 +5,6 @@ import java.util.*;
 import java.text.*;
 import java.awt.*;
 import java.awt.event.*;
-import javax.jnlp.BasicService;
-import javax.jnlp.PersistenceService;
-import javax.jnlp.ServiceManager;
-import javax.jnlp.UnavailableServiceException;
 import javax.swing.*;
 
 /*
@@ -32,18 +28,18 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 
 /**
  * Jpo is the the main class of a browser application that lets
- * a user view a collection of pictures in as thumbnails, in a seperate window
+ * a user view a collection of pictures in as thumbnails, in a separate window
  * or in a full sized mode.<p>
  *
  * The Jpo class creates the following main objects:
  *
  * <p><img src=../Overview.png border=0><p>
  *
- * It uses a list of pictures (PictureList file) to create a hirarchical model of
+ * It uses a list of pictures (PictureList file) to create a hierarchical model of
  * <code>SortableDefaultMutableTreeNode</code>s that represent the structure of the collection.
  * Each node has an associated object of {@link GroupInfo} or {@link PictureInfo} type.
  *
- * The {@link CollectionJTree} visualises the model and allows the user to
+ * The {@link CollectionJTreeController} visualises the model and allows the user to
  * expand and collapse branches of the tree with the mouse. If a node is clicked this generates
  * a <code>valueChanged</code> event from the model which is sent to all listening objects.<p>
  *
@@ -53,18 +49,15 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  * This listener architecture allows fairly easy expansion of the application
  * since all that is required is that any additional objects that need to be change the picture
  * or need to be informed of a change can connect to the model in this manner and
- * need no other contorls.
+ * need no other controls.
  *
+ * @author Richard Eigenmann, richard.eigenmann@gmail.com
+ * @version 0.9
  * @see CollectionJTree
  * @see ThumbnailJScrollPane
  * @see PictureViewer
- *
- *
- * @author 	Richard Eigenmann, richard.eigenmann@gmail.com
- * @version 	0.8.5
- * @since       JDK1.4.0
- *
- **/
+ * @since JDK1.5.0
+ */
 public class Jpo extends JFrame
         implements ApplicationMenuInterface {
     
@@ -106,6 +99,9 @@ public class Jpo extends JFrame
             System.exit(1);
         }
         
+        // somewhat rabid way of allowing the application access to the local filesystem. RE 13. Nov 2007
+        System.setSecurityManager( null );
+        
         EventQueue.invokeLater( new Runnable() {
             public void run() {
                 new Jpo().setVisible( true );
@@ -119,12 +115,11 @@ public class Jpo extends JFrame
     
     /**
      *  Constructor for the Jpo application that creates the main JFrame, attaches an
-     *  {@link ApplicationJMenuBar}, adds a JSplitPane to which it adds the {@link CollectionJTree}
+     *  {@link ApplicationJMenuBar}, adds a JSplitPane to which it adds the {@link CollectionJTreeController}
      *  on the left side and a {@link ThumbnailJScrollPane} on the right side.
-     *
-     **/
+     */
     public Jpo() {
-        System.out.println("\nJPO version 0.8.5\n"
+        System.out.println("\nJPO version 0.9\n"
                 + "Copyright (C) 2000-2007 Richard Eigenmann\n"
                 + "JPO comes with ABSOLUTELY NO WARRANTY;\n"
                 + "for details Look at the Help | License menu item.\n"
@@ -163,13 +158,13 @@ public class Jpo extends JFrame
      *  This object does all the tree work. It can load and save the nodes of the tree, listens to
      *  events happening on the tree and calls back with any actions that should be performed.
      *
-     *  @see CollectionJTree
+     * @see CollectionJTreeController
      */
-    public static CollectionJTree collectionJTree;
+    public static CollectionJTreeController collectionJTreeController;
     
     
     /**
-     *  This oject holds all the thumbnails and deals with all the thumbnail events.
+     *  This object holds all the thumbnails and deals with all the thumbnail events.
      **/
     private static ThumbnailJScrollPane thumbnailJScrollPane;
     
@@ -185,6 +180,7 @@ public class Jpo extends JFrame
                 setPriority( Thread.MIN_PRIORITY );
                 initComponents();
                 loadCollectionOnStartup();
+                new CameraWatchDaemon();
             }
         };
         t.start();
@@ -196,25 +192,26 @@ public class Jpo extends JFrame
      *  This method initialises the GUI components of the main window.
      */
     private void initComponents() {
-        ScreenHelper.explainGraphicsEnvironment();
+        //ScreenHelper.explainGraphicsEnvironment();
         
         setTitle( Settings.jpoResources.getString("ApplicationTitle"));
-        Settings.anchorFrame = this;
+        Settings.anchorFrame = this;;
         
         setMinimumSize( Settings.jpoJFrameMinimumSize );
-        setPreferredSize( Settings.jpoJFramePreferredSize );
+        //setPreferredSize( Settings.jpoJFramePreferredSize );
+        setPreferredSize( Settings.mainFrameDimensions );
         //setLocation( Settings.mainFrameDimensions.getLocation() );
         
         //Create the menu bar.
         ApplicationJMenuBar menuBar = new ApplicationJMenuBar( this );
         setJMenuBar( menuBar );
         
-
+        
         // Set Tooltipps to snappy mode
         ToolTipManager ttm = ToolTipManager.sharedInstance();
         ttm.setDismissDelay( 600 );
         ttm.setInitialDelay( 100 );
-
+        
         
         
         // Set up the Info Panel
@@ -255,8 +252,8 @@ public class Jpo extends JFrame
         }
         
         
-        collectionJTree = new CollectionJTree();
-        JScrollPane collectionJScrollPane = new JScrollPane( collectionJTree );
+        collectionJTreeController = new CollectionJTreeController();
+        JScrollPane collectionJScrollPane = new JScrollPane( collectionJTreeController.getComponent() );
         collectionJScrollPane.setMinimumSize( Settings.jpoNavigatorJTabbedPaneMinimumSize );
         collectionJScrollPane.setPreferredSize( Settings.jpoNavigatorJTabbedPanePreferredSize );
         
@@ -278,19 +275,19 @@ public class Jpo extends JFrame
         
         
         // Set up the communication between the JTree and the Thumbnail Pane
-        collectionJTree.setAssociatedThumbnailJScrollpane( thumbnailJScrollPane );
-        collectionJTree.setAssociatedInfoPanel( infoPanel );
+        collectionJTreeController.setAssociatedThumbnailJScrollpane( thumbnailJScrollPane );
+        collectionJTreeController.setAssociatedInfoPanel( infoPanel );
         searchesJTree.setAssociatedThumbnailJScrollpane( thumbnailJScrollPane );
         searchesJTree.setAssociatedInfoPanel( infoPanel );
-        thumbnailJScrollPane.setAssociatedCollectionJTree( collectionJTree );
+        thumbnailJScrollPane.setAssociatedCollectionJTree( collectionJTreeController );
         thumbnailJScrollPane.setAssociatedInfoPanel( infoPanel );
-        Settings.mainCollectionJTree = collectionJTree;
+        Settings.mainCollectionJTreeController = collectionJTreeController;
         
         infoPanel.addComponentListener(new ComponentAdapter() {
             public void componentResized( ComponentEvent event ) {
-                Tools.log( "Jpo:InfoPanelcomponentResized invoked" );
-                Tools.log( "collectionJTree.preferredSize: " + collectionJTree.getPreferredSize().toString() );
-                Tools.log( "jpoNavigatorJTabbedPane.preferredSize: " + jpoNavigatorJTabbedPane.getPreferredSize().toString() );
+                //Tools.log( "Jpo:InfoPanelcomponentResized invoked" );
+                //Tools.log( "collectionJTree.preferredSize: " + collectionJTree.getPreferredSize().toString() );
+                //Tools.log( "jpoNavigatorJTabbedPane.preferredSize: " + jpoNavigatorJTabbedPane.getPreferredSize().toString() );
                 int leftDividerSpot = leftSplitPane.getDividerLocation();
                 if ( leftDividerSpot != Settings.preferredLeftDividerSpot ) {
                     Settings.preferredLeftDividerSpot = leftDividerSpot;
@@ -301,7 +298,7 @@ public class Jpo extends JFrame
         
         jpoNavigatorJTabbedPane.addComponentListener( new ComponentAdapter() {
             public void componentResized( ComponentEvent event ) {
-                Tools.log( "Jpo.collectionJTree.componentResized invoked" );
+                //Tools.log( "Jpo.collectionJTree.componentResized invoked" );
                 int dividerSpot = masterSplitPane.getDividerLocation();
                 if ( dividerSpot != Settings.preferredMasterDividerSpot ) {
                     Settings.preferredMasterDividerSpot = dividerSpot;
@@ -324,7 +321,7 @@ public class Jpo extends JFrame
     
     /**
      *  method that is invoked when the Jpo application is to be closed. Checks if
-     *  the main application window size should be saved and saves if nescessary.
+     *  the main application window size should be saved and saves if necessary.
      *  also checks for unsaved changes before closing the application.
      */
     public void closeJpo() {
@@ -402,18 +399,18 @@ public class Jpo extends JFrame
     /**
      *   Creates a {@link PictureAdder} object and tells it to
      *   add the selected pictures to the root node of the
-     *   {@link CollectionJTree}.
+     *   {@link CollectionJTreeController}.
      */
     public void requestFileAdd() {
-        collectionJTree.popupNode = Settings.pictureCollection.getRootNode();
-        collectionJTree.requestAdd();
+        collectionJTreeController.popupNode = Settings.pictureCollection.getRootNode();
+        collectionJTreeController.requestAdd();
     }
     
     
     /**
      *   Creates a {@link PictureAdder} object and tells it to
      *   add the selected pictures to the root node of the
-     *   {@link CollectionJTree}.
+     *   {@link CollectionJTreeController}.
      */
     public void requestFileAddFromCamera() {
         new AddFromCamera( Settings.pictureCollection.getRootNode() );
@@ -442,7 +439,7 @@ public class Jpo extends JFrame
      *  on the supplied node.
      */
     public static void positionToNode( SortableDefaultMutableTreeNode displayNode ) {
-        collectionJTree.setSelectedNode( displayNode );
+        collectionJTreeController.setSelectedNode( displayNode );
         thumbnailJScrollPane.show( new GroupBrowser( displayNode ) );
     }
     
@@ -552,10 +549,10 @@ public class Jpo extends JFrame
      */
     public void performSlideshow() {
         PictureViewer p1 = new PictureViewer();
-        p1.switchWindowMode( PictureViewer.WINDOW_LEFT );
+        p1.switchWindowMode( ResizableJFrame.WINDOW_LEFT );
         p1.switchDecorations( true );
         PictureViewer p2 = new PictureViewer();
-        p2.switchWindowMode( PictureViewer.WINDOW_RIGHT );
+        p2.switchWindowMode( ResizableJFrame.WINDOW_RIGHT );
         p2.switchDecorations( true );
         RandomBrowser rb1 = new RandomBrowser( Settings.pictureCollection.getRootNode() );
         RandomBrowser rb2 = new RandomBrowser( Settings.pictureCollection.getRootNode() );

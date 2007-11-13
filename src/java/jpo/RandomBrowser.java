@@ -37,7 +37,7 @@ public class RandomBrowser extends ThumbnailBrowser {
 	 *  @param groupNode    The groupNode under which the randomisation should happen.
 	 */
 	RandomBrowser( SortableDefaultMutableTreeNode groupNode ) {
-		Tools.log("RandomBrowser: constructor called on node: " + groupNode.toString() );
+		//Tools.log("RandomBrowser: constructor called on node: " + groupNode.toString() );
 		enumerateAndAddToList( allPictures, groupNode );
 	}
 	
@@ -61,7 +61,7 @@ public class RandomBrowser extends ThumbnailBrowser {
 	 *  If the last element is requested the Random Generator picks a new one.
 	 */
 	public int getNumberOfNodes() {
-		Tools.log("RandomBrowser.getNumberOfNodes: returning: " + Integer.toString( randomNodes.size() ) );
+		//Tools.log("RandomBrowser.getNumberOfNodes: returning: " + Integer.toString( randomNodes.size() ) );
 		return randomNodes.size();
 	}
 
@@ -73,7 +73,7 @@ public class RandomBrowser extends ThumbnailBrowser {
 	 *  @param index   The component index that is to be returned.
 	 */
  	public SortableDefaultMutableTreeNode getNode( int index ) {
-		Tools.log("RandomBrowser.getNode: requested for node: " + Integer.toString( index ) );
+		//Tools.log("RandomBrowser.getNode: requested for node: " + Integer.toString( index ) );
 		if ( index >= randomNodes.size() ) {
 			int randomIndex = (int) ( Math.random() * allPictures.size() );
 			randomNodes.add( allPictures.get( randomIndex ) );
@@ -96,7 +96,7 @@ public class RandomBrowser extends ThumbnailBrowser {
 	 *  @param  startNode   The group node under which to collect the pictures.
 	 */
 	public void enumerateAndAddToList( ArrayList myList, SortableDefaultMutableTreeNode startNode ) {
-		Tools.log("RandomBrowser.enumerateAndAddToList: invoked on group " + startNode.toString() );
+		//Tools.log("RandomBrowser.enumerateAndAddToList: invoked on group " + startNode.toString() );
 		Enumeration kids = startNode.children();
 		SortableDefaultMutableTreeNode n;
 		
@@ -120,10 +120,5 @@ public class RandomBrowser extends ThumbnailBrowser {
 		randomNodes = null;
 		allPictures = null;
 	}
-
-	
-
-
-	
 	
 }

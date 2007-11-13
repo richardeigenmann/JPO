@@ -66,7 +66,7 @@ public class Thumbnail extends JComponent
 	
 
 	/**
-	 *  the Index positon in the {@link #myThumbnailBrowser} which is being shown by this 
+	 *  the Index position in the {@link #myThumbnailBrowser} which is being shown by this 
 	 *  component.
 	 */	
 	public int myIndex = 0;
@@ -196,8 +196,6 @@ public class Thumbnail extends JComponent
 		setVisible( false );
 		setOpaque( false );
 		setBackground( UNSELECTED_COLOR );
-		//setBorder( BorderFactory.createEmptyBorder(0,0,0,0) );
-		//setBorder( BorderFactory.createLineBorder( Color.RED ) );
 		addMouseListener( new ThumbnailMouseAdapter() );
 
 		// attach the Thumbnail to the Tree Model to get notifications.
@@ -256,14 +254,11 @@ public class Thumbnail extends JComponent
 	 *  @param index	The position of this object to be displayed.
 	 */
 	 public void setNode( ThumbnailBrowserInterface mySetOfNodes, int index ) {
-	 	//Tools.log("Thumbnail.setNode: assigning node number " + Integer.toString( index ) );
 		this.myThumbnailBrowser = mySetOfNodes;
 		this.myIndex = index;
 		SortableDefaultMutableTreeNode node = mySetOfNodes.getNode( index );
 		if ( this.referringNode == node ) {
 			// Don't refresh the node if it hasn't changed
-
-			//Tools.log("Thumbnail.setNode: " + Integer.toString(index) + " determined that this node is being set to the same.");
 			return;
 		}
 
@@ -296,9 +291,7 @@ public class Thumbnail extends JComponent
 			imgOb = null;
 			setVisible( false );
 		} else { //if ( node.getUserObject() instanceof PictureInfo ) {
-			//Tools.log("Thumbnail.setNode: called on node: " + node.getUserObject().toString());
-			ThumbnailCreationQueue.requestThumbnailCreation( 
-				this, priority, false );
+			requestThumbnailCreation( priority, false );
 		} 
 	
 		showSlectionStatus();
@@ -307,6 +300,16 @@ public class Thumbnail extends JComponent
 	}
 
 
+        /**
+         *  This method forwards the request to create the thumbnail to the ThumbnailCreationQueue
+	 *  @param	priority	The priority with which the request is to be treated on the queue
+	 *  @param	force		Set to true if the thumbnail needs to be rebuilt from source, false
+	 *				if using a cached version is OK.
+         */
+        public void requestThumbnailCreation( int priority, boolean force ) {
+			ThumbnailCreationQueue.requestThumbnailCreation( 
+				this, priority, force );
+        }
 
 	/**
 	 *  sets the Thumbnail to the specified icon  
@@ -425,7 +428,7 @@ public class Thumbnail extends JComponent
 
 	/**
 	 *   we are overriding the default paintComponent method, grabbing the Graphics 
-	 *   handle and doing our own drawing here. Esentially this method draws a large
+	 *   handle and doing our own drawing here. Essentially this method draws a large
 	 *   black rectangle. A drawImage is then painted doing an affine transformation
 	 *   on the image to position it so the the desired point is in the middle of the 
 	 *   Graphics object. 
@@ -563,7 +566,7 @@ public class Thumbnail extends JComponent
 					if  ( e.getClickCount() > 1 ) {
 						associatedPanel.requestShowGroup( referringNode );
 					}  else if ( e.getButton() == 3 ) { // popup menu only on 3rd mouse button.
-						CollectionJTree CollectionJTree = associatedPanel.getAssociatedCollectionJTree();
+						CollectionJTreeController CollectionJTree = associatedPanel.getAssociatedCollectionJTree();
 						if ( CollectionJTree != null ) {
 							CollectionJTree.popupNode = referringNode;
 							GroupPopupMenu groupPopupMenu = new GroupPopupMenu( CollectionJTree, referringNode );
@@ -587,8 +590,7 @@ public class Thumbnail extends JComponent
 		  || e.getLowresLocationChanged()
 		  || e.getThumbnailChanged()
 		  || e.getRotationChanged() ) {
-			ThumbnailCreationQueue.requestThumbnailCreation( 
-				this, ThumbnailCreationQueue.HIGH_PRIORITY, false );
+			requestThumbnailCreation( ThumbnailCreationQueue.HIGH_PRIORITY, false );
 		} else if ( e.getWasSelected() ) {
 			showAsSelected();
 		} else if ( e.getWasUnselected() ) {
@@ -682,8 +684,7 @@ public class Thumbnail extends JComponent
 				if ( userObject instanceof GroupInfo ) {
 					// determine if the icon changed
 					// Tools.log( "Thumbnail should be reloading the icon..." );
-					ThumbnailCreationQueue.requestThumbnailCreation( 
-						this, ThumbnailCreationQueue.HIGH_PRIORITY, false );
+					requestThumbnailCreation( ThumbnailCreationQueue.HIGH_PRIORITY, false );
 				}
 			}
 		}
@@ -728,13 +729,11 @@ public class Thumbnail extends JComponent
 
 
 
-	/**
-	 *   this callback method is invoked every time something is 
-	 *   dragged over the Thumbnail. We could do some highlighting if
-	 *   we so desired.
-	 *
-	 *   @see	CollectionJTree#dragOver(DropTargetDragEvent)
-	 */
+    /**
+     *   this callback method is invoked every time something is 
+     *   dragged over the Thumbnail. We could do some highlighting if
+     *   we so desired.
+     */
 	public void dragOver ( DropTargetDragEvent event ) {
 		if ( ! event.isDataFlavorSupported ( JpoTransferable.dmtnFlavor)) {
 			event.rejectDrag();
@@ -745,13 +744,11 @@ public class Thumbnail extends JComponent
 
 
 	/**
-	 *   this callback method is invoked when the user presses or releases shift when
-	 *   doing a drag. He can signal that he wants to change the copy / move of the 
-	 *   operation. This method could intercept this change and could modify the event
-	 *   if it needs to.  On Thumbnails this does nothing.
-	 *
-	 *   @see	CollectionJTree#dropActionChanged(DropTargetDragEvent)
-	 */
+     *   this callback method is invoked when the user presses or releases shift when
+     *   doing a drag. He can signal that he wants to change the copy / move of the 
+     *   operation. This method could intercept this change and could modify the event
+     *   if it needs to.  On Thumbnails this does nothing.
+     */
 	public void dropActionChanged ( DropTargetDragEvent event ) {
 	}
 

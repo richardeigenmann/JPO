@@ -4,10 +4,12 @@ import java.util.*;
 import java.net.*;
 import java.io.*;
 import java.awt.*;
+import java.util.prefs.BackingStoreException;
 import javax.swing.JOptionPane;
 import javax.swing.JFrame;
 import javax.jnlp.*;
 import java.util.prefs.Preferences;
+import javax.swing.filechooser.FileSystemView;
 
 
 /*
@@ -42,15 +44,6 @@ public class Settings {
     
     
     /**
-     *  The constructor which is not neaded as everything in this class is static.
-     *  But having one keeps Netbeans from complaining about the package Settings not
-     *  existing.  RE, 19.1.2007
-     **/
-    public Settings() {
-    }
-    
-    
-    /**
      *  this ClassLoader helps most other objects find the resources they require
      */
     public static final ClassLoader cl = Settings.class.getClassLoader();
@@ -62,19 +55,6 @@ public class Settings {
      *  allow multiple collections to be loaded.
      **/
     public static PictureCollection pictureCollection = new PictureCollection();
-    
-    
-    
-    /**
-     *  the name of the ini file
-     **/
-    public static File iniFile = new File( new File( System.getProperty("user.dir")), "JPO.ini");
-    
-    
-    /**
-     *  the name of the cameras file
-     **/
-    public static File camerasFile = new File( new File( System.getProperty("user.dir")), "JPO_cameras.dta");
     
     
     /**
@@ -104,26 +84,37 @@ public class Settings {
     public static File logfile;
     
     
-    /**
-     *  the dimensions of the main frame
-     *  @deprecated
-     */
-    
-    public static Rectangle mainFrameDimensions;
     
     
     /**
-     *  Flag to inicate if the JPO window should be maximised on startup or left for the
+     *  Flag to indicate whether the JPO window should be maximised on startup or left for the
      *  OS to decide on the size together with the JVM
      */
     public static boolean maximiseJpoOnStartup = true;
     
+    /**
+     *  the dimensions of the main JPO frame
+     */
+    public static Dimension mainFrameDimensions;
+    
+    
+    /**
+     *  A set of window sizes that the user can choose his preferred size from. The first option will be to maximise the window
+     */
+    public static final Dimension[] windowSizes = { new Dimension(0,0), new Dimension(1050, 760), new Dimension(1250, 900), new Dimension(1450, 1190), new Dimension(2150, 1300) };
+    
+    
+    /**
+     *  Flag to indicate whether the JPO window should be maximised on startup or left for the
+     *  OS to decide on the size together with the JVM
+     */
+    public static boolean maximisePictureViewerWindow = true;
     
     /**
      *  the dimensions of the "Default" picture viewer
      */
     
-    public static Rectangle pictureViewerDefaultDimensions;
+    public static Dimension pictureViewerDefaultDimensions;
     
     
     /**
@@ -155,7 +146,7 @@ public class Settings {
      *  the default value for maxThumbnails
      **/
     public final static int defaultMaxThumbnails = 50;
-
+    
     
     /**
      *  a variable that sets the maximum number of thumbnails that shall be displayed at one time.
@@ -180,20 +171,20 @@ public class Settings {
     /**
      *   The minimum width for the left panels
      */
-    public static final int leftPanelMinimumWidth = 240;
+    public static final int leftPanelMinimumWidth = 200;
     
     
     
     /**
      *  the minimum Dimension for the InfoPanel
      */
-    public static final Dimension infoPanelMinimumSize = new Dimension( leftPanelMinimumWidth, 150 );
+    public static final Dimension infoPanelMinimumSize = new Dimension( leftPanelMinimumWidth, 100 );
     
     
     /**
      *  the preferred Dimension for the InfoPanel
      */
-    public static final Dimension infoPanelPreferredSize = new Dimension( preferredMasterDividerSpot, 300 );
+    public static final Dimension infoPanelPreferredSize = new Dimension( leftPanelMinimumWidth, 100 );
     
     
     /**
@@ -232,6 +223,7 @@ public class Settings {
             + infoPanelMinimumSize.height,
             thumbnailJScrollPaneMinimumSize.height )
             );
+    
     
     /**
      *  the preferred Dimension for the JPO Window
@@ -374,8 +366,8 @@ public class Settings {
     
     /**
      *  The maximum size a picture is zoomed to. This is to stop
-     *  the Java engine creating enormous temporaty images which
-     *  lock the computer up copletely.
+     *  the Java engine creating enormous temporary images which
+     *  lock the computer up completely.
      */
     public static int maximumPictureSize;
     
@@ -393,7 +385,7 @@ public class Settings {
     /**
      *  standard size for all JTextFields that need to record a filename
      */
-    public static final Dimension filenameFieldMinimumSize = new Dimension(450,20);
+    public static final Dimension filenameFieldMinimumSize = new Dimension(300,20);
     
     /**
      *  standard size for all JTextFields that need to record a filename
@@ -558,11 +550,11 @@ public class Settings {
     public static Dimension threeDotButtonDimension = new Dimension(25, 25);
     
     /**
-     *  This object is a handy reference for any component that wants to tell the 
+     *  This object is a handy reference for any component that wants to tell the
      *  main JTree for the collection to reposition itself.
      *  ToDo: make this an interface.
      */
-    public static CollectionJTree mainCollectionJTree = null;
+    public static CollectionJTreeController mainCollectionJTreeController = null;
     
     
     
@@ -651,7 +643,12 @@ public class Settings {
     /**
      *	list of cameras
      */
-    public static Vector Cameras = new Vector();
+    public static Vector<Camera> Cameras = new Vector() {
+        public boolean add( Object o ) {
+            Tools.log("Object: " + o.toString() );
+            return super.add( o );
+        }
+    };
     
     
     /**
@@ -738,10 +735,6 @@ public class Settings {
     
     
     
-    /**
-     *  handle to the user Preferences
-     */
-    public static Preferences prefs = Preferences.userNodeForPackage( Jpo.class );
     
     
     
@@ -749,23 +742,19 @@ public class Settings {
      *  method that set the default parameters
      */
     public static void setDefaults() {
-        Rectangle screenDimensions = ScreenHelper.getPrimaryScreen().getBounds();
-        
         setLocale( currentLocale );
         
         autoLoad = "";
         logfile = new File( new File( System.getProperty("java.io.tmpdir")), "JPO.log");
-        saveSizeOnExit = false;
-        mainFrameDimensions = new Rectangle( screenDimensions );
-        preferredLeftDividerSpot = screenDimensions.height - 200;
-        if ( preferredLeftDividerSpot < 0 ) { preferredLeftDividerSpot = 100; };
         
+        mainFrameDimensions = new Dimension( windowSizes[1] );
+        preferredLeftDividerSpot = mainFrameDimensions.height - 200;
+        if ( preferredLeftDividerSpot < 0 ) { preferredLeftDividerSpot = 100; };
         
         maximumPictureSize = 6000;
         maxCache = 4;
-        //leaveForPanel = 45; //KDE
-        leaveForPanel = 27; // Windows
-        pictureViewerDefaultDimensions = screenDimensions;
+        
+        pictureViewerDefaultDimensions =  new Dimension( windowSizes[1] );
         
         keepThumbnails = true;
         thumbnailPath = new File( new File( System.getProperty("java.io.tmpdir")) , "JPO_thumbnails" + File.separator);
@@ -776,35 +765,33 @@ public class Settings {
     
     
     
-    
-    
-    
+    /**
+     *  handle to the user Preferences
+     */
+    public static Preferences prefs = Preferences.userNodeForPackage( Jpo.class );
     
     /**
-     *  method that reads the Jpo.ini file
+     *  This method reads the settings from the preferences.
      */
     public static void loadSettings() {
         setDefaults();
         
         setLocale( new Locale( prefs.get( "currentLocale", getCurrentLocale().toString() ) ) );
         maximumPictureSize = prefs.getInt( "maximumPictureSize", maximumPictureSize );
-        leaveForPanel = prefs.getInt( "leaveForPanel", leaveForPanel );
         maxThumbnails = prefs.getInt( "maxThumbnails", maxThumbnails );
         thumbnailSize = prefs.getInt( "thumbnailSize", thumbnailSize );
-        saveSizeOnExit = prefs.getBoolean( "saveSizeOnExit", saveSizeOnExit );
         maximiseJpoOnStartup = prefs.getBoolean( "maximiseJpoOnStartup", maximiseJpoOnStartup );
-        mainFrameDimensions.x = prefs.getInt( "mainFrameDimensions.x", mainFrameDimensions.x );
-        mainFrameDimensions.y = prefs.getInt( "mainFrameDimensions.y", mainFrameDimensions.y );
         mainFrameDimensions.width = prefs.getInt( "mainFrameDimensions.width", mainFrameDimensions.width );
         mainFrameDimensions.height = prefs.getInt( "mainFrameDimensions.height", mainFrameDimensions.height );
         preferredMasterDividerSpot = prefs.getInt( "preferredMasterDividerSpot", preferredMasterDividerSpot );
         preferredLeftDividerSpot = prefs.getInt( "preferredLeftDividerSpot", preferredLeftDividerSpot );
         dividerWidth = prefs.getInt( "dividerWidth", dividerWidth );
         autoLoad = prefs.get( "autoload", autoLoad );
-        prefs.getInt( "pictureViewerDefaultDimensions.x", pictureViewerDefaultDimensions.x );
-        prefs.getInt( "pictureViewerDefaultDimensions.y", pictureViewerDefaultDimensions.y );
-        prefs.getInt( "pictureViewerDefaultDimensions.width", pictureViewerDefaultDimensions.width );
-        prefs.getInt( "pictureViewerDefaultDimensions.height", pictureViewerDefaultDimensions.height );
+        
+        maximisePictureViewerWindow = prefs.getBoolean( "maximisePictureViewerWindow", maximisePictureViewerWindow );
+        pictureViewerDefaultDimensions.width = prefs.getInt( "pictureViewerDefaultDimensions.width", pictureViewerDefaultDimensions.width );
+        pictureViewerDefaultDimensions.height = prefs.getInt( "pictureViewerDefaultDimensions.height", pictureViewerDefaultDimensions.height );
+        
         int i;
         for ( i = 0; i < Settings.maxCopyLocations; i++ ) {
             copyLocations[ i ] = prefs.get( "copyLocations-" + Integer.toString( i ), null );
@@ -848,289 +835,11 @@ public class Settings {
         emailDimensions.width = prefs.getInt( "emailDimensions.width", emailDimensions.width );
         emailDimensions.height = prefs.getInt( "emailDimensions.height", emailDimensions.height );
         
-        convertOldSettings();
         validateCopyLocations();
         validateSettings();
         
         loadCameraSettings();
     }
-    
-    
-    /**
-     *  This method converts the settings stored in the PersistenceService or ini file by
-     *  loading them, writing the Preferences and deleting the old store. It will be removed
-     *  on 11.11.2007, a year after implementing the Preferences in Jpo.
-     */
-    private static void convertOldSettings() {
-        try {
-            PersistenceService ps = (PersistenceService) ServiceManager.lookup( "javax.jnlp.PersistenceService" );
-            BasicService bs = (BasicService) ServiceManager.lookup( "javax.jnlp.BasicService" );
-            try {
-                URL baseURL = bs.getCodeBase();
-                URL settingsURL = new URL( baseURL, "Settings" );
-                ps.get( settingsURL );
-                //FileContents fc = ps.get( settingsURL );
-                //in = new BufferedReader( new InputStreamReader( fc.getInputStream() ) );
-                Tools.log("Setting.convertOldSettings: Running in Java Web Start Mode and found PersistenceService for Settings." );
-                
-                loadSettingsOld();
-                writeSettings();
-                ps.delete( settingsURL );
-            } catch ( MalformedURLException x ) {
-                Tools.log( "Settings.convertOldSettings: We had a MalformedURLException: " + x.getMessage() );
-                return;
-            } catch ( IOException x ) {
-                Tools.log( "Settings.convertOldSettings: Running in a Java Web Start context but there are no settings that could be read from the PersistenceService. Good." );
-                return;
-            }
-        } catch ( UnavailableServiceException x ) {
-            if ( iniFile.exists() ) {
-                Tools.log("Settings.convertOldSettings: Converting and removing ini File: " + iniFile.getPath() );
-                loadSettingsOld();
-                writeSettings();
-                iniFile.delete();
-            } else {
-                Tools.log("Settings.convertOldSettings: no old settings found to convert." );
-            }
-        }
-    }
-    
-    
-    
-    /**
-     *  old way of loading settings from an Ini file or the jnlp PersistenceService.
-     *  Will be removed in a year: on 11.11.2007
-     */
-    public static void loadSettingsOld() {
-        BufferedReader in = null;
-        
-        try {
-            PersistenceService ps = (PersistenceService) ServiceManager.lookup( "javax.jnlp.PersistenceService" );
-            BasicService bs = (BasicService) ServiceManager.lookup( "javax.jnlp.BasicService" );
-            try {
-                URL baseURL = bs.getCodeBase();
-                URL settingsURL = new URL( baseURL, "Settings" );
-                ps.get( settingsURL );
-                FileContents fc = ps.get( settingsURL );
-                in = new BufferedReader( new InputStreamReader( fc.getInputStream() ) );
-                Tools.log("Setting.loadSettingsOld: Running in Java Web Start Mode and found PersistenceService for Settings." );
-            } catch ( MalformedURLException x ) {
-                Tools.log( "Setting.loadSettingsOld: We had a MalformedURLException: " + x.getMessage() );
-                return;
-            } catch ( IOException x ) {
-                Tools.log( "Settings.loadSettingsOld: There are no settings that could be read." );
-                return;
-            }
-        } catch ( UnavailableServiceException x ) {
-            Tools.log( "Settings.loadSettingsOld: Running in local file mode. Trying to locate ini file " + iniFile.getPath() );
-            if ( ! iniFile.exists() ) {
-                Tools.log("Settings.loadSettingsOld: Can't find ini File. Using defaults." );
-                return;
-            }
-            try {
-                in = new BufferedReader(new FileReader( iniFile ));
-            } catch ( FileNotFoundException y ) {
-                Tools.log("Settings.loadSettingsOld: Can't find ini File. Using defaults." );
-                return;
-            }
-        }
-        
-        
-        try {
-            
-            String sb = new String();
-            
-            int recentCollectionsIndex = 0;
-            int copyLocationsIndex = 0;
-            int userFunctionNameIndex = 0;
-            int userFunctionCmdIndex = 0;
-            
-            while (in.ready()) {
-                sb = in.readLine();
-                
-                
-                
-                if (sb.startsWith("leaveForPanel")) {
-                    String Value = sb.substring(sb.indexOf("=") + 2);
-                    leaveForPanel = Integer.parseInt(Value);
-                } else if (sb.startsWith("maxThumbnails")) {
-                    String Value = sb.substring(sb.indexOf("=") + 2);
-                    maxThumbnails = Integer.parseInt(Value);
-                } else if (sb.startsWith("currentLanguage")) {
-                    //System.out.println("Settings.loadSettings: parsing tag currentLanguage as " + sb.substring(sb.indexOf("=") + 2) );
-                    // unsupported as of 20.1.2007 RE
-                    //setLanguage( sb.substring(sb.indexOf("=") + 2) );
-                } else if (sb.startsWith("thumbnailSize")) {
-                    String Value = sb.substring(sb.indexOf("=") + 2);
-                    thumbnailSize = Integer.parseInt(Value);
-                } else if (sb.startsWith("mainFrameDimensions-X")) {
-                    String Value = sb.substring(sb.indexOf("=") + 2);
-                    mainFrameDimensions.x = Integer.parseInt(Value);
-                } else if (sb.startsWith("mainFrameDimensions-Y")) {
-                    String Value = sb.substring(sb.indexOf("=") + 2);
-                    mainFrameDimensions.y = Integer.parseInt(Value);
-                } else if (sb.startsWith("mainFrameDimensions-Width")) {
-                    String Value = sb.substring(sb.indexOf("=") + 2);
-                    mainFrameDimensions.width = Integer.parseInt(Value);
-                } else if (sb.startsWith("mainFrameDimensions-Height")) {
-                    String Value = sb.substring(sb.indexOf("=") + 2);
-                    mainFrameDimensions.height = Integer.parseInt(Value);
-                } else if (sb.startsWith("preferredMasterDividerSpot")) {
-                    String Value = sb.substring(sb.indexOf("=") + 2);
-                    preferredMasterDividerSpot = Integer.parseInt(Value);
-                } else if (sb.startsWith("preferredLeftDividerSpot")) {
-                    Tools.log(" --> loading " + sb);
-                    String Value = sb.substring(sb.indexOf("=") + 2);
-                    preferredLeftDividerSpot = Integer.parseInt(Value);
-                } else if (sb.startsWith("dividerWidth")) {
-                    String Value = sb.substring(sb.indexOf("=") + 2);
-                    dividerWidth = Integer.parseInt(Value);
-                } else if (sb.startsWith("pictureViewerDefaultDimensions-X")) {
-                    String Value = sb.substring(sb.indexOf("=") + 2);
-                    pictureViewerDefaultDimensions.x = Integer.parseInt(Value);
-                } else if (sb.startsWith("pictureViewerDefaultDimensions-Y")) {
-                    String Value = sb.substring(sb.indexOf("=") + 2);
-                    pictureViewerDefaultDimensions.y = Integer.parseInt(Value);
-                } else if (sb.startsWith("pictureViewerDefaultDimensions-Width")) {
-                    String Value = sb.substring(sb.indexOf("=") + 2);
-                    pictureViewerDefaultDimensions.width = Integer.parseInt(Value);
-                } else if (sb.startsWith("pictureViewerDefaultDimensions-Height")) {
-                    String Value = sb.substring(sb.indexOf("=") + 2);
-                    pictureViewerDefaultDimensions.height = Integer.parseInt(Value);
-                } else if (sb.startsWith("autoload")) {
-                    autoLoad = sb.substring(sb.indexOf("=") + 2);
-                } else if (sb.startsWith("copyLocations")
-                && ( copyLocationsIndex < maxCopyLocations ) ) {
-                    copyLocations[ copyLocationsIndex ] = sb.substring(sb.indexOf("=") + 2);
-                    Tools.log( "copyLocations[" + Integer.toString( copyLocationsIndex ) + "] is set to " + copyLocations[ copyLocationsIndex ] );
-                    copyLocationsIndex++;
-                } else if (sb.startsWith("recentCollections")
-                && ( recentCollectionsIndex < recentFiles ) ) {
-                    recentCollections[ recentCollectionsIndex ] = sb.substring(sb.indexOf("=") + 2);
-                    Tools.log( "recentCollections[" + Integer.toString( recentCollectionsIndex ) + "] is set to " + recentCollections[ recentCollectionsIndex ] );
-                    recentCollectionsIndex++;
-                } else if (sb.startsWith("userFunctionName")
-                && ( userFunctionNameIndex < maxUserFunctions ) ) {
-                    userFunctionNames[ userFunctionNameIndex ] = sb.substring(sb.indexOf("=") + 2);
-                    Tools.log( "userFunctionNames[" + Integer.toString( userFunctionNameIndex ) + "] is set to " + userFunctionNames[ userFunctionNameIndex ] );
-                    userFunctionNameIndex++;
-                } else if (sb.startsWith("userFunctionCmd")
-                && ( userFunctionCmdIndex < maxUserFunctions ) ) {
-                    userFunctionCmd[ userFunctionCmdIndex ] = sb.substring(sb.indexOf("=") + 2);
-                    Tools.log( "userFunctionCmd[" + Integer.toString( userFunctionCmdIndex ) + "] is set to " + userFunctionCmd[ userFunctionCmdIndex ] );
-                    userFunctionCmdIndex++;
-                } else if (sb.startsWith("keepThumbnails")) {
-                    if ( (sb.substring(sb.indexOf("=") + 2)).startsWith( "False" ) )
-                        keepThumbnails = false;
-                } else if (sb.startsWith("maximiseJpoOnStartup")) {
-                    if ( (sb.substring(sb.indexOf("=") + 2)).startsWith( "False" ) )
-                        maximiseJpoOnStartup = false;
-                } else if (sb.startsWith("thumbnailPath")) {
-                    thumbnailPath = new File( sb.substring(sb.indexOf("=") + 2));
-                } else if (sb.startsWith("dontEnlargeSmallImages")) {
-                    if ( (sb.substring(sb.indexOf("=") + 2)).startsWith( "False" ) )
-                        dontEnlargeSmallImages = false;
-                } else if (sb.startsWith("thumbnailCounter")) {
-                    String Value = sb.substring(sb.indexOf("=") + 2);
-                    thumbnailCounter = Integer.parseInt(Value);
-                } else if (sb.startsWith("logfile")) {
-                    logfile = new File( sb.substring(sb.indexOf("=") + 2));
-                } else if (sb.startsWith("writeLog")) {
-                    if ( (sb.substring(sb.indexOf("=") + 2)).startsWith( "True" ) )
-                        writeLog = true;
-                    else
-                        writeLog = false;
-                } else if (sb.startsWith("saveSizeOnExit")) {
-                    if ( (sb.substring(sb.indexOf("=") + 2)).startsWith( "True" ) )
-                        saveSizeOnExit = true;
-                    else
-                        saveSizeOnExit = false;
-                } else if (sb.startsWith("maxCache")) {
-                    String Value = sb.substring(sb.indexOf("=") + 2);
-                    //Tools.log("maxCache: >" + Value + "<");
-                    maxCache = Integer.parseInt(Value);
-                } else if (sb.startsWith("maximumPictureSize")) {
-                    String Value = sb.substring(sb.indexOf("=") + 2);
-                    //Tools.log("maxCache: >" + Value + "<");
-                    maximumPictureSize = Integer.parseInt(Value);
-                } else if (sb.startsWith("defaultHtmlPicsPerRow")) {
-                    String Value = sb.substring(sb.indexOf("=") + 2);
-                    //Tools.log("maxCache: >" + Value + "<");
-                    defaultHtmlPicsPerRow = Integer.parseInt(Value);
-                } else if (sb.startsWith("defaultHtmlThumbnailWidth")) {
-                    String Value = sb.substring(sb.indexOf("=") + 2);
-                    //Tools.log("maxCache: >" + Value + "<");
-                    defaultHtmlThumbnailWidth = Integer.parseInt(Value);
-                } else if (sb.startsWith("defaultHtmlThumbnailHeight")) {
-                    String Value = sb.substring(sb.indexOf("=") + 2);
-                    //Tools.log("maxCache: >" + Value + "<");
-                    defaultHtmlThumbnailHeight = Integer.parseInt(Value);
-                } else if (sb.startsWith("defaultHtmlMidresWidth")) {
-                    String Value = sb.substring(sb.indexOf("=") + 2);
-                    //Tools.log("maxCache: >" + Value + "<");
-                    defaultHtmlMidresWidth = Integer.parseInt(Value);
-                } else if (sb.startsWith("defaultHtmlMidresHeight")) {
-                    String Value = sb.substring(sb.indexOf("=") + 2);
-                    //Tools.log("maxCache: >" + Value + "<");
-                    defaultHtmlMidresHeight = Integer.parseInt(Value);
-                } else if (sb.startsWith("defaultJpgQuality")) {
-                    String Value = sb.substring(sb.indexOf("=") + 2);
-                    //Tools.log("maxCache: >" + Value + "<");
-                    defaultJpgQuality = Float.parseFloat(Value);
-                } else if (sb.startsWith("thumbnailFastScale")) {
-                    if ( (sb.substring(sb.indexOf("=") + 2)).startsWith( "True" ) )
-                        thumbnailFastScale = true;
-                    else
-                        thumbnailFastScale = false;
-                } else if (sb.startsWith("pictureViewerFastScale")) {
-                    if ( (sb.substring(sb.indexOf("=") + 2)).startsWith( "True" ) )
-                        pictureViewerFastScale = true;
-                    else
-                        pictureViewerFastScale = false;
-                } else if (sb.startsWith("emailSender")) {
-                    emailSenders.add(sb.substring(sb.indexOf("=") + 2) );
-                } else if (sb.startsWith("emailRecipient")) {
-                    emailRecipients.add(sb.substring(sb.indexOf("=") + 2) );
-                } else if (sb.startsWith("emailServer")) {
-                    emailServer = sb.substring( sb.indexOf("=") + 2 );
-                } else if (sb.startsWith("emailPort")) {
-                    emailPort = sb.substring( sb.indexOf("=") + 2 );
-                } else if (sb.startsWith("emailUser")) {
-                    emailUser = sb.substring( sb.indexOf("=") + 2 );
-                } else if (sb.startsWith("emailPassword")) {
-                    emailPassword = sb.substring( sb.indexOf("=") + 2 );
-                } else if (sb.startsWith("emailScaleImages")) {
-                    if ( (sb.substring(sb.indexOf("=") + 2)).startsWith( "True" ) )
-                        emailScaleImages = true;
-                    else
-                        emailScaleImages = false;
-                } else if (sb.startsWith("emailSendOriginal")) {
-                    if ( (sb.substring(sb.indexOf("=") + 2)).startsWith( "True" ) )
-                        emailSendOriginal = true;
-                    else
-                        emailSendOriginal = false;
-                } else if (sb.startsWith("emailDimensions.width")) {
-                    String Value = sb.substring(sb.indexOf("=") + 2);
-                    emailDimensions.width = Integer.parseInt(Value);
-                } else if (sb.startsWith("emailDimensions.height")) {
-                    String Value = sb.substring(sb.indexOf("=") + 2);
-                    emailDimensions.height = Integer.parseInt(Value);
-                } else if ( sb.startsWith("#") || sb.equals("") ) {
-                } else {
-                    System.out.println("Can't decode ini line: " + sb);
-                }
-                
-            }
-        } catch (IOException e) {
-            Tools.log( "Settings.loadSettingsOld: IOException " + e.getMessage() );
-            JOptionPane.showMessageDialog(
-                    Settings.anchorFrame,
-                    Settings.jpoResources.getString("cantReadIniFile") + e.getMessage(),
-                    Settings.jpoResources.getString("settingsError"),
-                    JOptionPane.ERROR_MESSAGE);
-        }
-    }
-    
     
     
     /**
@@ -1220,21 +929,16 @@ public class Settings {
     public static void writeSettings() {
         prefs.put( "currentLocale", getCurrentLocale().toString() );
         prefs.putInt( "maximumPictureSize", maximumPictureSize );
-        prefs.putInt( "leaveForPanel", leaveForPanel );
         prefs.putInt( "maxThumbnails", maxThumbnails );
         prefs.putInt( "thumbnailSize", thumbnailSize );
-        prefs.putBoolean( "saveSizeOnExit", saveSizeOnExit );
         prefs.putBoolean( "maximiseJpoOnStartup", maximiseJpoOnStartup );
-        prefs.putInt( "mainFrameDimensions.x", mainFrameDimensions.x );
-        prefs.putInt( "mainFrameDimensions.y", mainFrameDimensions.y );
         prefs.putInt( "mainFrameDimensions.width", mainFrameDimensions.width );
         prefs.putInt( "mainFrameDimensions.height", mainFrameDimensions.height );
         prefs.putInt( "preferredMasterDividerSpot", preferredMasterDividerSpot );
         prefs.putInt( "preferredLeftDividerSpot", preferredLeftDividerSpot );
         prefs.putInt( "dividerWidth", dividerWidth );
         prefs.put( "autoload", autoLoad );
-        prefs.putInt( "pictureViewerDefaultDimensions.x", pictureViewerDefaultDimensions.x );
-        prefs.putInt( "pictureViewerDefaultDimensions.y", pictureViewerDefaultDimensions.y );
+        prefs.putBoolean( "maximisePictureViewerWindow", maximisePictureViewerWindow );
         prefs.putInt( "pictureViewerDefaultDimensions.width", pictureViewerDefaultDimensions.width );
         prefs.putInt( "pictureViewerDefaultDimensions.height", pictureViewerDefaultDimensions.height );
         int i;
@@ -1306,399 +1010,169 @@ public class Settings {
     
     
     
+    /**
+     *  Writes the Cameras collection to the preferences. Uses an idea presented by Greg Travis
+     *  on this IBM website: http://www-128.ibm.com/developerworks/java/library/j-prefapi.html
+     */
+    public static void writeCameraSettings() {
+        //Tools.log( "Writing Cameras" );
+        prefs.putInt( "NumberOfCameras", Cameras.size() );
+        int i = 0;
+        for ( Camera c : Cameras ) {
+            prefs.put( "Camera[" + Integer.toString( i ) + "].description", c.getDescription() );
+            prefs.put( "Camera[" + Integer.toString( i ) + "].cameraMountPoint", c.getCameraMountPoint() );
+            prefs.putBoolean( "Camera[" + Integer.toString( i ) + "].useFilename", c.getUseFilename() );
+            prefs.putBoolean( "Camera[" + Integer.toString( i ) + "].monitor", c.getMonitorForNewPictures() );
+            try {
+                PrefObj.putObject( prefs, "Camera[" + Integer.toString( i ) + "].oldImage", c.getOldImage() );
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            } catch (BackingStoreException ex) {
+                ex.printStackTrace();
+            } catch (ClassNotFoundException ex) {
+                ex.printStackTrace();
+            }
+            i++;
+        }
+    }
+    
     
     /**
-     *  method that writes the Jpo.ini file
-     *  @deprecated
-     */
-    public static void writeSettingsOld() {
-        //Tools.log( "Settings.writeSettings" );
-        BufferedWriter out = null;
-        
-        try {
-            PersistenceService ps = (PersistenceService) ServiceManager.lookup( "javax.jnlp.PersistenceService" );
-            BasicService bs = (BasicService) ServiceManager.lookup( "javax.jnlp.BasicService" );
-            try {
-                URL baseURL = bs.getCodeBase();
-                //Tools.log( "CodeBase was " + baseURL.toString() );
-                URL settingsURL = new URL( baseURL, "Settings" );
-                try {
-                    ps.delete( settingsURL );
-                } catch ( IOException x ) {
-                    // it doesn't matter if we can't delete the file.
-                    Tools.log( "Settings.writeSettings: Caught an IOException when trying to delete the file. Perhaps it didn't exist?. Continuing. Error message: " + x.getMessage() );
-                }
-                ps.create( settingsURL, 4096 );
-                FileContents fc = ps.get( settingsURL );
-                Tools.log( "Settings.writeSettings: Running in Java Web Start setting and writing settings to PersistenceService: " + baseURL.toString() + "/" + fc.getName() );
-                out = new BufferedWriter( new OutputStreamWriter( fc.getOutputStream( true ) ) );
-            } catch ( MalformedURLException x ) {
-                Tools.log( "We had a MalformedURLException: " + x.getMessage() );
-                return;
-            } catch ( IOException x ) {
-                Tools.log( "We had an IOException: " + x.getMessage() );
-                return;
-            }
-        } catch ( UnavailableServiceException x ) {
-            Tools.log( "Settings.writeSettings: no PersistenceService available: writing to local file: " + iniFile.getPath() );
-            try {
-                out = new BufferedWriter(new FileWriter( iniFile));
-            } catch ( IOException y ) {
-                Tools.log("Settings.writeSettings: can't create ini File. Aborting. Error: " + y.getMessage() );
-                return;
-            }
-        }
-        
-        
-        try {
-            
-            
-            out.write("# This is the settings file for the JPO application.");
-            out.newLine();
-            out.write("# You can delete it and the application will revert to the defaults.");
-            out.newLine();
-            out.write("# This file gets created when you click Save in the settlings dialog.");
-            out.newLine();
-            out.newLine();
-            
-            
-            Tools.log("writeSettings: writing language as " + getCurrentLanguage() );
-            out.write("currentLanguage = " + getCurrentLanguage() );
-            out.newLine();
-            
-            out.write("maximumPictureSize = " + String.valueOf( maximumPictureSize ) );
-            out.newLine();
-            
-            out.write("leaveForPanel = " + String.valueOf( leaveForPanel ) );
-            out.newLine();
-            
-            out.write("maxThumbnails = " + String.valueOf( maxThumbnails ) );
-            out.newLine();
-            
-            out.write("thumbnailSize = " + String.valueOf( thumbnailSize ) );
-            out.newLine();
-            
-            if ( saveSizeOnExit )
-                out.write( "saveSizeOnExit = True" );
-            else
-                out.write( "saveSizeOnExit = False" );
-            out.newLine();
-            
-            if ( maximiseJpoOnStartup )
-                out.write( "maximiseJpoOnStartup = True" );
-            else
-                out.write( "maximiseJpoOnStartup = False" );
-            out.newLine();
-            
-            out.write("mainFrameDimensions-X = " + String.valueOf( (int) mainFrameDimensions.getX() ) );
-            out.newLine();
-            
-            out.write("mainFrameDimensions-Y = " + String.valueOf( (int) mainFrameDimensions.getY() ) );
-            out.newLine();
-            
-            out.write("mainFrameDimensions-Width = " + String.valueOf( (int) mainFrameDimensions.getWidth() ) );
-            out.newLine();
-            
-            out.write("mainFrameDimensions-Height = " + String.valueOf( (int) mainFrameDimensions.getHeight() ) );
-            out.newLine();
-            
-            out.write( "preferredMasterDividerSpot = " + String.valueOf( preferredMasterDividerSpot ) );
-            out.newLine();
-            
-            out.write( "preferredLeftDividerSpot = " + String.valueOf( preferredLeftDividerSpot ) );
-            out.newLine();
-            
-            out.write("dividerWidth = " + String.valueOf(dividerWidth));
-            out.newLine();
-            
-            out.write("autoload = " + autoLoad);
-            out.newLine();
-            
-            
-            out.write("pictureViewerDefaultDimensions-X = " + String.valueOf((int) pictureViewerDefaultDimensions.getX()) );
-            out.newLine();
-            
-            out.write("pictureViewerDefaultDimensions-Y = " + String.valueOf((int) pictureViewerDefaultDimensions.getY()) );
-            out.newLine();
-            
-            out.write("pictureViewerDefaultDimensions-Width = " + String.valueOf((int)pictureViewerDefaultDimensions.getWidth()));
-            out.newLine();
-            
-            out.write("pictureViewerDefaultDimensions-Height = " + String.valueOf((int)pictureViewerDefaultDimensions.getHeight()));
-            out.newLine();
-            
-            
-            for ( int i = 0; i < Settings.maxCopyLocations; i++ ) {
-                if ( copyLocations[ i ] != null ) {
-                    out.write( "copyLocations = " + copyLocations[ i ] );
-                    out.newLine();
-                }
-            }
-            
-            
-            for ( int i = 0; i < Settings.recentFiles; i++ ) {
-                if ( recentCollections[ i ] != null ) {
-                    out.write( "recentCollections = " + recentCollections[ i ] );
-                    out.newLine();
-                }
-            }
-            
-            
-            for ( int i = 0; i < Settings.maxUserFunctions; i++ ) {
-                if (( userFunctionNames[ i ] != null )
-                && ( userFunctionNames[ i ].length() > 0 )
-                && ( userFunctionCmd[ i ] != null )
-                && ( userFunctionCmd[ i ].length() > 0 ) ) {
-                    out.write( "userFunctionName = " + userFunctionNames[ i ] );
-                    out.newLine();
-                    out.write( "userFunctionCmd = " + userFunctionCmd[ i ] );
-                    out.newLine();
-                }
-            }
-            
-            
-            if ( keepThumbnails )
-                out.write( "keepThumbnails = True" );
-            else
-                out.write( "keepThumbnails = False" );
-            out.newLine();
-            
-            
-            out.write("thumbnailPath = " + thumbnailPath.getPath() );
-            out.newLine();
-            
-            if ( dontEnlargeSmallImages )
-                out.write( "dontEnlargeSmallImages = True" );
-            else
-                out.write( "dontEnlargeSmallImages = False" );
-            out.newLine();
-            
-            
-            out.write("thumbnailCounter = " + String.valueOf(thumbnailCounter));
-            out.newLine();
-            
-            
-            out.write( "logfile = " + logfile.getPath() );
-            out.newLine();
-            
-            if ( writeLog )
-                out.write( "writeLog = True" );
-            else
-                out.write( "writeLog = False" );
-            out.newLine();
-            
-            out.write("maxCache = " + String.valueOf( maxCache ));
-            out.newLine();
-            
-            out.write("defaultHtmlPicsPerRow = " + String.valueOf( defaultHtmlPicsPerRow ));
-            out.newLine();
-            
-            out.write("defaultHtmlThumbnailWidth = " + String.valueOf( defaultHtmlThumbnailWidth ));
-            out.newLine();
-            out.write("defaultHtmlThumbnailHeight = " + String.valueOf( defaultHtmlThumbnailHeight ));
-            out.newLine();
-            
-            out.write("defaultHtmlMidresWidth = " + String.valueOf( defaultHtmlMidresWidth ));
-            out.newLine();
-            out.write("defaultHtmlMidresHeight = " + String.valueOf( defaultHtmlMidresHeight ));
-            out.newLine();
-            
-            out.write("defaultJpgQuality = " + String.valueOf( defaultJpgQuality ));
-            out.newLine();
-            
-            
-            if ( thumbnailFastScale )
-                out.write( "thumbnailFastScale = True" );
-            else
-                out.write( "thumbnailFastScale = False" );
-            out.newLine();
-            
-            if ( pictureViewerFastScale )
-                out.write( "pictureViewerFastScale = True" );
-            else
-                out.write( "pictureViewerFastScale = False" );
-            out.newLine();
-            
-            
-            Iterator i = emailSenders.iterator();
-            while ( i.hasNext() ) {
-                out.write( "emailSender = " + (String) i.next() );
-                out.newLine();
-            }
-            
-            i = emailRecipients.iterator();
-            while ( i.hasNext() ) {
-                out.write( "emailRecipient = " + (String) i.next() );
-                out.newLine();
-            }
-            
-            
-            out.write( "emailServer = " + emailServer );
-            out.newLine();
-            
-            out.write( "emailPort = " + emailPort );
-            out.newLine();
-            
-            out.write( "emailUser = " + emailUser );
-            out.newLine();
-            
-            out.write( "emailPassword = " + emailPassword );
-            out.newLine();
-            
-            
-            if ( emailScaleImages )
-                out.write( "emailScaleImages = True" );
-            else
-                out.write( "emailScaleImages = False" );
-            out.newLine();
-            
-            if ( emailSendOriginal )
-                out.write( "emailSendOriginal = True" );
-            else
-                out.write( "emailSendOriginal = False" );
-            out.newLine();
-            
-            out.write("emailDimensions.width = " + String.valueOf( emailDimensions.width ) );
-            out.newLine();
-            
-            out.write("emailDimensions.height = " + String.valueOf( Settings.emailDimensions.height ) );
-            out.newLine();
-            
-            
-            out.close();
-            unsavedSettingChanges = false;
-            
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(
-                    Settings.anchorFrame,
-                    Settings.jpoResources.getString("cantWriteIniFile" + e.getMessage() ),
-                    Settings.jpoResources.getString("settingsError"),
-                    JOptionPane.ERROR_MESSAGE);
-        }
-    }
-    
-    
-    
-    public static void writeCameraSettings() {
-        Tools.log( "Writing Camera Settings" );
-        OutputStream out;
-        
-        try {
-            PersistenceService ps = (PersistenceService) ServiceManager.lookup( "javax.jnlp.PersistenceService" );
-            BasicService bs = (BasicService) ServiceManager.lookup( "javax.jnlp.BasicService" );
-            try {
-                URL baseURL = bs.getCodeBase();
-                //Tools.log( "CodeBase was " + baseURL.toString() );
-                URL camerasURL = new URL( baseURL, "Cameras" );
-                try {
-                    ps.delete( camerasURL );
-                } catch ( IOException x ) {
-                    // it doesn't matter if we can't delete the file.
-                    Tools.log( "Settings.writeSettings: Caught an IOException when trying to delete the file. Perhaps it didn't exist?. Continuing. Error message: " + x.getMessage() );
-                }
-                ps.create( camerasURL, 4096 );
-                FileContents fc = ps.get( camerasURL );
-                Tools.log( "Settings.writeSettings: Running in Java Web Start setting and writing settings to PersistenceService: " + baseURL.toString() + "/" + fc.getName() );
-                out = fc.getOutputStream( true );
-            } catch ( MalformedURLException x ) {
-                Tools.log( "We had a MalformedURLException: " + x.getMessage() );
-                return;
-            } catch ( IOException x ) {
-                Tools.log( "We had an IOException: " + x.getMessage() );
-                return;
-            }
-        } catch ( UnavailableServiceException x ) {
-            Tools.log( "Settings.writeSettings: no PersistenceService available: writing to local file: " + camerasFile.getPath() );
-            try {
-                out = new FileOutputStream( camerasFile );
-            } catch ( IOException y ) {
-                Tools.log("Settings.writeSettings: can't create cameras File. Aborting. Error: " + y.getMessage() );
-                return;
-            }
-        }
-        
-        
-        try {
-            ObjectOutputStream oos = new ObjectOutputStream( out );
-            
-            oos.writeObject( Cameras );
-            oos.close();
-        } catch ( IOException x ) {
-            Tools.log("Settings.writeCameraSettings failed on an IOException: " + x.getMessage());
-        }
-    }
+     *  Writes the Camera settings
+     *
+     * public static void writeCameraSettingsOld() {
+     * //Tools.log( "Writing Camera Settings" );
+     * OutputStream out;
+     *
+     * try {
+     * PersistenceService ps = (PersistenceService) ServiceManager.lookup( "javax.jnlp.PersistenceService" );
+     * BasicService bs = (BasicService) ServiceManager.lookup( "javax.jnlp.BasicService" );
+     * try {
+     * URL baseURL = bs.getCodeBase();
+     * //Tools.log( "CodeBase was " + baseURL.toString() );
+     * URL camerasURL = new URL( baseURL, "Cameras" );
+     * try {
+     * ps.delete( camerasURL );
+     * } catch ( IOException x ) {
+     * // it doesn't matter if we can't delete the file.
+     * Tools.log( "Settings.writeSettings: Caught an IOException when trying to delete the file. Perhaps it didn't exist?. Continuing. Error message: " + x.getMessage() );
+     * }
+     * ps.create( camerasURL, 4096 );
+     * FileContents fc = ps.get( camerasURL );
+     * Tools.log( "Settings.writeSettings: Running in Java Web Start setting and writing settings to PersistenceService: " + baseURL.toString() + "/" + fc.getName() );
+     * out = fc.getOutputStream( true );
+     * } catch ( MalformedURLException x ) {
+     * Tools.log( "We had a MalformedURLException: " + x.getMessage() );
+     * return;
+     * } catch ( IOException x ) {
+     * Tools.log( "We had an IOException: " + x.getMessage() );
+     * return;
+     * }
+     * } catch ( UnavailableServiceException x ) {
+     * Tools.log( "Settings.writeSettings: no PersistenceService available: writing to local file: " + camerasFile.getPath() );
+     * try {
+     * out = new FileOutputStream( camerasFile );
+     * } catch ( IOException y ) {
+     * Tools.log("Settings.writeSettings: can't create cameras File. Aborting. Error: " + y.getMessage() );
+     * return;
+     * }
+     * }
+     *
+     *
+     * try {
+     * ObjectOutputStream oos = new ObjectOutputStream( out );
+     *
+     * oos.writeObject( Cameras );
+     * oos.close();
+     * } catch ( IOException x ) {
+     * Tools.log("Settings.writeCameraSettings failed on an IOException: " + x.getMessage());
+     * }
+     * }*/
     
     
     /**
      *  this method attempts to load the cameras
      */
     public static void loadCameraSettings() {
-        Tools.log( "Settings.loadCameraSettings: Loading Camera Settings" );
-        InputStream in;
-        try {
-            PersistenceService ps = (PersistenceService) ServiceManager.lookup( "javax.jnlp.PersistenceService" );
-            BasicService bs = (BasicService) ServiceManager.lookup( "javax.jnlp.BasicService" );
-            try {
-                URL baseURL = bs.getCodeBase();
-                URL camerasURL = new URL( baseURL, "Cameras" );
-                ps.get( camerasURL );
-                FileContents fc = ps.get( camerasURL );
-                in = fc.getInputStream();
-                Tools.log("Setting.loadCameraSettings: Running in Java Web Start Mode and found PersistenceService for Settings." );
-            } catch ( MalformedURLException x ) {
-                Tools.log( "Setting.loadCameraSettings: We had a MalformedURLException: " + x.getMessage() );
-                return;
-            } catch ( IOException x ) {
-                Tools.log( "Settings.loadCameraSettings: There are no settings that could be read." );
-                return;
-            }
-        } catch ( UnavailableServiceException x ) {
-            Tools.log( "Settings.loadCameraSettings: Running in local file mode. Trying to locate file " + camerasFile.getPath() );
-            if ( ! camerasFile.exists() ) {
-                Tools.log("Settings.loadCameraSettings: Can't find file. Using defaults." );
-                return;
-            }
-            try {
-                in = new FileInputStream( camerasFile );
-            } catch ( FileNotFoundException y ) {
-                Tools.log("Settings.loadCameraSettings: Can't find ini File. Using defaults." );
-                return;
-            }
-        }
-        
-        try{
-            ObjectInputStream ois = new ObjectInputStream( in );
+        int numberOfCameras = prefs.getInt( "NumberOfCameras", 0 );
+        for ( int i = 0; i < numberOfCameras; i++ ) {
+            Camera c = new Camera();
+            c.setDescription( prefs.get( "Camera[" + Integer.toString( i ) + "].description", "unknown" ) );
+            c.setCameraMountPoint( prefs.get( "Camera[" + Integer.toString( i ) + "].cameraMountPoint", FileSystemView.getFileSystemView().getHomeDirectory().toString() ) );
+            c.setUseFilename( prefs.getBoolean( "Camera[" + Integer.toString( i ) + "].useFilename", true ) );
+            c.setMonitorForNewPictures( prefs.getBoolean( "Camera[" + Integer.toString( i ) + "].monitor", true ) );
             
-            Cameras = (Vector) ois.readObject();
-            ois.close();
-        } catch ( IOException x ) {
-            Tools.log("Settings.loadCameraSettings failed with an IOException: " + x.getMessage());
-        } catch ( ClassNotFoundException x ) {
-            Tools.log("Settings.loadCameraSettings failed with an ClassNotFoundException: " + x.getMessage());
+            c.setOldImage( new HashMap() );
+            try {
+                c.setOldImage( (HashMap) PrefObj.getObject( prefs, "Camera[" + Integer.toString( i ) + "].oldImage" ) );
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            } catch (BackingStoreException ex) {
+                ex.printStackTrace();
+            } catch (ClassNotFoundException ex) {
+                ex.printStackTrace();
+            }
+            Cameras.add( c );
         }
-        createFirstCameraIfEmpty();
     }
     
-    
     /**
-     *   Creates a first camera in the table if we have no cameras yet.
+     *  this method attempts to load the cameras
+     *
+     * public static void loadCameraSettingsOld() {
+     * //Tools.log( "Settings.loadCameraSettings: Loading Camera Settings" );
+     * InputStream in;
+     * try {
+     * PersistenceService ps = (PersistenceService) ServiceManager.lookup( "javax.jnlp.PersistenceService" );
+     * BasicService bs = (BasicService) ServiceManager.lookup( "javax.jnlp.BasicService" );
+     * try {
+     * URL baseURL = bs.getCodeBase();
+     * URL camerasURL = new URL( baseURL, "Cameras" );
+     * ps.get( camerasURL );
+     * FileContents fc = ps.get( camerasURL );
+     * in = fc.getInputStream();
+     * //Tools.log("Setting.loadCameraSettings: Running in Java Web Start Mode and found PersistenceService for Settings." );
+     * } catch ( MalformedURLException x ) {
+     * Tools.log( "Setting.loadCameraSettings: We had a MalformedURLException: " + x.getMessage() );
+     * return;
+     * } catch ( IOException x ) {
+     * Tools.log( "Settings.loadCameraSettings: There are no settings that could be read." );
+     * return;
+     * }
+     * } catch ( UnavailableServiceException x ) {
+     * //Tools.log( "Settings.loadCameraSettings: Running in local file mode. Trying to locate file " + camerasFile.getPath() );
+     * if ( ! camerasFile.exists() ) {
+     * Tools.log("Settings.loadCameraSettings: Can't find file. Using defaults." );
+     * return;
+     * }
+     * try {
+     * in = new FileInputStream( camerasFile );
+     * } catch ( FileNotFoundException y ) {
+     * Tools.log("Settings.loadCameraSettings: Can't find ini File. Using defaults." );
+     * return;
+     * }
+     * }
+     *
+     * try{
+     * ObjectInputStream ois = new ObjectInputStream( in );
+     * Cameras = (Vector) ois.readObject();
+     * ois.close();
+     * } catch ( IOException x ) {
+     * Tools.log("Settings.loadCameraSettings failed with an IOException: " + x.getMessage());
+     * } catch ( ClassNotFoundException x ) {
+     * Tools.log("Settings.loadCameraSettings failed with an ClassNotFoundException: " + x.getMessage());
+     * }
+     * createFirstCameraIfEmpty();
+     * }*/
+    
+    
+    /*------------------------------------------------------------------------------
+     
+     
+    /**
+     *  every time a collection is opened this function is called for storing
+     *  the collection name in the Open Recent menu
      */
-    private static void createFirstCameraIfEmpty() {
-        Tools.log( "Settings.createFirstCameraIfEmpty: invoked" );
-        if ( Cameras.isEmpty() ) {
-            Camera cam = new Camera();
-            Cameras.add( cam );
-        }
-    }
-    
-    
-        /*------------------------------------------------------------------------------
-         
-         
-    /**
-         *  every time a collection is opened this function is called for storing
-         *  the collection name in the Open Recent menu
-         */
     public static void pushRecentCollection( String recentFile ) {
         for ( int i = 0; i < Settings.recentFiles; i++ ) {
             if ( ( recentCollections[ i ] != null ) &&
@@ -1756,14 +1230,14 @@ public class Settings {
     }
     
     
-        /*------------------------------------------------------------------------------
-         
-         
-         
-         
-        /**
-         *  Default locale if all else fails use this one.
-         */
+    /*------------------------------------------------------------------------------
+     
+     
+     
+     
+    /**
+     *  Default locale if all else fails use this one.
+     */
     private static final Locale DEFAULT_LOCALE = Locale.ENGLISH;
     
     /**
@@ -1778,6 +1252,7 @@ public class Settings {
     public static Locale getCurrentLocale() {
         return currentLocale;
     }
+    
     
     /**
      *  The langauge to be used for the application
@@ -1874,8 +1349,8 @@ public class Settings {
     
     
     
-        /*------------------------------------------------------------------------------
-            Stuff for memorizing the drop locations    */
+    /*------------------------------------------------------------------------------
+         Stuff for memorizing the drop locations    */
     
     
     /**
@@ -2141,13 +1616,4 @@ public class Settings {
         }
     }
     
-    
-    
-    
-    
 }
-
-
-
-
-

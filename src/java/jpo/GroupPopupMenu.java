@@ -357,7 +357,7 @@ class GroupPopupMenu extends JPopupMenu
 
 			addFlatFileJMenuItem.addActionListener( new ActionListener() {
 				public void actionPerformed( ActionEvent e ) {
-					popupNode.addFlatFile();
+					TreeNodeController.addFlatFile( popupNode );
 				}
 			});
 			addGroupJMenu.add( addFlatFileJMenuItem );

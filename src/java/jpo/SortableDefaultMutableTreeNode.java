@@ -6,7 +6,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import javax.swing.JOptionPane;
-import javax.swing.JFileChooser;
 import java.io.FileNotFoundException;
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -19,7 +18,6 @@ import com.drew.metadata.*;
 import com.drew.metadata.exif.*;
 import com.drew.metadata.iptc.*;
 import com.drew.imaging.jpeg.*;
-import com.drew.imaging.jpeg.JpegSegmentReader.*;
 import java.awt.event.*;
 import javax.swing.*;
 
@@ -84,9 +82,22 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
     }
     
     
+    
     /**
-     *  Call this method to sort the Children of a node by a field. The field codes are
-     *  the ones in the Settings object.
+     * @deprecated
+     * use Settings.pictureCollection.setUnsavedUpdates()  instead.
+     */
+    public void setUnsavedUpdates() {
+        Settings.pictureCollection.setUnsavedUpdates() ;
+    }
+    
+    
+    
+    /**
+     *  Call this method to sort the Children of a node by a field. The value of sortCriteria can be one of
+     *   {@link Settings.DESCRIPTION}, {@link Settings.FILM_REFERENCE}, {@link Settings.CREATION_TIME},
+     *   {@link Settings.COMMENT}, {@link Settings.PHOTOGRAPHER}, {@link Settings.COPYRIGHT_HOLDER}.
+     *  @param  sortCriteria The criteria by which the pictures should be sorted.
      */
     public void sortChildren( int sortCriteria ) {
         int childCount = getChildCount();
@@ -122,8 +133,11 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
     
     
     /**
-     *   Overriden method to allow sorting of nodes. It uses the static global variable
-     *   sortfield to figure out what to compare on.
+     *   Overridden method to allow sorting of nodes. It uses the static global variable
+     *   sortfield to figure out what to compare on. The value of sortfield can be one of
+     *   {@link Settings.DESCRIPTION}, {@link Settings.FILM_REFERENCE}, {@link Settings.CREATION_TIME},
+     *   {@link Settings.COMMENT}, {@link Settings.PHOTOGRAPHER}, {@link Settings.COPYRIGHT_HOLDER}.
+     *
      */
     public int compareTo( Object o ) {
         Object myObject = getUserObject();
@@ -198,8 +212,8 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
      *   be in another Group.
      *   It uses the getNextNode method of the DefaultMutableTreeNode.
      *
-     *   @return			The SortableDefaultMutableTreeNode that represents the next
-     *				picture. If no picture can be found it returns null.
+     *   @return The SortableDefaultMutableTreeNode that represents the next
+     *		 picture. If no picture can be found it returns null.
      *
      */
     public SortableDefaultMutableTreeNode getNextPicture() {
@@ -214,8 +228,8 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
      *   Returns the next node with a picture found after current one in the current Group
      *   It uses the getNextSibling method of the DefaultMutableTreeNode.
      *
-     *   @return			The SortableDefaultMutableTreeNode that represents the next
-     *				picture. If no picture can be found it returns null.
+     *   @return The SortableDefaultMutableTreeNode that represents the next
+     *		 picture. If no picture can be found it returns null.
      *
      */
     public SortableDefaultMutableTreeNode getNextGroupPicture() {
@@ -253,78 +267,25 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
     
     
     
-    
     /**
-     * @deprecated
+     *  This method is being overridden to allow us to capture editing events on the JTree that is rendering this node.
+     *  The TreeCellEditor will send the changed label as a String type object to the setUserObject method of this class.
+     *  My overriding this we can intercept this and update the PictureInfo or GroupInfo accordingly.
      */
-    public void setUnsavedUpdates() {
-        Settings.pictureCollection.setUnsavedUpdates() ;
-    }
-    
-    
-    
-    
-    
-    
-    
-    /**
-     *  This method fires up a user function if it can. User functions are only valid on
-     *  PictureInfo nodes.
-     *
-     *  @param  userFunction	The user function to be executed
-     */
-    public void runUserFunction( int userFunction ) {
-        Object myObject = getUserObject();
-        if ( ! ( myObject instanceof PictureInfo ) ){
-            Tools.log("SortableDefaultMutableTreeNode.runUserFunction: was called on an Object that wasn't a PictureInfo. Aborting.");
-            return;
-        }
-        if ( ( userFunction < 0 ) || ( userFunction >= Settings.maxUserFunctions ) ) {
-            Tools.log("SortableDefaultMutableTreeNode.runUserFunction: was called with an out of bounds index");
-            return;
-        }
-        String command = Settings.userFunctionCmd[ userFunction ];
-        if ( ( command == null ) || ( command.length() == 0 ) ) {
-            Tools.log("SortableDefaultMutableTreeNode.runUserFunction: command " + Integer.toString(userFunction) + " is not properly defined");
-            return;
-        }
-        
-        String filename = ((PictureInfo) myObject).getHighresFile().toString();
-        command = command.replaceAll("%f", filename );
-        
-        String escapedFilename = filename.replaceAll( "\\s", "\\\\\\\\ " );
-        command = command.replaceAll("%e", escapedFilename );
-        
-        
-        URL pictureURL = ((PictureInfo) myObject).getHighresURLOrNull();
-        if ( pictureURL == null ) {
-            Tools.log("SortableDefaultMutableTreeNode.runUserFunction: The picture doesn't have a valid URL. This is bad. Aborted.");
-            return;
-        }
-        command = command.replaceAll("%u", pictureURL.toString());
-        
-        Tools.log("SortableDefaultMutableTreeNode.runUserFunction: Command to run is: " + command);
-        try {
-            // Had big issues here because the simple exec (String) calls a StringTokenizer
-            // which messes up the filename parameters
-            int blank = command.indexOf( " " );
-            if ( blank > -1 ) {
-                String[] cmdarray = new String[2];
-                cmdarray[0] = command.substring( 0, blank );
-                cmdarray[1] = command.substring( blank+1 );
-                Runtime.getRuntime().exec( cmdarray );
-            } else {
-                String[] cmdarray = new String[1];
-                cmdarray[0] = command;
-                Runtime.getRuntime().exec( cmdarray );
+    public void setUserObject( Object o ) {
+        Tools.log( "setUserObject fired with o: " + o.toString() + " of class: " + o.getClass().toString() );
+        if ( o instanceof String ) {
+            Object obj = getUserObject();
+            if ( obj instanceof GroupInfo ) {
+                ( (GroupInfo) obj ).setGroupName( (String) o );
+            } else if ( obj instanceof PictureInfo ) {
+                ( (PictureInfo) obj ).setDescription( (String) o );
             }
-            
-        } catch ( IOException x ) {
-            Tools.log("SortableDefaultMutableTreeNode.runUserFunction: Runtime.exec collapsed with and IOException: " + x.getMessage() );
+        } else {
+            // fall back on the default behaviour
+            super.setUserObject( o );
         }
-        
     }
-    
     
     
     
@@ -491,10 +452,10 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
     
     
     /**
-     *   This innter class creates a popup menu for group drop events to find out whether to drop
+     *   This inner class creates a popup menu for group drop events to find out whether to drop
      *   into before or after the drop node.
      */
-    private class GroupDropPopupMenu extends JPopupMenu {
+    class GroupDropPopupMenu extends JPopupMenu {
         
         /**
          *  menu item that allows the user to edit the group description
@@ -524,7 +485,7 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
         
         
         /**
-         *   This innter class creates a popup menu for group drop events to find out whether to drop
+         *   This inner class creates a popup menu for group drop events to find out whether to drop
          *   into before or after the drop node.
          */
         public GroupDropPopupMenu( final DropTargetDropEvent event, final SortableDefaultMutableTreeNode sourceNode, final SortableDefaultMutableTreeNode targetNode ) {
@@ -617,76 +578,47 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
     }
     
     
-    
-    
-    
-    
     /**
-     *  This method brings up a Filechooser and then loads the images off the specified flat file.
+     *  This method adds the specified flat file of images at the current node.
      */
-    public void addFlatFile() {
-        JFileChooser jFileChooser = new JFileChooser();
-        jFileChooser.setFileSelectionMode(javax.swing.JFileChooser.FILES_ONLY);
-        jFileChooser.setApproveButtonText( Settings.jpoResources.getString( "fileOpenButtonText" ) );
-        jFileChooser.setDialogTitle( Settings.jpoResources.getString( "addFlatFileTitle" ) );
-        jFileChooser.setCurrentDirectory( Settings.getMostRecentCopyLocation() );
-        
-        int returnVal = jFileChooser.showOpenDialog( Settings.anchorFrame );
-        if( returnVal == JFileChooser.APPROVE_OPTION ) {
-            File chosenFile = jFileChooser.getSelectedFile();
-            addFlatFile( chosenFile );
-        }
-    }
-    
-    
-    /**
-     *  This method adds the speicifed flat file of images at the current node.
-     */
-    public void addFlatFile( File chosenFile ) {
+    public void addFlatFile( File chosenFile ) throws IOException {
         SortableDefaultMutableTreeNode newNode =
                 new SortableDefaultMutableTreeNode(
                 new GroupInfo( chosenFile.getName() ) );
         this.add( newNode );
-        try {
-            BufferedReader in = new BufferedReader( new FileReader( chosenFile ) );
-            String sb = new String();
-            while ( in.ready() ) {
-                sb = in.readLine();
-                File testFile = null;
-                try {
-                    testFile = new File( new URI(sb) );
-                } catch ( URISyntaxException x ) {
-                    Tools.log( "Conversion of " + sb+ " to URI failed: " + x.getMessage() );
-                } catch ( IllegalArgumentException x ) {
-                    Tools.log( "Conversion of " + sb+ " to URI failed: " + x.getMessage() );
-                }
-                
-                // dangerous but it doesn't continue if the first condition is true
-                
-                if ( (testFile != null) && (testFile.canRead()) ) {
-                    //Tools.log ( "Adding picture: " + sb );
-                    SortableDefaultMutableTreeNode newPictureNode = new SortableDefaultMutableTreeNode(
-                            new PictureInfo(
-                            sb ,
-                            Tools.lowresFilename() ,
-                            Tools.stripOutFilenameRoot( testFile ) ,
-                            ""
-                            )
-                            );
-                    newNode.add( newPictureNode );
-                } else {
-                    Tools.log( "Not adding picture: " + sb + " because it can't be read" );
-                }
+        BufferedReader in = new BufferedReader( new FileReader( chosenFile ) );
+        String sb = new String();
+        while ( in.ready() ) {
+            sb = in.readLine();
+            File testFile = null;
+            try {
+                testFile = new File( new URI(sb) );
+            } catch ( URISyntaxException x ) {
+                Tools.log( "Conversion of " + sb+ " to URI failed: " + x.getMessage() );
+            } catch ( IllegalArgumentException x ) {
+                Tools.log( "Conversion of " + sb+ " to URI failed: " + x.getMessage() );
             }
-            in.close();
-            getPictureCollection().getTreeModel().nodeStructureChanged( this );
-            getPictureCollection().setUnsavedUpdates( false );
-        } catch (IOException e) {
-            Tools.log( "IOException " + e.getMessage() );
-            JOptionPane.showMessageDialog(Settings.anchorFrame,
-                    "Could not read " + chosenFile.getPath(),
-                    Settings.jpoResources.getString("genericError"), 					JOptionPane.ERROR_MESSAGE);
+            
+            // dangerous but it doesn't continue if the first condition is true
+            
+            if ( (testFile != null) && (testFile.canRead()) ) {
+                //Tools.log ( "Adding picture: " + sb );
+                SortableDefaultMutableTreeNode newPictureNode = new SortableDefaultMutableTreeNode(
+                        new PictureInfo(
+                        sb ,
+                        Tools.lowresFilename() ,
+                        Tools.stripOutFilenameRoot( testFile ) ,
+                        ""
+                        )
+                        );
+                newNode.add( newPictureNode );
+            } else {
+                Tools.log( "Not adding picture: " + sb + " because it can't be read" );
+            }
         }
+        in.close();
+        getPictureCollection().getTreeModel().nodeStructureChanged( this );
+        getPictureCollection().setUnsavedUpdates( false );
     }
     
     
@@ -738,7 +670,7 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
     
     
     /**
-     *   Overriden method which will do the default befaviour and then sends a notification to
+     *   Overridden method which will do the default behaviour and then sends a notification to
      *   the Tree Model.
      */
     public void removeFromParent() {
@@ -757,8 +689,8 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
     
     
     /**
-     *   This method adds a new node to the data model of the tree. It is the overriden add
-     *   method which will first do the default befaviour and then send a notification to
+     *   This method adds a new node to the data model of the tree. It is the overridden add
+     *   method which will first do the default behaviour and then send a notification to
      *   the Tree Model if model updates are being requested. Likewise the unsaved changes
      *   of the collection are only being updated when model updates are not being reported.
      *   This allows the loading of collections (which of course massively change the collection
@@ -776,7 +708,7 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
     
     
     /**
-     *   Overriden method which will do the default befaviour and then sends a notification to
+     *   Overriden method which will do the default behaviour and then sends a notification to
      *   the Tree Model.
      */
     public void insert( SortableDefaultMutableTreeNode node, int index ) {
@@ -789,43 +721,6 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
     
     
     
-    /**
-     *   brings up a file chooser
-     *   and allows the user to specify where the image should to be copied to and then
-     *   copies it.
-     *
-     *
-     */
-    public void copyToNewLocation() {
-        URL originalUrl;
-        if ( ! ( this.getUserObject() instanceof PictureInfo ) ) {
-            Tools.log( "SDMTN.copyToNewLocation: inkoked on a non PictureInfo type node! Aborted." );
-            return;
-        }
-        try {
-            originalUrl = ((PictureInfo) this.getUserObject()).getHighresURL();
-        } catch ( MalformedURLException x ) {
-            Tools.log("MarformedURLException trapped on: " + ((PictureInfo) this.getUserObject()).getHighresLocation() + "\nReason: " + x.getMessage());
-            JOptionPane.showMessageDialog(
-                    Settings.anchorFrame,
-                    "MarformedURLException trapped on:\n" + ((PictureInfo) this.getUserObject()).getHighresLocation() + "\nReason: " + x.getMessage(),
-                    Settings.jpoResources.getString("genericError"),
-                    JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        
-        JFileChooser jFileChooser = new JFileChooser();
-        
-        jFileChooser.setFileSelectionMode( JFileChooser.DIRECTORIES_ONLY );
-        jFileChooser.setApproveButtonText( Settings.jpoResources.getString( "CopyImageDialogButton" ) );
-        jFileChooser.setDialogTitle( Settings.jpoResources.getString( "CopyImageDialogTitle" ) + originalUrl );
-        jFileChooser.setCurrentDirectory( Settings.getMostRecentCopyLocation() );
-        
-        int returnVal = jFileChooser.showSaveDialog( Settings.anchorFrame );
-        if( returnVal == JFileChooser.APPROVE_OPTION ) {
-            this.validateAndCopyPicture( jFileChooser.getSelectedFile() );
-        }
-    }
     
     
     
@@ -839,6 +734,8 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
      *   4: If the target directory doesn't exist then the directories are created.<br>
      *   5: The file extension is made to be that of the original if it isn't already that.<br>
      *   When all preconditions are met the image is copied
+     *
+     *  //TODO should throw exceptions instead of doing dialogs
      *
      *   @param targetFile  The target location for the new Picture.
      */
@@ -897,7 +794,6 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
         }
         
         
-        
         if ( targetFile.isDirectory() ) {
             try {
                 String sourceFilename = new File( new URI( originalUrl.toString() ) ).getName();
@@ -910,10 +806,6 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
                 return;
             }
         }
-        
-        
-        
-        
         
         targetFile = Tools.correctFilenameExtension( Tools.getExtension( originalUrl ), targetFile );
         
@@ -928,12 +820,11 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
     
     
     /**
-     *  Moves a node to the top of it's branch.
+     *  When this method is invoked on a node it is moved to the first child position of it's parent node.
      */
     public void moveNodeToTop() {
         if ( this.isRoot() )
             return;  // don't do anything with a root node.
-        
         
         SortableDefaultMutableTreeNode parentNode = (SortableDefaultMutableTreeNode) this.getParent();
         // abort if this action was attempted on the top node
@@ -947,7 +838,8 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
     
     
     /**
-     *  Moves a node up one position in the current branch.
+     *  When this method is invoked on a node it moves itself one position up towards the first
+     *  child position of it's parent node.
      */
     public void moveNodeUp() {
         if ( this.isRoot() )
@@ -1005,7 +897,7 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
     
     
     /**
-     *  Method that indents a node.
+     *  When this method is invoked on a node it becomes a sub-node of it's preceeding group.
      */
     public void indentNode() {
         if ( this.isRoot() )
@@ -1031,6 +923,7 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
         }
         setUnsavedUpdates();
     }
+    
     
     /**
      *  Method that outdents a node. This means the node will be placed just after it's parent's node
@@ -1066,53 +959,6 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
         groupNode.add( this );
         
         setUnsavedUpdates();
-    }
-    
-    
-    
-    
-    /**
-     *   Renames the file of the indicated node.
-     */
-    public void fileRename() {
-        Object userObject = this.getUserObject();
-        if ( ! ( userObject instanceof PictureInfo ) )
-            return;
-        
-        PictureInfo pi = (PictureInfo) userObject;
-        File highresFile = pi.getHighresFile();
-        if ( highresFile == null )
-            return;
-        
-        Object object =  Settings.jpoResources.getString("FileRenameLabel1")
-        + highresFile.toString()
-        + Settings.jpoResources.getString("FileRenameLabel2") ;
-/*		String selectedValue = JOptionPane.showInputDialog (
-                                Settings.anchorFrame, 					// parent component
-                                object, 						// message
-                                Settings.jpoResources.getString("fileRenameTitle"),	// title
-                                JOptionPane.QUESTION_MESSAGE,				// message type
-                                new Icon(),							// icon
-                                null,							// selectionValues
-                                highresFile.toString() );				// initialSelectionValue
- */
-        String selectedValue = JOptionPane.showInputDialog(
-                Settings.anchorFrame, 					// parent component
-                object, 						// message
-                highresFile.toString() );				// initialSelectionValue
-        if ( selectedValue != null ) {
-            File newName = new File( selectedValue );
-            if ( highresFile.renameTo( newName ) ) {
-                Tools.log("Sucessufully renamed: " + highresFile.toString() + " to: " + selectedValue);
-                try {
-                    pi.setHighresLocation( newName.toURI().toURL() );
-                } catch ( MalformedURLException x ) {
-                    Tools.log("Caught a MalformedURLException because of: " + x.getMessage() );
-                }
-            } else {
-                Tools.log("Rename failed from : " + highresFile.toString() + " to: " + selectedValue);
-            }
-        }
     }
     
     
@@ -1172,71 +1018,9 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
     
     
     
-    /**
-     *  method that searches for pictures and stores them at the end of the current node
-     *  @param q	 The Query object which specifies the search criteria
-     *  @return  The new node in the tree or null if nothing was found
-     */
-        /*public SortableDefaultMutableTreeNode findAndSave( Query q ) {
-                SortableDefaultMutableTreeNode resultsGroupNode =
-                        new SortableDefaultMutableTreeNode ( new GroupInfo ( q.getTitle() ) );
-                SortableDefaultMutableTreeNode TestNode;
-                Object nodeInfo;
-         
-                ArrayList searchResults =  q.getSearchResults();
-                if ( ! searchResults.isEmpty() ) {
-                        setSendModelUpdates( false );
-                        this.add( resultsGroupNode );
-                        for ( int i = 0 ;  i < searchResults.size(); i++) {
-                                resultsGroupNode.add( (SortableDefaultMutableTreeNode) searchResults.get( i ) );
-                        }
-                        setSendModelUpdates( true );
-                        getTreeModel().nodeStructureChanged( this );
-                        return resultsGroupNode;
-                } else {
-                        return null;
-                }
-        }*/
-    
-    
-    
     
     /**
-     *  This function brings up a picture editor gui.
-     */
-    public void showEditGUI() {
-        if ( this.getUserObject() instanceof PictureInfo ) {
-            new PictureInfoEditor( this );
-        } else if ( this.getUserObject() instanceof GroupInfo ) {
-            new GroupInfoEditor( this );
-        } else {
-            Tools.log( "SortableDefaultMutableTreeNode.showEditGUI: doesn't know what kind of editor to use. Irngoring request.");
-        }
-    }
-    
-    
-    /**
-     *  This function opens the CateGoryUsageEditor.
-     */
-    public void showCategoryUsageGUI() {
-        Tools.log("SDMTN.showCategoryUsageGUI invoked");
-        if ( this.getUserObject() instanceof PictureInfo ) {
-            CategoryUsageJFrame cujf = new CategoryUsageJFrame();
-            Vector nodes = new Vector();
-            nodes.add( this );
-            cujf.setSelection( nodes );
-        } else  if ( this.getUserObject() instanceof GroupInfo ) {
-            CategoryUsageJFrame cujf = new CategoryUsageJFrame();
-            cujf.setGroupSelection( this, false );
-        } else{
-            Tools.log( "SortableDefaultMutableTreeNode.showCategoryUsageGUI: doesn't know what kind of editor to use. Irngoring request.");
-        }
-    }
-    
-    
-    
-    /**
-     *  Adds a new Group with the indicated description.
+     *  Adds a new Group to the current node with the indicated description.
      *  @return  The new node is returned for convenience.
      */
     public SortableDefaultMutableTreeNode addGroupNode( String description ) {
@@ -1270,7 +1054,7 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
         SortableDefaultMutableTreeNode addedNode = null;
         
         // add all the files from the array as nodes to the start node.
-        for ( int i = 0; (i < chosenFiles.length) && ( ! progGui.interrupt ); i++ ) {
+        for ( int i = 0; (i < chosenFiles.length) && ( ! progGui.getInterruptor().getShouldInterrupt() ); i++ ) {
             File addFile = chosenFiles[i];
             if ( ! addFile.isDirectory() ) {
                 if ( addSinglePicture( addFile, newOnly, selectedCategories ) ) {
@@ -1305,7 +1089,10 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
     
     
     /**
-     *  Copies the pictures from the source tree to the target directory and adds them to the collection.
+     *  Copies the pictures from the source tree to the target directory and adds them to the collection creating a progress GUI.
+     *  @param sourceDir The source directory for the pictures
+     *  @param targetDir  The target directory for the pictures
+     *  @groupName the new name for the group
      *  @param  newOnly  If true only pictures not yet in the collection will be added.
      *  @param  retainDirectories  indicates that the directory structure should be preserved.
      *  @param  selectedCategories  the categories to be applied to the newly loaded pictures.
@@ -1356,7 +1143,7 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
         
         boolean picturesAdded = false;
         // add all the files from the array as nodes to the start node.
-        for ( int i = 0; (i < files.length) && ( ! progGui.interrupt ); i++ ) {
+        for ( int i = 0; (i < files.length) && ( ! progGui.getInterruptor().getShouldInterrupt() ); i++ ) {
             File addFile = files[i];
             if ( ! addFile.isDirectory() ) {
                 File targetFile = Tools.inventPicFilename( targetDir, addFile.getName() );
@@ -1387,7 +1174,7 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
         return picturesAdded;
     }
     
-    
+
     /**
      *  Copies the pictures from the source tree to the target directory and adds them to the
      *  collection only if they have not been seen by the camera before.
@@ -1422,16 +1209,34 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
         }
         return newGroup;
     }
+
+    
     
     
     /**
-     *   Creates a JFileChooser GUI and allows the user to select an XML file
-     *   which is then loaded current node of the collection
+     *  Copies the pictures from the source File collection into the target node
+     *  @param newPictures  A Collection framework of the new picture Files
+     *  @param targetDir    The target directory for the copy operation
+     *  @param copyMode     Set to true if you want to copy, false if you want to move the pictures.
+     *  @param progressBar   The optional progressBar that should be updated.
+     *
      */
-    public void fileLoad() {
-        File fileToLoad = Tools.chooseXmlFile();
-        fileLoad( fileToLoad );
+    public void copyAddPictures( Collection<File> newPictures, File targetDir, boolean copyMode, JProgressBar progressBar ) {
+        getPictureCollection().setSendModelUpdates( false );
+        for ( File f : newPictures ) {
+            if ( progressBar != null ) {
+                progressBar.setValue( progressBar.getValue() + 1 );
+            }
+            File targetFile = Tools.inventPicFilename( targetDir, f.getName() );
+            Tools.copyPicture( f, targetFile );
+	    if ( ! copyMode ) {
+            	f.delete();
+	    }
+            addPicture( targetFile, null );
+        }
+        getPictureCollection().setSendModelUpdates( true );
     }
+    
     
     
     
@@ -1441,24 +1246,15 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
      *
      *   @param  fileToLoad		The File object that is to be loaded.
      */
-    public void fileLoad( File fileToLoad ) {
-        Tools.log("SDTM.fileLoad: loading: "+fileToLoad.toString());
+    public void fileLoad( File fileToLoad ) throws FileNotFoundException {
         if ( fileToLoad != null ) {
-            try {
-                InputStream is = new FileInputStream( fileToLoad );
-                if ( this.isRoot() ) {
-                    getPictureCollection().clearCollection();
-                    getPictureCollection().setXmlFile( fileToLoad );
-                }
-                streamLoad( is );
-                Settings.pushRecentCollection( fileToLoad.toString() );
-            } catch ( FileNotFoundException x ) {
-                Tools.log( "SDTM.fileToLoad: FileNotFoundExecption: "+ x.getMessage() );
-                JOptionPane.showMessageDialog( Settings.anchorFrame,
-                        "File not found:\n" + fileToLoad.getPath(),
-                        Settings.jpoResources.getString("genericError"),
-                        JOptionPane.ERROR_MESSAGE);
+            InputStream is = new FileInputStream( fileToLoad );
+            if ( this.isRoot() ) {
+                getPictureCollection().clearCollection();
+                getPictureCollection().setXmlFile( fileToLoad );
             }
+            streamLoad( is );
+            Settings.pushRecentCollection( fileToLoad.toString() );
         }
     }
     
@@ -1470,7 +1266,6 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
      *   @param  is	The inputstream that is to be loaded.
      */
     public void streamLoad( InputStream is ) {
-        Tools.log("STDM.streamLoad: "+is.toString());
         getPictureCollection().setSendModelUpdates( false ); // turn off model notification of each add for performance
         new XmlReader( is, this );
         getPictureCollection().getTreeModel().nodeStructureChanged( this );
@@ -1494,10 +1289,10 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
         
         boolean picturesAdded = false;
         // add all the files from the array as nodes to the start node.
-        for ( int i = 0; (i < files.length) && ( ! progGui.interrupt ); i++ ) {
+        for ( int i = 0; (i < files.length) && ( ! progGui.getInterruptor().getShouldInterrupt() ); i++ ) {
             File addFile = files[i];
             if ( ! addFile.isDirectory() ) {
-                if ( cam.useFilename && cam.inOldImage( addFile ) ) {
+                if ( cam.getUseFilename() && cam.inOldImage( addFile ) ) {
                     // ignore image if the filename is known
                     cam.copyToNewImage( addFile ); // put it in the known pictures Hash
                     progGui.decrementTotal();
@@ -1537,7 +1332,7 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
     
     
     /**
-     *  method that is invoked resursively on each directory encoundered. It adds
+     *  method that is invoked recursively on each directory encountered. It adds
      *  a new group to the tree and then adds all the pictures found therein to that
      *  group. The ImageIO.getImageReaders method is queried to see whether a reader
      *  exists for the image that is attempted to be loaded.
@@ -1555,7 +1350,7 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
         }
         
         File[] fileArray = dir.listFiles();
-        for (int i = 0; (i < fileArray.length) && ( ! progGui.interrupt ); i++) {
+        for (int i = 0; (i < fileArray.length) && ( ! progGui.getInterruptor().getShouldInterrupt() ); i++) {
             if ( fileArray[i].isDirectory() && recurseDirectories ) {
                 if ( Tools.hasPictures( fileArray[i] ) ) {
                     newNode.addDirectory( fileArray[i], newOnly, recurseDirectories, retainDirectories, progGui, selectedCategories );
@@ -1594,22 +1389,10 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
      *  this method adds a new Picture to the current node if the JVM has a reader for it.
      *
      *  @param  addFile  the file that should be added
-     *  @return  true if the picture was valid, false if not.
-     *
-     * public boolean addPicture ( File addFile, HashSet selectedCategories ) {
-     * return ( addPicture (addFile, selectedCategories) );
-     * }*/
-    
-    
-    
-    /**
-     *  this method adds a new Picture to the current node if the JVM has a reader for it.
-     *
-     *  @param  addFile  the file that should be added
+     *  @param categoryAssignment  Can be null
      *  @return  true if the picture was valid, false if not.
      */
     public boolean addPicture( File addFile, HashSet categoryAssignment ) {
-        Tools.log("SDMTN.addPicture: invoked on: " + addFile.toString() + " for " + this.toString() );
         PictureInfo newPictureInfo = new PictureInfo();
         try {
             if ( ! Tools.jvmHasReader( addFile ) ) {
@@ -1623,7 +1406,7 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
                 newPictureInfo.setCategoryAssignment( categoryAssignment );
             }
         } catch ( MalformedURLException x ) {
-            Tools.log( "PictureAdder.addSinglePicture: MalformedURLException: " + addFile.getPath() + "\nError: " + x.getMessage());
+            Tools.log( this.getClass().toString() + ".addPicture: MalformedURLException: " + addFile.getPath() + "\nError: " + x.getMessage());
             return false;
         }
         
@@ -1657,11 +1440,11 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
             if ( creationTime == null ) creationTime = "";
             newPictureInfo.setCreationTime( creationTime );
         } catch ( MalformedURLException x ) {
-            Tools.log( "SDMTN.addSinglePicture: MalformedURLException: " + addFile.getPath() + "\nError: " + x.getMessage());
+            Tools.log( "SDMTN.addPicture: MalformedURLException: " + addFile.getPath() + "\nError: " + x.getMessage());
         } catch ( IOException x ) {
-            Tools.log( "SDMTN.addSinglePicture: IOException: " + x.getMessage() );
+            Tools.log( "SDMTN.addPicture: IOException: " + x.getMessage() );
         } catch ( JpegProcessingException x ) {
-            Tools.log( "SDMTN.addSinglePicture: No EXIF header found\n" + x.getMessage() );
+            Tools.log( "SDMTN.addPicture: No EXIF header found\n" + x.getMessage() );
         }
         
         return true;
@@ -1676,9 +1459,6 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
      *  event.
      */
     public void refreshThumbnail() {
-                /*if ( ! ( this.getUserObject() instanceof PictureInfo ) ) {
-                        Tools.log("SDMTN.refresh Thumbnail called on a node that doesn't contain a picture! Ignoring request.");
-                }*/
         Thumbnail t = new Thumbnail( new SingleNodeBrowser( this ), 0, Settings.thumbnailSize, ThumbnailCreationQueue.HIGH_PRIORITY );
         ThumbnailCreationQueue.requestThumbnailCreation( t, ThumbnailCreationQueue.HIGH_PRIORITY, true );
     }
@@ -1718,7 +1498,7 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
      *  @param  e the TreenModelEvent that was detected
      */
     public static boolean wasNodeDeleted( SortableDefaultMutableTreeNode affectedNode, TreeModelEvent e ) {
-        Tools.log( "SDMTN.wasNodeDeleted invoked for: " + affectedNode.toString() + " / " + e.toString() );
+        //Tools.log( "SDMTN.wasNodeDeleted invoked for: " + affectedNode.toString() + " / " + e.toString() );
         TreePath removedChild;
         TreePath currentNodeTreePath = new TreePath( affectedNode.getPath() );
         Object [] children = e.getChildren();

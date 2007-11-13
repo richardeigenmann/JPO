@@ -60,7 +60,7 @@ public class JpoResources_zh_CN extends ListResourceBundle {
 		
 		
 		// Help About Dialog
-		{"HelpAboutText", "JPO 版本 0.8.5 是基于Java/Swing 开发的软件\n" 
+		{"HelpAboutText", "JPO 版本 0.9 是基于Java/Swing 开发的软件\n" 
 			+ "作者Richard Eigenmann在瑞士苏黎世, \n" 
 			+ "版权 2000 - 2007\n"
 			+ "邮件地址：richard.eigenmann@gmail.com\n"
@@ -127,12 +127,15 @@ public class JpoResources_zh_CN extends ListResourceBundle {
 		{"autoLoadJLabelLabel", "启动加载："},
 		{"logfileJCheckBoxLabel", "保存日志"},
 		{"logfileJLabelLabel", "日志文件路径以及文件名："},
-		{"maximiseJpoOnStartupJCheckBoxLabel", "Maximise JPO window when program starts"},
-		{"saveSizeJCheckBoxLabel", "在退出时保存窗口的位置"},
-		{"MainCoordinates", "主窗口坐标(横坐标/纵坐标):"},
-		{"MainSize", "主窗口大小(宽度/高度):"},
+		//{"maximiseJpoOnStartupJCheckBoxLabel", "Maximise JPO window when program starts"},
+		//{"saveSizeJCheckBoxLabel", "在退出时保存窗口的位置"},
+		//{"MainCoordinates", "主窗口坐标(横坐标/纵坐标):"},
+		//{"MainSize", "主窗口大小(宽度/高度):"},
+		{"windowSizeChoicesJlabel", "When JPO starts size Window to:"},
+		{"windowSizeChoicesMaximum", "Maximum"},
 		
 		{"pictureViewerJPanel", "图片浏览"},
+		{"pictureViewerSizeChoicesJlabel", "Size of viewer:"},
 		{"maximumPictureSizeLabel", "最大图片缩放尺寸"},
 		{"maxCacheLabel", "图片最大缓存"},
 		{"leaveSpaceLabel", "距离底部距离"},
@@ -382,6 +385,7 @@ public class JpoResources_zh_CN extends ListResourceBundle {
 		{"fileSaveAsTitle", "另存为图片集"},
 		{"collectionSaveTitle", "保存图片集"},
 		{"collectionSaveBody", "另存图片集\n"},
+		{"setAutoload", "Automatically load this collection when JPO starts"}, // please translate
 		{"addSinglePictureTitle", "选择需要添加的图片"},
 		{"addSinglePictureButtonLabel", "选择"},
 		{"addFlatFileTitle", "选择无格式图片文件列表"},
@@ -465,7 +469,6 @@ public class JpoResources_zh_CN extends ListResourceBundle {
 		
 		// CameraEditor
 		{"CameraEditor", "编辑相机设置"},
-		{"cameraNewNameJLabel", "新建相机名"},
 		{"runConnectJButton", "运行"},
 		{"saveJButton", "保存"},
 		{"memorisedPicsJLabel", "上次导入的图片数："},
@@ -476,6 +479,7 @@ public class JpoResources_zh_CN extends ListResourceBundle {
 		{"closeJButton", "关闭"},
 		{"filenameJCheckBox", "以文件名方式记忆图片"},
 		{"refreshJButtonError", "请先保存您的变更！"},
+		{"monitorJCheckBox", "automatically monitor for new pictures"}, //new
 		
 		
 
@@ -615,6 +619,42 @@ public class JpoResources_zh_CN extends ListResourceBundle {
 		{"ScalablePictureLoadingStatus", "正在装入"},
 		{"ScalablePictureRotatingStatus", "正在翻转"},
 		{"ScalablePictureScalingStatus", "正在缩放"},
+
+
+		//CameraDownloadWizard
+		{"CameraDownloadWizard", "Camera Download Wizard"},
+		{"DownloadCameraWizardStep1Title", "Camera detected"},
+		{"DownloadCameraWizardStep1Description", "Camera detected"},
+		{"DownloadCameraWizardStep1Text1", "Camera "},
+		{"DownloadCameraWizardStep1Text2", " detected."},
+		{"DownloadCameraWizardStep1Text3", " new pictures found."},
+		{"DownloadCameraWizardStep1Text4", "Analysing pictures...."},
+		{"DownloadCameraWizardStep2Title", "Move or Copy"},
+		{"DownloadCameraWizardStep2Description", "Move or Copy to your Computer"},
+		{"DownloadCameraWizardStep2Text1", "<html>There are "},
+		{"DownloadCameraWizardStep2Text2", " new pictures on your camera.<br><br>Would you like to<br>"},
+		{"DownloadCameraWizardStep2Text3", "<html><b>move</b> the pictures to your computer or"},
+		{"DownloadCameraWizardStep2Text4", "<html><b>copy</b> them to your computer?"},
+		{"DownloadCameraWizardStep3Title", "Where to add"},
+		{"DownloadCameraWizardStep3Description", "Where to add in the collection"},
+		{"DownloadCameraWizardStep3Text0", "Tick to create a sub-folder"},
+		{"DownloadCameraWizardStep3Text1", "Title for the new sub-folder:"},
+		{"DownloadCameraWizardStep3Text2a", "Add the new folder to:"},
+		{"DownloadCameraWizardStep3Text2b", "Add the pictures to:"},
+		{"DownloadCameraWizardStep4Title", "Where to store"},
+		{"DownloadCameraWizardStep4Description", "Select directory to save pictures on your computer"},
+		{"DownloadCameraWizardStep4Text1", "Target directory on Computer:"},
+		{"DownloadCameraWizardStep5Title", "Summary"},
+		{"DownloadCameraWizardStep5Description", "Summary"},
+		{"DownloadCameraWizardStep5Text1", "Copy "},
+		{"DownloadCameraWizardStep5Text2", "Move "},
+		{"DownloadCameraWizardStep5Text3", " pictures from"},
+		{"DownloadCameraWizardStep5Text4", "Camera: "},
+		{"DownloadCameraWizardStep5Text5", "Adding to new folder: "},
+		{"DownloadCameraWizardStep5Text6", "Adding to folder: "},
+		{"DownloadCameraWizardStep5Text7", "Storing in: "},
+		{"DownloadCameraWizardStep6Title", "Download"},
+		{"DownloadCameraWizardStep6Description", "Downloading the pictures"},
 
 
 		{"Template", "模板"}

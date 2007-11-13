@@ -7,15 +7,12 @@ import java.awt.image.*;
 import java.awt.Dimension;
 import java.util.Vector;
 import java.util.Enumeration;
-import com.sun.image.codec.jpeg.*;
 import javax.imageio.*;
 import javax.imageio.stream.*;
 import javax.imageio.event.*;
 import java.text.*;
 import javax.swing.*;
 import java.awt.geom.*;
-import java.awt.color.*;
-import java.awt.image.DataBuffer.*;
 
 /*
 SourcePicture.java:  class that can load a picture from a URL
@@ -39,7 +36,7 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 
 /** 
  *  a class to load and scale a picture either immediately or in a 
- *  seperate thread from a URL
+ *  separate thread from a URL
  */
 
 public class SourcePicture implements Cloneable {
@@ -207,7 +204,7 @@ public class SourcePicture implements Cloneable {
 	 *  object and updates the status when done or failed.
 	 */
 	public void loadPicture() {
-		Tools.log("SourcePicture.loadPicture: " + imageUrl.toString() + " loaded into SourcePicture object: " + Integer.toString(this.hashCode()) );
+		//Tools.log("SourcePicture.loadPicture: " + imageUrl.toString() + " loaded into SourcePicture object: " + Integer.toString(this.hashCode()) );
 		//Tools.freeMem();
 						
 		setStatus( LOADING, Settings.jpoResources.getString("ScalablePictureLoadingStatus") );

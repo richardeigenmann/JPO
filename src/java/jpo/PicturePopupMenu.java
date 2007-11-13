@@ -4,6 +4,7 @@ import java.awt.event.*;
 import javax.swing.*;
 import java.io.*;
 import java.util.*;
+import java.lang.*;
 
 /*
 PicturePopupMenu.java:  a popup menu for pictures
@@ -290,7 +291,7 @@ public class PicturePopupMenu extends JPopupMenu
                                             navigateToRootNode.addActionListener( new ActionListener() {
                                                 final SortableDefaultMutableTreeNode node = targetNode;
                                                 public void actionPerformed( ActionEvent e ) {
-                                                    Settings.mainCollectionJTree.requestShowGroup( node );
+                                                    Settings.mainCollectionJTreeController.requestShowGroup( node );
                                                 }
                                             });
                                             navigationJMenu.add( navigateToRootNode );
@@ -301,7 +302,7 @@ public class PicturePopupMenu extends JPopupMenu
                                                 = new JMenuItem( Settings.jpoResources.getString("pictureEditJMenuItemLabel") );
                                         pictureEditJMenuItem.addActionListener( new ActionListener() {
                                             public void actionPerformed( ActionEvent e ) {
-                                                popupNode.showEditGUI();
+                                                TreeNodeController.showEditGUI( popupNode );
                                             }
                                         });
                                         add( pictureEditJMenuItem );
@@ -311,14 +312,14 @@ public class PicturePopupMenu extends JPopupMenu
                                         categoryUsagetJMenuItem.addActionListener( new ActionListener() {
                                             public void actionPerformed( ActionEvent e ) {
                                                 if ( associatedPanel == null ) {
-                                                    popupNode.showCategoryUsageGUI();
+                                                    TreeNodeController.showCategoryUsageGUI( popupNode );
                                                 } else {
                                                     if ( associatedPanel.countSelectedNodes() < 1 ) {
-                                                        popupNode.showCategoryUsageGUI();
+                                                        TreeNodeController.showCategoryUsageGUI( popupNode );
                                                     } else {
                                                         if ( ! associatedPanel.isSelected( popupNode ) ) {
                                                             associatedPanel.clearSelection();
-                                                            popupNode.showCategoryUsageGUI();
+                                                            TreeNodeController.showCategoryUsageGUI( popupNode );
                                                         } else {
                                                             CategoryUsageJFrame cujf = new CategoryUsageJFrame();
                                                             cujf.setSelection( associatedPanel.getSelectedNodesAsVector() );
@@ -536,7 +537,7 @@ public class PicturePopupMenu extends JPopupMenu
                                                         while ( selection.hasMoreElements() ) {
                                                             n = (SortableDefaultMutableTreeNode) selection.nextElement();
                                                             if ( n.getUserObject() instanceof PictureInfo ) {
-                                                                n.copyToNewLocation();
+                                                                TreeNodeController.copyToNewLocation( n );
                                                             }
                                                         }
                                                     }
@@ -554,7 +555,7 @@ public class PicturePopupMenu extends JPopupMenu
                                                         while ( selection.hasMoreElements() ) {
                                                             n = (SortableDefaultMutableTreeNode) selection.nextElement();
                                                             if ( n.getUserObject() instanceof PictureInfo ) {
-                                                                n.copyToNewLocation();
+                                                                TreeNodeController.copyToNewLocation( n );
                                                             }
                                                         }
                                                     }
@@ -571,14 +572,14 @@ public class PicturePopupMenu extends JPopupMenu
                                         copyToNewLocationJMenuItem.addActionListener( new ActionListener() {
                                             public void actionPerformed( ActionEvent e ) {
                                                 if (( associatedPanel == null ) || ( associatedPanel.countSelectedNodes() < 1 ) ){
-                                                    popupNode.copyToNewLocation();
+                                                    TreeNodeController.copyToNewLocation( popupNode );
                                                 } else {
                                                     Enumeration selection = associatedPanel.getSelectedNodesAsVector().elements();
                                                     SortableDefaultMutableTreeNode n;
                                                     while ( selection.hasMoreElements() ) {
                                                         n = (SortableDefaultMutableTreeNode) selection.nextElement();
                                                         if ( n.getUserObject() instanceof PictureInfo ) {
-                                                            n.copyToNewLocation();
+                                                            TreeNodeController.copyToNewLocation( n );
                                                         }
                                                     }
                                                 }
@@ -624,14 +625,14 @@ public class PicturePopupMenu extends JPopupMenu
                                             fileRenameJMenuItem.addActionListener( new ActionListener() {
                                                 public void actionPerformed( ActionEvent e ) {
                                                     if (( associatedPanel == null ) || ( associatedPanel.countSelectedNodes() < 1 ) ){
-                                                        popupNode.fileRename();
+                                                        TreeNodeController.fileRename( popupNode );
                                                     } else {
                                                         Enumeration selection = associatedPanel.getSelectedNodesAsVector().elements();
                                                         SortableDefaultMutableTreeNode n;
                                                         while ( selection.hasMoreElements() ) {
                                                             n = (SortableDefaultMutableTreeNode) selection.nextElement();
                                                             if ( n.getUserObject() instanceof PictureInfo ) {
-                                                                n.fileRename();
+                                                                TreeNodeController.fileRename( n );
                                                             }
                                                         }
                                                     }
@@ -774,7 +775,13 @@ public class PicturePopupMenu extends JPopupMenu
                                         for ( int i = 0; i < Settings.maxUserFunctions; i++ ) {
                                             if ( ( userFunctionsJMenuItems[ i ] != null )
                                             && ( e.getSource().hashCode() == userFunctionsJMenuItems[ i ].hashCode() ) ) {
-                                                popupNode.runUserFunction( i );
+                                                try {
+                                                    Tools.runUserFunction( i, (PictureInfo) popupNode.getUserObject() );
+                                                } catch ( ClassCastException x ) {
+                                                    // Well, it was the wrong type
+                                                } catch ( NullPointerException x ) {
+                                                    // Well, it wasn't a good node anyway.
+                                                }
                                                 return;
                                             }
                                         }

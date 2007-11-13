@@ -307,12 +307,12 @@ public class ThumbnailJScrollPane extends JScrollPane implements RelayoutListene
         
         ThumbnailPane.addMouseListener( new MouseInputAdapter() {
             public void mousePressed( MouseEvent e ) {
-                Tools.log("Thumbnail pane registered a mousePressed event");
+                //Tools.log("Thumbnail pane registered a mousePressed event");
                 mousePressedPoint = e.getPoint();
             }
             
             public void mouseReleased( MouseEvent e ) {
-                Tools.log("ThumbnailJScrollpane.mouseReleased: registered a mouseReleased event");
+                //Tools.log("ThumbnailJScrollpane.mouseReleased: registered a mouseReleased event");
                 requestFocusInWindow();
                 
                 Graphics g = ThumbnailPane.getGraphics();
@@ -476,7 +476,7 @@ public class ThumbnailJScrollPane extends JScrollPane implements RelayoutListene
      *  correct node. It also sets the tile of the JScrollPane.
      */
     public void assignThumbnails() {
-        Tools.log("ThumbnailJScrollPane.assignThumbnails: running through thumbnails");
+        //Tools.log("ThumbnailJScrollPane.assignThumbnails: running through thumbnails");
         if (mySetOfNodes == null) {
             return;
         }
@@ -529,10 +529,10 @@ public class ThumbnailJScrollPane extends JScrollPane implements RelayoutListene
     
     
     /**
-     *   This is a reference to the assoicated CollectionJTree which allows group show requests
+     *   This is a reference to the assoicated CollectionJTreeController which allows group show requests
      *   to be passed between the Thumbnail pane and the JTree.
      */
-    private CollectionJTree associatedCollectionJTree;
+    private CollectionJTreeController associatedCollectionJTree;
     
     /**
      *   This is a reference to the assoicated InfoPanel which shows info from selections
@@ -544,7 +544,7 @@ public class ThumbnailJScrollPane extends JScrollPane implements RelayoutListene
     /**
      *   sets the assoiciated JTree
      */
-    public void setAssociatedCollectionJTree( CollectionJTree associatedCollectionJTree ) {
+    public void setAssociatedCollectionJTree( CollectionJTreeController associatedCollectionJTree ) {
         this.associatedCollectionJTree = associatedCollectionJTree;
     }
     /**
@@ -557,7 +557,7 @@ public class ThumbnailJScrollPane extends JScrollPane implements RelayoutListene
     /**
      *   returns the associated JTree
      */
-    public CollectionJTree getAssociatedCollectionJTree() {
+    public CollectionJTreeController getAssociatedCollectionJTree() {
         return associatedCollectionJTree;
     }
     /**

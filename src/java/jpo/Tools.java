@@ -195,7 +195,7 @@ public class Tools {
 	 *  at least one picture in it for which our Java Environment has a decoder.
 	 *
 	 *  @param  subDirectory	The File representing the subdirectory to be recursively searched
-	 *  @return true if there is at leas one picture in the subdirectory, false if there is nothing.
+	 *  @return true if there is at least one picture in the subdirectory, false if there is nothing.
 	 */
 	public static boolean hasPictures( File subDirectory ) {
 		File[] fileArray = subDirectory.listFiles();
@@ -285,6 +285,7 @@ public class Tools {
 
 	/** 
 	 *  method to copy any file from a source File to a target File location.
+         * @return The crc of the copied picture.
 	 */
 	public static long copyPicture ( File a, File b ){
 		try {
@@ -691,12 +692,12 @@ public class Tools {
 		File testLowresFilename;
 		for (int i=1; i < 10000; i++) {
 			Settings.thumbnailCounter++;
-			if ( (Settings.thumbnailCounter % 10) == 0 )
-				Tools.log ("considering " + Settings.thumbnailCounter + " filenames for lowres filename");
+			//if ( (Settings.thumbnailCounter % 10) == 0 )
+				//Tools.log ("considering " + Settings.thumbnailCounter + " filenames for lowres filename");
 			testLowresFilename = new File ( Settings.thumbnailPath, Settings.thumbnailPrefix  + Integer.toString(Settings.thumbnailCounter) + ".jpg");
 			if (! testLowresFilename.exists()) {
 				try {
-					Tools.log( "Tools.lowresFilename: assigning: " + testLowresFilename.toURI().toURL().toString());
+					//Tools.log( "Tools.lowresFilename: assigning: " + testLowresFilename.toURI().toURL().toString());
 					Settings.unsavedSettingChanges = true;
 					return ( testLowresFilename.toURI().toURL().toString() );
 				} catch (MalformedURLException x) {
@@ -738,8 +739,8 @@ public class Tools {
 		int freeMemory = (int) Runtime.getRuntime().freeMemory()/1024/1024;
 		int totalMemory = (int) Runtime.getRuntime().totalMemory()/1024/1024;
 		int maxMemory = (int) Runtime.getRuntime().maxMemory()/1024/1024;		
-		return (Settings.jpoResources.getString("freeMemory") + Integer.toString( freeMemory ) + "MB / "
-			+ Integer.toString( totalMemory ) + "MB / "
+		return (Settings.jpoResources.getString("freeMemory") + Integer.toString( freeMemory ) + "MB/"
+			+ Integer.toString( totalMemory ) + "MB/"
 			+ Integer.toString( maxMemory ) + "MB");
 	}
 
@@ -932,5 +933,60 @@ public class Tools {
 		s += Integer.toString( c.getBlue(), 16);
 		return s;
 	}
-	
+
+        
+    /**
+     *  This method fires up a user function if it can. User functions are only valid on
+     *  PictureInfo nodes.
+     *
+     *  @param  userFunction	The user function to be executed in the array Settings.userFunctionCmd
+     *  @param  myObject        The PictureInfo upon which the user function should be executed.
+     */
+    public static void runUserFunction( int userFunction, PictureInfo myObject ) {
+        if ( ( userFunction < 0 ) || ( userFunction >= Settings.maxUserFunctions ) ) {
+            Tools.log("Tools.runUserFunction: was called with an out of bounds index");
+            return;
+        }
+        String command = Settings.userFunctionCmd[ userFunction ];
+        if ( ( command == null ) || ( command.length() == 0 ) ) {
+            Tools.log("Tools.runUserFunction: command " + Integer.toString(userFunction) + " is not properly defined");
+            return;
+        }
+        
+        String filename = ((PictureInfo) myObject).getHighresFile().toString();
+        command = command.replaceAll("%f", filename );
+        
+        String escapedFilename = filename.replaceAll( "\\s", "\\\\\\\\ " );
+        command = command.replaceAll("%e", escapedFilename );
+        
+        
+        URL pictureURL = ((PictureInfo) myObject).getHighresURLOrNull();
+        if ( pictureURL == null ) {
+            Tools.log("SortableDefaultMutableTreeNode.runUserFunction: The picture doesn't have a valid URL. This is bad. Aborted.");
+            return;
+        }
+        command = command.replaceAll("%u", pictureURL.toString());
+        
+        Tools.log("SortableDefaultMutableTreeNode.runUserFunction: Command to run is: " + command);
+        try {
+            // Had big issues here because the simple exec (String) calls a StringTokenizer
+            // which messes up the filename parameters
+            int blank = command.indexOf( " " );
+            if ( blank > -1 ) {
+                String[] cmdarray = new String[2];
+                cmdarray[0] = command.substring( 0, blank );
+                cmdarray[1] = command.substring( blank+1 );
+                Runtime.getRuntime().exec( cmdarray );
+            } else {
+                String[] cmdarray = new String[1];
+                cmdarray[0] = command;
+                Runtime.getRuntime().exec( cmdarray );
+            }
+        } catch ( IOException x ) {
+            Tools.log("SortableDefaultMutableTreeNode.runUserFunction: Runtime.exec collapsed with and IOException: " + x.getMessage() );
+        }
+    }
+        
+        
+        
 }

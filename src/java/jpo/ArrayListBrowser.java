@@ -1,7 +1,6 @@
 package jpo;
 
 import java.util.*;
-import javax.swing.event.*;
 
 /*
 ArrayListBrower.java:  an implementation of the ThumbnailBrowserInterface for browsing pictures sequentially.
@@ -61,7 +60,6 @@ public class ArrayListBrowser extends ThumbnailBrowser {
      *  because counting starts at 0. So 3 nodes in the group returns 2 meaning node0, node1, node2
      */
     public int getNumberOfNodes() {
-        //Tools.log("ArrayListBrowser.getNumberOfNodes: returning: " + Integer.toString( allPictures.size() - 1) );
         return allPictures.size() - 1;
     }
     
@@ -75,7 +73,7 @@ public class ArrayListBrowser extends ThumbnailBrowser {
      *                 getNode(1) and getNode(2).
      */
     public SortableDefaultMutableTreeNode getNode( int index ) {
-        Tools.log("ArrayListBrowser.getNode: requested for node: " + Integer.toString( index ) );
+        //Tools.log("ArrayListBrowser.getNode: requested for node: " + Integer.toString( index ) );
         if ( index > getNumberOfNodes() ) {
             Tools.log("ArrayListBrowser.getNode: index requested beyond number of pictures. Returning null");
             return null;

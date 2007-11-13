@@ -13,7 +13,7 @@ import javax.swing.border.*;
 /*
 CollectionPropertiesJPanel.java: a panel that shows some counts about the collection
 
-Copyright (C) 2002-2006  Richard Eigenmann.
+Copyright (C) 2002-2007  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -63,7 +63,7 @@ public class CollectionPropertiesJPanel
 	/**
 	 *  Indicates how many jobs are on the thumbnail creation queue.
 	 */
-	private JLabel queCountJLabel = new JLabel ();
+	private JLabel queueCountJLabel = new JLabel ();
 
 
 
@@ -75,14 +75,14 @@ public class CollectionPropertiesJPanel
 	public CollectionPropertiesJPanel() {
 		setMinimumSize( new Dimension (100,100) );
 		setLayout(new GridBagLayout());
-		
+                
 		GridBagConstraints constraints = new GridBagConstraints();
 		constraints.anchor = GridBagConstraints.WEST;
 		
 		constraints.gridx = 0; constraints.gridy = 0;
 		constraints.weightx = 1.0;
 		constraints.fill = GridBagConstraints.HORIZONTAL;
-		constraints.insets = new Insets(4, 4, 4, 4);
+		constraints.insets = new Insets(0, 4, 0, 4);
 		add( collectionItemsLabel, constraints );
 		
 		constraints.gridy++;
@@ -98,21 +98,23 @@ public class CollectionPropertiesJPanel
 		add( freeMemoryJLabel, constraints );
 
 		constraints.gridy++;
-		add( queCountJLabel, constraints );
+		add( queueCountJLabel, constraints );
 	}
 
 
 
 
-
+        /**
+         *  This method will update the statistics based on the supplied input node.
+         *  @param  statisticsNode   The node that is being analysed.
+         */
 	public void updateStats( DefaultMutableTreeNode statisticsNode ) {
-		Tools.log("CollectionPropertiesJPanel.updateStats: called on node: " + statisticsNode.toString() );
+		//Tools.log("CollectionPropertiesJPanel.updateStats: called on node: " + statisticsNode.toString() );
 		if ( Settings.pictureCollection.fileLoading ) {
 			Tools.log("CollectionPropertiesJPanel.updateStats: Still busy loading the file. Aborting");
 			return;
 		}
 
-		//Tools.log("CollectionPropertiesJPanel.updateStats: inkoved on " + statisticsNode.toString() );
 		int numberOfNodes = Tools.countNodes( statisticsNode );
 		collectionItemsLabel.setText( Settings.jpoResources.getString("CollectionNodeCountLabel") + Integer.toString( numberOfNodes ) );
 
@@ -125,17 +127,25 @@ public class CollectionPropertiesJPanel
 		String sizeOfPictures = Tools.sizeOfPictures( statisticsNode );
 		collectionSizeJLabel.setText( Settings.jpoResources.getString("CollectionSizeJLabel") + sizeOfPictures );
 
-		updateQueueCount();		
-	}		
-	
+		updateQueueCount();
+	}
+
 
 	/**
-	 *  This method updates the label showing the entries on the queue. This was split out for performance
-	 *  as counting the filesize could be very slow and doesn't change that often
+	 *  This method updates the label showing the entries on the queue. This was split so that costly operations could be slowed down but it doesn't
+         *  Seem to be a problem. The memory usage and the Thumbnails on queue are only shown when the log file is being written as normal users will
+         *  hardly be interested in this detail.
 	 */
 	public void updateQueueCount() {
-		freeMemoryJLabel.setText( Tools.freeMemory() );
-		queCountJLabel.setText( Settings.jpoResources.getString("queCountJLabel") + ThumbnailCreationQueue.countQueueRequests() );
+                if ( Settings.writeLog ) {
+                        freeMemoryJLabel.setVisible( true );
+        		freeMemoryJLabel.setText( Tools.freeMemory() );
+                        queueCountJLabel.setVisible( true );
+        		queueCountJLabel.setText( Settings.jpoResources.getString("queCountJLabel") + ThumbnailCreationQueue.getQueueRequestCount() );
+                } else {
+                        freeMemoryJLabel.setVisible( false );
+                        queueCountJLabel.setVisible( false );
+                }
 	}
 
 }

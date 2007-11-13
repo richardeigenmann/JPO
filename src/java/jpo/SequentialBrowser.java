@@ -35,7 +35,7 @@ public class SequentialBrowser extends ArrayListBrowser {
 	 *  @param groupNode    The groupNode under which the pictures should be displayed.
 	 */
 	SequentialBrowser( SortableDefaultMutableTreeNode groupNode ) {
-		Tools.log("SequentialBrowser: constructor called on node: " + groupNode.toString() );
+		//Tools.log("SequentialBrowser: constructor called on node: " + groupNode.toString() );
 		this.groupNode = groupNode;
 		enumerateAndAddToList( allPictures, groupNode );
 	}
@@ -69,7 +69,7 @@ public class SequentialBrowser extends ArrayListBrowser {
 	 *  @param  startNode   The group node under which to collect the pictures.
 	 */
 	public void enumerateAndAddToList( ArrayList myList, SortableDefaultMutableTreeNode startNode ) {
-		Tools.log("RandomBrowser.enumerateAndAddToList: invoked on group " + startNode.toString() );
+		//Tools.log("SequentialBrowser.enumerateAndAddToList: invoked on group " + startNode.toString() );
 		Enumeration kids = startNode.children();
 		SortableDefaultMutableTreeNode n;
 		

@@ -57,7 +57,7 @@ public class JpoResources_en extends ListResourceBundle {
 		
 		
 		// Help About Dialog
-		{"HelpAboutText", "JPO Version 0.8.5 is a Java/Swing program\n" 
+		{"HelpAboutText", "JPO Version 0.9 is a Java/Swing program\n" 
 			+ "written by Richard Eigenmann, Zürich, Switzerland\n" 
 			+ "Copyright 2000 - 2007\n"
 			+ "richard.eigenmann@gmail.com\n"
@@ -123,12 +123,15 @@ public class JpoResources_en extends ListResourceBundle {
 		{"autoLoadJLabelLabel", "Automatically load:"},
 		{"logfileJCheckBoxLabel", "Write logfile"},
 		{"logfileJLabelLabel", "Logfile path and filename:"},
-		{"maximiseJpoOnStartupJCheckBoxLabel", "Maximise JPO window when program starts"},
-		{"saveSizeJCheckBoxLabel", "Save Window Position on Exit"},
-		{"MainCoordinates", "Coordinates of main window (x/y):"},
-		{"MainSize", "Size of main window (w/h):"},
+		//{"maximiseJpoOnStartupJCheckBoxLabel", "Maximise JPO window when program starts"},
+		//{"saveSizeJCheckBoxLabel", "Save Window Position on Exit"},
+		//{"MainCoordinates", "Coordinates of main window (x/y):"},
+		//{"MainSize", "Size of main window (w/h):"},
+		{"windowSizeChoicesJlabel", "When JPO starts size Window to:"},
+		{"windowSizeChoicesMaximum", "Maximum"},
 		
 		{"pictureViewerJPanel", "Picture Viewer"},
+		{"pictureViewerSizeChoicesJlabel", "Size of viewer:"},
 		{"maximumPictureSizeLabel", "Maximum Picture Scale size:"},
 		{"maxCacheLabel", "Maximum Cache Images:"},
 		{"leaveSpaceLabel", "Leave from bottom:"},
@@ -378,6 +381,7 @@ public class JpoResources_en extends ListResourceBundle {
 		{"fileSaveAsTitle", "Save Collection As"},
 		{"collectionSaveTitle", "Collection Saved"},
 		{"collectionSaveBody", "Collection Saved as:\n"},
+		{"setAutoload", "Automatically load this collection when JPO starts"},
 		{"addSinglePictureTitle", "Select picture to add"},
 		{"addSinglePictureButtonLabel", "Select"},
 		{"addFlatFileTitle", "Choose Flat File Picture List"},
@@ -461,7 +465,6 @@ public class JpoResources_en extends ListResourceBundle {
 		
 		// CameraEditor
 		{"CameraEditor", "Edit Camera Settings"},
-		{"cameraNewNameJLabel", "New Name"},
 		{"runConnectJButton", "Run"},
 		{"saveJButton", "Save"},
 		{"memorisedPicsJLabel", "Number of pictures remembered from last import:"},
@@ -472,6 +475,7 @@ public class JpoResources_en extends ListResourceBundle {
 		{"closeJButton", "Close"},
 		{"filenameJCheckBox", "rely on filenames to remember pictures (faster)"},
 		{"refreshJButtonError", "Save your changes first!"},
+		{"monitorJCheckBox", "automatically monitor for new pictures"},
 		
 		
 
@@ -499,7 +503,7 @@ public class JpoResources_en extends ListResourceBundle {
 		{"copyPictureError1", "Could not copy\n"},
 		{"copyPictureError2", "\nto: "},
 		{"copyPictureError3", "\nbecause: "},
-		{"freeMemory", "Free Memory: "},
+		{"freeMemory", "Memory: "},
 
 		// PictureAdder
 		{"recurseJCheckBox", "Recurse subdirectories"},
@@ -613,6 +617,42 @@ public class JpoResources_en extends ListResourceBundle {
 		{"ScalablePictureRotatingStatus", "Rotating"},
 		{"ScalablePictureScalingStatus", "Scaling"},
 		{"ScalablePictureErrorStatus", "Error"},
+
+		//CameraDownloadWizard
+		{"CameraDownloadWizard", "Camera Download Wizard"},
+		{"DownloadCameraWizardStep1Title", "Camera detected"},
+		{"DownloadCameraWizardStep1Description", "Camera detected"},
+		{"DownloadCameraWizardStep1Text1", "Camera "},
+		{"DownloadCameraWizardStep1Text2", " detected."},
+		{"DownloadCameraWizardStep1Text3", " new pictures found."},
+		{"DownloadCameraWizardStep1Text4", "Analysing pictures...."},
+		{"DownloadCameraWizardStep2Title", "Move or Copy"},
+		{"DownloadCameraWizardStep2Description", "Move or Copy to your Computer"},
+		{"DownloadCameraWizardStep2Text1", "<html>There are "},
+		{"DownloadCameraWizardStep2Text2", " new pictures on your camera.<br><br>Would you like to<br>"},
+		{"DownloadCameraWizardStep2Text3", "<html><b>move</b> the pictures to your computer or"},
+		{"DownloadCameraWizardStep2Text4", "<html><b>copy</b> them to your computer?"},
+		{"DownloadCameraWizardStep3Title", "Where to add"},
+		{"DownloadCameraWizardStep3Description", "Where to add in the collection"},
+		{"DownloadCameraWizardStep3Text0", "Tick to create a sub-folder"},
+		{"DownloadCameraWizardStep3Text1", "Title for the new sub-folder:"},
+		{"DownloadCameraWizardStep3Text2a", "Add the new folder to:"},
+		{"DownloadCameraWizardStep3Text2b", "Add the pictures to:"},
+		{"DownloadCameraWizardStep4Title", "Where to store"},
+		{"DownloadCameraWizardStep4Description", "Select directory to save pictures on your computer"},
+		{"DownloadCameraWizardStep4Text1", "Target directory on Computer:"},
+		{"DownloadCameraWizardStep5Title", "Summary"},
+		{"DownloadCameraWizardStep5Description", "Summary"},
+		{"DownloadCameraWizardStep5Text1", "Copy "},
+		{"DownloadCameraWizardStep5Text2", "Move "},
+		{"DownloadCameraWizardStep5Text3", " pictures from"},
+		{"DownloadCameraWizardStep5Text4", "Camera: "},
+		{"DownloadCameraWizardStep5Text5", "Adding to new folder: "},
+		{"DownloadCameraWizardStep5Text6", "Adding to folder: "},
+		{"DownloadCameraWizardStep5Text7", "Storing in: "},
+		{"DownloadCameraWizardStep6Title", "Download"},
+		{"DownloadCameraWizardStep6Description", "Downloading the pictures"},
+
 
 		{"Template", "Template"}
 		

@@ -1,9 +1,5 @@
 package jpo;
 
-import java.util.*;
-import javax.swing.event.*;
-import javax.swing.tree.*;
-
 /*
 SingleNodeBrower.java:  an implementation of the ThumbnailBrowserInterface for "browsing" a single picture.
  
@@ -25,7 +21,7 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 
 
 /**
- *  Thuis class implements the ThumbnailBrowserInterface in the specific manner that is required for
+ *  This class implements the ThumbnailBrowserInterface in the specific manner that is required for
  *  displaying a single picture in the ThumbnailJScrollPane.
  */
 
@@ -37,7 +33,7 @@ public class SingleNodeBrowser extends ThumbnailBrowser {
      *  @param singleNode    The Node which is to be "browsed".
      */
     SingleNodeBrowser( SortableDefaultMutableTreeNode singleNode ) {
-        Tools.log("SingleNodeBrowser: constructor called on node: " + singleNode.toString() );
+        //Tools.log("SingleNodeBrowser: constructor called on node: " + singleNode.toString() );
         this.singleNode = singleNode;
     }
     
@@ -65,7 +61,7 @@ public class SingleNodeBrowser extends ThumbnailBrowser {
      *  because counting starts at 0. So 3 nodes in the group returns 2 meaning node0, node1, node2
      */
     public int getNumberOfNodes() {
-        Tools.log("SingleNodeBrowser.getNumberOfNodes: returning: 0");
+        //Tools.log("SingleNodeBrowser.getNumberOfNodes: returning: 0");
         return 0;
     }
     
@@ -79,7 +75,7 @@ public class SingleNodeBrowser extends ThumbnailBrowser {
      *                 getNode(1) and getNode(2).
      */
     public SortableDefaultMutableTreeNode getNode( int index ) {
-        Tools.log("SingleNodeBrowser.getNode: requested for node: " + Integer.toString( index ) );
+        //Tools.log("SingleNodeBrowser.getNode: requested for node: " + Integer.toString( index ) );
         return singleNode;
     }
     

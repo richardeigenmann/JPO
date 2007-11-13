@@ -1,15 +1,14 @@
-package jpo; 
+package jpo;
  
-import javax.swing.*; 
+import javax.swing.*;
 import javax.swing.Timer;
-import java.awt.event.*; 
-import java.awt.*;
+import java.awt.event.*;
 import javax.swing.tree.*;
  
 /*
 InfoPanel.java:  a JScrollPane that shows information after selection events.
 
-Copyright (C) 2002-2006  Richard Eigenmann.
+Copyright (C) 2002-2007  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -26,20 +25,21 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  
  
 /** 
- *  The infopanel shows interesting stuff about what has been selected. Such as either the
- *  picture details or the information about the group.
+ *  The InfoPanel shows interesting stuff about what has been selected. Such as either the
+ *  picture details or the information about the group. It works as a JScrollPane that swaps different
+ *  JPanels into it's viewport.
  */ 
   
 public class InfoPanel extends JScrollPane {
- 
-	/** 
+
+	/**
 	 * ThumbnailComponent to show the picture that has been selected
-	 */ 
-	private Thumbnail thumbnail; 
+	 */
+	private Thumbnail thumbnail;
 
 
 	/**
-	 *  StatisticsPanel
+	 *  A link to the statistics panel class.
 	 */
 	private	final CollectionPropertiesJPanel statsJPanel = new CollectionPropertiesJPanel();
 
@@ -51,30 +51,26 @@ public class InfoPanel extends JScrollPane {
 
 
 	/**
-	 *  how often to update the statistics panel
+	 *  A millisecond delay for the polling of the thumbnail queue and memory status
 	 */
-	private static final int delay = 500; //milliseconds
+	private static final int delay = 800; //milliseconds
 
+        
 	/**
-	 *  A timer to fire off the refresh of the Thumbnail Queue display
+	 *  A timer to fire off the refresh of the Thumbnail Queue display. 
+         *  Is only alive if the InfoPanel is showing the statistics panel.
 	 */
 	private Timer t;
 
- 
- 
-	/** 
-	 *   creates a new JScrollPane with an embedded JPanel and provides a set of  
-	 *   methods that allow thumbnails to be displayed. <p> 
+
+
+	/**
+	 *   Constructor for the InfoPanel.
+	 *   methods that allow thumbnails to be displayed. <p>
 	 *
-	 *   The passing in of the caller is obsolete and should be removed when  
-	 *   a better interface type solution has been built. 
-	 *  
-	 */ 
-	public InfoPanel() { 
-		//Tools.log("InfoPanel.constructor");
+	 */
+	public InfoPanel() {
 		statsJPanel.setBackground( Settings.JPO_BACKGROUND_COLOR );
-		statsJPanel.setMinimumSize( Settings.infoPanelMinimumSize );
-		statsJPanel.setPreferredSize( Settings.infoPanelPreferredSize );
 		setMinimumSize( Settings.infoPanelMinimumSize );
 		setPreferredSize( Settings.infoPanelPreferredSize );
 		
@@ -82,7 +78,7 @@ public class InfoPanel extends JScrollPane {
 		
 		//  set the amount by which the panel scrolls down when the user clicks the 
 		//  little down or up arrow in the scrollbar
-		getVerticalScrollBar().setUnitIncrement( 80 );
+		getVerticalScrollBar().setUnitIncrement( 20 );
 		
 		thumbnail = new Thumbnail( Settings.thumbnailSize );
 		final ActionListener taskPerformer = new ActionListener() {

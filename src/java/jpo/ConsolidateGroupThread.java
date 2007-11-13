@@ -164,7 +164,7 @@ public class ConsolidateGroupThread extends Thread {
 		}
 				
 		Enumeration kids = groupNode.children();
-		while ( kids.hasMoreElements() && ( ! progGui.interrupt ) ) {
+		while ( kids.hasMoreElements() && ( ! progGui.getInterruptor().getShouldInterrupt() ) ) {
 			n = (SortableDefaultMutableTreeNode) kids.nextElement();
 			uo = n.getUserObject();
 			if ( uo instanceof GroupInfo ) {

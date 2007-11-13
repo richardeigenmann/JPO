@@ -7,7 +7,7 @@ import javax.swing.ImageIcon;
 /*
 ThumbnailCreationQueue.java:  queue that holds requests to create Thumbnails from Highres Images
 
-Copyright (C) 2003-2006  Richard Eigenmann.
+Copyright (C) 2003-2007  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -91,7 +91,7 @@ public class ThumbnailCreationQueue {
 	 *  If a suitable cached image exists it will be used instead.
 	 *
 	 *  @param	thumb	The Thumbnail which is to be loaded
-	 *  @param	priority	The priority with which the rquest is to be treated on the queue
+	 *  @param	priority	The priority with which the request is to be treated on the queue
 	 *  @deprecated  Use requestThumbnailCreation Thumbnail, priority, force instead.
 	 */
 	public static void requestThumbnailCreation( Thumbnail thumb, int priority ) {
@@ -117,9 +117,9 @@ public class ThumbnailCreationQueue {
 	 *  on the {@link ThumbnailCreationQueue}. 
 	 *
 	 *  @param	thumb	The Thumbnail which is to be loaded
-	 *  @param	priority	The priority with which the rquest is to be treated on the queue
+	 *  @param	priority	The priority with which the request is to be treated on the queue
 	 *  @param	force		Set to true if the thumbnail needs to be rebuilt from source, false
-	 *				if using a cached version is ok.
+	 *				if using a cached version is OK.
 	 */
 	public static void requestThumbnailCreation( Thumbnail thumb, int priority, boolean force ) {
 		// prevent concurrent use of Thumbnail:
@@ -143,7 +143,7 @@ public class ThumbnailCreationQueue {
 				thumbQueue.add( new ThumbnailQueueRequest ( thumb, priority, force ) );
 			} else {
 				// thumbnail already on queue
-				Tools.log("ThumbnailCreationQueue.requestThumbnailCreation: Thumbnail already on queue: " + thumb.toString());
+				//Tools.log("ThumbnailCreationQueue.requestThumbnailCreation: Thumbnail already on queue: " + thumb.toString());
 				if ( req.getPriority() > priority ) {
 					req.setPriority( priority );
 				}
@@ -168,17 +168,6 @@ public class ThumbnailCreationQueue {
 				thumbQueue.remove( req );
 			}
 		}
-	/*
-		boolean notFound = true;
-		ThumbnailQueueRequest test;
-		Enumeration e = thumbQueue.elements();		
-		while ( e.hasMoreElements() && notFound ) {
-			test = (ThumbnailQueueRequest) e.nextElement();
-			if ( test.getThumbnail() == thumb ) {
-				thumbQueue.remove( test );
-				notFound = false;
-			}
-		}*/
 	}
 
 
@@ -256,7 +245,7 @@ public class ThumbnailCreationQueue {
 	/**
 	 * returns the number of Requests currently on the queue
 	 */
-	public static int countQueueRequests() {
+	public static int getQueueRequestCount() {
 		return thumbQueue.size();
 	}
 			

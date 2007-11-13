@@ -190,7 +190,7 @@ public class ThumbnailCreationThread extends Thread {
 				InputStream lowresStream = lowresUrl.openStream();
 				lowresStream.close();
 			} catch  ( IOException x ) {
-				Tools.log("ThumbnailCreationThread.createThumbnail: is requesting the creation of a numbnail because if we can't open the lowres stream we should re-create the image.");
+				//Tools.log("ThumbnailCreationThread.createThumbnail: is requesting the creation of a numbnail because if we can't open the lowres stream we should re-create the image.");
 				createNewThumbnail( currentThumb );
 				return;
 			}
@@ -277,7 +277,7 @@ public class ThumbnailCreationThread extends Thread {
 		}
 	
 		referringNode = currentThumb.referringNode;
-		Tools.log("ThumbnailCreationThread.createNewThumbnail: Creating Thumbnail " + ((PictureInfo) referringNode.getUserObject()).getLowresLocation() + " from " + ((PictureInfo) referringNode.getUserObject()).getHighresLocation());
+		//Tools.log("ThumbnailCreationThread.createNewThumbnail: Creating Thumbnail " + ((PictureInfo) referringNode.getUserObject()).getLowresLocation() + " from " + ((PictureInfo) referringNode.getUserObject()).getHighresLocation());
 		
 		try {
 			// create a new thumbnail from the highres

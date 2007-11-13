@@ -22,7 +22,7 @@
 
     <!-- Description elements are displayed in various places in the Application Manager -->
     <description>JPO Java Picture Organizer</description>
-    <description kind="short"> Oragnize and Share your Picture Collections </description>
+    <description kind="short"> Organize and Share your Picture Collections </description>
 
     <!-- A URL pointing at a GIF or JPG icon file -->
     <icon href="jpo_icon.gif"/>

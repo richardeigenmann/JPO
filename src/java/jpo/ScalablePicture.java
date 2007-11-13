@@ -2,12 +2,9 @@ package jpo;
 
 import java.util.*;
 import javax.swing.*;
-import java.awt.event.*;
 import java.awt.*;
 import java.awt.image.*;
-import java.awt.image.renderable.*;
 import java.awt.geom.AffineTransform;
-import java.lang.Runtime;
 import javax.imageio.*;
 import javax.imageio.stream.*;
 import javax.imageio.plugins.jpeg.*;
@@ -20,7 +17,7 @@ import java.util.Enumeration;
 /*
 ScalablePicture.java:  class that can load and save images
 
-Copyright (C) 2002-2006  Richard Eigenmann.
+Copyright (C) 2002-2007  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -396,6 +393,8 @@ public class ScalablePicture implements SourcePictureListener {
 			if ( scaleToSize ) {
 				int WindowWidth = TargetSize.width;
 				int WindowHeight = TargetSize.height;
+                                //Tools.log("ScalablePicture.scalePicture: Size of window is: " + Integer.toString(WindowWidth) + " x " + Integer.toString(WindowHeight));
+                      
 			
 				int PictureWidth = sourcePicture.getWidth();
 				int PictureHeight = sourcePicture.getHeight();
@@ -481,12 +480,17 @@ public class ScalablePicture implements SourcePictureListener {
 
 
 	/** 
-	 *  invoke this method to tell the scale process to figure out the scal factor 
+	 *  invoke this method to tell the scale process to figure out the scale factor 
 	 *  so that the image fits either by height or by width into the indicated dimension.
 	 */
 	public void setScaleSize( Dimension newSize ) {
 		scaleToSize = true;
-		TargetSize = newSize;
+                if ( ( newSize.height < 1 ) || ( newSize.width < 1 ) ) {
+                    // to prevent the affine transform from failing on a 0 size.
+                    TargetSize = new Dimension( 100, 100 );
+                } else {
+                    TargetSize = newSize;
+                }
 	}
 
 

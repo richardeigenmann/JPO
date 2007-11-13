@@ -32,8 +32,7 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  *
  * @author  Richard Eigenmann
  */
-public class SettingsDialog extends JDialog
-        implements ChangeListener {
+public class SettingsDialog extends JDialog {
     
     
     /**
@@ -41,7 +40,7 @@ public class SettingsDialog extends JDialog
      */
     private JTextField autoLoadJTextField = new JTextField();
     
-      
+    
     
     /**
      *  tickbox that indicates where status information should be written to the log
@@ -62,6 +61,16 @@ public class SettingsDialog extends JDialog
      */
     private JCheckBox maximiseJpoOnStartupJCheckBox = new JCheckBox();
     
+    
+    /**
+     *  Dropdown to indicate what preference the user has for JPO startup
+     */
+    private final JComboBox startupSizeDropdown = new JComboBox();
+    
+    /**
+     *  Dropdown to indicate the preferred size of the viewer window
+     */
+    private final JComboBox viewerSizeDropdown = new JComboBox();
     
     /**
      *  checkbox to indicate that the screen position should be saved upon exit.
@@ -139,14 +148,6 @@ public class SettingsDialog extends JDialog
      */
     private JCheckBox dontEnlargeJCheckBox = new JCheckBox( Settings.jpoResources.getString("dontEnlargeJCheckBoxLabel") );
     
-    
-    
-    
-    
-    /**
-     *    textfield that says how much space to leave from bottom of screen for taskbars
-     */
-    private WholeNumberField taskbarSpaceJTextField = new WholeNumberField( 0, 4 );
     
     
     /**
@@ -255,24 +256,23 @@ public class SettingsDialog extends JDialog
      *   Text Field that holds the password for the email server
      */
     private JTextField emailPasswordJTextField = new JTextField();
+
+    
     
     /**
      *   Constructor to create the GUI that allows modification of the settings
      */
     public SettingsDialog( JFrame parent, boolean modal) {
         super(parent, modal);
-        
         initComponents();
         initValues();
-        
-        
         pack();
         setLocationRelativeTo( Settings.anchorFrame );
         setVisible( true );
     }
     
-    
-    
+
+        
     /**
      *   Create the GUI elements
      */
@@ -288,20 +288,63 @@ public class SettingsDialog extends JDialog
         browserWindowSettingsJPanel.setLayout(new GridBagLayout());
         browserWindowSettingsJPanel.setBorder( BorderFactory.createEmptyBorder() );
         
+        // Language stuff
         c.gridx = 0; c.gridy = 0;
         c.gridwidth = 2;
         JLabel languageJLabel = new JLabel( Settings.jpoResources.getString("languageJLabel") );
         browserWindowSettingsJPanel.add( languageJLabel, c );
         
-        c.gridy ++;
+        c.gridx ++;
         browserWindowSettingsJPanel.add( languageJComboBox, c );
+        // End of Language stuff
+        
+        // Initial Windowsize stuff
+        c.gridx = 0; c.gridy ++;
+        c.gridwidth = 1;
+        browserWindowSettingsJPanel.add( new JLabel( Settings.jpoResources.getString("windowSizeChoicesJlabel") ), c );
+        
+        c.gridx++;
+        final String [] windowSizeChoices = new String[ Settings.windowSizes.length ];
+        windowSizeChoices[0] = Settings.jpoResources.getString("windowSizeChoicesMaximum");
+        for ( int i = 1; i < Settings.windowSizes.length; i++ ) {
+            windowSizeChoices[i] = Integer.toString( Settings.windowSizes[i].width ) + " x "
+                    + Integer.toString( Settings.windowSizes[i].height );
+        }
+        final DefaultComboBoxModel dcbm = new DefaultComboBoxModel( windowSizeChoices );
+        startupSizeDropdown.setModel( dcbm );
+        browserWindowSettingsJPanel.add( startupSizeDropdown, c );
+        startupSizeDropdown.addActionListener( new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if ( startupSizeDropdown.getSelectedIndex() == 0 ) {
+                    Settings.anchorFrame.setExtendedState( Frame.MAXIMIZED_BOTH );
+                } else {
+                    Settings.anchorFrame.setExtendedState( Frame.NORMAL );
+                    Settings.anchorFrame.setSize( Settings.windowSizes[ startupSizeDropdown.getSelectedIndex( ) ] );
+                }
+            }
+        } );
+        // End of Initial Windowsize stuff
+
+        // PictureViewer size stuff
+        c.gridx = 0; c.gridy++;
+        c.gridwidth = 1;
+        browserWindowSettingsJPanel.add( new JLabel( Settings.jpoResources.getString("pictureViewerSizeChoicesJlabel") ), c );
+        
+        c.gridx++;
+        final DefaultComboBoxModel viewerSizeModel = new DefaultComboBoxModel( windowSizeChoices );
+        viewerSizeDropdown.setModel( viewerSizeModel );
+        browserWindowSettingsJPanel.add( viewerSizeDropdown, c );
+        // End of PictureViewer size stuff
         
         
-        c.gridy ++;
+        
+        //Autoload stuff
+        c.gridx = 0; c.gridy ++;
         JLabel autoLoadJLabel = new JLabel( Settings.jpoResources.getString("autoLoadJLabelLabel") );
         browserWindowSettingsJPanel.add( autoLoadJLabel, c );
         
         c.gridy ++;
+        c.gridwidth = 2;
         c.weightx = 0.7f;
         c.fill = GridBagConstraints.HORIZONTAL;
         autoLoadJTextField.setPreferredSize( Settings.filenameFieldPreferredSize );
@@ -324,93 +367,57 @@ public class SettingsDialog extends JDialog
             }
         } );
         browserWindowSettingsJPanel.add( autoLoadJButton, c );
-        
-        
-        // logfile stuff
-        c.gridx = 0; c.gridy ++;
-        c.gridwidth = 2;
-        logfileJCheckBox.setText( Settings.jpoResources.getString("logfileJCheckBoxLabel") );
-        browserWindowSettingsJPanel.add( logfileJCheckBox, c );
-        
-        c.gridy ++;
-        JLabel logfileJLabel = new JLabel( Settings.jpoResources.getString("logfileJLabelLabel") );
-        browserWindowSettingsJPanel.add( logfileJLabel, c );
-        
-        
-        c.gridy ++;
-        c.weightx = 0.7f;
-        c.fill = GridBagConstraints.HORIZONTAL;
-        logfileJTextField.setPreferredSize( Settings.filenameFieldPreferredSize );
-        logfileJTextField.setMinimumSize( Settings.filenameFieldMinimumSize );
-        logfileJTextField.setMaximumSize( Settings.filenameFieldMaximumSize );
-        logfileJTextField.setInputVerifier( new FileTextFieldVerifier() );
-        browserWindowSettingsJPanel.add( logfileJTextField, c );
-        
-        c.gridx = 2;
-        c.gridwidth = 1;
-        c.weightx = 0;
-        c.fill = GridBagConstraints.NONE;
-        JButton logfileJButton = new JButton( Settings.jpoResources.getString("threeDotText") );
-        logfileJButton.setPreferredSize( Settings.threeDotButtonSize );
-        logfileJButton.setMinimumSize( Settings.threeDotButtonSize ) ;
-        logfileJButton.setMaximumSize( Settings.threeDotButtonSize );
-        logfileJButton.addActionListener( new ActionListener() {
-            public void actionPerformed( ActionEvent e ) {
-                logfileChooser();
-            }
-        } );
-        browserWindowSettingsJPanel.add( logfileJButton, c );
+        // End of Autoload stuff
         
         
         
+        /*
         c.gridx = 0; c.gridy ++;
         c.gridwidth = 2;
         maximiseJpoOnStartupJCheckBox.setText( Settings.jpoResources.getString("maximiseJpoOnStartupJCheckBoxLabel") );
         browserWindowSettingsJPanel.add( maximiseJpoOnStartupJCheckBox, c );
-        
-        
-        
+         
         c.gridx = 0; c.gridy ++;
         c.gridwidth = 2;
         saveSizeJCheckBox.setText( Settings.jpoResources.getString("saveSizeJCheckBoxLabel") );
         browserWindowSettingsJPanel.add( saveSizeJCheckBox, c );
-        
+         
         c.gridx = 0; c.gridy ++;
         JLabel mainCoordsJLabel = new JLabel( Settings.jpoResources.getString("MainCoordinates") );
         browserWindowSettingsJPanel.add( mainCoordsJLabel, c );
-        
+         
         c.gridx = 0; c.gridy ++;
         c.gridwidth = 1;
         mainX.setPreferredSize( Settings.shortNumberPreferredSize );
         mainX.setMinimumSize( Settings.shortNumberMinimumSize );
         mainX.setMaximumSize( Settings.shortNumberMaximumSize );
         browserWindowSettingsJPanel.add( mainX, c );
-        
+         
         c.gridx++;
         mainY.setPreferredSize( Settings.shortNumberPreferredSize );
         mainY.setMinimumSize( Settings.shortNumberMinimumSize );
         mainY.setMaximumSize( Settings.shortNumberMaximumSize );
         browserWindowSettingsJPanel.add( mainY, c );
-        
+         
         c.gridx = 0; c.gridy ++;
         c.gridwidth = 2;
         JLabel mainSizeJLabel = new JLabel( Settings.jpoResources.getString("MainSize") );
         browserWindowSettingsJPanel.add( mainSizeJLabel, c );
-        
+         
         c.gridx = 0; c.gridy ++;
         c.gridwidth = 1;
         mainWidth.setPreferredSize( Settings.shortNumberPreferredSize );
         mainWidth.setMinimumSize( Settings.shortNumberMinimumSize );
         mainWidth.setMaximumSize( Settings.shortNumberMaximumSize );
         browserWindowSettingsJPanel.add( mainWidth, c );
-        
+         
         c.gridx++;
         c.gridwidth = 1;
         mainHeight.setPreferredSize( Settings.shortNumberPreferredSize );
         mainHeight.setMinimumSize( Settings.shortNumberMinimumSize );
         mainHeight.setMaximumSize( Settings.shortNumberMaximumSize );
         browserWindowSettingsJPanel.add( mainHeight, c );
-        
+         */
         
         
         
@@ -418,6 +425,8 @@ public class SettingsDialog extends JDialog
         JPanel pictureViewerJPanel = new JPanel();
         pictureViewerJPanel.setLayout( new GridBagLayout() );
         pictureViewerJPanel.setBorder( BorderFactory.createEmptyBorder() );
+        
+        
         
         c.gridx = 0; c.gridy = 0;
         c.gridwidth = 2;
@@ -443,67 +452,14 @@ public class SettingsDialog extends JDialog
         maxCacheJTextField.setMaximumSize( Settings.shortNumberMaximumSize );
         pictureViewerJPanel.add( maxCacheJTextField, c );
         
-        c.gridx = 0; c.gridy++;
-        c.gridwidth = 2;
-        JLabel taskbarJLabel = new JLabel( Settings.jpoResources.getString("leaveSpaceLabel")  );
-        taskbarJLabel.setForeground( Color.black );
-        pictureViewerJPanel.add( taskbarJLabel, c );
-        
-        c.gridx = 2;
-        c.gridwidth = 1;
-        taskbarSpaceJTextField.setPreferredSize( Settings.shortNumberPreferredSize );
-        taskbarSpaceJTextField.setMinimumSize( Settings.shortNumberMinimumSize );
-        taskbarSpaceJTextField.setMaximumSize(  Settings.shortNumberMaximumSize  );
-        pictureViewerJPanel.add( taskbarSpaceJTextField, c);
-        
         
         c.gridx = 0; c.gridy++;
         c.gridwidth = 3;
         pictureViewerJPanel.add( dontEnlargeJCheckBox, c );
         
-        
-        c.gridx = 0; c.gridy ++;
-        JLabel pictureCoordsJLabel = new JLabel( Settings.jpoResources.getString("pictureCoordinates") );
-        pictureViewerJPanel.add( pictureCoordsJLabel, c );
-        
-        c.gridx = 0; c.gridy ++;
-        c.gridwidth = 1;
-        pictureX.setPreferredSize( Settings.shortNumberPreferredSize );
-        pictureX.setMinimumSize( Settings.shortNumberMinimumSize );
-        pictureX.setMaximumSize(  Settings.shortNumberMaximumSize  );
-        pictureViewerJPanel.add( pictureX, c );
-        
-        c.gridx++;
-        pictureY.setPreferredSize( Settings.shortNumberPreferredSize );
-        pictureY.setMinimumSize( Settings.shortNumberMinimumSize );
-        pictureY.setMaximumSize(  Settings.shortNumberMaximumSize  );
-        pictureViewerJPanel.add( pictureY, c );
-        
-        c.gridx = 0; c.gridy ++;
-        c.gridwidth = 3;
-        JLabel pictureSizeJLabel = new JLabel( Settings.jpoResources.getString("pictureSize") );
-        pictureViewerJPanel.add( pictureSizeJLabel, c );
-        
-        c.gridx = 0; c.gridy ++;
-        c.gridwidth = 1;
-        pictureWidth.setPreferredSize( Settings.shortNumberPreferredSize );
-        pictureWidth.setMinimumSize( Settings.shortNumberMinimumSize );
-        pictureWidth.setMaximumSize(  Settings.shortNumberMaximumSize  );
-        pictureViewerJPanel.add( pictureWidth, c );
-        
-        c.gridx++;
-        c.gridwidth = 1;
-        pictureHeight.setPreferredSize( Settings.shortNumberPreferredSize );
-        pictureHeight.setMinimumSize( Settings.shortNumberMinimumSize );
-        pictureHeight.setMaximumSize(  Settings.shortNumberMaximumSize  );
-        pictureViewerJPanel.add( pictureHeight, c );
-        
         c.gridx = 0; c.gridy++;
         c.gridwidth = 3;
         pictureViewerJPanel.add( pictureViewerFastScaleJCheckBox, c);
-        
-        
-        
         
         
         // set up the thumbnailSettingsJPanel
@@ -531,7 +487,7 @@ public class SettingsDialog extends JDialog
         c.gridx = 0; c.gridy++;
         c.gridwidth = 3;
         c.fill = GridBagConstraints.NONE;
-        JButton zapThumbnailsJButton = new JButton( Settings.jpoResources.getString("zapThumbnails") );        
+        JButton zapThumbnailsJButton = new JButton( Settings.jpoResources.getString("zapThumbnails") );
         zapThumbnailsJButton.addActionListener( new ActionListener() {
             public void actionPerformed( ActionEvent e ) {
                 zapThumbnails();
@@ -749,6 +705,71 @@ public class SettingsDialog extends JDialog
         
         
         
+        // Debug Panel
+        JPanel debugJPanel = new JPanel();
+        debugJPanel.setLayout( new GridBagLayout() );
+        debugJPanel.setBorder( BorderFactory.createEmptyBorder() );
+        
+        // Logfile stuff
+        c.gridx = 0; c.gridy = 0;
+        c.gridwidth = 2;
+        logfileJCheckBox.setText( Settings.jpoResources.getString("logfileJCheckBoxLabel") );
+        final JLabel logfileJLabel = new JLabel( Settings.jpoResources.getString("logfileJLabelLabel") );
+        final JButton logfileJButton = new JButton( Settings.jpoResources.getString("threeDotText") );
+        logfileJCheckBox.addActionListener( new ActionListener() {
+            public void actionPerformed( ActionEvent e ) {
+                logfileJLabel.setVisible( logfileJCheckBox.isSelected() );
+                logfileJTextField.setVisible( logfileJCheckBox.isSelected() );
+                logfileJButton.setVisible( logfileJCheckBox.isSelected() );
+                checkLogfile( logfileJTextField.getText() );
+            }
+        } );
+        debugJPanel.add( logfileJCheckBox, c );
+        
+        c.gridy ++;
+        debugJPanel.add( logfileJLabel, c );
+        
+        c.gridy ++;
+        c.weightx = 0.7f;
+        c.fill = GridBagConstraints.HORIZONTAL;
+        logfileJTextField.setPreferredSize( Settings.filenameFieldPreferredSize );
+        logfileJTextField.setMinimumSize( Settings.filenameFieldMinimumSize );
+        logfileJTextField.setMaximumSize( Settings.filenameFieldMaximumSize );
+        logfileJTextField.setInputVerifier( new FileTextFieldVerifier() );
+        debugJPanel.add( logfileJTextField, c );
+        
+        c.gridx = 2;
+        c.gridwidth = 1;
+        c.weightx = 0;
+        c.fill = GridBagConstraints.NONE;
+        logfileJButton.setPreferredSize( Settings.threeDotButtonSize );
+        logfileJButton.setMinimumSize( Settings.threeDotButtonSize ) ;
+        logfileJButton.setMaximumSize( Settings.threeDotButtonSize );
+        logfileJButton.addActionListener( new ActionListener() {
+            public void actionPerformed( ActionEvent e ) {
+                logfileChooser();
+            }
+        } );
+        debugJPanel.add( logfileJButton, c );
+        // end of Logfile Stuff
+        
+        c.gridx = 0;
+        c.gridwidth = 1;
+        c.weightx = 0;
+        c.fill = GridBagConstraints.NONE;
+        c.gridy++;
+        JButton screenSizeTestButton = new JButton ( "Window Resize Test" );
+        screenSizeTestButton.addActionListener( new ActionListener() {
+            public void actionPerformed( ActionEvent e ) {
+                getRid(); // the dialog is modal and would prevent us using the frame
+                ResizableJFrameTest.main( null );
+            }
+        } );
+        debugJPanel.add( screenSizeTestButton, c );
+        
+        
+        
+        
         
         // set up the main part of the dialog
         getContentPane().setLayout( new BorderLayout());
@@ -763,6 +784,7 @@ public class SettingsDialog extends JDialog
         tp.add( Settings.jpoResources.getString("thumbnailSettingsJPanel"), thumbnailSettingsJPanel );
         tp.add( Settings.jpoResources.getString("userFunctionJPanel"), userFunctionJPanel );
         tp.add( Settings.jpoResources.getString("emailJPanel"), emailJPanel );
+        tp.add( "Debug", debugJPanel );
         
         getContentPane().add(tp, BorderLayout.NORTH);
         
@@ -793,7 +815,7 @@ public class SettingsDialog extends JDialog
         cancelButton.setMinimumSize( Settings.defaultButtonDimension );
         cancelButton.setMaximumSize( Settings.defaultButtonDimension );
         cancelButton.setBorder( BorderFactory.createRaisedBevelBorder() );
-        saveButton.addActionListener( new ActionListener() {
+        cancelButton.addActionListener( new ActionListener() {
             public void actionPerformed( ActionEvent e ) {
                 getRid();
             }
@@ -832,29 +854,17 @@ public class SettingsDialog extends JDialog
         autoLoadJTextField.setText(Settings.autoLoad);
         logfileJCheckBox.setSelected( Settings.writeLog );
         logfileJTextField.setText( Settings.logfile.getPath() );
-        maximiseJpoOnStartupJCheckBox.setSelected( Settings.maximiseJpoOnStartup );
-        saveSizeJCheckBox.setSelected( Settings.saveSizeOnExit );
-        mainX.setValue( Settings.mainFrameDimensions.x );
-        mainY.setValue( Settings.mainFrameDimensions.y );
-        mainWidth.setValue( Settings.mainFrameDimensions.width );
-        mainHeight.setValue( Settings.mainFrameDimensions.height );
         
+        startupSizeDropdown.setSelectedIndex( findSizeIndex( Settings.maximiseJpoOnStartup, Settings.mainFrameDimensions ) );
+        viewerSizeDropdown.setSelectedIndex( findSizeIndex( Settings.maximisePictureViewerWindow, Settings.pictureViewerDefaultDimensions ) );
         
         maximumPictureSizeJTextField.setValue( Settings.maximumPictureSize );
         maxCacheJTextField.setValue( Settings.maxCache );
         dontEnlargeJCheckBox.setSelected( Settings.dontEnlargeSmallImages );
-        pictureX.setValue( Settings.pictureViewerDefaultDimensions.x );
-        pictureY.setValue( Settings.pictureViewerDefaultDimensions.y );
-        pictureWidth.setValue( Settings.pictureViewerDefaultDimensions.width );
-        pictureHeight.setValue( Settings.pictureViewerDefaultDimensions.height );
-        pictureViewerFastScaleJCheckBox.setSelected( Settings.pictureViewerFastScale );
-        
-        
         
         thumbnailPathField.setText( Settings.thumbnailPath.getPath() );
         maxThumbnails.setValue( Settings.maxThumbnails );
         thumbnailSize.setValue( Settings.thumbnailSize );
-        taskbarSpaceJTextField.setValue( Settings.leaveForPanel );
         keepThumbnailsJCheckBox.setSelected( Settings.keepThumbnails );
         jpgQualityJSlider.setValue( (int) (Settings.defaultJpgQuality * 100) );
         thumbnailFastScaleJCheckBox.setSelected( Settings.thumbnailFastScale );
@@ -872,15 +882,34 @@ public class SettingsDialog extends JDialog
         emailUserJTextField.setText( Settings.emailUser );
         emailPasswordJTextField.setText( Settings.emailPassword );
         
-        
         // deliberately placed here to stop change events being triggered while the fields are
         // being initialised.
         checkLogfile( logfileJTextField.getText() );
         checkAutoLoad( autoLoadJTextField.getText() );
-        logfileJCheckBox.addChangeListener( this );
-        //logfileJTextField.addActionListener( this );
     }
     
+    
+    /**
+     * returns the index for the size dropdowns based on the supplied parameters.
+     * @param maximise  whether the index should be maximised
+     * @param targetDimension  the target size of the window
+     */
+    private static int findSizeIndex( boolean maximise, Dimension targetDimension ) {
+        if ( maximise ) {
+            return 0;
+        } else {
+            int settingsArea = targetDimension.width * targetDimension.height;
+            int index = 1;
+            for ( int i = 1; i < Settings.windowSizes.length; i++ ) {
+                if ( Settings.windowSizes[i].width * Settings.windowSizes[i].height <= settingsArea ) {
+                    index = i;
+                } else {
+                    break;
+                }
+            }
+            return index;
+        }
+    }
     
     
     /**
@@ -917,6 +946,7 @@ public class SettingsDialog extends JDialog
         Settings.setLocale( Settings.supportedLocale[ languageJComboBox.getSelectedIndex() ] );
         
         Settings.autoLoad = autoLoadJTextField.getText();
+        
         if ( ! logfileJTextField.getText().equals( Settings.logfile.getPath() )
         || ( logfileJCheckBox.isSelected() ^ Settings.writeLog ))
             Tools.closeLogfile();  // logging either stopped or file changed
@@ -924,28 +954,28 @@ public class SettingsDialog extends JDialog
         Settings.logfile = new File( logfileJTextField.getText() );
         Settings.writeLog = logfileJCheckBox.isSelected();
         
-        
-        Settings.maximiseJpoOnStartup = maximiseJpoOnStartupJCheckBox.isSelected();
-        Settings.saveSizeOnExit = saveSizeJCheckBox.isSelected();
-        
-        Settings.mainFrameDimensions.x = mainX.getValue();
-        Settings.mainFrameDimensions.y = mainY.getValue();
-        Settings.mainFrameDimensions.width = mainWidth.getValue();
-        Settings.mainFrameDimensions.height = mainHeight.getValue();
+        if ( startupSizeDropdown.getSelectedIndex() == 0 ) {
+            Settings.maximiseJpoOnStartup = true;
+            Settings.mainFrameDimensions = new Dimension( 0, 0);
+        } else {
+            Settings.maximiseJpoOnStartup = false;
+            Settings.mainFrameDimensions = new Dimension( Settings.windowSizes[ startupSizeDropdown.getSelectedIndex( )] );
+        }
         
         Settings.maximumPictureSize = maximumPictureSizeJTextField.getValue();
         Settings.maxCache = maxCacheJTextField.getValue();
-        Settings.leaveForPanel = taskbarSpaceJTextField.getValue();
         Settings.dontEnlargeSmallImages = dontEnlargeJCheckBox.isSelected();
-        Settings.pictureViewerDefaultDimensions.x = pictureX.getValue();
-        Settings.pictureViewerDefaultDimensions.y = pictureY.getValue();
-        Settings.pictureViewerDefaultDimensions.width = pictureWidth.getValue();
-        Settings.pictureViewerDefaultDimensions.height = pictureHeight.getValue();
+
+        if ( viewerSizeDropdown.getSelectedIndex() == 0 ) {
+            Settings.maximisePictureViewerWindow = true;
+            Settings.pictureViewerDefaultDimensions = new Dimension( 0, 0);
+        } else {
+            Settings.maximisePictureViewerWindow = false;
+            Settings.pictureViewerDefaultDimensions = new Dimension( Settings.windowSizes[ viewerSizeDropdown.getSelectedIndex( )] );
+        }
+
         Settings.pictureViewerFastScale = pictureViewerFastScaleJCheckBox.isSelected();
         
-        
-        
-        //Settings.thumbnailPath = new File( thumbnailPathJTextField.getText() );
         Settings.thumbnailPath = new File( thumbnailPathField.getText() );
         Settings.keepThumbnails = keepThumbnailsJCheckBox.isSelected();
         
@@ -1100,18 +1130,6 @@ public class SettingsDialog extends JDialog
         int returnVal = jFileChooser.showDialog( this, Settings.jpoResources.getString("genericSelectText") );
         if(returnVal == JFileChooser.APPROVE_OPTION) {
             logfileJTextField.setText(jFileChooser.getSelectedFile().getPath());
-            checkLogfile( logfileJTextField.getText() );
-        }
-    }
-    
-    
-  
-    
-    /**
-     *   method that catches change events on tickboxes
-     */
-    public void stateChanged( ChangeEvent e ) {
-        if ( e.getSource() == logfileJCheckBox ) {
             checkLogfile( logfileJTextField.getText() );
         }
     }

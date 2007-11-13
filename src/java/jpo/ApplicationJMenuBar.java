@@ -91,7 +91,7 @@ public class ApplicationJMenuBar extends JMenuBar
      **/
     private final JMenuItem FileCameraJMenuItem = new JMenuItem();
     
-    
+
     /**
      *  Menu item that allows the user to load a collection.
      **/
@@ -171,7 +171,7 @@ public class ApplicationJMenuBar extends JMenuBar
     private final JMenuItem EditCategoriesJMenuItem = new JMenuItem();
     
     /**
-     *  Menu item that pops up an automatic slideshow
+     *  Menu item that pops up an automatic slide show
      */
     private final JMenuItem RandomSlideshowJMenuItem = new JMenuItem();
     
@@ -231,8 +231,8 @@ public class ApplicationJMenuBar extends JMenuBar
             }
         } );
         FileJMenu.add( FileCameraJMenuItem );
-        
-        
+
+
         FileLoadJMenuItem.setMnemonic(KeyEvent.VK_O);
         FileLoadJMenuItem.setAccelerator( KeyStroke.getKeyStroke( 'O', java.awt.event.InputEvent.CTRL_MASK ) );
         FileLoadJMenuItem.addActionListener( new ActionListener() {
@@ -245,7 +245,7 @@ public class ApplicationJMenuBar extends JMenuBar
         
         FileOpenRecentJMenu.setMnemonic(KeyEvent.VK_R);
         FileJMenu.add( FileOpenRecentJMenu );
-
+        
         for ( int i = 0; i < Settings.recentFiles; i++ ) {
             recentOpenedfileJMenuItem[ i ] = new JMenuItem();
             final int index = i;  // the anonymous innter class needs a final variable
@@ -259,7 +259,7 @@ public class ApplicationJMenuBar extends JMenuBar
             FileOpenRecentJMenu.add( recentOpenedfileJMenuItem[ i ] );
         }
         Settings.addRecentFilesChangeListener( this );
-
+        
         
         FileSaveJMenuItem.setMnemonic(KeyEvent.VK_S);
         FileSaveJMenuItem.setAccelerator( KeyStroke.getKeyStroke( 'S', java.awt.event.InputEvent.CTRL_MASK ) );
@@ -314,7 +314,7 @@ public class ApplicationJMenuBar extends JMenuBar
             }
         } );
         EditJMenu.add( EditCheckDirectoriesJMenuItem );
-       
+        
         
         EditCollectionPropertiesJMenuItem.setMnemonic( KeyEvent.VK_D );
         EditCollectionPropertiesJMenuItem.addActionListener( new ActionListener() {
@@ -404,7 +404,7 @@ public class ApplicationJMenuBar extends JMenuBar
             }
         } );
         HelpJMenu.add( HelpLicenseJMenuItem );
-
+        
         // register an interest in the locale changes
         Settings.addLocaleChangeListener( this );
         setMenuTexts();
@@ -445,10 +445,10 @@ public class ApplicationJMenuBar extends JMenuBar
         HelpLicenseJMenuItem.setText( Settings.jpoResources.getString("HelpLicenseMenuItemText") );
         
     }
-
+    
     
     /**
-     *  This method handles the change of the application locale. In this class it simply makes sure the 
+     *  This method handles the change of the application locale. In this class it simply makes sure the
      *  menus are reloaded.
      */
     public void localeChanged() {
@@ -457,7 +457,7 @@ public class ApplicationJMenuBar extends JMenuBar
     
     
     /**
-     *  Sets up the menu entries in the File|OpenRecent submenu from the recentCollections 
+     *  Sets up the menu entries in the File|OpenRecent sub menu from the recentCollections
      *  in Settings. Can be called by the interface from the listener on the Settings object.
      */
     public void recentFilesChanged() {
@@ -470,7 +470,7 @@ public class ApplicationJMenuBar extends JMenuBar
             }
         }
     }
-
+    
     
 }
 

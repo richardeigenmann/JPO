@@ -11,7 +11,7 @@
     <property name="build.dtd.dir" value="${build.base.classes.dir}/${app.main.package}"/>
     <property name="build.docs.dir" value="${build.dir}/docs"/>
     <property name="build.jars.dir" value="${build.dir}/jars"/>
-    <property name="version" value="0.8.5"/>
+    <property name="version" value="0.9"/>
     
     <property name="libs.dir" value="libs"/>
     <property name="src.dir" value="src"/>
@@ -61,12 +61,20 @@
         </delete>
         <delete dir="${build.dir}"/>
     </target>
+
+        
+    <target name="cleanupSource" description="Deletes the ~ files that some editors create" >
+        <delete verbose="${TALK}">
+            <fileset dir="${src.java.dir}/jpo/" includes="*~" defaultexcludes="no" />
+        </delete>
+    </target>
+
     
     <target name="compile"
             depends="prepare"
             description="Compiles the .java files">
         <javac destdir="${build.base.classes.dir}"
-               debug="on"
+               debug="true"
                optimize="off"
                verbose="off"
                fork="yes"
@@ -124,14 +132,14 @@
             description="Compile and run the project"/>
     
     
-    <target name="buildjar" depends="compile, test" description="Builds the  file containing the Jpo Classes">
+    <target name="buildjar" depends="clean, cleanupSource, compile, test" description="Builds the  file containing the Jpo Classes">
         <jar destfile="${build.jars.dir}/jpo-${version}.jar"
              basedir="${build.base.classes.dir}"
-             compress="yes"
+             compress="no"
              duplicate="fail" >
             <manifest>
                 <attribute name="Main-Class" value="${app.main.class}"/>
-                <attribute name="Class-Path" value="metadata-extractor-2.3.0.jar jnlp.jar activation.jar mail.jar" />
+                <attribute name="Class-Path" value="metadata-extractor-2.3.0.jar jnlp.jar activation.jar mail.jar jwizz-0.1.4.jar" />
                 <section name="Copyright">
                     <attribute name="Copy" value="(c) 2001-2007, Richard Eigenmann, Zürich, Switzerland"/>
                 </section>
@@ -150,7 +158,7 @@
 	 buildjar
     -->
     <target name="signjar" depends="buildjar" description="Signs the jpo-${version}.jar jar file with the key in the keystore ${env.KEYSTORE} using the password ${env.JARPWD}">
-        <signjar jar="${build.jars.dir}/jpo-${version}.jar" 
+       <signjar jar="${build.jars.dir}/jpo-${version}.jar" 
                  alias="richi"
                  keystore="${env.KEYSTORE}"
                  storepass="${env.JARPWD}"
@@ -160,6 +168,21 @@
                  keystore="${env.KEYSTORE}"
                  storepass="${env.JARPWD}"
         />
+        <signjar jar="${build.jars.dir}/jwizz-0.1.4.jar" 
+                 alias="richi"
+                 keystore="${env.KEYSTORE}"
+                 storepass="${env.JARPWD}"
+        />
+        <!-- requires ant 1.7
+        <signjar 
+            alias="richi"
+            keystore="${env.KEYSTORE}"
+            storepass="${env.JARPWD}">
+            <path>
+                <fileset dir="${build.jars.dir}" incudes="**/*.jar" />
+            </path>
+        </signjar>  -->
+        
     </target>
     
     <target name="runjar" description="Runs the program from the jar" depends="buildjar">
@@ -173,18 +196,25 @@
     
     <!-- This target will only be of use to the person who does the deployment of JPO to souceforge.
          It relies on the environment variables SOURCEFORGEUSER and SORUVEFORGEPWD for the authentication.
+         
     -->
-    <target name="publish" depends="signjar" description="Publishes the lates Jpo Version to the SourceForge project">
+    <target name="publish" depends="signjar"  description="Publishes the lates Jpo Version to the SourceForge project">
         <scp localfile="web/index.html" 
              todir="${env.SOURCFORGEUSER}:${env.SOURCFORGEPWD}@shell.sourceforge.net:/home/groups/j/j-/j-po/htdocs"
              trust="yes"
              verbose="no" >
             <fileset dir="web">
+                <modified>
+                    <param name="cache.cachefile"  value="/tmp/Sourceforge-Jpo-Cache1" />
+                </modified>
                 <include name="*.html" />
                 <include name="*.jnlp" />
                 <include name="fontconfig" />
             </fileset>
             <fileset dir="${build.jars.dir}">
+                <modified>
+                    <param name="cache.cachefile"  value="/tmp/Sourceforge-Jpo-Cache2" />
+                </modified>
                 <include name="*.jar" />
             </fileset> 
         </scp>
@@ -200,6 +230,13 @@
     </target>
     
     
+    <target name="run.single" description="Runs a single program" depends="compile">
+        <java classname="jpo.ResizableJFrameTest"
+              fork="yes"
+              maxmemory="500m" >
+            <classpath refid="base.path"/>
+        </java>
+    </target>
     
     
     

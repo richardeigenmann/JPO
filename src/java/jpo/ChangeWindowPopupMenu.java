@@ -5,7 +5,7 @@ import javax.swing.*;
 
 /*
 GroupPopupMenu.java: popup menu for groups
-Copyright (C) 2002  Richard Eigenmann.
+Copyright (C) 2002-2007  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -151,21 +151,21 @@ public class ChangeWindowPopupMenu extends JPopupMenu
 		// Group popup menu				
 
 		if ( e.getSource() == fullScreenJMenuItem )
-			caller.switchWindowMode( PictureViewer.WINDOW_FULLSCREEN );				
+			caller.switchWindowMode( ResizableJFrame.WINDOW_FULLSCREEN );				
 		else if ( e.getSource() == leftWindowJMenuItem )
-			caller.switchWindowMode( PictureViewer.WINDOW_LEFT );				
+			caller.switchWindowMode( ResizableJFrame.WINDOW_LEFT );				
 		else if ( e.getSource() == rightWindowJMenuItem )
-			caller.switchWindowMode( PictureViewer.WINDOW_RIGHT );				
+			caller.switchWindowMode( ResizableJFrame.WINDOW_RIGHT );				
 		else if ( e.getSource() == topLeftWindowJMenuItem )
-			caller.switchWindowMode( PictureViewer.WINDOW_TOP_LEFT );				
+			caller.switchWindowMode( ResizableJFrame.WINDOW_TOP_LEFT );				
 		else if ( e.getSource() == topRightWindowJMenuItem )
-			caller.switchWindowMode( PictureViewer.WINDOW_TOP_RIGHT );				
+			caller.switchWindowMode( ResizableJFrame.WINDOW_TOP_RIGHT );				
 		else if ( e.getSource() == bottomLeftWindowJMenuItem )
-			caller.switchWindowMode( PictureViewer.WINDOW_BOTTOM_LEFT );				
+			caller.switchWindowMode( ResizableJFrame.WINDOW_BOTTOM_LEFT );				
 		else if ( e.getSource() == bottomRightWindowJMenuItem )
-			caller.switchWindowMode( PictureViewer.WINDOW_BOTTOM_RIGHT );				
+			caller.switchWindowMode( ResizableJFrame.WINDOW_BOTTOM_RIGHT );				
 		else if ( e.getSource() == defaultWindowJMenuItem )
-			caller.switchWindowMode( PictureViewer.WINDOW_DEFAULT );				
+			caller.switchWindowMode( ResizableJFrame.WINDOW_DEFAULT );				
 
 			
 		else if ( e.getSource() == windowDecorationsJMenuItem ) 
