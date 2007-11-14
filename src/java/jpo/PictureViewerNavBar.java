@@ -1,16 +1,19 @@
 package jpo;
 
 import java.awt.Dimension;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JToolBar;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 /*
-PictureViewerNavBar.java:  Does the navigation icons and event handling for the PictureViewer
+PictureViewerNavBar.java:  Does the navigation icons and sends the events back to the PictureViewer
  
 Copyright (C) 2002-2007  Richard Eigenmann, Zürich, Switzerland
 This program is free software; you can redistribute it and/or
@@ -29,170 +32,65 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 
 
 /**
- *  Does the navigation icons and event handling for the PictureViewer
+ *  Creates a navigation Bar with several icons to navigate the Picture Viewer
+ *  @author Richard Eigenmann richard.eigenmann@gmail.com
  */
 public class PictureViewerNavBar extends JToolBar {
     
     /**
-     * handle back to the PictureViewer.
-     * Should probably be an Interface
+     * A handle back to the PictureViewer so that the buttons can request actions
+     * Should be an Interface
      */
-    final PictureViewer pv;
+    private final PictureViewer pv;
     
-    /** Creates a new instance of PictureViewerNavBar */
+    /** Constructor for a new instance of PictureViewerNavBar */
     public PictureViewerNavBar( final PictureViewer pv ) {
         super( Settings.jpoResources.getString("NavigationPanel") );
         this.pv = pv;
         final int numButtons = 8;
-        final Dimension navButtonSize = new Dimension( 24, 24);
         
         setBackground( Settings.PICTUREVIEWER_BACKGROUND_COLOR );
         setFloatable( true );
-        setMinimumSize(new Dimension(36 * numButtons, 26));
-        setPreferredSize(new Dimension(36 * numButtons, 26));
-        setMaximumSize(new Dimension(36 * numButtons, 50));
+        setMinimumSize( new Dimension(36 * numButtons, 26) );
+        setPreferredSize( new Dimension(36 * numButtons, 26) );
+        setMaximumSize( new Dimension(36 * numButtons, 50) );
         setRollover( true );
         setBorderPainted( false );
         
-        previousJButton.setMnemonic(KeyEvent.VK_P);
-        previousJButton.addActionListener( new ActionListener() {
-            public void actionPerformed( ActionEvent e ) {
-                pv.requestPriorPicture();
-                pv.myJFrame.getGlassPane().requestFocusInWindow();
-            }
-        });
-        previousJButton.setToolTipText( Settings.jpoResources.getString("previousJButton.ToolTipText") );
-        previousJButton.setBorderPainted(false);
-        previousJButton.setBackground( Settings.PICTUREVIEWER_BACKGROUND_COLOR );
-        previousJButton.setPreferredSize( navButtonSize );
-        add(previousJButton);
-        
-        
-        nextJButton.setMnemonic(KeyEvent.VK_N);
-        nextJButton.addActionListener( new ActionListener() {
-            public void actionPerformed( ActionEvent e ) {
-                pv.requestNextPicture();
-                pv.myJFrame.getGlassPane().requestFocusInWindow();
-            }
-        });
-        nextJButton.setToolTipText( Settings.jpoResources.getString("nextJButton.ToolTipText") );
-        nextJButton.setBorderPainted(false);
-        nextJButton.setBackground( Settings.PICTUREVIEWER_BACKGROUND_COLOR );
-        nextJButton.setPreferredSize( navButtonSize );
-        add(nextJButton);
-        
-        
-        rotateLeftJButton.setMnemonic(KeyEvent.VK_L);
-        rotateLeftJButton.addActionListener( new ActionListener() {
-            public void actionPerformed( ActionEvent e ) {
-                pv.currentNode.rotatePicture( 270 );
-                pv.myJFrame.getGlassPane().requestFocusInWindow();
-            }
-        });
-        rotateLeftJButton.setToolTipText( Settings.jpoResources.getString("rotateLeftJButton.ToolTipText") );
-        rotateLeftJButton.setBorderPainted( false );
-        rotateLeftJButton.setBackground( Settings.PICTUREVIEWER_BACKGROUND_COLOR );
-        rotateLeftJButton.setPreferredSize( navButtonSize );
+        add( previousJButton );
+        add( nextJButton );
         add( rotateLeftJButton );
-        
-        
-        
-        
-        rotateRightJButton.setMnemonic(KeyEvent.VK_R);
-        rotateRightJButton.addActionListener( new ActionListener() {
-            public void actionPerformed( ActionEvent e ) {
-                pv.currentNode.rotatePicture( 90 );
-                pv.myJFrame.getGlassPane().requestFocusInWindow();
-            }
-        });
-        rotateRightJButton.setToolTipText( Settings.jpoResources.getString("rotateRightJButton.ToolTipText") );
-        rotateRightJButton.setBorderPainted( false );
-        rotateRightJButton.setBackground( Settings.PICTUREVIEWER_BACKGROUND_COLOR );
-        rotateRightJButton.setPreferredSize( navButtonSize );
         add( rotateRightJButton );
-        
-        
-        fullScreenJButton.setMnemonic( KeyEvent.VK_F );
-        fullScreenJButton.addActionListener( new ActionListener() {
-            public void actionPerformed( ActionEvent e ) {
-                pv.requestScreenSizeMenu();
-                pv.myJFrame.getGlassPane().requestFocusInWindow();
-            }
-        });
-        fullScreenJButton.setBorderPainted( false );
-        fullScreenJButton.setToolTipText( Settings.jpoResources.getString("fullScreenJButton.ToolTipText") );
-        fullScreenJButton.setBackground( Settings.PICTUREVIEWER_BACKGROUND_COLOR );
-        fullScreenJButton.setPreferredSize( navButtonSize );
         add( fullScreenJButton );
-        
-        
-        popupMenuJButton.setMnemonic( KeyEvent.VK_M );
-        popupMenuJButton.addActionListener( new ActionListener() {
-            public void actionPerformed( ActionEvent e ) {
-                pv.requestPopupMenu();
-                pv.myJFrame.getGlassPane().requestFocusInWindow();
-            }
-        });
-        popupMenuJButton.setBorderPainted( false );
-        popupMenuJButton.setToolTipText( Settings.jpoResources.getString("popupMenuJButton.ToolTipText") );
-        popupMenuJButton.setBackground( Settings.PICTUREVIEWER_BACKGROUND_COLOR );
-        popupMenuJButton.setPreferredSize( navButtonSize );
-        popupMenuJButton.setVisible( true );
         add( popupMenuJButton );
-        
-        infoJButton.setMnemonic(KeyEvent.VK_I);
-        infoJButton.addActionListener( new ActionListener() {
-            public void actionPerformed( ActionEvent e ) {
-                pv.pictureJPanel.cylceInfoDisplay();
-                pv.myJFrame.getGlassPane().requestFocusInWindow();
-            }
-        });
-        infoJButton.setBorderPainted(false);
-        infoJButton.setToolTipText( Settings.jpoResources.getString("infoJButton.ToolTipText") );
-        infoJButton.setBackground( Settings.PICTUREVIEWER_BACKGROUND_COLOR );
-        infoJButton.setPreferredSize( navButtonSize );
         add(infoJButton);
-        
-        resetJButton.setMnemonic(KeyEvent.VK_ESCAPE);
-        resetJButton.addActionListener( new ActionListener() {
-            public void actionPerformed( ActionEvent e ) {
-                pv.resetPicture();
-                pv.myJFrame.getGlassPane().requestFocusInWindow();
-            }
-        });
-        resetJButton.setBorderPainted( false );
-        resetJButton.setToolTipText( Settings.jpoResources.getString("resetJButton.ToolTipText") );
-        resetJButton.setBackground( Settings.PICTUREVIEWER_BACKGROUND_COLOR );
-        resetJButton.setPreferredSize( navButtonSize );
         add(resetJButton);
-        
-        clockJButton.addActionListener( new ActionListener() {
-            public void actionPerformed( ActionEvent e ) {
-                pv.requestAutoAdvance();
-                pv.myJFrame.getGlassPane().requestFocusInWindow();
-            }
-        });
-        clockJButton.setBorderPainted( false );
-        clockJButton.setToolTipText( Settings.jpoResources.getString("clockJButton.ToolTipText") );
-        clockJButton.setBackground( Settings.PICTUREVIEWER_BACKGROUND_COLOR );
-        clockJButton.setPreferredSize( navButtonSize );
         add( clockJButton );
-        
-        closeJButton.setMnemonic(KeyEvent.VK_C);
-        closeJButton.addActionListener( new ActionListener() {
-            public void actionPerformed( ActionEvent e ) {
-                pv.closeViewer();
-            }
-        });
-        closeJButton.setToolTipText( Settings.jpoResources.getString("closeJButton.ToolTipText") );
-        closeJButton.setBorderPainted( false );
-        closeJButton.setBackground( Settings.PICTUREVIEWER_BACKGROUND_COLOR );
-        closeJButton.setPreferredSize( navButtonSize );
         add( closeJButton );
-        
     }
     
-       
+    /**
+     * Inner class to define common attributes of the NavBarButtons.
+     */
+    private class NavBarButton extends JButton {
+        /**
+         * Constructor
+         */
+        NavBarButton( Icon icon ) {
+            super( icon );
+            setBorderPainted(false);
+            setBackground( Settings.PICTUREVIEWER_BACKGROUND_COLOR );
+            final Dimension navButtonSize = new Dimension( 24, 24);
+            setPreferredSize( navButtonSize );
+        }
+        /**
+         *  overriding the position of the tooltip
+         */
+        public Point getToolTipLocation(MouseEvent event) {
+            return new Point( 0 , -20 );
+        }
+    }
+    
     /**
      *   icon for the simple next picture
      */
@@ -203,52 +101,25 @@ public class PictureViewerNavBar extends JToolBar {
      */
     private static final ImageIcon iconNextNext = new ImageIcon( Settings.cl.getResource( "jpo/images/icon_nextnext.gif" ) );
     
-    
     /**
      *   icon to indicate the next picture is from a new group
      */
     private static final ImageIcon iconNoNext = new ImageIcon( Settings.cl.getResource( "jpo/images/icon_nonext.gif" ) );
-    
     
     /**
      *   icon to indicate that there is a previous image in the same group
      */
     private static final ImageIcon iconPrevious = new ImageIcon( Settings.cl.getResource( "jpo/images/icon_previous.gif" ) );
     
-    
     /**
      *   icon to indicate that there is an image in the previous group
      */
     private static final ImageIcon iconPrevPrev = new ImageIcon( Settings.cl.getResource( "jpo/images/icon_prevprev.gif" ) );
     
-    
     /**
      *   icon to indicate that there are no images before the current one in the album
      */
     private static final ImageIcon iconNoPrev = new ImageIcon( Settings.cl.getResource( "jpo/images/icon_noprev.gif" ) );
-    
-    
-    /**
-     *   icon to rotate right
-     */
-    private static final ImageIcon iconRotateRight = new ImageIcon( Settings.cl.getResource( "jpo/images/icon_RotCWDown.gif" ) );
-    
-    /**
-     *  button to rotate right
-     */
-    private JButton rotateRightJButton = new JButton( iconRotateRight );
-    
-    /**
-     *   icon to rotate left
-     */
-    private static final ImageIcon iconRotateLeft = new ImageIcon( Settings.cl.getResource( "jpo/images/icon_RotCCDown.gif" ) );
-    
-    
-    /**
-     *  button to rotate left
-     */
-    private JButton rotateLeftJButton = new JButton( iconRotateLeft );
-    
     
     /**
      *  Button that is put in the NavigationPanel to allow the user to navigate to the previous
@@ -256,63 +127,33 @@ public class PictureViewerNavBar extends JToolBar {
      *  in previous group, beginning of pictures) the icon {@link #iconPrevious}, {@link #iconPrevPrev}
      *  {@link #iconNoPrev} should be shown as appropriate.
      */
-    private JButton previousJButton = new JButton( iconPrevious );
-    
-    
-    /**
-     *   icon to indicate that the timer is available
-     */
-    public static final ImageIcon iconClockOff = new ImageIcon( Settings.cl.getResource( "jpo/images/icon_clock_off.gif" ) );
-    
-    
-    /**
-     *   icon to indicate that the timer is active
-     */
-    public static final ImageIcon iconClockOn = new ImageIcon( Settings.cl.getResource( "jpo/images/icon_clock_on.gif" ) );
+    private JButton previousJButton = new NavBarButton( iconPrevious ) {
+        {   setMnemonic(KeyEvent.VK_P);
+            addActionListener( new ActionListener() {
+                public void actionPerformed( ActionEvent e ) {
+                    pv.requestPriorPicture();
+                    pv.myJFrame.getGlassPane().requestFocusInWindow();
+                }
+            });
+            setToolTipText( Settings.jpoResources.getString("previousJButton.ToolTipText") );
+        }
+    };
     
     /**
      *   Button to move to the next image.
      */
-    private JButton nextJButton = new JButton( nextImageIcon );
+    private JButton nextJButton = new NavBarButton( nextImageIcon ) {
+        {   setMnemonic(KeyEvent.VK_N);
+            addActionListener( new ActionListener() {
+                public void actionPerformed( ActionEvent e ) {
+                    pv.requestNextPicture();
+                    pv.myJFrame.getGlassPane().requestFocusInWindow();
+                }
+            });
+            setToolTipText( Settings.jpoResources.getString("nextJButton.ToolTipText") );
+        }
+    };
     
-    /**
-     *  Button to expand the windo to full screen or a different window size.
-     */
-    public JButton fullScreenJButton = new JButton( new ImageIcon( Settings.cl.getResource( "jpo/images/icon_Frames.gif" ) ) );
-    
-    /**
-     *  Button to bring up the popup menu to do things to the image.
-     */
-    private JButton popupMenuJButton = new JButton(new ImageIcon( Settings.cl.getResource( "jpo/images/icon_FingerUp.gif")));
-    
-    /**
-     *  Button to turn on the blending in of info or turn it off.
-     */
-    private JButton infoJButton = new JButton( new ImageIcon( Settings.cl.getResource( "jpo/images/icon_info.gif" ) ) );
-    
-    /**
-     *  Button to rezise the image so that it fits in the screen.
-     */
-    private JButton resetJButton = new JButton( new ImageIcon( Settings.cl.getResource( "jpo/images/icon_reset.gif" ) ) );
-    
-    /**
-     *   Button to start the auto timer or turn it off.
-     */
-    public JButton clockJButton = new JButton( iconClockOff );
-    
-    
-    /**
-     *   icon to close the image
-     */
-    private static final ImageIcon closeIcon = new ImageIcon( Settings.cl.getResource( "jpo/images/icon_close2.gif" ) );
-    
-    /**
-     *  button to close the window
-     */
-    private JButton closeJButton = new JButton( closeIcon );
-    
-
-       
     /**
      *  This method looks at the position the currentNode is in regard to it's siblings and
      *  changes the forward and back icons to reflect the position of the current node.
@@ -362,8 +203,134 @@ public class PictureViewerNavBar extends JToolBar {
         }
     }
     
+    /**
+     *  Button to rotate right
+     */
+    private JButton rotateRightJButton = new NavBarButton( new ImageIcon( Settings.cl.getResource( "jpo/images/icon_RotCWDown.gif" ) ) ) {
+        { setMnemonic(KeyEvent.VK_R);
+          addActionListener( new ActionListener() {
+              public void actionPerformed( ActionEvent e ) {
+                  pv.currentNode.rotatePicture( 90 );
+                  pv.myJFrame.getGlassPane().requestFocusInWindow();
+              }
+          });
+          setToolTipText( Settings.jpoResources.getString("rotateRightJButton.ToolTipText") );
+        }
+    };
     
- 
+    /**
+     *  Button to rotate left
+     */
+    private JButton rotateLeftJButton = new NavBarButton( new ImageIcon( Settings.cl.getResource( "jpo/images/icon_RotCCDown.gif" ) ) ) {
+        { setMnemonic(KeyEvent.VK_L);
+          addActionListener( new ActionListener() {
+              public void actionPerformed( ActionEvent e ) {
+                  pv.currentNode.rotatePicture( 270 );
+                  pv.myJFrame.getGlassPane().requestFocusInWindow();
+              }
+          });
+          setToolTipText( Settings.jpoResources.getString("rotateLeftJButton.ToolTipText") );
+        }
+    };
     
+    /**
+     *  Button to expand the window to full screen or a different window size.
+     */
+    public JButton fullScreenJButton = new NavBarButton( new ImageIcon( Settings.cl.getResource( "jpo/images/icon_Frames.gif" ) ) ){
+        { setMnemonic( KeyEvent.VK_F );
+          addActionListener( new ActionListener() {
+              public void actionPerformed( ActionEvent e ) {
+                  pv.requestScreenSizeMenu();
+                  pv.myJFrame.getGlassPane().requestFocusInWindow();
+              }
+          });
+          setToolTipText( Settings.jpoResources.getString("fullScreenJButton.ToolTipText") );
+        }
+    };
+    
+    /**
+     *  Button to bring up the popup menu to do things to the image.
+     */
+    private JButton popupMenuJButton = new NavBarButton(new ImageIcon( Settings.cl.getResource( "jpo/images/icon_FingerUp.gif"))){
+        { setMnemonic( KeyEvent.VK_M );
+          addActionListener( new ActionListener() {
+              public void actionPerformed( ActionEvent e ) {
+                  pv.requestPopupMenu();
+                  pv.myJFrame.getGlassPane().requestFocusInWindow();
+              }
+          });
+          setToolTipText( Settings.jpoResources.getString("popupMenuJButton.ToolTipText") );
+        }
+    };
+    
+    /**
+     *  Button to turn on the blending in of info or turn it off.
+     */
+    private JButton infoJButton = new NavBarButton( new ImageIcon( Settings.cl.getResource( "jpo/images/icon_info.gif" ) ) ) {
+        { setMnemonic(KeyEvent.VK_I);
+          addActionListener( new ActionListener() {
+              public void actionPerformed( ActionEvent e ) {
+                  pv.pictureJPanel.cylceInfoDisplay();
+                  pv.myJFrame.getGlassPane().requestFocusInWindow();
+              }
+          });
+          setToolTipText( Settings.jpoResources.getString("infoJButton.ToolTipText") );
+        }
+    };
+    
+    
+    /**
+     *  Button to resize the image so that it fits in the screen.
+     */
+    private JButton resetJButton = new NavBarButton( new ImageIcon( Settings.cl.getResource( "jpo/images/icon_reset.gif" ) ) ) {
+        { setMnemonic(KeyEvent.VK_ESCAPE);
+          addActionListener( new ActionListener() {
+              public void actionPerformed( ActionEvent e ) {
+                  pv.resetPicture();
+                  pv.myJFrame.getGlassPane().requestFocusInWindow();
+              }
+          });
+          setToolTipText( Settings.jpoResources.getString("resetJButton.ToolTipText") );
+        }
+    };
+    
+    /**
+     *   icon to indicate that the timer is available
+     */
+    public static final ImageIcon iconClockOff = new ImageIcon( Settings.cl.getResource( "jpo/images/icon_clock_off.gif" ) );
+    
+    /**
+     *   icon to indicate that the timer is active
+     */
+    public static final ImageIcon iconClockOn = new ImageIcon( Settings.cl.getResource( "jpo/images/icon_clock_on.gif" ) );
+    
+    /**
+     *   Button to start the auto timer or turn it off.
+     */
+    public JButton clockJButton = new NavBarButton( iconClockOff ) {
+        { addActionListener( new ActionListener() {
+              public void actionPerformed( ActionEvent e ) {
+                  pv.requestAutoAdvance();
+                  pv.myJFrame.getGlassPane().requestFocusInWindow();
+              }
+          });
+          setToolTipText( Settings.jpoResources.getString("clockJButton.ToolTipText") );
+        }
+    };
+    
+    
+    /**
+     *  button to close the window
+     */
+    private JButton closeJButton = new NavBarButton( new ImageIcon( Settings.cl.getResource( "jpo/images/icon_close2.gif" ) ) ){
+        { setMnemonic(KeyEvent.VK_C);
+          addActionListener( new ActionListener() {
+              public void actionPerformed( ActionEvent e ) {
+                  pv.closeViewer();
+              }
+          });
+          setToolTipText( Settings.jpoResources.getString("closeJButton.ToolTipText") );
+        }
+    };
     
 }

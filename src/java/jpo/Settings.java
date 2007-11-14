@@ -1250,7 +1250,7 @@ public class Settings {
     
     
     /**
-     *  The langauge to be used for the application
+     *  The language to be used for the application
      */
     //private static String currentLanguage = "English";
     

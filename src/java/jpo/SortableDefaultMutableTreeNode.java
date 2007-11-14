@@ -95,8 +95,8 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
     
     /**
      *  Call this method to sort the Children of a node by a field. The value of sortCriteria can be one of
-     *   {@link Settings.DESCRIPTION}, {@link Settings.FILM_REFERENCE}, {@link Settings.CREATION_TIME},
-     *   {@link Settings.COMMENT}, {@link Settings.PHOTOGRAPHER}, {@link Settings.COPYRIGHT_HOLDER}.
+     *   {@link Settings#DESCRIPTION}, {@link Settings#FILM_REFERENCE}, {@link Settings#CREATION_TIME},
+     *   {@link Settings#COMMENT}, {@link Settings#PHOTOGRAPHER}, {@link Settings#COPYRIGHT_HOLDER}.
      *  @param  sortCriteria The criteria by which the pictures should be sorted.
      */
     public void sortChildren( int sortCriteria ) {
