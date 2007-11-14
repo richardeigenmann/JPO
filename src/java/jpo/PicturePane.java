@@ -1,18 +1,12 @@
 package jpo;
 
-import java.io.*;
 import java.net.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.image.*;
-import java.awt.image.renderable.*;
 import java.awt.geom.AffineTransform;
 import java.awt.Point;
 import javax.swing.*;
 import javax.swing.event.*;
-import java.lang.Runtime;
-import java.util.Hashtable;
-import java.util.*;
 import java.text.*;
 import java.util.Vector;
 import java.util.Enumeration;
@@ -21,7 +15,7 @@ import java.util.Enumeration;
 /*
 PicturePane.java:  a component that can display an image
 
-Copyright (C) 2002-2006 Richard Eigenmann.
+Copyright (C) 2002-2007 Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -46,10 +40,10 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  *   send to the parent with the ready status.<p>
  *
  *   The user can zoom in on a picture coordinate by clicking the left mouse button. The middle
- *   button scales the picture so that it fits in the available space and centers it there.
+ *   button scales the picture so that it fits in the available space and centres it there.
  *   The right mouse button zooms out.<p>
  *
- *   The image is centered on the component to the {@link #focusPoint} in the coordinate space 
+ *   The image is centred on the component to the {@link #focusPoint} in the coordinate space 
  *   of the image. This translated using the {@link ScalablePicture#setScaleFactor( double )} to the coordinate 
  *   space of the JComponent<p>
  *
@@ -59,11 +53,11 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  *   The {@link #showInfo} flag controls whether information about the picture is overlayed 
  *   on the image.
  */
-class PicturePane extends JComponent implements ScalablePictureListener {
+public class PicturePane extends JComponent implements ScalablePictureListener {
 	
 	
 	/**
-	 *   The currently diplayed ScalablePicture.
+	 *   The currently displayed ScalablePicture.
 	 */
 	public ScalablePicture sclPic = new ScalablePicture();
 	
@@ -248,10 +242,10 @@ class PicturePane extends JComponent implements ScalablePictureListener {
 
 
 	/**
-	 * Multifilies the scale factor so that paint() method scales the
+	 * Multiplies the scale factor so that paint() method scales the
 	 * image larger. This method calls
 	 * {@link ScalablePicture#createScaledPictureInThread(int)} which in
-	 * turn will tell this oject by means of the status update that
+	 * turn will tell this object by means of the status update that
 	 * the image is ready and should be repainted.
 	 */
 	public void zoomIn() {
@@ -308,7 +302,7 @@ class PicturePane extends JComponent implements ScalablePictureListener {
 	 *  method that zooms the image to 100%.
 	 *  This method calls
 	 * {@link ScalablePicture#createScaledPictureInThread(int)} which in
-	 * turn will tell this oject by means of the status update that
+	 * turn will tell this object by means of the status update that
 	 * the image is ready and should be repainted.
 	 */
 	public void zoomFull() {
@@ -384,7 +378,7 @@ class PicturePane extends JComponent implements ScalablePictureListener {
 	 *  method that moves the image left by 10% of the pixels shown on the screen. 
 	 * This method
 	 * calls <code>repaint()</code> directly since no time consuming image operations need to take place.
-	 *  works just liks {@link #scrollUp()}.
+	 *  works just like {@link #scrollUp()}.
 	 *  @see #scrollUp()
 	 *  @see #scrollDown()
 	 *  @see #scrollLeft()
@@ -437,7 +431,7 @@ class PicturePane extends JComponent implements ScalablePictureListener {
 
 	/**
 	 *   we are overriding the default paintComponent method, grabbing the Graphics 
-	 *   handle and doing our own drawing here. Esentially this method draws a large
+	 *   handle and doing our own drawing here. Essentially this method draws a large
 	 *   black rectangle. A drawRenderedImage is then painted doing an affine transformation
 	 *   on the scaled image to position it so the the desired point is in the middle of the 
 	 *   Graphics object. The picture is not scaled here because this is a slow operation
@@ -674,7 +668,7 @@ class PicturePane extends JComponent implements ScalablePictureListener {
 
 
 	/**
-	 *  This function cyles to the next info display. The first is DISPLAY_NONE, DISPLAY_PHOTOGRAPHIC 
+	 *  This function cycles to the next info display. The first is DISPLAY_NONE, DISPLAY_PHOTOGRAPHIC 
 	 *  and DISPLAY_APPLICATION
 	 **/
 	public void cylceInfoDisplay() {
@@ -697,7 +691,7 @@ class PicturePane extends JComponent implements ScalablePictureListener {
 
 	/**
 	 *  method that gets invoked from the ScalablePicture object to notify of status changes.
-	 *  The ScalablePicture goes through several statusses: UNINITIALISED, GARBAGE_COLLECTION, 
+	 *  The ScalablePicture goes through several statuses: UNINITIALISED, GARBAGE_COLLECTION, 
 	 *  LOADING, SCALING, READY, ERROR.<p>
 	 *  Each status is passed to the listener upon receipt.<p>
 	 *  When the ScalablePicture signals that it is READY the legend of the picture is sent 
@@ -768,7 +762,7 @@ class PicturePane extends JComponent implements ScalablePictureListener {
 
 
 	/**
-	 *  method that returns a handle to the scalable picutre that this component is displaying
+	 *  method that returns a handle to the scalable picture that this component is displaying
 	 */
 	public ScalablePicture getScalablePicture() {
 		return sclPic;

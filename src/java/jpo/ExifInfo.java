@@ -107,16 +107,17 @@ public class ExifInfo {
 
 
 	/**
-	 *  This method sets the variables of the ExifInfo to null
+	 *  This method sets the variables of the ExifInfo to null.
+         *  Changed null to "" as null gives runtime errors when rendering the strings.
 	 */
 	private void nullifyVars() {
-		camera = null;
-		lens = null;
-		aperture = null;
-		shutterSpeed = null;
-		focalLength = null;
-		iso = null;
-		dateTime = null;
+		camera = "";
+		lens = "";
+		aperture = "";
+		shutterSpeed = "";
+		focalLength = "";
+		iso = "";
+		dateTime = "";
 		exifDump = new StringBuffer( "" );
 	}	
 

@@ -132,7 +132,6 @@ public class PictureViewerNavBar extends JToolBar {
             addActionListener( new ActionListener() {
                 public void actionPerformed( ActionEvent e ) {
                     pv.requestPriorPicture();
-                    pv.myJFrame.getGlassPane().requestFocusInWindow();
                 }
             });
             setToolTipText( Settings.jpoResources.getString("previousJButton.ToolTipText") );
@@ -147,7 +146,6 @@ public class PictureViewerNavBar extends JToolBar {
             addActionListener( new ActionListener() {
                 public void actionPerformed( ActionEvent e ) {
                     pv.requestNextPicture();
-                    pv.myJFrame.getGlassPane().requestFocusInWindow();
                 }
             });
             setToolTipText( Settings.jpoResources.getString("nextJButton.ToolTipText") );
@@ -211,7 +209,7 @@ public class PictureViewerNavBar extends JToolBar {
           addActionListener( new ActionListener() {
               public void actionPerformed( ActionEvent e ) {
                   pv.currentNode.rotatePicture( 90 );
-                  pv.myJFrame.getGlassPane().requestFocusInWindow();
+                  pv.pictureJPanel.requestFocusInWindow();
               }
           });
           setToolTipText( Settings.jpoResources.getString("rotateRightJButton.ToolTipText") );
@@ -226,7 +224,7 @@ public class PictureViewerNavBar extends JToolBar {
           addActionListener( new ActionListener() {
               public void actionPerformed( ActionEvent e ) {
                   pv.currentNode.rotatePicture( 270 );
-                  pv.myJFrame.getGlassPane().requestFocusInWindow();
+                  pv.pictureJPanel.requestFocusInWindow();
               }
           });
           setToolTipText( Settings.jpoResources.getString("rotateLeftJButton.ToolTipText") );
@@ -241,7 +239,7 @@ public class PictureViewerNavBar extends JToolBar {
           addActionListener( new ActionListener() {
               public void actionPerformed( ActionEvent e ) {
                   pv.requestScreenSizeMenu();
-                  pv.myJFrame.getGlassPane().requestFocusInWindow();
+                  pv.pictureJPanel.requestFocusInWindow();
               }
           });
           setToolTipText( Settings.jpoResources.getString("fullScreenJButton.ToolTipText") );
@@ -256,7 +254,7 @@ public class PictureViewerNavBar extends JToolBar {
           addActionListener( new ActionListener() {
               public void actionPerformed( ActionEvent e ) {
                   pv.requestPopupMenu();
-                  pv.myJFrame.getGlassPane().requestFocusInWindow();
+                  pv.pictureJPanel.requestFocusInWindow();
               }
           });
           setToolTipText( Settings.jpoResources.getString("popupMenuJButton.ToolTipText") );
@@ -271,7 +269,7 @@ public class PictureViewerNavBar extends JToolBar {
           addActionListener( new ActionListener() {
               public void actionPerformed( ActionEvent e ) {
                   pv.pictureJPanel.cylceInfoDisplay();
-                  pv.myJFrame.getGlassPane().requestFocusInWindow();
+                  pv.pictureJPanel.requestFocusInWindow();
               }
           });
           setToolTipText( Settings.jpoResources.getString("infoJButton.ToolTipText") );
@@ -287,7 +285,7 @@ public class PictureViewerNavBar extends JToolBar {
           addActionListener( new ActionListener() {
               public void actionPerformed( ActionEvent e ) {
                   pv.resetPicture();
-                  pv.myJFrame.getGlassPane().requestFocusInWindow();
+                  pv.pictureJPanel.requestFocusInWindow();
               }
           });
           setToolTipText( Settings.jpoResources.getString("resetJButton.ToolTipText") );
@@ -311,7 +309,7 @@ public class PictureViewerNavBar extends JToolBar {
         { addActionListener( new ActionListener() {
               public void actionPerformed( ActionEvent e ) {
                   pv.requestAutoAdvance();
-                  pv.myJFrame.getGlassPane().requestFocusInWindow();
+                  pv.pictureJPanel.requestFocusInWindow();
               }
           });
           setToolTipText( Settings.jpoResources.getString("clockJButton.ToolTipText") );
