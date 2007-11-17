@@ -135,8 +135,8 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
     /**
      *   Overridden method to allow sorting of nodes. It uses the static global variable
      *   sortfield to figure out what to compare on. The value of sortfield can be one of
-     *   {@link Settings.DESCRIPTION}, {@link Settings.FILM_REFERENCE}, {@link Settings.CREATION_TIME},
-     *   {@link Settings.COMMENT}, {@link Settings.PHOTOGRAPHER}, {@link Settings.COPYRIGHT_HOLDER}.
+     *   {@link Settings#DESCRIPTION}, {@link Settings#FILM_REFERENCE}, {@link Settings#CREATION_TIME},
+     *   {@link Settings#COMMENT}, {@link Settings#PHOTOGRAPHER}, {@link Settings#COPYRIGHT_HOLDER}.
      *
      */
     public int compareTo( Object o ) {
@@ -1092,10 +1092,10 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
      *  Copies the pictures from the source tree to the target directory and adds them to the collection creating a progress GUI.
      *  @param sourceDir The source directory for the pictures
      *  @param targetDir  The target directory for the pictures
-     *  @groupName the new name for the group
-     *  @param  newOnly  If true only pictures not yet in the collection will be added.
-     *  @param  retainDirectories  indicates that the directory structure should be preserved.
-     *  @param  selectedCategories  the categories to be applied to the newly loaded pictures.
+     *  @param groupName the new name for the group
+     *  @param newOnly  If true only pictures not yet in the collection will be added.
+     *  @param retainDirectories  indicates that the directory structure should be preserved.
+     *  @param selectedCategories  the categories to be applied to the newly loaded pictures.
      *
      */
     public SortableDefaultMutableTreeNode copyAddPictures( File sourceDir, File targetDir, String groupName, boolean newOnly, boolean retainDirectories, HashSet selectedCategories ) {
