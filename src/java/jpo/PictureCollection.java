@@ -683,6 +683,9 @@ public class PictureCollection {
             p.setLayout( new BoxLayout( p, BoxLayout.Y_AXIS ) );
             p.add( new JLabel( Settings.jpoResources.getString("collectionSaveBody") + xmlFile.toString() ) );
             JCheckBox setAutoload = new JCheckBox(Settings.jpoResources.getString("setAutoload") );
+            if ( ( new File( Settings.autoLoad ) ).compareTo( xmlFile ) == 0 ) {
+                setAutoload.setSelected( true );
+            }
             p.add( setAutoload );
             JOptionPane.showMessageDialog( Settings.anchorFrame,
                     p,

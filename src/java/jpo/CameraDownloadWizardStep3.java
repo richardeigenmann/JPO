@@ -8,9 +8,11 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreeNode;
 import net.javaprog.ui.wizard.*;
 import javax.swing.*;
 import java.awt.Dimension;
+import javax.swing.tree.TreePath;
 
 
 /* CameraDownloadWizardStep3.java: the third step in the download from Camera Wizard
@@ -31,8 +33,8 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 
 /**
- *  The third step in the download from camera dialog asks whether to create a new Group, the description for the new Group and 
- *  the node for which the operation is to run. If presents a checkbox whether to create a new group. If this is ticked then 
+ *  The third step in the download from camera dialog asks whether to create a new Group, the description for the new Group and
+ *  the node for which the operation is to run. If presents a checkbox whether to create a new group. If this is ticked then
  *  the textfield for the new group name is made visible, otherwise it is hidden.
  */
 public class CameraDownloadWizardStep3 extends AbstractStep {
@@ -41,7 +43,7 @@ public class CameraDownloadWizardStep3 extends AbstractStep {
         super( Settings.jpoResources.getString("DownloadCameraWizardStep3Title"), Settings.jpoResources.getString("DownloadCameraWizardStep3Description") );
         this.dataModel = dataModel;
     }
-
+    
     /**
      *  Holds a reference to the data used by the wizard
      */
@@ -100,7 +102,7 @@ public class CameraDownloadWizardStep3 extends AbstractStep {
         stepComponent.add( newGroupName );
         stepComponent.add( secondStrut );
         stepComponent.add( selectNodeLabel );
-        setCanGoNext( false );
+        
         final JTree collectionJTree = new CollectionJTree();
         collectionJTree.setModel( dataModel.getTreeModel() );
         collectionJTree.setEditable( false );
@@ -122,6 +124,13 @@ public class CameraDownloadWizardStep3 extends AbstractStep {
             }
         } );
         
+        // if there is only a root node in the collection, select it by default
+        Object root = dataModel.getTreeModel().getRoot();
+        if ( dataModel.getTreeModel().isLeaf( root ) ) {
+            TreePath rp = new TreePath( root );
+            collectionJTree.setSelectionPath( rp );
+        }
+        
         JScrollPane jsp = new JScrollPane( collectionJTree );
         stepComponent.add( jsp );
         jsp.setAlignmentX( Component.LEFT_ALIGNMENT );
@@ -131,5 +140,7 @@ public class CameraDownloadWizardStep3 extends AbstractStep {
     /**
      *  Required by the AbstractSetp but not used.
      */
-    public void prepareRendering() {}
+    public void prepareRendering() {
+        setCanGoNext( false );
+    }
 }
