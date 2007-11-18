@@ -1,6 +1,6 @@
 package jpo;
 
-import java.awt.Component;
+import java.io.File;
 import net.javaprog.ui.wizard.*;
 import javax.swing.*;
 
@@ -89,6 +89,22 @@ public class CameraDownloadWizardStep5 extends AbstractStep {
         
         // Storing in xxx
         label4.setText(  Settings.jpoResources.getString("DownloadCameraWizardStep5Text7" ) + dataModel.targetDir.getText() );
+        File f = new File( dataModel.targetDir.getText() );
+        if ( ! f.exists() ) {
+            f.mkdirs();
+        }
+        if ( ! f.exists() ) {
+            label4.setText( "Error: " + dataModel.targetDir.getText() +" doesn't exist.");
+            setCanGoNext( false );
+        } else  if ( ! f.isDirectory() ) {
+            label4.setText( "Error: " + dataModel.targetDir.getText() +" must be a directory.");
+            setCanGoNext( false );
+        } else if ( ! f.canWrite() ) {
+            label4.setText( "Error: Can't write to " + dataModel.targetDir.getText() );
+            setCanGoNext( false );
+        } else {
+            setCanGoNext( true );
+        }
         
     }
     
