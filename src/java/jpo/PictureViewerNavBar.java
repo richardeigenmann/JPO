@@ -158,8 +158,8 @@ public class PictureViewerNavBar extends JToolBar {
      */
     public void setIconDecorations() {
         // Set the next and back icons
-        if ( pv.currentNode != null ) {
-            DefaultMutableTreeNode NextNode = pv.currentNode.getNextSibling();
+        if ( pv.getCurrentNode() != null ) {
+            DefaultMutableTreeNode NextNode = pv.getCurrentNode().getNextSibling();
             if ( NextNode != null ) {
                 Object nodeInfo = NextNode.getUserObject();
                 if (nodeInfo instanceof PictureInfo) {
@@ -176,7 +176,7 @@ public class PictureViewerNavBar extends JToolBar {
                 // the getNextSibling() method returned null
                 // if the getNextNode also returns null this was the end of the album
                 // otherwise there are more pictures in the next group.
-                if ( pv.currentNode.getNextNode() != null )
+                if ( pv.getCurrentNode().getNextNode() != null )
                     nextJButton.setIcon( iconNextNext );
                 else
                     nextJButton.setIcon( iconNoNext );
@@ -184,12 +184,12 @@ public class PictureViewerNavBar extends JToolBar {
             
             // let's see what we have in the way of previous siblings..
             
-            if (pv.currentNode.getPreviousSibling() != null)
+            if (pv.getCurrentNode().getPreviousSibling() != null)
                 previousJButton.setIcon(iconPrevious);
             else {
                 // deterine if there are any previous nodes that are not groups.
                 DefaultMutableTreeNode testNode;
-                testNode = pv.currentNode.getPreviousNode();
+                testNode = pv.getCurrentNode().getPreviousNode();
                 while ((testNode != null) && (! (testNode.getUserObject() instanceof PictureInfo))) {
                     testNode = testNode.getPreviousNode();
                 }
@@ -208,7 +208,7 @@ public class PictureViewerNavBar extends JToolBar {
         { setMnemonic(KeyEvent.VK_R);
           addActionListener( new ActionListener() {
               public void actionPerformed( ActionEvent e ) {
-                  pv.currentNode.rotatePicture( 90 );
+                  pv.getCurrentNode().rotatePicture( 90 );
                   pv.pictureJPanel.requestFocusInWindow();
               }
           });
@@ -223,7 +223,7 @@ public class PictureViewerNavBar extends JToolBar {
         { setMnemonic(KeyEvent.VK_L);
           addActionListener( new ActionListener() {
               public void actionPerformed( ActionEvent e ) {
-                  pv.currentNode.rotatePicture( 270 );
+                  pv.getCurrentNode().rotatePicture( 270 );
                   pv.pictureJPanel.requestFocusInWindow();
               }
           });

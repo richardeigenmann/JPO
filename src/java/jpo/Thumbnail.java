@@ -568,7 +568,7 @@ public class Thumbnail extends JComponent
 					}  else if ( e.getButton() == 3 ) { // popup menu only on 3rd mouse button.
 						CollectionJTreeController CollectionJTree = associatedPanel.getAssociatedCollectionJTree();
 						if ( CollectionJTree != null ) {
-							CollectionJTree.popupNode = referringNode;
+							CollectionJTree.setPopupNode( referringNode );
 							GroupPopupMenu groupPopupMenu = new GroupPopupMenu( CollectionJTree, referringNode );
 							groupPopupMenu.show( e.getComponent(), e.getX(), e.getY() );
 						}

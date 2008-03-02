@@ -4,15 +4,13 @@ import java.util.*;
 import java.net.*;
 import java.io.*;
 import java.awt.*;
-import javax.swing.JOptionPane;
-import javax.swing.JFrame;
 import javax.jnlp.*;
 import javax.swing.tree.*;
 
 /*
 PictureCacheLoader.java:  class that manages the loading of pictures to the cache
 
-Copyright (C) 2002  Richard Eigenmann.
+Copyright (C) 2002-2008  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -29,7 +27,8 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 
 
 /**
- *  This is a class that is non static that can load imaged to the cache
+ *  The purpose for this class is to have a tool that will load SourcePictures 
+ *  into the PictureCache.  
  */
 public class PictureCacheLoader implements SourcePictureListener {
 
@@ -41,7 +40,7 @@ public class PictureCacheLoader implements SourcePictureListener {
 	 *  @param	node	The node which holds the picture to be cached
 	 *
 	 */
-	PictureCacheLoader ( SortableDefaultMutableTreeNode node ) {
+	public PictureCacheLoader ( SortableDefaultMutableTreeNode node ) {
 		Object nodeUserObject = node.getUserObject();
 		if ( nodeUserObject instanceof PictureInfo) {
 			try {
@@ -62,16 +61,16 @@ public class PictureCacheLoader implements SourcePictureListener {
 
 	
 	/**
-	 *  loads a picture into the cache if the cache Size is equal or more to 1.
+	 *  loads a picture into the cache if the cache size is equal or more to 1.
 	 *  if the picture is already in the cache it is not loaded again.
 	 */
 	private void load( URL url, double rotation ) {	
-		Tools.log("PictureCacheLoader.load: " + url.toString() );
+		//Tools.log("PictureCacheLoader.load: " + url.toString() );
 
 		if ( ( Settings.maxCache < 1 )
 		  || ( PictureCache.isInCache( url.toString() ) ) ) {
-			Tools.log("PictureCache.load: picture not loaded because either maxCache < 1 or image already there");
-			PictureCache.reportCache();
+			//Tools.log("PictureCache.load: picture not loaded because either maxCache < 1 or image already there");
+			// PictureCache.reportCache();
 			return;
 		}
 			
@@ -79,22 +78,62 @@ public class PictureCacheLoader implements SourcePictureListener {
 		cachedPicture.addListener( this );
 		cachedPicture.loadPictureInThread( url, Thread.MIN_PRIORITY, rotation );
 		PictureCache.add( url, cachedPicture );
-		PictureCache.cacheLoadsInProgress.add( cachedPicture );
+		cacheLoadsInProgress.add( cachedPicture );
 	}
 
 
+        /**
+     *  This Vector keeps track of which pictures the PictureCache has been
+     *  requested to load in the background. They may have to be stopped in 
+     *  a hurry.
+     */
+    public static Vector cacheLoadsInProgress = new Vector();
+
+    /** 
+     * method to stop all background loading
+     */
+    public static void stopBackgroundLoading() {
+        Enumeration e = cacheLoadsInProgress.elements();
+        while ( e.hasMoreElements() ) {
+            ( (SourcePicture) e.nextElement() ).stopLoading();
+        }
+        //cacheLoadsInProgress.clear();  // handled by the PictureCacheLoader which gets an ERROR status from the SourcePicture.
+    }
+
+    /** 
+     *  method to stop all background loading except the indicated file. Returns whether the
+     *  image is already being loaded. True = loading in progress, False = not in progress.
+     */
+    public static boolean stopBackgroundLoadingExcept( URL exemptionURL ) {
+        SourcePicture sp;
+        String exemptionURLString = exemptionURL.toString();
+        Enumeration e = cacheLoadsInProgress.elements();
+        boolean inProgress = false;
+        while ( e.hasMoreElements() ) {
+            sp = ( (SourcePicture) e.nextElement() );
+            if ( !sp.getUrlString().equals( exemptionURLString ) ) {
+                sp.stopLoading();
+            } else {
+                Tools.log( "PictureCache.stopBackgroundLoading: picture was already loading" );
+                inProgress = true;
+            }
+        }
+        return inProgress;
+    }
+        
+        
 	/**
-	 *  in this method we get the information back from the backgroundloading
+	 *  in this method we get the information back from the background loading
 	 *  pictures as to what they have achieved.
 	 */
 	public synchronized void sourceStatusChange( int statusCode, String statusMessage, SourcePicture sp ) {
-		Tools.log("PictureCacheLoader.sourceStatusChange: " + statusMessage);
+		//Tools.log("PictureCacheLoader.sourceStatusChange: " + statusMessage);
 		if ( statusCode == SourcePicture.ERROR ) {
 			PictureCache.remove( sp.getUrlString() );
-			PictureCache.cacheLoadsInProgress.remove( sp );
+			cacheLoadsInProgress.remove( sp );
 			sp.removeListener( this );
 		} else if ( statusCode == SourcePicture.READY )  {
-			PictureCache.cacheLoadsInProgress.remove( sp );
+			cacheLoadsInProgress.remove( sp );
 			Tools.log("PictureCacheLoader.sourceStatusChange: removing listener because of READY status on " + sp.getUrlString() );
 			sp.removeListener( this );
 		}

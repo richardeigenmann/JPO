@@ -10,7 +10,7 @@ import javax.swing.event.*;
 /*
 SettingsDialog.java:  the class that provides a GUI for the settings
  
-Copyright (C) 2002-2007  Richard Eigenmann, Zürich, Switzerland
+Copyright (C) 2002-2008  Richard Eigenmann, Zürich, Switzerland
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -28,7 +28,7 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 
 
 /**
- *  GUI that allos the settings to be changed.
+ *  GUI that allows the settings to be changed.
  *
  * @author  Richard Eigenmann
  */
@@ -947,9 +947,11 @@ public class SettingsDialog extends JDialog {
         
         Settings.autoLoad = autoLoadJTextField.getText();
         
-        if ( ! logfileJTextField.getText().equals( Settings.logfile.getPath() )
+        /*  No longer required since I have moved to the new logging framework, RE 2.3.2008
+         if ( ! logfileJTextField.getText().equals( Settings.logfile.getPath() )
         || ( logfileJCheckBox.isSelected() ^ Settings.writeLog ))
             Tools.closeLogfile();  // logging either stopped or file changed
+         */
         
         Settings.logfile = new File( logfileJTextField.getText() );
         Settings.writeLog = logfileJCheckBox.isSelected();

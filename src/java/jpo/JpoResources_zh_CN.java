@@ -5,7 +5,7 @@ import java.util.*;
 /*
 JpoResources_cn.java:  class that holds the generic labels for the JPO application
 
-Copyright (C) 2002-2007  Richard Eigenmann, Zurich, Switzerland
+Copyright (C) 2002-2008  Richard Eigenmann, Zurich, Switzerland
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -62,7 +62,7 @@ public class JpoResources_zh_CN extends ListResourceBundle {
 		// Help About Dialog
 		{"HelpAboutText", "JPO 版本 0.9 是基于Java/Swing 开发的软件\n" 
 			+ "作者Richard Eigenmann在瑞士苏黎世, \n" 
-			+ "版权 2000 - 2007\n"
+			+ "版权 2000 - 2008\n"
 			+ "邮件地址：richard.eigenmann@gmail.com\n"
 			+ "软件主页网址：http://j-po.sourceforge.net\n"
 			+ "\nExif（可交换图像文件）的抽取部分蒙Drew Noakes的帮助\n"

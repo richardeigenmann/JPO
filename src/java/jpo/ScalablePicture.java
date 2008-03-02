@@ -194,7 +194,7 @@ public class ScalablePicture implements SourcePictureListener {
 
 		boolean alreadyLoading = false;
 		//Tools.log("ScalablePicture.loadAndScalePictureInThread: checking if picture " + imageUrl + " is already being loaded.");
-		if ( ( sourcePicture != null ) && ( sourcePicture.getUrl().equals( imageUrl ) ) ) {
+		if ( ( sourcePicture != null ) && ( sourcePicture.getUrl() != null) && ( sourcePicture.getUrl().equals( imageUrl ) ) ) {
 			// Tools.log("ScalablePicture.loadAndScalePictureInThread: the SourcePicture is already loading the sourcePictureimage");
 			if ( sourcePicture.getRotation() == rotation ) {
 				alreadyLoading = true;
@@ -594,7 +594,7 @@ public class ScalablePicture implements SourcePictureListener {
 	 *   return the image in the original size
 	 */	
 	public SourcePicture getSourcePicture() {
-		return sourcePicture.getSourcePicture();
+		return sourcePicture;
 	}
 	
 	

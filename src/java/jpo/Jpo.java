@@ -253,7 +253,10 @@ public class Jpo extends JFrame
         
         
         collectionJTreeController = new CollectionJTreeController();
-        JScrollPane collectionJScrollPane = new JScrollPane( collectionJTreeController.getComponent() );
+        //JScrollPane collectionJScrollPane = new JScrollPane( collectionJTreeController.getComponent() );
+        //collectionJScrollPane.setMinimumSize( Settings.jpoNavigatorJTabbedPaneMinimumSize );
+        //collectionJScrollPane.setPreferredSize( Settings.jpoNavigatorJTabbedPanePreferredSize );
+        JScrollPane collectionJScrollPane = collectionJTreeController.getJScrollPane();
         collectionJScrollPane.setMinimumSize( Settings.jpoNavigatorJTabbedPaneMinimumSize );
         collectionJScrollPane.setPreferredSize( Settings.jpoNavigatorJTabbedPanePreferredSize );
         
@@ -345,7 +348,7 @@ public class Jpo extends JFrame
         
         Tools.log("Exiting JPO: " + DateFormat.getDateTimeInstance().format(Calendar.getInstance().getTime() ) );
         Tools.log("------------------------------------------------------------");
-        Tools.closeLogfile();
+        //Tools.closeLogfile();
         
         System.exit(0);
     }
@@ -402,7 +405,7 @@ public class Jpo extends JFrame
      *   {@link CollectionJTreeController}.
      */
     public void requestFileAdd() {
-        collectionJTreeController.popupNode = Settings.pictureCollection.getRootNode();
+        collectionJTreeController.setPopupNode( Settings.pictureCollection.getRootNode() );
         collectionJTreeController.requestAdd();
     }
     

@@ -4,11 +4,10 @@ import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Frame;
 import java.awt.Rectangle;
-import java.lang.reflect.InvocationTargetException;
 import javax.swing.JFrame;
 
 /*
-Copyright (C) 2002-2007  Richard Eigenmann.
+Copyright (C) 2002-2008  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -40,7 +39,7 @@ public class ResizableJFrame extends JFrame {
     public ResizableJFrame( String title, boolean drawframe, Dimension defaultSize ) {
         super( title );
         this.defaultSize = defaultSize;
-        Tools.log("ResizeableJFrame.constructor: defaultSize = " + defaultSize.toString() );
+        //Tools.log("ResizeableJFrame.constructor: defaultSize = " + defaultSize.toString() );
         setUndecorated( ! drawframe );
         setSize( defaultSize );
             EventQueue.invokeLater( new Runnable() {

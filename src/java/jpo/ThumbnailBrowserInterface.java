@@ -66,6 +66,7 @@ public interface ThumbnailBrowserInterface {
 	/**
 	 *  method that must be implemented which gives the implementing object the
 	 *  chance to free variables and deallocate itself from listeners and things.
+         *  TODO: whyever did I choose not to use finalize?
 	 */
 	public void cleanup ();
 

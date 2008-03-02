@@ -8,9 +8,8 @@ import javax.swing.event.*;
 import javax.swing.tree.*;
 
 /*
-PictureViewer.java:  class that displays a window in which a picture is shown.
- 
-Copyright (C) 2002-2007  Richard Eigenmann, Zürich, Switzerland
+PictureViewer.java:  Controller and Viewer class that browses a set of pictures.
+Copyright (C) 2002-2008  Richard Eigenmann, Zürich, Switzerland
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -24,11 +23,13 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 The license is in gpl.txt.
 See http://www.gnu.org/copyleft/gpl.html for the details.
  */
-
-
 /**
- *   PictureViewer is a Controller that manages a window which displays a picture. It provides navigation control
- *   the collection as well as mouse and keyboard control over the zooming
+ *   PictureViewer is a Controller that manages a window which displays a picture.
+ *   It provides navigation control
+ *   the collection as well as mouse and keyboard control over the zooming. 
+ *   According to MVC the GUI bits should be moved out to a dumb viewer but
+ *   this controller is so closely geared towards the view that this will not add 
+ *   a lot of value.
  *
  *   <img src="../PictureViewer.png" border=0>
  **/
@@ -38,15 +39,12 @@ public class PictureViewer
         ChangeWindowInterface,
         PictureInfoChangeListener,
         TreeModelListener {
-    
-    
+
     /**
      *  indicator that specifies what sort of window should be created
      */
     public int windowMode = ResizableJFrame.WINDOW_DEFAULT;
-    
-    
-    
+
     /**
      *  Brings up a window in which a picture node is displayed. This class
      *  handles all the user interaction such as zoom in / out, drag, navigation,
@@ -57,8 +55,7 @@ public class PictureViewer
         Settings.pictureCollection.getTreeModel().addTreeModelListener( this );
         pictureJPanel.addStatusListener( this );
     }
-    
-    
+
     /**
      *   method to close the PictureViewer and all dangling references.
      */
@@ -67,55 +64,46 @@ public class PictureViewer
         stopTimer();
         closeMyWindow();
     }
-    
-    
-    
     // GUI Widgets
     /**
      *  The Window in which the viewer will place it's components.
      **/
     public ResizableJFrame myJFrame;
-    
     /**
      *  The root JPanel
      */
     private JPanel viewerPanel = new JPanel();
-    
     /**
      *   The pane that handles the image drawing aspects.
      **/
     public PicturePane pictureJPanel = new PicturePane();
-    
     /**
      *   progress bar to track the pictures loaded so far
      */
     private JProgressBar loadJProgressBar = new JProgressBar();
-    
     /**
      *   Description Panel
      **/
     private JTextArea descriptionJTextField = new JTextArea();
-    
     /**
      *  Navigation Panel
      */
     private PictureViewerNavBar navBar;
-    
-    
+
     /**
      *  This method creates all the GUI widgets and connects them for the
      *  PictureViewer.
      */
     private void initGui() {
         createWindow();
-        
+
         viewerPanel.setBackground( Settings.PICTUREVIEWER_BACKGROUND_COLOR );
         viewerPanel.setOpaque( true );
         viewerPanel.setFocusable( false );
-        
+
         GridBagConstraints c = new GridBagConstraints();
         viewerPanel.setLayout( new GridBagLayout() );
-        
+
         // Picture Painter Pane
         pictureJPanel.setBackground( Settings.PICTUREVIEWER_BACKGROUND_COLOR );
         pictureJPanel.setVisible( true );
@@ -130,19 +118,19 @@ public class PictureViewer
         c.gridy = 0;
         c.anchor = GridBagConstraints.NORTH;
         viewerPanel.add( pictureJPanel, c );
-        
+
         loadJProgressBar.setPreferredSize( new Dimension( 120, 20 ) );
         loadJProgressBar.setMaximumSize( new Dimension( 140, 20 ) );
         loadJProgressBar.setMinimumSize( new Dimension( 80, 20 ) );
         loadJProgressBar.setBackground( Settings.PICTUREVIEWER_BACKGROUND_COLOR );
         loadJProgressBar.setBorderPainted( true );
         loadJProgressBar.setBorder( BorderFactory.createLineBorder( Color.gray, 1 ) );
-        
+
         loadJProgressBar.setMinimum( 0 );
         loadJProgressBar.setMaximum( 100 );
         loadJProgressBar.setStringPainted( true );
         loadJProgressBar.setVisible( false );
-        
+
         c.weightx = 0;
         c.weighty = 0;
         c.fill = GridBagConstraints.NONE;
@@ -151,23 +139,23 @@ public class PictureViewer
         c.gridy = 1;
         c.anchor = GridBagConstraints.EAST;
         viewerPanel.add( loadJProgressBar, c );
-        
+
         // The Description_Panel
-        descriptionJTextField.setFont( Font.decode( Settings.jpoResources.getString("PictureViewerDescriptionFont") ) );
+        descriptionJTextField.setFont( Font.decode( Settings.jpoResources.getString( "PictureViewerDescriptionFont" ) ) );
         descriptionJTextField.setWrapStyleWord( true );
         descriptionJTextField.setLineWrap( true );
         descriptionJTextField.setEditable( true );
         descriptionJTextField.setForeground( Settings.PICTUREVIEWER_TEXT_COLOR );
         descriptionJTextField.setBackground( Settings.PICTUREVIEWER_BACKGROUND_COLOR );
         descriptionJTextField.setOpaque( true );
-        descriptionJTextField.setBorder( new EmptyBorder(2,12,0,0) );
+        descriptionJTextField.setBorder( new EmptyBorder( 2, 12, 0, 0 ) );
         descriptionJTextField.setMinimumSize( new Dimension( 80, 26 ) );
-        
+
         JScrollPane descriptionJScrollPane = new JScrollPane( JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER );
         descriptionJScrollPane.setViewportView( descriptionJTextField );
-        descriptionJScrollPane.setBorder(new EmptyBorder(0,0,0,0));
+        descriptionJScrollPane.setBorder( new EmptyBorder( 0, 0, 0, 0 ) );
         descriptionJScrollPane.setBackground( Settings.PICTUREVIEWER_BACKGROUND_COLOR );
-        descriptionJScrollPane.setOpaque(true);
+        descriptionJScrollPane.setOpaque( true );
         c.weightx = 1;
         c.weighty = 0.01;
         c.fill = GridBagConstraints.BOTH;
@@ -175,9 +163,9 @@ public class PictureViewer
         c.gridx = 1;
         c.gridy = 1;
         c.anchor = GridBagConstraints.FIRST_LINE_START;
-        viewerPanel.add( descriptionJScrollPane, c ) ;
-        
-        
+        viewerPanel.add( descriptionJScrollPane, c );
+
+
         c.weightx = 0;
         c.weighty = 0;
         c.fill = GridBagConstraints.NONE;
@@ -186,9 +174,9 @@ public class PictureViewer
         c.gridy = 1;
         c.anchor = GridBagConstraints.LAST_LINE_END;
         navBar = new PictureViewerNavBar( this );
-        viewerPanel.add( navBar ,c );
+        viewerPanel.add( navBar, c );
     }
-    
+
     /**
      *  Method that creates the JFrame and attaches the viewerPanel to it.
      **/
@@ -198,24 +186,26 @@ public class PictureViewer
             // this gets us around the problem that the Affine Transform crashes if the window size is 0,0
             initialDimension = Settings.windowSizes[1];
         }
-        myJFrame = new ResizableJFrame( Settings.jpoResources.getString("PictureViewerTitle"), decorateWindow, initialDimension );
+        myJFrame = new ResizableJFrame( Settings.jpoResources.getString( "PictureViewerTitle" ), decorateWindow, initialDimension );
         myJFrame.setBackground( Settings.PICTUREVIEWER_BACKGROUND_COLOR );
-        
-        
-        if ( Settings.maximisePictureViewerWindow ) windowMode = ResizableJFrame.WINDOW_FULLSCREEN;
+
+
+        if ( Settings.maximisePictureViewerWindow ) {
+            windowMode = ResizableJFrame.WINDOW_FULLSCREEN;
+        }
         myJFrame.resizeTo( windowMode );
         myJFrame.addWindowListener( new WindowAdapter() {
-            public void windowClosing(WindowEvent we) {
+
+            public void windowClosing( WindowEvent we ) {
                 closeViewer();
             }
-        });
-        
+        } );
+
         // set layout manager and add the PictureViewer Panel
-        myJFrame.getContentPane().setLayout(new BorderLayout() );
+        myJFrame.getContentPane().setLayout( new BorderLayout() );
         myJFrame.getContentPane().add( "Center", viewerPanel );
     }
-    
-    
+
     /**
      *   method to close the active window.
      */
@@ -225,13 +215,11 @@ public class PictureViewer
             myJFrame = null;
         }
     }
-    
-    
     /**
      *  flag that specifies whether the window should be drawn with decoration or not
      */
     private boolean decorateWindow = true;
-    
+
     /**
      *  request that the window showing the picture be changed be changed.
      *  @param  newMode  {@link ResizableJFrame#WINDOW_FULLSCREEN}, {@link ResizableJFrame#WINDOW_LEFT},
@@ -242,7 +230,7 @@ public class PictureViewer
      *
      */
     public void switchWindowMode( int newMode ) {
-        Tools.log("PictureViewer.switchWindowMode: old mode: " + Integer.toString( windowMode ) + " new: " + Integer.toString( newMode ));
+        //Tools.log("PictureViewer.switchWindowMode: old mode: " + Integer.toString( windowMode ) + " new: " + Integer.toString( newMode ));
         windowMode = newMode;
         boolean newDecoration = decorateWindow;
         // some intelligence as to when to have window decorations and when not.
@@ -275,12 +263,10 @@ public class PictureViewer
         //switchDecorations( newDecoration );
         myJFrame.resizeTo( windowMode );
     }
-    
-    
-    
+
     /**
-     *  This method turns on or truns off the frame around the window. It works by closing
-     *  the window and creatig a new one with the correct decorations. It uses the decorateWindow
+     *  This method turns on or turns off the frame around the window. It works by closing
+     *  the window and creating a new one with the correct decorations. It uses the decorateWindow
      *  flag to determine if the decorations are being shown.
      */
     public void switchDecorations( boolean newDecoration ) {
@@ -291,122 +277,111 @@ public class PictureViewer
             createWindow();
         }
     }
-    
-    
-    
 // End of GUI Widgets
-    
-    
     /**
-     *  a reference to the currently displayed node of the model to allows navigation forwards and backwards
-     *  TODO: Why is this public? Should this not be replaced by the next 2 objects?
+     *  Reference to the currently showing node. Used for comparisons and quick access.
      */
-    public SortableDefaultMutableTreeNode currentNode = null;
-    
+    //private SortableDefaultMutableTreeNode currentNode = null;
+
     /**
      *  the context of the browsing
      */
     private ThumbnailBrowserInterface mySetOfNodes = null;
-    
     /**
      *  the position in the context being shown
      */
     private int myIndex = 0;
-    
-    
-    
+    /**
+     * Returns the current Node. TODO: change this to use the mySetofNodes
+     * @return The current node as defined by the mySetOfNodes 
+     * ThumbnailBrowserInterface and the myIndex. If the set of nodes has not 
+     * been initialised or there is some other error null shall be returned.
+     */
+    public SortableDefaultMutableTreeNode getCurrentNode() {
+        try {
+            return mySetOfNodes.getNode( myIndex );
+        } catch ( NullPointerException npe ) {
+            return null;
+        }
+
+    }
+
     
     /**
      *  variable which controls whether the autoadvance cycles through the current
      *  group only or whether it is allowed to cycle through images in the collection
      */
     private boolean cycleAll = true;
-    
     /**
      *  the timer that can call back into the object with the instruction to
      *  load the next image
      */
     private AdvanceTimer advanceTimer = null;
-    
-    
-    
     /**
      *  popup menu for window mode changing
      */
     private ChangeWindowPopupMenu changeWindowPopupMenu = new ChangeWindowPopupMenu( this );
-    
-    
-    
-    
-    
-    
-    
-    
     private ViewerKeyAdapter myViewerKeyAdapter = new ViewerKeyAdapter();
-    
-    
+
     private class ViewerKeyAdapter extends KeyAdapter {
+
         /**
          *  method that analysed the key that was pressed
          */
-        public void keyPressed(KeyEvent e) {
+        public void keyPressed( KeyEvent e ) {
             int k = e.getKeyCode();
-            if ((k == KeyEvent.VK_I))
+            if ( ( k == KeyEvent.VK_I ) ) {
                 pictureJPanel.cylceInfoDisplay();
-            else if ((k == KeyEvent.VK_N))
+            } else if ( ( k == KeyEvent.VK_N ) ) {
                 requestNextPicture();
-            else if ((k == KeyEvent.VK_M))
+            } else if ( ( k == KeyEvent.VK_M ) ) {
                 requestPopupMenu();
-            else if ((k == KeyEvent.VK_P))
+            } else if ( ( k == KeyEvent.VK_P ) ) {
                 requestPriorPicture();
-            else if ((k == KeyEvent.VK_F))
+            } else if ( ( k == KeyEvent.VK_F ) ) {
                 requestScreenSizeMenu();
-            else if ((k == KeyEvent.VK_SPACE) || (k == KeyEvent.VK_HOME))
+            } else if ( ( k == KeyEvent.VK_SPACE ) || ( k == KeyEvent.VK_HOME ) ) {
                 resetPicture();
-            else if ((k == KeyEvent.VK_PAGE_UP))
+            } else if ( ( k == KeyEvent.VK_PAGE_UP ) ) {
                 pictureJPanel.zoomIn();
-            else if ((k == KeyEvent.VK_PAGE_DOWN))
+            } else if ( ( k == KeyEvent.VK_PAGE_DOWN ) ) {
                 pictureJPanel.zoomOut();
-            else if ((k == KeyEvent.VK_1))
+            } else if ( ( k == KeyEvent.VK_1 ) ) {
                 pictureJPanel.zoomFull();
-            else if ((k == KeyEvent.VK_UP) || (k == KeyEvent.VK_KP_UP))
+            } else if ( ( k == KeyEvent.VK_UP ) || ( k == KeyEvent.VK_KP_UP ) ) {
                 pictureJPanel.scrollDown();
-            else if ((k == KeyEvent.VK_DOWN) || (k == KeyEvent.VK_KP_DOWN))
+            } else if ( ( k == KeyEvent.VK_DOWN ) || ( k == KeyEvent.VK_KP_DOWN ) ) {
                 pictureJPanel.scrollUp();
-            else if ((k == KeyEvent.VK_LEFT) || (k == KeyEvent.VK_KP_LEFT))
+            } else if ( ( k == KeyEvent.VK_LEFT ) || ( k == KeyEvent.VK_KP_LEFT ) ) {
                 pictureJPanel.scrollRight();
-            else if ((k == KeyEvent.VK_RIGHT) || (k == KeyEvent.VK_KP_RIGHT))
+            } else if ( ( k == KeyEvent.VK_RIGHT ) || ( k == KeyEvent.VK_KP_RIGHT ) ) {
                 pictureJPanel.scrollLeft();
-            else
+            } else {
                 JOptionPane.showMessageDialog( myJFrame,
-                        Settings.jpoResources.getString("PictureViewerKeycodes"),
-                        Settings.jpoResources.getString("PictureViewerKeycodesTitle"),
-                        JOptionPane.INFORMATION_MESSAGE);
+                        Settings.jpoResources.getString( "PictureViewerKeycodes" ),
+                        Settings.jpoResources.getString( "PictureViewerKeycodesTitle" ),
+                        JOptionPane.INFORMATION_MESSAGE );
+            }
         }
     }
-    
-    
-    
-    
+
     /**
      *  method to toggle to a frameless window.
      **/
     public void requestScreenSizeMenu() {
-        changeWindowPopupMenu.show( navBar.fullScreenJButton, 0, (int) (0 - changeWindowPopupMenu.getSize().getHeight()) );
+        changeWindowPopupMenu.show( navBar.fullScreenJButton, 0, (int) ( 0 - changeWindowPopupMenu.getSize().getHeight() ) );
         pictureJPanel.requestFocusInWindow();
     }
-    
-    
+
     /**
      *  method to toggle to a frameless window.
      **/
     public void requestPopupMenu() {
         PicturePopupMenu pm = new PicturePopupMenu( mySetOfNodes, myIndex, this );
-        pm.show( navBar.fullScreenJButton, 0, (int) (0 - pm.getSize().getHeight()) );
+        pm.show( navBar.fullScreenJButton, 0, (int) ( 0 - pm.getSize().getHeight() ) );
         pictureJPanel.requestFocusInWindow();
     }
-    
-    
+
     /**
      *  call this method to request a picture to be shown.
      *
@@ -415,70 +390,67 @@ public class PictureViewer
      */
     public void changePicture( ThumbnailBrowserInterface mySetOfNodes, int myIndex ) {
         //Tools.log("PictureViewer.changePicture: called the good new way.");
+        SortableDefaultMutableTreeNode oldNode = getCurrentNode();
         this.mySetOfNodes = mySetOfNodes;
         this.myIndex = myIndex;
         SortableDefaultMutableTreeNode node = mySetOfNodes.getNode( myIndex );
         if ( node == null ) {
-            Tools.log("PictureViewer.changePicture: null node recieved. Not valid, aborting.");
+            Tools.log( "PictureViewer.changePicture: null node recieved. Not valid, aborting." );
             return;
         }
-        
-        if ( ! ( node.getUserObject() instanceof PictureInfo) ) {
-            Tools.log( "PictureViewer:changePicture: ignoring request because new node is not a PictureInfo");
+
+        if ( !( node.getUserObject() instanceof PictureInfo ) ) {
+            Tools.log( "PictureViewer:changePicture: ignoring request because new node is not a PictureInfo" );
             return;
         }
-        
-        if ( currentNode == node) {
-            Tools.log( "PictureViewer.changePicture: ignoring request because new node is the same as the current one");
+
+        if ( oldNode == node ) {
+            Tools.log( "PictureViewer.changePicture: ignoring request because new node is the same as the current one" );
             return;
         }
-        
-        if (myJFrame == null) {
+
+        if ( myJFrame == null ) {
             createWindow();
         }
-        
+
         // unattach the change listener  and figure out if the description was changed and update
         // it if edits to the collection are allowed.
-        if ( ( this.currentNode != null )
-        && ( this.currentNode.getUserObject() instanceof  PictureInfo ) ) {
-            PictureInfo pi = (PictureInfo) currentNode.getUserObject();
+        if ( ( oldNode != null ) && ( oldNode.getUserObject() instanceof PictureInfo ) ) {
+            PictureInfo pi = (PictureInfo) oldNode.getUserObject();
             pi.removePictureInfoChangeListener( this );
-            
-            if ( ( ! getDescription().equals( descriptionJTextField.getText() ) )
-            && ( currentNode.getPictureCollection().getAllowEdits() ) ) {
-                Tools.log("PictureViewer.changePicture: The description was modified and is being saved");
+
+            if ( ( !getDescription().equals( descriptionJTextField.getText() ) ) && ( oldNode.getPictureCollection().getAllowEdits() ) ) {
+                Tools.log( "PictureViewer.changePicture: The description was modified and is being saved" );
                 pi.setDescription( descriptionJTextField.getText() );
             }
         }
-        
-        
-        
-        currentNode = node;
+
+
+
+        //currentNode = node;
         descriptionJTextField.setText( getDescription() );
         pictureJPanel.setPicture( (PictureInfo) node.getUserObject() );
-        
-        
+
+
         // attach the change listener
-        PictureInfo pi = (PictureInfo) currentNode.getUserObject();
+        PictureInfo pi = (PictureInfo) node.getUserObject();
         pi.addPictureInfoChangeListener( this );
-        
-        
+
+
         navBar.setIconDecorations();
-        
+
         // request cacheing of next pictures
-        SortableDefaultMutableTreeNode cacheNextNode = node.getNextPicture();
+        /*SortableDefaultMutableTreeNode cacheNextNode = node.getNextPicture();
         if ( ( cacheNextNode != null ) && Settings.maxCache > 2 ) {
-            new PictureCacheLoader( cacheNextNode );
-            
-            SortableDefaultMutableTreeNode cacheAfterNextNode = cacheNextNode.getNextPicture();
-            if ( ( cacheAfterNextNode != null ) && Settings.maxCache > 3 ) {
-                new PictureCacheLoader( cacheAfterNextNode );
-            }
+        new PictureCacheLoader( cacheNextNode );
+        SortableDefaultMutableTreeNode cacheAfterNextNode = cacheNextNode.getNextPicture();
+        if ( ( cacheAfterNextNode != null ) && Settings.maxCache > 3 ) {
+        new PictureCacheLoader( cacheAfterNextNode );
         }
+        }*/
         pictureJPanel.requestFocusInWindow();
     }
-    
-    
+
     /**
      *  here we get notified by the PictureInfo object that something has
      *  changed.
@@ -488,55 +460,52 @@ public class PictureViewer
             descriptionJTextField.setText( e.getPictureInfo().getDescription() );
         }
         if ( e.getHighresLocationChanged() ) {
-            pictureJPanel.setPicture( (PictureInfo) currentNode.getUserObject() );
+            pictureJPanel.setPicture( (PictureInfo) mySetOfNodes.getNode( myIndex ).getUserObject() );
         }
         if ( e.getRotationChanged() ) {
-            pictureJPanel.setPicture( (PictureInfo) currentNode.getUserObject() );
+            pictureJPanel.setPicture( (PictureInfo) mySetOfNodes.getNode( myIndex ).getUserObject() );
         }
-/*		if ( e.getLowresLocationChanged() ) {
-                        lowresLocationJTextField.setText( e.getPictureInfo().getLowresLocation () );
-                }
-                if ( e.getChecksumChanged() ) {
-                        checksumJLabel.setText( Settings.jpoResources.getString("checksumJLabel") + pi.getChecksumAsString () );
-                }
-                if ( e.getCreationTimeChanged() ) {
-                        creationTimeJTextField.setText( pi.getCreationTime () );
-                        parsedCreationTimeJLabel.setText( pi.getFormattedCreationTime() );
-                }
-                if ( e.getFilmReferenceChanged() ) {
-                        filmReferenceJTextField.setText( pi.getFilmReference() );
-                }
-                if ( e.getCommentChanged() ) {
-                        commentJTextField.setText( pi.getComment() );
-                }
-                if ( e.getPhotographerChanged() ) {
-                        photographerJTextField.setText( pi.getPhotographer() );
-                }
-                if ( e.getCopyrightHolderChanged() ) {
-                        copyrightHolderJTextField.setText( pi.getCopyrightHolder() );
-                } */
-        //closeViewer();
+    /*		if ( e.getLowresLocationChanged() ) {
+    lowresLocationJTextField.setText( e.getPictureInfo().getLowresLocation () );
     }
-    
-    
-    
+    if ( e.getChecksumChanged() ) {
+    checksumJLabel.setText( Settings.jpoResources.getString("checksumJLabel") + pi.getChecksumAsString () );
+    }
+    if ( e.getCreationTimeChanged() ) {
+    creationTimeJTextField.setText( pi.getCreationTime () );
+    parsedCreationTimeJLabel.setText( pi.getFormattedCreationTime() );
+    }
+    if ( e.getFilmReferenceChanged() ) {
+    filmReferenceJTextField.setText( pi.getFilmReference() );
+    }
+    if ( e.getCommentChanged() ) {
+    commentJTextField.setText( pi.getComment() );
+    }
+    if ( e.getPhotographerChanged() ) {
+    photographerJTextField.setText( pi.getPhotographer() );
+    }
+    if ( e.getCopyrightHolderChanged() ) {
+    copyrightHolderJTextField.setText( pi.getCopyrightHolder() );
+    } */
+    //closeViewer();
+    }
+
     // Here we are not that interested in TreeModel change events other than to find out if our
     // current node was removed in which case we close the Window.
-    
     /**
      *   implemented here to satisfy the TreeModelListener interface; not used.
      */
     public void treeNodesChanged( TreeModelEvent e ) {
         navBar.setIconDecorations();
     }
-    
+
     /**
      *   implemented here to satisfy the TreeModelListener interface; not used.
      */
     public void treeNodesInserted( TreeModelEvent e ) {
         navBar.setIconDecorations();
     }
-    
+
     /**
      *  The TreeModelListener interface tells us of tree node removal events.
      *  If we receive a removal event we need to find out if the PictureViewer is
@@ -547,45 +516,46 @@ public class PictureViewer
      */
     public void treeNodesRemoved( TreeModelEvent e ) {
         //Tools.log("PictureViewer.treeNodesRemoved was invoked");
-        if ( currentNode == null ) return;
+        if ( getCurrentNode() == null ) {
+            return;
+        }
         TreePath removedChild;
-        TreePath currentNodeTreePath = new TreePath( currentNode.getPath() );
-        Object [] children = e.getChildren();
+        TreePath currentNodeTreePath = new TreePath( getCurrentNode().getPath() );
+        Object[] children = e.getChildren();
         for ( int i = 0; i < children.length; i++ ) {
-            removedChild = new TreePath( children[ i ] );
+            removedChild = new TreePath( children[i] );
             if ( removedChild.isDescendant( currentNodeTreePath ) ) {
-                                /*Tools.log("PictureViewer.treeNodesRemoved: "
-                                        + currentNodeTreePath.toString()
-                                        + " is a descendant of "
-                                        +  removedChild.toString() ); */
+                /*Tools.log("PictureViewer.treeNodesRemoved: "
+                + currentNodeTreePath.toString()
+                + " is a descendant of "
+                +  removedChild.toString() ); */
                 int[] childIndices = e.getChildIndices();
                 SortableDefaultMutableTreeNode parentNode =
                         (SortableDefaultMutableTreeNode) e.getTreePath().getLastPathComponent();
                 try {
                     SortableDefaultMutableTreeNode nextChild =
                             (SortableDefaultMutableTreeNode) parentNode.getChildAt( childIndices[i] );
-                    if ( nextChild.getUserObject() instanceof PictureInfo )
+                    if ( nextChild.getUserObject() instanceof PictureInfo ) {
                         changePicture( new SingleNodeBrowser( nextChild ), 0 );
-                    else
+                    } else {
                         closeViewer();
+                    }
                 } catch ( ArrayIndexOutOfBoundsException x ) {
                     closeViewer();
                 }
             }
         }
-        
+
         navBar.setIconDecorations();
     }
-    
+
     /**
      *   implemented here to satisfy the TreeModelListener interface; not used.
      */
     public void treeStructureChanged( TreeModelEvent e ) {
         navBar.setIconDecorations();
     }
-    
-    
-    
+
     /**
      *   This method is invoked by the GUI button or keyboard shortcut to
      *   advance the picture. It calls {@link SortableDefaultMutableTreeNode#getNextPicture} to find
@@ -599,8 +569,8 @@ public class PictureViewer
     public boolean requestNextPicture() {
         if ( mySetOfNodes == null ) {
             //Tools.log("PictureViewer.requestNextPicture: using non context aware step forward");
-            SortableDefaultMutableTreeNode nextNode = currentNode.getNextPicture();
-            if ( nextNode != null )  {
+            SortableDefaultMutableTreeNode nextNode = getCurrentNode().getNextPicture();
+            if ( nextNode != null ) {
                 changePicture( new SingleNodeBrowser( nextNode ), 0 );
                 return true;
             } else {
@@ -618,7 +588,7 @@ public class PictureViewer
             }
         }
     }
-    
+
     /**
      *  if a request comes in to show the previous picture the data model is asked for the prior image
      *  and if one is returned it is displayed.
@@ -627,24 +597,22 @@ public class PictureViewer
      */
     public void requestPriorPicture() {
         if ( mySetOfNodes == null ) {
-            Tools.log("PictureViewer.requestPriorPicture: using non context aware step backward");
-            if (currentNode != null) {
-                SortableDefaultMutableTreeNode prevNode = currentNode.getPreviousPicture();
+            Tools.log( "PictureViewer.requestPriorPicture: using non context aware step backward" );
+            if ( getCurrentNode() != null ) {
+                SortableDefaultMutableTreeNode prevNode = getCurrentNode().getPreviousPicture();
                 if ( prevNode != null ) {
                     changePicture( new SingleNodeBrowser( prevNode ), 0 );
                 }
             }
         } else {
             // use context aware step forward
-            Tools.log("PictureViewer.requestPriorPicture: using the context aware step backward");
+            Tools.log( "PictureViewer.requestPriorPicture: using the context aware step backward" );
             if ( myIndex > 0 ) {
                 changePicture( mySetOfNodes, myIndex - 1 );
             }
         }
     }
-    
-    
-    
+
     /**
      *  method that cancels a timer if one is running or calls the method to
      *  bring up the dialog.
@@ -657,14 +625,14 @@ public class PictureViewer
             doAutoAdvanceDialog();
         }
     }
-    
+
     /**
      *  method that brings up a dialog box and asks the user how he would
      *  like autoadvance to work
      */
     private void doAutoAdvanceDialog() {
-        JRadioButton randomAdvanceJRadioButton = new JRadioButton( Settings.jpoResources.getString("randomAdvanceJRadioButtonLabel") );
-        JRadioButton sequentialAdvanceJRadioButton = new JRadioButton( Settings.jpoResources.getString("sequentialAdvanceJRadioButtonLabel") );
+        JRadioButton randomAdvanceJRadioButton = new JRadioButton( Settings.jpoResources.getString( "randomAdvanceJRadioButtonLabel" ) );
+        JRadioButton sequentialAdvanceJRadioButton = new JRadioButton( Settings.jpoResources.getString( "sequentialAdvanceJRadioButtonLabel" ) );
         ButtonGroup advanceButtonGroup = new ButtonGroup();
         advanceButtonGroup.add( randomAdvanceJRadioButton );
         advanceButtonGroup.add( sequentialAdvanceJRadioButton );
@@ -672,9 +640,9 @@ public class PictureViewer
         randomAdvanceJRadioButton.setSelected( true );
         //else
         //sequentialAdvanceJRadioButton.setSelected( true );
-        
-        JRadioButton restrictToGroupJRadioButton = new JRadioButton( Settings.jpoResources.getString("restrictToGroupJRadioButtonLabel") );
-        JRadioButton useAllPicturesJRadioButton = new JRadioButton( Settings.jpoResources.getString("useAllPicturesJRadioButtonLabel") );
+
+        JRadioButton restrictToGroupJRadioButton = new JRadioButton( Settings.jpoResources.getString( "restrictToGroupJRadioButtonLabel" ) );
+        JRadioButton useAllPicturesJRadioButton = new JRadioButton( Settings.jpoResources.getString( "useAllPicturesJRadioButtonLabel" ) );
         ButtonGroup cycleButtonGroup = new ButtonGroup();
         cycleButtonGroup.add( restrictToGroupJRadioButton );
         cycleButtonGroup.add( useAllPicturesJRadioButton );
@@ -682,45 +650,48 @@ public class PictureViewer
         useAllPicturesJRadioButton.setSelected( true );
         //else
         //restrictToGroupJRadioButton.setSelected( true );
-        
-        JLabel timerSecondsJLabel = new JLabel( Settings.jpoResources.getString("timerSecondsJLabelLabel") );
+
+        JLabel timerSecondsJLabel = new JLabel( Settings.jpoResources.getString( "timerSecondsJLabelLabel" ) );
         //JTextField timerSecondsJTextField = new JTextField();
         WholeNumberField timerSecondsField = new WholeNumberField( 4, 3 );
         timerSecondsField.setPreferredSize( new Dimension( 50, 20 ) );
         timerSecondsField.setMaximumSize( new Dimension( 50, 20 ) );
-        Object [] objects = { randomAdvanceJRadioButton,
-        sequentialAdvanceJRadioButton,
-        restrictToGroupJRadioButton,
-        useAllPicturesJRadioButton,
-        timerSecondsJLabel,
-        timerSecondsField };
-        
+        Object[] objects = { randomAdvanceJRadioButton,
+            sequentialAdvanceJRadioButton,
+            restrictToGroupJRadioButton,
+            useAllPicturesJRadioButton,
+            timerSecondsJLabel,
+            timerSecondsField
+        };
+
         int selectedValue = JOptionPane.showOptionDialog(
                 myJFrame,
                 objects,
-                Settings.jpoResources.getString("autoAdvanceDialogTitle"),
+                Settings.jpoResources.getString( "autoAdvanceDialogTitle" ),
                 JOptionPane.OK_CANCEL_OPTION,
                 JOptionPane.PLAIN_MESSAGE,
                 null,
                 null,
-                null);
-        
+                null );
+
         if ( selectedValue == 0 ) {
             //randomAdvance = randomAdvanceJRadioButton.isSelected();
             //cycleAll = useAllPicturesJRadioButton.isSelected();
-            
+
             if ( randomAdvanceJRadioButton.isSelected() ) {
-                if ( useAllPicturesJRadioButton.isSelected() )
-                    //enumerateAndAddToList( pictureNodesArrayList, (SortableDefaultMutableTreeNode) currentNode.getRoot()  );
-                    mySetOfNodes = new RandomBrowser( (SortableDefaultMutableTreeNode) currentNode.getRoot() );
-                else
-                    //enumerateAndAddToList( pictureNodesArrayList, (SortableDefaultMutableTreeNode) currentNode.getParent() );
-                    mySetOfNodes = new RandomBrowser( (SortableDefaultMutableTreeNode) currentNode.getParent() );
+                if ( useAllPicturesJRadioButton.isSelected() ) //enumerateAndAddToList( pictureNodesArrayList, (SortableDefaultMutableTreeNode) currentNode.getRoot()  );
+                {
+                    mySetOfNodes = new RandomBrowser( (SortableDefaultMutableTreeNode) getCurrentNode().getRoot() );
+                } else //enumerateAndAddToList( pictureNodesArrayList, (SortableDefaultMutableTreeNode) currentNode.getParent() );
+                {
+                    mySetOfNodes = new RandomBrowser( (SortableDefaultMutableTreeNode) getCurrentNode().getParent() );
+                }
             } else {
-                if ( useAllPicturesJRadioButton.isSelected() )
-                    mySetOfNodes = new SequentialBrowser( (SortableDefaultMutableTreeNode) currentNode.getRoot() );
-                else
-                    mySetOfNodes = new SequentialBrowser( (SortableDefaultMutableTreeNode) currentNode.getParent() );
+                if ( useAllPicturesJRadioButton.isSelected() ) {
+                    mySetOfNodes = new SequentialBrowser( (SortableDefaultMutableTreeNode) getCurrentNode().getRoot() );
+                } else {
+                    mySetOfNodes = new SequentialBrowser( (SortableDefaultMutableTreeNode) getCurrentNode().getParent() );
+                }
                 myIndex = 0;
                 changePicture( mySetOfNodes, myIndex );
             }
@@ -729,7 +700,7 @@ public class PictureViewer
             startAdvanceTimer( timerSecondsField.getValue() );
         }
     }
-    
+
     /**
      * This method sets up the Advance Timer
      */
@@ -737,17 +708,18 @@ public class PictureViewer
         advanceTimer = new AdvanceTimer( this, seconds );
         navBar.clockJButton.setIcon( navBar.iconClockOn );
     }
-    
+
     /**
      *  method to stop any timer that might be running
      */
     public void stopTimer() {
-        if ( advanceTimer != null )
+        if ( advanceTimer != null ) {
             advanceTimer.stopThread();
+        }
         advanceTimer = null;
-        //pictureNodesArrayList = null;
+    //pictureNodesArrayList = null;
     }
-    
+
     /**
      * method that tells the AdvanceTimer whether it is OK to advance the picture or not
      * This important to avoid the submission of new picture requests before the old
@@ -755,29 +727,26 @@ public class PictureViewer
      */
     public boolean readyToAdvance() {
         int status = pictureJPanel.getScalablePicture().getStatusCode();
-        if ( ( status == ScalablePicture.READY )
-        || ( status == ScalablePicture.ERROR ) )
+        if ( ( status == ScalablePicture.READY ) || ( status == ScalablePicture.ERROR ) ) {
             return true;
-        else
+        } else {
             return false;
+        }
     }
-    
+
     /**
      *   this method is invoked from the timer thread that notifies
      *   our object that it is time to advance to the next picture.
      */
     public void requestAdvance() {
         requestNextPicture();
-                /*myIndex++;
-                if ( myIndex >= mySetOfNodes.getNumberOfNodes() ) {
-                        myIndex = 0;
-                }
-                changePicture( mySetOfNodes, myIndex );*/
+    /*myIndex++;
+    if ( myIndex >= mySetOfNodes.getNumberOfNodes() ) {
+    myIndex = 0;
     }
-    
-    
-    
-    
+    changePicture( mySetOfNodes, myIndex );*/
+    }
+
     /**
      *   this method gets invoked from the PicturePane object
      *   to notifying of status changes. It updates the description
@@ -786,10 +755,10 @@ public class PictureViewer
      *   the progress bar is made le. Any other status hides
      *   the progress bar.
      **/
-    public void scalableStatusChange(int pictureStatusCode, String pictureStatusMessage) {
-        Tools.log("PictureViewer.scalableStatusChange: Got a status change: " + pictureStatusMessage);
+    public void scalableStatusChange( int pictureStatusCode, String pictureStatusMessage ) {
+        Tools.log( "PictureViewer.scalableStatusChange: Got a status change: " + pictureStatusMessage );
         //loadJProgressBar.setString( pictureStatusMessage );
-        switch( pictureStatusCode ) {
+        switch ( pictureStatusCode ) {
             case ScalablePicture.UNINITIALISED:
                 loadJProgressBar.setVisible( false );
                 break;
@@ -797,8 +766,9 @@ public class PictureViewer
                 loadJProgressBar.setVisible( false );
                 break;
             case ScalablePicture.LOADING:
-                if ( myJFrame != null )
+                if ( myJFrame != null ) {
                     loadJProgressBar.setVisible( true );
+                }
                 break;
             case ScalablePicture.LOADED:
                 loadJProgressBar.setVisible( false );
@@ -809,29 +779,30 @@ public class PictureViewer
                 break;
             case ScalablePicture.READY:
                 loadJProgressBar.setVisible( false );
-                if ( myJFrame != null )
+                if ( myJFrame != null ) {
                     myJFrame.toFront();
+                }
                 //descriptionJTextField.setText( getDescription() );
                 break;
             case ScalablePicture.ERROR:
-                loadJProgressBar.setVisible( false );;
+                loadJProgressBar.setVisible( false );
+                ;
                 break;
             default:
                 Tools.log( "PictureViewer.scalableStatusChange: get called with a code that is not understood: " + Integer.toString( pictureStatusCode ) + " " + pictureStatusMessage );
                 break;
         }
     }
-    
-    
+
     /**
      *  This helper method returns the description of the node and if that is not available for
      *  some reason it returns a blank string.
      */
     private String getDescription() {
-        Object uo = currentNode.getUserObject();
+        Object uo = getCurrentNode().getUserObject();
         if ( uo != null ) {
             if ( uo instanceof PictureInfo ) {
-                return ((PictureInfo) uo).getDescription() ;
+                return ( (PictureInfo) uo ).getDescription();
             } else {
                 return "";
             }
@@ -839,9 +810,7 @@ public class PictureViewer
             return "";
         }
     }
-    
-    
-    
+
     /**
      *  method that gets invoked from the PicturePane object to notify of status changes
      **/
@@ -861,7 +830,7 @@ public class PictureViewer
                 break;
         }
     }
-    
+
     /**
      *  method to scale the picture to the current screen size and to center it there.
      */
@@ -869,8 +838,6 @@ public class PictureViewer
         pictureJPanel.zoomToFit();
         pictureJPanel.centerImage();
     }
-    
-    
 }
 
 

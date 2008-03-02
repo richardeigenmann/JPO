@@ -7,6 +7,8 @@
     <property name="build.dir" value="build"/>
     <property name="build.base.classes.dir" value="${build.dir}/classes"/>
     <property name="unit.test.classes.dir" value="${build.dir}/unittestclasses"/>
+    <property name="junit.dir" value="/usr/share/java/junit.jar"/>
+    <property name="jsch.dir" value="/usr/share/java/jsch.jar"/>
     <property name="build.images.dir" value="${build.base.classes.dir}/${app.main.package}/images"/>
     <property name="build.dtd.dir" value="${build.base.classes.dir}/${app.main.package}"/>
     <property name="build.docs.dir" value="${build.dir}/docs"/>
@@ -266,6 +268,7 @@
                 <pathelement location="${unit.test.classes.dir}" />
                 <pathelement path="" />
                 <pathelement path="${java.class.path}" />
+                <pathelement location="${junit.dir}" />
             </classpath>
         </java>
     </target>
@@ -286,6 +289,7 @@
                 <pathelement location="${build.base.classes.dir}" />
                 <pathelement location="${unit.test.classes.dir}" />
                 <pathelement path="libs/metadata-extractor-2.3.0.jar; libs/jnlp.jar; libs/activation.jar; libs/mail.jar" />
+                <pathelement location="${junit.dir}" />
             </classpath>
             <!--<test todir="${results}" name="jpo.ApplicationJMenuBarTest"/>-->
             <batchtest todir="${results}">
@@ -299,11 +303,13 @@
     
     
     <target name="JUNIT" description="Checks if JUnit is available">
-        <available property="junit.present" classname="junit.framework.TestCase" />
+        <available property="junit.present" classname="junit.framework.TestCase" classpath="${junit.dir}" />
+        <echo message="Testing if JUnit is present: ${junit.present}" />
     </target>
     
     <target name="JSCH" description="Checks if JSch is available">
-        <available property="jsch.present" classname="jsch.JSCh" />
+        <available property="jsch.present" classname="com.jcraft.jsch.JSch" classpath="${junit.dir}"  />
+        <echo message="Testing if JSch is present: ${jsch.present}" />
     </target>
     
     
