@@ -213,6 +213,10 @@ public class JpoResources_en extends ListResourceBundle {
 		{"htmlDistillerInterrupt", "interrupting gracefully"},
 		{"CssCopyError", "Could not copy Stylesheet jpo.css\n"},
 		{"HtmlDistillerPreviewFont", "SansSerif-BOLD-18"},
+		{"HtmlDistillerNumbering", "Create Image Filenames"},
+		{"hashcodeRadioButton",  "using Java Hash Code" },
+		{"originalNameRadioButton", "using original image name" },
+		{"sequentialRadioButton",  "using sequential number" },
 
 				
 

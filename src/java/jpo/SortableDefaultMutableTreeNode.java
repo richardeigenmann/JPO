@@ -25,7 +25,7 @@ import javax.swing.*;
 /*
 SortableDefaultMutableTreeNode.java:  A DefaultMutableTreeNode that knows how to compare my objects
  
-Copyright (C) 2003-2007  Richard Eigenmann, Zurich, Switzerland
+Copyright (C) 2003-2008  Richard Eigenmann, Zurich, Switzerland
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -272,8 +272,9 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
      *  The TreeCellEditor will send the changed label as a String type object to the setUserObject method of this class.
      *  My overriding this we can intercept this and update the PictureInfo or GroupInfo accordingly.
      */
+    @Override
     public void setUserObject( Object o ) {
-        Tools.log( "setUserObject fired with o: " + o.toString() + " of class: " + o.getClass().toString() );
+        //Tools.log( "setUserObject fired with o: " + o.toString() + " of class: " + o.getClass().toString() );
         if ( o instanceof String ) {
             Object obj = getUserObject();
             if ( obj instanceof GroupInfo ) {

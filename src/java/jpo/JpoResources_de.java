@@ -209,6 +209,11 @@ public class JpoResources_de extends ListResourceBundle {
 		{"jpgQualityGood", "Gut"},
 		{"jpgQualityBest", "Beste"},
 		{"HtmlDistillerPreviewFont", "SansSerif-BOLD-18"},
+		{"HtmlDistillerNumbering", "Bilder benennen"},
+		{"hashcodeRadioButton",  "nach Java Hash Code" },
+		{"originalNameRadioButton", "nach Originalnamen" },
+		{"sequentialRadioButton",  "sequentielle Nummer" },
+
 		
 		// HtmlDistillerThread
 		{"LinkToJpo", "Mit <A HREF=\"http://j-po.sourceforge.net\">JPO</A> erstellt"},

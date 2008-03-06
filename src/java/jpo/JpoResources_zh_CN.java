@@ -217,6 +217,10 @@ public class JpoResources_zh_CN extends ListResourceBundle {
 		{"htmlDistillerInterrupt", "操作已被停止"},
 		{"CssCopyError", "不能拷贝样式文件jpo.css\n"},
 		{"HtmlDistillerPreviewFont", ""},
+		{"HtmlDistillerNumbering", "Create Image Filenames"},
+		{"hashcodeRadioButton",  "using Java Hash Code" },
+		{"originalNameRadioButton", "using original image name" },
+		{"sequentialRadioButton",  "using sequential number" },
 
 				
 

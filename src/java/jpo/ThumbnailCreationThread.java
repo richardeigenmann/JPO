@@ -11,7 +11,7 @@ import javax.imageio.*;
 /*
 ThumbnailCreationThread.java:  A factory that creates thumbnails
 
-Copyright (C) 2002-2006  Richard Eigenmann.
+Copyright (C) 2002-2008  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -403,7 +403,7 @@ public class ThumbnailCreationThread extends Thread {
 				InputStream lowresStream = lowresUrl.openStream();
 				lowresStream.close();
 			} catch  ( IOException x ) {
-				Tools.log("ThumbnailCreationThread.loadOrCreateGroupThumbnail: is requesting the creation of a numbnail because if we can't open the lowres stream we should re-create the image.");
+				//Tools.log("ThumbnailCreationThread.loadOrCreateGroupThumbnail: is requesting the creation of a numbnail because if we can't open the lowres stream we should re-create the image.");
 				createNewGroupThumbnail( currentThumb );
 				return;
 			}
@@ -439,7 +439,7 @@ public class ThumbnailCreationThread extends Thread {
 		}
 		
 		referringNode = currentThumb.referringNode;
-		Tools.log("ThumbnailCreationThread.createNewGroupThumbnail: Creating Thumbnail " + ((GroupInfo) referringNode.getUserObject()).getLowresLocation() + " from " + ((GroupInfo) referringNode.getUserObject()).getLowresLocation());
+		//Tools.log("ThumbnailCreationThread.createNewGroupThumbnail: Creating Thumbnail " + ((GroupInfo) referringNode.getUserObject()).getLowresLocation() + " from " + ((GroupInfo) referringNode.getUserObject()).getLowresLocation());
 
 		try{
 			BufferedImage groupThumbnail = ImageIO.read( new BufferedInputStream( ThumbnailCreationThread.class.getResourceAsStream( "images/icon_folder_large.jpg" ) ) );
@@ -473,7 +473,7 @@ public class ThumbnailCreationThread extends Thread {
 					//Tools.log(Integer.toString(picsProcessed) +": " + Integer.toString(x) + "/" +Integer.toString(y)+ " - " + Integer.toString(yPos) );
 	
 					pi = (PictureInfo) userObject;
-					Tools.log("Loading picture: " + pi.getDescription() + " Filename: " + pi.getLowresFilename() );
+					//Tools.log("Loading picture: " + pi.getDescription() + " Filename: " + pi.getLowresFilename() );
 					try {
 						lowresUrl = pi.getLowresURL();
 					} catch ( MalformedURLException mue ) {
