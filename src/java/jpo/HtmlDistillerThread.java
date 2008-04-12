@@ -28,7 +28,7 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 /**
  *  This thread object generates a web of html pages that allows you to browse
  *  groups of pictures using a web browsers. The resulting html pages can be
- *  posted to the internet. Relative addressing has been used throughout to facilitate 
+ *  posted to the Internet. Relative addressing has been used throughout to facilitate 
  *  this.
  */
 public class HtmlDistillerThread extends Thread {
@@ -353,47 +353,47 @@ public class HtmlDistillerThread extends Thread {
 
         String fn = "jpo_" + Integer.toString( n.hashCode() );
         String extension = Tools.getExtension( p.getHighresFilename() );
-        File lowresFilename;
-        File midresFilename;
-        File highresFilename;
+        File lowresFile;
+        File midresFile;
+        File highresFile;
         picsWroteCounter++;
 
         switch ( options.getPictureNaming() ) {
             case HtmlDistillerOptions.PICTURE_NAMING_BY_ORIGINAL_NAME:
                 String rootName = Tools.getFilenameRoot( p.getHighresFilename() );
-                lowresFilename = new File( options.getHtmlDirectory(), rootName + "_l." + extension );
-                midresFilename = new File( options.getHtmlDirectory(), rootName + "_m." + extension );
-                highresFilename = new File( options.getHtmlDirectory(), rootName + "_h." + extension );
+                lowresFile = new File( options.getHtmlDirectory(), rootName + "_l." + extension );
+                midresFile = new File( options.getHtmlDirectory(), rootName + "_m." + extension );
+                highresFile= new File( options.getHtmlDirectory(), rootName + "_h." + extension );
                 break;
             case HtmlDistillerOptions.PICTURE_NAMING_BY_SEQUENTIAL_NUMBER:
                 String convertedNumber = Integer.toString( picsWroteCounter );
                 String padding = "00000";
                 String root = "jpo_img" + padding.substring( convertedNumber.length() ) + convertedNumber;
-                lowresFilename = new File( options.getHtmlDirectory(), root + "_l." + extension );
-                midresFilename = new File( options.getHtmlDirectory(), root + "_m." + extension );
-                highresFilename = new File( options.getHtmlDirectory(), root + "_h." + extension );
+                lowresFile = new File( options.getHtmlDirectory(), root + "_l." + extension );
+                midresFile = new File( options.getHtmlDirectory(), root + "_m." + extension );
+                highresFile = new File( options.getHtmlDirectory(), root + "_h." + extension );
                 break;
             default:  //case HtmlDistillerOptions.PICTURE_NAMING_BY_HASH_CODE:
-                lowresFilename = new File( options.getHtmlDirectory(), fn + "_l." + extension );
-                midresFilename = new File( options.getHtmlDirectory(), fn + "_m." + extension );
-                highresFilename = new File( options.getHtmlDirectory(), fn + "_h." + extension );
+                lowresFile = new File( options.getHtmlDirectory(), fn + "_l." + extension );
+                midresFile = new File( options.getHtmlDirectory(), fn + "_m." + extension );
+                highresFile = new File( options.getHtmlDirectory(), fn + "_h." + extension );
                 break;
         }
 
         // copy the picture to the target directory
         if ( options.isExportHighres() ) {
-            progressLabel.setText( "copying picture " + p.getHighresLocation() + " to " + highresFilename.toString() );
-            Tools.copyPicture( p.getHighresURL(), highresFilename );
+            progressLabel.setText( "copying picture " + p.getHighresLocation() + " to " + highresFile.toString() );
+            Tools.copyPicture( p.getHighresURL(), highresFile );
         }
 
 
         if ( options.isGenerateZipfile() ) {
-            progressLabel.setText( "adding to zipfile: " + highresFilename.toString() );
+            progressLabel.setText( "adding to zipfile: " + highresFile.toString() );
             try {
                 InputStream in = p.getHighresURL().openStream();
                 BufferedInputStream bin = new BufferedInputStream( in );
 
-                ZipEntry entry = new ZipEntry( highresFilename.getName() );
+                ZipEntry entry = new ZipEntry( highresFile.getName() );
                 zipFile.putNextEntry( entry );
 
                 int count;
@@ -405,9 +405,9 @@ public class HtmlDistillerThread extends Thread {
                 bin.close();
                 in.close();
             } catch ( IOException e ) {
-                Tools.log( "HtmDistillerThrea.run: Could not create zipfile entry for " + highresFilename.toString() + "\n" + e.toString() );
+                Tools.log( "HtmDistillerThrea.run: Could not create zipfile entry for " + highresFile.toString() + "\n" + e.toString() );
             } catch ( Exception e ) {
-                Tools.log( "HtmDistillerThrea.run: Could not create zipfile entry for " + highresFilename.toString() + "\n" + e.toString() );
+                Tools.log( "HtmDistillerThrea.run: Could not create zipfile entry for " + highresFile.toString() + "\n" + e.toString() );
             }
         }
 
@@ -436,9 +436,9 @@ public class HtmlDistillerThread extends Thread {
 
         boolean loaded = false;
         if ( ( wOrig == options.getThumbnailWidth() ) || ( hOrig == options.getThumbnailHeight() ) ) {
-            progressLabel.setText( "copying picture " + p.getLowresLocation() + " to " + lowresFilename.toString() );
-            Tools.log( "copying picture " + p.getLowresLocation() + " to " + lowresFilename.toString() + " w=" + Integer.toString( wOrig ) + " h=" + Integer.toString( hOrig ) );
-            Tools.copyPicture( p.getLowresURL(), lowresFilename );
+            progressLabel.setText( "copying picture " + p.getLowresLocation() + " to " + lowresFile.toString() );
+            Tools.log( "copying picture " + p.getLowresLocation() + " to " + lowresFile.toString() + " w=" + Integer.toString( wOrig ) + " h=" + Integer.toString( hOrig ) );
+            Tools.copyPicture( p.getLowresURL(), lowresFile );
             w = wOrig;
             h = hOrig;
         } else {
@@ -454,9 +454,9 @@ public class HtmlDistillerThread extends Thread {
             scp.setScaleSize( new Dimension( options.getThumbnailWidth(), options.getThumbnailWidth() ) );
             progressLabel.setText( "scaling " + p.getHighresLocation() );
             scp.scalePicture();
-            progressLabel.setText( "writing " + lowresFilename.toString() );
+            progressLabel.setText( "writing " + lowresFile.toString() );
             scp.setJpgQuality( options.getLowresJpgQuality() );
-            scp.writeScaledJpg( lowresFilename );
+            scp.writeScaledJpg( lowresFile );
             w = scp.getScaledWidth();
             h = scp.getScaledHeight();
             loaded = true;
@@ -465,7 +465,7 @@ public class HtmlDistillerThread extends Thread {
 
         out.write( "<TD VALIGN=BOTTOM ALIGN=CENTER WIDTH=" + Integer.toString( options.getThumbnailWidth() ) + ">" );
 
-        out.write( "<a href=\"" + fn + ".htm\">" + "<img border=0 src=\"" + lowresFilename + "\" width= " + Integer.toString( w ) + " height= " + Integer.toString( h ) + ">" + "</a>" );
+        out.write( "<a href=\"" + fn + ".htm\">" + "<img border=0 src=\"" + lowresFile.getName() + "\" width= " + Integer.toString( w ) + " height= " + Integer.toString( h ) + ">" + "</a>" );
 
 
         out.write( "</TD>" );
@@ -483,9 +483,9 @@ public class HtmlDistillerThread extends Thread {
         scp.setScaleSize( options.getMidresDimension() );
         progressLabel.setText( "scaling " + p.getHighresLocation() );
         scp.scalePicture();
-        progressLabel.setText( "writing " + midresFilename.toString() );
+        progressLabel.setText( "writing " + midresFile.toString() );
         scp.setJpgQuality( options.getMidresJpgQuality() );
-        scp.writeScaledJpg( midresFilename );
+        scp.writeScaledJpg( midresFile );
         w = scp.getScaledWidth();
         h = scp.getScaledHeight();
 
@@ -506,12 +506,12 @@ public class HtmlDistillerThread extends Thread {
         midresHtmlWriter.newLine();
         midresHtmlWriter.newLine();
         midresHtmlWriter.write( "<TR><TD align=\"CENTER\" valign=\"TOP\" width=" + Integer.toString( options.getMidresWidth() ) + ">" );
-        String imgTag = "<IMG border=0 src=\"" + midresFilename + "\" width= " + Integer.toString( w ) + " height= " + Integer.toString( h ) + ">";
+        String imgTag = "<IMG border=0 src=\"" + midresFile.getName() + "\" width= " + Integer.toString( w ) + " height= " + Integer.toString( h ) + ">";
 
         if ( options.isLinkToHighres() ) {
             midresHtmlWriter.write( "<A HREF=\"" + p.getHighresLocation() + "\">" + imgTag + "</A>" );
         } else if ( options.isExportHighres() ) {
-            midresHtmlWriter.write( "<A HREF=\"" + highresFilename + "\">" + imgTag + "</A>" );
+            midresHtmlWriter.write( "<A HREF=\"" + highresFile.getName() + "\">" + imgTag + "</A>" );
         } else {
             midresHtmlWriter.write( imgTag );
         }
