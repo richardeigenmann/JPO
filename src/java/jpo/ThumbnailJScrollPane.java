@@ -165,15 +165,15 @@ public class ThumbnailJScrollPane extends JScrollPane implements RelayoutListene
     /**
      *  The largest size for the thumbnail slider
      */
-    private static final int THUMBNAILSIZE_MIN = 1;
+    private static final int THUMBNAILSIZE_MIN = 5;
     /**
      *  The smallest size for the thumbnail slider
      */
-    private static final int THUMBNAILSIZE_MAX = 4;
+    private static final int THUMBNAILSIZE_MAX = 20;
     /**
      *  The starting position for the thumbnail slider
      */
-    private static final int THUMBNAILSIZE_INIT = 1;
+    private static final int THUMBNAILSIZE_INIT = 20;
     
     /**
      *   Slider to control the size of the thumbnails
@@ -269,11 +269,11 @@ public class ThumbnailJScrollPane extends JScrollPane implements RelayoutListene
         lblPage.setBorder(BorderFactory.createEmptyBorder(0,10,0,10));					// JA
         titleJPanel.add( lblPage );
         titleJPanel.add( title );
-        resizeJSlider.setInverted( true );
-        resizeJSlider.setSnapToTicks( true );
-        resizeJSlider.setMaximumSize( new Dimension( 80,40 ) );
-        resizeJSlider.setMajorTickSpacing( 1 );
-        resizeJSlider.setMinorTickSpacing( 0 );
+        //resizeJSlider.setInverted( true );
+        resizeJSlider.setSnapToTicks( false );
+        resizeJSlider.setMaximumSize( new Dimension( 150,40 ) );
+        resizeJSlider.setMajorTickSpacing( 4 );
+        resizeJSlider.setMinorTickSpacing( 2 );
         resizeJSlider.setPaintTicks( true );
         resizeJSlider.setPaintLabels( false );
         titleJPanel.add( resizeJSlider );
@@ -281,8 +281,10 @@ public class ThumbnailJScrollPane extends JScrollPane implements RelayoutListene
         resizeJSlider.addChangeListener( new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
                 JSlider source = (JSlider)e.getSource();
-                if ( ! source.getValueIsAdjusting() ) {
-                    thumbnailSizeFactor = 1 / (float) source.getValue();
+                //if ( ! source.getValueIsAdjusting() ) {
+                    //thumbnailSizeFactor = 1 / (float) source.getValue();
+                    thumbnailSizeFactor = (float) source.getValue() / THUMBNAILSIZE_MAX;
+
                     Tools.log("resizeJSlider.addChangeListener: New Value: " + Float.toString( thumbnailSizeFactor ) );
                     thumbnailLayout.setThumbnailWidth( (int) (350 * thumbnailSizeFactor) );
                     for ( int i=0;  i < Settings.maxThumbnails; i++ ) {
@@ -290,7 +292,7 @@ public class ThumbnailJScrollPane extends JScrollPane implements RelayoutListene
                         thumbnailDescriptionJPanels[i].setFactor( thumbnailSizeFactor );
                     }
                     thumbnailLayout.layoutContainer( ThumbnailPane );
-                }
+                //}
             }
         } );
         

@@ -1,20 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project basedir=".." name="Java Picture Organizer-IDE">
     <!-- TODO: edit the following target according to your needs -->
-    <!-- (more info: http://www.netbeans.org/kb/55/freeform-config.html#compilesingle) -->
+    <!-- (more info: http://www.netbeans.org/kb/articles/freeform-config.html#compilesingle) -->
+    <target name="run-selected-file-in-java">
+        <fail unless="run.class">Must set property 'run.class'</fail>
+        <ant antfile="build.xml" inheritall="false" target="compile"/>
+        <java classname="${run.class}" failonerror="true" fork="true">
+            <classpath>
+                <pathelement path="libs/activation.jar:libs/jnlp.jar:libs/mail.jar:libs/metadata-extractor-2.3.0.jar:libs/jh.jar:libs/jwizz-0.1.4.jar:libs/poi-3.1-FINAL-20080629.jar:libs/poi-contrib-3.1-FINAL-20080629.jar:libs/poi-scratchpad-3.1-FINAL-20080629.jar"/>
+                <pathelement location="build/classes/"/>
+            </classpath>
+        </java>
+    </target>
+    <!-- TODO: edit the following target according to your needs -->
+    <!-- (more info: http://www.netbeans.org/kb/articles/freeform-config.html#compilesingle) -->
     <target name="compile-selected-files-in-java">
         <fail unless="files">Must set property 'files'</fail>
-        <!-- TODO decide on and define some value for ${build.classes.dir} -->
-        <mkdir dir="${build.classes.dir}"/>
-        <javac destdir="${build.classes.dir}" includes="${files}" source="1.5" srcdir="src/java">
-            <classpath path="libs/activation.jar:libs/jnlp.jar:libs/mail.jar:libs/metadata-extractor-2.3.0.jar"/>
+        <mkdir dir="build/classes/"/>
+        <javac destdir="build/classes/" includes="${files}" source="1.5" srcdir="src/java">
+            <classpath path="libs/activation.jar:libs/jnlp.jar:libs/mail.jar:libs/metadata-extractor-2.3.0.jar:libs/jh.jar:libs/jwizz-0.1.4.jar:libs/poi-3.1-FINAL-20080629.jar:libs/poi-contrib-3.1-FINAL-20080629.jar:libs/poi-scratchpad-3.1-FINAL-20080629.jar"/>
         </javac>
     </target>
-    
-      <target name="run-selected-file" depends="compile-selected-files-in-java" description="Run Single File">
-      <fail unless="runclass">Must set property 'classname'</fail>
-      <java classname="${runclass}">
-         <classpath refid="run.classpath"/>
-      </java>
-   </target>
 </project>

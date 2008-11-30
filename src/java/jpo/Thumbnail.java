@@ -1,28 +1,24 @@
 package jpo;
 
-import java.util.*;
 import java.io.*;
 import java.net.*;
-import java.awt.*;
 import javax.swing.*;
 import javax.swing.tree.*;
 
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.dnd.*;
-import java.awt.datatransfer.*;
 import javax.swing.event.*;
 import javax.swing.border.*;
 
 import java.awt.image.*;
 import java.awt.geom.*;
-import javax.imageio.*;
 import java.awt.Dimension;
 
 /*
 Thumbnail.java:  class that displays a visual respresentation of the specified node
 
-Copyright (C) 2002-2007  Richard Eigenmann.
+Copyright (C) 2002-2008  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -401,6 +397,7 @@ public class Thumbnail extends JComponent
 
 	/**
 	 *  This method sets the scaling factor for the display of a thumbnail.
+     *  0 .. 1
 	 */
 	public void setFactor( float thumbnailSizeFactor ) {
 		//Tools.log("Thumbnail.setFactor: " + Float.toString( thumbnailSizeFactor ) );

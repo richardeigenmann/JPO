@@ -3,28 +3,14 @@ package jpo;
 import java.util.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.*;
-import javax.swing.filechooser.*;
 import java.io.*;
-import javax.swing.colorchooser.*;
 import javax.swing.event.*;
+import org.apache.poi.hslf.usermodel.*;
+import org.apache.poi.hslf.model.*;
 
-/*
-HtmlDistillerJFrame.java: GUI for the HTML Distiller
-Copyright (C) 2002-2008  Richard Eigenmann.
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or any later version. This program is distributed 
-in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
-without even the implied warranty of MERCHANTABILITY or FITNESS 
-FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
-more details. You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-The license is in gpl.txt.
-See http://www.gnu.org/copyleft/gpl.html for the details.
- */
 /**
  * A GUI for the HtmlDistiller which then populates an HtmlDistillerOptions object 
  * and then fires of the HtmlDistillerThread.
@@ -384,11 +370,26 @@ public class HtmlDistillerJFrame extends JFrame {
             }
         } );
 
+        //JButton pptJButton = new JButton( Settings.jpoResources.getString( "genericCancelText" ) );
+        JButton pptJButton = new JButton( "Experiment PPT" );
+        pptJButton.setPreferredSize( Settings.defaultButtonDimension );
+        pptJButton.setMinimumSize( Settings.defaultButtonDimension );
+        pptJButton.setMaximumSize( Settings.defaultButtonDimension );
+        pptJButton.setBorder( BorderFactory.createRaisedBevelBorder() );
+        pptJButton.addActionListener( new ActionListener() {
+
+            public void actionPerformed( ActionEvent e ) {
+                exportToPpt();
+            }
+        } );
+
+
 
         JPanel buttonJPanel = new JPanel();
         buttonJPanel.setLayout( new FlowLayout() );
         buttonJPanel.add( okJButton );
         buttonJPanel.add( cancelJButton );
+        buttonJPanel.add( pptJButton );
         constraints.gridx = 0;
         constraints.gridy++;
         constraints.gridwidth = 3;
@@ -478,6 +479,76 @@ public class HtmlDistillerJFrame extends JFrame {
         storeSettings();
 
         HtmlDistillerThread h = new HtmlDistillerThread( options );
+    }
+
+    /**
+     *  This method tries to creates the target directory (or fails with errors) 
+     *  and then fires off the HtmlDistiller thread.
+     */
+    private void exportToPpt() {
+        File pptFile = new File( targetDirJTextField.getText() );
+        try {
+            SlideShow ppt = new SlideShow();
+
+            Enumeration e = options.getStartNode().postorderEnumeration();
+            while ( e.hasMoreElements() ) {
+                Slide s = ppt.createSlide();
+
+                Object o = ( (SortableDefaultMutableTreeNode) e.nextElement() ).getUserObject();
+                if ( o instanceof GroupInfo ) {
+                    GroupInfo gi = (GroupInfo) o;
+                    TextBox txt = new TextBox();
+                    txt.setText( gi.getGroupName() );
+                    txt.setAnchor( new java.awt.Rectangle( 300, 100, 300, 50 ) );
+
+                    //use RichTextRun to work with the text format
+                    RichTextRun rt = txt.getTextRun().getRichTextRuns()[0];
+                    rt.setFontSize( 32 );
+                    rt.setFontName( "Arial" );
+                    rt.setBold( true );
+                    rt.setItalic( true );
+                    rt.setUnderlined( true );
+                    rt.setFontColor( Color.red );
+                    rt.setAlignment( TextBox.AlignRight );
+
+                    s.addShape( txt );
+                } else if ( o instanceof PictureInfo ) {
+                    PictureInfo pi = (PictureInfo) o;
+
+                    // add a new picture to this slideshow and insert it in a  new slide
+                    int idx = ppt.addPicture( pi.getLowresFile(), Picture.JPEG );
+                    Picture pict = new Picture( idx );
+                    //set image position in the slide
+                    pict.setAnchor( new java.awt.Rectangle( 100, 100, 300, 200 ) );
+                    s.addShape( pict );
+
+                    TextBox txt = new TextBox();
+                    txt.setText( pi.getDescription() );
+                    txt.setAnchor( new java.awt.Rectangle( 300, 100, 300, 50 ) );
+
+                    //use RichTextRun to work with the text format
+                    RichTextRun rt = txt.getTextRun().getRichTextRuns()[0];
+                    rt.setFontSize( 32 );
+                    rt.setFontName( "Arial" );
+                    rt.setBold( true );
+                    rt.setItalic( true );
+                    rt.setUnderlined( true );
+                    rt.setFontColor( Color.blue );
+                    rt.setAlignment( TextBox.AlignRight );
+                    s.addShape( txt );
+
+                }
+
+            }
+
+            FileOutputStream out = new FileOutputStream( pptFile );
+            ppt.write( out );
+            out.close();
+        } catch ( IOException ex ) {
+            Logger.getLogger( HtmlDistillerJFrame.class.getName() ).log( Level.SEVERE, null, ex );
+        }
+
+        getRid();
     }
 
     /**
