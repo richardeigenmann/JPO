@@ -396,6 +396,7 @@ public class CollectionJTreeController
      */
     public void requestAddGroup() {
         SortableDefaultMutableTreeNode newNode = popupNode.addGroupNode( "New Group" );
+        Settings.memorizeGroupOfDropLocation( newNode );
         setSelectedNode( newNode );
     }
 

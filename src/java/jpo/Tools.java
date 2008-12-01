@@ -149,7 +149,6 @@ public class Tools {
                 Tools.log( "Tools.countfiles: got a SecurityException on file: " + fileEntry.toString() + " \n" + x.getMessage() );
             }
         }
-
         return numFiles;
     }
 

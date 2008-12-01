@@ -1219,7 +1219,7 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
      *  @param newPictures  A Collection framework of the new picture Files
      *  @param targetDir    The target directory for the copy operation
      *  @param copyMode     Set to true if you want to copy, false if you want to move the pictures.
-     *  @param progressBar   The optional progressBar that should be updated.
+     *  @param progressBar   The optional progressBar that should be incremented.
      *
      */
     public void copyAddPictures( Collection<File> newPictures, File targetDir, boolean copyMode, JProgressBar progressBar ) {
@@ -1242,8 +1242,7 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
     
     
     /**
-     *   Loads the collection indicated by the File at the
-     *   specified node.
+     *   Loads the collection indicated by the File at the "this" node
      *
      *   @param  fileToLoad		The File object that is to be loaded.
      */
@@ -1261,8 +1260,7 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
     
     
     /**
-     *   Loads the collection indicated by the File at the
-     *   specified node.
+     *   Loads the collection indicated by the Input stream at the "this" node.
      *
      *   @param  is	The inputstream that is to be loaded.
      */
