@@ -1,0 +1,19 @@
+body {
+    background-color: #ffffff;
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+    color: #000;
+}
+h2   {
+    color: #000;
+    text-align: center;
+}
+table {
+    margin-left:auto;
+    margin-right:auto;
+}
+img {
+    border-style: none
+}
+.sidepanel {
+    max-width: 180px
+}

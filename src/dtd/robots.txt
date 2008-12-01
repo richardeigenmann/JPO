@@ -1,0 +1,4 @@
+# Forbids Search Engine Robots to index the website
+
+User-agent: *
+Disallow: /
