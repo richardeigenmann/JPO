@@ -189,9 +189,11 @@ public class JpoResources_de extends ListResourceBundle {
 
 
 		// HtmlDistillerJFrame
-		{"HtmlDistillerJFrameHeading", "Export nach HTML"},
+		{"HtmlDistillerJFrameHeading", "Webseite Generieren"},
 		{"HtmlDistillerThreadTitle", "Extraktion nach HTML"}, 
 		{"HtmlDistillerChooserTitle", "Zielverzeichnis für HTML"},
+        { "HtmlDistTarget", "Ziel"},
+        { "HtmlDistThumbnails", "Übersichtsbilder"},
 		{"exportHighresJCheckBox", "Originalbilder exportieren"},
 		{"linkToHighresJCheckBox", "Link auf Originalbilder im aktuellen Verzeichnis erstellen"},
 		{"generateDHTMLJCheckBox", "DHTML mouseover Effekte generieren"},
@@ -202,23 +204,29 @@ public class JpoResources_de extends ListResourceBundle {
 		{"htmlDistIsDirError", "Das ist kein Verzeichnis!"},
 		{"htmlDistCanWriteError", "Dies ist kein Beschreibbares Verzeichnis!"},
 		{"htmlDistIsNotEmptyWarning", "Das Zielverzeichnis ist nicht leer.\nBestätigen sie, dass JPO fortfahren soll und allenfalls Dateien berschreibt."},
+        { "HtmlDistMidres", "Mittelgrosse Bilder"},
+        { "HtmlDistMidresHtml", "Navigationsseite generieren"},
 		{"midresSizeJLabel", "Grösse mittlere Auflösung"},
 		{"midreaJpgQualitySlider", "Midres Jpg Qualität"},
 		{"lowresJpgQualitySlider", "Lowres Jpg Qualität"},
 		{"jpgQualityBad", "Gering"},
 		{"jpgQualityGood", "Gut"},
 		{"jpgQualityBest", "Beste"},
+        { "HtmlDistHighres", "Originalbilder"},
+        { "HtmlDistOptions", "Optionen"},  
 		{"HtmlDistillerPreviewFont", "SansSerif-BOLD-18"},
 		{"HtmlDistillerNumbering", "Bilder benennen"},
 		{"hashcodeRadioButton",  "nach Java Hash Code" },
 		{"originalNameRadioButton", "nach Originalnamen" },
 		{"sequentialRadioButton",  "sequentielle Nummer" },
+        { "sequentialRadioButtonStart", "Start bei" }, 
+        { "generateRobotsJCheckBox", "Indexierung durch Suchmaschinen verbieten (robots.txt schreiben)" },
 
 		
 		// HtmlDistillerThread
 		{"LinkToJpo", "Mit <A HREF=\"http://j-po.sourceforge.net\">JPO</A> erstellt"},
 		{"htmlDistillerInterrupt", "saubere Unterbrechung"},
-		{"CssCopyError", "Konnte das Stylesheet jpo.css nicht kopieren\n"},
+		{"CssCopyError", "Fehler beim schreiben von: "},
 			
 
 		// ReconcileJFrame
@@ -320,7 +328,7 @@ public class JpoResources_de extends ListResourceBundle {
 		{"sortByCommentJMenuItem", "Kommentar"},
 		{"sortByPhotographerJMenuItem", "Photograph"},
 		{"sortByCopyrightHolderTimeJMenuItem", "Copyright"},
-		{"groupExportHtmlMenuText", "Export nach HTML"},
+		{"groupExportHtmlMenuText", "Generate Website"},
 		{"groupExportFlatFileMenuText", "Export in Einfache Datei"},
 		{"groupExportJarMenuText", "Export in Jar Archive"},
 		

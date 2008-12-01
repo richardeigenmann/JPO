@@ -13,7 +13,7 @@ import javax.swing.JTextArea;
 /*
 LicenseWindow.java:  Creates the License window
  
-Copyright (C) 2007 Richard Eigenmann, Zürich, Switzerland
+Copyright (C) 2007-2008 Richard Eigenmann, Zürich, Switzerland
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -55,6 +55,8 @@ public class LicenseWindow {
             while ( ( textLine = bin.readLine() ) != null ) {
                 sb += textLine + "\n";
             }
+            bin.close();
+            in.close();
         } catch (IOException e) {
             Tools.log( "Jpo.java: Error while reading gpl.txt: " + e.getMessage() );
         }

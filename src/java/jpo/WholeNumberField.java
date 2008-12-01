@@ -3,10 +3,8 @@ package jpo;
 import javax.swing.*; 
 import javax.swing.text.*; 
 
-import java.awt.Toolkit;
 import java.text.NumberFormat;
 import java.text.ParseException;
-import java.util.Locale;
 
 
 /*
@@ -15,7 +13,7 @@ since I lifted this code from their Java Swing Tutorial. Richard Eigenmann Febru
 
 WholeNumberField.java:  a textfield that allows only entry of proper numbers
 
-Copyright (C) 2002  Richard Eigenmann (for the modifications over the original I copied)
+Copyright (C) 2002-2008  Richard Eigenmann (for the modifications over the original I copied)
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -34,10 +32,6 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  *  a clever JTextField that allows only numbers to be captured
  */
 public class WholeNumberField extends JTextField {
-	/**
-	 *  used to do a beep()
-	 */
-	//private Toolkit toolkit = Toolkit.getDefaultToolkit();
 	
 	/**
 	 *  not quite sure what this is for.
@@ -116,6 +110,7 @@ public class WholeNumberField extends JTextField {
 	/**
 	 *  part of the inner workings
 	 */
+    @Override
 	protected Document createDefaultModel() {
 		return new WholeNumberDocument();
 	}

@@ -192,9 +192,11 @@ public class JpoResources_zh_TW extends ListResourceBundle {
 
 
 		// HtmlDistillerJFrame
-		{"HtmlDistillerJFrameHeading", "以HTML格式導出"},
+		{"HtmlDistillerJFrameHeading", "以HTML格式導出"}, // ToDo: change to Generate Website
 		{"HtmlDistillerThreadTitle", "導出成HTML"}, 
 		{"HtmlDistillerChooserTitle", "選擇保存HTML文件夾位置"},
+		{ "HtmlDistTarget", "Target"}, //new
+		{ "HtmlDistThumbnails", "Thumbnails"},  //new
 		{"exportHighresJCheckBox", "導出清晰圖片"},
 		{"linkToHighresJCheckBox", "使用當前位置鏈接到清晰圖片"},
 		{"generateDHTMLJCheckBox", "生成DHTML鼠標移動效果"},
@@ -205,21 +207,28 @@ public class JpoResources_zh_TW extends ListResourceBundle {
 		{"htmlDistIsDirError", "這不是一個文件夾！"},
 		{"htmlDistCanWriteError", "這不是一個可寫的文件夾"},
 		{"htmlDistIsNotEmptyWarning", "目標文件夾不為空\n點确認將繼續操作但可能覆蓋已有的文件。"},
+		{ "HtmlDistMidres", "Medium size images"},  //new
+		{ "HtmlDistMidresHtml", "Generate navigation pages"},  //new
 		{"midresSizeJLabel", "清晰度滑尺"},
 		{"midresJpgQualitySlider", "Jpg清晰度"},
 		{"lowresJpgQualitySlider", "低清晰度Jpg"},
 		{"jpgQualityBad", "低分辨率"},
 		{"jpgQualityGood", "一般分辨率"},
 		{"jpgQualityBest", "高清晰"},
-		// HtmlDistillerThread
-		{"LinkToJpo", "制作工具：<A HREF=http://j-po.sourceforge.net\">JPO</A>"},
-		{"htmlDistillerInterrupt", "操作已被停止"},
-		{"CssCopyError", "不能拷貝樣式文件jpo.css\n"},
-		{"HtmlDistillerPreviewFont", ""},
+		{ "HtmlDistHighres", "High resolution originals"},  //new
+		{ "HtmlDistOptions", "Options"},  //new
 		{"HtmlDistillerNumbering", "Create Image Filenames"},
 		{"hashcodeRadioButton",  "using Java Hash Code" },
 		{"originalNameRadioButton", "using original image name" },
 		{"sequentialRadioButton",  "using sequential number" },
+		{ "sequentialRadioButtonStart", "Starting at" }, //new
+		{ "generateRobotsJCheckBox", "Prevent search engines from indexing (write robots.txt)" }, //new
+
+		// HtmlDistillerThread
+		{"LinkToJpo", "制作工具：<A HREF=http://j-po.sourceforge.net\">JPO</A>"},
+		{"htmlDistillerInterrupt", "操作已被停止"},
+		{"CssCopyError", "不能拷貝樣式文件: "},
+		{"HtmlDistillerPreviewFont", ""},
 
 				
 
@@ -322,7 +331,7 @@ public class JpoResources_zh_TW extends ListResourceBundle {
 		{"sortByCommentJMenuItem", "描述"},
 		{"sortByPhotographerJMenuItem", "攝影作者"},
 		{"sortByCopyrightHolderTimeJMenuItem", "版權"},
-		{"groupExportHtmlMenuText", "導出成HTML"},
+		{"groupExportHtmlMenuText", "導出成HTML"}, // ToDo: Change to "Generate Website"
 		{"groupExportFlatFileMenuText", "導出成無格式文件"},
 		{"groupExportJarMenuText", "導出成Jar壓縮包"},
 		

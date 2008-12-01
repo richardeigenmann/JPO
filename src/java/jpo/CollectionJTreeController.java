@@ -1,5 +1,6 @@
 package jpo;
 
+import jpo.export.HtmlDistillerJFrame;
 import java.awt.*;
 import java.awt.dnd.*;
 
