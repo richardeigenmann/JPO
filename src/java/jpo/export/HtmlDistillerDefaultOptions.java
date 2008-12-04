@@ -37,13 +37,24 @@ public class HtmlDistillerDefaultOptions extends HtmlDistillerOptions {
         setFolderIconRequired( false );
         setDownloadZipFileName( "download.zip" );
         setCellspacing( 10 );
-        setHtmlDirectory( new File( Settings.getMostRecentCopyLocation().toString() ) );
+        setTargetDirectory( new File( Settings.getMostRecentCopyLocation().toString() ) );
         setPicsPerRow( Settings.defaultHtmlPicsPerRow );
         setThumbnailWidth( Settings.defaultHtmlThumbnailWidth );
         setThumbnailHeight( Settings.defaultHtmlThumbnailHeight );
+        setLowresJpgQuality( Settings.defaultHtmlLowresQuality );
         setMidresWidth( Settings.defaultHtmlMidresWidth );
         setMidresHeight( Settings.defaultHtmlMidresHeight );
+        setMidresJpgQuality( Settings.defaultHtmlMidresQuality );
         setGenerateMidresHtml( Settings.defaultGenerateMidresHtml );
+        setGenerateDHTML( Settings.defaultGenerateDHTML );
+        setGenerateZipfile( Settings.defaultGenerateZipfile );
+        setLinkToHighres( Settings.defaultLinkToHighres );
+        setExportHighres( Settings.defaultExportHighres );
+        setPictureNaming( Settings.defaultHtmlPictureNaming );
+
         setWriteRobotsTxt( Settings.writeRobotsTxt );
+        setBackgroundColor( Settings.htmlBackgroundColor );
+        setFontColor( Settings.htmlFontColor );
+
     }
 }

@@ -9,6 +9,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JFrame;
 import java.util.prefs.Preferences;
 import javax.swing.filechooser.FileSystemView;
+import jpo.export.HtmlDistillerOptions;
 
 
 /*
@@ -327,23 +328,43 @@ public class Settings {
     /**
      *  The default width for pictures for the Html export overview
      */
-    public static int defaultHtmlThumbnailWidth = 150;
+    public static int defaultHtmlThumbnailWidth = 300;
     /**
      *  The default height for pictures for the Html export overview
      */
-    public static int defaultHtmlThumbnailHeight = 100;
+    public static int defaultHtmlThumbnailHeight = 300;
     /**
      *  Whether to generate the midres html pages or not
      */
     public static boolean defaultGenerateMidresHtml = true;
     /**
+     *  Whether to generate DHTML effects or not
+     */
+    public static boolean defaultGenerateDHTML = true;
+    /**
+     *  Whether to generate a zip file with the highres pictures
+     */
+    public static boolean defaultGenerateZipfile = false;
+    /**
+     *  Whether to generate a link to highre pictures at the current location or not
+     */
+    public static boolean defaultLinkToHighres = false;
+    /**
+     *  Whether to export the Highres pictures or not
+     */
+    public static boolean defaultExportHighres = false;
+    /**
      *  The default midres width for pictures for the Html export
      */
-    public static int defaultHtmlMidresWidth = 450;
+    public static int defaultHtmlMidresWidth = 700;
     /**
      *  The default midres height for pictures for the Html export
      */
-    public static int defaultHtmlMidresHeight = 450;
+    public static int defaultHtmlMidresHeight = 700;
+    /**
+     * Picture nameing convention on HTML output
+     */
+    public static int defaultHtmlPictureNaming = HtmlDistillerOptions.PICTURE_NAMING_BY_HASH_CODE;
     /**
      *   The default color for the background on the web page is white.
      */
@@ -353,16 +374,20 @@ public class Settings {
      */
     public static Color htmlFontColor = Color.BLACK;
     /**
-     *  The default size for pictures for the Html export
+     *  The default quality for Thumbnail pictures for the Html export
      */
-    public static float defaultJpgQuality = 0.8f;
+    public static float defaultHtmlLowresQuality = 0.8f;
     /**
-     *  true when thumbnails are supposed to scale fast
+     *  The default quality for Midres pictures for the Html export
      */
+    public static float defaultHtmlMidresQuality = 0.8f;
     /**
      * Whether to write the robots.txt on the generate webpage
      */
     public static boolean writeRobotsTxt = false;
+    /**
+     *  true when thumbnails are supposed to scale fast
+     */
     public static boolean thumbnailFastScale = true;
     /**
      *  true when the pictureViewer is supposed to scale fast
@@ -584,9 +609,15 @@ public class Settings {
         defaultHtmlThumbnailWidth = prefs.getInt( "defaultHtmlThumbnailWidth", defaultHtmlThumbnailWidth );
         defaultHtmlThumbnailHeight = prefs.getInt( "defaultHtmlThumbnailHeight", defaultHtmlThumbnailHeight );
         defaultGenerateMidresHtml = prefs.getBoolean( "defaultGenerateMidresHtml", defaultGenerateMidresHtml );
+        defaultHtmlPictureNaming = prefs.getInt( "defaultHtmlPictureNaming", defaultHtmlPictureNaming );
+        defaultGenerateDHTML = prefs.getBoolean( "defaultGenerateDHTML", defaultGenerateDHTML );
+        defaultGenerateZipfile = prefs.getBoolean( "defaultGenerateZipfile", defaultGenerateZipfile );
+        defaultLinkToHighres = prefs.getBoolean( "defaultLinkToHighres", defaultLinkToHighres );
+        defaultExportHighres = prefs.getBoolean( "defaultExportHighres", defaultExportHighres );
         defaultHtmlMidresWidth = prefs.getInt( "defaultHtmlMidresWidth", defaultHtmlMidresWidth );
         defaultHtmlMidresHeight = prefs.getInt( "defaultHtmlMidresHeight", defaultHtmlMidresHeight );
-        defaultJpgQuality = prefs.getFloat( "defaultJpgQuality", defaultJpgQuality );
+        defaultHtmlLowresQuality = prefs.getFloat( "defaultHtmlLowresQuality", defaultHtmlLowresQuality );
+        defaultHtmlMidresQuality = prefs.getFloat( "defaultHtmlMidresQuality", defaultHtmlMidresQuality );
         writeRobotsTxt = prefs.getBoolean( "writeRobotsTxt", writeRobotsTxt );
         thumbnailFastScale = prefs.getBoolean( "thumbnailFastScale", thumbnailFastScale );
         pictureViewerFastScale = prefs.getBoolean( "pictureViewerFastScale", pictureViewerFastScale );
@@ -744,9 +775,15 @@ public class Settings {
         prefs.putInt( "defaultHtmlThumbnailWidth", defaultHtmlThumbnailWidth );
         prefs.putInt( "defaultHtmlThumbnailHeight", defaultHtmlThumbnailHeight );
         prefs.putBoolean( "defaultGenerateMidresHtml", defaultGenerateMidresHtml );
+        prefs.putInt( "defaultHtmlPictureNaming", defaultHtmlPictureNaming );
+        prefs.putBoolean( "defaultGenerateDHTML", defaultGenerateDHTML );
+        prefs.putBoolean( "defaultGenerateZipfile", defaultGenerateZipfile );
+        prefs.putBoolean( "defaultLinkToHighres", defaultLinkToHighres );
+        prefs.putBoolean( "defaultExportHighres", defaultExportHighres );
         prefs.putInt( "defaultHtmlMidresWidth", defaultHtmlMidresWidth );
         prefs.putInt( "defaultHtmlMidresHeight", defaultHtmlMidresHeight );
-        prefs.putFloat( "defaultJpgQuality", defaultJpgQuality );
+        prefs.putFloat( "defaultHtmlLowresQuality", defaultHtmlLowresQuality );
+        prefs.putFloat( "defaultHtmlMidresQuality", defaultHtmlMidresQuality );
         prefs.putBoolean( "writeRobotsTxt", writeRobotsTxt );
         prefs.putBoolean( "thumbnailFastScale", thumbnailFastScale );
         prefs.putBoolean( "pictureViewerFastScale", pictureViewerFastScale );

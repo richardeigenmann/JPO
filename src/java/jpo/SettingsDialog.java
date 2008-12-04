@@ -187,9 +187,10 @@ public class SettingsDialog extends JDialog {
     
     /**
      *  slider that allows the quality of the jpg's to be specified
+     * Should this really be the same as the HTLM Quality Field?
      */
     private JSlider jpgQualityJSlider = new JSlider(JSlider.HORIZONTAL,
-            0, 100, (int) (Settings.defaultJpgQuality * 100));
+            0, 100, (int) (Settings.defaultHtmlLowresQuality * 100));
     
     /**
      *  tickbox that indicates whether to scale the thumbnails quickly
@@ -866,7 +867,7 @@ public class SettingsDialog extends JDialog {
         maxThumbnails.setValue( Settings.maxThumbnails );
         thumbnailSize.setValue( Settings.thumbnailSize );
         keepThumbnailsJCheckBox.setSelected( Settings.keepThumbnails );
-        jpgQualityJSlider.setValue( (int) (Settings.defaultJpgQuality * 100) );
+        jpgQualityJSlider.setValue( (int) (Settings.defaultHtmlLowresQuality * 100) );
         thumbnailFastScaleJCheckBox.setSelected( Settings.thumbnailFastScale );
         
         userFunction1NameJTextField.setText( Settings.userFunctionNames[0] );
@@ -986,7 +987,7 @@ public class SettingsDialog extends JDialog {
         
         Settings.maxThumbnails = maxThumbnails.getValue();
         Settings.thumbnailSize = thumbnailSize.getValue();
-        Settings.defaultJpgQuality = ((float) jpgQualityJSlider.getValue()) / 100 ;
+        Settings.defaultHtmlLowresQuality = ((float) jpgQualityJSlider.getValue()) / 100 ;
         Settings.thumbnailFastScale = thumbnailFastScaleJCheckBox.isSelected();
         
         Settings.userFunctionNames[0] = userFunction1NameJTextField.getText();

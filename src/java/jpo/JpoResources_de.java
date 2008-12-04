@@ -199,7 +199,7 @@ public class JpoResources_de extends ListResourceBundle {
 		{"generateDHTMLJCheckBox", "DHTML mouseover Effekte generieren"},
 		{"generateZipfileJCheckBox", "Zipfile für Download der hoch auflösenden Bilder generieren"},
 		{"picsPerRowText", "Spalten"},
-		{"thubnailSizeJLabel", "Grösse der Verkleinerungen"},
+		{"thubnailSizeJLabel", "Grösse: "},
 		{"htmlDistCrtDirError", "Konnte das Export Verzeichnis nicht generieren!"},
 		{"htmlDistIsDirError", "Das ist kein Verzeichnis!"},
 		{"htmlDistCanWriteError", "Dies ist kein Beschreibbares Verzeichnis!"},
@@ -207,7 +207,7 @@ public class JpoResources_de extends ListResourceBundle {
         { "HtmlDistMidres", "Mittelgrosse Bilder"},
         { "HtmlDistMidresHtml", "Navigationsseite generieren"},
 		{"midresSizeJLabel", "Grösse mittlere Auflösung"},
-		{"midreaJpgQualitySlider", "Midres Jpg Qualität"},
+		{"midresJpgQualitySlider", "Midres Jpg Qualität"},
 		{"lowresJpgQualitySlider", "Lowres Jpg Qualität"},
 		{"jpgQualityBad", "Gering"},
 		{"jpgQualityGood", "Gut"},
@@ -220,7 +220,13 @@ public class JpoResources_de extends ListResourceBundle {
 		{"originalNameRadioButton", "nach Originalnamen" },
 		{"sequentialRadioButton",  "sequentielle Nummer" },
         { "sequentialRadioButtonStart", "Start bei" }, 
-        { "generateRobotsJCheckBox", "Indexierung durch Suchmaschinen verbieten (robots.txt schreiben)" },
+        { "generateRobotsJCheckBox", "Indexierung durch Suchmaschinen\nverbieten (robots.txt schreiben)" },
+        { "welcomeTitle", "Wilkommen"},
+        { "generate1", "Webseite mit "}, 
+        { "generate2", " Bildern erstellen"}, 
+        { "generateFrom", "Von: "}, 
+        { "summary", "Zusammenfassung"}, 
+        { "check", "Prüfen"}, 
 
 		
 		// HtmlDistillerThread

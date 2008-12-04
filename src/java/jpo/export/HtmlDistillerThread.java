@@ -144,7 +144,7 @@ public class HtmlDistillerThread extends Thread {
         // create zip
         try {
             if ( options.isGenerateZipfile() ) {
-                FileOutputStream dest = new FileOutputStream( new File( options.getHtmlDirectory(), options.getDownloadZipFileName() ) );
+                FileOutputStream dest = new FileOutputStream( new File( options.getTargetDirectory(), options.getDownloadZipFileName() ) );
                 zipFile = new ZipOutputStream( new BufferedOutputStream( dest ) );
             }
         } catch ( IOException x ) {
@@ -172,7 +172,7 @@ public class HtmlDistillerThread extends Thread {
         if ( folderIconRequired ) {
             try {
                 InputStream inStream = Settings.cl.getResource( "jpo/images/icon_folder.gif" ).openStream();
-                FileOutputStream outStream = new FileOutputStream( new File( options.getHtmlDirectory(), "jpo_folder_icon.gif" ) );
+                FileOutputStream outStream = new FileOutputStream( new File( options.getTargetDirectory(), "jpo_folder_icon.gif" ) );
 
                 BufferedInputStream bin = new BufferedInputStream( inStream );
                 BufferedOutputStream bout = new BufferedOutputStream( outStream );
@@ -224,10 +224,10 @@ public class HtmlDistillerThread extends Thread {
 
             File groupFile;
             if ( groupNode.equals( options.getStartNode() ) ) {
-                groupFile = new File( options.getHtmlDirectory(), "index.htm" );
+                groupFile = new File( options.getTargetDirectory(), "index.htm" );
             } else {
                 int hashCode = groupNode.hashCode();
-                groupFile = new File( options.getHtmlDirectory(), "jpo_" + Integer.toString( hashCode ) + ".htm" );
+                groupFile = new File( options.getTargetDirectory(), "jpo_" + Integer.toString( hashCode ) + ".htm" );
             }
             BufferedWriter out = new BufferedWriter( new FileWriter( groupFile ) );
             DescriptionsBuffer descriptionsBuffer = new DescriptionsBuffer( options.getPicsPerRow(), out );
@@ -364,9 +364,9 @@ public class HtmlDistillerThread extends Thread {
         switch ( options.getPictureNaming() ) {
             case HtmlDistillerOptions.PICTURE_NAMING_BY_ORIGINAL_NAME:
                 String rootName = Tools.getFilenameRoot( p.getHighresFilename() );
-                lowresFile = new File( options.getHtmlDirectory(), rootName + "_l." + extension );
-                midresFile = new File( options.getHtmlDirectory(), rootName + "_m." + extension );
-                highresFile = new File( options.getHtmlDirectory(), rootName + "_h." + extension );
+                lowresFile = new File( options.getTargetDirectory(), rootName + "_l." + extension );
+                midresFile = new File( options.getTargetDirectory(), rootName + "_m." + extension );
+                highresFile = new File( options.getTargetDirectory(), rootName + "_h." + extension );
                 midresHtmlFileName = rootName + ".htm";
                 break;
             case HtmlDistillerOptions.PICTURE_NAMING_BY_SEQUENTIAL_NUMBER:
@@ -374,16 +374,16 @@ public class HtmlDistillerThread extends Thread {
                 String padding = "00000";
                 String formattedNumber = padding.substring( convertedNumber.length() ) + convertedNumber;
                 String root = "jpo_" + formattedNumber;
-                lowresFile = new File( options.getHtmlDirectory(), root + "_l." + extension );
-                midresFile = new File( options.getHtmlDirectory(), root + "_m." + extension );
-                highresFile = new File( options.getHtmlDirectory(), root + "_h." + extension );
+                lowresFile = new File( options.getTargetDirectory(), root + "_l." + extension );
+                midresFile = new File( options.getTargetDirectory(), root + "_m." + extension );
+                highresFile = new File( options.getTargetDirectory(), root + "_h." + extension );
                 midresHtmlFileName = "jpo_" + formattedNumber + ".htm";
                 break;
             default:  //case HtmlDistillerOptions.PICTURE_NAMING_BY_HASH_CODE:
                 String fn = "jpo_" + Integer.toString( n.hashCode() );
-                lowresFile = new File( options.getHtmlDirectory(), fn + "_l." + extension );
-                midresFile = new File( options.getHtmlDirectory(), fn + "_m." + extension );
-                highresFile = new File( options.getHtmlDirectory(), fn + "_h." + extension );
+                lowresFile = new File( options.getTargetDirectory(), fn + "_l." + extension );
+                midresFile = new File( options.getTargetDirectory(), fn + "_m." + extension );
+                highresFile = new File( options.getTargetDirectory(), fn + "_h." + extension );
                 midresHtmlFileName = fn + ".htm";
                 break;
         }
@@ -509,7 +509,7 @@ public class HtmlDistillerThread extends Thread {
 
         if ( options.isGenerateMidresHtml() ) {
 
-            File midresHtmlFile = new File( options.getHtmlDirectory(), midresHtmlFileName );
+            File midresHtmlFile = new File( options.getTargetDirectory(), midresHtmlFileName );
             BufferedWriter midresHtmlWriter = new BufferedWriter( new FileWriter( midresHtmlFile ) );
             String groupDescription =
                     ( (SortableDefaultMutableTreeNode) n.getParent() ).getUserObject().toString();
@@ -916,7 +916,7 @@ public class HtmlDistillerThread extends Thread {
      *  which is handled in the build file.
      */
     public void writeStylesheet() {
-        copyFromJarToFile( "jpo.css", options.getHtmlDirectory(), "jpo.css" );
+        copyFromJarToFile( "jpo.css", options.getTargetDirectory(), "jpo.css" );
     }
 
     /**
@@ -924,14 +924,14 @@ public class HtmlDistillerThread extends Thread {
      * engines indexing the data.
      */
     public void writeRobotsTxt() {
-        copyFromJarToFile( "robots.txt", options.getHtmlDirectory(), "robots.txt" );
+        copyFromJarToFile( "robots.txt", options.getTargetDirectory(), "robots.txt" );
     }
 
     /**
      * Writes the file jpo.js for the DHTML effects
      */
     public void writeJs() {
-        copyFromJarToFile( "jpo.js", options.getHtmlDirectory(), "jpo.js" );
+        copyFromJarToFile( "jpo.js", options.getTargetDirectory(), "jpo.js" );
     }
 
     /**

@@ -11,9 +11,7 @@ import javax.imageio.*;
 import javax.imageio.stream.*;
 import java.text.*;
 
-import javax.swing.border.*;
 import javax.swing.WindowConstants.*;
-import java.awt.event.*;
 import java.awt.*;
 
 import java.util.logging.FileHandler;
@@ -25,6 +23,7 @@ import java.util.logging.Formatter;
 
 /*
 Tools.java:  utilities for the JPO application
+ *
 Copyright (C) 2002-2008  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -384,6 +383,8 @@ public class Tools {
      *   count the number of pictures in a subtree. Useful for progress monitors. If called with
      *   a null start node it returns 0. If called wiht a node that is actually a Query object it 
      *   asks the Query for the count.
+     *
+     *   Exists in Tools instead of on the SDMTN node because it can deal with Queries too.
      *
      *   @param startNode	the node from which to count
      *   @param recurseSubgroups  indicator to say whether the next levels of groups should be counted too or not.

@@ -12,6 +12,23 @@ import javax.swing.event.*;
 import org.apache.poi.hslf.usermodel.*;
 import org.apache.poi.hslf.model.*;
 
+/*
+HtmlDistillerJFrame.java:  Runs a GUI to generate a website
+pre-populates the options with default values.
+Copyright (C) 2008  Richard Eigenmann.
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or any later version. This program is distributed
+in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+more details. You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+The license is in gpl.txt.
+See http://www.gnu.org/copyleft/gpl.html for the details.
+ */
 /**
  * A GUI for the HtmlDistiller which then populates an HtmlDistillerOptions object 
  * and then fires of the HtmlDistillerThread.
@@ -27,26 +44,27 @@ public class HtmlDistillerJFrame extends JFrame {
             new DirectoryChooser( Settings.jpoResources.getString( "HtmlDistillerChooserTitle" ),
             DirectoryChooser.DIR_MUST_BE_WRITABLE );
     /**
-     *  Text field that holds the directory that the html is to be exported to.
+     *  The number of columns
      **/
-    //private WholeNumberField picsPerRow = new WholeNumberField( 0, 4 );
     private JSpinner picsPerRow = new JSpinner( new SpinnerNumberModel( 3, 1, 10, 1 ) );
     /**
-     *  Text field that holds the width of the small overview pictures.
+     *  The width of the thumbnails
      **/
-    private WholeNumberField thubWidthWholeNumberField = new WholeNumberField( 0, 6 );
+    private JSpinner thumbWidth = new JSpinner( new SpinnerNumberModel( 300, 100, 1000, 25 ) );
     /**
-     *  Text field that holds the width of the small overview pictures.
+     *  The height of the thumbnails
      **/
-    private WholeNumberField thubHeightWholeNumberField = new WholeNumberField( 0, 6 );
+    private JSpinner thumbHeight = new JSpinner( new SpinnerNumberModel( 300, 100, 1000, 25 ) );
     /**
-     *  Text field that holds the size of the midres pictures.
+     *  The width of the midres images
      **/
-    private WholeNumberField midresWidthWholeNumberField = new WholeNumberField( 0, 6 );
+    private JSpinner midresWidth = new JSpinner( new SpinnerNumberModel( 300, 100, 10000, 25 ) );
     /**
-     *  Text field that holds the size of the midres pictures.
+     *  The height of the midres images
      **/
-    private WholeNumberField midresHeightWholeNumberField = new WholeNumberField( 0, 6 );
+    private JSpinner midresHeight = new JSpinner( new SpinnerNumberModel( 300, 100, 10000, 25 ) );
+    /**
+
     /**
      *  Tickbox that indicates whether the highes pictures are to be copied to the
      *  target directory structure.
@@ -76,15 +94,15 @@ public class HtmlDistillerJFrame extends JFrame {
             new JSlider(
             JSlider.HORIZONTAL,
             0, 100,
-            (int) ( Settings.defaultJpgQuality * 100 ) );
+            (int) ( Settings.defaultHtmlLowresQuality * 100 ) );
     /**
-     *  Slider that allows the quality of the lowres jpg's to be specified.
+     *  Slider that allows the quality of the midres jpg's to be specified.
      */
     private JSlider midresJpgQualityJSlider =
             new JSlider(
             JSlider.HORIZONTAL,
             0, 100,
-            (int) ( Settings.defaultJpgQuality * 100 ) );
+            (int) ( Settings.defaultHtmlMidresQuality * 100 ) );
     /**
      *   This table will act as a preview to the color chooser.
      */
@@ -192,62 +210,44 @@ public class HtmlDistillerJFrame extends JFrame {
 
 
 
-        JPanel picsPerRowJPanel = new JPanel();
-        picsPerRowJPanel.setBorder(
-                BorderFactory.createTitledBorder(
-                Settings.jpoResources.getString( "picsPerRowText" ) ) );
-
-
-
-
-        JPanel thumbnailJPanel = new JPanel();
+        // Thumbnail panel
+        JPanel thumbnailJPanel = new JPanel( new FlowLayout( FlowLayout.LEFT ) );
         thumbnailJPanel.setBorder(
                 BorderFactory.createTitledBorder(
-                Settings.jpoResources.getString( "HtmlDistThumbnails" ) ) );
+                Settings.jpoResources.getString( "HtmlDistThumbnails" ) ) );   // Thumbnails
         thumbnailJPanel.setLayout( new BoxLayout( thumbnailJPanel, BoxLayout.PAGE_AXIS ) );
 
 
+        JLabel columnsLabel = new JLabel( Settings.jpoResources.getString( "picsPerRowText" ) ); //Columns
+        columnsLabel.setAlignmentX( Component.LEFT_ALIGNMENT );
 
-        // create the JTextField that holds the number of pictures per row
-        picsPerRow.setPreferredSize( new Dimension( 100, 20 ) );
-        picsPerRow.setMinimumSize( new Dimension( 100, 20 ) );
-        picsPerRow.setMaximumSize( new Dimension( 200, 20 ) );
+        // create the JSpinner that holds the number of pictures per row
         picsPerRow.addChangeListener( new ChangeListener() {
 
             public void stateChanged( ChangeEvent arg0 ) {
                 previewPanel.repaint();
             }
-        } ); //picsPerRow.getDocument().addDocumentListener( myListener );
+        } );
 
-        picsPerRowJPanel.add( picsPerRow );
-        constraints.gridy++; // y = 1, x = 0
-        constraints.gridwidth = 1;
-        thumbnailJPanel.add( picsPerRowJPanel );
-        contentJPanel.add( thumbnailJPanel, constraints );
+        JPanel columnsPanel = new JPanel( new FlowLayout( FlowLayout.LEFT ) );
+        columnsPanel.add( columnsLabel );
+        columnsPanel.add( picsPerRow );
+        columnsPanel.setAlignmentX( Component.LEFT_ALIGNMENT );
+        thumbnailJPanel.add( columnsPanel );
 
 
-        // create the JTextField that holds the size of the thumbnails
-        thubWidthWholeNumberField.setPreferredSize( new Dimension( 100, 20 ) );
-        thubWidthWholeNumberField.setMinimumSize( new Dimension( 100, 20 ) );
-        thubWidthWholeNumberField.setMaximumSize( new Dimension( 200, 20 ) );
-
-        thubHeightWholeNumberField.setPreferredSize( new Dimension( 100, 20 ) );
-        thubHeightWholeNumberField.setMinimumSize( new Dimension( 100, 20 ) );
-        thubHeightWholeNumberField.setMaximumSize( new Dimension( 200, 20 ) );
-
-        JPanel thumbnailSizeJPanel = new JPanel();
-        thumbnailSizeJPanel.setBorder(
-                BorderFactory.createTitledBorder(
-                Settings.jpoResources.getString( "thubnailSizeJLabel" ) ) );
-        thumbnailSizeJPanel.add( thubWidthWholeNumberField );
+        JPanel thumbnailSizeJPanel = new JPanel( new FlowLayout( FlowLayout.LEFT ) );
+        thumbnailSizeJPanel.add( new JLabel( Settings.jpoResources.getString( "thubnailSizeJLabel" ) ) );
+        thumbnailSizeJPanel.add( thumbWidth );
         thumbnailSizeJPanel.add( new JLabel( " x " ) );
-        thumbnailSizeJPanel.add( thubHeightWholeNumberField );
+        thumbnailSizeJPanel.add( thumbHeight );
+        thumbnailSizeJPanel.setAlignmentX( Component.LEFT_ALIGNMENT );
 
-        //constraints.gridx++;  // y = 1, x = 1
-        //contentJPanel.add( thumbnailSizeJPanel, constraints );
         thumbnailJPanel.add( thumbnailSizeJPanel );
 
         // Thumbnail Quality Slider
+        JPanel lowresQualitySliderJPanel = new JPanel( new FlowLayout( FlowLayout.LEFT ) );
+        lowresQualitySliderJPanel.add( new JLabel( Settings.jpoResources.getString( "lowresJpgQualitySlider" ) ) );
         Hashtable labelTable = new Hashtable();
         labelTable.put( new Integer( 0 ), new JLabel( Settings.jpoResources.getString( "jpgQualityBad" ) ) );
         labelTable.put( new Integer( 80 ), new JLabel( Settings.jpoResources.getString( "jpgQualityGood" ) ) );
@@ -258,24 +258,26 @@ public class HtmlDistillerJFrame extends JFrame {
         lowresJpgQualityJSlider.setMinorTickSpacing( 5 );
         lowresJpgQualityJSlider.setPaintTicks( true );
         lowresJpgQualityJSlider.setPaintLabels( true );
-        lowresJpgQualityJSlider.setBorder(
-                BorderFactory.createTitledBorder(
-                Settings.jpoResources.getString( "lowresJpgQualitySlider" ) ) );
-        //constraints.gridx = 0;
-        //constraints.gridy++;
-        //constraints.gridwidth = 1;
-        //contentJPanel.add( lowresJpgQualityJSlider, constraints );
-        thumbnailJPanel.add( lowresJpgQualityJSlider );
+        lowresQualitySliderJPanel.add( lowresJpgQualityJSlider );
+        lowresQualitySliderJPanel.setAlignmentX( Component.LEFT_ALIGNMENT );
+        thumbnailJPanel.add( lowresQualitySliderJPanel );
 
 
+        constraints.gridy++; // y = 1, x = 0
+        constraints.gridwidth = 1;
+        contentJPanel.add( thumbnailJPanel, constraints );
+
+
+        // Midres
         JPanel midresJPanel = new JPanel();
         midresJPanel.setBorder(
                 BorderFactory.createTitledBorder(
                 Settings.jpoResources.getString( "HtmlDistMidres" ) ) );
         midresJPanel.setLayout( new BoxLayout( midresJPanel, BoxLayout.PAGE_AXIS ) );
+        midresJPanel.setAlignmentX( Component.LEFT_ALIGNMENT );
 
         generateMidresHtml.setSelected( true );
-        generateMidresHtml.setAlignmentX( Component.LEFT_ALIGNMENT );
+       // generateMidresHtml.setAlignmentX( Component.LEFT_ALIGNMENT );
         generateMidresHtml.addChangeListener( new ChangeListener() {
 
             public void stateChanged( ChangeEvent arg0 ) {
@@ -295,26 +297,18 @@ public class HtmlDistillerJFrame extends JFrame {
         midresJPanel.add( generateDHTMLJCheckBox );
 
 
-        // create the JTextField that holds the size of the target picture
-        midresWidthWholeNumberField.setPreferredSize( new Dimension( 100, 20 ) );
-        midresWidthWholeNumberField.setMinimumSize( new Dimension( 100, 20 ) );
-        midresWidthWholeNumberField.setMaximumSize( new Dimension( 200, 20 ) );
 
-        midresHeightWholeNumberField.setPreferredSize( new Dimension( 100, 20 ) );
-        midresHeightWholeNumberField.setMinimumSize( new Dimension( 100, 20 ) );
-        midresHeightWholeNumberField.setMaximumSize( new Dimension( 200, 20 ) );
-
-        JPanel midresSizeJPanel = new JPanel();
-        midresSizeJPanel.setBorder(
-                BorderFactory.createTitledBorder(
-                Settings.jpoResources.getString( "midresSizeJLabel" ) ) );
-        midresSizeJPanel.add( midresWidthWholeNumberField );
+        JPanel midresSizeJPanel = new JPanel( new FlowLayout( FlowLayout.LEFT ) );
+        midresSizeJPanel.setAlignmentX( Component.LEFT_ALIGNMENT );
+        /*midresSizeJPanel.setBorder(
+        BorderFactory.createTitledBorder(
+        Settings.jpoResources.getString( "midresSizeJLabel" ) ) ); */
+        midresSizeJPanel.add( new JLabel( Settings.jpoResources.getString( "midresSizeJLabel" ) ) );
+        midresSizeJPanel.add( midresWidth );
         midresSizeJPanel.add( new JLabel( " x " ) );
-        midresSizeJPanel.add( midresHeightWholeNumberField );
-
-        constraints.gridx++;  // y = 1, x = 2
+        midresSizeJPanel.add( midresHeight );
         midresJPanel.add( midresSizeJPanel );
-        contentJPanel.add( midresJPanel, constraints );
+
 
         // Midres Quality Slider
         Hashtable labelTable1 = new Hashtable();
@@ -327,13 +321,15 @@ public class HtmlDistillerJFrame extends JFrame {
         midresJpgQualityJSlider.setMinorTickSpacing( 5 );
         midresJpgQualityJSlider.setPaintTicks( true );
         midresJpgQualityJSlider.setPaintLabels( true );
-        midresJpgQualityJSlider.setBorder(
-                BorderFactory.createTitledBorder(
-                Settings.jpoResources.getString( "midresJpgQualitySlider" ) ) );
-        //constraints.gridx = 1; // constraints.gridy++;
-        //constraints.gridwidth = 1;
+        /*midresJpgQualityJSlider.setBorder(
+        BorderFactory.createTitledBorder(
+        Settings.jpoResources.getString( "midresJpgQualitySlider" ) ) );*/
+        midresJpgQualityJSlider.setAlignmentX( Component.LEFT_ALIGNMENT );
+        midresJPanel.add( new JLabel( Settings.jpoResources.getString( "midresJpgQualitySlider" ) ) );
         midresJPanel.add( midresJpgQualityJSlider );
 
+        constraints.gridx++;  // y = 1, x = 2
+        contentJPanel.add( midresJPanel, constraints );
 
 
         JPanel highresJPanel = new JPanel();
@@ -368,6 +364,7 @@ public class HtmlDistillerJFrame extends JFrame {
 
         //Set up color chooser for setting background color
         JPanel colorButtonPanel = new JPanel(); //use FlowLayout
+        colorButtonPanel.setAlignmentX( Component.LEFT_ALIGNMENT );
         JButton fgc = new JButton( "Foreground Color" );
         fgc.addActionListener( new ActionListener() {
 
@@ -410,24 +407,14 @@ public class HtmlDistillerJFrame extends JFrame {
                 BorderFactory.createTitledBorder(
                 Settings.jpoResources.getString( "HtmlDistillerNumbering" ) ) );
         filenameingJPanel.setLayout( new BoxLayout( filenameingJPanel, BoxLayout.PAGE_AXIS ) );
+        filenameingJPanel.setAlignmentX( Component.LEFT_ALIGNMENT );
 
-
-        // Image Name Source Radio Buttons
-        //constraints.gridx = 0;
-        //constraints.gridy++;
-        //constraints.gridwidth = 2;
-        //contentJPanel.add( new JLabel( Settings.jpoResources.getString( "HtmlDistillerNumbering" ) ), constraints );
         ButtonGroup bg = new ButtonGroup();
         bg.add( hashcodeRadioButton );
-        //constraints.gridy++;
-        //contentJPanel.add( hashcodeRadioButton, constraints );
         filenameingJPanel.add( hashcodeRadioButton );
 
         bg.add( originalNameRadioButton );
-        //constraints.gridy++;
-        //contentJPanel.add( originalNameRadioButton, constraints );
         filenameingJPanel.add( originalNameRadioButton );
-
 
         final JLabel sequentialStartLabel = new JLabel( Settings.jpoResources.getString( "sequentialRadioButtonStart" ) );
         bg.add( sequentialRadioButton );
@@ -444,9 +431,10 @@ public class HtmlDistillerJFrame extends JFrame {
         hashcodeRadioButton.addChangeListener( radioButtonChangeListener );
         originalNameRadioButton.addChangeListener( radioButtonChangeListener );
 
-        //constraints.gridy++;
-        //contentJPanel.add( sequentialRadioButton, constraints );
-        JPanel sequentialNumberJPanel = new JPanel();
+        JPanel sequentialNumberJPanel = new JPanel( new FlowLayout( FlowLayout.LEFT ) );
+        sequentialNumberJPanel.setAlignmentX( Component.LEFT_ALIGNMENT );
+        sequentialNumberJPanel.setMaximumSize( new Dimension( 300, 25 ) );
+
         sequentialNumberJPanel.add( sequentialRadioButton );
         sequentialNumberJPanel.add( sequentialStartLabel );
         sequentialNumberJPanel.add( sequentialStartJSpinner );
@@ -461,8 +449,8 @@ public class HtmlDistillerJFrame extends JFrame {
         wrappingPreviewJPanel.setBorder( BorderFactory.createTitledBorder( "Preview" ) );
         previewPanel.setPreferredSize( new Dimension( 300, 150 ) );
         previewPanel.setMinimumSize( new Dimension( 200, 100 ) );
-        previewPanel.setBackground( Settings.htmlBackgroundColor );
-        previewPanel.setForeground( Settings.htmlFontColor );
+        previewPanel.setBackground( options.getBackgroundColor() );
+        previewPanel.setForeground( options.getFontColor() );
         previewPanel.repaint();
         constraints.gridx++;
         //constraints.gridwidth = 3;
@@ -584,7 +572,7 @@ public class HtmlDistillerJFrame extends JFrame {
                 // shows which files exist
                 File[] f = htmlDirectory.listFiles();
                 for ( int i = 0; i < f.length; i++ ) {
-                    System.out.println( f[i].getAbsolutePath() );
+                System.out.println( f[i].getAbsolutePath() );
                 } */
                 int option = JOptionPane.showConfirmDialog(
                         this,
@@ -682,14 +670,15 @@ public class HtmlDistillerJFrame extends JFrame {
      * populated by the HtmlDistillerDefaultOptions.
      */
     private void loadOptionsToGui() {
-        targetDirJTextField.setText( options.getHtmlDirectory().toString() );
+        targetDirJTextField.setText( options.getTargetDirectory().toString() );
         //picsPerRow.setValue( options.getPicsPerRow() );
         ( (SpinnerNumberModel) ( picsPerRow.getModel() ) ).setValue( options.getPicsPerRow() );
-        thubWidthWholeNumberField.setValue( options.getThumbnailWidth() );
-        thubHeightWholeNumberField.setValue( options.getThumbnailHeight() );
+        ( (SpinnerNumberModel) ( thumbWidth.getModel() ) ).setValue( options.getThumbnailWidth() );
+        ( (SpinnerNumberModel) ( thumbHeight.getModel() ) ).setValue( options.getThumbnailHeight() );
         generateMidresHtml.setSelected( options.isGenerateMidresHtml() );
-        midresWidthWholeNumberField.setValue( options.getMidresWidth() );
-        midresHeightWholeNumberField.setValue( options.getMidresHeight() );
+        generateDHTMLJCheckBox.setSelected( options.isGenerateDHTML() );
+        ( (SpinnerNumberModel) ( midresWidth.getModel() ) ).setValue( options.getMidresWidth() );
+        ( (SpinnerNumberModel) ( midresHeight.getModel() ) ).setValue( options.getMidresHeight() );
         switch ( options.getPictureNaming() ) {
             case HtmlDistillerOptions.PICTURE_NAMING_BY_ORIGINAL_NAME:
                 originalNameRadioButton.setSelected( true );
@@ -715,28 +704,28 @@ public class HtmlDistillerJFrame extends JFrame {
         File htmlDirectory = new File( targetDirJTextField.getText() );
         Settings.memorizeCopyLocation( htmlDirectory.getPath() );
         Settings.defaultHtmlPicsPerRow = ( (SpinnerNumberModel) ( picsPerRow.getModel() ) ).getNumber().intValue();
-        Settings.defaultHtmlThumbnailWidth = thubWidthWholeNumberField.getValue();
-        Settings.defaultHtmlThumbnailHeight = thubHeightWholeNumberField.getValue();
+        Settings.defaultHtmlThumbnailWidth = ( (SpinnerNumberModel) ( thumbWidth.getModel() ) ).getNumber().intValue();
+        Settings.defaultHtmlThumbnailHeight = ( (SpinnerNumberModel) ( thumbHeight.getModel() ) ).getNumber().intValue();
         Settings.defaultGenerateMidresHtml = generateMidresHtml.isSelected();
-        Settings.defaultHtmlMidresWidth = midresWidthWholeNumberField.getValue();
-        Settings.defaultHtmlMidresHeight = midresHeightWholeNumberField.getValue();
+        Settings.defaultHtmlMidresWidth = ( (SpinnerNumberModel) ( midresWidth.getModel() ) ).getNumber().intValue();
+        Settings.defaultHtmlMidresHeight = ( (SpinnerNumberModel) ( midresHeight.getModel() ) ).getNumber().intValue();
         Settings.unsavedSettingChanges = true;
         Settings.htmlBackgroundColor = previewPanel.getBackground();
         Settings.htmlFontColor = previewPanel.getForeground();
         Settings.writeRobotsTxt = generateRobotsJCheckBox.isSelected();
 
-        options.setHtmlDirectory( htmlDirectory );
+        options.setTargetDirectory( htmlDirectory );
         options.setPicsPerRow( Settings.defaultHtmlPicsPerRow );
-        options.setThumbnailWidth( thubWidthWholeNumberField.getValue() );
-        options.setThumbnailHeight( thubHeightWholeNumberField.getValue() );
+        options.setThumbnailWidth( Settings.defaultHtmlThumbnailWidth );
+        options.setThumbnailHeight( Settings.defaultHtmlThumbnailHeight );
         options.setGenerateMidresHtml( generateMidresHtml.isSelected() );
-        options.setMidresWidth( midresWidthWholeNumberField.getValue() );
-        options.setMidresHeight( midresHeightWholeNumberField.getValue() );
+        options.setGenerateDHTML( generateDHTMLJCheckBox.isSelected() );
+        options.setMidresWidth( ( (SpinnerNumberModel) ( midresWidth.getModel() ) ).getNumber().intValue() );
+        options.setMidresHeight( ( (SpinnerNumberModel) ( midresHeight.getModel() ) ).getNumber().intValue() );
         options.setExportHighres( exportHighresJCheckBox.isSelected() );
         options.setLinkToHighres( linkToHighresJCheckBox.isSelected() );
         options.setLowresJpgQualityPercent( lowresJpgQualityJSlider.getValue() );
         options.setMidresJpgQualityPercent( midresJpgQualityJSlider.getValue() );
-        options.setGenerateDHTML( generateDHTMLJCheckBox.isSelected() );
         options.setGenerateZipfile( generateZipfileJCheckBox.isSelected() );
         options.setBackgroundColor( previewPanel.getBackground() );
         options.setFontColor( previewPanel.getForeground() );

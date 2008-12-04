@@ -65,7 +65,7 @@ public class DirectoryChooser extends JPanel {
     /**
      *   field that allows the user to capture the directory which is a sub object of the JComboBox
      */
-    public JTextField directoryJTextField;
+    private JTextField directoryJTextField;
     
     
     /**
@@ -191,10 +191,10 @@ public class DirectoryChooser extends JPanel {
     public boolean checkDirectory() {
         File testDir = new File( getText() );
         if ( checkDirectory( testDir, validationType ) ) {
-            directoryJTextField.setForeground( Color.black );
+            getDirectoryJTextField().setForeground( Color.black );
             return true;
         } else {
-            directoryJTextField.setForeground( Color.red );
+            getDirectoryJTextField().setForeground( Color.red );
             return false;
         }
     }
@@ -252,6 +252,20 @@ public class DirectoryChooser extends JPanel {
             return false;
         }
     }
+
+    /**
+     * @return the directoryJTextField
+     */
+    public JTextField getDirectoryJTextField() {
+        return directoryJTextField;
+    }
+
+    /**
+     * @param directoryJTextField the directoryJTextField to set
+     */
+    public void setDirectoryJTextField( JTextField directoryJTextField ) {
+        this.directoryJTextField = directoryJTextField;
+    }
     
     
     /**
@@ -271,7 +285,7 @@ public class DirectoryChooser extends JPanel {
      */
     public void setEnabled( boolean enabled ) {
         directoryJComboBox.setEnabled( enabled );
-        directoryJTextField.setEnabled( enabled );
+        getDirectoryJTextField().setEnabled( enabled );
         directoryChooserJButton.setEnabled( enabled );
     }
     

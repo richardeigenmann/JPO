@@ -224,6 +224,12 @@ public class JpoResources_zh_CN extends ListResourceBundle {
 		{"sequentialRadioButton",  "using sequential number" },
 		{ "sequentialRadioButtonStart", "Starting at" }, //new
 		{ "generateRobotsJCheckBox", "Prevent search engines from indexing (write robots.txt)" }, //new
+		{ "welcomeTitle", "Welcome"}, // new
+		{ "generate1", "Generate a Web Page showing "}, // new
+		{ "generate2", " pictures"}, // new
+		{ "generateFrom", "From: "}, // new
+		{ "summary", "Summary"}, // new
+		{ "check", "Check"}, // new
 
 		// HtmlDistillerThread
 		{"LinkToJpo", "制作工具：<A HREF=\"http://j-po.sourceforge.net\">JPO</A>"},

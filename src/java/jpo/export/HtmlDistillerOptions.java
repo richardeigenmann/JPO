@@ -1,9 +1,11 @@
 package jpo.export;
 
-import jpo.*;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.io.File;
+import javax.swing.SpinnerNumberModel;
+import jpo.Settings;
+import jpo.SortableDefaultMutableTreeNode;
 
 /*
 HtmlDistillerOptions.java:  Holds the options that configure the html output.
@@ -30,7 +32,7 @@ public class HtmlDistillerOptions {
     /**
      *  The directory into which the web page will be generated.
      */
-    private File htmlDirectory;
+    private File targetDirectory;
 
     public Color getBackgroundColor() {
         return backgroundColor;
@@ -98,12 +100,16 @@ public class HtmlDistillerOptions {
         this.generateZipfile = generateZipfile;
     }
 
-    public File getHtmlDirectory() {
-        return htmlDirectory;
+    /**
+     * The directory the pages should be written to
+     * @return
+     */
+    public File getTargetDirectory() {
+        return targetDirectory;
     }
 
-    public void setHtmlDirectory( File htmlDirectory ) {
-        this.htmlDirectory = htmlDirectory;
+    public void setTargetDirectory( File htmlDirectory ) {
+        this.targetDirectory = htmlDirectory;
     }
 
     public boolean isLinkToHighres() {
@@ -139,6 +145,14 @@ public class HtmlDistillerOptions {
 
     public float getLowresJpgQuality() {
         return lowresJpgQuality;
+    }
+
+    /** 
+     * Same as @see getLowresJpgQuality but returned as int and multiplied by 100
+     * @return
+     */
+    public int getLowresJpgQualityPercent() {
+        return (int) ( getLowresJpgQuality() * 100 );
     }
 
     public void setLowresJpgQuality( float lowresJpgQuality ) {
@@ -183,6 +197,14 @@ public class HtmlDistillerOptions {
 
     public void setMidresJpgQuality( float midresJpgQuality ) {
         this.midresJpgQuality = midresJpgQuality;
+    }
+
+    /**
+     * Same as @see getMidresJpgQuality but returned as int and multiplied by 100
+     * @return
+     */
+    public int getMidresJpgQualityPercent() {
+        return (int) ( getMidresJpgQuality() * 100 );
     }
 
     /**
@@ -361,7 +383,6 @@ public class HtmlDistillerOptions {
     public void setSequentialStartNumber( int setSequentialStartNumber ) {
         this.sequentialStartNumber = setSequentialStartNumber;
     }
-
     /**
      * Whether to write the robots.txt file
      */
@@ -381,4 +402,77 @@ public class HtmlDistillerOptions {
         this.writeRobotsTxt = writeRobotsTxt;
     }
 
+    /**
+     * Formats a neat summary of the options
+     * @return A nicely formatted summary of the option that are set.
+     */
+    @Override
+    public String toString() {
+        StringBuffer sb = new StringBuffer( Settings.jpoResources.getString( "HtmlDistThumbnails" ) + "\n" );
+        sb.append( Settings.jpoResources.getString( "picsPerRowText" ) + " " + getPicsPerRow() + "\n" );
+        sb.append( Settings.jpoResources.getString( "thubnailSizeJLabel" ) + " " + Integer.toString( getThumbnailWidth() ) + " x " + Integer.toString( getThumbnailHeight() ) + "\n" );
+        sb.append( Settings.jpoResources.getString( "lowresJpgQualitySlider" ) + " " + Integer.toString( getLowresJpgQualityPercent() ) + "\n" );
+
+        sb.append( "\n" + Settings.jpoResources.getString( "HtmlDistMidres" ) +"\n" );
+        sb.append( isGenerateMidresHtml() ? Settings.jpoResources.getString( "HtmlDistMidresHtml" ) + "\n" : "No medium size navigation pages\n" );
+        sb.append( isGenerateDHTML() ? Settings.jpoResources.getString( "generateDHTMLJCheckBox" ) + "\n" : "No  DHTML mouseover effects\n" );
+        sb.append( Settings.jpoResources.getString( "midresSizeJLabel" ) + " " + Integer.toString( getMidresWidth() ) + " x " + Integer.toString( getMidresHeight() ) + "\n" );
+        sb.append( Settings.jpoResources.getString( "midresJpgQualitySlider" ) + " " + Integer.toString( getMidresJpgQualityPercent() ) + "\n" );
+
+        sb.append( "\n" + Settings.jpoResources.getString( "HtmlDistHighres" ) + "\n" );
+        sb.append( isExportHighres() ? "Export Highres Pictures\n" : "Do not export Highres Pictures\n" );
+        sb.append( isGenerateZipfile() ? Settings.jpoResources.getString( "generateZipfileJCheckBox" ) + "\n" : "No Zipfile for download of Highres Pictures\n" );
+        sb.append( "Filename for Download Zipfile: " + getDownloadZipFileName() + "\n" );
+        sb.append( isLinkToHighres() ? Settings.jpoResources.getString( "linkToHighresJCheckBox" ) + "\n" : "No Link to high resolution pictures at current location\n" );
+
+        sb.append( "\n" + Settings.jpoResources.getString( "genericTargetDirText" ) + getTargetDirectory().getPath() );
+        sb.append( "\n" );
+
+        sb.append( "\n" + Settings.jpoResources.getString( "HtmlDistOptions" ) + "\n" );
+        sb.append( Settings.jpoResources.getString( "HtmlDistillerNumbering" ) + " " );
+        switch ( getPictureNaming() ) {
+            case PICTURE_NAMING_BY_HASH_CODE:
+                sb.append( Settings.jpoResources.getString( "hashcodeRadioButton" ) );
+                break;
+            case PICTURE_NAMING_BY_ORIGINAL_NAME:
+                sb.append( Settings.jpoResources.getString( "originalNameRadioButton" ) );
+                break;
+            case PICTURE_NAMING_BY_SEQUENTIAL_NUMBER:
+                sb.append( Settings.jpoResources.getString( "sequentialRadioButton" ) );
+                sb.append( Settings.jpoResources.getString( "sequentialRadioButtonStart" ) + " " + Integer.toString( getSequentialStartNumber() ) );
+                break;
+        }
+
+        sb.append( "\n" );
+        sb.append( "Webpage Font Color: " + getFontColor().toString() + "\n" );
+        sb.append( "Webpage Background Color: " + getBackgroundColor().toString() + "\n" );
+        sb.append( isWriteRobotsTxt() ? ( Settings.jpoResources.getString( "generateRobotsJCheckBox" ) + "\n" ) : "Do not write robots.txt\n" );
+
+        return sb.toString();
+    }
+
+    /**
+     * This optional method saves the options into the Settings object so that they can be remembered for the next time
+     * Note: Not all of them (yet?)
+     */
+    public void saveToSettings() {
+        Settings.memorizeCopyLocation( getTargetDirectory().getPath() );
+        Settings.defaultHtmlPicsPerRow = getPicsPerRow();
+        Settings.defaultHtmlThumbnailWidth = getThumbnailWidth();
+        Settings.defaultHtmlThumbnailHeight = getThumbnailHeight();
+        Settings.defaultHtmlLowresQuality = getLowresJpgQuality();
+        Settings.defaultGenerateMidresHtml = isGenerateMidresHtml();
+        Settings.defaultGenerateDHTML = isGenerateDHTML();
+        Settings.defaultHtmlMidresWidth = getMidresWidth();
+        Settings.defaultHtmlMidresHeight = getMidresHeight();
+        Settings.defaultHtmlMidresQuality = getMidresJpgQuality();
+        Settings.defaultGenerateZipfile = isGenerateZipfile();
+        Settings.defaultLinkToHighres = isLinkToHighres();
+        Settings.defaultExportHighres = isExportHighres();
+        Settings.defaultHtmlPictureNaming = getPictureNaming();
+        Settings.htmlBackgroundColor = getBackgroundColor();
+        Settings.htmlFontColor = getFontColor();
+        Settings.writeRobotsTxt = isWriteRobotsTxt();
+        Settings.unsavedSettingChanges = true;
+    }
 }

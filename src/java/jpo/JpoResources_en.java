@@ -156,8 +156,8 @@ public class JpoResources_en extends ListResourceBundle {
         { "linkToHighresJCheckBox", "Link to high resoloution pictures at current locations" },
         { "generateDHTMLJCheckBox", "Generate DHTML mouseover effects" },
         { "generateZipfileJCheckBox", "Generate Zipfile for download of Highres Pictures" },
-        { "picsPerRowText", "Columns" },
-        { "thubnailSizeJLabel", "Thumbnail size" },
+        { "picsPerRowText", "Columns: " },
+        { "thubnailSizeJLabel", "Thumbnail size:" },
         { "htmlDistCrtDirError", "Could not create Export directory!" },
         { "htmlDistIsDirError", "This is not a directory!" },
         { "htmlDistCanWriteError", "This is not a writable directory!" },
@@ -166,7 +166,7 @@ public class JpoResources_en extends ListResourceBundle {
         { "HtmlDistMidresHtml", "Generate navigation pages"}, 
         { "midresSizeJLabel", "Midres size" },
         { "midresJpgQualitySlider", "Midres Jpg Quality" },
-        { "lowresJpgQualitySlider", "Lowres Jpg Quality" },
+        { "lowresJpgQualitySlider", "Jpg Quality:" },
         { "jpgQualityBad", "Poor" },
         { "jpgQualityGood", "Good" },
         { "jpgQualityBest", "Best" },
@@ -177,7 +177,13 @@ public class JpoResources_en extends ListResourceBundle {
         { "originalNameRadioButton", "using original image name" },
         { "sequentialRadioButton", "using sequential number" },
         { "sequentialRadioButtonStart", "Starting at" },
-        { "generateRobotsJCheckBox", "Prevent search engines from indexing (write robots.txt)" },
+        { "generateRobotsJCheckBox", "Prevent search engine indexing (write robots.txt)" },
+        { "welcomeTitle", "Welcome"}, // new
+        { "generate1", "Generate a Web Page showing "}, // new
+        { "generate2", " pictures"}, // new
+        { "generateFrom", "From: "}, // new
+        { "summary", "Summary"}, // new
+        { "check", "Check"}, // new
 
         // HtmlDistillerThread
         { "LinkToJpo", "Made with <a href=\"http://j-po.sourceforge.net\">JPO</a>" },

@@ -141,7 +141,7 @@ public class ConsolidateGroupJFrame extends JFrame  {
 		constraints.weightx = 0.8;
 		constraints.insets = new Insets(4, 4, 4, 4);
 		contentJPanel.add(highresTargetDirJTextField, constraints);
-		highresTargetDirJTextField.directoryJTextField.getDocument().addDocumentListener( new DocumentListener () {
+		highresTargetDirJTextField.getDirectoryJTextField().getDocument().addDocumentListener( new DocumentListener () {
 			public void insertUpdate( DocumentEvent e ) {
 				setLowresLocation();
 			}
@@ -152,7 +152,7 @@ public class ConsolidateGroupJFrame extends JFrame  {
 				setLowresLocation();
 			}
 		});
-		highresTargetDirJTextField.directoryJTextField.addFocusListener( new FocusListener () {
+		highresTargetDirJTextField.getDirectoryJTextField().addFocusListener( new FocusListener () {
 			public void focusGained( FocusEvent e ) {}
 			public void focusLost( FocusEvent e ) {
 				setLowresLocation();

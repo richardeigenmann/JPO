@@ -10,9 +10,11 @@ import java.io.*;
 
 import javax.swing.*;
 import javax.swing.tree.*;
+import jpo.export.GenerateWebsiteWizard;
 
 /*
 CollectionJTreeController.java:  class that manages a JTree for the collection
+ * 
 Copyright (C) 2002-2008  Richard Eigenmann, Zurich, Switzerland
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -441,8 +443,8 @@ public class CollectionJTreeController
      *  to export the pictures of the current Group.
      **/
     public void requestGroupExportHtml() {
-        new HtmlDistillerJFrame( popupNode );
-
+        // new HtmlDistillerJFrame( popupNode );
+        new GenerateWebsiteWizard( popupNode );
     }
 
     /**
