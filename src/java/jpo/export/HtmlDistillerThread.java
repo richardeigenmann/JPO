@@ -10,6 +10,7 @@ import java.util.zip.*;
 
 /*
 HtmlDistillerThread.java:  class that can write html files
+ *
 Copyright (C) 2002-2008  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -363,7 +364,7 @@ public class HtmlDistillerThread extends Thread {
 
         switch ( options.getPictureNaming() ) {
             case HtmlDistillerOptions.PICTURE_NAMING_BY_ORIGINAL_NAME:
-                String rootName = Tools.getFilenameRoot( p.getHighresFilename() );
+                String rootName = cleanupFilename( Tools.getFilenameRoot( p.getHighresFilename() ) );
                 lowresFile = new File( options.getTargetDirectory(), rootName + "_l." + extension );
                 midresFile = new File( options.getTargetDirectory(), rootName + "_m." + extension );
                 highresFile = new File( options.getTargetDirectory(), rootName + "_h." + extension );
@@ -604,7 +605,7 @@ public class HtmlDistillerThread extends Thread {
                         switch ( options.getPictureNaming() ) {
                             case HtmlDistillerOptions.PICTURE_NAMING_BY_ORIGINAL_NAME:
                                 PictureInfo pi = (PictureInfo) nde.getUserObject();
-                                String rootName = Tools.getFilenameRoot( pi.getHighresFilename() );
+                                String rootName = cleanupFilename( Tools.getFilenameRoot( pi.getHighresFilename() ) );
                                 nodeUrl = rootName + ".htm";
                                 lowresFn = rootName + "_l." + extension;
                                 break;
@@ -659,8 +660,7 @@ public class HtmlDistillerThread extends Thread {
 
             midresHtmlWriter.newLine();
             //Up Link
-            midresHtmlWriter.write( "<p /><a href=\"" + groupFile.getName() 
-                    + "#" + stringToHTMLString( lowresFile.getName() ) + "\">Up</a>" );
+            midresHtmlWriter.write( "<p /><a href=\"" + groupFile.getName() + "#" + stringToHTMLString( lowresFile.getName() ) + "\">Up</a>" );
             midresHtmlWriter.write( "&nbsp;" );
             midresHtmlWriter.newLine();
             // Link to Previous
@@ -671,7 +671,7 @@ public class HtmlDistillerThread extends Thread {
                         SortableDefaultMutableTreeNode priorNode = (SortableDefaultMutableTreeNode) ( (SortableDefaultMutableTreeNode) n.getParent() ).getChildAt( childNumber - 2 );
                         Object userObject = priorNode.getUserObject();
                         if ( userObject instanceof PictureInfo ) {
-                            previousHtmlFilename = Tools.getFilenameRoot( ( (PictureInfo) userObject ).getHighresFilename() ) + ".htm";
+                            previousHtmlFilename = cleanupFilename( Tools.getFilenameRoot( ( (PictureInfo) userObject ).getHighresFilename() ) ) + ".htm";
                         } else {
                             previousHtmlFilename = "index.htm"; // actually something has gone horribly wrong
                         }
@@ -706,7 +706,7 @@ public class HtmlDistillerThread extends Thread {
                         SortableDefaultMutableTreeNode priorNode = (SortableDefaultMutableTreeNode) ( (SortableDefaultMutableTreeNode) n.getParent() ).getChildAt( childNumber );
                         Object userObject = priorNode.getUserObject();
                         if ( userObject instanceof PictureInfo ) {
-                            nextHtmlFilename = Tools.getFilenameRoot( ( (PictureInfo) userObject ).getHighresFilename() ) + ".htm";
+                            nextHtmlFilename = cleanupFilename( Tools.getFilenameRoot( ( (PictureInfo) userObject ).getHighresFilename() ) ) + ".htm";
                         } else {
                             nextHtmlFilename = "index.htm"; // actually something has gone horribly wrong
                         }
@@ -1037,8 +1037,100 @@ public class HtmlDistillerThread extends Thread {
                         sb.append( ';' );
                     }
                 }
+
+
             }
         }
         return sb.toString();
+    }
+
+    /**
+     *  Translates characters which are problematic into unproblematic characters
+     */
+    public static String cleanupFilename( String string ) {
+        String returnString = string;
+        if ( returnString.contains( " " ) ) {
+            returnString = returnString.replaceAll( " ", "_" );  // replace blank with underscore
+        }
+        if ( returnString.contains( "%20" ) ) {
+            returnString = returnString.replaceAll( "%20", "_" );  // replace blank with underscore
+        }
+        if ( returnString.contains( "&" ) ) {
+            returnString = returnString.replace( "&", "_and_" );  // replace ampersand with _and_
+        }
+        if ( returnString.contains( "|" ) ) {
+            returnString = returnString.replace( "|", "l" );  // replace pipe with lowercase L
+        }
+        if ( returnString.contains( "<" ) ) {
+            returnString = returnString.replace( "<", "_" );
+        }
+        if ( returnString.contains( ">" ) ) {
+            returnString = returnString.replace( ">", "_" );
+        }
+        if ( returnString.contains( "@" ) ) {
+            returnString = returnString.replace( "@", "_" );
+        }
+        if ( returnString.contains( ":" ) ) {
+            returnString = returnString.replace( ":", "_" );
+        }
+        if ( returnString.contains( "$" ) ) {
+            returnString = returnString.replace( "$", "_" );
+        }
+        if ( returnString.contains( "£" ) ) {
+            returnString = returnString.replace( "£", "_" );
+        }
+        if ( returnString.contains( "^" ) ) {
+            returnString = returnString.replace( "^", "_" );
+        }
+        if ( returnString.contains( "~" ) ) {
+            returnString = returnString.replace( "~", "_" );
+        }
+        if ( returnString.contains( "\"" ) ) {
+            returnString = returnString.replace( "\"", "_" );
+        }
+        if ( returnString.contains( "'" ) ) {
+            returnString = returnString.replace( "'", "_" );
+        }
+        if ( returnString.contains( "`" ) ) {
+            returnString = returnString.replace( "`", "_" );
+        }
+        if ( returnString.contains( "?" ) ) {
+            returnString = returnString.replace( "?", "_" );
+        }
+        if ( returnString.contains( "[" ) ) {
+            returnString = returnString.replace( "[", "_" );
+        }
+        if ( returnString.contains( "]" ) ) {
+            returnString = returnString.replace( "]", "_" );
+        }
+        if ( returnString.contains( "{" ) ) {
+            returnString = returnString.replace( "{", "_" );
+        }
+        if ( returnString.contains( "}" ) ) {
+            returnString = returnString.replace( "}", "_" );
+        }
+        if ( returnString.contains( "(" ) ) {
+            returnString = returnString.replace( "(", "_" );
+        }
+        if ( returnString.contains( ")" ) ) {
+            returnString = returnString.replace( ")", "_" );
+        }
+        if ( returnString.contains( "*" ) ) {
+            returnString = returnString.replace( "*", "_" );
+        }
+        if ( returnString.contains( "+" ) ) {
+            returnString = returnString.replace( "+", "_" );
+        }
+        if ( returnString.contains( "/" ) ) {
+            returnString = returnString.replace( "/", "_" );
+        }
+        if ( returnString.contains( "\\" ) ) {
+            returnString = returnString.replaceAll( "\\", "_" );
+        }
+        if ( returnString.contains( "%" ) ) {
+            returnString = returnString.replace( "%", "_" );  //Important for this one to be at the end as the loading into JPO converts funny chars to %xx values
+        }
+
+        return returnString;
     }
 }
