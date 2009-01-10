@@ -260,6 +260,7 @@ public class JpoResources_en extends ListResourceBundle {
         { "addNewGroupJMenuItemLabel", "New Group" },
         { "addPicturesJMenuItemLabel", "Pictures" },
         { "addCollectionJMenuItemLabel", "Collection" },
+        { "addCollectionFormFile", "Choose File" },
         { "groupExportNewCollectionMenuText", "Export to Collection" },
         { "addFlatFileJMenuItemLabel", "Flat File" },
         { "moveNodeJMenuLabel", "Move" },

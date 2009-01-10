@@ -319,6 +319,7 @@ public class JpoResources_zh_TW extends ListResourceBundle {
 		{"addNewGroupJMenuItemLabel", "新建圖片組"},
 		{"addPicturesJMenuItemLabel", "圖片"},
 		{"addCollectionJMenuItemLabel", "圖片集"},
+		{"addCollectionFormFile", "Choose File"},
 		{"groupExportNewCollectionMenuText", "導出成圖片集"},
 		{"addFlatFileJMenuItemLabel", "無格式文件"},
 		{"moveNodeJMenuLabel", "移動"},

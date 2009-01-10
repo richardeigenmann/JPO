@@ -320,6 +320,7 @@ public class JpoResources_zh_CN extends ListResourceBundle {
 		{"addNewGroupJMenuItemLabel", "新建图片组"},
 		{"addPicturesJMenuItemLabel", "图片"},
 		{"addCollectionJMenuItemLabel", "图片集"},
+		{ "addCollectionFormFile", "Choose File" },
 		{"groupExportNewCollectionMenuText", "导出成图片集"},
 		{"addFlatFileJMenuItemLabel", "无格式文件"},
 		{"moveNodeJMenuLabel", "移动"},

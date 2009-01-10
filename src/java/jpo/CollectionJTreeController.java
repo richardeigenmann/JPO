@@ -185,8 +185,6 @@ public class CollectionJTreeController
         }
         autoscroll( (JTree) event.getDropTargetContext().getComponent(), event.getLocation() );
     }
-    
-    
     /** insets for autoscroll */
     private Insets autoscrollInsets = new Insets( 20, 20, 20, 20 );
 
@@ -269,7 +267,7 @@ public class CollectionJTreeController
      *   to something else. We do nothing here.
      */
     public void dragExit( DropTargetEvent event ) {
-    //Tools.log("CollectionJTreeController.dragExit( DropTargetEvent ): invoked");
+        //Tools.log("CollectionJTreeController.dragExit( DropTargetEvent ): invoked");
     }
 
     /**
@@ -417,6 +415,13 @@ public class CollectionJTreeController
      */
     public void requestAddCollection() {
         File fileToLoad = Tools.chooseXmlFile();
+    }
+
+    /**
+     *  requests that a collection be added at this point in the tree
+     *  @see GroupPopupInterface
+     */
+    public void requestAddCollection( File fileToLoad ) {
         SortableDefaultMutableTreeNode newNode = popupNode.addGroupNode( "New Group" );
         try {
             newNode.fileLoad( fileToLoad );
@@ -557,7 +562,7 @@ public class CollectionJTreeController
     public void requestSort( int sortCriteria ) {
         //Tools.log( "Sort requested on " + popupNode.toString() + " for Criteria: " + Integer.toString( sortCriteria ) );
         popupNode.sortChildren( sortCriteria );
-        //( (DefaultTreeModel) collectionJTree.getModel() ).nodeStructureChanged( popupNode );
+    //( (DefaultTreeModel) collectionJTree.getModel() ).nodeStructureChanged( popupNode );
     }
 
     /**

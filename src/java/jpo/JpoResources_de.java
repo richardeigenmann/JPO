@@ -316,6 +316,7 @@ public class JpoResources_de extends ListResourceBundle {
 		{"addNewGroupJMenuItemLabel", "Neue Gruppe"},
 		{"addPicturesJMenuItemLabel", "Bilder"},
 		{"addCollectionJMenuItemLabel", "Sammlung"},
+        { "addCollectionFormFile", "Datei Auswählen" },
 		{"groupExportNewCollectionMenuText", "Export als Sammlung"},
 		{"addFlatFileJMenuItemLabel", "Einfache Datei"},
 		{"moveNodeJMenuLabel", "Verschieben"},

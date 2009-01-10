@@ -1,8 +1,10 @@
 package jpo;
 
+import java.io.File;
+
 /*
 GroupPopupInterface.java:  interface for the group popum menu
-Copyright (C) 2002-2008 Richard Eigenmann.
+Copyright (C) 2002-2009 Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -89,7 +91,10 @@ public interface GroupPopupInterface {
 	 */
 	public void requestAddCollection();
 
-
+	/**
+	 * the implementing class must load the collection indicated
+	 */
+	public void requestAddCollection( File fileToLoad );
 	
 	/**
 	 * the implementing class must trap and do something when the user wants to
