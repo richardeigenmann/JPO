@@ -86,7 +86,7 @@ public class CameraDownloadWizardStep6 extends AbstractStep {
         @Override
         public void run() {
             Settings.memorizeCopyLocation( dataModel.targetDir.getText() );
-            if ( dataModel.getCreateNewGroup() ) {
+            if ( dataModel.getShouldCreateNewGroup() ) {
                 dataModel.setTargetNode( dataModel.getTargetNode().addGroupNode( dataModel.getNewGroupDescription() ) );
             }
             Settings.memorizeGroupOfDropLocation( dataModel.getTargetNode() );
@@ -95,13 +95,7 @@ public class CameraDownloadWizardStep6 extends AbstractStep {
                     new File( dataModel.targetDir.getText() ),
                     dataModel.getCopyMode(),
                     threadProgressBar );
-            if ( dataModel.getCreateNewGroup() ) {
-                dataModel.getTargetNode().sortChildren( Settings.CREATION_TIME );
-                // fix the group thumbnail
-                SingleNodeBrowser snb = new SingleNodeBrowser( dataModel.getTargetNode() );
-                Thumbnail thumb = new Thumbnail( snb, 0, Settings.thumbnailSize, ThumbnailCreationQueue.LOW_PRIORITY );
-                thumb.requestThumbnailCreation( ThumbnailCreationQueue.LOW_PRIORITY, true );
-            }
+            dataModel.getTargetNode().refreshThumbnail();
 
             CollectionJTreeController c = dataModel.getCollectionJTreeController();
             if ( c != null ) {

@@ -15,7 +15,7 @@ import jpo.export.HtmlDistillerOptions;
 /*
 Settings.java:  class that holds the settings of the JPO application
 
-Copyright (C) 2002-2008 Richard Eigenmann, Zürich, Switzerland
+Copyright (C) 2002-2009 Richard Eigenmann, Zürich, Switzerland
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -393,6 +393,10 @@ public class Settings {
      *  true when the pictureViewer is supposed to scale fast
      */
     public static boolean pictureViewerFastScale = true;
+        /**
+     *  Informs the PictureAdder whether to show a thumbnail or not
+     */
+    public static boolean showThumbOnFileChooser = true;
     /**
      *  Default size for buttons such as OK, cancel etc.
      */
@@ -621,6 +625,7 @@ public class Settings {
         writeRobotsTxt = prefs.getBoolean( "writeRobotsTxt", writeRobotsTxt );
         thumbnailFastScale = prefs.getBoolean( "thumbnailFastScale", thumbnailFastScale );
         pictureViewerFastScale = prefs.getBoolean( "pictureViewerFastScale", pictureViewerFastScale );
+        defaultLinkToHighres = prefs.getBoolean( "showThumbOnFileChooser", showThumbOnFileChooser );
         int n = prefs.getInt( "emailSenders", 0 );
         for ( i = 0; i < n; i++ ) {
             emailSenders.add( prefs.get( "emailSender-" + Integer.toString( i ), "" ) );
@@ -787,6 +792,7 @@ public class Settings {
         prefs.putBoolean( "writeRobotsTxt", writeRobotsTxt );
         prefs.putBoolean( "thumbnailFastScale", thumbnailFastScale );
         prefs.putBoolean( "pictureViewerFastScale", pictureViewerFastScale );
+        prefs.putBoolean( "showThumbOnFileChooser", showThumbOnFileChooser );
         n = 0;
         Iterator itr = emailSenders.iterator();
         while ( itr.hasNext() ) {

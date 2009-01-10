@@ -3,12 +3,12 @@ package jpo.export;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.io.File;
-import javax.swing.SpinnerNumberModel;
 import jpo.Settings;
 import jpo.SortableDefaultMutableTreeNode;
 
 /*
 HtmlDistillerOptions.java:  Holds the options that configure the html output.
+
 Copyright (C) 2008  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -136,6 +136,14 @@ public class HtmlDistillerOptions {
     public void setThumbnailWidth( int thumbnailWidth ) {
         this.thumbnailWidth = thumbnailWidth;
     }
+
+    /**
+     * Convenience method that returns the size of the thumbnails in a new Dimension object.
+     * @return The desired dimensions of the Thumbnail size and width.
+     */
+    public Dimension getThumbnailDimension() {
+        return new Dimension( getThumbnailWidth(), getThumbnailHeight() );
+    }
     /**
      *   The compression rate passed to the jpg compressor 0 - 1. A value of 0 means maximum
      *   compression and crap quality, 1 means best quality minimal compression. 
@@ -230,8 +238,9 @@ public class HtmlDistillerOptions {
         this.midresWidth = midresWidth;
     }
 
+
     /**
-     * Convenience method the generates a NEW Dimension object with the 
+     * Convenience method the generates a new Dimension object with the
      * Midres dimensions.
      * @return A new object with the Midres dimensions.
      */
@@ -413,7 +422,7 @@ public class HtmlDistillerOptions {
         sb.append( Settings.jpoResources.getString( "thubnailSizeJLabel" ) + " " + Integer.toString( getThumbnailWidth() ) + " x " + Integer.toString( getThumbnailHeight() ) + "\n" );
         sb.append( Settings.jpoResources.getString( "lowresJpgQualitySlider" ) + " " + Integer.toString( getLowresJpgQualityPercent() ) + "\n" );
 
-        sb.append( "\n" + Settings.jpoResources.getString( "HtmlDistMidres" ) +"\n" );
+        sb.append( "\n" + Settings.jpoResources.getString( "HtmlDistMidres" ) + "\n" );
         sb.append( isGenerateMidresHtml() ? Settings.jpoResources.getString( "HtmlDistMidresHtml" ) + "\n" : "No medium size navigation pages\n" );
         sb.append( isGenerateDHTML() ? Settings.jpoResources.getString( "generateDHTMLJCheckBox" ) + "\n" : "No  DHTML mouseover effects\n" );
         sb.append( Settings.jpoResources.getString( "midresSizeJLabel" ) + " " + Integer.toString( getMidresWidth() ) + " x " + Integer.toString( getMidresHeight() ) + "\n" );

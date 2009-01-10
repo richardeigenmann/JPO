@@ -2,7 +2,7 @@
 
 ; HM NIS Edit Wizard helper defines
 !define PRODUCT_NAME "Java Picture Organizer"
-!define PRODUCT_VERSION "0.8.5"
+!define PRODUCT_VERSION "0.9"
 !define PRODUCT_PUBLISHER "Richard Eigenmann"
 !define PRODUCT_WEB_SITE "http://j-po.sourceforge.net"
 !define PRODUCT_UNINST_KEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}"
@@ -49,7 +49,7 @@ SetCompressor lzma
 ; MUI end ------
 
 Name "${PRODUCT_NAME} ${PRODUCT_VERSION}"
-OutFile "JPO-Installer-0.8.5.exe"
+OutFile "JPO-Installer-0.9.exe"
 InstallDir "$PROGRAMFILES\JPO"
 ShowInstDetails show
 ShowUnInstDetails show
@@ -64,11 +64,15 @@ Section "MainSection" SEC01
   SetOutPath "$INSTDIR"
   SetOverwrite ifnewer
   File "jpo.exe"
-  File "..\jars\jpo-0.8.5.jar"
+  File "..\build\jars\metadata-extractor-2.3.0.jar"
+  File "..\build\jars\jpo-0.9.jar"
   File "..\libs\jnlp.jar"
-  File "..\jars\metadata-extractor-2.3.0.jar"
+  File "..\libs\jwizz-0.1.4.jar"
   File "..\libs\mail.jar"
   File "..\libs\activation.jar"
+  File "..\libs\poi-3.1-FINAL-20080629.jar"
+  File "..\libs\poi-contrib-3.1-FINAL-20080629.jar"
+  File "..\libs\poi-scratchpad-3.1-FINAL-20080629.jar"
 SectionEnd
 
 Section -AdditionalIcons
@@ -108,7 +112,11 @@ Section Uninstall
   Delete "$INSTDIR\jpo.exe"
   Delete "$INSTDIR\activation.jar"
   Delete "$INSTDIR\mail.jar"
-  Delete "$INSTDIR\jpo-0.8.5.jar"
+  Delete "$INSTDIR\jpo-0.9.jar"
+  Delete "$INSTDIR\poi-3.1-FINAL-20080629.jar"
+  Delete "$INSTDIR\poi-contrib-3.1-FINAL-20080629.jar"
+  Delete "$INSTDIR\poi-scratchpad-3.1-FINAL-20080629.jar"
+  Delete "$INSTDIR\jwizz-0.1.4.jar"
   Delete "$INSTDIR\jpo.ini"
 
   Delete "$SMPROGRAMS\Java Picture Organizer\Uninstall.lnk"

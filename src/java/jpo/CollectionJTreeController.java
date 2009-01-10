@@ -555,9 +555,9 @@ public class CollectionJTreeController
      *  gets called by the GroupPopupInterface and implements the sort request.
      */
     public void requestSort( int sortCriteria ) {
-        Tools.log( "Sort requested on " + popupNode.toString() + " for Criteria: " + Integer.toString( sortCriteria ) );
+        //Tools.log( "Sort requested on " + popupNode.toString() + " for Criteria: " + Integer.toString( sortCriteria ) );
         popupNode.sortChildren( sortCriteria );
-        ( (DefaultTreeModel) collectionJTree.getModel() ).nodeStructureChanged( popupNode );
+        //( (DefaultTreeModel) collectionJTree.getModel() ).nodeStructureChanged( popupNode );
     }
 
     /**

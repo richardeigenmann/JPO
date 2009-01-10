@@ -37,6 +37,12 @@ public class HtmlDistillerThread extends Thread {
      *  Temporary object to scale the image for the html output.
      */
     private ScalablePicture scp = new ScalablePicture();
+
+
+    {
+        scp.setQualityScale();
+        scp.setScaleSteps( 8 );
+    }
     /**
      *   Variable that signals to the thread to stop immediately.
      */
@@ -211,7 +217,7 @@ public class HtmlDistillerThread extends Thread {
      *  gets named index.htm. 1234 is the internal hashCode of the node so that we can translate parents and
      *  children to each other.
      *
-     *  <p>The object wide groupCounter is used to track how many groups have been created
+     *  <p>The object-wide groupCounter is used to track how many groups have been created
      *  so far.
      *
      *  @param groupNode		The node at which the extraction is to start.
@@ -430,53 +436,59 @@ public class HtmlDistillerThread extends Thread {
 
         int w = 0;
         int h = 0;
+        /*
         try {
-            InputStream inputStream = p.getLowresURL().openStream();
-            inputStream.close();
-            scp.loadPictureImd( p.getLowresURL(), p.getRotation() );
-            wOrig = scp.getOriginalWidth();
-            hOrig = scp.getOriginalHeight();
+        InputStream inputStream = p.getLowresURL().openStream();
+        inputStream.close();
+        scp.loadPictureImd( p.getLowresURL(), p.getRotation() );
+        wOrig = scp.getOriginalWidth();
+        hOrig = scp.getOriginalHeight();
         //Tools.log( "Image: " + p.getLowresURL().toString() + " is size: w=" + Integer.toString( wOrig ) + " h=" + Integer.toString( hOrig ) );
 
         } catch ( IOException x ) {
-            Tools.log( "got an IO error on opening " + p.getLowresURL() );
+        Tools.log( "got an IO error on opening " + p.getLowresURL() );
         }
 
 
         boolean loaded = false;
         if ( ( wOrig == options.getThumbnailWidth() ) || ( hOrig == options.getThumbnailHeight() ) ) {
-            progressLabel.setText( "copying picture " + p.getLowresLocation() + " to " + lowresFile.toString() );
-            Tools.log( "copying picture " + p.getLowresLocation() + " to " + lowresFile.toString() + " w=" + Integer.toString( wOrig ) + " h=" + Integer.toString( hOrig ) );
-            Tools.copyPicture( p.getLowresURL(), lowresFile );
-            w = wOrig;
-            h = hOrig;
+        progressLabel.setText( "copying picture " + p.getLowresLocation() + " to " + lowresFile.toString() );
+        Tools.log( "copying picture " + p.getLowresLocation() + " to " + lowresFile.toString() + " w=" + Integer.toString( wOrig ) + " h=" + Integer.toString( hOrig ) );
+        Tools.copyPicture( p.getLowresURL(), lowresFile );
+        w = wOrig;
+        h = hOrig;
         } else {
-            // it needs scaling
-            progressLabel.setText( "loading " + p.getHighresLocation() );
-            scp.loadPictureImd( p.getHighresURL(), p.getRotation() );
+        // it needs scaling
+         */
 
-            if ( scp.getStatusCode() == ScalablePicture.ERROR ) {
-                Tools.log( "HtmlDistillerThread.writeHtmlPicture: problem reading image using brokenThumbnailPicture instead" );
-                scp.loadPictureImd( Settings.cl.getResource( "jpo/images/broken_thumbnail.gif" ), 0f );
-            }
+        progressLabel.setText( "loading " + p.getHighresLocation() );
+        scp.loadPictureImd( p.getHighresURL(), p.getRotation() );
 
-            scp.setScaleSize( new Dimension( options.getThumbnailWidth(), options.getThumbnailWidth() ) );
-            progressLabel.setText( "scaling " + p.getHighresLocation() );
-            scp.scalePicture();
-            progressLabel.setText( "writing " + lowresFile.toString() );
-            scp.setJpgQuality( options.getLowresJpgQuality() );
-            scp.writeScaledJpg( lowresFile );
-            w = scp.getScaledWidth();
-            h = scp.getScaledHeight();
-            loaded = true;
+        if ( scp.getStatusCode() == ScalablePicture.ERROR ) {
+            Tools.log( "HtmlDistillerThread.writeHtmlPicture: problem reading image using brokenThumbnailPicture instead" );
+            scp.loadPictureImd( Settings.cl.getResource( "jpo/images/broken_thumbnail.gif" ), 0f );
         }
+
+        scp.setScaleSize( options.getThumbnailDimension() );
+        progressLabel.setText( "scaling " + p.getHighresLocation() );
+        scp.scalePicture();
+        progressLabel.setText( "writing " + lowresFile.toString() );
+        scp.setJpgQuality( options.getLowresJpgQuality() );
+        scp.writeScaledJpg( lowresFile );
+        w = scp.getScaledWidth();
+        h = scp.getScaledHeight();
+        //loaded = true;
+        //}
 
 
         out.write( "<td valign=\"bottom\">" );
 
         // write an anchor so the up come back
-        out.write( "<a name=\"" + stringToHTMLString( lowresFile.getName() ) + "\" />" );
-
+        // but only if we are generating MidresHTML pages
+        if ( options.isGenerateMidresHtml() ) {
+            out.write( "<a name=\"" + stringToHTMLString( lowresFile.getName() ) + "\" />" );
+        }
+        
         out.write( "<a href=\"" );
         if ( options.isGenerateMidresHtml() ) {
             out.write( midresHtmlFileName );
@@ -494,10 +506,10 @@ public class HtmlDistillerThread extends Thread {
 
 
         // scale the midres picture
-        if ( !loaded ) {
-            progressLabel.setText( "loading " + p.getHighresLocation() );
-            scp.loadPictureImd( p.getHighresURL(), p.getRotation() );
-        }
+        //       if ( !loaded ) {
+        //progressLabel.setText( "loading " + p.getHighresLocation() );
+        //scp.loadPictureImd( p.getHighresURL(), p.getRotation() );
+        //       }
         scp.setScaleSize( options.getMidresDimension() );
         progressLabel.setText( "scaling " + p.getHighresLocation() );
         scp.scalePicture();

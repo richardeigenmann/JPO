@@ -81,7 +81,7 @@ public class CameraDownloadWizardStep5 extends AbstractStep {
         label2.setText( Settings.jpoResources.getString("DownloadCameraWizardStep5Text4" ) + dataModel.getCamera().getDescription() );
         
         // Adding to [new] folder xxx
-        if ( dataModel.getCreateNewGroup() ) {
+        if ( dataModel.getShouldCreateNewGroup() ) {
             label3.setText(  Settings.jpoResources.getString("DownloadCameraWizardStep5Text5" ) + dataModel.getNewGroupDescription() );
         } else {
             label3.setText(  Settings.jpoResources.getString("DownloadCameraWizardStep5Text6" ) + dataModel.getTargetNode().toString() );

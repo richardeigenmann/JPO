@@ -63,8 +63,8 @@ public class CameraDownloadWizardStep3 extends AbstractStep {
         final Component secondStrut = Box.createVerticalStrut( 8 );
 
         // set the initial visibility
-        createSubGroupCheckBox.setSelected( dataModel.getCreateNewGroup() );
-        dataModel.setCreateNewGroup( createSubGroupCheckBox.isSelected() );
+        createSubGroupCheckBox.setSelected( dataModel.getShouldCreateNewGroup() );
+        dataModel.setShouldCreateNewGroup( createSubGroupCheckBox.isSelected() );
         titleLabel.setVisible( createSubGroupCheckBox.isSelected() );
         newGroupName.setVisible( createSubGroupCheckBox.isSelected() );
         secondStrut.setVisible( createSubGroupCheckBox.isSelected() );
@@ -77,7 +77,7 @@ public class CameraDownloadWizardStep3 extends AbstractStep {
         createSubGroupCheckBox.addChangeListener( new ChangeListener() {
 
             public void stateChanged( ChangeEvent e ) {
-                dataModel.setCreateNewGroup( createSubGroupCheckBox.isSelected() );
+                dataModel.setShouldCreateNewGroup( createSubGroupCheckBox.isSelected() );
                 titleLabel.setVisible( createSubGroupCheckBox.isSelected() );
                 newGroupName.setVisible( createSubGroupCheckBox.isSelected() );
                 secondStrut.setVisible( createSubGroupCheckBox.isSelected() );

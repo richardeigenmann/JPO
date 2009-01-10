@@ -131,7 +131,7 @@ public class CameraDownloadWizardData {
     /**
      *  Sets the name for the new group, if a new group should be created. If this is not set
      *  a default of "Download <<date>>" is proposed. Calling this method can change that name.
-     *  If the (@link #createNewGroup} flag has been set a new group is created, otherwise this String
+     *  If the (@link #shouldCreateNewGroup} flag has been set a new group is created, otherwise this String
      *  will not be used.
      */
     public void setNewGroupDescription( String newGroupDescription ) {
@@ -149,21 +149,21 @@ public class CameraDownloadWizardData {
     /**
      *  A Flag to indicate whether to create a new group or whether to add pictures to an existing group.
      */
-    private boolean createNewGroup = false;
+    private boolean shouldCreateNewGroup = false;
     /**
      *  Sets whether to create a new Group or not.
-     *  @param  createNewGroup  If set to true a new group will be created, if false, not.
+     *  @param  shouldCreateNewGroup  If set to true a new group will be created, if false, not.
      */
-    public void setCreateNewGroup(boolean createNewGroup) {
-        this.createNewGroup = createNewGroup;
+    public void setShouldCreateNewGroup(boolean createNewGroup) {
+        this.shouldCreateNewGroup = createNewGroup;
     }
     /**
      *  returns whether a new Group should be created.
      *  @return true if a new group should be created, false if not.
-     *  @see #setCreateNewGroup
+     *  @see #setShouldCreateNewGroup
      */
-    public boolean getCreateNewGroup() {
-        return createNewGroup;
+    public boolean getShouldCreateNewGroup() {
+        return shouldCreateNewGroup;
     }
     
     /**
