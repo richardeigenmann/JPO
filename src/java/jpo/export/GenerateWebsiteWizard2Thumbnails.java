@@ -1,8 +1,11 @@
 package jpo.export;
 
+import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.util.Hashtable;
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -13,12 +16,14 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import jpo.Settings;
+import jpo.Tools;
 import net.javaprog.ui.wizard.AbstractStep;
 
 /*
 GenerateWebsiteWizard2Thumbnails.java:  Specify stuff about the Thumbnails
 
-Copyright (C) 2008  Richard Eigenmann.
+Copyright (C) 2008-2009  Richard Eigenmann. Zürich
+
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -78,6 +83,10 @@ public class GenerateWebsiteWizard2Thumbnails extends AbstractStep {
             JSlider.HORIZONTAL,
             0, 100,
             (int) ( Settings.defaultHtmlLowresQuality * 100 ) );
+    /**
+     *  Modifies the height of the thumbnails, 100 to 1000, start with 300 increment 25
+     **/
+    private JSpinner scalingSteps = new JSpinner( new SpinnerNumberModel( 8, 1, 20, 1 ) );
 
     /**
      * Creates the GUI widgets
@@ -125,26 +134,56 @@ public class GenerateWebsiteWizard2Thumbnails extends AbstractStep {
 
         // Thumbnail Quality Slider
         JPanel lowresQualitySliderJPanel = new JPanel( new FlowLayout( FlowLayout.LEFT ) );
+        lowresQualitySliderJPanel.setMaximumSize( GenerateWebsiteWizard.tallerComponentSize );
         lowresQualitySliderJPanel.setAlignmentX( Component.LEFT_ALIGNMENT );
-        //thumbnailSizeJPanel.setMaximumSize( GenerateWebsiteWizard.tallerComponentSize );
-        lowresQualitySliderJPanel.add( new JLabel( Settings.jpoResources.getString( "lowresJpgQualitySlider" ) ) );
+        lowresQualitySliderJPanel.add(
+                new JLabel(
+                Settings.jpoResources.getString( "lowresJpgQualitySlider" ) ) );
         Hashtable labelTable = new Hashtable();
-        labelTable.put( new Integer( 0 ), new JLabel( Settings.jpoResources.getString( "jpgQualityBad" ) ) );
-        labelTable.put( new Integer( 80 ), new JLabel( Settings.jpoResources.getString( "jpgQualityGood" ) ) );
-        labelTable.put( new Integer( 100 ), new JLabel( Settings.jpoResources.getString( "jpgQualityBest" ) ) );
+        labelTable.put(
+                new Integer( 0 ), new JLabel( Settings.jpoResources.getString( "jpgQualityBad" ) ) );
+        labelTable.put(
+                new Integer( 80 ), new JLabel( Settings.jpoResources.getString( "jpgQualityGood" ) ) );
+        labelTable.put(
+                new Integer( 100 ), new JLabel( Settings.jpoResources.getString( "jpgQualityBest" ) ) );
         lowresJpgQualityJSlider.setLabelTable( labelTable );
-        lowresJpgQualityJSlider.setMajorTickSpacing( 10 );
-        lowresJpgQualityJSlider.setMinorTickSpacing( 5 );
-        lowresJpgQualityJSlider.setPaintTicks( true );
-        lowresJpgQualityJSlider.setPaintLabels( true );
-        lowresJpgQualityJSlider.addChangeListener( new ChangeListener() {
+        lowresJpgQualityJSlider.setMajorTickSpacing(
+                10 );
+        lowresJpgQualityJSlider.setMinorTickSpacing(
+                5 );
+        lowresJpgQualityJSlider.setPaintTicks(
+                true );
+        lowresJpgQualityJSlider.setPaintLabels(
+                true );
+        lowresJpgQualityJSlider.addChangeListener(
+                new ChangeListener() {
 
-            public void stateChanged( ChangeEvent arg0 ) {
-                options.setLowresJpgQualityPercent( lowresJpgQualityJSlider.getValue() );
-            }
-        } );
+                    public void stateChanged( ChangeEvent arg0 ) {
+                        options.setLowresJpgQualityPercent( lowresJpgQualityJSlider.getValue() );
+                    }
+                } );
+
+        lowresJpgQualityJSlider.setAlignmentX( Component.LEFT_ALIGNMENT );
         lowresQualitySliderJPanel.add( lowresJpgQualityJSlider );
         wizardPanel.add( lowresQualitySliderJPanel );
+
+        JPanel scalingStepsPanel = new JPanel( new FlowLayout( FlowLayout.LEFT ) );
+        scalingStepsPanel.setAlignmentX( Component.LEFT_ALIGNMENT );
+        scalingStepsPanel.setAlignmentY( Component.TOP_ALIGNMENT );
+        scalingStepsPanel.setMaximumSize( GenerateWebsiteWizard.normalComponentSize );
+        scalingStepsPanel.add( new JLabel( Settings.jpoResources.getString( "scalingSteps" ) ) );
+
+        scalingSteps.setAlignmentX( Component.LEFT_ALIGNMENT );
+        scalingSteps.addChangeListener( new ChangeListener() {
+
+            public void stateChanged( ChangeEvent arg0 ) {
+                options.setScalingSteps( ( (SpinnerNumberModel) ( scalingSteps.getModel() ) ).getNumber().intValue() );
+            }
+        } );
+        scalingStepsPanel.add( scalingSteps );
+        wizardPanel.add( scalingStepsPanel );
+
+        wizardPanel.add( Box.createVerticalGlue() );
 
         return wizardPanel;
     }

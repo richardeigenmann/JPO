@@ -5,7 +5,7 @@ import java.util.*;
 /*
 JpoResources_cn.java:  class that holds the generic labels for the JPO application
 
-Copyright (C) 2002-2008  Richard Eigenmann, Zurich, Switzerland
+Copyright (C) 2002-2009  Richard Eigenmann, Zurich, Switzerland
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -62,7 +62,7 @@ public class JpoResources_zh_CN extends ListResourceBundle {
 		// Help About Dialog
 		{"HelpAboutText", "JPO 版本 0.9 是基于Java/Swing 开发的软件\n" 
 			+ "作者Richard Eigenmann在瑞士苏黎世, \n" 
-			+ "版权 2000 - 2008\n"
+			+ "版权 2000 - 2009\n"
 			+ "邮件地址：richard.eigenmann@gmail.com\n"
 			+ "软件主页网址：http://j-po.sourceforge.net\n"
 			+ "\nExif（可交换图像文件）的抽取部分蒙Drew Noakes的帮助\n"
@@ -193,35 +193,36 @@ public class JpoResources_zh_CN extends ListResourceBundle {
 
 
 		// HtmlDistillerJFrame
-		{"HtmlDistillerJFrameHeading", "以HTML格式导出"},  // ToDo: change to Generate Website
-		{"HtmlDistillerThreadTitle", "导出成HTML"}, 
-		{"HtmlDistillerChooserTitle", "选择保存HTML文件夹位置"},
-		{"HtmlDistTarget", "Target"}, //new
-		{"HtmlDistThumbnails", "Thumbnails"},  //new
-		{"exportHighresJCheckBox", "导出清晰图片"},
-		{"linkToHighresJCheckBox", "使用当前位置链接到清晰图片"},
-		{"generateDHTMLJCheckBox", "生成DHTML鼠标移动效果"},
-		{"generateZipfileJCheckBox", "生成清晰图片可用于下载的压缩文件包"},
-		{"picsPerRowText", "列"},
-		{"thubnailSizeJLabel", "所略图尺寸"},
-		{"htmlDistCrtDirError", "不能够导出到文件夹！"},
-		{"htmlDistIsDirError", "这不是一个文件夹！"},
-		{"htmlDistCanWriteError", "这不是一个可写的文件夹"},
-		{"htmlDistIsNotEmptyWarning", "目标文件夹不为空\n点确认将继续操作但可能覆盖已有的文件。"},
+		{ "HtmlDistillerJFrameHeading", "以HTML格式导出"},  // ToDo: change to Generate Website
+		{ "HtmlDistillerThreadTitle", "导出成HTML"}, 
+		{ "HtmlDistillerChooserTitle", "选择保存HTML文件夹位置"},
+		{ "HtmlDistTarget", "Target"}, //new
+		{ "HtmlDistThumbnails", "Thumbnails"},  //new
+		{ "exportHighresJCheckBox", "导出清晰图片"},
+		{ "linkToHighresJCheckBox", "使用当前位置链接到清晰图片"},
+		{ "generateDHTMLJCheckBox", "生成DHTML鼠标移动效果"},
+		{ "generateZipfileJCheckBox", "生成清晰图片可用于下载的压缩文件包"},
+		{ "picsPerRowText", "列"},
+		{ "thubnailSizeJLabel", "所略图尺寸"},
+		{ "scalingSteps","Scaling steps: " },
+		{ "htmlDistCrtDirError", "不能够导出到文件夹！"},
+		{ "htmlDistIsDirError", "这不是一个文件夹！"},
+		{ "htmlDistCanWriteError", "这不是一个可写的文件夹"},
+		{ "htmlDistIsNotEmptyWarning", "目标文件夹不为空\n点确认将继续操作但可能覆盖已有的文件。"},
 		{ "HtmlDistMidres", "Medium size images"},  //new
 		{ "HtmlDistMidresHtml", "Generate navigation pages"},  //new
-		{"midresSizeJLabel", "清晰度滑尺"},
-		{"midresJpgQualitySlider", "Jpg清晰度"},
-		{"lowresJpgQualitySlider", "低清晰度Jpg"},
-		{"jpgQualityBad", "低分辨率"},
-		{"jpgQualityGood", "一般分辨率"},
-		{"jpgQualityBest", "高清晰"},
+		{ "midresSizeJLabel", "清晰度滑尺"},
+		{ "midresJpgQualitySlider", "Jpg清晰度"},
+		{ "lowresJpgQualitySlider", "低清晰度Jpg"},
+		{ "jpgQualityBad", "低分辨率"},
+		{ "jpgQualityGood", "一般分辨率"},
+		{ "jpgQualityBest", "高清晰"},
 		{ "HtmlDistHighres", "High resolution originals"},  //new
 		{ "HtmlDistOptions", "Options"},  //new
-		{"HtmlDistillerNumbering", "Create Image Filenames"},
-		{"hashcodeRadioButton",  "using Java Hash Code" },
-		{"originalNameRadioButton", "using original image name" },
-		{"sequentialRadioButton",  "using sequential number" },
+		{ "HtmlDistillerNumbering", "Create Image Filenames"},
+		{ "hashcodeRadioButton",  "using Java Hash Code" },
+		{ "originalNameRadioButton", "using original image name" },
+		{ "sequentialRadioButton",  "using sequential number" },
 		{ "sequentialRadioButtonStart", "Starting at" }, //new
 		{ "generateRobotsJCheckBox", "Prevent search engines from indexing (write robots.txt)" }, //new
 		{ "welcomeTitle", "Welcome"}, // new

@@ -5,7 +5,8 @@ import java.util.*;
 /*
 JpoResources_de.java:  class that holds the German Language generic labels for the JPO application
 
-Copyright (C) 2002-2008  Richard Eigenmann, Zürich, Switzerland
+Copyright (C) 2002-2009  Richard Eigenmann, Zürich, Switzerland
+ 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -59,7 +60,7 @@ public class JpoResources_de extends ListResourceBundle {
 		// Help About Dialog
 		{"HelpAboutText", "JPO Version 0.9 ist ein Java/Swing Programm\n" 
 			+ "geschrieben von Richard Eigenmann, Zürich, Schweiz\n" 
-			+ "Copyright 2000 - 2008\n"
+			+ "Copyright 2000 - 2009\n"
 			+ "richard.eigenmann@gmail.com\n"
 			+ "http://j-po.sourceforge.net\n"
 			+ "\nDie Exif Extraktion wurde von Drew Noakes entwickelt\n"
@@ -200,6 +201,7 @@ public class JpoResources_de extends ListResourceBundle {
 		{"generateZipfileJCheckBox", "Zipfile für Download der hoch auflösenden Bilder generieren"},
 		{"picsPerRowText", "Spalten"},
 		{"thubnailSizeJLabel", "Grösse: "},
+        {"scalingSteps","Verkleinerungsschritte: "},
 		{"htmlDistCrtDirError", "Konnte das Export Verzeichnis nicht generieren!"},
 		{"htmlDistIsDirError", "Das ist kein Verzeichnis!"},
 		{"htmlDistCanWriteError", "Dies ist kein Beschreibbares Verzeichnis!"},

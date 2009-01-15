@@ -37,12 +37,6 @@ public class HtmlDistillerThread extends Thread {
      *  Temporary object to scale the image for the html output.
      */
     private ScalablePicture scp = new ScalablePicture();
-
-
-    {
-        scp.setQualityScale();
-        scp.setScaleSteps( 8 );
-    }
     /**
      *   Variable that signals to the thread to stop immediately.
      */
@@ -146,6 +140,11 @@ public class HtmlDistillerThread extends Thread {
         progressFrame.pack();
         progressFrame.setVisible( true );
         progressFrame.setLocationRelativeTo( Settings.anchorFrame );
+
+
+
+        scp.setQualityScale();
+        scp.setScaleSteps( options.getScalingSteps() );
 
 
         // create zip
@@ -488,7 +487,7 @@ public class HtmlDistillerThread extends Thread {
         if ( options.isGenerateMidresHtml() ) {
             out.write( "<a name=\"" + stringToHTMLString( lowresFile.getName() ) + "\" />" );
         }
-        
+
         out.write( "<a href=\"" );
         if ( options.isGenerateMidresHtml() ) {
             out.write( midresHtmlFileName );

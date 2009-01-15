@@ -5,7 +5,7 @@ import java.util.*;
 /*
 JpoResources_en.java:  class that holds the generic labels for the JPO application
 
-Copyright (C) 2002-2008  Richard Eigenmann, Zürich, Switzerland
+Copyright (C) 2002-2009  Richard Eigenmann, Zürich, Switzerland
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -51,7 +51,7 @@ public class JpoResources_en extends ListResourceBundle {
         { "outOfMemoryError", "An out of Memory error has occured" },
         { "areYouSure", "Are you sure?" },
         // Help About Dialog
-        { "HelpAboutText", "JPO Version 0.9 is a Java/Swing program\n" + "written by Richard Eigenmann, Zürich, Switzerland\n" + "Copyright 2000 - 2008\n" + "richard.eigenmann@gmail.com\n" + "http://j-po.sourceforge.net\n" + "\nThe Exif extration is courtesy of Drew Noakes\n" + "The Table sorter is courtesy of Philip Milne\n\n" },
+        { "HelpAboutText", "JPO Version 0.9 is a Java/Swing program\n" + "written by Richard Eigenmann, Zürich, Switzerland\n" + "Copyright 2000 - 2009\n" + "richard.eigenmann@gmail.com\n" + "http://j-po.sourceforge.net\n" + "\nThe Exif extration is courtesy of Drew Noakes\n" + "The Table sorter is courtesy of Philip Milne\n\n" },
         { "HelpAboutUser", "User: " },
         { "HelpAboutOs", "Operating System: " },
         { "HelpAboutJvm", "JVM: " },
@@ -158,6 +158,7 @@ public class JpoResources_en extends ListResourceBundle {
         { "generateZipfileJCheckBox", "Generate Zipfile for download of Highres Pictures" },
         { "picsPerRowText", "Columns: " },
         { "thubnailSizeJLabel", "Thumbnail size:" },
+        { "scalingSteps","Scaling steps: " },
         { "htmlDistCrtDirError", "Could not create Export directory!" },
         { "htmlDistIsDirError", "This is not a directory!" },
         { "htmlDistCanWriteError", "This is not a writable directory!" },

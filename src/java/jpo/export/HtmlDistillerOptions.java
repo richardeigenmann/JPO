@@ -9,7 +9,7 @@ import jpo.SortableDefaultMutableTreeNode;
 /*
 HtmlDistillerOptions.java:  Holds the options that configure the html output.
 
-Copyright (C) 2008  Richard Eigenmann.
+Copyright (C) 2008-2009,  Richard Eigenmann, Zürich
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -145,6 +145,26 @@ public class HtmlDistillerOptions {
         return new Dimension( getThumbnailWidth(), getThumbnailHeight() );
     }
     /**
+     * The number of scaling steps. Interestingly the quality gets better if scaling is done in several steps.
+     */
+    private int scalingSteps = 1;
+
+    /**
+     * The number of scaling steps. Interestingly the quality gets better if scaling is done in several steps.
+     * @return the number of scaling steps
+     */
+    public int getScalingSteps() {
+        return scalingSteps;
+    }
+
+    /**
+     * Sets the number of scaling steps. Interestingly the quality gets better if scaling is done in several steps.
+     * @param scalingSteps the new number of scaling Steps
+     */
+    public void setScalingSteps( int scalingSteps ) {
+        this.scalingSteps = scalingSteps;
+    }
+    /**
      *   The compression rate passed to the jpg compressor 0 - 1. A value of 0 means maximum
      *   compression and crap quality, 1 means best quality minimal compression. 
      *   0.8 is a good value.
@@ -237,7 +257,6 @@ public class HtmlDistillerOptions {
     public void setMidresWidth( int midresWidth ) {
         this.midresWidth = midresWidth;
     }
-
 
     /**
      * Convenience method the generates a new Dimension object with the
@@ -421,6 +440,7 @@ public class HtmlDistillerOptions {
         sb.append( Settings.jpoResources.getString( "picsPerRowText" ) + " " + getPicsPerRow() + "\n" );
         sb.append( Settings.jpoResources.getString( "thubnailSizeJLabel" ) + " " + Integer.toString( getThumbnailWidth() ) + " x " + Integer.toString( getThumbnailHeight() ) + "\n" );
         sb.append( Settings.jpoResources.getString( "lowresJpgQualitySlider" ) + " " + Integer.toString( getLowresJpgQualityPercent() ) + "\n" );
+        sb.append( Settings.jpoResources.getString( "scalingSteps" ) + " " + Integer.toString( getScalingSteps() ) + "\n" );
 
         sb.append( "\n" + Settings.jpoResources.getString( "HtmlDistMidres" ) + "\n" );
         sb.append( isGenerateMidresHtml() ? Settings.jpoResources.getString( "HtmlDistMidresHtml" ) + "\n" : "No medium size navigation pages\n" );

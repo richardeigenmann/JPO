@@ -5,7 +5,7 @@ import java.util.*;
 /*
 JpoResources_cn.java:  class that holds the generic labels for the JPO application
 
-Copyright (C) 2002-2008  Richard Eigenmann, Zurich, Switzerland
+Copyright (C) 2002-2009  Richard Eigenmann, Zurich, Switzerland
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -62,7 +62,7 @@ public class JpoResources_zh_TW extends ListResourceBundle {
 		// Help About Dialog
 		{"HelpAboutText", "JPO 版本 0.9 是基于Java/Swing 開發的軟件\n" 
 			+ "作者Richard Eigenmann在瑞士蘇黎世, \n" 
-			+ "版權 2000 - 2008\n"
+			+ "版權 2000 - 2009\n"
 			+ "郵件地址：richard.eigenmann@gmail.com\n"
 			+ "軟件主頁网址：http://j-po.sourceforge.net\n"
 			+ "\nExif（可交換圖像文件）的抽取部分蒙Drew Noakes的幫助\n"
@@ -203,6 +203,7 @@ public class JpoResources_zh_TW extends ListResourceBundle {
 		{"generateZipfileJCheckBox", "生成清晰圖片可用于下載的壓縮文件包"},
 		{"picsPerRowText", "列"},
 		{"thubnailSizeJLabel", "所略圖尺寸"},
+		{ "scalingSteps","Scaling steps: " },
 		{"htmlDistCrtDirError", "不能夠導出到文件夾！"},
 		{"htmlDistIsDirError", "這不是一個文件夾！"},
 		{"htmlDistCanWriteError", "這不是一個可寫的文件夾"},

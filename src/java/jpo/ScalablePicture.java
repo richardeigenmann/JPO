@@ -1,24 +1,36 @@
 package jpo;
 
-import java.util.*;
-import javax.swing.*;
-import java.awt.*;
-import java.awt.image.*;
+import java.awt.Dimension;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
-import javax.imageio.*;
-import javax.imageio.stream.*;
-import javax.imageio.plugins.jpeg.*;
-
-import java.io.*;
-import java.net.*;
-import java.util.Vector;
+import java.awt.image.AffineTransformOp;
+import java.awt.image.BufferedImage;
+import java.awt.image.IndexColorModel;
+import java.awt.image.RenderedImage;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.URL;
 import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.Vector;
+import javax.imageio.IIOImage;
+import javax.imageio.ImageIO;
+import javax.imageio.ImageTypeSpecifier;
+import javax.imageio.ImageWriteParam;
+import javax.imageio.ImageWriter;
+import javax.imageio.plugins.jpeg.JPEGImageWriteParam;
+import javax.imageio.stream.ImageOutputStream;
+import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
+
+
 
 /*
 ScalablePicture.java:  class that can load and save images
 
-Copyright (C) 2002-2007  Richard Eigenmann.
+Copyright (C) 2002-2009  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2

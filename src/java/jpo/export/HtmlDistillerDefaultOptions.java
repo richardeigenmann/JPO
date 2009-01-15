@@ -6,7 +6,8 @@ import java.io.File;
 /*
 HtmlDistillerDefaultOptions.java:  Extends an HtmlDistillerOptions class and 
 pre-populates the options with default values.
-Copyright (C) 2008  Richard Eigenmann.
+
+Copyright (C) 2008-2009  Richard Eigenmann, Zürich
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -55,6 +56,7 @@ public class HtmlDistillerDefaultOptions extends HtmlDistillerOptions {
         setWriteRobotsTxt( Settings.writeRobotsTxt );
         setBackgroundColor( Settings.htmlBackgroundColor );
         setFontColor( Settings.htmlFontColor );
+        setScalingSteps( 8 );
 
     }
 }

@@ -91,7 +91,7 @@ public class GenerateWebsiteWizard {
             }
         } );
 
-        try {
+       /* try {
             final String Metal = "javax.swing.plaf.metal.MetalLookAndFeel";
             UIManager.setLookAndFeel( Metal );
         } catch ( ClassNotFoundException ex ) {
@@ -102,7 +102,7 @@ public class GenerateWebsiteWizard {
             Logger.getLogger( GenerateWebsiteWizard.class.getName() ).log( Level.SEVERE, null, ex );
         } catch ( UnsupportedLookAndFeelException ex ) {
             Logger.getLogger( GenerateWebsiteWizard.class.getName() ).log( Level.SEVERE, null, ex );
-        }
+        } */
 
         Wizard wizard = new Wizard( model, Settings.jpoResources.getString( "HtmlDistillerJFrameHeading" ) );
 
