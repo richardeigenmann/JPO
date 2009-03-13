@@ -127,7 +127,7 @@ public class ExifInfo {
 	 */
 	public void decodeExifTags() {
 		if ( pictureUrl == null ) {
-			Tools.log ("ExifInfo.decodeExifTags: called with a null pictureUrl. aborting" );
+			//Tools.log ("ExifInfo.decodeExifTags: called with a null pictureUrl. aborting" );
 			return;
 		}
 			
@@ -167,17 +167,17 @@ public class ExifInfo {
 							+ tag.getDescription()
 							+ "\n");	
 					} catch ( MetadataException x ) {
-						Tools.log ("ExifInfo: problem with tag: " + x.getMessage());
+						//Tools.log ("ExifInfo: problem with tag: " + x.getMessage());
 					}	
 				}
 			}
 		} catch ( MalformedURLException x ) { 
-			Tools.log( "MalformedURLException: " + x.getMessage() );
+			//Tools.log( "MalformedURLException: " + x.getMessage() );
 		} catch ( IOException x ) {
-			Tools.log( "IOException: " + x.getMessage() );
+			//Tools.log( "IOException: " + x.getMessage() );
 		} catch ( JpegProcessingException x ) { 
 			//x.printStackTrace();
-			exifDump.append( "No EXIF header found\n" + x.getMessage() );
+			//exifDump.append( "No EXIF header found\n" + x.getMessage() );
 		}
 		if ( camera == null ) { camera = ""; }
 		if ( lens == null ) { lens = ""; }
@@ -198,7 +198,7 @@ public class ExifInfo {
 			//searchString = directory.getString( tag );
 			searchString = directory.getDescription( tag );
 		} catch ( MetadataException x ) {
-			Tools.log ("ExifInfo.tryToGetTag: problem with tag: " + x.getMessage());
+			//Tools.log ("ExifInfo.tryToGetTag: problem with tag: " + x.getMessage());
 			searchString = null;
 		}	
 		if ( searchString == null ) { 

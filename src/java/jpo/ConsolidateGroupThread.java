@@ -200,7 +200,7 @@ public class ConsolidateGroupThread extends Thread {
 
             oldFileParent = p.getHighresFile().getParentFile();
             if ( ( oldFileParent != null ) && ( oldFileParent.equals( targetDirectory ) ) ) {
-                Tools.log( "ConsolidateGroupThread.moveHighresPicture: path is identical (" + oldFileParent.toString() + "==" + p.getHighresFile().getParentFile().toString() + ") . Not Moving Picture: " + p.getHighresLocation() );
+                //Tools.log( "ConsolidateGroupThread.moveHighresPicture: path is identical (" + oldFileParent.toString() + "==" + p.getHighresFile().getParentFile().toString() + ") . Not Moving Picture: " + p.getHighresLocation() );
                 return true;
             }
 

@@ -69,7 +69,6 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
         return Settings.pictureCollection;
     }
 
-
     /**
      *  Call this method to sort the Children of a node by a field. The value of sortCriteria can be one of
      *   {@link Settings#DESCRIPTION}, {@link Settings#FILM_REFERENCE}, {@link Settings#CREATION_TIME},
@@ -1244,7 +1243,7 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
      *  group. The ImageIO.getImageReaders method is queried to see whether a reader
      *  exists for the image that is attempted to be loaded.
      *  @param retainDirectories  indicates whether to preserve the directory structure
-     *  @return returns the node that was added.
+     *  @return returns the node that was added or null if none was.
      */
     private SortableDefaultMutableTreeNode addDirectory( File dir, boolean newOnly, boolean recurseDirectories, boolean retainDirectories, ProgressGui progGui, HashSet selectedCategories ) {
         SortableDefaultMutableTreeNode newNode;
@@ -1270,7 +1269,13 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
                 }
             }
         }
-        return newNode;
+        // it can happen that we end up adding no pictures and could be returning a new empty group
+        if ( retainDirectories && ( newNode.getChildCount() == 0 ) ) {
+            newNode.deleteNode();
+            return this;
+        } else {
+            return newNode;
+        }
     }
 
     /**

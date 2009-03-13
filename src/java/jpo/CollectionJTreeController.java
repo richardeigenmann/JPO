@@ -1,6 +1,5 @@
 package jpo;
 
-import jpo.export.HtmlDistillerJFrame;
 import java.awt.*;
 import java.awt.dnd.*;
 
@@ -15,7 +14,7 @@ import jpo.export.GenerateWebsiteWizard;
 /*
 CollectionJTreeController.java:  class that manages a JTree for the collection
  * 
-Copyright (C) 2002-2008  Richard Eigenmann, Zurich, Switzerland
+Copyright (C) 2002-2009 Richard Eigenmann, Zurich, Switzerland
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -415,6 +414,8 @@ public class CollectionJTreeController
      */
     public void requestAddCollection() {
         File fileToLoad = Tools.chooseXmlFile();
+        if ( fileToLoad != null )
+                requestAddCollection( fileToLoad ); 
     }
 
     /**

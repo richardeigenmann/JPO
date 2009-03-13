@@ -25,8 +25,6 @@ import javax.imageio.stream.ImageOutputStream;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
-
-
 /*
 ScalablePicture.java:  class that can load and save images
 
@@ -413,7 +411,9 @@ public class ScalablePicture implements SourcePictureListener {
                 for ( int i = 0; i < getScaleSteps(); i++ ) {
                     pStep = new Point2D.Float( (float) scaledPicture.getWidth(), (float) ( scaledPicture.getHeight() ) );
                     pStep = afStep.transform( pStep, null );
-                    biStep = new BufferedImage( (int) Math.rint( pStep.getX() ), (int) Math.rint( pStep.getY() ), sourcePicture.getSourceBufferedImage().getType() );
+                    int x = (int) Math.rint( pStep.getX() );
+                    int y = (int) Math.rint( pStep.getY() );
+                    biStep = new BufferedImage( x, y, sourcePicture.getSourceBufferedImage().getType() );
                     scaledPicture = opStep.filter( scaledPicture, biStep );
                 }
 

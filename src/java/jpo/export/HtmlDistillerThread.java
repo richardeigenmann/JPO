@@ -265,7 +265,7 @@ public class HtmlDistillerThread extends Thread {
             if ( groupNode.equals( options.getStartNode() ) ) {
                 if ( options.isGenerateZipfile() ) {
                     out.newLine();
-                    out.write( "<a href=\"Download.zip\">Download High Resolution Pictures as a Zipfile</a>" );
+                    out.write( "<a href=\"" +options.getDownloadZipFileName() + "\">Download High Resolution Pictures as a Zipfile</a>" );
                     out.newLine();
                 }
             } else {
@@ -739,7 +739,7 @@ public class HtmlDistillerThread extends Thread {
                 midresHtmlWriter.newLine();
             }
             if ( options.isGenerateZipfile() ) {
-                midresHtmlWriter.write( "<br /><a href=\"Download.zip\">Download Zip</a>" );
+                midresHtmlWriter.write( "<br /><a href=\"" + options.getDownloadZipFileName() + "\">Download Zip</a>" );
                 midresHtmlWriter.newLine();
             }
 
