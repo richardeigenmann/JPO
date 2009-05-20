@@ -1,10 +1,15 @@
 package jpo;
 
+import jpo.dataModel.GroupInfo;
+import jpo.dataModel.SortableDefaultMutableTreeNode;
+import jpo.gui.ProgressGui;
+import jpo.dataModel.PictureInfo;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Enumeration;
 import javax.swing.JOptionPane;
+import jpo.dataModel.NodeStatistics;
 
 /*
 ConsolidateGroupThread.java:  class that consolidated the pictures of a group in one directory
@@ -26,28 +31,33 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 /**
  *  This class moves all pictures of a group node to a target directory.
  */
-public class ConsolidateGroupThread extends Thread {
+public class ConsolidateGroupThread implements Runnable {
 
     /**
      *  the directory where the pictures are to be moved to
      */
     private File targetDirectory;
+
     /**
      *  the directory where the lowres pictures are to be moved to
      */
     private File targetLowresDirectory;
+
     /**
      *  the node to start from
      */
     private SortableDefaultMutableTreeNode startNode;
+
     /**
      *  flag that indicates that the subgroups should also be considered
      */
     private boolean recurseGroups;
+
     /**
      *  This flag says whether to consolidate Lowres images too
      */
     private boolean moveLowres;
+
 
     /**
      *  Creates a Thread which runs the consolidation.
@@ -82,25 +92,28 @@ public class ConsolidateGroupThread extends Thread {
             Tools.log( "ConsolidateGroupThread aborted because lowres target directory can't be written tot: " + targetLowresDirectory.getPath() );
             return;
         }
-
-        start();
+        Thread t = new Thread( this );
+        t.start();
     }
+
     /**
      *   This object holds a reference to the progress GUI for the user.
      */
     private ProgressGui progGui;
+
 
     /**
      *  The run method is fired by starting the thread. It creates a ProgressGui and does the work.
      */
     @Override
     public void run() {
-        progGui = new ProgressGui( Tools.countPictures( startNode, recurseGroups ),
+        progGui = new ProgressGui( NodeStatistics.countPictures( startNode, recurseGroups ),
                 Settings.jpoResources.getString( "ConsolitdateProgBarTitle" ),
                 Settings.jpoResources.getString( "ConsolitdateProgBarDone" ) );
         consolidateGroup( startNode );
         progGui.switchToDoneMode();
     }
+
 
     /**
      *  This method consolidates all the nodes of the supplied group.
@@ -168,18 +181,22 @@ public class ConsolidateGroupThread extends Thread {
         }
         return true;
     }
+
     /**
-     *  temp var at class level to reduce the number ob objects being created.
+     *  temp var at class level to reduce the number of objects being created.
      */
     private File oldFile;
+
     /**
-     *  temp var at class level to reduce the number ob objects being created.
+     *  temp var at class level to reduce the number of objects being created.
      */
     private File oldFileParent;
+
     /**
-     *  temp var at class level to reduce the number ob objects being created.
+     *  temp var at class level to reduce the number of objects being created.
      */
     private URL newFile;
+
 
     /**
      *   This method moves a highres file from an indicated SortableDefaultMutableTreeNode 's
@@ -187,7 +204,7 @@ public class ConsolidateGroupThread extends Thread {
      *   false if there was a problem
      *
      *   @param	p  the userObject of type PictureInfo of the Node to be moved
-     *   @return 	True if the move was successfull or False if it was not.
+     *   @return 	True if the move was successful or False if it was not.
      */
     private boolean moveHighresPicture( PictureInfo p ) {
         //Tools.log("ConsolidateGroupThread.moveHighresPicture: invoked on PictureInfo: " + p.toString() );
@@ -220,16 +237,16 @@ public class ConsolidateGroupThread extends Thread {
 
     }
 
+
     /**
      *   This method moves a highres file from an indicated SortableDefaultMutableTreeNode 's
      *   PictureInfo object to the target directory. It returns true if the move was successful or ignored
      *   false if there was a problem
      *
      *   @param	o  the userObject of the Node to be moved
-     *   @return 	True if the move was successfull or False if it was not.
+     *   @return 	True if the move was successful or False if it was not.
      */
     private boolean moveLowresPicture( Object o ) {
-        //Tools.log("ConsolidateGroupThread.moveLowresPicture: invoked on userObject: " + o.toString() );
         try {
             if ( o instanceof GroupInfo ) {
                 GroupInfo gi = (GroupInfo) o;
@@ -245,21 +262,20 @@ public class ConsolidateGroupThread extends Thread {
             }
             oldFileParent = oldFile.getParentFile();
 
-            URL newFile = Tools.inventPicURL( targetLowresDirectory, oldFile.getName() );
+            URL newFileUrl = Tools.inventPicURL( targetLowresDirectory, oldFile.getName() );
             if ( ( oldFileParent != null ) && ( oldFileParent.equals( targetLowresDirectory ) ) ) {
-                //Tools.log( "ConsolidateGroupThread.moveLowresPicture: path is identical " + oldFileParent.toString() + " not moving picture." );
                 return true;
             }
 
             if ( !oldFile.exists() ) {
-                Tools.log( "ConsolidateGoupThread.moveLowresPicture: There was no Lowres Image to move. Enhancement: The URL should be corrected anyway." );
+                //Tools.log( "ConsolidateGoupThread.moveLowresPicture: There was no Lowres Image to move. Enhancement: The URL should be corrected anyway." );
                 return true;
             }
 
-            if ( Tools.movePicture( oldFile, newFile ) ) {
+            if ( Tools.movePicture( oldFile, newFileUrl ) ) {
                 return true;
             } else {
-                Tools.log( "ConsolidateGroupThread.moveLowresPicture: failed to move " + oldFile.toString() + " to " + newFile.toString() );
+                //Tools.log( "ConsolidateGroupThread.moveLowresPicture: failed to move " + oldFile.toString() + " to " + newFileUrl.toString() );
                 return false;
             }
 

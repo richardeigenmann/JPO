@@ -139,7 +139,7 @@ public class GenerateWebsiteWizard2Thumbnails extends AbstractStep {
         lowresQualitySliderJPanel.add(
                 new JLabel(
                 Settings.jpoResources.getString( "lowresJpgQualitySlider" ) ) );
-        Hashtable labelTable = new Hashtable();
+        Hashtable<Integer, JLabel> labelTable = new Hashtable<Integer, JLabel>();
         labelTable.put(
                 new Integer( 0 ), new JLabel( Settings.jpoResources.getString( "jpgQualityBad" ) ) );
         labelTable.put(

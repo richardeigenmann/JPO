@@ -4,6 +4,7 @@
  */
 package jpotestground;
 
+import jpo.gui.Thumbnail;
 import jpo.*;
 import java.awt.Dimension;
 import javax.swing.BoxLayout;

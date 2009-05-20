@@ -1,9 +1,13 @@
 package jpo;
 
+import jpo.gui.*;
+import jpo.*;
+import jpo.dataModel.Camera;
+
 /*
 CameraWatchDaemon.java: Daamon Thread that monitors when a camera has been connected.
- 
-Copyright (C) 2002-2007  Richard Eigenmann.
+
+Copyright (C) 2002-2009  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -17,45 +21,44 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 The license is in gpl.txt.
 See http://www.gnu.org/copyleft/gpl.html for the details.
  */
-
-
 /**
  * Daemon Thread that monitors when a camera has been connected.
  *
  * @author richi
  */
-public class CameraWatchDaemon extends Thread {
-    
+public class CameraWatchDaemon implements Runnable {
+
     /** Creates a new instance of CameraWatchDaemon. The Thread iterates over the  */
     public CameraWatchDaemon() {
-        start();
+        Thread t = new Thread( this );
+        t.start();
     }
-    
-    
+
     /**
      *  A Flag to indicate that the thread should stop at the next iteration.
      */
     private boolean gracefullyInterrupt = false;
-    
+
+
     /**
      *  A method to call when you want to signal that the thread should stop at the next iteration.
      */
     public void stopAsap() {
         gracefullyInterrupt = true;
     }
-    
-    
+
+
     /**
      *  The run method enumerates the Cameras configured and checks to see if a
      *  camera has been added. If a camera was added it fires off the CameraDownloadWizard.
      */
     public void run() {
-        
-        while ( ! gracefullyInterrupt ) {
+
+        while ( !gracefullyInterrupt ) {
             synchronized ( Settings.Cameras ) {
                 for ( Camera c : Settings.Cameras ) {
                     boolean isConnected = c.isCameraConnected();
-                    if ( c.getMonitorForNewPictures() && isConnected && ( ! c.getLastConnectionStatus() ) ) {
+                    if ( c.getMonitorForNewPictures() && isConnected && ( !c.getLastConnectionStatus() ) ) {
                         Tools.log( getClass().toString() + ": Camera " + c.toString() + " has been connected " );
                         CameraDownloadWizardData dm = new CameraDownloadWizardData();
                         dm.setCamera( c );
@@ -67,11 +70,10 @@ public class CameraWatchDaemon extends Thread {
                 }
             }
             try {
-                sleep( 5000 );
-            } catch (InterruptedException ex) {
+                Thread.sleep( 5000 );
+            } catch ( InterruptedException ex ) {
                 ex.printStackTrace();
             }
         }
     }
-    
 }

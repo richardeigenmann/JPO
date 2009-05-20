@@ -8,7 +8,8 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import jpo.Settings;
-import jpo.SortableDefaultMutableTreeNode;
+import jpo.dataModel.SortableDefaultMutableTreeNode;
+import jpo.dataModel.NodeStatistics;
 import net.javaprog.ui.wizard.AbstractStep;
 
 /*
@@ -52,7 +53,7 @@ public class GenerateWebsiteWizard1Welcome extends AbstractStep {
         this.options = options;
 
         SortableDefaultMutableTreeNode startNode = options.getStartNode();
-        int pictures = startNode.countPictures();
+        int pictures = NodeStatistics.countPictures( startNode, true );
         welcomeLabel.setText( Settings.jpoResources.getString( "generate1" ) + Integer.toString( pictures ) +
                 Settings.jpoResources.getString( "generate2" ) );
         fromLabel.setText( Settings.jpoResources.getString( "generateFrom" ) + startNode.toString() );

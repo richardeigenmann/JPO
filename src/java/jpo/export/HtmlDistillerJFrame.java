@@ -1,5 +1,10 @@
 package jpo.export;
 
+import jpo.dataModel.GroupInfo;
+import jpo.gui.FrameShower;
+import jpo.dataModel.SortableDefaultMutableTreeNode;
+import jpo.gui.DirectoryChooser;
+import jpo.dataModel.PictureInfo;
 import jpo.*;
 import java.util.*;
 import java.awt.*;
@@ -15,7 +20,8 @@ import org.apache.poi.hslf.model.*;
 /*
 HtmlDistillerJFrame.java:  Runs a GUI to generate a website
 pre-populates the options with default values.
-Copyright (C) 2008  Richard Eigenmann.
+
+Copyright (C) 2008-2009  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -31,7 +37,7 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 /**
  * A GUI for the HtmlDistiller which then populates an HtmlDistillerOptions object 
- * and then fires of the HtmlDistillerThread.
+ * and then fires of the HtmlDistiller.
  *
  * @author  Richard Eigenmann
  */
@@ -248,7 +254,7 @@ public class HtmlDistillerJFrame extends JFrame {
         // Thumbnail Quality Slider
         JPanel lowresQualitySliderJPanel = new JPanel( new FlowLayout( FlowLayout.LEFT ) );
         lowresQualitySliderJPanel.add( new JLabel( Settings.jpoResources.getString( "lowresJpgQualitySlider" ) ) );
-        Hashtable labelTable = new Hashtable();
+        Hashtable<Integer, JLabel> labelTable = new Hashtable<Integer, JLabel>();
         labelTable.put( new Integer( 0 ), new JLabel( Settings.jpoResources.getString( "jpgQualityBad" ) ) );
         labelTable.put( new Integer( 80 ), new JLabel( Settings.jpoResources.getString( "jpgQualityGood" ) ) );
         labelTable.put( new Integer( 100 ), new JLabel( Settings.jpoResources.getString( "jpgQualityBest" ) ) );
@@ -311,7 +317,7 @@ public class HtmlDistillerJFrame extends JFrame {
 
 
         // Midres Quality Slider
-        Hashtable labelTable1 = new Hashtable();
+        Hashtable<Integer, JLabel> labelTable1 = new Hashtable<Integer, JLabel>();
         labelTable1.put( new Integer( 0 ), new JLabel( Settings.jpoResources.getString( "jpgQualityBad" ) ) );
         labelTable1.put( new Integer( 80 ), new JLabel( Settings.jpoResources.getString( "jpgQualityGood" ) ) );
         labelTable1.put( new Integer( 100 ), new JLabel( Settings.jpoResources.getString( "jpgQualityBest" ) ) );
@@ -590,7 +596,9 @@ public class HtmlDistillerJFrame extends JFrame {
 
         storeSettings();
 
-        HtmlDistillerThread h = new HtmlDistillerThread( options );
+        HtmlDistiller h = new HtmlDistiller( options );
+        Thread t = new Thread (h );
+        t.start();
     }
 
     /**

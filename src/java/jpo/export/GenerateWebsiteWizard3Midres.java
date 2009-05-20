@@ -19,7 +19,7 @@ import net.javaprog.ui.wizard.AbstractStep;
 /*
 GenerateWebsiteWizard3Midres.java:  Midres stuff
 
-Copyright (C) 2008  Richard Eigenmann.
+Copyright (C) 2008-2009  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -146,7 +146,7 @@ public class GenerateWebsiteWizard3Midres extends AbstractStep {
         midresSliderJPanel.setAlignmentX( Component.LEFT_ALIGNMENT );
         //midresSliderJPanel.setMaximumSize( GenerateWebsiteWizard.tallerComponentSize );
         midresSliderJPanel.add( new JLabel( Settings.jpoResources.getString( "midresJpgQualitySlider" ) ) );
-        Hashtable labelTable1 = new Hashtable();
+        Hashtable<Integer, JLabel> labelTable1 = new Hashtable<Integer, JLabel>();
         labelTable1.put( new Integer( 0 ), new JLabel( Settings.jpoResources.getString( "jpgQualityBad" ) ) );
         labelTable1.put( new Integer( 80 ), new JLabel( Settings.jpoResources.getString( "jpgQualityGood" ) ) );
         labelTable1.put( new Integer( 100 ), new JLabel( Settings.jpoResources.getString( "jpgQualityBest" ) ) );

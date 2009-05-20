@@ -1,5 +1,10 @@
 package jpo;
 
+import jpo.dataModel.PictureCollection;
+import jpo.dataModel.SortableDefaultMutableTreeNode;
+import jpo.dataModel.RecentDropNodeListener;
+import jpo.gui.CollectionJTreeController;
+import jpo.dataModel.Camera;
 import java.util.*;
 import java.net.*;
 import java.io.*;
@@ -470,11 +475,11 @@ public class Settings {
     /**
      *	Collection of Cameras
      */
-    public static Vector<Camera> Cameras = new Vector();
+    public static Vector<Camera> Cameras = new Vector<Camera>();
     /**
      *	list of email senders
      */
-    public static TreeSet emailSenders = new TreeSet() {
+    public static TreeSet<Object> emailSenders = new TreeSet<Object>() {
 
         public boolean add( Object o ) {
             boolean b = super.add( o );
@@ -487,7 +492,7 @@ public class Settings {
     /**
      *	list of email senders
      */
-    public static TreeSet emailRecipients = new TreeSet() {
+    public static TreeSet<Object> emailRecipients = new TreeSet<Object>() {
 
         public boolean add( Object o ) {
             boolean b = super.add( o );
@@ -899,6 +904,7 @@ public class Settings {
     /**
      *  this method attempts to load the cameras
      */
+    @SuppressWarnings("unchecked")
     public static void loadCameraSettings() {
         int numberOfCameras = prefs.getInt( "NumberOfCameras", 0 );
         for ( int i = 0; i < numberOfCameras; i++ ) {
@@ -908,7 +914,7 @@ public class Settings {
             c.setUseFilename( prefs.getBoolean( "Camera[" + Integer.toString( i ) + "].useFilename", true ) );
             c.setMonitorForNewPictures( prefs.getBoolean( "Camera[" + Integer.toString( i ) + "].monitor", true ) );
 
-            c.setOldImage( new HashMap() );
+            c.setOldImage( new HashMap<File, Long> () );
             try {
                 c.setOldImage( (HashMap) PrefObj.getObject( prefs, "Camera[" + Integer.toString( i ) + "].oldImage" ) );
             } catch ( IOException ex ) {
@@ -921,57 +927,6 @@ public class Settings {
             Cameras.add( c );
         }
     }
-
-    /**
-     *  this method attempts to load the cameras
-     *
-     * public static void loadCameraSettingsOld() {
-     * //Tools.log( "Settings.loadCameraSettings: Loading Camera Settings" );
-     * InputStream in;
-     * try {
-     * PersistenceService ps = (PersistenceService) ServiceManager.lookup( "javax.jnlp.PersistenceService" );
-     * BasicService bs = (BasicService) ServiceManager.lookup( "javax.jnlp.BasicService" );
-     * try {
-     * URL baseURL = bs.getCodeBase();
-     * URL camerasURL = new URL( baseURL, "Cameras" );
-     * ps.get( camerasURL );
-     * FileContents fc = ps.get( camerasURL );
-     * in = fc.getInputStream();
-     * //Tools.log("Setting.loadCameraSettings: Running in Java Web Start Mode and found PersistenceService for Settings." );
-     * } catch ( MalformedURLException x ) {
-     * Tools.log( "Setting.loadCameraSettings: We had a MalformedURLException: " + x.getMessage() );
-     * return;
-     * } catch ( IOException x ) {
-     * Tools.log( "Settings.loadCameraSettings: There are no settings that could be read." );
-     * return;
-     * }
-     * } catch ( UnavailableServiceException x ) {
-     * //Tools.log( "Settings.loadCameraSettings: Running in local file mode. Trying to locate file " + camerasFile.getPath() );
-     * if ( ! camerasFile.exists() ) {
-     * Tools.log("Settings.loadCameraSettings: Can't find file. Using defaults." );
-     * return;
-     * }
-     * try {
-     * in = new FileInputStream( camerasFile );
-     * } catch ( FileNotFoundException y ) {
-     * Tools.log("Settings.loadCameraSettings: Can't find ini File. Using defaults." );
-     * return;
-     * }
-     * }
-     *
-     * try{
-     * ObjectInputStream ois = new ObjectInputStream( in );
-     * Cameras = (Vector) ois.readObject();
-     * ois.close();
-     * } catch ( IOException x ) {
-     * Tools.log("Settings.loadCameraSettings failed with an IOException: " + x.getMessage());
-     * } catch ( ClassNotFoundException x ) {
-     * Tools.log("Settings.loadCameraSettings failed with an ClassNotFoundException: " + x.getMessage());
-     * }
-     * createFirstCameraIfEmpty();
-     * }*/
-    /*------------------------------------------------------------------------------
-
 
     /**
      *  every time a collection is opened this function is called for storing
@@ -1013,7 +968,7 @@ public class Settings {
     /**
      *   a Vector referring to the objects that want to find out about changes to the recently opened files
      */
-    private static final Vector recentFilesChangeListeners = new Vector();
+    private static final Vector <RecentFilesChangeListener>recentFilesChangeListeners = new Vector<RecentFilesChangeListener>();
 
     /**
      *  method to register the listening object of the status events
@@ -1090,7 +1045,7 @@ public class Settings {
     /**
      *   a Vector referring to the objects that want to find out about changes to the locale
      */
-    private static ArrayList localeChangeListeners = new ArrayList();
+    private static ArrayList <LocaleChangeListener> localeChangeListeners = new ArrayList<LocaleChangeListener>();
 
     /**
      *  when the locale is changed this method must be called to inform the
@@ -1169,7 +1124,7 @@ public class Settings {
      *   a Vector referring to the objects that want to find out about changes to the
      *   recently drop target nodes.
      */
-    private static Vector recentDropNodeListeners = new Vector();
+    private static Vector <RecentDropNodeListener> recentDropNodeListeners = new Vector<RecentDropNodeListener>();
 
     /**
      *  method to register the listening object of the status events
@@ -1294,7 +1249,7 @@ public class Settings {
      *   a Vector referring to the objects that want to find out about changes to the
      *   recently drop target nodes.
      */
-    private static Vector copyLocationChangeListeners = new Vector();
+    private static Vector <CopyLocationsChangeListener>copyLocationChangeListeners = new Vector<CopyLocationsChangeListener>();
 
     /**
      *  method to register the listening object of the status events
@@ -1337,7 +1292,7 @@ public class Settings {
      *   a Vector referring to the objects that want to find out about changes to the
      *   recently drop target nodes.
      */
-    private static Vector userFunctionsChangeListeners = new Vector();
+    private static Vector<UserFunctionsChangeListener> userFunctionsChangeListeners = new Vector<UserFunctionsChangeListener>();
 
     /**
      *  method to register the listening object of the status events

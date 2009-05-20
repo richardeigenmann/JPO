@@ -6,7 +6,7 @@ import java.util.logging.Logger;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import jpo.Settings;
-import jpo.SortableDefaultMutableTreeNode;
+import jpo.dataModel.SortableDefaultMutableTreeNode;
 import net.javaprog.ui.wizard.DefaultWizardModel;
 import net.javaprog.ui.wizard.Step;
 import net.javaprog.ui.wizard.Wizard;
@@ -84,7 +84,9 @@ public class GenerateWebsiteWizard {
 
             public void wizardFinished( WizardModelEvent arg0 ) {
                 options.saveToSettings();
-                HtmlDistillerThread h = new HtmlDistillerThread( options );
+                HtmlDistiller h = new HtmlDistiller( options );
+                Thread t = new Thread( h );
+                t.start();
             }
 
             public void wizardModelChanged( WizardModelEvent arg0 ) {

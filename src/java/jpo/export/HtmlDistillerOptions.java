@@ -4,7 +4,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.io.File;
 import jpo.Settings;
-import jpo.SortableDefaultMutableTreeNode;
+import jpo.dataModel.SortableDefaultMutableTreeNode;
 
 /*
 HtmlDistillerOptions.java:  Holds the options that configure the html output.

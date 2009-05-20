@@ -91,7 +91,9 @@ public class ExifInfo {
 
 	/** 
     	 *   Constructor to create the object
-	 */
+         *
+         * @param pictureUrl
+         */
 	public ExifInfo( URL pictureUrl ) {
 		setUrl ( pictureUrl );
 	}
@@ -99,7 +101,9 @@ public class ExifInfo {
 	/**
 	 *  Use this method to set the URL of the picture to be decoded. Afterwards call
 	 *  decodeExifTags.
-	 */
+         *
+         * @param pictureUrl
+         */
 	public void setUrl ( URL pictureUrl ) {
 		this.pictureUrl = pictureUrl;
 		nullifyVars();
@@ -211,7 +215,9 @@ public class ExifInfo {
 
 	/**
 	 *  This method returns all the tags as they were decoded in a single string
-	 */
+         *
+         * @return
+         */
 	public String getAllTags() {
 		return exifDump.toString();
 	}
@@ -219,7 +225,9 @@ public class ExifInfo {
 
 	/**
 	 *  This method returns a brief summary of the photographic settings
-	 */
+         *
+         * @return
+         */
 	public String getBriefPhotographicSummary() {
 		return
 			Settings.jpoResources.getString("ExifInfoCamera") + "\t" + camera + "\n" +
@@ -231,7 +239,9 @@ public class ExifInfo {
 
 	/**
 	 *  This method returns a comprehensive summary of the photographic settings
-	 */
+         *
+         * @return 
+         */
 	public String getComprehensivePhotographicSummary() {
 		return
 			Settings.jpoResources.getString("ExifInfoCamera") + "\t" + camera + "\n" +

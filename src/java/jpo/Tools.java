@@ -1,10 +1,13 @@
 package jpo;
 
+import jpo.dataModel.GroupInfo;
+import jpo.dataModel.SortableDefaultMutableTreeNode;
+import jpo.gui.XmlFilter;
+import jpo.dataModel.PictureInfo;
 import java.io.*;
 import java.net.*;
 import java.util.*;
 import javax.swing.*;
-import javax.swing.tree.*;
 import java.awt.dnd.*;
 import java.util.zip.*;
 import javax.imageio.*;
@@ -24,7 +27,7 @@ import java.util.logging.Formatter;
 /*
 Tools.java:  utilities for the JPO application
  *
-Copyright (C) 2002-2008  Richard Eigenmann.
+Copyright (C) 2002-2009  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -44,8 +47,18 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 public class Tools {
 
     /**
+     * A private constructor to prevent instantiation of this class;
+     * all methods are static.
+     */
+    private Tools() {
+    }
+
+
+    /**
      *   method that converts any XML problem characters (&, <, >, ", ') to the 
      *   predefined codes.
+     * @param s
+     * @return
      */
     public static String escapeXML( String s ) {
         s = s.replaceAll( "&", "&amp;" );
@@ -56,25 +69,31 @@ public class Tools {
         return s;
     }
 
+
     /**
      *   returns the file extension of the indicated url
      *   @param url   The URL object for which the extension is being requested
+     * @return
      */
     public static String getExtension( URL url ) {
         return getExtension( url.toString() );
     }
 
+
     /**
      *   return the file extension of a file.
      *   @param file   The File object for which the extension is being requested
+     * @return
      */
     public static String getExtension( File file ) {
         return getExtension( file.getName() );
     }
 
+
     /**
      *   return the file extension of a string
      *   @param s   The string for which the extension is being requested
+     * @return
      */
     public static String getExtension( String s ) {
         String ext = null;
@@ -86,9 +105,11 @@ public class Tools {
         return ext;
     }
 
+
     /**
      *   return everything of the filename up to the extension.
      *   @param s   The string for which the root of the filename is being requested
+     * @return
      */
     public static String getFilenameRoot( String s ) {
         String fnroot = null;
@@ -100,10 +121,13 @@ public class Tools {
         return fnroot;
     }
 
+
     /**
      *   method that tests the extension of the string in a JTextField for being 
      *   the correct extension. If not the correct extension is added. The case
      *   of the extension is ignored.
+     * @param extension
+     * @param jTextField
      */
     public static void setFilenameExtension( String extension, JTextField jTextField ) {
         if ( !jTextField.getText().toUpperCase().endsWith( extension.toUpperCase() ) ) {
@@ -111,12 +135,16 @@ public class Tools {
         }
     }
 
+
     /**
      *   method that tests the file extension of a File object for being 
      *   the correct extension. Either the same file object is returned or a 
      *   new one is created with the correct extension.
      *   If not the correct extension is added. The case
      *   of the extension is ignored.
+     * @param extension
+     * @param testFile
+     * @return
      */
     public static File correctFilenameExtension( String extension, File testFile ) {
         if ( !testFile.getName().toUpperCase().endsWith( extension.toUpperCase() ) ) {
@@ -125,9 +153,11 @@ public class Tools {
         return testFile;
     }
 
+
     /**
      *  Counts the number of real files in the array of files.
-     *  @return  the number of real files in the array of files
+     *  @param fileArray
+     * @return  the number of real files in the array of files
      */
     public static int countfiles( File[] fileArray ) {
         if ( fileArray == null ) {
@@ -150,6 +180,7 @@ public class Tools {
         }
         return numFiles;
     }
+
 
     /**
      *  This method checks whether the JVM has an image reader for the supplied
@@ -174,6 +205,7 @@ public class Tools {
             return false;
         }
     }
+
 
     /**
      *  This method looks into the supplied subdirectory and tries to see if there is 
@@ -204,8 +236,12 @@ public class Tools {
         return false;
     }
 
+
     /**
      *  method to copy any file from a source location to a target location
+     * @param a
+     * @param b
+     * @return
      */
     public static long copyPicture( URL a, URL b ) {
         try {
@@ -229,9 +265,13 @@ public class Tools {
         }
     }
 
+
     /**
      *  method to copy any file from a source location to a target File location. Works 
      *  better because files are writable whilst most URL are read only.
+     * @param a
+     * @param b
+     * @return
      */
     public static long copyPicture( URL a, File b ) {
         try {
@@ -255,8 +295,11 @@ public class Tools {
         }
     }
 
-    /** 
+
+    /**
      *  method to copy any file from a source File to a target File location.
+     * @param a
+     * @param b
      * @return The crc of the copied picture.
      */
     public static long copyPicture( File a, File b ) {
@@ -281,9 +324,13 @@ public class Tools {
         }
     }
 
+
     /**
      *  method to copy any file from a source stream to a output stream
-     *  @return  the crc of the file
+     *  @param bin 
+     * @param bout 
+     * @return  the crc of the file
+     * @throws IOException
      */
     public static long copyBufferedStream( BufferedInputStream bin, BufferedOutputStream bout )
             throws IOException {
@@ -302,6 +349,7 @@ public class Tools {
 
     }
 
+
     /**
      *  This method moves any file to the target URL.
      *  It checks whether the filename was mentioned in the highres or lowres fields of other nodes
@@ -310,6 +358,7 @@ public class Tools {
      *  @param sourceFile   The file to be moved
      *  @param b  The target URL it is to be moved to.
      *  @return  true if successful, false if not.
+     * @throws IOException
      */
     public static boolean movePicture( File sourceFile, URL b ) throws IOException {
         File targetFile = null;
@@ -329,7 +378,7 @@ public class Tools {
         }
 
         if ( sourceFile.renameTo( targetFile ) ) {
-        //Tools.log ( "Tools.movePicture: File " + sourceFile.toString() + " renamed to " + b.toString() );
+            //Tools.log ( "Tools.movePicture: File " + sourceFile.toString() + " renamed to " + b.toString() );
         } else {
             // perhaps target was on a different filesystem. Trying copying
             Tools.log( "Tools.movePicture: Failed: Rename from " + sourceFile.toString() + " to " + b.toString() + " failed. Trying copying" );
@@ -372,51 +421,20 @@ public class Tools {
         return true;
     }
 
+
     /**
      *   count the number of pictures in a subtree. Useful for progress monitors.
-     */
+     *
     public static int countPictures( DefaultMutableTreeNode startNode ) {
-        return countPictures( startNode, true );
-    }
+    return countPictures( startNode, true );
+    }/*
+
+
 
     /**
-     *   count the number of pictures in a subtree. Useful for progress monitors. If called with
-     *   a null start node it returns 0. If called wiht a node that is actually a Query object it 
-     *   asks the Query for the count.
-     *
-     *   Exists in Tools instead of on the SDMTN node because it can deal with Queries too.
-     *
-     *   @param startNode	the node from which to count
-     *   @param recurseSubgroups  indicator to say whether the next levels of groups should be counted too or not.
-     */
-    public static int countPictures( DefaultMutableTreeNode startNode, boolean recurseSubgroups ) {
-        //Tools.log("Tools.countPictures: invoked on " + startNode.toString());
-        if ( startNode == null ) {
-            return 0;
-        }
-
-        if ( startNode.getUserObject() instanceof Query ) {
-            return ( (Query) startNode.getUserObject() ).getNumberOfResults();
-        }
-
-        int count = 0;
-        DefaultMutableTreeNode n;
-        Enumeration nodes = startNode.children();
-        while ( nodes.hasMoreElements() ) {
-            n = (DefaultMutableTreeNode) nodes.nextElement();
-            //Tools.log("Tools.countPictures: counting " + n.toString());
-            if ( n.getUserObject() instanceof PictureInfo ) {
-                count++;
-            }
-            if ( recurseSubgroups && ( n.getChildCount() > 0 ) ) {
-                count += countPictures( n );
-            }
-        }
-        return count;
-    }
-
-    /**
-     *  Converts a long value into a human readable size such a 245 B, 15 KB, 3 MB, 85 GB, 2 TB
+     * Converts a long value into a human readable size such a 245 B, 15 KB, 3 MB, 85 GB, 2 TB
+     * @param size
+     * @return
      */
     public static String fileSizeToString( long size ) {
         String suffix = " B";
@@ -440,100 +458,16 @@ public class Tools {
         return suffix;
     }
 
-    /**
-     *   sums the filesize of the pictures in a subtree. 
-     */
-    public static String sizeOfPictures( DefaultMutableTreeNode startNode ) {
-        long size = sizeOfPicturesLong( startNode );
-        return fileSizeToString( size );
-    }
-
-    /**
-     *   Adds the filesize of the pictures in a subtree. If the node holds a query the query is enumerated.
-     *
-     *   @param startNode   The node for which to add up the size of the pictures
-     */
-    public static long sizeOfPicturesLong( DefaultMutableTreeNode startNode ) {
-        if ( startNode == null ) {
-            return 0;
-        }
-
-        long size = 0;
-        File testfile;
-        DefaultMutableTreeNode n;
 
 
-        if ( startNode.getUserObject() instanceof Query ) {
-            Query q = (Query) startNode.getUserObject();
-            for ( int i = 0; i < q.getNumberOfResults(); i++ ) {
-                n = (DefaultMutableTreeNode) q.getIndex( i );
-                if ( n.getUserObject() instanceof PictureInfo ) {
-                    testfile = ( (PictureInfo) n.getUserObject() ).getHighresFile();
-                    if ( testfile != null ) {
-                        size += testfile.length();
-                    }
-                }
-            }
-        } else {
-            Enumeration nodes = startNode.children();
-            while ( nodes.hasMoreElements() ) {
-                n = (DefaultMutableTreeNode) nodes.nextElement();
-                if ( n.getUserObject() instanceof PictureInfo ) {
-                    testfile = ( (PictureInfo) n.getUserObject() ).getHighresFile();
-                    if ( testfile != null ) {
-                        size += testfile.length();
-                    }
-                }
-                if ( n.getChildCount() > 0 ) {
-                    size += sizeOfPicturesLong( n );
-                }
-            }
-        }
-
-        return size;
-    }
-
-    /**
-     *   count the number of nodes in a subtree. 
-     */
-    public static int countNodes( TreeNode startNode ) {
-        int count = 1;
-        TreeNode n;
-        Enumeration nodes = startNode.children();
-        while ( nodes.hasMoreElements() ) {
-            n = (TreeNode) nodes.nextElement();
-            if ( n.getChildCount() > 0 ) {
-                count += countNodes( n );
-            } else {
-                count++;
-            }
-        }
-        return count;
-    }
-
-    /**
-     *   count the number of groups excluding the starting one
-     */
-    public static int countGroups( DefaultMutableTreeNode startNode ) {
-        int count = 0;
-        Enumeration nodes = startNode.children();
-        while ( nodes.hasMoreElements() ) {
-            DefaultMutableTreeNode n = (DefaultMutableTreeNode) nodes.nextElement();
-            if ( n.getUserObject() instanceof GroupInfo ) {
-                count++;
-            }
-            if ( n.getChildCount() > 0 ) {
-                count += countGroups( n );
-            }
-        }
-        return count;
-    }
 
     /**
      *  searches for an item in the classpath that ends exactly like the supplied string.
      *  Returns a new file object for that item or null if not found.
      *  Invented to find the code classes of the 
      *  JPO app which sit in jpo.jar file
+     * @param searchName
+     * @return
      */
     public static File searchClasspath( String searchName ) {
         // find the jar file as last item in the Jar file.
@@ -549,16 +483,19 @@ public class Tools {
         }
         return null;
     }
+
     /**
      *  writer that gets the debug output if there is any to be written
      */
     //public static BufferedWriter logfile;
     private static Logger log = Logger.getLogger( Tools.class.getName() );
 
+
     /**
      *  writes a message to the logfile. There are several things that can go wrong here:
      *  The logfile path can be totally messed up i.e. not a valid filename. It could be
      *  non writable. In this case the error is reported and the log is shown on the screen.
+     * @param message
      */
     public static synchronized void log( String message ) {
         if ( Settings.writeLog ) {
@@ -567,7 +504,7 @@ public class Tools {
                 if ( Settings.writeLog ) {
                     //logfile = new BufferedWriter( new FileWriter( Settings.logfile, true ) );
                     Formatter f = new SimpleFormatter();
-                    Handler fh = new FileHandler(  Settings.logfile.getCanonicalPath(), true );
+                    Handler fh = new FileHandler( Settings.logfile.getCanonicalPath(), true );
                     fh.setFormatter( f );
                     Logger.getLogger( "" ).addHandler( fh );
                 }
@@ -581,25 +518,28 @@ public class Tools {
         }
     }
 
+
     /**
      *  proper way to close the logfile
      *
     public static void closeLogfile() {
-        try {
-            if ( logfile != null ) {
-                logfile.close();
-                logfile = null;
-            }
-        } catch ( IOException x ) {
-        // could not close the logfile; so what?
-        }
+    try {
+    if ( logfile != null ) {
+    logfile.close();
+    logfile = null;
+    }
+    } catch ( IOException x ) {
+    // could not close the logfile; so what?
+    }
     }*/
-
     /**
      *   method that returns a file handle for a picture that does not exist in the target 
      *   directory. It tries the combination of path and name first and then tries to 
      *   suffix _0 _1 _2 etc to the name. If that fails it combines random characters and
      *   then fails, returning null.
+     * @param targetDir
+     * @param startName
+     * @return
      */
     public static URL inventPicURL( File targetDir, String startName ) {
         try {
@@ -609,11 +549,15 @@ public class Tools {
         }
     }
 
+
     /**
      *   method that returns a file handle for a picture that does not exist in the target 
      *   directory. It tries the combination of path and name first and then tries to 
      *   suffix _0 _1 _2 etc to the name. If that fails it combines random characters and
      *   then fails, returning null.
+     * @param targetDir
+     * @param startName
+     * @return
      */
     public static File inventPicFilename( File targetDir, String startName ) {
         File testFile = new File( targetDir, startName );
@@ -638,8 +582,10 @@ public class Tools {
         return null;
     }
 
+
     /**
      *  method that returns a new lowres URL that has not been used before. 
+     * @return
      */
     public static String lowresFilename() {
         File testLowresFilename;
@@ -662,27 +608,36 @@ public class Tools {
         return null;
     }
 
+
     /**
      *  method that returns whether a URL is a file:// URL or not.
      *  Returns true if it is a file, false if it's anything else such as http://
+     * @param testURL
+     * @return
      */
     public static boolean isUrlFile( URL testURL ) {
         return ( testURL.getProtocol().equals( "file" ) );
 
     }
 
+
     /**
      *  convenience method to log the amount of free memory
-     **/
+     *
+     * @return
+     */
     public static int freeMem() {
         int memory = (int) Runtime.getRuntime().freeMemory() / 1024 / 1024;
         Tools.log( "Free memory: " + memory + "MB" );
         return memory;
     }
 
+
     /**
      *  convenience method to log the amount of free memory. Shows freeMemory, totalMemory and maxMemory
-     **/
+     *
+     * @return
+     */
     public static String freeMemory() {
         int freeMemory = (int) Runtime.getRuntime().freeMemory() / 1024 / 1024;
         int totalMemory = (int) Runtime.getRuntime().totalMemory() / 1024 / 1024;
@@ -690,9 +645,12 @@ public class Tools {
         return ( Settings.jpoResources.getString( "freeMemory" ) + Integer.toString( freeMemory ) + "MB/" + Integer.toString( totalMemory ) + "MB/" + Integer.toString( maxMemory ) + "MB" );
     }
 
+
     /**
      *  method that strips out the root filename from a File object. <p>
      *  Example: c:\directory\geysir.jpg returns geysir
+     * @param file
+     * @return
      */
     public static String stripOutFilenameRoot( File file ) {
         String description = file.getName();
@@ -707,8 +665,10 @@ public class Tools {
         return description;
     }
 
+
     /**
      *  Method that chooses an xml file or returns null
+     * @return
      */
     public static File chooseXmlFile() {
         JFileChooser jFileChooser = new JFileChooser();
@@ -725,6 +685,7 @@ public class Tools {
             return null;
         }
     }
+
 
     /**
      *  Analyses the drag event and sets the cursor to the appropriate style.
@@ -750,10 +711,12 @@ public class Tools {
         }
     }
 
-    /** 
+
+    /**
      *  Calculates a checksum from the supplied File
      *
-     *  @return  returns the checksum as a Long or Long.MIN_VALUE to indicate failure.
+     *  @param f
+     * @return  returns the checksum as a Long or Long.MIN_VALUE to indicate failure.
      */
     public static long calculateChecksum( File f ) {
         long checksum;
@@ -765,19 +728,21 @@ public class Tools {
         return checksum;
     }
 
-    /** 
+
+    /**
      *  Calculates a checksum from the supplied input stream
      *  originally taken from: Java ist auch eine Insel (2. Aufl.) 
      * von Christian Ullenboom Programmieren fuer die Java 2-Plattform in der Version 1.4
      *
-     *  @return  returns the checksum as a Long or Long.MIN_VALUE to indicate failure.
+     *  @param in
+     * @return  returns the checksum as a Long or Long.MIN_VALUE to indicate failure.
      */
     public static long calculateChecksum( InputStream in ) {
         Adler32 crc = new Adler32();
         int blockLen;
 
         try {
-            while ( ( blockLen = (int) in.available() ) > 0 ) {
+            while ( ( blockLen = in.available() ) > 0 ) {
                 byte ba[] = new byte[blockLen];
                 in.read( ba );
                 crc.update( ba );
@@ -789,9 +754,12 @@ public class Tools {
         }
     }
 
+
     /**
      *  returns the current date and time formatted per the formatting string. 
      *  See the API doc on SimpleDateFormat for the meaning of the letters.
+     * @param formatString
+     * @return
      */
     public static String currentDate( String formatString ) {
         SimpleDateFormat formatter = new SimpleDateFormat( formatString );
@@ -800,13 +768,14 @@ public class Tools {
         return dateString;
     }
 
+
     /**
      *  This method tries it's best to parse the supplied date into a Java Date object.
      *
      *  @param dateString   the String to be parsed
-     *  @return   the Java Date object or null if it could not be parsed.
+     *  @return   the Java Calendar object or null if it could not be parsed.
      */
-    public static Date parseDate( String dateString ) {
+    public static Calendar parseDate( String dateString ) {
         SimpleDateFormat df = new SimpleDateFormat();
         df.setLenient( true );
         String[] patterns = { "dd.MM.yyyy HH:mm",
@@ -833,8 +802,15 @@ public class Tools {
             } catch ( ParseException x ) {
             }
         }
-        return d;
+        if ( d != null ) {
+            Calendar cal = Calendar.getInstance();
+            cal.setTime( d );
+            return cal;
+        } else {
+            return null;
+        }
     }
+
 
     /**
      *   This method figures out the dimensions of the supplied JTextArea for it's current content.
@@ -842,19 +818,23 @@ public class Tools {
      *
      *   @param   ta   The JTextArea for which you want to know the dimensions
      *   @param   horizontalWidth   The horizontal width that should be used in the dimension.
+     * @return
      */
     public static Dimension getJTextAreaDimension( JTextArea ta, int horizontalWidth ) {
         // figure out the size of the JTextArea
         int fontHeight = ta.getFontMetrics( ta.getFont() ).getHeight();
         int stringWidth = ta.getFontMetrics( ta.getFont() ).stringWidth( ta.getText() );
-        int lines = (int) stringWidth / horizontalWidth;
+        int lines = stringWidth / horizontalWidth;
         int adjustedLines = (int) ( lines * 1.1 ) + 2;
         //Tools.log("ThumbnailDescriptionJPanel: lineCount: " + Integer.toString(lines) + " stringWidth: " + Integer.toString( stringWidth ) );
         return new Dimension( horizontalWidth, adjustedLines * fontHeight );
     }
 
+
     /**
      *  Converts the color into a string for web pages
+     * @param c
+     * @return
      */
     public static String getColor( Color c ) {
         String s = "#";
@@ -863,6 +843,7 @@ public class Tools {
         s += Integer.toString( c.getBlue(), 16 );
         return s;
     }
+
 
     /**
      *  This method fires up a user function if it can. User functions are only valid on
@@ -882,14 +863,14 @@ public class Tools {
             return;
         }
 
-        String filename = ( (PictureInfo) myObject ).getHighresFile().toString();
+        String filename = ( myObject ).getHighresFile().toString();
         command = command.replaceAll( "%f", filename );
 
         String escapedFilename = filename.replaceAll( "\\s", "\\\\\\\\ " );
         command = command.replaceAll( "%e", escapedFilename );
 
 
-        URL pictureURL = ( (PictureInfo) myObject ).getHighresURLOrNull();
+        URL pictureURL = ( myObject ).getHighresURLOrNull();
         if ( pictureURL == null ) {
             Tools.log( "SortableDefaultMutableTreeNode.runUserFunction: The picture doesn't have a valid URL. This is bad. Aborted." );
             return;

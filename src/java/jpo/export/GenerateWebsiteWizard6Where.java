@@ -12,7 +12,7 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import jpo.DirectoryChooser;
+import jpo.gui.DirectoryChooser;
 import jpo.Settings;
 import net.javaprog.ui.wizard.AbstractStep;
 
