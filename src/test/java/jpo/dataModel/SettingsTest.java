@@ -1,7 +1,6 @@
 package jpo.dataModel;
 
 import jpo.gui.LocaleChangeListener;
-import jpo.dataModel.Settings;
 import java.util.Locale;
 import junit.framework.*;
 

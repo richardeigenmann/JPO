@@ -1,6 +1,5 @@
 package jpo.dataModel;
 
-import jpo.dataModel.Category;
 import junit.framework.*;
 /*
  * CategoryTest.java
@@ -20,9 +19,19 @@ public class CategoryTest extends TestCase {
 
 
     
+    /**
+     * 
+     * @throws java.lang.Exception
+     */
+    @Override
     protected void setUp() throws Exception {
     }
 
+    /**
+     *
+     * @throws java.lang.Exception
+     */
+    @Override
     protected void tearDown() throws Exception {
     }
 

@@ -1,8 +1,5 @@
 package jpo.dataModel;
 
-import jpo.dataModel.GroupInfo;
-import jpo.dataModel.SortableDefaultMutableTreeNode;
-import jpo.dataModel.PictureInfo;
 import junit.framework.*;
 
 /*

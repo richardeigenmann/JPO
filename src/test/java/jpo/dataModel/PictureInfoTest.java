@@ -3,8 +3,6 @@ package jpo.dataModel;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Calendar;
-import java.util.HashSet;
 import junit.framework.TestCase;
 
 /**

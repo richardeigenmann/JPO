@@ -2,7 +2,6 @@ package jpo.dataModel;
 
 import java.util.AbstractMap;
 import java.util.HashSet;
-import java.util.Set;
 import java.util.TreeMap;
 import junit.framework.TestCase;
 
