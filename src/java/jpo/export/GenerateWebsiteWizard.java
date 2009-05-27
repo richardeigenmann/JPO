@@ -5,7 +5,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-import jpo.Settings;
+import jpo.dataModel.Settings;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
 import net.javaprog.ui.wizard.DefaultWizardModel;
 import net.javaprog.ui.wizard.Step;

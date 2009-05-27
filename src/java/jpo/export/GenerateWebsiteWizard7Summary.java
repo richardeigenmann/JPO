@@ -5,7 +5,7 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import jpo.Settings;
+import jpo.dataModel.Settings;
 import net.javaprog.ui.wizard.AbstractStep;
 
 /*

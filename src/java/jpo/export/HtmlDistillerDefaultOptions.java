@@ -1,5 +1,6 @@
 package jpo.export;
 
+import jpo.dataModel.Settings;
 import jpo.*;
 import java.io.File;
 

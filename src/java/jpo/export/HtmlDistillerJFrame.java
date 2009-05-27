@@ -1,5 +1,7 @@
 package jpo.export;
 
+import jpo.dataModel.Tools;
+import jpo.dataModel.Settings;
 import jpo.dataModel.GroupInfo;
 import jpo.gui.FrameShower;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
@@ -49,26 +51,32 @@ public class HtmlDistillerJFrame extends JFrame {
     private DirectoryChooser targetDirJTextField =
             new DirectoryChooser( Settings.jpoResources.getString( "HtmlDistillerChooserTitle" ),
             DirectoryChooser.DIR_MUST_BE_WRITABLE );
+
     /**
      *  The number of columns
      **/
     private JSpinner picsPerRow = new JSpinner( new SpinnerNumberModel( 3, 1, 10, 1 ) );
+
     /**
      *  The width of the thumbnails
      **/
     private JSpinner thumbWidth = new JSpinner( new SpinnerNumberModel( 300, 100, 1000, 25 ) );
+
     /**
      *  The height of the thumbnails
      **/
     private JSpinner thumbHeight = new JSpinner( new SpinnerNumberModel( 300, 100, 1000, 25 ) );
+
     /**
      *  The width of the midres images
      **/
     private JSpinner midresWidth = new JSpinner( new SpinnerNumberModel( 300, 100, 10000, 25 ) );
+
     /**
      *  The height of the midres images
      **/
     private JSpinner midresHeight = new JSpinner( new SpinnerNumberModel( 300, 100, 10000, 25 ) );
+
     /**
 
     /**
@@ -76,23 +84,28 @@ public class HtmlDistillerJFrame extends JFrame {
      *  target directory structure.
      **/
     private JCheckBox exportHighresJCheckBox = new JCheckBox( Settings.jpoResources.getString( "exportHighresJCheckBox" ) );
+
     /**
      *  Tickbox that indicates whether the highes picture should be linked to at the current location.
      **/
     private JCheckBox linkToHighresJCheckBox = new JCheckBox( Settings.jpoResources.getString( "linkToHighresJCheckBox" ) );
+
     /**
      * Checkbox that indicates whether to generate the midres html files or not.
      * Requested by Jay Christopherson, Nov 2008
      */
     private final JCheckBox generateMidresHtml = new JCheckBox( Settings.jpoResources.getString( "HtmlDistMidresHtml" ) );
+
     /**
      *  Tickbox that indicates whether DHTML tags and effects should be generated.
      **/
     private JCheckBox generateDHTMLJCheckBox = new JCheckBox( Settings.jpoResources.getString( "generateDHTMLJCheckBox" ) );
+
     /**
      *  Tickbox that indicates whether a Zipfile should be created to download the highres pictures
      **/
     private JCheckBox generateZipfileJCheckBox = new JCheckBox( Settings.jpoResources.getString( "generateZipfileJCheckBox" ) );
+
     /**
      *  Slider that allows the quality of the lowres jpg's to be specified.
      */
@@ -101,6 +114,7 @@ public class HtmlDistillerJFrame extends JFrame {
             JSlider.HORIZONTAL,
             0, 100,
             (int) ( Settings.defaultHtmlLowresQuality * 100 ) );
+
     /**
      *  Slider that allows the quality of the midres jpg's to be specified.
      */
@@ -109,41 +123,50 @@ public class HtmlDistillerJFrame extends JFrame {
             JSlider.HORIZONTAL,
             0, 100,
             (int) ( Settings.defaultHtmlMidresQuality * 100 ) );
+
     /**
      *   This table will act as a preview to the color chooser.
      */
     private JLabel previewJLabel;
+
     /**
      *  The preview Panel
      */
     private final JPanel previewPanel = new PreviewPanel();
+
     /**
      * Radio Button to indicate that the java hash code should be used to get the image name
      */
     private JRadioButton hashcodeRadioButton = new JRadioButton( Settings.jpoResources.getString( "hashcodeRadioButton" ) );
+
     /**
      * Radio Button to indicate that the original name should be used to get the image name
      */
     private JRadioButton originalNameRadioButton = new JRadioButton( Settings.jpoResources.getString( "originalNameRadioButton" ) );
+
     /**
      * Radio Button to indicate that a sequential number should be used to get the image name
      */
     private JRadioButton sequentialRadioButton = new JRadioButton( Settings.jpoResources.getString( "sequentialRadioButton" ) );
+
     /**
      * Allow the user to specify a start number for the sequential numbering.
      * Requested by Jay Christopherson, Nov 2008
      */
     private final JSpinner sequentialStartJSpinner = new JSpinner( new SpinnerNumberModel( 1, 1, 999999999, 1 ) );
+
     /**
      * The options that this GUI will set
      */
     private final HtmlDistillerOptions options = new HtmlDistillerDefaultOptions();
+
     /**
      *  Tickbox that indicates whether to write a robots.txt
      **/
     private JCheckBox generateRobotsJCheckBox = new JCheckBox( Settings.jpoResources.getString( "generateRobotsJCheckBox" ) );
 
-    /** 
+
+    /**
      *   Constructor to create the GUI.
      *
      *   @param  startNode  The node for which the html extract is to be performed.
@@ -153,6 +176,7 @@ public class HtmlDistillerJFrame extends JFrame {
         initGui();
         loadOptionsToGui();
     }
+
 
     /**
      * Creates all the required widgets.
@@ -283,7 +307,7 @@ public class HtmlDistillerJFrame extends JFrame {
         midresJPanel.setAlignmentX( Component.LEFT_ALIGNMENT );
 
         generateMidresHtml.setSelected( true );
-       // generateMidresHtml.setAlignmentX( Component.LEFT_ALIGNMENT );
+        // generateMidresHtml.setAlignmentX( Component.LEFT_ALIGNMENT );
         generateMidresHtml.addChangeListener( new ChangeListener() {
 
             public void stateChanged( ChangeEvent arg0 ) {
@@ -530,6 +554,7 @@ public class HtmlDistillerJFrame extends JFrame {
         EventQueue.invokeLater( runner );
     }
 
+
     /**
      *  Method that closes te frame and gets rid of it.
      */
@@ -537,6 +562,7 @@ public class HtmlDistillerJFrame extends JFrame {
         setVisible( false );
         dispose();
     }
+
 
     /**
      *  This method tries to creates the target directory (or fails with errors) 
@@ -574,12 +600,6 @@ public class HtmlDistillerJFrame extends JFrame {
                 return;
             }
             if ( htmlDirectory.listFiles().length > 0 ) {
-                /*
-                // shows which files exist
-                File[] f = htmlDirectory.listFiles();
-                for ( int i = 0; i < f.length; i++ ) {
-                System.out.println( f[i].getAbsolutePath() );
-                } */
                 int option = JOptionPane.showConfirmDialog(
                         this,
                         Settings.jpoResources.getString( "htmlDistIsNotEmptyWarning" ),
@@ -597,9 +617,10 @@ public class HtmlDistillerJFrame extends JFrame {
         storeSettings();
 
         HtmlDistiller h = new HtmlDistiller( options );
-        Thread t = new Thread (h );
+        Thread t = new Thread( h );
         t.start();
     }
+
 
     /**
      *  This method tries to creates the target directory (or fails with errors)
@@ -672,6 +693,7 @@ public class HtmlDistillerJFrame extends JFrame {
 
     }
 
+
     /**
      * Loads the options into the GUI fields. Note that the defaults come from
      * the settings. They are loaded when the options object is created. They are
@@ -703,6 +725,7 @@ public class HtmlDistillerJFrame extends JFrame {
         generateRobotsJCheckBox.setSelected( options.isWriteRobotsTxt() );
 
     }
+
 
     /**
      * Extracts the settings from the GUI components and puts the ones to remember in 
@@ -756,11 +779,13 @@ public class HtmlDistillerJFrame extends JFrame {
         //private final Font previewFont = new Font( "SansSerif", Font.BOLD, 18  );
         private final Font previewFont = Font.decode( Settings.jpoResources.getString( "HtmlDistillerPreviewFont" ) );
 
+
         /**
          *  Constructor
          */
         private PreviewPanel() {
         }
+
 
         /**
          *   This draws an image of what the HTML could look like

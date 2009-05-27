@@ -4,6 +4,7 @@
  */
 package jpotestground;
 
+import jpo.dataModel.Settings;
 import jpo.gui.Thumbnail;
 import jpo.*;
 import java.awt.Dimension;
@@ -23,15 +24,24 @@ import javax.swing.event.ChangeListener;
 public class PlayWithThumbnail extends JFrame implements ChangeListener {
 
     static final int MIN = 100;
+
     static final int MAX = 350;
+
     static final int INIT = 200;
+
     JPanel p = new JPanel();
+
     JSlider s = new JSlider( JSlider.HORIZONTAL, MIN, MAX, INIT );
     //JLabel l = new ChattyLabel();
+
     JLabel l = new JLabel();
+
     Thumbnail t = new Thumbnail( 350 );
+
     Box box = new Box();
+
     ImageIcon testimage = new ImageIcon( Settings.cl.getResource( "jpo/images/testimage.jpg" ) );
+
 
     public PlayWithThumbnail() {
         s.addChangeListener( this );
@@ -52,20 +62,21 @@ public class PlayWithThumbnail extends JFrame implements ChangeListener {
 
     }
 
+
     public static void main( String[] args ) {
-        System.out.println( "Hello World" );
         new PlayWithThumbnail();
 
     }
+
 
     public void stateChanged( ChangeEvent e ) {
         JSlider source = (JSlider) e.getSource();
         //if ( !source.getValueIsAdjusting() ) {
         int value = (int) source.getValue();
         float scale = (float) value / MAX;
-        l.setText( Integer.toString( value ) + " --> " + Float.toString( scale * 100) + "%" );
+        l.setText( Integer.toString( value ) + " --> " + Float.toString( scale * 100 ) + "%" );
 
         t.setFactor( scale );
-    //}
+        //}
     }
 }

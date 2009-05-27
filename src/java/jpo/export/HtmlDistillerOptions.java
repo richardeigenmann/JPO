@@ -3,7 +3,7 @@ package jpo.export;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.io.File;
-import jpo.Settings;
+import jpo.dataModel.Settings;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
 
 /*

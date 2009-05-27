@@ -13,7 +13,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import jpo.gui.DirectoryChooser;
-import jpo.Settings;
+import jpo.dataModel.Settings;
 import net.javaprog.ui.wizard.AbstractStep;
 
 /*
@@ -122,6 +122,8 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
 
     /**
      * Checks whether the supplied file is good for webpage generation and spams popups if not
+     * @param targetDirectory
+     * @return 
      */
     public static boolean check( File targetDirectory ) {
         if ( !targetDirectory.exists() ) {
@@ -154,12 +156,6 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
                 return false;
             }
             if ( targetDirectory.listFiles().length > 0 ) {
-                /*
-                // shows which files exist
-                File[] f = htmlDirectory.listFiles();
-                for ( int i = 0; i < f.length; i++ ) {
-                System.out.println( f[i].getAbsolutePath() );
-                } */
                 int option = JOptionPane.showConfirmDialog(
                         Settings.anchorFrame,
                         Settings.jpoResources.getString( "htmlDistIsNotEmptyWarning" ),
