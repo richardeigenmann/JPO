@@ -2,7 +2,7 @@
 <project name="Java Picture Organizer" default="run">
     
     <property name="app.main.package" value="jpo"/>
-    <property name="app.main.class" value="${app.main.package}.Jpo"/>
+    <property name="app.main.class" value="Main"/>
     
     <property name="build.dir" value="build"/>
     <property name="build.base.classes.dir" value="${build.dir}/classes"/>
@@ -31,9 +31,11 @@
             <include name="*.jar"/>
         </fileset>
     </path>
-    <property environment="env"/>
-    
-    
+
+    <!--  Load the javaKeyStore, javaKeyStorePassword and sourceforgeSshCertificate
+          properties from a private off CVS properties file  -->
+    <property file="/richi/wordpro/jpoPrivate.properties"/>
+
     <echo message="${ant.version} is using the "/>
     <echo message="build file ${ant.file} to build the project"/>
     <echo message="&quot;${ant.project.name}&quot; Use the &quot;-debug&quot; switch to see loads of"/>
@@ -41,15 +43,11 @@
     <echo message="there are and &quot;ant -p&quot; tells you what targets this build file supports."/>
     
     <!-- <echo message="The base directory for the project         ${basedir}"/> -->
-    <!-- <echo message="The environment's JAVA_HOME is set to:     ${env.JAVA_HOME}"/> -->
-    <!-- <echo message="The environment's PATH is set to:          ${env.PATH}"/> -->
     <!-- <echo message="The java source files are being read from: ${src.java.dir}"/> -->
     <!-- <echo message="The compiled Java .class files will go to: ${build.base.classes.dir}"/> -->
     <!-- <echo message="The new jar file will go to:               ${build.jars.dir}"/> -->
-    <!-- <echo message="KEYSTORE is set to:                        ${env.KEYSTORE}"/>  -->
 
 
-    
     <target name="prepare" description="Makes the build directory tree with mkdir">
         <mkdir dir="${build.dir}"/>
         <mkdir dir="${build.base.classes.dir}"/>
@@ -86,6 +84,7 @@
                source="1.5">
             <src path="${src.java.dir}"/>
             <classpath refid="base.path"/>
+            <compilerarg value="-Xlint:unchecked" />
         </javac>
         <copy todir="${build.images.dir}">
             <fileset dir="${src.images.dir}">
@@ -97,6 +96,9 @@
             <fileset dir="${src.dtd.dir}">
                 <include name="**/*.dtd"/>
                 <include name="**/gpl.txt"/>
+                <include name="**/robots.txt"/>
+                <include name="**/jpo.css"/>
+                <include name="**/jpo.js"/>
             </fileset>
         </copy>
     </target>
@@ -110,21 +112,21 @@
             </fileset>
         </copy>
         <javadoc destdir="${build.docs.dir}"
-                 packagenames="jpo.*"
+                 packagenames="*"
                  Overview="${src.docs.dir}/Overview.html"
                  Doctitle="JPO application documentation"
                  Windowtitle="JPO application documentation"
                  Header="JPO application documentation"
-                 Bottom="&lt;font size=&quot;-1&quot;&gt;Copyright (c) 2002 - 2007 by Richard Eigenmann &lt;a href=&quot;http://www.lomumba.ch/richi&quot;&gt;wwwlomumba.ch/richi&lt;/a&gt;&lt;/font&gt;"
+                 Bottom="&lt;font size=&quot;-1&quot;&gt;Copyright (c) 2002 - 2009 by Richard Eigenmann &lt;a href=&quot;http://www.lomumba.ch/richi&quot;&gt;www.lomumba.ch/richi&lt;/a&gt;&lt;/font&gt;"
                  author="true"
                  version="true"
                  use="true"
                  private="true"
-                 source="1.5"
-                 classpath="libs/metadata-extractor-2.3.0.jar; libs/jnlp.jar; libs/activation.jar; libs/mail.jar" 
+                 source="1.6"
+                 classpath="libs/metadata-extractor-2.3.0.jar; libs/jnlp.jar; libs/activation.jar; libs/mail.jar; libs/jwizz-0.1.4.jar; libs/mail.jar; libs/poi-3.1-FINAL-20080629.jar; libs/poi-contrib-3.1-FINAL-20080629.jar; libs/poi-scratchpad-3.1-FINAL-20080629.jar"
         >
             <sourcepath path="${src.java.dir}" />
-            <link href="http://java.sun.com/j2se/1.5.0/docs/api/" />
+            <link href="http://java.sun.com/j2se/1.6.0/docs/api/" />
         </javadoc>
     </target>
     
@@ -155,38 +157,24 @@
     </target>
     
     
-    <!-- This target will only be of use to the person who wants to sign the jar file for deployment on a web server.
-         It relies on the environment variables KEYSTORE and JARPWD to find the keystore and password to access this
-	 buildjar
+    <!-- This target will only be of use to the person who wants to sign the
+         jar file for deployment on a web server.
+         It uses two properties that come from a private off CVS properties file.
     -->
-    <target name="signjar" depends="buildjar" description="Signs the jpo-${version}.jar jar file with the key in the keystore ${env.KEYSTORE} using the password ${env.JARPWD}">
-       <signjar jar="${build.jars.dir}/jpo-${version}.jar" 
-                 alias="richi"
-                 keystore="${env.KEYSTORE}"
-                 storepass="${env.JARPWD}"
-        />
-        <signjar jar="${build.jars.dir}/metadata-extractor-2.3.0.jar" 
-                 alias="richi"
-                 keystore="${env.KEYSTORE}"
-                 storepass="${env.JARPWD}"
-        />
-        <signjar jar="${build.jars.dir}/jwizz-0.1.4.jar" 
-                 alias="richi"
-                 keystore="${env.KEYSTORE}"
-                 storepass="${env.JARPWD}"
-        />
-        <!-- requires ant 1.7
-        <signjar 
-            alias="richi"
-            keystore="${env.KEYSTORE}"
-            storepass="${env.JARPWD}">
-            <path>
-                <fileset dir="${build.jars.dir}" incudes="**/*.jar" />
-            </path>
-        </signjar>  -->
-        
+    <target name="signjar" depends="buildjar" description="Signs the jar files">
+        <signjar alias="richi"
+                 keystore="${javaKeyStore}"
+                 storepass="${javaKeyStorePassword}" >
+            <fileset dir="${build.jars.dir}">
+                <include name="jpo-${version}.jar"/>
+                <include name="metadata-extractor-2.3.0.jar"/>
+                <include name="jwizz-0.1.4.jar"/>
+            </fileset>
+
+        </signjar>
     </target>
-    
+
+
     <target name="runjar" description="Runs the program from the jar" depends="buildjar">
         <java jar="${build.jars.dir}/jpo-${version}.jar"
               fork="yes"
@@ -196,15 +184,16 @@
     
     
     
-    <!-- This target will only be of use to the person who does the deployment of JPO to souceforge.
-         It relies on the environment variables SOURCEFORGEUSER and SORUVEFORGEPWD for the authentication.
-         
-    -->
-    <target name="publish" depends="signjar"  description="Publishes the lates Jpo Version to the SourceForge project">
-        <scp localfile="web/index.html" 
-             todir="${env.SOURCFORGEUSER}:${env.SOURCFORGEPWD}@shell.sourceforge.net:/home/groups/j/j-/j-po/htdocs"
+    <!-- This target will only be of use to the person who does the deployment
+         of JPO to souceforge.  -->
+    <target name="publish" depends="signjar" description="Publishes the lates Jpo Version to the SourceForge project">
+
+        <scp todir="richieigenmann,j-po@web.sourceforge.net:/home/groups/j/j-/j-po/htdocs"
              trust="yes"
-             verbose="no" >
+             verbose="yes"
+             keyfile="${sourceforgeSshCertificate}"
+             passphrase=""
+             sftp="true">
             <fileset dir="web">
                 <modified>
                     <param name="cache.cachefile"  value="/tmp/Sourceforge-Jpo-Cache1" />
@@ -212,15 +201,18 @@
                 <include name="*.html" />
                 <include name="*.jnlp" />
                 <include name="fontconfig" />
+                <include name="*.gif" />
+                <include name="*.png" />
             </fileset>
             <fileset dir="${build.jars.dir}">
                 <modified>
                     <param name="cache.cachefile"  value="/tmp/Sourceforge-Jpo-Cache2" />
                 </modified>
                 <include name="*.jar" />
-            </fileset> 
+                
+            </fileset>
         </scp>
-    </target>    
+    </target>
     
     
     <target name="run" description="Runs the program" depends="compile">
@@ -241,17 +233,18 @@
     </target>
     
     
-    
-    
-    
-    
     <target name="compile-test" depends="JUNIT, compile" description="Compiles the JUnit test cases">
         <mkdir dir="${unit.test.classes.dir}"/>
         <javac srcdir="${testdir}"
                verbose="${TALK}"
                destdir="${unit.test.classes.dir}"
-               classpath="${build.base.classes.dir}"
-        >
+               >
+            <classpath>
+                <pathelement location="${build.base.classes.dir}" />
+                <pathelement location="${unit.test.classes.dir}" />
+                <pathelement path="libs/metadata-extractor-2.3.0.jar; libs/jnlp.jar; libs/activation.jar; libs/mail.jar" />
+                <pathelement location="${junit.dir}" />
+            </classpath>
         </javac>
     </target>
     
@@ -275,8 +268,8 @@
     
     
     <target name="test" depends="compile-test" description="Runs the unit tests">
-        <splash imageurl="http://www.bar-solutions.com/software/ant_splash.jpg"
-        showduration="5000"/>
+       <!-- <splash imageurl="http://www.bar-solutions.com/software/ant_splash.jpg"
+        showduration="5000"/> -->
         <junit
             printsummary="yes"
             errorProperty="test.failed"
@@ -291,7 +284,6 @@
                 <pathelement path="libs/metadata-extractor-2.3.0.jar; libs/jnlp.jar; libs/activation.jar; libs/mail.jar" />
                 <pathelement location="${junit.dir}" />
             </classpath>
-            <!--<test todir="${results}" name="jpo.ApplicationJMenuBarTest"/>-->
             <batchtest todir="${results}">
                 <fileset dir="${unit.test.classes.dir}">
                     <include name="**/*Test.class"/>
@@ -313,7 +305,6 @@
     </target>
     
     
-    <!-- <property name="cvsroot" value=":ext:richieigenmann@j-po.cvs.sourceforge.net:/cvsroot/j-po"/> -->
     <property name="cvsroot" value=":pserver:anonymous@j-po.cvs.sourceforge.net:/cvsroot/j-po"/>
     
     <target name="cvscheckout" description="Checks out a new version of the Jpo source from Sourceforge">
