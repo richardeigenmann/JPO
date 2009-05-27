@@ -22,10 +22,20 @@ public class SettingsTest extends TestCase implements LocaleChangeListener{
     
     private int countLocaleChanged;
     
+    /**
+     *
+     * @throws java.lang.Exception
+     */
+    @Override
     protected void setUp() throws Exception {
         countLocaleChanged = 0;
     }
     
+    /**
+     *
+     * @throws java.lang.Exception
+     */
+    @Override
     protected void tearDown() throws Exception {
     }
     

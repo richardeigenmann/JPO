@@ -1031,7 +1031,7 @@ public class Settings {
     public static void setLocale( Locale newLocale ) {
         Locale oldLocale = currentLocale;
         try {
-            jpoResources = ResourceBundle.getBundle( "jpo.JpoResources", newLocale );
+            jpoResources = ResourceBundle.getBundle( "jpo.gui.JpoResources", newLocale );
             currentLocale = newLocale;
         } catch ( MissingResourceException mre ) {
             Tools.log( "Settings.setDefaults: MissingResourceException: " + mre.getMessage() );

@@ -27,12 +27,13 @@ public class ResourceBundleTest extends TestCase {
     ResourceBundle jpoResources3;
     ResourceBundle jpoResources4;
     
+    @Override
     protected void setUp() throws Exception {
         try {
-            jpoResources1 = ResourceBundle.getBundle("jpo.JpoResources", Locale.ENGLISH);
-            jpoResources2 = ResourceBundle.getBundle("jpo.JpoResources", Locale.GERMAN);
-            jpoResources3 = ResourceBundle.getBundle("jpo.JpoResources", Locale.SIMPLIFIED_CHINESE);
-            jpoResources4 = ResourceBundle.getBundle("jpo.JpoResources", Locale.TRADITIONAL_CHINESE);
+            jpoResources1 = ResourceBundle.getBundle("jpo.gui.JpoResources", Locale.ENGLISH);
+            jpoResources2 = ResourceBundle.getBundle("jpo.gui.JpoResources", Locale.GERMAN);
+            jpoResources3 = ResourceBundle.getBundle("jpo.gui.JpoResources", Locale.SIMPLIFIED_CHINESE);
+            jpoResources4 = ResourceBundle.getBundle("jpo.gui.JpoResources", Locale.TRADITIONAL_CHINESE);
             
         } catch ( MissingResourceException x ) {
             fail( "Resource Bundles could not be found." );
@@ -84,7 +85,7 @@ public class ResourceBundleTest extends TestCase {
     
     public void testChangeLocale() {
         assertEquals("Testing English bundle locale", "New Collection", jpoResources1.getString("FileNewJMenuItem") );
-        jpoResources1 = ResourceBundle.getBundle("jpo.JpoResources", Locale.GERMAN);
+        jpoResources1 = ResourceBundle.getBundle("jpo.gui.JpoResources", Locale.GERMAN);
         assertEquals("Testing getString from the changed bundle", "Neue Sammlung", jpoResources1.getString("FileNewJMenuItem") );
         assertEquals("Testing verifying that the changed bundle is now German", Locale.GERMAN, jpoResources1.getLocale() );
     }

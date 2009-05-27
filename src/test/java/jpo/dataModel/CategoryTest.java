@@ -39,7 +39,7 @@ public class CategoryTest extends TestCase {
      * Test of getKey method, of class jpo.Category.
      */
     public void testGetKey() {
-        Category cat = new Category( "1", "Houses");
+        Category cat = new Category( 1, "Houses");
         assertEquals( "1", cat.getKey().toString() );
     }
 
@@ -47,8 +47,8 @@ public class CategoryTest extends TestCase {
      * Test of setKey method, of class jpo.Category.
      */
     public void testSetKey() {
-        Category cat = new Category( "1", "Houses");
-        cat.setKey( "2" );
+        Category cat = new Category( 1, "Houses");
+        cat.setKey( 2 );
         assertEquals( "2", cat.getKey().toString() );
     }
 
@@ -57,7 +57,7 @@ public class CategoryTest extends TestCase {
      * Test of getValue method, of class jpo.Category.
      */
     public void testGetValue() {
-        Category cat = new Category( "1", "Houses");
+        Category cat = new Category( 1, "Houses");
         assertEquals( "Houses", cat.getValue().toString() );
     }
 
@@ -65,7 +65,7 @@ public class CategoryTest extends TestCase {
      * Test of setValueKey method, of class jpo.Category.
      */
     public void testSetValue() {
-        Category cat = new Category( "1", "Houses");
+        Category cat = new Category( 1, "Houses");
         cat.setValue( "Landscapes" );
         assertEquals( "Landscapes", cat.getValue().toString() );
     }
@@ -77,7 +77,7 @@ public class CategoryTest extends TestCase {
      * somewhere. To prevent this stupid thing happening ever again I have added this test.
      */
     public void testToString() {
-        Category cat = new Category( "1", "Houses");
+        Category cat = new Category( 1, "Houses");
         assertEquals( "Houses", cat.toString() );
     }
 
