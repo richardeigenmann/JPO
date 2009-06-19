@@ -96,7 +96,6 @@ public class PicturePopupMenu extends JPopupMenu
      *   @param  pictureViewer  the PictureViewer to notify
      */
     public PicturePopupMenu( ThumbnailBrowserInterface setOfNodes, int idx, PictureViewer pictureViewer ) {
-        //Tools.log("PicturePopupMenu: constructor called with context.");
         this.mySetOfNodes = setOfNodes;
         this.index = idx;
         this.pictureViewer = pictureViewer;
@@ -524,15 +523,7 @@ public class PicturePopupMenu extends JPopupMenu
                     if ( ( associatedPanel == null ) || ( associatedPanel.countSelectedNodes() < 1 ) ) {
                         popupNode.fileDelete();
                     } else {
-                        Enumeration selection = associatedPanel.getSelectedNodesAsVector().elements();
-                        SortableDefaultMutableTreeNode n;
-                        while ( selection.hasMoreElements() ) {
-                            n = (SortableDefaultMutableTreeNode) selection.nextElement();
-                            if ( n.getUserObject() instanceof PictureInfo ) {
-                                n.fileDelete();
-                            }
-                        }
-                        associatedPanel.clearSelection();
+                        multiDeleteDialog();
                     }
                 }
             } );
@@ -541,12 +532,77 @@ public class PicturePopupMenu extends JPopupMenu
     }
 
 
+    private void multiDeleteDialog() {
+        JTextArea textArea = new JTextArea();
+        textArea.setText( "" );
+        Enumeration selection = associatedPanel.getSelectedNodesAsVector().elements();
+        SortableDefaultMutableTreeNode n;
+        while ( selection.hasMoreElements() ) {
+            n = (SortableDefaultMutableTreeNode) selection.nextElement();
+            if ( n.getUserObject() instanceof PictureInfo ) {
+                textArea.append( ( (PictureInfo) n.getUserObject() ).getHighresLocation() + "\n" );
+            }
+        }
+        textArea.append( Settings.jpoResources.getString( "areYouSure" ) );
+
+
+        int option = JOptionPane.showConfirmDialog(
+                Settings.anchorFrame, //very annoying if the main window is used as it forces itself into focus.
+                textArea,
+                Settings.jpoResources.getString( "FileDeleteLabel" ),
+                JOptionPane.OK_CANCEL_OPTION );
+
+        if ( option == 0 ) {
+            selection = associatedPanel.getSelectedNodesAsVector().elements();
+            PictureInfo pi;
+            while ( selection.hasMoreElements() ) {
+                n = (SortableDefaultMutableTreeNode) selection.nextElement();
+                if ( n.getUserObject() instanceof PictureInfo ) {
+                    pi = (PictureInfo) n.getUserObject();
+                    boolean ok = false;
+                    File lowresFile = pi.getLowresFile();
+                    if ( ( lowresFile != null ) && ( lowresFile.exists() ) ) {
+                        ok = lowresFile.delete();
+                        if ( !ok ) //Tools.log("File deleted: " + lowresFile.toString() );
+                        // else
+                        {
+                            Tools.log( "File deleted failed on: " + lowresFile.toString() );
+                        }
+                    }
+
+                    File highresFile = pi.getHighresFile();
+                    if ( highresFile.exists() ) {
+                        ok = highresFile.delete();
+                        if ( !ok ) //Tools.log("File deleted: " + highresFile.toString() );
+                        //else
+                        {
+                            Tools.log( "File deleted failed on: " + highresFile.toString() );
+                        }
+                    }
+
+                    n.deleteNode();
+
+                    if ( !ok ) {
+                        JOptionPane.showMessageDialog( Settings.anchorFrame,
+                                Settings.jpoResources.getString( "fileDeleteError" ) + highresFile.toString(),
+                                Settings.jpoResources.getString( "genericError" ),
+                                JOptionPane.ERROR_MESSAGE );
+                    }
+                }
+            }
+            associatedPanel.clearSelection();
+        }
+
+    }
+
+
     private void noRotation() {
         Object o = popupNode.getUserObject();
         PictureInfo pi = (PictureInfo) o;
-        pi.setRotation( 0);
+        pi.setRotation( 0 );
         popupNode.refreshThumbnail();
     }
+
 
     private void rotatePicture( int angle ) {
         Object o = popupNode.getUserObject();

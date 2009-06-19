@@ -1,5 +1,6 @@
 package jpo.gui;
 
+import jpo.gui.swing.MainWindow;
 import jpo.dataModel.Tools;
 import jpo.dataModel.Settings;
 import jpo.*;

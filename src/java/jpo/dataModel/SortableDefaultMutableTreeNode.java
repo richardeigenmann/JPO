@@ -938,6 +938,7 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
 
     /**
      *  Brings up an are you sure dialog and then deletes the file.
+     * TODO: Take out from here as we are doing GUI stuff and delete stuff.
      */
     public void fileDelete() {
         Object userObj = this.getUserObject();
