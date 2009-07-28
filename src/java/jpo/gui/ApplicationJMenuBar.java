@@ -5,6 +5,7 @@ import jpo.dataModel.Settings;
 import jpo.*;
 import java.awt.event.*;
 import javax.swing.*;
+import jpo.dataModel.Tools;
 
 /*
 ApplicationJMenuBar.java:  main menu for the application

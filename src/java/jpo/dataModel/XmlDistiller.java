@@ -1,7 +1,6 @@
 package jpo.dataModel;
 
 import jpo.*;
-import jpo.dataModel.PictureInfo;
 import java.io.*;
 import java.util.*;
 import javax.swing.*;
@@ -76,9 +75,9 @@ public class XmlDistiller implements Runnable {
 
     /**
      *  @param outputFile    	The name of the file that is to be created
-     *  @param startNode		The node from which this is all to be built.
+     *  @param startNode	The node from which this is all to be built.
      *  @param copyPics		Flag which instructs pictures to be copied too
-     *  @param runAsThread		Flag which can instruct this job not to run as a thread.
+     *  @param runAsThread	Flag which can instruct this job not to run as a thread.
      */
     public XmlDistiller( File outputFile, SortableDefaultMutableTreeNode startNode, boolean copyPics, boolean runAsThread ) {
         this.outputFile = outputFile;
@@ -127,7 +126,7 @@ public class XmlDistiller implements Runnable {
             String category;
             while ( i.hasNext() ) {
                 key = (Integer) i.next();
-                category = (String) startNode.getPictureCollection().getCategory( key );
+                category = startNode.getPictureCollection().getCategory( key );
                 out.write( "\t<category index=\"" + key.toString() + "\">" );
                 out.newLine();
                 out.write( "\t\t<categoryDescription><![CDATA[" + category + "]]></categoryDescription>" );
@@ -201,11 +200,6 @@ public class XmlDistiller implements Runnable {
         }
 
         g.endGroupXML( out, groupNode == startNode );
-        /*		if (groupNode != startNode)
-        out.write("</group>");
-        //else
-        //out.write("</collection>");
-        out.newLine();*/
     }
 
 

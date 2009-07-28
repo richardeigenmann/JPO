@@ -25,6 +25,7 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 /**
  *  As per http://java.sun.com/developer/JDCTechTips/2003/tt1208.html#1
  *  Multithreading in Swing Tech Tip
+ *  TODO: get rid of this class
  */
 public class FrameShower 
        	implements Runnable {

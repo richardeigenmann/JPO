@@ -107,7 +107,7 @@ public class Jpo
         javax.imageio.ImageIO.setUseCache( false );
         try {
             // Activate OpenGL performance improvements
-            System.setProperty("sun.java2d.opengl", "true");
+            System.setProperty( "sun.java2d.opengl", "true" );
             SwingUtilities.invokeAndWait( new Runnable() {
 
                 public void run() {
@@ -393,6 +393,51 @@ public class Jpo
     }
 
 
+
+    /**
+     *   Calls the {@link PictureCollection#fileSave} method that saves the
+     *   current collection under it's present name and if it was never
+     *   saved before brings up a popup window.
+     */
+    public void requestFileSave() {
+        Settings.pictureCollection.fileSave();
+        afterFileSaveDialog();
+    }
+
+
+    /**
+     *   Ask whether the file should be opened by default.
+     */
+    public void afterFileSaveDialog() {
+        JPanel p = new JPanel();
+        p.setLayout( new BoxLayout( p, BoxLayout.Y_AXIS ) );
+        p.add( new JLabel( Settings.jpoResources.getString( "collectionSaveBody" ) + Settings.pictureCollection.getXmlFile().toString() ) );
+        JCheckBox setAutoload = new JCheckBox( Settings.jpoResources.getString( "setAutoload" ) );
+        if ( ( new File( Settings.autoLoad ) ).compareTo( Settings.pictureCollection.getXmlFile() ) == 0 ) {
+            setAutoload.setSelected( true );
+        }
+        p.add( setAutoload );
+        JOptionPane.showMessageDialog( Settings.anchorFrame,
+                p,
+                Settings.jpoResources.getString( "collectionSaveTitle" ),
+                JOptionPane.INFORMATION_MESSAGE );
+        if ( setAutoload.isSelected() ) {
+            Settings.autoLoad = Settings.pictureCollection.getXmlFile().toString();
+            Settings.writeSettings();
+        }
+    }
+
+
+    /**
+     *   Calls the {@link PictureCollection#fileSaveAs} method to bring up
+     *   a filechooser where the user can select the filename to
+     *   save under.
+     */
+    public void requestFileSaveAs() {
+        fileSaveAs();
+    }
+
+
     /**
      *   method that saves the entire index in XML format. It prompts for the
      *   filename first.
@@ -433,63 +478,6 @@ public class Jpo
             afterFileSaveDialog();
         }
     }
-
-
-    /**
-     *   Calls the {@link PictureCollection#fileSave} method that saves the
-     *   current collection under it's present name and if it was never
-     *   saved before brings up a popup window.
-     */
-    public void requestFileSave() {
-        Settings.pictureCollection.fileSave();
-    }
-
-
-    /**
-     *   saves the file and asks whether the file should be opened by default.
-     */
-    public void fileSave() {
-        Settings.pictureCollection.fileSave();
-        afterFileSaveDialog();
-    }
-
-
-    /**
-     *   Ask whether the file should be opened by default.
-     */
-    public void afterFileSaveDialog() {
-        JOptionPane.showMessageDialog( Settings.anchorFrame,
-                Settings.jpoResources.getString( "collectionSaveBody" ) + Settings.pictureCollection.getXmlFile().toString(),
-                Settings.jpoResources.getString( "collectionSaveTitle" ),
-                JOptionPane.INFORMATION_MESSAGE );
-        JPanel p = new JPanel();
-        p.setLayout( new BoxLayout( p, BoxLayout.Y_AXIS ) );
-        p.add( new JLabel( Settings.jpoResources.getString( "collectionSaveBody" ) + Settings.pictureCollection.getXmlFile().toString() ) );
-        JCheckBox setAutoload = new JCheckBox( Settings.jpoResources.getString( "setAutoload" ) );
-        if ( ( new File( Settings.autoLoad ) ).compareTo( Settings.pictureCollection.getXmlFile() ) == 0 ) {
-            setAutoload.setSelected( true );
-        }
-        p.add( setAutoload );
-        JOptionPane.showMessageDialog( Settings.anchorFrame,
-                p,
-                Settings.jpoResources.getString( "collectionSaveTitle" ),
-                JOptionPane.INFORMATION_MESSAGE );
-        if ( setAutoload.isSelected() ) {
-            Settings.autoLoad = Settings.pictureCollection.getXmlFile().toString();
-            Settings.writeSettings();
-        }
-    }
-
-
-    /**
-     *   Calls the {@link PictureCollection#fileSaveAs} method to bring up
-     *   a filechooser where the user can select the filename to
-     *   save under.
-     */
-    public void requestFileSaveAs() {
-        fileSaveAs();
-    }
-
 
     /**
      *   Calls {@link #closeJpo} to shut down the application.
