@@ -12,11 +12,11 @@ import jpo.dataModel.SortableDefaultMutableTreeNode;
 import java.io.*;
 import java.util.*;
 import java.awt.event.*;
+import java.util.logging.Handler;
 import javax.swing.*;
 import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreePath;
 import jpo.dataModel.GroupInfo;
-import jpo.dataModel.PictureCollection;
 import jpo.dataModel.PictureInfo;
 import jpo.gui.swing.CollectionJTree;
 import jpotestground.CheckThreadViolationRepaintManager;
@@ -93,6 +93,13 @@ public class Jpo
      *  on the left side and a {@link ThumbnailJScrollPane} on the right side.
      */
     public Jpo() {
+
+        // set up logging level
+        Handler[] handlers =
+                Logger.getLogger( "" ).getHandlers();
+        for ( int index = 0; index < handlers.length; index++ ) {
+            handlers[index].setLevel( Level.FINEST );
+        }
         Settings.loadSettings();
 
         Tools.log( "------------------------------------------------------------" );
@@ -393,7 +400,6 @@ public class Jpo
     }
 
 
-
     /**
      *   Calls the {@link PictureCollection#fileSave} method that saves the
      *   current collection under it's present name and if it was never
@@ -478,6 +484,7 @@ public class Jpo
             afterFileSaveDialog();
         }
     }
+
 
     /**
      *   Calls {@link #closeJpo} to shut down the application.

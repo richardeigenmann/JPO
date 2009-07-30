@@ -72,7 +72,7 @@ public class PlayWithThumbnail extends JFrame implements ChangeListener {
     public void stateChanged( ChangeEvent e ) {
         JSlider source = (JSlider) e.getSource();
         //if ( !source.getValueIsAdjusting() ) {
-        int value = (int) source.getValue();
+        int value = source.getValue();
         float scale = (float) value / MAX;
         l.setText( Integer.toString( value ) + " --> " + Float.toString( scale * 100 ) + "%" );
 

@@ -460,8 +460,6 @@ public class Tools {
     }
 
 
-
-
     /**
      *  searches for an item in the classpath that ends exactly like the supplied string.
      *  Returns a new file object for that item or null if not found.
@@ -895,6 +893,19 @@ public class Tools {
             }
         } catch ( IOException x ) {
             Tools.log( "SortableDefaultMutableTreeNode.runUserFunction: Runtime.exec collapsed with and IOException: " + x.getMessage() );
+        }
+    }
+
+
+    /**
+     * This helper method checks if the execution is on the EventDisplayThread and
+     * throws an Error if it is not. All Swing operations must be done on the EDT. This
+     * method allows easy checking by writing:
+     * <code>Tools.checkEDT()</code>
+     */
+    public static void checkEDT() {
+        if ( ! SwingUtilities.isEventDispatchThread() ) {
+            throw new Error( "Not on EDT!" );
         }
     }
 }

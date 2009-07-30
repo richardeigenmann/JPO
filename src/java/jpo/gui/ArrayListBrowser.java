@@ -132,4 +132,18 @@ public class ArrayListBrowser extends ThumbnailBrowser {
         super.cleanup();
         allPictures = null;
     }
+
+    /**
+     * Overriden to print some useful info about the nodes
+     * @return A helpful description
+     */
+    @Override
+    public String toString() {
+        return "ArrayListBrowser "
+                + Integer.toString( hashCode() )
+                + " Title: " + getTitle()
+                + " with "
+                + Integer.toString( getNumberOfNodes() )
+                + " nodes";
+    }
 }

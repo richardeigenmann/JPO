@@ -1,5 +1,6 @@
-package jpo.dataModel;
+package jpo.TagCloud;
 
+import jpo.dataModel.*;
 import java.util.AbstractCollection;
 import java.util.AbstractMap;
 import java.util.ArrayList;
@@ -8,10 +9,9 @@ import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.TreeMap;
+import java.util.logging.Logger;
 
 /*
 DescrpitionWordMap.java:  Builds a list of description Words and links to a set of nodes where they were found
@@ -35,6 +35,11 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  * @author Richard Eigenmann
  */
 public class DescriptionWordMap {
+
+    /**
+     * Defines a logger for this class
+     */
+    private static Logger logger = Logger.getLogger( DescriptionWordMap.class.getName() );
 
     /**
      * A reference to the node from where we start analysing
@@ -63,6 +68,10 @@ public class DescriptionWordMap {
      * Zips through the nodes and builds the word to node set map.
      */
     private void buildList() {
+        if ( startNode == null ) {
+            // nothing to do
+            return;
+        }
         SortableDefaultMutableTreeNode n;
         Object o;
         Enumeration nodes = startNode.breadthFirstEnumeration();
@@ -158,7 +167,7 @@ public class DescriptionWordMap {
      */
     public static int getMaximumNodes( AbstractMap<String, HashSet<SortableDefaultMutableTreeNode>> map ) {
         int maxNodes = 0;
-        Iterator <Entry<String, HashSet<SortableDefaultMutableTreeNode>>> it = map.entrySet().iterator();
+        Iterator<Entry<String, HashSet<SortableDefaultMutableTreeNode>>> it = map.entrySet().iterator();
         Entry<String, HashSet<SortableDefaultMutableTreeNode>> pairs;
         while ( it.hasNext() ) {
             pairs = it.next();
@@ -173,6 +182,10 @@ public class DescriptionWordMap {
     private TreeMap<String, HashSet<SortableDefaultMutableTreeNode>> truncatedMap;
 
 
+    /**
+     * Returns a TreeMap of the top truncated nodes.
+     * @return
+     */
     public TreeMap<String, HashSet<SortableDefaultMutableTreeNode>> getTruncatedMap() {
         return truncatedMap;
     }

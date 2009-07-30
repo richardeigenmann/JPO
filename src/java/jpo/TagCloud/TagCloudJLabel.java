@@ -1,9 +1,11 @@
-package jpo.gui;
+package jpo.TagCloud;
 
+import jpo.gui.*;
 import java.awt.Color;
 import java.awt.Font;
+import java.util.logging.Logger;
 import javax.swing.JLabel;
-import javax.swing.SwingUtilities;
+import jpo.dataModel.Tools;
 
 /*
 TagCloudJLabel.java:  A widget that shows a word in a Tag Cloud
@@ -23,7 +25,7 @@ The license is in gpl.txt.
 See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 /**
- *  A Widget that shows a word in a Tag Cloud
+ *  A JLabel that shows a word in a Tag Cloud
  *
  * @author Richard Eigenmann
  */
@@ -32,7 +34,7 @@ public class TagCloudJLabel extends JLabel {
     /**
      * An Array of increasing size fonts for the label to choose from
      */
-    static final Font[] fonts = {
+    private static final Font[] fonts = {
         new Font( "SansSerif", Font.PLAIN, 10 ),
         new Font( "SansSerif", Font.PLAIN, 14 ),
         new Font( "SansSerif", Font.PLAIN, 18 ),
@@ -48,9 +50,14 @@ public class TagCloudJLabel extends JLabel {
      * I have chosen a the GradientColor.SHADES_OF_LIGHT_BLUE colors for
      * this component.
      */
-    static final Color[] gradientColor = GradientColor.SHADES_OF_LIGHT_BLUE;
+    private static final Color[] gradientColor = GradientColor.SHADES_OF_LIGHT_BLUE;
 
+    /**
+     * Defines a logger for this class
+     */
+    private static Logger logger = Logger.getLogger( TagCloudJLabel.class.getName() );
 
+ 
     /**
      * Constructs a Word Label
      * @param word The word to show
@@ -69,34 +76,32 @@ public class TagCloudJLabel extends JLabel {
      */
     public TagCloudJLabel( String word, float sizeWeight, float colorWeight ) {
         super( word );
+        logger.finest( String.format( "TagCloudJLabel Constructor for word: \"%s\" sizeWeight: %f colorWeight %f", word, sizeWeight, colorWeight ) );
+        Tools.checkEDT();
+
         // never trust imputs
         if ( sizeWeight > 1f ) {
+            logger.finest( String.format( "sizeWeight was %f which is > 1; setting to 1", sizeWeight ) );
             sizeWeight = 1;
         }
         if ( sizeWeight < 0f ) {
+            logger.finest( String.format( "sizeWeight was %f which is < 0; setting to 0", sizeWeight ) );
             sizeWeight = 0;
         }
         if ( colorWeight > 1f ) {
+            logger.finest( String.format( "colorWeight was %f which is > 1; setting to 1", colorWeight ) );
             colorWeight = 1;
         }
         if ( colorWeight < 0f ) {
+            logger.finest( String.format( "colorWeight was %f which is < 0; setting to 0", colorWeight ) );
             colorWeight = 0;
         }
 
 
         final int index = (int) ( sizeWeight * ( fonts.length - 1 ) );
         final float finalColorWeight = colorWeight;
-        Runnable r = new Runnable() {
 
-            public void run() {
-                setFont( fonts[index] );
-                setForeground( GradientColor.getColor( gradientColor, finalColorWeight ) );
-            }
-        };
-        if ( SwingUtilities.isEventDispatchThread() ) {
-            r.run();
-        } else {
-            SwingUtilities.invokeLater( r );
-        }
+        setFont( fonts[index] );
+        setForeground( GradientColor.getColor( gradientColor, finalColorWeight ) );
     }
 }
