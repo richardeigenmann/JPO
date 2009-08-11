@@ -12,6 +12,7 @@ import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.HashSet;
 import javax.swing.tree.*;
+import jpo.TagCloud.DescriptionWordMap;
 
 /*
 InfoPanel.java:  a JScrollPane that shows information after selection events.
@@ -125,17 +126,20 @@ public class InfoPanel extends JTabbedPane implements TagClickListener {
                     // ToDo get this stuff off the event handler thread
                     statsJPanel.updateStats( node );
                     statsScroller.setViewportView( statsJPanel );
-                    setComponentAt( 2, new WordBrowser( node, tagClickListener, 30 ) );
+                    dwm = new DescriptionWordMap( node );
+                    //setComponentAt( 2, new WordBrowser( dwm, tagClickListener, 30 ) );
                     t.start();  // updates the queue-count
                 }
             }
         } );
     }
 
+    DescriptionWordMap dwm ;
     TagClickListener tagClickListener;
 
 
-    public void tagClicked( String key, HashSet<SortableDefaultMutableTreeNode> hs ) {
+    public void tagClicked( String key ) {
+        HashSet<SortableDefaultMutableTreeNode> hs = dwm.getMap().get( key );
         ArrayList<SortableDefaultMutableTreeNode> set = new ArrayList<SortableDefaultMutableTreeNode>( hs );
         ArrayListBrowser alb = new ArrayListBrowser( key, set );
         Jpo.thumbnailJScrollPane.show( alb );

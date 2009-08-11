@@ -3,6 +3,7 @@ package jpo.export;
 import java.awt.Dimension;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import jpo.dataModel.Settings;
@@ -85,26 +86,14 @@ public class GenerateWebsiteWizard {
             public void wizardFinished( WizardModelEvent arg0 ) {
                 options.saveToSettings();
                 HtmlDistiller h = new HtmlDistiller( options );
-                Thread t = new Thread( h );
-                t.start();
+                SwingUtilities.invokeLater( h );
+                //Thread t = new Thread( h );
+                //t.start();
             }
 
             public void wizardModelChanged( WizardModelEvent arg0 ) {
             }
         } );
-
-       /* try {
-            final String Metal = "javax.swing.plaf.metal.MetalLookAndFeel";
-            UIManager.setLookAndFeel( Metal );
-        } catch ( ClassNotFoundException ex ) {
-            Logger.getLogger( GenerateWebsiteWizard.class.getName() ).log( Level.SEVERE, null, ex );
-        } catch ( InstantiationException ex ) {
-            Logger.getLogger( GenerateWebsiteWizard.class.getName() ).log( Level.SEVERE, null, ex );
-        } catch ( IllegalAccessException ex ) {
-            Logger.getLogger( GenerateWebsiteWizard.class.getName() ).log( Level.SEVERE, null, ex );
-        } catch ( UnsupportedLookAndFeelException ex ) {
-            Logger.getLogger( GenerateWebsiteWizard.class.getName() ).log( Level.SEVERE, null, ex );
-        } */
 
         Wizard wizard = new Wizard( model, Settings.jpoResources.getString( "HtmlDistillerJFrameHeading" ) );
 

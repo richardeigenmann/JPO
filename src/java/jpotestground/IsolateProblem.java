@@ -76,8 +76,8 @@ public class IsolateProblem extends JFrame {
             add( jsp, BorderLayout.CENTER );
 
 
-            dwm = new DescriptionWordMap( PlayWithTagCloud.getSomeNodes() );
-            availableWords = dwm.getMap().size();
+            //dwm = new DescriptionWordMap( new PlayWithTagCloud.Cities(); );
+            //availableWords = dwm.getMap().size();
 
             populateWithLabels();
         }

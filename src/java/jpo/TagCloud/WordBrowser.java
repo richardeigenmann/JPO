@@ -1,22 +1,18 @@
 package jpo.TagCloud;
 
 import java.awt.BorderLayout;
-import jpo.gui.*;
 import java.awt.Dimension;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.AbstractMap;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Map.Entry;
+import java.util.Map;
+import java.util.TreeSet;
 import java.util.logging.Logger;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import jpo.dataModel.SortableDefaultMutableTreeNode;
 import jpo.dataModel.Tools;
 
 /*
@@ -69,21 +65,20 @@ public class WordBrowser extends JPanel {
      */
     private int minimumWords;
 
+
     /**
      * The DescriptionordMap  for the TagCloud
      */
-    private DescriptionWordMap dwm;
-
-
+    //private DescriptionWordMap dwm;
     /**
      * Constructor to call to create a new WordBrowser. It used BorderLayout and
      * puts the Slider in the top part and the scroll pane in the center part.
      * 
-     * @param startNode  The node from which to enumerate and search out the words
+     * @param wordMap
      * @param tagClickListener The listener to notify word clicks to
      * @param minimumWords The minimum number of words to show (at least 1; enforced)
      */
-    public WordBrowser( final SortableDefaultMutableTreeNode startNode, final TagClickListener tagClickListener, final int minimumWords ) {
+    public WordBrowser( WordMap wordMap, final TagClickListener tagClickListener, final int minimumWords ) {
         Tools.checkEDT();
 
         this.tagClickListener = tagClickListener;
@@ -107,15 +102,27 @@ public class WordBrowser extends JPanel {
         scrollPane.setVerticalScrollBarPolicy( JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED );
         add( scrollPane, BorderLayout.CENTER );
 
-        dwm = new DescriptionWordMap( startNode );
-        availableWords = dwm.getMap().size();
+        //>setWordMap( wordMap );
+    }
+
+    WordMap wordMap;
+
+
+    public void setWordMap( WordMap wm ) {
+        wordMap = wm;
+        this.wordCountMap = wordMap.getWordCountMap();
+        availableWords = this.wordCountMap.size();
         showWords( this.minimumWords );
     }
+
+    Map<String, Integer> wordCountMap;
 
     /**
      * The number of words available in the DescriptionWordMap
      */
     private int availableWords;
+
+    private int maximumCount;
 
 
     /**
@@ -126,15 +133,17 @@ public class WordBrowser extends JPanel {
      */
     public void showWords( final int limit ) {
         Tools.checkEDT();
-        dwm.truncateToTop( limit );
-        final int maxNodes = DescriptionWordMap.getMaximumNodes( dwm.getTruncatedMap() );
+        TreeSet<String> topWords = DescriptionWordMap.getTopWords( wordMap.getValueSortedMap(), limit );
+        maximumCount = wordMap.getMaximumCount();
+        logger.fine( String.format( "maxNodes determined to be %d", maximumCount ) );
 
         labelPanel.removeAll();
-        Iterator<Entry<String, HashSet<SortableDefaultMutableTreeNode>>> it = dwm.getTruncatedMap().entrySet().iterator();
+
+        Iterator<String> it = topWords.iterator();
         while ( it.hasNext() ) {
-            Entry<String, HashSet<SortableDefaultMutableTreeNode>> pairs = it.next();
-            float percent = pairs.getValue().size() / (float) maxNodes;
-            TagCloudJLabel tagCloudEntry = new TagCloudJLabel( pairs.getKey(), percent );
+            String s = it.next();
+            float percent = (float) wordCountMap.get( s ) / (float) maximumCount;
+            TagCloudJLabel tagCloudEntry = new TagCloudJLabel( s, percent );
             tagCloudEntry.addMouseListener( wordClickListener );
             labelPanel.add( tagCloudEntry );
         }
@@ -146,8 +155,6 @@ public class WordBrowser extends JPanel {
         scrollPane.repaint();
 
     }
-
-
 
     /**
      * Listener for the slider which limits the number of words to be shown
@@ -185,11 +192,7 @@ public class WordBrowser extends JPanel {
         @Override
         public void mouseClicked( MouseEvent e ) {
             TagCloudJLabel wl = (TagCloudJLabel) e.getComponent();
-            String key = wl.getText();
-            HashSet<SortableDefaultMutableTreeNode> hs = dwm.getMap().get( key );
-            tagClickListener.tagClicked( key, hs );
+            tagClickListener.tagClicked( wl.getText() );
         }
     };
-
- 
 }

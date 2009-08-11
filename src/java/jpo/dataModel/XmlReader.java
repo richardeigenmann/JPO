@@ -72,13 +72,10 @@ public class XmlReader extends DefaultHandler {
         // Use the validating parser
         SAXParserFactory factory = SAXParserFactory.newInstance();
         factory.setValidating( true );
-        //factory.setValidating( false );
-        //factory.setSchema( null );
-        //factory.setNamespaceAware(true);
+
         try {
             // Parse the input
             SAXParser saxParser = factory.newSAXParser();
-            //saxParser.getXMLReader().setEntityResolver( this );
             saxParser.parse( bufferedInputStream, this );
 
         } catch ( SAXParseException spe ) {

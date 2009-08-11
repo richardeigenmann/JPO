@@ -11,6 +11,7 @@
     <property name="jsch.dir" value="/usr/share/java/jsch.jar"/>
     <property name="build.images.dir" value="${build.base.classes.dir}/${app.main.package}/images"/>
     <property name="build.dtd.dir" value="${build.base.classes.dir}/${app.main.package}"/>
+    <property name="build.export.dir" value="${build.base.classes.dir}/${app.main.package}/export"/>
     <property name="build.docs.dir" value="${build.dir}/docs"/>
     <property name="build.jars.dir" value="${build.dir}/jars"/>
     <property name="version" value="0.9"/>
@@ -96,6 +97,10 @@
             <fileset dir="${src.dtd.dir}">
                 <include name="**/*.dtd"/>
                 <include name="**/gpl.txt"/>
+            </fileset>
+        </copy>
+        <copy todir="${build.export.dir}">
+            <fileset dir="${src.dtd.dir}">
                 <include name="**/robots.txt"/>
                 <include name="**/jpo.css"/>
                 <include name="**/jpo.js"/>

@@ -5,7 +5,6 @@ import jpo.dataModel.Settings;
 import jpo.dataModel.GroupInfo;
 import jpo.gui.ScalablePicture;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
-import jpo.gui.ApplicationJMenuBar;
 import jpo.dataModel.PictureInfo;
 import jpo.*;
 import java.io.*;
@@ -13,6 +12,8 @@ import java.util.*;
 import java.awt.*;
 import javax.swing.*;
 import java.awt.event.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.zip.*;
 
 /*
@@ -37,6 +38,7 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  *  groups of pictures using a web browsers. The resulting html pages can be
  *  posted to the Internet. Relative addressing has been used throughout to facilitate 
  *  this.
+ * TODO: This class should use the proper Swing paradigm about with EDT and stuff
  */
 public class HtmlDistiller implements Runnable {
 
@@ -44,48 +46,69 @@ public class HtmlDistiller implements Runnable {
      *  Temporary object to scale the image for the html output.
      */
     private ScalablePicture scp = new ScalablePicture();
+
     /**
      *   Variable that signals to the thread to stop immediately.
      */
     public boolean interrupt = false;
+
     /**
      *   counter that is incremented with every new picture and is used to 
      *   determine the number for the next one.
      */
     private int picsWroteCounter = 1;
+
     /**
      *   Frame to show what the thread is doing.
      */
     private JFrame progressFrame;
+
     /**
      *  Label to show what is being processed.
      */
     private JLabel progressLabel;
+
     /**
      *  Progress Indicator.
      */
     private JProgressBar progBar;
+
     /**
      *  Cancel Button.
      */
     private JButton cancelButton;
+
     /**
      *   Indicator that gets set to true if groupnodes are being written so that
      *   the folder icon is created.
      */
     private boolean folderIconRequired = false;
+
     /**
      *  Handle for the zipfile
      */
     private ZipOutputStream zipFile;
+
     /**
      *  static size of the buffer to be used in copy operations
      */
     private static final int BUFFER_SIZE = 2048;
+
+    /**
+     * Defines a logger for this class
+     */
+    private static Logger logger = Logger.getLogger( HtmlDistiller.class.getName() );
+
+
+    {
+        logger.setLevel( Level.ALL );
+    }
+
     /**
      * The preferences that define how to render the Html page.
      */
     private HtmlDistillerOptions options;
+
 
     /**
      *  Creates and starts a Thread that writes the picture nodes from the specified
@@ -96,6 +119,7 @@ public class HtmlDistiller implements Runnable {
     public HtmlDistiller( HtmlDistillerOptions options ) {
         this.options = options;
     }
+
 
     /**
      *  Method that is invoked by the thread to do things asynchroneousely.
@@ -160,7 +184,7 @@ public class HtmlDistiller implements Runnable {
                 zipFile = new ZipOutputStream( new BufferedOutputStream( dest ) );
             }
         } catch ( IOException x ) {
-            Tools.log( "HtmlDistillerThread.run: Error creating Zipfile. Coninuing without Zip\n" + x.toString() );
+            logger.severe( "Error creating Zipfile. Coninuing without Zip\n" + x.toString() );
             options.setGenerateZipfile( false );
         }
 
@@ -176,7 +200,7 @@ public class HtmlDistiller implements Runnable {
                 zipFile.close();
             }
         } catch ( IOException x ) {
-            Tools.log( "HtmlDistillerThread.run: Error closing Zipfile. Coninuing.\n" + x.toString() );
+            logger.severe( "Error closing Zipfile. Coninuing.\n" + x.toString() );
             options.setGenerateZipfile( false );
         }
 
@@ -216,7 +240,8 @@ public class HtmlDistiller implements Runnable {
 
     }
 
-    /** 
+
+    /**
      *  This method writes out an HTML page with the small images aligned next to each other.
      *  Each Group and picture is created in an html file called jpo_1234.htm except for the first one that
      *  gets named index.htm. 1234 is the internal hashCode of the node so that we can translate parents and
@@ -271,7 +296,7 @@ public class HtmlDistiller implements Runnable {
             if ( groupNode.equals( options.getStartNode() ) ) {
                 if ( options.isGenerateZipfile() ) {
                     out.newLine();
-                    out.write( "<a href=\"" +options.getDownloadZipFileName() + "\">Download High Resolution Pictures as a Zipfile</a>" );
+                    out.write( "<a href=\"" + options.getDownloadZipFileName() + "\">Download High Resolution Pictures as a Zipfile</a>" );
                     out.newLine();
                 }
             } else {
@@ -345,7 +370,8 @@ public class HtmlDistiller implements Runnable {
 
     }
 
-    /** 
+
+    /**
      *  Write html about a picture to the output.
      *  @param	n	The node for which the HTML is to be written
      *  @param	out	The opened output stream of the overview page to which the thumbnail tags should be written
@@ -425,16 +451,16 @@ public class HtmlDistiller implements Runnable {
                 bin.close();
                 in.close();
             } catch ( IOException e ) {
-                Tools.log( "HtmDistillerThrea.run: Could not create zipfile entry for " + highresFile.toString() + "\n" + e.toString() );
+                logger.severe( "Could not create zipfile entry for " + highresFile.toString() + "\n" + e.toString() );
             } catch ( Exception e ) {
-                Tools.log( "HtmDistillerThrea.run: Could not create zipfile entry for " + highresFile.toString() + "\n" + e.toString() );
+                logger.severe( "Could not create zipfile entry for " + highresFile.toString() + "\n" + e.toString() );
             }
         }
 
 
 
         progressLabel.setText( "testing size of thumbnail " + p.getLowresURL().toString() );
-        //Tools.log( "testing size of thumbnail " + p.getLowresURL().toString() );
+        logger.fine( "testing size of thumbnail " + p.getLowresURL().toString() );
 
         int wOrig = 0;
         int hOrig = 0;
@@ -470,7 +496,7 @@ public class HtmlDistiller implements Runnable {
         scp.loadPictureImd( p.getHighresURL(), p.getRotation() );
 
         if ( scp.getStatusCode() == ScalablePicture.ERROR ) {
-            Tools.log( "HtmlDistillerThread.writeHtmlPicture: problem reading image using brokenThumbnailPicture instead" );
+            logger.info( "HtmlDistillerThread.writeHtmlPicture: problem reading image " + p.getHighresLocation() + " using brokenThumbnailPicture instead" );
             scp.loadPictureImd( Settings.cl.getResource( "jpo/images/broken_thumbnail.gif" ), 0f );
         }
 
@@ -810,18 +836,22 @@ public class HtmlDistiller implements Runnable {
          *   The number of columns on the Thumbnail page.
          */
         int columns;
+
         /**
          *   The HTML page for the Thumbnails.
          */
         BufferedWriter out;
+
         /**
          *   A counter variable.
          */
         int picCounter = 0;
+
         /**
          *   An array holding the strings of the pictures.
          */
         String[] descriptions;
+
 
         /**
          *  Creates a Description buffer with the indicated number of columns.
@@ -834,6 +864,7 @@ public class HtmlDistiller implements Runnable {
             descriptions = new String[options.getPicsPerRow()];
         }
 
+
         /**
          *  Adds the supplied string to the buffer.
          *  @param description	The string to be added
@@ -842,6 +873,7 @@ public class HtmlDistiller implements Runnable {
             descriptions[picCounter] = description;
             picCounter++;
         }
+
 
         /**
          *  Adds the supplied string to the buffer and performs a check 
@@ -855,6 +887,7 @@ public class HtmlDistiller implements Runnable {
             put( description );
             flushIfNescessary();
         }
+
 
         /**
          *  Checks whether the buffer is full and if so will
@@ -871,6 +904,7 @@ public class HtmlDistiller implements Runnable {
 
             }
         }
+
 
         /**
          *  method that writes the descriptions[] array to the html file.
@@ -905,6 +939,7 @@ public class HtmlDistiller implements Runnable {
         }
     }
 
+
     /**
      *  Returns the the total number of nodes belonging to the indicated node.
      *  @param startNode	The node from which the count shall begin.
@@ -927,6 +962,7 @@ public class HtmlDistiller implements Runnable {
         return count;
     }
 
+
     /**
      *  Writes the jpo.css stylesheet to the target directory.
      *  This file is in the src/dtd directory and has to be added to the jar
@@ -936,6 +972,7 @@ public class HtmlDistiller implements Runnable {
         copyFromJarToFile( "jpo.css", options.getTargetDirectory(), "jpo.css" );
     }
 
+
     /**
      * Writes the file robots.txt to the target directory to prevent search 
      * engines indexing the data.
@@ -944,12 +981,14 @@ public class HtmlDistiller implements Runnable {
         copyFromJarToFile( "robots.txt", options.getTargetDirectory(), "robots.txt" );
     }
 
+
     /**
      * Writes the file jpo.js for the DHTML effects
      */
     public void writeJs() {
         copyFromJarToFile( "jpo.js", options.getTargetDirectory(), "jpo.js" );
     }
+
 
     /**
      * Writes the contents of the specified text file which we have packaged in
@@ -960,9 +999,10 @@ public class HtmlDistiller implements Runnable {
      * @param targetFilename the target filename
      */
     public void copyFromJarToFile( String fileInJar, File targetDir, String targetFilename ) {
+        logger.info( String.format( "Copying File %s from classpath to filename %s in directory %s", fileInJar, targetFilename, targetDir ) );
         String textLine;
         try {
-            InputStream in = ApplicationJMenuBar.class.getResourceAsStream( fileInJar );
+            InputStream in = HtmlDistiller.class.getResourceAsStream( fileInJar );
             BufferedReader bin = new BufferedReader( new InputStreamReader( in ) );
             FileOutputStream out = new FileOutputStream( new File( targetDir, targetFilename ) );
             OutputStreamWriter osw = new OutputStreamWriter( out );
@@ -1001,6 +1041,7 @@ public class HtmlDistiller implements Runnable {
             interrupt = true;
         }
     }
+
 
     /**
      *  This method converts the special characters to codes that HTML can deal with.
@@ -1060,6 +1101,7 @@ public class HtmlDistiller implements Runnable {
         }
         return sb.toString();
     }
+
 
     /**
      *  Translates characters which are problematic into unproblematic characters

@@ -1,8 +1,5 @@
 package jpo.TagCloud;
 
-import java.util.HashSet;
-import jpo.dataModel.SortableDefaultMutableTreeNode;
-
 /*
 CopyLocationsChangeListener.java:  Interface to notify that the Settings.copyLocations array has changed.
 
@@ -31,7 +28,7 @@ public interface TagClickListener {
     /**
      * This method is fired when the user clicks on a tag in the tag cloud
      * @param key The word that was clicked on
-     * @param hs The set of nodes that was clicked on
+     * @param dwm
      */
-    public void tagClicked( String key, HashSet<SortableDefaultMutableTreeNode> hs );
+    public void tagClicked( String key );
 }

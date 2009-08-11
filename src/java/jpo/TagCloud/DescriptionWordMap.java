@@ -1,5 +1,6 @@
 package jpo.TagCloud;
 
+import java.lang.Integer;
 import jpo.dataModel.*;
 import java.util.AbstractCollection;
 import java.util.AbstractMap;
@@ -7,10 +8,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
+import java.util.TreeSet;
 import java.util.logging.Logger;
 
 /*
@@ -34,7 +38,7 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  * Builds a list of description Words and links to a set of nodes where they were found
  * @author Richard Eigenmann
  */
-public class DescriptionWordMap {
+public class DescriptionWordMap extends WordMap {
 
     /**
      * Defines a logger for this class
@@ -161,7 +165,7 @@ public class DescriptionWordMap {
 
 
     /**
-     * Returns th e largest count of modes in the Value of the supplied Map
+     * Returns the largest count of modes in the Value of the supplied Map
      * @param map
      * @return
      */
@@ -229,6 +233,25 @@ public class DescriptionWordMap {
         } );
         valueSortedMap.putAll( wordMap );
     }
+
+
+    /**
+     * The implementing class must return a map of words and their number of occurrences.
+     * @return
+     */
+    public Map<String, Integer> getWordCountMap() {
+        HashMap<String, Integer> wordCountMap = new HashMap<String, Integer>();
+        Iterator<Entry<String, HashSet<SortableDefaultMutableTreeNode>>> it = wordMap.entrySet().iterator();
+        Entry<String, HashSet<SortableDefaultMutableTreeNode>> pairs;
+        while ( it.hasNext() ) {
+            pairs = it.next();
+            wordCountMap.put( pairs.getKey(), pairs.getValue().size() );
+        }
+        return wordCountMap;
+    }
+
+
+   
 
 
     /**

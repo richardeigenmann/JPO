@@ -1,8 +1,10 @@
 package jpo.TagCloud;
 
+import java.awt.event.MouseEvent;
 import jpo.gui.*;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.event.MouseAdapter;
 import java.util.logging.Logger;
 import javax.swing.JLabel;
 import jpo.dataModel.Tools;
@@ -25,7 +27,9 @@ The license is in gpl.txt.
 See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 /**
- *  A JLabel that shows a word in a Tag Cloud
+ * A JLabel that shows a word (in a Tag Cloud) with a color that changes depending
+ * on a percentage and a size that increases with a percentage. It also highlights
+ * the term in a different color if the mouse moves over the label. 
  *
  * @author Richard Eigenmann
  */
@@ -53,11 +57,16 @@ public class TagCloudJLabel extends JLabel {
     private static final Color[] gradientColor = GradientColor.SHADES_OF_LIGHT_BLUE;
 
     /**
+     * The color to highlight the label in when moving the mouse over the label.
+     */
+    private static final Color mouseoverColor = new Color( 0x421ed9 );
+
+    /**
      * Defines a logger for this class
      */
     private static Logger logger = Logger.getLogger( TagCloudJLabel.class.getName() );
 
- 
+
     /**
      * Constructs a Word Label
      * @param word The word to show
@@ -103,5 +112,22 @@ public class TagCloudJLabel extends JLabel {
 
         setFont( fonts[index] );
         setForeground( GradientColor.getColor( gradientColor, finalColorWeight ) );
+        addMouseListener( new MouseAdapter() {
+
+            @Override
+            public void mouseEntered( MouseEvent e ) {
+                super.mouseEntered( e );
+                setForeground( mouseoverColor );
+
+            }
+
+
+            @Override
+            public void mouseExited( MouseEvent e ) {
+                super.mouseExited( e );
+                setForeground( GradientColor.getColor( gradientColor, finalColorWeight ) );
+
+            }
+        } );
     }
 }
