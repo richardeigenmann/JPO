@@ -1,6 +1,5 @@
 package jpo.gui;
 
-import jpo.dataModel.Tools;
 import jpo.dataModel.Settings;
 import jpo.dataModel.PictureCollection;
 import jpo.*;
@@ -12,11 +11,12 @@ import javax.swing.JOptionPane;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.ListSelectionEvent;
 import java.util.Iterator;
+import java.util.logging.Logger;
 
 /*
 CategoryEditorJFrame.java:  creates a GUI to allow the user to specify his search
 
-Copyright (C) 2002-2009  Richard Eigenmann.
+Copyright (C) 2002 - 2009  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -35,6 +35,11 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  *
  **/
 public class CategoryEditorJFrame extends JFrame implements ListSelectionListener {
+
+    /**
+     * Defines a logger for this class
+     */
+    private static Logger logger = Logger.getLogger( CategoryEditorJFrame.class.getName() );
 
     /**
      *  the entry field that allows a new category to be added
@@ -119,7 +124,7 @@ public class CategoryEditorJFrame extends JFrame implements ListSelectionListene
                 Category categoryObject = new Category( key, category );
                 listModel.addElement( categoryObject );
                 categoryJTextField.setText( "" );
-                //Tools.log("I want to add a category: " + categoryJTextField.getText() );
+                //logger.info("I want to add a category: " + categoryJTextField.getText() );
             }
         } );
         c.gridx++;
@@ -185,7 +190,7 @@ public class CategoryEditorJFrame extends JFrame implements ListSelectionListene
         deleteCategoryJButton.addActionListener( new ActionListener() {
 
             public void actionPerformed( ActionEvent evt ) {
-                //Tools.log("I want to remove the selected category " );
+                //logger.info("I want to remove the selected category " );
                 int index = categoriesJList.getSelectedIndex();
                 if ( index < 0 ) {
                     return; // nothing selected
@@ -207,7 +212,7 @@ public class CategoryEditorJFrame extends JFrame implements ListSelectionListene
                 }
                 listModel.remove( index );
                 Settings.pictureCollection.removeCategory( cat.getKey() );
-                //Tools.log("I want to delete: " + cat.value.toString());
+                //logger.info("I want to delete: " + cat.value.toString());
             }
         } );
         buttonJPanel.add( deleteCategoryJButton, bc );
@@ -220,7 +225,7 @@ public class CategoryEditorJFrame extends JFrame implements ListSelectionListene
         renameCategoryJButton.addActionListener( new ActionListener() {
 
             public void actionPerformed( ActionEvent evt ) {
-                Tools.log( "I want to rename the selected category " );
+                logger.info( "I want to rename the selected category " );
                 int index = categoriesJList.getSelectedIndex();
                 if ( index < 0 ) {
                     return; // nothing selected

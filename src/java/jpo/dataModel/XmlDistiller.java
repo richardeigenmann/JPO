@@ -3,6 +3,7 @@ package jpo.dataModel;
 import jpo.*;
 import java.io.*;
 import java.util.*;
+import java.util.logging.Logger;
 import javax.swing.*;
 
 /*
@@ -26,6 +27,11 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  *  a class that exports a tree of chapters to an XML file
  */
 public class XmlDistiller implements Runnable {
+
+    /**
+     * Defines a logger for this class
+     */
+    private static Logger logger = Logger.getLogger( XmlDistiller.class.getName() );
 
     /**
      *  output file handle
@@ -149,13 +155,13 @@ public class XmlDistiller implements Runnable {
 
         } catch ( SecurityException x ) {
             //e.printStackTrace();
-            Tools.log( "XmlDistiller.run: SecurityException: " + x.getMessage() );
+            logger.info( "XmlDistiller.run: SecurityException: " + x.getMessage() );
             JOptionPane.showMessageDialog( null, x.getMessage(),
                     "XmlDistiller: SecurityException",
                     JOptionPane.ERROR_MESSAGE );
         } catch ( IOException x ) {
             //x.printStackTrace();
-            Tools.log( "XmlDistiller.run: IOException: " + x.getMessage() );
+            logger.info( "XmlDistiller.run: IOException: " + x.getMessage() );
             JOptionPane.showMessageDialog( null, x.getMessage(),
                     "XmlDistiller: IOExeption",
                     JOptionPane.ERROR_MESSAGE );

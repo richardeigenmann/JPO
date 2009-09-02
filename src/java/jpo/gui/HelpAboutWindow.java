@@ -1,6 +1,6 @@
 package jpo.gui;
 
-import jpo.dataModel.Tools;
+import java.util.logging.Logger;
 import jpo.dataModel.Settings;
 import jpo.*;
 import javax.swing.JOptionPane;
@@ -30,7 +30,12 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 
 public class HelpAboutWindow {
-    
+
+    /**
+     * Defines a logger for this class
+     */
+    private static Logger logger = Logger.getLogger( HelpAboutWindow.class.getName() );
+
     /**
      *  Constructs a Help About Window
      */
@@ -61,12 +66,12 @@ public class HelpAboutWindow {
                 );
         
         // while we're at it dump the stuff to the log
-        Tools.log("HelpAboutWindow: Help About showed the following information" );
-        Tools.log("User: " + System.getProperty( "user.name" ) );
-        Tools.log("Operating System: " + System.getProperty( "os.name" ) + "  " + System.getProperty( "os.version" ));
-        Tools.log("Java: " + System.getProperty( "java.version" ) );
-        Tools.log("Max Memory: " + Long.toString( Runtime.getRuntime().maxMemory( )/1024/1024, 0 ) + " MB" );
-        Tools.log("Free Memory: " + Long.toString( Runtime.getRuntime().freeMemory( )/1024/1024, 0 ) + " MB" );
+        logger.info("HelpAboutWindow: Help About showed the following information" );
+        logger.info("User: " + System.getProperty( "user.name" ) );
+        logger.info("Operating System: " + System.getProperty( "os.name" ) + "  " + System.getProperty( "os.version" ));
+        logger.info("Java: " + System.getProperty( "java.version" ) );
+        logger.info("Max Memory: " + Long.toString( Runtime.getRuntime().maxMemory( )/1024/1024, 0 ) + " MB" );
+        logger.info("Free Memory: " + Long.toString( Runtime.getRuntime().freeMemory( )/1024/1024, 0 ) + " MB" );
     }
 }
 

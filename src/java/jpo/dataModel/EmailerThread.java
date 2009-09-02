@@ -1,10 +1,6 @@
 package jpo.dataModel;
 
-import jpo.dataModel.Tools;
-import jpo.dataModel.Settings;
 import jpo.gui.ScalablePicture;
-import jpo.dataModel.SortableDefaultMutableTreeNode;
-import jpo.dataModel.PictureInfo;
 import java.io.*;
 import java.util.Properties;
 import javax.mail.*;
@@ -13,12 +9,13 @@ import javax.activation.*;
 import java.net.URL;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.logging.Logger;
 import javax.swing.*;
 
 /*
 EmailerThread.java:  class that sends the emails
 
-Copyright (C) 2006-2009  Richard Eigenmann.
+Copyright (C) 2006 - 2009  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -36,6 +33,11 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  *  This thread sends the emails.
  */
 public class EmailerThread implements Runnable {
+
+    /**
+     * Defines a logger for this class
+     */
+    private static Logger logger = Logger.getLogger( EmailerThread.class.getName() );
 
     /**
      *   Frame to show what the thread is doing.
@@ -256,13 +258,13 @@ public class EmailerThread implements Runnable {
 
 
         } catch ( MessagingException x ) {
-            Tools.log( "EmailerJFrame trapped a MessagingException while preparing the message: " + x.getMessage() );
+            logger.info( "EmailerJFrame trapped a MessagingException while preparing the message: " + x.getMessage() );
             return;
         }
 
         // Send message
         if ( interrupted ) {
-            Tools.log( "EmailerThread: message not sent due to user clicking cancel." );
+            logger.info( "EmailerThread: message not sent due to user clicking cancel." );
         } else {
             try {
                 progressLabel.setText( "Connecting to Mail Server" );
@@ -273,7 +275,7 @@ public class EmailerThread implements Runnable {
                 Transport.send( message );
                 progressLabel.setText( Settings.jpoResources.getString( "EmailerSent" ) );
             } catch ( MessagingException x ) {
-                Tools.log( "EmailerJFrame trapped a MessagingException while sending the message: " + x.getMessage() );
+                logger.info( "EmailerJFrame trapped a MessagingException while sending the message: " + x.getMessage() );
                 x.printStackTrace();
                 JOptionPane.showMessageDialog( Settings.anchorFrame,
                         Settings.jpoResources.getString( "emailSendError" ) + x.getMessage(),

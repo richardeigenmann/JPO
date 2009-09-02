@@ -1,9 +1,8 @@
 package jpo.gui;
 
-import jpo.dataModel.Tools;
+import java.util.logging.Logger;
 import jpo.dataModel.Settings;
 import jpo.*;
-import jpo.gui.*;
 import jpo.dataModel.Camera;
 
 /*
@@ -29,6 +28,12 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  * @author richi
  */
 public class CameraWatchDaemon implements Runnable {
+
+    /**
+     * Defines a logger for this class
+     */
+    private static Logger logger = Logger.getLogger( CameraWatchDaemon.class.getName() );
+
 
     /** Creates a new instance of CameraWatchDaemon. The Thread iterates over the  */
     public CameraWatchDaemon() {
@@ -61,7 +66,7 @@ public class CameraWatchDaemon implements Runnable {
                 for ( Camera c : Settings.Cameras ) {
                     boolean isConnected = c.isCameraConnected();
                     if ( c.getMonitorForNewPictures() && isConnected && ( !c.getLastConnectionStatus() ) ) {
-                        Tools.log( getClass().toString() + ": Camera " + c.toString() + " has been connected " );
+                        logger.info( getClass().toString() + ": Camera " + c.toString() + " has been connected " );
                         CameraDownloadWizardData dm = new CameraDownloadWizardData();
                         dm.setCamera( c );
                         dm.setAnchorFrame( Settings.anchorFrame );

@@ -18,6 +18,7 @@ import java.net.URL;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Vector;
+import java.util.logging.Logger;
 import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
 import javax.imageio.ImageTypeSpecifier;
@@ -49,6 +50,11 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  *  a class to load and scale an image either immediately or in a seperate thread.
  */
 public class ScalablePicture implements SourcePictureListener {
+
+    /**
+     * Defines a logger for this class
+     */
+    private static Logger logger = Logger.getLogger( ReconcileJFrame.class.getName() );
 
     /**
      *   the source picture for the scalable picture
@@ -193,15 +199,15 @@ public class ScalablePicture implements SourcePictureListener {
         this.imageUrl = imageUrl;
 
         boolean alreadyLoading = false;
-        //Tools.log("ScalablePicture.loadAndScalePictureInThread: checking if picture " + imageUrl + " is already being loaded.");
+        //logger.info("ScalablePicture.loadAndScalePictureInThread: checking if picture " + imageUrl + " is already being loaded.");
         if ( ( sourcePicture != null ) && ( sourcePicture.getUrl() != null ) && ( sourcePicture.getUrl().equals( imageUrl ) ) ) {
-            // Tools.log("ScalablePicture.loadAndScalePictureInThread: the SourcePicture is already loading the sourcePictureimage");
+            // logger.info("ScalablePicture.loadAndScalePictureInThread: the SourcePicture is already loading the sourcePictureimage");
             if ( sourcePicture.getRotation() == rotation ) {
                 alreadyLoading = true;
-            // Tools.log ("ScalablePicture.loadAndScalePictureInThread: Picture was even rotated to the correct angle!");
+                // logger.info ("ScalablePicture.loadAndScalePictureInThread: Picture was even rotated to the correct angle!");
             } else {
                 alreadyLoading = false;
-            // Tools.log ("ScalablePicture.loadAndScalePictureInThread: Picture was in cache but with wrong rotation. Forcing reload.");
+                // logger.info ("ScalablePicture.loadAndScalePictureInThread: Picture was in cache but with wrong rotation. Forcing reload.");
             }
         } else if ( PictureCache.isInCache( imageUrl ) ) {
             // in case the old image has a listener connected remove it
@@ -215,14 +221,14 @@ public class ScalablePicture implements SourcePictureListener {
             if ( status == null ) {
                 status = "";
             }
-            // Tools.log ("ScalablePicture.loadAndScalePictureInThread: Picture in cache! Status: " + status );
+            // logger.info ("ScalablePicture.loadAndScalePictureInThread: Picture in cache! Status: " + status );
 
             if ( sourcePicture.getRotation() == rotation ) {
                 alreadyLoading = true;
-            // Tools.log ("ScalablePicture.loadAndScalePictureInThread: Picture was even rotated to the correct angle!");
+                // logger.info ("ScalablePicture.loadAndScalePictureInThread: Picture was even rotated to the correct angle!");
             } else {
                 alreadyLoading = false;
-            // Tools.log ("ScalablePicture.loadAndScalePictureInThread: Picture was in cache but with wrong rotation. Forcing reload.");
+                // logger.info ("ScalablePicture.loadAndScalePictureInThread: Picture was in cache but with wrong rotation. Forcing reload.");
             }
         }
 
@@ -231,32 +237,32 @@ public class ScalablePicture implements SourcePictureListener {
             switch ( sourcePicture.getStatusCode() ) {
                 case SourcePicture.UNINITIALISED:
                     alreadyLoading = false;
-                    // Tools.log("ScalablePicture.loadAndScalePictureInThread: pictureStatus was: UNINITIALISED");
+                    // logger.info("ScalablePicture.loadAndScalePictureInThread: pictureStatus was: UNINITIALISED");
                     break;
                 case SourcePicture.ERROR:
                     alreadyLoading = false;
-                    // Tools.log("ScalablePicture.loadAndScalePictureInThread: pictureStatus was: ERROR");
+                    // logger.info("ScalablePicture.loadAndScalePictureInThread: pictureStatus was: ERROR");
                     break;
                 case SourcePicture.LOADING:
-                    // Tools.log("ScalablePicture.loadAndScalePictureInThread: pictureStatus was: LOADING");
+                    // logger.info("ScalablePicture.loadAndScalePictureInThread: pictureStatus was: LOADING");
                     sourcePicture.addListener( this );
                     setStatus( LOADING, Settings.jpoResources.getString( "ScalablePictureLoadingStatus" ) );
                     sourceLoadProgressNotification( SourcePicture.LOADING_PROGRESS, sourcePicture.getPercentLoaded() );
                     scaleAfterLoad = true;
                     break;
                 case SourcePicture.ROTATING:
-                    // Tools.log("ScalablePicture.loadAndScalePictureInThread: pictureStatus was: ROTATING");
+                    // logger.info("ScalablePicture.loadAndScalePictureInThread: pictureStatus was: ROTATING");
                     setStatus( LOADING, Settings.jpoResources.getString( "ScalablePictureRotatingStatus" ) );
                     sourceLoadProgressNotification( SourcePicture.LOADING_PROGRESS, sourcePicture.getPercentLoaded() );
                     scaleAfterLoad = true;
                     break;
                 case SourcePicture.READY:
-                    //Tools.log("ScalablePicture.loadAndScalePictureInThread: pictureStatus was: READY. Sending SCALING status.");
+                    //logger.info("ScalablePicture.loadAndScalePictureInThread: pictureStatus was: READY. Sending SCALING status.");
                     setStatus( SCALING, Settings.jpoResources.getString( "ScalablePictureScalingStatus" ) );
                     createScaledPictureInThread( priority );
                     break;
                 default:
-                    // Tools.log("ScalablePicture.loadAndScalePictureInThread: Don't know what status this is:" + Integer.toString(sourcePicture.getStatusCode()) );
+                    // logger.info("ScalablePicture.loadAndScalePictureInThread: Don't know what status this is:" + Integer.toString(sourcePicture.getStatusCode()) );
                     break;
 
             }
@@ -272,7 +278,7 @@ public class ScalablePicture implements SourcePictureListener {
             setStatus( LOADING, Settings.jpoResources.getString( "ScalablePictureLoadingStatus" ) );
             scaleAfterLoad = true;
             sourcePicture.loadPictureInThread( imageUrl, priority, rotation );
-        // when the thread is done it sends a sourceStatusChange message to us
+            // when the thread is done it sends a sourceStatusChange message to us
         }
     }
 
@@ -285,7 +291,7 @@ public class ScalablePicture implements SourcePictureListener {
      *  @param  rotation  The angle by which it is to be roated upon loading.
      */
     public void loadPictureImd( URL imageUrl, double rotation ) {
-        //Tools.log( "loadPictureImd invoked with URL: " + imageUrl.toString() );
+        //logger.info( "loadPictureImd invoked with URL: " + imageUrl.toString() );
         if ( sourcePicture != null ) {
             sourcePicture.removeListener( this );
         }
@@ -307,7 +313,7 @@ public class ScalablePicture implements SourcePictureListener {
             if ( !isCurrentlyLoading ) {
                 sourcePicture.removeListener( this );
             }
-        //PictureCache.stopBackgroundLoadingExcept( url );
+            //PictureCache.stopBackgroundLoadingExcept( url );
         }
     }
 
@@ -322,28 +328,28 @@ public class ScalablePicture implements SourcePictureListener {
      * @param sp
      */
     public void sourceStatusChange( int statusCode, String statusMessage, SourcePicture sp ) {
-        //Tools.log("ScalablePicture.sourceStatusChange: status received from SourceImage: " + statusMessage);
+        //logger.info("ScalablePicture.sourceStatusChange: status received from SourceImage: " + statusMessage);
 
         switch ( statusCode ) {
             case SourcePicture.UNINITIALISED:
-                // Tools.log("ScalablePicture.sourceStatusChange: pictureStatus was: UNINITIALISED message: " + statusMessage );
+                // logger.info("ScalablePicture.sourceStatusChange: pictureStatus was: UNINITIALISED message: " + statusMessage );
                 setStatus( UNINITIALISED, statusMessage );
                 break;
             case SourcePicture.ERROR:
-                // Tools.log("ScalablePicture.sourceStatusChange: pictureStatus was: ERROR message: " + statusMessage );
+                // logger.info("ScalablePicture.sourceStatusChange: pictureStatus was: ERROR message: " + statusMessage );
                 setStatus( ERROR, statusMessage );
                 sourcePicture.removeListener( this );
                 break;
             case SourcePicture.LOADING:
-                // Tools.log("ScalablePicture.sourceStatusChange: pictureStatus was: LOADING message: " + statusMessage );
+                // logger.info("ScalablePicture.sourceStatusChange: pictureStatus was: LOADING message: " + statusMessage );
                 setStatus( LOADING, statusMessage );
                 break;
             case SourcePicture.ROTATING:
-                // Tools.log("ScalablePicture.sourceStatusChange: pictureStatus was: ROTATING message: " + statusMessage );
+                // logger.info("ScalablePicture.sourceStatusChange: pictureStatus was: ROTATING message: " + statusMessage );
                 setStatus( LOADING, statusMessage );
                 break;
             case SourcePicture.READY:
-                // Tools.log("ScalablePicture.sourceStatusChange: pictureStatus was: READY message: " + statusMessage );
+                // logger.info("ScalablePicture.sourceStatusChange: pictureStatus was: READY message: " + statusMessage );
                 setStatus( LOADED, statusMessage );
                 sourcePicture.removeListener( this );
                 if ( scaleAfterLoad ) {
@@ -352,7 +358,7 @@ public class ScalablePicture implements SourcePictureListener {
                 }
                 break;
             default:
-                // Tools.log("ScalablePicture.sourceStatusChange: Don't recognize this status: " + statusMessage );
+                // logger.info("ScalablePicture.sourceStatusChange: Don't recognize this status: " + statusMessage );
                 break;
 
         }
@@ -379,7 +385,6 @@ public class ScalablePicture implements SourcePictureListener {
      */
     public void createScaledPictureInThread( int priority ) {
         Runnable r = new Runnable() {
-
 
             public void run() {
                 scalePicture();
@@ -413,7 +418,7 @@ public class ScalablePicture implements SourcePictureListener {
                 if ( scaleToSize ) {
                     int WindowWidth = TargetSize.width;
                     int WindowHeight = TargetSize.height;
-                    //Tools.log("ScalablePicture.scalePicture: Size of window is: " + Integer.toString(WindowWidth) + " x " + Integer.toString(WindowHeight));
+                    //logger.info("ScalablePicture.scalePicture: Size of window is: " + Integer.toString(WindowWidth) + " x " + Integer.toString(WindowHeight));
 
 
                     int PictureWidth = sourcePicture.getWidth();
@@ -466,10 +471,10 @@ public class ScalablePicture implements SourcePictureListener {
                     if ( y == 0 ) {
                         y = 100;
                     }
-                    if ( imageType == 0) {
+                    if ( imageType == 0 ) {
                         imageType = BufferedImage.TYPE_3BYTE_BGR;
                     }
-                    biStep = new BufferedImage( x, y, imageType);
+                    biStep = new BufferedImage( x, y, imageType );
                     scaledPicture = opStep.filter( scaledPicture, biStep );
                 }
 
@@ -479,14 +484,14 @@ public class ScalablePicture implements SourcePictureListener {
                 setStatus( READY, "Scaled Picture is ready." );
             } else {
                 if ( getStatusCode() == LOADING ) {
-                    // Tools.log ("ScalablePicture.scalePicture invoked while image is still loading. I wonder why?");
+                    // logger.info ("ScalablePicture.scalePicture invoked while image is still loading. I wonder why?");
                     return;
                 } else {
                     setStatus( ERROR, "Could not scale image as SourceImage is null." );
                 }
             }
         } catch ( OutOfMemoryError e ) {
-            Tools.log( "ScalablePicture.scalePicture caught an OutOfMemoryError while scaling an image.\n" + e.getMessage() );
+            logger.info( "ScalablePicture.scalePicture caught an OutOfMemoryError while scaling an image.\n" + e.getMessage() );
             Tools.freeMem();
 
             setStatus( ERROR, "Out of Memory Error while scaling " + imageUrl.toString() );
@@ -501,7 +506,7 @@ public class ScalablePicture implements SourcePictureListener {
             System.gc();
             System.runFinalization();
 
-            Tools.log( "ScalablePicture.scalePicture: JPO has now run a garbage collection and finalization." );
+            logger.info( "ScalablePicture.scalePicture: JPO has now run a garbage collection and finalization." );
             Tools.freeMem();
         }
     }
@@ -735,7 +740,7 @@ public class ScalablePicture implements SourcePictureListener {
             ios.close();
 
         } catch ( IOException e ) {
-            Tools.log( "ScalablePicture.writeJpg caught IOException: " + e.getMessage() + "\nwhile writing " + writeFile.toString() );
+            logger.info( "ScalablePicture.writeJpg caught IOException: " + e.getMessage() + "\nwhile writing " + writeFile.toString() );
             e.printStackTrace();
         }
         //writer = null;
@@ -768,7 +773,7 @@ public class ScalablePicture implements SourcePictureListener {
             ios.close();
 
         } catch ( IOException e ) {
-            Tools.log( "ScalablePicture.writeJpg caught IOException: " + e.getMessage() );
+            logger.info( "ScalablePicture.writeJpg caught IOException: " + e.getMessage() );
             e.printStackTrace();
         }
         //writer = null;
@@ -800,7 +805,7 @@ public class ScalablePicture implements SourcePictureListener {
      */
     private void setStatus( int statusCode, String statusMessage ) {
         String filename = ( imageUrl == null ) ? "" : imageUrl.toString();
-        // Tools.log("ScalablePicture.setStatus: sending: " + statusMessage + " to all Listeners from Image: " + filename );
+        // logger.info("ScalablePicture.setStatus: sending: " + statusMessage + " to all Listeners from Image: " + filename );
 
         pictureStatusCode = statusCode;
         pictureStatusMessage = statusMessage;
@@ -835,9 +840,9 @@ public class ScalablePicture implements SourcePictureListener {
      * @param quality
      */
     public void setJpgQuality( float quality ) {
-        //Tools.log( "setJpgQuality requested with " + Float.toString( quality ) );
+        //logger.info( "setJpgQuality requested with " + Float.toString( quality ) );
         if ( quality >= 0f && quality <= 1f ) {
-            //Tools.log( "Quality set." );
+            //logger.info( "Quality set." );
             jpgQuality = quality;
         }
     }
@@ -864,7 +869,7 @@ public class ScalablePicture implements SourcePictureListener {
      */
     @Override
     public void finalize() {
-        Tools.log( "ScalablePicture.finalize: " + imageUrl.toString() );
+        logger.info( "ScalablePicture.finalize: " + imageUrl.toString() );
     }
 
 

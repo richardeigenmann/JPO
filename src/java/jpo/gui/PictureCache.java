@@ -7,6 +7,7 @@ import jpo.dataModel.SortableDefaultMutableTreeNode;
 import jpo.dataModel.PictureInfo;
 import java.util.*;
 import java.net.*;
+import java.util.logging.Logger;
 
 
 /*
@@ -32,15 +33,22 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 public class PictureCache {
 
     /**
+     * Defines a logger for this class
+     */
+    private static Logger logger = Logger.getLogger( PictureCache.class.getName() );
+
+    /**
      *  Defines the Hashtable that facilitate the caching of images. 
      *  It is static 
      *  so that there is just one for the application
      */
-    private static Hashtable <String, SourcePicture> pictureCache = new Hashtable <String, SourcePicture>();
+    private static Hashtable<String, SourcePicture> pictureCache = new Hashtable<String, SourcePicture>();
+
     /**
      *  Vector to keep track of what we should remove first in the cache
      */
-    private static Vector <String> removalQueue = new Vector<String>();
+    private static Vector<String> removalQueue = new Vector<String>();
+
 
     /**
      *  this method removes the least popular picture(s) in the cache.
@@ -51,13 +59,13 @@ public class PictureCache {
      *  Enumeration finds no elements and we don't get an endless loop.
      */
     public static synchronized void removeLeastPopular() {
-        //Tools.log("PictureCache.removeLeastPopular:");
+        //logger.info("PictureCache.removeLeastPopular:");
         //reportCache();
 
         Enumeration e = removalQueue.elements();
         while ( ( e.hasMoreElements() ) && ( pictureCache.size() >= Settings.maxCache ) ) {
             String removeElement = (String) e.nextElement();
-            //Tools.log ("PictureCache.remove: " + removeElement );
+            //logger.info ("PictureCache.remove: " + removeElement );
             pictureCache.remove( removeElement );
             removalQueue.remove( removeElement );
         }
@@ -65,12 +73,13 @@ public class PictureCache {
         e = pictureCache.keys();
         while ( ( pictureCache.size() >= Settings.maxCache ) && ( e.hasMoreElements() ) ) {
             String removeElement = (String) e.nextElement();
-            //Tools.log ("PictureCache.remove: " + removeElement );
+            //logger.info ("PictureCache.remove: " + removeElement );
             pictureCache.remove( removeElement );
         }
         System.gc();
-    //reportCache();
+        //reportCache();
     }
+
 
     /**
      *   Method that can be called when a picture is no longer needed.
@@ -87,10 +96,11 @@ public class PictureCache {
             try {
                 removalQueue.add( ( (PictureInfo) userObject ).getHighresURL().toString() );
             } catch ( MalformedURLException x ) {
-            // ignore
+                // ignore
             }
         }
     }
+
 
     /**
      *  returns whether an image is in the cache. <p>
@@ -101,6 +111,7 @@ public class PictureCache {
         return isInCache( url.toString() );
     }
 
+
     /**
      *  returns whether an image is in the cache. <p>
      * @param urlString 
@@ -110,25 +121,26 @@ public class PictureCache {
         return pictureCache.containsKey( urlString );
     }
 
+
     /**
      *  store an image in the cache
      *  @param url	The URL of the picture
      *  @param sp	The picture to be stored
      */
     public static synchronized void add( URL url, SourcePicture sp ) {
-        // Tools.log("PictureCache.add: " + url.toString() );
+        // logger.info("PictureCache.add: " + url.toString() );
         if ( sp.getSourceBufferedImage() == null ) {
-            Tools.log( "PictureCache.add: invoked with a null picture! Not cached! URL was: " + url.toString() );
+            logger.info( "PictureCache.add: invoked with a null picture! Not cached! URL was: " + url.toString() );
             return;
         }
 
         if ( ( Settings.maxCache < 1 ) ) {
-            //Tools.log("PictureCache.add: cache is diabled. Not adding picture.");
+            //logger.info("PictureCache.add: cache is diabled. Not adding picture.");
             return;
         }
 
         if ( isInCache( url ) ) {
-            //Tools.log( "PictureCache.add: Picture " + url.toString() + " is already in the cache. Not adding again.");
+            //logger.info( "PictureCache.add: Picture " + url.toString() + " is already in the cache. Not adding again.");
             return;
         }
 
@@ -140,8 +152,9 @@ public class PictureCache {
             pictureCache.put( url.toString(), sp );
         }
 
-    //reportCache();	
+        //reportCache();
     }
+
 
     /**
      *  remove a picture from the cache
@@ -153,6 +166,7 @@ public class PictureCache {
         }
     }
 
+
     /**
      *  returns a picture from the cache. Returns null if image is not there
      *  @param url 	The URL of the picture to be retrieved
@@ -162,26 +176,27 @@ public class PictureCache {
         return (SourcePicture) pictureCache.get( url.toString() );
     }
 
-    /** 
+
+    /**
      *  clears out all images in the cache. Important after OutOfMemoryErrors
      */
     public static void clear() {
-        // Tools.log("PictureCache.clear: Zapping entire cache");
+        // logger.info("PictureCache.clear: Zapping entire cache");
         pictureCache.clear();
         Tools.freeMem();
     }
+
 
     /**
      *  method to inspect the cache
      */
     public static void reportCache() {
-        Tools.log( "   PictureCache.reportCache: cache contains: " + Integer.toString( pictureCache.size() ) + " max: " + Integer.toString( Settings.maxCache ) );
+        logger.info( "   PictureCache.reportCache: cache contains: " + Integer.toString( pictureCache.size() ) + " max: " + Integer.toString( Settings.maxCache ) );
         //Tools.freeMem();
         Enumeration e = pictureCache.keys();
         while ( e.hasMoreElements() ) {
-            Tools.log( "   Cache contains: " + ( (String) e.nextElement() ) );
+            logger.info( "   Cache contains: " + ( (String) e.nextElement() ) );
         }
-        Tools.log( "  End of cache contents" );
+        logger.info( "  End of cache contents" );
     }
-
 }

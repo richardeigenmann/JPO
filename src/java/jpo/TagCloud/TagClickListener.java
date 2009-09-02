@@ -28,7 +28,6 @@ public interface TagClickListener {
     /**
      * This method is fired when the user clicks on a tag in the tag cloud
      * @param key The word that was clicked on
-     * @param dwm
      */
     public void tagClicked( String key );
 }

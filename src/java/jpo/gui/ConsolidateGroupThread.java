@@ -5,19 +5,19 @@ import jpo.dataModel.Settings;
 import jpo.*;
 import jpo.dataModel.GroupInfo;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
-import jpo.gui.ProgressGui;
 import jpo.dataModel.PictureInfo;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Enumeration;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import jpo.dataModel.NodeStatistics;
 
 /*
 ConsolidateGroupThread.java:  class that consolidated the pictures of a group in one directory
 
-Copyright (C) 2002, 2009  Richard Eigenmann.
+Copyright (C) 2002 - 2009  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -35,6 +35,11 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  *  This class moves all pictures of a group node to a target directory.
  */
 public class ConsolidateGroupThread implements Runnable {
+
+    /**
+     * Defines a logger for this class
+     */
+    private static Logger logger = Logger.getLogger( ConsolidateGroupThread.class.getName() );
 
     /**
      *  the directory where the pictures are to be moved to
@@ -80,19 +85,19 @@ public class ConsolidateGroupThread implements Runnable {
 
 
         if ( !targetDirectory.exists() ) {
-            Tools.log( "ConsolidateGroupThread aborted because target directory doesn't exist: " + targetDirectory.getPath() );
+            logger.info( "ConsolidateGroupThread aborted because target directory doesn't exist: " + targetDirectory.getPath() );
             return;
         }
         if ( !targetDirectory.canWrite() ) {
-            Tools.log( "ConsolidateGroupThread aborted because target directory can't be written tot: " + targetDirectory.getPath() );
+            logger.info( "ConsolidateGroupThread aborted because target directory can't be written tot: " + targetDirectory.getPath() );
             return;
         }
         if ( moveLowres && ( !targetLowresDirectory.exists() ) ) {
-            Tools.log( "ConsolidateGroupThread aborted because lowres target directory doesn't exist: " + targetLowresDirectory.getPath() );
+            logger.info( "ConsolidateGroupThread aborted because lowres target directory doesn't exist: " + targetLowresDirectory.getPath() );
             return;
         }
         if ( moveLowres && ( !targetLowresDirectory.canWrite() ) ) {
-            Tools.log( "ConsolidateGroupThread aborted because lowres target directory can't be written tot: " + targetLowresDirectory.getPath() );
+            logger.info( "ConsolidateGroupThread aborted because lowres target directory can't be written tot: " + targetLowresDirectory.getPath() );
             return;
         }
         Thread t = new Thread( this );
@@ -127,7 +132,7 @@ public class ConsolidateGroupThread implements Runnable {
     private boolean consolidateGroup( SortableDefaultMutableTreeNode groupNode ) {
         Object userObject = groupNode.getUserObject();
         if ( !( userObject instanceof GroupInfo ) ) {
-            Tools.log( "ConsolidateGroupThread.consolidateGroup: node is not a group: " + groupNode.toString() );
+            logger.info( "ConsolidateGroupThread.consolidateGroup: node is not a group: " + groupNode.toString() );
             JOptionPane.showMessageDialog(
                     Settings.anchorFrame,
                     Settings.jpoResources.getString( "ConsolidateFailure" ),
@@ -210,31 +215,31 @@ public class ConsolidateGroupThread implements Runnable {
      *   @return 	True if the move was successful or False if it was not.
      */
     private boolean moveHighresPicture( PictureInfo p ) {
-        //Tools.log("ConsolidateGroupThread.moveHighresPicture: invoked on PictureInfo: " + p.toString() );
+        //logger.info("ConsolidateGroupThread.moveHighresPicture: invoked on PictureInfo: " + p.toString() );
         try {
             oldFile = p.getHighresFile();
             if ( oldFile == null ) {
-                Tools.log( "ConsolidateGroupTread.moveHighresPicture: FAILED: can only move picture Files. " + p.getHighresLocation() );
+                logger.info( "ConsolidateGroupTread.moveHighresPicture: FAILED: can only move picture Files. " + p.getHighresLocation() );
                 return false;
             }
 
             oldFileParent = p.getHighresFile().getParentFile();
             if ( ( oldFileParent != null ) && ( oldFileParent.equals( targetDirectory ) ) ) {
-                //Tools.log( "ConsolidateGroupThread.moveHighresPicture: path is identical (" + oldFileParent.toString() + "==" + p.getHighresFile().getParentFile().toString() + ") . Not Moving Picture: " + p.getHighresLocation() );
+                //logger.info( "ConsolidateGroupThread.moveHighresPicture: path is identical (" + oldFileParent.toString() + "==" + p.getHighresFile().getParentFile().toString() + ") . Not Moving Picture: " + p.getHighresLocation() );
                 return true;
             }
 
             newFile = Tools.inventPicURL( targetDirectory, p.getHighresFilename() );
-            //Tools.log( "ConsolidateGroupTread.moveHighresPicture: returned URL: " + newFile );
+            //logger.info( "ConsolidateGroupTread.moveHighresPicture: returned URL: " + newFile );
             if ( Tools.movePicture( oldFile, newFile ) ) {
                 return true;
             } else {
-                Tools.log( "ConsolidateGroupThread.moveHighresPicture: failed to move " + oldFile.toString() + " to " + newFile.toString() );
+                logger.info( "ConsolidateGroupThread.moveHighresPicture: failed to move " + oldFile.toString() + " to " + newFile.toString() );
                 return false;
             }
 
         } catch ( IOException x ) {
-            Tools.log( "Got an IOException: " + x + "\nAborting the move of this image." );
+            logger.info( "Got an IOException: " + x + "\nAborting the move of this image." );
             return false;
         }
 
@@ -260,7 +265,7 @@ public class ConsolidateGroupThread implements Runnable {
             }
 
             if ( oldFile == null ) {
-                Tools.log( "ConsolidateGroupThread.moveLowresPicture: oldFile is null. Ignoring. " + o.toString() );
+                logger.info( "ConsolidateGroupThread.moveLowresPicture: oldFile is null. Ignoring. " + o.toString() );
                 return true;
             }
             oldFileParent = oldFile.getParentFile();
@@ -271,19 +276,19 @@ public class ConsolidateGroupThread implements Runnable {
             }
 
             if ( !oldFile.exists() ) {
-                //Tools.log( "ConsolidateGoupThread.moveLowresPicture: There was no Lowres Image to move. Enhancement: The URL should be corrected anyway." );
+                //logger.info( "ConsolidateGoupThread.moveLowresPicture: There was no Lowres Image to move. Enhancement: The URL should be corrected anyway." );
                 return true;
             }
 
             if ( Tools.movePicture( oldFile, newFileUrl ) ) {
                 return true;
             } else {
-                //Tools.log( "ConsolidateGroupThread.moveLowresPicture: failed to move " + oldFile.toString() + " to " + newFileUrl.toString() );
+                //logger.info( "ConsolidateGroupThread.moveLowresPicture: failed to move " + oldFile.toString() + " to " + newFileUrl.toString() );
                 return false;
             }
 
         } catch ( IOException x ) {
-            Tools.log( "ConsolidateGroupThread.moveLowresPicture: Got an IOException: " + x.getMessage() + " aborting the move of this image." );
+            logger.info( "ConsolidateGroupThread.moveLowresPicture: Got an IOException: " + x.getMessage() + " aborting the move of this image." );
             return false;
         }
     }

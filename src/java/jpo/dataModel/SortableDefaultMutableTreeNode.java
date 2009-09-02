@@ -19,13 +19,14 @@ import com.drew.metadata.exif.*;
 import com.drew.metadata.iptc.*;
 import com.drew.imaging.jpeg.*;
 import java.awt.event.*;
+import java.util.logging.Logger;
 import javax.swing.*;
 
 
 /*
 SortableDefaultMutableTreeNode.java:  A DefaultMutableTreeNode that knows how to compare my objects
 
-Copyright (C) 2003-2009  Richard Eigenmann, Zurich, Switzerland
+Copyright (C) 2003 - 2009  Richard Eigenmann, Zurich, Switzerland
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -46,6 +47,12 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
         implements Comparable, Serializable {
+
+    /**
+     * Defines a logger for this class
+     */
+    private static Logger logger = Logger.getLogger( SortableDefaultMutableTreeNode.class.getName() );
+
 
     /**
      *   Constructor for a new node.
@@ -123,7 +130,7 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
     public int compareTo( Object o ) {
         Object myObject = getUserObject();
         Object otherObject = ( (DefaultMutableTreeNode) o ).getUserObject();
-        //Tools.log( "Comparing " + myObject.toString() + " against " + otherObject.toString() );
+        //logger.info( "Comparing " + myObject.toString() + " against " + otherObject.toString() );
 
         if ( ( myObject instanceof GroupInfo ) && ( otherObject instanceof GroupInfo ) && ( sortfield == Settings.DESCRIPTION ) ) {
             return ( (GroupInfo) myObject ).getGroupName().compareTo( ( (GroupInfo) otherObject ).getGroupName() );
@@ -245,7 +252,7 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
      */
     @Override
     public void setUserObject( Object o ) {
-        //Tools.log( "setUserObject fired with o: " + o.toString() + " of class: " + o.getClass().toString() );
+        //logger.info( "setUserObject fired with o: " + o.toString() + " of class: " + o.getClass().toString() );
         if ( o instanceof String ) {
             Object obj = getUserObject();
             if ( obj instanceof GroupInfo ) {
@@ -268,17 +275,17 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
      *   @param event The event the listening object received.
      */
     public void executeDrop( DropTargetDropEvent event ) {
-        //Tools.log( "SDMTN.executeDrop: invoked");
+        //logger.info( "SDMTN.executeDrop: invoked");
 
         if ( !event.isLocalTransfer() ) {
-            Tools.log( "SDMTN.executeDrop: detected that the drop is not a local Transfer. These are not supported. Aborting drop." );
+            logger.info( "SDMTN.executeDrop: detected that the drop is not a local Transfer. These are not supported. Aborting drop." );
             event.rejectDrop();
             event.dropComplete( false );
             return;
         }
 
         if ( !event.isDataFlavorSupported( JpoTransferable.dmtnFlavor ) ) {
-            Tools.log( "SDMTN.executeDrop: The local drop does not support the dmtnFlavor DataFlavor. Drop rejected." );
+            logger.info( "SDMTN.executeDrop: The local drop does not support the dmtnFlavor DataFlavor. Drop rejected." );
             event.rejectDrop();
             event.dropComplete( false );
             return;
@@ -289,7 +296,7 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
         if ( ( actionType == DnDConstants.ACTION_MOVE ) || ( actionType == DnDConstants.ACTION_COPY ) ) {
             event.acceptDrop( actionType );   // crucial Step!
         } else {
-            Tools.log( "SDMTN.executeDrop: The event has an odd Action Type. Drop rejected." );
+            logger.info( "SDMTN.executeDrop: The event has an odd Action Type. Drop rejected." );
             event.rejectDrop();
             event.dropComplete( false );
             return;
@@ -305,15 +312,15 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
             Object o = t.getTransferData( JpoTransferable.dmtnFlavor );
             arrayOfNodes = (Object[]) o;
         } catch ( java.awt.datatransfer.UnsupportedFlavorException x ) {
-            Tools.log( "SDMTN.executeDrop caught an UnsupportedFlavorException: message: " + x.getMessage() );
+            logger.info( "SDMTN.executeDrop caught an UnsupportedFlavorException: message: " + x.getMessage() );
             event.dropComplete( false );
             return;
         } catch ( java.io.IOException x ) {
-            Tools.log( "SDMTN.executeDrop caught an IOException: message: " + x.getMessage() );
+            logger.info( "SDMTN.executeDrop caught an IOException: message: " + x.getMessage() );
             event.dropComplete( false );
             return;
         } catch ( ClassCastException x ) {
-            Tools.log( "SDMTN.executeDrop caught an ClassCastException: message: " + x.getMessage() );
+            logger.info( "SDMTN.executeDrop caught an ClassCastException: message: " + x.getMessage() );
             event.dropComplete( false );
             return;
         }
@@ -348,7 +355,7 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
         if ( ( groupOfDropLocation != null ) && ( groupOfDropLocation.getUserObject() instanceof GroupInfo ) ) {
             Settings.memorizeGroupOfDropLocation( groupOfDropLocation );
         } else {
-            Tools.log( "SDMTN.executeDrop failed to find the group of the drop location. Not memorizing." );
+            logger.info( "SDMTN.executeDrop failed to find the group of the drop location. Not memorizing." );
         }
 
 
@@ -359,7 +366,7 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
             if ( ( sourceNode.getUserObject() instanceof PictureInfo ) && ( this.getUserObject() instanceof GroupInfo ) ) {
                 // a picture is being dropped onto a group; add it at the end
                 if ( actionType == DnDConstants.ACTION_MOVE ) {
-                    Tools.log( "Moving Picture onto Group --> add picture to bottom of group" );
+                    logger.info( "Moving Picture onto Group --> add picture to bottom of group" );
                     sourceNode.removeFromParent();  //SDTMN removeFromParents fire the model notification
                     add( sourceNode );  //SDTMN adds fire the model notifications
                 } else {
@@ -380,14 +387,14 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
                 // and at the same level
                 int offset = 0;
                 if ( isNodeSibling( sourceNode ) ) {
-                    //Tools.log ("The target is a sibling of the sourceNode");
+                    //logger.info ("The target is a sibling of the sourceNode");
                     if ( parentNode.getIndex( sourceNode ) < parentNode.getIndex( this ) ) {
                         offset = -1;
                     }
                 }
 
                 if ( actionType == DnDConstants.ACTION_MOVE ) {
-                    Tools.log( "Moving Picture onto Picture --> move to current spot" );
+                    logger.info( "Moving Picture onto Picture --> move to current spot" );
                     sourceNode.removeFromParent();  //SDTMN removeFromParents fire the model notification
                     parentNode.insert( sourceNode, currentIndex + offset );
                 } else {
@@ -398,7 +405,7 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
                 dropcomplete = true;
                 getPictureCollection().setUnsavedUpdates();
             } else {
-                //Tools.log("SDMTN.executeDrop: we are dropping a GroupInfo object");
+                //logger.info("SDMTN.executeDrop: we are dropping a GroupInfo object");
                 // we are dropping a GroupInfo object; all others move down one step.
                 // find out at which index to insert the group
                 if ( !this.isRoot() ) {
@@ -475,7 +482,7 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
                     // and at the same level
                     int offset = 0;
                     if ( targetNode.isNodeSibling( sourceNode ) ) {
-                        //Tools.log ("The target is a sibling of the sourceNode");
+                        //logger.info ("The target is a sibling of the sourceNode");
                         if ( parentNode.getIndex( sourceNode ) < parentNode.getIndex( targetNode ) ) {
                             offset = -1;
                         }
@@ -499,7 +506,7 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
                     // and at the same level
                     int offset = 0;
                     if ( targetNode.isNodeSibling( sourceNode ) ) {
-                        //Tools.log ("The target is a sibling of the sourceNode");
+                        //logger.info ("The target is a sibling of the sourceNode");
                         if ( parentNode.getIndex( sourceNode ) < parentNode.getIndex( targetNode ) ) {
                             offset = -1;
                         }
@@ -551,7 +558,7 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
             dropCancel.addActionListener( new ActionListener() {
 
                 public void actionPerformed( ActionEvent e ) {
-                    Tools.log( "cancel drop" );
+                    logger.info( "cancel drop" );
                     event.dropComplete( false );
                 }
             } );
@@ -578,15 +585,15 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
             try {
                 testFile = new File( new URI( sb ) );
             } catch ( URISyntaxException x ) {
-                Tools.log( "Conversion of " + sb + " to URI failed: " + x.getMessage() );
+                logger.info( "Conversion of " + sb + " to URI failed: " + x.getMessage() );
             } catch ( IllegalArgumentException x ) {
-                Tools.log( "Conversion of " + sb + " to URI failed: " + x.getMessage() );
+                logger.info( "Conversion of " + sb + " to URI failed: " + x.getMessage() );
             }
 
             // dangerous but it doesn't continue if the first condition is true
 
             if ( ( testFile != null ) && ( testFile.canRead() ) ) {
-                //Tools.log ( "Adding picture: " + sb );
+                //logger.info ( "Adding picture: " + sb );
                 SortableDefaultMutableTreeNode newPictureNode = new SortableDefaultMutableTreeNode(
                         new PictureInfo(
                         sb,
@@ -595,7 +602,7 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
                         "" ) );
                 newNode.add( newPictureNode );
             } else {
-                Tools.log( "Not adding picture: " + sb + " because it can't be read" );
+                logger.info( "Not adding picture: " + sb + " because it can't be read" );
             }
         }
         in.close();
@@ -612,9 +619,9 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
      *
      */
     public boolean deleteNode() {
-        Tools.log( "SDMTN.deleteNode: invoked on: " + this.toString() );
+        logger.info( "SDMTN.deleteNode: invoked on: " + this.toString() );
         if ( this.isRoot() ) {
-            Tools.log( "SDMTN.deleteNode: attempted on Root node. Can't do this! Aborted." );
+            logger.info( "SDMTN.deleteNode: attempted on Root node. Can't do this! Aborted." );
             JOptionPane.showMessageDialog( null, //very annoying if the main window is used as it forces itself into focus.
                     Settings.jpoResources.getString( "deleteRootNodeError" ),
                     Settings.jpoResources.getString( "genericError" ),
@@ -652,10 +659,10 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
      */
     @Override
     public void removeFromParent() {
-        //Tools.log( "SDMTN.removeFromParent was called for node: " + this.toString() );
+        //logger.info( "SDMTN.removeFromParent was called for node: " + this.toString() );
         SortableDefaultMutableTreeNode oldParentNode = (SortableDefaultMutableTreeNode) this.getParent();
         int oldParentIndex = oldParentNode.getIndex( this );
-        //Tools.log( "SDMTN.removeFromParent: Currentnode: " + this.toString() + " Parent Node:" + oldParentNode.toString() );
+        //logger.info( "SDMTN.removeFromParent: Currentnode: " + this.toString() + " Parent Node:" + oldParentNode.toString() );
         super.removeFromParent();
         if ( getPictureCollection().getSendModelUpdates() ) {
             getPictureCollection().getTreeModel().nodesWereRemoved( oldParentNode,
@@ -675,7 +682,7 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
      * @param newNode
      */
     public void add( SortableDefaultMutableTreeNode newNode ) {
-        //Tools.log( "SDMTN.add was called for node: " + newNode.toString() );
+        //logger.info( "SDMTN.add was called for node: " + newNode.toString() );
         super.add( newNode );
         if ( getPictureCollection().getSendModelUpdates() ) {
             int index = this.getIndex( newNode );
@@ -692,7 +699,7 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
      * @param index
      */
     public void insert( SortableDefaultMutableTreeNode node, int index ) {
-        Tools.log( "SDMTN.insert was called for node: " + node.toString() );
+        logger.info( "SDMTN.insert was called for node: " + node.toString() );
         super.insert( node, index );
         if ( getPictureCollection().getSendModelUpdates() ) {
             getPictureCollection().getTreeModel().nodesWereInserted( this, new int[] { index } );
@@ -724,7 +731,7 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
         }
 
         if ( !( this.getUserObject() instanceof PictureInfo ) ) {
-            Tools.log( "SDMTN.copyToNewLocation: inkoked on a non PictureInfo type node! Aborted." );
+            logger.info( "SDMTN.copyToNewLocation: inkoked on a non PictureInfo type node! Aborted." );
             return;
         }
 
@@ -733,7 +740,7 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
         try {
             originalUrl = ( (PictureInfo) this.getUserObject() ).getHighresURL();
         } catch ( MalformedURLException x ) {
-            Tools.log( "MarformedURLException trapped on: " + ( (PictureInfo) this.getUserObject() ).getHighresLocation() + "\nReason: " + x.getMessage() );
+            logger.info( "MarformedURLException trapped on: " + ( (PictureInfo) this.getUserObject() ).getHighresLocation() + "\nReason: " + x.getMessage() );
             JOptionPane.showMessageDialog(
                     Settings.anchorFrame,
                     "MarformedURLException trapped on: " + ( (PictureInfo) this.getUserObject() ).getHighresLocation() + "\nReason: " + x.getMessage(),
@@ -747,7 +754,7 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
                 try {
                     String sourceFilename = new File( new URI( originalUrl.toString() ) ).getName();
                     targetFile = Tools.inventPicFilename( targetFile.getParentFile(), sourceFilename );
-                    //Tools.log("JTree:validateAndCopyPicture: originalUrl: " + originalUrl.toString() + "\nsourceFilename: " + sourceFilename + "  targetFile: " + targetFile.toString());
+                    //logger.info("JTree:validateAndCopyPicture: originalUrl: " + originalUrl.toString() + "\nsourceFilename: " + sourceFilename + "  targetFile: " + targetFile.toString());
                 } catch ( URISyntaxException x ) {
                     JOptionPane.showMessageDialog( Settings.anchorFrame,
                             "URISyntaxException: " + x,
@@ -963,20 +970,20 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
             File lowresFile = pi.getLowresFile();
             if ( ( lowresFile != null ) && ( lowresFile.exists() ) ) {
                 ok = lowresFile.delete();
-                if ( !ok ) //Tools.log("File deleted: " + lowresFile.toString() );
+                if ( !ok ) //logger.info("File deleted: " + lowresFile.toString() );
                 // else
                 {
-                    Tools.log( "File deleted failed on: " + lowresFile.toString() );
+                    logger.info( "File deleted failed on: " + lowresFile.toString() );
                 }
             }
 
 
             if ( highresFile.exists() ) {
                 ok = highresFile.delete();
-                if ( !ok ) //Tools.log("File deleted: " + highresFile.toString() );
+                if ( !ok ) //logger.info("File deleted: " + highresFile.toString() );
                 //else
                 {
-                    Tools.log( "File deleted failed on: " + highresFile.toString() );
+                    logger.info( "File deleted failed on: " + highresFile.toString() );
                 }
             }
 
@@ -1005,8 +1012,6 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
         return newNode;
     }
 
-
- 
 
     /**
      *  Copies the pictures from the source tree to the target directory and adds them to the collection creating a progress GUI.
@@ -1092,7 +1097,7 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
                     boolean a = copyAddPictures1( addFile.listFiles(), targetDir, subNode, progGui, newOnly, retainDirectories, selectedCategories );
                     picturesAdded = a || picturesAdded;
                 } else {
-                    Tools.log( "SDMTN.copyAddPictures: no pictures in directory " + addFile.toString() );
+                    logger.info( "SDMTN.copyAddPictures: no pictures in directory " + addFile.toString() );
                 }
             }
         }
@@ -1251,13 +1256,12 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
                     boolean a = copyAddPictures1( addFile.listFiles(), targetDir, subNode, progGui, cam, retainDirectories, selectedCategories );
                     picturesAdded = a || picturesAdded;
                 } else {
-                    Tools.log( "SDMTN.copyAddPictures: no pictures in directory " + addFile.toString() );
+                    logger.info( "SDMTN.copyAddPictures: no pictures in directory " + addFile.toString() );
                 }
             }
         }
         return picturesAdded;
     }
-
 
 
     /**
@@ -1269,7 +1273,7 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
      * @return  true if the picture was valid, false if not.
      */
     public boolean addSinglePicture( File addFile, boolean newOnly, HashSet<Object> selectedCategories ) {
-        //Tools.log( "SDMTN.addSinglePicture: invoked on: " + addFile.toString() + " for " + this.toString() );
+        //logger.info( "SDMTN.addSinglePicture: invoked on: " + addFile.toString() + " for " + this.toString() );
         if ( newOnly && getPictureCollection().isInCollection( addFile ) ) {
             return false; // only add pics not in the collection already
         } else {
@@ -1299,7 +1303,7 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
                 newPictureInfo.setCategoryAssignment( categoryAssignment );
             }
         } catch ( MalformedURLException x ) {
-            Tools.log( this.getClass().toString() + ".addPicture: MalformedURLException: " + addFile.getPath() + "\nError: " + x.getMessage() );
+            logger.info( this.getClass().toString() + ".addPicture: MalformedURLException: " + addFile.getPath() + "\nError: " + x.getMessage() );
             return false;
         }
 
@@ -1335,11 +1339,11 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
             }
             newPictureInfo.setCreationTime( creationTime );
         } catch ( MalformedURLException x ) {
-            Tools.log( "SDMTN.addPicture: MalformedURLException: " + addFile.getPath() + "\nError: " + x.getMessage() );
+            logger.info( "SDMTN.addPicture: MalformedURLException: " + addFile.getPath() + "\nError: " + x.getMessage() );
         } catch ( IOException x ) {
-            Tools.log( "SDMTN.addPicture: IOException: " + x.getMessage() );
+            logger.info( "SDMTN.addPicture: IOException: " + x.getMessage() );
         } catch ( JpegProcessingException x ) {
-            Tools.log( "SDMTN.addPicture: No EXIF header found\n" + x.getMessage() );
+            logger.info( "SDMTN.addPicture: No EXIF header found\n" + x.getMessage() );
         }
 
         return true;
@@ -1366,7 +1370,7 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
      * @return
      */
     public static boolean wasNodeDeleted( SortableDefaultMutableTreeNode affectedNode, TreeModelEvent e ) {
-        //Tools.log( "SDMTN.wasNodeDeleted invoked for: " + affectedNode.toString() + " / " + e.toString() );
+        //logger.info( "SDMTN.wasNodeDeleted invoked for: " + affectedNode.toString() + " / " + e.toString() );
         TreePath removedChild;
         TreePath currentNodeTreePath = new TreePath( affectedNode.getPath() );
         Object[] children = e.getChildren();
@@ -1378,7 +1382,4 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
         }
         return false;
     }
-
-
-
 }

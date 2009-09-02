@@ -4,13 +4,20 @@ import jpo.dataModel.*;
 import java.util.AbstractMap;
 import java.util.HashSet;
 import java.util.TreeMap;
+import java.util.logging.Logger;
 import junit.framework.TestCase;
 
 /**
  *
- * @author richi
+ * @author Richard Eigenmann
  */
 public class DescriptionWordMapTest extends TestCase {
+
+    /**
+     * Defines a logger for this class
+     */
+    private static Logger logger = Logger.getLogger( DescriptionWordMapTest.class.getName() );
+
 
     public DescriptionWordMapTest( String testName ) {
         super( testName );

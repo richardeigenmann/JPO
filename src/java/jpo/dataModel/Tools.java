@@ -1,10 +1,6 @@
 package jpo.dataModel;
 
-import jpo.dataModel.Settings;
-import jpo.dataModel.GroupInfo;
-import jpo.dataModel.SortableDefaultMutableTreeNode;
 import jpo.gui.XmlFilter;
-import jpo.dataModel.PictureInfo;
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -14,10 +10,8 @@ import java.util.zip.*;
 import javax.imageio.*;
 import javax.imageio.stream.*;
 import java.text.*;
-
 import javax.swing.WindowConstants.*;
 import java.awt.*;
-
 import java.util.logging.FileHandler;
 import java.util.logging.Handler;
 import java.util.logging.Logger;
@@ -48,11 +42,9 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 public class Tools {
 
     /**
-     * A private constructor to prevent instantiation of this class;
-     * all methods are static.
+     * Defines a logger for this class
      */
-    private Tools() {
-    }
+    private static Logger logger = Logger.getLogger( Tools.class.getName() );
 
 
     /**
@@ -176,7 +168,7 @@ public class Tools {
                 }
             } catch ( SecurityException x ) {
                 // Log the error and ignore it and continue
-                Tools.log( "Tools.countfiles: got a SecurityException on file: " + fileEntry.toString() + " \n" + x.getMessage() );
+                logger.info( "Tools.countfiles: got a SecurityException on file: " + fileEntry.toString() + " \n" + x.getMessage() );
             }
         }
         return numFiles;
@@ -196,13 +188,13 @@ public class Tools {
             testStream.close();
             return hasReader;
         } catch ( MalformedURLException x ) {
-            Tools.log( "Tools.jvmHasReader.MalformedURLException: " + testFile.getPath() + "\nError: " + x.getMessage() );
+            logger.info( "Tools.jvmHasReader.MalformedURLException: " + testFile.getPath() + "\nError: " + x.getMessage() );
             return false;
         } catch ( FileNotFoundException x ) {
-            Tools.log( "Tools.jvmHasReader.File not found: " + testFile.getPath() + "\nError: " + x.getMessage() );
+            logger.info( "Tools.jvmHasReader.File not found: " + testFile.getPath() + "\nError: " + x.getMessage() );
             return false;
         } catch ( IOException x ) {
-            Tools.log( "Tools.jvmHasReader.IO Exception on: " + testFile.getPath() + "\nError: " + x.getMessage() );
+            logger.info( "Tools.jvmHasReader.IO Exception on: " + testFile.getPath() + "\nError: " + x.getMessage() );
             return false;
         }
     }
@@ -217,7 +209,7 @@ public class Tools {
      */
     public static boolean hasPictures( File subDirectory ) {
         File[] fileArray = subDirectory.listFiles();
-        //Tools.log( "Tools.hasPictures: directory " + subDirectory.toString() + " has " + Integer.toString(fileArray.length) + " entries" );
+        //logger.info( "Tools.hasPictures: directory " + subDirectory.toString() + " has " + Integer.toString(fileArray.length) + " entries" );
         if ( fileArray == null ) {
             return false;
         }
@@ -228,7 +220,7 @@ public class Tools {
                     return true;
                 }
             } else {
-                //Tools.log( "PictureAdder.hasPictures: checking: " + fileArray[i].toString() );
+                //logger.info( "PictureAdder.hasPictures: checking: " + fileArray[i].toString() );
                 if ( Tools.jvmHasReader( fileArray[i] ) ) {
                     return true;
                 }
@@ -369,7 +361,7 @@ public class Tools {
             throw new IOException( "Tools.movePicture: URL caused a URISyntaxException. Move aborted! " + x.getMessage() );
         }
 
-        //Tools.log("Tools.movePicture: after decomposing the target URL the Path reads: " + targetFile.getPath());
+        //logger.info("Tools.movePicture: after decomposing the target URL the Path reads: " + targetFile.getPath());
 
         if ( targetFile.exists() ) {
             throw new IOException( "Tools.movePicture: Target File " + b.toString() + " already exists. Move aborted!" );
@@ -379,17 +371,17 @@ public class Tools {
         }
 
         if ( sourceFile.renameTo( targetFile ) ) {
-            //Tools.log ( "Tools.movePicture: File " + sourceFile.toString() + " renamed to " + b.toString() );
+            //logger.info ( "Tools.movePicture: File " + sourceFile.toString() + " renamed to " + b.toString() );
         } else {
             // perhaps target was on a different filesystem. Trying copying
-            Tools.log( "Tools.movePicture: Failed: Rename from " + sourceFile.toString() + " to " + b.toString() + " failed. Trying copying" );
+            logger.info( "Tools.movePicture: Failed: Rename from " + sourceFile.toString() + " to " + b.toString() + " failed. Trying copying" );
             if ( copyPicture( sourceFile, targetFile ) > Long.MIN_VALUE ) {
-                Tools.log( "Tools.movePicture: Copy worked. Deleting source file." );
+                logger.info( "Tools.movePicture: Copy worked. Deleting source file." );
                 if ( !sourceFile.delete() ) {
-                    Tools.log( "Tools.movePicture: FAILED: Deleting source file failed." );
+                    logger.info( "Tools.movePicture: FAILED: Deleting source file failed." );
                 }
             } else {
-                Tools.log( "Tools.movePicture: Copy failed too." );
+                logger.info( "Tools.movePicture: Copy failed too." );
                 return false;
             }
         }
@@ -403,18 +395,18 @@ public class Tools {
             node = (SortableDefaultMutableTreeNode) e.nextElement();
             nodeObject = node.getUserObject();
             if ( nodeObject instanceof PictureInfo ) {
-                //Tools.log( "Tools.movePicture: checking: " + ( (PictureInfo) nodeObject ).getHighresLocation() + " against " + sourceFile );
+                //logger.info( "Tools.movePicture: checking: " + ( (PictureInfo) nodeObject ).getHighresLocation() + " against " + sourceFile );
                 if ( ( (PictureInfo) nodeObject ).getHighresFile().equals( sourceFile ) ) {
-                    //Tools.log ( "Another picture node was using the same highres URL. Node changed: " + ( (PictureInfo) nodeObject ).getDescription() );
+                    //logger.info ( "Another picture node was using the same highres URL. Node changed: " + ( (PictureInfo) nodeObject ).getDescription() );
                     ( (PictureInfo) nodeObject ).setHighresLocation( targetFile.toURI().toURL() );
                 }
                 if ( ( (PictureInfo) nodeObject ).getLowresFile().equals( sourceFile ) ) {
-                    //Tools.log ( "Another picture node was using the same lowres URL. Node changed: " + ( (PictureInfo) nodeObject ).getDescription() );
+                    //logger.info ( "Another picture node was using the same lowres URL. Node changed: " + ( (PictureInfo) nodeObject ).getDescription() );
                     ( (PictureInfo) nodeObject ).setLowresLocation( targetFile.toURI().toURL() );
                 }
             } else {
                 if ( ( !node.isRoot() ) && ( !( (GroupInfo) nodeObject ).getLowresLocation().equals( "" ) ) && ( (GroupInfo) nodeObject ).getLowresFile().equals( sourceFile ) ) {
-                    //Tools.log ( "Another group node was using the same lowres URL. Node changed: " + ( (PictureInfo) nodeObject ).getDescription() );
+                    //logger.info ( "Another group node was using the same lowres URL. Node changed: " + ( (PictureInfo) nodeObject ).getDescription() );
                     ( (GroupInfo) nodeObject ).setLowresLocation( targetFile.toURI().toURL() );
                 }
             }
@@ -471,7 +463,7 @@ public class Tools {
     public static File searchClasspath( String searchName ) {
         // find the jar file as last item in the Jar file.
         String classpath = System.getProperty( "java.class.path" );
-        Tools.log( "Tools.searchClasspath: searching for " + searchName + " in " + classpath );
+        logger.info( "Tools.searchClasspath: searching for " + searchName + " in " + classpath );
         String testToken;
         StringTokenizer st = new StringTokenizer( classpath, ":" );
         while ( st.hasMoreTokens() ) {
@@ -495,29 +487,27 @@ public class Tools {
      *  The logfile path can be totally messed up i.e. not a valid filename. It could be
      *  non writable. In this case the error is reported and the log is shown on the screen.
      * @param message
-     */
+     * TODO: Remove all this stuff and get rid of the Settings.writeLog stuff
     public static synchronized void log( String message ) {
-        if ( Settings.writeLog ) {
-            try {
-                //if ( ( logfile == null ) && ( Settings.writeLog ) ) {
-                if ( Settings.writeLog ) {
-                    //logfile = new BufferedWriter( new FileWriter( Settings.logfile, true ) );
-                    Formatter f = new SimpleFormatter();
-                    Handler fh = new FileHandler( Settings.logfile.getCanonicalPath(), true );
-                    fh.setFormatter( f );
-                    Logger.getLogger( "" ).addHandler( fh );
-                }
-                //logfile.write( message );
-                //logfile.newLine();
-                //logfile.flush();
-                log.info( message );
-            } catch ( IOException x ) {
-                System.err.println( message );
-            }
-        }
+    if ( Settings.writeLog ) {
+    try {
+    //if ( ( logfile == null ) && ( Settings.writeLog ) ) {
+    if ( Settings.writeLog ) {
+    //logfile = new BufferedWriter( new FileWriter( Settings.logfile, true ) );
+    Formatter f = new SimpleFormatter();
+    Handler fh = new FileHandler( Settings.logfile.getCanonicalPath(), true );
+    fh.setFormatter( f );
+    Logger.getLogger( "" ).addHandler( fh );
     }
-
-
+    //logfile.write( message );
+    //logfile.newLine();
+    //logfile.flush();
+    log.info( message );
+    } catch ( IOException x ) {
+    System.err.println( message );
+    }
+    }
+    }*/
     /**
      *  proper way to close the logfile
      *
@@ -591,11 +581,11 @@ public class Tools {
         for ( int i = 1; i < 10000; i++ ) {
             Settings.thumbnailCounter++;
             //if ( (Settings.thumbnailCounter % 10) == 0 )
-            //Tools.log ("considering " + Settings.thumbnailCounter + " filenames for lowres filename");
+            //logger.info ("considering " + Settings.thumbnailCounter + " filenames for lowres filename");
             testLowresFilename = new File( Settings.thumbnailPath, Settings.thumbnailPrefix + Integer.toString( Settings.thumbnailCounter ) + ".jpg" );
             if ( !testLowresFilename.exists() ) {
                 try {
-                    //Tools.log( "Tools.lowresFilename: assigning: " + testLowresFilename.toURI().toURL().toString());
+                    //logger.info( "Tools.lowresFilename: assigning: " + testLowresFilename.toURI().toURL().toString());
                     Settings.unsavedSettingChanges = true;
                     return ( testLowresFilename.toURI().toURL().toString() );
                 } catch ( MalformedURLException x ) {
@@ -603,7 +593,7 @@ public class Tools {
                 }
             }
         }
-        Tools.log( "lowresFilename: Could not create a lowres filename." );
+        logger.info( "lowresFilename: Could not create a lowres filename." );
         return null;
     }
 
@@ -627,7 +617,7 @@ public class Tools {
      */
     public static int freeMem() {
         int memory = (int) Runtime.getRuntime().freeMemory() / 1024 / 1024;
-        Tools.log( "Free memory: " + memory + "MB" );
+        logger.info( "Free memory: " + memory + "MB" );
         return memory;
     }
 
@@ -692,7 +682,7 @@ public class Tools {
      *  @param event the DragSourceDragEvent for which the cursor is to be adjusted
      */
     public static void setDragCursor( DragSourceDragEvent event ) {
-        //Tools.log( "Tools.setDragCursor: invoked");
+        //logger.info( "Tools.setDragCursor: invoked");
         DragSourceContext context = event.getDragSourceContext();
         int dndCode = event.getDropAction();
         if ( ( dndCode & DnDConstants.ACTION_COPY ) != 0 ) {
@@ -700,12 +690,12 @@ public class Tools {
         } else if ( ( dndCode & DnDConstants.ACTION_MOVE ) != 0 ) {
             context.setCursor( DragSource.DefaultMoveDrop );
         } else {
-            //Tools.log( "ACTION_COPY is: " + Integer.toString( DnDConstants.ACTION_COPY ) );
-            //Tools.log( "ACTION_COPY_OR_MOVE is: " + Integer.toString( DnDConstants.ACTION_COPY_OR_MOVE ) );
-            //Tools.log( "ACTION_LINK is: " + Integer.toString( DnDConstants.ACTION_LINK ) );
-            //Tools.log( "ACTION_MOVE is: " + Integer.toString( DnDConstants.ACTION_MOVE ) );
-            //Tools.log( "ACTION_NONE is: " + Integer.toString( DnDConstants.ACTION_NONE ) );
-            //Tools.log( "ACTION_REFERENCE is: " + Integer.toString( DnDConstants.ACTION_REFERENCE ) );
+            //logger.info( "ACTION_COPY is: " + Integer.toString( DnDConstants.ACTION_COPY ) );
+            //logger.info( "ACTION_COPY_OR_MOVE is: " + Integer.toString( DnDConstants.ACTION_COPY_OR_MOVE ) );
+            //logger.info( "ACTION_LINK is: " + Integer.toString( DnDConstants.ACTION_LINK ) );
+            //logger.info( "ACTION_MOVE is: " + Integer.toString( DnDConstants.ACTION_MOVE ) );
+            //logger.info( "ACTION_NONE is: " + Integer.toString( DnDConstants.ACTION_NONE ) );
+            //logger.info( "ACTION_REFERENCE is: " + Integer.toString( DnDConstants.ACTION_REFERENCE ) );
             context.setCursor( DragSource.DefaultMoveNoDrop );
         }
     }
@@ -748,7 +738,7 @@ public class Tools {
             }
             return crc.getValue();
         } catch ( IOException x ) {
-            Tools.log( "Tools.calculateChecksum trapped an IOException. Aborting. Reason:\n" + x.getMessage() );
+            logger.info( "Tools.calculateChecksum trapped an IOException. Aborting. Reason:\n" + x.getMessage() );
             return Long.MIN_VALUE;
         }
     }
@@ -825,7 +815,7 @@ public class Tools {
         int stringWidth = ta.getFontMetrics( ta.getFont() ).stringWidth( ta.getText() );
         int lines = stringWidth / horizontalWidth;
         int adjustedLines = (int) ( lines * 1.1 ) + 2;
-        //Tools.log("ThumbnailDescriptionJPanel: lineCount: " + Integer.toString(lines) + " stringWidth: " + Integer.toString( stringWidth ) );
+        //logger.info("ThumbnailDescriptionJPanel: lineCount: " + Integer.toString(lines) + " stringWidth: " + Integer.toString( stringWidth ) );
         return new Dimension( horizontalWidth, adjustedLines * fontHeight );
     }
 
@@ -853,12 +843,12 @@ public class Tools {
      */
     public static void runUserFunction( int userFunction, PictureInfo myObject ) {
         if ( ( userFunction < 0 ) || ( userFunction >= Settings.maxUserFunctions ) ) {
-            Tools.log( "Tools.runUserFunction: was called with an out of bounds index" );
+            logger.info( "Tools.runUserFunction: was called with an out of bounds index" );
             return;
         }
         String command = Settings.userFunctionCmd[userFunction];
         if ( ( command == null ) || ( command.length() == 0 ) ) {
-            Tools.log( "Tools.runUserFunction: command " + Integer.toString( userFunction ) + " is not properly defined" );
+            logger.info( "Tools.runUserFunction: command " + Integer.toString( userFunction ) + " is not properly defined" );
             return;
         }
 
@@ -871,12 +861,12 @@ public class Tools {
 
         URL pictureURL = ( myObject ).getHighresURLOrNull();
         if ( pictureURL == null ) {
-            Tools.log( "SortableDefaultMutableTreeNode.runUserFunction: The picture doesn't have a valid URL. This is bad. Aborted." );
+            logger.info( "SortableDefaultMutableTreeNode.runUserFunction: The picture doesn't have a valid URL. This is bad. Aborted." );
             return;
         }
         command = command.replaceAll( "%u", pictureURL.toString() );
 
-        Tools.log( "SortableDefaultMutableTreeNode.runUserFunction: Command to run is: " + command );
+        logger.info( "SortableDefaultMutableTreeNode.runUserFunction: Command to run is: " + command );
         try {
             // Had big issues here because the simple exec (String) calls a StringTokenizer
             // which messes up the filename parameters
@@ -892,7 +882,7 @@ public class Tools {
                 Runtime.getRuntime().exec( cmdarray );
             }
         } catch ( IOException x ) {
-            Tools.log( "SortableDefaultMutableTreeNode.runUserFunction: Runtime.exec collapsed with and IOException: " + x.getMessage() );
+            logger.info( "SortableDefaultMutableTreeNode.runUserFunction: Runtime.exec collapsed with and IOException: " + x.getMessage() );
         }
     }
 
@@ -904,7 +894,7 @@ public class Tools {
      * <code>Tools.checkEDT()</code>
      */
     public static void checkEDT() {
-        if ( ! SwingUtilities.isEventDispatchThread() ) {
+        if ( !SwingUtilities.isEventDispatchThread() ) {
             throw new Error( "Not on EDT!" );
         }
     }

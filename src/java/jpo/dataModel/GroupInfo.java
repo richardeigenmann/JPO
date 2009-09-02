@@ -5,12 +5,13 @@ import java.net.*;
 import java.io.*;
 import java.util.*;
 import java.text.*;
+import java.util.logging.Logger;
 
 
 /*
 GroupInfo.java:  definitions for the group objects
 
-Copyright (C) 2002-2009  Richard Eigenmann.
+Copyright (C) 2002 - 2009  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -35,9 +36,15 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 public class GroupInfo implements Serializable {
 
     /**
+     * Defines a logger for this class
+     */
+    private static Logger logger = Logger.getLogger( GroupInfo.class.getName() );
+
+    /**
      *  The description of the GroupInfo.
      **/
     private StringBuffer groupName;
+
 
     /**
      *   Constructor to create a new GroupInfo object.
@@ -47,6 +54,7 @@ public class GroupInfo implements Serializable {
     public GroupInfo( String description ) {
         setGroupName( description );
     }
+
 
     /**
      *   toString method that returns the description of the group
@@ -58,6 +66,7 @@ public class GroupInfo implements Serializable {
         return groupName.toString();
     }
 
+
     /**
      *   Returns the description of the group.
      *
@@ -68,6 +77,7 @@ public class GroupInfo implements Serializable {
         return groupName.toString();
     }
 
+
     /**
      *   Set name of the GroupInfo
      *
@@ -75,18 +85,20 @@ public class GroupInfo implements Serializable {
      *   @see #getGroupName
      **/
     public void setGroupName( String name ) {
-        groupName = new StringBuffer( name) ;
+        groupName = new StringBuffer( name );
 
         if ( ( Settings.pictureCollection != null ) && ( Settings.pictureCollection.getSendModelUpdates() ) ) {
             Settings.pictureCollection.setUnsavedUpdates();
         }
     }
     //----------------------------------------
+
     /**
      * The full path to the lowres version of the picture.
      *
      */
     private String lowresLocation = "";
+
 
     /**
      * Returns the full path to the lowres picture.
@@ -96,22 +108,24 @@ public class GroupInfo implements Serializable {
         return lowresLocation;
     }
 
+
     /**
      * Returns the file handle to the lowres picture.
      * @see	#getLowresURL()
      * @return  The file handle for the lowres picture. Returns null if there is no filename.
      */
     public File getLowresFile() {
-        if ( lowresLocation.equals( "") ) {
+        if ( lowresLocation.equals( "" ) ) {
             return null;
         }
         try {
             return new File( new URI( lowresLocation ) );
         } catch ( URISyntaxException x ) {
-            Tools.log( "Conversion of " + lowresLocation + " to URI failed: " + x.getMessage() );
+            logger.info( "Conversion of " + lowresLocation + " to URI failed: " + x.getMessage() );
             return null;
         }
     }
+
 
     /**
      * Returns the URL handle to the lowres picture.
@@ -122,6 +136,7 @@ public class GroupInfo implements Serializable {
         URL lowresURL = new URL( lowresLocation );
         return lowresURL;
     }
+
 
     /**
      * returns the URL handle to the lowres picture or null. I invented this
@@ -134,10 +149,11 @@ public class GroupInfo implements Serializable {
             URL lowresURL = new URL( lowresLocation );
             return lowresURL;
         } catch ( MalformedURLException x ) {
-            Tools.log( "Caught an unexpected MalformedURLException: " + x.getMessage() );
+            logger.info( "Caught an unexpected MalformedURLException: " + x.getMessage() );
             return null;
         }
     }
+
 
     /**
      * Sets the full path to the lowres picture.
@@ -151,6 +167,7 @@ public class GroupInfo implements Serializable {
             }
         }
     }
+
 
     /**
      * Sets the full path to the highres picture.
@@ -166,6 +183,7 @@ public class GroupInfo implements Serializable {
         }
     }
 
+
     /**
      *  Appends the text to the lowres location (for the XML parser).
      *  @param  s  The text fragement to be added to the Lowres Location.
@@ -179,6 +197,7 @@ public class GroupInfo implements Serializable {
         }
     }
 
+
     /**
      *  Returns just the Filename of the lowres picture.
      *  @return  the filename of the lowres picture without any preceeding path.
@@ -187,6 +206,7 @@ public class GroupInfo implements Serializable {
         return new File( lowresLocation ).getName();
 
     }
+
 
     /**
      *  this method writes all attributes of the picture in the JPO
@@ -201,6 +221,7 @@ public class GroupInfo implements Serializable {
             throws IOException {
         dumpToXml( out, getLowresLocation(), rootNode, protection );
     }
+
 
     /**
      *  this method writes all attributes of the picture in the JPO
@@ -237,6 +258,7 @@ public class GroupInfo implements Serializable {
         out.write( ">" );
         out.newLine();
     }
+
 
     public void endGroupXML( BufferedWriter out, boolean rootNode )
             throws IOException {

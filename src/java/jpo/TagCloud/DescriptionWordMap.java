@@ -1,6 +1,5 @@
 package jpo.TagCloud;
 
-import java.lang.Integer;
 import jpo.dataModel.*;
 import java.util.AbstractCollection;
 import java.util.AbstractMap;
@@ -14,7 +13,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
-import java.util.TreeSet;
 import java.util.logging.Logger;
 
 /*

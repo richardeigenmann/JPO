@@ -4,10 +4,11 @@ import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Frame;
 import java.awt.Rectangle;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
 
 /*
-Copyright (C) 2002-2008  Richard Eigenmann.
+Copyright (C) 2002 - 2009  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -21,15 +22,19 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 The license is in gpl.txt.
 See http://www.gnu.org/copyleft/gpl.html for the details.
  */
-
-
 /**
  *
  * Class to create a JFrame which can be resized. This can be a bit hasslesome so I have put the code in
  * it's own class.
  */
 public class ResizableJFrame extends JFrame {
-    
+
+    /**
+     * Defines a logger for this class
+     */
+    private static Logger logger = Logger.getLogger( ResizableJFrame.class.getName() );
+
+
     /**
      * Creates a new instance of ResizableJFrame
      * @param title  The title of the window
@@ -39,16 +44,18 @@ public class ResizableJFrame extends JFrame {
     public ResizableJFrame( String title, boolean drawframe, Dimension defaultSize ) {
         super( title );
         this.defaultSize = defaultSize;
-        //Tools.log("ResizeableJFrame.constructor: defaultSize = " + defaultSize.toString() );
-        setUndecorated( ! drawframe );
+        //logger.info("ResizeableJFrame.constructor: defaultSize = " + defaultSize.toString() );
+        setUndecorated( !drawframe );
         setSize( defaultSize );
-            EventQueue.invokeLater( new Runnable() {
-                public void run() {
-                    setVisible( true );
-                }
-            } );
+        EventQueue.invokeLater( new Runnable() {
+
+            public void run() {
+                setVisible( true );
+            }
+        } );
     }
-    
+
+
     /**
      * Creates a new instance of ResizableJFrame
      * @param title  The title of the window
@@ -57,39 +64,42 @@ public class ResizableJFrame extends JFrame {
     public ResizableJFrame( String title, boolean drawframe ) {
         this( title, drawframe, new Dimension( 800, 600 ) );
     }
-    
+
     /**
      *  tracks the default Size of this window
      */
     private Dimension defaultSize;
-    
-    
+
+
     /**
      *  maximises the window
      */
     public void maximise() {
         EventQueue.invokeLater( new Runnable() {
+
             public void run() {
                 setExtendedState( Frame.MAXIMIZED_BOTH );
                 validate();
             }
         } );
     }
-    
+
+
     /**
      *  un-maximises the window, restoring the original size
      */
     public void unMaximise() {
         setExtendedState( Frame.NORMAL );
     }
-    
-    
+
+
     /**
      * Resizes the screen to the specified size after unmaximising it.
      * @param targetSize
      */
     public void rezise( final Dimension targetSize ) {
         EventQueue.invokeLater( new Runnable() {
+
             public void run() {
                 unMaximise();
                 setBounds( new Rectangle( targetSize ) );
@@ -97,15 +107,14 @@ public class ResizableJFrame extends JFrame {
             }
         } );
     }
-    
-    
-    
-    
+
+
     /**
      * Resizes the window to the left part of the screen
      */
     public void reziseToLeft() {
         EventQueue.invokeLater( new Runnable() {
+
             public void run() {
                 //unMaximise();
                 setBounds( ScreenHelper.getLeftScreenBounds() );
@@ -114,13 +123,14 @@ public class ResizableJFrame extends JFrame {
             }
         } );
     }
-    
-    
+
+
     /**
      *
      */
     public void reziseToTopLeft() {
         EventQueue.invokeLater( new Runnable() {
+
             public void run() {
                 unMaximise();
                 setBounds( ScreenHelper.getTopLeftScreenBounds() );
@@ -128,12 +138,14 @@ public class ResizableJFrame extends JFrame {
             }
         } );
     }
-    
+
+
     /**
      *
      */
     public void reziseToBottomLeft() {
         EventQueue.invokeLater( new Runnable() {
+
             public void run() {
                 unMaximise();
                 setBounds( ScreenHelper.getBottomLeftScreenBounds() );
@@ -141,13 +153,14 @@ public class ResizableJFrame extends JFrame {
             }
         } );
     }
-    
-    
+
+
     /**
      *
      */
     public void reziseToRight() {
         EventQueue.invokeLater( new Runnable() {
+
             public void run() {
                 //unMaximise();
                 setBounds( ScreenHelper.getRightScreenBounds() );
@@ -156,12 +169,14 @@ public class ResizableJFrame extends JFrame {
             }
         } );
     }
-    
+
+
     /**
      *
      */
     public void reziseToTopRight() {
         EventQueue.invokeLater( new Runnable() {
+
             public void run() {
                 unMaximise();
                 setBounds( ScreenHelper.getTopRightScreenBounds() );
@@ -169,12 +184,14 @@ public class ResizableJFrame extends JFrame {
             }
         } );
     }
-    
+
+
     /**
      *
      */
     public void reziseToBottomRight() {
         EventQueue.invokeLater( new Runnable() {
+
             public void run() {
                 unMaximise();
                 setBounds( ScreenHelper.getBottomRightScreenBounds() );
@@ -182,49 +199,48 @@ public class ResizableJFrame extends JFrame {
             }
         } );
     }
-    
-    
+
     /**
      *  constant to indicate that a Fullscreen window should be created.
      */
     public static final int WINDOW_FULLSCREEN = 1;
-    
+
     /**
      *  constant to indicate that the window should be created on the LEFT half of the display
      */
     public static final int WINDOW_LEFT = WINDOW_FULLSCREEN + 1;
-    
+
     /**
      *  constant to indicate that the window should be created on the LEFT half of the display
      */
     public static final int WINDOW_RIGHT = WINDOW_LEFT + 1;
-    
+
     /**
      *  constant to indicate that the window should be created on the TOP LEFT quarter of the display
      */
     public static final int WINDOW_TOP_LEFT = WINDOW_RIGHT + 1;
-    
+
     /**
      *  constant to indicate that the window should be created on the TOP RIGHT quarter of the display
      */
     public static final int WINDOW_TOP_RIGHT = WINDOW_TOP_LEFT + 1;
-    
+
     /**
      *  constant to indicate that the window should be created on the BOTTOM LEFT quarter of the display
      */
     public static final int WINDOW_BOTTOM_LEFT = WINDOW_TOP_RIGHT + 1;
-    
+
     /**
      *  constant to indicate that the window should be created on the BOTTOM RIGHT quarter of the display
      */
     public static final int WINDOW_BOTTOM_RIGHT = WINDOW_BOTTOM_LEFT + 1;
-    
+
     /**
      *  constant to indicate that the window should be created on the Default area
      */
     public static final int WINDOW_DEFAULT = WINDOW_BOTTOM_RIGHT + 1;
-    
-    
+
+
     /**
      *  request that the window showing the picture be changed be changed.
      *  @param  newMode  {@link #WINDOW_FULLSCREEN}, {@link #WINDOW_LEFT},
@@ -262,7 +278,4 @@ public class ResizableJFrame extends JFrame {
                 break;
         }
     }
-    
-    
-    
 }

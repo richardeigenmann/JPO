@@ -10,6 +10,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Rectangle;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -22,9 +23,14 @@ import javax.swing.event.ChangeListener;
 
 /**
  *
- * @author richi
+ * @author Richard Eigenmann
  */
 public class IsolateProblem extends JFrame {
+
+     /**
+     * Defines a logger for this class
+     */
+    private static Logger logger = Logger.getLogger( IsolateProblem.class.getName() );
 
     public static void main( String[] args ) {
         Runnable r = new Runnable() {

@@ -4,11 +4,7 @@ import jpo.dataModel.Settings;
 import jpo.dataModel.QueryBrowser;
 import jpo.*;
 import jpo.dataModel.Query;
-
 import java.awt.event.*;
-
-
-
 import javax.swing.*;
 import javax.swing.tree.*;
 import jpo.dataModel.Tools;
@@ -17,7 +13,7 @@ import jpo.dataModel.Tools;
 /*
 QueriesJTree.java:  class that creates a JTree to display the queries
 
-Copyright (C) 2006-2009  Richard Eigenmann, Zurich, Switzerland
+Copyright (C) 2006 - 2009  Richard Eigenmann, Zurich, Switzerland
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2

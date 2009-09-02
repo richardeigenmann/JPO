@@ -1,7 +1,6 @@
 package jpo.gui;
 
 import jpo.TagCloud.TagClickListener;
-import jpo.TagCloud.WordBrowser;
 import jpo.dataModel.Settings;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
 import jpo.*;
@@ -11,13 +10,14 @@ import javax.swing.Timer;
 import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.logging.Logger;
 import javax.swing.tree.*;
 import jpo.TagCloud.DescriptionWordMap;
 
 /*
 InfoPanel.java:  a JScrollPane that shows information after selection events.
 
-Copyright (C) 2002-2009  Richard Eigenmann.
+Copyright (C) 2002 - 2009  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -37,6 +37,11 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  *  JPanels into it's viewport.
  */
 public class InfoPanel extends JTabbedPane implements TagClickListener {
+
+    /**
+     * Defines a logger for this class
+     */
+    private static Logger logger = Logger.getLogger( InfoPanel.class.getName() );
 
     /**
      * ThumbnailComponent to show the picture that has been selected
@@ -134,7 +139,8 @@ public class InfoPanel extends JTabbedPane implements TagClickListener {
         } );
     }
 
-    DescriptionWordMap dwm ;
+    DescriptionWordMap dwm;
+
     TagClickListener tagClickListener;
 
 

@@ -2,6 +2,7 @@ package jpo.dataModel;
 
 import jpo.*;
 import java.util.*;
+import java.util.logging.Logger;
 
 
 /*
@@ -27,13 +28,20 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 public class CategoryQuery implements Query {
 
     /**
+     * Defines a logger for this class
+     */
+    private static Logger logger = Logger.getLogger( CategoryQuery.class.getName() );
+
+    /**
      * the category key for the Query
      */
     private Integer key = null;
+
     /**
      * An ArrayList of the nodes that represent these images
      */
-    private ArrayList <SortableDefaultMutableTreeNode> resultList = null;
+    private ArrayList<SortableDefaultMutableTreeNode> resultList = null;
+
 
     /**
      * Constructor for a Category Query
@@ -44,17 +52,19 @@ public class CategoryQuery implements Query {
         this.refresh();
     }
 
+
     /**
      *  The query must be able to say how many results it will return.
      * @return
      */
     public int getNumberOfResults() {
         if ( resultList == null ) {
-            Tools.log( "CategoryQuery.getNumberOfResults: called on a null result set." );
+            logger.info( "CategoryQuery.getNumberOfResults: called on a null result set." );
             return 0;
         }
         return resultList.size();
     }
+
 
     /**
      *  This method returns the SDMTN node for the indicated position in the query. If the
@@ -65,7 +75,7 @@ public class CategoryQuery implements Query {
      */
     public SortableDefaultMutableTreeNode getIndex( int index ) {
         if ( resultList == null ) {
-            Tools.log( "CategoryQuery.getIndex: called on a null result set." );
+            logger.info( "CategoryQuery.getIndex: called on a null result set." );
             return null;
         }
         if ( ( index < 0 ) || ( index >= resultList.size() ) ) {
@@ -73,6 +83,7 @@ public class CategoryQuery implements Query {
         }
         return resultList.get( index );
     }
+
 
     /**
      *  returns a title for the search that can be used to display the search results under.
@@ -82,6 +93,7 @@ public class CategoryQuery implements Query {
         return toString();
     }
 
+
     /**
      *  returns a the title for the search that can be used to display the search results under.
      * @return
@@ -90,6 +102,7 @@ public class CategoryQuery implements Query {
     public String toString() {
         return Settings.jpoResources.getString( "CategoryQuery" ) + Settings.pictureCollection.getCategory( key ).toString();
     }
+
 
     /**
      *  This method retrieves a new ArrayList of nodes that match the category.

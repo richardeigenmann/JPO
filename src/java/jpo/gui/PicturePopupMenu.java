@@ -12,6 +12,7 @@ import java.awt.event.*;
 import javax.swing.*;
 import java.io.*;
 import java.util.*;
+import java.util.logging.Logger;
 import jpo.dataModel.RecentDropNodeListener;
 
 /*
@@ -40,6 +41,11 @@ public class PicturePopupMenu extends JPopupMenu
         RecentDropNodeListener,
         CopyLocationsChangeListener,
         UserFunctionsChangeListener {
+
+    /**
+     * Defines a logger for this class
+     */
+    private static Logger logger = Logger.getLogger( PicturePopupMenu.class.getName() );
 
     /**
      *  array of menu items that allows the user to call up a user function
@@ -111,7 +117,7 @@ public class PicturePopupMenu extends JPopupMenu
             public void actionPerformed( ActionEvent e ) {
                 PictureViewer pictureViewer = new PictureViewer();
                 if ( mySetOfNodes == null ) {
-                    Tools.log( "PicturePopupMenu.constructor: why does this PicturePopupMenu not know the context it is showing pictures in?" );
+                    logger.info( "PicturePopupMenu.constructor: why does this PicturePopupMenu not know the context it is showing pictures in?" );
                     mySetOfNodes = new FlatGroupBrowser( (SortableDefaultMutableTreeNode) popupNode.getParent() );
                     index = 0;
                     for ( int i = 0; i < mySetOfNodes.getNumberOfNodes(); i++ ) {
@@ -563,20 +569,20 @@ public class PicturePopupMenu extends JPopupMenu
                     File lowresFile = pi.getLowresFile();
                     if ( ( lowresFile != null ) && ( lowresFile.exists() ) ) {
                         ok = lowresFile.delete();
-                        if ( !ok ) //Tools.log("File deleted: " + lowresFile.toString() );
+                        if ( !ok ) //logger.info("File deleted: " + lowresFile.toString() );
                         // else
                         {
-                            Tools.log( "File deleted failed on: " + lowresFile.toString() );
+                            logger.info( "File deleted failed on: " + lowresFile.toString() );
                         }
                     }
 
                     File highresFile = pi.getHighresFile();
                     if ( highresFile.exists() ) {
                         ok = highresFile.delete();
-                        if ( !ok ) //Tools.log("File deleted: " + highresFile.toString() );
+                        if ( !ok ) //logger.info("File deleted: " + highresFile.toString() );
                         //else
                         {
-                            Tools.log( "File deleted failed on: " + highresFile.toString() );
+                            logger.info( "File deleted failed on: " + highresFile.toString() );
                         }
                     }
 

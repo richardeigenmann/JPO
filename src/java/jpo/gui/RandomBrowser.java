@@ -4,11 +4,12 @@ import jpo.dataModel.*;
 import jpo.*;
 import jpo.dataModel.PictureInfo;
 import java.util.*;
+import java.util.logging.Logger;
 
 /*
 RandomBrower.java:  an implementation of the ThumbnailBrowserInterface for browsing random pictures.
 
-Copyright (C) 2006-2009  Richard Eigenmann, Zürich, Switzerland
+Copyright (C) 2006 - 2009  Richard Eigenmann, Zürich, Switzerland
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -29,12 +30,18 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 public class RandomBrowser extends ThumbnailBrowser {
 
     /**
+     * Defines a logger for this class
+     */
+    private static Logger logger = Logger.getLogger( RandomBrowser.class.getName() );
+
+
+    /**
      *  Constructor for a RandomBrowser.
      *
      *  @param groupNode    The groupNode under which the randomisation should happen.
      */
     public RandomBrowser( SortableDefaultMutableTreeNode groupNode ) {
-        //Tools.log("RandomBrowser: constructor called on node: " + groupNode.toString() );
+        //logger.info("RandomBrowser: constructor called on node: " + groupNode.toString() );
         enumerateAndAddToList( allPictures, groupNode );
     }
 
@@ -57,7 +64,7 @@ public class RandomBrowser extends ThumbnailBrowser {
      *  If the last element is requested the Random Generator picks a new one.
      */
     public int getNumberOfNodes() {
-        //Tools.log("RandomBrowser.getNumberOfNodes: returning: " + Integer.toString( randomNodes.size() ) );
+        //logger.info("RandomBrowser.getNumberOfNodes: returning: " + Integer.toString( randomNodes.size() ) );
         return randomNodes.size();
     }
 
@@ -68,7 +75,7 @@ public class RandomBrowser extends ThumbnailBrowser {
      *  @param index   The component index that is to be returned.
      */
     public SortableDefaultMutableTreeNode getNode( int index ) {
-        //Tools.log("RandomBrowser.getNode: requested for node: " + Integer.toString( index ) );
+        //logger.info("RandomBrowser.getNode: requested for node: " + Integer.toString( index ) );
         if ( index >= randomNodes.size() ) {
             int randomIndex = (int) ( Math.random() * allPictures.size() );
             randomNodes.add( allPictures.get( randomIndex ) );
@@ -90,7 +97,7 @@ public class RandomBrowser extends ThumbnailBrowser {
      *  @param  startNode   The group node under which to collect the pictures.
      */
     public void enumerateAndAddToList( ArrayList<SortableDefaultMutableTreeNode> myList, SortableDefaultMutableTreeNode startNode ) {
-        //Tools.log("RandomBrowser.enumerateAndAddToList: invoked on group " + startNode.toString() );
+        //logger.info("RandomBrowser.enumerateAndAddToList: invoked on group " + startNode.toString() );
         Enumeration kids = startNode.children();
         SortableDefaultMutableTreeNode n;
 

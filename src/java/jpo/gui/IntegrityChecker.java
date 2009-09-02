@@ -2,16 +2,15 @@ package jpo.gui;
 
 import jpo.dataModel.Tools;
 import jpo.dataModel.Settings;
-import jpo.gui.FrameShower;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
 import jpo.dataModel.PictureInfo;
 import java.io.*;
 import java.util.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.logging.Logger;
 import javax.swing.*;
 import javax.swing.Timer;
-import jpo.gui.YearsBrowserController;
 
 
 /*
@@ -36,6 +35,11 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  *
  **/
 public class IntegrityChecker extends JFrame {
+
+    /**
+     * Defines a logger for this class
+     */
+    private static Logger logger = Logger.getLogger( IntegrityChecker.class.getName() );
 
     JCheckBox checkDatesJCheckBox = new JCheckBox( Settings.jpoResources.getString( "check1" ) );
 
@@ -183,10 +187,10 @@ public class IntegrityChecker extends JFrame {
         if ( ( nodeObject instanceof PictureInfo ) ) {
         pi = (PictureInfo) nodeObject;
         if ( pi.getCreationTimeAsDate() == null ) {
-        //Tools.log( "IntegrityChecker.checkDates: Can't parse date: " + pi.getCreationTime() + " from Node: " + pi.getDescription() );
+        //logger.info( "IntegrityChecker.checkDates: Can't parse date: " + pi.getCreationTime() + " from Node: " + pi.getDescription() );
         count++;
         } else {
-        //Tools.log( "IntegrityChecker.checkDates:" + pi.getFormattedCreationTime() + " from " + pi.getCreationTime() + " from Node: " + pi.getDescription() );
+        //logger.info( "IntegrityChecker.checkDates:" + pi.getFormattedCreationTime() + " from " + pi.getCreationTime() + " from Node: " + pi.getDescription() );
         cal = pi.getCreationTimeAsDate();
         if ( cal != null ) {
         int year = cal.get( Calendar.YEAR );

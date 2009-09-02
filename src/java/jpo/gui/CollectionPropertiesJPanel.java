@@ -33,6 +33,11 @@ public class CollectionPropertiesJPanel
         extends JPanel {
 
     /**
+     * Defines a logger for this class
+     */
+    private static Logger logger = Logger.getLogger( CollectionPropertiesJPanel.class.getName() );
+
+    /**
      *   Number of Nodes in the tree including the current node
      */
     private JLabel collectionItemsLabel = new JLabel();
@@ -120,9 +125,9 @@ public class CollectionPropertiesJPanel
      *  @param  statisticsNode   The node that is being analysed.
      */
     public void updateStats( DefaultMutableTreeNode statisticsNode ) {
-        //Tools.log("CollectionPropertiesJPanel.updateStats: called on node: " + statisticsNode.toString() );
+        //logger.info("CollectionPropertiesJPanel.updateStats: called on node: " + statisticsNode.toString() );
         if ( Settings.pictureCollection.fileLoading ) {
-            Tools.log( "CollectionPropertiesJPanel.updateStats: Still busy loading the file. Aborting" );
+            logger.info( "CollectionPropertiesJPanel.updateStats: Still busy loading the file. Aborting" );
             return;
         }
 
@@ -142,7 +147,7 @@ public class CollectionPropertiesJPanel
                 collectionGroupsLabel.setText( ns.getNumberOfGroupsString() );
                 collectionPicturesLabel.setText( ns.getNumberOfPicturesString() );
                 collectionSizeJLabel.setText( ns.getSizeOfPicturesString() );
-                
+
                 updateQueueCount();
             }
         };
@@ -152,7 +157,7 @@ public class CollectionPropertiesJPanel
         } else {
             SwingUtilities.invokeLater( r );
         }
-        
+
     }
 
 
@@ -162,10 +167,7 @@ public class CollectionPropertiesJPanel
      *  hardly be interested in this detail.
      */
     public void updateQueueCount() {
-        if ( ! SwingUtilities.isEventDispatchThread() ) {
-            Tools.log( "Not on the EDT!");
-            Thread.dumpStack();
-        }
+        Tools.checkEDT();
         if ( Settings.writeLog ) {
             freeMemoryJLabel.setVisible( true );
             freeMemoryJLabel.setText( Tools.freeMemory() );

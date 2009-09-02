@@ -1,5 +1,6 @@
 package jpo.gui;
 
+import java.util.logging.Logger;
 import jpo.dataModel.Tools;
 import jpo.dataModel.Settings;
 import jpo.*;
@@ -10,7 +11,7 @@ import javax.swing.*;
 /*
 CameraDownloadWizardStep1.java: the first step in the download from Camera Wizard
 
-Copyright (C) 2007  Richard Eigenmann.
+Copyright (C) 2007 - 2009  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -30,6 +31,12 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  *  were found the Next button remains disabled and the user can only click the Cancel button.
  */
 public class CameraDownloadWizardStep1 extends AbstractStep {
+
+    /**
+     * Defines a logger for this class
+     */
+    private static Logger logger = Logger.getLogger( CameraDownloadWizardStep1.class.getName() );
+
 
     /**
      *  Constructor for the first step
@@ -52,9 +59,7 @@ public class CameraDownloadWizardStep1 extends AbstractStep {
      * @return
      */
     protected JComponent createComponent() {
-        if ( ! SwingUtilities.isEventDispatchThread() ) {
-            Tools.log ("CameraDownloadWizardStep1 is not on EDT!");
-        }
+        Tools.checkEDT();
         //return component shown to the user
         JPanel stepComponent = new JPanel();
         stepComponent.setLayout( new BoxLayout( stepComponent, BoxLayout.PAGE_AXIS ) );
@@ -95,7 +100,7 @@ public class CameraDownloadWizardStep1 extends AbstractStep {
 
 
         public void run() {
-            Tools.log( getClass().toString() + ".run: searching for the new pictures on the camera " + dataModel.getCamera().getDescription() );
+            logger.info( getClass().toString() + ".run: searching for the new pictures on the camera " + dataModel.getCamera().getDescription() );
             dataModel.setNewPictures( dataModel.getCamera().getNewPictures() );
 
             if ( dataModel.getNewPictures().size() > 0 ) {

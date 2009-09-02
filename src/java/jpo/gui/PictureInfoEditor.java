@@ -19,6 +19,7 @@ import java.text.*;
 import java.util.Iterator;
 import java.util.Vector;
 import java.util.Enumeration;
+import java.util.logging.Logger;
 
 /*
 PictureInfoEditor:  Edits the description of an image
@@ -52,7 +53,13 @@ public class PictureInfoEditor
         TreeModelListener,
         PictureInfoChangeListener,
         ListSelectionListener {
-    
+
+    /**
+     * Defines a logger for this class
+     */
+    private static Logger logger = Logger.getLogger( PictureInfoEditor.class.getName() );
+
+
     /**
      *   Thumbnail image
      */
@@ -237,7 +244,7 @@ public class PictureInfoEditor
         
         
         if ( ! ( editNode.getUserObject()instanceof PictureInfo ) ) {
-            Tools.log("PictureInfoEditor called on a non PictureInfo obejct! Rejected.");
+            logger.info("PictureInfoEditor called on a non PictureInfo obejct! Rejected.");
             return;
         }
         
@@ -383,7 +390,7 @@ public class PictureInfoEditor
                     public void insertUpdate( DocumentEvent e ) { parseit(); }
                     public void removeUpdate( DocumentEvent e ) { parseit(); }
                     private void parseit() {
-                        Tools.log ("parsing");
+                        logger.info ("parsing");
                         //parsedCreationTimeJLabel.setText( DateFormat.getDateTimeInstance().format( Tools.parseDate( creationTimeJTextField.getText() ) )  );
                     }
                 } ); */
@@ -704,11 +711,11 @@ public class PictureInfoEditor
             inputStream.close();
             highresLocationJTextField.setForeground( Color.black );
         } catch ( MalformedURLException x ) {
-            Tools.log( "MalformedURLException on " + pi.getHighresLocation() + x.getMessage() );
+            logger.info( "MalformedURLException on " + pi.getHighresLocation() + x.getMessage() );
             highresErrorJLabel.setText( "(MalformedURLException " + x.getMessage() + ")" );
             highresLocationJTextField.setForeground( Color.orange );
         } catch (IOException x) {
-            Tools.log("IOException on " + pi.getHighresLocation() + x.getMessage() );
+            logger.info("IOException on " + pi.getHighresLocation() + x.getMessage() );
             highresErrorJLabel.setText( "(IOException " + x.getMessage() + ")" );
             highresLocationJTextField.setForeground( Color.red );
         }
@@ -720,11 +727,11 @@ public class PictureInfoEditor
             inputStream.close();
             lowresLocationJTextField.setForeground( Color.black );
         } catch ( MalformedURLException x ) {
-            Tools.log( "MalformedURLException on " + pi.getLowresLocation() + x.getMessage() );
+            logger.info( "MalformedURLException on " + pi.getLowresLocation() + x.getMessage() );
             lowresErrorJLabel.setText( "(MalformedURLException  " + x.getMessage() + ")" );
             lowresLocationJTextField.setForeground( Color.orange );
         } catch (IOException x) {
-            Tools.log( "IOException on " + pi.getLowresLocation() + x.getMessage() );
+            logger.info( "IOException on " + pi.getLowresLocation() + x.getMessage() );
             lowresErrorJLabel.setText( "(IOException " + x.getMessage() + ")" );
             lowresLocationJTextField.setForeground( Color.red );
         }

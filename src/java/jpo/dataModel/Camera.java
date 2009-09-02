@@ -6,12 +6,13 @@ import jpo.gui.ProgressGui;
 import jpo.*;
 import java.io.*;
 import java.util.*;
+import java.util.logging.Logger;
 
 
 /*
 Camera.java:  information about the digital camera as seen by the filesystem
 
-Copyright (C) 2002-2009  Richard Eigenmann.
+Copyright (C) 2002 - 2009  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -33,22 +34,31 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 public class Camera implements Serializable {
 
     /**
+     * Defines a logger for this class
+     */
+    private static Logger logger = Logger.getLogger( Camera.class.getName() );
+
+    /**
      *  The description of the Camera
      **/
     private String description = Settings.jpoResources.getString( "newCamera" );
+
 
     public void setDescription( String newDescription ) {
         description = newDescription;
     }
 
+
     public String getDescription() {
         return description;
     }
+
     /**
      *  The mount point of the camera in the computer's file system.
      *  Could by E:\ in Windows /media/NIKON_D100 on Linux
      */
     private String cameraMountPoint = System.getProperty( "java.io.tmpdir" );
+
 
     /**
      *  This method returns the mount point of the camera in the computer's file system.
@@ -58,6 +68,7 @@ public class Camera implements Serializable {
         return cameraMountPoint;
     }
 
+
     /**
      *  This method sets the mount point of the camera in the computer's file system
      * @param newDir
@@ -65,36 +76,44 @@ public class Camera implements Serializable {
     public void setCameraMountPoint( String newDir ) {
         cameraMountPoint = newDir;
     }
+
     /**
      *  Indicator that tells the program to find new pictures based on filename if true.
      */
     private boolean useFilename = true;
 
+
     public boolean getUseFilename() {
         return useFilename;
     }
 
+
     public void setUseFilename( boolean useFilename ) {
         this.useFilename = useFilename;
     }
+
     /**
      *  This HashMap records the old images held on the camera so that we can determine
      *  which pictures are new.
      */
     private HashMap<File, Long> oldImage = new HashMap<File, Long>();
 
+
     public HashMap<File, Long> getOldImage() {
         return oldImage;
     }
 
+
     public void setOldImage( HashMap<File, Long> oldImage ) {
         this.oldImage = oldImage;
     }
+
     /**
      *  This HashMap is used temporarily when getting new pictures. It should be empty unless
      *  pictures are being loaded.
      */
     private HashMap<File, Long> newImage = new HashMap<File, Long>();
+
 
     /**
      *   toString method that returns the description of the camera
@@ -106,6 +125,7 @@ public class Camera implements Serializable {
         return description;
     }
 
+
     /**
      *   stores the checksum and file in the provided HashMap
      * @param hm
@@ -116,6 +136,7 @@ public class Camera implements Serializable {
         hm.put( f, new Long( checksum ) );
     }
 
+
     /**
      *   stores the checksum and file in the newImage HashMap
      * @param f
@@ -124,6 +145,7 @@ public class Camera implements Serializable {
     public void storePictureNewImage( File f, long checksum ) {
         storePicture( newImage, f, checksum );
     }
+
 
     /**
      *  returns whether the provided checksum or file is registered in the old camera image.
@@ -135,6 +157,7 @@ public class Camera implements Serializable {
         return inOldImage( f ) || inOldImage( checksum );
     }
 
+
     /**
      *  returns whether the provided checksum registered in the old camera image.
      *  it determines whether to check by checksum or file based on the useChecksum and useFilename
@@ -143,9 +166,10 @@ public class Camera implements Serializable {
      * @return
      */
     public boolean inOldImage( long checksum ) {
-        //Tools.log("Camera.inOldImage: Checking Checksum: " + Long.toString(checksum) );
+        //logger.info("Camera.inOldImage: Checking Checksum: " + Long.toString(checksum) );
         return getOldImage().containsValue( new Long( checksum ) );
     }
+
 
     /**
      *  returns whether the provided file is registered in the old camera image.
@@ -155,9 +179,10 @@ public class Camera implements Serializable {
      * @return
      */
     public boolean inOldImage( File f ) {
-        //Tools.log("Camera.inOldImage: Checking File: " + f.toString() );
+        //logger.info("Camera.inOldImage: Checking File: " + f.toString() );
         return getOldImage().containsKey( f );
     }
+
 
     /**
      *  copies the entry specified by the file in the oldImage HashMap to the newImage HashMap.
@@ -170,6 +195,7 @@ public class Camera implements Serializable {
         }
     }
 
+
     /**
      *   deletes all entries in the new Image.
      */
@@ -177,12 +203,14 @@ public class Camera implements Serializable {
         newImage.clear();
     }
 
+
     /**
      *   deletes all entries in the new Image.
      */
     public void zapOldImage() {
         getOldImage().clear();
     }
+
 
     /**
      * Returns the root directory of the camera or null if this is not a good
@@ -192,11 +220,12 @@ public class Camera implements Serializable {
     public File getRootDir() {
         File rootDir = new File( this.cameraMountPoint );
         if ( !rootDir.isDirectory() ) {
-            Tools.log( "Camera.buildOldImage was attempted on a non directory: " + this.cameraMountPoint );
+            logger.info( "Camera.buildOldImage was attempted on a non directory: " + this.cameraMountPoint );
             return null;
         }
         return rootDir;
     }
+
 
     /**
      * Returns the number of files the camera directory tree holds. This
@@ -207,6 +236,7 @@ public class Camera implements Serializable {
         return Tools.countfiles( getRootDir().listFiles() );
     }
 
+
     /**
      *   build a list of old image from the files on the camera-directory. This method
      *   creates a ProgressGui.
@@ -214,7 +244,7 @@ public class Camera implements Serializable {
     public void buildOldImage() {
         int count = countFiles();
         if ( count < 1 ) {
-            Tools.log( "Camera.buildOldImage was attempted for no files. Not building old image on camera as the camera is probably disconnected." );
+            logger.info( "Camera.buildOldImage was attempted for no files. Not building old image on camera as the camera is probably disconnected." );
             return;
         }
 
@@ -228,6 +258,7 @@ public class Camera implements Serializable {
         progGui.switchToDoneMode();
     }
 
+
     /**
      *   build a list of old image from the files on the camera-directory. This method
      *   notifies a ProgressListener if one is defined.
@@ -237,13 +268,14 @@ public class Camera implements Serializable {
     public void buildOldImage( ProgressListener progressListener, InterruptSemaphore interrupter ) {
         File rootDir = new File( this.cameraMountPoint );
         if ( !rootDir.isDirectory() ) {
-            Tools.log( "Camera.buildOldImage was attempted on a non directory: " + this.cameraMountPoint );
+            logger.info( "Camera.buildOldImage was attempted on a non directory: " + this.cameraMountPoint );
             return;
         }
         zapOldImage();
         buildOldImage(
                 rootDir.listFiles(), progressListener, interrupter );
     }
+
 
     /**
      *   this method recursively goes through the directories to identify the checksums
@@ -275,6 +307,7 @@ public class Camera implements Serializable {
         }
     }
 
+
     /**
      *  This method returns a collection of new pictures found on the camera not previously found there
      * @return
@@ -292,6 +325,7 @@ public class Camera implements Serializable {
 
         return getNewPicturesLoop( rootDir.listFiles(), newPics );
     }
+
 
     /**
      *  This method returns a collection of new pictures found on the camera not previously found there
@@ -316,6 +350,7 @@ public class Camera implements Serializable {
         return newFiles;
     }
 
+
     /**
      *  copies the entries in the newImage to the oldImage and zaps the new image.
      */
@@ -325,6 +360,7 @@ public class Camera implements Serializable {
 
     }
 
+
     /**
      *  counts the number of pictures for which a checksum is held in the HashMap
      * @return
@@ -332,6 +368,7 @@ public class Camera implements Serializable {
     public String getOldIndexCountAsString() {
         return Integer.toString( getOldImage().size() );
     }
+
 
     /**
      *  This method tries to find out if the camera is connected to the computer. It does this
@@ -351,10 +388,12 @@ public class Camera implements Serializable {
 
         return ( files.length > 0 );
     }
+
     /**
      *  Flag to tell the CameraWatchDaemon whether to monitor the camera or not.
      */
     private boolean monitorForNewPictures = false;
+
 
     /**
      *  returns whether to monitor for new Pictures
@@ -364,6 +403,7 @@ public class Camera implements Serializable {
         return monitorForNewPictures;
     }
 
+
     /**
      *  sets whether to monitor for new pictures
      * @param monitorForNewPictures 
@@ -371,10 +411,12 @@ public class Camera implements Serializable {
     public void setMonitorForNewPictures( boolean monitorForNewPictures ) {
         this.monitorForNewPictures = monitorForNewPictures;
     }
+
     /**
      *  This variable tracks the last connection status
      */
     private boolean lastConnectionStatus = false;
+
 
     /**
      *  Sets the last connection status.
@@ -385,6 +427,7 @@ public class Camera implements Serializable {
     public void setLastConnectionStatus( boolean newStatus ) {
         lastConnectionStatus = newStatus;
     }
+
 
     /**
      *  Returns the last connection status.
