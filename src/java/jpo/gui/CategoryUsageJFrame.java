@@ -17,6 +17,7 @@ import jpo.dataModel.SortableDefaultMutableTreeNode;
 import jpo.*;
 import javax.swing.*;
 import java.util.*;
+import java.util.logging.Logger;
 import jpo.dataModel.Category;
 import jpo.dataModel.PictureInfo;
 
@@ -49,10 +50,20 @@ public class CategoryUsageJFrame extends JFrame {
      *  the entry field that allows a new category to be added
      */
     private JTextField categoryJTextField = new JTextField();
+
     private DefaultListModel listModel;
+
     private final CategoryJScrollPane categoryJScrollPane;
+
     private Vector<SortableDefaultMutableTreeNode> selectedNodes = null;
+
     final JLabel numberOfPicturesJLabel = new JLabel( "" );
+
+    /**
+     * Defines a logger for this class
+     */
+    private static Logger logger = Logger.getLogger( CategoryUsageJFrame.class.getName() );
+
 
     /**
      *  Creates a GUI to edit the categories of the collection
@@ -184,6 +195,7 @@ public class CategoryUsageJFrame extends JFrame {
         EventQueue.invokeLater( runner );
     }
 
+
     /**
      *  method that closes te frame and gets rid of it
      */
@@ -191,6 +203,7 @@ public class CategoryUsageJFrame extends JFrame {
         setVisible( false );
         dispose();
     }
+
 
     /**
      *  This method receives the selection the Category Editor is working on
@@ -200,6 +213,7 @@ public class CategoryUsageJFrame extends JFrame {
         selectedNodes = nodes;
         updateCategories();
     }
+
 
     /**
      *  This method receives the selection the Category Editor is to work on. Here we
@@ -216,23 +230,24 @@ public class CategoryUsageJFrame extends JFrame {
             if ( n.getUserObject() instanceof PictureInfo ) {
                 selectedNodes.add( n );
             } else if ( ( n.getUserObject() instanceof GroupInfo ) && recurse ) {
-                Tools.log( "recurse not currently implemented" );
+                logger.info( "recurse not currently implemented" );
             }
         }
         updateCategories();
     }
 
+
     /**
      *  This method reads the nodes and sets the categories accordingly
      */
     public void updateCategories() {
-        //Tools.log("Reading categories...");
+        //logger.info("Reading categories...");
         numberOfPicturesJLabel.setText( Integer.toString( selectedNodes.size() ) + Settings.jpoResources.getString( "numberOfPicturesJLabel" ) );
 
         categoryJScrollPane.loadCategories();
 
         if ( selectedNodes == null ) {
-            Tools.log( "selectedNodes is null!" );
+            logger.info( "selectedNodes is null!" );
             return;
         }
 
@@ -241,7 +256,7 @@ public class CategoryUsageJFrame extends JFrame {
         Enumeration categoryEnumeration = listModel.elements();
         while ( categoryEnumeration.hasMoreElements() ) {
             c = (Category) categoryEnumeration.nextElement();
-            Tools.log( "Setting Status to undefined on Category: " + c.getKey().toString() + " " + c.toString() );
+            logger.info( "Setting Status to undefined on Category: " + c.getKey().toString() + " " + c.toString() );
             c.setStatus( Category.undefined );
             // force screen update:
             listModel.setElementAt( c, listModel.indexOf( c ) );
@@ -259,7 +274,7 @@ public class CategoryUsageJFrame extends JFrame {
         categoryEnumeration = listModel.elements();
         while ( categoryEnumeration.hasMoreElements() ) {
             c = (Category) categoryEnumeration.nextElement();
-            Tools.log( "Checking Category: " + c.getKey().toString() + " " + c.toString() );
+            logger.info( "Checking Category: " + c.getKey().toString() + " " + c.toString() );
 
             pictureNodes = selectedNodes.elements();
             while ( pictureNodes.hasMoreElements() ) {
@@ -268,7 +283,7 @@ public class CategoryUsageJFrame extends JFrame {
                     pi = (PictureInfo) myObject;
                     if ( pi.containsCategory( c.getKey() ) ) {
                         currentStatus = c.getStatus();
-                        Tools.log( "Status of category is: " + Integer.toString( currentStatus ) );
+                        logger.info( "Status of category is: " + Integer.toString( currentStatus ) );
                         if ( currentStatus == Category.undefined ) {
                             c.setStatus( Category.selected );
                             // force screen update:
@@ -278,11 +293,11 @@ public class CategoryUsageJFrame extends JFrame {
                             // force screen update:
                             listModel.setElementAt( c, listModel.indexOf( c ) );
                         }
-                    // ignore status both and selected as we would only be adding to that
+                        // ignore status both and selected as we would only be adding to that
                     } else {
                         // we get here if there was no category match
                         currentStatus = c.getStatus();
-                        Tools.log( "Status of category is: " + Integer.toString( currentStatus ) );
+                        logger.info( "Status of category is: " + Integer.toString( currentStatus ) );
                         if ( currentStatus == Category.undefined ) {
                             c.setStatus( Category.unSelected );
                             // force screen update:
@@ -292,12 +307,13 @@ public class CategoryUsageJFrame extends JFrame {
                             // force screen update:
                             listModel.setElementAt( c, listModel.indexOf( c ) );
                         }
-                    // ignore status unselected and both as nothing would change
+                        // ignore status unselected and both as nothing would change
                     }
                 }
             }
         }
     }
+
 
     /**
      *  This method updates the selected pictures with the new category classification.
@@ -329,7 +345,7 @@ public class CategoryUsageJFrame extends JFrame {
 
         // update the selected pictures
         if ( selectedNodes == null ) {
-            Tools.log( "CategoryUsageJFrame.storeSelection: called with a null selection. Aborting." );
+            logger.info( "CategoryUsageJFrame.storeSelection: called with a null selection. Aborting." );
             return;
         }
         PictureInfo pi;
@@ -352,10 +368,12 @@ public class CategoryUsageJFrame extends JFrame {
             }
         }
     }
+
     /**
      *  This Vector holds references to categoryGuiListeners
      */
     protected Vector<CategoryGuiListenerInterface> categoryGuiListeners = new Vector<CategoryGuiListenerInterface>();
+
 
     /**
      *  This method registers the categoryGuiListener
@@ -364,6 +382,7 @@ public class CategoryUsageJFrame extends JFrame {
     public void addCategoryGuiListener( CategoryGuiListenerInterface listener ) {
         categoryGuiListeners.add( listener );
     }
+
 
     /**
      *  This method deregisters the categoryGuiListener

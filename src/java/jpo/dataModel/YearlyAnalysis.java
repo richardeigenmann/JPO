@@ -6,6 +6,7 @@ import java.util.Enumeration;
 import java.util.TreeMap;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Logger;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 /*
@@ -45,6 +46,11 @@ public class YearlyAnalysis implements Serializable {
      */
     private final boolean includeNonParsable = false;
 
+    /**
+     * Defines a logger for this class
+     */
+    private static Logger logger = Logger.getLogger( YearlyAnalysis.class.getName() );
+
 
     /**
      * Constructor for a YearlyAnalysis Object. Create it with a startNode and
@@ -54,7 +60,7 @@ public class YearlyAnalysis implements Serializable {
     public YearlyAnalysis( DefaultMutableTreeNode startNode ) {
         this.startNode = startNode;
         buildMaps();
-    //System.out.println( toString() );
+        logger.fine( toString() );
     }
 
     /**
@@ -82,7 +88,7 @@ public class YearlyAnalysis implements Serializable {
                         // TODO: add the nodes to a catchall node.
                     }
                 } else {
-                    //Tools.log( "IntegrityChecker.checkDates:" + pi.getFormattedCreationTime() + " from " + pi.getCreationTime() + " from Node: " + pi.getDescription() );
+                    logger.fine( "IntegrityChecker.checkDates:" + pi.getFormattedCreationTime() + " from " + pi.getCreationTime() + " from Node: " + pi.getDescription() );
                     cal = pi.getCreationTimeAsDate();
                     if ( cal != null ) {
                         int year = cal.get( Calendar.YEAR );
@@ -102,7 +108,7 @@ public class YearlyAnalysis implements Serializable {
                             maxNodes = nodes.size();
                         }
                         monthMap.put( month, nodes );
-                    //System.out.printf( "Picture %s date %tc has year %d month %d\n", pi.getHighresFilename(), cal, year, month );
+                        //System.out.printf( "Picture %s date %tc has year %d month %d\n", pi.getHighresFilename(), cal, year, month );
                     }
                 }
             }
@@ -165,11 +171,11 @@ public class YearlyAnalysis implements Serializable {
      * @return The number of nodes in a month of the year
      */
     public int getMonthNodeCount( Integer year, Integer month ) {
-        //System.out.println( year +  "  " + month );
+        logger.fine( year +  "  " + month );
         try {
             return getNodes( year, month ).size();
         } catch ( NullPointerException ex ) {
-            Tools.log( "Got a NPE on Year " + year + " Month " + month );
+            logger.info( "Got a NPE on Year " + year + " Month " + month );
             return 0;
         }
     }

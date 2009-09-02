@@ -6,6 +6,7 @@ import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.Serializable;
+import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -36,6 +37,11 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 public class YearsBrowserController implements Serializable {
 
     private YearlyAnalysis ya;
+
+    /**
+     * Defines a logger for this class
+     */
+    private static Logger logger = Logger.getLogger( YearsBrowserController.class.getName() );
 
 
     /**
@@ -85,7 +91,7 @@ public class YearsBrowserController implements Serializable {
             addActionListener( new ActionListener() {
 
                 public void actionPerformed( ActionEvent e ) {
-                    Tools.log( Integer.toString( year ) );
+                    logger.info( Integer.toString( year ) );
                 }
             } );
             setBackground( GradientColor.getColor( GradientColor.BLACK_WHITE_COLORS, (double) count / ya.maxNodesPerMonthInAllYears() ) );

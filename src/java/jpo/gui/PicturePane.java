@@ -15,6 +15,7 @@ import javax.swing.event.*;
 import java.text.*;
 import java.util.Vector;
 import java.util.Enumeration;
+import java.util.logging.Logger;
 
 
 /*
@@ -114,7 +115,10 @@ public class PicturePane extends JComponent implements ScalablePictureListener {
      *  class to format the scale
      */
     private DecimalFormat twoDecimalFormatter = new DecimalFormat("###0.00");
-
+    /**
+     * Defines a logger for this class
+     */
+    private static Logger logger = Logger.getLogger( PicturePane.class.getName() );
     /**
      *   Constructor
      **/
@@ -157,7 +161,7 @@ public class PicturePane extends JComponent implements ScalablePictureListener {
      *  @param pi  The PicutreInfo object that should be displayed
      */
     public void setPicture(PictureInfo pi) {
-        Tools.log("PicturePane.setPicture: called on PictureInfo: " + pi.toString());
+        logger.fine("PicturePane.setPicture: called on PictureInfo: " + pi.toString());
         URL pictureURL;
         String description;
         double rotation = 0;
@@ -166,7 +170,7 @@ public class PicturePane extends JComponent implements ScalablePictureListener {
             description = pi.getDescription();
             rotation = pi.getRotation();
         } catch (MalformedURLException x) {
-            Tools.log("PicturePane.changePicture: MarformedURLException trapped on: " + pi.getHighresLocation() + "\nReason: " + x.getMessage());
+            logger.warning("PicturePane.changePicture: MarformedURLException trapped on: " + pi.getHighresLocation() + "\nReason: " + x.getMessage());
             return;
         }
         setPicture(pictureURL, description, rotation);
@@ -297,7 +301,7 @@ public class PicturePane extends JComponent implements ScalablePictureListener {
             focusPoint.y = focusPoint.y + (int) (getSize().height * 0.1 / sclPic.getScaleFactor());
             repaint();
         } else {
-            Tools.log("PicturePane.scrollUp rejected because bottom of picture is already showing.");
+            logger.warning("PicturePane.scrollUp rejected because bottom of picture is already showing.");
         }
     }
 
@@ -316,7 +320,7 @@ public class PicturePane extends JComponent implements ScalablePictureListener {
             focusPoint.y = focusPoint.y - (int) (getSize().height * 0.1 / sclPic.getScaleFactor());
             repaint();
         } else {
-            Tools.log("PicturePane.scrollDown rejected because top edge is aready visible");
+            logger.warning("PicturePane.scrollDown rejected because top edge is aready visible");
         }
     }
 
@@ -336,7 +340,7 @@ public class PicturePane extends JComponent implements ScalablePictureListener {
             focusPoint.x = focusPoint.x + (int) (getSize().width * 0.1 / sclPic.getScaleFactor());
             repaint();
         } else {
-            Tools.log("PicturePane.scrollLeft rejected because right edge of picture is already showing.");
+            logger.warning("PicturePane.scrollLeft rejected because right edge of picture is already showing.");
         }
     }
 
@@ -355,7 +359,7 @@ public class PicturePane extends JComponent implements ScalablePictureListener {
             focusPoint.x = focusPoint.x - (int) (getSize().width * 0.1 / sclPic.getScaleFactor());
             repaint();
         } else {
-            Tools.log("PicturePane.scrollRight rejected because left edge is aready visible");
+            logger.warning("PicturePane.scrollRight rejected because left edge is aready visible");
         }
     }
 
@@ -458,7 +462,7 @@ public class PicturePane extends JComponent implements ScalablePictureListener {
          */
         @Override
         public void mouseClicked(MouseEvent e) {
-            //Tools.log("PicturePane.mouseClicked");
+            logger.fine("PicturePane.mouseClicked");
             if (e.getButton() == 3) {
                 // Right Mousebutton zooms out
                 centerWhenScaled = false;
@@ -494,7 +498,7 @@ public class PicturePane extends JComponent implements ScalablePictureListener {
         public void mouseDragged(MouseEvent e) {
             if (!Dragging) {
                 // Switch into dragging mode and record current coordinates
-                //Tools.log("PicturePane.mouseDragged: Switching to drag mode.");
+                logger.fine("PicturePane.mouseDragged: Switching to drag mode.");
                 last_x = e.getX();
                 last_y = e.getY();
 
@@ -522,7 +526,7 @@ public class PicturePane extends JComponent implements ScalablePictureListener {
          */
         @Override
         public void mouseReleased(MouseEvent e) {
-            //Tools.log("PicturePane.mouseReleased.");
+            logger.fine("PicturePane.mouseReleased.");
             if (Dragging) {
                 //Dragging has ended
                 Dragging = false;
@@ -577,17 +581,17 @@ public class PicturePane extends JComponent implements ScalablePictureListener {
      * @param pictureStatusMessage
      */
     public void scalableStatusChange(int pictureStatusCode, String pictureStatusMessage) {
-        //Tools.log("PicturePane.scalableStatusChange: got a status change: " + pictureStatusMessage);
+        logger.fine("PicturePane.scalableStatusChange: got a status change: " + pictureStatusMessage);
 
         if (pictureStatusCode == ScalablePicture.READY) {
-            //Tools.log("PicturePane.scalableStatusChange: a READY status");
+            logger.fine("PicturePane.scalableStatusChange: a READY status");
             //pictureStatusMessage = legend;
             pictureStatusMessage = Settings.jpoResources.getString("PicturePaneReadyStatus");
             if (centerWhenScaled) {
-                //Tools.log("PicturePane.scalableStatusChange: centering image");
+                logger.fine("PicturePane.scalableStatusChange: centering image");
                 centerImage();
             }
-            //Tools.log("PicturePane.scalableStatusChange: forcing Panel repaint");
+            logger.fine("PicturePane.scalableStatusChange: forcing Panel repaint");
             repaint();
         }
 
@@ -645,7 +649,7 @@ public class PicturePane extends JComponent implements ScalablePictureListener {
      */
     @Override
     public void finalize() {
-        //Tools.log("PicturePane.finalize: called");
+        logger.fine("PicturePane.finalize: called");
         sclPic = null;
     }
 }

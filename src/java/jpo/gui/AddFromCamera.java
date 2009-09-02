@@ -10,12 +10,13 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import java.util.*;
+import java.util.logging.Logger;
 
 /*
 AddFromCamera.java:
 a class that creates a GUI and then adds the pictures from the camera to your collection.
  
-Copyright (C) 2002-2007 Richard Eigenmann.
+Copyright (C) 2002-2009 Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -40,7 +41,10 @@ public class AddFromCamera
         extends 	JFrame
         implements 	ActionListener, CategoryGuiListenerInterface {
     
-    
+     /**
+     * Defines a logger for this class
+     */
+    private static Logger logger = Logger.getLogger( AddFromCamera.class.getName() );
     
     /**
      *  The name of the camera
@@ -329,7 +333,7 @@ public class AddFromCamera
      *   @param  selectedCategories Categories that are applied to the loaded pictures.
      */
     public static void addPictures( SortableDefaultMutableTreeNode rootNode, Camera cam, File targetDir, boolean newPictures, boolean missingPictures, boolean retainDirectories, HashSet<Object> selectedCategories ) {
-        Tools.log("AddFromCamera.addPictures: running");
+        logger.info("AddFromCamera.addPictures: running");
         File sourceDir = new File( cam.getCameraMountPoint() );
         // give the OS time to mount properly:
         // try { sleep (1000); } catch ( InterruptedException x) {}
@@ -351,13 +355,13 @@ public class AddFromCamera
         
         SortableDefaultMutableTreeNode newNode = null;
         if ( newPictures ) {
-            Tools.log("AddFromCamera.addPictures: only new pictures should be loaded from camera");
+            logger.info("AddFromCamera.addPictures: only new pictures should be loaded from camera");
             newNode = rootNode.copyAddPictures( sourceDir, targetDir, groupName, cam, retainDirectories, selectedCategories );
         } else if ( missingPictures ) {
-            Tools.log("AddFromCamera.addPictures: only missing pictures should be loaded from camera");
+            logger.info("AddFromCamera.addPictures: only missing pictures should be loaded from camera");
             newNode = rootNode.copyAddPictures( sourceDir, targetDir, groupName, true, retainDirectories, selectedCategories );
         } else {
-            Tools.log("AddFromCamera.addPictures: AllPictures should be loaded from camera");
+            logger.info("AddFromCamera.addPictures: AllPictures should be loaded from camera");
             newNode = rootNode.copyAddPictures( sourceDir, targetDir, groupName, false, retainDirectories, selectedCategories  );
         }
         

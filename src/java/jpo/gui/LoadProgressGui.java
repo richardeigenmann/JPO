@@ -17,6 +17,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
+import jpo.dataModel.Tools;
 
 /**
  *  Constructor for a progress GUI for the XML reader
@@ -61,11 +62,7 @@ public class LoadProgressGui {
 
 
     private void initComponents() {
-        if ( !SwingUtilities.isEventDispatchThread() ) {
-            System.out.println( "LoadProgressGui is running not running on EDT this is bad" );
-        }
-
-
+        Tools.checkEDT();
 
         frame = new JFrame();
 

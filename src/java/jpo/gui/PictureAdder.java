@@ -11,6 +11,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.util.HashSet;
+import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
@@ -49,22 +50,23 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 public class PictureAdder implements PropertyChangeListener {
 
     /**
+     * Defines a logger for this class
+     */
+    private static Logger logger = Logger.getLogger(PictureAdder.class.getName());
+    /**
      *  Checkbox that allows the user to specify that pictures already
      *  in the collection should be ignored.
      */
-    private JCheckBox showThumbnailJCheckBox = new JCheckBox( Settings.jpoResources.getString( "showThumbnailJCheckBox" ) );
-
+    private JCheckBox showThumbnailJCheckBox = new JCheckBox(Settings.jpoResources.getString("showThumbnailJCheckBox"));
     /**
      *  This component shows the thumbnail. It is a JLabel as we can thus use the
      *  ImageIcon to display the pciture.
      */
     private JLabel thumbnailJLabel = new JLabel();
-
     /**
      *  preferred size of accessory panel
      */
-    private static final Dimension OPTIONS_PANEL_DIMENSION = new Dimension( 200, 180 );
-
+    private static final Dimension OPTIONS_PANEL_DIMENSION = new Dimension(200, 180);
 
     /**
      *  Constructor for a PictureAdder. It creates a JFilechooser GUI and then fires off a
@@ -73,76 +75,76 @@ public class PictureAdder implements PropertyChangeListener {
      *  @param  startNode   The node to which the selected pictures are to be added.
      *                      It must be a GroupInfo Node.
      */
-    public PictureAdder( final SortableDefaultMutableTreeNode startNode ) {
-        if ( !SwingUtilities.isEventDispatchThread() ) {
-            System.out.println( "PictureAdder Constructor is not on EDT" );
+    public PictureAdder(final SortableDefaultMutableTreeNode startNode) {
+        if (!SwingUtilities.isEventDispatchThread()) {
+            logger.severe("PictureAdder Constructor is not on EDT");
         }
 
-        if ( !( startNode.getUserObject() instanceof GroupInfo ) ) {
+        if (!(startNode.getUserObject() instanceof GroupInfo)) {
             JOptionPane.showMessageDialog(
                     Settings.anchorFrame,
-                    Settings.jpoResources.getString( "notGroupInfo" ),
-                    Settings.jpoResources.getString( "genericError" ),
-                    JOptionPane.ERROR_MESSAGE );
+                    Settings.jpoResources.getString("notGroupInfo"),
+                    Settings.jpoResources.getString("genericError"),
+                    JOptionPane.ERROR_MESSAGE);
             return;
         }
 
         //  Checkbox that allows the user to specifiy whether pictures in the subdirectories should be added or not.
-        final JCheckBox recurseJCheckBox = new JCheckBox( Settings.jpoResources.getString( "recurseJCheckBox" ) );
-        recurseJCheckBox.setSelected( true );
+        final JCheckBox recurseJCheckBox = new JCheckBox(Settings.jpoResources.getString("recurseJCheckBox"));
+        recurseJCheckBox.setSelected(true);
 
         //  Checkbox that allows the user to specify that pictures already in the collection should be ignored.
-        final JCheckBox newOnlyJCheckBox = new JCheckBox( Settings.jpoResources.getString( "newOnlyJCheckBox" ) );
-        newOnlyJCheckBox.setSelected( true );
+        final JCheckBox newOnlyJCheckBox = new JCheckBox(Settings.jpoResources.getString("newOnlyJCheckBox"));
+        newOnlyJCheckBox.setSelected(true);
 
-        showThumbnailJCheckBox.setSelected( Settings.showThumbOnFileChooser );
+        showThumbnailJCheckBox.setSelected(Settings.showThumbOnFileChooser);
 
         // Checkbox that allows the user to specifiy whether directory structures should be retained
-        final JCheckBox retainDirectoriesJCheckBox = new JCheckBox( Settings.jpoResources.getString( "retainDirectoriesJCheckBox" ) );
-        retainDirectoriesJCheckBox.setSelected( true );
+        final JCheckBox retainDirectoriesJCheckBox = new JCheckBox(Settings.jpoResources.getString("retainDirectoriesJCheckBox"));
+        retainDirectoriesJCheckBox.setSelected(true);
 
 
         JPanel optionsJPanel = new JPanel();
-        optionsJPanel.setLayout( new BoxLayout( optionsJPanel, BoxLayout.Y_AXIS ) );
-        optionsJPanel.add( recurseJCheckBox, BorderLayout.WEST );
-        optionsJPanel.add( newOnlyJCheckBox, BorderLayout.WEST );
-        optionsJPanel.add( showThumbnailJCheckBox, BorderLayout.WEST );
-        optionsJPanel.add( retainDirectoriesJCheckBox, BorderLayout.WEST );
-        optionsJPanel.setPreferredSize( OPTIONS_PANEL_DIMENSION );
-        thumbnailJLabel.setPreferredSize( OPTIONS_PANEL_DIMENSION );
+        optionsJPanel.setLayout(new BoxLayout(optionsJPanel, BoxLayout.Y_AXIS));
+        optionsJPanel.add(recurseJCheckBox, BorderLayout.WEST);
+        optionsJPanel.add(newOnlyJCheckBox, BorderLayout.WEST);
+        optionsJPanel.add(showThumbnailJCheckBox, BorderLayout.WEST);
+        optionsJPanel.add(retainDirectoriesJCheckBox, BorderLayout.WEST);
+        optionsJPanel.setPreferredSize(OPTIONS_PANEL_DIMENSION);
+        thumbnailJLabel.setPreferredSize(OPTIONS_PANEL_DIMENSION);
 
         final CategoryJScrollPane categoryJScrollPane = new CategoryJScrollPane();
         categoryJScrollPane.loadCategories();
 
 
         JTabbedPane tabbedPane = new JTabbedPane();
-        tabbedPane.setBorder( BorderFactory.createEmptyBorder( 0, 5, 0, 0 ) );
-        tabbedPane.add( Settings.jpoResources.getString( "pictureAdderOptionsTab" ), optionsJPanel );
-        tabbedPane.add( Settings.jpoResources.getString( "pictureAdderThumbnailTab" ), thumbnailJLabel );
-        tabbedPane.add( Settings.jpoResources.getString( "pictureAdderCategoryTab" ), categoryJScrollPane );
+        tabbedPane.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 0));
+        tabbedPane.add(Settings.jpoResources.getString("pictureAdderOptionsTab"), optionsJPanel);
+        tabbedPane.add(Settings.jpoResources.getString("pictureAdderThumbnailTab"), thumbnailJLabel);
+        tabbedPane.add(Settings.jpoResources.getString("pictureAdderCategoryTab"), categoryJScrollPane);
 
 
         JFileChooser jFileChooser = new JFileChooser();
 
-        jFileChooser.setFileSelectionMode( JFileChooser.FILES_AND_DIRECTORIES );
-        jFileChooser.setMultiSelectionEnabled( true );
-        jFileChooser.setApproveButtonText( Settings.jpoResources.getString( "fileChooserAddButtonLabel" ) );
-        jFileChooser.setDialogTitle( Settings.jpoResources.getString( "PictureAdderDialogTitle" ) );
-        jFileChooser.setAccessory( tabbedPane );
-        jFileChooser.setCurrentDirectory( Settings.getMostRecentCopyLocation() );
-        jFileChooser.addPropertyChangeListener( this );
+        jFileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+        jFileChooser.setMultiSelectionEnabled(true);
+        jFileChooser.setApproveButtonText(Settings.jpoResources.getString("fileChooserAddButtonLabel"));
+        jFileChooser.setDialogTitle(Settings.jpoResources.getString("PictureAdderDialogTitle"));
+        jFileChooser.setAccessory(tabbedPane);
+        jFileChooser.setCurrentDirectory(Settings.getMostRecentCopyLocation());
+        jFileChooser.addPropertyChangeListener(this);
 
-        if ( jFileChooser.showOpenDialog( Settings.anchorFrame ) == JFileChooser.APPROVE_OPTION ) {
+        if (jFileChooser.showOpenDialog(Settings.anchorFrame) == JFileChooser.APPROVE_OPTION) {
             final File[] chosenFiles = jFileChooser.getSelectedFiles();
-            Settings.memorizeCopyLocation( jFileChooser.getCurrentDirectory().getPath() );
+            Settings.memorizeCopyLocation(jFileChooser.getCurrentDirectory().getPath());
 
             Thread t = new Thread() {
 
                 @Override
                 public void run() {
-                    SortableDefaultMutableTreeNode displayNode = addPictures( startNode, chosenFiles, newOnlyJCheckBox.isSelected(), recurseJCheckBox.isSelected(), retainDirectoriesJCheckBox.isSelected(), categoryJScrollPane.getSelectedCategories() );
-                    if ( target != null ) {
-                        target.requestShowGroup( displayNode );
+                    SortableDefaultMutableTreeNode displayNode = addPictures(startNode, chosenFiles, newOnlyJCheckBox.isSelected(), recurseJCheckBox.isSelected(), retainDirectoriesJCheckBox.isSelected(), categoryJScrollPane.getSelectedCategories());
+                    if (target != null) {
+                        target.requestShowGroup(displayNode);
                         displayNode.refreshThumbnail();
                     }
                 }
@@ -152,7 +154,6 @@ public class PictureAdder implements PropertyChangeListener {
             Settings.showThumbOnFileChooser = showThumbnailJCheckBox.isSelected();
         }
     }
-
 
     /**
      *  Adds the indicated files to the current node if they are valid pictures. If the newOnly
@@ -167,28 +168,28 @@ public class PictureAdder implements PropertyChangeListener {
      *  @param selectedCategories
      *  @return In case this is of interest to the caller we return here the node to be displayed; null if no pictures were added.
      */
-    public static SortableDefaultMutableTreeNode addPictures( SortableDefaultMutableTreeNode startNode, File[] chosenFiles, boolean newOnly, boolean recurseDirectories, boolean retainDirectories, HashSet<Object> selectedCategories ) {
-        final ProgressGui progGui = new ProgressGui( Tools.countfiles( chosenFiles ),
-                Settings.jpoResources.getString( "PictureAdderProgressDialogTitle" ),
-                Settings.jpoResources.getString( "picturesAdded" ) );
-        Settings.pictureCollection.setSendModelUpdates( false );
+    public static SortableDefaultMutableTreeNode addPictures(SortableDefaultMutableTreeNode startNode, File[] chosenFiles, boolean newOnly, boolean recurseDirectories, boolean retainDirectories, HashSet<Object> selectedCategories) {
+        final ProgressGui progGui = new ProgressGui(Tools.countfiles(chosenFiles),
+                Settings.jpoResources.getString("PictureAdderProgressDialogTitle"),
+                Settings.jpoResources.getString("picturesAdded"));
+        Settings.pictureCollection.setSendModelUpdates(false);
 
         SortableDefaultMutableTreeNode displayNode = null;
         SortableDefaultMutableTreeNode addedNode = null;
 
         // add all the files from the array as nodes to the start node.
-        for ( int i = 0; ( i < chosenFiles.length ) && ( !progGui.getInterruptor().getShouldInterrupt() ); i++ ) {
+        for (int i = 0; (i < chosenFiles.length) && (!progGui.getInterruptor().getShouldInterrupt()); i++) {
             File addFile = chosenFiles[i];
-            if ( !addFile.isDirectory() ) {
+            if (!addFile.isDirectory()) {
                 // the file is not a directory
-                if ( startNode.addSinglePicture( addFile, newOnly, selectedCategories ) ) {
+                if (startNode.addSinglePicture(addFile, newOnly, selectedCategories)) {
                     Runnable r = new Runnable() {
 
                         public void run() {
                             progGui.progressIncrement();
                         }
                     };
-                    SwingUtilities.invokeLater( r );
+                    SwingUtilities.invokeLater(r);
                 } else {
                     // addSinglePicture failed
                     Runnable r = new Runnable() {
@@ -197,31 +198,30 @@ public class PictureAdder implements PropertyChangeListener {
                             progGui.decrementTotal();
                         }
                     };
-                    SwingUtilities.invokeLater( r );
+                    SwingUtilities.invokeLater(r);
 
                 }
             } else {
                 // the file is a directory
-                if ( Tools.hasPictures( addFile ) ) {
-                    addedNode = addDirectory( startNode, addFile, newOnly, recurseDirectories, retainDirectories, progGui, selectedCategories );
-                    if ( displayNode == null ) {
+                if (Tools.hasPictures(addFile)) {
+                    addedNode = addDirectory(startNode, addFile, newOnly, recurseDirectories, retainDirectories, progGui, selectedCategories);
+                    if (displayNode == null) {
                         displayNode = addedNode;
                     }
                 } else {
-                    Tools.log( "PictureAdder.run: no pictures in directory " + addFile.toString() );
+                    logger.info("PictureAdder.run: no pictures in directory " + addFile.toString());
                 }
             }
         }
-        Settings.pictureCollection.setSendModelUpdates( true );
-        Settings.pictureCollection.sendNodeStructureChanged( startNode );
+        Settings.pictureCollection.setSendModelUpdates(true);
+        Settings.pictureCollection.sendNodeStructureChanged(startNode);
 
         progGui.switchToDoneMode();
-        if ( displayNode == null ) {
+        if (displayNode == null) {
             displayNode = startNode;
         }
         return displayNode;
     }
-
 
     /**
      *  method that is invoked recursively on each directory encountered. It adds
@@ -231,31 +231,31 @@ public class PictureAdder implements PropertyChangeListener {
      *  @param retainDirectories  indicates whether to preserve the directory structure
      *  @return returns the node that was added or null if none was.
      */
-    private static SortableDefaultMutableTreeNode addDirectory( SortableDefaultMutableTreeNode startNode, File dir, boolean newOnly, boolean recurseDirectories, boolean retainDirectories, final ProgressGui progGui, HashSet<Object> selectedCategories ) {
+    private static SortableDefaultMutableTreeNode addDirectory(SortableDefaultMutableTreeNode startNode, File dir, boolean newOnly, boolean recurseDirectories, boolean retainDirectories, final ProgressGui progGui, HashSet<Object> selectedCategories) {
         SortableDefaultMutableTreeNode newNode;
-        if ( retainDirectories ) {
-            newNode = new SortableDefaultMutableTreeNode( new GroupInfo( dir.getName() ) );
-            startNode.add( newNode );
+        if (retainDirectories) {
+            newNode = new SortableDefaultMutableTreeNode(new GroupInfo(dir.getName()));
+            startNode.add(newNode);
             Settings.pictureCollection.setUnsavedUpdates();
         } else {
             newNode = startNode;
         }
 
         File[] fileArray = dir.listFiles();
-        for ( int i = 0; ( i < fileArray.length ) && ( !progGui.getInterruptor().getShouldInterrupt() ); i++ ) {
-            if ( fileArray[i].isDirectory() && recurseDirectories ) {
-                if ( Tools.hasPictures( fileArray[i] ) ) {
-                    newNode = addDirectory( newNode, fileArray[i], newOnly, recurseDirectories, retainDirectories, progGui, selectedCategories );
+        for (int i = 0; (i < fileArray.length) && (!progGui.getInterruptor().getShouldInterrupt()); i++) {
+            if (fileArray[i].isDirectory() && recurseDirectories) {
+                if (Tools.hasPictures(fileArray[i])) {
+                    newNode = addDirectory(newNode, fileArray[i], newOnly, recurseDirectories, retainDirectories, progGui, selectedCategories);
                 }
             } else {
-                if ( newNode.addSinglePicture( fileArray[i], newOnly, selectedCategories ) ) {
+                if (newNode.addSinglePicture(fileArray[i], newOnly, selectedCategories)) {
                     Runnable r = new Runnable() {
 
                         public void run() {
                             progGui.progressIncrement();
                         }
                     };
-                    SwingUtilities.invokeLater( r );
+                    SwingUtilities.invokeLater(r);
                 } else {
                     Runnable r = new Runnable() {
 
@@ -263,19 +263,18 @@ public class PictureAdder implements PropertyChangeListener {
                             progGui.decrementTotal();
                         }
                     };
-                    SwingUtilities.invokeLater( r );
+                    SwingUtilities.invokeLater(r);
                 }
             }
         }
         // it can happen that we end up adding no pictures and could be returning a new empty group
-        if ( retainDirectories && ( newNode.getChildCount() == 0 ) ) {
+        if (retainDirectories && (newNode.getChildCount() == 0)) {
             newNode.deleteNode();
             return startNode;
         } else {
             return newNode;
         }
     }
-
 
     /**
      *  This method is invoked from the FileChooser and creates the thumbnail.
@@ -284,47 +283,45 @@ public class PictureAdder implements PropertyChangeListener {
      *  Preview panels in the JFileChooser.
      * @param changeEvent
      */
-    public void propertyChange( PropertyChangeEvent changeEvent ) {
+    public void propertyChange(PropertyChangeEvent changeEvent) {
         String changeName = changeEvent.getPropertyName();
-        if ( changeName.equals( JFileChooser.SELECTED_FILE_CHANGED_PROPERTY ) ) {
+        if (changeName.equals(JFileChooser.SELECTED_FILE_CHANGED_PROPERTY)) {
             File file = (File) changeEvent.getNewValue();
-            if ( ( file != null ) && ( showThumbnailJCheckBox.isSelected() ) ) {
-                ImageIcon icon = new ImageIcon( file.getPath() );
-                if ( icon.getIconWidth() > OPTIONS_PANEL_DIMENSION.getWidth() ) {
-                    icon = new ImageIcon( icon.getImage().getScaledInstance( (int) OPTIONS_PANEL_DIMENSION.getWidth(), -1,
-                            Image.SCALE_DEFAULT ) );
-                    if ( icon.getIconHeight() > OPTIONS_PANEL_DIMENSION.getHeight() ) {
-                        icon = new ImageIcon( icon.getImage().getScaledInstance( -1, (int) OPTIONS_PANEL_DIMENSION.getHeight(),
-                                Image.SCALE_DEFAULT ) );
+            if ((file != null) && (showThumbnailJCheckBox.isSelected())) {
+                ImageIcon icon = new ImageIcon(file.getPath());
+                if (icon.getIconWidth() > OPTIONS_PANEL_DIMENSION.getWidth()) {
+                    icon = new ImageIcon(icon.getImage().getScaledInstance((int) OPTIONS_PANEL_DIMENSION.getWidth(), -1,
+                            Image.SCALE_DEFAULT));
+                    if (icon.getIconHeight() > OPTIONS_PANEL_DIMENSION.getHeight()) {
+                        icon = new ImageIcon(icon.getImage().getScaledInstance(-1, (int) OPTIONS_PANEL_DIMENSION.getHeight(),
+                                Image.SCALE_DEFAULT));
                     }
                 }
                 final ImageIcon setIcon = icon;
                 Runnable r = new Runnable() {
 
                     public void run() {
-                        thumbnailJLabel.setIcon( setIcon );
+                        thumbnailJLabel.setIcon(setIcon);
                     }
                 };
-                if ( SwingUtilities.isEventDispatchThread() ) {
+                if (SwingUtilities.isEventDispatchThread()) {
                     r.run();
                 } else {
-                    SwingUtilities.invokeLater( r );
+                    SwingUtilities.invokeLater(r);
                 }
             }
         }
     }
-
     /**
      *  This object refers to the target object that wil receive notification when the adding is done.
      */
     private GroupPopupInterface target = null;
 
-
     /**
      *  this method logs the object to call back when the pictures have been added.
      * @param target
      */
-    public void setNotificationTarget( GroupPopupInterface target ) {
+    public void setNotificationTarget(GroupPopupInterface target) {
         this.target = target;
     }
 }

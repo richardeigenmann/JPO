@@ -1,6 +1,7 @@
 package jpo.gui;
 
 import java.awt.Color;
+import java.util.logging.Logger;
 
 /*
 GradientColor.java:  A helper to find the color along a gradient Line.
@@ -30,6 +31,12 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  * @author richi
  */
 public class GradientColor {
+
+     /**
+     * Defines a logger for this class
+     */
+    private static Logger logger = Logger.getLogger(GradientColor.class.getName());
+
 
     /**
      * Sample gradient colors for use in the application
@@ -85,22 +92,22 @@ public class GradientColor {
         double higherIndexFactor = (double) higherIndex / ( availableColors.length - 1 );
         double interpolationFactor = ( factor - lowerIndexFactor ) / ( higherIndexFactor - lowerIndexFactor );
 
-        //System.out.println( String.format( "Lower Index: %d Factor: %f ", lowerIndex, lowerIndexFactor ) );
-        //System.out.println( String.format( "Higher Index: %d Factor: %f ", higherIndex, higherIndexFactor ) );
-        //System.out.println( String.format( "Interpolation: %f ", interpolationFactor ) );
+        logger.fine( String.format( "Lower Index: %d Factor: %f ", lowerIndex, lowerIndexFactor ) );
+        logger.fine( String.format( "Higher Index: %d Factor: %f ", higherIndex, higherIndexFactor ) );
+        logger.fine( String.format( "Interpolation: %f ", interpolationFactor ) );
 
         int r1 = lowerColor.getRed();
         int r2 = higherColor.getRed();
         int newRed = r1 + (int) ( ( r2 - r1 ) * interpolationFactor );
-        //System.out.println( String.format( "Red: lower= %d higher= %d new=%d", r1, r2, newRed ) );
+        logger.fine( String.format( "Red: lower= %d higher= %d new=%d", r1, r2, newRed ) );
         int g1 = lowerColor.getGreen();
         int g2 = higherColor.getGreen();
         int newGreen = g1 + (int) ( ( g2 - g1 ) * interpolationFactor );
-        //System.out.println( String.format( "Red: lower= %d higher= %d new=%d", g1, g2, newGreen ) );
+        logger.fine( String.format( "Red: lower= %d higher= %d new=%d", g1, g2, newGreen ) );
         int b1 = lowerColor.getBlue();
         int b2 = higherColor.getBlue();
         int newBlue = b1 + (int) ( ( b2 - b1 ) * interpolationFactor );
-        //System.out.println( String.format( "Red: lower= %d higher= %d new=%d", b1, b2, newBlue ) );
+        logger.fine( String.format( "Red: lower= %d higher= %d new=%d", b1, b2, newBlue ) );
         Color gradientColor = new Color( newRed, newGreen, newBlue );
 
         return gradientColor;

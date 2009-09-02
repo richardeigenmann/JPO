@@ -12,6 +12,7 @@ import java.awt.*;
 import javax.swing.event.*;
 import java.awt.event.AdjustmentListener;
 import java.awt.event.AdjustmentEvent;
+import java.util.logging.Logger;
 
 /*
 ThumbnailDescriptionJPanel.java:  class that creates a panel showing the details of a thumbnail
@@ -41,6 +42,11 @@ public class ThumbnailDescriptionJPanel
         extends JPanel
         implements PictureInfoChangeListener,
         TreeModelListener {
+
+    /**
+     * Defines a logger for this class
+     */
+    private static Logger logger = Logger.getLogger( ThumbnailDescriptionJPanel.class.getName() );
 
     /**
      *  a link to the SortableDefaultMutableTreeNode in the data model.
@@ -341,7 +347,7 @@ public class ThumbnailDescriptionJPanel
         int targetWidth = (int) ( Settings.thumbnailSize * thumbnailSizeFactor );
         if ( ( targetHeight != scrollPaneSize.height ) || ( targetWidth != scrollPaneSize.width ) ) {
             pictureDescriptionJSP.setPreferredSize( new Dimension( targetWidth, targetHeight ) );
-            //Tools.log("ThumbnailDescriptionJPanel.setTextAreaSize set to: " + Integer.toString(targetWidth) + " / " + Integer.toString(targetHeight) );
+            logger.fine( "ThumbnailDescriptionJPanel.setTextAreaSize set to: " + Integer.toString( targetWidth ) + " / " + Integer.toString( targetHeight ) );
         }
         //pictureDescriptionJSP.getParent().validate();
     }

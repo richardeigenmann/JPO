@@ -4,6 +4,7 @@ import jpo.*;
 import java.net.*;
 import java.io.*;
 import java.util.*;
+import java.util.logging.Logger;
 
 /*
 PictureInfo.java:  the definitions for picture data
@@ -34,6 +35,12 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 public class PictureInfo implements Serializable {
 
     /**
+     * Defines a logger for this class
+     */
+    private static Logger logger = Logger.getLogger( PictureInfo.class.getName() );
+
+
+    /**
      * Constructor method. Creates the object and sets up the variables.
      *
      * @param Highres_Name
@@ -50,10 +57,10 @@ public class PictureInfo implements Serializable {
         this.description = description;
         this.filmReference = filmReference;
 
-        Tools.log( "Highres_Name: " + Highres_Name );
-        Tools.log( "Lowres_Name: " + Lowres_Name );
-        Tools.log( "description: " + description );
-        Tools.log( "filmReference: " + filmReference );
+        logger.info( "Highres_Name: " + Highres_Name );
+        logger.info( "Lowres_Name: " + Lowres_Name );
+        logger.info( "description: " + description );
+        logger.info( "filmReference: " + filmReference );
     }
 
 
@@ -73,10 +80,10 @@ public class PictureInfo implements Serializable {
         this.description = description;
         this.filmReference = filmReference;
 
-        Tools.log( "Highres_Name: " + highresLocation );
-        Tools.log( "Lowres_Name: " + Lowres_Name );
-        Tools.log( "description: " + description );
-        Tools.log( "filmReference: " + filmReference );
+        logger.info( "Highres_Name: " + highresLocation );
+        logger.info( "Lowres_Name: " + Lowres_Name );
+        logger.info( "description: " + description );
+        logger.info( "filmReference: " + filmReference );
 
     }
 
@@ -222,6 +229,7 @@ public class PictureInfo implements Serializable {
      *  @see #getDescription
      */
     public synchronized void setDescription( String desc ) {
+        logger.fine( "setting description to: " + desc );
         if ( !desc.equals( description ) ) {
             description = desc;
             sendDescriptionChangedEvent();
@@ -258,10 +266,12 @@ public class PictureInfo implements Serializable {
      *  objects that the description was updated.
      */
     private void sendDescriptionChangedEvent() {
+        logger.fine( "preparing to send description changed event" );
         if ( Settings.pictureCollection.getSendModelUpdates() ) {
             PictureInfoChangeEvent pce = new PictureInfoChangeEvent( this );
             pce.setDescriptionChanged();
             sendPictureInfoChangedEvent( pce );
+            logger.fine( "sent description changed event" );
             Settings.pictureCollection.setUnsavedUpdates();
         }
     }
@@ -323,7 +333,7 @@ public class PictureInfo implements Serializable {
             URL highresURL = new URL( highresLocation );
             return highresURL;
         } catch ( MalformedURLException x ) {
-            Tools.log( "Caught an unexpected MalformedURLException: " + x.getMessage() );
+            logger.info( "Caught an unexpected MalformedURLException: " + x.getMessage() );
             return null;
         }
     }
@@ -452,7 +462,7 @@ public class PictureInfo implements Serializable {
     public void calculateChecksum() {
         URL pictureURL = getHighresURLOrNull();
         if ( pictureURL == null ) {
-            Tools.log( "PictureInfo.calculateChecksum din't get the URL. Aborting." );
+            logger.info( "PictureInfo.calculateChecksum din't get the URL. Aborting." );
             return;
         }
 
@@ -460,7 +470,7 @@ public class PictureInfo implements Serializable {
         try {
             in = pictureURL.openStream();
         } catch ( IOException x ) {
-            Tools.log( "PictureInfo.calculateChecksum couldn't open URL. Aborting." );
+            logger.info( "PictureInfo.calculateChecksum couldn't open URL. Aborting." );
             return;
         }
 
@@ -468,7 +478,7 @@ public class PictureInfo implements Serializable {
 
         checksum = Tools.calculateChecksum( bin );
 
-        // Tools.log( "Checksum is: " + Long.toString( checksum ) );
+        logger.fine( "Checksum is: " + Long.toString( checksum ) );
         sendChecksumChangedEvent();
     }
 
@@ -510,11 +520,11 @@ public class PictureInfo implements Serializable {
      */
     public void parseChecksum() {
         try {
-            //Tools.log("PictureInfo.parseChecksum: " + checksumString);
+            logger.fine( "PictureInfo.parseChecksum: " + checksumString );
             checksum = ( new Long( checksumString ) ).longValue();
             checksumString = "";
         } catch ( NumberFormatException x ) {
-            Tools.log( "PictureInfo.parseChecksum: invalid checksum: " + checksumString + " on picture: " + getHighresFilename() + " --> Set to MIN" );
+            logger.info( "PictureInfo.parseChecksum: invalid checksum: " + checksumString + " on picture: " + getHighresFilename() + " --> Set to MIN" );
             checksum = Long.MIN_VALUE;
         }
         sendChecksumChangedEvent();
@@ -547,7 +557,7 @@ public class PictureInfo implements Serializable {
         try {
             return new File( new URI( lowresLocation ) );
         } catch ( URISyntaxException x ) {
-            Tools.log( "Conversion of " + lowresLocation + " to URI failed: " + x.getMessage() );
+            logger.info( "Conversion of " + lowresLocation + " to URI failed: " + x.getMessage() );
             return null;
         }
     }
@@ -575,7 +585,7 @@ public class PictureInfo implements Serializable {
             URL lowresURL = new URL( lowresLocation );
             return lowresURL;
         } catch ( MalformedURLException x ) {
-            Tools.log( "Caught an unexpected MalformedURLException: " + x.getMessage() );
+            logger.info( "Caught an unexpected MalformedURLException: " + x.getMessage() );
             return null;
         }
     }
@@ -988,7 +998,7 @@ public class PictureInfo implements Serializable {
             rotation = ( new Double( rotationString ) ).doubleValue();
             rotationString = "";
         } catch ( NumberFormatException x ) {
-            Tools.log( "PictureInfo.appendToRotation: invalid rotation: " + rotationString + " on picture: " + getHighresFilename() + " --> Set to Zero" );
+            logger.info( "PictureInfo.appendToRotation: invalid rotation: " + rotationString + " on picture: " + getHighresFilename() + " --> Set to Zero" );
             rotation = 0;
         }
         sendRotationChangedEvent();
@@ -1022,7 +1032,7 @@ public class PictureInfo implements Serializable {
      *  @param angle
      */
     public synchronized void rotate( int angle ) {
-        setRotation( (int) (getRotation() + angle ) % 360 );
+        setRotation( (int) ( getRotation() + angle ) % 360 );
     }
 
 
@@ -1142,7 +1152,7 @@ public class PictureInfo implements Serializable {
             categoryAssignmentString = "";
             addCategoryAssignment( category );
         } catch ( NumberFormatException x ) {
-            Tools.log( "PictureInfo.parseCategoryAssignment: NumberFormatException: " + categoryAssignmentString + " on picture: " + getHighresFilename() + " because: " + x.getMessage() );
+            logger.info( "PictureInfo.parseCategoryAssignment: NumberFormatException: " + categoryAssignmentString + " on picture: " + getHighresFilename() + " because: " + x.getMessage() );
         }
         sendCategoryAssignmentsChangedEvent();
     }
@@ -1281,7 +1291,7 @@ public class PictureInfo implements Serializable {
      *  @param listener	The object that will receive notifications.
      */
     public void addPictureInfoChangeListener( PictureInfoChangeListener listener ) {
-        //System.out.println( "SourcePicture.addListener: listener added on SourcePicture " + Integer.toString( this.hashCode() ) + " of class: " + listener.getClass().toString() );
+        logger.fine( "SourcePicture.addListener: listener added on SourcePicture " + Integer.toString( this.hashCode() ) + " of class: " + listener.getClass().toString() );
         pictureInfoListeners.add( listener );
     }
 
@@ -1293,7 +1303,7 @@ public class PictureInfo implements Serializable {
      *  @param listener	The listener that doesn't want to notifications any more.
      */
     public void removePictureInfoChangeListener( PictureInfoChangeListener listener ) {
-        //System.out.println( "SourcePicture.removeListener: listener removed from SourcePicture " + Integer.toString( this.hashCode() ) + " of class: " + listener.getClass().toString() );
+        logger.fine( "SourcePicture.removeListener: listener removed from SourcePicture " + Integer.toString( this.hashCode() ) + " of class: " + listener.getClass().toString() );
         pictureInfoListeners.remove( listener );
     }
 

@@ -1,15 +1,13 @@
 package jpo.dataModel;
 
 import jpo.*;
-import jpo.dataModel.SortableDefaultMutableTreeNode;
-import jpo.dataModel.PictureInfo;
 import java.io.*;
 import java.net.*;
 import java.util.*;
 import javax.swing.*;
 import java.text.*;
 import java.util.jar.*;
-import jpo.dataModel.NodeStatistics;
+import java.util.logging.Logger;
 
 /*
 JarDistiller.java:  class that writes pictures to a jar file
@@ -52,6 +50,8 @@ public class JarDistiller implements Runnable {
      *  the buffer for read / write operations
      */
     private byte data[] = new byte[BUFFER];
+
+
     ;
 
     /**
@@ -110,6 +110,11 @@ public class JarDistiller implements Runnable {
      *   holds the whole xmlfile as it is being built
      */
     private StringBuffer xmlData = new StringBuffer( 50000 );
+
+    /**
+     * Defines a logger for this class
+     */
+    private static Logger logger = Logger.getLogger( JarDistiller.class.getName() );
 
 
     /**
@@ -185,11 +190,11 @@ public class JarDistiller implements Runnable {
             if ( codeJarFile != null ) {
                 String codeJarFile2 = codeJarFile.toString().substring( 0, codeJarFile.toString().indexOf( "!" ) + 2 );
 
-                Tools.log( "JarDistillerThread.run: URL of codeJarFile reads: " + codeJarFile.toString() );
-                Tools.log( "String reads: " + codeJarFile2 );
+                logger.info( "JarDistillerThread.run: URL of codeJarFile reads: " + codeJarFile.toString() );
+                logger.info( "String reads: " + codeJarFile2 );
                 copyJarToJar( codeJarFile2, jarOut );
             } else {
-                Tools.log( "Could not find jar file for copy of program code." );
+                logger.info( "Could not find jar file for copy of program code." );
             }
 
 
@@ -259,15 +264,15 @@ public class JarDistiller implements Runnable {
      *  it adds a suffix to the filename to make it unique.
      */
     private String preventDuplicateFilename( String targetFileName ) {
-        //System.out.println("\n----\nTesting: " + targetFileName);
+        logger.fine("\n----\nTesting: " + targetFileName);
 
         if ( filenameHashtable.containsKey( targetFileName ) ) {
-            //System.out.println("File exists in hashtable");
+            logger.fine("File exists in hashtable");
             String ext = Tools.getExtension( targetFileName );
             String rootName = Tools.getFilenameRoot( targetFileName );
             for ( int i = 1; i < 10000; i++ ) {
                 String testName = rootName + "_" + Integer.toString( i ) + "." + ext;
-                //System.out.println("Testing name: " + testName );
+                logger.fine("Testing name: " + testName );
                 if ( !filenameHashtable.containsKey( testName ) ) {
                     targetFileName = testName;
                     break;
@@ -353,14 +358,14 @@ public class JarDistiller implements Runnable {
                 in.close();
             }
 
-        //jarIn.close();
+            //jarIn.close();
         } catch ( IOException e ) {
-            Tools.log( "Could not copy " + sourceFile );
-            Tools.log( "Reason: " + e );
+            logger.info( "Could not copy " + sourceFile );
+            logger.info( "Reason: " + e );
             e.printStackTrace();
         } catch ( Exception e ) {
-            Tools.log( "Could not copy " + sourceFile );
-            Tools.log( "Reason: " + e );
+            logger.info( "Could not copy " + sourceFile );
+            logger.info( "Reason: " + e );
             e.printStackTrace();
         }
     }
@@ -389,12 +394,12 @@ public class JarDistiller implements Runnable {
 
             in.close();
         } catch ( IOException e ) {
-            Tools.log( "Could not copy " + a );
-            Tools.log( "Reason: " + e );
+            logger.info( "Could not copy " + a );
+            logger.info( "Reason: " + e );
             e.printStackTrace();
         } catch ( Exception e ) {
-            Tools.log( "Could not copy " + a );
-            Tools.log( "Reason: " + e );
+            logger.info( "Could not copy " + a );
+            logger.info( "Reason: " + e );
             e.printStackTrace();
         }
     }

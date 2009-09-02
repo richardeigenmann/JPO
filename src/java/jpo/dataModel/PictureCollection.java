@@ -41,6 +41,12 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 public class PictureCollection {
 
     /**
+     * Defines a logger for this class
+     */
+    private static Logger logger = Logger.getLogger( PictureCollection.class.getName() );
+
+
+    /**
      *  Constructs a new PictureCollection object.
      */
     public PictureCollection() {
@@ -192,9 +198,9 @@ public class PictureCollection {
      */
     private void setRootNode( SortableDefaultMutableTreeNode rootNode ) {
         if ( rootNode != null ) {
-            Tools.log( "setting root node to " + rootNode.toString() );
+            logger.info( "setting root node to " + rootNode.toString() );
         } else {
-            Tools.log( "setting root node to null" );
+            logger.info( "setting root node to null" );
         }
         this.rootNode = rootNode;
     }
@@ -628,9 +634,9 @@ public class PictureCollection {
             if ( nodeObject instanceof PictureInfo ) {
                 highresFile = ( (PictureInfo) nodeObject ).getHighresFile();
                 lowresFile = ( (PictureInfo) nodeObject ).getLowresFile();
-                //Tools.log( "Checking: " + ( (PictureInfo) nodeObject ).getHighresLocation() );
+                logger.fine( "Checking: " + ( (PictureInfo) nodeObject ).getHighresLocation() );
                 if ( ( highresFile != null ) && ( highresFile.compareTo( f ) == 0 ) ) {
-                    //Tools.log ( "CollectionJTree.isInCollection found a match on: " + ( (PictureInfo) nodeObject ).getDescription() );
+                    logger.fine( "CollectionJTree.isInCollection found a match on: " + ( (PictureInfo) nodeObject ).getDescription() );
                     return true;
                 } else if ( ( lowresFile != null ) && ( lowresFile.compareTo( f ) == 0 ) ) {
                     return true;
@@ -661,9 +667,9 @@ public class PictureCollection {
             node = (SortableDefaultMutableTreeNode) e.nextElement();
             nodeObject = node.getUserObject();
             if ( nodeObject instanceof PictureInfo ) {
-                //Tools.log( "Checking: " + ( (PictureInfo) nodeObject ).getHighresLocation() );
+                logger.fine( "Checking: " + ( (PictureInfo) nodeObject ).getHighresLocation() );
                 if ( ( (PictureInfo) nodeObject ).getChecksum() == checksum ) {
-                    //Tools.log ( "CollectionJTree.isInCollection found a match on: " + ( (PictureInfo) nodeObject ).getDescription() );
+                    logger.fine( "CollectionJTree.isInCollection found a match on: " + ( (PictureInfo) nodeObject ).getDescription() );
                     return true;
                 }
             }
@@ -709,11 +715,11 @@ public class PictureCollection {
      */
     public void fileLoad( File f ) throws FileNotFoundException {
         if ( fileLoading ) {
-            Tools.log( this.getClass().toString() + ".fileLoad: already busy loading another file. Aborting" );
+            logger.info( this.getClass().toString() + ".fileLoad: already busy loading another file. Aborting" );
             return;
         }
         if ( SwingUtilities.isEventDispatchThread() ) {
-            Tools.log( this.getClass().toString() + ".fileLoad:  should not be on the EDT!" );
+            logger.info( this.getClass().toString() + ".fileLoad:  should not be on the EDT!" );
             Thread.dumpStack();
         }
         fileLoading = true;
@@ -775,7 +781,7 @@ public class PictureCollection {
                 if ( pi.getHighresFilename().equals( comparingFilename ) ) {
                     testNodeParent = (SortableDefaultMutableTreeNode) testNode.getParent();
                     if ( !parentGroups.contains( testNodeParent ) ) {
-                        //System.out.println( "adding node: " + testNodeParent.toString() );
+                        logger.fine( "adding node: " + testNodeParent.toString() );
                         parentGroups.add( testNodeParent );
                     }
                 }

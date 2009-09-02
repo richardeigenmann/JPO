@@ -86,6 +86,11 @@ public class Jpo
      */
     private MainWindow mainWindow;
 
+    /**
+     * Defines a logger for this class
+     */
+    private static Logger logger = Logger.getLogger( Jpo.class.getName() );
+
 
     /**
      *  Constructor for the Jpo application that creates the main JFrame, attaches an
@@ -102,8 +107,8 @@ public class Jpo
         }
         Settings.loadSettings();
 
-        Tools.log( "------------------------------------------------------------" );
-        Tools.log( "Starting JPO" );
+        logger.info( "------------------------------------------------------------" );
+        logger.info( "Starting JPO" );
 
         //Toolkit.getDefaultToolkit().getSystemEventQueue().push(
         //       new TracingEventQueue() );
@@ -181,7 +186,7 @@ public class Jpo
      */
     public void loadCollectionOnStartup() {
         if ( SwingUtilities.isEventDispatchThread() ) {
-            Tools.log( "loadCollectionOnStartup should not be on the EDT!" );
+            logger.info( "loadCollectionOnStartup should not be on the EDT!" );
             Thread.dumpStack();
         }
         Settings.jarAutostartList = ClassLoader.getSystemResource( "autostartJarPicturelist.xml" );
@@ -189,18 +194,18 @@ public class Jpo
 
         if ( Settings.jarAutostartList != null ) {
             Settings.jarRoot = Settings.jarAutostartList.toString().substring( 0, Settings.jarAutostartList.toString().indexOf( "!" ) + 1 );
-            Tools.log( "Trying to load picturelist from jar: " + Settings.jarAutostartList.toString() );
+            logger.info( "Trying to load picturelist from jar: " + Settings.jarAutostartList.toString() );
             try {
                 Settings.pictureCollection.getRootNode().streamLoad( Settings.jarAutostartList.openStream() );
                 thumbnailJScrollPane.show( new GroupBrowser( Settings.pictureCollection.getRootNode() ) );
             } catch ( IOException x ) {
-                Tools.log( Settings.jarAutostartList.toString() + " could not be loaded\nReason: " + x.getMessage() );
+                logger.info( Settings.jarAutostartList.toString() + " could not be loaded\nReason: " + x.getMessage() );
             }
 
 
         } else if ( ( Settings.autoLoad != null ) && ( Settings.autoLoad.length() > 0 ) ) {
             File xmlFile = new File( Settings.autoLoad );
-            Tools.log( "Jpo.constructor: Trying to load collection from location in stored settings: " + Settings.autoLoad );
+            logger.info( "Jpo.constructor: Trying to load collection from location in stored settings: " + Settings.autoLoad );
             if ( xmlFile.exists() ) {
                 try {
                     Settings.pictureCollection.fileLoad( xmlFile );
@@ -241,8 +246,8 @@ public class Jpo
             Settings.writeSettings();
         }
 
-        Tools.log( "Exiting JPO" );
-        Tools.log( "------------------------------------------------------------" );
+        logger.info( "Exiting JPO" );
+        logger.info( "------------------------------------------------------------" );
 
         System.exit( 0 );
     }
@@ -298,7 +303,7 @@ public class Jpo
                 try {
                     Settings.pictureCollection.fileLoad( fileToLoad );
                 } catch ( FileNotFoundException ex ) {
-                    Tools.log( this.getClass().toString() + ".requestFileLoad: FileNotFoundExecption: " + ex.getMessage() );
+                    logger.info( this.getClass().toString() + ".requestFileLoad: FileNotFoundExecption: " + ex.getMessage() );
                     JOptionPane.showMessageDialog( Settings.anchorFrame,
                             ex.getMessage(),
                             Settings.jpoResources.getString( "genericError" ),
@@ -320,7 +325,7 @@ public class Jpo
      */
     public static void positionToNode( SortableDefaultMutableTreeNode displayNode ) {
         if ( displayNode == null ) {
-            Tools.log( "Jpo.positionToNode invoked on a on a null node!" );
+            logger.info( "Jpo.positionToNode invoked on a on a null node!" );
             Thread.dumpStack();
             return;
         }
@@ -347,7 +352,7 @@ public class Jpo
                     Settings.pictureCollection.fileLoad( new File( Settings.recentCollections[i] ) );
                 } catch ( FileNotFoundException ex ) {
                     Logger.getLogger( Jpo.class.getName() ).log( Level.SEVERE, null, ex );
-                    Tools.log( this.getClass().toString() + ".requestFileLoad: FileNotFoundExecption: " + ex.getMessage() );
+                    logger.info( this.getClass().toString() + ".requestFileLoad: FileNotFoundExecption: " + ex.getMessage() );
                     JOptionPane.showMessageDialog( Settings.anchorFrame,
                             ex.getMessage(),
                             Settings.jpoResources.getString( "genericError" ),

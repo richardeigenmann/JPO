@@ -29,6 +29,7 @@ import java.awt.image.RescaleOp;
 import java.io.IOException;
 import java.io.Serializable;
 import java.net.MalformedURLException;
+import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
@@ -81,6 +82,13 @@ public class Thumbnail extends JComponent
      *  nodeSelected event to the data model.
      **/
     public SortableDefaultMutableTreeNode referringNode;
+
+    /**
+     * Defines a logger for this class
+     */
+    private static Logger logger = Logger.getLogger(Thumbnail.class.getName());
+
+
     /**
      *  A set of picture nodes of which one indicated by {@link #myIndex} is to be shown
      */
@@ -371,7 +379,7 @@ public class Thumbnail extends JComponent
      */
     public void setPendingIcon() {
         if (referringNode == null) {
-            Tools.log("Referring node is null! How did this happen?");
+            logger.info("Referring node is null! How did this happen?");
             Thread.dumpStack();
             return;
         }
@@ -419,7 +427,7 @@ public class Thumbnail extends JComponent
             public void run() {
                 if (visibility) {
                     if (getSize().height != thumbnailHeight) {
-                        //Tools.log("Thumbnail.setVisible: The Size is not right!");
+                        //logger.info("Thumbnail.setVisible: The Size is not right!");
                         // finally I found the solution to the size issue! Unless it's set to
                         //  non visible the whole rendering engine sees no point in fixing the size.
                         Thumbnail.super.setVisible(false);
@@ -475,7 +483,7 @@ public class Thumbnail extends JComponent
      * @param thumbnailSizeFactor
      */
     public void setFactor(float thumbnailSizeFactor) {
-        //Tools.log("Thumbnail.setFactor: " + Float.toString( thumbnailSizeFactor ) );
+        //logger.info("Thumbnail.setFactor: " + Float.toString( thumbnailSizeFactor ) );
         this.thumbnailSizeFactor = thumbnailSizeFactor;
         setVisible(isVisible());
     }
@@ -508,7 +516,7 @@ public class Thumbnail extends JComponent
     @Override
     public void paintComponent(Graphics g) {
         if (!SwingUtilities.isEventDispatchThread()) {
-            System.out.println("Not running on EDT!");
+            logger.severe("Not running on EDT!");
             Thread.dumpStack();
         }
 
@@ -608,7 +616,7 @@ public class Thumbnail extends JComponent
                 if (e.getClickCount() > 1) {
                     PictureViewer pictureViewer = new PictureViewer();
                     if (myThumbnailBrowser == null) {
-                        Tools.log("Thumbnail.mouseClicked: why does this Thumbnail not know the context it is showing pictures in?");
+                        logger.info("Thumbnail.mouseClicked: why does this Thumbnail not know the context it is showing pictures in?");
                         myThumbnailBrowser = new FlatGroupBrowser((SortableDefaultMutableTreeNode) referringNode.getParent());
                         int myIndex = 0;
                         for (int i = 0; i < myThumbnailBrowser.getNumberOfNodes(); i++) {
@@ -767,12 +775,12 @@ public class Thumbnail extends JComponent
 
         for (int i = 0; i < children.length; i++) {
             if (children[i] == referringNode) {
-                // Tools.log( "Thumbnail detected a treeNodesChanged event" );
+                // logger.info( "Thumbnail detected a treeNodesChanged event" );
                 // we are displaying a changed node. What changed?
                 Object userObject = referringNode.getUserObject();
                 if (userObject instanceof GroupInfo) {
                     // determine if the icon changed
-                    // Tools.log( "Thumbnail should be reloading the icon..." );
+                    // logger.info( "Thumbnail should be reloading the icon..." );
                     requestThumbnailCreation(ThumbnailQueueRequest.HIGH_PRIORITY, false);
                 }
             }
@@ -843,7 +851,7 @@ public class Thumbnail extends JComponent
      * @param event
      */
     public void dragExit(DropTargetEvent event) {
-        Tools.log("Thumbnail.dragExit( DropTargetEvent ): invoked");
+        logger.info("Thumbnail.dragExit( DropTargetEvent ): invoked");
     }
 
     /**
@@ -885,9 +893,9 @@ public class Thumbnail extends JComponent
 
             try {
                 event.startDrag(DragSource.DefaultMoveNoDrop, t, myDragSourceListener);
-                Tools.log("Thumbnail.dragGestureRecognized: Drag started on node: " + referringNode.getUserObject().toString());
+                logger.info("Thumbnail.dragGestureRecognized: Drag started on node: " + referringNode.getUserObject().toString());
             } catch (InvalidDnDOperationException x) {
-                Tools.log("Thumbnail.dragGestureRecognized threw a InvalidDnDOperationException: reason: " + x.getMessage());
+                logger.info("Thumbnail.dragGestureRecognized threw a InvalidDnDOperationException: reason: " + x.getMessage());
             }
         }
     }

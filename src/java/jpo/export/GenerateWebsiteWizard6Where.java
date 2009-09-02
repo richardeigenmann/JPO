@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.logging.Logger;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -19,7 +20,7 @@ import net.javaprog.ui.wizard.AbstractStep;
 /*
 GenerateWebsiteWizard6Where: Ask where to generate the website
 
-Copyright (C) 2008  Richard Eigenmann.
+Copyright (C) 2008,2009  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -41,9 +42,15 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 public class GenerateWebsiteWizard6Where extends AbstractStep {
 
     /**
+     * Defines a logger for this class
+     */
+    private static Logger logger = Logger.getLogger( GenerateWebsiteWizard6Where.class.getName() );
+
+    /**
      * The link to the values that this panel should change
      */
     private final HtmlDistillerOptions options;
+
 
     /**
      * This Wizard prompts for the otpions regarding Highres
@@ -53,14 +60,16 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
         super( Settings.jpoResources.getString( "HtmlDistTarget" ), Settings.jpoResources.getString( "HtmlDistTarget" ) );
         this.options = options;
 
-    // load the options into the GUI components
+        // load the options into the GUI components
     }
+
     /**
      *  Text field that holds the directory that the html is to be exported to.
      **/
     private DirectoryChooser targetDirJTextField =
             new DirectoryChooser( Settings.jpoResources.getString( "HtmlDistillerChooserTitle" ),
             DirectoryChooser.DIR_MUST_BE_WRITABLE );
+
 
     /**
      * Creates the GUI widgets
@@ -79,7 +88,7 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
         finalTarget.addActionListener( new ActionListener() {
 
         public void actionPerformed( ActionEvent arg0 ) {
-        Tools.log( "Other delivery types are not yet supported" );
+        logger.info( "Other delivery types are not yet supported" );
         finalTarget.setSelectedIndex( 0 );
         }
         } );
@@ -113,12 +122,14 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
         return wizardPanel;
     }
 
+
     /**
      * Enforces that the user must check the directory before he can go next
      */
     public void prepareRendering() {
         setCanGoNext( false );
     }
+
 
     /**
      * Checks whether the supplied file is good for webpage generation and spams popups if not

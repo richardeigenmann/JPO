@@ -4,13 +4,14 @@ import jpo.dataModel.Tools;
 import jpo.dataModel.Settings;
 import jpo.*;
 import java.io.File;
+import java.util.logging.Logger;
 import net.javaprog.ui.wizard.*;
 import javax.swing.*;
 
 /*
 CameraDownloadWizardStep5.java: the sixth step in the download from Camera Wizard
 
-Copyright (C) 2007-20098  Richard Eigenmann.
+Copyright (C) 2007-2009  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -30,6 +31,12 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 public class CameraDownloadWizardStep6 extends AbstractStep {
 
     /**
+     * Defines a logger for this class
+     */
+    private static Logger logger = Logger.getLogger( CameraDownloadWizardStep6.class.getName() );
+
+
+    /**
      *
      * @param dataModel
      */
@@ -38,10 +45,12 @@ public class CameraDownloadWizardStep6 extends AbstractStep {
         super( Settings.jpoResources.getString( "DownloadCameraWizardStep6Title" ), Settings.jpoResources.getString( "DownloadCameraWizardStep6Description" ) );
         this.dataModel = dataModel;
     }
+
     /**
      *  Holds a reference to the data used by the wizard
      */
     private CameraDownloadWizardData dataModel = null;
+
 
     /**
      *  Returns the component that visualises the user interactable stuff for this step of the wizard.
@@ -54,8 +63,8 @@ public class CameraDownloadWizardStep6 extends AbstractStep {
         int filesOnCamera = dataModel.getCamera().countFiles();
         int newPictures = dataModel.getNewPictures().size();
         int picsToProcess = dataModel.getCopyMode() ? newPictures + filesOnCamera : filesOnCamera;
-        JProgressBar progressBar = new JProgressBar( 0, picsToProcess  );
-        Tools.log( "just created it" );
+        JProgressBar progressBar = new JProgressBar( 0, picsToProcess );
+        logger.info( "just created it" );
         progressBar.setStringPainted( true );
         stepComponent.add( progressBar );
         if ( !hasStarted ) {
@@ -66,6 +75,7 @@ public class CameraDownloadWizardStep6 extends AbstractStep {
         return stepComponent;
     }
 
+
     /**
      *  Required by the AbstractSetp but not used.
      */
@@ -74,6 +84,7 @@ public class CameraDownloadWizardStep6 extends AbstractStep {
         setCanGoBack( false );
         setCanCancel( false );
     }
+
     /**
      *  This field became necessary as there seems to be a problem with JWIZZ whereby it calls the createComponent repeatedly
      *  when doing a setCanGoBack, thereby starting the thread multiple times.
@@ -88,7 +99,9 @@ public class CameraDownloadWizardStep6 extends AbstractStep {
         public PictureDownloader( JProgressBar threadProgressBar ) {
             this.threadProgressBar = threadProgressBar;
         }
+
         private JProgressBar threadProgressBar;
+
 
         @Override
         public void run() {
@@ -117,6 +130,7 @@ public class CameraDownloadWizardStep6 extends AbstractStep {
             setCanCancel( false );
             setCanFinish( true );
         }
+
 
         /**
          * This callback is used by the Camera.buildOldImage to notify that it has

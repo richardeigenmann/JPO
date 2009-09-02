@@ -43,6 +43,16 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 public class HtmlDistiller implements Runnable {
 
     /**
+     * Defines a logger for this class
+     */
+    private static Logger logger = Logger.getLogger( HtmlDistiller.class.getName() );
+
+
+    {
+        logger.setLevel( Level.ALL );
+    }
+
+    /**
      *  Temporary object to scale the image for the html output.
      */
     private ScalablePicture scp = new ScalablePicture();
@@ -93,16 +103,6 @@ public class HtmlDistiller implements Runnable {
      *  static size of the buffer to be used in copy operations
      */
     private static final int BUFFER_SIZE = 2048;
-
-    /**
-     * Defines a logger for this class
-     */
-    private static Logger logger = Logger.getLogger( HtmlDistiller.class.getName() );
-
-
-    {
-        logger.setLevel( Level.ALL );
-    }
 
     /**
      * The preferences that define how to render the Html page.
@@ -474,17 +474,17 @@ public class HtmlDistiller implements Runnable {
         scp.loadPictureImd( p.getLowresURL(), p.getRotation() );
         wOrig = scp.getOriginalWidth();
         hOrig = scp.getOriginalHeight();
-        //Tools.log( "Image: " + p.getLowresURL().toString() + " is size: w=" + Integer.toString( wOrig ) + " h=" + Integer.toString( hOrig ) );
+        logger.info( "Image: " + p.getLowresURL().toString() + " is size: w=" + Integer.toString( wOrig ) + " h=" + Integer.toString( hOrig ) );
 
         } catch ( IOException x ) {
-        Tools.log( "got an IO error on opening " + p.getLowresURL() );
+        logger.info( "got an IO error on opening " + p.getLowresURL() );
         }
 
 
         boolean loaded = false;
         if ( ( wOrig == options.getThumbnailWidth() ) || ( hOrig == options.getThumbnailHeight() ) ) {
         progressLabel.setText( "copying picture " + p.getLowresLocation() + " to " + lowresFile.toString() );
-        Tools.log( "copying picture " + p.getLowresLocation() + " to " + lowresFile.toString() + " w=" + Integer.toString( wOrig ) + " h=" + Integer.toString( hOrig ) );
+        logger.info( "copying picture " + p.getLowresLocation() + " to " + lowresFile.toString() + " w=" + Integer.toString( wOrig ) + " h=" + Integer.toString( hOrig ) );
         Tools.copyPicture( p.getLowresURL(), lowresFile );
         w = wOrig;
         h = hOrig;

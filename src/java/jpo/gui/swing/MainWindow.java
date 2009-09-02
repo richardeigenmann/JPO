@@ -4,6 +4,7 @@ import jpo.gui.*;
 import java.awt.BorderLayout;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
@@ -14,6 +15,7 @@ import javax.swing.UIManager;
 import jpo.dataModel.Settings;
 import jpo.dataModel.GroupInfo;
 import jpo.dataModel.PictureInfo;
+import jpo.dataModel.Tools;
 
 /*
 MainWindow.java:  main window of the JPO application
@@ -60,10 +62,7 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 public class MainWindow extends JFrame {
 
     public MainWindow( ApplicationMenuInterface applicationController, CollectionJTreeController collectionJTreeController, ThumbnailJScrollPane thumbnailJScrollPane ) {
-        if ( !SwingUtilities.isEventDispatchThread() ) {
-            System.out.println( "MainWindow creation is not on EDT!" );
-            Thread.dumpStack();
-        }
+        Tools.checkEDT();
         this.applicationController = applicationController;
         this.collectionJTreeController = collectionJTreeController;
         this.thumbnailJScrollPane = thumbnailJScrollPane;
@@ -75,6 +74,11 @@ public class MainWindow extends JFrame {
     private CollectionJTreeController collectionJTreeController;
 
     private ThumbnailJScrollPane thumbnailJScrollPane;
+
+    /**
+     * Defines a logger for this class
+     */
+    private static Logger logger = Logger.getLogger( MainWindow.class.getName() );
 
 
     /**
@@ -89,7 +93,7 @@ public class MainWindow extends JFrame {
 
             UIManager.setLookAndFeel( Windows );
         } catch ( Exception e ) {
-            // System.out.println( "Jpo.main: Could not set Look and Feel");
+            logger.fine( "Jpo.main: Could not set Look and Feel");
         }
         //ScreenHelper.explainGraphicsEnvironment();
 

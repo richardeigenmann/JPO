@@ -1,6 +1,5 @@
 package jpo.export;
 
-import jpo.dataModel.Tools;
 import jpo.dataModel.Settings;
 import jpo.dataModel.GroupInfo;
 import jpo.gui.FrameShower;
@@ -44,6 +43,11 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  * @author  Richard Eigenmann
  */
 public class HtmlDistillerJFrame extends JFrame {
+
+    /**
+     * Defines a logger for this class
+     */
+    private static Logger logger = Logger.getLogger( HtmlDistillerJFrame.class.getName() );
 
     /**
      *  Text field that holds the directory that the html is to be exported to.
@@ -222,7 +226,7 @@ public class HtmlDistillerJFrame extends JFrame {
         finalTarget.addActionListener( new ActionListener() {
 
             public void actionPerformed( ActionEvent arg0 ) {
-                Tools.log( "Other delivery types are not yet supported" );
+                logger.info( "Other delivery types are not yet supported" );
                 finalTarget.setSelectedIndex( 0 );
             }
         } );

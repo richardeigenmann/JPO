@@ -8,6 +8,7 @@ import jpo.*;
 import java.awt.event.*;
 import java.io.File;
 import javax.swing.*;
+import jpo.dataModel.Tools;
 
 /*
 GroupPopupMenu.java: popup menu for groups
@@ -469,9 +470,7 @@ public class GroupPopupMenu extends JPopupMenu
      *  in Settings. Can be called by the interface from the listener on the Settings object.
      */
     public void recentFilesChanged() {
-        if ( ! SwingUtilities.isEventDispatchThread() ) {
-            System.out.println("GroupPopupMenu is not on the EDT");
-        }
+        Tools.checkEDT();
         for (int i = 0; i < Settings.recentCollections.length; i++) {
             if (Settings.recentCollections[i] != null) {
                 recentOpenedfileJMenuItem[i].setText(Integer.toString(i + 1) + ": " + Settings.recentCollections[i]);

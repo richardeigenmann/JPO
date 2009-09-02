@@ -1,6 +1,5 @@
 package jpo.gui;
 
-import jpo.dataModel.Tools;
 import jpo.dataModel.Settings;
 import jpo.*;
 import javax.swing.*;
@@ -8,6 +7,7 @@ import javax.swing.text.*;
 
 import java.text.NumberFormat;
 import java.text.ParseException;
+import java.util.logging.Logger;
 
 
 /*
@@ -35,6 +35,11 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 public class WholeNumberField extends JTextField {
 
+       /**
+     * Defines a logger for this class
+     */
+    private static Logger logger = Logger.getLogger( WholeNumberField.class.getName() );
+    
     /**
      *  not quite sure what this is for.
      */
@@ -104,7 +109,7 @@ public class WholeNumberField extends JTextField {
      * @param value
      */
     public void setValue( int value ) {
-        //Tools.log("WholeNumberField.setValue("+Integer.toString(value)+")");
+        logger.fine("WholeNumberField.setValue("+Integer.toString(value)+")");
         setText( Integer.toString( value ) );
     }
 
@@ -156,8 +161,7 @@ public class WholeNumberField extends JTextField {
 
                     result[j++] = source[i];
                 } else {
-                    //toolkit.beep();
-                    Tools.log( "WholdNumberField.WholdNumberDocument.insertString_ Refusing to insert character: " + source[i] );
+                    logger.info( "WholdNumberField.WholdNumberDocument.insertString_ Refusing to insert character: " + source[i] );
                 }
             }
             super.insertString( offs, new String( result, 0, j ), a );

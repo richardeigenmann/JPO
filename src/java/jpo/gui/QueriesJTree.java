@@ -11,6 +11,7 @@ import java.awt.event.*;
 
 import javax.swing.*;
 import javax.swing.tree.*;
+import jpo.dataModel.Tools;
 
 
 /*
@@ -40,9 +41,7 @@ public class QueriesJTree extends JTree {
      * Constructs a JTree for the queries
      */
     public QueriesJTree() {
-        if (! SwingUtilities.isEventDispatchThread()) {
-            System.out.println("QueriesJTree constructor is not on the EDT");
-        }
+        Tools.checkEDT();
         getSelectionModel().setSelectionMode( TreeSelectionModel.SINGLE_TREE_SELECTION );
         putClientProperty( "JTree.lineStyle", "Angled" );
         setOpaque( true );
