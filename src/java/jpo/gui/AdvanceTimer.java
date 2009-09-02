@@ -32,7 +32,7 @@ public class AdvanceTimer implements Runnable {
     /**
      * Defines a logger for this class
      */
-    private static Logger logger = Logger.getLogger( PictureInfoEditor.class.getName() );
+    private static Logger logger = Logger.getLogger( AdvanceTimer.class.getName() );
 
     /**
      *  A reference back to the object that needs to be told to advance to the

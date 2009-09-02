@@ -32,7 +32,7 @@ import javax.swing.JOptionPane;
 /*
 ScalablePicture.java:  class that can load and save images
 
-Copyright (C) 2002-2009  Richard Eigenmann.
+Copyright (C) 2002 - 2009  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -54,7 +54,7 @@ public class ScalablePicture implements SourcePictureListener {
     /**
      * Defines a logger for this class
      */
-    private static Logger logger = Logger.getLogger( ReconcileJFrame.class.getName() );
+    private static Logger logger = Logger.getLogger( ScalablePicture.class.getName() );
 
     /**
      *   the source picture for the scalable picture
