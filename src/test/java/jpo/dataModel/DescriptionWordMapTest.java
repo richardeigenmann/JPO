@@ -1,6 +1,5 @@
 package jpo.dataModel;
 
-import java.util.AbstractMap;
 import java.util.HashSet;
 import java.util.TreeMap;
 import java.util.logging.Logger;
@@ -52,11 +51,11 @@ public class DescriptionWordMapTest extends TestCase {
 
 
     /**
-     * Test of getMap method, of class DescriptionWordMap.
+     * Test of getWordNodeMap method, of class DescriptionWordMap.
      */
     public void testGetMap() {
         DescriptionWordMap dwm = new DescriptionWordMap( getSomeNodes() );
-        AbstractMap<String, HashSet<SortableDefaultMutableTreeNode>> result = dwm.getMap();
+        TreeMap<String, HashSet<SortableDefaultMutableTreeNode>> result = dwm.getWordNodeMap();
         assertTrue( String.format( "Verifying that a map of words (which has %d words) was built and that it has more than 4 words", result.size() ), result.size() > 4 );
     }
 
@@ -66,37 +65,14 @@ public class DescriptionWordMapTest extends TestCase {
      */
     public void testGetCountOfNodes() {
         DescriptionWordMap dwm = new DescriptionWordMap( getSomeNodes() );
-        int countWelcome = dwm.getCountOfNodes( "Welcome" );
+        TreeMap<String, HashSet<SortableDefaultMutableTreeNode>> result = dwm.getWordNodeMap();
+        HashSet<SortableDefaultMutableTreeNode> welcomeNodes = result.get( "Welcome" );
+        int countWelcome = welcomeNodes.size();
         assertEquals( "Expecting 3 hits for the word Welcome", countWelcome, 3 );
 
-        int countNewYork = dwm.getCountOfNodes( "New York" );
+        HashSet<SortableDefaultMutableTreeNode> newYorkNodes = result.get( "New York" );
+        int countNewYork = newYorkNodes.size();
         assertEquals( "Expecting 2 hits for the 2 word city New York", countNewYork, 2 );
-    }
-
-
-    /**
-     * Test of getMaximumNodes method, of class DescriptionWordMap.
-     */
-    public void testGetMaximumNodes() {
-        DescriptionWordMap dwm = new DescriptionWordMap( getSomeNodes() );
-        int max = DescriptionWordMap.getMaximumNodes( dwm.getMap() );
-        assertEquals( "Expecting Welcome to be the top counter with 3 entries", max, 3 );
-    }
-
-
-    /**
-     * Test of getTruncatedMap method, of class DescriptionWordMap.
-     */
-    public void testTruncatedMap() {
-        DescriptionWordMap dwm = new DescriptionWordMap( getSomeNodes() );
-        dwm.truncateToTop( 2 );
-        TreeMap<String, HashSet<SortableDefaultMutableTreeNode>> truncatedMap = dwm.getTruncatedMap();
-        assertEquals( "Expecting the truncated map to have only 2 words", truncatedMap.size(), 2 );
-
-        AbstractMap<String, HashSet<SortableDefaultMutableTreeNode>> fullMap = dwm.getMap();
-        assertTrue( "Expecting the maximum nodes for the top word to be the same", DescriptionWordMap.getMaximumNodes( fullMap ) == DescriptionWordMap.getMaximumNodes( truncatedMap ) );
-
-
     }
 
 
@@ -105,7 +81,7 @@ public class DescriptionWordMapTest extends TestCase {
      */
     public void testNullNode() {
         DescriptionWordMap dwm = new DescriptionWordMap( null );
-        int count = dwm.getMap().size();
+        int count = dwm.getWordNodeMap().size();
         assertEquals( "Expecting 0 words on a null node", count, 0 );
     }
 }

@@ -12,7 +12,8 @@ import java.util.HashSet;
 import java.util.logging.Logger;
 import javax.swing.tree.*;
 import jpo.dataModel.DescriptionWordMap;
-import jpo.TagCloud.WordBrowser;
+import jpo.TagCloud.TagCloud;
+import jpo.dataModel.Settings;
 import jpo.dataModel.Tools;
 
 /*
@@ -81,8 +82,6 @@ public class InfoPanelController implements TagClickListener {
             }
         };
         t = new Timer( delay, taskPerformer );
-
-        tagClickListener = this;
     }
 
 
@@ -111,7 +110,12 @@ public class InfoPanelController implements TagClickListener {
                     infoPanel.statsJPanel.updateStats( node );
                     infoPanel.statsScroller.setViewportView( infoPanel.statsJPanel );
                     dwm = new DescriptionWordMap( node );
-                    infoPanel.setComponentAt( 2, new WordBrowser( dwm, InfoPanelController.this, 30 ) );
+                    TagCloud wb = new TagCloud();
+                    wb.setWordsToShow( Settings.tagCloudWords );
+                    wb.setWordMap( dwm );
+                    wb.addTagClickListener( InfoPanelController.this );
+                    wb.showWords();
+                    infoPanel.setComponentAt( 2, wb );
                     t.start();  // updates the queue-count
                 }
             }
@@ -120,11 +124,8 @@ public class InfoPanelController implements TagClickListener {
 
     DescriptionWordMap dwm;
 
-    TagClickListener tagClickListener;
-
-
     public void tagClicked( String key ) {
-        HashSet<SortableDefaultMutableTreeNode> hs = dwm.getMap().get( key );
+        HashSet<SortableDefaultMutableTreeNode> hs = dwm.getWordNodeMap().get( key );
         ArrayList<SortableDefaultMutableTreeNode> set = new ArrayList<SortableDefaultMutableTreeNode>( hs );
         ArrayListBrowser alb = new ArrayListBrowser( key, set );
         Jpo.thumbnailJScrollPane.show( alb );

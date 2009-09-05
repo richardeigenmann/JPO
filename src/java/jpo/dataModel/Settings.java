@@ -660,6 +660,11 @@ public class Settings {
      */
     public static final Color PICTUREVIEWER_TEXT_COLOR = Color.WHITE;
 
+    /**
+     *  The number of Words that the TagCloud should show.
+     */
+    public static int tagCloudWords = 40;
+
 
     /**
      *  method that set the default parameters
@@ -767,6 +772,7 @@ public class Settings {
         emailSendOriginal = prefs.getBoolean( "emailSendOriginal", emailSendOriginal );
         emailDimensions.width = prefs.getInt( "emailDimensions.width", emailDimensions.width );
         emailDimensions.height = prefs.getInt( "emailDimensions.height", emailDimensions.height );
+        tagCloudWords = prefs.getInt( "tagCloudWords", tagCloudWords );
 
         validateCopyLocations();
         validateSettings();
@@ -942,6 +948,7 @@ public class Settings {
         prefs.putBoolean( "emailSendOriginal", emailSendOriginal );
         prefs.putInt( "emailDimensions.width", emailDimensions.width );
         prefs.putInt( "emailDimensions.height", emailDimensions.height );
+        prefs.putInt( "tagCloudWords", tagCloudWords );
 
         unsavedSettingChanges = false;
     }

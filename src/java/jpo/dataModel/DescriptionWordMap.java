@@ -50,7 +50,7 @@ public class DescriptionWordMap extends WordMap {
     /**
      * Map that holds the words and a set of the nodes where the words were found.
      */
-    private TreeMap<String, HashSet<SortableDefaultMutableTreeNode>> wordMap = new TreeMap<String, HashSet<SortableDefaultMutableTreeNode>>();
+    private TreeMap<String, HashSet<SortableDefaultMutableTreeNode>> wordNodeMap = new TreeMap<String, HashSet<SortableDefaultMutableTreeNode>>();
 
 
     /**
@@ -127,11 +127,11 @@ public class DescriptionWordMap extends WordMap {
             if ( ( s.length() > 2 ) && ( !strikeWordsSet.contains( s ) ) ) {
 
                 HashSet<SortableDefaultMutableTreeNode> nodeSet;
-                if ( !wordMap.containsKey( s ) ) {
+                if ( !wordNodeMap.containsKey( s ) ) {
                     nodeSet = new HashSet<SortableDefaultMutableTreeNode>();
-                    wordMap.put( s, nodeSet );
+                    wordNodeMap.put( s, nodeSet );
                 } else {
-                    nodeSet = wordMap.get( s );
+                    nodeSet = wordNodeMap.get( s );
                 }
                 nodeSet.add( n );
             }
@@ -144,8 +144,8 @@ public class DescriptionWordMap extends WordMap {
      * Returns the Word to Node Set to a caller
      * @return the word to node set map
      */
-    public TreeMap<String, HashSet<SortableDefaultMutableTreeNode>> getMap() {
-        return wordMap;
+    public TreeMap<String, HashSet<SortableDefaultMutableTreeNode>> getWordNodeMap() {
+        return wordNodeMap;
     }
 
   
@@ -160,11 +160,11 @@ public class DescriptionWordMap extends WordMap {
      * rebuilt the wordCountMap variable needs to be set to null;
      * @return A Map with description terms and a count of nodes where the term is found
      */
-    public Map<String, Integer> getWordCountMap() {
+    public Map<String, Integer> getWordValueMap() {
         if ( wordCountMap == null ) {
             logger.info( "Building wordCountMap" );
             wordCountMap = new HashMap<String, Integer>();
-            Iterator<Entry<String, HashSet<SortableDefaultMutableTreeNode>>> it = wordMap.entrySet().iterator();
+            Iterator<Entry<String, HashSet<SortableDefaultMutableTreeNode>>> it = wordNodeMap.entrySet().iterator();
             Entry<String, HashSet<SortableDefaultMutableTreeNode>> pairs;
             while ( it.hasNext() ) {
                 pairs = it.next();

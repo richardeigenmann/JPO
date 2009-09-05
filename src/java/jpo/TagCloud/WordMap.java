@@ -27,7 +27,7 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 
 /**
- * This class defines the abstract getWordCountMap method that must be
+ * This class defines the abstract getWordValueMap method that must be
  * written when extending this class to feed a list of words into the Tag Cloud.
  * It has the functionality to order the words by
  * the count so that a list of the top n words can be selected.
@@ -43,7 +43,7 @@ public abstract class WordMap {
      * words does not have to be sorted in any way.
      * @return the map of word and value pairs
      */
-    public abstract Map<String, Integer> getWordCountMap();
+    public abstract Map<String, Integer> getWordValueMap();
 
     /**
      * Defines a logger for this class
@@ -71,13 +71,13 @@ public abstract class WordMap {
 
 
     /**
-     * This method returns a TreeMap of the words retrieved from @see #getWordCountMap
+     * This method returns a TreeMap of the words retrieved from @see #getWordValueMap
      * sorted descendingly by the number in the value of each entry. It caches the result
      * in a private TreeMap variable and returns this on each subsequent call. If
      * the source words change you need to call @see #rebuild.
      * TODO: This is very slow!
      *
-     * @return The Map retrieved from getWordCountMap sorted by the count.
+     * @return The Map retrieved from getWordValueMap sorted by the count.
      */
     public TreeMap<String, Integer> getValueSortedMap() {
         //logger.fine( this.getClass().getName(), "getValueSortedMap" );
@@ -91,8 +91,8 @@ public abstract class WordMap {
                 @Override
                 public int compare( String key1, String key2 ) {
                     //logger.finest( String.format( "Comparing %s with %s", key1, key2 ));
-                    int s1 = getWordCountMap().get( key1 );
-                    int s2 = getWordCountMap().get( key2 );
+                    int s1 = getWordValueMap().get( key1 );
+                    int s2 = getWordValueMap().get( key2 );
                     if ( !( s1 == s2 ) ) {
                         return ( (Integer) s2 ).compareTo( s1 );
                     } else {
@@ -100,7 +100,7 @@ public abstract class WordMap {
                     }
                 }
             } );
-            valueSortedTreeMap.putAll( getWordCountMap() );
+            valueSortedTreeMap.putAll( getWordValueMap() );
             logger.fine( String.format( "valueSortedTreeMap built with %d entries", valueSortedTreeMap.size() ) );
         }
         return valueSortedTreeMap;
@@ -132,11 +132,22 @@ public abstract class WordMap {
 
 
     /**
-     * Returns the highest number associated with a word
+     * Returns the highest number associated with a word. If the list of words is
+     * empty then Integer.MAX_VALUE is returned (this is better than 0 which is likely to
+     * cause a division by zero error in someone's code). Likewise if the largest number
+     * is 0 then we will also return Integer.MAX_VALUE for the same reason.
      * @return the highest number associated with a word
      */
-    public int getMaximumCount() {
-        return getValueSortedMap().firstEntry().getValue();
+    public int getMaximumWordValue() {
+        TreeMap<String, Integer> valueSortedMap = getValueSortedMap();
+        if ( valueSortedMap.isEmpty() ) {
+            return Integer.MAX_VALUE;
+        }
+        int maxValue = valueSortedMap.firstEntry().getValue();
+        if ( maxValue == 0 ) {
+            maxValue = Integer.MAX_VALUE;
+        }
+        return maxValue;
     }
 
 
@@ -147,7 +158,7 @@ public abstract class WordMap {
     @Override
     public String toString() {
         StringBuffer sb = new StringBuffer( "" );
-        Iterator<Entry<String, Integer>> it = getWordCountMap().entrySet().iterator();
+        Iterator<Entry<String, Integer>> it = getWordValueMap().entrySet().iterator();
         Entry<String, Integer> pairs;
         int i = 0;
         while ( it.hasNext() ) {
@@ -157,4 +168,6 @@ public abstract class WordMap {
         }
         return sb.toString();
     }
+
+  
 }
