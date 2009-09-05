@@ -80,7 +80,7 @@ public class QueriesJTree extends JTree {
      *   allows the QueriesJTree to tell the Info Panel about selections
      *   via it's showInfo method.
      */
-    private InfoPanel associatedInfoPanel;
+    private InfoPanelController associatedInfoPanel;
 
 
     /**
@@ -89,7 +89,7 @@ public class QueriesJTree extends JTree {
      *
      * @param associatedInfoPanel
      */
-    public void setAssociatedInfoPanel( InfoPanel associatedInfoPanel ) {
+    public void setAssociatedInfoPanel( InfoPanelController associatedInfoPanel ) {
         this.associatedInfoPanel = associatedInfoPanel;
     }
 

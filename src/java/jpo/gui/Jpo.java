@@ -23,9 +23,9 @@ import jpotestground.CheckThreadViolationRepaintManager;
 
 
 /*
-Jpo.java:  main class of the JPO application
+Jpo.java:  The root object of the JPO application
 
-Copyright (C) 2002-2009  Richard Eigenmann.
+Copyright (C) 2002 - 2009  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -40,7 +40,7 @@ The license is in gpl.txt.
 See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 /**
- * Jpo is the the main class of a browser application that lets
+ * This is the root class of a browser application that lets
  * a user view a collection of pictures in as thumbnails, in a separate window
  * or in a full sized mode.<p>
  *
@@ -80,9 +80,6 @@ public class Jpo
      *
      *   The method verifies that the user has the correct Java Virtual Machine (> 1.4.0)
      *   and then created a new {@link Jpo} object.
-     *
-     *
-     * @param args
      */
     private MainWindow mainWindow;
 
@@ -107,8 +104,7 @@ public class Jpo
         }
         Settings.loadSettings();
 
-        logger.info( "------------------------------------------------------------" );
-        logger.info( "Starting JPO" );
+        logger.info( "------------------------------------------------------------\n      Starting JPO" );
 
         //Toolkit.getDefaultToolkit().getSystemEventQueue().push(
         //       new TracingEventQueue() );
@@ -129,9 +125,9 @@ public class Jpo
                 }
             } );
         } catch ( InterruptedException ex ) {
-            Logger.getLogger( Jpo.class.getName() ).log( Level.SEVERE, null, ex );
+            logger.log( Level.SEVERE, null, ex );
         } catch ( InvocationTargetException ex ) {
-            Logger.getLogger( Jpo.class.getName() ).log( Level.SEVERE, null, ex );
+            logger.log( Level.SEVERE, null, ex );
         }
 
         mainWindow.addWindowListener( new WindowAdapter() {
@@ -185,16 +181,12 @@ public class Jpo
      *  failing that it loads the file indicated in Settings.autoLoad.
      */
     public void loadCollectionOnStartup() {
-        if ( SwingUtilities.isEventDispatchThread() ) {
-            logger.info( "loadCollectionOnStartup should not be on the EDT!" );
-            Thread.dumpStack();
-        }
         Settings.jarAutostartList = ClassLoader.getSystemResource( "autostartJarPicturelist.xml" );
 
 
         if ( Settings.jarAutostartList != null ) {
             Settings.jarRoot = Settings.jarAutostartList.toString().substring( 0, Settings.jarAutostartList.toString().indexOf( "!" ) + 1 );
-            logger.info( "Trying to load picturelist from jar: " + Settings.jarAutostartList.toString() );
+            logger.info( "Autoloading: " + Settings.jarAutostartList.toString() );
             try {
                 Settings.pictureCollection.getRootNode().streamLoad( Settings.jarAutostartList.openStream() );
                 thumbnailJScrollPane.show( new GroupBrowser( Settings.pictureCollection.getRootNode() ) );
@@ -205,7 +197,7 @@ public class Jpo
 
         } else if ( ( Settings.autoLoad != null ) && ( Settings.autoLoad.length() > 0 ) ) {
             File xmlFile = new File( Settings.autoLoad );
-            logger.info( "Jpo.constructor: Trying to load collection from location in stored settings: " + Settings.autoLoad );
+            logger.info( "Autoloading: " + Settings.autoLoad );
             if ( xmlFile.exists() ) {
                 try {
                     Settings.pictureCollection.fileLoad( xmlFile );
@@ -246,8 +238,7 @@ public class Jpo
             Settings.writeSettings();
         }
 
-        logger.info( "Exiting JPO" );
-        logger.info( "------------------------------------------------------------" );
+        logger.info( "Exiting JPO\n------------------------------------------------------------" );
 
         System.exit( 0 );
     }
@@ -372,6 +363,7 @@ public class Jpo
      * @return Returns true if the user want to cancel the close.
      */
     public boolean checkUnsavedUpdates() {
+        Tools.checkEDT();
         if ( Settings.pictureCollection.getUnsavedUpdates() ) {
             Object[] options = {
                 Settings.jpoResources.getString( "discardChanges" ),
@@ -406,7 +398,7 @@ public class Jpo
 
 
     /**
-     *   Calls the {@link PictureCollection#fileSave} method that saves the
+     *   Calls the {@link jpo.dataModel.PictureCollection#fileSave} method that saves the
      *   current collection under it's present name and if it was never
      *   saved before brings up a popup window.
      */
@@ -440,7 +432,7 @@ public class Jpo
 
 
     /**
-     *   Calls the {@link PictureCollection#fileSaveAs} method to bring up
+     *   Calls the {@link #fileSaveAs} method to bring up
      *   a filechooser where the user can select the filename to
      *   save under.
      */

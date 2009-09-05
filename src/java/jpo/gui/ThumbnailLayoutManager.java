@@ -9,7 +9,7 @@ import java.util.logging.Logger;
 /*
 ThumbnailLayoutManger.java:  a Layout Manager for the Thumbnail pane
 
-Copyright (C) 2006-2009 Richard Eigenmann (for the modifications over the original I copied)
+Copyright (C) 2006 - 2009 Richard Eigenmann (for the modifications over the original I copied)
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -56,7 +56,7 @@ public class ThumbnailLayoutManager implements LayoutManager {
     /**
      * Returns the preferredLayoutSize for the managed component
      * @param parent
-     * @return
+     * @return preferred size
      */
     public Dimension preferredLayoutSize( Container parent ) {
         logger.fine( "ThumbnailLayoutManager.preferredLayoutSize: requested" );
@@ -73,7 +73,7 @@ public class ThumbnailLayoutManager implements LayoutManager {
                 if ( ( logicalThumbnail % columns ) == 0 ) {
                     rowComponentHeight = getHeightOfRow( parent, i, columns ) // Thumbnails
                             + getHeightOfRow( parent, i + 1, columns ); // Descriptions
-                    logger.fine( "ThumbnailLayoutManager.preferredLayoutSize: Description height of row " + Integer.toString( (int) ( logicalThumbnail / columns ) ) + " is " + Integer.toString( getHeightOfRow( parent, i + 1, columns ) ) );
+                    logger.fine( "ThumbnailLayoutManager.preferredLayoutSize: Description height of row " + Integer.toString( ( logicalThumbnail / columns )) + " is " + Integer.toString( getHeightOfRow( parent, i + 1, columns ) ) );
                     if ( rowComponentHeight > 0 ) {
                         height += rowComponentHeight + ( 2 * getVerticalGutter() );
                     }
@@ -88,7 +88,7 @@ public class ThumbnailLayoutManager implements LayoutManager {
     /**
      * Returns the minimumLayoutSize for the managed component
      * @param target
-     * @return
+     * @return preferred size
      */
     public Dimension minimumLayoutSize( Container target ) {
         return preferredLayoutSize( target );
@@ -210,7 +210,7 @@ public class ThumbnailLayoutManager implements LayoutManager {
      *  Returns the height of the thumbnails in the row
      *  @param  parent   The Container with the thumbnails
      *  @param index 	The first position of the row
-     *  @param columns  The number of columns in the row
+     *  @param cols  The number of columns in the row
      *  @return  The height of the row
      */
     private int getHeightOfRow( Container parent, int index, int cols ) {
@@ -274,7 +274,7 @@ public class ThumbnailLayoutManager implements LayoutManager {
     /**
      * The number of columns that are being displayed in the layout.
      * @see #calculateCols
-     * @see #getColss
+     * @see #getCols
      * @see #setCols
      */
     private int cols = 1;
@@ -292,7 +292,7 @@ public class ThumbnailLayoutManager implements LayoutManager {
 
     /**
      *  Sets the number of columns we are showing on the panel. This should only be set by {@link #calculateCols}.
-     *  @param columns  The new number of columns-
+     *  @param cols  The new number of columns-
      */
     private void setCols( int cols ) {
         this.cols = cols;

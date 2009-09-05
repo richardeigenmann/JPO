@@ -9,7 +9,7 @@ import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 /*
-WordMap.java:  A class that spplies the list of words to the tag cloud
+WordMap.java:  A class that spplies the list of words and a count to the tag cloud
 
 Copyright (C) 2009  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
@@ -29,18 +29,19 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 /**
  * This class defines the abstract getWordCountMap method that must be
  * written when extending this class to feed a list of words into the Tag Cloud.
- * It has the functionality in the getValueSortedMap method to order the words by
+ * It has the functionality to order the words by
  * the count so that a list of the top n words can be selected.
  * In order to optimise speed this class caches the valueSortedTreeMap. To signal
- * that the map of words has changed, call the @see #rebuild method.
- *
+ * that the map of words has changed, call the {@link #rebuild} method.
+ * TODO: Write testcases for this
  * @author Richard Eigenmann
  */
 public abstract class WordMap {
 
     /**
-     * The implementing class must return a map of words and their number of occurrences.
-     * @return
+     * The implementing class must return a map of words and a count. The list of
+     * words does not have to be sorted in any way.
+     * @return the map of word and value pairs
      */
     public abstract Map<String, Integer> getWordCountMap();
 
@@ -55,11 +56,17 @@ public abstract class WordMap {
     }
 
 
+    /**
+     * Empties the cache of the sorted-by-value word list and rebuilds it,
+     */
     public void rebuild() {
         valueSortedTreeMap = null;
         getValueSortedMap();
     }
 
+    /**
+     * Cache of the sorted-by-value list of words.
+     */
     private TreeMap<String, Integer> valueSortedTreeMap = null;
 
 
@@ -68,16 +75,22 @@ public abstract class WordMap {
      * sorted descendingly by the number in the value of each entry. It caches the result
      * in a private TreeMap variable and returns this on each subsequent call. If
      * the source words change you need to call @see #rebuild.
+     * TODO: This is very slow!
      *
      * @return The Map retrieved from getWordCountMap sorted by the count.
      */
     public TreeMap<String, Integer> getValueSortedMap() {
-        logger.entering( this.getClass().getName(), "getValueSortedMap" );
+        //logger.fine( this.getClass().getName(), "getValueSortedMap" );
         if ( valueSortedTreeMap == null ) {
             logger.fine( "valueSortedTreeMap doesn't exist. Building..." );
             valueSortedTreeMap = new TreeMap<String, Integer>( new Comparator<String>() {
 
+                /**
+                 * override the compare method so that we can have the TreeMap sorted by value instead of by word
+                 */
+                @Override
                 public int compare( String key1, String key2 ) {
+                    //logger.finest( String.format( "Comparing %s with %s", key1, key2 ));
                     int s1 = getWordCountMap().get( key1 );
                     int s2 = getWordCountMap().get( key2 );
                     if ( !( s1 == s2 ) ) {
@@ -95,15 +108,18 @@ public abstract class WordMap {
 
 
     /**
-     * Cuts the list of words down to the top terms such as top 30
-     * @param valueSortedTreeMap
+     * Returns a alphabetical set of the highest ranking n words
      * @param limit The maximum allowed terms
-     * @return
+     * @return an alphabetical set of the highest ranking n words
      */
-    public static TreeSet<String> getTopWords( TreeMap<String, Integer> valueSortedTreeMap, int limit ) {
+    public TreeSet<String> getTopWords( int limit ) {
         TreeSet<String> topWords = new TreeSet<String>();
+        if ( limit == 0 ) {
+            topWords.add( "" );
+            return topWords;
+        }
 
-        Iterator<Entry<String, Integer>> it = valueSortedTreeMap.entrySet().iterator();
+        Iterator<Entry<String, Integer>> it = getValueSortedMap().entrySet().iterator();
         Entry<String, Integer> pairs;
         int i = 0;
         while ( it.hasNext() && i < limit ) {
@@ -116,10 +132,29 @@ public abstract class WordMap {
 
 
     /**
-     * Returns the largest count of modes in the Value of the supplied Map
-     * @return
+     * Returns the highest number associated with a word
+     * @return the highest number associated with a word
      */
     public int getMaximumCount() {
         return getValueSortedMap().firstEntry().getValue();
+    }
+
+
+    /**
+     * Enumerates the WordMap which helps with debugging
+     * @return Returns all the words for debugging
+     */
+    @Override
+    public String toString() {
+        StringBuffer sb = new StringBuffer( "" );
+        Iterator<Entry<String, Integer>> it = getWordCountMap().entrySet().iterator();
+        Entry<String, Integer> pairs;
+        int i = 0;
+        while ( it.hasNext() ) {
+            pairs = it.next();
+            sb.append( String.format( "%s %d, ", pairs.getKey(), pairs.getValue() ) );
+            i++;
+        }
+        return sb.toString();
     }
 }

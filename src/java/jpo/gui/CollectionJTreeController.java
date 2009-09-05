@@ -107,7 +107,7 @@ public class CollectionJTreeController
      *   allows the CollectionJTreeController to tell the Info Panel about selections
      *   via it's showInfo method.
      */
-    private InfoPanel associatedInfoPanel;
+    private InfoPanelController associatedInfoPanel;
 
     /**
      * The private reference to the JTree representing the collection
@@ -144,7 +144,7 @@ public class CollectionJTreeController
      *   used to allow the JTree to tell the InfoPanel to show information about selections.
      * @param associatedInfoPanel
      */
-    public void setAssociatedInfoPanel( InfoPanel associatedInfoPanel ) {
+    public void setAssociatedInfoPanel( InfoPanelController associatedInfoPanel ) {
         this.associatedInfoPanel = associatedInfoPanel;
     }
 

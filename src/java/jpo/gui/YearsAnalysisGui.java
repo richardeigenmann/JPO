@@ -82,8 +82,8 @@ public class YearsAnalysisGui extends JFrame implements Serializable {
 
 
     /**
-     *
-     * @return 
+     * returns the display panel
+     * @return the display panel
      */
     public JPanel getDisplayPanel() {
         return DisplayPanel;

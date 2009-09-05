@@ -1162,7 +1162,7 @@ public class PictureInfo implements Serializable {
      *  Returns whether the category is part of the attributes of the picture
      *
      * @param key
-     * @return
+     * @return true if the key was in the categories
      */
     public boolean containsCategory( Object key ) {
         if ( categoryAssignments == null ) {
@@ -1175,7 +1175,7 @@ public class PictureInfo implements Serializable {
     /**
      *  Removes the supplied category from the picture if it was there
      *
-     * @param key
+     * @param key the key to search for
      */
     public void removeCategory( Object key ) {
         if ( categoryAssignments != null ) {

@@ -4,7 +4,7 @@ package jpo.dataModel;
 /*
 Query.java:  An Interface that specifies what a query must implement so it can be shown
 
-Copyright (C) 2006-2009  Richard Eigenmann.
+Copyright (C) 2006 - 2009  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -26,7 +26,7 @@ public interface Query {
     /**
      *  The query must be able to say how many results it will return.
      *
-     * @return
+     * @return the number of results
      */
     public int getNumberOfResults();
 
@@ -37,15 +37,15 @@ public interface Query {
      *  index is out of bounds it returns null. The valid range is from 0 to {@link #getNumberOfResults}.
      *
      *  @param index   The component index that is to be returned 0 to {@link #getNumberOfResults}.
-     * @return
+     *  @return the node for the index
      */
     public SortableDefaultMutableTreeNode getIndex( int index );
 
 
     /**
-     *  returns a title for the search that can be used to display the search results under.
+     *  Returns a title for the search that can be used to display the search results under.
      *
-     * @return
+     *  @return a string for the title
      */
     public String getTitle();
 
@@ -53,7 +53,7 @@ public interface Query {
     /**
      *  returns a the title for the search that can be used to display the search results under.
      *
-     * @return
+     *  @return a title
      */
     @Override
     public String toString();

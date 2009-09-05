@@ -62,7 +62,7 @@ public class Camera implements Serializable {
 
     /**
      *  This method returns the mount point of the camera in the computer's file system.
-     * @return
+     * @return the mount point of the camera
      */
     public String getCameraMountPoint() {
         return cameraMountPoint;
@@ -118,7 +118,7 @@ public class Camera implements Serializable {
     /**
      *   toString method that returns the description of the camera
      *
-     * @return
+     * @return the description of the camera
      */
     @Override
     public String toString() {
@@ -151,7 +151,7 @@ public class Camera implements Serializable {
      *  returns whether the provided checksum or file is registered in the old camera image.
      * @param f
      * @param checksum
-     * @return
+     * @return true if the file was known before
      */
     public boolean inOldImage( File f, long checksum ) {
         return inOldImage( f ) || inOldImage( checksum );
@@ -163,7 +163,7 @@ public class Camera implements Serializable {
      *  it determines whether to check by checksum or file based on the useChecksum and useFilename
      *  flags.
      * @param checksum
-     * @return
+     * @return true if the image was known before based on the checksum
      */
     public boolean inOldImage( long checksum ) {
         //logger.info("Camera.inOldImage: Checking Checksum: " + Long.toString(checksum) );
@@ -176,7 +176,7 @@ public class Camera implements Serializable {
      *  it determines whether to check by checksum or file based on the useChecksum and useFilename
      *  flags.
      * @param f
-     * @return
+     * @return true if file is found in old camera
      */
     public boolean inOldImage( File f ) {
         //logger.info("Camera.inOldImage: Checking File: " + f.toString() );
@@ -230,7 +230,7 @@ public class Camera implements Serializable {
     /**
      * Returns the number of files the camera directory tree holds. This
      * includes directories and non picture files.
-     * @return
+     * @return the number of files in the camera directory tree
      */
     public int countFiles() {
         return Tools.countfiles( getRootDir().listFiles() );
@@ -310,7 +310,7 @@ public class Camera implements Serializable {
 
     /**
      *  This method returns a collection of new pictures found on the camera not previously found there
-     * @return
+     * @return a collection of new picture files
      */
     public Collection<File> getNewPictures() {
         HashSet<File> newPics = new HashSet<File>();
@@ -331,7 +331,7 @@ public class Camera implements Serializable {
      *  This method returns a collection of new pictures found on the camera not previously found there
      * @param files
      * @param newFiles
-     * @return
+     * @return a collection of new picture files
      */
     protected Collection<File> getNewPicturesLoop( File[] files, Collection<File> newFiles ) {
         for ( File f : files ) {
@@ -363,7 +363,7 @@ public class Camera implements Serializable {
 
     /**
      *  counts the number of pictures for which a checksum is held in the HashMap
-     * @return
+     * @return the number of pictures previously known as a string
      */
     public String getOldIndexCountAsString() {
         return Integer.toString( getOldImage().size() );
@@ -373,7 +373,7 @@ public class Camera implements Serializable {
     /**
      *  This method tries to find out if the camera is connected to the computer. It does this
      *  by checking whether the directory of the camera is empty.
-     * @return
+     * @return true if the camera is connected
      */
     public boolean isCameraConnected() {
         File rootDir = new File( getCameraMountPoint() );
@@ -396,8 +396,8 @@ public class Camera implements Serializable {
 
 
     /**
-     *  returns whether to monitor for new Pictures
-     * @return
+     *  returns whether to monitor for new pictures
+     * @return whether to monitor for new picutres
      */
     public boolean getMonitorForNewPictures() {
         return monitorForNewPictures;

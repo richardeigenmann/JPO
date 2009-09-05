@@ -144,7 +144,6 @@ public class JarDistiller implements Runnable {
             // create the progress monitor
             NodeStatistics ns = new NodeStatistics( startNode );
             int numPics = ns.getNumberOfPictures();
-            ns.getRid();
             progressMonitor =
                     new ProgressMonitor(
                     Settings.anchorFrame,

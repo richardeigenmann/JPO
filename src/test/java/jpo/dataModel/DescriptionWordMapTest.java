@@ -1,6 +1,5 @@
-package jpo.TagCloud;
+package jpo.dataModel;
 
-import jpo.dataModel.*;
 import java.util.AbstractMap;
 import java.util.HashSet;
 import java.util.TreeMap;

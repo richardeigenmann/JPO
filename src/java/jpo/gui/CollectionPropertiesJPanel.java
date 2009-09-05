@@ -12,7 +12,7 @@ import jpo.dataModel.NodeStatistics;
 /*
 CollectionPropertiesJPanel.java: a panel that shows some counts about the collection
 
-Copyright (C) 2002-2009  Richard Eigenmann.
+Copyright (C) 2002 - 2009  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -73,17 +73,8 @@ public class CollectionPropertiesJPanel
      *   the supplied node.
      */
     public CollectionPropertiesJPanel() {
-        Runnable r = new Runnable() {
-
-            public void run() {
-                initComponents();
-            }
-        };
-        if ( SwingUtilities.isEventDispatchThread() ) {
-            r.run();
-        } else {
-            SwingUtilities.invokeLater( r );
-        }
+        Tools.checkEDT();
+        initComponents();
     }
 
 
@@ -125,9 +116,10 @@ public class CollectionPropertiesJPanel
      *  @param  statisticsNode   The node that is being analysed.
      */
     public void updateStats( DefaultMutableTreeNode statisticsNode ) {
-        //logger.info("CollectionPropertiesJPanel.updateStats: called on node: " + statisticsNode.toString() );
+        logger.info( "update stats for node: " + statisticsNode.toString() );
+        Tools.checkEDT();
         if ( Settings.pictureCollection.fileLoading ) {
-            logger.info( "CollectionPropertiesJPanel.updateStats: Still busy loading the file. Aborting" );
+            logger.info( "Still busy loading the file. Aborting" );
             return;
         }
 
@@ -140,23 +132,13 @@ public class CollectionPropertiesJPanel
             }
         }
 
-        Runnable r = new Runnable() {
 
-            public void run() {
-                collectionItemsLabel.setText( ns.getNumberOfNodesString() );
-                collectionGroupsLabel.setText( ns.getNumberOfGroupsString() );
-                collectionPicturesLabel.setText( ns.getNumberOfPicturesString() );
-                collectionSizeJLabel.setText( ns.getSizeOfPicturesString() );
+        collectionItemsLabel.setText( ns.getNumberOfNodesString() );
+        collectionGroupsLabel.setText( ns.getNumberOfGroupsString() );
+        collectionPicturesLabel.setText( ns.getNumberOfPicturesString() );
+        collectionSizeJLabel.setText( ns.getSizeOfPicturesString() );
 
-                updateQueueCount();
-            }
-        };
-
-        if ( SwingUtilities.isEventDispatchThread() ) {
-            r.run();
-        } else {
-            SwingUtilities.invokeLater( r );
-        }
+        updateQueueCount();
 
     }
 

@@ -20,22 +20,22 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 The license is in gpl.txt.
 See http://www.gnu.org/copyleft/gpl.html for the details.
  */
+/**
+ *  The first class to be started to get the JPO application going.
+ *  @author Richard Eigenmann, richard.eigenmann@gmail.com
+ *  @version 0.9
+ *  @since JDK1.6.0
+ */
 public class Main {
 
     /**
-     * @author Richard Eigenmann, richard.eigenmann@gmail.com
-     * @version 0.9
-     * @since JDK1.6.0
-     */
-    /**
-     *   the main method is the entry point for this application (or any)
-     *   Java application. No parameter passing is used in the Jpo application. <p>
+     *  The main method is the entry point for this application (or any)
+     *  Java application. No parameter passing is used in the Jpo application. <p>
      *
-     *   The method verifies that the user has the correct Java Virtual Machine (> 1.6.0)
-     *   and then created a new {@link Jpo} object.
+     *  The method verifies that the user has the correct Java Virtual Machine (> 1.6.0)
+     *  and then created a new {@link Jpo} object.
      *
-     *
-     * @param args
+     *  @param args The command line arguments
      */
     public static void main( String[] args ) {
         // Verify that we have to correct version of the jvm

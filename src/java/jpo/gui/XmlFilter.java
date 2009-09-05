@@ -35,7 +35,7 @@ public class XmlFilter extends javax.swing.filechooser.FileFilter {
 	 *  accepts directories and files ending in .xml
          *
          * @param file
-         * @return
+         * @return true if the files ends in .xml
          */
 	public boolean accept(File file) {
 		return file.isDirectory()
@@ -48,7 +48,7 @@ public class XmlFilter extends javax.swing.filechooser.FileFilter {
 	/**
 	 *   returns the description "XML Files"
          *
-         * @return
+         * @return the description "XML Files"
          */
 	public String getDescription() {
         	return "XML Files";

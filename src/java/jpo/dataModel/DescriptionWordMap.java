@@ -1,11 +1,9 @@
-package jpo.TagCloud;
+package jpo.dataModel;
 
+import jpo.TagCloud.*;
 import jpo.dataModel.*;
-import java.util.AbstractCollection;
-import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -150,124 +148,30 @@ public class DescriptionWordMap extends WordMap {
         return wordMap;
     }
 
-
-    /**
-     * Returns the number of nodes behind a specific key
-     * @param key
-     * @return The number of nodes in the HashSet
-     */
-    public int getCountOfNodes( String key ) {
-        HashSet hs = wordMap.get( key );
-        return hs.size();
-    }
+  
+   
+    private HashMap<String, Integer> wordCountMap = null;
 
 
     /**
-     * Returns the largest count of modes in the Value of the supplied Map
-     * @param map
-     * @return
-     */
-    public static int getMaximumNodes( AbstractMap<String, HashSet<SortableDefaultMutableTreeNode>> map ) {
-        int maxNodes = 0;
-        Iterator<Entry<String, HashSet<SortableDefaultMutableTreeNode>>> it = map.entrySet().iterator();
-        Entry<String, HashSet<SortableDefaultMutableTreeNode>> pairs;
-        while ( it.hasNext() ) {
-            pairs = it.next();
-            int nodes = ( (AbstractCollection) pairs.getValue() ).size();
-            if ( nodes > maxNodes ) {
-                maxNodes = nodes;
-            }
-        }
-        return maxNodes;
-    }
-
-    private TreeMap<String, HashSet<SortableDefaultMutableTreeNode>> truncatedMap;
-
-
-    /**
-     * Returns a TreeMap of the top truncated nodes.
-     * @return
-     */
-    public TreeMap<String, HashSet<SortableDefaultMutableTreeNode>> getTruncatedMap() {
-        return truncatedMap;
-    }
-
-
-    /**
-     * Cuts the list of words down to the top terms such as top 30
-     * @param limit The maximum allowed terms
-     */
-    public void truncateToTop( int limit ) {
-        if ( valueSortedMap == null ) {
-            buildValueSortedMap();
-        }
-        truncatedMap = new TreeMap<String, HashSet<SortableDefaultMutableTreeNode>>();
-
-        Iterator<Entry<String, HashSet<SortableDefaultMutableTreeNode>>> it = valueSortedMap.entrySet().iterator();
-        Entry<String, HashSet<SortableDefaultMutableTreeNode>> pairs;
-        int i = 0;
-        while ( it.hasNext() && i < limit ) {
-            pairs = it.next();
-            truncatedMap.put( pairs.getKey(), pairs.getValue() );
-            i++;
-        }
-    }
-
-    private TreeMap<String, HashSet<SortableDefaultMutableTreeNode>> valueSortedMap;
-
-
-    private void buildValueSortedMap() {
-        valueSortedMap = new TreeMap<String, HashSet<SortableDefaultMutableTreeNode>>( new Comparator<String>() {
-
-            public int compare( String k1, String k2 ) {
-                int s1 = wordMap.get( k1 ).size();
-                int s2 = wordMap.get( k2 ).size();
-                if ( !( s1 == s2 ) ) {
-                    return ( (Integer) s2 ).compareTo( s1 );
-                } else {
-                    return k2.compareTo( k1 );
-                }
-            }
-        } );
-        valueSortedMap.putAll( wordMap );
-    }
-
-
-    /**
-     * The implementing class must return a map of words and their number of occurrences.
-     * @return
+     * In this method we return a Map of description terms with the count
+     * of nodes they appear in. In order to ensure that subsequent calls to this
+     * method return quickly the list is build only once. If it should be
+     * rebuilt the wordCountMap variable needs to be set to null;
+     * @return A Map with description terms and a count of nodes where the term is found
      */
     public Map<String, Integer> getWordCountMap() {
-        HashMap<String, Integer> wordCountMap = new HashMap<String, Integer>();
-        Iterator<Entry<String, HashSet<SortableDefaultMutableTreeNode>>> it = wordMap.entrySet().iterator();
-        Entry<String, HashSet<SortableDefaultMutableTreeNode>> pairs;
-        while ( it.hasNext() ) {
-            pairs = it.next();
-            wordCountMap.put( pairs.getKey(), pairs.getValue().size() );
+        if ( wordCountMap == null ) {
+            logger.info( "Building wordCountMap" );
+            wordCountMap = new HashMap<String, Integer>();
+            Iterator<Entry<String, HashSet<SortableDefaultMutableTreeNode>>> it = wordMap.entrySet().iterator();
+            Entry<String, HashSet<SortableDefaultMutableTreeNode>> pairs;
+            while ( it.hasNext() ) {
+                pairs = it.next();
+                wordCountMap.put( pairs.getKey(), pairs.getValue().size() );
+            }
         }
         return wordCountMap;
     }
-
-
-   
-
-
-    /**
-     * Lists the contents of the word to set map
-     * @return a dump of the map
-     */
-    @Override
-    public String toString() {
-        StringBuffer output = new StringBuffer( "" );
-        output.append( "Number of Words: " + Integer.toString( wordMap.size() ) + "\n" );
-        output.append( "Larget number of nodes per word: " + Integer.toString( getMaximumNodes( wordMap ) ) + "\n" );
-        Iterator<Entry<String, HashSet<SortableDefaultMutableTreeNode>>> it = wordMap.entrySet().iterator();
-        Entry<String, HashSet<SortableDefaultMutableTreeNode>> pairs;
-        while ( it.hasNext() ) {
-            pairs = it.next();
-            output.append( pairs.getKey().toString() + " found in  " + Integer.toString( pairs.getValue().size() ) + " nodes.\n" );
-        }
-
-        return output.toString();
-    }
+ 
 }

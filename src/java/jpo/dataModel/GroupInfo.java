@@ -59,7 +59,7 @@ public class GroupInfo implements Serializable {
     /**
      *   toString method that returns the description of the group
      *
-     * @return
+     * @return description of the group
      */
     @Override
     public String toString() {

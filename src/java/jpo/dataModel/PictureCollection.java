@@ -19,9 +19,9 @@ import jpo.gui.ThumbnailCreationQueue;
 
 
 /*
-PictureCollection.java:  An object that holds all the references to a collection of pictures
+PictureCollection.java:  Information about the collection and owns the tree model
 
-Copyright (C) 2006-2009  Richard Eigenmann, Zurich, Switzerland
+Copyright (C) 2006 - 2009  Richard Eigenmann, Zurich, Switzerland
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -36,7 +36,7 @@ The license is in gpl.txt.
 See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 /**
- *  An object that holds all the references to a collection of pictures
+ *  Information about the collection and owner of the treemodel
  */
 public class PictureCollection {
 
@@ -47,12 +47,11 @@ public class PictureCollection {
 
 
     /**
-     *  Constructs a new PictureCollection object.
+     *  Constructs a new PictureCollection object with a root object
      */
     public PictureCollection() {
         setRootNode( new SortableDefaultMutableTreeNode( new Object() ) );
         treeModel = new DefaultTreeModel( getRootNode() );
-        //createQueriesTreeModel();
         categories = new HashMap<Integer, String>();
         mailSelection = new HashSet<SortableDefaultMutableTreeNode>();
         setAllowEdits( true );
@@ -87,12 +86,12 @@ public class PictureCollection {
             try {
                 SwingUtilities.invokeAndWait( r );
             } catch ( InterruptedException ex ) {
-                Logger.getLogger( PictureCollection.class.getName() ).log( Level.SEVERE, null, ex );
-                Logger.getLogger( PictureCollection.class.getName() ).log( Level.SEVERE, null, "no idea what to do here" );
+                logger.log( Level.SEVERE, null, ex );
+                logger.log( Level.SEVERE, null, "no idea what to do here" );
                 Thread.dumpStack();
             } catch ( InvocationTargetException ex ) {
-                Logger.getLogger( PictureCollection.class.getName() ).log( Level.SEVERE, null, ex );
-                Logger.getLogger( PictureCollection.class.getName() ).log( Level.SEVERE, null, "no idea what to do here" );
+                logger.log( Level.SEVERE, null, ex );
+                logger.log( Level.SEVERE, null, "no idea what to do here" );
                 Thread.dumpStack();
             }
         }
@@ -185,7 +184,7 @@ public class PictureCollection {
 
     /**
      *  This method returns the root node of the collection
-     * @return
+     * @return the root node
      */
     public SortableDefaultMutableTreeNode getRootNode() {
         return rootNode;
@@ -193,14 +192,13 @@ public class PictureCollection {
 
 
     /**
-     *  This method returns the root node of the collection
-     * @return
+     * This method sets the root node of the collection
      */
     private void setRootNode( SortableDefaultMutableTreeNode rootNode ) {
         if ( rootNode != null ) {
-            logger.info( "setting root node to " + rootNode.toString() );
+            logger.fine( "setting root node to " + rootNode.toString() );
         } else {
-            logger.info( "setting root node to null" );
+            logger.info( "setting root node to null. Why ?" );
         }
         this.rootNode = rootNode;
     }
@@ -391,7 +389,7 @@ public class PictureCollection {
     /**
      *  This adds a category to the HashMap
      * @param category
-     * @return
+     * @return the number at which the category was added
      */
     public Integer addCategory( String category ) {
         Integer key = null;
@@ -497,7 +495,7 @@ public class PictureCollection {
 
 
     /**
-     *  removes the category from the nodes using it
+     * removes the category from the nodes using it
      * @param key
      * @param startNode
      */

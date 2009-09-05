@@ -53,7 +53,7 @@ public class VerticalGrowJPanel extends JPanel implements Scrollable {
      * This method gets called by the JSCrollPane to figure out the size oif the
      * Viewport. The getScrollableTracksViewportWidth prevents the components
      * from growing horizontally but we need to figure out the height.
-     * @return
+     * @return the preffered size based on the getWidth and getPreferredHeight
      */
     @Override
     public Dimension getPreferredSize() {
@@ -68,7 +68,7 @@ public class VerticalGrowJPanel extends JPanel implements Scrollable {
      * height of the stacked components. FlowLayout will have taken care of the
      * wrap around.
      * Source: http://forums.sun.com/thread.jspa?forumID=57&threadID=5117549&start=7
-     * @return
+     * @return the suggested height
      */
     private int getPreferredHeight() {
         int rv = 0;
@@ -99,7 +99,7 @@ public class VerticalGrowJPanel extends JPanel implements Scrollable {
      * @param visibleRect
      * @param orientation
      * @param direction
-     * @return
+     * @return the scrollable block increment
      */
     public int getScrollableBlockIncrement( Rectangle visibleRect, int orientation, int direction ) {
         return orientation == SwingConstants.VERTICAL ? getParent().getHeight() : getParent().getWidth();
@@ -131,7 +131,7 @@ public class VerticalGrowJPanel extends JPanel implements Scrollable {
      * @param visibleRect
      * @param orientation
      * @param direction
-     * @return
+     * @return the scrollable unit increment
      */
     public int getScrollableUnitIncrement( Rectangle visibleRect, int orientation, int direction ) {
         int scrollAmount = ( orientation == SwingConstants.VERTICAL

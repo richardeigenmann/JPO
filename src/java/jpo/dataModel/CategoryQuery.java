@@ -55,7 +55,7 @@ public class CategoryQuery implements Query {
 
     /**
      *  The query must be able to say how many results it will return.
-     * @return
+     * @return the number of results
      */
     public int getNumberOfResults() {
         if ( resultList == null ) {
@@ -71,7 +71,7 @@ public class CategoryQuery implements Query {
      *  index is out of bounds it returns null.
      *
      *  @param index   The component index that is to be returned.
-     * @return 
+     * @return the node for the position
      */
     public SortableDefaultMutableTreeNode getIndex( int index ) {
         if ( resultList == null ) {
@@ -87,7 +87,7 @@ public class CategoryQuery implements Query {
 
     /**
      *  returns a title for the search that can be used to display the search results under.
-     * @return
+     * @return a title
      */
     public String getTitle() {
         return toString();
@@ -96,7 +96,7 @@ public class CategoryQuery implements Query {
 
     /**
      *  returns a the title for the search that can be used to display the search results under.
-     * @return
+     * @return the title for the search
      */
     @Override
     public String toString() {

@@ -20,8 +20,8 @@ The license is in gpl.txt.
 See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 /** 
- *  This class implements the {@link ThumbnailBrowserInterface} in the specific manner that is required for 
- *  displaying {@link Query} in the {@link ThumbnailJScrollPane}.
+ *  This class implements the {@link ThumbnailBrowser}  in the specific manner that is required for
+ *  displaying {@link Query} in the {@link jpo.gui.ThumbnailJScrollPane}.
  */
 public class QueryBrowser extends ThumbnailBrowser {
 
@@ -52,7 +52,7 @@ public class QueryBrowser extends ThumbnailBrowser {
     /**
      *  returns the {@link Query} for this QueryBrowser
      *
-     * @return
+     * @return the query for the browser
      */
     public Query getQuery() {
         return myQuery;
@@ -72,7 +72,7 @@ public class QueryBrowser extends ThumbnailBrowser {
     /**
      *  On a group we return the number of children in the group.
      *
-     * @return
+     * @return the number of nodes
      */
     public int getNumberOfNodes() {
         if ( myQuery == null ) {
@@ -88,7 +88,7 @@ public class QueryBrowser extends ThumbnailBrowser {
      *  If there are more Thumbnails than nodes in the group it returns null.
      *
      *  @param index   The component index that is to be returned.
-     * @return
+     * @return the node for the index
      */
     public SortableDefaultMutableTreeNode getNode( int index ) {
         if ( myQuery == null ) {

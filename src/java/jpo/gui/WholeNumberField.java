@@ -72,7 +72,7 @@ public class WholeNumberField extends JTextField {
     /**
      *  method that returns the value of the WholeNumberField
      *
-     * @return
+     * @return the value of the field
      */
     public int getValue() {
         int retVal = 0;
@@ -89,7 +89,7 @@ public class WholeNumberField extends JTextField {
     /**
      *  method that returns the value of the WholeNumberField
      *
-     * @return
+     * @return the value of the field
      */
     public double getValueAsDouble() {
         double retVal = 0;
@@ -127,7 +127,7 @@ public class WholeNumberField extends JTextField {
     /**
      *  part of the inner workings
      *
-     * @return
+     * @return the document
      */
     @Override
     protected Document createDefaultModel() {

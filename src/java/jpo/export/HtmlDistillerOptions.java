@@ -228,7 +228,7 @@ public class HtmlDistillerOptions {
     }
 
     /**
-     * Same as @see getMidresJpgQuality but returned as int and multiplied by 100
+     * Same as {@link #getMidresJpgQuality} but returned as int and multiplied by 100
      * @return
      */
     public int getMidresJpgQualityPercent() {
@@ -239,7 +239,7 @@ public class HtmlDistillerOptions {
      * Convenience method that allows the quality to be specified between 0 and 100 
      * as an integer. If the value is out of bounds it is raised to 0 or lowered
      * to 100.
-     * @param lowresJpgQuality
+     * @param midresJpgQuality the desired quality between 0 and 100
      */
     public void setMidresJpgQualityPercent( float midresJpgQuality ) {
         if ( midresJpgQuality > 100 ) {
@@ -247,9 +247,13 @@ public class HtmlDistillerOptions {
         } else if ( midresJpgQuality < 0 ) {
             midresJpgQuality = 0;
         }
-        setMidresJpgQuality( (float) midresJpgQuality / 100 );
+        setMidresJpgQuality( midresJpgQuality / 100 );
     }
 
+    /**
+     * Returns the width of the midres images
+     * @return the width of the midres images
+     */
     public int getMidresWidth() {
         return midresWidth;
     }
@@ -361,7 +365,7 @@ public class HtmlDistillerOptions {
 
     /**
      * Sets the name of the Zip file to be created
-     * @param zipFileName
+     * @param downloadZipFileName the name of the zip file to create
      */
     public void setDownloadZipFileName( String downloadZipFileName ) {
         this.downloadZipFileName = downloadZipFileName;

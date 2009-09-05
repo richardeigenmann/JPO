@@ -5,7 +5,6 @@ import java.awt.Dimension;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.TreeSet;
 import java.util.logging.Logger;
 import javax.swing.JPanel;
@@ -79,6 +78,8 @@ public class WordBrowser extends JPanel {
      * @param minimumWords The minimum number of words to show (at least 1; enforced)
      */
     public WordBrowser( WordMap wordMap, final TagClickListener tagClickListener, final int minimumWords ) {
+        logger.fine( String.format( "WordBrowser instantiated with WordMap, TagClickListener and minimumWords (%d)", minimumWords ) );
+        logger.finest( "WordMap contents: " + wordMap.toString() );
         Tools.checkEDT();
 
         this.tagClickListener = tagClickListener;
@@ -97,32 +98,23 @@ public class WordBrowser extends JPanel {
         controlsPanel.add( slider );
         add( controlsPanel, BorderLayout.PAGE_START );
 
-        //scrollPane = new JScrollPane( labelPanel );
         scrollPane.setHorizontalScrollBarPolicy( JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED );
         scrollPane.setVerticalScrollBarPolicy( JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED );
         add( scrollPane, BorderLayout.CENTER );
 
-        //>setWordMap( wordMap );
+        setWordMap( wordMap );
     }
 
-    WordMap wordMap;
+    /**
+     * The wordMap that will be used for the TagCloud
+     */
+    private WordMap wordMap;
 
 
     public void setWordMap( WordMap wm ) {
         wordMap = wm;
-        this.wordCountMap = wordMap.getWordCountMap();
-        availableWords = this.wordCountMap.size();
         showWords( this.minimumWords );
     }
-
-    Map<String, Integer> wordCountMap;
-
-    /**
-     * The number of words available in the DescriptionWordMap
-     */
-    private int availableWords;
-
-    private int maximumCount;
 
 
     /**
@@ -133,16 +125,15 @@ public class WordBrowser extends JPanel {
      */
     public void showWords( final int limit ) {
         Tools.checkEDT();
-        TreeSet<String> topWords = DescriptionWordMap.getTopWords( wordMap.getValueSortedMap(), limit );
-        maximumCount = wordMap.getMaximumCount();
-        logger.fine( String.format( "maxNodes determined to be %d", maximumCount ) );
+        TreeSet<String> topWords = wordMap.getTopWords( limit );
+        logger.fine( String.format( "maxNodes determined to be %d", wordMap.getMaximumCount() ) );
 
         labelPanel.removeAll();
 
         Iterator<String> it = topWords.iterator();
         while ( it.hasNext() ) {
             String s = it.next();
-            float percent = (float) wordCountMap.get( s ) / (float) maximumCount;
+            float percent = (float) wordMap.getWordCountMap().get( s ) / (float) wordMap.getMaximumCount();
             TagCloudJLabel tagCloudEntry = new TagCloudJLabel( s, percent );
             tagCloudEntry.addMouseListener( wordClickListener );
             labelPanel.add( tagCloudEntry );
@@ -175,9 +166,11 @@ public class WordBrowser extends JPanel {
                 // correct for the value 0 which I want to have 0 for.
                 pct = 0f;
             }
+            int availableWords = wordMap.getWordCountMap().size();
             int limit = (int) ( pct * ( availableWords - minimumWords ) ) + minimumWords;
             if ( limit > availableWords ) {
-                logger.severe( String.format( "Limit (%d) is greater than available words (%d)", limit, availableWords ) );
+                logger.severe( String.format( "Limit (%d) is greater than available words (%d) setting to available words", limit, availableWords ) );
+                limit = availableWords;
             }
             showWords( limit );
         }

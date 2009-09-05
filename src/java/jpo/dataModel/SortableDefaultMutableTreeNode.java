@@ -682,7 +682,7 @@ public class SortableDefaultMutableTreeNode extends DefaultMutableTreeNode
      * @param newNode
      */
     public void add( SortableDefaultMutableTreeNode newNode ) {
-        //logger.info( "SDMTN.add was called for node: " + newNode.toString() );
+        logger.fine( "SDMTN.add was called for node: " + newNode.toString() );
         super.add( newNode );
         if ( getPictureCollection().getSendModelUpdates() ) {
             int index = this.getIndex( newNode );

@@ -4,7 +4,7 @@
  */
 package jpotestground;
 
-import jpo.TagCloud.DescriptionWordMap;
+import jpo.dataModel.DescriptionWordMap;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;

@@ -16,6 +16,7 @@ import jpo.dataModel.Settings;
 import jpo.dataModel.GroupInfo;
 import jpo.dataModel.PictureInfo;
 import jpo.dataModel.Tools;
+import jpo.gui.InfoPanelController;
 
 /*
 MainWindow.java:  main window of the JPO application
@@ -116,7 +117,7 @@ public class MainWindow extends JFrame {
 
 
         // Set up the Info Panel
-        InfoPanel infoPanel = new InfoPanel();
+        InfoPanelController infoPanelController = new InfoPanelController();
 
         /**
          *  The pane that holds the main window. On the left will go the tree, on the
@@ -131,7 +132,7 @@ public class MainWindow extends JFrame {
         jpoNavigatorJTabbedPane.setPreferredSize( Settings.jpoNavigatorJTabbedPanePreferredSize );
 
         //leftSplitPane.setTopComponent( jpoNavigatorJTabbedPane );
-        leftSplitPane.setBottomComponent( infoPanel );
+        leftSplitPane.setBottomComponent( infoPanelController.getInfoPanel() );
         leftSplitPane.setDividerLocation( Settings.preferredLeftDividerSpot );
         /**
          *  The pane that holds the main window. On the left will go the tree, on the
@@ -171,14 +172,14 @@ public class MainWindow extends JFrame {
 
         // Set up the communication between the JTree and the Thumbnail Pane
         collectionJTreeController.setAssociatedThumbnailJScrollpane( thumbnailJScrollPane );
-        collectionJTreeController.setAssociatedInfoPanel( infoPanel );
+        collectionJTreeController.setAssociatedInfoPanel( infoPanelController );
         searchesJTree.setAssociatedThumbnailJScrollpane( thumbnailJScrollPane );
-        searchesJTree.setAssociatedInfoPanel( infoPanel );
+        searchesJTree.setAssociatedInfoPanel( infoPanelController );
         thumbnailJScrollPane.setAssociatedCollectionJTree( collectionJTreeController );
-        thumbnailJScrollPane.setAssociatedInfoPanel( infoPanel );
+        thumbnailJScrollPane.setAssociatedInfoPanel( infoPanelController );
         Settings.mainCollectionJTreeController = collectionJTreeController;
 
-        infoPanel.addComponentListener( new ComponentAdapter() {
+        infoPanelController.getInfoPanel().addComponentListener( new ComponentAdapter() {
 
             @Override
             public void componentResized( ComponentEvent event ) {

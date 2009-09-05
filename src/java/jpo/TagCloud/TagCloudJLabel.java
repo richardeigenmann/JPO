@@ -82,6 +82,7 @@ public class TagCloudJLabel extends JLabel {
      * @param word The word to show
      * @param sizeWeight The weight between 0 and 1 to determine the size of the font 
      * @param colorWeight The weight between 0 and 1 to determine the color of the font
+     * TODO: add tests to verify that the range checking gets enforced
      */
     public TagCloudJLabel( String word, float sizeWeight, float colorWeight ) {
         super( word );

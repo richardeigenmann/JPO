@@ -54,7 +54,7 @@ public interface ApplicationMenuInterface {
 	 *  Signals that the user wants to load a recently opened file. The parameter i 
 	 *  indicates which file to open in the Settings.recentCollections array.
 	 *
-	 *  @param 	i	the index in the {@link Settings#recentCollections} array
+	 *  @param 	i	the index in the {@link jpo.dataModel.Settings#recentCollections} array
 	 *			indicating the file to load.
 	 */
 	public void requestOpenRecent( int i );

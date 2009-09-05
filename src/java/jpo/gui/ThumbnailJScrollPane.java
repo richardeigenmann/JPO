@@ -547,7 +547,7 @@ public class ThumbnailJScrollPane implements RelayoutListener {
     /**
      *   This is a reference to the assoicated InfoPanel which shows info from selections
      */
-    public InfoPanel associatedInfoPanel;
+    public InfoPanelController associatedInfoPanel;
 
 
     /**
@@ -563,14 +563,14 @@ public class ThumbnailJScrollPane implements RelayoutListener {
      *   sets the assoiciated InfoPanel
      * @param associatedInfoPanel
      */
-    public void setAssociatedInfoPanel( InfoPanel associatedInfoPanel ) {
+    public void setAssociatedInfoPanel( InfoPanelController associatedInfoPanel ) {
         this.associatedInfoPanel = associatedInfoPanel;
     }
 
 
     /**
      *   returns the associated JTree
-     * @return
+     * @return the associated the Jtree
      */
     public CollectionJTreeController getAssociatedCollectionJTree() {
         return associatedCollectionJTree;
@@ -578,10 +578,10 @@ public class ThumbnailJScrollPane implements RelayoutListener {
 
 
     /**
-     *   returns the associated InfoPanel
-     * @return
+     *   returns the associated InfoPanelController
+     * @return the associated info panel controller
      */
-    public InfoPanel getAssociatedInfoPanel() {
+    public InfoPanelController getAssociatedInfoPanel() {
         return associatedInfoPanel;
     }
 
@@ -737,7 +737,7 @@ public class ThumbnailJScrollPane implements RelayoutListener {
     /**
      *  This returns whether the SDMTN is part of the selection HashSet.
      * @param node
-     * @return
+     * @return true if the node is selected
      */
     public boolean isSelected( SortableDefaultMutableTreeNode node ) {
         try {
@@ -750,7 +750,7 @@ public class ThumbnailJScrollPane implements RelayoutListener {
 
     /**
      *  returns an array of the selected nodes.
-     * @return
+     * @return an array of the selected nodes
      */
     public Object[] getSelectedNodes() {
         return selection.toArray();
@@ -759,7 +759,7 @@ public class ThumbnailJScrollPane implements RelayoutListener {
 
     /**
      *  returns a Vector of the selected nodes.
-     * @return
+     * @return a vector of the selected nodes
      */
     public Vector<SortableDefaultMutableTreeNode> getSelectedNodesAsVector() {
         return new Vector<SortableDefaultMutableTreeNode>( selection );

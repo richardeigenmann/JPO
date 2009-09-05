@@ -1,6 +1,5 @@
 package jpo.gui;
 
-import jpo.dataModel.Tools;
 import jpo.dataModel.Settings;
 import java.awt.BorderLayout;
 import java.awt.Color;

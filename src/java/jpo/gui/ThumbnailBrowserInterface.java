@@ -7,7 +7,7 @@ import jpo.dataModel.*;
 ThumbnailBrowserInterface.java:  an interface that defines the methods that a class 
 must implement so that the ThumbnailJScrollPane can identify the Thumbnails to be displayed.
 
-Copyright (C) 2002-2009  Richard Eigenmann, Zürich, Switzerland
+Copyright (C) 2002 - 2009  Richard Eigenmann, Zürich, Switzerland
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -35,7 +35,7 @@ public interface ThumbnailBrowserInterface {
 	 *  The implementing class must return the title for the images being shown. This 
 	 *  is displayed in the top part of the ThumbnailJScrollPane.
          *
-         * @return
+         * @return a title for the browser
          */
 	public String getTitle();
 
@@ -43,7 +43,7 @@ public interface ThumbnailBrowserInterface {
 	/**
 	 *  The implementing class must return the number of nodes it contains.
          *
-         * @return
+         * @return the number of nodes
          */
 	public int getNumberOfNodes();
 
@@ -54,24 +54,24 @@ public interface ThumbnailBrowserInterface {
 	 *  null is returned.
 	 *
          *  @param  componentNumber     The number between 0 and #getNumberOfNodes()
-         * @return
+         * @return the node for the index
 	 */
 	public SortableDefaultMutableTreeNode getNode( int componentNumber );
 
 
 
 	/**
-	 *  method to register a ThumbnailJScrollPane as a listener
+	 *  method to register a RelayoutListener
          *
-         * @param listener
+         * @param listener a RelayoutListener to notify
          */
 	public void addRelayoutListener ( RelayoutListener listener ); 
 
 
 	/**
-	 *  method to remove a ThumbnailJScrollPane as a listener
+	 *  method to remove a RelayoutListener
          *
-         * @param listener
+         * @param listener the listener to remove
          */
 	public void removeRelayoutListener ( RelayoutListener listener );
 

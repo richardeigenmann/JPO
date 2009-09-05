@@ -86,8 +86,8 @@ public class YearsBrowser extends javax.swing.JFrame {
 
 
     /**
-     *
-     * @return
+     * Returns the display panel
+     * @return the display panel
      */
     public JPanel getDisplayPanel() {
         return yearspanel;
