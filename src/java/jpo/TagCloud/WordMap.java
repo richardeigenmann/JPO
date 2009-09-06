@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.util.TreeSet;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 /*
 WordMap.java:  A class that spplies the list of words and a count to the tag cloud
@@ -33,7 +32,6 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  * the count so that a list of the top n words can be selected.
  * In order to optimise speed this class caches the valueSortedTreeMap. To signal
  * that the map of words has changed, call the {@link #rebuild} method.
- * TODO: Write testcases for this
  * @author Richard Eigenmann
  */
 public abstract class WordMap {
@@ -70,7 +68,12 @@ public abstract class WordMap {
      * sorted descendingly by the number in the value of each entry. It caches the result
      * in a private TreeMap variable and returns this on each subsequent call. If
      * the source words change you need to call @see #rebuild.
-     * TODO: This is very slow!
+     *
+     * As you can see from the code this keeps calling the abstract getWordValueMap
+     * method in the compare function. Make sure you implement the getWordValueMap
+     * as fast as possible (i.e. cache the result)
+     * as any dynamic building of the list will take forever if there are a lot
+     * of entries.
      *
      * @return The Map retrieved from getWordValueMap sorted by the count.
      */
