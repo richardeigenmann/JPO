@@ -7,11 +7,12 @@
         <ant antfile="build.xml" inheritall="false" target="compile"/>
         <java classname="${run.class}" failonerror="true" fork="true">
             <classpath>
-                <pathelement path="libs/activation.jar:libs/jnlp.jar:libs/mail.jar:libs/metadata-extractor-2.3.0.jar:libs/jh.jar:libs/jwizz-0.1.4.jar:libs/poi-3.1-FINAL-20080629.jar:libs/poi-contrib-3.1-FINAL-20080629.jar:libs/poi-scratchpad-3.1-FINAL-20080629.jar"/>
+                <pathelement path="libs/jide-oss-2.7.2.jar:libs/activation.jar:libs/jnlp.jar:libs/mail.jar:libs/metadata-extractor-2.3.0.jar:libs/jh.jar:libs/jwizz-0.1.4.jar:libs/poi-3.1-FINAL-20080629.jar:libs/poi-contrib-3.1-FINAL-20080629.jar:libs/poi-scratchpad-3.1-FINAL-20080629.jar"/>
                 <pathelement location="build/classes/"/>
             </classpath>
         </java>
     </target>
+    
     <!-- TODO: edit the following target according to your needs -->
     <!-- (more info: http://www.netbeans.org/kb/articles/freeform-config.html#compilesingle) -->
     <target name="compile-selected-files-in-java">

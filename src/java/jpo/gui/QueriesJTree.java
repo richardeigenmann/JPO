@@ -38,59 +38,18 @@ public class QueriesJTree extends JTree {
      */
     public QueriesJTree() {
         Tools.checkEDT();
-        getSelectionModel().setSelectionMode( TreeSelectionModel.SINGLE_TREE_SELECTION );
-        putClientProperty( "JTree.lineStyle", "Angled" );
-        setOpaque( true );
-        setEditable( false );
-        setShowsRootHandles( true );
-        setMinimumSize( Settings.jpoNavigatorJTabbedPaneMinimumSize );
-        setModel( Settings.pictureCollection.getQueriesTreeModel() );
+        getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+        putClientProperty("JTree.lineStyle", "Angled");
+        setOpaque(true);
+        setEditable(false);
+        setShowsRootHandles(true);
+        setMinimumSize(Settings.jpoNavigatorJTabbedPaneMinimumSize);
+        setModel(Settings.pictureCollection.getQueriesTreeModel());
 
         //Add listener to components that can bring up groupPopupJPopupMenu menus.
         QueriesMouseAdapter mouseAdapter = new QueriesMouseAdapter();
-        addMouseListener( mouseAdapter );
+        addMouseListener(mouseAdapter);
 
-    }
-
-    /**
-     *  create a QueryBrowser object that facilitates the browsing
-     */
-    private QueryBrowser queryBrowser = new QueryBrowser();
-
-    /**
-     *   a reference to the Thumbnail Pane that is displaying pictures. This
-     *   allows the QueriesJTree to tell the Thumbnail Pane to display searches
-     *   of pictures via it's showGroup method.
-     */
-    private ThumbnailJScrollPane associatedThumbnailJScrollPane;
-
-
-    /**
-     *   This method assigns the supplied ThumbnailJScrollpane with this JTree. This association is
-     *   used to allow the JTree to order the ThumbnailJScrollpane to display a different search.
-     *
-     * @param associatedThumbnailJScrollPane
-     */
-    public void setAssociatedThumbnailJScrollpane( ThumbnailJScrollPane associatedThumbnailJScrollPane ) {
-        this.associatedThumbnailJScrollPane = associatedThumbnailJScrollPane;
-    }
-
-    /**
-     *   a reference to the Info Panel that is displaying information. This
-     *   allows the QueriesJTree to tell the Info Panel about selections
-     *   via it's showInfo method.
-     */
-    private InfoPanelController associatedInfoPanel;
-
-
-    /**
-     *   This method assigns the supplied InfoPanel with this JTree. This association is
-     *   used to allow the JTree to tell the InfoPanel to show information about selections.
-     *
-     * @param associatedInfoPanel
-     */
-    public void setAssociatedInfoPanel( InfoPanelController associatedInfoPanel ) {
-        this.associatedInfoPanel = associatedInfoPanel;
     }
 
     /**
@@ -103,53 +62,44 @@ public class QueriesJTree extends JTree {
          *    node then the picture editor is opened.
          */
         @Override
-        public void mouseClicked( MouseEvent e ) {
-            TreePath clickPath = getPathForLocation( e.getX(), e.getY() );
-            if ( clickPath == null ) {
+        public void mouseClicked(MouseEvent e) {
+            TreePath clickPath = getPathForLocation(e.getX(), e.getY());
+            if (clickPath == null) {
                 return; // happens
             } // happens
             DefaultMutableTreeNode clickNode = (DefaultMutableTreeNode) clickPath.getLastPathComponent();
 
-            if ( associatedInfoPanel != null ) {
-                associatedInfoPanel.showInfo( clickNode );
-            }
-
-            if ( e.getClickCount() == 1 && ( !e.isPopupTrigger() ) ) {
-                if ( associatedThumbnailJScrollPane != null ) {
-                    if ( ( clickNode == null ) || ( clickNode.getUserObject() == null ) || ( !( clickNode.getUserObject() instanceof Query ) ) ) {
-                        return;
-                    }
-                    queryBrowser.setQuery( (Query) clickNode.getUserObject() );
-                    associatedThumbnailJScrollPane.show( queryBrowser );
+            if (e.getClickCount() == 1 && (!e.isPopupTrigger())) {
+                if ((clickNode == null) || (clickNode.getUserObject() == null) || (!(clickNode.getUserObject() instanceof Query))) {
+                    return;
                 }
+                QueryBrowser queryBrowser = new QueryBrowser((Query) clickNode.getUserObject());
+                Jpo.showThumbnails(queryBrowser);
             }
         }
-
 
         /**
          *   Override thge mousePressed event.
          */
         @Override
-        public void mousePressed( MouseEvent e ) {
+        public void mousePressed(MouseEvent e) {
             //maybeShowPopup(e);
         }
-
 
         /**
          *  Override the mouseReleased event.
          */
         @Override
-        public void mouseReleased( MouseEvent e ) {
+        public void mouseReleased(MouseEvent e) {
             //maybeShowPopup(e);
         }
-
 
         /**
          *  This method figures out whether a popup window should be displayed and displays
          *  it.
          *  @param   e	The MouseEvent that was trapped.
          */
-        private void maybeShowPopup( MouseEvent e ) {
+        private void maybeShowPopup(MouseEvent e) {
             /*if ( e.isPopupTrigger() ) {
             popupPath = getPathForLocation(e.getX(), e.getY());
             if ( popupPath == null ) return; // happens

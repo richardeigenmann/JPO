@@ -227,16 +227,9 @@
             <classpath refid="base.path"/>
         </java>
     </target>
-    
-    
-    <target name="run.single" description="Runs a single program" depends="compile">
-        <java classname="jpo.ResizableJFrameTest"
-              fork="yes"
-              maxmemory="500m" >
-            <classpath refid="base.path"/>
-        </java>
-    </target>
-    
+
+
+
     
     <target name="compile-test" depends="JUNIT, compile" description="Compiles the JUnit test cases">
         <mkdir dir="${unit.test.classes.dir}"/>

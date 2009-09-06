@@ -51,11 +51,6 @@ public abstract class WordMap {
     private static Logger logger = Logger.getLogger( WordMap.class.getName() );
 
 
-    {
-        logger.setLevel( Level.ALL );
-    }
-
-
     /**
      * Empties the cache of the sorted-by-value word list and rebuilds it,
      */

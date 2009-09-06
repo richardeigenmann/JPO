@@ -259,7 +259,7 @@ public class ApplicationJMenuBar extends JMenuBar
         EditFindJMenuItem.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
-                caller.requestEditFind();
+                caller.openFindDialog();
             }
         });
         EditJMenu.add(EditFindJMenuItem);

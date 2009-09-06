@@ -3,10 +3,11 @@ package jpo.gui.swing;
 import jpo.dataModel.Settings;
 import jpo.*;
 import javax.swing.*;
+import jpo.dataModel.Tools;
 import jpo.gui.ThumbnailLayoutManager;
 
 /*
-CollectionJTree.java:  class that creates a JTree for the collection
+ThumbnailPanel.java:  This class shows thumbnails and their legends
 
 Copyright (C) 2009  Richard Eigenmann, Zurich, Switzerland
 This program is free software; you can redistribute it and/or
@@ -23,9 +24,7 @@ The license is in gpl.txt.
 See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 /**
- *  This is the View object of the CollectionJTree. It is controlled by the CollectionJTreeController.
- *  All it can do is display the nodes of the data model and add a non standard set of icons depending on
- *  the userObject in the TreeNodes.
+ *  This class shows thumbnails and their legends
  */
 public class ThumbnailPanel extends JScrollPane {
 
@@ -33,17 +32,8 @@ public class ThumbnailPanel extends JScrollPane {
      *
      */
     public ThumbnailPanel() {
-        Runnable r = new Runnable() {
-
-            public void run() {
-                initComponents();
-            }
-        };
-        if (SwingUtilities.isEventDispatchThread()) {
-            r.run();
-        } else {
-            SwingUtilities.invokeLater(r);
-        }
+        Tools.checkEDT();
+        initComponents();
     }
     /**
      * the <code>JPanel</code> that is placed inside the <code>JScrollPane</code>

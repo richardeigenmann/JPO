@@ -81,7 +81,7 @@ public interface ApplicationMenuInterface {
 	/**
 	 *   Signals that the user wants to search the collection.
 	 */
-	public void requestEditFind();
+	public void openFindDialog();
 
 
 	/**

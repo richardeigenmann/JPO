@@ -128,6 +128,6 @@ public class InfoPanelController implements TagClickListener {
         HashSet<SortableDefaultMutableTreeNode> hs = dwm.getWordNodeMap().get( key );
         ArrayList<SortableDefaultMutableTreeNode> set = new ArrayList<SortableDefaultMutableTreeNode>( hs );
         ArrayListBrowser alb = new ArrayListBrowser( key, set );
-        Jpo.thumbnailJScrollPane.show( alb );
+        Jpo.showThumbnails( alb );
     }
 }

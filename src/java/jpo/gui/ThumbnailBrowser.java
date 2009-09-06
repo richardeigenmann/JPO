@@ -2,7 +2,6 @@ package jpo.gui;
 
 import jpo.dataModel.SortableDefaultMutableTreeNode;
 import java.util.*;
-import javax.swing.event.*;
 
 /*
 ThumbnailBrowser.java:  an implementation of the ThumbnailBrowserInterface for browsing pictures sequentially.

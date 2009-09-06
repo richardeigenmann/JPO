@@ -162,7 +162,7 @@ public class DescriptionWordMap extends WordMap {
      */
     public Map<String, Integer> getWordValueMap() {
         if ( wordCountMap == null ) {
-            logger.info( "Building wordCountMap" );
+            logger.fine( "Building wordCountMap" );
             wordCountMap = new HashMap<String, Integer>();
             Iterator<Entry<String, HashSet<SortableDefaultMutableTreeNode>>> it = wordNodeMap.entrySet().iterator();
             Entry<String, HashSet<SortableDefaultMutableTreeNode>> pairs;

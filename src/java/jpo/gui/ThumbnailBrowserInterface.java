@@ -25,7 +25,7 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 
 /**
  *   ThumbnailBrowserInterface.java:  an interface that defines the methods that a class 
- *   must implement so that the ThumbnailJScrollPane can identify the Thumbnails to be displayed.
+ *   must implement so that the ThumbnailPanelController can identify the Thumbnails to be displayed.
  *   You probably want to extend ThumbnailBrowser instead of implementing
  *   ThumbnailBrowserInterface as that takes care of the listeners.
  */

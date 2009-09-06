@@ -180,11 +180,32 @@
             </compilation-unit>
             <compilation-unit>
                 <package-root>src/java</package-root>
-                <classpath mode="compile">libs/activation.jar:libs/jnlp.jar:libs/mail.jar:libs/metadata-extractor-2.3.0.jar:libs/jh.jar:libs/jwizz-0.1.4.jar:libs/poi-3.1-FINAL-20080629.jar:libs/poi-contrib-3.1-FINAL-20080629.jar:libs/poi-scratchpad-3.1-FINAL-20080629.jar</classpath>
+                <classpath mode="compile">libs/activation.jar:libs/jnlp.jar:libs/mail.jar:libs/metadata-extractor-2.3.0.jar:libs/jh.jar:libs/jwizz-0.1.4.jar:libs/poi-3.1-FINAL-20080629.jar:libs/poi-contrib-3.1-FINAL-20080629.jar:libs/poi-scratchpad-3.1-FINAL-20080629.jar:libs/jide-oss-2.7.2.jar</classpath>
                 <built-to>build/classes/jpo</built-to>
                 <source-level>1.5</source-level>
             </compilation-unit>
         </java-data>
+        <preferences xmlns="http://www.netbeans.org/ns/auxiliary-configuration-preferences/1">
+            <module name="org-netbeans-modules-editor-indent">
+                <node name="CodeStyle">
+                    <property name="usedProfile" value="project"/>
+                    <node name="project">
+                        <property name="spaces-per-tab" value="4"/>
+                        <property name="tab-size" value="8"/>
+                        <property name="indent-shift-width" value="4"/>
+                        <property name="text-limit-width" value="80"/>
+                        <property name="expand-tabs" value="true"/>
+                    </node>
+                </node>
+                <node name="text">
+                    <node name="x-java">
+                        <node name="CodeStyle">
+                            <node name="project"/>
+                        </node>
+                    </node>
+                </node>
+            </module>
+        </preferences>
         <spellchecker-wordlist xmlns="http://www.netbeans.org/ns/spellchecker-wordlist/1">
             <word>thumbnails</word>
         </spellchecker-wordlist>

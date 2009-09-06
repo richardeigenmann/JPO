@@ -38,9 +38,9 @@ import javax.swing.border.BevelBorder;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 import javax.swing.tree.DefaultMutableTreeNode;
+import jpo.dataModel.GroupInfo;
 import jpo.dataModel.Settings;
 import jpo.dataModel.Tools;
-import jpo.dataModel.GroupInfo;
 import jpo.dataModel.PictureInfo;
 import jpo.dataModel.PictureInfoChangeEvent;
 import jpo.dataModel.PictureInfoChangeListener;
@@ -82,13 +82,10 @@ public class Thumbnail extends JComponent
      *  nodeSelected event to the data model.
      **/
     public SortableDefaultMutableTreeNode referringNode;
-
     /**
      * Defines a logger for this class
      */
     private static Logger logger = Logger.getLogger(Thumbnail.class.getName());
-
-
     /**
      *  A set of picture nodes of which one indicated by {@link #myIndex} is to be shown
      */
@@ -160,10 +157,6 @@ public class Thumbnail extends JComponent
      *  This flag indicates where decorations should be drawn at all
      */
     private boolean decorateThumbnails = true;
-    /**
-     *  a reference to the ThumbnailJScrollPane where group Info objects can refer their mouseclicks back to.
-     */
-    private ThumbnailJScrollPane associatedPanel;
     /**
      *    The image that should be displayed
      */
@@ -244,15 +237,12 @@ public class Thumbnail extends JComponent
     }
 
     /**
-     *   Creates a new Thumbnail object with a reference to the ThumbnailJScrollPane which
+     *   Creates a new Thumbnail object with a reference to the ThumbnailPanelController which
      *   must receive notifications that a new node should be selected.
      *
-     *   @param	associatedPanel	The ThumbnailJScrollpane that will be notified when the
-     *					user want a different selection shown
      **/
-    public Thumbnail(ThumbnailJScrollPane associatedPanel) {
+    public Thumbnail() {
         this(Settings.thumbnailSize);
-        setassociatedPanel(associatedPanel);
     }
     /**
      * remember where we registered as a PictureInfoListener
@@ -496,14 +486,6 @@ public class Thumbnail extends JComponent
         ThumbnailCreationQueue.removeThumbnailRequest(this);
     }
 
-    /**
-     *   sets the associated ThumbnailJScrollPane that will be told to display another group
-     *   if the user clicks on a group node.
-     * @param associatedPanel
-     */
-    public void setassociatedPanel(ThumbnailJScrollPane associatedPanel) {
-        this.associatedPanel = associatedPanel;
-    }
 
     /**
      *   we are overriding the default paintComponent method, grabbing the Graphics
@@ -546,12 +528,8 @@ public class Thumbnail extends JComponent
             //op = new AffineTransformOp( af2, AffineTransformOp.TYPE_NEAREST_NEIGHBOR );
 
 
-            if (associatedPanel != null) {
-                if (associatedPanel.isSelected(referringNode)) {
-                    g2d.drawImage(selectedThumbnail, af2, imgOb);
-                } else {
-                    g2d.drawImage(img, af2, imgOb);
-                }
+            if (Settings.pictureCollection.isSelected(referringNode)) {
+                g2d.drawImage(selectedThumbnail, af2, imgOb);
             } else {
                 g2d.drawImage(img, af2, imgOb);
             }
@@ -630,43 +608,30 @@ public class Thumbnail extends JComponent
                 } else if (e.getButton() == 3) { // popup menu only on 3rd mouse button.
                     //PicturePopupMenu picturePopupMenu = new PicturePopupMenu( referringNode );
                     PicturePopupMenu picturePopupMenu = new PicturePopupMenu(myThumbnailBrowser, myIndex, null);
-                    picturePopupMenu.setSelection(associatedPanel);
                     picturePopupMenu.show(e.getComponent(), e.getX(), e.getY());
-                } else if ((e.getButton() == 1) && (associatedPanel != null)) { // first button
+                } else if (e.getButton() == 1) { // first button
                     // I.e. selection
                     if (e.isControlDown()) {
-                        if (associatedPanel.isSelected(referringNode)) {
-                            associatedPanel.removeFromSelection(referringNode);
+                        if (Settings.pictureCollection.isSelected(referringNode)) {
+                            Settings.pictureCollection.removeFromSelection(referringNode);
                         } else {
-                            associatedPanel.setSelected(referringNode);
+                            Settings.pictureCollection.addToSelectedNodes(referringNode);
                         }
                     } else {
-                        if (associatedPanel.isSelected(referringNode)) {
-                            associatedPanel.clearSelection();
+                        if (Settings.pictureCollection.isSelected(referringNode)) {
+                            Settings.pictureCollection.clearSelection();
                         } else {
-                            associatedPanel.clearSelection();
-                            associatedPanel.setSelected(referringNode);
+                            Settings.pictureCollection.clearSelection();
+                            Settings.pictureCollection.addToSelectedNodes(referringNode);
                         }
                     }
                 }
             } else {
-                if (associatedPanel != null) {
-                    if (e.getClickCount() > 1) {
-                        associatedPanel.show(new GroupBrowser(referringNode));
-                        if (associatedPanel.associatedCollectionJTree != null) {
-                            associatedPanel.associatedCollectionJTree.setSelectedNode(referringNode);
-                        }
-                        if (associatedPanel.associatedInfoPanel != null) {
-                            associatedPanel.associatedInfoPanel.showInfo(referringNode);
-                        }
-                    } else if (e.getButton() == 3) { // popup menu only on 3rd mouse button.
-                        CollectionJTreeController CollectionJTree = associatedPanel.getAssociatedCollectionJTree();
-                        if (CollectionJTree != null) {
-                            CollectionJTree.setPopupNode(referringNode);
-                            GroupPopupMenu groupPopupMenu = new GroupPopupMenu(CollectionJTree, referringNode);
-                            groupPopupMenu.show(e.getComponent(), e.getX(), e.getY());
-                        }
-                    }
+                if (e.getClickCount() > 1) {
+                    Jpo.positionToNode(referringNode);
+                } else if (e.getButton() == 3) { // popup menu only on 3rd mouse button.
+                    GroupPopupMenu groupPopupMenu = new GroupPopupMenu(Jpo.collectionJTreeController, referringNode);
+                    groupPopupMenu.show(e.getComponent(), e.getX(), e.getY());
                 }
             }
         }
@@ -686,7 +651,12 @@ public class Thumbnail extends JComponent
         } else if ((e.getWasMailSelected()) || (e.getWasMailUnselected())) {
             determineMailSlectionStatus();
             repaint();
+
         }
+
+
+
+
     }
 
     /**
@@ -731,11 +701,12 @@ public class Thumbnail extends JComponent
      *  changes the color so that the user sees whether the thumbnail is part of the selection
      */
     public void showSlectionStatus() {
-        if ((associatedPanel != null) && (associatedPanel.isSelected(referringNode))) {
+        if (Settings.pictureCollection.isSelected(referringNode)) {
             showAsSelected();
         } else {
             showAsUnselected();
         }
+
     }
 
     /**
@@ -756,8 +727,8 @@ public class Thumbnail extends JComponent
         } else {
             drawMailIcon = false;
         }
-    }
 
+    }
 
     // Here we are not that interested in TreeModel change events other than to find out if our
     // current node was removed in which case we close the Window.
@@ -773,7 +744,8 @@ public class Thumbnail extends JComponent
             return;
         }
 
-        for (int i = 0; i < children.length; i++) {
+        for (int i = 0; i <
+                children.length; i++) {
             if (children[i] == referringNode) {
                 // logger.info( "Thumbnail detected a treeNodesChanged event" );
                 // we are displaying a changed node. What changed?
@@ -783,6 +755,7 @@ public class Thumbnail extends JComponent
                     // logger.info( "Thumbnail should be reloading the icon..." );
                     requestThumbnailCreation(ThumbnailQueueRequest.HIGH_PRIORITY, false);
                 }
+
             }
         }
     }
@@ -799,9 +772,6 @@ public class Thumbnail extends JComponent
      * @param e
      */
     public void treeNodesRemoved(TreeModelEvent e) {
-        /*if ( associatedPanel != null ) {
-        associatedPanel.removeFromSelection( referringNode );
-        }*/
     }
 
     /**
@@ -821,6 +791,7 @@ public class Thumbnail extends JComponent
         if (!event.isDataFlavorSupported(JpoTransferable.dmtnFlavor)) {
             event.rejectDrag();
         }
+
     }
 
     /**
@@ -833,6 +804,7 @@ public class Thumbnail extends JComponent
         if (!event.isDataFlavorSupported(JpoTransferable.dmtnFlavor)) {
             event.rejectDrag();
         }
+
     }
 
     /**
@@ -879,16 +851,12 @@ public class Thumbnail extends JComponent
             }
 
             JpoTransferable t;
-            if (associatedPanel == null) {
+
+            if (Settings.pictureCollection.countSelectedNodes() < 1) {
                 Object[] nodes = {referringNode};
                 t = new JpoTransferable(nodes);
             } else {
-                if (associatedPanel.countSelectedNodes() < 1) {
-                    Object[] nodes = {referringNode};
-                    t = new JpoTransferable(nodes);
-                } else {
-                    t = new JpoTransferable(associatedPanel.getSelectedNodes());
-                }
+                t = new JpoTransferable(Settings.pictureCollection.getSelectedNodes());
             }
 
             try {
@@ -947,9 +915,7 @@ public class Thumbnail extends JComponent
          *   has ended.
          */
         public void dragDropEnd(DragSourceDropEvent event) {
-            if (associatedPanel != null) {
-                associatedPanel.clearSelection();
-            }
+            Settings.pictureCollection.clearSelection();
         }
     }
 }

@@ -1,9 +1,6 @@
 package jpo.dataModel;
 
 import jpo.*;
-import jpo.dataModel.SortableDefaultMutableTreeNode;
-import jpo.dataModel.Query;
-import jpo.dataModel.PictureInfo;
 import java.io.*;
 import java.util.*;
 
@@ -11,7 +8,7 @@ import java.util.*;
 /*
 TextQuery.java:  The parameters for a search
 
-Copyright (C) 2002-2009  Richard Eigenmann.
+Copyright (C) 2002 - 2009  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
