@@ -8,6 +8,7 @@ import java.io.*;
 import java.net.*;
 import java.awt.image.*;
 import java.awt.Dimension;
+import java.awt.Graphics2D;
 import java.util.Vector;
 import java.util.Enumeration;
 import javax.imageio.*;
@@ -162,6 +163,14 @@ public class SourcePicture {
         try {
             // Java 1.4 way with a Listener
             ImageInputStream iis = ImageIO.createImageInputStream(imageUrl.openStream());
+            if (true) {
+                logger.info("Searching for ImageIO readers...");
+                Iterator i = ImageIO.getImageReaders(iis);
+                while (i.hasNext()) {
+                    reader = (ImageReader) i.next();  // grab the first one
+                    logger.info(String.format("Found reader: %s", reader.toString()));
+                }
+            }
             Iterator i = ImageIO.getImageReaders(iis);
             if (!i.hasNext()) {
                 throw new IOException("No Readers Available!");
@@ -173,7 +182,22 @@ public class SourcePicture {
             reader.setInput(iis);
             sourcePictureBufferedImage = null;
             try {
+                //ImageReadParam param = new ImageReadParam();
+                //param.setDestinationType(ImageTypeSpecifier.createFromBufferedImageType(BufferedImage.TYPE_3BYTE_BGR));
+                //sourcePictureBufferedImage = reader.read(0, param); // just get the first image
                 sourcePictureBufferedImage = reader.read(0); // just get the first image
+
+                if (sourcePictureBufferedImage.getType() != BufferedImage.TYPE_3BYTE_BGR) {
+                    logger.info(String.format("Got wrong image type: %d instead of %d. Trying to convert...", sourcePictureBufferedImage.getType(), BufferedImage.TYPE_3BYTE_BGR));
+
+                    BufferedImage newImage = new BufferedImage(sourcePictureBufferedImage.getWidth(),
+                            sourcePictureBufferedImage.getHeight(), BufferedImage.TYPE_3BYTE_BGR);
+                    Graphics2D g = newImage.createGraphics();
+                    g.drawImage(sourcePictureBufferedImage, 0, 0, null);
+                    g.dispose();
+                    sourcePictureBufferedImage = newImage;
+                }
+
             } catch (OutOfMemoryError e) {
                 logger.severe("SourcePicture caught an OutOfMemoryError while loading an image.");
                 Tools.freeMem();
@@ -377,7 +401,7 @@ public class SourcePicture {
      * @param listener
      */
     public void addListener(SourcePictureListener listener) {
-        logger.fine( "SourcePicture.addListener: SourcePicture " + Integer.toString( hashCode() ) + " adding listener " + listener.getClass().toString() + " hash: " + Integer.toString( listener.hashCode() ) );
+        logger.fine("SourcePicture.addListener: SourcePicture " + Integer.toString(hashCode()) + " adding listener " + listener.getClass().toString() + " hash: " + Integer.toString(listener.hashCode()));
         sourcePictureListeners.add(listener);
     }
 
@@ -386,7 +410,7 @@ public class SourcePicture {
      * @param listener
      */
     public void removeListener(SourcePictureListener listener) {
-        logger.fine( "SourcePicture.removeListener: SourcePicture " + Integer.toString( hashCode() ) + " removing listener " + listener.getClass().toString() + " hash: " + Integer.toString( listener.hashCode() ) );
+        logger.fine("SourcePicture.removeListener: SourcePicture " + Integer.toString(hashCode()) + " removing listener " + listener.getClass().toString() + " hash: " + Integer.toString(listener.hashCode()));
         sourcePictureListeners.remove(listener);
     }
     /**

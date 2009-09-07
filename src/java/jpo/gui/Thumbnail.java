@@ -918,4 +918,17 @@ public class Thumbnail extends JComponent
             Settings.pictureCollection.clearSelection();
         }
     }
+
+    /**
+     * Give some info about the Thumbnail.
+     * @return some info about the Thumbnail
+     */
+    @Override
+    public String toString() {
+        String myNode = "none";
+        if ( referringNode != null ) {
+            myNode = referringNode.toString();
+        }
+        return String.format("Thumbnail: HashCode: %d, referringNode: %s", hashCode(), myNode );
+    }
 }

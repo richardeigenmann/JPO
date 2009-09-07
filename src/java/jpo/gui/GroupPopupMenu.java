@@ -172,7 +172,7 @@ public class GroupPopupMenu extends JPopupMenu
             addPicturesJMenuItem.addActionListener(new ActionListener() {
 
                 public void actionPerformed(ActionEvent e) {
-                    caller.requestAdd();
+                    caller.chooseAndAddPicturesToGroup( popupNode );
                 }
             });
             addGroupJMenu.add(addPicturesJMenuItem);

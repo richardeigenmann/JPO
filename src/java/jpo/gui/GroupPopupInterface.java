@@ -82,10 +82,12 @@ public interface GroupPopupInterface {
 
 
 	/**
-	 * the implementing class must trap and do something when the user wants to
-	 * add pictures
-	 */
-	public void requestAdd();
+	 * The implementing class should bring up a chooser dialog and should
+         * add the selected pictures to the indicated group.
+         *
+         * @param groupNode The node to which the pictures should be added.
+         */
+	public void chooseAndAddPicturesToGroup( SortableDefaultMutableTreeNode groupNode);
 
 
 

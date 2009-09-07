@@ -116,7 +116,7 @@ public class CollectionPropertiesJPanel
      *  @param  statisticsNode   The node that is being analysed.
      */
     public void updateStats( DefaultMutableTreeNode statisticsNode ) {
-        logger.info( "update stats for node: " + statisticsNode.toString() );
+        logger.fine( "update stats for node: " + statisticsNode.toString() );
         Tools.checkEDT();
         if ( Settings.pictureCollection.fileLoading ) {
             logger.info( "Still busy loading the file. Aborting" );

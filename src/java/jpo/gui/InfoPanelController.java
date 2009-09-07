@@ -106,7 +106,7 @@ public class InfoPanelController implements TagClickListener {
                     t.stop();
                 } else {
                     // ToDo get this stuff off the event handler thread
-                    logger.info( "Updating stats" );
+                    logger.fine( "Updating stats" );
                     infoPanel.statsJPanel.updateStats( node );
                     infoPanel.statsScroller.setViewportView( infoPanel.statsJPanel );
                     dwm = new DescriptionWordMap( node );

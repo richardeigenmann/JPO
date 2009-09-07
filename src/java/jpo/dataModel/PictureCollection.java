@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -676,10 +675,12 @@ public class PictureCollection {
     }
 
     /**
-     *   method that saves the entire index in XML format. 
+     * method that saves the entire index in XML format.
+     * TODO: simply returning is a bit carefree if no save has taken place
      */
-    public void fileSave() {
+    public void fileSave()  {
         if (xmlFile == null) {
+            logger.severe("xmlFile is null. Not saving!");
             return;
         } else {
             File temporaryFile = new File(xmlFile.getPath() + ".!!!");

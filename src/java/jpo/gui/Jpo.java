@@ -251,17 +251,16 @@ public class Jpo
     }
 
     /**
-     *   Creates a {@link PictureAdder} object and tells it to
+     *   Creates a {@link PictureFileChooser} object and tells it to
      *   add the selected pictures to the root node of the
      *   {@link CollectionJTreeController}.
      */
     public void requestFileAdd() {
-        collectionJTreeController.setPopupNode(Settings.pictureCollection.getRootNode());
-        collectionJTreeController.requestAdd();
+        chooseAndAddPicturesToGroup(Settings.pictureCollection.getRootNode());
     }
 
     /**
-     *   Creates a {@link PictureAdder} object and tells it to
+     *   Creates a {@link PictureFileChooser} object and tells it to
      *   add the selected pictures to the root node of the
      *   {@link CollectionJTreeController}.
      */
@@ -461,8 +460,12 @@ public class Jpo
      *   saved before brings up a popup window.
      */
     public void requestFileSave() {
-        Settings.pictureCollection.fileSave();
-        afterFileSaveDialog();
+        if (Settings.pictureCollection.getXmlFile() == null) {
+            fileSaveAs();
+        } else {
+            Settings.pictureCollection.fileSave();
+            afterFileSaveDialog();
+        }
     }
 
     /**
@@ -607,6 +610,15 @@ public class Jpo
         p1.startAdvanceTimer(10);
         p2.changePicture(rb2, 0);
         p2.startAdvanceTimer(10);
+    }
+
+    /**
+     * Bring up a chooser and add pictures to the group.
+     * @see  GroupPopupInterface
+     * @param groupNode  The group nodde to which to add the pictures
+     */
+    public void chooseAndAddPicturesToGroup(SortableDefaultMutableTreeNode groupNode) {
+        PictureFileChooser pa = new PictureFileChooser(groupNode);
     }
 
     private class MainAppModelListener implements TreeModelListener {

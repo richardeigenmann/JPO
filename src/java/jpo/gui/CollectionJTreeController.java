@@ -99,7 +99,6 @@ public class CollectionJTreeController
      * enables this component to be a Drag Source
      */
     DragSource dragSource = null;
-
     /**
      * The private reference to the JTree representing the collection
      */
@@ -407,12 +406,12 @@ public class CollectionJTreeController
     }
 
     /**
-     *  requests pictures to be added at the popup node.
-     *  @see  GroupPopupInterface
+     * Bring up a chooser and add pictures to the group.
+     * @see  GroupPopupInterface
+     * @param groupNode  The group nodde to which to add the pictures
      */
-    public void requestAdd() {
-        PictureAdder pa = new PictureAdder(popupNode);
-        pa.setNotificationTarget(this);
+    public void chooseAndAddPicturesToGroup(SortableDefaultMutableTreeNode groupNode) {
+        collectionController.chooseAndAddPicturesToGroup(groupNode);
     }
 
     /**

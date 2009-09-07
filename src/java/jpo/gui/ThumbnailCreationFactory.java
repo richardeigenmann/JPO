@@ -11,6 +11,7 @@ import java.net.*;
 import java.io.*;
 import java.awt.*;
 import java.awt.image.*;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.*;
 
@@ -40,44 +41,40 @@ public class ThumbnailCreationFactory implements Runnable {
     /**
      * Defines a logger for this class
      */
-    private static Logger logger = Logger.getLogger( ThumbnailCreationFactory.class.getName() );
-
+    private static Logger logger = Logger.getLogger(ThumbnailCreationFactory.class.getName());
     /**
      *   Flag to indicate that the thread should die.
      */
     public boolean endThread = false;
-
 
     /**
      *  Constructor that creates the thread. It creates the thread with a Thread.MIN_PRIOTITY priority
      *  to ensure good overall response.
      */
     public ThumbnailCreationFactory() {
-        Thread t = new Thread( this );
-        t.setPriority( Thread.MIN_PRIORITY );
+        Thread t = new Thread(this);
+        t.setPriority(Thread.MIN_PRIORITY);
         t.start();
     }
-
 
     /**
      *  The run method for the thread that keeps checking whether there are any {@link ThumbnailQueueRequest} objects
      *  on the queue to be rendered.
      */
     public void run() {
-        while ( !endThread ) {
+        while (!endThread) {
             ThumbnailQueueRequest req = ThumbnailCreationQueue.remove();
-            if ( req == null ) {
+            if (req == null) {
                 try {
-                    Thread.sleep( Settings.ThumbnailCreationThreadPollingTime );
-                } catch ( InterruptedException x ) {
+                    Thread.sleep(Settings.ThumbnailCreationThreadPollingTime);
+                } catch (InterruptedException x) {
                     // so we got interrupted?
                 }
             } else {
-                createThumbnail( req );
+                createThumbnail(req);
             }
         }
     }
-
 
     /**
      *  This method picks up the thumbnail creation request, sets a loadingIcon and passes the
@@ -85,31 +82,30 @@ public class ThumbnailCreationFactory implements Runnable {
      *
      *  @param  req		the {@link ThumbnailQueueRequest} for which to create the Thumbnail
      */
-    private void createThumbnail( ThumbnailQueueRequest req ) {
+    private void createThumbnail(ThumbnailQueueRequest req) {
         Thumbnail currentThumb = req.getThumbnail();
         //logger.info("ThumbnailCreationFactory.createThumbnail: running on Thumbnail: " + Integer.toString(currentThumb.myIndex));
         // now block other threads from accessing the Thumbnail
-        synchronized ( currentThumb ) {
+        synchronized (currentThumb) {
             SortableDefaultMutableTreeNode referringNode = currentThumb.referringNode;
-            if ( referringNode == null ) {
-                logger.info( "ThumbnailCreationThread.createThumbnail: referringNode was null! Setting Broken Image.\nThis happened on ThumbnailQueueRequest: " + req.toString() + " which refers to Thumbnail: " + currentThumb.toString() );
+            if (referringNode == null) {
+                logger.info("ThumbnailCreationThread.createThumbnail: referringNode was null! Setting Broken Image.\nThis happened on ThumbnailQueueRequest: " + req.toString() + " which refers to Thumbnail: " + currentThumb.toString());
                 currentThumb.setBrokenIcon();
                 return;
             }
 
             // validate we were called on the right type of node
-            if ( referringNode.getUserObject() instanceof PictureInfo ) {
+            if (referringNode.getUserObject() instanceof PictureInfo) {
                 //logger.info("ThumbnailCreationFactory.createThumbnail: Throwing Thumbnail " + Integer.toString(currentThumb.myIndex) + " on queue");
-                loadOrCreatePictureThumbnail( req );
-            } else if ( referringNode.getUserObject() instanceof GroupInfo ) {
-                loadOrCreateGroupThumbnail( req );
+                loadOrCreatePictureThumbnail(req);
+            } else if (referringNode.getUserObject() instanceof GroupInfo) {
+                loadOrCreateGroupThumbnail(req);
             } else {
                 currentThumb.setBrokenIcon();
                 return;
             }
         }
     }
-
 
     /**
      *   This method tries to find out if a lowres image already exists and
@@ -119,38 +115,39 @@ public class ThumbnailCreationFactory implements Runnable {
      *
      *   @param req 	the ThumbnailQueueRequest for which to create the Thumbnail
      */
-    private void loadOrCreatePictureThumbnail( ThumbnailQueueRequest req ) {
-        if ( req == null ) {
-            logger.info( "ThumbnailCreationThread.createPictureThumbnail: invoked with a null request. Aborting." );
+    private void loadOrCreatePictureThumbnail(ThumbnailQueueRequest req) {
+        if (req == null) {
+            logger.info("Invoked with a null request. Aborting.");
             return;
         }
+        logger.fine(String.format("Request details: %s", req.toString()));
         Thumbnail currentThumb = req.getThumbnail();
         //logger.info("ThumbnailCreationFactory.loadOrCreatePictureThumbnail: running on Thumbnail: " + Integer.toString(currentThumb.myIndex));
-        if ( currentThumb == null ) {
-            logger.info( "ThumbnailCreationThread.createPictureThumbnail: invoked request with a null Thumbnail. Aborting." );
+        if (currentThumb == null) {
+            logger.info("Invoked request with a null Thumbnail. Aborting.");
             return;
         }
         PictureInfo pi = (PictureInfo) currentThumb.referringNode.getUserObject();
-        if ( pi == null ) {
-            logger.info( "ThumbnailCreationThread.createPictureThumbnail: could not find PictureInfo. Aborting." );
+        if (pi == null) {
+            logger.info("Could not find PictureInfo. Aborting.");
             return;
         }
         URL lowresUrl = null;
 
-        if ( Settings.keepThumbnails ) {
+        if (Settings.keepThumbnails) {
             try {
                 lowresUrl = pi.getLowresURL();
-            } catch ( MalformedURLException x ) {
-                logger.info( "Lowres URL was Malformed: " + pi.getLowresLocation() + "  Creating a new URL." );
-                pi.setLowresLocation( Tools.lowresFilename() );
+            } catch (MalformedURLException x) {
+                logger.info("Lowres URL was Malformed: " + pi.getLowresLocation() + "  Creating a new URL.");
+                pi.setLowresLocation(Tools.lowresFilename());
                 try {
                     lowresUrl = pi.getLowresURL();
-                } catch ( MalformedURLException x1 ) {
-                    logger.info( "The system is generating broken URL's! Aborting Thumbnail creation!" );
+                } catch (MalformedURLException x1) {
+                    logger.info("The system is generating broken URL's! Aborting Thumbnail creation!");
                     currentThumb.setBrokenIcon();
                     return;
                 }
-                createNewThumbnail( currentThumb );
+                createNewThumbnail(currentThumb);
                 return;
             }
             // if we get here we have a good lowres URL
@@ -160,8 +157,8 @@ public class ThumbnailCreationFactory implements Runnable {
         URL highresUrl = null;
         try {
             highresUrl = pi.getHighresURL();
-        } catch ( MalformedURLException x ) {
-            logger.info( "Highres URL was Malformed: " + pi.getHighresLocation() + "  Loading \"broken\" icon." );
+        } catch (MalformedURLException x) {
+            logger.info("Highres URL was Malformed: " + pi.getHighresLocation() + "  Loading \"broken\" icon.");
             currentThumb.setBrokenIcon();
             return;
         }
@@ -169,15 +166,15 @@ public class ThumbnailCreationFactory implements Runnable {
         // test if highres is readable
         try {
             highresUrl.openStream().close();
-        } catch ( IOException x ) {
+        } catch (IOException x) {
             // highres could not be opened
             // can we read the lowres instead?
             try {
                 lowresUrl.openStream().close();
-                ImageIcon icon = new ImageIcon( lowresUrl );
-                currentThumb.setThumbnail( icon );
+                ImageIcon icon = new ImageIcon(lowresUrl);
+                currentThumb.setThumbnail(icon);
                 return;
-            } catch ( IOException ioe ) {
+            } catch (IOException ioe) {
                 // we have nothing to display
                 currentThumb.setBrokenIcon();
                 return;
@@ -186,20 +183,20 @@ public class ThumbnailCreationFactory implements Runnable {
 
 
         // Are we being requested to recreate the Thumbnail in any case?
-        if ( req.getForce() ) {
-            createNewThumbnail( currentThumb );
+        if (req.getForce()) {
+            createNewThumbnail(currentThumb);
             return;
         }
 
 
         // test if lowres is readable
-        if ( Settings.keepThumbnails ) {
+        if (Settings.keepThumbnails) {
             try {
                 InputStream lowresStream = lowresUrl.openStream();
                 lowresStream.close();
-            } catch ( IOException x ) {
+            } catch (IOException x) {
                 //logger.info("ThumbnailCreationFactory.createThumbnail: is requesting the creation of a numbnail because if we can't open the lowres stream we should re-create the image.");
-                createNewThumbnail( currentThumb );
+                createNewThumbnail(currentThumb);
                 return;
             }
 
@@ -212,37 +209,36 @@ public class ThumbnailCreationFactory implements Runnable {
                 lowresUC.getInputStream().close();
                 highresUC.getInputStream().close();
 
-                if ( lowresModDate < highresModDate ) {
-                    logger.info( "ThumbnailCreationThread.createThumbnail: is requesting the creation of a numbnail because Thumbnail is out of date: " + pi.getLowresLocation() );
-                    createNewThumbnail( currentThumb );
+                if (lowresModDate < highresModDate) {
+                    logger.info("ThumbnailCreationThread.createThumbnail: is requesting the creation of a numbnail because Thumbnail is out of date: " + pi.getLowresLocation());
+                    createNewThumbnail(currentThumb);
                     return;
                 }
-            } catch ( IOException x ) {
+            } catch (IOException x) {
                 //if we can't open the stream we should re-create the image
-                createNewThumbnail( currentThumb );
+                createNewThumbnail(currentThumb);
                 return;
             }
         } else {
-            createNewThumbnail( currentThumb );
+            createNewThumbnail(currentThumb);
             return;
         }
 
 
         // Thumbnail up to date is size ok?
         //logger.info("ThubnailCreationThread.loadOrCreatePictureThumbnail: Thumbnail is up to date. Checking size");
-        ImageIcon icon = new ImageIcon( lowresUrl );
-        if ( isThumbnailSizeOk( new Dimension( icon.getIconWidth(), icon.getIconHeight() ),
-                currentThumb.getMaximumUnscaledSize() ) ) {
+        ImageIcon icon = new ImageIcon(lowresUrl);
+        if (isThumbnailSizeOk(new Dimension(icon.getIconWidth(), icon.getIconHeight()),
+                currentThumb.getMaximumUnscaledSize())) {
             // all ist fine
-            currentThumb.setThumbnail( icon );
+            currentThumb.setThumbnail(icon);
         } else {
-            logger.info( "ThumbnailCreationThread.createPictureThumbnail: Thumbnail is wrong size: " + icon.getIconWidth() + " x " + icon.getIconHeight() + " therefore thrown on queue" );
-            createNewThumbnail( currentThumb );
+            logger.info("ThumbnailCreationThread.createPictureThumbnail: Thumbnail is wrong size: " + icon.getIconWidth() + " x " + icon.getIconHeight() + " therefore thrown on queue");
+            createNewThumbnail(currentThumb);
         }
 
         return;
     }
-
 
     /**
      *  This method returns whether the dimension of the icon are within the tolerance of the
@@ -250,42 +246,41 @@ public class ThumbnailCreationFactory implements Runnable {
      *
      *  @return   	true if inside dimension, false if outside.
      */
-    private boolean isThumbnailSizeOk( Dimension iconDimension, Dimension desiredDimension ) {
+    private boolean isThumbnailSizeOk(Dimension iconDimension, Dimension desiredDimension) {
         final float tolerance = 1.02f;
         //logger.info("ThumbnailCreationFactory.isThumbnailSizeOk: called with check dimension: " + iconDimension.toString() + " desiredDimension: " + desiredDimension.toString() );
-        boolean widthOk = ( iconDimension.width > desiredDimension.width / tolerance ) && ( iconDimension.width < desiredDimension.width * tolerance );
-        boolean heightOk = ( iconDimension.height > desiredDimension.height / tolerance ) && ( iconDimension.height < desiredDimension.height * tolerance );
-        if ( widthOk || heightOk ) {
+        boolean widthOk = (iconDimension.width > desiredDimension.width / tolerance) && (iconDimension.width < desiredDimension.width * tolerance);
+        boolean heightOk = (iconDimension.height > desiredDimension.height / tolerance) && (iconDimension.height < desiredDimension.height * tolerance);
+        if (widthOk || heightOk) {
             return true;
         }
 
         //the original could be small. Problem: how to get the orignial size quickly here?
-        if ( Settings.dontEnlargeSmallImages && ( ( iconDimension.width < desiredDimension.width * tolerance ) || ( iconDimension.height < desiredDimension.height * tolerance ) ) && ( iconDimension.width > 1 ) && ( iconDimension.height > 1 ) ) {
+        if (Settings.dontEnlargeSmallImages && ((iconDimension.width < desiredDimension.width * tolerance) || (iconDimension.height < desiredDimension.height * tolerance)) && (iconDimension.width > 1) && (iconDimension.height > 1)) {
             return true;
         }
 
         return false;
     }
 
-
     /**
      *  creates a thumbnail by loading the highres image and scaling it down
      */
-    private void createNewThumbnail( Thumbnail currentThumb ) {
+    private void createNewThumbnail(Thumbnail currentThumb) {
         SortableDefaultMutableTreeNode referringNode = null;
-        if ( currentThumb == null ) {
-            logger.info( "ThumbnailCreationThread.createNewThumbnail called with null parameter! Aborting." );
+        if (currentThumb == null) {
+            logger.info("ThumbnailCreationThread.createNewThumbnail called with null parameter! Aborting.");
             return;
         }
 
         referringNode = currentThumb.referringNode;
-        //logger.info("ThumbnailCreationFactory.createNewThumbnail: Creating Thumbnail " + ((PictureInfo) referringNode.getUserObject()).getLowresLocation() + " from " + ((PictureInfo) referringNode.getUserObject()).getHighresLocation());
+        logger.fine(String.format("Creating Thumbnail %s from %s", ((PictureInfo) referringNode.getUserObject()).getLowresLocation(),((PictureInfo) referringNode.getUserObject()).getHighresLocation()));
 
         try {
             // create a new thumbnail from the highres
             ScalablePicture currentPicture = new ScalablePicture();
-            currentPicture.setScaleSize( new Dimension( currentThumb.thumbnailSize, currentThumb.thumbnailSize ) );
-            if ( Settings.thumbnailFastScale ) {
+            currentPicture.setScaleSize(new Dimension(currentThumb.thumbnailSize, currentThumb.thumbnailSize));
+            if (Settings.thumbnailFastScale) {
                 currentPicture.setFastScale();
             } else {
                 currentPicture.setQualityScale();
@@ -293,15 +288,15 @@ public class ThumbnailCreationFactory implements Runnable {
 
 
             PictureInfo pi = (PictureInfo) referringNode.getUserObject();
-            currentPicture.loadPictureImd( pi.getHighresURL(), pi.getRotation() );
+            currentPicture.loadPictureImd(pi.getHighresURL(), pi.getRotation());
 
 
             //logger.info(" ... scaling");
             currentPicture.scalePicture();
 
 
-            if ( currentPicture.getScaledPicture() == null ) {
-                logger.info( "There was a problem creating the thumbnail for: " + pi.getHighresURL() );
+            if (currentPicture.getScaledPicture() == null) {
+                logger.info("There was a problem creating the thumbnail for: " + pi.getHighresURL());
                 currentThumb.setBrokenIcon();
                 return;
             }
@@ -309,132 +304,132 @@ public class ThumbnailCreationFactory implements Runnable {
 
             // is the thumbnail is not on the local filesystem then change the
             // url to be a local file or the write will fail.
-            if ( !Tools.isUrlFile( pi.getLowresURL() ) ) {
-                logger.info( "The URL is not a file:// type. Getting new name. Type was: " + pi.getLowresURL().getProtocol().equals( "file" ) );
-                pi.setLowresLocation( Tools.lowresFilename() );
+            if (!Tools.isUrlFile(pi.getLowresURL())) {
+                logger.info("The URL is not a file:// type. Getting new name. Type was: " + pi.getLowresURL().getProtocol().equals("file"));
+                pi.setLowresLocation(Tools.lowresFilename());
                 referringNode.getPictureCollection().setUnsavedUpdates();
             }
 
 
             //logger.info(" ... writing: " + pi.getLowresLocation());
-            if ( Settings.keepThumbnails ) {
+            if (Settings.keepThumbnails) {
                 // Test that the file can be written to
                 // Note that we are using files here because java doesn't want to let me use output streams on URL's.
-                if ( !pi.getLowresFile().exists() ) {
+                if (!pi.getLowresFile().exists()) {
                     // the file doesn't yet exist. Can we write to it?
                     try {
                         pi.getLowresFile().createNewFile();
-                    } catch ( IOException x ) {
-                        logger.info( "Lowres URL is not writable: " + pi.getLowresLocation() + " " + x.getMessage() + "  Creating a new URL." );
-                        pi.setLowresLocation( Tools.lowresFilename() );
+                    } catch (IOException x) {
+                        logger.info("Lowres URL is not writable: " + pi.getLowresLocation() + " " + x.getMessage() + "  Creating a new URL.");
+                        pi.setLowresLocation(Tools.lowresFilename());
                         referringNode.getPictureCollection().setUnsavedUpdates();
                     }
                 } else {
                     // the file does exist, can we write to it?
-                    if ( !pi.getLowresFile().canWrite() ) {
-                        logger.info( "Lowres URL is not writable: " + pi.getLowresLocation() + ".  Creating a new URL." );
-                        pi.setLowresLocation( Tools.lowresFilename() );
+                    if (!pi.getLowresFile().canWrite()) {
+                        logger.info("Lowres URL is not writable: " + pi.getLowresLocation() + ".  Creating a new URL.");
+                        pi.setLowresLocation(Tools.lowresFilename());
                         referringNode.getPictureCollection().setUnsavedUpdates();
                     }
                 }
-                currentPicture.writeScaledJpg( pi.getLowresFile() );
+                currentPicture.writeScaledJpg(pi.getLowresFile());
 
                 // clean the cache
-                ImageIcon cleanCache = new ImageIcon( pi.getLowresURLOrNull() );
+                ImageIcon cleanCache = new ImageIcon(pi.getLowresURLOrNull());
                 cleanCache.getImage().flush();
 
                 pi.sendThumbnailChangedEvent();
             }
 
-            if ( !Settings.keepThumbnails ) {
+            if (!Settings.keepThumbnails) {
                 // This branch is nescessary because it sets the thumbnail only when the
                 // Thumbnail is not written to disk. Where it is written to disk the
                 // sent ThumbnailChangedEvent ensures that the new image is loaded.
-                ImageIcon icon = new ImageIcon( currentPicture.getScaledPicture() );
-                if ( ( currentThumb.referringNode != null ) && ( currentThumb.referringNode == referringNode ) ) {
+                ImageIcon icon = new ImageIcon(currentPicture.getScaledPicture());
+                if ((currentThumb.referringNode != null) && (currentThumb.referringNode == referringNode)) {
                     // could have changed in the mean time
-                    currentThumb.setThumbnail( icon );
+                    currentThumb.setThumbnail(icon);
                 }
             }
-        } catch ( IOException x ) {
+        } catch (IOException x) {
             currentThumb.setBrokenIcon();
         }
     }
 
-
     /**
-     *   This method looks at the ThumbnailQueueRequest and figures out if there is a
-     *   suitable disk based thumbnail for the group that can be displayed. If there isn't it
-     *   has a new thumbnail created.
+     * This method looks at the supplied ThumbnailQueueRequest and figures out if there is a
+     * suitable disk based thumbnail for the group that can be displayed. If there isn't it
+     * has a new thumbnail created.
+     * @param req The request to be processed
      */
-    private void loadOrCreateGroupThumbnail( ThumbnailQueueRequest req ) {
+    private void loadOrCreateGroupThumbnail(ThumbnailQueueRequest req) {
+        logger.fine(String.format("Request details: %s", req.toString()));
         Thumbnail currentThumb = req.getThumbnail();
         GroupInfo gi = (GroupInfo) currentThumb.referringNode.getUserObject();
         URL lowresUrl = null;
 
-        if ( Settings.keepThumbnails ) {
+        if (Settings.keepThumbnails) {
             try {
                 lowresUrl = gi.getLowresURL();
-            } catch ( MalformedURLException x ) {
-                logger.info( "Lowres URL was Malformed: " + gi.getLowresLocation() + "  Creating a new URL." );
-                gi.setLowresLocation( Tools.lowresFilename() );
+            } catch (MalformedURLException x) {
+                logger.info(String.format("Caught MalformedURLException: %s\nThe bad URL read: %s\nRequesting a new URL.", x.getMessage(), gi.getLowresLocation()));
+                gi.setLowresLocation(Tools.lowresFilename());
                 try {
                     lowresUrl = gi.getLowresURL();
-                } catch ( MalformedURLException x1 ) {
-                    logger.info( "The system is generating broken URL's! Aborting Thumbnail creation!" );
+                } catch (MalformedURLException x1) {
+                    logger.severe(String.format("The system is generating broken URL's! Setting broken-thumbnail image.\nError: %s", x.getMessage()));
                     currentThumb.setBrokenIcon();
                     return;
                 }
-                createNewGroupThumbnail( currentThumb );
+                createNewGroupThumbnail(currentThumb);
                 return;
             }
             // if we get here we have a good lowres URL
         }
 
         // Are we being requested to recreate the Thumbnail in any case?
-        if ( req.getForce() ) {
-            createNewGroupThumbnail( currentThumb );
+        if (req.getForce()) {
+            createNewGroupThumbnail(currentThumb);
             return;
         }
 
 
         // test if lowres is readable
-        if ( Settings.keepThumbnails ) {
+        if (Settings.keepThumbnails) {
             try {
                 InputStream lowresStream = lowresUrl.openStream();
                 lowresStream.close();
-            } catch ( IOException x ) {
+            } catch (IOException x) {
                 //logger.info("ThumbnailCreationFactory.loadOrCreateGroupThumbnail: is requesting the creation of a numbnail because if we can't open the lowres stream we should re-create the image.");
-                createNewGroupThumbnail( currentThumb );
+                createNewGroupThumbnail(currentThumb);
                 return;
             }
         } else {
-            createNewGroupThumbnail( currentThumb );
+            createNewGroupThumbnail(currentThumb);
             return;
         }
 
         // Thumbnail up to date is size ok?
-        ImageIcon icon = new ImageIcon( lowresUrl );
-        if ( isThumbnailSizeOk( new Dimension( icon.getIconWidth(), icon.getIconHeight() ),
-                currentThumb.getMaximumUnscaledSize() ) ) {
+        ImageIcon icon = new ImageIcon(lowresUrl);
+        if (isThumbnailSizeOk(new Dimension(icon.getIconWidth(), icon.getIconHeight()),
+                currentThumb.getMaximumUnscaledSize())) {
             // all ist fine
-            currentThumb.setThumbnail( icon );
+            currentThumb.setThumbnail(icon);
         } else {
             //logger.info( "ThumbnailCreationFactory.loadOrCreateGroupThumbnail: Thumbnail is wrong size: " + icon.getIconWidth()  + " x " +  icon.getIconHeight() );
-            createNewGroupThumbnail( currentThumb );
+            createNewGroupThumbnail(currentThumb);
         }
 
         return;
     }
 
-
     /**
      *  Create a Group Thumbnail by loading the nodes component images and creating a folder icon with embeded images
      */
-    private void createNewGroupThumbnail( Thumbnail currentThumb ) {
+    private void createNewGroupThumbnail(Thumbnail currentThumb) {
         SortableDefaultMutableTreeNode referringNode = null;
-        if ( currentThumb == null ) {
-            logger.info( "ThumbnailCreationThread.createNewGroupThumbnail called with null parameter! Aborting." );
+        if (currentThumb == null) {
+            logger.info("ThumbnailCreationThread.createNewGroupThumbnail called with null parameter! Aborting.");
             return;
         }
 
@@ -442,15 +437,15 @@ public class ThumbnailCreationFactory implements Runnable {
         //logger.info("ThumbnailCreationFactory.createNewGroupThumbnail: Creating Thumbnail " + ((GroupInfo) referringNode.getUserObject()).getLowresLocation() + " from " + ((GroupInfo) referringNode.getUserObject()).getLowresLocation());
 
         try {
-            BufferedImage groupThumbnail = ImageIO.read( new BufferedInputStream( Settings.cl.getResourceAsStream( "jpo/images/icon_folder_large.jpg" ) ) );
+            BufferedImage groupThumbnail = ImageIO.read(new BufferedInputStream(Settings.cl.getResourceAsStream("jpo/images/icon_folder_large.jpg")));
             Graphics2D groupThumbnailGraphics = groupThumbnail.createGraphics();
 
 
             int leftMargin = 15;
             int margin = 10;
             int topMargin = 65;
-            int horizontalPics = ( groupThumbnail.getWidth() - leftMargin ) / ( Settings.miniThumbnailSize.width + margin );
-            int verticalPics = ( groupThumbnail.getHeight() - topMargin ) / ( Settings.miniThumbnailSize.height + margin );
+            int horizontalPics = (groupThumbnail.getWidth() - leftMargin) / (Settings.miniThumbnailSize.width + margin);
+            int verticalPics = (groupThumbnail.getHeight() - topMargin) / (Settings.miniThumbnailSize.height + margin);
             int numberOfPics = horizontalPics * verticalPics;
 
             Object userObject;
@@ -461,85 +456,85 @@ public class ThumbnailCreationFactory implements Runnable {
             PictureInfo pi;
             URL lowresUrl;
             int childIndex = 0;
-            for ( int picsProcessed = 0; ( picsProcessed < numberOfPics ) && ( childIndex < numberOfChildNodes ); picsProcessed++ ) {
+            for (int picsProcessed = 0; (picsProcessed < numberOfPics) && (childIndex < numberOfChildNodes); picsProcessed++) {
                 do {
-                    userObject = ( (SortableDefaultMutableTreeNode) referringNode.getChildAt( childIndex ) ).getUserObject();
+                    userObject = ((SortableDefaultMutableTreeNode) referringNode.getChildAt(childIndex)).getUserObject();
                     childIndex++;
-                } while ( ( !( userObject instanceof PictureInfo ) ) && ( childIndex < numberOfChildNodes ) );
+                } while ((!(userObject instanceof PictureInfo)) && (childIndex < numberOfChildNodes));
 
-                if ( ( userObject instanceof PictureInfo ) && ( childIndex <= numberOfChildNodes ) ) {
-                    x = margin + ( ( picsProcessed % horizontalPics ) * ( Settings.miniThumbnailSize.width + margin ) );
-                    yPos = (int) Math.round( ( (double) picsProcessed / (double) horizontalPics ) - 0.5f );
-                    y = topMargin + ( yPos * ( Settings.miniThumbnailSize.height + margin ) );
+                if ((userObject instanceof PictureInfo) && (childIndex <= numberOfChildNodes)) {
+                    x = margin + ((picsProcessed % horizontalPics) * (Settings.miniThumbnailSize.width + margin));
+                    yPos = (int) Math.round(((double) picsProcessed / (double) horizontalPics) - 0.5f);
+                    y = topMargin + (yPos * (Settings.miniThumbnailSize.height + margin));
                     //logger.info(Integer.toString(picsProcessed) +": " + Integer.toString(x) + "/" +Integer.toString(y)+ " - " + Integer.toString(yPos) );
 
                     pi = (PictureInfo) userObject;
                     //logger.info("Loading picture: " + pi.getDescription() + " Filename: " + pi.getLowresFilename() );
                     try {
                         lowresUrl = pi.getLowresURL();
-                    } catch ( MalformedURLException mue ) {
-                        logger.info( "Lowres URL was Malformed: " + pi.getLowresLocation() );
+                    } catch (MalformedURLException mue) {
+                        logger.info("Lowres URL was Malformed: " + pi.getLowresLocation());
                         continue;
                     }
 
                     try {
                         //logger.info( "Trying to load Thumbnail for Miniicon" );
                         lowresUrl.openStream().close();
-                        sclPic.loadPictureImd( lowresUrl, 0 );
-                    } catch ( IOException ioe ) {
+                        sclPic.loadPictureImd(lowresUrl, 0);
+                    } catch (IOException ioe) {
                         // logger.info( "Thumbnail failed. Loading Highres for Miniicon" );
-                        sclPic.loadPictureImd( pi.getHighresURL(), pi.getRotation() );
+                        sclPic.loadPictureImd(pi.getHighresURL(), pi.getRotation());
                     }
 
 
-                    sclPic.setScaleSize( Settings.miniThumbnailSize );
+                    sclPic.setScaleSize(Settings.miniThumbnailSize);
                     sclPic.scalePicture();
-                    x += ( Settings.miniThumbnailSize.width - sclPic.getScaledWidth() ) / 2;
+                    x += (Settings.miniThumbnailSize.width - sclPic.getScaledWidth()) / 2;
                     y += Settings.miniThumbnailSize.height - sclPic.getScaledHeight();
 
-                    groupThumbnailGraphics.drawImage( sclPic.getScaledPicture(), x, y, null );
+                    groupThumbnailGraphics.drawImage(sclPic.getScaledPicture(), x, y, null);
                 }
             }
 
 
             //logger.info(" ... writing: " + pi.getLowresLocation());
-            if ( Settings.keepThumbnails ) {
+            if (Settings.keepThumbnails) {
                 // Test that the file can be written to
                 // Note that we are using files here because java doesn't want to let me use output streams on URL's.
                 GroupInfo gi = (GroupInfo) referringNode.getUserObject();
-                if ( !gi.getLowresFile().exists() ) {
+                if (!gi.getLowresFile().exists()) {
                     // the file doesn't yet exist. Can we write to it?
                     try {
                         gi.getLowresFile().createNewFile();
-                    } catch ( IOException ioe ) {
-                        logger.info( "Lowres URL is not writable: " + gi.getLowresLocation() + " " + ioe.getMessage() + "  Creating a new URL." );
-                        gi.setLowresLocation( Tools.lowresFilename() );
+                    } catch (IOException ioe) {
+                        logger.info("Lowres URL is not writable: " + gi.getLowresLocation() + " " + ioe.getMessage() + "  Creating a new URL.");
+                        gi.setLowresLocation(Tools.lowresFilename());
                         referringNode.getPictureCollection().setUnsavedUpdates();
                     }
                 } else {
                     // the file does exist, can we write to it?
-                    if ( !gi.getLowresFile().canWrite() ) {
-                        logger.info( "Lowres URL is not writable: " + gi.getLowresLocation() + ".  Creating a new URL." );
-                        gi.setLowresLocation( Tools.lowresFilename() );
+                    if (!gi.getLowresFile().canWrite()) {
+                        logger.info("Lowres URL is not writable: " + gi.getLowresLocation() + ".  Creating a new URL.");
+                        gi.setLowresLocation(Tools.lowresFilename());
                         referringNode.getPictureCollection().setUnsavedUpdates();
                     }
                 }
-                ScalablePicture.writeJpg( gi.getLowresFile(), groupThumbnail, 0.8f );
+                ScalablePicture.writeJpg(gi.getLowresFile(), groupThumbnail, 0.8f);
 
                 // clean the cache
-                ImageIcon cleanCache = new ImageIcon( gi.getLowresURLOrNull() );
+                ImageIcon cleanCache = new ImageIcon(gi.getLowresURLOrNull());
                 cleanCache.getImage().flush();
 
-                Settings.pictureCollection.sendNodeChanged( referringNode );
+                Settings.pictureCollection.sendNodeChanged(referringNode);
             }
 
 
-            if ( ( currentThumb.referringNode != null ) && ( currentThumb.referringNode == referringNode ) ) {
+            if ((currentThumb.referringNode != null) && (currentThumb.referringNode == referringNode)) {
                 // in the meantime it might be displaying something completely else
-                currentThumb.setThumbnail( new ImageIcon( groupThumbnail ) );
+                currentThumb.setThumbnail(new ImageIcon(groupThumbnail));
             }
-        } catch ( IOException x ) {
-            logger.info( "ThumbnailCreationThread.createNewGroupThumbnail: caught an IOException: " + x.getMessage() );
+        } catch (IOException x) {
+            logger.info("ThumbnailCreationThread.createNewGroupThumbnail: caught an IOException: " + x.getMessage());
             currentThumb.setBrokenIcon();
         }
     }
