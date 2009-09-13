@@ -5,7 +5,6 @@ import jpo.dataModel.Settings;
 import jpo.*;
 import java.awt.event.*;
 import javax.swing.*;
-import jpo.dataModel.Tools;
 
 /*
 ApplicationJMenuBar.java:  main menu for the application
@@ -105,7 +104,7 @@ public class ApplicationJMenuBar extends JMenuBar
     /**
      *  Menu item that allows the user to check his directories
      **/
-    private final JMenuItem EditCheckDirectoriesJMenuItem;
+    //private final JMenuItem EditCheckDirectoriesJMenuItem;
     /**
      *  Menu item that allows the user to change the application settings.
      **/
@@ -176,14 +175,14 @@ public class ApplicationJMenuBar extends JMenuBar
         });
         FileJMenu.add(FileAddJMenuItem);
 
-        FileCameraJMenuItem.setMnemonic(KeyEvent.VK_C);
+        /*FileCameraJMenuItem.setMnemonic(KeyEvent.VK_C);
         FileCameraJMenuItem.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
                 caller.requestFileAddFromCamera();
             }
         });
-        FileJMenu.add(FileCameraJMenuItem);
+        FileJMenu.add(FileCameraJMenuItem);*/
 
 
         FileLoadJMenuItem.setMnemonic(KeyEvent.VK_O);
@@ -265,7 +264,7 @@ public class ApplicationJMenuBar extends JMenuBar
         EditJMenu.add(EditFindJMenuItem);
 
 
-        EditCheckDirectoriesJMenuItem = new JMenuItem();
+        /*EditCheckDirectoriesJMenuItem = new JMenuItem();
         EditCheckDirectoriesJMenuItem.setMnemonic(KeyEvent.VK_D);
         EditCheckDirectoriesJMenuItem.addActionListener(new ActionListener() {
 
@@ -273,26 +272,26 @@ public class ApplicationJMenuBar extends JMenuBar
                 caller.requestCheckDirectories();
             }
         });
-        EditJMenu.add(EditCheckDirectoriesJMenuItem);
+        EditJMenu.add(EditCheckDirectoriesJMenuItem);*/
 
 
-        EditCollectionPropertiesJMenuItem.setMnemonic(KeyEvent.VK_D);
+        /*EditCollectionPropertiesJMenuItem.setMnemonic(KeyEvent.VK_D);
         EditCollectionPropertiesJMenuItem.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
                 caller.requestCollectionProperties();
             }
         });
-        EditJMenu.add(EditCollectionPropertiesJMenuItem);
+        EditJMenu.add(EditCollectionPropertiesJMenuItem);*/
 
-        EditCheckIntegrityJMenuItem.setMnemonic(KeyEvent.VK_C);
+        /*EditCheckIntegrityJMenuItem.setMnemonic(KeyEvent.VK_C);
         EditCheckIntegrityJMenuItem.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
                 caller.requestCheckIntegrity();
             }
         });
-        EditJMenu.add(EditCheckIntegrityJMenuItem);
+        EditJMenu.add(EditCheckIntegrityJMenuItem);*/
 
 
         EditCamerasJMenuItem.setMnemonic(KeyEvent.VK_D);
@@ -305,14 +304,14 @@ public class ApplicationJMenuBar extends JMenuBar
         EditJMenu.add(EditCamerasJMenuItem);
 
 
-        EditCategoriesJMenuItem.setMnemonic(KeyEvent.VK_D);
+        /*EditCategoriesJMenuItem.setMnemonic(KeyEvent.VK_D);
         EditCategoriesJMenuItem.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
                 new CategoryEditorJFrame();
             }
         });
-        EditJMenu.add(EditCategoriesJMenuItem);
+        EditJMenu.add(EditCategoriesJMenuItem);*/
 
 
 
@@ -397,11 +396,11 @@ public class ApplicationJMenuBar extends JMenuBar
 
         EditJMenu.setText(Settings.jpoResources.getString("EditJMenuText"));
         EditFindJMenuItem.setText(Settings.jpoResources.getString("EditFindJMenuItemText"));
-        EditCheckDirectoriesJMenuItem.setText(Settings.jpoResources.getString("EditCheckDirectoriesJMenuItemText"));
-        EditCollectionPropertiesJMenuItem.setText(Settings.jpoResources.getString("EditCollectionPropertiesJMenuItem"));
-        EditCheckIntegrityJMenuItem.setText(Settings.jpoResources.getString("EditCheckIntegrityJMenuItem"));
+        //EditCheckDirectoriesJMenuItem.setText(Settings.jpoResources.getString("EditCheckDirectoriesJMenuItemText"));
+        //EditCollectionPropertiesJMenuItem.setText(Settings.jpoResources.getString("EditCollectionPropertiesJMenuItem"));
+        //EditCheckIntegrityJMenuItem.setText(Settings.jpoResources.getString("EditCheckIntegrityJMenuItem"));
         EditCamerasJMenuItem.setText(Settings.jpoResources.getString("EditCamerasJMenuItem"));
-        EditCategoriesJMenuItem.setText(Settings.jpoResources.getString("EditCategoriesJMenuItem"));
+        //EditCategoriesJMenuItem.setText(Settings.jpoResources.getString("EditCategoriesJMenuItem"));
         EditSettingsJMenuItem.setText(Settings.jpoResources.getString("EditSettingsMenuItemText"));
 
 

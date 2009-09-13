@@ -1,6 +1,5 @@
 package jpo.gui;
 
-import java.util.logging.Logger;
 import jpo.dataModel.*;
 import javax.swing.event.*;
 import javax.swing.tree.*;
@@ -26,12 +25,9 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  *  This class implements the ThumbnailBrowserInterface in the specific manner that is required for 
  *  displaying Groups in the Thumbnail JScrollPane.
  */
-public class GroupBrowser extends ThumbnailBrowser implements TreeModelListener {
-
-    /**
-     * Defines a logger for this class
-     */
-    private static Logger logger = Logger.getLogger( GroupBrowser.class.getName() );
+public class GroupBrowser
+        extends ThumbnailBrowser
+        implements TreeModelListener {
 
     /**
      *  A reference to the current group that shall be browsed
@@ -224,7 +220,7 @@ public class GroupBrowser extends ThumbnailBrowser implements TreeModelListener 
      */
     @Override
     public void treeStructureChanged( TreeModelEvent e ) {
-        //logger.info("GroupBrowser.treeStructureChanged: " + e.toString() );
+        logger.fine( String.format( "We've teen told that the Tree structure changed Event: %s", e.toString() ) );
         if ( myNode == null ) {
             //logger.info("GroupBrowser.treeStructureChanged: ERROR! This should not have been called as there is not group showing and therefore there should be no tree listener firing off. Ignoring notification.");
             return;

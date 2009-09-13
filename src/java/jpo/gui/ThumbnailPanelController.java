@@ -417,7 +417,7 @@ public class ThumbnailPanelController implements RelayoutListener {
     }
 
     /**
-     *  this method runs through all the thumbnails on the panel and makes sure they are set to the
+     *  Forces a walk through all the thumbnails on the panel and makes sure they are set to the
      *  correct node. It also sets the tile of the JScrollPane.
      */
     public void assignThumbnails() {

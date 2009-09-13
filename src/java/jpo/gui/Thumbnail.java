@@ -216,6 +216,11 @@ public class Thumbnail extends JComponent
     }
 
     /**
+     * Handle for operations that affect the collection.
+     */
+    private Jpo collectionController;
+
+    /**
      *   Creates a new Thumbnail object and sets it to the supplied node.
      *
      *   @param 	mySetOfNodes	The set for which this Thumbnail is
@@ -228,11 +233,12 @@ public class Thumbnail extends JComponent
      *   @param     priority	One of ThumbnailCreationQueue.MEDIUM_PRIORITY,ThumbnailCreationQueue.HIGH_PRORITY, ThumbnailCreationQueue.LOW_PRIORITY
      *
      **/
-    public Thumbnail(ThumbnailBrowserInterface mySetOfNodes, int index, int thumbnailSize, int priority) {
+    public Thumbnail(ThumbnailBrowserInterface mySetOfNodes, int index, int thumbnailSize, int priority, Jpo collectionController) {
         this(thumbnailSize);
         this.priority = priority;
         this.myThumbnailBrowser = mySetOfNodes;
         this.myIndex = index;
+        this.collectionController = collectionController;
         setNode(mySetOfNodes, index);
     }
 
@@ -607,7 +613,7 @@ public class Thumbnail extends JComponent
                     pictureViewer.changePicture(myThumbnailBrowser, myIndex);
                 } else if (e.getButton() == 3) { // popup menu only on 3rd mouse button.
                     //PicturePopupMenu picturePopupMenu = new PicturePopupMenu( referringNode );
-                    PicturePopupMenu picturePopupMenu = new PicturePopupMenu(myThumbnailBrowser, myIndex, null);
+                    PicturePopupMenu picturePopupMenu = new PicturePopupMenu(myThumbnailBrowser, myIndex, null, collectionController);
                     picturePopupMenu.show(e.getComponent(), e.getX(), e.getY());
                 } else if (e.getButton() == 1) { // first button
                     // I.e. selection

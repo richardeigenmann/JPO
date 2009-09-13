@@ -45,7 +45,7 @@ class CollectionDistillerJFrame extends JFrame implements ActionListener {
     /**
      *  text field that holds the directory that the group is to be exported to
      **/
-    private DirectoryChooser targetDirJTextField =
+    private DirectoryChooser targetDirChooser =
             new DirectoryChooser( Settings.jpoResources.getString( "collectionExportChooserTitle" ),
             DirectoryChooser.DIR_MUST_BE_WRITABLE );
 
@@ -105,13 +105,13 @@ class CollectionDistillerJFrame extends JFrame implements ActionListener {
         constraints.insets = new Insets( 4, 4, 4, 4 );
         contentJPanel.add( targetDirJLabel, constraints );
 
-        // create the JTextField that holds the reference to the targetDirJTextField
+        // create the JTextField that holds the reference to the targetDirChooser
         constraints.gridx = 0;
         constraints.gridy++;
         constraints.gridwidth = 1;
         constraints.weightx = 0.8;
         constraints.insets = new Insets( 4, 4, 4, 4 );
-        contentJPanel.add( targetDirJTextField, constraints );
+        contentJPanel.add( targetDirChooser, constraints );
 
 
         JLabel xmlFileNameJLabel = new JLabel( Settings.jpoResources.getString( "xmlFileNameLabel" ) );
@@ -205,7 +205,7 @@ class CollectionDistillerJFrame extends JFrame implements ActionListener {
      *  method that outputs the selected group to a directory
      */
     private void exportToDirectory() {
-        File exportDirectory = new File( targetDirJTextField.getText() );
+        File exportDirectory = targetDirChooser.getDirectory();
 
         if ( !exportDirectory.exists() ) {
             try {

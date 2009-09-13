@@ -7,7 +7,7 @@ import junit.framework.TestCase;
 
 /**
  *
- * @author richi
+ * @author Richard Eigenmann
  */
 public class WordMapTest extends TestCase {
 

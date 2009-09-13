@@ -15,7 +15,7 @@ import javax.swing.JPanel;
 
 /**
  *
- * @author richi
+ * @author Richard Eigenmann
  */
 public class YearsBrowser extends javax.swing.JFrame {
 

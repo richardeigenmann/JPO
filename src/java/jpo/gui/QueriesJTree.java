@@ -11,7 +11,7 @@ import jpo.dataModel.Tools;
 
 
 /*
-QueriesJTree.java:  class that creates a JTree to display the queries
+QueriesJTree.java:  Controller for the Searches JTree
 
 Copyright (C) 2006 - 2009  Richard Eigenmann, Zurich, Switzerland
 This program is free software; you can redistribute it and/or
@@ -28,78 +28,104 @@ The license is in gpl.txt.
 See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 /**
- *   The is one of the main classes in the JPO application as it is an extended JTree that
- *   deals with most of the logic surrounding the collection and the user interactions with it.
+ *   Controller for the Searches JTree
  */
-public class QueriesJTree extends JTree {
+public class QueriesJTree
+        extends JTree {
 
     /**
      * Constructs a JTree for the queries
      */
     public QueriesJTree() {
         Tools.checkEDT();
-        getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
-        putClientProperty("JTree.lineStyle", "Angled");
-        setOpaque(true);
-        setEditable(false);
-        setShowsRootHandles(true);
-        setMinimumSize(Settings.jpoNavigatorJTabbedPaneMinimumSize);
-        setModel(Settings.pictureCollection.getQueriesTreeModel());
+        getSelectionModel().setSelectionMode( TreeSelectionModel.SINGLE_TREE_SELECTION );
+        putClientProperty( "JTree.lineStyle", "Angled" );
+        setOpaque( true );
+        setEditable( false );
+        setShowsRootHandles( true );
+        setMinimumSize( Settings.jpoNavigatorJTabbedPaneMinimumSize );
+        setModel( Settings.pictureCollection.getQueriesTreeModel() );
 
         //Add listener to components that can bring up groupPopupJPopupMenu menus.
         QueriesMouseAdapter mouseAdapter = new QueriesMouseAdapter();
-        addMouseListener(mouseAdapter);
+        addMouseListener( mouseAdapter );
 
+    }
+
+
+    /**
+     * Returns a view component with the JTree embedded in a JScrollpane
+     * @return
+     */
+    public JComponent getJScrollPane() {
+        return new JScrollPane( this );
+    }
+
+
+    /**
+     *  Moves the highlighted row to the indicated one and expands the tree if necessary.
+     *  Does not talk back to the collection controller as this should be called from the collection controller.
+     *  @param node  The node which should be highlighted
+     */
+    public void setSelectedNode( final DefaultMutableTreeNode node ) {
+        Tools.checkEDT();
+        TreePath tp = new TreePath( node.getPath() );
+        setSelectionPath( tp );
+        scrollPathToVisible( tp );
     }
 
     /**
      *  subclass to deal with the Mouse events
      **/
-    private class QueriesMouseAdapter extends MouseAdapter {
+    private class QueriesMouseAdapter
+            extends MouseAdapter {
 
         /**
          *    If the mouse was clicked more than once using the left mouse button over a valid picture
          *    node then the picture editor is opened.
          */
         @Override
-        public void mouseClicked(MouseEvent e) {
-            TreePath clickPath = getPathForLocation(e.getX(), e.getY());
-            if (clickPath == null) {
+        public void mouseClicked( MouseEvent e ) {
+            TreePath clickPath = getPathForLocation( e.getX(), e.getY() );
+            if ( clickPath == null ) {
                 return; // happens
             } // happens
             DefaultMutableTreeNode clickNode = (DefaultMutableTreeNode) clickPath.getLastPathComponent();
 
-            if (e.getClickCount() == 1 && (!e.isPopupTrigger())) {
-                if ((clickNode == null) || (clickNode.getUserObject() == null) || (!(clickNode.getUserObject() instanceof Query))) {
+            if ( e.getClickCount() == 1 && ( !e.isPopupTrigger() ) ) {
+                if ( ( clickNode == null ) || ( clickNode.getUserObject() == null ) || ( !( clickNode.getUserObject() instanceof Query ) ) ) {
                     return;
                 }
-                QueryBrowser queryBrowser = new QueryBrowser((Query) clickNode.getUserObject());
-                Jpo.showThumbnails(queryBrowser);
+                QueryBrowser queryBrowser = new QueryBrowser( (Query) clickNode.getUserObject() );
+                Jpo.showThumbnails( queryBrowser );
             }
         }
+
 
         /**
          *   Override thge mousePressed event.
          */
         @Override
-        public void mousePressed(MouseEvent e) {
+        public void mousePressed( MouseEvent e ) {
             //maybeShowPopup(e);
         }
+
 
         /**
          *  Override the mouseReleased event.
          */
         @Override
-        public void mouseReleased(MouseEvent e) {
+        public void mouseReleased( MouseEvent e ) {
             //maybeShowPopup(e);
         }
+
 
         /**
          *  This method figures out whether a popup window should be displayed and displays
          *  it.
          *  @param   e	The MouseEvent that was trapped.
          */
-        private void maybeShowPopup(MouseEvent e) {
+        private void maybeShowPopup( MouseEvent e ) {
             /*if ( e.isPopupTrigger() ) {
             popupPath = getPathForLocation(e.getX(), e.getY());
             if ( popupPath == null ) return; // happens

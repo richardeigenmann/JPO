@@ -122,7 +122,8 @@ public class Tools {
      * @param extension
      * @param jTextField
      */
-    public static void setFilenameExtension( String extension, JTextField jTextField ) {
+    public static void setFilenameExtension( String extension,
+            JTextField jTextField ) {
         if ( !jTextField.getText().toUpperCase().endsWith( extension.toUpperCase() ) ) {
             jTextField.setText( jTextField.getText() + "." + extension );
         }
@@ -172,6 +173,42 @@ public class Tools {
             }
         }
         return numFiles;
+    }
+
+    /**
+     *   Constant that indicates that the directory must exist
+     */
+    public static final int DIR_MUST_EXIST = 1;
+
+    /**
+     *   Constant that indicates that the directory must exist and be writable;
+     */
+    public static final int DIR_MUST_BE_WRITABLE = DIR_MUST_EXIST + 1;
+
+
+    /**
+     * Test the supplied File on whether it is a directory and whether is can be written to.
+     * @param testDir
+     * @param validationType
+     * @return
+     */
+    public static boolean checkDirectory( File testDir, int validationType ) {
+        switch ( validationType ) {
+            case DIR_MUST_EXIST:
+                return testDir.exists() && testDir.isDirectory();
+            case DIR_MUST_BE_WRITABLE:
+                if ( testDir.exists() ) {
+                    return testDir.canWrite() && testDir.isDirectory();
+                } else {
+                    File testDirParent = testDir.getParentFile();
+                    if ( testDirParent != null ) {
+                        return checkDirectory( testDirParent, validationType );
+                    } else {
+                        return false;
+                    }
+                }
+        }
+        return false;
     }
 
 
@@ -290,12 +327,13 @@ public class Tools {
 
 
     /**
-     *  method to copy any file from a source File to a target File location.
-     * @param a
-     * @param b
+     * Copy any file from a source File to a target File location.
+     * @param a the source file location
+     * @param b the target file location
      * @return The crc of the copied picture.
      */
     public static long copyPicture( File a, File b ) {
+        logger.fine( String.format( "Copying file %s to file %s", a.toString(), b.toString() ) );
         try {
             InputStream in = new FileInputStream( a );
             OutputStream out = new FileOutputStream( b );
@@ -325,7 +363,8 @@ public class Tools {
      * @return  the crc of the file
      * @throws IOException
      */
-    public static long copyBufferedStream( BufferedInputStream bin, BufferedOutputStream bout )
+    public static long copyBufferedStream( BufferedInputStream bin,
+            BufferedOutputStream bout )
             throws IOException {
 
         Adler32 crc = new Adler32();
@@ -542,8 +581,7 @@ public class Tools {
     /**
      *   method that returns a file handle for a picture that does not exist in the target 
      *   directory. It tries the combination of path and name first and then tries to 
-     *   suffix _0 _1 _2 etc to the name. If that fails it combines random characters and
-     *   then fails, returning null.
+     *   suffix _0 _1 _2 etc to the name. If it returns null then it failed
      * @param targetDir
      * @param startName
      * @return
@@ -559,15 +597,13 @@ public class Tools {
         String startNameSuffix = startName.substring( dotPoint );
 
 
-        for ( int i = 1; i < 10; i++ ) {
+        for ( int i = 1; i < 50; i++ ) {
             testFile = new File( targetDir, startNameRoot + "_" + Integer.toString( i ) + startNameSuffix );
             if ( !testFile.exists() ) {
                 return testFile;
             }
         }
-
-        String randomName;
-
+        logger.severe( String.format( "Could not invent a picture filename for the directory %s and the name %s", targetDir.toString(), startName ) );
         return null;
     }
 
@@ -809,7 +845,8 @@ public class Tools {
      *   @param   horizontalWidth   The horizontal width that should be used in the dimension.
      * @return
      */
-    public static Dimension getJTextAreaDimension( JTextArea ta, int horizontalWidth ) {
+    public static Dimension getJTextAreaDimension( JTextArea ta,
+            int horizontalWidth ) {
         // figure out the size of the JTextArea
         int fontHeight = ta.getFontMetrics( ta.getFont() ).getHeight();
         int stringWidth = ta.getFontMetrics( ta.getFont() ).stringWidth( ta.getText() );

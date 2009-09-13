@@ -124,7 +124,7 @@ public class SettingsDialog extends JDialog {
     /**
      *   fields that allows the user to capture the path for the thumbnails
      */
-    private DirectoryChooser thumbnailPathField = new DirectoryChooser(Settings.jpoResources.getString("genericSelectText"),
+    private DirectoryChooser thumbnailPathChooser = new DirectoryChooser(Settings.jpoResources.getString("genericSelectText"),
             DirectoryChooser.DIR_MUST_BE_WRITABLE);
     /**
      *  tickbox that indicates whether thumbnails should be written to disk
@@ -419,7 +419,7 @@ public class SettingsDialog extends JDialog {
         c.gridy++;
         c.gridwidth = 3;
         c.fill = GridBagConstraints.HORIZONTAL;
-        thumbnailSettingsJPanel.add(thumbnailPathField, c);
+        thumbnailSettingsJPanel.add(thumbnailPathChooser, c);
 
 
 
@@ -834,7 +834,7 @@ public class SettingsDialog extends JDialog {
         maxCacheJTextField.setValue(Settings.maxCache);
         dontEnlargeJCheckBox.setSelected(Settings.dontEnlargeSmallImages);
 
-        thumbnailPathField.setText(Settings.thumbnailPath.getPath());
+        thumbnailPathChooser.setText(Settings.thumbnailPath.getPath());
         maxThumbnails.setValue(Settings.maxThumbnails);
         thumbnailSize.setValue(Settings.thumbnailSize);
         keepThumbnailsJCheckBox.setSelected(Settings.keepThumbnails);
@@ -896,7 +896,7 @@ public class SettingsDialog extends JDialog {
         }
 
 
-        if ((!thumbnailPathField.checkDirectory())) {
+        if ((!thumbnailPathChooser.setColor())) { // TODO: This seems very odd
             JOptionPane.showMessageDialog(Settings.anchorFrame,
                     Settings.jpoResources.getString("thumbnailDirError"),
                     Settings.jpoResources.getString("settingsError"),
@@ -946,7 +946,7 @@ public class SettingsDialog extends JDialog {
 
         Settings.pictureViewerFastScale = pictureViewerFastScaleJCheckBox.isSelected();
 
-        Settings.thumbnailPath = new File(thumbnailPathField.getText());
+        Settings.thumbnailPath = thumbnailPathChooser.getDirectory();
         Settings.keepThumbnails = keepThumbnailsJCheckBox.isSelected();
 
         if ((!Settings.thumbnailPath.exists()) && Settings.keepThumbnails) {
@@ -1029,7 +1029,7 @@ public class SettingsDialog extends JDialog {
      * @return
      */
     public boolean checkAutoLoad(String validationFile) {
-        logger.fine("SettingsDialog.checkAutoLoad: called on: "+ validationFile);
+        logger.fine("SettingsDialog.checkAutoLoad: called on: " + validationFile);
         File testFile = new File(validationFile);
 
         if (validationFile.equals("")) {
@@ -1131,7 +1131,7 @@ public class SettingsDialog extends JDialog {
      *  thumbnauil images
      */
     public void zapThumbnails() {
-        if ((!thumbnailPathField.checkDirectory())) {
+        if ((!thumbnailPathChooser.setColor())) {//TODO: Seems odd to use a GUI component to validate a path
             JOptionPane.showMessageDialog(Settings.anchorFrame,
                     Settings.jpoResources.getString("thumbnailDirError"),
                     Settings.jpoResources.getString("settingsError"),
@@ -1139,16 +1139,15 @@ public class SettingsDialog extends JDialog {
             return;
         }
 
-        String thumbnailDir = thumbnailPathField.getText();
+        File thumbnailDirFile = thumbnailPathChooser.getDirectory();
 
         int option = JOptionPane.showConfirmDialog(
                 Settings.anchorFrame,
-                Settings.jpoResources.getString("zapThumbnails") + "\n" + thumbnailDir + "\n" + Settings.jpoResources.getString("areYouSure"),
+                Settings.jpoResources.getString("zapThumbnails") + "\n" + thumbnailDirFile.toString() + "\n" + Settings.jpoResources.getString("areYouSure"),
                 Settings.jpoResources.getString("FileDeleteTitle"),
                 JOptionPane.OK_CANCEL_OPTION);
 
         if (option == 0) {
-            File thumbnailDirFile = new File(thumbnailDir);
             File[] thumbnailFiles = thumbnailDirFile.listFiles(new java.io.FileFilter() {
 
                 public boolean accept(File file) {

@@ -18,7 +18,7 @@ import javax.swing.event.TableModelEvent;
 
 /**
  *
- * @author richi
+ * @author Richard Eigenmann
  */
 public class TableMap extends AbstractTableModel
                       implements TableModelListener {

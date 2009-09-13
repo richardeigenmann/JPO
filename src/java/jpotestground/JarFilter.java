@@ -1,4 +1,4 @@
-package jpo.gui;
+package jpotestground;
 
 import java.io.File;
 

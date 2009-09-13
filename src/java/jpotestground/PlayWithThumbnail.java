@@ -19,7 +19,7 @@ import javax.swing.event.ChangeListener;
 
 /**
  *Test
- * @author richi
+ * @author Richard Eigenmann
  */
 public class PlayWithThumbnail extends JFrame implements ChangeListener {
 

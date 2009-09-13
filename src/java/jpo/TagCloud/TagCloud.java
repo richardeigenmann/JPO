@@ -2,7 +2,6 @@ package jpo.TagCloud;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.TreeSet;
 import java.util.Vector;
@@ -144,9 +143,8 @@ public class TagCloud extends JScrollPane {
         public void mouseClicked( MouseEvent e ) {
             TagCloudJLabel wl = (TagCloudJLabel) e.getComponent();
             String tag = wl.getText();
-            Enumeration<TagClickListener> listeners = tagClickListeners.elements();
-            while ( listeners.hasMoreElements() ) {
-                listeners.nextElement().tagClicked( tag );
+            for ( TagClickListener tagClickListener : tagClickListeners ) {
+                tagClickListener.tagClicked( tag );
             }
         }
     };

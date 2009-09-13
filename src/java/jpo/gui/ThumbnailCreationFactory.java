@@ -210,7 +210,7 @@ public class ThumbnailCreationFactory implements Runnable {
                 highresUC.getInputStream().close();
 
                 if (lowresModDate < highresModDate) {
-                    logger.info("ThumbnailCreationThread.createThumbnail: is requesting the creation of a numbnail because Thumbnail is out of date: " + pi.getLowresLocation());
+                    logger.fine("ThumbnailCreationThread.createThumbnail: is requesting the creation of a numbnail because Thumbnail is out of date: " + pi.getLowresLocation());
                     createNewThumbnail(currentThumb);
                     return;
                 }

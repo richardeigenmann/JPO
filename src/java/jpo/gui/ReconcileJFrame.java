@@ -51,7 +51,7 @@ public class ReconcileJFrame
     /** 
      *   holds the directory to use.
      */
-    private DirectoryChooser directoryJTextField =
+    private DirectoryChooser directoryChooser =
             new DirectoryChooser( Settings.jpoResources.getString( "directoryCheckerChooserTitle" ),
             DirectoryChooser.DIR_MUST_EXIST );
 
@@ -160,7 +160,7 @@ public class ReconcileJFrame
         constraints.gridy++;
         constraints.gridwidth = 1;
         constraints.insets = new Insets( 4, 4, 4, 4 );
-        controlJPanel.add( directoryJTextField, constraints );
+        controlJPanel.add( directoryChooser, constraints );
 
 
         constraints.gridx = 3;
@@ -236,7 +236,7 @@ public class ReconcileJFrame
      */
     public void run() {
         stopThread = false;
-        File scanDir = new File( directoryJTextField.getText() );
+        File scanDir = directoryChooser.getDirectory();
         if ( validateDir( scanDir ) ) {
             logJTextArea.setText( null );
             reconcileDir( scanDir );
@@ -311,7 +311,7 @@ public class ReconcileJFrame
                     nodeObject = node.getUserObject();
                     if ( nodeObject instanceof PictureInfo ) {
 //						logJTextArea.append("Comparing: " + fileArray[i].toURI().toString() + " against: " + ((PictureInfo) nodeObject ).getHighresURIOrNull().toString() + "\n");
-                        // if ( ((PictureInfo) nodeObject ).getHighresURL().getFile().compareTo( fileArray[i].getPath() ) == 0)  {
+                        // if ( ((PictureInfo) nodeObject ).getHighresURL().getDirectory().compareTo( fileArray[i].getPath() ) == 0)  {
                         if ( ( (PictureInfo) nodeObject ).getHighresURIOrNull().equals( fileArray[i].toURI() ) ) {
                             if ( listPositivesJCheckBox.isSelected() ) {
                                 logJTextArea.append( fileArray[i].getPath() + Settings.jpoResources.getString( "ReconcileFound" ) + ( (PictureInfo) nodeObject ).getDescription() + "\n" );

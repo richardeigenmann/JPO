@@ -24,7 +24,7 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 /**
  * Swing based Gui elements to show the Yearly Analysis
  *
- * @author richi
+ * @author Richard Eigenmann
  */
 public class YearsAnalysisGui extends JFrame implements Serializable {
 

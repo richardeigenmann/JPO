@@ -7,7 +7,9 @@ import jpo.dataModel.RecentDropNodeListener;
 import jpo.*;
 import java.awt.event.*;
 import java.io.File;
+import java.util.ArrayList;
 import javax.swing.*;
+import jpo.dataModel.SortOption;
 import jpo.dataModel.Tools;
 
 /*
@@ -34,37 +36,44 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  * it is propbably more in line with the OO philosophy.
  *
  */
-public class GroupPopupMenu extends JPopupMenu
+public class GroupPopupMenu
+        extends JPopupMenu
         implements RecentDropNodeListener, RecentFilesChangeListener {
 
     /**
      *   An array of recently opened collections.
      */
     private final JMenuItem[] recentOpenedfileJMenuItem = new JMenuItem[Settings.recentFiles];
+
     /**
      *  a separator for the Move menu
      */
     private JSeparator movePictureNodeSeparator = new JSeparator();
+
     /**
      *  menu items for the recently dropped group nodes
      */
     private JMenuItem[] recentDropNodes = new JMenuItem[Settings.maxDropNodes];
+
     /**
      *  object that must implement the functions dealing with the user
      *  request
      */
     private GroupPopupInterface caller;
+
     /**
      *  the node we are doing the popup menu for
      */
     private final SortableDefaultMutableTreeNode popupNode;
+
 
     /**
      *   Creates a popup menu for a group.
      *   @param  caller   the caller that will get the requests to do things
      *   @param  node 	the node for which the popup menu is being created.
      */
-    public GroupPopupMenu(final GroupPopupInterface caller, final SortableDefaultMutableTreeNode node) {
+    public GroupPopupMenu( final GroupPopupInterface caller,
+            final SortableDefaultMutableTreeNode node ) {
         this.caller = caller;
         this.popupNode = node;
         Runnable r = new Runnable() {
@@ -73,334 +82,342 @@ public class GroupPopupMenu extends JPopupMenu
                 initComponents();
             }
         };
-        if (SwingUtilities.isEventDispatchThread()) {
+        if ( SwingUtilities.isEventDispatchThread() ) {
             r.run();
         } else {
-            SwingUtilities.invokeLater(r);
+            SwingUtilities.invokeLater( r );
         }
 
     }
 
+
     private void initComponents() {
-        JMenuItem groupShowJMenuItem = new JMenuItem(Settings.jpoResources.getString("groupShowJMenuItem"));
-        groupShowJMenuItem.addActionListener(new ActionListener() {
+        JMenuItem groupShowJMenuItem = new JMenuItem( Settings.jpoResources.getString( "groupShowJMenuItem" ) );
+        groupShowJMenuItem.addActionListener( new ActionListener() {
 
-            public void actionPerformed(ActionEvent e) {
-                caller.requestShowGroup(popupNode);
+            public void actionPerformed( ActionEvent e ) {
+                caller.requestShowGroup( popupNode );
             }
-        });
-        add(groupShowJMenuItem);
+        } );
+        add( groupShowJMenuItem );
 
-        JMenuItem groupSlideshowJMenuItem = new JMenuItem(Settings.jpoResources.getString("groupSlideshowJMenuItem"));
-        groupSlideshowJMenuItem.addActionListener(new ActionListener() {
+        JMenuItem groupSlideshowJMenuItem = new JMenuItem( Settings.jpoResources.getString( "groupSlideshowJMenuItem" ) );
+        groupSlideshowJMenuItem.addActionListener( new ActionListener() {
 
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed( ActionEvent e ) {
                 caller.requestSlideshow();
             }
-        });
-        add(groupSlideshowJMenuItem);
+        } );
+        add( groupSlideshowJMenuItem );
 
-        JMenuItem groupFindJMenuItem = new JMenuItem(Settings.jpoResources.getString("groupFindJMenuItemLabel"));
-        groupFindJMenuItem.addActionListener(new ActionListener() {
+        JMenuItem groupFindJMenuItem = new JMenuItem( Settings.jpoResources.getString( "groupFindJMenuItemLabel" ) );
+        groupFindJMenuItem.addActionListener( new ActionListener() {
 
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed( ActionEvent e ) {
                 caller.requestFind();
             }
-        });
-        add(groupFindJMenuItem);
+        } );
+        add( groupFindJMenuItem );
 
         addSeparator();
 
-        if (popupNode.getPictureCollection().getAllowEdits()) {
+        if ( popupNode.getPictureCollection().getAllowEdits() ) {
 
-            JMenuItem groupEditJMenuItem = new JMenuItem(Settings.jpoResources.getString("groupEditJMenuItem"));
-            groupEditJMenuItem.addActionListener(new ActionListener() {
+            JMenuItem groupEditJMenuItem = new JMenuItem( Settings.jpoResources.getString( "groupEditJMenuItem" ) );
+            groupEditJMenuItem.addActionListener( new ActionListener() {
 
-                public void actionPerformed(ActionEvent e) {
+                public void actionPerformed( ActionEvent e ) {
                     caller.requestEditGroupNode();
                 }
-            });
-            add(groupEditJMenuItem);
+            } );
+            add( groupEditJMenuItem );
 
-            JMenuItem categoryUsagetJMenuItem = new JMenuItem(Settings.jpoResources.getString("categoryUsagetJMenuItem"));
-            categoryUsagetJMenuItem.addActionListener(new ActionListener() {
+            JMenuItem categoryUsagetJMenuItem = new JMenuItem( Settings.jpoResources.getString( "categoryUsagetJMenuItem" ) );
+            categoryUsagetJMenuItem.addActionListener( new ActionListener() {
 
-                public void actionPerformed(ActionEvent e) {
+                public void actionPerformed( ActionEvent e ) {
                     caller.showCategoryUsageGUI();
                 }
-            });
-            add(categoryUsagetJMenuItem);
+            } );
+            add( categoryUsagetJMenuItem );
 
 
-            JMenuItem groupRefreshJMenuItem = new JMenuItem(Settings.jpoResources.getString("groupRefreshJMenuItem"));
-            groupRefreshJMenuItem.addActionListener(new ActionListener() {
+            JMenuItem groupRefreshJMenuItem = new JMenuItem( Settings.jpoResources.getString( "groupRefreshJMenuItem" ) );
+            groupRefreshJMenuItem.addActionListener( new ActionListener() {
 
-                public void actionPerformed(ActionEvent e) {
+                public void actionPerformed( ActionEvent e ) {
                     popupNode.refreshThumbnail();
                 }
-            });
-            add(groupRefreshJMenuItem);
+            } );
+            add( groupRefreshJMenuItem );
 
             addSeparator();
 
-            JMenuItem groupTableJMenuItem = new JMenuItem(Settings.jpoResources.getString("groupTableJMenuItemLabel"));
-            groupTableJMenuItem.addActionListener(new ActionListener() {
+            JMenuItem groupTableJMenuItem = new JMenuItem( Settings.jpoResources.getString( "groupTableJMenuItemLabel" ) );
+            groupTableJMenuItem.addActionListener( new ActionListener() {
 
-                public void actionPerformed(ActionEvent e) {
+                public void actionPerformed( ActionEvent e ) {
                     caller.requestEditGroupTable();
                 }
-            });
-            add(groupTableJMenuItem);
+            } );
+            add( groupTableJMenuItem );
 
             addSeparator();
 
             //submenu which has several navigation options
-            JMenu addGroupJMenu = new JMenu(Settings.jpoResources.getString("addGroupJMenuLabel"));
-            add(addGroupJMenu);
+            JMenu addGroupJMenu = new JMenu( Settings.jpoResources.getString( "addGroupJMenuLabel" ) );
+            add( addGroupJMenu );
 
             // menu item that allows adding a new blank group
-            JMenuItem addNewGroupJMenuItem = new JMenuItem(Settings.jpoResources.getString("addNewGroupJMenuItemLabel"));
-            addNewGroupJMenuItem.addActionListener(new ActionListener() {
+            JMenuItem addNewGroupJMenuItem = new JMenuItem( Settings.jpoResources.getString( "addNewGroupJMenuItemLabel" ) );
+            addNewGroupJMenuItem.addActionListener( new ActionListener() {
 
-                public void actionPerformed(ActionEvent e) {
+                public void actionPerformed( ActionEvent e ) {
                     caller.requestAddGroup();
                 }
-            });
-            addGroupJMenu.add(addNewGroupJMenuItem);
+            } );
+            addGroupJMenu.add( addNewGroupJMenuItem );
 
-            JMenuItem addPicturesJMenuItem = new JMenuItem(Settings.jpoResources.getString("addPicturesJMenuItemLabel"));
-            addPicturesJMenuItem.addActionListener(new ActionListener() {
+            JMenuItem addPicturesJMenuItem = new JMenuItem( Settings.jpoResources.getString( "addPicturesJMenuItemLabel" ) );
+            addPicturesJMenuItem.addActionListener( new ActionListener() {
 
-                public void actionPerformed(ActionEvent e) {
+                public void actionPerformed( ActionEvent e ) {
                     caller.chooseAndAddPicturesToGroup( popupNode );
                 }
-            });
-            addGroupJMenu.add(addPicturesJMenuItem);
+            } );
+            addGroupJMenu.add( addPicturesJMenuItem );
 
             // Add Collections
             // submenu which offers the choice of either loading from a file or from one of the recent collections
-            JMenu addCollectionJMenu = new JMenu(Settings.jpoResources.getString("addCollectionJMenuItemLabel"));
-            addGroupJMenu.add(addCollectionJMenu);
+            JMenu addCollectionJMenu = new JMenu( Settings.jpoResources.getString( "addCollectionJMenuItemLabel" ) );
+            addGroupJMenu.add( addCollectionJMenu );
 
             // menu item that allows adding a collection of pictures
-            JMenuItem addCollectionFormFile = new JMenuItem(Settings.jpoResources.getString("addCollectionFormFile"));
-            addCollectionFormFile.addActionListener(new ActionListener() {
+            JMenuItem addCollectionFormFile = new JMenuItem( Settings.jpoResources.getString( "addCollectionFormFile" ) );
+            addCollectionFormFile.addActionListener( new ActionListener() {
 
-                public void actionPerformed(ActionEvent e) {
+                public void actionPerformed( ActionEvent e ) {
                     caller.requestAddCollection();
                 }
-            });
-            addCollectionJMenu.add(addCollectionFormFile);
+            } );
+            addCollectionJMenu.add( addCollectionFormFile );
 
             // add the recently opened files to the menu
-            for (int i = 0; i < Settings.recentFiles; i++) {
+            for ( int i = 0; i < Settings.recentFiles; i++ ) {
                 recentOpenedfileJMenuItem[i] = new JMenuItem();
                 final int index = i;  // the anonymous innter class needs a final variable
-                recentOpenedfileJMenuItem[i].addActionListener(new ActionListener() {
+                recentOpenedfileJMenuItem[i].addActionListener( new ActionListener() {
 
-                    public void actionPerformed(ActionEvent e) {
-                        caller.requestAddCollection(new File(Settings.recentCollections[index]));
+                    public void actionPerformed( ActionEvent e ) {
+                        caller.requestAddCollection( new File( Settings.recentCollections[index] ) );
                     }
-                });
-                recentOpenedfileJMenuItem[i].setVisible(false);
-                addCollectionJMenu.add(recentOpenedfileJMenuItem[i]);
+                } );
+                recentOpenedfileJMenuItem[i].setVisible( false );
+                addCollectionJMenu.add( recentOpenedfileJMenuItem[i] );
             }
             //Settings.addRecentFilesChangeListener( this );  // not needed as Group Popups are created on demand
             recentFilesChanged();
 
 
             // menu item that allows adding from a list of filenames
-            JMenuItem addFlatFileJMenuItem = new JMenuItem(Settings.jpoResources.getString("addFlatFileJMenuItemLabel"));
-            addFlatFileJMenuItem.addActionListener(new ActionListener() {
+            JMenuItem addFlatFileJMenuItem = new JMenuItem( Settings.jpoResources.getString( "addFlatFileJMenuItemLabel" ) );
+            addFlatFileJMenuItem.addActionListener( new ActionListener() {
 
-                public void actionPerformed(ActionEvent e) {
-                    TreeNodeController.addFlatFile(popupNode);
+                public void actionPerformed( ActionEvent e ) {
+                    TreeNodeController.addFlatFile( popupNode );
                 }
-            });
-            addGroupJMenu.add(addFlatFileJMenuItem);
+            } );
+            addGroupJMenu.add( addFlatFileJMenuItem );
 
             // submenu which has several navigation options
-            JMenu moveGroupNodeJMenu = new JMenu(Settings.jpoResources.getString("moveNodeJMenuLabel"));
-            add(moveGroupNodeJMenu);
+            JMenu moveGroupNodeJMenu = new JMenu( Settings.jpoResources.getString( "moveNodeJMenuLabel" ) );
+            add( moveGroupNodeJMenu );
 
-            for (int i = 0; i < Settings.maxDropNodes; i++) {
+            for ( int i = 0; i < Settings.maxDropNodes; i++ ) {
                 recentDropNodes[i] = new JMenuItem();
-                recentDropNodes[i].addActionListener(new ActionListener() {
+                recentDropNodes[i].addActionListener( new ActionListener() {
 
-                    public void actionPerformed(ActionEvent e) {
-                        throw new UnsupportedOperationException("Not supported yet.");
+                    public void actionPerformed( ActionEvent e ) {
+                        throw new UnsupportedOperationException( "Not supported yet." );
                     }
-                });
-                moveGroupNodeJMenu.add(recentDropNodes[i]);
+                } );
+                moveGroupNodeJMenu.add( recentDropNodes[i] );
             }
-            moveGroupNodeJMenu.add(movePictureNodeSeparator);
+            moveGroupNodeJMenu.add( movePictureNodeSeparator );
             recentDropNodesChanged();
 
             //menu item that allows move to top op list
-            JMenuItem moveGroupToTopJMenuItem = new JMenuItem(Settings.jpoResources.getString("moveGroupToTopJMenuItem"));
-            moveGroupToTopJMenuItem.addActionListener(new ActionListener() {
+            JMenuItem moveGroupToTopJMenuItem = new JMenuItem( Settings.jpoResources.getString( "moveGroupToTopJMenuItem" ) );
+            moveGroupToTopJMenuItem.addActionListener( new ActionListener() {
 
-                public void actionPerformed(ActionEvent e) {
+                public void actionPerformed( ActionEvent e ) {
                     caller.requestMoveGroupToTop();
                 }
-            });
-            moveGroupNodeJMenu.add(moveGroupToTopJMenuItem);
+            } );
+            moveGroupNodeJMenu.add( moveGroupToTopJMenuItem );
 
             // menu item that allows move up in the list
-            JMenuItem moveGroupUpJMenuItem = new JMenuItem(Settings.jpoResources.getString("moveGroupUpJMenuItem"));
-            moveGroupUpJMenuItem.addActionListener(new ActionListener() {
+            JMenuItem moveGroupUpJMenuItem = new JMenuItem( Settings.jpoResources.getString( "moveGroupUpJMenuItem" ) );
+            moveGroupUpJMenuItem.addActionListener( new ActionListener() {
 
-                public void actionPerformed(ActionEvent e) {
+                public void actionPerformed( ActionEvent e ) {
                     caller.requestMoveGroupUp();
                 }
-            });
-            moveGroupNodeJMenu.add(moveGroupUpJMenuItem);
+            } );
+            moveGroupNodeJMenu.add( moveGroupUpJMenuItem );
 
             //menu item that allows move up in the list
-            JMenuItem moveGroupDownJMenuItem = new JMenuItem(Settings.jpoResources.getString("moveGroupDownJMenuItem"));
-            moveGroupDownJMenuItem.addActionListener(new ActionListener() {
+            JMenuItem moveGroupDownJMenuItem = new JMenuItem( Settings.jpoResources.getString( "moveGroupDownJMenuItem" ) );
+            moveGroupDownJMenuItem.addActionListener( new ActionListener() {
 
-                public void actionPerformed(ActionEvent e) {
+                public void actionPerformed( ActionEvent e ) {
                     caller.requestMoveGroupDown();
                 }
-            });
-            moveGroupNodeJMenu.add(moveGroupDownJMenuItem);
+            } );
+            moveGroupNodeJMenu.add( moveGroupDownJMenuItem );
 
             // menu item that allows move to top op list
-            JMenuItem moveGroupToBottomJMenuItem = new JMenuItem(Settings.jpoResources.getString("moveGroupToBottomJMenuItem"));
-            moveGroupToBottomJMenuItem.addActionListener(new ActionListener() {
+            JMenuItem moveGroupToBottomJMenuItem = new JMenuItem( Settings.jpoResources.getString( "moveGroupToBottomJMenuItem" ) );
+            moveGroupToBottomJMenuItem.addActionListener( new ActionListener() {
 
-                public void actionPerformed(ActionEvent e) {
+                public void actionPerformed( ActionEvent e ) {
                     caller.requestMoveGroupToBottom();
                 }
-            });
-            moveGroupNodeJMenu.add(moveGroupToBottomJMenuItem);
+            } );
+            moveGroupNodeJMenu.add( moveGroupToBottomJMenuItem );
 //menu item that allows indenting the group
-            JMenuItem indentJMenuItem = new JMenuItem(Settings.jpoResources.getString("indentJMenuItem"));
-            indentJMenuItem.addActionListener(new ActionListener() {
+            JMenuItem indentJMenuItem = new JMenuItem( Settings.jpoResources.getString( "indentJMenuItem" ) );
+            indentJMenuItem.addActionListener( new ActionListener() {
 
-                public void actionPerformed(ActionEvent e) {
+                public void actionPerformed( ActionEvent e ) {
                     popupNode.indentNode();
                 }
-            });
-            moveGroupNodeJMenu.add(indentJMenuItem);
+            } );
+            moveGroupNodeJMenu.add( indentJMenuItem );
 
             // menu item that allows outdenting the group
-            JMenuItem outdentJMenuItem = new JMenuItem(Settings.jpoResources.getString("outdentJMenuItem"));
-            outdentJMenuItem.addActionListener(new ActionListener() {
+            JMenuItem outdentJMenuItem = new JMenuItem( Settings.jpoResources.getString( "outdentJMenuItem" ) );
+            outdentJMenuItem.addActionListener( new ActionListener() {
 
-                public void actionPerformed(ActionEvent e) {
+                public void actionPerformed( ActionEvent e ) {
                     popupNode.outdentNode();
                 }
-            });
-            moveGroupNodeJMenu.add(outdentJMenuItem);
+            } );
+            moveGroupNodeJMenu.add( outdentJMenuItem );
 
-            JMenuItem groupRemove = new JMenuItem(Settings.jpoResources.getString("groupRemoveLabel"));
-            groupRemove.addActionListener(new ActionListener() {
+            JMenuItem groupRemove = new JMenuItem( Settings.jpoResources.getString( "groupRemoveLabel" ) );
+            groupRemove.addActionListener( new ActionListener() {
 
-                public void actionPerformed(ActionEvent e) {
+                public void actionPerformed( ActionEvent e ) {
                     caller.requestGroupRemove();
                 }
-            });
-            add(groupRemove);
+            } );
+            add( groupRemove );
 
             addSeparator();
 
             // menu item that brings a dialog to ask where to consolidate the files to
-            JMenuItem consolidateMoveJMenuItem = new JMenuItem(Settings.jpoResources.getString("consolidateMoveLabel"));
-            consolidateMoveJMenuItem.addActionListener(new ActionListener() {
+            JMenuItem consolidateMoveJMenuItem = new JMenuItem( Settings.jpoResources.getString( "consolidateMoveLabel" ) );
+            consolidateMoveJMenuItem.addActionListener( new ActionListener() {
 
-                public void actionPerformed(ActionEvent e) {
+                public void actionPerformed( ActionEvent e ) {
                     caller.requestConsolidateGroup();
                 }
-            });
-            add(consolidateMoveJMenuItem);
+            } );
+            add( consolidateMoveJMenuItem );
 
             addSeparator();
             //submenu which has several sort options
-            JMenu sortJMenu = new JMenu(Settings.jpoResources.getString("sortJMenu"));
-            add(sortJMenu);
+            JMenu sortJMenu = new JMenu( Settings.jpoResources.getString( "sortJMenu" ) );
+            add( sortJMenu );
             //requests a sort by Description
-            JMenuItem sortByDescriptionJMenuItem = new JMenuItem(Settings.jpoResources.getString("sortByDescriptionJMenuItem"));
-            sortByDescriptionJMenuItem.addActionListener(new ActionListener() {
+            ArrayList<SortOption> sortOptions = Settings.getSortOptions();
+            final SortOption sortByDescription = sortOptions.get( 1 );
+            JMenuItem sortByDescriptionJMenuItem = new JMenuItem( sortByDescription.getDescription() );
+            sortByDescriptionJMenuItem.addActionListener( new ActionListener() {
 
-                public void actionPerformed(ActionEvent e) {
-                    caller.requestSort(Settings.DESCRIPTION);
+                public void actionPerformed( ActionEvent e ) {
+                    caller.requestSort( sortByDescription.getSortCode() );
                 }
-            });
-            sortJMenu.add(sortByDescriptionJMenuItem);
+            } );
+            sortJMenu.add( sortByDescriptionJMenuItem );
 
             //requests a sort by Film Reference
-            JMenuItem sortByFilmReferenceJMenuItem = new JMenuItem(Settings.jpoResources.getString("sortByFilmReferenceJMenuItem"));
-            sortByFilmReferenceJMenuItem.addActionListener(new ActionListener() {
+            final SortOption sortByFilmReference = sortOptions.get( 2 );
+            JMenuItem sortByFilmReferenceJMenuItem = new JMenuItem( sortByFilmReference.getDescription()  );
+            sortByFilmReferenceJMenuItem.addActionListener( new ActionListener() {
 
-                public void actionPerformed(ActionEvent e) {
-                    caller.requestSort(Settings.FILM_REFERENCE);
+                public void actionPerformed( ActionEvent e ) {
+                    caller.requestSort( sortByFilmReference.getSortCode() );
                 }
-            });
-            sortJMenu.add(sortByFilmReferenceJMenuItem);
+            } );
+            sortJMenu.add( sortByFilmReferenceJMenuItem );
 
             //requests a sort by Creation Time
-            JMenuItem sortByCreationTimeJMenuItem = new JMenuItem(Settings.jpoResources.getString("sortByCreationTimeJMenuItem"));
-            sortByCreationTimeJMenuItem.addActionListener(new ActionListener() {
+            final SortOption sortByCreationTime = sortOptions.get( 3 );
+            JMenuItem sortByCreationTimeJMenuItem = new JMenuItem( sortByCreationTime.getDescription() );
+            sortByCreationTimeJMenuItem.addActionListener( new ActionListener() {
 
-                public void actionPerformed(ActionEvent e) {
-                    caller.requestSort(Settings.CREATION_TIME);
+                public void actionPerformed( ActionEvent e ) {
+                    caller.requestSort( sortByCreationTime.getSortCode() );
                 }
-            });
-            sortJMenu.add(sortByCreationTimeJMenuItem);
+            } );
+            sortJMenu.add( sortByCreationTimeJMenuItem );
 
             // requests a sort by Comment
-            JMenuItem sortByCommentJMenuItem = new JMenuItem(Settings.jpoResources.getString("sortByCommentJMenuItem"));
-            sortByCommentJMenuItem.addActionListener(new ActionListener() {
+            final SortOption sortByComment = sortOptions.get( 4 );
+            JMenuItem sortByCommentJMenuItem = new JMenuItem( sortByComment.getDescription() );
+            sortByCommentJMenuItem.addActionListener( new ActionListener() {
 
-                public void actionPerformed(ActionEvent e) {
-                    caller.requestSort(Settings.COMMENT);
+                public void actionPerformed( ActionEvent e ) {
+                    caller.requestSort( sortByComment.getSortCode() );
                 }
-            });
-            sortJMenu.add(sortByCommentJMenuItem);
+            } );
+            sortJMenu.add( sortByCommentJMenuItem );
 
             // requests a sort by Photographer
-            JMenuItem sortByPhotographerJMenuItem = new JMenuItem(Settings.jpoResources.getString("sortByPhotographerJMenuItem"));
-            sortByPhotographerJMenuItem.addActionListener(new ActionListener() {
+            final SortOption sortByPhotographer = sortOptions.get( 4 );
+            JMenuItem sortByPhotographerJMenuItem = new JMenuItem( sortByPhotographer.getDescription() );
+            sortByPhotographerJMenuItem.addActionListener( new ActionListener() {
 
-                public void actionPerformed(ActionEvent e) {
-                    caller.requestSort(Settings.PHOTOGRAPHER);
+                public void actionPerformed( ActionEvent e ) {
+                    caller.requestSort( sortByPhotographer.getSortCode() );
                 }
-            });
-            sortJMenu.add(sortByPhotographerJMenuItem);
+            } );
+            sortJMenu.add( sortByPhotographerJMenuItem );
 
             // requests a sort by Copyright Holder
-            JMenuItem sortByCopyrightHolderTimeJMenuItem = new JMenuItem(Settings.jpoResources.getString("sortByCopyrightHolderTimeJMenuItem"));
-            sortByCopyrightHolderTimeJMenuItem.addActionListener(new ActionListener() {
+            final SortOption sortByCopyrightHolder = sortOptions.get( 4 );
+            JMenuItem sortByCopyrightHolderTimeJMenuItem = new JMenuItem( sortByCopyrightHolder.getDescription() );
+            sortByCopyrightHolderTimeJMenuItem.addActionListener( new ActionListener() {
 
-                public void actionPerformed(ActionEvent e) {
-                    caller.requestSort(Settings.COPYRIGHT_HOLDER);
+                public void actionPerformed( ActionEvent e ) {
+                    caller.requestSort( sortByCopyrightHolder.getSortCode() );
                 }
-            });
-            sortJMenu.add(sortByCopyrightHolderTimeJMenuItem);
+            } );
+            sortJMenu.add( sortByCopyrightHolderTimeJMenuItem );
 
             addSeparator();
         }
 
-        JMenuItem groupExportHtml = new JMenuItem(Settings.jpoResources.getString("groupExportHtmlMenuText"));
-        groupExportHtml.addActionListener(new ActionListener() {
+        JMenuItem groupExportHtml = new JMenuItem( Settings.jpoResources.getString( "groupExportHtmlMenuText" ) );
+        groupExportHtml.addActionListener( new ActionListener() {
 
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed( ActionEvent e ) {
                 caller.requestGroupExportHtml();
             }
-        });
-        add(groupExportHtml);
+        } );
+        add( groupExportHtml );
 
         //  menu item that allows the user to export the group to several different formats
-        JMenuItem groupExportNewCollection = new JMenuItem(Settings.jpoResources.getString("groupExportNewCollectionMenuText"));
-        groupExportNewCollection.addActionListener(new ActionListener() {
+        JMenuItem groupExportNewCollection = new JMenuItem( Settings.jpoResources.getString( "groupExportNewCollectionMenuText" ) );
+        groupExportNewCollection.addActionListener( new ActionListener() {
 
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed( ActionEvent e ) {
                 caller.requestGroupExportNewCollection();
             }
-        });
-        add(groupExportNewCollection);
+        } );
+        add( groupExportNewCollection );
 
         /* Disabled because it's not thought through and the resulting jar file is
         too difficult to load.
@@ -417,53 +434,56 @@ public class GroupPopupMenu extends JPopupMenu
          */
 
         // menu item that allows the user to export the group to a flat list of filenames
-        JMenuItem groupExportFlatFile = new JMenuItem(Settings.jpoResources.getString("groupExportFlatFileMenuText"));
-        groupExportFlatFile.addActionListener(new ActionListener() {
+        JMenuItem groupExportFlatFile = new JMenuItem( Settings.jpoResources.getString( "groupExportFlatFileMenuText" ) );
+        groupExportFlatFile.addActionListener( new ActionListener() {
 
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed( ActionEvent e ) {
                 caller.requestGroupExportFlatFile();
             }
-        });
-        add(groupExportFlatFile);
+        } );
+        add( groupExportFlatFile );
 
     }
+
 
     /**
      *  Here we receive notification that the nodes have been updated
      */
     public void recentDropNodesChanged() {
         boolean dropNodesVisible = false;
-        for (int i = 0; i < Settings.maxDropNodes; i++) {
-            if ((Settings.recentDropNodes[i] != null)) {
-                recentDropNodes[i].setText("To Group: " + Settings.recentDropNodes[i].toString());
-                recentDropNodes[i].setVisible(true);
+        for ( int i = 0; i < Settings.maxDropNodes; i++ ) {
+            if ( ( Settings.recentDropNodes[i] != null ) ) {
+                recentDropNodes[i].setText( "To Group: " + Settings.recentDropNodes[i].toString() );
+                recentDropNodes[i].setVisible( true );
                 dropNodesVisible = true;
             } else {
-                recentDropNodes[i].setVisible(false);
+                recentDropNodes[i].setVisible( false );
             }
         }
-        if (dropNodesVisible) {
-            movePictureNodeSeparator.setVisible(true);
+        if ( dropNodesVisible ) {
+            movePictureNodeSeparator.setVisible( true );
         } else {
-            movePictureNodeSeparator.setVisible(false);
+            movePictureNodeSeparator.setVisible( false );
         }
 
     }
+
 
     /**
      *  checks if the event object is one of the drop nodes
      *  @return returns true if the object was found in the list and the action was submitted.
      */
-    private boolean checkDropNodes(Object o) {
-        for (int i = 0; i < Settings.maxDropNodes; i++) {
-            if ((recentDropNodes[i] != null) && (o.hashCode() == recentDropNodes[i].hashCode())) {
-                caller.requestMoveToNode(Settings.recentDropNodes[i]);
-                Settings.memorizeGroupOfDropLocation(Settings.recentDropNodes[i]);
+    private boolean checkDropNodes( Object o ) {
+        for ( int i = 0; i < Settings.maxDropNodes; i++ ) {
+            if ( ( recentDropNodes[i] != null ) && ( o.hashCode() == recentDropNodes[i].hashCode() ) ) {
+                caller.requestMoveToNode( Settings.recentDropNodes[i] );
+                Settings.memorizeGroupOfDropLocation( Settings.recentDropNodes[i] );
                 return true;
             }
         }
         return false;
     }
+
 
     /**
      *  Sets up the menu entries in the File|OpenRecent sub menu from the recentCollections
@@ -471,12 +491,12 @@ public class GroupPopupMenu extends JPopupMenu
      */
     public void recentFilesChanged() {
         Tools.checkEDT();
-        for (int i = 0; i < Settings.recentCollections.length; i++) {
-            if (Settings.recentCollections[i] != null) {
-                recentOpenedfileJMenuItem[i].setText(Integer.toString(i + 1) + ": " + Settings.recentCollections[i]);
-                recentOpenedfileJMenuItem[i].setVisible(true);
+        for ( int i = 0; i < Settings.recentCollections.length; i++ ) {
+            if ( Settings.recentCollections[i] != null ) {
+                recentOpenedfileJMenuItem[i].setText( Integer.toString( i + 1 ) + ": " + Settings.recentCollections[i] );
+                recentOpenedfileJMenuItem[i].setVisible( true );
             } else {
-                recentOpenedfileJMenuItem[i].setVisible(false);
+                recentOpenedfileJMenuItem[i].setVisible( false );
             }
         }
     }

@@ -32,7 +32,8 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  *
  *  @see GroupInfo
  */
-public class PictureInfo implements Serializable {
+public class PictureInfo
+        implements Serializable {
 
     /**
      * Defines a logger for this class
@@ -57,10 +58,10 @@ public class PictureInfo implements Serializable {
         this.description = description;
         this.filmReference = filmReference;
 
-        logger.info( "Highres_Name: " + Highres_Name );
-        logger.info( "Lowres_Name: " + Lowres_Name );
-        logger.info( "description: " + description );
-        logger.info( "filmReference: " + filmReference );
+        logger.fine( "Highres_Name: " + Highres_Name );
+        logger.fine( "Lowres_Name: " + Lowres_Name );
+        logger.fine( "description: " + description );
+        logger.fine( "filmReference: " + filmReference );
     }
 
 
@@ -80,10 +81,10 @@ public class PictureInfo implements Serializable {
         this.description = description;
         this.filmReference = filmReference;
 
-        logger.info( "Highres_Name: " + highresLocation );
-        logger.info( "Lowres_Name: " + Lowres_Name );
-        logger.info( "description: " + description );
-        logger.info( "filmReference: " + filmReference );
+        logger.fine( "Highres_Name: " + highresLocation );
+        logger.fine( "Lowres_Name: " + Lowres_Name );
+        logger.fine( "description: " + description );
+        logger.fine( "filmReference: " + filmReference );
 
     }
 
@@ -333,7 +334,7 @@ public class PictureInfo implements Serializable {
             URL highresURL = new URL( highresLocation );
             return highresURL;
         } catch ( MalformedURLException x ) {
-            logger.info( "Caught an unexpected MalformedURLException: " + x.getMessage() );
+            logger.fine( "Caught an unexpected MalformedURLException: " + x.getMessage() );
             return null;
         }
     }
@@ -462,7 +463,7 @@ public class PictureInfo implements Serializable {
     public void calculateChecksum() {
         URL pictureURL = getHighresURLOrNull();
         if ( pictureURL == null ) {
-            logger.info( "PictureInfo.calculateChecksum din't get the URL. Aborting." );
+            logger.severe( "PictureInfo.calculateChecksum din't get the URL. Aborting." );
             return;
         }
 
@@ -470,7 +471,7 @@ public class PictureInfo implements Serializable {
         try {
             in = pictureURL.openStream();
         } catch ( IOException x ) {
-            logger.info( "PictureInfo.calculateChecksum couldn't open URL. Aborting." );
+            logger.severe( "PictureInfo.calculateChecksum couldn't open URL. Aborting." );
             return;
         }
 
@@ -1302,7 +1303,8 @@ public class PictureInfo implements Serializable {
      *
      *  @param listener	The listener that doesn't want to notifications any more.
      */
-    public void removePictureInfoChangeListener( PictureInfoChangeListener listener ) {
+    public void removePictureInfoChangeListener(
+            PictureInfoChangeListener listener ) {
         logger.fine( "SourcePicture.removeListener: listener removed from SourcePicture " + Integer.toString( this.hashCode() ) + " of class: " + listener.getClass().toString() );
         pictureInfoListeners.remove( listener );
     }
@@ -1314,9 +1316,8 @@ public class PictureInfo implements Serializable {
      */
     private void sendPictureInfoChangedEvent( PictureInfoChangeEvent pce ) {
         if ( Settings.pictureCollection.getSendModelUpdates() ) {
-            Enumeration<PictureInfoChangeListener> e = pictureInfoListeners.elements();
-            while ( e.hasMoreElements() ) {
-                e.nextElement().pictureInfoChangeEvent( pce );
+            for ( PictureInfoChangeListener pictureInfoChangeListener : pictureInfoListeners ) {
+                pictureInfoChangeListener.pictureInfoChangeEvent( pce );
             }
         }
     }

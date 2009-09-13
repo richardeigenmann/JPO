@@ -4,7 +4,7 @@ import java.awt.Color;
 import java.util.logging.Logger;
 
 /*
-GradientColor.java:  A helper to find the color along a gradient Line.
+GradientColor.java:  A helper to pick the color along a gradient Line.
 
 Copyright (C) 2009  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
@@ -21,41 +21,33 @@ The license is in gpl.txt.
 See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 /**
- * A helper to find the color along a gradient Line.
+ * A helper to pick the color along a gradient Line.
+ * This class can be used as a regular class or it can be used for it's
+ * static getColor method.
  *
  * @author Richard Eigenmann
  */
-/**
- * This class can be used as a regular class or it can be used for it's
- * static getColor method.
- * @author richi
- */
 public class GradientColor {
 
-     /**
+    /**
      * Defines a logger for this class
      */
     private static Logger logger = Logger.getLogger(GradientColor.class.getName());
-
-
     /**
      * Sample gradient colors for use in the application
      */
-    public final static Color[] SAMPLE_GRADIENT_COLORS = { new Color( 0x099716 ), new Color( 0x18c928 ),
-        new Color( 0x36e410 ), new Color( 0x64e410 ), new Color( 0xa1e70c ),
-        new Color( 0xc3d000 ), new Color( 0xe8e410 ), new Color( 0xdcaf1e ),
-        new Color( 0xe87514 ), new Color( 0xed723b ) };
-
+    public final static Color[] SAMPLE_GRADIENT_COLORS = {new Color(0x099716), new Color(0x18c928),
+        new Color(0x36e410), new Color(0x64e410), new Color(0xa1e70c),
+        new Color(0xc3d000), new Color(0xe8e410), new Color(0xdcaf1e),
+        new Color(0xe87514), new Color(0xed723b)};
     /**
      * Predefined color for a Black to White gradient
      */
-    public final static Color[] BLACK_WHITE_COLORS = { Color.BLACK, Color.WHITE };
-
+    public final static Color[] BLACK_WHITE_COLORS = {Color.BLACK, Color.WHITE};
     /**
      * Predefined color gradient points for a blue gradient
      */
-    public final static Color[] SHADES_OF_LIGHT_BLUE = {new Color( 0x355ddb), new Color( 0x7aa5f4)};
-
+    public final static Color[] SHADES_OF_LIGHT_BLUE = {new Color(0x355ddb), new Color(0x7aa5f4)};
 
     /**
      * This method returns a color along a multi point color gradiant. The
@@ -67,48 +59,48 @@ public class GradientColor {
      * @param factor between 0 and 1
      * @return The Color in the gradient
      */
-    public static Color getColor( Color[] availableColors, double factor ) {
+    public static Color getColor(Color[] availableColors, double factor) {
         // Never trust input
-        if ( availableColors.length < 1 ) {
+        if (availableColors.length < 1) {
             availableColors = BLACK_WHITE_COLORS;
-        } else if (availableColors.length == 1 ) {
-            Color[] newColors = { availableColors[0], Color.WHITE };
+        } else if (availableColors.length == 1) {
+            Color[] newColors = {availableColors[0], Color.WHITE};
             availableColors = newColors;
         }
-        if ( factor > 1 ) {
+        if (factor > 1) {
             factor = 1;
         }
-        if ( factor < 0 ) {
+        if (factor < 0) {
             factor = 0;
         }
 
         // figure out the closest two color points
-        int lowerIndex = (int) (factor * ( availableColors.length - 2 ));
+        int lowerIndex = (int) (factor * (availableColors.length - 2));
         int higherIndex = lowerIndex + 1;
         Color lowerColor = availableColors[lowerIndex];
         Color higherColor = availableColors[higherIndex];
 
-        double lowerIndexFactor = (double) lowerIndex / ( availableColors.length - 1 );
-        double higherIndexFactor = (double) higherIndex / ( availableColors.length - 1 );
-        double interpolationFactor = ( factor - lowerIndexFactor ) / ( higherIndexFactor - lowerIndexFactor );
+        double lowerIndexFactor = (double) lowerIndex / (availableColors.length - 1);
+        double higherIndexFactor = (double) higherIndex / (availableColors.length - 1);
+        double interpolationFactor = (factor - lowerIndexFactor) / (higherIndexFactor - lowerIndexFactor);
 
-        logger.fine( String.format( "Lower Index: %d Factor: %f ", lowerIndex, lowerIndexFactor ) );
-        logger.fine( String.format( "Higher Index: %d Factor: %f ", higherIndex, higherIndexFactor ) );
-        logger.fine( String.format( "Interpolation: %f ", interpolationFactor ) );
+        logger.fine(String.format("Lower Index: %d Factor: %f ", lowerIndex, lowerIndexFactor));
+        logger.fine(String.format("Higher Index: %d Factor: %f ", higherIndex, higherIndexFactor));
+        logger.fine(String.format("Interpolation: %f ", interpolationFactor));
 
         int r1 = lowerColor.getRed();
         int r2 = higherColor.getRed();
-        int newRed = r1 + (int) ( ( r2 - r1 ) * interpolationFactor );
-        logger.fine( String.format( "Red: lower= %d higher= %d new=%d", r1, r2, newRed ) );
+        int newRed = r1 + (int) ((r2 - r1) * interpolationFactor);
+        logger.fine(String.format("Red: lower= %d higher= %d new=%d", r1, r2, newRed));
         int g1 = lowerColor.getGreen();
         int g2 = higherColor.getGreen();
-        int newGreen = g1 + (int) ( ( g2 - g1 ) * interpolationFactor );
-        logger.fine( String.format( "Red: lower= %d higher= %d new=%d", g1, g2, newGreen ) );
+        int newGreen = g1 + (int) ((g2 - g1) * interpolationFactor);
+        logger.fine(String.format("Red: lower= %d higher= %d new=%d", g1, g2, newGreen));
         int b1 = lowerColor.getBlue();
         int b2 = higherColor.getBlue();
-        int newBlue = b1 + (int) ( ( b2 - b1 ) * interpolationFactor );
-        logger.fine( String.format( "Red: lower= %d higher= %d new=%d", b1, b2, newBlue ) );
-        Color gradientColor = new Color( newRed, newGreen, newBlue );
+        int newBlue = b1 + (int) ((b2 - b1) * interpolationFactor);
+        logger.fine(String.format("Red: lower= %d higher= %d new=%d", b1, b2, newBlue));
+        Color gradientColor = new Color(newRed, newGreen, newBlue);
 
         return gradientColor;
 

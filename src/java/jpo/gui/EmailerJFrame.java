@@ -431,7 +431,7 @@ public class EmailerJFrame extends JFrame {
         for ( int i = 0; i < emailSelected.length; i++ ) {
             //logger.info("EmailerJFrame.loadThumbnails: running on " + emailSelected[i].toString() );
             alb.addNode( (SortableDefaultMutableTreeNode) emailSelected[i] );
-            Thumbnail t = new Thumbnail( alb, i, thumbnailSize, ThumbnailQueueRequest.LOW_PRIORITY );
+            Thumbnail t = new Thumbnail( alb, i, thumbnailSize, ThumbnailQueueRequest.LOW_PRIORITY, null);
             t.setDecorateThumbnails( false );
             t.determineMailSlectionStatus();
             t.setFactor( factor );

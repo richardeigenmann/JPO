@@ -3,21 +3,23 @@ package jpo.gui;
 import jpo.dataModel.Settings;
 import jpo.*;
 import jpo.dataModel.Camera;
-import java.awt.*;
-import java.awt.event.*;
-import java.util.Vector;
-import javax.swing.*;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.TreePath;
-import javax.swing.tree.TreeSelectionModel;
-
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.HashSet;
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 /*
-CameraEditor.java: a class that creates a GUI that allows the user to edit the definitions of his cameras.
- 
-Copyright (C) 2002-2009  Richard Eigenmann.
+CameraEditor.java: a class that creates a JPanel and allows camera attributes to be edited
+
+Copyright (C) 2002 - 2009  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -32,210 +34,286 @@ The license is in gpl.txt.
 See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 
-
 /**
- *   This class creates a JFrame and then presents the user with the cameras JPO knows about. The user can
- *   add, remove and modify the cameras. The class uses the SingleCameraEditor to edit the individual
- *   attributes of the cameras.
- *   @author Richard Eigenmann  richard.eigenmann@gmail.com
+ *   This class creates a JPanel and allows attributes of a single camera to be edited on it.
+ *
+ *   @author Richard Eigenmann richard.eigenmann@gmail.com
  */
-public class CameraEditor extends JFrame implements ActionListener {
-    
-    /**
-     * The root node of the JTree
-     */
-    private DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode( "Cameras" );
-    
-    /**
-     *  The default tree model
-     */
-    private DefaultTreeModel treeModel = new DefaultTreeModel( rootNode );
-    /**
-     * The JTree to select and manipulate the cameras
-     */
-    private JTree cameraJTree = new JTree( treeModel );
-    
-    
-    /**
-     *  keep a copy of the old cameras so we can restore them with the cancel button.
-     */
-    private final Vector<Camera> backupCameras;
-            
-    /**
-     *  This component handles all the editing of the camera information.
-     */
-    private SingleCameraEditor singleCameraEditor = new SingleCameraEditor();
-    
-    /**
-     *   Creates a JFrame with the GUI elements and buttons that can
-     *   start and stop the reconciliation. The reconciliation itself
-     *   runs in it's own Thread.
-     *
+public class CameraEditor
+        extends JPanel {
+
+    /** 
+     * Constructor
      */
     public CameraEditor() {
-        setSize( 500, 400 );
-        setLocationRelativeTo( Settings.anchorFrame );
-        setTitle( Settings.jpoResources.getString( "CameraEditor" ) );
-        setDefaultCloseOperation( DISPOSE_ON_CLOSE );
-        addWindowListener( new WindowAdapter() {
-            @Override
-            public void windowClosing( WindowEvent e ) {
-                singleCameraEditor.saveCamera();
-                getRid();
-            }
-        });
-        
-        // take a backup
-        backupCameras = new Vector<Camera>();
-        for ( Camera c : Settings.Cameras ) {
-            Camera b = new Camera();
-            b.setDescription( c.getDescription() );
-            b.setCameraMountPoint( c.getCameraMountPoint() );
-            b.setLastConnectionStatus( c.getLastConnectionStatus() );
-            b.setMonitorForNewPictures( c.getMonitorForNewPictures() );
-            b.setOldImage( c.getOldImage() ); // shallow copy!
-            b.setUseFilename( c.getUseFilename() );
-            backupCameras.add( b );
-        }
-        
-        loadTree();
-        cameraJTree. getSelectionModel().setSelectionMode( TreeSelectionModel.SINGLE_TREE_SELECTION );
-        cameraJTree. putClientProperty( "JTree.lineStyle", "Angled" );
-        cameraJTree. setOpaque( true );
-        cameraJTree. setShowsRootHandles( true );
-        cameraJTree.expandPath( new TreePath( rootNode ) );
-        cameraJTree.addTreeSelectionListener( new TreeSelectionListener() {
-            public void valueChanged( TreeSelectionEvent e ) {
-                singleCameraEditor.saveCamera();
-                DefaultMutableTreeNode n = (DefaultMutableTreeNode) cameraJTree.getLastSelectedPathComponent();
-                if ( n != null ) {
-                    Object o = n.getUserObject();
-                    if ( o instanceof Camera ) {
-                        singleCameraEditor.setCamera( (Camera) o );
-                    } else {
-                        singleCameraEditor.setCamera( null );
-                    }
-                } else {
-                    singleCameraEditor.setCamera( null );
-                }
-            }
-        } );
-        
-        
-        JSplitPane hjsp = new JSplitPane( JSplitPane.HORIZONTAL_SPLIT, cameraJTree, singleCameraEditor );
-        
-        
-        //  Button Panel
-        JPanel buttonJPanel = new JPanel();
-        
-        
-        JButton addJButton = new JButton( Settings.jpoResources.getString("addJButton") );
-        addJButton.setPreferredSize( Settings.defaultButtonDimension );
-        addJButton.setMinimumSize( Settings.defaultButtonDimension );
-        addJButton.setMaximumSize( Settings.defaultButtonDimension );
-        addJButton.setBorder(BorderFactory.createRaisedBevelBorder());
-        addJButton.addActionListener( new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                singleCameraEditor.saveCamera();
-                Camera cam = new Camera();
-                Settings.Cameras.add( cam );
-                singleCameraEditor.setCamera( cam );
-                DefaultMutableTreeNode newChild = new DefaultMutableTreeNode( cam );
-                treeModel.insertNodeInto( newChild, rootNode,
-                        rootNode.getChildCount());
-                
-            }
-        } );
-        buttonJPanel.add( addJButton );
-        
-        JButton deleteJButton = new JButton( Settings.jpoResources.getString("deleteJButton") );
-        deleteJButton.setPreferredSize( Settings.defaultButtonDimension );
-        deleteJButton.setMinimumSize( Settings.defaultButtonDimension );
-        deleteJButton.setMaximumSize( Settings.defaultButtonDimension );
-        deleteJButton.setBorder(BorderFactory.createRaisedBevelBorder());
-        deleteJButton.addActionListener( new ActionListener() {
+        setLayout( new GridBagLayout() );
+
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.anchor = GridBagConstraints.WEST;
+        constraints.gridwidth = 3;
+        constraints.weightx = 1.0;
+        constraints.fill = GridBagConstraints.HORIZONTAL;
+        constraints.insets = new Insets( 4, 4, 4, 4 );
+
+        constraints.gridy = 0;
+        constraints.gridx = 0;
+        constraints.fill = GridBagConstraints.HORIZONTAL;
+        constraints.gridwidth = 1;
+        constraints.gridheight = 10;
+        constraints.insets = new Insets( 4, 4, 4, 4 );
+        constraints.anchor = GridBagConstraints.NORTHWEST;
+        add( cameraIcon, constraints );
+
+        constraints.anchor = GridBagConstraints.WEST;
+        constraints.gridy = 0;
+        constraints.gridx = 1;
+        constraints.gridwidth = 1;
+        constraints.gridheight = 1;
+        constraints.insets = new Insets( 4, 4, 4, 4 );
+        JLabel cameraNameJLabel = new JLabel( Settings.jpoResources.getString( "cameraNameJLabel" ) );
+        add( cameraNameJLabel, constraints );
+
+        constraints.gridy++;
+        add( cameraNameJTextField, constraints );
+
+        constraints.gridy++;
+        constraints.gridx = 1;
+        add( cameraDirJLabel, constraints );
+
+        constraints.gridy++;
+        add( cameraDirJTextField, constraints );
+
+
+        constraints.gridy++;
+        constraints.gridx = 1;
+        add( monitorJCheckBox, constraints );
+
+        JPanel checksumJPanel = new JPanel();
+        checksumJPanel.add( memorisedPicsText );
+
+        JLabel memorisedPicsJLabel = new JLabel();
+        checksumJPanel.add( memorisedPicturesJLabel );
+
+        refreshJButton.setPreferredSize( Settings.defaultButtonDimension );
+        refreshJButton.setMinimumSize( Settings.defaultButtonDimension );
+        refreshJButton.setMaximumSize( Settings.defaultButtonDimension );
+        refreshJButton.setBorder( BorderFactory.createRaisedBevelBorder() );
+        refreshJButton.addActionListener( new ActionListener() {
+
             public void actionPerformed( ActionEvent e ) {
-                DefaultMutableTreeNode n = (DefaultMutableTreeNode) cameraJTree.getLastSelectedPathComponent();
-                if ( n != null ) {
-                    treeModel.removeNodeFromParent( n );
-                    synchronized( Settings.Cameras ) {
-                        Settings.Cameras.remove( n.getUserObject() );
-                    }
-                }
-            }
-        });
-        buttonJPanel.add( deleteJButton );
-        
-        JButton cancelJButton = new JButton( Settings.jpoResources.getString("genericCancelText") );
-        cancelJButton.setPreferredSize( Settings.defaultButtonDimension );
-        cancelJButton.setMinimumSize( Settings.defaultButtonDimension );
-        cancelJButton.setMaximumSize( Settings.defaultButtonDimension );
-        cancelJButton.setBorder(BorderFactory.createRaisedBevelBorder());
-        cancelJButton.addActionListener( new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                Settings.Cameras = backupCameras;
-                getRid();
+                getCamera().buildOldImage();
+                updateMemorisedPicturesJLabel();
             }
         } );
-        buttonJPanel.add( cancelJButton );
-        
-        JButton closeJButton = new JButton( Settings.jpoResources.getString("closeJButton") );
-        closeJButton.setPreferredSize( Settings.defaultButtonDimension );
-        closeJButton.setMinimumSize( Settings.defaultButtonDimension );
-        closeJButton.setMaximumSize( Settings.defaultButtonDimension );
-        closeJButton.setBorder(BorderFactory.createRaisedBevelBorder());
-        closeJButton.setDefaultCapable( true );
-        getRootPane().setDefaultButton( closeJButton );
-        closeJButton.addActionListener( new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                singleCameraEditor.saveCamera();
-                getRid();
+        checksumJPanel.add( refreshJButton );
+
+        zeroJButton.setPreferredSize( Settings.defaultButtonDimension );
+        zeroJButton.setMinimumSize( Settings.defaultButtonDimension );
+        zeroJButton.setMaximumSize( Settings.defaultButtonDimension );
+        zeroJButton.setBorder( BorderFactory.createRaisedBevelBorder() );
+        zeroJButton.addActionListener( new ActionListener() {
+
+            public void actionPerformed( ActionEvent e ) {
+                getCamera().zapOldImage();
+                updateMemorisedPicturesJLabel();
             }
         } );
-        buttonJPanel.add( closeJButton );
-        
-        JSplitPane vjsp = new JSplitPane( JSplitPane.VERTICAL_SPLIT, hjsp, buttonJPanel );
-        getContentPane().add( vjsp );
-        
-        //  As per http://java.sun.com/developer/JDCTechTips/2003/tt1208.html#1
-        Runnable runner = new FrameShower( this );
-        EventQueue.invokeLater(runner);
-        
-        Object o = treeModel.getChild( rootNode, 0 );
-        if ( o != null ) {
-            cameraJTree.setSelectionPath( new TreePath( ((DefaultMutableTreeNode) o).getPath() ) );
+        checksumJPanel.add( zeroJButton );
+
+        constraints.gridy++;
+        constraints.gridx = 1;
+        constraints.anchor = GridBagConstraints.WEST;
+        add( checksumJPanel, constraints );
+
+        saveJButton.setPreferredSize( Settings.defaultButtonDimension );
+        saveJButton.setMinimumSize( Settings.defaultButtonDimension );
+        saveJButton.setMaximumSize( Settings.defaultButtonDimension );
+        saveJButton.setBorder( BorderFactory.createRaisedBevelBorder() );
+        saveJButton.addActionListener( new ActionListener() {
+
+            public void actionPerformed( ActionEvent e ) {
+                saveCamera();
+            }
+        } );
+        constraints.gridy++;
+        add( saveJButton, constraints );
+    }
+
+    private Camera camera = null;
+
+
+    /**
+     *
+     * @return
+     */
+    public Camera getCamera() {
+        return camera;
+    }
+
+
+    /**
+     * Call this method to set the camera this panel is supposed to edit
+     * @param camera
+     */
+    public void setCamera( Camera camera ) {
+        this.camera = camera;
+        loadFields();
+    }
+
+
+    /**
+     *  This method loads the values from the camera to the GUI fields.
+     */
+    private void loadFields() {
+        if ( getCamera() == null ) {
+            cameraNameJTextField.setEnabled( false );
+            cameraDirJTextField.setEnabled( false );
+            filenameJCheckBox.setEnabled( false );
+            monitorJCheckBox.setEnabled( false );
+            cameraDirJLabel.setEnabled( false );
+            memorisedPicsText.setEnabled( false );
+            refreshJButton.setEnabled( false );
+            zeroJButton.setEnabled( false );
+            cameraNameJTextField.setText( "" );
+            cameraDirJTextField.setText( "" );
+        } else {
+            cameraNameJTextField.setText( getCamera().getDescription() );
+            cameraDirJTextField.setText( getCamera().getCameraMountPoint() );
+            filenameJCheckBox.setSelected( getCamera().getUseFilename() );
+            monitorJCheckBox.setSelected( getCamera().getMonitorForNewPictures() );
+            updateMemorisedPicturesJLabel();
+            cameraNameJTextField.setEnabled( true );
+            cameraDirJTextField.setEnabled( true );
+            filenameJCheckBox.setEnabled( true );
+            monitorJCheckBox.setEnabled( true );
+            cameraDirJLabel.setEnabled( true );
+            memorisedPicsText.setEnabled( true );
+            refreshJButton.setEnabled( true );
+            zeroJButton.setEnabled( true );
         }
     }
-    
+
+
     /**
-     *  method that closes the frame and gets rid of it
+     *  save the currently edited camera details into the set of cameras
      */
-    private void getRid() {
-        for ( Camera c : Settings.Cameras ) {
-            c.setLastConnectionStatus( false ); // so that the daemon gets a chance
+    public void saveCamera() {
+        if ( getCamera() != null ) {
+            getCamera().setDescription( cameraNameJTextField.getText() );
+            getCamera().setCameraMountPoint( cameraDirJTextField.getDirectory().toString() );
+            getCamera().setUseFilename( filenameJCheckBox.isSelected() );
+            getCamera().setMonitorForNewPictures( monitorJCheckBox.isSelected() );
+
+            Settings.writeCameraSettings();
+            notifyActionListeners();
         }
-        setVisible( false );
-        dispose();
     }
-    
+
+
     /**
-     *  empties and reloads the cameras JTree
+     *
      */
-    private void loadTree() {
-        rootNode.removeAllChildren();
-        treeModel.nodeStructureChanged( rootNode );
-        for ( Camera c : Settings.Cameras ) {
-            DefaultMutableTreeNode cameraNode = new DefaultMutableTreeNode( c );
-            rootNode.add( cameraNode );
+    public void updateMemorisedPicturesJLabel() {
+        memorisedPicturesJLabel.setText( getCamera().getOldIndexCountAsString() );
+    }
+
+    /**
+     * "Root directory of camera on computer's file system:
+     */
+    private JLabel cameraDirJLabel = new JLabel( Settings.jpoResources.getString( "cameraDirJLabel" ) );
+
+    /**
+     * The save button
+     *
+    private JButton saveJButton = new JButton( Settings.jpoResources.getString("saveJButton") );*/
+    /**
+     *  The new name of the camera
+     */
+    private JTextField cameraNameJTextField = new JTextField();
+
+    /**
+     *  an icon that displays a camera to beautify the screen.
+     */
+    private JLabel cameraIcon = new JLabel( new ImageIcon( Settings.cl.getResource( "jpo/images/camera.jpg" ) ) );
+
+    /**
+     *   holds the root directory of the camera relative to the host computer's file system
+     */
+    private DirectoryChooser cameraDirJTextField =
+            new DirectoryChooser( Settings.jpoResources.getString( "cameraDirJLabel" ),
+            DirectoryChooser.DIR_MUST_EXIST );
+
+    /**
+     * "Number of pictures remembered from last import:"
+     */
+    private JLabel memorisedPicsText = new JLabel( Settings.jpoResources.getString( "memorisedPicsJLabel" ) );
+
+    /**
+     *  label that informs how many pictures have been memorised for this camera
+     */
+    private JLabel memorisedPicturesJLabel = new JLabel();
+
+    /**
+     * Refresh Button to memorise the files on the camera
+     */
+    private JButton refreshJButton = new JButton( Settings.jpoResources.getString( "refreshJButton" ) );
+
+    /**
+     *  Button to zero out the memorised pictures on the camera
+     */
+    private JButton zeroJButton = new JButton( Settings.jpoResources.getString( "zeroJButton" ) );
+
+        /**
+     *  Button to save the camera information
+     */
+    private JButton saveJButton = new JButton( "Save" );
+
+
+    /**
+     *  checkbox to indicate that filenames should be used
+     */
+    private JCheckBox filenameJCheckBox = new JCheckBox( Settings.jpoResources.getString( "filenameJCheckBox" ) );
+
+    /**
+     *  checkbox to indicate whether to monitor for new pictures
+     */
+    private JCheckBox monitorJCheckBox = new JCheckBox( Settings.jpoResources.getString( "monitorJCheckBox" ) );
+
+    /**
+     *   holds the target directory where the images are to be copied to
+     */
+    private DirectoryChooser targetDirJTextField =
+            new DirectoryChooser( Settings.jpoResources.getString( "targetDirJLabel" ),
+            DirectoryChooser.DIR_MUST_EXIST );
+
+    private HashSet<ActionListener> listeners = new HashSet<ActionListener>();
+
+
+    /**
+     *
+     * @param l
+     */
+    public void addActionListener( ActionListener l ) {
+        listeners.add( l );
+    }
+
+
+    /**
+     *
+     * @param l
+     */
+    public void removeActionListener( ActionListener l ) {
+        listeners.remove( l );
+    }
+
+
+    /**
+     *
+     */
+    public void notifyActionListeners() {
+        ActionEvent e = new ActionEvent( this, 0, "save" );
+        for ( ActionListener a : listeners ) {
+            a.actionPerformed( e );
         }
-        treeModel.nodeStructureChanged( rootNode );
-    }
-    
-    /**
-     *  Implementing a listener so that we find out if the save button was clicked on the singleCameraEditor
-     * @param e 
-     */
-    public void actionPerformed( ActionEvent e ) {
-        loadTree();
     }
 }

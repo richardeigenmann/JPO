@@ -10,7 +10,7 @@ import javax.swing.JLabel;
 
 /**
  *
- * @author richi
+ * @author Richard Eigenmann
  */
 public class ChattyLabel extends JLabel {
 

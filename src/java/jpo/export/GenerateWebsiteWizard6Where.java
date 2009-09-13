@@ -13,8 +13,9 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import jpo.gui.DirectoryChooser;
 import jpo.dataModel.Settings;
+import jpo.dataModel.Tools;
+import jpo.gui.DirectoryChooser;
 import net.javaprog.ui.wizard.AbstractStep;
 
 /*
@@ -111,7 +112,7 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
         checkButton.addActionListener( new ActionListener() {
 
             public void actionPerformed( ActionEvent arg0 ) {
-                options.setTargetDirectory( targetDirJTextField.getFile() );
+                options.setTargetDirectory( targetDirJTextField.getDirectory() );
                 setCanGoNext( check( options.getTargetDirectory() ) );
             }
         } );

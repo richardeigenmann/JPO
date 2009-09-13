@@ -10,7 +10,6 @@ import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.tree.DefaultMutableTreeNode;
-import jpo.dataModel.Tools;
 
 /*
 YearlyAnalysisGuiController.java:  The controller that makes the GUI work
@@ -32,7 +31,7 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 /**
  * The controller that makes the GUI work
  *
- * @author richi
+ * @author Richard Eigenmann
  */
 public class YearsBrowserController implements Serializable {
 
@@ -69,7 +68,7 @@ public class YearsBrowserController implements Serializable {
 
     /**
      *
-     * @author richi
+     * @author Richard Eigenmann
      */
     class YearButton extends JButton implements Serializable {
 

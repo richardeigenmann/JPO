@@ -415,7 +415,7 @@ public class PictureViewer
      *  method to toggle to a frameless window.
      **/
     public void requestPopupMenu() {
-        PicturePopupMenu pm = new PicturePopupMenu(mySetOfNodes, myIndex, this);
+        PicturePopupMenu pm = new PicturePopupMenu(mySetOfNodes, myIndex, this, null);
         pm.show(navBar.fullScreenJButton, 0, (int) (0 - pm.getSize().getHeight()));
         pictureJPanel.requestFocusInWindow();
     }

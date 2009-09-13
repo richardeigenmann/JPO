@@ -1,5 +1,6 @@
-package jpo.gui;
+package jpotestground;
 
+import jpo.gui.*;
 import jpo.dataModel.Tools;
 import jpo.dataModel.Settings;
 import jpo.*;

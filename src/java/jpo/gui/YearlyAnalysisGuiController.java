@@ -80,7 +80,7 @@ public class YearlyAnalysisGuiController {
 
     /**
      *
-     * @author richi
+     * @author Richard Eigenmann
      */
     class YearsAnalysisButton extends JButton {
 

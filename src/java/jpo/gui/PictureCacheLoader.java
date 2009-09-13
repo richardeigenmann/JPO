@@ -29,7 +29,8 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  *  The purpose for this class is to have a tool that will load SourcePictures 
  *  into the PictureCache.  
  */
-public class PictureCacheLoader implements SourcePictureListener {
+public class PictureCacheLoader
+        implements SourcePictureListener {
 
     /**
      * Defines a logger for this class
@@ -96,9 +97,8 @@ public class PictureCacheLoader implements SourcePictureListener {
      * method to stop all background loading
      */
     public static void stopBackgroundLoading() {
-        Enumeration e = cacheLoadsInProgress.elements();
-        while ( e.hasMoreElements() ) {
-            ( (SourcePicture) e.nextElement() ).stopLoading();
+        for ( SourcePicture sourcePicture : cacheLoadsInProgress ) {
+            sourcePicture.stopLoading();
         }
         //cacheLoadsInProgress.clear();  // handled by the PictureCacheLoader which gets an ERROR status from the SourcePicture.
     }
@@ -113,12 +113,10 @@ public class PictureCacheLoader implements SourcePictureListener {
     public static boolean stopBackgroundLoadingExcept( URL exemptionURL ) {
         SourcePicture sp;
         String exemptionURLString = exemptionURL.toString();
-        Enumeration e = cacheLoadsInProgress.elements();
         boolean inProgress = false;
-        while ( e.hasMoreElements() ) {
-            sp = ( (SourcePicture) e.nextElement() );
-            if ( !sp.getUrlString().equals( exemptionURLString ) ) {
-                sp.stopLoading();
+        for ( SourcePicture sourcePicture : cacheLoadsInProgress ) {
+            if ( !sourcePicture.getUrlString().equals( exemptionURLString ) ) {
+                sourcePicture.stopLoading();
             } else {
                 logger.info( "PictureCache.stopBackgroundLoading: picture was already loading" );
                 inProgress = true;
@@ -136,7 +134,8 @@ public class PictureCacheLoader implements SourcePictureListener {
      * @param statusMessage
      * @param sp
      */
-    public synchronized void sourceStatusChange( int statusCode, String statusMessage, SourcePicture sp ) {
+    public synchronized void sourceStatusChange( int statusCode,
+            String statusMessage, SourcePicture sp ) {
         //logger.info("PictureCacheLoader.sourceStatusChange: " + statusMessage);
         if ( statusCode == SourcePicture.ERROR ) {
             PictureCache.remove( sp.getUrlString() );

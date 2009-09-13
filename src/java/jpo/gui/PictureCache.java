@@ -12,7 +12,7 @@ import java.util.logging.Logger;
 
 /*
 PictureCache.java:  class that manages the cache of pictures
-Copyright (C) 2002-2009  Richard Eigenmann.
+Copyright (C) 2002 - 2009  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -39,8 +39,7 @@ public class PictureCache {
 
     /**
      *  Defines the Hashtable that facilitate the caching of images. 
-     *  It is static 
-     *  so that there is just one for the application
+     *  It is static so that there is just one for the application
      */
     private static Hashtable<String, SourcePicture> pictureCache = new Hashtable<String, SourcePicture>();
 
@@ -62,9 +61,9 @@ public class PictureCache {
         //logger.info("PictureCache.removeLeastPopular:");
         //reportCache();
 
-        Enumeration e = removalQueue.elements();
+        Enumeration<String> e = removalQueue.elements();
         while ( ( e.hasMoreElements() ) && ( pictureCache.size() >= Settings.maxCache ) ) {
-            String removeElement = (String) e.nextElement();
+            String removeElement = e.nextElement();
             //logger.info ("PictureCache.remove: " + removeElement );
             pictureCache.remove( removeElement );
             removalQueue.remove( removeElement );
@@ -72,7 +71,7 @@ public class PictureCache {
 
         e = pictureCache.keys();
         while ( ( pictureCache.size() >= Settings.maxCache ) && ( e.hasMoreElements() ) ) {
-            String removeElement = (String) e.nextElement();
+            String removeElement = e.nextElement();
             //logger.info ("PictureCache.remove: " + removeElement );
             pictureCache.remove( removeElement );
         }
@@ -173,7 +172,7 @@ public class PictureCache {
      * @return
      */
     public static synchronized SourcePicture getSourcePicture( URL url ) {
-        return (SourcePicture) pictureCache.get( url.toString() );
+        return pictureCache.get(url.toString());
     }
 
 
@@ -191,11 +190,11 @@ public class PictureCache {
      *  method to inspect the cache
      */
     public static void reportCache() {
-        logger.info( "   PictureCache.reportCache: cache contains: " + Integer.toString( pictureCache.size() ) + " max: " + Integer.toString( Settings.maxCache ) );
+        logger.info( "cache contains: " + Integer.toString( pictureCache.size() ) + " max: " + Integer.toString( Settings.maxCache ) );
         //Tools.freeMem();
-        Enumeration e = pictureCache.keys();
+        Enumeration<String> e = pictureCache.keys();
         while ( e.hasMoreElements() ) {
-            logger.info( "   Cache contains: " + ( (String) e.nextElement() ) );
+            logger.info( "   Cache contains: " +  e.nextElement() );
         }
         logger.info( "  End of cache contents" );
     }

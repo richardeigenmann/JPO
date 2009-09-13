@@ -13,7 +13,7 @@ package jpotestground;
 
 /**
  *
- * @author richi
+ * @author Richard Eigenmann
  */
 public class NewJFrame extends javax.swing.JFrame {
 

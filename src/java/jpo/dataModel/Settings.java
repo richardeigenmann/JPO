@@ -508,9 +508,14 @@ public class Settings {
     public static CollectionJTreeController mainCollectionJTreeController = null;
 
     /**
+     *	constant to indicate no sorting to some routines
+     */
+    public final static int NO_SORTING = 1;
+
+    /**
      *	constant to indicate the Description to some routines
      */
-    public final static int DESCRIPTION = 1;
+    public final static int DESCRIPTION = NO_SORTING + 1;
 
     /**
      *	constant to indicate the Picture URL to some routines
@@ -546,6 +551,23 @@ public class Settings {
      *	constant to indicate the Copyright Holder to some routines
      */
     public final static int COPYRIGHT_HOLDER = PHOTOGRAPHER + 1;
+
+
+    /**
+     * returns an Arraylist of sort
+     * @return the Arraylist of sort options
+     */
+    public static ArrayList<SortOption> getSortOptions() {
+        ArrayList<SortOption> sortOptions = new ArrayList<SortOption>();
+        sortOptions.add( new SortOption( "No Sorting", Settings.NO_SORTING ) );
+        sortOptions.add( new SortOption( Settings.jpoResources.getString( "sortByDescriptionJMenuItem" ), Settings.DESCRIPTION ) );
+        sortOptions.add( new SortOption( Settings.jpoResources.getString( "sortByFilmReferenceJMenuItem" ), Settings.FILM_REFERENCE ) );
+        sortOptions.add( new SortOption( Settings.jpoResources.getString( "sortByCreationTimeJMenuItem" ), Settings.CREATION_TIME ) );
+        sortOptions.add( new SortOption( Settings.jpoResources.getString( "sortByCommentJMenuItem" ), Settings.COMMENT ) );
+        sortOptions.add( new SortOption( Settings.jpoResources.getString( "sortByPhotographerJMenuItem" ), Settings.PHOTOGRAPHER ) );
+        sortOptions.add( new SortOption( Settings.jpoResources.getString( "sortByCopyrightHolderTimeJMenuItem" ), Settings.COPYRIGHT_HOLDER ) );
+        return sortOptions;
+    }
 
     /**
      *	constant to indicate the Rotation to some routines
@@ -587,6 +609,7 @@ public class Settings {
      */
     public static TreeSet<Object> emailSenders = new TreeSet<Object>() {
 
+        @Override
         public boolean add( Object o ) {
             boolean b = super.add( o );
             if ( b ) {
@@ -601,6 +624,7 @@ public class Settings {
      */
     public static TreeSet<Object> emailRecipients = new TreeSet<Object>() {
 
+        @Override
         public boolean add( Object o ) {
             boolean b = super.add( o );
             if ( b ) {
@@ -665,6 +689,16 @@ public class Settings {
      */
     public static int tagCloudWords = 40;
 
+    /**
+     * The last sort choice of the user
+     */
+    public static int lastSortChoice = Settings.CREATION_TIME;
+
+    /**
+     * The last choice int he Camera Download Wizard whether to copy or move
+     */
+    public static boolean lastCameraWizardCopyMode = true;
+
 
     /**
      *  method that set the default parameters
@@ -680,7 +714,6 @@ public class Settings {
         if ( preferredLeftDividerSpot < 0 ) {
             preferredLeftDividerSpot = 100;
         }
-        ;
 
         maximumPictureSize = 6000;
         maxCache = 4;
@@ -773,6 +806,8 @@ public class Settings {
         emailDimensions.width = prefs.getInt( "emailDimensions.width", emailDimensions.width );
         emailDimensions.height = prefs.getInt( "emailDimensions.height", emailDimensions.height );
         tagCloudWords = prefs.getInt( "tagCloudWords", tagCloudWords );
+        lastSortChoice = prefs.getInt( "lastSortChoice", lastSortChoice );
+        lastCameraWizardCopyMode = prefs.getBoolean( "lastCameraWizardCopyMode", lastCameraWizardCopyMode );
 
         validateCopyLocations();
         validateSettings();
@@ -875,7 +910,9 @@ public class Settings {
         prefs.putInt( "preferredMasterDividerSpot", preferredMasterDividerSpot );
         prefs.putInt( "preferredLeftDividerSpot", preferredLeftDividerSpot );
         prefs.putInt( "dividerWidth", dividerWidth );
-        prefs.put( "autoload", autoLoad );
+        if ( !( autoLoad == null ) ) {
+            prefs.put( "autoload", autoLoad );
+        }
         prefs.putBoolean( "maximisePictureViewerWindow", maximisePictureViewerWindow );
         prefs.putInt( "pictureViewerDefaultDimensions.width", pictureViewerDefaultDimensions.width );
         prefs.putInt( "pictureViewerDefaultDimensions.height", pictureViewerDefaultDimensions.height );
@@ -949,6 +986,9 @@ public class Settings {
         prefs.putInt( "emailDimensions.width", emailDimensions.width );
         prefs.putInt( "emailDimensions.height", emailDimensions.height );
         prefs.putInt( "tagCloudWords", tagCloudWords );
+        prefs.putInt( "lastSortChoice", lastSortChoice );
+        prefs.putBoolean( "lastCameraWizardCopyMode", lastCameraWizardCopyMode );
+
 
         unsavedSettingChanges = false;
     }
@@ -1093,9 +1133,8 @@ public class Settings {
      *  the listeners for this change are informed about the change.
      */
     private static void notifyRecentFilesChanged() {
-        Enumeration e = recentFilesChangeListeners.elements();
-        while ( e.hasMoreElements() ) {
-            ( (RecentFilesChangeListener) e.nextElement() ).recentFilesChanged();
+        for ( RecentFilesChangeListener recentFilesChangeListener : recentFilesChangeListeners ) {
+            recentFilesChangeListener.recentFilesChanged();
         }
     }
 
@@ -1106,17 +1145,21 @@ public class Settings {
 
 
     /**
-     *  method to register the listening object of the status events
+     * register the listening object of the status events
+     * @param listener The listener to be notified
      */
-    public static void addRecentFilesChangeListener( RecentFilesChangeListener listener ) {
+    public static void addRecentFilesChangeListener(
+            RecentFilesChangeListener listener ) {
         recentFilesChangeListeners.add( listener );
     }
 
 
     /**
-     *  method to register the listening object of the status events
+     * deregister the listening object of the status events
+     * @param listener The listener to be removed
      */
-    public static void removeRecentFilesChangeListener( RecentFilesChangeListener listener ) {
+    public static void removeRecentFilesChangeListener(
+            RecentFilesChangeListener listener ) {
         recentFilesChangeListeners.remove( listener );
     }
     /*------------------------------------------------------------------------------
@@ -1197,15 +1240,16 @@ public class Settings {
      *  {@link LocaleChangeListener}s that the locale has changed.
      */
     private static void notifyLocaleChangeListeners() {
-        Iterator i = localeChangeListeners.iterator();
+        Iterator<LocaleChangeListener> i = localeChangeListeners.iterator();
         while ( i.hasNext() ) {
-            ( (LocaleChangeListener) i.next() ).localeChanged();
+            i.next().localeChanged();
         }
     }
 
 
     /**
-     *  method to register the listening object of the status events
+     * register the listening object of the status events
+     * @param listener The listener to add
      */
     public static void addLocaleChangeListener( LocaleChangeListener listener ) {
         localeChangeListeners.add( listener );
@@ -1213,7 +1257,8 @@ public class Settings {
 
 
     /**
-     *  method to register the listening object of the status events
+     * register the listening object of the status events
+     * @param listener The listener to remove
      */
     public static void removeLocaleChangeListener( LocaleChangeListener listener ) {
         localeChangeListeners.remove( listener );
@@ -1248,10 +1293,12 @@ public class Settings {
 
 
     /**
-     *  This method memorizes the recent drop targets so that they can be accessed
-     *  more quickly next time round.
+     * This method memorizes the recent drop targets so that they can be accessed
+     * more quickly next time round.
+     * @param recentNode The recent drop target to add
      */
-    public static void memorizeGroupOfDropLocation( SortableDefaultMutableTreeNode recentNode ) {
+    public static void memorizeGroupOfDropLocation(
+            SortableDefaultMutableTreeNode recentNode ) {
         for ( int i = 0; i < Settings.maxDropNodes; i++ ) {
             if ( ( recentDropNodes[i] != null ) &&
                     ( recentDropNodes[i].hashCode() == recentNode.hashCode() ) ) {
@@ -1280,28 +1327,31 @@ public class Settings {
 
 
     /**
-     *  method to register the listening object of the status events
+     * register the listening object of the status events
+     * @param listener The listener to add
      */
-    public static void addRecentDropNodeListener( RecentDropNodeListener listener ) {
+    public static void addRecentDropNodeListener(
+            RecentDropNodeListener listener ) {
         recentDropNodeListeners.add( listener );
     }
 
 
     /**
-     *  method to register the listening object of the status events
+     * unregister the listening object of the status events
+     * @param listener the listener to remove
      */
-    public static void removeRecentDropNodeListener( RecentDropNodeListener listener ) {
+    public static void removeRecentDropNodeListener(
+            RecentDropNodeListener listener ) {
         recentDropNodeListeners.remove( listener );
     }
 
 
     /**
-     *  notifies the listeners that the target drop nodes have changed.
+     * notifies the listeners that the target drop nodes have changed.
      */
     private static void notifyRecentDropNodesChanged() {
-        Enumeration e = recentDropNodeListeners.elements();
-        while ( e.hasMoreElements() ) {
-            ( (RecentDropNodeListener) e.nextElement() ).recentDropNodesChanged();
+        for ( RecentDropNodeListener recentDropNodeListener : recentDropNodeListeners ) {
+            recentDropNodeListener.recentDropNodesChanged();
         }
     }
 
@@ -1310,8 +1360,10 @@ public class Settings {
      *  method to remove one of the recent Drop Nodes. It is important to check each time a node
      *  is deleted whether it or one of it's descendents is a drop target as this would no longer
      *  be a valid target.
+     * @param deathNode rthe node to remove
      */
-    public static void removeRecentDropNode( SortableDefaultMutableTreeNode deathNode ) {
+    public static void removeRecentDropNode(
+            SortableDefaultMutableTreeNode deathNode ) {
         for ( int i = 0; i < recentDropNodes.length; i++ ) {
             if ( deathNode == recentDropNodes[i] ) {
                 recentDropNodes[i] = null;
@@ -1416,17 +1468,21 @@ public class Settings {
 
 
     /**
-     *  method to register the listening object of the status events
+     * register the listening object of the status events
+     * @param listener The listener to add
      */
-    public static void addCopyLocationsChangeListener( CopyLocationsChangeListener listener ) {
+    public static void addCopyLocationsChangeListener(
+            CopyLocationsChangeListener listener ) {
         copyLocationChangeListeners.add( listener );
     }
 
 
     /**
-     *  method to register the listening object of the status events
+     * deregister the listening object of the status events
+     * @param listener
      */
-    public static void removeCopyLocationsChangeListener( CopyLocationsChangeListener listener ) {
+    public static void removeCopyLocationsChangeListener(
+            CopyLocationsChangeListener listener ) {
         copyLocationChangeListeners.remove( listener );
     }
 
@@ -1435,9 +1491,8 @@ public class Settings {
      *  notifies the listeners that the target drop nodes have changed.
      */
     private static void notifyCopyLocationsChanged() {
-        Enumeration e = copyLocationChangeListeners.elements();
-        while ( e.hasMoreElements() ) {
-            ( (CopyLocationsChangeListener) e.nextElement() ).copyLocationsChanged();
+        for ( CopyLocationsChangeListener copyLocationsChangeListener : copyLocationChangeListeners ) {
+            copyLocationsChangeListener.copyLocationsChanged();
         }
     }
     /*------------------------------------------------------------------------------
@@ -1466,17 +1521,21 @@ public class Settings {
 
 
     /**
-     *  method to register the listening object of the status events
+     * register the listening object of the changes in user function
+     * @param listener The listener to add
      */
-    public static void addUserFunctionsChangeListener( UserFunctionsChangeListener listener ) {
+    public static void addUserFunctionsChangeListener(
+            UserFunctionsChangeListener listener ) {
         userFunctionsChangeListeners.add( listener );
     }
 
 
     /**
-     *  method to register the listening object of the status events
+     * deregister the listening object of the user function change events
+     * @param listener the listener to remove
      */
-    public static void removeUserFunctionsChangeListener( UserFunctionsChangeListener listener ) {
+    public static void removeUserFunctionsChangeListener(
+            UserFunctionsChangeListener listener ) {
         userFunctionsChangeListeners.remove( listener );
     }
 
@@ -1485,9 +1544,8 @@ public class Settings {
      *  notifies the listeners that the target drop nodes have changed.
      */
     public static void notifyUserFunctionsChanged() {
-        Enumeration e = userFunctionsChangeListeners.elements();
-        while ( e.hasMoreElements() ) {
-            ( (UserFunctionsChangeListener) e.nextElement() ).userFunctionsChanged();
+        for ( UserFunctionsChangeListener userFunctionsChangeListener : userFunctionsChangeListeners ) {
+            userFunctionsChangeListener.userFunctionsChanged();
         }
     }
 }

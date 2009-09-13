@@ -56,7 +56,7 @@ public class AddFromCamera
     /**
      *   holds the target directory where the images are to be copied to
      */
-    private DirectoryChooser targetDirJTextField =
+    private DirectoryChooser targetDirChooser =
             new DirectoryChooser( Settings.jpoResources.getString("targetDirJLabel"),
             DirectoryChooser.DIR_MUST_EXIST );
     
@@ -203,7 +203,7 @@ public class AddFromCamera
         cameraEditorJButton.setBorder(BorderFactory.createRaisedBevelBorder());
         cameraEditorJButton.addActionListener( new ActionListener() {
             public void actionPerformed( ActionEvent e ) {
-                new CameraEditor();
+                new CamerasEditor();
             }
         } );
         controlJPanel.add( cameraEditorJButton, constraints );
@@ -241,7 +241,7 @@ public class AddFromCamera
         controlJPanel.add( targetDirJLabel, constraints );
         
         constraints.gridy++;
-        controlJPanel.add( targetDirJTextField, constraints );
+        controlJPanel.add( targetDirChooser, constraints );
         
         
         JPanel buttonJPanel = new JPanel();
@@ -299,7 +299,7 @@ public class AddFromCamera
      */
     public void actionPerformed( ActionEvent e ) {
         if ( e.getSource() == cancelJButton ) {
-            File targetDir = new File( targetDirJTextField.getText() );
+            File targetDir = targetDirChooser.getDirectory();
             if ( targetDir.exists() ) {
                 Settings.memorizeCopyLocation( targetDir.toString() );
             }
@@ -310,7 +310,7 @@ public class AddFromCamera
                 @Override
                 public void run() {
                     Camera cam = (Camera) cameraNameJComboBox.getSelectedItem();
-                    File targetDir = new File( targetDirJTextField.getText() );
+                    File targetDir = targetDirChooser.getDirectory();
                     Settings.memorizeCopyLocation( targetDir.toString() );
                     addPictures( rootNode, cam, targetDir, newPicturesJRadioButton.isSelected(), missingPicturesJRadioButton.isSelected(), retainDirectoriesJCheckBox.isSelected(), selectedCategories );
                 }

@@ -15,6 +15,7 @@ import java.awt.event.*;
 import java.util.logging.Handler;
 import javax.swing.*;
 import javax.swing.event.TreeModelListener;
+import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 import jpo.dataModel.GroupInfo;
 import jpo.dataModel.PictureInfo;
@@ -23,7 +24,7 @@ import jpotestground.CheckThreadViolationRepaintManager;
 
 
 /*
-Jpo.java:  The root controller object of the JPO application
+Jpo.java:  The collection controller object of the JPO application
 
 Copyright (C) 2002 - 2009  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
@@ -40,7 +41,7 @@ The license is in gpl.txt.
 See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 /**
- * This is the root class of a browser application that lets
+ * This is the collection controller the JPO browser application that lets
  * a user view a collection of pictures in as thumbnails, in a separate window
  * or in a full sized mode.<p>
  *
@@ -82,10 +83,12 @@ public class Jpo
      *   and then created a new {@link Jpo} object.
      */
     private MainWindow mainWindow;
+
     /**
      * Defines a logger for this class
      */
-    private static Logger logger = Logger.getLogger(Jpo.class.getName());
+    private static Logger logger = Logger.getLogger( Jpo.class.getName() );
+
 
     /**
      *  Constructor for the Jpo application that creates the main JFrame, attaches an
@@ -96,53 +99,55 @@ public class Jpo
 
         // set up logging level
         Handler[] handlers =
-                Logger.getLogger("").getHandlers();
-        for (int index = 0; index < handlers.length; index++) {
-            handlers[index].setLevel(Level.FINEST);
+                Logger.getLogger( "" ).getHandlers();
+        for ( int index = 0; index < handlers.length; index++ ) {
+            handlers[index].setLevel( Level.FINEST );
         }
         Settings.loadSettings();
 
-        logger.info("------------------------------------------------------------\n      Starting JPO");
+        logger.info( "------------------------------------------------------------\n      Starting JPO" );
 
         //Toolkit.getDefaultToolkit().getSystemEventQueue().push(
         //       new TracingEventQueue() );
-        RepaintManager.setCurrentManager(new CheckThreadViolationRepaintManager());
+        RepaintManager.setCurrentManager( new CheckThreadViolationRepaintManager() );
 
 
         // does this give us any performance gains?? RE 7.6.2004
-        javax.imageio.ImageIO.setUseCache(false);
+        javax.imageio.ImageIO.setUseCache( false );
         try {
             // Activate OpenGL performance improvements
-            System.setProperty("sun.java2d.opengl", "true");
-            SwingUtilities.invokeAndWait(new Runnable() {
+            System.setProperty( "sun.java2d.opengl", "true" );
+            SwingUtilities.invokeAndWait( new Runnable() {
 
                 public void run() {
-                    collectionJTreeController = new CollectionJTreeController(Jpo.this);
+                    collectionJTreeController = new CollectionJTreeController( Jpo.this );
+                    searchesJTree = new QueriesJTree();
                     thumbnailJScrollPane = new ThumbnailPanelController();
                     infoPanelController = new InfoPanelController();
-                    mainWindow = new MainWindow(Jpo.this, collectionJTreeController.getJScrollPane(), thumbnailJScrollPane, infoPanelController.getInfoPanel());
+                    mainWindow = new MainWindow( Jpo.this, collectionJTreeController.getJScrollPane(), searchesJTree.getJScrollPane(), thumbnailJScrollPane, infoPanelController.getInfoPanel() );
                 }
-            });
-        } catch (InterruptedException ex) {
-            logger.log(Level.SEVERE, null, ex);
-        } catch (InvocationTargetException ex) {
-            logger.log(Level.SEVERE, null, ex);
+            } );
+        } catch ( InterruptedException ex ) {
+            logger.log( Level.SEVERE, null, ex );
+        } catch ( InvocationTargetException ex ) {
+            logger.log( Level.SEVERE, null, ex );
         }
 
-        mainWindow.addWindowListener(new WindowAdapter() {
+        mainWindow.addWindowListener( new WindowAdapter() {
 
             @Override
-            public void windowClosing(WindowEvent e) {
-                mainWindow.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+            public void windowClosing( WindowEvent e ) {
+                mainWindow.setDefaultCloseOperation( WindowConstants.DO_NOTHING_ON_CLOSE );
                 closeJpo();
             }
-        });
+        } );
 
-        Settings.pictureCollection.getTreeModel().addTreeModelListener(new MainAppModelListener());
+        Settings.pictureCollection.getTreeModel().addTreeModelListener( new MainAppModelListener() );
         loadCollectionOnStartup();
-        new CameraWatchDaemon();
+        new CameraWatchDaemon( this );
 
     }
+
     /**
      *  This object does all the tree work. It can load and save the nodes of the tree, listens to
      *  events happening on the tree and calls back with any actions that should be performed.
@@ -150,60 +155,71 @@ public class Jpo
      * @see CollectionJTreeController
      */
     public static CollectionJTreeController collectionJTreeController;
+
+    /**
+     * This object does the controller work for the Queries.
+     */
+    public static QueriesJTree searchesJTree;
+
     /**
      *  This object holds all the thumbnails and deals with all the thumbnail events.
      * ToDo: Make this private again when the wordlist browser is properly integrated
      **/
     public static ThumbnailPanelController thumbnailJScrollPane;
+
     /**
      * The InfoPanelController
      */
     private static InfoPanelController infoPanelController;
+
     /**
      *  This Vector allows us to keep track of the number of ThumbnailCreationThreads
      *  we have fired off. Could be enhanced to dynamically start more or less.
      */
     private static Vector<ThumbnailCreationFactory> thumbnailFactories = new Vector<ThumbnailCreationFactory>();
 
+
     /**
      *  static initializer for the ThumbnailCreationThreads
      */
     static {
-        for (int i = 1; i <= Settings.numberOfThumbnailCreationThreads; i++) {
-            thumbnailFactories.add(new ThumbnailCreationFactory());
+        for ( int i = 1; i <= Settings.numberOfThumbnailCreationThreads; i++ ) {
+            thumbnailFactories.add( new ThumbnailCreationFactory() );
         }
     }
+
 
     /**
      *  This method looks if it can find a file called autostartJarPicturelist.xml in the classpath;
      *  failing that it loads the file indicated in Settings.autoLoad.
      */
     public void loadCollectionOnStartup() {
-        Settings.jarAutostartList = ClassLoader.getSystemResource("autostartJarPicturelist.xml");
+        /* Settings.jarAutostartList = ClassLoader.getSystemResource( "autostartJarPicturelist.xml" );
 
 
-        if (Settings.jarAutostartList != null) {
-            Settings.jarRoot = Settings.jarAutostartList.toString().substring(0, Settings.jarAutostartList.toString().indexOf("!") + 1);
-            logger.info("Autoloading: " + Settings.jarAutostartList.toString());
-            try {
-                Settings.pictureCollection.getRootNode().streamLoad(Settings.jarAutostartList.openStream());
-                thumbnailJScrollPane.show(new GroupBrowser(Settings.pictureCollection.getRootNode()));
-            } catch (IOException x) {
-                logger.info(Settings.jarAutostartList.toString() + " could not be loaded\nReason: " + x.getMessage());
-            }
+        if ( Settings.jarAutostartList != null ) {
+        Settings.jarRoot = Settings.jarAutostartList.toString().substring( 0, Settings.jarAutostartList.toString().indexOf( "!" ) + 1 );
+        logger.info( "Autoloading: " + Settings.jarAutostartList.toString() );
+        try {
+        Settings.pictureCollection.getRootNode().streamLoad( Settings.jarAutostartList.openStream() );
+        thumbnailJScrollPane.show( new GroupBrowser( Settings.pictureCollection.getRootNode() ) );
+        } catch ( IOException x ) {
+        logger.info( Settings.jarAutostartList.toString() + " could not be loaded\nReason: " + x.getMessage() );
+        }
 
 
-        } else if ((Settings.autoLoad != null) && (Settings.autoLoad.length() > 0)) {
-            File xmlFile = new File(Settings.autoLoad);
-            logger.info("Autoloading: " + Settings.autoLoad);
-            if (xmlFile.exists()) {
+        } else*/
+        if ( ( Settings.autoLoad != null ) && ( Settings.autoLoad.length() > 0 ) ) {
+            File xmlFile = new File( Settings.autoLoad );
+            logger.info( "Autoloading: " + Settings.autoLoad );
+            if ( xmlFile.exists() ) {
                 try {
-                    Settings.pictureCollection.fileLoad(xmlFile);
-                } catch (FileNotFoundException ex) {
-                    Logger.getLogger(Jpo.class.getName()).log(Level.SEVERE, null, ex);
+                    Settings.pictureCollection.fileLoad( xmlFile );
+                } catch ( FileNotFoundException ex ) {
+                    Logger.getLogger( Jpo.class.getName() ).log( Level.SEVERE, null, ex );
                     requestFileNew();
                 }
-                positionToNode(Settings.pictureCollection.getRootNode());
+                positionToNode( Settings.pictureCollection.getRootNode() );
             }
 
 
@@ -212,13 +228,15 @@ public class Jpo
         }
     }
 
+
     /**
      * Brings up a QueryJFrame GUI.
      * @param startSearchNode
      */
-    public void find(SortableDefaultMutableTreeNode startSearchNode) {
-        new QueryJFrame(startSearchNode);
+    public void find( SortableDefaultMutableTreeNode startSearchNode ) {
+        new QueryJFrame( startSearchNode, this );
     }
+
 
     /**
      *  method that is invoked when the Jpo application is to be closed. Checks if
@@ -226,29 +244,37 @@ public class Jpo
      *  also checks for unsaved changes before closing the application.
      */
     public void closeJpo() {
-        if (checkUnsavedUpdates()) {
+        if ( checkUnsavedUpdates() ) {
             return;
         }
 
-        if (Settings.unsavedSettingChanges) {
+        if ( Settings.unsavedSettingChanges ) {
             Settings.writeSettings();
         }
 
-        logger.info("Exiting JPO\n------------------------------------------------------------");
+        logger.info( "Exiting JPO\n------------------------------------------------------------" );
 
-        System.exit(0);
+        System.exit( 0 );
     }
+
 
     /**
      *   Call to do the File|New function
      */
     public void requestFileNew() {
-        if (checkUnsavedUpdates()) {
-            return;
-        }
-        Settings.pictureCollection.clearCollection();
-        positionToNode(Settings.pictureCollection.getRootNode());
+        Runnable r = new Runnable() {
+
+            public void run() {
+                if ( checkUnsavedUpdates() ) {
+                    return;
+                }
+                Settings.pictureCollection.clearCollection();
+                positionToNode( Settings.pictureCollection.getRootNode() );
+            }
+        };
+        SwingUtilities.invokeLater( r );
     }
+
 
     /**
      *   Creates a {@link PictureFileChooser} object and tells it to
@@ -256,8 +282,9 @@ public class Jpo
      *   {@link CollectionJTreeController}.
      */
     public void requestFileAdd() {
-        chooseAndAddPicturesToGroup(Settings.pictureCollection.getRootNode());
+        chooseAndAddPicturesToGroup( Settings.pictureCollection.getRootNode() );
     }
+
 
     /**
      *   Creates a {@link PictureFileChooser} object and tells it to
@@ -265,16 +292,17 @@ public class Jpo
      *   {@link CollectionJTreeController}.
      */
     public void requestFileAddFromCamera() {
-        new AddFromCamera(Settings.pictureCollection.getRootNode());
-        positionToNode(Settings.pictureCollection.getRootNode());
+        new AddFromCamera( Settings.pictureCollection.getRootNode() );
+        positionToNode( Settings.pictureCollection.getRootNode() );
     }
+
 
     /**
      *   Brings up a dialog where the user can select the collection
      *   to be loaded. Calls {@link SortableDefaultMutableTreeNode#fileLoad}
      */
     public void requestFileLoad() {
-        if (checkUnsavedUpdates()) {
+        if ( checkUnsavedUpdates() ) {
             return;
         }
         final File fileToLoad = Tools.chooseXmlFile();
@@ -283,106 +311,123 @@ public class Jpo
             @Override
             public void run() {
                 try {
-                    Settings.pictureCollection.fileLoad(fileToLoad);
-                } catch (FileNotFoundException ex) {
-                    logger.info(this.getClass().toString() + ".requestFileLoad: FileNotFoundExecption: " + ex.getMessage());
-                    JOptionPane.showMessageDialog(Settings.anchorFrame,
+                    Settings.pictureCollection.fileLoad( fileToLoad );
+                } catch ( FileNotFoundException ex ) {
+                    logger.info( this.getClass().toString() + ".requestFileLoad: FileNotFoundExecption: " + ex.getMessage() );
+                    JOptionPane.showMessageDialog( Settings.anchorFrame,
                             ex.getMessage(),
-                            Settings.jpoResources.getString("genericError"),
-                            JOptionPane.ERROR_MESSAGE);
+                            Settings.jpoResources.getString( "genericError" ),
+                            JOptionPane.ERROR_MESSAGE );
 
                     return;
                 }
-                positionToNode(Settings.pictureCollection.getRootNode());
+                positionToNode( Settings.pictureCollection.getRootNode() );
             }
         };
         t.start();
     }
 
+
     /**
      * A call to this method with a GroupInfo node will position the JTree to the
      * node and will open the node in the ThumbnailPanel
-     * @param node must be of a node of type GroupInfo
+     * @param displayNode must be of a node of type GroupInfo
      */
-    public static void positionToNode(SortableDefaultMutableTreeNode displayNode) {
-        if (displayNode == null) {
-            logger.severe("I've been told to position to a null node!");
+    public static void positionToNode(
+            SortableDefaultMutableTreeNode displayNode ) {
+        if ( displayNode == null ) {
+            logger.severe( "I've been told to position to a null node!" );
             Thread.dumpStack();
             return;
         }
-        if (!(displayNode.getUserObject() instanceof GroupInfo)) {
-            logger.severe("We can only position to GroupInfo nodes!");
+        if ( !( displayNode.getUserObject() instanceof GroupInfo ) ) {
+            logger.severe( "We can only position to GroupInfo nodes!" );
             Thread.dumpStack();
             return;
         }
-        collectionJTreeController.setSelectedNode(displayNode);
-        showThumbnails(new GroupBrowser(displayNode));
-        infoPanelController.showInfo(displayNode);
+        collectionJTreeController.setSelectedNode( displayNode );
+        showThumbnails( new GroupBrowser( displayNode ) );
+        infoPanelController.showInfo( displayNode );
     }
+
 
     /**
      * A call to this method with a ThumbnailBrowser will show the
      * nodes of in the Thumbnail pane.
      * @param nodeSet must be of a node of type GroupInfo
      */
-    public static void showThumbnails(ThumbnailBrowserInterface nodeSet) {
-        if (nodeSet == null) {
-            logger.severe("I've been told to showThumbnails on a null set!");
+    public static void showThumbnails( ThumbnailBrowserInterface nodeSet ) {
+        if ( nodeSet == null ) {
+            logger.severe( "I've been told to showThumbnails on a null set!" );
             Thread.dumpStack();
             return;
         }
-        thumbnailJScrollPane.show(nodeSet);
+        thumbnailJScrollPane.show( nodeSet );
         //infoPanelController.show(nodeSet);
     }
+
+
+    /**
+     * Switches the left panel to the queries, expands to the right place and
+     * shows the numbnails of the query.
+     * @param node The query node to be displayed
+     */
+    public void showQuery( DefaultMutableTreeNode node ) {
+        mainWindow.tabToSearches();
+        searchesJTree.setSelectedNode( node );
+    }
+
 
     /**
      * A call to this method will result in the InfoPanel updatings it's display
      * @param node the Node for which to show the info
      */
-    public static void showInfo(SortableDefaultMutableTreeNode node) {
-        if (node == null) {
-            logger.severe("I've been told to show Info on a null node!");
+    public static void showInfo( SortableDefaultMutableTreeNode node ) {
+        if ( node == null ) {
+            logger.severe( "I've been told to show Info on a null node!" );
             Thread.dumpStack();
             return;
         }
-        infoPanelController.showInfo(node);
+        infoPanelController.showInfo( node );
     }
+
 
     /**
      * Opens a Picture Browser for the specified node. A PictureInfo node
      * will open directly and a GroupInfo node will open at it's first child node.
      * @param node
      */
-    public static void browsePictures(SortableDefaultMutableTreeNode node) {
+    public static void browsePictures( SortableDefaultMutableTreeNode node ) {
         Object o = node.getUserObject();
-        if (o instanceof PictureInfo) {
+        if ( o instanceof PictureInfo ) {
             //node.showLargePicture();
-            FlatGroupBrowser sb = new FlatGroupBrowser((SortableDefaultMutableTreeNode) node.getParent());
+            FlatGroupBrowser sb = new FlatGroupBrowser( (SortableDefaultMutableTreeNode) node.getParent() );
             int index = 0;
-            for (int i = 0; i < sb.getNumberOfNodes(); i++) {
-                if (sb.getNode(i).equals(node)) {
+            for ( int i = 0; i < sb.getNumberOfNodes(); i++ ) {
+                if ( sb.getNode( i ).equals( node ) ) {
                     index = i;
                     i = sb.getNumberOfNodes();
                 }
             }
             PictureViewer pictureViewer = new PictureViewer();
-            pictureViewer.changePicture(sb, index);
-        } else if (o instanceof GroupInfo) {
+            pictureViewer.changePicture( sb, index );
+        } else if ( o instanceof GroupInfo ) {
             SortableDefaultMutableTreeNode firstPicNode = node.findFirstPicture();
-            if (firstPicNode != null) {
+            if ( firstPicNode != null ) {
                 //firstPicNode.showLargePicture();
-                FlatGroupBrowser sb = new FlatGroupBrowser(node);
+                FlatGroupBrowser sb = new FlatGroupBrowser( node );
                 PictureViewer pictureViewer = new PictureViewer();
-                pictureViewer.changePicture(sb, 0);
+                pictureViewer.changePicture( sb, 0 );
             } else {
-                JOptionPane.showMessageDialog(Settings.anchorFrame,
-                        Settings.jpoResources.getString("noPicsForSlideshow"),
-                        Settings.jpoResources.getString("genericError"),
-                        JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog( Settings.anchorFrame,
+                        Settings.jpoResources.getString( "noPicsForSlideshow" ),
+                        Settings.jpoResources.getString( "genericError" ),
+                        JOptionPane.ERROR_MESSAGE );
             }
         }
 
     }
+
 
     /**
      *   Requests a recently loaded collection to be loaded. The index
@@ -390,8 +435,8 @@ public class Jpo
      *   {@link ApplicationJMenuBar} through the interface method
      *   {@link ApplicationMenuInterface#requestOpenRecent}.
      */
-    public void requestOpenRecent(final int i) {
-        if (checkUnsavedUpdates()) {
+    public void requestOpenRecent( final int i ) {
+        if ( checkUnsavedUpdates() ) {
             return;
         }
         Thread t = new Thread() {
@@ -399,21 +444,22 @@ public class Jpo
             @Override
             public void run() {
                 try {
-                    Settings.pictureCollection.fileLoad(new File(Settings.recentCollections[i]));
-                } catch (FileNotFoundException ex) {
-                    Logger.getLogger(Jpo.class.getName()).log(Level.SEVERE, null, ex);
-                    logger.info(this.getClass().toString() + ".requestFileLoad: FileNotFoundExecption: " + ex.getMessage());
-                    JOptionPane.showMessageDialog(Settings.anchorFrame,
+                    Settings.pictureCollection.fileLoad( new File( Settings.recentCollections[i] ) );
+                } catch ( FileNotFoundException ex ) {
+                    Logger.getLogger( Jpo.class.getName() ).log( Level.SEVERE, null, ex );
+                    logger.info( this.getClass().toString() + ".requestFileLoad: FileNotFoundExecption: " + ex.getMessage() );
+                    JOptionPane.showMessageDialog( Settings.anchorFrame,
                             ex.getMessage(),
-                            Settings.jpoResources.getString("genericError"),
-                            JOptionPane.ERROR_MESSAGE);
+                            Settings.jpoResources.getString( "genericError" ),
+                            JOptionPane.ERROR_MESSAGE );
                     return;
                 }
-                positionToNode(Settings.pictureCollection.getRootNode());
+                positionToNode( Settings.pictureCollection.getRootNode() );
             }
         };
         t.start();
     }
+
 
     /**
      * Checks for unsaved changes in the data model, pops up a dialog and does the save if so indicated by the user.
@@ -422,23 +468,23 @@ public class Jpo
      */
     public boolean checkUnsavedUpdates() {
         Tools.checkEDT();
-        if (Settings.pictureCollection.getUnsavedUpdates()) {
+        if ( Settings.pictureCollection.getUnsavedUpdates() ) {
             Object[] options = {
-                Settings.jpoResources.getString("discardChanges"),
-                Settings.jpoResources.getString("genericSaveButtonLabel"),
-                Settings.jpoResources.getString("FileSaveAsMenuItemText"),
-                Settings.jpoResources.getString("genericCancelText")};
+                Settings.jpoResources.getString( "discardChanges" ),
+                Settings.jpoResources.getString( "genericSaveButtonLabel" ),
+                Settings.jpoResources.getString( "FileSaveAsMenuItemText" ),
+                Settings.jpoResources.getString( "genericCancelText" ) };
             int option = JOptionPane.showOptionDialog(
                     Settings.anchorFrame,
-                    Settings.jpoResources.getString("unsavedChanges"),
-                    Settings.jpoResources.getString("genericWarning"),
+                    Settings.jpoResources.getString( "unsavedChanges" ),
+                    Settings.jpoResources.getString( "genericWarning" ),
                     JOptionPane.OK_CANCEL_OPTION,
                     JOptionPane.WARNING_MESSAGE,
                     null,
                     options,
-                    options[0]);
+                    options[0] );
 
-            switch (option) {
+            switch ( option ) {
                 case 0:
                     return false;
                 case 1:
@@ -454,41 +500,45 @@ public class Jpo
         return false;
     }
 
+
     /**
      *   Calls the {@link jpo.dataModel.PictureCollection#fileSave} method that saves the
      *   current collection under it's present name and if it was never
      *   saved before brings up a popup window.
      */
     public void requestFileSave() {
-        if (Settings.pictureCollection.getXmlFile() == null) {
+        if ( Settings.pictureCollection.getXmlFile() == null ) {
             fileSaveAs();
         } else {
+            logger.info( String.format( "xml file is not null and reads: %s", Settings.pictureCollection.getXmlFile() ) );
             Settings.pictureCollection.fileSave();
             afterFileSaveDialog();
         }
     }
+
 
     /**
      *   Ask whether the file should be opened by default.
      */
     public void afterFileSaveDialog() {
         JPanel p = new JPanel();
-        p.setLayout(new BoxLayout(p, BoxLayout.Y_AXIS));
-        p.add(new JLabel(Settings.jpoResources.getString("collectionSaveBody") + Settings.pictureCollection.getXmlFile().toString()));
-        JCheckBox setAutoload = new JCheckBox(Settings.jpoResources.getString("setAutoload"));
-        if ((new File(Settings.autoLoad)).compareTo(Settings.pictureCollection.getXmlFile()) == 0) {
-            setAutoload.setSelected(true);
+        p.setLayout( new BoxLayout( p, BoxLayout.Y_AXIS ) );
+        p.add( new JLabel( Settings.jpoResources.getString( "collectionSaveBody" ) + Settings.pictureCollection.getXmlFile().toString() ) );
+        JCheckBox setAutoload = new JCheckBox( Settings.jpoResources.getString( "setAutoload" ) );
+        if ( ( !( Settings.autoLoad == null ) ) && ( ( new File( Settings.autoLoad ) ).compareTo( Settings.pictureCollection.getXmlFile() ) == 0 ) ) {
+            setAutoload.setSelected( true );
         }
-        p.add(setAutoload);
-        JOptionPane.showMessageDialog(Settings.anchorFrame,
+        p.add( setAutoload );
+        JOptionPane.showMessageDialog( Settings.anchorFrame,
                 p,
-                Settings.jpoResources.getString("collectionSaveTitle"),
-                JOptionPane.INFORMATION_MESSAGE);
-        if (setAutoload.isSelected()) {
+                Settings.jpoResources.getString( "collectionSaveTitle" ),
+                JOptionPane.INFORMATION_MESSAGE );
+        if ( setAutoload.isSelected() ) {
             Settings.autoLoad = Settings.pictureCollection.getXmlFile().toString();
             Settings.writeSettings();
         }
     }
+
 
     /**
      *   Calls the {@link #fileSaveAs} method to bring up
@@ -499,46 +549,48 @@ public class Jpo
         fileSaveAs();
     }
 
+
     /**
      *   method that saves the entire index in XML format. It prompts for the
      *   filename first.
      */
     public void fileSaveAs() {
         JFileChooser jFileChooser = new JFileChooser();
-        jFileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        jFileChooser.setDialogType(JFileChooser.SAVE_DIALOG);
-        jFileChooser.setDialogTitle(Settings.jpoResources.getString("fileSaveAsTitle"));
-        jFileChooser.setMultiSelectionEnabled(false);
-        jFileChooser.setFileFilter(new XmlFilter());
-        if (Settings.pictureCollection.getXmlFile() != null) {
-            jFileChooser.setCurrentDirectory(Settings.pictureCollection.getXmlFile());
+        jFileChooser.setFileSelectionMode( JFileChooser.FILES_ONLY );
+        jFileChooser.setDialogType( JFileChooser.SAVE_DIALOG );
+        jFileChooser.setDialogTitle( Settings.jpoResources.getString( "fileSaveAsTitle" ) );
+        jFileChooser.setMultiSelectionEnabled( false );
+        jFileChooser.setFileFilter( new XmlFilter() );
+        if ( Settings.pictureCollection.getXmlFile() != null ) {
+            jFileChooser.setCurrentDirectory( Settings.pictureCollection.getXmlFile() );
         } else {
-            jFileChooser.setCurrentDirectory(Settings.getMostRecentCopyLocation());
+            jFileChooser.setCurrentDirectory( Settings.getMostRecentCopyLocation() );
         }
 
-        int returnVal = jFileChooser.showSaveDialog(Settings.anchorFrame);
-        if (returnVal == JFileChooser.APPROVE_OPTION) {
+        int returnVal = jFileChooser.showSaveDialog( Settings.anchorFrame );
+        if ( returnVal == JFileChooser.APPROVE_OPTION ) {
             File chosenFile = jFileChooser.getSelectedFile();
-            chosenFile = Tools.correctFilenameExtension("xml", chosenFile);
-            if (chosenFile.exists()) {
-                int answer = JOptionPane.showConfirmDialog(Settings.anchorFrame,
-                        Settings.jpoResources.getString("confirmSaveAs"),
-                        Settings.jpoResources.getString("genericWarning"),
+            chosenFile = Tools.correctFilenameExtension( "xml", chosenFile );
+            if ( chosenFile.exists() ) {
+                int answer = JOptionPane.showConfirmDialog( Settings.anchorFrame,
+                        Settings.jpoResources.getString( "confirmSaveAs" ),
+                        Settings.jpoResources.getString( "genericWarning" ),
                         JOptionPane.OK_CANCEL_OPTION,
-                        JOptionPane.QUESTION_MESSAGE);
-                if (answer == JOptionPane.CANCEL_OPTION) {
+                        JOptionPane.QUESTION_MESSAGE );
+                if ( answer == JOptionPane.CANCEL_OPTION ) {
                     return;
                 }
             }
 
-            Settings.pictureCollection.setXmlFile(chosenFile);
+            Settings.pictureCollection.setXmlFile( chosenFile );
             Settings.pictureCollection.fileSave();
 
-            Settings.memorizeCopyLocation(chosenFile.getParent());
-            Settings.pushRecentCollection(chosenFile.toString());
+            Settings.memorizeCopyLocation( chosenFile.getParent() );
+            Settings.pushRecentCollection( chosenFile.toString() );
             afterFileSaveDialog();
         }
     }
+
 
     /**
      *   Calls {@link #closeJpo} to shut down the application.
@@ -547,12 +599,14 @@ public class Jpo
         closeJpo();
     }
 
+
     /**
      *   Calls {@link #find} to bring up a find dialog box.
      */
     public void openFindDialog() {
-        find(Settings.pictureCollection.getRootNode());
+        find( Settings.pictureCollection.getRootNode() );
     }
+
 
     /**
      *   Creates a {@link ReconcileJFrame} which lets the user
@@ -560,8 +614,9 @@ public class Jpo
      *   against the current collection.
      */
     public void requestCheckDirectories() {
-        new ReconcileJFrame(Settings.pictureCollection.getRootNode());
+        new ReconcileJFrame( Settings.pictureCollection.getRootNode() );
     }
+
 
     /**
      *   Creates a {@link CollectionPropertiesJFrame} that displays
@@ -569,82 +624,93 @@ public class Jpo
      *   protect it from edits.
      */
     public void requestCollectionProperties() {
-        new CollectionPropertiesJFrame(Settings.pictureCollection.getRootNode());
+        new CollectionPropertiesJFrame( Settings.pictureCollection.getRootNode() );
     }
+
 
     /**
      *  Creates an IntegrityChecker that does it's magic on the collection.
      */
     public void requestCheckIntegrity() {
-        new IntegrityChecker(Settings.pictureCollection.getRootNode());
+        new IntegrityChecker( Settings.pictureCollection.getRootNode() );
     }
+
 
     /**
      *   Creates a {@link SettingsDialog} where the user can edit
      *   Application wide settings.
      */
     public void requestEditSettings() {
-        new SettingsDialog(true);
+        new SettingsDialog( true );
     }
 
+
     /**
-     *   opens up the Camera Editor GUI. See {@link CameraEditor}
+     *   opens up the Camera Editor GUI. See {@link CamerasEditor}
      */
     public void requestEditCameras() {
-        new CameraEditor();
+        new CamerasEditor();
     }
+
 
     /**
      *   calls up the Pictureviewer
      */
     public void performSlideshow() {
         PictureViewer p1 = new PictureViewer();
-        p1.switchWindowMode(ResizableJFrame.WINDOW_LEFT);
-        p1.switchDecorations(true);
+        p1.switchWindowMode( ResizableJFrame.WINDOW_LEFT );
+        p1.switchDecorations( true );
         PictureViewer p2 = new PictureViewer();
-        p2.switchWindowMode(ResizableJFrame.WINDOW_RIGHT);
-        p2.switchDecorations(true);
-        RandomBrowser rb1 = new RandomBrowser(Settings.pictureCollection.getRootNode());
-        RandomBrowser rb2 = new RandomBrowser(Settings.pictureCollection.getRootNode());
-        p1.changePicture(rb1, 0);
-        p1.startAdvanceTimer(10);
-        p2.changePicture(rb2, 0);
-        p2.startAdvanceTimer(10);
+        p2.switchWindowMode( ResizableJFrame.WINDOW_RIGHT );
+        p2.switchDecorations( true );
+        RandomBrowser rb1 = new RandomBrowser( Settings.pictureCollection.getRootNode() );
+        RandomBrowser rb2 = new RandomBrowser( Settings.pictureCollection.getRootNode() );
+        p1.changePicture( rb1, 0 );
+        p1.startAdvanceTimer( 10 );
+        p2.changePicture( rb2, 0 );
+        p2.startAdvanceTimer( 10 );
     }
+
 
     /**
      * Bring up a chooser and add pictures to the group.
      * @see  GroupPopupInterface
      * @param groupNode  The group nodde to which to add the pictures
      */
-    public void chooseAndAddPicturesToGroup(SortableDefaultMutableTreeNode groupNode) {
-        PictureFileChooser pa = new PictureFileChooser(groupNode);
+    public void chooseAndAddPicturesToGroup(
+            SortableDefaultMutableTreeNode groupNode ) {
+        PictureFileChooser pa = new PictureFileChooser( groupNode );
     }
 
-    private class MainAppModelListener implements TreeModelListener {
+    private class MainAppModelListener
+            implements TreeModelListener {
 
-        public void treeNodesChanged(TreeModelEvent e) {
+        public void treeNodesChanged( TreeModelEvent e ) {
             TreePath tp = e.getTreePath();
-            if (tp.getPathCount() == 1) { //if the root node sent the event
+            if ( tp.getPathCount() == 1 ) { //if the root node sent the event
                 updateApplicationTitle();
             }
         }
 
-        public void treeNodesInserted(TreeModelEvent e) {
+
+        public void treeNodesInserted( TreeModelEvent e ) {
             // ignore
         }
 
-        public void treeNodesRemoved(TreeModelEvent e) {
+
+        public void treeNodesRemoved( TreeModelEvent e ) {
             // ignore, the root can't be removed ... Really?
         }
 
-        public void treeStructureChanged(TreeModelEvent e) {
+
+        public void treeStructureChanged( TreeModelEvent e ) {
             TreePath tp = e.getTreePath();
-            if (tp.getPathCount() == 1) { //if the root node sent the event
+            if ( tp.getPathCount() == 1 ) { //if the root node sent the event
                 updateApplicationTitle();
             }
         }
     }
+
 
     /**
      * Sets the application title to the default tile based on the Resourcebundle string
@@ -652,31 +718,33 @@ public class Jpo
      */
     private void updateApplicationTitle() {
         final File xmlFile = Settings.pictureCollection.getXmlFile();
-        if (xmlFile != null) {
-            mainWindow.updateApplicationTitle(Settings.jpoResources.getString("ApplicationTitle") + ":  " + xmlFile.toString());
+        if ( xmlFile != null ) {
+            mainWindow.updateApplicationTitle( Settings.jpoResources.getString( "ApplicationTitle" ) + ":  " + xmlFile.toString() );
         } else {
-            mainWindow.updateApplicationTitle(Settings.jpoResources.getString("ApplicationTitle"));
+            mainWindow.updateApplicationTitle( Settings.jpoResources.getString( "ApplicationTitle" ) );
         }
     }
+
 
     /**
      *  requests that a collection be added at this point in the tree
      *  @param fileToLoad
      * @see GroupPopupInterface
      */
-    public void requestAddCollection(SortableDefaultMutableTreeNode popupNode, File fileToLoad) {
-        SortableDefaultMutableTreeNode newNode = popupNode.addGroupNode("New Group");
+    public void requestAddCollection( SortableDefaultMutableTreeNode popupNode,
+            File fileToLoad ) {
+        SortableDefaultMutableTreeNode newNode = popupNode.addGroupNode( "New Group" );
         try {
-            newNode.fileLoad(fileToLoad);
-        } catch (FileNotFoundException x) {
-            logger.info(this.getClass().toString() + ".fileToLoad: FileNotFoundExecption: " + x.getMessage());
-            JOptionPane.showMessageDialog(Settings.anchorFrame,
+            newNode.fileLoad( fileToLoad );
+        } catch ( FileNotFoundException x ) {
+            logger.info( this.getClass().toString() + ".fileToLoad: FileNotFoundExecption: " + x.getMessage() );
+            JOptionPane.showMessageDialog( Settings.anchorFrame,
                     "File not found:\n" + fileToLoad.getPath(),
-                    Settings.jpoResources.getString("genericError"),
-                    JOptionPane.ERROR_MESSAGE);
+                    Settings.jpoResources.getString( "genericError" ),
+                    JOptionPane.ERROR_MESSAGE );
         }
-        newNode.getPictureCollection().setUnsavedUpdates(true);
-        positionToNode(newNode);
-        collectionJTreeController.expandPath(new TreePath(newNode.getPath()));
+        newNode.getPictureCollection().setUnsavedUpdates( true );
+        positionToNode( newNode );
+        collectionJTreeController.expandPath( new TreePath( newNode.getPath() ) );
     }
 }

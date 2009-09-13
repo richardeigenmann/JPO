@@ -32,7 +32,7 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  * TreeMap. The second map has the key <Integer> by month (starting with 0)
  * and a value <HashSet> with the nodes that fall into that year and month.
  *
- * @author richi
+ * @author Richard Eigenmann
  */
 public class YearlyAnalysis implements Serializable {
 

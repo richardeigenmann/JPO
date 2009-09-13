@@ -63,6 +63,7 @@ public class CameraDownloadWizardStep2 extends AbstractStep {
         moveButton.addActionListener( new ActionListener() {
             public void actionPerformed( ActionEvent e ) {
                 dataModel.setCopyMode( false );
+                Settings.lastCameraWizardCopyMode = false;
             }
         } );
         stepComponent.add( moveButton );
@@ -70,13 +71,15 @@ public class CameraDownloadWizardStep2 extends AbstractStep {
         copyButton.addActionListener( new ActionListener() {
             public void actionPerformed( ActionEvent e ) {
                 dataModel.setCopyMode( true );
+                Settings.lastCameraWizardCopyMode = true;
             }
         } );
         stepComponent.add( copyButton );
         ButtonGroup group = new ButtonGroup();
         group.add( moveButton );
         group.add( copyButton );
-        copyButton.setSelected( true );
+        moveButton.setSelected( ! dataModel.getCopyMode() );
+        copyButton.setSelected( dataModel.getCopyMode() );
         setCanGoNext( true );
         setCanGoBack( false );
         return stepComponent;

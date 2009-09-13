@@ -273,7 +273,7 @@ public class PictureInfoEditor
         leftJPanel.setLayout( new GridBagLayout() );
         
         
-        thumbnail = new Thumbnail( new SingleNodeBrowser( editNode), 0, Settings.thumbnailSize, ThumbnailQueueRequest.MEDIUM_PRIORITY );
+        thumbnail = new Thumbnail( new SingleNodeBrowser( editNode), 0, Settings.thumbnailSize, ThumbnailQueueRequest.MEDIUM_PRIORITY, null );
         c.gridy = 0; c.gridx = 0;
         c.gridwidth = 1;
         c.anchor = GridBagConstraints.CENTER;
@@ -583,7 +583,8 @@ public class PictureInfoEditor
         categoriesJList.clearSelection();
         listModel.addElement( setupCategories );
         listModel.addElement( noCategories );
-        
+
+        //TODO: chan the iterator and enumberation use generis and be written nicer?
         Iterator i = editNode.getPictureCollection().getCategoryIterator();
         Integer key;
         String category;
@@ -591,7 +592,7 @@ public class PictureInfoEditor
         Vector <Integer>selections = new Vector<Integer>();
         while ( i.hasNext() ) {
             key = (Integer) i.next();
-            category = (String) editNode.getPictureCollection().getCategory( key );
+            category = editNode.getPictureCollection().getCategory(key);
             categoryObject = new Category( key, category );
             listModel.addElement( categoryObject );
             

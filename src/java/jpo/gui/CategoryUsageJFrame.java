@@ -1,6 +1,5 @@
 package jpo.gui;
 
-import jpo.dataModel.Tools;
 import jpo.dataModel.Settings;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -50,6 +49,7 @@ public class CategoryUsageJFrame extends JFrame {
      *  the entry field that allows a new category to be added
      */
     private JTextField categoryJTextField = new JTextField();
+
 
     private DefaultListModel listModel;
 

@@ -32,7 +32,7 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 /**
  *
- * @author richi
+ * @author Richard Eigenmann
  */
 public class TableJFrame extends JFrame {
 
