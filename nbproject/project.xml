@@ -180,7 +180,7 @@
             </compilation-unit>
             <compilation-unit>
                 <package-root>src/java</package-root>
-                <classpath mode="compile">libs/activation.jar:libs/jnlp.jar:libs/mail.jar:libs/metadata-extractor-2.3.0.jar:libs/jh.jar:libs/jwizz-0.1.4.jar:libs/poi-3.1-FINAL-20080629.jar:libs/poi-contrib-3.1-FINAL-20080629.jar:libs/poi-scratchpad-3.1-FINAL-20080629.jar:libs/jide-oss-2.7.2.jar</classpath>
+                <classpath mode="compile">libs/activation.jar:libs/jnlp.jar:libs/mail.jar:libs/metadata-extractor-2.3.0.jar:libs/jh.jar:libs/jwizz-0.1.4.jar:libs/poi-3.1-FINAL-20080629.jar:libs/poi-contrib-3.1-FINAL-20080629.jar:libs/poi-scratchpad-3.1-FINAL-20080629.jar:libs/jide-oss-2.7.2.jar:libs/miglayout-3.7.1.jar</classpath>
                 <built-to>build/classes/jpo</built-to>
                 <source-level>1.5</source-level>
             </compilation-unit>

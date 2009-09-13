@@ -705,10 +705,6 @@ public class PictureCollection {
             logger.info( this.getClass().toString() + ".fileLoad: already busy loading another file. Aborting" );
             return;
         }
-        if ( SwingUtilities.isEventDispatchThread() ) {
-            logger.info( this.getClass().toString() + ".fileLoad:  should not be on the EDT!" );
-            Thread.dumpStack();
-        }
         fileLoading = true;
         clearCollection();
         setXmlFile( f );

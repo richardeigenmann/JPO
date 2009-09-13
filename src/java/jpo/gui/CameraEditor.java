@@ -3,9 +3,6 @@ package jpo.gui;
 import jpo.dataModel.Settings;
 import jpo.*;
 import jpo.dataModel.Camera;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashSet;
@@ -16,6 +13,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import net.miginfocom.swing.MigLayout;
 /*
 CameraEditor.java: a class that creates a JPanel and allows camera attributes to be edited
 
@@ -46,53 +44,19 @@ public class CameraEditor
      * Constructor
      */
     public CameraEditor() {
-        setLayout( new GridBagLayout() );
-
-        GridBagConstraints constraints = new GridBagConstraints();
-        constraints.anchor = GridBagConstraints.WEST;
-        constraints.gridwidth = 3;
-        constraints.weightx = 1.0;
-        constraints.fill = GridBagConstraints.HORIZONTAL;
-        constraints.insets = new Insets( 4, 4, 4, 4 );
-
-        constraints.gridy = 0;
-        constraints.gridx = 0;
-        constraints.fill = GridBagConstraints.HORIZONTAL;
-        constraints.gridwidth = 1;
-        constraints.gridheight = 10;
-        constraints.insets = new Insets( 4, 4, 4, 4 );
-        constraints.anchor = GridBagConstraints.NORTHWEST;
-        add( cameraIcon, constraints );
-
-        constraints.anchor = GridBagConstraints.WEST;
-        constraints.gridy = 0;
-        constraints.gridx = 1;
-        constraints.gridwidth = 1;
-        constraints.gridheight = 1;
-        constraints.insets = new Insets( 4, 4, 4, 4 );
+        setLayout( new MigLayout("nogrid") );
         JLabel cameraNameJLabel = new JLabel( Settings.jpoResources.getString( "cameraNameJLabel" ) );
-        add( cameraNameJLabel, constraints );
+        add( cameraNameJLabel, "wrap" );
+        add( cameraNameJTextField, "wrap unrel" );
 
-        constraints.gridy++;
-        add( cameraNameJTextField, constraints );
+        add( cameraDirJLabel, "wrap" );
+        add( cameraDirJTextField, "wrap unrel" );
 
-        constraints.gridy++;
-        constraints.gridx = 1;
-        add( cameraDirJLabel, constraints );
+        add( monitorJCheckBox, "wrap unrel" );
 
-        constraints.gridy++;
-        add( cameraDirJTextField, constraints );
+        add( memorisedPicsText );
 
-
-        constraints.gridy++;
-        constraints.gridx = 1;
-        add( monitorJCheckBox, constraints );
-
-        JPanel checksumJPanel = new JPanel();
-        checksumJPanel.add( memorisedPicsText );
-
-        JLabel memorisedPicsJLabel = new JLabel();
-        checksumJPanel.add( memorisedPicturesJLabel );
+        add( memorisedPicturesJLabel );
 
         refreshJButton.setPreferredSize( Settings.defaultButtonDimension );
         refreshJButton.setMinimumSize( Settings.defaultButtonDimension );
@@ -105,7 +69,7 @@ public class CameraEditor
                 updateMemorisedPicturesJLabel();
             }
         } );
-        checksumJPanel.add( refreshJButton );
+        add( refreshJButton );
 
         zeroJButton.setPreferredSize( Settings.defaultButtonDimension );
         zeroJButton.setMinimumSize( Settings.defaultButtonDimension );
@@ -118,12 +82,7 @@ public class CameraEditor
                 updateMemorisedPicturesJLabel();
             }
         } );
-        checksumJPanel.add( zeroJButton );
-
-        constraints.gridy++;
-        constraints.gridx = 1;
-        constraints.anchor = GridBagConstraints.WEST;
-        add( checksumJPanel, constraints );
+        add( zeroJButton, "wrap unrel" );
 
         saveJButton.setPreferredSize( Settings.defaultButtonDimension );
         saveJButton.setMinimumSize( Settings.defaultButtonDimension );
@@ -135,10 +94,12 @@ public class CameraEditor
                 saveCamera();
             }
         } );
-        constraints.gridy++;
-        add( saveJButton, constraints );
+        add( saveJButton, "align right");
     }
 
+    /**
+     * A Handle to the camera being edited
+     */
     private Camera camera = null;
 
 
@@ -263,11 +224,10 @@ public class CameraEditor
      */
     private JButton zeroJButton = new JButton( Settings.jpoResources.getString( "zeroJButton" ) );
 
-        /**
+    /**
      *  Button to save the camera information
      */
     private JButton saveJButton = new JButton( "Save" );
-
 
     /**
      *  checkbox to indicate that filenames should be used

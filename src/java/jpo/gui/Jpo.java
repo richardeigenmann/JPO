@@ -143,6 +143,7 @@ public class Jpo
         } );
 
         Settings.pictureCollection.getTreeModel().addTreeModelListener( new MainAppModelListener() );
+        requestFileNew();
         loadCollectionOnStartup();
         new CameraWatchDaemon( this );
 
@@ -217,14 +218,9 @@ public class Jpo
                     Settings.pictureCollection.fileLoad( xmlFile );
                 } catch ( FileNotFoundException ex ) {
                     Logger.getLogger( Jpo.class.getName() ).log( Level.SEVERE, null, ex );
-                    requestFileNew();
                 }
                 positionToNode( Settings.pictureCollection.getRootNode() );
             }
-
-
-        } else {
-            requestFileNew();
         }
     }
 
