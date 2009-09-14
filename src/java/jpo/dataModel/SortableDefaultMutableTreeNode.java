@@ -115,6 +115,7 @@ public class SortableDefaultMutableTreeNode
 
 
             public void run() {
+                logger.fine(String.format( "Sending node structure changed event on node %s after sort",nodeStructureChangedNode.toString() ));
                 getPictureCollection().getTreeModel().nodeStructureChanged( nodeStructureChangedNode );
             }
         };

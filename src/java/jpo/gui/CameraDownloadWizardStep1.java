@@ -30,7 +30,8 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  *  on the camera she just plugged in x new pictures were discovered. If no new pictures
  *  were found the Next button remains disabled and the user can only click the Cancel button.
  */
-public class CameraDownloadWizardStep1 extends AbstractStep {
+public class CameraDownloadWizardStep1
+        extends AbstractStep {
 
     /**
      * Defines a logger for this class
@@ -89,7 +90,8 @@ public class CameraDownloadWizardStep1 extends AbstractStep {
      *  found. Only if there are more than 0 pictures then the setCanGoNext method is called which will
      *  allow the user to move forward. If there are no new pictures then the user can only cancel.
      */
-    class SearchForPicturesThread implements Runnable {
+    class SearchForPicturesThread
+            implements Runnable {
 
         private JLabel progressJLabel;
 
@@ -103,14 +105,15 @@ public class CameraDownloadWizardStep1 extends AbstractStep {
             logger.info( getClass().toString() + ".run: searching for the new pictures on the camera " + dataModel.getCamera().getDescription() );
             dataModel.setNewPictures( dataModel.getCamera().getNewPictures() );
 
-            if ( dataModel.getNewPictures().size() > 0 ) {
-                setCanGoNext( true );
-            } else {
-                setCanGoNext( false );
-            }
+            // now update the GUI on the EDT
             Runnable r = new Runnable() {
 
                 public void run() {
+                    if ( dataModel.getNewPictures().size() > 0 ) {
+                        setCanGoNext( true );
+                    } else {
+                        setCanGoNext( false );
+                    }
                     progressJLabel.setText( Integer.toString( dataModel.getNewPictures().size() ) + Settings.jpoResources.getString( "DownloadCameraWizardStep1Text3" ) );
                 }
             };

@@ -15,6 +15,7 @@ import javax.swing.event.TreeSelectionListener;
 import net.javaprog.ui.wizard.*;
 import javax.swing.*;
 import java.awt.Dimension;
+import java.util.logging.Logger;
 import javax.swing.tree.TreePath;
 
 
@@ -39,7 +40,14 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  *  the node for which the operation is to run. If presents a checkbox whether to create a new group. If this is ticked then
  *  the textfield for the new group name is made visible, otherwise it is hidden.
  */
-public class CameraDownloadWizardStep3 extends AbstractStep {
+public class CameraDownloadWizardStep3
+        extends AbstractStep {
+
+    /**
+     * Defines a logger for this class
+     */
+    private static Logger logger = Logger.getLogger( CameraDownloadWizardStep3.class.getName() );
+
 
     /**
      *
@@ -50,10 +58,12 @@ public class CameraDownloadWizardStep3 extends AbstractStep {
         super( Settings.jpoResources.getString( "DownloadCameraWizardStep3Title" ), Settings.jpoResources.getString( "DownloadCameraWizardStep3Description" ) );
         this.dataModel = dataModel;
     }
+
     /**
      *  Holds a reference to the data used by the wizard
      */
     private CameraDownloadWizardData dataModel = null;
+
 
     /**
      *  Returns the component that visualises the user interactable stuff for this step of the wizard.
@@ -121,6 +131,8 @@ public class CameraDownloadWizardStep3 extends AbstractStep {
         collectionJTree.addTreeSelectionListener( new TreeSelectionListener() {
 
             public void valueChanged( TreeSelectionEvent e ) {
+                logger.fine(String.format( "listening to a value changed event e:", e.toString() ));
+                // Are we trying to get the last clicked node? Not sure this is best...
                 SortableDefaultMutableTreeNode node = (SortableDefaultMutableTreeNode) collectionJTree.getLastSelectedPathComponent();
                 try {
                     if ( node.getUserObject() instanceof GroupInfo ) {
@@ -131,7 +143,7 @@ public class CameraDownloadWizardStep3 extends AbstractStep {
                         setCanGoNext( false );
                     }
                 } catch ( NullPointerException x ) {
-                    dataModel.setTargetNode( null );
+                    logger.fine( String.format( "The listener on the Download Wizard picked up a node change event on the node tree but got a NPE: %s", x.getMessage() ) );
                     setCanGoNext( false );
                 }
             }
@@ -156,6 +168,7 @@ public class CameraDownloadWizardStep3 extends AbstractStep {
         jsp.setAlignmentX( Component.LEFT_ALIGNMENT );
         return stepComponent;
     }
+
 
     /**
      *  Required by the AbstractSetp but not used.

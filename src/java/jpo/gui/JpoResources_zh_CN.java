@@ -314,7 +314,7 @@ public class JpoResources_zh_CN extends ListResourceBundle {
 		{"groupShowJMenuItem", "显示图片组"},
 		{"groupSlideshowJMenuItem", "显示图片"},
 		{"groupFindJMenuItemLabel", "查找"},
-		{"groupEditJMenuItem", "重命名"},
+		{"groupEditJMenuItem", "重命名"}, // change to Properties
 		{"groupRefreshJMenuItem", "刷新图标"},
 		{"groupTableJMenuItemLabel", "以表格方式编辑"},
 		{"addGroupJMenuLabel", "添加图片组"},

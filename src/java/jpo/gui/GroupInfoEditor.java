@@ -7,11 +7,11 @@ import jpo.*;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-import javax.swing.tree.*;
+import net.miginfocom.swing.MigLayout;
 
 /*
-GroupInfoEditor.java:  GUI for editing groups
-Copyright (C) 2002-2006  Richard Eigenmann.
+GroupInfoEditor.java:  Controller and Vie for editing group properties
+Copyright (C) 2002 - 2009  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -24,170 +24,126 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 The license is in gpl.txt.
 See http://www.gnu.org/copyleft/gpl.html for the details.
-*/
-
-
-/** 
- *   class that creates a Frame and allows the field(s) of a group to be edited. It seems to run
- *   in it's own thread because it creates a frame and those objects are waiting on input on the
- *   main event queue.
  */
-
+/** 
+ *   Creates a Frame and allows the field(s) of a group to be edited.
+ */
 public class GroupInfoEditor {
 
-	/**
-	 *   JFrame that holds all the dialog components for editing the window.
-	 */
-	private JFrame jFrame = new JFrame( Settings.jpoResources.getString("GroupInfoEditorHeading") );
-	
-	/**
-	 *  the text field in which the user can change the label
-	 */
-	private JTextArea descriptionJTextArea = new JTextArea();
-	
-	/**
-	 *   The location of the lowres image file
-	 */
-	private JTextField lowresLocationJTextField = new JTextField();
+    /**
+     *   JFrame that holds all the dialog components for editing the window.
+     */
+    private JFrame jFrame = new JFrame( Settings.jpoResources.getString( "GroupInfoEditorHeading" ) );
 
-	/**
-	 *  Dimension for the edit fields
-	 */
-	private static Dimension inputDimension = new Dimension(400, 20);
+    /**
+     *  the node being edited
+     */
+    private SortableDefaultMutableTreeNode editNode;
 
 
+    /**
+     *   Constructor that creates the JFrame and objects.
+     *
+     *   @param   editNode	The node being edited.
+     */
+    public GroupInfoEditor( final SortableDefaultMutableTreeNode editNode ) {
+        this.editNode = editNode;
 
-	/**
-	 *  the OK button
-	 */
-	private JButton OkJButton = new JButton ( Settings.jpoResources.getString("genericOKText") );
+        jFrame.addWindowListener( new WindowAdapter() {
 
-	/**
-	 *  the Cancel button
-	 */	
-	private JButton CancelButton = new JButton ( Settings.jpoResources.getString("genericCancelText") );
-
-	
-	/**
-	 *  the node being edited
-	 */
-	private SortableDefaultMutableTreeNode editNode;
-
-
-
-
-	/**
-	 *   Constructor that creates the JFrame and objects.
-	 *
-	 *   @param   editNode	The node being edited.
-	 */
-    @SuppressWarnings( "static-access" )
-	public GroupInfoEditor( final SortableDefaultMutableTreeNode editNode ) {
-		this.editNode = editNode;
-	
-		jFrame.addWindowListener(new WindowAdapter() {
             @Override
-			public void windowClosing(WindowEvent e) {
-				getRid();
-			}
-	        });  
+            public void windowClosing( WindowEvent e ) {
+                getRid();
+            }
+        } );
 
-		JPanel jPanel = new JPanel();
-		jFrame.getContentPane().add(jPanel, BorderLayout.CENTER);
-		jFrame.setLocationRelativeTo( Settings.anchorFrame );
+        JPanel jPanel = new JPanel();
+        jPanel.setLayout( new MigLayout() );
 
-
-		GridBagConstraints c = new GridBagConstraints(); 
-		c.fill = GridBagConstraints.NONE;
-		c.gridx = 0; 
-		c.insets = new Insets(4,4,4,4); 
-
-		jPanel.setLayout( new GridBagLayout() );
-
-		JLabel descriptionJLabel = new JLabel ( Settings.jpoResources.getString("groupDescriptionLabel") );
-		c.gridy = 1; 
-		c.anchor = GridBagConstraints.WEST;  
-		jPanel.add( descriptionJLabel, c );
+        JLabel descriptionJLabel = new JLabel( Settings.jpoResources.getString( "groupDescriptionLabel" ) );
+        jPanel.add( descriptionJLabel );
 
 
-		final GroupInfo gi = ( (GroupInfo) editNode.getUserObject() );
-	
-		descriptionJTextArea.setText( gi.getGroupName ());
-	        descriptionJTextArea.setPreferredSize( new Dimension(400, 150) );
-	        descriptionJTextArea.setWrapStyleWord( true ); 
-	        descriptionJTextArea.setLineWrap( true ); 
-	        descriptionJTextArea.setEditable( true ); 
-		c.gridy++; 
-		jPanel.add( descriptionJTextArea, c );
-		
+        final GroupInfo gi = ( (GroupInfo) editNode.getUserObject() );
 
-		JPanel lowresJPanel = new JPanel();
-		
-		JLabel lowresLocationJLabel = new JLabel ( Settings.jpoResources.getString("lowresLocationLabel") );
-		lowresJPanel.add ( lowresLocationJLabel );
-		
-		c.gridx = 0; c.gridy++;
-		c.insets = new Insets(4,0,0,0); 
-		jPanel.add( lowresJPanel, c );
-
-		
-	        lowresLocationJTextField.setPreferredSize( inputDimension );
-		lowresLocationJTextField.setText( gi.getLowresLocation() );
-		c.gridy++;
-		c.insets = new Insets(0,0,0,0); 
-		jPanel.add( lowresLocationJTextField, c );
+        final JTextArea descriptionJTextArea = new JTextArea();
+        descriptionJTextArea.setText( gi.getGroupName() );
+        descriptionJTextArea.setPreferredSize( new Dimension( 400, 150 ) );
+        descriptionJTextArea.setWrapStyleWord( true );
+        descriptionJTextArea.setLineWrap( true );
+        descriptionJTextArea.setEditable( true );
+        jPanel.add( descriptionJTextArea, "wrap" );
 
 
 
-		JPanel buttonJPanel = new JPanel();
+        JLabel lowresLocationJLabel = new JLabel( Settings.jpoResources.getString( "lowresLocationLabel" ) );
+        jPanel.add( lowresLocationJLabel );
 
-	        OkJButton.setPreferredSize( Settings.defaultButtonDimension );
-	        OkJButton.setMinimumSize( Settings.defaultButtonDimension );
-	        OkJButton.setMaximumSize( Settings.defaultButtonDimension );
-		OkJButton.setBorder(BorderFactory.createRaisedBevelBorder());
-		OkJButton.setAlignmentX(Component.LEFT_ALIGNMENT);
-	        OkJButton.addActionListener( new ActionListener() {
-			public void actionPerformed( ActionEvent e ) {
-				gi.setGroupName( descriptionJTextArea.getText() );
-				gi.setLowresLocation( lowresLocationJTextField.getText() );
-				editNode.getPictureCollection().getTreeModel().nodeChanged( editNode );
-				getRid();
-			}
-		});
-		OkJButton.setDefaultCapable( true );
-		jFrame.getRootPane().setDefaultButton ( OkJButton );
-		buttonJPanel.add( OkJButton );
-		
-		
-	        CancelButton.setPreferredSize( Settings.defaultButtonDimension );
-	        CancelButton.setMinimumSize( Settings.defaultButtonDimension );
-	        CancelButton.setMaximumSize( Settings.defaultButtonDimension );
-		CancelButton.setBorder(BorderFactory.createRaisedBevelBorder());
-		CancelButton.setAlignmentX(Component.RIGHT_ALIGNMENT);
-	        CancelButton.addActionListener( new ActionListener() {
-			public void actionPerformed( ActionEvent e ) {
-				getRid();				
-			}
-		});
-		buttonJPanel.add( CancelButton );
+        final JTextField lowresLocationJTextField = new JTextField();
+        Dimension inputDimension = new Dimension( 400, 20 );
+        lowresLocationJTextField.setPreferredSize( inputDimension );
+        lowresLocationJTextField.setText( gi.getLowresLocation() );
+        jPanel.add( lowresLocationJTextField, "wrap" );
 
-		c.gridy++;
-		c.anchor = GridBagConstraints.EAST;
-		jPanel.add( buttonJPanel, c );
-			
-		jFrame.pack();
-		jFrame.setVisible(true);
-        }
+        JPanel buttonJPanel = new JPanel();
+
+        JButton OkJButton = new JButton( Settings.jpoResources.getString( "genericOKText" ) );
+        OkJButton.setPreferredSize( Settings.defaultButtonDimension );
+        OkJButton.setMinimumSize( Settings.defaultButtonDimension );
+        OkJButton.setMaximumSize( Settings.defaultButtonDimension );
+        OkJButton.setBorder( BorderFactory.createRaisedBevelBorder() );
+        OkJButton.setAlignmentX( Component.LEFT_ALIGNMENT );
+        OkJButton.addActionListener( new ActionListener() {
+
+            public void actionPerformed( ActionEvent e ) {
+                gi.setGroupName( descriptionJTextArea.getText() );
+                gi.setLowresLocation( lowresLocationJTextField.getText() );
+                editNode.getPictureCollection().getTreeModel().nodeChanged( editNode );
+                getRid();
+            }
+        } );
+        OkJButton.setDefaultCapable( true );
+        jFrame.getRootPane().setDefaultButton( OkJButton );
+        jPanel.add( OkJButton, "tag ok, span, split 2" );
+
+        JButton CancelButton = new JButton( Settings.jpoResources.getString( "genericCancelText" ) );
+        CancelButton.setPreferredSize( Settings.defaultButtonDimension );
+        CancelButton.setMinimumSize( Settings.defaultButtonDimension );
+        CancelButton.setMaximumSize( Settings.defaultButtonDimension );
+        CancelButton.setBorder( BorderFactory.createRaisedBevelBorder() );
+        CancelButton.setAlignmentX( Component.RIGHT_ALIGNMENT );
+        CancelButton.addActionListener( new ActionListener() {
+
+            public void actionPerformed( ActionEvent e ) {
+                getRid();
+            }
+        } );
+        jPanel.add( CancelButton, "tag cancel" );
+
+        JTabbedPane tabbedPane = new JTabbedPane();
+        tabbedPane.addTab( "Properties", jPanel );
+
+        CollectionPropertiesJPanel statsJPanel = new CollectionPropertiesJPanel();
+        statsJPanel.updateStats( editNode );
+        tabbedPane.addTab( "Statistics", statsJPanel );
+
+        Thumbnail thumbnail = new Thumbnail();
+        thumbnail.setNode( new SingleNodeBrowser( editNode), 0 );
+        tabbedPane.addTab( "Thumbnail", thumbnail );
 
 
-
-	/**  
-	 *  method that closes the window.
-	 */
-	private void getRid() {
-		jFrame.setVisible ( false );
-		jFrame.dispose ();
-	}
+        jFrame.getContentPane().add( tabbedPane );
+        jFrame.pack();
+        jFrame.setLocationRelativeTo( Settings.anchorFrame );
+        jFrame.setVisible( true );
+    }
 
 
+    /**
+     *  method that closes the window.
+     */
+    private void getRid() {
+        jFrame.setVisible( false );
+        jFrame.dispose();
+    }
 }

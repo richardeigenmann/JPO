@@ -47,7 +47,7 @@ public class CameraEditor
         setLayout( new MigLayout("nogrid") );
         JLabel cameraNameJLabel = new JLabel( Settings.jpoResources.getString( "cameraNameJLabel" ) );
         add( cameraNameJLabel, "wrap" );
-        add( cameraNameJTextField, "wrap unrel" );
+        add( cameraNameJTextField, "grow, wrap unrel" );
 
         add( cameraDirJLabel, "wrap" );
         add( cameraDirJTextField, "wrap unrel" );

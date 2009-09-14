@@ -161,7 +161,7 @@ public class TreeNodeController {
         } else if ( node.getUserObject() instanceof GroupInfo ) {
             new GroupInfoEditor( node );
         } else {
-            logger.info( "TreeNodecontroller.showEditGUI: doesn't know what kind of editor to use. Irngoring request." );
+            logger.info( String.format( "Don't know what kind of editor to use on node %s Ignoring request.", node.toString() ) );
         }
     }
 

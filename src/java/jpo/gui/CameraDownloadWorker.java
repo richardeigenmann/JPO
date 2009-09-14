@@ -2,6 +2,7 @@ package jpo.gui;
 
 import java.util.logging.Logger;
 import javax.swing.JProgressBar;
+import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 import jpo.dataModel.Settings;
 
@@ -50,6 +51,7 @@ public class CameraDownloadWorker
 
     CameraDownloadWizardStep7 step7;
 
+
     @Override
     protected String doInBackground() throws Exception {
         Settings.memorizeCopyLocation( dataModel.targetDir.toString() );
@@ -73,7 +75,13 @@ public class CameraDownloadWorker
         InterruptSemaphore interrupter = new InterruptSemaphore();
         dataModel.getCamera().buildOldImage( this, interrupter );// this, interrupter );
         Settings.writeCameraSettings();
-        progressBar.setValue( progressBar.getMaximum() );
+        Runnable r = new Runnable() {
+
+            public void run() {
+                progressBar.setValue( progressBar.getMaximum() );
+            }
+        };
+        SwingUtilities.invokeLater( r );
         return "Done";
     }
 
@@ -90,7 +98,13 @@ public class CameraDownloadWorker
 
 
     public void progressIncrement() {
-        logger.info( "Got a progress Increment message" );
-        progressBar.setValue( progressBar.getValue() + 1 );
+        logger.fine( "Got a progress Increment message" );
+        Runnable r = new Runnable() {
+
+            public void run() {
+                progressBar.setValue( progressBar.getValue() + 1 );
+            }
+        };
+        SwingUtilities.invokeLater( r );
     }
 }

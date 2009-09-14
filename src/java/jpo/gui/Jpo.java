@@ -143,8 +143,9 @@ public class Jpo
         } );
 
         Settings.pictureCollection.getTreeModel().addTreeModelListener( new MainAppModelListener() );
-        requestFileNew();
-        loadCollectionOnStartup();
+        if ( !loadAutoloadCollection() ) {
+            requestFileNew();
+        }
         new CameraWatchDaemon( this );
 
     }
@@ -193,8 +194,9 @@ public class Jpo
     /**
      *  This method looks if it can find a file called autostartJarPicturelist.xml in the classpath;
      *  failing that it loads the file indicated in Settings.autoLoad.
+     *  @return returns whether this was successfull or not.
      */
-    public void loadCollectionOnStartup() {
+    public boolean loadAutoloadCollection() {
         /* Settings.jarAutostartList = ClassLoader.getSystemResource( "autostartJarPicturelist.xml" );
 
 
@@ -212,15 +214,22 @@ public class Jpo
         } else*/
         if ( ( Settings.autoLoad != null ) && ( Settings.autoLoad.length() > 0 ) ) {
             File xmlFile = new File( Settings.autoLoad );
-            logger.info( "Autoloading: " + Settings.autoLoad );
+            logger.fine( "File to Autoload: " + Settings.autoLoad );
             if ( xmlFile.exists() ) {
                 try {
                     Settings.pictureCollection.fileLoad( xmlFile );
                 } catch ( FileNotFoundException ex ) {
                     Logger.getLogger( Jpo.class.getName() ).log( Level.SEVERE, null, ex );
+                    return false;
                 }
                 positionToNode( Settings.pictureCollection.getRootNode() );
+                return true;
+            } else {
+                logger.fine( String.format( "File %s doesn't exist. not loading",xmlFile.toString() ) );
+                return false;
             }
+        } else {
+            return false;
         }
     }
 
@@ -484,7 +493,7 @@ public class Jpo
                 case 0:
                     return false;
                 case 1:
-                    Settings.pictureCollection.fileSave();
+                    requestFileSave();
                     return Settings.pictureCollection.getUnsavedUpdates();
                 case 2:
                     fileSaveAs();

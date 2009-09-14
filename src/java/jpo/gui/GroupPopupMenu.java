@@ -123,14 +123,6 @@ public class GroupPopupMenu
 
         if ( popupNode.getPictureCollection().getAllowEdits() ) {
 
-            JMenuItem groupEditJMenuItem = new JMenuItem( Settings.jpoResources.getString( "groupEditJMenuItem" ) );
-            groupEditJMenuItem.addActionListener( new ActionListener() {
-
-                public void actionPerformed( ActionEvent e ) {
-                    caller.requestEditGroupNode();
-                }
-            } );
-            add( groupEditJMenuItem );
 
             JMenuItem categoryUsagetJMenuItem = new JMenuItem( Settings.jpoResources.getString( "categoryUsagetJMenuItem" ) );
             categoryUsagetJMenuItem.addActionListener( new ActionListener() {
@@ -344,7 +336,7 @@ public class GroupPopupMenu
 
             //requests a sort by Film Reference
             final SortOption sortByFilmReference = sortOptions.get( 2 );
-            JMenuItem sortByFilmReferenceJMenuItem = new JMenuItem( sortByFilmReference.getDescription()  );
+            JMenuItem sortByFilmReferenceJMenuItem = new JMenuItem( sortByFilmReference.getDescription() );
             sortByFilmReferenceJMenuItem.addActionListener( new ActionListener() {
 
                 public void actionPerformed( ActionEvent e ) {
@@ -442,6 +434,17 @@ public class GroupPopupMenu
             }
         } );
         add( groupExportFlatFile );
+        addSeparator();
+
+        JMenuItem groupEditJMenuItem = new JMenuItem( Settings.jpoResources.getString( "groupEditJMenuItem" ) );
+        groupEditJMenuItem.addActionListener( new ActionListener() {
+
+            public void actionPerformed( ActionEvent e ) {
+                caller.requestEditGroupNode();
+            }
+        } );
+        add( groupEditJMenuItem );
+
 
     }
 

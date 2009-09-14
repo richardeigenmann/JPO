@@ -311,7 +311,7 @@ public class JpoResources_de extends ListResourceBundle {
 		{"groupShowJMenuItem", "Gruppe zeigen"},
 		{"groupSlideshowJMenuItem", "Bilder zeigen"},
 		{"groupFindJMenuItemLabel", "Suchen"},
-		{"groupEditJMenuItem", "Umbenennen"},
+		{"groupEditJMenuItem", "Eigenschaften"},
 		{"groupRefreshJMenuItem", "Icon regenerieren"},
 		{"groupTableJMenuItemLabel", "Als Tabelle bearbeiten"},
 		{"addGroupJMenuLabel", "Hinzufügen"},

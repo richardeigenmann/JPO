@@ -313,7 +313,7 @@ public class JpoResources_zh_TW extends ListResourceBundle {
 		{"groupShowJMenuItem", "顯示圖片組"},
 		{"groupSlideshowJMenuItem", "顯示圖片"},
 		{"groupFindJMenuItemLabel", "查找"},
-		{"groupEditJMenuItem", "重命名"},
+		{"groupEditJMenuItem", "重命名"}, //Change to Properties
 		{"groupRefreshJMenuItem", "刷新圖標"},
 		{"groupTableJMenuItemLabel", "以表格方式編輯"},
 		{"addGroupJMenuLabel", "添加圖片組"},

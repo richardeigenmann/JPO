@@ -36,7 +36,7 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  *   It knows the node it is representing.
  *   It can be told to change the node it is showing.
  *   It can be mute.
- *   It knows it's x and y position.
+ *   It knows it's x and y position in the grid
  */
 public class ThumbnailDescriptionJPanel
         extends JPanel
@@ -228,12 +228,16 @@ public class ThumbnailDescriptionJPanel
         if ( referringNode == null ) {
             return;
         }
-        if ( !pictureDescriptionJTA.getText().equals( referringNode.getUserObject().toString() ) ) {
-            if ( referringNode.getUserObject() instanceof PictureInfo ) {
+        Object userObject = referringNode.getUserObject();
+        if ( !pictureDescriptionJTA.getText().equals( userObject.toString() ) ) {
+            // the description was changed
+            if ( userObject instanceof PictureInfo ) {
                 ( (PictureInfo) referringNode.getUserObject() ).setDescription( pictureDescriptionJTA.getText() );
-            } else if ( referringNode.getUserObject() instanceof GroupInfo ) {
+            } else if ( userObject instanceof GroupInfo ) {
                 ( (GroupInfo) referringNode.getUserObject() ).setGroupName( pictureDescriptionJTA.getText() );
             }
+            // send a change event to the listeners
+            referringNode.getPictureCollection().getTreeModel().nodeChanged( referringNode );
         }
         //Todo: The GroupInfo should be sending the notifications around
         //Settings.pictureCollection.getTreeModel().nodeChanged( referringNode );
