@@ -145,8 +145,6 @@ public class CollectionPropertiesJPanel
         collectionGroupsLabel.setText( ns.getNumberOfGroupsString() );
         collectionPicturesLabel.setText( ns.getNumberOfPicturesString() );
         collectionSizeJLabel.setText( ns.getSizeOfPicturesString() );
-        logger.info(String.format("Updating stats: ",Settings.pictureCollection.getSelectedNodesAsVector().size()));
-        selectedCountJLabel.setText( String.format( "Selected: %d", Settings.pictureCollection.getSelectedNodesAsVector().size() ) ); //TODO: put this into translations
 
         updateQueueCount();
 
@@ -165,6 +163,7 @@ public class CollectionPropertiesJPanel
             freeMemoryJLabel.setText( Tools.freeMemory() );
             queueCountJLabel.setVisible( true );
             queueCountJLabel.setText( Settings.jpoResources.getString( "queCountJLabel" ) + ThumbnailCreationQueue.size() );
+            selectedCountJLabel.setText( String.format( "Selected: %d", Settings.pictureCollection.getSelectedNodesAsVector().size() ) ); //TODO: put this into translations
         } else {
             freeMemoryJLabel.setVisible( false );
             queueCountJLabel.setVisible( false );

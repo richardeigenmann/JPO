@@ -89,7 +89,8 @@ public class ThumbnailCreationFactory implements Runnable {
         synchronized (currentThumb) {
             SortableDefaultMutableTreeNode referringNode = currentThumb.referringNode;
             if (referringNode == null) {
-                logger.info("ThumbnailCreationThread.createThumbnail: referringNode was null! Setting Broken Image.\nThis happened on ThumbnailQueueRequest: " + req.toString() + " which refers to Thumbnail: " + currentThumb.toString());
+                logger.severe("referringNode was null! Setting Broken Image.\nThis happened on ThumbnailQueueRequest: " + req.toString() + " which refers to Thumbnail: " + currentThumb.toString());
+                Thread.dumpStack();
                 currentThumb.setBrokenIcon();
                 return;
             }

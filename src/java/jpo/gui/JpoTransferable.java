@@ -67,7 +67,7 @@ public class JpoTransferable implements Transferable, ClipboardOwner {
         try {
             dmtnFlavor = new DataFlavor( Object.class, "JpoTransferable" );
         } catch ( Exception e ) {
-            logger.info( "JpoTransferable.dmtnFlavor failed to initialize: " + e.getMessage() );
+            logger.fine( "Failed to initialize: " + e.getMessage() );
         }
     }
 
@@ -81,7 +81,7 @@ public class JpoTransferable implements Transferable, ClipboardOwner {
         try {
             jpegImage = new DataFlavor( "image/jpeg" );
         } catch ( Exception e ) {
-            logger.info( "JpoTransferable.jpegImage failed to initialize: " + e.getMessage() );
+            logger.fine( "Failed to initialize: " + e.getMessage() );
         }
     }
 
@@ -98,7 +98,7 @@ public class JpoTransferable implements Transferable, ClipboardOwner {
         try {
             originalHashCodeFlavor = new DataFlavor( Integer.class, "OriginalHashCodeFlavor" );
         } catch ( Exception e ) {
-            logger.info( "JpoTransferable.OriginalHashCodeFlavor failed to initialize: " + e.getMessage() );
+            logger.fine( "Failed to initialize: " + e.getMessage() );
         }
     }
 
@@ -148,28 +148,28 @@ public class JpoTransferable implements Transferable, ClipboardOwner {
     public Object getTransferData( DataFlavor flavor )
             throws UnsupportedFlavorException, IOException {
         if ( flavor.equals( dmtnFlavor ) ) {
-            logger.info( "dmtn Flavor Transferable" );
+            logger.fine( "dmtn Flavor Transferable" );
             return dmtn;
         } else if ( flavor.equals( originalHashCodeFlavor ) ) {
-            logger.info( "originalHashCodeTransferable" );
+            logger.fine( "originalHashCodeTransferable" );
             return new Integer( originalHashCode );
         } else if ( flavor.equals( stringFlavor ) ) {
-            logger.info( "String Transferable" );
+            logger.fine( "String Transferable" );
             return dmtn.toString();
         } else if ( flavor.equals( jpegImage ) ) {
             ScalablePicture sp = new ScalablePicture();
             File hrf = null;
             for ( int i = 0; i < dmtn.length; i++ ) {
-                logger.info( "Transferable: " + Integer.toString( i ) );
+                logger.fine( "Transferable: " + Integer.toString( i ) );
                 if ( dmtn[i] instanceof SortableDefaultMutableTreeNode ) {
                     SortableDefaultMutableTreeNode n = (SortableDefaultMutableTreeNode) dmtn[i];
                     Object userObject = n.getUserObject();
                     if ( userObject instanceof PictureInfo ) {
                         PictureInfo pi = (PictureInfo) userObject;
-                        logger.info( "Location: " + pi.getHighresURLOrNull().toString() );
+                        logger.fine( "Location: " + pi.getHighresURLOrNull().toString() );
                         hrf = pi.getHighresFile();
                         //sp.loadPictureImd( pi.getHighresURLOrNull(), pi.getRotation() );
-                        logger.info( "Done loading" );
+                        logger.fine( "Done loading" );
                     }
                 }
             }
@@ -178,15 +178,15 @@ public class JpoTransferable implements Transferable, ClipboardOwner {
         } else if ( flavor.equals( javaFileListFlavor ) ) {
             Vector<File> fileList = new Vector<File>();
             for ( int i = 0; i < dmtn.length; i++ ) {
-                logger.info( "Transferable: " + Integer.toString( i ) );
+                logger.fine( "Transferable: " + Integer.toString( i ) );
                 if ( dmtn[i] instanceof SortableDefaultMutableTreeNode ) {
                     SortableDefaultMutableTreeNode n = (SortableDefaultMutableTreeNode) dmtn[i];
                     Object userObject = n.getUserObject();
                     if ( userObject instanceof PictureInfo ) {
                         PictureInfo pi = (PictureInfo) userObject;
-                        logger.info( "Adding: " + pi.getHighresFile().toString() );
+                        logger.fine( "Adding: " + pi.getHighresFile().toString() );
                         fileList.add( pi.getHighresFile() );
-                        logger.info( "Done loading" );
+                        logger.fine( "Done loading" );
                     }
                 }
             }
@@ -208,7 +208,7 @@ public class JpoTransferable implements Transferable, ClipboardOwner {
      * @return
      */
     public boolean isDataFlavorSupported( DataFlavor flavor ) {
-        logger.info( "JpoTransferable.isDataFlavorSupported invoked. Returning: " + ( flavorList.contains( flavor ) ? "True" : "False" ) );
+        logger.fine( "Returning: " + ( flavorList.contains( flavor ) ? "True" : "False" ) );
         return ( flavorList.contains( flavor ) );
     }
 
@@ -234,6 +234,6 @@ public class JpoTransferable implements Transferable, ClipboardOwner {
      * @param contents
      */
     public void lostOwnership( Clipboard clipboard, Transferable contents ) {
-        logger.info( "JpoTransferable.lostOwnership happened." );
+        logger.fine( "JpoTransferable.lostOwnership happened." );
     }
 }

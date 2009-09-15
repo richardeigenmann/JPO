@@ -692,7 +692,7 @@ public class Thumbnail
             } else {
                 Settings.pictureCollection.clearSelection();
                 Settings.pictureCollection.addToSelectedNodes( referringNode );
-                logger.info( String.format( "1 selection added; Now Selected: %d", Settings.pictureCollection.getSelectedNodesAsVector().size() ) );
+                logger.fine( String.format( "1 selection added; Now Selected: %d", Settings.pictureCollection.getSelectedNodesAsVector().size() ) );
             }
         }
     }
@@ -939,7 +939,7 @@ public class Thumbnail
      * @param event
      */
     public void dragExit( DropTargetEvent event ) {
-        logger.info( "Thumbnail.dragExit( DropTargetEvent ): invoked" );
+        logger.fine( "Thumbnail.dragExit( DropTargetEvent ): invoked" );
     }
 
 
@@ -979,9 +979,9 @@ public class Thumbnail
 
             try {
                 event.startDrag( DragSource.DefaultMoveNoDrop, t, myDragSourceListener );
-                logger.info( "Thumbnail.dragGestureRecognized: Drag started on node: " + referringNode.getUserObject().toString() );
+                logger.fine( "Drag started on node: " + referringNode.getUserObject().toString() );
             } catch ( InvalidDnDOperationException x ) {
-                logger.info( "Thumbnail.dragGestureRecognized threw a InvalidDnDOperationException: reason: " + x.getMessage() );
+                logger.fine( "Threw a InvalidDnDOperationException: reason: " + x.getMessage() );
             }
         }
     }

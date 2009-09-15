@@ -716,7 +716,7 @@ public class SortableDefaultMutableTreeNode
      * @param index
      */
     public void insert( SortableDefaultMutableTreeNode node, int index ) {
-        logger.info( "SDMTN.insert was called for node: " + node.toString() );
+        logger.fine( "insert was called for node: " + node.toString() );
         super.insert( node, index );
         if ( getPictureCollection().getSendModelUpdates() ) {
             getPictureCollection().getTreeModel().nodesWereInserted( this, new int[] { index } );
@@ -1375,7 +1375,7 @@ public class SortableDefaultMutableTreeNode
         } catch ( IOException x ) {
             logger.severe( String.format( "Caught an IOException: %s\nError: %s", addFile.getPath(), x.getMessage() ) );
         } catch ( JpegProcessingException x ) {
-            logger.info( String.format( "Could not extract an EXIF header for file %s\nJpegProcessingException: ", addFile.getPath(), x.getMessage() ) );
+            logger.fine( String.format( "Could not extract an EXIF header for file %s\nJpegProcessingException: ", addFile.getPath(), x.getMessage() ) );
         }
         if ( creationTime == null ) {
             creationTime = "";

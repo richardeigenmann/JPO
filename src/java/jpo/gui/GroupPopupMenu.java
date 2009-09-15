@@ -34,7 +34,7 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  * the code was getting a bit long and was clutterin up a different class. Seperating out the 
  * popup menu and making it an object and forcing an interface on the object instantiating
  * it is propbably more in line with the OO philosophy.
- *
+ * @see GroupPopupInterface
  */
 public class GroupPopupMenu
         extends JPopupMenu
@@ -105,7 +105,7 @@ public class GroupPopupMenu
         groupSlideshowJMenuItem.addActionListener( new ActionListener() {
 
             public void actionPerformed( ActionEvent e ) {
-                caller.requestSlideshow();
+                caller.requestSlideshow( popupNode );
             }
         } );
         add( groupSlideshowJMenuItem );
@@ -114,7 +114,7 @@ public class GroupPopupMenu
         groupFindJMenuItem.addActionListener( new ActionListener() {
 
             public void actionPerformed( ActionEvent e ) {
-                caller.requestFind();
+                caller.requestFind( popupNode );
             }
         } );
         add( groupFindJMenuItem );
@@ -128,7 +128,7 @@ public class GroupPopupMenu
             categoryUsagetJMenuItem.addActionListener( new ActionListener() {
 
                 public void actionPerformed( ActionEvent e ) {
-                    caller.showCategoryUsageGUI();
+                    caller.showCategoryUsageGUI( popupNode );
                 }
             } );
             add( categoryUsagetJMenuItem );
@@ -149,7 +149,7 @@ public class GroupPopupMenu
             groupTableJMenuItem.addActionListener( new ActionListener() {
 
                 public void actionPerformed( ActionEvent e ) {
-                    caller.requestEditGroupTable();
+                    caller.requestEditGroupTable( popupNode );
                 }
             } );
             add( groupTableJMenuItem );
@@ -165,7 +165,7 @@ public class GroupPopupMenu
             addNewGroupJMenuItem.addActionListener( new ActionListener() {
 
                 public void actionPerformed( ActionEvent e ) {
-                    caller.requestAddGroup();
+                    caller.requestAddGroup( popupNode );
                 }
             } );
             addGroupJMenu.add( addNewGroupJMenuItem );
@@ -189,7 +189,7 @@ public class GroupPopupMenu
             addCollectionFormFile.addActionListener( new ActionListener() {
 
                 public void actionPerformed( ActionEvent e ) {
-                    caller.requestAddCollection();
+                    caller.requestAddCollection( popupNode );
                 }
             } );
             addCollectionJMenu.add( addCollectionFormFile );
@@ -201,7 +201,7 @@ public class GroupPopupMenu
                 recentOpenedfileJMenuItem[i].addActionListener( new ActionListener() {
 
                     public void actionPerformed( ActionEvent e ) {
-                        caller.requestAddCollection( new File( Settings.recentCollections[index] ) );
+                        caller.requestAddCollection( popupNode, new File( Settings.recentCollections[index] ) );
                     }
                 } );
                 recentOpenedfileJMenuItem[i].setVisible( false );
@@ -243,7 +243,7 @@ public class GroupPopupMenu
             moveGroupToTopJMenuItem.addActionListener( new ActionListener() {
 
                 public void actionPerformed( ActionEvent e ) {
-                    caller.requestMoveGroupToTop();
+                    caller.requestMoveGroupToTop( popupNode );
                 }
             } );
             moveGroupNodeJMenu.add( moveGroupToTopJMenuItem );
@@ -253,7 +253,7 @@ public class GroupPopupMenu
             moveGroupUpJMenuItem.addActionListener( new ActionListener() {
 
                 public void actionPerformed( ActionEvent e ) {
-                    caller.requestMoveGroupUp();
+                    caller.requestMoveGroupUp( popupNode );
                 }
             } );
             moveGroupNodeJMenu.add( moveGroupUpJMenuItem );
@@ -263,7 +263,7 @@ public class GroupPopupMenu
             moveGroupDownJMenuItem.addActionListener( new ActionListener() {
 
                 public void actionPerformed( ActionEvent e ) {
-                    caller.requestMoveGroupDown();
+                    caller.requestMoveGroupDown( popupNode );
                 }
             } );
             moveGroupNodeJMenu.add( moveGroupDownJMenuItem );
@@ -273,7 +273,7 @@ public class GroupPopupMenu
             moveGroupToBottomJMenuItem.addActionListener( new ActionListener() {
 
                 public void actionPerformed( ActionEvent e ) {
-                    caller.requestMoveGroupToBottom();
+                    caller.requestMoveGroupToBottom( popupNode );
                 }
             } );
             moveGroupNodeJMenu.add( moveGroupToBottomJMenuItem );
@@ -301,7 +301,7 @@ public class GroupPopupMenu
             groupRemove.addActionListener( new ActionListener() {
 
                 public void actionPerformed( ActionEvent e ) {
-                    caller.requestGroupRemove();
+                    caller.requestGroupRemove( popupNode );
                 }
             } );
             add( groupRemove );
@@ -313,7 +313,7 @@ public class GroupPopupMenu
             consolidateMoveJMenuItem.addActionListener( new ActionListener() {
 
                 public void actionPerformed( ActionEvent e ) {
-                    caller.requestConsolidateGroup();
+                    caller.requestConsolidateGroup( popupNode );
                 }
             } );
             add( consolidateMoveJMenuItem );
@@ -329,7 +329,7 @@ public class GroupPopupMenu
             sortByDescriptionJMenuItem.addActionListener( new ActionListener() {
 
                 public void actionPerformed( ActionEvent e ) {
-                    caller.requestSort( sortByDescription.getSortCode() );
+                    caller.requestSort( popupNode, sortByDescription.getSortCode() );
                 }
             } );
             sortJMenu.add( sortByDescriptionJMenuItem );
@@ -340,7 +340,7 @@ public class GroupPopupMenu
             sortByFilmReferenceJMenuItem.addActionListener( new ActionListener() {
 
                 public void actionPerformed( ActionEvent e ) {
-                    caller.requestSort( sortByFilmReference.getSortCode() );
+                    caller.requestSort( popupNode, sortByFilmReference.getSortCode() );
                 }
             } );
             sortJMenu.add( sortByFilmReferenceJMenuItem );
@@ -351,7 +351,7 @@ public class GroupPopupMenu
             sortByCreationTimeJMenuItem.addActionListener( new ActionListener() {
 
                 public void actionPerformed( ActionEvent e ) {
-                    caller.requestSort( sortByCreationTime.getSortCode() );
+                    caller.requestSort( popupNode, sortByCreationTime.getSortCode() );
                 }
             } );
             sortJMenu.add( sortByCreationTimeJMenuItem );
@@ -362,7 +362,7 @@ public class GroupPopupMenu
             sortByCommentJMenuItem.addActionListener( new ActionListener() {
 
                 public void actionPerformed( ActionEvent e ) {
-                    caller.requestSort( sortByComment.getSortCode() );
+                    caller.requestSort( popupNode, sortByComment.getSortCode() );
                 }
             } );
             sortJMenu.add( sortByCommentJMenuItem );
@@ -373,7 +373,7 @@ public class GroupPopupMenu
             sortByPhotographerJMenuItem.addActionListener( new ActionListener() {
 
                 public void actionPerformed( ActionEvent e ) {
-                    caller.requestSort( sortByPhotographer.getSortCode() );
+                    caller.requestSort( popupNode, sortByPhotographer.getSortCode() );
                 }
             } );
             sortJMenu.add( sortByPhotographerJMenuItem );
@@ -384,7 +384,7 @@ public class GroupPopupMenu
             sortByCopyrightHolderTimeJMenuItem.addActionListener( new ActionListener() {
 
                 public void actionPerformed( ActionEvent e ) {
-                    caller.requestSort( sortByCopyrightHolder.getSortCode() );
+                    caller.requestSort( popupNode, sortByCopyrightHolder.getSortCode() );
                 }
             } );
             sortJMenu.add( sortByCopyrightHolderTimeJMenuItem );
@@ -396,7 +396,7 @@ public class GroupPopupMenu
         groupExportHtml.addActionListener( new ActionListener() {
 
             public void actionPerformed( ActionEvent e ) {
-                caller.requestGroupExportHtml();
+                caller.requestGroupExportHtml( popupNode );
             }
         } );
         add( groupExportHtml );
@@ -406,7 +406,7 @@ public class GroupPopupMenu
         groupExportNewCollection.addActionListener( new ActionListener() {
 
             public void actionPerformed( ActionEvent e ) {
-                caller.requestGroupExportNewCollection();
+                caller.requestGroupExportNewCollection( popupNode );
             }
         } );
         add( groupExportNewCollection );
@@ -430,7 +430,7 @@ public class GroupPopupMenu
         groupExportFlatFile.addActionListener( new ActionListener() {
 
             public void actionPerformed( ActionEvent e ) {
-                caller.requestGroupExportFlatFile();
+                caller.requestGroupExportFlatFile( popupNode );
             }
         } );
         add( groupExportFlatFile );
@@ -440,7 +440,7 @@ public class GroupPopupMenu
         groupEditJMenuItem.addActionListener( new ActionListener() {
 
             public void actionPerformed( ActionEvent e ) {
-                caller.requestEditGroupNode();
+                caller.requestEditGroupNode( popupNode );
             }
         } );
         add( groupEditJMenuItem );
@@ -479,7 +479,7 @@ public class GroupPopupMenu
     private boolean checkDropNodes( Object o ) {
         for ( int i = 0; i < Settings.maxDropNodes; i++ ) {
             if ( ( recentDropNodes[i] != null ) && ( o.hashCode() == recentDropNodes[i].hashCode() ) ) {
-                caller.requestMoveToNode( Settings.recentDropNodes[i] );
+                caller.requestMoveToNode( popupNode, Settings.recentDropNodes[i] );
                 Settings.memorizeGroupOfDropLocation( Settings.recentDropNodes[i] );
                 return true;
             }
