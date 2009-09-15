@@ -229,14 +229,14 @@ public class PicturePopupMenu
 
                 public void actionPerformed( ActionEvent e ) {
                     if ( Settings.pictureCollection.countSelectedNodes() < 1 ) {
-                        popupNode.getPictureCollection().setMailSelected( popupNode );
+                        popupNode.getPictureCollection().addToMailSelected( popupNode );
                     } else {
                         Enumeration<SortableDefaultMutableTreeNode> selection = Settings.pictureCollection.getSelectedNodesAsVector().elements();
                         SortableDefaultMutableTreeNode n;
                         while ( selection.hasMoreElements() ) {
                             n = selection.nextElement();
                             if ( n.getUserObject() instanceof PictureInfo ) {
-                                n.getPictureCollection().setMailSelected( n );
+                                n.getPictureCollection().addToMailSelected( n );
                             }
                         }
                     }

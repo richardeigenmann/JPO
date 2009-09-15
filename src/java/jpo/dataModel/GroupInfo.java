@@ -33,7 +33,8 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  *
  * @see PictureInfo
  */
-public class GroupInfo implements Serializable {
+public class GroupInfo
+        implements Serializable {
 
     /**
      * Defines a logger for this class
@@ -43,7 +44,7 @@ public class GroupInfo implements Serializable {
     /**
      *  The description of the GroupInfo.
      **/
-    private StringBuffer groupName;
+    private StringBuffer groupName = new StringBuffer( "" );
 
 
     /**
@@ -85,14 +86,30 @@ public class GroupInfo implements Serializable {
      *   @see #getGroupName
      **/
     public void setGroupName( String name ) {
-        groupName = new StringBuffer( name );
+        if ( !groupName.toString().equals( name ) ) {
+            groupName = new StringBuffer( name );
+            sendGroupNameChangedEvent();
+        }
 
+    }
+
+
+    /**
+     *  Creates a GroupInfoChangedEvent and sends it to inform listening
+     *  objects that the description was updated.
+     */
+    private void sendGroupNameChangedEvent() {
+        logger.fine( "preparing to send GroupName changed event" );
         if ( ( Settings.pictureCollection != null ) && ( Settings.pictureCollection.getSendModelUpdates() ) ) {
+            GroupInfoChangeEvent gice = new GroupInfoChangeEvent( this );
+            gice.setGroupNameChanged();
+            sendGroupInfoChangedEvent( gice );
+            logger.fine( "sent description changed event" );
             Settings.pictureCollection.setUnsavedUpdates();
         }
     }
-    //----------------------------------------
 
+    //----------------------------------------
     /**
      * The full path to the lowres version of the picture.
      *
@@ -149,7 +166,7 @@ public class GroupInfo implements Serializable {
             URL lowresURL = new URL( lowresLocation );
             return lowresURL;
         } catch ( MalformedURLException x ) {
-            logger.info( "Caught an unexpected MalformedURLException: " + x.getMessage() );
+            logger.fine( "Caught a MalformedURLException: " + x.getMessage() );
             return null;
         }
     }
@@ -162,9 +179,7 @@ public class GroupInfo implements Serializable {
     public synchronized void setLowresLocation( String s ) {
         if ( !lowresLocation.equals( s ) ) {
             lowresLocation = s;
-            if ( ( Settings.pictureCollection != null ) && ( Settings.pictureCollection.getSendModelUpdates() ) ) {
-                Settings.pictureCollection.setUnsavedUpdates();
-            }
+            sendLowresLocationChangedEvent();
         }
     }
 
@@ -177,9 +192,7 @@ public class GroupInfo implements Serializable {
         String s = u.toString();
         if ( !lowresLocation.equals( s ) ) {
             lowresLocation = s;
-            if ( Settings.pictureCollection.getSendModelUpdates() ) {
-                Settings.pictureCollection.setUnsavedUpdates();
-            }
+            sendLowresLocationChangedEvent();
         }
     }
 
@@ -191,9 +204,7 @@ public class GroupInfo implements Serializable {
     public synchronized void appendToLowresLocation( String s ) {
         if ( s.length() > 0 ) {
             lowresLocation = lowresLocation.concat( s );
-            if ( ( Settings.pictureCollection != null ) && ( Settings.pictureCollection.getSendModelUpdates() ) ) {
-                Settings.pictureCollection.setUnsavedUpdates();
-            }
+            sendLowresLocationChangedEvent();
         }
     }
 
@@ -209,15 +220,30 @@ public class GroupInfo implements Serializable {
 
 
     /**
-     *  this method writes all attributes of the picture in the JPO
-     *  xml data format.
+     *  Creates a PictureChangedEvent and sends it to inform listening
+     *  objects that the lowres location was updated.
+     */
+    private void sendLowresLocationChangedEvent() {
+        if ( ( Settings.pictureCollection != null ) && ( Settings.pictureCollection.getSendModelUpdates() ) ) {
+            GroupInfoChangeEvent gice = new GroupInfoChangeEvent( this );
+            gice.setLowresLocationChanged();
+            sendGroupInfoChangedEvent( gice );
+            Settings.pictureCollection.setUnsavedUpdates();
+        }
+    }
+
+
+    /**
+     * this method writes all attributes of the picture in the JPO
+     * xml data format.
      *
-     *  @param out	The Bufferer Writer receiving the xml data
-     *  @param rootNode
+     * @param out	The Bufferer Writer receiving the xml data
+     * @param rootNode
      * @param protection
      * @throws IOException if there is a drama writing the file.
      */
-    public void dumpToXml( BufferedWriter out, boolean rootNode, boolean protection )
+    public void dumpToXml( BufferedWriter out, boolean rootNode,
+            boolean protection )
             throws IOException {
         dumpToXml( out, getLowresLocation(), rootNode, protection );
     }
@@ -230,13 +256,14 @@ public class GroupInfo implements Serializable {
      *  copies the pictures to a new location we don't want to write the
      *  URLs of the original pictures whilst all other attributes are retained.
      *
-     *  @param out	The Bufferer Writer receiving the xml data
-     *  @param lowres	The URL of the lowres file
-     *  @param rootNode
+     * @param out	The Bufferer Writer receiving the xml data
+     * @param lowres	The URL of the lowres file
+     * @param rootNode
      * @param protection 
      * @throws IOException  If there was an IO error
      */
-    public void dumpToXml( BufferedWriter out, String lowres, boolean rootNode, boolean protection )
+    public void dumpToXml( BufferedWriter out, String lowres, boolean rootNode,
+            boolean protection )
             throws IOException {
 
         if ( rootNode ) {
@@ -263,9 +290,89 @@ public class GroupInfo implements Serializable {
     public void endGroupXML( BufferedWriter out, boolean rootNode )
             throws IOException {
 
-        if ( !rootNode ) {
+        if ( !rootNode ) {  // if it is root Node then the XmlDistiller adds the categories and end collection tag.
             out.write( "</group>" );
-        }  // if it is root Node then the XmlDistiller adds the categories and end collection tag.
+        }
         out.newLine();
+    }
+
+
+    /**
+     *  Creates a GroupInfoChangedEvent and sends it to inform listening
+     *  objects that the node was selected. Strictly speaking this is not a
+     *  GroupInfo level event but a node level event. However, because I have
+     *  the GroupInfoChangeEvent structure in place this is a good place to
+     *  put this notification.
+     */
+    public void sendWasSelectedEvent() {
+        GroupInfoChangeEvent gice = new GroupInfoChangeEvent( this );
+        gice.setWasSelected();
+        sendGroupInfoChangedEvent( gice );
+    }
+
+
+    /**
+     *  Creates a PictureChangedEvent and sends it to inform listening
+     *  objects that the node was unselected. Strictly speaking this is not a
+     *  PictureInfo level event but a node level event. However, because I have
+     *  the PictureInfoChangeEvent structure in place this is a good place to
+     *  put this notification.
+     */
+    public void sendWasUnselectedEvent() {
+        logger.fine( "Sending unselected event" );
+        GroupInfoChangeEvent gice = new GroupInfoChangeEvent( this );
+        gice.setWasUnselected();
+        sendGroupInfoChangedEvent( gice );
+    }
+
+    /**
+     *  A vector that holds all the listeners that want to be notified about
+     *  changes to this PictureInfo object.
+     */
+    private Vector<GroupInfoChangeListener> groupInfoListeners = new Vector<GroupInfoChangeListener>();
+
+
+    /**
+     *  Method to register the listening object of the status events.
+     *  @param listener	The object that will receive notifications.
+     */
+    public void addGroupInfoChangeListener( GroupInfoChangeListener listener ) {
+        logger.fine( "Listener added on SourcePicture " + Integer.toString( this.hashCode() ) + " of class: " + listener.getClass().toString() );
+        groupInfoListeners.add( listener );
+    }
+
+
+    /**
+     *  Method to register the listening object of the status events. Will NOT throw an
+     *  exception if the listener was not in the Vector.
+     *
+     *  @param listener	The listener that doesn't want to notifications any more.
+     */
+    public void removeGroupInfoChangeListener(
+            GroupInfoChangeListener listener ) {
+        logger.fine( "Listener removed from SourcePicture " + Integer.toString( this.hashCode() ) + " of class: " + listener.getClass().toString() );
+        groupInfoListeners.remove( listener );
+    }
+
+
+    /**
+     *  Send PictureInfoChangeEvents.
+     *  @param gice The Event we want to notify.
+     */
+    private void sendGroupInfoChangedEvent( GroupInfoChangeEvent gice ) {
+        if ( Settings.pictureCollection.getSendModelUpdates() ) {
+            for ( GroupInfoChangeListener groupInfoChangeListener : groupInfoListeners ) {
+                groupInfoChangeListener.groupInfoChangeEvent( gice );
+            }
+        }
+    }
+
+
+    /**
+     * Intended mainly for debuggin purposes.
+     * @return The Vector of change listeners
+     */
+    public Vector<GroupInfoChangeListener> getGroupInfoListeners() {
+        return groupInfoListeners;
     }
 }

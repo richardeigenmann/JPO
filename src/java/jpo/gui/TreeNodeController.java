@@ -156,6 +156,11 @@ public class TreeNodeController {
      * @param node
      */
     public static void showEditGUI( SortableDefaultMutableTreeNode node ) {
+        if ( node == null ) {
+            logger.severe( "How comm show edit gui was called with a null node?");
+            Thread.dumpStack();
+            return;
+        }
         if ( node.getUserObject() instanceof PictureInfo ) {
             new PictureInfoEditor( node );
         } else if ( node.getUserObject() instanceof GroupInfo ) {

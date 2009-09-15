@@ -1386,7 +1386,7 @@ public class Settings {
     /**
      *  MAX number of recent Drop Nodes
      */
-    public static final int maxCopyLocations = 6;
+    public static final int maxCopyLocations = 9;
 
     /**
      *  Array of recently used directories in copy operations and other

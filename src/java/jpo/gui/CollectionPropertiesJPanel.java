@@ -67,6 +67,11 @@ public class CollectionPropertiesJPanel
      */
     private JLabel queueCountJLabel = new JLabel();
 
+    /**
+     *  Indicates how many pictures are selected
+     */
+    private JLabel selectedCountJLabel = new JLabel();
+
 
     /**
      *   Constructor to create a JFrame that displays statistics about the nodes underneath
@@ -106,6 +111,9 @@ public class CollectionPropertiesJPanel
 
         constraints.gridy++;
         add( queueCountJLabel, constraints );
+
+        constraints.gridy++;
+        add( selectedCountJLabel, constraints );
     }
 
     private NodeStatistics ns;
@@ -137,6 +145,8 @@ public class CollectionPropertiesJPanel
         collectionGroupsLabel.setText( ns.getNumberOfGroupsString() );
         collectionPicturesLabel.setText( ns.getNumberOfPicturesString() );
         collectionSizeJLabel.setText( ns.getSizeOfPicturesString() );
+        logger.info(String.format("Updating stats: ",Settings.pictureCollection.getSelectedNodesAsVector().size()));
+        selectedCountJLabel.setText( String.format( "Selected: %d", Settings.pictureCollection.getSelectedNodesAsVector().size() ) ); //TODO: put this into translations
 
         updateQueueCount();
 

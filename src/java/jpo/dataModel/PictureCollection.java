@@ -4,10 +4,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Vector;
 import java.util.logging.Level;
@@ -53,7 +51,7 @@ public class PictureCollection {
         setRootNode( new SortableDefaultMutableTreeNode( new Object() ) );
         treeModel = new DefaultTreeModel( getRootNode() );
         categories = new HashMap<Integer, String>();
-        mailSelection = new HashSet<SortableDefaultMutableTreeNode>();
+        mailSelection = new Vector<SortableDefaultMutableTreeNode>();
         setAllowEdits( true );
         setUnsavedUpdates( false );
     }
@@ -522,14 +520,18 @@ public class PictureCollection {
      *   This Hash Set hold references to the selected nodes for mailing. It works just like the selection
      *   HashSet only that the purpose is a different one. As such it has different behaviour.
      */
-    private HashSet<SortableDefaultMutableTreeNode> mailSelection;
+    private Vector<SortableDefaultMutableTreeNode> mailSelection;
 
 
     /**
      *  This method places the current SDMTN into the mailSelection HashSet.
      * @param node
      */
-    public void setMailSelected( SortableDefaultMutableTreeNode node ) {
+    public void addToMailSelected( SortableDefaultMutableTreeNode node ) {
+        if ( isMailSelected( node ) ) {
+            logger.fine( String.format( "The node %s is already selected. Leaving it selected.", node.toString() ) );
+            return;
+        }
         mailSelection.add( node );
         Object userObject = node.getUserObject();
         if ( userObject instanceof PictureInfo ) {
@@ -546,7 +548,7 @@ public class PictureCollection {
         if ( isMailSelected( node ) ) {
             removeFromMailSelection( node );
         } else {
-            setMailSelected( node );
+            addToMailSelected( node );
         }
     }
 
@@ -555,9 +557,11 @@ public class PictureCollection {
      *  This method clears the mailSelection HashSet.
      */
     public void clearMailSelection() {
-        Enumeration<SortableDefaultMutableTreeNode> e = Collections.enumeration( mailSelection );
-        while ( e.hasMoreElements() ) {
-            removeFromMailSelection( e.nextElement() );
+        //can't use iterator or there is a concurrent modification exception
+        Object[] array = new Object[mailSelection.size()];
+        mailSelection.copyInto( array );
+        for ( int i = 0; i < array.length; i++ ) {
+            removeFromMailSelection( (SortableDefaultMutableTreeNode) array[i] );
         }
     }
 
@@ -780,31 +784,39 @@ public class PictureCollection {
     /**
      *   This Hash Set holds references to the selected nodes.
      */
-    public final HashSet<SortableDefaultMutableTreeNode> selection = new HashSet<SortableDefaultMutableTreeNode>();
+    public final Vector<SortableDefaultMutableTreeNode> selection = new Vector<SortableDefaultMutableTreeNode>();
 
 
     /**
-     *  This method places the current {@link SortableDefaultMutableTreeNode} into the selection HashSet.
+     * This method places the current {@link SortableDefaultMutableTreeNode} into the selection HashSet.
      * @param node
      */
     public void addToSelectedNodes( SortableDefaultMutableTreeNode node ) {
+        if ( isSelected( node ) ) {
+            logger.fine( String.format( "The node %s is already selected. Leaving it selected.", node.toString() ) );
+            return;
+        }
         selection.add( node );
         Object userObject = node.getUserObject();
         if ( userObject instanceof PictureInfo ) {
             ( (PictureInfo) userObject ).sendWasSelectedEvent();
+        } else if ( userObject instanceof GroupInfo ) {
+            ( (GroupInfo) userObject ).sendWasSelectedEvent();
         }
     }
 
 
     /**
-     *  This method removes the current SDMTN from the selection HashSet.
-     * @param node
+     * This method removes the current SDMTN from the selection
+     * @param node the node to remove
      */
     public void removeFromSelection( SortableDefaultMutableTreeNode node ) {
         selection.remove( node );
         Object userObject = node.getUserObject();
         if ( userObject instanceof PictureInfo ) {
             ( (PictureInfo) userObject ).sendWasUnselectedEvent();
+        }else if ( userObject instanceof GroupInfo ) {
+            ( (GroupInfo) userObject ).sendWasUnselectedEvent();
         }
     }
 
@@ -814,9 +826,11 @@ public class PictureCollection {
      * highlighted thumbnails and fires unselectedEvents
      */
     public void clearSelection() {
-        Enumeration<SortableDefaultMutableTreeNode> e = Collections.enumeration( selection );
-        while ( e.hasMoreElements() ) {
-            removeFromSelection( e.nextElement() );
+        //can't use iterator or there is a concurrent modification exception
+        Object[] array = new Object[selection.size()];
+        selection.copyInto( array );
+        for ( int i = 0; i < array.length; i++ ) {
+            removeFromSelection( (SortableDefaultMutableTreeNode) array[i] );
         }
     }
 
@@ -836,7 +850,7 @@ public class PictureCollection {
 
 
     /**
-     *  returns an array of the selected nodes.
+     * returns an array of the selected nodes.
      * @return an array of the selected nodes
      */
     public Object[] getSelectedNodes() {
@@ -845,11 +859,11 @@ public class PictureCollection {
 
 
     /**
-     * returns a Vector of the selected nodes.
+     * The selected nodes
      * @return a vector of the selected nodes
      */
     public Vector<SortableDefaultMutableTreeNode> getSelectedNodesAsVector() {
-        return new Vector<SortableDefaultMutableTreeNode>( selection );
+        return selection;
     }
 
 

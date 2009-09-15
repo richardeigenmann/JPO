@@ -1292,7 +1292,7 @@ public class PictureInfo
      *  @param listener	The object that will receive notifications.
      */
     public void addPictureInfoChangeListener( PictureInfoChangeListener listener ) {
-        logger.fine( "SourcePicture.addListener: listener added on SourcePicture " + Integer.toString( this.hashCode() ) + " of class: " + listener.getClass().toString() );
+        logger.fine( "Listener added on SourcePicture " + Integer.toString( this.hashCode() ) + " of class: " + listener.getClass().toString() );
         pictureInfoListeners.add( listener );
     }
 
@@ -1305,7 +1305,7 @@ public class PictureInfo
      */
     public void removePictureInfoChangeListener(
             PictureInfoChangeListener listener ) {
-        logger.fine( "SourcePicture.removeListener: listener removed from SourcePicture " + Integer.toString( this.hashCode() ) + " of class: " + listener.getClass().toString() );
+        logger.fine( "Listener removed from SourcePicture " + Integer.toString( this.hashCode() ) + " of class: " + listener.getClass().toString() );
         pictureInfoListeners.remove( listener );
     }
 

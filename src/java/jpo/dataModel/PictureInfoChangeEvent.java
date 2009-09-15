@@ -1,11 +1,9 @@
 package jpo.dataModel;
 
-import jpo.dataModel.PictureInfo;
-
 /*
 PictureInfoChangeEvent.java:  This event holds information about how the picture changed
 
-Copyright (C) 2002-2009  Richard Eigenmann.
+Copyright (C) 2002 - 2009  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -125,7 +123,7 @@ public class PictureInfoChangeEvent {
 
 
 	/**
-	 *  indicates whether the highresLocation was changed.
+	 *  indicates whether the checksum was changed.
 	 */
 	private boolean checksumChanged = false;
 
