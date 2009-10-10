@@ -880,12 +880,12 @@ public class Tools {
      */
     public static void runUserFunction( int userFunction, PictureInfo myObject ) {
         if ( ( userFunction < 0 ) || ( userFunction >= Settings.maxUserFunctions ) ) {
-            logger.info( "Tools.runUserFunction: was called with an out of bounds index" );
+            logger.info( "Error: called with an out of bounds index" );
             return;
         }
         String command = Settings.userFunctionCmd[userFunction];
         if ( ( command == null ) || ( command.length() == 0 ) ) {
-            logger.info( "Tools.runUserFunction: command " + Integer.toString( userFunction ) + " is not properly defined" );
+            logger.info( "Command " + Integer.toString( userFunction ) + " is not properly defined" );
             return;
         }
 
@@ -898,12 +898,12 @@ public class Tools {
 
         URL pictureURL = ( myObject ).getHighresURLOrNull();
         if ( pictureURL == null ) {
-            logger.info( "SortableDefaultMutableTreeNode.runUserFunction: The picture doesn't have a valid URL. This is bad. Aborted." );
+            logger.info( "The picture doesn't have a valid URL. This is bad. Aborted." );
             return;
         }
         command = command.replaceAll( "%u", pictureURL.toString() );
 
-        logger.info( "SortableDefaultMutableTreeNode.runUserFunction: Command to run is: " + command );
+        logger.info( "Command to run is: " + command );
         try {
             // Had big issues here because the simple exec (String) calls a StringTokenizer
             // which messes up the filename parameters
@@ -919,7 +919,7 @@ public class Tools {
                 Runtime.getRuntime().exec( cmdarray );
             }
         } catch ( IOException x ) {
-            logger.info( "SortableDefaultMutableTreeNode.runUserFunction: Runtime.exec collapsed with and IOException: " + x.getMessage() );
+            logger.info( "Runtime.exec collapsed with and IOException: " + x.getMessage() );
         }
     }
 

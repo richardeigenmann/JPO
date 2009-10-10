@@ -48,7 +48,7 @@ public class CamerasEditor
     private static Logger logger = Logger.getLogger( CamerasEditor.class.getName() );
 
     /**
-     * The root node of the JTree
+     * The root node of the JTree of cameras
      */
     private DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode( "Cameras" );
 
@@ -230,10 +230,11 @@ public class CamerasEditor
         JSplitPane vjsp = new JSplitPane( JSplitPane.VERTICAL_SPLIT, hjsp, buttonJPanel );
         getContentPane().add( vjsp );
 
+        /* Why are we setting the path on the empty tree in the constructor?
         Object o = treeModel.getChild( rootNode, 0 );
         if ( o != null ) {
             cameraJTree.setSelectionPath( new TreePath( ( (DefaultMutableTreeNode) o ).getPath() ) );
-        }
+        }*/
 
         pack();
         setLocationRelativeTo( Settings.anchorFrame );
