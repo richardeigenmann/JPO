@@ -76,13 +76,13 @@ public class AdvanceTimer implements Runnable {
             caller.requestAdvance();
             try {
                 while ( !caller.readyToAdvance() ) {
-                    logger.info( "AdvanceTimer: Last image is not yet ready. Giving it some more time" );
+                    logger.fine( "Last image is not yet ready. Giving it some more time" );
                     Thread.sleep( Settings.advanceTimerPollingInterval );
                 }
-                logger.info( "AdvanceTimer: Sleeping for " + Integer.toString( delaySeconds ) + " Seconds" );
+                logger.fine( "Sleeping for " + Integer.toString( delaySeconds ) + " Seconds" );
                 Thread.sleep( delaySeconds * 1000 );
             } catch ( InterruptedException x ) {
-                logger.info( "The sleep statement in the AdvanceTimer was interrupted." );
+                logger.fine( "The sleep statement in the AdvanceTimer was interrupted." );
                 keepThreadRunning = false;
             }
         }

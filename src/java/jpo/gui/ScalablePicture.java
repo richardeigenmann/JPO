@@ -15,10 +15,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URL;
-import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Vector;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
@@ -801,7 +799,7 @@ public class ScalablePicture
      */
     private void setStatus( int statusCode, String statusMessage ) {
         String filename = ( imageUrl == null ) ? "" : imageUrl.toString();
-        // logger.info("ScalablePicture.setStatus: sending: " + statusMessage + " to all Listeners from Image: " + filename );
+        //logger.info("ScalablePicture.setStatus: sending: " + statusMessage + " to all Listeners from Image: " + filename );
 
         pictureStatusCode = statusCode;
         pictureStatusMessage = statusMessage;
@@ -829,6 +827,7 @@ public class ScalablePicture
      * @return
      */
     public int getStatusCode() {
+        //logger.info(String.format( "Returning status code %d which corresponds to message %s", pictureStatusCode, pictureStatusMessage ));
         return pictureStatusCode;
     }
 

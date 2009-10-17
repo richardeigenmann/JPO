@@ -31,10 +31,8 @@ public abstract class ThumbnailBrowser
     /**
      * Logger for this class
      */
-    Logger logger = Logger.getLogger( ThumbnailBrowser.class.getName() );
+    protected Logger logger = Logger.getLogger( ThumbnailBrowser.class.getName() );
 
-
-   
 
     /**
      *  The implementing class must return the title for the images being shown.

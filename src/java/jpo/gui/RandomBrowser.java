@@ -2,9 +2,7 @@ package jpo.gui;
 
 import jpo.dataModel.*;
 import jpo.*;
-import jpo.dataModel.PictureInfo;
 import java.util.*;
-import java.util.logging.Logger;
 
 /*
 RandomBrower.java:  an implementation of the ThumbnailBrowserInterface for browsing random pictures.
@@ -24,101 +22,59 @@ The license is in gpl.txt.
 See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 /** 
- *  Thuis class implements the ThumbnailBrowserInterface in the specific manner that is required for 
- *  displaying Groups in the Thumbnail JScrollPane.
+ *  This class returns a browser for all the pictures under a node in a random order
  */
-public class RandomBrowser extends ThumbnailBrowser {
+public class RandomBrowser
+        extends ThumbnailBrowser {
 
     /**
-     * Defines a logger for this class
+     *  This ArrayList holds all the picture nodes that the browser will serve
      */
-    private static Logger logger = Logger.getLogger( RandomBrowser.class.getName() );
+    private ArrayList<SortableDefaultMutableTreeNode> allPictures = new ArrayList<SortableDefaultMutableTreeNode>();
+
+    /**
+     * The root node for this browser
+     */
+    private SortableDefaultMutableTreeNode rootNode;
 
 
     /**
      *  Constructor for a RandomBrowser.
      *
-     *  @param groupNode    The groupNode under which the randomisation should happen.
+     *  @param rootNode    The rootNode under which the randomisation should happen.
      */
-    public RandomBrowser( SortableDefaultMutableTreeNode groupNode ) {
-        //logger.info("RandomBrowser: constructor called on node: " + groupNode.toString() );
-        enumerateAndAddToList( allPictures, groupNode );
+    public RandomBrowser( SortableDefaultMutableTreeNode rootNode ) {
+        logger.fine( "Constructor called on node: " + rootNode.toString() );
+        this.rootNode = rootNode;
+        rootNode.getChildPictureNodes( allPictures, true );
+        Collections.shuffle( allPictures );
     }
 
-    /**
-     *   This ArrayList holds the nodes we have identified
-     */
-    private ArrayList<SortableDefaultMutableTreeNode> randomNodes = new ArrayList<SortableDefaultMutableTreeNode>();
-
 
     /**
-     *  returns the string Random
+     *  returns a title for this browser
      */
     public String getTitle() {
-        return "Random";
+        return String.format("Randomised pictures from %s",rootNode.toString() ) ;
     }
 
 
     /**
-     *  The Random Browser returns the size as one more than the randomNodes ArrayList contains.
-     *  If the last element is requested the Random Generator picks a new one.
+     * The Random Browser returns the number of nodes in the shuffled list
+     * @return the number of nodes in the browser
      */
     public int getNumberOfNodes() {
-        //logger.info("RandomBrowser.getNumberOfNodes: returning: " + Integer.toString( randomNodes.size() ) );
-        return randomNodes.size();
+        return allPictures.size();
     }
 
 
     /**
-     *  This method returns the node for the indicated position in the group.
-     *
-     *  @param index   The component index that is to be returned.
+     * Returns the node for the specific index
+     * @param index The index 0 to getNumberOfNodes to retrieve
+     * @return the node for the index number
      */
     public SortableDefaultMutableTreeNode getNode( int index ) {
-        //logger.info("RandomBrowser.getNode: requested for node: " + Integer.toString( index ) );
-        if ( index >= randomNodes.size() ) {
-            int randomIndex = (int) ( Math.random() * allPictures.size() );
-            randomNodes.add( allPictures.get( randomIndex ) );
-        }
-        return randomNodes.get( index );
-    }
-
-    /**
-     *  This ArrayList holds a reference to each picture under the start group.
-     */
-    private ArrayList<SortableDefaultMutableTreeNode> allPictures = new ArrayList<SortableDefaultMutableTreeNode>();
-
-
-    /**
-     *  This method collects all pictures under the startNode into the supplied ArrayList. This method
-     *  calls itself recursively.
-     *
-     *  @param  myList   The ArrayList to which to add the pictures.
-     *  @param  startNode   The group node under which to collect the pictures.
-     */
-    public void enumerateAndAddToList( ArrayList<SortableDefaultMutableTreeNode> myList, SortableDefaultMutableTreeNode startNode ) {
-        //logger.info("RandomBrowser.enumerateAndAddToList: invoked on group " + startNode.toString() );
-        Enumeration kids = startNode.children();
-        SortableDefaultMutableTreeNode n;
-
-        while ( kids.hasMoreElements() ) {
-            n = (SortableDefaultMutableTreeNode) kids.nextElement();
-            if ( n.getUserObject() instanceof GroupInfo ) {
-                enumerateAndAddToList( myList, n );
-            } else if ( n.getUserObject() instanceof PictureInfo ) {
-                myList.add( n );
-            }
-        }
-    }
-
-
-    /**
-     *  This method unregisters the TreeModelListener and sets the variables to null;
-     */
-    @Override
-    public void cleanup() {
-        super.cleanup();
-        randomNodes = null;
-        allPictures = null;
+        logger.fine( String.format( "requested for node: %d", index ) );
+        return allPictures.get( index );
     }
 }

@@ -108,20 +108,19 @@ public class SortableDefaultMutableTreeNode
         getPictureCollection().setUnsavedUpdates();
         getPictureCollection().setSendModelUpdates( true );
         refreshThumbnail();
-        
+
         // tell the collection that the structure changed
         final SortableDefaultMutableTreeNode nodeStructureChangedNode = this;
         Runnable r = new Runnable() {
 
-
             public void run() {
-                logger.fine(String.format( "Sending node structure changed event on node %s after sort",nodeStructureChangedNode.toString() ));
+                logger.fine( String.format( "Sending node structure changed event on node %s after sort", nodeStructureChangedNode.toString() ) );
                 getPictureCollection().getTreeModel().nodeStructureChanged( nodeStructureChangedNode );
             }
         };
         SwingUtilities.invokeLater( r );
 
-        
+
     }
 
     /**
@@ -255,6 +254,29 @@ public class SortableDefaultMutableTreeNode
             }
         }
         return null;
+    }
+
+
+    /**
+     *  This method collects all pictures under the current node and returns them as an Array List..
+     *
+     *  @param  pictureNodes   The ArrayList to which to add the picture nodes.
+     *  @param recursive Whether to add the pictures of any groups nodes or not
+     */
+    public void getChildPictureNodes(
+            ArrayList<SortableDefaultMutableTreeNode> pictureNodes,
+            boolean recursive ) {
+        Enumeration kids = this.children();
+        SortableDefaultMutableTreeNode n;
+
+        while ( kids.hasMoreElements() ) {
+            n = (SortableDefaultMutableTreeNode) kids.nextElement();
+            if ( recursive && n.getUserObject() instanceof GroupInfo ) {
+                n.getChildPictureNodes( pictureNodes, recursive );
+            } else if ( n.getUserObject() instanceof PictureInfo ) {
+                pictureNodes.add( n );
+            }
+        }
     }
 
 

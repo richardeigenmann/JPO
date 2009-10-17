@@ -7,7 +7,6 @@ import java.awt.event.ComponentEvent;
 import java.util.logging.Logger;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
-import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.ToolTipManager;

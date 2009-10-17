@@ -33,6 +33,7 @@ import javax.swing.tree.TreePath;
 import jpo.dataModel.PictureInfoChangeEvent;
 import jpo.dataModel.PictureInfoChangeListener;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
+import jpo.dataModel.Tools;
 
 
 /*
@@ -454,6 +455,7 @@ public class PictureViewer
      */
     public void changePicture( ThumbnailBrowserInterface mySetOfNodes,
             int myIndex ) {
+        Tools.checkEDT();
         logger.fine( "PictureViewer.changePicture: called the good new way." );
 
         //logger.fine("Old node is: " + oldNode.toString());
@@ -678,7 +680,13 @@ public class PictureViewer
             logger.fine( String.format( "Using the context aware step forward. The browser contains: %d pictures and we are on picture %d", mySetOfNodes.getNumberOfNodes(), myIndex ) );
             if ( mySetOfNodes.getNumberOfNodes() > myIndex + 1 ) {
                 logger.fine( "PictureViewer.requestNextPicture: requesting node: " + Integer.toString( myIndex + 1 ) );
-                changePicture( mySetOfNodes, myIndex + 1 );
+                Runnable r = new Runnable() {
+
+                    public void run() {
+                        changePicture( mySetOfNodes, myIndex + 1 );
+                    }
+                };
+                SwingUtilities.invokeLater( r );
                 return true;
             } else {
                 return false;
@@ -706,7 +714,14 @@ public class PictureViewer
             // use context aware step forward
             logger.fine( "PictureViewer.requestPriorPicture: using the context aware step backward" );
             if ( myIndex > 0 ) {
-                changePicture( mySetOfNodes, myIndex - 1 );
+                Runnable r = new Runnable() {
+
+                    public void run() {
+                        changePicture( mySetOfNodes, myIndex - 1 );
+                    }
+                };
+                SwingUtilities.invokeLater( r );
+
             }
         }
     }
@@ -780,10 +795,10 @@ public class PictureViewer
             //cycleAll = useAllPicturesJRadioButton.isSelected();
 
             if ( randomAdvanceJRadioButton.isSelected() ) {
-                if ( useAllPicturesJRadioButton.isSelected() ) //enumerateAndAddToList( pictureNodesArrayList, (SortableDefaultMutableTreeNode) currentNode.getRoot()  );
+                if ( useAllPicturesJRadioButton.isSelected() ) //addAllPictureNodes( pictureNodesArrayList, (SortableDefaultMutableTreeNode) currentNode.getRoot()  );
                 {
                     mySetOfNodes = new RandomBrowser( (SortableDefaultMutableTreeNode) getCurrentNode().getRoot() );
-                } else //enumerateAndAddToList( pictureNodesArrayList, (SortableDefaultMutableTreeNode) currentNode.getParent() );
+                } else //addAllPictureNodes( pictureNodesArrayList, (SortableDefaultMutableTreeNode) currentNode.getParent() );
                 {
                     mySetOfNodes = new RandomBrowser( (SortableDefaultMutableTreeNode) getCurrentNode().getParent() );
                 }
@@ -833,6 +848,7 @@ public class PictureViewer
      */
     public boolean readyToAdvance() {
         int status = pictureJPanel.getScalablePicture().getStatusCode();
+        //logger.info( String.format( "Retrieved status %d; ready would be %d", status, ScalablePicture.READY ));
         if ( ( status == ScalablePicture.READY ) || ( status == ScalablePicture.ERROR ) ) {
             return true;
         } else {
@@ -846,6 +862,7 @@ public class PictureViewer
      *   our object that it is time to advance to the next picture.
      */
     public void requestAdvance() {
+        //logger.info( "Advance requested");
         requestNextPicture();
     }
 
