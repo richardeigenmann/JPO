@@ -14,6 +14,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JToolBar;
 import javax.swing.tree.DefaultMutableTreeNode;
+import jpo.dataModel.Tools;
 
 /*
 PictureViewerNavBar.java:  Does the navigation icons and sends the events back to the PictureViewer
@@ -36,7 +37,8 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  *  Creates a navigation Bar with several icons to navigate the Picture Viewer
  *  @author Richard Eigenmann richard.eigenmann@gmail.com
  */
-public class PictureViewerNavBar extends JToolBar {
+public class PictureViewerNavBar
+        extends JToolBar {
 
     /**
      * A handle back to the PictureViewer so that the buttons can request actions
@@ -50,6 +52,7 @@ public class PictureViewerNavBar extends JToolBar {
      */
     public PictureViewerNavBar( final PictureViewer pv ) {
         super( Settings.jpoResources.getString( "NavigationPanel" ) );
+        Tools.checkEDT();
         this.pv = pv;
         final int numButtons = 8;
 
@@ -75,7 +78,7 @@ public class PictureViewerNavBar extends JToolBar {
                 addActionListener( new ActionListener() {
 
                     public void actionPerformed( ActionEvent e ) {
-                        rotate( 270 );
+                        actionRotateLeft();
                     }
                 } );
                 setToolTipText( Settings.jpoResources.getString( "rotateLeftJButton.ToolTipText" ) );
@@ -93,7 +96,7 @@ public class PictureViewerNavBar extends JToolBar {
                 addActionListener( new ActionListener() {
 
                     public void actionPerformed( ActionEvent e ) {
-                        rotate( 90 );
+                        actionRotateRight();
                     }
                 } );
                 setToolTipText( Settings.jpoResources.getString( "rotateRightJButton.ToolTipText" ) );
@@ -108,8 +111,7 @@ public class PictureViewerNavBar extends JToolBar {
                 addActionListener( new ActionListener() {
 
                     public void actionPerformed( ActionEvent e ) {
-                        pv.requestPopupMenu();
-                        pv.pictureJPanel.requestFocusInWindow();
+                        actionPopupClicked();
                     }
                 } );
                 setToolTipText( Settings.jpoResources.getString( "popupMenuJButton.ToolTipText" ) );
@@ -127,8 +129,7 @@ public class PictureViewerNavBar extends JToolBar {
                 addActionListener( new ActionListener() {
 
                     public void actionPerformed( ActionEvent e ) {
-                        pv.pictureJPanel.cylceInfoDisplay();
-                        pv.pictureJPanel.requestFocusInWindow();
+                        actionInfoClicked();
                     }
                 } );
                 setToolTipText( Settings.jpoResources.getString( "infoJButton.ToolTipText" ) );
@@ -145,8 +146,7 @@ public class PictureViewerNavBar extends JToolBar {
                 addActionListener( new ActionListener() {
 
                     public void actionPerformed( ActionEvent e ) {
-                        pv.resetPicture();
-                        pv.pictureJPanel.requestFocusInWindow();
+                        actionResetClicked();
                     }
                 } );
                 setToolTipText( Settings.jpoResources.getString( "resetJButton.ToolTipText" ) );
@@ -164,7 +164,7 @@ public class PictureViewerNavBar extends JToolBar {
                 addActionListener( new ActionListener() {
 
                     public void actionPerformed( ActionEvent e ) {
-                        pv.closeViewer();
+                        actionCloseClicked();
                     }
                 } );
                 setToolTipText( Settings.jpoResources.getString( "closeJButton.ToolTipText" ) );
@@ -174,9 +174,10 @@ public class PictureViewerNavBar extends JToolBar {
     }
 
     /**
-     * Inner class to define common attributes of the NavBarButtons.
+     * Defines a JButton with no border, standard background color, standard dimensions and tooltip at 0, -20
      */
-    private class NavBarButton extends JButton {
+    private class NavBarButton
+            extends JButton {
 
         /**
          * Constructor
@@ -242,7 +243,7 @@ public class PictureViewerNavBar extends JToolBar {
             addActionListener( new ActionListener() {
 
                 public void actionPerformed( ActionEvent e ) {
-                    pv.requestPriorPicture();
+                    actionGoLeft();
                 }
             } );
             setToolTipText( Settings.jpoResources.getString( "previousJButton.ToolTipText" ) );
@@ -259,7 +260,7 @@ public class PictureViewerNavBar extends JToolBar {
             addActionListener( new ActionListener() {
 
                 public void actionPerformed( ActionEvent e ) {
-                    pv.requestNextPicture();
+                    actionGoRight();
                 }
             } );
             setToolTipText( Settings.jpoResources.getString( "nextJButton.ToolTipText" ) );
@@ -270,6 +271,7 @@ public class PictureViewerNavBar extends JToolBar {
     /**
      *  This method looks at the position the currentNode is in regard to it's siblings and
      *  changes the forward and back icons to reflect the position of the current node.
+     * TODO: This code is not browser aware. It needs to be.
      */
     public void setIconDecorations() {
         // Set the next and back icons
@@ -328,8 +330,7 @@ public class PictureViewerNavBar extends JToolBar {
             addActionListener( new ActionListener() {
 
                 public void actionPerformed( ActionEvent e ) {
-                    pv.requestScreenSizeMenu();
-                    pv.pictureJPanel.requestFocusInWindow();
+                    actionFullScreenClicked();
                 }
             } );
             setToolTipText( Settings.jpoResources.getString( "fullScreenJButton.ToolTipText" ) );
@@ -355,8 +356,7 @@ public class PictureViewerNavBar extends JToolBar {
             addActionListener( new ActionListener() {
 
                 public void actionPerformed( ActionEvent e ) {
-                    pv.requestAutoAdvance();
-                    pv.pictureJPanel.requestFocusInWindow();
+                    actionClockClicked();
                 }
             } );
             setToolTipText( Settings.jpoResources.getString( "clockJButton.ToolTipText" ) );
@@ -364,10 +364,91 @@ public class PictureViewerNavBar extends JToolBar {
     };
 
 
-    private void rotate( int angle ) {
-        PictureInfo pi = (PictureInfo) pv.getCurrentNode().getUserObject();
-        pi.rotate( angle );
+    /**
+     * hat to do when requested to go left
+     */
+    private void actionGoLeft() {
+        pv.requestPriorPicture();
+
+    }
+
+
+    /**
+     * hat to do when requested to go left
+     */
+    private void actionGoRight() {
+        pv.requestNextPicture();
+    }
+
+
+    /**
+     * What to do when the rotate left button is pressed
+     */
+    private void actionRotateLeft() {
+        pv.rotate( 270 );
+    }
+
+
+    /**
+     * What to do when the rotate right button is pressed
+     */
+    private void actionRotateRight() {
+        pv.rotate( 90 );
+    }
+
+
+    /**
+     * What to do when the popup button is clicked.
+     */
+    private void actionPopupClicked() {
+        pv.requestPopupMenu();
+    }
+
+
+    /**
+     * What to do when the info button is clicked
+     */
+    private void actionInfoClicked() {
+        pv.pictureJPanel.cylceInfoDisplay();
         pv.pictureJPanel.requestFocusInWindow();
 
+    }
+
+
+    /**
+     * What to do when the reset button is clicked
+     */
+    private void actionResetClicked() {
+        pv.resetPicture();
+        pv.pictureJPanel.requestFocusInWindow();
+
+    }
+
+
+    /**
+     * What to do when the close button is clicked
+     */
+    private void actionCloseClicked() {
+        pv.closeViewer();
+
+    }
+
+
+    /**
+     * What to do when the Full Screen button is clicked
+     */
+    private void actionFullScreenClicked() {
+        pv.requestScreenSizeMenu();
+        pv.pictureJPanel.requestFocusInWindow();
+
+    }
+
+
+    /**
+     * What to do when the clock button is clicked
+     */
+    private void actionClockClicked() {
+        pv.requestAutoAdvance();
+        pv.pictureJPanel.requestFocusInWindow();
     }
 }

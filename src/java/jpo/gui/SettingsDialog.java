@@ -1,5 +1,6 @@
 package jpo.gui;
 
+import jpotestground.ResizableJFrameTest;
 import jpo.dataModel.Settings;
 import java.awt.BorderLayout;
 import java.awt.Color;

@@ -18,7 +18,6 @@ public class SortableDefaultMutableTreeNodeTest extends TestCase {
         super(testName);
     }
     
-    
     SortableDefaultMutableTreeNode rootNode;
     GroupInfo gr1 = new GroupInfo( "Group1" );
     SortableDefaultMutableTreeNode group1;
@@ -37,6 +36,7 @@ public class SortableDefaultMutableTreeNodeTest extends TestCase {
     
     @Override
     protected void setUp() throws Exception {
+
         rootNode = new SortableDefaultMutableTreeNode();
         group1 = new SortableDefaultMutableTreeNode( gr1 );
         group2 = new SortableDefaultMutableTreeNode( gr2 );

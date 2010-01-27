@@ -1,5 +1,6 @@
-package jpo.gui;
+package jpo.dataModel;
 
+import jpo.dataModel.ThumbnailBrowser;
 import jpo.dataModel.*;
 import jpo.*;
 import java.util.*;

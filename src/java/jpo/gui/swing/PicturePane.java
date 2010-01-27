@@ -1,27 +1,24 @@
-package jpo.gui;
+package jpo.gui.swing;
 
+import jpo.gui.*;
 import jpo.dataModel.Tools;
 import jpo.dataModel.ExifInfo;
 import jpo.dataModel.Settings;
 import jpo.*;
-import jpo.dataModel.PictureInfo;
-import java.net.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.AffineTransform;
 import java.awt.Point;
 import javax.swing.*;
-import javax.swing.event.*;
 import java.text.*;
 import java.util.Vector;
-import java.util.Enumeration;
 import java.util.logging.Logger;
 
 
 /*
 PicturePane.java:  a component that can display an image
 
-Copyright (C) 2002 - 2009 Richard Eigenmann.
+Copyright (C) 2002 - 2010 Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -36,16 +33,11 @@ The license is in gpl.txt.
 See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 /**
- *   The job of this extended JComponent is to load, scale and display a 
- *   picture while 
- *   providing mouse control over which area is being shown and at which magnification.
+ *   The job of this Component is to scale and display a picture.
+ *
  *   It notifies the registered parent about status changes so that a description object can
  *   be updated. When the image has been rendered and displayed the legend of the image is 
  *   send to the parent with the ready status.<p>
- *
- *   The user can zoom in on a picture coordinate by clicking the left mouse button. The middle
- *   button scales the picture so that it fits in the available space and centres it there.
- *   The right mouse button zooms out.<p>
  *
  *   The image is centred on the component to the {@link #focusPoint} in the coordinate space 
  *   of the image. This translated using the {@link ScalablePicture#setScaleFactor( double )} to the coordinate 
@@ -66,32 +58,23 @@ public class PicturePane
      */
     public ScalablePicture sclPic = new ScalablePicture();
 
-    /**
-     *  Flag that lets the object know if the mouse is in dragging mode.
-     */
-    private boolean Dragging = false;
 
     /**
      *  Flag that lets this JComponent know if the picture is to be fitted into the available space
      *  when the threads return the scaled picture.
      */
-    private boolean centerWhenScaled;
+    public boolean centerWhenScaled;
 
     /**
-     *   the point inside the picture that will be put at the middle of the screen.
-     *   the coordinates are in x,y in the coordinate space of the picture.
+     * This point of the picture will be put at the middle of the screen component.
+     * The coordinates are in x,y in the coordinate space of the picture.
      */
-    private Point focusPoint = new Point();
-
-    /**
-     *  used in dragging to find out how much the mouse has moved from the last time
-     */
-    private int last_x, last_y;
+    public Point focusPoint = new Point();
 
     /**
      *  The legend of the picture. Is sent to the listener when the image is ready.
      */
-    private String legend = null;
+    public String legend = null;
 
     /**
      *   location of the info texts if shown
@@ -111,7 +94,6 @@ public class PicturePane
     /**
      *   Font for the info if shown.
      */
-    //private static final Font infoFont =  new Font("Arial", Font.PLAIN, 10);
     private static final Font infoFont = Font.decode( Settings.jpoResources.getString( "PicturePaneInfoFont" ) );
 
     /**
@@ -123,7 +105,7 @@ public class PicturePane
      *  This object is a reference to an Exif Info object that tries to keep tabs on the
      *  information in the image.
      */
-    private ExifInfo ei = new ExifInfo();
+    public ExifInfo ei = new ExifInfo();
 
     /**
      *  class to format the scale
@@ -137,16 +119,9 @@ public class PicturePane
 
 
     /**
-     *   Constructor
+     * Constructs a PicturePane components.
      **/
     public PicturePane() {
-
-        // register an interest in mouse events
-        Listener MouseListener = new Listener();
-        addMouseListener( MouseListener );
-        addMouseMotionListener( MouseListener );
-
-
         // make graphics faster
         this.setDoubleBuffered( false );
 
@@ -166,60 +141,10 @@ public class PicturePane
             }
         } );
 
-
-        //twoDecimalFormatter = new DecimalFormat("###0.00");
         setFont( infoFont );
-
-
     }
 
 
-    /**
-     *  brings up the indicated picture on the display.
-     *  @param pi  The PicutreInfo object that should be displayed
-     */
-    public void setPicture( PictureInfo pi ) {
-        logger.fine( "PicturePane.setPicture: called on PictureInfo: " + pi.toString() );
-        URL pictureURL;
-        String description;
-        double rotation = 0;
-        try {
-            pictureURL = pi.getHighresURL();
-            description = pi.getDescription();
-            rotation = pi.getRotation();
-        } catch ( MalformedURLException x ) {
-            logger.warning( "PicturePane.changePicture: MarformedURLException trapped on: " + pi.getHighresLocation() + "\nReason: " + x.getMessage() );
-            return;
-        }
-        setPicture( pictureURL, description, rotation );
-    }
-
-
-    /**
-     *  brings up the indicated picture on the display.
-     *  @param filenameURL  The URL of the picture to display
-     *  @param legendParam	The description of the picture
-     *  @param rotation  The rotation that should be applied
-     */
-    public void setPicture( URL filenameURL, String legendParam, double rotation ) {
-        legend = legendParam;
-        centerWhenScaled = true;
-        sclPic.setScaleSize( getSize() );
-
-        sclPic.stopLoadingExcept( filenameURL );
-        sclPic.loadAndScalePictureInThread( filenameURL, Thread.MAX_PRIORITY, rotation );
-        ei.setUrl( filenameURL );
-        ei.decodeExifTags();
-    }
-
-
-    /**
-     *
-     * @param parameter
-     */
-    public void setDragging( boolean parameter ) {
-        Dragging = parameter;
-    }
 
     /////////////////////////
     // Zooming Methods     //
@@ -311,6 +236,12 @@ public class PicturePane
 
 
     /**
+     * This is the factor by how much the scrollxxx methods will scroll.
+     * Currently set to a fixed 10%.
+     */
+    private static final float scrollFactor = 0.05f;
+
+    /**
      *  method that moves the image up by 10% of the pixels shown on the screen.
      * This method
      * calls <code>repaint()</code> directly since no time consuming image operations need to take place.
@@ -324,7 +255,7 @@ public class PicturePane
     public void scrollUp() {
         // if the bottom edge of the picture is visible, do not scroll
         if ( ( ( sclPic.getOriginalHeight() - focusPoint.y ) * sclPic.getScaleFactor() ) + getSize().height / 2 > getSize().height ) {
-            focusPoint.y = focusPoint.y + (int) ( getSize().height * 0.1 / sclPic.getScaleFactor() );
+            focusPoint.y = focusPoint.y + (int) ( getSize().height * scrollFactor / sclPic.getScaleFactor() );
             repaint();
         } else {
             logger.warning( "PicturePane.scrollUp rejected because bottom of picture is already showing." );
@@ -344,7 +275,7 @@ public class PicturePane
      */
     public void scrollDown() {
         if ( getSize().height / 2 - focusPoint.y * sclPic.getScaleFactor() < 0 ) {
-            focusPoint.y = focusPoint.y - (int) ( getSize().height * 0.1 / sclPic.getScaleFactor() );
+            focusPoint.y = focusPoint.y - (int) ( getSize().height * scrollFactor / sclPic.getScaleFactor() );
             repaint();
         } else {
             logger.warning( "PicturePane.scrollDown rejected because top edge is aready visible" );
@@ -365,10 +296,10 @@ public class PicturePane
     public void scrollLeft() {
         // if the bottom edge of the picture is visible, do not scroll
         if ( ( ( sclPic.getOriginalWidth() - focusPoint.x ) * sclPic.getScaleFactor() ) + getSize().width / 2 > getSize().width ) {
-            focusPoint.x = focusPoint.x + (int) ( getSize().width * 0.1 / sclPic.getScaleFactor() );
+            focusPoint.x = focusPoint.x + (int) ( getSize().width * scrollFactor / sclPic.getScaleFactor() );
             repaint();
         } else {
-            logger.warning( "PicturePane.scrollLeft rejected because right edge of picture is already showing." );
+            logger.warning( "scrollLeft rejected because right edge of picture is already showing." );
         }
     }
 
@@ -385,10 +316,10 @@ public class PicturePane
      */
     public void scrollRight() {
         if ( getSize().width / 2 - focusPoint.x * sclPic.getScaleFactor() < 0 ) {
-            focusPoint.x = focusPoint.x - (int) ( getSize().width * 0.1 / sclPic.getScaleFactor() );
+            focusPoint.x = focusPoint.x - (int) ( getSize().width * scrollFactor / sclPic.getScaleFactor() );
             repaint();
         } else {
-            logger.warning( "PicturePane.scrollRight rejected because left edge is aready visible" );
+            logger.warning( "scrollRight rejected because left edge is aready visible" );
         }
     }
 
@@ -419,9 +350,7 @@ public class PicturePane
         int WindowWidth = getSize().width;
         int WindowHeight = getSize().height;
 
-        if ( Dragging == false ) {  //otherwise it's already a move Cursor
-            setCursor( new Cursor( Cursor.WAIT_CURSOR ) );
-        }
+    
 
         if ( sclPic.getScaledPicture() != null ) {
             Graphics2D g2d = (Graphics2D) g;
@@ -438,7 +367,7 @@ public class PicturePane
                     clipBounds.height );
 
 
-            g2d.drawRenderedImage( sclPic.getScaledPicture(), AffineTransform.getTranslateInstance( (int) X_Offset, (int) Y_Offset ) );
+            g2d.drawRenderedImage( sclPic.getScaledPicture(), AffineTransform.getTranslateInstance( X_Offset, Y_Offset ) );
 
             g2d.setColor( infoFontColor );
             switch ( showInfo ) {
@@ -474,100 +403,7 @@ public class PicturePane
             g.setColor( Color.black );
             g.fillRect( 0, 0, WindowWidth, WindowHeight );
         }
-
-        if ( Dragging == false ) {  //otherwise a move Cursor and should remain
-            setCursor( new Cursor( Cursor.DEFAULT_CURSOR ) );
-        }
     }
-
-    /**
-     *  This class deals with the mouse events. Is built so that the picture can be dragged if
-     *  the mouse button is pressed and the mouse moved. If the left button is clicked the picture is
-     *  zoomed in, middle resets to full screen, right zooms out.
-     */
-    class Listener
-            extends MouseInputAdapter {
-
-        /**
-         *   This method traps the mouse events and changes the scale and position of the displayed
-         *   picture.
-         */
-        @Override
-        public void mouseClicked( MouseEvent e ) {
-            logger.fine( "PicturePane.mouseClicked" );
-            if ( e.getButton() == 3 ) {
-                // Right Mousebutton zooms out
-                centerWhenScaled = false;
-                zoomOut();
-            } else if ( e.getButton() == 2 ) {
-                // Middle Mousebutton resets
-                zoomToFit();
-                centerWhenScaled = true;
-            } else if ( e.getButton() == 1 ) {
-                // Left Mousebutton zooms in on selected spot
-                // Convert screen coordinates of the mouse click into true
-                // coordinates on the picture:
-
-                int WindowWidth = getSize().width;
-                int WindowHeight = getSize().height;
-
-                int X_Offset = e.getX() - (int) ( WindowWidth / 2 );
-                int Y_Offset = e.getY() - (int) ( WindowHeight / 2 );
-
-                setCenterLocation(
-                        focusPoint.x + (int) ( X_Offset / sclPic.getScaleFactor() ),
-                        focusPoint.y + (int) ( Y_Offset / sclPic.getScaleFactor() ) );
-                centerWhenScaled = false;
-                zoomIn();
-            }
-        }
-
-
-        /**
-         * method that is invoked when the
-         * user drags the mouse with a button pressed. Moves the picture around
-         */
-        @Override
-        public void mouseDragged( MouseEvent e ) {
-            if ( !Dragging ) {
-                // Switch into dragging mode and record current coordinates
-                logger.fine( "PicturePane.mouseDragged: Switching to drag mode." );
-                last_x = e.getX();
-                last_y = e.getY();
-
-                Dragging = true;
-                setCursor( new Cursor( Cursor.MOVE_CURSOR ) );
-
-            } else {
-                // was already dragging
-                int x = e.getX(), y = e.getY();
-
-                focusPoint.setLocation( (int) ( (double) focusPoint.x + ( ( last_x - x ) / sclPic.getScaleFactor() ) ),
-                        (int) ( (double) focusPoint.y + ( ( last_y - y ) / sclPic.getScaleFactor() ) ) );
-                last_x = x;
-                last_y = y;
-
-                Dragging = true;
-                repaint();
-            }
-            centerWhenScaled = false;
-        }
-
-
-        /**
-         * method that is invoked when the
-         * user releases the mouse button.
-         */
-        @Override
-        public void mouseReleased( MouseEvent e ) {
-            logger.fine( "PicturePane.mouseReleased." );
-            if ( Dragging ) {
-                //Dragging has ended
-                Dragging = false;
-                setCursor( new Cursor( Cursor.DEFAULT_CURSOR ) );
-            }
-        }
-    }  //end class Listener
 
     /**
      *  Constant to indicate that no information should be overlaid on the picture

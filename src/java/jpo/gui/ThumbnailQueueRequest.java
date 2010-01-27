@@ -1,7 +1,7 @@
 package jpo.gui;
 
 /*
-ThumbnailQueueRequest.java: Element on the Thumbnail Queue
+ThumbnailQueueRequest.java: Element on the ThumbnailController Queue
 
 Copyright (C) 2002 - 2009  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
@@ -19,10 +19,10 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 /**
  *  The ThumbnailQueueRequest is the type of object that will sit on the 
- *  {@link ThumbnailCreationQueue} with a references to the {@link Thumbnail}, the queue priority 
+ *  {@link ThumbnailCreationQueue} with a references to the {@link ThumbnailController}, the queue priority
  *  and an indicator whether the thumbnail creation must be forced.
  * TODO: Analyse how often a new picture is thrown on the queue. Could be a bit too often...
- * TODO: Perhaps we should not throw thumbnails on the queue but lowresimages as these are not exactly the same as a GUI component which is what a Thumbnail is.
+ * TODO: Perhaps we should not throw thumbnails on the queue but lowresimages as these are not exactly the same as a GUI component which is what a ThumbnailController is.
  */
 public class ThumbnailQueueRequest implements Comparable<ThumbnailQueueRequest> {
 
@@ -44,9 +44,9 @@ public class ThumbnailQueueRequest implements Comparable<ThumbnailQueueRequest> 
      */
     protected static final int LOWEST_PRIORITY = LOW_PRIORITY + 1;
     /**
-     *  a reference to the Thumbnail for which the request is to be performed.
+     *  a reference to the ThumbnailController for which the request is to be performed.
      */
-    protected Thumbnail thumb;
+    protected ThumbnailController thumbnailController;
     /**
      *  the priority the request has on the queue.
      */
@@ -58,31 +58,31 @@ public class ThumbnailQueueRequest implements Comparable<ThumbnailQueueRequest> 
 
     /**
      *  Constructs a ThumbnailQueueRequest object
-     *  @param	thumb	The Thumbnail object for which the thumbnail is to be created
+     *  @param	thumbnailController	The ThumbnailController object for which the thumbnail is to be created
      *  @param	priority	The priority with which the thumbnail is to be created
      *	Possible values are {@link #HIGH_PRIORITY}
      *	{@link #MEDIUM_PRIORITY} and
      *  {@link #LOW_PRIORITY}.
-     *  @param	force	set to true if the Thumbnail must be read from source if set to false
-     *  it is permissible to just reload the cached Thumbnail.
+     *  @param	force	set to true if the ThumbnailController must be read from source if set to false
+     *  it is permissible to just reload the cached ThumbnailController.
      */
-    ThumbnailQueueRequest(Thumbnail thumb, int priority, boolean force) {
-        this.thumb = thumb;
+    ThumbnailQueueRequest(ThumbnailController thumb, int priority, boolean force) {
+        this.thumbnailController = thumb;
         this.priority = priority;
         this.force = force;
     }
 
     /**
-     *  returns the {@link Thumbnail} which is to be created.
+     *  returns the {@link ThumbnailController} which is to be created.
      *
      * @return the thumbnail
      */
-    public Thumbnail getThumbnail() {
-        return thumb;
+    public ThumbnailController getThumbnailController() {
+        return thumbnailController;
     }
 
     /**
-     * returns the priority in which the {@link Thumbnail} is to be created. The values returned are
+     * returns the priority in which the {@link ThumbnailController} is to be created. The values returned are
      * {@link #LOW_PRIORITY}, {@link #MEDIUM_PRIORITY}
      * or {@link #HIGH_PRIORITY}. A high numeric value means less priority.
      *
@@ -94,7 +94,7 @@ public class ThumbnailQueueRequest implements Comparable<ThumbnailQueueRequest> 
     }
 
     /**
-     *  sets the priority in which the {@link Thumbnail} is to be created. The possible values are
+     *  sets the priority in which the {@link ThumbnailController} is to be created. The possible values are
      *  {@link #LOW_PRIORITY}, {@link #MEDIUM_PRIORITY}
      *  or {@link #HIGH_PRIORITY}. A high numeric value means less priority.
      *
@@ -106,7 +106,7 @@ public class ThumbnailQueueRequest implements Comparable<ThumbnailQueueRequest> 
     }
 
     /**
-     *   returns whether the rebuilding of the {@link Thumbnail} must be forced or
+     *   returns whether the rebuilding of the {@link ThumbnailController} must be forced or
      *   whether an available cached thumbnail will suffice.
      *
      *   @return  true if the thumbnail creation must be forced, false if not.
@@ -116,7 +116,7 @@ public class ThumbnailQueueRequest implements Comparable<ThumbnailQueueRequest> 
     }
 
     /**
-     *   sets whether the rebuilding of the {@link Thumbnail} must be forced or
+     *   sets whether the rebuilding of the {@link ThumbnailController} must be forced or
      *   whether an available cached thumbnail will suffice.
      *
      *   @param newForce   true if the thumbnail creation must be forced, false if not.
@@ -140,7 +140,7 @@ public class ThumbnailQueueRequest implements Comparable<ThumbnailQueueRequest> 
      */
     @Override
     public String toString() {
-        return String.format("ThumbnailQueueRequest: Hash: %d, Priority: %d, Force: %b, Thumbnail: %s", this.hashCode(), priority, force, thumb.toString());
+        return String.format("ThumbnailQueueRequest: Hash: %d, Priority: %d, Force: %b, Thumbnail: %s", this.hashCode(), priority, force, thumbnailController.toString());
 
     }
 }

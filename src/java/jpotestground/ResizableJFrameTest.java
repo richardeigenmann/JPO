@@ -1,5 +1,9 @@
-package jpo.gui;
+package jpotestground;
 
+import jpo.gui.swing.ScreenHelper;
+import jpo.gui.*;
+import jpo.gui.swing.ResizableJFrame;
+import jpo.gui.swing.NonFocussedCaret;
 import jpo.dataModel.Settings;
 import jpo.*;
 import java.awt.BorderLayout;
@@ -43,10 +47,9 @@ public class ResizableJFrameTest {
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        final ResizableJFrame rjf = new ResizableJFrame( "Title", true );
+        final ResizableJFrame rjf = new ResizableJFrame( "Title", true, new Dimension( 800, 600 ) );
         Settings.loadSettings();
         rjf.setDefaultCloseOperation( JFrame.DISPOSE_ON_CLOSE );
-        rjf.setSize( new Dimension( 800, 600 ) );
         
         JPanel buttonPanel = new JPanel();
         JButton fullScreen = new JButton( "FullScreen");

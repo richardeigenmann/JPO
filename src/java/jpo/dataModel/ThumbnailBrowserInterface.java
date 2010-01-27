@@ -1,5 +1,6 @@
-package jpo.gui;
+package jpo.dataModel;
 
+import jpo.gui.*;
 import jpo.dataModel.*;
 
 
@@ -24,7 +25,7 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 
 
 /**
- *   ThumbnailBrowserInterface.java:  an interface that defines the methods that a class 
+ *   ThumbnailBrowserInterface.java:  an interface that defines the methods that a "set of nodes"
  *   must implement so that the ThumbnailPanelController can identify the Thumbnails to be displayed.
  *   You probably want to extend ThumbnailBrowser instead of implementing
  *   ThumbnailBrowserInterface as that takes care of the listeners.

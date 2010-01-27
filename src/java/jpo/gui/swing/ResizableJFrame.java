@@ -1,14 +1,15 @@
-package jpo.gui;
+package jpo.gui.swing;
 
+import jpo.gui.*;
 import java.awt.Dimension;
-import java.awt.EventQueue;
 import java.awt.Frame;
 import java.awt.Rectangle;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
+import jpo.dataModel.Tools;
 
 /*
-Copyright (C) 2002 - 2009  Richard Eigenmann.
+Copyright (C) 2002 - 2010  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -24,10 +25,12 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 /**
  *
- * Class to create a JFrame which can be resized. This can be a bit hasslesome so I have put the code in
- * it's own class.
+ * This is an extended JFrame which has a few useful methods for it to be resized.
+ * The resizing doesn't always work very well which is why I encapsualted this into
+ * this class. 
  */
-public class ResizableJFrame extends JFrame {
+public class ResizableJFrame
+        extends JFrame {
 
     /**
      * Defines a logger for this class
@@ -37,167 +40,129 @@ public class ResizableJFrame extends JFrame {
 
     /**
      * Creates a new instance of ResizableJFrame
-     * @param title  The title of the window
+     * @param title  The title of the window (if null will be "ResizableJFrame")
      * @param drawframe  Whether to draw the decorations or not
-     * @param defaultSize Default size for the window
+     * @param defaultSize Default size for the window (if null we will go for 800,600)
      */
-    public ResizableJFrame( String title, boolean drawframe, Dimension defaultSize ) {
+    public ResizableJFrame( String title, boolean drawframe,
+            Dimension defaultSize ) {
         super( title );
-        this.defaultSize = defaultSize;
+        Tools.checkEDT();
+        if ( title == null ) {
+            title = "ResizableJFrame";
+        }
+        if ( defaultSize == null ) {
+            defaultSize = new Dimension( 800, 600 );
+        }
         //logger.info("ResizeableJFrame.constructor: defaultSize = " + defaultSize.toString() );
         setUndecorated( !drawframe );
         setSize( defaultSize );
-        EventQueue.invokeLater( new Runnable() {
-
-            public void run() {
-                setVisible( true );
-            }
-        } );
+        setVisible( true );
     }
 
 
     /**
-     * Creates a new instance of ResizableJFrame
-     * @param title  The title of the window
-     * @param drawframe  Whether to draw the decorations or not
-     */
-    public ResizableJFrame( String title, boolean drawframe ) {
-        this( title, drawframe, new Dimension( 800, 600 ) );
-    }
-
-    /**
-     *  tracks the default Size of this window
-     */
-    private Dimension defaultSize;
-
-
-    /**
-     *  maximises the window
+     *  Call this method on the EDT to maximise the windows
      */
     public void maximise() {
-        EventQueue.invokeLater( new Runnable() {
-
-            public void run() {
-                setExtendedState( Frame.MAXIMIZED_BOTH );
-                validate();
-            }
-        } );
+        Tools.checkEDT();
+        if ( this.getToolkit().isFrameStateSupported( Frame.MAXIMIZED_BOTH ) ) {
+            setExtendedState( Frame.MAXIMIZED_BOTH );
+            validate();
+        } else {
+            logger.fine( "The Window Manager doesn't support Frame.MAXIMIZED_BOTH" );
+        }
     }
 
 
     /**
-     *  un-maximises the window, restoring the original size
+     *  Call this method on the EDT to un-maximises the window, restoring the original size
      */
     public void unMaximise() {
-        setExtendedState( Frame.NORMAL );
+        Tools.checkEDT();
+        if ( this.getToolkit().isFrameStateSupported( Frame.NORMAL ) ) {
+            setExtendedState( Frame.NORMAL );
+        } else {
+            logger.fine( "The Window Manager doesn't support Frame.NORMAL" );
+        }
     }
 
 
     /**
      * Resizes the screen to the specified size after unmaximising it.
-     * @param targetSize
+     * @param targetSize  The dimension you want the Frame to have
      */
     public void rezise( final Dimension targetSize ) {
-        EventQueue.invokeLater( new Runnable() {
-
-            public void run() {
-                unMaximise();
-                setBounds( new Rectangle( targetSize ) );
-                validate();
-            }
-        } );
+        Tools.checkEDT();
+        unMaximise();
+        setBounds( new Rectangle( targetSize ) );
+        validate();
     }
 
 
     /**
-     * Resizes the window to the left part of the screen
+     * Resizes the window to the left part of the screen after unmaximising it.
      */
     public void reziseToLeft() {
-        EventQueue.invokeLater( new Runnable() {
-
-            public void run() {
-                //unMaximise();
-                setBounds( ScreenHelper.getLeftScreenBounds() );
-                setExtendedState( Frame.MAXIMIZED_VERT ); // because the above ignores menubars and stuff
-                validate();
-            }
-        } );
+        Tools.checkEDT();
+        unMaximise();
+        setBounds( ScreenHelper.getLeftScreenBounds() );
+        validate();
     }
 
 
     /**
-     *
+     * Resizes the window to the top left quarter of the screen after unmaximising it.
      */
     public void reziseToTopLeft() {
-        EventQueue.invokeLater( new Runnable() {
-
-            public void run() {
-                unMaximise();
-                setBounds( ScreenHelper.getTopLeftScreenBounds() );
-                validate();
-            }
-        } );
+        Tools.checkEDT();
+        unMaximise();
+        setBounds( ScreenHelper.getTopLeftScreenBounds() );
+        validate();
     }
 
 
     /**
-     *
+     * Resizes the window to the bottom left quarter of the screen after unmaximising it.
      */
     public void reziseToBottomLeft() {
-        EventQueue.invokeLater( new Runnable() {
-
-            public void run() {
-                unMaximise();
-                setBounds( ScreenHelper.getBottomLeftScreenBounds() );
-                validate();
-            }
-        } );
+        Tools.checkEDT();
+        unMaximise();
+        setBounds( ScreenHelper.getBottomLeftScreenBounds() );
+        validate();
     }
 
 
     /**
-     *
+     * Resizes the window to the right part of the screen after unmaximising it.
      */
     public void reziseToRight() {
-        EventQueue.invokeLater( new Runnable() {
-
-            public void run() {
-                //unMaximise();
-                setBounds( ScreenHelper.getRightScreenBounds() );
-                setExtendedState( Frame.MAXIMIZED_VERT ); // because the above ignores menubars and stuff
-                validate();
-            }
-        } );
+        Tools.checkEDT();
+        unMaximise();
+        setBounds( ScreenHelper.getRightScreenBounds() );
+        validate();
     }
 
 
     /**
-     *
+     * Resizes the window to the top right part of the screen after unmaximising it.
      */
     public void reziseToTopRight() {
-        EventQueue.invokeLater( new Runnable() {
-
-            public void run() {
-                unMaximise();
-                setBounds( ScreenHelper.getTopRightScreenBounds() );
-                validate();
-            }
-        } );
+        Tools.checkEDT();
+        unMaximise();
+        setBounds( ScreenHelper.getTopRightScreenBounds() );
+        validate();
     }
 
 
     /**
-     *
+     * Resizes the window to the bottom right part of the screen after unmaximising it.
      */
     public void reziseToBottomRight() {
-        EventQueue.invokeLater( new Runnable() {
-
-            public void run() {
-                unMaximise();
-                setBounds( ScreenHelper.getBottomRightScreenBounds() );
-                validate();
-            }
-        } );
+        Tools.checkEDT();
+        unMaximise();
+        setBounds( ScreenHelper.getBottomRightScreenBounds() );
+        validate();
     }
 
     /**
@@ -211,7 +176,7 @@ public class ResizableJFrame extends JFrame {
     public static final int WINDOW_LEFT = WINDOW_FULLSCREEN + 1;
 
     /**
-     *  constant to indicate that the window should be created on the LEFT half of the display
+     *  constant to indicate that the window should be created on the RIGHT half of the display
      */
     public static final int WINDOW_RIGHT = WINDOW_LEFT + 1;
 
@@ -242,7 +207,7 @@ public class ResizableJFrame extends JFrame {
 
 
     /**
-     *  request that the window showing the picture be changed be changed.
+     *  Request that the window showing the picture be changed be changed.
      *  @param  newMode  {@link #WINDOW_FULLSCREEN}, {@link #WINDOW_LEFT},
      *		{@link #WINDOW_RIGHT},  {@link #WINDOW_TOP_LEFT},
      *		{@link #WINDOW_TOP_RIGHT}, {@link #WINDOW_BOTTOM_LEFT},

@@ -205,7 +205,7 @@ public class JpoTransferable implements Transferable, ClipboardOwner {
     /**
      *   Returns if a flavor is supported.
      * @param flavor
-     * @return
+     * @return true if supported, false if not
      */
     public boolean isDataFlavorSupported( DataFlavor flavor ) {
         logger.fine( "Returning: " + ( flavorList.contains( flavor ) ? "True" : "False" ) );

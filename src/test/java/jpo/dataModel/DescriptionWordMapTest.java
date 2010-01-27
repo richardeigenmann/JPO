@@ -23,6 +23,8 @@ public class DescriptionWordMapTest extends TestCase {
 
 
     private SortableDefaultMutableTreeNode getSomeNodes() {
+
+
         SortableDefaultMutableTreeNode rootNode = new SortableDefaultMutableTreeNode( new GroupInfo( "Root Node" ) );
 
         PictureInfo pi1 = new PictureInfo();

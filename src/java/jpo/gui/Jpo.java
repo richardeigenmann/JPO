@@ -1,5 +1,10 @@
 package jpo.gui;
 
+import jpo.dataModel.FlatGroupBrowser;
+import jpo.dataModel.RandomBrowser;
+import jpo.dataModel.GroupBrowser;
+import jpo.dataModel.ThumbnailBrowserInterface;
+import jpo.gui.swing.ResizableJFrame;
 import jpo.gui.swing.MainWindow;
 import jpo.dataModel.Tools;
 import jpo.dataModel.Settings;
@@ -26,7 +31,7 @@ import jpotestground.CheckThreadViolationRepaintManager;
 /*
 Jpo.java:  The collection controller object of the JPO application
 
-Copyright (C) 2002 - 2009  Richard Eigenmann.
+Copyright (C) 2002 - 2010  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -41,17 +46,18 @@ The license is in gpl.txt.
 See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 /**
- * This is the collection controller the JPO browser application that lets
+ * This is the collection controller the Java Picture Organizer application that lets
  * a user view a collection of pictures in as thumbnails, in a separate window
  * or in a full sized mode.<p>
  *
- * The Jpo class creates the following main objects:
  *
  * <p><img src=../Overview.png border=0><p>
  *
  * It uses a list of pictures (PictureList file) to create a hierarchical model of
  * <code>SortableDefaultMutableTreeNode</code>s that represent the structure of the collection.
  * Each node has an associated object of {@link GroupInfo} or {@link PictureInfo} type.
+ *
+ * The Jpo class creates the following main objects:
  *
  * The {@link CollectionJTreeController} visualises the model and allows the user to
  * expand and collapse branches of the tree with the mouse. If a node is clicked this generates
@@ -225,7 +231,7 @@ public class Jpo
                 positionToNode( Settings.pictureCollection.getRootNode() );
                 return true;
             } else {
-                logger.fine( String.format( "File %s doesn't exist. not loading",xmlFile.toString() ) );
+                logger.fine( String.format( "File %s doesn't exist. not loading", xmlFile.toString() ) );
                 return false;
             }
         } else {
@@ -282,11 +288,10 @@ public class Jpo
 
 
     /**
-     *   Creates a {@link PictureFileChooser} object and tells it to
-     *   add the selected pictures to the root node of the
-     *   {@link CollectionJTreeController}.
+     *   The {@link ApplicationMenuInterface} calls here when the user
+     *   wants to add pictures to the root node of the collection.
      */
-    public void requestFileAdd() {
+    public void requestAddPictures() {
         chooseAndAddPicturesToGroup( Settings.pictureCollection.getRootNode() );
     }
 
@@ -678,9 +683,9 @@ public class Jpo
 
 
     /**
-     * Bring up a chooser and add pictures to the group.
-     * @see  GroupPopupInterface
-     * @param groupNode  The group nodde to which to add the pictures
+     * Calling this method brings up a filechooser which allows pictures and directories
+     * to be selected that are then added to the supplied node.
+     * @param groupNode  The group nodde to which to add the pictures or subdirectories
      */
     public void chooseAndAddPicturesToGroup(
             SortableDefaultMutableTreeNode groupNode ) {
@@ -692,7 +697,10 @@ public class Jpo
 
         public void treeNodesChanged( TreeModelEvent e ) {
             TreePath tp = e.getTreePath();
+            logger.fine( String.format( "The main app model listener trapped a tree node change event on the tree path: %s", tp.toString() ) );
             if ( tp.getPathCount() == 1 ) { //if the root node sent the event
+                logger.fine( "Since this is the root node we will update the ApplicationTitle" );
+
                 updateApplicationTitle();
             }
         }
@@ -724,9 +732,9 @@ public class Jpo
     private void updateApplicationTitle() {
         final File xmlFile = Settings.pictureCollection.getXmlFile();
         if ( xmlFile != null ) {
-            mainWindow.updateApplicationTitle( Settings.jpoResources.getString( "ApplicationTitle" ) + ":  " + xmlFile.toString() );
+            mainWindow.updateApplicationTitleEDT( Settings.jpoResources.getString( "ApplicationTitle" ) + ":  " + xmlFile.toString() );
         } else {
-            mainWindow.updateApplicationTitle( Settings.jpoResources.getString( "ApplicationTitle" ) );
+            mainWindow.updateApplicationTitleEDT( Settings.jpoResources.getString( "ApplicationTitle" ) );
         }
     }
 

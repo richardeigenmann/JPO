@@ -1,15 +1,20 @@
 package jpo.dataModel;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Vector;
-import jpo.gui.SingleNodeBrowser;
-import jpo.gui.Thumbnail;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.SwingUtilities;
+import jpo.gui.ThumbnailController;
+import junit.framework.AssertionFailedError;
 import junit.framework.TestCase;
 
 /**
  *
  * @author Richard Eigenmann
  */
-public class PictureInfoChangeListenerTest extends TestCase {
+public class PictureInfoChangeListenerTest
+        extends TestCase {
 
     public PictureInfoChangeListenerTest( String testName ) {
         super( testName );
@@ -17,7 +22,12 @@ public class PictureInfoChangeListenerTest extends TestCase {
 
 
     /**
-     * Test a Memory Leak scenaro
+     * Check how the Picture Listeners add and remove
+     * A new PictureInfo has no Listeners
+     * Then we add it to a node it should have one
+     * Then we put the node onto a thumbnail we should have two
+     * We then put a different node on the thumbnail the original PictureInfo we should have one listener
+     * If the node takes on a different Picture the listeners must be all gone
      */
     public void testPictureListenerAddAndRemove() {
         PictureInfo pi = new PictureInfo();
@@ -25,20 +35,35 @@ public class PictureInfoChangeListenerTest extends TestCase {
         assertTrue( "Verify that there is no Listerner to start off with", changeListeners.isEmpty() );
 
         SortableDefaultMutableTreeNode node = new SortableDefaultMutableTreeNode( pi );
-        Thumbnail t = new Thumbnail( 350 );
-        SingleNodeBrowser snb = new SingleNodeBrowser( node );
-        t.setNode( snb, 0 );
-        changeListeners = pi.getPictureInfoListeners();
-        assertEquals( "The PictureInfo should now have one change listener", 1, changeListeners.size());
+        assertEquals( "The PictureInfo should now have one change listener from the SDMTN", 1, changeListeners.size() );
 
-        node.setUserObject( new PictureInfo()) ;
-        t.setNode( snb, 0 );
-        changeListeners = pi.getPictureInfoListeners();
+        ThumbnailController tc1 = getNewThumbnailController();
+
+        SingleNodeBrowser snb = new SingleNodeBrowser( node );
+        tc1.setNode( snb, 0 );
+        assertEquals( "The PictureInfo should now have 2 change listeners", 2, changeListeners.size() );
+
+        SortableDefaultMutableTreeNode differentNode = new SortableDefaultMutableTreeNode( new PictureInfo() );
+        SingleNodeBrowser snb2 = new SingleNodeBrowser( differentNode );
+        tc1.setNode( snb2, 0 );
+        assertEquals( "The PictureInfo should now have 1 change listeners", 1, changeListeners.size() );
+
+        node.setUserObject( new PictureInfo() );
+        tc1.setNode( snb, 0 );
         assertTrue( "Verify that there is no Listerner after the node has been set to another object", changeListeners.isEmpty() );
+        tc1 = null;
     }
 
+
     /**
-     * Test another Memory Leak scenaro
+     * Check the PictureListeners some more
+     * A new PictureInfo has no listeners
+     * After adding it to a node it has one listener
+     * After adding the node to a Thumbnail it has one listener
+     * Now we replace the PictureInfo on the node
+     * The node should have remove itself from the the PictureInfo and attach
+     * The Thumbnail should unattach itself from the PictureInfo and attach itself to the new PictureInfo
+     *
      */
     public void testPictureListenerAddAndRemove2() {
         PictureInfo pi = new PictureInfo();
@@ -46,18 +71,46 @@ public class PictureInfoChangeListenerTest extends TestCase {
         assertTrue( "Verify that there is no Listerner to start off with", changeListeners.isEmpty() );
 
         SortableDefaultMutableTreeNode node = new SortableDefaultMutableTreeNode( pi );
-        Thumbnail t = new Thumbnail( 350 );
-        SingleNodeBrowser snb = new SingleNodeBrowser( node );
-        t.setNode( snb, 0 );
-        changeListeners = pi.getPictureInfoListeners();
-        assertEquals( "The PictureInfo should now have one change listener", 1, changeListeners.size());
+        assertEquals( "The PictureInfo should now have one change listener from the SDMTN", 1, changeListeners.size() );
 
-        SortableDefaultMutableTreeNode node2 = new SortableDefaultMutableTreeNode( new PictureInfo() )  ;
-        snb = new SingleNodeBrowser( node2 );
-        t.setNode( snb, 0 );
-        changeListeners = pi.getPictureInfoListeners();
-        assertTrue( "Verify that there is no Listerner after the Thumbnail has been set to another node", changeListeners.isEmpty() );
+        ThumbnailController tc2 = getNewThumbnailController();
+
+        SingleNodeBrowser snb = new SingleNodeBrowser( node );
+        tc2.setNode( snb, 0 );
+        assertEquals( "The PictureInfo should now have 2 change listeners", 2, changeListeners.size() );
+
+        PictureInfo pi2 = new PictureInfo();
+        node.setUserObject( pi2 );
+        assertEquals( "The PictureInfo should now have 0 change listeners", 0, changeListeners.size() );
+
+        tc2 = null;
     }
 
+    // helps with inner class
+    ThumbnailController tc;
 
+
+    /**
+     * helps to get a ThumbnailController from the EDT
+     * @return The ThumbnailController
+     */
+    private ThumbnailController getNewThumbnailController() {
+        // create the Thumbnail Controller on EDT
+        Runnable r = new Runnable() {
+
+            public void run() {
+                tc = new ThumbnailController( 350 );
+            }
+        };
+        try {
+            SwingUtilities.invokeAndWait( r );
+        } catch ( InterruptedException ex ) {
+            Logger.getLogger( PictureInfoChangeListenerTest.class.getName() ).log( Level.SEVERE, null, ex );
+            throw new AssertionFailedError( "Got an interrupted exception instead of a ThumbnailController" );
+        } catch ( InvocationTargetException ex ) {
+            Logger.getLogger( PictureInfoChangeListenerTest.class.getName() ).log( Level.SEVERE, null, ex );
+            throw new AssertionFailedError( "Got an exception instead of a ThumbnailController" );
+        }
+        return tc;
+    }
 }

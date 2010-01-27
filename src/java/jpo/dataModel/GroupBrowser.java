@@ -1,4 +1,4 @@
-package jpo.gui;
+package jpo.dataModel;
 
 import jpo.dataModel.*;
 import javax.swing.event.*;
@@ -7,7 +7,7 @@ import javax.swing.tree.*;
 /*
 GroupBrower.java:  an implementation of the ThumbnailBrowserInterface for browsing groups.
 
-Copyright (C) 2002 - 2009  Richard Eigenmann.
+Copyright (C) 2002 - 2010  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -23,7 +23,7 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 /** 
  *  This class implements the ThumbnailBrowserInterface in the specific manner that is required for 
- *  displaying Groups in the Thumbnail JScrollPane.
+ *  displaying the child nodes of a Group in the Thumbnail JScrollPane.
  */
 public class GroupBrowser
         extends ThumbnailBrowser
@@ -134,7 +134,7 @@ public class GroupBrowser
      */
     @Override
     public void treeNodesChanged( TreeModelEvent e ) {
-        //logger.info("GroupBrowser.treeNodesChanged: " + e.toString() );
+        logger.fine( "GroupBrowser.treeNodesChanged: " + e.toString() );
         if ( myNode == null ) {
             //logger.info("GroupBrowser.treeNodesChanged: ERROR! This should not have been called as there is not group showing and therefore there should be no tree listener firing off. Ignoring notification.");
             return;
@@ -144,8 +144,8 @@ public class GroupBrowser
         // of the current group
         TreePath myPath = new TreePath( myNode.getPath() );
         if ( myPath.equals( e.getTreePath() ) ) {
-            //logger.info("GroupBrowser.treeNodesChanged: The changed node's parent is the group being shown. We must therefore relayout the children; myNode: " + myPath.toString() + " comparison:" +  ((SortableDefaultMutableTreeNode) e.getTreePath().getLastPathComponent() ).toString() );
-            notifyRelayoutListeners();
+            logger.fine( String.format( "A Node was changed. No need to get excited at the group level. myNode: %s, notification node %s", myPath.toString(), ( (SortableDefaultMutableTreeNode) e.getTreePath().getLastPathComponent() ).toString() ) );
+            //notifyRelayoutListeners();
         }
     }
 
@@ -171,7 +171,7 @@ public class GroupBrowser
         // of the current group
         TreePath myPath = new TreePath( myNode.getPath() );
         if ( myPath.equals( e.getTreePath() ) ) {
-            //logger.info("GroupBrowser.treeNodesInserted: The inserted node's parent is the group being shown. We must therefore relayout the children; myNode: " + myPath.toString() + " comparison:" +  ((SortableDefaultMutableTreeNode) e.getTreePath().getLastPathComponent() ).toString() );
+            logger.info( "Nodes were inserted under my node. We must therefore relayout the children; myNode: " + myPath.toString() + " comparison:" + ( (SortableDefaultMutableTreeNode) e.getTreePath().getLastPathComponent() ).toString() );
             notifyRelayoutListeners();
         }
     }
@@ -189,7 +189,7 @@ public class GroupBrowser
     public void treeNodesRemoved( TreeModelEvent e ) {
         //logger.info("GroupBrowser.treeNodesRemoved: " + e.toString() );
         if ( myNode == null ) {
-            //logger.info("GroupBrowser.treeNodesRemoved: ERROR! This should not have been called as there is not group showing and therefore there should be no tree listener firing off. Ignoring notification.");
+            logger.severe( "ERROR! This should not have been called as there is not group showing and therefore there should be no tree listener firing off. Ignoring notification." );
             return;
         }
 
@@ -203,7 +203,7 @@ public class GroupBrowser
             // node is the current group
             TreePath myPath = new TreePath( myNode.getPath() );
             if ( myPath.equals( e.getTreePath() ) ) {
-                //logger.info("GroupBrowser.treeNodesRemoved: The removed node's parent is the group being shown. We must therefore relayout the children; myNode: " + myPath.toString() + " comparison:" +  ((SortableDefaultMutableTreeNode) e.getTreePath().getLastPathComponent() ).toString() );
+                logger.fine( String.format( "Nodes were removed from my node. We must therefore relayout the children; myPath: %s, lastPathComponent: [%s]", myPath.toString(), ( (SortableDefaultMutableTreeNode) e.getTreePath().getLastPathComponent() ).toString() ) );
                 notifyRelayoutListeners();
             }
         }

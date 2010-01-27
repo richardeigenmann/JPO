@@ -1,5 +1,7 @@
 package jpo.gui;
 
+import jpo.dataModel.ArrayListBrowser;
+import jpo.dataModel.SingleNodeBrowser;
 import jpo.TagCloud.TagClickListener;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
 import jpo.*;
@@ -44,7 +46,7 @@ public class InfoPanelController implements TagClickListener {
     private static Logger logger = Logger.getLogger( InfoPanelController.class.getName() );
 
     /**
-     *  A millisecond delay for the polling of the thumbnail queue and memory status
+     *  A millisecond delay for the polling of the thumbnailController queue and memory status
      */
     private static final int delay = 800; //milliseconds
 
@@ -102,7 +104,7 @@ public class InfoPanelController implements TagClickListener {
                     t.stop();
                     t.start();  // updates the queue-count
                 } else if ( node.getUserObject() instanceof PictureInfo ) {
-                    infoPanel.thumbnail.setNode( new SingleNodeBrowser( node ), 0 );
+                    infoPanel.thumbnailController.setNode( new SingleNodeBrowser( node ), 0 );
                     t.stop();
                 } else {
                     // ToDo get this stuff off the event handler thread

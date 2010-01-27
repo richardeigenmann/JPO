@@ -1,5 +1,6 @@
 package jpo.gui;
 
+import jpo.dataModel.FlatGroupBrowser;
 import jpo.dataModel.Tools;
 import jpo.dataModel.Settings;
 import jpo.gui.swing.CollectionJTree;
@@ -117,7 +118,7 @@ public class CollectionJTreeController
 
     /**
      * Returns the JScrollPane that holds the JTree.
-     * @return
+     * @return the JSCrollPane that holds the tree
      */
     public JScrollPane getJScrollPane() {
         return collectionJScrollPane;
@@ -369,6 +370,7 @@ public class CollectionJTreeController
         }
     }
 
+
     /**
      *  requests the pictures to be shown.
      *  @see  GroupPopupInterface
@@ -455,7 +457,7 @@ public class CollectionJTreeController
      *  method that will bring up a dialog box that allows the user to select how he wants
      *  to export the pictures of the current Group.
      **/
-    public void requestGroupExportHtml(SortableDefaultMutableTreeNode popupNode) {
+    public void requestGroupExportHtml( SortableDefaultMutableTreeNode popupNode ) {
         // new HtmlDistillerJFrame( myPopupNode );
         new GenerateWebsiteWizard( popupNode );
     }
@@ -465,7 +467,8 @@ public class CollectionJTreeController
      *  requests that the pictures indicated in a flat file be added at this point in the tree
      *  @see GroupPopupInterface
      */
-    public void requestGroupExportFlatFile(SortableDefaultMutableTreeNode popupNode) {
+    public void requestGroupExportFlatFile(
+            SortableDefaultMutableTreeNode popupNode ) {
         javax.swing.JFileChooser jFileChooser = new javax.swing.JFileChooser();
         jFileChooser.setFileSelectionMode( javax.swing.JFileChooser.FILES_ONLY );
         jFileChooser.setDialogTitle( Settings.jpoResources.getString( "saveFlatFileTitle" ) );
@@ -486,15 +489,14 @@ public class CollectionJTreeController
      *  @see  GroupPopupInterface
      *
     public void requestGroupExportJar(SortableDefaultMutableTreeNode popupNode) {
-//		new JarDistillerJFrame( myPopupNode );
+    //		new JarDistillerJFrame( myPopupNode );
     }*/
-
-
     /**
      *  requests that a group be exported to a new collectionjar archive
      *  @see  GroupPopupInterface
      */
-    public void requestGroupExportNewCollection(SortableDefaultMutableTreeNode popupNode) {
+    public void requestGroupExportNewCollection(
+            SortableDefaultMutableTreeNode popupNode ) {
         new CollectionDistillerJFrame( popupNode );
     }
 
@@ -503,7 +505,7 @@ public class CollectionJTreeController
      *  requests that a group be removed
      *  @see  GroupPopupInterface
      */
-    public void requestGroupRemove(SortableDefaultMutableTreeNode popupNode) {
+    public void requestGroupRemove( SortableDefaultMutableTreeNode popupNode ) {
         logger.fine( "CollectionJTree.requestGroupRemove: invoked on group: " + popupNode.getUserObject().toString() );
         SortableDefaultMutableTreeNode parentNode = (SortableDefaultMutableTreeNode) popupNode.getParent();
         if ( popupNode.deleteNode() ) {
@@ -516,7 +518,8 @@ public class CollectionJTreeController
      *  requests that a group's picture files be consolidated
      *  @see  GroupPopupInterface
      */
-    public void requestConsolidateGroup(SortableDefaultMutableTreeNode popupNode) {
+    public void requestConsolidateGroup(
+            SortableDefaultMutableTreeNode popupNode ) {
         new ConsolidateGroupJFrame( popupNode );
     }
 
@@ -525,7 +528,7 @@ public class CollectionJTreeController
      *  requests that a group be moved to the top
      *  @see  GroupPopupInterface
      */
-    public void requestMoveGroupToTop(SortableDefaultMutableTreeNode popupNode) {
+    public void requestMoveGroupToTop( SortableDefaultMutableTreeNode popupNode ) {
         popupNode.moveNodeToTop();
     }
 
@@ -534,7 +537,7 @@ public class CollectionJTreeController
      *  requests that a group be moved up
      *  @see  GroupPopupInterface
      */
-    public void requestMoveGroupUp(SortableDefaultMutableTreeNode popupNode) {
+    public void requestMoveGroupUp( SortableDefaultMutableTreeNode popupNode ) {
         popupNode.moveNodeUp();
     }
 
@@ -543,7 +546,7 @@ public class CollectionJTreeController
      *  requests that a group be moved down
      *  @see  GroupPopupInterface
      */
-    public void requestMoveGroupDown(SortableDefaultMutableTreeNode popupNode) {
+    public void requestMoveGroupDown( SortableDefaultMutableTreeNode popupNode ) {
         popupNode.moveNodeDown();
     }
 
@@ -552,7 +555,8 @@ public class CollectionJTreeController
      *  requests that a group be moved down
      *  @see  GroupPopupInterface
      */
-    public void requestMoveGroupToBottom(SortableDefaultMutableTreeNode popupNode) {
+    public void requestMoveGroupToBottom(
+            SortableDefaultMutableTreeNode popupNode ) {
         popupNode.moveNodeToBottom();
     }
 
@@ -561,7 +565,8 @@ public class CollectionJTreeController
      *  requests that a picture be moved to the target Group node
      *  @see  GroupPopupInterface
      */
-    public void requestMoveToNode( SortableDefaultMutableTreeNode popupNode, SortableDefaultMutableTreeNode targetGroup ) {
+    public void requestMoveToNode( SortableDefaultMutableTreeNode popupNode,
+            SortableDefaultMutableTreeNode targetGroup ) {
         popupNode.moveToNode( targetGroup );
     }
 
@@ -569,7 +574,7 @@ public class CollectionJTreeController
     /**
      *  request that a group be edited as a table
      */
-    public void requestEditGroupTable(SortableDefaultMutableTreeNode popupNode) {
+    public void requestEditGroupTable( SortableDefaultMutableTreeNode popupNode ) {
         TableJFrame tableJFrame = new TableJFrame( popupNode );
         tableJFrame.pack();
         tableJFrame.setVisible( true );
@@ -579,7 +584,8 @@ public class CollectionJTreeController
     /**
      *  gets called by the GroupPopupInterface and implements the sort request.
      */
-    public void requestSort(SortableDefaultMutableTreeNode popupNode, int sortCriteria ) {
+    public void requestSort( SortableDefaultMutableTreeNode popupNode,
+            int sortCriteria ) {
         //logger.info( "Sort requested on " + myPopupNode.toString() + " for Criteria: " + Integer.toString( sortCriteria ) );
         popupNode.sortChildren( sortCriteria );
         //( (DefaultTreeModel) collectionJTree.getModel() ).nodeStructureChanged( myPopupNode );
@@ -686,7 +692,7 @@ public class CollectionJTreeController
                             i = sb.getNumberOfNodes();
                         }
                     }
-                    PicturePopupMenu picturePopupMenu = new PicturePopupMenu( sb, index, null, collectionController );
+                    PicturePopupMenu picturePopupMenu = new PicturePopupMenu( sb, index );
                     picturePopupMenu.show( e.getComponent(), e.getX(), e.getY() );
                 }
             }

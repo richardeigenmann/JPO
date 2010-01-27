@@ -9,11 +9,10 @@ import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
+import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
 import javax.swing.UIManager;
 import jpo.dataModel.Settings;
-import jpo.dataModel.GroupInfo;
-import jpo.dataModel.PictureInfo;
 import jpo.dataModel.Tools;
 
 /*
@@ -37,12 +36,6 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  * MainWindow is the main window of the JPO application. Based on the MCV pattern
  * this is just the View object. The Jpo object is the controller.
  *
- * <p><img src=../Overview.png border=0><p>
- *
- * It uses a PictureCollection to organise a hierarchical model of
- * <code>SortableDefaultMutableTreeNode</code>s that represent the structure of the collection.
- * Each node has an associated object of {@link GroupInfo} or {@link PictureInfo} type.
- *
  *
  * @author Richard Eigenmann, richard.eigenmann@gmail.com
  */
@@ -58,10 +51,8 @@ public class MainWindow
     public MainWindow( ApplicationMenuInterface applicationController,
             JComponent navigationPanel, JComponent searchesJScrollPane,
             ThumbnailPanelController thumbnailJScrollPane, JComponent infoPanel ) {
-        this.applicationController = applicationController;
         this.collectionTab = navigationPanel;
         this.searchesTab = searchesJScrollPane;
-        this.thumbnailJScrollPane = thumbnailJScrollPane;
         Tools.checkEDT();
         try {
             //final String GTK = "com.sun.java.swing.plaf.gtk.GTKLookAndFeel";
@@ -71,7 +62,7 @@ public class MainWindow
 
             UIManager.setLookAndFeel( Windows );
         } catch ( Exception e ) {
-            logger.fine( "Jpo.main: Could not set Look and Feel" );
+            logger.fine( "Could not set Look and Feel" );
         }
         //ScreenHelper.explainGraphicsEnvironment();
 
@@ -168,8 +159,6 @@ public class MainWindow
         setVisible( true );
     }
 
-    private ApplicationMenuInterface applicationController;
-
     /**
      * Reference to the collection tab
      */
@@ -180,8 +169,10 @@ public class MainWindow
      */
     private JComponent searchesTab;
 
-    private ThumbnailPanelController thumbnailJScrollPane;
-
+  
+    /**
+     * The multi tab panel top left that allows the collection to be shown and then the searches etc.
+     */
     private JTabbedPane jpoNavigatorJTabbedPane = new JTabbedPane();
 
 
@@ -202,11 +193,34 @@ public class MainWindow
 
 
     /**
-     * Swing EDT invoking method that sets the title of the Frame to the new name
+     * This method updates the title of the MainWindow. In most operating systems this is
+     * shown on the top of the window and in the taskbar.
+     * Note: you must be on the EDT when calling this method.
      * @param newTitle The new title of the Frame
      */
     public void updateApplicationTitle( final String newTitle ) {
         Tools.checkEDT();
         setTitle( newTitle );
+    }
+
+
+    /**
+     * This method calls the {@link #updateApplicationTitle} method
+     * but can be called if you don't know whether you are on the EDT or not.
+     * @param newTitle The new title of the Frame
+     */
+    public void updateApplicationTitleEDT( final String newTitle ) {
+        if ( SwingUtilities.isEventDispatchThread() ) {
+            updateApplicationTitle( newTitle );
+        } else {
+            Runnable r = new Runnable() {
+
+                public void run() {
+                    updateApplicationTitle( newTitle );
+                }
+            };
+            SwingUtilities.invokeLater( r );
+
+        }
     }
 }

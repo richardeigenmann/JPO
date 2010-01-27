@@ -26,42 +26,54 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 /**
  *  This class shows thumbnails and their legends
  */
-public class ThumbnailPanel extends JScrollPane {
+public class ThumbnailPanel
+        extends JScrollPane {
 
     /**
-     *
+     *  Constructor. Make sure you are on the EDT before calling.
      */
     public ThumbnailPanel() {
         Tools.checkEDT();
         initComponents();
     }
+
     /**
      * the <code>JPanel</code> that is placed inside the <code>JScrollPane</code>
      * which holds the title and the ThumbnailComponents
      */
-    public JPanel ThumbnailPane;
+    private JPanel ThumbnailPane;
+
     /**
      *  Layout Manager for the Thumbnails
      */
     public final ThumbnailLayoutManager thumbnailLayout = new ThumbnailLayoutManager();
 
+
     private void initComponents() {
         ThumbnailPane = new JPanel();
-        ThumbnailPane.setLayout(thumbnailLayout);
+        ThumbnailPane.setLayout( thumbnailLayout );
 
 
-        ThumbnailPane.setBackground(Settings.JPO_BACKGROUND_COLOR);
+        ThumbnailPane.setBackground( Settings.JPO_BACKGROUND_COLOR );
 
-        setMinimumSize(Settings.thumbnailJScrollPaneMinimumSize);
-        setPreferredSize(Settings.thumbnailJScrollPanePreferredSize);
+        setMinimumSize( Settings.thumbnailJScrollPaneMinimumSize );
+        setPreferredSize( Settings.thumbnailJScrollPanePreferredSize );
 
-        setViewportView(ThumbnailPane);
-        setWheelScrollingEnabled(true);
-        setFocusable(true);
+        setViewportView( ThumbnailPane );
+        setWheelScrollingEnabled( true );
+        setFocusable( true );
 
         //  set the amount by which the panel scrolls down when the user clicks the
         //  little down or up arrow in the scrollbar
-        getVerticalScrollBar().setUnitIncrement(80);
+        getVerticalScrollBar().setUnitIncrement( 80 );
 
+    }
+
+    /**
+     * Returns the JPanel that holds the thumbnails.
+     * @return The JPanel that holds the thumbnails
+     */
+    public JPanel getThumbnailPane() {
+        return ThumbnailPane;
     }
 }

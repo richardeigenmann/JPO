@@ -135,7 +135,7 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
     /**
      * Checks whether the supplied file is good for webpage generation and spams popups if not
      * @param targetDirectory
-     * @return 
+     * @return true if ok, false if not
      */
     public static boolean check( File targetDirectory ) {
         if ( !targetDirectory.exists() ) {

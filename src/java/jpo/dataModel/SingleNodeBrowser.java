@@ -1,5 +1,6 @@
-package jpo.gui;
+package jpo.dataModel;
 
+import jpo.dataModel.ThumbnailBrowser;
 import java.util.logging.Logger;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
 import jpo.dataModel.PictureInfo;
@@ -25,12 +26,16 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  *  This class implements the ThumbnailBrowserInterface in the specific manner that is required for
  *  displaying a single picture in the ThumbnailJScrollPane.
  */
-public class SingleNodeBrowser extends ThumbnailBrowser {
+public class SingleNodeBrowser
+        extends ThumbnailBrowser {
 
     /**
-     * Defines a logger for this class
+     * Defines a logger for this class.
+     * Overrides the logger inherited in the Thumbnail Browser
      */
-    private static Logger logger = Logger.getLogger( SingleNodeBrowser.class.getName() );
+    {
+        logger = Logger.getLogger( SingleNodeBrowser.class.getName() );
+    }
 
 
     /**

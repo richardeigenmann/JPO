@@ -38,7 +38,7 @@ public class InfoPanel extends JTabbedPane {
     /**
      * ThumbnailComponent to show the picture that has been selected
      */
-    public Thumbnail thumbnail;
+    public ThumbnailController thumbnailController;
 
     /**
      *  A link to the statistics panel class.
@@ -72,8 +72,8 @@ public class InfoPanel extends JTabbedPane {
         statsScroller.getVerticalScrollBar().setUnitIncrement( 20 );
         this.addTab( "Stats", statsScroller );
      
-        thumbnail = new Thumbnail( Settings.thumbnailSize );
-        this.addTab( "Thumbnail", thumbnail );
+        thumbnailController = new ThumbnailController( Settings.thumbnailSize );
+        this.addTab( "Thumbnail", thumbnailController.getThumbnail() );
         this.addTab( "Word Cloud", new JPanel() );
     }
   

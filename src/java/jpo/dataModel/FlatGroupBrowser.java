@@ -1,5 +1,6 @@
-package jpo.gui;
+package jpo.dataModel;
 
+import jpo.gui.*;
 import jpo.dataModel.*;
 import java.util.ArrayList;
 import java.util.Enumeration;

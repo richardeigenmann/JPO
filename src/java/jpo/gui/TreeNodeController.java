@@ -157,7 +157,7 @@ public class TreeNodeController {
      */
     public static void showEditGUI( SortableDefaultMutableTreeNode node ) {
         if ( node == null ) {
-            logger.severe( "How comm show edit gui was called with a null node?");
+            logger.severe( "How come show edit gui was called with a null node?");
             Thread.dumpStack();
             return;
         }

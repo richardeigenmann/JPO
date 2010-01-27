@@ -1,5 +1,6 @@
 package jpo.gui;
 
+import jpo.gui.swing.HelpAboutWindow;
 import jpo.dataModel.RecentFilesChangeListener;
 import jpo.dataModel.Settings;
 import jpo.*;
@@ -170,7 +171,7 @@ public class ApplicationJMenuBar extends JMenuBar
         FileAddJMenuItem.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
-                caller.requestFileAdd();
+                caller.requestAddPictures();
             }
         });
         FileJMenu.add(FileAddJMenuItem);

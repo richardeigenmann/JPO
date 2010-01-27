@@ -1,5 +1,6 @@
 package jpo.gui;
 
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JProgressBar;
 import javax.swing.SwingUtilities;
@@ -36,6 +37,7 @@ public class CameraDownloadWorker
      * Defines a logger for this class
      */
     private static Logger logger = Logger.getLogger( CameraDownloadWorker.class.getName() );
+    //{logger.setLevel( Level.ALL ); }
 
 
     public CameraDownloadWorker( CameraDownloadWizardData dataModel,

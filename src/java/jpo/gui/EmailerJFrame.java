@@ -1,5 +1,6 @@
 package jpo.gui;
 
+import jpo.dataModel.ArrayListBrowser;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
 import java.awt.*;
 import java.awt.event.*;
@@ -431,14 +432,14 @@ public class EmailerJFrame extends JFrame {
         for ( int i = 0; i < emailSelected.length; i++ ) {
             //logger.info("EmailerJFrame.loadThumbnails: running on " + emailSelected[i].toString() );
             alb.addNode( (SortableDefaultMutableTreeNode) emailSelected[i] );
-            Thumbnail t = new Thumbnail( alb, i, thumbnailSize, ThumbnailQueueRequest.LOW_PRIORITY, null);
-            t.setDecorateThumbnails( false );
-            t.determineMailSlectionStatus();
-            t.setFactor( factor );
+            ThumbnailController thumbnailController = new ThumbnailController( alb, i, thumbnailSize, ThumbnailQueueRequest.LOW_PRIORITY, null);
+            thumbnailController.setDecorateThumbnails( false );
+            thumbnailController.determineMailSlectionStatus();
+            thumbnailController.setFactor( factor );
             c.gridx = i;
             logger.info( c.toString() + " x= " + Integer.toString( c.gridx ) + " y= " + Integer.toString( c.gridy ) );
-            imagesJPanel.add( t, c );
-            t.setVisible( true );
+            imagesJPanel.add( thumbnailController.getThumbnail(), c );
+            thumbnailController.getThumbnail().setVisible( true );
         }
         imagesJPanel.revalidate();
     }
@@ -480,7 +481,7 @@ public class EmailerJFrame extends JFrame {
 
         Dimension scaleSize = new Dimension( imageWidthWholeNumberField.getValue(), imageWidthWholeNumberField.getValue() );
 
-        putSettings(); // placed here so that we don't store addresses that fail in the AddressExceptions
+        putSettings(); // placed here so that we don'thumbnailController store addresses that fail in the AddressExceptions
         EmailerThread et = new EmailerThread( emailSelected, senderAddress, destinationAddress, subjectJTextField.getText(), messageJTextArea.getText(), scaleImages, scaleSize, sendOriginal );
         // sendEmail( emailSelected, senderAddress, destinationAddress, scaleImages, scaleSize, sendOriginal );
     }

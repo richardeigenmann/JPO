@@ -1,5 +1,6 @@
 package jpo.gui;
 
+import jpo.gui.swing.NonFocussedCaret;
 import jpo.dataModel.Settings;
 import jpo.dataModel.GroupInfo;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
@@ -17,7 +18,7 @@ import java.util.logging.Logger;
 /*
 ThumbnailDescriptionJPanel.java:  class that creates a panel showing the details of a thumbnail
 
-Copyright (C) 2002 - 2009  Richard Eigenmann, Zürich, Switzerland
+Copyright (C) 2002 - 2010  Richard Eigenmann, Zürich, Switzerland
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -138,10 +139,7 @@ public class ThumbnailDescriptionJPanel
         Settings.pictureCollection.getTreeModel().addTreeModelListener( this );
 
         setBackground( Color.WHITE );
-        //setBorder( BorderFactory.createLineBorder( Color.RED ) );
 
-
-        //pictureDescriptionJTA.setFont( Settings.captionFont );
         pictureDescriptionJTA.setWrapStyleWord( true );
         pictureDescriptionJTA.setLineWrap( true );
         pictureDescriptionJTA.setEditable( true );
@@ -151,11 +149,9 @@ public class ThumbnailDescriptionJPanel
         pictureDescriptionJSP.setMinimumSize( new Dimension( Settings.thumbnailSize, 25 ) );
         pictureDescriptionJSP.setMaximumSize( new Dimension( Settings.thumbnailSize, 250 ) );
 
-        //pictureDescriptionJTA.setAlignmentX( Component.CENTER_ALIGNMENT );
         pictureDescriptionJTA.setInputVerifier( new InputVerifier() {
 
             public boolean verify( JComponent component ) {
-                // doUpdate();
                 return true;
             }
 
@@ -192,31 +188,7 @@ public class ThumbnailDescriptionJPanel
         } );
 
         setVisible( false );
-
-
-        //c.fill = c.BOTH;
-        //c.anchor = c.NORTH;
-
-
-//		this.setLayout( new BoxLayout( this, BoxLayout.Y_AXIS ) );
-        //add ( pictureDescriptionJTA, BorderLayout.NORTH);
-        //pictureDescriptionJSP.setBorder( BorderFactory.createEmptyBorder(0,0,0,0) );
-        //pictureDescriptionJSP.setBorder( BorderFactory.createLineBorder( Color.GREEN ) );
         add( pictureDescriptionJSP );
-
-
-
-        /*highresLocationJTextField.setMinimumSize( new Dimension( (int) ( Settings.thumbnailSize * thumbnailSizeFactor ), 20) );
-        highresLocationJTextField.setMaximumSize( new Dimension( (int) ( Settings.thumbnailSize * thumbnailSizeFactor ), 20) );
-        highresLocationJTextField.setPreferredSize( new Dimension( (int) ( Settings.thumbnailSize * thumbnailSizeFactor ), 20) );
-        //		add ( highresLocationJTextField );
-
-
-        lowresLocationJTextField.setMinimumSize( new Dimension( (int) ( Settings.thumbnailSize * thumbnailSizeFactor ), 20) );
-        lowresLocationJTextField.setMaximumSize( new Dimension( (int) ( Settings.thumbnailSize * thumbnailSizeFactor ), 20) );
-        lowresLocationJTextField.setPreferredSize( new Dimension( (int) ( Settings.thumbnailSize * thumbnailSizeFactor ), 20) );
-        //		add ( lowresLocationJTextField );*/
-
     }
 
 
@@ -237,7 +209,7 @@ public class ThumbnailDescriptionJPanel
                 ( (GroupInfo) referringNode.getUserObject() ).setGroupName( pictureDescriptionJTA.getText() );
             }
             // send a change event to the listeners
-            referringNode.getPictureCollection().getTreeModel().nodeChanged( referringNode );
+            //          referringNode.getPictureCollection().getTreeModel().nodeChanged( referringNode );
         }
         //Todo: The GroupInfo should be sending the notifications around
         //Settings.pictureCollection.getTreeModel().nodeChanged( referringNode );
@@ -359,7 +331,7 @@ public class ThumbnailDescriptionJPanel
 
     /**
      *   Overridden method to allow the better tuning of visibility
-     * @param visibility
+     * @param visibility  Send in true or false
      */
     @Override
     public void setVisible( boolean visibility ) {
@@ -371,9 +343,10 @@ public class ThumbnailDescriptionJPanel
 
 
     /**
-     *   Returns the preferred size for the ThumbnailDescription as a Dimension using the thumbnailSize
-     *   as width and height.
-     * @return
+     * Returns the preferred size for the ThumbnailDescription as a Dimension using the thumbnailSize
+     * as width and height.
+     * 
+     * @return Returns the preferred size for the ThumbnailDescription as a Dimension using the thumbnailSize as width and height.
      */
     @Override
     public Dimension getPreferredSize() {

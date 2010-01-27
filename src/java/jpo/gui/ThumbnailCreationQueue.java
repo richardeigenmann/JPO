@@ -34,27 +34,36 @@ public class ThumbnailCreationQueue {
 
 
     /**
-     *  This method creates {@link ThumbnailQueueRequest} and sticks it
-     *  on the {@link ThumbnailCreationQueue}.
+     * This method creates a {@link ThumbnailQueueRequest} and sticks it
+     * on the {@link ThumbnailCreationQueue} if Thumbnail is not already on
+     * the queue. Otherwise the queue priority of the exising request is
+     * increased if the request comes in with a higher priority. If the new request
+     * forces a rebuild of the image this is also updated in the request.
      *
-     *  @param	thumb	The Thumbnail which is to be loaded
+     *
+     *  @param	thumbnailController	The ThumbnailController which is to be loaded
      *  @param	priority	The priority with which the request is to be treated on the queue
      *  @param	force		Set to true if the thumbnail needs to be rebuilt from source, false
      *				if using a cached version is OK.
+     *  @return true if the request was added to the queue, false if the request already existed.
      */
-    public static void requestThumbnailCreation( Thumbnail thumb, int priority, boolean force ) {
-        ThumbnailQueueRequest req = findQueueRequest( thumb );
-        if ( req == null ) {
-            thumb.setPendingIcon();
-            add( new ThumbnailQueueRequest( thumb, priority, force ) );
+    public static boolean requestThumbnailCreation( ThumbnailController thumbnailController,
+            int priority, boolean force ) {
+        ThumbnailQueueRequest requestFoundOnQueue = findQueueRequest( thumbnailController );
+        if ( requestFoundOnQueue == null ) {
+            // there is no prior request on the queue, we add a new one
+            add( new ThumbnailQueueRequest( thumbnailController, priority, force ) );
+            return true;
         } else {
-            // thumbnail already on queue
-            if ( req.getPriority() > priority ) {
-                req.setPriority( priority );
+            // thumbnail already on queue, should we up the priority?
+            if ( requestFoundOnQueue.getPriority() > priority ) {
+                requestFoundOnQueue.setPriority( priority );
             }
-            if ( req.getForce() || force ) {
-                req.setForce( true );
+            // must we now rebuild the image?
+            if ( force && ( requestFoundOnQueue.getForce() != force ) ) {
+                requestFoundOnQueue.setForce( true );
             }
+            return false;
         }
     }
 
@@ -105,12 +114,12 @@ public class ThumbnailCreationQueue {
 
 
     /**
-     *   removes the request for a specific Thumbnail from the queue.
+     *   removes the request for a specific ThumbnailController from the queue.
      *
-     *   @param  thumb  The thumbnail to be removed
+     *   @param  thumbnailController  The thumbnail to be removed
      */
-    public static void removeThumbnailRequest( Thumbnail thumb ) {
-        ThumbnailQueueRequest tqr = findQueueRequest( thumb );
+    public static void removeThumbnailRequest( ThumbnailController thumbnailController ) {
+        ThumbnailQueueRequest tqr = findQueueRequest( thumbnailController );
         if ( tqr != null ) {
             queue.remove( tqr );
         }
@@ -118,17 +127,18 @@ public class ThumbnailCreationQueue {
 
 
     /**
-     *   This method returns the {@link ThumbnailQueueRequest} for the supplied Thumbnail if such
+     *   This method returns the {@link ThumbnailQueueRequest} for the supplied ThumbnailController if such
      *   a request exists. Otherwise it returns null.
      *
-     *   @param  thumb  The {@link Thumbnail} for which the request is to be found
+     *   @param  thumbnailController  The {@link ThumbnailController} for which the request is to be found
      *   @return   The ThumbnailQueueRequest if it exists.
      */
-    public static ThumbnailQueueRequest findQueueRequest( Thumbnail thumb ) {
+    public static ThumbnailQueueRequest findQueueRequest(
+            ThumbnailController thumbnailController ) {
         ThumbnailQueueRequest req = null, test = null;
         for ( Iterator i = queue.iterator(); i.hasNext(); ) {
             test = (ThumbnailQueueRequest) i.next();
-            if ( test.getThumbnail().equals( thumb ) ) {
+            if ( test.getThumbnailController().equals( thumbnailController ) ) {
                 req = test;
                 break;
             }

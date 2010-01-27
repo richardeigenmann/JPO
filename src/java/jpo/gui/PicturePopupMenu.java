@@ -1,5 +1,6 @@
 package jpo.gui;
 
+import jpo.dataModel.ThumbnailBrowserInterface;
 import jpo.dataModel.UserFunctionsChangeListener;
 import jpo.dataModel.Tools;
 import jpo.dataModel.CopyLocationsChangeListener;
@@ -71,33 +72,6 @@ public class PicturePopupMenu
      */
     private JMenuItem[] recentDropNodes = new JMenuItem[Settings.maxDropNodes];
 
-    /**
-     *  The node the popup menu was created for
-     */
-    private final SortableDefaultMutableTreeNode popupNode;
-
-    /**
-     *  Reference to the {@link ThumbnailBrowserInterface} which indicates the nodes being displayed.
-     */
-    private ThumbnailBrowserInterface mySetOfNodes = null;
-
-    /**
-     *  Index of the {@link #mySetOfNodes} being popped up.
-     */
-    private int index = 0;
-
-    /**
-     *  Reference to the picture viewer so that we can reposition.
-     */
-    private final PictureViewer pictureViewer;
-
-    private SortableDefaultMutableTreeNode[] parentNodes = null;
-
-    /**
-     * handle back to the collection controller to tell it to do some events
-     */
-    private Jpo collectionController = null;
-
 
     /**
      * Constructor for the PicturePopupMenu where we do have a {@link PictureViewer} that should
@@ -105,47 +79,29 @@ public class PicturePopupMenu
      *
      * @param  setOfNodes   The set of nodes from which the popup picture is coming
      * @param  idx		The picture of the set for which the popup is being shown.
-     * @param  pictureViewer  the PictureViewer to notify
-     * @param collectionController The picture controller for this node
      */
-    public PicturePopupMenu( ThumbnailBrowserInterface setOfNodes, int idx,
-            PictureViewer pictureViewer, Jpo collectionController ) {
+    public PicturePopupMenu( ThumbnailBrowserInterface setOfNodes, int idx ) {
         this.mySetOfNodes = setOfNodes;
         this.index = idx;
-        this.pictureViewer = pictureViewer;
         this.popupNode = mySetOfNodes.getNode( index );
-        this.collectionController = collectionController;
 
         Settings.addRecentDropNodeListener( this );
         Settings.addCopyLocationsChangeListener( this );
         Settings.addUserFunctionsChangeListener( this );
 
+        // Show Picture button
         JMenuItem pictureShowJMenuItem = new JMenuItem( Settings.jpoResources.getString( "pictureShowJMenuItemLabel" ) );
         pictureShowJMenuItem.addActionListener( new ActionListener() {
 
             public void actionPerformed( ActionEvent e ) {
-                PictureViewer pictureViewer = new PictureViewer();
-                if ( mySetOfNodes == null ) {
-                    logger.info( "PicturePopupMenu.constructor: why does this PicturePopupMenu not know the context it is showing pictures in?" );
-                    mySetOfNodes = new FlatGroupBrowser( (SortableDefaultMutableTreeNode) popupNode.getParent() );
-                    index = 0;
-                    for ( int i = 0; i < mySetOfNodes.getNumberOfNodes(); i++ ) {
-                        if ( mySetOfNodes.getNode( i ).equals( popupNode ) ) {
-                            index = i;
-                            i = mySetOfNodes.getNumberOfNodes();
-                        }
-                    }
-                    //pictureViewer.changePicture( popupNode );
-                }
-                pictureViewer.changePicture( mySetOfNodes, index );
+                requestShowPicture();
             }
         } );
         add( pictureShowJMenuItem );
 
-
-        parentNodes = Settings.pictureCollection.findParentGroups( popupNode );
+        // Navigate to menu
+        SortableDefaultMutableTreeNode[] parentNodes = Settings.pictureCollection.findParentGroups( popupNode );
         JMenu navigationJMenu = new JMenu( Settings.jpoResources.getString( "navigationJMenu" ) );
-        final Jpo controller = collectionController;
         for ( int i = 0; i < parentNodes.length; i++ ) {
             JMenuItem navigateToRootNode = new JMenuItem( parentNodes[i].getUserObject().toString() );
             final SortableDefaultMutableTreeNode targetNode = parentNodes[i];
@@ -155,39 +111,29 @@ public class PicturePopupMenu
 
 
                 public void actionPerformed( ActionEvent e ) {
-                    controller.positionToNode( node );
+                    Jpo.positionToNode( node );
                 }
             } );
             navigationJMenu.add( navigateToRootNode );
         }
         add( navigationJMenu );
 
+        // Properties
         JMenuItem pictureEditJMenuItem = new JMenuItem( Settings.jpoResources.getString( "pictureEditJMenuItemLabel" ) );
         pictureEditJMenuItem.addActionListener( new ActionListener() {
 
             public void actionPerformed( ActionEvent e ) {
-                TreeNodeController.showEditGUI( popupNode );
+                requestProperties();
             }
         } );
         add( pictureEditJMenuItem );
 
+        // Categories
         JMenuItem categoryUsagetJMenuItem = new JMenuItem( Settings.jpoResources.getString( "categoryUsagetJMenuItem" ) );
         categoryUsagetJMenuItem.addActionListener( new ActionListener() {
 
             public void actionPerformed( ActionEvent e ) {
-
-                if ( Settings.pictureCollection.countSelectedNodes() < 1 ) {
-                    TreeNodeController.showCategoryUsageGUI( popupNode );
-                } else {
-                    if ( !Settings.pictureCollection.isSelected( popupNode ) ) {
-                        Settings.pictureCollection.clearSelection();
-                        TreeNodeController.showCategoryUsageGUI( popupNode );
-                    } else {
-                        CategoryUsageJFrame cujf = new CategoryUsageJFrame();
-                        cujf.setSelection( Settings.pictureCollection.getSelectedNodesAsVector() );
-                    }
-                }
-
+                requestCategories();
             }
         } );
         add( categoryUsagetJMenuItem );
@@ -200,18 +146,8 @@ public class PicturePopupMenu
             pictureMailSelectJMenuItem.addActionListener( new ActionListener() {
 
                 public void actionPerformed( ActionEvent e ) {
-                    if ( Settings.pictureCollection.countSelectedNodes() < 1 ) {
-                        popupNode.getPictureCollection().removeFromMailSelection( popupNode );
-                    } else {
-                        Enumeration<SortableDefaultMutableTreeNode> selection = Settings.pictureCollection.getSelectedNodesAsVector().elements();
-                        SortableDefaultMutableTreeNode n;
-                        while ( selection.hasMoreElements() ) {
-                            n = selection.nextElement();
-                            if ( n.getUserObject() instanceof PictureInfo ) {
-                                n.getPictureCollection().removeFromMailSelection( n );
-                            }
-                        }
-                    }
+                    requestSelectForEmail();
+
                 }
             } );
             add( pictureMailSelectJMenuItem );
@@ -480,24 +416,14 @@ public class PicturePopupMenu
         }
         copyLocationsChanged();
 
+        // remove node
         if ( popupNode.getPictureCollection().getAllowEdits() ) {
             JMenuItem pictureNodeRemove = new JMenuItem( Settings.jpoResources.getString( "pictureNodeRemove" ) );
             pictureNodeRemove.addActionListener( new ActionListener() {
 
                 public void actionPerformed( ActionEvent e ) {
-                    if ( Settings.pictureCollection.countSelectedNodes() < 1 ) {
-                        popupNode.deleteNode();
+                    requestRemoveNode();
 
-                    } else {
-                        Enumeration<SortableDefaultMutableTreeNode> selection = Settings.pictureCollection.getSelectedNodesAsVector().elements();
-                        SortableDefaultMutableTreeNode n;
-                        while ( selection.hasMoreElements() ) {
-                            n = selection.nextElement();
-                            if ( n.getUserObject() instanceof PictureInfo ) {
-                                n.deleteNode();
-                            }
-                        }
-                    }
                 }
             } );
             add( pictureNodeRemove );
@@ -525,15 +451,12 @@ public class PicturePopupMenu
             } );
             fileOperationsJMenu.add( fileRenameJMenuItem );
 
+            // Delete
             JMenuItem fileDeleteJMenuItem = new JMenuItem( Settings.jpoResources.getString( "fileDeleteJMenuItem" ) );
             fileDeleteJMenuItem.addActionListener( new ActionListener() {
 
                 public void actionPerformed( ActionEvent e ) {
-                    if ( Settings.pictureCollection.countSelectedNodes() < 1 ) {
-                        popupNode.fileDelete();
-                    } else {
-                        multiDeleteDialog();
-                    }
+                    requestDelete();
                 }
             } );
             fileOperationsJMenu.add( fileDeleteJMenuItem );
@@ -541,6 +464,106 @@ public class PicturePopupMenu
     }
 
 
+    /**
+     * Request to remove a node. What happens depends on the selection:
+     * If the node on which the popup was performed is one of a selection of
+     * nodes, the multi-delete dialog is opened. If, however it is not part
+     * of a potentially exisitng selection then only the specified node will
+     * be deleted.
+     */
+    private void requestRemoveNode() {
+        SortableDefaultMutableTreeNode actionNode = mySetOfNodes.getNode( index );
+        if ( ( Settings.pictureCollection.countSelectedNodes() > 1 ) && ( Settings.pictureCollection.isSelected( actionNode ) ) ) {
+            Enumeration<SortableDefaultMutableTreeNode> selection = Settings.pictureCollection.getSelectedNodesAsVector().elements();
+            SortableDefaultMutableTreeNode n;
+            while ( selection.hasMoreElements() ) {
+                n = selection.nextElement();
+                if ( n.getUserObject() instanceof PictureInfo ) {
+                    n.deleteNode();
+                }
+            }
+        } else {
+            popupNode.deleteNode();
+        }
+    }
+
+
+    /**
+     * the Delete menu was clicked. What happens depends on the selection:
+     * If the node on which the popup was performed is one of a selection of
+     * nodes, the multi-delete dialog is opened. If, however it is not part
+     * of a potentially exisitng selection then only the specified node will
+     * be deleted.
+     */
+    private void requestDelete() {
+        SortableDefaultMutableTreeNode actionNode = mySetOfNodes.getNode( index );
+        if ( ( Settings.pictureCollection.countSelectedNodes() > 1 ) && ( Settings.pictureCollection.isSelected( actionNode ) ) ) {
+            multiDeleteDialog();
+        } else {
+            fileDelete( actionNode );
+        }
+    }
+
+
+    /**
+     * Brings up an are you sure dialog and then deletes the file.
+     * @param nodeToDelete The node to be deleted
+     */
+    public void fileDelete( SortableDefaultMutableTreeNode nodeToDelete ) {
+        Object userObj = nodeToDelete.getUserObject();
+        if ( !( userObj instanceof PictureInfo ) ) {
+            return;
+        }
+
+        PictureInfo pi = (PictureInfo) userObj;
+        File highresFile = pi.getHighresFile();
+        if ( highresFile == null ) {
+            return;
+        }
+
+        int option = JOptionPane.showConfirmDialog(
+                Settings.anchorFrame,
+                Settings.jpoResources.getString( "FileDeleteLabel" ) + highresFile.toString() + "\n" + Settings.jpoResources.getString( "areYouSure" ),
+                Settings.jpoResources.getString( "FileDeleteTitle" ),
+                JOptionPane.OK_CANCEL_OPTION );
+
+        if ( option == 0 ) {
+            boolean ok = false;
+            File lowresFile = pi.getLowresFile();
+            if ( ( lowresFile != null ) && ( lowresFile.exists() ) ) {
+                ok = lowresFile.delete();
+                if ( !ok ) //logger.info("File deleted: " + lowresFile.toString() );
+                // else
+                {
+                    logger.info( "File deleted failed on: " + lowresFile.toString() );
+                }
+            }
+
+
+            if ( highresFile.exists() ) {
+                ok = highresFile.delete();
+                if ( !ok ) //logger.info("File deleted: " + highresFile.toString() );
+                //else
+                {
+                    logger.info( "File deleted failed on: " + highresFile.toString() );
+                }
+            }
+
+            nodeToDelete.deleteNode();
+
+            if ( !ok ) {
+                JOptionPane.showMessageDialog( Settings.anchorFrame,
+                        Settings.jpoResources.getString( "fileDeleteError" ) + highresFile.toString(),
+                        Settings.jpoResources.getString( "genericError" ),
+                        JOptionPane.ERROR_MESSAGE );
+            }
+        }
+    }
+
+
+    /**
+     * Multi delete dialog
+     */
     private void multiDeleteDialog() {
         JTextArea textArea = new JTextArea();
         textArea.setText( "" );
@@ -604,7 +627,80 @@ public class PicturePopupMenu
 
     }
 
+    //  Controller type Stuff
+    /**
+     *  The node the popup menu was created for
+     */
+    private final SortableDefaultMutableTreeNode popupNode;
 
+    /**
+     *  Reference to the {@link ThumbnailBrowserInterface} which indicates the nodes being displayed.
+     */
+    private ThumbnailBrowserInterface mySetOfNodes = null;
+
+    /**
+     *  Index of the {@link #mySetOfNodes} being popped up.
+     */
+    private int index = 0;
+
+
+    /**
+     * The "Show Picture" menu button calls this function
+     */
+    private void requestShowPicture() {
+        PictureViewer pictureViewer = new PictureViewer();
+        pictureViewer.changePicture( mySetOfNodes, index );
+    }
+
+
+    /**
+     * Show the Properties GUI
+     */
+    private void requestProperties() {
+        new PictureInfoEditor( mySetOfNodes, index );
+    }
+
+
+    /**
+     * handle the Categories click
+     */
+    private void requestCategories() {
+        if ( Settings.pictureCollection.countSelectedNodes() < 1 ) {
+            TreeNodeController.showCategoryUsageGUI( popupNode );
+        } else {
+            if ( !Settings.pictureCollection.isSelected( popupNode ) ) {
+                Settings.pictureCollection.clearSelection();
+                TreeNodeController.showCategoryUsageGUI( popupNode );
+            } else {
+                CategoryUsageJFrame cujf = new CategoryUsageJFrame();
+                cujf.setSelection( Settings.pictureCollection.getSelectedNodesAsVector() );
+            }
+        }
+    }
+
+
+    /**
+     * request to select for Email
+     */
+    private void requestSelectForEmail() {
+        if ( Settings.pictureCollection.countSelectedNodes() < 1 ) {
+            popupNode.getPictureCollection().removeFromMailSelection( popupNode );
+        } else {
+            Enumeration<SortableDefaultMutableTreeNode> selection = Settings.pictureCollection.getSelectedNodesAsVector().elements();
+            SortableDefaultMutableTreeNode n;
+            while ( selection.hasMoreElements() ) {
+                n = selection.nextElement();
+                if ( n.getUserObject() instanceof PictureInfo ) {
+                    n.getPictureCollection().removeFromMailSelection( n );
+                }
+            }
+        }
+    }
+
+
+    /**
+     * Switches the picture back to no rotation
+     */
     private void noRotation() {
         Object o = popupNode.getUserObject();
         PictureInfo pi = (PictureInfo) o;
@@ -613,6 +709,10 @@ public class PicturePopupMenu
     }
 
 
+    /**
+     * Rotates the picture by the indicated angle
+     * @param angle 0..360 degrees
+     */
     private void rotatePicture( int angle ) {
         Object o = popupNode.getUserObject();
         PictureInfo pi = (PictureInfo) o;

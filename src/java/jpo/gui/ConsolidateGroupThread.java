@@ -184,7 +184,7 @@ public class ConsolidateGroupThread implements Runnable {
                         return false;
                     }
                 }
-                progGui.progressIncrement();
+                progGui.progressIncrementEDT();
             }
         }
         return true;

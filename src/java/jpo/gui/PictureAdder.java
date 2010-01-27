@@ -2,18 +2,19 @@ package jpo.gui;
 
 import java.io.File;
 import java.util.HashSet;
+import java.util.List;
 import java.util.logging.Logger;
-import javax.swing.SwingUtilities;
+import javax.swing.SwingWorker;
 import jpo.dataModel.GroupInfo;
 import jpo.dataModel.Settings;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
 import jpo.dataModel.Tools;
 
 /*
-PictureFileChooser.java:  a controller that brings up a filechooser and then adds the pictures
+PictureAdder.java:  A Class which brings up a progress bar and adds pictures to the specified node.
 
 
-Copyright (C) 2009  Richard Eigenmann.
+Copyright (C) 2009-2010  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -31,131 +32,166 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  * A Class which brings up a progress bar and adds pictures to the specified node.
  * @author Richard Eigenmann
  */
-public class PictureAdder {
+public class PictureAdder
+        extends SwingWorker<Integer, Integer> {
 
     /**
-     * Defines a logger for this class
+     * Constructor
+     *  @param startNode  The node on which to add the pictures
+     *  @param chosenFiles  The array of Files to add
+     *  @param newOnly indicates whether to check if the picture is already in the collection
+     *  @param recurseDirectories  indicates whether to scan down into directories for more pictures.
+     *  @param retainDirectories  indicates whether to preserve the directory structure.
+     *  @param selectedCategories  The categories to give the pictures
      */
-    private static Logger logger = Logger.getLogger(PictureFileChooser.class.getName());
+    public PictureAdder( SortableDefaultMutableTreeNode startNode,
+            File[] chosenFiles, boolean newOnly, boolean recurseDirectories,
+            boolean retainDirectories, HashSet<Object> selectedCategories ) {
+
+        this.startNode = startNode;
+        this.chosenFiles = chosenFiles;
+        this.newOnly = newOnly;
+        this.recurseDirectories = recurseDirectories;
+        this.retainDirectories = retainDirectories;
+        this.selectedCategories = selectedCategories;
+
+        logger.fine( String.format( "Invoked for node: %s, with %d files, newOnly: %b, recurseDirectories: %b, retainDirectories: %b", startNode.toString(), chosenFiles.length, newOnly, recurseDirectories, retainDirectories ) );
+
+        progGui = new ProgressGui( Tools.countfiles( chosenFiles ),
+                Settings.jpoResources.getString( "PictureAdderProgressDialogTitle" ),
+                Settings.jpoResources.getString( "picturesAdded" ) );
+        Settings.pictureCollection.setSendModelUpdates( false );
+
+
+    }
+
+    /**
+     * The files selected by the filechooser
+     */
+    private File[] chosenFiles;
+
+    /**
+     * The node into which to add pictures
+     */
+    private SortableDefaultMutableTreeNode startNode;
+
+    /**
+     * A Progress Gui with a cancel button.
+     */
+    private ProgressGui progGui;
+
+    /**
+     * newOnly indicates whether to check if the picture is already in the collection
+     */
+    private boolean newOnly;
+
+    private boolean recurseDirectories;
+
+    private boolean retainDirectories;
+
+    private HashSet<Object> selectedCategories;
+
 
     /**
      *  Adds the indicated files to the current node if they are valid pictures. If the newOnly
      *  Flag is on then the collection is checked to see if the picture is already present. It
      *  also opens a progress Gui to provide feedback to the user.
-     *
-     *  @param startNode
-     *  @param chosenFiles
-     *  @param newOnly indicates whether to check if the picture is already in the collection
-     *  @param recurseDirectories  indicates whether to scan down into directories for more pictures.
-     *  @param retainDirectories  indicates whether to preserve the directory structure.
-     *  @param selectedCategories
-     *  @return In case this is of interest to the caller we return here the node to be displayed; null if no pictures were added.
+     * @return A string
      */
-    public static SortableDefaultMutableTreeNode addPictures(SortableDefaultMutableTreeNode startNode, File[] chosenFiles, boolean newOnly, boolean recurseDirectories, boolean retainDirectories, HashSet<Object> selectedCategories) {
-        final ProgressGui progGui = new ProgressGui(Tools.countfiles(chosenFiles),
-                Settings.jpoResources.getString("PictureAdderProgressDialogTitle"),
-                Settings.jpoResources.getString("picturesAdded"));
-        Settings.pictureCollection.setSendModelUpdates(false);
-
-        SortableDefaultMutableTreeNode displayNode = null;
-        SortableDefaultMutableTreeNode addedNode = null;
-
+    public Integer doInBackground() {
         // add all the files from the array as nodes to the start node.
-        for (int i = 0; (i < chosenFiles.length) && (!progGui.getInterruptor().getShouldInterrupt()); i++) {
+        for ( int i = 0; ( i < chosenFiles.length ) && ( !progGui.getInterruptor().getShouldInterrupt() ); i++ ) {
             File addFile = chosenFiles[i];
-            if (!addFile.isDirectory()) {
-                // the file is not a directory
-                if (startNode.addSinglePicture(addFile, newOnly, selectedCategories)) {
-                    Runnable r = new Runnable() {
-
-                        public void run() {
-                            progGui.progressIncrement();
-                        }
-                    };
-                    SwingUtilities.invokeLater(r);
+            logger.fine( String.format( "File %d of %d: %s", i + 1, chosenFiles.length, addFile.toString() ) );
+            if ( !addFile.isDirectory() ) {
+                if ( startNode.addSinglePicture( addFile, newOnly, selectedCategories ) ) {
+                    publish( 1 );
                 } else {
-                    // addSinglePicture failed
-                    Runnable r = new Runnable() {
-
-                        public void run() {
-                            progGui.decrementTotal();
-                        }
-                    };
-                    SwingUtilities.invokeLater(r);
-
+                    publish( -1 );
                 }
             } else {
                 // the file is a directory
-                if (Tools.hasPictures(addFile)) {
-                    addedNode = addDirectory(startNode, addFile, newOnly, recurseDirectories, retainDirectories, progGui, selectedCategories);
-                    if (displayNode == null) {
-                        displayNode = addedNode;
-                    }
+                if ( Tools.hasPictures( addFile ) ) {
+                    addDirectory( startNode, addFile );
                 } else {
-                    logger.info("PictureAdder.run: no pictures in directory " + addFile.toString());
+                    logger.fine( String.format( "No pictures in directory: %s", addFile.toString() ) );
                 }
             }
-        }
-        Settings.pictureCollection.setSendModelUpdates(true);
-        Settings.pictureCollection.sendNodeStructureChanged(startNode);
 
-        progGui.switchToDoneMode();
-        if (displayNode == null) {
-            displayNode = startNode;
         }
-        return displayNode;
+        return 1;
     }
+
 
     /**
      *  method that is invoked recursively on each directory encountered. It adds
      *  a new group to the tree and then adds all the pictures found therein to that
      *  group. The ImageIO.getImageReaders method is queried to see whether a reader
      *  exists for the image that is attempted to be loaded.
-     *  @param retainDirectories  indicates whether to preserve the directory structure
-     *  @return returns the node that was added or null if none was.
+     *  @param parentNode the node to which to add
+     *  @param dir the directory to add
      */
-    private static SortableDefaultMutableTreeNode addDirectory(SortableDefaultMutableTreeNode startNode, File dir, boolean newOnly, boolean recurseDirectories, boolean retainDirectories, final ProgressGui progGui, HashSet<Object> selectedCategories) {
-        SortableDefaultMutableTreeNode newNode;
-        if (retainDirectories) {
-            newNode = new SortableDefaultMutableTreeNode(new GroupInfo(dir.getName()));
-            startNode.add(newNode);
+    private void addDirectory(
+            SortableDefaultMutableTreeNode parentNode, File dir ) {
+        SortableDefaultMutableTreeNode directoryNode;
+        if ( retainDirectories ) {
+            directoryNode = new SortableDefaultMutableTreeNode( new GroupInfo( dir.getName() ) );
+            parentNode.add( directoryNode );
             Settings.pictureCollection.setUnsavedUpdates();
         } else {
-            newNode = startNode;
+            directoryNode = parentNode;
         }
 
         File[] fileArray = dir.listFiles();
-        for (int i = 0; (i < fileArray.length) && (!progGui.getInterruptor().getShouldInterrupt()); i++) {
-            if (fileArray[i].isDirectory() && recurseDirectories) {
-                if (Tools.hasPictures(fileArray[i])) {
-                    newNode = addDirectory(newNode, fileArray[i], newOnly, recurseDirectories, retainDirectories, progGui, selectedCategories);
+        for ( int i = 0; ( i < fileArray.length ) && ( !progGui.getInterruptor().getShouldInterrupt() ); i++ ) {
+            if ( fileArray[i].isDirectory() && recurseDirectories ) {
+                if ( Tools.hasPictures( fileArray[i] ) ) {
+                    addDirectory( directoryNode, fileArray[i] );
                 }
             } else {
-                if (newNode.addSinglePicture(fileArray[i], newOnly, selectedCategories)) {
-                    Runnable r = new Runnable() {
-
-                        public void run() {
-                            progGui.progressIncrement();
-                        }
-                    };
-                    SwingUtilities.invokeLater(r);
+                if ( directoryNode.addSinglePicture( fileArray[i], newOnly, selectedCategories ) ) {
+                    publish( 1 );
                 } else {
-                    Runnable r = new Runnable() {
-
-                        public void run() {
-                            progGui.decrementTotal();
-                        }
-                    };
-                    SwingUtilities.invokeLater(r);
+                    publish( -1 );
                 }
             }
         }
         // it can happen that we end up adding no pictures and could be returning a new empty group
-        if (retainDirectories && (newNode.getChildCount() == 0)) {
-            newNode.deleteNode();
-            return startNode;
-        } else {
-            return newNode;
+        if ( retainDirectories && ( directoryNode.getChildCount() == 0 ) ) {
+            directoryNode.deleteNode();
         }
     }
+
+
+    /**
+     * The Swing Worker sends the publish() events here on the EDT when it feels like it.
+     * @param chunks  Send 1 to increment the count of pictures processed, -1 to decrement the total
+     */
+    @Override
+    protected void process( List<Integer> chunks ) {
+        for ( int i : chunks ) {
+            if ( i > 0 ) {
+                progGui.progressIncrement();
+            } else {
+                progGui.decrementTotal();
+            }
+
+        }
+    }
+
+
+    /**
+     * Sends a model notification about the change and updates the cancel button to an OK button
+     */
+    @Override
+    protected void done() {
+        Settings.pictureCollection.setSendModelUpdates( true );
+        Settings.pictureCollection.sendNodeStructureChanged( startNode );
+        progGui.switchToDoneMode();
+    }
+
+    /**
+     * Defines a logger for this class
+     */
+    private static Logger logger = Logger.getLogger( PictureFileChooser.class.getName() );
 }

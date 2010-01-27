@@ -1,5 +1,6 @@
 package jpo.gui;
 
+import jpo.gui.swing.ResizableJFrame;
 import jpo.dataModel.Settings;
 import jpo.*;
 import java.awt.event.*;

@@ -1,7 +1,6 @@
 package jpo.dataModel;
 
-import jpo.gui.SingleNodeBrowser;
-import jpo.gui.Thumbnail;
+import jpo.gui.ThumbnailController;
 import jpo.gui.ThumbnailCreationQueue;
 import jpo.gui.ThumbnailQueueRequest;
 import jpo.*;
@@ -47,7 +46,7 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 public class SortableDefaultMutableTreeNode
         extends DefaultMutableTreeNode
-        implements Comparable, Serializable {
+        implements Comparable, Serializable, PictureInfoChangeListener {
 
     /**
      * Defines a logger for this class
@@ -64,11 +63,12 @@ public class SortableDefaultMutableTreeNode
 
 
     /**
-     *   Constructor for a new node including a user object.
+     * Constructor for a new node including a user object.
      * @param userObject
      */
     public SortableDefaultMutableTreeNode( Object userObject ) {
-        super( userObject );
+        super();
+        setUserObject( userObject );
     }
 
 
@@ -138,7 +138,7 @@ public class SortableDefaultMutableTreeNode
      *   {@link Settings#COMMENT}, {@link Settings#PHOTOGRAPHER}, {@link Settings#COPYRIGHT_HOLDER}.
      *
      * @param o
-     * @return
+     * @return the usual compareTo value used for sorting.
      */
     public int compareTo( Object o ) {
         Object myObject = getUserObject();
@@ -290,15 +290,32 @@ public class SortableDefaultMutableTreeNode
     public void setUserObject( Object o ) {
         //logger.info( "setUserObject fired with o: " + o.toString() + " of class: " + o.getClass().toString() );
         if ( o instanceof String ) {
+            logger.severe( "Why is ever being called?" );
             Object obj = getUserObject();
             if ( obj instanceof GroupInfo ) {
                 ( (GroupInfo) obj ).setGroupName( (String) o );
             } else if ( obj instanceof PictureInfo ) {
                 ( (PictureInfo) obj ).setDescription( (String) o );
             }
+        } else if ( o instanceof PictureInfo ) {
+            PictureInfo pi = (PictureInfo) o;
+            Object oldUserObject = getUserObject();
+            if ( oldUserObject != null ) {
+                if ( oldUserObject instanceof PictureInfo ) {
+                    PictureInfo oldPi = (PictureInfo) oldUserObject;
+                    oldPi.removePictureInfoChangeListener( this );
+                }
+            }
+            pi.addPictureInfoChangeListener( this );
+            super.setUserObject( o );
         } else {
             // fall back on the default behaviour
             super.setUserObject( o );
+        }
+        if ( getPictureCollection() != null ) {
+            if ( getPictureCollection().getSendModelUpdates() ) {
+                getPictureCollection().getTreeModel().nodeStructureChanged( this );
+            }
         }
     }
 
@@ -462,6 +479,27 @@ public class SortableDefaultMutableTreeNode
 
     }
 
+
+    /**
+     * This is where the Nodes in the tree find out about changes in the PictureInfo object
+     * @param e
+     */
+    public void pictureInfoChangeEvent( PictureInfoChangeEvent e ) {
+        logger.fine( String.format( "The SDMTN %s received a PictureInfoChangeEvent %s", this.toString(), e.toString() ) );
+        if ( SwingUtilities.isEventDispatchThread() ) {
+            getPictureCollection().getTreeModel().nodeChanged( this );
+        } else {
+            final SortableDefaultMutableTreeNode finalNode = this;
+            Runnable r = new Runnable() {
+
+                public void run() {
+                    getPictureCollection().getTreeModel().nodeChanged( finalNode );
+                }
+            };
+            SwingUtilities.invokeLater( r );
+        }
+    }
+
     /**
      *   This inner class creates a popup menu for group drop events to find out whether to drop
      *   into before or after the drop node.
@@ -507,6 +545,7 @@ public class SortableDefaultMutableTreeNode
         /**
          *   This inner class creates a popup menu for group drop events to find out whether to drop
          *   into before or after the drop node.
+         * TODO: Doesn't really belong here from a MVC perspective...
          */
         public GroupDropPopupMenu( final DropTargetDropEvent event,
                 final SortableDefaultMutableTreeNode sourceNode,
@@ -658,7 +697,7 @@ public class SortableDefaultMutableTreeNode
      *
      */
     public boolean deleteNode() {
-        logger.info( "SDMTN.deleteNode: invoked on: " + this.toString() );
+        logger.fine( "SDMTN.deleteNode: invoked on: " + this.toString() );
         if ( this.isRoot() ) {
             logger.info( "SDMTN.deleteNode: attempted on Root node. Can't do this! Aborted." );
             JOptionPane.showMessageDialog( null, //very annoying if the main window is used as it forces itself into focus.
@@ -982,61 +1021,7 @@ public class SortableDefaultMutableTreeNode
     }
 
 
-    /**
-     *  Brings up an are you sure dialog and then deletes the file.
-     * TODO: Take out from here as we are doing GUI stuff and delete stuff.
-     */
-    public void fileDelete() {
-        Object userObj = this.getUserObject();
-        if ( !( userObj instanceof PictureInfo ) ) {
-            return;
-        }
-
-        PictureInfo pi = (PictureInfo) userObj;
-        File highresFile = pi.getHighresFile();
-        if ( highresFile == null ) {
-            return;
-        }
-
-        int option = JOptionPane.showConfirmDialog(
-                null, //very annoying if the main window is used as it forces itself into focus.
-                Settings.jpoResources.getString( "FileDeleteLabel" ) + highresFile.toString() + "\n" + Settings.jpoResources.getString( "areYouSure" ),
-                Settings.jpoResources.getString( "FileDeleteTitle" ),
-                JOptionPane.OK_CANCEL_OPTION );
-
-        if ( option == 0 ) {
-            boolean ok = false;
-            File lowresFile = pi.getLowresFile();
-            if ( ( lowresFile != null ) && ( lowresFile.exists() ) ) {
-                ok = lowresFile.delete();
-                if ( !ok ) //logger.info("File deleted: " + lowresFile.toString() );
-                // else
-                {
-                    logger.info( "File deleted failed on: " + lowresFile.toString() );
-                }
-            }
-
-
-            if ( highresFile.exists() ) {
-                ok = highresFile.delete();
-                if ( !ok ) //logger.info("File deleted: " + highresFile.toString() );
-                //else
-                {
-                    logger.info( "File deleted failed on: " + highresFile.toString() );
-                }
-            }
-
-            deleteNode();
-
-            if ( !ok ) {
-                JOptionPane.showMessageDialog( Settings.anchorFrame,
-                        Settings.jpoResources.getString( "fileDeleteError" ) + highresFile.toString(),
-                        Settings.jpoResources.getString( "genericError" ),
-                        JOptionPane.ERROR_MESSAGE );
-            }
-        }
-    }
-
+ 
 
     /**
      *  Adds a new Group to the current node with the indicated description.
@@ -1112,6 +1097,7 @@ public class SortableDefaultMutableTreeNode
             boolean retainDirectories,
             HashSet<Object> selectedCategories ) {
 
+        logger.info( String.format( "Copying %d files from directory %s to node %s", files.length + 1, targetDir.toString(), receivingNode.toString() ) );
         boolean picturesAdded = false;
         // add all the files from the array as nodes to the start node.
         for ( int i = 0; ( i < files.length ) && ( !progGui.getInterruptor().getShouldInterrupt() ); i++ ) {
@@ -1319,16 +1305,16 @@ public class SortableDefaultMutableTreeNode
 
 
     /**
-     *  this method adds a new Picture if it is not yet in the collection.
+     *  Creates and add a new picture node to the current node from an image file.
      *
-     *  @param  addFile  the file that should be added
-     *  @param  newOnly whether to check if the picture is in the collection already
+     *  @param  addFile  the file of the pircute that should be added
+     *  @param  newOnly flag whether to check if the picture is in the collection already; if true will only add the picture if its not yet included
      *  @param selectedCategories
-     * @return  true if the picture was valid, false if not.
+     * @return  true if the node was added, false if not.
      */
     public boolean addSinglePicture( File addFile, boolean newOnly,
             HashSet<Object> selectedCategories ) {
-        //logger.info( "SDMTN.addSinglePicture: invoked on: " + addFile.toString() + " for " + this.toString() );
+        logger.fine( String.format( "Adding File: %s, NewOnly: %b to node %s", addFile.toString(), newOnly, toString() ) );
         if ( newOnly && getPictureCollection().isInCollection( addFile ) ) {
             return false; // only add pics not in the collection already
         } else {
@@ -1345,7 +1331,7 @@ public class SortableDefaultMutableTreeNode
      *  @return  true if the picture was valid, false if not.
      */
     public boolean addPicture( File addFile, HashSet<Object> categoryAssignment ) {
-        logger.fine( String.format( "About to add the picture %s to the node %s", addFile.toString(), toString() ) );
+        logger.fine( String.format( "Adding file %s to the node %s", addFile.toString(), toString() ) );
         PictureInfo newPictureInfo = new PictureInfo();
         try {
             if ( !Tools.jvmHasReader( addFile ) ) {
@@ -1360,18 +1346,18 @@ public class SortableDefaultMutableTreeNode
                 newPictureInfo.setCategoryAssignment( categoryAssignment );
             }
         } catch ( MalformedURLException x ) {
-            logger.info( String.format( "Caught a MalformedURLException: %s\nError: %s", addFile.getPath(), x.getMessage() ) );
+            logger.severe( String.format( "Caught a MalformedURLException: %s\nError: %s", addFile.getPath(), x.getMessage() ) );
             return false;
         }
 
 
         SortableDefaultMutableTreeNode newNode = new SortableDefaultMutableTreeNode( newPictureInfo );
         this.add( newNode );
-        // This is not elegant but for now forces the creation of the Thumbnail image
+        // This is not elegant but for now forces the creation of the ThumbnailController image
         // It is unfortunate that the queue will not recognize duplicates because it is working
-        //  off Thumbnail objects instead of Picturefiles. This also makes urgent requests come too late
-        // TODO: Improve it.
-        Thumbnail t = new Thumbnail( new SingleNodeBrowser( newNode ), 0, Settings.thumbnailSize, ThumbnailQueueRequest.LOW_PRIORITY, null );
+        //  off ThumbnailController objects instead of Picturefiles. This also makes urgent requests come too late
+        // TODO: Improve it. This is totally broken!
+        //ThumbnailController t = new ThumbnailController( new SingleNodeBrowser( newNode ), 0, Settings.thumbnailSize, ThumbnailQueueRequest.LOW_PRIORITY, null );
         getPictureCollection().setUnsavedUpdates();
 
         String creationTime = null;
@@ -1420,7 +1406,7 @@ public class SortableDefaultMutableTreeNode
             return;
         }
         logger.fine( String.format( "refreshing the thumbnail on the node %s\nAbout to create the thubnail", this.toString() ) );
-        Thumbnail t = new Thumbnail( new SingleNodeBrowser( this ), 0, Settings.thumbnailSize, ThumbnailQueueRequest.HIGH_PRIORITY, null );
+        ThumbnailController t = new ThumbnailController( new SingleNodeBrowser( this ), 0, Settings.thumbnailSize, ThumbnailQueueRequest.HIGH_PRIORITY, null );
         logger.fine( String.format( "Thumbnail %s created. Now chucking it on the creation queue", t.toString() ) );
         ThumbnailCreationQueue.requestThumbnailCreation( t, ThumbnailQueueRequest.HIGH_PRIORITY, true );
     }
@@ -1431,7 +1417,7 @@ public class SortableDefaultMutableTreeNode
      * have been detected in the TreeModelListener delivered TreeModelEvent.
      * @param  affectedNode  The node to check whether it is or is a descendent of the deleted node.
      * @param  e the TreenModelEvent that was detected
-     * @return
+     * @return tue if successful, false if not
      */
     public static boolean wasNodeDeleted(
             SortableDefaultMutableTreeNode affectedNode, TreeModelEvent e ) {

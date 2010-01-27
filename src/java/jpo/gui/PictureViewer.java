@@ -1,11 +1,17 @@
 package jpo.gui;
 
+import jpo.dataModel.FlatGroupBrowser;
+import jpo.dataModel.RandomBrowser;
+import jpo.dataModel.ThumbnailBrowserInterface;
+import jpo.gui.swing.ResizableJFrame;
+import jpo.gui.swing.PicturePane;
 import java.awt.event.FocusEvent;
 import jpo.dataModel.Settings;
 import jpo.*;
 import jpo.dataModel.PictureInfo;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -13,8 +19,11 @@ import java.awt.GridBagLayout;
 import java.awt.event.FocusAdapter;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
@@ -27,6 +36,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.MouseInputAdapter;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreePath;
@@ -39,7 +49,7 @@ import jpo.dataModel.Tools;
 /*
 PictureViewer.java:  Controller and Viewer class that browses a set of pictures.
 
-Copyright (C) 2002-2009  Richard Eigenmann, Zürich, Switzerland
+Copyright (C) 2002 - 2010  Richard Eigenmann, Zürich, Switzerland
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -55,11 +65,13 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 /**
  *   PictureViewer is a Controller that manages a window which displays a picture.
- *   It provides navigation control
+ *   It provides navigation control over
  *   the collection as well as mouse and keyboard control over the zooming. 
- *   According to MVC the GUI bits should be moved out to a dumb viewer but
- *   this controller is so closely geared towards the view that this will not add 
- *   a lot of value.
+ *
+ *   The user can zoom in on a picture coordinate by clicking the left mouse button. The middle
+ *   button scales the picture so that it fits in the available space and centres it there.
+ *   The right mouse button zooms out.<p>
+ *
  *
  *   <img src="../PictureViewer.png" border=0>
  **/
@@ -71,9 +83,9 @@ public class PictureViewer
         TreeModelListener {
 
     /**
-     *  indicator that specifies what sort of window should be created
-     */
-    public int windowMode = ResizableJFrame.WINDOW_DEFAULT;
+     *   The pane that handles the image drawing aspects.
+     **/
+    public PicturePane pictureJPanel = new PicturePane();
 
 
     /**
@@ -85,12 +97,23 @@ public class PictureViewer
         initGui();
         Settings.pictureCollection.getTreeModel().addTreeModelListener( this );
         pictureJPanel.addStatusListener( this );
+
+        // register an interest in mouse events
+        Listener MouseListener = new Listener();
+        pictureJPanel.addMouseListener( MouseListener );
+        pictureJPanel.addMouseMotionListener( MouseListener );
+
     }
 
     /**
      * Defines a logger for this class
      */
     private static Logger logger = Logger.getLogger( PictureViewer.class.getName() );
+
+    /**
+     *  indicator that specifies what sort of window should be created
+     */
+    public int windowMode = ResizableJFrame.WINDOW_DEFAULT;
 
 
     /**
@@ -114,11 +137,6 @@ public class PictureViewer
     private JPanel viewerPanel = new JPanel();
 
     /**
-     *   The pane that handles the image drawing aspects.
-     **/
-    public PicturePane pictureJPanel = new PicturePane();
-
-    /**
      *   progress bar to track the pictures loaded so far
      */
     private JProgressBar loadJProgressBar = new JProgressBar();
@@ -139,6 +157,7 @@ public class PictureViewer
      *  PictureViewer.
      */
     private void initGui() {
+        Tools.checkEDT();
         createWindow();
 
         viewerPanel.setBackground( Settings.PICTUREVIEWER_BACKGROUND_COLOR );
@@ -350,7 +369,7 @@ public class PictureViewer
 
 
     /**
-     * Returns the current Node. TODO: change this to use the mySetofNodes
+     * Returns the current Node.
      * @return The current node as defined by the mySetOfNodes 
      * ThumbnailBrowserInterface and the myIndex. If the set of nodes has not 
      * been initialised or there is some other error null shall be returned.
@@ -359,6 +378,7 @@ public class PictureViewer
         try {
             return mySetOfNodes.getNode( myIndex );
         } catch ( NullPointerException npe ) {
+            logger.warning( String.format( "Got a npe on node %d. Message: %s", myIndex, npe.getMessage() ) );
             return null;
         }
 
@@ -441,7 +461,7 @@ public class PictureViewer
      *  method to toggle to a frameless window.
      **/
     public void requestPopupMenu() {
-        PicturePopupMenu pm = new PicturePopupMenu( mySetOfNodes, myIndex, this, null );
+        PicturePopupMenu pm = new PicturePopupMenu( mySetOfNodes, myIndex );
         pm.show( navBar.fullScreenJButton, 0, (int) ( 0 - pm.getSize().getHeight() ) );
         pictureJPanel.requestFocusInWindow();
     }
@@ -499,7 +519,7 @@ public class PictureViewer
 
         //currentNode = node;
         descriptionJTextField.setText( getDescription() );
-        pictureJPanel.setPicture( (PictureInfo) node.getUserObject() );
+        setPicture( (PictureInfo) node.getUserObject() );
 
         // attach the change listener
         PictureInfo pi = (PictureInfo) node.getUserObject();
@@ -517,6 +537,57 @@ public class PictureViewer
         }
         }*/
         pictureJPanel.requestFocusInWindow();
+    }
+
+
+    /**
+     *  brings up the indicated picture on the display.
+     *  @param pi  The PicutreInfo object that should be displayed
+     */
+    public void setPicture( PictureInfo pi ) {
+        logger.fine( "Set picture to PictureInfo: " + pi.toString() );
+        URL pictureURL;
+        String description;
+        double rotation = 0;
+        try {
+            pictureURL = pi.getHighresURL();
+            description = pi.getDescription();
+            rotation = pi.getRotation();
+        } catch ( MalformedURLException x ) {
+            logger.severe( "MarformedURLException trapped on: " + pi.getHighresLocation() + "\nReason: " + x.getMessage() );
+            return;
+        }
+        setPicture( pictureURL, description, rotation );
+    }
+
+
+    /**
+     *  brings up the indicated picture on the display.
+     *  @param filenameURL  The URL of the picture to display
+     *  @param legendParam	The description of the picture
+     *  @param rotation  The rotation that should be applied
+     */
+    public void setPicture( URL filenameURL, String legendParam, double rotation ) {
+        pictureJPanel.legend = legendParam;
+        pictureJPanel.centerWhenScaled = true;
+        pictureJPanel.sclPic.setScaleSize( pictureJPanel.getSize() );
+
+        pictureJPanel.sclPic.stopLoadingExcept( filenameURL );
+        pictureJPanel.sclPic.loadAndScalePictureInThread( filenameURL, Thread.MAX_PRIORITY, rotation );
+        pictureJPanel.ei.setUrl( filenameURL );
+        pictureJPanel.ei.decodeExifTags();
+    }
+
+
+    /**
+     * Requests that the shown picture be rotated
+     * @param angle
+     */
+    public void rotate( int angle ) {
+        PictureInfo pi = (PictureInfo) getCurrentNode().getUserObject();
+        pi.rotate( angle );
+        pictureJPanel.requestFocusInWindow();
+
     }
 
 
@@ -543,7 +614,7 @@ public class PictureViewer
             if ( pi == null ) {
                 logger.warning( "PictureViewer.pictureInfoChangeEvent: highres location change got called without a PictureInfor user object. " + e.toString() );
             } else {
-                pictureJPanel.setPicture( pi );
+                setPicture( pi );
             }
         }
         if ( e.getRotationChanged() ) {
@@ -551,7 +622,7 @@ public class PictureViewer
             if ( pi == null ) {
                 logger.warning( "PictureViewer.pictureInfoChangeEvent: rotation change got called without a PictureInfor user object. " + e.toString() );
             } else {
-                pictureJPanel.setPicture( pi );
+                setPicture( pi );
             }
         }
         /*		if ( e.getLowresLocationChanged() ) {
@@ -665,32 +736,31 @@ public class PictureViewer
      * @see #requestPriorPicture()
      */
     public boolean requestNextPicture() {
-        if ( mySetOfNodes == null ) {
-            logger.severe( "PictureViewer.requestNextPicture: using non context aware step forward" );
-            Thread.dumpStack();
-            SortableDefaultMutableTreeNode nextNode = getCurrentNode().getNextPicture();
-            if ( nextNode != null ) {
-                changePicture( new SingleNodeBrowser( nextNode ), 0 );
-                return true;
-            } else {
-                return false;
-            }
+        /*if ( mySetOfNodes == null ) {
+        logger.severe( "PictureViewer.requestNextPicture: using non context aware step forward" );
+        Thread.dumpStack();
+        SortableDefaultMutableTreeNode nextNode = getCurrentNode().getNextPicture();
+        if ( nextNode != null ) {
+        changePicture( new SingleNodeBrowser( nextNode ), 0 );
+        return true;
         } else {
-            // use context aware step forward
-            logger.fine( String.format( "Using the context aware step forward. The browser contains: %d pictures and we are on picture %d", mySetOfNodes.getNumberOfNodes(), myIndex ) );
-            if ( mySetOfNodes.getNumberOfNodes() > myIndex + 1 ) {
-                logger.fine( "PictureViewer.requestNextPicture: requesting node: " + Integer.toString( myIndex + 1 ) );
-                Runnable r = new Runnable() {
+        return false;
+        }
+        } else { */
+        // use context aware step forward
+        logger.fine( String.format( "Using the context aware step forward. The browser contains: %d pictures and we are on picture %d", mySetOfNodes.getNumberOfNodes(), myIndex ) );
+        if ( mySetOfNodes.getNumberOfNodes() > myIndex + 1 ) {
+            logger.fine( "PictureViewer.requestNextPicture: requesting node: " + Integer.toString( myIndex + 1 ) );
+            Runnable r = new Runnable() {
 
-                    public void run() {
-                        changePicture( mySetOfNodes, myIndex + 1 );
-                    }
-                };
-                SwingUtilities.invokeLater( r );
-                return true;
-            } else {
-                return false;
-            }
+                public void run() {
+                    changePicture( mySetOfNodes, myIndex + 1 );
+                }
+            };
+            SwingUtilities.invokeLater( r );
+            return true;
+        } else {
+            return false;
         }
     }
 
@@ -702,28 +772,28 @@ public class PictureViewer
      * @see #requestNextPicture()
      */
     public void requestPriorPicture() {
-        if ( mySetOfNodes == null ) {
-            logger.fine( "PictureViewer.requestPriorPicture: using non context aware step backward" );
-            if ( getCurrentNode() != null ) {
-                SortableDefaultMutableTreeNode prevNode = getCurrentNode().getPreviousPicture();
-                if ( prevNode != null ) {
-                    changePicture( new SingleNodeBrowser( prevNode ), 0 );
-                }
-            }
-        } else {
-            // use context aware step forward
-            logger.fine( "PictureViewer.requestPriorPicture: using the context aware step backward" );
-            if ( myIndex > 0 ) {
-                Runnable r = new Runnable() {
-
-                    public void run() {
-                        changePicture( mySetOfNodes, myIndex - 1 );
-                    }
-                };
-                SwingUtilities.invokeLater( r );
-
-            }
+        /*if ( mySetOfNodes == null ) {
+        logger.fine( "PictureViewer.requestPriorPicture: using non context aware step backward" );
+        if ( getCurrentNode() != null ) {
+        SortableDefaultMutableTreeNode prevNode = getCurrentNode().getPreviousPicture();
+        if ( prevNode != null ) {
+        changePicture( new SingleNodeBrowser( prevNode ), 0 );
         }
+        }
+        } else {*/
+        // use context aware step forward
+        logger.fine( "PictureViewer.requestPriorPicture: using the context aware step backward" );
+        if ( myIndex > 0 ) {
+            Runnable r = new Runnable() {
+
+                public void run() {
+                    changePicture( mySetOfNodes, myIndex - 1 );
+                }
+            };
+            SwingUtilities.invokeLater( r );
+
+        }
+
     }
 
 
@@ -1004,6 +1074,120 @@ public class PictureViewer
         pictureJPanel.zoomToFit();
         pictureJPanel.centerImage();
     }
+
+    /**
+     *  This class deals with the mouse events. Is built so that the picture can be dragged if
+     *  the mouse button is pressed and the mouse moved. If the left button is clicked the picture is
+     *  zoomed in, middle resets to full screen, right zooms out.
+     */
+    class Listener
+            extends MouseInputAdapter {
+
+        /**
+         *  used in dragging to find out how much the mouse has moved from the last time
+         */
+        private int last_x, last_y;
+
+
+        /**
+         *   This method traps the mouse events and changes the scale and position of the displayed
+         *   picture.
+         */
+        @Override
+        public void mouseClicked( MouseEvent e ) {
+            logger.fine( "PicturePane.mouseClicked" );
+            if ( e.getButton() == 3 ) {
+                // Right Mousebutton zooms out
+                pictureJPanel.centerWhenScaled = false;
+                pictureJPanel.zoomOut();
+            } else if ( e.getButton() == 2 ) {
+                // Middle Mousebutton resets
+                pictureJPanel.zoomToFit();
+                pictureJPanel.centerWhenScaled = true;
+            } else if ( e.getButton() == 1 ) {
+                // Left Mousebutton zooms in on selected spot
+                // Convert screen coordinates of the mouse click into true
+                // coordinates on the picture:
+
+                int WindowWidth = pictureJPanel.getSize().width;
+                int WindowHeight = pictureJPanel.getSize().height;
+
+                int X_Offset = e.getX() - ( WindowWidth / 2 );
+                int Y_Offset = e.getY() - ( WindowHeight / 2 );
+
+                pictureJPanel.setCenterLocation(
+                        pictureJPanel.focusPoint.x + (int) ( X_Offset / pictureJPanel.sclPic.getScaleFactor() ),
+                        pictureJPanel.focusPoint.y + (int) ( Y_Offset / pictureJPanel.sclPic.getScaleFactor() ) );
+                pictureJPanel.centerWhenScaled = false;
+                pictureJPanel.zoomIn();
+            }
+        }
+
+
+        /**
+         * method that is invoked when the
+         * user drags the mouse with a button pressed. Moves the picture around
+         */
+        @Override
+        public void mouseDragged( MouseEvent e ) {
+            if ( !Dragging ) {
+                // Switch into dragging mode and record current coordinates
+                logger.fine( "PicturePane.mouseDragged: Switching to drag mode." );
+                last_x = e.getX();
+                last_y = e.getY();
+
+                setDragging( true );
+
+            } else {
+                // was already dragging
+                int x = e.getX(), y = e.getY();
+
+                pictureJPanel.focusPoint.setLocation( (int) ( (double) pictureJPanel.focusPoint.x + ( ( last_x - x ) / pictureJPanel.sclPic.getScaleFactor() ) ),
+                        (int) ( (double) pictureJPanel.focusPoint.y + ( ( last_y - y ) / pictureJPanel.sclPic.getScaleFactor() ) ) );
+                last_x = x;
+                last_y = y;
+
+                setDragging( true );
+                pictureJPanel.repaint();
+            }
+            pictureJPanel.centerWhenScaled = false;
+        }
+
+
+        /**
+         *
+         * @param parameter
+         */
+        public void setDragging( boolean parameter ) {
+            Dragging = parameter;
+            if ( Dragging == false ) {
+                //pictureJPanel.setCursor( new Cursor( Cursor.WAIT_CURSOR ) );
+                pictureJPanel.setCursor( new Cursor( Cursor.DEFAULT_CURSOR ) );
+            } else {
+                pictureJPanel.setCursor( new Cursor( Cursor.MOVE_CURSOR ) );
+            }
+        }
+
+        /**
+         *  Flag that lets the object know if the mouse is in dragging mode.
+         */
+        private boolean Dragging = false;
+
+
+        /**
+         * method that is invoked when the
+         * user releases the mouse button.
+         */
+        @Override
+        public void mouseReleased( MouseEvent e ) {
+            logger.fine( "PicturePane.mouseReleased." );
+            if ( Dragging ) {
+                //Dragging has ended
+                Dragging = false;
+                pictureJPanel.setCursor( new Cursor( Cursor.DEFAULT_CURSOR ) );
+            }
+        }
+    }  //end class Listener
 }
 
 

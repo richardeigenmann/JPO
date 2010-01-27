@@ -5,7 +5,7 @@
 package jpotestground;
 
 import jpo.dataModel.Settings;
-import jpo.gui.Thumbnail;
+import jpo.gui.ThumbnailController;
 import jpo.*;
 import java.awt.Dimension;
 import javax.swing.BoxLayout;
@@ -36,7 +36,7 @@ public class PlayWithThumbnail extends JFrame implements ChangeListener {
 
     JLabel l = new JLabel();
 
-    Thumbnail t = new Thumbnail( 350 );
+    ThumbnailController thumbnailController = new ThumbnailController( 350 );
 
     Box box = new Box();
 
@@ -49,13 +49,13 @@ public class PlayWithThumbnail extends JFrame implements ChangeListener {
 
         p.add( s );
         p.add( l );
-        p.add( t );
+        p.add( thumbnailController.getThumbnail() );
         //p.add( box );
         this.getContentPane().add( p );
         setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
 
         l.setText( "Starting with: " + Integer.toString( INIT ) );
-        t.setThumbnail( testimage );
+        thumbnailController.getThumbnail().setThumbnail( testimage );
         setPreferredSize( new Dimension( 400, 400 ) );
         pack();
         setVisible( true );
@@ -76,7 +76,7 @@ public class PlayWithThumbnail extends JFrame implements ChangeListener {
         float scale = (float) value / MAX;
         l.setText( Integer.toString( value ) + " --> " + Float.toString( scale * 100 ) + "%" );
 
-        t.setFactor( scale );
+        thumbnailController.setFactor( scale );
         //}
     }
 }

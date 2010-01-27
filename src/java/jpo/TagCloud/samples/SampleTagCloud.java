@@ -90,7 +90,7 @@ public class SampleTagCloud extends JFrame implements TagClickListener {
 
     /**
      * Build the widgets to have some interaction on the screen
-     * @return
+     * @return  Returns a panel with stuff
      */
     private JPanel getControlsPanel() {
         JPanel controlsPanel = new JPanel();

@@ -54,7 +54,7 @@ public class GroupInfoChangeEvent {
     /**
      * toString method that returns the descrition of the group
      *
-     * @return
+     * @return The description of the group
      */
     @Override
     public String toString() {
@@ -79,7 +79,7 @@ public class GroupInfoChangeEvent {
     /**
      *  returns whether the description was changed
      *
-     * @return
+     * @return true if the description has changes, false if not
      */
     public boolean getGroupNameChanged() {
         return descriptionChanged;
@@ -103,7 +103,7 @@ public class GroupInfoChangeEvent {
     /**
      *  returns whether the lowres Location was changed
      *
-     * @return
+     * @return true if the lowres location changed, false if not
      */
     public boolean getLowresLocationChanged() {
         return lowresLocationChanged;
@@ -127,7 +127,7 @@ public class GroupInfoChangeEvent {
     /**
      *  returns whether the thumbnail was changed
      *
-     * @return
+     * @return ture or false
      */
     public boolean getThumbnailChanged() {
         return thumbnailChanged;
@@ -151,7 +151,7 @@ public class GroupInfoChangeEvent {
     /**
      *  returns whether the event was about the selection status being set
      *
-     * @return
+     * @return true or false
      */
     public boolean getWasSelected() {
         return wasSelected;
@@ -175,7 +175,7 @@ public class GroupInfoChangeEvent {
     /**
      *  returns whether the selection was removed
      *
-     * @return
+     * @return true if the selection was removed, false if not
      */
     public boolean getWasUnselected() {
         return wasUnselected;

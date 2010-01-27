@@ -1,5 +1,6 @@
-package jpo.gui;
+package jpo.dataModel;
 
+import jpo.dataModel.ThumbnailBrowser;
 import jpo.dataModel.*;
 import jpo.*;
 import java.util.*;
@@ -63,7 +64,7 @@ public class ArrayListBrowser extends ThumbnailBrowser {
 
     /**
      *  returns the title
-     * @return
+     * @return the Title
      */
     public String getTitle() {
         if ( title != null ) {

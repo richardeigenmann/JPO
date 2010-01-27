@@ -19,11 +19,11 @@ import jpo.gui.ThumbnailCreationQueue;
 /*
 PictureCollection.java:  Information about the collection and owns the tree model
 
-Copyright (C) 2006 - 2009  Richard Eigenmann, Zurich, Switzerland
+Copyright (C) 2006 - 20109  Richard Eigenmann, Zurich, Switzerland
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
-of the License, or any later version. This program is distributed
+of the License, or any later version. This program is distribted
 in the hope that it will be useful, but WITHOUT ANY WARRANTY;
 without even the implied warranty of MERCHANTABILITY or FITNESS
 FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
@@ -438,9 +438,9 @@ public class PictureCollection {
 
     /**
      *  counts the number of nodes using the category
-     * @param key
-     * @param startNode
-     * @return
+     * @param key The Key
+     * @param startNode the node to start from
+     * @return the number of nodes
      */
     public static int countCategoryUsage( Object key,
             SortableDefaultMutableTreeNode startNode ) {
@@ -510,7 +510,7 @@ public class PictureCollection {
 
     /**
      *  returns the number of categories available.
-     * @return
+     * @return number of categories
      */
     public int countCategories() {
         return categories.size();
@@ -613,6 +613,7 @@ public class PictureCollection {
      * @return
      */
     public boolean isInCollection( File f ) {
+        logger.fine(String.format( "Checking if File %s exists in the collection", f.toString() ));
         SortableDefaultMutableTreeNode node;
         Object nodeObject;
         File highresFile;
@@ -627,7 +628,7 @@ public class PictureCollection {
                 lowresFile = ( (PictureInfo) nodeObject ).getLowresFile();
                 logger.fine( "Checking: " + ( (PictureInfo) nodeObject ).getHighresLocation() );
                 if ( ( highresFile != null ) && ( highresFile.compareTo( f ) == 0 ) ) {
-                    logger.fine( "CollectionJTree.isInCollection found a match on: " + ( (PictureInfo) nodeObject ).getDescription() );
+                    logger.info( "CollectionJTree.isInCollection found a match on: " + ( (PictureInfo) nodeObject ).getDescription() );
                     return true;
                 } else if ( ( lowresFile != null ) && ( lowresFile.compareTo( f ) == 0 ) ) {
                     return true;
@@ -745,8 +746,8 @@ public class PictureCollection {
 
     /**
      *  This method returns an array of the groups that hold a reference to the picture of the specified node
-     * @param orphanNode
-     * @return
+     * @param orphanNode the node to test
+     * @return groups that hold a reference to the picture of the specified node
      */
     public SortableDefaultMutableTreeNode[] findParentGroups(
             SortableDefaultMutableTreeNode orphanNode ) {
@@ -868,8 +869,8 @@ public class PictureCollection {
 
 
     /**
-     *  returns the amount of selected nodes
-     * @return
+     *  returns the count of selected nodes
+     * @return the count of selected nodes
      */
     public int countSelectedNodes() {
         return selection.size();

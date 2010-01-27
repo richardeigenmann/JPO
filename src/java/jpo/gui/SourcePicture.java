@@ -372,7 +372,7 @@ public class SourcePicture {
 
     /**
      *   return the height of the image or Zero if there is none
-     * @return
+     * @return the height of the image
      */
     public int getHeight() {
         if ( sourcePictureBufferedImage != null ) {
@@ -385,7 +385,7 @@ public class SourcePicture {
 
     /**
      *   return the width of the image or Zero if there is none
-     * @return
+     * @return the woidth of the image
      */
     public int getWidth() {
         if ( sourcePictureBufferedImage != null ) {
@@ -398,7 +398,7 @@ public class SourcePicture {
 
     /**
      *   return the URL of the original image as a string
-     * @return
+     * @return the url of the name
      */
     public String getUrlString() {
         return imageUrl.toString();
@@ -407,7 +407,7 @@ public class SourcePicture {
 
     /**
      *  return the URL of the original image
-     * @return
+     * @return the url of the name
      */
     public URL getUrl() {
         return imageUrl;
@@ -416,7 +416,7 @@ public class SourcePicture {
 
     /**
      *  return the rotation of the image
-     * @return
+     * @return the rotation angle
      */
     public double getRotation() {
         return rotation;
@@ -431,7 +431,7 @@ public class SourcePicture {
 
     /**
      *  method to register the listening object of the status events
-     * @param listener
+     * @param listener The listener to add
      */
     public void addListener( SourcePictureListener listener ) {
         logger.fine( "SourcePicture.addListener: SourcePicture " + Integer.toString( hashCode() ) + " adding listener " + listener.getClass().toString() + " hash: " + Integer.toString( listener.hashCode() ) );
@@ -441,7 +441,7 @@ public class SourcePicture {
 
     /**
      *  method to register the listening object of the status events
-     * @param listener
+     * @param listener  the listener to remove
      */
     public void removeListener( SourcePictureListener listener ) {
         logger.fine( "SourcePicture.removeListener: SourcePicture " + Integer.toString( hashCode() ) + " removing listener " + listener.getClass().toString() + " hash: " + Integer.toString( listener.hashCode() ) );
@@ -478,7 +478,7 @@ public class SourcePicture {
 
     /**
      * Method that returns the status code of the picture loading.
-     * @return
+     * @return the status value
      */
     public int getStatusCode() {
         return pictureStatusCode;
@@ -487,7 +487,7 @@ public class SourcePicture {
 
     /**
      * Method that returns the status code of the picture loading.
-     * @return
+     * @return the message of the status
      */
     public String getStatusMessage() {
         return pictureStatusMessage;
@@ -501,7 +501,7 @@ public class SourcePicture {
 
     /**
      *  Returns how much of the image has been loaded
-     * @return
+     * @return the percentage loaded
      */
     public int getPercentLoaded() {
         return percentLoaded;

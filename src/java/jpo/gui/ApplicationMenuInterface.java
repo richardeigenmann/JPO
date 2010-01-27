@@ -33,9 +33,9 @@ public interface ApplicationMenuInterface {
 
 
 	/**
-	 *   Signals that the user wants to add pictures to his collection.
+	 *   Signals that the user wants to add pictures to the root node of his collection.
 	 */
-	public void requestFileAdd();
+	public void requestAddPictures();
 	
 	
 	/**

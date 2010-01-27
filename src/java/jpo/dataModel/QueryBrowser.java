@@ -1,11 +1,9 @@
 package jpo.dataModel;
 
-import jpo.gui.ThumbnailBrowser;
-
 /*
 QueryBrower.java:  an implementation of the ThumbnailBrowserInterface for browsing groups.
 
-Copyright (C) 2006-2007  Richard Eigenmann, Zürich Switzerland
+Copyright (C) 2006-2010  Richard Eigenmann, Zürich Switzerland
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -20,32 +18,37 @@ The license is in gpl.txt.
 See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 /** 
- *  This class implements the {@link ThumbnailBrowser}  in the specific manner that is required for
- *  displaying {@link Query} in the {@link jpo.gui.ThumbnailJScrollPane}.
+ *  This class implements the {@link jpo.dataModel.ThumbnailBrowser}  in the specific manner that is required for
+ *  displaying {@link Query} in the {@link jpo.gui.ThumbnailPanelController}.
  */
-public class QueryBrowser extends ThumbnailBrowser {
+public class QueryBrowser
+        extends ThumbnailBrowser {
 
     /**
      *  A reference to the query group that shall be browsed
      */
     protected Query myQuery;
 
+
     /**
      *  Constructs a new Group Browser object
+     * @param queryToBrowse the Query for the browser
      */
-    public QueryBrowser(Query queryToBrowse) {
-        setQuery(queryToBrowse);
+    public QueryBrowser( Query queryToBrowse ) {
+        setQuery( queryToBrowse );
     }
+
 
     /**
      *  call this method to specify the query that should be browsed.
      *
      *  @param  queryToBrowse   The {@link Query} which should be browsed.
      */
-    public void setQuery(Query queryToBrowse) {
+    public void setQuery( Query queryToBrowse ) {
         myQuery = queryToBrowse;
         myQuery.refresh();
     }
+
 
     /**
      *  returns the {@link Query} for this QueryBrowser
@@ -56,14 +59,16 @@ public class QueryBrowser extends ThumbnailBrowser {
         return myQuery;
     }
 
+
     /**
-     *  returns the name of the Group being displayed
+     *  returns the title of the Query being displayed
      *
-     * @return
+     * @return The title of the query
      */
     public String getTitle() {
         return getQuery().getTitle();
     }
+
 
     /**
      *  On a group we return the number of children in the group.
@@ -71,12 +76,13 @@ public class QueryBrowser extends ThumbnailBrowser {
      * @return the number of nodes
      */
     public int getNumberOfNodes() {
-        if (myQuery == null) {
+        if ( myQuery == null ) {
             return 0;
         } else {
             return myQuery.getNumberOfResults();
         }
     }
+
 
     /**
      *  This method returns the SDMTN node for the indicated position in the group
@@ -85,13 +91,14 @@ public class QueryBrowser extends ThumbnailBrowser {
      *  @param index   The component index that is to be returned.
      * @return the node for the index
      */
-    public SortableDefaultMutableTreeNode getNode(int index) {
-        if (myQuery == null) {
+    public SortableDefaultMutableTreeNode getNode( int index ) {
+        if ( myQuery == null ) {
             return null;
         } else {
-            return myQuery.getIndex(index);
+            return myQuery.getIndex( index );
         }
     }
+
 
     /**
      *  This method unregisters the TreeModelListener and sets the variables to null;

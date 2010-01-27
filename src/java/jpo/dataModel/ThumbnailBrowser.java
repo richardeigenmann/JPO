@@ -1,5 +1,7 @@
-package jpo.gui;
+package jpo.dataModel;
 
+import jpo.gui.*;
+import jpo.dataModel.ThumbnailBrowserInterface;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
 import java.util.*;
 import java.util.logging.Logger;
@@ -7,7 +9,7 @@ import java.util.logging.Logger;
 /*
 ThumbnailBrowser.java:  an implementation of the ThumbnailBrowserInterface for browsing pictures sequentially.
 
-Copyright (C) 2006-2009  Richard Eigenmann, Zürich, Switzerland
+Copyright (C) 2006-2010  Richard Eigenmann, Zürich, Switzerland
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -98,6 +100,7 @@ public abstract class ThumbnailBrowser
     public void notifyRelayoutListeners() {
         logger.fine( String.format( "notifying %d relayout listeners.", relayoutListeners.size() ) );
         for ( RelayoutListener relayoutListener : relayoutListeners ) {
+            logger.fine( String.format( "   now notifying relayout listener: %s", relayoutListener.toString() ) );
             relayoutListener.assignThumbnails();
         }
     }
