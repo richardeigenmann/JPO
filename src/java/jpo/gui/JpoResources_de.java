@@ -403,7 +403,7 @@ public class JpoResources_de extends ListResourceBundle {
 		{"fileOpenHeading", "Sammlung öffnen"},
 		{"fileSaveAsTitle", "Sammlung speichern als"},
 		{"collectionSaveTitle", "Sammlung gespeichert"},
-		{"collectionSaveBody", "Sammlung gespeichert als:\n"},
+		{"collectionSaveBody", "Sammlung gespeichert als: \n"},
 		{"setAutoload", "Bei Programmstart diese Sammlung automatisch laden"},
 		{"addSinglePictureTitle", "Bild auswählen"},
 		{"addSinglePictureButtonLabel", "Auswählen"},
@@ -429,7 +429,7 @@ public class JpoResources_de extends ListResourceBundle {
 		{"FileCameraJMenuItem", "Von Kamera hinzufügen"},
 		{"FileSaveMenuItemText", "Sammlung Speichern"},
 		{"FileSaveAsMenuItemText", "Speichern unter"},
-		{"FileExitMenuItemText", "Abbruch"},
+		{"FileExitMenuItemText", "Beenden"},
 		{"EditJMenuText", "Editieren"},
 		{"EditFindJMenuItemText", "Suchen"},
 		{"EditCheckDirectoriesJMenuItemText", "Abgleichen"},
@@ -444,6 +444,8 @@ public class JpoResources_de extends ListResourceBundle {
 		{"HelpJMenuText", "Hilfe"},
 		{"HelpAboutMenuItemText", "Über"},
 		{"HelpLicenseMenuItemText", "Lizenz"},
+		{"HelpPrivacyMenuItemText", "Datenschutz" },
+
 		
 		// PictureViewer
 		{"autoAdvanceDialogTitle", "Automatischen Bildwechsel starten"},

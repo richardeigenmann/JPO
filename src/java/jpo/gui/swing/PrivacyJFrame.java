@@ -6,6 +6,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
+import java.io.FilenameFilter;
 import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -74,7 +76,7 @@ public class PrivacyJFrame
         final JLabel hello = new JLabel( "Privacy Settings" );
         final Font titleFont = new Font( "SansSerif", Font.BOLD, 14 );
         hello.setFont( titleFont );
-        hello.setForeground( Color.blue );
+        hello.setForeground( Color.black );
         privacyPanel.add( hello, "wrap" );
 
         final JCheckBox clearRecentFiles = new JCheckBox( "Clear Recent Files" );
@@ -130,7 +132,7 @@ public class PrivacyJFrame
         } );
         privacyPanel.add( selected, "split 2" );
 
-        final JButton cancel = new JButton( "Cancel" );
+        final JButton cancel = new JButton( "Close" );
         cancel.addActionListener( new ActionListener() {
 
             public void actionPerformed( ActionEvent e ) {
@@ -225,7 +227,7 @@ public class PrivacyJFrame
          * Handles a click on the clear Recent Files button
          */
         public void clearRecentFiles() {
-            logger.info( "Should Clear all recent files" );
+            Settings.clearRecentCollection();
         }
 
 
@@ -234,6 +236,20 @@ public class PrivacyJFrame
          */
         public void clearThumbnails() {
             logger.info( "Should Clear Thumbnails" );
+            File thumbnailDir = Settings.thumbnailPath;
+            FilenameFilter thumbnails = new FilenameFilter() {
+
+                public boolean accept( File dir, String name ) {
+                    boolean matches = name.matches( "^" + Settings.thumbnailPrefix + "[0-9]+[.]jpg$");
+                    //logger.info( String.format( "Considering: %s matches: %b", name, matches ) );
+                    return matches;
+                }
+            };
+            File[] deleteableThumbnails = thumbnailDir.listFiles(thumbnails);
+            for ( File f : deleteableThumbnails ) {
+                boolean success = f.delete();
+                logger.info( String.format( "Success: %b for deleting %s ", success, f.toString() ) );
+            }
         }
 
 
@@ -241,7 +257,7 @@ public class PrivacyJFrame
          * Handles a click on the clear Autoload button
          */
         public void clearAutoload() {
-            logger.info( "Should Clear Autoload" );
+            Settings.clearAutoLoad();
         }
 
 
@@ -249,7 +265,7 @@ public class PrivacyJFrame
          * Handles a click on the clear Memorised Dirs button
          */
         public void clearMemorisedDirs() {
-            logger.info( "Should Clear Memorised Directories" );
+            Settings.clearCopyLocations();
         }
     }
 }

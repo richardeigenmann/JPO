@@ -43,7 +43,7 @@ public class GroupPopupMenu
     /**
      *   An array of recently opened collections.
      */
-    private final JMenuItem[] recentOpenedfileJMenuItem = new JMenuItem[Settings.recentFiles];
+    private final JMenuItem[] recentOpenedfileJMenuItem = new JMenuItem[Settings.MAX_MEMORISE];
 
     /**
      *  a separator for the Move menu
@@ -53,7 +53,7 @@ public class GroupPopupMenu
     /**
      *  menu items for the recently dropped group nodes
      */
-    private JMenuItem[] recentDropNodes = new JMenuItem[Settings.maxDropNodes];
+    private JMenuItem[] recentDropNodes = new JMenuItem[Settings.MAX_DROPNODES];
 
     /**
      *  object that must implement the functions dealing with the user
@@ -195,7 +195,7 @@ public class GroupPopupMenu
             addCollectionJMenu.add( addCollectionFormFile );
 
             // add the recently opened files to the menu
-            for ( int i = 0; i < Settings.recentFiles; i++ ) {
+            for ( int i = 0; i < Settings.MAX_MEMORISE; i++ ) {
                 recentOpenedfileJMenuItem[i] = new JMenuItem();
                 final int index = i;  // the anonymous innter class needs a final variable
                 recentOpenedfileJMenuItem[i].addActionListener( new ActionListener() {
@@ -225,7 +225,7 @@ public class GroupPopupMenu
             JMenu moveGroupNodeJMenu = new JMenu( Settings.jpoResources.getString( "moveNodeJMenuLabel" ) );
             add( moveGroupNodeJMenu );
 
-            for ( int i = 0; i < Settings.maxDropNodes; i++ ) {
+            for ( int i = 0; i < Settings.MAX_DROPNODES; i++ ) {
                 recentDropNodes[i] = new JMenuItem();
                 recentDropNodes[i].addActionListener( new ActionListener() {
 
@@ -454,7 +454,7 @@ public class GroupPopupMenu
      */
     public void recentDropNodesChanged() {
         boolean dropNodesVisible = false;
-        for ( int i = 0; i < Settings.maxDropNodes; i++ ) {
+        for ( int i = 0; i < Settings.MAX_DROPNODES; i++ ) {
             if ( ( Settings.recentDropNodes[i] != null ) ) {
                 recentDropNodes[i].setText( "To Group: " + Settings.recentDropNodes[i].toString() );
                 recentDropNodes[i].setVisible( true );
@@ -477,7 +477,7 @@ public class GroupPopupMenu
      *  @return returns true if the object was found in the list and the action was submitted.
      */
     private boolean checkDropNodes( Object o ) {
-        for ( int i = 0; i < Settings.maxDropNodes; i++ ) {
+        for ( int i = 0; i < Settings.MAX_DROPNODES; i++ ) {
             if ( ( recentDropNodes[i] != null ) && ( o.hashCode() == recentDropNodes[i].hashCode() ) ) {
                 caller.requestMoveToNode( popupNode, Settings.recentDropNodes[i] );
                 Settings.memorizeGroupOfDropLocation( Settings.recentDropNodes[i] );

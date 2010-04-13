@@ -3,7 +3,6 @@ package jpo.gui;
 import jpo.gui.swing.HelpAboutWindow;
 import jpo.dataModel.RecentFilesChangeListener;
 import jpo.dataModel.Settings;
-import jpo.*;
 import java.awt.event.*;
 import javax.swing.*;
 import jpo.gui.swing.PrivacyJFrame;
@@ -11,7 +10,7 @@ import jpo.gui.swing.PrivacyJFrame;
 /*
 ApplicationJMenuBar.java:  main menu for the application
 
-Copyright (C) 2002 -2009 Richard Eigenmann.
+Copyright (C) 2002 -2010 Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -100,7 +99,7 @@ public class ApplicationJMenuBar
     /**
      *   An array of recently opened collections.
      */
-    private final JMenuItem[] recentOpenedfileJMenuItem = new JMenuItem[Settings.recentFiles];
+    private final JMenuItem[] recentOpenedfileJMenuItem = new JMenuItem[Settings.MAX_MEMORISE];
 
     /**
      *  Menu item that allows the user to save the picture list.
@@ -161,6 +160,7 @@ public class ApplicationJMenuBar
      *  Menu item to bring up the license.
      */
     private final JMenuItem HelpLicenseJMenuItem = new JMenuItem();
+
     /**
      *  Menu item to bring up the privacy dialog.
      */
@@ -229,7 +229,7 @@ public class ApplicationJMenuBar
         FileOpenRecentJMenu.setMnemonic( KeyEvent.VK_R );
         FileJMenu.add( FileOpenRecentJMenu );
 
-        for ( int i = 0; i < Settings.recentFiles; i++ ) {
+        for ( int i = 0; i < Settings.MAX_MEMORISE; i++ ) {
             recentOpenedfileJMenuItem[i] = new JMenuItem();
             final int index = i;  // the anonymous innter class needs a final variable
             recentOpenedfileJMenuItem[i].addActionListener( new ActionListener() {
@@ -452,7 +452,7 @@ public class ApplicationJMenuBar
         HelpJMenu.setText( Settings.jpoResources.getString( "HelpJMenuText" ) );
         HelpAboutJMenuItem.setText( Settings.jpoResources.getString( "HelpAboutMenuItemText" ) );
         HelpLicenseJMenuItem.setText( Settings.jpoResources.getString( "HelpLicenseMenuItemText" ) );
-        HelpPrivacyJMenuItem.setText( "Privacy" );
+        HelpPrivacyJMenuItem.setText( Settings.jpoResources.getString( "HelpPrivacyMenuItemText" ) );
 
     }
 

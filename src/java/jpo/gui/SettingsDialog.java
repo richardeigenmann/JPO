@@ -11,7 +11,6 @@ import java.awt.Frame;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import jpo.*;
 import java.awt.event.*;
 import java.io.File;
 import java.util.Hashtable;

@@ -5,7 +5,7 @@ import java.util.*;
 /*
 JpoResources_cn.java:  class that holds the generic labels for the JPO application
 
-Copyright (C) 2002-2009  Richard Eigenmann, Zurich, Switzerland
+Copyright (C) 2002-2010  Richard Eigenmann, Zurich, Switzerland
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -448,6 +448,8 @@ public class JpoResources_zh_CN extends ListResourceBundle {
 		{"HelpJMenuText", "帮助"},
 		{"HelpAboutMenuItemText", "关于"},
 		{"HelpLicenseMenuItemText", "授权"},
+		{"HelpPrivacyMenuItemText", "Privacy" },
+
 		
 		// PictureViewer
 		{"autoAdvanceDialogTitle", "自动播放"},

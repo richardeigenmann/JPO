@@ -1,7 +1,6 @@
 package jpo.dataModel;
 
 import jpo.gui.LocaleChangeListener;
-import jpo.*;
 import jpo.gui.Jpo;
 import jpo.gui.CollectionJTreeController;
 import java.util.*;
@@ -20,7 +19,7 @@ import jpo.export.HtmlDistillerOptions;
 /*
 Settings.java:  class that holds the settings of the JPO application
 
-Copyright (C) 2002 - 2009 Richard Eigenmann, Zürich, Switzerland
+Copyright (C) 2002 - 2010 Richard Eigenmann, Zürich, Switzerland
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -224,19 +223,27 @@ public class Settings {
     public static int leaveForPanel;
 
     /**
-     *   The picturelist that should be loaded automatically
+     *   The collection that should be loaded automatically
      **/
     public static String autoLoad;
+
+
+    /**
+     * Method to clear the autoload collection.
+     */
+    public static void clearAutoLoad() {
+        autoLoad = "";
+    }
 
     /**
      *  number of recent files shown in the file menu
      */
-    public static final int recentFiles = 9;
+    public static final int MAX_MEMORISE = 9;
 
     /**
      *  Array of recently used files
      */
-    public static String[] recentCollections = new String[recentFiles];
+    public static String[] recentCollections = new String[MAX_MEMORISE];
 
     /**
      *  the path where thumbnails are to be kept if at all
@@ -707,7 +714,7 @@ public class Settings {
     public static void setDefaults() {
         setLocale( currentLocale );
 
-        autoLoad = "";
+        clearAutoLoad();
         logfile = new File( new File( System.getProperty( "java.io.tmpdir" ) ), "JPO.log" );
 
         mainFrameDimensions = new Dimension( windowSizes[1] );
@@ -756,10 +763,10 @@ public class Settings {
         pictureViewerDefaultDimensions.height = prefs.getInt( "pictureViewerDefaultDimensions.height", pictureViewerDefaultDimensions.height );
 
         int i;
-        for ( i = 0; i < Settings.maxCopyLocations; i++ ) {
+        for ( i = 0; i < MAX_MEMORISE; i++ ) {
             copyLocations[i] = prefs.get( "copyLocations-" + Integer.toString( i ), null );
         }
-        for ( i = 0; i < Settings.recentFiles; i++ ) {
+        for ( i = 0; i < Settings.MAX_MEMORISE; i++ ) {
             recentCollections[i] = prefs.get( "recentCollections-" + Integer.toString( i ), null );
         }
         for ( i = 0; i < Settings.maxUserFunctions; i++ ) {
@@ -916,21 +923,32 @@ public class Settings {
         prefs.putBoolean( "maximisePictureViewerWindow", maximisePictureViewerWindow );
         prefs.putInt( "pictureViewerDefaultDimensions.width", pictureViewerDefaultDimensions.width );
         prefs.putInt( "pictureViewerDefaultDimensions.height", pictureViewerDefaultDimensions.height );
-        int i;
+
+        // copy locations
         int n = 0;
-        for ( i = 0; i < Settings.maxCopyLocations; i++ ) {
+        for ( int i = 0; i < MAX_MEMORISE; i++ ) {
             if ( copyLocations[i] != null ) {
-                prefs.put( "copyLocations-" + Integer.toString( n ), copyLocations[i] );
+                prefs.put( String.format( "copyLocations-%d", n), copyLocations[i] );
                 n++;
-            }
+            } 
         }
+        for ( int x = n; x < MAX_MEMORISE; x++) {
+                prefs.remove( String.format( "copyLocations-%d", x) );
+        }
+
+        // recent collections
         n = 0;
-        for ( i = 0; i < Settings.recentFiles; i++ ) {
+        for ( int i = 0; i < Settings.MAX_MEMORISE; i++ ) {
             if ( recentCollections[i] != null ) {
-                prefs.put( "recentCollections-" + Integer.toString( n ), recentCollections[i] );
+                prefs.put( String.format( "recentCollections-%d", n ), recentCollections[i] );
                 n++;
             }
         }
+        for ( int x = n; x < MAX_MEMORISE; x++) {
+                prefs.remove( String.format( "recentCollections-%d", x) );
+        }
+
+        int i;
         n = 0;
         for ( i = 0; i < Settings.maxUserFunctions; i++ ) {
             if ( ( userFunctionNames[i] != null ) && ( userFunctionNames[i].length() > 0 ) && ( userFunctionCmd[i] != null ) && ( userFunctionCmd[i].length() > 0 ) ) {
@@ -1101,13 +1119,13 @@ public class Settings {
 
 
     /**
-     *  every time a collection is opened this function is called for storing
-     *  the collection name in the Open Recent menu
+     * This method memorises a collection file name for the Open > Recent menu
+     * @param recentFile The collection file name to be memorised
      */
     public static void pushRecentCollection( String recentFile ) {
-        for ( int i = 0; i < Settings.recentFiles; i++ ) {
-            if ( ( recentCollections[i] != null ) &&
-                    ( recentCollections[i].equals( recentFile ) ) ) {
+        for ( int i = 0; i < Settings.MAX_MEMORISE; i++ ) {
+            if ( ( recentCollections[i] != null )
+                    && ( recentCollections[i].equals( recentFile ) ) ) {
                 // it was already in the list make it the first one
                 for ( int j = i; j > 0; j-- ) {
                     recentCollections[j] = recentCollections[j - 1];
@@ -1119,12 +1137,24 @@ public class Settings {
         }
 
         // move all the elements down by one
-        for ( int i = Settings.recentFiles - 1; i > 0; i-- ) {
+        for ( int i = Settings.MAX_MEMORISE - 1; i > 0; i-- ) {
             recentCollections[i] = recentCollections[i - 1];
         }
         recentCollections[ 0] = recentFile;
         notifyRecentFilesChanged();
         writeSettings();
+    }
+
+
+    /**
+     * This method clears all the recent collection file names
+     */
+    public static void clearRecentCollection() {
+        for ( int i = 0; i < Settings.MAX_MEMORISE; i++ ) {
+            recentCollections[i] = null;
+            notifyRecentFilesChanged();
+            writeSettings();
+        }
     }
 
 
@@ -1284,12 +1314,12 @@ public class Settings {
     /**
      *  MAX number of recent Drop Nodes
      */
-    public static final int maxDropNodes = 6;
+    public static final int MAX_DROPNODES = 6;
 
     /**
      *  Array of recently used Drop Nodes
      */
-    public static SortableDefaultMutableTreeNode[] recentDropNodes = new SortableDefaultMutableTreeNode[maxDropNodes];
+    public static SortableDefaultMutableTreeNode[] recentDropNodes = new SortableDefaultMutableTreeNode[MAX_DROPNODES];
 
 
     /**
@@ -1299,9 +1329,9 @@ public class Settings {
      */
     public static void memorizeGroupOfDropLocation(
             SortableDefaultMutableTreeNode recentNode ) {
-        for ( int i = 0; i < Settings.maxDropNodes; i++ ) {
-            if ( ( recentDropNodes[i] != null ) &&
-                    ( recentDropNodes[i].hashCode() == recentNode.hashCode() ) ) {
+        for ( int i = 0; i < MAX_DROPNODES; i++ ) {
+            if ( ( recentDropNodes[i] != null )
+                    && ( recentDropNodes[i].hashCode() == recentNode.hashCode() ) ) {
                 //logger.info( "Settings.memorizeGroupOfDropLocation: node was already in the list make it the first one.");
                 for ( int j = i; j > 0; j-- ) {
                     recentDropNodes[j] = recentDropNodes[j - 1];
@@ -1312,7 +1342,7 @@ public class Settings {
         }
 
         // move all the elements down by one
-        for ( int i = Settings.maxDropNodes - 1; i > 0; i-- ) {
+        for ( int i = MAX_DROPNODES - 1; i > 0; i-- ) {
             recentDropNodes[i] = recentDropNodes[i - 1];
         }
         recentDropNodes[ 0] = recentNode;
@@ -1377,30 +1407,27 @@ public class Settings {
      *  clears the list of recent drop nodes
      */
     public static void clearRecentDropNodes() {
-        recentDropNodes = new SortableDefaultMutableTreeNode[maxDropNodes];
+        recentDropNodes = new SortableDefaultMutableTreeNode[MAX_DROPNODES];
         notifyRecentDropNodesChanged();
     }
     /*------------------------------------------------------------------------------
     Stuff for memorizing the copy target locations    */
 
-    /**
-     *  MAX number of recent Drop Nodes
-     */
-    public static final int maxCopyLocations = 9;
-
+ 
     /**
      *  Array of recently used directories in copy operations and other
      *  File selections.
      */
-    public static String[] copyLocations = new String[maxCopyLocations];
+    public static String[] copyLocations = new String[MAX_MEMORISE];
 
 
     /**
-     *  This method memorizes the copy targets so that they can be accessed
-     *  more quickly next time round.
+     * This method memorises the directories used in copy operations so that they
+     * can be offered as options in drop down lists.
+     * @param location The new location to memorise
      */
     public static void memorizeCopyLocation( String location ) {
-        for ( int i = 0; i < Settings.maxCopyLocations; i++ ) {
+        for ( int i = 0; i < MAX_MEMORISE; i++ ) {
             if ( ( copyLocations[i] != null ) && ( copyLocations[i].equals( location ) ) ) {
                 for ( int j = i; j > 0; j-- ) {
                     copyLocations[j] = copyLocations[j - 1];
@@ -1411,13 +1438,13 @@ public class Settings {
         }
 
         // move all the elements down by one
-        for ( int i = Settings.maxCopyLocations - 1; i > 0; i-- ) {
+        for ( int i = MAX_MEMORISE - 1; i > 0; i-- ) {
             copyLocations[i] = copyLocations[i - 1];
         }
         copyLocations[ 0] = location;
 
         validateCopyLocations();
-        unsavedSettingChanges = true;
+        writeSettings();
         notifyCopyLocationsChanged();
     }
 
@@ -1432,7 +1459,7 @@ public class Settings {
         // validate the locations
         File f;
         boolean arrayChanged = false;
-        for ( int i = 0; i < Settings.maxCopyLocations; i++ ) {
+        for ( int i = 0; i < MAX_MEMORISE; i++ ) {
             if ( copyLocations[i] != null ) {
                 f = new File( copyLocations[i] );
                 if ( !f.exists() ) {
@@ -1446,13 +1473,26 @@ public class Settings {
 
 
     /**
+     *  This method clears the copy locations
+     */
+    public static void clearCopyLocations() {
+        logger.info( "Should Clear Memorised Directories" );
+        for ( int i = 0; i < MAX_MEMORISE; i++ ) {
+            copyLocations[i] = null;
+        }
+        notifyCopyLocationsChanged();
+        writeSettings();
+    }
+
+
+    /**
      *  This method returns the most recently used copy location. If there is no most recent
      *  copyLocation then the user's home directory is returned.
      *
      *  @return   Returns the most recent copy location directory or the user's home directory
      */
     public static File getMostRecentCopyLocation() {
-        for ( int i = 0; i < Settings.maxCopyLocations; i++ ) {
+        for ( int i = 0; i < copyLocations.length; i++ ) {
             if ( Settings.copyLocations[i] != null ) {
                 return new File( Settings.copyLocations[i] );
             }

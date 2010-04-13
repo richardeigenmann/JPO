@@ -59,7 +59,7 @@ public class PicturePopupMenu
      *  array of menu items that allows the user to copy the picture to a memorised file location
      *
      **/
-    private JMenuItem[] copyLocationsJMenuItems = new JMenuItem[Settings.maxCopyLocations];
+    private JMenuItem[] copyLocationsJMenuItems = new JMenuItem[Settings.MAX_MEMORISE];
 
     /**
      *  a separator for the Move menu. Declared here because other class methods want to turn on and off visible.
@@ -70,7 +70,7 @@ public class PicturePopupMenu
      *  This array of JMenuItems memorises the most recent drop locations and allows
      *  The user to quickly select a recently used drop location for the next drop.
      */
-    private JMenuItem[] recentDropNodes = new JMenuItem[Settings.maxDropNodes];
+    private JMenuItem[] recentDropNodes = new JMenuItem[Settings.MAX_DROPNODES];
 
 
     /**
@@ -251,7 +251,7 @@ public class PicturePopupMenu
             JMenu movePictureNodeJMenu = new JMenu( Settings.jpoResources.getString( "moveNodeJMenuLabel" ) );
             add( movePictureNodeJMenu );
 
-            for ( int i = 0; i < Settings.maxDropNodes; i++ ) {
+            for ( int i = 0; i < Settings.MAX_DROPNODES; i++ ) {
                 recentDropNodes[i] = new JMenuItem();
                 recentDropNodes[i].addActionListener( this );
                 movePictureNodeJMenu.add( recentDropNodes[i] );
@@ -409,7 +409,7 @@ public class PicturePopupMenu
 
 
 
-        for ( int i = 0; i < Settings.maxCopyLocations; i++ ) {
+        for ( int i = 0; i < Settings.MAX_MEMORISE; i++ ) {
             copyLocationsJMenuItems[i] = new JMenuItem();
             copyLocationsJMenuItems[i].addActionListener( this );
             copyImageJMenu.add( copyLocationsJMenuItems[i] );
@@ -730,7 +730,7 @@ public class PicturePopupMenu
      */
     public void recentDropNodesChanged() {
         boolean dropNodesVisible = false;
-        for ( int i = 0; i < Settings.maxDropNodes; i++ ) {
+        for ( int i = 0; i < Settings.MAX_DROPNODES; i++ ) {
             if ( Settings.recentDropNodes[i] != null ) {
                 recentDropNodes[i].setText(
                         Settings.jpoResources.getString( "recentDropNodePrefix" ) + Settings.recentDropNodes[i].toString() );
@@ -753,7 +753,7 @@ public class PicturePopupMenu
      *  and update the targets on the menu.
      */
     public void copyLocationsChanged() {
-        for ( int i = 0; i < Settings.maxCopyLocations; i++ ) {
+        for ( int i = 0; i < Settings.copyLocations.length; i++ ) {
             if ( Settings.copyLocations[i] != null ) {
                 copyLocationsJMenuItems[i].setText( Settings.copyLocations[i] );
                 copyLocationsJMenuItems[i].setVisible( true );
@@ -788,7 +788,7 @@ public class PicturePopupMenu
      */
     public void actionPerformed( ActionEvent e ) {
         //  was a recentDropNode picked?
-        for ( int i = 0; i < Settings.maxDropNodes; i++ ) {
+        for ( int i = 0; i < Settings.MAX_DROPNODES; i++ ) {
             if ( ( recentDropNodes[i] != null ) && ( e.getSource().hashCode() == recentDropNodes[i].hashCode() ) ) {
 
                 SortableDefaultMutableTreeNode nextChild =
@@ -802,7 +802,7 @@ public class PicturePopupMenu
         }
 
         //  was a copyLocationsJMenuItems item picked?
-        for ( int i = 0; i < Settings.maxCopyLocations; i++ ) {
+        for ( int i = 0; i < Settings.MAX_MEMORISE; i++ ) {
             if ( ( copyLocationsJMenuItems[i] != null ) && ( e.getSource().hashCode() == copyLocationsJMenuItems[i].hashCode() ) ) {
                 popupNode.validateAndCopyPicture( new File( Settings.copyLocations[i] ) );
                 Settings.memorizeCopyLocation( Settings.copyLocations[i] );
