@@ -1,6 +1,7 @@
 package jpo.gui;
 
-import jpo.dataModel.ThumbnailBrowserInterface;
+import jpo.dataModel.RelayoutListener;
+import jpo.dataModel.NodeNavigatorInterface;
 import jpo.dataModel.Settings;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
 import jpo.*;
@@ -72,10 +73,10 @@ public class ThumbnailPanelController
      *   Instructs the ThumbnailPanelController to display the specified set of nodes to be displayed
      *   @param mySetOfNodes 	The Interface with the collection of nodes
      */
-    public void show( ThumbnailBrowserInterface mySetOfNodes ) {
+    public void show( NodeNavigatorInterface mySetOfNodes ) {
         if ( this.mySetOfNodes != null ) {
             this.mySetOfNodes.removeRelayoutListener( this );
-            this.mySetOfNodes.cleanup();
+            this.mySetOfNodes.getRid();
         }
         this.mySetOfNodes = mySetOfNodes;
         mySetOfNodes.addRelayoutListener( this );  //Todo: investigate how we unattach these...
@@ -87,7 +88,7 @@ public class ThumbnailPanelController
                 thumbnailPanel.getVerticalScrollBar().setValue( 0 );
                 startIndex = 0;
                 curPage = 1;
-                assignThumbnails();
+                relayout();
             }
         };
         if ( SwingUtilities.isEventDispatchThread() ) {
@@ -114,7 +115,7 @@ public class ThumbnailPanelController
     /**
      *  This object refers to the set of Nodes that is being browsed in the ThumbnailPanelController
      */
-    public ThumbnailBrowserInterface mySetOfNodes;
+    public NodeNavigatorInterface mySetOfNodes;
 
     /**
      *  a variable to hold the current starting position of thumbnailControllers being
@@ -189,7 +190,7 @@ public class ThumbnailPanelController
         startIndex = 0;
         thumbnailPanel.getVerticalScrollBar().setValue( 0 );
         curPage = 1;
-        assignThumbnails();
+        relayout();
         setButtonStatus();
     }
 
@@ -204,7 +205,7 @@ public class ThumbnailPanelController
         }
         thumbnailPanel.getVerticalScrollBar().setValue( 0 );
         curPage--;
-        assignThumbnails();
+        relayout();
         setButtonStatus();
     }
 
@@ -216,7 +217,7 @@ public class ThumbnailPanelController
         startIndex = startIndex + Settings.maxThumbnails;
         thumbnailPanel.getVerticalScrollBar().setValue( 0 );
         curPage++;
-        assignThumbnails();
+        relayout();
         setButtonStatus();
     }
 
@@ -230,7 +231,7 @@ public class ThumbnailPanelController
         curPage = tgtPage + 1;
         startIndex = tgtPage * Settings.maxThumbnails;
         thumbnailPanel.getVerticalScrollBar().setValue( 0 );
-        assignThumbnails();
+        relayout();
         setButtonStatus();
     }
 
@@ -436,7 +437,7 @@ public class ThumbnailPanelController
      *
      * It also sets the tile of the JScrollPane.
      */
-    public void assignThumbnails() {
+    public void relayout() {
         if ( mySetOfNodes == null ) {
             return;
         }

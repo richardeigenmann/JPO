@@ -1,13 +1,11 @@
 package jpo.dataModel;
 
 import jpo.gui.*;
-import jpo.dataModel.ThumbnailBrowserInterface;
-import jpo.dataModel.SortableDefaultMutableTreeNode;
 import java.util.*;
 import java.util.logging.Logger;
 
 /*
-ThumbnailBrowser.java:  an implementation of the ThumbnailBrowserInterface for browsing pictures sequentially.
+NodeNavigator.java:  an implementation of the NodeNavigatorInterface for browsing pictures sequentially.
 
 Copyright (C) 2006-2010  Richard Eigenmann, Zürich, Switzerland
 This program is free software; you can redistribute it and/or
@@ -24,16 +22,16 @@ The license is in gpl.txt.
 See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 /**
- *  This class implements the RelayoutListener functionality required by the  ThumbnailBrowserInterface
- *  but the other methods need to be implements by the exentding class.
+ *  This class implements the RelayoutListener functionality required by the  NodeNavigatorInterface
+ *  but the other methods need to be implements by the extending class.
  */
-public abstract class ThumbnailBrowser
-        implements ThumbnailBrowserInterface {
+public abstract class NodeNavigator
+        implements NodeNavigatorInterface {
 
     /**
      * Logger for this class
      */
-    protected Logger logger = Logger.getLogger( ThumbnailBrowser.class.getName() );
+    protected Logger logger = Logger.getLogger( NodeNavigator.class.getName() );
 
 
     /**
@@ -60,9 +58,9 @@ public abstract class ThumbnailBrowser
 
     /**
      *  This method unregisters the TreeModelListener and sets the variables to null;
-     *  a super must be called to ensure that the ThumbnailBrowser cleans up the relayoutListeners
+     *  a super must be called to ensure that the NodeNavigator cleans up the relayoutListeners
      */
-    public void cleanup() {
+    public void getRid() {
         relayoutListeners.clear();
     }
 
@@ -74,7 +72,7 @@ public abstract class ThumbnailBrowser
 
 
     /**
-     *  method to register a ThumbnailJScrollPane as a listener
+     *  method to register a RelayoutListener as a listener
      */
     public void addRelayoutListener( RelayoutListener listener ) {
         logger.fine( String.format( "adding relayout listener: %s", listener.toString() ) );
@@ -84,7 +82,7 @@ public abstract class ThumbnailBrowser
 
 
     /**
-     *  method to remove a ThumbnailJScrollPane as a listener
+     *  method to remove a RelayoutListener as a listener
      */
     public void removeRelayoutListener( RelayoutListener listener ) {
         logger.fine( String.format( "removing relayout listener: %s", listener.toString() ) );
@@ -94,14 +92,18 @@ public abstract class ThumbnailBrowser
 
 
     /**
-     * Method that notifies the relayoutListeners of a structural change that they need to
+     * Method that notifies the RelayoutListener of a structural change that they need to
      * respond to.
      */
     public void notifyRelayoutListeners() {
         logger.fine( String.format( "notifying %d relayout listeners.", relayoutListeners.size() ) );
-        for ( RelayoutListener relayoutListener : relayoutListeners ) {
+        @SuppressWarnings( "unchecked" )
+        Vector<RelayoutListener> stableRelayoutListeners = (Vector<RelayoutListener>) relayoutListeners.clone();
+        for ( RelayoutListener relayoutListener : stableRelayoutListeners ) {
             logger.fine( String.format( "   now notifying relayout listener: %s", relayoutListener.toString() ) );
-            relayoutListener.assignThumbnails();
+            relayoutListener.relayout();
         }
     }
+
+ 
 }

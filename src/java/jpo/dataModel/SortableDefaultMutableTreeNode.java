@@ -697,7 +697,7 @@ public class SortableDefaultMutableTreeNode
      *
      */
     public boolean deleteNode() {
-        logger.fine( "SDMTN.deleteNode: invoked on: " + this.toString() );
+        logger.fine( String.format("Delete requested for node: %s", toString() ) );
         if ( this.isRoot() ) {
             logger.info( "SDMTN.deleteNode: attempted on Root node. Can't do this! Aborted." );
             JOptionPane.showMessageDialog( null, //very annoying if the main window is used as it forces itself into focus.
@@ -712,11 +712,10 @@ public class SortableDefaultMutableTreeNode
         int[] childIndices = { parentNode.getIndex( this ) };
         Object[] removedChildren = { this };
 
-        //this.removeFromSelection();
-
         super.removeFromParent();
 
         if ( getPictureCollection().getSendModelUpdates() ) {
+            logger.fine(String.format( "Sending delete message. Model: %s, Parent: %s, ChildIndex %d, removedChild: %s ", getPictureCollection().getTreeModel(), parentNode, childIndices[0], removedChildren[0].toString()) );
             getPictureCollection().getTreeModel().nodesWereRemoved( parentNode, childIndices, removedChildren );
         }
 
@@ -869,7 +868,7 @@ public class SortableDefaultMutableTreeNode
         targetFile = Tools.correctFilenameExtension( Tools.getExtension( originalUrl ), targetFile );
 
         if ( !targetFile.getParentFile().exists() ) {
-            targetFile.getParentFile().mkdirs();
+            boolean success = targetFile.getParentFile().mkdirs();
         }
 
         Tools.copyPicture( originalUrl, targetFile );
@@ -1106,7 +1105,7 @@ public class SortableDefaultMutableTreeNode
                 File targetFile = Tools.inventPicFilename( targetDir, addFile.getName() );
                 long crc = Tools.copyPicture( addFile, targetFile );
                 if ( newOnly && Settings.pictureCollection.isInCollection( crc ) ) {
-                    targetFile.delete();
+                    boolean success = targetFile.delete();
                     progGui.decrementTotal();
                 } else {
                     receivingNode.addPicture( targetFile, selectedCategories );
@@ -1201,10 +1200,10 @@ public class SortableDefaultMutableTreeNode
 
             }
             File targetFile = Tools.inventPicFilename( targetDir, f.getName() );
-            logger.fine( String.format( "Target file name chosen as: ", targetFile.toString() ) );
+            logger.fine( String.format( "Target file name chosen as: %s", targetFile.toString() ) );
             Tools.copyPicture( f, targetFile );
             if ( !copyMode ) {
-                f.delete();
+                boolean success = f.delete();
             }
             addPicture( targetFile, null );
         }
@@ -1276,7 +1275,7 @@ public class SortableDefaultMutableTreeNode
                     long crc = Tools.copyPicture( addFile, targetFile );
                     cam.storePictureNewImage( addFile, crc ); // remember it next time
                     if ( cam.inOldImage( crc ) ) {
-                        targetFile.delete();
+                        boolean success = targetFile.delete();
                         progGui.decrementTotal();
                     } else {
                         receivingNode.addPicture( targetFile, selectedCategories );
@@ -1357,7 +1356,7 @@ public class SortableDefaultMutableTreeNode
         // It is unfortunate that the queue will not recognize duplicates because it is working
         //  off ThumbnailController objects instead of Picturefiles. This also makes urgent requests come too late
         // TODO: Improve it. This is totally broken!
-        //ThumbnailController t = new ThumbnailController( new SingleNodeBrowser( newNode ), 0, Settings.thumbnailSize, ThumbnailQueueRequest.LOW_PRIORITY, null );
+        //ThumbnailController t = new ThumbnailController( new SingleNodeNavigator( newNode ), 0, Settings.thumbnailSize, ThumbnailQueueRequest.LOW_PRIORITY, null );
         getPictureCollection().setUnsavedUpdates();
 
         String creationTime = null;
@@ -1383,7 +1382,7 @@ public class SortableDefaultMutableTreeNode
         } catch ( IOException x ) {
             logger.severe( String.format( "Caught an IOException: %s\nError: %s", addFile.getPath(), x.getMessage() ) );
         } catch ( JpegProcessingException x ) {
-            logger.fine( String.format( "Could not extract an EXIF header for file %s\nJpegProcessingException: ", addFile.getPath(), x.getMessage() ) );
+            logger.fine( String.format( "Could not extract an EXIF header for file %s\nJpegProcessingException: %s", addFile.getPath(), x.getMessage() ) );
         }
         if ( creationTime == null ) {
             creationTime = "";
@@ -1406,7 +1405,7 @@ public class SortableDefaultMutableTreeNode
             return;
         }
         logger.fine( String.format( "refreshing the thumbnail on the node %s\nAbout to create the thubnail", this.toString() ) );
-        ThumbnailController t = new ThumbnailController( new SingleNodeBrowser( this ), 0, Settings.thumbnailSize, ThumbnailQueueRequest.HIGH_PRIORITY, null );
+        ThumbnailController t = new ThumbnailController( new SingleNodeNavigator( this ), 0, Settings.thumbnailSize, ThumbnailQueueRequest.HIGH_PRIORITY, null );
         logger.fine( String.format( "Thumbnail %s created. Now chucking it on the creation queue", t.toString() ) );
         ThumbnailCreationQueue.requestThumbnailCreation( t, ThumbnailQueueRequest.HIGH_PRIORITY, true );
     }

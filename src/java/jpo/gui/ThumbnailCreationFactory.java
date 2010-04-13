@@ -11,7 +11,6 @@ import java.net.*;
 import java.io.*;
 import java.awt.*;
 import java.awt.image.*;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.*;
 
@@ -543,7 +542,8 @@ public class ThumbnailCreationFactory
             }
 
 
-            if ( ( groupThumbnailController.referringNode != null ) && ( groupThumbnailController.referringNode == referringNode ) ) {
+            //if ( ( groupThumbnailController.referringNode != null ) && ( groupThumbnailController.referringNode == referringNode ) ) {
+            if ( groupThumbnailController.referringNode == referringNode ) {
                 // in the meantime it might be displaying something completely else
                 groupThumbnailController.getThumbnail().setThumbnail( new ImageIcon( groupThumbnail ) );
             }

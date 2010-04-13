@@ -409,9 +409,7 @@ public class PictureViewerNavBar
      * What to do when the info button is clicked
      */
     private void actionInfoClicked() {
-        pv.pictureJPanel.cylceInfoDisplay();
-        pv.pictureJPanel.requestFocusInWindow();
-
+        pv.cylceInfoDisplay();
     }
 
 
@@ -420,8 +418,6 @@ public class PictureViewerNavBar
      */
     private void actionResetClicked() {
         pv.resetPicture();
-        pv.pictureJPanel.requestFocusInWindow();
-
     }
 
 
@@ -439,7 +435,6 @@ public class PictureViewerNavBar
      */
     private void actionFullScreenClicked() {
         pv.requestScreenSizeMenu();
-        pv.pictureJPanel.requestFocusInWindow();
 
     }
 
@@ -449,6 +444,5 @@ public class PictureViewerNavBar
      */
     private void actionClockClicked() {
         pv.requestAutoAdvance();
-        pv.pictureJPanel.requestFocusInWindow();
     }
 }

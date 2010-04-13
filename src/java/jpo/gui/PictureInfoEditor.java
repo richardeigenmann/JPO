@@ -1,6 +1,6 @@
 package jpo.gui;
 
-import jpo.dataModel.SingleNodeBrowser;
+import jpo.dataModel.SingleNodeNavigator;
 import jpo.gui.swing.NonFocussedCaret;
 import jpo.dataModel.Tools;
 import jpo.dataModel.ExifInfo;
@@ -22,7 +22,7 @@ import java.util.Iterator;
 import java.util.Vector;
 import java.util.Enumeration;
 import java.util.logging.Logger;
-import jpo.dataModel.ThumbnailBrowserInterface;
+import jpo.dataModel.NodeNavigatorInterface;
 
 /*
 PictureInfoEditor:  Edits the description of an image
@@ -214,7 +214,7 @@ public class PictureInfoEditor
      * @param setOfNodes
      * @param index
      */
-    public PictureInfoEditor( ThumbnailBrowserInterface setOfNodes, int index ) {
+    public PictureInfoEditor( NodeNavigatorInterface setOfNodes, int index ) {
         this( setOfNodes.getNode( index ) );
     }
 
@@ -263,7 +263,7 @@ public class PictureInfoEditor
         leftJPanel.setLayout( new GridBagLayout() );
 
 
-        thumbnailController = new ThumbnailController( new SingleNodeBrowser( editNode ), 0, Settings.thumbnailSize, ThumbnailQueueRequest.MEDIUM_PRIORITY, null );
+        thumbnailController = new ThumbnailController( new SingleNodeNavigator( editNode ), 0, Settings.thumbnailSize, ThumbnailQueueRequest.MEDIUM_PRIORITY, null );
         c.gridy = 0;
         c.gridx = 0;
         c.gridwidth = 1;

@@ -1,9 +1,9 @@
 package jpo.gui;
 
-import jpo.dataModel.FlatGroupBrowser;
-import jpo.dataModel.RandomBrowser;
-import jpo.dataModel.GroupBrowser;
-import jpo.dataModel.ThumbnailBrowserInterface;
+import jpo.dataModel.FlatGroupNavigator;
+import jpo.dataModel.RandomNavigator;
+import jpo.dataModel.GroupNavigator;
+import jpo.dataModel.NodeNavigatorInterface;
 import jpo.gui.swing.ResizableJFrame;
 import jpo.gui.swing.MainWindow;
 import jpo.dataModel.Tools;
@@ -131,6 +131,14 @@ public class Jpo
                     thumbnailJScrollPane = new ThumbnailPanelController();
                     infoPanelController = new InfoPanelController();
                     mainWindow = new MainWindow( Jpo.this, collectionJTreeController.getJScrollPane(), searchesJTree.getJScrollPane(), thumbnailJScrollPane, infoPanelController.getInfoPanel() );
+                    mainWindow.addWindowListener( new WindowAdapter() {
+
+                        @Override
+                        public void windowClosing( WindowEvent e ) {
+                            mainWindow.setDefaultCloseOperation( WindowConstants.DO_NOTHING_ON_CLOSE );
+                            closeJpo();
+                        }
+                    } );
                 }
             } );
         } catch ( InterruptedException ex ) {
@@ -138,15 +146,6 @@ public class Jpo
         } catch ( InvocationTargetException ex ) {
             logger.log( Level.SEVERE, null, ex );
         }
-
-        mainWindow.addWindowListener( new WindowAdapter() {
-
-            @Override
-            public void windowClosing( WindowEvent e ) {
-                mainWindow.setDefaultCloseOperation( WindowConstants.DO_NOTHING_ON_CLOSE );
-                closeJpo();
-            }
-        } );
 
         Settings.pictureCollection.getTreeModel().addTreeModelListener( new MainAppModelListener() );
         if ( !loadAutoloadCollection() ) {
@@ -211,7 +210,7 @@ public class Jpo
         logger.info( "Autoloading: " + Settings.jarAutostartList.toString() );
         try {
         Settings.pictureCollection.getRootNode().streamLoad( Settings.jarAutostartList.openStream() );
-        thumbnailJScrollPane.show( new GroupBrowser( Settings.pictureCollection.getRootNode() ) );
+        thumbnailJScrollPane.show( new GroupNavigator( Settings.pictureCollection.getRootNode() ) );
         } catch ( IOException x ) {
         logger.info( Settings.jarAutostartList.toString() + " could not be loaded\nReason: " + x.getMessage() );
         }
@@ -356,7 +355,7 @@ public class Jpo
             return;
         }
         collectionJTreeController.setSelectedNode( displayNode );
-        showThumbnails( new GroupBrowser( displayNode ) );
+        showThumbnails( new GroupNavigator( displayNode ) );
         infoPanelController.showInfo( displayNode );
     }
 
@@ -366,7 +365,7 @@ public class Jpo
      * nodes of in the Thumbnail pane.
      * @param nodeSet must be of a node of type GroupInfo
      */
-    public static void showThumbnails( ThumbnailBrowserInterface nodeSet ) {
+    public static void showThumbnails( NodeNavigatorInterface nodeSet ) {
         if ( nodeSet == null ) {
             logger.severe( "I've been told to showThumbnails on a null set!" );
             Thread.dumpStack();
@@ -411,7 +410,7 @@ public class Jpo
         Object o = node.getUserObject();
         if ( o instanceof PictureInfo ) {
             //node.showLargePicture();
-            FlatGroupBrowser sb = new FlatGroupBrowser( (SortableDefaultMutableTreeNode) node.getParent() );
+            FlatGroupNavigator sb = new FlatGroupNavigator( (SortableDefaultMutableTreeNode) node.getParent() );
             int index = 0;
             for ( int i = 0; i < sb.getNumberOfNodes(); i++ ) {
                 if ( sb.getNode( i ).equals( node ) ) {
@@ -420,14 +419,14 @@ public class Jpo
                 }
             }
             PictureViewer pictureViewer = new PictureViewer();
-            pictureViewer.changePicture( sb, index );
+            pictureViewer.show( sb, index );
         } else if ( o instanceof GroupInfo ) {
             SortableDefaultMutableTreeNode firstPicNode = node.findFirstPicture();
             if ( firstPicNode != null ) {
                 //firstPicNode.showLargePicture();
-                FlatGroupBrowser sb = new FlatGroupBrowser( node );
+                FlatGroupNavigator sb = new FlatGroupNavigator( node );
                 PictureViewer pictureViewer = new PictureViewer();
-                pictureViewer.changePicture( sb, 0 );
+                pictureViewer.show( sb, 0 );
             } else {
                 JOptionPane.showMessageDialog( Settings.anchorFrame,
                         Settings.jpoResources.getString( "noPicsForSlideshow" ),
@@ -669,15 +668,15 @@ public class Jpo
     public void performSlideshow() {
         PictureViewer p1 = new PictureViewer();
         p1.switchWindowMode( ResizableJFrame.WINDOW_LEFT );
-        p1.switchDecorations( true );
+        //p1.switchDecorations( true );
         PictureViewer p2 = new PictureViewer();
         p2.switchWindowMode( ResizableJFrame.WINDOW_RIGHT );
-        p2.switchDecorations( true );
-        RandomBrowser rb1 = new RandomBrowser( Settings.pictureCollection.getRootNode() );
-        RandomBrowser rb2 = new RandomBrowser( Settings.pictureCollection.getRootNode() );
-        p1.changePicture( rb1, 0 );
+        //p2.switchDecorations( true );
+        RandomNavigator rb1 = new RandomNavigator( Settings.pictureCollection.getRootNode() );
+        RandomNavigator rb2 = new RandomNavigator( Settings.pictureCollection.getRootNode() );
+        p1.show( rb1, 0 );
         p1.startAdvanceTimer( 10 );
-        p2.changePicture( rb2, 0 );
+        p2.show( rb2, 0 );
         p2.startAdvanceTimer( 10 );
     }
 

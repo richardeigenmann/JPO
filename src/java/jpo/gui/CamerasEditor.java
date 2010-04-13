@@ -17,7 +17,7 @@ import javax.swing.tree.TreeSelectionModel;
 import jpo.dataModel.Tools;
 
 /*
-CamerasEditor.java: A Controller and View of the Cameras allows adding and removing
+CamerasEditor.java: A Controller and View of the cameras allows adding and removing
 
 Copyright (C) 2002 - 2009  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
@@ -105,7 +105,7 @@ public class CamerasEditor
 
         // take a backup
         backupCameras = new Vector<Camera>();
-        for ( Camera c : Settings.Cameras ) {
+        for ( Camera c : Settings.cameras ) {
             Camera b = new Camera();
             b.setDescription( c.getDescription() );
             b.setCameraMountPoint( c.getCameraMountPoint() );
@@ -203,7 +203,7 @@ public class CamerasEditor
         cancelJButton.addActionListener( new ActionListener() {
 
             public void actionPerformed( ActionEvent e ) {
-                Settings.Cameras = backupCameras;
+                Settings.cameras = backupCameras;
                 getRid();
 
             }
@@ -250,7 +250,7 @@ public class CamerasEditor
     private void addCameraAction() {
         singleCameraEditor.saveCamera();
         Camera cam = new Camera();
-        Settings.Cameras.add( cam );
+        Settings.cameras.add( cam );
         singleCameraEditor.setCamera( cam );
         DefaultMutableTreeNode newChild = new DefaultMutableTreeNode( cam );
         int childNodes = rootNode.getChildCount();
@@ -276,8 +276,8 @@ public class CamerasEditor
         DefaultMutableTreeNode nextsibling = n.getNextSibling();
         DefaultMutableTreeNode previousNode = n.getPreviousNode();
         treeModel.removeNodeFromParent( n );
-        synchronized ( Settings.Cameras ) {
-            Settings.Cameras.remove( n.getUserObject() );
+        synchronized ( Settings.cameras ) {
+            Settings.cameras.remove( n.getUserObject() );
         }
         if ( nextsibling != null ) {
             cameraJTree.setSelectionPath( new TreePath( nextsibling.getPath() ) );
@@ -309,11 +309,11 @@ public class CamerasEditor
 
 
     /**
-     * Closes the frame and gets rid of it and set all Cameras to disconnected
+     * Closes the frame and gets rid of it and set all cameras to disconnected
      * to that the daemon can scan them afresh.
      */
     private void getRid() {
-        for ( Camera c : Settings.Cameras ) {
+        for ( Camera c : Settings.cameras ) {
             c.setLastConnectionStatus( false ); // so that the daemon gets a chance
         }
 
@@ -329,7 +329,7 @@ public class CamerasEditor
     private void loadTree() {
         rootNode.removeAllChildren();
         treeModel.nodeStructureChanged( rootNode );
-        for ( Camera c : Settings.Cameras ) {
+        for ( Camera c : Settings.cameras ) {
             DefaultMutableTreeNode cameraNode = new DefaultMutableTreeNode( c );
             rootNode.add( cameraNode );
         }

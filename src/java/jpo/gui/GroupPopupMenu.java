@@ -368,7 +368,7 @@ public class GroupPopupMenu
             sortJMenu.add( sortByCommentJMenuItem );
 
             // requests a sort by Photographer
-            final SortOption sortByPhotographer = sortOptions.get( 4 );
+            final SortOption sortByPhotographer = sortOptions.get( 5 );
             JMenuItem sortByPhotographerJMenuItem = new JMenuItem( sortByPhotographer.getDescription() );
             sortByPhotographerJMenuItem.addActionListener( new ActionListener() {
 
@@ -379,7 +379,7 @@ public class GroupPopupMenu
             sortJMenu.add( sortByPhotographerJMenuItem );
 
             // requests a sort by Copyright Holder
-            final SortOption sortByCopyrightHolder = sortOptions.get( 4 );
+            final SortOption sortByCopyrightHolder = sortOptions.get( 6 );
             JMenuItem sortByCopyrightHolderTimeJMenuItem = new JMenuItem( sortByCopyrightHolder.getDescription() );
             sortByCopyrightHolderTimeJMenuItem.addActionListener( new ActionListener() {
 

@@ -105,7 +105,7 @@ public class CameraDownloadWizardStep6 extends AbstractStep {
         // Storing in xxx
         label4.setText(Settings.jpoResources.getString("DownloadCameraWizardStep5Text7") + dataModel.targetDir.toString());
         if (!dataModel.targetDir.exists()) {
-            dataModel.targetDir.mkdirs();
+            boolean created = dataModel.targetDir.mkdirs();
         }
         if (!dataModel.targetDir.exists()) {
             label4.setText(String.format("Error: %s  doesn't exist.", dataModel.targetDir.toString()));

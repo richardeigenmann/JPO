@@ -58,7 +58,6 @@ public class PicturePane
      */
     public ScalablePicture sclPic = new ScalablePicture();
 
-
     /**
      *  Flag that lets this JComponent know if the picture is to be fitted into the available space
      *  when the threads return the scaled picture.
@@ -145,11 +144,9 @@ public class PicturePane
     }
 
 
-
     /////////////////////////
     // Zooming Methods     //
     /////////////////////////
-
     /**
      * Multiplies the scale factor so that paint() method scales the
      * image larger. This method calls
@@ -234,12 +231,12 @@ public class PicturePane
         }
     }
 
-
     /**
      * This is the factor by how much the scrollxxx methods will scroll.
      * Currently set to a fixed 10%.
      */
     private static final float scrollFactor = 0.05f;
+
 
     /**
      *  method that moves the image up by 10% of the pixels shown on the screen.
@@ -350,7 +347,7 @@ public class PicturePane
         int WindowWidth = getSize().width;
         int WindowHeight = getSize().height;
 
-    
+
 
         if ( sclPic.getScaledPicture() != null ) {
             Graphics2D g2d = (Graphics2D) g;
@@ -443,6 +440,7 @@ public class PicturePane
                 break;
         }
         repaint();
+        //pictureJPanel.requestFocusInWindow();
     }
 
 

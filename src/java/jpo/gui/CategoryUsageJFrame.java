@@ -23,7 +23,7 @@ import jpo.dataModel.PictureInfo;
 /*
 CategoryUsageJFrame.java:  Creates a Window in which the categories are shown
 
-Copyright (C) 2002-2009  Richard Eigenmann.
+Copyright (C) 2002-2010  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -43,19 +43,22 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  *  it allows to update the pictures with the Categories being clicked.
  *
  **/
-public class CategoryUsageJFrame extends JFrame {
+public class CategoryUsageJFrame
+        extends JFrame {
 
     /**
      *  the entry field that allows a new category to be added
      */
     private JTextField categoryJTextField = new JTextField();
 
-
     private DefaultListModel listModel;
 
     private final CategoryJScrollPane categoryJScrollPane;
 
-    private Vector<SortableDefaultMutableTreeNode> selectedNodes = null;
+    /**
+     * An Array to record the selected nodes
+     */
+    private Vector<SortableDefaultMutableTreeNode> selectedNodes;
 
     final JLabel numberOfPicturesJLabel = new JLabel( "" );
 
@@ -221,7 +224,8 @@ public class CategoryUsageJFrame extends JFrame {
      *  @param  groupNode    The node from which to add the pictures
      *  @param  recurse	A flag whether to recurse the search into sub groups
      */
-    public void setGroupSelection( SortableDefaultMutableTreeNode groupNode, boolean recurse ) {
+    public void setGroupSelection( SortableDefaultMutableTreeNode groupNode,
+            boolean recurse ) {
         selectedNodes = new Vector<SortableDefaultMutableTreeNode>();
         SortableDefaultMutableTreeNode n;
         Enumeration nodes = groupNode.children();
@@ -241,15 +245,14 @@ public class CategoryUsageJFrame extends JFrame {
      *  This method reads the nodes and sets the categories accordingly
      */
     public void updateCategories() {
-        //logger.info("Reading categories...");
-        numberOfPicturesJLabel.setText( Integer.toString( selectedNodes.size() ) + Settings.jpoResources.getString( "numberOfPicturesJLabel" ) );
-
-        categoryJScrollPane.loadCategories();
-
         if ( selectedNodes == null ) {
             logger.info( "selectedNodes is null!" );
             return;
         }
+        numberOfPicturesJLabel.setText( String.format( Settings.jpoResources.getString( "numberOfPicturesJLabel" ), selectedNodes.size() ) );
+
+        categoryJScrollPane.loadCategories();
+
 
         // zero out the categories
         Category c;

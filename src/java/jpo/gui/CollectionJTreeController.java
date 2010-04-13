@@ -1,6 +1,6 @@
 package jpo.gui;
 
-import jpo.dataModel.FlatGroupBrowser;
+import jpo.dataModel.FlatGroupNavigator;
 import jpo.dataModel.Tools;
 import jpo.dataModel.Settings;
 import jpo.gui.swing.CollectionJTree;
@@ -373,6 +373,7 @@ public class CollectionJTreeController
 
     /**
      *  requests the pictures to be shown.
+     *  @param popupNode The node that sent the request
      *  @see  GroupPopupInterface
      */
     public void requestSlideshow( SortableDefaultMutableTreeNode popupNode ) {
@@ -383,7 +384,8 @@ public class CollectionJTreeController
     /**
      *  This method can be invoked by the GroupPopupMenu.
      *
-     *  @see  GroupPopupInterface
+     *  @param popupNode  The node on which the popup Menu was done
+     * @see  GroupPopupInterface
      */
     public void requestFind( SortableDefaultMutableTreeNode popupNode ) {
         new QueryJFrame( popupNode, collectionController );
@@ -465,7 +467,8 @@ public class CollectionJTreeController
 
     /**
      *  requests that the pictures indicated in a flat file be added at this point in the tree
-     *  @see GroupPopupInterface
+     *  @param popupNode The node on which the request was made
+     * @see GroupPopupInterface
      */
     public void requestGroupExportFlatFile(
             SortableDefaultMutableTreeNode popupNode ) {
@@ -494,6 +497,8 @@ public class CollectionJTreeController
     /**
      *  requests that a group be exported to a new collectionjar archive
      *  @see  GroupPopupInterface
+     *
+     *  @param popupNode The node on which the request was made
      */
     public void requestGroupExportNewCollection(
             SortableDefaultMutableTreeNode popupNode ) {
@@ -517,6 +522,7 @@ public class CollectionJTreeController
     /**
      *  requests that a group's picture files be consolidated
      *  @see  GroupPopupInterface
+     *  @param popupNode The node on which the request was made
      */
     public void requestConsolidateGroup(
             SortableDefaultMutableTreeNode popupNode ) {
@@ -526,6 +532,7 @@ public class CollectionJTreeController
 
     /**
      *  requests that a group be moved to the top
+     *  @param popupNode The node on which the request was made
      *  @see  GroupPopupInterface
      */
     public void requestMoveGroupToTop( SortableDefaultMutableTreeNode popupNode ) {
@@ -535,6 +542,7 @@ public class CollectionJTreeController
 
     /**
      *  requests that a group be moved up
+     * @param popupNode The node on which the request was made
      *  @see  GroupPopupInterface
      */
     public void requestMoveGroupUp( SortableDefaultMutableTreeNode popupNode ) {
@@ -544,6 +552,7 @@ public class CollectionJTreeController
 
     /**
      *  requests that a group be moved down
+     * @param popupNode The node on which the request was made
      *  @see  GroupPopupInterface
      */
     public void requestMoveGroupDown( SortableDefaultMutableTreeNode popupNode ) {
@@ -553,6 +562,7 @@ public class CollectionJTreeController
 
     /**
      *  requests that a group be moved down
+     * @param popupNode The node on which the request was made
      *  @see  GroupPopupInterface
      */
     public void requestMoveGroupToBottom(
@@ -563,6 +573,7 @@ public class CollectionJTreeController
 
     /**
      *  requests that a picture be moved to the target Group node
+     * @param popupNode The node on which the request was made
      *  @see  GroupPopupInterface
      */
     public void requestMoveToNode( SortableDefaultMutableTreeNode popupNode,
@@ -573,6 +584,7 @@ public class CollectionJTreeController
 
     /**
      *  request that a group be edited as a table
+     * @param popupNode The node on which the request was made
      */
     public void requestEditGroupTable( SortableDefaultMutableTreeNode popupNode ) {
         TableJFrame tableJFrame = new TableJFrame( popupNode );
@@ -583,6 +595,7 @@ public class CollectionJTreeController
 
     /**
      *  gets called by the GroupPopupInterface and implements the sort request.
+     * @param popupNode The node on which the request was made
      */
     public void requestSort( SortableDefaultMutableTreeNode popupNode,
             int sortCriteria ) {
@@ -684,7 +697,7 @@ public class CollectionJTreeController
                         SwingUtilities.invokeLater( r );
                     }
                 } else if ( nodeInfo instanceof PictureInfo ) {
-                    FlatGroupBrowser sb = new FlatGroupBrowser( (SortableDefaultMutableTreeNode) popupNode.getParent() );
+                    FlatGroupNavigator sb = new FlatGroupNavigator( (SortableDefaultMutableTreeNode) popupNode.getParent() );
                     int index = 0;
                     for ( int i = 0; i < sb.getNumberOfNodes(); i++ ) {
                         if ( sb.getNode( i ).equals( popupNode ) ) {

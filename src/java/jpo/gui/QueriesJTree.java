@@ -1,7 +1,7 @@
 package jpo.gui;
 
 import jpo.dataModel.Settings;
-import jpo.dataModel.QueryBrowser;
+import jpo.dataModel.QueryNavigator;
 import jpo.*;
 import jpo.dataModel.Query;
 import java.awt.event.*;
@@ -96,7 +96,7 @@ public class QueriesJTree
                 if ( ( clickNode == null ) || ( clickNode.getUserObject() == null ) || ( !( clickNode.getUserObject() instanceof Query ) ) ) {
                     return;
                 }
-                QueryBrowser queryBrowser = new QueryBrowser( (Query) clickNode.getUserObject() );
+                QueryNavigator queryBrowser = new QueryNavigator( (Query) clickNode.getUserObject() );
                 Jpo.showThumbnails( queryBrowser );
             }
         }

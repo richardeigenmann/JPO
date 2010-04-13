@@ -1,6 +1,6 @@
 package jpo.gui;
 
-import jpo.dataModel.ThumbnailBrowserInterface;
+import jpo.dataModel.NodeNavigatorInterface;
 import java.awt.Dimension;
 import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DragGestureEvent;
@@ -114,7 +114,7 @@ public class ThumbnailController
      *   @deprecated
      *
      **/
-    public ThumbnailController( ThumbnailBrowserInterface mySetOfNodes,
+    public ThumbnailController( NodeNavigatorInterface mySetOfNodes,
             int index,
             int thumbnailSize, int priority, Jpo collectionController ) {
         this( thumbnailSize );
@@ -140,7 +140,7 @@ public class ThumbnailController
     /**
      *  A set of picture nodes of which one indicated by {@link #myIndex} is to be shown
      */
-    private ThumbnailBrowserInterface myThumbnailBrowser = null;
+    private NodeNavigatorInterface myThumbnailBrowser = null;
 
     /**
      *  the Index position in the {@link #myThumbnailBrowser} which is being shown by this
@@ -202,11 +202,11 @@ public class ThumbnailController
 
     /**
      * Returns to the caller whether the thumbnail is already showing the node.
-     * @param newBrowser The ThumbnailBrowserInterface from which the node is coming
+     * @param newBrowser The NodeNavigatorInterface from which the node is coming
      * @param newIndex The index position that should be checked.
      * @return true if the indicated node is already showing, false if not
      */
-    public boolean isSameNode( ThumbnailBrowserInterface newBrowser,
+    public boolean isSameNode( NodeNavigatorInterface newBrowser,
             int newIndex ) {
         if ( !newBrowser.equals( myThumbnailBrowser ) ) {
             if ( myThumbnailBrowser == null ) {
@@ -231,10 +231,10 @@ public class ThumbnailController
     /**
      *  Sets the node being visualised by this ThumbnailController object.
      *
-     *  @param mySetOfNodes  The {@link ThumbnailBrowserInterface} being tracked
+     *  @param mySetOfNodes  The {@link NodeNavigatorInterface} being tracked
      *  @param index	The position of this object to be displayed.
      */
-    public void setNode( ThumbnailBrowserInterface mySetOfNodes, int index ) {
+    public void setNode( NodeNavigatorInterface mySetOfNodes, int index ) {
         logger.fine( String.format( "Setting Thubnail %d to index %d in Browser %s ", this.hashCode(), index, mySetOfNodes.toString() ) );
         this.myThumbnailBrowser = mySetOfNodes;
         this.myIndex = index;
@@ -445,8 +445,7 @@ public class ThumbnailController
      */
     private void doubleClickResponse() {
         if ( referringNode.getUserObject() instanceof PictureInfo ) {
-            PictureViewer pictureViewer = new PictureViewer();
-            pictureViewer.changePicture( myThumbnailBrowser, myIndex );
+            Jpo.browsePictures( referringNode );
         } else if ( referringNode.getUserObject() instanceof GroupInfo ) {
             Jpo.positionToNode( referringNode );
         }
@@ -475,7 +474,7 @@ public class ThumbnailController
      *  changed.
      */
     public void groupInfoChangeEvent( GroupInfoChangeEvent e ) {
-        logger.fine( String.format( "Got a Group Change event", e.toString() ) );
+        logger.fine( String.format( "Got a Group Change event: %s", e.toString() ) );
         if ( e.getLowresLocationChanged() ) {
             requestThumbnailCreation( ThumbnailQueueRequest.HIGH_PRIORITY, false );
         } else if ( e.getWasSelected() ) {

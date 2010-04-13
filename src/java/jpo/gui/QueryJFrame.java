@@ -11,7 +11,7 @@ import java.awt.event.*;
 import java.util.logging.Logger;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
-import jpo.dataModel.QueryBrowser;
+import jpo.dataModel.QueryNavigator;
 
 
 /*
@@ -267,7 +267,7 @@ public class QueryJFrame
         DefaultMutableTreeNode newNode = Settings.pictureCollection.addQueryToTreeModel( q );
         collectionController.showQuery( newNode );
 
-        QueryBrowser queryBrowser = new QueryBrowser( q );
+        QueryNavigator queryBrowser = new QueryNavigator( q );
         Jpo.showThumbnails( queryBrowser );
 
         getRid();

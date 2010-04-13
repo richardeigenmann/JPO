@@ -1,14 +1,11 @@
 package jpo.dataModel;
 
-import jpo.dataModel.ThumbnailBrowser;
 import java.util.logging.Logger;
-import jpo.dataModel.SortableDefaultMutableTreeNode;
-import jpo.dataModel.PictureInfo;
 
 /*
 SingleNodeBrower.java:  an implementation of the ThumbnailBrowserInterface for "browsing" a single picture.
 
-Copyright (C) 2006-2007  Richard Eigenmann, Zürich, Switzerland
+Copyright (C) 2006-2010  Richard Eigenmann, Zürich, Switzerland
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -26,30 +23,30 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  *  This class implements the ThumbnailBrowserInterface in the specific manner that is required for
  *  displaying a single picture in the ThumbnailJScrollPane.
  */
-public class SingleNodeBrowser
-        extends ThumbnailBrowser {
+public class SingleNodeNavigator
+        extends NodeNavigator {
 
     /**
      * Defines a logger for this class.
      * Overrides the logger inherited in the Thumbnail Browser
      */
     {
-        logger = Logger.getLogger( SingleNodeBrowser.class.getName() );
+        logger = Logger.getLogger( SingleNodeNavigator.class.getName() );
     }
 
 
     /**
-     *  Constructor for a SingleNodeBrowser.
+     *  Constructor for a SingleNodeNavigator.
      *
      *  @param singleNode    The Node which is to be "browsed".
      */
-    public SingleNodeBrowser( SortableDefaultMutableTreeNode singleNode ) {
-        //logger.info("SingleNodeBrowser: constructor called on node: " + singleNode.toString() );
+    public SingleNodeNavigator( SortableDefaultMutableTreeNode singleNode ) {
+        //logger.info("SingleNodeNavigator: constructor called on node: " + singleNode.toString() );
         this.singleNode = singleNode;
     }
 
     /**
-     *  A reference to the node for which this SingleNodeBrowser was created.
+     *  A reference to the node for which this SingleNodeNavigator was created.
      */
     private SortableDefaultMutableTreeNode singleNode = null;
 
@@ -71,7 +68,6 @@ public class SingleNodeBrowser
      *  because counting starts at 0. So 3 nodes in the group returns 2 meaning node0, node1, node2
      */
     public int getNumberOfNodes() {
-        //logger.info("SingleNodeBrowser.getNumberOfNodes: returning: 0");
         return 0;
     }
 
@@ -84,7 +80,7 @@ public class SingleNodeBrowser
      *                 getNode(1) and getNode(2).
      */
     public SortableDefaultMutableTreeNode getNode( int index ) {
-        //logger.info("SingleNodeBrowser.getNode: requested for node: " + Integer.toString( index ) );
+        //logger.info("SingleNodeNavigator.getNode: requested for node: " + Integer.toString( index ) );
         return singleNode;
     }
 
@@ -93,8 +89,8 @@ public class SingleNodeBrowser
      *  This method unregisters the TreeModelListener and sets the variables to null;
      */
     @Override
-    public void cleanup() {
-        super.cleanup();
+    public void getRid() {
+        super.getRid();
         singleNode = null;
     }
 }

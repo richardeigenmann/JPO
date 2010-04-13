@@ -1,14 +1,12 @@
 package jpo.dataModel;
 
-import jpo.dataModel.ThumbnailBrowser;
-import jpo.dataModel.*;
 import jpo.*;
 import java.util.*;
 
 /*
-ArrayListBrower.java:  an implementation of the ThumbnailBrowserInterface for browsing pictures.
+ArrayListNavigator.java:  an implementation of the ThumbnailBrowserInterface for browsing pictures.
 
-Copyright (C) 2006-2009  Richard Eigenmann, Zürich, Switzerland
+Copyright (C) 2006-2010  Richard Eigenmann, Zürich, Switzerland
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -26,26 +24,28 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  *  This class implements the ThumbnailBrowserInterface so that all the pictures of a specified
  *  ArrayList can be browsed sequentially.
  */
-public class ArrayListBrowser extends ThumbnailBrowser {
+public class ArrayListNavigator
+        extends NodeNavigator {
 
-        /**
-     * Optional Constructor for an ArrayListBrowser.
+    /**
+     * Optional Constructor for an ArrayListNavigator.
      * @param title
      * @param nodes 
      */
-    public ArrayListBrowser(String title, ArrayList<SortableDefaultMutableTreeNode> nodes) {
+    public ArrayListNavigator( String title,
+            ArrayList<SortableDefaultMutableTreeNode> nodes ) {
         setTitle( title );
         setArrayList( nodes );
     }
 
+
     /**
-     * Optional Constructor for an ArrayListBrowser.
+     * Optional Constructor for an ArrayListNavigator.
      */
-    public ArrayListBrowser() {
+    public ArrayListNavigator() {
         setTitle( "" );
         setArrayList( new ArrayList<SortableDefaultMutableTreeNode>() );
     }
-
 
     /**
      *   title for this ArrayList of images.
@@ -110,7 +110,8 @@ public class ArrayListBrowser extends ThumbnailBrowser {
      *
      *  @param newArrayList   the new ArrayList with the nodes to display.
      */
-    public void setArrayList( ArrayList<SortableDefaultMutableTreeNode> newArrayList ) {
+    public void setArrayList(
+            ArrayList<SortableDefaultMutableTreeNode> newArrayList ) {
         allPictures = newArrayList;
     }
 
@@ -126,13 +127,26 @@ public class ArrayListBrowser extends ThumbnailBrowser {
 
 
     /**
+     *  Removes a node from the ArrayList
+     *
+     *  @param  removeNode   a node to add to the allPictures ArrayList
+     */
+    public void removeNode( SortableDefaultMutableTreeNode removeNode ) {
+        //logger.info( String.format( "Removing node %s", removeNode.toString() ) );
+        allPictures.remove( removeNode );
+        //logger.info( toString() );
+    }
+
+
+    /**
      *  This method unregisters the TreeModelListener and sets the variables to null;
      */
     @Override
-    public void cleanup() {
-        super.cleanup();
+    public void getRid() {
+        super.getRid();
         allPictures = null;
     }
+
 
     /**
      * Overriden to print some useful info about the nodes
@@ -140,11 +154,7 @@ public class ArrayListBrowser extends ThumbnailBrowser {
      */
     @Override
     public String toString() {
-        return "ArrayListBrowser "
-                + Integer.toString( hashCode() )
-                + " Title: " + getTitle()
-                + " with "
-                + Integer.toString( getNumberOfNodes() )
-                + " nodes";
+        return String.format( "ArrayListBrowser %d Title: %s  with %d nodes",
+                hashCode(), getTitle(), getNumberOfNodes() );
     }
 }

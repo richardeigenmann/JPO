@@ -3,7 +3,6 @@ package jpo.dataModel;
 import jpo.gui.InterruptSemaphore;
 import jpo.gui.ProgressListener;
 import jpo.gui.ProgressGui;
-import jpo.*;
 import java.io.*;
 import java.util.*;
 import java.util.logging.Logger;

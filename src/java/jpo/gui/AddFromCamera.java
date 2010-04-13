@@ -3,7 +3,6 @@ package jpo.gui;
 import jpo.dataModel.Tools;
 import jpo.dataModel.Settings;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
-import jpo.*;
 import jpo.dataModel.Camera;
 import java.io.*;
 import java.awt.*;
@@ -274,7 +273,7 @@ public class AddFromCamera
         Runnable runner = new FrameShower( this );
         EventQueue.invokeLater(runner);
         
-        cameraNameJComboBox.setModel( new DefaultComboBoxModel( Settings.Cameras ) );
+        cameraNameJComboBox.setModel( new DefaultComboBoxModel( Settings.cameras ) );
         cameraNameJComboBox.setSelectedIndex( 0 );
     }
     
@@ -346,7 +345,7 @@ public class AddFromCamera
             return;
         }
         
-        targetDir.mkdirs();
+        boolean created = targetDir.mkdirs();
         
         String groupName = cam.getDescription()
                 + " "

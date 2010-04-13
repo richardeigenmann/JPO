@@ -1,6 +1,6 @@
 package jpo.gui;
 
-import jpo.dataModel.ThumbnailBrowserInterface;
+import jpo.dataModel.NodeNavigatorInterface;
 import jpo.dataModel.UserFunctionsChangeListener;
 import jpo.dataModel.Tools;
 import jpo.dataModel.CopyLocationsChangeListener;
@@ -80,7 +80,7 @@ public class PicturePopupMenu
      * @param  setOfNodes   The set of nodes from which the popup picture is coming
      * @param  idx		The picture of the set for which the popup is being shown.
      */
-    public PicturePopupMenu( ThumbnailBrowserInterface setOfNodes, int idx ) {
+    public PicturePopupMenu( NodeNavigatorInterface setOfNodes, int idx ) {
         this.mySetOfNodes = setOfNodes;
         this.index = idx;
         this.popupNode = mySetOfNodes.getNode( index );
@@ -634,9 +634,9 @@ public class PicturePopupMenu
     private final SortableDefaultMutableTreeNode popupNode;
 
     /**
-     *  Reference to the {@link ThumbnailBrowserInterface} which indicates the nodes being displayed.
+     *  Reference to the {@link NodeNavigatorInterface} which indicates the nodes being displayed.
      */
-    private ThumbnailBrowserInterface mySetOfNodes = null;
+    private NodeNavigatorInterface mySetOfNodes = null;
 
     /**
      *  Index of the {@link #mySetOfNodes} being popped up.
@@ -648,8 +648,9 @@ public class PicturePopupMenu
      * The "Show Picture" menu button calls this function
      */
     private void requestShowPicture() {
-        PictureViewer pictureViewer = new PictureViewer();
-        pictureViewer.changePicture( mySetOfNodes, index );
+        //PictureViewer pictureViewer = new PictureViewer();
+        Jpo.browsePictures(  popupNode );
+        //pictureViewer.show( mySetOfNodes, index );
     }
 
 

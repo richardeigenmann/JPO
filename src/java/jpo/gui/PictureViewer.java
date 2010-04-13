@@ -1,8 +1,6 @@
 package jpo.gui;
 
-import jpo.dataModel.FlatGroupBrowser;
-import jpo.dataModel.RandomBrowser;
-import jpo.dataModel.ThumbnailBrowserInterface;
+import jpo.dataModel.FlatGroupNavigator;
 import jpo.gui.swing.ResizableJFrame;
 import jpo.gui.swing.PicturePane;
 import java.awt.event.FocusEvent;
@@ -37,11 +35,11 @@ import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.MouseInputAdapter;
-import javax.swing.event.TreeModelEvent;
-import javax.swing.event.TreeModelListener;
-import javax.swing.tree.TreePath;
+import jpo.dataModel.NodeNavigator;
 import jpo.dataModel.PictureInfoChangeEvent;
 import jpo.dataModel.PictureInfoChangeListener;
+import jpo.dataModel.RandomNavigator;
+import jpo.dataModel.RelayoutListener;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
 import jpo.dataModel.Tools;
 
@@ -80,12 +78,13 @@ public class PictureViewer
         AdvanceTimerInterface,
         ChangeWindowInterface,
         PictureInfoChangeListener,
-        TreeModelListener {
+        //TreeModelListener,
+        RelayoutListener {
 
     /**
      *   The pane that handles the image drawing aspects.
      **/
-    public PicturePane pictureJPanel = new PicturePane();
+    private PicturePane pictureJPanel = new PicturePane();
 
 
     /**
@@ -95,7 +94,7 @@ public class PictureViewer
      **/
     public PictureViewer() {
         initGui();
-        Settings.pictureCollection.getTreeModel().addTreeModelListener( this );
+        //Settings.pictureCollection.getTreeModel().addTreeModelListener( this );
         pictureJPanel.addStatusListener( this );
 
         // register an interest in mouse events
@@ -113,14 +112,16 @@ public class PictureViewer
     /**
      *  indicator that specifies what sort of window should be created
      */
-    public int windowMode = ResizableJFrame.WINDOW_DEFAULT;
+    private int windowMode = ResizableJFrame.WINDOW_DEFAULT;
 
 
     /**
      *   method to close the PictureViewer and all dangling references.
      */
     public void closeViewer() {
-        Settings.pictureCollection.getTreeModel().removeTreeModelListener( this );
+        //getRid the old navigator
+        mySetOfNodes.removeRelayoutListener( this );
+        mySetOfNodes.getRid(); // help Grabage collection remove the listener
         stopTimer();
         closeMyWindow();
     }
@@ -129,7 +130,7 @@ public class PictureViewer
     /**
      *  The Window in which the viewer will place it's components.
      **/
-    public ResizableJFrame myJFrame;
+    private ResizableJFrame myJFrame;
 
     /**
      *  The root JPanel
@@ -291,9 +292,10 @@ public class PictureViewer
     }
 
     /**
-     *  flag that specifies whether the window should be drawn with decoration or not
+     * Flag that specifies whether the window should be drawn with decoration
+     * or not.
      */
-    private boolean decorateWindow = true;
+    private transient boolean decorateWindow = true;
 
 
     /**
@@ -305,7 +307,7 @@ public class PictureViewer
      *		need to be indicated.
      *
      */
-    public void switchWindowMode( int newMode ) {
+    public void switchWindowMode( final int newMode ) {
         logger.fine( "PictureViewer.switchWindowMode: old mode: " + Integer.toString( windowMode ) + " new: " + Integer.toString( newMode ) );
         windowMode = newMode;
         boolean newDecoration = decorateWindow;
@@ -360,7 +362,7 @@ public class PictureViewer
     /**
      *  the context of the browsing
      */
-    private ThumbnailBrowserInterface mySetOfNodes = null;
+    private NodeNavigator mySetOfNodes = null;
 
     /**
      *  the position in the context being shown
@@ -371,7 +373,7 @@ public class PictureViewer
     /**
      * Returns the current Node.
      * @return The current node as defined by the mySetOfNodes 
-     * ThumbnailBrowserInterface and the myIndex. If the set of nodes has not 
+     * NodeNavigatorInterface and the myIndex. If the set of nodes has not
      * been initialised or there is some other error null shall be returned.
      */
     public SortableDefaultMutableTreeNode getCurrentNode() {
@@ -468,74 +470,70 @@ public class PictureViewer
 
 
     /**
-     *  call this method to request a picture to be shown.
+     *  Puts the picture of the indicated node onto the viewer panel
      *
-     *  @param mySetOfNodes  The set of nodes which holds the links to the images
-     *  @param myIndex  The index of the pictures to be shown.
+     *  @param mySetOfNodes  The set of nodes from which one picture is to be shown
+     *  @param myIndex  The index of the set of nodes to be shown.
      */
-    public void changePicture( ThumbnailBrowserInterface mySetOfNodes,
+    public void show( NodeNavigator mySetOfNodes,
             int myIndex ) {
+        logger.fine( String.format( "Navigator: %s Nodes: %d Index: %d", mySetOfNodes.toString(), mySetOfNodes.getNumberOfNodes(), myIndex ) );
         Tools.checkEDT();
-        logger.fine( "PictureViewer.changePicture: called the good new way." );
 
-        //logger.fine("Old node is: " + oldNode.toString());
-        this.mySetOfNodes = mySetOfNodes;
+        // Validate the inputs
+        SortableDefaultMutableTreeNode node = mySetOfNodes.getNode( myIndex );
+        if ( node == null ) {
+            logger.severe( String.format( "The new node is null. Aborting. mySetOfNodes: %s, index: %d", mySetOfNodes.toString(), myIndex ) );
+            closeViewer();
+            return;
+        }
+
+        Object uo = node.getUserObject();
+        if ( !( uo instanceof PictureInfo ) ) {
+            logger.severe( String.format( "The new node is not for a PictureInfo object. Aborting. userObject class: %s, mySetOfNodes: %s, index: %d", node.getUserObject().getClass().toString(), mySetOfNodes.toString(), myIndex ) );
+            closeViewer();
+            return;
+        }
+
+
+        // remove the pictureinfo change listener if present
+        if ( this.mySetOfNodes != null ) {
+            ( (PictureInfo) this.mySetOfNodes.getNode( this.myIndex ).getUserObject() ).removePictureInfoChangeListener( this );
+        }
+        // attach the pictureinfo change listener
+        PictureInfo pictureInfo = (PictureInfo) uo;
+        pictureInfo.addPictureInfoChangeListener( this );
+
+
+        if ( this.mySetOfNodes == null ) {
+            // add viewer to the new one
+            this.mySetOfNodes = mySetOfNodes;
+            mySetOfNodes.addRelayoutListener( this );
+        } else {
+            //did we get a new navigator?
+            if ( !this.mySetOfNodes.equals( mySetOfNodes ) ) {
+                logger.info( String.format( "Got a new navigator: old: %s new: %s", this.mySetOfNodes.toString(), mySetOfNodes.toString() ) );
+                //get rid of the old navigator
+                this.mySetOfNodes.removeRelayoutListener( this );
+                this.mySetOfNodes.getRid(); // help Grabage collection remove the listener
+                // add viewer to the new one
+                this.mySetOfNodes = mySetOfNodes;
+                mySetOfNodes.addRelayoutListener( this );
+            }
+        }
+
         this.myIndex = myIndex;
 
-        // unattach the change listener  and figure out if the description was changed and update
-        // it if edits to the collection are allowed.
-        SortableDefaultMutableTreeNode oldNode = getCurrentNode();
-        if ( ( oldNode != null ) && ( oldNode.getUserObject() instanceof PictureInfo ) ) {
-            PictureInfo pi = (PictureInfo) oldNode.getUserObject();
-            pi.removePictureInfoChangeListener( this );
-
-            //if ((!getDescription().equals(descriptionJTextField.getText())) && (oldNode.getPictureCollection().getAllowEdits())) {
-            //    logger.info("PictureViewer.changePicture: The description was modified and is being saved");
-            //    pi.setDescription(descriptionJTextField.getText());
-            //}
-        }
-
-
-        SortableDefaultMutableTreeNode node = mySetOfNodes.getNode( myIndex );
-        logger.fine( "New node is: " + node.toString() );
-        if ( node == null ) {
-            logger.warning( "PictureViewer.changePicture: null node recieved. Not valid, aborting." );
-            return;
-        }
-
-        if ( !( node.getUserObject() instanceof PictureInfo ) ) {
-            logger.warning( "PictureViewer:changePicture: ignoring request because new node is not a PictureInfo" );
-            return;
-        }
-
-        //if (oldNode == node) {
-        //    logger.warning("PictureViewer.changePicture: ignoring request because new node is the same as the current one");
-        //    return;
-        //}
 
         if ( myJFrame == null ) {
             createWindow();
         }
 
-        //currentNode = node;
-        descriptionJTextField.setText( getDescription() );
-        setPicture( (PictureInfo) node.getUserObject() );
+        descriptionJTextField.setText( pictureInfo.getDescription() );
+        setPicture( pictureInfo );
 
-        // attach the change listener
-        PictureInfo pi = (PictureInfo) node.getUserObject();
-        pi.addPictureInfoChangeListener( this );
 
         navBar.setIconDecorations();
-
-        // request cacheing of next pictures
-        /*SortableDefaultMutableTreeNode cacheNextNode = node.getNextPicture();
-        if ( ( cacheNextNode != null ) && Settings.maxCache > 2 ) {
-        new PictureCacheLoader( cacheNextNode );
-        SortableDefaultMutableTreeNode cacheAfterNextNode = cacheNextNode.getNextPicture();
-        if ( ( cacheAfterNextNode != null ) && Settings.maxCache > 3 ) {
-        new PictureCacheLoader( cacheAfterNextNode );
-        }
-        }*/
         pictureJPanel.requestFocusInWindow();
     }
 
@@ -544,18 +542,23 @@ public class PictureViewer
      *  brings up the indicated picture on the display.
      *  @param pi  The PicutreInfo object that should be displayed
      */
-    public void setPicture( PictureInfo pi ) {
+    private void setPicture( PictureInfo pi ) {
         logger.fine( "Set picture to PictureInfo: " + pi.toString() );
         URL pictureURL;
+
         String description;
+
         double rotation = 0;
         try {
             pictureURL = pi.getHighresURL();
-            description = pi.getDescription();
-            rotation = pi.getRotation();
+            description =
+                    pi.getDescription();
+            rotation =
+                    pi.getRotation();
         } catch ( MalformedURLException x ) {
             logger.severe( "MarformedURLException trapped on: " + pi.getHighresLocation() + "\nReason: " + x.getMessage() );
             return;
+
         }
         setPicture( pictureURL, description, rotation );
     }
@@ -567,7 +570,8 @@ public class PictureViewer
      *  @param legendParam	The description of the picture
      *  @param rotation  The rotation that should be applied
      */
-    public void setPicture( URL filenameURL, String legendParam, double rotation ) {
+    private void setPicture( URL filenameURL, String legendParam,
+            double rotation ) {
         pictureJPanel.legend = legendParam;
         pictureJPanel.centerWhenScaled = true;
         pictureJPanel.sclPic.setScaleSize( pictureJPanel.getSize() );
@@ -603,19 +607,23 @@ public class PictureViewer
             } else {
                 descriptionJTextField.setText( s );
             }
+
         }
         if ( e.getHighresLocationChanged() ) {
             SortableDefaultMutableTreeNode node = mySetOfNodes.getNode( myIndex );
             if ( node == null ) {
                 logger.warning( "PictureViewer.pictureInfoChangeEvent: highres chnage got called without a node. Index: " + Integer.toString( myIndex ) + mySetOfNodes.toString() );
                 return;
+
             }
+
             PictureInfo pi = (PictureInfo) node.getUserObject();
             if ( pi == null ) {
                 logger.warning( "PictureViewer.pictureInfoChangeEvent: highres location change got called without a PictureInfor user object. " + e.toString() );
             } else {
                 setPicture( pi );
             }
+
         }
         if ( e.getRotationChanged() ) {
             PictureInfo pi = (PictureInfo) mySetOfNodes.getNode( myIndex ).getUserObject();
@@ -624,6 +632,7 @@ public class PictureViewer
             } else {
                 setPicture( pi );
             }
+
         }
         /*		if ( e.getLowresLocationChanged() ) {
         lowresLocationJTextField.setText( e.getPictureInfo().getLowresLocation () );
@@ -656,79 +665,112 @@ public class PictureViewer
     /**
      *   implemented here to satisfy the TreeModelListener interface; not used.
      * @param e
-     */
+     *
     public void treeNodesChanged( TreeModelEvent e ) {
-        navBar.setIconDecorations();
-    }
-
-
+    navBar.setIconDecorations();
+    }*/
     /**
      *   implemented here to satisfy the TreeModelListener interface; not used.
      * @param e
-     */
+     *
     public void treeNodesInserted( TreeModelEvent e ) {
-        navBar.setIconDecorations();
-    }
-
-
+    navBar.setIconDecorations();
+    }*/
     /**
      *  The TreeModelListener interface tells us of tree node removal events.
      *  If we receive a removal event we need to find out if the PictureViewer is
-     *  displaying an image and if it is whether this is the node being removed or
-     *  a descendant of it. If so it must switch to the next node. If the next node
-     *  is a group then the viewer is closed.
-     *  If the picture browser is not in the foreground it is closed.
-     * @param e
-     */
+     *  displaying node being removed. If so it must switch to the next node or
+     *  close if this is not possible.
+     *  TODO: This model is flawed. It's not the PictureViewer that must listen to
+     *  nodes disappearing but the browsers. The Browser should update with a new set of nodes
+     *  and give itself to the PictureVieer and
+     * @param e The Notification element
+     *
     public void treeNodesRemoved( TreeModelEvent e ) {
-        logger.fine( "PictureViewer.treeNodesRemoved was invoked" );
-        if ( getCurrentNode() == null ) {
-            // not showing a node
-            return;
-        }
-        TreePath removedChild;
-        TreePath currentNodeTreePath = new TreePath( getCurrentNode().getPath() );
-        Object[] children = e.getChildren();
-        for ( int i = 0; i < children.length; i++ ) {
-            removedChild = new TreePath( children[i] );
-            logger.fine( "Testing: " + removedChild.toString() );
-            if ( removedChild.isDescendant( currentNodeTreePath ) ) {
-                logger.fine( "PictureViewer.treeNodesRemoved: " + currentNodeTreePath.toString() + " is a descendant of " + removedChild.toString() );
-                requestNextPicture();
-                /*int[] childIndices = e.getChildIndices();
-                SortableDefaultMutableTreeNode parentNode =
-                (SortableDefaultMutableTreeNode) e.getTreePath().getLastPathComponent();
-                try {
-                SortableDefaultMutableTreeNode nextChild =
-                (SortableDefaultMutableTreeNode) parentNode.getChildAt(childIndices[i]);
-                if (nextChild.getUserObject() instanceof PictureInfo) {
-                changePicture(new SingleNodeBrowser(nextChild), 0);
-                } else {
-                closeViewer();
-                }
-                } catch (ArrayIndexOutOfBoundsException x) {
-                closeViewer();
-                }*/
-            }
-        }
+    logger.info( String.format( "Investigating a remove event: %s", e.toString() ) );
 
-        navBar.setIconDecorations();
+    // Problem here is that if the current node was removed we are no longer on the node that was removed
+    TreePath currentNodeTreePath = new TreePath( currentNode.getPath() );
+    logger.info( String.format( "The current node hat this path: %s", currentNodeTreePath.toString() ) );
+
+    // step through the array of removed nodes
+    Object[] children = e.getChildren();
+    TreePath removedChild;
+    for ( int i = 0; i < children.length; i++ ) {
+    removedChild = new TreePath( children[i] );
+    logger.info( String.format( "Deleted child[%d] has path: %s", i, removedChild.toString() ) );
+    if ( removedChild.isDescendant( currentNodeTreePath ) ) {
+    logger.info( String.format( "Type of browser is: %s", mySetOfNodes.getClass().toString() ) );
+    logger.info( String.format( "The current node was removed. Let's try to go to the next picture if we can" ) );
+    // because of the removal the picture we actually are pointing at the next picture
+    show( mySetOfNodes, myIndex );
+    //requestNextPicture();
+    /*int[] childIndices = e.getChildIndices();
+    SortableDefaultMutableTreeNode parentNode =
+    (SortableDefaultMutableTreeNode) e.getTreePath().getLastPathComponent();
+    try {
+    SortableDefaultMutableTreeNode nextChild =
+    (SortableDefaultMutableTreeNode) parentNode.getChildAt(childIndices[i]);
+    if (nextChild.getUserObject() instanceof PictureInfo) {
+    show(new SingleNodeBrowser(nextChild), 0);
+    } else {
+    closeViewer();
+    }
+    } catch (ArrayIndexOutOfBoundsException x) {
+    closeViewer();
+    }*
+    }
+    }
+    navBar.setIconDecorations();
+    }*/
+    /**
+     * This method gets called when the nodes of the set have changed.
+     * It moves to the new positon in the navigator if there is one.
+     * If the current node has been removed it tries to go to the next node and
+     * failing to find one looks for a prior node. If that is also unsuccessful
+     * the window is closed.
+     * @param mappingIndex The mapping index 
+     *
+    public void nodesChanged( int[] mappingIndex ) {
+    logger.info( "Got a nodeChanged event" );
+    int newIndex = mappingIndex[myIndex];
+    if ( newIndex > -1 ) {
+    show( mySetOfNodes, newIndex );
+    } else {
+    logger.info( String.format( "The current index position %d has been deleted!", myIndex ) );
+    // if the next position has a node let's jump there.
+    if ( ( myIndex + 1 < mappingIndex.length ) && ( mappingIndex[myIndex + 1] > -1 ) ) {
+    show( mySetOfNodes, mappingIndex[myIndex + 1] );
+    } else if ( ( myIndex > 0 ) && ( mappingIndex[myIndex - 1] > -1 ) ) {
+    // lets go to the prior node if there is something to show there
+    show( mySetOfNodes, mappingIndex[myIndex - 1] );
+    } else {
+    closeViewer();
+    }
+
+    }
+    }*/
+    /**
+     * gets called when the Navigator notices a change
+     */
+    public void relayout() {
+        logger.info( String.format( "Got notified to relayout" ) );
+        show(mySetOfNodes, myIndex);
+
     }
 
 
     /**
      *   implemented here to satisfy the TreeModelListener interface; not used.
      * @param e
-     */
+     *
     public void treeStructureChanged( TreeModelEvent e ) {
-        navBar.setIconDecorations();
-    }
-
-
+    navBar.setIconDecorations();
+    }*/
     /**
      *   This method is invoked by the GUI button or keyboard shortcut to
      *   advance the picture. It calls {@link SortableDefaultMutableTreeNode#getNextPicture} to find
-     *   the image. If the call returned a non null node {@link #changePicture}
+     *   the image. If the call returned a non null node {@link #show}
      *   is called to request the loading and display of the new picture.
      *
      *  @return  true if the next picture was located, false if none available
@@ -736,25 +778,13 @@ public class PictureViewer
      * @see #requestPriorPicture()
      */
     public boolean requestNextPicture() {
-        /*if ( mySetOfNodes == null ) {
-        logger.severe( "PictureViewer.requestNextPicture: using non context aware step forward" );
-        Thread.dumpStack();
-        SortableDefaultMutableTreeNode nextNode = getCurrentNode().getNextPicture();
-        if ( nextNode != null ) {
-        changePicture( new SingleNodeBrowser( nextNode ), 0 );
-        return true;
-        } else {
-        return false;
-        }
-        } else { */
-        // use context aware step forward
         logger.fine( String.format( "Using the context aware step forward. The browser contains: %d pictures and we are on picture %d", mySetOfNodes.getNumberOfNodes(), myIndex ) );
         if ( mySetOfNodes.getNumberOfNodes() > myIndex + 1 ) {
             logger.fine( "PictureViewer.requestNextPicture: requesting node: " + Integer.toString( myIndex + 1 ) );
             Runnable r = new Runnable() {
 
                 public void run() {
-                    changePicture( mySetOfNodes, myIndex + 1 );
+                    show( mySetOfNodes, myIndex + 1 );
                 }
             };
             SwingUtilities.invokeLater( r );
@@ -762,6 +792,7 @@ public class PictureViewer
         } else {
             return false;
         }
+
     }
 
 
@@ -777,7 +808,7 @@ public class PictureViewer
         if ( getCurrentNode() != null ) {
         SortableDefaultMutableTreeNode prevNode = getCurrentNode().getPreviousPicture();
         if ( prevNode != null ) {
-        changePicture( new SingleNodeBrowser( prevNode ), 0 );
+        show( new SingleNodeBrowser( prevNode ), 0 );
         }
         }
         } else {*/
@@ -787,7 +818,7 @@ public class PictureViewer
             Runnable r = new Runnable() {
 
                 public void run() {
-                    changePicture( mySetOfNodes, myIndex - 1 );
+                    show( mySetOfNodes, myIndex - 1 );
                 }
             };
             SwingUtilities.invokeLater( r );
@@ -809,6 +840,8 @@ public class PictureViewer
         } else {
             doAutoAdvanceDialog();
         }
+
+        pictureJPanel.requestFocusInWindow();
     }
 
 
@@ -867,24 +900,30 @@ public class PictureViewer
             if ( randomAdvanceJRadioButton.isSelected() ) {
                 if ( useAllPicturesJRadioButton.isSelected() ) //addAllPictureNodes( pictureNodesArrayList, (SortableDefaultMutableTreeNode) currentNode.getRoot()  );
                 {
-                    mySetOfNodes = new RandomBrowser( (SortableDefaultMutableTreeNode) getCurrentNode().getRoot() );
+                    mySetOfNodes = new RandomNavigator( (SortableDefaultMutableTreeNode) getCurrentNode().getRoot() );
                 } else //addAllPictureNodes( pictureNodesArrayList, (SortableDefaultMutableTreeNode) currentNode.getParent() );
                 {
-                    mySetOfNodes = new RandomBrowser( (SortableDefaultMutableTreeNode) getCurrentNode().getParent() );
+                    mySetOfNodes = new RandomNavigator( (SortableDefaultMutableTreeNode) getCurrentNode().getParent() );
                 }
             } else {
                 if ( useAllPicturesJRadioButton.isSelected() ) {
-                    mySetOfNodes = new FlatGroupBrowser( (SortableDefaultMutableTreeNode) getCurrentNode().getRoot() );
+                    mySetOfNodes = new FlatGroupNavigator( (SortableDefaultMutableTreeNode) getCurrentNode().getRoot() );
                 } else {
-                    mySetOfNodes = new FlatGroupBrowser( (SortableDefaultMutableTreeNode) getCurrentNode().getParent() );
+                    mySetOfNodes = new FlatGroupNavigator( (SortableDefaultMutableTreeNode) getCurrentNode().getParent() );
                 }
+
                 myIndex = 0;
-                changePicture( mySetOfNodes, myIndex );
+                show(
+                        mySetOfNodes, myIndex );
             }
+
             myIndex = 0;
-            changePicture( mySetOfNodes, myIndex );
-            startAdvanceTimer( timerSecondsField.getValue() );
+            show(
+                    mySetOfNodes, myIndex );
+            startAdvanceTimer(
+                    timerSecondsField.getValue() );
         }
+
     }
 
 
@@ -906,6 +945,7 @@ public class PictureViewer
         if ( advanceTimer != null ) {
             advanceTimer.stopThread();
         }
+
         advanceTimer = null;
         //pictureNodesArrayList = null;
     }
@@ -924,6 +964,7 @@ public class PictureViewer
         } else {
             return false;
         }
+
     }
 
 
@@ -957,36 +998,49 @@ public class PictureViewer
                     case ScalablePicture.UNINITIALISED:
                         loadJProgressBar.setVisible( false );
                         break;
+
                     case ScalablePicture.GARBAGE_COLLECTION:
                         loadJProgressBar.setVisible( false );
                         break;
+
                     case ScalablePicture.LOADING:
                         if ( myJFrame != null ) {
                             loadJProgressBar.setVisible( true );
                         }
+
                         break;
                     case ScalablePicture.LOADED:
                         loadJProgressBar.setVisible( false );
                         //descriptionJTextField.setText( getDescription() );
                         break;
+
                     case ScalablePicture.SCALING:
                         loadJProgressBar.setVisible( false );
                         break;
+
                     case ScalablePicture.READY:
                         loadJProgressBar.setVisible( false );
                         if ( myJFrame != null ) {
                             myJFrame.toFront();
                         }
-                        //descriptionJTextField.setText( getDescription() );
+//descriptionJTextField.setText( getDescription() );
+
                         break;
                     case ScalablePicture.ERROR:
                         loadJProgressBar.setVisible( false );
                         ;
                         break;
+
                     default:
+
                         logger.warning( "PictureViewer.scalableStatusChange: get called with a code that is not understood: " + Integer.toString( pictureStatusCode ) + " " + pictureStatusMessage );
                         break;
+
                 }
+
+
+
+
             }
         };
         if ( SwingUtilities.isEventDispatchThread() ) {
@@ -995,24 +1049,6 @@ public class PictureViewer
             SwingUtilities.invokeLater( r );
         }
 
-    }
-
-
-    /**
-     *  This helper method returns the description of the node and if that is not available for
-     *  some reason it returns a blank string.
-     */
-    private String getDescription() {
-        Object uo = getCurrentNode().getUserObject();
-        if ( uo != null ) {
-            if ( uo instanceof PictureInfo ) {
-                return ( (PictureInfo) uo ).getDescription();
-            } else {
-                return "";
-            }
-        } else {
-            return "";
-        }
     }
 
 
@@ -1028,6 +1064,7 @@ public class PictureViewer
                 ( (PictureInfo) uo ).setDescription(
                         descriptionJTextField.getText() );
             }
+
         }
     }
 
@@ -1048,15 +1085,22 @@ public class PictureViewer
                         loadJProgressBar.setValue( 0 );
                         loadJProgressBar.setVisible( true );
                         break;
+
                     case SourcePicture.LOADING_PROGRESS:
                         loadJProgressBar.setValue( percentage );
                         loadJProgressBar.setVisible( true );
                         break;
+
                     case SourcePicture.LOADING_COMPLETED:
                         loadJProgressBar.setVisible( false );
                         loadJProgressBar.setValue( 0 ); // prepare for the next load
                         break;
+
                 }
+
+
+
+
             }
         };
         if ( SwingUtilities.isEventDispatchThread() ) {
@@ -1064,6 +1108,7 @@ public class PictureViewer
         } else {
             SwingUtilities.invokeLater( r );
         }
+
     }
 
 
@@ -1073,6 +1118,17 @@ public class PictureViewer
     public void resetPicture() {
         pictureJPanel.zoomToFit();
         pictureJPanel.centerImage();
+        pictureJPanel.requestFocusInWindow();
+    }
+
+
+    /**
+     *  This function cycles to the next info display. The first is DISPLAY_NONE, DISPLAY_PHOTOGRAPHIC
+     *  and DISPLAY_APPLICATION
+     **/
+    public void cylceInfoDisplay() {
+        pictureJPanel.cylceInfoDisplay();
+        pictureJPanel.requestFocusInWindow();
     }
 
     /**

@@ -1,5 +1,6 @@
 package jpo.dataModel;
 
+import jpotestground.DebuggingDefaultTreeModel;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.lang.reflect.InvocationTargetException;
@@ -256,8 +257,8 @@ public class PictureCollection {
 
 
     /**
-     *  Returns true if edits are allowed on this collection
-     * @return
+     * Returns true if edits are allowed on this collection
+     * @return true if edits are allowed on this collection
      */
     public boolean getAllowEdits() {
         return allowEdits;
@@ -265,8 +266,8 @@ public class PictureCollection {
 
 
     /**
-     *  sets the allow edit status of this collection
-     * @param status
+     * sets the allow edit status of this collection
+     * @param status pass true to allow edits, false to forbid
      */
     public void setAllowEdits( boolean status ) {
         allowEdits = status;
@@ -408,8 +409,8 @@ public class PictureCollection {
 
 
     /**
-     *  returns an iterator through the categories keys
-     * @return
+     * Returns an iterator through the categories keys
+     * @return an interator over the categories keys
      */
     public Iterator getCategoryIterator() {
         return categories.keySet().iterator();
@@ -417,9 +418,9 @@ public class PictureCollection {
 
 
     /**
-     *  returns an iterator through the categories
-     * @param key
-     * @return
+     * Returns the Value for the key
+     * @param key the key for the value to be returned-
+     * @return Returns the Value for the Key
      */
     public String getCategory( Integer key ) {
         return categories.get( key );
@@ -427,9 +428,9 @@ public class PictureCollection {
 
 
     /**
-     *  returns an iterator through the categories
-     * @param key
-     * @return
+     * Removes the category associated with the
+     * @param key The Key to be removed
+     * @return What does this return? 
      */
     public String removeCategory( Integer key ) {
         return categories.remove( key );
@@ -437,7 +438,7 @@ public class PictureCollection {
 
 
     /**
-     *  counts the number of nodes using the category
+     * Counts the number of nodes using the category
      * @param key The Key
      * @param startNode the node to start from
      * @return the number of nodes
@@ -463,10 +464,10 @@ public class PictureCollection {
 
 
     /**
-     *  returns an ArrayList of the nodes that match this category
-     * @param key
-     * @param startNode
-     * @return
+     * Returns an ArrayList of the nodes that match this category
+     * @param key The key of the category to find
+     * @param startNode the node at which to start
+     * @return the list of nodes
      */
     public static ArrayList<SortableDefaultMutableTreeNode> getCategoryUsageNodes(
             Object key, SortableDefaultMutableTreeNode startNode ) {
@@ -489,9 +490,9 @@ public class PictureCollection {
 
 
     /**
-     * removes the category from the nodes using it
-     * @param key
-     * @param startNode
+     * Removes the category from the nodes using it
+     * @param key The category to remove
+     * @param startNode The node from which to start
      */
     public void removeCategoryUsage( Object key,
             SortableDefaultMutableTreeNode startNode ) {
@@ -509,7 +510,7 @@ public class PictureCollection {
 
 
     /**
-     *  returns the number of categories available.
+     * Returns the number of categories available.
      * @return number of categories
      */
     public int countCategories() {
@@ -525,7 +526,7 @@ public class PictureCollection {
 
     /**
      *  This method places the current SDMTN into the mailSelection HashSet.
-     * @param node
+     *  @param node The node going into the selection
      */
     public void addToMailSelected( SortableDefaultMutableTreeNode node ) {
         if ( isMailSelected( node ) ) {
@@ -735,10 +736,10 @@ public class PictureCollection {
             File temporaryFile = new File( xmlFile.getPath() + ".!!!" );
             new XmlDistiller( temporaryFile, getRootNode(), false, false );
             File originalFile = new File( xmlFile.getPath() + ".orig" );
-            xmlFile.renameTo( originalFile );
-            temporaryFile.renameTo( xmlFile );
+            boolean success = xmlFile.renameTo( originalFile );
+            success = temporaryFile.renameTo( xmlFile );
             setUnsavedUpdates( false );
-            originalFile.delete();
+            success = originalFile.delete();
             Settings.pushRecentCollection( xmlFile.toString() );
         }
     }

@@ -1,6 +1,6 @@
 package jpo.gui;
 
-import jpo.dataModel.SingleNodeBrowser;
+import jpo.dataModel.SingleNodeNavigator;
 import jpo.dataModel.Settings;
 import jpo.dataModel.GroupInfo;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
@@ -129,7 +129,7 @@ public class GroupInfoEditor {
         tabbedPane.addTab( "Statistics", statsJPanel );
 
         ThumbnailController thumbnailController = new ThumbnailController();
-        thumbnailController.setNode( new SingleNodeBrowser( editNode), 0 );
+        thumbnailController.setNode( new SingleNodeNavigator( editNode), 0 );
         tabbedPane.addTab( "Thumbnail", thumbnailController.getThumbnail() );
 
 

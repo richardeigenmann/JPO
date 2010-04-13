@@ -18,11 +18,11 @@ The license is in gpl.txt.
 See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 /** 
- *  This class implements the {@link jpo.dataModel.ThumbnailBrowser}  in the specific manner that is required for
+ *  This class implements the {@link jpo.dataModel.NodeNavigator}  in the specific manner that is required for
  *  displaying {@link Query} in the {@link jpo.gui.ThumbnailPanelController}.
  */
-public class QueryBrowser
-        extends ThumbnailBrowser {
+public class QueryNavigator
+        extends NodeNavigator {
 
     /**
      *  A reference to the query group that shall be browsed
@@ -34,7 +34,7 @@ public class QueryBrowser
      *  Constructs a new Group Browser object
      * @param queryToBrowse the Query for the browser
      */
-    public QueryBrowser( Query queryToBrowse ) {
+    public QueryNavigator( Query queryToBrowse ) {
         setQuery( queryToBrowse );
     }
 
@@ -51,7 +51,7 @@ public class QueryBrowser
 
 
     /**
-     *  returns the {@link Query} for this QueryBrowser
+     *  returns the {@link Query} for this QueryNavigator
      *
      * @return the query for the browser
      */
@@ -104,7 +104,7 @@ public class QueryBrowser
      *  This method unregisters the TreeModelListener and sets the variables to null;
      */
     @Override
-    public void cleanup() {
-        super.cleanup();
+    public void getRid() {
+        super.getRid();
     }
 }

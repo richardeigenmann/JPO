@@ -1,6 +1,5 @@
 package jpo.dataModel;
 
-import jpo.dataModel.*;
 import javax.swing.event.*;
 import javax.swing.tree.*;
 
@@ -25,8 +24,8 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  *  This class implements the ThumbnailBrowserInterface in the specific manner that is required for 
  *  displaying the child nodes of a Group in the Thumbnail JScrollPane.
  */
-public class GroupBrowser
-        extends ThumbnailBrowser
+public class GroupNavigator
+        extends NodeNavigator
         implements TreeModelListener {
 
     /**
@@ -40,13 +39,13 @@ public class GroupBrowser
      *
      * @param node
      */
-    public GroupBrowser( SortableDefaultMutableTreeNode node ) {
+    public GroupNavigator( SortableDefaultMutableTreeNode node ) {
         setNode( node );
     }
 
 
     /**
-     *  call this method to specify the node that this GroupBrowser should refer to. The node is validated
+     *  call this method to specify the node that this GroupNavigator should refer to. The node is validated
      *  that it's payload is of type GroupInfo.
      *
      *  @param  node   The SortableDefaultMutableTreeNode that refers to the Group that should be displayed.
@@ -114,8 +113,8 @@ public class GroupBrowser
      *  This method unregisters the TreeModelListener and sets the variables to null;
      */
     @Override
-    public void cleanup() {
-        super.cleanup();
+    public void getRid() {
+        super.getRid();
         if ( myNode != null ) {
             myNode.getPictureCollection().getTreeModel().removeTreeModelListener( this );
             myNode = null;
@@ -136,7 +135,7 @@ public class GroupBrowser
     public void treeNodesChanged( TreeModelEvent e ) {
         logger.fine( "GroupBrowser.treeNodesChanged: " + e.toString() );
         if ( myNode == null ) {
-            //logger.info("GroupBrowser.treeNodesChanged: ERROR! This should not have been called as there is not group showing and therefore there should be no tree listener firing off. Ignoring notification.");
+            //logger.info("GroupNavigator.treeNodesChanged: ERROR! This should not have been called as there is not group showing and therefore there should be no tree listener firing off. Ignoring notification.");
             return;
         }
 
@@ -161,9 +160,9 @@ public class GroupBrowser
      */
     @Override
     public void treeNodesInserted( TreeModelEvent e ) {
-        //logger.info("GroupBrowser.treeNodesInserted: " + e.toString() );
+        //logger.info("GroupNavigator.treeNodesInserted: " + e.toString() );
         if ( myNode == null ) {
-            //logger.info("GroupBrowser.treeNodesInserted: ERROR! This should not have been called as there is not group showing and therefore there should be no tree listener firing off. Ignoring notification.");
+            //logger.info("GroupNavigator.treeNodesInserted: ERROR! This should not have been called as there is not group showing and therefore there should be no tree listener firing off. Ignoring notification.");
             return;
         }
 
@@ -187,7 +186,7 @@ public class GroupBrowser
      */
     @Override
     public void treeNodesRemoved( TreeModelEvent e ) {
-        //logger.info("GroupBrowser.treeNodesRemoved: " + e.toString() );
+        //logger.info("GroupNavigator.treeNodesRemoved: " + e.toString() );
         if ( myNode == null ) {
             logger.severe( "ERROR! This should not have been called as there is not group showing and therefore there should be no tree listener firing off. Ignoring notification." );
             return;
@@ -196,7 +195,7 @@ public class GroupBrowser
         // if the current node is part of the tree that was deleted then we need to
         //  reposition the group at the parent node that remains.
         if ( SortableDefaultMutableTreeNode.wasNodeDeleted( myNode, e ) ) {
-            //logger.info("GroupBrowser.treeNodesRemoved: determined that a child node of the currently displaying node was deleted and therefore executing a setNode on the parent that remains.");
+            //logger.info("GroupNavigator.treeNodesRemoved: determined that a child node of the currently displaying node was deleted and therefore executing a setNode on the parent that remains.");
             setNode( (SortableDefaultMutableTreeNode) e.getTreePath().getLastPathComponent() );
         } else {
             // don't get excited and force a relayout unless the partent of the deleted
@@ -222,7 +221,7 @@ public class GroupBrowser
     public void treeStructureChanged( TreeModelEvent e ) {
         logger.fine( String.format( "We've teen told that the Tree structure changed Event: %s", e.toString() ) );
         if ( myNode == null ) {
-            //logger.info("GroupBrowser.treeStructureChanged: ERROR! This should not have been called as there is not group showing and therefore there should be no tree listener firing off. Ignoring notification.");
+            //logger.info("GroupNavigator.treeStructureChanged: ERROR! This should not have been called as there is not group showing and therefore there should be no tree listener firing off. Ignoring notification.");
             return;
         }
         if ( myNode.isNodeDescendant( (SortableDefaultMutableTreeNode) e.getTreePath().getLastPathComponent() ) ) {

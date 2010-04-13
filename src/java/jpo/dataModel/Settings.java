@@ -555,6 +555,7 @@ public class Settings {
 
     /**
      * returns an Arraylist of sort
+     * TODO: Why is is not a map?
      * @return the Arraylist of sort options
      */
     public static ArrayList<SortOption> getSortOptions() {
@@ -600,9 +601,9 @@ public class Settings {
     public static String addFromCameraDateFormat = "dd.MM.yyyy  HH:mm";
 
     /**
-     *	Collection of Cameras
+     *	Collection of cameras
      */
-    public static Vector<Camera> Cameras = new Vector<Camera>();
+    public static Vector<Camera> cameras = new Vector<Camera>();
 
     /**
      *	list of email senders
@@ -880,8 +881,7 @@ public class Settings {
                             Settings.jpoResources.getString( "settingsError" ),
                             JOptionPane.ERROR_MESSAGE );
                     writeLog = false;
-                }
-                if ( !testFileParent.canWrite() ) {
+                } else if ( !testFileParent.canWrite() ) {
                     JOptionPane.showMessageDialog( Settings.anchorFrame,
                             Settings.jpoResources.getString( "logFileCanWriteError" ),
                             Settings.jpoResources.getString( "settingsError" ),
@@ -995,14 +995,14 @@ public class Settings {
 
 
     /**
-     *  Writes the Cameras collection to the preferences. Uses an idea presented by Greg Travis
+     *  Writes the cameras collection to the preferences. Uses an idea presented by Greg Travis
      *  on this IBM website: http://www-128.ibm.com/developerworks/java/library/j-prefapi.html
      */
     public static void writeCameraSettings() {
-        //logger.info( "Writing Cameras" );
-        prefs.putInt( "NumberOfCameras", Cameras.size() );
+        //logger.info( "Writing cameras" );
+        prefs.putInt( "NumberOfCameras", cameras.size() );
         int i = 0;
-        for ( Camera c : Cameras ) {
+        for ( Camera c : cameras ) {
             prefs.put( "Camera[" + Integer.toString( i ) + "].description", c.getDescription() );
             prefs.put( "Camera[" + Integer.toString( i ) + "].cameraMountPoint", c.getCameraMountPoint() );
             prefs.putBoolean( "Camera[" + Integer.toString( i ) + "].useFilename", c.getUseFilename() );
@@ -1034,7 +1034,7 @@ public class Settings {
      * try {
      * URL baseURL = bs.getCodeBase();
      * //logger.info( "CodeBase was " + baseURL.toString() );
-     * URL camerasURL = new URL( baseURL, "Cameras" );
+     * URL camerasURL = new URL( baseURL, "cameras" );
      * try {
      * ps.delete( camerasURL );
      * } catch ( IOException x ) {
@@ -1066,7 +1066,7 @@ public class Settings {
      * try {
      * ObjectOutputStream oos = new ObjectOutputStream( out );
      *
-     * oos.writeObject( Cameras );
+     * oos.writeObject( cameras );
      * oos.close();
      * } catch ( IOException x ) {
      * logger.info("Settings.writeCameraSettings failed on an IOException: " + x.getMessage());
@@ -1095,7 +1095,7 @@ public class Settings {
             } catch ( ClassNotFoundException ex ) {
                 ex.printStackTrace();
             }
-            Cameras.add( c );
+            cameras.add( c );
         }
     }
 

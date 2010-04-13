@@ -30,11 +30,11 @@ Date: 21-06-2006
  *  Settings.jpoResources.getString("key")
  */
 public class JpoResources_zh_TW extends ListResourceBundle {
-	public Object[][] getContents() {
+	protected Object[][] getContents() {
 		return contents;
 
 	}
-	public static final Object[][] contents = {
+	protected static final Object[][] contents = {
 		// Jpo
 		{"ApplicationTitle", "JPO - 圖片管理"},
 		{"jpoTabbedPaneCollection", "圖片目錄"},
@@ -273,9 +273,10 @@ public class JpoResources_zh_TW extends ListResourceBundle {
 		{"ConsolidateButton", "整合"},
 		{"ConsolidateFailure", "圖片整合失敗，退出"},
 		{"ConsolitdateProgBarTitle", "圖片正在整合中"},
-		{"ConsolitdateProgBarDone", "圖片集整合完畢"},
+		{"ConsolitdateProgBarDone", "%d 圖片集整合完畢"},
 		{"lowresJCheckBox", "連同低分辨率圖片也整合"},
-		
+		{"ConsolidateCreateDirFailure", "Aborted because directory %s can't be created." },
+		{"ConsolidateCantWrite", "Aborted because directory %s is not writable." },
 
 		
 		// JarDistillerJFrame
@@ -571,7 +572,7 @@ public class JpoResources_zh_TW extends ListResourceBundle {
 
 		// CategoryUsageJFrame
 		{"CategoryUsageJFrameTitle", "類使用狀況"},
-		{"numberOfPicturesJLabel", "圖片被選中"},
+		{"numberOfPicturesJLabel", "圖片被選中 %d"},
 		{"updateJButton", "更新"},
 		{"refreshJButtonCUJF", "刷新"},
 		{"modifyCategoryJButton", "類目"},

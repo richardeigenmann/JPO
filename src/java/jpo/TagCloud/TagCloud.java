@@ -137,7 +137,7 @@ public class TagCloud extends JScrollPane {
      * A click listener that fires off the tagClicked event to the tagClickListener when
      * a click is registered on a word label.
      */
-    private MouseAdapter wordClickListener = new MouseAdapter() {
+    private transient MouseAdapter wordClickListener = new MouseAdapter() {
 
         @Override
         public void mouseClicked( MouseEvent e ) {

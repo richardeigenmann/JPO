@@ -26,11 +26,11 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 public class JpoResources_en extends ListResourceBundle {
 
-    public Object[][] getContents() {
+    protected Object[][] getContents() {
         return contents;
 
     }
-    public static final Object[][] contents = {
+    protected static final Object[][] contents = {
         // Jpo
         { "ApplicationTitle", "JPO - Java Picture Organizer" },
         { "jpoTabbedPaneCollection", "Collection" },
@@ -212,6 +212,7 @@ public class JpoResources_en extends ListResourceBundle {
         { "collectionExportPicturesText", "Export Pictures" },
         { "xmlFileNameLabel", "Name for XML file:" },
         { "collectionExportChooserTitle", "Target Directory for Collection" },
+
         // ConsolidateGroupJFrame
         { "highresTargetDirJTextField", "Select Highres Consolidation Directory" },
         { "lowresTargetDirJTextField", "Select Lowres Consolidation Directory" },
@@ -221,8 +222,11 @@ public class JpoResources_en extends ListResourceBundle {
         { "ConsolidateButton", "Consolidate" },
         { "ConsolidateFailure", "Consolidation generated a failure and has aborted." },
         { "ConsolitdateProgBarTitle", "Running Consolidation" },
-        { "ConsolitdateProgBarDone", " pictures Consolidated" },
+        { "ConsolitdateProgBarDone", "%d pictures Consolidated" },
         { "lowresJCheckBox", "consolidate Lowres too" },
+	{"ConsolidateCreateDirFailure", "Aborted because directory %s can't be created." },
+        {"ConsolidateCantWrite", "Aborted because directory %s is not writable." },
+
         // JarDistillerJFrame
         { "groupExportJarTitleText", "Export to Jar" },
         { "JarDistillerLabel", "Jar (Java Archive) to create:" },
@@ -484,7 +488,7 @@ public class JpoResources_en extends ListResourceBundle {
         { "countCategoryUsageWarning2", " nodes using this category.\nAre you sure you want to remove it?" },
         // CategoryUsageJFrame
         { "CategoryUsageJFrameTitle", "Category Usage" },
-        { "numberOfPicturesJLabel", " pictures selected" },
+        { "numberOfPicturesJLabel", "%d pictures selected" },
         { "updateJButton", "Update" },
         { "refreshJButtonCUJF", "Refresh" },
         { "modifyCategoryJButton", "Categories" },

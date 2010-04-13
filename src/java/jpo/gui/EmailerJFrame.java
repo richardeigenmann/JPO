@@ -1,6 +1,6 @@
 package jpo.gui;
 
-import jpo.dataModel.ArrayListBrowser;
+import jpo.dataModel.ArrayListNavigator;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
 import java.awt.*;
 import java.awt.event.*;
@@ -427,7 +427,7 @@ public class EmailerJFrame extends JFrame {
         c.anchor = GridBagConstraints.LINE_START;
         c.insets = new Insets( 4, 4, 4, 4 );
         c.gridy = 0;
-        ArrayListBrowser alb = new ArrayListBrowser();
+        ArrayListNavigator alb = new ArrayListNavigator();
 
         for ( int i = 0; i < emailSelected.length; i++ ) {
             //logger.info("EmailerJFrame.loadThumbnails: running on " + emailSelected[i].toString() );

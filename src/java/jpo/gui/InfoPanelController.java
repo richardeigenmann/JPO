@@ -1,7 +1,7 @@
 package jpo.gui;
 
-import jpo.dataModel.ArrayListBrowser;
-import jpo.dataModel.SingleNodeBrowser;
+import jpo.dataModel.ArrayListNavigator;
+import jpo.dataModel.SingleNodeNavigator;
 import jpo.TagCloud.TagClickListener;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
 import jpo.*;
@@ -104,7 +104,7 @@ public class InfoPanelController implements TagClickListener {
                     t.stop();
                     t.start();  // updates the queue-count
                 } else if ( node.getUserObject() instanceof PictureInfo ) {
-                    infoPanel.thumbnailController.setNode( new SingleNodeBrowser( node ), 0 );
+                    infoPanel.thumbnailController.setNode( new SingleNodeNavigator( node ), 0 );
                     t.stop();
                 } else {
                     // ToDo get this stuff off the event handler thread
@@ -129,7 +129,7 @@ public class InfoPanelController implements TagClickListener {
     public void tagClicked( String key ) {
         HashSet<SortableDefaultMutableTreeNode> hs = dwm.getWordNodeMap().get( key );
         ArrayList<SortableDefaultMutableTreeNode> set = new ArrayList<SortableDefaultMutableTreeNode>( hs );
-        ArrayListBrowser alb = new ArrayListBrowser( key, set );
+        ArrayListNavigator alb = new ArrayListNavigator( key, set );
         Jpo.showThumbnails( alb );
     }
 }

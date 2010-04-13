@@ -1,7 +1,5 @@
 package jpo.dataModel;
 
-import jpo.dataModel.ThumbnailBrowser;
-import jpo.dataModel.*;
 import jpo.*;
 import java.util.*;
 
@@ -25,8 +23,8 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 /** 
  *  This class returns a browser for all the pictures under a node in a random order
  */
-public class RandomBrowser
-        extends ThumbnailBrowser {
+public class RandomNavigator
+        extends NodeNavigator {
 
     /**
      *  This ArrayList holds all the picture nodes that the browser will serve
@@ -40,11 +38,11 @@ public class RandomBrowser
 
 
     /**
-     *  Constructor for a RandomBrowser.
+     *  Constructor for a RandomNavigator.
      *
      *  @param rootNode    The rootNode under which the randomisation should happen.
      */
-    public RandomBrowser( SortableDefaultMutableTreeNode rootNode ) {
+    public RandomNavigator( SortableDefaultMutableTreeNode rootNode ) {
         logger.fine( "Constructor called on node: " + rootNode.toString() );
         this.rootNode = rootNode;
         rootNode.getChildPictureNodes( allPictures, true );

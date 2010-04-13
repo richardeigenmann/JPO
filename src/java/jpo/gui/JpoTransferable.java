@@ -29,7 +29,8 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  *
  *
  */
-public class JpoTransferable implements Transferable, ClipboardOwner {
+public class JpoTransferable
+        implements Transferable, ClipboardOwner {
 
     /**
      * Defines a logger for this class
@@ -54,7 +55,7 @@ public class JpoTransferable implements Transferable, ClipboardOwner {
      **/
     public JpoTransferable( Object[] dmtn ) {
         this.dmtn = dmtn;
-        originalHashCode = dmtn.hashCode();
+        originalHashCode = java.util.Arrays.hashCode( dmtn );
     }
 
     /**
@@ -139,7 +140,7 @@ public class JpoTransferable implements Transferable, ClipboardOwner {
 
 
     /**
-     *   Returns the transferable.
+     * Returns the transferable.
      * @param flavor 
      * @return
      * @throws UnsupportedFlavorException
@@ -155,7 +156,11 @@ public class JpoTransferable implements Transferable, ClipboardOwner {
             return new Integer( originalHashCode );
         } else if ( flavor.equals( stringFlavor ) ) {
             logger.fine( "String Transferable" );
-            return dmtn.toString();
+            StringBuffer objectDescriptions = new StringBuffer( "" );
+            for ( Object o : dmtn ) {
+                objectDescriptions.append( o.toString() + "\n" );
+            }
+            return objectDescriptions.toString();
         } else if ( flavor.equals( jpegImage ) ) {
             ScalablePicture sp = new ScalablePicture();
             File hrf = null;
@@ -219,12 +224,11 @@ public class JpoTransferable implements Transferable, ClipboardOwner {
      */
     @Override
     public String toString() {
-        String retString = dmtn.toString();
-        if ( retString == null ) {
-            retString = "";
+        StringBuffer objectDescriptions = new StringBuffer( "JpoTransferable for node: " );
+        for ( Object o : dmtn ) {
+            objectDescriptions.append( o.toString() + "\n" );
         }
-        retString = "JpoTransferable for node: " + retString;
-        return retString;
+        return objectDescriptions.toString();
     }
 
 

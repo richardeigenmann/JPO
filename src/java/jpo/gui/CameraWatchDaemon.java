@@ -62,14 +62,14 @@ public class CameraWatchDaemon implements Runnable {
     }
 
     /**
-     *  The run method enumerates the Cameras configured and checks to see if a
+     *  The run method enumerates the cameras configured and checks to see if a
      *  camera has been added. If a camera was added it fires off the CameraDownloadWizard.
      */
     public void run() {
 
         while (!gracefullyInterrupt) {
-            synchronized (Settings.Cameras) {
-                for (Camera c : Settings.Cameras) {
+            synchronized (Settings.cameras) {
+                for (Camera c : Settings.cameras) {
                     boolean isConnected = c.isCameraConnected();
                     if (c.getMonitorForNewPictures() && isConnected && (!c.getLastConnectionStatus())) {
                         logger.info(getClass().toString() + ": Camera " + c.toString() + " has been connected ");

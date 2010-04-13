@@ -131,7 +131,7 @@ public class CameraDownloadWizardStep3
         collectionJTree.addTreeSelectionListener( new TreeSelectionListener() {
 
             public void valueChanged( TreeSelectionEvent e ) {
-                logger.fine(String.format( "listening to a value changed event e:", e.toString() ));
+                logger.fine(String.format( "listening to a value changed event e: %s", e.toString() ));
                 // Are we trying to get the last clicked node? Not sure this is best...
                 SortableDefaultMutableTreeNode node = (SortableDefaultMutableTreeNode) collectionJTree.getLastSelectedPathComponent();
                 try {

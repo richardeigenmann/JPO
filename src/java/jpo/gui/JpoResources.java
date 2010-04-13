@@ -26,9 +26,9 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  *  Use the following command to access your Strings:
  *  Settings.jpoResources.getString("key")
  */
-public class JpoResources extends ListResourceBundle {
-	public Object[][] getContents() {
-		return JpoResources_en.contents;
-	}
+public class JpoResources extends JpoResources_en {
+	/*public Object[][] getContents() {
+		return (new JpoResources_en()).getContents();
+	}*/
 }
 

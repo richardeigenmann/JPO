@@ -1,7 +1,6 @@
 package jpo.gui;
 
 import jpo.dataModel.Settings;
-import jpo.*;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -69,6 +68,11 @@ public class ProgressGui
      */
     private static final int timeout = 5 * 60 * 1000;
 
+    /**
+     * The minimum size for a ProgressGui
+     */
+    private static final Dimension MINIMUM_FRAME_SIZE = new Dimension( 350, 100 );
+
 
     /**
      *  Constructor for a progress GUI
@@ -124,7 +128,7 @@ public class ProgressGui
         progBar.setBorder( BorderFactory.createLineBorder( Color.gray, 1 ) );
         progBar.setStringPainted( true );
         progBar.setPreferredSize( new Dimension( 140, 20 ) );
-        progBar.setMaximumSize( new Dimension( 240, 20 ) );
+        progBar.setMaximumSize( new Dimension( 340, 20 ) );
         progBar.setMinimumSize( new Dimension( 140, 20 ) );
         progBar.setValue( 0 );
         constraints.gridx = 0;
@@ -133,10 +137,8 @@ public class ProgressGui
         contentJPanel.add( progBar, constraints );
 
         progLabel = new JLabel();
-        progLabel.setPreferredSize( new Dimension( 160, 20 ) );
         progLabel.setBorder( BorderFactory.createEmptyBorder( 5, 5, 5, 5 ) );
         progLabel.setHorizontalAlignment( javax.swing.SwingConstants.CENTER );
-        //progLabel.setVisible( false );
         constraints.gridy++;
         contentJPanel.add( progLabel, constraints );
 
@@ -171,7 +173,7 @@ public class ProgressGui
 
         okJButton.setVisible( false );
         this.getRootPane().setDefaultButton( cancelJButton );
-
+        setMinimumSize( MINIMUM_FRAME_SIZE );
         pack();
         setVisible( true );
     }
@@ -207,24 +209,6 @@ public class ProgressGui
 
 
     /**
-     *  Adds 1 to the progress counter, submitting to the EDT if required
-     */
-    public void progressIncrementEDT() {
-        Runnable r = new Runnable() {
-
-            public void run() {
-                progressIncrement();
-            }
-        };
-        if ( SwingUtilities.isEventDispatchThread() ) {
-            r.run();
-        } else {
-            SwingUtilities.invokeLater( r );
-        }
-    }
-
-
-    /**
      *  decreases the total by 1
      */
     public void decrementTotal() {
@@ -242,7 +226,8 @@ public class ProgressGui
             public void run() {
                 okJButton.setVisible( true );
                 cancelJButton.setVisible( false );
-                progLabel.setText( Integer.toString( progBar.getValue() ) + doneString );
+                progLabel.setText( String.format( doneString, progBar.getValue() ) );
+                validate();
             }
         };
         if ( SwingUtilities.isEventDispatchThread() ) {

@@ -108,8 +108,8 @@ public class XmlDistiller implements Runnable {
                 highresTargetDir = new File( outputFile.getParentFile(), "Highres" );
                 lowresTargetDir = new File( outputFile.getParentFile(), "Lowres" );
 
-                highresTargetDir.mkdirs();
-                lowresTargetDir.mkdirs();
+                boolean created = highresTargetDir.mkdirs();
+                created = lowresTargetDir.mkdirs();
             }
 
             FileWriter fw = new FileWriter( outputFile );

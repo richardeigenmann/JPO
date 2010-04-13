@@ -870,15 +870,7 @@ public class ScalablePicture
     }
 
 
-    /**
-     *
-     */
-    @Override
-    public void finalize() {
-        logger.info( "ScalablePicture.finalize: " + imageUrl.toString() );
-    }
-
-
+   
     /**
      * @return the scaleSteps
      */

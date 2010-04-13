@@ -5,7 +5,7 @@ import java.util.*;
 /*
 JpoResources_de.java:  class that holds the German Language generic labels for the JPO application
 
-Copyright (C) 2002-2009  Richard Eigenmann, Zürich, Switzerland
+Copyright (C) 2002-2010  Richard Eigenmann, Zürich, Switzerland
  
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -28,11 +28,11 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  *  Settings.jpoResources.getString("key")
  */
 public class JpoResources_de extends ListResourceBundle {
-	public Object[][] getContents() {
+	protected final Object[][] getContents() {
 		return contents;
 
 	}
-	static final Object[][] contents = {
+	protected static final Object[][] contents = {
 		// Jpo
 		{"ApplicationTitle", "JPO - Java Picture Organizer"},
 		{"jpoTabbedPaneCollection", "Sammlung"},
@@ -271,9 +271,10 @@ public class JpoResources_de extends ListResourceBundle {
 		{"ConsolidateButton", "Konsolidieren"},
 		{"ConsolidateFailure", "Konsolidierung generierte einen Fehler und wurde abgebrochen"},
 		{"ConsolitdateProgBarTitle", "Konsolidierung läuft"},
-		{"ConsolitdateProgBarDone", " Bilder konsolidiert"},
+		{"ConsolitdateProgBarDone", "%d Bilder konsolidiert"},
 		{"lowresJCheckBox", "Auch Verkleinerungen konsolidieren"},
-		
+		{"ConsolidateCreateDirFailure", "Abbruch. Verzeichnis %s kann nicht erstellt werden." },
+		{"ConsolidateCantWrite", "Abbruch. Verzeichnis %s ist nicht beschreibbar." },
 
 		
 		// JarDistillerJFrame
@@ -318,7 +319,7 @@ public class JpoResources_de extends ListResourceBundle {
 		{"addNewGroupJMenuItemLabel", "Neue Gruppe"},
 		{"addPicturesJMenuItemLabel", "Bilder"},
 		{"addCollectionJMenuItemLabel", "Sammlung"},
-        { "addCollectionFormFile", "Datei Auswählen" },
+		{ "addCollectionFormFile", "Datei Auswählen" },
 		{"groupExportNewCollectionMenuText", "Export als Sammlung"},
 		{"addFlatFileJMenuItemLabel", "Einfache Datei"},
 		{"moveNodeJMenuLabel", "Verschieben"},
@@ -568,7 +569,7 @@ public class JpoResources_de extends ListResourceBundle {
 
 		// CategoryUsageJFrame
 		{"CategoryUsageJFrameTitle", "Kategorienzuteilung"},
-		{"numberOfPicturesJLabel", " Bild(er) ausgewählt"},
+		{"numberOfPicturesJLabel", "%d Bild(er) ausgewählt"},
 		{"updateJButton", "Sichern"},
 		{"refreshJButtonCUJF", "Neu laden"},
 		{"modifyCategoryJButton", "Kategorien"},

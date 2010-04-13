@@ -217,7 +217,7 @@ public class ReconcileJFrame
      * @param e
      */
     public void actionPerformed( ActionEvent e ) {
-        logger.fine("actionperformed!!");
+        logger.fine( "actionperformed!!" );
         if ( e.getSource() == cancelJButton ) {
             logger.info( "cancel buttoon" );
             if ( stopThread ) {
@@ -254,12 +254,6 @@ public class ReconcileJFrame
      *  If it is not it returns false. It pops up JOptionPanes to explain what is wrong
      */
     private boolean validateDir( File scanDir ) {
-        logger.info( "validateDir invoked with " + scanDir.getPath() );
-        // is it a directory?
-        if ( !scanDir.isDirectory() ) {
-            scanDir = scanDir.getParentFile();
-            logger.info( "File is not a directory. Using it's parent: " + scanDir.getPath() );
-        }
         if ( scanDir == null ) {
             JOptionPane.showMessageDialog(
                     Settings.anchorFrame,
@@ -268,6 +262,23 @@ public class ReconcileJFrame
                     JOptionPane.ERROR_MESSAGE );
             return false;
         }
+
+        logger.info( "validateDir invoked with " + scanDir.getPath() );
+        // is it a directory?
+        if ( !scanDir.isDirectory() ) {
+            scanDir = scanDir.getParentFile();
+            if ( scanDir == null ) {
+                JOptionPane.showMessageDialog(
+                        Settings.anchorFrame,
+                        Settings.jpoResources.getString( "ReconcileNullFileError" ),
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE );
+                return false;
+            }
+            logger.info( "File is not a directory. Using it's parent: " + scanDir.getPath() );
+        }
+
+
 
 
         // is the File object readable?
@@ -298,10 +309,10 @@ public class ReconcileJFrame
 
         for ( int i = 0; ( ( i < fileArray.length ) && ( !stopThread ) ); i++ ) {
             if ( fileArray[i].isDirectory() ) {
-                logger.fine("Branching into subdir");
+                logger.fine( "Branching into subdir" );
                 reconcileDir( fileArray[i] );
             } else {
-                logger.fine ("should reconciling File: " + fileArray[i].getPath());
+                logger.fine( "should reconciling File: " + fileArray[i].getPath() );
                 SortableDefaultMutableTreeNode node;
                 Object nodeObject;
                 Enumeration e = rootNode.preorderEnumeration();

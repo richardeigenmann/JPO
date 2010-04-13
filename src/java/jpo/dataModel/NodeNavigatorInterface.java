@@ -5,7 +5,7 @@ import jpo.dataModel.*;
 
 
 /*
-ThumbnailBrowserInterface.java:  an interface that defines the methods that a class 
+NodeNavigatorInterface.java:  an interface that defines the methods that a class
 must implement so that the ThumbnailJScrollPane can identify the Thumbnails to be displayed.
 
 Copyright (C) 2002 - 2009  Richard Eigenmann, Zürich, Switzerland
@@ -25,12 +25,12 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 
 
 /**
- *   ThumbnailBrowserInterface.java:  an interface that defines the methods that a "set of nodes"
+ *   NodeNavigatorInterface.java:  an interface that defines the methods that a "set of nodes"
  *   must implement so that the ThumbnailPanelController can identify the Thumbnails to be displayed.
  *   You probably want to extend ThumbnailBrowser instead of implementing
- *   ThumbnailBrowserInterface as that takes care of the listeners.
+ *   NodeNavigatorInterface as that takes care of the listeners.
  */
-public interface ThumbnailBrowserInterface {
+public interface NodeNavigatorInterface {
 
 	/**
 	 *  The implementing class must return the title for the images being shown. This 
@@ -80,9 +80,8 @@ public interface ThumbnailBrowserInterface {
 	/**
 	 *  method that must be implemented which gives the implementing object the
 	 *  chance to free variables and deallocate itself from listeners and things.
-         *  TODO: whyever did I choose not to use finalize?
 	 */
-	public void cleanup ();
+	public void getRid ();
 
 
 }
