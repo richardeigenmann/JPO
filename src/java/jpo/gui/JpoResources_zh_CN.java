@@ -681,6 +681,17 @@ public class JpoResources_zh_CN extends ListResourceBundle {
 		{"DownloadCameraWizardStep6Title", "Download"},
 		{"DownloadCameraWizardStep6Description", "Downloading the pictures"},
 
+		//Privacy Dialog
+		{ "PrivacyTitle", "Privacy Settings" },
+		{ "PrivacyClearRecentFiles", "Clear Recent Files" },
+		{ "PrivacyClearThumbnails", "Clear Thumbnails" },
+		{ "PrivacyClearAutoload", "Clear Autoload" },
+		{ "PrivacyClearMemorisedDirs", "Clear Memorised Directories" },
+		{ "PrivacySelected", "Do Selected" },
+		{ "PrivacyClose", "Close Window" },
+		{ "PrivacyAll", "All" },
+		{ "PrivacyClear", "clear" },
+
 
 		{"Template", "模板"}
 		

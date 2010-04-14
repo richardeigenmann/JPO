@@ -585,6 +585,18 @@ public class JpoResources_en extends ListResourceBundle {
         { "DownloadCameraWizardStep5Text7", "Storing in: " },
         { "DownloadCameraWizardStep6Title", "Download" },
         { "DownloadCameraWizardStep6Description", "Downloading the pictures" },
+
+		//Privacy Dialog
+		{ "PrivacyTitle", "Privacy Settings" },
+		{ "PrivacyClearRecentFiles", "Clear Recent Files" },
+		{ "PrivacyClearThumbnails", "Clear Thumbnails" },
+		{ "PrivacyClearAutoload", "Clear Autoload" },
+		{ "PrivacyClearMemorisedDirs", "Clear Memorised Directories" },
+		{ "PrivacySelected", "Do Selected" },
+		{ "PrivacyClose", "Close Window" },
+		{ "PrivacyAll", "All" },
+		{ "PrivacyClear", "clear" },
+
         { "Template", "Template" }
     };
 }

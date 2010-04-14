@@ -46,7 +46,7 @@ public class PrivacyJFrame
      * Constructs a Frame with the privacy options
      */
     public PrivacyJFrame() {
-        super( "Privacy Window" );
+        super( Settings.jpoResources.getString( "PrivacyTitle" ) );
         Tools.checkEDT();
         initGui();
         pack();
@@ -72,16 +72,9 @@ public class PrivacyJFrame
         final MigLayout layout = new MigLayout( "insets 10" );
         final JPanel privacyPanel = new JPanel( layout );
 
-
-        final JLabel hello = new JLabel( "Privacy Settings" );
-        final Font titleFont = new Font( "SansSerif", Font.BOLD, 14 );
-        hello.setFont( titleFont );
-        hello.setForeground( Color.black );
-        privacyPanel.add( hello, "wrap" );
-
-        final JCheckBox clearRecentFiles = new JCheckBox( "Clear Recent Files" );
+        final JCheckBox clearRecentFiles = new JCheckBox( Settings.jpoResources.getString( "PrivacyClearRecentFiles" ) );
         privacyPanel.add( clearRecentFiles );
-        final JButton clearRecentFilesButton = new JButton( "clear" );
+        final JButton clearRecentFilesButton = new JButton( Settings.jpoResources.getString( "PrivacyClear" ) );
         clearRecentFilesButton.addActionListener( new ActionListener() {
 
             public void actionPerformed( ActionEvent e ) {
@@ -90,9 +83,9 @@ public class PrivacyJFrame
         } );
         privacyPanel.add( clearRecentFilesButton, "wrap" );
 
-        final JCheckBox clearThumbnails = new JCheckBox( "Clear Thumbnails" );
+        final JCheckBox clearThumbnails = new JCheckBox( Settings.jpoResources.getString( "PrivacyClearThumbnails" ) );
         privacyPanel.add( clearThumbnails );
-        final JButton clearThumbnailsButton = new JButton( "clear" );
+        final JButton clearThumbnailsButton = new JButton( Settings.jpoResources.getString( "PrivacyClear" ) );
         clearThumbnailsButton.addActionListener( new ActionListener() {
 
             public void actionPerformed( ActionEvent e ) {
@@ -101,9 +94,9 @@ public class PrivacyJFrame
         } );
         privacyPanel.add( clearThumbnailsButton, "wrap" );
 
-        final JCheckBox clearAutoload = new JCheckBox( "Clear Autoload" );
+        final JCheckBox clearAutoload = new JCheckBox( Settings.jpoResources.getString( "PrivacyClearAutoload" ) );
         privacyPanel.add( clearAutoload );
-        final JButton clearAutoloadButton = new JButton( "clear" );
+        final JButton clearAutoloadButton = new JButton( Settings.jpoResources.getString( "PrivacyClear" ) );
         clearAutoloadButton.addActionListener( new ActionListener() {
 
             public void actionPerformed( ActionEvent e ) {
@@ -112,9 +105,9 @@ public class PrivacyJFrame
         } );
         privacyPanel.add( clearAutoloadButton, "wrap" );
 
-        final JCheckBox clearMemorisedDirs = new JCheckBox( "Clear Memorised Directories" );
+        final JCheckBox clearMemorisedDirs = new JCheckBox( Settings.jpoResources.getString( "PrivacyClearMemorisedDirs" ) );
         privacyPanel.add( clearMemorisedDirs );
-        final JButton clearMemorisedDirsButton = new JButton( "clear" );
+        final JButton clearMemorisedDirsButton = new JButton( Settings.jpoResources.getString( "PrivacyClear" ) );
         clearMemorisedDirsButton.addActionListener( new ActionListener() {
 
             public void actionPerformed( ActionEvent e ) {
@@ -123,7 +116,7 @@ public class PrivacyJFrame
         } );
         privacyPanel.add( clearMemorisedDirsButton, "wrap" );
 
-        final JButton selected = new JButton( "Selected" );
+        final JButton selected = new JButton( Settings.jpoResources.getString( "PrivacySelected" ) );
         selected.addActionListener( new ActionListener() {
 
             public void actionPerformed( ActionEvent e ) {
@@ -132,7 +125,7 @@ public class PrivacyJFrame
         } );
         privacyPanel.add( selected, "split 2" );
 
-        final JButton cancel = new JButton( "Close" );
+        final JButton cancel = new JButton( Settings.jpoResources.getString( "PrivacyClose" ) );
         cancel.addActionListener( new ActionListener() {
 
             public void actionPerformed( ActionEvent e ) {
@@ -141,7 +134,7 @@ public class PrivacyJFrame
         } );
         privacyPanel.add( cancel );
 
-        final JButton all = new JButton( "All" );
+        final JButton all = new JButton( Settings.jpoResources.getString( "PrivacyAll" ) );
         all.addActionListener( new ActionListener() {
 
             public void actionPerformed( ActionEvent e ) {
@@ -190,7 +183,6 @@ public class PrivacyJFrame
          * Handles a click on the clear All button
          */
         public void clearAll() {
-            logger.info( "Click all" );
             clearRecentFiles();
             clearThumbnails();
             clearAutoload();
@@ -233,19 +225,19 @@ public class PrivacyJFrame
 
         /**
          * Handles a click on the clear Thumbnails button
+         * TODO: make this a SwingWorker and have a progress bar
          */
         public void clearThumbnails() {
-            logger.info( "Should Clear Thumbnails" );
             File thumbnailDir = Settings.thumbnailPath;
             FilenameFilter thumbnails = new FilenameFilter() {
 
                 public boolean accept( File dir, String name ) {
-                    boolean matches = name.matches( "^" + Settings.thumbnailPrefix + "[0-9]+[.]jpg$");
+                    boolean matches = name.matches( "^" + Settings.thumbnailPrefix + "[0-9]+[.]jpg$" );
                     //logger.info( String.format( "Considering: %s matches: %b", name, matches ) );
                     return matches;
                 }
             };
-            File[] deleteableThumbnails = thumbnailDir.listFiles(thumbnails);
+            File[] deleteableThumbnails = thumbnailDir.listFiles( thumbnails );
             for ( File f : deleteableThumbnails ) {
                 boolean success = f.delete();
                 logger.info( String.format( "Success: %b for deleting %s ", success, f.toString() ) );
