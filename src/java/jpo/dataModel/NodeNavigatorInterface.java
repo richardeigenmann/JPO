@@ -1,9 +1,5 @@
 package jpo.dataModel;
 
-import jpo.gui.*;
-import jpo.dataModel.*;
-
-
 /*
 NodeNavigatorInterface.java:  an interface that defines the methods that a class
 must implement so that the ThumbnailJScrollPane can identify the Thumbnails to be displayed.
@@ -29,6 +25,8 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  *   must implement so that the ThumbnailPanelController can identify the Thumbnails to be displayed.
  *   You probably want to extend ThumbnailBrowser instead of implementing
  *   NodeNavigatorInterface as that takes care of the listeners.
+ *
+ *  TODO: Perhaps we should also have a method for the current node?
  */
 public interface NodeNavigatorInterface {
 

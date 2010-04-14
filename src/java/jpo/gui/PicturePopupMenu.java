@@ -1,19 +1,19 @@
 package jpo.gui;
 
+import java.awt.Color;
 import jpo.dataModel.NodeNavigatorInterface;
 import jpo.dataModel.UserFunctionsChangeListener;
 import jpo.dataModel.Tools;
 import jpo.dataModel.CopyLocationsChangeListener;
 import jpo.dataModel.Settings;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
-
-import jpo.*;
 import jpo.dataModel.PictureInfo;
 import java.awt.event.*;
 import javax.swing.*;
 import java.io.*;
 import java.util.*;
 import java.util.logging.Logger;
+import javax.swing.border.Border;
 import jpo.dataModel.RecentDropNodeListener;
 
 /*
@@ -76,6 +76,8 @@ public class PicturePopupMenu
     /**
      * Constructor for the PicturePopupMenu where we do have a {@link PictureViewer} that should
      * receive the picture.
+     * TODO: Fix the wax this is being called because the whole business of
+     * figuring out whether this is a single node or multi node is silly
      *
      * @param  setOfNodes   The set of nodes from which the popup picture is coming
      * @param  idx		The picture of the set for which the popup is being shown.
@@ -85,9 +87,28 @@ public class PicturePopupMenu
         this.index = idx;
         this.popupNode = mySetOfNodes.getNode( index );
 
-        Settings.addRecentDropNodeListener( this );
-        Settings.addCopyLocationsChangeListener( this );
-        Settings.addUserFunctionsChangeListener( this );
+        // Title
+        String title = "Picture Popup Menu";
+        if ( ( Settings.pictureCollection.countSelectedNodes() > 1 ) && ( Settings.pictureCollection.isSelected( popupNode ) ) ) {
+            title = String.format( "%d nodes", Settings.pictureCollection.countSelectedNodes() );
+        } else {
+            Object uo = popupNode.getUserObject();
+            if ( uo instanceof PictureInfo ) {
+                title = ( (PictureInfo) uo ).getDescription();
+            }
+            if ( title.length() > 25 ) {
+                logger.info( String.format( "Length: %d", title.length() ) );
+                title = title.substring( 0, 25 ) + "...";
+                logger.info( String.format( "Length: %d", title.length() ) );
+            }
+
+        }
+
+        setLabel( title );
+        JMenuItem menuTitle = new JMenuItem( title );
+        menuTitle.setEnabled( false );
+        add( menuTitle );
+        addSeparator();
 
         // Show Picture button
         JMenuItem pictureShowJMenuItem = new JMenuItem( Settings.jpoResources.getString( "pictureShowJMenuItemLabel" ) );
@@ -648,9 +669,7 @@ public class PicturePopupMenu
      * The "Show Picture" menu button calls this function
      */
     private void requestShowPicture() {
-        //PictureViewer pictureViewer = new PictureViewer();
-        Jpo.browsePictures(  popupNode );
-        //pictureViewer.show( mySetOfNodes, index );
+        Jpo.browsePictures( popupNode );
     }
 
 
@@ -823,5 +842,35 @@ public class PicturePopupMenu
                 return;
             }
         }
+    }
+
+
+    /**
+     * Intercepting this method to attach the change listeners when the menu
+     * becomes visible so that they can also be removed when the menu goes away
+     * again.
+     */
+    @Override
+    protected void firePopupMenuWillBecomeVisible() {
+        logger.info( "Adding listeners" );
+        Settings.addRecentDropNodeListener( this );
+        Settings.addCopyLocationsChangeListener( this );
+        Settings.addUserFunctionsChangeListener( this );
+        super.firePopupMenuWillBecomeVisible();
+    }
+
+
+    /**
+     * Intercepting this method to attach the change listeners when the menu
+     * becomes visible so that they can also be removed when the menu goes away
+     * again.
+     */
+    @Override
+    protected void firePopupMenuWillBecomeInvisible() {
+        logger.info( "Removing Listeners" );
+        Settings.removeRecentDropNodeListener( this );
+        Settings.removeCopyLocationsChangeListener( this );
+        Settings.removeUserFunctionsChangeListener( this );
+        super.firePopupMenuWillBecomeInvisible();
     }
 }
