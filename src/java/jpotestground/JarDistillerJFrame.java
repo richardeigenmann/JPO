@@ -1,10 +1,8 @@
 package jpotestground;
 
-import jpo.gui.*;
 import jpo.dataModel.Tools;
 import jpo.dataModel.Settings;
 import jpo.*;
-import jpo.dataModel.JarDistiller;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
 import java.awt.*;
 import java.awt.event.*;

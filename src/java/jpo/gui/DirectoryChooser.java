@@ -1,12 +1,10 @@
 package jpo.gui;
 
 import jpo.dataModel.Settings;
-import jpo.*;
 import java.io.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.Vector;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -156,8 +154,6 @@ public class DirectoryChooser
         directoryChooserJButton.addActionListener( new ActionListener() {
 
             public void actionPerformed( ActionEvent e ) {
-                System.out.println( "clicked" );
-                logger.info( "Button clicked" );
                 JFileChooser jFileChooser = new JFileChooser();
                 jFileChooser.setFileSelectionMode( JFileChooser.DIRECTORIES_ONLY );
                 jFileChooser.setApproveButtonText( Settings.jpoResources.getString( "genericSelectText" ) );

@@ -1,6 +1,7 @@
 package jpo.dataModel;
 
 import java.io.File;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
@@ -25,6 +26,10 @@ public class PictureCollectionTest
      * Defines a logger for this class
      */
     private static Logger logger = Logger.getLogger(PictureCollectionTest.class.getName());
+
+    /**
+     * Let's have a nice little collection for some tests....
+     */
     PictureCollection pc;
     PictureInfo pi1 = new PictureInfo("/images/image1.jpg", "/lowresimages/image1lowres.jpg", "Picture 1", "Reference1");
     PictureInfo pi2 = new PictureInfo("/images/image1.jpg", "/lowresimages/image2lowres.jpg", "Picture 2", "Reference2");
@@ -259,7 +264,7 @@ public class PictureCollectionTest
      * In this test we want to see whether a change to an attribute in the picture results in a treeModel change event being 
      * fired
      */
-    public void testChangeNotification() {
+    public void testChangeNotification()  {
         nodeschanged = 0;
         nodesinserted = 0;
         nodesremoved = 0;
@@ -287,6 +292,11 @@ public class PictureCollectionTest
         Settings.pictureCollection = pc;
         assertEquals("Before updating the description we should have 0 nodes changed: ", 0, nodeschanged);
         pi1.setDescription("Changed Description");
+        try {
+            Thread.sleep( 80 );  // give the threads some time to do the notifications.
+        } catch ( InterruptedException ex ) {
+            Logger.getLogger( PictureCollectionTest.class.getName() ).log( Level.SEVERE, null, ex );
+        }
         assertEquals("After updating the description we should have 1 node changed: ", 1, nodeschanged);
         assertEquals("No nodes should have been inserted: ", 0, nodesinserted);
         assertEquals("No nodes should have been removed: ", 0, nodesremoved);

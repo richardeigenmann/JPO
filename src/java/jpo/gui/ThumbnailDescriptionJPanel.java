@@ -4,7 +4,6 @@ import jpo.gui.swing.NonFocussedCaret;
 import jpo.dataModel.Settings;
 import jpo.dataModel.GroupInfo;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
-import jpo.*;
 import jpo.dataModel.PictureInfoChangeEvent;
 import jpo.dataModel.PictureInfoChangeListener;
 import jpo.dataModel.PictureInfo;
@@ -57,17 +56,9 @@ public class ThumbnailDescriptionJPanel
     protected SortableDefaultMutableTreeNode referringNode;
 
     /**
-     *  The GridBagConstrains for this ThumbnailDescriptionJPanel which help to
-     *  position it in the panel
-     */
-    //protected GridBagConstraints c = new GridBagConstraints();
-    /**
      *  This object holds the description
      */
     private JTextArea pictureDescriptionJTA = new JTextArea();
-
-
-    ;
 
     /**
      *   This JScrollPane holds the JTextArea pictureDescriptionJTA so that it can have
@@ -121,7 +112,6 @@ public class ThumbnailDescriptionJPanel
      *   ThumbnailDescriptionJPanel.LARGE_DESCRIPTION,
      *   ThumbnailDescriptionJPanel.MINI_INFO,
      */
-    //private int displayMode = MINI_INFO;
     private int displayMode = LARGE_DESCRIPTION;
 
     /**
@@ -374,7 +364,7 @@ public class ThumbnailDescriptionJPanel
     /**
      *  returns the current node
      *
-     * @return
+     * @return the current node
      */
     public SortableDefaultMutableTreeNode getNode() {
         return referringNode;
@@ -385,38 +375,51 @@ public class ThumbnailDescriptionJPanel
      *  here we get notified by the PictureInfo object that something has
      *  changed.
      */
-    public void pictureInfoChangeEvent( PictureInfoChangeEvent e ) {
-        if ( e.getDescriptionChanged() ) {
-            pictureDescriptionJTA.setText( e.getPictureInfo().getDescription() );
+    public void pictureInfoChangeEvent( final PictureInfoChangeEvent e ) {
+        Runnable r = new Runnable() {
+
+            public void run() {
+                if ( e.getDescriptionChanged() ) {
+                    pictureDescriptionJTA.setText( e.getPictureInfo().getDescription() );
+                }
+
+                if ( e.getHighresLocationChanged() ) {
+                    highresLocationJTextField.setText( e.getPictureInfo().getHighresLocation() );
+                }
+
+                if ( e.getLowresLocationChanged() ) {
+                    lowresLocationJTextField.setText( e.getPictureInfo().getLowresLocation() );
+                }
+                /*		if ( e.getChecksumChanged() ) {
+                checksumJLabel.setText( Settings.jpoResources.getString("checksumJLabel") + pi.getChecksumAsString () );
+                }
+                if ( e.getCreationTimeChanged() ) {
+                creationTimeJTextField.setText( pi.getCreationTime () );
+                parsedCreationTimeJLabel.setText( pi.getFormattedCreationTime() );
+                }
+                if ( e.getFilmReferenceChanged() ) {
+                filmReferenceJTextField.setText( pi.getFilmReference() );
+                }
+                if ( e.getRotationChanged() ) {
+                rotationJTextField.setText( Double.toString( pi.getRotation() ) );
+                }
+                if ( e.getCommentChanged() ) {
+                commentJTextField.setText( pi.getComment() );
+                }
+                if ( e.getPhotographerChanged() ) {
+                photographerJTextField.setText( pi.getPhotographer() );
+                }
+                if ( e.getCopyrightHolderChanged() ) {
+                copyrightHolderJTextField.setText( pi.getCopyrightHolder() );
+                } */
+            }
+        };
+        if ( SwingUtilities.isEventDispatchThread() ) {
+            r.run();
+        } else {
+            SwingUtilities.invokeLater( r );
         }
-        if ( e.getHighresLocationChanged() ) {
-            highresLocationJTextField.setText( e.getPictureInfo().getHighresLocation() );
-        }
-        if ( e.getLowresLocationChanged() ) {
-            lowresLocationJTextField.setText( e.getPictureInfo().getLowresLocation() );
-        }
-        /*		if ( e.getChecksumChanged() ) {
-        checksumJLabel.setText( Settings.jpoResources.getString("checksumJLabel") + pi.getChecksumAsString () );
-        }
-        if ( e.getCreationTimeChanged() ) {
-        creationTimeJTextField.setText( pi.getCreationTime () );
-        parsedCreationTimeJLabel.setText( pi.getFormattedCreationTime() );
-        }
-        if ( e.getFilmReferenceChanged() ) {
-        filmReferenceJTextField.setText( pi.getFilmReference() );
-        }
-        if ( e.getRotationChanged() ) {
-        rotationJTextField.setText( Double.toString( pi.getRotation() ) );
-        }
-        if ( e.getCommentChanged() ) {
-        commentJTextField.setText( pi.getComment() );
-        }
-        if ( e.getPhotographerChanged() ) {
-        photographerJTextField.setText( pi.getPhotographer() );
-        }
-        if ( e.getCopyrightHolderChanged() ) {
-        copyrightHolderJTextField.setText( pi.getCopyrightHolder() );
-        } */
+
 
     }
 

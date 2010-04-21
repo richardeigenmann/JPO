@@ -39,12 +39,12 @@ public class PictureInfoChangeListenerTest
 
         ThumbnailController tc1 = getNewThumbnailController();
 
-        SingleNodeBrowser snb = new SingleNodeBrowser( node );
+        SingleNodeNavigator snb = new SingleNodeNavigator( node );
         tc1.setNode( snb, 0 );
         assertEquals( "The PictureInfo should now have 2 change listeners", 2, changeListeners.size() );
 
         SortableDefaultMutableTreeNode differentNode = new SortableDefaultMutableTreeNode( new PictureInfo() );
-        SingleNodeBrowser snb2 = new SingleNodeBrowser( differentNode );
+        SingleNodeNavigator snb2 = new SingleNodeNavigator( differentNode );
         tc1.setNode( snb2, 0 );
         assertEquals( "The PictureInfo should now have 1 change listeners", 1, changeListeners.size() );
 
@@ -75,7 +75,7 @@ public class PictureInfoChangeListenerTest
 
         ThumbnailController tc2 = getNewThumbnailController();
 
-        SingleNodeBrowser snb = new SingleNodeBrowser( node );
+        SingleNodeNavigator snb = new SingleNodeNavigator( node );
         tc2.setNode( snb, 0 );
         assertEquals( "The PictureInfo should now have 2 change listeners", 2, changeListeners.size() );
 

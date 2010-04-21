@@ -1105,6 +1105,8 @@ public class HtmlDistiller implements Runnable {
 
     /**
      *  Translates characters which are problematic into unproblematic characters
+     * @param string The filename to clean up
+     * @return The cleaned up filename
      */
     public static String cleanupFilename( String string ) {
         String returnString = string;
@@ -1184,7 +1186,7 @@ public class HtmlDistiller implements Runnable {
             returnString = returnString.replace( "/", "_" );
         }
         if ( returnString.contains( "\\" ) ) {
-            returnString = returnString.replaceAll( "\\", "_" );
+            returnString = returnString.replaceAll( "\\\\", "_" );
         }
         if ( returnString.contains( "%" ) ) {
             returnString = returnString.replace( "%", "_" );  //Important for this one to be at the end as the loading into JPO converts funny chars to %xx values

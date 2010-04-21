@@ -1,7 +1,6 @@
 package jpotestground;
 
 import jpo.gui.swing.ScreenHelper;
-import jpo.gui.*;
 import jpo.gui.swing.ResizableJFrame;
 import jpo.gui.swing.NonFocussedCaret;
 import jpo.dataModel.Settings;
@@ -42,10 +41,17 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 public class ResizableJFrameTest {
     
     /**
-     *  An entry point for standalone screen size testing.
+     * An entry point for standalone screen size testing.
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+      new ResizableJFrameTest();
+    }
+
+    /**
+     * Constructor for the test window
+     */
+    public ResizableJFrameTest() {
         // TODO code application logic here
         final ResizableJFrame rjf = new ResizableJFrame( "Title", true, new Dimension( 800, 600 ) );
         Settings.loadSettings();
@@ -153,5 +159,5 @@ public class ResizableJFrameTest {
         
         jta.setText( ScreenHelper.explainGraphicsEnvironment().toString() );
     }
-    
+
 }
