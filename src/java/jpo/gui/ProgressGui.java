@@ -59,11 +59,6 @@ public class ProgressGui
     private InterruptSemaphore interruptor = new InterruptSemaphore();
 
     /**
-     *  The string that should be shown after completion. Something like "12 pictures added".
-     */
-    private String doneString;
-
-    /**
      * how long the gui should show after it has finished.
      */
     private static final int timeout = 5 * 60 * 1000;
@@ -83,7 +78,7 @@ public class ProgressGui
      *
      */
     public ProgressGui( final int max, final String title, String doneString ) {
-        this.doneString = doneString;
+        setDoneString( doneString );
         Runnable r = new Runnable() {
 
             public void run() {
@@ -95,6 +90,22 @@ public class ProgressGui
         } else {
             SwingUtilities.invokeLater( r );
         }
+    }
+
+    /**
+     *  The string that should be shown after completion. Something like "12 pictures added".
+     *  Default is "Done."
+     */
+    private String doneString = "Done.";
+
+
+    /**
+     * Sets the text that will be shown when the processing is over.
+     * @param newDoneString The text to be shown when the processing is over
+     */
+    public void setDoneString( String newDoneString ) {
+        doneString = newDoneString;
+
     }
 
 

@@ -813,7 +813,7 @@ public class PicturePopupMenu
                 SortableDefaultMutableTreeNode nextChild =
                         (SortableDefaultMutableTreeNode) ( (SortableDefaultMutableTreeNode) popupNode.getParent() ).getChildAfter( popupNode );
 
-                popupNode.moveToNode( Settings.recentDropNodes[i] );
+                popupNode.moveToLastChild( Settings.recentDropNodes[i] );
                 Settings.memorizeGroupOfDropLocation( Settings.recentDropNodes[i] );
 
                 return;

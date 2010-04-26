@@ -739,9 +739,10 @@ public class Jpo
 
 
     /**
-     *  requests that a collection be added at this point in the tree
-     *  @param fileToLoad
-     * @see GroupPopupInterface
+     *  Requests that a collection be added at this point in the tree
+     *  @param popupNode The node at which to add
+     *  @param fileToLoad The collection file to load
+     *  @see GroupPopupInterface
      */
     public void requestAddCollection( SortableDefaultMutableTreeNode popupNode,
             File fileToLoad ) {

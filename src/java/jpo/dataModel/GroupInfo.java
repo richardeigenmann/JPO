@@ -1,6 +1,5 @@
 package jpo.dataModel;
 
-import jpo.*;
 import java.net.*;
 import java.io.*;
 import java.util.*;
@@ -11,7 +10,7 @@ import java.util.logging.Logger;
 /*
 GroupInfo.java:  definitions for the group objects
 
-Copyright (C) 2002 - 2009  Richard Eigenmann.
+Copyright (C) 2002 - 2010  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -374,5 +373,15 @@ public class GroupInfo
      */
     public Vector<GroupInfoChangeListener> getGroupInfoListeners() {
         return groupInfoListeners;
+    }
+
+
+    /**
+     *  Returns a new GroupInfo object which is identical to the current one.
+     *  @return  a clone of the current PictureInfo object.
+     */
+    public GroupInfo getClone() {
+        GroupInfo clone = new GroupInfo( this.getGroupName() );
+        return clone;
     }
 }

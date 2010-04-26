@@ -1,5 +1,6 @@
 package jpo.gui;
 
+import java.awt.datatransfer.Transferable;
 import jpo.dataModel.FlatGroupNavigator;
 import jpo.dataModel.Tools;
 import jpo.dataModel.Settings;
@@ -7,10 +8,8 @@ import jpo.gui.swing.CollectionJTree;
 import jpo.dataModel.GroupInfo;
 import jpo.dataModel.FlatFileDistiller;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
-import jpo.*;
 import jpo.dataModel.PictureInfo;
 import java.awt.*;
-import java.awt.dnd.*;
 import java.awt.event.*;
 import java.io.*;
 import java.util.logging.Logger;
@@ -21,7 +20,7 @@ import jpo.export.GenerateWebsiteWizard;
 /*
 CollectionJTreeController.java:  class that manages a JTree for the collection
  * 
-Copyright (C) 2002 - 2009 Richard Eigenmann, Zurich, Switzerland
+Copyright (C) 2002 - 2010 Richard Eigenmann, Zurich, Switzerland
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -40,9 +39,7 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  *   deals with most of the logic surrounding the collection and the user interactions with it.
  */
 public class CollectionJTreeController
-        implements DropTargetListener,
-        DragSourceListener,
-        DragGestureListener,
+        implements
         GroupPopupInterface {
 
     /**
@@ -72,6 +69,10 @@ public class CollectionJTreeController
             public void run() {
                 collectionJTree.setModel( Settings.pictureCollection.getTreeModel() );
                 collectionJTree.setEditable( true ); // doing this in the controller as it might not always be desired (like in the CameraDownloadWizard)
+                collectionJTree.getSelectionModel().setSelectionMode( TreeSelectionModel.SINGLE_TREE_SELECTION );
+                collectionJTree.setTransferHandler( new MyTransferHandler() );
+                collectionJTree.setDragEnabled( true );
+                collectionJTree.setDropMode( DropMode.ON_OR_INSERT );
                 // embed the JTree in a JScrollPane
                 collectionJScrollPane = new JScrollPane( collectionJTree );
                 collectionJScrollPane.setMinimumSize( Settings.jpoNavigatorJTabbedPaneMinimumSize );
@@ -84,26 +85,157 @@ public class CollectionJTreeController
             SwingUtilities.invokeLater( r );
         }
 
-        // set up drag & drop
-        dropTarget = new DropTarget( collectionJTree, this );
-        dragSource = DragSource.getDefaultDragSource();
-        dragSource.createDefaultDragGestureRecognizer( collectionJTree, DnDConstants.ACTION_COPY_OR_MOVE, this );
-
         //Add listener to components that can bring up groupPopupJPopupMenu menus.
         CollectionMouseAdapter mouseAdapter = new CollectionMouseAdapter( this );
         collectionJTree.addMouseListener( mouseAdapter );
 
     }
 
-    /**
-     * enables this component to be a dropTarget
-     */
-    DropTarget dropTarget = null;
+    private class MyTransferHandler
+            extends TransferHandler {
 
-    /**
-     * enables this component to be a Drag Source
-     */
-    DragSource dragSource = null;
+        /**
+         * This method is used to query what actions are supported by the source component
+         * @param c
+         * @return
+         */
+        @Override
+        public int getSourceActions( JComponent c ) {
+            return COPY_OR_MOVE;
+        }
+
+
+        /**
+         * This method bundles up the data to be exported into a Transferable object in preparation for the transfer.
+         * @param c
+         * @return a Treansferable
+         */
+        @Override
+        protected Transferable createTransferable( JComponent c ) {
+            TreePath selected = collectionJTree.getSelectionPath();
+            SortableDefaultMutableTreeNode dmtn = (SortableDefaultMutableTreeNode) selected.getLastPathComponent();
+            if ( dmtn.isRoot() ) {
+                logger.info( "The Root node must not be dragged. Dragging disabled." );
+                return null;
+            }
+            final Object t[] = { dmtn };
+            JpoTransferable draggedNode = new JpoTransferable( t );
+            return draggedNode;
+        }
+
+
+        /**
+         * This method is called repeatedly during a drag gesture and returns true if the
+         * area below the cursor can accept the transfer, or false if the transfer will be rejected.
+         * @param support
+         * @return
+         */
+        @Override
+        public boolean canImport( TransferSupport support ) {
+            return support.isDataFlavorSupported( JpoTransferable.jpoNodeFlavor );
+        }
+
+
+        /**
+         * This method is called on a successful drop (or paste) and initiates
+         * the transfer of data to the target component. This method returns
+         * true if the import was successful and false otherwise.
+         * @param support
+         * @return
+         */
+        @Override
+        public boolean importData( TransferSupport support ) {
+            JTree.DropLocation dropLocation = (JTree.DropLocation) support.getDropLocation();
+            SortableDefaultMutableTreeNode targetNode = (SortableDefaultMutableTreeNode) dropLocation.getPath().getLastPathComponent();
+            logger.info( String.format( "Choosing node %s as target for path %s, ChildIndex: %d", targetNode.toString(), dropLocation.getPath(), dropLocation.getChildIndex() ) );
+
+            int actionType = support.getDropAction();
+            if ( !( ( actionType == TransferHandler.COPY ) || ( actionType == TransferHandler.MOVE ) ) ) {
+                logger.info( String.format( "The event has an odd Action Type: %d. Drop rejected. Copy is %d; Move is %d", actionType, TransferHandler.COPY, TransferHandler.MOVE ) );
+                return false;
+            }
+
+            SortableDefaultMutableTreeNode sourceNode;
+            Object[] arrayOfNodes;
+
+            try {
+                Transferable t = support.getTransferable();
+                Object o = t.getTransferData( JpoTransferable.jpoNodeFlavor );
+                arrayOfNodes = (Object[]) o;
+            } catch ( java.awt.datatransfer.UnsupportedFlavorException x ) {
+                logger.info( "Caught an UnsupportedFlavorException: message: " + x.getMessage() );
+                return false;
+            } catch ( java.io.IOException x ) {
+                logger.info( "Caught an IOException: message: " + x.getMessage() );
+                return false;
+            } catch ( ClassCastException x ) {
+                logger.info( "Caught an ClassCastException: message: " + x.getMessage() );
+                return false;
+            }
+
+            /* We must ensure that if the action is a move it does not drop into
+            itself or into a child of itself. */
+            for ( int i = 0; i < arrayOfNodes.length; i++ ) {
+                sourceNode = (SortableDefaultMutableTreeNode) arrayOfNodes[i];
+                if ( targetNode.isNodeAncestor( sourceNode ) ) {
+                    JOptionPane.showMessageDialog( Settings.anchorFrame,
+                            Settings.jpoResources.getString( "moveNodeError" ),
+                            Settings.jpoResources.getString( "genericError" ),
+                            JOptionPane.ERROR_MESSAGE );
+                    return false;
+                }
+            }
+
+            // The drop is a valid one.
+
+            //  memorise the group of the drop location.
+            SortableDefaultMutableTreeNode groupOfDropLocation;
+            if ( targetNode.getUserObject() instanceof GroupInfo ) {
+                groupOfDropLocation = targetNode;
+            } else {
+                // the parent must be a group node
+                groupOfDropLocation = (SortableDefaultMutableTreeNode) targetNode.getParent();
+            }
+            if ( ( groupOfDropLocation != null ) && ( groupOfDropLocation.getUserObject() instanceof GroupInfo ) ) {
+                Settings.memorizeGroupOfDropLocation( groupOfDropLocation );
+            } else {
+                logger.info( "Failed to find the group of the drop location. Not memorizing." );
+            }
+
+
+            for ( int i = 0; i < arrayOfNodes.length; i++ ) {
+                sourceNode = (SortableDefaultMutableTreeNode) arrayOfNodes[i];
+                if ( actionType == TransferHandler.MOVE ) {
+                    if ( dropLocation.getChildIndex() == -1 ) {
+                        if ( targetNode.getUserObject() instanceof GroupInfo ) {
+                            // append to end of group if dropping on a group node
+                            sourceNode.moveToLastChild( targetNode );
+                        } else {
+                            // dropping on a PictureInfo
+                            sourceNode.moveBefore( targetNode );
+                        }
+                    } else {
+                        //index was supplied by the JTree notification
+                        sourceNode.moveToIndex( targetNode, dropLocation.getChildIndex() );
+                    }
+                } else {
+                    // Copy
+                    SortableDefaultMutableTreeNode cloneNode = sourceNode.getClone();
+                    if ( dropLocation.getChildIndex() == -1 ) {
+                        if ( targetNode.getUserObject() instanceof GroupInfo ) {
+                            targetNode.add( cloneNode );
+                        } else {
+                            // dropping onto a picture
+                            cloneNode.moveBefore( targetNode );
+                        }
+                    } else {
+                        cloneNode.moveToIndex( targetNode, dropLocation.getChildIndex() );
+                    }
+                }
+            }
+            return true;
+        }
+    }
 
     /**
      * The private reference to the JTree representing the collection
@@ -122,42 +254,43 @@ public class CollectionJTreeController
      */
     public JScrollPane getJScrollPane() {
         return collectionJScrollPane;
-    }
 
+
+    }
 
     /**
      *  callback method that is called when a drag gesture has been initiated on a node of the JTree.
      *  @param  event    The Drag and Drop Framework gives us details about the detected event in this parameter.
      *
-     */
+     *
     public void dragGestureRecognized( DragGestureEvent event ) {
-        if ( ( event.getDragAction() & DnDConstants.ACTION_COPY_OR_MOVE ) == 0 ) {
-            return;
-        }
-
-        TreePath selected = collectionJTree.getSelectionPath();
-        SortableDefaultMutableTreeNode dmtn = (SortableDefaultMutableTreeNode) selected.getLastPathComponent();
-        // logger.info("CollectionJTreeController.dragGestureRecognized: Drag started on node: " + dmtn.getUserObject().toString() );
-        if ( dmtn.isRoot() ) {
-            logger.info( "The Root node must not be dragged. Dragging disabled." );
-            return;
-        }
-        final Object t[] = { dmtn };
-        JpoTransferable draggedNode = new JpoTransferable( t );
-        event.startDrag( DragSource.DefaultMoveDrop, draggedNode, this );
+    if ( ( event.getDragAction() & DnDConstants.ACTION_COPY_OR_MOVE ) == 0 ) {
+    return;
     }
 
-
+    TreePath selected = collectionJTree.getSelectionPath();
+    SortableDefaultMutableTreeNode dmtn = (SortableDefaultMutableTreeNode) selected.getLastPathComponent();
+    // logger.info("CollectionJTreeController.dragGestureRecognized: Drag started on node: " + dmtn.getUserObject().toString() );
+    if ( dmtn.isRoot() ) {
+    logger.info( "The Root node must not be dragged. Dragging disabled." );
+    return;
+    }
+    final Object t[] = { dmtn };
+    JpoTransferable draggedNode = new JpoTransferable( t );
+    event.startDrag( DragSource.DefaultMoveDrop, draggedNode, this );
+    }*/
     /**
      *   this callback method is invoked every time something is
      *   dragged onto the JTree. We check if the desired DataFlavor is
      *   supported and then reject the drag if it is not.
      * @param event
-     */
+     *
     public void dragEnter( DropTargetDragEvent event ) {
-        if ( !event.isDataFlavorSupported( JpoTransferable.dmtnFlavor ) ) {
-            event.rejectDrag();
-        }
+    if ( !event.isDataFlavorSupported( JpoTransferable.jpoNodeFlavor ) ) {
+    event.rejectDrag();
+
+
+    }
     }
 
 
@@ -168,10 +301,12 @@ public class CollectionJTreeController
      *  whether a copy, move or no drop is possible.
      *
      * @param event
-     */
+     *
     public void dragEnter( DragSourceDragEvent event ) {
-        //logger.info( "CollectionJTreeController.dragEnter(DragSourceDragEvent): invoked");
-        Tools.setDragCursor( event );
+    //logger.info( "CollectionJTreeController.dragEnter(DragSourceDragEvent): invoked");
+    Tools.setDragCursor( event );
+
+
     }
 
 
@@ -181,25 +316,35 @@ public class CollectionJTreeController
      *   supported and then reject the drag if it is not.
      *
      * @param event
-     */
+     *
     public void dragOver( DropTargetDragEvent event ) {
-        //logger.info("CollectionJTreeController.dragOver (DropTargetDragEvent) triggered");
-        if ( !event.isDataFlavorSupported( JpoTransferable.dmtnFlavor ) ) {
-            //logger.info("CollectionJTree.dragOver (DropTargetDragEvent): The dmtn DataFlavor is not supported. Rejecting drag.");
-            event.rejectDrag();
-        } else {
-            // figure out where the cursor is and highlight the node by setting the selection path
-            TreePath popupPath = collectionJTree.getPathForLocation( event.getLocation().x, event.getLocation().y );
-            if ( popupPath != null ) {
-                event.acceptDrag( DnDConstants.ACTION_COPY_OR_MOVE );
-                //popupNode = (SortableDefaultMutableTreeNode) popupPath.getLastPathComponent();
-                collectionJTree.setSelectionPath( popupPath );
-            } else {
-                //logger.info("CollectionJTreeController.dragOver( DropTargetDragEvent ): the coordinates returned by the event do not match a selectable path." );
-                event.rejectDrag();
-            }
-        }
-        autoscroll( (JTree) event.getDropTargetContext().getComponent(), event.getLocation() );
+    //logger.info("CollectionJTreeController.dragOver (DropTargetDragEvent) triggered");
+    if ( !event.isDataFlavorSupported( JpoTransferable.jpoNodeFlavor ) ) {
+    //logger.info("CollectionJTree.dragOver (DropTargetDragEvent): The dmtn DataFlavor is not supported. Rejecting drag.");
+    event.rejectDrag();
+
+
+    } else {
+    // figure out where the cursor is and highlight the node by setting the selection path
+    TreePath popupPath = collectionJTree.getPathForLocation( event.getLocation().x, event.getLocation().y );
+
+
+    if ( popupPath != null ) {
+    event.acceptDrag( DnDConstants.ACTION_COPY_OR_MOVE );
+    //popupNode = (SortableDefaultMutableTreeNode) popupPath.getLastPathComponent();
+    collectionJTree.setSelectionPath( popupPath );
+
+
+    } else {
+    //logger.info("CollectionJTreeController.dragOver( DropTargetDragEvent ): the coordinates returned by the event do not match a selectable path." );
+    event.rejectDrag();
+
+
+    }
+    }
+    autoscroll( (JTree) event.getDropTargetContext().getComponent(), event.getLocation() );
+
+
     }
 
     /** insets for autoscroll */
@@ -208,6 +353,8 @@ public class CollectionJTreeController
 
     private Insets getAutoscrollInsets() {
         return autoscrollInsets;
+
+
     }
 
 
@@ -224,6 +371,8 @@ public class CollectionJTreeController
                 outer.y + insets.top,
                 outer.width - ( insets.left + insets.right ),
                 outer.height - ( insets.top + insets.bottom ) );
+
+
         if ( !inner.contains( cursorLocation ) ) {
             Rectangle scrollRect = new Rectangle(
                     cursorLocation.x - insets.left,
@@ -231,6 +380,8 @@ public class CollectionJTreeController
                     insets.left + insets.right,
                     insets.top + insets.bottom );
             tree.scrollRectToVisible( scrollRect );
+
+
         }
     }
 
@@ -242,10 +393,12 @@ public class CollectionJTreeController
      *  whether a copy, move or no drop is possible.
      *
      * @param event
-     */
+     *
     public void dragOver( DragSourceDragEvent event ) {
-        //logger.info("CollectionJTreeController.dragOver(DragSourceDragEvent) invoked");
-        Tools.setDragCursor( event );
+    //logger.info("CollectionJTreeController.dragOver(DragSourceDragEvent) invoked");
+    Tools.setDragCursor( event );
+
+
     }
 
 
@@ -257,21 +410,31 @@ public class CollectionJTreeController
      *  Here we use this as a convenient handle to expand and collapse the Tree.
      *
      * @param event
-     */
+     *
     public void dropActionChanged( DropTargetDragEvent event ) {
-        // figure out where the cursor is and highlight the node
-        TreePath popupPath = collectionJTree.getPathForLocation( event.getLocation().x, event.getLocation().y );
-        if ( popupPath != null ) {
-            SortableDefaultMutableTreeNode myPopupNode = (SortableDefaultMutableTreeNode) popupPath.getLastPathComponent();
-            logger.info( "CollectionJTree.dropActionChanged( DropTargetDragEvent ): hovering over: " + myPopupNode.getUserObject().toString() );
-            if ( collectionJTree.isExpanded( popupPath ) ) {
-                collectionJTree.collapsePath( popupPath );
-            } else {
-                collectionJTree.expandPath( popupPath );
-            }
-        } else {
-            logger.info( "CollectionJTree.dropActionChanged( DropTargetDragEvent ): the coordinates returned by the event do not match a selectable path." );
-        }
+    // figure out where the cursor is and highlight the node
+    TreePath popupPath = collectionJTree.getPathForLocation( event.getLocation().x, event.getLocation().y );
+
+
+    if ( popupPath != null ) {
+    SortableDefaultMutableTreeNode myPopupNode = (SortableDefaultMutableTreeNode) popupPath.getLastPathComponent();
+    logger.info( "CollectionJTree.dropActionChanged( DropTargetDragEvent ): hovering over: " + myPopupNode.getUserObject().toString() );
+
+
+    if ( collectionJTree.isExpanded( popupPath ) ) {
+    collectionJTree.collapsePath( popupPath );
+
+
+    } else {
+    collectionJTree.expandPath( popupPath );
+
+
+    }
+    } else {
+    logger.info( "CollectionJTree.dropActionChanged( DropTargetDragEvent ): the coordinates returned by the event do not match a selectable path." );
+
+
+    }
     }
 
 
@@ -281,10 +444,12 @@ public class CollectionJTreeController
      *  operation. This method changes the cursor to reflect the mode of the
      *  operation.
      * @param event
-     */
+     *
     public void dropActionChanged( DragSourceDragEvent event ) {
-        //logger.info( "CollectionJTreeController.dropActionChanged( DragSourceDragEvent ): invoked");
-        Tools.setDragCursor( event );
+    //logger.info( "CollectionJTreeController.dropActionChanged( DragSourceDragEvent ): invoked");
+    Tools.setDragCursor( event );
+
+
     }
 
 
@@ -292,9 +457,9 @@ public class CollectionJTreeController
      *   this callback method is invoked to tell the dropTarget that the drag has moved on
      *   to something else. We do nothing here.
      * @param event
-     */
+     *
     public void dragExit( DropTargetEvent event ) {
-        //logger.info("CollectionJTreeController.dragExit( DropTargetEvent ): invoked");
+    //logger.info("CollectionJTreeController.dragExit( DropTargetEvent ): invoked");
     }
 
 
@@ -302,7 +467,7 @@ public class CollectionJTreeController
      *   this callback method is invoked to tell the dragSource that the drag has moved on
      *   to something else. We do nothing here.
      * @param event
-     */
+     *
     public void dragExit( DragSourceEvent event ) {
     }
 
@@ -311,18 +476,26 @@ public class CollectionJTreeController
      *  Entry point for the drop event. Figures out which node the drop occured on and
      *  sorts out the drop action in the data model.
      * @param event
-     */
+     *
     public void drop( DropTargetDropEvent event ) {
-        Point p = event.getLocation();
-        TreePath targetPath = collectionJTree.getPathForLocation( p.x, p.y );
-        if ( targetPath == null ) {
-            logger.info( "CollectionJTree.drop(DropTargetDropEvent): The drop coordinates do not specify a node. Drop aborted." );
-            event.dropComplete( false );
-            return;
-        } else {
-            SortableDefaultMutableTreeNode targetNode = (SortableDefaultMutableTreeNode) targetPath.getLastPathComponent();
-            targetNode.executeDrop( event );
-        }
+    Point p = event.getLocation();
+    TreePath targetPath = collectionJTree.getPathForLocation( p.x, p.y );
+
+
+    if ( targetPath == null ) {
+    logger.info( "CollectionJTree.drop(DropTargetDropEvent): The drop coordinates do not specify a node. Drop aborted." );
+    event.dropComplete( false );
+
+
+    return;
+
+
+    } else {
+    SortableDefaultMutableTreeNode targetNode = (SortableDefaultMutableTreeNode) targetPath.getLastPathComponent();
+    targetNode.executeDrop( event );
+
+
+    }
     }
 
 
@@ -331,7 +504,7 @@ public class CollectionJTreeController
      * has ended.
      *
      * @param event
-     */
+     *
     public void dragDropEnd( DragSourceDropEvent event ) {
     }
 
@@ -345,6 +518,8 @@ public class CollectionJTreeController
     public void requestShowGroup( SortableDefaultMutableTreeNode newNode ) {
         logger.fine( "requesting node: " + newNode.toString() );
         Jpo.positionToNode( newNode );
+
+
     }
 
 
@@ -354,19 +529,26 @@ public class CollectionJTreeController
      *  @param newNode  The node which should be highlighted
      */
     public void setSelectedNode( final SortableDefaultMutableTreeNode newNode ) {
-
         Runnable r = new Runnable() {
 
             public void run() {
                 TreePath tp = new TreePath( newNode.getPath() );
                 collectionJTree.setSelectionPath( tp );
                 collectionJTree.scrollPathToVisible( tp );
+
+
             }
         };
+
+
         if ( SwingUtilities.isEventDispatchThread() ) {
             r.run();
+
+
         } else {
             SwingUtilities.invokeLater( r );
+
+
         }
     }
 
@@ -378,6 +560,8 @@ public class CollectionJTreeController
      */
     public void requestSlideshow( SortableDefaultMutableTreeNode popupNode ) {
         Jpo.browsePictures( popupNode );
+
+
     }
 
 
@@ -389,34 +573,46 @@ public class CollectionJTreeController
      */
     public void requestFind( SortableDefaultMutableTreeNode popupNode ) {
         new QueryJFrame( popupNode, collectionController );
+
+
     }
 
 
     /**
      *  this method invokes an editor for the GroupInfo data
-     *  @see  GroupPopupInterface
+     *  @param popupNode
+     * @see  GroupPopupInterface
      */
     public void requestEditGroupNode( SortableDefaultMutableTreeNode popupNode ) {
         TreeNodeController.showEditGUI( popupNode );
+
+
     }
 
 
     /**
      *  this method invokes the Category editor and allows the user to set the categories for all the pictures in the Group.
+     * @param popupNode
      */
     public void showCategoryUsageGUI( SortableDefaultMutableTreeNode popupNode ) {
         TreeNodeController.showCategoryUsageGUI( popupNode );
+
+
     }
 
 
     /**
      *  requests a new empty group to be added.
-     *  @see  GroupPopupInterface
+     *  @param popupNode
+     * @see  GroupPopupInterface
      */
     public void requestAddGroup( SortableDefaultMutableTreeNode popupNode ) {
         SortableDefaultMutableTreeNode newNode = popupNode.addGroupNode( "New Group" );
         Settings.memorizeGroupOfDropLocation( newNode );
-        setSelectedNode( newNode );
+        setSelectedNode(
+                newNode );
+
+
     }
 
 
@@ -428,6 +624,8 @@ public class CollectionJTreeController
     public void chooseAndAddPicturesToGroup(
             SortableDefaultMutableTreeNode groupNode ) {
         collectionController.chooseAndAddPicturesToGroup( groupNode );
+
+
     }
 
 
@@ -438,8 +636,12 @@ public class CollectionJTreeController
      */
     public void requestAddCollection( SortableDefaultMutableTreeNode popupNode ) {
         File fileToLoad = Tools.chooseXmlFile();
+
+
         if ( fileToLoad != null ) {
             requestAddCollection( popupNode, fileToLoad );
+
+
         }
     }
 
@@ -447,6 +649,8 @@ public class CollectionJTreeController
     public void requestAddCollection( SortableDefaultMutableTreeNode popupNode,
             File fileToLoad ) {
         collectionController.requestAddCollection( popupNode, fileToLoad );
+
+
     }
 
 
@@ -458,10 +662,14 @@ public class CollectionJTreeController
     /**
      *  method that will bring up a dialog box that allows the user to select how he wants
      *  to export the pictures of the current Group.
-     **/
+     *
+     * @param popupNode
+     */
     public void requestGroupExportHtml( SortableDefaultMutableTreeNode popupNode ) {
         // new HtmlDistillerJFrame( myPopupNode );
         new GenerateWebsiteWizard( popupNode );
+
+
     }
 
 
@@ -478,10 +686,18 @@ public class CollectionJTreeController
         jFileChooser.setApproveButtonText( Settings.jpoResources.getString( "saveFlatFileButtonLabel" ) );
         jFileChooser.setCurrentDirectory( Settings.getMostRecentCopyLocation() );
 
+
+
         int returnVal = jFileChooser.showSaveDialog( Settings.anchorFrame );
+
+
         if ( returnVal == JFileChooser.APPROVE_OPTION ) {
             File chosenFile = jFileChooser.getSelectedFile();
+
+
             new FlatFileDistiller( chosenFile, popupNode );
+
+
         }
 
     }
@@ -503,18 +719,25 @@ public class CollectionJTreeController
     public void requestGroupExportNewCollection(
             SortableDefaultMutableTreeNode popupNode ) {
         new CollectionDistillerJFrame( popupNode );
+
+
     }
 
 
     /**
      *  requests that a group be removed
-     *  @see  GroupPopupInterface
+     *  @param popupNode
+     * @see  GroupPopupInterface
      */
     public void requestGroupRemove( SortableDefaultMutableTreeNode popupNode ) {
         logger.fine( "CollectionJTree.requestGroupRemove: invoked on group: " + popupNode.getUserObject().toString() );
         SortableDefaultMutableTreeNode parentNode = (SortableDefaultMutableTreeNode) popupNode.getParent();
+
+
         if ( popupNode.deleteNode() ) {
             setSelectedNode( parentNode );
+
+
         }
     }
 
@@ -527,6 +750,8 @@ public class CollectionJTreeController
     public void requestConsolidateGroup(
             SortableDefaultMutableTreeNode popupNode ) {
         new ConsolidateGroupJFrame( popupNode );
+
+
     }
 
 
@@ -537,6 +762,8 @@ public class CollectionJTreeController
      */
     public void requestMoveGroupToTop( SortableDefaultMutableTreeNode popupNode ) {
         popupNode.moveNodeToTop();
+
+
     }
 
 
@@ -547,6 +774,8 @@ public class CollectionJTreeController
      */
     public void requestMoveGroupUp( SortableDefaultMutableTreeNode popupNode ) {
         popupNode.moveNodeUp();
+
+
     }
 
 
@@ -557,6 +786,8 @@ public class CollectionJTreeController
      */
     public void requestMoveGroupDown( SortableDefaultMutableTreeNode popupNode ) {
         popupNode.moveNodeDown();
+
+
     }
 
 
@@ -568,6 +799,8 @@ public class CollectionJTreeController
     public void requestMoveGroupToBottom(
             SortableDefaultMutableTreeNode popupNode ) {
         popupNode.moveNodeToBottom();
+
+
     }
 
 
@@ -578,7 +811,9 @@ public class CollectionJTreeController
      */
     public void requestMoveToNode( SortableDefaultMutableTreeNode popupNode,
             SortableDefaultMutableTreeNode targetGroup ) {
-        popupNode.moveToNode( targetGroup );
+        popupNode.moveToLastChild( targetGroup );
+
+
     }
 
 
@@ -590,6 +825,8 @@ public class CollectionJTreeController
         TableJFrame tableJFrame = new TableJFrame( popupNode );
         tableJFrame.pack();
         tableJFrame.setVisible( true );
+
+
     }
 
 
@@ -602,6 +839,16 @@ public class CollectionJTreeController
         //logger.info( "Sort requested on " + myPopupNode.toString() + " for Criteria: " + Integer.toString( sortCriteria ) );
         popupNode.sortChildren( sortCriteria );
         //( (DefaultTreeModel) collectionJTree.getModel() ).nodeStructureChanged( myPopupNode );
+
+
+
+
+
+
+
+
+
+
     }
 
     /**

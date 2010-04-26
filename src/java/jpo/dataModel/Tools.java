@@ -12,17 +12,14 @@ import javax.imageio.stream.*;
 import java.text.*;
 import javax.swing.WindowConstants.*;
 import java.awt.*;
-import java.util.logging.FileHandler;
-import java.util.logging.Handler;
 import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
-import java.util.logging.Formatter;
+import jpo.export.HtmlDistiller;
 
 
 /*
 Tools.java:  utilities for the JPO application
  *
-Copyright (C) 2002-2009  Richard Eigenmann.
+Copyright (C) 2002-2010  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -60,6 +57,161 @@ public class Tools {
         s = s.replaceAll( "\"", "&quot;" );
         s = s.replaceAll( "'", "&apos;" );
         return s;
+    }
+
+
+    /**
+     *  Translates characters which are problematic in a filename into unproblematic characters
+     * @param string The filename to clean up
+     * @return The cleaned up filename
+     */
+    public static String cleanupFilename( String string ) {
+        String returnString = string;
+        if ( returnString.contains( " " ) ) {
+            returnString = returnString.replaceAll( " ", "_" );  // replace blank with underscore
+        }
+        if ( returnString.contains( "%20" ) ) {
+            returnString = returnString.replaceAll( "%20", "_" );  // replace blank with underscore
+        }
+        if ( returnString.contains( "&" ) ) {
+            returnString = returnString.replace( "&", "_and_" );  // replace ampersand with _and_
+        }
+        if ( returnString.contains( "|" ) ) {
+            returnString = returnString.replace( "|", "l" );  // replace pipe with lowercase L
+        }
+        if ( returnString.contains( "<" ) ) {
+            returnString = returnString.replace( "<", "_" );
+        }
+        if ( returnString.contains( ">" ) ) {
+            returnString = returnString.replace( ">", "_" );
+        }
+        if ( returnString.contains( "@" ) ) {
+            returnString = returnString.replace( "@", "_" );
+        }
+        if ( returnString.contains( ":" ) ) {
+            returnString = returnString.replace( ":", "_" );
+        }
+        if ( returnString.contains( "$" ) ) {
+            returnString = returnString.replace( "$", "_" );
+        }
+        if ( returnString.contains( "£" ) ) {
+            returnString = returnString.replace( "£", "_" );
+        }
+        if ( returnString.contains( "^" ) ) {
+            returnString = returnString.replace( "^", "_" );
+        }
+        if ( returnString.contains( "~" ) ) {
+            returnString = returnString.replace( "~", "_" );
+        }
+        if ( returnString.contains( "\"" ) ) {
+            returnString = returnString.replace( "\"", "_" );
+        }
+        if ( returnString.contains( "'" ) ) {
+            returnString = returnString.replace( "'", "_" );
+        }
+        if ( returnString.contains( "`" ) ) {
+            returnString = returnString.replace( "`", "_" );
+        }
+        if ( returnString.contains( "?" ) ) {
+            returnString = returnString.replace( "?", "_" );
+        }
+        if ( returnString.contains( "[" ) ) {
+            returnString = returnString.replace( "[", "_" );
+        }
+        if ( returnString.contains( "]" ) ) {
+            returnString = returnString.replace( "]", "_" );
+        }
+        if ( returnString.contains( "{" ) ) {
+            returnString = returnString.replace( "{", "_" );
+        }
+        if ( returnString.contains( "}" ) ) {
+            returnString = returnString.replace( "}", "_" );
+        }
+        if ( returnString.contains( "(" ) ) {
+            returnString = returnString.replace( "(", "_" );
+        }
+        if ( returnString.contains( ")" ) ) {
+            returnString = returnString.replace( ")", "_" );
+        }
+        if ( returnString.contains( "*" ) ) {
+            returnString = returnString.replace( "*", "_" );
+        }
+        if ( returnString.contains( "+" ) ) {
+            returnString = returnString.replace( "+", "_" );
+        }
+        if ( returnString.contains( "/" ) ) {
+            returnString = returnString.replace( "/", "_" );
+        }
+        if ( returnString.contains( "\\" ) ) {
+            returnString = returnString.replaceAll( "\\\\", "_" );
+        }
+        if ( returnString.contains( "%" ) ) {
+            returnString = returnString.replace( "%", "_" );  //Important for this one to be at the end as the loading into JPO converts funny chars to %xx values
+        }
+
+        return returnString;
+    }
+
+
+    /**
+     *  This method converts the special characters to codes that HTML can deal with.
+     *  Taken from http://www.rgagnon.com/javadetails/java-0306.html
+     * @param string String to check
+     * @return  clensed string
+     */
+    public static String stringToHTMLString( String string ) {
+        StringBuffer sb = new StringBuffer( string.length() );
+        // true if last char was blank
+        boolean lastWasBlankChar = false;
+        int len = string.length();
+        char c;
+
+        for ( int i = 0; i < len; i++ ) {
+            c = string.charAt( i );
+            if ( c == ' ' ) {
+                // blank gets extra work,
+                // this solves the problem you get if you replace all
+                // blanks with &nbsp;, if you do that you loss
+                // word breaking
+                if ( lastWasBlankChar ) {
+                    lastWasBlankChar = false;
+                    sb.append( "&nbsp;" );
+                } else {
+                    lastWasBlankChar = true;
+                    sb.append( ' ' );
+                }
+            } else {
+                lastWasBlankChar = false;
+                //
+                // HTML Special Chars
+                if ( c == '"' ) {
+                    sb.append( "&quot;" );
+                } else if ( c == '&' ) {
+                    sb.append( "&amp;" );
+                } else if ( c == '<' ) {
+                    sb.append( "&lt;" );
+                } else if ( c == '>' ) {
+                    sb.append( "&gt;" );
+                } else if ( c == '\n' ) // Handle Newline
+                {
+                    sb.append( "&lt;br/&gt;" );
+                } else {
+                    int ci = 0xffff & c;
+                    if ( ci < 160 ) // nothing special only 7 Bit
+                    {
+                        sb.append( c );
+                    } else {
+                        // Not 7 Bit use the unicode system
+                        sb.append( "&#" );
+                        sb.append( new Integer( ci ).toString() );
+                        sb.append( ';' );
+                    }
+                }
+
+
+            }
+        }
+        return sb.toString();
     }
 
 
@@ -173,6 +325,29 @@ public class Tools {
             }
         }
         return numFiles;
+    }
+
+
+    /**
+     *  Returns the the total number of nodes belonging to the indicated node.
+     *  @param startNode	The node from which the count shall begin.
+     *  @return The number of Nodes.
+     */
+    public static int countNodes( SortableDefaultMutableTreeNode startNode ) {
+        int count = 1;
+
+        Enumeration kids = startNode.children();
+        SortableDefaultMutableTreeNode n;
+
+        while ( kids.hasMoreElements() ) {
+            n = (SortableDefaultMutableTreeNode) kids.nextElement();
+            if ( n.getChildCount() > 0 ) {
+                count += countNodes( n );
+            } else {
+                count++;
+            }
+        }
+        return count;
     }
 
     /**
@@ -455,15 +630,6 @@ public class Tools {
 
 
     /**
-     *   count the number of pictures in a subtree. Useful for progress monitors.
-     *
-    public static int countPictures( DefaultMutableTreeNode startNode ) {
-    return countPictures( startNode, true );
-    }/*
-
-
-
-    /**
      * Converts a long value into a human readable size such a 245 B, 15 KB, 3 MB, 85 GB, 2 TB
      * @param size
      * @return
@@ -517,49 +683,9 @@ public class Tools {
     /**
      *  writer that gets the debug output if there is any to be written
      */
-    //public static BufferedWriter logfile;
     private static Logger log = Logger.getLogger( Tools.class.getName() );
 
 
-    /**
-     *  writes a message to the logfile. There are several things that can go wrong here:
-     *  The logfile path can be totally messed up i.e. not a valid filename. It could be
-     *  non writable. In this case the error is reported and the log is shown on the screen.
-     * @param message
-     * TODO: Remove all this stuff and get rid of the Settings.writeLog stuff
-    public static synchronized void log( String message ) {
-    if ( Settings.writeLog ) {
-    try {
-    //if ( ( logfile == null ) && ( Settings.writeLog ) ) {
-    if ( Settings.writeLog ) {
-    //logfile = new BufferedWriter( new FileWriter( Settings.logfile, true ) );
-    Formatter f = new SimpleFormatter();
-    Handler fh = new FileHandler( Settings.logfile.getCanonicalPath(), true );
-    fh.setFormatter( f );
-    Logger.getLogger( "" ).addHandler( fh );
-    }
-    //logfile.write( message );
-    //logfile.newLine();
-    //logfile.flush();
-    log.info( message );
-    } catch ( IOException x ) {
-    System.err.println( message );
-    }
-    }
-    }*/
-    /**
-     *  proper way to close the logfile
-     *
-    public static void closeLogfile() {
-    try {
-    if ( logfile != null ) {
-    logfile.close();
-    logfile = null;
-    }
-    } catch ( IOException x ) {
-    // could not close the logfile; so what?
-    }
-    }*/
     /**
      *   method that returns a file handle for a picture that does not exist in the target 
      *   directory. It tries the combination of path and name first and then tries to 
@@ -933,6 +1059,45 @@ public class Tools {
     public static void checkEDT() {
         if ( !SwingUtilities.isEventDispatchThread() ) {
             throw new Error( "Not on EDT!" );
+        }
+    }
+
+
+    /**
+     * Writes the contents of the specified text file which we have packaged in
+     * the jar of the distribution to a File. Usefull for stylesheets, dtd and
+     * robots.txt.
+     * @param fileInJar The name of the file in the jar
+     * @param targetDir The target directory
+     * @param targetFilename the target filename
+     * //TODO is specific to HtmlDistiller at the moment.
+     */
+    public static void copyFromJarToFile( String fileInJar, File targetDir,
+            String targetFilename ) {
+        logger.info( String.format( "Copying File %s from classpath %s to filename %s in directory %s", fileInJar, HtmlDistiller.class.toString() ,targetFilename, targetDir ) );
+        String textLine;
+        try {
+            InputStream in = HtmlDistiller.class.getResourceAsStream( fileInJar );
+            BufferedReader bin = new BufferedReader( new InputStreamReader( in ) );
+            FileOutputStream out = new FileOutputStream( new File( targetDir, targetFilename ) );
+            OutputStreamWriter osw = new OutputStreamWriter( out );
+            BufferedWriter bout = new BufferedWriter( osw );
+            while ( ( textLine = bin.readLine() ) != null ) {
+                bout.write( textLine );
+                bout.newLine();
+            }
+            bout.flush();
+            bout.close();
+            osw.close();
+            out.close();
+            bin.close();
+            in.close();
+        } catch ( IOException x ) {
+            JOptionPane.showMessageDialog(
+                    Settings.anchorFrame,
+                    Settings.jpoResources.getString( "CssCopyError" ) + targetFilename + "\n" + x.getMessage(),
+                    Settings.jpoResources.getString( "genericWarning" ),
+                    JOptionPane.ERROR_MESSAGE );
         }
     }
 }

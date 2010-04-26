@@ -1,7 +1,7 @@
 package jpo.gui;
 
+import java.awt.Image;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
-import jpo.*;
 import jpo.dataModel.PictureInfo;
 import java.awt.datatransfer.*;
 import java.io.*;
@@ -11,7 +11,7 @@ import java.util.logging.Logger;
 /*
 JpoTransferable.java:  a transferable to drag and drop nodes of the Jpo application
 
-Copyright (C) 2002 - 2009  Richard Eigenmann.
+Copyright (C) 2002 - 2010  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -37,207 +37,228 @@ public class JpoTransferable
      */
     private static Logger logger = Logger.getLogger( JpoTransferable.class.getName() );
 
-    /**
-     *   This is the reference to the node that is being transferred
-     */
-    private Object[] dmtn;
 
     /**
-     *   holds the hash code of the original object.
-     */
-    private int originalHashCode;
-
-
-    /**
-     *  Constructor
+     *  Constructs a JpoTransferable
      *
-     *  @param dmtn  The SortableDefaultMutableTreeNode to be transferred
+     *  @param transferableNodes  The nodes to be transferred
      **/
-    public JpoTransferable( Object[] dmtn ) {
-        this.dmtn = dmtn;
-        originalHashCode = java.util.Arrays.hashCode( dmtn );
+    public JpoTransferable( Object[] transferableNodes ) {
+        logger.fine( String.format( "A Transferable has been created with %d nodes", transferableNodes.length ) );
+        this.transferableNodes = transferableNodes;
+        //originalHashCode = java.util.Arrays.hashCode( transferableNodes );
     }
 
     /**
-     *  Definition of the data flavor for the nodes.
+     *  The nodes being transferred
      */
-    public static DataFlavor dmtnFlavor = null;
-
-
-    static {
-        try {
-            dmtnFlavor = new DataFlavor( Object.class, "JpoTransferable" );
-        } catch ( Exception e ) {
-            logger.fine( "Failed to initialize: " + e.getMessage() );
-        }
-    }
+    private Object[] transferableNodes;
 
     /**
-     *  Definition of the data flavor for the nodes.
+     *  Definition of the data flavor as a jpo internal object
      */
-    public static DataFlavor jpegImage = null;
-
-
-    static {
-        try {
-            jpegImage = new DataFlavor( "image/jpeg" );
-        } catch ( Exception e ) {
-            logger.fine( "Failed to initialize: " + e.getMessage() );
-        }
-    }
+    public static final DataFlavor jpoNodeFlavor = new DataFlavor( Object.class, "JpoTransferable" );
 
     /**
      *  Definition of the data flavor for the original hash code.
      */
-    public static DataFlavor originalHashCodeFlavor = null;
-
-
-    ;
-
-
-    static {
-        try {
-            originalHashCodeFlavor = new DataFlavor( Integer.class, "OriginalHashCodeFlavor" );
-        } catch ( Exception e ) {
-            logger.fine( "Failed to initialize: " + e.getMessage() );
-        }
-    }
-
-    /**
-     *  Definition of the data flavor for String.
-     */
-    public static final DataFlavor stringFlavor = DataFlavor.stringFlavor;
-
-    /**
-     *  Definition of the data flavor for File List.
-     */
-    public static final DataFlavor javaFileListFlavor = DataFlavor.javaFileListFlavor;
+    public static final DataFlavor originalHashCodeFlavor = new DataFlavor( Integer.class, "OriginalHashCodeFlavor" );
 
     /**
      *   Definition of the data flavours supported by this Transferrable.
      */
     private static final DataFlavor[] flavors = {
-        //DataFlavor.imageFlavor,
-        //jpegImage,
-        javaFileListFlavor,
-        JpoTransferable.dmtnFlavor
-    //JpoTransferable.originalHashCodeFlavor
-    // JpoTransferable.stringFlavor
+        jpoNodeFlavor,
+        DataFlavor.imageFlavor,
+        DataFlavor.javaFileListFlavor,
+        DataFlavor.stringFlavor
     };
 
 
     /**
-     *   Returns the supported flavours.
-     * @return
+     * Returns a well formated description of the supported transferrables
+     * @return a well formated description of the supported transferrables
      */
-    public DataFlavor[] getTransferDataFlavors() {
-        //logger.info("JpoTransferabe.getTransferDataFlavors: returning flavors: "  );
-        //for ( int i = 0; i<flavors.length; i++ ) {
-        //logger.info("JpoTransferabe.getTransferDataFlavors: supported flavor: " + flavors[i].toString() );
-        //}
-        return flavors;
+    private static final String flavorsToString() {
+        StringBuffer sb = new StringBuffer( String.format( "%d Transferable flavors supported: ", flavors.length ) );
+
+
+        for ( int i = 0; i
+                < flavors.length; i++ ) {
+            sb.append( flavors[i].toString() + ", " );
+
+
+        }
+        return ( sb.toString() );
+
+
     }
 
 
     /**
-     * Returns the transferable.
-     * @param flavor 
-     * @return
-     * @throws UnsupportedFlavorException
-     * @throws IOException
+     * Returns the supported transferable data flavours.
+     * @return The transferable data flavours
+     */
+    public DataFlavor[] getTransferDataFlavors() {
+        logger.fine( flavorsToString() );
+
+
+        return flavors;
+
+
+    }
+
+
+    /**
+     * Returns if a requested flavor is supported.
+     * @param flavor The flavor to query
+     * @return wheter it is supported or not
+     */
+    public boolean isDataFlavorSupported( DataFlavor flavor ) {
+        logger.fine( String.format( "Requested flavor %s is supported: %b", flavor.toString(), Arrays.asList( flavors ).contains( flavor ) ) );
+        return ( Arrays.asList( flavors ).contains( flavor ) );
+    }
+
+
+    /**
+     * Returns the transferable in the requested flavor
+     * @param flavor The flavor to return the transferable in
+     * @return The transferable
+     * @throws UnsupportedFlavorException You get this exception if you request something that is not supported
+     * @throws IOException There could also be an io exception thrown
      */
     public Object getTransferData( DataFlavor flavor )
             throws UnsupportedFlavorException, IOException {
-        if ( flavor.equals( dmtnFlavor ) ) {
-            logger.fine( "dmtn Flavor Transferable" );
-            return dmtn;
-        } else if ( flavor.equals( originalHashCodeFlavor ) ) {
-            logger.fine( "originalHashCodeTransferable" );
-            return new Integer( originalHashCode );
-        } else if ( flavor.equals( stringFlavor ) ) {
-            logger.fine( "String Transferable" );
-            StringBuffer objectDescriptions = new StringBuffer( "" );
-            for ( Object o : dmtn ) {
-                objectDescriptions.append( o.toString() + "\n" );
-            }
-            return objectDescriptions.toString();
-        } else if ( flavor.equals( jpegImage ) ) {
-            ScalablePicture sp = new ScalablePicture();
-            File hrf = null;
-            for ( int i = 0; i < dmtn.length; i++ ) {
-                logger.fine( "Transferable: " + Integer.toString( i ) );
-                if ( dmtn[i] instanceof SortableDefaultMutableTreeNode ) {
-                    SortableDefaultMutableTreeNode n = (SortableDefaultMutableTreeNode) dmtn[i];
-                    Object userObject = n.getUserObject();
-                    if ( userObject instanceof PictureInfo ) {
-                        PictureInfo pi = (PictureInfo) userObject;
-                        logger.fine( "Location: " + pi.getHighresURLOrNull().toString() );
-                        hrf = pi.getHighresFile();
-                        //sp.loadPictureImd( pi.getHighresURLOrNull(), pi.getRotation() );
-                        logger.fine( "Done loading" );
-                    }
-                }
-            }
-            //return sp.getScaledPicture();
-            return new FileInputStream( hrf );
-        } else if ( flavor.equals( javaFileListFlavor ) ) {
-            Vector<File> fileList = new Vector<File>();
-            for ( int i = 0; i < dmtn.length; i++ ) {
-                logger.fine( "Transferable: " + Integer.toString( i ) );
-                if ( dmtn[i] instanceof SortableDefaultMutableTreeNode ) {
-                    SortableDefaultMutableTreeNode n = (SortableDefaultMutableTreeNode) dmtn[i];
-                    Object userObject = n.getUserObject();
-                    if ( userObject instanceof PictureInfo ) {
-                        PictureInfo pi = (PictureInfo) userObject;
-                        logger.fine( "Adding: " + pi.getHighresFile().toString() );
-                        fileList.add( pi.getHighresFile() );
-                        logger.fine( "Done loading" );
-                    }
-                }
-            }
-            return (List) fileList;
+        logger.fine( String.format( "Transferable requested as DataFlavor: %s", flavor.toString() ) );
+        if ( flavor.equals( jpoNodeFlavor ) ) {
+            logger.fine( "returning the Java array of nodes as a transferable" );
+            return transferableNodes;
+        } else if ( flavor.equals( DataFlavor.stringFlavor ) ) {
+            return getStringTransferData();
+        } else if ( flavor.equals( DataFlavor.javaFileListFlavor ) ) {
+            return getJavaFileListTransferable();
+        } else if ( flavor.equals( DataFlavor.imageFlavor ) ) {
+            return getImageTransferable();
         } else {
             throw new UnsupportedFlavorException( flavor );
         }
     }
 
-    /**
-     *  Definition of the flavorList
-     */
-    private static final List flavorList = Arrays.asList( flavors );
-
 
     /**
-     *   Returns if a flavor is supported.
-     * @param flavor
-     * @return true if supported, false if not
+     * Returns the transfer data in the DataFlavor format for a string
+     * @return the transfer data as a String
      */
-    public boolean isDataFlavorSupported( DataFlavor flavor ) {
-        logger.fine( "Returning: " + ( flavorList.contains( flavor ) ? "True" : "False" ) );
-        return ( flavorList.contains( flavor ) );
-    }
-
-
-    /**
-     *  Returns a String description of the object
-     * @return
-     */
-    @Override
-    public String toString() {
-        StringBuffer objectDescriptions = new StringBuffer( "JpoTransferable for node: " );
-        for ( Object o : dmtn ) {
+    private Object getStringDescriptionTransferData() {
+        StringBuffer objectDescriptions = new StringBuffer( "" );
+        for ( Object o : transferableNodes ) {
             objectDescriptions.append( o.toString() + "\n" );
         }
+        logger.fine( String.format( "Returning the following String as stringFlavor: %s", objectDescriptions.toString() ) );
         return objectDescriptions.toString();
     }
 
 
     /**
-     *  Comes from the clipboard owner interface
+     * Returns the transfer data in the DataFlavor format for a string
+     * @return the transfer data as a String
+     */
+    private Object getStringTransferData() {
+        StringBuffer filenames = new StringBuffer( "" );
+        for ( int i = 0; i < transferableNodes.length; i++ ) {
+            if ( transferableNodes[i] instanceof SortableDefaultMutableTreeNode ) {
+                SortableDefaultMutableTreeNode n = (SortableDefaultMutableTreeNode) transferableNodes[i];
+                Object userObject = n.getUserObject();
+                if ( userObject instanceof PictureInfo ) {
+                    PictureInfo pi = (PictureInfo) userObject;
+                    filenames.append( pi.getHighresFile() + "\n" );
+                }
+            }
+        }
+        logger.fine( String.format( "Returning the following String as stringFlavor: %s", filenames.toString() ) );
+        return filenames.toString();
+    }
+
+
+    /**
+     * Returns the transfer data as a List for the javaFileListFlavor
+     * @return the transferable as a List
+     */
+    private Object getJavaFileListTransferable() {
+        Vector<File> fileList = new Vector<File>();
+        for ( int i = 0; i
+                < transferableNodes.length; i++ ) {
+
+            if ( transferableNodes[i] instanceof SortableDefaultMutableTreeNode ) {
+                SortableDefaultMutableTreeNode n = (SortableDefaultMutableTreeNode) transferableNodes[i];
+                Object userObject = n.getUserObject();
+
+
+                if ( userObject instanceof PictureInfo ) {
+                    PictureInfo pi = (PictureInfo) userObject;
+                    fileList.add( pi.getHighresFile() );
+                }
+            }
+        }
+        logger.fine( String.format( "Returning %d files in a list", fileList.size() ) );
+        return (List) fileList;
+    }
+
+
+    /**
+     * Returns the transfer data as a List for the javaFileListFlavor
+     * @return the transferable as a List
+     */
+    private Object getImageTransferable() {
+        Image img = null;
+        for ( int i = 0; i
+                < transferableNodes.length; i++ ) {
+
+            if ( transferableNodes[i] instanceof SortableDefaultMutableTreeNode ) {
+                SortableDefaultMutableTreeNode n = (SortableDefaultMutableTreeNode) transferableNodes[i];
+                Object userObject = n.getUserObject();
+
+
+                if ( userObject instanceof PictureInfo ) {
+                    PictureInfo pi = (PictureInfo) userObject;
+                    SourcePicture sp = new SourcePicture();
+                    sp.loadPicture( pi.getHighresURLOrNull(), pi.getRotation() );
+                    img = sp.getSourceBufferedImage();
+                }
+            }
+        }
+        logger.fine( String.format( "Returning a BufferedImage in the Transferable" ) );
+        return img;
+    }
+
+
+    /**
+     * Returns information about the transferable
+     * @return information about the transferable
+     */
+    @Override
+    public String toString() {
+        StringBuffer objectDescriptions = new StringBuffer( String.format( "JpoTransferable for %d nodes: ", transferableNodes.length ) );
+
+
+        for ( Object o : transferableNodes ) {
+            objectDescriptions.append( o.toString() + ", " );
+
+
+        }
+        return objectDescriptions.toString();
+
+
+    }
+
+
+    /**
+     * Comes from the clipboard owner interface
      * @param clipboard
      * @param contents
      */
     public void lostOwnership( Clipboard clipboard, Transferable contents ) {
-        logger.fine( "JpoTransferable.lostOwnership happened." );
+        logger.info( String.format( "lostOwnership clipboard: %s, Transferable: %s", clipboard.toString(), contents.toString() ) );
+
     }
 }

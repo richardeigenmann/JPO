@@ -6,20 +6,18 @@ import jpo.dataModel.GroupInfo;
 import jpo.gui.ScalablePicture;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
 import jpo.dataModel.PictureInfo;
-import jpo.*;
 import java.io.*;
 import java.util.*;
-import java.awt.*;
 import javax.swing.*;
-import java.awt.event.*;
-import java.util.logging.Level;
+import java.util.List;
 import java.util.logging.Logger;
 import java.util.zip.*;
+import jpo.gui.ProgressGui;
 
 /*
 HtmlDistiller.java:  class that can write html files
  *
-Copyright (C) 2002-2008  Richard Eigenmann.
+Copyright (C) 2002-2010  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -34,13 +32,13 @@ The license is in gpl.txt.
 See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 /**
- *  This thread object generates a web of html pages that allows you to browse
- *  groups of pictures using a web browsers. The resulting html pages can be
+ *  This class generates a set of HTML pages that allows a user to browse
+ *  groups of pictures in a web-browser. The resulting html pages can be
  *  posted to the Internet. Relative addressing has been used throughout to facilitate 
  *  this.
- * TODO: This class should use the proper Swing paradigm about with EDT and stuff
  */
-public class HtmlDistiller implements Runnable {
+public class HtmlDistiller
+        extends SwingWorker<Integer, String> {
 
     /**
      * Defines a logger for this class
@@ -48,45 +46,19 @@ public class HtmlDistiller implements Runnable {
     private static Logger logger = Logger.getLogger( HtmlDistiller.class.getName() );
 
 
-    {
-        logger.setLevel( Level.ALL );
-    }
-
+    /*{
+    logger.setLevel( Level.ALL );
+    }*/
     /**
      *  Temporary object to scale the image for the html output.
      */
     private ScalablePicture scp = new ScalablePicture();
 
     /**
-     *   Variable that signals to the thread to stop immediately.
-     */
-    public boolean interrupt = false;
-
-    /**
      *   counter that is incremented with every new picture and is used to 
      *   determine the number for the next one.
      */
     private int picsWroteCounter = 1;
-
-    /**
-     *   Frame to show what the thread is doing.
-     */
-    private JFrame progressFrame;
-
-    /**
-     *  Label to show what is being processed.
-     */
-    private JLabel progressLabel;
-
-    /**
-     *  Progress Indicator.
-     */
-    private JProgressBar progBar;
-
-    /**
-     *  Cancel Button.
-     */
-    private JButton cancelButton;
 
     /**
      *   Indicator that gets set to true if groupnodes are being written so that
@@ -111,68 +83,30 @@ public class HtmlDistiller implements Runnable {
 
 
     /**
-     *  Creates and starts a Thread that writes the picture nodes from the specified
-     *  startNode to the target directory.
+     *  Creates and starts a Thread that renders the web page files
+     *  to the target directory.
      *
-     *  @param  options The options on how to render the pages
+     *  @param  options The parameters the user chose on how to render the pages
      */
     public HtmlDistiller( HtmlDistillerOptions options ) {
         this.options = options;
+        Tools.checkEDT();
+        int totalNodes = Tools.countNodes( options.getStartNode() );
+        progGui = new ProgressGui( totalNodes,
+                Settings.jpoResources.getString( "HtmlDistillerThreadTitle" ),
+                String.format( Settings.jpoResources.getString( "HtmlDistDone" ), totalNodes ) );
+        execute();
     }
 
 
     /**
-     *  Method that is invoked by the thread to do things asynchroneousely.
+     * Entry point for the SwingWorker when execute() is called.
+     *
+     * @return an Integer (not sure what to do with this...)
+     * @throws Exception hopefully not
      */
     @Override
-    public void run() {
-        GridBagConstraints c = new GridBagConstraints();
-        c.anchor = GridBagConstraints.WEST;
-        c.insets = new Insets( 4, 4, 4, 4 );
-
-        JPanel progPanel = new JPanel();
-        progPanel.setBorder( BorderFactory.createEmptyBorder( 5, 5, 5, 5 ) );
-        progPanel.setLayout( new GridBagLayout() );
-
-
-        progressLabel = new JLabel();
-        progressLabel.setPreferredSize( new Dimension( 600, 20 ) );
-        progressLabel.setBorder( BorderFactory.createEmptyBorder( 5, 5, 5, 5 ) );
-        c.gridx = 0;
-        c.gridy = 0;
-        c.gridwidth = 2;
-        c.fill = GridBagConstraints.HORIZONTAL;
-        progPanel.add( progressLabel, c );
-
-        progBar = new JProgressBar( 0, countNodes( options.getStartNode() ) );
-        progBar.setBorder( BorderFactory.createLineBorder( Color.gray, 1 ) );
-        progBar.setStringPainted( true );
-        progBar.setPreferredSize( new Dimension( 140, 20 ) );
-        progBar.setMaximumSize( new Dimension( 240, 20 ) );
-        progBar.setMinimumSize( new Dimension( 140, 20 ) );
-        progBar.setValue( 0 );
-        c.gridy++;
-        c.fill = GridBagConstraints.NONE;
-        progPanel.add( progBar, c );
-
-        cancelButton = new JButton( "Cancel" );
-        cancelButton.addActionListener( new ButtonListener() );
-        cancelButton.setPreferredSize( Settings.defaultButtonDimension );
-        cancelButton.setMaximumSize( Settings.defaultButtonDimension );
-        cancelButton.setMinimumSize( Settings.defaultButtonDimension );
-
-        c.gridx++;
-        c.anchor = GridBagConstraints.EAST;
-        progPanel.add( cancelButton, c );
-
-        progressFrame = new JFrame( Settings.jpoResources.getString( "HtmlDistillerThreadTitle" ) );
-        progressFrame.getContentPane().add( progPanel );
-        progressFrame.pack();
-        progressFrame.setVisible( true );
-        progressFrame.setLocationRelativeTo( Settings.anchorFrame );
-
-
-
+    protected Integer doInBackground() throws Exception {
         scp.setQualityScale();
         scp.setScaleSteps( options.getScalingSteps() );
 
@@ -188,11 +122,11 @@ public class HtmlDistiller implements Runnable {
             options.setGenerateZipfile( false );
         }
 
-        writeStylesheet();
+        Tools.copyFromJarToFile( "jpo.css", options.getTargetDirectory(), "jpo.css" );
         if ( options.isWriteRobotsTxt() ) {
-            writeRobotsTxt();
+            Tools.copyFromJarToFile( "robots.txt", options.getTargetDirectory(), "robots.txt" );
         }
-        writeAsHtml( options.getStartNode() );
+        writeGroup( options.getStartNode() );
 
 
         try {
@@ -236,8 +170,36 @@ public class HtmlDistiller implements Runnable {
         }
 
 
-        progressFrame.dispose();
 
+        return Integer.MAX_VALUE;
+    }
+
+    /**
+     *   This object holds a reference to the progress GUI for the user.
+     */
+    private ProgressGui progGui;
+
+
+    /**
+     * This method is called by SwingWorker when the background process
+     * sends a publish.
+     * @param messages A message that will be written to the logfile.
+     */
+    @Override
+    protected void process( List<String> messages ) {
+        for ( String message : messages ) {
+            logger.info( String.format( "messge: %s", message ) );
+            progGui.progressIncrement();
+        }
+    }
+
+
+    /**
+     * SwingWorker calls here when the background task is done.
+     */
+    @Override
+    protected void done() {
+        progGui.switchToDoneMode();
     }
 
 
@@ -247,17 +209,12 @@ public class HtmlDistiller implements Runnable {
      *  gets named index.htm. 1234 is the internal hashCode of the node so that we can translate parents and
      *  children to each other.
      *
-     *  <p>The object-wide groupCounter is used to track how many groups have been created
-     *  so far.
-     *
      *  @param groupNode		The node at which the extraction is to start.
      *
      */
-    public void writeAsHtml( SortableDefaultMutableTreeNode groupNode ) {
+    public void writeGroup( SortableDefaultMutableTreeNode groupNode ) {
         try {
-            progBar.setValue( progBar.getValue() + 1 );
-            progBar.setString( Integer.toString( progBar.getValue() ) + "/" + Integer.toString( progBar.getMaximum() ) );
-
+            publish( String.format( "Writing a picture for group node: %s", groupNode.toString() ) );
 
             File groupFile;
             if ( groupNode.equals( options.getStartNode() ) ) {
@@ -269,7 +226,7 @@ public class HtmlDistiller implements Runnable {
             BufferedWriter out = new BufferedWriter( new FileWriter( groupFile ) );
             DescriptionsBuffer descriptionsBuffer = new DescriptionsBuffer( options.getPicsPerRow(), out );
 
-            progressLabel.setText( "writing " + groupFile.toString() );
+            logger.fine( String.format( "Writing: %s", groupFile.toString() ) );
             // write header
             out.write( "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" );
             out.newLine();
@@ -291,12 +248,12 @@ public class HtmlDistiller implements Runnable {
 
             out.write( "<tr><td colspan=\"" + Integer.toString( options.getPicsPerRow() ) + "\">" );
 
-            out.write( "<h2>" + stringToHTMLString( ( (GroupInfo) groupNode.getUserObject() ).getGroupName() ) + "</h2>" );
+            out.write( String.format( "<h2>%s</h2>", Tools.stringToHTMLString( ( (GroupInfo) groupNode.getUserObject() ).getGroupName() ) ) );
 
             if ( groupNode.equals( options.getStartNode() ) ) {
                 if ( options.isGenerateZipfile() ) {
                     out.newLine();
-                    out.write( "<a href=\"" + options.getDownloadZipFileName() + "\">Download High Resolution Pictures as a Zipfile</a>" );
+                    out.write( String.format( "<a href=\"%s\">Download High Resolution Pictures as a Zipfile</a>", options.getDownloadZipFileName() ) );
                     out.newLine();
                 }
             } else {
@@ -307,7 +264,7 @@ public class HtmlDistiller implements Runnable {
                     parentLink = "index.htm";
                 }
 
-                out.write( "<p>Up to: <a href=\"" + parentLink + "\">" + parentNode.toString() + "</a>" );
+                out.write( String.format( "<p>Up to: <a href=\"%s\">%s</a>", parentLink, parentNode.toString() ) );
                 out.newLine();
             }
 
@@ -320,7 +277,7 @@ public class HtmlDistiller implements Runnable {
             Enumeration kids = groupNode.children();
             SortableDefaultMutableTreeNode n;
 
-            while ( kids.hasMoreElements() && ( !interrupt ) ) {
+            while ( kids.hasMoreElements() && ( !progGui.getInterruptor().getShouldInterrupt() ) ) {
                 n = (SortableDefaultMutableTreeNode) kids.nextElement();
                 if ( n.getUserObject() instanceof GroupInfo ) {
 
@@ -331,18 +288,19 @@ public class HtmlDistiller implements Runnable {
                     out.write( "</td>" );
                     out.newLine();
 
-                    descriptionsBuffer.putCheckFlush( ( (GroupInfo) n.getUserObject() ).getGroupName() );
+                    descriptionsBuffer.putDescription( ( (GroupInfo) n.getUserObject() ).getGroupName() );
 
                     // recursively call the method to output that group.
-                    writeAsHtml( n );
+                    writeGroup( n );
                     picsWroteCounter++;
                     folderIconRequired = true;
                 } else {
-                    writeHtmlPicture( n, out, groupFile, childNumber, childCount, descriptionsBuffer );
-                    progBar.setValue( progBar.getValue() + 1 );
-                    progBar.setString( Integer.toString( progBar.getValue() ) + "/" + Integer.toString( progBar.getMaximum() ) );
+                    writePicture( n, out, groupFile, childNumber, childCount, descriptionsBuffer );
                 }
                 childNumber++;
+            }
+            if ( progGui.getInterruptor().getShouldInterrupt() ) {
+                progGui.setDoneString( Settings.jpoResources.getString( "htmlDistillerInterrupt" ) );
             }
 
 
@@ -356,11 +314,8 @@ public class HtmlDistiller implements Runnable {
             out.write( "</body></html>" );
             out.close();
 
-
-
         } catch ( IOException x ) {
-            x.printStackTrace();
-            System.err.println( x.getMessage() );
+            logger.severe( x.getMessage() );
             JOptionPane.showMessageDialog(
                     Settings.anchorFrame,
                     "got an IOException??",
@@ -372,17 +327,17 @@ public class HtmlDistiller implements Runnable {
 
 
     /**
-     *  Write html about a picture to the output.
-     *  @param	n	The node for which the HTML is to be written
+     *  Write html for a picture in the set of webpages.
+     *  @param	pictureNode	The node for which the HTML is to be written
      *  @param	out	The opened output stream of the overview page to which the thumbnail tags should be written
      *  @param	groupFile	The name of the html file that holds the small thumbnails of the parent group
      *  @param	childNumber	The current position of the picture in the group
      *  @param	childCount	The total number of pictures in the group
      *  @param	descriptionsBuffer	A buffer for the thumbnails page
-     *  @throws IOException if there was some sort of IO Error.
+     *  @throws IOException If there was some sort of IO Error.
      */
-    private void writeHtmlPicture(
-            SortableDefaultMutableTreeNode n,
+    private void writePicture(
+            SortableDefaultMutableTreeNode pictureNode,
             BufferedWriter out,
             File groupFile,
             int childNumber,
@@ -390,18 +345,18 @@ public class HtmlDistiller implements Runnable {
             DescriptionsBuffer descriptionsBuffer )
             throws IOException {
 
-        PictureInfo p = (PictureInfo) n.getUserObject();
+        PictureInfo p = (PictureInfo) pictureNode.getUserObject();
+        publish( String.format( "Writing picture node: %s", p.toString() ) );
 
         String extension = Tools.getExtension( p.getHighresFilename() );
         File lowresFile;
         File midresFile;
         File highresFile;
         String midresHtmlFileName;
-        picsWroteCounter++;
 
         switch ( options.getPictureNaming() ) {
             case HtmlDistillerOptions.PICTURE_NAMING_BY_ORIGINAL_NAME:
-                String rootName = cleanupFilename( Tools.getFilenameRoot( p.getHighresFilename() ) );
+                String rootName = Tools.cleanupFilename( Tools.getFilenameRoot( p.getHighresFilename() ) );
                 lowresFile = new File( options.getTargetDirectory(), rootName + "_l." + extension );
                 midresFile = new File( options.getTargetDirectory(), rootName + "_m." + extension );
                 highresFile = new File( options.getTargetDirectory(), rootName + "_h." + extension );
@@ -418,7 +373,7 @@ public class HtmlDistiller implements Runnable {
                 midresHtmlFileName = "jpo_" + formattedNumber + ".htm";
                 break;
             default:  //case HtmlDistillerOptions.PICTURE_NAMING_BY_HASH_CODE:
-                String fn = "jpo_" + Integer.toString( n.hashCode() );
+                String fn = "jpo_" + Integer.toString( pictureNode.hashCode() );
                 lowresFile = new File( options.getTargetDirectory(), fn + "_l." + extension );
                 midresFile = new File( options.getTargetDirectory(), fn + "_m." + extension );
                 highresFile = new File( options.getTargetDirectory(), fn + "_h." + extension );
@@ -428,13 +383,13 @@ public class HtmlDistiller implements Runnable {
 
         // copy the picture to the target directory
         if ( options.isExportHighres() ) {
-            progressLabel.setText( "copying picture " + p.getHighresLocation() + " to " + highresFile.toString() );
+            logger.fine( String.format( "Copying picture %s to %s", p.getHighresLocation(), highresFile.toString() ) );
             Tools.copyPicture( p.getHighresURL(), highresFile );
         }
 
 
         if ( options.isGenerateZipfile() ) {
-            progressLabel.setText( "adding to zipfile: " + highresFile.toString() );
+            logger.fine( String.format( "Adding to zipfile: %s", highresFile.toString() ) );
             try {
                 InputStream in = p.getHighresURL().openStream();
                 BufferedInputStream bin = new BufferedInputStream( in );
@@ -457,9 +412,6 @@ public class HtmlDistiller implements Runnable {
             }
         }
 
-
-
-        progressLabel.setText( "testing size of thumbnail " + p.getLowresURL().toString() );
         logger.fine( "testing size of thumbnail " + p.getLowresURL().toString() );
 
         int wOrig = 0;
@@ -467,57 +419,30 @@ public class HtmlDistiller implements Runnable {
 
         int w = 0;
         int h = 0;
-        /*
-        try {
-        InputStream inputStream = p.getLowresURL().openStream();
-        inputStream.close();
-        scp.loadPictureImd( p.getLowresURL(), p.getRotation() );
-        wOrig = scp.getOriginalWidth();
-        hOrig = scp.getOriginalHeight();
-        logger.info( "Image: " + p.getLowresURL().toString() + " is size: w=" + Integer.toString( wOrig ) + " h=" + Integer.toString( hOrig ) );
 
-        } catch ( IOException x ) {
-        logger.info( "got an IO error on opening " + p.getLowresURL() );
-        }
-
-
-        boolean loaded = false;
-        if ( ( wOrig == options.getThumbnailWidth() ) || ( hOrig == options.getThumbnailHeight() ) ) {
-        progressLabel.setText( "copying picture " + p.getLowresLocation() + " to " + lowresFile.toString() );
-        logger.info( "copying picture " + p.getLowresLocation() + " to " + lowresFile.toString() + " w=" + Integer.toString( wOrig ) + " h=" + Integer.toString( hOrig ) );
-        Tools.copyPicture( p.getLowresURL(), lowresFile );
-        w = wOrig;
-        h = hOrig;
-        } else {
-        // it needs scaling
-         */
-
-        progressLabel.setText( "loading " + p.getHighresLocation() );
+        logger.fine( String.format( "Loading: %s", p.getHighresLocation() ) );
         scp.loadPictureImd( p.getHighresURL(), p.getRotation() );
 
         if ( scp.getStatusCode() == ScalablePicture.ERROR ) {
-            logger.info( "HtmlDistillerThread.writeHtmlPicture: problem reading image " + p.getHighresLocation() + " using brokenThumbnailPicture instead" );
+            logger.severe( "Problem reading image " + p.getHighresLocation() + " using brokenThumbnailPicture instead" );
             scp.loadPictureImd( Settings.cl.getResource( "jpo/images/broken_thumbnail.gif" ), 0f );
         }
 
         scp.setScaleSize( options.getThumbnailDimension() );
-        progressLabel.setText( "scaling " + p.getHighresLocation() );
+        logger.fine( String.format( "Scaling: %s", p.getHighresLocation() ) );
         scp.scalePicture();
-        progressLabel.setText( "writing " + lowresFile.toString() );
+        logger.fine( String.format( "Writing: %s", lowresFile.toString() ) );
         scp.setJpgQuality( options.getLowresJpgQuality() );
         scp.writeScaledJpg( lowresFile );
         w = scp.getScaledWidth();
         h = scp.getScaledHeight();
-        //loaded = true;
-        //}
-
 
         out.write( "<td valign=\"bottom\">" );
 
         // write an anchor so the up come back
         // but only if we are generating MidresHTML pages
         if ( options.isGenerateMidresHtml() ) {
-            out.write( "<a name=\"" + stringToHTMLString( lowresFile.getName() ) + "\" />" );
+            out.write( String.format( "<a name=\"%s\" />", Tools.stringToHTMLString( lowresFile.getName() ) ) );
         }
 
         out.write( "<a href=\"" );
@@ -526,25 +451,18 @@ public class HtmlDistiller implements Runnable {
         } else {
             out.write( midresFile.getName() );
         }
-        out.write( "\">" + "<img src=\"" + lowresFile.getName() + "\" width=\"" + Integer.toString( w ) + "\" height=\"" + Integer.toString( h ) + "\" alt=\"" + stringToHTMLString( p.getDescription() ) + "\" " + " />" + "</a>" );
+        out.write( "\">" + "<img src=\"" + lowresFile.getName() + "\" width=\"" + Integer.toString( w ) + "\" height=\"" + Integer.toString( h ) + "\" alt=\"" + Tools.stringToHTMLString( p.getDescription() ) + "\" " + " />" + "</a>" );
 
 
         out.write( "</td>" );
         out.newLine();
 
-        descriptionsBuffer.putCheckFlush( p.getDescription() );
+        descriptionsBuffer.putDescription( p.getDescription() );
 
-
-
-        // scale the midres picture
-        //       if ( !loaded ) {
-        //progressLabel.setText( "loading " + p.getHighresLocation() );
-        //scp.loadPictureImd( p.getHighresURL(), p.getRotation() );
-        //       }
         scp.setScaleSize( options.getMidresDimension() );
-        progressLabel.setText( "scaling " + p.getHighresLocation() );
+        logger.fine( "Scaling: " + p.getHighresLocation() );
         scp.scalePicture();
-        progressLabel.setText( "writing " + midresFile.toString() );
+        logger.fine( "Writing: " + midresFile.toString() );
         scp.setJpgQuality( options.getMidresJpgQuality() );
         scp.writeScaledJpg( midresFile );
         w = scp.getScaledWidth();
@@ -556,7 +474,7 @@ public class HtmlDistiller implements Runnable {
             File midresHtmlFile = new File( options.getTargetDirectory(), midresHtmlFileName );
             BufferedWriter midresHtmlWriter = new BufferedWriter( new FileWriter( midresHtmlFile ) );
             String groupDescription =
-                    ( (SortableDefaultMutableTreeNode) n.getParent() ).getUserObject().toString();
+                    ( (SortableDefaultMutableTreeNode) pictureNode.getParent() ).getUserObject().toString();
 
             midresHtmlWriter.write( "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" );
             midresHtmlWriter.newLine();
@@ -564,16 +482,16 @@ public class HtmlDistiller implements Runnable {
             midresHtmlWriter.newLine();
             midresHtmlWriter.write( "<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\" lang=\"en\">" );
             midresHtmlWriter.newLine();
-            midresHtmlWriter.write( "<head>\n\t<link rel=\"StyleSheet\" href=\"jpo.css\" type=\"text/css\" media=\"screen\" />\n\t<title>" + stringToHTMLString( groupDescription ) + "</title>\n</head>" );
+            midresHtmlWriter.write( "<head>\n\t<link rel=\"StyleSheet\" href=\"jpo.css\" type=\"text/css\" media=\"screen\" />\n\t<title>" + Tools.stringToHTMLString( groupDescription ) + "</title>\n</head>" );
             midresHtmlWriter.newLine();
             midresHtmlWriter.write( "<body onload=\"changetext(content[0])\">" );
             midresHtmlWriter.newLine();
             midresHtmlWriter.write( "<table cellpadding=\"0\" cellspacing=\"10\">" );
-            midresHtmlWriter.write( "<tr><td colspan=\"2\"><h2>" + stringToHTMLString( groupDescription ) + "</h2></td></tr>" );
+            midresHtmlWriter.write( "<tr><td colspan=\"2\"><h2>" + Tools.stringToHTMLString( groupDescription ) + "</h2></td></tr>" );
             midresHtmlWriter.newLine();
             midresHtmlWriter.newLine();
             midresHtmlWriter.write( "<tr><td align=\"center\" valign=\"top\">" );
-            String imgTag = "<img src=\"" + midresFile.getName() + "\" width= \"" + Integer.toString( w ) + "\" height=\"" + Integer.toString( h ) + "\" alt=\"" + stringToHTMLString( p.getDescription() ) + "\" />";
+            String imgTag = "<img src=\"" + midresFile.getName() + "\" width= \"" + Integer.toString( w ) + "\" height=\"" + Integer.toString( h ) + "\" alt=\"" + Tools.stringToHTMLString( p.getDescription() ) + "\" />";
 
             if ( options.isLinkToHighres() ) {
                 midresHtmlWriter.write( "<a href=\"" + p.getHighresLocation() + "\">" + imgTag + "</a>" );
@@ -583,7 +501,7 @@ public class HtmlDistiller implements Runnable {
                 midresHtmlWriter.write( imgTag );
             }
             midresHtmlWriter.newLine();
-            midresHtmlWriter.write( "<p />" + stringToHTMLString( p.getDescription() ) );
+            midresHtmlWriter.write( "<p/>" + Tools.stringToHTMLString( p.getDescription() ) );
             midresHtmlWriter.newLine();
             midresHtmlWriter.write( "</td>" );
             midresHtmlWriter.newLine();
@@ -598,11 +516,11 @@ public class HtmlDistiller implements Runnable {
             final String font = "<font face=\"Helvetica\" size=\"small\">";
             SortableDefaultMutableTreeNode nde;
             midresHtmlWriter.write( "<td align=\"center\" valign=\"top\">" );
-            midresHtmlWriter.write( "Picture " + Integer.toString( childNumber ) + " of " + Integer.toString( childCount ) );
+            midresHtmlWriter.write( String.format( "Picture %d of %d", childNumber, childCount ) );
             midresHtmlWriter.newLine();
             midresHtmlWriter.write( "<table cellpadding=\"3\" cellspacing=\"1\" border=\"1\">" );
             midresHtmlWriter.newLine();
-            StringBuffer dhtmlArray = new StringBuffer( "content[0]='" + font + "<p><b>Picture</b> " + Integer.toString( childNumber ) + " of " + Integer.toString( childCount ) + ":<p>" + "<b>Description:</b><br>" + stringToHTMLString( p.getDescription().replaceAll( "\'", "\\\\'" ).replaceAll( "\n", " " ) ) + "<p>" );
+            StringBuffer dhtmlArray = new StringBuffer( "content[0]='" + font + "<p><b>Picture</b> " + Integer.toString( childNumber ) + " of " + Integer.toString( childCount ) + ":<p>" + "<b>Description:</b><br>" + Tools.stringToHTMLString( p.getDescription().replaceAll( "\'", "\\\\'" ).replaceAll( "\n", " " ) ) + "<p>" );
             if ( p.getCreationTime().length() > 0 ) {
                 dhtmlArray.append( "<b>Date:</b><br>" + p.getCreationTime().replaceAll( "\'", "\\\\'" ).replaceAll( "\n", " " ) + "<p>" );
             }
@@ -643,12 +561,12 @@ public class HtmlDistiller implements Runnable {
                     String nodeUrl = "";
                     String lowresFn = "";
 
-                    nde = (SortableDefaultMutableTreeNode) n.getParent().getChildAt( i - 1 );
+                    nde = (SortableDefaultMutableTreeNode) pictureNode.getParent().getChildAt( i - 1 );
                     if ( nde.getUserObject() instanceof PictureInfo ) {
                         switch ( options.getPictureNaming() ) {
                             case HtmlDistillerOptions.PICTURE_NAMING_BY_ORIGINAL_NAME:
                                 PictureInfo pi = (PictureInfo) nde.getUserObject();
-                                String rootName = cleanupFilename( Tools.getFilenameRoot( pi.getHighresFilename() ) );
+                                String rootName = Tools.cleanupFilename( Tools.getFilenameRoot( pi.getHighresFilename() ) );
                                 nodeUrl = rootName + ".htm";
                                 lowresFn = rootName + "_l." + extension;
                                 break;
@@ -668,13 +586,13 @@ public class HtmlDistiller implements Runnable {
 
                         midresHtmlWriter.write( "<a href=\"" + nodeUrl + "\"" );
                         if ( options.isGenerateDHTML() ) {
-                            midresHtmlWriter.write( " onmouseover=\"changetext(content[" + Integer.toString( i ) + "])\" onmouseout=\"changetext(content[0])\"" );
+                            midresHtmlWriter.write( String.format( " onmouseover=\"changetext(content[%d])\" onmouseout=\"changetext(content[0])\"", i ) );
                             dhtmlArray.append( "content[" + Integer.toString( i ) + "]='" );
 
-                            dhtmlArray.append( font + "<p />Picture " + Integer.toString( i ) + "/" + Integer.toString( childCount ) + ":<p />" + "<img src=\"" + lowresFn + "\" width=\"" + Integer.toString( matrixWidth - 10 ) + "\" alt=\"Thumbnail\" />" + "<p /><i>" + stringToHTMLString( ( (PictureInfo) nde.getUserObject() ).getDescription().replaceAll( "\'", "\\\\'" ).replaceAll( "\n", " " ) ) + "</i></font>'\n" );
+                            dhtmlArray.append( font + "<p />Picture " + Integer.toString( i ) + "/" + Integer.toString( childCount ) + ":<p />" + "<img src=\"" + lowresFn + "\" width=\"" + Integer.toString( matrixWidth - 10 ) + "\" alt=\"Thumbnail\" />" + "<p /><i>" + Tools.stringToHTMLString( ( (PictureInfo) nde.getUserObject() ).getDescription().replaceAll( "\'", "\\\\'" ).replaceAll( "\n", " " ) ) + "</i></font>'\n" );
                         } else {
-                            //dhtmlArray.append( font + "<p />Item " + Integer.toString( i ) + "/" + Integer.toString( childCount ) + ":<p />" + "<i><b>Group:</b><br />" + ( (GroupInfo) nde.getUserObject() ).getGroupName().replaceAll( "\'", "\\\\'" ).replaceAll( "\n", " " ) + "</i></font>'\n" );
-                            dhtmlArray.append( font + "<p />Item " + Integer.toString( i ) + "/" + Integer.toString( childCount ) + ":<p />" + stringToHTMLString( ( (PictureInfo) nde.getUserObject() ).getDescription().replaceAll( "\'", "\\\\'" ).replaceAll( "\n", " " ) ) + "</i></font>'\n" );
+                            //dhtmlArray.append( font + "<p />Item " + Integer.toString( i ) + "/" + Integer.toString( childCount ) + ":<p />" + "<i><b>Group:</b><br />" + ( (GroupInfo) nde.getUserObject() ).getGroupName().replaceAll( "\'", "\\\\'" ).replaceAll( "\pictureNode", " " ) + "</i></font>'\pictureNode" );
+                            dhtmlArray.append( font + "<p />Item " + Integer.toString( i ) + "/" + Integer.toString( childCount ) + ":<p />" + Tools.stringToHTMLString( ( (PictureInfo) nde.getUserObject() ).getDescription().replaceAll( "\'", "\\\\'" ).replaceAll( "\n", " " ) ) + "</i></font>'\n" );
                         }
                     }
                     midresHtmlWriter.write( ">" );
@@ -703,7 +621,7 @@ public class HtmlDistiller implements Runnable {
 
             midresHtmlWriter.newLine();
             //Up Link
-            midresHtmlWriter.write( "<p /><a href=\"" + groupFile.getName() + "#" + stringToHTMLString( lowresFile.getName() ) + "\">Up</a>" );
+            midresHtmlWriter.write( "<p /><a href=\"" + groupFile.getName() + "#" + Tools.stringToHTMLString( lowresFile.getName() ) + "\">Up</a>" );
             midresHtmlWriter.write( "&nbsp;" );
             midresHtmlWriter.newLine();
             // Link to Previous
@@ -711,10 +629,10 @@ public class HtmlDistiller implements Runnable {
                 String previousHtmlFilename = "";
                 switch ( options.getPictureNaming() ) {
                     case HtmlDistillerOptions.PICTURE_NAMING_BY_ORIGINAL_NAME:
-                        SortableDefaultMutableTreeNode priorNode = (SortableDefaultMutableTreeNode) ( (SortableDefaultMutableTreeNode) n.getParent() ).getChildAt( childNumber - 2 );
+                        SortableDefaultMutableTreeNode priorNode = (SortableDefaultMutableTreeNode) ( (SortableDefaultMutableTreeNode) pictureNode.getParent() ).getChildAt( childNumber - 2 );
                         Object userObject = priorNode.getUserObject();
                         if ( userObject instanceof PictureInfo ) {
-                            previousHtmlFilename = cleanupFilename( Tools.getFilenameRoot( ( (PictureInfo) userObject ).getHighresFilename() ) ) + ".htm";
+                            previousHtmlFilename = Tools.cleanupFilename( Tools.getFilenameRoot( ( (PictureInfo) userObject ).getHighresFilename() ) ) + ".htm";
                         } else {
                             previousHtmlFilename = "index.htm"; // actually something has gone horribly wrong
                         }
@@ -726,11 +644,11 @@ public class HtmlDistiller implements Runnable {
                         previousHtmlFilename = "jpo_" + formattedNumber + ".htm";
                         break;
                     default:  //case HtmlDistillerOptions.PICTURE_NAMING_BY_HASH_CODE:
-                        int hashCode = ( (SortableDefaultMutableTreeNode) n.getParent() ).getChildAt( childNumber - 2 ).hashCode();
+                        int hashCode = ( (SortableDefaultMutableTreeNode) pictureNode.getParent() ).getChildAt( childNumber - 2 ).hashCode();
                         previousHtmlFilename = "jpo_" + Integer.toString( hashCode ) + ".htm";
                         break;
                 }
-                midresHtmlWriter.write( "<a href=\"" + previousHtmlFilename + "\">Previous</a>" );
+                midresHtmlWriter.write( String.format( "<a href=\"%s\">Previous</a>", previousHtmlFilename ) );
                 midresHtmlWriter.write( "&nbsp;" );
             }
             if ( options.isLinkToHighres() ) {
@@ -746,10 +664,10 @@ public class HtmlDistiller implements Runnable {
                 String nextHtmlFilename = "";
                 switch ( options.getPictureNaming() ) {
                     case HtmlDistillerOptions.PICTURE_NAMING_BY_ORIGINAL_NAME:
-                        SortableDefaultMutableTreeNode priorNode = (SortableDefaultMutableTreeNode) ( (SortableDefaultMutableTreeNode) n.getParent() ).getChildAt( childNumber );
+                        SortableDefaultMutableTreeNode priorNode = (SortableDefaultMutableTreeNode) ( (SortableDefaultMutableTreeNode) pictureNode.getParent() ).getChildAt( childNumber );
                         Object userObject = priorNode.getUserObject();
                         if ( userObject instanceof PictureInfo ) {
-                            nextHtmlFilename = cleanupFilename( Tools.getFilenameRoot( ( (PictureInfo) userObject ).getHighresFilename() ) ) + ".htm";
+                            nextHtmlFilename = Tools.cleanupFilename( Tools.getFilenameRoot( ( (PictureInfo) userObject ).getHighresFilename() ) ) + ".htm";
                         } else {
                             nextHtmlFilename = "index.htm"; // actually something has gone horribly wrong
                         }
@@ -761,7 +679,7 @@ public class HtmlDistiller implements Runnable {
                         nextHtmlFilename = "jpo_" + formattedNumber + ".htm";
                         break;
                     default:  //case HtmlDistillerOptions.PICTURE_NAMING_BY_HASH_CODE:
-                        int hashCode = ( (SortableDefaultMutableTreeNode) n.getParent() ).getChildAt( childNumber ).hashCode();
+                        int hashCode = ( (SortableDefaultMutableTreeNode) pictureNode.getParent() ).getChildAt( childNumber ).hashCode();
                         nextHtmlFilename = "jpo_" + Integer.toString( hashCode ) + ".htm";
                         break;
                 }
@@ -797,7 +715,7 @@ public class HtmlDistiller implements Runnable {
             midresHtmlWriter.newLine();
 
             if ( options.isGenerateDHTML() ) {
-                writeJs();
+                Tools.copyFromJarToFile( "jpo.js", options.getTargetDirectory(), "jpo.js" );
                 midresHtmlWriter.write( "<script type=\"text/javascript\" src=\"jpo.js\" ></script>" );
                 midresHtmlWriter.newLine();
                 midresHtmlWriter.write( "<script type=\"text/javascript\">" );
@@ -830,27 +748,27 @@ public class HtmlDistiller implements Runnable {
      *  output a table row with the buffered descriptions when the buffer has
      *  reached it's limit.
      */
-    class DescriptionsBuffer {
+    private class DescriptionsBuffer {
 
         /**
          *   The number of columns on the Thumbnail page.
          */
-        int columns;
+        private int columns;
 
         /**
          *   The HTML page for the Thumbnails.
          */
-        BufferedWriter out;
+        private BufferedWriter out;
 
         /**
          *   A counter variable.
          */
-        int picCounter = 0;
+        private int picCounter = 0;
 
         /**
          *   An array holding the strings of the pictures.
          */
-        String[] descriptions;
+        private String[] descriptions;
 
 
         /**
@@ -858,23 +776,14 @@ public class HtmlDistiller implements Runnable {
          *  @param	columns	The number of columns being generated
          *  @param	out	The Thumbnail page
          */
-        DescriptionsBuffer( int columns, BufferedWriter out ) {
+        public DescriptionsBuffer( int columns, BufferedWriter out ) {
             this.columns = columns;
             this.out = out;
             descriptions = new String[options.getPicsPerRow()];
         }
 
 
-        /**
-         *  Adds the supplied string to the buffer.
-         *  @param description	The string to be added
-         */
-        public void put( String description ) {
-            descriptions[picCounter] = description;
-            picCounter++;
-        }
-
-
+     
         /**
          *  Adds the supplied string to the buffer and performs a check 
          *  whether the buffer is full
@@ -883,8 +792,9 @@ public class HtmlDistiller implements Runnable {
          *  @param  description	The String to be added.
          *  @throws IOException if anything went wrong with the writing.
          */
-        public void putCheckFlush( String description ) throws IOException {
-            put( description );
+        public void putDescription( String description ) throws IOException {
+            descriptions[picCounter] = description;
+            picCounter++;
             flushIfNescessary();
         }
 
@@ -908,7 +818,7 @@ public class HtmlDistiller implements Runnable {
 
         /**
          *  method that writes the descriptions[] array to the html file.
-         *  as each pictures's img tag was written to the file the description
+         *  As each pictures's img tag was written to the file the description
          *  was kept in an array. This method is called each time the row 
          *  of img is full. The method is also called when the last picture has
          *  been written. The array elements are set to null after writing so
@@ -926,7 +836,7 @@ public class HtmlDistiller implements Runnable {
                 if ( descriptions[i] != null ) {
                     out.write( "<td valign=\"top\">" );
 
-                    out.write( stringToHTMLString( descriptions[i] ) );
+                    out.write( Tools.stringToHTMLString( descriptions[i] ) );
 
                     out.write( "</td>" );
                     out.newLine();
@@ -937,261 +847,5 @@ public class HtmlDistiller implements Runnable {
             out.write( "</tr>" );
             out.newLine();
         }
-    }
-
-
-    /**
-     *  Returns the the total number of nodes belonging to the indicated node.
-     *  @param startNode	The node from which the count shall begin.
-     *  @return The number of Nodes.
-     */
-    public static int countNodes( SortableDefaultMutableTreeNode startNode ) {
-        int count = 1;
-
-        Enumeration kids = startNode.children();
-        SortableDefaultMutableTreeNode n;
-
-        while ( kids.hasMoreElements() ) {
-            n = (SortableDefaultMutableTreeNode) kids.nextElement();
-            if ( n.getChildCount() > 0 ) {
-                count += countNodes( n );
-            } else {
-                count++;
-            }
-        }
-        return count;
-    }
-
-
-    /**
-     *  Writes the jpo.css stylesheet to the target directory.
-     *  This file is in the src/dtd directory and has to be added to the jar
-     *  which is handled in the build file.
-     */
-    public void writeStylesheet() {
-        copyFromJarToFile( "jpo.css", options.getTargetDirectory(), "jpo.css" );
-    }
-
-
-    /**
-     * Writes the file robots.txt to the target directory to prevent search 
-     * engines indexing the data.
-     */
-    public void writeRobotsTxt() {
-        copyFromJarToFile( "robots.txt", options.getTargetDirectory(), "robots.txt" );
-    }
-
-
-    /**
-     * Writes the file jpo.js for the DHTML effects
-     */
-    public void writeJs() {
-        copyFromJarToFile( "jpo.js", options.getTargetDirectory(), "jpo.js" );
-    }
-
-
-    /**
-     * Writes the contents of the specified text file which we have packaged in
-     * the jar of the distribution to a File. Usefull for stylesheets, dtd and
-     * robots.txt.
-     * @param fileInJar The name of the file in the jar
-     * @param targetDir The target directory
-     * @param targetFilename the target filename
-     */
-    public void copyFromJarToFile( String fileInJar, File targetDir, String targetFilename ) {
-        logger.info( String.format( "Copying File %s from classpath to filename %s in directory %s", fileInJar, targetFilename, targetDir ) );
-        String textLine;
-        try {
-            InputStream in = HtmlDistiller.class.getResourceAsStream( fileInJar );
-            BufferedReader bin = new BufferedReader( new InputStreamReader( in ) );
-            FileOutputStream out = new FileOutputStream( new File( targetDir, targetFilename ) );
-            OutputStreamWriter osw = new OutputStreamWriter( out );
-            BufferedWriter bout = new BufferedWriter( osw );
-            while ( ( textLine = bin.readLine() ) != null ) {
-                bout.write( textLine );
-                bout.newLine();
-            }
-            bout.flush();
-            bout.close();
-            osw.close();
-            out.close();
-            bin.close();
-            in.close();
-        } catch ( IOException x ) {
-            JOptionPane.showMessageDialog(
-                    Settings.anchorFrame,
-                    Settings.jpoResources.getString( "CssCopyError" ) + targetFilename + "\n" + x.getMessage(),
-                    Settings.jpoResources.getString( "genericWarning" ),
-                    JOptionPane.ERROR_MESSAGE );
-        }
-    }
-
-    /**
-     *  A button listener for the cancel button on the progress frame.
-     *  ToDo: Remove this class and integrate it into the button
-     */
-    private class ButtonListener implements ActionListener {
-
-        /**
-         *  Traps the event.
-         *  @param evt  The event.
-         */
-        public void actionPerformed( ActionEvent evt ) {
-            progressLabel.setText( Settings.jpoResources.getString( "htmlDistillerInterrupt" ) );
-            interrupt = true;
-        }
-    }
-
-
-    /**
-     *  This method converts the special characters to codes that HTML can deal with.
-     *  Taken from http://www.rgagnon.com/javadetails/java-0306.html
-     */
-    public static String stringToHTMLString( String string ) {
-        StringBuffer sb = new StringBuffer( string.length() );
-        // true if last char was blank
-        boolean lastWasBlankChar = false;
-        int len = string.length();
-        char c;
-
-        for ( int i = 0; i < len; i++ ) {
-            c = string.charAt( i );
-            if ( c == ' ' ) {
-                // blank gets extra work,
-                // this solves the problem you get if you replace all
-                // blanks with &nbsp;, if you do that you loss 
-                // word breaking
-                if ( lastWasBlankChar ) {
-                    lastWasBlankChar = false;
-                    sb.append( "&nbsp;" );
-                } else {
-                    lastWasBlankChar = true;
-                    sb.append( ' ' );
-                }
-            } else {
-                lastWasBlankChar = false;
-                //
-                // HTML Special Chars
-                if ( c == '"' ) {
-                    sb.append( "&quot;" );
-                } else if ( c == '&' ) {
-                    sb.append( "&amp;" );
-                } else if ( c == '<' ) {
-                    sb.append( "&lt;" );
-                } else if ( c == '>' ) {
-                    sb.append( "&gt;" );
-                } else if ( c == '\n' ) // Handle Newline
-                {
-                    sb.append( "&lt;br/&gt;" );
-                } else {
-                    int ci = 0xffff & c;
-                    if ( ci < 160 ) // nothing special only 7 Bit
-                    {
-                        sb.append( c );
-                    } else {
-                        // Not 7 Bit use the unicode system
-                        sb.append( "&#" );
-                        sb.append( new Integer( ci ).toString() );
-                        sb.append( ';' );
-                    }
-                }
-
-
-            }
-        }
-        return sb.toString();
-    }
-
-
-    /**
-     *  Translates characters which are problematic into unproblematic characters
-     * @param string The filename to clean up
-     * @return The cleaned up filename
-     */
-    public static String cleanupFilename( String string ) {
-        String returnString = string;
-        if ( returnString.contains( " " ) ) {
-            returnString = returnString.replaceAll( " ", "_" );  // replace blank with underscore
-        }
-        if ( returnString.contains( "%20" ) ) {
-            returnString = returnString.replaceAll( "%20", "_" );  // replace blank with underscore
-        }
-        if ( returnString.contains( "&" ) ) {
-            returnString = returnString.replace( "&", "_and_" );  // replace ampersand with _and_
-        }
-        if ( returnString.contains( "|" ) ) {
-            returnString = returnString.replace( "|", "l" );  // replace pipe with lowercase L
-        }
-        if ( returnString.contains( "<" ) ) {
-            returnString = returnString.replace( "<", "_" );
-        }
-        if ( returnString.contains( ">" ) ) {
-            returnString = returnString.replace( ">", "_" );
-        }
-        if ( returnString.contains( "@" ) ) {
-            returnString = returnString.replace( "@", "_" );
-        }
-        if ( returnString.contains( ":" ) ) {
-            returnString = returnString.replace( ":", "_" );
-        }
-        if ( returnString.contains( "$" ) ) {
-            returnString = returnString.replace( "$", "_" );
-        }
-        if ( returnString.contains( "£" ) ) {
-            returnString = returnString.replace( "£", "_" );
-        }
-        if ( returnString.contains( "^" ) ) {
-            returnString = returnString.replace( "^", "_" );
-        }
-        if ( returnString.contains( "~" ) ) {
-            returnString = returnString.replace( "~", "_" );
-        }
-        if ( returnString.contains( "\"" ) ) {
-            returnString = returnString.replace( "\"", "_" );
-        }
-        if ( returnString.contains( "'" ) ) {
-            returnString = returnString.replace( "'", "_" );
-        }
-        if ( returnString.contains( "`" ) ) {
-            returnString = returnString.replace( "`", "_" );
-        }
-        if ( returnString.contains( "?" ) ) {
-            returnString = returnString.replace( "?", "_" );
-        }
-        if ( returnString.contains( "[" ) ) {
-            returnString = returnString.replace( "[", "_" );
-        }
-        if ( returnString.contains( "]" ) ) {
-            returnString = returnString.replace( "]", "_" );
-        }
-        if ( returnString.contains( "{" ) ) {
-            returnString = returnString.replace( "{", "_" );
-        }
-        if ( returnString.contains( "}" ) ) {
-            returnString = returnString.replace( "}", "_" );
-        }
-        if ( returnString.contains( "(" ) ) {
-            returnString = returnString.replace( "(", "_" );
-        }
-        if ( returnString.contains( ")" ) ) {
-            returnString = returnString.replace( ")", "_" );
-        }
-        if ( returnString.contains( "*" ) ) {
-            returnString = returnString.replace( "*", "_" );
-        }
-        if ( returnString.contains( "+" ) ) {
-            returnString = returnString.replace( "+", "_" );
-        }
-        if ( returnString.contains( "/" ) ) {
-            returnString = returnString.replace( "/", "_" );
-        }
-        if ( returnString.contains( "\\" ) ) {
-            returnString = returnString.replaceAll( "\\\\", "_" );
-        }
-        if ( returnString.contains( "%" ) ) {
-            returnString = returnString.replace( "%", "_" );  //Important for this one to be at the end as the loading into JPO converts funny chars to %xx values
-        }
-
-        return returnString;
     }
 }

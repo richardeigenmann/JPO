@@ -623,7 +623,7 @@ public class ThumbnailController
      * @param event
      */
     public void dragEnter( DropTargetDragEvent event ) {
-        if ( !event.isDataFlavorSupported( JpoTransferable.dmtnFlavor ) ) {
+        if ( !event.isDataFlavorSupported( JpoTransferable.jpoNodeFlavor ) ) {
             event.rejectDrag();
         }
 
@@ -637,7 +637,7 @@ public class ThumbnailController
      * @param event
      */
     public void dragOver( DropTargetDragEvent event ) {
-        if ( !event.isDataFlavorSupported( JpoTransferable.dmtnFlavor ) ) {
+        if ( !event.isDataFlavorSupported( JpoTransferable.jpoNodeFlavor ) ) {
             event.rejectDrag();
         }
 
