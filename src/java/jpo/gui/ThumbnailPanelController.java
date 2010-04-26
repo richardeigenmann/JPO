@@ -438,6 +438,7 @@ public class ThumbnailPanelController
      * It also sets the tile of the JScrollPane.
      */
     public void relayout() {
+        Tools.checkEDT();
         if ( mySetOfNodes == null ) {
             return;
         }

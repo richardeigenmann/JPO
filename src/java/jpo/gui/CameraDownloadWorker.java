@@ -1,11 +1,11 @@
 package jpo.gui;
 
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JProgressBar;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 import jpo.dataModel.Settings;
+import jpo.dataModel.SortableDefaultMutableTreeNode;
 
 
 /*
@@ -59,7 +59,8 @@ public class CameraDownloadWorker
         Settings.memorizeCopyLocation( dataModel.targetDir.toString() );
         if ( dataModel.getShouldCreateNewGroup() ) {
             logger.fine( String.format( "Adding a new group %s to node %s", dataModel.getNewGroupDescription(), dataModel.getTargetNode().toString() ) );
-            dataModel.setTargetNode( dataModel.getTargetNode().addGroupNode( dataModel.getNewGroupDescription() ) );
+            SortableDefaultMutableTreeNode newGroupNode =dataModel.getTargetNode().addGroupNode( dataModel.getNewGroupDescription() );
+            dataModel.setTargetNode( newGroupNode );
         }
         Settings.memorizeGroupOfDropLocation( dataModel.getTargetNode() );
 
@@ -77,22 +78,20 @@ public class CameraDownloadWorker
         InterruptSemaphore interrupter = new InterruptSemaphore();
         dataModel.getCamera().buildOldImage( this, interrupter );// this, interrupter );
         Settings.writeCameraSettings();
-        Runnable r = new Runnable() {
-
-            public void run() {
-                progressBar.setValue( progressBar.getMaximum() );
-            }
-        };
-        SwingUtilities.invokeLater( r );
         return "Done";
     }
 
 
+    /**
+     * The Swing Worked calles this method when done.
+     */
+    @Override
     protected void done() {
+        progressBar.setValue( progressBar.getMaximum() );
         Jpo collectionController = dataModel.getCollectionController();
         if ( collectionController != null ) {
             logger.fine( String.format( "Position to node %s", dataModel.getTargetNode() ) );
-            collectionController.positionToNode( dataModel.getTargetNode() );
+            Jpo.positionToNode( dataModel.getTargetNode() );
         }
         step7.done();
 

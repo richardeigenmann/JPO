@@ -781,7 +781,7 @@ public class PictureInfoEditor
             pi.setFilmReference( filmReferenceJTextField.getText() );
             pi.setCopyrightHolder( copyrightHolderJTextField.getText() );
 
-            editNode.getPictureCollection().getTreeModel().nodeChanged( editNode );
+            editNode.getPictureCollection().sendNodeChanged( editNode );
             editNode.getPictureCollection().setUnsavedUpdates();
         }
 

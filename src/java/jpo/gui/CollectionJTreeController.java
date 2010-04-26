@@ -825,8 +825,6 @@ public class CollectionJTreeController
         TableJFrame tableJFrame = new TableJFrame( popupNode );
         tableJFrame.pack();
         tableJFrame.setVisible( true );
-
-
     }
 
 
@@ -838,17 +836,6 @@ public class CollectionJTreeController
             int sortCriteria ) {
         //logger.info( "Sort requested on " + myPopupNode.toString() + " for Criteria: " + Integer.toString( sortCriteria ) );
         popupNode.sortChildren( sortCriteria );
-        //( (DefaultTreeModel) collectionJTree.getModel() ).nodeStructureChanged( myPopupNode );
-
-
-
-
-
-
-
-
-
-
     }
 
     /**

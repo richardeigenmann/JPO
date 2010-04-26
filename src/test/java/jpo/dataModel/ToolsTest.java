@@ -63,4 +63,16 @@ public class ToolsTest extends TestCase {
         assertEquals( "When on EDT must not throw an error", false, onEDT_ErrorThrown );
 
     }
+
+      /**
+     * Test of cleanupFilename method, of class HtmlDistiller.
+     */
+    public void testCleanupFilename() {
+        String filename = "directory\\file.xml";  // actually contains directoy\file.xml
+        String wanted = "directory_file.xml";  // actually contains directoy\file.xml
+        String got = Tools.cleanupFilename( filename );
+        //System.out.println( String.format ("cleanupFilename from %s to %s got %s", filename, wanted, got ));
+        assertEquals( "A backslash could be made into an underscore", wanted, got );
+    }
+
 }

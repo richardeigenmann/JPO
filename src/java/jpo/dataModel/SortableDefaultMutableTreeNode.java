@@ -109,17 +109,8 @@ public class SortableDefaultMutableTreeNode
         refreshThumbnail();
 
         // tell the collection that the structure changed
-        final SortableDefaultMutableTreeNode nodeStructureChangedNode = this;
-        Runnable r = new Runnable() {
-
-            public void run() {
-                logger.fine( String.format( "Sending node structure changed event on node %s after sort", nodeStructureChangedNode.toString() ) );
-                getPictureCollection().getTreeModel().nodeStructureChanged( nodeStructureChangedNode );
-            }
-        };
-        SwingUtilities.invokeLater( r );
-
-
+        logger.fine( String.format( "Sending node structure changed event on node %s after sort", this.toString() ) );
+        getPictureCollection().sendNodeStructureChanged( this );
     }
 
     /**
@@ -313,7 +304,7 @@ public class SortableDefaultMutableTreeNode
         }
         if ( getPictureCollection() != null ) {
             if ( getPictureCollection().getSendModelUpdates() ) {
-                getPictureCollection().getTreeModel().nodeStructureChanged( this );
+                getPictureCollection().sendNodeChanged( this );
             }
         }
     }
@@ -486,18 +477,7 @@ public class SortableDefaultMutableTreeNode
      */
     public void pictureInfoChangeEvent( PictureInfoChangeEvent e ) {
         logger.fine( String.format( "The SDMTN %s received a PictureInfoChangeEvent %s", this.toString(), e.toString() ) );
-        if ( SwingUtilities.isEventDispatchThread() ) {
-            getPictureCollection().getTreeModel().nodeChanged( this );
-        } else {
-            final SortableDefaultMutableTreeNode finalNode = this;
-            Runnable r = new Runnable() {
-
-                public void run() {
-                    getPictureCollection().getTreeModel().nodeChanged( finalNode );
-                }
-            };
-            SwingUtilities.invokeLater( r );
-        }
+        getPictureCollection().sendNodeChanged( this );
     }
 
     /**
@@ -684,7 +664,7 @@ public class SortableDefaultMutableTreeNode
             }
         }
         in.close();
-        getPictureCollection().getTreeModel().nodeStructureChanged( this );
+        getPictureCollection().sendNodeStructureChanged( this );
         getPictureCollection().setUnsavedUpdates( false );
     }
 
@@ -716,7 +696,7 @@ public class SortableDefaultMutableTreeNode
 
         if ( getPictureCollection().getSendModelUpdates() ) {
             logger.fine( String.format( "Sending delete message. Model: %s, Parent: %s, ChildIndex %d, removedChild: %s ", getPictureCollection().getTreeModel(), parentNode, childIndices[0], removedChildren[0].toString() ) );
-            getPictureCollection().getTreeModel().nodesWereRemoved( parentNode, childIndices, removedChildren );
+            getPictureCollection().sendNodesWereRemoved( parentNode, childIndices, removedChildren );
         }
 
         /**  removeThumbnailRequest the move targets here **/
@@ -745,7 +725,7 @@ public class SortableDefaultMutableTreeNode
         //logger.info( "SDMTN.removeFromParent: Currentnode: " + this.toString() + " Parent Node:" + oldParentNode.toString() );
         super.removeFromParent();
         if ( getPictureCollection().getSendModelUpdates() ) {
-            getPictureCollection().getTreeModel().nodesWereRemoved( oldParentNode,
+            getPictureCollection().sendNodesWereRemoved( oldParentNode,
                     new int[] { oldParentIndex },
                     new Object[] { this } );
         }
@@ -786,9 +766,24 @@ public class SortableDefaultMutableTreeNode
         super.add( newNode );
         if ( getPictureCollection().getSendModelUpdates() ) {
             int index = this.getIndex( newNode );
-            getPictureCollection().getTreeModel().nodesWereInserted( this, new int[] { index } );
+            logger.fine( String.format( "The new node %s has index %d", newNode, index ) );
+            getPictureCollection().sendNodesWereInserted( this, new int[] { index } );
             getPictureCollection().setUnsavedUpdates();
         }
+    }
+
+
+    /**
+     *  Adds a new Group to the current node with the indicated description.
+     *  @param description
+     * @return  The new node is returned for convenience.
+     */
+    public SortableDefaultMutableTreeNode addGroupNode( String description ) {
+        SortableDefaultMutableTreeNode newNode =
+                new SortableDefaultMutableTreeNode(
+                new GroupInfo( description ) );
+        add( newNode );
+        return newNode;
     }
 
 
@@ -803,7 +798,7 @@ public class SortableDefaultMutableTreeNode
         super.insert( node, index );
         getPictureCollection().setUnsavedUpdates();
         if ( getPictureCollection().getSendModelUpdates() ) {
-            getPictureCollection().getTreeModel().nodesWereInserted( this, new int[] { index } );
+            getPictureCollection().sendNodesWereInserted( this, new int[] { index } );
         }
     }
 
@@ -1134,33 +1129,6 @@ public class SortableDefaultMutableTreeNode
             }
         }
         return super.getAllowsChildren();
-
-
-
-
-    }
-
-
-    /**
-     *  Adds a new Group to the current node with the indicated description.
-     *  @param description
-     * @return  The new node is returned for convenience.
-     */
-    public SortableDefaultMutableTreeNode addGroupNode( String description ) {
-        SortableDefaultMutableTreeNode newNode =
-                new SortableDefaultMutableTreeNode(
-                new GroupInfo( description ) );
-        add(
-                newNode );
-
-
-
-
-        return newNode;
-
-
-
-
     }
 
 

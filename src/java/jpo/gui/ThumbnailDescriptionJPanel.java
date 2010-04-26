@@ -198,11 +198,7 @@ public class ThumbnailDescriptionJPanel
             } else if ( userObject instanceof GroupInfo ) {
                 ( (GroupInfo) referringNode.getUserObject() ).setGroupName( pictureDescriptionJTA.getText() );
             }
-            // send a change event to the listeners
-            //          referringNode.getPictureCollection().getTreeModel().nodeChanged( referringNode );
         }
-        //Todo: The GroupInfo should be sending the notifications around
-        //Settings.pictureCollection.getTreeModel().nodeChanged( referringNode );
     }
 
 

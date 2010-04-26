@@ -99,7 +99,7 @@ public class GroupInfoEditor {
             public void actionPerformed( ActionEvent e ) {
                 gi.setGroupName( descriptionJTextArea.getText() );
                 gi.setLowresLocation( lowresLocationJTextField.getText() );
-                editNode.getPictureCollection().getTreeModel().nodeChanged( editNode );
+                editNode.getPictureCollection().sendNodeChanged( editNode );
                 getRid();
             }
         } );

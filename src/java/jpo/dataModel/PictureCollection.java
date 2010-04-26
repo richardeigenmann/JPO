@@ -1,6 +1,5 @@
 package jpo.dataModel;
 
-import jpotestground.DebuggingDefaultTreeModel;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.lang.reflect.InvocationTargetException;
@@ -14,6 +13,7 @@ import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreeNode;
 import jpo.gui.ThumbnailCreationQueue;
 
 
@@ -126,45 +126,7 @@ public class PictureCollection {
     }
 
 
-    /**
-     * This method sends all listeners of the TreeModel a nodeStructureChanged notification for the supplied node.
-     * It is asynchroneous on the EDT
-     * @param node  The node that was changed.
-     */
-    public void sendNodeStructureChanged( final DefaultMutableTreeNode node ) {
-        Runnable r = new Runnable() {
-
-            public void run() {
-                getTreeModel().nodeStructureChanged( node );
-            }
-        };
-        if ( SwingUtilities.isEventDispatchThread() ) {
-            r.run();
-        } else {
-            SwingUtilities.invokeLater( r );
-        }
-    }
-
-
-    /**
-     * This method sends all listeners of the TreeModel a nodeChanged notification for the supplied node.
-     * It is asynchroneous on the EDT
-     * @param node  The node that was changed.
-     */
-    public void sendNodeChanged( final DefaultMutableTreeNode node ) {
-        Runnable r = new Runnable() {
-
-            public void run() {
-                getTreeModel().nodeChanged( node );
-            }
-        };
-        if ( SwingUtilities.isEventDispatchThread() ) {
-            r.run();
-        } else {
-            SwingUtilities.invokeLater( r );
-        }
-    }
-
+     
 
     /**
      * Sets the flag whether to send model updates or not
@@ -172,6 +134,99 @@ public class PictureCollection {
      */
     public void setSendModelUpdates( boolean status ) {
         sendModelUpdates = status;
+    }
+
+
+    /**
+     * This method sends a nodeStructureChanged event through to the
+     * listeners of the Collection's model
+     * @param changedNode The node that was changed
+     */
+    public void sendNodeStructureChanged(
+            final TreeNode changedNode ) {
+        if ( SwingUtilities.isEventDispatchThread() ) {
+            getTreeModel().nodeStructureChanged( changedNode );
+        } else {
+            Runnable r = new Runnable() {
+
+                public void run() {
+                    getTreeModel().nodeStructureChanged( changedNode );
+                }
+            };
+            SwingUtilities.invokeLater( r );
+        }
+    }
+
+
+    /**
+     * This method sends a nodeChanged event through to the
+     * listeners of the Collection's model. It makes sure the
+     * event is sent on the EDT
+     * @param changedNode The node that was changed
+     */
+    public void sendNodeChanged(
+            final TreeNode changedNode ) {
+        if ( SwingUtilities.isEventDispatchThread() ) {
+            getTreeModel().nodeChanged( changedNode );
+        } else {
+            Runnable r = new Runnable() {
+
+                public void run() {
+                    Tools.checkEDT();
+                    getTreeModel().nodeChanged( changedNode );
+                }
+            };
+            SwingUtilities.invokeLater( r );
+        }
+    }
+
+
+    /**
+     * This method sends a nodesWereInserted event through to the
+     * listeners of the Collection's model. It makes sure the
+     * event is sent on the EDT
+     * @param changedNode The node that was inserted
+     * @param childIndices The Child indices
+     */
+    public void sendNodesWereInserted(
+            final TreeNode changedNode,
+            final int[] childIndices ) {
+        if ( SwingUtilities.isEventDispatchThread() ) {
+            getTreeModel().nodesWereInserted( changedNode, childIndices );
+        } else {
+            Runnable r = new Runnable() {
+
+                public void run() {
+                    getTreeModel().nodesWereInserted( changedNode, childIndices );
+                }
+            };
+            SwingUtilities.invokeLater( r );
+        }
+    }
+
+
+    /**
+     * This method sends a nodesWereRemoved event through to the
+     * listeners of the Collection's model. It makes sure the
+     * event is sent on the EDT
+     * @param node parent node
+     * @param childIndices The Child indices
+     * @param removedChildren the removed nodes
+     */
+    public void sendNodesWereRemoved( final TreeNode node,
+            final int[] childIndices,
+            final Object[] removedChildren ) {
+        if ( SwingUtilities.isEventDispatchThread() ) {
+            getTreeModel().nodesWereRemoved( node, childIndices, removedChildren );
+        } else {
+            Runnable r = new Runnable() {
+
+                public void run() {
+                    getTreeModel().nodesWereRemoved( node, childIndices, removedChildren );
+                }
+            };
+            SwingUtilities.invokeLater( r );
+        }
     }
 
     /**
@@ -614,7 +669,7 @@ public class PictureCollection {
      * @return
      */
     public boolean isInCollection( File f ) {
-        logger.fine(String.format( "Checking if File %s exists in the collection", f.toString() ));
+        logger.fine( String.format( "Checking if File %s exists in the collection", f.toString() ) );
         SortableDefaultMutableTreeNode node;
         Object nodeObject;
         File highresFile;
@@ -817,7 +872,7 @@ public class PictureCollection {
         Object userObject = node.getUserObject();
         if ( userObject instanceof PictureInfo ) {
             ( (PictureInfo) userObject ).sendWasUnselectedEvent();
-        }else if ( userObject instanceof GroupInfo ) {
+        } else if ( userObject instanceof GroupInfo ) {
             ( (GroupInfo) userObject ).sendWasUnselectedEvent();
         }
     }

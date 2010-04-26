@@ -40,7 +40,9 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  *
  * @author Richard Eigenmann
  */
-public class SampleTagCloud extends JFrame implements TagClickListener {
+public class SampleTagCloud
+        extends JFrame
+        implements TagClickListener {
 
     /**
      * Make this class directly executable.
@@ -59,17 +61,17 @@ public class SampleTagCloud extends JFrame implements TagClickListener {
     /**
      * One set of words for cities and their population
      */
-    WordMap cities = new Cities();
+    private WordMap cities = new Cities();
 
     /**
      * One set of words for countries and their population
      */
-    WordMap countries = new Countries();
+    private WordMap countries = new Countries();
 
     /**
      * The TagCloud widget that we would like to show.
      */
-    TagCloud tagCloud = new TagCloud();
+    private TagCloud tagCloud = new TagCloud();
 
 
     /**
@@ -147,9 +149,11 @@ public class SampleTagCloud extends JFrame implements TagClickListener {
     /**
      * Listener for the slider which limits the number of words to be shown
      */
-    private class MySliderChangeListener implements ChangeListener {
+    private class MySliderChangeListener
+            implements ChangeListener {
 
         int minimumWords = 10;
+
 
         /**
          * Receive slider moves and using an exponential formula to adjust the
@@ -174,7 +178,7 @@ public class SampleTagCloud extends JFrame implements TagClickListener {
                 logger.severe( String.format( "Limit (%d) is greater than available words (%d) setting to available words", numberOfWords, availableWords ) );
                 numberOfWords = availableWords;
             }
-            commentLabel.setText( String.format( "Slider set to %d%%; showing %d words", (int) (pct * 100f), numberOfWords ) );
+            commentLabel.setText( String.format( "Slider set to %d%%; showing %d words", (int) ( pct * 100f ), numberOfWords ) );
             tagCloud.setWordsToShow( numberOfWords );
             tagCloud.showWords();
         }

@@ -81,6 +81,7 @@ public class PictureInfoChangeListenerTest
 
         PictureInfo pi2 = new PictureInfo();
         node.setUserObject( pi2 );
+        
         assertEquals( "The PictureInfo should now have 0 change listeners", 0, changeListeners.size() );
 
         tc2 = null;

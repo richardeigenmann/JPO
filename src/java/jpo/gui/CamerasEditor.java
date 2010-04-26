@@ -327,6 +327,7 @@ public class CamerasEditor
      * Empties and reloads the cameras JTree
      */
     private void loadTree() {
+        Tools.checkEDT();
         rootNode.removeAllChildren();
         treeModel.nodeStructureChanged( rootNode );
         for ( Camera c : Settings.cameras ) {
