@@ -186,11 +186,14 @@ public class JpoResources_en extends ListResourceBundle {
         { "summary", "Summary"}, // new
         { "check", "Check"}, // new
 
+
         // HtmlDistillerThread
         { "LinkToJpo", "Made with <a href=\"http://j-po.sourceforge.net\">JPO</a>" },
         { "htmlDistillerInterrupt", "interrupting gracefully" },
         { "CssCopyError", "Error writing file: " },
         { "HtmlDistillerPreviewFont", "SansSerif-BOLD-18" },
+	{ "HtmlDistDone", "Wrote website with %d pictures"}, 
+
         // ReconcileJFrame
         { "ReconcileJFrameTitle", "Reconcile Directory vs Collection" },
         { "ReconcileBlaBlaLabel", "<HTML>This function will check whether the files in the indicated directory are present <br>in the current collection</HTML>" },

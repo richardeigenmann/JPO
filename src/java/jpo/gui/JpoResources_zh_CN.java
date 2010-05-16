@@ -232,11 +232,13 @@ public class JpoResources_zh_CN extends ListResourceBundle {
 		{ "summary", "Summary"}, // new
 		{ "check", "Check"}, // new
 
+
 		// HtmlDistillerThread
-		{"LinkToJpo", "制作工具：<A HREF=\"http://j-po.sourceforge.net\">JPO</A>"},
-		{"htmlDistillerInterrupt", "操作已被停止"},
-		{"CssCopyError", "不能拷贝样式文件: "},
-		{"HtmlDistillerPreviewFont", ""},
+		{ "LinkToJpo", "制作工具：<A HREF=\"http://j-po.sourceforge.net\">JPO</A>"},
+		{ "htmlDistillerInterrupt", "操作已被停止"},
+		{ "CssCopyError", "不能拷贝样式文件: "},
+		{ "HtmlDistillerPreviewFont", ""},
+		{ "HtmlDistDone", "Wrote website with %d pictures"}, 
 
 				
 

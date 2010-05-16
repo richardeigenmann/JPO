@@ -236,6 +236,7 @@ public class JpoResources_zh_TW extends ListResourceBundle {
 		{"htmlDistillerInterrupt", "操作已被停止"},
 		{"CssCopyError", "不能拷貝樣式文件: "},
 		{"HtmlDistillerPreviewFont", ""},
+	        {"HtmlDistDone", "Wrote website with %d pictures"}, 
 
 				
 
