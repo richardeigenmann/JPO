@@ -8,7 +8,6 @@ import jpo.dataModel.Settings;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
 import jpo.dataModel.PictureInfoChangeEvent;
 import jpo.dataModel.PictureInfoChangeListener;
-import jpo.*;
 import jpo.dataModel.Category;
 import jpo.dataModel.PictureInfo;
 import java.io.*;
@@ -27,7 +26,7 @@ import jpo.dataModel.NodeNavigatorInterface;
 /*
 PictureInfoEditor:  Edits the description of an image
 
-Copyright (C) 2002-2009  Richard Eigenmann.
+Copyright (C) 2002-2010  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -381,26 +380,14 @@ public class PictureInfoEditor
 
 
             private void parseit() {
-                //parsedCreationTimeJLabel.setText( DateFormat.getDateTimeInstance().format( Tools.parseDate( creationTimeJTextField.getText() ) )  );
                 parsedCreationTimeJLabel.setText( String.format( "%tc", Tools.parseDate( creationTimeJTextField.getText() ) ) );
             }
         } );
-
-
-        /*creationTimeJTextField.getDocument().addDocumentListener(new DocumentListener() {
-        public void changedUpdate( DocumentEvent e ) { parseit(); }
-        public void insertUpdate( DocumentEvent e ) { parseit(); }
-        public void removeUpdate( DocumentEvent e ) { parseit(); }
-        private void parseit() {
-        logger.info ("parsing");
-        //parsedCreationTimeJLabel.setText( DateFormat.getDateTimeInstance().format( Tools.parseDate( creationTimeJTextField.getText() ) )  );
-        }
-        } ); */
-
         c.gridy++;
         c.insets = new Insets( 0, 0, 0, 0 );
         rightJPanel.add( creationTimeJTextField, c );
 
+        c.gridx = 0;
         c.gridy++;
         parsedCreationTimeJLabel.setFont( errorLabelFont );
         rightJPanel.add( parsedCreationTimeJLabel, c );

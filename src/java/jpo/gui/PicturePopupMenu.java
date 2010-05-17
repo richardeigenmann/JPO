@@ -1,6 +1,5 @@
 package jpo.gui;
 
-import java.awt.Color;
 import jpo.dataModel.NodeNavigatorInterface;
 import jpo.dataModel.UserFunctionsChangeListener;
 import jpo.dataModel.Tools;
@@ -13,13 +12,12 @@ import javax.swing.*;
 import java.io.*;
 import java.util.*;
 import java.util.logging.Logger;
-import javax.swing.border.Border;
 import jpo.dataModel.RecentDropNodeListener;
 
 /*
 PicturePopupMenu.java:  a popup menu for pictures
 
-Copyright (C) 2002 - 2009  Richard Eigenmann.
+Copyright (C) 2002 - 2010  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -76,7 +74,7 @@ public class PicturePopupMenu
     /**
      * Constructor for the PicturePopupMenu where we do have a {@link PictureViewer} that should
      * receive the picture.
-     * TODO: Fix the wax this is being called because the whole business of
+     * TODO: Fix the way this is being called because the whole business of
      * figuring out whether this is a single node or multi node is silly
      *
      * @param  setOfNodes   The set of nodes from which the popup picture is coming
@@ -139,15 +137,7 @@ public class PicturePopupMenu
         }
         add( navigationJMenu );
 
-        // Properties
-        JMenuItem pictureEditJMenuItem = new JMenuItem( Settings.jpoResources.getString( "pictureEditJMenuItemLabel" ) );
-        pictureEditJMenuItem.addActionListener( new ActionListener() {
 
-            public void actionPerformed( ActionEvent e ) {
-                requestProperties();
-            }
-        } );
-        add( pictureEditJMenuItem );
 
         // Categories
         JMenuItem categoryUsagetJMenuItem = new JMenuItem( Settings.jpoResources.getString( "categoryUsagetJMenuItem" ) );
@@ -482,6 +472,16 @@ public class PicturePopupMenu
             } );
             fileOperationsJMenu.add( fileDeleteJMenuItem );
         }
+        
+        // Properties
+        JMenuItem picturePropertiesMenuItem = new JMenuItem( Settings.jpoResources.getString( "pictureEditJMenuItemLabel" ) );
+        picturePropertiesMenuItem.addActionListener( new ActionListener() {
+
+            public void actionPerformed( ActionEvent e ) {
+                requestProperties();
+            }
+        } );
+        add( picturePropertiesMenuItem );
     }
 
 

@@ -12,10 +12,6 @@ import java.net.*;
 import java.io.*;
 import java.awt.dnd.*;
 import java.awt.datatransfer.*;
-import com.drew.metadata.*;
-import com.drew.metadata.exif.*;
-import com.drew.metadata.iptc.*;
-import com.drew.imaging.jpeg.*;
 import java.awt.event.*;
 import java.util.logging.Logger;
 import javax.swing.*;
@@ -1632,55 +1628,23 @@ public class SortableDefaultMutableTreeNode
         logger.fine( String.format( "Adding file %s to the node %s", addFile.toString(), toString() ) );
         PictureInfo newPictureInfo = new PictureInfo();
 
-
-
-
         try {
             if ( !Tools.jvmHasReader( addFile ) ) {
                 logger.severe( String.format( "The Java Virtual Machine has not got a reader for the file %s", addFile.toString() ) );
-
-
-
-
                 return false; // don't add if there is no reader.
-
-
-
-
             }
             newPictureInfo.setHighresLocation( addFile.toURI().toURL() );
             newPictureInfo.setLowresLocation( Tools.lowresFilename() );
             newPictureInfo.setDescription( Tools.stripOutFilenameRoot( addFile ) );
             newPictureInfo.setChecksum( Tools.calculateChecksum( addFile ) );
-
-
-
-
             if ( categoryAssignment != null ) {
                 newPictureInfo.setCategoryAssignment( categoryAssignment );
-
-
-
-
             }
         } catch ( MalformedURLException x ) {
             logger.severe( String.format( "Caught a MalformedURLException: %s\nError: %s", addFile.getPath(), x.getMessage() ) );
-
-
-
-
             return false;
-
-
-
-
         }
-
-
         SortableDefaultMutableTreeNode newNode = new SortableDefaultMutableTreeNode( newPictureInfo );
-
-
-
 
         this.add( newNode );
         // This is not elegant but for now forces the creation of the ThumbnailController image
@@ -1690,83 +1654,11 @@ public class SortableDefaultMutableTreeNode
         //ThumbnailController t = new ThumbnailController( new SingleNodeNavigator( newNode ), 0, Settings.thumbnailSize, ThumbnailQueueRequest.LOW_PRIORITY, null );
         getPictureCollection().setUnsavedUpdates();
 
-        String creationTime = null;
-
-
-
-
-        try {
-            // try to read EXIF data and get the date/time if possible
-            // if this fails the is crashes into the catch statements and
-            // the date is not added
-
-            InputStream highresStream = newPictureInfo.getHighresURL().openStream();
-            JpegSegmentReader reader = new JpegSegmentReader( new BufferedInputStream( highresStream ) );
-
-
-
-
-            byte[] exifSegment = reader.readSegment( JpegSegmentReader.SEGMENT_APP1 );
-
-
-
-
-            byte[] iptcSegment = reader.readSegment( JpegSegmentReader.SEGMENT_APPD );
-            highresStream.close();
-
-            Metadata metadata = new Metadata();
-
-
-
-
-            new ExifReader( exifSegment ).extract( metadata );
-
-
-
-
-            new IptcReader( iptcSegment ).extract( metadata );
-
-            Directory exifDirectory = metadata.getDirectory( ExifDirectory.class );
-
-
-            creationTime = exifDirectory.getString( ExifDirectory.TAG_DATETIME );
-        } catch ( MalformedURLException x ) {
-            logger.severe( String.format( "Caught a MalformedURLException: %s\nError: %s", addFile.getPath(), x.getMessage() ) );
-
-
-
-
-        } catch ( IOException x ) {
-            logger.severe( String.format( "Caught an IOException: %s\nError: %s", addFile.getPath(), x.getMessage() ) );
-
-
-
-
-        } catch ( JpegProcessingException x ) {
-            logger.fine( String.format( "Could not extract an EXIF header for file %s\nJpegProcessingException: %s", addFile.getPath(), x.getMessage() ) );
-
-
-
-
-        }
-        if ( creationTime == null ) {
-            creationTime = "";
-
-
-
-
-        }
-        newPictureInfo.setCreationTime( creationTime );
-
-
-
-
+        ExifInfo exifInfo = new ExifInfo( newPictureInfo.getHighresURLOrNull() );
+        exifInfo.decodeExifTags();
+        newPictureInfo.setCreationTime( exifInfo.getCreateDateTime() );
 
         return true;
-
-
-
-
     }
 
 
@@ -1779,24 +1671,12 @@ public class SortableDefaultMutableTreeNode
     public void refreshThumbnail() {
         if ( isRoot() ) {
             logger.fine( "Ingnoring the request for a thumbnail on the Root Node as the query for it's parent's children will fail" );
-
-
-
-
             return;
-
-
-
-
         }
         logger.fine( String.format( "refreshing the thumbnail on the node %s\nAbout to create the thubnail", this.toString() ) );
         ThumbnailController t = new ThumbnailController( new SingleNodeNavigator( this ), 0, Settings.thumbnailSize, ThumbnailQueueRequest.HIGH_PRIORITY, null );
         logger.fine( String.format( "Thumbnail %s created. Now chucking it on the creation queue", t.toString() ) );
         ThumbnailCreationQueue.requestThumbnailCreation( t, ThumbnailQueueRequest.HIGH_PRIORITY, true );
-
-
-
-
     }
 
 

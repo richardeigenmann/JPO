@@ -4,7 +4,6 @@ import jpo.gui.*;
 import jpo.dataModel.Tools;
 import jpo.dataModel.ExifInfo;
 import jpo.dataModel.Settings;
-import jpo.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.AffineTransform;
@@ -104,7 +103,7 @@ public class PicturePane
      *  This object is a reference to an Exif Info object that tries to keep tabs on the
      *  information in the image.
      */
-    public ExifInfo ei = new ExifInfo();
+    public ExifInfo ei = null;
 
     /**
      *  class to format the scale
@@ -384,7 +383,7 @@ public class PicturePane
                     g2d.drawString( Settings.jpoResources.getString( "ExifInfoISO" ), infoPoint.x, infoPoint.y + ( 5 * lineSpacing ) );
                     g2d.drawString( ei.iso, infoPoint.x + tabstop, infoPoint.y + ( 5 * lineSpacing ) );
                     g2d.drawString( Settings.jpoResources.getString( "ExifInfoTimeStamp" ), infoPoint.x, infoPoint.y + ( 6 * lineSpacing ) );
-                    g2d.drawString( ei.dateTime, infoPoint.x + tabstop, infoPoint.y + ( 6 * lineSpacing ) );
+                    g2d.drawString( ei.getCreateDateTime(), infoPoint.x + tabstop, infoPoint.y + ( 6 * lineSpacing ) );
                     break;
                 case DISPLAY_APPLICATION:
                     g2d.drawString( legend, infoPoint.x, infoPoint.y + ( 0 * lineSpacing ) );

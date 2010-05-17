@@ -35,6 +35,7 @@ import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.MouseInputAdapter;
+import jpo.dataModel.ExifInfo;
 import jpo.dataModel.NodeNavigator;
 import jpo.dataModel.PictureInfoChangeEvent;
 import jpo.dataModel.PictureInfoChangeListener;
@@ -578,7 +579,7 @@ public class PictureViewer
 
         pictureJPanel.sclPic.stopLoadingExcept( filenameURL );
         pictureJPanel.sclPic.loadAndScalePictureInThread( filenameURL, Thread.MAX_PRIORITY, rotation );
-        pictureJPanel.ei.setUrl( filenameURL );
+        pictureJPanel.ei = new ExifInfo( filenameURL );
         pictureJPanel.ei.decodeExifTags();
     }
 
@@ -755,7 +756,7 @@ public class PictureViewer
      */
     public void relayout() {
         logger.info( String.format( "Got notified to relayout" ) );
-        show(mySetOfNodes, myIndex);
+        show( mySetOfNodes, myIndex );
 
     }
 

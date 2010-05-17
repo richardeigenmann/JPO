@@ -76,7 +76,7 @@ public class ExifInfo {
     /**
      *  The camera timestamp
      */
-    public String dateTime;
+    private String createDateTime;
 
     /**
      *  A full dump of the Exif information
@@ -86,11 +86,9 @@ public class ExifInfo {
 
     /**
      *   Constructor to create the object
-     */
+     *
     public ExifInfo() {
-    }
-
-
+    }*/
     /**
      *   Constructor to create the object
      *
@@ -124,7 +122,7 @@ public class ExifInfo {
         shutterSpeed = "";
         focalLength = "";
         iso = "";
-        dateTime = "";
+        setCreateDateTime( "" );
         exifDump = new StringBuffer( "" );
     }
 
@@ -163,7 +161,7 @@ public class ExifInfo {
                 shutterSpeed = tryToGetTag( directory, ExifDirectory.TAG_EXPOSURE_TIME, shutterSpeed );
                 focalLength = tryToGetTag( directory, ExifDirectory.TAG_FOCAL_LENGTH, focalLength );
                 iso = tryToGetTag( directory, NikonType2MakernoteDirectory.TAG_NIKON_TYPE2_ISO_1, iso );
-                dateTime = tryToGetTag( directory, ExifDirectory.TAG_DATETIME_ORIGINAL, dateTime );
+                setCreateDateTime( tryToGetTag( directory, ExifDirectory.TAG_DATETIME_ORIGINAL, getCreateDateTime() ) );
 
                 Iterator tags = directory.getTagIterator();
                 while ( tags.hasNext() ) {
@@ -201,8 +199,8 @@ public class ExifInfo {
         if ( iso == null ) {
             iso = "";
         }
-        if ( dateTime == null ) {
-            dateTime = "";
+        if ( getCreateDateTime() == null ) {
+            setCreateDateTime( "" );
         }
 
     }
@@ -210,14 +208,15 @@ public class ExifInfo {
 
     /**
      *  This method tries to get a tag out of the Exif data
+     *  @param directory The EXIF Directory
+     *  @param tag the tag to search for
+     *  @param inputString the String to return if the tag was not found.
      */
     private String tryToGetTag( Directory directory, int tag, String inputString ) {
         String searchString;
         try {
-            //searchString = directory.getString( tag );
             searchString = directory.getDescription( tag );
         } catch ( MetadataException x ) {
-            //logger.info ("ExifInfo.tryToGetTag: problem with tag: " + x.getMessage());
             searchString = null;
         }
         if ( searchString == null ) {
@@ -243,10 +242,10 @@ public class ExifInfo {
      * @return Returns a brief summary of the photographic settings
      */
     public String getBriefPhotographicSummary() {
-        return Settings.jpoResources.getString( "ExifInfoCamera" ) + "\t" + camera + "\n" +
-                Settings.jpoResources.getString( "ExifInfoShutterSpeed" ) + "\t" + shutterSpeed + "\n" +
-                Settings.jpoResources.getString( "ExifInfoAperture" ) + "\t" + aperture + "\n" +
-                Settings.jpoResources.getString( "ExifInfoTimeStamp" ) + "\t" + dateTime + "\n";
+        return Settings.jpoResources.getString( "ExifInfoCamera" ) + "\t" + camera + "\n"
+                + Settings.jpoResources.getString( "ExifInfoShutterSpeed" ) + "\t" + shutterSpeed + "\n"
+                + Settings.jpoResources.getString( "ExifInfoAperture" ) + "\t" + aperture + "\n"
+                + Settings.jpoResources.getString( "ExifInfoTimeStamp" ) + "\t" + getCreateDateTime() + "\n";
     }
 
 
@@ -256,13 +255,31 @@ public class ExifInfo {
      * @return Returns a comprehensive summary of the photographic settings
      */
     public String getComprehensivePhotographicSummary() {
-        return Settings.jpoResources.getString( "ExifInfoCamera" ) + "\t" + camera + "\n" +
-                Settings.jpoResources.getString( "ExifInfoLens" ) + "\t" + lens + "\n" +
-                Settings.jpoResources.getString( "ExifInfoShutterSpeed" ) + "\t" + shutterSpeed + "\n" +
-                Settings.jpoResources.getString( "ExifInfoAperture" ) + "\t" + aperture + "\n" +
-                Settings.jpoResources.getString( "ExifInfoFocalLength" ) + "\t" + focalLength + "\n" +
-                Settings.jpoResources.getString( "ExifInfoISO" ) + "\t" + iso + "\n" +
-                Settings.jpoResources.getString( "ExifInfoTimeStamp" ) + "\t" + dateTime + "\n";
+        return Settings.jpoResources.getString( "ExifInfoCamera" ) + "\t" + camera + "\n"
+                + Settings.jpoResources.getString( "ExifInfoLens" ) + "\t" + lens + "\n"
+                + Settings.jpoResources.getString( "ExifInfoShutterSpeed" ) + "\t" + shutterSpeed + "\n"
+                + Settings.jpoResources.getString( "ExifInfoAperture" ) + "\t" + aperture + "\n"
+                + Settings.jpoResources.getString( "ExifInfoFocalLength" ) + "\t" + focalLength + "\n"
+                + Settings.jpoResources.getString( "ExifInfoISO" ) + "\t" + iso + "\n"
+                + Settings.jpoResources.getString( "ExifInfoTimeStamp" ) + "\t" + getCreateDateTime() + "\n";
 
+    }
+
+
+    /**
+     * Returns the time the picture was created.
+     * @return the createDateTime
+     */
+    public String getCreateDateTime() {
+        return createDateTime;
+    }
+
+
+    /**
+     * Sets the time the picutre was created
+     * @param createDateTime the createDateTime to set
+     */
+    private void setCreateDateTime( String dateTime ) {
+        this.createDateTime = dateTime;
     }
 }
