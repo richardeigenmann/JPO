@@ -1,21 +1,21 @@
 package jpo.gui.swing;
 
-import java.awt.Color;
-import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.FilenameFilter;
+import java.util.List;
 import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingWorker;
 import jpo.dataModel.Settings;
 import jpo.dataModel.Tools;
+import jpo.gui.ProgressGui;
 import net.miginfocom.swing.MigLayout;
 
 /*
@@ -193,7 +193,7 @@ public class PrivacyJFrame
         /**
          * Handles a click on the clear selected button.
          * @param clearRecentFiles  Wether to clear the recent files of not
-         * @param clearThumbnails  Wether to clear the thumbnails
+         * @param clearThumbnails  Wether to clear the thumbnailFilter
          * @param clearAutoload  Wether to clear the Autoload 
          * @param clearMemorisedDirs  Wether to clear the memorised locations
          */
@@ -225,22 +225,95 @@ public class PrivacyJFrame
 
         /**
          * Handles a click on the clear Thumbnails button
-         * TODO: make this a SwingWorker and have a progress bar
          */
         public void clearThumbnails() {
-            File thumbnailDir = Settings.thumbnailPath;
-            FilenameFilter thumbnails = new FilenameFilter() {
+            new ThumbnailDeleter();
+        }
 
-                public boolean accept( File dir, String name ) {
-                    boolean matches = name.matches( "^" + Settings.thumbnailPrefix + "[0-9]+[.]jpg$" );
-                    //logger.info( String.format( "Considering: %s matches: %b", name, matches ) );
-                    return matches;
+        /**
+         * This class extends a SwingWorker to provide a progress bar while deleting the thumbnailFilter.
+         */
+        private class ThumbnailDeleter
+                extends SwingWorker<String, String> {
+
+            /**
+             *   This object holds a reference to the progress GUI for the user.
+             */
+            private ProgressGui progGui;
+
+            /**
+             * An array of the files to delete.
+             */
+            File[] deleteableThumbnails;
+
+
+            /**
+             * Constructs the Thumbnail Deleter. Builds an array of the thumbnail
+             * files and then uses the doInBackground() method to do the actual deletion.
+             */
+            public ThumbnailDeleter() {
+                File thumbnailDir = Settings.thumbnailPath;
+                FilenameFilter thumbnailFilter = new FilenameFilter() {
+
+                    public boolean accept( File dir, String name ) {
+                        boolean matches = name.matches( "^" + Settings.thumbnailPrefix + "[0-9]+[.]jpg$" );
+                        //logger.info( String.format( "Considering: %s matches: %b", name, matches ) );
+                        return matches;
+                    }
+                };
+                deleteableThumbnails = thumbnailDir.listFiles( thumbnailFilter );
+
+                int filesToDelete = deleteableThumbnails.length;
+                progGui = new ProgressGui( filesToDelete,
+                        Settings.jpoResources.getString( "PrivacyTumbProgBarTitle" ),
+                        String.format( Settings.jpoResources.getString( "PrivacyTumbProgBarDone" ), filesToDelete ) );
+                execute();
+            }
+
+
+            /**
+             * This method deletes each file in the deleteableThumbnails
+             * array and updates the progress bar while doing so.
+             * It can be interrupted by clicking the cancel button.
+             * @return The string "Done"
+             * @throws Exception
+             */
+            @Override
+            protected String doInBackground() throws Exception {
+
+                for ( File f : deleteableThumbnails ) {
+                    boolean success = f.delete();
+                    logger.fine( String.format( "Success: %b for deleting %s ", success, f.toString() ) );
+                    publish( String.format( "Success: %b for deleting %s ", success, f.toString() ) );
+                    if ( progGui.getInterruptor().getShouldInterrupt() ) {
+                        progGui.setDoneString( Settings.jpoResources.getString( "htmlDistillerInterrupt" ) );
+                        break;
+                    }
                 }
-            };
-            File[] deleteableThumbnails = thumbnailDir.listFiles( thumbnails );
-            for ( File f : deleteableThumbnails ) {
-                boolean success = f.delete();
-                logger.info( String.format( "Success: %b for deleting %s ", success, f.toString() ) );
+                return "Done";
+            }
+
+
+            /**
+             * This method is called by SwingWorker when the background process
+             * sends a publish.
+             * @param messages A message that will be written to the logfile.
+             */
+            @Override
+            protected void process( List<String> messages ) {
+                for ( String message : messages ) {
+                    //logger.info( String.format( "messge: %s", message ) );
+                    progGui.progressIncrement();
+                }
+            }
+
+
+            /**
+             * SwingWorker calls here when the background task is done.
+             */
+            @Override
+            protected void done() {
+                progGui.switchToDoneMode();
             }
         }
 

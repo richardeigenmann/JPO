@@ -687,6 +687,8 @@ public class JpoResources_de extends ListResourceBundle {
 		{ "PrivacyClose", "Schliessen" },
 		{ "PrivacyAll", "Alle" },
 		{ "PrivacyClear", "ausführen" },
+		{ "PrivacyTumbProgBarTitle", "Verkleinerungen Löschen" },
+		{ "PrivacyTumbProgBarDone", "%d Verkleinerungen gelöscht" },
 
 		{"Template", "Template"}
 		

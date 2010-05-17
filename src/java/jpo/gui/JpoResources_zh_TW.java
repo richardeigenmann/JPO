@@ -689,6 +689,9 @@ public class JpoResources_zh_TW extends ListResourceBundle {
 		{ "PrivacyClose", "Close Window" },
 		{ "PrivacyAll", "All" },
 		{ "PrivacyClear", "clear" },
+		{ "PrivacyTumbProgBarTitle", "Deleting Thumbnails" },
+		{ "PrivacyTumbProgBarDone", "%d Thumbnails Deleted" },
+
 
 
 		{"Template", "模板"}
