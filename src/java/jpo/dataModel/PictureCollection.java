@@ -801,22 +801,21 @@ public class PictureCollection {
 
 
     /**
-     *  This method returns an array of the groups that hold a reference to the picture of the specified node
-     * @param orphanNode the node to test
-     * @return groups that hold a reference to the picture of the specified node
+     * This method returns an array of the groups that hold a reference to the 
+     * picture filename of the supplied node
+     * @param suppliedNode The node with the picture for which the owning parent nodes need to be found
+     * @return group nodes that have a child with the same picture
      */
     public SortableDefaultMutableTreeNode[] findParentGroups(
-            SortableDefaultMutableTreeNode orphanNode ) {
-        if ( !( orphanNode.getUserObject() instanceof PictureInfo ) ) {
+            SortableDefaultMutableTreeNode suppliedNode ) {
+        Object userObject = suppliedNode.getUserObject();
+        if ( !( userObject instanceof PictureInfo ) ) {
             return null;
         }
 
         Vector<SortableDefaultMutableTreeNode> parentGroups = new Vector<SortableDefaultMutableTreeNode>();
-        if ( ( (DefaultMutableTreeNode) orphanNode.getParent() ).getUserObject() instanceof GroupInfo ) {
-            parentGroups.add( (SortableDefaultMutableTreeNode) orphanNode.getParent() );
-        }
 
-        String comparingFilename = ( (PictureInfo) orphanNode.getUserObject() ).getHighresFilename();
+        String comparingFilename = ( (PictureInfo) userObject ).getHighresLocation();
         SortableDefaultMutableTreeNode testNode, testNodeParent;
         Object nodeObject;
         PictureInfo pi;
@@ -825,7 +824,7 @@ public class PictureCollection {
             nodeObject = testNode.getUserObject();
             if ( ( nodeObject instanceof PictureInfo ) ) {
                 pi = (PictureInfo) nodeObject;
-                if ( pi.getHighresFilename().equals( comparingFilename ) ) {
+                if ( pi.getHighresLocation().equals( comparingFilename ) ) {
                     testNodeParent = (SortableDefaultMutableTreeNode) testNode.getParent();
                     if ( !parentGroups.contains( testNodeParent ) ) {
                         logger.fine( "adding node: " + testNodeParent.toString() );
@@ -834,7 +833,6 @@ public class PictureCollection {
                 }
             }
         }
-
         return parentGroups.toArray( new SortableDefaultMutableTreeNode[0] );
     }
 
