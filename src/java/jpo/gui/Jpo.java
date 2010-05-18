@@ -8,7 +8,6 @@ import jpo.gui.swing.ResizableJFrame;
 import jpo.gui.swing.MainWindow;
 import jpo.dataModel.Tools;
 import jpo.dataModel.Settings;
-import jpo.*;
 import java.lang.reflect.InvocationTargetException;
 import java.util.logging.Level;
 import java.util.logging.Logger;

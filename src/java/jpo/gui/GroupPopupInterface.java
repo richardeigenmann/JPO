@@ -1,12 +1,11 @@
 package jpo.gui;
 
 import jpo.dataModel.SortableDefaultMutableTreeNode;
-import jpo.*;
 import java.io.File;
 
 /*
 GroupPopupInterface.java:  interface for the group popum menu
-Copyright (C) 2002-2009 Richard Eigenmann.
+Copyright (C) 2002-2010 Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -39,6 +38,7 @@ public interface GroupPopupInterface {
     /**
      * the implementing class must trap and do something when the user wants to
      * show the Pictures.
+     * @param groupNode
      */
     public void requestSlideshow( SortableDefaultMutableTreeNode groupNode );
 
@@ -46,6 +46,7 @@ public interface GroupPopupInterface {
     /**
      * the implementing class must trap and do something when the user wants to
      * Find pictures
+     * @param groupNode
      */
     public void requestFind( SortableDefaultMutableTreeNode groupNode );
 
@@ -53,6 +54,7 @@ public interface GroupPopupInterface {
     /**
      * the implementing class must trap and do something when the user wants to
      * edit the Group.
+     * @param groupNode
      */
     public void requestEditGroupNode( SortableDefaultMutableTreeNode groupNode );
 
@@ -60,6 +62,7 @@ public interface GroupPopupInterface {
     /**
      * the implementing class must trap and do something when the user wants to
      * edit the Group as a table.
+     * @param groupNode
      */
     public void requestEditGroupTable( SortableDefaultMutableTreeNode groupNode );
 
@@ -67,6 +70,7 @@ public interface GroupPopupInterface {
     /**
      * the implementing class must trap and do something when the user wants to
      * add an empty group.
+     * @param groupNode 
      */
     public void requestAddGroup( SortableDefaultMutableTreeNode groupNode );
 
@@ -84,6 +88,7 @@ public interface GroupPopupInterface {
     /**
      * the implementing class must trap and do something when the user wants to
      * add a collection.
+     * @param groupNode
      */
     public void requestAddCollection( SortableDefaultMutableTreeNode groupNode );
 
@@ -91,6 +96,7 @@ public interface GroupPopupInterface {
     /**
      * the implementing class must load the collection indicated
      *
+     * @param groupNode
      * @param fileToLoad
      */
     public void requestAddCollection( SortableDefaultMutableTreeNode groupNode,
@@ -98,8 +104,16 @@ public interface GroupPopupInterface {
 
 
     /**
+     * the implementing class must trap this request and must select all the child nodes for email.
+     * @param groupNode The group node whose children should be emailed
+     */
+    public void requestEmailSelection( SortableDefaultMutableTreeNode groupNode );
+
+
+    /**
      * the implementing class must trap and do something when the user wants to
      * export to HTML.
+     * @param groupNode
      */
     public void requestGroupExportHtml( SortableDefaultMutableTreeNode groupNode );
 
@@ -107,6 +121,7 @@ public interface GroupPopupInterface {
     /**
      * the implementing class must trap and do something when the user wants to
      * export to a JAR archive.
+     * @param groupNode
      */
     public void requestGroupExportFlatFile(
             SortableDefaultMutableTreeNode groupNode );
@@ -123,6 +138,7 @@ public interface GroupPopupInterface {
     /**
      * the implementing class must trap and do something when the user wants to
      * export to a new collection.
+     * @param groupNode
      */
     public void requestGroupExportNewCollection(
             SortableDefaultMutableTreeNode groupNode );
@@ -131,6 +147,7 @@ public interface GroupPopupInterface {
     /**
      * the implementing class must trap and do something when the user wants to
      * remove a group.
+     * @param groupNode
      */
     public void requestGroupRemove( SortableDefaultMutableTreeNode groupNode );
 
@@ -138,6 +155,7 @@ public interface GroupPopupInterface {
     /**
      * the implementing class must trap and do something when the user wants to
      * move a group to the top.
+     * @param groupNode
      */
     public void requestMoveGroupToTop( SortableDefaultMutableTreeNode groupNode );
 
@@ -145,6 +163,7 @@ public interface GroupPopupInterface {
     /**
      * the implementing class must trap and do something when the user wants to
      * move a group up
+     * @param groupNode
      */
     public void requestMoveGroupUp( SortableDefaultMutableTreeNode groupNode );
 
@@ -152,6 +171,7 @@ public interface GroupPopupInterface {
     /**
      * the implementing class must trap and do something when the user wants to
      * move a group down
+     * @param groupNode
      */
     public void requestMoveGroupDown( SortableDefaultMutableTreeNode groupNode );
 
@@ -159,6 +179,7 @@ public interface GroupPopupInterface {
     /**
      * the implementing class must trap and do something when the user wants to
      * move a group down
+     * @param groupNode
      */
     public void requestMoveGroupToBottom(
             SortableDefaultMutableTreeNode groupNode );
@@ -167,7 +188,8 @@ public interface GroupPopupInterface {
     /**
      *  the implementing class must trap and do something whne the user wants to
      *  move the current group to the specified node.
-     *  @param  targetGroup
+     *  @param groupNode
+     * @param  targetGroup
      */
     public void requestMoveToNode( SortableDefaultMutableTreeNode groupNode,
             SortableDefaultMutableTreeNode targetGroup );
@@ -176,6 +198,7 @@ public interface GroupPopupInterface {
     /**
      * the implementing class must trap and do something when the user wants to
      * consolidate a group.
+     * @param groupNode
      */
     public void requestConsolidateGroup(
             SortableDefaultMutableTreeNode groupNode );
@@ -197,6 +220,7 @@ public interface GroupPopupInterface {
     /**
      * the implementing class must trap and do something when the user wants to
      * edit the categories
+     * @param groupNode
      */
     public void showCategoryUsageGUI( SortableDefaultMutableTreeNode groupNode );
 }

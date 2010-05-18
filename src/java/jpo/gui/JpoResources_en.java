@@ -133,8 +133,10 @@ public class JpoResources_en extends ListResourceBundle {
         { "predefinedEmailJLabel", "Predefined Server:" },
         { "emailServerJLabel", "Email Server:" },
         { "emailPortJLabel", "Port:" },
+        { "emailAuthentication", "Authentication:" },
         { "emailUserJLabel", "Username:" },
         { "emailPasswordJLabel", "Password:" },
+
         // Settings
         { "thumbNoExistError", "The directory for the thumbnails doesn't exist.\nPlease select Edit | Settings to set this correctly.\nThumbnail caching has been turned off." },
         { "thumbNoWriteError", "The directory for the thumbnails is not writeable.\nPlease select Edit | Settings to set this correctly.\nThumbnail caching has been turned off." },
@@ -287,6 +289,7 @@ public class JpoResources_en extends ListResourceBundle {
         { "sortByCommentJMenuItem", "Comment" },
         { "sortByPhotographerJMenuItem", "Photographer" },
         { "sortByCopyrightHolderTimeJMenuItem", "Copyright Holder" },
+	{ "groupSelectForEmail", "Select all for Emailing"},
         { "groupExportHtmlMenuText", "Generate Website" },
         { "groupExportFlatFileMenuText", "Export to Flat File" },
         { "groupExportJarMenuText", "Export to Jar Archive" },
@@ -498,6 +501,7 @@ public class JpoResources_en extends ListResourceBundle {
         { "refreshJButtonCUJF", "Refresh" },
         { "modifyCategoryJButton", "Categories" },
         { "cancelJButton", "Cancel" },
+
         // EmailerJFrame
         { "EmailerJFrame", "Send email" },
         { "imagesCountJLabel", "Number of Pictures Selected: " },

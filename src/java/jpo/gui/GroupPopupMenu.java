@@ -4,7 +4,6 @@ import jpo.dataModel.RecentFilesChangeListener;
 import jpo.dataModel.Settings;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
 import jpo.dataModel.RecentDropNodeListener;
-import jpo.*;
 import java.awt.event.*;
 import java.io.File;
 import java.util.ArrayList;
@@ -15,7 +14,7 @@ import jpo.dataModel.Tools;
 /*
 GroupPopupMenu.java: popup menu for groups
 
-Copyright (C) 2002 - 2009  Richard Eigenmann.
+Copyright (C) 2002 - 2010  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -277,7 +276,7 @@ public class GroupPopupMenu
                 }
             } );
             moveGroupNodeJMenu.add( moveGroupToBottomJMenuItem );
-//menu item that allows indenting the group
+            //menu item that allows indenting the group
             JMenuItem indentJMenuItem = new JMenuItem( Settings.jpoResources.getString( "indentJMenuItem" ) );
             indentJMenuItem.addActionListener( new ActionListener() {
 
@@ -392,6 +391,16 @@ public class GroupPopupMenu
             addSeparator();
         }
 
+        JMenuItem groupSelectForEmail = new JMenuItem( Settings.jpoResources.getString( "groupSelectForEmail" ) );
+        groupSelectForEmail.addActionListener( new ActionListener() {
+
+            public void actionPerformed( ActionEvent e ) {
+                caller.requestEmailSelection( popupNode );
+            }
+        } );
+        add( groupSelectForEmail );
+
+
         JMenuItem groupExportHtml = new JMenuItem( Settings.jpoResources.getString( "groupExportHtmlMenuText" ) );
         groupExportHtml.addActionListener( new ActionListener() {
 
@@ -411,19 +420,6 @@ public class GroupPopupMenu
         } );
         add( groupExportNewCollection );
 
-        /* Disabled because it's not thought through and the resulting jar file is
-        too difficult to load.
-        // menu item that allows the user to export the group to several different formats
-        JMenuItem groupExportJar = new JMenuItem(Settings.jpoResources.getString("groupExportJarMenuText"));
-        groupExportJar.addActionListener(new ActionListener() {
-
-        public void actionPerformed(ActionEvent e) {
-        caller.requestGroupExportJar();
-        }
-        });
-
-        add(groupExportJar);
-         */
 
         // menu item that allows the user to export the group to a flat list of filenames
         JMenuItem groupExportFlatFile = new JMenuItem( Settings.jpoResources.getString( "groupExportFlatFileMenuText" ) );

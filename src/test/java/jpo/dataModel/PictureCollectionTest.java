@@ -170,6 +170,21 @@ public class PictureCollectionTest
         pc.removeFromMailSelection(group1); // How about removing somehting that is not there?
         assertEquals("Testing that the selection array stayed", 0, pc.getMailSelectedNodes().length);
     }
+
+      /**
+     * Since I had a concurrent modification probelm on the clear selections here are a few tests
+     * to verify the selection thing works.
+     */
+    public void testAddToMailSelection() {
+        assertEquals("Testing that the mail selection array is empty before we start", 0, pc.getMailSelectedNodes().length);
+        pc.addToMailSelected(picture1);
+        assertEquals("We should have 1 nodes selected now", 1, pc.getMailSelectedNodes().length);
+        pc.addToMailSelected(picture1); //adding the same node again
+        assertEquals("We should have 1 nodes selected now", 1, pc.getMailSelectedNodes().length);
+    }
+
+
+
     /**
      * Let's create a quick and dirty change listener
      */

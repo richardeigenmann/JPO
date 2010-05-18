@@ -1,6 +1,5 @@
-package jpo.dataModel;
+package jpo.gui;
 
-import jpo.gui.ScalablePicture;
 import java.io.*;
 import java.util.Properties;
 import javax.mail.*;
@@ -11,11 +10,15 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.logging.Logger;
 import javax.swing.*;
+import jpo.dataModel.PictureInfo;
+import jpo.dataModel.Settings;
+import jpo.dataModel.SortableDefaultMutableTreeNode;
+import jpo.dataModel.Tools;
 
 /*
-EmailerThread.java:  class that sends the emails
+Emailer.java:  class that sends the emails
 
-Copyright (C) 2006 - 2009  Richard Eigenmann.
+Copyright (C) 2006 - 2010  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -32,12 +35,13 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 /**
  *  This thread sends the emails.
  */
-public class EmailerThread implements Runnable {
+public class Emailer
+        extends SwingWorker<String, String> {
 
     /**
      * Defines a logger for this class
      */
-    private static Logger logger = Logger.getLogger( EmailerThread.class.getName() );
+    private static Logger logger = Logger.getLogger( Emailer.class.getName() );
 
     /**
      *   Frame to show what the thread is doing.
@@ -85,9 +89,16 @@ public class EmailerThread implements Runnable {
      *  Creates and starts a Thread that writes the picture nodes from the specified
      *  startNode to the target directory.
      *
-     *
+     * @param emailSelected
+     * @param senderAddress
+     * @param destinationAddress
+     * @param subjectLine
+     * @param bodyText
+     * @param scaleImages
+     * @param scaleSize
+     * @param sendOriginal
      */
-    public EmailerThread( Object[] emailSelected,
+    public Emailer( Object[] emailSelected,
             InternetAddress senderAddress,
             InternetAddress destinationAddress,
             String subjectLine,
@@ -104,15 +115,10 @@ public class EmailerThread implements Runnable {
         this.scaleImages = scaleImages;
         this.scaleSize = scaleSize;
         this.sendOriginal = sendOriginal;
-        Thread t = new Thread( this );
-        t.start();
-    }
 
 
-    /**
-     *  Method that is invoked by the thread to do things asynchroneousely.
-     */
-    public void run() {
+        Tools.checkEDT();
+
         GridBagConstraints c = new GridBagConstraints();
         c.anchor = GridBagConstraints.WEST;
         c.insets = new Insets( 4, 4, 4, 4 );
@@ -158,35 +164,80 @@ public class EmailerThread implements Runnable {
         c.anchor = GridBagConstraints.EAST;
         progPanel.add( cancelButton, c );
 
-        progressFrame = new JFrame( Settings.jpoResources.getString( "HtmlDistillerThreadTitle" ) );
+        progressFrame = new JFrame( Settings.jpoResources.getString( "EmailerJFrame" ) );
         progressFrame.getContentPane().add( progPanel );
         progressFrame.pack();
         progressFrame.setVisible( true );
         progressFrame.setLocationRelativeTo( Settings.anchorFrame );
 
-        sendEmail();
 
+        execute();
+    }
+
+
+    /**
+     * This is where the SwingWorker does it's stuff
+     * @return
+     * @throws Exception
+     */
+    @Override
+    protected String doInBackground() throws Exception {
+        switch ( Settings.emailAuthentication ) {
+            case 0:
+                sendEmailNoAuth();
+                break; // No Authentication
+            case 1:
+                sendEmailAuth();
+                break; // Password
+            case 2:
+                sendEmailSSL();
+                break;// SSL
+        }
+        return ( "Done" );
+    }
+
+
+    @Override
+    protected void done() {
         progressFrame.dispose();
+        if ( error.equals( "" ) ) {
+            JOptionPane.showMessageDialog( Settings.anchorFrame,
+                    Settings.jpoResources.getString( "emailOK" ),
+                    Settings.jpoResources.getString( "genericOKText" ),
+                    JOptionPane.INFORMATION_MESSAGE );
+        } else {
+            JOptionPane.showMessageDialog( Settings.anchorFrame,
+                    Settings.jpoResources.getString( "emailSendError" ) + error,
+                    Settings.jpoResources.getString( "genericError" ),
+                    JOptionPane.ERROR_MESSAGE );
+        }
+    }
+
+    /**
+     * Error message to show if there is an issue:
+     */
+    private String error = "";
+
+
+    /**
+     *
+     * @param chunks
+     */
+    @Override
+    protected void process( java.util.List<String> chunks ) {
+        for ( String s : chunks ) {
+            progBar.setValue( progBar.getValue() + 1 );
+            progressLabel.setText( s );
+        }
 
     }
 
 
     /**
-     *  method that sends the email
+     * This method returns the MimeMessage object that should be emailed.
+     * @return The MimeMessage for the email.
      */
-    private void sendEmail() {
-
-
-        // Get system properties
-        Properties props = System.getProperties();
-
-        // Setup mail server
-        props.setProperty( "mail.smtp.host", Settings.emailServer );
-
-
-        // Get session
-        Session session = Session.getDefaultInstance( props, null );
-
+    private MimeMessage buildMessage( Session session ) {
         // Define message
         MimeMessage message;
         try {
@@ -214,8 +265,7 @@ public class EmailerThread implements Runnable {
             ByteArrayOutputStream baos;
             EncodedDataSource encds;
             for ( int i = 0; ( i < emailSelected.length ) && ( !interrupted ); i++ ) {
-                progBar.setValue( progBar.getValue() + 1 );
-                progBar.setString( Integer.toString( progBar.getValue() ) + "/" + Integer.toString( progBar.getMaximum() ) );
+                publish( Integer.toString( progBar.getValue() ) + "/" + Integer.toString( progBar.getMaximum() ) );
                 pictureDescriptionMimeBodyPart = new MimeBodyPart();
                 pi = (PictureInfo) ( (SortableDefaultMutableTreeNode) emailSelected[i] ).getUserObject();
 
@@ -223,18 +273,18 @@ public class EmailerThread implements Runnable {
                 mp.addBodyPart( pictureDescriptionMimeBodyPart );
 
                 if ( scaleImages ) {
-                    progressLabel.setText( Settings.jpoResources.getString( "EmailerLoading" ) + pi.getHighresFilename() );
+                    publish( Settings.jpoResources.getString( "EmailerLoading" ) + pi.getHighresFilename() );
                     scalablePicture.loadPictureImd( pi.getHighresURLOrNull(), pi.getRotation() );
-                    progressLabel.setText( Settings.jpoResources.getString( "EmailerScaling" ) + pi.getHighresFilename() );
+                    publish( Settings.jpoResources.getString( "EmailerScaling" ) + pi.getHighresFilename() );
                     scalablePicture.scalePicture();
                     baos = new ByteArrayOutputStream();
-                    progressLabel.setText( Settings.jpoResources.getString( "EmailerWriting" ) + pi.getHighresFilename() );
+                    publish( Settings.jpoResources.getString( "EmailerWriting" ) + pi.getHighresFilename() );
                     scalablePicture.writeScaledJpg( baos );
-                    encds = new EncodedDataSource( "image/jpeg", "filename.jpg", baos );
+                    encds = new EncodedDataSource( "image/jpeg", pi.getHighresFilename(), baos );
                     scaledPictureMimeBodyPart = new MimeBodyPart();
                     scaledPictureMimeBodyPart.setDataHandler( new DataHandler( encds ) );
                     scaledPictureMimeBodyPart.setFileName( pi.getHighresFilename() );
-                    progressLabel.setText( Settings.jpoResources.getString( "EmailerAdding" ) + pi.getHighresFilename() );
+                    publish( Settings.jpoResources.getString( "EmailerAdding" ) + pi.getHighresFilename() );
                     mp.addBodyPart( scaledPictureMimeBodyPart );
                 }
 
@@ -248,55 +298,140 @@ public class EmailerThread implements Runnable {
                     originalPictureMimeBodyPart.setDataHandler( new DataHandler( ds ) );
                     originalPictureMimeBodyPart.setFileName( pi.getHighresFilename() );
                     // create the Multipart and add its parts to it
-                    progressLabel.setText( Settings.jpoResources.getString( "EmailerAdding" ) + pi.getHighresFilename() );
+                    publish( Settings.jpoResources.getString( "EmailerAdding" ) + pi.getHighresFilename() );
                     mp.addBodyPart( originalPictureMimeBodyPart );
                 }
 
             }
             // add the Multipart to the message
             message.setContent( mp );
+            publish( "Sending..." );
 
 
         } catch ( MessagingException x ) {
-            logger.info( "EmailerJFrame trapped a MessagingException while preparing the message: " + x.getMessage() );
-            return;
+            logger.severe( "MessagingException: " + x.getMessage() );
+            error = x.getMessage();
+            return null;
         }
+        return message;
+    }
+
+
+    /**
+     *  method that sends the email
+     */
+    private void sendEmailNoAuth() {
+        Properties props = System.getProperties();
+        props.setProperty( "mail.smtp.host", Settings.emailServer );
+        props.setProperty( "mail.smtp.port", Settings.emailPort );
+        //props.put( "mail.debug", "true" );
+        props.setProperty( "mail.smtp.socketFactory.port", Settings.emailPort );
+        Session session = Session.getDefaultInstance( props, null );
+        //session.setDebug( true );
 
         // Send message
         if ( interrupted ) {
             logger.info( "EmailerThread: message not sent due to user clicking cancel." );
         } else {
             try {
-                progressLabel.setText( "Connecting to Mail Server" );
-                //Transport.send( message );
-                Transport transport = session.getTransport( "smtp" );
-                transport.connect( Settings.emailServer, Settings.emailUser, Settings.emailPassword );
-                progressLabel.setText( Settings.jpoResources.getString( "EmailerSending" ) );
-                Transport.send( message );
-                progressLabel.setText( Settings.jpoResources.getString( "EmailerSent" ) );
+                publish( Settings.jpoResources.getString( "EmailerSending" ) );
+                Transport.send( buildMessage( session ) );
+                publish( Settings.jpoResources.getString( "EmailerSent" ) );
             } catch ( MessagingException x ) {
-                logger.info( "EmailerJFrame trapped a MessagingException while sending the message: " + x.getMessage() );
-                x.printStackTrace();
-                JOptionPane.showMessageDialog( Settings.anchorFrame,
-                        Settings.jpoResources.getString( "emailSendError" ) + x.getMessage(),
-                        Settings.jpoResources.getString( "genericError" ),
-                        JOptionPane.ERROR_MESSAGE );
+                logger.severe( "MessagingException: " + x.getMessage() );
+                error = x.getMessage();
                 return;
             }
+        }
+    }
 
-            JOptionPane.showMessageDialog( Settings.anchorFrame,
-                    Settings.jpoResources.getString( "emailOK" ),
-                    Settings.jpoResources.getString( "genericOKText" ),
-                    JOptionPane.INFORMATION_MESSAGE );
+
+    /**
+     *  method that sends the email
+     */
+    private void sendEmailAuth() {
+        Properties props = System.getProperties();
+        props.setProperty( "mail.smtp.host", Settings.emailServer );
+        props.setProperty( "mail.smtp.port", Settings.emailPort );
+        //props.setProperty( "mail.debug", "true" );
+        props.setProperty( "mail.smtp.socketFactory.port", Settings.emailPort );
+        props.setProperty( "mail.smtp.auth", "true" );
+        props.setProperty( "mail.smtp.socketFactory.fallback", "false" );
+        props.setProperty( "mail.smtp.socketFactory.port", Settings.emailPort );
+        props.setProperty( "mail.smtp.starttls.enable", "true" );
+
+
+        Session session = Session.getDefaultInstance( props, new javax.mail.Authenticator() {
+
+            @Override
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication( Settings.emailUser, Settings.emailPassword );
+            }
+        } );
+        //session.setDebug( true );
+
+        // Send message
+        if ( interrupted ) {
+            logger.info( "EmailerThread: message not sent due to user clicking cancel." );
+        } else {
+            try {
+                publish( Settings.jpoResources.getString( "EmailerSending" ) );
+                Transport.send( buildMessage( session ) );
+                publish( Settings.jpoResources.getString( "EmailerSent" ) );
+            } catch ( MessagingException x ) {
+                logger.severe( "MessagingException: " + x.getMessage() );
+                error = x.getMessage();
+                return;
+            }
+        }
+    }
+
+
+    /**
+     *  method that sends the email via SSL
+     */
+    private void sendEmailSSL() {
+        Properties props = System.getProperties();
+        props.setProperty( "mail.smtp.host", Settings.emailServer );
+        props.setProperty( "mail.smtp.port", Settings.emailPort );
+        props.setProperty( "mail.smtp.auth", "true" );
+        //props.put( "mail.debug", "true" );
+        props.setProperty( "mail.smtp.socketFactory.port", Settings.emailPort );
+        props.setProperty( "mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory" );
+        props.setProperty( "mail.smtp.socketFactory.fallback", "false" );
+
+        Session session = Session.getDefaultInstance( props,
+                new javax.mail.Authenticator() {
+
+                    @Override
+                    protected PasswordAuthentication getPasswordAuthentication() {
+                        return new PasswordAuthentication( Settings.emailUser, Settings.emailPassword );
+                    }
+                } );
+        //session.setDebug( true );
+        if ( interrupted ) {
+            logger.info( "EmailerThread: message not sent due to user clicking cancel." );
+        } else {
+            try {
+                publish( Settings.jpoResources.getString( "EmailerSending" ) );
+                Transport.send( buildMessage( session ) );
+                publish( Settings.jpoResources.getString( "EmailerSent" ) );
+            } catch ( MessagingException x ) {
+                logger.severe( "MessagingException: " + x.getMessage() );
+                error = x.getMessage();
+                return;
+            }
         }
     }
 
     /**
      *  A class that somehow helps with the emailing
      */
-    private class EncodedDataSource implements DataSource {
+    private class EncodedDataSource
+            implements DataSource {
 
-        EncodedDataSource( String contentType, String filename, ByteArrayOutputStream baos ) {
+        EncodedDataSource( String contentType, String filename,
+                ByteArrayOutputStream baos ) {
             this.contentType = contentType;
             this.filename = filename;
             this.baos = baos;

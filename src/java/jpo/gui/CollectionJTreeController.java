@@ -12,6 +12,7 @@ import jpo.dataModel.PictureInfo;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
+import java.util.Enumeration;
 import java.util.logging.Logger;
 import javax.swing.*;
 import javax.swing.tree.*;
@@ -666,10 +667,23 @@ public class CollectionJTreeController
      * @param popupNode
      */
     public void requestGroupExportHtml( SortableDefaultMutableTreeNode popupNode ) {
-        // new HtmlDistillerJFrame( myPopupNode );
         new GenerateWebsiteWizard( popupNode );
+    }
 
 
+    /**
+     *  Selects all the pictures under the group for emailing.
+     *
+     * @param groupNode
+     */
+    public void requestEmailSelection( SortableDefaultMutableTreeNode groupNode ) {
+        SortableDefaultMutableTreeNode n;
+        for ( Enumeration e = groupNode.breadthFirstEnumeration(); e.hasMoreElements(); ) {
+            n = (SortableDefaultMutableTreeNode) e.nextElement();
+            if ( n.getUserObject() instanceof PictureInfo ) {
+                Settings.pictureCollection.addToMailSelected( n );
+            }
+        }
     }
 
 

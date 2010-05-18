@@ -8,11 +8,10 @@ import javax.swing.*;
 import javax.mail.internet.*;
 import java.util.*;
 import java.util.logging.Logger;
-import jpo.dataModel.EmailerThread;
 import jpo.dataModel.Settings;
 
 /*
-EmailerJFrame.java:  creates a GUI to allow the user to specify his search
+EmailerGui.java:  creates a GUI to allow the user to specify his search
 
 Copyright (C) 2004-2009  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
@@ -29,15 +28,16 @@ The license is in gpl.txt.
 See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 /**
- * EmailerJFrame.java:  Creates a GUI to edit the categories of the collection
+ * EmailerGui.java:  Creates a GUI to edit the categories of the collection
  *
  **/
-public class EmailerJFrame extends JFrame {
+public class EmailerGui
+        extends JFrame {
 
     /**
      * Defines a logger for this class
      */
-    private static Logger logger = Logger.getLogger( EmailerJFrame.class.getName() );
+    private static Logger logger = Logger.getLogger( EmailerGui.class.getName() );
 
     /**
      *  Internal array that holds the nodes to be send by email.
@@ -101,24 +101,24 @@ public class EmailerJFrame extends JFrame {
 
 
     /**
-     *  Creates a GUI to edit the categories of the collection
+     *  Creates a GUI to send the selected pictures as an email
      *
      **/
-    public EmailerJFrame() {
+    public EmailerGui() {
 
         emailSelected = Settings.pictureCollection.getMailSelectedNodes();
 
+        // if no picutres have been selected pop up an error message
         if ( emailSelected.length < 1 ) {
-            JOptionPane.showMessageDialog( this,
+            JOptionPane.showMessageDialog( Settings.anchorFrame,
                     Settings.jpoResources.getString( "emailNoNodes" ),
                     Settings.jpoResources.getString( "genericError" ),
                     JOptionPane.ERROR_MESSAGE );
-            //getRid();
             return;
         }
 
         if ( Settings.emailServer.equals( "" ) ) { //perhaps make this a better test of the server
-            JOptionPane.showMessageDialog( this,
+            JOptionPane.showMessageDialog( Settings.anchorFrame,
                     Settings.jpoResources.getString( "emailNoServer" ),
                     Settings.jpoResources.getString( "genericError" ),
                     JOptionPane.ERROR_MESSAGE );
@@ -430,14 +430,14 @@ public class EmailerJFrame extends JFrame {
         ArrayListNavigator alb = new ArrayListNavigator();
 
         for ( int i = 0; i < emailSelected.length; i++ ) {
-            //logger.info("EmailerJFrame.loadThumbnails: running on " + emailSelected[i].toString() );
+            //logger.info("EmailerGui.loadThumbnails: running on " + emailSelected[i].toString() );
             alb.addNode( (SortableDefaultMutableTreeNode) emailSelected[i] );
-            ThumbnailController thumbnailController = new ThumbnailController( alb, i, thumbnailSize, ThumbnailQueueRequest.LOW_PRIORITY, null);
+            ThumbnailController thumbnailController = new ThumbnailController( alb, i, thumbnailSize, ThumbnailQueueRequest.LOW_PRIORITY, null );
             thumbnailController.setDecorateThumbnails( false );
             thumbnailController.determineMailSlectionStatus();
             thumbnailController.setFactor( factor );
             c.gridx = i;
-            logger.info( c.toString() + " x= " + Integer.toString( c.gridx ) + " y= " + Integer.toString( c.gridy ) );
+            //logger.info( c.toString() + " x= " + Integer.toString( c.gridx ) + " y= " + Integer.toString( c.gridy ) );
             imagesJPanel.add( thumbnailController.getThumbnail(), c );
             thumbnailController.getThumbnail().setVisible( true );
         }
@@ -482,7 +482,6 @@ public class EmailerJFrame extends JFrame {
         Dimension scaleSize = new Dimension( imageWidthWholeNumberField.getValue(), imageWidthWholeNumberField.getValue() );
 
         putSettings(); // placed here so that we don'thumbnailController store addresses that fail in the AddressExceptions
-        EmailerThread et = new EmailerThread( emailSelected, senderAddress, destinationAddress, subjectJTextField.getText(), messageJTextArea.getText(), scaleImages, scaleSize, sendOriginal );
-        // sendEmail( emailSelected, senderAddress, destinationAddress, scaleImages, scaleSize, sendOriginal );
+        Emailer et = new Emailer( emailSelected, senderAddress, destinationAddress, subjectJTextField.getText(), messageJTextArea.getText(), scaleImages, scaleSize, sendOriginal );
     }
 }

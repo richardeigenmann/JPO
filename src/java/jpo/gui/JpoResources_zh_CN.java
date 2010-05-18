@@ -174,6 +174,7 @@ public class JpoResources_zh_CN extends ListResourceBundle {
 		{"predefinedEmailJLabel", "预先配置的邮件服务器："},
 		{"emailServerJLabel", "邮件服务器："},
 		{"emailPortJLabel", "端口："},
+		{ "emailAuthentication", "Authentication:" },
 		{"emailUserJLabel", "用户名："},
 		{"emailPasswordJLabel", "密码："},
 		
@@ -344,6 +345,7 @@ public class JpoResources_zh_CN extends ListResourceBundle {
 		{"sortByCommentJMenuItem", "描述"},
 		{"sortByPhotographerJMenuItem", "摄影作者"},
 		{"sortByCopyrightHolderTimeJMenuItem", "版权"},
+		{"groupSelectForEmail", "Select all for Emailing"},
 		{"groupExportHtmlMenuText", "导出成HTML"}, // ToDo: change to "Generate Website"
 		{"groupExportFlatFileMenuText", "导出成无格式文件"},
 		{"groupExportJarMenuText", "导出成Jar压缩包"},

@@ -653,6 +653,11 @@ public class Settings {
     public static String emailPort = "25";
 
     /**
+     * Email authentication 0 = None 1 = Password 2 = SSL
+     */
+    public static int emailAuthentication  = 0;
+
+    /**
      *	Email User
      */
     public static String emailUser = "";
@@ -807,6 +812,7 @@ public class Settings {
         }
         emailServer = prefs.get( "emailServer", emailServer );
         emailPort = prefs.get( "emailPort", emailPort );
+        emailAuthentication = prefs.getInt("emailAuthentication", emailAuthentication);
         emailUser = prefs.get( "emailUser", emailUser );
         emailPassword = prefs.get( "emailPassword", emailPassword );
         emailScaleImages = prefs.getBoolean( "emailScaleImages", emailScaleImages );
@@ -928,12 +934,12 @@ public class Settings {
         int n = 0;
         for ( int i = 0; i < MAX_MEMORISE; i++ ) {
             if ( copyLocations[i] != null ) {
-                prefs.put( String.format( "copyLocations-%d", n), copyLocations[i] );
+                prefs.put( String.format( "copyLocations-%d", n ), copyLocations[i] );
                 n++;
-            } 
+            }
         }
-        for ( int x = n; x < MAX_MEMORISE; x++) {
-                prefs.remove( String.format( "copyLocations-%d", x) );
+        for ( int x = n; x < MAX_MEMORISE; x++ ) {
+            prefs.remove( String.format( "copyLocations-%d", x ) );
         }
 
         // recent collections
@@ -944,8 +950,8 @@ public class Settings {
                 n++;
             }
         }
-        for ( int x = n; x < MAX_MEMORISE; x++) {
-                prefs.remove( String.format( "recentCollections-%d", x) );
+        for ( int x = n; x < MAX_MEMORISE; x++ ) {
+            prefs.remove( String.format( "recentCollections-%d", x ) );
         }
 
         int i;
@@ -997,6 +1003,7 @@ public class Settings {
         prefs.putInt( "emailRecipients", n );
         prefs.put( "emailServer", emailServer );
         prefs.put( "emailPort", emailPort );
+        prefs.putInt( "emailAuthentication", emailAuthentication );
         prefs.put( "emailUser", emailUser );
         prefs.put( "emailPassword", emailPassword );
         prefs.putBoolean( "emailScaleImages", emailScaleImages );
@@ -1413,7 +1420,6 @@ public class Settings {
     /*------------------------------------------------------------------------------
     Stuff for memorizing the copy target locations    */
 
- 
     /**
      *  Array of recently used directories in copy operations and other
      *  File selections.

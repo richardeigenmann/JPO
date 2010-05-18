@@ -221,6 +221,11 @@ public class SettingsDialog
     private JTextField emailPortJTextField = new JTextField();
 
     /**
+     * Combobox that holds the type of authentication.
+     */
+    private JComboBox authenticationJComboBox = new JComboBox();
+
+    /**
      *   Text Field that holds the user for the email server
      */
     private JTextField emailUserJTextField = new JTextField();
@@ -645,10 +650,16 @@ public class SettingsDialog
         JLabel emailJLabel = new JLabel( Settings.jpoResources.getString( "emailJLabel" ) );
         emailJPanel.add( emailJLabel, c );
 
+        c.gridy++;
+        c.gridwidth = 1;
+        emailJPanel.add( new JLabel( Settings.jpoResources.getString( "predefinedEmailJLabel" ) ), c );
+
         JComboBox predefinedEmailJComboBox = new JComboBox();
         predefinedEmailJComboBox.addItem( "Localhost" );
-        predefinedEmailJComboBox.addItem( "Hotmail" );
+        predefinedEmailJComboBox.addItem( "Gmail" );
         predefinedEmailJComboBox.addItem( "Compuserve" );
+        predefinedEmailJComboBox.addItem( "Hotmail" );
+        predefinedEmailJComboBox.addItem( "Other" );
         predefinedEmailJComboBox.addActionListener( new ActionListener() {
 
             public void actionPerformed( ActionEvent e ) {
@@ -657,20 +668,32 @@ public class SettingsDialog
                 if ( cbSelection.equals( "Localhost" ) ) {
                     emailServerJTextField.setText( "localhost" );
                     emailPortJTextField.setText( "25" );
-                    emailUserJTextField.setText( "" );
-                    emailPasswordJTextField.setText( "" );
+                    authenticationJComboBox.setSelectedIndex( 1 ); //Password
                 } else if ( cbSelection.equals( "Compuserve" ) ) {
                     emailServerJTextField.setText( "smtp.compuserve.com" );
                     emailPortJTextField.setText( "25" );
-                    emailUserJTextField.setText( "set your username" );
-                    emailPasswordJTextField.setText( "set your password" );
+                    //emailUserJTextField.setText( "set your username" );
+                    //emailPasswordJTextField.setText( "set your password" );
+                    authenticationJComboBox.setSelectedIndex( 1 ); //Password
+                } else if ( cbSelection.equals( "Gmail" ) ) {
+                    emailServerJTextField.setText( "smtp.gmail.com" );
+                    emailPortJTextField.setText( "465" );
+                    //emailUserJTextField.setText( "set your username" );
+                    //emailPasswordJTextField.setText( "set your password" );
+                    authenticationJComboBox.setSelectedIndex( 2 ); //SSL
+                } else if ( cbSelection.equals( "Hotmail" ) ) {
+                    emailServerJTextField.setText( "smtp.live.com" );
+                    emailPortJTextField.setText( "25" );
+                    //emailUserJTextField.setText( "set your username" );
+                    //emailPasswordJTextField.setText( "set your password" );
+                    authenticationJComboBox.setSelectedIndex( 1 ); //Password
+                } else if ( cbSelection.equals( "Other" ) ) {
+                    emailServerJTextField.setText( "" );
+                    emailPortJTextField.setText( "25" );
                 }
+
             }
         } );
-
-        c.gridy++;
-        c.gridwidth = 1;
-        emailJPanel.add( new JLabel( Settings.jpoResources.getString( "predefinedEmailJLabel" ) ), c );
         c.gridx++;
         emailJPanel.add( predefinedEmailJComboBox, c );
 
@@ -693,9 +716,51 @@ public class SettingsDialog
         emailPortJTextField.setMaximumSize( Settings.shortNumberMaximumSize );
         emailJPanel.add( emailPortJTextField, c );
 
+        final JLabel userNameJLabel = new JLabel( Settings.jpoResources.getString( "emailUserJLabel" ) );
+        final JLabel passwordJLabel = new JLabel( Settings.jpoResources.getString( "emailPasswordJLabel" ) );
+
+
         c.gridx = 0;
         c.gridy++;
-        emailJPanel.add( new JLabel( Settings.jpoResources.getString( "emailUserJLabel" ) ), c );
+        c.gridwidth = 1;
+        emailJPanel.add( new JLabel( Settings.jpoResources.getString( "emailAuthentication" ) ), c );
+        authenticationJComboBox = new JComboBox();
+        authenticationJComboBox.addItem( "None" );
+        authenticationJComboBox.addItem( "Password" );
+        authenticationJComboBox.addItem( "SSL" );
+        authenticationJComboBox.addActionListener( new ActionListener() {
+
+            public void actionPerformed( ActionEvent e ) {
+                JComboBox cb = (JComboBox) e.getSource();
+                String cbSelection = (String) cb.getSelectedItem();
+                if ( cbSelection.equals( "None" ) ) {
+                    emailUserJTextField.setText( "" );
+                    userNameJLabel.setVisible( false );
+                    emailUserJTextField.setVisible( false );
+                    emailPasswordJTextField.setText( "" );
+                    passwordJLabel.setVisible( false );
+                    emailPasswordJTextField.setVisible( false );
+                } else if ( cbSelection.equals( "Password" ) ) {
+                    userNameJLabel.setVisible( true );
+                    emailUserJTextField.setVisible( true );
+                    passwordJLabel.setVisible( true );
+                    emailPasswordJTextField.setVisible( true );
+                } else if ( cbSelection.equals( "SSL" ) ) {
+                    userNameJLabel.setVisible( true );
+                    emailUserJTextField.setVisible( true );
+                    passwordJLabel.setVisible( true );
+                    emailPasswordJTextField.setVisible( true );
+                }
+
+            }
+        } );
+        c.gridx++;
+        emailJPanel.add( authenticationJComboBox, c );
+
+
+        c.gridx = 0;
+        c.gridy++;
+        emailJPanel.add( userNameJLabel, c );
         c.gridx++;
         emailUserJTextField.setPreferredSize( Settings.textfieldPreferredSize );
         emailUserJTextField.setMinimumSize( Settings.textfieldMinimumSize );
@@ -704,7 +769,7 @@ public class SettingsDialog
 
         c.gridx = 0;
         c.gridy++;
-        emailJPanel.add( new JLabel( Settings.jpoResources.getString( "emailPasswordJLabel" ) ), c );
+        emailJPanel.add( passwordJLabel, c );
         c.gridx++;
         emailPasswordJTextField.setPreferredSize( Settings.textfieldPreferredSize );
         emailPasswordJTextField.setMinimumSize( Settings.textfieldMinimumSize );
@@ -891,6 +956,7 @@ public class SettingsDialog
 
         emailServerJTextField.setText( Settings.emailServer );
         emailPortJTextField.setText( Settings.emailPort );
+        authenticationJComboBox.setSelectedIndex( Settings.emailAuthentication );
         emailUserJTextField.setText( Settings.emailUser );
         emailPasswordJTextField.setText( Settings.emailPassword );
 
@@ -1005,16 +1071,11 @@ public class SettingsDialog
         Settings.userFunctionCmd[2] = userFunction3CmdJTextField.getText();
 
 
-        if ( !emailServerJTextField.getText().equals( "" ) ) {
-            Settings.emailServer = emailServerJTextField.getText();
-        }
+        Settings.emailServer = emailServerJTextField.getText();
         Settings.emailPort = emailPortJTextField.getText();
-        if ( !emailUserJTextField.getText().equals( "" ) ) {
-            Settings.emailUser = emailUserJTextField.getText();
-        }
-        if ( !emailPasswordJTextField.getText().equals( "" ) ) {
-            Settings.emailPassword = emailPasswordJTextField.getText();
-        }
+        Settings.emailAuthentication = authenticationJComboBox.getSelectedIndex();
+        Settings.emailUser = emailUserJTextField.getText();
+        Settings.emailPassword = emailPasswordJTextField.getText();
 
         Settings.validateSettings();
         Settings.notifyUserFunctionsChanged();

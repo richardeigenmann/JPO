@@ -362,7 +362,7 @@ public class ApplicationJMenuBar
         emailJMenuItem.addActionListener( new ActionListener() {
 
             public void actionPerformed( ActionEvent e ) {
-                new EmailerJFrame();
+                new EmailerGui();
             }
         } );
         actionJMenu.add( emailJMenuItem );

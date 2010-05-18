@@ -172,6 +172,7 @@ public class JpoResources_de extends ListResourceBundle {
 		{"predefinedEmailJLabel", "Vordefinierter Server:"},
 		{"emailServerJLabel", "Email Server:"},
 		{"emailPortJLabel", "Port:"},
+		{"emailAuthentication", "Autentifizierung:" },
 		{"emailUserJLabel", "Benutzername:"},
 		{"emailPasswordJLabel", "Password:"},
 		
@@ -339,6 +340,7 @@ public class JpoResources_de extends ListResourceBundle {
 		{"sortByCommentJMenuItem", "Kommentar"},
 		{"sortByPhotographerJMenuItem", "Photograph"},
 		{"sortByCopyrightHolderTimeJMenuItem", "Copyright"},
+		{"groupSelectForEmail", "Alle zum Emailen auswählen"},
 		{"groupExportHtmlMenuText", "Generate Website"},
 		{"groupExportFlatFileMenuText", "Export in Einfache Datei"},
 		{"groupExportJarMenuText", "Export in Jar Archive"},
