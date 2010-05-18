@@ -1647,11 +1647,7 @@ public class SortableDefaultMutableTreeNode
         SortableDefaultMutableTreeNode newNode = new SortableDefaultMutableTreeNode( newPictureInfo );
 
         this.add( newNode );
-        // This is not elegant but for now forces the creation of the ThumbnailController image
-        // It is unfortunate that the queue will not recognize duplicates because it is working
-        //  off ThumbnailController objects instead of Picturefiles. This also makes urgent requests come too late
-        // TODO: Improve it. This is totally broken!
-        //ThumbnailController t = new ThumbnailController( new SingleNodeNavigator( newNode ), 0, Settings.thumbnailSize, ThumbnailQueueRequest.LOW_PRIORITY, null );
+        //TODO: Chuck a thumbnail creation on the queue here
         getPictureCollection().setUnsavedUpdates();
 
         ExifInfo exifInfo = new ExifInfo( newPictureInfo.getHighresURLOrNull() );

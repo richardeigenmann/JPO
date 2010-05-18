@@ -67,7 +67,12 @@ public class ApplicationJMenuBar
     private final JMenuItem emailJMenuItem = new JMenuItem();
 
     /**
-     *  The g menu which is part of the JMenuBar for the Jpo application.
+     *  The extras menu which is part of the JMenuBar for the Jpo application.
+     **/
+    private final JMenu ExtrasJMenu = new JMenu();
+
+    /**
+     *  The help menu which is part of the JMenuBar for the Jpo application.
      **/
     private final JMenu HelpJMenu = new JMenu();
 
@@ -80,11 +85,6 @@ public class ApplicationJMenuBar
      *  Menu item that will request a File|Add operation.
      **/
     private final JMenuItem FileAddJMenuItem = new JMenuItem();
-
-    /**
-     *  Menu item that will request a File|Add from Camera operation.
-     **/
-    private final JMenuItem FileCameraJMenuItem = new JMenuItem();
 
     /**
      *  Menu item that allows the user to load a collection.
@@ -122,16 +122,6 @@ public class ApplicationJMenuBar
     private final JMenuItem EditFindJMenuItem = new JMenuItem();
 
     /**
-     *  Menu item that allows the user to change the application settings.
-     **/
-    private final JMenuItem EditCollectionPropertiesJMenuItem = new JMenuItem();
-
-    /**
-     *  Menu item that allows the user to have the collection integrity checked.
-     **/
-    private final JMenuItem EditCheckIntegrityJMenuItem = new JMenuItem();
-
-    /**
      *  Menu item that allows the user to set up his cameras.
      **/
     private final JMenuItem EditCamerasJMenuItem = new JMenuItem();
@@ -142,14 +132,25 @@ public class ApplicationJMenuBar
     private final JMenuItem EditSettingsJMenuItem = new JMenuItem();
 
     /**
-     *  Menu item that allows the user to change the categories.
-     **/
-    private final JMenuItem EditCategoriesJMenuItem = new JMenuItem();
-
-    /**
      *  Menu item that pops up an automatic slide show.
      */
     private final JMenuItem RandomSlideshowJMenuItem = new JMenuItem();
+
+    /**
+     *  Menu item that calls the Check Directories item
+     **/
+    private final JMenuItem EditCheckDirectoriesJMenuItem = new JMenuItem();
+
+
+    /**
+     *  Menu item that allows the user to have the collection integrity checked.
+     **/
+    private final JMenuItem EditCheckIntegrityJMenuItem = new JMenuItem();
+
+    /**
+     *  Menu item that allows the user to change the categories.
+     **/
+    private final JMenuItem EditCategoriesJMenuItem = new JMenuItem();
 
     /**
      *  Menu item that brings up the Help About screen.
@@ -204,15 +205,6 @@ public class ApplicationJMenuBar
             }
         } );
         FileJMenu.add( FileAddJMenuItem );
-
-        /*FileCameraJMenuItem.setMnemonic(KeyEvent.VK_C);
-        FileCameraJMenuItem.addActionListener(new ActionListener() {
-
-        public void actionPerformed(ActionEvent e) {
-        caller.requestFileAddFromCamera();
-        }
-        });
-        FileJMenu.add(FileCameraJMenuItem);*/
 
 
         FileLoadJMenuItem.setMnemonic( KeyEvent.VK_O );
@@ -294,36 +286,6 @@ public class ApplicationJMenuBar
         EditJMenu.add( EditFindJMenuItem );
 
 
-        /*EditCheckDirectoriesJMenuItem = new JMenuItem();
-        EditCheckDirectoriesJMenuItem.setMnemonic(KeyEvent.VK_D);
-        EditCheckDirectoriesJMenuItem.addActionListener(new ActionListener() {
-
-        public void actionPerformed(ActionEvent e) {
-        caller.requestCheckDirectories();
-        }
-        });
-        EditJMenu.add(EditCheckDirectoriesJMenuItem);*/
-
-
-        /*EditCollectionPropertiesJMenuItem.setMnemonic(KeyEvent.VK_D);
-        EditCollectionPropertiesJMenuItem.addActionListener(new ActionListener() {
-
-        public void actionPerformed(ActionEvent e) {
-        caller.requestCollectionProperties();
-        }
-        });
-        EditJMenu.add(EditCollectionPropertiesJMenuItem);*/
-
-        /*EditCheckIntegrityJMenuItem.setMnemonic(KeyEvent.VK_C);
-        EditCheckIntegrityJMenuItem.addActionListener(new ActionListener() {
-
-        public void actionPerformed(ActionEvent e) {
-        caller.requestCheckIntegrity();
-        }
-        });
-        EditJMenu.add(EditCheckIntegrityJMenuItem);*/
-
-
         EditCamerasJMenuItem.setMnemonic( KeyEvent.VK_D );
         EditCamerasJMenuItem.addActionListener( new ActionListener() {
 
@@ -334,14 +296,7 @@ public class ApplicationJMenuBar
         EditJMenu.add( EditCamerasJMenuItem );
 
 
-        /*EditCategoriesJMenuItem.setMnemonic(KeyEvent.VK_D);
-        EditCategoriesJMenuItem.addActionListener(new ActionListener() {
 
-        public void actionPerformed(ActionEvent e) {
-        new CategoryEditorJFrame();
-        }
-        });
-        EditJMenu.add(EditCategoriesJMenuItem);*/
 
 
 
@@ -379,6 +334,42 @@ public class ApplicationJMenuBar
 
         actionJMenu.setMnemonic( KeyEvent.VK_A );
         add( actionJMenu );
+
+
+
+        // Build the Extras menu.
+        ExtrasJMenu.setMnemonic( KeyEvent.VK_X );
+        add( ExtrasJMenu );
+        EditCheckDirectoriesJMenuItem.setMnemonic( KeyEvent.VK_D );
+        EditCheckDirectoriesJMenuItem.addActionListener( new ActionListener() {
+
+            public void actionPerformed( ActionEvent e ) {
+                caller.requestCheckDirectories();
+            }
+        } );
+        ExtrasJMenu.add( EditCheckDirectoriesJMenuItem );
+
+
+
+        EditCheckIntegrityJMenuItem.setMnemonic( KeyEvent.VK_C );
+        EditCheckIntegrityJMenuItem.addActionListener( new ActionListener() {
+
+            public void actionPerformed( ActionEvent e ) {
+                caller.requestCheckIntegrity();
+            }
+        } );
+        ExtrasJMenu.add( EditCheckIntegrityJMenuItem );
+
+        EditCategoriesJMenuItem.setMnemonic(KeyEvent.VK_D);
+        EditCategoriesJMenuItem.addActionListener(new ActionListener() {
+
+        public void actionPerformed(ActionEvent e) {
+        new CategoryEditorJFrame();
+        }
+        });
+        ExtrasJMenu.add(EditCategoriesJMenuItem);
+
+
 
         // Build the Help menu.
         HelpJMenu.setMnemonic( KeyEvent.VK_H );
@@ -430,24 +421,23 @@ public class ApplicationJMenuBar
         FileOpenRecentJMenu.setText( Settings.jpoResources.getString( "FileOpenRecentItemText" ) );
         FileLoadJMenuItem.setText( Settings.jpoResources.getString( "FileLoadMenuItemText" ) );
         FileAddJMenuItem.setText( Settings.jpoResources.getString( "FileAddMenuItemText" ) );
-        FileCameraJMenuItem.setText( Settings.jpoResources.getString( "FileCameraJMenuItem" ) );
         FileSaveJMenuItem.setText( Settings.jpoResources.getString( "FileSaveMenuItemText" ) );
         FileSaveAsJMenuItem.setText( Settings.jpoResources.getString( "FileSaveAsMenuItemText" ) );
         FileExitJMenuItem.setText( Settings.jpoResources.getString( "FileExitMenuItemText" ) );
 
         EditJMenu.setText( Settings.jpoResources.getString( "EditJMenuText" ) );
         EditFindJMenuItem.setText( Settings.jpoResources.getString( "EditFindJMenuItemText" ) );
-        //EditCheckDirectoriesJMenuItem.setText(Settings.jpoResources.getString("EditCheckDirectoriesJMenuItemText"));
-        //EditCollectionPropertiesJMenuItem.setText(Settings.jpoResources.getString("EditCollectionPropertiesJMenuItem"));
-        //EditCheckIntegrityJMenuItem.setText(Settings.jpoResources.getString("EditCheckIntegrityJMenuItem"));
         EditCamerasJMenuItem.setText( Settings.jpoResources.getString( "EditCamerasJMenuItem" ) );
-        //EditCategoriesJMenuItem.setText(Settings.jpoResources.getString("EditCategoriesJMenuItem"));
         EditSettingsJMenuItem.setText( Settings.jpoResources.getString( "EditSettingsMenuItemText" ) );
-
 
         actionJMenu.setText( Settings.jpoResources.getString( "actionJMenu" ) );
         emailJMenuItem.setText( Settings.jpoResources.getString( "emailJMenuItem" ) );
         RandomSlideshowJMenuItem.setText( Settings.jpoResources.getString( "RandomSlideshowJMenuItem" ) );
+
+        ExtrasJMenu.setText( "Extras" );
+        EditCheckDirectoriesJMenuItem.setText( Settings.jpoResources.getString( "EditCheckDirectoriesJMenuItemText" ) );
+        EditCheckIntegrityJMenuItem.setText( Settings.jpoResources.getString( "EditCheckIntegrityJMenuItem" ) );
+        EditCategoriesJMenuItem.setText( Settings.jpoResources.getString( "EditCategoriesJMenuItem" ) );
 
         HelpJMenu.setText( Settings.jpoResources.getString( "HelpJMenuText" ) );
         HelpAboutJMenuItem.setText( Settings.jpoResources.getString( "HelpAboutMenuItemText" ) );

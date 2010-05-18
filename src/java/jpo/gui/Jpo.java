@@ -294,16 +294,6 @@ public class Jpo
     }
 
 
-    /**
-     *   Creates a {@link PictureFileChooser} object and tells it to
-     *   add the selected pictures to the root node of the
-     *   {@link CollectionJTreeController}.
-     */
-    public void requestFileAddFromCamera() {
-        new AddFromCamera( Settings.pictureCollection.getRootNode() );
-        positionToNode( Settings.pictureCollection.getRootNode() );
-    }
-
 
     /**
      *   Brings up a dialog where the user can select the collection
@@ -626,17 +616,7 @@ public class Jpo
     }
 
 
-    /**
-     *   Creates a {@link CollectionPropertiesJFrame} that displays
-     *   statistics about the collection and allows the user to
-     *   protect it from edits.
-     */
-    public void requestCollectionProperties() {
-        new CollectionPropertiesJFrame( Settings.pictureCollection.getRootNode() );
-    }
-
-
-    /**
+     /**
      *  Creates an IntegrityChecker that does it's magic on the collection.
      */
     public void requestCheckIntegrity() {
