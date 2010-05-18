@@ -105,5 +105,17 @@ public interface ApplicationMenuInterface {
      *   Signals that the user wants to have the Collection Integrity checked.
      */
     public void requestCheckIntegrity();
+
+
+    /**
+     *   Signals that the user see the year Browser
+     */
+    public void requestYearBrowser();
+
+    /**
+     *   Signals that the user see the yearly Anaylsis
+     */
+    public void requestYearlyAnalyis();
+
 }
 

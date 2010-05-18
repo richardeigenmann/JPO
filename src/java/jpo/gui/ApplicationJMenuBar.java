@@ -141,7 +141,6 @@ public class ApplicationJMenuBar
      **/
     private final JMenuItem EditCheckDirectoriesJMenuItem = new JMenuItem();
 
-
     /**
      *  Menu item that allows the user to have the collection integrity checked.
      **/
@@ -360,14 +359,33 @@ public class ApplicationJMenuBar
         } );
         ExtrasJMenu.add( EditCheckIntegrityJMenuItem );
 
-        EditCategoriesJMenuItem.setMnemonic(KeyEvent.VK_D);
-        EditCategoriesJMenuItem.addActionListener(new ActionListener() {
+        JMenuItem yearsBrowser = new JMenuItem( "Years Browser" );
+        yearsBrowser.addActionListener( new ActionListener() {
 
-        public void actionPerformed(ActionEvent e) {
-        new CategoryEditorJFrame();
-        }
-        });
-        ExtrasJMenu.add(EditCategoriesJMenuItem);
+            public void actionPerformed( ActionEvent e ) {
+                caller.requestYearBrowser();
+            }
+        } );
+        ExtrasJMenu.add( yearsBrowser );
+
+        JMenuItem yearlyAnalysis = new JMenuItem( "Yearly Analysis" );
+        yearlyAnalysis.addActionListener( new ActionListener() {
+
+            public void actionPerformed( ActionEvent e ) {
+                caller.requestYearlyAnalyis();
+            }
+        } );
+        ExtrasJMenu.add( yearlyAnalysis );
+
+
+        EditCategoriesJMenuItem.setMnemonic( KeyEvent.VK_D );
+        EditCategoriesJMenuItem.addActionListener( new ActionListener() {
+
+            public void actionPerformed( ActionEvent e ) {
+                caller.requestCheckIntegrity();
+            }
+        } );
+        ExtrasJMenu.add( EditCategoriesJMenuItem );
 
 
 

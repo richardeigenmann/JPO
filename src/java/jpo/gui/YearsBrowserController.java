@@ -10,6 +10,7 @@ import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.tree.DefaultMutableTreeNode;
+import jpo.dataModel.Settings;
 
 /*
 YearlyAnalysisGuiController.java:  The controller that makes the GUI work
@@ -33,7 +34,8 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  *
  * @author Richard Eigenmann
  */
-public class YearsBrowserController implements Serializable {
+public class YearsBrowserController
+        implements Serializable {
 
     private YearlyAnalysis ya;
 
@@ -50,6 +52,7 @@ public class YearsBrowserController implements Serializable {
     public YearsBrowserController( DefaultMutableTreeNode startNode ) {
         ya = new YearlyAnalysis( startNode );
         YearsBrowser yb = new YearsBrowser();
+        yb.setLocationRelativeTo( Settings.anchorFrame );
         yb.setVisible( true );
 
 
@@ -70,7 +73,9 @@ public class YearsBrowserController implements Serializable {
      *
      * @author Richard Eigenmann
      */
-    class YearButton extends JButton implements Serializable {
+    class YearButton
+            extends JButton
+            implements Serializable {
 
         /**
          * The maximum dynamic width we want to give this button in addition to the minimum width

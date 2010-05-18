@@ -12,6 +12,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.tree.DefaultMutableTreeNode;
+import jpo.dataModel.Settings;
 
 /*
 YearlyAnalysisGuiController.java:  The controller that makes the GUI work
@@ -40,16 +41,19 @@ public class YearlyAnalysisGuiController {
     /**
      * Defines a logger for this class
      */
-    private static Logger logger = Logger.getLogger(YearlyAnalysisGuiController.class.getName());
+    private static Logger logger = Logger.getLogger( YearlyAnalysisGuiController.class.getName() );
+
 
     /**
      * Constructor to call to create a new YearlyAnalysisGui
      * @param startNode
      */
-    public YearlyAnalysisGuiController(DefaultMutableTreeNode startNode) {
-        YearlyAnalysis ya = new YearlyAnalysis(startNode);
+    public YearlyAnalysisGuiController( DefaultMutableTreeNode startNode ) {
+        YearlyAnalysis ya = new YearlyAnalysis( startNode );
         YearsAnalysisGui yag = new YearsAnalysisGui();
-        yag.setVisible(true);
+        yag.pack();
+        yag.setLocationRelativeTo( Settings.anchorFrame );
+        yag.setVisible( true );
 
         TreeMap<Integer, TreeMap<Integer, HashSet<DefaultMutableTreeNode>>> yearsMap = ya.getYearMap();
 
@@ -59,18 +63,18 @@ public class YearlyAnalysisGuiController {
         gc.gridy = 0;
         gc.anchor = GridBagConstraints.LINE_START;
 
-        for (Integer year : yearsMap.keySet()) {
+        for ( Integer year : yearsMap.keySet() ) {
             gc.gridx = 0;
-            panel.add(new JLabel(String.format("Year: %4d", year)), gc);
+            panel.add( new JLabel( String.format( "Year: %4d", year ) ), gc );
 
-            TreeMap<Integer, HashSet<DefaultMutableTreeNode>> monthMap = yearsMap.get(year);
-            for (Integer month : monthMap.keySet()) {
-                HashSet<DefaultMutableTreeNode> nodes = monthMap.get(month);
+            TreeMap<Integer, HashSet<DefaultMutableTreeNode>> monthMap = yearsMap.get( year );
+            for ( Integer month : monthMap.keySet() ) {
+                HashSet<DefaultMutableTreeNode> nodes = monthMap.get( month );
                 gc.gridx = 1;
-                panel.add(new JLabel(String.format("%s", YearlyAnalysis.getMonthName(month))), gc);
+                panel.add( new JLabel( String.format( "%s", YearlyAnalysis.getMonthName( month ) ) ), gc );
                 gc.gridx = 2;
-                YearsAnalysisButton b = new YearsAnalysisButton(ya, year, month);
-                panel.add(b, gc);
+                YearsAnalysisButton b = new YearsAnalysisButton( ya, year, month );
+                panel.add( b, gc );
                 gc.gridy++;
             }
         }
@@ -82,45 +86,52 @@ public class YearlyAnalysisGuiController {
      *
      * @author Richard Eigenmann
      */
-    class YearsAnalysisButton extends JButton {
+    class YearsAnalysisButton
+            extends JButton {
 
         /**
          * The maximum dynamic width we want to give this button in addition to the minimum width
          */
         int maxWidth = 400;
+
         /**
          * The minimum width a button will always have;
          */
         int minimumWidth = 80;
+
         /**
          * The width this button will use.
          */
         int width;
+
         /**
          * The height for the button
          */
         int height = 16;
 
-        public YearsAnalysisButton(YearlyAnalysis ya, Integer year, Integer month) {
-            super("Button");
-            int count = ya.getYearMap().get(year).get(month).size();
-            setText(String.format("Nodes: %d", count));
-            width = (int) ((double) count / ya.maxNodesPerMonthInAllYears() * maxWidth + minimumWidth);
+
+        public YearsAnalysisButton( YearlyAnalysis ya, Integer year,
+                Integer month ) {
+            super( "Button" );
+            int count = ya.getYearMap().get( year ).get( month ).size();
+            setText( String.format( "Nodes: %d", count ) );
+            width = (int) ( (double) count / ya.maxNodesPerMonthInAllYears() * maxWidth + minimumWidth );
             //setMinimumSize( buttonSize );
             //setMaximumSize( buttonSize );
             //setPreferredSize( buttonSize );
-            addActionListener(new ActionListener() {
+            addActionListener( new ActionListener() {
 
-                public void actionPerformed(ActionEvent e) {
-                    logger.info(Integer.toString(width));
+                public void actionPerformed( ActionEvent e ) {
+                    logger.info( Integer.toString( width ) );
                 }
-            });
-            setBackground(GradientColor.getColor(GradientColor.BLACK_WHITE_COLORS, (double) count / ya.maxNodesPerMonthInAllYears()));
+            } );
+            setBackground( GradientColor.getColor( GradientColor.BLACK_WHITE_COLORS, (double) count / ya.maxNodesPerMonthInAllYears() ) );
         }
+
 
         @Override
         public Dimension getPreferredSize() {
-            return new Dimension(width, height);
+            return new Dimension( width, height );
         }
     }
 }

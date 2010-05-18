@@ -34,7 +34,8 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  * IntegrityChecker.java:  creates a frame and checks the integrity of the collection
  *
  **/
-public class IntegrityChecker extends JFrame {
+public class IntegrityChecker
+        extends JFrame {
 
     /**
      * Defines a logger for this class
@@ -80,7 +81,6 @@ public class IntegrityChecker extends JFrame {
             }
         } );
 
-        setLocationRelativeTo( Settings.anchorFrame );
         setTitle( Settings.jpoResources.getString( "IntegrityCheckerTitle" ) );
 
         JPanel jPanel = new JPanel();
@@ -109,9 +109,9 @@ public class IntegrityChecker extends JFrame {
         getContentPane().add( jPanel, BorderLayout.CENTER );
         setSize( new Dimension( 300, 150 ) );
 
-        //  As per http://java.sun.com/developer/JDCTechTips/2003/tt1208.html#1
-        Runnable runner = new FrameShower( this );
-        EventQueue.invokeLater( runner );
+        setLocationRelativeTo( Settings.anchorFrame );
+        pack();
+        setVisible( true );
 
         IntegrityCheckerThread ict = new IntegrityCheckerThread();
     }
@@ -173,7 +173,7 @@ public class IntegrityChecker extends JFrame {
     private int checkDates() {
         int count = 0;
         //new YearlyAnalysisGuiController( startNode );
-        new YearsBrowserController( startNode );
+        
 
 
         /*       SortableDefaultMutableTreeNode testNode;
@@ -272,7 +272,8 @@ public class IntegrityChecker extends JFrame {
      *  This class allows the integrity check to run in it's own thread.
      *
      */
-    private class IntegrityCheckerThread implements Runnable {
+    private class IntegrityCheckerThread
+            implements Runnable {
 
         /**
          *  Constructor for the thread

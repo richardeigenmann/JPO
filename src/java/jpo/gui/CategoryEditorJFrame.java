@@ -2,7 +2,6 @@ package jpo.gui;
 
 import jpo.dataModel.Settings;
 import jpo.dataModel.PictureCollection;
-import jpo.*;
 import jpo.dataModel.Category;
 import java.awt.*;
 import java.awt.event.*;
@@ -12,6 +11,7 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.event.ListSelectionEvent;
 import java.util.Iterator;
 import java.util.logging.Logger;
+import jpo.dataModel.Tools;
 
 /*
 CategoryEditorJFrame.java:  creates a GUI to allow the user to specify his search
@@ -34,7 +34,9 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  * CategoryEditorJFrame.java:  Creates a GUI to edit the categories of the collection
  *
  **/
-public class CategoryEditorJFrame extends JFrame implements ListSelectionListener {
+public class CategoryEditorJFrame
+        extends JFrame
+        implements ListSelectionListener {
 
     /**
      * Defines a logger for this class
@@ -52,17 +54,8 @@ public class CategoryEditorJFrame extends JFrame implements ListSelectionListene
      *
      **/
     public CategoryEditorJFrame() {
-        Runnable r = new Runnable() {
-
-            public void run() {
-                initComponents();
-            }
-        };
-        if ( SwingUtilities.isEventDispatchThread() ) {
-            r.run();
-        } else {
-            SwingUtilities.invokeLater( r );
-        }
+        Tools.checkEDT();
+        initComponents();
     }
 
 
@@ -266,6 +259,8 @@ public class CategoryEditorJFrame extends JFrame implements ListSelectionListene
         jPanel.add( buttonJPanel, c );
 
         getContentPane().add( jPanel, BorderLayout.CENTER );
+        pack();
+        setLocationRelativeTo( Settings.anchorFrame );
         setVisible( true );
     }
 

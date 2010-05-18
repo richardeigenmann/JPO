@@ -1,13 +1,12 @@
 package jpo.gui;
 
-import java.io.Serializable;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 /*
 YearlyAnalysisGui.java:  Swing based Gui elements to show the Yearly Analysis
 
-Copyright (C) 2009  Richard Eigenmann.
+Copyright (C) 2009-2010  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -26,7 +25,7 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  *
  * @author Richard Eigenmann
  */
-public class YearsAnalysisGui extends JFrame implements Serializable {
+public class YearsAnalysisGui extends JFrame {
 
     /** Creates new form YearsAnalysisGui */
     public YearsAnalysisGui() {
@@ -45,7 +44,7 @@ public class YearsAnalysisGui extends JFrame implements Serializable {
         jScrollPane1 = new javax.swing.JScrollPane();
         DisplayPanel = new javax.swing.JPanel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         DisplayPanel.setLayout(new java.awt.GridBagLayout());
         jScrollPane1.setViewportView(DisplayPanel);
@@ -64,17 +63,7 @@ public class YearsAnalysisGui extends JFrame implements Serializable {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    /**
-    * @param args the command line arguments
-    */
-    public static void main(String args[]) {
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new YearsAnalysisGui().setVisible(true);
-            }
-        });
-    }
-
+  
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel DisplayPanel;
     private javax.swing.JScrollPane jScrollPane1;

@@ -1,6 +1,5 @@
 package jpo.dataModel;
 
-import jpo.*;
 import java.util.*;
 import java.util.logging.Logger;
 

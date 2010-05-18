@@ -294,7 +294,6 @@ public class Jpo
     }
 
 
-
     /**
      *   Brings up a dialog where the user can select the collection
      *   to be loaded. Calls {@link SortableDefaultMutableTreeNode#fileLoad}
@@ -616,7 +615,7 @@ public class Jpo
     }
 
 
-     /**
+    /**
      *  Creates an IntegrityChecker that does it's magic on the collection.
      */
     public void requestCheckIntegrity() {
@@ -657,6 +656,21 @@ public class Jpo
         p1.startAdvanceTimer( 10 );
         p2.show( rb2, 0 );
         p2.startAdvanceTimer( 10 );
+    }
+
+
+    /**
+     *  Opens up a Year Browser
+     */
+    public void requestYearBrowser() {
+        new YearsBrowserController( Settings.pictureCollection.getRootNode() );
+    }
+
+        /**
+     *  Opens up a Year Browser
+     */
+    public void requestYearlyAnalyis() {
+        new YearlyAnalysisGuiController( Settings.pictureCollection.getRootNode() );
     }
 
 

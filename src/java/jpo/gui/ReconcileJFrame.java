@@ -2,7 +2,6 @@ package jpo.gui;
 
 import jpo.dataModel.Settings;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
-import jpo.*;
 import jpo.dataModel.PictureInfo;
 import java.io.*;
 import java.util.*;
@@ -15,7 +14,7 @@ import javax.swing.*;
 ReconcileJFrame.java:  
 a class that creates a GUI, asks for a directory and then tells you if the files are in your collection.
 
-Copyright (C) 2002 - 2009  Richard Eigenmann.
+Copyright (C) 2002 - 2010  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -36,6 +35,8 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  *
  *  The user can choose whether only missing files are to be shown or whether the
  *  reconciliation should also show the matched files.
+ *
+ *  TODO: Make this a Swing Worker if it servers a purpose
  *
  */
 public class ReconcileJFrame
@@ -106,8 +107,6 @@ public class ReconcileJFrame
     public ReconcileJFrame( SortableDefaultMutableTreeNode rootNode ) {
         this.rootNode = rootNode;
 
-        setSize( 460, 300 );
-        setLocationRelativeTo( Settings.anchorFrame );
         setTitle( Settings.jpoResources.getString( "ReconcileJFrameTitle" ) );
         setDefaultCloseOperation( DISPOSE_ON_CLOSE );
         addWindowListener( new WindowAdapter() {
@@ -197,7 +196,9 @@ public class ReconcileJFrame
 
         getContentPane().add( controlJPanel );
 
+        //setSize( 460, 300 );
         pack();
+        setLocationRelativeTo( Settings.anchorFrame );
         setVisible( true );
     }
 
