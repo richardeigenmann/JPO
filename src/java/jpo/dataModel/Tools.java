@@ -1067,17 +1067,17 @@ public class Tools {
      * Writes the contents of the specified text file which we have packaged in
      * the jar of the distribution to a File. Usefull for stylesheets, dtd and
      * robots.txt.
+     * @param rootClass The class from which to search in the jar to help find the file
      * @param fileInJar The name of the file in the jar
      * @param targetDir The target directory
      * @param targetFilename the target filename
-     * //TODO is specific to HtmlDistiller at the moment.
      */
-    public static void copyFromJarToFile( String fileInJar, File targetDir,
+    public static void copyFromJarToFile( Class rootClass, String fileInJar, File targetDir,
             String targetFilename ) {
-        logger.info( String.format( "Copying File %s from classpath %s to filename %s in directory %s", fileInJar, HtmlDistiller.class.toString() ,targetFilename, targetDir ) );
+        logger.info( String.format( "Copying File %s from classpath %s to filename %s in directory %s", fileInJar, rootClass.toString() ,targetFilename, targetDir ) );
         String textLine;
         try {
-            InputStream in = HtmlDistiller.class.getResourceAsStream( fileInJar );
+            InputStream in = rootClass.getResourceAsStream( fileInJar );
             BufferedReader bin = new BufferedReader( new InputStreamReader( in ) );
             FileOutputStream out = new FileOutputStream( new File( targetDir, targetFilename ) );
             OutputStreamWriter osw = new OutputStreamWriter( out );

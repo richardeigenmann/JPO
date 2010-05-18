@@ -781,12 +781,12 @@ public class PictureCollection {
 
     /**
      * method that saves the entire index in XML format.
-     * TODO: simply returning is a bit carefree if no save has taken place
+     * @return true if successful, false if not
      */
-    public void fileSave() {
+    public boolean fileSave() {
         if ( xmlFile == null ) {
             logger.severe( "xmlFile is null. Not saving!" );
-            return;
+            return false;
         } else {
             File temporaryFile = new File( xmlFile.getPath() + ".!!!" );
             new XmlDistiller( temporaryFile, getRootNode(), false, false );
@@ -796,6 +796,7 @@ public class PictureCollection {
             setUnsavedUpdates( false );
             success = originalFile.delete();
             Settings.pushRecentCollection( xmlFile.toString() );
+            return true;
         }
     }
 

@@ -122,9 +122,9 @@ public class HtmlDistiller
             options.setGenerateZipfile( false );
         }
 
-        Tools.copyFromJarToFile( "jpo.css", options.getTargetDirectory(), "jpo.css" );
+        Tools.copyFromJarToFile( HtmlDistiller.class, "jpo.css", options.getTargetDirectory(), "jpo.css" );
         if ( options.isWriteRobotsTxt() ) {
-            Tools.copyFromJarToFile( "robots.txt", options.getTargetDirectory(), "robots.txt" );
+            Tools.copyFromJarToFile( HtmlDistiller.class, "robots.txt", options.getTargetDirectory(), "robots.txt" );
         }
         writeGroup( options.getStartNode() );
 
@@ -715,7 +715,7 @@ public class HtmlDistiller
             midresHtmlWriter.newLine();
 
             if ( options.isGenerateDHTML() ) {
-                Tools.copyFromJarToFile( "jpo.js", options.getTargetDirectory(), "jpo.js" );
+                Tools.copyFromJarToFile( HtmlDistiller.class, "jpo.js", options.getTargetDirectory(), "jpo.js" );
                 midresHtmlWriter.write( "<script type=\"text/javascript\" src=\"jpo.js\" ></script>" );
                 midresHtmlWriter.newLine();
                 midresHtmlWriter.write( "<script type=\"text/javascript\">" );
