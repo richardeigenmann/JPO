@@ -21,8 +21,11 @@ import javax.swing.*;
 import javax.swing.event.TreeModelListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
+import jpo.dataModel.DuplicatesQuery;
 import jpo.dataModel.GroupInfo;
 import jpo.dataModel.PictureInfo;
+import jpo.dataModel.QueryNavigator;
+import jpo.dataModel.TextQuery;
 import jpo.gui.swing.CollectionJTree;
 import jpotestground.CheckThreadViolationRepaintManager;
 
@@ -666,11 +669,24 @@ public class Jpo
         new YearsBrowserController( Settings.pictureCollection.getRootNode() );
     }
 
-        /**
+
+    /**
      *  Opens up a Year Browser
      */
     public void requestYearlyAnalyis() {
         new YearlyAnalysisGuiController( Settings.pictureCollection.getRootNode() );
+    }
+
+
+    /**
+     * The user wants to find duplicates
+     */
+    public void requestFindDuplicates() {
+        DuplicatesQuery q = new DuplicatesQuery();
+        DefaultMutableTreeNode newNode = Settings.pictureCollection.addQueryToTreeModel( q );
+        showQuery( newNode );
+        QueryNavigator queryBrowser = new QueryNavigator( q );
+        showThumbnails( queryBrowser );
     }
 
 

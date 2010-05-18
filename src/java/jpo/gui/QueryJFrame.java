@@ -5,7 +5,6 @@ import jpo.dataModel.Settings;
 import jpo.dataModel.GroupInfo;
 import jpo.dataModel.TextQuery;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
-import jpo.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.logging.Logger;
@@ -17,7 +16,7 @@ import jpo.dataModel.QueryNavigator;
 /*
 QueryJFrame.java:  creates a GUI to allow the user to specify his search
 
-Copyright (C) 2002-2009  Richard Eigenmann.
+Copyright (C) 2002-2010  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -76,6 +75,7 @@ public class QueryJFrame
      *
      *
      * @param startSearchNode
+     * @param collectioController The main controller for the collection
      */
     public QueryJFrame( SortableDefaultMutableTreeNode startSearchNode, Jpo collectioController ) {
         this.startSearchNode = startSearchNode;
@@ -89,7 +89,6 @@ public class QueryJFrame
             }
         } );
 
-        setLocationRelativeTo( Settings.anchorFrame );
         setTitle( Settings.jpoResources.getString( "searchDialogTitle" ) );
 
         JPanel jPanel = new JPanel();
@@ -218,11 +217,9 @@ public class QueryJFrame
         jPanel.add( buttonJPanel, c );
 
         getContentPane().add( jPanel, BorderLayout.CENTER );
-        //setSize( compactSize );
-
-        //  As per http://java.sun.com/developer/JDCTechTips/2003/tt1208.html#1
-        Runnable runner = new FrameShower( this );
-        EventQueue.invokeLater( runner );
+        pack();
+        setLocationRelativeTo( Settings.anchorFrame );
+        setVisible(true);
     }
 
     /**

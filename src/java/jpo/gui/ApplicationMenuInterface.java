@@ -112,10 +112,16 @@ public interface ApplicationMenuInterface {
      */
     public void requestYearBrowser();
 
+
     /**
      *   Signals that the user see the yearly Anaylsis
      */
     public void requestYearlyAnalyis();
 
+
+    /**
+     *   Signals that the user wants to find duplicates
+     */
+    public void requestFindDuplicates();
 }
 

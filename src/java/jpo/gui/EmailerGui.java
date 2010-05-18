@@ -363,9 +363,9 @@ public class EmailerGui
         jPanel.setMinimumSize( new Dimension( 600, 600 ) );
         getContentPane().add( jPanel, BorderLayout.CENTER );
 
-        //  As per http://java.sun.com/developer/JDCTechTips/2003/tt1208.html#1
-        Runnable runner = new FrameShower( this, Settings.anchorFrame );
-        EventQueue.invokeLater( runner );
+        pack();
+        setLocationRelativeTo( Settings.anchorFrame);
+        setVisible( true);
 
         getSettings();
     }

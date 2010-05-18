@@ -1,6 +1,5 @@
 package jpo.dataModel;
 
-import jpo.*;
 import java.io.*;
 import java.util.*;
 

@@ -126,8 +126,6 @@ public class PictureCollection {
     }
 
 
-     
-
     /**
      * Sets the flag whether to send model updates or not
      * @param status
@@ -386,21 +384,10 @@ public class PictureCollection {
      * @return The node that was added.
      */
     public DefaultMutableTreeNode addQueryToTreeModel( final Query q ) {
+        Tools.checkEDT();
         final DefaultMutableTreeNode newNode = new DefaultMutableTreeNode( q );
         getQueriesRootNode().add( newNode );
-        Runnable r = new Runnable() {
-
-            public void run() {
-                queriesTreeModel.nodesWereInserted( getQueriesRootNode(), new int[] { getQueriesRootNode().getIndex( newNode ) } );
-            }
-        };
-        if ( SwingUtilities.isEventDispatchThread() ) {
-            logger.fine( "We're not normally on the EDT but OK" );
-            r.run();
-        } else {
-            logger.fine( "In order for the JTree to update on the EDT we are sending the node change event on a Swing invoke Later thread" );
-            SwingUtilities.invokeLater( r );
-        }
+        queriesTreeModel.nodesWereInserted( getQueriesRootNode(), new int[] { getQueriesRootNode().getIndex( newNode ) } );
         return newNode;
     }
 
@@ -429,8 +416,15 @@ public class PictureCollection {
         categories.put( index, category );
 
         // add a new CategoryQuery to the Searches tree
-        CategoryQuery q = new CategoryQuery( index );
-        addQueryToTreeModel( q );
+        final CategoryQuery q = new CategoryQuery( index );
+        Runnable r = new Runnable() {
+
+
+            public void run() {
+                addQueryToTreeModel( q );
+            }
+        };
+        SwingUtilities.invokeLater( r );
     }
 
 

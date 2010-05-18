@@ -498,24 +498,15 @@ public class SortableDefaultMutableTreeNode
          **/
         private JMenuItem dropIntoFirst = new JMenuItem( Settings.jpoResources.getString( "GDPMdropIntoFirst" ) );
 
-
-        ;
-
         /**
          *  menu item that allows the user to edit the group description
          **/
         private JMenuItem dropIntoLast = new JMenuItem( Settings.jpoResources.getString( "GDPMdropIntoLast" ) );
 
-
-        ;
-
         /**
          *  menu item that allows the user to edit the group description
          **/
         private JMenuItem dropCancel = new JMenuItem( Settings.jpoResources.getString( "GDPMdropCancel" ) );
-
-
-        ;
 
 
         /**
@@ -1089,14 +1080,7 @@ public class SortableDefaultMutableTreeNode
             this.removeFromParent();
         }
         parentNode.insert( this, index + offset );
-
         getPictureCollection().setUnsavedUpdates();
-
-
-
-
-
-
         return true;
     }
 
@@ -1112,16 +1096,8 @@ public class SortableDefaultMutableTreeNode
         if ( userObject != null ) {
             if ( userObject instanceof PictureInfo ) {
                 return false;
-
-
-
-
             } else if ( userObject instanceof GroupInfo ) {
                 return true;
-
-
-
-
             }
         }
         return super.getAllowsChildren();
@@ -1152,38 +1128,15 @@ public class SortableDefaultMutableTreeNode
                 new GroupInfo( groupName ) );
 
         getPictureCollection().setSendModelUpdates( false );
-
-
-
-
-
-
         boolean picturesAdded = copyAddPictures1( files, targetDir, newGroup, progGui, newOnly, retainDirectories, selectedCategories );
         progGui.switchToDoneMode();
         getPictureCollection().setSendModelUpdates( true );
-
-
-
-
-
         if ( picturesAdded ) {
             add( newGroup );
-
-
-
-
         } else {
             newGroup = null;
-
-
-
-
         }
         return newGroup;
-
-
-
-
     }
 
 
@@ -1209,90 +1162,38 @@ public class SortableDefaultMutableTreeNode
             HashSet<Object> selectedCategories ) {
 
         logger.info( String.format( "Copying %d files from directory %s to node %s", files.length + 1, targetDir.toString(), receivingNode.toString() ) );
-
-
-
-
         boolean picturesAdded = false;
         // add all the files from the array as nodes to the start node.
-
-
-
-
         for ( int i = 0;
                 ( i < files.length ) && ( !progGui.getInterruptor().getShouldInterrupt() ); i++ ) {
             File addFile = files[i];
-
-
-
-
             if ( !addFile.isDirectory() ) {
                 File targetFile = Tools.inventPicFilename( targetDir, addFile.getName() );
-
-
-
-
                 long crc = Tools.copyPicture( addFile, targetFile );
-
-
-
-
                 if ( newOnly && Settings.pictureCollection.isInCollection( crc ) ) {
                     boolean success = targetFile.delete();
                     progGui.decrementTotal();
-
-
-
-
                 } else {
                     receivingNode.addPicture( targetFile, selectedCategories );
                     progGui.progressIncrement();
                     picturesAdded = true;
-
-
-
-
                 }
             } else {
                 if ( Tools.hasPictures( addFile ) ) {
                     SortableDefaultMutableTreeNode subNode;
-
-
-
-
                     if ( retainDirectories ) {
                         subNode = receivingNode.addGroupNode( addFile.getName() );
-
-
-
-
                     } else {
                         subNode = receivingNode;
-
-
-
-
                     }
                     boolean a = copyAddPictures1( addFile.listFiles(), targetDir, subNode, progGui, newOnly, retainDirectories, selectedCategories );
                     picturesAdded = a || picturesAdded;
-
-
-
-
                 } else {
                     logger.info( "SDMTN.copyAddPictures: no pictures in directory " + addFile.toString() );
-
-
-
-
                 }
             }
         }
         return picturesAdded;
-
-
-
-
     }
 
 
@@ -1323,10 +1224,6 @@ public class SortableDefaultMutableTreeNode
         getPictureCollection().setSendModelUpdates( false );
 
         cam.zapNewImage();
-
-
-
-
         boolean picturesAdded = copyAddPictures1( files, targetDir, newGroup, progGui, cam, retainDirectories, selectedCategories );
 
         cam.storeNewImage();
@@ -1334,29 +1231,12 @@ public class SortableDefaultMutableTreeNode
 
         getPictureCollection().setSendModelUpdates( true );
         progGui.switchToDoneMode();
-
-
-
-
-
         if ( picturesAdded ) {
             add( newGroup );
-
-
-
-
         } else {
             newGroup = null;
-
-
-
-
         }
         return newGroup;
-
-
-
-
     }
 
 
@@ -1372,59 +1252,26 @@ public class SortableDefaultMutableTreeNode
             boolean copyMode, final JProgressBar progressBar ) {
         logger.fine( String.format( "Copy/Moving %d pictures to target directory %s", newPictures.size(), targetDir.toString() ) );
         getPictureCollection().setSendModelUpdates( false );
-
-
-
-
         for ( File f : newPictures ) {
             logger.fine( String.format( "Processing file %s", f.toString() ) );
-
-
-
-
             if ( progressBar != null ) {
                 Runnable r = new Runnable() {
-
                     public void run() {
                         progressBar.setValue( progressBar.getValue() + 1 );
-
-
-
-
                     }
                 };
                 SwingUtilities.invokeLater( r );
-
-
-
-
-
             }
             File targetFile = Tools.inventPicFilename( targetDir, f.getName() );
             logger.fine( String.format( "Target file name chosen as: %s", targetFile.toString() ) );
             Tools.copyPicture( f, targetFile );
 
-
-
-
             if ( !copyMode ) {
                 boolean success = f.delete();
-
-
-
-
             }
             addPicture( targetFile, null );
-
-
-
-
         }
         getPictureCollection().setSendModelUpdates( true );
-
-
-
-
     }
 
 
@@ -1437,13 +1284,8 @@ public class SortableDefaultMutableTreeNode
     public void fileLoad( File fileToLoad ) throws FileNotFoundException {
         if ( fileToLoad != null ) {
             InputStream is = new FileInputStream( fileToLoad );
-            streamLoad(
-                    is );
+            streamLoad( is );
             Settings.pushRecentCollection( fileToLoad.toString() );
-
-
-
-
         }
     }
 
@@ -1455,17 +1297,9 @@ public class SortableDefaultMutableTreeNode
      */
     public void streamLoad( InputStream is ) {
         getPictureCollection().setSendModelUpdates( false ); // turn off model notification of each add for performance
-
-
-
-
         new XmlReader( is, this );
         getPictureCollection().setSendModelUpdates( true );
         getPictureCollection().sendNodeStructureChanged( this );
-
-
-
-
     }
 
 
@@ -1493,96 +1327,43 @@ public class SortableDefaultMutableTreeNode
 
         boolean picturesAdded = false;
         // add all the files from the array as nodes to the start node.
-
-
-
-
         for ( int i = 0;
                 ( i < files.length ) && ( !progGui.getInterruptor().getShouldInterrupt() ); i++ ) {
             File addFile = files[i];
-
-
-
-
             if ( !addFile.isDirectory() ) {
                 if ( cam.getUseFilename() && cam.inOldImage( addFile ) ) {
                     // ignore image if the filename is known
                     cam.copyToNewImage( addFile ); // put it in the known pictures Hash
                     progGui.decrementTotal();
-
-
-
-
                 } else {
                     File targetFile = Tools.inventPicFilename( targetDir, addFile.getName() );
-
-
-
-
                     long crc = Tools.copyPicture( addFile, targetFile );
                     cam.storePictureNewImage( addFile, crc ); // remember it next time
-
-
-
-
                     if ( cam.inOldImage( crc ) ) {
                         boolean success = targetFile.delete();
                         progGui.decrementTotal();
-
-
-
-
                     } else {
                         receivingNode.addPicture( targetFile, selectedCategories );
                         progGui.progressIncrement();
                         picturesAdded = true;
-
-
-
-
                     }
                 }
             } else {
                 if ( Tools.hasPictures( addFile ) ) {
                     SortableDefaultMutableTreeNode subNode;
-
-
-
-
                     if ( retainDirectories ) {
                         subNode = receivingNode.addGroupNode( addFile.getName() );
-
-
-
-
                     } else {
                         subNode = receivingNode;
-
-
-
-
                     }
-
                     boolean a = copyAddPictures1( addFile.listFiles(), targetDir, subNode, progGui, cam, retainDirectories, selectedCategories );
                     picturesAdded = a || picturesAdded;
-
-
-
-
                 } else {
                     logger.info( "SDMTN.copyAddPictures: no pictures in directory " + addFile.toString() );
-
-
-
-
                 }
             }
         }
         return picturesAdded;
-
-
-
-
     }
 
 
@@ -1597,22 +1378,10 @@ public class SortableDefaultMutableTreeNode
     public boolean addSinglePicture( File addFile, boolean newOnly,
             HashSet<Object> selectedCategories ) {
         logger.fine( String.format( "Adding File: %s, NewOnly: %b to node %s", addFile.toString(), newOnly, toString() ) );
-
-
-
-
         if ( newOnly && getPictureCollection().isInCollection( addFile ) ) {
             return false; // only add pics not in the collection already
-
-
-
-
         } else {
             return addPicture( addFile, selectedCategories );
-
-
-
-
         }
     }
 
@@ -1689,27 +1458,13 @@ public class SortableDefaultMutableTreeNode
         TreePath removedChild;
         TreePath currentNodeTreePath = new TreePath( affectedNode.getPath() );
         Object[] children = e.getChildren();
-
-
-
-
         for ( int i = 0; i
                 < children.length; i++ ) {
             removedChild = new TreePath( children[i] );
-
-
-
-
             if ( removedChild.isDescendant( currentNodeTreePath ) ) {
                 return true;
-
-
-
-
             }
         }
         return false;
-
-
     }
 }

@@ -377,6 +377,15 @@ public class ApplicationJMenuBar
         } );
         ExtrasJMenu.add( yearlyAnalysis );
 
+        JMenuItem findDuplicates = new JMenuItem( "Find Duplicates" );
+        findDuplicates.addActionListener( new ActionListener() {
+
+            public void actionPerformed( ActionEvent e ) {
+                caller.requestFindDuplicates();
+            }
+        } );
+        ExtrasJMenu.add( findDuplicates );
+
 
         EditCategoriesJMenuItem.setMnemonic( KeyEvent.VK_D );
         EditCategoriesJMenuItem.addActionListener( new ActionListener() {

@@ -111,7 +111,6 @@ public class ProgressGui
 
     private void createGui( int max, String title ) {
         setTitle( title );
-        setLocationRelativeTo( Settings.anchorFrame );
         setDefaultCloseOperation( DISPOSE_ON_CLOSE );
         addWindowListener( new WindowAdapter() {
 
@@ -186,6 +185,7 @@ public class ProgressGui
         this.getRootPane().setDefaultButton( cancelJButton );
         setMinimumSize( MINIMUM_FRAME_SIZE );
         pack();
+        setLocationRelativeTo( Settings.anchorFrame );
         setVisible( true );
     }
 
