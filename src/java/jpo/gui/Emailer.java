@@ -137,7 +137,7 @@ public class Emailer
         c.fill = GridBagConstraints.HORIZONTAL;
         progPanel.add( progressLabel, c );
 
-        progBar = new JProgressBar( 0, emailSelected.length );
+        progBar = new JProgressBar( 0, emailSelected.length + 3 ); // 3 extra steps
         progBar.setBorder( BorderFactory.createLineBorder( Color.gray, 1 ) );
         progBar.setStringPainted( true );
         progBar.setPreferredSize( new Dimension( 140, 20 ) );
@@ -265,7 +265,7 @@ public class Emailer
             ByteArrayOutputStream baos;
             EncodedDataSource encds;
             for ( int i = 0; ( i < emailSelected.length ) && ( !interrupted ); i++ ) {
-                publish( Integer.toString( progBar.getValue() ) + "/" + Integer.toString( progBar.getMaximum() ) );
+                publish( String.format( "%d / %d", progBar.getValue(), progBar.getMaximum() ) );
                 pictureDescriptionMimeBodyPart = new MimeBodyPart();
                 pi = (PictureInfo) ( (SortableDefaultMutableTreeNode) emailSelected[i] ).getUserObject();
 
@@ -273,18 +273,18 @@ public class Emailer
                 mp.addBodyPart( pictureDescriptionMimeBodyPart );
 
                 if ( scaleImages ) {
-                    publish( Settings.jpoResources.getString( "EmailerLoading" ) + pi.getHighresFilename() );
+                    logger.info( Settings.jpoResources.getString( "EmailerLoading" ) + pi.getHighresFilename() );
                     scalablePicture.loadPictureImd( pi.getHighresURLOrNull(), pi.getRotation() );
-                    publish( Settings.jpoResources.getString( "EmailerScaling" ) + pi.getHighresFilename() );
+                    logger.info( Settings.jpoResources.getString( "EmailerScaling" ) + pi.getHighresFilename() );
                     scalablePicture.scalePicture();
                     baos = new ByteArrayOutputStream();
-                    publish( Settings.jpoResources.getString( "EmailerWriting" ) + pi.getHighresFilename() );
+                    logger.info( Settings.jpoResources.getString( "EmailerWriting" ) + pi.getHighresFilename() );
                     scalablePicture.writeScaledJpg( baos );
                     encds = new EncodedDataSource( "image/jpeg", pi.getHighresFilename(), baos );
                     scaledPictureMimeBodyPart = new MimeBodyPart();
                     scaledPictureMimeBodyPart.setDataHandler( new DataHandler( encds ) );
                     scaledPictureMimeBodyPart.setFileName( pi.getHighresFilename() );
-                    publish( Settings.jpoResources.getString( "EmailerAdding" ) + pi.getHighresFilename() );
+                    logger.info( Settings.jpoResources.getString( "EmailerAdding" ) + pi.getHighresFilename() );
                     mp.addBodyPart( scaledPictureMimeBodyPart );
                 }
 
@@ -298,7 +298,7 @@ public class Emailer
                     originalPictureMimeBodyPart.setDataHandler( new DataHandler( ds ) );
                     originalPictureMimeBodyPart.setFileName( pi.getHighresFilename() );
                     // create the Multipart and add its parts to it
-                    publish( Settings.jpoResources.getString( "EmailerAdding" ) + pi.getHighresFilename() );
+                    logger.info( Settings.jpoResources.getString( "EmailerAdding" ) + pi.getHighresFilename() );
                     mp.addBodyPart( originalPictureMimeBodyPart );
                 }
 
