@@ -242,27 +242,27 @@ public class SortableDefaultMutableTreeNode
         return null;
     }
 
-
     /**
      *  This method collects all pictures under the current node and returns them as an Array List..
      *
-     *  @param  pictureNodes   The ArrayList to which to add the picture nodes.
-     *  @param recursive Whether to add the pictures of any groups nodes or not
+     * @param recursive Whether to add the pictures of any groups nodes or not
+     * @return  An ArrayList of child nodes that hold a picture
      */
-    public void getChildPictureNodes(
-            ArrayList<SortableDefaultMutableTreeNode> pictureNodes,
+    public ArrayList<SortableDefaultMutableTreeNode> getChildPictureNodes(
             boolean recursive ) {
+        ArrayList<SortableDefaultMutableTreeNode> pictureNodes = new ArrayList<SortableDefaultMutableTreeNode>();
         Enumeration kids = this.children();
         SortableDefaultMutableTreeNode n;
 
         while ( kids.hasMoreElements() ) {
             n = (SortableDefaultMutableTreeNode) kids.nextElement();
             if ( recursive && n.getUserObject() instanceof GroupInfo ) {
-                n.getChildPictureNodes( pictureNodes, recursive );
+                pictureNodes.addAll( n.getChildPictureNodes( recursive ) );
             } else if ( n.getUserObject() instanceof PictureInfo ) {
                 pictureNodes.add( n );
             }
         }
+        return pictureNodes;
     }
 
 
@@ -1256,6 +1256,7 @@ public class SortableDefaultMutableTreeNode
             logger.fine( String.format( "Processing file %s", f.toString() ) );
             if ( progressBar != null ) {
                 Runnable r = new Runnable() {
+
                     public void run() {
                         progressBar.setValue( progressBar.getValue() + 1 );
                     }

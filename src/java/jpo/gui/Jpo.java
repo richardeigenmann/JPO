@@ -653,8 +653,8 @@ public class Jpo
         PictureViewer p2 = new PictureViewer();
         p2.switchWindowMode( ResizableJFrame.WINDOW_RIGHT );
         //p2.switchDecorations( true );
-        RandomNavigator rb1 = new RandomNavigator( Settings.pictureCollection.getRootNode() );
-        RandomNavigator rb2 = new RandomNavigator( Settings.pictureCollection.getRootNode() );
+        RandomNavigator rb1 = new RandomNavigator( Settings.pictureCollection.getRootNode().getChildPictureNodes( true ), String.format( "Randomised pictures from %s", Settings.pictureCollection.getRootNode().toString() ) );
+        RandomNavigator rb2 = new RandomNavigator( Settings.pictureCollection.getRootNode().getChildPictureNodes( true ), String.format( "Randomised pictures from %s", Settings.pictureCollection.getRootNode().toString() ) );
         p1.show( rb1, 0 );
         p1.startAdvanceTimer( 10 );
         p2.show( rb2, 0 );

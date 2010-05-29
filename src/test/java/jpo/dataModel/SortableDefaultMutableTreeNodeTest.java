@@ -1,5 +1,6 @@
 package jpo.dataModel;
 
+import java.util.ArrayList;
 import junit.framework.*;
 
 /*
@@ -243,5 +244,14 @@ public class SortableDefaultMutableTreeNodeTest
         assertNull( "The clone has no parent", cloneNode.getParent() );
         assertTrue( "The clones userObject is of type GroupInfo", cloneNode.getUserObject() instanceof GroupInfo );
         assertEquals( "The clone has the same number of children", group2.getChildCount(), cloneNode.getChildCount() );
+    }
+
+
+    public void testgetChildPictureNodes() {
+        ArrayList<SortableDefaultMutableTreeNode> allPicturesFromRoot = rootNode.getChildPictureNodes( true );
+        assertEquals( "There should be 5 pictures in the result set from root, recursive", 5, allPicturesFromRoot.size() );
+        assertEquals( "There should be 0 pictures under the root node when nonrecursive", 0, rootNode.getChildPictureNodes( false ).size() );
+        assertEquals( "There should be 2 pictures under the group1 node when nonrecursive", 2, group1.getChildPictureNodes( false ).size() );
+        assertEquals( "There should be 2 pictures under the group1 node when recursive", 2, group1.getChildPictureNodes( true ).size() );
     }
 }

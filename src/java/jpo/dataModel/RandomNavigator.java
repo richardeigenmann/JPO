@@ -1,12 +1,11 @@
 package jpo.dataModel;
 
-import jpo.*;
 import java.util.*;
 
 /*
-RandomBrower.java:  an implementation of the ThumbnailBrowserInterface for browsing random pictures.
+RandomNavigator.java:  an implementation of the NodeNavigator for navigating nodes in a random order.
 
-Copyright (C) 2006 - 2009  Richard Eigenmann, Zürich, Switzerland
+Copyright (C) 2006 - 2010  Richard Eigenmann, Zürich, Switzerland
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -21,59 +20,54 @@ The license is in gpl.txt.
 See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 /** 
- *  This class returns a browser for all the pictures under a node in a random order
+ *  This class returns a NodeNavigator which shuffles the supplied nodes
  */
 public class RandomNavigator
         extends NodeNavigator {
 
     /**
-     *  This ArrayList holds all the picture nodes that the browser will serve
+     *  This ArrayList holds all the nodes that the NodeNavigator will serve
      */
-    private ArrayList<SortableDefaultMutableTreeNode> allPictures = new ArrayList<SortableDefaultMutableTreeNode>();
+    private ArrayList<SortableDefaultMutableTreeNode> nodes;
 
     /**
-     * The root node for this browser
+     * The title of this set of nodes
      */
-    private SortableDefaultMutableTreeNode rootNode;
-
+    private String title;
 
     /**
      *  Constructor for a RandomNavigator.
      *
-     *  @param rootNode    The rootNode under which the randomisation should happen.
+     *  @param nodes An ArrayList of nodes to randomly navigate
+     *  @param  title The title of the nodes
      */
-    public RandomNavigator( SortableDefaultMutableTreeNode rootNode ) {
-        logger.fine( "Constructor called on node: " + rootNode.toString() );
-        this.rootNode = rootNode;
-        rootNode.getChildPictureNodes( allPictures, true );
-        Collections.shuffle( allPictures );
+    public RandomNavigator( ArrayList<SortableDefaultMutableTreeNode> nodes, String title ) {
+        this.nodes = nodes;
+        this.title = title;
+        Collections.shuffle( this.nodes );
     }
 
-
     /**
-     *  returns a title for this browser
+     *  returns a title for this NodeNavigator
      */
     public String getTitle() {
-        return String.format("Randomised pictures from %s",rootNode.toString() ) ;
+        return title;
     }
-
 
     /**
-     * The Random Browser returns the number of nodes in the shuffled list
-     * @return the number of nodes in the browser
+     * Returns the number of nodes in the shuffled list
+     * @return The number of nodes in the list
      */
     public int getNumberOfNodes() {
-        return allPictures.size();
+        return nodes.size();
     }
-
 
     /**
      * Returns the node for the specific index
-     * @param index The index 0 to getNumberOfNodes to retrieve
+     * @param index The index of the node to retrieve
      * @return the node for the index number
      */
     public SortableDefaultMutableTreeNode getNode( int index ) {
-        logger.fine( String.format( "requested for node: %d", index ) );
-        return allPictures.get( index );
+        return nodes.get( index );
     }
 }

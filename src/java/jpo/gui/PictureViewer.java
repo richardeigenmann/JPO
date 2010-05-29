@@ -901,10 +901,11 @@ public class PictureViewer
             if ( randomAdvanceJRadioButton.isSelected() ) {
                 if ( useAllPicturesJRadioButton.isSelected() ) //addAllPictureNodes( pictureNodesArrayList, (SortableDefaultMutableTreeNode) currentNode.getRoot()  );
                 {
-                    mySetOfNodes = new RandomNavigator( (SortableDefaultMutableTreeNode) getCurrentNode().getRoot() );
+                    mySetOfNodes = new RandomNavigator( Settings.pictureCollection.getRootNode().getChildPictureNodes( true ), String.format( "Randomised pictures from %s", Settings.pictureCollection.getRootNode().toString() ) );
                 } else //addAllPictureNodes( pictureNodesArrayList, (SortableDefaultMutableTreeNode) currentNode.getParent() );
                 {
-                    mySetOfNodes = new RandomNavigator( (SortableDefaultMutableTreeNode) getCurrentNode().getParent() );
+                    mySetOfNodes = new RandomNavigator( ( (SortableDefaultMutableTreeNode) getCurrentNode().getParent() ).getChildPictureNodes( true ),
+                            String.format( "Randomised pictures from %s", ( (SortableDefaultMutableTreeNode) getCurrentNode().getParent() ).toString() ) );
                 }
             } else {
                 if ( useAllPicturesJRadioButton.isSelected() ) {
