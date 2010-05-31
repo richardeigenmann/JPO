@@ -1440,7 +1440,8 @@ public class SortableDefaultMutableTreeNode
             return;
         }
         logger.fine( String.format( "refreshing the thumbnail on the node %s\nAbout to create the thubnail", this.toString() ) );
-        ThumbnailController t = new ThumbnailController( new SingleNodeNavigator( this ), 0, Settings.thumbnailSize, ThumbnailQueueRequest.HIGH_PRIORITY, null );
+        ThumbnailController t = new ThumbnailController( Settings.thumbnailSize );
+        t.setNode( new SingleNodeNavigator( this ), 0 );
         logger.fine( String.format( "Thumbnail %s created. Now chucking it on the creation queue", t.toString() ) );
         ThumbnailCreationQueue.requestThumbnailCreation( t, ThumbnailQueueRequest.HIGH_PRIORITY, true );
     }

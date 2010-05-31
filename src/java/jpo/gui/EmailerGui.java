@@ -432,7 +432,8 @@ public class EmailerGui
         for ( int i = 0; i < emailSelected.length; i++ ) {
             //logger.info("EmailerGui.loadThumbnails: running on " + emailSelected[i].toString() );
             alb.addNode( (SortableDefaultMutableTreeNode) emailSelected[i] );
-            ThumbnailController thumbnailController = new ThumbnailController( alb, i, thumbnailSize, ThumbnailQueueRequest.LOW_PRIORITY, null );
+            ThumbnailController thumbnailController = new ThumbnailController( thumbnailSize );
+            thumbnailController.setNode( alb, i );
             thumbnailController.setDecorateThumbnails( false );
             thumbnailController.determineMailSlectionStatus();
             thumbnailController.setFactor( factor );

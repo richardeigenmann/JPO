@@ -262,7 +262,8 @@ public class PictureInfoEditor
         leftJPanel.setLayout( new GridBagLayout() );
 
 
-        thumbnailController = new ThumbnailController( new SingleNodeNavigator( editNode ), 0, Settings.thumbnailSize, ThumbnailQueueRequest.MEDIUM_PRIORITY, null );
+        thumbnailController = new ThumbnailController( Settings.thumbnailSize );
+        thumbnailController.setNode( new SingleNodeNavigator( editNode ), 0);
         c.gridy = 0;
         c.gridx = 0;
         c.gridwidth = 1;

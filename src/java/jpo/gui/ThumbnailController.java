@@ -98,33 +98,6 @@ public class ThumbnailController
         Settings.pictureCollection.getTreeModel().addTreeModelListener( this );
     }
 
-
-    /**
-     *   Creates a new ThumbnailController object and sets it to the supplied node.
-     *
-     *   @param 	mySetOfNodes	The set for which this ThumbnailController is
-     *				being created.
-     *
-     *   @param	index		the position of the image in the set
-     *
-     *   @param	thumbnailSize	The size in which the thumbnail is to be created
-     *
-     *   @param     priority	One of ThumbnailCreationQueue.MEDIUM_PRIORITY,ThumbnailCreationQueue.HIGH_PRORITY, ThumbnailCreationQueue.LOW_PRIORITY
-     *   @param collectionController  The controller for the collection
-     *   @deprecated
-     *
-     **/
-    public ThumbnailController( NodeNavigatorInterface mySetOfNodes,
-            int index,
-            int thumbnailSize, int priority, Jpo collectionController ) {
-        this( thumbnailSize );
-        this.priority = priority;
-        this.myThumbnailBrowser = mySetOfNodes;
-        this.myIndex = index;
-        this.collectionController = collectionController;
-        setNode( mySetOfNodes, index ); //won't this fail because the thumbnail isn't there yet?
-    }
-
     /**
      *  a link to the SortableDefaultMutableTreeNode in the data model.
      *  This allows thumbnails to be selected by sending a
