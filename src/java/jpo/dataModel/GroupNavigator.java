@@ -4,7 +4,7 @@ import javax.swing.event.*;
 import javax.swing.tree.*;
 
 /*
-GroupBrower.java:  an implementation of the ThumbnailBrowserInterface for browsing groups.
+GroupBrower.java:  an implementation of the NodeNavigator for browsing groups.
 
 Copyright (C) 2002 - 2010  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
@@ -21,7 +21,7 @@ The license is in gpl.txt.
 See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 /** 
- *  This class implements the ThumbnailBrowserInterface in the specific manner that is required for 
+ *  This class implements the NodeNavigator in the specific manner that is required for
  *  displaying the child nodes of a Group in the Thumbnail JScrollPane.
  */
 public class GroupNavigator
@@ -40,6 +40,7 @@ public class GroupNavigator
      * @param node
      */
     public GroupNavigator( SortableDefaultMutableTreeNode node ) {
+        //logger.info( String.format( "Creating a new GroupNavigator for group %s", node.toString() ) );
         setNode( node );
     }
 
@@ -133,7 +134,7 @@ public class GroupNavigator
      */
     @Override
     public void treeNodesChanged( TreeModelEvent e ) {
-        logger.fine( "GroupBrowser.treeNodesChanged: " + e.toString() );
+        logger.fine( "treeNodesChanged: " + e.toString() );
         if ( myNode == null ) {
             //logger.info("GroupNavigator.treeNodesChanged: ERROR! This should not have been called as there is not group showing and therefore there should be no tree listener firing off. Ignoring notification.");
             return;
@@ -170,7 +171,7 @@ public class GroupNavigator
         // of the current group
         TreePath myPath = new TreePath( myNode.getPath() );
         if ( myPath.equals( e.getTreePath() ) ) {
-            logger.info( "Nodes were inserted under my node. We must therefore relayout the children; myNode: " + myPath.toString() + " comparison:" + ( (SortableDefaultMutableTreeNode) e.getTreePath().getLastPathComponent() ).toString() );
+            //logger.info( "Nodes were inserted under my node. We must therefore relayout the children; myNode: " + myPath.toString() + " comparison:" + ( (SortableDefaultMutableTreeNode) e.getTreePath().getLastPathComponent() ).toString() );
             notifyRelayoutListeners();
         }
     }

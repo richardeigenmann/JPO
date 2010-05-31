@@ -10,7 +10,7 @@ import javax.swing.tree.TreeNode;
 
 /**
  *
- * @author richi
+ * @author Richard Eigenmann
  */
 public class DebuggingDefaultTreeModel
         extends DefaultTreeModel {

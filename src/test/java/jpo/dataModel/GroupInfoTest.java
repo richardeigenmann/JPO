@@ -4,7 +4,6 @@
  */
 package jpo.dataModel;
 
-import java.io.BufferedWriter;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -14,7 +13,7 @@ import junit.framework.TestCase;
 
 /**
  *
- * @author richi
+ * @author Richard Eigenmann
  */
 public class GroupInfoTest
         extends TestCase {

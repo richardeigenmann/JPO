@@ -1,7 +1,6 @@
 package jpo.gui;
 
 import java.awt.datatransfer.Transferable;
-import jpo.dataModel.FlatGroupNavigator;
 import jpo.dataModel.Tools;
 import jpo.dataModel.Settings;
 import jpo.gui.swing.CollectionJTree;
@@ -16,6 +15,7 @@ import java.util.Enumeration;
 import java.util.logging.Logger;
 import javax.swing.*;
 import javax.swing.tree.*;
+import jpo.dataModel.SingleNodeNavigator;
 import jpo.export.GenerateWebsiteWizard;
 
 /*
@@ -881,11 +881,10 @@ public class CollectionJTreeController
         @Override
         public void mouseClicked( MouseEvent e ) {
             TreePath clickPath = ( (JTree) e.getSource() ).getPathForLocation( e.getX(), e.getY() );
-            if ( clickPath == null ) {
+            if ( clickPath == null ) { // this happens
                 return;
-            } // happens
+            }
             SortableDefaultMutableTreeNode clickNode = (SortableDefaultMutableTreeNode) clickPath.getLastPathComponent();
-
 
             if ( e.getClickCount() == 1 && ( !e.isPopupTrigger() ) ) {
                 if ( clickNode.getUserObject() instanceof GroupInfo ) {
@@ -945,15 +944,8 @@ public class CollectionJTreeController
                         SwingUtilities.invokeLater( r );
                     }
                 } else if ( nodeInfo instanceof PictureInfo ) {
-                    FlatGroupNavigator sb = new FlatGroupNavigator( (SortableDefaultMutableTreeNode) popupNode.getParent() );
-                    int index = 0;
-                    for ( int i = 0; i < sb.getNumberOfNodes(); i++ ) {
-                        if ( sb.getNode( i ).equals( popupNode ) ) {
-                            index = i;
-                            i = sb.getNumberOfNodes();
-                        }
-                    }
-                    PicturePopupMenu picturePopupMenu = new PicturePopupMenu( sb, index );
+                    SingleNodeNavigator sb = new SingleNodeNavigator( popupNode );
+                    PicturePopupMenu picturePopupMenu = new PicturePopupMenu( sb, 0 );
                     picturePopupMenu.show( e.getComponent(), e.getX(), e.getY() );
                 }
             }

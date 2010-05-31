@@ -1,6 +1,5 @@
 package jpo.dataModel;
 
-import jpo.gui.*;
 import java.util.*;
 import java.util.logging.Logger;
 
@@ -31,7 +30,7 @@ public abstract class NodeNavigator
     /**
      * Logger for this class
      */
-    protected Logger logger = Logger.getLogger( NodeNavigator.class.getName() );
+    protected Logger logger = Logger.getLogger( this.getClass().getName() );
 
 
     /**

@@ -1,13 +1,11 @@
 package jpo.dataModel;
 
-import java.util.ArrayList;
-import java.util.Enumeration;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreePath;
 
 /*
-FlatGroupNavigator.java:  an implementation of the ThumbnailBrowserInterface for browsing all the pictures of a group sequentially.
+FlatGroupNavigator.java:  an implementation of the NodeNavigator for browsing all the pictures of a group sequentially.
 
 Copyright (C) 2006-2010  Richard Eigenmann, Zürich, Switzerland
 This program is free software; you can redistribute it and/or
@@ -24,7 +22,7 @@ The license is in gpl.txt.
 See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 /** 
- *  This class implements the ThumbnailBrowserInterface so that all the potentially nested 
+ *  This class implements the Node Navigator Interface so that all the potentially nested
  *  child pictures of the specified group are browsed sequentially.
  */
 public class FlatGroupNavigator
@@ -37,6 +35,8 @@ public class FlatGroupNavigator
      *  @param groupNode    The groupNode under which the pictures should be displayed.
      */
     public FlatGroupNavigator( SortableDefaultMutableTreeNode groupNode ) {
+        logger.info( String.format( "Creating a FlatGroupNavigator for node %s", groupNode.toString() ) );
+        Thread.dumpStack();
         this.groupNode = groupNode;
         Settings.pictureCollection.getTreeModel().addTreeModelListener( this );
         buildFromScratch();
@@ -48,13 +48,14 @@ public class FlatGroupNavigator
      */
     private void buildFromScratch() {
         allPictures.clear();
-        enumerateAndAddToList( allPictures, groupNode );
+        allPictures = groupNode.getChildPictureNodes( true );
     }
 
 
     /**
      * This method shuts down the object and makes it available for garbage collection
      */
+    @Override
     public void getRid() {
         logger.info( "Deregistering the Navigator from the data model notifications." );
         Settings.pictureCollection.getTreeModel().removeTreeModelListener( this );
@@ -77,30 +78,6 @@ public class FlatGroupNavigator
             return ( (GroupInfo) groupNode.getUserObject() ).getGroupName();
         } else {
             return "No title available";
-        }
-    }
-
-
-    /**
-     *  This method collects all pictures under the startNode into the supplied ArrayList. This method
-     *  calls itself recursively.
-     *
-     *  @param  myList   The ArrayList to which to add the pictures.
-     *  @param  startNode   The group node under which to collect the pictures.
-     */
-    public void enumerateAndAddToList(
-            ArrayList<SortableDefaultMutableTreeNode> myList,
-            SortableDefaultMutableTreeNode startNode ) {
-        Enumeration kids = startNode.children();
-        SortableDefaultMutableTreeNode n;
-
-        while ( kids.hasMoreElements() ) {
-            n = (SortableDefaultMutableTreeNode) kids.nextElement();
-            if ( n.getUserObject() instanceof GroupInfo ) {
-                enumerateAndAddToList( myList, n );
-            } else if ( n.getUserObject() instanceof PictureInfo ) {
-                myList.add( n );
-            }
         }
     }
 

@@ -400,7 +400,6 @@ public class Jpo
     public static void browsePictures( SortableDefaultMutableTreeNode node ) {
         Object o = node.getUserObject();
         if ( o instanceof PictureInfo ) {
-            //node.showLargePicture();
             FlatGroupNavigator sb = new FlatGroupNavigator( (SortableDefaultMutableTreeNode) node.getParent() );
             int index = 0;
             for ( int i = 0; i < sb.getNumberOfNodes(); i++ ) {
@@ -414,7 +413,6 @@ public class Jpo
         } else if ( o instanceof GroupInfo ) {
             SortableDefaultMutableTreeNode firstPicNode = node.findFirstPicture();
             if ( firstPicNode != null ) {
-                //firstPicNode.showLargePicture();
                 FlatGroupNavigator sb = new FlatGroupNavigator( node );
                 PictureViewer pictureViewer = new PictureViewer();
                 pictureViewer.show( sb, 0 );

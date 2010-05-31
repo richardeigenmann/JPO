@@ -15,7 +15,7 @@ import jpo.gui.DirectoryChooser;
 
 /**
  *
- * @author richi
+ * @author Richard Eigenmann
  */
 public class PlayWithDirectoryChooser extends javax.swing.JFrame {
 

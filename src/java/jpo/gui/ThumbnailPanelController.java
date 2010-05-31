@@ -459,9 +459,10 @@ public class ThumbnailPanelController
         // take the thumbnailControllers off the creation queue if they were on it.
         // as setNode is now internally synchronised this can slow down removal
         // from the queue
-        for ( int i = 0; i < Settings.maxThumbnails; i++ ) {
+        //Why? RE 1.6.2010 Causes bug with move down
+        /*for ( int i = 0; i < Settings.maxThumbnails; i++ ) {
             thumbnailControllers[i].unqueue();
-        }
+        }*/
         for ( int i = 0; i < Settings.maxThumbnails; i++ ) {
             logger.fine( String.format( "now assigning thumbnail numer: %d", i ) );
             if ( !thumbnailControllers[i].isSameNode( mySetOfNodes, i + startIndex ) ) {

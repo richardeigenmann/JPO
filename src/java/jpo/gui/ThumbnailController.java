@@ -221,7 +221,7 @@ public class ThumbnailController
 
         if ( node == null ) {
             theThumbnail.setVisible( false );
-        } else { //if ( node.getUserObject() instanceof PictureInfo ) {
+        } else {
             requestThumbnailCreation( priority, false );
         }
 
@@ -255,11 +255,11 @@ public class ThumbnailController
                 PictureInfo pi = (PictureInfo) referringNode.getUserObject();
                 logger.fine( String.format( "attaching ThumbnailController %d to Picturinfo %d", this.hashCode(), pi.hashCode() ) );
                 pi.addPictureInfoChangeListener( this );
-                registeredPictureInfoChangeListener = pi; //remember so we can remove
+                registeredPictureInfoChangeListener = pi; //remember so we can poll
             } else if ( referringNode.getUserObject() instanceof GroupInfo ) {
                 GroupInfo pi = (GroupInfo) referringNode.getUserObject();
                 pi.addGroupInfoChangeListener( this );
-                registeredGroupInfoChangeListener = pi; //remember so we can remove
+                registeredGroupInfoChangeListener = pi; //remember so we can poll
 
             }
         }
@@ -279,7 +279,6 @@ public class ThumbnailController
             setPendingIcon();
         } else {
             logger.fine( String.format( "Why have we just sent in a request for Thumbnail creation for %s when it's already on the queue?", toString() ) );
-            //Thread.dumpStack();
         }
     }
 
@@ -288,6 +287,8 @@ public class ThumbnailController
      * Sets an icon for a pending state before a final icon is put in place by a ThumbnailCreation
      */
     public void setPendingIcon() {
+        //logger.info( "Setting pending icon");
+        //Thread.dumpStack();
         if ( referringNode == null ) {
             logger.info( "Referring node is null! How did this happen?" );
             Thread.dumpStack();

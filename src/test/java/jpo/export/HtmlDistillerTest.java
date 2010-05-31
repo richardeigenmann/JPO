@@ -8,7 +8,7 @@ import junit.framework.TestCase;
 
 /**
  *
- * @author richi
+ * @author Richard Eigenmann
  */
 public class HtmlDistillerTest
         extends TestCase {

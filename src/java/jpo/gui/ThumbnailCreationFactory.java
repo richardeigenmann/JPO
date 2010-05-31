@@ -3,7 +3,6 @@ package jpo.gui;
 import jpo.dataModel.Tools;
 import jpo.dataModel.Settings;
 import jpo.dataModel.GroupInfo;
-import jpo.*;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
 import jpo.dataModel.PictureInfo;
 import javax.swing.*;
@@ -66,7 +65,7 @@ public class ThumbnailCreationFactory
      */
     public void run() {
         while ( !endThread ) {
-            ThumbnailQueueRequest req = ThumbnailCreationQueue.remove();
+            ThumbnailQueueRequest req = ThumbnailCreationQueue.poll();
             if ( req == null ) {
                 try {
                     Thread.sleep( Settings.ThumbnailCreationThreadPollingTime );
@@ -87,8 +86,8 @@ public class ThumbnailCreationFactory
      *  @param  req		the {@link ThumbnailQueueRequest} for which to create the ThumbnailController
      */
     private void createThumbnail( ThumbnailQueueRequest req ) {
+        //logger.info( String.format( "Processing QueueRequest %s", req.toString() ) );
         ThumbnailController currentThumb = req.getThumbnailController();
-        //logger.info("ThumbnailCreationFactory.createThumbnail: running on ThumbnailController: " + Integer.toString(groupThumbnailController.myIndex));
         // now block other threads from accessing the ThumbnailController
         synchronized ( currentThumb ) {
             SortableDefaultMutableTreeNode referringNode = currentThumb.referringNode;
@@ -126,9 +125,8 @@ public class ThumbnailCreationFactory
             logger.info( "Invoked with a null request. Aborting." );
             return;
         }
-        logger.fine( String.format( "Request details: %s", req.toString() ) );
+        logger.fine( String.format( "Processing Queue Request details: %s", req.toString() ) );
         ThumbnailController currentThumb = req.getThumbnailController();
-        //logger.info("ThumbnailCreationFactory.loadOrCreatePictureThumbnail: running on ThumbnailController: " + Integer.toString(groupThumbnailController.myIndex));
         if ( currentThumb == null ) {
             logger.info( "Invoked request with a null Thumbnail. Aborting." );
             return;
@@ -160,34 +158,6 @@ public class ThumbnailCreationFactory
         }
 
 
-        URL highresUrl = null;
-        try {
-            highresUrl = pi.getHighresURL();
-        } catch ( MalformedURLException x ) {
-            logger.info( "Highres URL was Malformed: " + pi.getHighresLocation() + "  Loading \"broken\" icon." );
-            currentThumb.setBrokenIcon();
-            return;
-        }
-
-        // test if highres is readable
-        try {
-            highresUrl.openStream().close();
-        } catch ( IOException x ) {
-            // highres could not be opened
-            // can we read the lowres instead?
-            try {
-                lowresUrl.openStream().close();
-                ImageIcon icon = new ImageIcon( lowresUrl );
-                currentThumb.getThumbnail().setThumbnail( icon );
-                return;
-            } catch ( IOException ioe ) {
-                // we have nothing to display
-                currentThumb.setBrokenIcon();
-                return;
-            }
-        }
-
-
         // Are we being requested to recreate the ThumbnailController in any case?
         if ( req.getForce() ) {
             createNewThumbnail( currentThumb );
@@ -206,6 +176,34 @@ public class ThumbnailCreationFactory
                 return;
             }
 
+
+            URL highresUrl = null;
+            try {
+                highresUrl = pi.getHighresURL();
+            } catch ( MalformedURLException x ) {
+                logger.info( "Highres URL was Malformed: " + pi.getHighresLocation() + "  Loading \"broken\" icon." );
+                currentThumb.setBrokenIcon();
+                return;
+            }
+
+            // test if highres is readable
+            try {
+                highresUrl.openStream().close();
+            } catch ( IOException x ) {
+                // highres could not be opened
+                // can we read the lowres instead?
+                try {
+                    lowresUrl.openStream().close();
+                    ImageIcon icon = new ImageIcon( lowresUrl );
+                    currentThumb.getThumbnail().setThumbnail( icon );
+                    return;
+                } catch ( IOException ioe ) {
+                    // we have nothing to display
+                    currentThumb.setBrokenIcon();
+                    return;
+                }
+            }
+
             // is lowres up to date?
             try {
                 URLConnection lowresUC = lowresUrl.openConnection();
@@ -216,7 +214,7 @@ public class ThumbnailCreationFactory
                 highresUC.getInputStream().close();
 
                 if ( lowresModDate < highresModDate ) {
-                    logger.fine( "ThumbnailCreationThread.createThumbnail: is requesting the creation of a numbnail because Thumbnail is out of date: " + pi.getLowresLocation() );
+                    logger.fine( "Requesting the creation of a Thumbnail because Thumbnail is out of date: " + pi.getLowresLocation() );
                     createNewThumbnail( currentThumb );
                     return;
                 }
@@ -232,7 +230,7 @@ public class ThumbnailCreationFactory
 
 
         // ThumbnailController up to date is size ok?
-        //logger.info("ThubnailCreationThread.loadOrCreatePictureThumbnail: ThumbnailController is up to date. Checking size");
+        logger.fine( "Thumbnail is more recent than Highres picture. Loading and checking size..." );
         ImageIcon icon = new ImageIcon( lowresUrl );
         if ( isThumbnailSizeOk( new Dimension( icon.getIconWidth(), icon.getIconHeight() ),
                 currentThumb.getMaximumUnscaledSize() ) ) {
@@ -351,15 +349,15 @@ public class ThumbnailCreationFactory
             }
 
             //if ( !Settings.keepThumbnails ) {
-                // This branch is nescessary because it sets the thumbnail only when the
-                // ThumbnailController is not written to disk. Where it is written to disk the
-                // sent ThumbnailChangedEvent ensures that the new image is loaded.
-                ImageIcon icon = new ImageIcon( currentPicture.getScaledPicture() );
-                //if ((currentThumb.referringNode != null) && (currentThumb.referringNode == referringNode)) {
-                if ( currentThumb.referringNode != null ) {
-                    // could have changed in the mean time
-                    currentThumb.getThumbnail().setThumbnail( icon );
-                }
+            // This branch is nescessary because it sets the thumbnail only when the
+            // ThumbnailController is not written to disk. Where it is written to disk the
+            // sent ThumbnailChangedEvent ensures that the new image is loaded.
+            ImageIcon icon = new ImageIcon( currentPicture.getScaledPicture() );
+            //if ((currentThumb.referringNode != null) && (currentThumb.referringNode == referringNode)) {
+            if ( currentThumb.referringNode != null ) {
+                // could have changed in the mean time
+                currentThumb.getThumbnail().setThumbnail( icon );
+            }
             //}
         } catch ( IOException x ) {
             currentThumb.setBrokenIcon();

@@ -1073,7 +1073,7 @@ public class SortableDefaultMutableTreeNode
         if ( this.getParent() != null ) {
             if ( this.getParent().equals( parentNode ) ) {
                 if ( this.getParent().getIndex( this ) < index ) {
-                    // correct the index because the remove will take away one slot
+                    // correct the index because the poll will take away one slot
                     offset = -1;
                 }
             }

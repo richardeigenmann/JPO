@@ -94,10 +94,9 @@ public class PicturePopupMenu
             if ( uo instanceof PictureInfo ) {
                 title = ( (PictureInfo) uo ).getDescription();
             }
+            // trim title length to 25 characters if longer
             if ( title.length() > 25 ) {
-                logger.info( String.format( "Length: %d", title.length() ) );
                 title = title.substring( 0, 25 ) + "...";
-                logger.info( String.format( "Length: %d", title.length() ) );
             }
 
         }
@@ -846,13 +845,12 @@ public class PicturePopupMenu
 
 
     /**
-     * Intercepting this method to attach the change listeners when the menu
+     * Intercepting this method to attach the Setting's change listeners when the menu
      * becomes visible so that they can also be removed when the menu goes away
      * again.
      */
     @Override
     protected void firePopupMenuWillBecomeVisible() {
-        logger.info( "Adding listeners" );
         Settings.addRecentDropNodeListener( this );
         Settings.addCopyLocationsChangeListener( this );
         Settings.addUserFunctionsChangeListener( this );
@@ -861,13 +859,12 @@ public class PicturePopupMenu
 
 
     /**
-     * Intercepting this method to attach the change listeners when the menu
+     * Intercepting this method to attach the Setting's change listeners when the menu
      * becomes visible so that they can also be removed when the menu goes away
      * again.
      */
     @Override
     protected void firePopupMenuWillBecomeInvisible() {
-        logger.info( "Removing Listeners" );
         Settings.removeRecentDropNodeListener( this );
         Settings.removeCopyLocationsChangeListener( this );
         Settings.removeUserFunctionsChangeListener( this );

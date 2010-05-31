@@ -540,7 +540,7 @@ public class PictureCollection {
 
     /**
      * Removes the category from the nodes using it
-     * @param key The category to remove
+     * @param key The category to poll
      * @param startNode The node from which to start
      */
     public void removeCategoryUsage( Object key,
@@ -618,7 +618,7 @@ public class PictureCollection {
 
     /**
      *  This method removes the current SDMTN from the mailSelection HashSet.
-     * @param node the node to remove from the mail selection
+     * @param node the node to poll from the mail selection
      */
     public void removeFromMailSelection( SortableDefaultMutableTreeNode node ) {
         mailSelection.remove( node );
@@ -858,7 +858,7 @@ public class PictureCollection {
 
     /**
      * This method removes the current SDMTN from the selection
-     * @param node the node to remove
+     * @param node the node to poll
      */
     public void removeFromSelection( SortableDefaultMutableTreeNode node ) {
         selection.remove( node );

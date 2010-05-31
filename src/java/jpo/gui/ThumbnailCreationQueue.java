@@ -2,12 +2,13 @@ package jpo.gui;
 
 import java.util.Iterator;
 import java.util.concurrent.PriorityBlockingQueue;
+import java.util.logging.Logger;
 
 
 /*
 ThumbnailCreationQueue.java:  queue that holds requests to create Thumbnails from Highres Images
 
-Copyright (C) 2003-2009  Richard Eigenmann.
+Copyright (C) 2003-2010  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -32,6 +33,11 @@ public class ThumbnailCreationQueue {
      */
     private static final PriorityBlockingQueue<ThumbnailQueueRequest> queue = new PriorityBlockingQueue<ThumbnailQueueRequest>();
 
+    /**
+     * Defines a logger for this class
+     */
+    private static Logger logger = Logger.getLogger( ThumbnailCreationQueue.class.getName() );
+
 
     /**
      * This method creates a {@link ThumbnailQueueRequest} and sticks it
@@ -47,14 +53,18 @@ public class ThumbnailCreationQueue {
      *				if using a cached version is OK.
      *  @return true if the request was added to the queue, false if the request already existed.
      */
-    public static boolean requestThumbnailCreation( ThumbnailController thumbnailController,
+    public static boolean requestThumbnailCreation(
+            ThumbnailController thumbnailController,
             int priority, boolean force ) {
+        //logger.info( "Chucking a request on the queue for ThumbnailController: " + thumbnailController.toString() );
         ThumbnailQueueRequest requestFoundOnQueue = findQueueRequest( thumbnailController );
         if ( requestFoundOnQueue == null ) {
-            // there is no prior request on the queue, we add a new one
-            add( new ThumbnailQueueRequest( thumbnailController, priority, force ) );
+            ThumbnailQueueRequest tqr = new ThumbnailQueueRequest( thumbnailController, priority, force );
+            //logger.info( String.format( "There is no prior request on the queue, we add a new one: %s", tqr.toString() ) );
+            add( tqr );
             return true;
         } else {
+            //logger.info( "Such a request is already on the queue" );
             // thumbnail already on queue, should we up the priority?
             if ( requestFoundOnQueue.getPriority() > priority ) {
                 requestFoundOnQueue.setPriority( priority );
@@ -74,6 +84,7 @@ public class ThumbnailCreationQueue {
      */
     public static void add( ThumbnailQueueRequest tqr ) {
         queue.add( tqr );
+        //logger.info( String.format( "Added request %s size now: %d", tqr, size() ) );
     }
 
 
@@ -81,16 +92,22 @@ public class ThumbnailCreationQueue {
      * Returns the highest priority request on the queue.
      * @return The highest priority queue request
      */
-    public static ThumbnailQueueRequest remove() {
-        return queue.poll();
+    public static ThumbnailQueueRequest poll() {
+        ThumbnailQueueRequest tqr = queue.poll();
+        /*if ( tqr != null ) {
+            logger.info( String.format( "Returning request: %s remaining queue size: %d", tqr, size() ) );
+        }*/
+        return tqr;
     }
 
 
     /**
-     * Removes the specified request from the queue
-     * @param tqr The request to remove
+     * Retrieves and removes the head of this queue, or returns null if this queue is empty. 
+     * @param tqr The request to poll
      */
     public static void remove( ThumbnailQueueRequest tqr ) {
+        //logger.info( "Removing request: " + tqr.toString() );
+        //Thread.dumpStack();
         queue.remove( tqr );
     }
 
@@ -99,6 +116,7 @@ public class ThumbnailCreationQueue {
      * Remove all queue requests from the queue.
      */
     public static void clear() {
+        //logger.info( "Clearing queue" );
         queue.clear();
     }
 
@@ -118,10 +136,11 @@ public class ThumbnailCreationQueue {
      *
      *   @param  thumbnailController  The thumbnail to be removed
      */
-    public static void removeThumbnailRequest( ThumbnailController thumbnailController ) {
+    public static void removeThumbnailRequest(
+            ThumbnailController thumbnailController ) {
         ThumbnailQueueRequest tqr = findQueueRequest( thumbnailController );
         if ( tqr != null ) {
-            queue.remove( tqr );
+            remove( tqr );
         }
     }
 

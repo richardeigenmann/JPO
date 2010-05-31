@@ -4,7 +4,7 @@ import jpo.*;
 import java.util.*;
 
 /*
-ArrayListNavigator.java:  an implementation of the ThumbnailBrowserInterface for browsing pictures.
+ArrayListNavigator.java:  an implementation of the NodeNavigator for browsing pictures.
 
 Copyright (C) 2006-2010  Richard Eigenmann, Zürich, Switzerland
 This program is free software; you can redistribute it and/or
@@ -21,7 +21,7 @@ The license is in gpl.txt.
 See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 /**
- *  This class implements the ThumbnailBrowserInterface so that all the pictures of a specified
+ *  This class implements the NodeNavigator Interface so that all the pictures of a specified
  *  ArrayList can be browsed sequentially.
  */
 public class ArrayListNavigator
@@ -63,7 +63,7 @@ public class ArrayListNavigator
 
 
     /**
-     *  returns the title
+     * Returns the title of the node set
      * @return the Title
      */
     public String getTitle() {
@@ -91,11 +91,11 @@ public class ArrayListNavigator
      *                 getNode(1) and getNode(2).
      */
     public SortableDefaultMutableTreeNode getNode( int index ) {
-        if ( index >= getNumberOfNodes() ) {
-            // it is perfectly legal to ask for a node beyond the available nodes
-            return null;
-        } else {
+        try {
             return allPictures.get( index );
+        } catch ( ArrayIndexOutOfBoundsException x ) {
+            logger.warning( String.format( "Requested node %d on NodeNavigator %s is out of bounds!", index, getTitle() ) );
+            return null;
         }
     }
 
