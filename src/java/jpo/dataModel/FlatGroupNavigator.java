@@ -120,7 +120,7 @@ public class FlatGroupNavigator
                 logger.info( String.format( "Oh dear, our group has just disappeared." ) );
                 allPictures.clear();
                 //notifyNodeChangeListeners( indexMapping );
-                notifyRelayoutListeners();
+                notifyNodeNavigatorListeners();
                 return; // no point in continuing the loop; the group is gone.
             }
 
@@ -130,7 +130,7 @@ public class FlatGroupNavigator
                 int myNodeCount = getNumberOfNodes();
                 logger.info( String.format( "The removed %d node(s) are children of the current group (which has %d nodes)", childIndices.length, myNodeCount ) );
                 buildFromScratch();
-                notifyRelayoutListeners();
+                notifyNodeNavigatorListeners();
             }
         }
     }

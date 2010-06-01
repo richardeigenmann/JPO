@@ -67,9 +67,9 @@ public class ArrayListNavigator
      * @return the Title
      */
     public String getTitle() {
-        if ( title != null ) {
+        try {
             return title;
-        } else {
+        } catch ( NullPointerException ex ) {
             return "";
         }
     }
@@ -79,7 +79,13 @@ public class ArrayListNavigator
      *  Returns the number of pictures in this group. Starts at 1 like all arrays.
      */
     public int getNumberOfNodes() {
-        return allPictures.size();
+        try {
+            return allPictures.size();
+        } catch ( NullPointerException ex ) {
+            logger.severe( String.format( "Why did we get a NullPointerExecption for the ArrayListNavigator %s?", getTitle() ) );
+            Thread.dumpStack();
+            return 0;
+        }
     }
 
 

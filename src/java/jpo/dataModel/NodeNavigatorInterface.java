@@ -60,19 +60,19 @@ public interface NodeNavigatorInterface {
 
 
 	/**
-	 *  method to register a RelayoutListener
+	 *  method to register a NodeNavigatorListener
          *
-         * @param listener a RelayoutListener to notify
+         * @param listener a NodeNavigatorListener to notify
          */
-	public void addRelayoutListener ( RelayoutListener listener ); 
+	public void addNodeNavigatorListener ( NodeNavigatorListener listener );
 
 
 	/**
-	 *  method to remove a RelayoutListener
+	 *  method to remove a NodeNavigatorListener
          *
          * @param listener the listener to remove
          */
-	public void removeRelayoutListener ( RelayoutListener listener );
+	public void removeNodeNavigatorListener ( NodeNavigatorListener listener );
 
 
 	/**

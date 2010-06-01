@@ -40,7 +40,7 @@ import jpo.dataModel.NodeNavigator;
 import jpo.dataModel.PictureInfoChangeEvent;
 import jpo.dataModel.PictureInfoChangeListener;
 import jpo.dataModel.RandomNavigator;
-import jpo.dataModel.RelayoutListener;
+import jpo.dataModel.NodeNavigatorListener;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
 import jpo.dataModel.Tools;
 
@@ -80,7 +80,7 @@ public class PictureViewer
         ChangeWindowInterface,
         PictureInfoChangeListener,
         //TreeModelListener,
-        RelayoutListener {
+        NodeNavigatorListener {
 
     /**
      *   The pane that handles the image drawing aspects.
@@ -121,7 +121,7 @@ public class PictureViewer
      */
     public void closeViewer() {
         //getRid the old navigator
-        mySetOfNodes.removeRelayoutListener( this );
+        mySetOfNodes.removeNodeNavigatorListener( this );
         mySetOfNodes.getRid(); // help Grabage collection remove the listener
         stopTimer();
         closeMyWindow();
@@ -509,17 +509,17 @@ public class PictureViewer
         if ( this.mySetOfNodes == null ) {
             // add viewer to the new one
             this.mySetOfNodes = mySetOfNodes;
-            mySetOfNodes.addRelayoutListener( this );
+            mySetOfNodes.addNodeNavigatorListener( this );
         } else {
             //did we get a new navigator?
             if ( !this.mySetOfNodes.equals( mySetOfNodes ) ) {
                 logger.info( String.format( "Got a new navigator: old: %s new: %s", this.mySetOfNodes.toString(), mySetOfNodes.toString() ) );
                 //get rid of the old navigator
-                this.mySetOfNodes.removeRelayoutListener( this );
+                this.mySetOfNodes.removeNodeNavigatorListener( this );
                 this.mySetOfNodes.getRid(); // help Grabage collection remove the listener
                 // add viewer to the new one
                 this.mySetOfNodes = mySetOfNodes;
-                mySetOfNodes.addRelayoutListener( this );
+                mySetOfNodes.addNodeNavigatorListener( this );
             }
         }
 
@@ -754,7 +754,7 @@ public class PictureViewer
     /**
      * gets called when the Navigator notices a change
      */
-    public void relayout() {
+    public void nodeLayoutChanged() {
         logger.info( String.format( "Got notified to relayout" ) );
         show( mySetOfNodes, myIndex );
 

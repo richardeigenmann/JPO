@@ -2,7 +2,7 @@ package jpo.dataModel;
 
 
 /*
-RelayoutListener.java:  interface for notification
+NodeNavigatorListener.java:  interface for notification
 
 Copyright (C) 2007-2010 Richard Eigenmann, Zürich, Switzerland
 This program is free software; you can redistribute it and/or
@@ -22,12 +22,12 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  * This interface allows the Navigators to inform a client that the nodes have
  * changed and that they need to update the screen.
  */
-public interface RelayoutListener {
+public interface NodeNavigatorListener {
 
     /**
      *  Gets called when the nodex need to be laid out again because the
      *  layout changed.
      */
-    public void relayout();
+    public void nodeLayoutChanged();
 }
 

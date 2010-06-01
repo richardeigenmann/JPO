@@ -21,7 +21,7 @@ The license is in gpl.txt.
 See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 /**
- *  This class implements the RelayoutListener functionality required by the  NodeNavigatorInterface
+ *  This class implements the NodeNavigatorListener functionality required by the  NodeNavigatorInterface
  *  but the other methods need to be implements by the extending class.
  */
 public abstract class NodeNavigator
@@ -67,40 +67,40 @@ public abstract class NodeNavigator
      *  This ArrayList holds the reference to the listeners that need to be notified if there is a structural change.
      *  Observer pattern.
      */
-    private Vector<RelayoutListener> relayoutListeners = new Vector<RelayoutListener>();
+    private Vector<NodeNavigatorListener> relayoutListeners = new Vector<NodeNavigatorListener>();
 
 
     /**
-     *  method to register a RelayoutListener as a listener
+     *  method to register a NodeNavigatorListener as a listener
      */
-    public void addRelayoutListener( RelayoutListener listener ) {
-        logger.fine( String.format( "adding relayout listener: %s", listener.toString() ) );
+    public void addNodeNavigatorListener( NodeNavigatorListener listener ) {
+        logger.fine( String.format( "adding listener: %s", listener.toString() ) );
         relayoutListeners.add( listener );
         logger.fine( String.format( "We now have %d relayout listeners.", relayoutListeners.size() ) );
     }
 
 
     /**
-     *  method to remove a RelayoutListener as a listener
+     *  method to remove a NodeNavigatorListener as a listener
      */
-    public void removeRelayoutListener( RelayoutListener listener ) {
-        logger.fine( String.format( "removing relayout listener: %s", listener.toString() ) );
+    public void removeNodeNavigatorListener( NodeNavigatorListener listener ) {
+        logger.fine( String.format( "removing listener: %s", listener.toString() ) );
         relayoutListeners.remove( listener );
         logger.fine( String.format( "We now have %d relayout listeners.", relayoutListeners.size() ) );
     }
 
 
     /**
-     * Method that notifies the RelayoutListener of a structural change that they need to
+     * Method that notifies the NodeNavigatorListener of a structural change that they need to
      * respond to.
      */
-    public void notifyRelayoutListeners() {
-        logger.fine( String.format( "notifying %d relayout listeners.", relayoutListeners.size() ) );
+    public void notifyNodeNavigatorListeners() {
+        logger.fine( String.format( "notifying %d NodeNavigatorListeners.", relayoutListeners.size() ) );
         @SuppressWarnings( "unchecked" )
-        Vector<RelayoutListener> stableRelayoutListeners = (Vector<RelayoutListener>) relayoutListeners.clone();
-        for ( RelayoutListener relayoutListener : stableRelayoutListeners ) {
+        Vector<NodeNavigatorListener> stableRelayoutListeners = (Vector<NodeNavigatorListener>) relayoutListeners.clone();
+        for ( NodeNavigatorListener relayoutListener : stableRelayoutListeners ) {
             logger.fine( String.format( "   now notifying relayout listener: %s", relayoutListener.toString() ) );
-            relayoutListener.relayout();
+            relayoutListener.nodeLayoutChanged();
         }
     }
 

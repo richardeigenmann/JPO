@@ -213,7 +213,7 @@ public class Settings {
      *  The number of thumbnail creation threads to spawn.
      *  @see jpo.gui.ThumbnailCreationQueue
      */
-    public static final int numberOfThumbnailCreationThreads = 1;
+    public static final int numberOfThumbnailCreationThreads = 2;
 
     /**
      *  The KDE Panel has the unfortunate habit of insisting on being on top so this

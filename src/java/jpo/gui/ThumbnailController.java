@@ -113,10 +113,10 @@ public class ThumbnailController
     /**
      *  A set of picture nodes of which one indicated by {@link #myIndex} is to be shown
      */
-    private NodeNavigatorInterface myThumbnailBrowser = null;
+    private NodeNavigatorInterface myNodeNavigator = null;
 
     /**
-     *  the Index position in the {@link #myThumbnailBrowser} which is being shown by this
+     *  the Index position in the {@link #myNodeNavigator} which is being shown by this
      *  component.
      */
     public int myIndex = 0;
@@ -175,23 +175,18 @@ public class ThumbnailController
 
     /**
      * Returns to the caller whether the thumbnail is already showing the node.
-     * @param newBrowser The NodeNavigatorInterface from which the node is coming
+     * @param newNavigator The NodeNavigatorInterface from which the node is coming
      * @param newIndex The index position that should be checked.
      * @return true if the indicated node is already showing, false if not
      */
-    public boolean isSameNode( NodeNavigatorInterface newBrowser,
+    public boolean isSameNode( NodeNavigatorInterface newNavigator,
             int newIndex ) {
-        if ( !newBrowser.equals( myThumbnailBrowser ) ) {
-            if ( myThumbnailBrowser == null ) {
-                logger.fine( String.format( "Not the same Browser %s  vs.  null", newBrowser.toString() ) );
-            } else {
-                logger.fine( String.format( "Not the same Browser %s  vs.  %s ", newBrowser.toString(), myThumbnailBrowser.toString() ) );
-            }
+        if ( !newNavigator.equals( myNodeNavigator ) ) {
             return false;
         } else if ( newIndex == myIndex ) {
-            logger.fine( String.format( "Same index: %d on same Browser %s. But is it actually the same node?", newIndex, newBrowser.toString() ) );
+            logger.fine( String.format( "Same index: %d on same Browser %s. But is it actually the same node?", newIndex, newNavigator.toString() ) );
             //return true;
-            SortableDefaultMutableTreeNode testNode = newBrowser.getNode( newIndex );
+            SortableDefaultMutableTreeNode testNode = newNavigator.getNode( newIndex );
             logger.fine( String.format( "The refferingNode is the same as the newNode: %b", testNode == referringNode ) );
             return testNode == referringNode;
         } else {
@@ -209,7 +204,7 @@ public class ThumbnailController
      */
     public void setNode( NodeNavigatorInterface mySetOfNodes, int index ) {
         logger.fine( String.format( "Setting Thubnail %d to index %d in Browser %s ", this.hashCode(), index, mySetOfNodes.toString() ) );
-        this.myThumbnailBrowser = mySetOfNodes;
+        this.myNodeNavigator = mySetOfNodes;
         this.myIndex = index;
         SortableDefaultMutableTreeNode node = mySetOfNodes.getNode( index );
 
@@ -402,7 +397,7 @@ public class ThumbnailController
      */
     private void rightClickResponse( MouseEvent e ) {
         if ( referringNode.getUserObject() instanceof PictureInfo ) {
-            PicturePopupMenu picturePopupMenu = new PicturePopupMenu( myThumbnailBrowser, myIndex );
+            PicturePopupMenu picturePopupMenu = new PicturePopupMenu( myNodeNavigator, myIndex );
             picturePopupMenu.show( e.getComponent(), e.getX(), e.getY() );
         } else if ( referringNode.getUserObject() instanceof GroupInfo ) {
             GroupPopupMenu groupPopupMenu = new GroupPopupMenu( Jpo.collectionJTreeController, referringNode );
@@ -540,8 +535,8 @@ public class ThumbnailController
             return;
         }
 
-        for ( int i = 0; i <
-                children.length; i++ ) {
+        for ( int i = 0; i
+                < children.length; i++ ) {
             if ( children[i] == referringNode ) {
                 // we are displaying a changed node. What changed?
                 Object userObject = referringNode.getUserObject();

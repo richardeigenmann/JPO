@@ -145,7 +145,7 @@ public class GroupNavigator
         TreePath myPath = new TreePath( myNode.getPath() );
         if ( myPath.equals( e.getTreePath() ) ) {
             logger.fine( String.format( "A Node was changed. No need to get excited at the group level. myNode: %s, notification node %s", myPath.toString(), ( (SortableDefaultMutableTreeNode) e.getTreePath().getLastPathComponent() ).toString() ) );
-            //notifyRelayoutListeners();
+            //notifyNodeNavigatorListeners();
         }
     }
 
@@ -172,7 +172,7 @@ public class GroupNavigator
         TreePath myPath = new TreePath( myNode.getPath() );
         if ( myPath.equals( e.getTreePath() ) ) {
             //logger.info( "Nodes were inserted under my node. We must therefore relayout the children; myNode: " + myPath.toString() + " comparison:" + ( (SortableDefaultMutableTreeNode) e.getTreePath().getLastPathComponent() ).toString() );
-            notifyRelayoutListeners();
+            notifyNodeNavigatorListeners();
         }
     }
 
@@ -204,7 +204,7 @@ public class GroupNavigator
             TreePath myPath = new TreePath( myNode.getPath() );
             if ( myPath.equals( e.getTreePath() ) ) {
                 logger.fine( String.format( "Nodes were removed from my node. We must therefore relayout the children; myPath: %s, lastPathComponent: [%s]", myPath.toString(), ( (SortableDefaultMutableTreeNode) e.getTreePath().getLastPathComponent() ).toString() ) );
-                notifyRelayoutListeners();
+                notifyNodeNavigatorListeners();
             }
         }
     }
@@ -226,7 +226,7 @@ public class GroupNavigator
             return;
         }
         if ( myNode.isNodeDescendant( (SortableDefaultMutableTreeNode) e.getTreePath().getLastPathComponent() ) ) {
-            notifyRelayoutListeners();
+            notifyNodeNavigatorListeners();
         }
     }
 }

@@ -1,6 +1,6 @@
 package jpo.gui;
 
-import jpo.dataModel.RelayoutListener;
+import jpo.dataModel.NodeNavigatorListener;
 import jpo.dataModel.NodeNavigatorInterface;
 import jpo.dataModel.Settings;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
@@ -42,7 +42,7 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  *
  */
 public class ThumbnailPanelController
-        implements RelayoutListener {
+        implements NodeNavigatorListener {
 
     /**
      * Defines a logger for this class
@@ -71,15 +71,15 @@ public class ThumbnailPanelController
 
     /**
      *   Instructs the ThumbnailPanelController to display the specified set of nodes to be displayed
-     *   @param mySetOfNodes 	The Interface with the collection of nodes
+     *   @param newNodeNavigator 	The Interface with the collection of nodes
      */
-    public void show( NodeNavigatorInterface mySetOfNodes ) {
+    public void show( NodeNavigatorInterface newNodeNavigator ) {
         if ( this.mySetOfNodes != null ) {
-            this.mySetOfNodes.removeRelayoutListener( this );
+            this.mySetOfNodes.removeNodeNavigatorListener( this );
             this.mySetOfNodes.getRid();
         }
-        this.mySetOfNodes = mySetOfNodes;
-        mySetOfNodes.addRelayoutListener( this );  //Todo: investigate how we unattach these...
+        this.mySetOfNodes = newNodeNavigator;
+        newNodeNavigator.addNodeNavigatorListener( this );  //Todo: investigate how we unattach these...
 
         Runnable r = new Runnable() {
 
@@ -88,7 +88,7 @@ public class ThumbnailPanelController
                 thumbnailPanel.getVerticalScrollBar().setValue( 0 );
                 startIndex = 0;
                 curPage = 1;
-                relayout();
+                nodeLayoutChanged();
             }
         };
         if ( SwingUtilities.isEventDispatchThread() ) {
@@ -190,7 +190,7 @@ public class ThumbnailPanelController
         startIndex = 0;
         thumbnailPanel.getVerticalScrollBar().setValue( 0 );
         curPage = 1;
-        relayout();
+        nodeLayoutChanged();
         setButtonStatus();
     }
 
@@ -205,7 +205,7 @@ public class ThumbnailPanelController
         }
         thumbnailPanel.getVerticalScrollBar().setValue( 0 );
         curPage--;
-        relayout();
+        nodeLayoutChanged();
         setButtonStatus();
     }
 
@@ -217,7 +217,7 @@ public class ThumbnailPanelController
         startIndex = startIndex + Settings.maxThumbnails;
         thumbnailPanel.getVerticalScrollBar().setValue( 0 );
         curPage++;
-        relayout();
+        nodeLayoutChanged();
         setButtonStatus();
     }
 
@@ -231,7 +231,7 @@ public class ThumbnailPanelController
         curPage = tgtPage + 1;
         startIndex = tgtPage * Settings.maxThumbnails;
         thumbnailPanel.getVerticalScrollBar().setValue( 0 );
-        relayout();
+        nodeLayoutChanged();
         setButtonStatus();
     }
 
@@ -437,7 +437,7 @@ public class ThumbnailPanelController
      *
      * It also sets the tile of the JScrollPane.
      */
-    public void relayout() {
+    public void nodeLayoutChanged() {
         Tools.checkEDT();
         if ( mySetOfNodes == null ) {
             return;
