@@ -100,7 +100,8 @@ public class ArrayListNavigator
         try {
             return allPictures.get( index );
         } catch ( ArrayIndexOutOfBoundsException x ) {
-            logger.warning( String.format( "Requested node %d on NodeNavigator %s is out of bounds!", index, getTitle() ) );
+            logger.severe( String.format( "Requested node %d on NodeNavigator %s is out of bounds!", index, getTitle() ) );
+            Thread.dumpStack();
             return null;
         }
     }

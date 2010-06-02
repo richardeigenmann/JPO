@@ -508,7 +508,7 @@ public class Jpo
         if ( Settings.pictureCollection.getXmlFile() == null ) {
             fileSaveAs();
         } else {
-            logger.info( String.format( "xml file is not null and reads: %s", Settings.pictureCollection.getXmlFile() ) );
+            logger.info( String.format( "Saving under the name: %s", Settings.pictureCollection.getXmlFile() ) );
             Settings.pictureCollection.fileSave();
             afterFileSaveDialog();
         }

@@ -642,7 +642,7 @@ public class SortableDefaultMutableTreeNode
                 SortableDefaultMutableTreeNode newPictureNode = new SortableDefaultMutableTreeNode(
                         new PictureInfo(
                         sb,
-                        Tools.lowresFilename(),
+                        Tools.getNewLowresFilename(),
                         Tools.stripOutFilenameRoot( testFile ),
                         "" ) );
                 newNode.add( newPictureNode );
@@ -667,7 +667,7 @@ public class SortableDefaultMutableTreeNode
         logger.fine( String.format( "Delete requested for node: %s", toString() ) );
         if ( this.isRoot() ) {
             logger.info( "SDMTN.deleteNode: attempted on Root node. Can't do this! Aborted." );
-            JOptionPane.showMessageDialog( null, //very annoying if the main window is used as it forces itself into focus.
+            JOptionPane.showMessageDialog( Settings.anchorFrame,
                     Settings.jpoResources.getString( "deleteRootNodeError" ),
                     Settings.jpoResources.getString( "genericError" ),
                     JOptionPane.ERROR_MESSAGE );
@@ -1400,11 +1400,11 @@ public class SortableDefaultMutableTreeNode
 
         try {
             if ( !Tools.jvmHasReader( addFile ) ) {
-                logger.severe( String.format( "The Java Virtual Machine has not got a reader for the file %s", addFile.toString() ) );
+                logger.info( String.format( "Not adding file %s because the Java Virtual Machine has not got a reader for the file.", addFile.toString() ) );
                 return false; // don't add if there is no reader.
             }
             newPictureInfo.setHighresLocation( addFile.toURI().toURL() );
-            newPictureInfo.setLowresLocation( Tools.lowresFilename() );
+            newPictureInfo.setLowresLocation( Tools.getNewLowresFilename() );
             newPictureInfo.setDescription( Tools.stripOutFilenameRoot( addFile ) );
             newPictureInfo.setChecksum( Tools.calculateChecksum( addFile ) );
             if ( categoryAssignment != null ) {

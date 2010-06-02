@@ -60,11 +60,14 @@ public class JpoResources_de extends ListResourceBundle {
 		// Help About Dialog
 		{"HelpAboutText", "JPO Version 0.9 ist ein Java/Swing Programm\n" 
 			+ "geschrieben von Richard Eigenmann, Zürich, Schweiz\n" 
-			+ "Copyright 2000 - 2009\n"
+			+ "Copyright 2000 - 2010\n"
 			+ "richard.eigenmann@gmail.com\n"
 			+ "http://j-po.sourceforge.net\n"
 			+ "\nDie Exif Extraktion wurde von Drew Noakes entwickelt\n"
-			+  "Der Tablen Sortierer stammt von Philip Milne\n\n"},
+			+ "Der Tabellen Sortierer stammt von Philip Milne\n"
+			+ "Mikael Grev entwickelt MiG Layout\n"
+			+ "Michael Rudolf entwickelt JWizz\n"
+			+ "Franklin He übersetzte ins Chinesische\n\n"},
 		{"HelpAboutUser", "Benutzer: " },
 		{"HelpAboutOs", "Betriebssystem: " },
 		{"HelpAboutJvm", "JVM: " },
@@ -470,7 +473,7 @@ public class JpoResources_de extends ListResourceBundle {
 		{"recurseSubdirectoriesMessage", "Es sind Unterverzeichnisse in Ihrer Auswahl vorhanden.\nSollen diese auch einbezogen werden?"},
 		{"recurseSubdirectoriesOk", "Hinzufügen"},
 		{"recurseSubdirectoriesNo", "Nein"},
-		{"picturesAdded", " Bilder hinzugefügt"},
+		{"picturesAdded", "%d Bilder hinzugefügt"},
 		{"pictureAdderOptionsTab", "Optionen"},
 		{"pictureAdderThumbnailTab", "Vorschau"},
 		{"pictureAdderCategoryTab", "Kategorien"},

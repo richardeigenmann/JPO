@@ -106,8 +106,6 @@ public class ThumbnailCreationQueue {
      * @param tqr The request to poll
      */
     public static void remove( ThumbnailQueueRequest tqr ) {
-        //logger.info( "Removing request: " + tqr.toString() );
-        //Thread.dumpStack();
         queue.remove( tqr );
     }
 

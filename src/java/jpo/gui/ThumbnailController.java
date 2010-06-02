@@ -103,7 +103,7 @@ public class ThumbnailController
      *  This allows thumbnails to be selected by sending a
      *  nodeSelected event to the data model.
      **/
-    public SortableDefaultMutableTreeNode referringNode;
+    public SortableDefaultMutableTreeNode myNode;
 
     /**
      * Defines a logger for this class
@@ -187,8 +187,8 @@ public class ThumbnailController
             logger.fine( String.format( "Same index: %d on same Browser %s. But is it actually the same node?", newIndex, newNavigator.toString() ) );
             //return true;
             SortableDefaultMutableTreeNode testNode = newNavigator.getNode( newIndex );
-            logger.fine( String.format( "The refferingNode is the same as the newNode: %b", testNode == referringNode ) );
-            return testNode == referringNode;
+            logger.fine( String.format( "The refferingNode is the same as the newNode: %b", testNode == myNode ) );
+            return testNode == myNode;
         } else {
             logger.fine( String.format( "Same Browser but Different index: new: %d old: %d", newIndex, myIndex ) );
             return false;
@@ -210,7 +210,7 @@ public class ThumbnailController
 
         unqueue();
 
-        this.referringNode = node;
+        this.myNode = node;
 
         attachChangeListeners();
 
@@ -222,7 +222,7 @@ public class ThumbnailController
 
         showSlectionStatus();
         determineMailSlectionStatus();
-        determineImageStatus( referringNode );
+        determineImageStatus( myNode );
     }
 
 
@@ -245,14 +245,14 @@ public class ThumbnailController
         }
 
         // attach the change Listener
-        if ( referringNode != null ) {
-            if ( referringNode.getUserObject() instanceof PictureInfo ) {
-                PictureInfo pi = (PictureInfo) referringNode.getUserObject();
+        if ( myNode != null ) {
+            if ( myNode.getUserObject() instanceof PictureInfo ) {
+                PictureInfo pi = (PictureInfo) myNode.getUserObject();
                 logger.fine( String.format( "attaching ThumbnailController %d to Picturinfo %d", this.hashCode(), pi.hashCode() ) );
                 pi.addPictureInfoChangeListener( this );
                 registeredPictureInfoChangeListener = pi; //remember so we can poll
-            } else if ( referringNode.getUserObject() instanceof GroupInfo ) {
-                GroupInfo pi = (GroupInfo) referringNode.getUserObject();
+            } else if ( myNode.getUserObject() instanceof GroupInfo ) {
+                GroupInfo pi = (GroupInfo) myNode.getUserObject();
                 pi.addGroupInfoChangeListener( this );
                 registeredGroupInfoChangeListener = pi; //remember so we can poll
 
@@ -282,14 +282,12 @@ public class ThumbnailController
      * Sets an icon for a pending state before a final icon is put in place by a ThumbnailCreation
      */
     public void setPendingIcon() {
-        //logger.info( "Setting pending icon");
-        //Thread.dumpStack();
-        if ( referringNode == null ) {
-            logger.info( "Referring node is null! How did this happen?" );
+        if ( myNode == null ) {
+            logger.severe( "Referring node is null! How did this happen?" );
             Thread.dumpStack();
             return;
         }
-        if ( referringNode.getUserObject() instanceof PictureInfo ) {
+        if ( myNode.getUserObject() instanceof PictureInfo ) {
             theThumbnail.setQueueIcon();
         } else {
             theThumbnail.setLargeFolderIcon();
@@ -355,7 +353,7 @@ public class ThumbnailController
          */
         @Override
         public void mouseClicked( MouseEvent e ) {
-            if ( referringNode == null ) {
+            if ( myNode == null ) {
                 return;
             }
             if ( e.getClickCount() > 1 ) {
@@ -374,18 +372,18 @@ public class ThumbnailController
      */
     private void leftClickResponse( MouseEvent e ) {
         if ( e.isControlDown() ) {
-            if ( Settings.pictureCollection.isSelected( referringNode ) ) {
-                Settings.pictureCollection.removeFromSelection( referringNode );
+            if ( Settings.pictureCollection.isSelected( myNode ) ) {
+                Settings.pictureCollection.removeFromSelection( myNode );
             } else {
                 logger.fine( String.format( "Adding; Now Selected: %d", Settings.pictureCollection.getSelectedNodesAsVector().size() ) );
-                Settings.pictureCollection.addToSelectedNodes( referringNode );
+                Settings.pictureCollection.addToSelectedNodes( myNode );
             }
         } else {
-            if ( Settings.pictureCollection.isSelected( referringNode ) ) {
+            if ( Settings.pictureCollection.isSelected( myNode ) ) {
                 Settings.pictureCollection.clearSelection();
             } else {
                 Settings.pictureCollection.clearSelection();
-                Settings.pictureCollection.addToSelectedNodes( referringNode );
+                Settings.pictureCollection.addToSelectedNodes( myNode );
                 logger.fine( String.format( "1 selection added; Now Selected: %d", Settings.pictureCollection.getSelectedNodesAsVector().size() ) );
             }
         }
@@ -396,14 +394,14 @@ public class ThumbnailController
      * Logic for processing a right click on the thumbnail
      */
     private void rightClickResponse( MouseEvent e ) {
-        if ( referringNode.getUserObject() instanceof PictureInfo ) {
+        if ( myNode.getUserObject() instanceof PictureInfo ) {
             PicturePopupMenu picturePopupMenu = new PicturePopupMenu( myNodeNavigator, myIndex );
             picturePopupMenu.show( e.getComponent(), e.getX(), e.getY() );
-        } else if ( referringNode.getUserObject() instanceof GroupInfo ) {
-            GroupPopupMenu groupPopupMenu = new GroupPopupMenu( Jpo.collectionJTreeController, referringNode );
+        } else if ( myNode.getUserObject() instanceof GroupInfo ) {
+            GroupPopupMenu groupPopupMenu = new GroupPopupMenu( Jpo.collectionJTreeController, myNode );
             groupPopupMenu.show( e.getComponent(), e.getX(), e.getY() );
         } else {
-            logger.severe( "Processing a right click response on an unknown node." );
+            logger.severe( String.format( "Processing a right click response on an unknown node type: %s", myNode.getUserObject().getClass().toString() ) );
             Thread.dumpStack();
         }
     }
@@ -413,10 +411,10 @@ public class ThumbnailController
      * Logic for processing a doubleclick on the thumbnail
      */
     private void doubleClickResponse() {
-        if ( referringNode.getUserObject() instanceof PictureInfo ) {
-            Jpo.browsePictures( referringNode );
-        } else if ( referringNode.getUserObject() instanceof GroupInfo ) {
-            Jpo.positionToNode( referringNode );
+        if ( myNode.getUserObject() instanceof PictureInfo ) {
+            Jpo.browsePictures( myNode );
+        } else if ( myNode.getUserObject() instanceof GroupInfo ) {
+            Jpo.positionToNode( myNode );
         }
     }
 
@@ -458,7 +456,7 @@ public class ThumbnailController
      *  changes the color so that the user sees whether the thumbnail is part of the selection
      */
     public void showSlectionStatus() {
-        if ( Settings.pictureCollection.isSelected( referringNode ) ) {
+        if ( Settings.pictureCollection.isSelected( myNode ) ) {
             theThumbnail.showAsSelected();
         } else {
             theThumbnail.showAsUnselected();
@@ -509,7 +507,7 @@ public class ThumbnailController
      *  flag to ensure that the mail icon will be place over the image.
      */
     public void determineMailSlectionStatus() {
-        if ( ( referringNode != null ) && decorateThumbnails && Settings.pictureCollection.isMailSelected( referringNode ) ) {
+        if ( ( myNode != null ) && decorateThumbnails && Settings.pictureCollection.isMailSelected( myNode ) ) {
             theThumbnail.drawMailIcon( true );
         } else {
             theThumbnail.drawMailIcon( false );
@@ -537,9 +535,9 @@ public class ThumbnailController
 
         for ( int i = 0; i
                 < children.length; i++ ) {
-            if ( children[i] == referringNode ) {
+            if ( children[i] == myNode ) {
                 // we are displaying a changed node. What changed?
-                Object userObject = referringNode.getUserObject();
+                Object userObject = myNode.getUserObject();
                 if ( userObject instanceof GroupInfo ) {
                     // determine if the icon changed
                     // logger.info( "ThumbnailController should be reloading the icon..." );
@@ -640,7 +638,7 @@ public class ThumbnailController
      * @param event
      */
     public void drop( DropTargetDropEvent event ) {
-        referringNode.executeDrop( event );
+        myNode.executeDrop( event );
     }
 
     /**
@@ -662,7 +660,7 @@ public class ThumbnailController
             JpoTransferable t;
 
             if ( Settings.pictureCollection.countSelectedNodes() < 1 ) {
-                Object[] nodes = { referringNode };
+                Object[] nodes = { myNode };
                 t = new JpoTransferable( nodes );
             } else {
                 t = new JpoTransferable( Settings.pictureCollection.getSelectedNodes() );
@@ -670,7 +668,7 @@ public class ThumbnailController
 
             try {
                 event.startDrag( DragSource.DefaultMoveNoDrop, t, myDragSourceListener );
-                logger.fine( "Drag started on node: " + referringNode.getUserObject().toString() );
+                logger.fine( "Drag started on node: " + myNode.getUserObject().toString() );
             } catch ( InvalidDnDOperationException x ) {
                 logger.fine( "Threw a InvalidDnDOperationException: reason: " + x.getMessage() );
             }
@@ -741,8 +739,8 @@ public class ThumbnailController
     @Override
     public String toString() {
         String myNode = "none";
-        if ( referringNode != null ) {
-            myNode = referringNode.toString();
+        if ( this.myNode != null ) {
+            myNode = this.myNode.toString();
         }
         return String.format( "Thumbnail: HashCode: %d, referringNode: %s", hashCode(), myNode );
     }

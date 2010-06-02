@@ -249,7 +249,6 @@ public class CameraDownloadWizardData {
      */
     public void setTargetNode( SortableDefaultMutableTreeNode targetNode ) {
         logger.fine( String.format( "Setting target node to: %s", targetNode == null ? "null" : targetNode.toString() ) );
-        //Thread.dumpStack();
         this.targetNode = targetNode;
     }
 

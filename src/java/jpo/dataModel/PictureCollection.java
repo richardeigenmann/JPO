@@ -85,12 +85,12 @@ public class PictureCollection {
             try {
                 SwingUtilities.invokeAndWait( r );
             } catch ( InterruptedException ex ) {
-                logger.log( Level.SEVERE, null, ex );
-                logger.log( Level.SEVERE, null, "no idea what to do here" );
+                logger.severe( ex.getMessage() );
+                logger.severe( "No idea what to do here!" );
                 Thread.dumpStack();
             } catch ( InvocationTargetException ex ) {
-                logger.log( Level.SEVERE, null, ex );
-                logger.log( Level.SEVERE, null, "no idea what to do here" );
+                logger.severe( ex.getMessage() );
+                logger.severe( "No idea what to do here!" );
                 Thread.dumpStack();
             }
         }

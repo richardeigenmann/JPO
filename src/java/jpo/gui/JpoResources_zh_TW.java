@@ -62,11 +62,14 @@ public class JpoResources_zh_TW extends ListResourceBundle {
 		// Help About Dialog
 		{"HelpAboutText", "JPO 版本 0.9 是基于Java/Swing 開發的軟件\n" 
 			+ "作者Richard Eigenmann在瑞士蘇黎世, \n" 
-			+ "版權 2000 - 2009\n"
+			+ "版權 2000 - 2010\n"
 			+ "郵件地址：richard.eigenmann@gmail.com\n"
 			+ "軟件主頁网址：http://j-po.sourceforge.net\n"
 			+ "\nExif（可交換圖像文件）的抽取部分蒙Drew Noakes的幫助\n"
-			+  "表的排序部分蒙Philip Milne的幫助\n\n"},
+			+  "表的排序部分蒙Philip Milne的幫助\n"
+			+ "Mikael Grev develops MiG Layout\n"
+			+ "Michael Rudolf develops JWizz\n"
+			+ "Franklin He translated to Chinese\n\n"},
 		{"HelpAboutUser", "使用者：" },
 		{"HelpAboutOs", "操作系統：" },
 		{"HelpAboutJvm", "Java虛擬机" },
@@ -471,7 +474,7 @@ public class JpoResources_zh_TW extends ListResourceBundle {
 		{"recurseSubdirectoriesMessage", "您的選擇包含了子文件夾，\n將所有的子文件夾也加入嗎？"},
 		{"recurseSubdirectoriesOk", "添加"},
 		{"recurseSubdirectoriesNo", "否"},
-		{"picturesAdded", "圖片已經添加"},
+		{"picturesAdded", "%d 圖片已經添加"},
 		{"pictureAdderOptionsTab", "選項"},
 		{"pictureAdderThumbnailTab", "所略圖"},
 		{"pictureAdderCategoryTab", "類目"},

@@ -50,13 +50,24 @@ public class JpoResources_en extends ListResourceBundle {
         { "genericExit", "Exit" },
         { "outOfMemoryError", "An out of Memory error has occured" },
         { "areYouSure", "Are you sure?" },
+
         // Help About Dialog
-        { "HelpAboutText", "JPO Version 0.9 is a Java/Swing program\n" + "written by Richard Eigenmann, Zürich, Switzerland\n" + "Copyright 2000 - 2009\n" + "richard.eigenmann@gmail.com\n" + "http://j-po.sourceforge.net\n" + "\nThe Exif extration is courtesy of Drew Noakes\n" + "The Table sorter is courtesy of Philip Milne\n\n" },
+        { "HelpAboutText", "JPO Version 0.9 is a Java/Swing program\n"
+			+ "written by Richard Eigenmann, Zürich, Switzerland\n" 
+			+ "Copyright 2000 - 2010\n" 
+			+ "richard.eigenmann@gmail.com\n" 
+			+ "http://j-po.sourceforge.net\n" 
+			+ "\nThe Exif extration is courtesy of Drew Noakes\n" 
+			+ "The Table sorter is courtesy of Philip Milne\n"
+			+ "Mikael Grev develops MiG Layout\n"
+			+ "Michael Rudolf develops JWizz\n"
+			+ "Franklin He translated to Chinese\n\n"},
         { "HelpAboutUser", "User: " },
         { "HelpAboutOs", "Operating System: " },
         { "HelpAboutJvm", "JVM: " },
         { "HelpAboutJvmMemory", "JVM Max Memory: " },
         { "HelpAboutJvmFreeMemory", "JVM Free Memory: " },
+
         // QueryJFrame
         { "searchDialogTitle", "Find Pictures" },
         { "searchDialogLabel", "Search for:" },
@@ -66,6 +77,7 @@ public class JpoResources_en extends ListResourceBundle {
         { "noSearchResults", "There were no pictures matching the criteria." },
         { "lowerDateJLabel", "Between:" },
         { "dateRangeError", "Sorry, the date range makes no sense." },
+
         // PictureViewer
         { "PictureViewerTitle", "JPO Picture Browser" },
         { "PictureViewerKeycodes", "The following keyboard shortcuts can be used:\n" + "N: Next Image\n" + "P: Previous Image\n" + "I: Show Information on | off\n" + "<space>,<home>: Resize to fit\n" + "<left>,<right>,<up>,<down>: scroll image\n" + "<PgUp>: Zoom In\n" + "<PgDown>: Zoom Out\n" + "1: Zoom to 100%\n" + "F: Window size menu\n" + "M: Popup menu" },
@@ -408,7 +420,7 @@ public class JpoResources_en extends ListResourceBundle {
         { "recurseSubdirectoriesMessage", "There are nested subdirectories in your selection.\nDo you want to add these too?" },
         { "recurseSubdirectoriesOk", "Add" },
         { "recurseSubdirectoriesNo", "No" },
-        { "picturesAdded", " pictures Added" },
+        { "picturesAdded", "%d pictures Added" },
         { "pictureAdderOptionsTab", "Options" },
         { "pictureAdderThumbnailTab", "Thumbnail" },
         { "pictureAdderCategoryTab", "Categories" },

@@ -79,17 +79,8 @@ public class ProgressGui
      */
     public ProgressGui( final int max, final String title, String doneString ) {
         setDoneString( doneString );
-        Runnable r = new Runnable() {
-
-            public void run() {
-                createGui( max, title );
-            }
-        };
-        if ( SwingUtilities.isEventDispatchThread() ) {
-            r.run();
-        } else {
-            SwingUtilities.invokeLater( r );
-        }
+        Tools.checkEDT();
+        createGui( max, title );
     }
 
     /**
@@ -232,20 +223,11 @@ public class ProgressGui
      *  removes the Cancel Button and adds an OK button
      */
     public void switchToDoneMode() {
-        Runnable r = new Runnable() {
-
-            public void run() {
-                okJButton.setVisible( true );
-                cancelJButton.setVisible( false );
-                progLabel.setText( String.format( doneString, progBar.getValue() ) );
-                validate();
-            }
-        };
-        if ( SwingUtilities.isEventDispatchThread() ) {
-            r.run();
-        } else {
-            SwingUtilities.invokeLater( r );
-        }
+        Tools.checkEDT();
+        okJButton.setVisible( true );
+        cancelJButton.setVisible( false );
+        progLabel.setText( String.format( doneString, progBar.getValue() ) );
+        validate();
         Timer timer = new Timer( timeout, new ActionListener() {
 
             public void actionPerformed( ActionEvent evt ) {

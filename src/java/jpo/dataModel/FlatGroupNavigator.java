@@ -35,8 +35,7 @@ public class FlatGroupNavigator
      *  @param groupNode    The groupNode under which the pictures should be displayed.
      */
     public FlatGroupNavigator( SortableDefaultMutableTreeNode groupNode ) {
-        logger.info( String.format( "Creating a FlatGroupNavigator for node %s", groupNode.toString() ) );
-        Thread.dumpStack();
+        //logger.info( String.format( "Creating a FlatGroupNavigator for node %s", groupNode.toString() ) );
         this.groupNode = groupNode;
         Settings.pictureCollection.getTreeModel().addTreeModelListener( this );
         buildFromScratch();

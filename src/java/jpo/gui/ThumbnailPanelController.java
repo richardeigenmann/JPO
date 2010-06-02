@@ -319,7 +319,7 @@ public class ThumbnailPanelController
                 for ( int i = 0; i < thumbnailControllers.length; i++ ) {
                     thumbnailControllers[i].getThumbnail().getBounds( thumbnailRectangle );
                     if ( r.intersects( thumbnailRectangle ) ) {
-                        n = thumbnailControllers[i].referringNode;
+                        n = thumbnailControllers[i].myNode;
                         if ( n != null ) {
                             Settings.pictureCollection.addToSelectedNodes( n );
                         }
@@ -534,7 +534,7 @@ public class ThumbnailPanelController
     public void selectAll() {
         SortableDefaultMutableTreeNode n;
         for ( int i = 0; i < thumbnailControllers.length; i++ ) {
-            n = thumbnailControllers[i].referringNode;
+            n = thumbnailControllers[i].myNode;
             if ( n != null ) {
                 Settings.pictureCollection.addToSelectedNodes( n );
             }

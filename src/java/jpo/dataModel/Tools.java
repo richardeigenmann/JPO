@@ -1,5 +1,6 @@
 package jpo.dataModel;
 
+import java.util.logging.Level;
 import jpo.gui.XmlFilter;
 import java.io.*;
 import java.net.*;
@@ -735,10 +736,10 @@ public class Tools {
 
 
     /**
-     *  method that returns a new lowres URL that has not been used before. 
+     * Method that returns a new lowres URL that has not been used before.
      * @return
      */
-    public static String lowresFilename() {
+    public static String getNewLowresFilename() {
         File testLowresFilename;
         for ( int i = 1; i < 10000; i++ ) {
             Settings.thumbnailCounter++;
@@ -747,7 +748,7 @@ public class Tools {
             testLowresFilename = new File( Settings.thumbnailPath, Settings.thumbnailPrefix + Integer.toString( Settings.thumbnailCounter ) + ".jpg" );
             if ( !testLowresFilename.exists() ) {
                 try {
-                    //logger.info( "Tools.lowresFilename: assigning: " + testLowresFilename.toURI().toURL().toString());
+                    //logger.info( "Tools.getNewLowresFilename: assigning: " + testLowresFilename.toURI().toURL().toString());
                     Settings.unsavedSettingChanges = true;
                     return ( testLowresFilename.toURI().toURL().toString() );
                 } catch ( MalformedURLException x ) {
@@ -757,6 +758,21 @@ public class Tools {
         }
         logger.info( "lowresFilename: Could not create a lowres filename." );
         return null;
+    }
+
+    /**
+     * Returns a new URL for a thumbnail. Calls getNewLowresFilename
+     * @return a new URL or null if something went very wrong.
+     */
+    public static URL getNewLowresURL() {
+        URL newURL = null;
+        try {
+            newURL = new URL( getNewLowresFilename() );
+        } catch ( MalformedURLException ex ) {
+            logger.severe( ex.getMessage() );
+            Thread.dumpStack();
+        }
+        return newURL;
     }
 
 
@@ -1074,7 +1090,7 @@ public class Tools {
      */
     public static void copyFromJarToFile( Class rootClass, String fileInJar, File targetDir,
             String targetFilename ) {
-        logger.info( String.format( "Copying File %s from classpath %s to filename %s in directory %s", fileInJar, rootClass.toString() ,targetFilename, targetDir ) );
+        logger.fine( String.format( "Copying File %s from classpath %s to filename %s in directory %s", fileInJar, rootClass.toString() ,targetFilename, targetDir ) );
         String textLine;
         try {
             InputStream in = rootClass.getResourceAsStream( fileInJar );
