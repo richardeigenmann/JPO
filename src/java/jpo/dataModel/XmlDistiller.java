@@ -1,6 +1,5 @@
 package jpo.dataModel;
 
-import jpo.*;
 import java.io.*;
 import java.util.*;
 import java.util.logging.Logger;
@@ -9,7 +8,7 @@ import javax.swing.*;
 /*
 XmlDistiller.java:  class that writes the xml file
 
-Copyright (C) 2002-2009  Richard Eigenmann.
+Copyright (C) 2002-2010  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -26,7 +25,8 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 /**
  *  a class that exports a tree of chapters to an XML file
  */
-public class XmlDistiller implements Runnable {
+public class XmlDistiller
+        implements Runnable {
 
     /**
      * Defines a logger for this class
@@ -39,24 +39,9 @@ public class XmlDistiller implements Runnable {
     private BufferedWriter out;
 
     /**
-     *  temporary variable to hold the group information from the user object of the node
-     */
-    private GroupInfo g;
-
-    /**
-     *  temporary variable to hold the picture information from the user object of the node
-     */
-    private PictureInfo p;
-
-    /**
-     *  temporary node used in the Enumeration of the kids of the Group
-     */
-    private SortableDefaultMutableTreeNode n;
-
-    /**
      *  variable to hold the name of the output file
      */
-    private File outputFile;
+    private File xmlOutputFile;
 
     /**
      *  highres picture directory if pictures need to be copied
@@ -80,13 +65,15 @@ public class XmlDistiller implements Runnable {
 
 
     /**
-     *  @param outputFile    	The name of the file that is to be created
+     *  @param xmlOutputFile    	The name of the file that is to be created
      *  @param startNode	The node from which this is all to be built.
      *  @param copyPics		Flag which instructs pictures to be copied too
      *  @param runAsThread	Flag which can instruct this job not to run as a thread.
      */
-    public XmlDistiller( File outputFile, SortableDefaultMutableTreeNode startNode, boolean copyPics, boolean runAsThread ) {
-        this.outputFile = outputFile;
+    public XmlDistiller( File xmlOutputFile,
+            SortableDefaultMutableTreeNode startNode, boolean copyPics,
+            boolean runAsThread ) {
+        this.xmlOutputFile = xmlOutputFile;
         this.startNode = startNode;
         this.copyPics = copyPics;
 
@@ -99,20 +86,24 @@ public class XmlDistiller implements Runnable {
     }
 
 
-    /**current
+    /**
      *  method that is invoked by the thread to do things asynchroneousely
      */
     public void run() {
         try {
             if ( copyPics ) {
-                highresTargetDir = new File( outputFile.getParentFile(), "Highres" );
-                lowresTargetDir = new File( outputFile.getParentFile(), "Lowres" );
+                highresTargetDir = new File( xmlOutputFile.getParentFile(), "Highres" );
+                lowresTargetDir = new File( xmlOutputFile.getParentFile(), "Lowres" );
 
-                boolean created = highresTargetDir.mkdirs();
-                created = lowresTargetDir.mkdirs();
+                highresTargetDir.mkdirs();
+                lowresTargetDir.mkdirs();
+                if ( !( highresTargetDir.canWrite() && lowresTargetDir.canWrite() ) ) {
+                    logger.severe( String.format( "There was a problem creating dir %s or dir %s", highresTargetDir.toString(), lowresTargetDir.toString() ) );
+                    return;
+                }
             }
 
-            FileWriter fw = new FileWriter( outputFile );
+            FileWriter fw = new FileWriter( xmlOutputFile );
             out = new BufferedWriter( fw );
 
             // header
@@ -149,7 +140,7 @@ public class XmlDistiller implements Runnable {
 
             out.close();
 
-            writeCollectionDTD( outputFile.getParentFile() );
+            writeCollectionDTD( xmlOutputFile.getParentFile() );
 
 
 
@@ -173,58 +164,47 @@ public class XmlDistiller implements Runnable {
      *  recursively invoked method to report all groups.
      */
     private void enumerateGroup( SortableDefaultMutableTreeNode groupNode ) throws IOException {
-        g = (GroupInfo) groupNode.getUserObject();
+        GroupInfo groupInfo = (GroupInfo) groupNode.getUserObject();
 
         if ( copyPics ) {
-            File targetLowresFile = Tools.inventPicFilename( lowresTargetDir, p.getLowresFilename() );
-            Tools.copyPicture( g.getLowresURL(), targetLowresFile );
-            g.dumpToXml( out, targetLowresFile.toURI().toURL().toString(), groupNode == startNode, groupNode.getPictureCollection().getAllowEdits() );
+            File targetLowresFile = Tools.inventPicFilename( lowresTargetDir, groupInfo.getLowresFilename() );
+            Tools.copyPicture( groupInfo.getLowresURL(), targetLowresFile );
+            groupInfo.dumpToXml( out, targetLowresFile.toURI().toURL().toString(), groupNode == startNode, groupNode.getPictureCollection().getAllowEdits() );
         } else {
-            g.dumpToXml( out, groupNode == startNode, groupNode.getPictureCollection().getAllowEdits() );
+            groupInfo.dumpToXml( out, groupNode == startNode, groupNode.getPictureCollection().getAllowEdits() );
         }
-        /*		if (groupNode == startNode)
-        out.write("<collection collection_name=\""
-        + Tools.escapeXML( g.getGroupName() )
-        + "\" collection_created=\""
-        + DateFormat.getDateInstance().format(Calendar.getInstance().getTime())
-        + "\""
-        + ( groupNode.getAllowEdits() ? " collection_protected=\"No\"" : " collection_protected=\"Yes\"" )
-        + ">");
-        else
-        out.write("<group group_name=\"" + Tools.escapeXML( g.getGroupName() ) + "\">");
-        out.newLine();*/
 
-
+        SortableDefaultMutableTreeNode childNode;
         Enumeration kids = groupNode.children();
         while ( kids.hasMoreElements() ) {
-            n = (SortableDefaultMutableTreeNode) kids.nextElement();
-            if ( n.getUserObject() instanceof GroupInfo ) {
-                enumerateGroup( n );
+            childNode = (SortableDefaultMutableTreeNode) kids.nextElement();
+            if ( childNode.getUserObject() instanceof GroupInfo ) {
+                enumerateGroup( childNode );
             } else {
-                writePicture( n );
+                writePicture( childNode );
             }
         }
 
-        g.endGroupXML( out, groupNode == startNode );
+        groupInfo.endGroupXML( out, groupNode == startNode );
     }
 
 
     /**
      *  write a picture to the output
      */
-    private void writePicture( SortableDefaultMutableTreeNode n ) throws IOException {
-        p = (PictureInfo) n.getUserObject();
+    private void writePicture( SortableDefaultMutableTreeNode pictureNode ) throws IOException {
+        PictureInfo pictureInfo = (PictureInfo) pictureNode.getUserObject();
 
         if ( copyPics ) {
-            File targetHighresFile = Tools.inventPicFilename( highresTargetDir, p.getHighresFilename() );
-            File targetLowresFile = Tools.inventPicFilename( lowresTargetDir, p.getLowresFilename() );
-            Tools.copyPicture( p.getHighresURL(), targetHighresFile );
-            Tools.copyPicture( p.getLowresURL(), targetLowresFile );
-            p.dumpToXml( out,
+            File targetHighresFile = Tools.inventPicFilename( highresTargetDir, pictureInfo.getHighresFilename() );
+            File targetLowresFile = Tools.inventPicFilename( lowresTargetDir, pictureInfo.getLowresFilename() );
+            Tools.copyPicture( pictureInfo.getHighresURL(), targetHighresFile );
+            Tools.copyPicture( pictureInfo.getLowresURL(), targetLowresFile );
+            pictureInfo.dumpToXml( out,
                     targetHighresFile.toURI().toURL().toString(),
                     targetLowresFile.toURI().toURL().toString() );
         } else {
-            p.dumpToXml( out );
+            pictureInfo.dumpToXml( out );
         }
     }
 
@@ -238,7 +218,6 @@ public class XmlDistiller implements Runnable {
     public void writeCollectionDTD( File directory ) {
         try {
             ClassLoader cl = this.getClass().getClassLoader();
-            //InputStream in  = ClassLoader.getSystemResource( "jpo/collection.dtd" ).openStream();
             InputStream in = cl.getResource( "jpo/collection.dtd" ).openStream();
             FileOutputStream outStream = new FileOutputStream( new File( directory, "collection.dtd" ) );
 

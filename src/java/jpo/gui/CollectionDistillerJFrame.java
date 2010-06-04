@@ -3,7 +3,6 @@ package jpo.gui;
 import jpo.dataModel.Settings;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
 import jpo.dataModel.XmlDistiller;
-import jpo.*;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -130,7 +129,7 @@ class CollectionDistillerJFrame extends JFrame implements ActionListener {
 
             @Override
             public boolean shouldYieldFocus( JComponent input ) {
-                logger.info( "CollectionDistillerJFrame:xmlFileNameJTestField.shouldYieldFocus was triggered" );
+                //logger.info( "CollectionDistillerJFrame:xmlFileNameJTestField.shouldYieldFocus was triggered" );
                 String validationFile = ( (JTextField) input ).getText();
                 if ( !validationFile.toUpperCase().endsWith( ".XML" ) ) {
                     ( (JTextField) input ).setText( validationFile + ".xml" );
