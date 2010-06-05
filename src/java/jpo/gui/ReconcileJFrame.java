@@ -50,7 +50,6 @@ public class ReconcileJFrame
      */
     private static Logger logger = Logger.getLogger( ReconcileJFrame.class.getName() );
 
-   
     /**
      *  tickbox that indicates whether subdirectories are to be reconciled too
      **/
@@ -128,8 +127,8 @@ public class ReconcileJFrame
 
 
         final DirectoryChooser directoryChooser =
-            new DirectoryChooser( Settings.jpoResources.getString( "directoryCheckerChooserTitle" ),
-            DirectoryChooser.DIR_MUST_EXIST );
+                new DirectoryChooser( Settings.jpoResources.getString( "directoryCheckerChooserTitle" ),
+                DirectoryChooser.DIR_MUST_EXIST );
 
         constraints.gridx = 3;
         constraints.fill = GridBagConstraints.NONE;
@@ -289,8 +288,28 @@ public class ReconcileJFrame
     class Reconciler
             extends SwingWorker<String, String> {
 
+        private HashSet<URI> collectionUris = new HashSet<URI>();
+
+
         @Override
         protected String doInBackground() throws Exception {
+            //Build HashSet of all of the URIs know to the collection
+            SortableDefaultMutableTreeNode node;
+            Object nodeObject;
+            Enumeration e = rootNode.preorderEnumeration();
+            while ( e.hasMoreElements() ) {
+                node = (SortableDefaultMutableTreeNode) e.nextElement();
+                nodeObject = node.getUserObject();
+                if ( nodeObject instanceof PictureInfo ) {
+                    PictureInfo pi = (PictureInfo) nodeObject;
+                    collectionUris.add( pi.getHighresURIOrNull() );
+                    collectionUris.add( pi.getLowresURIOrNull() );
+                } else if ( nodeObject instanceof GroupInfo ) {
+                    GroupInfo gi = (GroupInfo) nodeObject;
+                    collectionUris.add( gi.getLowresURIOrNull() );
+                }
+            }
+
             reconcileDir( scanDir );
             stopThread = true;
             return "Done.";
@@ -298,47 +317,27 @@ public class ReconcileJFrame
 
 
         public void reconcileDir( File scanDir ) {
-            publish( Settings.jpoResources.getString( "ReconcileStart" ) + scanDir.getPath() + "\n" );
+            if ( listPositivesJCheckBox.isSelected() ) {
+                publish( Settings.jpoResources.getString( "ReconcileStart" ) + scanDir.getPath() + "\n" );
+            }
             File[] fileArray = scanDir.listFiles();
             if ( fileArray == null ) {
                 publish( Settings.jpoResources.getString( "ReconcileNoFiles" ) );
                 return;
             }
 
+
             for ( int i = 0; ( ( i < fileArray.length ) && ( !stopThread ) ); i++ ) {
                 if ( fileArray[i].isDirectory() ) {
                     reconcileDir( fileArray[i] );
                 } else {
                     URI testFile = fileArray[i].toURI();
-                    SortableDefaultMutableTreeNode node;
-                    Object nodeObject;
-                    Enumeration e = rootNode.preorderEnumeration();
-                    boolean found = false;
-                    while ( e.hasMoreElements() && ( !found ) ) {
-                        node = (SortableDefaultMutableTreeNode) e.nextElement();
-                        nodeObject = node.getUserObject();
-                        if ( nodeObject instanceof PictureInfo ) {
-                            PictureInfo pi = (PictureInfo) nodeObject;
-                            if ( pi.getHighresURIOrNull().equals( testFile )
-                                    || pi.getLowresURIOrNull().equals( testFile ) ) {
-                                if ( listPositivesJCheckBox.isSelected() ) {
-                                    publish( fileArray[i].getPath() + Settings.jpoResources.getString( "ReconcileFound" ) + pi.getDescription() + "\n" );
-                                }
-                                found = true;
-                            }
-                        } else if ( nodeObject instanceof GroupInfo ) {
-                            GroupInfo gi = (GroupInfo) nodeObject;
-                            if ( ( gi.getLowresURIOrNull().equals( testFile ) ) ) {
-                                if ( listPositivesJCheckBox.isSelected() ) {
-                                    publish( fileArray[i].getPath() + Settings.jpoResources.getString( "ReconcileFound" ) + gi.getGroupName() + "\n" );
-                                }
-                                found = true;
-                            }
+                    if ( collectionUris.contains( testFile ) ) {
+                        if ( listPositivesJCheckBox.isSelected() ) {
+                            publish( fileArray[i].getPath() + Settings.jpoResources.getString( "ReconcileFound" ) + "\n" );
                         }
-                    }
-                    if ( !found ) {
+                    } else {
                         publish( Settings.jpoResources.getString( "ReconcileNotFound" ) + fileArray[i].toString() + "\n" );
-
                     }
                 }
             }
