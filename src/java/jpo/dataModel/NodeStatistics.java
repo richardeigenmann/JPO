@@ -35,6 +35,10 @@ public class NodeStatistics {
      */
     private static Logger logger = Logger.getLogger( NodeStatistics.class.getName() );
 
+
+    /**
+     * Remebers the node for which stats are being collected
+     */
     private DefaultMutableTreeNode myNode;
 
 

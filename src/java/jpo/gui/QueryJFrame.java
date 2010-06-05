@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import jpo.dataModel.QueryNavigator;
+import jpo.gui.Jpo.ApplicationEventHandler;
 
 
 /*
@@ -77,9 +78,9 @@ public class QueryJFrame
      * @param startSearchNode
      * @param collectioController The main controller for the collection
      */
-    public QueryJFrame( SortableDefaultMutableTreeNode startSearchNode, Jpo collectioController ) {
+    public QueryJFrame( SortableDefaultMutableTreeNode startSearchNode, ApplicationEventHandler collectioController ) {
         this.startSearchNode = startSearchNode;
-        this.collectionController = collectioController;
+        this.applicationEventHandler = collectioController;
         addWindowListener( new WindowAdapter() {
 
             @Override
@@ -223,9 +224,9 @@ public class QueryJFrame
     }
 
     /**
-     * reference to the main collection controller so that we can delegate stuff to
+     * reference to the main application Event Handler so that we can delegate stuff to
      */
-    private Jpo collectionController;
+    private ApplicationEventHandler applicationEventHandler;
 
 
     /**
@@ -262,7 +263,7 @@ public class QueryJFrame
 
 
         DefaultMutableTreeNode newNode = Settings.pictureCollection.addQueryToTreeModel( q );
-        collectionController.showQuery( newNode );
+        applicationEventHandler.showQuery( newNode );
 
         QueryNavigator queryBrowser = new QueryNavigator( q );
         Jpo.showThumbnails( queryBrowser );

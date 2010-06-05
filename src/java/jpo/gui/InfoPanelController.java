@@ -104,21 +104,22 @@ public class InfoPanelController implements TagClickListener {
                     t.stop();
                     t.start();  // updates the queue-count
                 } else if ( node.getUserObject() instanceof PictureInfo ) {
-                    infoPanel.thumbnailController.setNode( new SingleNodeNavigator( node ), 0 );
+                    //infoPanel.thumbnailController.setNode( new SingleNodeNavigator( node ), 0 );
                     t.stop();
                 } else {
                     // ToDo get this stuff off the event handler thread
                     logger.fine( "Updating stats" );
                     infoPanel.statsJPanel.updateStats( node );
                     infoPanel.statsScroller.setViewportView( infoPanel.statsJPanel );
-                    dwm = new DescriptionWordMap( node );
-                    TagCloud wb = new TagCloud();
-                    wb.setWordsToShow( Settings.tagCloudWords );
-                    wb.setWordMap( dwm );
-                    wb.addTagClickListener( InfoPanelController.this );
-                    wb.showWords();
-                    infoPanel.setComponentAt( 2, wb );
                     t.start();  // updates the queue-count
+
+                    dwm = new DescriptionWordMap( node );
+                    TagCloud tagCloud = new TagCloud();
+                    tagCloud.setWordsToShow( Settings.tagCloudWords );
+                    tagCloud.setWordMap( dwm );
+                    tagCloud.addTagClickListener( InfoPanelController.this );
+                    tagCloud.showWords();
+                    infoPanel.setComponentAt( 0, tagCloud );
                 }
             }
         } );

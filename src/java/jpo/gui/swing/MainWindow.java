@@ -79,7 +79,7 @@ public class MainWindow
 
         // Set Tooltipps to snappy mode
         ToolTipManager ttm = ToolTipManager.sharedInstance();
-        ttm.setDismissDelay( 600 );
+        ttm.setDismissDelay( 1500 );
         ttm.setInitialDelay( 100 );
 
 
