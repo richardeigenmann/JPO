@@ -99,9 +99,9 @@ public class ArrayListNavigator
     public SortableDefaultMutableTreeNode getNode( int index ) {
         try {
             return allPictures.get( index );
-        } catch ( ArrayIndexOutOfBoundsException x ) {
-            logger.severe( String.format( "Requested node %d on NodeNavigator %s is out of bounds!", index, getTitle() ) );
-            Thread.dumpStack();
+        } catch ( IndexOutOfBoundsException x ) {
+            //logger.severe( String.format( "Requested node %d on NodeNavigator %s is out of bounds!", index, getTitle() ) );
+            //Thread.dumpStack();
             return null;
         }
     }

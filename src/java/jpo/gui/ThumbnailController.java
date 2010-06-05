@@ -204,11 +204,12 @@ public class ThumbnailController
      */
     public void setNode( NodeNavigatorInterface mySetOfNodes, int index ) {
         logger.fine( String.format( "Setting Thubnail %d to index %d in Browser %s ", this.hashCode(), index, mySetOfNodes.toString() ) );
+        unqueue();
+
         this.myNodeNavigator = mySetOfNodes;
         this.myIndex = index;
         SortableDefaultMutableTreeNode node = mySetOfNodes.getNode( index );
 
-        unqueue();
 
         this.myNode = node;
 
@@ -424,7 +425,7 @@ public class ThumbnailController
      *  changed.
      */
     public void pictureInfoChangeEvent( PictureInfoChangeEvent e ) {
-        if ( e.getHighresLocationChanged() || e.getChecksumChanged() || e.getLowresLocationChanged() || e.getThumbnailChanged() || e.getRotationChanged() ) {
+        if ( e.getHighresLocationChanged() || e.getChecksumChanged() || e.getLowresLocationChanged() || e.getThumbnailChanged()  ) {
             requestThumbnailCreation( ThumbnailQueueRequest.HIGH_PRIORITY, false );
         } else if ( e.getWasSelected() ) {
             theThumbnail.showAsSelected();
@@ -432,6 +433,8 @@ public class ThumbnailController
             theThumbnail.showAsUnselected();
         } else if ( ( e.getWasMailSelected() ) || ( e.getWasMailUnselected() ) ) {
             determineMailSlectionStatus();
+        } else if ( e.getRotationChanged() ) {
+            requestThumbnailCreation( ThumbnailQueueRequest.HIGH_PRIORITY, true );
         }
     }
 

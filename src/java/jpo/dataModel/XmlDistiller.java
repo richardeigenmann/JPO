@@ -166,7 +166,7 @@ public class XmlDistiller
     private void enumerateGroup( SortableDefaultMutableTreeNode groupNode ) throws IOException {
         GroupInfo groupInfo = (GroupInfo) groupNode.getUserObject();
 
-        if ( copyPics ) {
+        if ( copyPics && groupInfo.getLowresFile().canRead() ) {
             File targetLowresFile = Tools.inventPicFilename( lowresTargetDir, groupInfo.getLowresFilename() );
             Tools.copyPicture( groupInfo.getLowresURL(), targetLowresFile );
             groupInfo.dumpToXml( out, targetLowresFile.toURI().toURL().toString(), groupNode == startNode, groupNode.getPictureCollection().getAllowEdits() );
@@ -199,7 +199,9 @@ public class XmlDistiller
             File targetHighresFile = Tools.inventPicFilename( highresTargetDir, pictureInfo.getHighresFilename() );
             File targetLowresFile = Tools.inventPicFilename( lowresTargetDir, pictureInfo.getLowresFilename() );
             Tools.copyPicture( pictureInfo.getHighresURL(), targetHighresFile );
-            Tools.copyPicture( pictureInfo.getLowresURL(), targetLowresFile );
+            if ( pictureInfo.getLowresFile().canRead() ) {
+                Tools.copyPicture( pictureInfo.getLowresURL(), targetLowresFile );
+            }
             pictureInfo.dumpToXml( out,
                     targetHighresFile.toURI().toURL().toString(),
                     targetLowresFile.toURI().toURL().toString() );
