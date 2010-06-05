@@ -7,8 +7,11 @@ import java.io.*;
 import java.util.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.net.URI;
+import java.util.List;
 import java.util.logging.Logger;
 import javax.swing.*;
+import jpo.dataModel.GroupInfo;
 
 /*
 ReconcileJFrame.java:  
@@ -40,32 +43,14 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  *
  */
 public class ReconcileJFrame
-        extends JFrame
-        implements ActionListener,
-        Runnable {
+        extends JFrame {
 
     /**
      * Defines a logger for this class
      */
     private static Logger logger = Logger.getLogger( ReconcileJFrame.class.getName() );
 
-    /** 
-     *   holds the directory to use.
-     */
-    private DirectoryChooser directoryChooser =
-            new DirectoryChooser( Settings.jpoResources.getString( "directoryCheckerChooserTitle" ),
-            DirectoryChooser.DIR_MUST_EXIST );
-
-    /**
-     *  button to start the export
-     **/
-    private JButton okJButton = new JButton( Settings.jpoResources.getString( "ReconcileOkButtonLabel" ) );
-
-    /**
-     *  button to cancel the dialog
-     **/
-    private JButton cancelJButton = new JButton( Settings.jpoResources.getString( "genericCancelText" ) );
-
+   
     /**
      *  tickbox that indicates whether subdirectories are to be reconciled too
      **/
@@ -142,15 +127,26 @@ public class ReconcileJFrame
         controlJPanel.add( directoryJLabel, constraints );
 
 
+        final DirectoryChooser directoryChooser =
+            new DirectoryChooser( Settings.jpoResources.getString( "directoryCheckerChooserTitle" ),
+            DirectoryChooser.DIR_MUST_EXIST );
+
         constraints.gridx = 3;
         constraints.fill = GridBagConstraints.NONE;
+        JButton okJButton = new JButton( Settings.jpoResources.getString( "ReconcileOkButtonLabel" ) );
         okJButton.setPreferredSize( Settings.defaultButtonDimension );
         okJButton.setMinimumSize( Settings.defaultButtonDimension );
         okJButton.setMaximumSize( Settings.defaultButtonDimension );
         okJButton.setBorder( BorderFactory.createRaisedBevelBorder() );
         okJButton.setDefaultCapable( true );
         getRootPane().setDefaultButton( okJButton );
-        okJButton.addActionListener( this );
+        okJButton.addActionListener( new ActionListener() {
+
+            public void actionPerformed( ActionEvent e ) {
+                scanDir = directoryChooser.getDirectory();
+                runReconciliationEDT();
+            }
+        } );
         controlJPanel.add( okJButton, constraints );
 
 
@@ -163,11 +159,21 @@ public class ReconcileJFrame
 
 
         constraints.gridx = 3;
+        JButton cancelJButton = new JButton( Settings.jpoResources.getString( "genericCancelText" ) );
+        cancelJButton.addActionListener( new ActionListener() {
+
+            public void actionPerformed( ActionEvent e ) {
+                if ( stopThread ) {
+                    getRid(); // thread hasn't started
+                } else {
+                    stopThread = true; // thread will end when it wants to
+                }
+            }
+        } );
         cancelJButton.setPreferredSize( Settings.defaultButtonDimension );
         cancelJButton.setMinimumSize( Settings.defaultButtonDimension );
         cancelJButton.setMaximumSize( Settings.defaultButtonDimension );
         cancelJButton.setBorder( BorderFactory.createRaisedBevelBorder() );
-        cancelJButton.addActionListener( this );
         controlJPanel.add( cancelJButton, constraints );
 
         constraints.gridx = 0;
@@ -196,7 +202,6 @@ public class ReconcileJFrame
 
         getContentPane().add( controlJPanel );
 
-        //setSize( 460, 300 );
         pack();
         setLocationRelativeTo( Settings.anchorFrame );
         setVisible( true );
@@ -212,39 +217,19 @@ public class ReconcileJFrame
     }
 
 
-    /** 
-     *  method that analyses the user initiated action and performs what the user requested
-     *
-     * @param e
-     */
-    public void actionPerformed( ActionEvent e ) {
-        logger.fine( "actionperformed!!" );
-        if ( e.getSource() == cancelJButton ) {
-            logger.info( "cancel buttoon" );
-            if ( stopThread ) {
-                getRid(); // thread hasn't started
-            } else {
-                stopThread = true; // thread will end when it wants to
-            }
-        } else if ( e.getSource() == okJButton ) {
-            new Thread( this ).start();
-        }
-    }
-
-
     /**
-     *   the run method that gets inkoked in it's own thread and can then do the directory checking.
+     * This method does some validation and then fires the Reconciler
      */
-    public void run() {
+    private void runReconciliationEDT() {
         stopThread = false;
-        File scanDir = directoryChooser.getDirectory();
         if ( validateDir( scanDir ) ) {
             logJTextArea.setText( null );
-            reconcileDir( scanDir );
+            ( new Reconciler() ).execute();
             if ( stopThread ) {
                 logJTextArea.append( Settings.jpoResources.getString( "ReconcileInterrupted" ) );
             } else {
                 logJTextArea.append( Settings.jpoResources.getString( "ReconcileDone" ) );
+
             }
         }
     }
@@ -264,7 +249,7 @@ public class ReconcileJFrame
             return false;
         }
 
-        logger.info( "validateDir invoked with " + scanDir.getPath() );
+        //logger.info( "validateDir invoked with " + scanDir.getPath() );
         // is it a directory?
         if ( !scanDir.isDirectory() ) {
             scanDir = scanDir.getParentFile();
@@ -296,48 +281,75 @@ public class ReconcileJFrame
         return true;
     }
 
+    private File scanDir;
 
     /**
-     *  reconciles the directory
+     * Do the reconciliation in a SwingWorker
      */
-    private void reconcileDir( File scanDir ) {
-        logJTextArea.append( Settings.jpoResources.getString( "ReconcileStart" ) + scanDir.getPath() + "\n" );
-        File[] fileArray = scanDir.listFiles();
-        if ( fileArray == null ) {
-            logJTextArea.append( Settings.jpoResources.getString( "ReconcileNoFiles" ) );
-            return;
+    class Reconciler
+            extends SwingWorker<String, String> {
+
+        @Override
+        protected String doInBackground() throws Exception {
+            reconcileDir( scanDir );
+            stopThread = true;
+            return "Done.";
         }
 
-        for ( int i = 0; ( ( i < fileArray.length ) && ( !stopThread ) ); i++ ) {
-            if ( fileArray[i].isDirectory() ) {
-                logger.fine( "Branching into subdir" );
-                reconcileDir( fileArray[i] );
-            } else {
-                logger.fine( "should reconciling File: " + fileArray[i].getPath() );
-                SortableDefaultMutableTreeNode node;
-                Object nodeObject;
-                Enumeration e = rootNode.preorderEnumeration();
-                boolean found = false;
-                while ( e.hasMoreElements() && ( !found ) ) {
-                    node = (SortableDefaultMutableTreeNode) e.nextElement();
-                    nodeObject = node.getUserObject();
-                    if ( nodeObject instanceof PictureInfo ) {
-//						logJTextArea.append("Comparing: " + fileArray[i].toURI().toString() + " against: " + ((PictureInfo) nodeObject ).getHighresURIOrNull().toString() + "\n");
-                        // if ( ((PictureInfo) nodeObject ).getHighresURL().getDirectory().compareTo( fileArray[i].getPath() ) == 0)  {
-                        if ( ( (PictureInfo) nodeObject ).getHighresURIOrNull().equals( fileArray[i].toURI() ) ) {
-                            if ( listPositivesJCheckBox.isSelected() ) {
-                                logJTextArea.append( fileArray[i].getPath() + Settings.jpoResources.getString( "ReconcileFound" ) + ( (PictureInfo) nodeObject ).getDescription() + "\n" );
+
+        public void reconcileDir( File scanDir ) {
+            publish( Settings.jpoResources.getString( "ReconcileStart" ) + scanDir.getPath() + "\n" );
+            File[] fileArray = scanDir.listFiles();
+            if ( fileArray == null ) {
+                publish( Settings.jpoResources.getString( "ReconcileNoFiles" ) );
+                return;
+            }
+
+            for ( int i = 0; ( ( i < fileArray.length ) && ( !stopThread ) ); i++ ) {
+                if ( fileArray[i].isDirectory() ) {
+                    reconcileDir( fileArray[i] );
+                } else {
+                    URI testFile = fileArray[i].toURI();
+                    SortableDefaultMutableTreeNode node;
+                    Object nodeObject;
+                    Enumeration e = rootNode.preorderEnumeration();
+                    boolean found = false;
+                    while ( e.hasMoreElements() && ( !found ) ) {
+                        node = (SortableDefaultMutableTreeNode) e.nextElement();
+                        nodeObject = node.getUserObject();
+                        if ( nodeObject instanceof PictureInfo ) {
+                            PictureInfo pi = (PictureInfo) nodeObject;
+                            if ( pi.getHighresURIOrNull().equals( testFile )
+                                    || pi.getLowresURIOrNull().equals( testFile ) ) {
+                                if ( listPositivesJCheckBox.isSelected() ) {
+                                    publish( fileArray[i].getPath() + Settings.jpoResources.getString( "ReconcileFound" ) + pi.getDescription() + "\n" );
+                                }
+                                found = true;
                             }
-                            found = true;
+                        } else if ( nodeObject instanceof GroupInfo ) {
+                            GroupInfo gi = (GroupInfo) nodeObject;
+                            if ( ( gi.getLowresURIOrNull().equals( testFile ) ) ) {
+                                if ( listPositivesJCheckBox.isSelected() ) {
+                                    publish( fileArray[i].getPath() + Settings.jpoResources.getString( "ReconcileFound" ) + gi.getGroupName() + "\n" );
+                                }
+                                found = true;
+                            }
                         }
                     }
-                }
-                if ( !found ) {
-                    logJTextArea.append( Settings.jpoResources.getString( "ReconcileNotFound" ) + fileArray[i].toString() + "\n" );
-                }
+                    if ( !found ) {
+                        publish( Settings.jpoResources.getString( "ReconcileNotFound" ) + fileArray[i].toString() + "\n" );
 
+                    }
+                }
             }
         }
 
+
+        @Override
+        protected void process( List<String> chunks ) {
+            for ( String s : chunks ) {
+                logJTextArea.append( s );
+            }
+        }
     }
 }

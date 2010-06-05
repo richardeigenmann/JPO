@@ -592,6 +592,19 @@ public class PictureInfo
 
 
     /**
+     * returns the URI handle to the lores picture.
+     * @return The lowres URI
+     */
+    public URI getLowresURIOrNull() {
+        try {
+            return new URI( lowresLocation );
+        } catch ( URISyntaxException x ) {
+            return null;
+        }
+    }
+
+
+    /**
      * Sets the full path to the lowres picture.
      * @param s The new location
      */
@@ -781,8 +794,8 @@ public class PictureInfo
         if ( d == null ) {
             formattedDate = Settings.jpoResources.getString( "failedToParse" );
         } else {
-            formattedDate = Settings.jpoResources.getString( "parsedAs" ) +
-                    String.format( "%tc", d );
+            formattedDate = Settings.jpoResources.getString( "parsedAs" )
+                    + String.format( "%tc", d );
             //DateFormat.getDateTimeInstance().format( d );
         }
         return formattedDate;

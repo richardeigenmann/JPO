@@ -172,6 +172,19 @@ public class GroupInfo
 
 
     /**
+     * returns the URI handle to the lowres picture or null.
+     *  @return the lowres location
+     */
+    public URI getLowresURIOrNull() {
+        try {
+            return new URI( lowresLocation );
+        } catch ( URISyntaxException x ) {
+            return null;
+        }
+    }
+
+
+    /**
      * Sets the full path to the lowres picture.
      * @param s The new location
      */
