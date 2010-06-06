@@ -12,44 +12,7 @@
 	</tr>
 	<tr>
 		<td width="150" bgcolor="#97a4da" valign="top">
-			<p><a href="jpo-stable.jnlp"><font color="red">Run JPO with Java Web Start</font></a><br>
-                        <a href="http://sourceforge.net/projects/j-po/files/"><font color="red">Download for Windows</font></a></p>
-			<p><a href="jpo-devel.jnlp"><font color="red">Beta version</font></a></p>
-			
-			<p>
-			<strong>About JPO</strong><br>
-			<a href="index.html">Introduction</a><br>
-			<a href="index.html#Features">Features</a><br>
-			<a href="index.html#Screenshot">Screenshot</a><br>
-			<a href="index.html#Reviews">Reviews</a><br>
-			<a href="index.html#Techdes">Technical description</a><br>
-
-			<br><a href="userguide.html"><strong>User Guide</strong></a><br>
-
-			<br><strong>Installing JPO</strong><br>
-			<a href="installation.html">Requirements</a><br>
-			<a href="installation.html#Options">Options</a><br>
-			<a href="installation.html#javawebstart">Java Web Start</a><br>
-			<a href="installation.html#windows">Windows Installer</a><br>
-			<a href="installation.html#local">Local Installation</a><br>
-			<a href="installation.html#source">Source Installation</a><br>
-			<a href="installation.html#problems">Potential Problems</a><br>
-			
-			
-			<br><strong>The project</strong><br>
-			<a href="about.html">Thanks</a><br>
-			<a href="about.html#Links">Links</a><br>
-			<a href="about.html#Author">Author</a><br>
-			<a href="about.html#License">License</a><br>
-			<a href="changelog.html">Changelog</a><br>
-			<a href="changelog.html#Bugs">Bugs</a><br>
-			<a href="changelog.html#PotentialFeatures">Potential Features</a><br>
-			</p>
-			
-
-			<p><a href="http://sourceforge.net/projects/j-po/"><img src="http://sourceforge.net/sflogo.php?group_id=71359&amp;type=1" width="88" height="31" border="0" alt="SourceForge.net Logo"></a></p>
-        
-		        <p>Launched: 14.1.2003</p>
+                        <?php include("nav.html"); ?>
 		</td>
 		<td>
 			<h2 id="Introduction">Introduction</h2>

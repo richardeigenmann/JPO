@@ -204,6 +204,7 @@
                     <param name="cache.cachefile"  value="/tmp/Sourceforge-Jpo-Cache1" />
                 </modified>
                 <include name="*.html" />
+                <include name="*.php" />
                 <include name="*.jnlp" />
                 <include name="fontconfig" />
                 <include name="*.gif" />
