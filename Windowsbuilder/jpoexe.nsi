@@ -10,9 +10,9 @@ SilentInstall silent
 AutoCloseWindow true
 ShowInstDetails nevershow
  
-!define CLASSPATH "jnlp.jar;metadata-extractor-2.3.0.jar;activation.jar;mail.jar;poi-3.1-FINAL-20080629.jar;poi-contrib-3.1-FINAL-20080629.jar;poi-scratchpad-3.1-FINAL-20080629.jar;jwizz-0.1.4.jar;jpo-0.9.jar"
-!define CLASS "jpo.Jpo"
-!define OPTIONS "-Xms80M -Xmx500M"
+!define CLASSPATH "jnlp.jar;metadata-extractor-2.3.0.jar;activation.jar;mail.jar;jwizz-0.1.4.jar;miglayout-3.7.1.jar;jpo-0.9.jar"
+!define CLASS "Main"
+!define OPTIONS "-Xms80M -Xmx800M"
  
 Section ""
   Call GetJRE

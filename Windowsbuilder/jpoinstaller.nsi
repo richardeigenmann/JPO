@@ -70,9 +70,7 @@ Section "MainSection" SEC01
   File "..\libs\jwizz-0.1.4.jar"
   File "..\libs\mail.jar"
   File "..\libs\activation.jar"
-  File "..\libs\poi-3.1-FINAL-20080629.jar"
-  File "..\libs\poi-contrib-3.1-FINAL-20080629.jar"
-  File "..\libs\poi-scratchpad-3.1-FINAL-20080629.jar"
+  File "..\libs\miglayout-3.7.1.jar"
 SectionEnd
 
 Section -AdditionalIcons
@@ -113,11 +111,8 @@ Section Uninstall
   Delete "$INSTDIR\activation.jar"
   Delete "$INSTDIR\mail.jar"
   Delete "$INSTDIR\jpo-0.9.jar"
-  Delete "$INSTDIR\poi-3.1-FINAL-20080629.jar"
-  Delete "$INSTDIR\poi-contrib-3.1-FINAL-20080629.jar"
-  Delete "$INSTDIR\poi-scratchpad-3.1-FINAL-20080629.jar"
+  Delete "$INSTDIR\miglayout-3.7.1.jar"
   Delete "$INSTDIR\jwizz-0.1.4.jar"
-  Delete "$INSTDIR\jpo.ini"
 
   Delete "$SMPROGRAMS\Java Picture Organizer\Uninstall.lnk"
   Delete "$SMPROGRAMS\Java Picture Organizer\Website.lnk"

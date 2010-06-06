@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jnlp spec="1.0+" codebase="http://j-po.sourceforge.net/" href="miglayout.jnlp">
+   <information>
+      <title>MigLayout</title>
+      <vendor>Mikael Grev</vendor>
+      <offline-allowed/>
+   </information>
+   <offline-allowed/>
+   <resources>
+      <jar href="miglayout-3.7.1.jar"/>
+   </resources>
+   <component-desc/>
+</jnlp>

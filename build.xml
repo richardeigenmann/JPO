@@ -82,7 +82,7 @@
                listfiles="yes"
                deprecation="yes"
                compiler="modern"
-               source="1.5">
+               source="1.6">
             <src path="${src.java.dir}"/>
             <classpath refid="base.path"/>
             <compilerarg value="-Xlint:unchecked" />
@@ -190,8 +190,8 @@
     
     
     <!-- This target will only be of use to the person who does the deployment
-         of JPO to souceforge.  -->
-    <target name="publish" depends="signjar" description="Publishes the lates Jpo Version to the SourceForge project">
+         of JPO to souceforge.  signjar-->
+    <target name="publish" depends="" description="Publishes the lates Jpo Version to the SourceForge project">
 
         <scp todir="richieigenmann,j-po@web.sourceforge.net:/home/groups/j/j-/j-po/htdocs"
              trust="yes"
@@ -208,6 +208,7 @@
                 <include name="fontconfig" />
                 <include name="*.gif" />
                 <include name="*.png" />
+                <include name="*.jpg" />
             </fileset>
             <fileset dir="${build.jars.dir}">
                 <modified>

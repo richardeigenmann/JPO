@@ -1,1 +1,1 @@
-c:\windows\system32\java -Xms80M -Xmx200M -classpath "c:\Program Files\Jpo\jnlp.jar";"c:\Program Files\Jpo\metadata-extractor-2.3.0.jar";"c:\Program Files\Jpo\activation.jar";"c:\Program Files\Jpo\mail.jar";"c:\Program Files\Jpo\jpo-0.8.5.jar" jpo.Jpo
+c:\windows\system32\java -Xms80M -Xmx800M -classpath "c:\Program Files\Jpo\jnlp.jar";"c:\Program Files\Jpo\metadata-extractor-2.3.0.jar";"c:\Program Files\Jpo\activation.jar";"c:\Program Files\Jpo\mail.jar";"c:\Program Files\Jpo\miglayout-3.7.1.jar";"c:\Program Files\Jpo\jpo-0.9.jar" Main

@@ -7,11 +7,11 @@
   codebase="http://j-po.sourceforge.net/"
   
   <!-- The relative URL of this file -->
-  href="jpo-0.8.5.jnlp">   
+  href="jpo-stable.jnlp">
   
   <information>
-    <!-- Application title -->
-    <title>JPO Version 0.8.5</title>
+    <!-- Application title  -->
+    <title>Java Picture Organizer Version 0.9</title>
     
     <!-- The vendor of the application -->
     <vendor>Richard Eigenmann</vendor>
@@ -49,7 +49,7 @@
          allowed, in which case they are
          considered to be in order of
          preference -->
-    <j2se version="1.5+" initial-heap-size="64m" max-heap-size="512m"/>
+    <j2se version="1.6+" initial-heap-size="64m" max-heap-size="800m"/>
 <!--     -->
     
     <!-- Specify the relative URL of a .jar
@@ -58,14 +58,16 @@
          system that the file does not need
          to be downloaded before the
          application can be run -->
-    <jar href="jpo-0.8.5.jar"/>
-    <jar href="metadata-extractor-2.3.0.jar"/>
+    <jar href="jpo-0.9.jar"/>
     <extension name="activation" href="activation.jnlp"/>
     <extension name="mail" href="mail.jnlp"/>
     <extension name="jnlp" href="jnlp.jnlp"/>
+    <extension name="jwizz" href="jwizz.jnlp"/>
+    <extension name="miglayout" href="miglayout.jnlp"/>
+    <extension name="exif" href="exif.jnlp"/>
   </resources>
 
   
-  <application-desc main-class="jpo.Jpo"/>
+  <application-desc main-class="Main"/>
   
 </jnlp>

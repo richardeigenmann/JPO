@@ -11,8 +11,9 @@
         </tr>
         <tr>
             <td width="150" bgcolor="#97a4da" valign="top">
-                <p><a href="jpo-stable.jnlp"><font color="red">Start now!</font></a></p>
-                <p><a href="jpo-devel.jnlp"><font color="red">Beta version 0.9</font></a></p>
+			<p><a href="jpo-stable.jnlp"><font color="red">Run JPO with Java Web Start</font></a><br>
+                        <a href="http://sourceforge.net/projects/j-po/files/"><font color="red">Download for Windows</font></a></p>
+			<p><a href="jpo-devel.jnlp"><font color="red">Beta version</font></a></p>
 
                 <p>
                     <strong>About JPO</strong><br>
@@ -64,9 +65,8 @@
 
 
                 <p>You can download the Java Runtime Environment (JRE) or the Java Software Development Kit (SDK)
-			here: <a href="http://java.sun.com/j2se/1.5.0/system-configurations.html">http://java.sun.com/j2se/1.5.0/system-configurations.html</a></p>
-
-                <p>In the past I've run JPO against the IBM Linux JVM and the Blackdown JVM.</p>
+			here: <a href="http://www.java.com/en/download/index.jsp">http://www.java.com/en/download/index.jsp</a>
+                        Get the JRE is you just want to run java programs. Get the SDK if you want to develop code.</p>
 
                 <p>Dealing with bitmaps inside the JVM consumes huge amounts of memory. On low specified
 			machines this can become frustrating when the operating system decides to spend minutes 
@@ -117,8 +117,8 @@
                 <p>If everything is configured correctly all you do is click this <strong>
                         <a href="jpo-stable.jnlp">link</a></strong> and off you go.</p>
                 <p>You can also start other versions of the program:<br>
-                    <a href="jpo-stable.jnlp">JPO Stable (Version 0.8.5)</a><br>
-                    <a href="jpo-devel.jnlp">JPO Development (Version 0.9)</a><br>
+                    <a href="jpo-stable.jnlp">JPO Stable</a><br>
+                    <a href="jpo-devel.jnlp">JPO Development</a><br>
 
 
                 <p><strong>Note:</strong> You will see the following warning screen:</p>
@@ -128,7 +128,7 @@
                 <p>You get this warning message because I haven't bought myself
 			a certificate with which to sign the packaged programs. JPO does need 
 			access to your hard disk so you have to accept this "sandbox" warning or it 
-			will not run.</P>
+			will not run.</p>
 
 
                 <p><strong>Note:</strong> Please also note that on some XP machines and Mac OS machines
@@ -164,10 +164,11 @@
                 <hr>
                 <h2 id="local">Local Installation</h2>
                 <p>First download the jar files and save them in your program directory:<br>
-                    <a href="http://j-po.sourceforge.net/jpo-0.8.5.jar">jpo-0.8.5.jar</a><br>
+                    <a href="http://j-po.sourceforge.net/jpo-0.9.jar">jpo-0.9.jar</a><br>
                     <a href="http://j-po.sourceforge.net/metadata-extractor-2.3.0.jar">metadata-extractor-2.3.0.jar</a><br>
                     <a href="http://j-po.sourceforge.net/jnlp.jar">jnlp.jar</a><br>
                     <a href="http://j-po.sourceforge.net/activation.jar">activation.jar</a><br>
+                    <a href="http://j-po.sourceforge.net/miglayout-3.7.1.jar">miglayout-3.7.1.jar</a><br>
                     <a href="http://j-po.sourceforge.net/mail.jar">mail.jar</a>.</p>
 
                 <p><strong>Note:</strong> Make sure they retain the <code>.jar</code> file extension. I've seen
@@ -175,12 +176,13 @@
 
 
                 <p> Then you need to create a script or batch file to run everything. On Linux the script would look like this:</p>
-                <p><font color="darkRed"><code>/PATH/TO/YOUR/JAVA/bin/java -Xms80M -Xmx200M
+                <p><font color="darkRed"><code>/PATH/TO/YOUR/JAVA/bin/java -Xms80M -Xmx800M
 			-classpath /PATH/TO/YOUR/JPO/JARS/jnlp.jar:
-			/PATH/TO/YOUR/JPO/JARS/metadata-extractor-2.3.jar:
+			/PATH/TO/YOUR/JPO/JARS/metadata-extractor-2.3.0.jar:
 			/PATH/TO/YOUR/JPO/JARS/mail.jar:
 			/PATH/TO/YOUR/JPO/JARS/activation.jar:
-			/PATH/TO/YOUR/JPO/JARS/jpo-0.8.5.jar jpo.Jpo</code></font></p>
+                        /PATH/TO/YOUR/JPO/JARS/miglayout-3.7.1.jar:
+			/PATH/TO/YOUR/JPO/JARS/jpo-0.9.jar Main</code></font></p>
 
                 <p><strong>Note:</strong> Put everything on one long line. The space characters do
 			matter; don't put spaces between the jars separated by colons(:) in the classpath! In the example 
@@ -194,12 +196,13 @@
 			file looks like this: (you can download it here: <a href="Jpo.bat">Jpo.bat</a></p>
 
                 <p><code>
-			c:\windows\system32\java -Xms80M -Xmx200M -classpath
+			c:\windows\system32\java -Xms80M -Xmx800M -classpath
 			"c:\Program Files\Jpo\jnlp.jar";
-			"c:\Program Files\Jpo\metadata-extractor-2.3.jar";
+			"c:\Program Files\Jpo\metadata-extractor-2.3.0.jar";
 			"c:\Program Files\Jpo\mail.jar";
 			"c:\Program Files\Jpo\activation.jar";
-			"c:\Program Files\Jpo\jpo-0.8.5.jar" jpo.Jpo
+			"c:\Program Files\Jpo\miglayout-3.7.1.jar";
+			"c:\Program Files\Jpo\jpo-0.9.jar" Main
                     </code></p>
 
 
@@ -207,8 +210,8 @@
 			set a classpath in the manifest of the main jar. If all the jars are in the same directory
 			all that is needed to run the program is then a &quot;simple&quot; command like this:</p>
 
-                <p><font color="darkRed"><code>/PATH/TO/YOUR/JAVA/bin/java -Xms80M -Xmx200M
-			-jar /PATH/TO/YOUR/JPO/JARS/jpo-0.8.5.jar </code></font></p>
+                <p><font color="darkRed"><code>/PATH/TO/YOUR/JAVA/bin/java -Xms80M -Xmx800M
+			-jar /PATH/TO/YOUR/JPO/JARS/jpo-0.9.jar </code></font></p>
 
 
                 <hr>
@@ -217,9 +220,9 @@
                 <p>Naturally there are some prerequisites:
 			a Java Software Development Kit (SDK), Apache Ant, a CVS client and JUnit.</p>
                 <p>Pitfalls to be aware of: Ant can be very fussy and annoying with cryptic,
-			incomprehensible error messages. On my SuSE 10.1 machine things have gotten 
+			incomprehensible error messages. On my SuSE 11.2 machine things have gotten
 			much better. SuSE have done all sorts of magic with the Java installation and 
-			the 1.5 release seems to be found by the command line without too much hassle.
+			the 6 release seems to be found by the command line without too much hassle.
 			Ant also does some magic so that as long as the ant command itself is found 
 			ant is perfectly happy to build. But, to be honest, I have also spent many
 			frustrating hours fiddling with things I didn't understand. I can say that 
@@ -347,8 +350,8 @@ cd /path_to_my_sources/Jpo
 
 
                 <hr>
-                <p>Last update to this page: 7.2.2007<br>
-			Copyright 2003-2007 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
+                <p>Last update to this page: 6.6.2010<br>
+			Copyright 2003-2010 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
             </td>
         </tr>
     </table>
