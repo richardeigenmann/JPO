@@ -19,6 +19,7 @@
 			<table>
 				<tr><td colspan=2><b>Development Version 0.9</b></td></tr>
 				<tr><td valign="top">28.12.2010</td><td> Fixed the bug whereby selections were not moved to a move target</td></tr>
+				<tr><td valign="top">1.10.2010</td><td> Geotagging of images</td></tr>
 				<tr><td valign="top">5.6.2010</td><td> Improved Reconcile Function</td></tr>
 				<tr><td valign="top">5.6.2010</td><td> Added Hover to JTree</td></tr>
 				<tr><td valign="top">4.6.2010</td><td> Fixed Export Collection bug</td></tr>

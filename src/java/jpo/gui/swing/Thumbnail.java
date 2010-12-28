@@ -11,7 +11,6 @@ import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
 import java.awt.image.RescaleOp;
 import java.util.logging.Logger;
-import jpo.*;
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
 import jpo.dataModel.Settings;

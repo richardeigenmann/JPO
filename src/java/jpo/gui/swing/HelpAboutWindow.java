@@ -2,7 +2,6 @@ package jpo.gui.swing;
 
 import java.util.logging.Logger;
 import jpo.dataModel.Settings;
-import jpo.*;
 import javax.swing.JOptionPane;
 import jpo.dataModel.Tools;
 

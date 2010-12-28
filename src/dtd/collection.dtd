@@ -25,6 +25,7 @@
 	film_reference?, 
 	COPYRIGHT_HOLDER?,
 	ROTATION?,
+	LATLNG?,
 	categoryAssignment* )>
 	
 <!-- The description or caption of the Image;
@@ -62,6 +63,7 @@
 
 <!ELEMENT ROTATION (#PCDATA)>
 
+<!ELEMENT LATLNG (#PCDATA)>
  
 <!ELEMENT categories ( category* )>
 
