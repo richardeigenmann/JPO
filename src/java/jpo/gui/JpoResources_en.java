@@ -257,6 +257,8 @@ public class JpoResources_en extends ListResourceBundle {
         { "lowresLocationLabel", "Lowres location:" },
         { "filmReferenceLabel", "Film reference:" },
         { "rotationLabel", "Rotate on load:" },
+        { "latitudeLabel", "Latitude:" },
+        { "longitudeLabel", "Longitude:" },
         { "commentLabel", "Comment:" },
         { "copyrightHolderLabel", "Copyright statment:" },
         { "photographerLabel", "Photographer:" },
@@ -307,6 +309,7 @@ public class JpoResources_en extends ListResourceBundle {
         { "groupExportJarMenuText", "Export to Jar Archive" },
         // PicturePopupMenu
         { "pictureShowJMenuItemLabel", "Show Picture" },
+        { "mapShowJMenuItemLabel", "Show Map" },
         { "pictureEditJMenuItemLabel", "Properties" },
         { "copyImageJMenuLabel", "Copy Image" },
         { "copyToNewLocationJMenuItem", "choose target directory" },

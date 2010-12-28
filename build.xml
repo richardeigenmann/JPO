@@ -104,6 +104,7 @@
                 <include name="**/robots.txt"/>
                 <include name="**/jpo.css"/>
                 <include name="**/jpo.js"/>
+                <include name="**/googlemaps.*"/>
             </fileset>
         </copy>
     </target>

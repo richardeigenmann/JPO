@@ -1,7 +1,6 @@
 package jpo.gui;
 
 import jpo.dataModel.Settings;
-import jpo.*;
 import java.awt.Dimension;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -12,11 +11,12 @@ import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import webserver.NanoHTTPD;
 
 /*
 LicenseWindow.java:  Creates the License window
 
-Copyright (C) 2007 - 2009 Richard Eigenmann, Zürich, Switzerland
+Copyright (C) 2007 - 2010 Richard Eigenmann, Zürich, Switzerland
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -55,20 +55,22 @@ public class LicenseWindow {
         jsp.setPreferredSize( new Dimension( 500, 400 ) );
 
 
-        String sb = new String( "" );
+        StringBuffer sb = new StringBuffer( "" );
         String textLine;
         try {
             InputStream in = ApplicationJMenuBar.class.getResourceAsStream( "../gpl.txt" );
             BufferedReader bin = new BufferedReader( new InputStreamReader( in ) );
             while ( ( textLine = bin.readLine() ) != null ) {
-                sb += textLine + "\n";
+                sb.append(textLine + "\n");
             }
             bin.close();
             in.close();
         } catch ( IOException e ) {
             logger.info( "Jpo.java: Error while reading gpl.txt: " + e.getMessage() );
         }
-        licenseJTextArea.setText( sb );
+        sb.append("\n\n------------------------\nLicense for embedded NanoHTTPD:\n\n");
+        sb.append(NanoHTTPD.LICENCE );
+        licenseJTextArea.setText( sb.toString() );
         licenseJTextArea.setCaretPosition( 0 );
 
 

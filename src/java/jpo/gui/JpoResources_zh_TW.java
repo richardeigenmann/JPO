@@ -298,6 +298,8 @@ public class JpoResources_zh_TW extends ListResourceBundle {
 		{"lowresLocationLabel", "低清晰度圖片位置；"},
 		{"filmReferenceLabel", "影像位置："},
 		{"rotationLabel", "在打開時旋轉圖片："},
+		{ "latitudeLabel", "Latitude:" },
+		{ "longitudeLabel", "Longitude:" },
 		{"commentLabel", "描述："},
 		{"copyrightHolderLabel", "版權信息："},
 		{"photographerLabel", "攝影作者："},
@@ -353,6 +355,7 @@ public class JpoResources_zh_TW extends ListResourceBundle {
 		
 		// PicturePopupMenu
 		{"pictureShowJMenuItemLabel", "顯示圖片"},
+		{ "mapShowJMenuItemLabel", "Show Map" },
 		{"pictureEditJMenuItemLabel", "屬性"},
 		{"copyImageJMenuLabel", "复制圖片"},
 		{"copyToNewLocationJMenuItem", "選擇复制的文件夾位置"},

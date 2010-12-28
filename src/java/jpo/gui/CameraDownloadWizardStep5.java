@@ -38,7 +38,7 @@ public class CameraDownloadWizardStep5
     /**
      * Defines a logger for this class
      */
-    private static Logger logger = Logger.getLogger( CameraDownloadWizardStep5.class.getName() );
+    private static final Logger logger = Logger.getLogger( CameraDownloadWizardStep5.class.getName() );
 
 
     /**

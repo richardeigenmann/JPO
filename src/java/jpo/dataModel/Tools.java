@@ -1,6 +1,5 @@
 package jpo.dataModel;
 
-import java.util.logging.Level;
 import jpo.gui.XmlFilter;
 import java.io.*;
 import java.net.*;
@@ -14,7 +13,6 @@ import java.text.*;
 import javax.swing.WindowConstants.*;
 import java.awt.*;
 import java.util.logging.Logger;
-import jpo.export.HtmlDistiller;
 
 
 /*
@@ -44,14 +42,13 @@ public class Tools {
      */
     private static Logger logger = Logger.getLogger( Tools.class.getName() );
 
-
     /**
      *   method that converts any XML problem characters (&, <, >, ", ') to the 
      *   predefined codes.
      * @param s
      * @return
      */
-    public static String escapeXML( String s ) {
+    public static String escapeXML ( String s ) {
         s = s.replaceAll( "&", "&amp;" );
         s = s.replaceAll( "<", "&lt;" );
         s = s.replaceAll( ">", "&gt;" );
@@ -60,13 +57,12 @@ public class Tools {
         return s;
     }
 
-
     /**
      *  Translates characters which are problematic in a filename into unproblematic characters
      * @param string The filename to clean up
      * @return The cleaned up filename
      */
-    public static String cleanupFilename( String string ) {
+    public static String cleanupFilename ( String string ) {
         String returnString = string;
         if ( returnString.contains( " " ) ) {
             returnString = returnString.replaceAll( " ", "_" );  // replace blank with underscore
@@ -153,14 +149,13 @@ public class Tools {
         return returnString;
     }
 
-
     /**
      *  This method converts the special characters to codes that HTML can deal with.
      *  Taken from http://www.rgagnon.com/javadetails/java-0306.html
      * @param string String to check
      * @return  clensed string
      */
-    public static String stringToHTMLString( String string ) {
+    public static String stringToHTMLString ( String string ) {
         StringBuffer sb = new StringBuffer( string.length() );
         // true if last char was blank
         boolean lastWasBlankChar = false;
@@ -215,33 +210,30 @@ public class Tools {
         return sb.toString();
     }
 
-
     /**
      *   returns the file extension of the indicated url
      *   @param url   The URL object for which the extension is being requested
      * @return
      */
-    public static String getExtension( URL url ) {
+    public static String getExtension ( URL url ) {
         return getExtension( url.toString() );
     }
-
 
     /**
      *   return the file extension of a file.
      *   @param file   The File object for which the extension is being requested
      * @return
      */
-    public static String getExtension( File file ) {
+    public static String getExtension ( File file ) {
         return getExtension( file.getName() );
     }
-
 
     /**
      *   return the file extension of a string
      *   @param s   The string for which the extension is being requested
      * @return
      */
-    public static String getExtension( String s ) {
+    public static String getExtension ( String s ) {
         String ext = null;
         int i = s.lastIndexOf( '.' );
 
@@ -251,13 +243,12 @@ public class Tools {
         return ext;
     }
 
-
     /**
      *   return everything of the filename up to the extension.
      *   @param s   The string for which the root of the filename is being requested
      * @return
      */
-    public static String getFilenameRoot( String s ) {
+    public static String getFilenameRoot ( String s ) {
         String fnroot = null;
         int i = s.lastIndexOf( '.' );
 
@@ -267,7 +258,6 @@ public class Tools {
         return fnroot;
     }
 
-
     /**
      *   method that tests the extension of the string in a JTextField for being 
      *   the correct extension. If not the correct extension is added. The case
@@ -275,13 +265,12 @@ public class Tools {
      * @param extension
      * @param jTextField
      */
-    public static void setFilenameExtension( String extension,
+    public static void setFilenameExtension ( String extension,
             JTextField jTextField ) {
         if ( !jTextField.getText().toUpperCase().endsWith( extension.toUpperCase() ) ) {
             jTextField.setText( jTextField.getText() + "." + extension );
         }
     }
-
 
     /**
      *   method that tests the file extension of a File object for being 
@@ -293,20 +282,19 @@ public class Tools {
      * @param testFile
      * @return
      */
-    public static File correctFilenameExtension( String extension, File testFile ) {
+    public static File correctFilenameExtension ( String extension, File testFile ) {
         if ( !testFile.getName().toUpperCase().endsWith( extension.toUpperCase() ) ) {
             return new File( testFile.getPath() + "." + extension );
         }
         return testFile;
     }
 
-
     /**
      *  Counts the number of real files in the array of files.
      *  @param fileArray
      * @return  the number of real files in the array of files
      */
-    public static int countfiles( File[] fileArray ) {
+    public static int countfiles ( File[] fileArray ) {
         if ( fileArray == null ) {
             return 0;
         }
@@ -328,13 +316,12 @@ public class Tools {
         return numFiles;
     }
 
-
     /**
      *  Returns the the total number of nodes belonging to the indicated node.
      *  @param startNode	The node from which the count shall begin.
      *  @return The number of Nodes.
      */
-    public static int countNodes( SortableDefaultMutableTreeNode startNode ) {
+    public static int countNodes ( SortableDefaultMutableTreeNode startNode ) {
         int count = 1;
 
         Enumeration kids = startNode.children();
@@ -350,17 +337,14 @@ public class Tools {
         }
         return count;
     }
-
     /**
      *   Constant that indicates that the directory must exist
      */
     public static final int DIR_MUST_EXIST = 1;
-
     /**
      *   Constant that indicates that the directory must exist and be writable;
      */
     public static final int DIR_MUST_BE_WRITABLE = DIR_MUST_EXIST + 1;
-
 
     /**
      * Test the supplied File on whether it is a directory and whether is can be written to.
@@ -368,7 +352,7 @@ public class Tools {
      * @param validationType
      * @return
      */
-    public static boolean checkDirectory( File testDir, int validationType ) {
+    public static boolean checkDirectory ( File testDir, int validationType ) {
         switch ( validationType ) {
             case DIR_MUST_EXIST:
                 return testDir.exists() && testDir.isDirectory();
@@ -387,14 +371,13 @@ public class Tools {
         return false;
     }
 
-
     /**
      *  This method checks whether the JVM has an image reader for the supplied
      *  File.
      *  @param  testFile	The file to be checked
      *  @return  true if the JVM has a reader false if not.
      */
-    public static boolean jvmHasReader( File testFile ) {
+    public static boolean jvmHasReader ( File testFile ) {
         try {
             FileImageInputStream testStream = new FileImageInputStream( testFile );
             boolean hasReader = ImageIO.getImageReaders( testStream ).hasNext();
@@ -412,7 +395,6 @@ public class Tools {
         }
     }
 
-
     /**
      *  This method looks into the supplied subdirectory and tries to see if there is 
      *  at least one picture in it for which our Java Environment has a decoder.
@@ -420,7 +402,7 @@ public class Tools {
      *  @param  subDirectory	The File representing the subdirectory to be recursively searched
      *  @return true if there is at least one picture in the subdirectory, false if there is nothing.
      */
-    public static boolean hasPictures( File subDirectory ) {
+    public static boolean hasPictures ( File subDirectory ) {
         File[] fileArray = subDirectory.listFiles();
         //logger.info( "Tools.hasPictures: directory " + subDirectory.toString() + " has " + Integer.toString(fileArray.length) + " entries" );
         if ( fileArray == null ) {
@@ -442,14 +424,13 @@ public class Tools {
         return false;
     }
 
-
     /**
      *  method to copy any file from a source location to a target location
      * @param a
      * @param b
      * @return
      */
-    public static long copyPicture( URL a, URL b ) {
+    public static long copyPicture ( URL a, URL b ) {
         try {
             InputStream in = a.openStream();
             OutputStream out = b.openConnection().getOutputStream();
@@ -471,7 +452,6 @@ public class Tools {
         }
     }
 
-
     /**
      *  method to copy any file from a source location to a target File location. Works 
      *  better because files are writable whilst most URL are read only.
@@ -479,7 +459,7 @@ public class Tools {
      * @param b
      * @return
      */
-    public static long copyPicture( URL a, File b ) {
+    public static long copyPicture ( URL a, File b ) {
         try {
             InputStream in = a.openStream();
             OutputStream out = new FileOutputStream( b );
@@ -501,14 +481,13 @@ public class Tools {
         }
     }
 
-
     /**
      * Copy any file from a source File to a target File location.
      * @param a the source file location
      * @param b the target file location
      * @return The crc of the copied picture.
      */
-    public static long copyPicture( File a, File b ) {
+    public static long copyPicture ( File a, File b ) {
         logger.fine( String.format( "Copying file %s to file %s", a.toString(), b.toString() ) );
         try {
             InputStream in = new FileInputStream( a );
@@ -531,7 +510,6 @@ public class Tools {
         }
     }
 
-
     /**
      *  method to copy any file from a source stream to a output stream
      *  @param bin 
@@ -539,14 +517,14 @@ public class Tools {
      * @return  the crc of the file
      * @throws IOException
      */
-    public static long copyBufferedStream( BufferedInputStream bin,
+    public static long copyBufferedStream ( BufferedInputStream bin,
             BufferedOutputStream bout )
             throws IOException {
 
         Adler32 crc = new Adler32();
         int c;
 
-        while ( ( c = bin.read() ) != -1 ) {
+        while ( (c = bin.read()) != -1 ) {
             bout.write( c );
             crc.update( c );
         }
@@ -557,51 +535,64 @@ public class Tools {
 
     }
 
-
     /**
-     *  This method moves any file to the target URL.
-     *  It checks whether the filename was mentioned in the highres or lowres fields of other nodes
-     *  and corrects those references if found.
+     * This method moves the source file to the target file. It tries a java File.renameTo.
+     * This doesn't work across different mounted filesystems so if that fails it
+     * tries to copy the data from the source file to the target file and deletes the source.
      *
-     *  @param sourceFile   The file to be moved
-     *  @param b  The target URL it is to be moved to.
-     *  @return  true if successful, false if not.
+     * If successful it calls correctReferences to update any other references in the collection
+     * that might be pointing at the moved file.
+     *
+     * @param sourceFile   The file to be moved
+     * @param targetFile   The target file it is to be moved to.
+     * @return  true if successful, false if not.
      * @throws IOException
      */
-    public static boolean movePicture( File sourceFile, URL b ) throws IOException {
-        File targetFile = null;
-        try {
-            targetFile = new File( b.toURI() );
-        } catch ( URISyntaxException x ) {
-            throw new IOException( "Tools.movePicture: URL caused a URISyntaxException. Move aborted! " + x.getMessage() );
+    public static boolean moveFile ( File sourceFile, File targetFile ) throws IOException {
+        if ( ! sourceFile.exists() ) {
+            logger.severe( String.format( "Source File %s doesn't exist. Move aborted!", sourceFile.toString() ) );
+            return false;
         }
-
-        //logger.info("Tools.movePicture: after decomposing the target URL the Path reads: " + targetFile.getPath());
-
         if ( targetFile.exists() ) {
-            throw new IOException( "Tools.movePicture: Target File " + b.toString() + " already exists. Move aborted!" );
+            logger.warning( String.format( "Target File %s already exists. Move aborted!", targetFile.toString() ) );
+            return false;
         }
         if ( !sourceFile.canWrite() ) {
-            throw new IOException( "Tools.movePicture: Source File is not writable and hence can't be deleted. Move aborted!: " + sourceFile.getPath() );
+            logger.warning( String.format( "Source File %s is write protected. Move aborted!", sourceFile.getPath() ) );
+            return false;
         }
 
         if ( sourceFile.renameTo( targetFile ) ) {
-            //logger.info ( "Tools.movePicture: File " + sourceFile.toString() + " renamed to " + b.toString() );
+            logger.info( String.format( "Successfully renamed %s to %s", sourceFile.toString(), targetFile.toString() ) );
         } else {
             // perhaps target was on a different filesystem. Trying copying
-            logger.info( "Tools.movePicture: Failed: Rename from " + sourceFile.toString() + " to " + b.toString() + " failed. Trying copying" );
+            logger.info( String.format( "Rename from %s to %s failed. Trying to copy and delete...", sourceFile.toString(), targetFile.toString() ) );
             if ( copyPicture( sourceFile, targetFile ) > Long.MIN_VALUE ) {
-                logger.info( "Tools.movePicture: Copy worked. Deleting source file." );
+                logger.info( "... copy worked. Now deleting source file...." );
                 if ( !sourceFile.delete() ) {
-                    logger.info( "Tools.movePicture: FAILED: Deleting source file failed." );
+                    logger.info( "Nope, deleting source file failed." );
+                    return false;
+                } else {
+                    logger.info( "...delete worked.");
                 }
             } else {
-                logger.info( "Tools.movePicture: Copy failed too." );
+                logger.info( "Nope, Copy failed too." );
                 return false;
             }
         }
 
+        correctReferences( sourceFile, targetFile );
+        return true;
+    }
 
+    /**
+     * Searches for any references in the current collection to the source file and
+     * updates them to the target file.
+     * @param sourceFile The file that was moved
+     * @param targetFile The new location of the source file
+     * @throws MalformedURLException
+     */
+    private static void correctReferences ( File sourceFile, File targetFile ) throws MalformedURLException {
         //  search for other picture nodes in the tree using this image file
         SortableDefaultMutableTreeNode node;
         Object nodeObject;
@@ -611,31 +602,30 @@ public class Tools {
             nodeObject = node.getUserObject();
             if ( nodeObject instanceof PictureInfo ) {
                 //logger.info( "Tools.movePicture: checking: " + ( (PictureInfo) nodeObject ).getHighresLocation() + " against " + sourceFile );
-                if ( ( (PictureInfo) nodeObject ).getHighresFile().equals( sourceFile ) ) {
+                if ( ((PictureInfo) nodeObject).getHighresFile().equals( sourceFile ) ) {
                     //logger.info ( "Another picture node was using the same highres URL. Node changed: " + ( (PictureInfo) nodeObject ).getDescription() );
-                    ( (PictureInfo) nodeObject ).setHighresLocation( targetFile.toURI().toURL() );
+                    ((PictureInfo) nodeObject).setHighresLocation( targetFile.toURI().toURL() );
                 }
-                if ( ( (PictureInfo) nodeObject ).getLowresFile().equals( sourceFile ) ) {
+                if ( ((PictureInfo) nodeObject).getLowresFile().equals( sourceFile ) ) {
                     //logger.info ( "Another picture node was using the same lowres URL. Node changed: " + ( (PictureInfo) nodeObject ).getDescription() );
-                    ( (PictureInfo) nodeObject ).setLowresLocation( targetFile.toURI().toURL() );
+                    ((PictureInfo) nodeObject).setLowresLocation( targetFile.toURI().toURL() );
                 }
             } else {
-                if ( ( !node.isRoot() ) && ( !( (GroupInfo) nodeObject ).getLowresLocation().equals( "" ) ) && ( (GroupInfo) nodeObject ).getLowresFile().equals( sourceFile ) ) {
+                if ( (!node.isRoot()) && (!((GroupInfo) nodeObject).getLowresLocation().equals( "" )) && ((GroupInfo) nodeObject).getLowresFile().equals( sourceFile ) ) {
                     //logger.info ( "Another group node was using the same lowres URL. Node changed: " + ( (PictureInfo) nodeObject ).getDescription() );
-                    ( (GroupInfo) nodeObject ).setLowresLocation( targetFile.toURI().toURL() );
+                    ((GroupInfo) nodeObject).setLowresLocation( targetFile.toURI().toURL() );
                 }
             }
         }
-        return true;
-    }
 
+    }
 
     /**
      * Converts a long value into a human readable size such a 245 B, 15 KB, 3 MB, 85 GB, 2 TB
      * @param size
      * @return
      */
-    public static String fileSizeToString( long size ) {
+    public static String fileSizeToString ( long size ) {
         String suffix = " B";
         if ( size > 1024 ) {
             size = size / 1024;
@@ -657,7 +647,6 @@ public class Tools {
         return suffix;
     }
 
-
     /**
      *  searches for an item in the classpath that ends exactly like the supplied string.
      *  Returns a new file object for that item or null if not found.
@@ -666,7 +655,7 @@ public class Tools {
      * @param searchName
      * @return
      */
-    public static File searchClasspath( String searchName ) {
+    public static File searchClasspath ( String searchName ) {
         // find the jar file as last item in the Jar file.
         String classpath = System.getProperty( "java.class.path" );
         logger.info( "Tools.searchClasspath: searching for " + searchName + " in " + classpath );
@@ -680,12 +669,10 @@ public class Tools {
         }
         return null;
     }
-
     /**
      *  writer that gets the debug output if there is any to be written
      */
     private static Logger log = Logger.getLogger( Tools.class.getName() );
-
 
     /**
      *   method that returns a file handle for a picture that does not exist in the target 
@@ -696,14 +683,13 @@ public class Tools {
      * @param startName
      * @return
      */
-    public static URL inventPicURL( File targetDir, String startName ) {
+    public static URL inventPicURL ( File targetDir, String startName ) {
         try {
             return inventPicFilename( targetDir, startName ).toURI().toURL();
         } catch ( MalformedURLException x ) {
             return null;
         }
     }
-
 
     /**
      *   method that returns a file handle for a picture that does not exist in the target 
@@ -713,7 +699,7 @@ public class Tools {
      * @param startName
      * @return
      */
-    public static File inventPicFilename( File targetDir, String startName ) {
+    public static File inventPicFilename ( File targetDir, String startName ) {
         File testFile = new File( targetDir, startName );
         if ( !testFile.exists() ) {
             return testFile;
@@ -734,12 +720,11 @@ public class Tools {
         return null;
     }
 
-
     /**
      * Method that returns a new lowres URL that has not been used before.
      * @return
      */
-    public static String getNewLowresFilename() {
+    public static String getNewLowresFilename () {
         File testLowresFilename;
         for ( int i = 1; i < 10000; i++ ) {
             Settings.thumbnailCounter++;
@@ -750,9 +735,9 @@ public class Tools {
                 try {
                     //logger.info( "Tools.getNewLowresFilename: assigning: " + testLowresFilename.toURI().toURL().toString());
                     Settings.unsavedSettingChanges = true;
-                    return ( testLowresFilename.toURI().toURL().toString() );
+                    return (testLowresFilename.toURI().toURL().toString());
                 } catch ( MalformedURLException x ) {
-                    return ( null );
+                    return (null);
                 }
             }
         }
@@ -764,7 +749,7 @@ public class Tools {
      * Returns a new URL for a thumbnail. Calls getNewLowresFilename
      * @return a new URL or null if something went very wrong.
      */
-    public static URL getNewLowresURL() {
+    public static URL getNewLowresURL () {
         URL newURL = null;
         try {
             newURL = new URL( getNewLowresFilename() );
@@ -775,43 +760,39 @@ public class Tools {
         return newURL;
     }
 
-
     /**
      *  method that returns whether a URL is a file:// URL or not.
      *  Returns true if it is a file, false if it's anything else such as http://
      * @param testURL
      * @return
      */
-    public static boolean isUrlFile( URL testURL ) {
-        return ( testURL.getProtocol().equals( "file" ) );
+    public static boolean isUrlFile ( URL testURL ) {
+        return (testURL.getProtocol().equals( "file" ));
 
     }
-
 
     /**
      *  convenience method to log the amount of free memory
      *
      * @return
      */
-    public static int freeMem() {
+    public static int freeMem () {
         int memory = (int) Runtime.getRuntime().freeMemory() / 1024 / 1024;
         logger.info( "Free memory: " + memory + "MB" );
         return memory;
     }
-
 
     /**
      *  convenience method to log the amount of free memory. Shows freeMemory, totalMemory and maxMemory
      *
      * @return
      */
-    public static String freeMemory() {
+    public static String freeMemory () {
         int freeMemory = (int) Runtime.getRuntime().freeMemory() / 1024 / 1024;
         int totalMemory = (int) Runtime.getRuntime().totalMemory() / 1024 / 1024;
         int maxMemory = (int) Runtime.getRuntime().maxMemory() / 1024 / 1024;
-        return ( Settings.jpoResources.getString( "freeMemory" ) + Integer.toString( freeMemory ) + "MB/" + Integer.toString( totalMemory ) + "MB/" + Integer.toString( maxMemory ) + "MB" );
+        return (Settings.jpoResources.getString( "freeMemory" ) + Integer.toString( freeMemory ) + "MB/" + Integer.toString( totalMemory ) + "MB/" + Integer.toString( maxMemory ) + "MB");
     }
-
 
     /**
      *  method that strips out the root filename from a File object. <p>
@@ -819,7 +800,7 @@ public class Tools {
      * @param file
      * @return
      */
-    public static String stripOutFilenameRoot( File file ) {
+    public static String stripOutFilenameRoot ( File file ) {
         String description = file.getName();
         int lastDotIndex = description.lastIndexOf( "." );
         if ( lastDotIndex > -1 ) {
@@ -832,12 +813,11 @@ public class Tools {
         return description;
     }
 
-
     /**
      *  Method that chooses an xml file or returns null
      * @return
      */
-    public static File chooseXmlFile() {
+    public static File chooseXmlFile () {
         JFileChooser jFileChooser = new JFileChooser();
         jFileChooser.setFileSelectionMode( javax.swing.JFileChooser.FILES_ONLY );
         jFileChooser.setApproveButtonText( Settings.jpoResources.getString( "fileOpenButtonText" ) );
@@ -853,19 +833,18 @@ public class Tools {
         }
     }
 
-
     /**
      *  Analyses the drag event and sets the cursor to the appropriate style.
      *
      *  @param event the DragSourceDragEvent for which the cursor is to be adjusted
      */
-    public static void setDragCursor( DragSourceDragEvent event ) {
+    public static void setDragCursor ( DragSourceDragEvent event ) {
         //logger.info( "Tools.setDragCursor: invoked");
         DragSourceContext context = event.getDragSourceContext();
         int dndCode = event.getDropAction();
-        if ( ( dndCode & DnDConstants.ACTION_COPY ) != 0 ) {
+        if ( (dndCode & DnDConstants.ACTION_COPY) != 0 ) {
             context.setCursor( DragSource.DefaultCopyDrop );
-        } else if ( ( dndCode & DnDConstants.ACTION_MOVE ) != 0 ) {
+        } else if ( (dndCode & DnDConstants.ACTION_MOVE) != 0 ) {
             context.setCursor( DragSource.DefaultMoveDrop );
         } else {
             //logger.info( "ACTION_COPY is: " + Integer.toString( DnDConstants.ACTION_COPY ) );
@@ -878,14 +857,13 @@ public class Tools {
         }
     }
 
-
     /**
      *  Calculates a checksum from the supplied File
      *
      *  @param f
      * @return  returns the checksum as a Long or Long.MIN_VALUE to indicate failure.
      */
-    public static long calculateChecksum( File f ) {
+    public static long calculateChecksum ( File f ) {
         long checksum;
         try {
             checksum = calculateChecksum( new BufferedInputStream( new FileInputStream( f ) ) );
@@ -895,7 +873,6 @@ public class Tools {
         return checksum;
     }
 
-
     /**
      *  Calculates a checksum from the supplied input stream
      *  originally taken from: Java ist auch eine Insel (2. Aufl.) 
@@ -904,12 +881,12 @@ public class Tools {
      *  @param in
      * @return  returns the checksum as a Long or Long.MIN_VALUE to indicate failure.
      */
-    public static long calculateChecksum( InputStream in ) {
+    public static long calculateChecksum ( InputStream in ) {
         Adler32 crc = new Adler32();
         int blockLen;
 
         try {
-            while ( ( blockLen = in.available() ) > 0 ) {
+            while ( (blockLen = in.available()) > 0 ) {
                 byte ba[] = new byte[blockLen];
                 in.read( ba );
                 crc.update( ba );
@@ -921,20 +898,18 @@ public class Tools {
         }
     }
 
-
     /**
      *  returns the current date and time formatted per the formatting string. 
      *  See the API doc on SimpleDateFormat for the meaning of the letters.
      * @param formatString
      * @return
      */
-    public static String currentDate( String formatString ) {
+    public static String currentDate ( String formatString ) {
         SimpleDateFormat formatter = new SimpleDateFormat( formatString );
         Date currentTime = new Date();
         String dateString = formatter.format( currentTime );
         return dateString;
     }
-
 
     /**
      *  This method tries it's best to parse the supplied date into a Java Date object.
@@ -942,10 +917,10 @@ public class Tools {
      *  @param dateString   the String to be parsed
      *  @return   the Java Calendar object or null if it could not be parsed.
      */
-    public static Calendar parseDate( String dateString ) {
+    public static Calendar parseDate ( String dateString ) {
         SimpleDateFormat df = new SimpleDateFormat();
         df.setLenient( true );
-        String[] patterns = { "dd.MM.yyyy HH:mm",
+        String[] patterns = {"dd.MM.yyyy HH:mm",
             "yyyy:MM:dd HH:mm:ss",
             "dd.MM.yyyy",
             "MM.yyyy",
@@ -961,7 +936,7 @@ public class Tools {
         };
         Date d = null;
         boolean notFound = true;
-        for ( int i = 0; ( i < patterns.length ) && notFound; i++ ) {
+        for ( int i = 0; (i < patterns.length) && notFound; i++ ) {
             try {
                 df.applyPattern( patterns[i] );
                 d = df.parse( dateString );
@@ -978,7 +953,6 @@ public class Tools {
         }
     }
 
-
     /**
      *   This method figures out the dimensions of the supplied JTextArea for it's current content.
      *   It is not terribly exact.
@@ -987,31 +961,29 @@ public class Tools {
      *   @param   horizontalWidth   The horizontal width that should be used in the dimension.
      * @return
      */
-    public static Dimension getJTextAreaDimension( JTextArea ta,
+    public static Dimension getJTextAreaDimension ( JTextArea ta,
             int horizontalWidth ) {
         // figure out the size of the JTextArea
         int fontHeight = ta.getFontMetrics( ta.getFont() ).getHeight();
         int stringWidth = ta.getFontMetrics( ta.getFont() ).stringWidth( ta.getText() );
         int lines = stringWidth / horizontalWidth;
-        int adjustedLines = (int) ( lines * 1.1 ) + 2;
+        int adjustedLines = (int) (lines * 1.1) + 2;
         //logger.info("ThumbnailDescriptionJPanel: lineCount: " + Integer.toString(lines) + " stringWidth: " + Integer.toString( stringWidth ) );
         return new Dimension( horizontalWidth, adjustedLines * fontHeight );
     }
-
 
     /**
      *  Converts the color into a string for web pages
      * @param c
      * @return
      */
-    public static String getColor( Color c ) {
+    public static String getColor ( Color c ) {
         String s = "#";
         s += Integer.toString( c.getRed(), 16 );
         s += Integer.toString( c.getGreen(), 16 );
         s += Integer.toString( c.getBlue(), 16 );
         return s;
     }
-
 
     /**
      *  This method fires up a user function if it can. User functions are only valid on
@@ -1020,25 +992,25 @@ public class Tools {
      *  @param  userFunction	The user function to be executed in the array Settings.userFunctionCmd
      *  @param  myObject        The PictureInfo upon which the user function should be executed.
      */
-    public static void runUserFunction( int userFunction, PictureInfo myObject ) {
-        if ( ( userFunction < 0 ) || ( userFunction >= Settings.maxUserFunctions ) ) {
+    public static void runUserFunction ( int userFunction, PictureInfo myObject ) {
+        if ( (userFunction < 0) || (userFunction >= Settings.maxUserFunctions) ) {
             logger.info( "Error: called with an out of bounds index" );
             return;
         }
         String command = Settings.userFunctionCmd[userFunction];
-        if ( ( command == null ) || ( command.length() == 0 ) ) {
+        if ( (command == null) || (command.length() == 0) ) {
             logger.info( "Command " + Integer.toString( userFunction ) + " is not properly defined" );
             return;
         }
 
-        String filename = ( myObject ).getHighresFile().toString();
+        String filename = (myObject).getHighresFile().toString();
         command = command.replaceAll( "%f", filename );
 
         String escapedFilename = filename.replaceAll( "\\s", "\\\\\\\\ " );
         command = command.replaceAll( "%e", escapedFilename );
 
 
-        URL pictureURL = ( myObject ).getHighresURLOrNull();
+        URL pictureURL = (myObject).getHighresURLOrNull();
         if ( pictureURL == null ) {
             logger.info( "The picture doesn't have a valid URL. This is bad. Aborted." );
             return;
@@ -1065,19 +1037,17 @@ public class Tools {
         }
     }
 
-
     /**
      * This helper method checks if the execution is on the EventDisplayThread and
      * throws an Error if it is not. All Swing operations must be done on the EDT. This
      * method allows easy checking by writing:
      * <code>Tools.checkEDT()</code>
      */
-    public static void checkEDT() {
+    public static void checkEDT () {
         if ( !SwingUtilities.isEventDispatchThread() ) {
             throw new Error( "Not on EDT!" );
         }
     }
-
 
     /**
      * Writes the contents of the specified text file which we have packaged in
@@ -1087,10 +1057,12 @@ public class Tools {
      * @param fileInJar The name of the file in the jar
      * @param targetDir The target directory
      * @param targetFilename the target filename
+     * TODO: Look at the error message! RE 17.10.2010
      */
-    public static void copyFromJarToFile( Class rootClass, String fileInJar, File targetDir,
+    public static void copyFromJarToFile ( Class rootClass, String fileInJar,
+            File targetDir,
             String targetFilename ) {
-        logger.fine( String.format( "Copying File %s from classpath %s to filename %s in directory %s", fileInJar, rootClass.toString() ,targetFilename, targetDir ) );
+        logger.fine( String.format( "Copying File %s from classpath %s to filename %s in directory %s", fileInJar, rootClass.toString(), targetFilename, targetDir ) );
         String textLine;
         try {
             InputStream in = rootClass.getResourceAsStream( fileInJar );
@@ -1098,7 +1070,7 @@ public class Tools {
             FileOutputStream out = new FileOutputStream( new File( targetDir, targetFilename ) );
             OutputStreamWriter osw = new OutputStreamWriter( out );
             BufferedWriter bout = new BufferedWriter( osw );
-            while ( ( textLine = bin.readLine() ) != null ) {
+            while ( (textLine = bin.readLine()) != null ) {
                 bout.write( textLine );
                 bout.newLine();
             }
@@ -1115,5 +1087,57 @@ public class Tools {
                     Settings.jpoResources.getString( "genericWarning" ),
                     JOptionPane.ERROR_MESSAGE );
         }
+    }
+
+    /**
+     * Returns the content of the specified file which we have packaged in
+     * the jar of the distribution in a String.
+     * @param rootClass The class from which to search in the jar to help find the file
+     * @param fileInJar The name of the file in the jar
+     * @return The contents of the file in a string
+     */
+    public static String copyFromJarToString ( Class rootClass, String fileInJar ) {
+        logger.info( String.format( "Reading File %s from class %s", fileInJar, rootClass.toString() ) );
+        String fileContent = String.format( "<html><head></head><body>Failed to read file %s from Class %s</body></html>", fileInJar, rootClass.toString() );
+        try {
+            InputStream in = rootClass.getResourceAsStream( fileInJar );
+            BufferedReader bin = new BufferedReader( new InputStreamReader( in ) );
+            Scanner scanner = new Scanner( bin ).useDelimiter( "\\Z" );
+            fileContent = scanner.next();
+            scanner.close();
+            bin.close();
+            in.close();
+        } catch ( IOException x ) {
+            x.printStackTrace();
+        }
+        return fileContent;
+    }
+
+    /**
+     * Returns the content of the specified file which we have packaged in
+     * the jar of the distribution in a String.
+     * @param rootClass The class from which to search in the jar to help find the file
+     * @param fileInJar The name of the file in the jar
+     * @return The contents of the file in a string
+     */
+    public static String copyFromJarToStringLineByLine ( Class rootClass,
+            String fileInJar ) {
+        logger.info( String.format( "Reading File %s from class %s", fileInJar, rootClass.toString() ) );
+        StringBuffer sb = new StringBuffer();
+        try {
+            InputStream in = rootClass.getResourceAsStream( fileInJar );
+            BufferedReader bin = new BufferedReader( new InputStreamReader( in ) );
+            String textLine;
+            String newline = System.getProperty( "line.separator" );
+            while ( (textLine = bin.readLine()) != null ) {
+                sb.append( textLine );
+                sb.append( newline );
+            }
+            bin.close();
+            in.close();
+        } catch ( IOException x ) {
+            x.printStackTrace();
+        }
+        return sb.toString();
     }
 }

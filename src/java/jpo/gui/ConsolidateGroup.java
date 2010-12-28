@@ -193,16 +193,7 @@ public class ConsolidateGroup
         return true;
     }
 
-    /**
-     *  temp var at class level to reduce the number of objects being created.
-     */
-    private File oldFileParent;
-
-    /**
-     *  temp var at class level to reduce the number of objects being created.
-     */
-    private URL newFile;
-
+     
 
     /**
      *   This method moves a highres file from an indicated SortableDefaultMutableTreeNode 's
@@ -220,15 +211,16 @@ public class ConsolidateGroup
                 return false;
             }
 
-            oldFileParent = p.getHighresFile().getParentFile();
+            File oldFileParent = p.getHighresFile().getParentFile();
             if ( ( oldFileParent != null ) && ( oldFileParent.equals( targetDirectory ) ) ) {
                 //logger.info( "ConsolidateGroup.moveHighresPicture: path is identical (" + oldFileParent.toString() + "==" + p.getHighresFile().getParentFile().toString() + ") . Not Moving Picture: " + p.getHighresLocation() );
                 return true;
             }
 
-            newFile = Tools.inventPicURL( targetDirectory, p.getHighresFilename() );
+            //newFile = Tools.inventPicURL( targetDirectory, p.getHighresFilename() );
+            File newFile = Tools.inventPicFilename( targetDirectory, p.getHighresFilename() );
             //logger.info( "ConsolidateGroupTread.moveHighresPicture: returned URL: " + newFile );
-            if ( Tools.movePicture( oldFile, newFile ) ) {
+            if ( Tools.moveFile( oldFile, newFile ) ) {
                 return true;
             } else {
                 logger.info( "ConsolidateGroupThread.moveHighresPicture: failed to move " + oldFile.toString() + " to " + newFile.toString() );
@@ -266,9 +258,10 @@ public class ConsolidateGroup
                 logger.info( String.format( "The Lowres file of node %s is null. Ignoring.", o.toString() ) );
                 return true;
             }
-            oldFileParent = oldFile.getParentFile();
+            File oldFileParent = oldFile.getParentFile();
 
-            URL newFileUrl = Tools.inventPicURL( targetLowresDirectory, oldFile.getName() );
+            //URL newFileUrl = Tools.inventPicURL( targetLowresDirectory, oldFile.getName() );
+            File newFile = Tools.inventPicFilename( targetLowresDirectory, oldFile.getName() );
             if ( ( oldFileParent != null ) && ( oldFileParent.equals( targetLowresDirectory ) ) ) {
                 return true;
             }
@@ -278,7 +271,7 @@ public class ConsolidateGroup
                 return true;
             }
 
-            if ( Tools.movePicture( oldFile, newFileUrl ) ) {
+            if ( Tools.moveFile( oldFile, newFile ) ) {
                 return true;
             } else {
                 //logger.info( "ConsolidateGroup.moveLowresPicture: failed to move " + oldFile.toString() + " to " + newFileUrl.toString() );

@@ -34,7 +34,7 @@ class CollectionDistillerJFrame extends JFrame implements ActionListener {
     /**
      * Defines a logger for this class
      */
-    private static Logger logger = Logger.getLogger( CollectionDistillerJFrame.class.getName() );
+    private static final Logger logger = Logger.getLogger( CollectionDistillerJFrame.class.getName() );
 
     /**
      *  the node from which to start the export
@@ -54,7 +54,7 @@ class CollectionDistillerJFrame extends JFrame implements ActionListener {
     private JTextField xmlFileNameJTextField = new JTextField();
 
     /**
-     *  tickbox that indicates whether the pictures are to be copied to the
+     *  Tickbox that indicates whether the pictures are to be copied to the
      *  target directory structure.
      **/
     private JCheckBox exportPicsJCheckBox = new JCheckBox( Settings.jpoResources.getString( "collectionExportPicturesText" ) );
@@ -71,7 +71,7 @@ class CollectionDistillerJFrame extends JFrame implements ActionListener {
 
 
     /**
-     *  Constructor for the Export Dialog windod.
+     *  Constructor for the Export Dialog window.
      *
      *  @param startNode  The group node that the user wants the export to be done on.
      */

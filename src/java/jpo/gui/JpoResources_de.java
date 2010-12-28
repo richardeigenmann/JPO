@@ -296,6 +296,8 @@ public class JpoResources_de extends ListResourceBundle {
 		{"lowresLocationLabel", "Verkleinerungs-Pfad:"},
 		{"filmReferenceLabel", "Film Referenz:"},
 		{"rotationLabel", "Rotation beim Laden:"},
+		{ "latitudeLabel", "Latitude:" },
+		{ "longitudeLabel", "Longitude:" },
 		{"commentLabel", "Kommentar:"},
 		{"copyrightHolderLabel", "Copyright Vermerk:"},
 		{"photographerLabel", "Photograph:"},
@@ -351,6 +353,7 @@ public class JpoResources_de extends ListResourceBundle {
 		
 		// PicturePopupMenu
 		{"pictureShowJMenuItemLabel", "Bild anzeigen"},
+		{ "mapShowJMenuItemLabel", "Show Map" },
 		{"pictureEditJMenuItemLabel", "Eigenschaften"},
 		{"copyImageJMenuLabel", "Bild Kopieren"},
 		{"copyToNewLocationJMenuItem", "Zielverzeichnis auswählen"},

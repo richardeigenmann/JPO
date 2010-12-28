@@ -583,9 +583,14 @@ public class Settings {
     public final static int ROTATION = COPYRIGHT_HOLDER + 1;
 
     /**
+     *	constant to indicate the Latitude and Longitude to some routines
+     */
+    public final static int LATLNG = ROTATION + 1;
+
+    /**
      *	constant to indicate the Rotation to some routines
      */
-    public final static int CHECKSUM = ROTATION + 1;
+    public final static int CHECKSUM = LATLNG + 1;
 
     /**
      *	constant to indicate the Categories are being parsed
@@ -655,7 +660,7 @@ public class Settings {
     /**
      * Email authentication 0 = None 1 = Password 2 = SSL
      */
-    public static int emailAuthentication  = 0;
+    public static int emailAuthentication = 0;
 
     /**
      *	Email User
@@ -812,7 +817,7 @@ public class Settings {
         }
         emailServer = prefs.get( "emailServer", emailServer );
         emailPort = prefs.get( "emailPort", emailPort );
-        emailAuthentication = prefs.getInt("emailAuthentication", emailAuthentication);
+        emailAuthentication = prefs.getInt( "emailAuthentication", emailAuthentication );
         emailUser = prefs.get( "emailUser", emailUser );
         emailPassword = prefs.get( "emailPassword", emailPassword );
         emailScaleImages = prefs.getBoolean( "emailScaleImages", emailScaleImages );

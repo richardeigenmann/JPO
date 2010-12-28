@@ -58,12 +58,13 @@ public class PictureInfoChangeEvent {
      */
     @Override
     public String toString() {
-        return String.format( "PictureInfoChangeEvent from PictureInfo %s, descriptionChanged: %b, highresLocationChanged %b, lowresLocationChanged: %b, checksumChanged: %b, thumbnailChanged %b, creationTimeChanged %b, filmReferenceChanged: %b, rotationChanged %b, commentChanged: %b, photographerChanged: %b, copyrightHolderChanged: %b, categoryAssignmentsChanged: %b, wasSelected: %b, wasUnselected: %b, wasMailSelected: %b, wasMailUnselected: %b",
+        return String.format( "PictureInfoChangeEvent from PictureInfo %s, descriptionChanged: %b, highresLocationChanged %b, lowresLocationChanged: %b, checksumChanged: %b, thumbnailChanged %b, creationTimeChanged %b, filmReferenceChanged: %b, rotationChanged %b, commentChanged: %b, photographerChanged: %b, copyrightHolderChanged: %b, latLngChanged: %b, categoryAssignmentsChanged: %b, wasSelected: %b, wasUnselected: %b, wasMailSelected: %b, wasMailUnselected: %b",
                 pi.toString(), getDescriptionChanged(), getHighresLocationChanged(),
                 getLowresLocationChanged(), getChecksumChanged(), getThumbnailChanged(),
                 getCreationTimeChanged(), getFilmReferenceChanged(),
                 getRotationChanged(), getCommentChanged(), getPhotographerChanged(),
-                getCopyrightHolderChanged(), getCategoryAssignmentsChanged(),
+                getCopyrightHolderChanged(), getLatLngChanged(),
+                getCategoryAssignmentsChanged(),
                 getWasSelected(), getWasUnselected(), getWasMailSelected(),
                 getWasMailUnselected() );
     }
@@ -329,6 +330,30 @@ public class PictureInfoChangeEvent {
      */
     public boolean getCopyrightHolderChanged() {
         return copyrightHolderChanged;
+    }
+
+    //-----------------
+    /**
+     *  indicates whether the Latitude or Longitude was changed.
+     */
+    private boolean latLngChanged = false;
+
+
+    /**
+     *  sets the event to reflect that the Latitude or Longitude was changed
+     **/
+    public void setLatLngChanged() {
+        latLngChanged = true;
+    }
+
+
+    /**
+     *  returns whether the latitude or longitude was changed
+     *
+     * @return
+     */
+    public boolean getLatLngChanged() {
+        return latLngChanged;
     }
 
 //-----------------

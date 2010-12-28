@@ -1,6 +1,5 @@
 package jpo.dataModel;
 
-import jpo.*;
 import jpo.gui.LoadProgressGui;
 import java.io.*;
 import java.util.*;
@@ -14,7 +13,7 @@ import javax.xml.parsers.SAXParser;
 /*
 XmlReader.java:  class that reads the xml file
 
-Copyright (C) 2002 - 2009  Richard Eigenmann.
+Copyright (C) 2002 - 2010  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -170,6 +169,8 @@ public class XmlReader extends DefaultHandler {
             interpretChars = Settings.COPYRIGHT_HOLDER;
         } else if ( "ROTATION".equals( qName ) ) {
             interpretChars = Settings.ROTATION;
+        } else if ( "LATLNG".equals( qName ) ) {
+            interpretChars = Settings.LATLNG;
         } else if ( "checksum".equals( qName ) ) {
             interpretChars = Settings.CHECKSUM;
         } else if ( "categoryAssignment".equals( qName ) ) {
@@ -216,6 +217,8 @@ public class XmlReader extends DefaultHandler {
         } else if ( "ROTATION".equals( qName ) ) {
             //logger.info("ROTATION here");
             ( (PictureInfo) currentPicture.getUserObject() ).parseRotation();
+        } else if ( "LATLNG".equals( qName ) ) {
+            ( (PictureInfo) currentPicture.getUserObject() ).parseLatLng();
         } else if ( "checksum".equals( qName ) ) {
             //logger.info("CHECKSUM here");
             ( (PictureInfo) currentPicture.getUserObject() ).parseChecksum();
@@ -266,6 +269,9 @@ public class XmlReader extends DefaultHandler {
                 break;
             case Settings.ROTATION:
                 ( (PictureInfo) currentPicture.getUserObject() ).appendToRotation( s );
+                break;
+            case Settings.LATLNG:
+                ( (PictureInfo) currentPicture.getUserObject() ).appendToLatLng( s );
                 break;
             case Settings.CHECKSUM:
                 ( (PictureInfo) currentPicture.getUserObject() ).appendToChecksum( s );

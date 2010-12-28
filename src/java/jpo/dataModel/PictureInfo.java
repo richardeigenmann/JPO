@@ -1,5 +1,6 @@
 package jpo.dataModel;
 
+import java.awt.geom.Point2D;
 import java.net.*;
 import java.io.*;
 import java.util.*;
@@ -8,7 +9,7 @@ import java.util.logging.Logger;
 /*
 PictureInfo.java:  the definitions for picture data
 
-Copyright (C) 2002-2009  Richard Eigenmann.
+Copyright (C) 2002-2010  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -189,6 +190,12 @@ public class PictureInfo
             out.newLine();
         }
 
+        if ( latLng != null ) {
+            out.write( "\t<LATLNG>" + Double.toString( latLng.x ) + "x" + Double.toString( latLng.y ) + "</LATLNG>" );
+            out.newLine();
+        }
+
+
         if ( categoryAssignments != null ) {
             Iterator i = categoryAssignments.iterator();
             Integer assignment;
@@ -298,14 +305,16 @@ public class PictureInfo
     /**
      * returns the file handle to the highres picture.
      * @see	#getHighresURL()
-     * @return the highres location.
+     * @return the highres location or null if there is a failure
      */
     public File getHighresFile() {
         File returnFile;
         try {
             returnFile = new File( new URI( highresLocation ) );
+        } catch ( IllegalArgumentException x ) {
+            return null;
         } catch ( URISyntaxException x ) {
-            returnFile = null;
+            return null;
         }
         return returnFile;
     }
@@ -462,7 +471,7 @@ public class PictureInfo
     public void calculateChecksum() {
         URL pictureURL = getHighresURLOrNull();
         if ( pictureURL == null ) {
-            logger.severe( "PictureInfo.calculateChecksum din't get the URL. Aborting." );
+            logger.severe( "Aborting due to bad URL: " + getHighresLocation() );
             return;
         }
 
@@ -470,7 +479,7 @@ public class PictureInfo
         try {
             in = pictureURL.openStream();
         } catch ( IOException x ) {
-            logger.severe( "PictureInfo.calculateChecksum couldn't open URL. Aborting." );
+            logger.severe( String.format( "Couldn't open URL %s. Leaving Checksum unchanged.", pictureURL.toString() ) );
             return;
         }
 
@@ -1009,7 +1018,7 @@ public class PictureInfo
     public void parseRotation() {
         try {
             rotation = ( new Double( rotationString ) ).doubleValue();
-            rotationString = "";
+            rotationString = null;
         } catch ( NumberFormatException x ) {
             logger.info( "PictureInfo.appendToRotation: invalid rotation: " + rotationString + " on picture: " + getHighresFilename() + " --> Set to Zero" );
             rotation = 0;
@@ -1066,6 +1075,83 @@ public class PictureInfo
         if ( Settings.pictureCollection.getSendModelUpdates() ) {
             PictureInfoChangeEvent pce = new PictureInfoChangeEvent( this );
             pce.setRotationChanged();
+            sendPictureInfoChangedEvent( pce );
+            Settings.pictureCollection.setUnsavedUpdates();
+        }
+    }
+
+    //----------------------------------------
+    /**
+     *  The copyright holder of the image.
+     */
+    private Point2D.Double latLng;
+
+
+    /**
+     * Sets the Latitude and Longitude.
+     * @param newLatLng The latitude and longitude holder
+     */
+    public synchronized void setLatLng( Point2D.Double newLatLng ) {
+        if ( ( latLng == null ) || ( latLng.x != newLatLng.x ) || ( latLng.y != newLatLng.y ) ) {
+            latLng = newLatLng;
+            sendLatLngChangedEvent();
+        }
+    }
+
+    /**
+     *  Temporary variable to allow appending of characters as the XML file
+     *  is being read.
+     */
+    private String latLngString = "";
+
+
+    /**
+     * appends the text fragment to the latlng string.
+     * @param s The text fragment.
+     */
+    public synchronized void appendToLatLng( String s ) {
+        if ( s.length() > 0 ) {
+            latLngString = latLngString.concat( s );
+        }
+    }
+
+
+    /**
+     *  Converts the temporary latLngString to a LatLng Point.
+     */
+    public void parseLatLng() {
+        try {
+            String[] latLngArray = latLngString.split( "x" );
+            Double lat = ( new Double( latLngArray[0] ) ).doubleValue();
+            Double lng = ( new Double( latLngArray[1] ) ).doubleValue();
+            setLatLng( new Point2D.Double( lat, lng ) );
+            latLngString = null;
+        } catch ( NumberFormatException x ) {
+            logger.info( String.format( "Failed to parse string %s into latitude and longitude", latLngString ) );
+        }
+    }
+
+
+    /**
+     *  returns the Latitude and Longitude.
+     *  @return The Latitude and Longitude
+     */
+    public Point2D.Double getLatLng() {
+        if ( latLng == null ) {
+            setLatLng( new Point2D.Double( 0, 0 ) );
+        }
+        return latLng;
+    }
+
+
+    /**
+     *  Creates a PictureChangedEvent and sends it to inform listening
+     *  objects that the copyright holder was updated.
+     */
+    private void sendLatLngChangedEvent() {
+        if ( Settings.pictureCollection.getSendModelUpdates() ) {
+            PictureInfoChangeEvent pce = new PictureInfoChangeEvent( this );
+            pce.setLatLngChanged();
             sendPictureInfoChangedEvent( pce );
             Settings.pictureCollection.setUnsavedUpdates();
         }

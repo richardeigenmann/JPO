@@ -1,5 +1,6 @@
 package jpo.dataModel;
 
+import java.util.logging.Level;
 import jpo.gui.ThumbnailController;
 import jpo.gui.ThumbnailCreationQueue;
 import jpo.gui.ThumbnailQueueRequest;
@@ -761,8 +762,8 @@ public class SortableDefaultMutableTreeNode
 
 
     /**
-     *  Adds a new Group to the current node with the indicated description.
-     *  @param description
+     * Adds a new Group to the current node with the indicated description.
+     * @param description
      * @return  The new node is returned for convenience.
      */
     public SortableDefaultMutableTreeNode addGroupNode( String description ) {
@@ -775,13 +776,13 @@ public class SortableDefaultMutableTreeNode
 
 
     /**
-     *   Overriden method which will do the default behaviour and then sends a notification to
+     *   Override method which will do the default behaviour and then sends a notification to
      *   the Tree Model.
      * @param node
      * @param index
      */
     public void insert( SortableDefaultMutableTreeNode node, int index ) {
-        logger.fine( "insert was called for node: " + node.toString() );
+        logger.log( Level.FINE, "insert was called for node: {0}", node.toString());
         super.insert( node, index );
         getPictureCollection().setUnsavedUpdates();
         if ( getPictureCollection().getSendModelUpdates() ) {
@@ -823,7 +824,7 @@ public class SortableDefaultMutableTreeNode
         try {
             originalUrl = ( (PictureInfo) this.getUserObject() ).getHighresURL();
         } catch ( MalformedURLException x ) {
-            logger.info( "MarformedURLException trapped on: " + ( (PictureInfo) this.getUserObject() ).getHighresLocation() + "\nReason: " + x.getMessage() );
+            logger.log( Level.INFO, "MarformedURLException trapped on: {0}\nReason: {1}", new Object[]{((PictureInfo) this.getUserObject()).getHighresLocation(), x.getMessage()});
             JOptionPane.showMessageDialog(
                     Settings.anchorFrame,
                     "MarformedURLException trapped on: " + ( (PictureInfo) this.getUserObject() ).getHighresLocation() + "\nReason: " + x.getMessage(),

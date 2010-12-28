@@ -18,6 +18,7 @@
 
 			<table>
 				<tr><td colspan=2><b>Development Version 0.9</b></td></tr>
+				<tr><td valign="top">28.12.2010</td><td> Fixed the bug whereby selections were not moved to a move target</td></tr>
 				<tr><td valign="top">5.6.2010</td><td> Improved Reconcile Function</td></tr>
 				<tr><td valign="top">5.6.2010</td><td> Added Hover to JTree</td></tr>
 				<tr><td valign="top">4.6.2010</td><td> Fixed Export Collection bug</td></tr>
@@ -381,7 +382,7 @@
 			</table>
 
 			<hr>
-			<p>Last update to this page: 17 May 2010<br>
+			<p>Last update to this page: 28 Dec 2010<br>
 			Copyright 2003-2010 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
 		</td>
 	</tr>

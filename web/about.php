@@ -18,6 +18,7 @@
 
 			<h2 id="Thanks">Thanks</h2>
 			<ul>
+				<li><b>Jarno Elonen</b> for NanoHTTPD See: <a href="http://elonen.iki.fi/code/nanohttpd/">http://elonen.iki.fi/code/nanohttpd/</a></li>
 				<li><b>Mikael Grev</b> for the MiG Layoutk. See: <a href="http://miglayout.com">http://miglayout.com</a></li>
 				<li><b>Michael Rudolf</b> for the JWizz framework. See: <a href="http://javaprog.net/jwizz/">http://javaprog.net/jwizz/</a></li>
 				<li><b>Franklin He</b> for the Simplified and Traditional Chinese translations</li>
@@ -62,7 +63,7 @@
 			<p>The JWizz wizard classes are licensed under the FreeBSD license by Michael Rudolf. They are in an included .jar file and have not been modified.</p>
 
 			<hr>
-			<p>Last update to this page: 1.6.2010<br>
+			<p>Last update to this page: 21.10.2010<br>
 			Copyright 2003-2010 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
 		</td>
 	</tr>
