@@ -51,33 +51,28 @@ public class ConsolidateGroupJFrame
      *  The node from which to start the export
      */
     private SortableDefaultMutableTreeNode startNode;
-
     /**
      * Defines a logger for this class
      */
-    private static Logger logger = Logger.getLogger( ConsolidateGroupJFrame.class.getName() );
-
+    private static final Logger logger = Logger.getLogger( ConsolidateGroupJFrame.class.getName() );
     /**
      *  Chooser to pick the highres directory
      **/
-    private DirectoryChooser highresTargetDir =
+    private DirectoryChooser highresDirectoryChooser =
             new DirectoryChooser( Settings.jpoResources.getString( "highresTargetDirJTextField" ),
             DirectoryChooser.DIR_MUST_BE_WRITABLE );
-
     /**
      *  Chooser to pick the lowres directory
      **/
-    private DirectoryChooser lowresTargetDir =
+    private DirectoryChooser lowresDirectoryChooser =
             new DirectoryChooser( Settings.jpoResources.getString( "lowresTargetDirJTextField" ),
             DirectoryChooser.DIR_MUST_BE_WRITABLE );
-
     /**
      *  Tickbox that indicates whether pictures or the current group only
      *  should be consolidated or whether the subgroups (if any) should
      *  be included.
      **/
     private JCheckBox recurseSubgroupsJCheckBox = new JCheckBox( Settings.jpoResources.getString( "RecurseSubgroupsLabel" ) );
-
     /**
      *  Tickbox that indicates whether pictures or the current group only
      *  should be consolidated or whether the subgroups (if any) should
@@ -85,19 +80,19 @@ public class ConsolidateGroupJFrame
      **/
     private JCheckBox lowresJCheckBox = new JCheckBox( Settings.jpoResources.getString( "lowresJCheckBox" ) );
 
-
     /**
      *   Creates a GUI that allows the user to specify into which directory
      *   he or she would like images to be moved physically.
      *
      *   @param startNode  The group node that the user wants the consolidation to be done on.
+     *  TODO: make this use MIG Layout
      */
-    public ConsolidateGroupJFrame( SortableDefaultMutableTreeNode startNode ) {
+    public ConsolidateGroupJFrame ( SortableDefaultMutableTreeNode startNode ) {
         super( Settings.jpoResources.getString( "ConsolidateGroupJFrameHeading" ) );
         this.startNode = startNode;
 
         Object userObject = startNode.getUserObject();
-        if ( !( userObject instanceof GroupInfo ) ) {
+        if ( !(userObject instanceof GroupInfo) ) {
             logger.info( String.format( "Node %s is not a group", startNode.toString() ) );
             JOptionPane.showMessageDialog(
                     Settings.anchorFrame,
@@ -116,7 +111,7 @@ public class ConsolidateGroupJFrame
         addWindowListener( new WindowAdapter() {
 
             @Override
-            public void windowClosing( WindowEvent e ) {
+            public void windowClosing ( WindowEvent e ) {
                 getRid();
             }
         } );
@@ -152,7 +147,7 @@ public class ConsolidateGroupJFrame
         constraints.gridwidth = 1;
         constraints.weightx = 0.8;
         constraints.insets = new Insets( 4, 4, 4, 4 );
-        contentJPanel.add( highresTargetDir, constraints );
+        contentJPanel.add( highresDirectoryChooser, constraints );
 
 
 
@@ -187,7 +182,7 @@ public class ConsolidateGroupJFrame
         constraints.gridwidth = 1;
         constraints.weightx = 0.8;
         constraints.insets = new Insets( 4, 4, 4, 4 );
-        contentJPanel.add( lowresTargetDir, constraints );
+        contentJPanel.add( lowresDirectoryChooser, constraints );
 
 
         // create a JPanel for the buttons
@@ -222,62 +217,59 @@ public class ConsolidateGroupJFrame
         setVisible( true );
 
         // Add the behaviour
-        highresTargetDir.addChangeListener( new ChangeListener() {
+        highresDirectoryChooser.addChangeListener( new ChangeListener() {
 
-            public void stateChanged( ChangeEvent e ) {
+            public void stateChanged ( ChangeEvent e ) {
                 setLowresLocation();
             }
         } );
         lowresJCheckBox.addActionListener( new ActionListener() {
 
-            public void actionPerformed( ActionEvent e ) {
+            public void actionPerformed ( ActionEvent e ) {
                 setLowresLocation();
-                lowresTargetDir.setVisible( lowresJCheckBox.isSelected() );
+                lowresDirectoryChooser.setVisible( lowresJCheckBox.isSelected() );
                 targetLowresDirJLabel.setVisible( lowresJCheckBox.isSelected() );
             }
         } );
         consolidateJButton.addActionListener( new ActionListener() {
 
-            public void actionPerformed( ActionEvent e ) {
+            public void actionPerformed ( ActionEvent e ) {
                 consolidateToDirectory();
                 getRid();
             }
         } );
         cancelJButton.addActionListener( new ActionListener() {
 
-            public void actionPerformed( ActionEvent e ) {
+            public void actionPerformed ( ActionEvent e ) {
                 getRid();
             }
         } );
 
     }
 
-
     /**
      * This method sets the lowres location to the highres location with an additional /Lowres at the end.
      * It is typically invoked when the highres location changes.
      */
-    private void setLowresLocation() {
-        lowresTargetDir.setFile(
-                new File( highresTargetDir.getDirectory(), "/Lowres/" ) );
+    private void setLowresLocation () {
+        lowresDirectoryChooser.setFile(
+                new File( highresDirectoryChooser.getDirectory(), "/Lowres/" ) );
     }
 
-
     /**
-     * method that get's rid of this JFrame
+     * method that gets rid of this JFrame
      */
-    private void getRid() {
+    private void getRid () {
         setVisible( false );
         dispose();
     }
 
-
     /**
      *  method that outputs the selected group to a directory
      */
-    private void consolidateToDirectory() {
+    private void consolidateToDirectory () {
         Object userObject = startNode.getUserObject();
-        if ( !( userObject instanceof GroupInfo ) ) {
+        if ( !(userObject instanceof GroupInfo) ) {
             logger.info( String.format( "Node %s is not a group", startNode.toString() ) );
             JOptionPane.showMessageDialog(
                     Settings.anchorFrame,
@@ -289,14 +281,14 @@ public class ConsolidateGroupJFrame
 
 
 
-        File exportDirectory = highresTargetDir.getDirectory();
+        File highresDirectory = highresDirectoryChooser.getDirectory();
 
-        if ( !exportDirectory.exists() ) {
+        if ( !highresDirectory.exists() ) {
             try {
-                if ( !exportDirectory.mkdirs() ) {
+                if ( !highresDirectory.mkdirs() ) {
                     JOptionPane.showMessageDialog(
                             Settings.anchorFrame,
-                            String.format( Settings.jpoResources.getString( "ConsolidateCreateDirFailure" ), exportDirectory ),
+                            String.format( Settings.jpoResources.getString( "ConsolidateCreateDirFailure" ), highresDirectory ),
                             Settings.jpoResources.getString( "genericError" ),
                             JOptionPane.ERROR_MESSAGE );
                     return;
@@ -304,64 +296,66 @@ public class ConsolidateGroupJFrame
             } catch ( SecurityException e ) {
                 JOptionPane.showMessageDialog(
                         Settings.anchorFrame,
-                        String.format( Settings.jpoResources.getString( "ConsolidateCreateDirFailure" ), exportDirectory ),
+                        String.format( Settings.jpoResources.getString( "ConsolidateCreateDirFailure" ), highresDirectory ),
                         Settings.jpoResources.getString( "genericError" ),
                         JOptionPane.ERROR_MESSAGE );
-                logger.severe( String.format( "SecurityException when creating directory %s. Reason: %s", exportDirectory, e.getMessage() ) );
+                logger.severe( String.format( "SecurityException when creating directory %s. Reason: %s", highresDirectory, e.getMessage() ) );
                 return;
             }
         }
 
-        if ( !exportDirectory.canWrite() ) {
+        if ( !highresDirectory.canWrite() ) {
             JOptionPane.showMessageDialog(
                     Settings.anchorFrame,
-                    String.format( Settings.jpoResources.getString( "ConsolidateCantWrite" ), exportDirectory ),
+                    String.format( Settings.jpoResources.getString( "ConsolidateCantWrite" ), highresDirectory ),
                     Settings.jpoResources.getString( "genericError" ),
                     JOptionPane.ERROR_MESSAGE );
             return;
         }
 
 
-        File lowresDirectory = lowresTargetDir.getDirectory();
-
-        if ( ( lowresJCheckBox.isSelected() ) && ( !lowresDirectory.exists() ) ) {
-            try {
-                if ( !lowresDirectory.mkdirs() ) {
+        File lowresDirectory = null;
+        if ( lowresJCheckBox.isSelected() ) {
+            lowresDirectory = lowresDirectoryChooser.getDirectory();
+            if ( !lowresDirectory.exists() ) {
+                try {
+                    if ( !lowresDirectory.mkdirs() ) {
+                        JOptionPane.showMessageDialog(
+                                Settings.anchorFrame,
+                                String.format( Settings.jpoResources.getString( "ConsolidateCreateDirFailure" ), lowresDirectory ),
+                                Settings.jpoResources.getString( "genericError" ),
+                                JOptionPane.ERROR_MESSAGE );
+                        return;
+                    }
+                } catch ( SecurityException e ) {
                     JOptionPane.showMessageDialog(
                             Settings.anchorFrame,
                             String.format( Settings.jpoResources.getString( "ConsolidateCreateDirFailure" ), lowresDirectory ),
                             Settings.jpoResources.getString( "genericError" ),
                             JOptionPane.ERROR_MESSAGE );
-                    return;
+                    logger.severe( String.format( "SecurityException when creating directory %s. Reason: %s", lowresDirectory, e.getMessage() ) );
                 }
-            } catch ( SecurityException e ) {
+            }
+
+            if ( !lowresDirectory.canWrite() ) {
                 JOptionPane.showMessageDialog(
                         Settings.anchorFrame,
-                        String.format( Settings.jpoResources.getString( "ConsolidateCreateDirFailure" ), lowresDirectory ),
+                        String.format( Settings.jpoResources.getString( "ConsolidateCantWrite" ), lowresDirectory ),
                         Settings.jpoResources.getString( "genericError" ),
                         JOptionPane.ERROR_MESSAGE );
-                logger.severe( String.format( "SecurityException when creating directory %s. Reason: %s", lowresDirectory, e.getMessage() ) );
+                return;
             }
-        }
-
-        if ( !lowresDirectory.canWrite() ) {
-            JOptionPane.showMessageDialog(
-                    Settings.anchorFrame,
-                    String.format( Settings.jpoResources.getString( "ConsolidateCantWrite" ), lowresDirectory ),
-                    Settings.jpoResources.getString( "genericError" ),
-                    JOptionPane.ERROR_MESSAGE );
-            return;
         }
 
 
 
         new ConsolidateGroup(
-                exportDirectory,
+                highresDirectory,
                 startNode,
                 recurseSubgroupsJCheckBox.isSelected(),
                 lowresJCheckBox.isSelected(),
                 lowresDirectory );
-        Settings.memorizeCopyLocation( exportDirectory.toString() );
+        Settings.memorizeCopyLocation( highresDirectory.toString() );
 
     }
-} 
+}

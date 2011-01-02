@@ -47,7 +47,7 @@ public class SortableDefaultMutableTreeNode
     /**
      * Defines a logger for this class
      */
-    private static Logger logger = Logger.getLogger( SortableDefaultMutableTreeNode.class.getName() );
+    private static final Logger logger = Logger.getLogger( SortableDefaultMutableTreeNode.class.getName() );
 
 
     /**
@@ -352,15 +352,15 @@ public class SortableDefaultMutableTreeNode
             Object o = t.getTransferData( JpoTransferable.jpoNodeFlavor );
             arrayOfNodes = (Object[]) o;
         } catch ( java.awt.datatransfer.UnsupportedFlavorException x ) {
-            logger.info( "SDMTN.executeDrop caught an UnsupportedFlavorException: message: " + x.getMessage() );
+            logger.info( x.getMessage() );
             event.dropComplete( false );
             return;
         } catch ( java.io.IOException x ) {
-            logger.info( "SDMTN.executeDrop caught an IOException: message: " + x.getMessage() );
+            logger.info(  x.getMessage() );
             event.dropComplete( false );
             return;
         } catch ( ClassCastException x ) {
-            logger.info( "SDMTN.executeDrop caught an ClassCastException: message: " + x.getMessage() );
+            logger.info( x.getMessage() );
             event.dropComplete( false );
             return;
         }
@@ -1190,7 +1190,7 @@ public class SortableDefaultMutableTreeNode
                     boolean a = copyAddPictures1( addFile.listFiles(), targetDir, subNode, progGui, newOnly, retainDirectories, selectedCategories );
                     picturesAdded = a || picturesAdded;
                 } else {
-                    logger.info( "SDMTN.copyAddPictures: no pictures in directory " + addFile.toString() );
+                    logger.info( "No pictures in directory " + addFile.toString() );
                 }
             }
         }
@@ -1361,7 +1361,7 @@ public class SortableDefaultMutableTreeNode
                     boolean a = copyAddPictures1( addFile.listFiles(), targetDir, subNode, progGui, cam, retainDirectories, selectedCategories );
                     picturesAdded = a || picturesAdded;
                 } else {
-                    logger.info( "SDMTN.copyAddPictures: no pictures in directory " + addFile.toString() );
+                    logger.info( "No pictures in directory " + addFile.toString() );
                 }
             }
         }
@@ -1372,7 +1372,7 @@ public class SortableDefaultMutableTreeNode
     /**
      *  Creates and add a new picture node to the current node from an image file.
      *
-     *  @param  addFile  the file of the pircute that should be added
+     *  @param  addFile  the file of the picture that should be added
      *  @param  newOnly flag whether to check if the picture is in the collection already; if true will only add the picture if its not yet included
      *  @param selectedCategories
      * @return  true if the node was added, false if not.
@@ -1453,7 +1453,7 @@ public class SortableDefaultMutableTreeNode
      * have been detected in the TreeModelListener delivered TreeModelEvent.
      * @param  affectedNode  The node to check whether it is or is a descendent of the deleted node.
      * @param  e the TreenModelEvent that was detected
-     * @return tue if successful, false if not
+     * @return true if successful, false if not
      */
     public static boolean wasNodeDeleted(
             SortableDefaultMutableTreeNode affectedNode, TreeModelEvent e ) {

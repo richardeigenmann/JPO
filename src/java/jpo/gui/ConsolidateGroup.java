@@ -8,7 +8,6 @@ import jpo.dataModel.SortableDefaultMutableTreeNode;
 import jpo.dataModel.PictureInfo;
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.util.Enumeration;
 import java.util.logging.Logger;
 import javax.swing.SwingWorker;
@@ -40,17 +39,17 @@ public class ConsolidateGroup
     /**
      * Defines a logger for this class
      */
-    private static Logger logger = Logger.getLogger( ConsolidateGroup.class.getName() );
+    private static final Logger logger = Logger.getLogger( ConsolidateGroup.class.getName() );
 
     /**
      *  the directory where the pictures are to be moved to
      */
-    private File targetDirectory;
+    private File targetDirectoryHighres;
 
     /**
      *  the directory where the lowres pictures are to be moved to
      */
-    private File targetLowresDirectory;
+    private File targetDirectoryLowres;
 
     /**
      *  the node to start from
@@ -71,36 +70,36 @@ public class ConsolidateGroup
     /**
      *  Creates a Thread which runs the consolidation.
      *
-     *  @param targetDirectory	Where we want the files moved to
+     *  @param targetDirectoryHighres	Where we want the files moved to
      *  @param startNode		The node from which this is all to be built.
-     *  @param recurseGroups	Flag indicating subgroups should be included
+     *  @param recurseGroups            Flag indicating subgroups should be included
      *  @param moveLowres		Flag indication that Lowres should be moved too
-     *  @param targetLowresDirectory  Where to move the lowres files to. Only used if the moveLowres flag is true
+     *  @param targetDirectoryLowres    Where to move the lowres files to. Only used if the moveLowres flag is true
      */
-    public ConsolidateGroup( File targetDirectory,
+    public ConsolidateGroup( File targetDirectoryHighres,
             SortableDefaultMutableTreeNode startNode, boolean recurseGroups,
-            boolean moveLowres, File targetLowresDirectory ) {
-        this.targetDirectory = targetDirectory;
+            boolean moveLowres, File targetDirectoryLowres ) {
+        this.targetDirectoryHighres = targetDirectoryHighres;
         this.startNode = startNode;
         this.recurseGroups = recurseGroups;
         this.moveLowres = moveLowres;
-        this.targetLowresDirectory = targetLowresDirectory;
+        this.targetDirectoryLowres = targetDirectoryLowres;
 
 
-        if ( !targetDirectory.exists() ) {
-            logger.severe( String.format( "Aborting because target directory %s doesn't exist", targetDirectory.getPath() ) );
+        if ( !targetDirectoryHighres.exists() ) {
+            logger.severe( String.format( "Aborting because target directory %s doesn't exist", targetDirectoryHighres.getPath() ) );
             return;
         }
-        if ( !targetDirectory.canWrite() ) {
-            logger.severe( String.format( "Aborting because directory %s can't be written to", targetDirectory.getPath() ) );
+        if ( !targetDirectoryHighres.canWrite() ) {
+            logger.severe( String.format( "Aborting because directory %s can't be written to", targetDirectoryHighres.getPath() ) );
             return;
         }
-        if ( moveLowres && ( !targetLowresDirectory.exists() ) ) {
-            logger.info( String.format( "Aborting because lowres target directory %s doesn't exist", targetLowresDirectory.getPath() ) );
+        if ( moveLowres && ( !targetDirectoryLowres.exists() ) ) {
+            logger.info( String.format( "Aborting because lowres target directory %s doesn't exist", targetDirectoryLowres.getPath() ) );
             return;
         }
-        if ( moveLowres && ( !targetLowresDirectory.canWrite() ) ) {
-            logger.info( String.format( "Aborting because lowres target directory %s can't be written to", targetLowresDirectory.getPath() ) );
+        if ( moveLowres && ( !targetDirectoryLowres.canWrite() ) ) {
+            logger.info( String.format( "Aborting because lowres target directory %s can't be written to", targetDirectoryLowres.getPath() ) );
             return;
         }
 
@@ -148,7 +147,7 @@ public class ConsolidateGroup
      *  This method consolidates all the nodes of the supplied group.
      *
      *  @param  groupNode  the Group whose nodes are to be consolidated.
-     *  @return  True if ok, false if a problem occured.
+     *  @return  True if OK, false if a problem occurred.
      */
     private boolean consolidateGroup( SortableDefaultMutableTreeNode groupNode ) {
         Object userObject = groupNode.getUserObject();
@@ -207,23 +206,23 @@ public class ConsolidateGroup
         try {
             File oldFile = p.getHighresFile();
             if ( oldFile == null ) {
-                logger.info( "ConsolidateGroupTread.moveHighresPicture: FAILED: can only move picture Files. " + p.getHighresLocation() );
+                logger.info( "FAILED: can only move picture Files. " + p.getHighresLocation() );
                 return false;
             }
 
             File oldFileParent = p.getHighresFile().getParentFile();
-            if ( ( oldFileParent != null ) && ( oldFileParent.equals( targetDirectory ) ) ) {
+            if ( ( oldFileParent != null ) && ( oldFileParent.equals( targetDirectoryHighres ) ) ) {
                 //logger.info( "ConsolidateGroup.moveHighresPicture: path is identical (" + oldFileParent.toString() + "==" + p.getHighresFile().getParentFile().toString() + ") . Not Moving Picture: " + p.getHighresLocation() );
                 return true;
             }
 
             //newFile = Tools.inventPicURL( targetDirectory, p.getHighresFilename() );
-            File newFile = Tools.inventPicFilename( targetDirectory, p.getHighresFilename() );
+            File newFile = Tools.inventPicFilename( targetDirectoryHighres, p.getHighresFilename() );
             //logger.info( "ConsolidateGroupTread.moveHighresPicture: returned URL: " + newFile );
             if ( Tools.moveFile( oldFile, newFile ) ) {
                 return true;
             } else {
-                logger.info( "ConsolidateGroupThread.moveHighresPicture: failed to move " + oldFile.toString() + " to " + newFile.toString() );
+                logger.info( "Failed to move " + oldFile.toString() + " to " + newFile.toString() );
                 return false;
             }
 
@@ -261,8 +260,8 @@ public class ConsolidateGroup
             File oldFileParent = oldFile.getParentFile();
 
             //URL newFileUrl = Tools.inventPicURL( targetLowresDirectory, oldFile.getName() );
-            File newFile = Tools.inventPicFilename( targetLowresDirectory, oldFile.getName() );
-            if ( ( oldFileParent != null ) && ( oldFileParent.equals( targetLowresDirectory ) ) ) {
+            File newFile = Tools.inventPicFilename( targetDirectoryLowres, oldFile.getName() );
+            if ( ( oldFileParent != null ) && ( oldFileParent.equals( targetDirectoryLowres ) ) ) {
                 return true;
             }
 
