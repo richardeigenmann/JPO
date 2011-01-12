@@ -20,7 +20,7 @@ import javax.swing.*;
 /*
 SettingsDialog.java:  the class that provides a GUI for the settings
 
-Copyright (C) 2002-2009  Richard Eigenmann, Zürich, Switzerland
+Copyright (C) 2002-2011  Richard Eigenmann, Zürich, Switzerland
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -45,202 +45,165 @@ public class SettingsDialog
     /**
      * Defines a logger for this class
      */
-    private static Logger logger = Logger.getLogger( SettingsDialog.class.getName() );
-
+    private static final Logger logger = Logger.getLogger( SettingsDialog.class.getName() );
     /**
      *   field that allows the user to capture the file that should be automatically loaded
      */
     private JTextField autoLoadJTextField = new JTextField();
-
     /**
      *  tickbox that indicates where status information should be written to the log
      */
     private JCheckBox logfileJCheckBox = new JCheckBox();
-
     /**
      *   field that allows the user to specify where the logs should be written to
      */
     private JTextField logfileJTextField = new JTextField();
-
     /**
      *  checkbox to indicate that JPO should be maximised on startup
      */
     private JCheckBox maximiseJpoOnStartupJCheckBox = new JCheckBox();
-
     /**
      *  Dropdown to indicate what preference the user has for JPO startup
      */
     private final JComboBox startupSizeDropdown = new JComboBox();
-
     /**
      *  Dropdown to indicate the preferred size of the viewer window
      */
     private final JComboBox viewerSizeDropdown = new JComboBox();
-
     /**
      *  checkbox to indicate that the screen position should be saved upon exit.
      */
     private JCheckBox saveSizeJCheckBox = new JCheckBox();
-
     /**
      *   maximum number of pictures to cache
      */
     private WholeNumberField maxCacheJTextField = new WholeNumberField( 0, 4 );
-
     /**
      *   x coordinates of top left corner of main window
      */
     private WholeNumberField mainX = new WholeNumberField( 0, 6 );
-
     /**
      *   y coordinates of top left corner of main window
      */
     private WholeNumberField mainY = new WholeNumberField( 0, 6 );
-
     /**
      *   width of specific size window
      */
     private WholeNumberField mainWidth = new WholeNumberField( 0, 6 );
-
     /**
      *   height of specific size window
      */
     private WholeNumberField mainHeight = new WholeNumberField( 0, 6 );
-
     /**
      *   x coordinates of top left corner of main window
      */
     private WholeNumberField pictureX = new WholeNumberField( 0, 6 );
-
     /**
      *   y coordinates of top left corner of main window
      */
     private WholeNumberField pictureY = new WholeNumberField( 0, 6 );
-
     /**
      *   width of specific size window
      */
     private WholeNumberField pictureWidth = new WholeNumberField( 0, 6 );
-
     /**
      *   height of specific size window
      */
     private WholeNumberField pictureHeight = new WholeNumberField( 0, 6 );
-
     /**
      *   maximum size of picture
      */
     private WholeNumberField maximumPictureSizeJTextField = new WholeNumberField( 0, 6 );
-
     /**
      *  checkbox that indicates whether small images should be enlarged
      */
     private JCheckBox dontEnlargeJCheckBox = new JCheckBox( Settings.jpoResources.getString( "dontEnlargeJCheckBoxLabel" ) );
-
     /**
      *  tickbox that indicates whether to scale the thumbnails quickly
      */
     private JCheckBox pictureViewerFastScaleJCheckBox = new JCheckBox( Settings.jpoResources.getString( "pictureViewerFastScale" ) );
-
     /**
      *   fields that allows the user to capture the path for the thumbnails
      */
     private DirectoryChooser thumbnailPathChooser = new DirectoryChooser( Settings.jpoResources.getString( "genericSelectText" ),
             DirectoryChooser.DIR_MUST_BE_WRITABLE );
-
     /**
      *  tickbox that indicates whether thumbnails should be written to disk
      */
     private JCheckBox keepThumbnailsJCheckBox = new JCheckBox( Settings.jpoResources.getString( "keepThumbnailsJCheckBoxLabel" ) );
-
     /**
      *     field that allows the user to capture the maximum number of thumbnails to be displayed
      */
     private WholeNumberField maxThumbnails = new WholeNumberField( 0, 4 );
-
     /**
      *   fields that allows the user to capture the desired size of thumbnails
      */
     private WholeNumberField thumbnailSize = new WholeNumberField( 0, 6 );
-
     /**
      *  slider that allows the quality of the jpg's to be specified
      * Should this really be the same as the HTLM Quality Field?
      */
     private JSlider jpgQualityJSlider = new JSlider( JSlider.HORIZONTAL,
-            0, 100, (int) ( Settings.defaultHtmlLowresQuality * 100 ) );
-
+            0, 100, (int) (Settings.defaultHtmlLowresQuality * 100) );
     /**
      *  tickbox that indicates whether to scale the thumbnails quickly
      */
     private JCheckBox thumbnailFastScaleJCheckBox = new JCheckBox( Settings.jpoResources.getString( "thumbnailFastScale" ) );
-
     /**
      *   Text Filed that holds the first user Function
      */
     private JTextField userFunction1NameJTextField = new JTextField();
-
     /**
      *   Text Filed that holds the second user Function
      */
     private JTextField userFunction2NameJTextField = new JTextField();
-
     /**
      *   Text Filed that holds the third user Function
      */
     private JTextField userFunction3NameJTextField = new JTextField();
-
     /**
      *   Text Filed that holds the first user Function
      */
     private JTextField userFunction1CmdJTextField = new JTextField();
-
     /**
      *   Text Filed that holds the second user Function
      */
     private JTextField userFunction2CmdJTextField = new JTextField();
-
     /**
      *   Text Filed that holds the third user Function
      */
     private JTextField userFunction3CmdJTextField = new JTextField();
-
     /**
      *  Drop down box that shows the languages
      */
     private JComboBox languageJComboBox = new JComboBox( Settings.supportedLanguages );
-
     /**
      *   Text Field that holds the address of the email server
      */
     private JTextField emailServerJTextField = new JTextField();
-
     /**
      *   Text Field that holds the port of the email server
      */
     private JTextField emailPortJTextField = new JTextField();
-
     /**
      * Combobox that holds the type of authentication.
      */
     private JComboBox authenticationJComboBox = new JComboBox();
-
     /**
      *   Text Field that holds the user for the email server
      */
     private JTextField emailUserJTextField = new JTextField();
-
     /**
      *   Text Field that holds the password for the email server
      */
-    private JTextField emailPasswordJTextField = new JTextField();
-
+    //private JTextField emailPasswordJTextField = new JTextField();
+    private JPasswordField emailPasswordJTextField = new JPasswordField();
 
     /**
      *   Constructor to create the GUI that allows modification of the settings
      * @param modal
      */
-    public SettingsDialog( boolean modal ) {
+    public SettingsDialog ( boolean modal ) {
         super( Settings.anchorFrame, modal );
         initComponents();
         initValues();
@@ -249,11 +212,10 @@ public class SettingsDialog
         setVisible( true );
     }
 
-
     /**
      *   Create the GUI elements
      */
-    private void initComponents() {
+    private void initComponents () {
         setTitle( Settings.jpoResources.getString( "settingsDialogTitle" ) );
         GridBagConstraints c = new GridBagConstraints();
         c.anchor = GridBagConstraints.NORTHWEST;
@@ -293,7 +255,7 @@ public class SettingsDialog
         browserWindowSettingsJPanel.add( startupSizeDropdown, c );
         startupSizeDropdown.addActionListener( new ActionListener() {
 
-            public void actionPerformed( ActionEvent e ) {
+            public void actionPerformed ( ActionEvent e ) {
                 if ( startupSizeDropdown.getSelectedIndex() == 0 ) {
                     Settings.anchorFrame.setExtendedState( Frame.MAXIMIZED_BOTH );
                 } else {
@@ -344,63 +306,12 @@ public class SettingsDialog
         autoLoadJButton.setMaximumSize( Settings.threeDotButtonSize );
         autoLoadJButton.addActionListener( new ActionListener() {
 
-            public void actionPerformed( ActionEvent e ) {
+            public void actionPerformed ( ActionEvent e ) {
                 autoLoadChooser();
             }
         } );
         browserWindowSettingsJPanel.add( autoLoadJButton, c );
         // End of Autoload stuff
-
-
-
-        /*
-        c.gridx = 0; c.gridy ++;
-        c.gridwidth = 2;
-        maximiseJpoOnStartupJCheckBox.setText( Settings.jpoResources.getString("maximiseJpoOnStartupJCheckBoxLabel") );
-        browserWindowSettingsJPanel.add( maximiseJpoOnStartupJCheckBox, c );
-
-        c.gridx = 0; c.gridy ++;
-        c.gridwidth = 2;
-        saveSizeJCheckBox.setText( Settings.jpoResources.getString("saveSizeJCheckBoxLabel") );
-        browserWindowSettingsJPanel.add( saveSizeJCheckBox, c );
-
-        c.gridx = 0; c.gridy ++;
-        JLabel mainCoordsJLabel = new JLabel( Settings.jpoResources.getString("MainCoordinates") );
-        browserWindowSettingsJPanel.add( mainCoordsJLabel, c );
-
-        c.gridx = 0; c.gridy ++;
-        c.gridwidth = 1;
-        mainX.setPreferredSize( Settings.shortNumberPreferredSize );
-        mainX.setMinimumSize( Settings.shortNumberMinimumSize );
-        mainX.setMaximumSize( Settings.shortNumberMaximumSize );
-        browserWindowSettingsJPanel.add( mainX, c );
-
-        c.gridx++;
-        mainY.setPreferredSize( Settings.shortNumberPreferredSize );
-        mainY.setMinimumSize( Settings.shortNumberMinimumSize );
-        mainY.setMaximumSize( Settings.shortNumberMaximumSize );
-        browserWindowSettingsJPanel.add( mainY, c );
-
-        c.gridx = 0; c.gridy ++;
-        c.gridwidth = 2;
-        JLabel mainSizeJLabel = new JLabel( Settings.jpoResources.getString("MainSize") );
-        browserWindowSettingsJPanel.add( mainSizeJLabel, c );
-
-        c.gridx = 0; c.gridy ++;
-        c.gridwidth = 1;
-        mainWidth.setPreferredSize( Settings.shortNumberPreferredSize );
-        mainWidth.setMinimumSize( Settings.shortNumberMinimumSize );
-        mainWidth.setMaximumSize( Settings.shortNumberMaximumSize );
-        browserWindowSettingsJPanel.add( mainWidth, c );
-
-        c.gridx++;
-        c.gridwidth = 1;
-        mainHeight.setPreferredSize( Settings.shortNumberPreferredSize );
-        mainHeight.setMinimumSize( Settings.shortNumberMinimumSize );
-        mainHeight.setMaximumSize( Settings.shortNumberMaximumSize );
-        browserWindowSettingsJPanel.add( mainHeight, c );
-         */
-
 
 
         // set up the pictureViewerJPanel
@@ -480,7 +391,7 @@ public class SettingsDialog
         JButton zapThumbnailsJButton = new JButton( Settings.jpoResources.getString( "zapThumbnails" ) );
         zapThumbnailsJButton.addActionListener( new ActionListener() {
 
-            public void actionPerformed( ActionEvent e ) {
+            public void actionPerformed ( ActionEvent e ) {
                 zapThumbnails();
             }
         } );
@@ -662,7 +573,7 @@ public class SettingsDialog
         predefinedEmailJComboBox.addItem( "Other" );
         predefinedEmailJComboBox.addActionListener( new ActionListener() {
 
-            public void actionPerformed( ActionEvent e ) {
+            public void actionPerformed ( ActionEvent e ) {
                 JComboBox cb = (JComboBox) e.getSource();
                 String cbSelection = (String) cb.getSelectedItem();
                 if ( cbSelection.equals( "Localhost" ) ) {
@@ -718,7 +629,8 @@ public class SettingsDialog
 
         final JLabel userNameJLabel = new JLabel( Settings.jpoResources.getString( "emailUserJLabel" ) );
         final JLabel passwordJLabel = new JLabel( Settings.jpoResources.getString( "emailPasswordJLabel" ) );
-
+        final JLabel showPasswordLabel = new JLabel();
+        final JButton showPasswordButton = new JButton( Settings.jpoResources.getString( "emailShowPasswordButton" ) );
 
         c.gridx = 0;
         c.gridy++;
@@ -730,7 +642,7 @@ public class SettingsDialog
         authenticationJComboBox.addItem( "SSL" );
         authenticationJComboBox.addActionListener( new ActionListener() {
 
-            public void actionPerformed( ActionEvent e ) {
+            public void actionPerformed ( ActionEvent e ) {
                 JComboBox cb = (JComboBox) e.getSource();
                 String cbSelection = (String) cb.getSelectedItem();
                 if ( cbSelection.equals( "None" ) ) {
@@ -740,16 +652,22 @@ public class SettingsDialog
                     emailPasswordJTextField.setText( "" );
                     passwordJLabel.setVisible( false );
                     emailPasswordJTextField.setVisible( false );
+                    showPasswordButton.setVisible( false );
+                    showPasswordLabel.setVisible( false );
                 } else if ( cbSelection.equals( "Password" ) ) {
                     userNameJLabel.setVisible( true );
                     emailUserJTextField.setVisible( true );
                     passwordJLabel.setVisible( true );
                     emailPasswordJTextField.setVisible( true );
+                    showPasswordButton.setVisible( true );
+                    showPasswordLabel.setVisible( true );
                 } else if ( cbSelection.equals( "SSL" ) ) {
                     userNameJLabel.setVisible( true );
                     emailUserJTextField.setVisible( true );
                     passwordJLabel.setVisible( true );
                     emailPasswordJTextField.setVisible( true );
+                    showPasswordButton.setVisible( true );
+                    showPasswordLabel.setVisible( true );
                 }
 
             }
@@ -776,6 +694,19 @@ public class SettingsDialog
         emailPasswordJTextField.setMaximumSize( Settings.textfieldMaximumSize );
         emailJPanel.add( emailPasswordJTextField, c );
 
+        showPasswordButton.addActionListener( new ActionListener() {
+
+            public void actionPerformed ( ActionEvent ae ) {
+                showPasswordLabel.setText( new String( emailPasswordJTextField.getPassword() ) );
+            }
+        } );
+
+        c.gridx = 0;
+        c.gridy++;
+        emailJPanel.add( showPasswordButton, c );
+        c.gridx++;
+        emailJPanel.add( showPasswordLabel, c );
+
 
 
         // Debug Panel
@@ -792,7 +723,7 @@ public class SettingsDialog
         final JButton logfileJButton = new JButton( Settings.jpoResources.getString( "threeDotText" ) );
         logfileJCheckBox.addActionListener( new ActionListener() {
 
-            public void actionPerformed( ActionEvent e ) {
+            public void actionPerformed ( ActionEvent e ) {
                 logfileJLabel.setVisible( logfileJCheckBox.isSelected() );
                 logfileJTextField.setVisible( logfileJCheckBox.isSelected() );
                 logfileJButton.setVisible( logfileJCheckBox.isSelected() );
@@ -822,7 +753,7 @@ public class SettingsDialog
         logfileJButton.setMaximumSize( Settings.threeDotButtonSize );
         logfileJButton.addActionListener( new ActionListener() {
 
-            public void actionPerformed( ActionEvent e ) {
+            public void actionPerformed ( ActionEvent e ) {
                 logfileChooser();
             }
         } );
@@ -837,7 +768,7 @@ public class SettingsDialog
         JButton screenSizeTestButton = new JButton( "Window Resize Test" );
         screenSizeTestButton.addActionListener( new ActionListener() {
 
-            public void actionPerformed( ActionEvent e ) {
+            public void actionPerformed ( ActionEvent e ) {
                 getRid(); // the dialog is modal and would prevent us using the frame
                 new ResizableJFrameTest();
             }
@@ -866,7 +797,7 @@ public class SettingsDialog
         getContentPane().add( tp, BorderLayout.NORTH );
 
         /**
-         *   contrainer to neatly group the 2 buttons
+         *   container to neatly group the 2 buttons
          */
         Container buttonContainer = new Container();
 
@@ -879,7 +810,7 @@ public class SettingsDialog
         saveButton.setBorder( BorderFactory.createRaisedBevelBorder() );
         saveButton.addActionListener( new ActionListener() {
 
-            public void actionPerformed( ActionEvent e ) {
+            public void actionPerformed ( ActionEvent e ) {
                 consistencyCheck();
                 writeValues();
                 Settings.writeSettings();
@@ -895,7 +826,7 @@ public class SettingsDialog
         cancelButton.setBorder( BorderFactory.createRaisedBevelBorder() );
         cancelButton.addActionListener( new ActionListener() {
 
-            public void actionPerformed( ActionEvent e ) {
+            public void actionPerformed ( ActionEvent e ) {
                 getRid();
             }
         } );
@@ -909,18 +840,17 @@ public class SettingsDialog
         addWindowListener( new WindowAdapter() {
 
             @Override
-            public void windowClosing( WindowEvent evt ) {
+            public void windowClosing ( WindowEvent evt ) {
                 getRid();
             }
         } );
     }
 
-
     /**
      *   This method sets up the GUI fields according to what the
      *   Settings object's values are
      */
-    private void initValues() {
+    private void initValues () {
         for ( int i = 0; i < Settings.supportedLanguages.length; i++ ) {
             if ( Settings.getCurrentLocale().equals( Settings.supportedLocale[i] ) ) {
                 languageJComboBox.setSelectedIndex( i );
@@ -943,7 +873,7 @@ public class SettingsDialog
         maxThumbnails.setValue( Settings.maxThumbnails );
         thumbnailSize.setValue( Settings.thumbnailSize );
         keepThumbnailsJCheckBox.setSelected( Settings.keepThumbnails );
-        jpgQualityJSlider.setValue( (int) ( Settings.defaultHtmlLowresQuality * 100 ) );
+        jpgQualityJSlider.setValue( (int) (Settings.defaultHtmlLowresQuality * 100) );
         thumbnailFastScaleJCheckBox.setSelected( Settings.thumbnailFastScale );
 
         userFunction1NameJTextField.setText( Settings.userFunctionNames[0] );
@@ -966,13 +896,12 @@ public class SettingsDialog
         checkAutoLoad( autoLoadJTextField.getText() );
     }
 
-
     /**
      * returns the index for the size dropdowns based on the supplied parameters.
      * @param maximise  whether the index should be maximised
      * @param targetDimension  the target size of the window
      */
-    private static int findSizeIndex( boolean maximise,
+    private static int findSizeIndex ( boolean maximise,
             Dimension targetDimension ) {
         if ( maximise ) {
             return 0;
@@ -990,12 +919,11 @@ public class SettingsDialog
         }
     }
 
-
     /**
      *   This method checks that the values all make sense and adjusts them if not.
      */
-    private void consistencyCheck() {
-        if ( ( !checkLogfile( logfileJTextField.getText() ) ) && logfileJCheckBox.isSelected() ) {
+    private void consistencyCheck () {
+        if ( (!checkLogfile( logfileJTextField.getText() )) && logfileJCheckBox.isSelected() ) {
             // disable logging if logfile is not in order
             JOptionPane.showMessageDialog( Settings.anchorFrame,
                     Settings.jpoResources.getString( "generalLogFileError" ),
@@ -1005,7 +933,7 @@ public class SettingsDialog
         }
 
 
-        if ( ( !thumbnailPathChooser.setColor() ) ) { // TODO: This seems very odd
+        if ( (!thumbnailPathChooser.setColor()) ) { // TODO: This seems very odd
             JOptionPane.showMessageDialog( Settings.anchorFrame,
                     Settings.jpoResources.getString( "thumbnailDirError" ),
                     Settings.jpoResources.getString( "settingsError" ),
@@ -1014,11 +942,10 @@ public class SettingsDialog
         }
     }
 
-
     /**
      *   This method writes the values in the GUI widgets into the Settings object.
      */
-    private void writeValues() {
+    private void writeValues () {
         Settings.setLocale( Settings.supportedLocale[languageJComboBox.getSelectedIndex()] );
 
         Settings.autoLoad = autoLoadJTextField.getText();
@@ -1051,7 +978,7 @@ public class SettingsDialog
         Settings.thumbnailPath = thumbnailPathChooser.getDirectory();
         Settings.keepThumbnails = keepThumbnailsJCheckBox.isSelected();
 
-        if ( ( !Settings.thumbnailPath.exists() ) && Settings.keepThumbnails ) {
+        if ( (!Settings.thumbnailPath.exists()) && Settings.keepThumbnails ) {
             if ( !Settings.thumbnailPath.mkdirs() ) {
                 logger.severe( String.format( "Could not create directory: %s", Settings.thumbnailPath.toString() ) );
             }
@@ -1059,7 +986,7 @@ public class SettingsDialog
 
         Settings.maxThumbnails = maxThumbnails.getValue();
         Settings.thumbnailSize = thumbnailSize.getValue();
-        Settings.defaultHtmlLowresQuality = ( (float) jpgQualityJSlider.getValue() ) / 100;
+        Settings.defaultHtmlLowresQuality = ((float) jpgQualityJSlider.getValue()) / 100;
         Settings.thumbnailFastScale = thumbnailFastScaleJCheckBox.isSelected();
 
         Settings.userFunctionNames[0] = userFunction1NameJTextField.getText();
@@ -1075,12 +1002,12 @@ public class SettingsDialog
         Settings.emailPort = emailPortJTextField.getText();
         Settings.emailAuthentication = authenticationJComboBox.getSelectedIndex();
         Settings.emailUser = emailUserJTextField.getText();
-        Settings.emailPassword = emailPasswordJTextField.getText();
+        //Settings.emailPassword = emailPasswordJTextField.getText();
+        Settings.emailPassword = new String( emailPasswordJTextField.getPassword() );
 
         Settings.validateSettings();
         Settings.notifyUserFunctionsChanged();
     }
-
 
     /**
      *   this method verifies that the file specified in the logfileJTextField
@@ -1089,7 +1016,7 @@ public class SettingsDialog
      * @param validationFile
      * @return
      */
-    public boolean checkLogfile( String validationFile ) {
+    public boolean checkLogfile ( String validationFile ) {
         File testFile = new File( validationFile );
 
         if ( testFile.exists() ) {
@@ -1121,7 +1048,6 @@ public class SettingsDialog
         return true;
     }
 
-
     /**
      *   this method verifies that the file specified in the logfileJTextField
      *   is valid. It sets the color of the font to red if this is not ok and
@@ -1129,7 +1055,7 @@ public class SettingsDialog
      * @param validationFile
      * @return
      */
-    public boolean checkAutoLoad( String validationFile ) {
+    public boolean checkAutoLoad ( String validationFile ) {
         logger.fine( "SettingsDialog.checkAutoLoad: called on: " + validationFile );
         File testFile = new File( validationFile );
 
@@ -1153,21 +1079,19 @@ public class SettingsDialog
         return true;
     }
 
-
     /**
      *  method that gets rid of the SettingsDialog
      */
-    private void getRid() {
+    private void getRid () {
         setVisible( false );
         dispose();
     }
-
 
     /**
      *  method that brings up a JFileChooser and places the path of the file selected into the
      *  JTextField of the autoFileJTextField.
      */
-    private void autoLoadChooser() {
+    private void autoLoadChooser () {
         JFileChooser jFileChooser = new JFileChooser();
         jFileChooser.setFileFilter( new XmlFilter() );
 
@@ -1182,12 +1106,11 @@ public class SettingsDialog
         }
     }
 
-
     /**
      *  method that brings up a JFileChooser and places the path of the file selected into the
      *  JTextField of the logfileJTextField.
      */
-    private void logfileChooser() {
+    private void logfileChooser () {
         JFileChooser jFileChooser = new JFileChooser();
         //jFileChooser.setFileFilter( new XmlFilter() );
 
@@ -1210,8 +1133,8 @@ public class SettingsDialog
             extends InputVerifier {
 
         @Override
-        public boolean shouldYieldFocus( JComponent input ) {
-            String validationFile = ( (JTextField) input ).getText();
+        public boolean shouldYieldFocus ( JComponent input ) {
+            String validationFile = ((JTextField) input).getText();
             logger.info( "SettingsDialog.FileTextFieldVerifyer.shouldYieldFocus: called with: " + validationFile );
             logger.info( "JComponent = " + Integer.toString( input.hashCode() ) );
             logger.info( "logfileJTextField = " + Integer.toString( logfileJTextField.hashCode() ) );
@@ -1225,20 +1148,18 @@ public class SettingsDialog
             return true;
         }
 
-
-        public boolean verify( JComponent input ) {
-            logger.info( "SettingsDialog.FileTextFieldVerifyer.verify: called with: " + ( (JTextField) input ).getText() );
+        public boolean verify ( JComponent input ) {
+            logger.info( "SettingsDialog.FileTextFieldVerifyer.verify: called with: " + ((JTextField) input).getText() );
             return true;
         }
     }
-
 
     /**
      *  brings up an are you sure dialog and then zaps all the
      *  thumbnauil images
      */
-    public void zapThumbnails() {
-        if ( ( !thumbnailPathChooser.setColor() ) ) {//TODO: Seems odd to use a GUI component to validate a path
+    public void zapThumbnails () {
+        if ( (!thumbnailPathChooser.setColor()) ) {//TODO: Seems odd to use a GUI component to validate a path
             JOptionPane.showMessageDialog( Settings.anchorFrame,
                     Settings.jpoResources.getString( "thumbnailDirError" ),
                     Settings.jpoResources.getString( "settingsError" ),
@@ -1257,7 +1178,7 @@ public class SettingsDialog
         if ( option == 0 ) {
             File[] thumbnailFiles = thumbnailDirFile.listFiles( new java.io.FileFilter() {
 
-                public boolean accept( File file ) {
+                public boolean accept ( File file ) {
                     return file.getName().startsWith( Settings.thumbnailPrefix );
                 }
             } );

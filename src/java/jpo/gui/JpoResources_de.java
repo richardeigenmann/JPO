@@ -178,6 +178,7 @@ public class JpoResources_de extends ListResourceBundle {
 		{"emailAuthentication", "Autentifizierung:" },
 		{"emailUserJLabel", "Benutzername:"},
 		{"emailPasswordJLabel", "Password:"},
+		{ "emailShowPasswordButton", "Passwort zeigen" },
 		
 
 		// Settings

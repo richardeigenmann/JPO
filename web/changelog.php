@@ -18,6 +18,7 @@
 
 			<table>
 				<tr><td colspan=2><b>Development Version 0.9</b></td></tr>
+				<tr><td valign="top">12.1.2011</td><td> Settings Dialog now hides email Password</td></tr>
 				<tr><td valign="top">2.1.2011</td><td> Changed Cursor color in Picture Viewer to make it visible</td></tr>
 				<tr><td valign="top">2.1.2011</td><td> Consolidate no longer refuses to work when not consolidation lowres too</td></tr>
 				<tr><td valign="top">28.12.2010</td><td> Fixed the bug whereby selections were not moved to a move target</td></tr>

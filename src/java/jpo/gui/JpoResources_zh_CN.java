@@ -180,6 +180,7 @@ public class JpoResources_zh_CN extends ListResourceBundle {
 		{ "emailAuthentication", "Authentication:" },
 		{"emailUserJLabel", "用户名："},
 		{"emailPasswordJLabel", "密码："},
+		{ "emailShowPasswordButton", "Show Password" },
 		
 		
 		

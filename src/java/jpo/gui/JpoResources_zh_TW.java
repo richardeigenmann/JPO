@@ -179,6 +179,7 @@ public class JpoResources_zh_TW extends ListResourceBundle {
 		{ "emailAuthentication", "Authentication:" },
 		{"emailUserJLabel", "用戶名："},
 		{"emailPasswordJLabel", "密碼："},
+		{ "emailShowPasswordButton", "Show Password" },
 		
 		
 		

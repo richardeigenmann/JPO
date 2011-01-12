@@ -148,6 +148,8 @@ public class JpoResources_en extends ListResourceBundle {
         { "emailAuthentication", "Authentication:" },
         { "emailUserJLabel", "Username:" },
         { "emailPasswordJLabel", "Password:" },
+	{ "emailShowPasswordButton", "Show Password" },
+
 
         // Settings
         { "thumbNoExistError", "The directory for the thumbnails doesn't exist.\nPlease select Edit | Settings to set this correctly.\nThumbnail caching has been turned off." },
