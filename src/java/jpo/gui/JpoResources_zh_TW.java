@@ -214,6 +214,7 @@ public class JpoResources_zh_TW extends ListResourceBundle {
 		{"htmlDistCanWriteError", "這不是一個可寫的文件夾"},
 		{"htmlDistIsNotEmptyWarning", "目標文件夾不為空\n點确認將繼續操作但可能覆蓋已有的文件。"},
 		{ "HtmlDistMidres", "Medium size images"},  //new
+		{ "GenerateMap", "Generate Map"}, 
 		{ "HtmlDistMidresHtml", "Generate navigation pages"},  //new
 		{"midresSizeJLabel", "清晰度滑尺"},
 		{"midresJpgQualitySlider", "Jpg清晰度"},

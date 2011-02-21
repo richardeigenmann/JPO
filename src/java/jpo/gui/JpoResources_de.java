@@ -212,6 +212,7 @@ public class JpoResources_de extends ListResourceBundle {
 		{"htmlDistCanWriteError", "Dies ist kein Beschreibbares Verzeichnis!"},
 		{"htmlDistIsNotEmptyWarning", "Das Zielverzeichnis ist nicht leer.\nBestätigen sie, dass JPO fortfahren soll und allenfalls Dateien berschreibt."},
 		{ "HtmlDistMidres", "Mittelgrosse Bilder"},
+		{ "GenerateMap", "Landkarte anzeigen"}, 
 		{ "HtmlDistMidresHtml", "Navigationsseite generieren"},
 		{"midresSizeJLabel", "Grösse mittlere Auflösung"},
 		{"midresJpgQualitySlider", "Midres Jpg Qualität"},

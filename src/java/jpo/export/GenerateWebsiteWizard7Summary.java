@@ -11,7 +11,7 @@ import net.javaprog.ui.wizard.AbstractStep;
 /*
 GenerateWebsiteWizard7Summary.java:  Summarise before you go and do it
 
-Copyright (C) 2008  Richard Eigenmann.
+Copyright (C) 2008-2011  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -58,8 +58,8 @@ public class GenerateWebsiteWizard7Summary extends AbstractStep {
         JPanel wizardStep = new JPanel();
 
         JScrollPane sp = new JScrollPane( summary );
-        sp.setPreferredSize( new Dimension( 300, 200 ) );
-        sp.setMaximumSize( new Dimension( 300, 200 ) );
+        sp.setPreferredSize( new Dimension( 335, 260 ) );
+        sp.setMaximumSize( new Dimension( 335, 260 ) );
         sp.setHorizontalScrollBarPolicy( JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS );
         sp.setVerticalScrollBarPolicy( JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED );
         wizardStep.add( sp );

@@ -2,6 +2,7 @@ package jpo.export;
 
 import java.awt.Component;
 import java.awt.FlowLayout;
+import java.util.Dictionary;
 import java.util.Hashtable;
 import javax.swing.BoxLayout;
 import javax.swing.JCheckBox;
@@ -19,7 +20,7 @@ import net.javaprog.ui.wizard.AbstractStep;
 /*
 GenerateWebsiteWizard3Midres.java:  Midres stuff
 
-Copyright (C) 2008-2009  Richard Eigenmann.
+Copyright (C) 2008-2011  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -48,70 +49,92 @@ public class GenerateWebsiteWizard3Midres extends AbstractStep {
      * This step asks for all the midres stuff for the webpage generation
      * @param options The link to the options object with all the settings
      */
-    public GenerateWebsiteWizard3Midres( HtmlDistillerOptions options ) {
+    public GenerateWebsiteWizard3Midres ( HtmlDistillerOptions options ) {
         super( Settings.jpoResources.getString( "HtmlDistMidres" ), Settings.jpoResources.getString( "HtmlDistMidres" ) );
         this.options = options;
 
         // populate the widgets with the values from the options
-        generateMidresHtml.setSelected( options.isGenerateMidresHtml() );
+        generateMidresHtmlJCheckBox.setSelected( options.isGenerateMidresHtml() );
+        generateMapJCheckBox.setSelected( options.isGenerateMap() );
         generateDHTMLJCheckBox.setSelected( options.isGenerateDHTML() );
-        ( (SpinnerNumberModel) ( midresWidth.getModel() ) ).setValue( options.getMidresWidth() );
-        ( (SpinnerNumberModel) ( midresHeight.getModel() ) ).setValue( options.getMidresHeight() );
+        midresWidthSpinnerNumberModel.setValue( options.getMidresWidth() );
+        midresHeightSpinnerNumberModel.setValue( options.getMidresHeight() );
         midresJpgQualityJSlider.setValue( options.getMidresJpgQualityPercent() );
     }
     /**
+     * The number model for the width spinner.
+     */
+    private final SpinnerNumberModel midresWidthSpinnerNumberModel = new SpinnerNumberModel( 300, 100, 10000, 25 );
+    /**
      *  The width of the midres images
      **/
-    private JSpinner midresWidth = new JSpinner( new SpinnerNumberModel( 300, 100, 10000, 25 ) );
+    private final JSpinner midresWidthJSpinner = new JSpinner( midresWidthSpinnerNumberModel );
+    /**
+     * The number model for the width spinner.
+     */
+    private final SpinnerNumberModel midresHeightSpinnerNumberModel = new SpinnerNumberModel( 300, 100, 10000, 25 );
     /**
      *  The height of the midres images
      **/
-    private JSpinner midresHeight = new JSpinner( new SpinnerNumberModel( 300, 100, 10000, 25 ) );
+    private final JSpinner midresHeightJSpinner = new JSpinner( midresHeightSpinnerNumberModel );
     /**
      * Checkbox that indicates whether to generate the midres html files or not.
      * Requested by Jay Christopherson, Nov 2008
      */
-    private final JCheckBox generateMidresHtml = new JCheckBox( Settings.jpoResources.getString( "HtmlDistMidresHtml" ) );
+    private final JCheckBox generateMidresHtmlJCheckBox = new JCheckBox( Settings.jpoResources.getString( "HtmlDistMidresHtml" ) );
+    /**
+     * Checkbox that indicates whether to add a map ith the location or not.
+     */
+    private final JCheckBox generateMapJCheckBox = new JCheckBox( Settings.jpoResources.getString( "GenerateMap" ) );
     /**
      *  Tickbox that indicates whether DHTML tags and effects should be generated.
      **/
-    private JCheckBox generateDHTMLJCheckBox = new JCheckBox( Settings.jpoResources.getString( "generateDHTMLJCheckBox" ) );
+    private final JCheckBox generateDHTMLJCheckBox = new JCheckBox( Settings.jpoResources.getString( "generateDHTMLJCheckBox" ) );
     /**
      *  Tickbox that indicates whether a Zipfile should be created to download the highres pictures
      **/
-    private JCheckBox generateZipfileJCheckBox = new JCheckBox( Settings.jpoResources.getString( "generateZipfileJCheckBox" ) );
+    private final JCheckBox generateZipfileJCheckBox = new JCheckBox( Settings.jpoResources.getString( "generateZipfileJCheckBox" ) );
     /**
      *  Slider that allows the quality of the midres jpg's to be specified.
      */
-    private JSlider midresJpgQualityJSlider =
+    private final JSlider midresJpgQualityJSlider =
             new JSlider(
             JSlider.HORIZONTAL,
             0, 100,
-            (int) ( Settings.defaultHtmlMidresQuality * 100 ) );
+            (int) (Settings.defaultHtmlMidresQuality * 100) );
 
     /**
      * Create the widgets.
      * @return A panel with the components
      */
     @Override
-    protected JComponent createComponent() {
+    protected JComponent createComponent () {
         JPanel wizardPanel = new JPanel();
         wizardPanel.setLayout( new BoxLayout( wizardPanel, BoxLayout.PAGE_AXIS ) );
         wizardPanel.setAlignmentX( Component.LEFT_ALIGNMENT );
 
-        generateMidresHtml.addChangeListener( new ChangeListener() {
+        generateMidresHtmlJCheckBox.addChangeListener( new ChangeListener() {
 
-            public void stateChanged( ChangeEvent arg0 ) {
-                generateDHTMLJCheckBox.setEnabled( generateMidresHtml.isSelected() );
-                options.setGenerateMidresHtml( generateMidresHtml.isSelected() );
+            public void stateChanged ( ChangeEvent arg0 ) {
+                generateMapJCheckBox.setEnabled( generateMidresHtmlJCheckBox.isSelected() );
+                generateDHTMLJCheckBox.setEnabled( generateMidresHtmlJCheckBox.isSelected() );
+                options.setGenerateMidresHtml( generateMidresHtmlJCheckBox.isSelected() );
             }
         } );
-        wizardPanel.add( generateMidresHtml );
+        wizardPanel.add( generateMidresHtmlJCheckBox );
+
+        generateMapJCheckBox.addChangeListener( new ChangeListener() {
+
+            public void stateChanged ( ChangeEvent arg0 ) {
+                options.setGenerateMap( generateMapJCheckBox.isSelected() );
+            }
+        } );
+        wizardPanel.add( generateMapJCheckBox );
+
 
         generateDHTMLJCheckBox.addChangeListener( new ChangeListener() {
 
-            public void stateChanged( ChangeEvent arg0 ) {
-                generateDHTMLJCheckBox.setEnabled( generateMidresHtml.isSelected() );
+            public void stateChanged ( ChangeEvent arg0 ) {
                 options.setGenerateDHTML( generateDHTMLJCheckBox.isSelected() );
             }
         } );
@@ -122,31 +145,30 @@ public class GenerateWebsiteWizard3Midres extends AbstractStep {
         midresSizeJPanel.setAlignmentX( Component.LEFT_ALIGNMENT );
         midresSizeJPanel.setMaximumSize( GenerateWebsiteWizard.normalComponentSize );
         midresSizeJPanel.add( new JLabel( Settings.jpoResources.getString( "thubnailSizeJLabel" ) ) );  // Deliberately taking lowres
-        midresWidth.addChangeListener(
+        midresWidthJSpinner.addChangeListener(
                 new ChangeListener() {
 
-                    public void stateChanged( ChangeEvent arg0 ) {
-                        options.setMidresWidth( ( (SpinnerNumberModel) ( midresWidth.getModel() ) ).getNumber().intValue() );
+                    public void stateChanged ( ChangeEvent arg0 ) {
+                        options.setMidresWidth( ((SpinnerNumberModel) (midresWidthJSpinner.getModel())).getNumber().intValue() );
                     }
                 } );
-        midresSizeJPanel.add( midresWidth );
+        midresSizeJPanel.add( midresWidthJSpinner );
         midresSizeJPanel.add( new JLabel( " x " ) );
-        midresHeight.addChangeListener( new ChangeListener() {
+        midresHeightJSpinner.addChangeListener( new ChangeListener() {
 
-            public void stateChanged( ChangeEvent arg0 ) {
-                options.setMidresHeight( ( (SpinnerNumberModel) ( midresHeight.getModel() ) ).getNumber().intValue() );
+            public void stateChanged ( ChangeEvent arg0 ) {
+                options.setMidresHeight( ((SpinnerNumberModel) (midresHeightJSpinner.getModel())).getNumber().intValue() );
             }
         } );
-        midresSizeJPanel.add( midresHeight );
+        midresSizeJPanel.add( midresHeightJSpinner );
         wizardPanel.add( midresSizeJPanel );
 
 
         // Midres Quality Slider
         JPanel midresSliderJPanel = new JPanel( new FlowLayout( FlowLayout.LEFT ) );
         midresSliderJPanel.setAlignmentX( Component.LEFT_ALIGNMENT );
-        //midresSliderJPanel.setMaximumSize( GenerateWebsiteWizard.tallerComponentSize );
         midresSliderJPanel.add( new JLabel( Settings.jpoResources.getString( "midresJpgQualitySlider" ) ) );
-        Hashtable<Integer, JLabel> labelTable1 = new Hashtable<Integer, JLabel>();
+        final Dictionary<Integer, JLabel> labelTable1 = new Hashtable<Integer, JLabel>();
         labelTable1.put( new Integer( 0 ), new JLabel( Settings.jpoResources.getString( "jpgQualityBad" ) ) );
         labelTable1.put( new Integer( 80 ), new JLabel( Settings.jpoResources.getString( "jpgQualityGood" ) ) );
         labelTable1.put( new Integer( 100 ), new JLabel( Settings.jpoResources.getString( "jpgQualityBest" ) ) );
@@ -158,7 +180,7 @@ public class GenerateWebsiteWizard3Midres extends AbstractStep {
         midresJpgQualityJSlider.setPaintLabels( true );
         midresJpgQualityJSlider.addChangeListener( new ChangeListener() {
 
-            public void stateChanged( ChangeEvent arg0 ) {
+            public void stateChanged ( ChangeEvent arg0 ) {
                 options.setMidresJpgQualityPercent( midresJpgQualityJSlider.getValue() );
             }
         } );
@@ -168,6 +190,6 @@ public class GenerateWebsiteWizard3Midres extends AbstractStep {
     }
 
     // required but not used
-    public void prepareRendering() {
+    public void prepareRendering () {
     }
 }

@@ -1,13 +1,3 @@
-/* Textual Tooltip Script- (c) Dynamic Drive (www.dynamicdrive.com) For full source code, installation instructions, 100's more DHTML scripts, and Terms Of Use, visit dynamicdrive.com */
-function regenerate(){
-    window.location.reload()
-}
-function regenerate2(){
-    if (document.layers){
-        appear()
-        setTimeout("window.onresize=regenerate",450)
-    }
-}
 function changetext(whichcontent){
     if (document.all||document.getElementById){
         cross_el=document.getElementById? document.getElementById("descriptions"):document.all.descriptions
@@ -18,7 +8,27 @@ function changetext(whichcontent){
         document.d1.document.close()
     }
 }
-function appear(){
-    document.d1.visibility='show'
-}
-window.onload=regenerate2
+
+
+( function() {
+    window.onload = function () {
+        var latLng= new google.maps.LatLng(lat, lng);
+
+        var mapDiv = document.getElementById("map");
+        var options = {
+            center: latLng,
+            zoom: 4,
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+        };
+        var map = new google.maps.Map( mapDiv, options );
+
+        var markerLatLng= new google.maps.LatLng(lat, lng);
+
+        var marker = new google.maps.Marker({
+            position: markerLatLng,
+            map: map,
+            draggable: false
+        })
+    }
+
+})();

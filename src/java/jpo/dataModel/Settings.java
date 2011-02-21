@@ -423,6 +423,11 @@ public class Settings {
     public static boolean defaultGenerateMidresHtml = true;
 
     /**
+     *  Whether to generate a map or not
+     */
+    public static boolean defaultGenerateMap = true;
+
+    /**
      *  Whether to generate DHTML effects or not
      */
     public static boolean defaultGenerateDHTML = true;
@@ -795,6 +800,7 @@ public class Settings {
         defaultHtmlThumbnailHeight = prefs.getInt( "defaultHtmlThumbnailHeight", defaultHtmlThumbnailHeight );
         defaultGenerateMidresHtml = prefs.getBoolean( "defaultGenerateMidresHtml", defaultGenerateMidresHtml );
         defaultHtmlPictureNaming = prefs.getInt( "defaultHtmlPictureNaming", defaultHtmlPictureNaming );
+        defaultGenerateMap = prefs.getBoolean( "defaultGenerateMap", defaultGenerateMap );
         defaultGenerateDHTML = prefs.getBoolean( "defaultGenerateDHTML", defaultGenerateDHTML );
         defaultGenerateZipfile = prefs.getBoolean( "defaultGenerateZipfile", defaultGenerateZipfile );
         defaultLinkToHighres = prefs.getBoolean( "defaultLinkToHighres", defaultLinkToHighres );
@@ -980,6 +986,7 @@ public class Settings {
         prefs.putInt( "defaultHtmlThumbnailHeight", defaultHtmlThumbnailHeight );
         prefs.putBoolean( "defaultGenerateMidresHtml", defaultGenerateMidresHtml );
         prefs.putInt( "defaultHtmlPictureNaming", defaultHtmlPictureNaming );
+        prefs.putBoolean( "defaultGenerateMap", defaultGenerateMap );
         prefs.putBoolean( "defaultGenerateDHTML", defaultGenerateDHTML );
         prefs.putBoolean( "defaultGenerateZipfile", defaultGenerateZipfile );
         prefs.putBoolean( "defaultLinkToHighres", defaultLinkToHighres );

@@ -180,6 +180,7 @@ public class JpoResources_en extends ListResourceBundle {
         { "htmlDistCanWriteError", "This is not a writable directory!" },
         { "htmlDistIsNotEmptyWarning", "The target Directory is not empty.\nClick OK to continue and possibly overwrite files." },
         { "HtmlDistMidres", "Medium size images"}, 
+        { "GenerateMap", "Generate Map"}, 
         { "HtmlDistMidresHtml", "Generate navigation pages"}, 
         { "midresSizeJLabel", "Midres size" },
         { "midresJpgQualitySlider", "Midres Jpg Quality" },

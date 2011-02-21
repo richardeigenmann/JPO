@@ -93,7 +93,7 @@ public class Jpo {
     /**
      * Defines a logger for this class
      */
-    private static Logger logger = Logger.getLogger( Jpo.class.getName() );
+    private static final Logger LOGGER = Logger.getLogger( Jpo.class.getName() );
 
 
     /**
@@ -111,7 +111,7 @@ public class Jpo {
         }
         Settings.loadSettings();
 
-        logger.info( "------------------------------------------------------------\n      Starting JPO" );
+        LOGGER.info( "------------------------------------------------------------\n      Starting JPO" );
 
 
         // Check for EDT violations
@@ -142,9 +142,9 @@ public class Jpo {
                 }
             } );
         } catch ( InterruptedException ex ) {
-            logger.log( Level.SEVERE, null, ex );
+            LOGGER.log( Level.SEVERE, null, ex );
         } catch ( InvocationTargetException ex ) {
-            logger.log( Level.SEVERE, null, ex );
+            LOGGER.log( Level.SEVERE, null, ex );
         }
 
         Settings.pictureCollection.getTreeModel().addTreeModelListener( new MainAppModelListener() );
@@ -183,7 +183,7 @@ public class Jpo {
      *  This Vector allows us to keep track of the number of ThumbnailCreationThreads
      *  we have fired off. Could be enhanced to dynamically start more or less.
      */
-    private static Vector<ThumbnailCreationFactory> thumbnailFactories = new Vector<ThumbnailCreationFactory>();
+    private final static Vector<ThumbnailCreationFactory> thumbnailFactories = new Vector<ThumbnailCreationFactory>();
 
 
     /**
@@ -204,7 +204,7 @@ public class Jpo {
     public boolean loadAutoloadCollection() {
         if ( ( Settings.autoLoad != null ) && ( Settings.autoLoad.length() > 0 ) ) {
             File xmlFile = new File( Settings.autoLoad );
-            logger.fine( "File to Autoload: " + Settings.autoLoad );
+            LOGGER.log( Level.FINE, "File to Autoload: {0}", Settings.autoLoad);
             if ( xmlFile.exists() ) {
                 try {
                     Settings.pictureCollection.fileLoad( xmlFile );
@@ -218,7 +218,7 @@ public class Jpo {
 
                 return true;
             } else {
-                logger.fine( String.format( "File %s doesn't exist. not loading", xmlFile.toString() ) );
+                LOGGER.fine( String.format( "File %s doesn't exist. not loading", xmlFile.toString() ) );
                 return false;
             }
         } else {
@@ -237,13 +237,11 @@ public class Jpo {
             final SortableDefaultMutableTreeNode displayNode ) {
 
         if ( displayNode == null ) {
-            logger.severe( "I've been told to position to a null node!" );
-            Thread.dumpStack();
+            LOGGER.severe( "I've been told to position to a null node!" );
             return;
         }
         if ( !( displayNode.getUserObject() instanceof GroupInfo ) ) {
-            logger.severe( "We can only position to GroupInfo nodes!" );
-            Thread.dumpStack();
+            LOGGER.severe( "We can only position to GroupInfo nodes!" );
             return;
         }
 
@@ -271,23 +269,20 @@ public class Jpo {
      */
     public static void showThumbnails( NodeNavigatorInterface nodeSet ) {
         if ( nodeSet == null ) {
-            logger.severe( "I've been told to showThumbnails on a null set!" );
-            Thread.dumpStack();
+            LOGGER.severe( "I've been told to showThumbnails on a null set!" );
             return;
         }
         thumbnailJScrollPane.show( nodeSet );
-        //infoPanelController.show(nodeSet);
     }
 
 
     /**
-     * A call to this method will result in the InfoPanel updatings it's display
+     * A call to this method will result in the InfoPanel updating it's display
      * @param node the Node for which to show the info
      */
     public static void showInfo( SortableDefaultMutableTreeNode node ) {
         if ( node == null ) {
-            logger.severe( "I've been told to show Info on a null node!" );
-            Thread.dumpStack();
+            LOGGER.severe( "I've been told to show Info on a null node!" );
             return;
         }
         infoPanelController.showInfo( node );
@@ -373,9 +368,9 @@ public class Jpo {
 
         public void treeNodesChanged( TreeModelEvent e ) {
             TreePath tp = e.getTreePath();
-            logger.fine( String.format( "The main app model listener trapped a tree node change event on the tree path: %s", tp.toString() ) );
+            LOGGER.fine( String.format( "The main app model listener trapped a tree node change event on the tree path: %s", tp.toString() ) );
             if ( tp.getPathCount() == 1 ) { //if the root node sent the event
-                logger.fine( "Since this is the root node we will update the ApplicationTitle" );
+                LOGGER.fine( "Since this is the root node we will update the ApplicationTitle" );
 
                 updateApplicationTitle();
             }
@@ -492,7 +487,7 @@ public class Jpo {
                 Settings.writeSettings();
             }
 
-            logger.info( "Exiting JPO\n------------------------------------------------------------" );
+            LOGGER.info( "Exiting JPO\n------------------------------------------------------------" );
 
             System.exit( 0 );
         }
@@ -569,7 +564,7 @@ public class Jpo {
                     try {
                         Settings.pictureCollection.fileLoad( fileToLoad );
                     } catch ( FileNotFoundException ex ) {
-                        logger.info( this.getClass().toString() + ".requestFileLoad: FileNotFoundExecption: " + ex.getMessage() );
+                        LOGGER.log( Level.INFO, "FileNotFoundExecption: {0}", ex.getMessage());
                         JOptionPane.showMessageDialog( Settings.anchorFrame,
                                 ex.getMessage(),
                                 Settings.jpoResources.getString( "genericError" ),
@@ -611,7 +606,7 @@ public class Jpo {
             if ( Settings.pictureCollection.getXmlFile() == null ) {
                 requestFileSaveAs();
             } else {
-                logger.info( String.format( "Saving under the name: %s", Settings.pictureCollection.getXmlFile() ) );
+                LOGGER.info( String.format( "Saving under the name: %s", Settings.pictureCollection.getXmlFile() ) );
                 Settings.pictureCollection.fileSave();
                 afterFileSaveDialog();
             }
@@ -696,7 +691,7 @@ public class Jpo {
             try {
                 newNode.fileLoad( fileToLoad );
             } catch ( FileNotFoundException x ) {
-                logger.info( this.getClass().toString() + ".fileToLoad: FileNotFoundExecption: " + x.getMessage() );
+                LOGGER.log( Level.INFO, "{0}.fileToLoad: FileNotFoundExecption: {1}", new Object[]{this.getClass().toString(), x.getMessage()});
                 JOptionPane.showMessageDialog( Settings.anchorFrame,
                         "File not found:\n" + fileToLoad.getPath(),
                         Settings.jpoResources.getString( "genericError" ),
@@ -726,7 +721,7 @@ public class Jpo {
                         Settings.pictureCollection.fileLoad( new File( Settings.recentCollections[i] ) );
                     } catch ( FileNotFoundException ex ) {
                         Logger.getLogger( Jpo.class.getName() ).log( Level.SEVERE, null, ex );
-                        logger.info( this.getClass().toString() + ".requestFileLoad: FileNotFoundExecption: " + ex.getMessage() );
+                        LOGGER.log( Level.INFO, "FileNotFoundExecption: {0}", ex.getMessage());
                         JOptionPane.showMessageDialog( Settings.anchorFrame,
                                 ex.getMessage(),
                                 Settings.jpoResources.getString( "genericError" ),
@@ -742,7 +737,7 @@ public class Jpo {
 
         /**
          * Switches the left panel to the queries, expands to the right place and
-         * shows the numbnails of the query.
+         * shows the thumbnails of the query.
          * @param node The query node to be displayed
          */
         public void showQuery( DefaultMutableTreeNode node ) {

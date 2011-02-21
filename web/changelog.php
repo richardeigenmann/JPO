@@ -18,6 +18,7 @@
 
 			<table>
 				<tr><td colspan=2><b>Development Version 0.9</b></td></tr>
+				<tr><td valign="top">21.2.2011</td><td> Generated Webpage now also shows a little Google map</td></tr>
 				<tr><td valign="top">12.1.2011</td><td> Settings Dialog now hides email Password</td></tr>
 				<tr><td valign="top">2.1.2011</td><td> Changed Cursor color in Picture Viewer to make it visible</td></tr>
 				<tr><td valign="top">2.1.2011</td><td> Consolidate no longer refuses to work when not consolidation lowres too</td></tr>
@@ -386,8 +387,8 @@
 			</table>
 
 			<hr>
-			<p>Last update to this page: 28 Dec 2010<br>
-			Copyright 2003-2010 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
+			<p>Last update to this page: 21 Feb 2011<br>
+			Copyright 2003-2011 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
 		</td>
 	</tr>
 </table>

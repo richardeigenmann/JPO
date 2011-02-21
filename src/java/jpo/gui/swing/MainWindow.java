@@ -18,7 +18,7 @@ import jpo.dataModel.Tools;
 /*
 MainWindow.java:  main window of the JPO application
 
-Copyright (C) 2002 - 2009  Richard Eigenmann.
+Copyright (C) 2002 - 2011  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -45,7 +45,7 @@ public class MainWindow
     /**
      * Defines a logger for this class
      */
-    private static Logger logger = Logger.getLogger( MainWindow.class.getName() );
+    private static final Logger LOGGER = Logger.getLogger( MainWindow.class.getName() );
 
 
     public MainWindow( ApplicationMenuInterface applicationController,
@@ -62,7 +62,7 @@ public class MainWindow
 
             UIManager.setLookAndFeel( Windows );
         } catch ( Exception e ) {
-            logger.fine( "Could not set Look and Feel" );
+            LOGGER.fine( "Could not set Look and Feel" );
         }
         //ScreenHelper.explainGraphicsEnvironment();
 
@@ -173,7 +173,7 @@ public class MainWindow
     /**
      * The multi tab panel top left that allows the collection to be shown and then the searches etc.
      */
-    private JTabbedPane jpoNavigatorJTabbedPane = new JTabbedPane();
+    private final JTabbedPane jpoNavigatorJTabbedPane = new JTabbedPane();
 
 
     /**
