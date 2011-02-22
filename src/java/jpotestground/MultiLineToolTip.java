@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package jpo.gui.swing;
+package jpotestground;
 
 import java.util.Enumeration;
 import java.util.StringTokenizer;

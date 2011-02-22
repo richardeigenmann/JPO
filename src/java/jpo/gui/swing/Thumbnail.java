@@ -19,7 +19,7 @@ import jpo.dataModel.Tools;
 /*
 Thumbnail.java:  This class shows a single Thumbnail
 
-Copyright (C) 2010  Richard Eigenmann, Zurich, Switzerland
+Copyright (C) 2010-2011  Richard Eigenmann, Zurich, Switzerland
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -42,7 +42,7 @@ public class Thumbnail
     /**
      * Defines a logger for this class
      */
-    private static Logger logger = Logger.getLogger( Thumbnail.class.getName() );
+    private static final Logger LOGGER = Logger.getLogger( Thumbnail.class.getName() );
 
 
     /**
@@ -72,7 +72,7 @@ public class Thumbnail
      *  @param  icon  The imageicon that should be displayed
      */
     public void setThumbnail( final ImageIcon icon ) {
-        logger.fine( String.format( "Setting image on thumbnail %d", hashCode() ) );
+        LOGGER.fine( String.format( "Setting image on thumbnail %d", hashCode() ) );
         Runnable r = new Runnable() {
 
             public void run() {
@@ -138,7 +138,7 @@ public class Thumbnail
      * @param thumbnailSizeFactor
      */
     public void setFactor( float thumbnailSizeFactor ) {
-        logger.fine( String.format( "Scaling factor is being set to %f", thumbnailSizeFactor ) );
+        LOGGER.fine( String.format( "Scaling factor is being set to %f", thumbnailSizeFactor ) );
         this.thumbnailSizeFactor = thumbnailSizeFactor;
         setVisible( isVisible() );  //Todo wouldn't revalidate be better to force relayout and repainting?
     }
@@ -209,33 +209,33 @@ public class Thumbnail
     /**
      *   This icon indicates that the thumbnail creation is sitting on the queue.
      */
-    private static final ImageIcon queueIcon = new ImageIcon( Settings.cl.getResource( "jpo/images/queued_thumbnail.gif" ) );
+    private static final ImageIcon QUEUE_ICON = new ImageIcon( Settings.cl.getResource( "jpo/images/queued_thumbnail.gif" ) );
 
     /**
      *   This icon shows a large yellow folder.
      */
-    private static final ImageIcon largeFolderIcon = new ImageIcon( Settings.cl.getResource( "jpo/images/icon_folder_large.jpg" ) );
+    private static final ImageIcon LARGE_FOLDER_ICON = new ImageIcon( Settings.cl.getResource( "jpo/images/icon_folder_large.jpg" ) );
 
     /**
      *  The icon to superimpose on the picture if the highres picture is not available
      */
-    private static final ImageIcon offlineIcon = new ImageIcon( Settings.cl.getResource( "jpo/images/icon_offline.gif" ) );
+    private static final ImageIcon OFFLINE_ICON = new ImageIcon( Settings.cl.getResource( "jpo/images/icon_offline.gif" ) );
 
     /**
      *   An icon that indicates that the image is being loaded
      */
-    private static final ImageIcon loadingIcon = new ImageIcon( Settings.cl.getResource( "jpo/images/loading_thumbnail.gif" ) );
+    private static final ImageIcon LOADING_ICON = new ImageIcon( Settings.cl.getResource( "jpo/images/loading_thumbnail.gif" ) );
 
     /**
      *   An icon that indicates a broken image used when there is a
      *   problem rendering the correct thumbnail.
      */
-    private static final ImageIcon brokenThumbnailPicture = new ImageIcon( Settings.cl.getResource( "jpo/images/broken_thumbnail.gif" ) );
+    private static final ImageIcon BROKEN_THUMBNAIL_PICTURE = new ImageIcon( Settings.cl.getResource( "jpo/images/broken_thumbnail.gif" ) );
 
     /**
      *  The icon to superimpose on the picture if the highres picture is not available
      */
-    private static final ImageIcon mailIcon = new ImageIcon( Settings.cl.getResource( "jpo/images/icon_mail.gif" ) );
+    private static final ImageIcon MAIL_ICON = new ImageIcon( Settings.cl.getResource( "jpo/images/icon_mail.gif" ) );
 
     /**
      *  The color to use when the thumbnail has been selected
@@ -257,7 +257,7 @@ public class Thumbnail
      * Sets an icon of a clock to indicate being on a queue
      */
     public void setQueueIcon() {
-        setThumbnail( queueIcon );
+        setThumbnail( QUEUE_ICON );
     }
 
 
@@ -265,7 +265,7 @@ public class Thumbnail
      * Sets an icon showing a large yellow folder
      */
     public void setLargeFolderIcon() {
-        setThumbnail( largeFolderIcon );
+        setThumbnail( LARGE_FOLDER_ICON );
     }
 
 
@@ -273,7 +273,7 @@ public class Thumbnail
      * Sets an icon to mark that the thumbnail is in loading state before a final icon is put in place by a ThumbnailCreation
      */
     public void setLoadingIcon() {
-        setThumbnail( loadingIcon );
+        setThumbnail( LOADING_ICON );
     }
 
 
@@ -281,7 +281,7 @@ public class Thumbnail
      * Sets an icon to mark that the thumbnail is in loading state before a final icon is put in place by a ThumbnailCreation
      */
     public void setBrokenIcon() {
-        setThumbnail( brokenThumbnailPicture );
+        setThumbnail( BROKEN_THUMBNAIL_PICTURE );
     }
 
     /**
@@ -319,7 +319,7 @@ public class Thumbnail
     }
 
     /**
-     * Indicates whether the Thubnail is to draw ans a selected Thumbnail or not.
+     * Indicates whether the Thumbnail is to draw as a selected Thumbnail or not.
      */
     private boolean isSelected = false;
 
@@ -351,7 +351,7 @@ public class Thumbnail
      * This method is EDT safe
      */
     public void showAsUnselected() {
-        logger.fine( "running show unselected" );
+        LOGGER.fine( "running show unselected" );
         Runnable r = new Runnable() {
 
             public void run() {
@@ -378,7 +378,7 @@ public class Thumbnail
     @Override
     public void paintComponent( Graphics g ) {
         if ( !SwingUtilities.isEventDispatchThread() ) {
-            logger.severe( "Not running on EDT!" );
+            LOGGER.severe( "Not running on EDT!" );
             Thread.dumpStack();
         }
 
@@ -415,11 +415,11 @@ public class Thumbnail
             }
 
             if ( drawOfflineIcon ) {
-                g2d.drawImage( offlineIcon.getImage(), X_Offset + 10, Y_Offset + 10, offlineIcon.getImageObserver() );
+                g2d.drawImage( OFFLINE_ICON.getImage(), X_Offset + 10, Y_Offset + 10, OFFLINE_ICON.getImageObserver() );
             }
             if ( drawMailIcon ) {
                 int additionalOffset = drawOfflineIcon ? 40 : 0;
-                g2d.drawImage( mailIcon.getImage(), X_Offset + 10 + additionalOffset, Y_Offset + 10, mailIcon.getImageObserver() );
+                g2d.drawImage( MAIL_ICON.getImage(), X_Offset + 10 + additionalOffset, Y_Offset + 10, MAIL_ICON.getImageObserver() );
             }
         } else {
             // paint a black square

@@ -2,7 +2,6 @@ package jpo.gui;
 
 import jpo.dataModel.Tools;
 import jpo.dataModel.Settings;
-import jpo.*;
 import java.awt.Dimension;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
@@ -27,11 +26,12 @@ import javax.imageio.plugins.jpeg.JPEGImageWriteParam;
 import javax.imageio.stream.ImageOutputStream;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
+import jpo.dataModel.SizeCalculator;
 
 /*
 ScalablePicture.java:  class that can load and save images
 
-Copyright (C) 2002 - 2009  Richard Eigenmann.
+Copyright (C) 2002 - 2011  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -46,7 +46,7 @@ The license is in gpl.txt.
 See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 /** 
- *  a class to load and scale an image either immediately or in a seperate thread.
+ *  a class to load and scale an image either immediately or in a separate thread.
  */
 public class ScalablePicture
         implements SourcePictureListener {
@@ -54,7 +54,7 @@ public class ScalablePicture
     /**
      * Defines a logger for this class
      */
-    private static Logger logger = Logger.getLogger( ScalablePicture.class.getName() );
+    private static final Logger LOGGER = Logger.getLogger( ScalablePicture.class.getName() );
 
     /**
      *   the source picture for the scalable picture
@@ -77,7 +77,7 @@ public class ScalablePicture
     public URL imageUrl = null;
 
     /**
-     *  variable to compose te status message
+     *  variable to compose the status message
      */
     private String pictureStatusMessage;
 
@@ -190,15 +190,15 @@ public class ScalablePicture
         this.imageUrl = imageUrl;
 
         boolean alreadyLoading = false;
-        logger.fine( "Checking if picture " + imageUrl + " is already being loaded." );
+        LOGGER.fine( "Checking if picture " + imageUrl + " is already being loaded." );
         if ( ( sourcePicture != null ) && ( sourcePicture.getUrl() != null ) && ( sourcePicture.getUrl().equals( imageUrl ) ) ) {
-            logger.fine( "the SourcePicture is already loading the sourcePicture image" );
+            LOGGER.fine( "the SourcePicture is already loading the sourcePicture image" );
             if ( sourcePicture.getRotation() == rotation ) {
                 alreadyLoading = true;
-                logger.fine( "Picture was even rotated to the correct angle!" );
+                LOGGER.fine( "Picture was even rotated to the correct angle!" );
             } else {
                 alreadyLoading = false;
-                logger.fine( "Picture was in cache but with wrong rotation. Forcing reload." );
+                LOGGER.fine( "Picture was in cache but with wrong rotation. Forcing reload." );
             }
         } else if ( PictureCache.isInCache( imageUrl ) ) {
             // in case the old image has a listener connected remove it
@@ -212,14 +212,14 @@ public class ScalablePicture
             if ( status == null ) {
                 status = "";
             }
-            logger.fine( "Picture in cache! Status: " + status );
+            LOGGER.fine( "Picture in cache! Status: " + status );
 
             if ( sourcePicture.getRotation() == rotation ) {
                 alreadyLoading = true;
-                logger.fine( "Picture was even rotated to the correct angle!" );
+                LOGGER.fine( "Picture was even rotated to the correct angle!" );
             } else {
                 alreadyLoading = false;
-                logger.fine( "Picture was in cache but with wrong rotation. Forcing reload." );
+                LOGGER.fine( "Picture was in cache but with wrong rotation. Forcing reload." );
             }
         }
 
@@ -283,7 +283,7 @@ public class ScalablePicture
      *  @param  rotation  The angle by which it is to be roated upon loading.
      */
     public void loadPictureImd( URL imageUrl, double rotation ) {
-        logger.fine( "Invoked on URL: " + imageUrl.toString() );
+        LOGGER.fine( "Invoked on URL: " + imageUrl.toString() );
         if ( sourcePicture != null ) {
             sourcePicture.removeListener( this );
         }
@@ -390,28 +390,14 @@ public class ScalablePicture
      *
      **/
     public void scalePicture() {
-        logger.fine( "scaling..." );
+        LOGGER.fine( "scaling..." );
         try {
             setStatus( SCALING, "Scaling picture." );
 
             if ( ( sourcePicture != null ) && ( sourcePicture.getSourceBufferedImage() != null ) ) {
                 if ( scaleToSize ) {
-                    int WindowWidth = TargetSize.width;
-                    int WindowHeight = TargetSize.height;
-                    //logger.info("ScalablePicture.scalePicture: Size of window is: " + Integer.toString(WindowWidth) + " x " + Integer.toString(WindowHeight));
-
-
-                    int PictureWidth = sourcePicture.getWidth();
-                    int PictureHeight = sourcePicture.getHeight();
-
-                    // Scale so that the enire picture fits in the component.
-                    if ( ( (double) PictureHeight / WindowHeight ) > ( (double) PictureWidth / WindowWidth ) ) {
-                        // Vertical scaling
-                        ScaleFactor = ( (double) WindowHeight / PictureHeight );
-                    } else {
-                        // Horizontal scaling
-                        ScaleFactor = ( (double) WindowWidth / PictureWidth );
-                    }
+                    SizeCalculator sc = new SizeCalculator( sourcePicture.getWidth(), sourcePicture.getHeight(), TargetSize.width, TargetSize.height);
+                    ScaleFactor = sc.ScaleFactor;
 
                     if ( Settings.dontEnlargeSmallImages && ScaleFactor > 1 ) {
                         ScaleFactor = 1;
@@ -445,7 +431,7 @@ public class ScalablePicture
                     int x = (int) Math.rint( pStep.getX() );
                     int y = (int) Math.rint( pStep.getY() );
                     int imageType = sourcePicture.getSourceBufferedImage().getType();
-                    logger.fine( String.format( "getType from source image returned %d", imageType ) );
+                    LOGGER.fine( String.format( "getType from source image returned %d", imageType ) );
                     if ( x == 0 ) {
                         x = 100;
                     }
@@ -454,7 +440,7 @@ public class ScalablePicture
                     }
                     if ( ( imageType == 0 ) || ( imageType == 13 ) ) {
                         imageType = BufferedImage.TYPE_3BYTE_BGR;
-                        logger.fine( String.format( "Becuase we don't like imageType 0 we are setting the target type to BufferedImage.TYPE_3BYTE_BGR which has code: %d", BufferedImage.TYPE_3BYTE_BGR ) );
+                        LOGGER.fine( String.format( "Becuase we don't like imageType 0 we are setting the target type to BufferedImage.TYPE_3BYTE_BGR which has code: %d", BufferedImage.TYPE_3BYTE_BGR ) );
                     }
                     biStep = new BufferedImage( x, y, imageType );
                     scaledPicture = opStep.filter( scaledPicture, biStep );
@@ -473,7 +459,7 @@ public class ScalablePicture
                 }
             }
         } catch ( OutOfMemoryError e ) {
-            logger.severe( "ScalablePicture.scalePicture caught an OutOfMemoryError while scaling an image.\n" + e.getMessage() );
+            LOGGER.severe( "ScalablePicture.scalePicture caught an OutOfMemoryError while scaling an image.\n" + e.getMessage() );
             Tools.freeMem();
 
             setStatus( ERROR, "Out of Memory Error while scaling " + imageUrl.toString() );
@@ -488,7 +474,7 @@ public class ScalablePicture
             System.gc();
             System.runFinalization();
 
-            logger.info( "ScalablePicture.scalePicture: JPO has now run a garbage collection and finalization." );
+            LOGGER.info( "ScalablePicture.scalePicture: JPO has now run a garbage collection and finalization." );
             Tools.freeMem();
         }
     }
@@ -723,7 +709,7 @@ public class ScalablePicture
             ios.close();
 
         } catch ( IOException e ) {
-            logger.info( "ScalablePicture.writeJpg caught IOException: " + e.getMessage() + "\nwhile writing " + writeFile.toString() );
+            LOGGER.info( "ScalablePicture.writeJpg caught IOException: " + e.getMessage() + "\nwhile writing " + writeFile.toString() );
             e.printStackTrace();
         }
         //writer = null;
@@ -757,7 +743,7 @@ public class ScalablePicture
             ios.close();
 
         } catch ( IOException e ) {
-            logger.info( "ScalablePicture.writeJpg caught IOException: " + e.getMessage() );
+            LOGGER.info( "ScalablePicture.writeJpg caught IOException: " + e.getMessage() );
             e.printStackTrace();
         }
         //writer = null;

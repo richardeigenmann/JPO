@@ -1,6 +1,7 @@
 package jpo.gui;
 
 import java.awt.datatransfer.Transferable;
+import java.util.logging.Level;
 import jpo.dataModel.Tools;
 import jpo.dataModel.Settings;
 import jpo.gui.swing.CollectionJTree;
@@ -16,13 +17,14 @@ import javax.swing.*;
 import javax.swing.tree.*;
 import jpo.dataModel.NodeStatistics;
 import jpo.dataModel.SingleNodeNavigator;
+import jpo.dataModel.SizeCalculator;
 import jpo.export.GenerateWebsiteWizard;
 import jpo.gui.Jpo.ApplicationEventHandler;
 
 /*
 CollectionJTreeController.java:  class that manages a JTree for the collection
  * 
-Copyright (C) 2002 - 2010 Richard Eigenmann, Zurich, Switzerland
+Copyright (C) 2002 - 2011 Richard Eigenmann, Zurich, Switzerland
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -47,7 +49,7 @@ public class CollectionJTreeController
     /**
      * Defines a logger for this class
      */
-    private static Logger logger = Logger.getLogger( CollectionJTreeController.class.getName() );
+    private static final Logger LOGGER = Logger.getLogger( CollectionJTreeController.class.getName() );
     /**
      * reference to the main collection controller so that we can delegate stuff to 
      */
@@ -106,7 +108,7 @@ public class CollectionJTreeController
             TreePath selected = collectionJTree.getSelectionPath();
             SortableDefaultMutableTreeNode dmtn = (SortableDefaultMutableTreeNode) selected.getLastPathComponent();
             if ( dmtn.isRoot() ) {
-                logger.info( "The Root node must not be dragged. Dragging disabled." );
+                LOGGER.info( "The Root node must not be dragged. Dragging disabled." );
                 return null;
             }
             final Object t[] = {dmtn};
@@ -136,11 +138,11 @@ public class CollectionJTreeController
         public boolean importData ( TransferSupport support ) {
             JTree.DropLocation dropLocation = (JTree.DropLocation) support.getDropLocation();
             SortableDefaultMutableTreeNode targetNode = (SortableDefaultMutableTreeNode) dropLocation.getPath().getLastPathComponent();
-            logger.info( String.format( "Choosing node %s as target for path %s, ChildIndex: %d", targetNode.toString(), dropLocation.getPath(), dropLocation.getChildIndex() ) );
+            LOGGER.info( String.format( "Choosing node %s as target for path %s, ChildIndex: %d", targetNode.toString(), dropLocation.getPath(), dropLocation.getChildIndex() ) );
 
             int actionType = support.getDropAction();
             if ( !((actionType == TransferHandler.COPY) || (actionType == TransferHandler.MOVE)) ) {
-                logger.info( String.format( "The event has an odd Action Type: %d. Drop rejected. Copy is %d; Move is %d", actionType, TransferHandler.COPY, TransferHandler.MOVE ) );
+                LOGGER.info( String.format( "The event has an odd Action Type: %d. Drop rejected. Copy is %d; Move is %d", actionType, TransferHandler.COPY, TransferHandler.MOVE ) );
                 return false;
             }
 
@@ -152,13 +154,13 @@ public class CollectionJTreeController
                 Object o = t.getTransferData( JpoTransferable.jpoNodeFlavor );
                 arrayOfNodes = (Object[]) o;
             } catch ( java.awt.datatransfer.UnsupportedFlavorException x ) {
-                logger.info( "Caught an UnsupportedFlavorException: message: " + x.getMessage() );
+                LOGGER.info( "Caught an UnsupportedFlavorException: message: " + x.getMessage() );
                 return false;
             } catch ( java.io.IOException x ) {
-                logger.info( "Caught an IOException: message: " + x.getMessage() );
+                LOGGER.info( "Caught an IOException: message: " + x.getMessage() );
                 return false;
             } catch ( ClassCastException x ) {
-                logger.info( "Caught an ClassCastException: message: " + x.getMessage() );
+                LOGGER.info( "Caught an ClassCastException: message: " + x.getMessage() );
                 return false;
             }
 
@@ -188,7 +190,7 @@ public class CollectionJTreeController
             if ( (groupOfDropLocation != null) && (groupOfDropLocation.getUserObject() instanceof GroupInfo) ) {
                 Settings.memorizeGroupOfDropLocation( groupOfDropLocation );
             } else {
-                logger.info( "Failed to find the group of the drop location. Not memorizing." );
+                LOGGER.info( "Failed to find the group of the drop location. Not memorizing." );
             }
 
 
@@ -238,7 +240,7 @@ public class CollectionJTreeController
     /**
      * The private reference to the JScrollPane that holds the JTree.
      */
-    private JScrollPane collectionJScrollPane = new JScrollPane( collectionJTree );
+    private final JScrollPane collectionJScrollPane = new JScrollPane( collectionJTree );
 
     /**
      * Returns the JScrollPane that holds the JTree.
@@ -258,11 +260,13 @@ public class CollectionJTreeController
         String toolTip = "";
         if ( userObject instanceof GroupInfo ) {
             NodeStatistics ns = new NodeStatistics( node );
-            toolTip = String.format( "Group: %s|%d Nodes: %d Groups, %d Pictures|%s", ((GroupInfo) userObject).getGroupName(), ns.getNumberOfNodes(), ns.getNumberOfGroups(), ns.getNumberOfPictures(), ns.getSizeOfPicturesString() );
+            GroupInfo groupInfo = (GroupInfo) userObject;
+            toolTip = String.format( "<html>Group: %s<br>%d Nodes: %d Groups, %d Pictures<br>%s</html>", groupInfo.getGroupName(), ns.getNumberOfNodes(), ns.getNumberOfGroups(), ns.getNumberOfPictures(), ns.getSizeOfPicturesString() );
         } else if ( userObject instanceof PictureInfo ) {
-            File testfile = ((PictureInfo) userObject).getHighresFile();
-            String fileSize = testfile == null ? "no file" : Tools.fileSizeToString( testfile.length() );
-            toolTip = String.format( "Picture: %s|%s %s", ((PictureInfo) userObject).getDescription(), Settings.jpoResources.getString( "CollectionSizeJLabel" ), fileSize );
+            final PictureInfo pictureInfo = (PictureInfo) userObject;
+            File highresFile = pictureInfo.getHighresFile();
+            String fileSize = highresFile == null ? "no file" : Tools.fileSizeToString( highresFile.length() );
+            toolTip = String.format( "<html><img src=\"%s\"><br>Picture: %s<br>%s %s</html>", pictureInfo.getLowresLocation(), pictureInfo.getDescription(), Settings.jpoResources.getString( "CollectionSizeJLabel" ), fileSize );
         }
         return toolTip;
     }
@@ -274,7 +278,7 @@ public class CollectionJTreeController
      *  @see  GroupPopupInterface
      */
     public void requestShowGroup ( SortableDefaultMutableTreeNode newNode ) {
-        logger.fine( "requesting node: " + newNode.toString() );
+        LOGGER.log( Level.FINE, "requesting node: {0}", newNode.toString());
         Jpo.positionToNode( newNode );
 
 
@@ -344,7 +348,7 @@ public class CollectionJTreeController
      */
     public void requestAddGroup ( SortableDefaultMutableTreeNode popupNode ) {
         if ( !(popupNode.getUserObject() instanceof GroupInfo) ) {
-            logger.warning( String.format( "node %s is of type %s instead of GroupInfo. Proceeding anyway.", popupNode.getUserObject().toString(), popupNode.getUserObject().getClass().toString() ) );
+            LOGGER.warning( String.format( "node %s is of type %s instead of GroupInfo. Proceeding anyway.", popupNode.getUserObject().toString(), popupNode.getUserObject().getClass().toString() ) );
         }
         SortableDefaultMutableTreeNode newNode = popupNode.addGroupNode( "New Group" );
         Settings.memorizeGroupOfDropLocation( newNode );

@@ -18,7 +18,7 @@ import java.util.logging.Logger;
 /*
 Tools.java:  utilities for the JPO application
  *
-Copyright (C) 2002-2010  Richard Eigenmann.
+Copyright (C) 2002-2011  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -40,7 +40,7 @@ public class Tools {
     /**
      * Defines a logger for this class
      */
-    private static Logger logger = Logger.getLogger( Tools.class.getName() );
+    private static final Logger LOGGER = Logger.getLogger( Tools.class.getName() );
 
     /**
      *   method that converts any XML problem characters (&, <, >, ", ') to the 
@@ -310,7 +310,7 @@ public class Tools {
                 }
             } catch ( SecurityException x ) {
                 // Log the error and ignore it and continue
-                logger.info( "Tools.countfiles: got a SecurityException on file: " + fileEntry.toString() + " \n" + x.getMessage() );
+                LOGGER.info( "Tools.countfiles: got a SecurityException on file: " + fileEntry.toString() + " \n" + x.getMessage() );
             }
         }
         return numFiles;
@@ -384,13 +384,13 @@ public class Tools {
             testStream.close();
             return hasReader;
         } catch ( MalformedURLException x ) {
-            logger.info( "Tools.jvmHasReader.MalformedURLException: " + testFile.getPath() + "\nError: " + x.getMessage() );
+            LOGGER.info( "Tools.jvmHasReader.MalformedURLException: " + testFile.getPath() + "\nError: " + x.getMessage() );
             return false;
         } catch ( FileNotFoundException x ) {
-            logger.info( "Tools.jvmHasReader.File not found: " + testFile.getPath() + "\nError: " + x.getMessage() );
+            LOGGER.info( "Tools.jvmHasReader.File not found: " + testFile.getPath() + "\nError: " + x.getMessage() );
             return false;
         } catch ( IOException x ) {
-            logger.info( "Tools.jvmHasReader.IO Exception on: " + testFile.getPath() + "\nError: " + x.getMessage() );
+            LOGGER.info( "Tools.jvmHasReader.IO Exception on: " + testFile.getPath() + "\nError: " + x.getMessage() );
             return false;
         }
     }
@@ -488,7 +488,7 @@ public class Tools {
      * @return The crc of the copied picture.
      */
     public static long copyPicture ( File a, File b ) {
-        logger.fine( String.format( "Copying file %s to file %s", a.toString(), b.toString() ) );
+        LOGGER.fine( String.format( "Copying file %s to file %s", a.toString(), b.toString() ) );
         try {
             InputStream in = new FileInputStream( a );
             OutputStream out = new FileOutputStream( b );
@@ -550,33 +550,33 @@ public class Tools {
      */
     public static boolean moveFile ( File sourceFile, File targetFile ) throws IOException {
         if ( ! sourceFile.exists() ) {
-            logger.severe( String.format( "Source File %s doesn't exist. Move aborted!", sourceFile.toString() ) );
+            LOGGER.severe( String.format( "Source File %s doesn't exist. Move aborted!", sourceFile.toString() ) );
             return false;
         }
         if ( targetFile.exists() ) {
-            logger.warning( String.format( "Target File %s already exists. Move aborted!", targetFile.toString() ) );
+            LOGGER.warning( String.format( "Target File %s already exists. Move aborted!", targetFile.toString() ) );
             return false;
         }
         if ( !sourceFile.canWrite() ) {
-            logger.warning( String.format( "Source File %s is write protected. Move aborted!", sourceFile.getPath() ) );
+            LOGGER.warning( String.format( "Source File %s is write protected. Move aborted!", sourceFile.getPath() ) );
             return false;
         }
 
         if ( sourceFile.renameTo( targetFile ) ) {
-            logger.info( String.format( "Successfully renamed %s to %s", sourceFile.toString(), targetFile.toString() ) );
+            LOGGER.info( String.format( "Successfully renamed %s to %s", sourceFile.toString(), targetFile.toString() ) );
         } else {
             // perhaps target was on a different filesystem. Trying copying
-            logger.info( String.format( "Rename from %s to %s failed. Trying to copy and delete...", sourceFile.toString(), targetFile.toString() ) );
+            LOGGER.info( String.format( "Rename from %s to %s failed. Trying to copy and delete...", sourceFile.toString(), targetFile.toString() ) );
             if ( copyPicture( sourceFile, targetFile ) > Long.MIN_VALUE ) {
-                logger.info( "... copy worked. Now deleting source file...." );
+                LOGGER.info( "... copy worked. Now deleting source file...." );
                 if ( !sourceFile.delete() ) {
-                    logger.info( "Nope, deleting source file failed." );
+                    LOGGER.info( "Nope, deleting source file failed." );
                     return false;
                 } else {
-                    logger.info( "...delete worked.");
+                    LOGGER.info( "...delete worked.");
                 }
             } else {
-                logger.info( "Nope, Copy failed too." );
+                LOGGER.info( "Nope, Copy failed too." );
                 return false;
             }
         }
@@ -658,7 +658,7 @@ public class Tools {
     public static File searchClasspath ( String searchName ) {
         // find the jar file as last item in the Jar file.
         String classpath = System.getProperty( "java.class.path" );
-        logger.info( "Tools.searchClasspath: searching for " + searchName + " in " + classpath );
+        LOGGER.info( "Tools.searchClasspath: searching for " + searchName + " in " + classpath );
         String testToken;
         StringTokenizer st = new StringTokenizer( classpath, ":" );
         while ( st.hasMoreTokens() ) {
@@ -716,7 +716,7 @@ public class Tools {
                 return testFile;
             }
         }
-        logger.severe( String.format( "Could not invent a picture filename for the directory %s and the name %s", targetDir.toString(), startName ) );
+        LOGGER.severe( String.format( "Could not invent a picture filename for the directory %s and the name %s", targetDir.toString(), startName ) );
         return null;
     }
 
@@ -741,7 +741,7 @@ public class Tools {
                 }
             }
         }
-        logger.info( "lowresFilename: Could not create a lowres filename." );
+        LOGGER.info( "lowresFilename: Could not create a lowres filename." );
         return null;
     }
 
@@ -754,7 +754,7 @@ public class Tools {
         try {
             newURL = new URL( getNewLowresFilename() );
         } catch ( MalformedURLException ex ) {
-            logger.severe( ex.getMessage() );
+            LOGGER.severe( ex.getMessage() );
             Thread.dumpStack();
         }
         return newURL;
@@ -778,7 +778,7 @@ public class Tools {
      */
     public static int freeMem () {
         int memory = (int) Runtime.getRuntime().freeMemory() / 1024 / 1024;
-        logger.info( "Free memory: " + memory + "MB" );
+        LOGGER.info( "Free memory: " + memory + "MB" );
         return memory;
     }
 
@@ -893,7 +893,7 @@ public class Tools {
             }
             return crc.getValue();
         } catch ( IOException x ) {
-            logger.info( "Tools.calculateChecksum trapped an IOException. Aborting. Reason:\n" + x.getMessage() );
+            LOGGER.info( "Tools.calculateChecksum trapped an IOException. Aborting. Reason:\n" + x.getMessage() );
             return Long.MIN_VALUE;
         }
     }
@@ -994,12 +994,12 @@ public class Tools {
      */
     public static void runUserFunction ( int userFunction, PictureInfo myObject ) {
         if ( (userFunction < 0) || (userFunction >= Settings.maxUserFunctions) ) {
-            logger.info( "Error: called with an out of bounds index" );
+            LOGGER.info( "Error: called with an out of bounds index" );
             return;
         }
         String command = Settings.userFunctionCmd[userFunction];
         if ( (command == null) || (command.length() == 0) ) {
-            logger.info( "Command " + Integer.toString( userFunction ) + " is not properly defined" );
+            LOGGER.info( "Command " + Integer.toString( userFunction ) + " is not properly defined" );
             return;
         }
 
@@ -1012,12 +1012,12 @@ public class Tools {
 
         URL pictureURL = (myObject).getHighresURLOrNull();
         if ( pictureURL == null ) {
-            logger.info( "The picture doesn't have a valid URL. This is bad. Aborted." );
+            LOGGER.info( "The picture doesn't have a valid URL. This is bad. Aborted." );
             return;
         }
         command = command.replaceAll( "%u", pictureURL.toString() );
 
-        logger.info( "Command to run is: " + command );
+        LOGGER.info( "Command to run is: " + command );
         try {
             // Had big issues here because the simple exec (String) calls a StringTokenizer
             // which messes up the filename parameters
@@ -1033,7 +1033,7 @@ public class Tools {
                 Runtime.getRuntime().exec( cmdarray );
             }
         } catch ( IOException x ) {
-            logger.info( "Runtime.exec collapsed with and IOException: " + x.getMessage() );
+            LOGGER.info( "Runtime.exec collapsed with and IOException: " + x.getMessage() );
         }
     }
 
@@ -1062,7 +1062,7 @@ public class Tools {
     public static void copyFromJarToFile ( Class rootClass, String fileInJar,
             File targetDir,
             String targetFilename ) {
-        logger.fine( String.format( "Copying File %s from classpath %s to filename %s in directory %s", fileInJar, rootClass.toString(), targetFilename, targetDir ) );
+        LOGGER.fine( String.format( "Copying File %s from classpath %s to filename %s in directory %s", fileInJar, rootClass.toString(), targetFilename, targetDir ) );
         String textLine;
         try {
             InputStream in = rootClass.getResourceAsStream( fileInJar );
@@ -1097,7 +1097,7 @@ public class Tools {
      * @return The contents of the file in a string
      */
     public static String copyFromJarToString ( Class rootClass, String fileInJar ) {
-        logger.info( String.format( "Reading File %s from class %s", fileInJar, rootClass.toString() ) );
+        LOGGER.info( String.format( "Reading File %s from class %s", fileInJar, rootClass.toString() ) );
         String fileContent = String.format( "<html><head></head><body>Failed to read file %s from Class %s</body></html>", fileInJar, rootClass.toString() );
         try {
             InputStream in = rootClass.getResourceAsStream( fileInJar );
@@ -1122,7 +1122,7 @@ public class Tools {
      */
     public static String copyFromJarToStringLineByLine ( Class rootClass,
             String fileInJar ) {
-        logger.info( String.format( "Reading File %s from class %s", fileInJar, rootClass.toString() ) );
+        LOGGER.info( String.format( "Reading File %s from class %s", fileInJar, rootClass.toString() ) );
         StringBuffer sb = new StringBuffer();
         try {
             InputStream in = rootClass.getResourceAsStream( fileInJar );

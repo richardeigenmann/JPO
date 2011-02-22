@@ -18,6 +18,7 @@
 
 			<table>
 				<tr><td colspan=2><b>Development Version 0.9</b></td></tr>
+				<tr><td valign="top">22.2.2011</td><td> Added Thumbnail to Tooltips</td></tr>
 				<tr><td valign="top">21.2.2011</td><td> Generated Webpage now also shows a little Google map</td></tr>
 				<tr><td valign="top">12.1.2011</td><td> Settings Dialog now hides email Password</td></tr>
 				<tr><td valign="top">2.1.2011</td><td> Changed Cursor color in Picture Viewer to make it visible</td></tr>
@@ -55,10 +56,10 @@
 				<tr><td valign="top">12.4.2008</td><td> Fixed a bug with the HTML export. It was writing the Path instead of just the filename</td></tr>
 				<tr><td valign="top">6.3.2008</td><td> Implemented Sequential Numbering option in output for Jay.</td></tr>
 				<tr><td valign="top">2.3.2008</td><td> Implemented Autoscroll in the JTree.</td></tr>
-				<tr><td valign="top">18.11.2007</td><td> Added some error checking for the Camera Download Wizard and an mkdirs.</td></tr>
+				<tr><td valign="top">18.11.2007</td><td> Added some error checking for the Camera Download Wizard and mkdirs.</td></tr>
 				<tr><td valign="top">18.11.2007</td><td> Camera Download Wizard now select the root node by default if it is the only node in the collection.</td></tr>
-				<tr><td valign="top">18.11.2007</td><td> Save Dialog now recognizes the autostart collection correctly</td></tr>
-				<tr><td valign="top">15.11.2007</td><td> Fixed Tooltips & Keyboard Navigatiop in Picture Browser</td></tr>
+				<tr><td valign="top">18.11.2007</td><td> Save Dialog now recognises the autostart collection correctly</td></tr>
+				<tr><td valign="top">15.11.2007</td><td> Fixed Tooltips & Keyboard Navigation in Picture Browser</td></tr>
 				<tr><td valign="top">11.11.2007</td><td> Improved Camera Editor</td></tr>
 				<tr><td valign="top">11.11.2007</td><td> Camera Watch Deamon and Wizard</td></tr>
 				<tr><td valign="top">6.11.2007</td><td> Added ability to edit the nodes in the JTree</td></tr>
@@ -69,20 +70,20 @@
 				<tr><td valign="top">14.7.2007</td><td> Add from Camera now can go direct to Edit Camera and Edit Camera close window saves the changes</td></tr>
 				<tr><td valign="top">10.7.2007</td><td> Changed speed of ToolTipManager to make the ToolTips snappier</td></tr>
 				<tr><td valign="top">23.6.2007</td><td> Drag to Windows Explorer and Web File upload applets now seems to work</td></tr>
-				<tr><td valign="top">2.6.2007</td><td> Fixed a bug with the display of Categories that had been pouinted out by Jon Allen</td></tr>
+				<tr><td valign="top">2.6.2007</td><td> Fixed a bug with the display of Categories that had been pointed out by Jon Allen</td></tr>
 				<tr><td valign="top">2.6.2007</td><td> PictureInfoEditor parses the creation date when the cursor moves in or out of the date field</td></tr>
 				<tr><td valign="top">20.5.2007</td><td> Added a progress indicator for loading the files</td></tr>
-				<tr><td valign="top">30.1.2007</td><td> Fixed a	bug in HTM Esxport where the wrong image width for a thumbnail could be written.</td></tr>
+				<tr><td valign="top">30.1.2007</td><td> Fixed a	bug in HTML Export where the wrong image width for a thumbnail could be written.</td></tr>
 				<tr><td valign="top">30.1.2007</td><td> Navigation from Thumbnail added so that you can jump to the groups that refer to this picture.</td></tr>
 				<tr><td valign="top">21.1.2007</td><td> You can now select all Thumbnails with Ctrl-A. Also you can add to your selection with the SHIFT and CTRL modifiers.</td></tr>
-				<tr><td valign="top">20.1.2007</td><td> Loads of Code Refacturing</td></tr>
+				<tr><td valign="top">20.1.2007</td><td> Loads of Code Refactoring</td></tr>
 				<tr><td valign="top">20.1.2007</td><td> Started to add JUnit test cases</td></tr>
-				<tr><td valign="top">18.1.2007</td><td> Added random multi viwer function to menu</td></tr>
+				<tr><td valign="top">18.1.2007</td><td> Added random multi viewer function to menu</td></tr>
 				<tr><td valign="top">29.12.2006</td><td> Fixed stupid bug with Directory Chooser on virgin properties.</td></tr>
 				<tr><td valign="top">19.12.2006</td><td> Fixed an annoying bug whereby it was not reading the cameras data file.</td></tr>
 				<tr><td valign="top">13.11.2006</td><td> Fixed sizing issues.</td></tr>
 				<tr><td valign="top">12.11.2006</td><td> Code refactoring to avoid blocking the Even threat when starting up.</td></tr>
-				<tr><td valign="top">11.11.2006</td><td> Fixed bug with Consolidate that didn like blanks in directory names.</td></tr>
+				<tr><td valign="top">11.11.2006</td><td> Fixed bug with Consolidate that did not like blanks in directory names.</td></tr>
 				<tr><td valign="top">11.11.2006</td><td> Replaced the ini file with a Preferences implementation. The data in the ini file will be parsed before the ini file is removed.</td></tr>
 				<tr><td valign="top">4.11.2006</td><td> Window can now be maximised upon start. This solves the wierd Windows OS window sizing behaviour</td></tr>
 				<tr><td valign="top">14.10.2006</td><td> Sort double triggered the structure changed event which lead to thumbnails no longer showing.</td></tr>
@@ -91,7 +92,7 @@
 				<tr><td valign="top">26.7.2006</td><td> Changed the structure of the ThumbnailCreationQueue access and hopefully fixed the deadlock scenario.</td></tr>
 				<tr><td valign="top">13.7.2006</td><td> Fixed an annoying bug in the Picture Pane: the mouse release was not being trapped after a drag which lead to counterintuitive behaviour.</td></tr>
 				<tr><td valign="top">28.6.2006</td><td> Changed notification texts for better UI handling in Picture Viewer.</td></tr>
-				<tr><td valign="top">28.6.2006</td><td> Added ability to change the description in the Picutre Viewer</td></tr>
+				<tr><td valign="top">28.6.2006</td><td> Added ability to change the description in the Picture Viewer</td></tr>
 				<tr><td valign="top">28.6.2006</td><td> Improved internationalization support by removing hard coded texts and removing hard coded font instructions.</td></tr>
 				<tr><td valign="top">22.6.2006</td><td> Added support for Simplified and Traditional chinese Menus and dialogs. Thanks to Franklin He for the translations.</td></tr>
 				<tr><td valign="top">21.6.2006</td><td> Fixed a nasty bug in the GroupBrowser which caused a memory leak and unnecessary relayouting.</td></tr>
@@ -103,10 +104,10 @@
 				<tr><td valign="top">28.2.2006</td><td> Introduction of new PictureCollection class that reduces the complexity of the SortableDefaultMutableTreeNode. </td></tr>
 				<tr><td valign="top">27.2.2006</td><td> Thumbnails of the pictures being mailed are shown on the Mailing panel. </td></tr>
 				<tr><td valign="top">26.2.2006</td><td> Categories can be selected when adding pictures now. </td></tr>
-				<tr><td valign="top">26.2.2006</td><td> Improved Search Data strucutres and navigation </td></tr>
+				<tr><td valign="top">26.2.2006</td><td> Improved Search Data structures and navigation </td></tr>
 				<tr><td valign="top">25.2.2006</td><td> HTML export now offers zipfile creation with Highres images </td></tr>
 				<tr><td valign="top">21.2.2006</td><td> The picture popup menu now allows you to unselect all selected pictures from mailing. </td></tr>
-				<tr><td valign="top">21.2.2006</td><td> If you remove a group while it is being displayed in the Thumbnail pane the thnubnail pane now reacts to this and jumps to the parent. </td></tr>
+				<tr><td valign="top">21.2.2006</td><td> If you remove a group while it is being displayed in the Thumbnail pane the thumbnail pane now reacts to this and jumps to the parent. </td></tr>
 				<tr><td valign="top">21.2.2006</td><td> Emailing now happens in a thread and is more informative about what is going on </td></tr>
 				<tr><td valign="top">19.2.2006</td><td> Categories can be assigned when importing from Camera now </td></tr>
 				<tr><td valign="top">19.2.2006</td><td> Delete on a selection of Thumbnails now iterates through the thumbnails </td></tr>
@@ -134,7 +135,7 @@
 				<tr><td valign="top">06.10.2004</td><td> Rotation set the angle instead of rotating by the angle. Fixed.</td></tr>
 				<tr><td valign="top">06.10.2004</td><td> Fixed a bug in the Pictureviewer: Image would not rotate if user chose a rotate function</td></tr>
 				<tr><td valign="top">06.10.2004</td><td> Added a display of how many thumbnails are on the queue</td></tr>
-				<tr><td valign="top">28.09.2004</td><td> Fixed the logic of what happens when you are showing an image and then rmove it's node or it's parent node</td></tr>
+				<tr><td valign="top">28.09.2004</td><td> Fixed the logic of what happens when you are showing an image and then remove it's node or it's parent node</td></tr>
 				<tr><td colspan=2><b>Version 0.8.4</b></td></tr>
 				<tr><td valign="top">20.08.2004</td><td> Consolidate now also consolidates the group thumbnails</td></tr>
 				<tr><td valign="top">20.08.2004</td><td> Bugfix: im thumbnail size was not exactly specified thumbnail size or original image was smaller than thumbnail then thumbnail creation could loop</td></tr>
@@ -161,14 +162,14 @@
 				<tr><td valign="top">06.06.2004</td><td> When a thumbnail was freshly created the thumbnail was loaded twice because of the notification</td></tr>
 				<tr><td valign="top">05.06.2004</td><td> When the user selected no Thumbnails on Disk this would cause a loop because of the notification that the thumbnail had changed</td></tr>
 				<tr><td valign="top">05.06.2004</td><td> Fixed a missing label on the delete all thumbnails button</td></tr>
-				<tr><td valign="top">31.05.2004</td><td> Added German resource bundle and abilit to change user language</td></tr>
+				<tr><td valign="top">31.05.2004</td><td> Added German resource bundle and ability to change user language</td></tr>
 				<tr><td valign="top">20.05.2004</td><td> Added ability attach categories to pictures and edit categories</td></tr>
 				<tr><td valign="top">13.05.2004</td><td> The collection datamodel now allows categories and the XmlReader and XmlWriter support this</td></tr>
 				<tr><td valign="top">11.05.2004</td><td> Indent and Outdent functionality added.</td></tr>
 				<tr><td valign="top">11.05.2004</td><td> When a picture is moved to a recent move target in the Picture Viewer the Picture Viewer advances to the next picture in the old group. This allows for easier sorting of collection in full screen mode.</td></tr>
 				<tr><td valign="top">11.05.2004</td><td> When a node is removed that a Picture Viewer is showing it tries to move to the next picture if there is one. If not it closes the window.</td></tr>
 				<tr><td valign="top">11.05.2004</td><td> When a node is removed that was next to a picture the PictureInfoEditor was showing this would wrongly close.</td></tr>
-				<tr><td valign="top">11.05.2004</td><td> When updateing a description the unsaved attribute is now set on a collection</td></tr>
+				<tr><td valign="top">11.05.2004</td><td> When updating a description the unsaved attribute is now set on a collection</td></tr>
 				<tr><td valign="top">10.05.2004</td><td> Added Multiple select drag and drop</td></tr>
 				<tr><td valign="top">10.05.2004</td><td> Added Page display as per Joe Azure's suggestion</td></tr>
 				<tr><td valign="top">06.05.2004</td><td> Add from Camera now remembers the target directory properly. Even when cancel is pressed. This improves user friendlyness. </td></tr>
@@ -183,7 +184,7 @@
 				<tr><td valign="top">28.02.2004</td><td> Added an Info Panel underneath the JTree as recommended by Jochen Schaeuble </td></tr>
 				<tr><td valign="top">28.02.2004</td><td> Dropping a Group on another Group now brings a popup Menu </td></tr>
 				<tr><td valign="top">28.02.2004</td><td> Consolidate can now consolidate the Lowres directories too </td></tr>
-				<tr><td valign="top">28.02.2004</td><td> Adding picures from the camera can now rely on the filename to determine if the picture is known </td></tr>
+				<tr><td valign="top">28.02.2004</td><td> Adding pictures from the camera can now rely on the filename to determine if the picture is known </td></tr>
 				<tr><td valign="top">28.02.2004</td><td> Thumbnail queue requests are taken off queue when a new collection is initialised. </td></tr>
 				<tr><td valign="top">27.02.2004</td><td> Collection Properties now shows disk space used </td></tr>
 				<tr><td valign="top">27.02.2004</td><td> Redesigned the ThumbnailJScrollpane. Only maxThumbnailComponents on the panel. They can load and unload the images.</td></tr>
@@ -206,7 +207,7 @@
 				<tr><td valign="top">24.08.2003</td><td> Added the ability to call up user defined programs</td></tr>
 				<tr><td valign="top">24.08.2003</td><td> Fixed a bug in the Collection Properties where groups were double counted</td></tr>
 				<tr><td valign="top">24.08.2003</td><td> Fixed a bug in the drag and drop of the JTree which would prevent groups and pictures dragged from the Thumbnail pane to work</td></tr>
-				<tr><td valign="top">19.08.2003</td><td> Fixed a bug where clicking forward on a small image in a slideshow would not advance to the new image</td></tr>
+				<tr><td valign="top">19.08.2003</td><td> Fixed a bug where clicking forward on a small image in a slide show would not advance to the new image</td></tr>
 				<tr><td valign="top">19.08.2003</td><td> Fixed some bugs when adding pictures whilst having read protected directories in the selection</td></tr>
 				<tr><td valign="top">19.08.2003</td><td> Fixed a bug where Find could add the found results again</td></tr>
 				<tr><td valign="top">17.08.2003</td><td> Release of 0.8.3</td></tr>
@@ -235,11 +236,11 @@
 				<tr><td valign="top">05.03.2003</td><td> Added keyboard shortcuts to menu functions</td></tr>
 				<tr><td valign="top">02.03.2003</td><td> Added ability to rotate image upon load. (However, the color model changes and HTML exported images can't be read by browsers.)</td></tr>
 				<tr><td valign="top">02.03.2003</td><td> Moved the EXIF information display to the Picture Properties</td></tr>
-				<tr><td valign="top">22.02.2003</td><td> Fixed a bug where adding a single picture could be atted to the ThumbnailJScrollpane several times. This was beacuse a Tree Structure Change event and node selection event were coming in at the same time each firing off a layoutThumbnails thread. The selection event now checks to see if the selection changed before laying out anything and the killThread waits a little longer. </td></tr>
-				<tr><td valign="top">18.02.2003</td><td> Fixed a bug when laying out thumbnails where files were being opend but not closed which could stop all IO in the JVM. </td></tr>
-				<tr><td valign="top">18.02.2003</td><td> Fixed a bug when adding files where files were being opend but not closed which could stop all IO in the JVM. </td></tr>
+				<tr><td valign="top">22.02.2003</td><td> Fixed a bug where adding a single picture could be added to the ThumbnailJScrollpane several times. This was because a Tree Structure Change event and node selection event were coming in at the same time each firing off a layoutThumbnails thread. The selection event now checks to see if the selection changed before laying out anything and the killThread waits a little longer. </td></tr>
+				<tr><td valign="top">18.02.2003</td><td> Fixed a bug when laying out thumbnails where files were being opened but not closed which could stop all IO in the JVM. </td></tr>
+				<tr><td valign="top">18.02.2003</td><td> Fixed a bug when adding files where files were being opened but not closed which could stop all IO in the JVM. </td></tr>
 				<tr><td valign="top">18.02.2003</td><td> Added a progress GUI when adding files </td></tr>
-				<tr><td valign="top">12.02.2003</td><td> Selecting a group didn't bring up thumbnails in Web Start envrionment. Fixed. </td></tr>
+				<tr><td valign="top">12.02.2003</td><td> Selecting a group didn't bring up thumbnails in Web Start environment. Fixed. </td></tr>
 				<tr><td valign="top">19.01.2003</td><td> Sorted the odd behaviour when doing drag over on the Thumbnails </td></tr>
 				<tr><td valign="top">18.01.2003</td><td> Changes in the Tree were not detected by the Thumbnail pane. They now are the Thumbnails are refreshed. (Bobby) </td></tr>
 				<tr><td valign="top">18.01.2003</td><td> The Picture Info Editor fired a change event before any change was applied. </td></tr>
@@ -260,7 +261,7 @@
 				<tr><td valign="top">11.01.2003</td><td> Group popup and Picture Popup Menus now respect the allow edits property </td></tr>
 				<tr><td valign="top">11.01.2003</td><td> Disabled Jar Extraction; It's not thought through and running the generated jar is too difficult</td></tr>
 				<tr><td valign="top">09.01.2003</td><td> Fixed a bug in the color validation on the Autoloader selection field.</td></tr>
-				<tr><td valign="top">09.01.2003</td><td> Added an errordialog when a file delete failed.</td></tr>
+				<tr><td valign="top">09.01.2003</td><td> Added an error dialog when a file delete failed.</td></tr>
 				<tr><td valign="top">09.01.2003</td><td> Fixed a bug where the html export was generating a tag without right bracket</td></tr>
 				<tr><td valign="top">09.01.2003</td><td> Fixed a bug where the wrong folder icon was displayed in the tree</td></tr>
 				<tr><td valign="top">01.01.2003</td><td> Added Collection properties dialog </td></tr>
@@ -276,7 +277,7 @@
 				<tr><td valign="top">06.12.2002</td><td> Open Recent added </td></tr>
 				<tr><td valign="top">27.11.2002</td><td> Doubleclick on a picture node in the tree now opens the picture </td></tr>
 				<tr><td valign="top">26.11.2002</td><td> Fixed some problems with drag and drop on the root node</td></tr>
-				<tr><td valign="top">25.11.2002</td><td> Introduced a progres tracker on the Image Loading</td></tr>
+				<tr><td valign="top">25.11.2002</td><td> Introduced a progress tracker on the Image Loading</td></tr>
 				<tr><td valign="top">24.11.2002</td><td> If Present the date in the Image (EXIF) is extracted and used when adding pictures</td></tr>
 				<tr><td valign="top">24.11.2002</td><td> Implemented Drew Noakes' 1.2 version of EXIF extractor </td></tr>
 				<tr><td valign="top">20.11.2002</td><td> Started transition to Java Web Start</td></tr>

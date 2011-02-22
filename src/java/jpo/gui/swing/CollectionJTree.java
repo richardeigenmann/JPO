@@ -112,12 +112,12 @@ public class CollectionJTree
     }
 
 
-    @Override
+    /*@Override
     public JToolTip createToolTip() {
         MultiLineToolTip tip = new MultiLineToolTip();
         tip.setComponent( this );
         return tip;
-    }
+    }*/
 
     /**
      *  Icon of a closed folder to be used on groups that are not expanded in the JTree.
