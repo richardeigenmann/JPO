@@ -1,5 +1,6 @@
 package jpo.gui;
 
+import java.util.logging.Level;
 import jpo.dataModel.NodeNavigatorInterface;
 import java.awt.Dimension;
 import java.awt.dnd.DnDConstants;
@@ -39,7 +40,7 @@ import jpo.gui.swing.Thumbnail;
 /*
 ThumbnailController.java:  class that displays a visual respresentation of the specified node
 
-Copyright (C) 2002 - 2010  Richard Eigenmann.
+Copyright (C) 2002 - 2011  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -59,7 +60,7 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  *
  * TODO: move the methods to make the ThumbnailController back into this class from ThumbnailCreationFactory
  * TODO: split this class into a GUI component that deals with the GUI stuff and one which deals with the
- * creation stuff and all the model notifcations. I.e. MVC..
+ * creation stuff and all the model notifications. I.e. MVC..
  */
 public class ThumbnailController
         implements DropTargetListener,
@@ -106,9 +107,9 @@ public class ThumbnailController
     public SortableDefaultMutableTreeNode myNode;
 
     /**
-     * Defines a logger for this class
+     * Defines a LOGGER for this class
      */
-    private static Logger logger = Logger.getLogger( ThumbnailController.class.getName() );
+    private static final Logger LOGGER = Logger.getLogger( ThumbnailController.class.getName() );
 
     /**
      *  A set of picture nodes of which one indicated by {@link #myIndex} is to be shown
@@ -184,13 +185,13 @@ public class ThumbnailController
         if ( !newNavigator.equals( myNodeNavigator ) ) {
             return false;
         } else if ( newIndex == myIndex ) {
-            logger.fine( String.format( "Same index: %d on same Browser %s. But is it actually the same node?", newIndex, newNavigator.toString() ) );
+            LOGGER.fine( String.format( "Same index: %d on same Browser %s. But is it actually the same node?", newIndex, newNavigator.toString() ) );
             //return true;
             SortableDefaultMutableTreeNode testNode = newNavigator.getNode( newIndex );
-            logger.fine( String.format( "The refferingNode is the same as the newNode: %b", testNode == myNode ) );
+            LOGGER.fine( String.format( "The refferingNode is the same as the newNode: %b", testNode == myNode ) );
             return testNode == myNode;
         } else {
-            logger.fine( String.format( "Same Browser but Different index: new: %d old: %d", newIndex, myIndex ) );
+            LOGGER.fine( String.format( "Same Browser but Different index: new: %d old: %d", newIndex, myIndex ) );
             return false;
         }
     }
@@ -203,7 +204,7 @@ public class ThumbnailController
      *  @param index	The position of this object to be displayed.
      */
     public void setNode( NodeNavigatorInterface mySetOfNodes, int index ) {
-        logger.fine( String.format( "Setting Thubnail %d to index %d in Browser %s ", this.hashCode(), index, mySetOfNodes.toString() ) );
+        LOGGER.fine( String.format( "Setting Thubnail %d to index %d in Browser %s ", this.hashCode(), index, mySetOfNodes.toString() ) );
         unqueue();
 
         this.myNodeNavigator = mySetOfNodes;
@@ -235,7 +236,7 @@ public class ThumbnailController
     private void attachChangeListeners() {
         // unattach from the change Listener
         if ( registeredPictureInfoChangeListener != null ) {
-            logger.fine( String.format( "unattaching ThumbnailController %d from Picturinfo %d", this.hashCode(), registeredPictureInfoChangeListener.hashCode() ) );
+            LOGGER.fine( String.format( "unattaching ThumbnailController %d from Picturinfo %d", this.hashCode(), registeredPictureInfoChangeListener.hashCode() ) );
             registeredPictureInfoChangeListener.removePictureInfoChangeListener( this );
             registeredPictureInfoChangeListener = null;
         }
@@ -249,7 +250,7 @@ public class ThumbnailController
         if ( myNode != null ) {
             if ( myNode.getUserObject() instanceof PictureInfo ) {
                 PictureInfo pi = (PictureInfo) myNode.getUserObject();
-                logger.fine( String.format( "attaching ThumbnailController %d to Picturinfo %d", this.hashCode(), pi.hashCode() ) );
+                LOGGER.fine( String.format( "attaching ThumbnailController %d to Picturinfo %d", this.hashCode(), pi.hashCode() ) );
                 pi.addPictureInfoChangeListener( this );
                 registeredPictureInfoChangeListener = pi; //remember so we can poll
             } else if ( myNode.getUserObject() instanceof GroupInfo ) {
@@ -274,7 +275,7 @@ public class ThumbnailController
         if ( newRequest ) {
             setPendingIcon();
         } else {
-            logger.fine( String.format( "Why have we just sent in a request for Thumbnail creation for %s when it's already on the queue?", toString() ) );
+            LOGGER.fine( String.format( "Why have we just sent in a request for Thumbnail creation for %s when it's already on the queue?", toString() ) );
         }
     }
 
@@ -284,7 +285,7 @@ public class ThumbnailController
      */
     public void setPendingIcon() {
         if ( myNode == null ) {
-            logger.severe( "Referring node is null! How did this happen?" );
+            LOGGER.severe( "Referring node is null! How did this happen?" );
             Thread.dumpStack();
             return;
         }
@@ -376,7 +377,7 @@ public class ThumbnailController
             if ( Settings.pictureCollection.isSelected( myNode ) ) {
                 Settings.pictureCollection.removeFromSelection( myNode );
             } else {
-                logger.fine( String.format( "Adding; Now Selected: %d", Settings.pictureCollection.getSelectedNodesAsVector().size() ) );
+                LOGGER.fine( String.format( "Adding; Now Selected: %d", Settings.pictureCollection.getSelectedNodesAsVector().size() ) );
                 Settings.pictureCollection.addToSelectedNodes( myNode );
             }
         } else {
@@ -385,7 +386,7 @@ public class ThumbnailController
             } else {
                 Settings.pictureCollection.clearSelection();
                 Settings.pictureCollection.addToSelectedNodes( myNode );
-                logger.fine( String.format( "1 selection added; Now Selected: %d", Settings.pictureCollection.getSelectedNodesAsVector().size() ) );
+                LOGGER.fine( String.format( "1 selection added; Now Selected: %d", Settings.pictureCollection.getSelectedNodesAsVector().size() ) );
             }
         }
     }
@@ -402,7 +403,7 @@ public class ThumbnailController
             GroupPopupMenu groupPopupMenu = new GroupPopupMenu( Jpo.collectionJTreeController, myNode );
             groupPopupMenu.show( e.getComponent(), e.getX(), e.getY() );
         } else {
-            logger.severe( String.format( "Processing a right click response on an unknown node type: %s", myNode.getUserObject().getClass().toString() ) );
+            LOGGER.severe( String.format( "Processing a right click response on an unknown node type: %s", myNode.getUserObject().getClass().toString() ) );
             Thread.dumpStack();
         }
     }
@@ -444,7 +445,7 @@ public class ThumbnailController
      *  changed.
      */
     public void groupInfoChangeEvent( GroupInfoChangeEvent e ) {
-        logger.fine( String.format( "Got a Group Change event: %s", e.toString() ) );
+        LOGGER.fine( String.format( "Got a Group Change event: %s", e.toString() ) );
         if ( e.getLowresLocationChanged() ) {
             requestThumbnailCreation( ThumbnailQueueRequest.HIGH_PRIORITY, false );
         } else if ( e.getWasSelected() ) {
@@ -474,7 +475,7 @@ public class ThumbnailController
      * @param thumbnailSizeFactor
      */
     public void setFactor( float thumbnailSizeFactor ) {
-        logger.fine( String.format( "Scaling factor is being set to %f", thumbnailSizeFactor ) );
+        LOGGER.fine( String.format( "Scaling factor is being set to %f", thumbnailSizeFactor ) );
         theThumbnail.setFactor( thumbnailSizeFactor );
     }
 
@@ -526,13 +527,13 @@ public class ThumbnailController
      * @param e
      */
     public void treeNodesChanged( TreeModelEvent e ) {
-        logger.fine( String.format( "ThumbnailController %d detected a treeNodesChanged event: %s", hashCode(), e ) );
+        LOGGER.fine( String.format( "ThumbnailController %d detected a treeNodesChanged event: %s", hashCode(), e ) );
 
         // find out whether our node was changed
         Object[] children = e.getChildren();
         if ( children == null ) {
-            // the root path does not have children as it doesn't have a parent
-            logger.fine( "Supposedly we got the root node?" );
+            // the root path does not have children as it doesn'transferable have a parent
+            LOGGER.fine( "Supposedly we got the root node?" );
             return;
         }
 
@@ -543,10 +544,10 @@ public class ThumbnailController
                 Object userObject = myNode.getUserObject();
                 if ( userObject instanceof GroupInfo ) {
                     // determine if the icon changed
-                    // logger.info( "ThumbnailController should be reloading the icon..." );
+                    // LOGGER.info( "ThumbnailController should be reloading the icon..." );
                     requestThumbnailCreation( ThumbnailQueueRequest.HIGH_PRIORITY, false );
                 } else {
-                    logger.fine( String.format( "ThumbnailController %d detected a treeNodesChanged event: %s on a PictureInfo node", hashCode(), e ) );
+                    LOGGER.fine( String.format( "ThumbnailController %d detected a treeNodesChanged event: %s on a PictureInfo node", hashCode(), e ) );
 
                 }
                 // what do we do here when a PictureInfor has updated?
@@ -561,7 +562,7 @@ public class ThumbnailController
      * @param e
      */
     public void treeNodesInserted( TreeModelEvent e ) {
-        logger.fine( String.format( "ThumbnailController %d detected a treeNodesInserted event: %s", hashCode(), e ) );
+        LOGGER.fine( String.format( "ThumbnailController %d detected a treeNodesInserted event: %s", hashCode(), e ) );
     }
 
 
@@ -570,7 +571,7 @@ public class ThumbnailController
      * @param e
      */
     public void treeNodesRemoved( TreeModelEvent e ) {
-        logger.fine( String.format( "ThumbnailController %d detected a treeNodesRemoved event: %s", hashCode(), e ) );
+        LOGGER.fine( String.format( "ThumbnailController %d detected a treeNodesRemoved event: %s", hashCode(), e ) );
     }
 
 
@@ -579,7 +580,7 @@ public class ThumbnailController
      * @param e
      */
     public void treeStructureChanged( TreeModelEvent e ) {
-        logger.fine( String.format( "ThumbnailController %d detected a treeStructureChanged event: %s", hashCode(), e ) );
+        LOGGER.fine( String.format( "ThumbnailController %d detected a treeStructureChanged event: %s", hashCode(), e ) );
 
         attachChangeListeners();
 
@@ -631,7 +632,7 @@ public class ThumbnailController
      * @param event
      */
     public void dragExit( DropTargetEvent event ) {
-        logger.fine( "Thumbnail.dragExit( DropTargetEvent ): invoked" );
+        LOGGER.fine( "Thumbnail.dragExit( DropTargetEvent ): invoked" );
     }
 
 
@@ -660,20 +661,20 @@ public class ThumbnailController
                 return;
             }
 
-            JpoTransferable t;
+            JpoTransferable transferable;
 
             if ( Settings.pictureCollection.countSelectedNodes() < 1 ) {
                 Object[] nodes = { myNode };
-                t = new JpoTransferable( nodes );
+                transferable = new JpoTransferable( nodes );
             } else {
-                t = new JpoTransferable( Settings.pictureCollection.getSelectedNodes() );
+                transferable = new JpoTransferable( Settings.pictureCollection.getSelectedNodes() );
             }
 
             try {
-                event.startDrag( DragSource.DefaultMoveNoDrop, t, myDragSourceListener );
-                logger.fine( "Drag started on node: " + myNode.getUserObject().toString() );
+                event.startDrag( DragSource.DefaultMoveNoDrop, transferable, myDragSourceListener );
+                LOGGER.log( Level.FINE, "Drag started on node: {0}", myNode.getUserObject().toString());
             } catch ( InvalidDnDOperationException x ) {
-                logger.fine( "Threw a InvalidDnDOperationException: reason: " + x.getMessage() );
+                LOGGER.log( Level.FINE, "Threw a InvalidDnDOperationException: reason: {0}", x.getMessage());
             }
         }
     }

@@ -17,7 +17,6 @@ import javax.swing.*;
 import javax.swing.tree.*;
 import jpo.dataModel.NodeStatistics;
 import jpo.dataModel.SingleNodeNavigator;
-import jpo.dataModel.SizeCalculator;
 import jpo.export.GenerateWebsiteWizard;
 import jpo.gui.Jpo.ApplicationEventHandler;
 
@@ -154,13 +153,13 @@ public class CollectionJTreeController
                 Object o = t.getTransferData( JpoTransferable.jpoNodeFlavor );
                 arrayOfNodes = (Object[]) o;
             } catch ( java.awt.datatransfer.UnsupportedFlavorException x ) {
-                LOGGER.info( "Caught an UnsupportedFlavorException: message: " + x.getMessage() );
+                LOGGER.log( Level.INFO, "Caught an UnsupportedFlavorException: message: {0}", x.getMessage());
                 return false;
             } catch ( java.io.IOException x ) {
-                LOGGER.info( "Caught an IOException: message: " + x.getMessage() );
+                LOGGER.log( Level.INFO, "Caught an IOException: message: {0}", x.getMessage());
                 return false;
             } catch ( ClassCastException x ) {
-                LOGGER.info( "Caught an ClassCastException: message: " + x.getMessage() );
+                LOGGER.log( Level.INFO, "Caught an ClassCastException: message: {0}", x.getMessage());
                 return false;
             }
 

@@ -18,6 +18,7 @@
 
 			<table>
 				<tr><td colspan=2><b>Development Version 0.9</b></td></tr>
+				<tr><td valign="top">27.3.2011</td><td> Fixed File Copy for multiple files</td></tr>
 				<tr><td valign="top">22.2.2011</td><td> Added Thumbnail to Tooltips</td></tr>
 				<tr><td valign="top">21.2.2011</td><td> Generated Webpage now also shows a little Google map</td></tr>
 				<tr><td valign="top">12.1.2011</td><td> Settings Dialog now hides email Password</td></tr>
@@ -388,7 +389,7 @@
 			</table>
 
 			<hr>
-			<p>Last update to this page: 21 Feb 2011<br>
+			<p>Last update to this page: 27 Mar 2011<br>
 			Copyright 2003-2011 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
 		</td>
 	</tr>

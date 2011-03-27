@@ -1,12 +1,13 @@
 package jpo.gui;
 
+import java.util.logging.Level;
 import jpo.dataModel.Settings;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Enumeration;
 import jpo.dataModel.GroupInfo;
-import jpo.*;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
 import java.util.Vector;
 import java.util.logging.Logger;
@@ -40,10 +41,9 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 public class TreeNodeController {
 
     /**
-     * Defines a logger for this class
+     * Defines a LOGGER for this class
      */
-    private static Logger logger = Logger.getLogger( TreeNodeController.class.getName() );
-
+    private static Logger LOGGER = Logger.getLogger( TreeNodeController.class.getName() );
 
     /**
      *  This method brings up a Filechooser and then loads the images off the specified flat file.
@@ -63,7 +63,7 @@ public class TreeNodeController {
             try {
                 targetNode.addFlatFile( chosenFile );
             } catch ( IOException e ) {
-                logger.info( "IOException " + e.getMessage() );
+                LOGGER.log( Level.INFO, "IOException {0}", e.getMessage() );
                 JOptionPane.showMessageDialog( Settings.anchorFrame,
                         e.getMessage(),
                         Settings.jpoResources.getString( "genericError" ),
@@ -73,47 +73,51 @@ public class TreeNodeController {
         }
     }
 
-
     /**
-     *   brings up a file chooser
-     *   and allows the user to specify where the image should to be copied to and then
-     *   copies it.
+     *   Brings up a JFileChooser to select the target location and then copies the images to the target location
      *
-     *
-     * @param node
+     * @param nodes The Vector of nodes to be copied to a new location
      */
-    public static void copyToNewLocation( SortableDefaultMutableTreeNode node ) {
-        URL originalUrl;
-        if ( !( node.getUserObject() instanceof PictureInfo ) ) {
-            logger.info( "SDMTN.copyToNewLocation: inkoked on a non PictureInfo type node! Aborted." );
-            return;
-        }
-        try {
-            originalUrl = ( (PictureInfo) node.getUserObject() ).getHighresURL();
-        } catch ( MalformedURLException x ) {
-            logger.info( "MarformedURLException trapped on: " + ( (PictureInfo) node.getUserObject() ).getHighresLocation() + "\nReason: " + x.getMessage() );
-            JOptionPane.showMessageDialog(
-                    Settings.anchorFrame,
-                    "MarformedURLException trapped on:\n" + ( (PictureInfo) node.getUserObject() ).getHighresLocation() + "\nReason: " + x.getMessage(),
-                    Settings.jpoResources.getString( "genericError" ),
-                    JOptionPane.ERROR_MESSAGE );
-            return;
-        }
-
+    public static void copyToNewLocation( SortableDefaultMutableTreeNode[] nodes ) {
         JFileChooser jFileChooser = new JFileChooser();
 
         jFileChooser.setFileSelectionMode( JFileChooser.DIRECTORIES_ONLY );
         jFileChooser.setApproveButtonText( Settings.jpoResources.getString( "CopyImageDialogButton" ) );
-        jFileChooser.setDialogTitle( Settings.jpoResources.getString( "CopyImageDialogTitle" ) + originalUrl );
+        jFileChooser.setDialogTitle( Settings.jpoResources.getString( "CopyImageDialogTitle" ) );
         jFileChooser.setCurrentDirectory( Settings.getMostRecentCopyLocation() );
 
         int returnVal = jFileChooser.showSaveDialog( Settings.anchorFrame );
-        if ( returnVal == JFileChooser.APPROVE_OPTION ) {
-            node.validateAndCopyPicture( jFileChooser.getSelectedFile() );
+        if ( returnVal != JFileChooser.APPROVE_OPTION ) {
+            return;
         }
+
+        copyToLocation( nodes, jFileChooser.getSelectedFile() );
     }
 
+        /**
+     *   Brings up a JFileChooser to select the target location and then copies the images to the target location
+     *
+     * @param nodes The Vector of nodes to be copied to a new location
+     */
+    public static void copyToLocation( SortableDefaultMutableTreeNode[] nodes, File targetLocation ) {
+        int picsCopied = 0;
+        for ( SortableDefaultMutableTreeNode node : nodes ) {
+            if ( node.getUserObject() instanceof PictureInfo ) {
+                node.validateAndCopyPicture( targetLocation );
+                picsCopied++;
 
+            } else {
+                LOGGER.info( String.format( "Skipping non PictureInfo node %s", node.toString() ) );
+            }
+        }
+        JOptionPane.showMessageDialog( Settings.anchorFrame,
+                String.format( Settings.jpoResources.getString( "copyToNewLocationSuccess" ), picsCopied, nodes.length ),
+                Settings.jpoResources.getString( "genericInfo" ),
+                JOptionPane.INFORMATION_MESSAGE );
+
+    }
+
+    
     /**
      *   Bring up a Dialog where the user can input a new name for a file and rename it.
      * @param node
@@ -138,18 +142,17 @@ public class TreeNodeController {
         if ( selectedValue != null ) {
             File newName = new File( selectedValue );
             if ( highresFile.renameTo( newName ) ) {
-                logger.info( "Sucessufully renamed: " + highresFile.toString() + " to: " + selectedValue );
+                LOGGER.log( Level.INFO, "Sucessufully renamed: {0} to: {1}", new Object[] { highresFile.toString(), selectedValue } );
                 try {
                     pi.setHighresLocation( newName.toURI().toURL() );
                 } catch ( MalformedURLException x ) {
-                    logger.info( "Caught a MalformedURLException because of: " + x.getMessage() );
+                    LOGGER.log( Level.INFO, "Caught a MalformedURLException because of: {0}", x.getMessage() );
                 }
             } else {
-                logger.info( "Rename failed from : " + highresFile.toString() + " to: " + selectedValue );
+                LOGGER.log( Level.INFO, "Rename failed from : {0} to: {1}", new Object[] { highresFile.toString(), selectedValue } );
             }
         }
     }
-
 
     /**
      *  This function brings up a PictureInfoEditor of a GroupInfoEditor
@@ -157,7 +160,7 @@ public class TreeNodeController {
      */
     public static void showEditGUI( SortableDefaultMutableTreeNode node ) {
         if ( node == null ) {
-            logger.severe( "How come this method was called with a null node?");
+            LOGGER.severe( "How come this method was called with a null node?" );
             Thread.dumpStack();
             return;
         }
@@ -166,10 +169,9 @@ public class TreeNodeController {
         } else if ( node.getUserObject() instanceof GroupInfo ) {
             new GroupInfoEditor( node );
         } else {
-            logger.info( String.format( "Don't know what kind of editor to use on node %s Ignoring request.", node.toString() ) );
+            LOGGER.info( String.format( "Don't know what kind of editor to use on node %s Ignoring request.", node.toString() ) );
         }
     }
-
 
     /**
      *  This function opens the CateGoryUsageEditor.
@@ -186,7 +188,7 @@ public class TreeNodeController {
             CategoryUsageJFrame cujf = new CategoryUsageJFrame();
             cujf.setGroupSelection( node, false );
         } else {
-            logger.info( "SortableDefaultMutableTreeNode.showCategoryUsageGUI: doesn't know what kind of editor to use. Ignoring request." );
+            LOGGER.info( "SortableDefaultMutableTreeNode.showCategoryUsageGUI: doesn't know what kind of editor to use. Ignoring request." );
         }
     }
 }

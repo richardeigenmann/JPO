@@ -44,7 +44,6 @@ public class PictureCollection {
      */
     private static Logger logger = Logger.getLogger( PictureCollection.class.getName() );
 
-
     /**
      *  Constructs a new PictureCollection object with a root object
      */
@@ -56,7 +55,6 @@ public class PictureCollection {
         setAllowEdits( true );
         setUnsavedUpdates( false );
     }
-
 
     /**
      * This method wipes out the data in the picture collection.
@@ -95,12 +93,10 @@ public class PictureCollection {
             }
         }
     }
-
     /**
      *   This variable refers to the tree model.
      */
     private DefaultTreeModel treeModel;
-
 
     /**
      *   The DefaultTreeModel allows notification of tree change events to listening
@@ -110,12 +106,10 @@ public class PictureCollection {
     public DefaultTreeModel getTreeModel() {
         return ( treeModel );
     }
-
     /**
      *  controls whether updates should be fired from add, delete, insert methods
      */
     public static boolean sendModelUpdates = true;
-
 
     /**
      *  returns true if edits are allowed on this collection
@@ -125,7 +119,6 @@ public class PictureCollection {
         return sendModelUpdates;
     }
 
-
     /**
      * Sets the flag whether to send model updates or not
      * @param status
@@ -133,7 +126,6 @@ public class PictureCollection {
     public void setSendModelUpdates( boolean status ) {
         sendModelUpdates = status;
     }
-
 
     /**
      * This method sends a nodeStructureChanged event through to the
@@ -154,7 +146,6 @@ public class PictureCollection {
             SwingUtilities.invokeLater( r );
         }
     }
-
 
     /**
      * This method sends a nodeChanged event through to the
@@ -177,7 +168,6 @@ public class PictureCollection {
             SwingUtilities.invokeLater( r );
         }
     }
-
 
     /**
      * This method sends a nodesWereInserted event through to the
@@ -202,7 +192,6 @@ public class PictureCollection {
         }
     }
 
-
     /**
      * This method sends a nodesWereRemoved event through to the
      * listeners of the Collection's model. It makes sure the
@@ -226,13 +215,11 @@ public class PictureCollection {
             SwingUtilities.invokeLater( r );
         }
     }
-
     /**
      *  The root node of the tree data model. It holds all the branches
      *  to the groups and pictures
      **/
     private SortableDefaultMutableTreeNode rootNode;
-
 
     /**
      *  This method returns the root node of the collection
@@ -241,7 +228,6 @@ public class PictureCollection {
     public SortableDefaultMutableTreeNode getRootNode() {
         return rootNode;
     }
-
 
     /**
      * This method sets the root node of the collection
@@ -254,7 +240,6 @@ public class PictureCollection {
         }
         this.rootNode = rootNode;
     }
-
     /**
      *   This variable indicates whether uncommited changes exist for this collection.
      *   Care should be taken when adding removing or changing nodes to update this flag.
@@ -268,7 +253,6 @@ public class PictureCollection {
      */
     private boolean unsavedUpdates = false;
 
-
     /**
      *   This method marks the root node of the tree as having unsaved updates.
      *
@@ -278,7 +262,6 @@ public class PictureCollection {
     public void setUnsavedUpdates() {
         setUnsavedUpdates( true );
     }
-
 
     /**
      *   This method allows the programmer to set whether the tree has unsaved updates or not.
@@ -290,7 +273,6 @@ public class PictureCollection {
         unsavedUpdates = b;
     }
 
-
     /**
      *   This method returns true is the tree has unsaved updates, false if it has none
      *
@@ -301,13 +283,11 @@ public class PictureCollection {
     public boolean getUnsavedUpdates() {
         return unsavedUpdates;
     }
-
     /**
      *  This flag controls whether this collection can be edited. This is queried by several
      *  menus and will restrict the options a use has if it returns true.
      */
     private boolean allowEdits;
-
 
     /**
      * Returns true if edits are allowed on this collection
@@ -317,7 +297,6 @@ public class PictureCollection {
         return allowEdits;
     }
 
-
     /**
      * sets the allow edit status of this collection
      * @param status pass true to allow edits, false to forbid
@@ -325,12 +304,10 @@ public class PictureCollection {
     public void setAllowEdits( boolean status ) {
         allowEdits = status;
     }
-
     /**
      *   This variable holds the reference to the queries executed against the collection.
      */
     private DefaultTreeModel queriesTreeModel = null;
-
 
     /**
      * Call this method when you need the TreeModel for the queries
@@ -343,7 +320,6 @@ public class PictureCollection {
         return ( queriesTreeModel );
     }
 
-
     /**
      * Call this method when you need the toot Node for the queries
      * @return
@@ -351,7 +327,6 @@ public class PictureCollection {
     public DefaultMutableTreeNode getQueriesRootNode() {
         return ( (DefaultMutableTreeNode) getQueriesTreeModel().getRoot() );
     }
-
 
     /**
      *   Call this method when you need to set the TreeModel for the queries
@@ -361,7 +336,6 @@ public class PictureCollection {
         queriesTreeModel = tm;
     }
 
-
     /**
      *   Call this method when you need to create a new TreeModel for the queries.
      */
@@ -369,14 +343,12 @@ public class PictureCollection {
         setQueriesTreeModel( new DefaultTreeModel( new DefaultMutableTreeNode( Settings.jpoResources.getString( "queriesTreeModelRootNode" ) ) ) );
     }
 
-
     /**
      *   Clear out the nodes in the exisitng queries Tree Model
      */
     public void clearQueriesTreeModel() {
         getQueriesRootNode().removeAllChildren();
     }
-
 
     /**
      * Adds a query to the Query Tree Model. It has been made synchroneous on the EDT
@@ -390,13 +362,11 @@ public class PictureCollection {
         queriesTreeModel.nodesWereInserted( getQueriesRootNode(), new int[] { getQueriesRootNode().getIndex( newNode ) } );
         return newNode;
     }
-
     /**
      *  This HashMap holds the categories that will be available for this collection.
      *  It is only populated on the root node.
      */
     private HashMap<Integer, String> categories;
-
 
     /**
      *  Acessor for the categories object
@@ -405,7 +375,6 @@ public class PictureCollection {
     public HashMap<Integer, String> getCategories() {
         return categories;
     }
-
 
     /**
      *  This adds a category to the HashMap
@@ -419,14 +388,12 @@ public class PictureCollection {
         final CategoryQuery q = new CategoryQuery( index );
         Runnable r = new Runnable() {
 
-
             public void run() {
                 addQueryToTreeModel( q );
             }
         };
         SwingUtilities.invokeLater( r );
     }
-
 
     /**
      *  This adds a category to the HashMap
@@ -445,7 +412,6 @@ public class PictureCollection {
         return key;
     }
 
-
     /**
      *  Renames a category in the HashMap
      * @param key
@@ -456,7 +422,6 @@ public class PictureCollection {
         addCategory( key, category );
     }
 
-
     /**
      * Returns an iterator through the categories keys
      * @return an interator over the categories keys
@@ -464,7 +429,6 @@ public class PictureCollection {
     public Iterator getCategoryIterator() {
         return categories.keySet().iterator();
     }
-
 
     /**
      * Returns the Value for the key
@@ -475,7 +439,6 @@ public class PictureCollection {
         return categories.get( key );
     }
 
-
     /**
      * Removes the category associated with the
      * @param key The Key to be removed
@@ -484,7 +447,6 @@ public class PictureCollection {
     public String removeCategory( Integer key ) {
         return categories.remove( key );
     }
-
 
     /**
      * Counts the number of nodes using the category
@@ -511,7 +473,6 @@ public class PictureCollection {
         return count;
     }
 
-
     /**
      * Returns an ArrayList of the nodes that match this category
      * @param key The key of the category to find
@@ -537,7 +498,6 @@ public class PictureCollection {
         return resultList;
     }
 
-
     /**
      * Removes the category from the nodes using it
      * @param key The category to poll
@@ -557,7 +517,6 @@ public class PictureCollection {
         }
     }
 
-
     /**
      * Returns the number of categories available.
      * @return number of categories
@@ -565,13 +524,11 @@ public class PictureCollection {
     public int countCategories() {
         return categories.size();
     }
-
     /**
      *   This Hash Set hold references to the selected nodes for mailing. It works just like the selection
      *   HashSet only that the purpose is a different one. As such it has different behaviour.
      */
     private Vector<SortableDefaultMutableTreeNode> mailSelection;
-
 
     /**
      *  This method places the current SDMTN into the mailSelection HashSet.
@@ -589,7 +546,6 @@ public class PictureCollection {
         }
     }
 
-
     /**
      *  This method inverts the status of the node on the mail selection HashSet
      * @param node
@@ -601,7 +557,6 @@ public class PictureCollection {
             addToMailSelected( node );
         }
     }
-
 
     /**
      *  This method clears the mailSelection HashSet.
@@ -615,7 +570,6 @@ public class PictureCollection {
         }
     }
 
-
     /**
      *  This method removes the current SDMTN from the mailSelection HashSet.
      * @param node the node to poll from the mail selection
@@ -627,7 +581,6 @@ public class PictureCollection {
             ( (PictureInfo) userObject ).sendWasMailUnselectedEvent();
         }
     }
-
 
     /**
      *  This returns whether the SDMTN is part of the mailSelection HashSet.
@@ -642,7 +595,6 @@ public class PictureCollection {
         }
     }
 
-
     /**
      *  returns an array of the mailSelected nodes.
      * @return
@@ -650,7 +602,6 @@ public class PictureCollection {
     public Object[] getMailSelectedNodes() {
         return mailSelection.toArray();
     }
-
 
     /**
      *   This method returns true if the indicated picture file is already a member
@@ -693,7 +644,6 @@ public class PictureCollection {
         return false;
     }
 
-
     /**
      *   This method returns true if the indicated checksum is already a member
      *   of the collection. Otherwise it returns false.
@@ -718,18 +668,15 @@ public class PictureCollection {
         }
         return false;
     }
-
     /**
      *  status variable to find out if a thread is loading a file
      */
     public boolean fileLoading = false;
-
     /**
      *  A file reference to the file that was loaded. It will come in handy when
      *  a save instruction comes along.
      */
     private File xmlFile;
-
 
     /**
      *  This method sets the file which represents the current collection.
@@ -740,7 +687,6 @@ public class PictureCollection {
         xmlFile = f;
     }
 
-
     /**
      *  This method returns the xml file for the collection
      * @return
@@ -748,7 +694,6 @@ public class PictureCollection {
     public File getXmlFile() {
         return xmlFile;
     }
-
 
     /**
      * Loads the specified file into the root node of the collection
@@ -772,7 +717,6 @@ public class PictureCollection {
         }
     }
 
-
     /**
      * method that saves the entire index in XML format.
      * @return true if successful, false if not
@@ -793,7 +737,6 @@ public class PictureCollection {
             return true;
         }
     }
-
 
     /**
      * This method returns an array of the groups that hold a reference to the 
@@ -830,12 +773,10 @@ public class PictureCollection {
         }
         return parentGroups.toArray( new SortableDefaultMutableTreeNode[0] );
     }
-
     /**
      *   This Hash Set holds references to the selected nodes.
      */
     public final Vector<SortableDefaultMutableTreeNode> selection = new Vector<SortableDefaultMutableTreeNode>();
-
 
     /**
      * This method places the current {@link SortableDefaultMutableTreeNode} into the selection HashSet.
@@ -855,7 +796,6 @@ public class PictureCollection {
         }
     }
 
-
     /**
      * This method removes the current SDMTN from the selection
      * @param node the node to poll
@@ -870,7 +810,6 @@ public class PictureCollection {
         }
     }
 
-
     /**
      * This method clears selection HashSet that refers to the selected
      * highlighted thumbnails and fires unselectedEvents
@@ -883,7 +822,6 @@ public class PictureCollection {
             removeFromSelection( (SortableDefaultMutableTreeNode) array[i] );
         }
     }
-
 
     /**
      * This returns whether the SDMTN is part of the selection HashSet.
@@ -898,15 +836,13 @@ public class PictureCollection {
         }
     }
 
-
     /**
      * returns an array of the selected nodes.
      * @return an array of the selected nodes
      */
-    public Object[] getSelectedNodes() {
-        return selection.toArray();
+    public SortableDefaultMutableTreeNode[] getSelectedNodes() {
+        return (SortableDefaultMutableTreeNode[]) selection.toArray( new SortableDefaultMutableTreeNode[selection.size()] );
     }
-
 
     /**
      * The selected nodes
@@ -915,7 +851,6 @@ public class PictureCollection {
     public Vector<SortableDefaultMutableTreeNode> getSelectedNodesAsVector() {
         return selection;
     }
-
 
     /**
      *  returns the count of selected nodes

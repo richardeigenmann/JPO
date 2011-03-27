@@ -45,6 +45,7 @@ public class JpoResources_en extends ListResourceBundle {
         { "genericExportButtonText", "Export" },
         { "genericSecurityException", "Security Exception" },
         { "genericError", "Error" },
+        { "genericInfo", "Information" },
         { "internalError", "or" },
         { "genericWarning", "Warning" },
         { "genericExit", "Exit" },
@@ -310,12 +311,14 @@ public class JpoResources_en extends ListResourceBundle {
         { "groupExportHtmlMenuText", "Generate Website" },
         { "groupExportFlatFileMenuText", "Export to Flat File" },
         { "groupExportJarMenuText", "Export to Jar Archive" },
+
         // PicturePopupMenu
         { "pictureShowJMenuItemLabel", "Show Picture" },
         { "mapShowJMenuItemLabel", "Show Map" },
         { "pictureEditJMenuItemLabel", "Properties" },
         { "copyImageJMenuLabel", "Copy Image" },
         { "copyToNewLocationJMenuItem", "choose target directory" },
+        { "copyToNewLocationSuccess", "%d of %d pictures copied" },
         { "FileOperations", "File operations" },
         { "fileRenameJMenuItem", "Rename" },
         { "FileRenameLabel1", "Rename \n" },
