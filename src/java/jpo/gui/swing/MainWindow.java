@@ -50,7 +50,7 @@ public class MainWindow
 
     public MainWindow( ApplicationMenuInterface applicationController,
             JComponent navigationPanel, JComponent searchesJScrollPane,
-            ThumbnailPanelController thumbnailJScrollPane, JComponent infoPanel ) {
+            ThumbnailPanelController thumbnailPanelController, JComponent infoPanel ) {
         this.collectionTab = navigationPanel;
         this.searchesTab = searchesJScrollPane;
         Tools.checkEDT();
@@ -130,7 +130,7 @@ public class MainWindow
 
         // Set up the Thumbnail Pane
         masterSplitPane.setLeftComponent( leftSplitPane );
-        masterSplitPane.setRightComponent( thumbnailJScrollPane.getJScrollPane() );
+        masterSplitPane.setRightComponent( thumbnailPanelController.getView() );
 
 
         infoPanel.addComponentListener( new ComponentAdapter() {

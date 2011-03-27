@@ -4,20 +4,18 @@ import jpo.dataModel.NodeNavigatorListener;
 import jpo.dataModel.NodeNavigatorInterface;
 import jpo.dataModel.Settings;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
-import jpo.*;
 import javax.swing.*;
 import java.awt.event.*;
 import java.awt.*;
 import javax.swing.event.*;
 import java.util.logging.Logger;
 import jpo.dataModel.Tools;
-import jpo.gui.swing.ThumbnailPanel;
 import jpo.gui.swing.ThumbnailPanelTitle;
 
 /*
 ThumbnailPanelController.java:  a JScrollPane that shows thumbnailControllers
 
-Copyright (C) 2002 - 2010  Richard Eigenmann.
+Copyright (C) 2002 - 2011  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -45,78 +43,33 @@ public class ThumbnailPanelController
         implements NodeNavigatorListener {
 
     /**
-     * Defines a logger for this class
+     * Defines a LOGGER for this class
      */
-    private static Logger logger = Logger.getLogger( ThumbnailPanelController.class.getName() );
-
-    /**
-     * The panel that holds the Thumbnails
-     */
-    private ThumbnailPanel thumbnailPanel;
-
+    private static final Logger LOGGER = Logger.getLogger(ThumbnailPanelController.class.getName());
     /**
      * The title above the ThumbnailPanel
      */
-    private ThumbnailPanelTitle titleJPanel;
-
-
+    private final ThumbnailPanelTitle titleJPanel = new ThumbnailPanelTitle();
     /**
-     * Returns a handle to the JScrollPane widget
-     * @return The JScollPane widget
+     * The Layout Manager used by the thumbnail panel 
      */
-    public JScrollPane getJScrollPane() {
-        return thumbnailPanel;
-    }
-
-
+    private final ThumbnailLayoutManager thumbnailLayoutManager = new ThumbnailLayoutManager();
     /**
-     *   Instructs the ThumbnailPanelController to display the specified set of nodes to be displayed
-     *   @param newNodeNavigator 	The Interface with the collection of nodes
+     * The Panel that shows the Thumbnails
      */
-    public void show( NodeNavigatorInterface newNodeNavigator ) {
-        if ( this.mySetOfNodes != null ) {
-            this.mySetOfNodes.removeNodeNavigatorListener( this );
-            this.mySetOfNodes.getRid();
-        }
-        this.mySetOfNodes = newNodeNavigator;
-        newNodeNavigator.addNodeNavigatorListener( this );  //Todo: investigate how we unattach these...
-
-        Runnable r = new Runnable() {
-
-            public void run() {
-                Settings.pictureCollection.clearSelection();
-                thumbnailPanel.getVerticalScrollBar().setValue( 0 );
-                startIndex = 0;
-                curPage = 1;
-                nodeLayoutChanged();
-            }
-        };
-        if ( SwingUtilities.isEventDispatchThread() ) {
-            r.run();
-        } else {
-            SwingUtilities.invokeLater( r );
-        }
-    }
-
+    private final JPanel thumbnailPane = new JPanel(thumbnailLayoutManager);
+    /**
+     * The Scroll Pane that holds the Thumbnail Panel
+     */
+    private final JScrollPane thumbnailJScrollPane = new JScrollPane(thumbnailPane);
     /**
      * currently displayed page
      * */
     private int curPage = 1;
-
-    /**
-     *   A Thread that will load the images.
-     *
-     * private ThumbnailLoaderThread tl = null; */
-    /**
-     *  variable that will signal to the thread to stop loading images.
-     */
-    public boolean stopThread;
-
     /**
      *  This object refers to the set of Nodes that is being browsed in the ThumbnailPanelController
      */
     public NodeNavigatorInterface mySetOfNodes;
-
     /**
      *  a variable to hold the current starting position of thumbnailControllers being
      *  displayed out of a group or search. Range 0..count()-1<p>
@@ -127,100 +80,109 @@ public class ThumbnailPanelController
      *
      **/
     private int startIndex;
-
     /**
      *   An array that holds the 50 or so ThumbnailComponents that are being displayed
      */
     private ThumbnailController[] thumbnailControllers;
-
     /**
      *   An array that holds the 50 or so ThumbnailDescriptionJPanels that are being displayed
      */
     private ThumbnailDescriptionJPanel[] thumbnailDescriptionJPanels;
-
     /**
      *  This variable keeps track of how many thumbnailControllers per page the component was initialised
      *  with. If the number changes because the user changed it in the settings then the difference
      *  is recognised and the arrays are recreated.
      */
     private int initialisedMaxThumbnails = Integer.MIN_VALUE;
-
     /**
      *  Factor for the Thumbnails
      */
     private float thumbnailSizeFactor = 1;
-
     /**
-     *  Point where the mouse was pressed
+     *  Point where the mouse was pressed so that we can figure out the 
+     *  rectangle that is being selected.
      */
     private Point mousePressedPoint;
 
-
     /**
-     *   creates a new JScrollPane with an embedded JPanel and provides a set of
-     *   methods that allow thumbnailControllers to be displayed. <p>
+     *   Creates a new ThumbnailPanelController which in turn creates the view objects
+     *   and hooks itself up so that thumbnails can be shown <p>
      *
-     *   The passing in of the caller is obsolete and should be removed when
-     *   a better interface type solution has been built.
      *
      */
     public ThumbnailPanelController() {
-        Runnable r = new Runnable() {
-
-            public void run() {
-                initComponents();
-            }
-        };
-        if ( SwingUtilities.isEventDispatchThread() ) {
-            r.run();
-        } else {
-            SwingUtilities.invokeLater( r );
-        }
+        Tools.checkEDT();
+        initComponents();
     }
 
+    /**
+     * Returns a handle to view widget being controlled by this controller
+     * @return The JScollPane widget
+     */
+    public JScrollPane getView() {
+        return thumbnailJScrollPane;
+    }
+
+    /**
+     *   Instructs the ThumbnailPanelController to display the specified set of nodes to be displayed
+     *   @param newNodeNavigator 	The Interface with the collection of nodes
+     */
+    public void show(NodeNavigatorInterface newNodeNavigator) {
+        Tools.checkEDT();
+
+        if (this.mySetOfNodes != null) {
+            this.mySetOfNodes.removeNodeNavigatorListener(this);
+            this.mySetOfNodes.getRid();
+        }
+        this.mySetOfNodes = newNodeNavigator;
+        newNodeNavigator.addNodeNavigatorListener(this);  //Todo: investigate how we unattach these...
+
+        Settings.pictureCollection.clearSelection();
+        thumbnailJScrollPane.getVerticalScrollBar().setValue(0);
+        startIndex = 0;
+        curPage = 1;
+        nodeLayoutChanged();
+    }
 
     /**
      * Request that the ThumbnailPanel show the first page of Thumbnails
      */
     private void goToFirstPage() {
-        if ( startIndex == 0 ) {
+        if (startIndex == 0) {
             return;
         }
 
         startIndex = 0;
-        thumbnailPanel.getVerticalScrollBar().setValue( 0 );
+        thumbnailJScrollPane.getVerticalScrollBar().setValue(0);
         curPage = 1;
         nodeLayoutChanged();
         setButtonStatus();
     }
-
 
     /**
      * Request that the ThumbnailPanel show the previous page of Thumbnails
      */
     private void goToPreviousPage() {
         startIndex = startIndex - Settings.maxThumbnails;
-        if ( startIndex < 0 ) {
+        if (startIndex < 0) {
             startIndex = 0;
         }
-        thumbnailPanel.getVerticalScrollBar().setValue( 0 );
+        thumbnailJScrollPane.getVerticalScrollBar().setValue(0);
         curPage--;
         nodeLayoutChanged();
         setButtonStatus();
     }
-
 
     /**
      * Request that the ThumbnailPanel show the next page of Thumbnails
      */
     private void goToNextPage() {
         startIndex = startIndex + Settings.maxThumbnails;
-        thumbnailPanel.getVerticalScrollBar().setValue( 0 );
+        thumbnailJScrollPane.getVerticalScrollBar().setValue(0);
         curPage++;
         nodeLayoutChanged();
         setButtonStatus();
     }
-
 
     /**
      * Request that the ThumbnailPanel show the last page of Thumbnails
@@ -230,164 +192,174 @@ public class ThumbnailPanelController
         int tgtPage = last / Settings.maxThumbnails;
         curPage = tgtPage + 1;
         startIndex = tgtPage * Settings.maxThumbnails;
-        thumbnailPanel.getVerticalScrollBar().setValue( 0 );
+        thumbnailJScrollPane.getVerticalScrollBar().setValue(0);
         nodeLayoutChanged();
         setButtonStatus();
     }
-
 
     /**
      * Initialises the components for the ThumbnailController Pane
      */
     private void initComponents() {
-        thumbnailPanel = new ThumbnailPanel();
-        titleJPanel = new ThumbnailPanelTitle();
-        thumbnailPanel.setColumnHeaderView( titleJPanel );
+        thumbnailPane.setBackground(Settings.JPO_BACKGROUND_COLOR);
+
+        thumbnailJScrollPane.setMinimumSize(Settings.thumbnailJScrollPaneMinimumSize);
+        thumbnailJScrollPane.setPreferredSize(Settings.thumbnailJScrollPanePreferredSize);
+        thumbnailJScrollPane.setWheelScrollingEnabled(true);
+        thumbnailJScrollPane.setFocusable(true);
+
+        //  set the amount by which the panel scrolls down when the user clicks the
+        //  little down or up arrow in the scrollbar
+        thumbnailJScrollPane.getVerticalScrollBar().setUnitIncrement(80);
+
+
+
+        //titleJPanel = new ThumbnailPanelTitle();
+        thumbnailJScrollPane.setColumnHeaderView(titleJPanel);
 
         initThumbnailsArray();
 
         // Wire up the events
-        titleJPanel.firstThumbnailsPageButton.addActionListener( new ActionListener() {
+        titleJPanel.firstThumbnailsPageButton.addActionListener(new ActionListener() {
 
-            public void actionPerformed( ActionEvent e ) {
+            public void actionPerformed(ActionEvent e) {
                 goToFirstPage();
             }
-        } );
-        titleJPanel.previousThumbnailsPageButton.addActionListener( new ActionListener() {
+        });
+        titleJPanel.previousThumbnailsPageButton.addActionListener(new ActionListener() {
 
-            public void actionPerformed( ActionEvent e ) {
+            public void actionPerformed(ActionEvent e) {
                 goToPreviousPage();
             }
-        } );
-        titleJPanel.nextThumbnailsPageButton.addActionListener( new ActionListener() {
+        });
+        titleJPanel.nextThumbnailsPageButton.addActionListener(new ActionListener() {
 
-            public void actionPerformed( ActionEvent e ) {
+            public void actionPerformed(ActionEvent e) {
                 goToNextPage();
             }
-        } );
-        titleJPanel.lastThumbnailsPageButton.addActionListener( new ActionListener() {
+        });
+        titleJPanel.lastThumbnailsPageButton.addActionListener(new ActionListener() {
 
-            public void actionPerformed( ActionEvent e ) {
+            public void actionPerformed(ActionEvent e) {
                 goToLastPage();
             }
-        } );
+        });
 
-        titleJPanel.resizeJSlider.addChangeListener( new SlideChangeListener() );
+        titleJPanel.resizeJSlider.addChangeListener(new SlideChangeListener());
 
 
         JPanel whiteArea = new JPanel();
-        thumbnailPanel.setCorner( JScrollPane.UPPER_RIGHT_CORNER, whiteArea );
+        thumbnailJScrollPane.setCorner(JScrollPane.UPPER_RIGHT_CORNER, whiteArea);
 
-        thumbnailPanel.getThumbnailPane().addMouseListener( new MouseInputAdapter() {
+        thumbnailPane.addMouseListener(new MouseInputAdapter() {
 
             @Override
-            public void mousePressed( MouseEvent e ) {
+            public void mousePressed(MouseEvent e) {
                 mousePressedPoint = e.getPoint();
             }
 
-
             @Override
-            public void mouseReleased( MouseEvent e ) {
-                thumbnailPanel.requestFocusInWindow();
+            public void mouseReleased(MouseEvent e) {
+                thumbnailJScrollPane.requestFocusInWindow();
 
-                Graphics g = thumbnailPanel.getThumbnailPane().getGraphics();
-                thumbnailPanel.getThumbnailPane().paint( g ); //cheap way of undoing old rectancle... TODO: use the glass pane
+                Graphics g = thumbnailPane.getGraphics();
+                thumbnailPane.paint(g); //cheap way of undoing old rectancle... TODO: use the glass pane
 
                 Point mouseMovedToPoint = e.getPoint();
-                Rectangle r = new Rectangle( mousePressedPoint,
-                        new Dimension( mouseMovedToPoint.x - mousePressedPoint.x,
-                        mouseMovedToPoint.y - mousePressedPoint.y ) );
-                if ( mouseMovedToPoint.x < mousePressedPoint.x ) {
+                Rectangle r = new Rectangle(mousePressedPoint,
+                        new Dimension(mouseMovedToPoint.x - mousePressedPoint.x,
+                        mouseMovedToPoint.y - mousePressedPoint.y));
+                if (mouseMovedToPoint.x < mousePressedPoint.x) {
                     r.x = mouseMovedToPoint.x;
                     r.width = mousePressedPoint.x - mouseMovedToPoint.x;
                 }
-                if ( mouseMovedToPoint.y < mousePressedPoint.y ) {
+                if (mouseMovedToPoint.y < mousePressedPoint.y) {
                     r.y = mouseMovedToPoint.y;
                     r.height = mousePressedPoint.y - mouseMovedToPoint.y;
                 }
 
                 // I wonder why they don't put the following two lines into the SWING library but
                 // let you work out this binary math on your own from the unhelpful description?
-                boolean ctrlpressed = ( e.getModifiersEx() & MouseEvent.CTRL_DOWN_MASK ) == MouseEvent.CTRL_DOWN_MASK;
-                boolean shiftpressed = ( e.getModifiersEx() & MouseEvent.SHIFT_DOWN_MASK ) == MouseEvent.SHIFT_DOWN_MASK;
+                boolean ctrlpressed = (e.getModifiersEx() & MouseEvent.CTRL_DOWN_MASK) == MouseEvent.CTRL_DOWN_MASK;
+                boolean shiftpressed = (e.getModifiersEx() & MouseEvent.SHIFT_DOWN_MASK) == MouseEvent.SHIFT_DOWN_MASK;
 
-                if ( !( ctrlpressed | shiftpressed ) ) {
+                if (!(ctrlpressed | shiftpressed)) {
                     Settings.pictureCollection.clearSelection();
                 }
                 Rectangle thumbnailRectangle = new Rectangle();
                 SortableDefaultMutableTreeNode n;
-                for ( int i = 0; i < thumbnailControllers.length; i++ ) {
-                    thumbnailControllers[i].getThumbnail().getBounds( thumbnailRectangle );
-                    if ( r.intersects( thumbnailRectangle ) ) {
+                for (int i = 0; i < thumbnailControllers.length; i++) {
+                    thumbnailControllers[i].getThumbnail().getBounds(thumbnailRectangle);
+                    if (r.intersects(thumbnailRectangle)) {
                         n = thumbnailControllers[i].myNode;
-                        if ( n != null ) {
-                            Settings.pictureCollection.addToSelectedNodes( n );
+                        if (n != null) {
+                            Settings.pictureCollection.addToSelectedNodes(n);
                         }
                     }
                 }
 
 
             }
-        } );
+        });
 
-        thumbnailPanel.getThumbnailPane().addMouseMotionListener( new MouseInputAdapter() {
+        thumbnailPane.addMouseMotionListener(new MouseInputAdapter() {
 
             @Override
-            public void mouseDragged( MouseEvent e ) {
+            public void mouseDragged(MouseEvent e) {
 
                 Point mouseMovedToPoint = e.getPoint();
-                Rectangle r = new Rectangle( mousePressedPoint,
-                        new Dimension( mouseMovedToPoint.x - mousePressedPoint.x,
-                        mouseMovedToPoint.y - mousePressedPoint.y ) );
-                if ( mouseMovedToPoint.x < mousePressedPoint.x ) {
+                Rectangle r = new Rectangle(mousePressedPoint,
+                        new Dimension(mouseMovedToPoint.x - mousePressedPoint.x,
+                        mouseMovedToPoint.y - mousePressedPoint.y));
+                if (mouseMovedToPoint.x < mousePressedPoint.x) {
                     r.x = mouseMovedToPoint.x;
                     r.width = mousePressedPoint.x - mouseMovedToPoint.x;
                 }
-                if ( mouseMovedToPoint.y < mousePressedPoint.y ) {
+                if (mouseMovedToPoint.y < mousePressedPoint.y) {
                     r.y = mouseMovedToPoint.y;
                     r.height = mousePressedPoint.y - mouseMovedToPoint.y;
                 }
-                Graphics g = thumbnailPanel.getThumbnailPane().getGraphics();
-                thumbnailPanel.getThumbnailPane().paint( g ); //cheap way of undoing old rectancle...
-                g.drawRect( r.x, r.y, r.width, r.height );
+                Graphics g = thumbnailPane.getGraphics();
+                thumbnailPane.paint(g); //cheap way of undoing old rectancle...
+                g.drawRect(r.x, r.y, r.width, r.height);
 
                 // find out if we need to scroll the window
-                Rectangle viewRect = thumbnailPanel.getViewport().getViewRect();
-                JScrollBar verticalScrollBar = thumbnailPanel.getVerticalScrollBar();
+                Rectangle viewRect = thumbnailJScrollPane.getViewport().getViewRect();
+                JScrollBar verticalScrollBar = thumbnailJScrollPane.getVerticalScrollBar();
                 final int scrolltrigger = 40;
-                if ( mouseMovedToPoint.y - viewRect.y - viewRect.height > -scrolltrigger ) {
-                    // logger.info("must scroll down");
-                    int increment = verticalScrollBar.getUnitIncrement( 1 );
+                if (mouseMovedToPoint.y - viewRect.y - viewRect.height > -scrolltrigger) {
+                    // LOGGER.info("must scroll down");
+                    int increment = verticalScrollBar.getUnitIncrement(1);
                     int position = verticalScrollBar.getValue();
-                    if ( position < verticalScrollBar.getMaximum() ) {
-                        verticalScrollBar.setValue( position + increment );
+                    if (position < verticalScrollBar.getMaximum()) {
+                        verticalScrollBar.setValue(position + increment);
                     }
-                } else if ( mouseMovedToPoint.y - viewRect.y < scrolltrigger ) {
+                } else if (mouseMovedToPoint.y - viewRect.y < scrolltrigger) {
                     //logger.info("must scroll up");
-                    int increment = verticalScrollBar.getUnitIncrement( 1 );
+                    int increment = verticalScrollBar.getUnitIncrement(1);
                     int position = verticalScrollBar.getValue();
-                    if ( position > verticalScrollBar.getMinimum() ) {
-                        verticalScrollBar.setValue( position - increment );
+                    if (position > verticalScrollBar.getMinimum()) {
+                        verticalScrollBar.setValue(position - increment);
                     }
 
                 }
 
             }
-        } );
+        });
 
 
-        thumbnailPanel.addKeyListener(
+        thumbnailJScrollPane.addKeyListener(
                 new KeyAdapter() {
 
                     @Override
-                    public void keyReleased( KeyEvent e ) {
+                    public void keyReleased(KeyEvent e) {
                         //logger.info("thumbnailJScrollPane: Trapped a KeyTyped event for key code: " + Integer.toString( e.getKeyCode() ) );
-                        if ( e.getKeyCode() == KeyEvent.VK_A && e.isControlDown() ) {
+                        if (e.getKeyCode() == KeyEvent.VK_A && e.isControlDown()) {
                             //logger.info("thumbnailJScrollPane: Got a CTRL-A");
                             selectAll();
                         }
                     }
-                } );
+                });
     }
 
     /**
@@ -400,18 +372,17 @@ public class ThumbnailPanelController
          * Got a slider changed event.
          * @param e
          */
-        public void stateChanged( ChangeEvent e ) {
+        public void stateChanged(ChangeEvent e) {
             JSlider source = (JSlider) e.getSource();
             thumbnailSizeFactor = (float) source.getValue() / ThumbnailPanelTitle.THUMBNAILSIZE_MAX;
-            thumbnailPanel.thumbnailLayout.setThumbnailWidth( (int) ( 350 * thumbnailSizeFactor ) );
-            for ( int i = 0; i < Settings.maxThumbnails; i++ ) {
-                thumbnailControllers[i].setFactor( thumbnailSizeFactor );
-                thumbnailDescriptionJPanels[i].setFactor( thumbnailSizeFactor );
+            thumbnailLayoutManager.setThumbnailWidth((int) (350 * thumbnailSizeFactor));
+            for (int i = 0; i < Settings.maxThumbnails; i++) {
+                thumbnailControllers[i].setFactor(thumbnailSizeFactor);
+                thumbnailDescriptionJPanels[i].setFactor(thumbnailSizeFactor);
             }
-            thumbnailPanel.thumbnailLayout.layoutContainer( thumbnailPanel.getThumbnailPane() );
+            thumbnailLayoutManager.layoutContainer(thumbnailPane);
         }
     }
-
 
     /**
      *  creates the arrays for the thumbnailControllers and the descriptions and adds them to the ThubnailPane.
@@ -420,16 +391,15 @@ public class ThumbnailPanelController
         Tools.checkEDT();
         thumbnailControllers = new ThumbnailController[Settings.maxThumbnails];
         thumbnailDescriptionJPanels = new ThumbnailDescriptionJPanel[Settings.maxThumbnails];
-        thumbnailPanel.getThumbnailPane().removeAll();
+        thumbnailPane.removeAll();
         initialisedMaxThumbnails = Settings.maxThumbnails;
-        for ( int i = 0; i < Settings.maxThumbnails; i++ ) {
-            thumbnailControllers[i] = new ThumbnailController( Settings.thumbnailSize );
+        for (int i = 0; i < Settings.maxThumbnails; i++) {
+            thumbnailControllers[i] = new ThumbnailController(Settings.thumbnailSize);
             thumbnailDescriptionJPanels[i] = new ThumbnailDescriptionJPanel();
-            thumbnailPanel.getThumbnailPane().add( thumbnailControllers[i].getThumbnail() );
-            thumbnailPanel.getThumbnailPane().add( thumbnailDescriptionJPanels[i] );
+            thumbnailPane.add(thumbnailControllers[i].getThumbnail());
+            thumbnailPane.add(thumbnailDescriptionJPanels[i]);
         }
     }
-
 
     /**
      * Assigns each of the ThumbnailControllers and ThumbnailDescriptionJPanels the appropriate node
@@ -439,113 +409,76 @@ public class ThumbnailPanelController
      */
     public void nodeLayoutChanged() {
         Tools.checkEDT();
-        if ( mySetOfNodes == null ) {
+        if (mySetOfNodes == null) {
+            LOGGER.severe("ThumbnailPanelController nodeLayoutChanged was called with a null set of nodes. This is not right.");
             return;
         }
 
-        logger.fine( String.format( "setting title to: %s", mySetOfNodes.getTitle() ) );
-        titleJPanel.setTitle( mySetOfNodes.getTitle() );
+        LOGGER.fine(String.format("setting title to: %s", mySetOfNodes.getTitle()));
+        titleJPanel.setTitle(mySetOfNodes.getTitle());
 
-        if ( initialisedMaxThumbnails != Settings.maxThumbnails ) {
-            logger.info( String.format( "There are %d initialised thumbnails which is not equal to the defined maximum number of %d. Therefore reinitialising", initialisedMaxThumbnails, Settings.maxThumbnails ) );
+        if (initialisedMaxThumbnails != Settings.maxThumbnails) {
+            LOGGER.info(String.format("There are %d initialised thumbnails which is not equal to the defined maximum number of %d. Therefore reinitialising", initialisedMaxThumbnails, Settings.maxThumbnails));
             initThumbnailsArray();
         }
 
-        int groupCount = mySetOfNodes.getNumberOfNodes();
-
         setPageStats();
-
         setButtonStatus();
-        // take the thumbnailControllers off the creation queue if they were on it.
-        // as setNode is now internally synchronised this can slow down removal
-        // from the queue
-        //Why? RE 1.6.2010 Causes bug with move down
-        /*for ( int i = 0; i < Settings.maxThumbnails; i++ ) {
-            thumbnailControllers[i].unqueue();
-        }*/
-        for ( int i = 0; i < Settings.maxThumbnails; i++ ) {
-            logger.fine( String.format( "now assigning thumbnail numer: %d", i ) );
-            if ( !thumbnailControllers[i].isSameNode( mySetOfNodes, i + startIndex ) ) {
-                thumbnailControllers[i].setNode( mySetOfNodes, i + startIndex );
-                thumbnailDescriptionJPanels[i].setNode( mySetOfNodes.getNode( i + startIndex ) );
+
+        for (int i = 0; i < Settings.maxThumbnails; i++) {
+            //LOGGER.fine(String.format("now assigning thumbnail numer: %d", i));
+            if (!thumbnailControllers[i].isSameNode(mySetOfNodes, i + startIndex)) {
+                thumbnailControllers[i].setNode(mySetOfNodes, i + startIndex);
+                thumbnailDescriptionJPanels[i].setNode(mySetOfNodes.getNode(i + startIndex));
             } else {
-                logger.fine( String.format( "Node %d is unchanged", i ) );
+                LOGGER.fine(String.format("Node %d is unchanged", i));
             }
         }
     }
-
 
     /**
      * Sets the text in the title for displaying page count information
      */
     private void setPageStats() {
+        Tools.checkEDT();
         final int total = mySetOfNodes.getNumberOfNodes();
-        final int lastOnPage = Math.min( startIndex + Settings.maxThumbnails, total );
-        Runnable r = new Runnable() {
-
-            public void run() {
-                titleJPanel.lblPage.setText( String.format( "Thumbnails %d to %d of %d", startIndex + 1, lastOnPage, total ) );
-            }
-        };
-        if ( SwingUtilities.isEventDispatchThread() ) {
-            r.run();
-        } else {
-            SwingUtilities.invokeLater( r );
-        }
+        final int lastOnPage = Math.min(startIndex + Settings.maxThumbnails, total);
+        titleJPanel.lblPage.setText(String.format("Thumbnails %d to %d of %d", startIndex + 1, lastOnPage, total));
     }
-
 
     /**
      *  This method sets whether the first, previous, next and last buttons are visible or not
      */
     public void setButtonStatus() {
-        Runnable r = new Runnable() {
-
-            public void run() {
-                if ( startIndex == 0 ) {
-                    titleJPanel.firstThumbnailsPageButton.setEnabled( false );
-                    titleJPanel.previousThumbnailsPageButton.setEnabled( false );
-                } else {
-                    titleJPanel.firstThumbnailsPageButton.setEnabled( true );
-                    titleJPanel.previousThumbnailsPageButton.setEnabled( true );
-                }
-
-                int count = mySetOfNodes.getNumberOfNodes();
-                if ( ( startIndex + Settings.maxThumbnails ) < count ) {
-                    titleJPanel.lastThumbnailsPageButton.setEnabled( true );
-                    titleJPanel.nextThumbnailsPageButton.setEnabled( true );
-                } else {
-                    titleJPanel.lastThumbnailsPageButton.setEnabled( false );
-                    titleJPanel.nextThumbnailsPageButton.setEnabled( false );
-                }
-            }
-        };
-        if ( SwingUtilities.isEventDispatchThread() ) {
-            r.run();
+        Tools.checkEDT();
+        if (startIndex == 0) {
+            titleJPanel.firstThumbnailsPageButton.setEnabled(false);
+            titleJPanel.previousThumbnailsPageButton.setEnabled(false);
         } else {
-            SwingUtilities.invokeLater( r );
+            titleJPanel.firstThumbnailsPageButton.setEnabled(true);
+            titleJPanel.previousThumbnailsPageButton.setEnabled(true);
+        }
+
+        int count = mySetOfNodes.getNumberOfNodes();
+        if ((startIndex + Settings.maxThumbnails) < count) {
+            titleJPanel.lastThumbnailsPageButton.setEnabled(true);
+            titleJPanel.nextThumbnailsPageButton.setEnabled(true);
+        } else {
+            titleJPanel.lastThumbnailsPageButton.setEnabled(false);
+            titleJPanel.nextThumbnailsPageButton.setEnabled(false);
         }
     }
-
 
     /**
      *  This method select all Thumbnails which are not null
      */
     public void selectAll() {
         SortableDefaultMutableTreeNode n;
-        for ( int i = 0; i < thumbnailControllers.length; i++ ) {
+        for (int i = 0; i < thumbnailControllers.length; i++) {
             n = thumbnailControllers[i].myNode;
-            if ( n != null ) {
-                Settings.pictureCollection.addToSelectedNodes( n );
+            if (n != null) {
+                Settings.pictureCollection.addToSelectedNodes(n);
             }
         }
     }
 }
-
-
-
-
-
-
-
-
