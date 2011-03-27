@@ -6,7 +6,7 @@ import java.util.logging.Logger;
 /*
 NodeNavigator.java:  an implementation of the NodeNavigatorInterface for browsing pictures sequentially.
 
-Copyright (C) 2006-2010  Richard Eigenmann, Zürich, Switzerland
+Copyright (C) 2006-2011  Richard Eigenmann, Zürich, Switzerland
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -30,7 +30,7 @@ public abstract class NodeNavigator
     /**
      * Logger for this class
      */
-    protected Logger logger = Logger.getLogger( this.getClass().getName() );
+    private static final Logger LOGGER = Logger.getLogger( NodeNavigator.class.getName() );
 
 
     /**
@@ -67,16 +67,16 @@ public abstract class NodeNavigator
      *  This ArrayList holds the reference to the listeners that need to be notified if there is a structural change.
      *  Observer pattern.
      */
-    private Vector<NodeNavigatorListener> relayoutListeners = new Vector<NodeNavigatorListener>();
+    private ArrayList<NodeNavigatorListener> relayoutListeners = new ArrayList<NodeNavigatorListener>();
 
 
     /**
      *  method to register a NodeNavigatorListener as a listener
      */
     public void addNodeNavigatorListener( NodeNavigatorListener listener ) {
-        logger.fine( String.format( "adding listener: %s", listener.toString() ) );
+        LOGGER.fine( String.format( "adding listener: %s", listener.toString() ) );
         relayoutListeners.add( listener );
-        logger.fine( String.format( "We now have %d relayout listeners.", relayoutListeners.size() ) );
+        LOGGER.fine( String.format( "We now have %d relayout listeners.", relayoutListeners.size() ) );
     }
 
 
@@ -84,9 +84,9 @@ public abstract class NodeNavigator
      *  method to remove a NodeNavigatorListener as a listener
      */
     public void removeNodeNavigatorListener( NodeNavigatorListener listener ) {
-        logger.fine( String.format( "removing listener: %s", listener.toString() ) );
+        LOGGER.fine( String.format( "removing listener: %s", listener.toString() ) );
         relayoutListeners.remove( listener );
-        logger.fine( String.format( "We now have %d relayout listeners.", relayoutListeners.size() ) );
+        LOGGER.fine( String.format( "We now have %d relayout listeners.", relayoutListeners.size() ) );
     }
 
 
@@ -95,11 +95,11 @@ public abstract class NodeNavigator
      * respond to.
      */
     public void notifyNodeNavigatorListeners() {
-        logger.fine( String.format( "notifying %d NodeNavigatorListeners.", relayoutListeners.size() ) );
+        LOGGER.fine( String.format( "notifying %d NodeNavigatorListeners.", relayoutListeners.size() ) );
         @SuppressWarnings( "unchecked" )
-        Vector<NodeNavigatorListener> stableRelayoutListeners = (Vector<NodeNavigatorListener>) relayoutListeners.clone();
+        ArrayList<NodeNavigatorListener> stableRelayoutListeners = (ArrayList<NodeNavigatorListener>) relayoutListeners.clone();
         for ( NodeNavigatorListener relayoutListener : stableRelayoutListeners ) {
-            logger.fine( String.format( "   now notifying relayout listener: %s", relayoutListener.toString() ) );
+            LOGGER.fine( String.format( "   now notifying relayout listener: %s", relayoutListener.toString() ) );
             relayoutListener.nodeLayoutChanged();
         }
     }

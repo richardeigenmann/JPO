@@ -2,6 +2,7 @@ package jpo.dataModel;
 
 import jpo.*;
 import java.util.*;
+import java.util.logging.Logger;
 
 /*
 ArrayListNavigator.java:  an implementation of the NodeNavigator for browsing pictures.
@@ -38,7 +39,6 @@ public class ArrayListNavigator
         setArrayList( nodes );
     }
 
-
     /**
      * Optional Constructor for an ArrayListNavigator.
      */
@@ -46,12 +46,14 @@ public class ArrayListNavigator
         setTitle( "" );
         setArrayList( new ArrayList<SortableDefaultMutableTreeNode>() );
     }
-
+    /**
+     * Logger for this class
+     */
+    private static final Logger LOGGER = Logger.getLogger( ArrayListNavigator.class.getName() );
     /**
      *   title for this ArrayList of images.
      */
     private String title;
-
 
     /**
      * Sets the title to be returned if any component tried to display the title of the list
@@ -60,7 +62,6 @@ public class ArrayListNavigator
     public void setTitle( String newTitle ) {
         title = newTitle;
     }
-
 
     /**
      * Returns the title of the node set
@@ -74,7 +75,6 @@ public class ArrayListNavigator
         }
     }
 
-
     /**
      *  Returns the number of pictures in this group. Starts at 1 like all arrays.
      */
@@ -82,12 +82,11 @@ public class ArrayListNavigator
         try {
             return allPictures.size();
         } catch ( NullPointerException ex ) {
-            logger.severe( String.format( "Why did we get a NullPointerExecption for the ArrayListNavigator %s?", getTitle() ) );
+            LOGGER.severe( String.format( "Why did we get a NullPointerExecption for the ArrayListNavigator %s?", getTitle() ) );
             Thread.dumpStack();
             return 0;
         }
     }
-
 
     /**
      *  This method returns the node for the indicated position in the group.
@@ -105,12 +104,10 @@ public class ArrayListNavigator
             return null;
         }
     }
-
     /**
      *  This ArrayList holds a reference to each picture under the start group.
      */
     protected ArrayList<SortableDefaultMutableTreeNode> allPictures;
-
 
     /**
      *   sets the ArrayList
@@ -122,7 +119,6 @@ public class ArrayListNavigator
         allPictures = newArrayList;
     }
 
-
     /**
      *  adds a node to the ArrayList
      *
@@ -131,7 +127,6 @@ public class ArrayListNavigator
     public void addNode( SortableDefaultMutableTreeNode addNode ) {
         allPictures.add( addNode );
     }
-
 
     /**
      *  Removes a node from the ArrayList
@@ -144,7 +139,6 @@ public class ArrayListNavigator
         //logger.info( toString() );
     }
 
-
     /**
      *  This method unregisters the TreeModelListener and sets the variables to null;
      */
@@ -153,7 +147,6 @@ public class ArrayListNavigator
         super.getRid();
         allPictures = null;
     }
-
 
     /**
      * Overriden to print some useful info about the nodes

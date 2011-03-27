@@ -27,13 +27,9 @@ public class SingleNodeNavigator
         extends NodeNavigator {
 
     /**
-     * Defines a logger for this class.
-     * Overrides the logger inherited in the Thumbnail Browser
+     * Logger for this class
      */
-    {
-        logger = Logger.getLogger( SingleNodeNavigator.class.getName() );
-    }
-
+    private static final Logger LOGGER = Logger.getLogger( SingleNodeNavigator.class.getName() );
 
     /**
      *  Constructor for a SingleNodeNavigator.
@@ -44,12 +40,10 @@ public class SingleNodeNavigator
         //logger.info("SingleNodeNavigator: constructor called on node: " + singleNode.toString() );
         this.singleNode = singleNode;
     }
-
     /**
      *  A reference to the node for which this SingleNodeNavigator was created.
      */
     private SortableDefaultMutableTreeNode singleNode = null;
-
 
     /**
      *  returns the string Sequential
@@ -62,7 +56,6 @@ public class SingleNodeNavigator
         }
     }
 
-
     /**
      *  Returns the number of pictures in this group. The number is 0 to the number of pictures minus 1
      *  because counting starts at 0. So 3 nodes in the group returns 2 meaning node0, node1, node2
@@ -70,7 +63,6 @@ public class SingleNodeNavigator
     public int getNumberOfNodes() {
         return 0;
     }
-
 
     /**
      *  This method returns the node for the indicated position in the group.
@@ -83,7 +75,6 @@ public class SingleNodeNavigator
         //logger.info("SingleNodeNavigator.getNode: requested for node: " + Integer.toString( index ) );
         return singleNode;
     }
-
 
     /**
      *  This method unregisters the TreeModelListener and sets the variables to null;

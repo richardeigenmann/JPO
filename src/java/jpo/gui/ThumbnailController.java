@@ -110,6 +110,7 @@ public class ThumbnailController
      * Defines a LOGGER for this class
      */
     private static final Logger LOGGER = Logger.getLogger( ThumbnailController.class.getName() );
+    //{ LOGGER.setLevel( Level.ALL ); }
 
     /**
      *  A set of picture nodes of which one indicated by {@link #myIndex} is to be shown
@@ -519,8 +520,6 @@ public class ThumbnailController
 
     }
 
-    // Here we are not that interested in TreeModel change events other than to find out if our
-    // current node was removed in which case we close the Window.
 
     /**
      *   implemented here to satisfy the TreeModelListener interface; not used.
@@ -550,8 +549,6 @@ public class ThumbnailController
                     LOGGER.fine( String.format( "ThumbnailController %d detected a treeNodesChanged event: %s on a PictureInfo node", hashCode(), e ) );
 
                 }
-                // what do we do here when a PictureInfor has updated?
-
             }
         }
     }

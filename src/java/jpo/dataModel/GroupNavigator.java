@@ -1,5 +1,7 @@
 package jpo.dataModel;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.event.*;
 import javax.swing.tree.*;
 
@@ -29,10 +31,14 @@ public class GroupNavigator
         implements TreeModelListener {
 
     /**
+     * Logger for this class
+     */
+    private static final Logger LOGGER = Logger.getLogger( GroupNavigator.class.getName() );
+
+    /**
      *  A reference to the current group that shall be browsed
      */
     private SortableDefaultMutableTreeNode myNode;
-
 
     /**
      *  Constructs a new Group Browser object for a specific group node
@@ -40,10 +46,9 @@ public class GroupNavigator
      * @param node
      */
     public GroupNavigator( SortableDefaultMutableTreeNode node ) {
-        //logger.info( String.format( "Creating a new GroupNavigator for group %s", node.toString() ) );
+        LOGGER.fine( String.format( "Creating a new GroupNavigator for group %s", node.toString() ) );
         setNode( node );
     }
-
 
     /**
      *  call this method to specify the node that this GroupNavigator should refer to. The node is validated
@@ -67,7 +72,6 @@ public class GroupNavigator
         }
     }
 
-
     /**
      *  returns the name of the Group being displayed
      */
@@ -78,7 +82,6 @@ public class GroupNavigator
             return "<no group>";
         }
     }
-
 
     /**
      *  On a group we return the number of children in the group.
@@ -91,12 +94,13 @@ public class GroupNavigator
         }
     }
 
-
     /**
-     *  This method returns the SDMTN node for the indicated position in the group
-     *  If there are more Thumbnails than nodes in the group it returns null.
+     * This method returns the SortableDefaultMutableTreeNode node for 
+     * the indicated position in the group.
+     * If the request is for an index larger than the number of nodes null 
+     * is returned so that clients can show something appropriate.
      *
-     *  @param index   The component index that is to be returned.
+     * @param index The component index that is to be returned.
      */
     public SortableDefaultMutableTreeNode getNode( int index ) {
         if ( myNode == null ) {
@@ -109,7 +113,6 @@ public class GroupNavigator
         }
     }
 
-
     /**
      *  This method unregisters the TreeModelListener and sets the variables to null;
      */
@@ -120,21 +123,19 @@ public class GroupNavigator
             myNode.getPictureCollection().getTreeModel().removeTreeModelListener( this );
             myNode = null;
         }
-        //relayoutListeners.clear();
     }
-
 
     /**
      *   This method is defined by the TreeModelListener interface and gives the
-     *   JThumnailScrollPane a notification that some nodes changed in a non dramatic way.
+     *   GroupNavigator a notification that some nodes changed in a non dramatic way.
      *   The nodes that were changed have their Constraints reevaluated and a revalidate
      *   is called to update the screen.
      *
-     * @param e
+     * @param treeModelEvent
      */
     @Override
-    public void treeNodesChanged( TreeModelEvent e ) {
-        logger.fine( "treeNodesChanged: " + e.toString() );
+    public void treeNodesChanged( TreeModelEvent treeModelEvent ) {
+        LOGGER.log( Level.FINE, "treeNodesChanged: {0}", treeModelEvent.toString());
         if ( myNode == null ) {
             //logger.info("GroupNavigator.treeNodesChanged: ERROR! This should not have been called as there is not group showing and therefore there should be no tree listener firing off. Ignoring notification.");
             return;
@@ -143,25 +144,24 @@ public class GroupNavigator
         // don't get excited and force a relayout unless the inserted node is part
         // of the current group
         TreePath myPath = new TreePath( myNode.getPath() );
-        if ( myPath.equals( e.getTreePath() ) ) {
-            logger.fine( String.format( "A Node was changed. No need to get excited at the group level. myNode: %s, notification node %s", myPath.toString(), ( (SortableDefaultMutableTreeNode) e.getTreePath().getLastPathComponent() ).toString() ) );
+        if ( myPath.equals( treeModelEvent.getTreePath() ) ) {
+            LOGGER.fine( String.format( "A Node was changed. No need to get excited at the group level. myNode: %s, notification node %s", myPath.toString(), ( (SortableDefaultMutableTreeNode) treeModelEvent.getTreePath().getLastPathComponent() ).toString() ) );
             //notifyNodeNavigatorListeners();
         }
     }
 
-
     /**
      *   This method is defined by the TreeModelListener interface and gives the
-     *   JThumnailScrollPane a notification if additional nodes were inserted.
+     *   GroupNavigator a notification if additional nodes were inserted.
      *   The additional nodes are added and the existing nodes are reevaluated
      *   as to whether they are at the right place. Revalidate is called to update
      *   the screen.
      *
-     * @param e
+     * @param treeModelEvent
      */
     @Override
-    public void treeNodesInserted( TreeModelEvent e ) {
-        //logger.info("GroupNavigator.treeNodesInserted: " + e.toString() );
+    public void treeNodesInserted( TreeModelEvent treeModelEvent ) {
+        //logger.info("GroupNavigator.treeNodesInserted: " + treeModelEvent.toString() );
         if ( myNode == null ) {
             //logger.info("GroupNavigator.treeNodesInserted: ERROR! This should not have been called as there is not group showing and therefore there should be no tree listener firing off. Ignoring notification.");
             return;
@@ -170,62 +170,61 @@ public class GroupNavigator
         // don't get excited and force a relayout unless the inserted node is part
         // of the current group
         TreePath myPath = new TreePath( myNode.getPath() );
-        if ( myPath.equals( e.getTreePath() ) ) {
-            //logger.info( "Nodes were inserted under my node. We must therefore relayout the children; myNode: " + myPath.toString() + " comparison:" + ( (SortableDefaultMutableTreeNode) e.getTreePath().getLastPathComponent() ).toString() );
+        if ( myPath.equals( treeModelEvent.getTreePath() ) ) {
+            //logger.info( "Nodes were inserted under my node. We must therefore relayout the children; myNode: " + myPath.toString() + " comparison:" + ( (SortableDefaultMutableTreeNode) treeModelEvent.getTreePath().getLastPathComponent() ).toString() );
             notifyNodeNavigatorListeners();
         }
     }
 
-
     /**
      *   This method is defined by the TreeModelListener interface and gives the
-     *   JThumnailScrollPane a notification that some nodes were removed. It steps
-     *   through all the Thumbnail Components and makes sure they all are at the correct
-     *   location. The dead ones are removed.
+     *   GroupNavigator a notification that some nodes were removed. 
+     *   Case 1: the removal affected some other part of the tree --> we don't care
+     *   Case 2: the Group being shown was wiped off the tree --> we reposition to the last node still in existence (could be the root node)
+     *   Case 3: a child of our current Group was removed --> we relayout the nodes.
      *
-     * @param e
+     * @param treeModelEvent
      */
     @Override
-    public void treeNodesRemoved( TreeModelEvent e ) {
-        //logger.info("GroupNavigator.treeNodesRemoved: " + e.toString() );
+    public void treeNodesRemoved( TreeModelEvent treeModelEvent ) {
         if ( myNode == null ) {
-            logger.severe( "ERROR! This should not have been called as there is not group showing and therefore there should be no tree listener firing off. Ignoring notification." );
+            LOGGER.severe( "ERROR! This should not have been called as there is not group showing and therefore there should be no tree listener firing off. Ignoring notification." );
             return;
         }
 
         // if the current node is part of the tree that was deleted then we need to
         //  reposition the group at the parent node that remains.
-        if ( SortableDefaultMutableTreeNode.wasNodeDeleted( myNode, e ) ) {
-            //logger.info("GroupNavigator.treeNodesRemoved: determined that a child node of the currently displaying node was deleted and therefore executing a setNode on the parent that remains.");
-            setNode( (SortableDefaultMutableTreeNode) e.getTreePath().getLastPathComponent() );
+        if ( SortableDefaultMutableTreeNode.wasNodeDeleted( myNode, treeModelEvent ) ) {
+            LOGGER.info( String.format( "Determined that our current node has died. Moving to the last node still present: %s", treeModelEvent.getTreePath().getLastPathComponent().toString() ) );
+            setNode( (SortableDefaultMutableTreeNode) treeModelEvent.getTreePath().getLastPathComponent() );
+            notifyNodeNavigatorListeners();
         } else {
             // don't get excited and force a relayout unless the partent of the deleted
             // node is the current group
             TreePath myPath = new TreePath( myNode.getPath() );
-            if ( myPath.equals( e.getTreePath() ) ) {
-                logger.fine( String.format( "Nodes were removed from my node. We must therefore relayout the children; myPath: %s, lastPathComponent: [%s]", myPath.toString(), ( (SortableDefaultMutableTreeNode) e.getTreePath().getLastPathComponent() ).toString() ) );
+            if ( myPath.equals( treeModelEvent.getTreePath() ) ) {
+                LOGGER.fine( String.format( "Children were removed from the current node. We must therefore relayout the children; myPath: %s, lastPathComponent: [%s]", myPath.toString(), ( (SortableDefaultMutableTreeNode) treeModelEvent.getTreePath().getLastPathComponent() ).toString() ) );
                 notifyNodeNavigatorListeners();
             }
         }
     }
 
-
     /**
      *   This method is defined by the TreeModelListener interface and gives the
-     *   JThumnailScrollPane a notification if there was a massive structure change in the
+     *   GroupNavigator a notification if there was a massive structure change in the
      *   tree. In this event all laying out shall stop and the group should be laid out from
      *   scratch.
      *
-     * @param e
+     * @param treeModelEvent
      */
     @Override
-    public void treeStructureChanged( TreeModelEvent e ) {
-        logger.fine( String.format( "We've teen told that the Tree structure changed Event: %s", e.toString() ) );
+    public void treeStructureChanged( TreeModelEvent treeModelEvent ) {
+        LOGGER.fine( String.format( "We've teen told that the Tree structure changed Event: %s", treeModelEvent.toString() ) );
         if ( myNode == null ) {
             //logger.info("GroupNavigator.treeStructureChanged: ERROR! This should not have been called as there is not group showing and therefore there should be no tree listener firing off. Ignoring notification.");
             return;
         }
-        if ( myNode.isNodeDescendant( (SortableDefaultMutableTreeNode) e.getTreePath().getLastPathComponent() ) ) {
+        if ( myNode.isNodeDescendant( (SortableDefaultMutableTreeNode) treeModelEvent.getTreePath().getLastPathComponent() ) ) {
             notifyNodeNavigatorListeners();
         }
     }
