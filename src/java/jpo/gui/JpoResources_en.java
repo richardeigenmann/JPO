@@ -567,6 +567,9 @@ public class JpoResources_en extends ListResourceBundle {
         { "ExifInfoFocalLength", "Focal Length:" },
         { "ExifInfoISO", "ISO:" },
         { "ExifInfoTimeStamp", "Time stamp:" },
+		{"ExifInfoLongitude", "Longitude:"},
+		{"ExifInfoLatitude", "Latitude:"},
+
         //ThumbnailDescriptionJPanel
         { "ThumbnailDescriptionJPanelLargeFont", "Arial-PLAIN-12" },
         { "ThumbnailDescriptionJPanelSmallFont", "Arial-PLAIN-9" },

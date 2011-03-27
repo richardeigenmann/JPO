@@ -296,7 +296,7 @@ public class Tools {
      * @return  the number of real files in the array of files
      */
     public static int countfiles(File[] fileArray) {
-        warnOnEDT();
+        //warnOnEDT();
         if (fileArray == null) {
             return 0;
         }

@@ -645,6 +645,9 @@ public class JpoResources_zh_CN extends ListResourceBundle {
 		{"ExifInfoFocalLength", "焦距："},
 		{"ExifInfoISO", "感光度ISO："},
 		{"ExifInfoTimeStamp", "拍摄时间："},
+		{"ExifInfoLongitude", "Longitude: "},
+		{"ExifInfoLatitude", "Latitude: "},
+
 
 		//ThumbnailDescriptionJPane
 		{"ThumbnailDescriptionJPanelLargeFont", ""},

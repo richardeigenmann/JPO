@@ -4,6 +4,7 @@ import java.awt.geom.Point2D;
 import java.net.*;
 import java.io.*;
 import java.util.*;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /*
@@ -36,9 +37,9 @@ public class PictureInfo
         implements Serializable {
 
     /**
-     * Defines a logger for this class
+     * Defines a LOGGER for this class
      */
-    private static Logger logger = Logger.getLogger( PictureInfo.class.getName() );
+    private static final Logger LOGGER = Logger.getLogger( PictureInfo.class.getName() );
 
 
     /**
@@ -58,10 +59,10 @@ public class PictureInfo
         this.description = description;
         this.filmReference = filmReference;
 
-        logger.fine( "Highres_Name: " + Highres_Name );
-        logger.fine( "Lowres_Name: " + Lowres_Name );
-        logger.fine( "description: " + description );
-        logger.fine( "filmReference: " + filmReference );
+        LOGGER.log( Level.FINE, "Highres_Name: {0}", Highres_Name);
+        LOGGER.log( Level.FINE, "Lowres_Name: {0}", Lowres_Name);
+        LOGGER.log( Level.FINE, "description: {0}", description);
+        LOGGER.log( Level.FINE, "filmReference: {0}", filmReference);
     }
 
 
@@ -81,10 +82,10 @@ public class PictureInfo
         this.description = description;
         this.filmReference = filmReference;
 
-        logger.fine( "Highres_Name: " + highresLocation );
-        logger.fine( "Lowres_Name: " + Lowres_Name );
-        logger.fine( "description: " + description );
-        logger.fine( "filmReference: " + filmReference );
+        LOGGER.log( Level.FINE, "Highres_Name: {0}", highresLocation);
+        LOGGER.log( Level.FINE, "Lowres_Name: {0}", Lowres_Name);
+        LOGGER.log( Level.FINE, "description: {0}", description);
+        LOGGER.log( Level.FINE, "filmReference: {0}", filmReference);
 
     }
 
@@ -236,7 +237,7 @@ public class PictureInfo
      *  @see #getDescription
      */
     public synchronized void setDescription( String desc ) {
-        logger.fine( "setting description to: " + desc );
+        LOGGER.fine( "setting description to: " + desc );
         if ( !desc.equals( description ) ) {
             description = desc;
             sendDescriptionChangedEvent();
@@ -273,12 +274,12 @@ public class PictureInfo
      *  objects that the description was updated.
      */
     private void sendDescriptionChangedEvent() {
-        logger.fine( "preparing to send description changed event" );
+        LOGGER.fine( "preparing to send description changed event" );
         if ( Settings.pictureCollection.getSendModelUpdates() ) {
             PictureInfoChangeEvent pce = new PictureInfoChangeEvent( this );
             pce.setDescriptionChanged();
             sendPictureInfoChangedEvent( pce );
-            logger.fine( "sent description changed event" );
+            LOGGER.fine( "sent description changed event" );
             Settings.pictureCollection.setUnsavedUpdates();
         }
     }
@@ -342,7 +343,7 @@ public class PictureInfo
             URL highresURL = new URL( highresLocation );
             return highresURL;
         } catch ( MalformedURLException x ) {
-            logger.fine( "Caught an unexpected MalformedURLException: " + x.getMessage() );
+            LOGGER.fine( "Caught an unexpected MalformedURLException: " + x.getMessage() );
             return null;
         }
     }
@@ -471,7 +472,7 @@ public class PictureInfo
     public void calculateChecksum() {
         URL pictureURL = getHighresURLOrNull();
         if ( pictureURL == null ) {
-            logger.severe( "Aborting due to bad URL: " + getHighresLocation() );
+            LOGGER.severe( "Aborting due to bad URL: " + getHighresLocation() );
             return;
         }
 
@@ -479,7 +480,7 @@ public class PictureInfo
         try {
             in = pictureURL.openStream();
         } catch ( IOException x ) {
-            logger.severe( String.format( "Couldn't open URL %s. Leaving Checksum unchanged.", pictureURL.toString() ) );
+            LOGGER.severe( String.format( "Couldn't open URL %s. Leaving Checksum unchanged.", pictureURL.toString() ) );
             return;
         }
 
@@ -487,7 +488,7 @@ public class PictureInfo
 
         checksum = Tools.calculateChecksum( bin );
 
-        logger.fine( "Checksum is: " + Long.toString( checksum ) );
+        LOGGER.fine( "Checksum is: " + Long.toString( checksum ) );
         sendChecksumChangedEvent();
     }
 
@@ -529,11 +530,11 @@ public class PictureInfo
      */
     public void parseChecksum() {
         try {
-            logger.fine( "PictureInfo.parseChecksum: " + checksumString );
+            LOGGER.fine( "PictureInfo.parseChecksum: " + checksumString );
             checksum = ( new Long( checksumString ) ).longValue();
             checksumString = "";
         } catch ( NumberFormatException x ) {
-            logger.info( "PictureInfo.parseChecksum: invalid checksum: " + checksumString + " on picture: " + getHighresFilename() + " --> Set to MIN" );
+            LOGGER.info( "PictureInfo.parseChecksum: invalid checksum: " + checksumString + " on picture: " + getHighresFilename() + " --> Set to MIN" );
             checksum = Long.MIN_VALUE;
         }
         sendChecksumChangedEvent();
@@ -566,7 +567,7 @@ public class PictureInfo
         try {
             return new File( new URI( lowresLocation ) );
         } catch ( URISyntaxException x ) {
-            logger.info( "Conversion of " + lowresLocation + " to URI failed: " + x.getMessage() );
+            LOGGER.info( "Conversion of " + lowresLocation + " to URI failed: " + x.getMessage() );
             return null;
         }
     }
@@ -594,7 +595,7 @@ public class PictureInfo
             URL lowresURL = new URL( lowresLocation );
             return lowresURL;
         } catch ( MalformedURLException x ) {
-            logger.info( "Caught an unexpected MalformedURLException: " + x.getMessage() );
+            LOGGER.info( "Caught an unexpected MalformedURLException: " + x.getMessage() );
             return null;
         }
     }
@@ -1020,7 +1021,7 @@ public class PictureInfo
             rotation = ( new Double( rotationString ) ).doubleValue();
             rotationString = null;
         } catch ( NumberFormatException x ) {
-            logger.info( "PictureInfo.appendToRotation: invalid rotation: " + rotationString + " on picture: " + getHighresFilename() + " --> Set to Zero" );
+            LOGGER.info( "PictureInfo.appendToRotation: invalid rotation: " + rotationString + " on picture: " + getHighresFilename() + " --> Set to Zero" );
             rotation = 0;
         }
         sendRotationChangedEvent();
@@ -1127,7 +1128,7 @@ public class PictureInfo
             setLatLng( new Point2D.Double( lat, lng ) );
             latLngString = null;
         } catch ( NumberFormatException x ) {
-            logger.info( String.format( "Failed to parse string %s into latitude and longitude", latLngString ) );
+            LOGGER.info( String.format( "Failed to parse string %s into latitude and longitude", latLngString ) );
         }
     }
 
@@ -1251,7 +1252,7 @@ public class PictureInfo
             categoryAssignmentString = "";
             addCategoryAssignment( category );
         } catch ( NumberFormatException x ) {
-            logger.info( "PictureInfo.parseCategoryAssignment: NumberFormatException: " + categoryAssignmentString + " on picture: " + getHighresFilename() + " because: " + x.getMessage() );
+            LOGGER.info( "PictureInfo.parseCategoryAssignment: NumberFormatException: " + categoryAssignmentString + " on picture: " + getHighresFilename() + " because: " + x.getMessage() );
         }
         sendCategoryAssignmentsChangedEvent();
     }
@@ -1390,7 +1391,7 @@ public class PictureInfo
      *  @param listener	The object that will receive notifications.
      */
     public void addPictureInfoChangeListener( PictureInfoChangeListener listener ) {
-        logger.fine( "Listener added on SourcePicture " + Integer.toString( this.hashCode() ) + " of class: " + listener.getClass().toString() );
+        LOGGER.fine( "Listener added on SourcePicture " + Integer.toString( this.hashCode() ) + " of class: " + listener.getClass().toString() );
         pictureInfoListeners.add( listener );
     }
 
@@ -1403,7 +1404,7 @@ public class PictureInfo
      */
     public void removePictureInfoChangeListener(
             PictureInfoChangeListener listener ) {
-        logger.fine( "Listener removed from SourcePicture " + Integer.toString( this.hashCode() ) + " of class: " + listener.getClass().toString() );
+        LOGGER.fine( "Listener removed from SourcePicture " + Integer.toString( this.hashCode() ) + " of class: " + listener.getClass().toString() );
         pictureInfoListeners.remove( listener );
     }
 

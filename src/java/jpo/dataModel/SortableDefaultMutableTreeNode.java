@@ -14,6 +14,7 @@ import java.io.*;
 import java.awt.dnd.*;
 import java.awt.datatransfer.*;
 import java.awt.event.*;
+import java.awt.geom.Point2D;
 import java.util.logging.Logger;
 import javax.swing.*;
 
@@ -1424,6 +1425,7 @@ public class SortableDefaultMutableTreeNode
         ExifInfo exifInfo = new ExifInfo( newPictureInfo.getHighresURLOrNull() );
         exifInfo.decodeExifTags();
         newPictureInfo.setCreationTime( exifInfo.getCreateDateTime() );
+        newPictureInfo.setLatLng( exifInfo.latLng );
 
         return true;
     }

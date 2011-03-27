@@ -99,7 +99,6 @@ public class ProgressGui
 
     }
 
-
     private void createGui( int max, String title ) {
         setTitle( title );
         setDefaultCloseOperation( DISPOSE_ON_CLOSE );
