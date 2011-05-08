@@ -80,9 +80,12 @@
 		  	technology for easy installation and upgrading.</p>
 
 			<hr>
+			<h2 id="Like">Do you like JPO?</h2>
+                        <p>Why don't you let the author know? Send him an email at <a href="mailto:richard.eigenmann@gmail.com">richard.eigenmann@gmail.com</a></p>
+			<hr>
 
-			<p>Last update to this page: 6.6.2010<br>
-			Copyright 2003-2010 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
+			<p>Last update to this page: 8.5.2011<br>
+			Copyright 2003-2011 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
 		</td>
 	</tr>
 </table>

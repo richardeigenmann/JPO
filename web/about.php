@@ -52,10 +52,7 @@
 			Caribbean. The sites I wrote JPO at included aeroplanes, trains, cars, safari camps, sail boats, 
 			botanical gardens, restaurants, bars and swimming pools.</p>
 			
-			<p>Richard "eats his own dog food". He uses JPO to manage
-			a private collection of around 15'000 pictures.
-			</p>
-
+			<p>Richard uses JPO to manage private collection of around 20'000 pictures.</p>
 
 			<hr>
 			<h2 id="License">License</h2>
@@ -63,8 +60,8 @@
 			<p>The JWizz wizard classes are licensed under the FreeBSD license by Michael Rudolf. They are in an included .jar file and have not been modified.</p>
 
 			<hr>
-			<p>Last update to this page: 21.10.2010<br>
-			Copyright 2003-2010 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
+			<p>Last update to this page: 8.5.2010<br>
+			Copyright 2003-2011 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
 		</td>
 	</tr>
 </table>
