@@ -20,7 +20,7 @@ import org.apache.poi.hslf.model.*;
 HtmlDistillerJFrame.java:  Runs a GUI to generate a website
 pre-populates the options with default values.
 
-Copyright (C) 2008-2009  Richard Eigenmann.
+Copyright (C) 2008-2011  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -46,7 +46,7 @@ public class HtmlDistillerJFrame
     /**
      * Defines a logger for this class
      */
-    private static Logger logger = Logger.getLogger( HtmlDistillerJFrame.class.getName() );
+    private static final Logger LOGGER = Logger.getLogger( HtmlDistillerJFrame.class.getName() );
 
     /**
      *  Text field that holds the directory that the html is to be exported to.
@@ -225,7 +225,7 @@ public class HtmlDistillerJFrame
         finalTarget.addActionListener( new ActionListener() {
 
             public void actionPerformed( ActionEvent arg0 ) {
-                logger.info( "Other delivery types are not yet supported" );
+                LOGGER.info( "Other delivery types are not yet supported" );
                 finalTarget.setSelectedIndex( 0 );
             }
         } );
@@ -257,6 +257,7 @@ public class HtmlDistillerJFrame
         // create the JSpinner that holds the number of pictures per row
         picsPerRow.addChangeListener( new ChangeListener() {
 
+            @Override
             public void stateChanged( ChangeEvent arg0 ) {
                 previewPanel.repaint();
             }
@@ -313,6 +314,7 @@ public class HtmlDistillerJFrame
         // generateMidresHtml.setAlignmentX( Component.LEFT_ALIGNMENT );
         generateMidresHtml.addChangeListener( new ChangeListener() {
 
+            @Override
             public void stateChanged( ChangeEvent arg0 ) {
                 generateDHTMLJCheckBox.setEnabled( generateMidresHtml.isSelected() );
                 if ( !generateMidresHtml.isSelected() ) {
@@ -401,6 +403,7 @@ public class HtmlDistillerJFrame
         JButton fgc = new JButton( "Foreground Color" );
         fgc.addActionListener( new ActionListener() {
 
+            @Override
             public void actionPerformed( ActionEvent e ) {
                 JColorChooser tcc = new JColorChooser();
                 //Remove the preview panel
@@ -418,6 +421,7 @@ public class HtmlDistillerJFrame
         JButton bgc = new JButton( "Background Color" );
         bgc.addActionListener( new ActionListener() {
 
+            @Override
             public void actionPerformed( ActionEvent e ) {
                 JColorChooser tcc = new JColorChooser();
                 //Remove the preview panel
@@ -453,6 +457,7 @@ public class HtmlDistillerJFrame
         bg.add( sequentialRadioButton );
         ChangeListener radioButtonChangeListener = new ChangeListener() {
 
+            @Override
             public void stateChanged( ChangeEvent arg0 ) {
                 if ( sequentialStartJSpinner.isEnabled() != sequentialRadioButton.isSelected() ) {
                     sequentialStartJSpinner.setEnabled( sequentialRadioButton.isSelected() );
@@ -503,6 +508,7 @@ public class HtmlDistillerJFrame
         this.getRootPane().setDefaultButton( okJButton );
         okJButton.addActionListener( new ActionListener() {
 
+            @Override
             public void actionPerformed( ActionEvent e ) {
                 exportToHtml();
             }
@@ -516,6 +522,7 @@ public class HtmlDistillerJFrame
         cancelJButton.setBorder( BorderFactory.createRaisedBevelBorder() );
         cancelJButton.addActionListener( new ActionListener() {
 
+            @Override
             public void actionPerformed( ActionEvent e ) {
                 getRid();
             }
@@ -529,6 +536,7 @@ public class HtmlDistillerJFrame
         pptJButton.setBorder( BorderFactory.createRaisedBevelBorder() );
         pptJButton.addActionListener( new ActionListener() {
 
+            @Override
             public void actionPerformed( ActionEvent e ) {
                 exportToPpt();
             }
@@ -616,9 +624,9 @@ public class HtmlDistillerJFrame
 
         storeSettings();
 
-        HtmlDistiller h = new HtmlDistiller( options );
-        Thread t = new Thread( h );
-        t.start();
+        HtmlDistiller htmlDistiller = new HtmlDistiller( options );
+        Thread thread = new Thread( htmlDistiller );
+        thread.start();
     }
 
 
@@ -791,6 +799,7 @@ public class HtmlDistillerJFrame
         /**
          *   This draws an image of what the HTML could look like
          */
+        @Override
         public void paintComponent( Graphics g ) {
             int WindowWidth = getSize().width;
             int WindowHeight = getSize().height;

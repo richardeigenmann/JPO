@@ -18,6 +18,7 @@
 
 			<table>
 				<tr><td colspan=2><b>Development Version 0.9</b></td></tr>
+				<tr><td valign="top">8.5.2011</td><td> Fixed EDT violations</td></tr>
 				<tr><td valign="top">27.3.2011</td><td> Added parsing of GPS data from image</td></tr>
 				<tr><td valign="top">27.3.2011</td><td> When removing a group in the tree the thumbnail panel didn't jump to the last visible group</td></tr>
 				<tr><td valign="top">27.3.2011</td><td> Fixed File Copy for multiple files</td></tr>

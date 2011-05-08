@@ -109,8 +109,8 @@ public class HtmlDistillerOptions {
     }
 
     /**
-     * The directory the pages should be written to
-     * @return
+     * The directory the web pages should be written to
+     * @return The directory where the web pages should be written to
      */
     public File getTargetDirectory () {
         return targetDirectory;
@@ -285,6 +285,10 @@ public class HtmlDistillerOptions {
      */
     private float midresJpgQuality;
 
+    /**
+     * The number of rows that should be generated on the group overview page
+     * @return The number of rows that should be generated on the group overview page
+     */
     public int getPicsPerRow () {
         return picsPerRow;
     }
@@ -293,6 +297,10 @@ public class HtmlDistillerOptions {
         this.picsPerRow = picsPerRow;
     }
 
+    /**
+     * The note from which to start
+     * @return The node from which to start
+     */
     public SortableDefaultMutableTreeNode getStartNode () {
         return startNode;
     }

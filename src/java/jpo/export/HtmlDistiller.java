@@ -16,6 +16,7 @@ import javax.swing.*;
 import java.util.List;
 import java.util.logging.Logger;
 import java.util.zip.*;
+import jpo.dataModel.NodeStatistics;
 import jpo.gui.ProgressGui;
 
 /*
@@ -76,7 +77,7 @@ public class HtmlDistiller
     /**
      * The preferences that define how to render the Html page.
      */
-    private HtmlDistillerOptions options;
+    private final HtmlDistillerOptions options;
 
     /**
      *  Creates and starts a Swing Worker that renders the web page files
@@ -84,13 +85,33 @@ public class HtmlDistiller
      *
      *  @param  options The parameters the user chose on how to render the pages
      */
-    public HtmlDistiller ( HtmlDistillerOptions options ) {
+    public HtmlDistiller( final HtmlDistillerOptions options ) {
         this.options = options;
         Tools.checkEDT();
-        int totalNodes = Tools.countNodes( options.getStartNode() );
-        progGui = new ProgressGui( totalNodes,
+        //int totalNodes = ( new NodeStatistics( options.getStartNode() ) ).getNumberOfNodes();
+        progGui = new ProgressGui( Integer.MAX_VALUE,
                 Settings.jpoResources.getString( "HtmlDistillerThreadTitle" ),
-                String.format( Settings.jpoResources.getString( "HtmlDistDone" ), totalNodes ) );
+                String.format( Settings.jpoResources.getString( "HtmlDistDone" ), 0 ) );
+
+        class getCountWorker extends SwingWorker<Integer, Object> {
+
+            @Override
+            public Integer doInBackground() {
+                return NodeStatistics.countPictures( options.getStartNode(), true );
+            }
+
+            @Override
+            protected void done() {
+                try {
+                    progGui.setMaxiumum( get() );
+                    progGui.setDoneString( String.format( Settings.jpoResources.getString( "HtmlDistDone" ), get() ) );
+                } catch ( Exception ignore ) {
+                }
+            }
+        }
+        ( new getCountWorker() ).execute();
+
+
         execute();
     }
 
@@ -101,7 +122,7 @@ public class HtmlDistiller
      * @throws Exception hopefully not
      */
     @Override
-    protected Integer doInBackground () throws Exception {
+    protected Integer doInBackground() throws Exception {
         scp.setQualityScale();
         scp.setScaleSteps( options.getScalingSteps() );
 
@@ -144,7 +165,7 @@ public class HtmlDistiller
 
                 int count;
                 byte data[] = new byte[BUFFER_SIZE];
-                while ( (count = bin.read( data, 0, BUFFER_SIZE )) != -1 ) {
+                while ( ( count = bin.read( data, 0, BUFFER_SIZE ) ) != -1 ) {
                     bout.write( data, 0, count );
                 }
 
@@ -174,7 +195,7 @@ public class HtmlDistiller
      * @param messages A message that will be written to the logfile.
      */
     @Override
-    protected void process ( List<String> messages ) {
+    protected void process( List<String> messages ) {
         for ( String message : messages ) {
             LOGGER.info( String.format( "messge: %s", message ) );
             progGui.progressIncrement();
@@ -185,7 +206,7 @@ public class HtmlDistiller
      * SwingWorker calls here when the background task is done.
      */
     @Override
-    protected void done () {
+    protected void done() {
         progGui.switchToDoneMode();
         URI uri;
         try {
@@ -208,7 +229,7 @@ public class HtmlDistiller
      *  @param groupNode		The node at which the extraction is to start.
      *
      */
-    public void writeGroup ( SortableDefaultMutableTreeNode groupNode ) {
+    public void writeGroup( SortableDefaultMutableTreeNode groupNode ) {
         try {
             publish( String.format( "Writing a picture for group node: %s", groupNode.toString() ) );
 
@@ -231,7 +252,7 @@ public class HtmlDistiller
             out.write( "<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\" lang=\"en\">" );
             out.newLine();
 
-            out.write( "<head>\n\t<link rel=\"StyleSheet\" href=\"jpo.css\" type=\"text/css\" media=\"screen\" />\n\t<title>" + ((GroupInfo) groupNode.getUserObject()).getGroupName() + "</title>\n</head>" );
+            out.write( "<head>\n\t<link rel=\"StyleSheet\" href=\"jpo.css\" type=\"text/css\" media=\"screen\" />\n\t<title>" + Tools.stringToHTMLString( ( (GroupInfo) groupNode.getUserObject() ).getGroupName() ) + "</title>\n</head>" );
             out.newLine();
 
 
@@ -239,12 +260,12 @@ public class HtmlDistiller
             out.write( "<body>" );
             out.newLine();
 
-            out.write( "<table border=\"0\" cellpadding=\"0\" cellspacing=\"" + Integer.toString( options.getCellspacing() ) + "\" width=\"" + Integer.toString( options.getPicsPerRow() * options.getThumbnailWidth() + (options.getPicsPerRow() - 1) * options.getCellspacing() ) + "\">" );
+            out.write( "<table border=\"0\" cellpadding=\"0\" cellspacing=\"" + Integer.toString( options.getCellspacing() ) + "\" width=\"" + Integer.toString( options.getPicsPerRow() * options.getThumbnailWidth() + ( options.getPicsPerRow() - 1 ) * options.getCellspacing() ) + "\">" );
             out.newLine();
 
             out.write( "<tr><td colspan=\"" + Integer.toString( options.getPicsPerRow() ) + "\">" );
 
-            out.write( String.format( "<h2>%s</h2>", Tools.stringToHTMLString( ((GroupInfo) groupNode.getUserObject()).getGroupName() ) ) );
+            out.write( String.format( "<h2>%s</h2>", Tools.stringToHTMLString( ( (GroupInfo) groupNode.getUserObject() ).getGroupName() ) ) );
 
             if ( groupNode.equals( options.getStartNode() ) ) {
                 if ( options.isGenerateZipfile() ) {
@@ -273,7 +294,7 @@ public class HtmlDistiller
             Enumeration kids = groupNode.children();
             SortableDefaultMutableTreeNode n;
 
-            while ( kids.hasMoreElements() && (!progGui.getInterruptor().getShouldInterrupt()) ) {
+            while ( kids.hasMoreElements() && ( !progGui.getInterruptor().getShouldInterrupt() ) ) {
                 n = (SortableDefaultMutableTreeNode) kids.nextElement();
                 if ( n.getUserObject() instanceof GroupInfo ) {
 
@@ -284,7 +305,7 @@ public class HtmlDistiller
                     out.write( "</td>" );
                     out.newLine();
 
-                    descriptionsBuffer.putDescription( ((GroupInfo) n.getUserObject()).getGroupName() );
+                    descriptionsBuffer.putDescription( ( (GroupInfo) n.getUserObject() ).getGroupName() );
 
                     // recursively call the method to output that group.
                     writeGroup( n );
@@ -331,7 +352,7 @@ public class HtmlDistiller
      *  @param	descriptionsBuffer	A buffer for the thumbnails page
      *  @throws IOException If there was some sort of IO Error.
      */
-    private void writePicture (
+    private void writePicture(
             SortableDefaultMutableTreeNode pictureNode,
             BufferedWriter out,
             File groupFile,
@@ -394,16 +415,16 @@ public class HtmlDistiller
 
                 int count;
                 byte data[] = new byte[BUFFER_SIZE];
-                while ( (count = bin.read( data, 0, BUFFER_SIZE )) != -1 ) {
+                while ( ( count = bin.read( data, 0, BUFFER_SIZE ) ) != -1 ) {
                     zipFile.write( data, 0, count );
                 }
 
                 bin.close();
                 in.close();
             } catch ( IOException e ) {
-                LOGGER.log( Level.SEVERE, "Could not create zipfile entry for {0}\n{1}", new Object[]{highresFile.toString(), e.toString()} );
+                LOGGER.log( Level.SEVERE, "Could not create zipfile entry for {0}\n{1}", new Object[]{ highresFile.toString(), e.toString() } );
             } catch ( Exception e ) {
-                LOGGER.log( Level.SEVERE, "Could not create zipfile entry for {0}\n{1}", new Object[]{highresFile.toString(), e.toString()} );
+                LOGGER.log( Level.SEVERE, "Could not create zipfile entry for {0}\n{1}", new Object[]{ highresFile.toString(), e.toString() } );
             }
         }
 
@@ -469,7 +490,7 @@ public class HtmlDistiller
             File midresHtmlFile = new File( options.getTargetDirectory(), midresHtmlFileName );
             BufferedWriter midresHtmlWriter = new BufferedWriter( new FileWriter( midresHtmlFile ) );
             String groupDescription =
-                    ((SortableDefaultMutableTreeNode) pictureNode.getParent()).getUserObject().toString();
+                    ( (SortableDefaultMutableTreeNode) pictureNode.getParent() ).getUserObject().toString();
 
             midresHtmlWriter.write( "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" );
             midresHtmlWriter.newLine();
@@ -546,7 +567,7 @@ public class HtmlDistiller
             dhtmlArray.append( "</font>'\n" );
 
 
-            int startNumber = (int) Math.floor( (childNumber - indexBeforeCurrent - 1) / indexPerRow ) * indexPerRow + 1;
+            int startNumber = (int) Math.floor( ( childNumber - indexBeforeCurrent - 1 ) / indexPerRow ) * indexPerRow + 1;
             if ( startNumber < 1 ) {
                 startNumber = 1;
             }
@@ -554,10 +575,10 @@ public class HtmlDistiller
             if ( endNumber > childCount ) {
                 endNumber = childCount + 1;
             }
-            endNumber = endNumber + indexPerRow - (childCount % indexPerRow);
+            endNumber = endNumber + indexPerRow - ( childCount % indexPerRow );
 
             for ( int i = startNumber; i < endNumber; i++ ) {
-                if ( (i - 1) % indexPerRow == 0 ) {
+                if ( ( i - 1 ) % indexPerRow == 0 ) {
                     midresHtmlWriter.write( "<tr>" );
                     midresHtmlWriter.newLine();
                 }
@@ -594,9 +615,9 @@ public class HtmlDistiller
                             midresHtmlWriter.write( String.format( " onmouseover=\"changetext(content[%d])\" onmouseout=\"changetext(content[0])\"", i ) );
                             dhtmlArray.append( "content[" ).append( Integer.toString( i ) ).append( "]='" );
 
-                            dhtmlArray.append( font ).append( "<p />Picture " ).append( Integer.toString( i ) ).append( "/" ).append( Integer.toString( childCount ) ).append( ":<p />" + "<img src=\"" ).append( lowresFn ).append( "\" width=\"" ).append( Integer.toString( matrixWidth - 10 ) ).append( "\" alt=\"Thumbnail\" />" + "<p /><i>" ).append( Tools.stringToHTMLString( ((PictureInfo) nde.getUserObject()).getDescription().replaceAll( "\'", "\\\\'" ).replaceAll( "\n", " " ) ) ).append( "</i></font>'\n" );
+                            dhtmlArray.append( font ).append( "<p />Picture " ).append( Integer.toString( i ) ).append( "/" ).append( Integer.toString( childCount ) ).append( ":<p />" + "<img src=\"" ).append( lowresFn ).append( "\" width=\"" ).append( Integer.toString( matrixWidth - 10 ) ).append( "\" alt=\"Thumbnail\" />" + "<p /><i>" ).append( Tools.stringToHTMLString( ( (PictureInfo) nde.getUserObject() ).getDescription().replaceAll( "\'", "\\\\'" ).replaceAll( "\n", " " ) ) ).append( "</i></font>'\n" );
                         } else {
-                            dhtmlArray.append( font ).append( "<p />Item " ).append( Integer.toString( i ) ).append( "/" ).append( Integer.toString( childCount ) ).append( ":<p />" ).append( Tools.stringToHTMLString( ((PictureInfo) nde.getUserObject()).getDescription().replaceAll( "\'", "\\\\'" ).replaceAll( "\n", " " ) ) ).append( "</i></font>'\n" );
+                            dhtmlArray.append( font ).append( "<p />Item " ).append( Integer.toString( i ) ).append( "/" ).append( Integer.toString( childCount ) ).append( ":<p />" ).append( Tools.stringToHTMLString( ( (PictureInfo) nde.getUserObject() ).getDescription().replaceAll( "\'", "\\\\'" ).replaceAll( "\n", " " ) ) ).append( "</i></font>'\n" );
                         }
                     }
                     midresHtmlWriter.write( ">" );
@@ -633,10 +654,10 @@ public class HtmlDistiller
                 String previousHtmlFilename = "";
                 switch ( options.getPictureNaming() ) {
                     case HtmlDistillerOptions.PICTURE_NAMING_BY_ORIGINAL_NAME:
-                        SortableDefaultMutableTreeNode priorNode = (SortableDefaultMutableTreeNode) ((SortableDefaultMutableTreeNode) pictureNode.getParent()).getChildAt( childNumber - 2 );
+                        SortableDefaultMutableTreeNode priorNode = (SortableDefaultMutableTreeNode) ( (SortableDefaultMutableTreeNode) pictureNode.getParent() ).getChildAt( childNumber - 2 );
                         Object userObject = priorNode.getUserObject();
                         if ( userObject instanceof PictureInfo ) {
-                            previousHtmlFilename = Tools.cleanupFilename( Tools.getFilenameRoot( ((PictureInfo) userObject).getHighresFilename() ) ) + ".htm";
+                            previousHtmlFilename = Tools.cleanupFilename( Tools.getFilenameRoot( ( (PictureInfo) userObject ).getHighresFilename() ) ) + ".htm";
                         } else {
                             previousHtmlFilename = "index.htm"; // actually something has gone horribly wrong
                         }
@@ -648,7 +669,7 @@ public class HtmlDistiller
                         previousHtmlFilename = "jpo_" + formattedNumber + ".htm";
                         break;
                     default:  //case HtmlDistillerOptions.PICTURE_NAMING_BY_HASH_CODE:
-                        int hashCode = ((SortableDefaultMutableTreeNode) pictureNode.getParent()).getChildAt( childNumber - 2 ).hashCode();
+                        int hashCode = ( (SortableDefaultMutableTreeNode) pictureNode.getParent() ).getChildAt( childNumber - 2 ).hashCode();
                         previousHtmlFilename = "jpo_" + Integer.toString( hashCode ) + ".htm";
                         break;
                 }
@@ -668,10 +689,10 @@ public class HtmlDistiller
                 String nextHtmlFilename = "";
                 switch ( options.getPictureNaming() ) {
                     case HtmlDistillerOptions.PICTURE_NAMING_BY_ORIGINAL_NAME:
-                        SortableDefaultMutableTreeNode priorNode = (SortableDefaultMutableTreeNode) ((SortableDefaultMutableTreeNode) pictureNode.getParent()).getChildAt( childNumber );
+                        SortableDefaultMutableTreeNode priorNode = (SortableDefaultMutableTreeNode) ( (SortableDefaultMutableTreeNode) pictureNode.getParent() ).getChildAt( childNumber );
                         Object userObject = priorNode.getUserObject();
                         if ( userObject instanceof PictureInfo ) {
-                            nextHtmlFilename = Tools.cleanupFilename( Tools.getFilenameRoot( ((PictureInfo) userObject).getHighresFilename() ) ) + ".htm";
+                            nextHtmlFilename = Tools.cleanupFilename( Tools.getFilenameRoot( ( (PictureInfo) userObject ).getHighresFilename() ) ) + ".htm";
                         } else {
                             nextHtmlFilename = "index.htm"; // actually something has gone horribly wrong
                         }
@@ -683,7 +704,7 @@ public class HtmlDistiller
                         nextHtmlFilename = "jpo_" + formattedNumber + ".htm";
                         break;
                     default:  //case HtmlDistillerOptions.PICTURE_NAMING_BY_HASH_CODE:
-                        int hashCode = ((SortableDefaultMutableTreeNode) pictureNode.getParent()).getChildAt( childNumber ).hashCode();
+                        int hashCode = ( (SortableDefaultMutableTreeNode) pictureNode.getParent() ).getChildAt( childNumber ).hashCode();
                         nextHtmlFilename = "jpo_" + Integer.toString( hashCode ) + ".htm";
                         break;
                 }
@@ -739,14 +760,14 @@ public class HtmlDistiller
             }
 
 
-            if (options.isGenerateMap() ) {
-                midresHtmlWriter.write("<script type=\"text/javascript\"> <!--");
+            if ( options.isGenerateMap() ) {
+                midresHtmlWriter.write( "<script type=\"text/javascript\"> <!--" );
                 midresHtmlWriter.newLine();
-                midresHtmlWriter.write( String.format("var lat=%f; var lng=%f;", pictureInfo.getLatLng().x, pictureInfo.getLatLng().y ));
+                midresHtmlWriter.write( String.format( "var lat=%f; var lng=%f;", pictureInfo.getLatLng().x, pictureInfo.getLatLng().y ) );
                 midresHtmlWriter.newLine();
-                midresHtmlWriter.write("--> </script>");
+                midresHtmlWriter.write( "--> </script>" );
                 midresHtmlWriter.newLine();
-                midresHtmlWriter.write("<script type=\"text/javascript\" src=\"http://maps.google.com/maps/api/js?sensor=false\"></script>");
+                midresHtmlWriter.write( "<script type=\"text/javascript\" src=\"http://maps.google.com/maps/api/js?sensor=false\"></script>" );
                 midresHtmlWriter.newLine();
             }
 
@@ -787,7 +808,7 @@ public class HtmlDistiller
          *  @param	columns	The number of columns being generated
          *  @param	out	The Thumbnail page
          */
-        public DescriptionsBuffer ( int columns, BufferedWriter out ) {
+        public DescriptionsBuffer( int columns, BufferedWriter out ) {
             this.columns = columns;
             this.out = out;
             descriptions = new String[options.getPicsPerRow()];
@@ -801,7 +822,7 @@ public class HtmlDistiller
          *  @param  description	The String to be added.
          *  @throws IOException if anything went wrong with the writing.
          */
-        public void putDescription ( String description ) throws IOException {
+        public void putDescription( String description ) throws IOException {
             descriptions[picCounter] = description;
             picCounter++;
             flushIfNescessary();
@@ -814,7 +835,7 @@ public class HtmlDistiller
          *
          *  @throws IOException if something went wrong with wrting.
          */
-        public void flushIfNescessary () throws IOException {
+        public void flushIfNescessary() throws IOException {
             if ( picCounter == columns ) {
                 out.write( "</tr>" );
                 flushDescriptions();
@@ -834,7 +855,7 @@ public class HtmlDistiller
          *
          *  @throws IOException	If writing didn't work.
          */
-        public void flushDescriptions () throws IOException {
+        public void flushDescriptions() throws IOException {
             out.newLine();
             out.write( "<tr>" );
             out.newLine();

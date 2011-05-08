@@ -231,8 +231,7 @@ public class JpoResources_de extends ListResourceBundle {
 		{ "sequentialRadioButtonStart", "Start bei" }, 
 		{ "generateRobotsJCheckBox", "Indexierung durch Suchmaschinen\nverbieten (robots.txt schreiben)" },
 		{ "welcomeTitle", "Wilkommen"},
-		{ "generate1", "Webseite mit "}, 
-		{ "generate2", " Bildern erstellen"}, 
+		{ "welcomeMsg", "Webseite mit %d Bildern erstellen"}, // new
 		{ "generateFrom", "Von: "}, 
 		{ "summary", "Zusammenfassung"}, 
 		{ "check", "Prüfen"}, 

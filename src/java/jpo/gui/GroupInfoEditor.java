@@ -124,7 +124,7 @@ public class GroupInfoEditor {
         JTabbedPane tabbedPane = new JTabbedPane();
         tabbedPane.addTab( "Properties", jPanel );
 
-        CollectionPropertiesJPanel statsJPanel = new CollectionPropertiesJPanel();
+        NodeStatisticsPanel statsJPanel = new NodeStatisticsPanel();
         statsJPanel.updateStats( editNode );
         tabbedPane.addTab( "Statistics", statsJPanel );
 

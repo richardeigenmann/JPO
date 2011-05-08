@@ -318,29 +318,7 @@ public class Tools {
         return numFiles;
     }
 
-    /**
-     *  Returns the the total number of nodes belonging to the indicated node.
-     *  @param startNode	The node from which the count shall begin.
-     *  @return The number of Nodes.
-     */
-    public static int countNodes(SortableDefaultMutableTreeNode startNode) {
-        warnOnEDT();
-        
-        int count = 1;
-        Enumeration kids = startNode.children();
-        SortableDefaultMutableTreeNode n;
-
-        while (kids.hasMoreElements()) {
-            n = (SortableDefaultMutableTreeNode) kids.nextElement();
-            if (n.getChildCount() > 0) {
-                count += countNodes(n);
-            } else {
-                count++;
-            }
-        }
-        return count;
-    }
-    /**
+        /**
      *   Constant that indicates that the directory must exist
      */
     public static final int DIR_MUST_EXIST = 1;
@@ -1049,7 +1027,7 @@ public class Tools {
      */
     public static void checkEDT() {
         if (!SwingUtilities.isEventDispatchThread()) {
-            throw new Error("Not on EDT!");
+            throw new Error("Not on EDT! Throwing error.");
         }
     }
 
@@ -1060,7 +1038,7 @@ public class Tools {
      */
     public static void warnOnEDT() {
         if (SwingUtilities.isEventDispatchThread()) {
-            LOGGER.warning("We are on the EDT and should not be!");
+            LOGGER.warning("We are on the EDT and should not be! Continuing normally.");
             for (StackTraceElement trace : new Throwable().getStackTrace()) {
                 System.out.println(trace);
             }

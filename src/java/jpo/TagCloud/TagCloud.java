@@ -2,9 +2,9 @@ package jpo.TagCloud;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.TreeSet;
-import java.util.Vector;
 import java.util.logging.Logger;
 import javax.swing.JScrollPane;
 import jpo.dataModel.Tools;
@@ -12,7 +12,7 @@ import jpo.dataModel.Tools;
 /*
 TagCloud.java:  A Widget that shows a TagCloud
 
-Copyright (C) 2009  Richard Eigenmann.
+Copyright (C) 2009-2011  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -27,7 +27,7 @@ The license is in gpl.txt.
 See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 /**
- * A controller that constructs the TagCloud of Labels and handles mouse clickes,
+ * A controller that constructs the TagCloud of Labels and handles mouse clicks,
  * sending them on to TagClickListeners.
  *
  * @author Richard Eigenmann
@@ -37,7 +37,7 @@ public class TagCloud extends JScrollPane {
     /**
      * Defines a logger for this class
      */
-    private static Logger logger = Logger.getLogger( TagCloud.class.getName() );
+    private static final Logger LOGGER = Logger.getLogger( TagCloud.class.getName() );
 
 
     /**
@@ -60,14 +60,14 @@ public class TagCloud extends JScrollPane {
 
 
     /**
-     * Sets the number of words to show. The number is validated and set to be 1 or higher.
-     * Call showWords aferwards to update the tags being shown.
-     * @param wordsToShow the number of words to show in the range 1..Interger.MAX_VALUE.
+     * Sets the maximum number of words to show. The number is validated and set to be 1 or higher.
+     * Call showWords afterwards to update the tags being shown.
+     * @param wordsToShow the number of words to show in the range 1..Integer.MAX_VALUE.
      */
-    public void setWordsToShow( int wordsToShow ) {
+    public void setMaxWordsToShow( int wordsToShow ) {
         // never trust inputs
         if ( wordsToShow < 1 ) {
-            logger.finest( String.format( "wordsToShow was %d which is less than 1; setting to 1.", wordsToShow ) );
+            LOGGER.finest( String.format( "wordsToShow was %d which is less than 1; setting to 1.", wordsToShow ) );
             wordsToShow = 1;
         }
         this.wordsToShow = wordsToShow;
@@ -113,7 +113,7 @@ public class TagCloud extends JScrollPane {
         labelPanel.removeAll();
         if ( wordMap != null ) { // if no wordMap, leave panel empty
             TreeSet<String> topWords = wordMap.getTopWords( wordsToShow );
-            logger.fine( String.format( "maxNodes determined to be %d", wordMap.getMaximumWordValue() ) );
+            LOGGER.fine( String.format( "maxNodes determined to be %d", wordMap.getMaximumWordValue() ) );
 
 
             Iterator<String> it = topWords.iterator();
@@ -153,7 +153,7 @@ public class TagCloud extends JScrollPane {
      *  A vector that holds all the TagClickListeners that want to be notified
      *  when the user clicks on a Tag. Based on the Observer pattern.
      */
-    private Vector<TagClickListener> tagClickListeners = new Vector<TagClickListener>();
+    private ArrayList<TagClickListener> tagClickListeners = new ArrayList<TagClickListener>();
 
 
     /**

@@ -179,7 +179,7 @@ public class SampleTagCloud
                 numberOfWords = availableWords;
             }
             commentLabel.setText( String.format( "Slider set to %d%%; showing %d words", (int) ( pct * 100f ), numberOfWords ) );
-            tagCloud.setWordsToShow( numberOfWords );
+            tagCloud.setMaxWordsToShow( numberOfWords );
             tagCloud.showWords();
         }
     }

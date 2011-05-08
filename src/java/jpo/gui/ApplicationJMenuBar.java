@@ -10,7 +10,7 @@ import jpo.gui.swing.PrivacyJFrame;
 /*
 ApplicationJMenuBar.java:  main menu for the application
 
-Copyright (C) 2002 -2010 Richard Eigenmann.
+Copyright (C) 2002 -2011 Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -190,6 +190,7 @@ public class ApplicationJMenuBar
         FileNewJMenuItem.setAccelerator( KeyStroke.getKeyStroke( 'N', java.awt.event.InputEvent.CTRL_MASK ) );
         FileNewJMenuItem.addActionListener( new ActionListener() {
 
+            @Override
             public void actionPerformed( ActionEvent e ) {
                 caller.requestFileNew();
             }
@@ -199,6 +200,7 @@ public class ApplicationJMenuBar
         FileAddJMenuItem.setMnemonic( KeyEvent.VK_A );
         FileAddJMenuItem.addActionListener( new ActionListener() {
 
+            @Override
             public void actionPerformed( ActionEvent e ) {
                 caller.requestAddPictures();
             }

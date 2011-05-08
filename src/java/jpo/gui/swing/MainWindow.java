@@ -7,6 +7,7 @@ import java.awt.event.ComponentEvent;
 import java.util.logging.Logger;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
+import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
@@ -33,7 +34,7 @@ The license is in gpl.txt.
 See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 /**
- * MainWindow is the main window of the JPO application. Based on the MCV pattern
+ * MainWindow is the main window of the JPO application. Based on the MVC pattern
  * this is just the View object. The Jpo object is the controller.
  *
  *
@@ -48,9 +49,18 @@ public class MainWindow
     private static final Logger LOGGER = Logger.getLogger( MainWindow.class.getName() );
 
 
-    public MainWindow( ApplicationMenuInterface applicationController,
+    /**
+     * Creates the JPO window and lays our the components
+     * @param menuBar  The menu
+     * @param navigationPanel  The navigation pane for the left panel
+     * @param searchesJScrollPane The search pane for the left panel
+     * @param thumbnailPanel The main thumbnail grid
+     * @param infoPanel The info panel
+     * @param tagCloud The tag cloud panel
+     */
+    public MainWindow( ApplicationJMenuBar menuBar,
             JComponent navigationPanel, JComponent searchesJScrollPane,
-            ThumbnailPanelController thumbnailPanelController, JComponent infoPanel ) {
+             JComponent thumbnailPanel, JComponent infoPanel , JComponent tagCloud ) {
         this.collectionTab = navigationPanel;
         this.searchesTab = searchesJScrollPane;
         Tools.checkEDT();
@@ -73,8 +83,7 @@ public class MainWindow
         setMinimumSize( Settings.jpoJFrameMinimumSize );
         setPreferredSize( Settings.mainFrameDimensions );
 
-        //Create the menu bar.
-        ApplicationJMenuBar menuBar = new ApplicationJMenuBar( applicationController );
+        
         setJMenuBar( menuBar );
 
         // Set Tooltipps to snappy mode
@@ -100,7 +109,27 @@ public class MainWindow
         jpoNavigatorJTabbedPane.setPreferredSize( Settings.jpoNavigatorJTabbedPanePreferredSize );
 
         //leftSplitPane.setTopComponent( jpoNavigatorJTabbedPane );
-        leftSplitPane.setBottomComponent( infoPanel );
+        
+        final JTabbedPane tabbedPane = new JTabbedPane();
+        tabbedPane.setMinimumSize( Settings.infoPanelMinimumSize );
+        tabbedPane.setPreferredSize( Settings.infoPanelPreferredSize );
+
+        tabbedPane.addTab( "Word Cloud", tagCloud );
+        
+        infoPanel.setBackground( Settings.JPO_BACKGROUND_COLOR );
+        final JScrollPane statsScroller = new JScrollPane( infoPanel );
+        statsScroller.setWheelScrollingEnabled( true );
+        //  set the amount by which the panel scrolls down when the user clicks the
+        //  little down or up arrow in the scrollbar
+        statsScroller.getVerticalScrollBar().setUnitIncrement( 20 );
+        tabbedPane.addTab( "Stats", statsScroller );
+
+        
+
+        leftSplitPane.setBottomComponent( tabbedPane );
+        
+        
+        
         leftSplitPane.setDividerLocation( Settings.preferredLeftDividerSpot );
         /**
          *  The pane that holds the main window. On the left will go the tree, on the
@@ -130,7 +159,7 @@ public class MainWindow
 
         // Set up the Thumbnail Pane
         masterSplitPane.setLeftComponent( leftSplitPane );
-        masterSplitPane.setRightComponent( thumbnailPanelController.getView() );
+        masterSplitPane.setRightComponent( thumbnailPanel );
 
 
         infoPanel.addComponentListener( new ComponentAdapter() {
@@ -185,7 +214,7 @@ public class MainWindow
 
 
     /**
-     * Instructs the MainWindow to show the searchesn in the left panel
+     * Instructs the MainWindow to show the searches in the left panel
      */
     public void tabToSearches() {
         jpoNavigatorJTabbedPane.setSelectedComponent( searchesTab );
@@ -215,6 +244,7 @@ public class MainWindow
         } else {
             Runnable r = new Runnable() {
 
+                @Override
                 public void run() {
                     updateApplicationTitle( newTitle );
                 }

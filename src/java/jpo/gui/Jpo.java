@@ -32,7 +32,7 @@ import jpotestground.CheckThreadViolationRepaintManager;
 /*
 Jpo.java:  The collection controller object of the JPO application
 
-Copyright (C) 2002 - 2010  Richard Eigenmann.
+Copyright (C) 2002 - 2011  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -89,12 +89,10 @@ public class Jpo {
      *   and then created a new {@link Jpo} object.
      */
     private MainWindow mainWindow;
-
     /**
      * Defines a logger for this class
      */
     private static final Logger LOGGER = Logger.getLogger( Jpo.class.getName() );
-
 
     /**
      *  Constructor for the Jpo application that creates the main JFrame, attaches an
@@ -125,12 +123,14 @@ public class Jpo {
             System.setProperty( "sun.java2d.opengl", "true" );
             SwingUtilities.invokeAndWait( new Runnable() {
 
+                @Override
                 public void run() {
+                    ApplicationJMenuBar menuBar = new ApplicationJMenuBar( applicationEventHandler );
                     collectionJTreeController = new CollectionJTreeController( applicationEventHandler );
                     searchesJTree = new QueriesJTree();
-                    thumbnailJScrollPane = new ThumbnailPanelController();
+                    thumbnailPanelController = new ThumbnailPanelController();
                     infoPanelController = new InfoPanelController();
-                    mainWindow = new MainWindow( applicationEventHandler, collectionJTreeController.getJScrollPane(), searchesJTree.getJScrollPane(), thumbnailJScrollPane, infoPanelController.getInfoPanel() );
+                    mainWindow = new MainWindow( menuBar, collectionJTreeController.getJScrollPane(), searchesJTree.getJScrollPane(), thumbnailPanelController.getView(), infoPanelController.getInfoPanel(), infoPanelController.getTagCloud() );
                     mainWindow.addWindowListener( new WindowAdapter() {
 
                         @Override
@@ -154,7 +154,6 @@ public class Jpo {
         new CameraWatchDaemon( this );
 
     }
-
     /**
      *  This object does all the tree work. It can load and save the nodes of the tree, listens to
      *  events happening on the tree and calls back with any actions that should be performed.
@@ -162,29 +161,25 @@ public class Jpo {
      * @see CollectionJTreeController
      */
     public static CollectionJTreeController collectionJTreeController;
-
     /**
      * This object does the controller work for the Queries.
      */
     public static QueriesJTree searchesJTree;
-
+    
     /**
-     *  This object holds all the thumbnails and deals with all the thumbnail events.
-     * ToDo: Make this private again when the wordlist browser is properly integrated
+     *  The controller for the thumbnail panel
+     *  ToDo: Make this private again when the wordlist browser is properly integrated
      **/
-    public static ThumbnailPanelController thumbnailJScrollPane;
-
+    public static ThumbnailPanelController thumbnailPanelController;
     /**
      * The InfoPanelController
      */
     private static InfoPanelController infoPanelController;
-
     /**
      *  This Vector allows us to keep track of the number of ThumbnailCreationThreads
      *  we have fired off. Could be enhanced to dynamically start more or less.
      */
     private final static Vector<ThumbnailCreationFactory> thumbnailFactories = new Vector<ThumbnailCreationFactory>();
-
 
     /**
      *  static initializer for the ThumbnailCreationThreads
@@ -195,7 +190,6 @@ public class Jpo {
         }
     }
 
-
     /**
      *  This method looks if it can find a file called autostartJarPicturelist.xml in the classpath;
      *  failing that it loads the file indicated in Settings.autoLoad.
@@ -204,7 +198,7 @@ public class Jpo {
     public boolean loadAutoloadCollection() {
         if ( ( Settings.autoLoad != null ) && ( Settings.autoLoad.length() > 0 ) ) {
             File xmlFile = new File( Settings.autoLoad );
-            LOGGER.log( Level.FINE, "File to Autoload: {0}", Settings.autoLoad);
+            LOGGER.log( Level.FINE, "File to Autoload: {0}", Settings.autoLoad );
             if ( xmlFile.exists() ) {
                 try {
                     Settings.pictureCollection.fileLoad( xmlFile );
@@ -225,7 +219,6 @@ public class Jpo {
             return false;
         }
     }
-
 
     /**
      * A call to this method with a GroupInfo node will position the JTree to the
@@ -248,10 +241,11 @@ public class Jpo {
         // Make it EDT safe
         Runnable r = new Runnable() {
 
+            @Override
             public void run() {
                 collectionJTreeController.setSelectedNode( displayNode );
                 showThumbnails( new GroupNavigator( displayNode ) );
-                infoPanelController.showInfo( displayNode );
+                showInfo( displayNode );
             }
         };
         if ( SwingUtilities.isEventDispatchThread() ) {
@@ -260,7 +254,6 @@ public class Jpo {
             SwingUtilities.invokeLater( r );
         }
     }
-
 
     /**
      * A call to this method with a ThumbnailBrowser will show the
@@ -272,9 +265,8 @@ public class Jpo {
             LOGGER.severe( "I've been told to showThumbnails on a null set!" );
             return;
         }
-        thumbnailJScrollPane.show( nodeSet );
+        thumbnailPanelController.show( nodeSet );
     }
-
 
     /**
      * A call to this method will result in the InfoPanel updating it's display
@@ -287,7 +279,6 @@ public class Jpo {
         }
         infoPanelController.showInfo( node );
     }
-
 
     /**
      * Opens a Picture Browser for the specified node. A PictureInfo node
@@ -322,7 +313,6 @@ public class Jpo {
         }
 
     }
-
 
     /**
      * Checks for unsaved changes in the data model, pops up a dialog and does the save if so indicated by the user.
@@ -366,6 +356,7 @@ public class Jpo {
     private class MainAppModelListener
             implements TreeModelListener {
 
+        @Override
         public void treeNodesChanged( TreeModelEvent e ) {
             TreePath tp = e.getTreePath();
             LOGGER.fine( String.format( "The main app model listener trapped a tree node change event on the tree path: %s", tp.toString() ) );
@@ -376,17 +367,17 @@ public class Jpo {
             }
         }
 
-
+        @Override
         public void treeNodesInserted( TreeModelEvent e ) {
             // ignore
         }
 
-
+        @Override
         public void treeNodesRemoved( TreeModelEvent e ) {
             // ignore, the root can't be removed ... Really?
         }
 
-
+        @Override
         public void treeStructureChanged( TreeModelEvent e ) {
             TreePath tp = e.getTreePath();
             if ( tp.getPathCount() == 1 ) { //if the root node sent the event
@@ -394,7 +385,6 @@ public class Jpo {
             }
         }
     }
-
 
     /**
      * Sets the application title to the default tile based on the Resourcebundle string
@@ -408,7 +398,6 @@ public class Jpo {
             mainWindow.updateApplicationTitleEDT( Settings.jpoResources.getString( "ApplicationTitle" ) );
         }
     }
-
     /**
      * Set up an Event Handler for Application logic
      */
@@ -423,6 +412,7 @@ public class Jpo {
         /**
          * The user wants to find duplicates
          */
+        @Override
         public void requestFindDuplicates() {
             DuplicatesQuery q = new DuplicatesQuery();
             DefaultMutableTreeNode newNode = Settings.pictureCollection.addQueryToTreeModel( q );
@@ -431,53 +421,53 @@ public class Jpo {
             showThumbnails( queryBrowser );
         }
 
-
         /**
          *  Opens up a Year Browser
          */
+        @Override
         public void requestYearlyAnalyis() {
             new YearlyAnalysisGuiController( Settings.pictureCollection.getRootNode() );
         }
 
-
         /**
          *  Opens up a Year Browser
          */
+        @Override
         public void requestYearBrowser() {
             new YearsBrowserController( Settings.pictureCollection.getRootNode() );
         }
 
-
         /**
          *  Creates an IntegrityChecker that does it's magic on the collection.
          */
+        @Override
         public void requestCheckIntegrity() {
             new IntegrityChecker( Settings.pictureCollection.getRootNode() );
         }
-
 
         /**
          *   Creates a {@link SettingsDialog} where the user can edit
          *   Application wide settings.
          */
+        @Override
         public void requestEditSettings() {
             new SettingsDialog( true );
         }
 
-
         /**
          *   opens up the Camera Editor GUI. See {@link CamerasEditor}
          */
+        @Override
         public void requestEditCameras() {
             new CamerasEditor();
         }
-
 
         /**
          *  method that is invoked when the Jpo application is to be closed. Checks if
          *  the main application window size should be saved and saves if necessary.
          *  also checks for unsaved changes before closing the application.
          */
+        @Override
         public void requestExit() {
             if ( checkUnsavedUpdates() ) {
                 return;
@@ -492,14 +482,13 @@ public class Jpo {
             System.exit( 0 );
         }
 
-
         /**
          *   Calls {@link #find} to bring up a find dialog box.
          */
+        @Override
         public void openFindDialog() {
             find( Settings.pictureCollection.getRootNode() );
         }
-
 
         /**
          * Brings up a QueryJFrame GUI.
@@ -509,20 +498,20 @@ public class Jpo {
             new QueryJFrame( startSearchNode, this );
         }
 
-
         /**
          *   Creates a {@link ReconcileJFrame} which lets the user
          *   specify a directory whose pictures are then compared
          *   against the current collection.
          */
+        @Override
         public void requestCheckDirectories() {
             new ReconcileJFrame( Settings.pictureCollection.getRootNode() );
         }
 
-
         /**
-         *   calls up the Pictureviewer
+         *   calls up the Picture Viewer
          */
+        @Override
         public void performSlideshow() {
             PictureViewer p1 = new PictureViewer();
             p1.switchWindowMode( ResizableJFrame.WINDOW_LEFT );
@@ -538,20 +527,20 @@ public class Jpo {
             p2.startAdvanceTimer( 10 );
         }
 
-
         /**
          *   The {@link ApplicationMenuInterface} calls here when the user
          *   wants to add pictures to the root node of the collection.
          */
+        @Override
         public void requestAddPictures() {
             chooseAndAddPicturesToGroup( Settings.pictureCollection.getRootNode() );
         }
-
 
         /**
          *   Brings up a dialog where the user can select the collection
          *   to be loaded. Calls {@link SortableDefaultMutableTreeNode#fileLoad}
          */
+        @Override
         public void requestFileLoad() {
             if ( checkUnsavedUpdates() ) {
                 return;
@@ -564,7 +553,7 @@ public class Jpo {
                     try {
                         Settings.pictureCollection.fileLoad( fileToLoad );
                     } catch ( FileNotFoundException ex ) {
-                        LOGGER.log( Level.INFO, "FileNotFoundExecption: {0}", ex.getMessage());
+                        LOGGER.log( Level.INFO, "FileNotFoundExecption: {0}", ex.getMessage() );
                         JOptionPane.showMessageDialog( Settings.anchorFrame,
                                 ex.getMessage(),
                                 Settings.jpoResources.getString( "genericError" ),
@@ -578,13 +567,14 @@ public class Jpo {
             t.start();
         }
 
-
         /**
          *   Call to do the File|New function
          */
+        @Override
         public void requestFileNew() {
             Runnable r = new Runnable() {
 
+                @Override
                 public void run() {
                     if ( checkUnsavedUpdates() ) {
                         return;
@@ -596,12 +586,12 @@ public class Jpo {
             SwingUtilities.invokeLater( r );
         }
 
-
         /**
          *   Calls the {@link jpo.dataModel.PictureCollection#fileSave} method that saves the
          *   current collection under it's present name and if it was never
          *   saved before brings up a popup window.
          */
+        @Override
         public void requestFileSave() {
             if ( Settings.pictureCollection.getXmlFile() == null ) {
                 requestFileSaveAs();
@@ -612,11 +602,11 @@ public class Jpo {
             }
         }
 
-
         /**
          *   method that saves the entire index in XML format. It prompts for the
          *   filename first.
          */
+        @Override
         public void requestFileSaveAs() {
             JFileChooser jFileChooser = new JFileChooser();
             jFileChooser.setFileSelectionMode( JFileChooser.FILES_ONLY );
@@ -654,7 +644,6 @@ public class Jpo {
             }
         }
 
-
         /**
          *   Ask whether the file should be opened by default.
          */
@@ -677,7 +666,6 @@ public class Jpo {
             }
         }
 
-
         /**
          *  Requests that a collection be added at this point in the tree
          *  @param popupNode The node at which to add
@@ -691,7 +679,7 @@ public class Jpo {
             try {
                 newNode.fileLoad( fileToLoad );
             } catch ( FileNotFoundException x ) {
-                LOGGER.log( Level.INFO, "{0}.fileToLoad: FileNotFoundExecption: {1}", new Object[]{this.getClass().toString(), x.getMessage()});
+                LOGGER.log( Level.INFO, "{0}.fileToLoad: FileNotFoundExecption: {1}", new Object[]{ this.getClass().toString(), x.getMessage() } );
                 JOptionPane.showMessageDialog( Settings.anchorFrame,
                         "File not found:\n" + fileToLoad.getPath(),
                         Settings.jpoResources.getString( "genericError" ),
@@ -702,13 +690,13 @@ public class Jpo {
             collectionJTreeController.expandPath( new TreePath( newNode.getPath() ) );
         }
 
-
         /**
          *   Requests a recently loaded collection to be loaded. The index
          *   of which recently opened file to load is supplied from the
          *   {@link ApplicationJMenuBar} through the interface method
          *   {@link ApplicationMenuInterface#requestOpenRecent}.
          */
+        @Override
         public void requestOpenRecent( final int i ) {
             if ( checkUnsavedUpdates() ) {
                 return;
@@ -721,7 +709,7 @@ public class Jpo {
                         Settings.pictureCollection.fileLoad( new File( Settings.recentCollections[i] ) );
                     } catch ( FileNotFoundException ex ) {
                         Logger.getLogger( Jpo.class.getName() ).log( Level.SEVERE, null, ex );
-                        LOGGER.log( Level.INFO, "FileNotFoundExecption: {0}", ex.getMessage());
+                        LOGGER.log( Level.INFO, "FileNotFoundExecption: {0}", ex.getMessage() );
                         JOptionPane.showMessageDialog( Settings.anchorFrame,
                                 ex.getMessage(),
                                 Settings.jpoResources.getString( "genericError" ),
@@ -734,7 +722,6 @@ public class Jpo {
             t.start();
         }
 
-
         /**
          * Switches the left panel to the queries, expands to the right place and
          * shows the thumbnails of the query.
@@ -745,11 +732,10 @@ public class Jpo {
             searchesJTree.setSelectedNode( node );
         }
 
-
         /**
          * Calling this method brings up a filechooser which allows pictures and directories
          * to be selected that are then added to the supplied node.
-         * @param groupNode  The group nodde to which to add the pictures or subdirectories
+         * @param groupNode  The group node to which to add the pictures or subdirectories
          */
         public void chooseAndAddPicturesToGroup(
                 SortableDefaultMutableTreeNode groupNode ) {

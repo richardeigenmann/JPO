@@ -233,8 +233,7 @@ public class JpoResources_zh_CN extends ListResourceBundle {
 		{ "sequentialRadioButtonStart", "Starting at" }, //new
 		{ "generateRobotsJCheckBox", "Prevent search engines from indexing (write robots.txt)" }, //new
 		{ "welcomeTitle", "Welcome"}, // new
-		{ "generate1", "Generate a Web Page showing "}, // new
-		{ "generate2", " pictures"}, // new
+		{ "welcomeMsg", "Generate a Web Page showing %d pictures"}, // new
 		{ "generateFrom", "From: "}, // new
 		{ "summary", "Summary"}, // new
 		{ "check", "Check"}, // new

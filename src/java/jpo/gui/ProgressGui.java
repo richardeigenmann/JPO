@@ -36,38 +36,31 @@ public class ProgressGui
      *  button to start the export
      **/
     private JButton okJButton = new JButton( Settings.jpoResources.getString( "genericOKText" ) );
-
     /**
      *  button to cancel the dialog
      **/
     private JButton cancelJButton = new JButton( Settings.jpoResources.getString( "genericCancelText" ) );
-
     /**
      *  Progress Indicator
      */
     private JProgressBar progBar;
-
     /**
      *  Label
      */
     private JLabel progLabel;
-
     /**
      *  variable that is checked periodically that stops the addDirectory loop in a controlled way
      *
      * public boolean interrupt = false;*/
     private InterruptSemaphore interruptor = new InterruptSemaphore();
-
     /**
      * how long the gui should show after it has finished.
      */
     private static final int timeout = 5 * 60 * 1000;
-
     /**
      * The minimum size for a ProgressGui
      */
     private static final Dimension MINIMUM_FRAME_SIZE = new Dimension( 350, 100 );
-
 
     /**
      *  Constructor for a progress GUI
@@ -82,13 +75,11 @@ public class ProgressGui
         Tools.checkEDT();
         createGui( max, title );
     }
-
     /**
      *  The string that should be shown after completion. Something like "12 pictures added".
      *  Default is "Done."
      */
     private String doneString = "Done.";
-
 
     /**
      * Sets the text that will be shown when the processing is over.
@@ -150,6 +141,7 @@ public class ProgressGui
         okJButton.setDefaultCapable( true );
         okJButton.addActionListener( new ActionListener() {
 
+            @Override
             public void actionPerformed( ActionEvent e ) {
                 getRid();
             }
@@ -164,6 +156,7 @@ public class ProgressGui
         cancelJButton.setDefaultCapable( true );
         cancelJButton.addActionListener( new ActionListener() {
 
+            @Override
             public void actionPerformed( ActionEvent e ) {
                 interruptor.setShouldInterrupt( true );
             }
@@ -178,7 +171,6 @@ public class ProgressGui
         setLocationRelativeTo( Settings.anchorFrame );
         setVisible( true );
     }
-
 
     /**
      *  method that closes the frame and gets rid of it
@@ -198,7 +190,6 @@ public class ProgressGui
         }
     }
 
-
     /**
      *  Adds 1 to the progress counter
      */
@@ -208,7 +199,6 @@ public class ProgressGui
         progLabel.setText( Integer.toString( progBar.getValue() ) + " / " + Integer.toString( progBar.getMaximum() ) );
     }
 
-
     /**
      *  decreases the total by 1
      */
@@ -217,6 +207,13 @@ public class ProgressGui
         progLabel.setText( Integer.toString( progBar.getValue() ) + " / " + Integer.toString( progBar.getMaximum() ) );
     }
 
+    /**
+     *  set the maximum
+     */
+    public void setMaxiumum( int max ) {
+        progBar.setMaximum( max );
+        progLabel.setText( Integer.toString( progBar.getValue() ) + " / " + Integer.toString( progBar.getMaximum() ) );
+    }
 
     /**
      *  removes the Cancel Button and adds an OK button
@@ -229,6 +226,7 @@ public class ProgressGui
         validate();
         Timer timer = new Timer( timeout, new ActionListener() {
 
+            @Override
             public void actionPerformed( ActionEvent evt ) {
                 getRid();
             }
@@ -236,7 +234,6 @@ public class ProgressGui
         timer.setRepeats( false );
         timer.start();
     }
-
 
     /**
      *  returns the interrupt semaphore object
@@ -246,4 +243,3 @@ public class ProgressGui
         return interruptor;
     }
 }
-

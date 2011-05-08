@@ -9,7 +9,7 @@ import javax.swing.tree.TreeNode;
 /*
 NodeStatistics.java: A Class that counts nodes, groups, pictures and disk usage on the supplied node
 
-Copyright (C) 2002 - 2009  Richard Eigenmann.
+Copyright (C) 2002 - 2011  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -33,28 +33,24 @@ public class NodeStatistics {
     /**
      * Defines a logger for this class
      */
-    private static Logger logger = Logger.getLogger( NodeStatistics.class.getName() );
-
-
+    private static final Logger LOGGER = Logger.getLogger( NodeStatistics.class.getName() );
     /**
      * Remebers the node for which stats are being collected
      */
     private DefaultMutableTreeNode myNode;
 
-
     /**
      * Constructs a NodeStatistics Object for the supplied node
-     * @param nodeToAnalyse The node for which to perfrom the analysis
+     * @param nodeToAnalyse The node for which to perform the analysis
      */
     public NodeStatistics( DefaultMutableTreeNode nodeToAnalyse ) {
         if ( nodeToAnalyse != null ) {
-            logger.fine( "new NodeStatistics on node: " + nodeToAnalyse.toString() );
+            LOGGER.fine( "new NodeStatistics on node: " + nodeToAnalyse.toString() );
         } else {
-            logger.fine( "new NodeStatistics on null node" );
+            LOGGER.fine( "new NodeStatistics on null node" );
         }
         setNode( nodeToAnalyse );
     }
-
 
     /**
      * Sets the node to analysed
@@ -64,7 +60,6 @@ public class NodeStatistics {
         myNode = nodeToAnalyse;
     }
 
-
     /**
      * Returns the node being analysed.
      * @return the node being analysed
@@ -73,17 +68,15 @@ public class NodeStatistics {
         return myNode;
     }
 
-
     /**
      * Returns the number of nodes including the root node in the tree
      * @return The number of nodes including the root node
      */
     public int getNumberOfNodes() {
         int count = countNodes( myNode );
-        logger.fine( String.format( "Number of nodes counted: %d", count ) );
+        LOGGER.fine( String.format( "Number of nodes counted: %d", count ) );
         return count;
     }
-
 
     /**
      * Recursive static method that loops through the child nodes to find the
@@ -91,7 +84,8 @@ public class NodeStatistics {
      * @param start The node on which to start
      * @return The number of nodes including the root node or 0 if null is supplied.
      */
-    private static int countNodes( TreeNode start ) {
+    public static int countNodes( TreeNode start ) {
+        Tools.warnOnEDT();
         //never trust inputs
         if ( start == null ) {
             return 0;
@@ -111,7 +105,6 @@ public class NodeStatistics {
         return count;
     }
 
-
     /**
      * Returns the number of nodes with the multilingual label in front of the number.
      * @return Returns the number of nodes with the multilingual label in front of the number
@@ -119,7 +112,6 @@ public class NodeStatistics {
     public String getNumberOfNodesString() {
         return Settings.jpoResources.getString( "CollectionNodeCountLabel" ) + Integer.toString( getNumberOfNodes() );
     }
-
 
     /**
      * Returns the number of groups in the supplied node.
@@ -129,13 +121,13 @@ public class NodeStatistics {
         return countGroups( myNode );
     }
 
-
     /**
      * Recursive static method that counts the number of GroupInfo nodes underneath the start node.
      * @param startNode The node from which to start
      * @return the number of GroupInfo nodes underneath the start node.
      */
     private synchronized static int countGroups( TreeNode startNode ) {
+        Tools.warnOnEDT();
         int count = 0;
         DefaultMutableTreeNode n;
         Enumeration nodes = startNode.children();
@@ -155,7 +147,6 @@ public class NodeStatistics {
         return count;
     }
 
-
     /**
      * Returns a multilingual label with the number of Groups
      * @return Returns a multilingual label with the number of Groups
@@ -163,7 +154,6 @@ public class NodeStatistics {
     public String getNumberOfGroupsString() {
         return Settings.jpoResources.getString( "CollectionGroupCountLabel" ) + Integer.toString( getNumberOfGroups() );
     }
-
 
     /**
      * Returns the number of Pictures found in the supplied node.
@@ -173,7 +163,6 @@ public class NodeStatistics {
         return countPictures( myNode, true );
     }
 
-
     /**
      * Returns the number of Pictures found in the supplied node prefixed with the multilingual label
      * @return Returns the number of Pictures found in the supplied node prefixed with the multilingual label
@@ -181,7 +170,6 @@ public class NodeStatistics {
     public String getNumberOfPicturesString() {
         return Settings.jpoResources.getString( "CollectionPictureCountLabel" ) + Integer.toString( getNumberOfPictures() );
     }
-
 
     /**
      *   Returns the number of PictureInfo Nodes in a subtree. Useful for progress monitors. If called with
@@ -193,6 +181,7 @@ public class NodeStatistics {
      *   @return the number of PictureInfo nodes
      */
     public synchronized static int countPictures( DefaultMutableTreeNode startNode, boolean recurseSubgroups ) {
+        Tools.warnOnEDT();
         if ( startNode == null ) {
             return 0;
         }
@@ -220,7 +209,6 @@ public class NodeStatistics {
         return count;
     }
 
-
     /**
      * Returns the bytes of the pictures underneath the supplied node
      * @return Returns the bytes of the pictures underneath the supplied node
@@ -228,7 +216,6 @@ public class NodeStatistics {
     public long getSizeOfPictures() {
         return sizeOfPicturesLong( myNode );
     }
-
 
     /**
      * Returns the bytes of the pictures underneath the supplied node as a String
@@ -238,7 +225,6 @@ public class NodeStatistics {
         return Settings.jpoResources.getString( "CollectionSizeJLabel" ) + Tools.fileSizeToString( getSizeOfPictures() );
     }
 
-
     /**
      * Returns the number of bytes the picture files in the subtree occupy.
      * If the node holds a query the query is enumerated.
@@ -247,6 +233,7 @@ public class NodeStatistics {
      * @return  The number of bytes
      */
     private static long sizeOfPicturesLong( DefaultMutableTreeNode startNode ) {
+        Tools.warnOnEDT();
         if ( startNode == null ) {
             return 0;
         }

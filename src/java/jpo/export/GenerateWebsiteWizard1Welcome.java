@@ -7,6 +7,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingWorker;
 import jpo.dataModel.Settings;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
 import jpo.dataModel.NodeStatistics;
@@ -40,23 +41,36 @@ public class GenerateWebsiteWizard1Welcome extends AbstractStep {
      */
     private final HtmlDistillerOptions options;
     /**
-     * This lable will read "Generate a Web Page showing 10 pictures"
+     * This label will read "Generate a Web Page showing 10 pictures"
      */
-    private JLabel welcomeLabel = new JLabel();
+    private final JLabel welcomeLabel = new JLabel("working...");
     /**
-     * This lable will read "From: Trip to France August 2008"
+     * This label will read "From: Trip to France August 2008"
      */
     private JLabel fromLabel = new JLabel();
 
-    public GenerateWebsiteWizard1Welcome( HtmlDistillerOptions options ) {
+    public GenerateWebsiteWizard1Welcome( final HtmlDistillerOptions options ) {
         super( Settings.jpoResources.getString( "welcomeTitle" ), Settings.jpoResources.getString( "HtmlDistillerJFrameHeading" ) );
         this.options = options;
 
-        SortableDefaultMutableTreeNode startNode = options.getStartNode();
-        int pictures = NodeStatistics.countPictures( startNode, true );
-        welcomeLabel.setText( Settings.jpoResources.getString( "generate1" ) + Integer.toString( pictures ) +
-                Settings.jpoResources.getString( "generate2" ) );
-        fromLabel.setText( Settings.jpoResources.getString( "generateFrom" ) + startNode.toString() );
+        class getCountWorker extends SwingWorker<Integer, Object> {
+
+            @Override
+            public Integer doInBackground() {
+                return NodeStatistics.countPictures( options.getStartNode(), true );
+            }
+
+            @Override
+            protected void done() {
+                try {
+                    welcomeLabel.setText( String.format( Settings.jpoResources.getString( "welcomeMsg" ), get() ) );
+                } catch ( Exception ignore ) {
+                }
+            }
+        }
+        ( new getCountWorker() ).execute();
+
+        fromLabel.setText( Settings.jpoResources.getString( "generateFrom" ) + options.getStartNode().toString() );
     }
 
     /**

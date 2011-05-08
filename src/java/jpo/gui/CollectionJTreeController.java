@@ -258,9 +258,10 @@ public class CollectionJTreeController
         Object userObject = node.getUserObject();
         String toolTip = "";
         if ( userObject instanceof GroupInfo ) {
-            NodeStatistics ns = new NodeStatistics( node );
+            //NodeStatistics ns = new NodeStatistics( node ); // slow; don't want on the EDT
             GroupInfo groupInfo = (GroupInfo) userObject;
-            toolTip = String.format( "<html>Group: %s<br>%d Nodes: %d Groups, %d Pictures<br>%s</html>", groupInfo.getGroupName(), ns.getNumberOfNodes(), ns.getNumberOfGroups(), ns.getNumberOfPictures(), ns.getSizeOfPicturesString() );
+            //toolTip = String.format( "<html>Group: %s<br>%d Nodes: %d Groups, %d Pictures<br>%s</html>", groupInfo.getGroupName(), ns.getNumberOfNodes(), ns.getNumberOfGroups(), ns.getNumberOfPictures(), ns.getSizeOfPicturesString() );
+            toolTip = String.format( "<html>Group: %s</html>", groupInfo.getGroupName() );
         } else if ( userObject instanceof PictureInfo ) {
             final PictureInfo pictureInfo = (PictureInfo) userObject;
             File highresFile = pictureInfo.getHighresFile();
@@ -276,6 +277,7 @@ public class CollectionJTreeController
      *  @param newNode  The Node to which to jump
      *  @see  GroupPopupInterface
      */
+    @Override
     public void requestShowGroup ( SortableDefaultMutableTreeNode newNode ) {
         LOGGER.log( Level.FINE, "requesting node: {0}", newNode.toString());
         Jpo.positionToNode( newNode );

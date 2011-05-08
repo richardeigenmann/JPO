@@ -73,12 +73,15 @@ public class GenerateWebsiteWizard {
         // the listener traps all
         model.addWizardModelListener( new WizardModelListener() {
 
+            @Override
             public void stepShown( WizardModelEvent arg0 ) {
             }
 
+            @Override
             public void wizardCanceled( WizardModelEvent arg0 ) {
             }
 
+            @Override
             public void wizardFinished( WizardModelEvent arg0 ) {
                 options.saveToSettings();
                 HtmlDistiller h = new HtmlDistiller( options );
@@ -87,6 +90,7 @@ public class GenerateWebsiteWizard {
                 //t.start();
             }
 
+            @Override
             public void wizardModelChanged( WizardModelEvent arg0 ) {
             }
         } );
