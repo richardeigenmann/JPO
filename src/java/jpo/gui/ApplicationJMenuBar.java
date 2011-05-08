@@ -280,6 +280,7 @@ public class ApplicationJMenuBar
         EditFindJMenuItem.setAccelerator( KeyStroke.getKeyStroke( 'F', java.awt.event.InputEvent.CTRL_MASK ) );
         EditFindJMenuItem.addActionListener( new ActionListener() {
 
+            @Override
             public void actionPerformed( ActionEvent e ) {
                 caller.openFindDialog();
             }
@@ -290,6 +291,7 @@ public class ApplicationJMenuBar
         EditCamerasJMenuItem.setMnemonic( KeyEvent.VK_D );
         EditCamerasJMenuItem.addActionListener( new ActionListener() {
 
+            @Override
             public void actionPerformed( ActionEvent e ) {
                 caller.requestEditCameras();
             }
@@ -304,6 +306,7 @@ public class ApplicationJMenuBar
         EditSettingsJMenuItem.setMnemonic( KeyEvent.VK_S );
         EditSettingsJMenuItem.addActionListener( new ActionListener() {
 
+            @Override
             public void actionPerformed( ActionEvent e ) {
                 caller.requestEditSettings();
             }
@@ -317,6 +320,7 @@ public class ApplicationJMenuBar
         emailJMenuItem.setMnemonic( KeyEvent.VK_E );
         emailJMenuItem.addActionListener( new ActionListener() {
 
+            @Override
             public void actionPerformed( ActionEvent e ) {
                 new EmailerGui();
             }

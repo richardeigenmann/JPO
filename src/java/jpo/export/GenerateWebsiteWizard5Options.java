@@ -124,6 +124,7 @@ public class GenerateWebsiteWizard5Options extends AbstractStep {
         wizardPanel.add( sequentialRadioButton );
         ChangeListener radioButtonChangeListener = new ChangeListener() {
 
+            @Override
             public void stateChanged( ChangeEvent arg0 ) {
                 if ( hashcodeRadioButton.isSelected() ) {
                     options.setPictureNaming( HtmlDistillerOptions.PICTURE_NAMING_BY_HASH_CODE );
