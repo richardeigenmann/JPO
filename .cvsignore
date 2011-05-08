@@ -1,5 +1,4 @@
 CVS/*
-build/*
+build
 CVS
 JPO_cameras.dta
-build
