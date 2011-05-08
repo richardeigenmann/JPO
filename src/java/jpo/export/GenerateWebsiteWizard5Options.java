@@ -2,7 +2,6 @@ package jpo.export;
 
 import java.awt.Component;
 import java.awt.Container;
-import java.awt.Dimension;
 import java.awt.FlowLayout;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
@@ -151,6 +150,7 @@ public class GenerateWebsiteWizard5Options extends AbstractStep {
         sequentialNumberJPanel.add( sequentialStartLabel );
         sequentialStartJSpinner.addChangeListener( new ChangeListener() {
 
+            @Override
             public void stateChanged( ChangeEvent arg0 ) {
                 options.setSequentialStartNumber( ( (SpinnerNumberModel) sequentialStartJSpinner.getModel() ).getNumber().intValue() );
             }
@@ -160,6 +160,7 @@ public class GenerateWebsiteWizard5Options extends AbstractStep {
 
         generateRobotsJCheckBox.addChangeListener( new ChangeListener() {
 
+            @Override
             public void stateChanged( ChangeEvent arg0 ) {
                 options.setWriteRobotsTxt( generateRobotsJCheckBox.isSelected() );
             }
@@ -173,6 +174,7 @@ public class GenerateWebsiteWizard5Options extends AbstractStep {
     /**
      * Required but not used here
      */
+    @Override
     public void prepareRendering() {
     }
 }

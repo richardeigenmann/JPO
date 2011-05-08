@@ -78,6 +78,7 @@ public class GenerateWebsiteWizard4Highres extends AbstractStep {
         // create checkbox for highres export
         exportHighresJCheckBox.addChangeListener( new ChangeListener() {
 
+            @Override
             public void stateChanged( ChangeEvent arg0 ) {
                 options.setExportHighres( exportHighresJCheckBox.isSelected() );
             }
@@ -86,6 +87,7 @@ public class GenerateWebsiteWizard4Highres extends AbstractStep {
 
         generateZipfileJCheckBox.addChangeListener( new ChangeListener() {
 
+            @Override
             public void stateChanged( ChangeEvent arg0 ) {
                 options.setGenerateZipfile( generateZipfileJCheckBox.isSelected() );
             }
@@ -95,6 +97,7 @@ public class GenerateWebsiteWizard4Highres extends AbstractStep {
         // create checkbox for linking to highres
         linkToHighresJCheckBox.addChangeListener( new ChangeListener() {
 
+            @Override
             public void stateChanged( ChangeEvent arg0 ) {
                 options.setLinkToHighres( linkToHighresJCheckBox.isSelected() );
             }
