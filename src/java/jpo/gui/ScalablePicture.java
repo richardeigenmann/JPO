@@ -1,5 +1,6 @@
 package jpo.gui;
 
+import java.util.logging.Level;
 import jpo.dataModel.Tools;
 import jpo.dataModel.Settings;
 import java.awt.Dimension;
@@ -14,8 +15,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Vector;
 import java.util.logging.Logger;
 import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
@@ -25,7 +26,6 @@ import javax.imageio.ImageWriter;
 import javax.imageio.plugins.jpeg.JPEGImageWriteParam;
 import javax.imageio.stream.ImageOutputStream;
 import javax.swing.ImageIcon;
-import javax.swing.JOptionPane;
 import jpo.dataModel.SizeCalculator;
 
 /*
@@ -190,7 +190,7 @@ public class ScalablePicture
         this.imageUrl = imageUrl;
 
         boolean alreadyLoading = false;
-        LOGGER.fine( "Checking if picture " + imageUrl + " is already being loaded." );
+        LOGGER.log( Level.FINE, "Checking if picture {0} is already being loaded.", imageUrl);
         if ( ( sourcePicture != null ) && ( sourcePicture.getUrl() != null ) && ( sourcePicture.getUrl().equals( imageUrl ) ) ) {
             LOGGER.fine( "the SourcePicture is already loading the sourcePicture image" );
             if ( sourcePicture.getRotation() == rotation ) {
@@ -212,7 +212,7 @@ public class ScalablePicture
             if ( status == null ) {
                 status = "";
             }
-            LOGGER.fine( "Picture in cache! Status: " + status );
+            LOGGER.log( Level.FINE, "Picture in cache! Status: {0}", status);
 
             if ( sourcePicture.getRotation() == rotation ) {
                 alreadyLoading = true;
@@ -283,7 +283,7 @@ public class ScalablePicture
      *  @param  rotation  The angle by which it is to be roated upon loading.
      */
     public void loadPictureImd( URL imageUrl, double rotation ) {
-        LOGGER.fine( "Invoked on URL: " + imageUrl.toString() );
+        LOGGER.log( Level.FINE, "Invoked on URL: {0}", imageUrl.toString());
         if ( sourcePicture != null ) {
             sourcePicture.removeListener( this );
         }
@@ -319,6 +319,7 @@ public class ScalablePicture
      * @param statusMessage
      * @param sp
      */
+    @Override
     public void sourceStatusChange( int statusCode, String statusMessage,
             SourcePicture sp ) {
         //logger.info("ScalablePicture.sourceStatusChange: status received from SourceImage: " + statusMessage);
@@ -365,6 +366,7 @@ public class ScalablePicture
     public void createScaledPictureInThread( int priority ) {
         Runnable r = new Runnable() {
 
+            @Override
             public void run() {
                 scalePicture();
             }
@@ -459,23 +461,13 @@ public class ScalablePicture
                 }
             }
         } catch ( OutOfMemoryError e ) {
-            LOGGER.severe( "ScalablePicture.scalePicture caught an OutOfMemoryError while scaling an image.\n" + e.getMessage() );
-            Tools.freeMem();
-
+            LOGGER.log( Level.SEVERE, "ScalablePicture.scalePicture caught an OutOfMemoryError while scaling an image.\n{0}", e.getMessage());
             setStatus( ERROR, "Out of Memory Error while scaling " + imageUrl.toString() );
             scaledPicture = null;
             PictureCache.clear();
 
-            JOptionPane.showMessageDialog( Settings.anchorFrame,
-                    Settings.jpoResources.getString( "outOfMemoryError" ),
-                    Settings.jpoResources.getString( "genericError" ),
-                    JOptionPane.ERROR_MESSAGE );
-
-            System.gc();
-            System.runFinalization();
-
-            LOGGER.info( "ScalablePicture.scalePicture: JPO has now run a garbage collection and finalization." );
-            Tools.freeMem();
+            Tools.dealOutOfMemoryError();
+            
         }
     }
 
@@ -524,8 +516,8 @@ public class ScalablePicture
 
     /**
      *   return the current scale size. This is the area that the picture
-     *   ist fitted into. Since the are could be wider or taller than the picture
-     *   will be scaled to there is a different mehtod <code>getScaledSize</code>
+     *   is fitted into. Since the are could be wider or taller than the picture
+     *   will be scaled to there is a different method <code>getScaledSize</code>
      *   that will return the size of the picture.
      * @return
      */
@@ -709,7 +701,7 @@ public class ScalablePicture
             ios.close();
 
         } catch ( IOException e ) {
-            LOGGER.info( "ScalablePicture.writeJpg caught IOException: " + e.getMessage() + "\nwhile writing " + writeFile.toString() );
+            LOGGER.log( Level.INFO, "ScalablePicture.writeJpg caught IOException: {0}\nwhile writing {1}", new Object[]{e.getMessage(), writeFile.toString()});
             e.printStackTrace();
         }
         //writer = null;
@@ -743,7 +735,7 @@ public class ScalablePicture
             ios.close();
 
         } catch ( IOException e ) {
-            LOGGER.info( "ScalablePicture.writeJpg caught IOException: " + e.getMessage() );
+            LOGGER.log( Level.INFO, "Caught IOException: {0}", e.getMessage());
             e.printStackTrace();
         }
         //writer = null;
@@ -753,7 +745,7 @@ public class ScalablePicture
     /**
      *  The listeners to notify when the image operation changes the status.
      */
-    private Vector<ScalablePictureListener> scalablePictureStatusListeners = new Vector<ScalablePictureListener>();
+    private ArrayList<ScalablePictureListener> scalablePictureStatusListeners = new ArrayList<ScalablePictureListener>();
 
 
     /**
@@ -781,7 +773,7 @@ public class ScalablePicture
 
     /**
      * Method that sets the status of the ScalablePicture object and notifies
-     * intereasted objects of a change in status (not built yet).
+     * interested objects of a change in status (not built yet).
      */
     private void setStatus( int statusCode, String statusMessage ) {
         String filename = ( imageUrl == null ) ? "" : imageUrl.toString();
@@ -801,6 +793,7 @@ public class ScalablePicture
      * @param statusCode
      * @param percentage
      */
+    @Override
     public void sourceLoadProgressNotification( int statusCode, int percentage ) {
         for ( ScalablePictureListener scalablePictureListener : scalablePictureStatusListeners ) {
             scalablePictureListener.sourceLoadProgressNotification( statusCode, percentage );
@@ -828,7 +821,7 @@ public class ScalablePicture
 
 
     /**
-     *  accessor method to set the quality that should be used on jpg write operations.
+     * accessor method to set the quality that should be used on jpg write operations.
      * @param quality
      */
     public void setJpgQuality( float quality ) {
@@ -849,7 +842,7 @@ public class ScalablePicture
 
 
     /**
-     *  sets the picture into quality sacling mode
+     *  sets the picture into quality scaling mode
      */
     public void setQualityScale() {
         fastScale = false;

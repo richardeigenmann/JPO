@@ -222,8 +222,6 @@ public class SourcePicture {
 
             } catch ( OutOfMemoryError e ) {
                 logger.severe( "SourcePicture caught an OutOfMemoryError while loading an image." );
-                Tools.freeMem();
-
                 iis.close();
                 reader.removeIIOReadProgressListener( imageProgressListener );
                 reader.dispose();
@@ -233,16 +231,7 @@ public class SourcePicture {
                 sourcePictureBufferedImage = null;
                 PictureCache.clear();
 
-                JOptionPane.showMessageDialog( null, //deliberately null or it swaps the window
-                        Settings.jpoResources.getString( "outOfMemoryError" ),
-                        Settings.jpoResources.getString( "genericError" ),
-                        JOptionPane.ERROR_MESSAGE );
-
-                System.gc();
-                System.runFinalization();
-
-                logger.fine( "JPO has now run a garbage collection and finalization." );
-                Tools.freeMem();
+                Tools.dealOutOfMemoryError();
                 return;
             }
             reader.removeIIOReadProgressListener( imageProgressListener );

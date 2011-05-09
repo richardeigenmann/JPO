@@ -317,8 +317,7 @@ public class Tools {
         }
         return numFiles;
     }
-
-        /**
+    /**
      *   Constant that indicates that the directory must exist
      */
     public static final int DIR_MUST_EXIST = 1;
@@ -365,13 +364,13 @@ public class Tools {
             testStream.close();
             return hasReader;
         } catch (MalformedURLException x) {
-            LOGGER.info("Tools.jvmHasReader.MalformedURLException: " + testFile.getPath() + "\nError: " + x.getMessage());
+            LOGGER.log(Level.INFO, "Tools.jvmHasReader.MalformedURLException: {0}\nError: {1}", new Object[]{testFile.getPath(), x.getMessage()});
             return false;
         } catch (FileNotFoundException x) {
-            LOGGER.info("Tools.jvmHasReader.File not found: " + testFile.getPath() + "\nError: " + x.getMessage());
+            LOGGER.log(Level.INFO, "Tools.jvmHasReader.File not found: {0}\nError: {1}", new Object[]{testFile.getPath(), x.getMessage()});
             return false;
         } catch (IOException x) {
-            LOGGER.info("Tools.jvmHasReader.IO Exception on: " + testFile.getPath() + "\nError: " + x.getMessage());
+            LOGGER.log(Level.INFO, "Tools.jvmHasReader.IO Exception on: {0}\nError: {1}", new Object[]{testFile.getPath(), x.getMessage()});
             return false;
         }
     }
@@ -640,7 +639,7 @@ public class Tools {
     public static File searchClasspath(String searchName) {
         // find the jar file as last item in the Jar file.
         String classpath = System.getProperty("java.class.path");
-        LOGGER.info("Tools.searchClasspath: searching for " + searchName + " in " + classpath);
+        LOGGER.log(Level.INFO, "Tools.searchClasspath: searching for {0} in {1}", new Object[]{searchName, classpath});
         String testToken;
         StringTokenizer st = new StringTokenizer(classpath, ":");
         while (st.hasMoreTokens()) {
@@ -651,7 +650,6 @@ public class Tools {
         }
         return null;
     }
-
 
     /**
      *   method that returns a file handle for a picture that does not exist in the target 
@@ -758,7 +756,7 @@ public class Tools {
      */
     public static int freeMem() {
         int memory = (int) Runtime.getRuntime().freeMemory() / 1024 / 1024;
-        LOGGER.info("Free memory: " + memory + "MB");
+        LOGGER.log(Level.INFO, "Free memory: {0}MB", memory);
         return memory;
     }
 
@@ -772,6 +770,28 @@ public class Tools {
         int totalMemory = (int) Runtime.getRuntime().totalMemory() / 1024 / 1024;
         int maxMemory = (int) Runtime.getRuntime().maxMemory() / 1024 / 1024;
         return (Settings.jpoResources.getString("freeMemory") + Integer.toString(freeMemory) + "MB/" + Integer.toString(totalMemory) + "MB/" + Integer.toString(maxMemory) + "MB");
+    }
+
+    public static void dealOutOfMemoryError() {
+        Tools.freeMem();
+        Thread.dumpStack();
+        Runnable optionDialog = new Runnable() {
+
+            @Override
+            public void run() {
+                JOptionPane.showMessageDialog(Settings.anchorFrame,
+                        Settings.jpoResources.getString("outOfMemoryError"),
+                        Settings.jpoResources.getString("genericError"),
+                        JOptionPane.ERROR_MESSAGE);
+            }
+        };
+        SwingUtilities.invokeLater(optionDialog);
+
+        System.gc();
+        System.runFinalization();
+
+        LOGGER.info("ScalablePicture.scalePicture: JPO has now run a garbage collection and finalization.");
+        Tools.freeMem();
     }
 
     /**
@@ -1111,31 +1131,4 @@ public class Tools {
         }
         return fileContent;
     }
-    /**
-     * Returns the content of the specified file which we have packaged in
-     * the jar of the distribution in a String.
-     * @param rootClass The class from which to search in the jar to help find the file
-     * @param fileInJar The name of the file in the jar
-     * @return The contents of the file in a string
-     *
-    public static String copyFromJarToStringLineByLine ( Class rootClass,
-    String fileInJar ) {
-    LOGGER.info( String.format( "Reading File %s from class %s", fileInJar, rootClass.toString() ) );
-    StringBuilder sb = new StringBuilder();
-    try {
-    InputStream in = rootClass.getResourceAsStream( fileInJar );
-    BufferedReader bin = new BufferedReader( new InputStreamReader( in ) );
-    String textLine;
-    String newline = System.getProperty( "line.separator" );
-    while ( (textLine = bin.readLine()) != null ) {
-    sb.append( textLine );
-    sb.append( newline );
-    }
-    bin.close();
-    in.close();
-    } catch ( IOException x ) {
-    x.printStackTrace();
-    }
-    return sb.toString();
-    }*/
 }
