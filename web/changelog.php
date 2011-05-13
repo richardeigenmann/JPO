@@ -18,6 +18,7 @@
 
 			<table>
 				<tr><td colspan=2><b>Development Version 0.9</b></td></tr>
+				<tr><td valign="top">14.5.2011</td><td> Changed Settings Dialog to MigLayout </td></tr>
 				<tr><td valign="top">8.5.2011</td><td> Bug with sequential numbering in website generation</td></tr>
 				<tr><td valign="top">8.5.2011</td><td> Open Settings no longer changes the window size</td></tr>
 				<tr><td valign="top">8.5.2011</td><td> Fixed EDT violations</td></tr>
@@ -394,7 +395,7 @@
 			</table>
 
 			<hr>
-			<p>Last update to this page: 27 Mar 2011<br>
+			<p>Last update to this page: 14 May 2011<br>
 			Copyright 2003-2011 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
 		</td>
 	</tr>

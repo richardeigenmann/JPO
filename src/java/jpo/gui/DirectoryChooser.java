@@ -4,18 +4,19 @@ import jpo.dataModel.Settings;
 import java.io.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.Vector;
+import java.util.ArrayList;
 import java.util.logging.Logger;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import jpo.dataModel.Tools;
+import net.miginfocom.swing.MigLayout;
 
 /*
 DirectoryChooserTest.java:  a object that displays a JTextFiled and has a button
 next to it which allows you to bring up a filechooser
 
-Copyright (C) 2002 - 2009  Richard Eigenmann.
+Copyright (C) 2002 - 2011  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -41,7 +42,7 @@ public class DirectoryChooser
         extends JPanel {
 
     /**
-     *   Creates the directory chooser comonent
+     *   Creates the directory chooser component
      *
      *   @param chooserTitle 	The title for a JFileChooser window if the user clicks the button
      *   @param validationType	The type of validation that must be performed
@@ -53,77 +54,54 @@ public class DirectoryChooser
         initComponents();
         addBehaviour();
     }
-
     /**
      * Defines a logger for this class
      */
-    private static Logger logger = Logger.getLogger( DirectoryChooser.class.getName() );
- 
+    private static final Logger LOGGER = Logger.getLogger( DirectoryChooser.class.getName() );
     /**
-     * The fitle that will be used in the JFileChooser if the user clicks the button
+     * The itle that will be used in the JFileChooser if the user clicks the button
      */
     private String chooserTitle = "";
-
     /**
      *  Variable that records what type of validation this object must perform.
      *  Valid Types are DIR_MUST_EXIST  and DIR_MUST_BE_WRITABLE.
      */
     private int validationType;
-
     /**
      * The drop down list of the previously used directories
      */
-    private JComboBox directoryJComboBox = new JComboBox();
-
+    private final JComboBox directoryJComboBox = new JComboBox();
     /**
      * Field that allows the user to capture the directory which is a sub object of the JComboBox.
      * This code relies that the ComboBoxEditors are implemented as a JTextField.
      * The Java 1.4.0 manual says this is the case.
      */
-    private JTextField directoryJTextField = (JTextField) directoryJComboBox.getEditor().getEditorComponent();
-
+    private final JTextField directoryJTextField = (JTextField) directoryJComboBox.getEditor().getEditorComponent();
     /**
      * Button that brings up a file chooser for the directory
      **/
-    private JButton directoryChooserJButton = new JButton( Settings.jpoResources.getString( "threeDotText" ) );
-
+    private final JButton directoryChooserJButton = new JButton( Settings.jpoResources.getString( "threeDotText" ) );
 
     /**
      * creates the GUI widgets
      */
     private void initComponents() {
         Tools.checkEDT();
-        setLayout( new GridBagLayout() );
-        GridBagConstraints c = new GridBagConstraints();
-        c.anchor = GridBagConstraints.NORTHWEST;
-        c.insets = new Insets( 4, 4, 4, 4 );
-        setBorder( BorderFactory.createEmptyBorder() );
-
-        c.gridx = 0;
-        c.gridy = 0;
-        c.gridwidth = 1;
-        c.fill = GridBagConstraints.HORIZONTAL;
+        setLayout( new MigLayout() );
         directoryJComboBox.setEditable( true );
-
         for ( int i = 0; i < Settings.copyLocations.length; i++ ) {
             addDirToDropdown( Settings.copyLocations[i] );
         }
-
         directoryJComboBox.setPreferredSize( Settings.filenameFieldPreferredSize );
         directoryJComboBox.setMinimumSize( Settings.filenameFieldMinimumSize );
         directoryJComboBox.setMaximumSize( Settings.filenameFieldMaximumSize );
-        add( directoryJComboBox, c );
+        add( directoryJComboBox );
 
-
-        c.weightx = 0;
-        c.gridx++;
-        c.fill = GridBagConstraints.NONE;
         directoryChooserJButton.setPreferredSize( Settings.threeDotButtonSize );
         directoryChooserJButton.setMinimumSize( Settings.threeDotButtonSize );
         directoryChooserJButton.setMaximumSize( Settings.threeDotButtonSize );
-        add( directoryChooserJButton, c );
+        add( directoryChooserJButton );
     }
-
 
     /**
      * Add listeners to the GUI components
@@ -131,6 +109,7 @@ public class DirectoryChooser
     private void addBehaviour() {
         directoryJComboBox.addActionListener( new ActionListener() {
 
+            @Override
             public void actionPerformed( ActionEvent e ) {
                 sendChangeNotification();
 
@@ -153,6 +132,7 @@ public class DirectoryChooser
 
         directoryChooserJButton.addActionListener( new ActionListener() {
 
+            @Override
             public void actionPerformed( ActionEvent e ) {
                 JFileChooser jFileChooser = new JFileChooser();
                 jFileChooser.setFileSelectionMode( JFileChooser.DIRECTORIES_ONLY );
@@ -171,7 +151,6 @@ public class DirectoryChooser
 
     }
 
-
     /**
      * Puts the directory into the DirectoryChooserTest
      * @param directory The string of the directory to be set in the field
@@ -180,7 +159,6 @@ public class DirectoryChooser
         directoryJComboBox.setSelectedItem( makeObj( directory ) );
     }
 
-
     /**
      * Set the DirectoryChooserTest to the supplied File
      * @param directory The directory to be set in the DirectoryChooserTest
@@ -188,17 +166,14 @@ public class DirectoryChooser
     public void setFile( File directory ) {
         setText( directory.toString() );
     }
-
     /**
      * The color to use if the directory doesn't pass validation
      */
     private static final Color COLOR_BAD = Color.red;
-
     /**
      * The color to use if the directory passes validation
      */
     private static final Color COLOR_GOOD = Color.black;
-
 
     /**
      * This method checks the path specified in the directory chooser and sets
@@ -216,12 +191,10 @@ public class DirectoryChooser
             return false;
         }
     }
-
     /**
      * Variable to memorise what was in the field the last time to detect real changes
      */
     private String oldFieldContents = "";
-
 
     /**
      * Checks whether the field was changed and if so sends a notification
@@ -230,7 +203,7 @@ public class DirectoryChooser
     private void sendChangeNotification() {
         String newFieldContents = getText();
         if ( !oldFieldContents.equals( newFieldContents ) ) {
-            logger.fine( String.format( "The field changed from %s to %s", oldFieldContents, newFieldContents ) );
+            LOGGER.fine( String.format( "The field changed from %s to %s", oldFieldContents, newFieldContents ) );
             setColor();
             oldFieldContents = newFieldContents;
             for ( ChangeListener changeListener : changeListeners ) {
@@ -238,13 +211,11 @@ public class DirectoryChooser
             }
         }
     }
-
     /**
-     *  A vector that holds all the ChangeListeners that want to be notified
+     *  A List that holds all the ChangeListeners that want to be notified
      *  when the directory changes.
      */
-    private Vector<ChangeListener> changeListeners = new Vector<ChangeListener>();
-
+    private ArrayList<ChangeListener> changeListeners = new ArrayList<ChangeListener>();
 
     /**
      * Adds a change listener that will be notified whenever the text in the field changes
@@ -254,7 +225,6 @@ public class DirectoryChooser
         changeListeners.add( listener );
     }
 
-
     /**
      * Removes a change listener that no longer wants to know about text changes
      * @param listener The listener to remove
@@ -262,7 +232,6 @@ public class DirectoryChooser
     public void removeChangeListener( ChangeListener listener ) {
         changeListeners.remove( listener );
     }
-
 
     /**
      *  Returns a string representation of the currently selected item in the dropdown list
@@ -277,15 +246,13 @@ public class DirectoryChooser
         }
     }
 
-
     /**
      * Returns the directory of the chooser as a new File object
-     * @return The directoy currently selected
+     * @return The directory currently selected
      */
     public File getDirectory() {
         return new File( getText() );
     }
-
 
     /**
      *  This method creates an Object from a String. As discussed in the Java API for JComboBox.addItem
@@ -299,7 +266,6 @@ public class DirectoryChooser
             }
         };
     }
-
 
     /**
      *  This method adds the supplied directory to the dropdown if it is a valid directory
@@ -320,7 +286,6 @@ public class DirectoryChooser
         }
     }
 
-
     /**
      * Sets the DirectoryChooser to enabled or unenabled. Delegates this down to
      * the component Swing components.
@@ -332,18 +297,14 @@ public class DirectoryChooser
         directoryJTextField.setEnabled( enabled );
         directoryChooserJButton.setEnabled( enabled );
     }
-
     /**
      * Constant that indicates that the directory must exist.
      * @see Tools#DIR_MUST_EXIST
      */
     public static final int DIR_MUST_EXIST = Tools.DIR_MUST_EXIST;
-
     /**
      * Constant that indicates that the directory must exist and be writable;
      * @see Tools#DIR_MUST_BE_WRITABLE
      */
     public static final int DIR_MUST_BE_WRITABLE = Tools.DIR_MUST_BE_WRITABLE;
 }
-
-
