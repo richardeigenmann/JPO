@@ -58,6 +58,11 @@ public class PicturePopupMenu
      **/
     private JMenuItem[] copyLocationsJMenuItems = new JMenuItem[Settings.MAX_MEMORISE];
     /**
+     *  array of menu items that allows the user to copy pictures to a recently used zip file
+     *
+     **/
+    private JMenuItem[] memorizedZipFileJMenuItems = new JMenuItem[Settings.MAX_MEMORISE];
+    /**
      *  a separator for the Move menu. Declared here because other class methods want to turn on and off visible.
      */
     private JSeparator movePictureNodeSeparator = new JSeparator();
@@ -107,6 +112,7 @@ public class PicturePopupMenu
         JMenuItem pictureShowJMenuItem = new JMenuItem( Settings.jpoResources.getString( "pictureShowJMenuItemLabel" ) );
         pictureShowJMenuItem.addActionListener( new ActionListener() {
 
+            @Override
             public void actionPerformed( ActionEvent e ) {
                 requestShowPicture();
             }
@@ -117,6 +123,7 @@ public class PicturePopupMenu
         JMenuItem mapShowJMenuItem = new JMenuItem( Settings.jpoResources.getString( "mapShowJMenuItemLabel" ) );
         mapShowJMenuItem.addActionListener( new ActionListener() {
 
+            @Override
             public void actionPerformed( ActionEvent e ) {
                 requestShowMap();
             }
@@ -134,6 +141,7 @@ public class PicturePopupMenu
 
                 final SortableDefaultMutableTreeNode node = targetNode;
 
+                @Override
                 public void actionPerformed( ActionEvent e ) {
                     Jpo.positionToNode( node );
                 }
@@ -148,6 +156,7 @@ public class PicturePopupMenu
         JMenuItem categoryUsagetJMenuItem = new JMenuItem( Settings.jpoResources.getString( "categoryUsagetJMenuItem" ) );
         categoryUsagetJMenuItem.addActionListener( new ActionListener() {
 
+            @Override
             public void actionPerformed( ActionEvent e ) {
                 requestCategories();
             }
@@ -161,6 +170,7 @@ public class PicturePopupMenu
             pictureMailSelectJMenuItem.setText( Settings.jpoResources.getString( "pictureMailUnselectJMenuItem" ) );
             pictureMailSelectJMenuItem.addActionListener( new ActionListener() {
 
+                @Override
                 public void actionPerformed( ActionEvent e ) {
                     requestSelectForEmail();
 
@@ -170,6 +180,7 @@ public class PicturePopupMenu
 
             pictureMailUnselectAllJMenuItem.addActionListener( new ActionListener() {
 
+                @Override
                 public void actionPerformed( ActionEvent e ) {
                     popupNode.getPictureCollection().clearMailSelection();
                 }
@@ -179,6 +190,7 @@ public class PicturePopupMenu
             pictureMailSelectJMenuItem.setText( Settings.jpoResources.getString( "pictureMailSelectJMenuItem" ) );
             pictureMailSelectJMenuItem.addActionListener( new ActionListener() {
 
+                @Override
                 public void actionPerformed( ActionEvent e ) {
                     if ( Settings.pictureCollection.countSelectedNodes() < 1 ) {
                         popupNode.getPictureCollection().addToMailSelected( popupNode );
@@ -202,6 +214,7 @@ public class PicturePopupMenu
             userFunctionsJMenuItems[i] = new JMenuItem();
             userFunctionsJMenuItems[i].addActionListener( new ActionListener() {
 
+                @Override
                 public void actionPerformed( ActionEvent ae ) {
                     try {
                         Tools.runUserFunction( userfunction, (PictureInfo) popupNode.getUserObject() );
@@ -226,6 +239,7 @@ public class PicturePopupMenu
             JMenuItem rotate90JMenuItem = new JMenuItem( Settings.jpoResources.getString( "rotate90" ) );
             rotate90JMenuItem.addActionListener( new ActionListener() {
 
+                @Override
                 public void actionPerformed( ActionEvent e ) {
                     rotatePicture( 90 );
                 }
@@ -233,6 +247,7 @@ public class PicturePopupMenu
             JMenuItem rotate180JMenuItem = new JMenuItem( Settings.jpoResources.getString( "rotate180" ) );
             rotate180JMenuItem.addActionListener( new ActionListener() {
 
+                @Override
                 public void actionPerformed( ActionEvent e ) {
                     rotatePicture( 180 );
                 }
@@ -240,6 +255,7 @@ public class PicturePopupMenu
             JMenuItem rotate270JMenuItem = new JMenuItem( Settings.jpoResources.getString( "rotate270" ) );
             rotate270JMenuItem.addActionListener( new ActionListener() {
 
+                @Override
                 public void actionPerformed( ActionEvent e ) {
                     rotatePicture( 270 );
                 }
@@ -247,6 +263,7 @@ public class PicturePopupMenu
             JMenuItem rotate0JMenuItem = new JMenuItem( Settings.jpoResources.getString( "rotate0" ) );
             rotate0JMenuItem.addActionListener( new ActionListener() {
 
+                @Override
                 public void actionPerformed( ActionEvent e ) {
                     noRotation();
                 }
@@ -260,6 +277,7 @@ public class PicturePopupMenu
 
         pictureRefreshJMenuItem.addActionListener( new ActionListener() {
 
+            @Override
             public void actionPerformed( ActionEvent e ) {
                 if ( !Settings.pictureCollection.isSelected( popupNode ) ) {
                     Settings.pictureCollection.clearSelection();
@@ -284,6 +302,7 @@ public class PicturePopupMenu
                 recentDropNodes[i] = new JMenuItem();
                 recentDropNodes[i].addActionListener( new ActionListener() {
 
+                    @Override
                     public void actionPerformed( ActionEvent ae ) {
                         moveToLastChild( Settings.recentDropNodes[dropnode] );
                         Settings.memorizeGroupOfDropLocation( Settings.recentDropNodes[dropnode] );
@@ -297,6 +316,7 @@ public class PicturePopupMenu
             JMenuItem movePictureToTopJMenuItem = new JMenuItem( Settings.jpoResources.getString( "movePictureToTopJMenuItem" ) );
             movePictureToTopJMenuItem.addActionListener( new ActionListener() {
 
+                @Override
                 public void actionPerformed( ActionEvent e ) {
                     if ( Settings.pictureCollection.countSelectedNodes() < 1 ) {
                         popupNode.moveNodeToTop();
@@ -417,10 +437,10 @@ public class PicturePopupMenu
         }
 
 
-        JMenu copyImageJMenu = new JMenu( Settings.jpoResources.getString( "copyImageJMenuLabel" ) );
+        final JMenu copyImageJMenu = new JMenu( Settings.jpoResources.getString( "copyImageJMenuLabel" ) );
         add( copyImageJMenu );
 
-        JMenuItem copyToNewLocationJMenuItem = new JMenuItem( Settings.jpoResources.getString( "copyToNewLocationJMenuItem" ) );
+        final JMenuItem copyToNewLocationJMenuItem = new JMenuItem( Settings.jpoResources.getString( "copyToNewLocationJMenuItem" ) );
         copyToNewLocationJMenuItem.addActionListener( new ActionListener() {
 
             public void actionPerformed( ActionEvent e ) {
@@ -442,6 +462,7 @@ public class PicturePopupMenu
             copyLocationsJMenuItems[i] = new JMenuItem();
             copyLocationsJMenuItems[i].addActionListener( new ActionListener() {
 
+                @Override
                 public void actionPerformed( ActionEvent ae ) {
                     if ( Settings.pictureCollection.countSelectedNodes() < 1 ) {
                         SortableDefaultMutableTreeNode[] nodes = new SortableDefaultMutableTreeNode[1];
@@ -456,11 +477,56 @@ public class PicturePopupMenu
         }
         copyLocationsChanged();
 
+        copyImageJMenu.addSeparator();
+
+        final JMenuItem copyToNewZipfileJMenuItem = new JMenuItem( Settings.jpoResources.getString( "copyToNewZipfileJMenuItem" ) );
+        copyToNewZipfileJMenuItem.addActionListener( new ActionListener() {
+
+            @Override
+            public void actionPerformed( ActionEvent e ) {
+                if ( Settings.pictureCollection.countSelectedNodes() < 1 ) {
+                    SortableDefaultMutableTreeNode[] nodes = new SortableDefaultMutableTreeNode[1];
+                    nodes[0] = popupNode;
+                    TreeNodeController.copyToNewZipfile( nodes );
+                } else {
+                    TreeNodeController.copyToNewZipfile( Settings.pictureCollection.getSelectedNodes() );
+                }
+            }
+        } );
+        copyImageJMenu.add( copyToNewZipfileJMenuItem );
+
+        for ( int i = 0; i < Settings.MAX_MEMORISE; i++ ) {
+            final int item = i;
+            memorizedZipFileJMenuItems[i] = new JMenuItem();
+            memorizedZipFileJMenuItems[i].addActionListener( new ActionListener() {
+
+                @Override
+                public void actionPerformed( ActionEvent ae ) {
+                    if ( Settings.pictureCollection.countSelectedNodes() < 1 ) {
+                        SortableDefaultMutableTreeNode[] nodes = new SortableDefaultMutableTreeNode[1];
+                        nodes[0] = popupNode;
+                        TreeNodeController.copyToZipfile( nodes, new File( Settings.memorizedZipFiles[item] ) );
+                    } else {
+                        TreeNodeController.copyToZipfile( Settings.pictureCollection.getSelectedNodes(), new File( Settings.memorizedZipFiles[item] ) );
+                    }
+                }
+            } );
+            copyImageJMenu.add( memorizedZipFileJMenuItems[i] );
+            if ( Settings.memorizedZipFiles[i] != null ) {
+                memorizedZipFileJMenuItems[i].setText( Settings.memorizedZipFiles[i] );
+                memorizedZipFileJMenuItems[i].setVisible( true );
+            } else {
+                memorizedZipFileJMenuItems[i].setVisible( false );
+            }
+        }
+
+
         // remove node
         if ( popupNode.getPictureCollection().getAllowEdits() ) {
             JMenuItem pictureNodeRemove = new JMenuItem( Settings.jpoResources.getString( "pictureNodeRemove" ) );
             pictureNodeRemove.addActionListener( new ActionListener() {
 
+                @Override
                 public void actionPerformed( ActionEvent e ) {
                     requestRemoveNode();
 
@@ -769,6 +835,7 @@ public class PicturePopupMenu
      *  not shown. If no drop targets are shown at all the seerator in the submenu
      *  is not shown either.
      */
+    @Override
     public void recentDropNodesChanged() {
         boolean dropNodesVisible = false;
         for ( int i = 0; i < Settings.MAX_DROPNODES; i++ ) {
@@ -792,6 +859,7 @@ public class PicturePopupMenu
      *  Here we receive notification that the copy locations were updated and then go
      *  and update the targets on the menu.
      */
+    @Override
     public void copyLocationsChanged() {
         for ( int i = 0; i < Settings.copyLocations.length; i++ ) {
             if ( Settings.copyLocations[i] != null ) {
@@ -808,6 +876,7 @@ public class PicturePopupMenu
      * called by a listener when user functions are added.
      *
      */
+    @Override
     public void userFunctionsChanged() {
         for ( int i = 0; i < Settings.maxUserFunctions; i++ ) {
             if ( ( Settings.userFunctionNames[i] != null ) && ( Settings.userFunctionNames[i].length() > 0 ) && ( Settings.userFunctionCmd[i] != null ) && ( Settings.userFunctionCmd[i].length() > 0 ) ) {
@@ -837,8 +906,8 @@ public class PicturePopupMenu
                 n.moveToLastChild( targetNode );
             }
             Settings.pictureCollection.clearSelection();
-        } else // move only the popup node
-        {
+        } else {
+            // move only the popup node
             popupNode.moveToLastChild( targetNode );
         }
 
@@ -851,14 +920,12 @@ public class PicturePopupMenu
      */
     @Override
     protected void firePopupMenuWillBecomeVisible() {
+        LOGGER.fine( "registering PicturePopupMenu listeners" );
         Settings.addRecentDropNodeListener( this );
         Settings.addCopyLocationsChangeListener( this );
         Settings.addUserFunctionsChangeListener( this );
 
-
         super.firePopupMenuWillBecomeVisible();
-
-
     }
 
     /**
@@ -868,12 +935,11 @@ public class PicturePopupMenu
      */
     @Override
     protected void firePopupMenuWillBecomeInvisible() {
+        LOGGER.fine( "deregistering PicturePopupMenu listeners" );
         Settings.removeRecentDropNodeListener( this );
         Settings.removeCopyLocationsChangeListener( this );
         Settings.removeUserFunctionsChangeListener( this );
 
-
         super.firePopupMenuWillBecomeInvisible();
-
     }
 }

@@ -491,6 +491,7 @@ public class CollectionJTreeController
      * @param nodeToExport The node on which the request was made
      * @see  GroupPopupInterface
      */
+    @Override
     public void requestMoveGroupDown ( SortableDefaultMutableTreeNode popupNode ) {
         popupNode.moveNodeDown();
     }
@@ -500,6 +501,7 @@ public class CollectionJTreeController
      * @param nodeToExport The node on which the request was made
      * @see  GroupPopupInterface
      */
+    @Override
     public void requestMoveGroupToBottom (
             SortableDefaultMutableTreeNode popupNode ) {
         popupNode.moveNodeToBottom();
@@ -512,6 +514,7 @@ public class CollectionJTreeController
      * @param nodeToExport The node on which the request was made
      * @see  GroupPopupInterface
      */
+    @Override
     public void requestMoveToNode ( SortableDefaultMutableTreeNode popupNode,
             SortableDefaultMutableTreeNode targetGroup ) {
         popupNode.moveToLastChild( targetGroup );
@@ -523,6 +526,7 @@ public class CollectionJTreeController
      * Request that a group be edited as a table
      * @param nodeToExport The node on which the request was made
      */
+    @Override
     public void requestEditGroupTable ( SortableDefaultMutableTreeNode popupNode ) {
         TableJFrame tableJFrame = new TableJFrame( popupNode );
         tableJFrame.pack();
@@ -533,6 +537,7 @@ public class CollectionJTreeController
      * Gets called by the GroupPopupInterface and implements the sort request.
      * @param nodeToExport The node on which the request was made
      */
+    @Override
     public void requestSort ( SortableDefaultMutableTreeNode popupNode,
             int sortCriteria ) {
         //logger.info( "Sort requested on " + myPopupNode.toString() + " for Criteria: " + Integer.toString( sortCriteria ) );
@@ -615,6 +620,7 @@ public class CollectionJTreeController
                     final MouseEvent fe = e;
                     Runnable r = new Runnable() {
 
+                        @Override
                         public void run () {
                             GroupPopupMenu groupPopupMenu = new GroupPopupMenu( collectionJTreeController, popupNode );
                             groupPopupMenu.show( fe.getComponent(), fe.getX(), fe.getY() );

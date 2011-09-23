@@ -21,6 +21,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.event.ChangeListener;
 import jpo.dataModel.GroupInfo;
+import jpo.dataModel.NodeStatistics;
 
 /*
 ConsolidateGroupJFrame.java:  Controller and Visual to consoliodate
@@ -87,12 +88,12 @@ public class ConsolidateGroupJFrame
      *   @param startNode  The group node that the user wants the consolidation to be done on.
      *  TODO: make this use MIG Layout
      */
-    public ConsolidateGroupJFrame ( SortableDefaultMutableTreeNode startNode ) {
+    public ConsolidateGroupJFrame( SortableDefaultMutableTreeNode startNode ) {
         super( Settings.jpoResources.getString( "ConsolidateGroupJFrameHeading" ) );
         this.startNode = startNode;
 
         Object userObject = startNode.getUserObject();
-        if ( !(userObject instanceof GroupInfo) ) {
+        if ( !( userObject instanceof GroupInfo ) ) {
             logger.info( String.format( "Node %s is not a group", startNode.toString() ) );
             JOptionPane.showMessageDialog(
                     Settings.anchorFrame,
@@ -111,7 +112,7 @@ public class ConsolidateGroupJFrame
         addWindowListener( new WindowAdapter() {
 
             @Override
-            public void windowClosing ( WindowEvent e ) {
+            public void windowClosing( WindowEvent e ) {
                 getRid();
             }
         } );
@@ -219,13 +220,15 @@ public class ConsolidateGroupJFrame
         // Add the behaviour
         highresDirectoryChooser.addChangeListener( new ChangeListener() {
 
-            public void stateChanged ( ChangeEvent e ) {
+            @Override
+            public void stateChanged( ChangeEvent e ) {
                 setLowresLocation();
             }
         } );
         lowresJCheckBox.addActionListener( new ActionListener() {
 
-            public void actionPerformed ( ActionEvent e ) {
+            @Override
+            public void actionPerformed( ActionEvent e ) {
                 setLowresLocation();
                 lowresDirectoryChooser.setVisible( lowresJCheckBox.isSelected() );
                 targetLowresDirJLabel.setVisible( lowresJCheckBox.isSelected() );
@@ -233,14 +236,16 @@ public class ConsolidateGroupJFrame
         } );
         consolidateJButton.addActionListener( new ActionListener() {
 
-            public void actionPerformed ( ActionEvent e ) {
+            @Override
+            public void actionPerformed( ActionEvent e ) {
                 consolidateToDirectory();
                 getRid();
             }
         } );
         cancelJButton.addActionListener( new ActionListener() {
 
-            public void actionPerformed ( ActionEvent e ) {
+            @Override
+            public void actionPerformed( ActionEvent e ) {
                 getRid();
             }
         } );
@@ -251,7 +256,7 @@ public class ConsolidateGroupJFrame
      * This method sets the lowres location to the highres location with an additional /Lowres at the end.
      * It is typically invoked when the highres location changes.
      */
-    private void setLowresLocation () {
+    private void setLowresLocation() {
         lowresDirectoryChooser.setFile(
                 new File( highresDirectoryChooser.getDirectory(), "/Lowres/" ) );
     }
@@ -259,7 +264,7 @@ public class ConsolidateGroupJFrame
     /**
      * method that gets rid of this JFrame
      */
-    private void getRid () {
+    private void getRid() {
         setVisible( false );
         dispose();
     }
@@ -267,9 +272,9 @@ public class ConsolidateGroupJFrame
     /**
      *  method that outputs the selected group to a directory
      */
-    private void consolidateToDirectory () {
+    private void consolidateToDirectory() {
         Object userObject = startNode.getUserObject();
-        if ( !(userObject instanceof GroupInfo) ) {
+        if ( !( userObject instanceof GroupInfo ) ) {
             logger.info( String.format( "Node %s is not a group", startNode.toString() ) );
             JOptionPane.showMessageDialog(
                     Settings.anchorFrame,
@@ -354,7 +359,10 @@ public class ConsolidateGroupJFrame
                 startNode,
                 recurseSubgroupsJCheckBox.isSelected(),
                 lowresJCheckBox.isSelected(),
-                lowresDirectory );
+                lowresDirectory,
+                new ProgressGui( NodeStatistics.countPictures( startNode, recurseSubgroupsJCheckBox.isSelected() ),
+                Settings.jpoResources.getString( "ConsolitdateProgBarTitle" ),
+                Settings.jpoResources.getString( "ConsolitdateProgBarDone" ) ) );
         Settings.memorizeCopyLocation( highresDirectory.toString() );
 
     }

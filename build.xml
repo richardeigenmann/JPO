@@ -123,13 +123,13 @@
                  Doctitle="JPO application documentation"
                  Windowtitle="JPO application documentation"
                  Header="JPO application documentation"
-                 Bottom="&lt;font size=&quot;-1&quot;&gt;Copyright (c) 2002 - 2009 by Richard Eigenmann &lt;a href=&quot;http://www.lomumba.ch/richi&quot;&gt;www.lomumba.ch/richi&lt;/a&gt;&lt;/font&gt;"
+                 Bottom="&lt;font size=&quot;-1&quot;&gt;Copyright (c) 2002 - 2011 by Richard Eigenmann &lt;a href=&quot;http://www.lomumba.ch/richi&quot;&gt;www.lomumba.ch/richi&lt;/a&gt;&lt;/font&gt;"
                  author="true"
                  version="true"
                  use="true"
                  private="true"
                  source="1.6"
-                 classpath="libs/mmiglayout-3.7.1.jar; libs/metadata-extractor-2.3.0.jar; libs/jnlp.jar; libs/activation.jar; libs/mail.jar; libs/jwizz-0.1.4.jar; libs/mail.jar; libs/poi-3.1-FINAL-20080629.jar; libs/poi-contrib-3.1-FINAL-20080629.jar; libs/poi-scratchpad-3.1-FINAL-20080629.jar"
+                 classpath="libs/mmiglayout-3.7.4.jar; libs/metadata-extractor-2.3.0.jar; libs/jnlp.jar; libs/activation.jar; libs/mail.jar; libs/jwizz-0.1.4.jar; libs/mail.jar; libs/poi-3.1-FINAL-20080629.jar; libs/poi-contrib-3.1-FINAL-20080629.jar; libs/poi-scratchpad-3.1-FINAL-20080629.jar"
         >
             <sourcepath path="${src.java.dir}" />
             <link href="http://java.sun.com/j2se/1.6.0/docs/api/" />

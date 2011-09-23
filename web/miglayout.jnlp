@@ -7,7 +7,7 @@
    </information>
    <offline-allowed/>
    <resources>
-      <jar href="miglayout-3.7.1.jar"/>
+      <jar href="miglayout-3.7.4.jar"/>
    </resources>
    <component-desc/>
 </jnlp>

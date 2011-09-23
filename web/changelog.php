@@ -18,6 +18,7 @@
 
 			<table>
 				<tr><td colspan=2><b>Development Version 0.9</b></td></tr>
+				<tr><td valign="top">13.9.2011</td><td> Added ability to copy into Zip files </td></tr>
 				<tr><td valign="top">14.5.2011</td><td> Changed Settings Dialog to MigLayout </td></tr>
 				<tr><td valign="top">8.5.2011</td><td> Bug with sequential numbering in website generation</td></tr>
 				<tr><td valign="top">8.5.2011</td><td> Open Settings no longer changes the window size</td></tr>

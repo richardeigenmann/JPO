@@ -46,147 +46,119 @@ public class Settings {
     /**
      * Defines a logger for this class
      */
-    private static Logger logger = Logger.getLogger( Settings.class.getName() );
-
+    private static final Logger LOGGER = Logger.getLogger( Settings.class.getName() );
     /**
      *  this ClassLoader helps most other objects find the resources they require
      */
     public static final ClassLoader cl = Settings.class.getClassLoader();
-
     /**
      *  A static reference to the Collection being displayed. In future perhaps we will
      *  allow multiple collections to be loaded.
      **/
     public static PictureCollection pictureCollection = new PictureCollection();
-
     /**
      *  Indicates whether functions should log that they were called.
      */
     public static final boolean logFunctions = true;
-
     /**
      *  Indicates whether user actions should be logged
      */
     public static final boolean logUserActions = true;
-
     /**
      *  Indicates whether errors should be logged
      */
     public static final boolean logErrors = true;
-
     /**
      *  flag to indicate that debug information should be logged
      */
     public static boolean writeLog = false;
-
     /**
      *  the filename of the logfile
      */
     public static File logfile;
-
     /**
      *  Flag to indicate whether the JPO window should be maximised on startup or left for the
      *  OS to decide on the size together with the JVM
      */
     public static boolean maximiseJpoOnStartup = true;
-
     /**
      *  the dimensions of the main JPO frame
      */
     public static Dimension mainFrameDimensions;
-
     /**
      *  A set of window sizes that the user can choose his preferred size from. The first option will be to maximise the window
      */
     public static final Dimension[] windowSizes = { new Dimension( 0, 0 ), new Dimension( 1050, 760 ), new Dimension( 1250, 900 ), new Dimension( 1450, 1190 ), new Dimension( 2150, 1300 ) };
-
     /**
      *  Flag to indicate whether the JPO window should be maximised on startup or left for the
      *  OS to decide on the size together with the JVM
      */
     public static boolean maximisePictureViewerWindow = true;
-
     /**
      *  the dimensions of the "Default" picture viewer
      */
     public static Dimension pictureViewerDefaultDimensions;
-
     /**
      *  variable to indicate that the window size should be stored
      *  when the application closes.
      */
     public static boolean saveSizeOnExit;
-
     /**
      *  the default place for the divider.
      **/
     public static int preferredMasterDividerSpot = 350;
-
     /**
      *  the default place for the left side divider.
      **/
     public static int preferredLeftDividerSpot;
-
     /**
      *  the default width of the divider
      **/
     public static int dividerWidth = 12;
-
     /**
      *  the default value for maxThumbnails
      **/
     public final static int defaultMaxThumbnails = 50;
-
     /**
      *  a variable that sets the maximum number of thumbnails that shall be displayed at one time.
      **/
     public static int maxThumbnails = defaultMaxThumbnails;
-
     /**
      * Setting for the width of the thumbnails. Set by default to 350 pixels.
      */
     public static int thumbnailSize = 350;
-
     /**
      *  the dimension of minithumbnails in the group folders
      */
     public static final Dimension miniThumbnailSize = new Dimension( 100, 75 );
-
     /**
      *   The minimum width for the left panels
      */
     public static final int leftPanelMinimumWidth = 200;
-
     /**
      *  the minimum Dimension for the InfoPanel
      */
     public static final Dimension infoPanelMinimumSize = new Dimension( leftPanelMinimumWidth, 100 );
-
     /**
      *  the preferred Dimension for the InfoPanel
      */
     public static final Dimension infoPanelPreferredSize = new Dimension( leftPanelMinimumWidth, 100 );
-
     /**
      *  the minimum Dimension for the Navigator Panel
      */
     public static final Dimension jpoNavigatorJTabbedPaneMinimumSize = new Dimension( leftPanelMinimumWidth, 300 );
-
     /**
      *  the preferred Dimension for the Navigator Panel
      */
     public static final Dimension jpoNavigatorJTabbedPanePreferredSize = new Dimension( preferredMasterDividerSpot, 500 );
-
     /**
      *  the minimum Dimension for the Thumbnail Panel
      */
     public static final Dimension thumbnailJScrollPaneMinimumSize = new Dimension( (int) ( thumbnailSize * 1.4f ), (int) ( thumbnailSize * 1.8f ) );
-
     /**
      *  the preferred Dimension for the Thumbnail Panel
      */
     public static final Dimension thumbnailJScrollPanePreferredSize = new Dimension( (int) ( thumbnailSize * 2.2f ), 800 );
-
     /**
      *  the minimum Dimension for the JPO Window
      */
@@ -194,7 +166,6 @@ public class Settings {
             new Dimension( jpoNavigatorJTabbedPaneMinimumSize.width + dividerWidth + thumbnailJScrollPaneMinimumSize.width,
             Math.max( jpoNavigatorJTabbedPaneMinimumSize.height + dividerWidth + infoPanelMinimumSize.height,
             thumbnailJScrollPaneMinimumSize.height ) );
-
     /**
      *  the preferred Dimension for the JPO Window
      */
@@ -202,31 +173,26 @@ public class Settings {
             new Dimension( jpoNavigatorJTabbedPanePreferredSize.width + dividerWidth + thumbnailJScrollPanePreferredSize.width,
             Math.max( jpoNavigatorJTabbedPanePreferredSize.height + dividerWidth + infoPanelPreferredSize.height,
             thumbnailJScrollPanePreferredSize.height ) );
-
     /**
      *   The polling interval in milliseconds for the ThumbnailCreationThreads to check
      *   Whether there is something new to render.
      */
     public static final int ThumbnailCreationThreadPollingTime = 500;
-
     /**
      *  The number of thumbnail creation threads to spawn.
      *  @see jpo.gui.ThumbnailCreationQueue
      */
     public static final int numberOfThumbnailCreationThreads = 2;
-
     /**
      *  The KDE Panel has the unfortunate habit of insisting on being on top so this
      *  parameter allows you to specify how much space should be left from the bottom of
      *  the screen for Full screen windows.
      **/
     public static int leaveForPanel;
-
     /**
      *   The collection that should be loaded automatically
      **/
     public static String autoLoad;
-
 
     /**
      * Method to clear the autoload collection.
@@ -234,42 +200,34 @@ public class Settings {
     public static void clearAutoLoad() {
         autoLoad = "";
     }
-
     /**
      *  number of recent files shown in the file menu
      */
     public static final int MAX_MEMORISE = 9;
-
     /**
      *  Array of recently used files
      */
     public static String[] recentCollections = new String[MAX_MEMORISE];
-
     /**
      *  the path where thumbnails are to be kept if at all
      */
     public static File thumbnailPath;
-
     /**
      *  the prefix for thumbnail files in the thumbnail directory
      */
     public static final String thumbnailPrefix = "JPO_Thumbnail_";
-
     /**
      *  a flag that indicates whether thumbnails are to be kept as files at all
      */
     public static boolean keepThumbnails;
-
     /**
      *   A counter that keeps track of the number of thumbnails created
      */
     public static int thumbnailCounter = 0;
-
     /**
      *  a flag that indicates that small images should not be enlarged
      */
     public static boolean dontEnlargeSmallImages;
-
     /**
      *  Object that gets populated by the main Jpo object if it can
      *  discover a file called autostartJarPicturelist in the Classpath.
@@ -278,122 +236,99 @@ public class Settings {
      *  populated. Otherwise it is null. You can test for null on it.
      */
     public static URL jarAutostartList = null;
-
     /**
      *  the path to the jar file; derived from jarAutostartList
      */
     public static String jarRoot = null;
-
     /**
      *   variable that tracks if there are unsaved changes in these
      *   settings.
      */
     public static boolean unsavedSettingChanges = false;
-
     /**
      *    URL of the document type definition in the xml file.
      */
     public static final String COLLECTION_DTD = "file:./collection.dtd";
-
     /**
      *    handle to the main frame of the application. It's purpose it
      *    to have a handy reference for dialog boxes and the like to have
      *    a reference object.
      */
     public static JFrame anchorFrame = null;
-
     /**
      *   The maximum number of pictures to keep in memory
      */
     public static int maxCache;
-
     /**
      *  The maximum size a picture is zoomed to. This is to stop
      *  the Java engine creating enormous temporary images which
      *  lock the computer up completely.
      */
     public static int maximumPictureSize;
-
     /**
      *  standard size for all JTextFields that need to record a filename.
      */
     public static final Dimension filenameFieldPreferredSize = new Dimension( 550, 20 );
-
     /**
      *  standard size for all JTextFields that need to record a filename
      */
     public static final Dimension filenameFieldMinimumSize = new Dimension( 300, 20 );
-
     /**
      *  standard size for all JTextFields that need to record a filename
      */
     public static final Dimension filenameFieldMaximumSize = new Dimension( 1000, 20 );
-
     /**
      *  standard size for all JTextFields that need to record a short text.
      */
     public static final Dimension shortFieldPreferredSize = new Dimension( 350, 20 );
-
     /**
      *  standard size for all JTextFields that need to record a short text
      */
     public static final Dimension shortFieldMinimumSize = new Dimension( 150, 20 );
-
     /**
      *  standard size for all JTextFields that need to record a short text
      */
     public static final Dimension shortFieldMaximumSize = new Dimension( 1000, 20 );
-
     /**
      *  standard size for all JTextFields that need to record a normal length text
      */
     public static final Dimension textfieldPreferredSize = new Dimension( 350, 20 );
-
     /**
      *  standard size for all JTextFields that need to record a normal length text
      */
     public static final Dimension textfieldMinimumSize = new Dimension( 150, 20 );
-
     /**
      *  standard size for all JTextFields that need to record a normal length text
      */
     public static final Dimension textfieldMaximumSize = new Dimension( 1000, 20 );
-
     /**
      *  standard size for all JTextFields that need to record a normal length text
      */
     public static final Dimension shortNumberPreferredSize = new Dimension( 60, 20 );
-
     /**
      *  standard size for all JTextFields that need to record a normal length text
      */
     public static final Dimension shortNumberMinimumSize = new Dimension( 60, 20 );
-
     /**
      *  standard size for all JTextFields that need to record a normal length text
      */
     public static final Dimension shortNumberMaximumSize = new Dimension( 100, 20 );
-
     /**
      *   fixed size for the threeDotButton which opens the JFileChooser dialog
      */
     public static final Dimension threeDotButtonSize = new Dimension( 25, 20 );
-
     /**
      *  the font used to display the title. Currently Arial Bold 20.
      */
     public static Font titleFont;
-
     /**
      *  the font used to display the captions. Currently Arial Plain 16
      */
     public static Font captionFont;
-
     /**
      *  the height of the Thumbnail descriptions
      */
     public static final int thumbnailDescriptionHeight = 200;
-
     /**
      *  The interval between the timer checking to see if the picture is ready
      *  before the main delay loop should be waited. You want to give the user
@@ -401,169 +336,136 @@ public class Settings {
      *  the time it took the program to load the image.
      */
     public static final int advanceTimerPollingInterval = 500;
-
     /**
      *  The default number of pictures per row for the Html export
      */
     public static int defaultHtmlPicsPerRow = 3;
-
     /**
      *  The default width for pictures for the Html export overview
      */
     public static int defaultHtmlThumbnailWidth = 300;
-
     /**
      *  The default height for pictures for the Html export overview
      */
     public static int defaultHtmlThumbnailHeight = 300;
-
     /**
      *  Whether to generate the midres html pages or not
      */
     public static boolean defaultGenerateMidresHtml = true;
-
     /**
      *  Whether to generate a map or not
      */
     public static boolean defaultGenerateMap = true;
-
     /**
      *  Whether to generate DHTML effects or not
      */
     public static boolean defaultGenerateDHTML = true;
-
     /**
      *  Whether to generate a zip file with the highres pictures
      */
     public static boolean defaultGenerateZipfile = false;
-
     /**
      *  Whether to generate a link to highre pictures at the current location or not
      */
     public static boolean defaultLinkToHighres = false;
-
     /**
      *  Whether to export the Highres pictures or not
      */
     public static boolean defaultExportHighres = false;
-
     /**
      *  The default midres width for pictures for the Html export
      */
     public static int defaultHtmlMidresWidth = 700;
-
     /**
      *  The default midres height for pictures for the Html export
      */
     public static int defaultHtmlMidresHeight = 700;
-
     /**
      * Picture nameing convention on HTML output
      */
     public static int defaultHtmlPictureNaming = HtmlDistillerOptions.PICTURE_NAMING_BY_HASH_CODE;
-
     /**
      *   The default color for the background on the web page is white.
      */
     public static Color htmlBackgroundColor = Color.WHITE;
-
     /**
      *  This constant defines the text color on the web page.
      */
     public static Color htmlFontColor = Color.BLACK;
-
     /**
      *  The default quality for Thumbnail pictures for the Html export
      */
     public static float defaultHtmlLowresQuality = 0.8f;
-
     /**
      *  The default quality for Midres pictures for the Html export
      */
     public static float defaultHtmlMidresQuality = 0.8f;
-
     /**
      * Whether to write the robots.txt on the generate webpage
      */
     public static boolean writeRobotsTxt = false;
-
     /**
      *  true when thumbnails are supposed to scale fast
      */
     public static boolean thumbnailFastScale = true;
-
     /**
      *  true when the pictureViewer is supposed to scale fast
      */
     public static boolean pictureViewerFastScale = true;
-
     /**
      *  Informs the PictureAdder whether to show a thumbnail or not
      */
     public static boolean showThumbOnFileChooser = true;
-
     /**
      *  Default size for buttons such as OK, cancel etc.
      */
     public static Dimension defaultButtonDimension = new Dimension( 80, 25 );
-
     /**
      *  Default size for buttons such as OK, cancel etc.
      */
     public static Dimension threeDotButtonDimension = new Dimension( 25, 25 );
-
     /**
      *  This object is a handy reference for any component that wants to tell the
      *  main JTree for the collection to reposition itself.
      *  ToDo: make this an interface.
      */
     public static CollectionJTreeController mainCollectionJTreeController = null;
-
     /**
      *	constant to indicate no sorting to some routines
      */
     public final static int NO_SORTING = 1;
-
     /**
      *	constant to indicate the Description to some routines
      */
     public final static int DESCRIPTION = NO_SORTING + 1;
-
     /**
      *	constant to indicate the Picture URL to some routines
      */
     public final static int FILE_URL = DESCRIPTION + 1;
-
     /**
      *	constant to indicate the Lowres URL to some routines
      */
     public final static int FILE_LOWRES_URL = FILE_URL + 1;
-
     /**
      *	constant to indicate the Film Reference to some routines
      */
     public final static int FILM_REFERENCE = FILE_LOWRES_URL + 1;
-
     /**
      *	constant to indicate the Creation Time to some routines
      */
     public final static int CREATION_TIME = FILM_REFERENCE + 1;
-
     /**
      *	constant to indicate the Comment to some routines
      */
     public final static int COMMENT = CREATION_TIME + 1;
-
     /**
      *	constant to indicate the Photographer to some routines
      */
     public final static int PHOTOGRAPHER = COMMENT + 1;
-
     /**
      *	constant to indicate the Copyright Holder to some routines
      */
     public final static int COPYRIGHT_HOLDER = PHOTOGRAPHER + 1;
-
 
     /**
      * returns an Arraylist of sort
@@ -581,47 +483,38 @@ public class Settings {
         sortOptions.add( new SortOption( Settings.jpoResources.getString( "sortByCopyrightHolderTimeJMenuItem" ), Settings.COPYRIGHT_HOLDER ) );
         return sortOptions;
     }
-
     /**
      *	constant to indicate the Rotation to some routines
      */
     public final static int ROTATION = COPYRIGHT_HOLDER + 1;
-
     /**
      *	constant to indicate the Latitude and Longitude to some routines
      */
     public final static int LATLNG = ROTATION + 1;
-
     /**
      *	constant to indicate the Rotation to some routines
      */
     public final static int CHECKSUM = LATLNG + 1;
-
     /**
      *	constant to indicate the Categories are being parsed
      */
     public final static int CATEGORIES = CHECKSUM + 1;
-
     /**
      *	constant to indicate that a Category is being parsed
      */
     public final static int CATEGORY = CATEGORIES + 1;
-
     /**
      *	constant to indicate that a Category is being parsed
      */
     public final static int CATEGORY_DESCRIPTION = CATEGORY + 1;
-
     /**
      *      date format for adding ew pictures from the camera
      */
     public static String addFromCameraDateFormat = "dd.MM.yyyy  HH:mm";
-
     /**
      *	Collection of cameras
      */
     public static Vector<Camera> cameras = new Vector<Camera>();
-
     /**
      *	list of email senders
      */
@@ -636,7 +529,6 @@ public class Settings {
             return b;
         }
     };
-
     /**
      *	list of email senders
      */
@@ -651,77 +543,62 @@ public class Settings {
             return b;
         }
     };
-
     /**
      *	Email Server
      */
     public static String emailServer = "";
-
     /**
      *	Email Server port
      */
     public static String emailPort = "25";
-
     /**
      * Email authentication 0 = None 1 = Password 2 = SSL
      */
     public static int emailAuthentication = 0;
-
     /**
      *	Email User
      */
     public static String emailUser = "";
-
     /**
      *	Email Password
      */
     public static String emailPassword = "";
-
     /**
      *	Should emails have scaled images
      */
     public static boolean emailScaleImages = true;
-
     /**
      *	The last size we scaled images to in the email dialog
      */
     public static Dimension emailDimensions = new Dimension( 350, 300 );
-
     /**
      *	Should emails contain the original images
      */
     public static boolean emailSendOriginal = false;
-
     /**
      *   The default application background color.
      */
     public static final Color JPO_BACKGROUND_COLOR = Color.WHITE;
-
     /**
      *  The background color for the picture Viewer
      */
     public static final Color PICTUREVIEWER_BACKGROUND_COLOR = Color.BLACK;
-
     /**
      *  The text color for the picture Viewer
      */
     public static final Color PICTUREVIEWER_TEXT_COLOR = Color.WHITE;
-
     /**
      *  The number of Words that the TagCloud should show.
      */
     public static int tagCloudWords = 40;
-
     /**
      * The last sort choice of the user
      */
     public static int lastSortChoice = Settings.CREATION_TIME;
-
     /**
      * The last choice int he Camera Download Wizard whether to copy or move
      */
     public static boolean lastCameraWizardCopyMode = true;
-
 
     /**
      *  method that set the default parameters
@@ -748,12 +625,10 @@ public class Settings {
 
         dontEnlargeSmallImages = true;
     }
-
     /**
      *  handle to the user Preferences
      */
     public static Preferences prefs = Preferences.userNodeForPackage( Jpo.class );
-
 
     /**
      *  This method reads the settings from the preferences.
@@ -840,7 +715,6 @@ public class Settings {
         loadCameraSettings();
     }
 
-
     /**
      *  method that validates the settings & brings up the Settings dialog if not ok
      */
@@ -918,7 +792,6 @@ public class Settings {
 
         notifyRecentFilesChanged();  // why? RE, 20.1.2007
     }
-
 
     /**
      *  This method writes the settings to the Preferences object which was added to Java with 1.4
@@ -1030,7 +903,6 @@ public class Settings {
         unsavedSettingChanges = false;
     }
 
-
     /**
      *  Writes the cameras collection to the preferences. Uses an idea presented by Greg Travis
      *  on this IBM website: http://www-128.ibm.com/developerworks/java/library/j-prefapi.html
@@ -1056,7 +928,6 @@ public class Settings {
             i++;
         }
     }
-
 
     /**
      *  Writes the Camera settings
@@ -1136,7 +1007,6 @@ public class Settings {
         }
     }
 
-
     /**
      * This method memorises a collection file name for the Open > Recent menu
      * @param recentFile The collection file name to be memorised
@@ -1164,7 +1034,6 @@ public class Settings {
         writeSettings();
     }
 
-
     /**
      * This method clears all the recent collection file names
      */
@@ -1176,7 +1045,6 @@ public class Settings {
         }
     }
 
-
     /**
      *  This method needs to be called when the recentCollections Array is updated so that
      *  the listeners for this change are informed about the change.
@@ -1186,12 +1054,10 @@ public class Settings {
             recentFilesChangeListener.recentFilesChanged();
         }
     }
-
     /**
      *   a Vector referring to the objects that want to find out about changes to the recently opened files
      */
     private static final Vector<RecentFilesChangeListener> recentFilesChangeListeners = new Vector<RecentFilesChangeListener>();
-
 
     /**
      * register the listening object of the status events
@@ -1202,7 +1068,6 @@ public class Settings {
         recentFilesChangeListeners.add( listener );
     }
 
-
     /**
      * deregister the listening object of the status events
      * @param listener The listener to be removed
@@ -1212,21 +1077,18 @@ public class Settings {
         recentFilesChangeListeners.remove( listener );
     }
     /*------------------------------------------------------------------------------
-
-
-
-
+    
+    
+    
+    
     /**
      *  Default locale if all else fails use this one.
      */
-
     private static final Locale DEFAULT_LOCALE = Locale.ENGLISH;
-
     /**
      *  The locale to be used for the application
      */
     private static Locale currentLocale = Locale.getDefault();
-
 
     /**
      *  returns the Locale the application is running in.
@@ -1235,7 +1097,6 @@ public class Settings {
     public static Locale getCurrentLocale() {
         return currentLocale;
     }
-
 
     /**
      *  The language to be used for the application
@@ -1248,17 +1109,14 @@ public class Settings {
     public static String getCurrentLanguage() {
         return currentLocale.getDisplayLanguage();
     }
-
     /**
      *  Supported Languages
      */
     public static final String[] supportedLanguages = { "English", "Deutsch", "Simplified Chinese", "Traditional Chinese" };
-
     /**
      *  Locales for the languages in supportedLanguages
      */
     public static final Locale[] supportedLocale = { Locale.ENGLISH, Locale.GERMAN, Locale.SIMPLIFIED_CHINESE, Locale.TRADITIONAL_CHINESE };
-
 
     public static void setLocale( Locale newLocale ) {
         Locale oldLocale = currentLocale;
@@ -1266,7 +1124,7 @@ public class Settings {
             jpoResources = ResourceBundle.getBundle( "jpo.gui.JpoResources", newLocale );
             currentLocale = newLocale;
         } catch ( MissingResourceException mre ) {
-            logger.info( "Settings.setDefaults: MissingResourceException: " + mre.getMessage() );
+            LOGGER.info( "Settings.setDefaults: MissingResourceException: " + mre.getMessage() );
             jpoResources = ResourceBundle.getBundle( "jpo.gui.JpoResources", DEFAULT_LOCALE );
             currentLocale = DEFAULT_LOCALE;
         }
@@ -1277,12 +1135,10 @@ public class Settings {
             notifyLocaleChangeListeners();
         }
     }
-
     /**
      *   a Vector referring to the objects that want to find out about changes to the locale
      */
     private static ArrayList<LocaleChangeListener> localeChangeListeners = new ArrayList<LocaleChangeListener>();
-
 
     /**
      *  when the locale is changed this method must be called to inform the
@@ -1295,7 +1151,6 @@ public class Settings {
         }
     }
 
-
     /**
      * register the listening object of the status events
      * @param listener The listener to add
@@ -1304,7 +1159,6 @@ public class Settings {
         localeChangeListeners.add( listener );
     }
 
-
     /**
      * register the listening object of the status events
      * @param listener The listener to remove
@@ -1312,12 +1166,10 @@ public class Settings {
     public static void removeLocaleChangeListener( LocaleChangeListener listener ) {
         localeChangeListeners.remove( listener );
     }
-
     /**
      *  the resourceBundle is a Java thing that sorts out language customisation
      */
     public static ResourceBundle jpoResources;
-
 
     /**
      *  I'm using a class block initializer here so that we don't ever end up without a
@@ -1329,17 +1181,14 @@ public class Settings {
     }
     /*------------------------------------------------------------------------------
     Stuff for memorizing the drop locations    */
-
     /**
      *  MAX number of recent Drop Nodes
      */
     public static final int MAX_DROPNODES = 6;
-
     /**
      *  Array of recently used Drop Nodes
      */
     public static SortableDefaultMutableTreeNode[] recentDropNodes = new SortableDefaultMutableTreeNode[MAX_DROPNODES];
-
 
     /**
      * This method memorizes the recent drop targets so that they can be accessed
@@ -1367,13 +1216,11 @@ public class Settings {
         recentDropNodes[ 0] = recentNode;
         notifyRecentDropNodesChanged();
     }
-
     /**
      *   a Vector referring to the objects that want to find out about changes to the
      *   recently drop target nodes.
      */
     private static Vector<RecentDropNodeListener> recentDropNodeListeners = new Vector<RecentDropNodeListener>();
-
 
     /**
      * register the listening object of the status events
@@ -1384,7 +1231,6 @@ public class Settings {
         recentDropNodeListeners.add( listener );
     }
 
-
     /**
      * unregister the listening object of the status events
      * @param listener the listener to remove
@@ -1394,7 +1240,6 @@ public class Settings {
         recentDropNodeListeners.remove( listener );
     }
 
-
     /**
      * notifies the listeners that the target drop nodes have changed.
      */
@@ -1403,7 +1248,6 @@ public class Settings {
             recentDropNodeListener.recentDropNodesChanged();
         }
     }
-
 
     /**
      *  method to remove one of the recent Drop Nodes. It is important to check each time a node
@@ -1421,7 +1265,6 @@ public class Settings {
         }
     }
 
-
     /**
      *  clears the list of recent drop nodes
      */
@@ -1431,14 +1274,18 @@ public class Settings {
     }
     /*------------------------------------------------------------------------------
     Stuff for memorizing the copy target locations    */
-
     /**
      *  Array of recently used directories in copy operations and other
-     *  File selections.
+     *  file selections.
      */
     public static String[] copyLocations = new String[MAX_MEMORISE];
+    /**
+     *  Array of recently used zip files operations and other
+     *  file selections.
+     */
+    public final static String[] memorizedZipFiles = new String[MAX_MEMORISE];
 
-
+    
     /**
      * This method memorises the directories used in copy operations so that they
      * can be offered as options in drop down lists.
@@ -1466,6 +1313,32 @@ public class Settings {
         notifyCopyLocationsChanged();
     }
 
+    /**
+     * This method memorises the zip files used in copy operations so that they
+     * can be offered as options in drop down lists.
+     * @param location The new zip file to memorise
+     */
+    public static void memorizeZipFile( String location ) {
+        for ( int i = 0; i < MAX_MEMORISE; i++ ) {
+            if ( ( memorizedZipFiles[i] != null ) && ( memorizedZipFiles[i].equals( location ) ) ) {
+                for ( int j = i; j > 0; j-- ) {
+                    memorizedZipFiles[j] = memorizedZipFiles[j - 1];
+                }
+                memorizedZipFiles[ 0] = location;
+                return;
+            }
+        }
+
+        // move all the elements down by one
+        for ( int i = MAX_MEMORISE - 1; i > 0; i-- ) {
+            memorizedZipFiles[i] = memorizedZipFiles[i - 1];
+        }
+        memorizedZipFiles[ 0] = location;
+
+        //validateCopyLocations();
+        //writeSettings();
+        //notifyCopyLocationsChanged();
+    }
 
     /**
      *  This method validates that the copy locations are valid directories and if not sets the
@@ -1489,19 +1362,17 @@ public class Settings {
         return arrayChanged;
     }
 
-
     /**
      *  This method clears the copy locations
      */
     public static void clearCopyLocations() {
-        logger.info( "Should Clear Memorised Directories" );
+        LOGGER.info( "Should Clear Memorised Directories" );
         for ( int i = 0; i < MAX_MEMORISE; i++ ) {
             copyLocations[i] = null;
         }
         notifyCopyLocationsChanged();
         writeSettings();
     }
-
 
     /**
      *  This method returns the most recently used copy location. If there is no most recent
@@ -1517,13 +1388,11 @@ public class Settings {
         }
         return new File( System.getProperty( "user.dir" ) );
     }
-
     /**
      *   a Vector referring to the objects that want to find out about changes to the
      *   recently drop target nodes.
      */
     private static Vector<CopyLocationsChangeListener> copyLocationChangeListeners = new Vector<CopyLocationsChangeListener>();
-
 
     /**
      * register the listening object of the status events
@@ -1534,7 +1403,6 @@ public class Settings {
         copyLocationChangeListeners.add( listener );
     }
 
-
     /**
      * deregister the listening object of the status events
      * @param listener
@@ -1543,7 +1411,6 @@ public class Settings {
             CopyLocationsChangeListener listener ) {
         copyLocationChangeListeners.remove( listener );
     }
-
 
     /**
      *  notifies the listeners that the target drop nodes have changed.
@@ -1555,28 +1422,23 @@ public class Settings {
     }
     /*------------------------------------------------------------------------------
     Stuff for user Functions    */
-
     /**
      *  number of user Functions
      */
     public static final int maxUserFunctions = 3;
-
     /**
      *  Array of user fucntion names
      */
     public static String[] userFunctionNames = new String[maxUserFunctions];
-
     /**
      *  Array of user fucntion commands
      */
     public static String[] userFunctionCmd = new String[maxUserFunctions];
-
     /**
      *   a Vector referring to the objects that want to find out about changes to the
      *   recently drop target nodes.
      */
     private static Vector<UserFunctionsChangeListener> userFunctionsChangeListeners = new Vector<UserFunctionsChangeListener>();
-
 
     /**
      * register the listening object of the changes in user function
@@ -1587,7 +1449,6 @@ public class Settings {
         userFunctionsChangeListeners.add( listener );
     }
 
-
     /**
      * deregister the listening object of the user function change events
      * @param listener the listener to remove
@@ -1596,7 +1457,6 @@ public class Settings {
             UserFunctionsChangeListener listener ) {
         userFunctionsChangeListeners.remove( listener );
     }
-
 
     /**
      *  notifies the listeners that the target drop nodes have changed.

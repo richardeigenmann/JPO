@@ -214,6 +214,7 @@ public class GroupPopupMenu
             JMenuItem addFlatFileJMenuItem = new JMenuItem( Settings.jpoResources.getString( "addFlatFileJMenuItemLabel" ) );
             addFlatFileJMenuItem.addActionListener( new ActionListener() {
 
+                @Override
                 public void actionPerformed( ActionEvent e ) {
                     TreeNodeController.addFlatFile( popupNode );
                 }
@@ -225,11 +226,14 @@ public class GroupPopupMenu
             add( moveGroupNodeJMenu );
 
             for ( int i = 0; i < Settings.MAX_DROPNODES; i++ ) {
+                final int dropnode = i;
                 recentDropNodes[i] = new JMenuItem();
                 recentDropNodes[i].addActionListener( new ActionListener() {
 
+                    @Override
                     public void actionPerformed( ActionEvent e ) {
-                        throw new UnsupportedOperationException( "Not supported yet." );
+                        popupNode.moveToLastChild( Settings.recentDropNodes[dropnode] );
+                        Settings.memorizeGroupOfDropLocation( Settings.recentDropNodes[dropnode] );
                     }
                 } );
                 moveGroupNodeJMenu.add( recentDropNodes[i] );
@@ -241,6 +245,7 @@ public class GroupPopupMenu
             JMenuItem moveGroupToTopJMenuItem = new JMenuItem( Settings.jpoResources.getString( "moveGroupToTopJMenuItem" ) );
             moveGroupToTopJMenuItem.addActionListener( new ActionListener() {
 
+                @Override
                 public void actionPerformed( ActionEvent e ) {
                     caller.requestMoveGroupToTop( popupNode );
                 }
@@ -251,6 +256,7 @@ public class GroupPopupMenu
             JMenuItem moveGroupUpJMenuItem = new JMenuItem( Settings.jpoResources.getString( "moveGroupUpJMenuItem" ) );
             moveGroupUpJMenuItem.addActionListener( new ActionListener() {
 
+                @Override
                 public void actionPerformed( ActionEvent e ) {
                     caller.requestMoveGroupUp( popupNode );
                 }

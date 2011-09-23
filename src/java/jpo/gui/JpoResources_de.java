@@ -359,6 +359,7 @@ public class JpoResources_de extends ListResourceBundle {
 		{"pictureEditJMenuItemLabel", "Eigenschaften"},
 		{"copyImageJMenuLabel", "Bild Kopieren"},
 		{"copyToNewLocationJMenuItem", "Zielverzeichnis auswählen"},
+		{"copyToNewZipfileJMenuItem", "in eine Zip Datei"},
 		{"copyToNewLocationSuccess", "%d von %d Bildern kopiert" },
 		{"FileOperations", "Datei Operationen"},
 		{"fileRenameJMenuItem", "Umbenennen"},

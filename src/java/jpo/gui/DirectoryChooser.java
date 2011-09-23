@@ -87,7 +87,7 @@ public class DirectoryChooser
      */
     private void initComponents() {
         Tools.checkEDT();
-        setLayout( new MigLayout() );
+        //setLayout( new MigLayout() );  // removed as it serves no purpose but crashes the junit test
         directoryJComboBox.setEditable( true );
         for ( int i = 0; i < Settings.copyLocations.length; i++ ) {
             addDirToDropdown( Settings.copyLocations[i] );

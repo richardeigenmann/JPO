@@ -45,6 +45,7 @@ public class PictureInfoTest
         changeEvents = 0;
         PictureInfoChangeListener picl = new PictureInfoChangeListener() {
 
+            @Override
             public void pictureInfoChangeEvent( PictureInfoChangeEvent arg0 ) {
                 changeEvents += 1;
             }
@@ -69,6 +70,7 @@ public class PictureInfoTest
         countEvents = 0;
         PictureInfoChangeListener picl = new PictureInfoChangeListener() {
 
+            @Override
             public void pictureInfoChangeEvent( PictureInfoChangeEvent arg0 ) {
                 countEvents += 1;
             }

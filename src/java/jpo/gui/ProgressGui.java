@@ -178,6 +178,7 @@ public class ProgressGui
     private void getRid() {
         Runnable r = new Runnable() {
 
+            @Override
             public void run() {
                 setVisible( false );
                 dispose();
@@ -193,6 +194,7 @@ public class ProgressGui
     /**
      *  Adds 1 to the progress counter
      */
+    @Override
     public void progressIncrement() {
         Tools.checkEDT();
         progBar.setValue( progBar.getValue() + 1 );
