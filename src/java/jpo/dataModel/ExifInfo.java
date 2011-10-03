@@ -93,6 +93,14 @@ public class ExifInfo {
      */
     public Point2D.Double latLng;
     /**
+     * The parsed width
+     */
+    public String exifWidth = "N/A";
+    /**
+     * The parsed width
+     */
+    public String exifHeight = "N/A";
+    /**
      *  A full dump of the Exif information
      */
     private StringBuffer exifDump;
@@ -171,6 +179,10 @@ public class ExifInfo {
                 latitudeRef = tryToGetTag( directory, GpsDirectory.TAG_GPS_LATITUDE_REF, "" );
                 longitude = tryToGetTag( directory, GpsDirectory.TAG_GPS_LONGITUDE, longitude );
                 longitudeRef = tryToGetTag( directory, GpsDirectory.TAG_GPS_LONGITUDE_REF, "" );
+                exifWidth = tryToGetTag( directory, ExifDirectory.TAG_EXIF_IMAGE_WIDTH, exifWidth );
+                //LOGGER.info( "Width: " + exifWidth );
+                exifHeight = tryToGetTag( directory, ExifDirectory.TAG_EXIF_IMAGE_HEIGHT, exifHeight );
+                //LOGGER.info( "Height: " + exifHeight );
                 latLng = parseGPS();
 
                 Iterator tags = directory.getTagIterator();
@@ -310,7 +322,7 @@ public class ExifInfo {
         Matcher longitudeMatcher = pattern.matcher( longitude );
         if ( longitudeMatcher.matches() ) {
             longitudeD = Integer.parseInt( longitudeMatcher.group( 1 ) ) + ( Double.parseDouble( longitudeMatcher.group( 2 ) ) / 60 ) + ( Double.parseDouble( longitudeMatcher.group( 3 ) ) / 3600 );
-            if ( longitudeRef.equals( "W") ) {
+            if ( longitudeRef.equals( "W" ) ) {
                 longitudeD *= -1f;
             }
             LOGGER.fine( String.format( "Longitude %s matches %s %s %s --> %f", longitude, longitudeMatcher.group( 1 ), longitudeMatcher.group( 2 ), longitudeMatcher.group( 3 ), longitudeD ) );
@@ -320,7 +332,7 @@ public class ExifInfo {
         Matcher latitudeMatcher = pattern.matcher( latitude );
         if ( latitudeMatcher.matches() ) {
             latitudeD = Integer.parseInt( latitudeMatcher.group( 1 ) ) + ( Double.parseDouble( latitudeMatcher.group( 2 ) ) / 60 ) + ( Double.parseDouble( latitudeMatcher.group( 3 ) ) / 3600 );
-            if ( latitudeRef.equals( "S") ) {
+            if ( latitudeRef.equals( "S" ) ) {
                 latitudeD *= -1f;
             }
             LOGGER.fine( String.format( "Latitude %s matches %s %s %s --> %f", latitude, latitudeMatcher.group( 1 ), latitudeMatcher.group( 2 ), latitudeMatcher.group( 3 ), latitudeD ) );

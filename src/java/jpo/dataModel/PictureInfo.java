@@ -1021,7 +1021,7 @@ public class PictureInfo
             rotation = ( new Double( rotationString ) ).doubleValue();
             rotationString = null;
         } catch ( NumberFormatException x ) {
-            LOGGER.info( "PictureInfo.appendToRotation: invalid rotation: " + rotationString + " on picture: " + getHighresFilename() + " --> Set to Zero" );
+            LOGGER.info( "invalid rotation: " + rotationString + " on picture: " + getHighresFilename() + " --> Set to Zero" );
             rotation = 0;
         }
         sendRotationChangedEvent();
@@ -1423,7 +1423,7 @@ public class PictureInfo
 
 
     /**
-     * Intended mainly for debuggin purposes.
+     * Intended mainly for debugging purposes.
      * @return The Vector of change listeners
      */
     public Vector<PictureInfoChangeListener> getPictureInfoListeners() {

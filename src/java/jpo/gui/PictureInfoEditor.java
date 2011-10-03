@@ -30,7 +30,7 @@ import webserver.Webserver;
 /*
 PictureInfoEditor:  Edits the details of a picture
 
-Copyright (C) 2002-2010  Richard Eigenmann.
+Copyright (C) 2002-2011  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -45,7 +45,7 @@ The license is in gpl.txt.
 See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 /**
- * An editor window that allows the attributes of a picutre to be modified
+ * An editor window that allows the attributes of a picture to be modified
  *
  * @author 	Richard Eigenmann
  */
@@ -56,106 +56,88 @@ public class PictureInfoEditor
      *  Dimension for the edit fields
      */
     private final static Dimension TEXT_FIELD_DIMENSION = new Dimension( 400, 20 );
-
     /**
      *  Dimension for the time, latitude and longitude
      */
     private final static Dimension SHORT_FIELD_DIMENSION = new Dimension( 180, 20 );
-
     /**
      * Defines a logger for this class
      */
-    private static Logger logger = Logger.getLogger( PictureInfoEditor.class.getName() );
-
+    private static final Logger LOGGER = Logger.getLogger( PictureInfoEditor.class.getName() );
     private ThumbnailController thumbnailController = new ThumbnailController( Settings.thumbnailSize );
-
     /**
      *   The description of the picture
      */
     private JTextArea descriptionJTextArea = new JTextArea();
-
     /**
      *   The location of the image file
      */
     private JTextField creationTimeJTextField = new JTextField();
-
     /**
      *   This label will hold the parsed date of what whas in the creation time.
      */
     private JLabel parsedCreationTimeJLabel = new JLabel();
-
     /**
      *   The location of the image file
      */
     private JTextField highresLocationJTextField = new JTextField();
-
     /**
      *   An informative message about what sort of error we have if any on the highres image
      */
     private JLabel highresErrorJLabel = new JLabel( "" );
-
     /**
      *   An informative message about what sort of error we have if any on the lowres image
      */
     private JLabel lowresErrorJLabel = new JLabel( "" );
-
     /**
      *   Label to display the checksum of the image file. Gets updated so it's here.
      */
     private JLabel checksumJLabel = new JLabel();
-
     /**
      *   The location of the lowres image file
      */
     private JTextField lowresLocationJTextField = new JTextField();
-
     /**
      *   The location of the image file
      */
     private JTextField filmReferenceJTextField = new JTextField();
-
     /**
      *   The latitude of the image
      */
     private JFormattedTextField latitudeJTextField;
-
     /**
      *   The longitude of the image
      */
     private JFormattedTextField longitudeJTextField;
-
     /**
      *   The comment field
      */
     private JTextField commentJTextField = new JTextField();
-
     /**
      *   The photographer field
      */
     private JTextField photographerJTextField = new JTextField();
-
     /**
      *   The copyright field
      */
     private JTextField copyrightHolderJTextField = new JTextField();
-
+    /**
+     * Shows the Exif size
+     */
+    private final JLabel sizeJLabel = new JLabel( "" );
     /**
      *   The category assignments
      */
     private final JLabel categoryAssignmentsJLabel = new JLabel();
-
     /**
      *  The list model supporting the category assignments
      */
     private final DefaultListModel listModel = new DefaultListModel();
-
     /**
      *  JList to hold the categories
      */
     private final JList categoriesJList = new JList( listModel );
-
     private final JScrollPane listJScrollPane = new JScrollPane( categoriesJList );
-
     private static final Object setupCategories = new Object() {
 
         @Override
@@ -163,7 +145,6 @@ public class PictureInfoEditor
             return Settings.jpoResources.getString( "setupCategories" );
         }
     };
-
     private static final Object noCategories = new Object() {
 
         @Override
@@ -171,29 +152,23 @@ public class PictureInfoEditor
             return Settings.jpoResources.getString( "noCategories" );
         }
     };
-
     /**
      * The text area to use for showing the Exif data
      */
     private JTextArea exifTagsJTextArea = new JTextArea();
-
     private final SpinnerModel angleModel = new MySpinnerNumberModel();
-
     /**
      *  the node being edited
      */
     private SortableDefaultMutableTreeNode myNode;
-
     /**
-     *  the PictureInfo obejct being displayed
+     *  the PictureInfo object being displayed
      */
     private PictureInfo pi;
-
     /**
      *  Font used to show the error label
      */
     private static Font errorLabelFont = Font.decode( Settings.jpoResources.getString( "ThumbnailDescriptionJPanelLargeFont" ) );
-
 
     /**
      * Constructs a Picture Properties Dialog
@@ -203,7 +178,6 @@ public class PictureInfoEditor
     public PictureInfoEditor( NodeNavigatorInterface setOfNodes, int index ) {
         this( setOfNodes.getNode( index ) );
     }
-
 
     /**
      *   Constructor that creates the JFrame and objects.
@@ -215,7 +189,7 @@ public class PictureInfoEditor
         try {
             pi = (PictureInfo) editNode.getUserObject();
         } catch ( ClassCastException x ) {
-            logger.severe( "This class can only be called with a PictureInfo bearning node." );
+            LOGGER.severe( "This class can only be called with a PictureInfo bearning node." );
             x.printStackTrace();
             return;
         }
@@ -228,6 +202,15 @@ public class PictureInfoEditor
 
         thumbnailController.setNode( new SingleNodeNavigator( editNode ), 0 );
 
+        addWindowListener( new WindowAdapter() {
+
+            @Override
+            public void windowClosing( WindowEvent e ) {
+                getRid();
+            }
+        } );
+
+
         initComponents();
 
         loadData();
@@ -237,16 +220,7 @@ public class PictureInfoEditor
         setVisible( true );
     }
 
-
     private void initComponents() {
-        addWindowListener( new WindowAdapter() {
-
-            @Override
-            public void windowClosing( WindowEvent e ) {
-                getRid();
-            }
-        } );
-
         JPanel mainPanel = new JPanel( new MigLayout() );
 
         mainPanel.add( thumbnailController.getThumbnail() );
@@ -264,6 +238,7 @@ public class PictureInfoEditor
         JSpinner spinner = new JSpinner( angleModel );
         spinner.addChangeListener( new ChangeListener() {
 
+            @Override
             public void stateChanged( ChangeEvent e ) {
                 saveRotation();
             }
@@ -281,6 +256,7 @@ public class PictureInfoEditor
                 setMnemonic( KeyEvent.VK_L );
                 addActionListener( new ActionListener() {
 
+                    @Override
                     public void actionPerformed( ActionEvent e ) {
                         angleModel.setValue( ( (Double) angleModel.getValue() + 270 ) % 360 );
                         saveRotation();
@@ -300,6 +276,7 @@ public class PictureInfoEditor
                 setMnemonic( KeyEvent.VK_R );
                 addActionListener( new ActionListener() {
 
+                    @Override
                     public void actionPerformed( ActionEvent e ) {
                         angleModel.setValue( ( (Double) angleModel.getValue() + 90 ) % 360 );
                         saveRotation();
@@ -323,6 +300,7 @@ public class PictureInfoEditor
         OkJButton.setBorder( BorderFactory.createRaisedBevelBorder() );
         OkJButton.addActionListener( new ActionListener() {
 
+            @Override
             public void actionPerformed( ActionEvent e ) {
                 saveFieldData();
                 getRid();
@@ -339,6 +317,7 @@ public class PictureInfoEditor
         CancelButton.setBorder( BorderFactory.createRaisedBevelBorder() );
         CancelButton.addActionListener( new ActionListener() {
 
+            @Override
             public void actionPerformed( ActionEvent e ) {
                 getRid();
             }
@@ -352,6 +331,7 @@ public class PictureInfoEditor
         resetJButton.setBorder( BorderFactory.createRaisedBevelBorder() );
         resetJButton.addActionListener( new ActionListener() {
 
+            @Override
             public void actionPerformed( ActionEvent e ) {
                 loadData();
             }
@@ -383,15 +363,15 @@ public class PictureInfoEditor
         creationTimeJTextField.setPreferredSize( SHORT_FIELD_DIMENSION );
         creationTimeJTextField.addFocusListener( new FocusListener() {
 
+            @Override
             public void focusGained( FocusEvent e ) {
                 parseit();
             }
 
-
+            @Override
             public void focusLost( FocusEvent e ) {
                 parseit();
             }
-
 
             private void parseit() {
                 parsedCreationTimeJLabel.setText( String.format( "%tc", Tools.parseDate( creationTimeJTextField.getText() ) ) );
@@ -436,7 +416,7 @@ public class PictureInfoEditor
         latitudeJTextField.setPreferredSize( SHORT_FIELD_DIMENSION );
         infoTab.add( latitudeJTextField, "wrap" );
 
-        JLabel longitudeJLabel = new JLabel( Settings.jpoResources.getString( "longitudeLabel" ) );
+        final JLabel longitudeJLabel = new JLabel( Settings.jpoResources.getString( "longitudeLabel" ) );
         infoTab.add( longitudeJLabel, "spany 2, aligny top" );
 
         longitudeJTextField = new JFormattedTextField( nfl );
@@ -446,11 +426,19 @@ public class PictureInfoEditor
         JButton mapButton = new JButton( "Open Map (in Browser)" );
         mapButton.addActionListener( new ActionListener() {
 
+            @Override
             public void actionPerformed( ActionEvent e ) {
                 Webserver.getInstance().browse( myNode );
             }
         } );
         infoTab.add( mapButton, "span 2, wrap" );
+
+        final JLabel sizeLabelJLabel = new JLabel( "Size:" );
+        infoTab.add( sizeLabelJLabel, "aligny top" );
+
+        infoTab.add( sizeJLabel, "aligny top, wrap" );
+
+
 
         JScrollPane jScrollPane = new JScrollPane( infoTab );
         jScrollPane.setWheelScrollingEnabled( true );
@@ -471,6 +459,7 @@ public class PictureInfoEditor
         JButton highresLocationJButton = new ThreeDotButton();
         highresLocationJButton.addActionListener( new ActionListener() {
 
+            @Override
             public void actionPerformed( ActionEvent e ) {
                 chooseFile();
             }
@@ -485,6 +474,7 @@ public class PictureInfoEditor
         checksumJButton.setMaximumSize( new Dimension( 80, 25 ) );
         checksumJButton.addActionListener( new ActionListener() {
 
+            @Override
             public void actionPerformed( ActionEvent e ) {
                 pi.calculateChecksum();
             }
@@ -521,6 +511,7 @@ public class PictureInfoEditor
              *  element was selected.
              * @param e
              */
+            @Override
             public void valueChanged( ListSelectionEvent e ) {
                 if ( e.getValueIsAdjusting() ) {
                     return;
@@ -562,7 +553,6 @@ public class PictureInfoEditor
         setLayout( new MigLayout() );
         getContentPane().add( mainPanel );
     }
-
 
     /**
      *  populates the text fields with the values from the PictureInfo object
@@ -615,16 +605,19 @@ public class PictureInfoEditor
         categoriesJList.setSelectedIndices( selectionsArray );
         categoryAssignmentsJLabel.setText( selectedJListCategoriesToString( categoriesJList ) );
 
-        ExifInfo ei = new ExifInfo( pi.getHighresURLOrNull() );
-        ei.decodeExifTags();
+        ExifInfo exifInfo = new ExifInfo( pi.getHighresURLOrNull() );
+        exifInfo.decodeExifTags();
+
+        sizeJLabel.setText( String.format( "%s x %s", exifInfo.exifWidth, exifInfo.exifHeight ) );
+
+
         exifTagsJTextArea.append( Settings.jpoResources.getString( "ExifTitle" ) );
-        exifTagsJTextArea.append( ei.getComprehensivePhotographicSummary() );
+        exifTagsJTextArea.append( exifInfo.getComprehensivePhotographicSummary() );
         exifTagsJTextArea.append( "-------------------------\nAll Tags:\n" );
-        exifTagsJTextArea.append( ei.getAllTags() );
+        exifTagsJTextArea.append( exifInfo.getAllTags() );
 
         setColorIfError();
     }
-
     /**
      * Set up a PictureInfoChangeListener to get updated on change events in the Picture Metadata
      */
@@ -634,6 +627,7 @@ public class PictureInfoEditor
          *  here we get notified by the PictureInfo object that something has
          *  changed.
          */
+        @Override
         public void pictureInfoChangeEvent( PictureInfoChangeEvent e ) {
             if ( e.getDescriptionChanged() ) {
                 descriptionJTextArea.setText( pi.getDescription() );
@@ -674,7 +668,6 @@ public class PictureInfoEditor
         }
     };
 
-
     /**
      *  This utility method builds a string from the selected categories in a supplied JList
      * @param theList
@@ -690,17 +683,16 @@ public class PictureInfoEditor
                 } else if ( i == 0 ) {
                     resultString = new StringBuffer( selectedCategories[i].toString() );
                 } else {
-                    resultString.append( ", " + selectedCategories[i].toString() );
+                    resultString.append( ", " ).append( selectedCategories[i].toString() );
                 }
             }
         }
         return resultString.toString();
     }
 
-
     /**
      *  method that sets the URL fields to red if the file is not found and
-     *  organge if the URL is not a valid URL
+     *  red if the URL is not a valid URL
      */
     private void setColorIfError() {
         try {
@@ -722,7 +714,6 @@ public class PictureInfoEditor
         }
     }
 
-
     /**
      * Returns true if the file is good, an Exception if bad.
      * @return true if the file is good, an Exception if bad.
@@ -734,15 +725,14 @@ public class PictureInfoEditor
             inputStream.close();
             return true;
         } catch ( MalformedURLException x ) {
-            logger.info( "Exception trapped: " + x.getMessage() );
+            LOGGER.info( "Exception trapped: " + x.getMessage() );
             throw new Exception( x );
         } catch ( IOException x ) {
-            logger.info( "Exception trapped: " + x.getMessage() );
+            LOGGER.info( "Exception trapped: " + x.getMessage() );
             throw new Exception( x );
         }
 
     }
-
 
     /**
      *  Close the editor window and release all listeners.
@@ -757,7 +747,6 @@ public class PictureInfoEditor
 
 
     }
-
 
     /**
      * saves the data in the fields back to the PictureInfo object
@@ -783,7 +772,7 @@ public class PictureInfoEditor
 
         } catch ( NumberFormatException ex ) {
             latitude = pi.getLatLng().x;
-            logger.info( String.format( "Latitude String %s could not be parsed: %s --> leaving at old value: %f", latitudeJTextField.getText(), ex.getMessage(), latitude ) );
+            LOGGER.info( String.format( "Latitude String %s could not be parsed: %s --> leaving at old value: %f", latitudeJTextField.getText(), ex.getMessage(), latitude ) );
 
 
         }
@@ -797,7 +786,7 @@ public class PictureInfoEditor
 
         } catch ( NumberFormatException ex ) {
             longitude = pi.getLatLng().y;
-            logger.info( String.format( "Longitude String %s could not be parsed: %s --> leaving at old value: %f", longitudeJTextField.getText(), ex.getMessage(), longitude ) );
+            LOGGER.info( String.format( "Longitude String %s could not be parsed: %s --> leaving at old value: %f", longitudeJTextField.getText(), ex.getMessage(), longitude ) );
 
 
         }
@@ -824,14 +813,12 @@ public class PictureInfoEditor
         myNode.getPictureCollection().setUnsavedUpdates();*/
     }
 
-
     /**
      * This method saves the rotation value
      */
     private void saveRotation() {
         pi.setRotation( (Double) angleModel.getValue() );
     }
-
 
     /**
      *  method that brings up a JFileChooser and places the path of the file selected into the
@@ -861,14 +848,7 @@ public class PictureInfoEditor
             }
         }
         setColorIfError();
-        /*if ( jFileChooser.getSelectedFile().exists() ) {
-        highresLocationJTextField.setForeground( Color.black );
-        } else {
-        highresLocationJTextField.setForeground( Color.red );
-        }*/
-
     }
-
     /**
      * Set up a TreeModelListener to learn of updates to the tree and be
      * able to close the window if the node we are editing has been removed or
@@ -882,17 +862,17 @@ public class PictureInfoEditor
          *   implemented here to satisfy the TreeModelListener interface; not used.
          * @param e
          */
+        @Override
         public void treeNodesChanged( TreeModelEvent e ) {
         }
-
 
         /**
          *   implemented here to satisfy the TreeModelListener interface; not used.
          * @param e
          */
+        @Override
         public void treeNodesInserted( TreeModelEvent e ) {
         }
-
 
         /**
          *  The TreeModelListener interface tells us of tree node removal events. We use this
@@ -900,6 +880,7 @@ public class PictureInfoEditor
          *  of the removed nodes. If so we close the window.
          * @param e
          */
+        @Override
         public void treeNodesRemoved( TreeModelEvent e ) {
             if ( SortableDefaultMutableTreeNode.wasNodeDeleted( myNode, e ) ) {
                 getRid();
@@ -908,11 +889,11 @@ public class PictureInfoEditor
             }
         }
 
-
         /**
          *   implemented here to satisfy the TreeModelListener interface; not used.
          * @param e
          */
+        @Override
         public void treeStructureChanged( TreeModelEvent e ) {
         }
     };
@@ -927,7 +908,6 @@ public class PictureInfoEditor
                     .1f );                //step
         }
 
-
         @Override
         public Object getNextValue() {
             Object o = super.getNextValue();
@@ -936,7 +916,6 @@ public class PictureInfoEditor
             }
             return o;
         }
-
 
         @Override
         public Object getPreviousValue() {
