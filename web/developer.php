@@ -19,23 +19,15 @@
 <p>Have you installed the Java Software Developer Kit (SDK)?
 <a href="http://www.oracle.com/technetwork/java/javase/downloads/index.html">Link</a><br>
 Have you installed Netbeans? <a href="http://netbeans.org/downloads/index.html">Link</a><br>
-Have you installed Asian Language support and it works? (JPO is translated to Chinese and the compiler 
-fails if you don't have the chinese codepage installed.) I have not found out how (8 Oct 2011): Control Panel > Regional and 
-Language Options > Languages > Tick "Install files for complexs cript..." and tick "Install files for East Asian Languages" > OK > OK > Insert 
-the XP installation CD > Reboot</p>
 
 <p>Start Netbeans and click the menu item Team > CVS > Checkout. Into the CVS Root field 
 paste :pserver:anonymous@j-po.cvs.sourceforge.net:/cvsroot/j-po into the field Click Next Click Finish. 
 On the dialog that appears click Open Project. To compile and run the application press the F6 key.</p>
 
-<p>To do away with the issues surrounding the Chinese codepage in Windows go to the Projects tab on 
-the left, expand "Java Picture Organizer", expand "src/java", expand "jpo.gui", right click on 
-"JpoResources_zn_TW.java" and delete it. Also delete "JPOResources-zn-CN". Now the code will compile 
-without the Chinese menus.</p>
-
-
 
                 <h2 id="source">Installing the source:</h2>
+<p>These instructions are now a little dated as they stem from the 
+pre-Netbeans development phase. RE 8 Oct 2011</p>
 
                 <p>Naturally there are some prerequisites:
 			a Java Software Development Kit (SDK), Apache Ant, a CVS client and JUnit.</p>

@@ -19,7 +19,7 @@
 			<h2 id="Thanks">Thanks</h2>
 			<ul>
 				<li><b>Jarno Elonen</b> for NanoHTTPD See: <a href="http://elonen.iki.fi/code/nanohttpd/">http://elonen.iki.fi/code/nanohttpd/</a></li>
-				<li><b>Mikael Grev</b> for the MiG Layoutk. See: <a href="http://miglayout.com">http://miglayout.com</a></li>
+				<li><b>Mikael Grev</b> for the MiG Layout. See: <a href="http://miglayout.com">http://miglayout.com</a></li>
 				<li><b>Michael Rudolf</b> for the JWizz framework. See: <a href="http://javaprog.net/jwizz/">http://javaprog.net/jwizz/</a></li>
 				<li><b>Franklin He</b> for the Simplified and Traditional Chinese translations</li>
 				<li><b>Drew Noakes</b> for posting the Exif decoder software on his homepage <a href="http://drewnoakes.com">http://drewnoakes.com</a></li>

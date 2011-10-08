@@ -195,17 +195,13 @@
                     <a href="fontconfig">here</a> to download my version.</p>
 
 
-                <h2>Helpful Links</h2>
-                <p>Sun's Web start FAQ: <a href="http://java.sun.com/products/javawebstart/faq.html">http://java.sun.com/products/javawebstart/faq.html</a><br>
-		        Sun's Java Web start download page: <a href="http://java.sun.com/products/javawebstart/download.html">http://java.sun.com/products/javawebstart/download.html</a><br>
-		        Unofficial Java Web Start/JNLP FAQ: <a href="http://www.vamphq.com/jwsfaq.html">http://www.vamphq.com/jwsfaq.html</a></p>
 
                 <p>Please let me know of specific installation issues you have so that I may extend this section for the benefit of other users who might have the same issue.</p>
 
 
 
                 <hr>
-                <p>Last update to this page: 6.6.2010<br>
+                <p>Last update to this page: 8 Oct 2011<br>
 			Copyright 2003-2010 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
             </td>
         </tr>

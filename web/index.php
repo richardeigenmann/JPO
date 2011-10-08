@@ -21,7 +21,7 @@
                             It doesn't mess with pictures on your disk; they stay where they are and how they are.</p>
 			
 			<p>JPO can generate webpages for you and you can use it to tidy up your picture directories.
-                            It has nearly 10 years of development in it, runs on any compter that runs Java
+                            It has over 10 years of development in it, runs on any compter that runs Java
                             and is entirely Open Source.</p>
 
 			<hr>
