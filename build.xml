@@ -82,7 +82,8 @@
                listfiles="yes"
                deprecation="yes"
                compiler="modern"
-               source="1.6">
+               source="1.6"
+               encoding="UTF-8" >
             <src path="${src.java.dir}"/>
             <classpath refid="base.path"/>
             <compilerarg value="-Xlint:unchecked" />
@@ -188,11 +189,10 @@
         </java>
     </target>
     
-    
-    
-    <!-- This target will only be of use to the person who does the deployment
-         of JPO to souceforge.  signjar-->
-    <target name="publish" depends="" description="Publishes the lates Jpo Version to the SourceForge project">
+
+        <!-- This target will only be of use to the person who does the deployment
+         of JPO to souceforge.  -->
+    <target name="publish-webpages" depends="" description="Publishes the lates Jpo Version to the SourceForge project">
 
         <scp todir="richieigenmann,j-po@web.sourceforge.net:/home/groups/j/j-/j-po/htdocs"
              trust="yes"
@@ -202,7 +202,7 @@
              sftp="true">
             <fileset dir="web">
                 <modified>
-                    <param name="cache.cachefile"  value="/tmp/Sourceforge-Jpo-Cache1" />
+                    <param name="cache.cachefile"  value="/tmp/Sourceforge-Jpo-Webpagecache" />
                 </modified>
                 <include name="*.html" />
                 <include name="*.php" />
@@ -212,16 +212,30 @@
                 <include name="*.png" />
                 <include name="*.jpg" />
             </fileset>
+        </scp>
+    </target>
+
+    
+    
+    <!-- pushes the jpo jar to sourceforge -->
+    <target name="publish-jar" depends="signjar" description="Publishes the lates Jpo Version to the SourceForge project">
+        <scp todir="richieigenmann,j-po@web.sourceforge.net:/home/groups/j/j-/j-po/htdocs"
+             trust="yes"
+             verbose="yes"
+             keyfile="${sourceforgeSshCertificate}"
+             passphrase=""
+             sftp="true">
             <fileset dir="${build.jars.dir}">
                 <modified>
-                    <param name="cache.cachefile"  value="/tmp/Sourceforge-Jpo-Cache2" />
+                    <param name="cache2.cachefile"  value="/tmp/Sourceforge-Jpo-Jarcache" />
                 </modified>
                 <include name="*.jar" />
-                
             </fileset>
         </scp>
     </target>
-    
+
+    <target name="publish" depends="publish-webpages, publish-jar" description="Publishes the lates Jpo Version and webpages to the SourceForge project"/>
+
     
     <target name="run" description="Runs the program" depends="compile">
         <java classname="${app.main.class}"
