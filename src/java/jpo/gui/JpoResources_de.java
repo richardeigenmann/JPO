@@ -61,7 +61,7 @@ public class JpoResources_de extends ListResourceBundle {
 		// Help About Dialog
 		{"HelpAboutText", "JPO Version 0.9 ist ein Java/Swing Programm\n" 
 			+ "geschrieben von Richard Eigenmann, Zürich, Schweiz\n" 
-			+ "Copyright 2000 - 2010\n"
+			+ "Copyright 2000 - 2011\n"
 			+ "richard.eigenmann@gmail.com\n"
 			+ "http://j-po.sourceforge.net\n"
 			+ "\nDie Exif Extraktion wurde von Drew Noakes entwickelt\n"
@@ -114,6 +114,8 @@ public class JpoResources_de extends ListResourceBundle {
 		{"closeJButton.ToolTipText", "Fenster schliessen"},
 		{"rotateLeftJButton.ToolTipText", "Nach Links rotieren"},
 		{"rotateRightJButton.ToolTipText", "Nach Rechts rotieren"},
+		{"zoomInJButton.ToolTipText", "Vergrössern"},
+		{"zoomOutJButton.ToolTipText", "Verkleinern"},
 		{"PictureViewerDescriptionFont", "Arial-BOLD-12"},
 
 		// Settings

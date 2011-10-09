@@ -63,7 +63,7 @@ public class JpoResources_zh_CN extends ListResourceBundle {
 		// Help About Dialog
 		{"HelpAboutText", "JPO 版本 0.9 是基于Java/Swing 开发的软件\n" 
 			+ "作者Richard Eigenmann在瑞士苏黎世, \n" 
-			+ "版权 2000 - 2010\n"
+			+ "版权 2000 - 2011\n"
 			+ "邮件地址：richard.eigenmann@gmail.com\n"
 			+ "软件主页网址：http://j-po.sourceforge.net\n"
 			+ "\nExif（可交换图像文件）的抽取部分蒙Drew Noakes的帮助\n"
@@ -116,6 +116,8 @@ public class JpoResources_zh_CN extends ListResourceBundle {
 		{"closeJButton.ToolTipText", "关闭窗口"},
 		{"rotateLeftJButton.ToolTipText", "左旋转"},
 		{"rotateRightJButton.ToolTipText", "右旋转"},
+		{"zoomInJButton.ToolTipText", "Zoom In" },
+		{"zoomOutJButton.ToolTipText", "Zoom Out" },
 		{"PictureViewerDescriptionFont", ""},
 
 		// Settings

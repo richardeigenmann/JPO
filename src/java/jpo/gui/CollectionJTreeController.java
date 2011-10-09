@@ -15,7 +15,6 @@ import java.util.Enumeration;
 import java.util.logging.Logger;
 import javax.swing.*;
 import javax.swing.tree.*;
-import jpo.dataModel.NodeStatistics;
 import jpo.dataModel.SingleNodeNavigator;
 import jpo.export.GenerateWebsiteWizard;
 import jpo.gui.Jpo.ApplicationEventHandler;

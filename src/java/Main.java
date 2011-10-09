@@ -6,7 +6,7 @@ import jpo.dataModel.Settings;
 /*
 Main.java:  starting point for the JPO application
 
-Copyright (C) 2002 - 2009  Richard Eigenmann.
+Copyright (C) 2002 - 2011  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -52,10 +52,13 @@ public class Main {
         // somewhat rabid way of allowing the application access to the local filesystem. RE 13. Nov 2007
         System.setSecurityManager( null );
 
-        System.out.println( "\nJPO version 0.9\n" + "Copyright (C) 2000-2009 Richard Eigenmann\n" + "JPO comes with ABSOLUTELY NO WARRANTY;\n" + "for details Look at the Help | License menu item.\n" + "This is free software, and you are welcome\n" + "to redistribute it under certain conditions;\n" + "see Help | License for details.\n\n" );
-
+        System.out.println( "\nJPO version 0.9\n" + "Copyright (C) 2000-2011 Richard Eigenmann\n"
+                + "JPO comes with ABSOLUTELY NO WARRANTY;\n"
+                + "for details Look at the Help | License menu item.\n"
+                + "This is free software, and you are welcome\n"
+                + "to redistribute it under certain conditions;\n"
+                + "see Help | License for details.\n\n" );
 
         new Jpo();
-
     }
 }

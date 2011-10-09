@@ -1,7 +1,6 @@
-package jpo.gui;
+package jpo.gui.swing;
 
 import jpo.dataModel.Settings;
-import jpo.*;
 import jpo.dataModel.PictureInfo;
 import java.awt.Dimension;
 import java.awt.Point;
@@ -15,11 +14,12 @@ import javax.swing.JButton;
 import javax.swing.JToolBar;
 import javax.swing.tree.DefaultMutableTreeNode;
 import jpo.dataModel.Tools;
+import jpo.gui.PictureViewerActions;
 
 /*
 PictureViewerNavBar.java:  Does the navigation icons and sends the events back to the PictureViewer
 
-Copyright (C) 2002-2009  Richard Eigenmann, Zürich, Switzerland
+Copyright (C) 2002-2011  Richard Eigenmann, Zürich, Switzerland
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -41,20 +41,17 @@ public class PictureViewerNavBar
         extends JToolBar {
 
     /**
-     * A handle back to the PictureViewer so that the buttons can request actions
-     * Should be an Interface
+     * A handle back to the Controller so the buttons can request actions
      */
-    private final PictureViewer pv;
-
+    private PictureViewerActions pictureViewerController = null;
 
     /** Constructor for a new instance of PictureViewerNavBar
      * @param pv
      */
-    public PictureViewerNavBar( final PictureViewer pv ) {
+    public PictureViewerNavBar() {
         super( Settings.jpoResources.getString( "NavigationPanel" ) );
         Tools.checkEDT();
-        this.pv = pv;
-        final int numButtons = 8;
+        final int numButtons = 10;
 
         setBackground( Settings.PICTUREVIEWER_BACKGROUND_COLOR );
         setFloatable( true );
@@ -67,18 +64,15 @@ public class PictureViewerNavBar
         add( previousJButton );
         add( nextJButton );
 
-
-        /**
-         *  Button to rotate left
-         */
-        JButton rotateLeftJButton = new NavBarButton( new ImageIcon( Settings.cl.getResource( "jpo/images/icon_RotCCDown.gif" ) ) ) {
+        final JButton rotateLeftJButton = new NavBarButton( new ImageIcon( Settings.cl.getResource( "jpo/images/icon_RotCCDown.gif" ) ) ) {
 
             {
                 setMnemonic( KeyEvent.VK_L );
                 addActionListener( new ActionListener() {
 
+                    @Override
                     public void actionPerformed( ActionEvent e ) {
-                        actionRotateLeft();
+                        pictureViewerController.rotate( 270 );
                     }
                 } );
                 setToolTipText( Settings.jpoResources.getString( "rotateLeftJButton.ToolTipText" ) );
@@ -86,32 +80,79 @@ public class PictureViewerNavBar
         };
         add( rotateLeftJButton );
 
-        /**
-         *  Button to rotate right
-         */
-        JButton rotateRightJButton = new NavBarButton( new ImageIcon( Settings.cl.getResource( "jpo/images/icon_RotCWDown.gif" ) ) ) {
+        final JButton rotateRightJButton = new NavBarButton( new ImageIcon( Settings.cl.getResource( "jpo/images/icon_RotCWDown.gif" ) ) ) {
 
             {
                 setMnemonic( KeyEvent.VK_R );
                 addActionListener( new ActionListener() {
 
+                    @Override
                     public void actionPerformed( ActionEvent e ) {
-                        actionRotateRight();
+                        pictureViewerController.rotate( 90 );
                     }
                 } );
                 setToolTipText( Settings.jpoResources.getString( "rotateRightJButton.ToolTipText" ) );
             }
         };
         add( rotateRightJButton );
+
+        final JButton zoomInJButton = new NavBarButton( new ImageIcon( Settings.cl.getResource( "jpo/images/MagnifyPlus.gif" ) ) ) {
+
+            {
+                addActionListener( new ActionListener() {
+
+                    @Override
+                    public void actionPerformed( ActionEvent e ) {
+                        pictureViewerController.zoomIn();
+                    }
+                } );
+                setToolTipText( Settings.jpoResources.getString( "zoomInJButton.ToolTipText" ) );
+            }
+        };
+        add( zoomInJButton );
+
+        final JButton zoomOutJButton = new NavBarButton( new ImageIcon( Settings.cl.getResource( "jpo/images/MagnifyMinus.gif" ) ) ) {
+
+            {
+                addActionListener( new ActionListener() {
+
+                    @Override
+                    public void actionPerformed( ActionEvent e ) {
+                        pictureViewerController.zoomOut();
+                    }
+                } );
+                setToolTipText( Settings.jpoResources.getString( "zoomOutJButton.ToolTipText" ) );
+            }
+        };
+        add( zoomOutJButton );
+
+
+        final JButton fullScreenJButton = new NavBarButton( new ImageIcon( Settings.cl.getResource( "jpo/images/icon_Frames.gif" ) ) ) {
+
+            {
+                setMnemonic( KeyEvent.VK_F );
+                addActionListener( new ActionListener() {
+
+                    @Override
+                    public void actionPerformed( ActionEvent e ) {
+                        pictureViewerController.requestScreenSizeMenu();
+                    }
+                } );
+                setToolTipText( Settings.jpoResources.getString( "fullScreenJButton.ToolTipText" ) );
+            }
+        };
+
+
         add( fullScreenJButton );
-        JButton popupMenuJButton = new NavBarButton( new ImageIcon( Settings.cl.getResource( "jpo/images/icon_FingerUp.gif" ) ) ) {
+        final JButton popupMenuJButton = new NavBarButton( new ImageIcon( Settings.cl.getResource( "jpo/images/icon_FingerUp.gif" ) ) ) {
 
             {
                 setMnemonic( KeyEvent.VK_M );
                 addActionListener( new ActionListener() {
 
+                    @Override
                     public void actionPerformed( ActionEvent e ) {
-                        actionPopupClicked();
+                        pictureViewerController.requestPopupMenu();
                     }
                 } );
                 setToolTipText( Settings.jpoResources.getString( "popupMenuJButton.ToolTipText" ) );
@@ -119,52 +160,53 @@ public class PictureViewerNavBar
         };
 
         add( popupMenuJButton );
-        /**
-         *  Button to turn on the blending in of info or turn it off.
-         */
-        JButton infoJButton = new NavBarButton( new ImageIcon( Settings.cl.getResource( "jpo/images/icon_info.gif" ) ) ) {
+
+        final JButton infoJButton = new NavBarButton( new ImageIcon( Settings.cl.getResource( "jpo/images/icon_info.gif" ) ) ) {
 
             {
                 setMnemonic( KeyEvent.VK_I );
                 addActionListener( new ActionListener() {
 
+                    @Override
                     public void actionPerformed( ActionEvent e ) {
-                        actionInfoClicked();
+                        pictureViewerController.cylceInfoDisplay();
                     }
                 } );
                 setToolTipText( Settings.jpoResources.getString( "infoJButton.ToolTipText" ) );
             }
         };
         add( infoJButton );
+
         /**
          *  Button to resize the image so that it fits in the screen.
          */
-        JButton resetJButton = new NavBarButton( new ImageIcon( Settings.cl.getResource( "jpo/images/icon_reset.gif" ) ) ) {
+        final JButton resetJButton = new NavBarButton( new ImageIcon( Settings.cl.getResource( "jpo/images/icon_reset.gif" ) ) ) {
 
             {
                 setMnemonic( KeyEvent.VK_ESCAPE );
                 addActionListener( new ActionListener() {
 
+                    @Override
                     public void actionPerformed( ActionEvent e ) {
-                        actionResetClicked();
+                        pictureViewerController.resetPicture();
                     }
                 } );
                 setToolTipText( Settings.jpoResources.getString( "resetJButton.ToolTipText" ) );
             }
         };
         add( resetJButton );
+
         add( clockJButton );
-        /**
-         *  button to close the window
-         */
-        JButton closeJButton = new NavBarButton( new ImageIcon( Settings.cl.getResource( "jpo/images/icon_close2.gif" ) ) ) {
+
+        final JButton closeJButton = new NavBarButton( new ImageIcon( Settings.cl.getResource( "jpo/images/icon_close2.gif" ) ) ) {
 
             {
                 setMnemonic( KeyEvent.VK_C );
                 addActionListener( new ActionListener() {
 
+                    @Override
                     public void actionPerformed( ActionEvent e ) {
-                        actionCloseClicked();
+                        pictureViewerController.closeViewer();
                     }
                 } );
                 setToolTipText( Settings.jpoResources.getString( "closeJButton.ToolTipText" ) );
@@ -174,99 +216,97 @@ public class PictureViewerNavBar
     }
 
     /**
-     * Defines a JButton with no border, standard background color, standard dimensions and tooltip at 0, -20
+     * Extends the default JButton with no border, standard background color, standard 
+     * dimensions of 24 pixels and tooltip at 0, -20 Uses the Settings.PICTUREVIEWER_BACKGROUND_COLOR
+     * for the background.
      */
     private class NavBarButton
             extends JButton {
 
+        final Dimension navButtonSize = new Dimension( 24, 24 );
+
         /**
-         * Constructor
+         * Constructs the NavBarButton
          */
-        NavBarButton( Icon icon ) {
+        NavBarButton( final Icon icon ) {
             super( icon );
             setBorderPainted( false );
             setBackground( Settings.PICTUREVIEWER_BACKGROUND_COLOR );
-            final Dimension navButtonSize = new Dimension( 24, 24 );
             setPreferredSize( navButtonSize );
         }
 
-
         /**
-         *  overriding the position of the tooltip
+         * Overriding the position of the tooltip so that it comes 
+         * 20 pixels above the mouse pointer
          */
         @Override
         public Point getToolTipLocation( MouseEvent event ) {
             return new Point( 0, -20 );
         }
     }
-
     /**
-     *   icon for the simple next picture
+     * Icon pointing right
      */
-    private static final ImageIcon nextImageIcon = new ImageIcon( Settings.cl.getResource( "jpo/images/icon_next.gif" ) );
-
+    private static final ImageIcon ICON_ARROW_RIGHT = new ImageIcon( Settings.cl.getResource( "jpo/images/icon_next.gif" ) );
     /**
-     *   icon to indicate the next picture is from a new group
+     * Double right pointing icon
      */
-    private static final ImageIcon iconNextNext = new ImageIcon( Settings.cl.getResource( "jpo/images/icon_nextnext.gif" ) );
-
+    private static final ImageIcon ICON_DOUBLE_ARROW_RIGHT = new ImageIcon( Settings.cl.getResource( "jpo/images/icon_nextnext.gif" ) );
     /**
-     *   icon to indicate the next picture is from a new group
+     * Icon pointing right at a bar to indicate you can't go right
      */
-    private static final ImageIcon iconNoNext = new ImageIcon( Settings.cl.getResource( "jpo/images/icon_nonext.gif" ) );
-
+    private static final ImageIcon ICON_ARROW_RIGHT_STOP = new ImageIcon( Settings.cl.getResource( "jpo/images/icon_nonext.gif" ) );
     /**
-     *   icon to indicate that there is a previous image in the same group
+     * Icon pointing left
      */
-    private static final ImageIcon iconPrevious = new ImageIcon( Settings.cl.getResource( "jpo/images/icon_previous.gif" ) );
-
+    private static final ImageIcon ICON_ARROW_LEFT = new ImageIcon( Settings.cl.getResource( "jpo/images/icon_previous.gif" ) );
     /**
-     *   icon to indicate that there is an image in the previous group
+     * Double left pointing icon
      */
-    private static final ImageIcon iconPrevPrev = new ImageIcon( Settings.cl.getResource( "jpo/images/icon_prevprev.gif" ) );
-
+    private static final ImageIcon ICON_DOUBLE_ARROW_LEFT = new ImageIcon( Settings.cl.getResource( "jpo/images/icon_prevprev.gif" ) );
     /**
-     *   icon to indicate that there are no images before the current one in the album
+     * Icon pointing left with a bar to indicate you can't go left
      */
-    private static final ImageIcon iconNoPrev = new ImageIcon( Settings.cl.getResource( "jpo/images/icon_noprev.gif" ) );
-
+    private static final ImageIcon ICON_ARROW_LEFT_STOP = new ImageIcon( Settings.cl.getResource( "jpo/images/icon_noprev.gif" ) );
     /**
      *  Button that is put in the NavigationPanel to allow the user to navigate to the previous
      *  picture. Depending on the context (previous pictures in the group, picture
-     *  in previous group, beginning of pictures) the icon {@link #iconPrevious}, {@link #iconPrevPrev}
-     *  {@link #iconNoPrev} should be shown as appropriate.
+     *  in previous group, beginning of pictures) the icon {@link #ICON_ARROW_LEFT}, {@link #ICON_DOUBLE_ARROW_LEFT}
+     *  {@link #ICON_ARROW_LEFT_STOP} should be shown as appropriate.
+     *  @see #setIconDecorations() 
      */
-    private JButton previousJButton = new NavBarButton( iconPrevious ) {
+    private final JButton previousJButton = new NavBarButton( ICON_ARROW_LEFT ) {
 
         {
             setMnemonic( KeyEvent.VK_P );
             addActionListener( new ActionListener() {
 
+                @Override
                 public void actionPerformed( ActionEvent e ) {
-                    actionGoLeft();
+                    pictureViewerController.requestPriorPicture();
                 }
             } );
             setToolTipText( Settings.jpoResources.getString( "previousJButton.ToolTipText" ) );
         }
     };
-
     /**
-     *   Button to move to the next image.
+     *  Button to move to the next image.
+     *  @see #setIconDecorations() 
      */
-    private JButton nextJButton = new NavBarButton( nextImageIcon ) {
+    private final JButton nextJButton = new NavBarButton( ICON_ARROW_RIGHT ) {
 
         {
             setMnemonic( KeyEvent.VK_N );
             addActionListener( new ActionListener() {
 
+                @Override
                 public void actionPerformed( ActionEvent e ) {
-                    actionGoRight();
+                    pictureViewerController.requestNextPicture();
                 }
             } );
             setToolTipText( Settings.jpoResources.getString( "nextJButton.ToolTipText" ) );
         }
     };
-
 
     /**
      *  This method looks at the position the currentNode is in regard to it's siblings and
@@ -275,174 +315,94 @@ public class PictureViewerNavBar
      */
     public void setIconDecorations() {
         // Set the next and back icons
-        if ( pv.getCurrentNode() != null ) {
-            DefaultMutableTreeNode NextNode = pv.getCurrentNode().getNextSibling();
+        if ( pictureViewerController.getCurrentNode() != null ) {
+            DefaultMutableTreeNode NextNode = pictureViewerController.getCurrentNode().getNextSibling();
             if ( NextNode != null ) {
                 Object nodeInfo = NextNode.getUserObject();
                 if ( nodeInfo instanceof PictureInfo ) {
                     // because there is a next sibling object of type
                     // PictureInfo we should set the next icon to the
                     // icon that indicates a next picture in the group
-                    nextJButton.setIcon( nextImageIcon );
+                    nextJButton.setIcon( ICON_ARROW_RIGHT );
                 } else {
                     // it must be a GroupInfo node
                     // since we must descend into it it gets a nextnext icon.
-                    nextJButton.setIcon( iconNextNext );
+                    nextJButton.setIcon( ICON_DOUBLE_ARROW_RIGHT );
                 }
             } else {
                 // the getNextSibling() method returned null
                 // if the getNextNode also returns null this was the end of the album
                 // otherwise there are more pictures in the next group.
-                if ( pv.getCurrentNode().getNextNode() != null ) {
-                    nextJButton.setIcon( iconNextNext );
+                if ( pictureViewerController.getCurrentNode().getNextNode() != null ) {
+                    nextJButton.setIcon( ICON_DOUBLE_ARROW_RIGHT );
                 } else {
-                    nextJButton.setIcon( iconNoNext );
+                    nextJButton.setIcon( ICON_ARROW_RIGHT_STOP );
                 }
             }
 
             // let's see what we have in the way of previous siblings..
 
-            if ( pv.getCurrentNode().getPreviousSibling() != null ) {
-                previousJButton.setIcon( iconPrevious );
+            if ( pictureViewerController.getCurrentNode().getPreviousSibling() != null ) {
+                previousJButton.setIcon( ICON_ARROW_LEFT );
             } else {
                 // deterine if there are any previous nodes that are not groups.
                 DefaultMutableTreeNode testNode;
-                testNode = pv.getCurrentNode().getPreviousNode();
+                testNode = pictureViewerController.getCurrentNode().getPreviousNode();
                 while ( ( testNode != null ) && ( !( testNode.getUserObject() instanceof PictureInfo ) ) ) {
                     testNode = testNode.getPreviousNode();
                 }
                 if ( testNode == null ) {
-                    previousJButton.setIcon( iconNoPrev );
+                    previousJButton.setIcon( ICON_ARROW_LEFT_STOP );
                 } else {
-                    previousJButton.setIcon( iconPrevPrev );
+                    previousJButton.setIcon( ICON_DOUBLE_ARROW_LEFT );
                 }
             }
         }
     }
-
     /**
-     *  Button to expand the window to full screen or a different window size.
+     * Icon to indicate that the timer is available
      */
-    public JButton fullScreenJButton = new NavBarButton( new ImageIcon( Settings.cl.getResource( "jpo/images/icon_Frames.gif" ) ) ) {
-
-        {
-            setMnemonic( KeyEvent.VK_F );
-            addActionListener( new ActionListener() {
-
-                public void actionPerformed( ActionEvent e ) {
-                    actionFullScreenClicked();
-                }
-            } );
-            setToolTipText( Settings.jpoResources.getString( "fullScreenJButton.ToolTipText" ) );
-        }
-    };
-
+    public static final ImageIcon ICON_CLOCK_OFF = new ImageIcon( Settings.cl.getResource( "jpo/images/icon_clock_off.gif" ) );
     /**
-     *   icon to indicate that the timer is available
+     * Icon to indicate that the timer is active
      */
-    public static final ImageIcon iconClockOff = new ImageIcon( Settings.cl.getResource( "jpo/images/icon_clock_off.gif" ) );
-
+    public static final ImageIcon ICON_CLOCK_ON = new ImageIcon( Settings.cl.getResource( "jpo/images/icon_clock_on.gif" ) );
     /**
-     *   icon to indicate that the timer is active
+     * Button for the automatic advance timer.
      */
-    public static final ImageIcon iconClockOn = new ImageIcon( Settings.cl.getResource( "jpo/images/icon_clock_on.gif" ) );
-
-    /**
-     *   Button to start the auto timer or turn it off.
-     */
-    public JButton clockJButton = new NavBarButton( iconClockOff ) {
+    public final JButton clockJButton = new NavBarButton( ICON_CLOCK_OFF ) {
 
         {
             addActionListener( new ActionListener() {
 
+                @Override
                 public void actionPerformed( ActionEvent e ) {
-                    actionClockClicked();
+                    pictureViewerController.requestAutoAdvance();
                 }
             } );
             setToolTipText( Settings.jpoResources.getString( "clockJButton.ToolTipText" ) );
         }
     };
 
-
     /**
-     * hat to do when requested to go left
+     * Switches the clock to busy mode
      */
-    private void actionGoLeft() {
-        pv.requestPriorPicture();
-
+    public void setClockBusy() {
+        clockJButton.setIcon( PictureViewerNavBar.ICON_CLOCK_ON );
     }
 
-
     /**
-     * hat to do when requested to go left
+     * Switches the clock icon to idle mode
      */
-    private void actionGoRight() {
-        pv.requestNextPicture();
+    public void setClockIdle() {
+        clockJButton.setIcon( PictureViewerNavBar.ICON_CLOCK_OFF );
     }
 
-
     /**
-     * What to do when the rotate left button is pressed
+     * Sets the pictureViewer so that the buttons has a target to send their requests to
+     * @param pictureViewerActions 
      */
-    private void actionRotateLeft() {
-        pv.rotate( 270 );
-    }
-
-
-    /**
-     * What to do when the rotate right button is pressed
-     */
-    private void actionRotateRight() {
-        pv.rotate( 90 );
-    }
-
-
-    /**
-     * What to do when the popup button is clicked.
-     */
-    private void actionPopupClicked() {
-        pv.requestPopupMenu();
-    }
-
-
-    /**
-     * What to do when the info button is clicked
-     */
-    private void actionInfoClicked() {
-        pv.cylceInfoDisplay();
-    }
-
-
-    /**
-     * What to do when the reset button is clicked
-     */
-    private void actionResetClicked() {
-        pv.resetPicture();
-    }
-
-
-    /**
-     * What to do when the close button is clicked
-     */
-    private void actionCloseClicked() {
-        pv.closeViewer();
-
-    }
-
-
-    /**
-     * What to do when the Full Screen button is clicked
-     */
-    private void actionFullScreenClicked() {
-        pv.requestScreenSizeMenu();
-
-    }
-
-
-    /**
-     * What to do when the clock button is clicked
-     */
-    private void actionClockClicked() {
-        pv.requestAutoAdvance();
+    public void setPictureViewer( final PictureViewerActions pictureViewerActions ) {
+        this.pictureViewerController = pictureViewerActions;
     }
 }

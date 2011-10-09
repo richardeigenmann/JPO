@@ -10,14 +10,14 @@ import java.awt.geom.AffineTransform;
 import java.awt.Point;
 import javax.swing.*;
 import java.text.*;
-import java.util.Vector;
+import java.util.ArrayList;
 import java.util.logging.Logger;
 
 
 /*
 PicturePane.java:  a component that can display an image
 
-Copyright (C) 2002 - 2010 Richard Eigenmann.
+Copyright (C) 2002 - 2011 Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -113,7 +113,7 @@ public class PicturePane
     /**
      * Defines a logger for this class
      */
-    private static Logger logger = Logger.getLogger( PicturePane.class.getName() );
+    private static final Logger LOGGER = Logger.getLogger( PicturePane.class.getName() );
 
 
     /**
@@ -254,7 +254,7 @@ public class PicturePane
             focusPoint.y = focusPoint.y + (int) ( getSize().height * scrollFactor / sclPic.getScaleFactor() );
             repaint();
         } else {
-            logger.warning( "PicturePane.scrollUp rejected because bottom of picture is already showing." );
+            LOGGER.warning( "PicturePane.scrollUp rejected because bottom of picture is already showing." );
         }
     }
 
@@ -274,7 +274,7 @@ public class PicturePane
             focusPoint.y = focusPoint.y - (int) ( getSize().height * scrollFactor / sclPic.getScaleFactor() );
             repaint();
         } else {
-            logger.warning( "PicturePane.scrollDown rejected because top edge is aready visible" );
+            LOGGER.warning( "PicturePane.scrollDown rejected because top edge is aready visible" );
         }
     }
 
@@ -295,7 +295,7 @@ public class PicturePane
             focusPoint.x = focusPoint.x + (int) ( getSize().width * scrollFactor / sclPic.getScaleFactor() );
             repaint();
         } else {
-            logger.warning( "scrollLeft rejected because right edge of picture is already showing." );
+            LOGGER.warning( "scrollLeft rejected because right edge of picture is already showing." );
         }
     }
 
@@ -315,7 +315,7 @@ public class PicturePane
             focusPoint.x = focusPoint.x - (int) ( getSize().width * scrollFactor / sclPic.getScaleFactor() );
             repaint();
         } else {
-            logger.warning( "scrollRight rejected because left edge is aready visible" );
+            LOGGER.warning( "scrollRight rejected because left edge is aready visible" );
         }
     }
 
@@ -453,19 +453,20 @@ public class PicturePane
      * @param pictureStatusCode 
      * @param pictureStatusMessage
      */
+    @Override
     public void scalableStatusChange( int pictureStatusCode,
             String pictureStatusMessage ) {
-        logger.fine( "PicturePane.scalableStatusChange: got a status change: " + pictureStatusMessage );
+        LOGGER.fine( "PicturePane.scalableStatusChange: got a status change: " + pictureStatusMessage );
 
         if ( pictureStatusCode == ScalablePicture.READY ) {
-            logger.fine( "PicturePane.scalableStatusChange: a READY status" );
+            LOGGER.fine( "PicturePane.scalableStatusChange: a READY status" );
             //pictureStatusMessage = legend;
             pictureStatusMessage = Settings.jpoResources.getString( "PicturePaneReadyStatus" );
             if ( centerWhenScaled ) {
-                logger.fine( "PicturePane.scalableStatusChange: centering image" );
+                LOGGER.fine( "PicturePane.scalableStatusChange: centering image" );
                 centerImage();
             }
-            logger.fine( "PicturePane.scalableStatusChange: forcing Panel repaint" );
+            LOGGER.fine( "PicturePane.scalableStatusChange: forcing Panel repaint" );
             repaint();
         }
 
@@ -480,6 +481,7 @@ public class PicturePane
      * @param statusCode
      * @param percentage
      */
+    @Override
     public void sourceLoadProgressNotification( int statusCode, int percentage ) {
         for ( ScalablePictureListener scalablePictureListener : picturePaneListeners ) {
             scalablePictureListener.sourceLoadProgressNotification( statusCode, percentage );
@@ -492,7 +494,7 @@ public class PicturePane
      *  being displayed in this PicturePane. These objects
      *  must implement the ScalablePictureListener interface.
      */
-    protected Vector<ScalablePictureListener> picturePaneListeners = new Vector<ScalablePictureListener>();
+    protected ArrayList<ScalablePictureListener> picturePaneListeners = new ArrayList<ScalablePictureListener>();
 
 
     /**

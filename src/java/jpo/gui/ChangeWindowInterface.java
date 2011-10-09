@@ -28,11 +28,10 @@ public interface ChangeWindowInterface {
 
     /**
      *  If this method is received the implementing class must switch to a new
-     *  window positon indicated by the parameter.
+     *  window position indicated by the parameter.
      *  @param newMode The new window mode
      */
     public void switchWindowMode( int newMode );
-
 
     /**
      * Instruct the caller to switch to the window decorations.
@@ -41,4 +40,3 @@ public interface ChangeWindowInterface {
      */
     public void switchDecorations( boolean newDecorations );
 }
-

@@ -514,10 +514,10 @@ public class Jpo {
         @Override
         public void performSlideshow() {
             PictureViewer p1 = new PictureViewer();
-            p1.switchWindowMode( ResizableJFrame.WINDOW_LEFT );
+            p1.pictureFrame.switchWindowMode( ResizableJFrame.WINDOW_LEFT );
             //p1.switchDecorations( true );
             PictureViewer p2 = new PictureViewer();
-            p2.switchWindowMode( ResizableJFrame.WINDOW_RIGHT );
+            p2.pictureFrame.switchWindowMode( ResizableJFrame.WINDOW_RIGHT );
             //p2.switchDecorations( true );
             RandomNavigator rb1 = new RandomNavigator( Settings.pictureCollection.getRootNode().getChildPictureNodes( true ), String.format( "Randomised pictures from %s", Settings.pictureCollection.getRootNode().toString() ) );
             RandomNavigator rb2 = new RandomNavigator( Settings.pictureCollection.getRootNode().getChildPictureNodes( true ), String.format( "Randomised pictures from %s", Settings.pictureCollection.getRootNode().toString() ) );
