@@ -10,13 +10,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import jpo.dataModel.GroupInfo;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
-import java.util.Vector;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 import javax.swing.*;
 import jpo.dataModel.PictureInfo;
@@ -26,7 +25,7 @@ import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
 /*
 TreeNodeController.java: This class should handle all the interactive GUI stuff for a Tree Node
 
-Copyright (C) 2007 - 2009  Richard Eigenmann.
+Copyright (C) 2007 - 2011  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -64,11 +63,11 @@ public class TreeNodeController {
         jFileChooser.setApproveButtonText( Settings.jpoResources.getString( "fileOpenButtonText" ) );
         jFileChooser.setDialogTitle( Settings.jpoResources.getString( "addFlatFileTitle" ) );
         jFileChooser.setCurrentDirectory( Settings.getMostRecentCopyLocation() );
-        
+
         int returnVal = jFileChooser.showOpenDialog( Settings.anchorFrame );
         if ( returnVal == JFileChooser.APPROVE_OPTION ) {
             File chosenFile = jFileChooser.getSelectedFile();
-            
+
             try {
                 targetNode.addFlatFile( chosenFile );
             } catch ( IOException e ) {
@@ -78,7 +77,7 @@ public class TreeNodeController {
                         Settings.jpoResources.getString( "genericError" ),
                         JOptionPane.ERROR_MESSAGE );
             }
-            
+
         }
     }
 
@@ -89,17 +88,17 @@ public class TreeNodeController {
      */
     public static void copyToNewLocation( SortableDefaultMutableTreeNode[] nodes ) {
         JFileChooser jFileChooser = new JFileChooser();
-        
+
         jFileChooser.setFileSelectionMode( JFileChooser.DIRECTORIES_ONLY );
         jFileChooser.setApproveButtonText( Settings.jpoResources.getString( "CopyImageDialogButton" ) );
         jFileChooser.setDialogTitle( Settings.jpoResources.getString( "CopyImageDialogTitle" ) );
         jFileChooser.setCurrentDirectory( Settings.getMostRecentCopyLocation() );
-        
+
         int returnVal = jFileChooser.showSaveDialog( Settings.anchorFrame );
         if ( returnVal != JFileChooser.APPROVE_OPTION ) {
             return;
         }
-        
+
         copyToLocation( nodes, jFileChooser.getSelectedFile() );
     }
 
@@ -115,7 +114,7 @@ public class TreeNodeController {
             if ( node.getUserObject() instanceof PictureInfo ) {
                 node.validateAndCopyPicture( targetLocation );
                 picsCopied++;
-                
+
             } else {
                 LOGGER.info( String.format( "Skipping non PictureInfo node %s", node.toString() ) );
             }
@@ -124,7 +123,7 @@ public class TreeNodeController {
                 String.format( Settings.jpoResources.getString( "copyToNewLocationSuccess" ), picsCopied, nodes.length ),
                 Settings.jpoResources.getString( "genericInfo" ),
                 JOptionPane.INFORMATION_MESSAGE );
-        
+
     }
 
     /**
@@ -134,13 +133,13 @@ public class TreeNodeController {
      */
     public static void copyToNewZipfile( SortableDefaultMutableTreeNode[] nodes ) {
         final JFileChooser jFileChooser = new JFileChooser();
-        
+
         jFileChooser.setFileSelectionMode( JFileChooser.FILES_ONLY );
         // TODO: internationalise this Settings.jpoResources.getString( "CopyImageDialogButton" )
         jFileChooser.setApproveButtonText( "Select" );
         jFileChooser.setDialogTitle( "Pick the zipfile to which the pictures should be added" );
         jFileChooser.setCurrentDirectory( Settings.getMostRecentCopyLocation() );
-        
+
         int returnVal = jFileChooser.showDialog( Settings.anchorFrame, "Select" );
         if ( returnVal != JFileChooser.APPROVE_OPTION ) {
             return;
@@ -152,7 +151,7 @@ public class TreeNodeController {
     }
     // 4MB buffer
     private static final byte[] BUFFER = new byte[4096 * 1024];
-    
+
     public static void streamcopy( InputStream input, OutputStream output ) throws IOException {
         int bytesRead;
         while ( ( bytesRead = input.read( BUFFER ) ) != -1 ) {
@@ -182,28 +181,28 @@ public class TreeNodeController {
                     pictureInfo = (PictureInfo) node.getUserObject();
                     sourceFile = pictureInfo.getHighresFile();
                     LOGGER.info( String.format( "Processing file %s", sourceFile.toString() ) );
-                    
+
                     ZipArchiveEntry entry = new ZipArchiveEntry( sourceFile, sourceFile.getName() );
                     zipArchiveOutputStream.putArchiveEntry( entry );
-                    
+
                     FileInputStream fis = new FileInputStream( sourceFile );
                     streamcopy( fis, zipArchiveOutputStream );
                     fis.close();
                     zipArchiveOutputStream.closeArchiveEntry();
-                    
+
                     picsCopied++;
-                    
+
                 } else {
                     LOGGER.info( String.format( "Skipping non PictureInfo node %s", node.toString() ) );
                 }
             }
-            
+
             if ( zipfile.exists() ) {
                 // copy the old entries over
                 org.apache.commons.compress.archivers.zip.ZipFile oldzip = new org.apache.commons.compress.archivers.zip.ZipFile( zipfile );
-                Enumeration<? extends ZipArchiveEntry> entries = oldzip.getEntries();
+                Enumeration entries = oldzip.getEntries();
                 while ( entries.hasMoreElements() ) {
-                    ZipArchiveEntry e = entries.nextElement();
+                    ZipArchiveEntry e = (ZipArchiveEntry) entries.nextElement();
                     LOGGER.info( String.format( "streamcopy: %s", e.getName() ) );
                     zipArchiveOutputStream.putArchiveEntry( e );
                     if ( !e.isDirectory() ) {
@@ -221,22 +220,22 @@ public class TreeNodeController {
             Logger.getLogger( TreeNodeController.class.getName() ).log( Level.SEVERE, null, ex );
             tempfile.delete();
         }
-        
-        
+
+
         if ( zipfile.exists() ) {
             LOGGER.info( String.format( "Deleting old file %s", zipfile.getAbsolutePath() ) );
             zipfile.delete();
         }
         LOGGER.info( String.format( "Renaming temp file %s to %s", tempfile.getAbsolutePath(), zipfile.getAbsolutePath() ) );
         tempfile.renameTo( zipfile );
-        
-        
+
+
         JOptionPane.showMessageDialog( Settings.anchorFrame,
                 String.format( "Copied %d files of %d to zipfile %s", picsCopied, nodes.length, zipfile.toString() ),
                 Settings.jpoResources.getString( "genericInfo" ),
                 JOptionPane.INFORMATION_MESSAGE );
-        
-        
+
+
     }
 
     /**
@@ -260,24 +259,24 @@ public class TreeNodeController {
                     pictureInfo = (PictureInfo) node.getUserObject();
                     sourceFile = pictureInfo.getHighresFile();
                     LOGGER.info( String.format( "Processing file %s", sourceFile.toString() ) );
-                    
+
                     ZipEntry entry = new ZipEntry( sourceFile.getName() );
                     zipOutputStream.putNextEntry( entry );
-                    
+
                     FileInputStream fis = new FileInputStream( sourceFile );
                     streamcopy( fis, zipOutputStream );
                     fis.close();
                     zipOutputStream.closeEntry();
-                    
+
                     picsCopied++;
-                    
+
                 } else {
                     LOGGER.info( String.format( "Skipping non PictureInfo node %s", node.toString() ) );
                 }
             }
             zipOutputStream.finish();
             zipOutputStream.close();
-            
+
         } catch ( FileNotFoundException ex ) {
             Logger.getLogger( TreeNodeController.class.getName() ).log( Level.SEVERE, null, ex );
         } catch ( IOException ex ) {
@@ -289,13 +288,13 @@ public class TreeNodeController {
                 Logger.getLogger( TreeNodeController.class.getName() ).log( Level.SEVERE, null, ex );
             }
         }
-        
+
         JOptionPane.showMessageDialog( Settings.anchorFrame,
                 String.format( "Copied %d files of %d to zipfile %s", picsCopied, nodes.length, zipfile.toString() ),
                 Settings.jpoResources.getString( "genericInfo" ),
                 JOptionPane.INFORMATION_MESSAGE );
-        
-        
+
+
     }
 
     /**
@@ -307,13 +306,13 @@ public class TreeNodeController {
         if ( !( userObject instanceof PictureInfo ) ) {
             return;
         }
-        
+
         PictureInfo pi = (PictureInfo) userObject;
         File highresFile = pi.getHighresFile();
         if ( highresFile == null ) {
             return;
         }
-        
+
         Object object = Settings.jpoResources.getString( "FileRenameLabel1" ) + highresFile.toString() + Settings.jpoResources.getString( "FileRenameLabel2" );
         String selectedValue = JOptionPane.showInputDialog(
                 Settings.anchorFrame, // parent component
@@ -361,7 +360,7 @@ public class TreeNodeController {
         //logger.info("SDMTN.showCategoryUsageGUI invoked");
         if ( node.getUserObject() instanceof PictureInfo ) {
             CategoryUsageJFrame cujf = new CategoryUsageJFrame();
-            Vector<SortableDefaultMutableTreeNode> nodes = new Vector<SortableDefaultMutableTreeNode>();
+            ArrayList<SortableDefaultMutableTreeNode> nodes = new ArrayList<SortableDefaultMutableTreeNode>();
             nodes.add( node );
             cujf.setSelection( nodes );
         } else if ( node.getUserObject() instanceof GroupInfo ) {

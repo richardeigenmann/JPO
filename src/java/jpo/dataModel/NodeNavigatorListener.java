@@ -4,7 +4,7 @@ package jpo.dataModel;
 /*
 NodeNavigatorListener.java:  interface for notification
 
-Copyright (C) 2007-2010 Richard Eigenmann, Zürich, Switzerland
+Copyright (C) 2007-2011 Richard Eigenmann, Zürich, Switzerland
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -25,7 +25,7 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 public interface NodeNavigatorListener {
 
     /**
-     *  Gets called when the nodex need to be laid out again because the
+     *  Gets called when the node need to be laid out again because the
      *  layout changed.
      */
     public void nodeLayoutChanged();

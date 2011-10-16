@@ -2,7 +2,6 @@ package jpo.gui;
 
 import java.awt.event.ActionEvent;
 import jpo.dataModel.Settings;
-import jpo.*;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionListener;
@@ -15,7 +14,7 @@ import jpo.dataModel.SortOption;
 /*
 CameraDownloadWizardStep4.java: the fourth step in the download from Camera Wizard
 
-Copyright (C) 2007 - 2009  Richard Eigenmann.
+Copyright (C) 2007 - 2011  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -60,8 +59,9 @@ public class CameraDownloadWizardStep5
 
     /**
      *  Returns the component that visualises the user interactable stuff for this step of the wizard.
-     * @return
+     * @return the component
      */
+    @Override
     protected JComponent createComponent() {
         //return component shown to the user
         JPanel stepComponent = new JPanel();
@@ -86,6 +86,7 @@ public class CameraDownloadWizardStep5
         stepComponent.add( sortChoice );
         sortChoice.addActionListener( new ActionListener() {
 
+            @Override
             public void actionPerformed( ActionEvent e ) {
                 JComboBox cb = (JComboBox) e.getSource();
                 SortOption sortOption = (SortOption) cb.getSelectedItem();
@@ -105,6 +106,7 @@ public class CameraDownloadWizardStep5
     /**
      *  Required by the AbstractSetp but not used.
      */
+    @Override
     public void prepareRendering() {
     }
 

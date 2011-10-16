@@ -89,7 +89,7 @@ public class ScreenHelper {
 
     /**
      *  Returns the GraphicsConfiguration of the primary screen
-     * @return
+     * @return Graphics Configuration
      */
     public static GraphicsConfiguration getPrimaryScreen() {
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
@@ -100,7 +100,7 @@ public class ScreenHelper {
 
     /**
      *  Returns the graphics Configuration of the secondary screen
-     * @return
+     * @return the Graphics Configuration
      */
     public static GraphicsConfiguration getSecondaryScreenGraphicsConfiguration() {
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
@@ -115,7 +115,7 @@ public class ScreenHelper {
 
     /**
      *  Returns the graphics Configuration of the secondary screen
-     * @return
+     * @return GraphicsConfiguration
      */
     public static Rectangle getSecondaryScreenBounds() {
         if ( !isXinerama() ) {
@@ -129,7 +129,7 @@ public class ScreenHelper {
     /**
      *  Returns the bounds for the full screen. In a Xinerama context this is the full Xinerama area.
      *  If there is a secondary device we will use this. Otherwise the primary.
-     * @return
+     * @return bounds for the full screen
      */
     public static Rectangle getFullScreenBounds() {
         if ( isXinerama() ) {
@@ -145,7 +145,7 @@ public class ScreenHelper {
      *  Returns the bounds for the "left" window. In a Xinerama context this is the screen
      *  device with the lowest x coordinates. In a non Xinerama context this is the primary
      *  screen.
-     * @return
+     * @return bounds for the left window
      */
     public static Rectangle getLeftScreenBounds() {
         if ( isXinerama() ) {
@@ -167,7 +167,7 @@ public class ScreenHelper {
      *  we assume that the screens are same sized so we subtract a screen width from the right edge and
      *  hope this is the correct location In a non Xinerama context this is the secondary
      *  screen.
-     * @return
+     * @return bounds of the right screen
      */
     public static Rectangle getRightScreenBounds() {
         if ( isXinerama() ) {
@@ -187,7 +187,7 @@ public class ScreenHelper {
 
     /**
      *  Returns the bounds for the "top left" window.
-     * @return
+     * @return the bounds for the top left window
      */
     public static Rectangle getTopLeftScreenBounds() {
         Rectangle bounds = getLeftScreenBounds();
@@ -197,8 +197,8 @@ public class ScreenHelper {
 
 
     /**
-     *  Returns the bounds for the "top left" window.
-     * @return
+     *  Returns the bounds for the "bottom left" window.
+     * @return the bounds for the bottom left window
      */
     public static Rectangle getBottomLeftScreenBounds() {
         Rectangle bounds = getLeftScreenBounds();
@@ -210,7 +210,7 @@ public class ScreenHelper {
 
     /**
      *  Returns the bounds for the "top right" window.
-     * @return
+     * @return the bounds for the top right window
      */
     public static Rectangle getTopRightScreenBounds() {
         Rectangle bounds = getRightScreenBounds();
@@ -221,7 +221,7 @@ public class ScreenHelper {
 
     /**
      *  Returns the bounds for the "bottom right" window.
-     * @return
+     * @return the bounds for the bottom right window
      */
     public static Rectangle getBottomRightScreenBounds() {
         Rectangle bounds = getRightScreenBounds();
@@ -230,17 +230,23 @@ public class ScreenHelper {
         return bounds;
     }
 
+    /**
+     * helper variable
+     */
     private static StringBuffer b;
 
-
+    /**
+     * concatenates strings with a system dependent newline.
+     * @param s 
+     */
     private static void sbadd( String s ) {
-        b.append( s + System.getProperty( "line.separator" ) );
+        b.append( s ).append( System.getProperty( "line.separator" ));
     }
 
 
     /**
      *  Explains the graphics configuration to the log file if debug is on:
-     * @return
+     * @return A description of the graphics configuration
      */
     public static StringBuffer explainGraphicsEnvironment() {
         b = new StringBuffer();

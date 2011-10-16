@@ -3,7 +3,6 @@ package jpo.gui;
 import jpo.dataModel.Settings;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.EventQueue;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -13,7 +12,6 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import jpo.dataModel.GroupInfo;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
-import jpo.*;
 import javax.swing.*;
 import java.util.*;
 import java.util.logging.Logger;
@@ -23,7 +21,7 @@ import jpo.dataModel.PictureInfo;
 /*
 CategoryUsageJFrame.java:  Creates a Window in which the categories are shown
 
-Copyright (C) 2002-2010  Richard Eigenmann.
+Copyright (C) 2002-2011  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -58,14 +56,14 @@ public class CategoryUsageJFrame
     /**
      * An Array to record the selected nodes
      */
-    private Vector<SortableDefaultMutableTreeNode> selectedNodes;
+    private ArrayList<SortableDefaultMutableTreeNode> selectedNodes;
 
     final JLabel numberOfPicturesJLabel = new JLabel( "" );
 
     /**
-     * Defines a logger for this class
+     * Defines a LOGGER for this class
      */
-    private static Logger logger = Logger.getLogger( CategoryUsageJFrame.class.getName() );
+    private static final Logger LOGGER = Logger.getLogger( CategoryUsageJFrame.class.getName() );
 
 
     /**
@@ -131,6 +129,7 @@ public class CategoryUsageJFrame
         modifyCategoryJButton.setMaximumSize( maxButtonSize );
         modifyCategoryJButton.addActionListener( new ActionListener() {
 
+            @Override
             public void actionPerformed( ActionEvent evt ) {
                 new CategoryEditorJFrame();
             }
@@ -145,6 +144,7 @@ public class CategoryUsageJFrame
         refreshJButton.setMaximumSize( maxButtonSize );
         refreshJButton.addActionListener( new ActionListener() {
 
+            @Override
             public void actionPerformed( ActionEvent evt ) {
                 updateCategories();
             }
@@ -160,6 +160,7 @@ public class CategoryUsageJFrame
         updateJButton.setMaximumSize( maxButtonSize );
         updateJButton.addActionListener( new ActionListener() {
 
+            @Override
             public void actionPerformed( ActionEvent evt ) {
                 storeSelection();
                 getRid();
@@ -176,6 +177,7 @@ public class CategoryUsageJFrame
         cancelJButton.setMaximumSize( maxButtonSize );
         cancelJButton.addActionListener( new ActionListener() {
 
+            @Override
             public void actionPerformed( ActionEvent evt ) {
                 getRid();
             }
@@ -199,7 +201,7 @@ public class CategoryUsageJFrame
 
 
     /**
-     *  method that closes te frame and gets rid of it
+     *  method that closes the frame and gets rid of it
      */
     private void getRid() {
         setVisible( false );
@@ -211,7 +213,7 @@ public class CategoryUsageJFrame
      *  This method receives the selection the Category Editor is working on
      * @param nodes
      */
-    public void setSelection( Vector<SortableDefaultMutableTreeNode> nodes ) {
+    public void setSelection( ArrayList<SortableDefaultMutableTreeNode> nodes ) {
         selectedNodes = nodes;
         updateCategories();
     }
@@ -225,7 +227,7 @@ public class CategoryUsageJFrame
      */
     public void setGroupSelection( SortableDefaultMutableTreeNode groupNode,
             boolean recurse ) {
-        selectedNodes = new Vector<SortableDefaultMutableTreeNode>();
+        selectedNodes = new ArrayList<SortableDefaultMutableTreeNode>();
         SortableDefaultMutableTreeNode n;
         Enumeration nodes = groupNode.children();
         while ( nodes.hasMoreElements() ) {
@@ -233,7 +235,7 @@ public class CategoryUsageJFrame
             if ( n.getUserObject() instanceof PictureInfo ) {
                 selectedNodes.add( n );
             } else if ( ( n.getUserObject() instanceof GroupInfo ) && recurse ) {
-                logger.info( "recurse not currently implemented" );
+                LOGGER.info( "recurse not currently implemented" );
             }
         }
         updateCategories();
@@ -245,7 +247,7 @@ public class CategoryUsageJFrame
      */
     public void updateCategories() {
         if ( selectedNodes == null ) {
-            logger.info( "selectedNodes is null!" );
+            LOGGER.info( "selectedNodes is null!" );
             return;
         }
         numberOfPicturesJLabel.setText( String.format( Settings.jpoResources.getString( "numberOfPicturesJLabel" ), selectedNodes.size() ) );
@@ -258,7 +260,7 @@ public class CategoryUsageJFrame
         Enumeration categoryEnumeration = listModel.elements();
         while ( categoryEnumeration.hasMoreElements() ) {
             c = (Category) categoryEnumeration.nextElement();
-            logger.info( "Setting Status to undefined on Category: " + c.getKey().toString() + " " + c.toString() );
+            LOGGER.info( "Setting Status to undefined on Category: " + c.getKey().toString() + " " + c.toString() );
             c.setStatus( Category.undefined );
             // force screen update:
             listModel.setElementAt( c, listModel.indexOf( c ) );
@@ -276,16 +278,18 @@ public class CategoryUsageJFrame
         categoryEnumeration = listModel.elements();
         while ( categoryEnumeration.hasMoreElements() ) {
             c = (Category) categoryEnumeration.nextElement();
-            logger.info( "Checking Category: " + c.getKey().toString() + " " + c.toString() );
+            LOGGER.info( "Checking Category: " + c.getKey().toString() + " " + c.toString() );
 
-            pictureNodes = selectedNodes.elements();
-            while ( pictureNodes.hasMoreElements() ) {
-                myObject = ( (SortableDefaultMutableTreeNode) pictureNodes.nextElement() ).getUserObject();
+            for ( SortableDefaultMutableTreeNode pictureNode : selectedNodes ) {
+           //pictureNodes = selectedNodes.elements();
+            //while ( pictureNodes.hasMoreElements() ) {
+                //myObject = ( (SortableDefaultMutableTreeNode) pictureNodes.nextElement() ).getUserObject();
+                myObject = pictureNode.getUserObject();
                 if ( myObject instanceof PictureInfo ) {
                     pi = (PictureInfo) myObject;
                     if ( pi.containsCategory( c.getKey() ) ) {
                         currentStatus = c.getStatus();
-                        logger.info( "Status of category is: " + Integer.toString( currentStatus ) );
+                        LOGGER.info( "Status of category is: " + Integer.toString( currentStatus ) );
                         if ( currentStatus == Category.undefined ) {
                             c.setStatus( Category.selected );
                             // force screen update:
@@ -299,7 +303,7 @@ public class CategoryUsageJFrame
                     } else {
                         // we get here if there was no category match
                         currentStatus = c.getStatus();
-                        logger.info( "Status of category is: " + Integer.toString( currentStatus ) );
+                        LOGGER.info( "Status of category is: " + Integer.toString( currentStatus ) );
                         if ( currentStatus == Category.undefined ) {
                             c.setStatus( Category.unSelected );
                             // force screen update:
@@ -339,32 +343,38 @@ public class CategoryUsageJFrame
         }*/
 
         // send the selected categories to listeners such as the AddFromCamera screen
-        e = categoryGuiListeners.elements();
+       /* e = categoryGuiListeners.elements();
         while ( e.hasMoreElements() ) {
             ( (CategoryGuiListenerInterface) e.nextElement() ).categoriesChosen( selectedCategories );
+        }*/
+        
+        for (CategoryGuiListenerInterface listener :  categoryGuiListeners ) {
+            listener.categoriesChosen( selectedCategories );
         }
 
 
         // update the selected pictures
         if ( selectedNodes == null ) {
-            logger.info( "CategoryUsageJFrame.storeSelection: called with a null selection. Aborting." );
+            LOGGER.info( "CategoryUsageJFrame.storeSelection: called with a null selection. Aborting." );
             return;
         }
-        PictureInfo pi;
-        Object o;
-        Enumeration pictureNodes = selectedNodes.elements();
-        while ( pictureNodes.hasMoreElements() ) {
-            o = ( (SortableDefaultMutableTreeNode) pictureNodes.nextElement() ).getUserObject();
-            if ( o instanceof PictureInfo ) {
-                pi = (PictureInfo) o;
+        PictureInfo pictureInfo;
+        Object userObject;
+        //Enumeration pictureNodes = selectedNodes.elements();
+        //while ( pictureNodes.hasMoreElements() ) {
+        //    userObject = ( (SortableDefaultMutableTreeNode) pictureNodes.nextElement() ).getUserObject();
+        for ( SortableDefaultMutableTreeNode selectedNode : selectedNodes ) {
+            userObject = selectedNode.getUserObject();
+            if ( userObject instanceof PictureInfo ) {
+                pictureInfo = (PictureInfo) userObject;
                 e = listModel.elements();
                 while ( e.hasMoreElements() ) {
                     c = (Category) e.nextElement();
                     status = c.getStatus();
                     if ( status == Category.selected ) {
-                        pi.addCategoryAssignment( c.getKey() );
+                        pictureInfo.addCategoryAssignment( c.getKey() );
                     } else if ( status == Category.unSelected ) {
-                        pi.removeCategory( c.getKey() );
+                        pictureInfo.removeCategory( c.getKey() );
                     }
                 }
             }
@@ -374,7 +384,7 @@ public class CategoryUsageJFrame
     /**
      *  This Vector holds references to categoryGuiListeners
      */
-    protected Vector<CategoryGuiListenerInterface> categoryGuiListeners = new Vector<CategoryGuiListenerInterface>();
+    protected ArrayList<CategoryGuiListenerInterface> categoryGuiListeners = new ArrayList<CategoryGuiListenerInterface>();
 
 
     /**

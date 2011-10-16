@@ -58,7 +58,7 @@ public class ThumbnailQueueRequest implements Comparable<ThumbnailQueueRequest> 
 
     /**
      *  Constructs a ThumbnailQueueRequest object
-     *  @param	thumbnailController	The ThumbnailController object for which the thumbnail is to be created
+     *  @param	thumb	The ThumbnailController object for which the thumbnail is to be created
      *  @param	priority	The priority with which the thumbnail is to be created
      *	Possible values are {@link #HIGH_PRIORITY}
      *	{@link #MEDIUM_PRIORITY} and

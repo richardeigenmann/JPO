@@ -11,7 +11,7 @@ import jpo.dataModel.Tools;
 /*
 ProgressGui.java:  a class that shows the progress in adding pictures
 
-Copyright (C) 2002-2010  Richard Eigenmann.
+Copyright (C) 2002-2011  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -239,7 +239,7 @@ public class ProgressGui
 
     /**
      *  returns the interrupt semaphore object
-     * @return
+     * @return true if the thread should be interrupted
      */
     public InterruptSemaphore getInterruptor() {
         return interruptor;

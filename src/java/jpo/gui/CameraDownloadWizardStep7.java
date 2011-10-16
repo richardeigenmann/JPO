@@ -1,8 +1,6 @@
 package jpo.gui;
 
-import java.util.logging.Level;
 import jpo.dataModel.Settings;
-import jpo.*;
 import java.util.logging.Logger;
 import net.javaprog.ui.wizard.*;
 import javax.swing.*;
@@ -10,7 +8,7 @@ import javax.swing.*;
 /*
 CameraDownloadWizardStep5.java: the sixth step in the download from Camera Wizard
 
-Copyright (C) 2007-2009  Richard Eigenmann.
+Copyright (C) 2007-2011  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -31,9 +29,9 @@ public class CameraDownloadWizardStep7
         extends AbstractStep {
 
     /**
-     * Defines a logger for this class
+     * Defines a LOGGER for this class
      */
-    private static Logger logger = Logger.getLogger( CameraDownloadWizardStep7.class.getName() );
+    private static final Logger LOGGER = Logger.getLogger( CameraDownloadWizardStep7.class.getName() );
 
     /**
      *
@@ -55,10 +53,10 @@ public class CameraDownloadWizardStep7
 
     /**
      *  Returns the component that visualises the user interactable stuff for this step of the wizard.
-     * @return
+     * @return the component
      */
+    @Override
     protected JComponent createComponent() {
-        //return component shown to the user
         JPanel stepComponent = new JPanel();
         stepComponent.setLayout( new BoxLayout( stepComponent, BoxLayout.PAGE_AXIS ) );
         int filesOnCamera = dataModel.getCamera().countFiles();
@@ -79,6 +77,7 @@ public class CameraDownloadWizardStep7
     /**
      *  Required by the AbstractSetp but not used.
      */
+    @Override
     public void prepareRendering() {
         setCanGoNext( false );
         setCanGoBack( false );

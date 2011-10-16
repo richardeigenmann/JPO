@@ -5,13 +5,12 @@
 
 package jpotestground;
 
-import java.util.Enumeration;
 import java.util.StringTokenizer;
-import java.util.Vector;
 
 import java.awt.Dimension;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
+import java.util.ArrayList;
 import javax.swing.JComponent;
 import javax.swing.JToolTip;
 import javax.swing.SwingUtilities;
@@ -27,7 +26,7 @@ import javax.swing.plaf.metal.MetalToolTipUI;
  * Found on http://www.koders.com/java/fidF47D0FF86FA20992E7C6C1F02E8DBB745B11AA52.aspx
  * 
  *
- * @author: Maj0r <aj@tkl-soft.de>
+ * @author  Maj0r <aj@tkl-soft.de>
  *
  */
 
@@ -70,12 +69,12 @@ public class MultiLineToolTip
             }
             StringTokenizer st = new StringTokenizer(tipText, "|");
             int maxWidth = 0;
-            Vector<String> v = new Vector<String>();
+            ArrayList<String> v = new ArrayList<String>();
             while (st.hasMoreTokens()) {
                 String token = st.nextToken();
                 int width = SwingUtilities.computeStringWidth(metrics, token);
                 maxWidth = (maxWidth < width) ? width : maxWidth;
-                v.addElement(token);
+                v.add(token);
             }
             int lines = v.size();
             if (lines < 1) {
@@ -85,8 +84,8 @@ public class MultiLineToolTip
             else {
                 strs = new String[lines];
                 int i = 0;
-                for (Enumeration e = v.elements(); e.hasMoreElements(); i++) {
-                    strs[i] = (String) e.nextElement();
+                for (String s : v) {
+                    strs[i] = s;
                 }
             }
             int height = metrics.getHeight() * lines;

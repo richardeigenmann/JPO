@@ -177,7 +177,7 @@ public class Emailer
 
     /**
      * This is where the SwingWorker does it's stuff
-     * @return
+     * @return "Done"
      * @throws Exception
      */
     @Override

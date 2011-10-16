@@ -3,7 +3,7 @@ package jpo.dataModel;
 /*
 PictureInfoChangeEvent.java:  This event holds information about how the picture changed
 
-Copyright (C) 2002 - 2010  Richard Eigenmann.
+Copyright (C) 2002 - 2011  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -44,7 +44,7 @@ public class PictureInfoChangeEvent {
     /**
      *  returns the PictureInfo object that created the event
      *
-     * @return
+     * @return the pictureinfo object
      */
     public PictureInfo getPictureInfo() {
         return pi;
@@ -87,7 +87,7 @@ public class PictureInfoChangeEvent {
     /**
      *  returns whether the description was changed
      *
-     * @return
+     * @return true if the description was changed
      */
     public boolean getDescriptionChanged() {
         return descriptionChanged;
@@ -111,7 +111,7 @@ public class PictureInfoChangeEvent {
     /**
      *  returns whether the highres Location was changed
      *
-     * @return
+     * @return true if the highres location was changed
      */
     public boolean getHighresLocationChanged() {
         return highresLocationChanged;
@@ -135,7 +135,7 @@ public class PictureInfoChangeEvent {
     /**
      *  returns whether the checksum was changed
      *
-     * @return
+     * @return true if the checksum was changed
      */
     public boolean getChecksumChanged() {
         return checksumChanged;
@@ -159,7 +159,7 @@ public class PictureInfoChangeEvent {
     /**
      *  returns whether the lowres Location was changed
      *
-     * @return
+     * @return true if the lowres loc was changed
      */
     public boolean getLowresLocationChanged() {
         return lowresLocationChanged;
@@ -182,7 +182,7 @@ public class PictureInfoChangeEvent {
     /**
      *  returns whether the thumbnail was changed
      *
-     * @return
+     * @return true if changed, false if not
      */
     public boolean getThumbnailChanged() {
         return thumbnailChanged;
@@ -190,13 +190,13 @@ public class PictureInfoChangeEvent {
 
 //-----------------
     /**
-     *  indicates whether the lowresLocation description was changed.
+     *  indicates whether the creation time was changed.
      */
     private boolean creationTimeChanged = false;
 
 
     /**
-     *  sets the event to reflect that the lowres Location changed
+     *  sets the event to reflect that the creation time was changed
      **/
     public void setCreationTimeChanged() {
         creationTimeChanged = true;
@@ -204,9 +204,9 @@ public class PictureInfoChangeEvent {
 
 
     /**
-     *  returns whether the lowres Location was changed
+     *  returns whether the creation time was changed was changed
      *
-     * @return
+     * @return true if changed, false if not
      */
     public boolean getCreationTimeChanged() {
         return creationTimeChanged;
@@ -230,7 +230,7 @@ public class PictureInfoChangeEvent {
     /**
      *  returns whether the film reference was changed
      *
-     * @return
+     * @return true if changed, false if not
      */
     public boolean getFilmReferenceChanged() {
         return filmReferenceChanged;
@@ -254,7 +254,7 @@ public class PictureInfoChangeEvent {
     /**
      *  returns whether the rotation changed
      *
-     * @return
+     * @return true if changed, false if not
      */
     public boolean getRotationChanged() {
         return rotationChanged;
@@ -278,7 +278,7 @@ public class PictureInfoChangeEvent {
     /**
      *  returns whether the comment changed
      *
-     * @return
+     * @return true if changed, false if not
      */
     public boolean getCommentChanged() {
         return commentChanged;
@@ -302,7 +302,7 @@ public class PictureInfoChangeEvent {
     /**
      *  returns whether the photographer changed
      *
-     * @return
+     * @return true if the photographer changed
      */
     public boolean getPhotographerChanged() {
         return photographerChanged;
@@ -326,7 +326,7 @@ public class PictureInfoChangeEvent {
     /**
      *  returns whether the copyright holder was changed
      *
-     * @return
+     * @return true if changed, false if not
      */
     public boolean getCopyrightHolderChanged() {
         return copyrightHolderChanged;
@@ -350,7 +350,7 @@ public class PictureInfoChangeEvent {
     /**
      *  returns whether the latitude or longitude was changed
      *
-     * @return
+     * @return true if the lat or lng was changed
      */
     public boolean getLatLngChanged() {
         return latLngChanged;
@@ -372,9 +372,9 @@ public class PictureInfoChangeEvent {
 
 
     /**
-     *  returns whether the copyright holder was changed
+     *  returns whether the category assignment was changed
      *
-     * @return
+     * @return true if changed, false if not
      */
     public boolean getCategoryAssignmentsChanged() {
         return categoryAssignmentsChanged;
@@ -398,7 +398,7 @@ public class PictureInfoChangeEvent {
     /**
      *  returns whether the event was about the selection status being set
      *
-     * @return
+     * @return true if selected, false if not
      */
     public boolean getWasSelected() {
         return wasSelected;
@@ -422,7 +422,7 @@ public class PictureInfoChangeEvent {
     /**
      *  returns whether the selection was removed
      *
-     * @return
+     * @return true if the selection was removed
      */
     public boolean getWasUnselected() {
         return wasUnselected;
@@ -446,7 +446,7 @@ public class PictureInfoChangeEvent {
     /**
      *  returns whether the event was about the selection status being set
      *
-     * @return
+     * @return true if the mail was selected
      */
     public boolean getWasMailSelected() {
         return wasMailSelected;
@@ -468,9 +468,9 @@ public class PictureInfoChangeEvent {
 
 
     /**
-     *  returns whether the selection was removed
+     *  returns whether the mail selection was removed
      *
-     * @return
+     * @return true if removed, false if not
      */
     public boolean getWasMailUnselected() {
         return wasMailUnselected;

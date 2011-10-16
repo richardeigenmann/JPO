@@ -309,8 +309,8 @@ public class SourcePicture {
      *  this method can be invoked to stop the current reader except if it
      *  is reading the desired file. It returns true is the desired file
      *  is being loaded. Otherwise it returns false.
-     * @param exemptionURL
-     * @return
+     * @param exemptionURL The exemption URL
+     * @return True if loading in progress, false if not
      */
     public boolean stopLoadingExcept( URL exemptionURL ) {
         if ( ( imageUrl == null ) || ( exemptionURL == null ) ) {

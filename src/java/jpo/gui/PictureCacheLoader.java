@@ -2,7 +2,6 @@ package jpo.gui;
 
 import jpo.dataModel.Settings;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
-import jpo.*;
 import jpo.dataModel.PictureInfo;
 import java.util.*;
 import java.net.*;
@@ -11,7 +10,7 @@ import java.util.logging.Logger;
 /*
 PictureCacheLoader.java:  class that manages the loading of pictures to the cache
 
-Copyright (C) 2002 - 2009  Richard Eigenmann.
+Copyright (C) 2002 - 2011  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -33,9 +32,9 @@ public class PictureCacheLoader
         implements SourcePictureListener {
 
     /**
-     * Defines a logger for this class
+     * Defines a LOGGER for this class
      */
-    private static Logger logger = Logger.getLogger( PictureCacheLoader.class.getName() );
+    private static final Logger LOGGER = Logger.getLogger( PictureCacheLoader.class.getName() );
 
 
     /**
@@ -51,7 +50,7 @@ public class PictureCacheLoader
                 PictureInfo pi = (PictureInfo) nodeUserObject;
                 load( pi.getHighresURL(), pi.getRotation() );
             } catch ( MalformedURLException x ) {
-                logger.info( "PictureCacheLoader.constructor: Caught a MalformedURLException when trying to cache the next image. Reason is: " + x.getMessage() );
+                LOGGER.info( "PictureCacheLoader.constructor: Caught a MalformedURLException when trying to cache the next image. Reason is: " + x.getMessage() );
             }
         }
     }
@@ -90,7 +89,7 @@ public class PictureCacheLoader
      *  requested to load in the background. They may have to be stopped in 
      *  a hurry.
      */
-    public static Vector<SourcePicture> cacheLoadsInProgress = new Vector<SourcePicture>();
+    public static ArrayList<SourcePicture> cacheLoadsInProgress = new ArrayList<SourcePicture>();
 
 
     /**
@@ -106,9 +105,9 @@ public class PictureCacheLoader
 
     /**
      *  method to stop all background loading except the indicated file. Returns whether the
-     *  image is already being loaded. True = loading in progress, False = not in progress.
+     *  image is already being loaded. 
      * @param exemptionURL
-     * @return
+     * @return True = loading in progress, False = not in progress.
      */
     public static boolean stopBackgroundLoadingExcept( URL exemptionURL ) {
         SourcePicture sp;
@@ -118,7 +117,7 @@ public class PictureCacheLoader
             if ( !sourcePicture.getUrlString().equals( exemptionURLString ) ) {
                 sourcePicture.stopLoading();
             } else {
-                logger.info( "PictureCache.stopBackgroundLoading: picture was already loading" );
+                LOGGER.info( "PictureCache.stopBackgroundLoading: picture was already loading" );
                 inProgress = true;
             }
         }
@@ -134,6 +133,7 @@ public class PictureCacheLoader
      * @param statusMessage
      * @param sp
      */
+    @Override
     public synchronized void sourceStatusChange( int statusCode,
             String statusMessage, SourcePicture sp ) {
         //logger.info("PictureCacheLoader.sourceStatusChange: " + statusMessage);
@@ -143,7 +143,7 @@ public class PictureCacheLoader
             sp.removeListener( this );
         } else if ( statusCode == SourcePicture.READY ) {
             cacheLoadsInProgress.remove( sp );
-            logger.info( "PictureCacheLoader.sourceStatusChange: removing listener because of READY status on " + sp.getUrlString() );
+            LOGGER.info( "PictureCacheLoader.sourceStatusChange: removing listener because of READY status on " + sp.getUrlString() );
             sp.removeListener( this );
         }
     }
@@ -155,6 +155,7 @@ public class PictureCacheLoader
      * @param statusCode
      * @param percentage
      */
+    @Override
     public void sourceLoadProgressNotification( int statusCode, int percentage ) {
     }
 }

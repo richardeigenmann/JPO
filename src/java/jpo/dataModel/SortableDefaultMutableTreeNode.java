@@ -21,7 +21,7 @@ import javax.swing.*;
 /*
 SortableDefaultMutableTreeNode.java:  The main data model object for the JPO application
 
-Copyright (C) 2003 - 2010  Richard Eigenmann, Zurich, Switzerland
+Copyright (C) 2003 - 2011  Richard Eigenmann, Zurich, Switzerland
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -70,7 +70,7 @@ public class SortableDefaultMutableTreeNode
 
     /**
      *   returns the collection associated with this node
-     * @return
+     * @return the picture collection.
      */
     public PictureCollection getPictureCollection() {
         return Settings.pictureCollection;
@@ -135,6 +135,7 @@ public class SortableDefaultMutableTreeNode
      * @param o
      * @return the usual compareTo value used for sorting.
      */
+    @Override
     public int compareTo( Object o ) {
         Object myObject = getUserObject();
         Object otherObject = ( (DefaultMutableTreeNode) o ).getUserObject();
@@ -553,6 +554,7 @@ public class SortableDefaultMutableTreeNode
 
             dropAfter.addActionListener( new ActionListener() {
 
+                @Override
                 public void actionPerformed( ActionEvent e ) {
                     SortableDefaultMutableTreeNode parentNode = (SortableDefaultMutableTreeNode) targetNode.getParent();
                     int currentIndex = parentNode.getIndex( targetNode );
@@ -589,6 +591,7 @@ public class SortableDefaultMutableTreeNode
 
             dropIntoLast.addActionListener( new ActionListener() {
 
+                @Override
                 public void actionPerformed( ActionEvent e ) {
                     int childCount = targetNode.getChildCount();
                     int offset = 0;
@@ -612,6 +615,7 @@ public class SortableDefaultMutableTreeNode
 
             dropCancel.addActionListener( new ActionListener() {
 
+                @Override
                 public void actionPerformed( ActionEvent e ) {
                     LOGGER.info( "cancel drop" );
                     event.dropComplete( false );
@@ -1122,7 +1126,7 @@ public class SortableDefaultMutableTreeNode
      *  @param newOnly  If true only pictures not yet in the collection will be added.
      *  @param retainDirectories  indicates that the directory structure should be preserved.
      *  @param selectedCategories  the categories to be applied to the newly loaded pictures.
-     * @return
+     * @return the new group
      *
      */
     public SortableDefaultMutableTreeNode copyAddPictures( File sourceDir,
@@ -1217,7 +1221,7 @@ public class SortableDefaultMutableTreeNode
      * @param groupName
      * @param retainDirectories
      * @param selectedCategories
-     * @return
+     * @return the new group
      *
      */
     public SortableDefaultMutableTreeNode copyAddPictures( File sourceDir,
@@ -1267,6 +1271,7 @@ public class SortableDefaultMutableTreeNode
             if ( progressBar != null ) {
                 Runnable r = new Runnable() {
 
+                    @Override
                     public void run() {
                         progressBar.setValue( progressBar.getValue() + 1 );
                     }
@@ -1325,7 +1330,7 @@ public class SortableDefaultMutableTreeNode
      * @param cam
      * @param retainDirectories
      * @param selectedCategories
-     * @return
+     * @return true if OK, false if not
      */
     protected static boolean copyAddPictures1( File[] files,
             File targetDir,

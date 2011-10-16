@@ -9,6 +9,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -70,10 +71,10 @@ public class NanoHTTPD
 	 *
 	 * (By default, this delegates to serveFile() and allows directory listing.)
 	 *
-	 * @parm uri	Percent-decoded URI without parameters, for example "/index.cgi"
-	 * @parm method	"GET", "POST" etc.
-	 * @parm parms	Parsed, percent decoded parameters from URI and, in case of POST, data.
-	 * @parm header	Header entries, percent decoded
+	 * @param uri	Percent-decoded URI without parameters, for example "/index.cgi"
+	 * @param method	"GET", "POST" etc.
+	 * @param parms	Parsed, percent decoded parameters from URI and, in case of POST, data.
+	 * @param header	Header entries, percent decoded
 	 * @return HTTP response, see class Response for details
 	 */
 	public Response serve( String uri, String method, Properties header, Properties parms )
@@ -487,9 +488,9 @@ public class NanoHTTPD
 				newUri += "%20";
 			else
 			{
-				newUri += URLEncoder.encode( tok );
+				//newUri += URLEncoder.encode( tok );
 				// For Java 1.4 you'll want to use this instead:
-				// try { newUri += URLEncoder.encode( tok, "UTF-8" ); } catch ( UnsupportedEncodingException uee )
+				try { newUri += URLEncoder.encode( tok, "UTF-8" ); } catch ( UnsupportedEncodingException uee ) {}
 			}
 		}
 		return newUri;
@@ -650,7 +651,7 @@ public class NanoHTTPD
 	/**
 	 * Hashtable mapping (String)FILENAME_EXTENSION -> (String)MIME_TYPE
 	 */
-	private static Hashtable theMimeTypes = new Hashtable();
+	private static final Hashtable<Object,Object> theMimeTypes = new Hashtable<Object, Object>();
 	static
 	{
 		StringTokenizer st = new StringTokenizer(
@@ -678,7 +679,7 @@ public class NanoHTTPD
 	/**
 	 * GMT date formatter
 	 */
-    private static java.text.SimpleDateFormat gmtFrmt;
+    private static final java.text.SimpleDateFormat gmtFrmt;
 	static
 	{
 		gmtFrmt = new java.text.SimpleDateFormat( "E, d MMM yyyy HH:mm:ss 'GMT'", Locale.US);

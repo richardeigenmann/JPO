@@ -7,10 +7,8 @@ import jpo.dataModel.GroupInfo;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
 import jpo.dataModel.PictureInfo;
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Enumeration;
 import java.util.logging.Logger;
 import javax.swing.SwingWorker;
 
@@ -114,7 +112,7 @@ public class ConsolidateGroup
 
     /**
      *  The run method is fired by starting the thread. It creates a ProgressGui and does the work.
-     * @return
+     * @return Integer.MAX_VALUE
      */
     @Override
     public Integer doInBackground() {
@@ -142,7 +140,6 @@ public class ConsolidateGroup
      *  This method consolidates all the nodes of the supplied group.
      *
      *  @param  groupNode  the Group whose nodes are to be consolidated.
-     *  @return  True if OK, false if a problem occurred.
      */
     private void consolidateGroup( SortableDefaultMutableTreeNode groupNode ) {
         Object userObject = groupNode.getUserObject();
@@ -163,7 +160,8 @@ public class ConsolidateGroup
         //while ( childNodeEnumeration.hasMoreElements() && ( !progGui.getInterruptor().getShouldInterrupt() ) ) {
         //    SortableDefaultMutableTreeNode node = childNodeEnumeration.nextElement();
         LOGGER.fine( String.format( "prog GUI interrupt: %b", progGui.getInterruptor().getShouldInterrupt() ) );
-        ArrayList<SortableDefaultMutableTreeNode> nodeArrayList = Collections.list( groupNode.children() );
+        @SuppressWarnings ("unchecked")
+        ArrayList<SortableDefaultMutableTreeNode> nodeArrayList = Collections.<SortableDefaultMutableTreeNode>list( groupNode.children() );
         //for ( Enumeration<SortableDefaultMutableTreeNode> nodes = groupNode.children(); nodes.hasMoreElements() && ( !  progGui.getInterruptor().getShouldInterrupt() );  ) {
         //    SortableDefaultMutableTreeNode node = nodes.nextElement();
         for ( SortableDefaultMutableTreeNode node : nodeArrayList ) {
@@ -224,7 +222,7 @@ public class ConsolidateGroup
      *   PictureInfo object to the target directory. It returns true if the move was successful or ignored
      *   false if there was a problem
      *
-     *   @param	o  the userObject of the Node to be moved
+     *   @param	object  the userObject of the Node to be moved
      *   @return 	True if the move was successful or False if it was not.
      */
     private boolean moveLowresPicture( Object object ) {

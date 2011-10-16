@@ -195,12 +195,17 @@ public class PicturePopupMenu
                     if ( Settings.pictureCollection.countSelectedNodes() < 1 ) {
                         popupNode.getPictureCollection().addToMailSelected( popupNode );
                     } else {
-                        Enumeration<SortableDefaultMutableTreeNode> selection = Settings.pictureCollection.getSelectedNodesAsVector().elements();
+                        /*Enumeration<SortableDefaultMutableTreeNode> selection = Settings.pictureCollection.getSelectedNodesAsVector().elements();
                         SortableDefaultMutableTreeNode n;
                         while ( selection.hasMoreElements() ) {
-                            n = selection.nextElement();
-                            if ( n.getUserObject() instanceof PictureInfo ) {
-                                n.getPictureCollection().addToMailSelected( n );
+                        n = selection.nextElement();
+                        if ( n.getUserObject() instanceof PictureInfo ) {
+                        n.getPictureCollection().addToMailSelected( n );
+                        }
+                        }*/
+                        for ( SortableDefaultMutableTreeNode selectedNode : Settings.pictureCollection.getSelectedNodes() ) {
+                            if ( selectedNode.getUserObject() instanceof PictureInfo ) {
+                                selectedNode.getPictureCollection().addToMailSelected( selectedNode );
                             }
                         }
                     }
@@ -321,12 +326,17 @@ public class PicturePopupMenu
                     if ( Settings.pictureCollection.countSelectedNodes() < 1 ) {
                         popupNode.moveNodeToTop();
                     } else {
-                        Enumeration<SortableDefaultMutableTreeNode> selection = Settings.pictureCollection.getSelectedNodesAsVector().elements();
+                        /*Enumeration<SortableDefaultMutableTreeNode> selection = Settings.pictureCollection.getSelectedNodesAsVector().elements();
                         SortableDefaultMutableTreeNode n;
                         while ( selection.hasMoreElements() ) {
-                            n = selection.nextElement();
-                            if ( n.getUserObject() instanceof PictureInfo ) {
-                                n.moveNodeToTop();
+                        n = selection.nextElement();
+                        if ( n.getUserObject() instanceof PictureInfo ) {
+                        n.moveNodeToTop();
+                        }
+                        }*/
+                        for ( SortableDefaultMutableTreeNode selectedNode : Settings.pictureCollection.getSelectedNodes() ) {
+                            if ( selectedNode.getUserObject() instanceof PictureInfo ) {
+                                selectedNode.moveNodeToTop();
                             }
                         }
                     }
@@ -341,12 +351,17 @@ public class PicturePopupMenu
                     if ( Settings.pictureCollection.countSelectedNodes() < 1 ) {
                         popupNode.moveNodeUp();
                     } else {
-                        Enumeration<SortableDefaultMutableTreeNode> selection = Settings.pictureCollection.getSelectedNodesAsVector().elements();
+                        /*Enumeration<SortableDefaultMutableTreeNode> selection = Settings.pictureCollection.getSelectedNodesAsVector().elements();
                         SortableDefaultMutableTreeNode n;
                         while ( selection.hasMoreElements() ) {
-                            n = selection.nextElement();
-                            if ( n.getUserObject() instanceof PictureInfo ) {
-                                n.moveNodeUp();
+                        n = selection.nextElement();
+                        if ( n.getUserObject() instanceof PictureInfo ) {
+                        n.moveNodeUp();
+                        }
+                        }*/
+                        for ( SortableDefaultMutableTreeNode selectedNode : Settings.pictureCollection.getSelectedNodes() ) {
+                            if ( selectedNode.getUserObject() instanceof PictureInfo ) {
+                                selectedNode.moveNodeUp();
                             }
                         }
                     }
@@ -361,12 +376,17 @@ public class PicturePopupMenu
                     if ( Settings.pictureCollection.countSelectedNodes() < 1 ) {
                         popupNode.moveNodeDown();
                     } else {
-                        Enumeration<SortableDefaultMutableTreeNode> selection = Settings.pictureCollection.getSelectedNodesAsVector().elements();
+                        /*Enumeration<SortableDefaultMutableTreeNode> selection = Settings.pictureCollection.getSelectedNodesAsVector().elements();
                         SortableDefaultMutableTreeNode n;
                         while ( selection.hasMoreElements() ) {
-                            n = selection.nextElement();
-                            if ( n.getUserObject() instanceof PictureInfo ) {
-                                n.moveNodeDown();
+                        n = selection.nextElement();
+                        if ( n.getUserObject() instanceof PictureInfo ) {
+                        n.moveNodeDown();
+                        }
+                        }*/
+                        for ( SortableDefaultMutableTreeNode selectedNode : Settings.pictureCollection.getSelectedNodes() ) {
+                            if ( selectedNode.getUserObject() instanceof PictureInfo ) {
+                                selectedNode.moveNodeDown();
                             }
                         }
                     }
@@ -377,16 +397,22 @@ public class PicturePopupMenu
             JMenuItem movePictureToBottomJMenuItem = new JMenuItem( Settings.jpoResources.getString( "movePictureToBottomJMenuItem" ) );
             movePictureToBottomJMenuItem.addActionListener( new ActionListener() {
 
+                @Override
                 public void actionPerformed( ActionEvent e ) {
                     if ( Settings.pictureCollection.countSelectedNodes() < 1 ) {
                         popupNode.moveNodeToBottom();
                     } else {
-                        Enumeration<SortableDefaultMutableTreeNode> selection = Settings.pictureCollection.getSelectedNodesAsVector().elements();
+                        /*Enumeration<SortableDefaultMutableTreeNode> selection = Settings.pictureCollection.getSelectedNodesAsVector().elements();
                         SortableDefaultMutableTreeNode n;
                         while ( selection.hasMoreElements() ) {
-                            n = selection.nextElement();
-                            if ( n.getUserObject() instanceof PictureInfo ) {
-                                n.moveNodeToBottom();
+                        n = selection.nextElement();
+                        if ( n.getUserObject() instanceof PictureInfo ) {
+                        n.moveNodeToBottom();
+                        }
+                        }*/
+                        for ( SortableDefaultMutableTreeNode selectedNode : Settings.pictureCollection.getSelectedNodes() ) {
+                            if ( selectedNode.getUserObject() instanceof PictureInfo ) {
+                                selectedNode.moveNodeToBottom();
                             }
                         }
                     }
@@ -397,16 +423,22 @@ public class PicturePopupMenu
             JMenuItem indentJMenuItem = new JMenuItem( Settings.jpoResources.getString( "indentJMenuItem" ) );
             indentJMenuItem.addActionListener( new ActionListener() {
 
+                @Override
                 public void actionPerformed( ActionEvent e ) {
                     if ( Settings.pictureCollection.countSelectedNodes() < 1 ) {
                         popupNode.indentNode();
                     } else {
-                        Enumeration<SortableDefaultMutableTreeNode> selection = Settings.pictureCollection.getSelectedNodesAsVector().elements();
+                        /*Enumeration<SortableDefaultMutableTreeNode> selection = Settings.pictureCollection.getSelectedNodesAsVector().elements();
                         SortableDefaultMutableTreeNode n;
                         while ( selection.hasMoreElements() ) {
-                            n = selection.nextElement();
-                            if ( n.getUserObject() instanceof PictureInfo ) {
-                                n.indentNode();
+                        n = selection.nextElement();
+                        if ( n.getUserObject() instanceof PictureInfo ) {
+                        n.indentNode();
+                        }
+                        }*/
+                        for ( SortableDefaultMutableTreeNode selectedNode : Settings.pictureCollection.getSelectedNodes() ) {
+                            if ( selectedNode.getUserObject() instanceof PictureInfo ) {
+                                selectedNode.indentNode();
                             }
                         }
                     }
@@ -421,12 +453,17 @@ public class PicturePopupMenu
                     if ( Settings.pictureCollection.countSelectedNodes() < 1 ) {
                         popupNode.outdentNode();
                     } else {
-                        Enumeration selection = Settings.pictureCollection.getSelectedNodesAsVector().elements();
+                        /*Enumeration selection = Settings.pictureCollection.getSelectedNodesAsVector().elements();
                         SortableDefaultMutableTreeNode n;
                         while ( selection.hasMoreElements() ) {
-                            n = (SortableDefaultMutableTreeNode) selection.nextElement();
-                            if ( n.getUserObject() instanceof PictureInfo ) {
-                                n.outdentNode();
+                        n = (SortableDefaultMutableTreeNode) selection.nextElement();
+                        if ( n.getUserObject() instanceof PictureInfo ) {
+                        n.outdentNode();
+                        }
+                        }*/
+                        for ( SortableDefaultMutableTreeNode selectedNode : Settings.pictureCollection.getSelectedNodes() ) {
+                            if ( selectedNode.getUserObject() instanceof PictureInfo ) {
+                                selectedNode.outdentNode();
                             }
                         }
                     }
@@ -443,6 +480,7 @@ public class PicturePopupMenu
         final JMenuItem copyToNewLocationJMenuItem = new JMenuItem( Settings.jpoResources.getString( "copyToNewLocationJMenuItem" ) );
         copyToNewLocationJMenuItem.addActionListener( new ActionListener() {
 
+            @Override
             public void actionPerformed( ActionEvent e ) {
                 if ( Settings.pictureCollection.countSelectedNodes() < 1 ) {
                     SortableDefaultMutableTreeNode[] nodes = new SortableDefaultMutableTreeNode[1];
@@ -540,16 +578,22 @@ public class PicturePopupMenu
             JMenuItem fileRenameJMenuItem = new JMenuItem( Settings.jpoResources.getString( "fileRenameJMenuItem" ) );
             fileRenameJMenuItem.addActionListener( new ActionListener() {
 
+                @Override
                 public void actionPerformed( ActionEvent e ) {
                     if ( Settings.pictureCollection.countSelectedNodes() < 1 ) {
                         TreeNodeController.fileRename( popupNode );
                     } else {
-                        Enumeration<SortableDefaultMutableTreeNode> selection = Settings.pictureCollection.getSelectedNodesAsVector().elements();
+                        /* Enumeration<SortableDefaultMutableTreeNode> selection = Settings.pictureCollection.getSelectedNodesAsVector().elements();
                         SortableDefaultMutableTreeNode n;
                         while ( selection.hasMoreElements() ) {
-                            n = selection.nextElement();
-                            if ( n.getUserObject() instanceof PictureInfo ) {
-                                TreeNodeController.fileRename( n );
+                        n = selection.nextElement();
+                        if ( n.getUserObject() instanceof PictureInfo ) {
+                        TreeNodeController.fileRename( n );
+                        }
+                        }*/
+                        for ( SortableDefaultMutableTreeNode selectedNode : Settings.pictureCollection.getSelectedNodes() ) {
+                            if ( selectedNode.getUserObject() instanceof PictureInfo ) {
+                                TreeNodeController.fileRename( selectedNode );
                             }
                         }
                     }
@@ -561,6 +605,7 @@ public class PicturePopupMenu
             JMenuItem fileDeleteJMenuItem = new JMenuItem( Settings.jpoResources.getString( "fileDeleteJMenuItem" ) );
             fileDeleteJMenuItem.addActionListener( new ActionListener() {
 
+                @Override
                 public void actionPerformed( ActionEvent e ) {
                     requestDelete();
                 }
@@ -589,12 +634,17 @@ public class PicturePopupMenu
     private void requestRemoveNode() {
         SortableDefaultMutableTreeNode actionNode = mySetOfNodes.getNode( index );
         if ( ( Settings.pictureCollection.countSelectedNodes() > 1 ) && ( Settings.pictureCollection.isSelected( actionNode ) ) ) {
-            Enumeration<SortableDefaultMutableTreeNode> selection = Settings.pictureCollection.getSelectedNodesAsVector().elements();
+            /*Enumeration<SortableDefaultMutableTreeNode> selection = Settings.pictureCollection.getSelectedNodesAsVector().elements();
             SortableDefaultMutableTreeNode n;
             while ( selection.hasMoreElements() ) {
-                n = selection.nextElement();
-                if ( n.getUserObject() instanceof PictureInfo ) {
-                    n.deleteNode();
+            n = selection.nextElement();
+            if ( n.getUserObject() instanceof PictureInfo ) {
+            n.deleteNode();
+            }
+            }*/
+            for ( SortableDefaultMutableTreeNode selectedNode : Settings.pictureCollection.getSelectedNodes() ) {
+                if ( selectedNode.getUserObject() instanceof PictureInfo ) {
+                    selectedNode.deleteNode();
                 }
             }
         } else {
@@ -679,12 +729,17 @@ public class PicturePopupMenu
     private void multiDeleteDialog() {
         JTextArea textArea = new JTextArea();
         textArea.setText( "" );
-        Enumeration<SortableDefaultMutableTreeNode> selection = Settings.pictureCollection.getSelectedNodesAsVector().elements();
+        /*Enumeration<SortableDefaultMutableTreeNode> selection = Settings.pictureCollection.getSelectedNodesAsVector().elements();
         SortableDefaultMutableTreeNode n;
         while ( selection.hasMoreElements() ) {
-            n = selection.nextElement();
-            if ( n.getUserObject() instanceof PictureInfo ) {
-                textArea.append( ( (PictureInfo) n.getUserObject() ).getHighresLocation() + "\n" );
+        n = selection.nextElement();
+        if ( n.getUserObject() instanceof PictureInfo ) {
+        textArea.append( ( (PictureInfo) n.getUserObject() ).getHighresLocation() + "\n" );
+        }
+        }*/
+        for ( SortableDefaultMutableTreeNode selectedNode : Settings.pictureCollection.getSelectedNodes() ) {
+            if ( selectedNode.getUserObject() instanceof PictureInfo ) {
+                textArea.append( ( (PictureInfo) selectedNode.getUserObject() ).getHighresLocation() + "\n" );
             }
         }
         textArea.append( Settings.jpoResources.getString( "areYouSure" ) );
@@ -697,12 +752,13 @@ public class PicturePopupMenu
                 JOptionPane.OK_CANCEL_OPTION );
 
         if ( option == 0 ) {
-            selection = Settings.pictureCollection.getSelectedNodesAsVector().elements();
-            PictureInfo pi;
-            while ( selection.hasMoreElements() ) {
-                n = selection.nextElement();
-                if ( n.getUserObject() instanceof PictureInfo ) {
-                    pi = (PictureInfo) n.getUserObject();
+            for ( SortableDefaultMutableTreeNode selectedNode : Settings.pictureCollection.getSelectedNodes() ) {
+                //selection = Settings.pictureCollection.getSelectedNodesAsVector().elements();
+                PictureInfo pi;
+                //while ( selection.hasMoreElements() ) {
+                //  n = selection.nextElement();
+                if ( selectedNode.getUserObject() instanceof PictureInfo ) {
+                    pi = (PictureInfo) selectedNode.getUserObject();
                     boolean ok = false;
                     File lowresFile = pi.getLowresFile();
                     if ( ( lowresFile != null ) && ( lowresFile.exists() ) ) {
@@ -717,14 +773,12 @@ public class PicturePopupMenu
                     File highresFile = pi.getHighresFile();
                     if ( highresFile.exists() ) {
                         ok = highresFile.delete();
-                        if ( !ok ) //logger.info("File deleted: " + highresFile.toString() );
-                        //else
-                        {
+                        if ( !ok ) {
                             LOGGER.info( "File deleted failed on: " + highresFile.toString() );
                         }
                     }
 
-                    n.deleteNode();
+                    selectedNode.deleteNode();
 
                     if ( !ok ) {
                         JOptionPane.showMessageDialog( Settings.anchorFrame,
@@ -784,8 +838,9 @@ public class PicturePopupMenu
                 Settings.pictureCollection.clearSelection();
                 TreeNodeController.showCategoryUsageGUI( popupNode );
             } else {
-                CategoryUsageJFrame cujf = new CategoryUsageJFrame();
-                cujf.setSelection( Settings.pictureCollection.getSelectedNodesAsVector() );
+                CategoryUsageJFrame categoryUsageJFrame = new CategoryUsageJFrame();
+                SortableDefaultMutableTreeNode [] selectedNodes = Settings.pictureCollection.getSelectedNodes();
+                categoryUsageJFrame.setSelection( new ArrayList<SortableDefaultMutableTreeNode>( Arrays.asList( selectedNodes ) ) );
             }
         }
     }
@@ -797,12 +852,17 @@ public class PicturePopupMenu
         if ( Settings.pictureCollection.countSelectedNodes() < 1 ) {
             popupNode.getPictureCollection().removeFromMailSelection( popupNode );
         } else {
-            Enumeration<SortableDefaultMutableTreeNode> selection = Settings.pictureCollection.getSelectedNodesAsVector().elements();
+            /*Enumeration<SortableDefaultMutableTreeNode> selection = Settings.pictureCollection.getSelectedNodesAsVector().elements();
             SortableDefaultMutableTreeNode n;
             while ( selection.hasMoreElements() ) {
-                n = selection.nextElement();
-                if ( n.getUserObject() instanceof PictureInfo ) {
-                    n.getPictureCollection().removeFromMailSelection( n );
+            n = selection.nextElement();
+            if ( n.getUserObject() instanceof PictureInfo ) {
+            n.getPictureCollection().removeFromMailSelection( n );
+            }
+            }*/
+            for ( SortableDefaultMutableTreeNode selectedNode : Settings.pictureCollection.getSelectedNodes() ) {
+                if ( selectedNode.getUserObject() instanceof PictureInfo ) {
+                    selectedNode.getPictureCollection().removeFromMailSelection( selectedNode );
                 }
             }
         }
@@ -900,11 +960,17 @@ public class PicturePopupMenu
         if ( ( Settings.pictureCollection.countSelectedNodes() > 0 ) && ( Settings.pictureCollection.isSelected( popupNode ) ) ) {
             // move the selected nodes and then unselect them
             LOGGER.info( "Moving the selection." );
-            Enumeration<SortableDefaultMutableTreeNode> selection = Settings.pictureCollection.getSelectedNodesAsVector().elements();
+            /*Enumeration<SortableDefaultMutableTreeNode> selection = Settings.pictureCollection.getSelectedNodesAsVector().elements();
             while ( selection.hasMoreElements() ) {
-                SortableDefaultMutableTreeNode n = selection.nextElement();
-                n.moveToLastChild( targetNode );
+            SortableDefaultMutableTreeNode n = selection.nextElement();
+            n.moveToLastChild( targetNode );
+            }*/
+            for ( SortableDefaultMutableTreeNode selectedNode : Settings.pictureCollection.getSelectedNodes() ) {
+                if ( selectedNode.getUserObject() instanceof PictureInfo ) {
+                    selectedNode.moveToLastChild( targetNode );
+                }
             }
+
             Settings.pictureCollection.clearSelection();
         } else {
             // move only the popup node

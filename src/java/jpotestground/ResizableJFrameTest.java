@@ -1,12 +1,13 @@
 package jpotestground;
 
+import java.lang.reflect.InvocationTargetException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import jpo.gui.swing.ScreenHelper;
 import jpo.gui.swing.ResizableJFrame;
 import jpo.gui.swing.NonFocussedCaret;
 import jpo.dataModel.Settings;
-import jpo.*;
 import java.awt.BorderLayout;
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
@@ -14,6 +15,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.SwingUtilities;
 
 
 /*
@@ -31,133 +33,176 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 The license is in gpl.txt.
 See http://www.gnu.org/copyleft/gpl.html for the details.
  */
-
-
 /**
  *
  * A class to test the ResizableJFrame. This can be problematic
  * because different users are likely to have different screen configurations.
  */
 public class ResizableJFrameTest {
-    
+
     /**
      * An entry point for standalone screen size testing.
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
-      new ResizableJFrameTest();
+    public static void main( String[] args ) {
+        Settings.loadSettings();
+        try {
+            SwingUtilities.invokeAndWait( new Runnable() {
+
+                @Override
+                public void run() {
+                    new ResizableJFrameTest();
+                }
+            } );
+        } catch ( InterruptedException ex ) {
+            Logger.getLogger( ResizableJFrameTest.class.getName() ).log( Level.SEVERE, null, ex );
+        } catch ( InvocationTargetException ex ) {
+            Logger.getLogger( ResizableJFrameTest.class.getName() ).log( Level.SEVERE, null, ex );
+
+        }
     }
 
     /**
      * Constructor for the test window
      */
     public ResizableJFrameTest() {
-        // TODO code application logic here
-        final ResizableJFrame rjf = new ResizableJFrame( "Title", true, new Dimension( 800, 600 ) );
-        Settings.loadSettings();
+
+        final JPanel p = new JPanel();
+        p.setLayout( new BorderLayout() );
+
+        final ResizableJFrame rjf = new ResizableJFrame( p );
         rjf.setDefaultCloseOperation( JFrame.DISPOSE_ON_CLOSE );
-        
+
+
+
         JPanel buttonPanel = new JPanel();
-        JButton fullScreen = new JButton( "FullScreen");
+        JButton fullScreen = new JButton( "FullScreen" );
         fullScreen.addActionListener( new ActionListener() {
+
+            @Override
             public void actionPerformed( ActionEvent e ) {
-                //rjf.maximise();
                 rjf.resizeTo( ResizableJFrame.WINDOW_FULLSCREEN );
             }
         } );
         buttonPanel.add( fullScreen );
-        
-        JButton normalScreen = new JButton( "Normal");
+
+        JButton normalScreen = new JButton( "Normal" );
         normalScreen.addActionListener( new ActionListener() {
+
+            @Override
             public void actionPerformed( ActionEvent e ) {
-                //rjf.unMaximise();
                 rjf.resizeTo( ResizableJFrame.WINDOW_DEFAULT );
-                
+
             }
         } );
         buttonPanel.add( normalScreen );
-        
-        JButton leftSize = new JButton( "Left");
+
+        JButton leftSize = new JButton( "Left" );
         leftSize.addActionListener( new ActionListener() {
+
+            @Override
             public void actionPerformed( ActionEvent e ) {
-                //rjf.reziseToLeft();
                 rjf.resizeTo( ResizableJFrame.WINDOW_LEFT );
             }
         } );
         buttonPanel.add( leftSize );
-        
-        JButton topLeftSize = new JButton( "Top Left");
+
+        JButton topLeftSize = new JButton( "Top Left" );
         topLeftSize.addActionListener( new ActionListener() {
+
+            @Override
             public void actionPerformed( ActionEvent e ) {
-                //rjf.reziseToTopLeft();
                 rjf.resizeTo( ResizableJFrame.WINDOW_TOP_LEFT );
-                
+
             }
         } );
         buttonPanel.add( topLeftSize );
-        
-        JButton bottomLeftSize = new JButton( "Bottom Left");
+
+        JButton bottomLeftSize = new JButton( "Bottom Left" );
         bottomLeftSize.addActionListener( new ActionListener() {
+
+            @Override
             public void actionPerformed( ActionEvent e ) {
-                //rjf.reziseToBottomLeft();
                 rjf.resizeTo( ResizableJFrame.WINDOW_BOTTOM_LEFT );
-                
+
             }
         } );
         buttonPanel.add( bottomLeftSize );
-        
-        
-        JButton rightSize = new JButton( "Right");
+
+
+        JButton rightSize = new JButton( "Right" );
         rightSize.addActionListener( new ActionListener() {
+
+            @Override
             public void actionPerformed( ActionEvent e ) {
-                //rjf.reziseToRight();
                 rjf.resizeTo( ResizableJFrame.WINDOW_RIGHT );
             }
         } );
         buttonPanel.add( rightSize );
-        
-        JButton topRightSize = new JButton( "Top Right");
+
+        JButton topRightSize = new JButton( "Top Right" );
         topRightSize.addActionListener( new ActionListener() {
+
+            @Override
             public void actionPerformed( ActionEvent e ) {
-                //rjf.reziseToTopRight();
                 rjf.resizeTo( ResizableJFrame.WINDOW_TOP_RIGHT );
             }
         } );
         buttonPanel.add( topRightSize );
-        
-        JButton bottomRightSize = new JButton( "Bottom Right");
+
+        JButton bottomRightSize = new JButton( "Bottom Right" );
         bottomRightSize.addActionListener( new ActionListener() {
+
+            @Override
             public void actionPerformed( ActionEvent e ) {
-                //rjf.reziseToBottomRight();
                 rjf.resizeTo( ResizableJFrame.WINDOW_BOTTOM_RIGHT );
             }
         } );
         buttonPanel.add( bottomRightSize );
-        
-        
+
+        JButton decorateButton = new JButton( "Turn on decorations" );
+        decorateButton.addActionListener( new ActionListener() {
+
+            @Override
+            public void actionPerformed( ActionEvent e ) {
+                rjf.switchDecorations( true );
+            }
+        } );
+        buttonPanel.add( decorateButton );
+
+        JButton undecorateButton = new JButton( "Turn off decorations" );
+        undecorateButton.addActionListener( new ActionListener() {
+
+            @Override
+            public void actionPerformed( ActionEvent e ) {
+                rjf.switchDecorations( false );
+            }
+        } );
+        buttonPanel.add( undecorateButton );
+
+
         final JTextArea jta = new JTextArea( 20, 80 );
         jta.setCaret( new NonFocussedCaret() );
-        
-        
-        JButton refresh = new JButton( "Refresh");
+
+
+        JButton refresh = new JButton( "Refresh" );
         refresh.addActionListener( new ActionListener() {
+
+            @Override
             public void actionPerformed( ActionEvent e ) {
                 jta.setText( ScreenHelper.explainGraphicsEnvironment().toString() );
             }
         } );
         buttonPanel.add( refresh );
-        
-        
-        JPanel p = new JPanel();
-        p.setLayout( new BorderLayout() );
+
         p.add( buttonPanel, BorderLayout.NORTH );
+
         final JScrollPane jsp = new JScrollPane( jta );
         p.add( jsp, BorderLayout.CENTER );
-        
-        rjf.getContentPane().add( p );
-        rjf.validate();
-        
-        jta.setText( ScreenHelper.explainGraphicsEnvironment().toString() );
-    }
 
+        rjf.validate();
+
+        jta.setText( ScreenHelper.explainGraphicsEnvironment().toString() );
+
+    }
 }

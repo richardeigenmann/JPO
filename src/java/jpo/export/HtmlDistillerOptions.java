@@ -185,12 +185,16 @@ public class HtmlDistillerOptions {
 
     /** 
      * Same as @see getLowresJpgQuality but returned as int and multiplied by 100
-     * @return
+     * @return the lowres quality number
      */
     public int getLowresJpgQualityPercent () {
         return (int) (getLowresJpgQuality() * 100);
     }
 
+    /**
+     * sets the lowers quality number
+     * @param lowresJpgQuality the lowres quality
+     */
     public void setLowresJpgQuality ( float lowresJpgQuality ) {
         this.lowresJpgQuality = lowresJpgQuality;
     }
@@ -237,7 +241,7 @@ public class HtmlDistillerOptions {
 
     /**
      * Same as {@link #getMidresJpgQuality} but returned as int and multiplied by 100
-     * @return
+     * @return the midres quality number
      */
     public int getMidresJpgQualityPercent () {
         return (int) (getMidresJpgQuality() * 100);
@@ -398,7 +402,7 @@ public class HtmlDistillerOptions {
 
     /**
      * Returns the method for picture Naming
-     * @return
+     * @return the picture naming code
      */
     public int getPictureNaming () {
         return pictureNaming;

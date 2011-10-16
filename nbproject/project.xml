@@ -186,9 +186,16 @@
             </compilation-unit>
         </java-data>
         <preferences xmlns="http://www.netbeans.org/ns/auxiliary-configuration-preferences/1">
-            <module name="org-netbeans-modules-editor-indent"/>
+            <module name="org-netbeans-modules-editor-indent">
+                <node name="CodeStyle"/>
+            </module>
+            <module name="org-netbeans-modules-html-editor-lib">
+                <property name="default-html-public-id" value="HTML5"/>
+            </module>
+            <module name="org-netbeans-modules-projectimport-eclipse-core"/>
         </preferences>
         <spellchecker-wordlist xmlns="http://www.netbeans.org/ns/spellchecker-wordlist/1">
+            <word>behavour</word>
             <word>thumbnails</word>
         </spellchecker-wordlist>
     </configuration>

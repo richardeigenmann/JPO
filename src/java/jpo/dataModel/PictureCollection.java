@@ -7,8 +7,6 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Vector;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -20,7 +18,7 @@ import jpo.gui.ThumbnailCreationQueue;
 /*
 PictureCollection.java:  Information about the collection and owns the tree model
 
-Copyright (C) 2006 - 20109  Richard Eigenmann, Zurich, Switzerland
+Copyright (C) 2006 - 2011  Richard Eigenmann, Zurich, Switzerland
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -40,9 +38,9 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 public class PictureCollection {
 
     /**
-     * Defines a logger for this class
+     * Defines a LOGGER for this class
      */
-    private static Logger logger = Logger.getLogger( PictureCollection.class.getName() );
+    private static final Logger LOGGER = Logger.getLogger( PictureCollection.class.getName() );
 
     /**
      *  Constructs a new PictureCollection object with a root object
@@ -51,7 +49,7 @@ public class PictureCollection {
         setRootNode( new SortableDefaultMutableTreeNode( new Object() ) );
         treeModel = new DefaultTreeModel( getRootNode() );
         categories = new HashMap<Integer, String>();
-        mailSelection = new Vector<SortableDefaultMutableTreeNode>();
+        mailSelection = new ArrayList<SortableDefaultMutableTreeNode>();
         setAllowEdits( true );
         setUnsavedUpdates( false );
     }
@@ -63,6 +61,7 @@ public class PictureCollection {
     public void clearCollection() {
         Runnable r = new Runnable() {
 
+            @Override
             public void run() {
                 getRootNode().removeAllChildren();
                 getRootNode().setUserObject( new GroupInfo( Settings.jpoResources.getString( "DefaultRootNodeText" ) ) );
@@ -83,12 +82,12 @@ public class PictureCollection {
             try {
                 SwingUtilities.invokeAndWait( r );
             } catch ( InterruptedException ex ) {
-                logger.severe( ex.getMessage() );
-                logger.severe( "No idea what to do here!" );
+                LOGGER.severe( ex.getMessage() );
+                LOGGER.severe( "No idea what to do here!" );
                 Thread.dumpStack();
             } catch ( InvocationTargetException ex ) {
-                logger.severe( ex.getMessage() );
-                logger.severe( "No idea what to do here!" );
+                LOGGER.severe( ex.getMessage() );
+                LOGGER.severe( "No idea what to do here!" );
                 Thread.dumpStack();
             }
         }
@@ -100,8 +99,8 @@ public class PictureCollection {
 
     /**
      *   The DefaultTreeModel allows notification of tree change events to listening
-     *   objects.
-     * @return
+     *   objects. 
+     * @return The tree Model
      */
     public DefaultTreeModel getTreeModel() {
         return ( treeModel );
@@ -112,8 +111,8 @@ public class PictureCollection {
     public static boolean sendModelUpdates = true;
 
     /**
-     *  returns true if edits are allowed on this collection
-     * @return
+     * Returns true if edits are allowed on this collection
+     * @return true if edits are allowed, false if not
      */
     public boolean getSendModelUpdates() {
         return sendModelUpdates;
@@ -121,7 +120,7 @@ public class PictureCollection {
 
     /**
      * Sets the flag whether to send model updates or not
-     * @param status
+     * @param status the new flag value
      */
     public void setSendModelUpdates( boolean status ) {
         sendModelUpdates = status;
@@ -139,6 +138,7 @@ public class PictureCollection {
         } else {
             Runnable r = new Runnable() {
 
+                @Override
                 public void run() {
                     getTreeModel().nodeStructureChanged( changedNode );
                 }
@@ -160,6 +160,7 @@ public class PictureCollection {
         } else {
             Runnable r = new Runnable() {
 
+                @Override
                 public void run() {
                     Tools.checkEDT();
                     getTreeModel().nodeChanged( changedNode );
@@ -184,6 +185,7 @@ public class PictureCollection {
         } else {
             Runnable r = new Runnable() {
 
+                @Override
                 public void run() {
                     getTreeModel().nodesWereInserted( changedNode, childIndices );
                 }
@@ -208,6 +210,7 @@ public class PictureCollection {
         } else {
             Runnable r = new Runnable() {
 
+                @Override
                 public void run() {
                     getTreeModel().nodesWereRemoved( node, childIndices, removedChildren );
                 }
@@ -234,9 +237,9 @@ public class PictureCollection {
      */
     private void setRootNode( SortableDefaultMutableTreeNode rootNode ) {
         if ( rootNode != null ) {
-            logger.fine( "setting root node to " + rootNode.toString() );
+            LOGGER.fine( "setting root node to " + rootNode.toString() );
         } else {
-            logger.info( "setting root node to null. Why ?" );
+            LOGGER.info( "setting root node to null. Why ?" );
         }
         this.rootNode = rootNode;
     }
@@ -276,7 +279,7 @@ public class PictureCollection {
     /**
      *   This method returns true is the tree has unsaved updates, false if it has none
      *
-     *   @return
+     *   @return true if there are unsaved updates, false if there are none
      * @see #unsavedUpdates
      *
      */
@@ -321,8 +324,8 @@ public class PictureCollection {
     }
 
     /**
-     * Call this method when you need the toot Node for the queries
-     * @return
+     * Call this method when you need the root Node for the queries
+     * @return the root node
      */
     public DefaultMutableTreeNode getQueriesRootNode() {
         return ( (DefaultMutableTreeNode) getQueriesTreeModel().getRoot() );
@@ -330,7 +333,7 @@ public class PictureCollection {
 
     /**
      *   Call this method when you need to set the TreeModel for the queries
-     * @param tm
+     * @param tm the tree model
      */
     public void setQueriesTreeModel( DefaultTreeModel tm ) {
         queriesTreeModel = tm;
@@ -344,14 +347,14 @@ public class PictureCollection {
     }
 
     /**
-     *   Clear out the nodes in the exisitng queries Tree Model
+     *   Clear out the nodes in the existing queries Tree Model
      */
     public void clearQueriesTreeModel() {
         getQueriesRootNode().removeAllChildren();
     }
 
     /**
-     * Adds a query to the Query Tree Model. It has been made synchroneous on the EDT
+     * Adds a query to the Query Tree Model. It has been made synchronous on the EDT
      * @param q The new Query to add
      * @return The node that was added.
      */
@@ -370,7 +373,7 @@ public class PictureCollection {
 
     /**
      *  Acessor for the categories object
-     * @return
+     * @return the hash map
      */
     public HashMap<Integer, String> getCategories() {
         return categories;
@@ -388,6 +391,7 @@ public class PictureCollection {
         final CategoryQuery q = new CategoryQuery( index );
         Runnable r = new Runnable() {
 
+            @Override
             public void run() {
                 addQueryToTreeModel( q );
             }
@@ -424,7 +428,7 @@ public class PictureCollection {
 
     /**
      * Returns an iterator through the categories keys
-     * @return an interator over the categories keys
+     * @return an iterator over the categories keys
      */
     public Iterator getCategoryIterator() {
         return categories.keySet().iterator();
@@ -528,7 +532,7 @@ public class PictureCollection {
      *   This Hash Set hold references to the selected nodes for mailing. It works just like the selection
      *   HashSet only that the purpose is a different one. As such it has different behaviour.
      */
-    private Vector<SortableDefaultMutableTreeNode> mailSelection;
+    private ArrayList<SortableDefaultMutableTreeNode> mailSelection;
 
     /**
      *  This method places the current SDMTN into the mailSelection HashSet.
@@ -536,7 +540,7 @@ public class PictureCollection {
      */
     public void addToMailSelected( SortableDefaultMutableTreeNode node ) {
         if ( isMailSelected( node ) ) {
-            logger.fine( String.format( "The node %s is already selected. Leaving it selected.", node.toString() ) );
+            LOGGER.fine( String.format( "The node %s is already selected. Leaving it selected.", node.toString() ) );
             return;
         }
         mailSelection.add( node );
@@ -563,10 +567,13 @@ public class PictureCollection {
      */
     public void clearMailSelection() {
         //can't use iterator or there is a concurrent modification exception
-        Object[] array = new Object[mailSelection.size()];
+        /*Object[] array = new Object[mailSelection.size()];
         mailSelection.copyInto( array );
         for ( int i = 0; i < array.length; i++ ) {
             removeFromMailSelection( (SortableDefaultMutableTreeNode) array[i] );
+        }*/
+        for (SortableDefaultMutableTreeNode node : mailSelection ) {
+            removeFromMailSelection( node );
         }
     }
 
@@ -585,7 +592,7 @@ public class PictureCollection {
     /**
      *  This returns whether the SDMTN is part of the mailSelection HashSet.
      * @param node
-     * @return
+     * @return true if part of the mailing set, false if not
      */
     public boolean isMailSelected( SortableDefaultMutableTreeNode node ) {
         try {
@@ -596,8 +603,8 @@ public class PictureCollection {
     }
 
     /**
-     *  returns an array of the mailSelected nodes.
-     * @return
+     * Returns an array of the mailSelected nodes.
+     * @return the nodes selected for mail
      */
     public Object[] getMailSelectedNodes() {
         return mailSelection.toArray();
@@ -607,14 +614,14 @@ public class PictureCollection {
      *   This method returns true if the indicated picture file is already a member
      *   of the collection. Otherwise it returns false. Enhanced on 9.6.2004 to
      *   check against Lowres pictures too as we might be adding in pictures that have a
-     *   Lowres Subdirectory and we don't wan't to add the Lowres of the collection
+     *   Lowres Subdirectory and we don't want to add the Lowres of the collection
      *   back in.
      *
-     *   @param	f	The File object of the file to check for
-     * @return
+     *   @param	file	The File object of the file to check for
+     * @return ture if found, false if not
      */
-    public boolean isInCollection( File f ) {
-        logger.fine( String.format( "Checking if File %s exists in the collection", f.toString() ) );
+    public boolean isInCollection( File file ) {
+        LOGGER.fine( String.format( "Checking if File %s exists in the collection", file.toString() ) );
         SortableDefaultMutableTreeNode node;
         Object nodeObject;
         File highresFile;
@@ -627,16 +634,16 @@ public class PictureCollection {
             if ( nodeObject instanceof PictureInfo ) {
                 highresFile = ( (PictureInfo) nodeObject ).getHighresFile();
                 lowresFile = ( (PictureInfo) nodeObject ).getLowresFile();
-                logger.fine( "Checking: " + ( (PictureInfo) nodeObject ).getHighresLocation() );
-                if ( ( highresFile != null ) && ( highresFile.compareTo( f ) == 0 ) ) {
-                    logger.info( "CollectionJTree.isInCollection found a match on: " + ( (PictureInfo) nodeObject ).getDescription() );
+                LOGGER.fine( "Checking: " + ( (PictureInfo) nodeObject ).getHighresLocation() );
+                if ( ( highresFile != null ) && ( highresFile.compareTo( file ) == 0 ) ) {
+                    LOGGER.info( "CollectionJTree.isInCollection found a match on: " + ( (PictureInfo) nodeObject ).getDescription() );
                     return true;
-                } else if ( ( lowresFile != null ) && ( lowresFile.compareTo( f ) == 0 ) ) {
+                } else if ( ( lowresFile != null ) && ( lowresFile.compareTo( file ) == 0 ) ) {
                     return true;
                 }
             } else if ( nodeObject instanceof GroupInfo ) {
                 groupThumbnail = ( (GroupInfo) nodeObject ).getLowresFile();
-                if ( ( groupThumbnail != null ) && ( groupThumbnail.compareTo( f ) == 0 ) ) {
+                if ( ( groupThumbnail != null ) && ( groupThumbnail.compareTo( file ) == 0 ) ) {
                     return true;
                 }
             }
@@ -649,7 +656,7 @@ public class PictureCollection {
      *   of the collection. Otherwise it returns false.
      *
      *   @param	checksum	The checksum of the picture to check for
-     * @return
+     * @return true if found, false if not
      */
     public boolean isInCollection( long checksum ) {
         SortableDefaultMutableTreeNode node;
@@ -659,9 +666,9 @@ public class PictureCollection {
             node = (SortableDefaultMutableTreeNode) e.nextElement();
             nodeObject = node.getUserObject();
             if ( nodeObject instanceof PictureInfo ) {
-                logger.fine( "Checking: " + ( (PictureInfo) nodeObject ).getHighresLocation() );
+                LOGGER.fine( "Checking: " + ( (PictureInfo) nodeObject ).getHighresLocation() );
                 if ( ( (PictureInfo) nodeObject ).getChecksum() == checksum ) {
-                    logger.fine( "CollectionJTree.isInCollection found a match on: " + ( (PictureInfo) nodeObject ).getDescription() );
+                    LOGGER.fine( "CollectionJTree.isInCollection found a match on: " + ( (PictureInfo) nodeObject ).getDescription() );
                     return true;
                 }
             }
@@ -681,15 +688,15 @@ public class PictureCollection {
     /**
      *  This method sets the file which represents the current collection.
      *  It updates the title of the main application window too.
-     * @param f
+     * @param file set the file name
      */
-    public void setXmlFile( File f ) {
-        xmlFile = f;
+    public void setXmlFile( File file ) {
+        xmlFile = file;
     }
 
     /**
-     *  This method returns the xml file for the collection
-     * @return
+     * This method returns the xml file for the collection
+     * @return The xml file of the collection 
      */
     public File getXmlFile() {
         return xmlFile;
@@ -702,7 +709,7 @@ public class PictureCollection {
      */
     public void fileLoad( File f ) throws FileNotFoundException {
         if ( fileLoading ) {
-            logger.info( this.getClass().toString() + ".fileLoad: already busy loading another file. Aborting" );
+            LOGGER.info( this.getClass().toString() + ".fileLoad: already busy loading another file. Aborting" );
             return;
         }
         fileLoading = true;
@@ -723,7 +730,7 @@ public class PictureCollection {
      */
     public boolean fileSave() {
         if ( xmlFile == null ) {
-            logger.severe( "xmlFile is null. Not saving!" );
+            LOGGER.severe( "xmlFile is null. Not saving!" );
             return false;
         } else {
             File temporaryFile = new File( xmlFile.getPath() + ".!!!" );
@@ -751,7 +758,7 @@ public class PictureCollection {
             return null;
         }
 
-        Vector<SortableDefaultMutableTreeNode> parentGroups = new Vector<SortableDefaultMutableTreeNode>();
+        ArrayList<SortableDefaultMutableTreeNode> parentGroups = new ArrayList<SortableDefaultMutableTreeNode>();
 
         String comparingFilename = ( (PictureInfo) userObject ).getHighresLocation();
         SortableDefaultMutableTreeNode testNode, testNodeParent;
@@ -765,7 +772,7 @@ public class PictureCollection {
                 if ( pi.getHighresLocation().equals( comparingFilename ) ) {
                     testNodeParent = (SortableDefaultMutableTreeNode) testNode.getParent();
                     if ( !parentGroups.contains( testNodeParent ) ) {
-                        logger.fine( "adding node: " + testNodeParent.toString() );
+                        LOGGER.fine( "adding node: " + testNodeParent.toString() );
                         parentGroups.add( testNodeParent );
                     }
                 }
@@ -776,7 +783,7 @@ public class PictureCollection {
     /**
      *   This Hash Set holds references to the selected nodes.
      */
-    public final Vector<SortableDefaultMutableTreeNode> selection = new Vector<SortableDefaultMutableTreeNode>();
+    public final ArrayList<SortableDefaultMutableTreeNode> selection = new ArrayList<SortableDefaultMutableTreeNode>();
 
     /**
      * This method places the current {@link SortableDefaultMutableTreeNode} into the selection HashSet.
@@ -784,7 +791,7 @@ public class PictureCollection {
      */
     public void addToSelectedNodes( SortableDefaultMutableTreeNode node ) {
         if ( isSelected( node ) ) {
-            logger.fine( String.format( "The node %s is already selected. Leaving it selected.", node.toString() ) );
+            LOGGER.fine( String.format( "The node %s is already selected. Leaving it selected.", node.toString() ) );
             return;
         }
         selection.add( node );
@@ -809,6 +816,9 @@ public class PictureCollection {
             ( (GroupInfo) userObject ).sendWasUnselectedEvent();
         }
     }
+    
+    
+    
 
     /**
      * This method clears selection HashSet that refers to the selected
@@ -816,11 +826,18 @@ public class PictureCollection {
      */
     public void clearSelection() {
         //can't use iterator or there is a concurrent modification exception
-        Object[] array = new Object[selection.size()];
-        selection.copyInto( array );
+        //Object[] array = new Object[selection.size()];
+        //selection.toArray().copyInto( array );
+        Object[] array = selection.toArray();
         for ( int i = 0; i < array.length; i++ ) {
             removeFromSelection( (SortableDefaultMutableTreeNode) array[i] );
         }
+        //ArrayList<SortableDefaultMutableTreeNode> tempArray = new ArrayList<SortableDefaultMutableTreeNode>();
+        //Collections.copy( tempArray, selection);
+        /*ArrayList<SortableDefaultMutableTreeNode> tempArray = selection.clone();
+        for ( SortableDefaultMutableTreeNode node : tempArray ) {
+            removeFromSelection( node );
+        }*/
     }
 
     /**
@@ -847,10 +864,10 @@ public class PictureCollection {
     /**
      * The selected nodes
      * @return a vector of the selected nodes
-     */
-    public Vector<SortableDefaultMutableTreeNode> getSelectedNodesAsVector() {
+     *
+    public ArrayList<SortableDefaultMutableTreeNode> getSelectedNodesAsVector() {
         return selection;
-    }
+    }*/
 
     /**
      *  returns the count of selected nodes

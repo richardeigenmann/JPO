@@ -7,6 +7,8 @@ import jpo.dataModel.PictureInfo;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.logging.Logger;
@@ -81,6 +83,15 @@ public class PictureViewer
         pictureJPanel.addMouseListener( MouseListener );
         pictureJPanel.addMouseMotionListener( MouseListener );
 
+        pictureFrame.myJFrame.addWindowListener( new WindowAdapter() {
+
+            @Override
+            public void windowClosing( WindowEvent we ) {
+                closeViewer();
+            }
+        } );
+
+
     }
     /**
      * Defines a logger for this class
@@ -96,7 +107,7 @@ public class PictureViewer
         mySetOfNodes.removeNodeNavigatorListener( this );
         mySetOfNodes.getRid(); // help Grabage collection remove the listener
         stopTimer();
-        pictureFrame.closeMyWindow();
+        pictureFrame.myJFrame.dispose();
     }
     /**
      *  the context of the browsing
@@ -137,7 +148,7 @@ public class PictureViewer
     /**
      *  popup menu for window mode changing
      */
-    private ChangeWindowPopupMenu changeWindowPopupMenu = new ChangeWindowPopupMenu( pictureFrame );
+    private ChangeWindowPopupMenu changeWindowPopupMenu = new ChangeWindowPopupMenu( pictureFrame.myJFrame );
 
     /**
      * Shows a resize popup menu
@@ -212,11 +223,6 @@ public class PictureViewer
         }
 
         this.myIndex = myIndex;
-
-
-        if ( pictureFrame.myJFrame == null ) {
-            pictureFrame.createWindow();
-        }
 
         pictureFrame.descriptionJTextField.setText( pictureInfo.getDescription() );
         setPicture( pictureInfo );
@@ -492,6 +498,18 @@ public class PictureViewer
     public void startAdvanceTimer( int seconds ) {
         advanceTimer = new AdvanceTimer( this, seconds );
         pictureFrame.getPictureViewerNavBar().setClockBusy();
+        pictureFrame.getPictureViewerNavBar().showDelaySilder();
+    }
+
+    /**
+     * This method sets up the Advance Timer
+     * @param seconds 
+     */
+    @Override
+    public void setTimerDelay( int delay ) {
+        if ( advanceTimer != null ) {
+            advanceTimer.setDelay( delay );
+        }
     }
 
     /**
@@ -503,7 +521,7 @@ public class PictureViewer
         }
 
         advanceTimer = null;
-        //pictureNodesArrayList = null;
+        pictureFrame.getPictureViewerNavBar().hideDelaySilder();
     }
 
     /**
@@ -529,7 +547,6 @@ public class PictureViewer
      */
     @Override
     public void requestAdvance() {
-        //logger.info( "Advance requested");
         requestNextPicture();
     }
 
@@ -593,10 +610,6 @@ public class PictureViewer
                         break;
 
                 }
-
-
-
-
             }
         };
         if ( SwingUtilities.isEventDispatchThread() ) {
@@ -637,10 +650,6 @@ public class PictureViewer
                         break;
 
                 }
-
-
-
-
             }
         };
         if ( SwingUtilities.isEventDispatchThread() ) {

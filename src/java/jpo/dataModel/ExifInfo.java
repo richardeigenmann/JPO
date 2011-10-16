@@ -300,7 +300,7 @@ public class ExifInfo {
 
     /**
      * Sets the time the picture was created
-     * @param createDateTime the createDateTime to set
+     * @param dateTime the createDateTime to set
      */
     private void setCreateDateTime( String dateTime ) {
         this.createDateTime = dateTime;

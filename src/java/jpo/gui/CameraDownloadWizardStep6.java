@@ -2,7 +2,6 @@ package jpo.gui;
 
 import java.util.ArrayList;
 import jpo.dataModel.Settings;
-import jpo.*;
 import net.javaprog.ui.wizard.*;
 import javax.swing.*;
 import jpo.dataModel.SortOption;
@@ -10,7 +9,7 @@ import jpo.dataModel.SortOption;
 /*
 CameraDownloadWizardStep6.java: the fifth step in the download from Camera Wizard
 
-Copyright (C) 2007  Richard Eigenmann.
+Copyright (C) 2007 - 2011  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -50,10 +49,10 @@ public class CameraDownloadWizardStep6 extends AbstractStep {
 
     /**
      *  Returns the component that visualises the user interactable stuff for this step of the wizard.
-     * @return
+     * @return the component
      */
+    @Override
     protected JComponent createComponent() {
-        //return component shown to the user
         JPanel stepComponent = new JPanel();
         stepComponent.setLayout(new BoxLayout(stepComponent, BoxLayout.PAGE_AXIS));
         stepComponent.add(label1);
@@ -72,6 +71,7 @@ public class CameraDownloadWizardStep6 extends AbstractStep {
     /**
      *  Required by the AbstractSetp but not used.
      */
+    @Override
     public void prepareRendering() {
 
         // Move|Copy xx pictures from

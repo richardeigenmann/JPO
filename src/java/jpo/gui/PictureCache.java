@@ -2,7 +2,6 @@ package jpo.gui;
 
 import jpo.dataModel.Tools;
 import jpo.dataModel.Settings;
-import jpo.*;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
 import jpo.dataModel.PictureInfo;
 import java.util.*;
@@ -12,7 +11,7 @@ import java.util.logging.Logger;
 
 /*
 PictureCache.java:  class that manages the cache of pictures
-Copyright (C) 2002 - 2009  Richard Eigenmann.
+Copyright (C) 2002 - 2011  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -33,9 +32,9 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 public class PictureCache {
 
     /**
-     * Defines a logger for this class
+     * Defines a LOGGER for this class
      */
-    private static Logger logger = Logger.getLogger( PictureCache.class.getName() );
+    private static final Logger LOGGER = Logger.getLogger( PictureCache.class.getName() );
 
     /**
      *  Defines the Hashtable that facilitate the caching of images. 
@@ -104,7 +103,7 @@ public class PictureCache {
     /**
      *  returns whether an image is in the cache. <p>
      * @param url 
-     * @return
+     * @return true if it is, false if not
      */
     public static synchronized boolean isInCache( URL url ) {
         return isInCache( url.toString() );
@@ -114,7 +113,7 @@ public class PictureCache {
     /**
      *  returns whether an image is in the cache. <p>
      * @param urlString 
-     * @return
+     * @return true if the url is in the cache, false if not 
      */
     public static synchronized boolean isInCache( String urlString ) {
         return pictureCache.containsKey( urlString );
@@ -127,9 +126,9 @@ public class PictureCache {
      *  @param sp	The picture to be stored
      */
     public static synchronized void add( URL url, SourcePicture sp ) {
-        // logger.info("PictureCache.add: " + url.toString() );
+        // LOGGER.info("PictureCache.add: " + url.toString() );
         if ( sp.getSourceBufferedImage() == null ) {
-            logger.info( "PictureCache.add: invoked with a null picture! Not cached! URL was: " + url.toString() );
+            LOGGER.info( "PictureCache.add: invoked with a null picture! Not cached! URL was: " + url.toString() );
             return;
         }
 
@@ -169,7 +168,7 @@ public class PictureCache {
     /**
      *  returns a picture from the cache. Returns null if image is not there
      *  @param url 	The URL of the picture to be retrieved
-     * @return
+     * @return the source Picture
      */
     public static synchronized SourcePicture getSourcePicture( URL url ) {
         return pictureCache.get(url.toString());
@@ -180,7 +179,7 @@ public class PictureCache {
      *  clears out all images in the cache. Important after OutOfMemoryErrors
      */
     public static void clear() {
-        // logger.info("PictureCache.clear: Zapping entire cache");
+        // LOGGER.info("PictureCache.clear: Zapping entire cache");
         pictureCache.clear();
         Tools.freeMem();
     }
@@ -190,12 +189,12 @@ public class PictureCache {
      *  method to inspect the cache
      */
     public static void reportCache() {
-        logger.info( "cache contains: " + Integer.toString( pictureCache.size() ) + " max: " + Integer.toString( Settings.maxCache ) );
+        LOGGER.info( "cache contains: " + Integer.toString( pictureCache.size() ) + " max: " + Integer.toString( Settings.maxCache ) );
         //Tools.freeMem();
         Enumeration<String> e = pictureCache.keys();
         while ( e.hasMoreElements() ) {
-            logger.info( "   Cache contains: " +  e.nextElement() );
+            LOGGER.info( "   Cache contains: " +  e.nextElement() );
         }
-        logger.info( "  End of cache contents" );
+        LOGGER.info( "  End of cache contents" );
     }
 }

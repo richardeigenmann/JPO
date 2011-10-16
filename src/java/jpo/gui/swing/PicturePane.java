@@ -140,6 +140,7 @@ public class PicturePane
         } );
 
         setFont( infoFont );
+        setMinimumSize( new Dimension (100,100));
     }
 
 

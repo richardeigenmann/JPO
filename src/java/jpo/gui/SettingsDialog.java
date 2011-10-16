@@ -858,8 +858,8 @@ public class SettingsDialog
      *   this method verifies that the file specified in the logfileJTextField
      *   is valid. It sets the color of the font to red if this is not ok and
      *   returns false to the caller. If all is fine it returns true;
-     * @param validationFile
-     * @return
+     * @param validationFile The file to test
+     * @return true if good, false if bad
      */
     public boolean checkLogfile( String validationFile ) {
         File testFile = new File( validationFile );
@@ -897,8 +897,8 @@ public class SettingsDialog
      *   this method verifies that the file specified in the logfileJTextField
      *   is valid. It sets the color of the font to red if this is not ok and
      *   returns false to the caller. If all is fine it returns true;
-     * @param validationFile
-     * @return
+     * @param validationFile the file to validate
+     * @return true if good, false if not
      */
     public boolean checkAutoLoad( String validationFile ) {
         LOGGER.log( Level.FINE, "SettingsDialog.checkAutoLoad: called on: {0}", validationFile );

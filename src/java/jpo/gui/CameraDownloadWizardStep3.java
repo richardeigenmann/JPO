@@ -4,7 +4,6 @@ import jpo.dataModel.Settings;
 import jpo.gui.swing.CollectionJTree;
 import jpo.dataModel.GroupInfo;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
-import jpo.*;
 import java.awt.Component;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
@@ -44,9 +43,9 @@ public class CameraDownloadWizardStep3
         extends AbstractStep {
 
     /**
-     * Defines a logger for this class
+     * Defines a LOGGER for this class
      */
-    private static Logger logger = Logger.getLogger( CameraDownloadWizardStep3.class.getName() );
+    private static final Logger LOGGER = Logger.getLogger( CameraDownloadWizardStep3.class.getName() );
 
 
     /**
@@ -67,8 +66,9 @@ public class CameraDownloadWizardStep3
 
     /**
      *  Returns the component that visualises the user interactable stuff for this step of the wizard.
-     * @return 
+     * @return the component
      */
+    @Override
     protected JComponent createComponent() {
         //return component shown to the user
         JPanel stepComponent = new JPanel();
@@ -130,8 +130,9 @@ public class CameraDownloadWizardStep3
         collectionJTree.setEditable( false );
         collectionJTree.addTreeSelectionListener( new TreeSelectionListener() {
 
+            @Override
             public void valueChanged( TreeSelectionEvent e ) {
-                logger.fine(String.format( "listening to a value changed event e: %s", e.toString() ));
+                LOGGER.fine(String.format( "listening to a value changed event e: %s", e.toString() ));
                 // Are we trying to get the last clicked node? Not sure this is best...
                 SortableDefaultMutableTreeNode node = (SortableDefaultMutableTreeNode) collectionJTree.getLastSelectedPathComponent();
                 try {
@@ -143,7 +144,7 @@ public class CameraDownloadWizardStep3
                         setCanGoNext( false );
                     }
                 } catch ( NullPointerException x ) {
-                    logger.fine( String.format( "The listener on the Download Wizard picked up a node change event on the node tree but got a NPE: %s", x.getMessage() ) );
+                    LOGGER.fine( String.format( "The listener on the Download Wizard picked up a node change event on the node tree but got a NPE: %s", x.getMessage() ) );
                     setCanGoNext( false );
                 }
             }
@@ -173,6 +174,7 @@ public class CameraDownloadWizardStep3
     /**
      *  Required by the AbstractSetp but not used.
      */
+    @Override
     public void prepareRendering() {
     }
 }

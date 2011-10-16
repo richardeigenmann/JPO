@@ -26,7 +26,7 @@
 				<li><b>Philip Milne</b> for contributing the Table sorter code via the Java Tutorial</li>
 				<li><b>Lode Leroy</b> for helping with the run-from-jar</li>
 				<li><b>Joe Azure</b> for the Page Count display in the Thumbnail pane</li>
-				<li><b>Dean S. Jones</b> for his icon collection on <a href="http://www.gallant.com/icons.htm">http://www.gallant.com/icons.htm</a> that I have modified to suit my needs.</li>
+				<li><b>Dean S. Jones</b> for his icon collection on <a href="http://sourceforge.net/projects/icon-collection/">http://sourceforge.net/projects/icon-collection/</a> that I have modified to suit my needs.</li>
 				<li><b>Sandra Keller</b> for putting up with me while I was developing this software which she would "Delete right away after downloading it from the internet"</li>
 			</ul>
 

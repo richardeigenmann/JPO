@@ -1,7 +1,6 @@
 package jpo.gui;
 
 import jpo.dataModel.Settings;
-import jpo.*;
 import jpo.dataModel.Camera;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -17,7 +16,7 @@ import net.miginfocom.swing.MigLayout;
 /*
 CameraEditor.java: a class that creates a JPanel and allows camera attributes to be edited
 
-Copyright (C) 2002 - 2009  Richard Eigenmann.
+Copyright (C) 2002 - 2011  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -41,7 +40,7 @@ public class CameraEditor
         extends JPanel {
 
     /** 
-     * Constructor
+     * Constructor for the editor gui
      */
     public CameraEditor() {
         setLayout( new MigLayout("nogrid") );
@@ -64,6 +63,7 @@ public class CameraEditor
         refreshJButton.setBorder( BorderFactory.createRaisedBevelBorder() );
         refreshJButton.addActionListener( new ActionListener() {
 
+            @Override
             public void actionPerformed( ActionEvent e ) {
                 getCamera().buildOldImage();
                 updateMemorisedPicturesJLabel();
@@ -77,6 +77,7 @@ public class CameraEditor
         zeroJButton.setBorder( BorderFactory.createRaisedBevelBorder() );
         zeroJButton.addActionListener( new ActionListener() {
 
+            @Override
             public void actionPerformed( ActionEvent e ) {
                 getCamera().zapOldImage();
                 updateMemorisedPicturesJLabel();
@@ -90,6 +91,7 @@ public class CameraEditor
         saveJButton.setBorder( BorderFactory.createRaisedBevelBorder() );
         saveJButton.addActionListener( new ActionListener() {
 
+            @Override
             public void actionPerformed( ActionEvent e ) {
                 saveCamera();
             }
@@ -104,8 +106,8 @@ public class CameraEditor
 
 
     /**
-     *
-     * @return
+     * Return the camera object
+     * @return the Camera object
      */
     public Camera getCamera() {
         return camera;
@@ -114,7 +116,7 @@ public class CameraEditor
 
     /**
      * Call this method to set the camera this panel is supposed to edit
-     * @param camera
+     * @param camera the camera object
      */
     public void setCamera( Camera camera ) {
         this.camera = camera;
@@ -172,7 +174,7 @@ public class CameraEditor
 
 
     /**
-     *
+     * Updates the memorised pictures label
      */
     public void updateMemorisedPicturesJLabel() {
         memorisedPicturesJLabel.setText( getCamera().getOldIndexCountAsString() );
@@ -249,27 +251,18 @@ public class CameraEditor
     private HashSet<ActionListener> listeners = new HashSet<ActionListener>();
 
 
-    /**
-     *
-     * @param l
-     */
+
     public void addActionListener( ActionListener l ) {
         listeners.add( l );
     }
 
 
-    /**
-     *
-     * @param l
-     */
+
     public void removeActionListener( ActionListener l ) {
         listeners.remove( l );
     }
 
 
-    /**
-     *
-     */
     public void notifyActionListeners() {
         ActionEvent e = new ActionEvent( this, 0, "save" );
         for ( ActionListener a : listeners ) {

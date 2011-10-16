@@ -10,7 +10,7 @@ import java.util.logging.Logger;
 /*
 PictureInfo.java:  the definitions for picture data
 
-Copyright (C) 2002-2010  Richard Eigenmann.
+Copyright (C) 2002-2011  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -26,7 +26,7 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 /** 
  *  Objects of this type represent a single picture in the collection. Since SortableDefaultMutableTreeNodes
- *  allow user obects to be attached to the node this is a conveinent place to store all the information
+ *  allow user objects to be attached to the node this is a convenient place to store all the information
  *  that we have about a picture. <p>
  *  The class provides several convenience methods to access the information.
  *  <p> This class must implement the Serializable interface or Drag and Drop will not work.
@@ -104,7 +104,7 @@ public class PictureInfo
     /**
      * returns the description of the image in the default <code>toString</code> method.
      *
-     * @return
+     * @return description
      */
     @Override
     public String toString() {
@@ -432,9 +432,9 @@ public class PictureInfo
 
 
     /**
-     *  returns the value of the checksum or Long.MIN_VALUE if it is not set.
+     * Returns the value of the checksum or Long.MIN_VALUE if it is not set.
      *
-     * @return
+     * @return the Checksum
      */
     public long getChecksum() {
         return checksum;
@@ -444,7 +444,7 @@ public class PictureInfo
     /**
      *  returns the value of the checksum or the text "N/A" if not defined.
      *
-     * @return
+     * @return the checksum
      */
     public String getChecksumAsString() {
         if ( checksum != Long.MIN_VALUE ) {
@@ -458,7 +458,7 @@ public class PictureInfo
     /**
      *  allows the checksum to be set
      *
-     * @param newValue
+     * @param newValue the new value
      */
     public void setChecksum( long newValue ) {
         checksum = newValue;
@@ -785,7 +785,7 @@ public class PictureInfo
     /**
      *  Returns the creationTime as a Date object or null if the parsing failed.
      *
-     * @return
+     * @return  the creation time
      */
     public Calendar getCreationTimeAsDate() {
         return ( Tools.parseDate( creationTime ) );
@@ -796,7 +796,7 @@ public class PictureInfo
      *  Returns the creationTime as a string after it has been parsed. Essentially this is
      *  a utility method to identify what the Date parser is doing.
      *
-     * @return
+     * @return the creation time
      */
     public String getFormattedCreationTime() {
         String formattedDate;
@@ -1185,7 +1185,7 @@ public class PictureInfo
     /**
      * Returns an Array of the category assignments associated with this picture
      *
-     * @return
+     * @return the category assignments as an array
      */
     public Object[] getCategoryAssignmentsAsArray() {
         return categoryAssignments.toArray();
@@ -1194,22 +1194,22 @@ public class PictureInfo
 
     /**
      * Appends the text fragment to the categoryAssignmentString field.
-     * @param s Text fragment
+     * @param string Text fragment
      */
-    public synchronized void appendToCategoryAssignment( String s ) {
-        if ( s.length() > 0 ) {
-            categoryAssignmentString = categoryAssignmentString.concat( s );
+    public synchronized void appendToCategoryAssignment( String string ) {
+        if ( string.length() > 0 ) {
+            categoryAssignmentString = categoryAssignmentString.concat( string );
         }
     }
 
 
     /**
      * Adds to the categoryAssignmentString HashSet.
-     * @param s Text fragment
+     * @param string Text fragment
      */
-    public synchronized void addCategoryAssignment( String s ) {
-        if ( s.length() > 0 ) {
-            categoryAssignmentString = s;
+    public synchronized void addCategoryAssignment( String string ) {
+        if ( string.length() > 0 ) {
+            categoryAssignmentString = string;
             parseCategoryAssignment();
         }
     }
@@ -1219,7 +1219,7 @@ public class PictureInfo
      * Adds the supplied Object to the categoryAssignment HashSet. If the Object already existed
      * it doesn't get added a second time.
      *
-     * @param key
+     * @param key the key to add
      */
     public synchronized void addCategoryAssignment( Object key ) {
         if ( categoryAssignments == null ) {
@@ -1234,7 +1234,7 @@ public class PictureInfo
     /**
      * sets the supplied HashSet as the valid HashSet for the Categories of the picture
      *
-     * @param ca
+     * @param ca the supplied hash set
      */
     public synchronized void setCategoryAssignment( HashSet<Object> ca ) {
         if ( ca != null ) {
@@ -1383,7 +1383,7 @@ public class PictureInfo
      *  A vector that holds all the listeners that want to be notified about
      *  changes to this PictureInfo object.
      */
-    private Vector<PictureInfoChangeListener> pictureInfoListeners = new Vector<PictureInfoChangeListener>();
+    private ArrayList<PictureInfoChangeListener> pictureInfoListeners = new ArrayList<PictureInfoChangeListener>();
 
 
     /**
@@ -1426,7 +1426,7 @@ public class PictureInfo
      * Intended mainly for debugging purposes.
      * @return The Vector of change listeners
      */
-    public Vector<PictureInfoChangeListener> getPictureInfoListeners() {
+    public ArrayList<PictureInfoChangeListener> getPictureInfoListeners() {
         return pictureInfoListeners;
     }
 

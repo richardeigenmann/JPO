@@ -62,7 +62,7 @@ public final class Webserver
     /**
      * Statische Methode „getInstance()“ liefert die einzige Instanz der Klasse zurück.
      * Ist synchronisiert und somit thread-sicher.
-     * @return
+     * @return returns the instance
      */
     public synchronized static Webserver getInstance() {
         if ( instance == null ) {

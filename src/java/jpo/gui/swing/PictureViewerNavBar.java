@@ -1,5 +1,6 @@
 package jpo.gui.swing;
 
+import javax.swing.event.ChangeEvent;
 import jpo.dataModel.Settings;
 import jpo.dataModel.PictureInfo;
 import java.awt.Dimension;
@@ -11,7 +12,9 @@ import java.awt.event.MouseEvent;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JSlider;
 import javax.swing.JToolBar;
+import javax.swing.event.ChangeListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import jpo.dataModel.Tools;
 import jpo.gui.PictureViewerActions;
@@ -46,30 +49,25 @@ public class PictureViewerNavBar
     private PictureViewerActions pictureViewerController = null;
 
     /** Constructor for a new instance of PictureViewerNavBar
-     * @param pv
      */
     public PictureViewerNavBar() {
         super( Settings.jpoResources.getString( "NavigationPanel" ) );
         Tools.checkEDT();
-        final int numButtons = 10;
-
+        
         setBackground( Settings.PICTUREVIEWER_BACKGROUND_COLOR );
         setFloatable( true );
-        setMinimumSize( new Dimension( 36 * numButtons, 26 ) );
-        setPreferredSize( new Dimension( 36 * numButtons, 26 ) );
-        setMaximumSize( new Dimension( 36 * numButtons, 50 ) );
         setRollover( true );
         setBorderPainted( false );
-
+        
         add( previousJButton );
         add( nextJButton );
-
+        
         final JButton rotateLeftJButton = new NavBarButton( new ImageIcon( Settings.cl.getResource( "jpo/images/icon_RotCCDown.gif" ) ) ) {
-
+            
             {
                 setMnemonic( KeyEvent.VK_L );
                 addActionListener( new ActionListener() {
-
+                    
                     @Override
                     public void actionPerformed( ActionEvent e ) {
                         pictureViewerController.rotate( 270 );
@@ -79,13 +77,13 @@ public class PictureViewerNavBar
             }
         };
         add( rotateLeftJButton );
-
+        
         final JButton rotateRightJButton = new NavBarButton( new ImageIcon( Settings.cl.getResource( "jpo/images/icon_RotCWDown.gif" ) ) ) {
-
+            
             {
                 setMnemonic( KeyEvent.VK_R );
                 addActionListener( new ActionListener() {
-
+                    
                     @Override
                     public void actionPerformed( ActionEvent e ) {
                         pictureViewerController.rotate( 90 );
@@ -95,12 +93,12 @@ public class PictureViewerNavBar
             }
         };
         add( rotateRightJButton );
-
+        
         final JButton zoomInJButton = new NavBarButton( new ImageIcon( Settings.cl.getResource( "jpo/images/MagnifyPlus.gif" ) ) ) {
-
+            
             {
                 addActionListener( new ActionListener() {
-
+                    
                     @Override
                     public void actionPerformed( ActionEvent e ) {
                         pictureViewerController.zoomIn();
@@ -110,12 +108,12 @@ public class PictureViewerNavBar
             }
         };
         add( zoomInJButton );
-
+        
         final JButton zoomOutJButton = new NavBarButton( new ImageIcon( Settings.cl.getResource( "jpo/images/MagnifyMinus.gif" ) ) ) {
-
+            
             {
                 addActionListener( new ActionListener() {
-
+                    
                     @Override
                     public void actionPerformed( ActionEvent e ) {
                         pictureViewerController.zoomOut();
@@ -125,14 +123,14 @@ public class PictureViewerNavBar
             }
         };
         add( zoomOutJButton );
-
-
+        
+        
         final JButton fullScreenJButton = new NavBarButton( new ImageIcon( Settings.cl.getResource( "jpo/images/icon_Frames.gif" ) ) ) {
-
+            
             {
                 setMnemonic( KeyEvent.VK_F );
                 addActionListener( new ActionListener() {
-
+                    
                     @Override
                     public void actionPerformed( ActionEvent e ) {
                         pictureViewerController.requestScreenSizeMenu();
@@ -141,15 +139,15 @@ public class PictureViewerNavBar
                 setToolTipText( Settings.jpoResources.getString( "fullScreenJButton.ToolTipText" ) );
             }
         };
-
-
+        
+        
         add( fullScreenJButton );
         final JButton popupMenuJButton = new NavBarButton( new ImageIcon( Settings.cl.getResource( "jpo/images/icon_FingerUp.gif" ) ) ) {
-
+            
             {
                 setMnemonic( KeyEvent.VK_M );
                 addActionListener( new ActionListener() {
-
+                    
                     @Override
                     public void actionPerformed( ActionEvent e ) {
                         pictureViewerController.requestPopupMenu();
@@ -158,15 +156,15 @@ public class PictureViewerNavBar
                 setToolTipText( Settings.jpoResources.getString( "popupMenuJButton.ToolTipText" ) );
             }
         };
-
+        
         add( popupMenuJButton );
-
+        
         final JButton infoJButton = new NavBarButton( new ImageIcon( Settings.cl.getResource( "jpo/images/icon_info.gif" ) ) ) {
-
+            
             {
                 setMnemonic( KeyEvent.VK_I );
                 addActionListener( new ActionListener() {
-
+                    
                     @Override
                     public void actionPerformed( ActionEvent e ) {
                         pictureViewerController.cylceInfoDisplay();
@@ -181,11 +179,11 @@ public class PictureViewerNavBar
          *  Button to resize the image so that it fits in the screen.
          */
         final JButton resetJButton = new NavBarButton( new ImageIcon( Settings.cl.getResource( "jpo/images/icon_reset.gif" ) ) ) {
-
+            
             {
                 setMnemonic( KeyEvent.VK_ESCAPE );
                 addActionListener( new ActionListener() {
-
+                    
                     @Override
                     public void actionPerformed( ActionEvent e ) {
                         pictureViewerController.resetPicture();
@@ -195,15 +193,28 @@ public class PictureViewerNavBar
             }
         };
         add( resetJButton );
-
+        
         add( clockJButton );
-
+        
+        speedSlider.setVisible( false );
+        speedSlider.setMinimumSize( new Dimension( 60, 24 ) );
+        speedSlider.setPreferredSize( new Dimension( 60, 24 ) );
+        speedSlider.setMaximumSize( new Dimension( 100, 24 ) );
+        speedSlider.addChangeListener( new ChangeListener() {
+            
+            @Override
+            public void stateChanged( ChangeEvent ce ) {
+                pictureViewerController.setTimerDelay( speedSlider.getValue() );
+            }
+        } );
+        add( speedSlider );
+        
         final JButton closeJButton = new NavBarButton( new ImageIcon( Settings.cl.getResource( "jpo/images/icon_close2.gif" ) ) ) {
-
+            
             {
                 setMnemonic( KeyEvent.VK_C );
                 addActionListener( new ActionListener() {
-
+                    
                     @Override
                     public void actionPerformed( ActionEvent e ) {
                         pictureViewerController.closeViewer();
@@ -214,6 +225,18 @@ public class PictureViewerNavBar
         };
         add( closeJButton );
     }
+    /**
+     * The delay timer that is shown only when auto advance is on.
+     */
+    private final JSlider speedSlider = new JSlider( 1, 60, 4 );
+    
+    public void showDelaySilder() {
+        speedSlider.setVisible( true );
+    }
+    
+    public void hideDelaySilder() {
+        speedSlider.setVisible( false );
+    }
 
     /**
      * Extends the default JButton with no border, standard background color, standard 
@@ -222,7 +245,7 @@ public class PictureViewerNavBar
      */
     private class NavBarButton
             extends JButton {
-
+        
         final Dimension navButtonSize = new Dimension( 24, 24 );
 
         /**
@@ -232,7 +255,9 @@ public class PictureViewerNavBar
             super( icon );
             setBorderPainted( false );
             setBackground( Settings.PICTUREVIEWER_BACKGROUND_COLOR );
+            setMinimumSize( navButtonSize );
             setPreferredSize( navButtonSize );
+            setMaximumSize( navButtonSize );
         }
 
         /**
@@ -276,11 +301,11 @@ public class PictureViewerNavBar
      *  @see #setIconDecorations() 
      */
     private final JButton previousJButton = new NavBarButton( ICON_ARROW_LEFT ) {
-
+        
         {
             setMnemonic( KeyEvent.VK_P );
             addActionListener( new ActionListener() {
-
+                
                 @Override
                 public void actionPerformed( ActionEvent e ) {
                     pictureViewerController.requestPriorPicture();
@@ -294,11 +319,11 @@ public class PictureViewerNavBar
      *  @see #setIconDecorations() 
      */
     private final JButton nextJButton = new NavBarButton( ICON_ARROW_RIGHT ) {
-
+        
         {
             setMnemonic( KeyEvent.VK_N );
             addActionListener( new ActionListener() {
-
+                
                 @Override
                 public void actionPerformed( ActionEvent e ) {
                     pictureViewerController.requestNextPicture();
@@ -371,10 +396,10 @@ public class PictureViewerNavBar
      * Button for the automatic advance timer.
      */
     public final JButton clockJButton = new NavBarButton( ICON_CLOCK_OFF ) {
-
+        
         {
             addActionListener( new ActionListener() {
-
+                
                 @Override
                 public void actionPerformed( ActionEvent e ) {
                     pictureViewerController.requestAutoAdvance();

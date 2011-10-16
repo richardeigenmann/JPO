@@ -46,8 +46,8 @@ public class Tools {
     /**
      *   method that converts any XML problem characters (&, <, >, ", ') to the 
      *   predefined codes.
-     * @param s
-     * @return
+     * @param s string to escape
+     * @return the escaped string
      */
     public static String escapeXML( String s ) {
         s = s.replaceAll( "&", "&amp;" );
@@ -214,7 +214,7 @@ public class Tools {
     /**
      *   returns the file extension of the indicated url
      *   @param url   The URL object for which the extension is being requested
-     * @return
+     * @return file extension
      */
     public static String getExtension( URL url ) {
         return getExtension( url.toString() );
@@ -223,7 +223,7 @@ public class Tools {
     /**
      *   return the file extension of a file.
      *   @param file   The File object for which the extension is being requested
-     * @return
+     * @return file extension
      */
     public static String getExtension( File file ) {
         return getExtension( file.getName() );
@@ -232,7 +232,7 @@ public class Tools {
     /**
      *   return the file extension of a string
      *   @param s   The string for which the extension is being requested
-     * @return
+     * @return the file extension
      */
     public static String getExtension( String s ) {
         String ext = null;
@@ -247,7 +247,7 @@ public class Tools {
     /**
      *   return everything of the filename up to the extension.
      *   @param s   The string for which the root of the filename is being requested
-     * @return
+     * @return the filename
      */
     public static String getFilenameRoot( String s ) {
         String fnroot = null;
@@ -281,7 +281,7 @@ public class Tools {
      *   of the extension is ignored.
      * @param extension
      * @param testFile
-     * @return
+     * @return the file
      */
     public static File correctFilenameExtension( String extension, File testFile ) {
         if ( !testFile.getName().toUpperCase().endsWith( extension.toUpperCase() ) ) {
@@ -330,7 +330,7 @@ public class Tools {
      * Test the supplied File on whether it is a directory and whether is can be written to.
      * @param testDir
      * @param validationType
-     * @return
+     * @return true if good, false if bad
      */
     public static boolean checkDirectory( File testDir, int validationType ) {
         switch ( validationType ) {
@@ -406,9 +406,9 @@ public class Tools {
 
     /**
      *  method to copy any file from a source location to a target location
-     * @param a
-     * @param b
-     * @return
+     * @param a source url
+     * @param b target url
+     * @return the crc
      */
     public static long copyPicture( URL a, URL b ) {
         try {
@@ -435,9 +435,9 @@ public class Tools {
     /**
      *  method to copy any file from a source location to a target File location. Works 
      *  better because files are writable whilst most URL are read only.
-     * @param a
-     * @param b
-     * @return
+     * @param a source URL
+     * @param b target file
+     * @return a long for the CRC
      */
     public static long copyPicture( URL a, File b ) {
         try {
@@ -609,8 +609,8 @@ public class Tools {
 
     /**
      * Converts a long value into a human readable size such a 245 B, 15 KB, 3 MB, 85 GB, 2 TB
-     * @param size
-     * @return
+     * @param size the input number
+     * @return the human readable number
      */
     public static String fileSizeToString( long size ) {
         String suffix = " B";
@@ -640,7 +640,7 @@ public class Tools {
      *  Invented to find the code classes of the 
      *  JPO app which sit in jpo.jar file
      * @param searchName
-     * @return
+     * @return the file of the search result
      */
     public static File searchClasspath( String searchName ) {
         // find the jar file as last item in the Jar file.
@@ -664,7 +664,7 @@ public class Tools {
      *   then fails, returning null.
      * @param targetDir
      * @param startName
-     * @return
+     * @return the new URL
      */
     public static URL inventPicURL( File targetDir, String startName ) {
         try {
@@ -675,12 +675,12 @@ public class Tools {
     }
 
     /**
-     *   method that returns a file handle for a picture that does not exist in the target 
+     *   Method that returns a file handle for a picture that does not exist in the target 
      *   directory. It tries the combination of path and name first and then tries to 
      *   suffix _0 _1 _2 etc to the name. If it returns null then it failed
-     * @param targetDir
-     * @param startName
-     * @return
+     * @param targetDir the directory in which the picture needs to go
+     * @param startName the name to start from 
+     * @return the new picture filename
      */
     public static File inventPicFilename( File targetDir, String startName ) {
         File testFile = new File( targetDir, startName );
@@ -705,7 +705,7 @@ public class Tools {
 
     /**
      * Method that returns a new lowres URL that has not been used before.
-     * @return
+     * @return the lowres url
      */
     public static String getNewLowresFilename() {
         warnOnEDT();
@@ -748,7 +748,7 @@ public class Tools {
      *  method that returns whether a URL is a file:// URL or not.
      *  Returns true if it is a file, false if it's anything else such as http://
      * @param testURL
-     * @return
+     * @return true if the URL points to a file
      */
     public static boolean isUrlFile( URL testURL ) {
         return ( testURL.getProtocol().equals( "file" ) );
@@ -758,7 +758,7 @@ public class Tools {
     /**
      *  convenience method to log the amount of free memory
      *
-     * @return
+     * @return the free memory
      */
     public static int freeMem() {
         int memory = (int) Runtime.getRuntime().freeMemory() / 1024 / 1024;
@@ -769,7 +769,7 @@ public class Tools {
     /**
      *  convenience method to log the amount of free memory. Shows freeMemory, totalMemory and maxMemory
      *
-     * @return
+     * @return free memory
      */
     public static String freeMemory() {
         int freeMemory = (int) Runtime.getRuntime().freeMemory() / 1024 / 1024;
@@ -804,7 +804,7 @@ public class Tools {
      *  method that strips out the root filename from a File object. <p>
      *  Example: c:\directory\geysir.jpg returns geysir
      * @param file
-     * @return
+     * @return the name of the file without extension
      */
     public static String stripOutFilenameRoot( File file ) {
         String description = file.getName();
@@ -821,7 +821,7 @@ public class Tools {
 
     /**
      *  Method that chooses an xml file or returns null
-     * @return
+     * @return the xml file or null
      */
     public static File chooseXmlFile() {
         JFileChooser jFileChooser = new JFileChooser();
@@ -865,7 +865,6 @@ public class Tools {
 
     /**
      *  Returns a checksum out of the contents of the the supplied File
-     *  @see calculateChecksum(InputStream inputStream)
      *
      *  @param file The file to checksum
      *  @return  returns the checksum as a Long or Long.MIN_VALUE to indicate failure.
@@ -910,7 +909,7 @@ public class Tools {
      *  returns the current date and time formatted per the formatting string. 
      *  See the API doc on SimpleDateFormat for the meaning of the letters.
      * @param formatString
-     * @return
+     * @return current date and time
      */
     public static String currentDate( String formatString ) {
         SimpleDateFormat formatter = new SimpleDateFormat( formatString );
@@ -967,7 +966,7 @@ public class Tools {
      *
      *   @param   ta   The JTextArea for which you want to know the dimensions
      *   @param   horizontalWidth   The horizontal width that should be used in the dimension.
-     * @return
+     * @return the text area dimensions
      */
     public static Dimension getJTextAreaDimension( JTextArea ta,
             int horizontalWidth ) {

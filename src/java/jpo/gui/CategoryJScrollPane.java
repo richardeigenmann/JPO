@@ -1,7 +1,6 @@
 package jpo.gui;
 
 import jpo.dataModel.Settings;
-import jpo.*;
 import jpo.dataModel.Category;
 import java.awt.*;
 import javax.swing.*;
@@ -12,7 +11,7 @@ import java.util.*;
 /*
 CategoryJScrollPane.java:  creates a JPanel in a JScrollPane that lists categories
 
-Copyright (C) 2006-2009  Richard Eigenmann.
+Copyright (C) 2006-2011  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -61,7 +60,7 @@ public class CategoryJScrollPane extends JScrollPane implements ListSelectionLis
 	/**
 	 *  Returns the List Model used for this list
          *
-         * @return
+         * @return the List Model used for this list
          */
 	public DefaultListModel getDefaultListModel() {
 		return defaultListModel;
@@ -71,7 +70,7 @@ public class CategoryJScrollPane extends JScrollPane implements ListSelectionLis
 	/**
 	 *  Returns the JList used for this list
          *
-         * @return
+         * @return the jlist
          */
 	public JList getJList() {
 		return categoriesJList;
@@ -100,8 +99,9 @@ public class CategoryJScrollPane extends JScrollPane implements ListSelectionLis
 	 *  Method from the ListSelectionListener implementation that tracks when an 
 	 *  element was selected.
          *
-         * @param e
+         * @param e the list selection event
          */
+    @Override
 	public void valueChanged( ListSelectionEvent e ) {
 		if (e.getValueIsAdjusting()) {
             return;
@@ -129,7 +129,7 @@ public class CategoryJScrollPane extends JScrollPane implements ListSelectionLis
 	/**
 	 *  Returns a HashSet of the selected Categories
          *
-         * @return
+         * @return the hash set of the selected categories
          */
 	public HashSet<Object> getSelectedCategories() {
 		HashSet<Object> selectedCategories = new HashSet<Object>();

@@ -54,7 +54,7 @@ public class QueriesJTree
 
     /**
      * Returns a view component with the JTree embedded in a JScrollpane
-     * @return
+     * @return the view
      */
     public JComponent getJScrollPane() {
         return new JScrollPane( this );

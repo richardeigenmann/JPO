@@ -88,8 +88,8 @@ public class CollectionJTreeController
 
         /**
          * This method is used to query what actions are supported by the source component
-         * @param c
-         * @return
+         * @param c the Object to query
+         * @return COPY_OR_MOVE for this TransferHandler
          */
         @Override
         public int getSourceActions ( JComponent c ) {
@@ -117,8 +117,8 @@ public class CollectionJTreeController
         /**
          * This method is called repeatedly during a drag gesture and returns true if the
          * area below the cursor can accept the transfer, or false if the transfer will be rejected.
-         * @param support
-         * @return
+         * @param support The transfer support object
+         * @return true if the import is OK
          */
         @Override
         public boolean canImport ( TransferSupport support ) {
@@ -130,7 +130,7 @@ public class CollectionJTreeController
          * the transfer of data to the target component. This method returns
          * true if the import was successful and false otherwise.
          * @param support
-         * @return
+         * @return true if successful
          */
         @Override
         public boolean importData ( TransferSupport support ) {
@@ -301,6 +301,7 @@ public class CollectionJTreeController
      *  @param popupNode The node that sent the request
      *  @see  GroupPopupInterface
      */
+    @Override
     public void requestSlideshow ( SortableDefaultMutableTreeNode popupNode ) {
         Jpo.browsePictures( popupNode );
 
@@ -313,6 +314,7 @@ public class CollectionJTreeController
      *  @param popupNode  The node on which the popup Menu was done
      * @see  GroupPopupInterface
      */
+    @Override
     public void requestFind ( SortableDefaultMutableTreeNode popupNode ) {
         new QueryJFrame( popupNode, applicationEventHandler );
 
@@ -324,6 +326,7 @@ public class CollectionJTreeController
      *  @param popupNode
      * @see  GroupPopupInterface
      */
+    @Override
     public void requestEditGroupNode ( SortableDefaultMutableTreeNode popupNode ) {
         TreeNodeController.showEditGUI( popupNode );
 
@@ -334,6 +337,7 @@ public class CollectionJTreeController
      *  this method invokes the Category editor and allows the user to set the categories for all the pictures in the Group.
      * @param popupNode
      */
+    @Override
     public void showCategoryUsageGUI ( SortableDefaultMutableTreeNode popupNode ) {
         TreeNodeController.showCategoryUsageGUI( popupNode );
 
@@ -346,6 +350,7 @@ public class CollectionJTreeController
      * @param popupNode The node to which the group is being attached
      * @see  GroupPopupInterface
      */
+    @Override
     public void requestAddGroup ( SortableDefaultMutableTreeNode popupNode ) {
         if ( !(popupNode.getUserObject() instanceof GroupInfo) ) {
             LOGGER.warning( String.format( "node %s is of type %s instead of GroupInfo. Proceeding anyway.", popupNode.getUserObject().toString(), popupNode.getUserObject().getClass().toString() ) );
@@ -358,8 +363,9 @@ public class CollectionJTreeController
     /**
      * Bring up a chooser and add pictures to the group.
      * @see  GroupPopupInterface
-     * @param groupNode  The group nodde to which to add the pictures
+     * @param groupNode  The group node to which to add the pictures
      */
+    @Override
     public void chooseAndAddPicturesToGroup (
             SortableDefaultMutableTreeNode groupNode ) {
         applicationEventHandler.chooseAndAddPicturesToGroup( groupNode );
@@ -372,6 +378,7 @@ public class CollectionJTreeController
      * @param popupNode
      * @see GroupPopupInterface
      */
+    @Override
     public void requestAddCollection ( SortableDefaultMutableTreeNode popupNode ) {
         File fileToLoad = Tools.chooseXmlFile();
         if ( fileToLoad != null ) {
@@ -379,6 +386,7 @@ public class CollectionJTreeController
         }
     }
 
+    @Override
     public void requestAddCollection ( SortableDefaultMutableTreeNode popupNode,
             File fileToLoad ) {
         applicationEventHandler.requestAddCollection( popupNode, fileToLoad );
@@ -394,6 +402,7 @@ public class CollectionJTreeController
      *
      * @param nodeToExport  The node to export to a website
      */
+    @Override
     public void requestGroupExportHtml (
             SortableDefaultMutableTreeNode nodeToExport ) {
         new GenerateWebsiteWizard( nodeToExport );
@@ -404,6 +413,7 @@ public class CollectionJTreeController
      *
      * @param groupNode
      */
+    @Override
     public void requestEmailSelection ( SortableDefaultMutableTreeNode groupNode ) {
         SortableDefaultMutableTreeNode n;
         for ( Enumeration e = groupNode.breadthFirstEnumeration(); e.hasMoreElements(); ) {
@@ -419,6 +429,7 @@ public class CollectionJTreeController
      * @param nodeToExport The node on which the request was made
      * @see GroupPopupInterface
      */
+    @Override
     public void requestGroupExportFlatFile (
             SortableDefaultMutableTreeNode nodeToExport ) {
         javax.swing.JFileChooser jFileChooser = new javax.swing.JFileChooser();
@@ -439,6 +450,7 @@ public class CollectionJTreeController
      *
      *  @param nodeToExport The node on which the request was made
      */
+    @Override
     public void requestGroupExportNewCollection (
             SortableDefaultMutableTreeNode nodeToExport ) {
         new CollectionDistillerJFrame( nodeToExport );
@@ -449,6 +461,7 @@ public class CollectionJTreeController
      * @param nodeToRemove The Node you want removed
      * @see  GroupPopupInterface
      */
+    @Override
     public void requestGroupRemove ( SortableDefaultMutableTreeNode nodeToRemove ) {
         //logger.fine( "CollectionJTree.requestGroupRemove: invoked on group: " + nodeToRemove.getUserObject().toString() );
         SortableDefaultMutableTreeNode parentNode = (SortableDefaultMutableTreeNode) nodeToRemove.getParent();
@@ -462,6 +475,7 @@ public class CollectionJTreeController
      * @param node
      * @see  GroupPopupInterface
      */
+    @Override
     public void requestConsolidateGroup (
             SortableDefaultMutableTreeNode node ) {
         new ConsolidateGroupJFrame( node );
@@ -469,25 +483,27 @@ public class CollectionJTreeController
 
     /**
      * Requests that a group be moved to the top
-     * @param nodeToExport The node on which the request was made
+     * @param popupNode The node on which the request was made
      * @see  GroupPopupInterface
      */
+    @Override
     public void requestMoveGroupToTop ( SortableDefaultMutableTreeNode popupNode ) {
         popupNode.moveNodeToTop();
     }
 
     /**
      * Requests that a group be moved up
-     * @param nodeToExport The node on which the request was made
+     * @param popupNode The node on which the request was made
      * @see  GroupPopupInterface
      */
+    @Override
     public void requestMoveGroupUp ( SortableDefaultMutableTreeNode popupNode ) {
         popupNode.moveNodeUp();
     }
 
     /**
      * Requests that a group be moved down
-     * @param nodeToExport The node on which the request was made
+     * @param popupNode The node on which the request was made
      * @see  GroupPopupInterface
      */
     @Override
@@ -497,7 +513,7 @@ public class CollectionJTreeController
 
     /**
      * Requests that a group be moved down
-     * @param nodeToExport The node on which the request was made
+     * @param popupNode The node on which the request was made
      * @see  GroupPopupInterface
      */
     @Override
@@ -510,7 +526,8 @@ public class CollectionJTreeController
 
     /**
      * Requests that a picture be moved to the target Group node
-     * @param nodeToExport The node on which the request was made
+     * @param popupNode The node on which the request was made
+     * @param  targetGroup  the target group node
      * @see  GroupPopupInterface
      */
     @Override
@@ -523,7 +540,7 @@ public class CollectionJTreeController
 
     /**
      * Request that a group be edited as a table
-     * @param nodeToExport The node on which the request was made
+     * @param popupNode The node on which the request was made
      */
     @Override
     public void requestEditGroupTable ( SortableDefaultMutableTreeNode popupNode ) {
@@ -534,7 +551,7 @@ public class CollectionJTreeController
 
     /**
      * Gets called by the GroupPopupInterface and implements the sort request.
-     * @param nodeToExport The node on which the request was made
+     * @param popupNode The node on which the request was made
      */
     @Override
     public void requestSort ( SortableDefaultMutableTreeNode popupNode,

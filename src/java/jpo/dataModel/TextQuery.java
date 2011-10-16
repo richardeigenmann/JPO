@@ -59,7 +59,7 @@ public class TextQuery implements Serializable, Query {
 
 
     /**
-     *   Method to set the lower date range of the search. If null the lower date will be ignored.
+     * Method to set the lower date range of the search. If null the lower date will be ignored.
      * @param lowerDateRange
      */
     public void setLowerDateRange( Calendar lowerDateRange ) {
@@ -68,8 +68,8 @@ public class TextQuery implements Serializable, Query {
 
 
     /**
-     *   Method to get the lower date range of the search.
-     * @return
+     * Method to get the lower date range of the search.
+     * @return returns the lower date range
      */
     public Calendar getLowerDateRange() {
         return lowerDateRange;
@@ -82,8 +82,8 @@ public class TextQuery implements Serializable, Query {
 
 
     /**
-     *   Method to set the upper date range of the search. If null the upper date will be ignored.
-     * @param upperDateRange
+     * Method to set the upper date range of the search. If null the upper date will be ignored.
+     * @param upperDateRange  The upper date range
      */
     public void setUpperDateRange( Calendar upperDateRange ) {
         this.upperDateRange = upperDateRange;
@@ -92,7 +92,7 @@ public class TextQuery implements Serializable, Query {
 
     /**
      *   Method to get the upper date range of the search.
-     * @return
+     * @return the upper date range
      */
     public Calendar getUpperDateRange() {
         return upperDateRange;

@@ -160,7 +160,7 @@ public class NodeStatisticsPanel
                 if ( debugMode ) {
                     freeMemory = Tools.freeMemory();
                     queueCount = Settings.jpoResources.getString( "queCountJLabel" ) + ThumbnailCreationQueue.size();
-                    selectedCount = String.format( "Selected: %d", Settings.pictureCollection.getSelectedNodesAsVector().size() ); //TODO: put this into translations
+                    selectedCount = String.format( "Selected: %d", Settings.pictureCollection.getSelectedNodes().length ); //TODO: put this into translations
                 }
 
                 return null;

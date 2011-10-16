@@ -83,6 +83,7 @@
                deprecation="yes"
                compiler="modern"
                source="1.6"
+               includeantruntime="false"
                encoding="UTF-8" >
             <src path="${src.java.dir}"/>
             <classpath refid="base.path"/>
@@ -130,11 +131,12 @@
                  use="true"
                  private="true"
                  source="1.6"
-                 classpath="libs/mmiglayout-3.7.4.jar; libs/metadata-extractor-2.3.0.jar; libs/jnlp.jar; libs/activation.jar; libs/mail.jar; libs/jwizz-0.1.4.jar; libs/mail.jar; libs/poi-3.1-FINAL-20080629.jar; libs/poi-contrib-3.1-FINAL-20080629.jar; libs/poi-scratchpad-3.1-FINAL-20080629.jar"
-        >
+                 linksource="yes"
+                  >
             <sourcepath path="${src.java.dir}" />
-            <link href="http://java.sun.com/j2se/1.6.0/docs/api/" />
+            <classpath refid="base.path"/>
         </javadoc>
+        <!-- classpath="libs/miglayout-4.0.jar; libs/metadata-extractor-2.4.0-beta-1.jar; libs/jnlp.jar; libs/activation.jar; libs/mail.jar; libs/jwizz-0.1.4.jar; libs/mail.jar; libs/poi-3.1-FINAL-20080629.jar; libs/poi-contrib-3.1-FINAL-20080629.jar; libs/poi-scratchpad-3.1-FINAL-20080629.jar; libs/commons-compress-1.2.jar"  -->
     </target>
     
     
@@ -192,7 +194,7 @@
 
         <!-- This target will only be of use to the person who does the deployment
          of JPO to souceforge.  -->
-    <target name="publish-webpages" depends="" description="Publishes the lates Jpo Version to the SourceForge project">
+    <target name="publish-webpages" depends="" description="Publishes the latest Jpo web pages SourceForge project">
 
         <scp todir="richieigenmann,j-po@web.sourceforge.net:/home/groups/j/j-/j-po/htdocs"
              trust="yes"
@@ -215,6 +217,23 @@
         </scp>
     </target>
 
+        <!-- This target will only be of use to the person who does the deployment
+         of JPO to souceforge.  -->
+    <target name="publish-javadoc" depends="javadoc" description="Publishes the latest Javadoc to the SourceForge project">
+
+        <scp todir="richieigenmann,j-po@web.sourceforge.net:/home/groups/j/j-/j-po/htdocs/javadoc"
+             trust="yes"
+             verbose="yes"
+             keyfile="${sourceforgeSshCertificate}"
+             passphrase=""
+             sftp="true">
+            <fileset dir="${build.docs.dir}">
+                <modified>
+                    <param name="cache.cachefile" value="/tmp/Sourceforge-Jpo-Javadocache" />
+                </modified>
+            </fileset>
+        </scp>
+    </target>
     
     
     <!-- pushes the jpo jar to sourceforge -->
@@ -234,7 +253,7 @@
         </scp>
     </target>
 
-    <target name="publish" depends="publish-webpages, publish-jar" description="Publishes the lates Jpo Version and webpages to the SourceForge project"/>
+    <target name="publish" depends="publish-jar, publish-javadoc, publish-webpages" description="Publishes the lates Jpo Version and webpages to the SourceForge project"/>
 
     
     <target name="run" description="Runs the program" depends="compile">

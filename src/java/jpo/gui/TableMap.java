@@ -11,119 +11,85 @@ package jpo.gui;
  *
  * @version 1.4 12/17/97
  * @author Philip Milne */
-
-import javax.swing.table.*; 
-import javax.swing.event.TableModelListener; 
-import javax.swing.event.TableModelEvent; 
+import javax.swing.table.*;
+import javax.swing.event.TableModelListener;
+import javax.swing.event.TableModelEvent;
 
 /**
  *
  * @author Richard Eigenmann
  */
 public class TableMap extends AbstractTableModel
-                      implements TableModelListener {
-    /**
-     *
-     */
+        implements TableModelListener {
+
+  
     protected TableModel model;
 
-        /**
-         *
-         * @return
-         */
-        public TableModel getModel() {
-		return model;
-	}
+  
+    public TableModel getModel() {
+        return model;
+    }
 
-        /**
-         *
-         * @param model
-         */
-        public void setModel(TableModel model) {
-		this.model = model; 
-		model.addTableModelListener(this); 
-	}
+ 
+    public void setModel( TableModel model ) {
+        this.model = model;
+        model.addTableModelListener( this );
+    }
 
-	// By default, implement TableModel by forwarding all messages 
-	// to the model. 
-
-        /**
-         *
-         * @param aRow
-         * @param aColumn
-         * @return
-         */
-        public Object getValueAt(int aRow, int aColumn) {
-		return model.getValueAt(aRow, aColumn); 
-	}
-        
-        /**
-         *
-         * @param aValue
-         * @param aRow
-         * @param aColumn
-         */
-        @Override
-	public void setValueAt(Object aValue, int aRow, int aColumn) {
-		model.setValueAt(aValue, aRow, aColumn); 
-	}
-
-        /**
-         *
-         * @return
-         */
-        public int getRowCount() {
-        	return (model == null) ? 0 : model.getRowCount(); 
-	}
-
-        /**
-         *
-         * @return
-         */
-        public int getColumnCount() {
-        	return (model == null) ? 0 : model.getColumnCount(); 
-	}
-        
-        /**
-         *
-         * @param aColumn
-         * @return
-         */
-        @Override
-	public String getColumnName(int aColumn) {
-        	return model.getColumnName(aColumn); 
-	}
-
-        /**
-         *
-         * @param aColumn
-         * @return
-         */
-    @Override
-        public Class getColumnClass(int aColumn) {
-        	return model.getColumnClass(aColumn); 
-	}
-        
-    /**
-     *
-     * @param row
-     * @param column
-     * @return
+    /** By default, implement TableModel by forwarding all messages 
+     to the model. 
      */
     @Override
-    public boolean isCellEditable(int row, int column) {
-        	return model.isCellEditable(row, column); 
-	}
+    public Object getValueAt( int aRow, int aColumn ) {
+        return model.getValueAt( aRow, aColumn );
+    }
 
-	//
-	// Implementation of the TableModelListener interface, 
-	//
-	// By default forward all events to all the listeners. 
-        /**
-         *
-         * @param e
-         */
-        public void tableChanged(TableModelEvent e) {
-        	fireTableChanged(e);
-	}
+    /**
+     *
+     * @param aValue
+     * @param aRow
+     * @param aColumn
+     */
+    @Override
+    public void setValueAt( Object aValue, int aRow, int aColumn ) {
+        model.setValueAt( aValue, aRow, aColumn );
+    }
+
+  
+    @Override
+    public int getRowCount() {
+        return ( model == null ) ? 0 : model.getRowCount();
+    }
+
+   
+    @Override
+    public int getColumnCount() {
+        return ( model == null ) ? 0 : model.getColumnCount();
+    }
+
+  
+    @Override
+    public String getColumnName( int aColumn ) {
+        return model.getColumnName( aColumn );
+    }
+
+    @Override
+    public Class getColumnClass( int aColumn ) {
+        return model.getColumnClass( aColumn );
+    }
+
+ 
+    @Override
+    public boolean isCellEditable( int row, int column ) {
+        return model.isCellEditable( row, column );
+    }
+
+    /**
+     *Implementation of the TableModelListener interface, 
+     * By default forward all events to all the listeners. 
+     */
+    @Override
+    public void tableChanged( TableModelEvent e ) {
+        fireTableChanged( e );
+    }
 }

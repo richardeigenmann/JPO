@@ -2,7 +2,6 @@ package jpo.gui;
 
 
 import jpo.dataModel.Settings;
-import jpo.*;
 import net.javaprog.ui.wizard.*;
 import javax.swing.*;
 import java.awt.event.*;
@@ -11,7 +10,7 @@ import java.awt.event.*;
 /*
 CameraDownloadWizardStep2.java: the second step in the download from Camera Wizard
  
-Copyright (C) 2007  Richard Eigenmann.
+Copyright (C) 2007-2011  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -48,8 +47,9 @@ public class CameraDownloadWizardStep2 extends AbstractStep {
     
     /**
      *  Returns the component that visualises the user interactable stuff for this step of the wizard.
-     * @return
+     * @return the component
      */
+    @Override
     protected JComponent createComponent() {
         //return component shown to the user
         JPanel stepComponent = new JPanel();
@@ -61,6 +61,7 @@ public class CameraDownloadWizardStep2 extends AbstractStep {
         
         JRadioButton moveButton = new JRadioButton( Settings.jpoResources.getString( "DownloadCameraWizardStep2Text3" ) );
         moveButton.addActionListener( new ActionListener() {
+            @Override
             public void actionPerformed( ActionEvent e ) {
                 dataModel.setCopyMode( false );
                 Settings.lastCameraWizardCopyMode = false;
@@ -69,6 +70,7 @@ public class CameraDownloadWizardStep2 extends AbstractStep {
         stepComponent.add( moveButton );
         JRadioButton copyButton = new JRadioButton( Settings.jpoResources.getString( "DownloadCameraWizardStep2Text4" ) );
         copyButton.addActionListener( new ActionListener() {
+            @Override
             public void actionPerformed( ActionEvent e ) {
                 dataModel.setCopyMode( true );
                 Settings.lastCameraWizardCopyMode = true;
@@ -88,6 +90,7 @@ public class CameraDownloadWizardStep2 extends AbstractStep {
     /**
      *  Required by the AbstractSetp but not used.
      */
+    @Override
     public void prepareRendering() {}
 }
 

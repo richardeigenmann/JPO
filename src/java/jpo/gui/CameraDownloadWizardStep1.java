@@ -3,7 +3,6 @@ package jpo.gui;
 import java.util.logging.Logger;
 import jpo.dataModel.Tools;
 import jpo.dataModel.Settings;
-import jpo.*;
 import net.javaprog.ui.wizard.*;
 import javax.swing.*;
 
@@ -11,7 +10,7 @@ import javax.swing.*;
 /*
 CameraDownloadWizardStep1.java: the first step in the download from Camera Wizard
 
-Copyright (C) 2007 - 2009  Richard Eigenmann.
+Copyright (C) 2007 - 2011  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -34,9 +33,9 @@ public class CameraDownloadWizardStep1
         extends AbstractStep {
 
     /**
-     * Defines a logger for this class
+     * Defines a LOGGER for this class
      */
-    private static Logger logger = Logger.getLogger( CameraDownloadWizardStep1.class.getName() );
+    private static final Logger LOGGER = Logger.getLogger( CameraDownloadWizardStep1.class.getName() );
 
 
     /**
@@ -57,8 +56,9 @@ public class CameraDownloadWizardStep1
 
     /**
      *  Returns the component that visualises the user interactable stuff for this step of the wizard.
-     * @return
+     * @return the component
      */
+    @Override
     protected JComponent createComponent() {
         Tools.checkEDT();
         //return component shown to the user
@@ -80,6 +80,7 @@ public class CameraDownloadWizardStep1
     /**
      *  Required by the AbstractSetp but not used.
      */
+    @Override
     public void prepareRendering() {
         setCanGoNext( false );
     }
@@ -102,12 +103,13 @@ public class CameraDownloadWizardStep1
 
 
         public void run() {
-            logger.info( getClass().toString() + ".run: searching for the new pictures on the camera " + dataModel.getCamera().getDescription() );
+            LOGGER.info( getClass().toString() + ".run: searching for the new pictures on the camera " + dataModel.getCamera().getDescription() );
             dataModel.setNewPictures( dataModel.getCamera().getNewPictures() );
 
             // now update the GUI on the EDT
             Runnable r = new Runnable() {
 
+                @Override
                 public void run() {
                     if ( dataModel.getNewPictures().size() > 0 ) {
                         setCanGoNext( true );

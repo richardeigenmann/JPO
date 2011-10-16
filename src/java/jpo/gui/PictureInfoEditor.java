@@ -671,7 +671,7 @@ public class PictureInfoEditor
     /**
      *  This utility method builds a string from the selected categories in a supplied JList
      * @param theList
-     * @return
+     * @return a string for the selected categories
      */
     private static String selectedJListCategoriesToString( JList theList ) {
         StringBuffer resultString = new StringBuffer( "" );

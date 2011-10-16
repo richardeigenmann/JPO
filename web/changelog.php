@@ -18,6 +18,8 @@
 
 			<table>
 				<tr><td colspan=2><b>Development Version 0.9</b></td></tr>
+				<tr><td valign="top">11.10.2011</td><td> Changed PictureViewer to be more MVC and made it use MigLayout</td></tr>
+				<tr><td valign="top">9.10.2011</td><td> Added icons to picture Panel for zooming</td></tr>
 				<tr><td valign="top">13.9.2011</td><td> Added ability to copy into Zip files </td></tr>
 				<tr><td valign="top">14.5.2011</td><td> Changed Settings Dialog to MigLayout </td></tr>
 				<tr><td valign="top">8.5.2011</td><td> Bug with sequential numbering in website generation</td></tr>

@@ -507,7 +507,7 @@ public class ScalablePicture
 
     /**
      *   return the current scale factor
-     * @return
+     * @return the scale factor
      */
     public double getScaleFactor() {
         return ScaleFactor;
@@ -519,7 +519,7 @@ public class ScalablePicture
      *   is fitted into. Since the are could be wider or taller than the picture
      *   will be scaled to there is a different method <code>getScaledSize</code>
      *   that will return the size of the picture.
-     * @return
+     * @return the current scale size
      */
     public Dimension getScaleSize() {
         return TargetSize;
@@ -528,7 +528,7 @@ public class ScalablePicture
 
     /**
      *   return the scaled image
-     * @return
+     * @return the scaled image
      */
     public BufferedImage getScaledPicture() {
         return scaledPicture;
@@ -537,7 +537,7 @@ public class ScalablePicture
 
     /**
      *   return the scaled image
-     * @return
+     * @return the scaled image
      */
     public ImageIcon getScaledImageIcon() {
         return new ImageIcon( scaledPicture );
@@ -546,7 +546,7 @@ public class ScalablePicture
 
     /**
      *   return the size of the scaled image or Zero if there is none
-     * @return
+     * @return the scaled size 
      */
     public Dimension getScaledSize() {
         if ( scaledPicture != null ) {
@@ -559,7 +559,7 @@ public class ScalablePicture
 
     /**
      *   return the size of the scaled image as a neatly formatted text or Zero if there is none
-     * @return
+     * @return a string of the scaled size
      */
     public String getScaledSizeString() {
         if ( scaledPicture != null ) {
@@ -572,7 +572,7 @@ public class ScalablePicture
 
     /**
      *   return the height of the scaled image or Zero if there is none
-     * @return
+     * @return the scaled height or 0
      */
     public int getScaledHeight() {
         if ( scaledPicture != null ) {
@@ -585,7 +585,7 @@ public class ScalablePicture
 
     /**
      *   return the width of the scaled image or Zero if there is none
-     * @return
+     * @return the scaled width or 0
      */
     public int getScaledWidth() {
         if ( scaledPicture != null ) {
@@ -598,7 +598,7 @@ public class ScalablePicture
 
     /**
      *   return the image in the original size
-     * @return
+     * @return image in the original size
      */
     public BufferedImage getOriginalImage() {
         return sourcePicture.getSourceBufferedImage();
@@ -607,7 +607,7 @@ public class ScalablePicture
 
     /**
      *   return the image in the original size
-     * @return
+     * @return the original picture
      */
     public SourcePicture getSourcePicture() {
         return sourcePicture;
@@ -616,7 +616,7 @@ public class ScalablePicture
 
     /**
      *   return the size of the original image or Zero if there is none
-     * @return
+     * @return The original size
      */
     public Dimension getOriginalSize() {
         return sourcePicture.getSize();
@@ -625,7 +625,7 @@ public class ScalablePicture
 
     /**
      *   return the height of the original image or Zero if there is none
-     * @return
+     * @return the original height of the image
      */
     public int getOriginalHeight() {
         return sourcePicture.getHeight();
@@ -634,7 +634,7 @@ public class ScalablePicture
 
     /**
      *   return the width of the original image or Zero if there is none
-     * @return
+     * @return the original width of the image
      */
     public int getOriginalWidth() {
         return sourcePicture.getWidth();
@@ -643,7 +643,7 @@ public class ScalablePicture
 
     /**
      *   return the filename of the original image
-     * @return
+     * @return the filename of the original image
      */
     public String getFilename() {
         return imageUrl.toString();
@@ -803,7 +803,7 @@ public class ScalablePicture
 
     /**
      * Method that returns the status code of the picture loading.
-     * @return
+     * @return the status code
      */
     public int getStatusCode() {
         //logger.info(String.format( "Returning status code %d which corresponds to message %s", pictureStatusCode, pictureStatusMessage ));
@@ -812,8 +812,8 @@ public class ScalablePicture
 
 
     /**
-     * Method that returns the status code of the picture loading.
-     * @return
+     * Method that returns the status message of the picture loading.
+     * @return the status message
      */
     public String getStatusMessage() {
         return pictureStatusMessage;
@@ -822,7 +822,7 @@ public class ScalablePicture
 
     /**
      * accessor method to set the quality that should be used on jpg write operations.
-     * @param quality
+     * @param quality the qualits to use
      */
     public void setJpgQuality( float quality ) {
         //logger.info( "setJpgQuality requested with " + Float.toString( quality ) );
@@ -851,6 +851,7 @@ public class ScalablePicture
 
    
     /**
+     * The number of steps to use in scaling
      * @return the scaleSteps
      */
     public int getScaleSteps() {
@@ -859,6 +860,7 @@ public class ScalablePicture
 
 
     /**
+     * The number of steps to use in scaling
      * @param scaleSteps the scaleSteps to set
      */
     public void setScaleSteps( int scaleSteps ) {

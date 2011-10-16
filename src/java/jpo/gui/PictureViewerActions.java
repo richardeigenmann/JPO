@@ -80,6 +80,11 @@ public interface PictureViewerActions {
      */
     public void requestAutoAdvance();
 
+     /**
+     *  Change the delay associated with the timer
+     */
+    public void setTimerDelay( int delay );
+
     /**
      * Makes the picture zoom in
      */

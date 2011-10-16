@@ -301,7 +301,7 @@ public class ThumbnailController
     /**
      *   Returns the maximum unscaled size for the ThumbnailController as a Dimension using the thumbnailSize
      *   as width and height.
-     * @return
+     * @return The maximum unscaled size of the ThumbnailController
      */
     public Dimension getMaximumUnscaledSize() {
         return new Dimension( theThumbnail.thumbnailSize, theThumbnail.thumbnailSize );
@@ -318,17 +318,17 @@ public class ThumbnailController
 
 
     /**
-     *  This method determines whether the source image is available online and sets the {@link #drawOfflineIcon}
+     *  This method determines whether the source image is available online and sets the {@link Thumbnail#drawOfflineIcon}
      *  indicator accordingly.
-     * @param n
+     * @param nodeToCheck The Node to check
      */
-    public void determineImageStatus( DefaultMutableTreeNode n ) {
-        if ( n == null ) {
+    public void determineImageStatus( DefaultMutableTreeNode nodeToCheck ) {
+        if ( nodeToCheck == null ) {
             theThumbnail.drawOfflineIcon( false );
             return;
         }
 
-        Object userObject = n.getUserObject();
+        Object userObject = nodeToCheck.getUserObject();
         if ( userObject instanceof PictureInfo ) {
             try {
                 ( (PictureInfo) userObject ).getHighresURL().openStream().close();
@@ -371,14 +371,14 @@ public class ThumbnailController
 
 
     /**
-     * Logic for processing a leftclick on the thumbnail
+     * Logic for processing a left click on the thumbnail
      */
     private void leftClickResponse( MouseEvent e ) {
         if ( e.isControlDown() ) {
             if ( Settings.pictureCollection.isSelected( myNode ) ) {
                 Settings.pictureCollection.removeFromSelection( myNode );
             } else {
-                LOGGER.fine( String.format( "Adding; Now Selected: %d", Settings.pictureCollection.getSelectedNodesAsVector().size() ) );
+                LOGGER.fine( String.format( "Adding; Now Selected: %d", Settings.pictureCollection.getSelectedNodes().length ) );
                 Settings.pictureCollection.addToSelectedNodes( myNode );
             }
         } else {
@@ -387,7 +387,7 @@ public class ThumbnailController
             } else {
                 Settings.pictureCollection.clearSelection();
                 Settings.pictureCollection.addToSelectedNodes( myNode );
-                LOGGER.fine( String.format( "1 selection added; Now Selected: %d", Settings.pictureCollection.getSelectedNodesAsVector().size() ) );
+                LOGGER.fine( String.format( "1 selection added; Now Selected: %d", Settings.pictureCollection.getSelectedNodes().length ) );
             }
         }
     }
@@ -426,6 +426,7 @@ public class ThumbnailController
      *  here we get notified by the PictureInfo object that something has
      *  changed.
      */
+    @Override
     public void pictureInfoChangeEvent( PictureInfoChangeEvent e ) {
         if ( e.getHighresLocationChanged() || e.getChecksumChanged() || e.getLowresLocationChanged() || e.getThumbnailChanged()  ) {
             requestThumbnailCreation( ThumbnailQueueRequest.HIGH_PRIORITY, false );
@@ -445,6 +446,7 @@ public class ThumbnailController
      *  here we get notified by the GroupInfo object that something has
      *  changed.
      */
+    @Override
     public void groupInfoChangeEvent( GroupInfoChangeEvent e ) {
         LOGGER.fine( String.format( "Got a Group Change event: %s", e.toString() ) );
         if ( e.getLowresLocationChanged() ) {
@@ -525,6 +527,7 @@ public class ThumbnailController
      *   implemented here to satisfy the TreeModelListener interface; not used.
      * @param e
      */
+    @Override
     public void treeNodesChanged( TreeModelEvent e ) {
         LOGGER.fine( String.format( "ThumbnailController %d detected a treeNodesChanged event: %s", hashCode(), e ) );
 
@@ -558,6 +561,7 @@ public class ThumbnailController
      *   implemented here to satisfy the TreeModelListener interface; not used.
      * @param e
      */
+    @Override
     public void treeNodesInserted( TreeModelEvent e ) {
         LOGGER.fine( String.format( "ThumbnailController %d detected a treeNodesInserted event: %s", hashCode(), e ) );
     }
@@ -567,6 +571,7 @@ public class ThumbnailController
      *  The TreeModelListener interface tells us of tree node removal events.
      * @param e
      */
+    @Override
     public void treeNodesRemoved( TreeModelEvent e ) {
         LOGGER.fine( String.format( "ThumbnailController %d detected a treeNodesRemoved event: %s", hashCode(), e ) );
     }
@@ -576,6 +581,7 @@ public class ThumbnailController
      *   implemented here to satisfy the TreeModelListener interface; not used.
      * @param e
      */
+    @Override
     public void treeStructureChanged( TreeModelEvent e ) {
         LOGGER.fine( String.format( "ThumbnailController %d detected a treeStructureChanged event: %s", hashCode(), e ) );
 
@@ -590,6 +596,7 @@ public class ThumbnailController
      *   supported and then reject the drag if it is not.
      * @param event
      */
+    @Override
     public void dragEnter( DropTargetDragEvent event ) {
         if ( !event.isDataFlavorSupported( JpoTransferable.jpoNodeFlavor ) ) {
             event.rejectDrag();
@@ -604,6 +611,7 @@ public class ThumbnailController
      *   we so desired.
      * @param event
      */
+    @Override
     public void dragOver( DropTargetDragEvent event ) {
         if ( !event.isDataFlavorSupported( JpoTransferable.jpoNodeFlavor ) ) {
             event.rejectDrag();
@@ -619,6 +627,7 @@ public class ThumbnailController
      *   if it needs to.  On Thumbnails this does nothing.
      * @param event
      */
+    @Override
     public void dropActionChanged( DropTargetDragEvent event ) {
     }
 
@@ -628,6 +637,7 @@ public class ThumbnailController
      *   to something else. We do nothing here.
      * @param event
      */
+    @Override
     public void dragExit( DropTargetEvent event ) {
         LOGGER.fine( "Thumbnail.dragExit( DropTargetEvent ): invoked" );
     }
@@ -638,6 +648,7 @@ public class ThumbnailController
      *  SortableDefaultMutableTreeNode.
      * @param event
      */
+    @Override
     public void drop( DropTargetDropEvent event ) {
         myNode.executeDrop( event );
     }
@@ -653,6 +664,7 @@ public class ThumbnailController
          *   the start of a drag and drop operation. If the event is a copy or move we
          *   start the drag and create a Transferable.
          */
+        @Override
         public void dragGestureRecognized( DragGestureEvent event ) {
             if ( ( event.getDragAction() & DnDConstants.ACTION_COPY_OR_MOVE ) == 0 ) {
                 return;
@@ -689,6 +701,7 @@ public class ThumbnailController
          *  modifying the event. This method sets the cursor to reflect
          *  whether a copy, move or no drop is possible.
          */
+        @Override
         public void dragEnter( DragSourceDragEvent event ) {
             Tools.setDragCursor( event );
         }
@@ -700,6 +713,7 @@ public class ThumbnailController
          *  modifying the event. This method sets the cursor to reflect
          *  whether a copy, move or no drop is possible.
          */
+        @Override
         public void dragOver( DragSourceDragEvent event ) {
             Tools.setDragCursor( event );
         }
@@ -709,6 +723,7 @@ public class ThumbnailController
          *   this callback method is invoked to tell the dragSource that the drag has moved on
          *   to something else.
          */
+        @Override
         public void dragExit( DragSourceEvent event ) {
         }
 
@@ -718,6 +733,7 @@ public class ThumbnailController
          *   doing a drag. He can signal that he wants to change the copy / move of the
          *   operation.
          */
+        @Override
         public void dropActionChanged( DragSourceDragEvent event ) {
             Tools.setDragCursor( event );
         }
@@ -727,6 +743,7 @@ public class ThumbnailController
          *   this callback message goes to DragSourceListener, informing it that the dragging
          *   has ended.
          */
+        @Override
         public void dragDropEnd( DragSourceDropEvent event ) {
             Settings.pictureCollection.clearSelection();
         }
@@ -739,10 +756,10 @@ public class ThumbnailController
      */
     @Override
     public String toString() {
-        String myNode = "none";
-        if ( this.myNode != null ) {
-            myNode = this.myNode.toString();
+        String description = "none";
+        if ( myNode != null ) {
+            description = myNode.toString();
         }
-        return String.format( "Thumbnail: HashCode: %d, referringNode: %s", hashCode(), myNode );
+        return String.format( "Thumbnail: HashCode: %d, referringNode: %s", hashCode(), description );
     }
 }

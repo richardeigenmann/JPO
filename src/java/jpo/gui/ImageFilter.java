@@ -5,7 +5,7 @@ import java.io.File;
 /*
 ImageFilter.java:  class that allows only images to be selected
 
-Copyright (C) 2002  Richard Eigenmann.
+Copyright (C) 2002 - 2011  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -18,9 +18,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 The license is in gpl.txt.
 See http://www.gnu.org/copyleft/gpl.html for the details.
-*/
-
-
+ */
 /** 
  *   This class overrides the abstract javax.swing.filechoose.FileFilter class
  *   (not the java.io.FileFilter) to provide a true or false indicator to
@@ -29,36 +27,30 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  **/
 public class ImageFilter extends javax.swing.filechooser.FileFilter {
 
-	
-	/**
-	 *  accepts directories and files ending in .jpg, .jpeg, .tif, .tiff or .gif
-         *
-         * @param f
-         * @return
-         */
-	public boolean accept(File f) {
-		String lowercaseFilename = f.getAbsolutePath().toLowerCase();
-		return f.isDirectory() 
-			|| lowercaseFilename.endsWith( ".jpg" ) 
-			|| lowercaseFilename.endsWith( ".jpeg" ) 
-			|| lowercaseFilename.endsWith( ".tif" ) 
-			|| lowercaseFilename.endsWith( ".tiff" ) 
-			|| lowercaseFilename.endsWith( ".gif" ) ;
-	}
+    /**
+     *  accepts directories and files ending in .jpg, .jpeg, .tif, .tiff or .gif
+     *
+     * @param file the file to test
+     * @return true if good, false if not
+     */
+    @Override
+    public boolean accept( File file ) {
+        String lowercaseFilename = file.getAbsolutePath().toLowerCase();
+        return file.isDirectory()
+                || lowercaseFilename.endsWith( ".jpg" )
+                || lowercaseFilename.endsWith( ".jpeg" )
+                || lowercaseFilename.endsWith( ".tif" )
+                || lowercaseFilename.endsWith( ".tiff" )
+                || lowercaseFilename.endsWith( ".gif" );
+    }
 
-	/**
-	 *   returns the description "tiff, gif, jpeg Images"
-         *
-         * @return
-         */
-	public String getDescription() {
-        	return "tiff, gif, jpeg Images";
-	}
-
-	
-	
-	
-
-	
-	
+    /**
+     *   returns the description "tiff, gif, jpeg Images"
+     *
+     * @return A description for the filter
+     */
+    @Override
+    public String getDescription() {
+        return "tiff, gif, jpeg Images";
+    }
 }
