@@ -12,7 +12,7 @@ import net.javaprog.ui.wizard.AbstractStep;
 /*
 GenerateWebsiteWizard4Highres.java: Ask for Highres stuff
 
-Copyright (C) 2008  Richard Eigenmann.
+Copyright (C) 2008-2012  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -40,7 +40,7 @@ public class GenerateWebsiteWizard4Highres extends AbstractStep {
     private final HtmlDistillerOptions options;
 
     /**
-     * This Wizard prompts for the otpions regarding Highres
+     * This Wizard prompts for the options regarding Highres
      * @param options The data object with all the settings
      */
     public GenerateWebsiteWizard4Highres( HtmlDistillerOptions options ) {
@@ -49,6 +49,7 @@ public class GenerateWebsiteWizard4Highres extends AbstractStep {
 
         // load the options into the GUI components
         exportHighresJCheckBox.setSelected( options.isExportHighres() );
+        rotateHighresJCheckBox.setSelected( options.isRotateHighres() );
         generateZipfileJCheckBox.setSelected( options.isGenerateZipfile() );
         linkToHighresJCheckBox.setSelected( options.isLinkToHighres() );
     }
@@ -57,6 +58,11 @@ public class GenerateWebsiteWizard4Highres extends AbstractStep {
      *  target directory structure.
      **/
     private JCheckBox exportHighresJCheckBox = new JCheckBox( Settings.jpoResources.getString( "exportHighresJCheckBox" ) );
+    /**
+     *  Tickbox that indicates whether the highes pictures are to be copied to the
+     *  target directory structure.
+     **/
+    private JCheckBox rotateHighresJCheckBox = new JCheckBox( Settings.jpoResources.getString( "rotateHighresJCheckBox" ) );
     /**
      *  Tickbox that indicates whether a Zipfile should be created to download the highres pictures
      **/
@@ -84,7 +90,18 @@ public class GenerateWebsiteWizard4Highres extends AbstractStep {
             }
         } );
         wizardPanel.add( exportHighresJCheckBox );
+        
+        // create checkbox for highres rotate
+        rotateHighresJCheckBox.addChangeListener( new ChangeListener() {
 
+            @Override
+            public void stateChanged( ChangeEvent arg0 ) {
+                options.setRotateHighres( rotateHighresJCheckBox.isSelected() );
+            }
+        } );
+        wizardPanel.add( rotateHighresJCheckBox );
+
+        
         generateZipfileJCheckBox.addChangeListener( new ChangeListener() {
 
             @Override
@@ -111,6 +128,7 @@ public class GenerateWebsiteWizard4Highres extends AbstractStep {
     /**
      * Required but not used here
      */
+    @Override
     public void prepareRendering() {
     }
 }

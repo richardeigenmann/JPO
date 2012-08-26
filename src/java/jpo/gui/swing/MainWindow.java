@@ -1,25 +1,18 @@
 package jpo.gui.swing;
 
-import jpo.gui.*;
 import java.awt.BorderLayout;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.util.logging.Logger;
-import javax.swing.JComponent;
-import javax.swing.JFrame;
-import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
-import javax.swing.JTabbedPane;
-import javax.swing.SwingUtilities;
-import javax.swing.ToolTipManager;
-import javax.swing.UIManager;
+import javax.swing.*;
 import jpo.dataModel.Settings;
 import jpo.dataModel.Tools;
+import jpo.gui.ApplicationJMenuBar;
 
 /*
 MainWindow.java:  main window of the JPO application
 
-Copyright (C) 2002 - 2011  Richard Eigenmann.
+Copyright (C) 2002 - 2012  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -65,18 +58,11 @@ public class MainWindow
         this.searchesTab = searchesJScrollPane;
         Tools.checkEDT();
         try {
-            //final String GTK = "com.sun.java.swing.plaf.gtk.GTKLookAndFeel";
             final String Windows = "com.sun.java.swing.plaf.windows.WindowsLookAndFeel";
-            //final String Metal = "javax.swing.plaf.metal.MetalLookAndFeel";
-            //final String CDE = "com.sun.java.swing.plaf.motif.MotifLookAndFeel";
-
             UIManager.setLookAndFeel( Windows );
         } catch ( Exception e ) {
             LOGGER.fine( "Could not set Look and Feel" );
         }
-        //ScreenHelper.explainGraphicsEnvironment();
-
-        Settings.anchorFrame = this;
         setTitle( Settings.jpoResources.getString( "ApplicationTitle" ) );
 
 
@@ -124,13 +110,9 @@ public class MainWindow
         statsScroller.getVerticalScrollBar().setUnitIncrement( 20 );
         tabbedPane.addTab( "Stats", statsScroller );
 
-        
-
         leftSplitPane.setBottomComponent( tabbedPane );
-        
-        
-        
         leftSplitPane.setDividerLocation( Settings.preferredLeftDividerSpot );
+        
         /**
          *  The pane that holds the main window. On the left will go the tree, on the
          *  right will go the thumbnails

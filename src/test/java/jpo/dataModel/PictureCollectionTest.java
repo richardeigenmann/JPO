@@ -5,11 +5,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
-import junit.framework.*;
+import junit.framework.TestCase;
 
 /*
- * ApplicationJMenuBarTest.java
- * JUnit based test
+ * ApplicationJMenuBarTest.java JUnit based test
  *
  */
 /**
@@ -25,8 +24,7 @@ public class PictureCollectionTest
     /**
      * Defines a logger for this class
      */
-    private static Logger logger = Logger.getLogger(PictureCollectionTest.class.getName());
-
+    private static final Logger LOGGER = Logger.getLogger(PictureCollectionTest.class.getName());
     /**
      * Let's have a nice little collection for some tests....
      */
@@ -107,14 +105,13 @@ public class PictureCollectionTest
     }
 
     /**
-     * Since I had a concurrent modification probelm on the clear selections here are a few tests
-     * to verify the selection thing works.
+     * Since I had a concurrent modification problem on the clear selections
+     * here are a few tests to verify the selection thing works.
      */
     public void testSelections() {
-        assertEquals("Testing that the selection array is empty before we start", 0, pc.getSelectedNodesAsVector().size());
+        assertEquals("Testing that the selection array is empty before we start", 0, pc.getSelectedNodes().length);
         pc.addToSelectedNodes(group1);
         pc.addToSelectedNodes(picture1);
-        assertEquals("We should have 2 nodes selected now", 2, pc.getSelectedNodesAsVector().size());
         assertEquals("We should have 2 nodes selected now", 2, pc.getSelectedNodes().length);
         assertEquals("We should have 2 nodes selected now", 2, pc.countSelectedNodes());
         assertTrue("We sould find that the node we selected is actually in the selected set", pc.isSelected(group1));
@@ -122,30 +119,30 @@ public class PictureCollectionTest
         assertFalse("A Node that was not selected should not be in the selection", pc.isSelected(group2));
 
         pc.removeFromSelection(group1);
-        assertEquals("We should have 1 nodes selected now", 1, pc.getSelectedNodesAsVector().size());
+        assertEquals("We should have 1 nodes selected now", 1, pc.getSelectedNodes().length);
         assertFalse("We sould find that the node we deselected is actually gone", pc.isSelected(group1));
         assertTrue("We sould find that the second node we selected is still in the selected set", pc.isSelected(picture1));
         assertFalse("A Node that was not selected should not be in the selection", pc.isSelected(group2));
 
         pc.addToSelectedNodes(group1);
         pc.addToSelectedNodes(group1); //why not add it again?
-        assertEquals("Twice the same node plus one equals 2", 2, pc.getSelectedNodesAsVector().size());
+        assertEquals("Twice the same node plus one equals 2", 2, pc.getSelectedNodes().length);
 
         pc.clearSelection(); // this is where we the concurrent modification happened
-        assertEquals("Testing that the selection array is empty again", 0, pc.getSelectedNodesAsVector().size());
+        assertEquals("Testing that the selection array is empty again", 0, pc.getSelectedNodes().length);
 
         pc.removeFromSelection(group1); // How about removing somehting that is not there?
-        assertEquals("Testing that the selection array stayed", 0, pc.getSelectedNodesAsVector().size());
+        assertEquals("Testing that the selection array stayed", 0, pc.getSelectedNodes().length);
     }
 
     /**
-     * Since I had a concurrent modification probelm on the clear selections here are a few tests
-     * to verify the selection thing works.
+     * Since I had a concurrent modification problem on the clear selections
+     * here are a few tests to verify the selection thing works.
      */
     public void testMailSelections() {
         assertEquals("Testing that the mail selection array is empty before we start", 0, pc.getMailSelectedNodes().length);
-        pc.addToMailSelected(group1);
-        pc.addToMailSelected(picture1);
+        pc.addToMailSelection(group1);
+        pc.addToMailSelection(picture1);
         assertEquals("We should have 2 nodes selected now", 2, pc.getMailSelectedNodes().length);
         assertTrue("We sould find that the node we selected is actually in the selected set", pc.isMailSelected(group1));
         assertTrue("We sould find that the second node we selected is actually in the selected set", pc.isMailSelected(picture1));
@@ -157,8 +154,8 @@ public class PictureCollectionTest
         assertTrue("We sould find that the second node we selected is still in the selected set", pc.isMailSelected(picture1));
         assertFalse("A Node that was not selected should not be in the selection", pc.isMailSelected(group2));
 
-        pc.addToMailSelected(group1);
-        pc.addToMailSelected(group1); //why not add it again?
+        pc.addToMailSelection(group1);
+        pc.addToMailSelection(group1); //why not add it again?
         assertEquals("Twice the same node plus one picture equals 2", 2, pc.getMailSelectedNodes().length);
 
         pc.toggleMailSelected(picture1);
@@ -171,25 +168,23 @@ public class PictureCollectionTest
         assertEquals("Testing that the selection array stayed", 0, pc.getMailSelectedNodes().length);
     }
 
-      /**
-     * Since I had a concurrent modification probelm on the clear selections here are a few tests
-     * to verify the selection thing works.
+    /**
+     * Since I had a concurrent modification problem on the clear selections
+     * here are a few tests to verify the selection thing works.
      */
     public void testAddToMailSelection() {
         assertEquals("Testing that the mail selection array is empty before we start", 0, pc.getMailSelectedNodes().length);
-        pc.addToMailSelected(picture1);
+        pc.addToMailSelection(picture1);
         assertEquals("We should have 1 nodes selected now", 1, pc.getMailSelectedNodes().length);
-        pc.addToMailSelected(picture1); //adding the same node again
+        pc.addToMailSelection(picture1); //adding the same node again
         assertEquals("We should have 1 nodes selected now", 1, pc.getMailSelectedNodes().length);
     }
-
-
-
     /**
      * Let's create a quick and dirty change listener
      */
     private PictureInfoChangeListener listener = new PictureInfoChangeListener() {
 
+        @Override
         public void pictureInfoChangeEvent(PictureInfoChangeEvent e) {
             if (e.getWasSelected()) {
                 selectedCount++;
@@ -239,65 +234,88 @@ public class PictureCollectionTest
         assertEquals("We should have received a notification that the picture was unselected", 2, unselectedCount);
     }
 
+    public void testClearMailSelection() {
+        pi1.addPictureInfoChangeListener(listener);
+        mailSelectedCount = 0;
+        mailUnselectedCount = 0;
+        pc.addToMailSelection(picture1);
+        assertEquals("We should have received a notification that the picture was selected", 1, mailSelectedCount);
+
+        assertEquals("Before the removal we should have 0 unselect events", 0, mailUnselectedCount);
+        pc.clearMailSelection();
+        assertEquals("We should have received a notification that the picture was unselected", 1, mailUnselectedCount);
+    }
+   
+    
+    
     public void testMailSelectNotification() {
         pi1.addPictureInfoChangeListener(listener);
         mailSelectedCount = 0;
         mailUnselectedCount = 0;
-        pc.addToMailSelected(picture1);
+        pc.addToMailSelection(picture1);
         assertEquals("We should have received a notification that the picture was selected", 1, mailSelectedCount);
 
         // do it again.
-        pc.addToMailSelected(picture1);
+        pc.addToMailSelection(picture1);
         assertEquals("As we are adding the same node again we should not get a change event", 1, mailSelectedCount);
 
         // add another node where we are not listening.
-        pc.addToMailSelected(picture2);
+        pc.addToMailSelection(picture2);
         assertEquals("As we are not listening on the second node we should still be with 1 event", 1, mailSelectedCount);
 
+        assertEquals("Before the removal we should have 0 unselect events", 0, mailUnselectedCount);
         pc.removeFromMailSelection(picture1);
         assertEquals("We should have received a notification that the picture was unselected", 1, mailUnselectedCount);
 
-        pc.addToMailSelected(picture1);
+        pc.addToMailSelection(picture1);
         assertEquals("We should have received a notification that the picture was selected", 2, mailSelectedCount);
 
         pc.clearMailSelection();
         assertEquals("We should have received a notification that the picture was unselected", 2, mailUnselectedCount);
 
         pi1.removePictureInfoChangeListener(listener);
-        pc.addToMailSelected(picture1);
+        pc.addToMailSelection(picture1);
         assertEquals("We should not have received a notification that the picture was selected", 2, mailSelectedCount);
 
         pc.clearSelection();
-        assertEquals("We should have received a notification that the picture was unselected", 2, mailUnselectedCount);
+        assertEquals("We should have received a notification that the picture was unselected", 2, mailUnselectedCount); 
+       
     }
+    
+    
+    
     int nodeschanged = 0;
     int nodesinserted = 0;
     int nodesremoved = 0;
     int nodestructurechanged = 0;
 
     /**
-     * In this test we want to see whether a change to an attribute in the picture results in a treeModel change event being 
-     * fired
+     * In this test we want to see whether a change to an attribute in the
+     * picture results in a treeModel change event being fired
      */
-    public void testChangeNotification()  {
+    public void testChangeNotification() {
         nodeschanged = 0;
         nodesinserted = 0;
         nodesremoved = 0;
         nodestructurechanged = 0;
         pc.getTreeModel().addTreeModelListener(new TreeModelListener() {
 
+            @Override
             public void treeNodesChanged(TreeModelEvent e) {
                 nodeschanged++;
             }
 
+            @Override
             public void treeNodesInserted(TreeModelEvent e) {
                 nodesinserted++;
             }
 
+            @Override
             public void treeNodesRemoved(TreeModelEvent e) {
                 nodesremoved++;
             }
 
+            @Override
             public void treeStructureChanged(TreeModelEvent e) {
                 nodestructurechanged++;
             }
@@ -308,9 +326,9 @@ public class PictureCollectionTest
         assertEquals("Before updating the description we should have 0 nodes changed: ", 0, nodeschanged);
         pi1.setDescription("Changed Description");
         try {
-            Thread.sleep( 80 );  // give the threads some time to do the notifications.
-        } catch ( InterruptedException ex ) {
-            Logger.getLogger( PictureCollectionTest.class.getName() ).log( Level.SEVERE, null, ex );
+            Thread.sleep(80);  // give the threads some time to do the notifications.
+        } catch (InterruptedException ex) {
+            Logger.getLogger(PictureCollectionTest.class.getName()).log(Level.SEVERE, null, ex);
         }
         assertEquals("After updating the description we should have 1 node changed: ", 1, nodeschanged);
         assertEquals("No nodes should have been inserted: ", 0, nodesinserted);

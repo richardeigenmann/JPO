@@ -1,8 +1,5 @@
 package jpo.gui;
 
-import java.util.logging.Level;
-import jpo.dataModel.Tools;
-import jpo.dataModel.Settings;
 import java.awt.Dimension;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
@@ -17,16 +14,15 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.imageio.IIOImage;
-import javax.imageio.ImageIO;
-import javax.imageio.ImageTypeSpecifier;
-import javax.imageio.ImageWriteParam;
-import javax.imageio.ImageWriter;
+import javax.imageio.*;
 import javax.imageio.plugins.jpeg.JPEGImageWriteParam;
 import javax.imageio.stream.ImageOutputStream;
 import javax.swing.ImageIcon;
+import jpo.dataModel.Settings;
 import jpo.dataModel.SizeCalculator;
+import jpo.dataModel.Tools;
 
 /*
 ScalablePicture.java:  class that can load and save images
@@ -455,7 +451,6 @@ public class ScalablePicture
             } else {
                 if ( getStatusCode() == LOADING ) {
                     // logger.info ("ScalablePicture.scalePicture invoked while image is still loading. I wonder why?");
-                    return;
                 } else {
                     setStatus( ERROR, "Could not scale image as SourceImage is null." );
                 }
@@ -702,7 +697,6 @@ public class ScalablePicture
 
         } catch ( IOException e ) {
             LOGGER.log( Level.INFO, "ScalablePicture.writeJpg caught IOException: {0}\nwhile writing {1}", new Object[]{e.getMessage(), writeFile.toString()});
-            e.printStackTrace();
         }
         //writer = null;
         writer.dispose(); //1.4.1 documentation says to do this.
@@ -736,7 +730,6 @@ public class ScalablePicture
 
         } catch ( IOException e ) {
             LOGGER.log( Level.INFO, "Caught IOException: {0}", e.getMessage());
-            e.printStackTrace();
         }
         //writer = null;
         writer.dispose(); //1.4.1 documentation says to do this.
@@ -822,7 +815,7 @@ public class ScalablePicture
 
     /**
      * accessor method to set the quality that should be used on jpg write operations.
-     * @param quality the qualits to use
+     * @param quality the quality to use
      */
     public void setJpgQuality( float quality ) {
         //logger.info( "setJpgQuality requested with " + Float.toString( quality ) );

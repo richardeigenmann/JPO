@@ -4,17 +4,12 @@ import java.awt.Dimension;
 import javax.swing.SwingUtilities;
 import jpo.dataModel.Settings;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
-import net.javaprog.ui.wizard.DefaultWizardModel;
-import net.javaprog.ui.wizard.Step;
-import net.javaprog.ui.wizard.Wizard;
-import net.javaprog.ui.wizard.WizardModel;
-import net.javaprog.ui.wizard.WizardModelEvent;
-import net.javaprog.ui.wizard.WizardModelListener;
+import net.javaprog.ui.wizard.*;
 
 /*
 GenerateWebsiteWizard.java: Creates a Wizard for generating a web page
 
-Copyright (C) 2008  Richard Eigenmann.
+Copyright (C) 2008-2012  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2

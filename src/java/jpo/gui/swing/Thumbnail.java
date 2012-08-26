@@ -1,17 +1,15 @@
 package jpo.gui.swing;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.Rectangle;
+import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
 import java.awt.image.RescaleOp;
 import java.util.logging.Logger;
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
+import javax.swing.JComponent;
+import javax.swing.SwingUtilities;
 import javax.swing.border.BevelBorder;
 import jpo.dataModel.Settings;
 import jpo.dataModel.Tools;
@@ -75,6 +73,7 @@ public class Thumbnail
         LOGGER.fine( String.format( "Setting image on thumbnail %d", hashCode() ) );
         Runnable r = new Runnable() {
 
+            @Override
             public void run() {
                 if ( icon == null ) {
                     return;
@@ -331,6 +330,7 @@ public class Thumbnail
     public void showAsSelected() {
         Runnable r = new Runnable() {
 
+            @Override
             public void run() {
                 setBorder( BorderFactory.createCompoundBorder(
                         BorderFactory.createBevelBorder( BevelBorder.LOWERED, HIGHLIGHT_COLOR, SHADOW_COLOR ),
@@ -354,6 +354,7 @@ public class Thumbnail
         LOGGER.fine( "running show unselected" );
         Runnable r = new Runnable() {
 
+            @Override
             public void run() {
                 setBorder( BorderFactory.createEmptyBorder() );
             }
@@ -379,7 +380,6 @@ public class Thumbnail
     public void paintComponent( Graphics g ) {
         if ( !SwingUtilities.isEventDispatchThread() ) {
             LOGGER.severe( "Not running on EDT!" );
-            Thread.dumpStack();
         }
 
         int WindowWidth = getSize().width;

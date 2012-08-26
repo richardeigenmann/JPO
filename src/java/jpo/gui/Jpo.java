@@ -1,31 +1,23 @@
 package jpo.gui;
 
-import jpo.dataModel.FlatGroupNavigator;
-import jpo.dataModel.RandomNavigator;
-import jpo.dataModel.GroupNavigator;
-import jpo.dataModel.NodeNavigatorInterface;
-import jpo.gui.swing.ResizableJFrame;
-import jpo.gui.swing.MainWindow;
-import jpo.dataModel.Tools;
-import jpo.dataModel.Settings;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.event.TreeModelEvent;
-import jpo.dataModel.SortableDefaultMutableTreeNode;
-import java.io.*;
-import java.util.*;
-import java.awt.event.*;
-import java.util.logging.Handler;
 import javax.swing.*;
+import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
-import jpo.dataModel.DuplicatesQuery;
-import jpo.dataModel.GroupInfo;
-import jpo.dataModel.PictureInfo;
-import jpo.dataModel.QueryNavigator;
+import jpo.dataModel.*;
 import jpo.gui.swing.CollectionJTree;
+import jpo.gui.swing.MainWindow;
+import jpo.gui.swing.ResizableJFrame;
 import jpotestground.CheckThreadViolationRepaintManager;
 
 
@@ -139,6 +131,7 @@ public class Jpo {
                             applicationEventHandler.requestExit();
                         }
                     } );
+                     Settings.anchorFrame = mainWindow;
                 }
             } );
         } catch ( InterruptedException ex ) {
@@ -179,7 +172,7 @@ public class Jpo {
      *  This Vector allows us to keep track of the number of ThumbnailCreationThreads
      *  we have fired off. Could be enhanced to dynamically start more or less.
      */
-    private final static Vector<ThumbnailCreationFactory> thumbnailFactories = new Vector<ThumbnailCreationFactory>();
+    private final static ArrayList<ThumbnailCreationFactory> thumbnailFactories = new ArrayList<ThumbnailCreationFactory>();
 
     /**
      *  static initializer for the ThumbnailCreationThreads

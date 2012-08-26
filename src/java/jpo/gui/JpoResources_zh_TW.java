@@ -206,6 +206,7 @@ public class JpoResources_zh_TW extends ListResourceBundle {
 		{ "HtmlDistTarget", "Target"}, //new
 		{ "HtmlDistThumbnails", "Thumbnails"},  //new
 		{"exportHighresJCheckBox", "導出清晰圖片"},
+		{"rotateHighresJCheckBox", "Rotate Highres pictures"},
 		{"linkToHighresJCheckBox", "使用當前位置鏈接到清晰圖片"},
 		{"generateDHTMLJCheckBox", "生成DHTML鼠標移動效果"},
 		{"generateZipfileJCheckBox", "生成清晰圖片可用于下載的壓縮文件包"},

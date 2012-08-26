@@ -9,7 +9,7 @@ import jpo.dataModel.SortableDefaultMutableTreeNode;
 /*
 HtmlDistillerOptions.java:  Holds the options that configure the html output.
 
-Copyright (C) 2008-2011,  Richard Eigenmann, Zürich
+Copyright (C) 2008-2012,  Richard Eigenmann, Zürich
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -334,6 +334,26 @@ public class HtmlDistillerOptions {
      */
     private boolean exportHighres;
     /**
+     *   Indicates whether a highres image should be rotated.
+     */
+    private boolean rotateHighres;
+
+    /**
+     * Indicate that a highres image should be rotated
+     * @param rotateHighres 
+     */
+    public void setRotateHighres(boolean rotateHighres) {
+        this.rotateHighres = rotateHighres;
+    }
+
+    /**
+     * returns whether a highres image should be rotated
+     * @return 
+     */
+    public boolean isRotateHighres() {
+        return rotateHighres;
+    }
+    /**
      *   Indicates whether the highres pictures should be linked to.
      */
     private boolean linkToHighres;
@@ -479,6 +499,7 @@ public class HtmlDistillerOptions {
 
         sb.append( "\n" ).append( Settings.jpoResources.getString( "HtmlDistHighres" ) ).append( "\n" );
         sb.append( isExportHighres() ? "Export Highres Pictures\n" : "Do not export Highres Pictures\n" );
+        sb.append( isRotateHighres() ? "Rotate Highres Pictures\n" : "Do not rotate Highres Pictures\n" );
         sb.append( isGenerateZipfile() ? Settings.jpoResources.getString( "generateZipfileJCheckBox" ) + "\n" : "No Zipfile for download of Highres Pictures\n" );
         sb.append( "Filename for Download Zipfile: " ).append( getDownloadZipFileName() ).append( "\n" );
         sb.append( isLinkToHighres() ? Settings.jpoResources.getString( "linkToHighresJCheckBox" ) + "\n" : "No Link to high resolution pictures at current location\n" );

@@ -146,7 +146,10 @@ public class ConsolidateGroup
         if ( !( userObject instanceof GroupInfo ) ) {
             LOGGER.severe( String.format( "Node %s is not a GroupInfo.", groupNode.toString() ) );
             return;
+        } else {
+            LOGGER.fine(String.format("Running consolidateGroup on GroupInfo: %s", groupNode.toString()));
         }
+        try {
         if ( moveLowres && ( !groupNode.isRoot() ) ) {
             // we should move the group thumbnail
             if ( !moveLowresPicture( userObject ) ) {
@@ -185,6 +188,9 @@ public class ConsolidateGroup
             publish( String.format( "Consolidated node: %s", node.toString() ) );
         }
         LOGGER.fine( String.format( "End of loop prog GUI interrupt: %b", progGui.getInterruptor().getShouldInterrupt() ) );
+        } catch (Exception e) {
+            LOGGER.severe(String.format("Caught error: %s",e.getMessage()));
+        }
     }
 
     /**

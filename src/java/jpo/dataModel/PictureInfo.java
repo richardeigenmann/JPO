@@ -1,16 +1,22 @@
 package jpo.dataModel;
 
 import java.awt.geom.Point2D;
-import java.net.*;
 import java.io.*;
-import java.util.*;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /*
 PictureInfo.java:  the definitions for picture data
 
-Copyright (C) 2002-2011  Richard Eigenmann.
+Copyright (C) 2002-2012  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -128,7 +134,7 @@ public class PictureInfo
     /**
      *  this method writes all attributes of the picture in the JPO
      *  xml data format with the highres and lowres locations passed in as
-     *  parameters. This became nescesary because when the XmlDistiller
+     *  parameters. This became necessary because when the XmlDistiller
      *  copies the pictures to a new location we don't want to write the
      *  URLs of the original pictures whilst all other attributes are retained.
      *
@@ -237,7 +243,7 @@ public class PictureInfo
      *  @see #getDescription
      */
     public synchronized void setDescription( String desc ) {
-        LOGGER.fine( "setting description to: " + desc );
+        LOGGER.log( Level.FINE, "setting description to: {0}", desc);
         if ( !desc.equals( description ) ) {
             description = desc;
             sendDescriptionChangedEvent();
@@ -391,7 +397,7 @@ public class PictureInfo
 
     /**
      * Appends the text to the field (used by XML parser).
-     * @param s The text fragement to be added to the Highres Location
+     * @param s The text fragment to be added to the Highres Location
      */
     public synchronized void appendToHighresLocation( String s ) {
         if ( s.length() > 0 ) {
@@ -677,7 +683,7 @@ public class PictureInfo
 
     /**
      *  Creates a PictureChangedEvent and sends it to inform listening
-     *  objects that the lthumbnail was updated.
+     *  objects that the thumbnail was updated.
      */
     public void sendThumbnailChangedEvent() {
         if ( Settings.pictureCollection.getSendModelUpdates() ) {

@@ -273,6 +273,7 @@
         <javac srcdir="${testdir}"
                verbose="${TALK}"
                destdir="${unit.test.classes.dir}"
+               includeantruntime="false"
                >
             <classpath>
                 <pathelement location="${build.base.classes.dir}" />

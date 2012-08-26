@@ -69,6 +69,7 @@ public class GenerateWebsiteWizard7Summary extends AbstractStep {
     /**
      * Refreshes the contents of the widgets
      */
+    @Override
     public void prepareRendering() {
         summary.setText( options.toString() );
         setCanFinish( true );

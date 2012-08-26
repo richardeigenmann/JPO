@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jnlp spec="1.0+" codebase="http://j-po.sourceforge.net/" href="jwizz.jnlp">
+    <information>
+        <title>Google Libraries</title>
+        <vendor>Google</vendor>
+        <offline-allowed/>
+    </information>
+    <offline-allowed/>
+    <resources>
+        <jar href="gdata-core-1.0.jar"/>
+        <jar href="gdata-maps-2.0.jar"/>
+        <jar href="gdata-media-1.0.jar"/>
+        <jar href="gdata-photos-2.0.jar"/>
+        <jar href="guava-13.0.jar"/>
+    </resources>
+    <component-desc/>
+</jnlp>

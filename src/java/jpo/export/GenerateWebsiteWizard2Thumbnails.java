@@ -1,28 +1,18 @@
 package jpo.export;
 
-import java.awt.Color;
 import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.util.Hashtable;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JSlider;
-import javax.swing.JSpinner;
-import javax.swing.SpinnerNumberModel;
+import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import jpo.dataModel.Settings;
-import jpo.dataModel.Tools;
 import net.javaprog.ui.wizard.AbstractStep;
 
 /*
 GenerateWebsiteWizard2Thumbnails.java:  Specify stuff about the Thumbnails
 
-Copyright (C) 2008-2009  Richard Eigenmann. Zürich
+Copyright (C) 2008-2012  Richard Eigenmann. Zürich
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -104,6 +94,7 @@ public class GenerateWebsiteWizard2Thumbnails extends AbstractStep {
         columnsPanel.add( new JLabel( Settings.jpoResources.getString( "picsPerRowText" ) ) );
         picsPerRow.addChangeListener( new ChangeListener() {
 
+            @Override
             public void stateChanged( ChangeEvent arg0 ) {
                 options.setPicsPerRow( ( (SpinnerNumberModel) ( picsPerRow.getModel() ) ).getNumber().intValue() );
             }
@@ -117,6 +108,7 @@ public class GenerateWebsiteWizard2Thumbnails extends AbstractStep {
         thumbnailSizeJPanel.add( new JLabel( Settings.jpoResources.getString( "thubnailSizeJLabel" ) ) );
         thumbWidth.addChangeListener( new ChangeListener() {
 
+            @Override
             public void stateChanged( ChangeEvent arg0 ) {
                 options.setThumbnailWidth( ( (SpinnerNumberModel) ( thumbWidth.getModel() ) ).getNumber().intValue() );
             }
@@ -125,6 +117,7 @@ public class GenerateWebsiteWizard2Thumbnails extends AbstractStep {
         thumbnailSizeJPanel.add( new JLabel( " x " ) );
         thumbHeight.addChangeListener( new ChangeListener() {
 
+            @Override
             public void stateChanged( ChangeEvent arg0 ) {
                 options.setThumbnailHeight( ( (SpinnerNumberModel) ( thumbHeight.getModel() ) ).getNumber().intValue() );
             }
@@ -176,6 +169,7 @@ public class GenerateWebsiteWizard2Thumbnails extends AbstractStep {
         scalingSteps.setAlignmentX( Component.LEFT_ALIGNMENT );
         scalingSteps.addChangeListener( new ChangeListener() {
 
+            @Override
             public void stateChanged( ChangeEvent arg0 ) {
                 options.setScalingSteps( ( (SpinnerNumberModel) ( scalingSteps.getModel() ) ).getNumber().intValue() );
             }
@@ -191,6 +185,7 @@ public class GenerateWebsiteWizard2Thumbnails extends AbstractStep {
     /**
      * Required but not needed here
      */
+    @Override
     public void prepareRendering() {
     }
 }

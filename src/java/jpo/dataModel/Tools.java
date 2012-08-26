@@ -1,19 +1,24 @@
 package jpo.dataModel;
 
-import java.util.logging.Level;
-import jpo.gui.XmlFilter;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.dnd.DnDConstants;
+import java.awt.dnd.DragSource;
+import java.awt.dnd.DragSourceContext;
+import java.awt.dnd.DragSourceDragEvent;
 import java.io.*;
-import java.net.*;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
-import javax.swing.*;
-import java.awt.dnd.*;
-import java.util.zip.*;
-import javax.imageio.*;
-import javax.imageio.stream.*;
-import java.text.*;
-import javax.swing.WindowConstants.*;
-import java.awt.*;
+import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.zip.Adler32;
+import javax.imageio.ImageIO;
+import javax.imageio.stream.FileImageInputStream;
+import javax.swing.*;
+import jpo.gui.XmlFilter;
 
 
 /*

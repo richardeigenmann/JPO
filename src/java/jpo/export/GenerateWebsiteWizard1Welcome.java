@@ -2,15 +2,9 @@ package jpo.export;
 
 import java.awt.Component;
 import java.awt.Dimension;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.SwingWorker;
-import jpo.dataModel.Settings;
-import jpo.dataModel.SortableDefaultMutableTreeNode;
+import javax.swing.*;
 import jpo.dataModel.NodeStatistics;
+import jpo.dataModel.Settings;
 import net.javaprog.ui.wizard.AbstractStep;
 
 /*

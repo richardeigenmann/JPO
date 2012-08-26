@@ -1,46 +1,39 @@
 package jpo.export;
 
 import java.awt.Desktop;
-import java.net.URISyntaxException;
-import java.util.logging.Level;
-import jpo.dataModel.Tools;
-import jpo.dataModel.Settings;
-import jpo.dataModel.GroupInfo;
-import jpo.gui.ScalablePicture;
-import jpo.dataModel.SortableDefaultMutableTreeNode;
-import jpo.dataModel.PictureInfo;
 import java.io.*;
 import java.net.URI;
-import java.util.*;
-import javax.swing.*;
+import java.net.URISyntaxException;
+import java.util.Enumeration;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.zip.*;
-import jpo.dataModel.NodeStatistics;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
+import javax.swing.JOptionPane;
+import javax.swing.SwingWorker;
+import jpo.dataModel.*;
 import jpo.gui.ProgressGui;
+import jpo.gui.ScalablePicture;
 
 /*
-HtmlDistiller.java:  class that can write html files
- *
-Copyright (C) 2002-2011  Richard Eigenmann.
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or any later version. This program is distributed 
-in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
-without even the implied warranty of MERCHANTABILITY or FITNESS 
-FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
-more details. You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-The license is in gpl.txt.
-See http://www.gnu.org/copyleft/gpl.html for the details.
+ * HtmlDistiller.java: class that can write html files * Copyright (C) 2002-2012
+ * Richard Eigenmann. This program is free software; you can redistribute it
+ * and/or modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of the License,
+ * or any later version. This program is distributed in the hope that it will be
+ * useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
+ * Public License for more details. You should have received a copy of the GNU
+ * General Public License along with this program; if not, write to the Free
+ * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
+ * 02111-1307, USA. The license is in gpl.txt. See
+ * http://www.gnu.org/copyleft/gpl.html for the details.
  */
 /**
- *  This class generates a set of HTML pages that allows a user to browse
- *  groups of pictures in a web-browser. The resulting html pages can be
- *  posted to the Internet. Relative addressing has been used throughout to facilitate 
- *  this.
+ * This class generates a set of HTML pages that allows a user to browse groups
+ * of pictures in a web-browser. The resulting html pages can be posted to the
+ * Internet. Relative addressing has been used throughout to facilitate this.
  */
 public class HtmlDistiller
         extends SwingWorker<Integer, String> {
@@ -49,29 +42,30 @@ public class HtmlDistiller
      * Defines a logger for this class
      */
     private static final Logger LOGGER = Logger.getLogger(HtmlDistiller.class.getName());
-    /*{
-    logger.setLevel( Level.ALL );
-    }*/
+
+    {
+        LOGGER.setLevel(Level.ALL);
+    }
     /**
-     *  Temporary object to scale the image for the html output.
+     * Temporary object to scale the image for the html output.
      */
     private ScalablePicture scp = new ScalablePicture();
     /**
-     *   counter that is incremented with every new picture and is used to 
-     *   determine the number for the next one.
+     * counter that is incremented with every new picture and is used to
+     * determine the number for the next one.
      */
     private int picsWroteCounter = 1;
     /**
-     *   Indicator that gets set to true if group nodes are being written so that
-     *   the folder icon is created.
+     * Indicator that gets set to true if group nodes are being written so that
+     * the folder icon is created.
      */
     private boolean folderIconRequired = false;
     /**
-     *  Handle for the zipfile
+     * Handle for the zipfile
      */
     private ZipOutputStream zipFile;
     /**
-     *  static size of the buffer to be used in copy operations
+     * static size of the buffer to be used in copy operations
      */
     private static final int BUFFER_SIZE = 2048;
     /**
@@ -80,10 +74,10 @@ public class HtmlDistiller
     private final HtmlDistillerOptions options;
 
     /**
-     *  Creates and starts a Swing Worker that renders the web page files
-     *  to the target directory.
+     * Creates and starts a Swing Worker that renders the web page files to the
+     * target directory.
      *
-     *  @param  options The parameters the user chose on how to render the pages
+     * @param options The parameters the user chose on how to render the pages
      */
     public HtmlDistiller(final HtmlDistillerOptions options) {
         this.options = options;
@@ -185,13 +179,14 @@ public class HtmlDistiller
         return Integer.MAX_VALUE;
     }
     /**
-     *   This object holds a reference to the progress GUI for the user.
+     * This object holds a reference to the progress GUI for the user.
      */
     private ProgressGui progGui;
 
     /**
-     * This method is called by SwingWorker when the background process
-     * sends a publish.
+     * This method is called by SwingWorker when the background process sends a
+     * publish.
+     *
      * @param messages A message that will be written to the logfile.
      */
     @Override
@@ -221,12 +216,13 @@ public class HtmlDistiller
     }
 
     /**
-     *  This method writes out an HTML page with the small images aligned next to each other.
-     *  Each Group and picture is created in an html file called jpo_1234.htm except for the first one that
-     *  gets named index.htm. 1234 is the internal hashCode of the node so that we can translate parents and
-     *  children to each other.
+     * This method writes out an HTML page with the small images aligned next to
+     * each other. Each Group and picture is created in an html file called
+     * jpo_1234.htm except for the first one that gets named index.htm. 1234 is
+     * the internal hashCode of the node so that we can translate parents and
+     * children to each other.
      *
-     *  @param groupNode		The node at which the extraction is to start.
+     * @param groupNode	The node at which the extraction is to start.
      *
      */
     public void writeGroup(SortableDefaultMutableTreeNode groupNode) {
@@ -342,14 +338,17 @@ public class HtmlDistiller
     }
 
     /**
-     *  Write html for a picture in the set of webpages.
-     *  @param	pictureNode	The node for which the HTML is to be written
-     *  @param	out	The opened output stream of the overview page to which the thumbnail tags should be written
-     *  @param	groupFile	The name of the html file that holds the small thumbnails of the parent group
-     *  @param	childNumber	The current position of the picture in the group
-     *  @param	childCount	The total number of pictures in the group
-     *  @param	descriptionsBuffer	A buffer for the thumbnails page
-     *  @throws IOException If there was some sort of IO Error.
+     * Write html for a picture in the set of webpages.
+     *
+     * @param	pictureNode	The node for which the HTML is to be written
+     * @param	out	The opened output stream of the overview page to which the
+     * thumbnail tags should be written
+     * @param	groupFile	The name of the html file that holds the small
+     * thumbnails of the parent group
+     * @param	childNumber	The current position of the picture in the group
+     * @param	childCount	The total number of pictures in the group
+     * @param	descriptionsBuffer	A buffer for the thumbnails page
+     * @throws IOException If there was some sort of IO Error.
      */
     private void writePicture(
             SortableDefaultMutableTreeNode pictureNode,
@@ -396,11 +395,6 @@ public class HtmlDistiller
                 break;
         }
 
-        // copy the picture to the target directory
-        if (options.isExportHighres()) {
-            LOGGER.fine(String.format("Copying picture %s to %s", pictureInfo.getHighresLocation(), highresFile.toString()));
-            Tools.copyPicture(pictureInfo.getHighresURL(), highresFile);
-        }
 
 
         if (options.isGenerateZipfile()) {
@@ -429,12 +423,6 @@ public class HtmlDistiller
 
         LOGGER.log(Level.FINE, "testing size of thumbnail {0}", pictureInfo.getLowresURL().toString());
 
-        int wOrig = 0;
-        int hOrig = 0;
-
-        int w = 0;
-        int h = 0;
-
         LOGGER.fine(String.format("Loading: %s", pictureInfo.getHighresLocation()));
         scp.loadPictureImd(pictureInfo.getHighresURL(), pictureInfo.getRotation());
 
@@ -443,14 +431,30 @@ public class HtmlDistiller
             scp.loadPictureImd(Settings.cl.getResource("jpo/images/broken_thumbnail.gif"), 0f);
         }
 
+        // copy the picture to the target directory
+        if (options.isExportHighres())  {
+            if (options.isRotateHighres() && (pictureInfo.getRotation() != 0) ) {
+                LOGGER.fine(String.format("Copying and rotating picture %s to %s", pictureInfo.getHighresLocation(), highresFile.toString()));
+                scp.setScaleFactor(1);
+                scp.scalePicture();
+                scp.setJpgQuality(options.getMidresJpgQuality());
+                scp.writeScaledJpg(highresFile);
+            } else {
+                LOGGER.fine(String.format("Copying picture %s to %s", pictureInfo.getHighresLocation(), highresFile.toString()));
+                Tools.copyPicture(pictureInfo.getHighresURL(), highresFile);
+            }
+        }
+
+
+
         scp.setScaleSize(options.getThumbnailDimension());
         LOGGER.fine(String.format("Scaling: %s", pictureInfo.getHighresLocation()));
         scp.scalePicture();
         LOGGER.fine(String.format("Writing: %s", lowresFile.toString()));
         scp.setJpgQuality(options.getLowresJpgQuality());
         scp.writeScaledJpg(lowresFile);
-        w = scp.getScaledWidth();
-        h = scp.getScaledHeight();
+        int w = scp.getScaledWidth();
+        int h = scp.getScaledHeight();
 
         out.write("<td valign=\"bottom\">");
 
@@ -781,33 +785,34 @@ public class HtmlDistiller
     }
 
     /**
-     *  Inner class that keeps a buffer of the picture descriptions and will
-     *  output a table row with the buffered descriptions when the buffer has
-     *  reached it's limit.
+     * Inner class that keeps a buffer of the picture descriptions and will
+     * output a table row with the buffered descriptions when the buffer has
+     * reached it's limit.
      */
     private class DescriptionsBuffer {
 
         /**
-         *   The number of columns on the Thumbnail page.
+         * The number of columns on the Thumbnail page.
          */
         private int columns;
         /**
-         *   The HTML page for the Thumbnails.
+         * The HTML page for the Thumbnails.
          */
         private BufferedWriter out;
         /**
-         *   A counter variable.
+         * A counter variable.
          */
         private int picCounter = 0;
         /**
-         *   An array holding the strings of the pictures.
+         * An array holding the strings of the pictures.
          */
         private String[] descriptions;
 
         /**
-         *  Creates a Description buffer with the indicated number of columns.
-         *  @param	columns	The number of columns being generated
-         *  @param	out	The Thumbnail page
+         * Creates a Description buffer with the indicated number of columns.
+         *
+         * @param	columns	The number of columns being generated
+         * @param	out	The Thumbnail page
          */
         public DescriptionsBuffer(int columns, BufferedWriter out) {
             this.columns = columns;
@@ -816,12 +821,11 @@ public class HtmlDistiller
         }
 
         /**
-         *  Adds the supplied string to the buffer and performs a check 
-         *  whether the buffer is full
-         *  If the buffer is full it flushes it.
+         * Adds the supplied string to the buffer and performs a check whether
+         * the buffer is full If the buffer is full it flushes it.
          *
-         *  @param  description	The String to be added.
-         *  @throws IOException if anything went wrong with the writing.
+         * @param description	The String to be added.
+         * @throws IOException if anything went wrong with the writing.
          */
         public void putDescription(String description) throws IOException {
             descriptions[picCounter] = description;
@@ -830,11 +834,10 @@ public class HtmlDistiller
         }
 
         /**
-         *  Checks whether the buffer is full and if so will
-         *  terminate the current line, flush the buffer and 
-         *  start a new line.
+         * Checks whether the buffer is full and if so will terminate the
+         * current line, flush the buffer and start a new line.
          *
-         *  @throws IOException if something went wrong with wrting.
+         * @throws IOException if something went wrong with wrting.
          */
         public void flushIfNescessary() throws IOException {
             if (picCounter == columns) {
@@ -846,15 +849,15 @@ public class HtmlDistiller
         }
 
         /**
-         *  method that writes the descriptions[] array to the html file.
-         *  As each pictures's img tag was written to the file the description
-         *  was kept in an array. This method is called each time the row 
-         *  of img is full. The method is also called when the last picture has
-         *  been written. The array elements are set to null after writing so
-         *  that the last row can determine when to stop writing the pictures (the
-         *  row can of course be incomplete).
+         * method that writes the descriptions[] array to the html file. As each
+         * pictures's img tag was written to the file the description was kept
+         * in an array. This method is called each time the row of img is full.
+         * The method is also called when the last picture has been written. The
+         * array elements are set to null after writing so that the last row can
+         * determine when to stop writing the pictures (the row can of course be
+         * incomplete).
          *
-         *  @throws IOException	If writing didn't work.
+         * @throws IOException	If writing didn't work.
          */
         public void flushDescriptions() throws IOException {
             out.newLine();

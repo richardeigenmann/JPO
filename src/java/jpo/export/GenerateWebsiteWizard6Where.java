@@ -6,22 +6,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.logging.Logger;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
+import javax.swing.*;
 import jpo.dataModel.Settings;
-import jpo.dataModel.Tools;
 import jpo.gui.DirectoryChooser;
 import net.javaprog.ui.wizard.AbstractStep;
 
 /*
 GenerateWebsiteWizard6Where: Ask where to generate the website
 
-Copyright (C) 2008,2009  Richard Eigenmann.
+Copyright (C) 2008-2012  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -36,7 +29,7 @@ The license is in gpl.txt.
 See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 /**
- * Asks where we sould create the website
+ * Asks where we should create the website
  *
  * @author Richard Eigenmann
  */
@@ -45,7 +38,7 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
     /**
      * Defines a logger for this class
      */
-    private static Logger logger = Logger.getLogger( GenerateWebsiteWizard6Where.class.getName() );
+    private static final Logger LOGGER = Logger.getLogger( GenerateWebsiteWizard6Where.class.getName() );
 
     /**
      * The link to the values that this panel should change
@@ -60,8 +53,6 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
     public GenerateWebsiteWizard6Where( HtmlDistillerOptions options ) {
         super( Settings.jpoResources.getString( "HtmlDistTarget" ), Settings.jpoResources.getString( "HtmlDistTarget" ) );
         this.options = options;
-
-        // load the options into the GUI components
     }
 
     /**
@@ -103,7 +94,6 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
 
         targetDirJTextField.setAlignmentX( Component.LEFT_ALIGNMENT );
         targetDirJTextField.setMaximumSize( GenerateWebsiteWizard.normalComponentSize );
-        // normally I would put a listener here to trap changes to the field but just now I don't know how to do it delegated the dirty work to "check" below
         wizardPanel.add( targetDirJTextField );
 
         JButton checkButton = new JButton( Settings.jpoResources.getString( "check" ) );
@@ -111,6 +101,7 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
         checkButton.setMaximumSize( Settings.defaultButtonDimension );
         checkButton.addActionListener( new ActionListener() {
 
+            @Override
             public void actionPerformed( ActionEvent arg0 ) {
                 options.setTargetDirectory( targetDirJTextField.getDirectory() );
                 setCanGoNext( check( options.getTargetDirectory() ) );
@@ -127,6 +118,7 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
     /**
      * Enforces that the user must check the directory before he can go next
      */
+    @Override
     public void prepareRendering() {
         setCanGoNext( false );
     }

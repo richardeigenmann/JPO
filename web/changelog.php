@@ -18,6 +18,7 @@
 
 			<table>
 				<tr><td colspan=2><b>Development Version 0.9</b></td></tr>
+				<tr><td valign="top">26.08.2012</td><td> Added ability to upload a group op Pictures to Picasa</td></tr>
 				<tr><td valign="top">11.10.2011</td><td> Changed PictureViewer to be more MVC and made it use MigLayout</td></tr>
 				<tr><td valign="top">9.10.2011</td><td> Added icons to picture Panel for zooming</td></tr>
 				<tr><td valign="top">13.9.2011</td><td> Added ability to copy into Zip files </td></tr>
@@ -398,8 +399,8 @@
 			</table>
 
 			<hr>
-			<p>Last update to this page: 14 May 2011<br>
-			Copyright 2003-2011 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
+			<p>Last update to this page: 26 August 2012<br>
+			Copyright 2003-2012 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
 		</td>
 	</tr>
 </table>

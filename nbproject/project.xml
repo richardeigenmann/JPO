@@ -3,19 +3,29 @@
     <type>org.netbeans.modules.ant.freeform</type>
     <configuration>
         <general-data xmlns="http://www.netbeans.org/ns/freeform-project/1">
+            <name>Java Picture Organizer</name>
+        </general-data>
+        <general-data xmlns="http://www.netbeans.org/ns/freeform-project/2">
             <!-- Do not use Project Properties customizer when editing this file manually. -->
             <name>Java Picture Organizer</name>
             <properties/>
             <folders>
                 <source-folder>
+                    <label>Java Picture Organizer</label>
+                    <location>.</location>
+                    <encoding>UTF-8</encoding>
+                </source-folder>
+                <source-folder>
                     <label>src/test/java</label>
                     <type>java</type>
                     <location>src/test/java</location>
+                    <encoding>UTF-8</encoding>
                 </source-folder>
                 <source-folder>
                     <label>src/java</label>
                     <type>java</type>
                     <location>src/java</location>
+                    <encoding>UTF-8</encoding>
                 </source-folder>
             </folders>
             <ide-actions>
@@ -174,13 +184,13 @@
             <compilation-unit>
                 <package-root>src/test/java</package-root>
                 <unit-tests/>
-                <classpath mode="compile">libs/activation.jar:libs/jnlp.jar:libs/mail.jar:libs/jwizz-0.1.4.jar:libs/poi-3.1-FINAL-20080629.jar:libs/poi-contrib-3.1-FINAL-20080629.jar:libs/poi-scratchpad-3.1-FINAL-20080629.jar:libs/miglayout-4.0.jar:libs/metadata-extractor-2.4.0-beta-1.jar:build/classes:/usr/share/java/junit.jar</classpath>
+                <classpath mode="compile">libs/activation.jar:libs/jnlp.jar:libs/mail.jar:libs/jwizz-0.1.4.jar:libs/poi-3.1-FINAL-20080629.jar:libs/poi-contrib-3.1-FINAL-20080629.jar:libs/poi-scratchpad-3.1-FINAL-20080629.jar:libs/miglayout-4.0.jar:libs/metadata-extractor-2.4.0-beta-1.jar:build/classes:/usr/share/java/junit.jar:libs/gdata-photos-2.0.jar:libs/gdata-core-1.0.jar:libs/gdata-media-1.0.jar:libs/gdata-maps-2.0.jar:libs/guava-13.0.jar</classpath>
                 <built-to>build/unittestclasses/jpo</built-to>
                 <source-level>1.6</source-level>
             </compilation-unit>
             <compilation-unit>
                 <package-root>src/java</package-root>
-                <classpath mode="compile">libs/activation.jar:libs/jnlp.jar:libs/mail.jar:libs/jwizz-0.1.4.jar:libs/poi-3.1-FINAL-20080629.jar:libs/poi-contrib-3.1-FINAL-20080629.jar:libs/poi-scratchpad-3.1-FINAL-20080629.jar:libs/metadata-extractor-2.4.0-beta-1.jar:libs/miglayout-4.0.jar:libs/commons-compress-1.2.jar</classpath>
+                <classpath mode="compile">libs/activation.jar:libs/jnlp.jar:libs/mail.jar:libs/jwizz-0.1.4.jar:libs/poi-3.1-FINAL-20080629.jar:libs/poi-contrib-3.1-FINAL-20080629.jar:libs/poi-scratchpad-3.1-FINAL-20080629.jar:libs/metadata-extractor-2.4.0-beta-1.jar:libs/miglayout-4.0.jar:libs/commons-compress-1.2.jar:libs/gdata-photos-2.0.jar:libs/gdata-core-1.0.jar:libs/gdata-media-1.0.jar:libs/gdata-maps-2.0.jar:libs/guava-13.0.jar</classpath>
                 <built-to>build/classes/jpo</built-to>
                 <source-level>1.6</source-level>
             </compilation-unit>

@@ -1,28 +1,26 @@
 package jpo.gui;
 
-import jpo.dataModel.SingleNodeNavigator;
-import jpo.gui.swing.NonFocussedCaret;
-import jpo.dataModel.Tools;
-import jpo.dataModel.ExifInfo;
-import jpo.dataModel.Settings;
-import jpo.dataModel.SortableDefaultMutableTreeNode;
-import jpo.dataModel.PictureInfoChangeEvent;
-import jpo.dataModel.PictureInfoChangeListener;
-import jpo.dataModel.Category;
-import jpo.dataModel.PictureInfo;
-import java.io.*;
-import java.net.*;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.event.*;
 import java.awt.geom.Point2D;
-import javax.swing.*;
-import javax.swing.event.*;
-import java.text.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Vector;
-import java.util.Enumeration;
 import java.util.logging.Logger;
-import jpo.dataModel.NodeNavigatorInterface;
+import javax.swing.*;
+import javax.swing.event.*;
+import jpo.dataModel.*;
+import jpo.gui.swing.NonFocussedCaret;
 import jpo.gui.swing.ThreeDotButton;
 import net.miginfocom.swing.MigLayout;
 import webserver.Webserver;
@@ -30,7 +28,7 @@ import webserver.Webserver;
 /*
 PictureInfoEditor:  Edits the details of a picture
 
-Copyright (C) 2002-2011  Richard Eigenmann.
+Copyright (C) 2002-2012  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -773,27 +771,15 @@ public class PictureInfoEditor
         } catch ( NumberFormatException ex ) {
             latitude = pi.getLatLng().x;
             LOGGER.info( String.format( "Latitude String %s could not be parsed: %s --> leaving at old value: %f", latitudeJTextField.getText(), ex.getMessage(), latitude ) );
-
-
         }
-
         Double longitude;
-
-
         try {
             longitude = Double.parseDouble( longitudeJTextField.getText() );
-
-
         } catch ( NumberFormatException ex ) {
             longitude = pi.getLatLng().y;
             LOGGER.info( String.format( "Longitude String %s could not be parsed: %s --> leaving at old value: %f", longitudeJTextField.getText(), ex.getMessage(), longitude ) );
-
-
         }
         pi.setLatLng( new Point2D.Double( latitude, longitude ) );
-
-
-
         int[] indexes = categoriesJList.getSelectedIndices();
         Object o;
         pi.clearCategoryAssignments();

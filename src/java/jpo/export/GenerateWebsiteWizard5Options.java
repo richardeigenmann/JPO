@@ -3,15 +3,7 @@ package jpo.export;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.FlowLayout;
-import javax.swing.BoxLayout;
-import javax.swing.ButtonGroup;
-import javax.swing.JCheckBox;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-import javax.swing.JSpinner;
-import javax.swing.SpinnerNumberModel;
+import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import jpo.dataModel.Settings;
@@ -21,7 +13,7 @@ import net.javaprog.ui.wizard.AbstractStep;
 /*
 GenerateWebsiteWizard5Options.java: Ask about the options
 
-Copyright (C) 2008  Richard Eigenmann.
+Copyright (C) 2008 -2012 Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2

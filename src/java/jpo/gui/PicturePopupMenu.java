@@ -193,7 +193,7 @@ public class PicturePopupMenu
                 @Override
                 public void actionPerformed( ActionEvent e ) {
                     if ( Settings.pictureCollection.countSelectedNodes() < 1 ) {
-                        popupNode.getPictureCollection().addToMailSelected( popupNode );
+                        popupNode.getPictureCollection().addToMailSelection( popupNode );
                     } else {
                         /*Enumeration<SortableDefaultMutableTreeNode> selection = Settings.pictureCollection.getSelectedNodesAsVector().elements();
                         SortableDefaultMutableTreeNode n;
@@ -205,7 +205,7 @@ public class PicturePopupMenu
                         }*/
                         for ( SortableDefaultMutableTreeNode selectedNode : Settings.pictureCollection.getSelectedNodes() ) {
                             if ( selectedNode.getUserObject() instanceof PictureInfo ) {
-                                selectedNode.getPictureCollection().addToMailSelected( selectedNode );
+                                selectedNode.getPictureCollection().addToMailSelection( selectedNode );
                             }
                         }
                     }

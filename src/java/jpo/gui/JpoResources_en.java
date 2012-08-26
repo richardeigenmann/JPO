@@ -173,6 +173,7 @@ public class JpoResources_en extends ListResourceBundle {
         { "HtmlDistTarget", "Target"},
         { "HtmlDistThumbnails", "Thumbnails"},  
         { "exportHighresJCheckBox", "Export high resolution pictures" },
+        { "rotateHighresJCheckBox", "Rotate high resolution pictures" },
         { "linkToHighresJCheckBox", "Link to high resoloution pictures at current locations" },
         { "generateDHTMLJCheckBox", "Generate DHTML mouseover effects" },
         { "generateZipfileJCheckBox", "Generate Zipfile for download of Highres Pictures" },

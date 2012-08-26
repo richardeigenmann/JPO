@@ -1,6 +1,7 @@
 package jpo.dataModel;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -31,7 +32,7 @@ public class PictureInfoChangeListenerTest
      */
     public void testPictureListenerAddAndRemove() {
         PictureInfo pi = new PictureInfo();
-        Vector changeListeners = pi.getPictureInfoListeners();
+        ArrayList<PictureInfoChangeListener> changeListeners = pi.getPictureInfoListeners();
         assertTrue( "Verify that there is no Listerner to start off with", changeListeners.isEmpty() );
 
         SortableDefaultMutableTreeNode node = new SortableDefaultMutableTreeNode( pi );
@@ -51,7 +52,6 @@ public class PictureInfoChangeListenerTest
         node.setUserObject( new PictureInfo() );
         tc1.setNode( snb, 0 );
         assertTrue( "Verify that there is no Listerner after the node has been set to another object", changeListeners.isEmpty() );
-        tc1 = null;
     }
 
 
@@ -67,7 +67,7 @@ public class PictureInfoChangeListenerTest
      */
     public void testPictureListenerAddAndRemove2() {
         PictureInfo pi = new PictureInfo();
-        Vector changeListeners = pi.getPictureInfoListeners();
+        ArrayList<PictureInfoChangeListener> changeListeners = pi.getPictureInfoListeners();
         assertTrue( "Verify that there is no Listerner to start off with", changeListeners.isEmpty() );
 
         SortableDefaultMutableTreeNode node = new SortableDefaultMutableTreeNode( pi );
@@ -83,8 +83,6 @@ public class PictureInfoChangeListenerTest
 
         //TODO Fix this here!
         //assertEquals( "The PictureInfo should now have 0 change listeners", 0, changeListeners.size() );
-
-        tc2 = null;
     }
 
     // helps with inner class
@@ -99,6 +97,7 @@ public class PictureInfoChangeListenerTest
         // create the Thumbnail Controller on EDT
         Runnable r = new Runnable() {
 
+            @Override
             public void run() {
                 tc = new ThumbnailController( 350 );
             }

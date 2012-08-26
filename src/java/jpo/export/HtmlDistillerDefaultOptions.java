@@ -1,13 +1,13 @@
 package jpo.export;
 
-import jpo.dataModel.Settings;
 import java.io.File;
+import jpo.dataModel.Settings;
 
 /*
 HtmlDistillerDefaultOptions.java:  Extends an HtmlDistillerOptions class and 
 pre-populates the options with default values.
 
-Copyright (C) 2008-2011  Richard Eigenmann, Zürich
+Copyright (C) 2008-2012  Richard Eigenmann, Zürich
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -52,6 +52,7 @@ public class HtmlDistillerDefaultOptions extends HtmlDistillerOptions {
         setGenerateZipfile( Settings.defaultGenerateZipfile );
         setLinkToHighres( Settings.defaultLinkToHighres );
         setExportHighres( Settings.defaultExportHighres );
+        setRotateHighres( Settings.defaultRotateHighres );
         setPictureNaming( Settings.defaultHtmlPictureNaming );
 
         setWriteRobotsTxt( Settings.writeRobotsTxt );
