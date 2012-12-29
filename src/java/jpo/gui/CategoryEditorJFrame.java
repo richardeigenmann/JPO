@@ -1,22 +1,21 @@
 package jpo.gui;
 
-import jpo.dataModel.Settings;
-import jpo.dataModel.PictureCollection;
-import jpo.dataModel.Category;
 import java.awt.*;
 import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.JOptionPane;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.event.ListSelectionEvent;
 import java.util.Iterator;
 import java.util.logging.Logger;
+import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import jpo.dataModel.Category;
+import jpo.dataModel.PictureCollection;
+import jpo.dataModel.Settings;
 import jpo.dataModel.Tools;
 
 /*
 CategoryEditorJFrame.java:  creates a GUI to allow the user to specify his search
 
-Copyright (C) 2002 - 2009  Richard Eigenmann.
+Copyright (C) 2002 - 2012  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -41,7 +40,7 @@ public class CategoryEditorJFrame
     /**
      * Defines a logger for this class
      */
-    private static Logger logger = Logger.getLogger( CategoryEditorJFrame.class.getName() );
+    private static final Logger LOGGER = Logger.getLogger( CategoryEditorJFrame.class.getName() );
 
     /**
      *  the entry field that allows a new category to be added
@@ -98,7 +97,7 @@ public class CategoryEditorJFrame
         c.insets = new Insets( 0, 0, 3, 0 );
         jPanel.add( categoryJTextField, c );
 
-        final DefaultListModel listModel = new DefaultListModel();
+        final DefaultListModel <Category> listModel = new DefaultListModel<Category>();
 
 
         final Dimension defaultButtonSize = new Dimension( 150, 25 );
@@ -111,6 +110,7 @@ public class CategoryEditorJFrame
         addCategoryJButton.setMaximumSize( maxButtonSize );
         addCategoryJButton.addActionListener( new ActionListener() {
 
+            @Override
             public void actionPerformed( ActionEvent evt ) {
                 String category = categoryJTextField.getText();
                 Integer key = Settings.pictureCollection.addCategory( category );
@@ -137,7 +137,7 @@ public class CategoryEditorJFrame
         jPanel.add( categoriesJLabel, c );
 
 
-        final JList categoriesJList = new JList( listModel );
+        final JList  <Category> categoriesJList = new JList <Category>( listModel );
         categoriesJList.setPreferredSize( new Dimension( 180, 250 ) );
         categoriesJList.setMinimumSize( new Dimension( 180, 50 ) );
         //categoriesJList.setMaximumSize( new Dimension( 1000, 500) );
@@ -218,7 +218,7 @@ public class CategoryEditorJFrame
         renameCategoryJButton.addActionListener( new ActionListener() {
 
             public void actionPerformed( ActionEvent evt ) {
-                logger.info( "I want to rename the selected category " );
+                LOGGER.info( "I want to rename the selected category " );
                 int index = categoriesJList.getSelectedIndex();
                 if ( index < 0 ) {
                     return; // nothing selected

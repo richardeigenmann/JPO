@@ -805,18 +805,27 @@ public class PictureInfo
      * @return the creation time
      */
     public String getFormattedCreationTime() {
+        Calendar dateTime = getCreationTimeAsDate();
+        return getFormattedCreationTime( dateTime );
+    }
+
+    
+    /**
+     *  Returns the creationTime as a string after it has been parsed. Essentially this is
+     *  a utility method to identify what the Date parser is doing.
+     *
+     * @return the creation time
+     */
+    public static String getFormattedCreationTime( Calendar dateTime ) {
         String formattedDate;
-        Calendar d = getCreationTimeAsDate();
-        if ( d == null ) {
+        if ( dateTime == null ) {
             formattedDate = Settings.jpoResources.getString( "failedToParse" );
         } else {
             formattedDate = Settings.jpoResources.getString( "parsedAs" )
-                    + String.format( "%tc", d );
-            //DateFormat.getDateTimeInstance().format( d );
+                    + String.format( "%tc", dateTime );
         }
         return formattedDate;
     }
-
 
     /**
      *  Creates a PictureChangedEvent and sends it to inform listening

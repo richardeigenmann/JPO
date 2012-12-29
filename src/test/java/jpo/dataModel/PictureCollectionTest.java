@@ -29,24 +29,24 @@ public class PictureCollectionTest
      * Let's have a nice little collection for some tests....
      */
     PictureCollection pc;
-    PictureInfo pi1 = new PictureInfo("/images/image1.jpg", "/lowresimages/image1lowres.jpg", "Picture 1", "Reference1");
-    PictureInfo pi2 = new PictureInfo("/images/image1.jpg", "/lowresimages/image2lowres.jpg", "Picture 2", "Reference2");
-    PictureInfo pi3 = new PictureInfo("/images/image1.jpg", "/lowresimages/image3lowres.jpg", "Picture 3", "Reference3");
-    PictureInfo pi4 = new PictureInfo("/images/image4.jpg", "/lowresimages/image4lowres.jpg", "Picture 4", "Reference4");
-    PictureInfo pi5 = new PictureInfo("/images/image1.jpg", "/lowresimages/image5lowres.jpg", "Picture 5", "Reference5");
-    PictureInfo pi6 = new PictureInfo("/images/image1.jpg", "/lowresimages/image6lowres.jpg", "Picture 6", "Reference6");
-    SortableDefaultMutableTreeNode picture1 = new SortableDefaultMutableTreeNode(pi1);
-    SortableDefaultMutableTreeNode picture2 = new SortableDefaultMutableTreeNode(pi2);
-    SortableDefaultMutableTreeNode picture3 = new SortableDefaultMutableTreeNode(pi3);
-    SortableDefaultMutableTreeNode picture4 = new SortableDefaultMutableTreeNode(pi4);
-    SortableDefaultMutableTreeNode picture5 = new SortableDefaultMutableTreeNode(pi5);
-    SortableDefaultMutableTreeNode picture6 = new SortableDefaultMutableTreeNode(pi6);
-    SortableDefaultMutableTreeNode group1 = new SortableDefaultMutableTreeNode(new GroupInfo("Group1"));
-    SortableDefaultMutableTreeNode group2 = new SortableDefaultMutableTreeNode(new GroupInfo("Group2"));
-    SortableDefaultMutableTreeNode group3 = new SortableDefaultMutableTreeNode(new GroupInfo("Group3"));
-    SortableDefaultMutableTreeNode group4 = new SortableDefaultMutableTreeNode(new GroupInfo("Group4"));
-    SortableDefaultMutableTreeNode group5 = new SortableDefaultMutableTreeNode(new GroupInfo("Group5"));
-    SortableDefaultMutableTreeNode group6 = new SortableDefaultMutableTreeNode(new GroupInfo("Group6"));
+    final PictureInfo pi1 = new PictureInfo("/images/image1.jpg", "/lowresimages/image1lowres.jpg", "Picture 1", "Reference1");
+    final PictureInfo pi2 = new PictureInfo("/images/image2.jpg", "/lowresimages/image2lowres.jpg", "Picture 2", "Reference2");
+    final PictureInfo pi3 = new PictureInfo("/images/image3.jpg", "/lowresimages/image3lowres.jpg", "Picture 3", "Reference3");
+    final PictureInfo pi4 = new PictureInfo("/images/image4.jpg", "/lowresimages/image4lowres.jpg", "Picture 4", "Reference4");
+    final PictureInfo pi5 = new PictureInfo("/images/image5.jpg", "/lowresimages/image5lowres.jpg", "Picture 5", "Reference5");
+    final PictureInfo pi6 = new PictureInfo("/images/image6.jpg", "/lowresimages/image6lowres.jpg", "Picture 6", "Reference6");
+    final SortableDefaultMutableTreeNode picture1 = new SortableDefaultMutableTreeNode(pi1);
+    final SortableDefaultMutableTreeNode picture2 = new SortableDefaultMutableTreeNode(pi2);
+    final SortableDefaultMutableTreeNode picture3 = new SortableDefaultMutableTreeNode(pi3);
+    final SortableDefaultMutableTreeNode picture4 = new SortableDefaultMutableTreeNode(pi4);
+    final SortableDefaultMutableTreeNode picture5 = new SortableDefaultMutableTreeNode(pi5);
+    final SortableDefaultMutableTreeNode picture6 = new SortableDefaultMutableTreeNode(pi6);
+    final SortableDefaultMutableTreeNode group1 = new SortableDefaultMutableTreeNode(new GroupInfo("Group1"));
+    final SortableDefaultMutableTreeNode group2 = new SortableDefaultMutableTreeNode(new GroupInfo("Group2"));
+    final SortableDefaultMutableTreeNode group3 = new SortableDefaultMutableTreeNode(new GroupInfo("Group3"));
+    final SortableDefaultMutableTreeNode group4 = new SortableDefaultMutableTreeNode(new GroupInfo("Group4"));
+    final SortableDefaultMutableTreeNode group5 = new SortableDefaultMutableTreeNode(new GroupInfo("Group5"));
+    final SortableDefaultMutableTreeNode group6 = new SortableDefaultMutableTreeNode(new GroupInfo("Group6"));
 
     @Override
     protected void setUp() throws Exception {
@@ -105,7 +105,7 @@ public class PictureCollectionTest
     }
 
     /**
-     * Since I had a concurrent modification problem on the clear selections
+     * I had a concurrent modification problem on "clear selections" so 
      * here are a few tests to verify the selection thing works.
      */
     public void testSelections() {
@@ -136,7 +136,7 @@ public class PictureCollectionTest
     }
 
     /**
-     * Since I had a concurrent modification problem on the clear selections
+     * I had a concurrent modification problem on "clear selections" so
      * here are a few tests to verify the selection thing works.
      */
     public void testMailSelections() {
@@ -320,6 +320,7 @@ public class PictureCollectionTest
                 nodestructurechanged++;
             }
         });
+        
         //TODO: review this; why does the root node, the model and the picturecollection have to be tied together
         // via the Settings?
         Settings.pictureCollection = pc;

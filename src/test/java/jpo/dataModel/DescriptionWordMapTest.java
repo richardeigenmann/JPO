@@ -14,7 +14,7 @@ public class DescriptionWordMapTest extends TestCase {
     /**
      * Defines a logger for this class
      */
-    private static Logger logger = Logger.getLogger( DescriptionWordMapTest.class.getName() );
+    private static final Logger LOGGER = Logger.getLogger( DescriptionWordMapTest.class.getName() );
 
 
     public DescriptionWordMapTest( String testName ) {

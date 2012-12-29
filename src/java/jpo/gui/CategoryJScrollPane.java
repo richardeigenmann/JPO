@@ -1,17 +1,17 @@
 package jpo.gui;
 
-import jpo.dataModel.Settings;
-import jpo.dataModel.Category;
 import java.awt.*;
-import javax.swing.*;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.event.ListSelectionEvent;
 import java.util.*;
+import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import jpo.dataModel.Category;
+import jpo.dataModel.Settings;
 
 /*
 CategoryJScrollPane.java:  creates a JPanel in a JScrollPane that lists categories
 
-Copyright (C) 2006-2011  Richard Eigenmann.
+Copyright (C) 2006-2012  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -34,9 +34,9 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 public class CategoryJScrollPane extends JScrollPane implements ListSelectionListener {
 
 
-	private final DefaultListModel defaultListModel = new DefaultListModel();
+	private final DefaultListModel <Category> defaultListModel = new DefaultListModel<Category>();
 
-	private	final JList categoriesJList = new JList( defaultListModel );
+	private	final JList <Category>categoriesJList = new JList<Category>( defaultListModel );
 
 
 	/**
@@ -62,7 +62,7 @@ public class CategoryJScrollPane extends JScrollPane implements ListSelectionLis
          *
          * @return the List Model used for this list
          */
-	public DefaultListModel getDefaultListModel() {
+	public DefaultListModel <Category> getDefaultListModel() {
 		return defaultListModel;
 	}
 	
@@ -72,7 +72,7 @@ public class CategoryJScrollPane extends JScrollPane implements ListSelectionLis
          *
          * @return the jlist
          */
-	public JList getJList() {
+	public JList<Category> getJList() {
 		return categoriesJList;
 	}
 
@@ -111,14 +111,14 @@ public class CategoryJScrollPane extends JScrollPane implements ListSelectionLis
 			int index = theList.getSelectedIndex();
 			Category cat = (Category) theList.getModel().getElementAt( index );
 			int status = cat.getStatus();
-			if ( status == Category.undefined ) {
-				cat.setStatus( Category.selected );
-			} else if ( status == Category.selected ) {
-				cat.setStatus( Category.unSelected );
-			} else if ( status == Category.unSelected ) {
-				cat.setStatus( Category.selected );
-			} else if ( status == Category.both ) {
-				cat.setStatus( Category.selected );
+			if ( status == Category.UNDEFINED ) {
+				cat.setStatus( Category.SELECTED );
+			} else if ( status == Category.SELECTED ) {
+				cat.setStatus( Category.UN_SELECTED );
+			} else if ( status == Category.UN_SELECTED ) {
+				cat.setStatus( Category.SELECTED );
+			} else if ( status == Category.BOTH ) {
+				cat.setStatus( Category.SELECTED );
 			}
 			theList.clearSelection();
 			categoriesJList.validate();
@@ -138,7 +138,7 @@ public class CategoryJScrollPane extends JScrollPane implements ListSelectionLis
 		while ( e.hasMoreElements() ) {
 			c = (Category) e.nextElement();
 			status = c.getStatus();
-			if ( status == Category.selected ) {
+			if ( status == Category.SELECTED ) {
 				selectedCategories.add( c.getKey() );
 			}
 		}

@@ -34,11 +34,8 @@ public class DirectoryChooserTest extends TestCase {
                         changesReceived++;
                     }
                 } );
-                System.out.println( "DirectoryChooser created. Now setting the directory to /" );
                 dc.setText( "/" );
-                System.out.println( "Directory / set" );
                 result = dc.getDirectory();
-                System.out.println( result );
             }
         };
         try {

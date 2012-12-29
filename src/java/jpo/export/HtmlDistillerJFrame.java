@@ -13,14 +13,13 @@ import javax.swing.*;
 import java.io.*;
 import javax.swing.event.*;
 import jpo.gui.DirectoryChooser;
-import org.apache.poi.hslf.usermodel.*;
-import org.apache.poi.hslf.model.*;
+
 
 /*
 HtmlDistillerJFrame.java:  Runs a GUI to generate a website
 pre-populates the options with default values.
 
-Copyright (C) 2008-2011  Richard Eigenmann.
+Copyright (C) 2008-2012  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -220,10 +219,11 @@ public class HtmlDistillerJFrame
         targetJPanel.add( Box.createRigidArea( new Dimension( 0, 10 ) ) );
 
         String[] finalTargetOptions = { "Local Directory", "FTP Location", "SCP Location" };
-        final JComboBox finalTarget = new JComboBox( finalTargetOptions );
+        final JComboBox <String>finalTarget = new JComboBox<String>( finalTargetOptions );
         finalTarget.setSelectedIndex( 0 );
         finalTarget.addActionListener( new ActionListener() {
 
+            @Override
             public void actionPerformed( ActionEvent arg0 ) {
                 LOGGER.info( "Other delivery types are not yet supported" );
                 finalTarget.setSelectedIndex( 0 );
@@ -538,7 +538,7 @@ public class HtmlDistillerJFrame
 
             @Override
             public void actionPerformed( ActionEvent e ) {
-                exportToPpt();
+              //  exportToPpt();
             }
         } );
 
@@ -631,9 +631,8 @@ public class HtmlDistillerJFrame
 
 
     /**
-     *  This method tries to creates the target directory (or fails with errors)
-     *  and then fires off the HtmlDistiller thread.
-     */
+     *  
+     *
     private void exportToPpt() {
         File pptFile = targetDirChooser.getDirectory();
         try {
@@ -700,6 +699,7 @@ public class HtmlDistillerJFrame
         getRid();
 
     }
+    * */
 
 
     /**

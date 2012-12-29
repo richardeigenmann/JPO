@@ -1,22 +1,21 @@
 package jpo.gui;
 
-import jpo.dataModel.Settings;
-import java.io.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import jpo.dataModel.Settings;
 import jpo.dataModel.Tools;
-import net.miginfocom.swing.MigLayout;
 
 /*
 DirectoryChooserTest.java:  a object that displays a JTextFiled and has a button
 next to it which allows you to bring up a filechooser
 
-Copyright (C) 2002 - 2011  Richard Eigenmann.
+Copyright (C) 2002 - 2012  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -59,7 +58,7 @@ public class DirectoryChooser
      */
     private static final Logger LOGGER = Logger.getLogger( DirectoryChooser.class.getName() );
     /**
-     * The itle that will be used in the JFileChooser if the user clicks the button
+     * The title that will be used in the JFileChooser if the user clicks the button
      */
     private String chooserTitle = "";
     /**
@@ -70,13 +69,14 @@ public class DirectoryChooser
     /**
      * The drop down list of the previously used directories
      */
-    private final JComboBox directoryJComboBox = new JComboBox();
+    private final JComboBox <Object> directoryJComboBox = new JComboBox<Object>();
     /**
      * Field that allows the user to capture the directory which is a sub object of the JComboBox.
      * This code relies that the ComboBoxEditors are implemented as a JTextField.
      * The Java 1.4.0 manual says this is the case.
      */
     private final JTextField directoryJTextField = (JTextField) directoryJComboBox.getEditor().getEditorComponent();
+    
     /**
      * Button that brings up a file chooser for the directory
      **/
@@ -87,7 +87,6 @@ public class DirectoryChooser
      */
     private void initComponents() {
         Tools.checkEDT();
-        //setLayout( new MigLayout() );  // removed as it serves no purpose but crashes the junit test
         directoryJComboBox.setEditable( true );
         for ( int i = 0; i < Settings.copyLocations.length; i++ ) {
             addDirToDropdown( Settings.copyLocations[i] );

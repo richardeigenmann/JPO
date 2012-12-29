@@ -64,11 +64,11 @@ public class SettingsDialog
     /**
      *  Dropdown to indicate what preference the user has for JPO startup
      */
-    private final JComboBox startupSizeDropdown = new JComboBox();
+    private final JComboBox <String>startupSizeDropdown = new JComboBox<String>();
     /**
      *  Dropdown to indicate the preferred size of the viewer window
      */
-    private final JComboBox viewerSizeDropdown = new JComboBox();
+    private final JComboBox <String>viewerSizeDropdown = new JComboBox<String>();
     /**
      *  checkbox to indicate that the screen position should be saved upon exit.
      */
@@ -175,7 +175,7 @@ public class SettingsDialog
     /**
      *  Drop down box that shows the languages
      */
-    private final JComboBox languageJComboBox = new JComboBox( Settings.supportedLanguages );
+    private final JComboBox <String>languageJComboBox = new JComboBox<String>( Settings.supportedLanguages );
     /**
      *   Text Field that holds the address of the email server
      */
@@ -185,9 +185,9 @@ public class SettingsDialog
      */
     private final JTextField emailPortJTextField = new JTextField();
     /**
-     * Combobox that holds the type of authentication.
+     * ComboBox that holds the type of authentication.
      */
-    private final JComboBox authenticationJComboBox = new JComboBox();
+    private final JComboBox <String> authenticationJComboBox = new JComboBox<String>();
     /**
      *   Text Field that holds the user for the email server
      */
@@ -235,7 +235,7 @@ public class SettingsDialog
         for ( int i = 1; i < Settings.windowSizes.length; i++ ) {
             windowSizeChoices[i] = Integer.toString( Settings.windowSizes[i].width ) + " x " + Integer.toString( Settings.windowSizes[i].height );
         }
-        final DefaultComboBoxModel dcbm = new DefaultComboBoxModel( windowSizeChoices );
+        final DefaultComboBoxModel<String> dcbm = new DefaultComboBoxModel<String>( windowSizeChoices );
         startupSizeDropdown.setModel( dcbm );
         generalTab.add( startupSizeDropdown, "wrap" );
         startupSizeDropdown.addActionListener( new ActionListener() {
@@ -289,7 +289,7 @@ public class SettingsDialog
 
         // PictureViewer size stuff
         pictureViewerTab.add( new JLabel( Settings.jpoResources.getString( "pictureViewerSizeChoicesJlabel" ) ) );
-        final DefaultComboBoxModel viewerSizeModel = new DefaultComboBoxModel( windowSizeChoices );
+        final DefaultComboBoxModel <String> viewerSizeModel = new DefaultComboBoxModel<String>( windowSizeChoices );
         viewerSizeDropdown.setModel( viewerSizeModel );
         pictureViewerTab.add( viewerSizeDropdown, "wrap" );
         // End of PictureViewer size stuff
@@ -442,7 +442,7 @@ public class SettingsDialog
 
         emailJPanel.add( new JLabel( Settings.jpoResources.getString( "predefinedEmailJLabel" ) ) );
 
-        JComboBox predefinedEmailJComboBox = new JComboBox();
+        JComboBox <Object> predefinedEmailJComboBox = new JComboBox<Object>();
         predefinedEmailJComboBox.addItem( "Localhost" );
         predefinedEmailJComboBox.addItem( "Gmail" );
         predefinedEmailJComboBox.addItem( "Compuserve" );

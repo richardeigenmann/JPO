@@ -17,7 +17,9 @@
 			<h2 id="Changelog">Changelog</h2>
 
 			<table>
-				<tr><td colspan=2><b>Development Version 0.9</b></td></tr>
+				<tr><td colspan=2><b>Development Version 0.10</b></td></tr>
+				<tr><td valign="top">29.12.2012</td><td> Added a reparse button for the date to the Picture Properties window. </td></tr>
+				<tr><td valign="top">10.09.2012</td><td> Dusted off the deployment scripts and pushed a new development version to the web</td></tr>
 				<tr><td valign="top">26.08.2012</td><td> Added ability to upload a group op Pictures to Picasa</td></tr>
 				<tr><td valign="top">11.10.2011</td><td> Changed PictureViewer to be more MVC and made it use MigLayout</td></tr>
 				<tr><td valign="top">9.10.2011</td><td> Added icons to picture Panel for zooming</td></tr>

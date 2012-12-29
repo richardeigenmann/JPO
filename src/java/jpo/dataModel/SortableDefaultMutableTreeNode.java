@@ -1032,11 +1032,11 @@ public class SortableDefaultMutableTreeNode
      */
     public boolean moveToLastChild( SortableDefaultMutableTreeNode targetNode ) {
         if ( this.isRoot() ) {
-            LOGGER.severe( "You can't move the root node to be a child of another node! Aborting move." );
+            LOGGER.fine( "You can't move the root node to be a child of another node! Aborting move." );
             return false;
         }
         if ( !targetNode.getAllowsChildren() ) {
-            LOGGER.severe( "You can't move a node onto a node that doesn't allow child nodes." );
+            LOGGER.fine( "You can't move a node onto a node that doesn't allow child nodes." );
             return false;
         }
         this.removeFromParent();
@@ -1054,12 +1054,12 @@ public class SortableDefaultMutableTreeNode
      */
     public boolean moveBefore( SortableDefaultMutableTreeNode targetNode ) {
         if ( isNodeDescendant( targetNode ) ) {
-            LOGGER.severe( "Can't move to a descendent node. Aborting move." );
+            LOGGER.fine( "Can't move to a descendent node. Aborting move." );
             return false;
         }
 
         if ( targetNode.isRoot() ) {
-            LOGGER.severe( "You can't move anything in front of the the root node! Aborting move." );
+            LOGGER.fine( "You can't move anything in front of the the root node! Aborting move." );
             return false;
         }
 
@@ -1079,7 +1079,7 @@ public class SortableDefaultMutableTreeNode
     public boolean moveToIndex( SortableDefaultMutableTreeNode parentNode,
             int index ) {
         if ( isNodeDescendant( parentNode ) ) {
-            LOGGER.severe( "Can't move to a descendent node. Aborting move." );
+            LOGGER.fine( "Can't move to a descendent node. Aborting move." );
             return false;
         }
 

@@ -8,12 +8,12 @@
   
   <!-- The relative URL of this file -->
   href="jpo-devel.jnlp"
-  version="0.9" >
+  version="0.10" >
 
   
   <information>
     <!-- Application title  -->
-    <title>Java Picture Organizer Development Version 0.9</title>
+    <title>Java Picture Organizer Development Version 0.10</title>
     
     <!-- The vendor of the application -->
     <vendor>Richard Eigenmann</vendor>
@@ -36,7 +36,6 @@
     <offline-allowed/>
   </information>
 
-
   <security>
 	<all-permissions/>
   </security>
@@ -56,14 +55,21 @@
          system that the file does not need
          to be downloaded before the
          application can be run -->
-    <jar href="jpo-0.9.jar"/>
-    <extension name="activation" href="activation.jnlp"/>
-    <extension name="mail" href="mail.jnlp"/>
-    <extension name="jnlp" href="jnlp.jnlp"/>
-    <extension name="jwizz" href="jwizz.jnlp"/>
-    <extension name="miglayout-devel" href="miglayout.jnlp"/>
-    <extension name="exif-devel" href="exif.jnlp"/>
+    <jar href="jpo-0.10.jar" download="eager" />
+    <extension name="activation" href="lib-activation.jnlp"/>
+    <jar href="commons-compress-1.2.jar" donload="lazy" />
+    <jar href="gdata-core-1.0.jar" donload="lazy" />
+    <jar href="gdata-maps-2.0.jar" donload="lazy" />
+    <jar href="gdata-media-1.0.jar" donload="lazy" />
+    <jar href="gdata-photos-2.0.jar" donload="lazy" />
+    <jar href="guava-13.0.jar" donload="lazy" />
+    <jar href="jnpl.jar" donload="lazy" />
+    <extension name="mail" href="lib-mail.jnlp"/>
+    <jar href="metadata-extractor-2.6.4.jar" download="lazy" />
+    <jar href="miglayout-4.0.jar" donload="eager" />
+    <jar href="xmpcore.jar" download="lazy" />
   </resources>
+  
 
   <application-desc main-class="Main"/>
 

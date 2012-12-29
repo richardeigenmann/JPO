@@ -15,7 +15,9 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Enumeration;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Vector;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
 import javax.swing.event.*;
@@ -26,168 +28,161 @@ import net.miginfocom.swing.MigLayout;
 import webserver.Webserver;
 
 /*
-PictureInfoEditor:  Edits the details of a picture
+ PictureInfoEditor:  Edits the details of a picture
 
-Copyright (C) 2002-2012  Richard Eigenmann.
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or any later version. This program is distributed
-in the hope that it will be useful, but WITHOUT ANY WARRANTY;
-without even the implied warranty of MERCHANTABILITY or FITNESS
-FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-more details. You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-The license is in gpl.txt.
-See http://www.gnu.org/copyleft/gpl.html for the details.
+ Copyright (C) 2002-2012  Richard Eigenmann.
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or any later version. This program is distributed
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ without even the implied warranty of MERCHANTABILITY or FITNESS
+ FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+ more details. You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ The license is in gpl.txt.
+ See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 /**
  * An editor window that allows the attributes of a picture to be modified
  *
- * @author 	Richard Eigenmann
+ * @author Richard Eigenmann
  */
 public class PictureInfoEditor
         extends JFrame {
 
     /**
-     *  Dimension for the edit fields
+     * Dimension for the edit fields
      */
-    private final static Dimension TEXT_FIELD_DIMENSION = new Dimension( 400, 20 );
+    private final static Dimension TEXT_FIELD_DIMENSION = new Dimension(400, 20);
     /**
-     *  Dimension for the time, latitude and longitude
+     * Dimension for the time, latitude and longitude
      */
-    private final static Dimension SHORT_FIELD_DIMENSION = new Dimension( 180, 20 );
+    private final static Dimension SHORT_FIELD_DIMENSION = new Dimension(180, 20);
     /**
      * Defines a logger for this class
      */
-    private static final Logger LOGGER = Logger.getLogger( PictureInfoEditor.class.getName() );
-    private ThumbnailController thumbnailController = new ThumbnailController( Settings.thumbnailSize );
+    private static final Logger LOGGER = Logger.getLogger(PictureInfoEditor.class.getName());
+    private ThumbnailController thumbnailController = new ThumbnailController(Settings.thumbnailSize);
     /**
-     *   The description of the picture
+     * The description of the picture
      */
     private JTextArea descriptionJTextArea = new JTextArea();
     /**
-     *   The location of the image file
+     * The location of the image file
      */
     private JTextField creationTimeJTextField = new JTextField();
     /**
-     *   This label will hold the parsed date of what whas in the creation time.
+     * This label will hold the parsed date of what was in the creation time.
      */
     private JLabel parsedCreationTimeJLabel = new JLabel();
     /**
-     *   The location of the image file
+     * The location of the image file
      */
     private JTextField highresLocationJTextField = new JTextField();
     /**
-     *   An informative message about what sort of error we have if any on the highres image
+     * An informative message about what sort of error we have if any on the
+     * highres image
      */
-    private JLabel highresErrorJLabel = new JLabel( "" );
+    private JLabel highresErrorJLabel = new JLabel("");
     /**
-     *   An informative message about what sort of error we have if any on the lowres image
+     * An informative message about what sort of error we have if any on the
+     * lowres image
      */
-    private JLabel lowresErrorJLabel = new JLabel( "" );
+    private JLabel lowresErrorJLabel = new JLabel("");
     /**
-     *   Label to display the checksum of the image file. Gets updated so it's here.
+     * Label to display the checksum of the image file. Gets updated so it's
+     * here.
      */
     private JLabel checksumJLabel = new JLabel();
     /**
-     *   The location of the lowres image file
+     * The location of the lowres image file
      */
     private JTextField lowresLocationJTextField = new JTextField();
     /**
-     *   The location of the image file
+     * The location of the image file
      */
     private JTextField filmReferenceJTextField = new JTextField();
     /**
-     *   The latitude of the image
+     * The latitude of the image
      */
     private JFormattedTextField latitudeJTextField;
     /**
-     *   The longitude of the image
+     * The longitude of the image
      */
     private JFormattedTextField longitudeJTextField;
     /**
-     *   The comment field
+     * The comment field
      */
     private JTextField commentJTextField = new JTextField();
     /**
-     *   The photographer field
+     * The photographer field
      */
     private JTextField photographerJTextField = new JTextField();
     /**
-     *   The copyright field
+     * The copyright field
      */
     private JTextField copyrightHolderJTextField = new JTextField();
     /**
      * Shows the Exif size
      */
-    private final JLabel sizeJLabel = new JLabel( "" );
+    private final JLabel sizeJLabel = new JLabel("");
     /**
-     *   The category assignments
+     * The category assignments
      */
     private final JLabel categoryAssignmentsJLabel = new JLabel();
     /**
-     *  The list model supporting the category assignments
+     * The list model supporting the category assignments
      */
-    private final DefaultListModel listModel = new DefaultListModel();
+    private final DefaultListModel<Category> listModel = new DefaultListModel<Category>();
     /**
-     *  JList to hold the categories
+     * JList to hold the categories
      */
-    private final JList categoriesJList = new JList( listModel );
-    private final JScrollPane listJScrollPane = new JScrollPane( categoriesJList );
-    private static final Object setupCategories = new Object() {
-
-        @Override
-        public String toString() {
-            return Settings.jpoResources.getString( "setupCategories" );
-        }
-    };
-    private static final Object noCategories = new Object() {
-
-        @Override
-        public String toString() {
-            return Settings.jpoResources.getString( "noCategories" );
-        }
-    };
+    private final JList<Category> categoriesJList = new JList<Category>(listModel);
+    private final JScrollPane listJScrollPane = new JScrollPane(categoriesJList);
+    private static final Category setupCategories = new Category(Integer.MIN_VALUE, Settings.jpoResources.getString("setupCategories"));
+    private static final Category noCategories = new Category(Integer.MIN_VALUE, Settings.jpoResources.getString("noCategories"));
     /**
      * The text area to use for showing the Exif data
      */
     private JTextArea exifTagsJTextArea = new JTextArea();
     private final SpinnerModel angleModel = new MySpinnerNumberModel();
     /**
-     *  the node being edited
+     * the node being edited
      */
     private SortableDefaultMutableTreeNode myNode;
     /**
-     *  the PictureInfo object being displayed
+     * the PictureInfo object being displayed
      */
-    private PictureInfo pi;
+    private PictureInfo pictureInfo;
     /**
-     *  Font used to show the error label
+     * Font used to show the error label
      */
-    private static Font errorLabelFont = Font.decode( Settings.jpoResources.getString( "ThumbnailDescriptionJPanelLargeFont" ) );
+    private static Font errorLabelFont = Font.decode(Settings.jpoResources.getString("ThumbnailDescriptionJPanelLargeFont"));
 
     /**
      * Constructs a Picture Properties Dialog
+     *
      * @param setOfNodes
      * @param index
      */
-    public PictureInfoEditor( NodeNavigatorInterface setOfNodes, int index ) {
-        this( setOfNodes.getNode( index ) );
+    public PictureInfoEditor(NodeNavigatorInterface setOfNodes, int index) {
+        this(setOfNodes.getNode(index));
     }
 
     /**
-     *   Constructor that creates the JFrame and objects.
-     *   @param   editNode	The node being edited.
+     * Constructor that creates the JFrame and objects.
+     *
+     * @param editNode	The node being edited.
      */
-    public PictureInfoEditor( final SortableDefaultMutableTreeNode editNode ) {
-        super( Settings.jpoResources.getString( "PictureInfoEditorHeading" ) );
+    public PictureInfoEditor(final SortableDefaultMutableTreeNode editNode) {
+        super(Settings.jpoResources.getString("PictureInfoEditorHeading"));
 
         try {
-            pi = (PictureInfo) editNode.getUserObject();
-        } catch ( ClassCastException x ) {
-            LOGGER.severe( "This class can only be called with a PictureInfo bearning node." );
+            pictureInfo = (PictureInfo) editNode.getUserObject();
+        } catch (ClassCastException x) {
+            LOGGER.severe("This class can only be called with a PictureInfo bearning node.");
             x.printStackTrace();
             return;
         }
@@ -195,18 +190,17 @@ public class PictureInfoEditor
 
         // set this up so that we can close the GUI if the picture node is removed while we
         // are displaying it.
-        editNode.getPictureCollection().getTreeModel().addTreeModelListener( myTreeModelListener );
-        pi.addPictureInfoChangeListener( myPictureInfoChangeListener );
+        editNode.getPictureCollection().getTreeModel().addTreeModelListener(myTreeModelListener);
+        pictureInfo.addPictureInfoChangeListener(myPictureInfoChangeListener);
 
-        thumbnailController.setNode( new SingleNodeNavigator( editNode ), 0 );
+        thumbnailController.setNode(new SingleNodeNavigator(editNode), 0);
 
-        addWindowListener( new WindowAdapter() {
-
+        addWindowListener(new WindowAdapter() {
             @Override
-            public void windowClosing( WindowEvent e ) {
+            public void windowClosing(WindowEvent e) {
                 getRid();
             }
-        } );
+        });
 
 
         initComponents();
@@ -214,128 +208,123 @@ public class PictureInfoEditor
         loadData();
 
         pack();
-        setLocationRelativeTo( Settings.anchorFrame );
-        setVisible( true );
+        setLocationRelativeTo(Settings.anchorFrame);
+        setVisible(true);
     }
 
+    /**
+     * initialise the Swing components and place them.
+     */
     private void initComponents() {
-        JPanel mainPanel = new JPanel( new MigLayout() );
+        JPanel mainPanel = new JPanel(new MigLayout());
 
-        mainPanel.add( thumbnailController.getThumbnail() );
+        mainPanel.add(thumbnailController.getThumbnail());
 
         JTabbedPane tabs = new JTabbedPane();
-        mainPanel.add( tabs, "wrap" );
+        mainPanel.add(tabs, "wrap");
 
         JPanel rotationPanel = new JPanel();
-        JLabel rotationJLabel = new JLabel( Settings.jpoResources.getString( "rotationLabel" ) );
-        rotationPanel.add( rotationJLabel );
+        JLabel rotationJLabel = new JLabel(Settings.jpoResources.getString("rotationLabel"));
+        rotationPanel.add(rotationJLabel);
 
-        NumberFormat nf = new DecimalFormat( "###.##" );
+        NumberFormat nf = new DecimalFormat("###.##");
 
 
-        JSpinner spinner = new JSpinner( angleModel );
-        spinner.addChangeListener( new ChangeListener() {
-
+        JSpinner spinner = new JSpinner(angleModel);
+        spinner.addChangeListener(new ChangeListener() {
             @Override
-            public void stateChanged( ChangeEvent e ) {
+            public void stateChanged(ChangeEvent e) {
                 saveRotation();
             }
-        } );
+        });
         //Make the angle formatted without a thousands separator.
-        spinner.setEditor( new JSpinner.NumberEditor( spinner, "###.##" ) );
-        rotationPanel.add( spinner );
+        spinner.setEditor(new JSpinner.NumberEditor(spinner, "###.##"));
+        rotationPanel.add(spinner);
 
 
 
 
-        JButton rotateLeftJButton = new JButton( new ImageIcon( Settings.cl.getResource( "jpo/images/icon_RotCCDown.gif" ) ) ) {
-
+        JButton rotateLeftJButton = new JButton(new ImageIcon(Settings.cl.getResource("jpo/images/icon_RotCCDown.gif"))) {
             {
-                setMnemonic( KeyEvent.VK_L );
-                addActionListener( new ActionListener() {
-
+                setMnemonic(KeyEvent.VK_L);
+                addActionListener(new ActionListener() {
                     @Override
-                    public void actionPerformed( ActionEvent e ) {
-                        angleModel.setValue( ( (Double) angleModel.getValue() + 270 ) % 360 );
+                    public void actionPerformed(ActionEvent e) {
+                        angleModel.setValue(((Double) angleModel.getValue() + 270) % 360);
                         saveRotation();
                     }
-                } );
-                setToolTipText( Settings.jpoResources.getString( "rotateLeftJButton.ToolTipText" ) );
+                });
+                setToolTipText(Settings.jpoResources.getString("rotateLeftJButton.ToolTipText"));
             }
         };
-        rotationPanel.add( rotateLeftJButton );
+        rotationPanel.add(rotateLeftJButton);
 
         /**
-         *  Button to rotate right
+         * Button to rotate right
          */
-        JButton rotateRightJButton = new JButton( new ImageIcon( Settings.cl.getResource( "jpo/images/icon_RotCWDown.gif" ) ) ) {
-
+        JButton rotateRightJButton = new JButton(new ImageIcon(Settings.cl.getResource("jpo/images/icon_RotCWDown.gif"))) {
             {
-                setMnemonic( KeyEvent.VK_R );
-                addActionListener( new ActionListener() {
-
+                setMnemonic(KeyEvent.VK_R);
+                addActionListener(new ActionListener() {
                     @Override
-                    public void actionPerformed( ActionEvent e ) {
-                        angleModel.setValue( ( (Double) angleModel.getValue() + 90 ) % 360 );
+                    public void actionPerformed(ActionEvent e) {
+                        angleModel.setValue(((Double) angleModel.getValue() + 90) % 360);
                         saveRotation();
                     }
-                } );
-                setToolTipText( Settings.jpoResources.getString( "rotateRightJButton.ToolTipText" ) );
+                });
+                setToolTipText(Settings.jpoResources.getString("rotateRightJButton.ToolTipText"));
             }
         };
-        rotationPanel.add( rotateRightJButton );
+        rotationPanel.add(rotateRightJButton);
 
-        mainPanel.add( rotationPanel );
+        mainPanel.add(rotationPanel);
 
 
         JPanel buttonJPanel = new JPanel();
-        buttonJPanel.setLayout( new FlowLayout() );
+        buttonJPanel.setLayout(new FlowLayout());
 
-        JButton OkJButton = new JButton( Settings.jpoResources.getString( "genericOKText" ) );
-        OkJButton.setPreferredSize( Settings.defaultButtonDimension );
-        OkJButton.setMinimumSize( Settings.defaultButtonDimension );
-        OkJButton.setMaximumSize( Settings.defaultButtonDimension );
-        OkJButton.setBorder( BorderFactory.createRaisedBevelBorder() );
-        OkJButton.addActionListener( new ActionListener() {
-
+        JButton OkJButton = new JButton(Settings.jpoResources.getString("genericOKText"));
+        OkJButton.setPreferredSize(Settings.defaultButtonDimension);
+        OkJButton.setMinimumSize(Settings.defaultButtonDimension);
+        OkJButton.setMaximumSize(Settings.defaultButtonDimension);
+        OkJButton.setBorder(BorderFactory.createRaisedBevelBorder());
+        OkJButton.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed( ActionEvent e ) {
+            public void actionPerformed(ActionEvent e) {
                 saveFieldData();
                 getRid();
             }
-        } );
-        OkJButton.setDefaultCapable( true );
-        getRootPane().setDefaultButton( OkJButton );
-        buttonJPanel.add( OkJButton );
+        });
+        OkJButton.setDefaultCapable(true);
+        getRootPane().setDefaultButton(OkJButton);
+        buttonJPanel.add(OkJButton);
 
-        JButton CancelButton = new JButton( Settings.jpoResources.getString( "genericCancelText" ) );
-        CancelButton.setPreferredSize( Settings.defaultButtonDimension );
-        CancelButton.setMinimumSize( Settings.defaultButtonDimension );
-        CancelButton.setMaximumSize( Settings.defaultButtonDimension );
-        CancelButton.setBorder( BorderFactory.createRaisedBevelBorder() );
-        CancelButton.addActionListener( new ActionListener() {
-
+        JButton CancelButton = new JButton(Settings.jpoResources.getString("genericCancelText"));
+        CancelButton.setPreferredSize(Settings.defaultButtonDimension);
+        CancelButton.setMinimumSize(Settings.defaultButtonDimension);
+        CancelButton.setMaximumSize(Settings.defaultButtonDimension);
+        CancelButton.setBorder(BorderFactory.createRaisedBevelBorder());
+        CancelButton.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed( ActionEvent e ) {
+            public void actionPerformed(ActionEvent e) {
                 getRid();
             }
-        } );
-        buttonJPanel.add( CancelButton );
+        });
+        buttonJPanel.add(CancelButton);
 
-        JButton resetJButton = new JButton( Settings.jpoResources.getString( "resetLabel" ) );
-        resetJButton.setPreferredSize( Settings.defaultButtonDimension );
-        resetJButton.setMinimumSize( Settings.defaultButtonDimension );
-        resetJButton.setMaximumSize( Settings.defaultButtonDimension );
-        resetJButton.setBorder( BorderFactory.createRaisedBevelBorder() );
-        resetJButton.addActionListener( new ActionListener() {
-
+        JButton resetJButton = new JButton(Settings.jpoResources.getString("resetLabel"));
+        resetJButton.setPreferredSize(Settings.defaultButtonDimension);
+        resetJButton.setMinimumSize(Settings.defaultButtonDimension);
+        resetJButton.setMaximumSize(Settings.defaultButtonDimension);
+        resetJButton.setBorder(BorderFactory.createRaisedBevelBorder());
+        resetJButton.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed( ActionEvent e ) {
+            public void actionPerformed(ActionEvent e) {
                 loadData();
             }
-        } );
-        buttonJPanel.add( resetJButton );
-        mainPanel.add( buttonJPanel );
+        });
+        buttonJPanel.add(resetJButton);
+        mainPanel.add(buttonJPanel);
 
 
 
@@ -343,237 +332,239 @@ public class PictureInfoEditor
 
 
         JPanel infoTab = new JPanel();
-        infoTab.setLayout( new MigLayout() );
+        infoTab.setLayout(new MigLayout());
 
-        JLabel descriptionJLabel = new JLabel( Settings.jpoResources.getString( "pictureDescriptionLabel" ) );
-        infoTab.add( descriptionJLabel, "span 2, wrap" );
+        JLabel descriptionJLabel = new JLabel(Settings.jpoResources.getString("pictureDescriptionLabel"));
+        infoTab.add(descriptionJLabel, "span 2, wrap");
 
-        descriptionJTextArea.setPreferredSize( new Dimension( 400, 150 ) );
-        descriptionJTextArea.setWrapStyleWord( true );
-        descriptionJTextArea.setLineWrap( true );
-        descriptionJTextArea.setEditable( true );
-        infoTab.add( descriptionJTextArea, "span 2, wrap" );
+        descriptionJTextArea.setPreferredSize(new Dimension(400, 150));
+        descriptionJTextArea.setWrapStyleWord(true);
+        descriptionJTextArea.setLineWrap(true);
+        descriptionJTextArea.setEditable(true);
+        infoTab.add(descriptionJTextArea, "span 2, wrap");
 
 
-        JLabel creationTimeJLabel = new JLabel( Settings.jpoResources.getString( "creationTimeLabel" ) );
-        infoTab.add( creationTimeJLabel, "spany 2, aligny top" );
+        JLabel creationTimeJLabel = new JLabel(Settings.jpoResources.getString("creationTimeLabel"));
+        infoTab.add(creationTimeJLabel, "spany 2, aligny top");
 
-        creationTimeJTextField.setPreferredSize( SHORT_FIELD_DIMENSION );
-        creationTimeJTextField.addFocusListener( new FocusListener() {
+        creationTimeJTextField.setPreferredSize(SHORT_FIELD_DIMENSION);
+        creationTimeJTextField.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                parseTimestamp(creationTimeJTextField.getText());
+            }
 
             @Override
-            public void focusGained( FocusEvent e ) {
-                parseit();
+            public void focusLost(FocusEvent e) {
+                parseTimestamp(creationTimeJTextField.getText());
             }
+        });
+        infoTab.add(creationTimeJTextField, "wrap");
 
+        parsedCreationTimeJLabel.setFont(errorLabelFont);
+        infoTab.add(parsedCreationTimeJLabel, "wrap");
+
+        JButton reparseButton = new JButton("reparse");
+        infoTab.add(reparseButton, "wrap");
+        reparseButton.addActionListener(new ActionListener() {
             @Override
-            public void focusLost( FocusEvent e ) {
-                parseit();
+            public void actionPerformed(ActionEvent e) {
+                doReparseDate();
             }
-
-            private void parseit() {
-                parsedCreationTimeJLabel.setText( String.format( "%tc", Tools.parseDate( creationTimeJTextField.getText() ) ) );
-            }
-        } );
-        infoTab.add( creationTimeJTextField, "wrap" );
-
-        parsedCreationTimeJLabel.setFont( errorLabelFont );
-        infoTab.add( parsedCreationTimeJLabel, "wrap" );
+        });
 
 
-        JLabel filmReferenceJLabel = new JLabel( Settings.jpoResources.getString( "filmReferenceLabel" ) );
-        infoTab.add( filmReferenceJLabel, "span 2, wrap" );
 
-        filmReferenceJTextField.setPreferredSize( TEXT_FIELD_DIMENSION );
-        infoTab.add( filmReferenceJTextField, "span 2, wrap" );
+        JLabel filmReferenceJLabel = new JLabel(Settings.jpoResources.getString("filmReferenceLabel"));
+        infoTab.add(filmReferenceJLabel, "span 2, wrap");
 
-        JLabel commentJLabel = new JLabel( Settings.jpoResources.getString( "commentLabel" ) );
-        infoTab.add( commentJLabel, "span 2, wrap" );
+        filmReferenceJTextField.setPreferredSize(TEXT_FIELD_DIMENSION);
+        infoTab.add(filmReferenceJTextField, "span 2, wrap");
 
-        commentJTextField.setPreferredSize( TEXT_FIELD_DIMENSION );
-        infoTab.add( commentJTextField, "span 2, wrap" );
+        JLabel commentJLabel = new JLabel(Settings.jpoResources.getString("commentLabel"));
+        infoTab.add(commentJLabel, "span 2, wrap");
+
+        commentJTextField.setPreferredSize(TEXT_FIELD_DIMENSION);
+        infoTab.add(commentJTextField, "span 2, wrap");
 
 
-        JLabel photographerJLabel = new JLabel( Settings.jpoResources.getString( "photographerLabel" ) );
-        infoTab.add( photographerJLabel, "span 2, wrap" );
+        JLabel photographerJLabel = new JLabel(Settings.jpoResources.getString("photographerLabel"));
+        infoTab.add(photographerJLabel, "span 2, wrap");
 
-        photographerJTextField.setPreferredSize( TEXT_FIELD_DIMENSION );
-        infoTab.add( photographerJTextField, "span 2, wrap" );
+        photographerJTextField.setPreferredSize(TEXT_FIELD_DIMENSION);
+        infoTab.add(photographerJTextField, "span 2, wrap");
 
-        JLabel copyrightHolderJLabel = new JLabel( Settings.jpoResources.getString( "copyrightHolderLabel" ) );
-        infoTab.add( copyrightHolderJLabel, "span 2, wrap" );
+        JLabel copyrightHolderJLabel = new JLabel(Settings.jpoResources.getString("copyrightHolderLabel"));
+        infoTab.add(copyrightHolderJLabel, "span 2, wrap");
 
-        copyrightHolderJTextField.setPreferredSize( TEXT_FIELD_DIMENSION );
-        infoTab.add( copyrightHolderJTextField, "span 2, wrap" );
+        copyrightHolderJTextField.setPreferredSize(TEXT_FIELD_DIMENSION);
+        infoTab.add(copyrightHolderJTextField, "span 2, wrap");
 
-        JLabel latitudeJLabel = new JLabel( Settings.jpoResources.getString( "latitudeLabel" ) );
-        infoTab.add( latitudeJLabel, "aligny top" );
+        JLabel latitudeJLabel = new JLabel(Settings.jpoResources.getString("latitudeLabel"));
+        infoTab.add(latitudeJLabel, "aligny top");
 
-        NumberFormat nfl = new DecimalFormat( "###.#####################" );
-        latitudeJTextField = new JFormattedTextField( nfl );
-        latitudeJTextField.setPreferredSize( SHORT_FIELD_DIMENSION );
-        infoTab.add( latitudeJTextField, "wrap" );
+        NumberFormat nfl = new DecimalFormat("###.#####################");
+        latitudeJTextField = new JFormattedTextField(nfl);
+        latitudeJTextField.setPreferredSize(SHORT_FIELD_DIMENSION);
+        infoTab.add(latitudeJTextField, "wrap");
 
-        final JLabel longitudeJLabel = new JLabel( Settings.jpoResources.getString( "longitudeLabel" ) );
-        infoTab.add( longitudeJLabel, "spany 2, aligny top" );
+        final JLabel longitudeJLabel = new JLabel(Settings.jpoResources.getString("longitudeLabel"));
+        infoTab.add(longitudeJLabel, "spany 2, aligny top");
 
-        longitudeJTextField = new JFormattedTextField( nfl );
-        longitudeJTextField.setPreferredSize( SHORT_FIELD_DIMENSION );
-        infoTab.add( longitudeJTextField, "wrap" );
+        longitudeJTextField = new JFormattedTextField(nfl);
+        longitudeJTextField.setPreferredSize(SHORT_FIELD_DIMENSION);
+        infoTab.add(longitudeJTextField, "wrap");
 
-        JButton mapButton = new JButton( "Open Map (in Browser)" );
-        mapButton.addActionListener( new ActionListener() {
-
+        JButton mapButton = new JButton("Open Map (in Browser)");
+        mapButton.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed( ActionEvent e ) {
-                Webserver.getInstance().browse( myNode );
+            public void actionPerformed(ActionEvent e) {
+                Webserver.getInstance().browse(myNode);
             }
-        } );
-        infoTab.add( mapButton, "span 2, wrap" );
+        });
+        infoTab.add(mapButton, "span 2, wrap");
 
-        final JLabel sizeLabelJLabel = new JLabel( "Size:" );
-        infoTab.add( sizeLabelJLabel, "aligny top" );
+        final JLabel sizeLabelJLabel = new JLabel("Size:");
+        infoTab.add(sizeLabelJLabel, "aligny top");
 
-        infoTab.add( sizeJLabel, "aligny top, wrap" );
-
-
-
-        JScrollPane jScrollPane = new JScrollPane( infoTab );
-        jScrollPane.setWheelScrollingEnabled( true );
-        tabs.add( "Info", jScrollPane );
+        infoTab.add(sizeJLabel, "aligny top, wrap");
 
 
 
+        JScrollPane jScrollPane = new JScrollPane(infoTab);
+        jScrollPane.setWheelScrollingEnabled(true);
+        tabs.add("Info", jScrollPane);
 
 
-        JPanel fileTab = new JPanel( new MigLayout() );
-        JLabel highresLocationJLabel = new JLabel( Settings.jpoResources.getString( "highresLocationLabel" ) );
-        fileTab.add( highresLocationJLabel, "span 2, wrap" );
-        highresErrorJLabel.setFont( errorLabelFont );
-        highresLocationJTextField.setPreferredSize( TEXT_FIELD_DIMENSION );
-        fileTab.add( highresLocationJTextField );
+
+
+
+        JPanel fileTab = new JPanel(new MigLayout());
+        JLabel highresLocationJLabel = new JLabel(Settings.jpoResources.getString("highresLocationLabel"));
+        fileTab.add(highresLocationJLabel, "span 2, wrap");
+        highresErrorJLabel.setFont(errorLabelFont);
+        highresLocationJTextField.setPreferredSize(TEXT_FIELD_DIMENSION);
+        fileTab.add(highresLocationJTextField);
 
         //JButton highresLocationJButton = new JButton( Settings.jpoResources.getString( "threeDotText" ) );
         JButton highresLocationJButton = new ThreeDotButton();
-        highresLocationJButton.addActionListener( new ActionListener() {
-
+        highresLocationJButton.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed( ActionEvent e ) {
+            public void actionPerformed(ActionEvent e) {
                 chooseFile();
             }
-        } );
-        fileTab.add( highresLocationJButton, "wrap" );
-        fileTab.add( highresErrorJLabel, "span 2, wrap" );
+        });
+        fileTab.add(highresLocationJButton, "wrap");
+        fileTab.add(highresErrorJLabel, "span 2, wrap");
 
 
-        JButton checksumJButton = new JButton( Settings.jpoResources.getString( "checksumJButton" ) );
-        checksumJButton.setPreferredSize( new Dimension( 80, 25 ) );
-        checksumJButton.setMinimumSize( new Dimension( 80, 25 ) );
-        checksumJButton.setMaximumSize( new Dimension( 80, 25 ) );
-        checksumJButton.addActionListener( new ActionListener() {
-
+        JButton checksumJButton = new JButton(Settings.jpoResources.getString("checksumJButton"));
+        checksumJButton.setPreferredSize(new Dimension(80, 25));
+        checksumJButton.setMinimumSize(new Dimension(80, 25));
+        checksumJButton.setMaximumSize(new Dimension(80, 25));
+        checksumJButton.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed( ActionEvent e ) {
-                pi.calculateChecksum();
+            public void actionPerformed(ActionEvent e) {
+                pictureInfo.calculateChecksum();
             }
-        } );
+        });
 
-        fileTab.add( checksumJLabel );
-        fileTab.add( checksumJButton, "wrap" );
+        fileTab.add(checksumJLabel);
+        fileTab.add(checksumJButton, "wrap");
 
-        JLabel lowresLocationJLabel = new JLabel( Settings.jpoResources.getString( "lowresLocationLabel" ) );
-        lowresErrorJLabel.setFont( errorLabelFont );
-        fileTab.add( lowresLocationJLabel, "wrap" );
-        lowresLocationJTextField.setPreferredSize( TEXT_FIELD_DIMENSION );
-        fileTab.add( lowresLocationJTextField, "wrap" );
-        fileTab.add( lowresErrorJLabel, "wrap" );
+        JLabel lowresLocationJLabel = new JLabel(Settings.jpoResources.getString("lowresLocationLabel"));
+        lowresErrorJLabel.setFont(errorLabelFont);
+        fileTab.add(lowresLocationJLabel, "wrap");
+        lowresLocationJTextField.setPreferredSize(TEXT_FIELD_DIMENSION);
+        fileTab.add(lowresLocationJTextField, "wrap");
+        fileTab.add(lowresErrorJLabel, "wrap");
 
-        tabs.add( "File", fileTab );
-
-
+        tabs.add("File", fileTab);
 
 
 
 
-        JPanel categoriesTab = new JPanel( new MigLayout() );
-        JLabel categoriesJLabel = new JLabel( Settings.jpoResources.getString( "categoriesJLabel-2" ) );
-        categoriesTab.add( categoriesJLabel, "wrap" );
 
-        categoriesTab.add( categoryAssignmentsJLabel, "wrap" );
 
-        categoriesJList.setSelectionMode( ListSelectionModel.MULTIPLE_INTERVAL_SELECTION );
-        categoriesJList.addListSelectionListener( new ListSelectionListener() {
+        JPanel categoriesTab = new JPanel(new MigLayout());
+        JLabel categoriesJLabel = new JLabel(Settings.jpoResources.getString("categoriesJLabel-2"));
+        categoriesTab.add(categoriesJLabel, "wrap");
 
+        categoriesTab.add(categoryAssignmentsJLabel, "wrap");
+
+        categoriesJList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        categoriesJList.addListSelectionListener(new ListSelectionListener() {
             /**
-             *  Method from the ListSelectionListener implementation that tracks when an
-             *  element was selected.
+             * Method from the ListSelectionListener implementation that tracks
+             * when an element was selected.
+             *
              * @param e
              */
             @Override
-            public void valueChanged( ListSelectionEvent e ) {
-                if ( e.getValueIsAdjusting() ) {
+            public void valueChanged(ListSelectionEvent e) {
+                if (e.getValueIsAdjusting()) {
                     return;
                 }
-                JList theList = (JList) e.getSource();
-                if ( theList.isSelectedIndex( ( (DefaultListModel) theList.getModel() ).indexOf( setupCategories ) ) ) {
+                //JList <Category> theList = (JList<Category>) e.getSource();
+                if (categoriesJList.isSelectedIndex(((DefaultListModel) categoriesJList.getModel()).indexOf(setupCategories))) {
                     new CategoryEditorJFrame();
-                } else if ( theList.isSelectedIndex( ( (DefaultListModel) theList.getModel() ).indexOf( noCategories ) ) ) {
+                } else if (categoriesJList.isSelectedIndex(((DefaultListModel) categoriesJList.getModel()).indexOf(noCategories))) {
                     categoriesJList.clearSelection();
                 }
-                categoryAssignmentsJLabel.setText( selectedJListCategoriesToString( theList ) );
+                categoryAssignmentsJLabel.setText(selectedJListCategoriesToString(categoriesJList));
             }
-        } );
+        });
 
 
-        categoriesTab.add( listJScrollPane, "wrap" );
-        tabs.add( "Categories", categoriesTab );
+        categoriesTab.add(listJScrollPane, "wrap");
+        tabs.add("Categories", categoriesTab);
 
 
         // Add Exif panel
-        exifTagsJTextArea.setWrapStyleWord( true );
-        exifTagsJTextArea.setLineWrap( false );
-        exifTagsJTextArea.setEditable( true );
-        exifTagsJTextArea.setRows( 17 );
-        exifTagsJTextArea.setColumns( 35 );
+        exifTagsJTextArea.setWrapStyleWord(true);
+        exifTagsJTextArea.setLineWrap(false);
+        exifTagsJTextArea.setEditable(true);
+        exifTagsJTextArea.setRows(17);
+        exifTagsJTextArea.setColumns(35);
 
         // stop undesired scrolling in the window when doing append
         NonFocussedCaret dumbCaret = new NonFocussedCaret();
-        exifTagsJTextArea.setCaret( dumbCaret );
+        exifTagsJTextArea.setCaret(dumbCaret);
 
         JScrollPane exifJScrollPane = new JScrollPane();
-        exifJScrollPane.setViewportView( exifTagsJTextArea );//, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS );
-        exifJScrollPane.setWheelScrollingEnabled( true );
+        exifJScrollPane.setViewportView(exifTagsJTextArea);//, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS );
+        exifJScrollPane.setWheelScrollingEnabled(true);
 
-        tabs.add( "Exif", exifJScrollPane );
+        tabs.add("Exif", exifJScrollPane);
 
 
 
-        setLayout( new MigLayout() );
-        getContentPane().add( mainPanel );
+        setLayout(new MigLayout());
+        getContentPane().add(mainPanel);
     }
 
     /**
-     *  populates the text fields with the values from the PictureInfo object
+     * populates the text fields with the values from the PictureInfo object
      */
     private void loadData() {
-        creationTimeJTextField.setText( pi.getCreationTime() );
-        parsedCreationTimeJLabel.setText( pi.getFormattedCreationTime() );
-        descriptionJTextArea.setText( pi.getDescription() );
-        highresLocationJTextField.setText( pi.getHighresLocation() );
-        checksumJLabel.setText( Settings.jpoResources.getString( "checksumJLabel" ) + pi.getChecksumAsString() );
-        lowresLocationJTextField.setText( pi.getLowresLocation() );
-        filmReferenceJTextField.setText( pi.getFilmReference() );
-        angleModel.setValue( pi.getRotation() );
-        latitudeJTextField.setText( Double.toString( pi.getLatLng().x ) );
-        longitudeJTextField.setText( Double.toString( pi.getLatLng().y ) );
-        commentJTextField.setText( pi.getComment() );
-        photographerJTextField.setText( pi.getPhotographer() );
-        copyrightHolderJTextField.setText( pi.getCopyrightHolder() );
+        creationTimeJTextField.setText(pictureInfo.getCreationTime());
+        parsedCreationTimeJLabel.setText(pictureInfo.getFormattedCreationTime());
+        descriptionJTextArea.setText(pictureInfo.getDescription());
+        highresLocationJTextField.setText(pictureInfo.getHighresLocation());
+        checksumJLabel.setText(Settings.jpoResources.getString("checksumJLabel") + pictureInfo.getChecksumAsString());
+        lowresLocationJTextField.setText(pictureInfo.getLowresLocation());
+        filmReferenceJTextField.setText(pictureInfo.getFilmReference());
+        angleModel.setValue(pictureInfo.getRotation());
+        latitudeJTextField.setText(Double.toString(pictureInfo.getLatLng().x));
+        longitudeJTextField.setText(Double.toString(pictureInfo.getLatLng().y));
+        commentJTextField.setText(pictureInfo.getComment());
+        photographerJTextField.setText(pictureInfo.getPhotographer());
+        copyrightHolderJTextField.setText(pictureInfo.getCopyrightHolder());
 
         listModel.removeAllElements();
         categoriesJList.clearSelection();
-        listModel.addElement( setupCategories );
-        listModel.addElement( noCategories );
+        listModel.addElement(setupCategories);
+        listModel.addElement(noCategories);
 
         //TODO: can the iterator and enumeration use generics and be written nicer?
         Iterator i = myNode.getPictureCollection().getCategoryIterator();
@@ -581,107 +572,109 @@ public class PictureInfoEditor
         String category;
         Category categoryObject;
         Vector<Integer> selections = new Vector<Integer>();
-        while ( i.hasNext() ) {
+        while (i.hasNext()) {
             key = (Integer) i.next();
-            category = myNode.getPictureCollection().getCategory( key );
-            categoryObject = new Category( key, category );
-            listModel.addElement( categoryObject );
+            category = myNode.getPictureCollection().getCategory(key);
+            categoryObject = new Category(key, category);
+            listModel.addElement(categoryObject);
 
-            if ( ( pi.categoryAssignments != null ) && ( pi.categoryAssignments.contains( key ) ) ) {
-                selections.add( new Integer( listModel.indexOf( categoryObject ) ) );
+            if ((pictureInfo.categoryAssignments != null) && (pictureInfo.categoryAssignments.contains(key))) {
+                selections.add(new Integer(listModel.indexOf(categoryObject)));
             }
         }
         Enumeration e = selections.elements();
         int selectionsArray[] = new int[selections.size()];
         Object o;
         int j = 0;
-        while ( e.hasMoreElements() ) {
+        while (e.hasMoreElements()) {
             o = e.nextElement();
-            selectionsArray[j] = ( (Integer) o ).intValue();
+            selectionsArray[j] = ((Integer) o).intValue();
             j++;
         }
-        categoriesJList.setSelectedIndices( selectionsArray );
-        categoryAssignmentsJLabel.setText( selectedJListCategoriesToString( categoriesJList ) );
+        categoriesJList.setSelectedIndices(selectionsArray);
+        categoryAssignmentsJLabel.setText(selectedJListCategoriesToString(categoriesJList));
 
-        ExifInfo exifInfo = new ExifInfo( pi.getHighresURLOrNull() );
+        ExifInfo exifInfo = new ExifInfo(pictureInfo.getHighresURLOrNull());
         exifInfo.decodeExifTags();
 
-        sizeJLabel.setText( String.format( "%s x %s", exifInfo.exifWidth, exifInfo.exifHeight ) );
+        sizeJLabel.setText(String.format("%s x %s", exifInfo.exifWidth, exifInfo.exifHeight));
 
 
-        exifTagsJTextArea.append( Settings.jpoResources.getString( "ExifTitle" ) );
-        exifTagsJTextArea.append( exifInfo.getComprehensivePhotographicSummary() );
-        exifTagsJTextArea.append( "-------------------------\nAll Tags:\n" );
-        exifTagsJTextArea.append( exifInfo.getAllTags() );
+        exifTagsJTextArea.append(Settings.jpoResources.getString("ExifTitle"));
+        exifTagsJTextArea.append(exifInfo.getComprehensivePhotographicSummary());
+        exifTagsJTextArea.append("-------------------------\nAll Tags:\n");
+        exifTagsJTextArea.append(exifInfo.getAllTags());
 
         setColorIfError();
     }
     /**
-     * Set up a PictureInfoChangeListener to get updated on change events in the Picture Metadata
+     * Set up a PictureInfoChangeListener to get updated on change events in the
+     * Picture Metadata
      */
     private PictureInfoChangeListener myPictureInfoChangeListener = new PictureInfoChangeListener() {
-
         /**
-         *  here we get notified by the PictureInfo object that something has
-         *  changed.
+         * here we get notified by the PictureInfo object that something has
+         * changed.
          */
         @Override
-        public void pictureInfoChangeEvent( PictureInfoChangeEvent e ) {
-            if ( e.getDescriptionChanged() ) {
-                descriptionJTextArea.setText( pi.getDescription() );
+        public void pictureInfoChangeEvent(PictureInfoChangeEvent e) {
+            if (e.getDescriptionChanged()) {
+                descriptionJTextArea.setText(pictureInfo.getDescription());
             }
-            if ( e.getHighresLocationChanged() ) {
-                highresLocationJTextField.setText( pi.getHighresLocation() );
+            if (e.getHighresLocationChanged()) {
+                highresLocationJTextField.setText(pictureInfo.getHighresLocation());
             }
-            if ( e.getChecksumChanged() ) {
-                checksumJLabel.setText( Settings.jpoResources.getString( "checksumJLabel" ) + pi.getChecksumAsString() );
+            if (e.getChecksumChanged()) {
+                checksumJLabel.setText(Settings.jpoResources.getString("checksumJLabel") + pictureInfo.getChecksumAsString());
             }
-            if ( e.getLowresLocationChanged() ) {
-                lowresLocationJTextField.setText( pi.getLowresLocation() );
+            if (e.getLowresLocationChanged()) {
+                lowresLocationJTextField.setText(pictureInfo.getLowresLocation());
             }
-            if ( e.getCreationTimeChanged() ) {
-                creationTimeJTextField.setText( pi.getCreationTime() );
-                parsedCreationTimeJLabel.setText( pi.getFormattedCreationTime() );
+            if (e.getCreationTimeChanged()) {
+                creationTimeJTextField.setText(pictureInfo.getCreationTime());
+                parsedCreationTimeJLabel.setText(pictureInfo.getFormattedCreationTime());
             }
-            if ( e.getFilmReferenceChanged() ) {
-                filmReferenceJTextField.setText( pi.getFilmReference() );
+            if (e.getFilmReferenceChanged()) {
+                filmReferenceJTextField.setText(pictureInfo.getFilmReference());
             }
-            if ( e.getRotationChanged() ) {
-                angleModel.setValue( pi.getRotation() );
+            if (e.getRotationChanged()) {
+                angleModel.setValue(pictureInfo.getRotation());
             }
-            if ( e.getLatLngChanged() ) {
-                latitudeJTextField.setText( Double.toString( pi.getLatLng().x ) );
-                longitudeJTextField.setText( Double.toString( pi.getLatLng().y ) );
+            if (e.getLatLngChanged()) {
+                latitudeJTextField.setText(Double.toString(pictureInfo.getLatLng().x));
+                longitudeJTextField.setText(Double.toString(pictureInfo.getLatLng().y));
             }
-            if ( e.getCommentChanged() ) {
-                commentJTextField.setText( pi.getComment() );
+            if (e.getCommentChanged()) {
+                commentJTextField.setText(pictureInfo.getComment());
             }
-            if ( e.getPhotographerChanged() ) {
-                photographerJTextField.setText( pi.getPhotographer() );
+            if (e.getPhotographerChanged()) {
+                photographerJTextField.setText(pictureInfo.getPhotographer());
             }
-            if ( e.getCopyrightHolderChanged() ) {
-                copyrightHolderJTextField.setText( pi.getCopyrightHolder() );
+            if (e.getCopyrightHolderChanged()) {
+                copyrightHolderJTextField.setText(pictureInfo.getCopyrightHolder());
             }
 
         }
     };
 
     /**
-     *  This utility method builds a string from the selected categories in a supplied JList
+     * This utility method builds a string from the selected categories in a
+     * supplied JList
+     *
      * @param theList
      * @return a string for the selected categories
      */
-    private static String selectedJListCategoriesToString( JList theList ) {
-        StringBuffer resultString = new StringBuffer( "" );
-        if ( !theList.isSelectionEmpty() ) {
-            Object[] selectedCategories = theList.getSelectedValues();
-            for ( int i = 0; i < selectedCategories.length; i++ ) {
-                if ( ( selectedCategories[i] == setupCategories ) || ( selectedCategories[i] == noCategories ) ) {
+    private static String selectedJListCategoriesToString(JList<Category> theList) {
+        StringBuffer resultString = new StringBuffer("");
+        if (!theList.isSelectionEmpty()) {
+            List<Category> selectedCategories = theList.getSelectedValuesList();
+            String comma = "";
+            for (Category c : selectedCategories) {
+                if ((c == setupCategories) || (c == noCategories)) {
                     // skip them
-                } else if ( i == 0 ) {
-                    resultString = new StringBuffer( selectedCategories[i].toString() );
                 } else {
-                    resultString.append( ", " ).append( selectedCategories[i].toString() );
+                    resultString.append(comma).append(c.toString());
+                    comma = ", ";
                 }
             }
         }
@@ -689,75 +682,97 @@ public class PictureInfoEditor
     }
 
     /**
-     *  method that sets the URL fields to red if the file is not found and
-     *  red if the URL is not a valid URL
+     * method that sets the URL fields to red if the file is not found and red
+     * if the URL is not a valid URL
      */
     private void setColorIfError() {
         try {
-            testFile( highresLocationJTextField.getText() );
-            highresLocationJTextField.setForeground( Color.black );
-            highresErrorJLabel.setText( "" );
-        } catch ( Exception xh ) {
-            highresLocationJTextField.setForeground( Color.red );
-            highresErrorJLabel.setText( xh.getMessage() );
+            testFile(highresLocationJTextField.getText());
+            highresLocationJTextField.setForeground(Color.black);
+            highresErrorJLabel.setText("");
+        } catch (Exception xh) {
+            highresLocationJTextField.setForeground(Color.red);
+            highresErrorJLabel.setText(xh.getMessage());
         }
 
         try {
-            testFile( lowresLocationJTextField.getText() );
-            lowresLocationJTextField.setForeground( Color.black );
-            lowresErrorJLabel.setText( "" );
-        } catch ( Exception xl ) {
-            lowresLocationJTextField.setForeground( Color.red );
-            lowresErrorJLabel.setText( xl.getMessage() );
+            testFile(lowresLocationJTextField.getText());
+            lowresLocationJTextField.setForeground(Color.black);
+            lowresErrorJLabel.setText("");
+        } catch (Exception xl) {
+            lowresLocationJTextField.setForeground(Color.red);
+            lowresErrorJLabel.setText(xl.getMessage());
         }
     }
 
     /**
      * Returns true if the file is good, an Exception if bad.
+     *
      * @return true if the file is good, an Exception if bad.
      */
-    private boolean testFile( String fileToTest ) throws Exception {
+    private boolean testFile(String fileToTest) throws Exception {
         try {
-            URL pictureUrl = new URL( fileToTest );
+            URL pictureUrl = new URL(fileToTest);
             InputStream inputStream = pictureUrl.openStream();
             inputStream.close();
             return true;
-        } catch ( MalformedURLException x ) {
-            LOGGER.info( "Exception trapped: " + x.getMessage() );
-            throw new Exception( x );
-        } catch ( IOException x ) {
-            LOGGER.info( "Exception trapped: " + x.getMessage() );
-            throw new Exception( x );
+        } catch (MalformedURLException x) {
+            LOGGER.info("MalformedURLException: " + x.getMessage());
+            throw new Exception(x);
+        } catch (IOException x) {
+            LOGGER.info("IOException: " + x.getMessage());
+            throw new Exception(x);
         }
 
     }
 
     /**
-     *  Close the editor window and release all listeners.
+     * Close the editor window and release all listeners.
      */
     private void getRid() {
-        if ( myNode.getPictureCollection().getTreeModel() != null ) {
-            myNode.getPictureCollection().getTreeModel().removeTreeModelListener( myTreeModelListener );
+        if (myNode.getPictureCollection().getTreeModel() != null) {
+            myNode.getPictureCollection().getTreeModel().removeTreeModelListener(myTreeModelListener);
         }
-        pi.removePictureInfoChangeListener( myPictureInfoChangeListener );
-        setVisible( false );
+        pictureInfo.removePictureInfoChangeListener(myPictureInfoChangeListener);
+        setVisible(false);
         dispose();
+    }
 
+    /**
+     * Reparse the date from the EXIF information
+     */
+    private void doReparseDate() {
+        try {
+            ExifInfo exifInfo = new ExifInfo(new URL(highresLocationJTextField.getText()));
+            exifInfo.decodeExifTags();
+            String timestamp = exifInfo.getCreateDateTime();
+            creationTimeJTextField.setText( timestamp );
+            parseTimestamp( timestamp );
+        } catch (MalformedURLException ex) {
+            Logger.getLogger(PictureInfoEditor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 
+    /**
+     * Parses the supplied timestamp and shows the result in the parsedCreationTimeJLabel
+     * @param timestamp 
+     */
+    private void parseTimestamp(String timestamp) {
+        parsedCreationTimeJLabel.setText(String.format("%tc", Tools.parseDate(timestamp)));
     }
 
     /**
      * saves the data in the fields back to the PictureInfo object
      */
     private void saveFieldData() {
-        pi.setDescription( descriptionJTextArea.getText() );
-        pi.setCreationTime( creationTimeJTextField.getText() );
-        pi.setHighresLocation( highresLocationJTextField.getText() );
-        pi.setLowresLocation( lowresLocationJTextField.getText() );
-        pi.setComment( commentJTextField.getText() );
-        pi.setPhotographer( photographerJTextField.getText() );
-        pi.setFilmReference( filmReferenceJTextField.getText() );
-        pi.setCopyrightHolder( copyrightHolderJTextField.getText() );
+        pictureInfo.setDescription(descriptionJTextArea.getText());
+        pictureInfo.setCreationTime(creationTimeJTextField.getText());
+        pictureInfo.setHighresLocation(highresLocationJTextField.getText());
+        pictureInfo.setLowresLocation(lowresLocationJTextField.getText());
+        pictureInfo.setComment(commentJTextField.getText());
+        pictureInfo.setPhotographer(photographerJTextField.getText());
+        pictureInfo.setFilmReference(filmReferenceJTextField.getText());
+        pictureInfo.setCopyrightHolder(copyrightHolderJTextField.getText());
 
         saveRotation();
 
@@ -765,110 +780,115 @@ public class PictureInfoEditor
 
 
         try {
-            latitude = Double.parseDouble( latitudeJTextField.getText() );
+            latitude = Double.parseDouble(latitudeJTextField.getText());
 
 
-        } catch ( NumberFormatException ex ) {
-            latitude = pi.getLatLng().x;
-            LOGGER.info( String.format( "Latitude String %s could not be parsed: %s --> leaving at old value: %f", latitudeJTextField.getText(), ex.getMessage(), latitude ) );
+        } catch (NumberFormatException ex) {
+            latitude = pictureInfo.getLatLng().x;
+            LOGGER.info(String.format("Latitude String %s could not be parsed: %s --> leaving at old value: %f", latitudeJTextField.getText(), ex.getMessage(), latitude));
         }
         Double longitude;
         try {
-            longitude = Double.parseDouble( longitudeJTextField.getText() );
-        } catch ( NumberFormatException ex ) {
-            longitude = pi.getLatLng().y;
-            LOGGER.info( String.format( "Longitude String %s could not be parsed: %s --> leaving at old value: %f", longitudeJTextField.getText(), ex.getMessage(), longitude ) );
+            longitude = Double.parseDouble(longitudeJTextField.getText());
+        } catch (NumberFormatException ex) {
+            longitude = pictureInfo.getLatLng().y;
+            LOGGER.info(String.format("Longitude String %s could not be parsed: %s --> leaving at old value: %f", longitudeJTextField.getText(), ex.getMessage(), longitude));
         }
-        pi.setLatLng( new Point2D.Double( latitude, longitude ) );
+        pictureInfo.setLatLng(new Point2D.Double(latitude, longitude));
         int[] indexes = categoriesJList.getSelectedIndices();
         Object o;
-        pi.clearCategoryAssignments();
+        pictureInfo.clearCategoryAssignments();
 
 
-        for ( int i = 0; i < indexes.length; i++ ) {
-            o = listModel.getElementAt( indexes[i] );
+        for (int i = 0; i < indexes.length; i++) {
+            o = listModel.getElementAt(indexes[i]);
 
 
-            if ( o instanceof Category ) {
-                pi.addCategoryAssignment( ( (Category) o ).getKey() );
+            if (o instanceof Category) {
+                pictureInfo.addCategoryAssignment(((Category) o).getKey());
 
 
             }
         }
         /*myNode.getPictureCollection().sendNodeChanged( myNode );
-        myNode.getPictureCollection().setUnsavedUpdates();*/
+         myNode.getPictureCollection().setUnsavedUpdates();*/
     }
 
     /**
      * This method saves the rotation value
      */
     private void saveRotation() {
-        pi.setRotation( (Double) angleModel.getValue() );
+        pictureInfo.setRotation((Double) angleModel.getValue());
     }
 
     /**
-     *  method that brings up a JFileChooser and places the path of the file selected into the
-     *  JTextField of the highres locations
+     * method that brings up a JFileChooser and places the path of the file
+     * selected into the JTextField of the highres locations
      */
     private void chooseFile() {
         JFileChooser jFileChooser = new JFileChooser();
-        jFileChooser.setFileFilter( new ImageFilter() );
+        jFileChooser.setFileFilter(new ImageFilter());
 
-        jFileChooser.setFileSelectionMode( JFileChooser.FILES_ONLY );
-        jFileChooser.setApproveButtonText( Settings.jpoResources.getString( "genericSelectText" ) );
-        jFileChooser.setDialogTitle( Settings.jpoResources.getString( "highresChooserTitle" ) );
-        jFileChooser.setCurrentDirectory( new File( highresLocationJTextField.getText() ) );
-
-
-
-        int returnVal = jFileChooser.showOpenDialog( this );
+        jFileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        jFileChooser.setApproveButtonText(Settings.jpoResources.getString("genericSelectText"));
+        jFileChooser.setDialogTitle(Settings.jpoResources.getString("highresChooserTitle"));
+        jFileChooser.setCurrentDirectory(new File(highresLocationJTextField.getText()));
 
 
-        if ( returnVal == JFileChooser.APPROVE_OPTION ) {
+
+        int returnVal = jFileChooser.showOpenDialog(this);
+
+
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
             try {
-                highresLocationJTextField.setText( jFileChooser.getSelectedFile().toURI().toURL().toString() );
+                highresLocationJTextField.setText(jFileChooser.getSelectedFile().toURI().toURL().toString());
 
 
-            } catch ( MalformedURLException x ) {
+            } catch (MalformedURLException x) {
                 // don't update the text field then
             }
         }
         setColorIfError();
     }
     /**
-     * Set up a TreeModelListener to learn of updates to the tree and be
-     * able to close the window if the node we are editing has been removed or
-     * to update the fields if it was changed.
+     * Set up a TreeModelListener to learn of updates to the tree and be able to
+     * close the window if the node we are editing has been removed or to update
+     * the fields if it was changed.
      */
     private TreeModelListener myTreeModelListener = new TreeModelListener() {
-
         // Here we are not that interested in TreeModel change events other than to find out if our
         // current node was removed in which case we close the Window.
         /**
-         *   implemented here to satisfy the TreeModelListener interface; not used.
+         * implemented here to satisfy the TreeModelListener interface; not
+         * used.
+         *
          * @param e
          */
         @Override
-        public void treeNodesChanged( TreeModelEvent e ) {
+        public void treeNodesChanged(TreeModelEvent e) {
         }
 
         /**
-         *   implemented here to satisfy the TreeModelListener interface; not used.
+         * implemented here to satisfy the TreeModelListener interface; not
+         * used.
+         *
          * @param e
          */
         @Override
-        public void treeNodesInserted( TreeModelEvent e ) {
+        public void treeNodesInserted(TreeModelEvent e) {
         }
 
         /**
-         *  The TreeModelListener interface tells us of tree node removal events. We use this
-         *  here to determine if the node being displayed is the one removed or whether it is a child
-         *  of the removed nodes. If so we close the window.
+         * The TreeModelListener interface tells us of tree node removal events.
+         * We use this here to determine if the node being displayed is the one
+         * removed or whether it is a child of the removed nodes. If so we close
+         * the window.
+         *
          * @param e
          */
         @Override
-        public void treeNodesRemoved( TreeModelEvent e ) {
-            if ( SortableDefaultMutableTreeNode.wasNodeDeleted( myNode, e ) ) {
+        public void treeNodesRemoved(TreeModelEvent e) {
+            if (SortableDefaultMutableTreeNode.wasNodeDeleted(myNode, e)) {
                 getRid();
 
 
@@ -876,11 +896,13 @@ public class PictureInfoEditor
         }
 
         /**
-         *   implemented here to satisfy the TreeModelListener interface; not used.
+         * implemented here to satisfy the TreeModelListener interface; not
+         * used.
+         *
          * @param e
          */
         @Override
-        public void treeStructureChanged( TreeModelEvent e ) {
+        public void treeStructureChanged(TreeModelEvent e) {
         }
     };
 
@@ -888,16 +910,16 @@ public class PictureInfoEditor
             extends SpinnerNumberModel {
 
         public MySpinnerNumberModel() {
-            super( 0.0, //initial value
+            super(0.0, //initial value
                     0.0, //min
                     359.9, //max
-                    .1f );                //step
+                    .1f);                //step
         }
 
         @Override
         public Object getNextValue() {
             Object o = super.getNextValue();
-            if ( o == null ) {
+            if (o == null) {
                 o = 0.0;
             }
             return o;
@@ -906,7 +928,7 @@ public class PictureInfoEditor
         @Override
         public Object getPreviousValue() {
             Object o = super.getPreviousValue();
-            if ( o == null ) {
+            if (o == null) {
                 o = 359.9;
             }
             return o;

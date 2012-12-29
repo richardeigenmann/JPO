@@ -14,7 +14,7 @@
     <property name="build.export.dir" value="${build.base.classes.dir}/${app.main.package}/export"/>
     <property name="build.docs.dir" value="${build.dir}/docs"/>
     <property name="build.jars.dir" value="${build.dir}/jars"/>
-    <property name="version" value="0.9"/>
+    <property name="version" value="0.10"/>
     
     <property name="libs.dir" value="libs"/>
     <property name="src.dir" value="src"/>
@@ -26,7 +26,7 @@
     
     <property name="testdir" value="${src.dir}/test/java"/>
     <property name="TALK" value="true" />
-    <path id="base.path">
+    <path id="classpath">
         <pathelement location="${build.base.classes.dir}"/>
         <fileset dir="${libs.dir}">
             <include name="*.jar"/>
@@ -34,8 +34,8 @@
     </path>
 
     <!--  Load the javaKeyStore, javaKeyStorePassword and sourceforgeSshCertificate
-          properties from a private off CVS properties file  -->
-    <property file="/richi/wordpro/jpoPrivate.properties"/>
+    properties from a private properties file which I deliberately don't contribute.... -->
+    <property file="/richi/Privat/Documents/jpoPrivate.properties"/>
 
     <echo message="${ant.version} is using the "/>
     <echo message="build file ${ant.file} to build the project"/>
@@ -81,12 +81,11 @@
                fork="yes"
                listfiles="yes"
                deprecation="yes"
-               compiler="modern"
                source="1.6"
                includeantruntime="false"
                encoding="UTF-8" >
             <src path="${src.java.dir}"/>
-            <classpath refid="base.path"/>
+            <classpath refid="classpath"/>
             <compilerarg value="-Xlint:unchecked" />
         </javac>
         <copy todir="${build.images.dir}">
@@ -125,18 +124,17 @@
                  Doctitle="JPO application documentation"
                  Windowtitle="JPO application documentation"
                  Header="JPO application documentation"
-                 Bottom="&lt;font size=&quot;-1&quot;&gt;Copyright (c) 2002 - 2011 by Richard Eigenmann &lt;a href=&quot;http://www.lomumba.ch/richi&quot;&gt;www.lomumba.ch/richi&lt;/a&gt;&lt;/font&gt;"
+                 Bottom="&lt;font size=&quot;-1&quot;&gt;Copyright (c) 2002 - 2012 by Richard Eigenmann &lt;a href=&quot;http://www.lomumba.ch/richi&quot;&gt;www.lomumba.ch/richi&lt;/a&gt;&lt;/font&gt;"
                  author="true"
                  version="true"
                  use="true"
                  private="true"
                  source="1.6"
                  linksource="yes"
-                  >
+        >
             <sourcepath path="${src.java.dir}" />
-            <classpath refid="base.path"/>
+            <classpath refid="classpath"/>
         </javadoc>
-        <!-- classpath="libs/miglayout-4.0.jar; libs/metadata-extractor-2.4.0-beta-1.jar; libs/jnlp.jar; libs/activation.jar; libs/mail.jar; libs/jwizz-0.1.4.jar; libs/mail.jar; libs/poi-3.1-FINAL-20080629.jar; libs/poi-contrib-3.1-FINAL-20080629.jar; libs/poi-scratchpad-3.1-FINAL-20080629.jar; libs/commons-compress-1.2.jar"  -->
     </target>
     
     
@@ -152,9 +150,9 @@
              duplicate="fail" >
             <manifest>
                 <attribute name="Main-Class" value="${app.main.class}"/>
-                <attribute name="Class-Path" value="metadata-extractor-2.3.0.jar jnlp.jar activation.jar mail.jar jwizz-0.1.4.jar" />
+                <attribute name="Class-Path" value="metadata-extractor-2.6.2.jar jnlp.jar xmpcore.jar activation.jar mail.jar jwizz-0.1.4.jar" />
                 <section name="Copyright">
-                    <attribute name="Copy" value="(c) 2001-2007, Richard Eigenmann, Zürich, Switzerland"/>
+                    <attribute name="Copy" value="(c) 2001-2012, Richard Eigenmann, Zürich, Switzerland"/>
                 </section>
             </manifest>
         </jar>
@@ -164,11 +162,12 @@
             </fileset>
         </copy>
     </target>
+
     
-    
-    <!-- This target will only be of use to the person who wants to sign the
-         jar file for deployment on a web server.
-         It uses two properties that come from a private off CVS properties file.
+    <!-- This target signs the unsinged jars so that they can be used in the Java Web Start context.
+         You need to have a Java Keystore
+                <include name="activation.jar"/>
+                <include name="mail.jar"/>
     -->
     <target name="signjar" depends="buildjar" description="Signs the jar files">
         <signjar alias="richi"
@@ -176,8 +175,17 @@
                  storepass="${javaKeyStorePassword}" >
             <fileset dir="${build.jars.dir}">
                 <include name="jpo-${version}.jar"/>
-                <include name="metadata-extractor-2.3.0.jar"/>
+                <include name="commons-compress-1.2.jar"/>
+                <include name="gdata-core-1.0.jar"/>
+                <include name="gdata-maps-2.0.jar"/>
+                <include name="gdata-media-1.0.jar"/>
+                <include name="gdata-photos-2.0.jar"/>
+                <include name="guava-13.0.jar"/>
+                <include name="jnpl.jar"/>
                 <include name="jwizz-0.1.4.jar"/>
+                <include name="metadata-extractor-2.6.2.jar"/>
+                <include name="miglayout-4.0.jar"/>
+                <include name="xmpcore.jar"/>
             </fileset>
 
         </signjar>
@@ -187,43 +195,19 @@
     <target name="runjar" description="Runs the program from the jar" depends="buildjar">
         <java jar="${build.jars.dir}/jpo-${version}.jar"
               fork="yes"
-              >
+        >
         </java>
     </target>
     
 
-        <!-- This target will only be of use to the person who does the deployment
-         of JPO to souceforge.  -->
-    <target name="publish-webpages" depends="" description="Publishes the latest Jpo web pages SourceForge project">
 
-        <scp todir="richieigenmann,j-po@web.sourceforge.net:/home/groups/j/j-/j-po/htdocs"
-             trust="yes"
-             verbose="yes"
-             keyfile="${sourceforgeSshCertificate}"
-             passphrase=""
-             sftp="true">
-            <fileset dir="web">
-                <modified>
-                    <param name="cache.cachefile"  value="/tmp/Sourceforge-Jpo-Webpagecache" />
-                </modified>
-                <include name="*.html" />
-                <include name="*.php" />
-                <include name="*.jnlp" />
-                <include name="fontconfig" />
-                <include name="*.gif" />
-                <include name="*.png" />
-                <include name="*.jpg" />
-            </fileset>
-        </scp>
-    </target>
-
-        <!-- This target will only be of use to the person who does the deployment
-         of JPO to souceforge.  -->
+    <!-- This target will only be of use to the person who does the deployment
+    of JPO to souceforge.  -->
     <target name="publish-javadoc" depends="javadoc" description="Publishes the latest Javadoc to the SourceForge project">
 
         <scp todir="richieigenmann,j-po@web.sourceforge.net:/home/groups/j/j-/j-po/htdocs/javadoc"
              trust="yes"
-             verbose="yes"
+             verbose="no"
              keyfile="${sourceforgeSshCertificate}"
              passphrase=""
              sftp="true">
@@ -236,22 +220,54 @@
     </target>
     
     
-    <!-- pushes the jpo jar to sourceforge -->
-    <target name="publish-jar" depends="signjar" description="Publishes the lates Jpo Version to the SourceForge project">
+    <!-- pushes the jpo jar to sourceforge  -->
+    <target name="publish-jar" depends="signjar"  description="Publishes the lates Jpo Version to the SourceForge project">
         <scp todir="richieigenmann,j-po@web.sourceforge.net:/home/groups/j/j-/j-po/htdocs"
              trust="yes"
-             verbose="yes"
+             verbose="no"
              keyfile="${sourceforgeSshCertificate}"
              passphrase=""
              sftp="true">
             <fileset dir="${build.jars.dir}">
                 <modified>
-                    <param name="cache2.cachefile"  value="/tmp/Sourceforge-Jpo-Jarcache" />
+                    <param name="cache.cachefile"  value="/tmp/Sourceforge-Jpo-Jarcache" />
                 </modified>
                 <include name="*.jar" />
             </fileset>
+            <fileset dir="web">
+                <modified>
+                    <param name="cache.cachefile"  value="/tmp/Sourceforge-Jpo-JNLPcache" />
+                </modified>
+                <include name="*.jnlp" />
+            </fileset>
         </scp>
     </target>
+
+
+    <!-- This target will only be of use to the person who does the deployment
+    of JPO to souceforge.  -->
+    <target name="publish-webpages" description="Publishes the latest Jpo web pages SourceForge project">
+
+        <scp todir="richieigenmann,j-po@web.sourceforge.net:/home/groups/j/j-/j-po/htdocs"
+             trust="yes"
+             verbose="no"
+             keyfile="${sourceforgeSshCertificate}"
+             passphrase=""
+             sftp="true">
+            <fileset dir="web">
+                <modified>
+                    <param name="cache.cachefile"  value="/tmp/Sourceforge-Jpo-Webpagecache" />
+                </modified>
+                <include name="*.html" />
+                <include name="*.php" />
+                <include name="fontconfig" />
+                <include name="*.gif" />
+                <include name="*.png" />
+                <include name="*.jpg" />
+            </fileset>
+        </scp>
+    </target>
+
 
     <target name="publish" depends="publish-jar, publish-javadoc, publish-webpages" description="Publishes the lates Jpo Version and webpages to the SourceForge project"/>
 
@@ -260,8 +276,8 @@
         <java classname="${app.main.class}"
               fork="yes"
               maxmemory="700m">
-                  <!-- add for debugging: jvmargs="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,address=8888,suspend=n" -->
-            <classpath refid="base.path"/>
+            <!-- add for debugging: jvmargs="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,address=8888,suspend=n" -->
+            <classpath refid="classpath"/>
         </java>
     </target>
 
@@ -274,11 +290,10 @@
                verbose="${TALK}"
                destdir="${unit.test.classes.dir}"
                includeantruntime="false"
-               >
+        >
+            <classpath refid="classpath"/>
             <classpath>
-                <pathelement location="${build.base.classes.dir}" />
                 <pathelement location="${unit.test.classes.dir}" />
-                <pathelement path="libs/metadata-extractor-2.3.0.jar; libs/jnlp.jar; libs/activation.jar; libs/mail.jar" />
                 <pathelement location="${junit.dir}" />
             </classpath>
         </javac>
@@ -304,7 +319,7 @@
     
     
     <target name="test" depends="compile-test" description="Runs the unit tests">
-       <!-- <splash imageurl="http://www.bar-solutions.com/software/ant_splash.jpg"
+        <!-- <splash imageurl="http://www.bar-solutions.com/software/ant_splash.jpg"
         showduration="5000"/> -->
         <junit
             printsummary="yes"
@@ -341,29 +356,13 @@
     </target>
     
     
-    <property name="cvsroot" value=":pserver:anonymous@j-po.cvs.sourceforge.net:/cvsroot/j-po"/>
-    
-    <target name="cvscheckout" description="Checks out a new version of the Jpo source from Sourceforge">
-        <!-- Sourceforge doesn't use .cvspass instead uses the user's ssh public key <cvspass cvsroot="${cvsroot}" password="${SOURCEFORGEPWD}"/> -->
-        <cvs cvsroot="${cvsroot}" command="checkout Jpo"/>
-    </target>
-    
-    <target name="cvsupdate" description="Updates the Jpo source from Sourceforge">
-        <!-- Sourceforge doesn't use .cvspass instead uses the user's ssh public key <cvspass cvsroot="${cvsroot}" password="${SOURCEFORGEPWD}"/> -->
-        <cvs cvsroot="${cvsroot}" command="update -P"/>
-    </target>
-    
-    <target name="cvscommit" description="Updates the Jpo source from Sourceforge">
-        <cvs cvsroot="${cvsroot}" command="commit"/>
-    </target>
-
     <target name="antstructure" description="Generated a dtd of the ant tasks">
         <antstructure output="build/antstructure.dtd" />
     </target>
 
     <target name="splash">
         <splash imageurl="http://jakarta.apache.org/images/jakarta-logo.gif"
-        showduration="5000"/>
+                showduration="5000"/>
     </target>
     
 </project>

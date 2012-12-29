@@ -1,19 +1,19 @@
 package jpo.gui;
 
-import jpo.dataModel.ArrayListNavigator;
-import jpo.dataModel.SortableDefaultMutableTreeNode;
 import java.awt.*;
 import java.awt.event.*;
-import javax.swing.*;
-import javax.mail.internet.*;
 import java.util.*;
 import java.util.logging.Logger;
+import javax.mail.internet.*;
+import javax.swing.*;
+import jpo.dataModel.ArrayListNavigator;
 import jpo.dataModel.Settings;
+import jpo.dataModel.SortableDefaultMutableTreeNode;
 
 /*
 EmailerGui.java:  creates a GUI to allow the user to specify his search
 
-Copyright (C) 2004-2009  Richard Eigenmann.
+Copyright (C) 2004-2012  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -37,7 +37,7 @@ public class EmailerGui
     /**
      * Defines a logger for this class
      */
-    private static Logger logger = Logger.getLogger( EmailerGui.class.getName() );
+    private static final Logger LOGGER = Logger.getLogger( EmailerGui.class.getName() );
 
     /**
      *  Internal array that holds the nodes to be send by email.
@@ -47,12 +47,12 @@ public class EmailerGui
     /**
      *  Field for the Sender's address
      */
-    private JComboBox fromJComboBox = new JComboBox();
+    private JComboBox <String>fromJComboBox = new JComboBox<String>();
 
     /**
      *  Field for the Recipient's address
      */
-    private JComboBox toJComboBox = new JComboBox();
+    private JComboBox <String> toJComboBox = new JComboBox<String>();
 
     /**
      *  Field for the Subject of the mail
@@ -232,7 +232,7 @@ public class EmailerGui
         c.gridy++;
         jPanel.add( new JLabel( Settings.jpoResources.getString( "emailSizesJLabel" ) ), c );
 
-        JComboBox sizesJComboBox = new JComboBox();
+        JComboBox <String> sizesJComboBox = new JComboBox<String>();
         sizesJComboBox.addItem( Settings.jpoResources.getString( "emailSize1" ) );
         sizesJComboBox.addItem( Settings.jpoResources.getString( "emailSize2" ) );
         sizesJComboBox.addItem( Settings.jpoResources.getString( "emailSize3" ) );
@@ -240,6 +240,7 @@ public class EmailerGui
         sizesJComboBox.addItem( Settings.jpoResources.getString( "emailSize5" ) );
         sizesJComboBox.addActionListener( new ActionListener() {
 
+            @Override
             public void actionPerformed( ActionEvent e ) {
                 JComboBox cb = (JComboBox) e.getSource();
                 String cbSelection = (String) cb.getSelectedItem();
@@ -464,7 +465,7 @@ public class EmailerGui
         try {
             senderAddress = new InternetAddress( fromJComboBox.getSelectedItem().toString() );
         } catch ( AddressException x ) {
-            logger.info( "EmailerJFrame trapped an AddressException on the senderAddress: " + x.getMessage() );
+            LOGGER.info( "EmailerJFrame trapped an AddressException on the senderAddress: " + x.getMessage() );
             return;
         }
 
@@ -472,7 +473,7 @@ public class EmailerGui
         try {
             destinationAddress = new InternetAddress( toJComboBox.getSelectedItem().toString() );
         } catch ( AddressException x ) {
-            logger.info( "EmailerJFrame trapped an AddressException on the destinationAddress: " + x.getMessage() );
+            LOGGER.info( "EmailerJFrame trapped an AddressException on the destinationAddress: " + x.getMessage() );
             return;
         }
 

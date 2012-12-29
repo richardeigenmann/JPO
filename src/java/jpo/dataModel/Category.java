@@ -7,7 +7,7 @@ import java.util.logging.Logger;
 /*
 Category.java:  A class which represents a Category
 
-Copyright (C) 2002-2009  Richard Eigenmann.
+Copyright (C) 2002-2012  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -25,7 +25,7 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  * A class which represents a Category
  *
  */
-public class Category implements Serializable {
+public final class Category implements Serializable {
 
     /**
      *  variable that records the Category
@@ -38,20 +38,20 @@ public class Category implements Serializable {
     /**
      * This status represents the category as being in undefined state
      */
-    public static final int undefined = 0;
+    public static final int UNDEFINED = 0;
     /**
      *  This status represents the category as being selected
      **/
-    public static final int selected = undefined + 1;
+    public static final int SELECTED = UNDEFINED + 1;
     /**
      *  this status represents the category as being unselected
      **/
-    public static final int unSelected = selected + 1;
+    public static final int UN_SELECTED = SELECTED + 1;
     /**
-     *  This status represents the categoring being both selected and unselected at the same time
+     *  This status represents the category being both selected and unselected at the same time
      *  used for situations where we have more than one category selected at a time
      */
-    public static final int both = unSelected + 1;
+    public static final int BOTH = UN_SELECTED + 1;
     /**
      *  variable that records the state of the Category
      *  @see Category#undefined , Category#selected , Category#unSelected , Category#both
@@ -60,7 +60,7 @@ public class Category implements Serializable {
     /**
      * Defines a logger for this class
      */
-    private static Logger logger = Logger.getLogger(Category.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(Category.class.getName());
 
     /**
      *  Constructs a new category for the key and value
@@ -68,7 +68,7 @@ public class Category implements Serializable {
      * @param  value the value
      **/
     public Category(Integer key, String value) {
-        logger.fine("Creating Category Object: key: " + key.toString() + " value: " + value.toString());
+        //LOGGER.fine("Creating Category Object: key: " + key.toString() + " value: " + value.toString());
         setKey(key);
         setValue(value);
     }
@@ -110,7 +110,7 @@ public class Category implements Serializable {
      *  @return  They value of the Category
      **/
     public String getValue() {
-        logger.fine("Category.getValue: called. Returning: " + value.toString());
+        //LOGGER.fine("Category.getValue: called. Returning: " + value.toString());
         return value;
     }
 
