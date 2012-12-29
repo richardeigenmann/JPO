@@ -1,6 +1,6 @@
 package jpo.gui;
 
-import java.util.logging.Level;
+
 import jpo.dataModel.NodeNavigatorInterface;
 import jpo.dataModel.UserFunctionsChangeListener;
 import jpo.dataModel.Tools;
@@ -12,6 +12,7 @@ import java.awt.event.*;
 import javax.swing.*;
 import java.io.*;
 import java.util.*;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import jpo.dataModel.RecentDropNodeListener;
 import webserver.Webserver;
@@ -19,7 +20,7 @@ import webserver.Webserver;
 /*
 PicturePopupMenu.java:  a popup menu for pictures
 
-Copyright (C) 2002 - 2011  Richard Eigenmann.
+Copyright (C) 2002 - 2012  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2

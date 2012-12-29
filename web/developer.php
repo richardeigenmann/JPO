@@ -133,11 +133,32 @@ cd /path_to_my_sources/Jpo
 			differences between version very nicely: <a href="http://j-po.cvs.sourceforge.net/j-po/">http://j-po.cvs.sourceforge.net/j-po/</a></p>
 
 
-                <hr>
-                <p>Last update to this page: 8.10.2011<br>
-			Copyright 2003-2011 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
-            </td>
-        </tr>
-    </table>
+
+<h2 id="eclipse">Using Eclipse</h2>
+<p>Set up Eclipse and install the CVS plug-in</p>
+<p>File > New > Other... > expand CVS > Projects from CVS</p>
+<p>Host: j-po.cvs.sourceforge.net</p>
+<p>Repository path: /cvsroot/j-po</p>
+<p>User: anyonymous</p>
+<p>Password: leave empty</p>
+<p>Connection type: leave on pserver</p>
+<p>leave radio button on "Use default port"</p>
+<p>Next Panel</p>
+<p>Use specified module name: Jpo</p>
+<p>Next Panel</p>
+<p>Put radiobutton into "Check out as a project in the workspace"</p>
+<p>Project Name: Jpo</p>
+<p>Next right-click on the build.xml file > Run/Debug Settings > Make sure you have a JRE selected.</p>
+<p>To run right-click on the build.xml file and click run-as Ant Build file.
+
+<hr>
+<p>Last update to this page: 29.12.2012<br>
+Copyright 2003-2011 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
+</td>
+</tr>
+
+</table>
+
+
 </body>
 </html>

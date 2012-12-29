@@ -792,7 +792,8 @@ public class PictureCollection {
 
     /**
      * This method returns an array of the groups that hold a reference to the
-     * picture filename of the supplied node
+     * picture filename of the supplied node.
+     * This is used in the Navigate-to function of the pop-up menu
      *
      * @param suppliedNode The node with the picture for which the owning parent
      * nodes need to be found
@@ -827,6 +828,9 @@ public class PictureCollection {
         }
         return parentGroups.toArray(new SortableDefaultMutableTreeNode[0]);
     }
+    
+    
+    
     /**
      * This Hash Set holds references to the selected nodes.
      */
