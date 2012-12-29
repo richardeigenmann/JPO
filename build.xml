@@ -183,7 +183,7 @@
                 <include name="guava-13.0.jar"/>
                 <include name="jnpl.jar"/>
                 <include name="jwizz-0.1.4.jar"/>
-                <include name="metadata-extractor-2.6.2.jar"/>
+                <include name="metadata-extractor-2.6.4.jar"/>
                 <include name="miglayout-4.0.jar"/>
                 <include name="xmpcore.jar"/>
             </fileset>

@@ -1,6 +1,7 @@
+.classpath
+.project
 CVS/*
-build
 build/classes
-build/classes/Main.class
 CVS
 JPO_cameras.dta
+build
