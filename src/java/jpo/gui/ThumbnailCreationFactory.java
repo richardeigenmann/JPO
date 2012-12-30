@@ -7,7 +7,6 @@ import java.net.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.*;
 import javax.swing.*;
@@ -86,28 +85,28 @@ public class ThumbnailCreationFactory
 
     /**
      * This method picks up the thumbnail creation request, sets a loadingIcon
-     * and passes the request to the {@link #loadOrCreatePictureThumbnail} or
-     * the {@link #loadOrCreateGroupThumbnail} method.
+     * and passes the request to the {@link #processPictureRequest} or
+     * the {@link #processGroupRequest} method.
      *
-     * @param req	the {@link ThumbnailQueueRequest} for which to create the
+     * @param request	the {@link ThumbnailQueueRequest} for which to create the
      * ThumbnailController
      */
-    private void processQueueRequest( ThumbnailQueueRequest req ) {
+    private void processQueueRequest( ThumbnailQueueRequest request ) {
         //logger.info( String.format( "Processing QueueRequest %s", req.toString() ) );
-        ThumbnailController currentThumb = req.getThumbnailController();
+        ThumbnailController currentThumb = request.getThumbnailController();
         // now block other threads from accessing the ThumbnailController
         synchronized ( currentThumb ) {
             SortableDefaultMutableTreeNode referringNode = currentThumb.myNode;
             if ( referringNode == null ) {
-                LOGGER.severe( "ReferringNode was null! Setting Broken Image. This happened on ThumbnailQueueRequest: " + req.toString() + " which refers to Thumbnail: " + currentThumb.toString() );
+                LOGGER.severe( "ReferringNode was null! Setting Broken Image. This happened on ThumbnailQueueRequest: " + request.toString() + " which refers to Thumbnail: " + currentThumb.toString() );
                 currentThumb.setBrokenIcon();
                 return;
             }
 
             if ( referringNode.getUserObject() instanceof PictureInfo ) {
-                processPictureRequest( req );
+                processPictureRequest( request );
             } else if ( referringNode.getUserObject() instanceof GroupInfo ) {
-                processGroupRequest( req );
+                processGroupRequest( request );
             } else {
                 LOGGER.severe( "Can only create thumbnails for PictureInfo or GroupInfo objects; not for objects of type: " + referringNode.getUserObject().getClass().toString() );
                 currentThumb.setBrokenIcon();
