@@ -60,7 +60,7 @@
          application can be run -->
     <jar href="jpo-0.9.jar"/>
     <extension name="activation" href="lib-activation.jnlp"/>
-    <extension name="commons-compress" href="lib-commons.compress.jnlp"/>
+    <extension name="commons-compress" href="lib-commons-compress.jnlp" />
     <extension name="mail" href="lib-mail.jnlp"/>
     <extension name="jnlp" href="lib-jnlp.jnlp"/>
     <extension name="jwizz" href="lib-jwizz.jnlp"/>

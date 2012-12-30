@@ -313,7 +313,7 @@ public class ThumbnailController
      *  it was not on the queue.
      */
     public void unqueue() {
-        ThumbnailCreationQueue.removeThumbnailRequest( this );
+        ThumbnailCreationQueue.removeThumbnailQueueRequest( this );
     }
 
 

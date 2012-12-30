@@ -503,7 +503,7 @@ public class PictureViewer
 
     /**
      * This method sets up the Advance Timer
-     * @param seconds 
+     * @param delay the delay (in seconds?)
      */
     @Override
     public void setTimerDelay( int delay ) {

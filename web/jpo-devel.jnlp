@@ -63,7 +63,7 @@
     <jar href="gdata-media-1.0.jar" donload="lazy" />
     <jar href="gdata-photos-2.0.jar" donload="lazy" />
     <jar href="guava-13.0.jar" donload="lazy" />
-    <jar href="jnpl.jar" donload="lazy" />
+    <jar href="jnlp.jar" donload="lazy" />
     <extension name="mail" href="lib-mail.jnlp"/>
     <jar href="metadata-extractor-2.6.4.jar" download="lazy" />
     <jar href="miglayout-4.0.jar" donload="eager" />

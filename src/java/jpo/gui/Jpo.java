@@ -24,7 +24,7 @@ import jpotestground.CheckThreadViolationRepaintManager;
 /*
 Jpo.java:  The collection controller object of the JPO application
 
-Copyright (C) 2002 - 2011  Richard Eigenmann.
+Copyright (C) 2002 - 2012  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -172,21 +172,21 @@ public class Jpo {
      *  This Vector allows us to keep track of the number of ThumbnailCreationThreads
      *  we have fired off. Could be enhanced to dynamically start more or less.
      */
-    private final static ArrayList<ThumbnailCreationFactory> thumbnailFactories = new ArrayList<ThumbnailCreationFactory>();
+    private final static ArrayList<ThumbnailCreationFactory> THUMBNAIL_FACTORIES = new ArrayList<ThumbnailCreationFactory>();
 
     /**
      *  static initializer for the ThumbnailCreationThreads
      */
     static {
         for ( int i = 1; i <= Settings.numberOfThumbnailCreationThreads; i++ ) {
-            thumbnailFactories.add( new ThumbnailCreationFactory() );
+            THUMBNAIL_FACTORIES.add( new ThumbnailCreationFactory() );
         }
     }
 
     /**
      *  This method looks if it can find a file called autostartJarPicturelist.xml in the classpath;
      *  failing that it loads the file indicated in Settings.autoLoad.
-     *  @return returns whether this was successfull or not.
+     *  @return returns whether this was successful or not.
      */
     public boolean loadAutoloadCollection() {
         if ( ( Settings.autoLoad != null ) && ( Settings.autoLoad.length() > 0 ) ) {

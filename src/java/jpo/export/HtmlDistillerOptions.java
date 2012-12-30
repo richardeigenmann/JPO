@@ -348,7 +348,7 @@ public class HtmlDistillerOptions {
 
     /**
      * returns whether a highres image should be rotated
-     * @return 
+     * @return true if the highres image should be rotated, false if not
      */
     public boolean isRotateHighres() {
         return rotateHighres;

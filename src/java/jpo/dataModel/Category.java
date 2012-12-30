@@ -54,7 +54,7 @@ public final class Category implements Serializable {
     public static final int BOTH = UN_SELECTED + 1;
     /**
      *  variable that records the state of the Category
-     *  @see Category#undefined , Category#selected , Category#unSelected , Category#both
+     *  @see Category#UNDEFINED , Category#SELECTED , Category#UN_SELECTED , Category#BOTH
      */
     private int status = 0;
     /**

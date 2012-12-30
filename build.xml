@@ -250,7 +250,7 @@
 
         <scp todir="richieigenmann,j-po@web.sourceforge.net:/home/groups/j/j-/j-po/htdocs"
              trust="yes"
-             verbose="no"
+             verbose="yes"
              keyfile="${sourceforgeSshCertificate}"
              passphrase=""
              sftp="true">
@@ -264,6 +264,7 @@
                 <include name="*.gif" />
                 <include name="*.png" />
                 <include name="*.jpg" />
+                <include name="*.jnlp" />
             </fileset>
         </scp>
     </target>
