@@ -18,6 +18,7 @@
 
 			<table>
 				<tr><td colspan=2><b>Development Version 0.10</b></td></tr>
+				<tr><td valign="top">2.11.2013</td><td> Dusted off the Windows installer, repackaged the Windows installer and pushed it to the download area. </td></tr>
 				<tr><td valign="top">30.12.2012</td><td> Fix for looping bug when file modification date is in the future (reported and fixed by Tom) </td></tr>
 				<tr><td valign="top">29.12.2012</td><td> Added a reparse button for the date to the Picture Properties window. </td></tr>
 				<tr><td valign="top">10.09.2012</td><td> Dusted off the deployment scripts and pushed a new development version to the web</td></tr>
@@ -402,8 +403,8 @@
 			</table>
 
 			<hr>
-			<p>Last update to this page: 26 August 2012<br>
-			Copyright 2003-2012 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
+			<p>Last update to this page: 2 January 2013<br>
+			Copyright 2003-2013 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
 		</td>
 	</tr>
 </table>

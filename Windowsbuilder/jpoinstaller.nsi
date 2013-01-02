@@ -2,7 +2,7 @@
 
 ; HM NIS Edit Wizard helper defines
 !define PRODUCT_NAME "Java Picture Organizer"
-!define PRODUCT_VERSION "0.9"
+!define PRODUCT_VERSION "0.10"
 !define PRODUCT_PUBLISHER "Richard Eigenmann"
 !define PRODUCT_WEB_SITE "http://j-po.sourceforge.net"
 !define PRODUCT_UNINST_KEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}"
@@ -49,7 +49,7 @@ SetCompressor lzma
 ; MUI end ------
 
 Name "${PRODUCT_NAME} ${PRODUCT_VERSION}"
-OutFile "JPO-Installer-0.9.exe"
+OutFile "JPO-Installer-0.10.exe"
 InstallDir "$PROGRAMFILES\JPO"
 ShowInstDetails show
 ShowUnInstDetails show
@@ -64,13 +64,20 @@ Section "MainSection" SEC01
   SetOutPath "$INSTDIR"
   SetOverwrite ifnewer
   File "jpo.exe"
-  File "..\build\jars\metadata-extractor-2.3.0.jar"
-  File "..\build\jars\jpo-0.9.jar"
+  File "..\libs\activation.jar"
+  File "..\libs\commons-compress-1.2.jar"
+  File "..\libs\gdata-core-1.0.jar"
+  File "..\libs\gdata-maps-2.0.jar"
+  File "..\libs\gdata-media-1.0.jar"
+  File "..\libs\gdata-photos-2.0.jar"
+  File "..\libs\guava-13.0.jar"
   File "..\libs\jnlp.jar"
   File "..\libs\jwizz-0.1.4.jar"
   File "..\libs\mail.jar"
-  File "..\libs\activation.jar"
-  File "..\libs\miglayout-3.7.1.jar"
+  File "..\libs\metadata-extractor-2.6.4.jar"
+  File "..\libs\miglayout-4.0.jar"
+  File "..\libs\xmpcore.jar"
+  File "..\build\jars\jpo-0.10.jar"
 SectionEnd
 
 Section -AdditionalIcons
@@ -79,6 +86,9 @@ Section -AdditionalIcons
   CreateShortCut "$SMPROGRAMS\Java Picture Organizer\Jpo.lnk" "$INSTDIR\jpo.exe"
   CreateShortCut "$SMPROGRAMS\Java Picture Organizer\Website.lnk" "$INSTDIR\${PRODUCT_NAME}.url"
   CreateShortCut "$SMPROGRAMS\Java Picture Organizer\Uninstall.lnk" "$INSTDIR\uninst.exe"
+  
+  ;create desktop shortcut
+  CreateShortCut "$DESKTOP\Jpo.lnk" "$INSTDIR\jpo.exe" "$INSTDIR"
 SectionEnd
 
 Section -Post
@@ -88,6 +98,7 @@ Section -Post
   WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "DisplayVersion" "${PRODUCT_VERSION}"
   WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "URLInfoAbout" "${PRODUCT_WEB_SITE}"
   WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "Publisher" "${PRODUCT_PUBLISHER}"
+  WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "InstallDir" "$INSTDIR"
 SectionEnd
 
 
@@ -105,20 +116,28 @@ FunctionEnd
 Section Uninstall
   Delete "$INSTDIR\${PRODUCT_NAME}.url"
   Delete "$INSTDIR\uninst.exe"
-  Delete "$INSTDIR\metadata-extractor-2.3.0.jar"
-  Delete "$INSTDIR\jnlp.jar"
   Delete "$INSTDIR\jpo.exe"
   Delete "$INSTDIR\activation.jar"
-  Delete "$INSTDIR\mail.jar"
-  Delete "$INSTDIR\jpo-0.9.jar"
-  Delete "$INSTDIR\miglayout-3.7.1.jar"
+  Delete "$INSTDIR\commons-compress-1.2.jar"
+  Delete "$INSTDIR\gdata-core-1.0.jar"
+  Delete "$INSTDIR\gdata-maps-2.0.jar"
+  Delete "$INSTDIR\gdata-media-1.0.jar"
+  Delete "$INSTDIR\gdata-photos-2.0.jar"
+  Delete "$INSTDIR\guava-13.0.jar"
+  Delete "$INSTDIR\jnlp.jar"
   Delete "$INSTDIR\jwizz-0.1.4.jar"
-
+  Delete "$INSTDIR\mail.jar"
+  Delete "$INSTDIR\metadata-extractor-2.6.4.jar"
+  Delete "$INSTDIR\miglayout-4.0.jar"
+  Delete "$INSTDIR\xmpcore.jar"
+  Delete "$INSTDIR\jpo-0.10.jar"
+  RMDir  "$INSTDIR"
   Delete "$SMPROGRAMS\Java Picture Organizer\Uninstall.lnk"
   Delete "$SMPROGRAMS\Java Picture Organizer\Website.lnk"
+  Delete "$SMPROGRAMS\Java Picture Organizer\Jpo.lnk"
+  RMDir  "$SMPROGRAMS\Java Picture Organizer"
+  Delete "$DESKTOP\Jpo.lnk"
 
-  RMDir "$SMPROGRAMS\Java Picture Organizer"
-  RMDir "$INSTDIR"
 
   DeleteRegKey ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}"
   SetAutoClose true

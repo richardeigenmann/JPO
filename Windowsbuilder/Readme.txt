@@ -7,4 +7,8 @@ It immediately compiles it and creates a Jpo.exe program
 Then open the script jpo.nsi which creates the Jpo-Installer.exe program
 Done.
 
+See http://sourceforge.net/projects/nsis
+
+Note: You do need Java installed on the Windows PC.
+
 RE, 20.2.2006
