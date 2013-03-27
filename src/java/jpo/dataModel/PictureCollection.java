@@ -17,7 +17,7 @@ import jpo.gui.ThumbnailCreationQueue;
  * PictureCollection.java: Information about the collection and owns the tree
  * model
  *
- * Copyright (C) 2006 - 2012 Richard Eigenmann, Zurich, Switzerland This program
+ * Copyright (C) 2006 - 2013 Richard Eigenmann, Zurich, Switzerland This program
  * is free software; you can redistribute it and/or modify it under the terms of
  * the GNU General Public License as published by the Free Software Foundation;
  * either version 2 of the License, or any later version. This program is
@@ -40,7 +40,7 @@ public class PictureCollection {
     private static final Logger LOGGER = Logger.getLogger( PictureCollection.class.getName() );
 
     {
-        LOGGER.setLevel( Level.ALL );
+        //LOGGER.setLevel( Level.ALL );
     }
 
     /**
