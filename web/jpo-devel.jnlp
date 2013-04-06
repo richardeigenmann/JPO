@@ -8,12 +8,12 @@
   
   <!-- The relative URL of this file -->
   href="jpo-devel.jnlp"
-  version="0.10" >
+  version="0.11" >
 
   
   <information>
     <!-- Application title  -->
-    <title>Java Picture Organizer Development Version 0.10</title>
+    <title>Java Picture Organizer Development Version 0.11</title>
     
     <!-- The vendor of the application -->
     <vendor>Richard Eigenmann</vendor>
@@ -55,7 +55,7 @@
          system that the file does not need
          to be downloaded before the
          application can be run -->
-    <jar href="jpo-0.10.jar" download="eager" />
+    <jar href="jpo-0.11.jar" download="eager" />
     <extension name="activation" href="lib-activation.jnlp"/>
     <jar href="commons-compress-1.2.jar" donload="lazy" />
     <jar href="gdata-core-1.0.jar" donload="lazy" />

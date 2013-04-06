@@ -24,7 +24,7 @@ import jpotestground.CheckThreadViolationRepaintManager;
 /*
 Jpo.java:  The collection controller object of the JPO application
 
-Copyright (C) 2002 - 2012  Richard Eigenmann.
+Copyright (C) 2002 - 2013  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -65,7 +65,7 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  * need no other controls.
  *
  * @author Richard Eigenmann, richard.eigenmann@gmail.com
- * @version 0.9
+ * @version 0.11
  * @see CollectionJTree
  * @see ThumbnailPanelController
  * @see PictureViewer

@@ -19,7 +19,7 @@ import net.miginfocom.swing.MigLayout;
 /*
 SettingsDialog.java:  the class that provides a GUI for the settings
 
-Copyright (C) 2002-2011  Richard Eigenmann, Zürich, Switzerland
+Copyright (C) 2002-2013  Richard Eigenmann, Zürich, Switzerland
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2

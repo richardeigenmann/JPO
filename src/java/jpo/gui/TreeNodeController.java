@@ -25,7 +25,7 @@ import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
 /*
 TreeNodeController.java: This class should handle all the interactive GUI stuff for a Tree Node
 
-Copyright (C) 2007 - 2011  Richard Eigenmann.
+Copyright (C) 2007 - 2013  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2

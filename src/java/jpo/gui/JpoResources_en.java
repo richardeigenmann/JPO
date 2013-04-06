@@ -5,7 +5,7 @@ import java.util.*;
 /*
 JpoResources_en.java:  class that holds the generic labels for the JPO application
 
-Copyright (C) 2002-2012  Richard Eigenmann, Zürich, Switzerland
+Copyright (C) 2002-2013  Richard Eigenmann, Zürich, Switzerland
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -54,9 +54,9 @@ public class JpoResources_en extends ListResourceBundle {
         { "areYouSure", "Are you sure?" },
 
         // Help About Dialog
-        { "HelpAboutText", "JPO Version 0.10 is a Java/Swing program\n"
+        { "HelpAboutText", "JPO Version 0.11 is a Java/Swing program\n"
 			+ "written by Richard Eigenmann, Zürich, Switzerland\n" 
-			+ "Copyright 2000 - 2012\n" 
+			+ "Copyright 2000 - 2013\n" 
 			+ "richard.eigenmann@gmail.com\n" 
 			+ "http://j-po.sourceforge.net\n" 
 			+ "\nThe Exif extration is courtesy of Drew Noakes\n" 

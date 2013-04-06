@@ -2,7 +2,7 @@
 
 ; HM NIS Edit Wizard helper defines
 !define PRODUCT_NAME "Java Picture Organizer"
-!define PRODUCT_VERSION "0.10"
+!define PRODUCT_VERSION "0.11"
 !define PRODUCT_PUBLISHER "Richard Eigenmann"
 !define PRODUCT_WEB_SITE "http://j-po.sourceforge.net"
 !define PRODUCT_UNINST_KEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}"
@@ -49,7 +49,7 @@ SetCompressor lzma
 ; MUI end ------
 
 Name "${PRODUCT_NAME} ${PRODUCT_VERSION}"
-OutFile "JPO-Installer-0.10.exe"
+OutFile "JPO-Installer-0.11.exe"
 InstallDir "$PROGRAMFILES\JPO"
 ShowInstDetails show
 ShowUnInstDetails show
@@ -77,7 +77,7 @@ Section "MainSection" SEC01
   File "..\libs\metadata-extractor-2.6.4.jar"
   File "..\libs\miglayout-4.0.jar"
   File "..\libs\xmpcore.jar"
-  File "..\build\jars\jpo-0.10.jar"
+  File "..\build\jars\jpo-0.11.jar"
 SectionEnd
 
 Section -AdditionalIcons
@@ -130,7 +130,7 @@ Section Uninstall
   Delete "$INSTDIR\metadata-extractor-2.6.4.jar"
   Delete "$INSTDIR\miglayout-4.0.jar"
   Delete "$INSTDIR\xmpcore.jar"
-  Delete "$INSTDIR\jpo-0.10.jar"
+  Delete "$INSTDIR\jpo-0.11.jar"
   RMDir  "$INSTDIR"
   Delete "$SMPROGRAMS\Java Picture Organizer\Uninstall.lnk"
   Delete "$SMPROGRAMS\Java Picture Organizer\Website.lnk"

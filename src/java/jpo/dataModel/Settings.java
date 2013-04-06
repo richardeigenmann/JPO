@@ -278,15 +278,15 @@ public class Settings {
     /**
      * standard size for all JTextFields that need to record a filename.
      */
-    public static final Dimension filenameFieldPreferredSize = new Dimension ( 550, 20 );
+    public static final Dimension filenameFieldPreferredSize = new Dimension ( 300, 20 );
     /**
      * standard size for all JTextFields that need to record a filename
      */
-    public static final Dimension filenameFieldMinimumSize = new Dimension ( 300, 20 );
+    public static final Dimension filenameFieldMinimumSize = new Dimension ( 150, 20 );
     /**
      * standard size for all JTextFields that need to record a filename
      */
-    public static final Dimension filenameFieldMaximumSize = new Dimension ( 1000, 20 );
+    public static final Dimension filenameFieldMaximumSize = new Dimension ( 600, 20 );
     /**
      * standard size for all JTextFields that need to record a short text.
      */

@@ -18,7 +18,7 @@ import jpo.dataModel.Tools;
 /*
 Emailer.java:  class that sends the emails
 
-Copyright (C) 2006 - 2010  Richard Eigenmann.
+Copyright (C) 2006 - 2013  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -39,9 +39,9 @@ public class Emailer
         extends SwingWorker<String, String> {
 
     /**
-     * Defines a logger for this class
+     * Defines a LOGGER for this class
      */
-    private static Logger logger = Logger.getLogger( Emailer.class.getName() );
+    private static final Logger LOGGER = Logger.getLogger( Emailer.class.getName() );
 
     /**
      *   Frame to show what the thread is doing.
@@ -49,7 +49,7 @@ public class Emailer
     private JFrame progressFrame;
 
     /**
-     *  Lablel to show what is being processed.
+     *  Label to show what is being processed.
      */
     private JLabel progressLabel;
 
@@ -151,6 +151,7 @@ public class Emailer
         cancelButton = new JButton( "Cancel" );
         cancelButton.addActionListener( new ActionListener() {
 
+            @Override
             public void actionPerformed( ActionEvent e ) {
                 progressLabel.setText( Settings.jpoResources.getString( "htmlDistillerInterrupt" ) );
                 interrupted = true;
@@ -273,18 +274,18 @@ public class Emailer
                 mp.addBodyPart( pictureDescriptionMimeBodyPart );
 
                 if ( scaleImages ) {
-                    logger.info( Settings.jpoResources.getString( "EmailerLoading" ) + pi.getHighresFilename() );
+                    LOGGER.info( Settings.jpoResources.getString( "EmailerLoading" ) + pi.getHighresFilename() );
                     scalablePicture.loadPictureImd( pi.getHighresURLOrNull(), pi.getRotation() );
-                    logger.info( Settings.jpoResources.getString( "EmailerScaling" ) + pi.getHighresFilename() );
+                    LOGGER.info( Settings.jpoResources.getString( "EmailerScaling" ) + pi.getHighresFilename() );
                     scalablePicture.scalePicture();
                     baos = new ByteArrayOutputStream();
-                    logger.info( Settings.jpoResources.getString( "EmailerWriting" ) + pi.getHighresFilename() );
+                    LOGGER.info( Settings.jpoResources.getString( "EmailerWriting" ) + pi.getHighresFilename() );
                     scalablePicture.writeScaledJpg( baos );
                     encds = new EncodedDataSource( "image/jpeg", pi.getHighresFilename(), baos );
                     scaledPictureMimeBodyPart = new MimeBodyPart();
                     scaledPictureMimeBodyPart.setDataHandler( new DataHandler( encds ) );
                     scaledPictureMimeBodyPart.setFileName( pi.getHighresFilename() );
-                    logger.info( Settings.jpoResources.getString( "EmailerAdding" ) + pi.getHighresFilename() );
+                    LOGGER.info( Settings.jpoResources.getString( "EmailerAdding" ) + pi.getHighresFilename() );
                     mp.addBodyPart( scaledPictureMimeBodyPart );
                 }
 
@@ -298,7 +299,7 @@ public class Emailer
                     originalPictureMimeBodyPart.setDataHandler( new DataHandler( ds ) );
                     originalPictureMimeBodyPart.setFileName( pi.getHighresFilename() );
                     // create the Multipart and add its parts to it
-                    logger.info( Settings.jpoResources.getString( "EmailerAdding" ) + pi.getHighresFilename() );
+                    LOGGER.info( Settings.jpoResources.getString( "EmailerAdding" ) + pi.getHighresFilename() );
                     mp.addBodyPart( originalPictureMimeBodyPart );
                 }
 
@@ -309,7 +310,7 @@ public class Emailer
 
 
         } catch ( MessagingException x ) {
-            logger.severe( "MessagingException: " + x.getMessage() );
+            LOGGER.severe( "MessagingException: " + x.getMessage() );
             error = x.getMessage();
             return null;
         }
@@ -331,14 +332,14 @@ public class Emailer
 
         // Send message
         if ( interrupted ) {
-            logger.info( "EmailerThread: message not sent due to user clicking cancel." );
+            LOGGER.info( "EmailerThread: message not sent due to user clicking cancel." );
         } else {
             try {
                 publish( Settings.jpoResources.getString( "EmailerSending" ) );
                 Transport.send( buildMessage( session ) );
                 publish( Settings.jpoResources.getString( "EmailerSent" ) );
             } catch ( MessagingException x ) {
-                logger.severe( "MessagingException: " + x.getMessage() );
+                LOGGER.severe( "MessagingException: " + x.getMessage() );
                 error = x.getMessage();
                 return;
             }
@@ -372,14 +373,14 @@ public class Emailer
 
         // Send message
         if ( interrupted ) {
-            logger.info( "EmailerThread: message not sent due to user clicking cancel." );
+            LOGGER.info( "EmailerThread: message not sent due to user clicking cancel." );
         } else {
             try {
                 publish( Settings.jpoResources.getString( "EmailerSending" ) );
                 Transport.send( buildMessage( session ) );
                 publish( Settings.jpoResources.getString( "EmailerSent" ) );
             } catch ( MessagingException x ) {
-                logger.severe( "MessagingException: " + x.getMessage() );
+                LOGGER.severe( "MessagingException: " + x.getMessage() );
                 error = x.getMessage();
                 return;
             }
@@ -410,14 +411,14 @@ public class Emailer
                 } );
         //session.setDebug( true );
         if ( interrupted ) {
-            logger.info( "EmailerThread: message not sent due to user clicking cancel." );
+            LOGGER.info( "EmailerThread: message not sent due to user clicking cancel." );
         } else {
             try {
                 publish( Settings.jpoResources.getString( "EmailerSending" ) );
                 Transport.send( buildMessage( session ) );
                 publish( Settings.jpoResources.getString( "EmailerSent" ) );
             } catch ( MessagingException x ) {
-                logger.severe( "MessagingException: " + x.getMessage() );
+                LOGGER.severe( "MessagingException: " + x.getMessage() );
                 error = x.getMessage();
                 return;
             }
@@ -444,21 +445,25 @@ public class Emailer
         ByteArrayOutputStream baos;
 
 
+        @Override
         public InputStream getInputStream() throws IOException {
             return new ByteArrayInputStream( baos.toByteArray() );
         }
 
 
+        @Override
         public OutputStream getOutputStream() throws IOException {
             return null;//new OutputStream();
         }
 
 
+        @Override
         public String getContentType() {
             return contentType;
         }
 
 
+        @Override
         public String getName() {
             return filename;
         }

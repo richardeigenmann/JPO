@@ -14,7 +14,7 @@
     <property name="build.export.dir" value="${build.base.classes.dir}/${app.main.package}/export"/>
     <property name="build.docs.dir" value="${build.dir}/docs"/>
     <property name="build.jars.dir" value="${build.dir}/jars"/>
-    <property name="version" value="0.10"/>
+    <property name="version" value="0.11"/>
     
     <property name="libs.dir" value="libs"/>
     <property name="src.dir" value="src"/>
@@ -82,6 +82,7 @@
                listfiles="yes"
                deprecation="yes"
                source="1.6"
+               target="1.6"
                includeantruntime="false"
                encoding="UTF-8" >
             <src path="${src.java.dir}"/>
@@ -124,7 +125,7 @@
                  Doctitle="JPO application documentation"
                  Windowtitle="JPO application documentation"
                  Header="JPO application documentation"
-                 Bottom="&lt;font size=&quot;-1&quot;&gt;Copyright (c) 2002 - 2012 by Richard Eigenmann &lt;a href=&quot;http://www.lomumba.ch/richi&quot;&gt;www.lomumba.ch/richi&lt;/a&gt;&lt;/font&gt;"
+                 Bottom="&lt;font size=&quot;-1&quot;&gt;Copyright (c) 2002 - 2013 by Richard Eigenmann &lt;a href=&quot;http://richieigenmann.users.sourceforge.net/&quot;&gt;http://richieigenmann.users.sourceforge.net/&lt;/a&gt;&lt;/font&gt;"
                  author="true"
                  version="true"
                  use="true"
@@ -150,9 +151,9 @@
              duplicate="fail" >
             <manifest>
                 <attribute name="Main-Class" value="${app.main.class}"/>
-                <attribute name="Class-Path" value="metadata-extractor-2.6.2.jar jnlp.jar xmpcore.jar activation.jar mail.jar jwizz-0.1.4.jar" />
+                <attribute name="Class-Path" value="activation.jar jnlp.jar commons-compress-1.2.jar gdata-core-1.0.jar gdata-maps-2.0.jar gdata-media-1.0.jar gdata-photos-2.0.jar guava-13.0.jar jnlp.jar jwizz-0.1.4.jar mail.jar metadata-extractor-2.6.4.jar miglayout-4.0.jar xmpcore.jar" />
                 <section name="Copyright">
-                    <attribute name="Copy" value="(c) 2001-2012, Richard Eigenmann, Zürich, Switzerland"/>
+                    <attribute name="Copy" value="(c) 2001-2013, Richard Eigenmann, Zürich, Switzerland"/>
                 </section>
             </manifest>
         </jar>
@@ -265,6 +266,7 @@
                 <include name="*.png" />
                 <include name="*.jpg" />
                 <include name="*.jnlp" />
+                <include name="*.bat" />
             </fileset>
         </scp>
     </target>
@@ -276,7 +278,7 @@
     <target name="run" description="Runs the program" depends="compile">
         <java classname="${app.main.class}"
               fork="yes"
-              maxmemory="700m">
+              maxmemory="2000m">
             <!-- add for debugging: jvmargs="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,address=8888,suspend=n" -->
             <classpath refid="classpath"/>
         </java>
@@ -333,7 +335,7 @@
             <classpath>
                 <pathelement location="${build.base.classes.dir}" />
                 <pathelement location="${unit.test.classes.dir}" />
-                <pathelement path="libs/metadata-extractor-2.3.0.jar; libs/jnlp.jar; libs/activation.jar; libs/mail.jar" />
+                <pathelement path="libs/metadata-extractor-2.6.4.jar; libs/jnlp.jar; libs/activation.jar; libs/mail.jar" />
                 <pathelement location="${junit.dir}" />
             </classpath>
             <batchtest todir="${results}">

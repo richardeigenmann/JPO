@@ -8,7 +8,7 @@ import java.util.logging.Logger;
 /*
  ThumbnailCreationQueue.java:  queue that holds requests to create Thumbnails from Highres Images
 
- Copyright (C) 2003-2012  Richard Eigenmann.
+ Copyright (C) 2003-2013  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -58,7 +58,7 @@ public class ThumbnailCreationQueue {
     public static boolean requestThumbnailCreation(
             ThumbnailController thumbnailController,
             int priority, boolean force ) {
-        LOGGER.info( "Chucking a request on the queue for ThumbnailController: " + thumbnailController.toString() );
+        LOGGER.fine( "Chucking a request on the queue for ThumbnailController: " + thumbnailController.toString() );
         ThumbnailQueueRequest requestFoundOnQueue = findThumbnailQueueRequest( thumbnailController );
         if ( requestFoundOnQueue == null ) {
             ThumbnailQueueRequest thumbnailQueueRequest = new ThumbnailQueueRequest( thumbnailController, priority, force );
