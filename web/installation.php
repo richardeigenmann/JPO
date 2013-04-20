@@ -123,6 +123,7 @@
                 <a href="http://j-po.sourceforge.net/gdata-photos-2.0.jar">gdata-photos-2.0.jar</a><br>
                 <a href="http://j-po.sourceforge.net/guava-13.0.jar">guava-13.0.jar</a><br>
                 <a href="http://j-po.sourceforge.net/jnlp.jar">jnlp.jar</a><br>
+                <a href="http://j-po.sourceforge.net/jsch-0.1.49.jar">jsch-0.1.49.jar</a><br>                
                 <a href="http://j-po.sourceforge.net/jwizz-0.1.4.jar">jwizz-0.1.4.jar</a><br>
                 <a href="http://j-po.sourceforge.net/mail.jar">mail.jar</a><br>
                 <a href="http://j-po.sourceforge.net/metadata-extractor-2.6.4.jar">metadata-extractor-2.6.4.jar</a><br>
@@ -135,7 +136,7 @@
 
             <p> Then you need to create a script or batch file to run everything. On Linux the script would look like this:</p>
             <p><font color="darkRed"><code>/PATH/TO/YOUR/JAVA/bin/java -Xms80M -Xmx2000M -classpath 
-                    /PATH/TO/YOUR/JPO/JARS/activation.jar:/PATH/TO/YOUR/JPO/JARS/commons-compress-1.2.jar:/PATH/TO/YOUR/JPO/JARS/gdata-core-1.0.jar:/PATH/TO/YOUR/JPO/JARS/gdata-maps-2.0.jar:/PATH/TO/YOUR/JPO/JARS/gdata-media-1.0.jar:/PATH/TO/YOUR/JPO/JARS/gdata-photos-2.0.jar:/PATH/TO/YOUR/JPO/JARS/guava-13.0.jar:/PATH/TO/YOUR/JPO/JARS/gdata-core-1.0.jar:/PATH/TO/YOUR/JPO/JARS/jnlp.jar:/PATH/TO/YOUR/JPO/JARS/jwizz-0.1.4.jar:/PATH/TO/YOUR/JPO/JARS/mail.jar:/PATH/TO/YOUR/JPO/JARS/metadata-extractor-2.6.4.jar:/PATH/TO/YOUR/JPO/JARS/miglayout-4.0.jar:/PATH/TO/YOUR/JPO/JARS/xmpcore.jar:/PATH/TO/YOUR/JPO/JARS/jpo-0.11.jar Main</code></font></p>
+                    /PATH/TO/YOUR/JPO/JARS/activation.jar:/PATH/TO/YOUR/JPO/JARS/commons-compress-1.2.jar:/PATH/TO/YOUR/JPO/JARS/gdata-core-1.0.jar:/PATH/TO/YOUR/JPO/JARS/gdata-maps-2.0.jar:/PATH/TO/YOUR/JPO/JARS/gdata-media-1.0.jar:/PATH/TO/YOUR/JPO/JARS/gdata-photos-2.0.jar:/PATH/TO/YOUR/JPO/JARS/guava-13.0.jar:/PATH/TO/YOUR/JPO/JARS/gdata-core-1.0.jar:/PATH/TO/YOUR/JPO/JARS/jnlp.jar:/PATH/TO/YOUR/JPO/JARS/jsch-0.1.49.jar:/PATH/TO/YOUR/JPO/JARS/jwizz-0.1.4.jar:/PATH/TO/YOUR/JPO/JARS/mail.jar:/PATH/TO/YOUR/JPO/JARS/metadata-extractor-2.6.4.jar:/PATH/TO/YOUR/JPO/JARS/miglayout-4.0.jar:/PATH/TO/YOUR/JPO/JARS/xmpcore.jar:/PATH/TO/YOUR/JPO/JARS/jpo-0.11.jar Main</code></font></p>
 
             <p><strong>Note:</strong> Put everything on one long line. The space characters do
                 matter; don't put spaces between the jars separated by colons(:) in the classpath!</p>
@@ -147,7 +148,7 @@
             <p>On a particular Windows XP machine I installed Jpo into c:\Program Files\Jpo. The resulting Batch
                 file looks like this: (you can download it here: <a href="Jpo.bat">Jpo.bat</a></p>
 
-            <p><code>c:\windows\system32\java -Xms80M -Xmx2000M -classpath "c:\Program Files\Jpo\activation.jar";"c:\Program Files\Jpo\commons-compress-1.2.jar";"c:\Program Files\Jpo\gdata-core-1.0.jar";"c:\Program Files\Jpo\gdata-maps-2.0.jar";"c:\Program Files\Jpo\gdata-media-1.0.jar";"c:\Program Files\Jpo\gdata-photos-2.0.jar";"c:\Program Files\Jpo\guava-13.0.jar";"c:\Program Files\Jpo\jnlp.jar";"c:\Program Files\Jpo\jwizz-0.1.4.jar";"c:\Program Files\Jpo\mail.jar";"c:\Program Files\Jpo\metadata-extractor-2.6.4.jar";"c:\Program Files\Jpo\miglayout-4.0.jar";"c:\Program Files\Jpo\xmpcore.jar";"c:\Program Files\Jpo\jpo-0.11.jar" Main                    </code></p>
+            <p><code>c:\windows\system32\java -Xms80M -Xmx2000M -classpath "c:\Program Files\Jpo\activation.jar";"c:\Program Files\Jpo\commons-compress-1.2.jar";"c:\Program Files\Jpo\gdata-core-1.0.jar";"c:\Program Files\Jpo\gdata-maps-2.0.jar";"c:\Program Files\Jpo\gdata-media-1.0.jar";"c:\Program Files\Jpo\gdata-photos-2.0.jar";"c:\Program Files\Jpo\guava-13.0.jar";"c:\Program Files\Jpo\jnlp.jar";"c:\Program Files\Jpo\jsch-0.1.49.jar";"c:\Program Files\Jpo\jwizz-0.1.4.jar";"c:\Program Files\Jpo\mail.jar";"c:\Program Files\Jpo\metadata-extractor-2.6.4.jar";"c:\Program Files\Jpo\miglayout-4.0.jar";"c:\Program Files\Jpo\xmpcore.jar";"c:\Program Files\Jpo\jpo-0.11.jar" Main</code></p>
 
 
             <p>Actually I think I have managed to improve on this on 5.2.2007: I learned that I can
@@ -192,7 +193,7 @@
 
 
             <hr>
-            <p>Last update to this page: 6 Apr 2013<br>
+            <p>Last update to this page: 15 Apr 2013<br>
                 Copyright 2003-2013 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
         </td>
     </tr>

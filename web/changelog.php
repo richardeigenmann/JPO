@@ -1,8 +1,8 @@
-<!DOCTYPE HTML">
+ <!DOCTYPE HTML>
 <html>
     <head>
         <title>JPO Homepage</title>
-        <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     </head>
     <body>
         <table CELLSPACING=0 CELLPADDING=10>

@@ -1,13 +1,10 @@
 package jpo.export;
 
 import jpo.dataModel.Settings;
-import jpo.dataModel.GroupInfo;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
-import jpo.dataModel.PictureInfo;
 import java.util.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
 import java.io.*;
@@ -718,11 +715,11 @@ public class HtmlDistillerJFrame
         ( (SpinnerNumberModel) ( midresWidth.getModel() ) ).setValue( options.getMidresWidth() );
         ( (SpinnerNumberModel) ( midresHeight.getModel() ) ).setValue( options.getMidresHeight() );
         switch ( options.getPictureNaming() ) {
-            case HtmlDistillerOptions.PICTURE_NAMING_BY_ORIGINAL_NAME:
+            case PICTURE_NAMING_BY_ORIGINAL_NAME:
                 originalNameRadioButton.setSelected( true );
                 break;
 
-            case HtmlDistillerOptions.PICTURE_NAMING_BY_SEQUENTIAL_NUMBER:
+            case PICTURE_NAMING_BY_SEQUENTIAL_NUMBER:
                 sequentialRadioButton.setSelected( true );
                 break;
 
@@ -769,11 +766,11 @@ public class HtmlDistillerJFrame
         options.setBackgroundColor( previewPanel.getBackground() );
         options.setFontColor( previewPanel.getForeground() );
         if ( originalNameRadioButton.isSelected() ) {
-            options.setPictureNaming( HtmlDistillerOptions.PICTURE_NAMING_BY_ORIGINAL_NAME );
+            options.setPictureNaming( HtmlDistillerOptions.PictureNamingType.PICTURE_NAMING_BY_ORIGINAL_NAME );
         } else if ( sequentialRadioButton.isSelected() ) {
-            options.setPictureNaming( HtmlDistillerOptions.PICTURE_NAMING_BY_SEQUENTIAL_NUMBER );
+            options.setPictureNaming( HtmlDistillerOptions.PictureNamingType.PICTURE_NAMING_BY_SEQUENTIAL_NUMBER );
         } else {
-            options.setPictureNaming( HtmlDistillerOptions.PICTURE_NAMING_BY_HASH_CODE );
+            options.setPictureNaming( HtmlDistillerOptions.PictureNamingType.PICTURE_NAMING_BY_HASH_CODE );
         }
         options.setSequentialStartNumber( ( (SpinnerNumberModel) sequentialStartJSpinner.getModel() ).getNumber().intValue() );
         options.setWriteRobotsTxt( generateRobotsJCheckBox.isSelected() );

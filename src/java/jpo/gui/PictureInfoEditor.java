@@ -159,7 +159,7 @@ public class PictureInfoEditor
     /**
      * Font used to show the error label
      */
-    private static Font errorLabelFont = Font.decode(Settings.jpoResources.getString("ThumbnailDescriptionJPanelLargeFont"));
+    private static final Font errorLabelFont = Font.decode(Settings.jpoResources.getString("ThumbnailDescriptionJPanelLargeFont"));
 
     /**
      * Constructs a Picture Properties Dialog

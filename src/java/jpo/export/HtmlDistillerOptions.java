@@ -3,209 +3,228 @@ package jpo.export;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.io.File;
+import java.util.logging.Logger;
 import jpo.dataModel.Settings;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
+import jpo.gui.PictureInfoEditor;
 
 /*
-HtmlDistillerOptions.java:  Holds the options that configure the html output.
+ HtmlDistillerOptions.java:  Holds the options that configure the html output.
 
-Copyright (C) 2008-2012,  Richard Eigenmann, Zürich
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or any later version. This program is distributed 
-in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
-without even the implied warranty of MERCHANTABILITY or FITNESS 
-FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
-more details. You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-The license is in gpl.txt.
-See http://www.gnu.org/copyleft/gpl.html for the details.
+ Copyright (C) 2008-2012,  Richard Eigenmann, Zürich
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or any later version. This program is distributed 
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+ without even the implied warranty of MERCHANTABILITY or FITNESS 
+ FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
+ more details. You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ The license is in gpl.txt.
+ See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 /**
- *  This object holds the details of how the HtmlDistiller is supposed to generate the 
- *  output pages. It simplifies the interaction between the GUI and the worker thread significantly.
+ * This object holds the details of how the HtmlDistiller is supposed to
+ * generate the output pages. It simplifies the interaction between the GUI and
+ * the worker thread significantly.
  */
 public class HtmlDistillerOptions {
 
     /**
-     *  The directory into which the web page will be generated.
+     * Defines a logger for this class
+     */
+    private static final Logger LOGGER = Logger.getLogger( HtmlDistillerOptions.class.getName() );
+    /**
+     * The directory into which the web page will be generated.
      */
     private File targetDirectory;
 
-    public Color getBackgroundColor () {
+    public Color getBackgroundColor() {
         return backgroundColor;
     }
 
-    public void setBackgroundColor ( Color backgroundColor ) {
+    public void setBackgroundColor( Color backgroundColor ) {
         this.backgroundColor = backgroundColor;
     }
 
-    public int getCellspacing () {
+    public int getCellspacing() {
         return cellspacing;
     }
 
-    public void setCellspacing ( int cellspacing ) {
+    public void setCellspacing( int cellspacing ) {
         this.cellspacing = cellspacing;
     }
 
-    public boolean isExportHighres () {
+    public boolean isExportHighres() {
         return exportHighres;
     }
 
-    public void setExportHighres ( boolean exportHighres ) {
+    public void setExportHighres( boolean exportHighres ) {
         this.exportHighres = exportHighres;
     }
 
-    public Color getFontColor () {
+    public Color getFontColor() {
         return fontColor;
     }
 
-    public void setFontColor ( Color fontColor ) {
+    public void setFontColor( Color fontColor ) {
         this.fontColor = fontColor;
     }
     /**
-     *   A flag to indicate whether midres HTML pages should be generated. 
+     * A flag to indicate whether midres HTML pages should be generated.
      */
     private boolean generateMidresHtml;
 
     /**
      * @return the generateMidresHtml
      */
-    public boolean isGenerateMidresHtml () {
+    public boolean isGenerateMidresHtml() {
         return generateMidresHtml;
     }
 
     /**
      * @param generateMidresHtml the generateMidresHtml to set
      */
-    public void setGenerateMidresHtml ( boolean generateMidresHtml ) {
+    public void setGenerateMidresHtml( boolean generateMidresHtml ) {
         this.generateMidresHtml = generateMidresHtml;
     }
 
-    public boolean isGenerateMap () {
+    public boolean isGenerateMap() {
         return generateMap;
     }
 
-    public void setGenerateMap ( boolean generateMap ) {
+    public void setGenerateMap( boolean generateMap ) {
         this.generateMap = generateMap;
     }
 
-    public boolean isGenerateDHTML () {
+    public boolean isGenerateDHTML() {
         return generateDHTML;
     }
 
-    public void setGenerateDHTML ( boolean generateDHTML ) {
+    public void setGenerateDHTML( boolean generateDHTML ) {
         this.generateDHTML = generateDHTML;
     }
 
-    public boolean isGenerateZipfile () {
+    public boolean isGenerateZipfile() {
         return generateZipfile;
     }
 
-    public void setGenerateZipfile ( boolean generateZipfile ) {
+    public void setGenerateZipfile( boolean generateZipfile ) {
         this.generateZipfile = generateZipfile;
     }
 
     /**
      * The directory the web pages should be written to
+     *
      * @return The directory where the web pages should be written to
      */
-    public File getTargetDirectory () {
+    public File getTargetDirectory() {
         return targetDirectory;
     }
 
-    public void setTargetDirectory ( File htmlDirectory ) {
+    public void setTargetDirectory( File htmlDirectory ) {
         this.targetDirectory = htmlDirectory;
     }
 
-    public boolean isLinkToHighres () {
+    public boolean isLinkToHighres() {
         return linkToHighres;
     }
 
-    public void setLinkToHighres ( boolean linkToHighres ) {
+    public void setLinkToHighres( boolean linkToHighres ) {
         this.linkToHighres = linkToHighres;
     }
 
     //------------------Lowres-------------------
-    public int getThumbnailHeight () {
+    public int getThumbnailHeight() {
         return thumbnailHeight;
     }
 
-    public void setThumbnailHeight ( int thumbnailHeight ) {
+    public void setThumbnailHeight( int thumbnailHeight ) {
         this.thumbnailHeight = thumbnailHeight;
     }
 
-    public int getThumbnailWidth () {
+    public int getThumbnailWidth() {
         return thumbnailWidth;
     }
 
-    public void setThumbnailWidth ( int thumbnailWidth ) {
+    public void setThumbnailWidth( int thumbnailWidth ) {
         this.thumbnailWidth = thumbnailWidth;
     }
 
     /**
-     * Convenience method that returns the size of the thumbnails in a new Dimension object.
+     * Convenience method that returns the size of the thumbnails in a new
+     * Dimension object.
+     *
      * @return The desired dimensions of the Thumbnail size and width.
      */
-    public Dimension getThumbnailDimension () {
+    public Dimension getThumbnailDimension() {
         return new Dimension( getThumbnailWidth(), getThumbnailHeight() );
     }
     /**
-     * The number of scaling steps. Interestingly the quality gets better if scaling is done in several steps.
+     * The number of scaling steps. Interestingly the quality gets better if
+     * scaling is done in several steps.
      */
     private int scalingSteps = 1;
 
     /**
-     * The number of scaling steps. Interestingly the quality gets better if scaling is done in several steps.
+     * The number of scaling steps. Interestingly the quality gets better if
+     * scaling is done in several steps.
+     *
      * @return the number of scaling steps
      */
-    public int getScalingSteps () {
+    public int getScalingSteps() {
         return scalingSteps;
     }
 
     /**
-     * Sets the number of scaling steps. Interestingly the quality gets better if scaling is done in several steps.
+     * Sets the number of scaling steps. Interestingly the quality gets better
+     * if scaling is done in several steps.
+     *
      * @param scalingSteps the new number of scaling Steps
      */
-    public void setScalingSteps ( int scalingSteps ) {
+    public void setScalingSteps( int scalingSteps ) {
         this.scalingSteps = scalingSteps;
     }
     /**
-     *   The compression rate passed to the jpg compressor 0 - 1. A value of 0 means maximum
-     *   compression and crap quality, 1 means best quality minimal compression. 
-     *   0.8 is a good value.
+     * The compression rate passed to the jpg compressor 0 - 1. A value of 0
+     * means maximum compression and crap quality, 1 means best quality minimal
+     * compression. 0.8 is a good value.
      */
     private float lowresJpgQuality;
 
-    public float getLowresJpgQuality () {
+    public float getLowresJpgQuality() {
         return lowresJpgQuality;
     }
 
-    /** 
-     * Same as @see getLowresJpgQuality but returned as int and multiplied by 100
+    /**
+     * Same as
+     *
+     * @see getLowresJpgQuality but returned as int and multiplied by 100
      * @return the lowres quality number
      */
-    public int getLowresJpgQualityPercent () {
-        return (int) (getLowresJpgQuality() * 100);
+    public int getLowresJpgQualityPercent() {
+        return (int) ( getLowresJpgQuality() * 100 );
     }
 
     /**
      * sets the lowers quality number
+     *
      * @param lowresJpgQuality the lowres quality
      */
-    public void setLowresJpgQuality ( float lowresJpgQuality ) {
+    public void setLowresJpgQuality( float lowresJpgQuality ) {
         this.lowresJpgQuality = lowresJpgQuality;
     }
 
     /**
-     * Convenience method that allows the quality to be specified between 0 and 100 
-     * as an integer. If the value is out of bounds it is raised to 0 or lowered
-     * to 100.
+     * Convenience method that allows the quality to be specified between 0 and
+     * 100 as an integer. If the value is out of bounds it is raised to 0 or
+     * lowered to 100.
+     *
      * @param lowresJpgQuality
      */
-    public void setLowresJpgQualityPercent ( int lowresJpgQuality ) {
+    public void setLowresJpgQualityPercent( int lowresJpgQuality ) {
         if ( lowresJpgQuality > 100 ) {
             lowresJpgQuality = 100;
         } else if ( lowresJpgQuality < 0 ) {
@@ -215,45 +234,48 @@ public class HtmlDistillerOptions {
     }
     //------------------Midres-------------------
     /**
-     *  The width the midres picture must not exceed.
+     * The width the midres picture must not exceed.
      */
     private int midresWidth;
     /**
-     *  The height the midres picture must not exceed.
+     * The height the midres picture must not exceed.
      */
     private int midresHeight;
 
-    public int getMidresHeight () {
+    public int getMidresHeight() {
         return midresHeight;
     }
 
-    public void setMidresHeight ( int midresHeight ) {
+    public void setMidresHeight( int midresHeight ) {
         this.midresHeight = midresHeight;
     }
 
-    public float getMidresJpgQuality () {
+    public float getMidresJpgQuality() {
         return midresJpgQuality;
     }
 
-    public void setMidresJpgQuality ( float midresJpgQuality ) {
+    public void setMidresJpgQuality( float midresJpgQuality ) {
         this.midresJpgQuality = midresJpgQuality;
     }
 
     /**
-     * Same as {@link #getMidresJpgQuality} but returned as int and multiplied by 100
+     * Same as {@link #getMidresJpgQuality} but returned as int and multiplied
+     * by 100
+     *
      * @return the midres quality number
      */
-    public int getMidresJpgQualityPercent () {
-        return (int) (getMidresJpgQuality() * 100);
+    public int getMidresJpgQualityPercent() {
+        return (int) ( getMidresJpgQuality() * 100 );
     }
 
     /**
-     * Convenience method that allows the quality to be specified between 0 and 100 
-     * as an integer. If the value is out of bounds it is raised to 0 or lowered
-     * to 100.
+     * Convenience method that allows the quality to be specified between 0 and
+     * 100 as an integer. If the value is out of bounds it is raised to 0 or
+     * lowered to 100.
+     *
      * @param midresJpgQuality the desired quality between 0 and 100
      */
-    public void setMidresJpgQualityPercent ( float midresJpgQuality ) {
+    public void setMidresJpgQualityPercent( float midresJpgQuality ) {
         if ( midresJpgQuality > 100 ) {
             midresJpgQuality = 100;
         } else if ( midresJpgQuality < 0 ) {
@@ -264,134 +286,141 @@ public class HtmlDistillerOptions {
 
     /**
      * Returns the width of the midres images
+     *
      * @return the width of the midres images
      */
-    public int getMidresWidth () {
+    public int getMidresWidth() {
         return midresWidth;
     }
 
-    public void setMidresWidth ( int midresWidth ) {
+    public void setMidresWidth( int midresWidth ) {
         this.midresWidth = midresWidth;
     }
 
     /**
-     * Convenience method the generates a new Dimension object with the
-     * Midres dimensions.
+     * Convenience method the generates a new Dimension object with the Midres
+     * dimensions.
+     *
      * @return A new object with the Midres dimensions.
      */
-    public Dimension getMidresDimension () {
+    public Dimension getMidresDimension() {
         return new Dimension( getMidresWidth(), getMidresHeight() );
     }
     /**
-     *   The compression rate passed to the jpg compressor 0 - 1. A value of 0 means maximum
-     *   compression and crap quality, 1 means best quality minimal compression. 
-     *   0.8 is a good value.
+     * The compression rate passed to the jpg compressor 0 - 1. A value of 0
+     * means maximum compression and crap quality, 1 means best quality minimal
+     * compression. 0.8 is a good value.
      */
     private float midresJpgQuality;
 
     /**
      * The number of rows that should be generated on the group overview page
-     * @return The number of rows that should be generated on the group overview page
+     *
+     * @return The number of rows that should be generated on the group overview
+     * page
      */
-    public int getPicsPerRow () {
+    public int getPicsPerRow() {
         return picsPerRow;
     }
 
-    public void setPicsPerRow ( int picsPerRow ) {
+    public void setPicsPerRow( int picsPerRow ) {
         this.picsPerRow = picsPerRow;
     }
 
     /**
      * The note from which to start
+     *
      * @return The node from which to start
      */
-    public SortableDefaultMutableTreeNode getStartNode () {
+    public SortableDefaultMutableTreeNode getStartNode() {
         return startNode;
     }
 
-    public void setStartNode ( SortableDefaultMutableTreeNode startNode ) {
+    public void setStartNode( SortableDefaultMutableTreeNode startNode ) {
         this.startNode = startNode;
     }
     /**
-     *   How many pictures should be placed next to each 
-     *   other in the html table.
+     * How many pictures should be placed next to each other in the html table.
      */
     private int picsPerRow;
     /**
-     *  The width the thumbnail must not exceed.
+     * The width the thumbnail must not exceed.
      */
     private int thumbnailWidth;
     /**
-     *  The height the thumbnail must not exceed.
+     * The height the thumbnail must not exceed.
      */
     private int thumbnailHeight;
     /**
-     *  The padding between two adjacent cells in the output table.
+     * The padding between two adjacent cells in the output table.
      */
     private int cellspacing;
     /**
-     *   Indicates whether a highres image should be copied as well.
+     * Indicates whether a highres image should be copied as well.
      */
     private boolean exportHighres;
     /**
-     *   Indicates whether a highres image should be rotated.
+     * Indicates whether a highres image should be rotated.
      */
     private boolean rotateHighres;
 
     /**
      * Indicate that a highres image should be rotated
-     * @param rotateHighres 
+     *
+     * @param rotateHighres
      */
-    public void setRotateHighres(boolean rotateHighres) {
+    public void setRotateHighres( boolean rotateHighres ) {
         this.rotateHighres = rotateHighres;
     }
 
     /**
      * returns whether a highres image should be rotated
+     *
      * @return true if the highres image should be rotated, false if not
      */
     public boolean isRotateHighres() {
         return rotateHighres;
     }
     /**
-     *   Indicates whether the highres pictures should be linked to.
+     * Indicates whether the highres pictures should be linked to.
      */
     private boolean linkToHighres;
     /**
-     *  The first node from which the export is to be done.
+     * The first node from which the export is to be done.
      */
     private SortableDefaultMutableTreeNode startNode;
     /**
-     *   Indicator that gets set to true if group nodes are being written so that
-     *   the folder icon is created.
+     * Indicator that gets set to true if group nodes are being written so that
+     * the folder icon is created.
      */
     private boolean folderIconRequired;
 
-    public boolean isFolderIconRequired () {
+    public boolean isFolderIconRequired() {
         return folderIconRequired;
     }
 
-    public void setFolderIconRequired ( boolean folderIconRequired ) {
+    public void setFolderIconRequired( boolean folderIconRequired ) {
         this.folderIconRequired = folderIconRequired;
     }
     /**
-     *   A flag to indicate whether a map should be generated.
+     * A flag to indicate whether a map should be generated.
      */
     private boolean generateMap;
     /**
-     *   A flag to indicate whether DHTML elements should be generated. 
+     * A flag to indicate whether DHTML elements should be generated.
      */
     private boolean generateDHTML;
     /**
-     *   A flag to indicate whether a Zipfile with Highres Images should be generated. 
+     * A flag to indicate whether a Zipfile with Highres Images should be
+     * generated.
      */
     private boolean generateZipfile;
     /**
-     *  The background color for the web pages
+     * The background colour for the web pages
      */
     private Color backgroundColor;
     /**
-     *  The color to be used for the fonts.
+     * The colour to be used for the fonts.
      */
     private Color fontColor;
     /**
@@ -401,46 +430,140 @@ public class HtmlDistillerOptions {
 
     /**
      * Returns the name for the ZipFile containing the downloadable images
+     *
      * @return The name of the file to create (no path information)
      */
-    public String getDownloadZipFileName () {
+    public String getDownloadZipFileName() {
         return downloadZipFileName;
     }
 
     /**
      * Sets the name of the Zip file to be created
+     *
      * @param downloadZipFileName the name of the zip file to create
      */
-    public void setDownloadZipFileName ( String downloadZipFileName ) {
+    public void setDownloadZipFileName( String downloadZipFileName ) {
         this.downloadZipFileName = downloadZipFileName;
     }
+
     /**
-     * The method used to determine the picture filename naming 
+     * @return the ftpTargetDir
      */
-    //private int pictureNaming = PICTURE_NAMING_BY_HASH_CODE;
-    private int pictureNaming = PICTURE_NAMING_BY_HASH_CODE;
+    public String getFtpTargetDir() {
+        return ftpTargetDir;
+    }
+
+    /**
+     * @param ftpTargetDir the ftpTargetDir to set
+     */
+    public void setFtpTargetDir( String ftpTargetDir ) {
+        this.ftpTargetDir = ftpTargetDir;
+    }
+
+    /**
+     * @return the sshServer
+     */
+    public String getSshServer() {
+        return sshServer;
+    }
+
+    /**
+     * @param sshServer the sshServer to set
+     */
+    public void setSshServer( String sshServer ) {
+        this.sshServer = sshServer;
+    }
+
+    /**
+     * @return the sshUser
+     */
+    public String getSshUser() {
+        return sshUser;
+    }
+
+    /**
+     * @param sshUser the sshUser to set
+     */
+    public void setSshUser( String sshUser ) {
+        this.sshUser = sshUser;
+    }
+    /**
+     * The ssh password
+     */
+    private String sshPassword = "";
+
+    /**
+     * @return the sshPassword
+     */
+    public String getSshPassword() {
+        return sshPassword;
+    }
+
+    /**
+     * @param sshPassword the sshPassword to set
+     */
+    public void setSshPassword( String sshPassword ) {
+        this.sshPassword = sshPassword;
+    }
+
+    /**
+     * @return the sshTargetDir
+     */
+    public String getSshTargetDir() {
+        return sshTargetDir;
+    }
+
+    /**
+     * @param sshTargetDir the sshTargetDir to set
+     */
+    public void setSshTargetDir( String sshTargetDir ) {
+        this.sshTargetDir = sshTargetDir;
+    }
+
+    /**
+     * @return the sshKeyFile
+     */
+    public String getSshKeyFile() {
+        return sshKeyFile;
+    }
+
+    /**
+     * @param sshKeyFile the sshKeyFile to set
+     */
+    public void setSshKeyFile( String sshKeyFile ) {
+        this.sshKeyFile = sshKeyFile;
+    }
+
+    /**
+     * Define the types of output naming convention
+     */
+    public enum PictureNamingType {
+
+        PICTURE_NAMING_BY_HASH_CODE, PICTURE_NAMING_BY_SEQUENTIAL_NUMBER, PICTURE_NAMING_BY_ORIGINAL_NAME
+    }
+    /**
+     * field to store the type of picture naming convention
+     */
+    private PictureNamingType pictureNaming = PictureNamingType.PICTURE_NAMING_BY_HASH_CODE;
 
     /**
      * Returns the method for picture Naming
+     *
      * @return the picture naming code
      */
-    public int getPictureNaming () {
+    public PictureNamingType getPictureNaming() {
         return pictureNaming;
     }
 
     /**
-     * Sets the method for picture naming. Validates that the number is in the bounds
+     * Sets the method for picture naming. Validates that the number is in the
+     * bounds
+     *
      * @param pictureNaming
      */
-    public void setPictureNaming ( int pictureNaming ) {
-        if ( (pictureNaming < PICTURE_NAMING_BY_HASH_CODE) || (pictureNaming > PICTURE_NAMING_BY_ORIGINAL_NAME) ) {
-            pictureNaming = PICTURE_NAMING_BY_HASH_CODE;
-        }
+    public void setPictureNaming( PictureNamingType pictureNaming ) {
         this.pictureNaming = pictureNaming;
     }
-    public static final int PICTURE_NAMING_BY_HASH_CODE = 1;
-    public static final int PICTURE_NAMING_BY_SEQUENTIAL_NUMBER = PICTURE_NAMING_BY_HASH_CODE + 1;
-    public static final int PICTURE_NAMING_BY_ORIGINAL_NAME = PICTURE_NAMING_BY_SEQUENTIAL_NUMBER + 1;
     /**
      * The start number for the sequential numbering
      */
@@ -449,14 +572,14 @@ public class HtmlDistillerOptions {
     /**
      * @return the setSequentialStartNumber
      */
-    public int getSequentialStartNumber () {
+    public int getSequentialStartNumber() {
         return sequentialStartNumber;
     }
 
     /**
      * @param setSequentialStartNumber the setSequentialStartNumber to set
      */
-    public void setSequentialStartNumber ( int setSequentialStartNumber ) {
+    public void setSequentialStartNumber( int setSequentialStartNumber ) {
         this.sequentialStartNumber = setSequentialStartNumber;
     }
     /**
@@ -467,23 +590,205 @@ public class HtmlDistillerOptions {
     /**
      * @return the writeRobotsTxt
      */
-    public boolean isWriteRobotsTxt () {
+    public boolean isWriteRobotsTxt() {
         return writeRobotsTxt;
     }
 
     /**
      * @param writeRobotsTxt the writeRobotsTxt to set
      */
-    public void setWriteRobotsTxt ( boolean writeRobotsTxt ) {
+    public void setWriteRobotsTxt( boolean writeRobotsTxt ) {
         this.writeRobotsTxt = writeRobotsTxt;
     }
 
     /**
+     * Define the types of output
+     */
+    public enum OutputTarget {
+
+        OUTPUT_LOCAL_DIRECTORY, OUTPUT_FTP_LOCATION, OUTPUT_SSH_LOCATION
+    }
+    /**
+     * field to store the type of picture naming convention
+     */
+    private OutputTarget outputTarget = OutputTarget.OUTPUT_LOCAL_DIRECTORY;
+
+    /**
+     * Returns the output target choice
+     *
+     * @return the output target choice
+     */
+    public OutputTarget getOutputTarget() {
+        return outputTarget;
+    }
+
+    /**
+     * Sets the method for output targets
+     *
+     * @param outputTarget
+     */
+    public void setOutputTarget( OutputTarget outputTarget ) {
+        this.outputTarget = outputTarget;
+    }
+    
+        /**
+     * Define the types of SSH Authentication
+     */
+    public enum SshAuthType {
+        SSH_AUTH_PASSWORD, SSH_AUTH_KEYFILE
+    }
+    /**
+     * field to store the type of picture naming convention
+     */
+    private SshAuthType sshAuthType = SshAuthType.SSH_AUTH_PASSWORD;
+
+    /**
+     * Returns the output target choice
+     *
+     * @return the output target choice
+     */
+    public SshAuthType getSshAuthType() {
+        return sshAuthType;
+    }
+
+    /**
+     * Sets the method for output targets
+     *
+     * @param outputTarget
+     */
+    public void setSshAuthType( SshAuthType sshAuthType ) {
+        this.sshAuthType = sshAuthType;
+    }
+
+    
+    
+    
+    /**
+     * The FTP Port
+     */
+    private int ftpPort = 21;
+
+    /**
+     * Returns the ftp port
+     *
+     * @return the ftp port
+     */
+    public int getFtpPort() {
+        return ftpPort;
+    }
+
+    /**
+     * Sets the ftp port
+     *
+     * @param ftpPort
+     */
+    public void setFtpPort( int ftpPort ) {
+        this.ftpPort = ftpPort;
+    }
+    /**
+     * The SSH Port
+     */
+    private int sshPort = 22;
+
+    /**
+     * Returns the ssh port
+     *
+     * @return the ssh port
+     */
+    public int getSshPort() {
+        return sshPort;
+    }
+
+    /**
+     * Sets the ssh port
+     *
+     * @param sshPort
+     */
+    public void setSshPort( int sshPort ) {
+        this.sshPort = sshPort;
+    }
+    /**
+     * The ftp server
+     */
+    private String ftpServer = "";
+
+    /**
+     * @return the ftpServer
+     */
+    public String getFtpServer() {
+        return ftpServer;
+    }
+
+    /**
+     * @param ftpServer the server address
+     */
+    public void setFtpServer( String ftpServer ) {
+        this.ftpServer = ftpServer;
+    }
+    /**
+     * The ftp user
+     */
+    private String ftpUser = "";
+
+    /**
+     * @return the ftpUser
+     */
+    public String getFtpUser() {
+        return ftpUser;
+    }
+
+    /**
+     * @param ftpUser the ftpUser to set
+     */
+    public void setFtpUser( String ftpUser ) {
+        this.ftpUser = ftpUser;
+    }
+    /**
+     * The ftp password
+     */
+    private String ftpPassword = "";
+
+    /**
+     * @param ftpPassword the ftpPassword to set
+     */
+    public void setFtpPassword( String ftpPassword ) {
+        this.ftpPassword = ftpPassword;
+    }
+
+    /**
+     * @return the ftpUser
+     */
+    public String getFtpPassword() {
+        return ftpPassword;
+    }
+    /**
+     * The ftp target directory
+     */
+    private String ftpTargetDir = "";
+    /**
+     * The ssh server
+     */
+    private String sshServer = "";
+    /**
+     * The ssh user
+     */
+    private String sshUser = "";
+    /**
+     * The ssh target dir
+     */
+    private String sshTargetDir = "";
+    /**
+     * The ssh key file
+     */
+    private String sshKeyFile = "";
+
+    /**
      * Formats a neat summary of the options
+     *
      * @return A nicely formatted summary of the option that are set.
      */
     @Override
-    public String toString () {
+    public String toString() {
         StringBuilder sb = new StringBuilder( Settings.jpoResources.getString( "HtmlDistThumbnails" ) + "\n" );
         sb.append( Settings.jpoResources.getString( "picsPerRowText" ) ).append( " " ).append( getPicsPerRow() ).append( "\n" );
         sb.append( Settings.jpoResources.getString( "thubnailSizeJLabel" ) ).append( " " ).append( Integer.toString( getThumbnailWidth() ) ).append( " x " ).append( Integer.toString( getThumbnailHeight() ) ).append( "\n" );
@@ -504,8 +809,27 @@ public class HtmlDistillerOptions {
         sb.append( "Filename for Download Zipfile: " ).append( getDownloadZipFileName() ).append( "\n" );
         sb.append( isLinkToHighres() ? Settings.jpoResources.getString( "linkToHighresJCheckBox" ) + "\n" : "No Link to high resolution pictures at current location\n" );
 
+        sb.append( "\n" ).append( "Output mode: " ).append( getOutputTarget().name() );
+
         sb.append( "\n" ).append( Settings.jpoResources.getString( "genericTargetDirText" ) ).append( getTargetDirectory().getPath() );
         sb.append( "\n" );
+
+        sb.append( "\n" ).append( "Ftp Server: " ).append( getFtpServer() );
+        sb.append( "\n" ).append( "Ftp Port: " ).append( getFtpPort() );
+        sb.append( "\n" ).append( "Ftp User: " ).append( getFtpUser() );
+        sb.append( "\n" ).append( "Ftp Password: " ).append( getFtpPassword() );
+        sb.append( "\n" ).append( "Ftp Target Dir: " ).append( getFtpTargetDir() );
+        sb.append( "\n" );
+
+        sb.append( "\n" ).append( "SSH Server: " ).append( getSshServer() );
+        sb.append( "\n" ).append( "SSH Port: " ).append( getSshPort() );
+        sb.append( "\n" ).append( "SSH User: " ).append( getSshUser() );
+        sb.append( "\n" ).append( "SSH Authentication: " ).append( getSshAuthType().name() );
+        sb.append( "\n" ).append( "SSH Password: " ).append( getSshPassword() );
+        sb.append( "\n" ).append( "SSH Key File: " ).append( getSshKeyFile() );
+        sb.append( "\n" ).append( "SSH Target Dir: " ).append( getSshTargetDir() );
+        sb.append( "\n" );
+
 
         sb.append( "\n" ).append( Settings.jpoResources.getString( "HtmlDistOptions" ) ).append( "\n" );
         sb.append( Settings.jpoResources.getString( "HtmlDistillerNumbering" ) ).append( " " );
@@ -525,16 +849,16 @@ public class HtmlDistillerOptions {
         sb.append( "\n" );
         sb.append( "Webpage Font Color: " ).append( getFontColor().toString() ).append( "\n" );
         sb.append( "Webpage Background Color: " ).append( getBackgroundColor().toString() ).append( "\n" );
-        sb.append( isWriteRobotsTxt() ? (Settings.jpoResources.getString( "generateRobotsJCheckBox" ) + "\n") : "Do not write robots.txt\n" );
+        sb.append( isWriteRobotsTxt() ? ( Settings.jpoResources.getString( "generateRobotsJCheckBox" ) + "\n" ) : "Do not write robots.txt\n" );
 
         return sb.toString();
     }
 
     /**
-     * This optional method saves the options into the Settings object so that they can be remembered for the next time
-     * Note: Not all of them (yet?)
+     * This optional method saves the options into the Settings object so that
+     * they can be remembered for the next time Note: Not all of them (yet?)
      */
-    public void saveToSettings () {
+    public void saveToSettings() {
         Settings.memorizeCopyLocation( getTargetDirectory().getPath() );
         Settings.defaultHtmlPicsPerRow = getPicsPerRow();
         Settings.defaultHtmlThumbnailWidth = getThumbnailWidth();
@@ -550,6 +874,19 @@ public class HtmlDistillerOptions {
         Settings.defaultLinkToHighres = isLinkToHighres();
         Settings.defaultExportHighres = isExportHighres();
         Settings.defaultHtmlPictureNaming = getPictureNaming();
+        Settings.defaultHtmlOutputTarget = getOutputTarget();
+        Settings.defaultHtmlFtpServer = getFtpServer();
+        Settings.defaultHtmlFtpPort = getFtpPort();
+        Settings.defaultHtmlFtpUser = getFtpUser();
+        Settings.defaultHtmlFtpPassword = getFtpPassword();
+        Settings.defaultHtmlFtpTargetDir = getFtpTargetDir();
+        Settings.defaultHtmlSshServer = getSshServer();
+        Settings.defaultHtmlSshPort = getSshPort();
+        Settings.defaultHtmlSshUser = getSshUser();
+        Settings.defaultHtmlSshAuthType = getSshAuthType();
+        Settings.defaultHtmlSshPassword = getSshPassword();
+        Settings.defaultHtmlSshTargetDir = getSshTargetDir();
+        Settings.defaultHtmlSshKeyFile = getSshKeyFile();
         Settings.htmlBackgroundColor = getBackgroundColor();
         Settings.htmlFontColor = getFontColor();
         Settings.writeRobotsTxt = isWriteRobotsTxt();

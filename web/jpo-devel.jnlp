@@ -57,16 +57,18 @@
          application can be run -->
     <jar href="jpo-0.11.jar" download="eager" />
     <extension name="activation" href="lib-activation.jnlp"/>
-    <jar href="commons-compress-1.2.jar" donload="lazy" />
-    <jar href="gdata-core-1.0.jar" donload="lazy" />
-    <jar href="gdata-maps-2.0.jar" donload="lazy" />
-    <jar href="gdata-media-1.0.jar" donload="lazy" />
-    <jar href="gdata-photos-2.0.jar" donload="lazy" />
-    <jar href="guava-13.0.jar" donload="lazy" />
-    <jar href="jnlp.jar" donload="lazy" />
+    <jar href="commons-compress-1.2.jar" download="lazy" />
+    <jar href="commons-net-3.2.jar" download="lazy" />
+    <jar href="gdata-core-1.0.jar" download="lazy" />
+    <jar href="gdata-maps-2.0.jar" download="lazy" />
+    <jar href="gdata-media-1.0.jar" download="lazy" />
+    <jar href="gdata-photos-2.0.jar" download="lazy" />
+    <jar href="guava-13.0.jar" download="lazy" />
+    <jar href="jnlp.jar" download="lazy" />
+    <jar href="jsch-0.1.49.jar" download="lazy" />
     <extension name="mail" href="lib-mail.jnlp"/>
     <jar href="metadata-extractor-2.6.4.jar" download="lazy" />
-    <jar href="miglayout-4.0.jar" donload="eager" />
+    <jar href="miglayout-4.0.jar" download="eager" />
     <jar href="xmpcore.jar" download="lazy" />
   </resources>
   
