@@ -17,8 +17,9 @@
 
             <table>
                 <tr><td colspan=2><b>Development Version 0.11</b></td></tr>
-                <tr><td valign="top">6.4.2013</td><td> Improved installation check at startup.</td></tr>
-                <tr><td valign="top">3.4.2013</td><td> Shortened File Combobox after user feedback.</td></tr>
+                <tr><td valign="top">12.7.2013</td><td>Add unit tests for the Exif Extraction library, some refactoring and fixed the Netbeans setup so that Test File works again.</td></tr>
+                <tr><td valign="top">6.4.2013</td><td>Improved installation check at startup.</td></tr>
+                <tr><td valign="top">3.4.2013</td><td>Shortened File Combobox after user feedback.</td></tr>
                 <tr><td colspan=2><b>Development Version 0.10</b></td></tr>
                 <tr><td valign="top">2.11.2013</td><td> Dusted off the Windows installer, repackaged the Windows installer and pushed it to the download area. </td></tr>
                 <tr><td valign="top">30.12.2012</td><td> Fix for looping bug when file modification date is in the future (reported and fixed by Tom) </td></tr>
