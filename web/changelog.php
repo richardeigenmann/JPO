@@ -17,6 +17,7 @@
 
             <table>
                 <tr><td colspan=2><b>Development Version 0.11</b></td></tr>
+                <tr><td valign="top">29.8.2013</td><td>Improved Exif Parsing and added more unit tests for different cameras.</td></tr>
                 <tr><td valign="top">12.7.2013</td><td>Add unit tests for the Exif Extraction library, some refactoring and fixed the Netbeans setup so that Test File works again.</td></tr>
                 <tr><td valign="top">6.4.2013</td><td>Improved installation check at startup.</td></tr>
                 <tr><td valign="top">3.4.2013</td><td>Shortened File Combobox after user feedback.</td></tr>
@@ -406,7 +407,7 @@
             </table>
 
             <hr>
-            <p>Last update to this page: 6 April 2013<br>
+            <p>Last update to this page: 29 August 2013<br>
                 Copyright 2003-2013 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
         </td>
     </tr>

@@ -312,24 +312,6 @@
     </target>
     
     
-    <target name="test-single-gaga" description="Run individual Unit tests"  >  <!-- depends="compile-test" -->
-        <property name="junit-text" value="junit.textui.TestRunner"/>
-        <property name="junit-swing" value="junit.swingui.TestRunner"/>
-        <java fork="true" classname="${junit-text}"
-              taskname="junit" failonerror="true">
-            <arg value="jpo.CategoryTest" />
-            <arg value="jpo.ApplicationJMenuBarTest" />
-            <classpath>
-                <classpath refid="classpath"/>
-                <classpath location="/usr/share/java/junit-3.8.2.jar"></classpath>
-                <pathelement location="${build.base.classes.dir}" />
-                <pathelement location="${unit.test.classes.dir}" />
-                <pathelement path="libs/metadata-extractor-2.6.4.jar; libs/jnlp.jar; libs/jsch-0.1.49.jar;libs/activation.jar; libs/mail.jar" />
-                <pathelement path="${java.class.path}" />
-                <pathelement location="${junit.dir}" />
-            </classpath>
-        </java>
-    </target>
     
     <!-- To run from the command line: ant -Dtest.class=jpo.dataModel.ExifInfo test-single -->
     <target name="test-single" description="Run individual Unit tests" depends="compile, compile-test" >  
@@ -364,11 +346,11 @@
             showoutput="yes">
             <formatter type="plain" usefile="false"/>
             <classpath>
-                <pathelement location="${build.base.classes.dir}" />
                 <pathelement location="${unit.test.classes.dir}" />
-                <pathelement path="/usr/share/java/junit.jar;libs/metadata-extractor-2.6.4.jar; libs/jnlp.jar; libs/jsch-0.1.49.jar;libs/activation.jar; libs/mail.jar" />
                 <pathelement location="${junit.dir}" />
             </classpath>
+             <classpath refid="classpath"/>
+            
             <batchtest todir="${results}">
                 <fileset dir="${unit.test.classes.dir}">
                     <include name="**/*Test.class"/>

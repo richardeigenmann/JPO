@@ -1,11 +1,13 @@
 package jpo.dataModel;
 
+import com.adobe.xmp.XMPException;
 import com.drew.imaging.ImageMetadataReader;
 import com.drew.imaging.ImageProcessingException;
 import com.drew.lang.GeoLocation;
 import com.drew.metadata.Directory;
 import com.drew.metadata.Metadata;
 import com.drew.metadata.Tag;
+import com.drew.metadata.exif.CanonMakernoteDirectory;
 import com.drew.metadata.exif.ExifIFD0Directory;
 import com.drew.metadata.exif.ExifSubIFDDirectory;
 import com.drew.metadata.exif.GpsDirectory;
@@ -130,70 +132,61 @@ public class ExifInfo {
      * This method decodes the Exif tags and stores the data
      */
     public void decodeExifTags() {
+        if (pictureUrl == null) {
+            return;
+        }
 
         try {
             InputStream highresStream = pictureUrl.openStream();
             boolean waitforbytes = false;
             Metadata metadata = ImageMetadataReader.readMetadata(new BufferedInputStream(highresStream), waitforbytes);
 
-            ExifSubIFDDirectory exifSubIFDdirectory = metadata.getDirectory(ExifSubIFDDirectory.class);
-            setCreateDateTime(tryToGetTag(exifSubIFDdirectory, ExifSubIFDDirectory.TAG_DATETIME_ORIGINAL, getCreateDateTime()));
-            aperture = tryToGetTag(exifSubIFDdirectory, ExifSubIFDDirectory.TAG_FNUMBER, aperture);
-            shutterSpeed = tryToGetTag(exifSubIFDdirectory, ExifSubIFDDirectory.TAG_EXPOSURE_TIME, shutterSpeed);
-            focalLength = tryToGetTag(exifSubIFDdirectory, ExifSubIFDDirectory.TAG_FOCAL_LENGTH, focalLength);
-            iso = tryToGetTag(exifSubIFDdirectory, ExifSubIFDDirectory.TAG_ISO_EQUIVALENT, iso);
-            lens = tryToGetTag(exifSubIFDdirectory, ExifSubIFDDirectory.TAG_LENS, lens);
-
             JpegDirectory jpegDirectory = metadata.getDirectory(JpegDirectory.class);
-            exifWidth = tryToGetTag(jpegDirectory, JpegDirectory.TAG_JPEG_IMAGE_WIDTH, exifWidth);
-            exifHeight = tryToGetTag(jpegDirectory, JpegDirectory.TAG_JPEG_IMAGE_HEIGHT, exifHeight);
+            if (jpegDirectory != null) {
+                exifWidth = tryToGetTag(jpegDirectory, JpegDirectory.TAG_JPEG_IMAGE_WIDTH, exifWidth);
+                exifHeight = tryToGetTag(jpegDirectory, JpegDirectory.TAG_JPEG_IMAGE_HEIGHT, exifHeight);
+            }
+
+            ExifSubIFDDirectory exifSubIFDdirectory = metadata.getDirectory(ExifSubIFDDirectory.class);
+            if (exifSubIFDdirectory != null) {
+                setCreateDateTime(tryToGetTag(exifSubIFDdirectory, ExifSubIFDDirectory.TAG_DATETIME_ORIGINAL, getCreateDateTime()));
+                aperture = tryToGetTag(exifSubIFDdirectory, ExifSubIFDDirectory.TAG_FNUMBER, aperture);
+                aperture = tryToGetTag(exifSubIFDdirectory, ExifSubIFDDirectory.TAG_APERTURE, aperture);
+                shutterSpeed = tryToGetTag(exifSubIFDdirectory, ExifSubIFDDirectory.TAG_EXPOSURE_TIME, shutterSpeed);
+                shutterSpeed = tryToGetTag(exifSubIFDdirectory, ExifSubIFDDirectory.TAG_SHUTTER_SPEED, shutterSpeed);
+                focalLength = tryToGetTag(exifSubIFDdirectory, ExifSubIFDDirectory.TAG_FOCAL_LENGTH, focalLength);
+                iso = tryToGetTag(exifSubIFDdirectory, ExifSubIFDDirectory.TAG_ISO_EQUIVALENT, iso);
+                lens = tryToGetTag(exifSubIFDdirectory, ExifSubIFDDirectory.TAG_LENS, lens);
+            }
 
             ExifIFD0Directory exifSubIFD0directory = metadata.getDirectory(ExifIFD0Directory.class);
-            camera = rtrim(tryToGetTag(exifSubIFD0directory, ExifIFD0Directory.TAG_MODEL, camera));
+            if (exifSubIFD0directory != null) {
+                camera = rtrim(tryToGetTag(exifSubIFD0directory, ExifIFD0Directory.TAG_MODEL, camera));
+            }
+
+            GpsDirectory gpsDirectory = metadata.getDirectory(GpsDirectory.class);
+            if (gpsDirectory != null) {
+                GeoLocation location = gpsDirectory.getGeoLocation();
+                latLng.x = location.getLatitude();
+                latLng.y = location.getLongitude();
+            }
 
             NikonType2MakernoteDirectory nikonType2MakernoteDirectory = metadata.getDirectory(NikonType2MakernoteDirectory.class);
             if (nikonType2MakernoteDirectory != null) {
                 iso = tryToGetTag(nikonType2MakernoteDirectory, NikonType2MakernoteDirectory.TAG_NIKON_TYPE2_ISO_1, iso);
-                //System.out.println( directory.getName() + "iso: " + iso );
                 lens = tryToGetTag(nikonType2MakernoteDirectory, NikonType2MakernoteDirectory.TAG_NIKON_TYPE2_LENS, lens);
             }
 
+            CanonMakernoteDirectory canonMakernoteDirectory = metadata.getDirectory(CanonMakernoteDirectory.class);
+            if (canonMakernoteDirectory != null) {
+                lens = tryToGetTag(canonMakernoteDirectory, CanonMakernoteDirectory.TAG_LENS_MODEL, lens);
+            }
 
             for (Directory directory : metadata.getDirectories()) {
-                //camera = rtrim(tryToGetTag(directory, ExifIFD0Directory.TAG_MODEL, camera));
-
-
-                //    if ("Nikon Makernote".equals(directory.getName())) {
-                //      iso = tryToGetTag(directory, NikonType2MakernoteDirectory.TAG_NIKON_TYPE2_ISO_1, iso);
-                //System.out.println( directory.getName() + "iso: " + iso );
-                //    lens = tryToGetTag(directory, NikonType2MakernoteDirectory.TAG_NIKON_TYPE2_LENS, lens);
-                //}
-                //setCreateDateTime(tryToGetTag(directory, ExifSubIFDDirectory.TAG_DATETIME_ORIGINAL, getCreateDateTime()));
-                //setCreateDateTime( tryToGetTag( directory, ExifIFD0Directory.TAG_DATETIME, getCreateDateTime() ) );
-                //latitude = tryToGetTag(directory, GpsDirectory.TAG_GPS_LATITUDE, latitude);
-                //latitudeRef = tryToGetTag(directory, GpsDirectory.TAG_GPS_LATITUDE_REF, "");
-                //longitude = tryToGetTag(directory, GpsDirectory.TAG_GPS_LONGITUDE, longitude);
-                //longitudeRef = tryToGetTag(directory, GpsDirectory.TAG_GPS_LONGITUDE_REF, "");
-                //if ("Jpeg".equals(directory.getName())) {
-                //exifWidth = tryToGetTag( directory, ExifSubIFDDirectory.TAG_EXIF_IMAGE_WIDTH, exifWidth );
-                //exifWidth = tryToGetTag(directory, JpegDirectory.TAG_JPEG_IMAGE_WIDTH, exifWidth);
-                //LOGGER.info( "Width: " + exifWidth );
-                //exifHeight = tryToGetTag( directory, ExifSubIFDDirectory.TAG_EXIF_IMAGE_HEIGHT, exifHeight );
-                //exifHeight = tryToGetTag(directory, JpegDirectory.TAG_JPEG_IMAGE_HEIGHT, exifHeight);
-                //System.out.println( directory.getName() + "exifHeight: " + exifHeight );
-                //LOGGER.info( "Height: " + exifHeight );
-                //}
-                //latLng = parseGPS();
-
                 for (Tag tag : directory.getTags()) {
                     exifDump.append(tag.getTagTypeHex()).append(" - ").append(tag.getTagName()).append(":\t").append(tag.getDirectoryName()).append(":\t").append(tag.getDescription()).append("\n");
                 }
             }
-            GpsDirectory gpsDirectory = metadata.getDirectory(GpsDirectory.class);
-            GeoLocation location = gpsDirectory.getGeoLocation();
-            latLng.x = location.getLatitude();
-            latLng.y = location.getLongitude();
-            //LOGGER.info(location.toString());
         } catch (ImageProcessingException x) {
             LOGGER.severe("ImageProcessingException: " + x.getMessage());
         } catch (MalformedURLException x) {
@@ -201,7 +194,7 @@ public class ExifInfo {
         } catch (IOException x) {
             LOGGER.severe("IOException: " + x.getMessage());
         } catch (NullPointerException x) {
-            LOGGER.severe("Now why would we be trying to decode Exiff info on a null URL other than for testing?\n" + x.getMessage());
+            LOGGER.severe("NullPointerException: " + x.getMessage());
         }
 
 
