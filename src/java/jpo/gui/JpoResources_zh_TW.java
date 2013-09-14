@@ -555,9 +555,9 @@ public class JpoResources_zh_TW extends ListResourceBundle {
 		// IntegrityChecker
 		{"IntegrityCheckerTitle", "檢查圖片集完整性"},
 		{"integrityCheckerLabel", "正在檢查完整性"},
-		{"check1", "檢查日期格式"},
+		{"checkDateParsing", "檢查日期格式"},
 		{"check1done", "日期格式不正确"},
-		{"check2", "校檢和檢驗"},
+		{"checkChecksums", "校檢和檢驗"},
 		{"check2progress", "正在運行校檢和修复: "},
 		{"check2done", "修复后的校檢和 "},
 		{"check3", "檢查3"},

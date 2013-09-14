@@ -1462,6 +1462,48 @@ public class SortableDefaultMutableTreeNode
         ThumbnailCreationQueue.requestThumbnailCreation( t, ThumbnailQueueRequest.HIGH_PRIORITY, true );
     }
 
+    
+     /**
+     * This method extracts the thumbnail location from the supplied node. It
+     * handles PictureInfo and GroupInfo nodes. If the userObject is something
+     * else it will return the STRING "null" (to avoid NPE problems)
+     *
+     * @param node The node from which to extract the thumbnail location
+     * @return the string with the full path of the thumbnail location
+     */
+    public String getThumbnailLocation() {
+        Object nodeObject = getUserObject();
+        if ( nodeObject instanceof PictureInfo ) {
+            return ( (PictureInfo) nodeObject ).getLowresLocation();
+        } else if ( nodeObject instanceof GroupInfo ) {
+            return ( (GroupInfo) nodeObject ).getLowresLocation();
+        } else {
+            return "null";
+        }
+    }
+
+    /**
+     * This method requests that the node assigns a new location to the
+     * PictureInfo or GroupInfo object
+     *
+     * @param node The node on which to assign a new thumbnail
+     * @return the filename of the new thumbnail
+     */
+    public String assignNewThumbnailLocation() {
+        String newThumbnailFilename = Tools.getNewLowresFilename();
+        Object nodeObject = getUserObject();
+        if ( nodeObject instanceof PictureInfo ) {
+            ( (PictureInfo) nodeObject ).setLowresLocation( newThumbnailFilename );
+        } else if ( nodeObject instanceof GroupInfo ) {
+            ( (GroupInfo) nodeObject ).setLowresLocation( newThumbnailFilename );
+        } else {
+            LOGGER.severe( "Node: " + toString() + " isn't a PictureInfo or a GroupInfo - can't assign a new lowres Filename" );
+            newThumbnailFilename = "null";
+        }
+        return newThumbnailFilename;
+    }
+    
+    
 
     /**
      * This method returns whether the supplied node is a descendent of the deletions that

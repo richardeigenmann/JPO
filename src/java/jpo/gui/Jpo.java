@@ -435,7 +435,7 @@ public class Jpo {
          */
         @Override
         public void requestCheckIntegrity() {
-            new IntegrityChecker( Settings.pictureCollection.getRootNode() );
+            new IntegrityCheckerJFrame( Settings.pictureCollection.getRootNode() );
         }
 
         /**

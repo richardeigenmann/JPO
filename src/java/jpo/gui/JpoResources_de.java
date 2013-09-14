@@ -553,9 +553,9 @@ public class JpoResources_de extends ListResourceBundle {
 		// IntegrityChecker
 		{"IntegrityCheckerTitle", "Überprüfen der Integrität¤der Sammlung"},
 		{"integrityCheckerLabel", "Integrität überprüfen:"},
-		{"check1", "Überprüfe Datums-codierung"},
+		{"checkDateParsing", "Überprüfe Datums-codierung"},
 		{"check1done", "Datümmer die nicht decodiert werden können: "},
-		{"check2", "Prüfsummen überprüfen"},
+		{"checkChecksums", "Prüfsummen überprüfen"},
 		{"check2progress", "Überprüfe Prüfsummen (läuft): "},
 		{"check2done", "Korrigierte Prüfsummen: "},
 		{"check3", "Check 3"},

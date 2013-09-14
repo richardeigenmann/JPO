@@ -491,9 +491,9 @@ public class JpoResources_en extends ListResourceBundle {
         // IntegrityChecker
         { "IntegrityCheckerTitle", "Checking Collection Integrity" },
         { "integrityCheckerLabel", "Checking the integrity:" },
-        { "check1", "Check Date Parsing" },
+        { "checkDateParsing", "Check Date Parsing" },
         { "check1done", "Dates that could not be parsed: " },
-        { "check2", "Verify Checksums" },
+        { "checkChecksums", "Verify Checksums" },
         { "check2progress", "Corrected Checksums (running): " },
         { "check2done", "Corrected Checksums: " },
         { "check3", "Check 3" },
