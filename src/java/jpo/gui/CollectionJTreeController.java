@@ -1,5 +1,6 @@
 package jpo.gui;
 
+import jpo.gui.swing.GroupPopupMenu;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;

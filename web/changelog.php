@@ -17,6 +17,7 @@
 
             <table>
                 <tr><td colspan=2><b>Development Version 0.11</b></td></tr>
+                <tr><td valign="top">9.12.2013</td><td>Added A Consolidate Here function on the PicturePopup Menu</td></tr>
                 <tr><td valign="top">15.9.2013</td><td>Fixed the Extras > Check Integrity Screen.</td></tr>
                 <tr><td valign="top">29.8.2013</td><td>Improved Exif Parsing and added more unit tests for different cameras.</td></tr>
                 <tr><td valign="top">12.7.2013</td><td>Add unit tests for the Exif Extraction library, some refactoring and fixed the Netbeans setup so that Test File works again.</td></tr>

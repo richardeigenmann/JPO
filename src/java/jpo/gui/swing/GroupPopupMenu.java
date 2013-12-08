@@ -1,4 +1,4 @@
-package jpo.gui;
+package jpo.gui.swing;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -6,11 +6,13 @@ import java.io.File;
 import java.util.ArrayList;
 import javax.swing.*;
 import jpo.dataModel.*;
+import jpo.gui.GroupPopupInterface;
+import jpo.gui.TreeNodeController;
 
 /*
 GroupPopupMenu.java: popup menu for groups
 
-Copyright (C) 2002 - 2012  Richard Eigenmann.
+Copyright (C) 2002 - 2013  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -25,10 +27,10 @@ The license is in gpl.txt.
 See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 /** 
- * A class that generates a popup menu for a group node. This became nescessary primarily because
- * the code was getting a bit long and was clutterin up a different class. Seperating out the 
+ * A class that generates a popup menu for a group node. This became necessary primarily because
+ * the code was getting a bit long and was cluttering up a different class. Separating out the 
  * popup menu and making it an object and forcing an interface on the object instantiating
- * it is propbably more in line with the OO philosophy.
+ * it is probably more in line with the OO philosophy.
  * @see GroupPopupInterface
  */
 public class GroupPopupMenu
@@ -43,18 +45,18 @@ public class GroupPopupMenu
     /**
      *  a separator for the Move menu
      */
-    private JSeparator movePictureNodeSeparator = new JSeparator();
+    private final JSeparator movePictureNodeSeparator = new JSeparator();
 
     /**
      *  menu items for the recently dropped group nodes
      */
-    private JMenuItem[] recentDropNodes = new JMenuItem[Settings.MAX_DROPNODES];
+    private final JMenuItem[] recentDropNodes = new JMenuItem[Settings.MAX_DROPNODES];
 
     /**
      *  object that must implement the functions dealing with the user
      *  request
      */
-    private GroupPopupInterface caller;
+    private final GroupPopupInterface caller;
 
     /**
      *  the node we are doing the popup menu for
@@ -87,6 +89,9 @@ public class GroupPopupMenu
     }
 
 
+    /**
+     * Create the menu items
+     */
     private void initComponents() {
         JMenuItem groupShowJMenuItem = new JMenuItem( Settings.jpoResources.getString( "groupShowJMenuItem" ) );
         groupShowJMenuItem.addActionListener( new ActionListener() {
@@ -213,7 +218,6 @@ public class GroupPopupMenu
                 recentOpenedfileJMenuItem[i].setVisible( false );
                 addCollectionJMenu.add( recentOpenedfileJMenuItem[i] );
             }
-            //Settings.addRecentFilesChangeListener( this );  // not needed as Group Popups are created on demand
             recentFilesChanged();
 
 

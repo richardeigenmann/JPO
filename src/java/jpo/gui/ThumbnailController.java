@@ -1,5 +1,6 @@
 package jpo.gui;
 
+import jpo.gui.swing.GroupPopupMenu;
 import java.util.logging.Level;
 import jpo.dataModel.NodeNavigatorInterface;
 import java.awt.Dimension;
