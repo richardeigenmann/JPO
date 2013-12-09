@@ -6,6 +6,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashSet;
@@ -14,30 +15,34 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /*
-PictureInfo.java:  the definitions for picture data
+ PictureInfo.java:  the definitions for picture data
 
-Copyright (C) 2002-2012  Richard Eigenmann.
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or any later version. This program is distributed 
-in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
-without even the implied warranty of MERCHANTABILITY or FITNESS 
-FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
-more details. You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-The license is in gpl.txt.
-See http://www.gnu.org/copyleft/gpl.html for the details.
+ Copyright (C) 2002-2013  Richard Eigenmann.
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or any later version. This program is distributed 
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+ without even the implied warranty of MERCHANTABILITY or FITNESS 
+ FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
+ more details. You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ The license is in gpl.txt.
+ See http://www.gnu.org/copyleft/gpl.html for the details.
  */
-/** 
- *  Objects of this type represent a single picture in the collection. Since SortableDefaultMutableTreeNodes
- *  allow user objects to be attached to the node this is a convenient place to store all the information
- *  that we have about a picture. <p>
- *  The class provides several convenience methods to access the information.
- *  <p> This class must implement the Serializable interface or Drag and Drop will not work.
+/**
+ * Objects of this type represent a single picture in the collection. Since
+ * SortableDefaultMutableTreeNodes allow user objects to be attached to the node
+ * this is a convenient place to store all the information that we have about a
+ * picture.
+ * <p>
+ * The class provides several convenience methods to access the information.
+ * <p>
+ * This class must implement the Serializable interface or Drag and Drop will
+ * not work.
  *
- *  @see GroupInfo
+ * @see GroupInfo
  */
 public class PictureInfo
         implements Serializable {
@@ -47,14 +52,13 @@ public class PictureInfo
      */
     private static final Logger LOGGER = Logger.getLogger( PictureInfo.class.getName() );
 
-
     /**
      * Constructor method. Creates the object and sets up the variables.
      *
      * @param Highres_Name
      * @param Lowres_Name
-     * @param 	description		The description of the image
-     * @param	filmReference		The reference to the film if any
+     * @param description	The description of the image
+     * @param	filmReference	The reference to the film if any
      */
     public PictureInfo( String Highres_Name,
             String Lowres_Name,
@@ -65,19 +69,19 @@ public class PictureInfo
         this.description = description;
         this.filmReference = filmReference;
 
-        LOGGER.log( Level.FINE, "Highres_Name: {0}", Highres_Name);
-        LOGGER.log( Level.FINE, "Lowres_Name: {0}", Lowres_Name);
-        LOGGER.log( Level.FINE, "description: {0}", description);
-        LOGGER.log( Level.FINE, "filmReference: {0}", filmReference);
+        LOGGER.log( Level.FINE, "Highres_Name: {0}", Highres_Name );
+        LOGGER.log( Level.FINE, "Lowres_Name: {0}", Lowres_Name );
+        LOGGER.log( Level.FINE, "description: {0}", description );
+        LOGGER.log( Level.FINE, "filmReference: {0}", filmReference );
     }
-
 
     /**
      * Constructor method. Creates the object and sets up the variables.
-     * @param 	highresURL 		The filename of the high resolution image
+     *
+     * @param highresURL The filename of the high resolution image
      * @param Lowres_Name
-     * @param 	description		The description of the image
-     * @param	filmReference		The reference to the film if any
+     * @param description	The description of the image
+     * @param	filmReference	The reference to the film if any
      */
     public PictureInfo( URL highresURL,
             String Lowres_Name,
@@ -88,16 +92,15 @@ public class PictureInfo
         this.description = description;
         this.filmReference = filmReference;
 
-        LOGGER.log( Level.FINE, "Highres_Name: {0}", highresLocation);
-        LOGGER.log( Level.FINE, "Lowres_Name: {0}", Lowres_Name);
-        LOGGER.log( Level.FINE, "description: {0}", description);
-        LOGGER.log( Level.FINE, "filmReference: {0}", filmReference);
+        LOGGER.log( Level.FINE, "Highres_Name: {0}", highresLocation );
+        LOGGER.log( Level.FINE, "Lowres_Name: {0}", Lowres_Name );
+        LOGGER.log( Level.FINE, "description: {0}", description );
+        LOGGER.log( Level.FINE, "filmReference: {0}", filmReference );
 
     }
 
-
     /**
-     *  Constructor without options. All strings are set to blanks
+     * Constructor without options. All strings are set to blanks
      */
     public PictureInfo() {
         highresLocation = "";
@@ -106,9 +109,9 @@ public class PictureInfo
         filmReference = "";
     }
 
-
     /**
-     * returns the description of the image in the default <code>toString</code> method.
+     * returns the description of the image in the default <code>toString</code>
+     * method.
      *
      * @return description
      */
@@ -117,31 +120,29 @@ public class PictureInfo
         return description;
     }
 
-
     /**
-     *  this method writes all attributes of the picture in the JPO
-     *  xml data format.
+     * this method writes all attributes of the picture in the JPO xml data
+     * format.
      *
-     *  @param out	The Bufferer Writer receiving the xml data
-     *  @throws IOException if there is a drama writing the file.
+     * @param out	The Bufferer Writer receiving the xml data
+     * @throws IOException if there is a drama writing the file.
      */
     public void dumpToXml( BufferedWriter out )
             throws IOException {
         dumpToXml( out, getHighresLocation(), getLowresLocation() );
     }
 
-
     /**
-     *  this method writes all attributes of the picture in the JPO
-     *  xml data format with the highres and lowres locations passed in as
-     *  parameters. This became necessary because when the XmlDistiller
-     *  copies the pictures to a new location we don't want to write the
-     *  URLs of the original pictures whilst all other attributes are retained.
+     * this method writes all attributes of the picture in the JPO xml data
+     * format with the highres and lowres locations passed in as parameters.
+     * This became necessary because when the XmlDistiller copies the pictures
+     * to a new location we don't want to write the URLs of the original
+     * pictures whilst all other attributes are retained.
      *
-     *  @param out	The Bufferer Writer receiving the xml data
-     *  @param highres	The URL of the highres file
-     *  @param lowres	The URL of the lowres file
-     *  @throws IOException  If there was an IO error
+     * @param out	The Bufferer Writer receiving the xml data
+     * @param highres	The URL of the highres file
+     * @param lowres	The URL of the lowres file
+     * @throws IOException If there was an IO error
      */
     public void dumpToXml( BufferedWriter out, String highres, String lowres )
             throws IOException {
@@ -164,7 +165,6 @@ public class PictureInfo
             out.write( "\t<checksum>" + Long.toString( checksum ) + "</checksum>" );
             out.newLine();
         }
-
 
         if ( lowres.length() > 0 ) {
             out.write( "\t<file_lowres_URL>" + Tools.escapeXML( lowres ) + "</file_lowres_URL>" );
@@ -191,7 +191,6 @@ public class PictureInfo
             out.newLine();
         }
 
-
         if ( getRotation() != 0 ) {
             out.write( "\t<ROTATION>" + ( new Double( getRotation() ) ).toString() + "</ROTATION>" );
             out.newLine();
@@ -201,7 +200,6 @@ public class PictureInfo
             out.write( "\t<LATLNG>" + Double.toString( latLng.x ) + "x" + Double.toString( latLng.y ) + "</LATLNG>" );
             out.newLine();
         }
-
 
         if ( categoryAssignments != null ) {
             Iterator i = categoryAssignments.iterator();
@@ -213,7 +211,6 @@ public class PictureInfo
             }
         }
 
-
         out.write( "</picture>" );
         out.newLine();
     }
@@ -224,36 +221,34 @@ public class PictureInfo
      */
     private String description = "";
 
-
     /**
-     *  Returns the description of the image.
+     * Returns the description of the image.
      *
-     *  @return	The description of the image.
-     *  @see #setDescription
+     * @return	The description of the image.
+     * @see #setDescription
      */
     public String getDescription() {
         return description;
     }
 
-
     /**
-     *  Sets the description of the image.
+     * Sets the description of the image.
      *
-     *  @param desc  New description of the image.
-     *  @see #getDescription
+     * @param desc New description of the image.
+     * @see #getDescription
      */
     public synchronized void setDescription( String desc ) {
-        LOGGER.log( Level.FINE, "setting description to: {0}", desc);
+        LOGGER.log( Level.FINE, "setting description to: {0}", desc );
         if ( !desc.equals( description ) ) {
             description = desc;
             sendDescriptionChangedEvent();
         }
     }
 
-
     /**
-     *  Appends the text fragment to the description.
-     *  @param s	The text fragment to append.
+     * Appends the text fragment to the description.
+     *
+     * @param s	The text fragment to append.
      */
     public synchronized void appendToDescription( String s ) {
         if ( s.length() > 0 ) {
@@ -262,22 +257,20 @@ public class PictureInfo
         }
     }
 
-
     /**
-     *  Checks whether the searchString parameter is contained in the description.
-     *  The search is case insensitive.
+     * Checks whether the searchString parameter is contained in the
+     * description. The search is case insensitive.
      *
-     *  @param	searchString	The string to search for.
-     *  @return	true if found. false if not.
+     * @param	searchString	The string to search for.
+     * @return	true if found. false if not.
      */
     public boolean descriptionContains( String searchString ) {
         return description.toUpperCase().indexOf( searchString.toUpperCase() ) > -1;
     }
 
-
     /**
-     *  Creates a PictureChangedEvent and sends it to inform listening
-     *  objects that the description was updated.
+     * Creates a PictureChangedEvent and sends it to inform listening objects
+     * that the description was updated.
      */
     private void sendDescriptionChangedEvent() {
         LOGGER.fine( "preparing to send description changed event" );
@@ -293,24 +286,25 @@ public class PictureInfo
     //----------------------------------------
     /**
      * The full path to the high resolution version of the picture.
+     *
      * @see #lowresLocation
-
+     *
      */
     private String highresLocation = "";
 
-
     /**
      * Returns the full path to the highres picture.
-     * @return  The highres location
+     *
+     * @return The highres location
      * @see #setHighresLocation
      */
     public String getHighresLocation() {
         return highresLocation;
     }
 
-
     /**
      * returns the file handle to the highres picture.
+     *
      * @see	#getHighresURL()
      * @return the highres location or null if there is a failure
      */
@@ -326,23 +320,24 @@ public class PictureInfo
         return returnFile;
     }
 
-
     /**
      * returns the URL handle to the highres picture.
-     *  @return the highres location
-     *  @throws  MalformedURLException if the location could not be converted to a URL.
+     *
+     * @return the highres location
+     * @throws MalformedURLException if the location could not be converted to a
+     * URL.
      */
     public URL getHighresURL() throws MalformedURLException {
         URL highresURL = new URL( highresLocation );
         return highresURL;
     }
 
-
     /**
      * returns the URL handle to the highres picture or null. I invented this
      * because I got fed up trying and catching the MalformedURLException that
      * could be thrown.
-     *  @return the highres location
+     *
+     * @return the highres location
      */
     public URL getHighresURLOrNull() {
         try {
@@ -354,9 +349,9 @@ public class PictureInfo
         }
     }
 
-
     /**
      * returns the URI handle to the highres picture.
+     *
      * @return The highres location
      */
     public URI getHighresURIOrNull() {
@@ -367,9 +362,9 @@ public class PictureInfo
         }
     }
 
-
     /**
      * Sets the full path to the highres picture.
+     *
      * @param s The new location for the highres picture.
      * @see #getHighresLocation
      */
@@ -381,9 +376,9 @@ public class PictureInfo
         getHighresFile(); // just so that it creates a failure if the filename is not conform.
     }
 
-
     /**
      * Sets the full path to the highres picture.
+     *
      * @param u The new location for the highres picture.
      */
     public synchronized void setHighresLocation( URL u ) {
@@ -394,9 +389,9 @@ public class PictureInfo
         }
     }
 
-
     /**
      * Appends the text to the field (used by XML parser).
+     *
      * @param s The text fragment to be added to the Highres Location
      */
     public synchronized void appendToHighresLocation( String s ) {
@@ -406,20 +401,19 @@ public class PictureInfo
         }
     }
 
-
     /**
-     *  Returns just the Filename of the highres picture.
-     *  @return the highres Filename
+     * Returns just the Filename of the highres picture.
+     *
+     * @return the highres Filename
      */
     public String getHighresFilename() {
         return new File( highresLocation ).getName();
 
     }
 
-
     /**
-     *  Creates a PictureChangedEvent and sends it to inform listening
-     *  objects that the highres location was updated.
+     * Creates a PictureChangedEvent and sends it to inform listening objects
+     * that the highres location was updated.
      */
     private void sendHighresLocationChangedEvent() {
         if ( Settings.pictureCollection.getSendModelUpdates() ) {
@@ -432,10 +426,9 @@ public class PictureInfo
 
     //----------------------------------------
     /**
-     *  the value of the checksum of the image file
+     * the value of the checksum of the image file
      */
     private long checksum = Long.MIN_VALUE;
-
 
     /**
      * Returns the value of the checksum or Long.MIN_VALUE if it is not set.
@@ -446,9 +439,8 @@ public class PictureInfo
         return checksum;
     }
 
-
     /**
-     *  returns the value of the checksum or the text "N/A" if not defined.
+     * returns the value of the checksum or the text "N/A" if not defined.
      *
      * @return the checksum
      */
@@ -460,9 +452,8 @@ public class PictureInfo
         }
     }
 
-
     /**
-     *  allows the checksum to be set
+     * allows the checksum to be set
      *
      * @param newValue the new value
      */
@@ -471,9 +462,8 @@ public class PictureInfo
         sendChecksumChangedEvent();
     }
 
-
     /**
-     *  calculates the Adler32 checksum of the current picture.
+     * calculates the Adler32 checksum of the current picture.
      */
     public void calculateChecksum() {
         URL pictureURL = getHighresURLOrNull();
@@ -498,10 +488,9 @@ public class PictureInfo
         sendChecksumChangedEvent();
     }
 
-
     /**
-     *  Creates a PictureChangedEvent and sends it to inform listening
-     *  objects that the checksum was updated.
+     * Creates a PictureChangedEvent and sends it to inform listening objects
+     * that the checksum was updated.
      */
     private void sendChecksumChangedEvent() {
         if ( Settings.pictureCollection.getSendModelUpdates() ) {
@@ -513,14 +502,14 @@ public class PictureInfo
     }
 
     /**
-     *  Temporary variable to allow appending of characters as the XML file
-     *  is being read.
+     * Temporary variable to allow appending of characters as the XML file is
+     * being read.
      */
     private String checksumString = "";
 
-
     /**
      * Appends the text fragment to the checksum field.
+     *
      * @param s Text fragment
      */
     public synchronized void appendToChecksum( String s ) {
@@ -530,9 +519,8 @@ public class PictureInfo
         }
     }
 
-
     /**
-     *  Converts the temporary checksumString to the checksum long.
+     * Converts the temporary checksumString to the checksum long.
      */
     public void parseChecksum() {
         try {
@@ -554,20 +542,20 @@ public class PictureInfo
      */
     private String lowresLocation = "";
 
-
     /**
      * Returns the full path to the lowres picture.
-     * @return   The lowres location.
+     *
+     * @return The lowres location.
      */
     public String getLowresLocation() {
         return lowresLocation;
     }
 
-
     /**
      * Returns the file handle to the lowres picture.
+     *
      * @see	#getLowresURL()
-     * @return  The file handle for the lowres picture.
+     * @return The file handle for the lowres picture.
      */
     public File getLowresFile() {
         try {
@@ -578,10 +566,10 @@ public class PictureInfo
         }
     }
 
-
     /**
      * Returns the URL handle to the lowres picture.
-     * @return  The URL of the lowres picture.
+     *
+     * @return The URL of the lowres picture.
      * @throws MalformedURLException if there was a drama
      */
     public URL getLowresURL() throws MalformedURLException {
@@ -589,12 +577,12 @@ public class PictureInfo
         return lowresURL;
     }
 
-
     /**
      * returns the URL handle to the lowres picture or null. I invented this
      * because I got fed up trying and catching the MalformedURLException that
      * could be thrown.
-     *  @return the lowres location
+     *
+     * @return the lowres location
      */
     public URL getLowresURLOrNull() {
         try {
@@ -606,9 +594,9 @@ public class PictureInfo
         }
     }
 
-
     /**
      * returns the URI handle to the lores picture.
+     *
      * @return The lowres URI
      */
     public URI getLowresURIOrNull() {
@@ -619,9 +607,9 @@ public class PictureInfo
         }
     }
 
-
     /**
      * Sets the full path to the lowres picture.
+     *
      * @param s The new location
      */
     public synchronized void setLowresLocation( String s ) {
@@ -631,9 +619,9 @@ public class PictureInfo
         }
     }
 
-
     /**
      * Sets the full path to the highres picture.
+     *
      * @param u The new location for the highres picture.
      */
     public synchronized void setLowresLocation( URL u ) {
@@ -644,10 +632,10 @@ public class PictureInfo
         }
     }
 
-
     /**
-     *  Appends the text to the lowres location (for the XML parser).
-     *  @param  s  The text fragement to be added to the Lowres Location.
+     * Appends the text to the lowres location (for the XML parser).
+     *
+     * @param s The text fragement to be added to the Lowres Location.
      */
     public synchronized void appendToLowresLocation( String s ) {
         if ( s.length() > 0 ) {
@@ -656,20 +644,19 @@ public class PictureInfo
         }
     }
 
-
     /**
-     *  Returns just the Filename of the lowres picture.
-     *  @return  the filename of the lowres picture without any preceeding path.
+     * Returns just the Filename of the lowres picture.
+     *
+     * @return the filename of the lowres picture without any preceeding path.
      */
     public String getLowresFilename() {
         return new File( lowresLocation ).getName();
 
     }
 
-
     /**
-     *  Creates a PictureChangedEvent and sends it to inform listening
-     *  objects that the lowres location was updated.
+     * Creates a PictureChangedEvent and sends it to inform listening objects
+     * that the lowres location was updated.
      */
     private void sendLowresLocationChangedEvent() {
         if ( Settings.pictureCollection.getSendModelUpdates() ) {
@@ -680,10 +667,9 @@ public class PictureInfo
         }
     }
 
-
     /**
-     *  Creates a PictureChangedEvent and sends it to inform listening
-     *  objects that the thumbnail was updated.
+     * Creates a PictureChangedEvent and sends it to inform listening objects
+     * that the thumbnail was updated.
      */
     public void sendThumbnailChangedEvent() {
         if ( Settings.pictureCollection.getSendModelUpdates() ) {
@@ -699,9 +685,9 @@ public class PictureInfo
      */
     private String filmReference = "";
 
-
     /**
      * Appends the string to the filmRreference field.
+     *
      * @param s Fragment to append to Film Reference
      */
     public synchronized void appendToFilmReference( String s ) {
@@ -711,18 +697,18 @@ public class PictureInfo
         }
     }
 
-
     /**
-     *  Returns the film reference.
-     *  @return  the film reference
+     * Returns the film reference.
+     *
+     * @return the film reference
      */
     public String getFilmReference() {
         return filmReference;
     }
 
-
     /**
      * Sets the film reference.
+     *
      * @param s The new film reference.
      */
     public synchronized void setFilmReference( String s ) {
@@ -732,10 +718,9 @@ public class PictureInfo
         }
     }
 
-
     /**
-     *  Creates a PictureChangedEvent and sends it to inform listening
-     *  objects that the film reference was updated.
+     * Creates a PictureChangedEvent and sends it to inform listening objects
+     * that the film reference was updated.
      */
     private void sendFilmReferenceChangedEvent() {
         if ( Settings.pictureCollection.getSendModelUpdates() ) {
@@ -748,15 +733,14 @@ public class PictureInfo
 
     //----------------------------------------
     /**
-     *  The time the image was created. This should be the original
-     *  time when the shutter snapped closed and not the time of
-     *  scanning etc.
+     * The time the image was created. This should be the original time when the
+     * shutter snapped closed and not the time of scanning etc.
      */
     private String creationTime = "";
 
-
     /**
      * Sets the creationTime.
+     *
      * @param s The new creation time.
      */
     public synchronized void setCreationTime( String s ) {
@@ -766,10 +750,10 @@ public class PictureInfo
         }
     }
 
-
     /**
      * appends the text fragement to the creation time.
-     * @param  s  The text fragment to add.
+     *
+     * @param s The text fragment to add.
      */
     public synchronized void appendToCreationTime( String s ) {
         if ( s.length() > 0 ) {
@@ -778,29 +762,28 @@ public class PictureInfo
         }
     }
 
-
     /**
-     *  Returns the creation Time.
-     *  @return the creation Time
+     * Returns the creation Time.
+     *
+     * @return the creation Time
      */
     public String getCreationTime() {
         return creationTime;
     }
 
-
     /**
-     *  Returns the creationTime as a Date object or null if the parsing failed.
+     * Returns the creationTime as a Date object or null if the parsing failed.
      *
-     * @return  the creation time
+     * @return the creation time
      */
     public Calendar getCreationTimeAsDate() {
         return ( Tools.parseDate( creationTime ) );
     }
 
-
     /**
-     *  Returns the creationTime as a string after it has been parsed. Essentially this is
-     *  a utility method to identify what the Date parser is doing.
+     * Returns the creationTime as a string after it has been parsed.
+     * Essentially this is a utility method to identify what the Date parser is
+     * doing.
      *
      * @return the creation time
      */
@@ -809,10 +792,10 @@ public class PictureInfo
         return getFormattedCreationTime( dateTime );
     }
 
-    
     /**
-     *  Returns the creationTime as a string after it has been parsed. Essentially this is
-     *  a utility method to identify what the Date parser is doing.
+     * Returns the creationTime as a string after it has been parsed.
+     * Essentially this is a utility method to identify what the Date parser is
+     * doing.
      *
      * @return the creation time
      */
@@ -828,8 +811,8 @@ public class PictureInfo
     }
 
     /**
-     *  Creates a PictureChangedEvent and sends it to inform listening
-     *  objects that the film reference was updated.
+     * Creates a PictureChangedEvent and sends it to inform listening objects
+     * that the film reference was updated.
      */
     private void sendCreationTimeChangedEvent() {
         if ( Settings.pictureCollection.getSendModelUpdates() ) {
@@ -842,15 +825,14 @@ public class PictureInfo
 
     //----------------------------------------
     /**
-     *  The time the image was created. This should be the original
-     *  time when the shutter snapped closed and not the time of
-     *  scanning etc.
+     * The time the image was created. This should be the original time when the
+     * shutter snapped closed and not the time of scanning etc.
      */
     private String comment = "";
 
-
     /**
      * Sets the comment.
+     *
      * @param s The new comment
      */
     public synchronized void setComment( String s ) {
@@ -860,9 +842,9 @@ public class PictureInfo
         }
     }
 
-
     /**
      * Appends the text fragment to the comment.
+     *
      * @param s the text fragment
      */
     public synchronized void appendToComment( String s ) {
@@ -872,19 +854,18 @@ public class PictureInfo
         }
     }
 
-
     /**
-     *  Returns the comment.
-     *  @return The comment.
+     * Returns the comment.
+     *
+     * @return The comment.
      */
     public String getComment() {
         return comment;
     }
 
-
     /**
-     *  Creates a PictureChangedEvent and sends it to inform listening
-     *  objects that the comment was updated.
+     * Creates a PictureChangedEvent and sends it to inform listening objects
+     * that the comment was updated.
      */
     private void sendCommentChangedEvent() {
         if ( Settings.pictureCollection.getSendModelUpdates() ) {
@@ -897,15 +878,14 @@ public class PictureInfo
 
     //----------------------------------------
     /**
-     *  The time the image was created. This should be the original
-     *  time when the shutter snapped closed and not the time of
-     *  scanning etc.
+     * The time the image was created. This should be the original time when the
+     * shutter snapped closed and not the time of scanning etc.
      */
     private String photographer = "";
 
-
     /**
      * Sets the Photographer.
+     *
      * @param s The new Photographer
      */
     public synchronized void setPhotographer( String s ) {
@@ -915,9 +895,9 @@ public class PictureInfo
         }
     }
 
-
     /**
      * Appends the text fragment to the photographer field.
+     *
      * @param s The photographer.
      */
     public synchronized void appendToPhotographer( String s ) {
@@ -927,19 +907,18 @@ public class PictureInfo
         }
     }
 
-
     /**
-     *  Returns the photographer.
-     *  @return The Photographer.
+     * Returns the photographer.
+     *
+     * @return The Photographer.
      */
     public String getPhotographer() {
         return photographer;
     }
 
-
     /**
-     *  Creates a PictureChangedEvent and sends it to inform listening
-     *  objects that the photographer was updated.
+     * Creates a PictureChangedEvent and sends it to inform listening objects
+     * that the photographer was updated.
      */
     private void sendPhotographerChangedEvent() {
         if ( Settings.pictureCollection.getSendModelUpdates() ) {
@@ -952,13 +931,13 @@ public class PictureInfo
 
     //----------------------------------------
     /**
-     *  The copyright holder of the image.
+     * The copyright holder of the image.
      */
     private String copyrightHolder = "";
 
-
     /**
      * Sets the copyright holder.
+     *
      * @param s The copyright holder
      */
     public synchronized void setCopyrightHolder( String s ) {
@@ -968,9 +947,9 @@ public class PictureInfo
         }
     }
 
-
     /**
      * appends the text fragment to the copyright holder field.
+     *
      * @param s The text fragment.
      */
     public synchronized void appendToCopyrightHolder( String s ) {
@@ -980,19 +959,18 @@ public class PictureInfo
         }
     }
 
-
     /**
-     *  returns the copyright holder.
-     *  @return The copyright holder
+     * returns the copyright holder.
+     *
+     * @return The copyright holder
      */
     public String getCopyrightHolder() {
         return copyrightHolder;
     }
 
-
     /**
-     *  Creates a PictureChangedEvent and sends it to inform listening
-     *  objects that the copyright holder was updated.
+     * Creates a PictureChangedEvent and sends it to inform listening objects
+     * that the copyright holder was updated.
      */
     private void sendCopyrightHolderChangedEvent() {
         if ( Settings.pictureCollection.getSendModelUpdates() ) {
@@ -1010,14 +988,14 @@ public class PictureInfo
     private double rotation = 0;
 
     /**
-     *  Temporary variable to allow appending of characters as the XML file
-     *  is being read.
+     * Temporary variable to allow appending of characters as the XML file is
+     * being read.
      */
     private String rotationString = "";
 
-
     /**
      * Appends the text fragment to the rotation field.
+     *
      * @param s Text fragment
      */
     public synchronized void appendToRotation( String s ) {
@@ -1027,9 +1005,8 @@ public class PictureInfo
         }
     }
 
-
     /**
-     *  Converts the temporary rotationString to the rotation double.
+     * Converts the temporary rotationString to the rotation double.
      */
     public void parseRotation() {
         try {
@@ -1043,19 +1020,19 @@ public class PictureInfo
 
     }
 
-
     /**
-     *  Returns the rotation.
-     *  @return  The rotation of the image.
+     * Returns the rotation.
+     *
+     * @return The rotation of the image.
      */
     public double getRotation() {
         return rotation;
     }
 
-
     /**
-     *  Sets the rotation.
-     *  @param  rotation 	The new rotation for the PictureInfo.
+     * Sets the rotation.
+     *
+     * @param rotation The new rotation for the PictureInfo.
      */
     public synchronized void setRotation( double rotation ) {
         if ( this.rotation != rotation ) {
@@ -1064,28 +1041,27 @@ public class PictureInfo
         }
     }
 
-
     /**
-     *  Changes the angle by the supplied angle the picture by an angle.
-     *  @param angle
+     * Changes the angle by the supplied angle the picture by an angle.
+     *
+     * @param angle
      */
     public synchronized void rotate( int angle ) {
         setRotation( (int) ( getRotation() + angle ) % 360 );
     }
 
-
     /**
-     *  Sets the rotation.
-     *  @param  rotation 	The new rotation for the PictureInfo.
+     * Sets the rotation.
+     *
+     * @param rotation The new rotation for the PictureInfo.
      */
     public synchronized void setRotation( int rotation ) {
         setRotation( (double) rotation );
     }
 
-
     /**
-     *  Creates a PictureChangedEvent and sends it to inform listening
-     *  objects that the copyright holder was updated.
+     * Creates a PictureChangedEvent and sends it to inform listening objects
+     * that the copyright holder was updated.
      */
     private void sendRotationChangedEvent() {
         if ( Settings.pictureCollection.getSendModelUpdates() ) {
@@ -1098,13 +1074,13 @@ public class PictureInfo
 
     //----------------------------------------
     /**
-     *  The copyright holder of the image.
+     * The copyright holder of the image.
      */
     private Point2D.Double latLng;
 
-
     /**
      * Sets the Latitude and Longitude.
+     *
      * @param newLatLng The latitude and longitude holder
      */
     public synchronized void setLatLng( Point2D.Double newLatLng ) {
@@ -1115,14 +1091,25 @@ public class PictureInfo
     }
 
     /**
-     *  Temporary variable to allow appending of characters as the XML file
-     *  is being read.
+     * Sets the Latitude and Longitude.
+     *
+     * @param newLatLng The latitude and longitude in the format of 2 doubles
+     * with an x
+     */
+    public synchronized void setLatLng( String newLatLng ) {
+        this.latLngString = newLatLng;
+        parseLatLng();
+    }
+
+    /**
+     * Temporary variable to allow appending of characters as the XML file is
+     * being read.
      */
     private String latLngString = "";
 
-
     /**
      * appends the text fragment to the latlng string.
+     *
      * @param s The text fragment.
      */
     public synchronized void appendToLatLng( String s ) {
@@ -1131,9 +1118,8 @@ public class PictureInfo
         }
     }
 
-
     /**
-     *  Converts the temporary latLngString to a LatLng Point.
+     * Converts the temporary latLngString to a LatLng Point.
      */
     public void parseLatLng() {
         try {
@@ -1147,10 +1133,10 @@ public class PictureInfo
         }
     }
 
-
     /**
-     *  returns the Latitude and Longitude.
-     *  @return The Latitude and Longitude
+     * returns the Latitude and Longitude.
+     *
+     * @return The Latitude and Longitude
      */
     public Point2D.Double getLatLng() {
         if ( latLng == null ) {
@@ -1159,10 +1145,23 @@ public class PictureInfo
         return latLng;
     }
 
+    /**
+     * returns the Latitude and Longitude as a String
+     *
+     * @return The latitude and longitude in the format of 2 doubles with an x
+     */
+    public String getLatLngString() {
+        Point2D.Double latLang = getLatLng();
+        NumberFormat numberFormatter;
+        numberFormatter = NumberFormat.getNumberInstance();
+        String formattedString = numberFormatter.format( latLang.x ) + "x" + numberFormatter.format( latLang.y );
+        return formattedString;
+
+    }
 
     /**
-     *  Creates a PictureChangedEvent and sends it to inform listening
-     *  objects that the copyright holder was updated.
+     * Creates a PictureChangedEvent and sends it to inform listening objects
+     * that the copyright holder was updated.
      */
     private void sendLatLngChangedEvent() {
         if ( Settings.pictureCollection.getSendModelUpdates() ) {
@@ -1179,9 +1178,8 @@ public class PictureInfo
      */
     public HashSet<Object> categoryAssignments;
 
-
     /**
-     *  removes all category Assignments
+     * removes all category Assignments
      */
     public void clearCategoryAssignments() {
         if ( categoryAssignments != null ) {
@@ -1191,11 +1189,10 @@ public class PictureInfo
     }
 
     /**
-     *  Temporary variable to allow appending of characters as the XML file
-     *  is being read.
+     * Temporary variable to allow appending of characters as the XML file is
+     * being read.
      */
     private String categoryAssignmentString = "";
-
 
     /**
      * Returns an Array of the category assignments associated with this picture
@@ -1206,9 +1203,9 @@ public class PictureInfo
         return categoryAssignments.toArray();
     }
 
-
     /**
      * Appends the text fragment to the categoryAssignmentString field.
+     *
      * @param string Text fragment
      */
     public synchronized void appendToCategoryAssignment( String string ) {
@@ -1217,9 +1214,9 @@ public class PictureInfo
         }
     }
 
-
     /**
      * Adds to the categoryAssignmentString HashSet.
+     *
      * @param string Text fragment
      */
     public synchronized void addCategoryAssignment( String string ) {
@@ -1229,10 +1226,9 @@ public class PictureInfo
         }
     }
 
-
     /**
-     * Adds the supplied Object to the categoryAssignment HashSet. If the Object already existed
-     * it doesn't get added a second time.
+     * Adds the supplied Object to the categoryAssignment HashSet. If the Object
+     * already existed it doesn't get added a second time.
      *
      * @param key the key to add
      */
@@ -1245,9 +1241,9 @@ public class PictureInfo
         }
     }
 
-
     /**
-     * sets the supplied HashSet as the valid HashSet for the Categories of the picture
+     * sets the supplied HashSet as the valid HashSet for the Categories of the
+     * picture
      *
      * @param ca the supplied hash set
      */
@@ -1257,9 +1253,8 @@ public class PictureInfo
         }
     }
 
-
     /**
-     *  Converts the temporary categoryAssignmentString to a categoryAssignment.
+     * Converts the temporary categoryAssignmentString to a categoryAssignment.
      */
     public void parseCategoryAssignment() {
         try {
@@ -1272,9 +1267,8 @@ public class PictureInfo
         sendCategoryAssignmentsChangedEvent();
     }
 
-
     /**
-     *  Returns whether the category is part of the attributes of the picture
+     * Returns whether the category is part of the attributes of the picture
      *
      * @param key
      * @return true if the key was in the categories
@@ -1286,9 +1280,8 @@ public class PictureInfo
         return categoryAssignments.contains( key );
     }
 
-
     /**
-     *  Removes the supplied category from the picture if it was there
+     * Removes the supplied category from the picture if it was there
      *
      * @param key the key to search for
      */
@@ -1300,10 +1293,9 @@ public class PictureInfo
         }
     }
 
-
     /**
-     *  Creates a PictureChangedEvent and sends it to inform listening
-     *  objects that the copyright holder was updated.
+     * Creates a PictureChangedEvent and sends it to inform listening objects
+     * that the copyright holder was updated.
      */
     private void sendCategoryAssignmentsChangedEvent() {
         if ( Settings.pictureCollection.getSendModelUpdates() ) {
@@ -1314,14 +1306,13 @@ public class PictureInfo
         }
     }
 
-
     //-------------------------------------------
     /**
-     *  Creates a PictureChangedEvent and sends it to inform listening
-     *  objects that the node was selected. Strictly speaking this is not a
-     *  PictureInfo level event but a node level event. However, because I have
-     *  the PictureInfoChangeEvent structure in place this is a good place to
-     *  put this notification.
+     * Creates a PictureChangedEvent and sends it to inform listening objects
+     * that the node was selected. Strictly speaking this is not a PictureInfo
+     * level event but a node level event. However, because I have the
+     * PictureInfoChangeEvent structure in place this is a good place to put
+     * this notification.
      */
     public void sendWasSelectedEvent() {
         PictureInfoChangeEvent pce = new PictureInfoChangeEvent( this );
@@ -1329,14 +1320,13 @@ public class PictureInfo
         sendPictureInfoChangedEvent( pce );
     }
 
-
     //-------------------------------------------
     /**
-     *  Creates a PictureChangedEvent and sends it to inform listening
-     *  objects that the node was unselected. Strictly speaking this is not a
-     *  PictureInfo level event but a node level event. However, because I have
-     *  the PictureInfoChangeEvent structure in place this is a good place to
-     *  put this notification.
+     * Creates a PictureChangedEvent and sends it to inform listening objects
+     * that the node was unselected. Strictly speaking this is not a PictureInfo
+     * level event but a node level event. However, because I have the
+     * PictureInfoChangeEvent structure in place this is a good place to put
+     * this notification.
      */
     public void sendWasUnselectedEvent() {
         PictureInfoChangeEvent pce = new PictureInfoChangeEvent( this );
@@ -1344,14 +1334,13 @@ public class PictureInfo
         sendPictureInfoChangedEvent( pce );
     }
 
-
     //-------------------------------------------
     /**
-     *  Creates a PictureChangedEvent and sends it to inform listening
-     *  objects that the node was mailSelected. Strictly speaking this is not a
-     *  PictureInfo level event but a node level event. However, because I have
-     *  the PictureInfoChangeEvent structure in place this is a good place to
-     *  put this notification.
+     * Creates a PictureChangedEvent and sends it to inform listening objects
+     * that the node was mailSelected. Strictly speaking this is not a
+     * PictureInfo level event but a node level event. However, because I have
+     * the PictureInfoChangeEvent structure in place this is a good place to put
+     * this notification.
      */
     public void sendWasMailSelectedEvent() {
         PictureInfoChangeEvent pce = new PictureInfoChangeEvent( this );
@@ -1359,14 +1348,13 @@ public class PictureInfo
         sendPictureInfoChangedEvent( pce );
     }
 
-
     //-------------------------------------------
     /**
-     *  Creates a PictureChangedEvent and sends it to inform listening
-     *  objects that the node was mailUnselected. Strictly speaking this is not a
-     *  PictureInfo level event but a node level event. However, because I have
-     *  the PictureInfoChangeEvent structure in place this is a good place to
-     *  put this notification.
+     * Creates a PictureChangedEvent and sends it to inform listening objects
+     * that the node was mailUnselected. Strictly speaking this is not a
+     * PictureInfo level event but a node level event. However, because I have
+     * the PictureInfoChangeEvent structure in place this is a good place to put
+     * this notification.
      */
     public void sendWasMailUnselectedEvent() {
         PictureInfoChangeEvent pce = new PictureInfoChangeEvent( this );
@@ -1374,11 +1362,11 @@ public class PictureInfo
         sendPictureInfoChangedEvent( pce );
     }
 
-
     //-------------------------------------------
     /**
-     *  Returns a new PictureInfo object which is identical to the current one.
-     *  @return  a clone of the current PictureInfo object.
+     * Returns a new PictureInfo object which is identical to the current one.
+     *
+     * @return a clone of the current PictureInfo object.
      */
     public PictureInfo getClone() {
         PictureInfo clone = new PictureInfo();
@@ -1395,27 +1383,26 @@ public class PictureInfo
     }
 
     /**
-     *  A vector that holds all the listeners that want to be notified about
-     *  changes to this PictureInfo object.
+     * A vector that holds all the listeners that want to be notified about
+     * changes to this PictureInfo object.
      */
     private ArrayList<PictureInfoChangeListener> pictureInfoListeners = new ArrayList<PictureInfoChangeListener>();
 
-
     /**
-     *  Method to register the listening object of the status events.
-     *  @param listener	The object that will receive notifications.
+     * Method to register the listening object of the status events.
+     *
+     * @param listener	The object that will receive notifications.
      */
     public void addPictureInfoChangeListener( PictureInfoChangeListener listener ) {
         LOGGER.fine( "Listener added on SourcePicture " + Integer.toString( this.hashCode() ) + " of class: " + listener.getClass().toString() );
         pictureInfoListeners.add( listener );
     }
 
-
     /**
-     *  Method to register the listening object of the status events. Will NOT throw an
-     *  exception if the listener was not in the Vector.
+     * Method to register the listening object of the status events. Will NOT
+     * throw an exception if the listener was not in the Vector.
      *
-     *  @param listener	The listener that doesn't want to notifications any more.
+     * @param listener	The listener that doesn't want to notifications any more.
      */
     public void removePictureInfoChangeListener(
             PictureInfoChangeListener listener ) {
@@ -1423,10 +1410,10 @@ public class PictureInfo
         pictureInfoListeners.remove( listener );
     }
 
-
     /**
-     *  Send PictureInfoChangeEvents.
-     *  @param pce The Event we want to notify.
+     * Send PictureInfoChangeEvents.
+     *
+     * @param pce The Event we want to notify.
      */
     private void sendPictureInfoChangedEvent( PictureInfoChangeEvent pce ) {
         if ( Settings.pictureCollection.getSendModelUpdates() ) {
@@ -1436,9 +1423,9 @@ public class PictureInfo
         }
     }
 
-
     /**
      * Intended mainly for debugging purposes.
+     *
      * @return The Vector of change listeners
      */
     public ArrayList<PictureInfoChangeListener> getPictureInfoListeners() {
@@ -1446,18 +1433,17 @@ public class PictureInfo
     }
 
     //-------------------------------------------
-
     /**
-     *  Checks whether the searchString parameter is contained in any of the fields.
-     *  It doesn't check the checksum, lowres filename, rotation.
-     *  It does check the description, highres name, film reference, creation time, comment and copyright holder
+     * Checks whether the searchString parameter is contained in any of the
+     * fields. It doesn't check the checksum, lowres filename, rotation. It does
+     * check the description, highres name, film reference, creation time,
+     * comment and copyright holder
      *
-     *  @param	searchString	The string to search for.
-     *  @return	true if found. false if not.
+     * @param	searchString	The string to search for.
+     * @return	true if found. false if not.
      */
     public boolean anyMatch( String searchString ) {
         boolean found = descriptionContains( searchString ) || ( getPhotographer().toUpperCase().indexOf( searchString.toUpperCase() ) > -1 ) || ( highresLocation.toUpperCase().indexOf( searchString.toUpperCase() ) > -1 ) || ( getFilmReference().toUpperCase().indexOf( searchString.toUpperCase() ) > -1 ) || ( getCreationTime().toUpperCase().indexOf( searchString.toUpperCase() ) > -1 ) || ( getComment().toUpperCase().indexOf( searchString.toUpperCase() ) > -1 ) || ( getCopyrightHolder().toUpperCase().indexOf( searchString.toUpperCase() ) > -1 );
-
 
         return found;
     }
