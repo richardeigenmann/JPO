@@ -5,7 +5,7 @@ import java.util.*;
 /*
 RandomNavigator.java:  an implementation of the NodeNavigator for navigating nodes in a random order.
 
-Copyright (C) 2006 - 2010  Richard Eigenmann, Zürich, Switzerland
+Copyright (C) 2006 - 2014  Richard Eigenmann, Zürich, Switzerland
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -28,12 +28,12 @@ public class RandomNavigator
     /**
      *  This ArrayList holds all the nodes that the NodeNavigator will serve
      */
-    private ArrayList<SortableDefaultMutableTreeNode> nodes;
+    private final ArrayList<SortableDefaultMutableTreeNode> nodes;
 
     /**
      * The title of this set of nodes
      */
-    private String title;
+    private final String title;
 
     /**
      *  Constructor for a RandomNavigator.
@@ -49,7 +49,9 @@ public class RandomNavigator
 
     /**
      *  returns a title for this NodeNavigator
+     * @return the Title for the NodeNavigator
      */
+    @Override
     public String getTitle() {
         return title;
     }
@@ -58,6 +60,7 @@ public class RandomNavigator
      * Returns the number of nodes in the shuffled list
      * @return The number of nodes in the list
      */
+    @Override
     public int getNumberOfNodes() {
         return nodes.size();
     }
@@ -67,6 +70,7 @@ public class RandomNavigator
      * @param index The index of the node to retrieve
      * @return the node for the index number
      */
+    @Override
     public SortableDefaultMutableTreeNode getNode( int index ) {
         return nodes.get( index );
     }

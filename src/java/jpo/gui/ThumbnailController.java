@@ -142,12 +142,12 @@ public class ThumbnailController
     /**
      *  The DragSourceListener for a thumbnail.
      */
-    private DragSourceListener myDragSourceListener = new ThumbnailDragSourceListener();
+    private final DragSourceListener myDragSourceListener = new ThumbnailDragSourceListener();
 
     /**
      * The priority this ThumbnailController should have on the ThumbnailCreationQueue
      */
-    private int priority = ThumbnailQueueRequest.MEDIUM_PRIORITY;
+    private final int priority = ThumbnailQueueRequest.MEDIUM_PRIORITY;
 
     private Thumbnail theThumbnail;
 

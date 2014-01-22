@@ -48,24 +48,24 @@ public class ReconcileJFrame
     /**
      * Defines a logger for this class
      */
-    private static Logger logger = Logger.getLogger( ReconcileJFrame.class.getName() );
+    private static final Logger LOGGER = Logger.getLogger( ReconcileJFrame.class.getName() );
 
     /**
      *  tickbox that indicates whether subdirectories are to be reconciled too
      **/
-    private JCheckBox recurseSubdirectoriesJCheckBox = new JCheckBox( Settings.jpoResources.getString( "ReconcileSubdirectories" ) );
+    private final JCheckBox recurseSubdirectoriesJCheckBox = new JCheckBox( Settings.jpoResources.getString( "ReconcileSubdirectories" ) );
 
     /**
      *  tickbox that indicates whether subdirectories are to be reconciled too
      **/
-    private JCheckBox listPositivesJCheckBox = new JCheckBox( Settings.jpoResources.getString( "ReconcileListPositives" ) );
+    private final JCheckBox listPositivesJCheckBox = new JCheckBox( Settings.jpoResources.getString( "ReconcileListPositives" ) );
 
     /**
      *  the log window with the results of the reconciliation
      */
-    private JTextArea logJTextArea = new JTextArea( 15, 60 );
+    private final JTextArea logJTextArea = new JTextArea( 15, 60 );
 
-    private JScrollPane logJScrollPane = new JScrollPane( logJTextArea );
+    private final JScrollPane logJScrollPane = new JScrollPane( logJTextArea );
 
     /**
      *  flag to tell the thread to end in a controlled manner. If the thread is not running it is true
@@ -75,7 +75,7 @@ public class ReconcileJFrame
     /**
      *  a reference to the root object which shall be reconciled.
      */
-    private SortableDefaultMutableTreeNode rootNode;
+    private final SortableDefaultMutableTreeNode rootNode;
 
 
     /** 
@@ -260,7 +260,7 @@ public class ReconcileJFrame
                         JOptionPane.ERROR_MESSAGE );
                 return false;
             }
-            logger.info( "File is not a directory. Using it's parent: " + scanDir.getPath() );
+            LOGGER.info( "File is not a directory. Using it's parent: " + scanDir.getPath() );
         }
 
 

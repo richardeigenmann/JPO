@@ -65,6 +65,7 @@ public class QueryNavigator
      *
      * @return The title of the query
      */
+    @Override
     public String getTitle() {
         return getQuery().getTitle();
     }
@@ -75,6 +76,7 @@ public class QueryNavigator
      *
      * @return the number of nodes
      */
+    @Override
     public int getNumberOfNodes() {
         if ( myQuery == null ) {
             return 0;
@@ -91,6 +93,7 @@ public class QueryNavigator
      *  @param index   The component index that is to be returned.
      * @return the node for the index
      */
+    @Override
     public SortableDefaultMutableTreeNode getNode( int index ) {
         if ( myQuery == null ) {
             return null;

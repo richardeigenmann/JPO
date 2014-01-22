@@ -6,7 +6,7 @@ import java.util.logging.Logger;
 /*
 NodeNavigator.java:  an implementation of the NodeNavigatorInterface for browsing pictures sequentially.
 
-Copyright (C) 2006-2011  Richard Eigenmann, Zürich, Switzerland
+Copyright (C) 2006-2014 Richard Eigenmann, Zürich, Switzerland
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -36,12 +36,14 @@ public abstract class NodeNavigator
     /**
      *  The implementing class must return the title for the images being shown.
      */
+    @Override
     public abstract String getTitle();
 
 
     /**
      *  The implementing class must return the number of nodes it contains.
      */
+    @Override
     public abstract int getNumberOfNodes();
 
 
@@ -52,6 +54,7 @@ public abstract class NodeNavigator
      *                 {@link #getNumberOfNodes}. If there are 3 nodes request getNode(0),
      *                 getNode(1) and getNode(2).
      */
+    @Override
     public abstract SortableDefaultMutableTreeNode getNode( int index );
 
 
@@ -59,6 +62,7 @@ public abstract class NodeNavigator
      *  This method unregisters the TreeModelListener and sets the variables to null;
      *  a super must be called to ensure that the NodeNavigator cleans up the relayoutListeners
      */
+    @Override
     public void getRid() {
         relayoutListeners.clear();
     }
@@ -67,12 +71,13 @@ public abstract class NodeNavigator
      *  This ArrayList holds the reference to the listeners that need to be notified if there is a structural change.
      *  Observer pattern.
      */
-    private ArrayList<NodeNavigatorListener> relayoutListeners = new ArrayList<NodeNavigatorListener>();
+    private final ArrayList<NodeNavigatorListener> relayoutListeners = new ArrayList<NodeNavigatorListener>();
 
 
     /**
      *  method to register a NodeNavigatorListener as a listener
      */
+    @Override
     public void addNodeNavigatorListener( NodeNavigatorListener listener ) {
         LOGGER.fine( String.format( "adding listener: %s", listener.toString() ) );
         relayoutListeners.add( listener );
@@ -83,6 +88,7 @@ public abstract class NodeNavigator
     /**
      *  method to remove a NodeNavigatorListener as a listener
      */
+    @Override
     public void removeNodeNavigatorListener( NodeNavigatorListener listener ) {
         LOGGER.fine( String.format( "removing listener: %s", listener.toString() ) );
         relayoutListeners.remove( listener );

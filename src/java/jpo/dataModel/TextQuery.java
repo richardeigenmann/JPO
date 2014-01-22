@@ -135,6 +135,7 @@ public class TextQuery implements Serializable, Query {
     /**
      *  On a group we return the number of children in the group.
      */
+    @Override
     public int getNumberOfResults() {
         if ( searchResults == null ) {
             searchResults = extractSearchResults();
@@ -149,6 +150,7 @@ public class TextQuery implements Serializable, Query {
      *
      *  @param index   The component index that is to be returned.
      */
+    @Override
     public SortableDefaultMutableTreeNode getIndex( int index ) {
         if ( index >= getNumberOfResults() ) // forces execute of query if not yet executed
         {
@@ -181,6 +183,7 @@ public class TextQuery implements Serializable, Query {
     /**
      *  Forces the query to re-executed
      */
+    @Override
     public void refresh() {
         extractSearchResults();
     }
@@ -232,6 +235,7 @@ public class TextQuery implements Serializable, Query {
     /**
      *  returns a title for the search that can be used to display the search results under.
      */
+    @Override
     public String getTitle() {
         String nodeDescription = ( startNode == null ) ? "" : startNode.getUserObject().toString();
 

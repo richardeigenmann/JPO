@@ -1,5 +1,6 @@
 package jpo.gui;
 
+import jpo.gui.swing.QueryJFrame;
 import jpo.gui.swing.GroupPopupMenu;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.MouseAdapter;
@@ -15,12 +16,12 @@ import jpo.dataModel.*;
 import jpo.export.GenerateWebsiteWizard;
 import jpo.export.PicasaUploadRequest;
 import jpo.export.PicasaUploaderWizard;
-import jpo.gui.Jpo.ApplicationEventHandler;
+import jpo.gui.ApplicationEventHandler;
 import jpo.gui.swing.CollectionJTree;
 
 /*
  * CollectionJTreeController.java: class that manages a JTree for the collection
- * * Copyright (C) 2002 - 2011 Richard Eigenmann, Zurich, Switzerland This
+ * * Copyright (C) 2002 - 2014 Richard Eigenmann, Zurich, Switzerland This
  * program is free software; you can redistribute it and/or modify it under the
  * terms of the GNU General Public License as published by the Free Software
  * Foundation; either version 2 of the License, or any later version. This
@@ -33,7 +34,7 @@ import jpo.gui.swing.CollectionJTree;
  * http://www.gnu.org/copyleft/gpl.html for the details.
  */
 /**
- * The is one of the main classes in the JPO application as it is an extended
+ * The is one of the main classes in the JPO application as it manages the 
  * JTree that deals with most of the logic surrounding the collection and the
  * user interactions with it.
  */
@@ -45,11 +46,12 @@ public class CollectionJTreeController
      * Defines a logger for this class
      */
     private static final Logger LOGGER = Logger.getLogger(CollectionJTreeController.class.getName());
+    
     /**
      * reference to the main collection controller so that we can delegate stuff
      * to
      */
-    private ApplicationEventHandler applicationEventHandler;
+    private final ApplicationEventHandler applicationEventHandler;
 
     /**
      * The Controller class for the JTree. This class no longer extends the
@@ -108,7 +110,7 @@ public class CollectionJTreeController
          * object in preparation for the transfer.
          *
          * @param c
-         * @return a Treansferable
+         * @return a transferable
          */
         @Override
         protected Transferable createTransferable(JComponent c) {
@@ -174,12 +176,8 @@ public class CollectionJTreeController
                 return false;
             }
 
-            /*
-             * We must ensure that if the action is a move it does not drop into
-             * itself or into a child of itself.
-             */
-            for (int i = 0; i < arrayOfNodes.length; i++) {
-                sourceNode = (SortableDefaultMutableTreeNode) arrayOfNodes[i];
+            for ( Object arrayOfNode : arrayOfNodes ) {
+                sourceNode = (SortableDefaultMutableTreeNode) arrayOfNode;
                 if (targetNode.isNodeAncestor(sourceNode)) {
                     JOptionPane.showMessageDialog(Settings.anchorFrame,
                             Settings.jpoResources.getString("moveNodeError"),
@@ -206,8 +204,8 @@ public class CollectionJTreeController
             }
 
 
-            for (int i = 0; i < arrayOfNodes.length; i++) {
-                sourceNode = (SortableDefaultMutableTreeNode) arrayOfNodes[i];
+            for ( Object arrayOfNode : arrayOfNodes ) {
+                sourceNode = (SortableDefaultMutableTreeNode) arrayOfNode;
                 if (actionType == TransferHandler.MOVE) {
                     if (dropLocation.getChildIndex() == -1) {
                         if (targetNode.getUserObject() instanceof GroupInfo) {
@@ -242,7 +240,7 @@ public class CollectionJTreeController
     /**
      * The private reference to the JTree representing the collection
      */
-    private JTree collectionJTree = new CollectionJTree() {
+    private final JTree collectionJTree = new CollectionJTree() {
 
         @Override
         public String getToolTipText(MouseEvent mouseEvent) {
@@ -336,8 +334,6 @@ public class CollectionJTreeController
     @Override
     public void requestFind(SortableDefaultMutableTreeNode popupNode) {
         new QueryJFrame(popupNode, applicationEventHandler);
-
-
     }
 
     /**

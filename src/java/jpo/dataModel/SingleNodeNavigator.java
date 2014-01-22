@@ -5,7 +5,7 @@ import java.util.logging.Logger;
 /*
 SingleNodeBrower.java:  an implementation of the ThumbnailBrowserInterface for "browsing" a single picture.
 
-Copyright (C) 2006-2010  Richard Eigenmann, Zürich, Switzerland
+Copyright (C) 2006-2014  Richard Eigenmann, Zürich, Switzerland
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -46,8 +46,10 @@ public class SingleNodeNavigator
     private SortableDefaultMutableTreeNode singleNode = null;
 
     /**
-     *  returns the string Sequential
+     * returns the description of the picture or "Single picture"
+     * @return returns the description of the picture or "Single picture"
      */
+    @Override
     public String getTitle() {
         if ( ( singleNode != null ) && ( singleNode.getUserObject() instanceof PictureInfo ) ) {
             return ( (PictureInfo) singleNode.getUserObject() ).getDescription();
@@ -59,7 +61,9 @@ public class SingleNodeNavigator
     /**
      *  Returns the number of pictures in this group. The number is 0 to the number of pictures minus 1
      *  because counting starts at 0. So 3 nodes in the group returns 2 meaning node0, node1, node2
+     * @return 0
      */
+    @Override
     public int getNumberOfNodes() {
         return 0;
     }
@@ -70,9 +74,10 @@ public class SingleNodeNavigator
      *  @param index   The component index that is to be returned. The number is from 0 to
      *                 {@link #getNumberOfNodes}. If there are 3 nodes request getNode(0),
      *                 getNode(1) and getNode(2).
+     * @return The single note
      */
+    @Override
     public SortableDefaultMutableTreeNode getNode( int index ) {
-        //logger.info("SingleNodeNavigator.getNode: requested for node: " + Integer.toString( index ) );
         return singleNode;
     }
 

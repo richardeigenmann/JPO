@@ -21,7 +21,7 @@ import net.miginfocom.swing.MigLayout;
 /*
 PrivacyJFrame.java:  a dialog to clear private data from JPO
 
-Copyright (C) 2002 - 2010 Richard Eigenmann.
+Copyright (C) 2002 - 2014 Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -57,12 +57,12 @@ public class PrivacyJFrame
     /**
      * Handler for the clicks
      */
-    private PrivacyController privacyController = new PrivacyController();
+    private final PrivacyController privacyController = new PrivacyController();
 
     /**
      * Defines a logger for this class
      */
-    private static final Logger logger = Logger.getLogger( PrivacyJFrame.class.getName() );
+    private static final Logger LOGGER = Logger.getLogger( PrivacyJFrame.class.getName() );
 
 
     /**
@@ -77,6 +77,7 @@ public class PrivacyJFrame
         final JButton clearRecentFilesButton = new JButton( Settings.jpoResources.getString( "PrivacyClear" ) );
         clearRecentFilesButton.addActionListener( new ActionListener() {
 
+            @Override
             public void actionPerformed( ActionEvent e ) {
                 privacyController.clearRecentFiles();
             }
@@ -88,6 +89,7 @@ public class PrivacyJFrame
         final JButton clearThumbnailsButton = new JButton( Settings.jpoResources.getString( "PrivacyClear" ) );
         clearThumbnailsButton.addActionListener( new ActionListener() {
 
+            @Override
             public void actionPerformed( ActionEvent e ) {
                 privacyController.clearThumbnails();
             }
@@ -99,6 +101,7 @@ public class PrivacyJFrame
         final JButton clearAutoloadButton = new JButton( Settings.jpoResources.getString( "PrivacyClear" ) );
         clearAutoloadButton.addActionListener( new ActionListener() {
 
+            @Override
             public void actionPerformed( ActionEvent e ) {
                 privacyController.clearAutoload();
             }
@@ -110,6 +113,7 @@ public class PrivacyJFrame
         final JButton clearMemorisedDirsButton = new JButton( Settings.jpoResources.getString( "PrivacyClear" ) );
         clearMemorisedDirsButton.addActionListener( new ActionListener() {
 
+            @Override
             public void actionPerformed( ActionEvent e ) {
                 privacyController.clearMemorisedDirs();
             }
@@ -119,6 +123,7 @@ public class PrivacyJFrame
         final JButton selected = new JButton( Settings.jpoResources.getString( "PrivacySelected" ) );
         selected.addActionListener( new ActionListener() {
 
+            @Override
             public void actionPerformed( ActionEvent e ) {
                 privacyController.clearSelected( clearRecentFiles.isSelected(), clearThumbnails.isSelected(), clearAutoload.isSelected(), clearMemorisedDirs.isSelected() );
             }
@@ -128,6 +133,7 @@ public class PrivacyJFrame
         final JButton cancel = new JButton( Settings.jpoResources.getString( "PrivacyClose" ) );
         cancel.addActionListener( new ActionListener() {
 
+            @Override
             public void actionPerformed( ActionEvent e ) {
                 getRid();
             }
@@ -176,7 +182,7 @@ public class PrivacyJFrame
         /**
          * Defines a logger for this class
          */
-        private Logger logger = Logger.getLogger( getClass().getName() );
+        private final Logger LOGGER = Logger.getLogger( getClass().getName() );
 
 
         /**
@@ -192,10 +198,10 @@ public class PrivacyJFrame
 
         /**
          * Handles a click on the clear selected button.
-         * @param clearRecentFiles  Wether to clear the recent files of not
-         * @param clearThumbnails  Wether to clear the thumbnailFilter
-         * @param clearAutoload  Wether to clear the Autoload 
-         * @param clearMemorisedDirs  Wether to clear the memorised locations
+         * @param clearRecentFiles  Whether to clear the recent files of not
+         * @param clearThumbnails  Whether to clear the thumbnailFilter
+         * @param clearAutoload  Whether to clear the Autoload 
+         * @param clearMemorisedDirs  Whether to clear the memorised locations
          */
         public void clearSelected( final boolean clearRecentFiles,
                 final boolean clearThumbnails, final boolean clearAutoload,
@@ -255,6 +261,7 @@ public class PrivacyJFrame
                 File thumbnailDir = Settings.thumbnailPath;
                 FilenameFilter thumbnailFilter = new FilenameFilter() {
 
+                    @Override
                     public boolean accept( File dir, String name ) {
                         boolean matches = name.matches( "^" + Settings.thumbnailPrefix + "[0-9]+[.]jpg$" );
                         //logger.info( String.format( "Considering: %s matches: %b", name, matches ) );
@@ -283,7 +290,7 @@ public class PrivacyJFrame
 
                 for ( File f : deleteableThumbnails ) {
                     boolean success = f.delete();
-                    logger.fine( String.format( "Success: %b for deleting %s ", success, f.toString() ) );
+                    LOGGER.fine( String.format( "Success: %b for deleting %s ", success, f.toString() ) );
                     publish( String.format( "Success: %b for deleting %s ", success, f.toString() ) );
                     if ( progGui.getInterruptor().getShouldInterrupt() ) {
                         progGui.setDoneString( Settings.jpoResources.getString( "htmlDistillerInterrupt" ) );

@@ -17,7 +17,7 @@ import jpo.gui.ThumbnailCreationQueue;
  * PictureCollection.java: Information about the collection and owns the tree
  * model
  *
- * Copyright (C) 2006 - 2013 Richard Eigenmann, Zurich, Switzerland This program
+ * Copyright (C) 2006 - 2014 Richard Eigenmann, Zurich, Switzerland This program
  * is free software; you can redistribute it and/or modify it under the terms of
  * the GNU General Public License as published by the Free Software Foundation;
  * either version 2 of the License, or any later version. This program is
@@ -60,7 +60,7 @@ public class PictureCollection {
      * the TreeModel it has been made synchronous on the EDT.
      */
     public void clearCollection() {
-        Runnable r = new Runnable() {
+        Runnable runnable = new Runnable() {
             @Override
             public void run() {
                 getRootNode().removeAllChildren();
@@ -77,10 +77,10 @@ public class PictureCollection {
             }
         };
         if ( SwingUtilities.isEventDispatchThread() ) {
-            r.run();
+            runnable.run();
         } else {
             try {
-                SwingUtilities.invokeAndWait( r );
+                SwingUtilities.invokeAndWait( runnable );
             } catch ( InterruptedException ex ) {
                 LOGGER.severe( ex.getMessage() );
                 LOGGER.severe( "No idea what to do here!" );
@@ -320,6 +320,7 @@ public class PictureCollection {
     public void setAllowEdits( boolean status ) {
         allowEdits = status;
     }
+
     /**
      * This variable holds the reference to the queries executed against the
      * collection.
@@ -350,10 +351,10 @@ public class PictureCollection {
     /**
      * Call this method when you need to set the TreeModel for the queries
      *
-     * @param tm the tree model
+     * @param defaultTreeModel the tree model
      */
-    public void setQueriesTreeModel( DefaultTreeModel tm ) {
-        queriesTreeModel = tm;
+    public void setQueriesTreeModel( DefaultTreeModel defaultTreeModel ) {
+        queriesTreeModel = defaultTreeModel;
     }
 
     /**
@@ -361,6 +362,13 @@ public class PictureCollection {
      */
     public void createQueriesTreeModel() {
         setQueriesTreeModel( new DefaultTreeModel( new DefaultMutableTreeNode( Settings.jpoResources.getString( "queriesTreeModelRootNode" ) ) ) );
+
+        DefaultMutableTreeNode yearsTreeNode = new DefaultMutableTreeNode("By Year");
+        getQueriesRootNode().add( yearsTreeNode );
+        
+        YearQuery yearQuery = new YearQuery( "1982" );
+        yearQuery.setStartNode( getRootNode() );
+        yearsTreeNode.add( new DefaultMutableTreeNode( yearQuery ) );
     }
 
     /**
@@ -374,21 +382,21 @@ public class PictureCollection {
      * Adds a query to the Query Tree Model. It has been made synchronous on the
      * EDT
      *
-     * @param q The new Query to add
+     * @param query The new Query to add
      * @return The node that was added.
      */
-    public DefaultMutableTreeNode addQueryToTreeModel( final Query q ) {
+    public DefaultMutableTreeNode addQueryToTreeModel( final Query query ) {
         Tools.checkEDT();
-        final DefaultMutableTreeNode newNode = new DefaultMutableTreeNode( q );
+        final DefaultMutableTreeNode newNode = new DefaultMutableTreeNode( query );
         getQueriesRootNode().add( newNode );
-        queriesTreeModel.nodesWereInserted( getQueriesRootNode(), new int[]{getQueriesRootNode().getIndex( newNode )} );
+        queriesTreeModel.nodesWereInserted( getQueriesRootNode(), new int[]{ getQueriesRootNode().getIndex( newNode ) } );
         return newNode;
     }
     /**
      * This HashMap holds the categories that will be available for this
      * collection. It is only populated on the root node.
      */
-    private HashMap<Integer, String> categories;
+    private final HashMap<Integer, String> categories;
 
     /**
      * Accessor for the categories object
@@ -409,11 +417,11 @@ public class PictureCollection {
         categories.put( index, category );
 
         // add a new CategoryQuery to the Searches tree
-        final CategoryQuery q = new CategoryQuery( index );
+        final CategoryQuery categoryQuery = new CategoryQuery( index );
         Runnable r = new Runnable() {
             @Override
             public void run() {
-                addQueryToTreeModel( q );
+                addQueryToTreeModel( categoryQuery );
             }
         };
         SwingUtilities.invokeLater( r );
@@ -606,7 +614,7 @@ public class PictureCollection {
         }
 
         for ( SortableDefaultMutableTreeNode node : clone ) {
-            LOGGER.fine("Removing node: " + node.toString() );
+            LOGGER.fine( "Removing node: " + node.toString() );
             removeFromMailSelection( node );
         }
     }
@@ -743,7 +751,8 @@ public class PictureCollection {
 
     /**
      * Loads the specified file into the root node of the collection. It ought
-     * to be called off the EDT. Then the clearCollection runs on the same thread.
+     * to be called off the EDT. Then the clearCollection runs on the same
+     * thread.
      *
      * @param file
      * @throws FileNotFoundException
@@ -899,7 +908,6 @@ public class PictureCollection {
     public SortableDefaultMutableTreeNode[] getSelectedNodes() {
         return (SortableDefaultMutableTreeNode[]) selection.toArray( new SortableDefaultMutableTreeNode[selection.size()] );
     }
-
 
     /**
      * returns the count of selected nodes

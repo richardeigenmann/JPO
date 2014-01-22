@@ -8,7 +8,7 @@ import javax.swing.tree.*;
 /*
 GroupBrower.java:  an implementation of the NodeNavigator for browsing groups.
 
-Copyright (C) 2002 - 2010  Richard Eigenmann.
+Copyright (C) 2002 - 2014  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -75,6 +75,7 @@ public class GroupNavigator
     /**
      *  returns the name of the Group being displayed
      */
+    @Override
     public String getTitle() {
         if ( myNode != null ) {
             return myNode.toString();
@@ -86,6 +87,7 @@ public class GroupNavigator
     /**
      *  On a group we return the number of children in the group.
      */
+    @Override
     public int getNumberOfNodes() {
         if ( myNode != null ) {
             return myNode.getChildCount();
@@ -102,6 +104,7 @@ public class GroupNavigator
      *
      * @param index The component index that is to be returned.
      */
+    @Override
     public SortableDefaultMutableTreeNode getNode( int index ) {
         if ( myNode == null ) {
             return null;

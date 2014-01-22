@@ -8,7 +8,7 @@ import javax.swing.tree.TreePath;
 /*
 FlatGroupNavigator.java:  an implementation of the NodeNavigator for browsing all the pictures of a group sequentially.
 
-Copyright (C) 2006-2011  Richard Eigenmann, Zürich, Switzerland
+Copyright (C) 2006-2014 Richard Eigenmann, Zürich, Switzerland
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -70,7 +70,8 @@ public class FlatGroupNavigator
     private SortableDefaultMutableTreeNode groupNode = null;
 
     /**
-     *  returns the title of the groupstring Sequential
+     *  returns the title of the node
+     * @return the title of the node
      */
     @Override
     public String getTitle() {
@@ -85,6 +86,7 @@ public class FlatGroupNavigator
      * We are notified here that a node changed
      * @param e The notification event details
      */
+    @Override
     public void treeNodesChanged( TreeModelEvent e ) {
     }
 
@@ -92,6 +94,7 @@ public class FlatGroupNavigator
      * We are notified here that a node was inserted
      * @param e
      */
+    @Override
     public void treeNodesInserted( TreeModelEvent e ) {
     }
 
@@ -100,6 +103,7 @@ public class FlatGroupNavigator
      *  If we receive a removal event we need to find out if one of our nodes was removed
      * @param e The Notification event
      */
+    @Override
     public void treeNodesRemoved( TreeModelEvent e ) {
         LOGGER.info( String.format( "Investigating a remove event: %s", e.toString() ) );
 
@@ -136,6 +140,7 @@ public class FlatGroupNavigator
      * We are notified here if the structure changed
      * @param e
      */
+    @Override
     public void treeStructureChanged( TreeModelEvent e ) {
     }
 }
