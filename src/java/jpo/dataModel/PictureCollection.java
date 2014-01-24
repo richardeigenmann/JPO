@@ -363,12 +363,30 @@ public class PictureCollection {
     public void createQueriesTreeModel() {
         setQueriesTreeModel( new DefaultTreeModel( new DefaultMutableTreeNode( Settings.jpoResources.getString( "queriesTreeModelRootNode" ) ) ) );
 
-        DefaultMutableTreeNode yearsTreeNode = new DefaultMutableTreeNode("By Year");
+        DefaultMutableTreeNode yearsTreeNode = new DefaultMutableTreeNode( "By Year" );
+        rememberYearsTreeNode( yearsTreeNode );
         getQueriesRootNode().add( yearsTreeNode );
-        
-        YearQuery yearQuery = new YearQuery( "1982" );
+    }
+
+    private DefaultMutableTreeNode yearsTreeNode = null;
+
+    /**
+     * Remembers the node on which the years were added
+     *
+     * @param node
+     */
+    private void rememberYearsTreeNode( DefaultMutableTreeNode node ) {
+        yearsTreeNode = node;
+    }
+
+    public DefaultMutableTreeNode getYearsTreeNode() {
+        return yearsTreeNode;
+    }
+
+    public void addYearQuery( String year ) {
+        YearQuery yearQuery = new YearQuery( year );
         yearQuery.setStartNode( getRootNode() );
-        yearsTreeNode.add( new DefaultMutableTreeNode( yearQuery ) );
+        getYearsTreeNode().add( new DefaultMutableTreeNode( yearQuery ) );
     }
 
     /**
@@ -767,11 +785,39 @@ public class PictureCollection {
         setXmlFile( file );
         try {
             getRootNode().fileLoad( getXmlFile() );
+            addYearQueries();
             fileLoading = false;
         } catch ( FileNotFoundException ex ) {
             fileLoading = false;
             throw ex;
         }
+    }
+
+    private void addYearQueries() {
+        TreeSet<String> years = new TreeSet<String>();
+
+        DefaultMutableTreeNode testNode;
+        Object nodeObject;
+        PictureInfo pi;
+        Calendar cal;
+        for ( Enumeration e = getRootNode().breadthFirstEnumeration(); e.hasMoreElements(); ) {
+            testNode = (DefaultMutableTreeNode) e.nextElement();
+            nodeObject = testNode.getUserObject();
+            if ( ( nodeObject instanceof PictureInfo ) ) {
+                pi = (PictureInfo) nodeObject;
+                cal = pi.getCreationTimeAsDate();
+                if ( cal != null ) {
+                    int year = cal.get( Calendar.YEAR );
+                    int month = cal.get( Calendar.MONTH );
+                    years.add( Integer.toString( year ) );
+                }
+            }
+        }
+        
+        for ( String year : years ) {
+            addYearQuery( year );
+        }
+
     }
 
     /**
