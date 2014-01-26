@@ -42,7 +42,7 @@ public class CollectionJTree
         setShowsRootHandles( true );
         setOpaque( true );
         setBackground( Settings.JPO_BACKGROUND_COLOR );
-        setMinimumSize( Settings.jpoNavigatorJTabbedPaneMinimumSize );
+        setMinimumSize( Settings.JPO_NAVIGATOR_JTABBEDPANE_MINIMUM_SIZE );
 
         final DefaultTreeCellRenderer renderer = new DefaultTreeCellRenderer() {
 

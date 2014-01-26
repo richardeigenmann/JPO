@@ -1,5 +1,6 @@
 package jpo.gui;
 
+import jpo.gui.swing.QueriesJTree;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
@@ -71,7 +72,6 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 public class Jpo {
 
-    private MainWindow mainWindow;
     /**
      * Defines a logger for this class
      */
@@ -141,6 +141,13 @@ public class Jpo {
         new CameraWatchDaemon( this );
 
     }
+
+
+    /**
+     * This class handles the the main window
+     */
+    private static MainWindow mainWindow;
+    
     /**
      *  This object does all the tree work. It can load and save the nodes of the tree, listens to
      *  events happening on the tree and calls back with any actions that should be performed.
@@ -227,10 +234,10 @@ public class Jpo {
 
         // Make it EDT safe
         Runnable r = new Runnable() {
-
             @Override
             public void run() {
                 collectionJTreeController.setSelectedNode( displayNode );
+                mainWindow.tabToCollection();
                 showThumbnails( new GroupNavigator( displayNode ) );
                 showInfo( displayNode );
             }

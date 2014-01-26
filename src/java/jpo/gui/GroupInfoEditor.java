@@ -124,9 +124,9 @@ public class GroupInfoEditor {
         JTabbedPane tabbedPane = new JTabbedPane();
         tabbedPane.addTab( "Properties", jPanel );
 
-        NodeStatisticsPanel statsJPanel = new NodeStatisticsPanel();
-        statsJPanel.updateStats( editNode );
-        tabbedPane.addTab( "Statistics", statsJPanel );
+        NodeStatisticsController nodeStatisticsController = new NodeStatisticsController();
+        nodeStatisticsController.updateStats( editNode );
+        tabbedPane.addTab( "Statistics", nodeStatisticsController.getJComponent() );
 
         ThumbnailController thumbnailController = new ThumbnailController();
         thumbnailController.setNode( new SingleNodeNavigator( editNode), 0 );

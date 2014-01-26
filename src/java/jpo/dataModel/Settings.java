@@ -22,7 +22,7 @@ import jpo.gui.LocaleChangeListener;
 /*
  * Settings.java: class that holds the settings of the JPO application
  *
- * Copyright (C) 2002 - 2012 Richard Eigenmann, Zürich, Switzerland This program
+ * Copyright (C) 2002 - 2014 Richard Eigenmann, Zürich, Switzerland This program
  * is free software; you can redistribute it and/or modify it under the terms of
  * the GNU General Public License as published by the Free Software Foundation;
  * either version 2 of the License, or any later version. This program is
@@ -92,7 +92,7 @@ public class Settings {
      * A set of window sizes that the user can choose his preferred size from.
      * The first option will be to maximise the window
      */
-    public static final Dimension[] windowSizes = {new Dimension( 0, 0 ), new Dimension( 1050, 760 ), new Dimension( 1250, 900 ), new Dimension( 1450, 1190 ), new Dimension( 2150, 1300 )};
+    public static final Dimension[] windowSizes = { new Dimension( 0, 0 ), new Dimension( 1050, 760 ), new Dimension( 1250, 900 ), new Dimension( 1450, 1190 ), new Dimension( 2150, 1300 ) };
     /**
      * Flag to indicate whether the JPO window should be maximised on startup or
      * left for the OS to decide on the size together with the JVM
@@ -138,33 +138,33 @@ public class Settings {
      */
     public static int thumbnailSize = 350;
     /**
-     * the dimension of minithumbnails in the group folders
+     * the dimension of mini thumbnails in the group folders
      */
     public static final Dimension miniThumbnailSize = new Dimension( 100, 75 );
     /**
      * The minimum width for the left panels
      */
-    public static final int leftPanelMinimumWidth = 200;
+    public static final int LEFT_PANEL_MINIMUM_WIDTH = 300;
     /**
      * the minimum Dimension for the InfoPanel
      */
-    public static final Dimension infoPanelMinimumSize = new Dimension( leftPanelMinimumWidth, 100 );
+    public static final Dimension INFO_PANEL_MINIMUM_DIMENSION = new Dimension( LEFT_PANEL_MINIMUM_WIDTH, 100 );
     /**
      * the preferred Dimension for the InfoPanel
      */
-    public static final Dimension infoPanelPreferredSize = new Dimension( leftPanelMinimumWidth, 100 );
+    public static final Dimension INFO_PANEL_PREFERRED_SIZE = new Dimension( LEFT_PANEL_MINIMUM_WIDTH, 100 );
     /**
      * the minimum Dimension for the Navigator Panel
      */
-    public static final Dimension jpoNavigatorJTabbedPaneMinimumSize = new Dimension( leftPanelMinimumWidth, 300 );
+    public static final Dimension JPO_NAVIGATOR_JTABBEDPANE_MINIMUM_SIZE = new Dimension( LEFT_PANEL_MINIMUM_WIDTH, 450 );
     /**
      * the preferred Dimension for the Navigator Panel
      */
-    public static final Dimension jpoNavigatorJTabbedPanePreferredSize = new Dimension( preferredMasterDividerSpot, 500 );
+    public static final Dimension jpoNavigatorJTabbedPanePreferredSize = new Dimension( preferredMasterDividerSpot, 800 );
     /**
      * the minimum Dimension for the Thumbnail Panel
      */
-    public static final Dimension thumbnailJScrollPaneMinimumSize = new Dimension( (int) ( thumbnailSize * 1.4f ), (int) ( thumbnailSize * 1.8f ) );
+    public static final Dimension THUMBNAIL_JSCROLLPANE_MINIMUM_SIZE = new Dimension( (int) ( thumbnailSize * 1.4f ), (int) ( thumbnailSize * 1.8f ) );
     /**
      * the preferred Dimension for the Thumbnail Panel
      */
@@ -172,17 +172,17 @@ public class Settings {
     /**
      * the minimum Dimension for the JPO Window
      */
-    public static final Dimension jpoJFrameMinimumSize =
-            new Dimension( jpoNavigatorJTabbedPaneMinimumSize.width + dividerWidth + thumbnailJScrollPaneMinimumSize.width,
-            Math.max( jpoNavigatorJTabbedPaneMinimumSize.height + dividerWidth + infoPanelMinimumSize.height,
-            thumbnailJScrollPaneMinimumSize.height ) );
+    public static final Dimension jpoJFrameMinimumSize
+            = new Dimension( JPO_NAVIGATOR_JTABBEDPANE_MINIMUM_SIZE.width + dividerWidth + THUMBNAIL_JSCROLLPANE_MINIMUM_SIZE.width,
+                    Math.max( JPO_NAVIGATOR_JTABBEDPANE_MINIMUM_SIZE.height + dividerWidth + INFO_PANEL_MINIMUM_DIMENSION.height,
+                            THUMBNAIL_JSCROLLPANE_MINIMUM_SIZE.height ) );
     /**
      * the preferred Dimension for the JPO Window
      */
-    public static final Dimension jpoJFramePreferredSize =
-            new Dimension( jpoNavigatorJTabbedPanePreferredSize.width + dividerWidth + thumbnailJScrollPanePreferredSize.width,
-            Math.max( jpoNavigatorJTabbedPanePreferredSize.height + dividerWidth + infoPanelPreferredSize.height,
-            thumbnailJScrollPanePreferredSize.height ) );
+    public static final Dimension jpoJFramePreferredSize
+            = new Dimension( jpoNavigatorJTabbedPanePreferredSize.width + dividerWidth + thumbnailJScrollPanePreferredSize.width,
+                    Math.max( jpoNavigatorJTabbedPanePreferredSize.height + dividerWidth + INFO_PANEL_PREFERRED_SIZE.height,
+                            thumbnailJScrollPanePreferredSize.height ) );
     /**
      * The polling interval in milliseconds for the ThumbnailCreationThreads to
      * check Whether there is something new to render.
@@ -692,11 +692,13 @@ public class Settings {
         clearAutoLoad();
         logfile = new File( new File( System.getProperty( "java.io.tmpdir" ) ), "JPO.log" );
 
-        mainFrameDimensions = new Dimension( windowSizes[1] );
+        mainFrameDimensions = new Dimension( windowSizes[4] );
+        LOGGER.info( String.format( "mainFrameDimension: width %d, height: %d", mainFrameDimensions.width, mainFrameDimensions.height ) );
         preferredLeftDividerSpot = mainFrameDimensions.height - 200;
         if ( preferredLeftDividerSpot < 0 ) {
             preferredLeftDividerSpot = 150;
         }
+        LOGGER.info( String.format( "preferredLeftDividerSpot: %d", preferredLeftDividerSpot ) );
 
         maximumPictureSize = 6000;
         maxCache = 4;
@@ -728,6 +730,8 @@ public class Settings {
         mainFrameDimensions.height = prefs.getInt( "mainFrameDimensions.height", mainFrameDimensions.height );
         preferredMasterDividerSpot = prefs.getInt( "preferredMasterDividerSpot", preferredMasterDividerSpot );
         preferredLeftDividerSpot = prefs.getInt( "preferredLeftDividerSpot", preferredLeftDividerSpot );
+        LOGGER.info(String.format( "Loaded preferredLeftDividerSpot as: %d", preferredLeftDividerSpot));
+
         dividerWidth = prefs.getInt( "dividerWidth", dividerWidth );
         autoLoad = prefs.get( "autoload", autoLoad );
 
@@ -814,7 +818,6 @@ public class Settings {
         googleUsername = prefs.get( "googleUsername", "" );
         googlePassword = prefs.get( "googlePassword", "" );
 
-
         validateCopyLocations();
         validateSettings();
 
@@ -859,7 +862,6 @@ public class Settings {
                 keepThumbnails = false;
             }
         }
-
 
         if ( writeLog ) {
             if ( logfile.exists() ) {
@@ -914,6 +916,7 @@ public class Settings {
         prefs.putInt( "mainFrameDimensions.height", mainFrameDimensions.height );
         prefs.putInt( "preferredMasterDividerSpot", preferredMasterDividerSpot );
         prefs.putInt( "preferredLeftDividerSpot", preferredLeftDividerSpot );
+        LOGGER.info(String.format( "Writing preferredLeftDividerSpot: %d", preferredLeftDividerSpot));
         prefs.putInt( "dividerWidth", dividerWidth );
         if ( !( autoLoad == null ) ) {
             prefs.put( "autoload", autoLoad );
@@ -991,7 +994,7 @@ public class Settings {
         prefs.put( "defaultHtmlSshPassword", defaultHtmlSshPassword );
         prefs.put( "defaultHtmlSshTargetDir", defaultHtmlSshTargetDir );
         prefs.put( "defaultHtmlSshKeyFile", defaultHtmlSshKeyFile );
-        
+
         prefs.putBoolean( "thumbnailFastScale", thumbnailFastScale );
         prefs.putBoolean( "pictureViewerFastScale", pictureViewerFastScale );
         prefs.putBoolean( "showThumbOnFileChooser", showThumbOnFileChooser );
@@ -1237,11 +1240,11 @@ public class Settings {
     /**
      * Supported Languages
      */
-    public static final String[] supportedLanguages = {"English", "Deutsch", "Simplified Chinese", "Traditional Chinese"};
+    public static final String[] supportedLanguages = { "English", "Deutsch", "Simplified Chinese", "Traditional Chinese" };
     /**
      * Locales for the languages in supportedLanguages
      */
-    public static final Locale[] supportedLocale = {Locale.ENGLISH, Locale.GERMAN, Locale.SIMPLIFIED_CHINESE, Locale.TRADITIONAL_CHINESE};
+    public static final Locale[] supportedLocale = { Locale.ENGLISH, Locale.GERMAN, Locale.SIMPLIFIED_CHINESE, Locale.TRADITIONAL_CHINESE };
 
     public static void setLocale( Locale newLocale ) {
         Locale oldLocale = currentLocale;

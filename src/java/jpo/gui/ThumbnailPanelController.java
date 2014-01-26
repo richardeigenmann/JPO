@@ -203,7 +203,7 @@ public class ThumbnailPanelController
     private void initComponents() {
         thumbnailPane.setBackground(Settings.JPO_BACKGROUND_COLOR);
 
-        thumbnailJScrollPane.setMinimumSize(Settings.thumbnailJScrollPaneMinimumSize);
+        thumbnailJScrollPane.setMinimumSize(Settings.THUMBNAIL_JSCROLLPANE_MINIMUM_SIZE);
         thumbnailJScrollPane.setPreferredSize(Settings.thumbnailJScrollPanePreferredSize);
         thumbnailJScrollPane.setWheelScrollingEnabled(true);
         thumbnailJScrollPane.setFocusable(true);

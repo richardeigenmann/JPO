@@ -41,7 +41,7 @@ import jpo.gui.swing.Thumbnail;
 /*
 ThumbnailController.java:  class that displays a visual respresentation of the specified node
 
-Copyright (C) 2002 - 2011  Richard Eigenmann.
+Copyright (C) 2002 - 2014  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -461,7 +461,7 @@ public class ThumbnailController
 
 
     /**
-     *  changes the color so that the user sees whether the thumbnail is part of the selection
+     *  changes the colour so that the user sees whether the thumbnail is part of the selection
      */
     public void showSlectionStatus() {
         if ( Settings.pictureCollection.isSelected( myNode ) ) {
@@ -540,9 +540,8 @@ public class ThumbnailController
             return;
         }
 
-        for ( int i = 0; i
-                < children.length; i++ ) {
-            if ( children[i] == myNode ) {
+        for ( Object children1 : children ) {
+            if ( children1 == myNode ) {
                 // we are displaying a changed node. What changed?
                 Object userObject = myNode.getUserObject();
                 if ( userObject instanceof GroupInfo ) {

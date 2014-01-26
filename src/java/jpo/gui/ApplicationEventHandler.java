@@ -119,6 +119,7 @@ public class ApplicationEventHandler
             return;
         }
 
+        
         if ( Settings.unsavedSettingChanges ) {
             Settings.writeSettings();
         }

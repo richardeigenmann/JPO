@@ -1,4 +1,4 @@
-package jpo.gui;
+package jpo.gui.swing;
 
 import jpo.dataModel.Settings;
 import jpo.dataModel.QueryNavigator;
@@ -7,6 +7,7 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.tree.*;
 import jpo.dataModel.Tools;
+import jpo.gui.Jpo;
 
 
 /*
@@ -42,7 +43,7 @@ public class QueriesJTree
         setOpaque( true );
         setEditable( false );
         setShowsRootHandles( true );
-        setMinimumSize( Settings.jpoNavigatorJTabbedPaneMinimumSize );
+        setMinimumSize( Settings.JPO_NAVIGATOR_JTABBEDPANE_MINIMUM_SIZE );
         setModel( Settings.pictureCollection.getQueriesTreeModel() );
 
         addMouseListener( new MouseAdapter() {

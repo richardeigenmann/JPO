@@ -814,6 +814,7 @@ public class PictureCollection {
             }
         }
         
+        getYearsTreeNode().removeAllChildren();
         for ( String year : years ) {
             addYearQuery( year );
         }
