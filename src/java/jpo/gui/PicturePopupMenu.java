@@ -1,5 +1,10 @@
 package jpo.gui;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
 import jpo.dataModel.NodeNavigatorInterface;
 import jpo.dataModel.UserFunctionsChangeListener;
 import jpo.dataModel.Tools;
@@ -7,12 +12,14 @@ import jpo.dataModel.CopyLocationsChangeListener;
 import jpo.dataModel.Settings;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
 import jpo.dataModel.PictureInfo;
-import java.awt.event.*;
-import javax.swing.*;
-import java.io.*;
-import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPopupMenu;
+import javax.swing.JSeparator;
+import javax.swing.JTextArea;
 import jpo.dataModel.RecentDropNodeListener;
 import webserver.Webserver;
 

@@ -1,7 +1,7 @@
 package jpo.dataModel;
 
-import jpo.*;
-import junit.framework.*;
+import static junit.framework.Assert.assertNotNull;
+import junit.framework.TestCase;
 import org.xml.sax.InputSource;
 /*
  * XmlReaderTest.java

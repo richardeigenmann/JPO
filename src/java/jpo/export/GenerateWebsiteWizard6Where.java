@@ -1,5 +1,10 @@
 package jpo.export;
 
+import com.jcraft.jsch.Channel;
+import com.jcraft.jsch.ChannelExec;
+import com.jcraft.jsch.JSch;
+import com.jcraft.jsch.JSchException;
+import com.jcraft.jsch.Session;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -7,7 +12,6 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.io.File;
 import java.util.logging.Logger;
-import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import jpo.dataModel.Settings;
@@ -17,13 +21,21 @@ import static jpo.export.HtmlDistillerOptions.OutputTarget.OUTPUT_SSH_LOCATION;
 import jpo.gui.DirectoryChooser;
 import net.javaprog.ui.wizard.AbstractStep;
 import net.miginfocom.swing.MigLayout;
-import com.jcraft.jsch.*;
 import java.awt.Font;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.SocketException;
 import java.util.Properties;
-import java.util.logging.Level;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JSpinner;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.SpinnerNumberModel;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPReply;
@@ -84,8 +96,8 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
         }
 
     }
-    private final String[] finalTargetOptions = {"Local Directory", "FTP Location", "SSH Location"};
-    private final JComboBox finalTarget = new JComboBox( finalTargetOptions );
+    private static final String[] TARGET_OPTIONS = {"Local Directory", "FTP Location", "SSH Location"};
+    private final JComboBox finalTarget = new JComboBox<>( TARGET_OPTIONS );
     /**
      * Text field that holds the directory that the html is to be exported to.
      *
@@ -139,11 +151,11 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
     /**
      * SSH Authentication Options
      */
-    private final String[] sshAuthOptions = {"Password", "SSH KEY File"};
+    private static final String[] SSH_AUTH_OPTIONS = {"Password", "SSH KEY File"};
     /**
      * SSH Authentication Options
      */
-    private final JComboBox sshAuthOoptionChooser = new JComboBox( sshAuthOptions );
+    private final JComboBox sshAuthOoptionChooser = new JComboBox<String>( SSH_AUTH_OPTIONS );
     /**
      * The ssh password
      *

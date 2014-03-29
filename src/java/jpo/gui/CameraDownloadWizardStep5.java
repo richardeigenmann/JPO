@@ -7,9 +7,14 @@ import java.awt.Dimension;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.logging.Logger;
-import net.javaprog.ui.wizard.*;
-import javax.swing.*;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import jpo.dataModel.SortOption;
+import net.javaprog.ui.wizard.AbstractStep;
 
 /*
 CameraDownloadWizardStep4.java: the fourth step in the download from Camera Wizard

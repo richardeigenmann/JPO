@@ -66,7 +66,7 @@ public class Main {
         StringBuilder missing = new StringBuilder( "The Installation is faulty! The following classes and libraries are missing:\n" );
 
         testClass( "jpo.gui.Jpo", "Jpo-0.11.jar", good, missing );
-        testClass( "javax.activation.DataSource", "activation.jar", good, missing );
+        //testClass( "javax.activation.DataSource", "activation.jar", good, missing );
         testClass( "org.apache.commons.compress.archivers.zip.ZipArchiveEntry", "commons-compress-1.2.jar", good, missing );
         testClass( "com.google.gdata.util.AuthenticationException", "gdata-core-1.0.jar", good, missing );
         testClass( "com.google.gdata.client.maps.MapsService", "gdata-maps-2.0", good, missing );

@@ -48,7 +48,7 @@ public class NodeStatisticsController {
     
     /**
      * Returns the JComponent representing the statistics
-     * @return 
+     * @return the JComponent
      */
     public JComponent getJComponent(){
         // lazy instantiation (is it worth it?)

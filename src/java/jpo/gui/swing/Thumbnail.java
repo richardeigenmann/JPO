@@ -1,6 +1,11 @@
 package jpo.gui.swing;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.Rectangle;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
@@ -320,7 +325,7 @@ public class Thumbnail
     /**
      * Indicates whether the Thumbnail is to draw as a selected Thumbnail or not.
      */
-    private boolean isSelected = false;
+    private final boolean isSelected = false;
 
 
     /**

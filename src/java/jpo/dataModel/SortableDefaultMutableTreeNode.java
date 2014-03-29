@@ -1,21 +1,42 @@
 package jpo.dataModel;
 
+import java.awt.datatransfer.Transferable;
 import java.util.logging.Level;
 import jpo.gui.ThumbnailController;
 import jpo.gui.ThumbnailCreationQueue;
 import jpo.gui.ThumbnailQueueRequest;
 import jpo.gui.JpoTransferable;
 import jpo.gui.ProgressGui;
-import javax.swing.tree.*;
-import java.util.*;
 import javax.swing.event.TreeModelEvent;
-import java.net.*;
-import java.io.*;
-import java.awt.dnd.*;
-import java.awt.datatransfer.*;
-import java.awt.event.*;
+import java.awt.dnd.DnDConstants;
+import java.awt.dnd.DropTargetDropEvent;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Serializable;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Enumeration;
+import java.util.HashSet;
 import java.util.logging.Logger;
-import javax.swing.*;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPopupMenu;
+import javax.swing.JProgressBar;
+import javax.swing.SwingUtilities;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreePath;
 
 
 /*
@@ -105,9 +126,8 @@ public class SortableDefaultMutableTreeNode
         //Remove all children from the node
         getPictureCollection().setSendModelUpdates( false );
         removeAllChildren();
-        //Add the new array of nodes to top
-        for ( int i = 0; i < childNodes.length; i++ ) {
-            add( childNodes[i] );
+        for ( SortableDefaultMutableTreeNode childNode : childNodes ) {
+            add( childNode );
         }
         getPictureCollection().setUnsavedUpdates();
         getPictureCollection().setSendModelUpdates( true );
@@ -409,9 +429,8 @@ public class SortableDefaultMutableTreeNode
 
 
         boolean dropcomplete = false;
-        for ( int i = 0; i < arrayOfNodes.length; i++ ) {
-            sourceNode = (SortableDefaultMutableTreeNode) arrayOfNodes[i];
-
+        for ( Object arrayOfNode : arrayOfNodes ) {
+            sourceNode = (SortableDefaultMutableTreeNode) arrayOfNode;
             if ( ( sourceNode.getUserObject() instanceof PictureInfo ) && ( this.getUserObject() instanceof GroupInfo ) ) {
                 // a picture is being dropped onto a group; add it at the end
                 if ( actionType == DnDConstants.ACTION_MOVE ) {
@@ -497,27 +516,27 @@ public class SortableDefaultMutableTreeNode
         /**
          *  menu item that allows the user to edit the group description
          **/
-        private JMenuItem dropBefore = new JMenuItem( Settings.jpoResources.getString( "GDPMdropBefore" ) );
+        private final JMenuItem dropBefore = new JMenuItem( Settings.jpoResources.getString( "GDPMdropBefore" ) );
 
         /**
          *  menu item that allows the user to edit the group description
          **/
-        private JMenuItem dropAfter = new JMenuItem( Settings.jpoResources.getString( "GDPMdropAfter" ) );
+        private final JMenuItem dropAfter = new JMenuItem( Settings.jpoResources.getString( "GDPMdropAfter" ) );
 
         /**
          *  menu item that allows the user to edit the group description
          **/
-        private JMenuItem dropIntoFirst = new JMenuItem( Settings.jpoResources.getString( "GDPMdropIntoFirst" ) );
+        private final JMenuItem dropIntoFirst = new JMenuItem( Settings.jpoResources.getString( "GDPMdropIntoFirst" ) );
 
         /**
          *  menu item that allows the user to edit the group description
          **/
-        private JMenuItem dropIntoLast = new JMenuItem( Settings.jpoResources.getString( "GDPMdropIntoLast" ) );
+        private final JMenuItem dropIntoLast = new JMenuItem( Settings.jpoResources.getString( "GDPMdropIntoLast" ) );
 
         /**
          *  menu item that allows the user to edit the group description
          **/
-        private JMenuItem dropCancel = new JMenuItem( Settings.jpoResources.getString( "GDPMdropCancel" ) );
+        private final JMenuItem dropCancel = new JMenuItem( Settings.jpoResources.getString( "GDPMdropCancel" ) );
 
 
         /**
@@ -530,6 +549,7 @@ public class SortableDefaultMutableTreeNode
                 final SortableDefaultMutableTreeNode targetNode ) {
             dropBefore.addActionListener( new ActionListener() {
 
+                @Override
                 public void actionPerformed( ActionEvent e ) {
                     SortableDefaultMutableTreeNode parentNode = (SortableDefaultMutableTreeNode) targetNode.getParent();
                     int currentIndex = parentNode.getIndex( targetNode );
@@ -579,6 +599,7 @@ public class SortableDefaultMutableTreeNode
 
             dropIntoFirst.addActionListener( new ActionListener() {
 
+                @Override
                 public void actionPerformed( ActionEvent e ) {
                     sourceNode.removeFromParent();
                     targetNode.insert( sourceNode, 0 );
@@ -1468,7 +1489,6 @@ public class SortableDefaultMutableTreeNode
      * handles PictureInfo and GroupInfo nodes. If the userObject is something
      * else it will return the STRING "null" (to avoid NPE problems)
      *
-     * @param node The node from which to extract the thumbnail location
      * @return the string with the full path of the thumbnail location
      */
     public String getThumbnailLocation() {
@@ -1486,7 +1506,6 @@ public class SortableDefaultMutableTreeNode
      * This method requests that the node assigns a new location to the
      * PictureInfo or GroupInfo object
      *
-     * @param node The node on which to assign a new thumbnail
      * @return the filename of the new thumbnail
      */
     public String assignNewThumbnailLocation() {
@@ -1518,9 +1537,8 @@ public class SortableDefaultMutableTreeNode
         TreePath removedChild;
         TreePath currentNodeTreePath = new TreePath( affectedNode.getPath() );
         Object[] children = e.getChildren();
-        for ( int i = 0; i
-                < children.length; i++ ) {
-            removedChild = new TreePath( children[i] );
+        for ( Object child : children ) {
+            removedChild = new TreePath( child );
             if ( removedChild.isDescendant( currentNodeTreePath ) ) {
                 return true;
             }

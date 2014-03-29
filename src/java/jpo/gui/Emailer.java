@@ -1,15 +1,41 @@
 package jpo.gui;
 
-import java.io.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Properties;
-import javax.mail.*;
-import javax.mail.internet.*;
-import javax.activation.*;
 import java.net.URL;
-import java.awt.*;
-import java.awt.event.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.logging.Logger;
-import javax.swing.*;
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
+import javax.activation.URLDataSource;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Multipart;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JProgressBar;
+import javax.swing.SwingWorker;
 import jpo.dataModel.PictureInfo;
 import jpo.dataModel.Settings;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
@@ -46,7 +72,7 @@ public class Emailer
     /**
      *   Frame to show what the thread is doing.
      */
-    private JFrame progressFrame;
+    private final JFrame progressFrame;
 
     /**
      *  Label to show what is being processed.
@@ -56,33 +82,33 @@ public class Emailer
     /**
      *  Progress Indicator.
      */
-    private JProgressBar progBar;
+    private final JProgressBar progBar;
 
     /**
      *  Cancel Button.
      */
-    private JButton cancelButton;
+    private final JButton cancelButton;
 
     /**
      *   Variable that signals to the thread to stop immediately.
      */
     public boolean interrupted = false;
 
-    private Object[] emailSelected;
+    private final Object[] emailSelected;
 
-    private InternetAddress senderAddress;
+    private final InternetAddress senderAddress;
 
-    private InternetAddress destinationAddress;
+    private final InternetAddress destinationAddress;
 
-    private String subjectLine;
+    private final String subjectLine;
 
-    private String bodyText;
+    private final String bodyText;
 
-    private boolean scaleImages;
+    private final boolean scaleImages;
 
-    private Dimension scaleSize;
+    private final Dimension scaleSize;
 
-    private boolean sendOriginal;
+    private final boolean sendOriginal;
 
 
     /**
@@ -341,7 +367,6 @@ public class Emailer
             } catch ( MessagingException x ) {
                 LOGGER.severe( "MessagingException: " + x.getMessage() );
                 error = x.getMessage();
-                return;
             }
         }
     }
@@ -382,7 +407,6 @@ public class Emailer
             } catch ( MessagingException x ) {
                 LOGGER.severe( "MessagingException: " + x.getMessage() );
                 error = x.getMessage();
-                return;
             }
         }
     }
@@ -420,7 +444,6 @@ public class Emailer
             } catch ( MessagingException x ) {
                 LOGGER.severe( "MessagingException: " + x.getMessage() );
                 error = x.getMessage();
-                return;
             }
         }
     }

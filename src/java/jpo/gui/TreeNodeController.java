@@ -17,34 +17,35 @@ import jpo.dataModel.SortableDefaultMutableTreeNode;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
-import javax.swing.*;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import jpo.dataModel.PictureInfo;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
 
 /*
-TreeNodeController.java: This class should handle all the interactive GUI stuff for a Tree Node
+ TreeNodeController.java: This class should handle all the interactive GUI stuff for a Tree Node
 
-Copyright (C) 2007 - 2013  Richard Eigenmann.
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or any later version. This program is distributed
-in the hope that it will be useful, but WITHOUT ANY WARRANTY;
-without even the implied warranty of MERCHANTABILITY or FITNESS
-FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-more details. You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-The license is in gpl.txt.
-See http://www.gnu.org/copyleft/gpl.html for the details.
+ Copyright (C) 2007 - 2013  Richard Eigenmann.
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or any later version. This program is distributed
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ without even the implied warranty of MERCHANTABILITY or FITNESS
+ FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+ more details. You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ The license is in gpl.txt.
+ See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 /**
- *   This class should handle all the interactive GUI stuff for a Tree Node. Formerly the
- *   SortableDefaultMutableTreeNode was doing data stuff and GUI stuff. It should really
- *   only do data stuff.
+ * This class should handle all the interactive GUI stuff for a Tree Node.
+ * Formerly the SortableDefaultMutableTreeNode was doing data stuff and GUI
+ * stuff. It should really only do data stuff.
  *
- *   @author  Richard Eigenmann
+ * @author Richard Eigenmann
  */
 public class TreeNodeController {
 
@@ -54,8 +55,10 @@ public class TreeNodeController {
     private static final Logger LOGGER = Logger.getLogger( TreeNodeController.class.getName() );
 
     /**
-     *  This method brings up a Filechooser and then loads the images off the specified flat file.
-     * @param  targetNode   The node at which to add the flat file.
+     * This method brings up a Filechooser and then loads the images off the
+     * specified flat file.
+     *
+     * @param targetNode The node at which to add the flat file.
      */
     public static void addFlatFile( SortableDefaultMutableTreeNode targetNode ) {
         JFileChooser jFileChooser = new JFileChooser();
@@ -82,7 +85,8 @@ public class TreeNodeController {
     }
 
     /**
-     *   Brings up a JFileChooser to select the target location and then copies the images to the target location
+     * Brings up a JFileChooser to select the target location and then copies
+     * the images to the target location
      *
      * @param nodes The Vector of nodes to be copied to a new location
      */
@@ -106,7 +110,7 @@ public class TreeNodeController {
      * Copies the pictures of the supplied nodes to the target directory
      *
      * @param nodes The array of nodes to be copied to a new location
-     * @param targetLocation  the target directory
+     * @param targetLocation the target directory
      */
     public static void copyToLocation( SortableDefaultMutableTreeNode[] nodes, File targetLocation ) {
         int picsCopied = 0;
@@ -127,7 +131,8 @@ public class TreeNodeController {
     }
 
     /**
-     *   Brings up a JFileChooser to select the target zip file and then copies the images there
+     * Brings up a JFileChooser to select the target zip file and then copies
+     * the images there
      *
      * @param nodes The Vector of nodes to be copied to a new location
      */
@@ -160,12 +165,13 @@ public class TreeNodeController {
     }
 
     /**
-     * Copies the pictures of the supplied nodes to the target zipfile, creating it if need be.
-     * This method does append to the zipfile by riting to a temporary file and then copying the old
-     * zip file over to this one as the API doesn't support directly appending to a zip file.
+     * Copies the pictures of the supplied nodes to the target zipfile, creating
+     * it if need be. This method does append to the zipfile by riting to a
+     * temporary file and then copying the old zip file over to this one as the
+     * API doesn't support directly appending to a zip file.
      *
      * @param nodes The array of nodes to be copied to a new location
-     * @param zipfile  the target zip file
+     * @param zipfile the target zip file
      */
     public static void copyToZipfile( SortableDefaultMutableTreeNode[] nodes, File zipfile ) {
         File tempfile = new File( zipfile.getAbsolutePath() + ".jpo.temp" );
@@ -221,7 +227,6 @@ public class TreeNodeController {
             tempfile.delete();
         }
 
-
         if ( zipfile.exists() ) {
             LOGGER.info( String.format( "Deleting old file %s", zipfile.getAbsolutePath() ) );
             zipfile.delete();
@@ -229,20 +234,19 @@ public class TreeNodeController {
         LOGGER.info( String.format( "Renaming temp file %s to %s", tempfile.getAbsolutePath(), zipfile.getAbsolutePath() ) );
         tempfile.renameTo( zipfile );
 
-
         JOptionPane.showMessageDialog( Settings.anchorFrame,
                 String.format( "Copied %d files of %d to zipfile %s", picsCopied, nodes.length, zipfile.toString() ),
                 Settings.jpoResources.getString( "genericInfo" ),
                 JOptionPane.INFORMATION_MESSAGE );
 
-
     }
 
     /**
-     * Copies the pictures of the supplied nodes to the target zipfile, creating it if need be.
+     * Copies the pictures of the supplied nodes to the target zipfile, creating
+     * it if need be.
      *
      * @param nodes The array of nodes to be copied to a new location
-     * @param zipfile  the target zip file
+     * @param zipfile the target zip file
      */
     public static void copyToZipfileBAD( SortableDefaultMutableTreeNode[] nodes, File zipfile ) {
         ZipOutputStream zipOutputStream = null;
@@ -294,11 +298,12 @@ public class TreeNodeController {
                 Settings.jpoResources.getString( "genericInfo" ),
                 JOptionPane.INFORMATION_MESSAGE );
 
-
     }
 
     /**
-     *   Bring up a Dialog where the user can input a new name for a file and rename it.
+     * Bring up a Dialog where the user can input a new name for a file and
+     * rename it.
+     *
      * @param node
      */
     public static void fileRename( SortableDefaultMutableTreeNode node ) {
@@ -334,7 +339,8 @@ public class TreeNodeController {
     }
 
     /**
-     *  This function brings up a PictureInfoEditor of a GroupInfoEditor
+     * This function brings up a PictureInfoEditor of a GroupInfoEditor
+     *
      * @param node
      */
     public static void showEditGUI( SortableDefaultMutableTreeNode node ) {
@@ -353,7 +359,8 @@ public class TreeNodeController {
     }
 
     /**
-     *  This function opens the CateGoryUsageEditor.
+     * This function opens the CateGoryUsageEditor.
+     *
      * @param node
      */
     public static void showCategoryUsageGUI( SortableDefaultMutableTreeNode node ) {

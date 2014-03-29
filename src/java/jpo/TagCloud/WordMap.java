@@ -8,37 +8,39 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.logging.Logger;
 /*
-WordMap.java:  A class that spplies the list of words and a count to the tag cloud
+ WordMap.java:  A class that spplies the list of words and a count to the tag cloud
 
-Copyright (C) 2009  Richard Eigenmann.
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or any later version. This program is distributed
-in the hope that it will be useful, but WITHOUT ANY WARRANTY;
-without even the implied warranty of MERCHANTABILITY or FITNESS
-FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-more details. You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-The license is in gpl.txt.
-See http://www.gnu.org/copyleft/gpl.html for the details.
+ Copyright (C) 2009-2014  Richard Eigenmann.
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or any later version. This program is distributed
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ without even the implied warranty of MERCHANTABILITY or FITNESS
+ FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+ more details. You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ The license is in gpl.txt.
+ See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 
 /**
- * This class defines the abstract getWordValueMap method that must be
- * written when extending this class to feed a list of words into the Tag Cloud.
- * It has the functionality to order the words by
- * the count so that a list of the top n words can be selected.
- * In order to optimise speed this class caches the valueSortedTreeMap. To signal
- * that the map of words has changed, call the {@link #rebuild} method.
+ * This class defines the abstract getWordValueMap method that must be written
+ * when extending this class to feed a list of words into the Tag Cloud. It has
+ * the functionality to order the words by the count so that a list of the top n
+ * words can be selected. In order to optimise speed this class caches the
+ * valueSortedTreeMap. To signal that the map of words has changed, call the
+ * {@link #rebuild} method.
+ *
  * @author Richard Eigenmann
  */
 public abstract class WordMap {
 
     /**
-     * The implementing class must return a map of words and a count. The list of
-     * words does not have to be sorted in any way.
+     * The implementing class must return a map of words and a count. The list
+     * of words does not have to be sorted in any way.
+     *
      * @return the map of word and value pairs
      */
     public abstract Map<String, Integer> getWordValueMap();
@@ -46,8 +48,7 @@ public abstract class WordMap {
     /**
      * Defines a logger for this class
      */
-    private static Logger logger = Logger.getLogger( WordMap.class.getName() );
-
+    private static final Logger LOGGER = Logger.getLogger( WordMap.class.getName() );
 
     /**
      * Empties the cache of the sorted-by-value word list and rebuilds it,
@@ -62,29 +63,29 @@ public abstract class WordMap {
      */
     private TreeMap<String, Integer> valueSortedTreeMap = null;
 
-
     /**
-     * This method returns a TreeMap of the words retrieved from @see #getWordValueMap
-     * sorted descendingly by the number in the value of each entry. It caches the result
-     * in a private TreeMap variable and returns this on each subsequent call. If
-     * the source words change you need to call @see #rebuild.
+     * This method returns a TreeMap of the words retrieved from @see
+     * #getWordValueMap sorted descendingly by the number in the value of each
+     * entry. It caches the result in a private TreeMap variable and returns
+     * this on each subsequent call. If the source words change you need to call
+     * @see #rebuild().
      *
-     * As you can see from the code this keeps calling the abstract getWordValueMap
-     * method in the compare function. Make sure you implement the getWordValueMap
-     * as fast as possible (i.e. cache the result)
-     * as any dynamic building of the list will take forever if there are a lot
-     * of entries.
+     * As you can see from the code this keeps calling the abstract
+     * getWordValueMap method in the compare function. Make sure you implement
+     * the getWordValueMap as fast as possible (i.e. cache the result) as any
+     * dynamic building of the list will take forever if there are a lot of
+     * entries.
      *
      * @return The Map retrieved from getWordValueMap sorted by the count.
      */
     public TreeMap<String, Integer> getValueSortedMap() {
-        //logger.fine( this.getClass().getName(), "getValueSortedMap" );
         if ( valueSortedTreeMap == null ) {
-            logger.fine( "valueSortedTreeMap doesn't exist. Building..." );
+            LOGGER.fine( "valueSortedTreeMap doesn't exist. Building..." );
             valueSortedTreeMap = new TreeMap<String, Integer>( new Comparator<String>() {
 
                 /**
-                 * override the compare method so that we can have the TreeMap sorted by value instead of by word
+                 * override the compare method so that we can have the TreeMap
+                 * sorted by value instead of by word
                  */
                 @Override
                 public int compare( String key1, String key2 ) {
@@ -99,14 +100,14 @@ public abstract class WordMap {
                 }
             } );
             valueSortedTreeMap.putAll( getWordValueMap() );
-            logger.fine( String.format( "valueSortedTreeMap built with %d entries", valueSortedTreeMap.size() ) );
+            LOGGER.fine( String.format( "valueSortedTreeMap built with %d entries", valueSortedTreeMap.size() ) );
         }
         return valueSortedTreeMap;
     }
 
-
     /**
      * Returns a alphabetical set of the highest ranking n words
+     *
      * @param limit The maximum allowed terms
      * @return an alphabetical set of the highest ranking n words
      */
@@ -128,12 +129,13 @@ public abstract class WordMap {
         return topWords;
     }
 
-
     /**
-     * Returns the highest number associated with a word. If the list of words is
-     * empty then Integer.MAX_VALUE is returned (this is better than 0 which is likely to
-     * cause a division by zero error in someone's code). Likewise if the largest number
-     * is 0 then we will also return Integer.MAX_VALUE for the same reason.
+     * Returns the highest number associated with a word. If the list of words
+     * is empty then Integer.MAX_VALUE is returned (this is better than 0 which
+     * is likely to cause a division by zero error in someone's code). Likewise
+     * if the largest number is 0 then we will also return Integer.MAX_VALUE for
+     * the same reason.
+     *
      * @return the highest number associated with a word
      */
     public int getMaximumWordValue() {
@@ -148,9 +150,9 @@ public abstract class WordMap {
         return maxValue;
     }
 
-
     /**
      * Enumerates the WordMap which helps with debugging
+     *
      * @return Returns all the words for debugging
      */
     @Override
@@ -167,5 +169,4 @@ public abstract class WordMap {
         return sb.toString();
     }
 
-  
 }

@@ -1,7 +1,9 @@
 package jpo.gui;
 
-import java.awt.*;
-import javax.swing.*;
+import java.awt.Component;
+import javax.swing.JCheckBox;
+import javax.swing.JList;
+import javax.swing.ListCellRenderer;
 import jpo.dataModel.Category;
 
 /*
@@ -28,7 +30,7 @@ import jpo.dataModel.Category;
 public class CategoryListCellRenderer extends JCheckBox implements ListCellRenderer<Category> {
 
     public CategoryListCellRenderer() {
-        setOpaque(true);
+        setOpaque( true );
     }
 
     @Override
@@ -37,28 +39,27 @@ public class CategoryListCellRenderer extends JCheckBox implements ListCellRende
             Category category,
             int index,
             boolean isSelected,
-            boolean cellHasFocus) {
-
+            boolean cellHasFocus ) {
 
         int status = category.getStatus();
-        if (status == Category.UNDEFINED) {
-            setSelected(false);
-            setEnabled(true);
+        if ( status == Category.UNDEFINED ) {
+            setSelected( false );
+            setEnabled( true );
             //setBackground( Color.gray );
-        } else if (status == Category.SELECTED) {
-            setSelected(true);
-            setEnabled(true);
+        } else if ( status == Category.SELECTED ) {
+            setSelected( true );
+            setEnabled( true );
             //setBackground( Color.white );
-        } else if (status == Category.BOTH) {
-            setSelected(false);
-            setEnabled(false);
+        } else if ( status == Category.BOTH ) {
+            setSelected( false );
+            setEnabled( false );
             //setBackground( Color.gray );
-        } else if (status == Category.UN_SELECTED) {
-            setSelected(false);
-            setEnabled(true);
+        } else if ( status == Category.UN_SELECTED ) {
+            setSelected( false );
+            setEnabled( true );
             //setBackground( Color.white );
         }
-        setText(category.toString());
+        setText( category.toString() );
 
         return this;
     }

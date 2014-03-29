@@ -6,7 +6,6 @@ import java.io.File;
 import java.util.logging.Logger;
 import jpo.dataModel.Settings;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
-import jpo.gui.PictureInfoEditor;
 
 /*
  HtmlDistillerOptions.java:  Holds the options that configure the html output.
@@ -201,7 +200,7 @@ public class HtmlDistillerOptions {
     /**
      * Same as
      *
-     * @see getLowresJpgQuality but returned as int and multiplied by 100
+     * @see #getLowresJpgQuality() but returned as int and multiplied by 100
      * @return the lowres quality number
      */
     public int getLowresJpgQualityPercent() {
@@ -654,7 +653,7 @@ public class HtmlDistillerOptions {
     /**
      * Sets the method for output targets
      *
-     * @param outputTarget
+     * @param sshAuthType see the documentation of ssh
      */
     public void setSshAuthType( SshAuthType sshAuthType ) {
         this.sshAuthType = sshAuthType;

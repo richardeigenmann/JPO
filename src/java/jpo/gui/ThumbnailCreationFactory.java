@@ -1,15 +1,20 @@
 package jpo.gui;
 
-import java.awt.*;
-import java.awt.image.*;
-import java.io.*;
-import java.net.*;
+import java.awt.Dimension;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.logging.Logger;
-import javax.imageio.*;
-import javax.swing.*;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import jpo.dataModel.GroupInfo;
 import jpo.dataModel.PictureInfo;
 import jpo.dataModel.Settings;
@@ -45,9 +50,8 @@ public class ThumbnailCreationFactory
      * Defines a logger for this class
      */
     private static final Logger LOGGER = Logger.getLogger( ThumbnailCreationFactory.class.getName() );
-    
+
     //{ LOGGER.setLevel( Level.ALL ); }
-    
     /**
      * Flag to indicate that the thread should die.
      */
@@ -85,8 +89,8 @@ public class ThumbnailCreationFactory
 
     /**
      * This method picks up the thumbnail creation request, sets a loadingIcon
-     * and passes the request to the {@link #processPictureRequest} or
-     * the {@link #processGroupRequest} method.
+     * and passes the request to the {@link #processPictureRequest} or the
+     * {@link #processGroupRequest} method.
      *
      * @param request	the {@link ThumbnailQueueRequest} for which to create the
      * ThumbnailController
@@ -160,13 +164,11 @@ public class ThumbnailCreationFactory
             // if we get here we have a good lowres URL
         }
 
-
         // Are we being requested to recreate the ThumbnailController in any case?
         if ( req.getForce() ) {
             createNewPictureThumbnail( currentThumb );
             return;
         }
-
 
         // test if lowres is readable
         if ( Settings.keepThumbnails ) {
@@ -178,7 +180,6 @@ public class ThumbnailCreationFactory
                 createNewPictureThumbnail( currentThumb );
                 return;
             }
-
 
             URL highresUrl;
             try {
@@ -236,7 +237,6 @@ public class ThumbnailCreationFactory
             createNewPictureThumbnail( currentThumb );
             return;
         }
-
 
         // ThumbnailController up to date is size ok?
         LOGGER.fine( "Thumbnail is current. Checking size..." );
@@ -296,13 +296,12 @@ public class ThumbnailCreationFactory
      * creates a thumbnail by loading the highres image and scaling it down
      */
     private void createNewPictureThumbnail( ThumbnailController currentThumb ) {
-        SortableDefaultMutableTreeNode referringNode = null;
         if ( currentThumb == null ) {
             LOGGER.info( "Called with null parameter! Aborting." );
             return;
         }
 
-        referringNode = currentThumb.myNode;
+        SortableDefaultMutableTreeNode referringNode = currentThumb.myNode;
         LOGGER.fine( String.format( "Creating Thumbnail %s from %s", ( (PictureInfo) referringNode.getUserObject() ).getLowresLocation(), ( (PictureInfo) referringNode.getUserObject() ).getHighresLocation() ) );
 
         try {
@@ -315,21 +314,17 @@ public class ThumbnailCreationFactory
                 currentPicture.setQualityScale();
             }
 
-
             PictureInfo pi = (PictureInfo) referringNode.getUserObject();
             currentPicture.loadPictureImd( pi.getHighresURL(), pi.getRotation() );
 
-
             //logger.info(" ... scaling");
             currentPicture.scalePicture();
-
 
             if ( currentPicture.getScaledPicture() == null ) {
                 LOGGER.info( "There was a problem creating the thumbnail for: " + pi.getHighresURL() );
                 currentThumb.setBrokenIcon();
                 return;
             }
-
 
             // is the thumbnail is not on the local filesystem then change the
             // url to be a local file or the write will fail.
@@ -338,7 +333,6 @@ public class ThumbnailCreationFactory
                 pi.setLowresLocation( Tools.getNewLowresFilename() );
                 referringNode.getPictureCollection().setUnsavedUpdates();
             }
-
 
             //logger.info(" ... writing: " + pi.getLowresLocation());
             if ( Settings.keepThumbnails ) {
@@ -381,7 +375,7 @@ public class ThumbnailCreationFactory
                 currentThumb.getThumbnail().setThumbnail( icon );
             }
             //}
-        } catch ( IOException x ) {
+        } catch ( MalformedURLException x ) {
             currentThumb.setBrokenIcon();
         }
     }
@@ -413,7 +407,6 @@ public class ThumbnailCreationFactory
             return;
         }
 
-
         // test if lowres is readable
         if ( Settings.keepThumbnails ) {
             try {
@@ -436,32 +429,29 @@ public class ThumbnailCreationFactory
             // all ist fine
             currentThumb.getThumbnail().setThumbnail( icon );
         } else {
-            LOGGER.fine( "Thumbnail is wrong size: " + icon.getIconWidth()  + " x " +  icon.getIconHeight() );
+            LOGGER.fine( "Thumbnail is wrong size: " + icon.getIconWidth() + " x " + icon.getIconHeight() );
             createNewGroupThumbnail( currentThumb );
         }
-
-        return;
     }
 
     /**
      * Create a Group ThumbnailController by loading the nodes component images
-     * and creating a folder icon with embeded images
+     * and creating a folder icon with embedded images
      */
     private void createNewGroupThumbnail(
             ThumbnailController groupThumbnailController ) {
-        SortableDefaultMutableTreeNode referringNode = null;
+
         if ( groupThumbnailController == null ) {
             LOGGER.info( "Called with null parameter! Aborting." );
             return;
         }
 
-        referringNode = groupThumbnailController.myNode;
+        SortableDefaultMutableTreeNode referringNode = groupThumbnailController.myNode;
         //logger.info("ThumbnailCreationFactory.createNewGroupThumbnail: Creating ThumbnailController " + ((GroupInfo) myNode.getUserObject()).getLowresLocation() + " from " + ((GroupInfo) myNode.getUserObject()).getLowresLocation());
 
         try {
             BufferedImage groupThumbnail = ImageIO.read( new BufferedInputStream( Settings.cl.getResourceAsStream( "jpo/images/icon_folder_large.jpg" ) ) );
             Graphics2D groupThumbnailGraphics = groupThumbnail.createGraphics();
-
 
             int leftMargin = 15;
             int margin = 10;
@@ -508,7 +498,6 @@ public class ThumbnailCreationFactory
                         sclPic.loadPictureImd( pi.getHighresURL(), pi.getRotation() );
                     }
 
-
                     sclPic.setScaleSize( Settings.miniThumbnailSize );
                     sclPic.scalePicture();
                     x += ( Settings.miniThumbnailSize.width - sclPic.getScaledWidth() ) / 2;
@@ -517,7 +506,6 @@ public class ThumbnailCreationFactory
                     groupThumbnailGraphics.drawImage( sclPic.getScaledPicture(), x, y, null );
                 }
             }
-
 
             //logger.info(" ... writing: " + pi.getLowresLocation());
             if ( Settings.keepThumbnails ) {
@@ -549,7 +537,6 @@ public class ThumbnailCreationFactory
 
                 Settings.pictureCollection.sendNodeChanged( referringNode );
             }
-
 
             //if ( ( groupThumbnailController.myNode != null ) && ( groupThumbnailController.myNode == myNode ) ) {
             if ( groupThumbnailController.myNode == referringNode ) {

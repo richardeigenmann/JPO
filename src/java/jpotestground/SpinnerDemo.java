@@ -37,8 +37,19 @@ package jpotestground;
  *   CyclingSpinnerListModel.java
  */
 
-import javax.swing.*;
+
 import java.awt.Container;
+import javax.swing.JComponent;
+import javax.swing.JFormattedTextField;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerModel;
+import javax.swing.SpinnerNumberModel;
+import javax.swing.SpringLayout;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 
 public class SpinnerDemo extends JPanel {
     public SpinnerDemo(boolean cycleMonths) {
@@ -62,6 +73,8 @@ public class SpinnerDemo extends JPanel {
     /**
      * Return the formatted text field used by the editor, or
      * null if the editor doesn't descend from JSpinner.DefaultEditor.
+     * @param spinner
+     * @return the textfield
      */
     public JFormattedTextField getTextField(JSpinner spinner) {
         JComponent editor = spinner.getEditor();
@@ -78,6 +91,7 @@ public class SpinnerDemo extends JPanel {
     /**
      * DateFormatSymbols returns an extra, empty value at the
      * end of the array of months.  Remove it.
+     * @return Array of Strings
      */
     static protected String[] getMonthStrings() {
         String[] months = new java.text.DateFormatSymbols().getMonths();
@@ -129,6 +143,7 @@ public class SpinnerDemo extends JPanel {
         //Schedule a job for the event dispatch thread:
         //creating and showing this application's GUI.
         SwingUtilities.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 //Turn off metal's use of bold fonts
 	        UIManager.put("swing.boldMetal", Boolean.FALSE);

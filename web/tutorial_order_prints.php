@@ -1,0 +1,20 @@
+<?php include("page-start.php"); ?>
+<span class="para-heading"  id="title">Tutorial: Order prints from a lab</span>
+<h3>Objective:</h3>
+<p>In this tutorial you will learn:<ul><li>How to order prints from from a lab that has a website with upload</li>
+    <li>How to copy the pictures onto a Memory Stick</li>
+</ul></p>
+
+<h3>Quick Take</h3>
+<p>Simply select the pictures you want printed and drag them to the web site of the lab.</p>
+<p>Alternatively create a directory somewhere and copy the pictures you want to print there. User the Copy Picture
+    entry in the the pop-up menu. The directory can be on a memory stick that you then send to the lab. Or it could
+    be a directory that you the burn on a CD.</p>
+
+<h3>Where are the details?</h3>
+<p>This part of the tutorial hasn't been written yet. Why don't you send me an email to encourage me to write it? My email address is: <a href="mailto:richard.eigenmann@gmail.com">richard.eigenmann@gmail.com</a></p>
+
+<hr>
+<p>Last update to this page: 22 Mar 2014<br>
+    Copyright 2009-2014 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
+<?php include("page-end.php"); ?>

@@ -1,11 +1,14 @@
 package jpo.gui;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Vector;
 import jpo.dataModel.Tools;
 import jpo.dataModel.Settings;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
 import jpo.dataModel.PictureInfo;
-import java.util.*;
-import java.net.*;
 import java.util.logging.Logger;
 
 
@@ -40,12 +43,12 @@ public class PictureCache {
      *  Defines the Hashtable that facilitate the caching of images. 
      *  It is static so that there is just one for the application
      */
-    private static Hashtable<String, SourcePicture> pictureCache = new Hashtable<String, SourcePicture>();
+    private static final Hashtable<String, SourcePicture> pictureCache = new Hashtable<String, SourcePicture>();
 
     /**
      *  Vector to keep track of what we should remove first in the cache
      */
-    private static Vector<String> removalQueue = new Vector<String>();
+    private static final Vector<String> removalQueue = new Vector<String>();
 
 
     /**

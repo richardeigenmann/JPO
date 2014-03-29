@@ -11,11 +11,19 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
-import net.javaprog.ui.wizard.*;
-import javax.swing.*;
 import java.awt.Dimension;
 import java.util.logging.Logger;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JCheckBox;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
+import javax.swing.JTree;
 import javax.swing.tree.TreePath;
+import net.javaprog.ui.wizard.AbstractStep;
 
 
 /* CameraDownloadWizardStep3.java: the third step in the download from Camera Wizard
@@ -96,6 +104,7 @@ public class CameraDownloadWizardStep3
 
         createSubGroupCheckBox.addChangeListener( new ChangeListener() {
 
+            @Override
             public void stateChanged( ChangeEvent e ) {
                 dataModel.setShouldCreateNewGroup( createSubGroupCheckBox.isSelected() );
                 titleLabel.setVisible( createSubGroupCheckBox.isSelected() );

@@ -1,6 +1,9 @@
 package jpo.dataModel;
 
-import junit.framework.*;
+import static junit.framework.Assert.assertEquals;
+import junit.framework.TestCase;
+
+
 /*
  * CategoryTest.java
  * JUnit based test

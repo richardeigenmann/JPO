@@ -19,7 +19,7 @@ import jpo.dataModel.Tools;
 /*
 ThumbnailPanelTitle.java:  This class does the widgets at the top of the ThumbnailPanel
 
-Copyright (C) 2009  Richard Eigenmann, Zürich, Switzerland
+Copyright (C) 2009-2014  Richard Eigenmann, Zürich, Switzerland
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -50,10 +50,10 @@ public class ThumbnailPanelTitle
     /**
      * Defines a logger for this class
      */
-    private static Logger logger = Logger.getLogger( ThumbnailPanelTitle.class.getName() );
+    private static final Logger LOGGER = Logger.getLogger( ThumbnailPanelTitle.class.getName() );
 
     /**
-     *  a button to nagivate back to the first page
+     *  a button to navigate back to the first page
      **/
     public JButton firstThumbnailsPageButton =
             new JButton( new ImageIcon( Settings.cl.getResource( "jpo/images/icon_first.gif" ) ) );
@@ -65,7 +65,7 @@ public class ThumbnailPanelTitle
             new JButton( new ImageIcon( Settings.cl.getResource( "jpo/images/Forward24.gif" ) ) );
 
     /**
-     *  a button to naviage to the last page
+     *  a button to navigate to the last page
      **/
     public JButton lastThumbnailsPageButton =
             new JButton( new ImageIcon( Settings.cl.getResource( "jpo/images/icon_last.gif" ) ) );
@@ -84,7 +84,7 @@ public class ThumbnailPanelTitle
     /**
      *  the JLabel that holds the description of what is being shown in the TubnmailPanel
      */
-    private JLabel title = new JLabel();
+    private final JLabel title = new JLabel();
 
     /**
      *  The largest size for the thumbnail slider
@@ -183,6 +183,7 @@ public class ThumbnailPanelTitle
     public void setTitle( final String titleString ) {
         Runnable r = new Runnable() {
 
+            @Override
             public void run() {
                 Tools.checkEDT();
                 title.setText( titleString );

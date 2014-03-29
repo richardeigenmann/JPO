@@ -1,90 +1,114 @@
 package jpo.gui;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPopupMenu;
 import jpo.gui.swing.ResizableJFrame;
 import jpo.dataModel.Settings;
-import java.awt.event.*;
-import javax.swing.*;
 
 /*
-GroupPopupMenu.java: popup menu for groups
-Copyright (C) 2002-2011  Richard Eigenmann.
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or any later version. This program is distributed 
-in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
-without even the implied warranty of MERCHANTABILITY or FITNESS 
-FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
-more details. You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-The license is in gpl.txt.
-See http://www.gnu.org/copyleft/gpl.html for the details.
+ GroupPopupMenu.java: popup menu for groups
+ Copyright (C) 2002-2011  Richard Eigenmann.
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or any later version. This program is distributed 
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+ without even the implied warranty of MERCHANTABILITY or FITNESS 
+ FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
+ more details. You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ The license is in gpl.txt.
+ See http://www.gnu.org/copyleft/gpl.html for the details.
  */
-/** 
- * A class that generates a popup menu for a group node. This became necessary primarily because
- * the code was getting a bit long and was cluttering up a different class. Separating out the 
- * popup menu and making it an object and forcing an interface on the object instantiating
- * it is probably more in line with the OO philosophy.
+/**
+ * A class that generates a popup menu for a group node. This became necessary
+ * primarily because the code was getting a bit long and was cluttering up a
+ * different class. Separating out the popup menu and making it an object and
+ * forcing an interface on the object instantiating it is probably more in line
+ * with the OO philosophy.
  *
  */
 public class ChangeWindowPopupMenu extends JPopupMenu
         implements ActionListener {
 
-    /** 
-     *  Menu item that indicates that a Fullscreen window should be created.
-     **/
-    private JMenuItem fullScreenJMenuItem = new JMenuItem( Settings.jpoResources.getString( "fullScreenLabel" ) );
-    /** 
-     *  Menu item that indicates that the window should be created on the LEFT half of the display.
-     **/
-    private JMenuItem leftWindowJMenuItem = new JMenuItem( Settings.jpoResources.getString( "leftWindowLabel" ) );
-    /** 
-     *  Menu item that indicates that the window should be created on the RIGHT half of the display.
-     **/
-    private JMenuItem rightWindowJMenuItem = new JMenuItem( Settings.jpoResources.getString( "rightWindowLabel" ) );
-    /** 
-     *  Menu item that indicates that the window should be created on the TOP LEFT quarter of the display.
-     **/
-    private JMenuItem topLeftWindowJMenuItem = new JMenuItem( Settings.jpoResources.getString( "topLeftWindowLabel" ) );
-    /** 
-     *  Menu item that indicates that the window should be created on the TOP RIGHT quarter of the display.
-     **/
-    private JMenuItem topRightWindowJMenuItem = new JMenuItem( Settings.jpoResources.getString( "topRightWindowLabel" ) );
-    /** 
-     *  Menu item that indicates that the window should be created on the BOTTOM LEFT quarter of the display.
-     **/
-    private JMenuItem bottomLeftWindowJMenuItem = new JMenuItem( Settings.jpoResources.getString( "bottomLeftWindowLabel" ) );
-    /** 
-     *  Menu item that indicates that the window should be created on the BOTTOM RIGHT quarter of the display.
-     **/
-    private JMenuItem bottomRightWindowJMenuItem = new JMenuItem( Settings.jpoResources.getString( "bottomRightWindowLabel" ) );
-    /** 
-     *  Menu item that indicates that the window should be created on the BOTTOM RIGHT quarter of the display.
-     **/
-    private JMenuItem defaultWindowJMenuItem = new JMenuItem( Settings.jpoResources.getString( "defaultWindowLabel" ) );
-    /** 
-     *  Menu item that indicates that the window decorations should be shown.
-     **/
-    private JMenuItem windowDecorationsJMenuItem = new JMenuItem( Settings.jpoResources.getString( "windowDecorationsLabel" ) );
-    /** 
-     *  Menu item that indicates that the window decorations should not be shown.
-     **/
-    private JMenuItem windowNoDecorationsJMenuItem = new JMenuItem( Settings.jpoResources.getString( "windowNoDecorationsLabel" ) );
     /**
-     *  Object that must implement the functions dealing with the user
-     *  request.
+     * Menu item that indicates that a Fullscreen window should be created.
+     *
      */
-    private ChangeWindowInterface caller;
+    private final JMenuItem fullScreenJMenuItem = new JMenuItem( Settings.jpoResources.getString( "fullScreenLabel" ) );
+    /**
+     * Menu item that indicates that the window should be created on the LEFT
+     * half of the display.
+     *
+     */
+    private final JMenuItem leftWindowJMenuItem = new JMenuItem( Settings.jpoResources.getString( "leftWindowLabel" ) );
+    /**
+     * Menu item that indicates that the window should be created on the RIGHT
+     * half of the display.
+     *
+     */
+    private final JMenuItem rightWindowJMenuItem = new JMenuItem( Settings.jpoResources.getString( "rightWindowLabel" ) );
+    /**
+     * Menu item that indicates that the window should be created on the TOP
+     * LEFT quarter of the display.
+     *
+     */
+    private final JMenuItem topLeftWindowJMenuItem = new JMenuItem( Settings.jpoResources.getString( "topLeftWindowLabel" ) );
+    /**
+     * Menu item that indicates that the window should be created on the TOP
+     * RIGHT quarter of the display.
+     *
+     */
+    private final JMenuItem topRightWindowJMenuItem = new JMenuItem( Settings.jpoResources.getString( "topRightWindowLabel" ) );
+    /**
+     * Menu item that indicates that the window should be created on the BOTTOM
+     * LEFT quarter of the display.
+     *
+     */
+    private final JMenuItem bottomLeftWindowJMenuItem = new JMenuItem( Settings.jpoResources.getString( "bottomLeftWindowLabel" ) );
+    /**
+     * Menu item that indicates that the window should be created on the BOTTOM
+     * RIGHT quarter of the display.
+     *
+     */
+    private final JMenuItem bottomRightWindowJMenuItem = new JMenuItem( Settings.jpoResources.getString( "bottomRightWindowLabel" ) );
+    /**
+     * Menu item that indicates that the window should be created on the BOTTOM
+     * RIGHT quarter of the display.
+     *
+     */
+    private final JMenuItem defaultWindowJMenuItem = new JMenuItem( Settings.jpoResources.getString( "defaultWindowLabel" ) );
+    /**
+     * Menu item that indicates that the window decorations should be shown.
+     *
+     */
+    private final JMenuItem windowDecorationsJMenuItem = new JMenuItem( Settings.jpoResources.getString( "windowDecorationsLabel" ) );
+    /**
+     * Menu item that indicates that the window decorations should not be shown.
+     *
+     */
+    private final JMenuItem windowNoDecorationsJMenuItem = new JMenuItem( Settings.jpoResources.getString( "windowNoDecorationsLabel" ) );
+    /**
+     * Object that must implement the functions dealing with the user request.
+     */
+    private final ChangeWindowInterface caller;
 
     /**
-     *  Creates a popup menu which allows the user to choose how he would like
-     *  his window to be positioned and whether it should have decorations.
-     *  @param caller	The object requesting the menu.
+     * Creates a popup menu which allows the user to choose how he would like
+     * his window to be positioned and whether it should have decorations.
+     *
+     * @param caller	The object requesting the menu.
      */
     public ChangeWindowPopupMenu( ChangeWindowInterface caller ) {
         this.caller = caller;
+        initComponents();
+    }
 
+    private void initComponents() {
         fullScreenJMenuItem.addActionListener( this );
         add( fullScreenJMenuItem );
 
@@ -116,14 +140,15 @@ public class ChangeWindowPopupMenu extends JPopupMenu
 
         windowNoDecorationsJMenuItem.addActionListener( this );
         add( windowNoDecorationsJMenuItem );
-
-
     }
 
-    /** 
-     *  Method that analyses the user initiated action and performs what the user requested.
-     *  @param actionEvent The Action Event relieved.
-     **/
+    /**
+     * Method that analyses the user initiated action and performs what the user
+     * requested.
+     *
+     * @param actionEvent The Action Event relieved.
+     *
+     */
     @Override
     public void actionPerformed( ActionEvent actionEvent ) {
         // Group popup menu				

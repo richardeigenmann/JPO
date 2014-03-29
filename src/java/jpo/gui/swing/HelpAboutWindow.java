@@ -30,7 +30,7 @@ public class HelpAboutWindow {
     /**
      * Defines a logger for this class
      */
-    private static Logger logger = Logger.getLogger( HelpAboutWindow.class.getName() );
+    private static final Logger LOGGER = Logger.getLogger( HelpAboutWindow.class.getName() );
 
 
     /**
@@ -42,12 +42,12 @@ public class HelpAboutWindow {
                 Settings.jpoResources.getString( "HelpAboutText" ) + Settings.jpoResources.getString( "HelpAboutUser" ) + System.getProperty( "user.name" ) + "\n" + Settings.jpoResources.getString( "HelpAboutOs" ) + System.getProperty( "os.name" ) + " " + System.getProperty( "os.version" ) + " " + System.getProperty( "os.arch" ) + "\n" + Settings.jpoResources.getString( "HelpAboutJvm" ) + System.getProperty( "java.vendor" ) + " " + System.getProperty( "java.version" ) + "\n" + Settings.jpoResources.getString( "HelpAboutJvmMemory" ) + Long.toString( Runtime.getRuntime().maxMemory() / 1024 / 1024, 0 ) + " MB\n" + Settings.jpoResources.getString( "HelpAboutJvmFreeMemory" ) + Long.toString( Runtime.getRuntime().freeMemory() / 1024 / 1024, 0 ) + " MB\n" );
 
         // while we're at it dump the stuff to the log
-        logger.info( "HelpAboutWindow: Help About showed the following information" );
-        logger.info( "User: " + System.getProperty( "user.name" ) );
-        logger.info( "Operating System: " + System.getProperty( "os.name" ) + "  " + System.getProperty( "os.version" ) );
-        logger.info( "Java: " + System.getProperty( "java.version" ) );
-        logger.info( "Max Memory: " + Long.toString( Runtime.getRuntime().maxMemory() / 1024 / 1024, 0 ) + " MB" );
-        logger.info( "Free Memory: " + Long.toString( Runtime.getRuntime().freeMemory() / 1024 / 1024, 0 ) + " MB" );
+        LOGGER.info( "HelpAboutWindow: Help About showed the following information" );
+        LOGGER.info( "User: " + System.getProperty( "user.name" ) );
+        LOGGER.info( "Operating System: " + System.getProperty( "os.name" ) + "  " + System.getProperty( "os.version" ) );
+        LOGGER.info( "Java: " + System.getProperty( "java.version" ) );
+        LOGGER.info( "Max Memory: " + Long.toString( Runtime.getRuntime().maxMemory() / 1024 / 1024, 0 ) + " MB" );
+        LOGGER.info( "Free Memory: " + Long.toString( Runtime.getRuntime().freeMemory() / 1024 / 1024, 0 ) + " MB" );
     }
 }
 

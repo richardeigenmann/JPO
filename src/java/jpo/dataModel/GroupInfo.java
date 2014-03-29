@@ -1,9 +1,18 @@
 package jpo.dataModel;
 
-import java.net.*;
-import java.io.*;
-import java.util.*;
-import java.text.*;
+
+
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.IOException;
+import java.io.Serializable;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.text.DateFormat;
+import java.util.Calendar;
+import java.util.Vector;
 import java.util.logging.Logger;
 
 
@@ -38,7 +47,7 @@ public class GroupInfo
     /**
      * Defines a logger for this class
      */
-    private static Logger logger = Logger.getLogger( GroupInfo.class.getName() );
+    private static final Logger LOGGER = Logger.getLogger( GroupInfo.class.getName() );
 
     /**
      *  The description of the GroupInfo.
@@ -98,12 +107,12 @@ public class GroupInfo
      *  objects that the description was updated.
      */
     private void sendGroupNameChangedEvent() {
-        logger.fine( "preparing to send GroupName changed event" );
+        LOGGER.fine( "preparing to send GroupName changed event" );
         if ( ( Settings.pictureCollection != null ) && ( Settings.pictureCollection.getSendModelUpdates() ) ) {
             GroupInfoChangeEvent gice = new GroupInfoChangeEvent( this );
             gice.setGroupNameChanged();
             sendGroupInfoChangedEvent( gice );
-            logger.fine( "sent description changed event" );
+            LOGGER.fine( "sent description changed event" );
             Settings.pictureCollection.setUnsavedUpdates();
         }
     }
@@ -137,7 +146,7 @@ public class GroupInfo
         try {
             return new File( new URI( lowresLocation ) );
         } catch ( URISyntaxException x ) {
-            logger.info( "Conversion of " + lowresLocation + " to URI failed: " + x.getMessage() );
+            LOGGER.info( "Conversion of " + lowresLocation + " to URI failed: " + x.getMessage() );
             return null;
         }
     }
@@ -165,7 +174,7 @@ public class GroupInfo
             URL lowresURL = new URL( lowresLocation );
             return lowresURL;
         } catch ( MalformedURLException x ) {
-            logger.fine( "Caught a MalformedURLException: " + x.getMessage() );
+            LOGGER.fine( "Caught a MalformedURLException: " + x.getMessage() );
             return null;
         }
     }
@@ -211,7 +220,7 @@ public class GroupInfo
 
     /**
      *  Appends the text to the lowres location (for the XML parser).
-     *  @param  s  The text fragement to be added to the Lowres Location.
+     *  @param  s  The text fragment to be added to the Lowres Location.
      */
     public synchronized void appendToLowresLocation( String s ) {
         if ( s.length() > 0 ) {
@@ -331,7 +340,7 @@ public class GroupInfo
      *  put this notification.
      */
     public void sendWasUnselectedEvent() {
-        logger.fine( "Sending unselected event" );
+        LOGGER.fine( "Sending unselected event" );
         GroupInfoChangeEvent gice = new GroupInfoChangeEvent( this );
         gice.setWasUnselected();
         sendGroupInfoChangedEvent( gice );
@@ -341,7 +350,7 @@ public class GroupInfo
      *  A vector that holds all the listeners that want to be notified about
      *  changes to this PictureInfo object.
      */
-    private Vector<GroupInfoChangeListener> groupInfoListeners = new Vector<GroupInfoChangeListener>();
+    private final Vector<GroupInfoChangeListener> groupInfoListeners = new Vector<GroupInfoChangeListener>();
 
 
     /**
@@ -349,7 +358,7 @@ public class GroupInfo
      *  @param listener	The object that will receive notifications.
      */
     public void addGroupInfoChangeListener( GroupInfoChangeListener listener ) {
-        logger.fine( "Listener added on SourcePicture " + Integer.toString( this.hashCode() ) + " of class: " + listener.getClass().toString() );
+        LOGGER.fine( "Listener added on SourcePicture " + Integer.toString( this.hashCode() ) + " of class: " + listener.getClass().toString() );
         groupInfoListeners.add( listener );
     }
 
@@ -362,7 +371,7 @@ public class GroupInfo
      */
     public void removeGroupInfoChangeListener(
             GroupInfoChangeListener listener ) {
-        logger.fine( "Listener removed from SourcePicture " + Integer.toString( this.hashCode() ) + " of class: " + listener.getClass().toString() );
+        LOGGER.fine( "Listener removed from SourcePicture " + Integer.toString( this.hashCode() ) + " of class: " + listener.getClass().toString() );
         groupInfoListeners.remove( listener );
     }
 
@@ -381,7 +390,7 @@ public class GroupInfo
 
 
     /**
-     * Intended mainly for debuggin purposes.
+     * Intended mainly for debugging purposes.
      * @return The Vector of change listeners
      */
     public Vector<GroupInfoChangeListener> getGroupInfoListeners() {

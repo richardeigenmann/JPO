@@ -2,8 +2,11 @@ package jpo.gui;
 
 import jpo.dataModel.Settings;
 import java.util.logging.Logger;
-import net.javaprog.ui.wizard.*;
-import javax.swing.*;
+import javax.swing.BoxLayout;
+import javax.swing.JComponent;
+import javax.swing.JPanel;
+import javax.swing.JProgressBar;
+import net.javaprog.ui.wizard.AbstractStep;
 
 /*
 CameraDownloadWizardStep5.java: the sixth step in the download from Camera Wizard
@@ -48,7 +51,7 @@ public class CameraDownloadWizardStep7
      */
     private CameraDownloadWizardData dataModel = null;
 
-    private JProgressBar progressBar = new JProgressBar();
+    private final JProgressBar progressBar = new JProgressBar();
 
 
     /**

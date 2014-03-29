@@ -1,45 +1,62 @@
 package jpo.gui;
 
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.File;
 import jpo.dataModel.Settings;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
 import jpo.dataModel.PictureInfo;
-import java.io.*;
-import java.util.*;
-import java.awt.*;
-import java.awt.event.*;
 import java.net.URI;
+import java.util.Enumeration;
+import java.util.HashSet;
 import java.util.List;
 import java.util.logging.Logger;
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.SwingWorker;
+import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
 import jpo.dataModel.GroupInfo;
 
 /*
-ReconcileJFrame.java:  
-a class that creates a GUI, asks for a directory and then tells you if the files are in your collection.
+ ReconcileJFrame.java:  
+ a class that creates a GUI, asks for a directory and then tells you if the files are in your collection.
 
-Copyright (C) 2002 - 2010  Richard Eigenmann.
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or any later version. This program is distributed 
-in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
-without even the implied warranty of MERCHANTABILITY or FITNESS 
-FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
-more details. You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-The license is in gpl.txt.
-See http://www.gnu.org/copyleft/gpl.html for the details.
+ Copyright (C) 2002 - 2010  Richard Eigenmann.
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or any later version. This program is distributed 
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+ without even the implied warranty of MERCHANTABILITY or FITNESS 
+ FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
+ more details. You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ The license is in gpl.txt.
+ See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 /**
- *  This class creates a JFrame where the user can specify a directory against which
- *  he wants to reconcile the current collection. When the reconciliation is started
- *  the results are displayed in a JTextArea.<p>
+ * This class creates a JFrame where the user can specify a directory against
+ * which he wants to reconcile the current collection. When the reconciliation
+ * is started the results are displayed in a JTextArea.<p>
  *
- *  The user can choose whether only missing files are to be shown or whether the
- *  reconciliation should also show the matched files.
+ * The user can choose whether only missing files are to be shown or whether the
+ * reconciliation should also show the matched files.
  *
- *  TODO: Make this a Swing Worker if it servers a purpose
+ * TODO: Make this a Swing Worker if it servers a purpose
  *
  */
 public class ReconcileJFrame
@@ -51,42 +68,42 @@ public class ReconcileJFrame
     private static final Logger LOGGER = Logger.getLogger( ReconcileJFrame.class.getName() );
 
     /**
-     *  tickbox that indicates whether subdirectories are to be reconciled too
-     **/
+     * tickbox that indicates whether subdirectories are to be reconciled too
+     *
+     */
     private final JCheckBox recurseSubdirectoriesJCheckBox = new JCheckBox( Settings.jpoResources.getString( "ReconcileSubdirectories" ) );
 
     /**
-     *  tickbox that indicates whether subdirectories are to be reconciled too
-     **/
+     * tickbox that indicates whether subdirectories are to be reconciled too
+     *
+     */
     private final JCheckBox listPositivesJCheckBox = new JCheckBox( Settings.jpoResources.getString( "ReconcileListPositives" ) );
 
     /**
-     *  the log window with the results of the reconciliation
+     * the log window with the results of the reconciliation
      */
     private final JTextArea logJTextArea = new JTextArea( 15, 60 );
 
     private final JScrollPane logJScrollPane = new JScrollPane( logJTextArea );
 
     /**
-     *  flag to tell the thread to end in a controlled manner. If the thread is not running it is true
+     * flag to tell the thread to end in a controlled manner. If the thread is
+     * not running it is true
      */
     private boolean stopThread = true;
 
     /**
-     *  a reference to the root object which shall be reconciled.
+     * a reference to the root object which shall be reconciled.
      */
     private final SortableDefaultMutableTreeNode rootNode;
 
-
-    /** 
-     *   Creates a JFrame with the GUI elements and buttons that can
-     *   start and stop the reconciliation. The reconciliation itself
-     *   runs in it's own Thread.
+    /**
+     * Creates a JFrame with the GUI elements and buttons that can start and
+     * stop the reconciliation. The reconciliation itself runs in it's own
+     * Thread.
      *
-     *   @param	rootNode	The node which should be used as
-     *				a starting point for the reconciliation.
-     *				Will probably always be the root node of
-     *				the tree.
+     * @param	rootNode	The node which should be used as a starting point for the
+     * reconciliation. Will probably always be the root node of the tree.
      */
     public ReconcileJFrame( SortableDefaultMutableTreeNode rootNode ) {
         this.rootNode = rootNode;
@@ -100,7 +117,6 @@ public class ReconcileJFrame
                 getRid();
             }
         } );
-
 
         JPanel controlJPanel = new JPanel();
         controlJPanel.setLayout( new GridBagLayout() );
@@ -117,18 +133,15 @@ public class ReconcileJFrame
         constraints.insets = new Insets( 4, 4, 4, 4 );
         controlJPanel.add( reconcileBlaBlaJLabel, constraints );
 
-
-
         JLabel directoryJLabel = new JLabel( Settings.jpoResources.getString( "directoryJLabelLabel" ) );
         constraints.gridy++;
         constraints.gridwidth = 2;
         constraints.insets = new Insets( 4, 4, 4, 4 );
         controlJPanel.add( directoryJLabel, constraints );
 
-
-        final DirectoryChooser directoryChooser =
-                new DirectoryChooser( Settings.jpoResources.getString( "directoryCheckerChooserTitle" ),
-                DirectoryChooser.DIR_MUST_EXIST );
+        final DirectoryChooser directoryChooser
+                = new DirectoryChooser( Settings.jpoResources.getString( "directoryCheckerChooserTitle" ),
+                        DirectoryChooser.DIR_MUST_EXIST );
 
         constraints.gridx = 3;
         constraints.fill = GridBagConstraints.NONE;
@@ -141,13 +154,13 @@ public class ReconcileJFrame
         getRootPane().setDefaultButton( okJButton );
         okJButton.addActionListener( new ActionListener() {
 
+            @Override
             public void actionPerformed( ActionEvent e ) {
                 scanDir = directoryChooser.getDirectory();
                 runReconciliationEDT();
             }
         } );
         controlJPanel.add( okJButton, constraints );
-
 
         // create the JTextField that holds the reference to the targetDirJTextField
         constraints.gridx = 0;
@@ -156,11 +169,11 @@ public class ReconcileJFrame
         constraints.insets = new Insets( 4, 4, 4, 4 );
         controlJPanel.add( directoryChooser, constraints );
 
-
         constraints.gridx = 3;
         JButton cancelJButton = new JButton( Settings.jpoResources.getString( "genericCancelText" ) );
         cancelJButton.addActionListener( new ActionListener() {
 
+            @Override
             public void actionPerformed( ActionEvent e ) {
                 if ( stopThread ) {
                     getRid(); // thread hasn't started
@@ -187,11 +200,9 @@ public class ReconcileJFrame
         controlJPanel.add( listPositivesJCheckBox, constraints );
         listPositivesJCheckBox.setSelected( false );
 
-
         logJTextArea.setLineWrap( false );
         logJScrollPane.setMinimumSize( new Dimension( 400, 250 ) );
         logJScrollPane.setMaximumSize( new Dimension( 2000, 1000 ) );
-
 
         constraints.gridx = 0;
         constraints.gridy++;
@@ -206,15 +217,13 @@ public class ReconcileJFrame
         setVisible( true );
     }
 
-
     /**
-     *  method that closes te frame and gets rid of it
+     * method that closes te frame and gets rid of it
      */
     private void getRid() {
         setVisible( false );
         dispose();
     }
-
 
     /**
      * This method does some validation and then fires the Reconciler
@@ -233,10 +242,10 @@ public class ReconcileJFrame
         }
     }
 
-
     /**
-     *  helper method that returns true if the directory is a readable valid directory.
-     *  If it is not it returns false. It pops up JOptionPanes to explain what is wrong
+     * helper method that returns true if the directory is a readable valid
+     * directory. If it is not it returns false. It pops up JOptionPanes to
+     * explain what is wrong
      */
     private boolean validateDir( File scanDir ) {
         if ( scanDir == null ) {
@@ -263,9 +272,6 @@ public class ReconcileJFrame
             LOGGER.info( "File is not a directory. Using it's parent: " + scanDir.getPath() );
         }
 
-
-
-
         // is the File object readable?
         if ( !scanDir.canRead() ) {
             JOptionPane.showMessageDialog(
@@ -288,8 +294,7 @@ public class ReconcileJFrame
     class Reconciler
             extends SwingWorker<String, String> {
 
-        private HashSet<URI> collectionUris = new HashSet<URI>();
-
+        private final HashSet<URI> collectionUris = new HashSet<URI>();
 
         @Override
         protected String doInBackground() throws Exception {
@@ -315,7 +320,6 @@ public class ReconcileJFrame
             return "Done.";
         }
 
-
         public void reconcileDir( File scanDir ) {
             if ( listPositivesJCheckBox.isSelected() ) {
                 publish( Settings.jpoResources.getString( "ReconcileStart" ) + scanDir.getPath() + "\n" );
@@ -325,7 +329,6 @@ public class ReconcileJFrame
                 publish( Settings.jpoResources.getString( "ReconcileNoFiles" ) );
                 return;
             }
-
 
             for ( int i = 0; ( ( i < fileArray.length ) && ( !stopThread ) ); i++ ) {
                 if ( fileArray[i].isDirectory() ) {
@@ -342,7 +345,6 @@ public class ReconcileJFrame
                 }
             }
         }
-
 
         @Override
         protected void process( List<String> chunks ) {

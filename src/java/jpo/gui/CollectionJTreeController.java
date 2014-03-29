@@ -9,10 +9,26 @@ import java.io.File;
 import java.util.Enumeration;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.*;
+import javax.swing.DropMode;
+import javax.swing.JComponent;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.JTree;
+import javax.swing.SwingUtilities;
+import javax.swing.ToolTipManager;
+import javax.swing.TransferHandler;
+import static javax.swing.TransferHandler.COPY_OR_MOVE;
+import javax.swing.TransferHandler.TransferSupport;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
-import jpo.dataModel.*;
+import jpo.dataModel.FlatFileDistiller;
+import jpo.dataModel.GroupInfo;
+import jpo.dataModel.PictureInfo;
+import jpo.dataModel.Settings;
+import jpo.dataModel.SingleNodeNavigator;
+import jpo.dataModel.SortableDefaultMutableTreeNode;
+import jpo.dataModel.Tools;
 import jpo.export.GenerateWebsiteWizard;
 import jpo.export.PicasaUploadRequest;
 import jpo.export.PicasaUploaderWizard;
@@ -599,7 +615,7 @@ public class CollectionJTreeController
          * A reference back to the CollectionJTreeController for which this is a
          * listener.
          */
-        private CollectionJTreeController collectionJTreeController;
+        private final CollectionJTreeController collectionJTreeController;
 
         private CollectionMouseAdapter(
                 CollectionJTreeController collectionJTreeController ) {

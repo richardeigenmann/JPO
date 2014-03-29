@@ -1,7 +1,8 @@
 package jpo.gui.swing;
 
-import java.awt.*;
-import javax.swing.text.*;
+import java.awt.Rectangle;
+import javax.swing.text.DefaultCaret;
+
 
 /*
 NonFocussedCaret.java:  a dumb caret that doesn't move.

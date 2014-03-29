@@ -1,6 +1,10 @@
 package jpo.export;
 
-import javax.swing.*;
+import java.util.concurrent.ExecutionException;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.SwingWorker;
 import jpo.dataModel.NodeStatistics;
 import jpo.dataModel.Settings;
 import net.javaprog.ui.wizard.AbstractStep;
@@ -59,7 +63,8 @@ public class GenerateWebsiteWizard1Welcome extends AbstractStep {
             protected void done() {
                 try {
                     welcomeLabel.setText( String.format( Settings.jpoResources.getString( "welcomeMsg" ), get() ) );
-                } catch ( Exception ignore ) {
+                } catch ( InterruptedException ignore ) {
+                } catch ( ExecutionException ignore ) {
                 }
             }
         }

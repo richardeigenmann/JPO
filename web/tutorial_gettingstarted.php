@@ -1,59 +1,6 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
-    <head>
-        <title>JPO Homepage</title>
-        <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-    </head>
-    <body>
-        <table CELLSPACING=0 CELLPADDING=10>
-            <tr>
-                <th colspan="2" height="60" bgcolor="#97a4da"><h1>JPO  Java Picture Organizer</h1></th>
-            </tr>
-            <tr>
-                <td width="150" bgcolor="#97a4da" valign="top">
-                    <p><a href="jpo-stable.jnlp"><font color="red">Start now!</font></a></p>
-                    <p><a href="jpo-devel.jnlp"><font color="red">Beta version 0.9</font></a></p>
-
-                    <p>
-                        <strong>About JPO</strong><br>
-                        <a href="index.html">Introduction</a><br>
-                        <a href="index.html#Features">Features</a><br>
-                        <a href="index.html#Screenshot">Screenshot</a><br>
-                        <a href="index.html#Reviews">Reviews</a><br>
-                        <a href="index.html#Techdes">Technical description</a><br>
-
-
-                        <br><a href="userguide.html"><strong>User Guide</strong></a><br>
-
-
-                        <br><strong>Installing JPO</strong><br>
-                        <a href="installation.html">Requirements</a><br>
-                        <a href="installation.html#Options">Options</a><br>
-                        <a href="installation.html#javawebstart">Java Web Start</a><br>
-                        <a href="installation.html#windows">Windows Installer</a><br>
-                        <a href="installation.html#local">Local Installation</a><br>
-                        <a href="installation.html#source">Source Installation</a><br>
-                        <a href="installation.html#problems">Potential Problems</a><br>
-
-
-                        <br><strong>The project</strong><br>
-                        <a href="about.html">Thanks</a><br>
-                        <a href="about.html#Links">Links</a><br>
-                        <a href="about.html#Author">Author</a><br>
-                        <a href="about.html#License">License</a><br>
-                        <a href="changelog.html">Changelog</a><br>
-                        <a href="changelog.html#Bugs">Bugs</a><br>
-                        <a href="changelog.html#PotentialFeatures">Potential Features</a><br>
-                    </p>
-
-
-                    <p><a href="http://sourceforge.net"><img src="http://sourceforge.net/sflogo.php?group_id=71359&amp;type=1" width="88" height="31" border="0" alt="SourceForge.net Logo"></a></p>
-
-                    <p>Launched: 14.1.2003</p>
-                </td>
-
-                <td style="max-width:900px">
-                    <h2 id="title">Tutorial: Your first use of the Application: Create a new collection, add pictures and organise them</h2>
+    <?php include("page-start.php"); ?>
+<span class="para-heading" id="title">Tutorial: Your first use of the Application:<br>
+    Create a new collection, add pictures and organise them</span>
                     <h3>Objective:</h3>
                     <p>In this tutorial you will learn:<ul><li>How to add pictures to a new collection.</li>
                         <li>How to Organise pictures by
@@ -85,13 +32,12 @@
 
 
                     <h2>Adding pictures to your collection</h2>
-                    <p>For the purpose of this tutorial I have put some pictures of a trip to the mountains and a trip to the sea <a href="samplepictures.zip">here</a>.
-                        Download and unzip them to your Desktop.</p>
+                    <p>For this tutorial be sure to have some jpg images handy.</p>
 
                     <p>Here is what your Windows Desktop might look like:</p>
                     <img src="tutorial_sampledesktop.png" width="797" height="597" alt="What your Windows Desktop may look like"/>
 
-                    <p>Now click on File > Add Pictures:</p>
+                    <p>Now got to JPO and click on the menu File > Add Pictures:</p>
                     <img src="tutorial_file_add.png" width="810" height="601" alt="File Add Pictures Menu"/>
 
                     <p>JPO responds with a window which allows you to choose the pictures you would like to add to your collection:</p>
@@ -206,8 +152,4 @@
                     <hr>
                     <p>Last update to this page: 13.9.2009<br>
 			Copyright 2009 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
-                </td>
-            </tr>
-        </table>
-    </body>
-</html>
+    <?php include("page-end.php"); ?>

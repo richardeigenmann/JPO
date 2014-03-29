@@ -1,7 +1,9 @@
 package jpo.dataModel;
 
-import java.io.*;
-import java.util.*;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Enumeration;
 import java.util.logging.Logger;
 
 
@@ -23,7 +25,7 @@ import java.util.logging.Logger;
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 /**
- * This class stores the parameters for a search and can return an Arraylist of
+ * This class stores the parameters for a search and can return an ArrayList of
  * the search results.
  */
 public class YearQuery implements Serializable, Query {
@@ -170,7 +172,7 @@ public class YearQuery implements Serializable, Query {
     public ArrayList<SortableDefaultMutableTreeNode> extractSearchResults() {
         LOGGER.info( getLowerDateRange().toString() );
         LOGGER.info( getUpperDateRange().toString() );
-        
+
         SortableDefaultMutableTreeNode testNode;
         searchResults = new ArrayList<SortableDefaultMutableTreeNode>();
 

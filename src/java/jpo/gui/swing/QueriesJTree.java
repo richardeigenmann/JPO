@@ -1,11 +1,16 @@
 package jpo.gui.swing;
 
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import javax.swing.JComponent;
+import javax.swing.JScrollPane;
+import javax.swing.JTree;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreePath;
+import javax.swing.tree.TreeSelectionModel;
 import jpo.dataModel.Settings;
 import jpo.dataModel.QueryNavigator;
 import jpo.dataModel.Query;
-import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.tree.*;
 import jpo.dataModel.Tools;
 import jpo.gui.Jpo;
 

@@ -82,8 +82,8 @@
                fork="yes"
                listfiles="yes"
                deprecation="yes"
-               source="1.6"
-               target="1.6"
+               source="1.7"
+               target="1.7"
                includeantruntime="false"
                encoding="UTF-8" >
             <src path="${src.java.dir}"/>
@@ -126,12 +126,12 @@
                  Doctitle="JPO application documentation"
                  Windowtitle="JPO application documentation"
                  Header="JPO application documentation"
-                 Bottom="&lt;font size=&quot;-1&quot;&gt;Copyright (c) 2002 - 2013 by Richard Eigenmann &lt;a href=&quot;http://richieigenmann.users.sourceforge.net/&quot;&gt;http://richieigenmann.users.sourceforge.net/&lt;/a&gt;&lt;/font&gt;"
+                 Bottom="&lt;font size=&quot;-1&quot;&gt;Copyright (c) 2002 - 2014 by Richard Eigenmann &lt;a href=&quot;http://richieigenmann.users.sourceforge.net/&quot;&gt;http://richieigenmann.users.sourceforge.net/&lt;/a&gt;&lt;/font&gt;"
                  author="true"
                  version="true"
                  use="true"
                  private="true"
-                 source="1.6"
+                 source="1.7"
                  linksource="yes"
         >
             <sourcepath path="${src.java.dir}" />
@@ -152,10 +152,11 @@
              duplicate="fail" >
             <manifest>
                 <attribute name="Main-Class" value="${app.main.class}"/>
-                <attribute name="Class-Path" value="activation.jar jnlp.jar commons-compress-1.2.jar commons-net-3.2.jar gdata-core-1.0.jar gdata-maps-2.0.jar gdata-media-1.0.jar gdata-photos-2.0.jar guava-13.0.jar jnlp.jar jwizz-0.1.4.jar mail.jar metadata-extractor-2.6.4.jar miglayout-4.0.jar xmpcore.jar" />
+                <attribute name="Class-Path" value="commons-compress-1.8.jar commons-net-3.3.jar gdata-core-1.0.jar gdata-maps-2.0.jar gdata-media-1.0.jar gdata-photos-2.0.jar guava-16.0.1.jar jwizz-0.1.4.jar javax.mail-1.5.1.jar metadata-extractor-2.6.4.jar miglayout-4.0.jar xmpcore.jar" />
                 <section name="Copyright">
-                    <attribute name="Copy" value="(c) 2001-2013, Richard Eigenmann, Zürich, Switzerland"/>
+                    <attribute name="Copy" value="(c) 2001-2014, Richard Eigenmann, Zürich, Switzerland"/>
                 </section>
+                <attribute name="Permissions" value="all-permissions" />
             </manifest>
         </jar>
         <copy todir="${build.jars.dir}">
@@ -167,25 +168,24 @@
 
     
     <!-- This target signs the unsinged jars so that they can be used in the Java Web Start context.
-         You need to have a Java Keystore
-                <include name="activation.jar"/>
-                <include name="mail.jar"/>
+         You need to have a Java Keystore 
     -->
     <target name="signjar" depends="buildjar" description="Signs the jar files">
         <signjar alias="richi"
                  keystore="${javaKeyStore}"
-                 storepass="${javaKeyStorePassword}" >
+                 storepass="${javaKeyStorePassword}">
             <fileset dir="${build.jars.dir}">
                 <include name="jpo-${version}.jar"/>
-                <include name="commons-compress-1.2.jar"/>
-                <include name="commons-net-3.2.jar" />
+                <include name="commons-compress-1.8.jar"/>
+                <include name="commons-net-3.3.jar" />
                 <include name="gdata-core-1.0.jar"/>
                 <include name="gdata-maps-2.0.jar"/>
                 <include name="gdata-media-1.0.jar"/>
                 <include name="gdata-photos-2.0.jar"/>
-                <include name="guava-13.0.jar"/>
+                <include name="guava-16.0.1.jar"/>
+                <include name="javax.mail-1.5.1.jar"/>
                 <include name="jnpl.jar"/>
-                <include name="jsch-0.1.49.jar"/>
+                <include name="jsch-0.1.51.jar"/>
                 <include name="jwizz-0.1.4.jar"/>
                 <include name="metadata-extractor-2.6.4.jar"/>
                 <include name="miglayout-4.0.jar"/>
@@ -225,7 +225,7 @@
     
     
     <!-- pushes the jpo jar to sourceforge  -->
-    <target name="publish-jar" depends="signjar"  description="Publishes the lates Jpo Version to the SourceForge project">
+    <target name="publish-jar" depends="signjar"  description="Publishes the Jars to SourceForge website">
         <scp todir="richieigenmann,j-po@web.sourceforge.net:/home/groups/j/j-/j-po/htdocs"
              trust="yes"
              verbose="no"
@@ -254,7 +254,7 @@
 
         <scp todir="richieigenmann,j-po@web.sourceforge.net:/home/groups/j/j-/j-po/htdocs"
              trust="yes"
-             verbose="yes"
+             verbose="no"
              keyfile="${sourceforgeSshCertificate}"
              passphrase=""
              sftp="true">
@@ -263,6 +263,7 @@
                     <param name="cache.cachefile"  value="/tmp/Sourceforge-Jpo-Webpagecache" />
                 </modified>
                 <include name="*.html" />
+                <include name="*.css" />
                 <include name="*.php" />
                 <include name="fontconfig" />
                 <include name="*.gif" />
@@ -349,7 +350,7 @@
                 <pathelement location="${unit.test.classes.dir}" />
                 <pathelement location="${junit.dir}" />
             </classpath>
-             <classpath refid="classpath"/>
+            <classpath refid="classpath"/>
             
             <batchtest todir="${results}">
                 <fileset dir="${unit.test.classes.dir}">

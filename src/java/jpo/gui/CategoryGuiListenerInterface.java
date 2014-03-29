@@ -1,6 +1,8 @@
 package jpo.gui; 
 
-import java.util.*; 
+import java.util.HashSet;
+
+
 
 /*
 CategoryGuiListenerInterface.java:  an interface that helps the Category Browser tell the AddFromCamera with categories 

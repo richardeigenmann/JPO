@@ -1,10 +1,14 @@
 package jpo.gui;
 
 import java.util.ArrayList;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import jpo.dataModel.Settings;
-import net.javaprog.ui.wizard.*;
-import javax.swing.*;
 import jpo.dataModel.SortOption;
+import net.javaprog.ui.wizard.AbstractStep;
 
 /*
 CameraDownloadWizardStep6.java: the fifth step in the download from Camera Wizard
@@ -41,14 +45,14 @@ public class CameraDownloadWizardStep6 extends AbstractStep {
      *  Holds a reference to the data used by the wizard
      */
     private CameraDownloadWizardData dataModel = null;
-    private JLabel label1 = new JLabel();
-    private JLabel label2 = new JLabel();
-    private JLabel label3 = new JLabel();
-    private JLabel label3a = new JLabel(); // Sorting by
-    private JLabel label4 = new JLabel();
+    private final JLabel label1 = new JLabel();
+    private final JLabel label2 = new JLabel();
+    private final JLabel label3 = new JLabel();
+    private final JLabel label3a = new JLabel(); // Sorting by
+    private final JLabel label4 = new JLabel();
 
     /**
-     *  Returns the component that visualises the user interactable stuff for this step of the wizard.
+     *  Returns the component that visualises the user intractable stuff for this step of the wizard.
      * @return the component
      */
     @Override
@@ -94,9 +98,9 @@ public class CameraDownloadWizardStep6 extends AbstractStep {
         // Sorting by
         String sortingDescription = "not found!";
         ArrayList<SortOption> sortOptions = Settings.getSortOptions();
-        for ( int i = 0; i < sortOptions.size(); i++) {
-            if ( sortOptions.get( i ).getSortCode() == dataModel.getSortCode() ) {
-                sortingDescription = sortOptions.get( i ).getDescription();
+        for ( SortOption sortOption : sortOptions ) {
+            if ( sortOption.getSortCode() == dataModel.getSortCode() ) {
+                sortingDescription = sortOption.getDescription();
             }
         }
         label3a.setText("Sorting by: " + sortingDescription );

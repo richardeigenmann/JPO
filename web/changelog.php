@@ -1,22 +1,11 @@
- <!DOCTYPE HTML>
-<html>
-    <head>
-        <title>JPO Homepage</title>
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    </head>
-    <body>
-        <table CELLSPACING=0 CELLPADDING=10>
-            <tr>
-                <th colspan="2" height="60" bgcolor="#97a4da"><h1>JPO Java Picture Organizer</h1></th>
-    </tr>
-    <tr>
-        <td width="150" bgcolor="#97a4da" valign="top">
-            <?php include("nav.html"); ?>		</td>
-        <td>
-            <h2 id="Changelog">Changelog</h2>
+    <?php include("page-start.php"); ?>
+    <span class="para-heading" id="Changelog">Changelog</span>
 
-            <table>
+            <table class="changelog">
                 <tr><td colspan=2><b>Development Version 0.11</b></td></tr>
+                <tr><td valign="top">22.3.2014</td><td>Upgraded to javax.mail-1.5.1.jar</td></tr>
+                <tr><td valign="top">22.3.2014</td><td>Lots of refactoring to get rid of * imports and Netbeans warnings</td></tr>
+                <tr><td valign="top">22.3.2014</td><td>removed dependency on activation.jar as Java now includes it</td></tr>
                 <tr><td valign="top">9.12.2013</td><td>Added Latitude and Longitude to Edit Table View</td></tr>
                 <tr><td valign="top">9.12.2013</td><td>Added A Consolidate Here function on the PicturePopup Menu</td></tr>
                 <tr><td valign="top">15.9.2013</td><td>Fixed the Extras > Check Integrity Screen.</td></tr>
@@ -391,7 +380,7 @@
 
 
             <hr>
-            <h2 id="Bugs">Bugs</h2>
+            <span class="para-heading" id="Bugs">Bugs</span>
 
             <table>
                 <tr><td valign="top">1</td><td>Drop in the Thumbnail pane is not working correctly - Fixed 19.1.2003</td></tr>
@@ -401,7 +390,7 @@
 
 
             <hr>
-            <h2 id="PotentialFeatures">Potential Future Features</h2>
+            <span class="para-heading" id="PotentialFeatures">Potential Future Features</span>
 
             <table>
                 <tr><td valign="top">1</td><td>Collection Extraction to Zip file and ability to load images from Zip file</td></tr>
@@ -410,10 +399,6 @@
             </table>
 
             <hr>
-            <p>Last update to this page: 15 September 2013<br>
+            <p>Last update to this page: 22 March 2014<br>
                 Copyright 2003-2013 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
-        </td>
-    </tr>
-</table>
-</body>
-</html>
+    <?php include("page-end.php"); ?>

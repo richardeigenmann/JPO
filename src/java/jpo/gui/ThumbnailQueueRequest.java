@@ -22,7 +22,8 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  *  {@link ThumbnailCreationQueue} with a references to the {@link ThumbnailController}, the queue priority
  *  and an indicator whether the thumbnail creation must be forced.
  * TODO: Analyse how often a new picture is thrown on the queue. Could be a bit too often...
- * TODO: Perhaps we should not throw thumbnails on the queue but lowresimages as these are not exactly the same as a GUI component which is what a ThumbnailController is.
+ * TODO: Perhaps we should not throw thumbnails on the queue but lowresimages as these are not 
+ * exactly the same as a GUI component which is what a ThumbnailController is.
  */
 public class ThumbnailQueueRequest implements Comparable<ThumbnailQueueRequest> {
 
@@ -130,6 +131,7 @@ public class ThumbnailQueueRequest implements Comparable<ThumbnailQueueRequest> 
      * @param o The request to compare against
      * @return a negative 0 or positive number as defined by the compareTo interface
      */
+    @Override
     public int compareTo(ThumbnailQueueRequest o) {
         return getPriority() - o.getPriority();
     }

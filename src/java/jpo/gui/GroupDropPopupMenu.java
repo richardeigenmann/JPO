@@ -33,7 +33,7 @@ public class GroupDropPopupMenu extends JPopupMenu {
     /**
      * Defines a logger for this class
      */
-    private static Logger logger = Logger.getLogger( GroupDropPopupMenu.class.getName() );
+    private static final Logger LOGGER = Logger.getLogger( GroupDropPopupMenu.class.getName() );
 
     /**
      * Value to indicate that nothing was chosen yet

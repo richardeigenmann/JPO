@@ -1,6 +1,12 @@
 package jpo.gui.swing;
 
-import java.awt.*;
+import java.awt.DisplayMode;
+import java.awt.GraphicsConfiguration;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
+import java.awt.Rectangle;
+import java.awt.Toolkit;
+
 
 /*
 ScreenHelper.java:  class that helps with screen size logic
@@ -51,8 +57,8 @@ public class ScreenHelper {
         GraphicsDevice[] gs = ge.getScreenDevices();
         GraphicsDevice gd;
         GraphicsConfiguration gc;
-        for ( int j = 0; j < gs.length; j++ ) {
-            gd = gs[j];
+        for ( GraphicsDevice g : gs ) {
+            gd = g;
             gc = gd.getDefaultConfiguration();
             r = gc.getBounds();
             if ( ( r.x != 0 ) || ( r.y != 0 ) ) {
@@ -68,7 +74,7 @@ public class ScreenHelper {
      *  This method uses some code I got off the web to determine the rectangle of the
      *  screen size. This is more complicated than it appears on the face of it because
      *  some users have multiple screens making up a large virtual desktop so the top left corner
-     *  is not neccesarily (0,0).
+     *  is not necessarily (0,0).
      *
      *  @return   A rectangle with the coordinates of the desktop.
      */
@@ -76,11 +82,10 @@ public class ScreenHelper {
         Rectangle virtualBounds = new Rectangle();
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
         GraphicsDevice[] gs = ge.getScreenDevices();
-        for ( int j = 0; j < gs.length; j++ ) {
-            GraphicsDevice gd = gs[j];
+        for ( GraphicsDevice gd : gs ) {
             GraphicsConfiguration[] gc = gd.getConfigurations();
-            for ( int i = 0; i < gc.length; i++ ) {
-                virtualBounds = virtualBounds.union( gc[i].getBounds() );
+            for ( GraphicsConfiguration gc1 : gc ) {
+                virtualBounds = virtualBounds.union( gc1.getBounds() );
             }
         }
         return virtualBounds;
@@ -289,8 +294,8 @@ public class ScreenHelper {
         explainGraphicsDevice( defaultScreenDevice );
 
 
-        for ( int i = 0; i < gd.length; i++ ) {
-            explainGraphicsDevice( gd[i] );
+        for ( GraphicsDevice device : gd ) {
+            explainGraphicsDevice( device );
         }
 
         return b;

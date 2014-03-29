@@ -16,8 +16,15 @@
 
 package jpotestground;
 
-import javax.swing.*;
+
 import java.lang.ref.WeakReference;
+import java.lang.reflect.InvocationTargetException;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JEditorPane;
+import javax.swing.JFrame;
+import javax.swing.RepaintManager;
+import javax.swing.SwingUtilities;
 
 /**
  * <p>This class is used to detect Event Dispatch Thread rule violations<br>
@@ -152,12 +159,15 @@ public class CheckThreadViolationRepaintManager extends RepaintManager {
     static void repaintTest() {
         try {
             SwingUtilities.invokeAndWait(new Runnable() {
+                @Override
                 public void run() {
                     test = new JButton();
                     test.setSize(100, 100);
                 }
             });
-        } catch (Exception e) {
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch ( InvocationTargetException e ) {
             e.printStackTrace();
         } 
         // repaint(Rectangle) should be ok

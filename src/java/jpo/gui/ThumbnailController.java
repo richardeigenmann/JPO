@@ -39,29 +39,31 @@ import jpo.dataModel.SortableDefaultMutableTreeNode;
 import jpo.gui.swing.Thumbnail;
 
 /*
-ThumbnailController.java:  class that displays a visual respresentation of the specified node
+ ThumbnailController.java:  class that displays a visual respresentation of the specified node
 
-Copyright (C) 2002 - 2014  Richard Eigenmann.
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or any later version. This program is distributed 
-in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
-without even the implied warranty of MERCHANTABILITY or FITNESS 
-FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
-more details. You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-The license is in gpl.txt.
-See http://www.gnu.org/copyleft/gpl.html for the details.
+ Copyright (C) 2002 - 2014  Richard Eigenmann.
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or any later version. This program is distributed 
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+ without even the implied warranty of MERCHANTABILITY or FITNESS 
+ FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
+ more details. You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ The license is in gpl.txt.
+ See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 /**
- *   ThumbnailController displays a visual representation of the specified node. On a Picture this
- *   is a ThumbnailController thereof, on a Group it is a folder icon.
+ * ThumbnailController displays a visual representation of the specified node.
+ * On a Picture this is a ThumbnailController thereof, on a Group it is a folder
+ * icon.
  *
- * TODO: move the methods to make the ThumbnailController back into this class from ThumbnailCreationFactory
- * TODO: split this class into a GUI component that deals with the GUI stuff and one which deals with the
- * creation stuff and all the model notifications. I.e. MVC..
+ * TODO: move the methods to make the ThumbnailController back into this class
+ * from ThumbnailCreationFactory TODO: split this class into a GUI component
+ * that deals with the GUI stuff and one which deals with the creation stuff and
+ * all the model notifications. I.e. MVC..
  */
 public class ThumbnailController
         implements DropTargetListener,
@@ -70,22 +72,28 @@ public class ThumbnailController
         TreeModelListener {
 
     /**
-     *   Creates a new ThumbnailController object with a reference to the ThumbnailPanelController which
-     *   must receive notifications that a new node should be selected.
+     * Creates a new ThumbnailController object with a reference to the
+     * ThumbnailPanelController which must receive notifications that a new node
+     * should be selected.
      *
-     **/
+     *
+     */
     public ThumbnailController() {
         this( Settings.thumbnailSize );
     }
 
-
     /**
-     * Creates a new ThumbnailController object.
-     * This must happen on the EDT because it creates a Thumbnail SWING component
+     * Creates a new ThumbnailController object. This must happen on the EDT
+     * because it creates a Thumbnail SWING component
      *
-     *   @param	thumbnailSize	The size in which the thumbnail is to be created
-     **/
+     * @param	thumbnailSize	The size in which the thumbnail is to be created
+     *
+     */
     public ThumbnailController( final int thumbnailSize ) {
+        initComponents( thumbnailSize );
+    }
+
+    private void initComponents( final int thumbnailSize ) {
         Tools.checkEDT();
         theThumbnail = new Thumbnail();
         theThumbnail.thumbnailSize = thumbnailSize;
@@ -101,10 +109,11 @@ public class ThumbnailController
     }
 
     /**
-     *  a link to the SortableDefaultMutableTreeNode in the data model.
-     *  This allows thumbnails to be selected by sending a
-     *  nodeSelected event to the data model.
-     **/
+     * a link to the SortableDefaultMutableTreeNode in the data model. This
+     * allows thumbnails to be selected by sending a nodeSelected event to the
+     * data model.
+     *
+     */
     public SortableDefaultMutableTreeNode myNode;
 
     /**
@@ -114,46 +123,48 @@ public class ThumbnailController
     //{ LOGGER.setLevel( Level.ALL ); }
 
     /**
-     *  A set of picture nodes of which one indicated by {@link #myIndex} is to be shown
+     * A set of picture nodes of which one indicated by {@link #myIndex} is to
+     * be shown
      */
     private NodeNavigatorInterface myNodeNavigator = null;
 
     /**
-     *  the Index position in the {@link #myNodeNavigator} which is being shown by this
-     *  component.
+     * the Index position in the {@link #myNodeNavigator} which is being shown
+     * by this component.
      */
     public int myIndex = 0;
 
     /**
-     *   enables this component to be a Drag Source
+     * enables this component to be a Drag Source
      */
     public DragSource dragSource = DragSource.getDefaultDragSource();
 
     /**
-     *   enables this component to be a dropTarget
+     * enables this component to be a dropTarget
      */
     public DropTarget dropTarget;
 
     /**
-     *   The DragGestureListener for a thumbnail.
+     * The DragGestureListener for a thumbnail.
      */
     private DragGestureListener myDragGestureListener;
 
     /**
-     *  The DragSourceListener for a thumbnail.
+     * The DragSourceListener for a thumbnail.
      */
     private final DragSourceListener myDragSourceListener = new ThumbnailDragSourceListener();
 
     /**
-     * The priority this ThumbnailController should have on the ThumbnailCreationQueue
+     * The priority this ThumbnailController should have on the
+     * ThumbnailCreationQueue
      */
     private final int priority = ThumbnailQueueRequest.MEDIUM_PRIORITY;
 
     private Thumbnail theThumbnail;
 
-
     /**
      * returns the Thumbnail that is being controlled by this Controller.
+     *
      * @return the Thumbnail
      */
     public Thumbnail getThumbnail() {
@@ -175,10 +186,11 @@ public class ThumbnailController
      */
     private GroupInfo registeredGroupInfoChangeListener;
 
-
     /**
      * Returns to the caller whether the thumbnail is already showing the node.
-     * @param newNavigator The NodeNavigatorInterface from which the node is coming
+     *
+     * @param newNavigator The NodeNavigatorInterface from which the node is
+     * coming
      * @param newIndex The index position that should be checked.
      * @return true if the indicated node is already showing, false if not
      */
@@ -198,12 +210,11 @@ public class ThumbnailController
         }
     }
 
-
     /**
-     *  Sets the node being visualised by this ThumbnailController object.
+     * Sets the node being visualised by this ThumbnailController object.
      *
-     *  @param mySetOfNodes  The {@link NodeNavigatorInterface} being tracked
-     *  @param index	The position of this object to be displayed.
+     * @param mySetOfNodes The {@link NodeNavigatorInterface} being tracked
+     * @param index	The position of this object to be displayed.
      */
     public void setNode( NodeNavigatorInterface mySetOfNodes, int index ) {
         LOGGER.fine( String.format( "Setting Thubnail %d to index %d in Browser %s ", this.hashCode(), index, mySetOfNodes.toString() ) );
@@ -212,7 +223,6 @@ public class ThumbnailController
         this.myNodeNavigator = mySetOfNodes;
         this.myIndex = index;
         SortableDefaultMutableTreeNode node = mySetOfNodes.getNode( index );
-
 
         this.myNode = node;
 
@@ -229,11 +239,11 @@ public class ThumbnailController
         determineImageStatus( myNode );
     }
 
-
     /**
      * Unattaches the ThumbnailController from the previously linked
-     * PictureInfoChangeListener or GroupInfoChangeListener (if any)
-     * and attaches it to the new PictureInfoChangeListener or GroupInfoChangeListerner.
+     * PictureInfoChangeListener or GroupInfoChangeListener (if any) and
+     * attaches it to the new PictureInfoChangeListener or
+     * GroupInfoChangeListerner.
      */
     private void attachChangeListeners() {
         // unattach from the change Listener
@@ -264,12 +274,14 @@ public class ThumbnailController
         }
     }
 
-
     /**
-     *  This method forwards the request to create the thumbnail to the ThumbnailCreationQueue
-     *  @param	priority	The priority with which the request is to be treated on the queue
-     *  @param	force		Set to true if the thumbnail needs to be rebuilt from source, false
-     *				if using a cached version is OK.
+     * This method forwards the request to create the thumbnail to the
+     * ThumbnailCreationQueue
+     *
+     * @param	priority	The priority with which the request is to be treated on
+     * the queue
+     * @param	force	Set to true if the thumbnail needs to be rebuilt from
+     * source, false if using a cached version is OK.
      */
     public void requestThumbnailCreation( int priority, boolean force ) {
         boolean newRequest = ThumbnailCreationQueue.requestThumbnailCreation(
@@ -281,9 +293,9 @@ public class ThumbnailController
         }
     }
 
-
     /**
-     * Sets an icon for a pending state before a final icon is put in place by a ThumbnailCreation
+     * Sets an icon for a pending state before a final icon is put in place by a
+     * ThumbnailCreation
      */
     public void setPendingIcon() {
         if ( myNode == null ) {
@@ -298,29 +310,28 @@ public class ThumbnailController
         }
     }
 
-
     /**
-     *   Returns the maximum unscaled size for the ThumbnailController as a Dimension using the thumbnailSize
-     *   as width and height.
+     * Returns the maximum unscaled size for the ThumbnailController as a
+     * Dimension using the thumbnailSize as width and height.
+     *
      * @return The maximum unscaled size of the ThumbnailController
      */
     public Dimension getMaximumUnscaledSize() {
         return new Dimension( theThumbnail.thumbnailSize, theThumbnail.thumbnailSize );
     }
 
-
     /**
-     *  Removes any request for this thumbnail from the ThumbnailCreationQueue. No problem if
-     *  it was not on the queue.
+     * Removes any request for this thumbnail from the ThumbnailCreationQueue.
+     * No problem if it was not on the queue.
      */
     public void unqueue() {
         ThumbnailCreationQueue.removeThumbnailQueueRequest( this );
     }
 
-
     /**
-     *  This method determines whether the source image is available online and sets the {@link Thumbnail#drawOfflineIcon}
-     *  indicator accordingly.
+     * This method determines whether the source image is available online and
+     * sets the {@link Thumbnail#drawOfflineIcon} indicator accordingly.
+     *
      * @param nodeToCheck The Node to check
      */
     public void determineImageStatus( DefaultMutableTreeNode nodeToCheck ) {
@@ -345,15 +356,14 @@ public class ThumbnailController
     }
 
     /**
-     *  Inner class to handle the mouse events on the ThumbnailController
+     * Inner class to handle the mouse events on the ThumbnailController
      */
     private class ThumbnailMouseAdapter
             extends MouseAdapter {
 
         /**
-         *   overridden to analyse the mouse event and decide whether
-         *   to display the picture right away (doubleclick) or show
-         *   the popupMenu.
+         * overridden to analyse the mouse event and decide whether to display
+         * the picture right away (doubleclick) or show the popupMenu.
          */
         @Override
         public void mouseClicked( MouseEvent e ) {
@@ -369,7 +379,6 @@ public class ThumbnailController
             }
         }
     }
-
 
     /**
      * Logic for processing a left click on the thumbnail
@@ -393,7 +402,6 @@ public class ThumbnailController
         }
     }
 
-
     /**
      * Logic for processing a right click on the thumbnail
      */
@@ -410,7 +418,6 @@ public class ThumbnailController
         }
     }
 
-
     /**
      * Logic for processing a doubleclick on the thumbnail
      */
@@ -422,14 +429,13 @@ public class ThumbnailController
         }
     }
 
-
     /**
-     *  here we get notified by the PictureInfo object that something has
-     *  changed.
+     * here we get notified by the PictureInfo object that something has
+     * changed.
      */
     @Override
     public void pictureInfoChangeEvent( PictureInfoChangeEvent e ) {
-        if ( e.getHighresLocationChanged() || e.getChecksumChanged() || e.getLowresLocationChanged() || e.getThumbnailChanged()  ) {
+        if ( e.getHighresLocationChanged() || e.getChecksumChanged() || e.getLowresLocationChanged() || e.getThumbnailChanged() ) {
             requestThumbnailCreation( ThumbnailQueueRequest.HIGH_PRIORITY, false );
         } else if ( e.getWasSelected() ) {
             theThumbnail.showAsSelected();
@@ -442,10 +448,8 @@ public class ThumbnailController
         }
     }
 
-
     /**
-     *  here we get notified by the GroupInfo object that something has
-     *  changed.
+     * here we get notified by the GroupInfo object that something has changed.
      */
     @Override
     public void groupInfoChangeEvent( GroupInfoChangeEvent e ) {
@@ -459,9 +463,9 @@ public class ThumbnailController
         }
     }
 
-
     /**
-     *  changes the colour so that the user sees whether the thumbnail is part of the selection
+     * changes the colour so that the user sees whether the thumbnail is part of
+     * the selection
      */
     public void showSlectionStatus() {
         if ( Settings.pictureCollection.isSelected( myNode ) ) {
@@ -472,17 +476,16 @@ public class ThumbnailController
 
     }
 
-
     /**
-     *  This method sets the scaling factor for the display of a thumbnail.
-     *  0 .. 1
+     * This method sets the scaling factor for the display of a thumbnail. 0 ..
+     * 1
+     *
      * @param thumbnailSizeFactor
      */
     public void setFactor( float thumbnailSizeFactor ) {
         LOGGER.fine( String.format( "Scaling factor is being set to %f", thumbnailSizeFactor ) );
         theThumbnail.setFactor( thumbnailSizeFactor );
     }
-
 
     /**
      * tells the Thumbnail to show a broken icon
@@ -492,15 +495,15 @@ public class ThumbnailController
     }
 
     /**
-     *  This flag indicates where decorations should be drawn at all
+     * This flag indicates where decorations should be drawn at all
      */
     private boolean decorateThumbnails = true;
-
 
     /**
      * Determines whether decorations should be drawn or not
      *
      * TODO: Whatever effect does this have?
+     *
      * @param b
      */
     public void setDecorateThumbnails( boolean b ) {
@@ -509,10 +512,10 @@ public class ThumbnailController
         }
     }
 
-
     /**
-     *  determines if the thumbnail is part of the mail selection and changes the drawMailIcon
-     *  flag to ensure that the mail icon will be place over the image.
+     * determines if the thumbnail is part of the mail selection and changes the
+     * drawMailIcon flag to ensure that the mail icon will be place over the
+     * image.
      */
     public void determineMailSlectionStatus() {
         if ( ( myNode != null ) && decorateThumbnails && Settings.pictureCollection.isMailSelected( myNode ) ) {
@@ -523,9 +526,9 @@ public class ThumbnailController
 
     }
 
-
     /**
-     *   implemented here to satisfy the TreeModelListener interface; not used.
+     * implemented here to satisfy the TreeModelListener interface; not used.
+     *
      * @param e
      */
     @Override
@@ -556,9 +559,9 @@ public class ThumbnailController
         }
     }
 
-
     /**
-     *   implemented here to satisfy the TreeModelListener interface; not used.
+     * implemented here to satisfy the TreeModelListener interface; not used.
+     *
      * @param e
      */
     @Override
@@ -566,9 +569,9 @@ public class ThumbnailController
         LOGGER.fine( String.format( "ThumbnailController %d detected a treeNodesInserted event: %s", hashCode(), e ) );
     }
 
-
     /**
-     *  The TreeModelListener interface tells us of tree node removal events.
+     * The TreeModelListener interface tells us of tree node removal events.
+     *
      * @param e
      */
     @Override
@@ -576,9 +579,9 @@ public class ThumbnailController
         LOGGER.fine( String.format( "ThumbnailController %d detected a treeNodesRemoved event: %s", hashCode(), e ) );
     }
 
-
     /**
-     *   implemented here to satisfy the TreeModelListener interface; not used.
+     * implemented here to satisfy the TreeModelListener interface; not used.
+     *
      * @param e
      */
     @Override
@@ -589,11 +592,11 @@ public class ThumbnailController
 
     }
 
-
     /**
-     *   this callback method is invoked every time something is
-     *   dragged onto the ThumbnailController. We check if the desired DataFlavor is
-     *   supported and then reject the drag if it is not.
+     * this callback method is invoked every time something is dragged onto the
+     * ThumbnailController. We check if the desired DataFlavor is supported and
+     * then reject the drag if it is not.
+     *
      * @param event
      */
     @Override
@@ -604,11 +607,10 @@ public class ThumbnailController
 
     }
 
-
     /**
-     *   this callback method is invoked every time something is 
-     *   dragged over the ThumbnailController. We could do some highlighting if
-     *   we so desired.
+     * this callback method is invoked every time something is dragged over the
+     * ThumbnailController. We could do some highlighting if we so desired.
+     *
      * @param event
      */
     @Override
@@ -619,22 +621,22 @@ public class ThumbnailController
 
     }
 
-
     /**
-     *   this callback method is invoked when the user presses or releases shift when
-     *   doing a drag. He can signal that he wants to change the copy / move of the 
-     *   operation. This method could intercept this change and could modify the event
-     *   if it needs to.  On Thumbnails this does nothing.
+     * this callback method is invoked when the user presses or releases shift
+     * when doing a drag. He can signal that he wants to change the copy / move
+     * of the operation. This method could intercept this change and could
+     * modify the event if it needs to. On Thumbnails this does nothing.
+     *
      * @param event
      */
     @Override
     public void dropActionChanged( DropTargetDragEvent event ) {
     }
 
-
     /**
-     *   this callback method is invoked to tell the dropTarget that the drag has moved on
-     *   to something else. We do nothing here.
+     * this callback method is invoked to tell the dropTarget that the drag has
+     * moved on to something else. We do nothing here.
+     *
      * @param event
      */
     @Override
@@ -642,10 +644,10 @@ public class ThumbnailController
         LOGGER.fine( "Thumbnail.dragExit( DropTargetEvent ): invoked" );
     }
 
-
     /**
-     *  This method is called when the drop occurs. It gives the hard work to the
-     *  SortableDefaultMutableTreeNode.
+     * This method is called when the drop occurs. It gives the hard work to the
+     * SortableDefaultMutableTreeNode.
+     *
      * @param event
      */
     @Override
@@ -654,15 +656,15 @@ public class ThumbnailController
     }
 
     /**
-     *   This class extends a DragGestureListener and allows DnD on Thumbnails.
+     * This class extends a DragGestureListener and allows DnD on Thumbnails.
      */
     private class ThumbnailDragGestureListener
             implements DragGestureListener, Serializable {
 
         /**
-         *   This method is invoked by the drag and drop framework. It signifies
-         *   the start of a drag and drop operation. If the event is a copy or move we
-         *   start the drag and create a Transferable.
+         * This method is invoked by the drag and drop framework. It signifies
+         * the start of a drag and drop operation. If the event is a copy or
+         * move we start the drag and create a Transferable.
          */
         @Override
         public void dragGestureRecognized( DragGestureEvent event ) {
@@ -681,67 +683,63 @@ public class ThumbnailController
 
             try {
                 event.startDrag( DragSource.DefaultMoveNoDrop, transferable, myDragSourceListener );
-                LOGGER.log( Level.FINE, "Drag started on node: {0}", myNode.getUserObject().toString());
+                LOGGER.log( Level.FINE, "Drag started on node: {0}", myNode.getUserObject().toString() );
             } catch ( InvalidDnDOperationException x ) {
-                LOGGER.log( Level.FINE, "Threw a InvalidDnDOperationException: reason: {0}", x.getMessage());
+                LOGGER.log( Level.FINE, "Threw a InvalidDnDOperationException: reason: {0}", x.getMessage() );
             }
         }
     }
 
     /**
-     *  This class extends a DragSourceListener for tracking the drag operation originating
-     *  from this thumbnail.
+     * This class extends a DragSourceListener for tracking the drag operation
+     * originating from this thumbnail.
      */
     private class ThumbnailDragSourceListener
             implements DragSourceListener, Serializable {
 
         /**
-         *  this callback method is invoked after the dropTaget had a chance
-         *  to evaluate the drag event and was given the option of rejecting or
-         *  modifying the event. This method sets the cursor to reflect
-         *  whether a copy, move or no drop is possible.
+         * this callback method is invoked after the dropTaget had a chance to
+         * evaluate the drag event and was given the option of rejecting or
+         * modifying the event. This method sets the cursor to reflect whether a
+         * copy, move or no drop is possible.
          */
         @Override
         public void dragEnter( DragSourceDragEvent event ) {
             Tools.setDragCursor( event );
         }
 
-
         /**
-         *  this callback method is invoked after the dropTaget had a chance
-         *  to evaluate the dragOver event and was given the option of rejecting or
-         *  modifying the event. This method sets the cursor to reflect
-         *  whether a copy, move or no drop is possible.
+         * this callback method is invoked after the dropTaget had a chance to
+         * evaluate the dragOver event and was given the option of rejecting or
+         * modifying the event. This method sets the cursor to reflect whether a
+         * copy, move or no drop is possible.
          */
         @Override
         public void dragOver( DragSourceDragEvent event ) {
             Tools.setDragCursor( event );
         }
 
-
         /**
-         *   this callback method is invoked to tell the dragSource that the drag has moved on
-         *   to something else.
+         * this callback method is invoked to tell the dragSource that the drag
+         * has moved on to something else.
          */
         @Override
         public void dragExit( DragSourceEvent event ) {
         }
 
-
         /**
-         *   this callback method is invoked when the user presses or releases shift when
-         *   doing a drag. He can signal that he wants to change the copy / move of the
-         *   operation.
+         * this callback method is invoked when the user presses or releases
+         * shift when doing a drag. He can signal that he wants to change the
+         * copy / move of the operation.
          */
         @Override
         public void dropActionChanged( DragSourceDragEvent event ) {
             Tools.setDragCursor( event );
         }
 
-
         /**
-         *   this callback message goes to DragSourceListener, informing it that the dragging
-         *   has ended.
+         * this callback message goes to DragSourceListener, informing it that
+         * the dragging has ended.
          */
         @Override
         public void dragDropEnd( DragSourceDropEvent event ) {
@@ -749,9 +747,9 @@ public class ThumbnailController
         }
     }
 
-
     /**
      * Give some info about the ThumbnailController.
+     *
      * @return some info about the ThumbnailController
      */
     @Override

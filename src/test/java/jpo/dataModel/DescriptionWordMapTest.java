@@ -82,7 +82,8 @@ public class DescriptionWordMapTest extends TestCase {
      * Test that the right things happen when we give a null node
      */
     public void testNullNode() {
-        DescriptionWordMap dwm = new DescriptionWordMap( null );
+        SortableDefaultMutableTreeNode nullNode = null;
+        DescriptionWordMap dwm = new DescriptionWordMap( nullNode );
         int count = dwm.getWordNodeMap().size();
         assertEquals( "Expecting 0 words on a null node", count, 0 );
     }

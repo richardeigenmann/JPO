@@ -42,7 +42,7 @@ public class TagCloud extends JScrollPane {
 
     /**
      * Constructor to call to create a new TagCloud. It used BorderLayout and
-     * puts the Slider in the top part and the scroll pane in the center part.
+     * puts the Slider in the top part and the scroll pane in the centre part.
      */
     public TagCloud() {
         Tools.checkEDT();
@@ -76,7 +76,7 @@ public class TagCloud extends JScrollPane {
     /**
      * This special panel holds the words (TagCloudJLabel).
      */
-    private VerticalGrowJPanel labelPanel = new VerticalGrowJPanel();
+    private final VerticalGrowJPanel labelPanel = new VerticalGrowJPanel();
 
     /**
      * The wordMap that will be used for the TagCloud
@@ -85,7 +85,7 @@ public class TagCloud extends JScrollPane {
 
     /**
      * This method receives the WordMap of the words to be shown in the TagCloud.
-     * Call showWords aferwards to update the tags being shown.
+     * Call showWords afterwards to update the tags being shown.
      * @param wm The WordMap of the words to be shown.
      */
     public void setWordMap( WordMap wm ) {
@@ -104,7 +104,7 @@ public class TagCloud extends JScrollPane {
 
     /**
      * Runs off an creates the labels for the wordsToShow number of words. Removes
-     * all previous lables and adds the labels for the supplied map.
+     * all previous labels and adds the labels for the supplied map.
      * Adds the MouseListener to the labels.
      */
     public void showWords() {
@@ -137,7 +137,7 @@ public class TagCloud extends JScrollPane {
      * A click listener that fires off the tagClicked event to the tagClickListener when
      * a click is registered on a word label.
      */
-    private transient MouseAdapter wordClickListener = new MouseAdapter() {
+    private final transient MouseAdapter wordClickListener = new MouseAdapter() {
 
         @Override
         public void mouseClicked( MouseEvent e ) {

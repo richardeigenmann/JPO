@@ -1,7 +1,12 @@
 package jpo.dataModel;
 
 import java.awt.geom.Point2D;
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -265,7 +270,7 @@ public class PictureInfo
      * @return	true if found. false if not.
      */
     public boolean descriptionContains( String searchString ) {
-        return description.toUpperCase().indexOf( searchString.toUpperCase() ) > -1;
+        return description.toUpperCase().contains( searchString.toUpperCase() );
     }
 
     /**
@@ -525,7 +530,7 @@ public class PictureInfo
     public void parseChecksum() {
         try {
             LOGGER.fine( "PictureInfo.parseChecksum: " + checksumString );
-            checksum = ( new Long( checksumString ) ).longValue();
+            checksum = ( new Long( checksumString ) );
             checksumString = "";
         } catch ( NumberFormatException x ) {
             LOGGER.info( "PictureInfo.parseChecksum: invalid checksum: " + checksumString + " on picture: " + getHighresFilename() + " --> Set to MIN" );
@@ -797,6 +802,7 @@ public class PictureInfo
      * Essentially this is a utility method to identify what the Date parser is
      * doing.
      *
+     * @param dateTime
      * @return the creation time
      */
     public static String getFormattedCreationTime( Calendar dateTime ) {
@@ -1010,7 +1016,7 @@ public class PictureInfo
      */
     public void parseRotation() {
         try {
-            rotation = ( new Double( rotationString ) ).doubleValue();
+            rotation = ( new Double( rotationString ) );
             rotationString = null;
         } catch ( NumberFormatException x ) {
             LOGGER.info( "invalid rotation: " + rotationString + " on picture: " + getHighresFilename() + " --> Set to Zero" );
@@ -1124,8 +1130,8 @@ public class PictureInfo
     public void parseLatLng() {
         try {
             String[] latLngArray = latLngString.split( "x" );
-            Double lat = ( new Double( latLngArray[0] ) ).doubleValue();
-            Double lng = ( new Double( latLngArray[1] ) ).doubleValue();
+            Double lat = ( new Double( latLngArray[0] ) );
+            Double lng = ( new Double( latLngArray[1] ) );
             setLatLng( new Point2D.Double( lat, lng ) );
             latLngString = null;
         } catch ( NumberFormatException x ) {
@@ -1383,10 +1389,10 @@ public class PictureInfo
     }
 
     /**
-     * A vector that holds all the listeners that want to be notified about
+     * A collection that holds all the listeners that want to be notified about
      * changes to this PictureInfo object.
      */
-    private ArrayList<PictureInfoChangeListener> pictureInfoListeners = new ArrayList<PictureInfoChangeListener>();
+    private final ArrayList<PictureInfoChangeListener> pictureInfoListeners = new ArrayList<PictureInfoChangeListener>();
 
     /**
      * Method to register the listening object of the status events.
@@ -1443,7 +1449,14 @@ public class PictureInfo
      * @return	true if found. false if not.
      */
     public boolean anyMatch( String searchString ) {
-        boolean found = descriptionContains( searchString ) || ( getPhotographer().toUpperCase().indexOf( searchString.toUpperCase() ) > -1 ) || ( highresLocation.toUpperCase().indexOf( searchString.toUpperCase() ) > -1 ) || ( getFilmReference().toUpperCase().indexOf( searchString.toUpperCase() ) > -1 ) || ( getCreationTime().toUpperCase().indexOf( searchString.toUpperCase() ) > -1 ) || ( getComment().toUpperCase().indexOf( searchString.toUpperCase() ) > -1 ) || ( getCopyrightHolder().toUpperCase().indexOf( searchString.toUpperCase() ) > -1 );
+        String uppercaseSearchString = searchString.toUpperCase();
+        boolean found = descriptionContains( searchString ) 
+                || ( getPhotographer().toUpperCase().contains( uppercaseSearchString ) ) 
+                || ( highresLocation.toUpperCase().contains( uppercaseSearchString ) ) 
+                || ( getFilmReference().toUpperCase().contains( uppercaseSearchString ) ) 
+                || ( getCreationTime().toUpperCase().contains( uppercaseSearchString ) ) 
+                || ( getComment().toUpperCase().contains( uppercaseSearchString ) ) 
+                || ( getCopyrightHolder().toUpperCase().contains( uppercaseSearchString ) );
 
         return found;
     }

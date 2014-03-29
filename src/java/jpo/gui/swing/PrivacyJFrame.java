@@ -245,7 +245,7 @@ public class PrivacyJFrame
             /**
              *   This object holds a reference to the progress GUI for the user.
              */
-            private ProgressGui progGui;
+            private final ProgressGui progGui;
 
             /**
              * An array of the files to delete.

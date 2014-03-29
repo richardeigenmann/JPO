@@ -3,7 +3,10 @@ package jpo.dataModel;
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
-import junit.framework.*;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.fail;
+import junit.framework.TestCase;
 
 /*
  * ApplicationJMenuBarTest.java

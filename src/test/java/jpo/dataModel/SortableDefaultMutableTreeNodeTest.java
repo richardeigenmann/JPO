@@ -1,7 +1,15 @@
 package jpo.dataModel;
 
 import java.util.ArrayList;
-import junit.framework.*;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertNotSame;
+import static junit.framework.Assert.assertNull;
+import static junit.framework.Assert.assertSame;
+import static junit.framework.Assert.assertTrue;
+import junit.framework.TestCase;
+
 
 /*
  * ApplicationJMenuBarTest.java

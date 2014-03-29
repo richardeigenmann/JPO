@@ -4,7 +4,12 @@ import java.awt.Dimension;
 import javax.swing.SwingUtilities;
 import jpo.dataModel.Settings;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
-import net.javaprog.ui.wizard.*;
+import net.javaprog.ui.wizard.DefaultWizardModel;
+import net.javaprog.ui.wizard.Step;
+import net.javaprog.ui.wizard.Wizard;
+import net.javaprog.ui.wizard.WizardModel;
+import net.javaprog.ui.wizard.WizardModelEvent;
+import net.javaprog.ui.wizard.WizardModelListener;
 
 /*
  GenerateWebsiteWizard.java: Creates a Wizard for generating a web page
@@ -45,8 +50,8 @@ public class GenerateWebsiteWizard {
      */
     public static final Dimension normalComponentSize = new Dimension( 350, 25 );
     /**
-     * Defines the maximum size for taller horizontally combined objects on
-     * a step panel
+     * Defines the maximum size for taller horizontally combined objects on a
+     * step panel
      */
     public static final Dimension tallerComponentSize = new Dimension( 350, 50 );
 
@@ -66,7 +71,7 @@ public class GenerateWebsiteWizard {
             new GenerateWebsiteWizard4Highres( options ),
             new GenerateWebsiteWizard5Options( options ),
             new GenerateWebsiteWizard6Where( options ),
-            new GenerateWebsiteWizard7Summary( options ),} );
+            new GenerateWebsiteWizard7Summary( options ), } );
 
         // the listener traps all
         model.addWizardModelListener( new WizardModelListener() {

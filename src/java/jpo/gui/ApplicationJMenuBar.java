@@ -1,35 +1,42 @@
 package jpo.gui;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.KeyStroke;
+import javax.swing.SwingUtilities;
 import jpo.gui.swing.HelpAboutWindow;
 import jpo.dataModel.RecentFilesChangeListener;
 import jpo.dataModel.Settings;
-import java.awt.event.*;
-import javax.swing.*;
 import jpo.gui.swing.PrivacyJFrame;
 
 /*
-ApplicationJMenuBar.java:  main menu for the application
+ ApplicationJMenuBar.java:  main menu for the application
 
-Copyright (C) 2002 -2011 Richard Eigenmann.
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or any later version. This program is distributed
-in the hope that it will be useful, but WITHOUT ANY WARRANTY;
-without even the implied warranty of MERCHANTABILITY or FITNESS
-FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-more details. You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-The license is in gpl.txt.
-See http://www.gnu.org/copyleft/gpl.html for the details.
+ Copyright (C) 2002 -2011 Richard Eigenmann.
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or any later version. This program is distributed
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ without even the implied warranty of MERCHANTABILITY or FITNESS
+ FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+ more details. You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ The license is in gpl.txt.
+ See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 /**
- *   This class deals with the visible components of the Jpo main menu. It creates the widgets and connects the
- *   actions back to the JPO application controller which is the Jpo class. It goes back through an
- *   Interface but since the main menu is so tightly tied to the application this decoupling just adds another
- *   class and can be done away with.
- *   The object that creates this menu must connect this menu to the Notifier for a locale change.
+ * This class deals with the visible components of the Jpo main menu. It creates
+ * the widgets and connects the actions back to the JPO application controller
+ * which is the Jpo class. It goes back through an Interface but since the main
+ * menu is so tightly tied to the application this decoupling just adds another
+ * class and can be done away with. The object that creates this menu must
+ * connect this menu to the Notifier for a locale change.
  *
  */
 public class ApplicationJMenuBar
@@ -37,10 +44,10 @@ public class ApplicationJMenuBar
         implements RecentFilesChangeListener, LocaleChangeListener {
 
     /**
-     *  The File menu which is part of the JMenuBar for the Jpo application.
-     **/
+     * The File menu which is part of the JMenuBar for the Jpo application.
+     *
+     */
     private final JMenu FileJMenu = new JMenu();
-
 
     ;
 
@@ -51,132 +58,148 @@ public class ApplicationJMenuBar
     private final JMenu EditJMenu = new JMenu();
 
     /**
-     *  The Tools menu which is part of the JMenuBar for the Jpo application.
+     * The Tools menu which is part of the JMenuBar for the Jpo application.
      *
-     **/
+     *
+     */
     private final JMenu ToolsMenu = new JMenu();
 
     /**
-     *  The Action menu which is part of the JMenuBar for the Jpo application.
-     **/
+     * The Action menu which is part of the JMenuBar for the Jpo application.
+     *
+     */
     private final JMenu actionJMenu = new JMenu();
 
     /**
-     *  Menu item that will request a Action | Send Email
-     **/
+     * Menu item that will request a Action | Send Email
+     *
+     */
     private final JMenuItem emailJMenuItem = new JMenuItem();
 
     /**
-     *  The extras menu which is part of the JMenuBar for the Jpo application.
-     **/
+     * The extras menu which is part of the JMenuBar for the Jpo application.
+     *
+     */
     private final JMenu ExtrasJMenu = new JMenu();
 
     /**
-     *  The help menu which is part of the JMenuBar for the Jpo application.
-     **/
+     * The help menu which is part of the JMenuBar for the Jpo application.
+     *
+     */
     private final JMenu HelpJMenu = new JMenu();
 
     /**
-     *  Menu item that will request a File|New operation.
-     **/
+     * Menu item that will request a File|New operation.
+     *
+     */
     private final JMenuItem FileNewJMenuItem = new JMenuItem();
 
     /**
-     *  Menu item that will request a File|Add operation.
-     **/
+     * Menu item that will request a File|Add operation.
+     *
+     */
     private final JMenuItem FileAddJMenuItem = new JMenuItem();
 
     /**
-     *  Menu item that allows the user to load a collection.
-     **/
+     * Menu item that allows the user to load a collection.
+     *
+     */
     private final JMenuItem FileLoadJMenuItem = new JMenuItem();
 
     /**
-     *  Menu item that allows the user to load a collection recently used.
-     **/
+     * Menu item that allows the user to load a collection recently used.
+     *
+     */
     private final JMenu FileOpenRecentJMenu = new JMenu();
 
     /**
-     *   An array of recently opened collections.
+     * An array of recently opened collections.
      */
     private final JMenuItem[] recentOpenedfileJMenuItem = new JMenuItem[Settings.MAX_MEMORISE];
 
     /**
-     *  Menu item that allows the user to save the picture list.
-     **/
+     * Menu item that allows the user to save the picture list.
+     *
+     */
     private final JMenuItem FileSaveJMenuItem = new JMenuItem();
 
     /**
-     *  Menu item that allows the user to save the picture list to a new file.
-     **/
+     * Menu item that allows the user to save the picture list to a new file.
+     *
+     */
     private final JMenuItem FileSaveAsJMenuItem = new JMenuItem();
 
     /**
-     *  Menu item that allows the user to close the application.
-     **/
+     * Menu item that allows the user to close the application.
+     *
+     */
     private final JMenuItem FileExitJMenuItem = new JMenuItem();
 
     /**
-     *  Menu item that allows the user to search for pictures.
-     **/
+     * Menu item that allows the user to search for pictures.
+     *
+     */
     private final JMenuItem EditFindJMenuItem = new JMenuItem();
 
     /**
-     *  Menu item that allows the user to set up his cameras.
-     **/
+     * Menu item that allows the user to set up his cameras.
+     *
+     */
     private final JMenuItem EditCamerasJMenuItem = new JMenuItem();
 
     /**
-     *  Menu item that allows the user to change the application settings.
-     **/
+     * Menu item that allows the user to change the application settings.
+     *
+     */
     private final JMenuItem EditSettingsJMenuItem = new JMenuItem();
 
     /**
-     *  Menu item that pops up an automatic slide show.
+     * Menu item that pops up an automatic slide show.
      */
     private final JMenuItem RandomSlideshowJMenuItem = new JMenuItem();
 
     /**
-     *  Menu item that calls the Check Directories item
-     **/
+     * Menu item that calls the Check Directories item
+     *
+     */
     private final JMenuItem EditCheckDirectoriesJMenuItem = new JMenuItem();
 
     /**
-     *  Menu item that allows the user to have the collection integrity checked.
-     **/
+     * Menu item that allows the user to have the collection integrity checked.
+     *
+     */
     private final JMenuItem EditCheckIntegrityJMenuItem = new JMenuItem();
 
     /**
-     *  Menu item that allows the user to change the categories.
-     **/
+     * Menu item that allows the user to change the categories.
+     *
+     */
     private final JMenuItem EditCategoriesJMenuItem = new JMenuItem();
 
     /**
-     *  Menu item that brings up the Help About screen.
+     * Menu item that brings up the Help About screen.
      */
     private final JMenuItem HelpAboutJMenuItem = new JMenuItem();
 
     /**
-     *  Menu item to bring up the license.
+     * Menu item to bring up the license.
      */
     private final JMenuItem HelpLicenseJMenuItem = new JMenuItem();
 
     /**
-     *  Menu item to bring up the privacy dialog.
+     * Menu item to bring up the privacy dialog.
      */
     private final JMenuItem HelpPrivacyJMenuItem = new JMenuItem();
 
     /**
-     *  Object that must implement the functions dealing with the user
-     *  request.
+     * Object that must implement the functions dealing with the user request.
      */
-    private ApplicationMenuInterface caller;
-
+    private final ApplicationMenuInterface caller;
 
     /**
-     *  Creates a menu object for use in the main frame of the application.
+     * Creates a menu object for use in the main frame of the application.
      *
-     *  @param caller  The object that is going to get the requests.
+     * @param caller The object that is going to get the requests.
      */
     public ApplicationJMenuBar( final ApplicationMenuInterface caller ) {
         this.caller = caller;
@@ -184,7 +207,6 @@ public class ApplicationJMenuBar
         //Build the file menu.
         FileJMenu.setMnemonic( KeyEvent.VK_F );
         add( FileJMenu );
-
 
         FileNewJMenuItem.setMnemonic( KeyEvent.VK_N );
         FileNewJMenuItem.setAccelerator( KeyStroke.getKeyStroke( 'N', java.awt.event.InputEvent.CTRL_MASK ) );
@@ -207,17 +229,16 @@ public class ApplicationJMenuBar
         } );
         FileJMenu.add( FileAddJMenuItem );
 
-
         FileLoadJMenuItem.setMnemonic( KeyEvent.VK_O );
         FileLoadJMenuItem.setAccelerator( KeyStroke.getKeyStroke( 'O', java.awt.event.InputEvent.CTRL_MASK ) );
         FileLoadJMenuItem.addActionListener( new ActionListener() {
 
+            @Override
             public void actionPerformed( ActionEvent e ) {
                 caller.requestFileLoad();
             }
         } );
         FileJMenu.add( FileLoadJMenuItem );
-
 
         FileOpenRecentJMenu.setMnemonic( KeyEvent.VK_R );
         FileJMenu.add( FileOpenRecentJMenu );
@@ -227,6 +248,7 @@ public class ApplicationJMenuBar
             final int index = i;  // the anonymous innter class needs a final variable
             recentOpenedfileJMenuItem[i].addActionListener( new ActionListener() {
 
+                @Override
                 public void actionPerformed( ActionEvent e ) {
                     caller.requestOpenRecent( index );
                 }
@@ -237,44 +259,41 @@ public class ApplicationJMenuBar
         }
         Settings.addRecentFilesChangeListener( this );
 
-
         FileSaveJMenuItem.setMnemonic( KeyEvent.VK_S );
         FileSaveJMenuItem.setAccelerator( KeyStroke.getKeyStroke( 'S', java.awt.event.InputEvent.CTRL_MASK ) );
         FileSaveJMenuItem.addActionListener( new ActionListener() {
 
+            @Override
             public void actionPerformed( ActionEvent e ) {
                 caller.requestFileSave();
             }
         } );
         FileJMenu.add( FileSaveJMenuItem );
 
-
         FileSaveAsJMenuItem.setMnemonic( KeyEvent.VK_A );
         FileSaveAsJMenuItem.setAccelerator( KeyStroke.getKeyStroke( 'A', java.awt.event.InputEvent.ALT_MASK ) );
         FileSaveAsJMenuItem.addActionListener( new ActionListener() {
 
+            @Override
             public void actionPerformed( ActionEvent e ) {
                 caller.requestFileSaveAs();
             }
         } );
         FileJMenu.add( FileSaveAsJMenuItem );
 
-
-
         FileExitJMenuItem.setAccelerator( KeyStroke.getKeyStroke( KeyEvent.VK_F4, java.awt.event.InputEvent.ALT_MASK ) );
         FileExitJMenuItem.addActionListener( new ActionListener() {
 
+            @Override
             public void actionPerformed( ActionEvent e ) {
                 caller.requestExit();
             }
         } );
         FileJMenu.add( FileExitJMenuItem );
 
-
         //Build the Edit menu.
         EditJMenu.setMnemonic( KeyEvent.VK_E );
         add( EditJMenu );
-
 
         EditFindJMenuItem.setMnemonic( KeyEvent.VK_F );
         EditFindJMenuItem.setAccelerator( KeyStroke.getKeyStroke( 'F', java.awt.event.InputEvent.CTRL_MASK ) );
@@ -287,7 +306,6 @@ public class ApplicationJMenuBar
         } );
         EditJMenu.add( EditFindJMenuItem );
 
-
         EditCamerasJMenuItem.setMnemonic( KeyEvent.VK_D );
         EditCamerasJMenuItem.addActionListener( new ActionListener() {
 
@@ -298,11 +316,6 @@ public class ApplicationJMenuBar
         } );
         EditJMenu.add( EditCamerasJMenuItem );
 
-
-
-
-
-
         EditSettingsJMenuItem.setMnemonic( KeyEvent.VK_S );
         EditSettingsJMenuItem.addActionListener( new ActionListener() {
 
@@ -312,9 +325,6 @@ public class ApplicationJMenuBar
             }
         } );
         EditJMenu.add( EditSettingsJMenuItem );
-
-
-
 
         // Build the Action menu
         emailJMenuItem.setMnemonic( KeyEvent.VK_E );
@@ -327,10 +337,10 @@ public class ApplicationJMenuBar
         } );
         actionJMenu.add( emailJMenuItem );
 
-
         RandomSlideshowJMenuItem.setMnemonic( KeyEvent.VK_S );
         RandomSlideshowJMenuItem.addActionListener( new ActionListener() {
 
+            @Override
             public void actionPerformed( ActionEvent e ) {
                 caller.performSlideshow();
             }
@@ -340,25 +350,23 @@ public class ApplicationJMenuBar
         actionJMenu.setMnemonic( KeyEvent.VK_A );
         add( actionJMenu );
 
-
-
         // Build the Extras menu.
         ExtrasJMenu.setMnemonic( KeyEvent.VK_X );
         add( ExtrasJMenu );
         EditCheckDirectoriesJMenuItem.setMnemonic( KeyEvent.VK_D );
         EditCheckDirectoriesJMenuItem.addActionListener( new ActionListener() {
 
+            @Override
             public void actionPerformed( ActionEvent e ) {
                 caller.requestCheckDirectories();
             }
         } );
         ExtrasJMenu.add( EditCheckDirectoriesJMenuItem );
 
-
-
         EditCheckIntegrityJMenuItem.setMnemonic( KeyEvent.VK_C );
         EditCheckIntegrityJMenuItem.addActionListener( new ActionListener() {
 
+            @Override
             public void actionPerformed( ActionEvent e ) {
                 caller.requestCheckIntegrity();
             }
@@ -368,6 +376,7 @@ public class ApplicationJMenuBar
         JMenuItem yearsBrowser = new JMenuItem( "Years Browser" );
         yearsBrowser.addActionListener( new ActionListener() {
 
+            @Override
             public void actionPerformed( ActionEvent e ) {
                 caller.requestYearBrowser();
             }
@@ -377,6 +386,7 @@ public class ApplicationJMenuBar
         JMenuItem yearlyAnalysis = new JMenuItem( "Yearly Analysis" );
         yearlyAnalysis.addActionListener( new ActionListener() {
 
+            @Override
             public void actionPerformed( ActionEvent e ) {
                 caller.requestYearlyAnalyis();
             }
@@ -386,32 +396,31 @@ public class ApplicationJMenuBar
         JMenuItem findDuplicates = new JMenuItem( "Find Duplicates" );
         findDuplicates.addActionListener( new ActionListener() {
 
+            @Override
             public void actionPerformed( ActionEvent e ) {
                 caller.requestFindDuplicates();
             }
         } );
         ExtrasJMenu.add( findDuplicates );
 
-
         EditCategoriesJMenuItem.setMnemonic( KeyEvent.VK_D );
         EditCategoriesJMenuItem.addActionListener( new ActionListener() {
 
+            @Override
             public void actionPerformed( ActionEvent e ) {
                 caller.requestCheckIntegrity();
             }
         } );
         ExtrasJMenu.add( EditCategoriesJMenuItem );
 
-
-
         // Build the Help menu.
         HelpJMenu.setMnemonic( KeyEvent.VK_H );
         add( HelpJMenu );
 
-
         HelpAboutJMenuItem.setMnemonic( KeyEvent.VK_A );
         HelpAboutJMenuItem.addActionListener( new ActionListener() {
 
+            @Override
             public void actionPerformed( ActionEvent e ) {
                 new HelpAboutWindow();
             }
@@ -421,6 +430,7 @@ public class ApplicationJMenuBar
         HelpLicenseJMenuItem.setMnemonic( KeyEvent.VK_L );
         HelpLicenseJMenuItem.addActionListener( new ActionListener() {
 
+            @Override
             public void actionPerformed( ActionEvent e ) {
                 new LicenseWindow();
             }
@@ -430,12 +440,12 @@ public class ApplicationJMenuBar
         HelpPrivacyJMenuItem.setMnemonic( KeyEvent.VK_P );
         HelpPrivacyJMenuItem.addActionListener( new ActionListener() {
 
+            @Override
             public void actionPerformed( ActionEvent e ) {
                 new PrivacyJFrame();
             }
         } );
         HelpJMenu.add( HelpPrivacyJMenuItem );
-
 
         // register an interest in the locale changes
         Settings.addLocaleChangeListener( this );
@@ -443,10 +453,10 @@ public class ApplicationJMenuBar
         recentFilesChanged();
     }
 
-
     /**
-     *  This menu sets the texts of the menu in the language defined by the locale.
-     *  The application needs to call this method when the user changes the Locale in the Settings editor.
+     * This menu sets the texts of the menu in the language defined by the
+     * locale. The application needs to call this method when the user changes
+     * the Locale in the Settings editor.
      */
     public void setMenuTexts() {
         FileJMenu.setText( Settings.jpoResources.getString( "FileMenuText" ) );
@@ -479,23 +489,25 @@ public class ApplicationJMenuBar
 
     }
 
-
     /**
-     *  This method handles the change of the application locale. In this class it simply makes sure the
-     *  menus are reloaded.
+     * This method handles the change of the application locale. In this class
+     * it simply makes sure the menus are reloaded.
      */
+    @Override
     public void localeChanged() {
         setMenuTexts();
     }
 
-
     /**
-     *  Sets up the menu entries in the File|OpenRecent sub menu from the recentCollections
-     *  in Settings. Can be called by the interface from the listener on the Settings object.
+     * Sets up the menu entries in the File|OpenRecent sub menu from the
+     * recentCollections in Settings. Can be called by the interface from the
+     * listener on the Settings object.
      */
+    @Override
     public void recentFilesChanged() {
         Runnable r = new Runnable() {
 
+            @Override
             public void run() {
                 for ( int i = 0; i < Settings.recentCollections.length; i++ ) {
                     if ( Settings.recentCollections[i] != null ) {
@@ -514,4 +526,3 @@ public class ApplicationJMenuBar
         }
     }
 }
-

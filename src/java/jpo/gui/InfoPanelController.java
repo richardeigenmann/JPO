@@ -1,16 +1,18 @@
 package jpo.gui;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import jpo.dataModel.ArrayListNavigator;
 import jpo.TagCloud.TagClickListener;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
 import jpo.dataModel.PictureInfo;
-import javax.swing.*;
 import javax.swing.Timer;
-import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.logging.Logger;
-import javax.swing.tree.*;
+import javax.swing.JComponent;
+import javax.swing.SwingUtilities;
+import javax.swing.tree.DefaultMutableTreeNode;
 import jpo.dataModel.DescriptionWordMap;
 import jpo.TagCloud.TagCloud;
 import jpo.dataModel.Settings;

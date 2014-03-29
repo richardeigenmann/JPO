@@ -41,7 +41,7 @@ public class YearlyAnalysisGuiController {
     /**
      * Defines a logger for this class
      */
-    private static Logger logger = Logger.getLogger( YearlyAnalysisGuiController.class.getName() );
+    private static final Logger LOGGER = Logger.getLogger( YearlyAnalysisGuiController.class.getName() );
 
 
     /**
@@ -121,8 +121,9 @@ public class YearlyAnalysisGuiController {
             //setPreferredSize( buttonSize );
             addActionListener( new ActionListener() {
 
+                @Override
                 public void actionPerformed( ActionEvent e ) {
-                    logger.info( Integer.toString( width ) );
+                    LOGGER.info( Integer.toString( width ) );
                 }
             } );
             setBackground( GradientColor.getColor( GradientColor.BLACK_WHITE_COLORS, (double) count / ya.maxNodesPerMonthInAllYears() ) );

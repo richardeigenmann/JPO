@@ -3,7 +3,6 @@ package jpo.gui;
 import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
 import jpo.dataModel.Settings;
-import jpo.*;
 import jpo.dataModel.Camera;
 
 /*
@@ -33,7 +32,7 @@ public class CameraWatchDaemon implements Runnable {
     /**
      * Defines a logger for this class
      */
-    private static Logger logger = Logger.getLogger(CameraWatchDaemon.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(CameraWatchDaemon.class.getName());
 
     /**
      * Creates a new instance of CameraWatchDaemon. The Thread iterates over the
@@ -48,7 +47,7 @@ public class CameraWatchDaemon implements Runnable {
      * A handle to the controller of the collection to tell it when 
      * new pictures have been added.
      */
-    private Jpo collectionController;
+    private final Jpo collectionController;
     /**
      *  A flag to indicate that the thread should stop at the next iteration.
      */
@@ -65,6 +64,7 @@ public class CameraWatchDaemon implements Runnable {
      *  The run method enumerates the cameras configured and checks to see if a
      *  camera has been added. If a camera was added it fires off the CameraDownloadWizard.
      */
+    @Override
     public void run() {
 
         while (!gracefullyInterrupt) {
@@ -72,13 +72,15 @@ public class CameraWatchDaemon implements Runnable {
                 for (Camera c : Settings.cameras) {
                     boolean isConnected = c.isCameraConnected();
                     if (c.getMonitorForNewPictures() && isConnected && (!c.getLastConnectionStatus())) {
-                        logger.info(getClass().toString() + ": Camera " + c.toString() + " has been connected ");
+                        LOGGER.info(getClass().toString() + ": Camera " + c.toString() + " has been connected ");
                         final CameraDownloadWizardData dm = new CameraDownloadWizardData();
                         dm.setCamera(c);
                         dm.setAnchorFrame(Settings.anchorFrame);
                         dm.setCollectionJTreeController(collectionController);
-                        Runnable r = new Runnable() {
-
+                        Runnable r;
+                        r = new Runnable() {
+                            
+                            @Override
                             public void run() {
                                 new CameraDownloadWizard(dm);
                             }

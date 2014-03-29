@@ -45,7 +45,7 @@ public class PicasaUploaderWizard3Upload extends AbstractStep implements PicasaU
     /**
      * Defines a logger for this class
      */
-    private static final Logger LOGGER = Logger.getLogger ( PicasaUploaderWizard3Upload.class.getName () );
+    private static final Logger LOGGER = Logger.getLogger( PicasaUploaderWizard3Upload.class.getName() );
     /**
      * The link to the values that this panel should change
      */
@@ -54,35 +54,37 @@ public class PicasaUploaderWizard3Upload extends AbstractStep implements PicasaU
 
     /**
      * Upload the album
+     *
+     * @param myRequest
      */
-    public PicasaUploaderWizard3Upload ( PicasaUploadRequest myRequest ) {
-        super ( "Upload", "Upload" );
+    public PicasaUploaderWizard3Upload( PicasaUploadRequest myRequest ) {
+        super( "Upload", "Upload" );
         this.myRequest = myRequest;
     }
 
-    public void attachWizardModelListener ( WizardModel model ) {
+    public void attachWizardModelListener( WizardModel model ) {
         this.model = model;
-        model.addWizardModelListener ( new WizardModelListener () {
+        model.addWizardModelListener( new WizardModelListener() {
 
             @Override
-            public void wizardCanceled ( WizardModelEvent wme ) {
-                myRequest.setInterrupt ( true );
+            public void wizardCanceled( WizardModelEvent wme ) {
+                myRequest.setInterrupt( true );
             }
 
             @Override
-            public void wizardFinished ( WizardModelEvent wme ) {
+            public void wizardFinished( WizardModelEvent wme ) {
             }
 
             @Override
-            public void wizardModelChanged ( WizardModelEvent wme ) {
+            public void wizardModelChanged( WizardModelEvent wme ) {
             }
 
             @Override
-            public void stepShown ( WizardModelEvent wme ) {
+            public void stepShown( WizardModelEvent wme ) {
             }
         } );
     }
-    private final JProgressBar progressBar = new JProgressBar ();
+    private final JProgressBar progressBar = new JProgressBar();
 
     /**
      * Creates the GUI widgets
@@ -90,26 +92,24 @@ public class PicasaUploaderWizard3Upload extends AbstractStep implements PicasaU
      * @return The component to be shown
      */
     @Override
-    protected JComponent createComponent () {
-        JPanel wizardPanel = new JPanel ();
-        MigLayout layout = new MigLayout ( "wrap 1" );
-        wizardPanel.setLayout ( layout );
+    protected JComponent createComponent() {
+        JPanel wizardPanel = new JPanel();
+        MigLayout layout = new MigLayout( "wrap 1" );
+        wizardPanel.setLayout( layout );
 
-        progressBar.setStringPainted ( true );
-        progressBar.setMinimumSize ( new Dimension ( 250, 30 ) );
-        progressBar.setMaximumSize ( new Dimension ( 850, 30 ) );
+        progressBar.setStringPainted( true );
+        progressBar.setMinimumSize( new Dimension( 250, 30 ) );
+        progressBar.setMaximumSize( new Dimension( 850, 30 ) );
 
-        wizardPanel.add ( progressBar );
+        wizardPanel.add( progressBar );
 
-        SortableDefaultMutableTreeNode node = myRequest.getNode ();
-        String albumName = ( (GroupInfo) node.getUserObject () ).getGroupName ();
-        int pics = NodeStatistics.countPictures ( node, false );
-        progressBar.setMinimum ( 0 );
-        progressBar.setMaximum ( pics );
+        SortableDefaultMutableTreeNode node = myRequest.getNode();
+        String albumName = ( (GroupInfo) node.getUserObject() ).getGroupName();
+        int pics = NodeStatistics.countPictures( node, false );
+        progressBar.setMinimum( 0 );
+        progressBar.setMaximum( pics );
 
-        ( new PicasaUploaderWorker ( myRequest, progressBar, this ) ).execute ();
-
-
+        ( new PicasaUploaderWorker( myRequest, progressBar, this ) ).execute();
 
         return wizardPanel;
     }
@@ -118,22 +118,22 @@ public class PicasaUploaderWizard3Upload extends AbstractStep implements PicasaU
      * Required but not needed here
      */
     @Override
-    public void prepareRendering () {
-        setCanCancel ( true );
-        setCanGoBack ( false );
+    public void prepareRendering() {
+        setCanCancel( true );
+        setCanGoBack( false );
     }
 
     @Override
-    public void uploadDone () {
-        setCanFinish ( true );
-        setCanGoBack ( false );
-        setCanCancel ( false );
+    public void uploadDone() {
+        setCanFinish( true );
+        setCanGoBack( false );
+        setCanCancel( false );
         try {
-            Desktop.getDesktop ().browse ( new URI ( "https://picasaweb.google.com/home" ) );
+            Desktop.getDesktop().browse( new URI( "https://picasaweb.google.com/home" ) );
         } catch ( IOException ex ) {
-            Logger.getLogger ( PicasaUploaderWizard3Upload.class.getName () ).log ( Level.SEVERE, null, ex );
+            Logger.getLogger( PicasaUploaderWizard3Upload.class.getName() ).log( Level.SEVERE, null, ex );
         } catch ( URISyntaxException ex ) {
-            Logger.getLogger ( PicasaUploaderWizard3Upload.class.getName () ).log ( Level.SEVERE, null, ex );
+            Logger.getLogger( PicasaUploaderWizard3Upload.class.getName() ).log( Level.SEVERE, null, ex );
         }
 
     }

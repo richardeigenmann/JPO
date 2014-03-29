@@ -30,34 +30,35 @@ import jpo.gui.swing.PictureFrame;
 
 
 /*
-PictureViewer.java:  Controller and Viewer class that browses a set of pictures.
+ PictureViewer.java:  Controller and Viewer class that browses a set of pictures.
 
-Copyright (C) 2002 - 2011  Richard Eigenmann, Zürich, Switzerland
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or any later version. This program is distributed
-in the hope that it will be useful, but WITHOUT ANY WARRANTY;
-without even the implied warranty of MERCHANTABILITY or FITNESS
-FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-more details. You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-The license is in gpl.txt.
-See http://www.gnu.org/copyleft/gpl.html for the details.
+ Copyright (C) 2002 - 2011  Richard Eigenmann, Zürich, Switzerland
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or any later version. This program is distributed
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ without even the implied warranty of MERCHANTABILITY or FITNESS
+ FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+ more details. You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ The license is in gpl.txt.
+ See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 /**
- *   PictureViewer is a Controller that manages a window which displays a picture.
- *   It provides navigation control over
- *   the collection as well as mouse and keyboard control over the zooming. 
+ * PictureViewer is a Controller that manages a window which displays a picture.
+ * It provides navigation control over the collection as well as mouse and
+ * keyboard control over the zooming.
  *
- *   The user can zoom in on a picture coordinate by clicking the left mouse button. The middle
- *   button scales the picture so that it fits in the available space and centres it there.
- *   The right mouse button zooms out.<p>
+ * The user can zoom in on a picture coordinate by clicking the left mouse
+ * button. The middle button scales the picture so that it fits in the available
+ * space and centres it there. The right mouse button zooms out.<p>
  *
  *
- *   <img src="../PictureViewer.png" border=0>
- **/
+ * <img src="../PictureViewer.png" border=0>
+ *
+ */
 public class PictureViewer
         implements PictureViewerActions, ScalablePictureListener,
         AdvanceTimerInterface,
@@ -65,17 +66,29 @@ public class PictureViewer
         NodeNavigatorListener {
 
     public PictureFrame pictureFrame = new PictureFrame( this );
-    /**
-     *   The pane that handles the image drawing aspects.
-     **/
-    private PicturePane pictureJPanel = pictureFrame.getPictureJPanel();
 
     /**
-     *  Brings up a window in which a picture node is displayed. This class
-     *  handles all the user interaction such as zoom in / out, drag, navigation,
-     *  information display and keyboard keys.
-     **/
+     * The pane that handles the image drawing aspects.
+     *
+     */
+    private final PicturePane pictureJPanel = pictureFrame.getPictureJPanel();
+
+    /**
+     * Defines a logger for this class
+     */
+    private static final Logger LOGGER = Logger.getLogger( PictureViewer.class.getName() );
+
+    /**
+     * Brings up a window in which a picture node is displayed. This class
+     * handles all the user interaction such as zoom in / out, drag, navigation,
+     * information display and keyboard keys.
+     *
+     */
     public PictureViewer() {
+        initComponents();
+    }
+
+    private void initComponents() {
         pictureJPanel.addStatusListener( this );
 
         // register an interest in mouse events
@@ -90,13 +103,7 @@ public class PictureViewer
                 closeViewer();
             }
         } );
-
-
     }
-    /**
-     * Defines a logger for this class
-     */
-    private static final Logger LOGGER = Logger.getLogger( PictureViewer.class.getName() );
 
     /**
      * Closes the PictureViewer and all dangling references.
@@ -110,20 +117,21 @@ public class PictureViewer
         pictureFrame.myJFrame.dispose();
     }
     /**
-     *  the context of the browsing
+     * the context of the browsing
      */
     private NodeNavigator mySetOfNodes = null;
     /**
-     *  the position in the context being shown
+     * the position in the context being shown
      */
     private int myIndex = 0;
 
     /**
      * Returns the current Node.
-     * @return The current node as defined by the mySetOfNodes 
-     * NodeNavigatorInterface and the myIndex. If the set of nodes has not
-     * been initialised or there is some other error null shall be returned.
-     * TODO: Shouldn't this be more context aware?
+     *
+     * @return The current node as defined by the mySetOfNodes
+     * NodeNavigatorInterface and the myIndex. If the set of nodes has not been
+     * initialised or there is some other error null shall be returned. TODO:
+     * Shouldn't this be more context aware?
      */
     @Override
     public SortableDefaultMutableTreeNode getCurrentNode() {
@@ -136,23 +144,25 @@ public class PictureViewer
 
     }
     /**
-     *  variable which controls whether the autoadvance cycles through the current
-     *  group only or whether it is allowed to cycle through images in the collection
+     * variable which controls whether the autoadvance cycles through the
+     * current group only or whether it is allowed to cycle through images in
+     * the collection
      */
-    private boolean cycleAll = true;
+    private final boolean cycleAll = true;
     /**
-     *  the timer that can call back into the object with the instruction to
-     *  load the next image
+     * the timer that can call back into the object with the instruction to load
+     * the next image
      */
     private AdvanceTimer advanceTimer = null;
     /**
-     *  popup menu for window mode changing
+     * popup menu for window mode changing
      */
-    private ChangeWindowPopupMenu changeWindowPopupMenu = new ChangeWindowPopupMenu( pictureFrame.myJFrame );
+    private final ChangeWindowPopupMenu changeWindowPopupMenu = new ChangeWindowPopupMenu( pictureFrame.myJFrame );
 
     /**
      * Shows a resize popup menu
-     **/
+     *
+     */
     @Override
     public void requestScreenSizeMenu() {
         changeWindowPopupMenu.show( pictureFrame.getPictureViewerNavBar(), 96, (int) ( 0 - changeWindowPopupMenu.getSize().getHeight() ) );
@@ -160,8 +170,9 @@ public class PictureViewer
     }
 
     /**
-     *  Requests that the popup menu be shown
-     **/
+     * Requests that the popup menu be shown
+     *
+     */
     @Override
     public void requestPopupMenu() {
         PicturePopupMenu picturePopupMenu = new PicturePopupMenu( mySetOfNodes, myIndex );
@@ -170,10 +181,11 @@ public class PictureViewer
     }
 
     /**
-     *  Puts the picture of the indicated node onto the viewer panel
+     * Puts the picture of the indicated node onto the viewer panel
      *
-     *  @param mySetOfNodes  The set of nodes from which one picture is to be shown
-     *  @param myIndex  The index of the set of nodes to be shown.
+     * @param mySetOfNodes The set of nodes from which one picture is to be
+     * shown
+     * @param myIndex The index of the set of nodes to be shown.
      */
     public void show( NodeNavigator mySetOfNodes,
             int myIndex ) {
@@ -195,7 +207,6 @@ public class PictureViewer
             return;
         }
 
-
         // remove the pictureinfo change listener if present
         if ( this.mySetOfNodes != null ) {
             ( (PictureInfo) this.mySetOfNodes.getNode( this.myIndex ).getUserObject() ).removePictureInfoChangeListener( this );
@@ -203,7 +214,6 @@ public class PictureViewer
         // attach the pictureinfo change listener
         PictureInfo pictureInfo = (PictureInfo) uo;
         pictureInfo.addPictureInfoChangeListener( this );
-
 
         if ( this.mySetOfNodes == null ) {
             // add viewer to the new one
@@ -227,14 +237,14 @@ public class PictureViewer
         pictureFrame.descriptionJTextField.setText( pictureInfo.getDescription() );
         setPicture( pictureInfo );
 
-
         pictureFrame.getPictureViewerNavBar().setIconDecorations();
         pictureJPanel.requestFocusInWindow();
     }
 
     /**
-     *  brings up the indicated picture on the display.
-     *  @param pi  The PicutreInfo object that should be displayed
+     * brings up the indicated picture on the display.
+     *
+     * @param pi The PicutreInfo object that should be displayed
      */
     private void setPicture( PictureInfo pi ) {
         LOGGER.fine( "Set picture to PictureInfo: " + pi.toString() );
@@ -245,10 +255,10 @@ public class PictureViewer
         double rotation = 0;
         try {
             pictureURL = pi.getHighresURL();
-            description =
-                    pi.getDescription();
-            rotation =
-                    pi.getRotation();
+            description
+                    = pi.getDescription();
+            rotation
+                    = pi.getRotation();
         } catch ( MalformedURLException x ) {
             LOGGER.severe( "MarformedURLException trapped on: " + pi.getHighresLocation() + "\nReason: " + x.getMessage() );
             return;
@@ -258,10 +268,11 @@ public class PictureViewer
     }
 
     /**
-     *  brings up the indicated picture on the display.
-     *  @param filenameURL  The URL of the picture to display
-     *  @param legendParam	The description of the picture
-     *  @param rotation  The rotation that should be applied
+     * brings up the indicated picture on the display.
+     *
+     * @param filenameURL The URL of the picture to display
+     * @param legendParam	The description of the picture
+     * @param rotation The rotation that should be applied
      */
     private void setPicture( URL filenameURL, String legendParam,
             double rotation ) {
@@ -276,8 +287,9 @@ public class PictureViewer
     }
 
     /**
-     * Requests that the current picture be rotated from it's current rotation by 
-     * the specified amount.
+     * Requests that the current picture be rotated from it's current rotation
+     * by the specified amount.
+     *
      * @param angle The angle by which the picture should be rotated
      */
     @Override
@@ -288,8 +300,8 @@ public class PictureViewer
     }
 
     /**
-     *  here we get notified by the PictureInfo object that something has
-     *  changed.
+     * here we get notified by the PictureInfo object that something has
+     * changed.
      */
     @Override
     public void pictureInfoChangeEvent( PictureInfoChangeEvent e ) {
@@ -340,12 +352,13 @@ public class PictureViewer
     }
 
     /**
-     *   This method is invoked by the GUI button or keyboard shortcut to
-     *   advance the picture. It calls {@link SortableDefaultMutableTreeNode#getNextPicture} to find
-     *   the image. If the call returned a non null node {@link #show}
-     *   is called to request the loading and display of the new picture.
+     * This method is invoked by the GUI button or keyboard shortcut to advance
+     * the picture. It calls
+     * {@link SortableDefaultMutableTreeNode#getNextPicture} to find the image.
+     * If the call returned a non null node {@link #show} is called to request
+     * the loading and display of the new picture.
      *
-     *  @return  true if the next picture was located, false if none available
+     * @return true if the next picture was located, false if none available
      *
      * @see #requestPriorPicture()
      */
@@ -370,8 +383,8 @@ public class PictureViewer
     }
 
     /**
-     *  if a request comes in to show the previous picture the data model is asked for the prior image
-     *  and if one is returned it is displayed.
+     * if a request comes in to show the previous picture the data model is
+     * asked for the prior image and if one is returned it is displayed.
      *
      * @see #requestNextPicture()
      * @return true if successful, false if not.
@@ -394,8 +407,8 @@ public class PictureViewer
     }
 
     /**
-     *  method that cancels a timer if one is running or calls the method to
-     *  bring up the dialog to start a timer
+     * method that cancels a timer if one is running or calls the method to
+     * bring up the dialog to start a timer
      */
     @Override
     public void requestAutoAdvance() {
@@ -410,8 +423,8 @@ public class PictureViewer
     }
 
     /**
-     *  method that brings up a dialog box and asks the user how he would
-     *  like auto advance to work
+     * method that brings up a dialog box and asks the user how he would like
+     * auto advance to work
      */
     private void doAutoAdvanceDialog() {
         JRadioButton randomAdvanceJRadioButton = new JRadioButton( Settings.jpoResources.getString( "randomAdvanceJRadioButtonLabel" ) );
@@ -493,7 +506,8 @@ public class PictureViewer
 
     /**
      * This method sets up the Advance Timer
-     * @param seconds 
+     *
+     * @param seconds
      */
     public void startAdvanceTimer( int seconds ) {
         advanceTimer = new AdvanceTimer( this, seconds );
@@ -503,6 +517,7 @@ public class PictureViewer
 
     /**
      * This method sets up the Advance Timer
+     *
      * @param delay the delay (in seconds?)
      */
     @Override
@@ -513,7 +528,7 @@ public class PictureViewer
     }
 
     /**
-     *  method to stop any timer that might be running
+     * method to stop any timer that might be running
      */
     public void stopTimer() {
         if ( advanceTimer != null ) {
@@ -525,25 +540,19 @@ public class PictureViewer
     }
 
     /**
-     * method that tells the AdvanceTimer whether it is OK to advance the picture or not
-     * This important to avoid the submission of new picture requests before the old
-     * ones have been met.
+     * method that tells the AdvanceTimer whether it is OK to advance the
+     * picture or not This important to avoid the submission of new picture
+     * requests before the old ones have been met.
      */
     @Override
     public boolean readyToAdvance() {
         int status = pictureJPanel.getScalablePicture().getStatusCode();
-        //logger.info( String.format( "Retrieved status %d; ready would be %d", status, ScalablePicture.READY ));
-        if ( ( status == ScalablePicture.READY ) || ( status == ScalablePicture.ERROR ) ) {
-            return true;
-        } else {
-            return false;
-        }
-
+        return ( status == ScalablePicture.READY ) || ( status == ScalablePicture.ERROR );
     }
 
     /**
-     *   this method is invoked from the timer thread that notifies
-     *   our object that it is time to advance to the next picture.
+     * this method is invoked from the timer thread that notifies our object
+     * that it is time to advance to the next picture.
      */
     @Override
     public void requestAdvance() {
@@ -551,12 +560,11 @@ public class PictureViewer
     }
 
     /**
-     *   this method gets invoked from the PicturePane object
-     *   to notify of status changes. It updates the description
-     *   panel at the bottom of the screen with the status. If the
-     *   status was a notification of the image starting to load
-     *   the progress bar is made visible. Any other status hides
-     *   the progress bar.
+     * this method gets invoked from the PicturePane object to notify of status
+     * changes. It updates the description panel at the bottom of the screen
+     * with the status. If the status was a notification of the image starting
+     * to load the progress bar is made visible. Any other status hides the
+     * progress bar.
      *
      * @param pictureStatusCode
      * @param pictureStatusMessage
@@ -621,7 +629,8 @@ public class PictureViewer
     }
 
     /**
-     *  method that gets invoked from the PicturePane object to notify of status changes
+     * method that gets invoked from the PicturePane object to notify of status
+     * changes
      *
      * @param statusCode
      * @param percentage
@@ -661,7 +670,8 @@ public class PictureViewer
     }
 
     /**
-     * Sets the scale of the picture to the current screen size and centres it there.
+     * Sets the scale of the picture to the current screen size and centres it
+     * there.
      */
     @Override
     public void resetPicture() {
@@ -671,9 +681,10 @@ public class PictureViewer
     }
 
     /**
-     *  This function cycles to the next info display. The first is DISPLAY_NONE, DISPLAY_PHOTOGRAPHIC
-     *  and DISPLAY_APPLICATION
-     **/
+     * This function cycles to the next info display. The first is DISPLAY_NONE,
+     * DISPLAY_PHOTOGRAPHIC and DISPLAY_APPLICATION
+     *
+     */
     @Override
     public void cylceInfoDisplay() {
         pictureJPanel.cylceInfoDisplay();
@@ -697,21 +708,23 @@ public class PictureViewer
     }
 
     /**
-     *  This class deals with the mouse events. Is built so that the picture can be dragged if
-     *  the mouse button is pressed and the mouse moved. If the left button is clicked the picture is
-     *  zoomed in, middle resets to full screen, right zooms out.
+     * This class deals with the mouse events. Is built so that the picture can
+     * be dragged if the mouse button is pressed and the mouse moved. If the
+     * left button is clicked the picture is zoomed in, middle resets to full
+     * screen, right zooms out.
      */
     class Listener
             extends MouseInputAdapter {
 
         /**
-         *  used in dragging to find out how much the mouse has moved from the last time
+         * used in dragging to find out how much the mouse has moved from the
+         * last time
          */
         private int last_x, last_y;
 
         /**
-         *   This method traps the mouse events and changes the scale and position of the displayed
-         *   picture.
+         * This method traps the mouse events and changes the scale and position
+         * of the displayed picture.
          */
         @Override
         public void mouseClicked( MouseEvent e ) {
@@ -744,8 +757,8 @@ public class PictureViewer
         }
 
         /**
-         * method that is invoked when the
-         * user drags the mouse with a button pressed. Moves the picture around
+         * method that is invoked when the user drags the mouse with a button
+         * pressed. Moves the picture around
          */
         @Override
         public void mouseDragged( MouseEvent e ) {
@@ -786,13 +799,12 @@ public class PictureViewer
             }
         }
         /**
-         *  Flag that lets the object know if the mouse is in dragging mode.
+         * Flag that lets the object know if the mouse is in dragging mode.
          */
         private boolean Dragging = false;
 
         /**
-         * method that is invoked when the
-         * user releases the mouse button.
+         * method that is invoked when the user releases the mouse button.
          */
         @Override
         public void mouseReleased( MouseEvent e ) {

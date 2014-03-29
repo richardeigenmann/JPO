@@ -83,6 +83,7 @@ public class PicasaUploadRequest {
 
     /**
      * Returns the Picasa URL for communication with the Google server.
+     * @return the URL
      */
     public String getFormattedPicasaUrl () {
         return String.format ( PICASA_URL, getUsername () );

@@ -1,6 +1,7 @@
 package jpo.gui;
 
-import java.io.*;
+import java.io.File;
+
 
 
 /*

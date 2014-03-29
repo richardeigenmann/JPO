@@ -40,9 +40,10 @@ public class ConsolidateGroup
      */
     private static final Logger LOGGER = Logger.getLogger(ConsolidateGroup.class.getName());
 
-    {
+    /*{
         LOGGER.setLevel(Level.ALL);
-    }
+    }*/
+    
     /**
      * the directory where the pictures are to be moved to
      */

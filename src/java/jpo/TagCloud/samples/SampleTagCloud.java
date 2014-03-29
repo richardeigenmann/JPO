@@ -20,37 +20,45 @@ import jpo.TagCloud.WordMap;
 
 
 /*
-Copyright (C) 2009,  Richard Eigenmann, Zürich, Switzerland
+ Copyright (C) 2009,  Richard Eigenmann, Zürich, Switzerland
 
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or any later version. This program is distributed
-in the hope that it will be useful, but WITHOUT ANY WARRANTY;
-without even the implied warranty of MERCHANTABILITY or FITNESS
-FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-more details. You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-The license is in gpl.txt.
-See http://www.gnu.org/copyleft/gpl.html for the details.
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or any later version. This program is distributed
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ without even the implied warranty of MERCHANTABILITY or FITNESS
+ FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+ more details. You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ The license is in gpl.txt.
+ See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 /**
  * Shows how to generate a sample tag cloud
  *
  * @author Richard Eigenmann
+ * @deprecated
  */
 public class SampleTagCloud
         extends JFrame
         implements TagClickListener {
 
     /**
+     * Let's have a logger
+     */
+    private static final Logger LOGGER = Logger.getLogger( SampleTagCloud.class.getName() );
+
+    /**
      * Make this class directly executable.
+     *
      * @param args Command line arguments
      */
     public static void main( String[] args ) {
         Runnable r = new Runnable() {
 
+            @Override
             public void run() {
                 new SampleTagCloud();
             }
@@ -61,18 +69,17 @@ public class SampleTagCloud
     /**
      * One set of words for cities and their population
      */
-    private WordMap cities = new Cities();
+    private final WordMap cities = new Cities();
 
     /**
      * One set of words for countries and their population
      */
-    private WordMap countries = new Countries();
+    private final WordMap countries = new Countries();
 
     /**
      * The TagCloud widget that we would like to show.
      */
-    private TagCloud tagCloud = new TagCloud();
-
+    private final TagCloud tagCloud = new TagCloud();
 
     /**
      * Creates the JFrame, control widgets and TagCloud
@@ -89,16 +96,17 @@ public class SampleTagCloud
         setVisible( true );
     }
 
-
     /**
      * Build the widgets to have some interaction on the screen
-     * @return  Returns a panel with stuff
+     *
+     * @return Returns a panel with stuff
      */
     private JPanel getControlsPanel() {
         JPanel controlsPanel = new JPanel();
         JButton citiesButton = new JButton( "Cities" );
         citiesButton.addActionListener( new ActionListener() {
 
+            @Override
             public void actionPerformed( ActionEvent e ) {
                 commentLabel.setText( "Setting the TagCloud to show cities" );
                 tagCloud.setWordMap( cities );
@@ -110,6 +118,7 @@ public class SampleTagCloud
         JButton countriesButton = new JButton( "Countries" );
         countriesButton.addActionListener( new ActionListener() {
 
+            @Override
             public void actionPerformed( ActionEvent e ) {
                 commentLabel.setText( "Setting the TagCloud to show countries" );
                 tagCloud.setWordMap( countries );
@@ -117,7 +126,6 @@ public class SampleTagCloud
             }
         } );
         controlsPanel.add( countriesButton );
-
 
         JSlider slider = new JSlider( 0, 10 ); // we will only use the slider for the percentage of total
         slider.setPreferredSize( new Dimension( 150, 20 ) );
@@ -131,14 +139,15 @@ public class SampleTagCloud
     /**
      * A label that we can use to show what is happening.
      */
-    private JLabel commentLabel = new JLabel( "what's going on" );
-
+    private final JLabel commentLabel = new JLabel( "what's going on" );
 
     /**
-     * This method is fired whenever a label is clicked because we registerd this object
-     * as a TagClickListener on the TagCloud.
+     * This method is fired whenever a label is clicked because we registerd
+     * this object as a TagClickListener on the TagCloud.
+     *
      * @param key The string that the user clicked on
      */
+    @Override
     public void tagClicked( String key ) {
         WordMap wordMap = tagCloud.getWordMap();
         Map<String, Integer> wordValueMap = wordMap.getWordValueMap();
@@ -154,12 +163,13 @@ public class SampleTagCloud
 
         int minimumWords = 10;
 
-
         /**
          * Receive slider moves and using an exponential formula to adjust the
          * number of words being shown.
+         *
          * @param ce The event
          */
+        @Override
         public void stateChanged( ChangeEvent ce ) {
             final JSlider slider = (JSlider) ce.getSource();
             final int value = slider.getValue();
@@ -175,7 +185,7 @@ public class SampleTagCloud
             int availableWords = map.getWordValueMap().size();
             int numberOfWords = (int) ( pct * ( availableWords - minimumWords ) ) + minimumWords;
             if ( numberOfWords > availableWords ) {
-                logger.severe( String.format( "Limit (%d) is greater than available words (%d) setting to available words", numberOfWords, availableWords ) );
+                LOGGER.severe( String.format( "Limit (%d) is greater than available words (%d) setting to available words", numberOfWords, availableWords ) );
                 numberOfWords = availableWords;
             }
             commentLabel.setText( String.format( "Slider set to %d%%; showing %d words", (int) ( pct * 100f ), numberOfWords ) );
@@ -184,8 +194,4 @@ public class SampleTagCloud
         }
     }
 
-    /**
-     * Let's have a logger
-     */
-    private static Logger logger = Logger.getLogger( SampleTagCloud.class.getName() );
 }

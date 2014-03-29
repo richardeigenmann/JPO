@@ -1,10 +1,11 @@
 package jpo.gui;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
 import jpo.dataModel.Settings;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
 import jpo.dataModel.PictureInfo;
-import java.util.*;
-import java.net.*;
 import java.util.logging.Logger;
 
 /*

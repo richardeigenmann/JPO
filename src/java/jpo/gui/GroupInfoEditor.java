@@ -1,51 +1,60 @@
 package jpo.gui;
 
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import jpo.dataModel.SingleNodeNavigator;
 import jpo.dataModel.Settings;
 import jpo.dataModel.GroupInfo;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
-import jpo.*;
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
 import net.miginfocom.swing.MigLayout;
 
 /*
-GroupInfoEditor.java:  Controller and Vie for editing group properties
-Copyright (C) 2002 - 2009  Richard Eigenmann.
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or any later version. This program is distributed 
-in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
-without even the implied warranty of MERCHANTABILITY or FITNESS 
-FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
-more details. You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-The license is in gpl.txt.
-See http://www.gnu.org/copyleft/gpl.html for the details.
+ GroupInfoEditor.java:  Controller and Vie for editing group properties
+ Copyright (C) 2002 - 2009  Richard Eigenmann.
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or any later version. This program is distributed 
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+ without even the implied warranty of MERCHANTABILITY or FITNESS 
+ FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
+ more details. You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ The license is in gpl.txt.
+ See http://www.gnu.org/copyleft/gpl.html for the details.
  */
-/** 
- *   Creates a Frame and allows the field(s) of a group to be edited.
+/**
+ * Creates a Frame and allows the field(s) of a group to be edited.
  */
 public class GroupInfoEditor {
 
     /**
-     *   JFrame that holds all the dialog components for editing the window.
+     * JFrame that holds all the dialog components for editing the window.
      */
-    private JFrame jFrame = new JFrame( Settings.jpoResources.getString( "GroupInfoEditorHeading" ) );
+    private final JFrame jFrame = new JFrame( Settings.jpoResources.getString( "GroupInfoEditorHeading" ) );
 
     /**
-     *  the node being edited
+     * the node being edited
      */
-    private SortableDefaultMutableTreeNode editNode;
-
+    private final SortableDefaultMutableTreeNode editNode;
 
     /**
-     *   Constructor that creates the JFrame and objects.
+     * Constructor that creates the JFrame and objects.
      *
-     *   @param   editNode	The node being edited.
+     * @param editNode	The node being edited.
      */
     public GroupInfoEditor( final SortableDefaultMutableTreeNode editNode ) {
         this.editNode = editNode;
@@ -64,7 +73,6 @@ public class GroupInfoEditor {
         JLabel descriptionJLabel = new JLabel( Settings.jpoResources.getString( "groupDescriptionLabel" ) );
         jPanel.add( descriptionJLabel );
 
-
         final GroupInfo gi = ( (GroupInfo) editNode.getUserObject() );
 
         final JTextArea descriptionJTextArea = new JTextArea();
@@ -74,8 +82,6 @@ public class GroupInfoEditor {
         descriptionJTextArea.setLineWrap( true );
         descriptionJTextArea.setEditable( true );
         jPanel.add( descriptionJTextArea, "wrap" );
-
-
 
         JLabel lowresLocationJLabel = new JLabel( Settings.jpoResources.getString( "lowresLocationLabel" ) );
         jPanel.add( lowresLocationJLabel );
@@ -96,6 +102,7 @@ public class GroupInfoEditor {
         OkJButton.setAlignmentX( Component.LEFT_ALIGNMENT );
         OkJButton.addActionListener( new ActionListener() {
 
+            @Override
             public void actionPerformed( ActionEvent e ) {
                 gi.setGroupName( descriptionJTextArea.getText() );
                 gi.setLowresLocation( lowresLocationJTextField.getText() );
@@ -115,6 +122,7 @@ public class GroupInfoEditor {
         CancelButton.setAlignmentX( Component.RIGHT_ALIGNMENT );
         CancelButton.addActionListener( new ActionListener() {
 
+            @Override
             public void actionPerformed( ActionEvent e ) {
                 getRid();
             }
@@ -129,9 +137,8 @@ public class GroupInfoEditor {
         tabbedPane.addTab( "Statistics", nodeStatisticsController.getJComponent() );
 
         ThumbnailController thumbnailController = new ThumbnailController();
-        thumbnailController.setNode( new SingleNodeNavigator( editNode), 0 );
+        thumbnailController.setNode( new SingleNodeNavigator( editNode ), 0 );
         tabbedPane.addTab( "Thumbnail", thumbnailController.getThumbnail() );
-
 
         jFrame.getContentPane().add( tabbedPane );
         jFrame.pack();
@@ -139,9 +146,8 @@ public class GroupInfoEditor {
         jFrame.setVisible( true );
     }
 
-
     /**
-     *  method that closes the window.
+     * method that closes the window.
      */
     private void getRid() {
         jFrame.setVisible( false );

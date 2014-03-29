@@ -3,9 +3,12 @@ package jpo.gui;
 import javax.swing.event.ChangeEvent;
 import jpo.dataModel.Settings;
 import java.awt.Component;
-import net.javaprog.ui.wizard.*;
-import javax.swing.*;
+import javax.swing.BoxLayout;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.event.ChangeListener;
+import net.javaprog.ui.wizard.AbstractStep;
 
 /*
 CameraDownloadWizardStep4.java: the fourth step in the download from Camera Wizard
@@ -44,7 +47,7 @@ public class CameraDownloadWizardStep4 extends AbstractStep {
     private CameraDownloadWizardData dataModel = null;
 
     /**
-     *  Returns the component that visualises the user interactable stuff for this step of the wizard.
+     *  Returns the component that visualises the user intractable stuff for this step of the wizard.
      * @return the component
      */
     @Override

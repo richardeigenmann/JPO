@@ -1,9 +1,11 @@
 package jpo.gui;
 
 import jpo.dataModel.Settings;
-import jpo.*;
 import jpo.dataModel.Tools;
-import net.javaprog.ui.wizard.*;
+import net.javaprog.ui.wizard.DefaultWizardModel;
+import net.javaprog.ui.wizard.Step;
+import net.javaprog.ui.wizard.Wizard;
+import net.javaprog.ui.wizard.WizardModel;
 
 /*
 CameraDownloadWizard.java:  A Wizard based on the JWizz framework by Michael Rudolf

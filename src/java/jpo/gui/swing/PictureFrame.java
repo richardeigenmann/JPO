@@ -3,8 +3,6 @@ package jpo.gui.swing;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.KeyAdapter;
@@ -48,6 +46,7 @@ public class PictureFrame {
 
     /**
      * Constructor. Initialises the GUI widgets.
+     * @param pictureViewerController
      */
     public PictureFrame( final PictureViewerActions pictureViewerController ) {
         this.pictureViewerController = pictureViewerController;
@@ -65,7 +64,7 @@ public class PictureFrame {
     /**
      *   The pane that handles the image drawing aspects.
      **/
-    private PicturePane pictureJPanel = new PicturePane();
+    private final PicturePane pictureJPanel = new PicturePane();
 
     /**
      * Provides direct access to the panel that shows the picture.
@@ -190,7 +189,7 @@ public class PictureFrame {
 
         }
     }
-    private ViewerKeyAdapter myViewerKeyAdapter = new ViewerKeyAdapter();
+    private final ViewerKeyAdapter myViewerKeyAdapter = new ViewerKeyAdapter();
 
     private class ViewerKeyAdapter
             extends KeyAdapter {

@@ -1,14 +1,11 @@
 package jpo.gui;
 
-import java.util.concurrent.ExecutionException;
-import java.util.logging.Level;
 import jpo.dataModel.Settings;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Image;
 import jpo.dataModel.GroupInfo;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
-import jpo.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
@@ -22,7 +19,6 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
-import javax.swing.SwingUtilities;
 import jpo.dataModel.Tools;
 
 
@@ -55,7 +51,7 @@ public class PictureFileChooser
     /**
      * Defines a logger for this class
      */
-    private static Logger logger = Logger.getLogger( PictureFileChooser.class.getName() );
+    private static final Logger LOGGER = Logger.getLogger( PictureFileChooser.class.getName() );
 
     /**
      * We use the java filechooser and customise it.
@@ -132,6 +128,7 @@ public class PictureFileChooser
      * Preview panels in the JFileChooser.
      * @param changeEvent The event from the FileChooser that changed
      */
+    @Override
     public void propertyChange( PropertyChangeEvent changeEvent ) {
         String changeName = changeEvent.getPropertyName();
         if ( changeName.equals( JFileChooser.SELECTED_FILE_CHANGED_PROPERTY ) ) {

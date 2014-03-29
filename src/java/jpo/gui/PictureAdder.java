@@ -55,7 +55,7 @@ public class PictureAdder
         this.retainDirectories = retainDirectories;
         this.selectedCategories = selectedCategories;
 
-        logger.fine( String.format( "Invoked for node: %s, with %d files, newOnly: %b, recurseDirectories: %b, retainDirectories: %b", startNode.toString(), chosenFiles.length, newOnly, recurseDirectories, retainDirectories ) );
+        LOGGER.fine( String.format( "Invoked for node: %s, with %d files, newOnly: %b, recurseDirectories: %b, retainDirectories: %b", startNode.toString(), chosenFiles.length, newOnly, recurseDirectories, retainDirectories ) );
 
         progGui = new ProgressGui( Tools.countfiles( chosenFiles ),
                 Settings.jpoResources.getString( "PictureAdderProgressDialogTitle" ),
@@ -68,28 +68,28 @@ public class PictureAdder
     /**
      * The files selected by the filechooser
      */
-    private File[] chosenFiles;
+    private final File[] chosenFiles;
 
     /**
      * The node into which to add pictures
      */
-    private SortableDefaultMutableTreeNode startNode;
+    private final SortableDefaultMutableTreeNode startNode;
 
     /**
      * A Progress Gui with a cancel button.
      */
-    private ProgressGui progGui;
+    private final ProgressGui progGui;
 
     /**
      * newOnly indicates whether to check if the picture is already in the collection
      */
-    private boolean newOnly;
+    private final boolean newOnly;
 
-    private boolean recurseDirectories;
+    private final boolean recurseDirectories;
 
-    private boolean retainDirectories;
+    private final boolean retainDirectories;
 
-    private HashSet<Object> selectedCategories;
+    private final HashSet<Object> selectedCategories;
 
 
     /**
@@ -98,11 +98,12 @@ public class PictureAdder
      *  also opens a progress Gui to provide feedback to the user.
      * @return A string
      */
+    @Override
     public Integer doInBackground() {
         // add all the files from the array as nodes to the start node.
         for ( int i = 0; ( i < chosenFiles.length ) && ( !progGui.getInterruptor().getShouldInterrupt() ); i++ ) {
             File addFile = chosenFiles[i];
-            logger.fine( String.format( "File %d of %d: %s", i + 1, chosenFiles.length, addFile.toString() ) );
+            LOGGER.fine( String.format( "File %d of %d: %s", i + 1, chosenFiles.length, addFile.toString() ) );
             if ( !addFile.isDirectory() ) {
                 if ( startNode.addSinglePicture( addFile, newOnly, selectedCategories ) ) {
                     publish( 1 );
@@ -114,7 +115,7 @@ public class PictureAdder
                 if ( Tools.hasPictures( addFile ) ) {
                     addDirectory( startNode, addFile );
                 } else {
-                    logger.fine( String.format( "No pictures in directory: %s", addFile.toString() ) );
+                    LOGGER.fine( String.format( "No pictures in directory: %s", addFile.toString() ) );
                 }
             }
 
@@ -193,5 +194,5 @@ public class PictureAdder
     /**
      * Defines a logger for this class
      */
-    private static Logger logger = Logger.getLogger( PictureFileChooser.class.getName() );
+    private static final Logger LOGGER = Logger.getLogger( PictureFileChooser.class.getName() );
 }

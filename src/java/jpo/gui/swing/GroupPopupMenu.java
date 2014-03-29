@@ -4,9 +4,19 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
-import javax.swing.*;
-import jpo.dataModel.*;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
+import javax.swing.JSeparator;
+import javax.swing.SwingUtilities;
+import jpo.dataModel.RecentDropNodeListener;
+import jpo.dataModel.RecentFilesChangeListener;
+import jpo.dataModel.Settings;
+import jpo.dataModel.SortOption;
+import jpo.dataModel.SortableDefaultMutableTreeNode;
+import jpo.dataModel.Tools;
 import jpo.gui.GroupPopupInterface;
+import static jpo.gui.ThumbnailCreationQueue.add;
 import jpo.gui.TreeNodeController;
 
 /*

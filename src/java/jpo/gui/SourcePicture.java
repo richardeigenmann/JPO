@@ -16,7 +16,6 @@ import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import javax.imageio.event.IIOReadProgressListener;
 import javax.imageio.stream.ImageInputStream;
-import javax.swing.JOptionPane;
 import jpo.dataModel.Settings;
 import jpo.dataModel.Tools;
 
@@ -104,7 +103,7 @@ public class SourcePicture {
     /**
      *  reference to the inner class that listens to the image loading progress
      */
-    private ImageProgressListener imageProgressListener = new ImageProgressListener();
+    private final ImageProgressListener imageProgressListener = new ImageProgressListener();
 
     /**
      * the reader object that will read the image
@@ -124,7 +123,7 @@ public class SourcePicture {
     /**
      * Defines a logger for this class
      */
-    private static Logger logger = Logger.getLogger( SourcePicture.class.getName() );
+    private static final Logger LOGGER = Logger.getLogger( SourcePicture.class.getName() );
 
 
 
@@ -186,11 +185,11 @@ public class SourcePicture {
             // Java 1.4 way with a Listener
             ImageInputStream iis = ImageIO.createImageInputStream( imageUrl.openStream() );
             if ( true ) {
-                logger.fine( "Searching for ImageIO readers..." );
+                LOGGER.fine( "Searching for ImageIO readers..." );
                 Iterator i = ImageIO.getImageReaders( iis );
                 while ( i.hasNext() ) {
                     reader = (ImageReader) i.next();  // grab the first one
-                    logger.fine( String.format( "Found reader: %s", reader.toString() ) );
+                    LOGGER.fine( String.format( "Found reader: %s", reader.toString() ) );
                 }
             }
             Iterator i = ImageIO.getImageReaders( iis );
@@ -210,7 +209,7 @@ public class SourcePicture {
                 sourcePictureBufferedImage = reader.read( 0 ); // just get the first image
 
                 if ( sourcePictureBufferedImage.getType() != BufferedImage.TYPE_3BYTE_BGR ) {
-                    logger.fine( String.format( "Got wrong image type: %d instead of %d. Trying to convert...", sourcePictureBufferedImage.getType(), BufferedImage.TYPE_3BYTE_BGR ) );
+                    LOGGER.fine( String.format( "Got wrong image type: %d instead of %d. Trying to convert...", sourcePictureBufferedImage.getType(), BufferedImage.TYPE_3BYTE_BGR ) );
 
                     BufferedImage newImage = new BufferedImage( sourcePictureBufferedImage.getWidth(),
                             sourcePictureBufferedImage.getHeight(), BufferedImage.TYPE_3BYTE_BGR );
@@ -221,7 +220,7 @@ public class SourcePicture {
                 }
 
             } catch ( OutOfMemoryError e ) {
-                logger.severe( "SourcePicture caught an OutOfMemoryError while loading an image." );
+                LOGGER.severe( "SourcePicture caught an OutOfMemoryError while loading an image." );
                 iis.close();
                 reader.removeIIOReadProgressListener( imageProgressListener );
                 reader.dispose();
@@ -292,7 +291,7 @@ public class SourcePicture {
      *  this method can be invoked to stop the current reader
      */
     public void stopLoading() {
-        logger.fine( "SourcePicture.stopLoading(): called" );
+        LOGGER.fine( "SourcePicture.stopLoading(): called" );
         abortFlag = true;
         if ( ( pictureStatusCode == LOADING ) && ( reader != null ) ) {
             reader.abort();
@@ -314,17 +313,17 @@ public class SourcePicture {
      */
     public boolean stopLoadingExcept( URL exemptionURL ) {
         if ( ( imageUrl == null ) || ( exemptionURL == null ) ) {
-            logger.fine( "SourcePicture.stopLoadingExcept: exiting on a null parameter. How did this happen?" );
+            LOGGER.fine( "SourcePicture.stopLoadingExcept: exiting on a null parameter. How did this happen?" );
             return false; // has never been used yet
         }
 
         if ( pictureStatusCode != LOADING ) {
-            logger.fine( "SourcePicture.stopLoadingExcept: called but pointless since image is not LOADING: " + imageUrl.toString() );
+            LOGGER.fine( "SourcePicture.stopLoadingExcept: called but pointless since image is not LOADING: " + imageUrl.toString() );
             return false;
         }
 
         if ( !exemptionURL.equals( imageUrl ) ) {
-            logger.fine( "SourcePicture.stopLoadingExcept: called with Url " + exemptionURL.toString() + " --> stopping loading of " + imageUrl.toString() );
+            LOGGER.fine( "SourcePicture.stopLoadingExcept: called with Url " + exemptionURL.toString() + " --> stopping loading of " + imageUrl.toString() );
             stopLoading();
             return true;
         } else {
@@ -339,9 +338,13 @@ public class SourcePicture {
      */
     @Override
     protected void finalize() throws Throwable {
-        logger.fine( "SourcePicture.finalize: called" );
-        sourcePictureBufferedImage = null;
-        imageUrl = null;
+        try {
+            LOGGER.fine( "SourcePicture.finalize: called" );
+            sourcePictureBufferedImage = null;
+            imageUrl = null;
+        } finally {
+            super.finalize();
+        }
     }
 
 
@@ -374,7 +377,7 @@ public class SourcePicture {
 
     /**
      *   return the width of the image or Zero if there is none
-     * @return the woidth of the image
+     * @return the width of the image
      */
     public int getWidth() {
         if ( sourcePictureBufferedImage != null ) {
@@ -415,7 +418,7 @@ public class SourcePicture {
      *  A vector that holds all the listeners that want to be notified about 
      *  changes to this SourcePicture.
      */
-    private Vector<SourcePictureListener> sourcePictureListeners = new Vector<SourcePictureListener>();
+    private final Vector<SourcePictureListener> sourcePictureListeners = new Vector<SourcePictureListener>();
 
 
     /**
@@ -423,7 +426,7 @@ public class SourcePicture {
      * @param listener The listener to add
      */
     public void addListener( SourcePictureListener listener ) {
-        logger.fine( "SourcePicture.addListener: SourcePicture " + Integer.toString( hashCode() ) + " adding listener " + listener.getClass().toString() + " hash: " + Integer.toString( listener.hashCode() ) );
+        LOGGER.fine( "SourcePicture.addListener: SourcePicture " + Integer.toString( hashCode() ) + " adding listener " + listener.getClass().toString() + " hash: " + Integer.toString( listener.hashCode() ) );
         sourcePictureListeners.add( listener );
     }
 
@@ -433,7 +436,7 @@ public class SourcePicture {
      * @param listener  the listener to remove
      */
     public void removeListener( SourcePictureListener listener ) {
-        logger.fine( "SourcePicture.removeListener: SourcePicture " + Integer.toString( hashCode() ) + " removing listener " + listener.getClass().toString() + " hash: " + Integer.toString( listener.hashCode() ) );
+        LOGGER.fine( "SourcePicture.removeListener: SourcePicture " + Integer.toString( hashCode() ) + " removing listener " + listener.getClass().toString() + " hash: " + Integer.toString( listener.hashCode() ) );
         sourcePictureListeners.remove( listener );
     }
 
@@ -455,7 +458,7 @@ public class SourcePicture {
      * interested objects of a change in status (not built yet).
      */
     private void setStatus( int statusCode, String statusMessage ) {
-        logger.fine( String.format( "Sending status code %d with message %s to %d listeners", statusCode, statusMessage, sourcePictureListeners.size() ) );
+        LOGGER.fine( String.format( "Sending status code %d with message %s to %d listeners", statusCode, statusMessage, sourcePictureListeners.size() ) );
         pictureStatusCode = statusCode;
         pictureStatusMessage = statusMessage;
         Enumeration<SourcePictureListener> enumeration = sourcePictureListeners.elements();
@@ -522,41 +525,50 @@ public class SourcePicture {
         }
 
 
+        @Override
         public void imageComplete( ImageReader source ) {
             notifySourceLoadProgressListeners( LOADING_COMPLETED, 100 );
         }
 
 
+        @Override
         public void imageProgress( ImageReader source, float percentageDone ) {
             notifySourceLoadProgressListeners( LOADING_PROGRESS, ( new Float( percentageDone ) ).intValue() );
         }
 
 
+        @Override
         public void imageStarted( ImageReader source, int imageIndex ) {
             notifySourceLoadProgressListeners( LOADING_STARTED, 0 );
         }
 
 
+        @Override
         public void readAborted( ImageReader source ) {
         }
 
 
+        @Override
         public void sequenceComplete( ImageReader source ) {
         }
 
 
+        @Override
         public void sequenceStarted( ImageReader source, int minIndex ) {
         }
 
 
+        @Override
         public void thumbnailComplete( ImageReader source ) {
         }
 
 
+        @Override
         public void thumbnailProgress( ImageReader source, float percentageDone ) {
         }
 
 
+        @Override
         public void thumbnailStarted( ImageReader source, int imageIndex,
                 int thumbnailIndex ) {
         }

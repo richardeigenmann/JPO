@@ -2,8 +2,9 @@ package jpo.dataModel;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.event.*;
-import javax.swing.tree.*;
+import javax.swing.event.TreeModelEvent;
+import javax.swing.event.TreeModelListener;
+import javax.swing.tree.TreePath;
 
 /*
 GroupBrower.java:  an implementation of the NodeNavigator for browsing groups.
@@ -73,7 +74,8 @@ public class GroupNavigator
     }
 
     /**
-     *  returns the name of the Group being displayed
+     * returns the name of the Group being displayed
+     * @return the description of the group
      */
     @Override
     public String getTitle() {
@@ -85,7 +87,8 @@ public class GroupNavigator
     }
 
     /**
-     *  On a group we return the number of children in the group.
+     * On a group we return the number of children in the group.
+     * @return the number of child nodes
      */
     @Override
     public int getNumberOfNodes() {
@@ -103,6 +106,7 @@ public class GroupNavigator
      * is returned so that clients can show something appropriate.
      *
      * @param index The component index that is to be returned.
+     * @return the child node at the index
      */
     @Override
     public SortableDefaultMutableTreeNode getNode( int index ) {

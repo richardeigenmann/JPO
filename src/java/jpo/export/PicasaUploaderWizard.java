@@ -30,42 +30,41 @@ import net.javaprog.ui.wizard.WizardModel;
  */
 public class PicasaUploaderWizard {
 
-    private PicasaUploadRequest myRequest;
+    private final PicasaUploadRequest myRequest;
     /**
      * Defines the maximum size for horizontally combined objects on a step
      * panel
      */
-    public static final Dimension normalComponentSize = new Dimension ( 350, 25 );
+    public static final Dimension normalComponentSize = new Dimension( 350, 25 );
     /**
-     * Defines the maximum size for taller horizontally combined objects on
-     * astep panel
+     * Defines the maximum size for taller horizontally combined objects on a
+     * step panel
      */
-    public static final Dimension tallerComponentSize = new Dimension ( 350, 50 );
+    public static final Dimension tallerComponentSize = new Dimension( 350, 50 );
 
     /**
      * Creates a Wizard for the Picasa upload
      *
      * @param myRequest the request
      */
-    public PicasaUploaderWizard ( PicasaUploadRequest myRequest ) {
+    public PicasaUploaderWizard( PicasaUploadRequest myRequest ) {
         this.myRequest = myRequest;
 
         PicasaUploaderWizard3Upload step3 = new PicasaUploaderWizard3Upload( myRequest );
-        
+
         // JWizz stuff
-        WizardModel model = new DefaultWizardModel ( new Step[]{
-                    new PicasaUploaderWizard1Login ( myRequest ),
-                    new PicasaUploaderWizard2Confirm ( myRequest ),
-                    step3
-                } );
+        WizardModel model = new DefaultWizardModel( new Step[]{
+            new PicasaUploaderWizard1Login( myRequest ),
+            new PicasaUploaderWizard2Confirm( myRequest ),
+            step3
+        } );
 
-        step3.attachWizardModelListener ( model );
+        step3.attachWizardModelListener( model );
 
+        Wizard wizard = new Wizard( model, "Upload to Picasa" );
 
-        Wizard wizard = new Wizard ( model, "Upload to Picasa" );
-
-        wizard.pack ();
-        wizard.setLocationRelativeTo ( Settings.anchorFrame );
-        wizard.setVisible ( true );
+        wizard.pack();
+        wizard.setLocationRelativeTo( Settings.anchorFrame );
+        wizard.setVisible( true );
     }
 }

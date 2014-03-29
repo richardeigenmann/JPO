@@ -37,7 +37,7 @@ public interface AdvanceTimerInterface {
 	
 	/**
 	 *  The implementing class must support this function which indicates whether it is ready 
-	 *  for a picture advance. This is nescessary to prevent race situations as it takes a while
+	 *  for a picture advance. This is necessary to prevent race situations as it takes a while
 	 *  for a large picture to load.
 	 *  
 	 *  @return   True if the next picture can be advanced, false if not.

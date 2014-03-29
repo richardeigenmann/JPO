@@ -1,11 +1,18 @@
 package jpo.gui.swing;
 
+import java.awt.Component;
+import javax.swing.DefaultCellEditor;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
+import javax.swing.JTree;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeCellEditor;
+import javax.swing.tree.DefaultTreeCellRenderer;
+import javax.swing.tree.TreeCellEditor;
 import jpo.dataModel.Settings;
 import jpo.dataModel.GroupInfo;
 import jpo.dataModel.PictureInfo;
-import java.awt.*;
-import javax.swing.*;
-import javax.swing.tree.*;
 import jpo.dataModel.Tools;
 
 /*

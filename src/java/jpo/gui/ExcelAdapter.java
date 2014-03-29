@@ -1,12 +1,21 @@
 package jpo.gui;
 
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-import java.awt.datatransfer.*;
-import java.util.*;
-import javax.swing.event.*;
-import javax.swing.table.*;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.StringSelection;
+import java.awt.datatransfer.UnsupportedFlavorException;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.io.IOException;
+import java.util.StringTokenizer;
+import javax.swing.JComponent;
+import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.KeyStroke;
+import javax.swing.event.TableModelEvent;
+import javax.swing.table.AbstractTableModel;
 
 /**
  *  ExcelAdapter enables Copy-Paste Clipboard functionality on JTables.
@@ -19,7 +28,7 @@ import javax.swing.table.*;
 public class ExcelAdapter implements ActionListener {
     //private String rowstring,value;
 
-    private Clipboard systemClipboard;
+    private final Clipboard systemClipboard;
 
     private StringSelection stringSelection;
 
@@ -162,7 +171,9 @@ public class ExcelAdapter implements ActionListener {
                         ( (AbstractTableModel) jTable.getModel() ).fireTableChanged( tme );
                     }
                 }
-            } catch ( Exception ex ) {
+            } catch ( UnsupportedFlavorException ex ) {
+                ex.printStackTrace();
+            } catch ( IOException ex ) {
                 ex.printStackTrace();
             }
         }

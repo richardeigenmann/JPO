@@ -1,13 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jnlp spec="1.0+" codebase="http://j-po.sourceforge.net/" href="activation.jnlp">
-   <information>
-      <title>Activation</title>
-      <vendor>Sun Microsystems, Inc.</vendor>
-      <offline-allowed/>
-   </information>
-   <offline-allowed/>
-   <resources>
-      <jar href="activation.jar"/>
-   </resources>
-   <component-desc/>
+<jnlp 
+    spec="1.0+" 
+    codebase="http://j-po.sourceforge.net/" 
+    href="activation.jnlp" >
+    
+    <information>
+        <title>Activation</title>
+        <vendor>Sun Microsystems, Inc.</vendor>
+        <offline-allowed/>
+    </information>
+
+    <security>
+        <all-permissions/>
+    </security>    
+            
+    <resources>
+        <jar href="activation.jar" download="lazy"/>
+    </resources>
+    
+    <component-desc> 
+    />
+        
 </jnlp>

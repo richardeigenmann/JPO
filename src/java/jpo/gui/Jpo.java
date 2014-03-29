@@ -10,11 +10,21 @@ import java.util.ArrayList;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.*;
+import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.RepaintManager;
+import javax.swing.SwingUtilities;
+import javax.swing.WindowConstants;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreePath;
-import jpo.dataModel.*;
+import jpo.dataModel.FlatGroupNavigator;
+import jpo.dataModel.GroupInfo;
+import jpo.dataModel.GroupNavigator;
+import jpo.dataModel.NodeNavigatorInterface;
+import jpo.dataModel.PictureInfo;
+import jpo.dataModel.Settings;
+import jpo.dataModel.SortableDefaultMutableTreeNode;
 import jpo.gui.swing.CollectionJTree;
 import jpo.gui.swing.MainWindow;
 import jpotestground.CheckThreadViolationRepaintManager;
@@ -113,7 +123,7 @@ public class Jpo {
                     ApplicationJMenuBar menuBar = new ApplicationJMenuBar( applicationEventHandler );
                     collectionJTreeController = new CollectionJTreeController( applicationEventHandler );
                     searchesJTree = new QueriesJTree();
-                    thumbnailPanelController = new ThumbnailPanelController();
+                    thumbnailPanelController = new ThumbnailPanelController( new JScrollPane() );
                     infoPanelController = new InfoPanelController();
                     mainWindow = new MainWindow( menuBar, collectionJTreeController.getJScrollPane(), searchesJTree.getJComponent(), thumbnailPanelController.getView(), infoPanelController.getInfoPanel(), infoPanelController.getTagCloud() );
                     applicationEventHandler.setMainWindow( mainWindow);
@@ -173,7 +183,7 @@ public class Jpo {
      *  This Vector allows us to keep track of the number of ThumbnailCreationThreads
      *  we have fired off. Could be enhanced to dynamically start more or less.
      */
-    private final static ArrayList<ThumbnailCreationFactory> THUMBNAIL_FACTORIES = new ArrayList<ThumbnailCreationFactory>();
+    public final static ArrayList<ThumbnailCreationFactory> THUMBNAIL_FACTORIES = new ArrayList<ThumbnailCreationFactory>();
 
     /**
      *  static initializer for the ThumbnailCreationThreads

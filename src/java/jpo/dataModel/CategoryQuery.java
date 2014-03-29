@@ -1,6 +1,6 @@
 package jpo.dataModel;
 
-import java.util.*;
+import java.util.ArrayList;
 import java.util.logging.Logger;
 
 
@@ -29,7 +29,7 @@ public class CategoryQuery implements Query {
     /**
      * Defines a logger for this class
      */
-    private static Logger logger = Logger.getLogger( CategoryQuery.class.getName() );
+    private static final Logger LOGGER = Logger.getLogger( CategoryQuery.class.getName() );
 
     /**
      * the category key for the Query
@@ -56,9 +56,10 @@ public class CategoryQuery implements Query {
      *  The query must be able to say how many results it will return.
      * @return the number of results
      */
+    @Override
     public int getNumberOfResults() {
         if ( resultList == null ) {
-            logger.info( "CategoryQuery.getNumberOfResults: called on a null result set." );
+            LOGGER.info( "CategoryQuery.getNumberOfResults: called on a null result set." );
             return 0;
         }
         return resultList.size();
@@ -72,9 +73,10 @@ public class CategoryQuery implements Query {
      *  @param index   The component index that is to be returned.
      * @return the node for the position
      */
+    @Override
     public SortableDefaultMutableTreeNode getIndex( int index ) {
         if ( resultList == null ) {
-            logger.info( "CategoryQuery.getIndex: called on a null result set." );
+            LOGGER.info( "CategoryQuery.getIndex: called on a null result set." );
             return null;
         }
         if ( ( index < 0 ) || ( index >= resultList.size() ) ) {
@@ -88,6 +90,7 @@ public class CategoryQuery implements Query {
      *  returns a title for the search that can be used to display the search results under.
      * @return a title
      */
+    @Override
     public String getTitle() {
         return toString();
     }
@@ -99,13 +102,14 @@ public class CategoryQuery implements Query {
      */
     @Override
     public String toString() {
-        return Settings.jpoResources.getString( "CategoryQuery" ) + Settings.pictureCollection.getCategory( key ).toString();
+        return Settings.jpoResources.getString( "CategoryQuery" ) + Settings.pictureCollection.getCategory( key );
     }
 
 
     /**
      *  This method retrieves a new ArrayList of nodes that match the category.
      */
+    @Override
     public void refresh() {
         resultList = null;
         resultList = PictureCollection.getCategoryUsageNodes( key, Settings.pictureCollection.getRootNode() );

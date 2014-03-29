@@ -1,6 +1,7 @@
 package jpo.gui;
 
-import java.util.*;
+import java.util.ListResourceBundle;
+
 
 /*
 JpoResources_en.java:  class that holds the generic labels for the JPO application

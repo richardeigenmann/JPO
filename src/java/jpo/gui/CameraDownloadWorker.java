@@ -36,7 +36,7 @@ public class CameraDownloadWorker
     /**
      * Defines a logger for this class
      */
-    private static Logger logger = Logger.getLogger( CameraDownloadWorker.class.getName() );
+    private static final Logger LOGGER = Logger.getLogger( CameraDownloadWorker.class.getName() );
     //{logger.setLevel( Level.ALL ); }
 
 
@@ -47,9 +47,9 @@ public class CameraDownloadWorker
         this.step7 = step7;
     }
 
-    private CameraDownloadWizardData dataModel;
+    private final CameraDownloadWizardData dataModel;
 
-    private JProgressBar progressBar;
+    private final JProgressBar progressBar;
 
     CameraDownloadWizardStep7 step7;
 
@@ -58,19 +58,19 @@ public class CameraDownloadWorker
     protected String doInBackground() throws Exception {
         Settings.memorizeCopyLocation( dataModel.targetDir.toString() );
         if ( dataModel.getShouldCreateNewGroup() ) {
-            logger.fine( String.format( "Adding a new group %s to node %s", dataModel.getNewGroupDescription(), dataModel.getTargetNode().toString() ) );
+            LOGGER.fine( String.format( "Adding a new group %s to node %s", dataModel.getNewGroupDescription(), dataModel.getTargetNode().toString() ) );
             SortableDefaultMutableTreeNode newGroupNode =dataModel.getTargetNode().addGroupNode( dataModel.getNewGroupDescription() );
             dataModel.setTargetNode( newGroupNode );
         }
         Settings.memorizeGroupOfDropLocation( dataModel.getTargetNode() );
 
-        logger.fine( String.format( "About to copyAddPictures to node %s", dataModel.getTargetNode().toString() ) );
+        LOGGER.fine( String.format( "About to copyAddPictures to node %s", dataModel.getTargetNode().toString() ) );
         dataModel.getTargetNode().copyAddPictures( dataModel.getNewPictures(),
                 dataModel.targetDir,
                 dataModel.getCopyMode(),
                 progressBar );
         if ( dataModel.getSortCode() > 1 ) {
-            logger.fine( String.format( "Sorting node %s by code %d", dataModel.getTargetNode().toString(), dataModel.getSortCode() ) );
+            LOGGER.fine( String.format( "Sorting node %s by code %d", dataModel.getTargetNode().toString(), dataModel.getSortCode() ) );
             dataModel.getTargetNode().sortChildren( dataModel.getSortCode() );
         }
 
@@ -90,7 +90,7 @@ public class CameraDownloadWorker
         progressBar.setValue( progressBar.getMaximum() );
         Jpo collectionController = dataModel.getCollectionController();
         if ( collectionController != null ) {
-            logger.fine( String.format( "Position to node %s", dataModel.getTargetNode() ) );
+            LOGGER.fine( String.format( "Position to node %s", dataModel.getTargetNode() ) );
             Jpo.positionToNode( dataModel.getTargetNode() );
         }
         step7.done();
@@ -98,10 +98,12 @@ public class CameraDownloadWorker
     }
 
 
+    @Override
     public void progressIncrement() {
-        logger.fine( "Got a progress Increment message" );
+        LOGGER.fine( "Got a progress Increment message" );
         Runnable r = new Runnable() {
 
+            @Override
             public void run() {
                 progressBar.setValue( progressBar.getValue() + 1 );
             }

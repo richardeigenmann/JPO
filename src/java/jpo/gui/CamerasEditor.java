@@ -1,13 +1,25 @@
 package jpo.gui;
 
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import jpo.dataModel.Settings;
-import jpo.*;
 import jpo.dataModel.Camera;
-import java.awt.*;
-import java.awt.event.*;
 import java.util.Vector;
 import java.util.logging.Logger;
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+import javax.swing.JTree;
+import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -45,7 +57,7 @@ public class CamerasEditor
     /**
      * Defines a logger for this class
      */
-    private static Logger logger = Logger.getLogger( CamerasEditor.class.getName() );
+    private static final Logger LOGGER = Logger.getLogger( CamerasEditor.class.getName() );
 
     /**
      * The root node of the JTree of cameras
@@ -61,7 +73,7 @@ public class CamerasEditor
 
         @Override
         public void valueForPathChanged( TreePath path, Object newValue ) {
-            logger.info( String.format( "valueForPathchanged on node %s, to value %s", path.toString(), newValue.toString() ) );
+            LOGGER.info( String.format( "valueForPathchanged on node %s, to value %s", path.toString(), newValue.toString() ) );
             DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
             Camera cam = (Camera) node.getUserObject();
             cameraRenamed( cam, newValue.toString() );
@@ -124,6 +136,7 @@ public class CamerasEditor
         cameraJTree.expandPath( new TreePath( rootNode ) );
         cameraJTree.addTreeSelectionListener( new TreeSelectionListener() {
 
+            @Override
             public void valueChanged( TreeSelectionEvent e ) {
                 DefaultMutableTreeNode n = (DefaultMutableTreeNode) cameraJTree.getLastSelectedPathComponent();
                 if ( n == null ) {
@@ -134,7 +147,7 @@ public class CamerasEditor
                     Camera cam = (Camera) o;
                     cameraPicked( cam );
                 } else {
-                    logger.fine( "Very odd: the camera JTree repored a valueChanged but there is no selected camera. Could be the root node" );
+                    LOGGER.fine( "Very odd: the camera JTree repored a valueChanged but there is no selected camera. Could be the root node" );
                 }
             }
         } );
@@ -162,6 +175,7 @@ public class CamerasEditor
         addJButton.addActionListener(
                 new ActionListener() {
 
+                    @Override
                     public void actionPerformed( ActionEvent e ) {
                         addCameraAction();
                     }
@@ -175,6 +189,7 @@ public class CamerasEditor
         deleteJButton.setBorder( BorderFactory.createRaisedBevelBorder() );
         deleteJButton.addActionListener( new ActionListener() {
 
+            @Override
             public void actionPerformed( ActionEvent e ) {
                 deleteCameraAction();
             }
@@ -219,6 +234,7 @@ public class CamerasEditor
         getRootPane().setDefaultButton( closeJButton );
         closeJButton.addActionListener( new ActionListener() {
 
+            @Override
             public void actionPerformed( ActionEvent e ) {
                 singleCameraEditor.saveCamera();
                 getRid();
@@ -266,11 +282,11 @@ public class CamerasEditor
     private void deleteCameraAction() {
         DefaultMutableTreeNode n = (DefaultMutableTreeNode) cameraJTree.getLastSelectedPathComponent();
         if ( n == null ) {
-            logger.warning( "got a delete event without a node. Ignorning" );
+            LOGGER.warning( "got a delete event without a node. Ignorning" );
             return;
         }
         if ( n.isRoot() ) {
-            logger.fine( "Not allowing the root node to be deleted" );
+            LOGGER.fine( "Not allowing the root node to be deleted" );
             return;
         }
         DefaultMutableTreeNode nextsibling = n.getNextSibling();

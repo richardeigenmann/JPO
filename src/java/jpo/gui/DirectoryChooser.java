@@ -1,11 +1,18 @@
 package jpo.gui;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.io.*;
+import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.logging.Logger;
-import javax.swing.*;
+import javax.swing.InputVerifier;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JFileChooser;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import jpo.dataModel.Settings;
@@ -60,12 +67,12 @@ public class DirectoryChooser
     /**
      * The title that will be used in the JFileChooser if the user clicks the button
      */
-    private String chooserTitle = "";
+    private final String chooserTitle = "";
     /**
      *  Variable that records what type of validation this object must perform.
      *  Valid Types are DIR_MUST_EXIST  and DIR_MUST_BE_WRITABLE.
      */
-    private int validationType;
+    private final int validationType;
     /**
      * The drop down list of the previously used directories
      */
@@ -88,8 +95,8 @@ public class DirectoryChooser
     private void initComponents() {
         Tools.checkEDT();
         directoryJComboBox.setEditable( true );
-        for ( int i = 0; i < Settings.copyLocations.length; i++ ) {
-            addDirToDropdown( Settings.copyLocations[i] );
+        for ( String copyLocation : Settings.copyLocations ) {
+            addDirToDropdown( copyLocation );
         }
         directoryJComboBox.setPreferredSize( Settings.filenameFieldPreferredSize );
         directoryJComboBox.setMinimumSize( Settings.filenameFieldMinimumSize );
@@ -214,7 +221,7 @@ public class DirectoryChooser
      *  A List that holds all the ChangeListeners that want to be notified
      *  when the directory changes.
      */
-    private ArrayList<ChangeListener> changeListeners = new ArrayList<ChangeListener>();
+    private final ArrayList<ChangeListener> changeListeners = new ArrayList<ChangeListener>();
 
     /**
      * Adds a change listener that will be notified whenever the text in the field changes

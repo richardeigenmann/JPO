@@ -37,12 +37,12 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 public class YearsBrowserController
         implements Serializable {
 
-    private YearlyAnalysis ya;
+    private final YearlyAnalysis ya;
 
     /**
      * Defines a logger for this class
      */
-    private static Logger logger = Logger.getLogger( YearsBrowserController.class.getName() );
+    private static final Logger LOGGER = Logger.getLogger( YearsBrowserController.class.getName() );
 
 
     /**
@@ -94,8 +94,9 @@ public class YearsBrowserController
             setText( String.format( "<html>%d<br>(%d)</html>", year, count ) );
             addActionListener( new ActionListener() {
 
+                @Override
                 public void actionPerformed( ActionEvent e ) {
-                    logger.info( Integer.toString( year ) );
+                    LOGGER.info( Integer.toString( year ) );
                 }
             } );
             setBackground( GradientColor.getColor( GradientColor.BLACK_WHITE_COLORS, (double) count / ya.maxNodesPerMonthInAllYears() ) );

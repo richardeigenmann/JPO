@@ -36,9 +36,11 @@ package jpotestground;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import javax.swing.*;
+
+import java.awt.Component;
+import java.awt.Container;
 import javax.swing.SpringLayout;
-import java.awt.*;
+import javax.swing.Spring;
 
 /**
  * A 1.4 file that provides utility methods for
@@ -50,6 +52,7 @@ public class SpringUtilities {
     /**
      * A debugging utility that prints to stdout the component's
      * minimum, preferred, and maximum sizes.
+     * @param c
      */
     public static void printSizes(Component c) {
         System.out.println("minimumSize = " + c.getMinimumSize());
@@ -64,6 +67,7 @@ public class SpringUtilities {
      * preferred width and height of the components.
      * The parent is made just big enough to fit them all.
      *
+     * @param parent
      * @param rows number of rows
      * @param cols number of columns
      * @param initialX x location to start the grid at
@@ -167,6 +171,7 @@ public class SpringUtilities {
      * height is similarly determined for each row.
      * The parent is made just big enough to fit them all.
      *
+     * @param parent
      * @param rows number of rows
      * @param cols number of columns
      * @param initialX x location to start the grid at

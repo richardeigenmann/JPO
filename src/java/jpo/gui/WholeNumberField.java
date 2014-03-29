@@ -1,13 +1,14 @@
 package jpo.gui;
 
 import jpo.dataModel.Settings;
-import jpo.*;
-import javax.swing.*;
-import javax.swing.text.*;
-
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.logging.Logger;
+import javax.swing.JTextField;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
+import javax.swing.text.PlainDocument;
 
 
 /*
@@ -38,12 +39,12 @@ public class WholeNumberField extends JTextField {
        /**
      * Defines a logger for this class
      */
-    private static Logger logger = Logger.getLogger( WholeNumberField.class.getName() );
+    private static final Logger LOGGER = Logger.getLogger( WholeNumberField.class.getName() );
     
     /**
      *  not quite sure what this is for.
      */
-    private NumberFormat integerFormatter;
+    private final NumberFormat integerFormatter;
 
 
     /**
@@ -109,7 +110,7 @@ public class WholeNumberField extends JTextField {
      * @param value
      */
     public void setValue( int value ) {
-        logger.fine("WholeNumberField.setValue("+Integer.toString(value)+")");
+        LOGGER.fine("WholeNumberField.setValue("+Integer.toString(value)+")");
         setText( Integer.toString( value ) );
     }
 
@@ -161,7 +162,7 @@ public class WholeNumberField extends JTextField {
 
                     result[j++] = source[i];
                 } else {
-                    logger.info( "WholdNumberField.WholdNumberDocument.insertString_ Refusing to insert character: " + source[i] );
+                    LOGGER.info( "WholdNumberField.WholdNumberDocument.insertString_ Refusing to insert character: " + source[i] );
                 }
             }
             super.insertString( offs, new String( result, 0, j ), a );

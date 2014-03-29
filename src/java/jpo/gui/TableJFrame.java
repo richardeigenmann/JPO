@@ -1,13 +1,19 @@
 package jpo.gui;
 
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import jpo.dataModel.GroupInfo;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
 import jpo.dataModel.PictureInfo;
 import javax.swing.table.AbstractTableModel;
-import java.awt.*;
-import java.awt.event.*;
 import java.util.logging.Logger;
-import javax.swing.*;
+import javax.swing.JFrame;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 
 /*
  TableDemo.java:  class that creates a JFrame and shows the children of a SortableDefaultMutableTreeNode in it
@@ -157,7 +163,7 @@ public class TableJFrame extends JFrame {
         @Override
         public Object getValueAt( int row, int col ) {
             if ( col == 0 ) {
-                return new Integer( row + 1 ); // index
+                return row + 1; // index
             }
             SortableDefaultMutableTreeNode queryNode = (SortableDefaultMutableTreeNode) groupNode.getChildAt( row );
             Object userObject = queryNode.getUserObject();

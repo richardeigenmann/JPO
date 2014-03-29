@@ -1,15 +1,25 @@
 package jpo.gui;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.File;
+import java.util.Enumeration;
+import java.util.HashMap;
 import jpo.dataModel.Tools;
 import jpo.dataModel.Settings;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
 import jpo.dataModel.PictureInfo;
-import java.io.*;
-import java.util.*;
-import java.awt.event.*;
 import java.util.List;
 import java.util.logging.Logger;
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.SwingWorker;
 import static javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE;
 import net.miginfocom.swing.MigLayout;
 
@@ -140,7 +150,6 @@ public class IntegrityCheckerJFrame
      * Check the checksums of all the PictureInfo nodes and adds those that are
      * missing
      *
-     * @return the number of corrected nodes.
      */
     private void correctChecksums() {
         checksumWorker = new CorrectChecksumSwingWorker();

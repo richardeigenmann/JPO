@@ -1,14 +1,19 @@
 package jpo.dataModel;
 
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Enumeration;
 import jpo.gui.LoadProgressGui;
-import java.io.*;
-import java.util.*;
 import java.util.logging.Logger;
-import org.xml.sax.*;
 import org.xml.sax.helpers.DefaultHandler;
 import javax.xml.parsers.SAXParserFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
+import org.xml.sax.Attributes;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 
 /*
 XmlReader.java:  class that reads the xml file
@@ -200,7 +205,7 @@ public class XmlReader extends DefaultHandler {
 
     /**
      *  method that gets invoked by the parser when a end element is discovered; used
-     *  here to go back to the parent group if a </group> tag is found.
+     *  here to go back to the parent group if a \</group\> tag is found.
      * @param namespaceURI
      * @param sName
      * @param qName
@@ -223,7 +228,7 @@ public class XmlReader extends DefaultHandler {
             //logger.info("CHECKSUM here");
             ( (PictureInfo) currentPicture.getUserObject() ).parseChecksum();
         } else if ( "categoryDescription".equals( qName ) ) {
-            currentGroup.getPictureCollection().addCategory( new Integer( Integer.parseInt( temporaryCategoryIndex ) ), temporaryCategory );
+            currentGroup.getPictureCollection().addCategory( Integer.parseInt( temporaryCategoryIndex ), temporaryCategory );
             temporaryCategory = "";
         }
     }

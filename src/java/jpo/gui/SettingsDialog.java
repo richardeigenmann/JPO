@@ -9,11 +9,31 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Frame;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.util.Hashtable;
 import java.util.logging.Logger;
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.InputVerifier;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JDialog;
+import javax.swing.JFileChooser;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JSlider;
+import javax.swing.JTabbedPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.WindowConstants;
 import net.miginfocom.swing.MigLayout;
 
 /*
@@ -360,9 +380,9 @@ public class SettingsDialog
 
         //Create the label table
         Hashtable<Integer, JLabel> labelTable = new Hashtable<Integer, JLabel>();
-        labelTable.put( new Integer( 0 ), new JLabel( Settings.jpoResources.getString( "jpgQualityBad" ) ) );
-        labelTable.put( new Integer( 80 ), new JLabel( Settings.jpoResources.getString( "jpgQualityGood" ) ) );
-        labelTable.put( new Integer( 100 ), new JLabel( Settings.jpoResources.getString( "jpgQualityBest" ) ) );
+        labelTable.put( 0, new JLabel( Settings.jpoResources.getString( "jpgQualityBad" ) ) );
+        labelTable.put( 80, new JLabel( Settings.jpoResources.getString( "jpgQualityGood" ) ) );
+        labelTable.put( 100, new JLabel( Settings.jpoResources.getString( "jpgQualityBest" ) ) );
         jpgQualityJSlider.setLabelTable( labelTable );
 
         jpgQualityJSlider.setMajorTickSpacing( 10 );
@@ -1029,8 +1049,8 @@ public class SettingsDialog
                     return file.getName().startsWith( Settings.thumbnailPrefix );
                 }
             } );
-            for ( int i = 0; i < thumbnailFiles.length; i++ ) {
-                boolean success = thumbnailFiles[i].delete();
+            for ( File thumbnailFile : thumbnailFiles ) {
+                boolean success = thumbnailFile.delete();
             }
             // it is not a good idea to reset the counter since
             // this can lead to some thumbnails getting the same

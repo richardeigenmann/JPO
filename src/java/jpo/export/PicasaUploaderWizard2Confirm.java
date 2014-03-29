@@ -1,7 +1,9 @@
 package jpo.export;
 
 import java.util.logging.Logger;
-import javax.swing.*;
+import javax.swing.JComponent;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
 import jpo.dataModel.GroupInfo;
 import jpo.dataModel.NodeStatistics;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
@@ -34,7 +36,7 @@ public class PicasaUploaderWizard2Confirm extends AbstractStep {
     /**
      * Defines a logger for this class
      */
-    private static final Logger LOGGER = Logger.getLogger ( PicasaUploaderWizard2Confirm.class.getName () );
+    private static final Logger LOGGER = Logger.getLogger( PicasaUploaderWizard2Confirm.class.getName() );
     /**
      * The link to the values that this panel should change
      */
@@ -42,12 +44,13 @@ public class PicasaUploaderWizard2Confirm extends AbstractStep {
 
     /**
      * Upload the album
+     * @param myRequest
      */
-    public PicasaUploaderWizard2Confirm ( PicasaUploadRequest myRequest ) {
-        super ( "Confirm upload", "Confirm upload" );
+    public PicasaUploaderWizard2Confirm( PicasaUploadRequest myRequest ) {
+        super( "Confirm upload", "Confirm upload" );
         this.myRequest = myRequest;
     }
-    private final JTextArea info = new JTextArea ();
+    private final JTextArea info = new JTextArea();
 
     /**
      * Creates the GUI widgets
@@ -55,16 +58,16 @@ public class PicasaUploaderWizard2Confirm extends AbstractStep {
      * @return The component to be shown
      */
     @Override
-    protected JComponent createComponent () {
-        JPanel wizardPanel = new JPanel ();
-        MigLayout layout = new MigLayout ( "wrap 1" );
-        wizardPanel.setLayout ( layout );
+    protected JComponent createComponent() {
+        JPanel wizardPanel = new JPanel();
+        MigLayout layout = new MigLayout( "wrap 1" );
+        wizardPanel.setLayout( layout );
 
-        wizardPanel.add ( info );
-        SortableDefaultMutableTreeNode node = myRequest.getNode ();
-        String albumName = ( (GroupInfo) node.getUserObject () ).getGroupName ();
-        int pics = NodeStatistics.countPictures ( node, false );
-        info.setText ( String.format ( "Uploading Album\n%s\nwith %d pictures to Picasa", albumName, pics ) );
+        wizardPanel.add( info );
+        SortableDefaultMutableTreeNode node = myRequest.getNode();
+        String albumName = ( (GroupInfo) node.getUserObject() ).getGroupName();
+        int pics = NodeStatistics.countPictures( node, false );
+        info.setText( String.format( "Uploading Album\n%s\nwith %d pictures to Picasa", albumName, pics ) );
 
         return wizardPanel;
     }
@@ -73,6 +76,6 @@ public class PicasaUploaderWizard2Confirm extends AbstractStep {
      * Required but not needed here
      */
     @Override
-    public void prepareRendering () {
+    public void prepareRendering() {
     }
 }

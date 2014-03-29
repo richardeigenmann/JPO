@@ -1,5 +1,8 @@
 package jpo.gui;
 
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
 import jpo.gui.swing.NonFocussedCaret;
 import jpo.dataModel.Settings;
 import jpo.dataModel.GroupInfo;
@@ -7,36 +10,43 @@ import jpo.dataModel.SortableDefaultMutableTreeNode;
 import jpo.dataModel.PictureInfoChangeEvent;
 import jpo.dataModel.PictureInfoChangeListener;
 import jpo.dataModel.PictureInfo;
-import javax.swing.*;
-import java.awt.*;
-import javax.swing.event.*;
 import java.awt.event.AdjustmentListener;
 import java.awt.event.AdjustmentEvent;
 import java.util.logging.Logger;
+import javax.swing.InputVerifier;
+import javax.swing.JComponent;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.event.TreeModelEvent;
+import javax.swing.event.TreeModelListener;
 
 /*
-ThumbnailDescriptionJPanel.java:  class that creates a panel showing the details of a thumbnail
+ ThumbnailDescriptionJPanel.java:  class that creates a panel showing the details of a thumbnail
 
-Copyright (C) 2002 - 2010  Richard Eigenmann, Zürich, Switzerland
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or any later version. This program is distributed 
-in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
-without even the implied warranty of MERCHANTABILITY or FITNESS 
-FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
-more details. You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-The license is in gpl.txt.
-See http://www.gnu.org/copyleft/gpl.html for the details.
+ Copyright (C) 2002 - 2010  Richard Eigenmann, Zürich, Switzerland
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or any later version. This program is distributed 
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+ without even the implied warranty of MERCHANTABILITY or FITNESS 
+ FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
+ more details. You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ The license is in gpl.txt.
+ See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 /**
- *   ThumbnailDescriptionJPanel is a JPanel that displays the metadata of a thumbnail.
- *   It knows the node it is representing.
- *   It can be told to change the node it is showing.
- *   It can be mute.
- *   It knows it's x and y position in the grid
+ * ThumbnailDescriptionJPanel is a JPanel that displays the metadata of a
+ * thumbnail. It knows the node it is representing. It can be told to change the
+ * node it is showing. It can be mute. It knows it's x and y position in the
+ * grid
  */
 public class ThumbnailDescriptionJPanel
         extends JPanel
@@ -46,35 +56,36 @@ public class ThumbnailDescriptionJPanel
     /**
      * Defines a logger for this class
      */
-    private static Logger logger = Logger.getLogger( ThumbnailDescriptionJPanel.class.getName() );
+    private static final Logger LOGGER = Logger.getLogger( ThumbnailDescriptionJPanel.class.getName() );
 
     /**
-     *  a link to the SortableDefaultMutableTreeNode in the data model.
-     *  This allows thumbnails to be selected by sending a
-     *  nodeSelected event to the data model.
-     **/
+     * a link to the SortableDefaultMutableTreeNode in the data model. This
+     * allows thumbnails to be selected by sending a nodeSelected event to the
+     * data model.
+     *
+     */
     protected SortableDefaultMutableTreeNode referringNode;
 
     /**
-     *  This object holds the description
+     * This object holds the description
      */
     private JTextArea pictureDescriptionJTA = new JTextArea();
 
     /**
-     *   This JScrollPane holds the JTextArea pictureDescriptionJTA so that it can have
-     *   multiple lines of text if this is required.
+     * This JScrollPane holds the JTextArea pictureDescriptionJTA so that it can
+     * have multiple lines of text if this is required.
      */
     private JScrollPane pictureDescriptionJSP = new JScrollPane( pictureDescriptionJTA,
             JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
             JScrollPane.HORIZONTAL_SCROLLBAR_NEVER );
 
     /**
-     *   The location of the image file
+     * The location of the image file
      */
     private JTextField highresLocationJTextField = new JTextField();
 
     /**
-     *   The location of the lowres image file
+     * The location of the lowres image file
      */
     private JTextField lowresLocationJTextField = new JTextField();
 
@@ -86,45 +97,50 @@ public class ThumbnailDescriptionJPanel
     private NonFocussedCaret dumbCaret = new NonFocussedCaret();
 
     /**
-     *   Constant that indicates that the description should be formatted as
-     *   a large description meaning large font and just the image description
+     * Constant that indicates that the description should be formatted as a
+     * large description meaning large font and just the image description
      */
     public static final int LARGE_DESCRIPTION = 1;
 
     /**
-     *   Constant that indicates that the descriptions should be formatted as
-     *   a small info panel meaning small font and much information
+     * Constant that indicates that the descriptions should be formatted as a
+     * small info panel meaning small font and much information
      */
     public static final int MINI_INFO = LARGE_DESCRIPTION + 1;
 
     /**
-     *  Font to be used for Large Texts:
+     * Font to be used for Large Texts:
      */
-    private static Font largeFont = Font.decode( Settings.jpoResources.getString( "ThumbnailDescriptionJPanelLargeFont" ) );
+    private static final Font LARGE_FONT = Font.decode( Settings.jpoResources.getString( "ThumbnailDescriptionJPanelLargeFont" ) );
 
     /**
-     *  Font to be used for small texts:
+     * Font to be used for small texts:
      */
-    private static Font smallFont = Font.decode( Settings.jpoResources.getString( "ThumbnailDescriptionJPanelSmallFont" ) );
+    private static final Font SMALL_FONT = Font.decode( Settings.jpoResources.getString( "ThumbnailDescriptionJPanelSmallFont" ) );
 
     /**
-     *   This field controls how the description panel is shown. It can be set to
-     *   ThumbnailDescriptionJPanel.LARGE_DESCRIPTION,
-     *   ThumbnailDescriptionJPanel.MINI_INFO,
+     * This field controls how the description panel is shown. It can be set to
+     * ThumbnailDescriptionJPanel.LARGE_DESCRIPTION,
+     * ThumbnailDescriptionJPanel.MINI_INFO,
      */
     private int displayMode = LARGE_DESCRIPTION;
 
     /**
-     *   The factor which is multiplied with the ThumbnailDescription to determine how large it is shown.
+     * The factor which is multiplied with the ThumbnailDescription to determine
+     * how large it is shown.
      */
     private float thumbnailSizeFactor = 1;
 
-
     /**
-     *   Construct a new ThumbnailDescrciptionJPanel
+     * Construct a new ThumbnailDescrciptionJPanel
      *
-     **/
+     *
+     */
     public ThumbnailDescriptionJPanel() {
+        initComponents();
+    }
+
+    private void initComponents() {
         // attach this panel to the tree model so that it is notified about changes
         Settings.pictureCollection.getTreeModel().addTreeModelListener( this );
 
@@ -141,10 +157,10 @@ public class ThumbnailDescriptionJPanel
 
         pictureDescriptionJTA.setInputVerifier( new InputVerifier() {
 
+            @Override
             public boolean verify( JComponent component ) {
                 return true;
             }
-
 
             @Override
             public boolean shouldYieldFocus( JComponent component ) {
@@ -155,16 +171,17 @@ public class ThumbnailDescriptionJPanel
 
         pictureDescriptionJTA.getDocument().addDocumentListener( new DocumentListener() {
 
+            @Override
             public void insertUpdate( DocumentEvent e ) {
                 setTextAreaSize();
             }
 
-
+            @Override
             public void removeUpdate( DocumentEvent e ) {
                 setTextAreaSize();
             }
 
-
+            @Override
             public void changedUpdate( DocumentEvent e ) {
                 setTextAreaSize();
             }
@@ -172,6 +189,7 @@ public class ThumbnailDescriptionJPanel
 
         pictureDescriptionJSP.getVerticalScrollBar().addAdjustmentListener( new AdjustmentListener() {
 
+            @Override
             public void adjustmentValueChanged( AdjustmentEvent e ) {
                 setTextAreaSize();
             }
@@ -181,10 +199,10 @@ public class ThumbnailDescriptionJPanel
         add( pictureDescriptionJSP );
     }
 
-
     /**
-     *    doUpdate writes the changed text back to the data model and submits an nodeChanged
-     *    notification on the model. It get's called by the Inputverifier on the text area.
+     * doUpdate writes the changed text back to the data model and submits an
+     * nodeChanged notification on the model. It get's called by the
+     * Inputverifier on the text area.
      */
     public void doUpdate() {
         if ( referringNode == null ) {
@@ -201,12 +219,11 @@ public class ThumbnailDescriptionJPanel
         }
     }
 
-
     /**
-     *  This method sets the node which the ThumbnailDescriptionJPanel should display. If it should
-     *  display nothing then set it to null.
+     * This method sets the node which the ThumbnailDescriptionJPanel should
+     * display. If it should display nothing then set it to null.
      *
-     *  @param referringNode  The Node to be displayed
+     * @param referringNode The Node to be displayed
      */
     public void setNode( SortableDefaultMutableTreeNode referringNode ) {
         if ( this.referringNode == referringNode ) {
@@ -223,7 +240,6 @@ public class ThumbnailDescriptionJPanel
             pi.removePictureInfoChangeListener( this );
         }
 
-
         this.referringNode = referringNode;
 
         // attach the change Listener
@@ -231,7 +247,6 @@ public class ThumbnailDescriptionJPanel
             PictureInfo pi = (PictureInfo) referringNode.getUserObject();
             pi.addPictureInfoChangeListener( this );
         }
-
 
         String legend;
         if ( referringNode == null ) {
@@ -255,27 +270,26 @@ public class ThumbnailDescriptionJPanel
         formatDescription();
     }
 
-
     /**
-     *   This method how the description panel is shown. It can be set to
-     *   ThumbnailDescriptionJPanel.LARGE_DESCRIPTION,
-     *   ThumbnailDescriptionJPanel.MINI_INFO,
+     * This method how the description panel is shown. It can be set to
+     * ThumbnailDescriptionJPanel.LARGE_DESCRIPTION,
+     * ThumbnailDescriptionJPanel.MINI_INFO,
+     *
      * @param displayMode
      */
     public void setDisplayMode( int displayMode ) {
         this.displayMode = displayMode;
     }
 
-
     /**
-     *  This method formats the text information fields for the indicated node.
+     * This method formats the text information fields for the indicated node.
      */
     public void formatDescription() {
         if ( displayMode == LARGE_DESCRIPTION ) {
-            pictureDescriptionJTA.setFont( largeFont );
+            pictureDescriptionJTA.setFont( LARGE_FONT );
         } else {
             // i.e.  MINI_INFO
-            pictureDescriptionJTA.setFont( smallFont );
+            pictureDescriptionJTA.setFont( SMALL_FONT );
         }
         setTextAreaSize();
 
@@ -289,9 +303,8 @@ public class ThumbnailDescriptionJPanel
 
     }
 
-
     /**
-     *  sets the size of the TextArea
+     * sets the size of the TextArea
      */
     public void setTextAreaSize() {
         Dimension textAreaSize = pictureDescriptionJTA.getPreferredSize();
@@ -309,15 +322,15 @@ public class ThumbnailDescriptionJPanel
         int targetWidth = (int) ( Settings.thumbnailSize * thumbnailSizeFactor );
         if ( ( targetHeight != scrollPaneSize.height ) || ( targetWidth != scrollPaneSize.width ) ) {
             pictureDescriptionJSP.setPreferredSize( new Dimension( targetWidth, targetHeight ) );
-            logger.fine( "ThumbnailDescriptionJPanel.setTextAreaSize set to: " + Integer.toString( targetWidth ) + " / " + Integer.toString( targetHeight ) );
+            LOGGER.fine( "ThumbnailDescriptionJPanel.setTextAreaSize set to: " + Integer.toString( targetWidth ) + " / " + Integer.toString( targetHeight ) );
         }
         //pictureDescriptionJSP.getParent().validate();
     }
 
-
     /**
-     *   Overridden method to allow the better tuning of visibility
-     * @param visibility  Send in true or false
+     * Overridden method to allow the better tuning of visibility
+     *
+     * @param visibility Send in true or false
      */
     @Override
     public void setVisible( boolean visibility ) {
@@ -327,12 +340,12 @@ public class ThumbnailDescriptionJPanel
         //validate();
     }
 
-
     /**
-     * Returns the preferred size for the ThumbnailDescription as a Dimension using the thumbnailSize
-     * as width and height.
-     * 
-     * @return Returns the preferred size for the ThumbnailDescription as a Dimension using the thumbnailSize as width and height.
+     * Returns the preferred size for the ThumbnailDescription as a Dimension
+     * using the thumbnailSize as width and height.
+     *
+     * @return Returns the preferred size for the ThumbnailDescription as a
+     * Dimension using the thumbnailSize as width and height.
      */
     @Override
     public Dimension getPreferredSize() {
@@ -344,9 +357,9 @@ public class ThumbnailDescriptionJPanel
         return new Dimension( d.width, height );
     }
 
-
     /**
-     *  This method sets the scaling factor for the display of a thumbnail description
+     * This method sets the scaling factor for the display of a thumbnail
+     * description
      *
      * @param thumbnailSizeFactor
      */
@@ -356,9 +369,8 @@ public class ThumbnailDescriptionJPanel
         //setVisible( isVisible() );
     }
 
-
     /**
-     *  returns the current node
+     * returns the current node
      *
      * @return the current node
      */
@@ -366,14 +378,15 @@ public class ThumbnailDescriptionJPanel
         return referringNode;
     }
 
-
     /**
-     *  here we get notified by the PictureInfo object that something has
-     *  changed.
+     * here we get notified by the PictureInfo object that something has
+     * changed.
      */
+    @Override
     public void pictureInfoChangeEvent( final PictureInfoChangeEvent e ) {
         Runnable r = new Runnable() {
 
+            @Override
             public void run() {
                 if ( e.getDescriptionChanged() ) {
                     pictureDescriptionJTA.setText( e.getPictureInfo().getDescription() );
@@ -387,27 +400,27 @@ public class ThumbnailDescriptionJPanel
                     lowresLocationJTextField.setText( e.getPictureInfo().getLowresLocation() );
                 }
                 /*		if ( e.getChecksumChanged() ) {
-                checksumJLabel.setText( Settings.jpoResources.getString("checksumJLabel") + pi.getChecksumAsString () );
-                }
-                if ( e.getCreationTimeChanged() ) {
-                creationTimeJTextField.setText( pi.getCreationTime () );
-                parsedCreationTimeJLabel.setText( pi.getFormattedCreationTime() );
-                }
-                if ( e.getFilmReferenceChanged() ) {
-                filmReferenceJTextField.setText( pi.getFilmReference() );
-                }
-                if ( e.getRotationChanged() ) {
-                rotationJTextField.setText( Double.toString( pi.getRotation() ) );
-                }
-                if ( e.getCommentChanged() ) {
-                commentJTextField.setText( pi.getComment() );
-                }
-                if ( e.getPhotographerChanged() ) {
-                photographerJTextField.setText( pi.getPhotographer() );
-                }
-                if ( e.getCopyrightHolderChanged() ) {
-                copyrightHolderJTextField.setText( pi.getCopyrightHolder() );
-                } */
+                 checksumJLabel.setText( Settings.jpoResources.getString("checksumJLabel") + pi.getChecksumAsString () );
+                 }
+                 if ( e.getCreationTimeChanged() ) {
+                 creationTimeJTextField.setText( pi.getCreationTime () );
+                 parsedCreationTimeJLabel.setText( pi.getFormattedCreationTime() );
+                 }
+                 if ( e.getFilmReferenceChanged() ) {
+                 filmReferenceJTextField.setText( pi.getFilmReference() );
+                 }
+                 if ( e.getRotationChanged() ) {
+                 rotationJTextField.setText( Double.toString( pi.getRotation() ) );
+                 }
+                 if ( e.getCommentChanged() ) {
+                 commentJTextField.setText( pi.getComment() );
+                 }
+                 if ( e.getPhotographerChanged() ) {
+                 photographerJTextField.setText( pi.getPhotographer() );
+                 }
+                 if ( e.getCopyrightHolderChanged() ) {
+                 copyrightHolderJTextField.setText( pi.getCopyrightHolder() );
+                 } */
             }
         };
         if ( SwingUtilities.isEventDispatchThread() ) {
@@ -416,16 +429,16 @@ public class ThumbnailDescriptionJPanel
             SwingUtilities.invokeLater( r );
         }
 
-
     }
-
 
     // Here we are not that interested in TreeModel change events other than to find out if our
     // current node was removed in which case we close the Window.
     /**
-     *   implemented here to satisfy the TreeModelListener interface; not used.
+     * implemented here to satisfy the TreeModelListener interface; not used.
+     *
      * @param e
      */
+    @Override
     public void treeNodesChanged( TreeModelEvent e ) {
         // find out whether our node was changed
         Object[] children = e.getChildren();
@@ -434,8 +447,8 @@ public class ThumbnailDescriptionJPanel
             return;
         }
 
-        for ( int i = 0; i < children.length; i++ ) {
-            if ( children[i] == referringNode ) {
+        for ( Object child : children ) {
+            if ( child == referringNode ) {
                 // we are displaying a changed node. What changed?
                 Object userObject = referringNode.getUserObject();
                 if ( userObject instanceof GroupInfo ) {
@@ -448,27 +461,30 @@ public class ThumbnailDescriptionJPanel
         }
     }
 
-
     /**
-     *   implemented here to satisfy the TreeModelListener interface; not used.
+     * implemented here to satisfy the TreeModelListener interface; not used.
+     *
      * @param e
      */
+    @Override
     public void treeNodesInserted( TreeModelEvent e ) {
     }
 
-
     /**
-     *  The TreeModelListener interface tells us of tree node removal events.
-     * @param e 
+     * The TreeModelListener interface tells us of tree node removal events.
+     *
+     * @param e
      */
+    @Override
     public void treeNodesRemoved( TreeModelEvent e ) {
     }
 
-
     /**
-     *   implemented here to satisfy the TreeModelListener interface; not used.
+     * implemented here to satisfy the TreeModelListener interface; not used.
+     *
      * @param e
      */
+    @Override
     public void treeStructureChanged( TreeModelEvent e ) {
     }
 }

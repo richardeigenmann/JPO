@@ -27,6 +27,7 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  *
  * @see <a href="http://en.wikipedia.org/wiki/List_of_cities_proper_by_population">Wikipedia Cities by Population</a>
  * @author Richard Eigenmann
+ * @deprecated 
  */
 public class Cities extends WordMap {
 

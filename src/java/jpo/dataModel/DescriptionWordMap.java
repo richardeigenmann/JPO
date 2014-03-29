@@ -1,7 +1,5 @@
 package jpo.dataModel;
 
-import jpo.TagCloud.*;
-import jpo.dataModel.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;
@@ -12,6 +10,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.util.logging.Logger;
+import jpo.TagCloud.WordMap;
 
 /*
 DescrpitionWordMap.java:  Builds a list of description Words and links to a set of nodes where they were found
@@ -39,18 +38,13 @@ public class DescriptionWordMap extends WordMap {
     /**
      * Defines a logger for this class
      */
-    private static Logger logger = Logger.getLogger( DescriptionWordMap.class.getName() );
+    private static final Logger LOGGER = Logger.getLogger( DescriptionWordMap.class.getName() );
 
-    /**
-     * A reference to the node from where we start analysing
-     *
-     */
-    private SortableDefaultMutableTreeNode startNode;
 
     /**
      * Map that holds the words and a set of the nodes where the words were found.
      */
-    private TreeMap<String, HashSet<SortableDefaultMutableTreeNode>> wordNodeMap = new TreeMap<String, HashSet<SortableDefaultMutableTreeNode>>();
+    private final TreeMap<String, HashSet<SortableDefaultMutableTreeNode>> wordNodeMap = new TreeMap<String, HashSet<SortableDefaultMutableTreeNode>>();
 
 
     /**
@@ -58,16 +52,25 @@ public class DescriptionWordMap extends WordMap {
      * @param startNode The node from which to start the analysis
      */
     public DescriptionWordMap( SortableDefaultMutableTreeNode startNode ) {
-        this.startNode = startNode;
-        buildList();
-
+        buildList( startNode);
     }
 
+    
+    /**
+     * Constructor
+     * @param navigator The NodeNavigator with the nodes from which to take the words.
+     */
+    public DescriptionWordMap( NodeNavigatorInterface navigator ) {
+        for ( int i = 0; i< navigator.getNumberOfNodes(); i++) {
+            buildList( navigator.getNode( i ) );
+        }
+    }
 
+    
     /**
      * Zips through the nodes and builds the word to node set map.
      */
-    private void buildList() {
+    private void buildList(SortableDefaultMutableTreeNode startNode ) {
         if ( startNode == null ) {
             // nothing to do
             return;
@@ -104,8 +107,8 @@ public class DescriptionWordMap extends WordMap {
 
     /**
      * split the string and add the node to the map
-     * @param description  The description ot split
-     * @param n The node where the description was fouä
+     * @param description  The description of split
+     * @param n The node where the description was found
      */
     private void splitAndAdd( String description, SortableDefaultMutableTreeNode n ) {
         // cleanup punctuation
@@ -160,9 +163,10 @@ public class DescriptionWordMap extends WordMap {
      * rebuilt the wordCountMap variable needs to be set to null;
      * @return A Map with description terms and a count of nodes where the term is found
      */
+    @Override
     public Map<String, Integer> getWordValueMap() {
         if ( wordCountMap == null ) {
-            logger.fine( "Building wordCountMap" );
+            LOGGER.fine( "Building wordCountMap" );
             wordCountMap = new HashMap<String, Integer>();
             Iterator<Entry<String, HashSet<SortableDefaultMutableTreeNode>>> it = wordNodeMap.entrySet().iterator();
             Entry<String, HashSet<SortableDefaultMutableTreeNode>> pairs;

@@ -1,30 +1,45 @@
 package jpo.gui;
 
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.File;
 import jpo.dataModel.Settings;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
 import jpo.dataModel.XmlDistiller;
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-import java.io.*;
 import java.util.logging.Logger;
+import javax.swing.InputVerifier;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
 
 /*
-CollectionDistillerJFrame.java:  creates a GUI for the export
+ CollectionDistillerJFrame.java:  creates a GUI for the export
 
-Copyright (C) 2002 - 2009  Richard Eigenmann.
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or any later version. This program is distributed 
-in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
-without even the implied warranty of MERCHANTABILITY or FITNESS 
-FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
-more details. You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-The license is in gpl.txt.
-See http://www.gnu.org/copyleft/gpl.html for the details.
+ Copyright (C) 2002 - 2009  Richard Eigenmann.
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or any later version. This program is distributed 
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+ without even the implied warranty of MERCHANTABILITY or FITNESS 
+ FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
+ more details. You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ The license is in gpl.txt.
+ See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 /**
  * class that generates a GUI for the export of a collection
@@ -34,50 +49,59 @@ class CollectionDistillerJFrame extends JFrame implements ActionListener {
     /**
      * Defines a logger for this class
      */
-    private static final Logger logger = Logger.getLogger( CollectionDistillerJFrame.class.getName() );
+    private static final Logger LOGGER = Logger.getLogger( CollectionDistillerJFrame.class.getName() );
 
     /**
-     *  the node from which to start the export
+     * the node from which to start the export
      */
-    private SortableDefaultMutableTreeNode startNode;
+    private final SortableDefaultMutableTreeNode startNode;
 
     /**
-     *  text field that holds the directory that the group is to be exported to
-     **/
-    private DirectoryChooser targetDirChooser =
-            new DirectoryChooser( Settings.jpoResources.getString( "collectionExportChooserTitle" ),
-            DirectoryChooser.DIR_MUST_BE_WRITABLE );
-
-    /**
-     *  text field that holds the filename of the target XML file
-     **/
-    private JTextField xmlFileNameJTextField = new JTextField();
-
-    /**
-     *  Tickbox that indicates whether the pictures are to be copied to the
-     *  target directory structure.
-     **/
-    private JCheckBox exportPicsJCheckBox = new JCheckBox( Settings.jpoResources.getString( "collectionExportPicturesText" ) );
-
-    /**
-     *  button to start the export
-     **/
-    private JButton exportJButton = new JButton( Settings.jpoResources.getString( "genericExportButtonText" ) );
-
-    /**
-     *  button to cancel the dialog
-     **/
-    private JButton cancelJButton = new JButton( Settings.jpoResources.getString( "genericCancelText" ) );
-
-
-    /**
-     *  Constructor for the Export Dialog window.
+     * text field that holds the directory that the group is to be exported to
      *
-     *  @param startNode  The group node that the user wants the export to be done on.
+     */
+    private final DirectoryChooser targetDirChooser
+            = new DirectoryChooser( Settings.jpoResources.getString( "collectionExportChooserTitle" ),
+                    DirectoryChooser.DIR_MUST_BE_WRITABLE );
+
+    /**
+     * text field that holds the filename of the target XML file
+     *
+     */
+    private final JTextField xmlFileNameJTextField = new JTextField();
+
+    /**
+     * Tickbox that indicates whether the pictures are to be copied to the
+     * target directory structure.
+     *
+     */
+    private final JCheckBox exportPicsJCheckBox = new JCheckBox( Settings.jpoResources.getString( "collectionExportPicturesText" ) );
+
+    /**
+     * button to start the export
+     *
+     */
+    private final JButton exportJButton = new JButton( Settings.jpoResources.getString( "genericExportButtonText" ) );
+
+    /**
+     * button to cancel the dialog
+     *
+     */
+    private final JButton cancelJButton = new JButton( Settings.jpoResources.getString( "genericCancelText" ) );
+
+    /**
+     * Constructor for the Export Dialog window.
+     *
+     * @param startNode The group node that the user wants the export to be done
+     * on.
      */
     public CollectionDistillerJFrame( SortableDefaultMutableTreeNode startNode ) {
         super( Settings.jpoResources.getString( "CollectionDistillerJFrameFrameHeading" ) );
         this.startNode = startNode;
+        initComponents();
+    }
+
+    public final void initComponents() {
 
         setSize( 460, 300 );
         setLocationRelativeTo( Settings.anchorFrame );
@@ -112,7 +136,6 @@ class CollectionDistillerJFrame extends JFrame implements ActionListener {
         constraints.insets = new Insets( 4, 4, 4, 4 );
         contentJPanel.add( targetDirChooser, constraints );
 
-
         JLabel xmlFileNameJLabel = new JLabel( Settings.jpoResources.getString( "xmlFileNameLabel" ) );
         constraints.gridx = 0;
         constraints.gridy++;
@@ -137,7 +160,7 @@ class CollectionDistillerJFrame extends JFrame implements ActionListener {
                 return true;
             }
 
-
+            @Override
             public boolean verify( JComponent input ) {
                 return true;
             }
@@ -188,20 +211,19 @@ class CollectionDistillerJFrame extends JFrame implements ActionListener {
 
         pack();
         setVisible( true );
+
     }
 
-
     /**
-     *  method that get's rid of this JFrame
+     * method that gets rid of this JFrame
      */
     private void getRid() {
         setVisible( false );
         dispose();
     }
 
-
     /**
-     *  method that outputs the selected group to a directory
+     * method that outputs the selected group to a directory
      */
     private void exportToDirectory() {
         File exportDirectory = targetDirChooser.getDirectory();
@@ -232,7 +254,7 @@ class CollectionDistillerJFrame extends JFrame implements ActionListener {
         }
         new XmlDistiller( targetFile, startNode, exportPicsJCheckBox.isSelected(), true );
 
-        Settings.memorizeCopyLocation( targetFile.getParent().toString() );
+        Settings.memorizeCopyLocation( targetFile.getParent() );
         Settings.pushRecentCollection( targetFile.toString() );
         JOptionPane.showMessageDialog( Settings.anchorFrame,
                 Settings.jpoResources.getString( "collectionSaveBody" ) + targetFile.toString(),
@@ -241,10 +263,12 @@ class CollectionDistillerJFrame extends JFrame implements ActionListener {
 
     }
 
-
     /**
-     *  method that analyses the user initiated action and performs what the user requested
-     **/
+     * method that analyses the user initiated action and performs what the user
+     * requested
+     *
+     */
+    @Override
     public void actionPerformed( ActionEvent e ) {
         if ( e.getSource() == cancelJButton ) {
             getRid();
@@ -255,6 +279,5 @@ class CollectionDistillerJFrame extends JFrame implements ActionListener {
         }
     }
 
-
-    ;
+;
 }

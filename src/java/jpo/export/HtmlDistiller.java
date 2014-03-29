@@ -6,7 +6,17 @@ import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 import java.awt.Desktop;
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.SocketException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -14,13 +24,19 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Properties;
+import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 import javax.swing.JOptionPane;
 import javax.swing.SwingWorker;
-import jpo.dataModel.*;
+import jpo.dataModel.GroupInfo;
+import jpo.dataModel.NodeStatistics;
+import jpo.dataModel.PictureInfo;
+import jpo.dataModel.Settings;
+import jpo.dataModel.SortableDefaultMutableTreeNode;
+import jpo.dataModel.Tools;
 import jpo.gui.ProgressGui;
 import jpo.gui.ScalablePicture;
 import org.apache.commons.net.ftp.FTP;
@@ -56,9 +72,9 @@ public class HtmlDistiller
      */
     private static final Logger LOGGER = Logger.getLogger( HtmlDistiller.class.getName() );
 
-    {
-        LOGGER.setLevel( Level.ALL );
-    }
+    /*{
+     LOGGER.setLevel( Level.ALL );
+     }*/
     /**
      * Temporary object to scale the image for the html output.
      */
@@ -116,7 +132,8 @@ public class HtmlDistiller
                 try {
                     progGui.setMaxiumum( get() );
                     progGui.setDoneString( String.format( Settings.jpoResources.getString( "HtmlDistDone" ), get() ) );
-                } catch ( Exception ignore ) {
+                } catch ( InterruptedException ignore ) {
+                } catch ( ExecutionException ignore ) {
                 }
             }
         }
@@ -135,14 +152,13 @@ public class HtmlDistiller
         scp.setQualityScale();
         scp.setScaleSteps( options.getScalingSteps() );
 
-
         // create zip
         try {
             if ( options.isGenerateZipfile() ) {
                 FileOutputStream dest = new FileOutputStream( new File( options.getTargetDirectory(), options.getDownloadZipFileName() ) );
                 zipFile = new ZipOutputStream( new BufferedOutputStream( dest ) );
             }
-        } catch ( IOException x ) {
+        } catch ( FileNotFoundException x ) {
             LOGGER.log( Level.SEVERE, "Error creating Zipfile. Coninuing without Zip\n{0}", x.toString() );
             options.setGenerateZipfile( false );
         }
@@ -155,7 +171,6 @@ public class HtmlDistiller
         }
         writeGroup( options.getStartNode() );
 
-
         try {
             if ( options.isGenerateZipfile() ) {
                 zipFile.close();
@@ -164,7 +179,6 @@ public class HtmlDistiller
             LOGGER.log( Level.SEVERE, "Error closing Zipfile. Coninuing.\n{0}", x.toString() );
             options.setGenerateZipfile( false );
         }
-
 
         if ( folderIconRequired ) {
             try {
@@ -280,7 +294,6 @@ public class HtmlDistiller
             out.write( "<head>\n\t<link rel=\"StyleSheet\" href=\"jpo.css\" type=\"text/css\" media=\"screen\" />\n\t<title>" + Tools.stringToHTMLString( ( (GroupInfo) groupNode.getUserObject() ).getGroupName() ) + "</title>\n</head>" );
             out.newLine();
 
-
             // write body
             out.write( "<body>" );
             out.newLine();
@@ -313,7 +326,6 @@ public class HtmlDistiller
             out.write( "</td></tr>\n<tr>" );
             out.newLine();
 
-
             int childCount = groupNode.getChildCount();
             int childNumber = 1;
             Enumeration kids = groupNode.children();
@@ -343,7 +355,6 @@ public class HtmlDistiller
             if ( progGui.getInterruptor().getShouldInterrupt() ) {
                 progGui.setDoneString( Settings.jpoResources.getString( "htmlDistillerInterrupt" ) );
             }
-
 
             out.write( "</tr>" );
             descriptionsBuffer.flushDescriptions();
@@ -444,9 +455,7 @@ public class HtmlDistiller
                 bin.close();
                 in.close();
             } catch ( IOException e ) {
-                LOGGER.log( Level.SEVERE, "Could not create zipfile entry for {0}\n{1}", new Object[]{highresFile.toString(), e.toString()} );
-            } catch ( Exception e ) {
-                LOGGER.log( Level.SEVERE, "Could not create zipfile entry for {0}\n{1}", new Object[]{highresFile.toString(), e.toString()} );
+                LOGGER.log( Level.SEVERE, "Could not create zipfile entry for {0}\n{1}", new Object[]{ highresFile.toString(), e.toString() } );
             }
         }
 
@@ -500,7 +509,6 @@ public class HtmlDistiller
         }
         out.write( "\">" + "<img src=\"" + lowresFile.getName() + "\" width=\"" + Integer.toString( w ) + "\" height=\"" + Integer.toString( h ) + "\" alt=\"" + Tools.stringToHTMLString( pictureInfo.getDescription() ) + "\" " + " />" + "</a>" );
 
-
         out.write( "</td>" );
         out.newLine();
 
@@ -515,15 +523,14 @@ public class HtmlDistiller
         w = scp.getScaledWidth();
         h = scp.getScaledHeight();
 
-
         if ( options.isGenerateMidresHtml() ) {
 
             File midresHtmlFile = new File( options.getTargetDirectory(), midresHtmlFileName );
             files.add( midresHtmlFile );
 
             BufferedWriter midresHtmlWriter = new BufferedWriter( new FileWriter( midresHtmlFile ) );
-            String groupDescription =
-                    ( (SortableDefaultMutableTreeNode) pictureNode.getParent() ).getUserObject().toString();
+            String groupDescription
+                    = ( (SortableDefaultMutableTreeNode) pictureNode.getParent() ).getUserObject().toString();
 
             midresHtmlWriter.write( "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" );
             midresHtmlWriter.newLine();
@@ -555,7 +562,6 @@ public class HtmlDistiller
             midresHtmlWriter.write( "</td>" );
             midresHtmlWriter.newLine();
             midresHtmlWriter.newLine();
-
 
             // now do the right column
             midresHtmlWriter.write( "<td align=\"center\" valign=\"top\">" );
@@ -598,7 +604,6 @@ public class HtmlDistiller
             }
 
             dhtmlArray.append( "</font>'\n" );
-
 
             int startNumber = (int) Math.floor( ( childNumber - indexBeforeCurrent - 1 ) / indexPerRow ) * indexPerRow + 1;
             if ( startNumber < 1 ) {
@@ -676,7 +681,6 @@ public class HtmlDistiller
             midresHtmlWriter.newLine();
             // End of picture matrix
 
-
             midresHtmlWriter.newLine();
             //Up Link
             midresHtmlWriter.write( "<p /><a href=\"" + groupFile.getName() + "#" + Tools.stringToHTMLString( lowresFile.getName() ) + "\">Up</a>" );
@@ -742,7 +746,6 @@ public class HtmlDistiller
                         break;
                 }
 
-
                 midresHtmlWriter.write( "<a href=\"" + nextHtmlFilename + "\">Next</a>" );
                 midresHtmlWriter.newLine();
             }
@@ -750,7 +753,6 @@ public class HtmlDistiller
                 midresHtmlWriter.write( "<br /><a href=\"" + options.getDownloadZipFileName() + "\">Download Zip</a>" );
                 midresHtmlWriter.newLine();
             }
-
 
             midresHtmlWriter.newLine();
             midresHtmlWriter.write( "<p />" + Settings.jpoResources.getString( "LinkToJpo" ) );
@@ -793,7 +795,6 @@ public class HtmlDistiller
                 midresHtmlWriter.newLine();
             }
 
-
             if ( options.isGenerateMap() ) {
                 midresHtmlWriter.write( "<script type=\"text/javascript\"> <!--" );
                 midresHtmlWriter.newLine();
@@ -822,11 +823,11 @@ public class HtmlDistiller
         /**
          * The number of columns on the Thumbnail page.
          */
-        private int columns;
+        private final int columns;
         /**
          * The HTML page for the Thumbnails.
          */
-        private BufferedWriter out;
+        private final BufferedWriter out;
         /**
          * A counter variable.
          */
@@ -834,7 +835,7 @@ public class HtmlDistiller
         /**
          * An array holding the strings of the pictures.
          */
-        private String[] descriptions;
+        private final String[] descriptions;
 
         /**
          * Creates a Description buffer with the indicated number of columns.
@@ -1080,14 +1081,12 @@ public class HtmlDistiller
             }
 
             for ( File file : files ) {
-                InputStream input = new BufferedInputStream(new FileInputStream( file ));
+                InputStream input = new BufferedInputStream( new FileInputStream( file ) );
                 String remote = options.getFtpTargetDir() + file.getName();
-                LOGGER.info(String.format( "Putting file %s to %s", file.getAbsolutePath(), remote));
+                LOGGER.info( String.format( "Putting file %s to %s", file.getAbsolutePath(), remote ) );
                 ftp.storeFile( remote, input );
                 input.close();
             }
-
-
 
         } catch ( SocketException ex ) {
             Logger.getLogger( HtmlDistiller.class.getName() ).log( Level.SEVERE, null, ex );

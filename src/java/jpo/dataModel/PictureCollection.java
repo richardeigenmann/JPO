@@ -3,8 +3,12 @@ package jpo.dataModel;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.lang.reflect.InvocationTargetException;
-import java.util.*;
-import java.util.logging.Level;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.TreeSet;
 import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -39,9 +43,9 @@ public class PictureCollection {
      */
     private static final Logger LOGGER = Logger.getLogger( PictureCollection.class.getName() );
 
-    {
+    //{
         //LOGGER.setLevel( Level.ALL );
-    }
+    //}
 
     /**
      * Constructs a new PictureCollection object with a root object
@@ -95,7 +99,7 @@ public class PictureCollection {
     /**
      * This variable refers to the tree model.
      */
-    private DefaultTreeModel treeModel;
+    private final DefaultTreeModel treeModel;
 
     /**
      * The DefaultTreeModel allows notification of tree change events to
@@ -454,7 +458,7 @@ public class PictureCollection {
     public Integer addCategory( String category ) {
         Integer key = null;
         for ( int i = 0; i < Integer.MAX_VALUE; i++ ) {
-            key = new Integer( i );
+            key = i;
             if ( !categories.containsKey( key ) ) {
                 break;
             }
@@ -588,7 +592,7 @@ public class PictureCollection {
      * just like the selection HashSet only that the purpose is a different one.
      * As such it has different behaviour.
      */
-    private ArrayList<SortableDefaultMutableTreeNode> mailSelection;
+    private final ArrayList<SortableDefaultMutableTreeNode> mailSelection;
 
     /**
      * This method places the current SDMTN into the mailSelection HashSet.
@@ -928,8 +932,8 @@ public class PictureCollection {
     public void clearSelection() {
         //can't use iterator or there is a concurrent modification exception
         Object[] array = selection.toArray();
-        for ( int i = 0; i < array.length; i++ ) {
-            removeFromSelection( (SortableDefaultMutableTreeNode) array[i] );
+        for ( Object item : array ) {
+            removeFromSelection( (SortableDefaultMutableTreeNode) item );
         }
     }
 

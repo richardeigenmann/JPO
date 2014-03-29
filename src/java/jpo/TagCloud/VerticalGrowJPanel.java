@@ -10,30 +10,30 @@ import javax.swing.Scrollable;
 import javax.swing.SwingConstants;
 
 /*
-VerticalGrowJPanel.java:  A JPanel that grows vertically while maintining the with of it's parent JScrollpane
+ VerticalGrowJPanel.java:  A JPanel that grows vertically while maintining the with of it's parent JScrollpane
 
-Copyright (C) 2009  Richard Eigenmann.
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or any later version. This program is distributed
-in the hope that it will be useful, but WITHOUT ANY WARRANTY;
-without even the implied warranty of MERCHANTABILITY or FITNESS
-FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-more details. You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-The license is in gpl.txt.
-See http://www.gnu.org/copyleft/gpl.html for the details.
+ Copyright (C) 2009-2014  Richard Eigenmann.
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or any later version. This program is distributed
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ without even the implied warranty of MERCHANTABILITY or FITNESS
+ FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+ more details. You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ The license is in gpl.txt.
+ See http://www.gnu.org/copyleft/gpl.html for the details.
  */
-
 /**
- * This class was created to work in conjunction with a JScrollPane and FlowLayout.
- * When adding components FlowLayout adds them to the right of each other until
- * the width is filled up. Then FlowLayout adds a line. This class implements
- * Scrollable as this allows us to trap the getPreferredSize and grow the JPanel
- * vertically to show the components. FlowLayout seems to be stopping horizontally
- * because getScrollableTracksViewportWidth is defined to return true;
+ * This class was created to work in conjunction with a JScrollPane and
+ * FlowLayout. When adding components FlowLayout adds them to the right of each
+ * other until the width is filled up. Then FlowLayout adds a line. This class
+ * implements Scrollable as this allows us to trap the getPreferredSize and grow
+ * the JPanel vertically to show the components. FlowLayout seems to be stopping
+ * horizontally because getScrollableTracksViewportWidth is defined to return
+ * true;
  *
  * This is based on the article found here:
  * http://forums.sun.com/thread.jspa?forumID=57&threadID=5117549&start=7
@@ -45,29 +45,28 @@ public class VerticalGrowJPanel extends JPanel implements Scrollable {
     /**
      * Defines a logger for this class
      */
-    private static Logger logger = Logger.getLogger( VerticalGrowJPanel.class.getName() );
+    private static final Logger LOGGER = Logger.getLogger( VerticalGrowJPanel.class.getName() );
 
-
-    
     /**
-     * This method gets called by the JSCrollPane to figure out the size oif the
+     * This method gets called by the JSCrollPane to figure out the size of the
      * Viewport. The getScrollableTracksViewportWidth prevents the components
      * from growing horizontally but we need to figure out the height.
-     * @return the preffered size based on the getWidth and getPreferredHeight
+     *
+     * @return the preferred size based on the getWidth and getPreferredHeight
      */
     @Override
     public Dimension getPreferredSize() {
         Dimension d = new Dimension( getWidth(), getPreferredHeight() );
-        logger.fine( String.format( "getPreferredSize is returning Dimension (%d,%d)", d.width, d.height ) );
+        LOGGER.fine( String.format( "getPreferredSize is returning Dimension (%d,%d)", d.width, d.height ) );
         return d;
     }
 
-
     /**
-     * This method figures out the height of panel by looking at the location and
-     * height of the stacked components. FlowLayout will have taken care of the
-     * wrap around.
-     * Source: http://forums.sun.com/thread.jspa?forumID=57&threadID=5117549&start=7
+     * This method figures out the height of panel by looking at the location
+     * and height of the stacked components. FlowLayout will have taken care of
+     * the wrap around. Source:
+     * http://forums.sun.com/thread.jspa?forumID=57&threadID=5117549&start=7
+     *
      * @return the suggested height
      */
     private int getPreferredHeight() {
@@ -84,55 +83,63 @@ public class VerticalGrowJPanel extends JPanel implements Scrollable {
         return rv;
     }
 
-
     /**
-     * Source: http://forums.sun.com/thread.jspa?forumID=57&threadID=5117549&start=7
+     * Source:
+     * http://forums.sun.com/thread.jspa?forumID=57&threadID=5117549&start=7
+     *
      * @return super.getPreferredSize()
      */
+    @Override
     public Dimension getPreferredScrollableViewportSize() {
         return super.getPreferredSize();
     }
 
-
     /**
-     * Source: http://forums.sun.com/thread.jspa?forumID=57&threadID=5117549&start=7
+     * Source:
+     * http://forums.sun.com/thread.jspa?forumID=57&threadID=5117549&start=7
+     *
      * @param visibleRect
      * @param orientation
      * @param direction
      * @return the scrollable block increment
      */
+    @Override
     public int getScrollableBlockIncrement( Rectangle visibleRect, int orientation, int direction ) {
         return orientation == SwingConstants.VERTICAL ? getParent().getHeight() : getParent().getWidth();
     }
 
-
     /**
-     * Allows the JPanel to grow vertically beyond the height of the
-     * JScrollPane Vieport.
-     * @return  flase in this classe
+     * Allows the JPanel to grow vertically beyond the height of the JScrollPane
+     * Viewport.
+     *
+     * @return false in this case
      */
+    @Override
     public boolean getScrollableTracksViewportHeight() {
         return false;
     }
 
-
     /**
-     * Forces FlowLayout to stop growing horizontally at the idth of the
-     * JScrollPane's Vieport width.
+     * Forces FlowLayout to stop growing horizontally at the width of the
+     * JScrollPane's Viewport width.
+     *
      * @return true in this class
      */
+    @Override
     public boolean getScrollableTracksViewportWidth() {
         return true;
     }
 
-
     /**
-     * Source: http://forums.sun.com/thread.jspa?forumID=57&threadID=5117549&start=7
+     * Source:
+     * http://forums.sun.com/thread.jspa?forumID=57&threadID=5117549&start=7
+     *
      * @param visibleRect
      * @param orientation
      * @param direction
      * @return the scrollable unit increment
      */
+    @Override
     public int getScrollableUnitIncrement( Rectangle visibleRect, int orientation, int direction ) {
         int scrollAmount = ( orientation == SwingConstants.VERTICAL
                 ? getParent().getHeight() : getParent().getWidth() ) / 20;

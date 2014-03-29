@@ -1,6 +1,8 @@
 package jpo.gui;
 
-import java.util.*;
+import java.util.ListResourceBundle;
+
+
 
 /*
 JpoResources_fr.java:  class that holds the translated french labels for the JPO application
@@ -26,6 +28,12 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 
 public class JpoResources_fr extends ListResourceBundle {
+
+    /**
+     *
+     * @return the bundle
+     */
+    @Override
 	public Object[][] getContents() {
 		return contents;
 	}

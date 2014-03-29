@@ -1,6 +1,8 @@
 package jpo.dataModel;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+
 
 /*
 RandomNavigator.java:  an implementation of the NodeNavigator for navigating nodes in a random order.

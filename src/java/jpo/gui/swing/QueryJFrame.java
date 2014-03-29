@@ -1,14 +1,23 @@
 package jpo.gui.swing;
 
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import jpo.dataModel.Tools;
 import jpo.dataModel.Settings;
 import jpo.dataModel.GroupInfo;
 import jpo.dataModel.TextQuery;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
-import java.awt.*;
-import java.awt.event.*;
 import java.util.logging.Logger;
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import static javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE;
 import javax.swing.tree.DefaultMutableTreeNode;
 import jpo.dataModel.QueryNavigator;
 import jpo.gui.ApplicationEventHandler;
@@ -64,7 +73,7 @@ public class QueryJFrame
      *
      *
      * @param startSearchNode
-     * @param collectioController The main controller for the collection
+     * @param applicationEventHandler
      */
     public QueryJFrame( SortableDefaultMutableTreeNode startSearchNode, ApplicationEventHandler applicationEventHandler ) {
         if ( !( startSearchNode.getUserObject() instanceof GroupInfo ) ) {

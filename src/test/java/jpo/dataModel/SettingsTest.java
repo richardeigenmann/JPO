@@ -2,7 +2,11 @@ package jpo.dataModel;
 
 import jpo.gui.LocaleChangeListener;
 import java.util.Locale;
-import junit.framework.*;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertTrue;
+import junit.framework.TestCase;
+
 
 /*
  * ApplicationJMenuBarTest.java

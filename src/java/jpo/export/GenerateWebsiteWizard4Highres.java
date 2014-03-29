@@ -59,25 +59,25 @@ public class GenerateWebsiteWizard4Highres extends AbstractStep {
      * the target directory structure.
      *
      */
-    private JCheckBox exportHighresJCheckBox = new JCheckBox( Settings.jpoResources.getString( "exportHighresJCheckBox" ) );
+    private final JCheckBox exportHighresJCheckBox = new JCheckBox( Settings.jpoResources.getString( "exportHighresJCheckBox" ) );
     /**
      * Tickbox that indicates whether the highes pictures are to be copied to
      * the target directory structure.
      *
      */
-    private JCheckBox rotateHighresJCheckBox = new JCheckBox( Settings.jpoResources.getString( "rotateHighresJCheckBox" ) );
+    private final JCheckBox rotateHighresJCheckBox = new JCheckBox( Settings.jpoResources.getString( "rotateHighresJCheckBox" ) );
     /**
      * Tickbox that indicates whether a Zipfile should be created to download
      * the highres pictures
      *
      */
-    private JCheckBox generateZipfileJCheckBox = new JCheckBox( Settings.jpoResources.getString( "generateZipfileJCheckBox" ) );
+    private final JCheckBox generateZipfileJCheckBox = new JCheckBox( Settings.jpoResources.getString( "generateZipfileJCheckBox" ) );
     /**
      * Tickbox that indicates whether the highes picture should be linked to at
      * the current location.
      *
      */
-    private JCheckBox linkToHighresJCheckBox = new JCheckBox( Settings.jpoResources.getString( "linkToHighresJCheckBox" ) );
+    private final JCheckBox linkToHighresJCheckBox = new JCheckBox( Settings.jpoResources.getString( "linkToHighresJCheckBox" ) );
 
     /**
      * Creates the GUI widgets

@@ -1,11 +1,34 @@
 package jpo.gui;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.util.Iterator;
 import java.util.logging.Logger;
-import javax.mail.internet.*;
-import javax.swing.*;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.ScrollPaneConstants;
+import static javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE;
 import jpo.dataModel.ArrayListNavigator;
 import jpo.dataModel.Settings;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
@@ -42,10 +65,10 @@ public class EmailerGui
     /**
      *  Internal array that holds the nodes to be send by email.
      */
-    private Object[] emailSelected;
+    private final Object[] emailSelected;
 
     /**
-     *  Field for the Sender's address
+     *  Field for the Sender address
      */
     private JComboBox <String>fromJComboBox = new JComboBox<String>();
 
@@ -292,6 +315,7 @@ public class EmailerGui
 
         scalePicturesJCheckBox.addItemListener( new ItemListener() {
 
+            @Override
             public void itemStateChanged( ItemEvent e ) {
                 if ( e.getStateChange() == ItemEvent.DESELECTED ) {
                     imageWidthWholeNumberField.setEnabled( false );
@@ -336,6 +360,7 @@ public class EmailerGui
         emailJButton.setMaximumSize( Settings.defaultButtonDimension );
         emailJButton.addActionListener( new ActionListener() {
 
+            @Override
             public void actionPerformed( ActionEvent evt ) {
                 prepareSend();
                 getRid();
@@ -350,6 +375,7 @@ public class EmailerGui
         cancelJButton.setMaximumSize( Settings.defaultButtonDimension );
         cancelJButton.addActionListener( new ActionListener() {
 
+            @Override
             public void actionPerformed( ActionEvent evt ) {
                 getRid();
             }

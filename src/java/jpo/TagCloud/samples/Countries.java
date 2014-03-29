@@ -26,6 +26,7 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  *
  * @see <a href="http://en.wikipedia.org/wiki/List_of_countries_by_population">Wikipedia List of countries by population</a>
  * @author Richard Eigenmann
+ * @deprecated 
  */
 public class Countries extends WordMap {
 

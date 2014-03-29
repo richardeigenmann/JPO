@@ -1,7 +1,12 @@
 package jpo.export;
 
 import java.util.Hashtable;
-import javax.swing.*;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JSlider;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import jpo.dataModel.Settings;
@@ -58,33 +63,33 @@ public class GenerateWebsiteWizard2Thumbnails extends AbstractStep {
      * 1
      *
      */
-    private JSpinner picsPerRow = new JSpinner( new SpinnerNumberModel( 3, 1, 10, 1 ) );
+    private final JSpinner picsPerRow = new JSpinner( new SpinnerNumberModel( 3, 1, 10, 1 ) );
     /**
      * Modifies the width of the thumbnails, 100 to 1000, start with 300
      * increment 25
      *
      */
-    private JSpinner thumbWidth = new JSpinner( new SpinnerNumberModel( 300, 100, 1000, 25 ) );
+    private final JSpinner thumbWidth = new JSpinner( new SpinnerNumberModel( 300, 100, 1000, 25 ) );
     /**
      * Modifies the height of the thumbnails, 100 to 1000, start with 300
      * increment 25
      *
      */
-    private JSpinner thumbHeight = new JSpinner( new SpinnerNumberModel( 300, 100, 1000, 25 ) );
+    private final JSpinner thumbHeight = new JSpinner( new SpinnerNumberModel( 300, 100, 1000, 25 ) );
     /**
      * Slider that allows the quality of the lowres jpg's to be specified.
      */
-    private JSlider lowresJpgQualityJSlider =
-            new JSlider(
-            JSlider.HORIZONTAL,
-            0, 100,
-            (int) ( Settings.defaultHtmlLowresQuality * 100 ) );
+    private final JSlider lowresJpgQualityJSlider
+            = new JSlider(
+                    JSlider.HORIZONTAL,
+                    0, 100,
+                    (int) ( Settings.defaultHtmlLowresQuality * 100 ) );
     /**
      * Modifies the height of the thumbnails, 100 to 1000, start with 300
      * increment 25
      *
      */
-    private JSpinner scalingSteps = new JSpinner( new SpinnerNumberModel( 8, 1, 20, 1 ) );
+    private final JSpinner scalingSteps = new JSpinner( new SpinnerNumberModel( 8, 1, 20, 1 ) );
 
     /**
      * Creates the GUI widgets
@@ -123,14 +128,14 @@ public class GenerateWebsiteWizard2Thumbnails extends AbstractStep {
         // Thumbnail Quality Slider
         wizardPanel.add(
                 new JLabel(
-                Settings.jpoResources.getString( "lowresJpgQualitySlider" ) ), "align label" );
+                        Settings.jpoResources.getString( "lowresJpgQualitySlider" ) ), "align label" );
         Hashtable<Integer, JLabel> labelTable = new Hashtable<Integer, JLabel>();
         labelTable.put(
-                new Integer( 0 ), new JLabel( Settings.jpoResources.getString( "jpgQualityBad" ) ) );
+                0, new JLabel( Settings.jpoResources.getString( "jpgQualityBad" ) ) );
         labelTable.put(
-                new Integer( 80 ), new JLabel( Settings.jpoResources.getString( "jpgQualityGood" ) ) );
+                80, new JLabel( Settings.jpoResources.getString( "jpgQualityGood" ) ) );
         labelTable.put(
-                new Integer( 100 ), new JLabel( Settings.jpoResources.getString( "jpgQualityBest" ) ) );
+                100, new JLabel( Settings.jpoResources.getString( "jpgQualityBest" ) ) );
         lowresJpgQualityJSlider.setLabelTable( labelTable );
         lowresJpgQualityJSlider.setMajorTickSpacing(
                 10 );
@@ -142,11 +147,11 @@ public class GenerateWebsiteWizard2Thumbnails extends AbstractStep {
                 true );
         lowresJpgQualityJSlider.addChangeListener(
                 new ChangeListener() {
-            @Override
-            public void stateChanged( ChangeEvent arg0 ) {
-                options.setLowresJpgQualityPercent( lowresJpgQualityJSlider.getValue() );
-            }
-        } );
+                    @Override
+                    public void stateChanged( ChangeEvent arg0 ) {
+                        options.setLowresJpgQualityPercent( lowresJpgQualityJSlider.getValue() );
+                    }
+                } );
 
         wizardPanel.add( lowresJpgQualityJSlider, "growx, wrap" );
         wizardPanel.add( new JLabel( Settings.jpoResources.getString( "scalingSteps" ) ) );

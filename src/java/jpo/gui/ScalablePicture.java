@@ -16,7 +16,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.imageio.*;
+import javax.imageio.IIOImage;
+import javax.imageio.ImageIO;
+import javax.imageio.ImageTypeSpecifier;
+import javax.imageio.ImageWriteParam;
+import javax.imageio.ImageWriter;
 import javax.imageio.plugins.jpeg.JPEGImageWriteParam;
 import javax.imageio.stream.ImageOutputStream;
 import javax.swing.ImageIcon;
@@ -473,11 +477,11 @@ public class ScalablePicture
      *  call {@link #createScaledPictureInThread(int)} to
      *  make anything happen.<p>
      *
-     *  Example: Original is 3000 x 2000 --> Scale Factor 0.10  --> Target Picutre is 300 x 200
+     *  Example: Original is 3000 x 2000 --> Scale Factor 0.10  --> Target Picture is 300 x 200
      *
      * @param newFactor
      */
-    public void setScaleFactor( double newFactor ) {
+    public final void setScaleFactor( double newFactor ) {
         scaleToSize = false;
         TargetSize = null;
         ScaleFactor = newFactor;
@@ -738,7 +742,7 @@ public class ScalablePicture
     /**
      *  The listeners to notify when the image operation changes the status.
      */
-    private ArrayList<ScalablePictureListener> scalablePictureStatusListeners = new ArrayList<ScalablePictureListener>();
+    private final ArrayList<ScalablePictureListener> scalablePictureStatusListeners = new ArrayList<ScalablePictureListener>();
 
 
     /**

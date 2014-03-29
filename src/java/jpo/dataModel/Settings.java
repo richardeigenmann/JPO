@@ -6,7 +6,14 @@ import java.awt.Font;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Locale;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
+import java.util.TreeSet;
+import java.util.Vector;
 import java.util.logging.Logger;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
@@ -730,7 +737,7 @@ public class Settings {
         mainFrameDimensions.height = prefs.getInt( "mainFrameDimensions.height", mainFrameDimensions.height );
         preferredMasterDividerSpot = prefs.getInt( "preferredMasterDividerSpot", preferredMasterDividerSpot );
         preferredLeftDividerSpot = prefs.getInt( "preferredLeftDividerSpot", preferredLeftDividerSpot );
-        LOGGER.info(String.format( "Loaded preferredLeftDividerSpot as: %d", preferredLeftDividerSpot));
+        LOGGER.info( String.format( "Loaded preferredLeftDividerSpot as: %d", preferredLeftDividerSpot ) );
 
         dividerWidth = prefs.getInt( "dividerWidth", dividerWidth );
         autoLoad = prefs.get( "autoload", autoLoad );
@@ -916,7 +923,7 @@ public class Settings {
         prefs.putInt( "mainFrameDimensions.height", mainFrameDimensions.height );
         prefs.putInt( "preferredMasterDividerSpot", preferredMasterDividerSpot );
         prefs.putInt( "preferredLeftDividerSpot", preferredLeftDividerSpot );
-        LOGGER.info(String.format( "Writing preferredLeftDividerSpot: %d", preferredLeftDividerSpot));
+        LOGGER.info( String.format( "Writing preferredLeftDividerSpot: %d", preferredLeftDividerSpot ) );
         prefs.putInt( "dividerWidth", dividerWidth );
         if ( !( autoLoad == null ) ) {
             prefs.put( "autoload", autoLoad );
@@ -1267,7 +1274,7 @@ public class Settings {
      * a Vector referring to the objects that want to find out about changes to
      * the locale
      */
-    private static ArrayList<LocaleChangeListener> localeChangeListeners = new ArrayList<LocaleChangeListener>();
+    private static final ArrayList<LocaleChangeListener> localeChangeListeners = new ArrayList<LocaleChangeListener>();
 
     /**
      * when the locale is changed this method must be called to inform the
@@ -1354,7 +1361,7 @@ public class Settings {
      * a Vector referring to the objects that want to find out about changes to
      * the recently drop target nodes.
      */
-    private static Vector<RecentDropNodeListener> recentDropNodeListeners = new Vector<RecentDropNodeListener>();
+    private static final Vector<RecentDropNodeListener> recentDropNodeListeners = new Vector<RecentDropNodeListener>();
 
     /**
      * register the listening object of the status events
@@ -1521,9 +1528,9 @@ public class Settings {
      * home directory
      */
     public static File getMostRecentCopyLocation() {
-        for ( int i = 0; i < copyLocations.length; i++ ) {
-            if ( Settings.copyLocations[i] != null ) {
-                return new File( Settings.copyLocations[i] );
+        for ( String copyLocation : copyLocations ) {
+            if ( copyLocation != null ) {
+                return new File( copyLocation );
             }
         }
         return new File( System.getProperty( "user.dir" ) );
@@ -1532,7 +1539,7 @@ public class Settings {
      * a Vector referring to the objects that want to find out about changes to
      * the recently drop target nodes.
      */
-    private static Vector<CopyLocationsChangeListener> copyLocationChangeListeners = new Vector<CopyLocationsChangeListener>();
+    private static final Vector<CopyLocationsChangeListener> copyLocationChangeListeners = new Vector<CopyLocationsChangeListener>();
 
     /**
      * register the listening object of the status events
@@ -1571,18 +1578,18 @@ public class Settings {
      */
     public static final int maxUserFunctions = 3;
     /**
-     * Array of user fucntion names
+     * Array of user function names
      */
     public static String[] userFunctionNames = new String[maxUserFunctions];
     /**
-     * Array of user fucntion commands
+     * Array of user function commands
      */
     public static String[] userFunctionCmd = new String[maxUserFunctions];
     /**
      * a Vector referring to the objects that want to find out about changes to
      * the recently drop target nodes.
      */
-    private static Vector<UserFunctionsChangeListener> userFunctionsChangeListeners = new Vector<UserFunctionsChangeListener>();
+    private static final Vector<UserFunctionsChangeListener> userFunctionsChangeListeners = new Vector<UserFunctionsChangeListener>();
 
     /**
      * register the listening object of the changes in user function

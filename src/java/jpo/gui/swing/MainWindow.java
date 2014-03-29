@@ -1,10 +1,19 @@
 package jpo.gui.swing;
 
 import java.awt.BorderLayout;
+import static java.awt.Frame.MAXIMIZED_BOTH;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.util.logging.Logger;
-import javax.swing.*;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+import javax.swing.JTabbedPane;
+import javax.swing.SwingUtilities;
+import javax.swing.ToolTipManager;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import jpo.dataModel.Settings;
 import jpo.dataModel.Tools;
 import jpo.gui.ApplicationJMenuBar;
@@ -60,7 +69,13 @@ public class MainWindow
         try {
             final String Windows = "com.sun.java.swing.plaf.windows.WindowsLookAndFeel";
             UIManager.setLookAndFeel( Windows );
-        } catch ( Exception e ) {
+        } catch ( ClassNotFoundException e ) {
+            LOGGER.fine( "Could not set Look and Feel" );
+        } catch ( IllegalAccessException e ) {
+            LOGGER.fine( "Could not set Look and Feel" );
+        } catch ( InstantiationException e ) {
+            LOGGER.fine( "Could not set Look and Feel" );
+        } catch ( UnsupportedLookAndFeelException e ) {
             LOGGER.fine( "Could not set Look and Feel" );
         }
         setTitle( Settings.jpoResources.getString( "ApplicationTitle" ) );
@@ -115,7 +130,6 @@ public class MainWindow
 
         //searchesJScrollPane.setMinimumSize( Settings.jpoNavigatorJTabbedPaneMinimumSize );
         //searchesJScrollPane.setPreferredSize( Settings.jpoNavigatorJTabbedPanePreferredSize );
-
         jpoNavigatorJTabbedPane.add( Settings.jpoResources.getString( "jpoTabbedPaneCollection" ), navigationPanel );
         jpoNavigatorJTabbedPane.add( Settings.jpoResources.getString( "jpoTabbedPaneSearches" ), searchesJScrollPane );
         leftSplitPane.setTopComponent( jpoNavigatorJTabbedPane );
@@ -157,12 +171,12 @@ public class MainWindow
     /**
      * Reference to the collection tab
      */
-    private JComponent collectionTab;
+    private final JComponent collectionTab;
 
     /**
      * Reference to the searches tab
      */
-    private JComponent searchesTab;
+    private final JComponent searchesTab;
 
     /**
      * The multi tab panel top left that allows the collection to be shown and

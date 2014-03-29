@@ -1,6 +1,7 @@
 package jpo.gui;
 
-import java.util.*;
+import java.util.ListResourceBundle;
+
 
 /*
 JpoResources_de.java:  class that holds the German Language generic labels for the JPO application

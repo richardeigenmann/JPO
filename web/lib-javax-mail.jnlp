@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jnlp 
+    spec="1.0+" 
+    codebase="http://j-po.sourceforge.net/" 
+    href="lib-javax-mail.jnlp" >
+    
+    <information>
+        <title>JavaMail API</title>
+        <vendor>Oracle</vendor>
+        <offline-allowed/>
+    </information>
+    
+    <security>
+        <all-permissions/>
+    </security>    
+    
+    <resources>
+        <jar href="javax.mail-1.5.1.jar"/>
+    </resources>
+    
+    <component-desc/>
+    
+</jnlp>

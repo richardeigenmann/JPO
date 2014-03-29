@@ -1,14 +1,44 @@
 package jpo.export;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.File;
+import java.util.Hashtable;
 import jpo.dataModel.Settings;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
-import java.util.*;
-import java.awt.*;
-import java.awt.event.*;
 import java.util.logging.Logger;
-import javax.swing.*;
-import java.io.*;
-import javax.swing.event.*;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.ButtonGroup;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JColorChooser;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JSlider;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerNumberModel;
+import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import jpo.gui.DirectoryChooser;
 
 
@@ -47,34 +77,34 @@ public class HtmlDistillerJFrame
     /**
      *  Text field that holds the directory that the html is to be exported to.
      **/
-    private DirectoryChooser targetDirChooser =
+    private final DirectoryChooser targetDirChooser =
             new DirectoryChooser( Settings.jpoResources.getString( "HtmlDistillerChooserTitle" ),
             DirectoryChooser.DIR_MUST_BE_WRITABLE );
 
     /**
      *  The number of columns
      **/
-    private JSpinner picsPerRow = new JSpinner( new SpinnerNumberModel( 3, 1, 10, 1 ) );
+    private final JSpinner picsPerRow = new JSpinner( new SpinnerNumberModel( 3, 1, 10, 1 ) );
 
     /**
      *  The width of the thumbnails
      **/
-    private JSpinner thumbWidth = new JSpinner( new SpinnerNumberModel( 300, 100, 1000, 25 ) );
+    private final JSpinner thumbWidth = new JSpinner( new SpinnerNumberModel( 300, 100, 1000, 25 ) );
 
     /**
      *  The height of the thumbnails
      **/
-    private JSpinner thumbHeight = new JSpinner( new SpinnerNumberModel( 300, 100, 1000, 25 ) );
+    private final JSpinner thumbHeight = new JSpinner( new SpinnerNumberModel( 300, 100, 1000, 25 ) );
 
     /**
      *  The width of the midres images
      **/
-    private JSpinner midresWidth = new JSpinner( new SpinnerNumberModel( 300, 100, 10000, 25 ) );
+    private final JSpinner midresWidth = new JSpinner( new SpinnerNumberModel( 300, 100, 10000, 25 ) );
 
     /**
      *  The height of the midres images
      **/
-    private JSpinner midresHeight = new JSpinner( new SpinnerNumberModel( 300, 100, 10000, 25 ) );
+    private final JSpinner midresHeight = new JSpinner( new SpinnerNumberModel( 300, 100, 10000, 25 ) );
 
     /**
 
@@ -82,12 +112,12 @@ public class HtmlDistillerJFrame
      *  Tickbox that indicates whether the highes pictures are to be copied to the
      *  target directory structure.
      **/
-    private JCheckBox exportHighresJCheckBox = new JCheckBox( Settings.jpoResources.getString( "exportHighresJCheckBox" ) );
+    private final JCheckBox exportHighresJCheckBox = new JCheckBox( Settings.jpoResources.getString( "exportHighresJCheckBox" ) );
 
     /**
      *  Tickbox that indicates whether the highes picture should be linked to at the current location.
      **/
-    private JCheckBox linkToHighresJCheckBox = new JCheckBox( Settings.jpoResources.getString( "linkToHighresJCheckBox" ) );
+    private final JCheckBox linkToHighresJCheckBox = new JCheckBox( Settings.jpoResources.getString( "linkToHighresJCheckBox" ) );
 
     /**
      * Checkbox that indicates whether to generate the midres html files or not.
@@ -98,17 +128,17 @@ public class HtmlDistillerJFrame
     /**
      *  Tickbox that indicates whether DHTML tags and effects should be generated.
      **/
-    private JCheckBox generateDHTMLJCheckBox = new JCheckBox( Settings.jpoResources.getString( "generateDHTMLJCheckBox" ) );
+    private final JCheckBox generateDHTMLJCheckBox = new JCheckBox( Settings.jpoResources.getString( "generateDHTMLJCheckBox" ) );
 
     /**
      *  Tickbox that indicates whether a Zipfile should be created to download the highres pictures
      **/
-    private JCheckBox generateZipfileJCheckBox = new JCheckBox( Settings.jpoResources.getString( "generateZipfileJCheckBox" ) );
+    private final JCheckBox generateZipfileJCheckBox = new JCheckBox( Settings.jpoResources.getString( "generateZipfileJCheckBox" ) );
 
     /**
      *  Slider that allows the quality of the lowres jpg's to be specified.
      */
-    private JSlider lowresJpgQualityJSlider =
+    private final JSlider lowresJpgQualityJSlider =
             new JSlider(
             JSlider.HORIZONTAL,
             0, 100,
@@ -117,7 +147,7 @@ public class HtmlDistillerJFrame
     /**
      *  Slider that allows the quality of the midres jpg's to be specified.
      */
-    private JSlider midresJpgQualityJSlider =
+    private final JSlider midresJpgQualityJSlider =
             new JSlider(
             JSlider.HORIZONTAL,
             0, 100,
@@ -136,17 +166,17 @@ public class HtmlDistillerJFrame
     /**
      * Radio Button to indicate that the java hash code should be used to get the image name
      */
-    private JRadioButton hashcodeRadioButton = new JRadioButton( Settings.jpoResources.getString( "hashcodeRadioButton" ) );
+    private final JRadioButton hashcodeRadioButton = new JRadioButton( Settings.jpoResources.getString( "hashcodeRadioButton" ) );
 
     /**
      * Radio Button to indicate that the original name should be used to get the image name
      */
-    private JRadioButton originalNameRadioButton = new JRadioButton( Settings.jpoResources.getString( "originalNameRadioButton" ) );
+    private final JRadioButton originalNameRadioButton = new JRadioButton( Settings.jpoResources.getString( "originalNameRadioButton" ) );
 
     /**
      * Radio Button to indicate that a sequential number should be used to get the image name
      */
-    private JRadioButton sequentialRadioButton = new JRadioButton( Settings.jpoResources.getString( "sequentialRadioButton" ) );
+    private final JRadioButton sequentialRadioButton = new JRadioButton( Settings.jpoResources.getString( "sequentialRadioButton" ) );
 
     /**
      * Allow the user to specify a start number for the sequential numbering.
@@ -162,7 +192,7 @@ public class HtmlDistillerJFrame
     /**
      *  Tickbox that indicates whether to write a robots.txt
      **/
-    private JCheckBox generateRobotsJCheckBox = new JCheckBox( Settings.jpoResources.getString( "generateRobotsJCheckBox" ) );
+    private final JCheckBox generateRobotsJCheckBox = new JCheckBox( Settings.jpoResources.getString( "generateRobotsJCheckBox" ) );
 
 
     /**
@@ -280,9 +310,9 @@ public class HtmlDistillerJFrame
         JPanel lowresQualitySliderJPanel = new JPanel( new FlowLayout( FlowLayout.LEFT ) );
         lowresQualitySliderJPanel.add( new JLabel( Settings.jpoResources.getString( "lowresJpgQualitySlider" ) ) );
         Hashtable<Integer, JLabel> labelTable = new Hashtable<Integer, JLabel>();
-        labelTable.put( new Integer( 0 ), new JLabel( Settings.jpoResources.getString( "jpgQualityBad" ) ) );
-        labelTable.put( new Integer( 80 ), new JLabel( Settings.jpoResources.getString( "jpgQualityGood" ) ) );
-        labelTable.put( new Integer( 100 ), new JLabel( Settings.jpoResources.getString( "jpgQualityBest" ) ) );
+        labelTable.put( 0, new JLabel( Settings.jpoResources.getString( "jpgQualityBad" ) ) );
+        labelTable.put( 80, new JLabel( Settings.jpoResources.getString( "jpgQualityGood" ) ) );
+        labelTable.put( 100, new JLabel( Settings.jpoResources.getString( "jpgQualityBest" ) ) );
         lowresJpgQualityJSlider.setLabelTable( labelTable );
 
         lowresJpgQualityJSlider.setMajorTickSpacing( 10 );
@@ -344,9 +374,9 @@ public class HtmlDistillerJFrame
 
         // Midres Quality Slider
         Hashtable<Integer, JLabel> labelTable1 = new Hashtable<Integer, JLabel>();
-        labelTable1.put( new Integer( 0 ), new JLabel( Settings.jpoResources.getString( "jpgQualityBad" ) ) );
-        labelTable1.put( new Integer( 80 ), new JLabel( Settings.jpoResources.getString( "jpgQualityGood" ) ) );
-        labelTable1.put( new Integer( 100 ), new JLabel( Settings.jpoResources.getString( "jpgQualityBest" ) ) );
+        labelTable1.put( 0, new JLabel( Settings.jpoResources.getString( "jpgQualityBad" ) ) );
+        labelTable1.put( 80, new JLabel( Settings.jpoResources.getString( "jpgQualityGood" ) ) );
+        labelTable1.put( 100, new JLabel( Settings.jpoResources.getString( "jpgQualityBest" ) ) );
         midresJpgQualityJSlider.setLabelTable( labelTable1 );
 
         midresJpgQualityJSlider.setMajorTickSpacing( 10 );
@@ -795,6 +825,7 @@ public class HtmlDistillerJFrame
 
         /**
          *   This draws an image of what the HTML could look like
+         * @param g
          */
         @Override
         public void paintComponent( Graphics g ) {

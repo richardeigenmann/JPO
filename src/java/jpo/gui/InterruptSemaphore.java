@@ -33,6 +33,7 @@ public class InterruptSemaphore {
     
     /**
      *  use this method to find out if the thread should be interrupted.
+     * @return true if it should be interrupted.
      */
     public boolean getShouldInterrupt() {
         return shouldInterrupt;
@@ -40,6 +41,7 @@ public class InterruptSemaphore {
 
     /**
      *  use this method to indicate that the thread should be interrupted at the next safe point
+     * @param shouldInterrupt
      */
     public void setShouldInterrupt(boolean shouldInterrupt) {
         this.shouldInterrupt = shouldInterrupt;

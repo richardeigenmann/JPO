@@ -1,6 +1,5 @@
 package jpo.dataModel;
 
-import com.adobe.xmp.XMPException;
 import com.drew.imaging.ImageMetadataReader;
 import com.drew.imaging.ImageProcessingException;
 import com.drew.lang.GeoLocation;
@@ -55,7 +54,7 @@ public class ExifInfo {
     /**
      * The URL or the image to be decoded
      */
-    private URL pictureUrl;
+    private final URL pictureUrl;
     /**
      * The brand and model of the camera
      */
@@ -87,19 +86,19 @@ public class ExifInfo {
     /**
      * The Longitude
      */
-    private String longitude = "";
+    private final String longitude = "";
     /**
      * Whether it's W or E
      */
-    private String longitudeRef = "";
+    private final String longitudeRef = "";
     /**
      * The latitude
      */
-    private String latitude = "";
+    private final String latitude = "";
     /**
      * Whether it's N or S
      */
-    private String latitudeRef = "";
+    private final String latitudeRef = "";
     /**
      * The parsed GPS coordinates
      */
@@ -115,12 +114,12 @@ public class ExifInfo {
     /**
      * A full dump of the Exif information
      */
-    private StringBuffer exifDump = new StringBuffer("");
+    private final StringBuffer exifDump = new StringBuffer("");
 
     /**
      * Constructor to create the object. Call
      *
-     * @see decodeExifTags next.
+     * @see #decodeExifTags() next.
      *
      * @param pictureUrl
      */

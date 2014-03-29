@@ -1,7 +1,11 @@
 package jpo.dataModel;
 
-import java.io.*;
-import java.util.*;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Enumeration;
+
 
 
 /*
@@ -22,7 +26,7 @@ The license is in gpl.txt.
 See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 /** 
- * This class stores the parameters for a search and can return an Arraylist of the search results.
+ * This class stores the parameters for a search and can return an ArrayList of the search results.
  */
 public class TextQuery implements Serializable, Query {
 

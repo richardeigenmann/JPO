@@ -38,7 +38,7 @@ public class LicenseWindow {
     /**
      * Defines a logger for this class
      */
-    private static Logger logger = Logger.getLogger( LicenseWindow.class.getName() );
+    private static final Logger LOGGER = Logger.getLogger( LicenseWindow.class.getName() );
 
 
     /**
@@ -66,7 +66,7 @@ public class LicenseWindow {
             bin.close();
             in.close();
         } catch ( IOException e ) {
-            logger.info( "Jpo.java: Error while reading gpl.txt: " + e.getMessage() );
+            LOGGER.info( "Jpo.java: Error while reading gpl.txt: " + e.getMessage() );
         }
         sb.append("\n\n------------------------\nLicense for embedded NanoHTTPD:\n\n");
         sb.append(NanoHTTPD.LICENCE );

@@ -6,7 +6,6 @@ package jpotestground;
 
 import jpo.dataModel.Settings;
 import jpo.gui.ThumbnailController;
-import jpo.*;
 import java.awt.Dimension;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
@@ -18,7 +17,8 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 /**
- *Test
+ * Test
+ *
  * @author Richard Eigenmann
  */
 public class PlayWithThumbnail extends JFrame implements ChangeListener {
@@ -42,7 +42,6 @@ public class PlayWithThumbnail extends JFrame implements ChangeListener {
 
     ImageIcon testimage = new ImageIcon( Settings.cl.getResource( "jpo/images/testimage.jpg" ) );
 
-
     public PlayWithThumbnail() {
         s.addChangeListener( this );
         p.setLayout( new BoxLayout( p, BoxLayout.PAGE_AXIS ) );
@@ -62,13 +61,16 @@ public class PlayWithThumbnail extends JFrame implements ChangeListener {
 
     }
 
-
     public static void main( String[] args ) {
         new PlayWithThumbnail();
 
     }
 
-
+    /**
+     *
+     * @param e
+     */
+    @Override
     public void stateChanged( ChangeEvent e ) {
         JSlider source = (JSlider) e.getSource();
         //if ( !source.getValueIsAdjusting() ) {

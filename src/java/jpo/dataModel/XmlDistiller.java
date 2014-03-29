@@ -1,29 +1,37 @@
 package jpo.dataModel;
 
-import java.io.*;
-import java.util.*;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.logging.Logger;
-import javax.swing.*;
+import javax.swing.JOptionPane;
 
 /*
-XmlDistiller.java:  class that writes the xml file
+ XmlDistiller.java:  class that writes the xml file
 
-Copyright (C) 2002-2010  Richard Eigenmann.
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or any later version. This program is distributed 
-in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
-without even the implied warranty of MERCHANTABILITY or FITNESS 
-FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
-more details. You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-The license is in gpl.txt.
-See http://www.gnu.org/copyleft/gpl.html for the details.
+ Copyright (C) 2002-2010  Richard Eigenmann.
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or any later version. This program is distributed 
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+ without even the implied warranty of MERCHANTABILITY or FITNESS 
+ FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
+ more details. You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ The license is in gpl.txt.
+ See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 /**
- *  a class that exports a tree of chapters to an XML file
+ * a class that exports a tree of chapters to an XML file
  */
 public class XmlDistiller
         implements Runnable {
@@ -31,44 +39,44 @@ public class XmlDistiller
     /**
      * Defines a logger for this class
      */
-    private static Logger logger = Logger.getLogger( XmlDistiller.class.getName() );
+    private static final Logger LOGGER = Logger.getLogger( XmlDistiller.class.getName() );
 
     /**
-     *  output file handle
+     * output file handle
      */
     private BufferedWriter out;
 
     /**
-     *  variable to hold the name of the output file
+     * variable to hold the name of the output file
      */
-    private File xmlOutputFile;
+    private final File xmlOutputFile;
 
     /**
-     *  highres picture directory if pictures need to be copied
+     * highres picture directory if pictures need to be copied
      */
     private File highresTargetDir;
 
     /**
-     *  lowres picture directory if pictures need to be copied
+     * lowres picture directory if pictures need to be copied
      */
     private File lowresTargetDir;
 
     /**
-     *  the node to start from
+     * the node to start from
      */
-    private SortableDefaultMutableTreeNode startNode;
+    private final SortableDefaultMutableTreeNode startNode;
 
     /**
-     *  temporary variable that indicates that the pictures should be copied too.
+     * temporary variable that indicates that the pictures should be copied too.
      */
-    private boolean copyPics;
-
+    private final boolean copyPics;
 
     /**
-     *  @param xmlOutputFile    	The name of the file that is to be created
-     *  @param startNode	The node from which this is all to be built.
-     *  @param copyPics		Flag which instructs pictures to be copied too
-     *  @param runAsThread	Flag which can instruct this job not to run as a thread.
+     * @param xmlOutputFile The name of the file that is to be created
+     * @param startNode	The node from which this is all to be built.
+     * @param copyPics	Flag which instructs pictures to be copied too
+     * @param runAsThread	Flag which can instruct this job not to run as a
+     * thread.
      */
     public XmlDistiller( File xmlOutputFile,
             SortableDefaultMutableTreeNode startNode, boolean copyPics,
@@ -85,10 +93,10 @@ public class XmlDistiller
         }
     }
 
-
     /**
-     *  method that is invoked by the thread to do things asynchroneousely
+     * method that is invoked by the thread to do things asynchroneousely
      */
+    @Override
     public void run() {
         try {
             if ( copyPics ) {
@@ -98,7 +106,7 @@ public class XmlDistiller
                 highresTargetDir.mkdirs();
                 lowresTargetDir.mkdirs();
                 if ( !( highresTargetDir.canWrite() && lowresTargetDir.canWrite() ) ) {
-                    logger.severe( String.format( "There was a problem creating dir %s or dir %s", highresTargetDir.toString(), lowresTargetDir.toString() ) );
+                    LOGGER.severe( String.format( "There was a problem creating dir %s or dir %s", highresTargetDir.toString(), lowresTargetDir.toString() ) );
                     return;
                 }
             }
@@ -142,26 +150,23 @@ public class XmlDistiller
 
             writeCollectionDTD( xmlOutputFile.getParentFile() );
 
-
-
         } catch ( SecurityException x ) {
             //e.printStackTrace();
-            logger.info( "XmlDistiller.run: SecurityException: " + x.getMessage() );
+            LOGGER.info( "XmlDistiller.run: SecurityException: " + x.getMessage() );
             JOptionPane.showMessageDialog( null, x.getMessage(),
                     "XmlDistiller: SecurityException",
                     JOptionPane.ERROR_MESSAGE );
         } catch ( IOException x ) {
             //x.printStackTrace();
-            logger.info( "XmlDistiller.run: IOException: " + x.getMessage() );
+            LOGGER.info( "XmlDistiller.run: IOException: " + x.getMessage() );
             JOptionPane.showMessageDialog( null, x.getMessage(),
                     "XmlDistiller: IOExeption",
                     JOptionPane.ERROR_MESSAGE );
         }
     }
 
-
     /**
-     *  recursively invoked method to report all groups.
+     * recursively invoked method to report all groups.
      */
     private void enumerateGroup( SortableDefaultMutableTreeNode groupNode ) throws IOException {
         GroupInfo groupInfo = (GroupInfo) groupNode.getUserObject();
@@ -188,9 +193,8 @@ public class XmlDistiller
         groupInfo.endGroupXML( out, groupNode == startNode );
     }
 
-
     /**
-     *  write a picture to the output
+     * write a picture to the output
      */
     private void writePicture( SortableDefaultMutableTreeNode pictureNode ) throws IOException {
         PictureInfo pictureInfo = (PictureInfo) pictureNode.getUserObject();
@@ -210,10 +214,9 @@ public class XmlDistiller
         }
     }
 
-
     /**
-     *  writes the collection.dtd file to the target directory.
-     *  This file war written manually and added to the jar.
+     * writes the collection.dtd file to the target directory. This file war
+     * written manually and added to the jar.
      *
      * @param directory
      */
@@ -245,5 +248,3 @@ public class XmlDistiller
         }
     }
 }
-
-

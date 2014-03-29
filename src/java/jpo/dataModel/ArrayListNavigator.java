@@ -1,7 +1,6 @@
 package jpo.dataModel;
 
-import jpo.*;
-import java.util.*;
+import java.util.ArrayList;
 import java.util.logging.Logger;
 
 /*
@@ -67,6 +66,7 @@ public class ArrayListNavigator
      * Returns the title of the node set
      * @return the Title
      */
+    @Override
     public String getTitle() {
         try {
             return title;
@@ -76,8 +76,10 @@ public class ArrayListNavigator
     }
 
     /**
-     *  Returns the number of pictures in this group. Starts at 1 like all arrays.
+     * Returns the number of pictures in this group. Starts at 1 like all arrays.
+     * @return The number of pictures
      */
+    @Override
     public int getNumberOfNodes() {
         try {
             return allPictures.size();
@@ -94,7 +96,9 @@ public class ArrayListNavigator
      *  @param index   The component index that is to be returned. The number is from 0 to
      *                 {@link #getNumberOfNodes}. If there are 3 nodes request getNode(0),
      *                 getNode(1) and getNode(2).
+     * @return The node
      */
+    @Override
     public SortableDefaultMutableTreeNode getNode( int index ) {
         try {
             return allPictures.get( index );
