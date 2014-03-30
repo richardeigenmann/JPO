@@ -1,17 +1,15 @@
 package jpo.gui;
 
-import jpo.gui.swing.QueryJFrame;
+import com.google.common.eventbus.Subscribe;
 import jpo.gui.swing.GroupPopupMenu;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
-import java.util.Enumeration;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DropMode;
 import javax.swing.JComponent;
-import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
@@ -22,16 +20,16 @@ import static javax.swing.TransferHandler.COPY_OR_MOVE;
 import javax.swing.TransferHandler.TransferSupport;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
-import jpo.dataModel.FlatFileDistiller;
+import jpo.EventBus.GroupSelectionEvent;
+import jpo.EventBus.JpoEventBus;
+import jpo.EventBus.ShowGroupRequest;
+import jpo.EventBus.ShowPictureRequest;
 import jpo.dataModel.GroupInfo;
 import jpo.dataModel.PictureInfo;
 import jpo.dataModel.Settings;
 import jpo.dataModel.SingleNodeNavigator;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
 import jpo.dataModel.Tools;
-import jpo.export.GenerateWebsiteWizard;
-import jpo.export.PicasaUploadRequest;
-import jpo.export.PicasaUploaderWizard;
 import jpo.gui.swing.CollectionJTree;
 
 /*
@@ -54,20 +52,12 @@ import jpo.gui.swing.CollectionJTree;
  * that deals with most of the logic surrounding the collection and the user
  * interactions with it.
  */
-public class CollectionJTreeController
-        implements
-        GroupPopupInterface {
+public class CollectionJTreeController {
 
     /**
      * Defines a logger for this class
      */
     private static final Logger LOGGER = Logger.getLogger( CollectionJTreeController.class.getName() );
-
-    /**
-     * reference to the main collection controller so that we can delegate stuff
-     * to
-     */
-    private final ApplicationEventHandler applicationEventHandler;
 
     /**
      * The Controller class for the JTree. This class no longer extends the
@@ -76,10 +66,8 @@ public class CollectionJTreeController
      *
      * @param applicationEventHandler the reference to the collection controller
      */
-    public CollectionJTreeController(
-            ApplicationEventHandler applicationEventHandler ) {
+    public CollectionJTreeController() {
         Tools.checkEDT();
-        this.applicationEventHandler = applicationEventHandler;
 
         collectionJTree.setModel( Settings.pictureCollection.getTreeModel() );
         collectionJTree.setEditable( true ); // doing this in the controller as it might not always be desired (like in the CameraDownloadWizard)
@@ -96,14 +84,57 @@ public class CollectionJTreeController
         //Add listener to components that can bring up groupPopupJPopupMenu menus.
         CollectionMouseAdapter mouseAdapter = new CollectionMouseAdapter( this );
         collectionJTree.addMouseListener( mouseAdapter );
-
+        registerOnEventBus();
     }
 
-    @Override
-    public void requestGroupExportPicasa( SortableDefaultMutableTreeNode groupNode ) {
-        PicasaUploadRequest myRequest = new PicasaUploadRequest();
-        myRequest.setNode( groupNode );
-        new PicasaUploaderWizard( myRequest );
+    private void registerOnEventBus() {
+        JpoEventBus.getInstance().register( this );
+    }
+
+    /**
+     * When the tree receives a GroupSelectionEvent it will expand the treepath
+     * to show the node that was selected.
+     *
+     * @param event The GroupSelectionEvent
+     */
+    @Subscribe
+    public void handleGroupSlectionEvent( GroupSelectionEvent event ) {
+        expandAndScroll( event.getNode() );
+    }
+
+    /**
+     * When the tree receives a ShowGroupRequest it will expand the treepath to
+     * show the node that was selected.
+     *
+     * @param request The ShowGroupRequest
+     */
+    @Subscribe
+    public void handleShowGroupRequest( ShowGroupRequest request ) {
+        expandAndScroll( request.getNode() );
+    }
+
+    /**
+     * Expands the nodes and scroll the tree so that the indicated node is
+     * visible.
+     *
+     * @param node
+     */
+    private void expandAndScroll( SortableDefaultMutableTreeNode node ) {
+        final TreePath tp = new TreePath( node.getPath() );
+        Runnable r = new Runnable() {
+
+            @Override
+            public void run() {
+                collectionJTree.expandPath( tp );
+                collectionJTree.scrollPathToVisible( tp );
+                collectionJTree.setSelectionPath( tp );
+            }
+        };
+        if ( SwingUtilities.isEventDispatchThread() ) {
+            r.run();
+        } else {
+            SwingUtilities.invokeLater( r );
+        }
     }
 
     private class MyTransferHandler
@@ -284,9 +315,7 @@ public class CollectionJTreeController
         Object userObject = node.getUserObject();
         String toolTip = "";
         if ( userObject instanceof GroupInfo ) {
-            //NodeStatistics ns = new NodeStatistics( node ); // slow; don't want on the EDT
             GroupInfo groupInfo = (GroupInfo) userObject;
-            //toolTip = String.format( "<html>Group: %s<br>%d Nodes: %d Groups, %d Pictures<br>%s</html>", groupInfo.getGroupName(), ns.getNumberOfNodes(), ns.getNumberOfGroups(), ns.getNumberOfPictures(), ns.getSizeOfPicturesString() );
             toolTip = String.format( "<html>Group: %s</html>", groupInfo.getGroupName() );
         } else if ( userObject instanceof PictureInfo ) {
             final PictureInfo pictureInfo = (PictureInfo) userObject;
@@ -297,308 +326,6 @@ public class CollectionJTreeController
         return toolTip;
     }
 
-    /**
-     * Requests the group to be shown using the {@link #setSelectedNode} method.
-     * Additionally requests the Group to be shown in the
-     * ThumbnailPanelController.
-     *
-     * @param newNode The Node to which to jump
-     * @see GroupPopupInterface
-     */
-    @Override
-    public void requestShowGroup( SortableDefaultMutableTreeNode newNode ) {
-        LOGGER.log( Level.FINE, "requesting node: {0}", newNode.toString() );
-        Jpo.positionToNode( newNode );
-
-    }
-
-    /**
-     * Moves the highlighted row to the indicated one and expands the tree if
-     * necessary. Also ensures that the associatedInfoPanel is updated
-     *
-     * @param newNode The node which should be highlighted
-     */
-    public void setSelectedNode( final SortableDefaultMutableTreeNode newNode ) {
-        Tools.checkEDT();
-        TreePath tp = new TreePath( newNode.getPath() );
-        collectionJTree.setSelectionPath( tp );
-        collectionJTree.scrollPathToVisible( tp );
-    }
-
-    /**
-     * requests the pictures to be shown.
-     *
-     * @param popupNode The node that sent the request
-     * @see GroupPopupInterface
-     */
-    @Override
-    public void requestSlideshow( SortableDefaultMutableTreeNode popupNode ) {
-        Jpo.browsePictures( popupNode );
-
-    }
-
-    /**
-     * This method can be invoked by the GroupPopupMenu.
-     *
-     * @param popupNode The node on which the popup Menu was done
-     * @see GroupPopupInterface
-     */
-    @Override
-    public void requestFind( SortableDefaultMutableTreeNode popupNode ) {
-        new QueryJFrame( popupNode, applicationEventHandler );
-    }
-
-    /**
-     * this method invokes an editor for the GroupInfo data
-     *
-     * @param popupNode
-     * @see GroupPopupInterface
-     */
-    @Override
-    public void requestEditGroupNode( SortableDefaultMutableTreeNode popupNode ) {
-        TreeNodeController.showEditGUI( popupNode );
-
-    }
-
-    /**
-     * this method invokes the Category editor and allows the user to set the
-     * categories for all the pictures in the Group.
-     *
-     * @param popupNode
-     */
-    @Override
-    public void showCategoryUsageGUI( SortableDefaultMutableTreeNode popupNode ) {
-        TreeNodeController.showCategoryUsageGUI( popupNode );
-
-    }
-
-    /**
-     * Adds a new empty group to the node that was supplied. The group is called
-     * "New Group". It is added to the recent copy group targets.
-     *
-     * @param popupNode The node to which the group is being attached
-     * @see GroupPopupInterface
-     */
-    @Override
-    public void requestAddGroup( SortableDefaultMutableTreeNode popupNode ) {
-        if ( !( popupNode.getUserObject() instanceof GroupInfo ) ) {
-            LOGGER.warning( String.format( "node %s is of type %s instead of GroupInfo. Proceeding anyway.", popupNode.getUserObject().toString(), popupNode.getUserObject().getClass().toString() ) );
-        }
-        SortableDefaultMutableTreeNode newNode = popupNode.addGroupNode( "New Group" );
-        Settings.memorizeGroupOfDropLocation( newNode );
-        setSelectedNode( newNode );
-    }
-
-    /**
-     * Bring up a chooser and add pictures to the group.
-     *
-     * @see GroupPopupInterface
-     * @param groupNode The group node to which to add the pictures
-     */
-    @Override
-    public void chooseAndAddPicturesToGroup(
-            SortableDefaultMutableTreeNode groupNode ) {
-        applicationEventHandler.chooseAndAddPicturesToGroup( groupNode );
-
-    }
-
-    /**
-     * Requests that a collection be added at this point in the tree
-     *
-     * @param popupNode
-     * @see GroupPopupInterface
-     */
-    @Override
-    public void requestAddCollection( SortableDefaultMutableTreeNode popupNode ) {
-        File fileToLoad = Tools.chooseXmlFile();
-        if ( fileToLoad != null ) {
-            requestAddCollection( popupNode, fileToLoad );
-        }
-    }
-
-    @Override
-    public void requestAddCollection( SortableDefaultMutableTreeNode popupNode,
-            File fileToLoad ) {
-        applicationEventHandler.requestAddCollection( popupNode, fileToLoad );
-    }
-
-    public void expandPath( TreePath tp ) {
-        collectionJTree.expandPath( tp );
-    }
-
-    /**
-     * Method that will bring up a dialog box that allows the user to select how
-     * he wants to export the pictures of the current Group.
-     *
-     * @param nodeToExport The node to export to a website
-     */
-    @Override
-    public void requestGroupExportHtml(
-            SortableDefaultMutableTreeNode nodeToExport ) {
-        new GenerateWebsiteWizard( nodeToExport );
-    }
-
-    /**
-     * Selects all the pictures under the group for emailing.
-     *
-     * @param groupNode
-     */
-    @Override
-    public void requestEmailSelection( SortableDefaultMutableTreeNode groupNode ) {
-        SortableDefaultMutableTreeNode n;
-        for ( Enumeration e = groupNode.breadthFirstEnumeration(); e.hasMoreElements(); ) {
-            n = (SortableDefaultMutableTreeNode) e.nextElement();
-            if ( n.getUserObject() instanceof PictureInfo ) {
-                Settings.pictureCollection.addToMailSelection( n );
-            }
-        }
-    }
-
-    /**
-     * Requests that the pictures indicated in a flat file be added at this
-     * point in the tree
-     *
-     * @param nodeToExport The node on which the request was made
-     * @see GroupPopupInterface
-     */
-    @Override
-    public void requestGroupExportFlatFile(
-            SortableDefaultMutableTreeNode nodeToExport ) {
-        javax.swing.JFileChooser jFileChooser = new javax.swing.JFileChooser();
-        jFileChooser.setFileSelectionMode( javax.swing.JFileChooser.FILES_ONLY );
-        jFileChooser.setDialogTitle( Settings.jpoResources.getString( "saveFlatFileTitle" ) );
-        jFileChooser.setApproveButtonText( Settings.jpoResources.getString( "saveFlatFileButtonLabel" ) );
-        jFileChooser.setCurrentDirectory( Settings.getMostRecentCopyLocation() );
-        int returnVal = jFileChooser.showSaveDialog( Settings.anchorFrame );
-        if ( returnVal == JFileChooser.APPROVE_OPTION ) {
-            File chosenFile = jFileChooser.getSelectedFile();
-            new FlatFileDistiller( chosenFile, nodeToExport );
-        }
-    }
-
-    /**
-     * requests that a group be exported to a new collectionjar archive
-     *
-     * @see GroupPopupInterface
-     *
-     * @param nodeToExport The node on which the request was made
-     */
-    @Override
-    public void requestGroupExportNewCollection(
-            SortableDefaultMutableTreeNode nodeToExport ) {
-        new CollectionDistillerJFrame( nodeToExport );
-    }
-
-    /**
-     * Requests that a group be removed
-     *
-     * @param nodeToRemove The Node you want removed
-     * @see GroupPopupInterface
-     */
-    @Override
-    public void requestGroupRemove( SortableDefaultMutableTreeNode nodeToRemove ) {
-        //logger.fine( "CollectionJTree.requestGroupRemove: invoked on group: " + nodeToRemove.getUserObject().toString() );
-        SortableDefaultMutableTreeNode parentNode = (SortableDefaultMutableTreeNode) nodeToRemove.getParent();
-        if ( nodeToRemove.deleteNode() ) {
-            setSelectedNode( parentNode );
-        }
-    }
-
-    /**
-     * requests that a group's picture files be consolidated
-     *
-     * @param node
-     * @see GroupPopupInterface
-     */
-    @Override
-    public void requestConsolidateGroup(
-            SortableDefaultMutableTreeNode node ) {
-        new ConsolidateGroupJFrame( node );
-    }
-
-    /**
-     * Requests that a group be moved to the top
-     *
-     * @param popupNode The node on which the request was made
-     * @see GroupPopupInterface
-     */
-    @Override
-    public void requestMoveGroupToTop( SortableDefaultMutableTreeNode popupNode ) {
-        popupNode.moveNodeToTop();
-    }
-
-    /**
-     * Requests that a group be moved up
-     *
-     * @param popupNode The node on which the request was made
-     * @see GroupPopupInterface
-     */
-    @Override
-    public void requestMoveGroupUp( SortableDefaultMutableTreeNode popupNode ) {
-        popupNode.moveNodeUp();
-    }
-
-    /**
-     * Requests that a group be moved down
-     *
-     * @param popupNode The node on which the request was made
-     * @see GroupPopupInterface
-     */
-    @Override
-    public void requestMoveGroupDown( SortableDefaultMutableTreeNode popupNode ) {
-        popupNode.moveNodeDown();
-    }
-
-    /**
-     * Requests that a group be moved down
-     *
-     * @param popupNode The node on which the request was made
-     * @see GroupPopupInterface
-     */
-    @Override
-    public void requestMoveGroupToBottom(
-            SortableDefaultMutableTreeNode popupNode ) {
-        popupNode.moveNodeToBottom();
-
-    }
-
-    /**
-     * Requests that a picture be moved to the target Group node
-     *
-     * @param popupNode The node on which the request was made
-     * @param targetGroup the target group node
-     * @see GroupPopupInterface
-     */
-    @Override
-    public void requestMoveToNode( SortableDefaultMutableTreeNode popupNode,
-            SortableDefaultMutableTreeNode targetGroup ) {
-        popupNode.moveToLastChild( targetGroup );
-
-    }
-
-    /**
-     * Request that a group be edited as a table
-     *
-     * @param popupNode The node on which the request was made
-     */
-    @Override
-    public void requestEditGroupTable( SortableDefaultMutableTreeNode popupNode ) {
-        TableJFrame tableJFrame = new TableJFrame( popupNode );
-        tableJFrame.pack();
-        tableJFrame.setVisible( true );
-    }
-
-    /**
-     * Gets called by the GroupPopupInterface and implements the sort request.
-     *
-     * @param popupNode The node on which the request was made
-     */
-    @Override
-    public void requestSort( SortableDefaultMutableTreeNode popupNode,
-            int sortCriteria ) {
-        //logger.info( "Sort requested on " + myPopupNode.toString() + " for Criteria: " + Integer.toString( sortCriteria ) );
-        popupNode.sortChildren( sortCriteria );
-    }
 
     /**
      * This class decides what to do with mouse events on the JTree. Since there
@@ -611,15 +338,8 @@ public class CollectionJTreeController
     private class CollectionMouseAdapter
             extends MouseAdapter {
 
-        /**
-         * A reference back to the CollectionJTreeController for which this is a
-         * listener.
-         */
-        private final CollectionJTreeController collectionJTreeController;
-
         private CollectionMouseAdapter(
                 CollectionJTreeController collectionJTreeController ) {
-            this.collectionJTreeController = collectionJTreeController;
         }
 
         /**
@@ -636,10 +356,11 @@ public class CollectionJTreeController
 
             if ( e.getClickCount() == 1 && ( !e.isPopupTrigger() ) ) {
                 if ( clickNode.getUserObject() instanceof GroupInfo ) {
-                    Jpo.positionToNode( clickNode );
+                    JpoEventBus.getInstance().post( new ShowGroupRequest( clickNode ) );
                 }
             } else if ( e.getClickCount() > 1 && ( !e.isPopupTrigger() ) ) {
-                Jpo.browsePictures( clickNode );
+                //Jpo.browsePictures( clickNode );
+                JpoEventBus.getInstance().post( new ShowPictureRequest( clickNode ) );
             }
         }
 
@@ -681,7 +402,7 @@ public class CollectionJTreeController
 
                         @Override
                         public void run() {
-                            GroupPopupMenu groupPopupMenu = new GroupPopupMenu( collectionJTreeController, popupNode );
+                            GroupPopupMenu groupPopupMenu = new GroupPopupMenu( popupNode );
                             groupPopupMenu.show( fe.getComponent(), fe.getX(), fe.getY() );
                         }
                     };

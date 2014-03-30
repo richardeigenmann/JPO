@@ -1,8 +1,5 @@
 package jpo.gui;
 
-import jpo.gui.swing.GroupPopupMenu;
-import java.util.logging.Level;
-import jpo.dataModel.NodeNavigatorInterface;
 import java.awt.Dimension;
 import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DragGestureEvent;
@@ -23,19 +20,25 @@ import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.io.Serializable;
 import java.net.MalformedURLException;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 import javax.swing.tree.DefaultMutableTreeNode;
+import jpo.EventBus.GroupSelectionEvent;
+import jpo.EventBus.JpoEventBus;
+import jpo.EventBus.ShowPictureRequest;
 import jpo.dataModel.GroupInfo;
 import jpo.dataModel.GroupInfoChangeEvent;
 import jpo.dataModel.GroupInfoChangeListener;
-import jpo.dataModel.Settings;
-import jpo.dataModel.Tools;
+import jpo.dataModel.NodeNavigatorInterface;
 import jpo.dataModel.PictureInfo;
 import jpo.dataModel.PictureInfoChangeEvent;
 import jpo.dataModel.PictureInfoChangeListener;
+import jpo.dataModel.Settings;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
+import jpo.dataModel.Tools;
+import jpo.gui.swing.GroupPopupMenu;
 import jpo.gui.swing.Thumbnail;
 
 /*
@@ -106,6 +109,7 @@ public class ThumbnailController
 
         // attach the ThumbnailController to the Tree Model to get notifications.
         Settings.pictureCollection.getTreeModel().addTreeModelListener( this );
+        JpoEventBus.getInstance().register( this );
     }
 
     /**
@@ -210,7 +214,7 @@ public class ThumbnailController
         }
     }
 
-    /**
+      /**
      * Sets the node being visualised by this ThumbnailController object.
      *
      * @param mySetOfNodes The {@link NodeNavigatorInterface} being tracked
@@ -410,7 +414,7 @@ public class ThumbnailController
             PicturePopupMenu picturePopupMenu = new PicturePopupMenu( myNodeNavigator, myIndex );
             picturePopupMenu.show( e.getComponent(), e.getX(), e.getY() );
         } else if ( myNode.getUserObject() instanceof GroupInfo ) {
-            GroupPopupMenu groupPopupMenu = new GroupPopupMenu( Jpo.collectionJTreeController, myNode );
+            GroupPopupMenu groupPopupMenu = new GroupPopupMenu(  myNode );
             groupPopupMenu.show( e.getComponent(), e.getX(), e.getY() );
         } else {
             LOGGER.severe( String.format( "Processing a right click response on an unknown node type: %s", myNode.getUserObject().getClass().toString() ) );
@@ -423,9 +427,11 @@ public class ThumbnailController
      */
     private void doubleClickResponse() {
         if ( myNode.getUserObject() instanceof PictureInfo ) {
-            Jpo.browsePictures( myNode );
+            //Jpo.browsePictures( myNode );
+            JpoEventBus.getInstance().post( new ShowPictureRequest( myNode ) );
         } else if ( myNode.getUserObject() instanceof GroupInfo ) {
-            Jpo.positionToNode( myNode );
+            //Jpo.positionToNode( myNode );
+            JpoEventBus.getInstance().post( new GroupSelectionEvent( myNode ) );
         }
     }
 

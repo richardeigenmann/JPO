@@ -162,7 +162,7 @@ public class PictureFileChooser
     private static final Dimension OPTIONS_PANEL_DIMENSION = new Dimension( 200, 180 );
 
     /**
-     * Checkbox that allows the user to specifiy whether pictures in the subdirectories should be added or not.
+     * Checkbox that allows the user to specify whether pictures in the subdirectories should be added or not.
      */
     private final JCheckBox recurseJCheckBox = new JCheckBox( Settings.jpoResources.getString( "recurseJCheckBox" ) );
 
@@ -173,13 +173,13 @@ public class PictureFileChooser
     private final JCheckBox newOnlyJCheckBox = new JCheckBox( Settings.jpoResources.getString( "newOnlyJCheckBox" ) );
 
     /**
-     * Checkbox that allows the user to specifiy whether directory structures should be retained
+     * Checkbox that allows the user to specify whether directory structures should be retained
      */
     final JCheckBox retainDirectoriesJCheckBox = new JCheckBox( Settings.jpoResources.getString( "retainDirectoriesJCheckBox" ) );
 
     /**
      *  This component shows the thumbnail. It is a JLabel as we can thus use the
-     *  ImageIcon to display the pciture.
+     *  ImageIcon to display the picture.
      */
     private JLabel thumbnailJLabel = new JLabel();
 

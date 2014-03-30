@@ -4,84 +4,99 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashSet;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JSeparator;
 import javax.swing.SwingUtilities;
+import jpo.EventBus.AddCollectionToGroupRequest;
+import jpo.EventBus.AddEmptyGroupRequest;
+import jpo.EventBus.AddGroupToEmailSelectionRequest;
+import jpo.EventBus.ChooseAndAddCollectionRequest;
+import jpo.EventBus.ChooseAndAddPicturesToGroupRequest;
+import jpo.EventBus.ConsolidateGroupRequest;
+import jpo.EventBus.ExportGroupToFlatFileRequest;
+import jpo.EventBus.ExportGroupToHtmlRequest;
+import jpo.EventBus.ExportGroupToNewCollectionRequest;
+import jpo.EventBus.ExportGroupToPicasaRequest;
+import jpo.EventBus.JpoEventBus;
+import jpo.EventBus.MoveNodeDownRequest;
+import jpo.EventBus.MoveNodeToBottomRequest;
+import jpo.EventBus.MoveNodeToNodeRequest;
+import jpo.EventBus.MoveNodeToTopRequest;
+import jpo.EventBus.MoveNodeUpRequest;
+import jpo.EventBus.OpenSearchDialogRequest;
+import jpo.EventBus.RemoveNodeRequest;
+import jpo.EventBus.ShowCategoryUsageEditorRequest;
+import jpo.EventBus.ShowGroupAsTableRequest;
+import jpo.EventBus.ShowGroupInfoEditorRequest;
+import jpo.EventBus.ShowGroupRequest;
+import jpo.EventBus.ShowPictureRequest;
+import jpo.EventBus.SortGroupRequest;
 import jpo.dataModel.RecentDropNodeListener;
 import jpo.dataModel.RecentFilesChangeListener;
 import jpo.dataModel.Settings;
 import jpo.dataModel.SortOption;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
 import jpo.dataModel.Tools;
-import jpo.gui.GroupPopupInterface;
-import static jpo.gui.ThumbnailCreationQueue.add;
 import jpo.gui.TreeNodeController;
 
 /*
-GroupPopupMenu.java: popup menu for groups
+ GroupPopupMenu.java: popup menu for groups
 
-Copyright (C) 2002 - 2013  Richard Eigenmann.
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or any later version. This program is distributed 
-in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
-without even the implied warranty of MERCHANTABILITY or FITNESS 
-FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
-more details. You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-The license is in gpl.txt.
-See http://www.gnu.org/copyleft/gpl.html for the details.
+ Copyright (C) 2002 - 2013  Richard Eigenmann.
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or any later version. This program is distributed 
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+ without even the implied warranty of MERCHANTABILITY or FITNESS 
+ FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
+ more details. You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ The license is in gpl.txt.
+ See http://www.gnu.org/copyleft/gpl.html for the details.
  */
-/** 
- * A class that generates a popup menu for a group node. This became necessary primarily because
- * the code was getting a bit long and was cluttering up a different class. Separating out the 
- * popup menu and making it an object and forcing an interface on the object instantiating
- * it is probably more in line with the OO philosophy.
- * @see GroupPopupInterface
+/**
+ * A class that generates a popup menu for a group node. This became necessary
+ * primarily because the code was getting a bit long and was cluttering up a
+ * different class. Separating out the popup menu and making it an object and
+ * forcing an interface on the object instantiating it is probably more in line
+ * with the OO philosophy.
+ *
  */
 public class GroupPopupMenu
         extends JPopupMenu
         implements RecentDropNodeListener, RecentFilesChangeListener {
 
     /**
-     *   An array of recently opened collections.
+     * An array of recently opened collections.
      */
     private final JMenuItem[] recentOpenedfileJMenuItem = new JMenuItem[Settings.MAX_MEMORISE];
 
     /**
-     *  a separator for the Move menu
+     * a separator for the Move menu
      */
     private final JSeparator movePictureNodeSeparator = new JSeparator();
 
     /**
-     *  menu items for the recently dropped group nodes
+     * menu items for the recently dropped group nodes
      */
     private final JMenuItem[] recentDropNodes = new JMenuItem[Settings.MAX_DROPNODES];
 
     /**
-     *  object that must implement the functions dealing with the user
-     *  request
-     */
-    private final GroupPopupInterface caller;
-
-    /**
-     *  the node we are doing the popup menu for
+     * the node we are doing the popup menu for
      */
     private final SortableDefaultMutableTreeNode popupNode;
 
-
     /**
-     *   Creates a popup menu for a group.
-     *   @param  caller   the caller that will get the requests to do things
-     *   @param  node 	the node for which the popup menu is being created.
+     * Creates a popup menu for a group.
+     *
+     * @param node the node for which the popup menu is being created.
      */
-    public GroupPopupMenu( final GroupPopupInterface caller,
-            final SortableDefaultMutableTreeNode node ) {
-        this.caller = caller;
+    public GroupPopupMenu( final SortableDefaultMutableTreeNode node ) {
         this.popupNode = node;
         Runnable r = new Runnable() {
 
@@ -98,7 +113,6 @@ public class GroupPopupMenu
 
     }
 
-
     /**
      * Create the menu items
      */
@@ -108,7 +122,7 @@ public class GroupPopupMenu
 
             @Override
             public void actionPerformed( ActionEvent e ) {
-                caller.requestShowGroup( popupNode );
+                JpoEventBus.getInstance().post( new ShowGroupRequest( popupNode ) );
             }
         } );
         add( groupShowJMenuItem );
@@ -118,7 +132,7 @@ public class GroupPopupMenu
 
             @Override
             public void actionPerformed( ActionEvent e ) {
-                caller.requestSlideshow( popupNode );
+                JpoEventBus.getInstance().post( new ShowPictureRequest( popupNode ) );
             }
         } );
         add( groupSlideshowJMenuItem );
@@ -128,7 +142,7 @@ public class GroupPopupMenu
 
             @Override
             public void actionPerformed( ActionEvent e ) {
-                caller.requestFind( popupNode );
+                JpoEventBus.getInstance().post( new OpenSearchDialogRequest( popupNode ) );
             }
         } );
         add( groupFindJMenuItem );
@@ -137,17 +151,18 @@ public class GroupPopupMenu
 
         if ( popupNode.getPictureCollection().getAllowEdits() ) {
 
-
             JMenuItem categoryUsagetJMenuItem = new JMenuItem( Settings.jpoResources.getString( "categoryUsagetJMenuItem" ) );
             categoryUsagetJMenuItem.addActionListener( new ActionListener() {
 
                 @Override
                 public void actionPerformed( ActionEvent e ) {
-                    caller.showCategoryUsageGUI( popupNode );
+                    HashSet<SortableDefaultMutableTreeNode> hs = new HashSet<>();
+                    hs.add( popupNode );
+                    JpoEventBus.getInstance().post( new ShowCategoryUsageEditorRequest( hs ) );
+                    //caller.showCategoryUsageGUI( popupNode );
                 }
             } );
             add( categoryUsagetJMenuItem );
-
 
             JMenuItem groupRefreshJMenuItem = new JMenuItem( Settings.jpoResources.getString( "groupRefreshJMenuItem" ) );
             groupRefreshJMenuItem.addActionListener( new ActionListener() {
@@ -166,7 +181,7 @@ public class GroupPopupMenu
 
                 @Override
                 public void actionPerformed( ActionEvent e ) {
-                    caller.requestEditGroupTable( popupNode );
+                    JpoEventBus.getInstance().post( new ShowGroupAsTableRequest( popupNode ) );
                 }
             } );
             add( groupTableJMenuItem );
@@ -183,7 +198,7 @@ public class GroupPopupMenu
 
                 @Override
                 public void actionPerformed( ActionEvent e ) {
-                    caller.requestAddGroup( popupNode );
+                    JpoEventBus.getInstance().post( new AddEmptyGroupRequest( popupNode ) );
                 }
             } );
             addGroupJMenu.add( addNewGroupJMenuItem );
@@ -193,7 +208,7 @@ public class GroupPopupMenu
 
                 @Override
                 public void actionPerformed( ActionEvent e ) {
-                    caller.chooseAndAddPicturesToGroup( popupNode );
+                    JpoEventBus.getInstance().post( new ChooseAndAddPicturesToGroupRequest( popupNode ) );
                 }
             } );
             addGroupJMenu.add( addPicturesJMenuItem );
@@ -209,7 +224,7 @@ public class GroupPopupMenu
 
                 @Override
                 public void actionPerformed( ActionEvent e ) {
-                    caller.requestAddCollection( popupNode );
+                    JpoEventBus.getInstance().post( new ChooseAndAddCollectionRequest( popupNode ) );
                 }
             } );
             addCollectionJMenu.add( addCollectionFormFile );
@@ -222,14 +237,13 @@ public class GroupPopupMenu
 
                     @Override
                     public void actionPerformed( ActionEvent e ) {
-                        caller.requestAddCollection( popupNode, new File( Settings.recentCollections[index] ) );
+                        JpoEventBus.getInstance().post( new AddCollectionToGroupRequest( popupNode, new File( Settings.recentCollections[index] ) ) );
                     }
                 } );
                 recentOpenedfileJMenuItem[i].setVisible( false );
                 addCollectionJMenu.add( recentOpenedfileJMenuItem[i] );
             }
             recentFilesChanged();
-
 
             // menu item that allows adding from a list of filenames
             JMenuItem addFlatFileJMenuItem = new JMenuItem( Settings.jpoResources.getString( "addFlatFileJMenuItemLabel" ) );
@@ -268,7 +282,7 @@ public class GroupPopupMenu
 
                 @Override
                 public void actionPerformed( ActionEvent e ) {
-                    caller.requestMoveGroupToTop( popupNode );
+                    JpoEventBus.getInstance().post( new MoveNodeToTopRequest( popupNode ) );
                 }
             } );
             moveGroupNodeJMenu.add( moveGroupToTopJMenuItem );
@@ -279,7 +293,7 @@ public class GroupPopupMenu
 
                 @Override
                 public void actionPerformed( ActionEvent e ) {
-                    caller.requestMoveGroupUp( popupNode );
+                    JpoEventBus.getInstance().post( new MoveNodeUpRequest( popupNode ) );
                 }
             } );
             moveGroupNodeJMenu.add( moveGroupUpJMenuItem );
@@ -290,7 +304,7 @@ public class GroupPopupMenu
 
                 @Override
                 public void actionPerformed( ActionEvent e ) {
-                    caller.requestMoveGroupDown( popupNode );
+                    JpoEventBus.getInstance().post( new MoveNodeDownRequest( popupNode ) );
                 }
             } );
             moveGroupNodeJMenu.add( moveGroupDownJMenuItem );
@@ -301,7 +315,7 @@ public class GroupPopupMenu
 
                 @Override
                 public void actionPerformed( ActionEvent e ) {
-                    caller.requestMoveGroupToBottom( popupNode );
+                    JpoEventBus.getInstance().post( new MoveNodeToBottomRequest( popupNode ) );
                 }
             } );
             moveGroupNodeJMenu.add( moveGroupToBottomJMenuItem );
@@ -332,7 +346,7 @@ public class GroupPopupMenu
 
                 @Override
                 public void actionPerformed( ActionEvent e ) {
-                    caller.requestGroupRemove( popupNode );
+                    JpoEventBus.getInstance().post( new RemoveNodeRequest( popupNode ) );
                 }
             } );
             add( groupRemove );
@@ -345,7 +359,7 @@ public class GroupPopupMenu
 
                 @Override
                 public void actionPerformed( ActionEvent e ) {
-                    caller.requestConsolidateGroup( popupNode );
+                    JpoEventBus.getInstance().post( new ConsolidateGroupRequest( popupNode ) );
                 }
             } );
             add( consolidateMoveJMenuItem );
@@ -362,7 +376,7 @@ public class GroupPopupMenu
 
                 @Override
                 public void actionPerformed( ActionEvent e ) {
-                    caller.requestSort( popupNode, sortByDescription.getSortCode() );
+                    JpoEventBus.getInstance().post( new SortGroupRequest( popupNode, sortByDescription.getSortCode() ) );
                 }
             } );
             sortJMenu.add( sortByDescriptionJMenuItem );
@@ -374,7 +388,7 @@ public class GroupPopupMenu
 
                 @Override
                 public void actionPerformed( ActionEvent e ) {
-                    caller.requestSort( popupNode, sortByFilmReference.getSortCode() );
+                    JpoEventBus.getInstance().post( new SortGroupRequest( popupNode, sortByFilmReference.getSortCode() ) );
                 }
             } );
             sortJMenu.add( sortByFilmReferenceJMenuItem );
@@ -386,7 +400,7 @@ public class GroupPopupMenu
 
                 @Override
                 public void actionPerformed( ActionEvent e ) {
-                    caller.requestSort( popupNode, sortByCreationTime.getSortCode() );
+                    JpoEventBus.getInstance().post( new SortGroupRequest( popupNode, sortByCreationTime.getSortCode() ) );
                 }
             } );
             sortJMenu.add( sortByCreationTimeJMenuItem );
@@ -398,7 +412,7 @@ public class GroupPopupMenu
 
                 @Override
                 public void actionPerformed( ActionEvent e ) {
-                    caller.requestSort( popupNode, sortByComment.getSortCode() );
+                    JpoEventBus.getInstance().post( new SortGroupRequest( popupNode, sortByComment.getSortCode() ) );
                 }
             } );
             sortJMenu.add( sortByCommentJMenuItem );
@@ -410,7 +424,7 @@ public class GroupPopupMenu
 
                 @Override
                 public void actionPerformed( ActionEvent e ) {
-                    caller.requestSort( popupNode, sortByPhotographer.getSortCode() );
+                    JpoEventBus.getInstance().post( new SortGroupRequest( popupNode, sortByPhotographer.getSortCode() ) );
                 }
             } );
             sortJMenu.add( sortByPhotographerJMenuItem );
@@ -422,7 +436,7 @@ public class GroupPopupMenu
 
                 @Override
                 public void actionPerformed( ActionEvent e ) {
-                    caller.requestSort( popupNode, sortByCopyrightHolder.getSortCode() );
+                    JpoEventBus.getInstance().post( new SortGroupRequest( popupNode, sortByCopyrightHolder.getSortCode() ) );
                 }
             } );
             sortJMenu.add( sortByCopyrightHolderTimeJMenuItem );
@@ -435,18 +449,17 @@ public class GroupPopupMenu
 
             @Override
             public void actionPerformed( ActionEvent e ) {
-                caller.requestEmailSelection( popupNode );
+                JpoEventBus.getInstance().post( new AddGroupToEmailSelectionRequest( popupNode ) );
             }
         } );
         add( groupSelectForEmail );
-
 
         JMenuItem groupExportHtml = new JMenuItem( Settings.jpoResources.getString( "groupExportHtmlMenuText" ) );
         groupExportHtml.addActionListener( new ActionListener() {
 
             @Override
             public void actionPerformed( ActionEvent e ) {
-                caller.requestGroupExportHtml( popupNode );
+                JpoEventBus.getInstance().post( new ExportGroupToHtmlRequest( popupNode ) );
             }
         } );
         add( groupExportHtml );
@@ -457,11 +470,10 @@ public class GroupPopupMenu
 
             @Override
             public void actionPerformed( ActionEvent e ) {
-                caller.requestGroupExportNewCollection( popupNode );
+                JpoEventBus.getInstance().post( new ExportGroupToNewCollectionRequest( popupNode ) );
             }
         } );
         add( groupExportNewCollection );
-
 
         // menu item that allows the user to export the group to a flat list of filenames
         JMenuItem groupExportFlatFile = new JMenuItem( Settings.jpoResources.getString( "groupExportFlatFileMenuText" ) );
@@ -469,7 +481,7 @@ public class GroupPopupMenu
 
             @Override
             public void actionPerformed( ActionEvent e ) {
-                caller.requestGroupExportFlatFile( popupNode );
+                JpoEventBus.getInstance().post( new ExportGroupToFlatFileRequest( popupNode ) );
             }
         } );
         add( groupExportFlatFile );
@@ -480,7 +492,7 @@ public class GroupPopupMenu
 
             @Override
             public void actionPerformed( ActionEvent e ) {
-                caller.requestGroupExportPicasa( popupNode );
+                JpoEventBus.getInstance().post( new ExportGroupToPicasaRequest( popupNode ) );
             }
         } );
         add( groupExportPicasa );
@@ -492,17 +504,16 @@ public class GroupPopupMenu
 
             @Override
             public void actionPerformed( ActionEvent e ) {
-                caller.requestEditGroupNode( popupNode );
+                JpoEventBus.getInstance().post( new ShowGroupInfoEditorRequest( popupNode ) );
+                //caller.requestEditGroupNode( popupNode );
             }
         } );
         add( groupEditJMenuItem );
 
-
     }
 
-
     /**
-     *  Here we receive notification that the nodes have been updated
+     * Here we receive notification that the nodes have been updated
      */
     @Override
     public void recentDropNodesChanged() {
@@ -524,15 +535,16 @@ public class GroupPopupMenu
 
     }
 
-
     /**
-     *  checks if the event object is one of the drop nodes
-     *  @return returns true if the object was found in the list and the action was submitted.
+     * checks if the event object is one of the drop nodes
+     *
+     * @return returns true if the object was found in the list and the action
+     * was submitted.
      */
     private boolean checkDropNodes( Object o ) {
         for ( int i = 0; i < Settings.MAX_DROPNODES; i++ ) {
             if ( ( recentDropNodes[i] != null ) && ( o.hashCode() == recentDropNodes[i].hashCode() ) ) {
-                caller.requestMoveToNode( popupNode, Settings.recentDropNodes[i] );
+                JpoEventBus.getInstance().post( new MoveNodeToNodeRequest( popupNode, Settings.recentDropNodes[i] ) );
                 Settings.memorizeGroupOfDropLocation( Settings.recentDropNodes[i] );
                 return true;
             }
@@ -540,10 +552,10 @@ public class GroupPopupMenu
         return false;
     }
 
-
     /**
-     *  Sets up the menu entries in the File|OpenRecent sub menu from the recentCollections
-     *  in Settings. Can be called by the interface from the listener on the Settings object.
+     * Sets up the menu entries in the File|OpenRecent sub menu from the
+     * recentCollections in Settings. Can be called by the interface from the
+     * listener on the Settings object.
      */
     @Override
     public void recentFilesChanged() {

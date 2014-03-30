@@ -8,11 +8,11 @@ import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
+import jpo.EventBus.JpoEventBus;
+import jpo.EventBus.ShowQueryRequest;
 import jpo.dataModel.Settings;
-import jpo.dataModel.QueryNavigator;
 import jpo.dataModel.Query;
 import jpo.dataModel.Tools;
-import jpo.gui.Jpo;
 
 
 /*
@@ -69,8 +69,9 @@ public class QueriesJTree
                     if ( ( clickNode == null ) || ( clickNode.getUserObject() == null ) || ( !( clickNode.getUserObject() instanceof Query ) ) ) {
                         return;
                     }
-                    QueryNavigator queryBrowser = new QueryNavigator( (Query) clickNode.getUserObject() );
-                    Jpo.showThumbnails( queryBrowser );
+                    //QueryNavigator queryBrowser = new QueryNavigator( (Query) clickNode.getUserObject() );
+                    //Jpo.showThumbnails( queryBrowser );
+                    JpoEventBus.getInstance().post( new ShowQueryRequest((Query) clickNode.getUserObject()  ));
                 }
             }
         } );

@@ -86,8 +86,7 @@ import webserver.Webserver;
  *
  * @author Richard Eigenmann
  */
-public class PictureInfoEditor
-        extends JFrame {
+public class PictureInfoEditor extends JFrame {
 
     /**
      * Dimension for the edit fields

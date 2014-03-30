@@ -19,6 +19,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import static javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE;
 import javax.swing.tree.DefaultMutableTreeNode;
+import jpo.EventBus.JpoEventBus;
+import jpo.EventBus.ShowQueryRequest;
 import jpo.dataModel.QueryNavigator;
 import jpo.gui.ApplicationEventHandler;
 import jpo.gui.Jpo;
@@ -224,10 +226,11 @@ public class QueryJFrame
     
     private void executeQuery (TextQuery textQuery) {
         DefaultMutableTreeNode searchTreeNode = Settings.pictureCollection.addQueryToTreeModel( textQuery );
-        applicationEventHandler.showQuery( searchTreeNode );
+        JpoEventBus.getInstance().post( new ShowQueryRequest( textQuery ));
+        //applicationEventHandler.showQuery( searchTreeNode );
 
-        QueryNavigator queryBrowser = new QueryNavigator( textQuery );
-        Jpo.showThumbnails( queryBrowser );
+        //QueryNavigator queryBrowser = new QueryNavigator( textQuery );
+        //Jpo.showThumbnails( queryBrowser );
     }
     
 }

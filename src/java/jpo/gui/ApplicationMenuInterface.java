@@ -24,22 +24,6 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  **/
 public interface ApplicationMenuInterface {
 
-    /**
-     *   Signals that the user wants to create a new empty collection.
-     */
-    public void requestFileNew();
-
-
-    /**
-     *   Signals that the user wants to add pictures to the root node of his collection.
-     */
-    public void requestAddPictures();
-
-
-    /**
-     *   Signals that the user wants to load a collection file.
-     */
-    public void requestFileLoad();
 
 
     /**
@@ -52,29 +36,6 @@ public interface ApplicationMenuInterface {
     public void requestOpenRecent( int i );
 
 
-    /**
-     *   Signals that the user wants to save a collection file.
-     */
-    public void requestFileSave();
-
-
-    /**
-     *   Signals that the user wants to save a collection file under a new name.
-     */
-    public void requestFileSaveAs();
-
-
-    /**
-     *   Signals that the user wants to leave the application.
-     */
-    public void requestExit();
-
-
-    /**
-     *   Signals that the user wants to search the collection.
-     */
-    public void openFindDialog();
-
 
     /**
      *   Signals that the user wants to set up a camera
@@ -86,12 +47,6 @@ public interface ApplicationMenuInterface {
      *   Signals that the user wants to edit the settings of the application.
      */
     public void requestEditSettings();
-
-
-    /**
-     *   Signals that the user wants to see a random slideshow
-     */
-    public void performSlideshow();
 
 
     /**

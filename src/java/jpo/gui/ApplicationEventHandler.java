@@ -5,8 +5,11 @@
  */
 package jpo.gui;
 
+import com.google.common.eventbus.Subscribe;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.net.MalformedURLException;
+import java.util.Enumeration;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.BoxLayout;
@@ -17,20 +20,58 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.TreePath;
+import jpo.EventBus.AddCollectionToGroupRequest;
+import jpo.EventBus.AddEmptyGroupRequest;
+import jpo.EventBus.AddGroupToEmailSelectionRequest;
+import jpo.EventBus.ChooseAndAddCollectionRequest;
+import jpo.EventBus.ChooseAndAddPicturesToGroupRequest;
+import jpo.EventBus.CloseApplicationRequest;
+import jpo.EventBus.ConsolidateGroupRequest;
+import jpo.EventBus.ExportGroupToFlatFileRequest;
+import jpo.EventBus.ExportGroupToHtmlRequest;
+import jpo.EventBus.ExportGroupToNewCollectionRequest;
+import jpo.EventBus.ExportGroupToPicasaRequest;
+import jpo.EventBus.FileLoadRequest;
+import jpo.EventBus.FileSaveAsRequest;
+import jpo.EventBus.FileSaveRequest;
+import jpo.EventBus.GroupSelectionEvent;
+import jpo.EventBus.JpoEventBus;
+import jpo.EventBus.MoveNodeDownRequest;
+import jpo.EventBus.MoveNodeToBottomRequest;
+import jpo.EventBus.MoveNodeToNodeRequest;
+import jpo.EventBus.MoveNodeToTopRequest;
+import jpo.EventBus.MoveNodeUpRequest;
+import jpo.EventBus.OpenSearchDialogRequest;
+import jpo.EventBus.RemoveNodeRequest;
+import jpo.EventBus.RenamePictureRequest;
+import jpo.EventBus.ShowCategoryUsageEditorRequest;
+import jpo.EventBus.ShowGroupAsTableRequest;
+import jpo.EventBus.ShowGroupInfoEditorRequest;
+import jpo.EventBus.ShowGroupRequest;
+import jpo.EventBus.ShowPictureInfoEditorRequest;
+import jpo.EventBus.ShowPictureOnMapRequest;
+import jpo.EventBus.ShowPictureRequest;
+import jpo.EventBus.ShowQueryRequest;
+import jpo.EventBus.SortGroupRequest;
+import jpo.EventBus.StartDoublePanelSlideshowRequest;
+import jpo.EventBus.StartNewCollectionRequest;
 import jpo.dataModel.DuplicatesQuery;
+import jpo.dataModel.FlatFileDistiller;
+import jpo.dataModel.FlatGroupNavigator;
+import jpo.dataModel.GroupInfo;
+import jpo.dataModel.PictureInfo;
 import jpo.dataModel.QueryNavigator;
 import jpo.dataModel.RandomNavigator;
 import jpo.dataModel.Settings;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
 import jpo.dataModel.Tools;
-import static jpo.gui.Jpo.collectionJTreeController;
-import static jpo.gui.Jpo.positionToNode;
-import static jpo.gui.Jpo.searchesJTree;
-import static jpo.gui.Jpo.showThumbnails;
+import jpo.export.GenerateWebsiteWizard;
+import jpo.export.PicasaUploadRequest;
+import jpo.export.PicasaUploaderWizard;
 import jpo.gui.swing.MainWindow;
 import jpo.gui.swing.QueryJFrame;
 import jpo.gui.swing.ResizableJFrame;
+import webserver.Webserver;
 
 /**
  *
@@ -39,16 +80,22 @@ import jpo.gui.swing.ResizableJFrame;
 /**
  * This class handles all the Application Menu Events
  */
-public class ApplicationEventHandler
-        implements ApplicationMenuInterface {
+public class ApplicationEventHandler implements ApplicationMenuInterface {
 
-    
+    public ApplicationEventHandler() {
+        registerOnEventBus();
+    }
+
+    private void registerOnEventBus() {
+        JpoEventBus.getInstance().register( this );
+    }
+
     public void setMainWindow( MainWindow mainWindow ) {
         this.mainWindow = mainWindow;
     }
-    
+
     private MainWindow mainWindow;
-    
+
     /**
      * Defines a logger for this class
      */
@@ -61,9 +108,10 @@ public class ApplicationEventHandler
     public void requestFindDuplicates() {
         DuplicatesQuery duplicatesQuery = new DuplicatesQuery();
         DefaultMutableTreeNode newNode = Settings.pictureCollection.addQueryToTreeModel( duplicatesQuery );
-        showQuery( newNode );
+        //showQuery( newNode );
         QueryNavigator queryBrowser = new QueryNavigator( duplicatesQuery );
-        showThumbnails( queryBrowser );
+        //showThumbnails( queryBrowser );
+        JpoEventBus.getInstance().post( new ShowQueryRequest( duplicatesQuery ) );
     }
 
     /**
@@ -108,18 +156,17 @@ public class ApplicationEventHandler
     }
 
     /**
-     * method that is invoked when the Jpo application is to be closed. Checks
+     * Handles the close application request by checking 
      * if the main application window size should be saved and saves if
      * necessary. also checks for unsaved changes before closing the
      * application.
      */
-    @Override
-    public void requestExit() {
+    @Subscribe
+    public void handleCloseApplicationRequest( CloseApplicationRequest request) {
         if ( checkUnsavedUpdates() ) {
             return;
         }
 
-        
         if ( Settings.unsavedSettingChanges ) {
             Settings.writeSettings();
         }
@@ -129,23 +176,22 @@ public class ApplicationEventHandler
         System.exit( 0 );
     }
 
-    /**
+    /*
      * Calls {@link #find} to bring up a find dialog box.
-     */
-    @Override
-    public void openFindDialog() {
-        find( Settings.pictureCollection.getRootNode() );
-    }
+     *
+     @Override
+     public void openFindDialog() {
+     find( Settings.pictureCollection.getRootNode() );
+     }*/
 
-    /**
+    /*
      * Brings up a QueryJFrame GUI.
      *
      * @param startSearchNode
-     */
-    public void find( SortableDefaultMutableTreeNode startSearchNode ) {
-        new QueryJFrame( startSearchNode, this );
-    }
-
+     *
+     public void find( SortableDefaultMutableTreeNode startSearchNode ) {
+     new QueryJFrame( startSearchNode, this );
+     }*/
     /**
      * Creates a {@link ReconcileJFrame} which lets the user specify a directory
      * whose pictures are then compared against the current collection.
@@ -156,18 +202,17 @@ public class ApplicationEventHandler
     }
 
     /**
-     * calls up the Picture Viewer
+     * Starts a double panel slideshow
      */
-    @Override
-    public void performSlideshow() {
+    @Subscribe
+    public void handleStartDoublePanelSlideshowRequest( StartDoublePanelSlideshowRequest request) {
+        SortableDefaultMutableTreeNode rootNode = request.getNode();
         PictureViewer p1 = new PictureViewer();
         p1.pictureFrame.myJFrame.switchWindowMode( ResizableJFrame.WINDOW_LEFT );
-        //p1.switchDecorations( true );
         PictureViewer p2 = new PictureViewer();
         p2.pictureFrame.myJFrame.switchWindowMode( ResizableJFrame.WINDOW_RIGHT );
-        //p2.switchDecorations( true );
-        RandomNavigator rb1 = new RandomNavigator( Settings.pictureCollection.getRootNode().getChildPictureNodes( true ), String.format( "Randomised pictures from %s", Settings.pictureCollection.getRootNode().toString() ) );
-        RandomNavigator rb2 = new RandomNavigator( Settings.pictureCollection.getRootNode().getChildPictureNodes( true ), String.format( "Randomised pictures from %s", Settings.pictureCollection.getRootNode().toString() ) );
+        RandomNavigator rb1 = new RandomNavigator( rootNode.getChildPictureNodes( true ), String.format( "Randomised pictures from %s", rootNode.toString() ) );
+        RandomNavigator rb2 = new RandomNavigator( rootNode.getChildPictureNodes( true ), String.format( "Randomised pictures from %s", rootNode.toString() ) );
         p1.show( rb1, 0 );
         p1.startAdvanceTimer( 10 );
         p2.show( rb2, 0 );
@@ -175,20 +220,164 @@ public class ApplicationEventHandler
     }
 
     /**
-     * The {@link ApplicationMenuInterface} calls here when the user wants to
-     * add pictures to the root node of the collection.
+     * When we see a ShowPictureRequest this method will open a PictureViewer
+     * and will tell it to show the FlatGroupNavigator based on the pictures
+     * parent node starting at the current position
+     *
+     * @param request the ShowPictureRequest
      */
-    @Override
-    public void requestAddPictures() {
-        chooseAndAddPicturesToGroup( Settings.pictureCollection.getRootNode() );
+    @Subscribe
+    public void handleShowPictureRequest( ShowPictureRequest request ) {
+        SortableDefaultMutableTreeNode node = request.getNode();
+        Object userObject = node.getUserObject();
+        if ( !( userObject instanceof PictureInfo ) ) {
+            return; // should only be receiving PictureInfo objects
+        }
+        PictureViewer pictureViewer = new PictureViewer();
+        FlatGroupNavigator sb = new FlatGroupNavigator( (SortableDefaultMutableTreeNode) node.getParent() );
+        int index = 0;
+        for ( int i = 0; i < sb.getNumberOfNodes(); i++ ) {
+            if ( sb.getNode( i ).equals( node ) ) {
+                index = i;
+                i = sb.getNumberOfNodes();
+            }
+        }
+        pictureViewer.show( sb, index );
+    }
+
+    /**
+     * When the app sees a ShowPictureOnMapRequest it will start a webserver and
+     * will spawn the Google maps with the teardrop on the indicated location.
+     *
+     * @param request
+     */
+    @Subscribe
+    public void handleShowPictureOnMapRequest( ShowPictureOnMapRequest request ) {
+        Webserver.getInstance().browse( request.getNode() );
+    }
+
+    /**
+     * When the app sees a ShowPictureInfoEditorRequest it will open the
+     * PictureInfoEditor for the supplied node
+     *
+     * @param request
+     */
+    @Subscribe
+    public void handleShowPictureInfoEditorRequest( ShowPictureInfoEditorRequest request ) {
+        new PictureInfoEditor( request.getNode() );
+    }
+
+    /**
+     * When the app sees a ShowGroupInfoEditorRequest it will open the
+     * PictureInfoEditor for the supplied node
+     *
+     * @param request
+     */
+    @Subscribe
+    public void handleShowGroupInfoEditorRequest( ShowGroupInfoEditorRequest request ) {
+        new GroupInfoEditor( request.getNode() );
+    }
+
+    /**
+     * When the app sees a OpenSearchDialog it will open the QueryJFrame
+     *
+     * @param request
+     */
+    @Subscribe
+    public void handleOpenSearchDialogRequest( OpenSearchDialogRequest request ) {
+        new QueryJFrame( request.getStartNode(), this );
+    }
+
+    /**
+     * This function opens the CategoryUsageEditor.
+     *
+     * @param node
+     */
+    /**
+     * When the app sees a ShowCategoryUsageEditorRequest it will open the
+     * CategoryUsageEditor for the supplied node
+     *
+     * @param request
+     */
+    @Subscribe
+    public void handleShowGroupInfoEditorRequest( ShowCategoryUsageEditorRequest request ) {
+        new CategoryUsageJFrame( request );
+    }
+
+    /**
+     * Bring up a Dialog where the user can input a new name for a file and
+     * rename it.
+     *
+     * @param request
+     */
+    @Subscribe
+    public static void handleRenamePictureRequest( RenamePictureRequest request ) {
+        SortableDefaultMutableTreeNode node = request.getNode();
+        Object userObject = node.getUserObject();
+        if ( !( userObject instanceof PictureInfo ) ) {
+            return;
+        }
+
+        PictureInfo pi = (PictureInfo) userObject;
+        File highresFile = pi.getHighresFile();
+        if ( highresFile == null ) {
+            return;
+        }
+
+        Object object = Settings.jpoResources.getString( "FileRenameLabel1" ) + highresFile.toString() + Settings.jpoResources.getString( "FileRenameLabel2" );
+        String selectedValue = JOptionPane.showInputDialog(
+                Settings.anchorFrame, // parent component
+                object, // message
+                highresFile.toString() );				// initialSelectionValue
+        if ( selectedValue != null ) {
+            File newName = new File( selectedValue );
+            if ( highresFile.renameTo( newName ) ) {
+                LOGGER.log( Level.INFO, "Sucessufully renamed: {0} to: {1}", new Object[]{ highresFile.toString(), selectedValue } );
+                try {
+                    pi.setHighresLocation( newName.toURI().toURL() );
+                } catch ( MalformedURLException x ) {
+                    LOGGER.log( Level.INFO, "Caught a MalformedURLException because of: {0}", x.getMessage() );
+                }
+            } else {
+                LOGGER.log( Level.INFO, "Rename failed from : {0} to: {1}", new Object[]{ highresFile.toString(), selectedValue } );
+            }
+        }
+    }
+
+    /**
+     * When the app sees a ChooseAndAddCollectionRequest it will open the a
+     * chooser dialog and will add the collection to the supplied node
+     *
+     * @param request
+     */
+    @Subscribe
+    public void handleChooseAndAddCollectionRequest( ChooseAndAddCollectionRequest request ) {
+        File fileToLoad = Tools.chooseXmlFile();
+        if ( fileToLoad != null ) {
+            JpoEventBus.getInstance().post( new AddCollectionToGroupRequest( request.getNode(), fileToLoad ) );
+        }
+
+    }
+
+    /**
+     * When the app sees a ShowGroupAsTableRequest it will open the the group in
+     * a table.
+     *
+     * @param request
+     */
+    @Subscribe
+    public void handleShowGroupAsTableRequest( ShowGroupAsTableRequest request ) {
+        TableJFrame tableJFrame = new TableJFrame( request.getNode() );
+        tableJFrame.pack();
+        tableJFrame.setVisible( true );
     }
 
     /**
      * Brings up a dialog where the user can select the collection to be loaded.
      * Calls {@link SortableDefaultMutableTreeNode#fileLoad}
      */
-    @Override
-    public void requestFileLoad() {
+    @Subscribe
+    public void handleFileLoadRequest(FileLoadRequest request) {
         if ( checkUnsavedUpdates() ) {
             return;
         }
@@ -208,17 +397,18 @@ public class ApplicationEventHandler
 
                     return;
                 }
-                positionToNode( Settings.pictureCollection.getRootNode() );
+                //positionToNode( Settings.pictureCollection.getRootNode() );
+                JpoEventBus.getInstance().post( new GroupSelectionEvent( Settings.pictureCollection.getRootNode() ) );
             }
         };
         t.start();
     }
 
     /**
-     * Call to do the File|New function
+     * Calls the unsaved Updated check, clears the collection and starts a new one.
      */
-    @Override
-    public void requestFileNew() {
+    @Subscribe
+    public void handleStartNewCollectionRequest( StartNewCollectionRequest event) {
         Runnable r = new Runnable() {
 
             @Override
@@ -227,7 +417,7 @@ public class ApplicationEventHandler
                     return;
                 }
                 Settings.pictureCollection.clearCollection();
-                positionToNode( Settings.pictureCollection.getRootNode() );
+                JpoEventBus.getInstance().post( new GroupSelectionEvent( Settings.pictureCollection.getRootNode() ) );
             }
         };
         SwingUtilities.invokeLater( r );
@@ -238,10 +428,10 @@ public class ApplicationEventHandler
      * saves the current collection under it's present name and if it was never
      * saved before brings up a popup window.
      */
-    @Override
-    public void requestFileSave() {
+    @Subscribe
+    public void handleFileSaveRequest( FileSaveRequest request) {
         if ( Settings.pictureCollection.getXmlFile() == null ) {
-            requestFileSaveAs();
+            JpoEventBus.getInstance().post( new FileSaveAsRequest() );
         } else {
             LOGGER.info( String.format( "Saving under the name: %s", Settings.pictureCollection.getXmlFile() ) );
             Settings.pictureCollection.fileSave();
@@ -253,8 +443,8 @@ public class ApplicationEventHandler
      * method that saves the entire index in XML format. It prompts for the
      * filename first.
      */
-    @Override
-    public void requestFileSaveAs() {
+    @Subscribe
+    public void handleFileSaveAsRequest( FileSaveAsRequest request) {
         JFileChooser jFileChooser = new JFileChooser();
         jFileChooser.setFileSelectionMode( JFileChooser.FILES_ONLY );
         jFileChooser.setDialogType( JFileChooser.SAVE_DIALOG );
@@ -314,15 +504,16 @@ public class ApplicationEventHandler
     }
 
     /**
-     * Requests that a collection be added at this point in the tree
+     * Handles the request to add a collection supplied as a file to the
+     * supplied group node TODO: Perhaps move this to a DataModelEventHandler
      *
-     * @param popupNode The node at which to add
-     * @param fileToLoad The collection file to load
-     * @see GroupPopupInterface
+     * @param request
      */
-    public void requestAddCollection(
-            SortableDefaultMutableTreeNode popupNode,
-            File fileToLoad ) {
+    @Subscribe
+    public void handleAddCollectionToGroupRequest( AddCollectionToGroupRequest request ) {
+        SortableDefaultMutableTreeNode popupNode = request.getNode();
+        File fileToLoad = request.getCollectionFile();
+
         SortableDefaultMutableTreeNode newNode = popupNode.addGroupNode( "New Group" );
         try {
             newNode.fileLoad( fileToLoad );
@@ -334,8 +525,181 @@ public class ApplicationEventHandler
                     JOptionPane.ERROR_MESSAGE );
         }
         newNode.getPictureCollection().setUnsavedUpdates( true );
-        positionToNode( newNode );
-        collectionJTreeController.expandPath( new TreePath( newNode.getPath() ) );
+        JpoEventBus.getInstance().post( new GroupSelectionEvent( newNode ) );
+    }
+
+    /**
+     * when the App sees this request it will sort the group by the criteria
+     *
+     * @param request The node on which the request was made
+     */
+    @Subscribe
+    public void handleSortGroupRequest( SortGroupRequest request ) {
+        SortableDefaultMutableTreeNode popupNode = request.getNode();
+        int sortCriteria = request.getSortCriteria();
+        //logger.info( "Sort requested on " + myPopupNode.toString() + " for Criteria: " + Integer.toString( sortCriteria ) );
+        popupNode.sortChildren( sortCriteria );
+    }
+
+    /**
+     * when the App sees an AddEmptyGroup request it will sort the group by the
+     * criteria
+     *
+     * @param request The node on which the request was made
+     */
+    @Subscribe
+    public void handleAddEmptyGroup( AddEmptyGroupRequest request ) {
+        SortableDefaultMutableTreeNode node = request.getNode();
+        if ( !( node.getUserObject() instanceof GroupInfo ) ) {
+            LOGGER.warning( String.format( "node %s is of type %s instead of GroupInfo. Proceeding anyway.", node.getUserObject().toString(), node.getUserObject().getClass().toString() ) );
+        }
+        SortableDefaultMutableTreeNode newNode = node.addGroupNode( "New Group" );
+        Settings.memorizeGroupOfDropLocation( newNode );
+        JpoEventBus.getInstance().post( new ShowGroupRequest( newNode ) );
+    }
+
+    /**
+     * The App will respond to this request by opening the Export to HTML wizard
+     *
+     * @param request
+     */
+    @Subscribe
+    public void handleExportGroupToHtmlRequest( ExportGroupToHtmlRequest request ) {
+        SortableDefaultMutableTreeNode nodeToExport = request.getNode();
+        new GenerateWebsiteWizard( nodeToExport );
+    }
+
+    /**
+     * The App will respond to this request by saving the file names to a flat
+     * file
+     *
+     */
+    @Subscribe
+    public void requestGroupExportFlatFile( ExportGroupToFlatFileRequest request ) {
+        SortableDefaultMutableTreeNode nodeToExport = request.getNode();
+        javax.swing.JFileChooser jFileChooser = new javax.swing.JFileChooser();
+        jFileChooser.setFileSelectionMode( javax.swing.JFileChooser.FILES_ONLY );
+        jFileChooser.setDialogTitle( Settings.jpoResources.getString( "saveFlatFileTitle" ) );
+        jFileChooser.setApproveButtonText( Settings.jpoResources.getString( "saveFlatFileButtonLabel" ) );
+        jFileChooser.setCurrentDirectory( Settings.getMostRecentCopyLocation() );
+        int returnVal = jFileChooser.showSaveDialog( Settings.anchorFrame );
+        if ( returnVal == JFileChooser.APPROVE_OPTION ) {
+            File chosenFile = jFileChooser.getSelectedFile();
+            new FlatFileDistiller( chosenFile, nodeToExport );
+        }
+    }
+
+    /**
+     * Opens a dialog asking for the name of the new collection
+     *
+     *
+     * @param request
+     */
+    @Subscribe
+    public void handleExportGroupToNewCollectionRequest( ExportGroupToNewCollectionRequest request ) {
+        SortableDefaultMutableTreeNode nodeToExport = request.getNode();
+        new CollectionDistillerJFrame( nodeToExport );
+    }
+
+    /**
+     * When the app receives the ExportGroupToPicasaRequest the dialog will be
+     * opened to export the pictures to Picasa
+     *
+     * @param request
+     */
+    @Subscribe
+    public void handleExportGroupToPicasaRequest( ExportGroupToPicasaRequest request ) {
+        SortableDefaultMutableTreeNode groupNode = request.getNode();
+        PicasaUploadRequest myRequest = new PicasaUploadRequest();
+        myRequest.setNode( groupNode );
+        new PicasaUploaderWizard( myRequest );
+    }
+
+    /**
+     * Adds the pictures in the supplied group to the email selection
+     *
+     * @param request
+     */
+    @Subscribe
+    public void handleAddGroupToEmailSelectionRequest( AddGroupToEmailSelectionRequest request ) {
+        SortableDefaultMutableTreeNode groupNode = request.getNode();
+        SortableDefaultMutableTreeNode n;
+        for ( Enumeration e = groupNode.breadthFirstEnumeration(); e.hasMoreElements(); ) {
+            n = (SortableDefaultMutableTreeNode) e.nextElement();
+            if ( n.getUserObject() instanceof PictureInfo ) {
+                Settings.pictureCollection.addToMailSelection( n );
+            }
+        }
+    }
+
+    /**
+     * Opens the consolidate group dialog
+     *
+     * @param node
+     * @see GroupPopupInterface
+     */
+    @Subscribe
+    public void handleConsolidateGroupRequest( ConsolidateGroupRequest request ) {
+        SortableDefaultMutableTreeNode node = request.getNode();
+        new ConsolidateGroupJFrame( node );
+    }
+
+    /**
+     * Moves the node to the first position in the group
+     *
+     * @param request The node on which the request was made
+     */
+    @Subscribe
+    public void handleMoveNodeToTopRequest( MoveNodeToTopRequest request ) {
+        SortableDefaultMutableTreeNode popupNode = request.getNode();
+        popupNode.moveNodeToTop();
+    }
+
+    /**
+     * Moves the node up one position
+     *
+     * @param request
+     */
+    @Subscribe
+    public void handleMoveNodeUpRequest( MoveNodeUpRequest request ) {
+        SortableDefaultMutableTreeNode popupNode = request.getNode();
+        popupNode.moveNodeUp();
+    }
+
+    /**
+     * Moves the node down one position
+     *
+     * @param request
+     */
+    @Subscribe
+    public void requestMoveGroupDown( MoveNodeDownRequest request ) {
+        SortableDefaultMutableTreeNode popupNode = request.getNode();
+        popupNode.moveNodeDown();
+    }
+
+    /**
+     * Moves the node to the last position
+     *
+     * @param request
+     */
+    @Subscribe
+    public void requestMoveGroupToBottom( MoveNodeToBottomRequest request ) {
+        SortableDefaultMutableTreeNode popupNode = request.getNode();
+        popupNode.moveNodeToBottom();
+    }
+
+    /**
+     * Removes the supplied node from it's parent
+     *
+     * @param request
+     */
+    @Subscribe
+    public void handleRemoveNodeRequest( RemoveNodeRequest request ) {
+        SortableDefaultMutableTreeNode nodeToRemove = request.getNode();
+        SortableDefaultMutableTreeNode parentNode = (SortableDefaultMutableTreeNode) nodeToRemove.getParent();
+        if ( nodeToRemove.deleteNode() ) {
+            JpoEventBus.getInstance().post( new ShowGroupRequest( parentNode ) );
+        }
     }
 
     /**
@@ -364,7 +728,8 @@ public class ApplicationEventHandler
                             JOptionPane.ERROR_MESSAGE );
                     return;
                 }
-                positionToNode( Settings.pictureCollection.getRootNode() );
+                //positionToNode( Settings.pictureCollection.getRootNode() );
+                JpoEventBus.getInstance().post( new GroupSelectionEvent( Settings.pictureCollection.getRootNode() ) );
             }
         };
         t.start();
@@ -375,24 +740,35 @@ public class ApplicationEventHandler
      * shows the thumbnails of the query.
      *
      * @param node The query node to be displayed
-     */
-    public void showQuery( DefaultMutableTreeNode node ) {
-        mainWindow.tabToSearches();
-        searchesJTree.setSelectedNode( node );
-    }
-
-    /**
-     * Calling this method brings up a filechooser which allows pictures and
-     * directories to be selected that are then added to the supplied node.
      *
-     * @param groupNode The group node to which to add the pictures or
-     * subdirectories
+     *
+     * public void showQuery( DefaultMutableTreeNode node ) {
+     * mainWindow.tabToSearches(); searchesJTree.setSelectedNode( node ); }
      */
-    public void chooseAndAddPicturesToGroup(
-            SortableDefaultMutableTreeNode groupNode ) {
-        PictureFileChooser pa = new PictureFileChooser( groupNode );
+    /**
+     * Brings up a chooser to pick files and add them to the group.
+     *
+     * @param request the Request
+     */
+    @Subscribe
+    public void handleChooseAndAddPicturesToGroupRequest( ChooseAndAddPicturesToGroupRequest request ) {
+        new PictureFileChooser( request.getNode() );
     }
 
+    
+        /**
+     * Moves the movingNode into the last child position of the target node
+     *
+     * @param request 
+     */
+    @Subscribe
+    public void handleMoveNodeToNodeRequest( MoveNodeToNodeRequest request ) {
+        SortableDefaultMutableTreeNode movingNode = request.getMovingNode();
+        SortableDefaultMutableTreeNode targetGroup = request.getTargetNode();
+        movingNode.moveToLastChild( targetGroup );
+    }
+
+    
     /**
      * Checks for unsaved changes in the data model, pops up a dialog and does
      * the save if so indicated by the user.
@@ -421,10 +797,10 @@ public class ApplicationEventHandler
                 case 0:
                     return false;
                 case 1:
-                    requestFileSave();
+                    JpoEventBus.getInstance().post(  new FileSaveRequest() );
                     return Settings.pictureCollection.getUnsavedUpdates();
                 case 2:
-                    requestFileSaveAs();
+                    JpoEventBus.getInstance().post(  new FileSaveAsRequest() );
                     return Settings.pictureCollection.getUnsavedUpdates();
                 case 3:
                     return true;

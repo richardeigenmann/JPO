@@ -58,7 +58,7 @@ public class ThumbnailCreationQueue {
     public static boolean requestThumbnailCreation(
             ThumbnailController thumbnailController,
             int priority, boolean force ) {
-        LOGGER.fine( "Chucking a request on the queue for ThumbnailController: " + thumbnailController.toString() );
+        //LOGGER.fine( "Chucking a request on the queue for ThumbnailController: " + thumbnailController.toString() );
         ThumbnailQueueRequest requestFoundOnQueue = findThumbnailQueueRequest( thumbnailController );
         if ( requestFoundOnQueue == null ) {
             ThumbnailQueueRequest thumbnailQueueRequest = new ThumbnailQueueRequest( thumbnailController, priority, force );
@@ -150,7 +150,7 @@ public class ThumbnailCreationQueue {
         ThumbnailQueueRequest req = null, test;
         for ( Iterator i = QUEUE.iterator(); i.hasNext(); ) {
             test = (ThumbnailQueueRequest) i.next();
-            if ( test.getThumbnailController().equals( thumbnailController ) ) {
+            if ((thumbnailController !=null) &&( test.getThumbnailController().equals( thumbnailController ) )) {
                 req = test;
                 break;
             }

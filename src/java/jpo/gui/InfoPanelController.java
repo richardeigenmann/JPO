@@ -1,5 +1,6 @@
 package jpo.gui;
 
+import com.google.common.eventbus.Subscribe;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import jpo.dataModel.ArrayListNavigator;
@@ -13,10 +14,13 @@ import java.util.logging.Logger;
 import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
 import javax.swing.tree.DefaultMutableTreeNode;
+import jpo.EventBus.GroupSelectionEvent;
+import jpo.EventBus.JpoEventBus;
+import jpo.EventBus.ShowQueryRequest;
 import jpo.dataModel.DescriptionWordMap;
 import jpo.TagCloud.TagCloud;
 import jpo.dataModel.Settings;
-import jpo.dataModel.Tools;
+import jpo.dataModel.StaticNodesQuery;
 
 /*
  InfoPanelController.java:  The Controller for the Info Panel
@@ -41,15 +45,10 @@ import jpo.dataModel.Tools;
  */
 public class InfoPanelController implements TagClickListener {
 
-    /**
-     * Constructor for the InfoPanel. methods that allow thumbnails to be
-     * displayed.
-     * <p>
-     *
-     */
     public InfoPanelController() {
-        Tools.checkEDT();
+        JpoEventBus.getInstance().register( this );
     }
+
     /**
      * Defines a logger for this class
      */
@@ -85,6 +84,11 @@ public class InfoPanelController implements TagClickListener {
 
     public JComponent getTagCloud() {
         return tagCloud;
+    }
+
+    @Subscribe
+    public void handleGroupSelectionEvent( GroupSelectionEvent event ) {
+        showInfo( event.getNode() );
     }
 
     /**
@@ -128,9 +132,11 @@ public class InfoPanelController implements TagClickListener {
 
     @Override
     public void tagClicked( String key ) {
-        HashSet<SortableDefaultMutableTreeNode> hs = dwm.getWordNodeMap().get( key );
-        ArrayList<SortableDefaultMutableTreeNode> set = new ArrayList<SortableDefaultMutableTreeNode>( hs );
-        ArrayListNavigator alb = new ArrayListNavigator( key, set );
-        Jpo.showThumbnails( alb );
+        HashSet<SortableDefaultMutableTreeNode> hashSet = dwm.getWordNodeMap().get( key );
+        ArrayList<SortableDefaultMutableTreeNode> set = new ArrayList<>( hashSet );
+        StaticNodesQuery query = new StaticNodesQuery( "Word: "+key, set);
+        //ArrayListNavigator alb = new ArrayListNavigator( key, set );
+        //Jpo.showThumbnails( alb );
+        JpoEventBus.getInstance().post ( new ShowQueryRequest ( query)) ;
     }
 }

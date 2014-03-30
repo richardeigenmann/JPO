@@ -73,7 +73,7 @@ public class Main {
         testClass( "com.google.gdata.client.media.MediaService", "gdata-media-1.0", good, missing );
         testClass( "com.google.gdata.client.photos.PicasawebService", "gdata-photos-2.0", good, missing );
         testClass( "com.google.common.math.IntMath", "guava-13.0", good, missing );
-        testClass( "javax.jnlp.BasicService", "jnlp", good, missing );
+        //testClass( "javax.jnlp.BasicService", "jnlp", good, missing );
         testClass( "net.javaprog.ui.wizard.AbstractStep", "jwizz-0.1.4", good, missing );
         testClass( "javax.mail.Message", "mail", good, missing );
         testClass( "com.drew.imaging.jpeg.JpegMetadataReader", "metadata-extractor-2.6.4.jar", good, missing );

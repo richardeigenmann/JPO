@@ -2,7 +2,6 @@ package jpo.dataModel;
 
 import java.awt.datatransfer.Transferable;
 import java.util.logging.Level;
-import jpo.gui.ThumbnailController;
 import jpo.gui.ThumbnailCreationQueue;
 import jpo.gui.ThumbnailQueueRequest;
 import jpo.gui.JpoTransferable;
@@ -40,26 +39,26 @@ import javax.swing.tree.TreePath;
 
 
 /*
-SortableDefaultMutableTreeNode.java:  The main data model object for the JPO application
+ SortableDefaultMutableTreeNode.java:  The main data model object for the JPO application
 
-Copyright (C) 2003 - 2011  Richard Eigenmann, Zurich, Switzerland
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or any later version. This program is distributed
-in the hope that it will be useful, but WITHOUT ANY WARRANTY;
-without even the implied warranty of MERCHANTABILITY or FITNESS
-FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-more details. You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-The license is in gpl.txt.
-See http://www.gnu.org/copyleft/gpl.html for the details.
+ Copyright (C) 2003 - 2011  Richard Eigenmann, Zurich, Switzerland
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or any later version. This program is distributed
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ without even the implied warranty of MERCHANTABILITY or FITNESS
+ FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+ more details. You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ The license is in gpl.txt.
+ See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 /**
- *  This is the main data model object for the JPO Collection.
- *  It extends the DefaultMutableTreeNode with the Comparable
- *  Interface that allows our nodes to be compared.
+ * This is the main data model object for the JPO Collection. It extends the
+ * DefaultMutableTreeNode with the Comparable Interface that allows our nodes to
+ * be compared.
  */
 public class SortableDefaultMutableTreeNode
         extends DefaultMutableTreeNode
@@ -70,17 +69,16 @@ public class SortableDefaultMutableTreeNode
      */
     private static final Logger LOGGER = Logger.getLogger( SortableDefaultMutableTreeNode.class.getName() );
 
-
     /**
-     *   Constructor for a new node.
+     * Constructor for a new node.
      */
     public SortableDefaultMutableTreeNode() {
         super();
     }
 
-
     /**
      * Constructor for a new node including a user object.
+     *
      * @param userObject
      */
     public SortableDefaultMutableTreeNode( Object userObject ) {
@@ -88,18 +86,19 @@ public class SortableDefaultMutableTreeNode
         setUserObject( userObject );
     }
 
-
     /**
-     *   returns the collection associated with this node
+     * returns the collection associated with this node
+     *
      * @return the picture collection.
      */
     public PictureCollection getPictureCollection() {
         return Settings.pictureCollection;
     }
 
-    
     /**
-     * Returns a NodeStatistics object which can be queried for stuff about the node
+     * Returns a NodeStatistics object which can be queried for stuff about the
+     * node
+     *
      * @return a new NodeStatistics object
      */
     public NodeStatistics getNodeStatistics() {
@@ -107,10 +106,11 @@ public class SortableDefaultMutableTreeNode
     }
 
     /**
-     *  Call this method to sort the Children of a node by a field. The value of sortCriteria can be one of
-     *   {@link Settings#DESCRIPTION}, {@link Settings#FILM_REFERENCE}, {@link Settings#CREATION_TIME},
+     * Call this method to sort the Children of a node by a field. The value of
+     * sortCriteria can be one of      {@link Settings#DESCRIPTION}, {@link Settings#FILM_REFERENCE}, {@link Settings#CREATION_TIME},
      *   {@link Settings#COMMENT}, {@link Settings#PHOTOGRAPHER}, {@link Settings#COPYRIGHT_HOLDER}.
-     *  @param  sortCriteria The criteria by which the pictures should be sorted.
+     *
+     * @param sortCriteria The criteria by which the pictures should be sorted.
      */
     public void sortChildren( int sortCriteria ) {
         int childCount = getChildCount();
@@ -139,17 +139,17 @@ public class SortableDefaultMutableTreeNode
     }
 
     /**
-     *  This field records the field by which the group is to be sorted. This is not very
-     *  elegant as a second sort could run at the same time and clobber this global variable.
-     *  But that's not very likely on a single user app like this.
+     * This field records the field by which the group is to be sorted. This is
+     * not very elegant as a second sort could run at the same time and clobber
+     * this global variable. But that's not very likely on a single user app
+     * like this.
      */
     private static int sortfield;
 
-
     /**
-     *   Overridden method to allow sorting of nodes. It uses the static global variable
-     *   sortfield to figure out what to compare on. The value of sortfield can be one of
-     *   {@link Settings#DESCRIPTION}, {@link Settings#FILM_REFERENCE}, {@link Settings#CREATION_TIME},
+     * Overridden method to allow sorting of nodes. It uses the static global
+     * variable sortfield to figure out what to compare on. The value of
+     * sortfield can be one of      {@link Settings#DESCRIPTION}, {@link Settings#FILM_REFERENCE}, {@link Settings#CREATION_TIME},
      *   {@link Settings#COMMENT}, {@link Settings#PHOTOGRAPHER}, {@link Settings#COPYRIGHT_HOLDER}.
      *
      * @param o
@@ -199,12 +199,12 @@ public class SortableDefaultMutableTreeNode
         }
     }
 
-
     /**
-     *  Returns the first node with a picture before the current one in the tree.
-     *  It uses the getPreviousNode method of DefaultMutableTreeNode.
+     * Returns the first node with a picture before the current one in the tree.
+     * It uses the getPreviousNode method of DefaultMutableTreeNode.
      *
-     *  @return	the first node with a picture in preorder traversal or null if none found.
+     * @return	the first node with a picture in preorder traversal or null if
+     * none found.
      */
     public SortableDefaultMutableTreeNode getPreviousPicture() {
         DefaultMutableTreeNode prevNode = getPreviousNode();
@@ -214,14 +214,13 @@ public class SortableDefaultMutableTreeNode
         return (SortableDefaultMutableTreeNode) prevNode;
     }
 
-
     /**
-     *   Returns the next node with a picture found after current one in the tree. This can
-     *   be in another Group.
-     *   It uses the getNextNode method of the DefaultMutableTreeNode.
+     * Returns the next node with a picture found after current one in the tree.
+     * This can be in another Group. It uses the getNextNode method of the
+     * DefaultMutableTreeNode.
      *
-     *   @return The SortableDefaultMutableTreeNode that represents the next
-     *		 picture. If no picture can be found it returns null.
+     * @return The SortableDefaultMutableTreeNode that represents the next
+     * picture. If no picture can be found it returns null.
      *
      */
     public SortableDefaultMutableTreeNode getNextPicture() {
@@ -232,13 +231,13 @@ public class SortableDefaultMutableTreeNode
         return (SortableDefaultMutableTreeNode) nextNode;
     }
 
-
     /**
-     *   Returns the next node with a picture found after current one in the current Group
-     *   It uses the getNextSibling method of the DefaultMutableTreeNode.
+     * Returns the next node with a picture found after current one in the
+     * current Group It uses the getNextSibling method of the
+     * DefaultMutableTreeNode.
      *
-     *   @return The SortableDefaultMutableTreeNode that represents the next
-     *		 picture. If no picture can be found it returns null.
+     * @return The SortableDefaultMutableTreeNode that represents the next
+     * picture. If no picture can be found it returns null.
      *
      */
     public SortableDefaultMutableTreeNode getNextGroupPicture() {
@@ -249,11 +248,12 @@ public class SortableDefaultMutableTreeNode
         return (SortableDefaultMutableTreeNode) nextNode;
     }
 
-
     /**
-     *  Returns the first child node under the current node which holds a PictureInfo object.
+     * Returns the first child node under the current node which holds a
+     * PictureInfo object.
      *
-     *  @return  The first child node holding a picture or null if none can be found.
+     * @return The first child node holding a picture or null if none can be
+     * found.
      */
     public SortableDefaultMutableTreeNode findFirstPicture() {
         SortableDefaultMutableTreeNode testNode;
@@ -273,10 +273,11 @@ public class SortableDefaultMutableTreeNode
     }
 
     /**
-     *  This method collects all pictures under the current node and returns them as an Array List..
+     * This method collects all pictures under the current node and returns them
+     * as an Array List..
      *
      * @param recursive Whether to add the pictures of any groups nodes or not
-     * @return  An ArrayList of child nodes that hold a picture
+     * @return An ArrayList of child nodes that hold a picture
      */
     public ArrayList<SortableDefaultMutableTreeNode> getChildPictureNodes(
             boolean recursive ) {
@@ -295,11 +296,13 @@ public class SortableDefaultMutableTreeNode
         return pictureNodes;
     }
 
-
     /**
-     *  This method is being overridden to allow us to capture editing events on the JTree that is rendering this node.
-     *  The TreeCellEditor will send the changed label as a String type object to the setUserObject method of this class.
-     *  My overriding this we can intercept this and update the PictureInfo or GroupInfo accordingly.
+     * This method is being overridden to allow us to capture editing events on
+     * the JTree that is rendering this node. The TreeCellEditor will send the
+     * changed label as a String type object to the setUserObject method of this
+     * class. My overriding this we can intercept this and update the
+     * PictureInfo or GroupInfo accordingly.
+     *
      * @param o
      */
     @Override
@@ -335,13 +338,12 @@ public class SortableDefaultMutableTreeNode
         }
     }
 
-
     /**
-     *   This method is called by the drop method of the DragTarget to do the
-     *   move. It deals with the intricacies of the drop event and handles all
-     *   the moving, cloning and positioning that is required.
+     * This method is called by the drop method of the DragTarget to do the
+     * move. It deals with the intricacies of the drop event and handles all the
+     * moving, cloning and positioning that is required.
      *
-     *   @param event The event the listening object received.
+     * @param event The event the listening object received.
      */
     public void executeDrop( DropTargetDropEvent event ) {
         //logger.info( "SDMTN.executeDrop: invoked");
@@ -360,7 +362,6 @@ public class SortableDefaultMutableTreeNode
             return;
         }
 
-
         int actionType = event.getDropAction();
         if ( ( actionType == DnDConstants.ACTION_MOVE ) || ( actionType == DnDConstants.ACTION_COPY ) ) {
             event.acceptDrop( actionType );   // crucial Step!
@@ -370,7 +371,6 @@ public class SortableDefaultMutableTreeNode
             event.dropComplete( false );
             return;
         }
-
 
         SortableDefaultMutableTreeNode sourceNode;
         int originalHashCode;
@@ -385,7 +385,7 @@ public class SortableDefaultMutableTreeNode
             event.dropComplete( false );
             return;
         } catch ( java.io.IOException x ) {
-            LOGGER.info(  x.getMessage() );
+            LOGGER.info( x.getMessage() );
             event.dropComplete( false );
             return;
         } catch ( ClassCastException x ) {
@@ -396,7 +396,7 @@ public class SortableDefaultMutableTreeNode
 
 
         /* We must ensure that if the action is a move it does not drop into
-        itself or into a child of itself. */
+         itself or into a child of itself. */
         for ( int i = 0; i < arrayOfNodes.length; i++ ) {
             sourceNode = (SortableDefaultMutableTreeNode) arrayOfNodes[i];
             if ( this.isNodeAncestor( sourceNode ) ) {
@@ -409,10 +409,7 @@ public class SortableDefaultMutableTreeNode
             }
         }
 
-
-
         // The drop is a valid one.
-
         //  memorise the group of the drop location.
         SortableDefaultMutableTreeNode groupOfDropLocation;
         if ( this.getUserObject() instanceof GroupInfo ) {
@@ -426,7 +423,6 @@ public class SortableDefaultMutableTreeNode
         } else {
             LOGGER.info( "SDMTN.executeDrop failed to find the group of the drop location. Not memorizing." );
         }
-
 
         boolean dropcomplete = false;
         for ( Object arrayOfNode : arrayOfNodes ) {
@@ -492,12 +488,12 @@ public class SortableDefaultMutableTreeNode
         }
         event.dropComplete( dropcomplete );
 
-
     }
 
-
     /**
-     * This is where the Nodes in the tree find out about changes in the PictureInfo object
+     * This is where the Nodes in the tree find out about changes in the
+     * PictureInfo object
+     *
      * @param e
      */
     @Override
@@ -507,42 +503,46 @@ public class SortableDefaultMutableTreeNode
     }
 
     /**
-     *   This inner class creates a popup menu for group drop events to find out whether to drop
-     *   into before or after the drop node.
+     * This inner class creates a popup menu for group drop events to find out
+     * whether to drop into before or after the drop node.
      */
     class GroupDropPopupMenu
             extends JPopupMenu {
 
         /**
-         *  menu item that allows the user to edit the group description
-         **/
+         * menu item that allows the user to edit the group description
+         *
+         */
         private final JMenuItem dropBefore = new JMenuItem( Settings.jpoResources.getString( "GDPMdropBefore" ) );
 
         /**
-         *  menu item that allows the user to edit the group description
-         **/
+         * menu item that allows the user to edit the group description
+         *
+         */
         private final JMenuItem dropAfter = new JMenuItem( Settings.jpoResources.getString( "GDPMdropAfter" ) );
 
         /**
-         *  menu item that allows the user to edit the group description
-         **/
+         * menu item that allows the user to edit the group description
+         *
+         */
         private final JMenuItem dropIntoFirst = new JMenuItem( Settings.jpoResources.getString( "GDPMdropIntoFirst" ) );
 
         /**
-         *  menu item that allows the user to edit the group description
-         **/
+         * menu item that allows the user to edit the group description
+         *
+         */
         private final JMenuItem dropIntoLast = new JMenuItem( Settings.jpoResources.getString( "GDPMdropIntoLast" ) );
 
         /**
-         *  menu item that allows the user to edit the group description
-         **/
+         * menu item that allows the user to edit the group description
+         *
+         */
         private final JMenuItem dropCancel = new JMenuItem( Settings.jpoResources.getString( "GDPMdropCancel" ) );
 
-
         /**
-         *   This inner class creates a popup menu for group drop events to find out whether to drop
-         *   into before or after the drop node.
-         * TODO: Doesn't really belong here from a MVC perspective...
+         * This inner class creates a popup menu for group drop events to find
+         * out whether to drop into before or after the drop node. TODO: Doesn't
+         * really belong here from a MVC perspective...
          */
         private GroupDropPopupMenu( final DropTargetDropEvent event,
                 final SortableDefaultMutableTreeNode sourceNode,
@@ -633,7 +633,6 @@ public class SortableDefaultMutableTreeNode
             } );
             add( dropIntoLast );
 
-
             dropCancel.addActionListener( new ActionListener() {
 
                 @Override
@@ -646,16 +645,16 @@ public class SortableDefaultMutableTreeNode
         }
     }
 
-
     /**
-     *  This method adds the specified flat file of images at the current node.
+     * This method adds the specified flat file of images at the current node.
+     *
      * @param chosenFile
      * @throws IOException
      */
     public void addFlatFile( File chosenFile ) throws IOException {
-        SortableDefaultMutableTreeNode newNode =
-                new SortableDefaultMutableTreeNode(
-                new GroupInfo( chosenFile.getName() ) );
+        SortableDefaultMutableTreeNode newNode
+                = new SortableDefaultMutableTreeNode(
+                        new GroupInfo( chosenFile.getName() ) );
         this.add( newNode );
         BufferedReader in = new BufferedReader( new FileReader( chosenFile ) );
         String sb = new String();
@@ -671,15 +670,14 @@ public class SortableDefaultMutableTreeNode
             }
 
             // dangerous but it doesn't continue if the first condition is true
-
             if ( ( testFile != null ) && ( testFile.canRead() ) ) {
                 //logger.info ( "Adding picture: " + sb );
                 SortableDefaultMutableTreeNode newPictureNode = new SortableDefaultMutableTreeNode(
                         new PictureInfo(
-                        sb,
-                        Tools.getNewLowresFilename(),
-                        Tools.stripOutFilenameRoot( testFile ),
-                        "" ) );
+                                sb,
+                                Tools.getNewLowresFilename(),
+                                Tools.stripOutFilenameRoot( testFile ),
+                                "" ) );
                 newNode.add( newPictureNode );
             } else {
                 LOGGER.info( "Not adding picture: " + sb + " because it can't be read" );
@@ -690,12 +688,11 @@ public class SortableDefaultMutableTreeNode
         getPictureCollection().setUnsavedUpdates( false );
     }
 
-
     /**
-     *  This method removes the designated SortableDefaultMutableTreeNode from the tree.
-     *  The parent node is made the currently selected node.
+     * This method removes the designated SortableDefaultMutableTreeNode from
+     * the tree. The parent node is made the currently selected node.
      *
-     *  @return	true if successful, false if not
+     * @return	true if successful, false if not
      *
      */
     public boolean deleteNode() {
@@ -721,7 +718,9 @@ public class SortableDefaultMutableTreeNode
             getPictureCollection().sendNodesWereRemoved( parentNode, childIndices, removedChildren );
         }
 
-        /**  removeThumbnailRequest the move targets here **/
+        /**
+         * removeThumbnailRequest the move targets here *
+         */
         Enumeration e = this.breadthFirstEnumeration();
         SortableDefaultMutableTreeNode testNode;
         while ( e.hasMoreElements() ) {
@@ -731,10 +730,9 @@ public class SortableDefaultMutableTreeNode
         return true;
     }
 
-
     /**
-     *   Overridden method which will do the default behaviour and then sends a notification to
-     *   the Tree Model.
+     * Overridden method which will do the default behaviour and then sends a
+     * notification to the Tree Model.
      */
     @Override
     public void removeFromParent() {
@@ -748,14 +746,15 @@ public class SortableDefaultMutableTreeNode
         super.removeFromParent();
         if ( getPictureCollection().getSendModelUpdates() ) {
             getPictureCollection().sendNodesWereRemoved( oldParentNode,
-                    new int[] { oldParentIndex },
-                    new Object[] { this } );
+                    new int[]{ oldParentIndex },
+                    new Object[]{ this } );
         }
     }
 
-
     /**
-     * Returns a new SortableDefaultTreeMode which has the same content as the source node
+     * Returns a new SortableDefaultTreeMode which has the same content as the
+     * source node
+     *
      * @return a new node which is a clone of the old one
      */
     public SortableDefaultMutableTreeNode getClone() {
@@ -773,14 +772,15 @@ public class SortableDefaultMutableTreeNode
         return newNode;
     }
 
-
     /**
-     *   This method adds a new node to the data model of the tree. It is the overridden add
-     *   method which will first do the default behaviour and then send a notification to
-     *   the Tree Model if model updates are being requested. Likewise the unsaved changes
-     *   of the collection are only being updated when model updates are not being reported.
-     *   This allows the loading of collections (which of course massively change the collection
-     *   in memory) to report nothing changed.
+     * This method adds a new node to the data model of the tree. It is the
+     * overridden add method which will first do the default behaviour and then
+     * send a notification to the Tree Model if model updates are being
+     * requested. Likewise the unsaved changes of the collection are only being
+     * updated when model updates are not being reported. This allows the
+     * loading of collections (which of course massively change the collection
+     * in memory) to report nothing changed.
+     *
      * @param newNode
      */
     public void add( SortableDefaultMutableTreeNode newNode ) {
@@ -789,55 +789,56 @@ public class SortableDefaultMutableTreeNode
         if ( getPictureCollection().getSendModelUpdates() ) {
             int index = this.getIndex( newNode );
             LOGGER.fine( String.format( "The new node %s has index %d", newNode, index ) );
-            getPictureCollection().sendNodesWereInserted( this, new int[] { index } );
+            getPictureCollection().sendNodesWereInserted( this, new int[]{ index } );
             getPictureCollection().setUnsavedUpdates();
         }
     }
 
-
     /**
      * Adds a new Group to the current node with the indicated description.
+     *
      * @param description
-     * @return  The new node is returned for convenience.
+     * @return The new node is returned for convenience.
      */
     public SortableDefaultMutableTreeNode addGroupNode( String description ) {
-        SortableDefaultMutableTreeNode newNode =
-                new SortableDefaultMutableTreeNode(
-                new GroupInfo( description ) );
+        SortableDefaultMutableTreeNode newNode
+                = new SortableDefaultMutableTreeNode(
+                        new GroupInfo( description ) );
         add( newNode );
         return newNode;
     }
 
-
     /**
-     *   Override method which will do the default behaviour and then sends a notification to
-     *   the Tree Model.
+     * Override method which will do the default behaviour and then sends a
+     * notification to the Tree Model.
+     *
      * @param node
      * @param index
      */
     public void insert( SortableDefaultMutableTreeNode node, int index ) {
-        LOGGER.log( Level.FINE, "insert was called for node: {0}", node.toString());
+        LOGGER.log( Level.FINE, "insert was called for node: {0}", node.toString() );
         super.insert( node, index );
         getPictureCollection().setUnsavedUpdates();
         if ( getPictureCollection().getSendModelUpdates() ) {
-            getPictureCollection().sendNodesWereInserted( this, new int[] { index } );
+            getPictureCollection().sendNodesWereInserted( this, new int[]{ index } );
         }
     }
 
-
     /**
-     *   Validates the target of the picture copy instruction and tries to find the
-     *   appropriate thing to do. It does the following steps:<br>
-     *   1. If any input is null the copy is aborted with an error dialog.<br>
-     *   2: If the target is a directory the filename of the original is used.<br>
-     *   3: If the target is an existing file the copy is aborted<br>
-     *   4: If the target directory doesn't exist then the directories are created.<br>
-     *   5: The file extension is made to be that of the original if it isn't already that.<br>
-     *   When all preconditions are met the image is copied
+     * Validates the target of the picture copy instruction and tries to find
+     * the appropriate thing to do. It does the following steps:<br>
+     * 1. If any input is null the copy is aborted with an error dialog.<br>
+     * 2: If the target is a directory the filename of the original is used.<br>
+     * 3: If the target is an existing file the copy is aborted<br>
+     * 4: If the target directory doesn't exist then the directories are
+     * created.<br>
+     * 5: The file extension is made to be that of the original if it isn't
+     * already that.<br>
+     * When all preconditions are met the image is copied
      *
      *  //TODO should throw exceptions instead of doing dialogs
      *
-     *   @param targetFile  The target location for the new Picture.
+     * @param targetFile The target location for the new Picture.
      */
     public void validateAndCopyPicture( File targetFile ) {
         if ( ( this == null ) || ( targetFile == null ) ) {
@@ -853,12 +854,11 @@ public class SortableDefaultMutableTreeNode
             return;
         }
 
-
         URL originalUrl;
         try {
             originalUrl = ( (PictureInfo) this.getUserObject() ).getHighresURL();
         } catch ( MalformedURLException x ) {
-            LOGGER.log( Level.INFO, "MarformedURLException trapped on: {0}\nReason: {1}", new Object[]{((PictureInfo) this.getUserObject()).getHighresLocation(), x.getMessage()});
+            LOGGER.log( Level.INFO, "MarformedURLException trapped on: {0}\nReason: {1}", new Object[]{ ( (PictureInfo) this.getUserObject() ).getHighresLocation(), x.getMessage() } );
             JOptionPane.showMessageDialog(
                     Settings.anchorFrame,
                     "MarformedURLException trapped on: " + ( (PictureInfo) this.getUserObject() ).getHighresLocation() + "\nReason: " + x.getMessage(),
@@ -892,7 +892,6 @@ public class SortableDefaultMutableTreeNode
             }
         }
 
-
         if ( targetFile.isDirectory() ) {
             try {
                 String sourceFilename = new File( new URI( originalUrl.toString() ) ).getName();
@@ -916,9 +915,9 @@ public class SortableDefaultMutableTreeNode
         Settings.memorizeCopyLocation( targetFile.getParent() );
     }
 
-
     /**
-     *  When this method is invoked on a node it is moved to the first child position of it's parent node.
+     * When this method is invoked on a node it is moved to the first child
+     * position of it's parent node.
      */
     public void moveNodeToTop() {
         if ( this.isRoot() ) {
@@ -934,10 +933,9 @@ public class SortableDefaultMutableTreeNode
         getPictureCollection().setUnsavedUpdates();
     }
 
-
     /**
-     *  When this method is invoked on a node it moves itself one position up towards the first
-     *  child position of it's parent node.
+     * When this method is invoked on a node it moves itself one position up
+     * towards the first child position of it's parent node.
      */
     public void moveNodeUp() {
         if ( this.isRoot() ) {
@@ -954,9 +952,8 @@ public class SortableDefaultMutableTreeNode
         getPictureCollection().setUnsavedUpdates();
     }
 
-
     /**
-     *  Method that moves a node down one position
+     * Method that moves a node down one position
      */
     public void moveNodeDown() {
         if ( this.isRoot() ) {
@@ -975,9 +972,8 @@ public class SortableDefaultMutableTreeNode
         getPictureCollection().setUnsavedUpdates();
     }
 
-
     /**
-     *  Method that moves a node to the bottom of the current branch
+     * Method that moves a node to the bottom of the current branch
      */
     public void moveNodeToBottom() {
         if ( this.isRoot() ) {
@@ -996,9 +992,9 @@ public class SortableDefaultMutableTreeNode
         getPictureCollection().setUnsavedUpdates();
     }
 
-
     /**
-     *  When this method is invoked on a node it becomes a sub-node of it's preceeding group.
+     * When this method is invoked on a node it becomes a sub-node of it's
+     * preceeding group.
      */
     public void indentNode() {
         if ( this.isRoot() ) {
@@ -1011,9 +1007,9 @@ public class SortableDefaultMutableTreeNode
         } while ( ( childBefore != null ) && ( !( childBefore.getUserObject() instanceof GroupInfo ) ) );
 
         if ( childBefore == null ) {
-            SortableDefaultMutableTreeNode newGroup =
-                    new SortableDefaultMutableTreeNode(
-                    new GroupInfo( Settings.jpoResources.getString( "newGroup" ) ) );
+            SortableDefaultMutableTreeNode newGroup
+                    = new SortableDefaultMutableTreeNode(
+                            new GroupInfo( Settings.jpoResources.getString( "newGroup" ) ) );
             parentNode.insert( newGroup, 0 );
             this.removeFromParent();
             newGroup.add( this );
@@ -1024,10 +1020,9 @@ public class SortableDefaultMutableTreeNode
         getPictureCollection().setUnsavedUpdates();
     }
 
-
     /**
-     *  Method that outdents a node. This means the node will be placed just after it's parent's node
-     *  as a child of it's grandparent.
+     * Method that outdents a node. This means the node will be placed just
+     * after it's parent's node as a child of it's grandparent.
      */
     public void outdentNode() {
         if ( this.isRoot() ) {
@@ -1045,9 +1040,9 @@ public class SortableDefaultMutableTreeNode
         getPictureCollection().setUnsavedUpdates();
     }
 
-
     /**
      * Method that moves a node to bottom of the specified target group node
+     *
      * @param targetNode The target node you whish to attach the node to
      * @return true if the move was successful, false if not
      */
@@ -1067,9 +1062,9 @@ public class SortableDefaultMutableTreeNode
         return true;
     }
 
-
     /**
      * Method that moves the node to the spot before the indicated node
+     *
      * @param targetNode The before which you whish to insert the node to
      * @return true if the move was successful, false if not
      */
@@ -1090,9 +1085,9 @@ public class SortableDefaultMutableTreeNode
         return moveToIndex( targetParentNode, targetIndex );
     }
 
-
     /**
      * Method that moves the node to the specified index
+     *
      * @param parentNode The parent node that will get the child
      * @param index the position at which to insert
      * @return true if the move was successful, false if not
@@ -1119,11 +1114,11 @@ public class SortableDefaultMutableTreeNode
         return true;
     }
 
-
     /**
      * Informs whether this node allows children. If the node holds a
-     * PictureInfo it does not allow child nodes, if it holds a
-     * GroupInfo, it does.
+     * PictureInfo it does not allow child nodes, if it holds a GroupInfo, it
+     * does.
+     *
      * @return ture if child nodes are allowed, false if not
      */
     @Override
@@ -1138,15 +1133,19 @@ public class SortableDefaultMutableTreeNode
         return super.getAllowsChildren();
     }
 
-
     /**
-     *  Copies the pictures from the source tree to the target directory and adds them to the collection creating a progress GUI.
-     *  @param sourceDir The source directory for the pictures
-     *  @param targetDir  The target directory for the pictures
-     *  @param groupName the new name for the group
-     *  @param newOnly  If true only pictures not yet in the collection will be added.
-     *  @param retainDirectories  indicates that the directory structure should be preserved.
-     *  @param selectedCategories  the categories to be applied to the newly loaded pictures.
+     * Copies the pictures from the source tree to the target directory and adds
+     * them to the collection creating a progress GUI.
+     *
+     * @param sourceDir The source directory for the pictures
+     * @param targetDir The target directory for the pictures
+     * @param groupName the new name for the group
+     * @param newOnly If true only pictures not yet in the collection will be
+     * added.
+     * @param retainDirectories indicates that the directory structure should be
+     * preserved.
+     * @param selectedCategories the categories to be applied to the newly
+     * loaded pictures.
      * @return the new group
      *
      */
@@ -1158,9 +1157,9 @@ public class SortableDefaultMutableTreeNode
                 Settings.jpoResources.getString( "PictureAdderProgressDialogTitle" ),
                 Settings.jpoResources.getString( "picturesAdded" ) );
 
-        SortableDefaultMutableTreeNode newGroup =
-                new SortableDefaultMutableTreeNode(
-                new GroupInfo( groupName ) );
+        SortableDefaultMutableTreeNode newGroup
+                = new SortableDefaultMutableTreeNode(
+                        new GroupInfo( groupName ) );
 
         getPictureCollection().setSendModelUpdates( false );
         boolean picturesAdded = copyAddPictures1( files, targetDir, newGroup, progGui, newOnly, retainDirectories, selectedCategories );
@@ -1174,10 +1173,10 @@ public class SortableDefaultMutableTreeNode
         return newGroup;
     }
 
-
     /**
-     *  Copies the pictures from the source tree to the target directory and adds them to the collection.
-     *  This method does the actual loop.
+     * Copies the pictures from the source tree to the target directory and adds
+     * them to the collection. This method does the actual loop.
+     *
      * @param files
      * @param targetDir
      * @param receivingNode
@@ -1185,7 +1184,7 @@ public class SortableDefaultMutableTreeNode
      * @param newOnly
      * @param retainDirectories
      * @param selectedCategories
-     * @return  true if pictures were added, false if not.
+     * @return true if pictures were added, false if not.
      *
      */
     protected static boolean copyAddPictures1( File[] files,
@@ -1231,14 +1230,15 @@ public class SortableDefaultMutableTreeNode
         return picturesAdded;
     }
 
-
     /**
-     *  Copies the pictures from the source tree to the target directory and adds them to the
-     *  collection only if they have not been seen by the camera before.
+     * Copies the pictures from the source tree to the target directory and adds
+     * them to the collection only if they have not been seen by the camera
+     * before.
      *
-     * @param sourceDir 
-     * @param targetDir 
-     * @param  cam  The camera object with knows the checksums of the pictures seen before.
+     * @param sourceDir
+     * @param targetDir
+     * @param cam The camera object with knows the checksums of the pictures
+     * seen before.
      * @param groupName
      * @param retainDirectories
      * @param selectedCategories
@@ -1252,9 +1252,9 @@ public class SortableDefaultMutableTreeNode
         ProgressGui progGui = new ProgressGui( Tools.countfiles( files ),
                 Settings.jpoResources.getString( "PictureAdderProgressDialogTitle" ),
                 Settings.jpoResources.getString( "picturesAdded" ) );
-        SortableDefaultMutableTreeNode newGroup =
-                new SortableDefaultMutableTreeNode(
-                new GroupInfo( groupName ) );
+        SortableDefaultMutableTreeNode newGroup
+                = new SortableDefaultMutableTreeNode(
+                        new GroupInfo( groupName ) );
 
         getPictureCollection().setSendModelUpdates( false );
 
@@ -1274,13 +1274,14 @@ public class SortableDefaultMutableTreeNode
         return newGroup;
     }
 
-
     /**
-     *  Copies the pictures from the source File collection into the target node
-     *  @param newPictures  A Collection framework of the new picture Files
-     *  @param targetDir    The target directory for the copy operation
-     *  @param copyMode     Set to true if you want to copy, false if you want to move the pictures.
-     *  @param progressBar   The optional progressBar that should be incremented.
+     * Copies the pictures from the source File collection into the target node
+     *
+     * @param newPictures A Collection framework of the new picture Files
+     * @param targetDir The target directory for the copy operation
+     * @param copyMode Set to true if you want to copy, false if you want to
+     * move the pictures.
+     * @param progressBar The optional progressBar that should be incremented.
      *
      */
     public void copyAddPictures( Collection<File> newPictures, File targetDir,
@@ -1311,12 +1312,11 @@ public class SortableDefaultMutableTreeNode
         getPictureCollection().setSendModelUpdates( true );
     }
 
-
     /**
-     *   Loads the collection indicated by the File at the "this" node
+     * Loads the collection indicated by the File at the "this" node
      *
-     *   @param  fileToLoad		The File object that is to be loaded.
-     *   @throws FileNotFoundException
+     * @param fileToLoad	The File object that is to be loaded.
+     * @throws FileNotFoundException
      */
     public void fileLoad( File fileToLoad ) throws FileNotFoundException {
         if ( fileToLoad != null ) {
@@ -1326,11 +1326,10 @@ public class SortableDefaultMutableTreeNode
         }
     }
 
-
     /**
-     *   Loads the collection indicated by the Input stream at the "this" node.
+     * Loads the collection indicated by the Input stream at the "this" node.
      *
-     *   @param  is	The inputstream that is to be loaded.
+     * @param is	The inputstream that is to be loaded.
      */
     public void streamLoad( InputStream is ) {
         getPictureCollection().setSendModelUpdates( false ); // turn off model notification of each add for performance
@@ -1339,10 +1338,9 @@ public class SortableDefaultMutableTreeNode
         getPictureCollection().sendNodeStructureChanged( this );
     }
 
-
     /**
-     *  Copies the pictures from the source tree to the target directory and adds them to the collection.
-     *  This method does the actual loop.
+     * Copies the pictures from the source tree to the target directory and adds
+     * them to the collection. This method does the actual loop.
      *
      * @param files
      * @param targetDir
@@ -1360,7 +1358,6 @@ public class SortableDefaultMutableTreeNode
             Camera cam,
             boolean retainDirectories,
             HashSet<Object> selectedCategories ) {
-
 
         boolean picturesAdded = false;
         // add all the files from the array as nodes to the start node.
@@ -1403,14 +1400,15 @@ public class SortableDefaultMutableTreeNode
         return picturesAdded;
     }
 
-
     /**
-     *  Creates and add a new picture node to the current node from an image file.
+     * Creates and add a new picture node to the current node from an image
+     * file.
      *
-     *  @param  addFile  the file of the picture that should be added
-     *  @param  newOnly flag whether to check if the picture is in the collection already; if true will only add the picture if its not yet included
-     *  @param selectedCategories
-     * @return  true if the node was added, false if not.
+     * @param addFile the file of the picture that should be added
+     * @param newOnly flag whether to check if the picture is in the collection
+     * already; if true will only add the picture if its not yet included
+     * @param selectedCategories
+     * @return true if the node was added, false if not.
      */
     public boolean addSinglePicture( File addFile, boolean newOnly,
             HashSet<Object> selectedCategories ) {
@@ -1422,13 +1420,13 @@ public class SortableDefaultMutableTreeNode
         }
     }
 
-
     /**
-     *  this method adds a new Picture to the current node if the JVM has a reader for it.
+     * this method adds a new Picture to the current node if the JVM has a
+     * reader for it.
      *
-     *  @param  addFile  the file that should be added
-     *  @param categoryAssignment  Can be null
-     *  @return  true if the picture was valid, false if not.
+     * @param addFile the file that should be added
+     * @param categoryAssignment Can be null
+     * @return true if the picture was valid, false if not.
      */
     public boolean addPicture( File addFile, HashSet<Object> categoryAssignment ) {
         LOGGER.fine( String.format( "Adding file %s to the node %s", addFile.toString(), toString() ) );
@@ -1464,12 +1462,11 @@ public class SortableDefaultMutableTreeNode
         return true;
     }
 
-
     /**
-     * This method places a thumbnail creation request on the ThumbnailCreationQueue.
-     * It is here for convenience as it should be a controller doing this sort of stuff.
-     * @link PictureInfo#sendThumbnailChangedEvent()}
-     * event.
+     * This method places a thumbnail creation request on the
+     * ThumbnailCreationQueue. It is here for convenience as it should be a
+     * controller doing this sort of stuff.
+     * @link PictureInfo#sendThumbnailChangedEvent()} event.
      */
     public void refreshThumbnail() {
         if ( isRoot() ) {
@@ -1477,14 +1474,15 @@ public class SortableDefaultMutableTreeNode
             return;
         }
         LOGGER.fine( String.format( "refreshing the thumbnail on the node %s\nAbout to create the thubnail", this.toString() ) );
-        ThumbnailController t = new ThumbnailController( Settings.thumbnailSize );
-        t.setNode( new SingleNodeNavigator( this ), 0 );
-        LOGGER.fine( String.format( "Thumbnail %s created. Now chucking it on the creation queue", t.toString() ) );
-        ThumbnailCreationQueue.requestThumbnailCreation( t, ThumbnailQueueRequest.HIGH_PRIORITY, true );
+        //ThumbnailController t = new ThumbnailController( Settings.thumbnailSize );
+        //t.setNode( new SingleNodeNavigator( this ), 0 );
+        ThumbnailCreationQueue.requestThumbnailCreation( null,
+                ThumbnailQueueRequest.HIGH_PRIORITY, true );
+        //LOGGER.fine( String.format( "Thumbnail %s created. Now chucking it on the creation queue", t.toString() ) );
+        //ThumbnailCreationQueue.requestThumbnailCreation( t, ThumbnailQueueRequest.HIGH_PRIORITY, true );
     }
 
-    
-     /**
+    /**
      * This method extracts the thumbnail location from the supplied node. It
      * handles PictureInfo and GroupInfo nodes. If the userObject is something
      * else it will return the STRING "null" (to avoid NPE problems)
@@ -1521,14 +1519,15 @@ public class SortableDefaultMutableTreeNode
         }
         return newThumbnailFilename;
     }
-    
-    
 
     /**
-     * This method returns whether the supplied node is a descendent of the deletions that
-     * have been detected in the TreeModelListener delivered TreeModelEvent.
-     * @param  affectedNode  The node to check whether it is or is a descendent of the deleted node.
-     * @param  e the TreenModelEvent that was detected
+     * This method returns whether the supplied node is a descendent of the
+     * deletions that have been detected in the TreeModelListener delivered
+     * TreeModelEvent.
+     *
+     * @param affectedNode The node to check whether it is or is a descendent of
+     * the deleted node.
+     * @param e the TreenModelEvent that was detected
      * @return true if successful, false if not
      */
     public static boolean wasNodeDeleted(

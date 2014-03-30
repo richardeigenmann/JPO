@@ -10,9 +10,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
-import java.util.ArrayList;
 import java.util.Enumeration;
-import jpo.dataModel.GroupInfo;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
@@ -300,81 +298,7 @@ public class TreeNodeController {
 
     }
 
-    /**
-     * Bring up a Dialog where the user can input a new name for a file and
-     * rename it.
-     *
-     * @param node
-     */
-    public static void fileRename( SortableDefaultMutableTreeNode node ) {
-        Object userObject = node.getUserObject();
-        if ( !( userObject instanceof PictureInfo ) ) {
-            return;
-        }
+  
 
-        PictureInfo pi = (PictureInfo) userObject;
-        File highresFile = pi.getHighresFile();
-        if ( highresFile == null ) {
-            return;
-        }
-
-        Object object = Settings.jpoResources.getString( "FileRenameLabel1" ) + highresFile.toString() + Settings.jpoResources.getString( "FileRenameLabel2" );
-        String selectedValue = JOptionPane.showInputDialog(
-                Settings.anchorFrame, // parent component
-                object, // message
-                highresFile.toString() );				// initialSelectionValue
-        if ( selectedValue != null ) {
-            File newName = new File( selectedValue );
-            if ( highresFile.renameTo( newName ) ) {
-                LOGGER.log( Level.INFO, "Sucessufully renamed: {0} to: {1}", new Object[]{ highresFile.toString(), selectedValue } );
-                try {
-                    pi.setHighresLocation( newName.toURI().toURL() );
-                } catch ( MalformedURLException x ) {
-                    LOGGER.log( Level.INFO, "Caught a MalformedURLException because of: {0}", x.getMessage() );
-                }
-            } else {
-                LOGGER.log( Level.INFO, "Rename failed from : {0} to: {1}", new Object[]{ highresFile.toString(), selectedValue } );
-            }
-        }
-    }
-
-    /**
-     * This function brings up a PictureInfoEditor of a GroupInfoEditor
-     *
-     * @param node
-     */
-    public static void showEditGUI( SortableDefaultMutableTreeNode node ) {
-        if ( node == null ) {
-            LOGGER.severe( "How come this method was called with a null node?" );
-            Thread.dumpStack();
-            return;
-        }
-        if ( node.getUserObject() instanceof PictureInfo ) {
-            new PictureInfoEditor( node );
-        } else if ( node.getUserObject() instanceof GroupInfo ) {
-            new GroupInfoEditor( node );
-        } else {
-            LOGGER.info( String.format( "Don't know what kind of editor to use on node %s Ignoring request.", node.toString() ) );
-        }
-    }
-
-    /**
-     * This function opens the CateGoryUsageEditor.
-     *
-     * @param node
-     */
-    public static void showCategoryUsageGUI( SortableDefaultMutableTreeNode node ) {
-        //logger.info("SDMTN.showCategoryUsageGUI invoked");
-        if ( node.getUserObject() instanceof PictureInfo ) {
-            CategoryUsageJFrame cujf = new CategoryUsageJFrame();
-            ArrayList<SortableDefaultMutableTreeNode> nodes = new ArrayList<SortableDefaultMutableTreeNode>();
-            nodes.add( node );
-            cujf.setSelection( nodes );
-        } else if ( node.getUserObject() instanceof GroupInfo ) {
-            CategoryUsageJFrame cujf = new CategoryUsageJFrame();
-            cujf.setGroupSelection( node, false );
-        } else {
-            LOGGER.info( "SortableDefaultMutableTreeNode.showCategoryUsageGUI: doesn't know what kind of editor to use. Ignoring request." );
-        }
-    }
+  
 }

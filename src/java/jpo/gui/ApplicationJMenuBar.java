@@ -8,6 +8,15 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
+import jpo.EventBus.ChooseAndAddPicturesToGroupRequest;
+import jpo.EventBus.CloseApplicationRequest;
+import jpo.EventBus.FileLoadRequest;
+import jpo.EventBus.FileSaveAsRequest;
+import jpo.EventBus.FileSaveRequest;
+import jpo.EventBus.JpoEventBus;
+import jpo.EventBus.OpenSearchDialogRequest;
+import jpo.EventBus.StartDoublePanelSlideshowRequest;
+import jpo.EventBus.StartNewCollectionRequest;
 import jpo.gui.swing.HelpAboutWindow;
 import jpo.dataModel.RecentFilesChangeListener;
 import jpo.dataModel.Settings;
@@ -16,7 +25,7 @@ import jpo.gui.swing.PrivacyJFrame;
 /*
  ApplicationJMenuBar.java:  main menu for the application
 
- Copyright (C) 2002 -2011 Richard Eigenmann.
+ Copyright (C) 2002 -2014 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -214,7 +223,7 @@ public class ApplicationJMenuBar
 
             @Override
             public void actionPerformed( ActionEvent e ) {
-                caller.requestFileNew();
+                JpoEventBus.getInstance().post( new StartNewCollectionRequest() );
             }
         } );
         FileJMenu.add( FileNewJMenuItem );
@@ -224,7 +233,7 @@ public class ApplicationJMenuBar
 
             @Override
             public void actionPerformed( ActionEvent e ) {
-                caller.requestAddPictures();
+                JpoEventBus.getInstance().post( new ChooseAndAddPicturesToGroupRequest( Settings.pictureCollection.getRootNode() ) );
             }
         } );
         FileJMenu.add( FileAddJMenuItem );
@@ -235,7 +244,7 @@ public class ApplicationJMenuBar
 
             @Override
             public void actionPerformed( ActionEvent e ) {
-                caller.requestFileLoad();
+                JpoEventBus.getInstance().post( new FileLoadRequest() );
             }
         } );
         FileJMenu.add( FileLoadJMenuItem );
@@ -265,7 +274,7 @@ public class ApplicationJMenuBar
 
             @Override
             public void actionPerformed( ActionEvent e ) {
-                caller.requestFileSave();
+                JpoEventBus.getInstance().post( new FileSaveRequest() );
             }
         } );
         FileJMenu.add( FileSaveJMenuItem );
@@ -276,7 +285,7 @@ public class ApplicationJMenuBar
 
             @Override
             public void actionPerformed( ActionEvent e ) {
-                caller.requestFileSaveAs();
+                JpoEventBus.getInstance().post( new FileSaveAsRequest() );
             }
         } );
         FileJMenu.add( FileSaveAsJMenuItem );
@@ -286,7 +295,7 @@ public class ApplicationJMenuBar
 
             @Override
             public void actionPerformed( ActionEvent e ) {
-                caller.requestExit();
+                JpoEventBus.getInstance().post( new CloseApplicationRequest() );
             }
         } );
         FileJMenu.add( FileExitJMenuItem );
@@ -301,7 +310,7 @@ public class ApplicationJMenuBar
 
             @Override
             public void actionPerformed( ActionEvent e ) {
-                caller.openFindDialog();
+                JpoEventBus.getInstance().post( new OpenSearchDialogRequest( Settings.pictureCollection.getRootNode() ) );
             }
         } );
         EditJMenu.add( EditFindJMenuItem );
@@ -342,7 +351,7 @@ public class ApplicationJMenuBar
 
             @Override
             public void actionPerformed( ActionEvent e ) {
-                caller.performSlideshow();
+                JpoEventBus.getInstance().post( new StartDoublePanelSlideshowRequest( Settings.pictureCollection.getRootNode() ) );
             }
         } );
         actionJMenu.add( RandomSlideshowJMenuItem );

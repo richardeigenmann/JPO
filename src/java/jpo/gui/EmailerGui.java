@@ -454,13 +454,13 @@ public class EmailerGui
         c.anchor = GridBagConstraints.LINE_START;
         c.insets = new Insets( 4, 4, 4, 4 );
         c.gridy = 0;
-        ArrayListNavigator alb = new ArrayListNavigator();
+        ArrayListNavigator arrayListNavigator = new ArrayListNavigator();
 
         for ( int i = 0; i < emailSelected.length; i++ ) {
             //logger.info("EmailerGui.loadThumbnails: running on " + emailSelected[i].toString() );
-            alb.addNode( (SortableDefaultMutableTreeNode) emailSelected[i] );
+            arrayListNavigator.addNode( (SortableDefaultMutableTreeNode) emailSelected[i] );
             ThumbnailController thumbnailController = new ThumbnailController( thumbnailSize );
-            thumbnailController.setNode( alb, i );
+            thumbnailController.setNode( arrayListNavigator, i );
             thumbnailController.setDecorateThumbnails( false );
             thumbnailController.determineMailSlectionStatus();
             thumbnailController.setFactor( factor );

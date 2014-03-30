@@ -38,9 +38,9 @@ import jpo.dataModel.Settings;
  */
 public class CategoryJScrollPane extends JScrollPane implements ListSelectionListener {
 
-    private final DefaultListModel<Category> defaultListModel = new DefaultListModel<Category>();
+    private final DefaultListModel<Category> defaultListModel = new DefaultListModel<>();
 
-    private final JList<Category> categoriesJList = new JList<Category>( defaultListModel );
+    private final JList<Category> categoriesJList = new JList<>( defaultListModel );
 
     /**
      * Creates a JPanel that lists the categories

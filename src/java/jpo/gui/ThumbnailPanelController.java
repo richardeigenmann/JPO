@@ -1,5 +1,6 @@
 package jpo.gui;
 
+import com.google.common.eventbus.Subscribe;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Point;
@@ -18,9 +19,15 @@ import javax.swing.JPanel;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JSlider;
+import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.MouseInputAdapter;
+import jpo.EventBus.JpoEventBus;
+import jpo.EventBus.ShowGroupRequest;
+import jpo.EventBus.ShowQueryRequest;
+import jpo.dataModel.GroupNavigator;
+import jpo.dataModel.QueryNavigator;
 import jpo.dataModel.Tools;
 import jpo.gui.swing.ThumbnailPanelTitle;
 
@@ -137,6 +144,14 @@ public class ThumbnailPanelController
         this.thumbnailJScrollPane = thumbnailJScrollPane;
         Tools.checkEDT();
         initComponents();
+        registerOnEventBus();
+    }
+
+    /**
+     * Registers the controller on the event bus
+     */
+    private void registerOnEventBus() {
+        JpoEventBus.getInstance().register( this );
     }
 
     /**
@@ -146,6 +161,32 @@ public class ThumbnailPanelController
      */
     public JScrollPane getView() {
         return thumbnailJScrollPane;
+    }
+
+    /*@Subscribe
+     public void handleGroupSelectionEvents( GroupSelectionEvent event ) {
+     setNode( new GroupNavigator( event.getNode() ), 0 );
+     }*/
+    @Subscribe
+    public void handleShowGroupRequest( final ShowGroupRequest event ) {
+        final Runnable r = new Runnable() {
+
+            @Override
+            public void run() {
+                show( new GroupNavigator( event.getNode() ) );
+            }
+        };
+        if ( SwingUtilities.isEventDispatchThread() ) {
+            r.run();
+        } else {
+            SwingUtilities.invokeLater( r );
+        }
+        
+    }
+
+    @Subscribe
+    public void handleShowQueryRequest( ShowQueryRequest event ) {
+        show( new QueryNavigator( event.getQuery() ) );
     }
 
     /**

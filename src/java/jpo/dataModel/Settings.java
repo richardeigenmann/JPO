@@ -700,12 +700,12 @@ public class Settings {
         logfile = new File( new File( System.getProperty( "java.io.tmpdir" ) ), "JPO.log" );
 
         mainFrameDimensions = new Dimension( windowSizes[4] );
-        LOGGER.info( String.format( "mainFrameDimension: width %d, height: %d", mainFrameDimensions.width, mainFrameDimensions.height ) );
+        //LOGGER.info( String.format( "mainFrameDimension: width %d, height: %d", mainFrameDimensions.width, mainFrameDimensions.height ) );
         preferredLeftDividerSpot = mainFrameDimensions.height - 200;
         if ( preferredLeftDividerSpot < 0 ) {
             preferredLeftDividerSpot = 150;
         }
-        LOGGER.info( String.format( "preferredLeftDividerSpot: %d", preferredLeftDividerSpot ) );
+        //LOGGER.info( String.format( "preferredLeftDividerSpot: %d", preferredLeftDividerSpot ) );
 
         maximumPictureSize = 6000;
         maxCache = 4;
@@ -737,7 +737,7 @@ public class Settings {
         mainFrameDimensions.height = prefs.getInt( "mainFrameDimensions.height", mainFrameDimensions.height );
         preferredMasterDividerSpot = prefs.getInt( "preferredMasterDividerSpot", preferredMasterDividerSpot );
         preferredLeftDividerSpot = prefs.getInt( "preferredLeftDividerSpot", preferredLeftDividerSpot );
-        LOGGER.info( String.format( "Loaded preferredLeftDividerSpot as: %d", preferredLeftDividerSpot ) );
+        //LOGGER.info( String.format( "Loaded preferredLeftDividerSpot as: %d", preferredLeftDividerSpot ) );
 
         dividerWidth = prefs.getInt( "dividerWidth", dividerWidth );
         autoLoad = prefs.get( "autoload", autoLoad );
@@ -923,7 +923,7 @@ public class Settings {
         prefs.putInt( "mainFrameDimensions.height", mainFrameDimensions.height );
         prefs.putInt( "preferredMasterDividerSpot", preferredMasterDividerSpot );
         prefs.putInt( "preferredLeftDividerSpot", preferredLeftDividerSpot );
-        LOGGER.info( String.format( "Writing preferredLeftDividerSpot: %d", preferredLeftDividerSpot ) );
+        //LOGGER.info( String.format( "Writing preferredLeftDividerSpot: %d", preferredLeftDividerSpot ) );
         prefs.putInt( "dividerWidth", dividerWidth );
         if ( !( autoLoad == null ) ) {
             prefs.put( "autoload", autoLoad );

@@ -1,9 +1,11 @@
 package jpo.gui.swing;
 
+import com.google.common.eventbus.Subscribe;
 import java.awt.BorderLayout;
 import static java.awt.Frame.MAXIMIZED_BOTH;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.io.File;
 import java.util.logging.Logger;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
@@ -14,9 +16,19 @@ import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.event.TreeModelEvent;
+import javax.swing.event.TreeModelListener;
+import javax.swing.tree.TreePath;
+import jpo.EventBus.JpoEventBus;
+import jpo.EventBus.ShowGroupRequest;
+import jpo.EventBus.ShowQueryRequest;
 import jpo.dataModel.Settings;
 import jpo.dataModel.Tools;
+import jpo.gui.ApplicationEventHandler;
 import jpo.gui.ApplicationJMenuBar;
+import jpo.gui.CollectionJTreeController;
+import jpo.gui.InfoPanelController;
+import jpo.gui.ThumbnailPanelController;
 
 /*
  MainWindow.java:  main window of the JPO application
@@ -54,28 +66,26 @@ public class MainWindow
      * Creates the JPO window and lays our the components
      *
      * @param menuBar The menu
-     * @param navigationPanel The navigation pane for the left panel
-     * @param searchesJScrollPane The search pane for the left panel
      * @param thumbnailPanel The main thumbnail grid
-     * @param infoPanel The info panel
-     * @param tagCloud The tag cloud panel
      */
-    public MainWindow( ApplicationJMenuBar menuBar,
-            JComponent navigationPanel, JComponent searchesJScrollPane,
-            JComponent thumbnailPanel, JComponent infoPanel, JComponent tagCloud ) {
-        this.collectionTab = navigationPanel;
-        this.searchesTab = searchesJScrollPane;
+    public MainWindow() {
+        this.collectionTab = new CollectionJTreeController().getJScrollPane();
+        this.searchesTab = new QueriesJTree().getJComponent();
         Tools.checkEDT();
+        initComponents();
+        registerOnEventBus();
+        Settings.pictureCollection.getTreeModel().addTreeModelListener( new MainAppModelListener() );
+    }
+
+    private void registerOnEventBus() {
+        JpoEventBus.getInstance().register( this );
+    }
+
+    private void initComponents() {
         try {
             final String Windows = "com.sun.java.swing.plaf.windows.WindowsLookAndFeel";
             UIManager.setLookAndFeel( Windows );
-        } catch ( ClassNotFoundException e ) {
-            LOGGER.fine( "Could not set Look and Feel" );
-        } catch ( IllegalAccessException e ) {
-            LOGGER.fine( "Could not set Look and Feel" );
-        } catch ( InstantiationException e ) {
-            LOGGER.fine( "Could not set Look and Feel" );
-        } catch ( UnsupportedLookAndFeelException e ) {
+        } catch ( ClassNotFoundException | IllegalAccessException | InstantiationException | UnsupportedLookAndFeelException e ) {
             LOGGER.fine( "Could not set Look and Feel" );
         }
         setTitle( Settings.jpoResources.getString( "ApplicationTitle" ) );
@@ -83,6 +93,9 @@ public class MainWindow
         setMinimumSize( Settings.jpoJFrameMinimumSize );
         setPreferredSize( Settings.mainFrameDimensions );
 
+        final ApplicationEventHandler applicationEventHandler = new ApplicationEventHandler();
+        applicationEventHandler.setMainWindow( this );
+        ApplicationJMenuBar menuBar = new ApplicationJMenuBar( applicationEventHandler );
         setJMenuBar( menuBar );
 
         // Set Tooltipps to snappy mode
@@ -98,16 +111,18 @@ public class MainWindow
         jpoNavigatorJTabbedPane.setMinimumSize( Settings.JPO_NAVIGATOR_JTABBEDPANE_MINIMUM_SIZE );
         jpoNavigatorJTabbedPane.setPreferredSize( Settings.jpoNavigatorJTabbedPanePreferredSize );
 
-        final JTabbedPane tabbedPane = new JTabbedPane();
-        tabbedPane.addTab( "Word Cloud", tagCloud );
+        InfoPanelController infoPanelController = new InfoPanelController();
 
-        final JScrollPane statsScroller = new JScrollPane( infoPanel );
+        final JTabbedPane tabbedPane = new JTabbedPane();
+        tabbedPane.addTab( "Word Cloud", infoPanelController.getTagCloud() );
+
+        final JScrollPane statsScroller = new JScrollPane( infoPanelController.getInfoPanel() );
         statsScroller.setWheelScrollingEnabled( true );
         statsScroller.getVerticalScrollBar().setUnitIncrement( 20 );
         tabbedPane.addTab( "Stats", statsScroller );
 
         leftSplitPane.setBottomComponent( tabbedPane );
-        LOGGER.info( String.format( "Setting divider to: %d", Settings.preferredLeftDividerSpot ) );
+        //LOGGER.info( String.format( "Setting divider to: %d", Settings.preferredLeftDividerSpot ) );
 
         /**
          * The pane that holds the main window. On the left will go the tree, on
@@ -128,26 +143,24 @@ public class MainWindow
             setExtendedState( MAXIMIZED_BOTH );
         }
 
-        //searchesJScrollPane.setMinimumSize( Settings.jpoNavigatorJTabbedPaneMinimumSize );
-        //searchesJScrollPane.setPreferredSize( Settings.jpoNavigatorJTabbedPanePreferredSize );
-        jpoNavigatorJTabbedPane.add( Settings.jpoResources.getString( "jpoTabbedPaneCollection" ), navigationPanel );
-        jpoNavigatorJTabbedPane.add( Settings.jpoResources.getString( "jpoTabbedPaneSearches" ), searchesJScrollPane );
+        jpoNavigatorJTabbedPane.add( Settings.jpoResources.getString( "jpoTabbedPaneCollection" ), collectionTab );
+        jpoNavigatorJTabbedPane.add( Settings.jpoResources.getString( "jpoTabbedPaneSearches" ), searchesTab );
         leftSplitPane.setTopComponent( jpoNavigatorJTabbedPane );
 
         // Set up the Thumbnail Pane
         masterSplitPane.setLeftComponent( leftSplitPane );
-        masterSplitPane.setRightComponent( thumbnailPanel );
+        masterSplitPane.setRightComponent( new ThumbnailPanelController( new JScrollPane() ).getView() );
 
         leftSplitPane.setDividerLocation( Settings.preferredLeftDividerSpot );
 
-        infoPanel.addComponentListener( new ComponentAdapter() {
+        infoPanelController.getInfoPanel().addComponentListener( new ComponentAdapter() {
 
             @Override
             public void componentResized( ComponentEvent event ) {
                 int leftDividerSpot = leftSplitPane.getDividerLocation();
                 if ( leftDividerSpot != Settings.preferredLeftDividerSpot ) {
-                    LOGGER.info( String.format( "infoPanel was resized. Updating preferredLeftDividerSpot to: %d", leftDividerSpot ) );
-                    Thread.dumpStack();
+                    //LOGGER.info( String.format( "infoPanel was resized. Updating preferredLeftDividerSpot to: %d", leftDividerSpot ) );
+                    //Thread.dumpStack();
                     Settings.preferredLeftDividerSpot = leftDividerSpot;
                     Settings.unsavedSettingChanges = true;
                 }
@@ -166,6 +179,7 @@ public class MainWindow
             }
         } );
         setVisible( true );
+
     }
 
     /**
@@ -185,16 +199,38 @@ public class MainWindow
     private final JTabbedPane jpoNavigatorJTabbedPane = new JTabbedPane();
 
     /**
+     * If a ShowGroupRequest is seen we will switch the collection tab to the
+     * foreground.
+     *
+     * @param request The ShowGroupRequest
+     */
+    @Subscribe
+    public void handleShowGroupRequest( ShowGroupRequest request ) {
+        tabToCollection();
+    }
+
+    /**
      * Instructs the MainWindow to show the collection in the left panel
      */
-    public void tabToCollection() {
+    private void tabToCollection() {
         jpoNavigatorJTabbedPane.setSelectedComponent( collectionTab );
+    }
+
+    /**
+     * If a ShowQueryRequest is seen we will switch the query tab to the
+     * foreground.
+     *
+     * @param request The query request
+     */
+    @Subscribe
+    public void handleShowQueryRequest( ShowQueryRequest request ) {
+        tabToSearches();
     }
 
     /**
      * Instructs the MainWindow to show the searches in the left panel
      */
-    public void tabToSearches() {
+    private void tabToSearches() {
         jpoNavigatorJTabbedPane.setSelectedComponent( searchesTab );
     }
 
@@ -231,4 +267,52 @@ public class MainWindow
 
         }
     }
+
+    private class MainAppModelListener
+            implements TreeModelListener {
+
+        @Override
+        public void treeNodesChanged( TreeModelEvent e ) {
+            TreePath tp = e.getTreePath();
+            LOGGER.fine( String.format( "The main app model listener trapped a tree node change event on the tree path: %s", tp.toString() ) );
+            if ( tp.getPathCount() == 1 ) { //if the root node sent the event
+                LOGGER.fine( "Since this is the root node we will update the ApplicationTitle" );
+
+                updateApplicationTitle();
+            }
+        }
+
+        @Override
+        public void treeNodesInserted( TreeModelEvent e ) {
+            // ignore
+        }
+
+        @Override
+        public void treeNodesRemoved( TreeModelEvent e ) {
+            // ignore, the root can't be removed ... Really?
+        }
+
+        @Override
+        public void treeStructureChanged( TreeModelEvent e ) {
+            TreePath tp = e.getTreePath();
+            if ( tp.getPathCount() == 1 ) { //if the root node sent the event
+                updateApplicationTitle();
+            }
+        }
+    }
+
+    /**
+     * Sets the application title to the default tile based on the
+     * Resourcebundle string ApplicationTitle and the file name of the loaded
+     * xml file if any.
+     */
+    private void updateApplicationTitle() {
+        final File xmlFile = Settings.pictureCollection.getXmlFile();
+        if ( xmlFile != null ) {
+            updateApplicationTitleEDT( Settings.jpoResources.getString( "ApplicationTitle" ) + ":  " + xmlFile.toString() );
+        } else {
+            updateApplicationTitleEDT( Settings.jpoResources.getString( "ApplicationTitle" ) );
+        }
+    }
+
 }

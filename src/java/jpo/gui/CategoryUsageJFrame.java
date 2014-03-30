@@ -12,6 +12,7 @@ import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashSet;
+import java.util.Set;
 import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
@@ -21,6 +22,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import static javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE;
+import jpo.EventBus.ShowCategoryUsageEditorRequest;
 import jpo.dataModel.Category;
 import jpo.dataModel.GroupInfo;
 import jpo.dataModel.PictureInfo;
@@ -52,8 +54,7 @@ import jpo.dataModel.SortableDefaultMutableTreeNode;
  *
  *
  */
-public class CategoryUsageJFrame
-        extends JFrame {
+public class CategoryUsageJFrame extends JFrame {
 
     /**
      * Defines a LOGGER for this class
@@ -68,7 +69,7 @@ public class CategoryUsageJFrame
     /**
      * An Array to record the selected nodes
      */
-    private ArrayList<SortableDefaultMutableTreeNode> selectedNodes;
+    private Set<SortableDefaultMutableTreeNode> selectedNodes;
     final JLabel numberOfPicturesJLabel = new JLabel( "" );
 
     /**
@@ -85,6 +86,36 @@ public class CategoryUsageJFrame
             }
         } );
 
+        categoryJScrollPane = new CategoryJScrollPane();
+        listModel = categoryJScrollPane.getDefaultListModel();
+
+        initComponents();
+    }
+
+    /**
+     * Creates a GUI to edit the categories of the collection
+     *
+     *
+     */
+    public CategoryUsageJFrame( ShowCategoryUsageEditorRequest request ) {
+        this();
+        
+        Set<SortableDefaultMutableTreeNode> nodes = request.getNodes();
+        setSelection( nodes );
+        //logger.info("SDMTN.showCategoryUsageGUI invoked");
+        /*if ( node.getUserObject() instanceof PictureInfo ) {
+            ArrayList<SortableDefaultMutableTreeNode> nodes = new ArrayList<SortableDefaultMutableTreeNode>();
+            nodes.add( node );
+            setSelection( nodes );
+        } else if ( node.getUserObject() instanceof GroupInfo ) {
+            setGroupSelection( node, false );
+        } else {
+            LOGGER.info( "Don't know what kind of editor to use. Ignoring request." );
+        }*/
+
+    }
+
+    private void initComponents() {
         setTitle( Settings.jpoResources.getString( "CategoryUsageJFrameTitle" ) );
 
         final JPanel jPanel = new JPanel();
@@ -104,9 +135,6 @@ public class CategoryUsageJFrame
 
         final Dimension defaultButtonSize = new Dimension( 150, 25 );
         final Dimension maxButtonSize = new Dimension( 150, 25 );
-
-        categoryJScrollPane = new CategoryJScrollPane();
-        listModel = categoryJScrollPane.getDefaultListModel();
 
         c.gridx++;
         c.anchor = GridBagConstraints.FIRST_LINE_START;
@@ -190,6 +218,7 @@ public class CategoryUsageJFrame
         pack();
         setLocationRelativeTo( Settings.anchorFrame );
         setVisible( true );
+
     }
 
     /**
@@ -205,7 +234,7 @@ public class CategoryUsageJFrame
      *
      * @param nodes
      */
-    public void setSelection( ArrayList<SortableDefaultMutableTreeNode> nodes ) {
+    public void setSelection( Set<SortableDefaultMutableTreeNode> nodes ) {
         selectedNodes = nodes;
         updateCategories();
     }
@@ -220,7 +249,7 @@ public class CategoryUsageJFrame
      */
     public void setGroupSelection( SortableDefaultMutableTreeNode groupNode,
             boolean recurse ) {
-        selectedNodes = new ArrayList<SortableDefaultMutableTreeNode>();
+        selectedNodes = new HashSet<SortableDefaultMutableTreeNode>();
         SortableDefaultMutableTreeNode n;
         Enumeration nodes = groupNode.children();
         while ( nodes.hasMoreElements() ) {
