@@ -20,7 +20,7 @@ public class MoveNodeUpRequest implements Request {
 
     /**
      * The node which should be moved
-     * @return 
+     * @return the node
      */
     public SortableDefaultMutableTreeNode getNode() {
         return node;

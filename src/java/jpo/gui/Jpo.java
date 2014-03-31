@@ -1,27 +1,21 @@
 package jpo.gui;
 
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.RepaintManager;
-import javax.swing.SwingUtilities;
-import javax.swing.WindowConstants;
-import jpo.EventBus.CloseApplicationRequest;
 import jpo.EventBus.DebugEventListener;
 import jpo.EventBus.JpoEventBus;
+import jpo.EventBus.OpenMainWindowRequest;
 import jpo.EventBus.ShowGroupRequest;
+import jpo.EventBus.StartCameraWatchDaemonRequest;
 import jpo.EventBus.StartNewCollectionRequest;
 import jpo.dataModel.GroupInfo;
 import jpo.dataModel.PictureInfo;
 import jpo.dataModel.Settings;
 import jpo.gui.swing.CollectionJTree;
-import jpo.gui.swing.MainWindow;
 import jpotestground.CheckThreadViolationRepaintManager;
 
 
@@ -93,48 +87,17 @@ public class Jpo {
      */
     public Jpo() {
 
-        // set up logging level
-        Handler[] handlers
-                = Logger.getLogger( "" ).getHandlers();
-        for ( Handler handler : handlers ) {
-            handler.setLevel( Level.FINEST );
-        }
-        Settings.loadSettings();
-
         LOGGER.info( "------------------------------------------------------------\n      Starting JPO" );
 
         // Check for EDT violations
         RepaintManager.setCurrentManager( new CheckThreadViolationRepaintManager() );
 
-        // does this give us any performance gains?? RE 7.6.2004
-        javax.imageio.ImageIO.setUseCache( false );
-        try {
-            // Activate OpenGL performance improvements
-            System.setProperty( "sun.java2d.opengl", "true" );
-            SwingUtilities.invokeAndWait( new Runnable() {
+        Settings.loadSettings();
 
-                @Override
-                public void run() {
-                    final MainWindow mainWindow = new MainWindow();
-                    mainWindow.addWindowListener( new WindowAdapter() {
+        final ApplicationEventHandler applicationEventHandler = new ApplicationEventHandler();
 
-                        @Override
-                        public void windowClosing( WindowEvent e ) {
-                            mainWindow.setDefaultCloseOperation( WindowConstants.DO_NOTHING_ON_CLOSE );
-                            JpoEventBus.getInstance().post( new CloseApplicationRequest() );
-                        }
-                    } );
-                    Settings.anchorFrame = mainWindow;
-                }
-            } );
-        } catch ( InterruptedException | InvocationTargetException ex ) {
-            LOGGER.log( Level.SEVERE, null, ex );
-        }
-
-        new CameraWatchDaemon( this );
-
-        JpoEventBus.getInstance().register( this );
         JpoEventBus.getInstance().register( new DebugEventListener() );
+        JpoEventBus.getInstance().post( new OpenMainWindowRequest() );
 
         if ( !loadAutoloadCollection() ) {
             JpoEventBus.getInstance().post( new StartNewCollectionRequest() );
@@ -144,6 +107,7 @@ public class Jpo {
         for ( int i = 1; i <= Settings.numberOfThumbnailCreationThreads; i++ ) {
             THUMBNAIL_FACTORIES.add( new ThumbnailCreationFactory() );
         }
+        JpoEventBus.getInstance().post( new StartCameraWatchDaemonRequest() );
 
     }
 

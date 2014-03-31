@@ -28,7 +28,7 @@ public class MoveNodeToNodeRequest implements Request {
     /**
      * The node which should be moved
      *
-     * @return
+     * @return the node
      */
     public SortableDefaultMutableTreeNode getMovingNode() {
         return movingNode;
@@ -37,7 +37,7 @@ public class MoveNodeToNodeRequest implements Request {
     /**
      * The target node to which the node should be added as the last child
      *
-     * @return
+     * @return the node
      */
     public SortableDefaultMutableTreeNode getTargetNode() {
         return targetNode;

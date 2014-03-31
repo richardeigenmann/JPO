@@ -87,12 +87,7 @@ public class CameraDownloadWorker
     @Override
     protected void done() {
         progressBar.setValue( progressBar.getMaximum() );
-        Jpo collectionController = dataModel.getCollectionController();
-        if ( collectionController != null ) {
-            LOGGER.fine( String.format( "Position to node %s", dataModel.getTargetNode() ) );
-            //Jpo.positionToNode( dataModel.getTargetNode() );
-            JpoEventBus.getInstance().post( new GroupSelectionEvent( dataModel.getTargetNode() ) );
-        }
+        JpoEventBus.getInstance().post( new GroupSelectionEvent( dataModel.getTargetNode() ) );
         step7.done();
 
     }

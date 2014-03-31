@@ -285,27 +285,4 @@ public class CameraDownloadWizardData {
      */
     public File targetDir = null;
 
-    /**
-     * An optional reference to the collection controller that will allow the
-     * wizard at the end to request the added groups to be shown.
-     */
-    private Jpo collectionController;
-
-    /**
-     * returns the collection controller
-     *
-     * @return the collection controller
-     */
-    public Jpo getCollectionController() {
-        return collectionController;
-    }
-
-    /**
-     * sets the collection controller
-     *
-     * @param collectionController The collection controller
-     */
-    public void setCollectionJTreeController( Jpo collectionController ) {
-        this.collectionController = collectionController;
-    }
 }

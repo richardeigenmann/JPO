@@ -8,6 +8,7 @@ package jpo.gui;
 import com.google.common.eventbus.Subscribe;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.util.Enumeration;
 import java.util.logging.Level;
@@ -23,10 +24,14 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import jpo.EventBus.AddCollectionToGroupRequest;
 import jpo.EventBus.AddEmptyGroupRequest;
 import jpo.EventBus.AddGroupToEmailSelectionRequest;
+import jpo.EventBus.CheckDirectoriesRequest;
+import jpo.EventBus.CheckIntegrityRequest;
 import jpo.EventBus.ChooseAndAddCollectionRequest;
 import jpo.EventBus.ChooseAndAddPicturesToGroupRequest;
 import jpo.EventBus.CloseApplicationRequest;
 import jpo.EventBus.ConsolidateGroupRequest;
+import jpo.EventBus.EditCamerasRequest;
+import jpo.EventBus.EditSettingsRequest;
 import jpo.EventBus.ExportGroupToFlatFileRequest;
 import jpo.EventBus.ExportGroupToHtmlRequest;
 import jpo.EventBus.ExportGroupToNewCollectionRequest;
@@ -34,16 +39,23 @@ import jpo.EventBus.ExportGroupToPicasaRequest;
 import jpo.EventBus.FileLoadRequest;
 import jpo.EventBus.FileSaveAsRequest;
 import jpo.EventBus.FileSaveRequest;
+import jpo.EventBus.FindDuplicatesRequest;
 import jpo.EventBus.GroupSelectionEvent;
+import jpo.EventBus.OpenHelpAboutFrameRequest;
 import jpo.EventBus.JpoEventBus;
 import jpo.EventBus.MoveNodeDownRequest;
 import jpo.EventBus.MoveNodeToBottomRequest;
 import jpo.EventBus.MoveNodeToNodeRequest;
 import jpo.EventBus.MoveNodeToTopRequest;
 import jpo.EventBus.MoveNodeUpRequest;
+import jpo.EventBus.OpenLicenceFrameRequest;
+import jpo.EventBus.OpenMainWindowRequest;
+import jpo.EventBus.OpenPrivacyFrameRequest;
+import jpo.EventBus.OpenRecentCollectionRequest;
 import jpo.EventBus.OpenSearchDialogRequest;
 import jpo.EventBus.RemoveNodeRequest;
 import jpo.EventBus.RenamePictureRequest;
+import jpo.EventBus.SendEmailRequest;
 import jpo.EventBus.ShowCategoryUsageEditorRequest;
 import jpo.EventBus.ShowGroupAsTableRequest;
 import jpo.EventBus.ShowGroupInfoEditorRequest;
@@ -53,8 +65,11 @@ import jpo.EventBus.ShowPictureOnMapRequest;
 import jpo.EventBus.ShowPictureRequest;
 import jpo.EventBus.ShowQueryRequest;
 import jpo.EventBus.SortGroupRequest;
+import jpo.EventBus.StartCameraWatchDaemonRequest;
 import jpo.EventBus.StartDoublePanelSlideshowRequest;
 import jpo.EventBus.StartNewCollectionRequest;
+import jpo.EventBus.YearBrowserRequest;
+import jpo.EventBus.YearlyAnalysisRequest;
 import jpo.dataModel.DuplicatesQuery;
 import jpo.dataModel.FlatFileDistiller;
 import jpo.dataModel.FlatGroupNavigator;
@@ -68,7 +83,9 @@ import jpo.dataModel.Tools;
 import jpo.export.GenerateWebsiteWizard;
 import jpo.export.PicasaUploadRequest;
 import jpo.export.PicasaUploaderWizard;
+import jpo.gui.swing.HelpAboutWindow;
 import jpo.gui.swing.MainWindow;
+import jpo.gui.swing.PrivacyJFrame;
 import jpo.gui.swing.QueryJFrame;
 import jpo.gui.swing.ResizableJFrame;
 import webserver.Webserver;
@@ -80,8 +97,16 @@ import webserver.Webserver;
 /**
  * This class handles all the Application Menu Events
  */
-public class ApplicationEventHandler implements ApplicationMenuInterface {
+public class ApplicationEventHandler {
 
+    /**
+     * Defines a logger for this class
+     */
+    private static final Logger LOGGER = Logger.getLogger( ApplicationEventHandler.class.getName() );
+
+    /**
+     * This class handles most of the events flying around the JPO application
+     */
     public ApplicationEventHandler() {
         registerOnEventBus();
     }
@@ -90,51 +115,60 @@ public class ApplicationEventHandler implements ApplicationMenuInterface {
         JpoEventBus.getInstance().register( this );
     }
 
-    public void setMainWindow( MainWindow mainWindow ) {
-        this.mainWindow = mainWindow;
-    }
-
-    private MainWindow mainWindow;
-
     /**
-     * Defines a logger for this class
+     * Opens the MainWindow
+     *
+     * @param request
      */
-    private static final Logger LOGGER = Logger.getLogger( ApplicationEventHandler.class.getName() );
+    @Subscribe
+    public void handleOpenMainWindowRequest( OpenMainWindowRequest request ) {
+        try {
+            // Activate OpenGL performance improvements
+            System.setProperty( "sun.java2d.opengl", "true" );
+            SwingUtilities.invokeAndWait( new Runnable() {
+
+                @Override
+                public void run() {
+                    final MainWindow mainWindow = new MainWindow();
+                }
+            } );
+        } catch ( InterruptedException | InvocationTargetException ex ) {
+            LOGGER.log( Level.SEVERE, null, ex );
+        }
+    }
 
     /**
      * The user wants to find duplicates
      */
-    @Override
-    public void requestFindDuplicates() {
+    @Subscribe
+    public void handleFindDuplicatesRequest( FindDuplicatesRequest request ) {
         DuplicatesQuery duplicatesQuery = new DuplicatesQuery();
         DefaultMutableTreeNode newNode = Settings.pictureCollection.addQueryToTreeModel( duplicatesQuery );
-        //showQuery( newNode );
         QueryNavigator queryBrowser = new QueryNavigator( duplicatesQuery );
-        //showThumbnails( queryBrowser );
         JpoEventBus.getInstance().post( new ShowQueryRequest( duplicatesQuery ) );
     }
 
     /**
      * Opens up a Year Browser
      */
-    @Override
-    public void requestYearlyAnalyis() {
+    @Subscribe
+    public void handleYearlyAnalysisRequest( YearlyAnalysisRequest request ) {
         new YearlyAnalysisGuiController( Settings.pictureCollection.getRootNode() );
     }
 
     /**
      * Opens up a Year Browser
      */
-    @Override
-    public void requestYearBrowser() {
+    @Subscribe
+    public void handlerYearBrowserRequest( YearBrowserRequest request ) {
         new YearsBrowserController( Settings.pictureCollection.getRootNode() );
     }
 
     /**
      * Creates an IntegrityChecker that does it's magic on the collection.
      */
-    @Override
-    public void requestCheckIntegrity() {
+    @Subscribe
+    public void handleCheckIntegrityRequest( CheckIntegrityRequest request ) {
         new IntegrityCheckerJFrame( Settings.pictureCollection.getRootNode() );
     }
 
@@ -142,27 +176,38 @@ public class ApplicationEventHandler implements ApplicationMenuInterface {
      * Creates a {@link SettingsDialog} where the user can edit Application wide
      * settings.
      */
-    @Override
-    public void requestEditSettings() {
+    @Subscribe
+    public void handleEditSettingsRequest( EditSettingsRequest request ) {
         new SettingsDialog( true );
     }
 
     /**
-     * opens up the Camera Editor GUI. See {@link CamerasEditor}
+     * Opens up the Camera Editor GUI. See {@link CamerasEditor}
+     *
+     * @param request the request object
      */
-    @Override
-    public void requestEditCameras() {
+    @Subscribe
+    public void handleEditCamerasRequest( EditCamerasRequest request ) {
         new CamerasEditor();
     }
 
     /**
-     * Handles the close application request by checking 
-     * if the main application window size should be saved and saves if
-     * necessary. also checks for unsaved changes before closing the
-     * application.
+     * Opens up the Camera Editor GUI. See {@link CamerasEditor}
+     *
+     * @param request the request object
      */
     @Subscribe
-    public void handleCloseApplicationRequest( CloseApplicationRequest request) {
+    public void handleSendEmailRequest( SendEmailRequest request ) {
+        new EmailerGui();
+    }
+
+    /**
+     * Handles the close application request by checking if the main application
+     * window size should be saved and saves if necessary. also checks for
+     * unsaved changes before closing the application.
+     */
+    @Subscribe
+    public void handleCloseApplicationRequest( CloseApplicationRequest request ) {
         if ( checkUnsavedUpdates() ) {
             return;
         }
@@ -176,28 +221,14 @@ public class ApplicationEventHandler implements ApplicationMenuInterface {
         System.exit( 0 );
     }
 
-    /*
-     * Calls {@link #find} to bring up a find dialog box.
-     *
-     @Override
-     public void openFindDialog() {
-     find( Settings.pictureCollection.getRootNode() );
-     }*/
-
-    /*
-     * Brings up a QueryJFrame GUI.
-     *
-     * @param startSearchNode
-     *
-     public void find( SortableDefaultMutableTreeNode startSearchNode ) {
-     new QueryJFrame( startSearchNode, this );
-     }*/
     /**
      * Creates a {@link ReconcileJFrame} which lets the user specify a directory
-     * whose pictures are then compared against the current collection.
+     * whose pictures are then compared against the current collection. Allows
+     * the user to reconcile pictures in a directory with those in his
+     * collection.
      */
-    @Override
-    public void requestCheckDirectories() {
+    @Subscribe
+    public void handleCheckDirectoriesRequest( CheckDirectoriesRequest request ) {
         new ReconcileJFrame( Settings.pictureCollection.getRootNode() );
     }
 
@@ -205,7 +236,7 @@ public class ApplicationEventHandler implements ApplicationMenuInterface {
      * Starts a double panel slideshow
      */
     @Subscribe
-    public void handleStartDoublePanelSlideshowRequest( StartDoublePanelSlideshowRequest request) {
+    public void handleStartDoublePanelSlideshowRequest( StartDoublePanelSlideshowRequest request ) {
         SortableDefaultMutableTreeNode rootNode = request.getNode();
         PictureViewer p1 = new PictureViewer();
         p1.pictureFrame.myJFrame.switchWindowMode( ResizableJFrame.WINDOW_LEFT );
@@ -285,7 +316,7 @@ public class ApplicationEventHandler implements ApplicationMenuInterface {
      */
     @Subscribe
     public void handleOpenSearchDialogRequest( OpenSearchDialogRequest request ) {
-        new QueryJFrame( request.getStartNode(), this );
+        new QueryJFrame( request.getStartNode() );
     }
 
     /**
@@ -377,7 +408,7 @@ public class ApplicationEventHandler implements ApplicationMenuInterface {
      * Calls {@link SortableDefaultMutableTreeNode#fileLoad}
      */
     @Subscribe
-    public void handleFileLoadRequest(FileLoadRequest request) {
+    public void handleFileLoadRequest( FileLoadRequest request ) {
         if ( checkUnsavedUpdates() ) {
             return;
         }
@@ -405,10 +436,11 @@ public class ApplicationEventHandler implements ApplicationMenuInterface {
     }
 
     /**
-     * Calls the unsaved Updated check, clears the collection and starts a new one.
+     * Calls the unsaved Updated check, clears the collection and starts a new
+     * one.
      */
     @Subscribe
-    public void handleStartNewCollectionRequest( StartNewCollectionRequest event) {
+    public void handleStartNewCollectionRequest( StartNewCollectionRequest event ) {
         Runnable r = new Runnable() {
 
             @Override
@@ -429,7 +461,7 @@ public class ApplicationEventHandler implements ApplicationMenuInterface {
      * saved before brings up a popup window.
      */
     @Subscribe
-    public void handleFileSaveRequest( FileSaveRequest request) {
+    public void handleFileSaveRequest( FileSaveRequest request ) {
         if ( Settings.pictureCollection.getXmlFile() == null ) {
             JpoEventBus.getInstance().post( new FileSaveAsRequest() );
         } else {
@@ -444,7 +476,7 @@ public class ApplicationEventHandler implements ApplicationMenuInterface {
      * filename first.
      */
     @Subscribe
-    public void handleFileSaveAsRequest( FileSaveAsRequest request) {
+    public void handleFileSaveAsRequest( FileSaveAsRequest request ) {
         JFileChooser jFileChooser = new JFileChooser();
         jFileChooser.setFileSelectionMode( JFileChooser.FILES_ONLY );
         jFileChooser.setDialogType( JFileChooser.SAVE_DIALOG );
@@ -548,7 +580,7 @@ public class ApplicationEventHandler implements ApplicationMenuInterface {
      * @param request The node on which the request was made
      */
     @Subscribe
-    public void handleAddEmptyGroup( AddEmptyGroupRequest request ) {
+    public void handleAddEmptyGroupRequest( AddEmptyGroupRequest request ) {
         SortableDefaultMutableTreeNode node = request.getNode();
         if ( !( node.getUserObject() instanceof GroupInfo ) ) {
             LOGGER.warning( String.format( "node %s is of type %s instead of GroupInfo. Proceeding anyway.", node.getUserObject().toString(), node.getUserObject().getClass().toString() ) );
@@ -575,7 +607,7 @@ public class ApplicationEventHandler implements ApplicationMenuInterface {
      *
      */
     @Subscribe
-    public void requestGroupExportFlatFile( ExportGroupToFlatFileRequest request ) {
+    public void handleGroupExportFlatFileRequest( ExportGroupToFlatFileRequest request ) {
         SortableDefaultMutableTreeNode nodeToExport = request.getNode();
         javax.swing.JFileChooser jFileChooser = new javax.swing.JFileChooser();
         jFileChooser.setFileSelectionMode( javax.swing.JFileChooser.FILES_ONLY );
@@ -635,8 +667,7 @@ public class ApplicationEventHandler implements ApplicationMenuInterface {
     /**
      * Opens the consolidate group dialog
      *
-     * @param node
-     * @see GroupPopupInterface
+     * @param request The request
      */
     @Subscribe
     public void handleConsolidateGroupRequest( ConsolidateGroupRequest request ) {
@@ -672,7 +703,7 @@ public class ApplicationEventHandler implements ApplicationMenuInterface {
      * @param request
      */
     @Subscribe
-    public void requestMoveGroupDown( MoveNodeDownRequest request ) {
+    public void handleMoveGroupDownRequest( MoveNodeDownRequest request ) {
         SortableDefaultMutableTreeNode popupNode = request.getNode();
         popupNode.moveNodeDown();
     }
@@ -683,7 +714,7 @@ public class ApplicationEventHandler implements ApplicationMenuInterface {
      * @param request
      */
     @Subscribe
-    public void requestMoveGroupToBottom( MoveNodeToBottomRequest request ) {
+    public void handleMoveGroupToBottomRequest( MoveNodeToBottomRequest request ) {
         SortableDefaultMutableTreeNode popupNode = request.getNode();
         popupNode.moveNodeToBottom();
     }
@@ -703,13 +734,13 @@ public class ApplicationEventHandler implements ApplicationMenuInterface {
     }
 
     /**
-     * Requests a recently loaded collection to be loaded. The index of which
-     * recently opened file to load is supplied from the
-     * {@link ApplicationJMenuBar} through the interface method
-     * {@link ApplicationMenuInterface#requestOpenRecent}.
+     * Handles the request to open a recent collection ToDo: consider whether
+     * this request should be integrated with the FileLoadRequest
      */
-    @Override
-    public void requestOpenRecent( final int i ) {
+    @Subscribe
+    public void handleOpenRecentCollectionRequest( OpenRecentCollectionRequest request ) {
+        final int i = request.getI();
+
         if ( checkUnsavedUpdates() ) {
             return;
         }
@@ -755,11 +786,10 @@ public class ApplicationEventHandler implements ApplicationMenuInterface {
         new PictureFileChooser( request.getNode() );
     }
 
-    
-        /**
+    /**
      * Moves the movingNode into the last child position of the target node
      *
-     * @param request 
+     * @param request
      */
     @Subscribe
     public void handleMoveNodeToNodeRequest( MoveNodeToNodeRequest request ) {
@@ -768,6 +798,49 @@ public class ApplicationEventHandler implements ApplicationMenuInterface {
         movingNode.moveToLastChild( targetGroup );
     }
 
+    /**
+     * Opens the License window
+     *
+     * @param request
+     */
+    @Subscribe
+    public void handleOpenLicenceFrameRequest( OpenLicenceFrameRequest request ) {
+        new LicenseWindow();
+
+    }
+
+    /**
+     * Opens the Help About window
+     *
+     * @param request
+     */
+    @Subscribe
+    public void handleHelpAboutFrameRequest( OpenHelpAboutFrameRequest request ) {
+        new HelpAboutWindow();
+    }
+
+    /**
+     * Opens the Privacy window
+     *
+     * @param request
+     */
+    @Subscribe
+    public void handleOpenPrivacyFrameRequest( OpenPrivacyFrameRequest request ) {
+        new PrivacyJFrame();
+    }
+
+    /**
+     * Starts the Camera Watch Daemon
+     *
+     * @param request
+     */
+    @Subscribe
+    public void handleStartCameraWatchDaemonRequest( StartCameraWatchDaemonRequest request ) {
+        new CameraWatchDaemon();
+    }
+
+    
+    
     
     /**
      * Checks for unsaved changes in the data model, pops up a dialog and does
@@ -797,10 +870,10 @@ public class ApplicationEventHandler implements ApplicationMenuInterface {
                 case 0:
                     return false;
                 case 1:
-                    JpoEventBus.getInstance().post(  new FileSaveRequest() );
+                    JpoEventBus.getInstance().post( new FileSaveRequest() );
                     return Settings.pictureCollection.getUnsavedUpdates();
                 case 2:
-                    JpoEventBus.getInstance().post(  new FileSaveAsRequest() );
+                    JpoEventBus.getInstance().post( new FileSaveAsRequest() );
                     return Settings.pictureCollection.getUnsavedUpdates();
                 case 3:
                     return true;

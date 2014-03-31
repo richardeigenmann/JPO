@@ -32,7 +32,7 @@ public class SortGroupRequest implements Request {
 
     /**
      * Returns the sort criteria
-     * @return 
+     * @return the sort criteria index
      */
     public int getSortCriteria() {
         return sortCriteria;

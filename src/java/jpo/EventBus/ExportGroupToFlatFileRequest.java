@@ -20,7 +20,7 @@ public class ExportGroupToFlatFileRequest implements Request {
 
     /**
      * The node for which the dialog should be executed
-     * @return 
+     * @return the node
      */
     public SortableDefaultMutableTreeNode getNode() {
         return node;

@@ -5,6 +5,8 @@ import java.awt.BorderLayout;
 import static java.awt.Frame.MAXIMIZED_BOTH;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.util.logging.Logger;
 import javax.swing.JComponent;
@@ -16,15 +18,16 @@ import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.WindowConstants;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreePath;
+import jpo.EventBus.CloseApplicationRequest;
 import jpo.EventBus.JpoEventBus;
 import jpo.EventBus.ShowGroupRequest;
 import jpo.EventBus.ShowQueryRequest;
 import jpo.dataModel.Settings;
 import jpo.dataModel.Tools;
-import jpo.gui.ApplicationEventHandler;
 import jpo.gui.ApplicationJMenuBar;
 import jpo.gui.CollectionJTreeController;
 import jpo.gui.InfoPanelController;
@@ -64,9 +67,6 @@ public class MainWindow
 
     /**
      * Creates the JPO window and lays our the components
-     *
-     * @param menuBar The menu
-     * @param thumbnailPanel The main thumbnail grid
      */
     public MainWindow() {
         this.collectionTab = new CollectionJTreeController().getJScrollPane();
@@ -75,6 +75,15 @@ public class MainWindow
         initComponents();
         registerOnEventBus();
         Settings.pictureCollection.getTreeModel().addTreeModelListener( new MainAppModelListener() );
+        addWindowListener( new WindowAdapter() {
+
+            @Override
+            public void windowClosing( WindowEvent e ) {
+                setDefaultCloseOperation( WindowConstants.DO_NOTHING_ON_CLOSE );
+                JpoEventBus.getInstance().post( new CloseApplicationRequest() );
+            }
+        } );
+
     }
 
     private void registerOnEventBus() {
@@ -82,6 +91,7 @@ public class MainWindow
     }
 
     private void initComponents() {
+        Settings.anchorFrame = this;
         try {
             final String Windows = "com.sun.java.swing.plaf.windows.WindowsLookAndFeel";
             UIManager.setLookAndFeel( Windows );
@@ -93,9 +103,7 @@ public class MainWindow
         setMinimumSize( Settings.jpoJFrameMinimumSize );
         setPreferredSize( Settings.mainFrameDimensions );
 
-        final ApplicationEventHandler applicationEventHandler = new ApplicationEventHandler();
-        applicationEventHandler.setMainWindow( this );
-        ApplicationJMenuBar menuBar = new ApplicationJMenuBar( applicationEventHandler );
+        ApplicationJMenuBar menuBar = new ApplicationJMenuBar();
         setJMenuBar( menuBar );
 
         // Set Tooltipps to snappy mode

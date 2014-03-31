@@ -62,11 +62,6 @@ public class QueryJFrame
      */
     private final SortableDefaultMutableTreeNode startSearchNode;
 
-    /**
-     * reference to the main application Event Handler so that we can delegate
-     * stuff to
-     */
-    private final ApplicationEventHandler applicationEventHandler;
 
     //private static final Dimension compactSize = new Dimension( 300, 350 );
     //private static final Dimension advancedSize = new Dimension( 300, 550 );
@@ -77,14 +72,13 @@ public class QueryJFrame
      * @param startSearchNode
      * @param applicationEventHandler
      */
-    public QueryJFrame( SortableDefaultMutableTreeNode startSearchNode, ApplicationEventHandler applicationEventHandler ) {
+    public QueryJFrame( SortableDefaultMutableTreeNode startSearchNode ) {
         if ( !( startSearchNode.getUserObject() instanceof GroupInfo ) ) {
             LOGGER.info( "Method can only be invoked on GroupInfo nodes! Ignoring request. You are on node: " + this.toString() );
             getRid();
         }
 
         this.startSearchNode = startSearchNode;
-        this.applicationEventHandler = applicationEventHandler;
         initWidgets();
     }
 

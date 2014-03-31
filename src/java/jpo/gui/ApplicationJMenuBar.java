@@ -8,19 +8,29 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
+import jpo.EventBus.CheckDirectoriesRequest;
+import jpo.EventBus.CheckIntegrityRequest;
 import jpo.EventBus.ChooseAndAddPicturesToGroupRequest;
 import jpo.EventBus.CloseApplicationRequest;
+import jpo.EventBus.EditCamerasRequest;
+import jpo.EventBus.EditSettingsRequest;
 import jpo.EventBus.FileLoadRequest;
 import jpo.EventBus.FileSaveAsRequest;
 import jpo.EventBus.FileSaveRequest;
+import jpo.EventBus.FindDuplicatesRequest;
+import jpo.EventBus.OpenHelpAboutFrameRequest;
 import jpo.EventBus.JpoEventBus;
+import jpo.EventBus.OpenLicenceFrameRequest;
+import jpo.EventBus.OpenPrivacyFrameRequest;
+import jpo.EventBus.OpenRecentCollectionRequest;
 import jpo.EventBus.OpenSearchDialogRequest;
+import jpo.EventBus.SendEmailRequest;
 import jpo.EventBus.StartDoublePanelSlideshowRequest;
 import jpo.EventBus.StartNewCollectionRequest;
-import jpo.gui.swing.HelpAboutWindow;
+import jpo.EventBus.YearBrowserRequest;
+import jpo.EventBus.YearlyAnalysisRequest;
 import jpo.dataModel.RecentFilesChangeListener;
 import jpo.dataModel.Settings;
-import jpo.gui.swing.PrivacyJFrame;
 
 /*
  ApplicationJMenuBar.java:  main menu for the application
@@ -200,18 +210,12 @@ public class ApplicationJMenuBar
      */
     private final JMenuItem HelpPrivacyJMenuItem = new JMenuItem();
 
-    /**
-     * Object that must implement the functions dealing with the user request.
-     */
-    private final ApplicationMenuInterface caller;
 
     /**
      * Creates a menu object for use in the main frame of the application.
      *
-     * @param caller The object that is going to get the requests.
      */
-    public ApplicationJMenuBar( final ApplicationMenuInterface caller ) {
-        this.caller = caller;
+    public ApplicationJMenuBar() {
 
         //Build the file menu.
         FileJMenu.setMnemonic( KeyEvent.VK_F );
@@ -259,7 +263,7 @@ public class ApplicationJMenuBar
 
                 @Override
                 public void actionPerformed( ActionEvent e ) {
-                    caller.requestOpenRecent( index );
+                    JpoEventBus.getInstance().post( new OpenRecentCollectionRequest( index ) );
                 }
             } );
             recentOpenedfileJMenuItem[i].setVisible( false );
@@ -320,7 +324,7 @@ public class ApplicationJMenuBar
 
             @Override
             public void actionPerformed( ActionEvent e ) {
-                caller.requestEditCameras();
+                JpoEventBus.getInstance().post( new EditCamerasRequest() );
             }
         } );
         EditJMenu.add( EditCamerasJMenuItem );
@@ -330,7 +334,7 @@ public class ApplicationJMenuBar
 
             @Override
             public void actionPerformed( ActionEvent e ) {
-                caller.requestEditSettings();
+                JpoEventBus.getInstance().post( new EditSettingsRequest() );
             }
         } );
         EditJMenu.add( EditSettingsJMenuItem );
@@ -341,7 +345,7 @@ public class ApplicationJMenuBar
 
             @Override
             public void actionPerformed( ActionEvent e ) {
-                new EmailerGui();
+                JpoEventBus.getInstance().post( new SendEmailRequest() );
             }
         } );
         actionJMenu.add( emailJMenuItem );
@@ -367,7 +371,7 @@ public class ApplicationJMenuBar
 
             @Override
             public void actionPerformed( ActionEvent e ) {
-                caller.requestCheckDirectories();
+                JpoEventBus.getInstance().post( new CheckDirectoriesRequest() );
             }
         } );
         ExtrasJMenu.add( EditCheckDirectoriesJMenuItem );
@@ -377,7 +381,7 @@ public class ApplicationJMenuBar
 
             @Override
             public void actionPerformed( ActionEvent e ) {
-                caller.requestCheckIntegrity();
+                JpoEventBus.getInstance().post( new CheckIntegrityRequest() );
             }
         } );
         ExtrasJMenu.add( EditCheckIntegrityJMenuItem );
@@ -387,7 +391,7 @@ public class ApplicationJMenuBar
 
             @Override
             public void actionPerformed( ActionEvent e ) {
-                caller.requestYearBrowser();
+                JpoEventBus.getInstance().post( new YearBrowserRequest());
             }
         } );
         ExtrasJMenu.add( yearsBrowser );
@@ -397,7 +401,7 @@ public class ApplicationJMenuBar
 
             @Override
             public void actionPerformed( ActionEvent e ) {
-                caller.requestYearlyAnalyis();
+                JpoEventBus.getInstance().post( new YearlyAnalysisRequest() );
             }
         } );
         ExtrasJMenu.add( yearlyAnalysis );
@@ -407,7 +411,7 @@ public class ApplicationJMenuBar
 
             @Override
             public void actionPerformed( ActionEvent e ) {
-                caller.requestFindDuplicates();
+                JpoEventBus.getInstance().post( new FindDuplicatesRequest() );
             }
         } );
         ExtrasJMenu.add( findDuplicates );
@@ -417,7 +421,7 @@ public class ApplicationJMenuBar
 
             @Override
             public void actionPerformed( ActionEvent e ) {
-                caller.requestCheckIntegrity();
+                throw new UnsupportedOperationException( "Not sure what to do here...." );
             }
         } );
         ExtrasJMenu.add( EditCategoriesJMenuItem );
@@ -431,7 +435,7 @@ public class ApplicationJMenuBar
 
             @Override
             public void actionPerformed( ActionEvent e ) {
-                new HelpAboutWindow();
+                JpoEventBus.getInstance().post(new OpenHelpAboutFrameRequest());
             }
         } );
         HelpJMenu.add( HelpAboutJMenuItem );
@@ -441,7 +445,7 @@ public class ApplicationJMenuBar
 
             @Override
             public void actionPerformed( ActionEvent e ) {
-                new LicenseWindow();
+                JpoEventBus.getInstance().post(new OpenLicenceFrameRequest());
             }
         } );
         HelpJMenu.add( HelpLicenseJMenuItem );
@@ -451,7 +455,8 @@ public class ApplicationJMenuBar
 
             @Override
             public void actionPerformed( ActionEvent e ) {
-                new PrivacyJFrame();
+                JpoEventBus.getInstance().post(new OpenPrivacyFrameRequest());
+                
             }
         } );
         HelpJMenu.add( HelpPrivacyJMenuItem );

@@ -64,7 +64,6 @@ public class CollectionJTreeController {
      * JTree. Instead it is a plain simple old class that does all the things to
      * respond to or instruct the JTree to do and show.
      *
-     * @param applicationEventHandler the reference to the collection controller
      */
     public CollectionJTreeController() {
         Tools.checkEDT();

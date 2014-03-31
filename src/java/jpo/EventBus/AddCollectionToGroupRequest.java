@@ -33,7 +33,7 @@ public class AddCollectionToGroupRequest implements Request {
 
     /**
      * Returns the collectionFile that should be added.
-     * @return 
+     * @return the collection file
      */
     public File getCollectionFile() {
         return collectionFile;
