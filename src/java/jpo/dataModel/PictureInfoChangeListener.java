@@ -4,7 +4,7 @@ package jpo.dataModel;
 /*
  * PictureInfoChangeListener.java: interface for notification
  *
- * Copyright (C) 2002-2012 Richard Eigenmann. This program is free software; you
+ * Copyright (C) 2002-2014 Richard Eigenmann. This program is free software; you
  * can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation; either version 2
  * of the License, or any later version. This program is distributed in the hope
@@ -24,7 +24,7 @@ public interface PictureInfoChangeListener {
     /**
      * inform the listener that the status has changed
      *
-     * @param e
+     * @param pictureInfoChangeEvent
      */
-    public void pictureInfoChangeEvent(PictureInfoChangeEvent e);
+    public void pictureInfoChangeEvent( PictureInfoChangeEvent pictureInfoChangeEvent );
 }

@@ -26,6 +26,9 @@ import javax.swing.event.MouseInputAdapter;
 import jpo.EventBus.JpoEventBus;
 import jpo.EventBus.ShowGroupRequest;
 import jpo.EventBus.ShowQueryRequest;
+import jpo.dataModel.GroupInfo;
+import jpo.dataModel.GroupInfoChangeEvent;
+import jpo.dataModel.GroupInfoChangeListener;
 import jpo.dataModel.GroupNavigator;
 import jpo.dataModel.QueryNavigator;
 import jpo.dataModel.Tools;
@@ -144,13 +147,13 @@ public class ThumbnailPanelController
         this.thumbnailJScrollPane = thumbnailJScrollPane;
         Tools.checkEDT();
         initComponents();
-        registerOnEventBus();
+        registerListeners();
     }
 
     /**
-     * Registers the controller on the event bus
+     * Registers the controller as a listener
      */
-    private void registerOnEventBus() {
+    private void registerListeners() {
         JpoEventBus.getInstance().register( this );
     }
 
@@ -181,13 +184,19 @@ public class ThumbnailPanelController
         } else {
             SwingUtilities.invokeLater( r );
         }
-        
+
     }
 
     @Subscribe
     public void handleShowQueryRequest( ShowQueryRequest event ) {
         show( new QueryNavigator( event.getQuery() ) );
     }
+
+    /**
+     * Remembers the last GroupInfo we picked so that we can attach a listener
+     * to update the title if it changes
+     */
+    private SortableDefaultMutableTreeNode myLastGroupNode = null;
 
     /**
      * Instructs the ThumbnailPanelController to display the specified set of
@@ -205,12 +214,36 @@ public class ThumbnailPanelController
         this.mySetOfNodes = newNodeNavigator;
         newNodeNavigator.addNodeNavigatorListener( this );  //Todo: investigate how we unattach these...
 
+        if ( myLastGroupNode != null ) {
+            GroupInfo gi = (GroupInfo) myLastGroupNode.getUserObject();
+            gi.removeGroupInfoChangeListener( myGroupInfoChangeListener );
+        }
+        myLastGroupNode = null;
+        if ( newNodeNavigator instanceof GroupNavigator ) {
+            myLastGroupNode = ( (GroupNavigator) newNodeNavigator ).getGroupNode();
+            GroupInfo gi = (GroupInfo) myLastGroupNode.getUserObject();
+            gi.addGroupInfoChangeListener( myGroupInfoChangeListener );
+        }
+
         Settings.pictureCollection.clearSelection();
         thumbnailJScrollPane.getVerticalScrollBar().setValue( 0 );
         startIndex = 0;
         curPage = 1;
         nodeLayoutChanged();
     }
+
+    /**
+     * Listens for changes in the Group and updates the title if anything
+     * changed
+     */
+    private GroupInfoChangeListener myGroupInfoChangeListener = new GroupInfoChangeListener() {
+
+        @Override
+        public void groupInfoChangeEvent( GroupInfoChangeEvent groupInfoChangeEvent ) {
+            LOGGER.info( "change event received." );
+            updateTitle();
+        }
+    };
 
     /**
      * Request that the ThumbnailPanel show the first page of Thumbnails
@@ -487,8 +520,7 @@ public class ThumbnailPanelController
             return;
         }
 
-        LOGGER.fine( String.format( "setting title to: %s", mySetOfNodes.getTitle() ) );
-        titleJPanel.setTitle( mySetOfNodes.getTitle() );
+        updateTitle();
 
         if ( initialisedMaxThumbnails != Settings.maxThumbnails ) {
             LOGGER.info( String.format( "There are %d initialised thumbnails which is not equal to the defined maximum number of %d. Therefore reinitialising", initialisedMaxThumbnails, Settings.maxThumbnails ) );
@@ -516,6 +548,14 @@ public class ThumbnailPanelController
         final int total = mySetOfNodes.getNumberOfNodes();
         final int lastOnPage = Math.min( startIndex + Settings.maxThumbnails, total );
         titleJPanel.lblPage.setText( String.format( "Thumbnails %d to %d of %d", startIndex + 1, lastOnPage, total ) );
+    }
+
+    /**
+     * Updates the title of the page. (The implementing method takes care that it is on the EDT)
+     */
+    private void updateTitle() {
+        LOGGER.fine( String.format( "setting title to: %s", mySetOfNodes.getTitle() ) );
+        titleJPanel.setTitle( mySetOfNodes.getTitle() );
     }
 
     /**

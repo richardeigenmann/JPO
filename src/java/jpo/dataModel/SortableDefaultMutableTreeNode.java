@@ -107,7 +107,7 @@ public class SortableDefaultMutableTreeNode
 
     /**
      * Call this method to sort the Children of a node by a field. The value of
-     * sortCriteria can be one of      {@link Settings#DESCRIPTION}, {@link Settings#FILM_REFERENCE}, {@link Settings#CREATION_TIME},
+     * sortCriteria can be one of null null     {@link Settings#DESCRIPTION}, {@link Settings#FILM_REFERENCE}, {@link Settings#CREATION_TIME},
      *   {@link Settings#COMMENT}, {@link Settings#PHOTOGRAPHER}, {@link Settings#COPYRIGHT_HOLDER}.
      *
      * @param sortCriteria The criteria by which the pictures should be sorted.
@@ -149,7 +149,7 @@ public class SortableDefaultMutableTreeNode
     /**
      * Overridden method to allow sorting of nodes. It uses the static global
      * variable sortfield to figure out what to compare on. The value of
-     * sortfield can be one of      {@link Settings#DESCRIPTION}, {@link Settings#FILM_REFERENCE}, {@link Settings#CREATION_TIME},
+     * sortfield can be one of null null     {@link Settings#DESCRIPTION}, {@link Settings#FILM_REFERENCE}, {@link Settings#CREATION_TIME},
      *   {@link Settings#COMMENT}, {@link Settings#PHOTOGRAPHER}, {@link Settings#COPYRIGHT_HOLDER}.
      *
      * @param o
@@ -281,19 +281,38 @@ public class SortableDefaultMutableTreeNode
      */
     public ArrayList<SortableDefaultMutableTreeNode> getChildPictureNodes(
             boolean recursive ) {
-        ArrayList<SortableDefaultMutableTreeNode> pictureNodes = new ArrayList<SortableDefaultMutableTreeNode>();
+        ArrayList<SortableDefaultMutableTreeNode> pictureNodes = new ArrayList<>();
         Enumeration kids = this.children();
-        SortableDefaultMutableTreeNode n;
+        SortableDefaultMutableTreeNode node;
 
         while ( kids.hasMoreElements() ) {
-            n = (SortableDefaultMutableTreeNode) kids.nextElement();
-            if ( recursive && n.getUserObject() instanceof GroupInfo ) {
-                pictureNodes.addAll( n.getChildPictureNodes( recursive ) );
-            } else if ( n.getUserObject() instanceof PictureInfo ) {
-                pictureNodes.add( n );
+            node = (SortableDefaultMutableTreeNode) kids.nextElement();
+            if ( recursive && node.getUserObject() instanceof GroupInfo ) {
+                pictureNodes.addAll( node.getChildPictureNodes( recursive ) );
+            } else if ( node.getUserObject() instanceof PictureInfo ) {
+                pictureNodes.add( node );
             }
         }
         return pictureNodes;
+    }
+
+    /**
+     * A convenience method to tell if the current node has at least one picture
+     * node in the tree of children. (Could be one)
+     *
+     * @return true if at least one picture is found, false if not
+     */
+    public boolean hasChildPictureNodes() {
+        //Enumeration kids = this.children();
+        Enumeration kids = this.breadthFirstEnumeration();
+        SortableDefaultMutableTreeNode node;
+        while ( kids.hasMoreElements() ) {
+            node = (SortableDefaultMutableTreeNode) kids.nextElement();
+            if ( node.getUserObject() instanceof PictureInfo ) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -784,7 +803,6 @@ public class SortableDefaultMutableTreeNode
      * @param newNode
      */
     public void add( SortableDefaultMutableTreeNode newNode ) {
-        LOGGER.fine( String.format( "Adding a new node %s to the node %s", newNode.toString(), this.toString() ) );
         super.add( newNode );
         if ( getPictureCollection().getSendModelUpdates() ) {
             int index = this.getIndex( newNode );

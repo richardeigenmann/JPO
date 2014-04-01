@@ -71,8 +71,7 @@ import jpo.gui.swing.Thumbnail;
 public class ThumbnailController
         implements DropTargetListener,
         PictureInfoChangeListener,
-        GroupInfoChangeListener,
-        TreeModelListener {
+        GroupInfoChangeListener {
 
     /**
      * Creates a new ThumbnailController object with a reference to the
@@ -108,7 +107,7 @@ public class ThumbnailController
                 theThumbnail, DnDConstants.ACTION_COPY_OR_MOVE, myDragGestureListener );
 
         // attach the ThumbnailController to the Tree Model to get notifications.
-        Settings.pictureCollection.getTreeModel().addTreeModelListener( this );
+        Settings.pictureCollection.getTreeModel().addTreeModelListener( new MyTreeModelListener() );
         JpoEventBus.getInstance().register( this );
     }
 
@@ -214,7 +213,7 @@ public class ThumbnailController
         }
     }
 
-      /**
+    /**
      * Sets the node being visualised by this ThumbnailController object.
      *
      * @param mySetOfNodes The {@link NodeNavigatorInterface} being tracked
@@ -414,7 +413,7 @@ public class ThumbnailController
             PicturePopupMenu picturePopupMenu = new PicturePopupMenu( myNodeNavigator, myIndex );
             picturePopupMenu.show( e.getComponent(), e.getX(), e.getY() );
         } else if ( myNode.getUserObject() instanceof GroupInfo ) {
-            GroupPopupMenu groupPopupMenu = new GroupPopupMenu(  myNode );
+            GroupPopupMenu groupPopupMenu = new GroupPopupMenu( myNode );
             groupPopupMenu.show( e.getComponent(), e.getX(), e.getY() );
         } else {
             LOGGER.severe( String.format( "Processing a right click response on an unknown node type: %s", myNode.getUserObject().getClass().toString() ) );
@@ -532,70 +531,76 @@ public class ThumbnailController
 
     }
 
-    /**
-     * implemented here to satisfy the TreeModelListener interface; not used.
-     *
-     * @param e
-     */
-    @Override
-    public void treeNodesChanged( TreeModelEvent e ) {
-        LOGGER.fine( String.format( "ThumbnailController %d detected a treeNodesChanged event: %s", hashCode(), e ) );
+    private class MyTreeModelListener implements TreeModelListener {
 
-        // find out whether our node was changed
-        Object[] children = e.getChildren();
-        if ( children == null ) {
-            // the root path does not have children as it doesn'transferable have a parent
-            LOGGER.fine( "Supposedly we got the root node?" );
-            return;
-        }
+        /**
+         * implemented here to satisfy the TreeModelListener interface; not
+         * used.
+         *
+         * @param e
+         */
+        @Override
+        public void treeNodesChanged( TreeModelEvent e ) {
+            LOGGER.fine( String.format( "ThumbnailController %d detected a treeNodesChanged event: %s", hashCode(), e ) );
 
-        for ( Object children1 : children ) {
-            if ( children1 == myNode ) {
-                // we are displaying a changed node. What changed?
-                Object userObject = myNode.getUserObject();
-                if ( userObject instanceof GroupInfo ) {
-                    // determine if the icon changed
-                    // LOGGER.info( "ThumbnailController should be reloading the icon..." );
-                    requestThumbnailCreation( ThumbnailQueueRequest.HIGH_PRIORITY, false );
-                } else {
-                    LOGGER.fine( String.format( "ThumbnailController %d detected a treeNodesChanged event: %s on a PictureInfo node", hashCode(), e ) );
+            // find out whether our node was changed
+            Object[] children = e.getChildren();
+            if ( children == null ) {
+                // the root path does not have children as it doesn'transferable have a parent
+                LOGGER.fine( "Supposedly we got the root node?" );
+                return;
+            }
 
+            for ( Object children1 : children ) {
+                if ( children1 == myNode ) {
+                    // we are displaying a changed node. What changed?
+                    Object userObject = myNode.getUserObject();
+                    if ( userObject instanceof GroupInfo ) {
+                        // determine if the icon changed
+                        // LOGGER.info( "ThumbnailController should be reloading the icon..." );
+                        requestThumbnailCreation( ThumbnailQueueRequest.HIGH_PRIORITY, false );
+                    } else {
+                        LOGGER.fine( String.format( "ThumbnailController %d detected a treeNodesChanged event: %s on a PictureInfo node", hashCode(), e ) );
+
+                    }
                 }
             }
         }
-    }
 
-    /**
-     * implemented here to satisfy the TreeModelListener interface; not used.
-     *
-     * @param e
-     */
-    @Override
-    public void treeNodesInserted( TreeModelEvent e ) {
-        LOGGER.fine( String.format( "ThumbnailController %d detected a treeNodesInserted event: %s", hashCode(), e ) );
-    }
+        /**
+         * implemented here to satisfy the TreeModelListener interface; not
+         * used.
+         *
+         * @param e
+         */
+        @Override
+        public void treeNodesInserted( TreeModelEvent e ) {
+            LOGGER.fine( String.format( "ThumbnailController %d detected a treeNodesInserted event: %s", hashCode(), e ) );
+        }
 
-    /**
-     * The TreeModelListener interface tells us of tree node removal events.
-     *
-     * @param e
-     */
-    @Override
-    public void treeNodesRemoved( TreeModelEvent e ) {
-        LOGGER.fine( String.format( "ThumbnailController %d detected a treeNodesRemoved event: %s", hashCode(), e ) );
-    }
+        /**
+         * The TreeModelListener interface tells us of tree node removal events.
+         *
+         * @param e
+         */
+        @Override
+        public void treeNodesRemoved( TreeModelEvent e ) {
+            LOGGER.fine( String.format( "ThumbnailController %d detected a treeNodesRemoved event: %s", hashCode(), e ) );
+        }
 
-    /**
-     * implemented here to satisfy the TreeModelListener interface; not used.
-     *
-     * @param e
-     */
-    @Override
-    public void treeStructureChanged( TreeModelEvent e ) {
-        LOGGER.fine( String.format( "ThumbnailController %d detected a treeStructureChanged event: %s", hashCode(), e ) );
+        /**
+         * implemented here to satisfy the TreeModelListener interface; not
+         * used.
+         *
+         * @param e
+         */
+        @Override
+        public void treeStructureChanged( TreeModelEvent e ) {
+            LOGGER.fine( String.format( "ThumbnailController %d detected a treeStructureChanged event: %s", hashCode(), e ) );
 
-        attachChangeListeners();
+            attachChangeListeners();
 
+        }
     }
 
     /**

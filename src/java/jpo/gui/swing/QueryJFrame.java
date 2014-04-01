@@ -70,7 +70,6 @@ public class QueryJFrame
      *
      *
      * @param startSearchNode
-     * @param applicationEventHandler
      */
     public QueryJFrame( SortableDefaultMutableTreeNode startSearchNode ) {
         if ( !( startSearchNode.getUserObject() instanceof GroupInfo ) ) {

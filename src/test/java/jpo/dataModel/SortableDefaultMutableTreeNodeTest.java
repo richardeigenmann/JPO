@@ -41,6 +41,14 @@ public class SortableDefaultMutableTreeNodeTest
 
     SortableDefaultMutableTreeNode group3;
 
+    GroupInfo gr4 = new GroupInfo( "Group4" );
+
+    SortableDefaultMutableTreeNode group4;
+
+    GroupInfo gr5 = new GroupInfo( "Group5" );
+
+    SortableDefaultMutableTreeNode group5;
+
     PictureInfo pi1 = new PictureInfo( "file:///images/image1.jpg", "file:///lowresimages/image1lowres.jpg", "Fist Picture", "Reference1" );
 
     SortableDefaultMutableTreeNode picture1;
@@ -69,11 +77,30 @@ public class SortableDefaultMutableTreeNodeTest
         group1 = new SortableDefaultMutableTreeNode( gr1 );
         group2 = new SortableDefaultMutableTreeNode( gr2 );
         group3 = new SortableDefaultMutableTreeNode( gr3 );
+        group4 = new SortableDefaultMutableTreeNode( gr4 );
+        group5 = new SortableDefaultMutableTreeNode( gr5 );
         picture1 = new SortableDefaultMutableTreeNode( pi1 );
         picture2 = new SortableDefaultMutableTreeNode( pi2 );
         picture3 = new SortableDefaultMutableTreeNode( pi3 );
         picture4 = new SortableDefaultMutableTreeNode( pi4 );
         picture5 = new SortableDefaultMutableTreeNode( pi5 );
+        
+        /*
+        
+        rootNode
+        !----group1
+             !----picture1
+             !----picture2
+        !----group2
+             !----picture3
+             !----picture4
+             !----group3
+                  !----picture5
+                  !----group4
+                       !----group5
+        
+        */
+        
         rootNode.add( group1 );
         rootNode.add( group2 );
         group1.add( picture1 );
@@ -82,6 +109,8 @@ public class SortableDefaultMutableTreeNodeTest
         group2.add( picture4 );
         group2.add( group3 );
         group3.add( picture5 );
+        group3.add( group4 );
+        group4.add( group5 );
     }
 
 
@@ -261,5 +290,17 @@ public class SortableDefaultMutableTreeNodeTest
         assertEquals( "There should be 0 pictures under the root node when nonrecursive", 0, rootNode.getChildPictureNodes( false ).size() );
         assertEquals( "There should be 2 pictures under the group1 node when nonrecursive", 2, group1.getChildPictureNodes( false ).size() );
         assertEquals( "There should be 2 pictures under the group1 node when recursive", 2, group1.getChildPictureNodes( true ).size() );
+    }
+    
+    
+    /**
+     * Tests the hasChildPictureNodes method
+     */
+    public void testHasChildPictureNodes() {
+        assertTrue( "The root node of the test tree should report it has pictures", rootNode.hasChildPictureNodes() );
+        assertTrue( "The group1 node of the test tree should report it has pictures", group1.hasChildPictureNodes() );
+        assertTrue( "The group3 node of the test tree should report it has pictures", group3.hasChildPictureNodes() );
+        assertFalse( "The group4 node of the test tree should report it has NO pictures", group4.hasChildPictureNodes() );
+        assertFalse( "The group5 node of the test tree should report it has NO pictures", group5.hasChildPictureNodes() );
     }
 }

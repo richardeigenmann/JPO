@@ -19,7 +19,7 @@ import javax.swing.JRadioButton;
 import javax.swing.SwingUtilities;
 import javax.swing.event.MouseInputAdapter;
 import jpo.dataModel.ExifInfo;
-import jpo.dataModel.NodeNavigator;
+import jpo.dataModel.NodeNavigatorInterface;
 import jpo.dataModel.PictureInfoChangeEvent;
 import jpo.dataModel.PictureInfoChangeListener;
 import jpo.dataModel.RandomNavigator;
@@ -116,10 +116,12 @@ public class PictureViewer
         stopTimer();
         pictureFrame.myJFrame.dispose();
     }
+
     /**
      * the context of the browsing
      */
-    private NodeNavigator mySetOfNodes = null;
+    private NodeNavigatorInterface mySetOfNodes = null;
+
     /**
      * the position in the context being shown
      */
@@ -187,7 +189,7 @@ public class PictureViewer
      * shown
      * @param myIndex The index of the set of nodes to be shown.
      */
-    public void show( NodeNavigator mySetOfNodes,
+    public void show( NodeNavigatorInterface mySetOfNodes,
             int myIndex ) {
         LOGGER.fine( String.format( "Navigator: %s Nodes: %d Index: %d", mySetOfNodes.toString(), mySetOfNodes.getNumberOfNodes(), myIndex ) );
         Tools.checkEDT();

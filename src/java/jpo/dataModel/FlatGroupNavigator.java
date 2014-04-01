@@ -6,45 +6,47 @@ import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreePath;
 
 /*
-FlatGroupNavigator.java:  an implementation of the NodeNavigator for browsing all the pictures of a group sequentially.
+ FlatGroupNavigator.java:  an implementation of the NodeNavigator for browsing all the pictures of a group sequentially.
 
-Copyright (C) 2006-2014 Richard Eigenmann, Zürich, Switzerland
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or any later version. This program is distributed 
-in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
-without even the implied warranty of MERCHANTABILITY or FITNESS 
-FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
-more details. You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-The license is in gpl.txt.
-See http://www.gnu.org/copyleft/gpl.html for the details.
+ Copyright (C) 2006-2014 Richard Eigenmann, Zürich, Switzerland
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or any later version. This program is distributed 
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+ without even the implied warranty of MERCHANTABILITY or FITNESS 
+ FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
+ more details. You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ The license is in gpl.txt.
+ See http://www.gnu.org/copyleft/gpl.html for the details.
  */
-/** 
- *  This class implements the Node Navigator Interface so that all the potentially nested
- *  child pictures of the specified group are browsed sequentially.
+/**
+ * This class implements the Node Navigator Interface so that all the
+ * potentially nested child pictures of the specified group are browsed
+ * sequentially.
  */
 public class FlatGroupNavigator
         extends ArrayListNavigator
         implements TreeModelListener {
 
     /**
-     *  Constructor for a FlatGroupNavigator.
+     * Logger for this class
+     */
+    private static final Logger LOGGER = Logger.getLogger( FlatGroupNavigator.class.getName() );
+
+    /**
+     * Constructor for a FlatGroupNavigator.
      *
-     *  @param groupNode    The groupNode under which the pictures should be displayed.
+     * @param groupNode The groupNode under which the pictures should be
+     * displayed.
      */
     public FlatGroupNavigator( SortableDefaultMutableTreeNode groupNode ) {
-        //logger.info( String.format( "Creating a FlatGroupNavigator for node %s", groupNode.toString() ) );
         this.groupNode = groupNode;
         Settings.pictureCollection.getTreeModel().addTreeModelListener( this );
         buildFromScratch();
     }
-    /**
-     * Logger for this class
-     */
-    private static final Logger LOGGER = Logger.getLogger( FlatGroupNavigator.class.getName() );
 
     /**
      * Builds the list of nodes from the group.
@@ -55,7 +57,8 @@ public class FlatGroupNavigator
     }
 
     /**
-     * This method shuts down the object and makes it available for garbage collection
+     * This method shuts down the object and makes it available for garbage
+     * collection
      */
     @Override
     public void getRid() {
@@ -65,12 +68,13 @@ public class FlatGroupNavigator
         super.getRid();
     }
     /**
-     *  A reference to the group for which this FlatGroupNavigator was created.
+     * A reference to the group for which this FlatGroupNavigator was created.
      */
     private SortableDefaultMutableTreeNode groupNode = null;
 
     /**
-     *  returns the title of the node
+     * returns the title of the node
+     *
      * @return the title of the node
      */
     @Override
@@ -84,6 +88,7 @@ public class FlatGroupNavigator
 
     /**
      * We are notified here that a node changed
+     *
      * @param e The notification event details
      */
     @Override
@@ -92,6 +97,7 @@ public class FlatGroupNavigator
 
     /**
      * We are notified here that a node was inserted
+     *
      * @param e
      */
     @Override
@@ -99,8 +105,10 @@ public class FlatGroupNavigator
     }
 
     /**
-     *  The TreeModelListener interface tells us of tree node removal events.
-     *  If we receive a removal event we need to find out if one of our nodes was removed
+     * The TreeModelListener interface tells us of tree node removal events. If
+     * we receive a removal event we need to find out if one of our nodes was
+     * removed
+     *
      * @param e The Notification event
      */
     @Override
@@ -138,6 +146,7 @@ public class FlatGroupNavigator
 
     /**
      * We are notified here if the structure changed
+     *
      * @param e
      */
     @Override

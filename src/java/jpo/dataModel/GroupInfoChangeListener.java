@@ -4,7 +4,7 @@ package jpo.dataModel;
 /*
 GroupInfoChangeListener.java:  interface for notification
 
-Copyright (C) 2002 - 2009  Richard Eigenmann.
+Copyright (C) 2002 - 2014  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -19,15 +19,15 @@ The license is in gpl.txt.
 See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 /**
- * This interface allows GroupInfo objects to tell other objects about changes
+ * This interface allows GroupInfo objects to tell listeners that something has changed
  */
 public interface GroupInfoChangeListener {
 
     /**
-     *  inform the listener that the status has changed
+     *  inform the listener that the GroupInfo has changed
      *
-     * @param e
+     * @param groupInfoChangeEvent
      */
-    public void groupInfoChangeEvent( GroupInfoChangeEvent e );
+    public void groupInfoChangeEvent( GroupInfoChangeEvent groupInfoChangeEvent );
 }
 

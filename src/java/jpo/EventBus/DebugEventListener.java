@@ -5,6 +5,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
+ * A dummy event listener that listens to all events and simply logs them.
+ * Should be helpful to debug what is going on.
  *
  * @author Richard Eigenmann
  */
@@ -17,7 +19,7 @@ public class DebugEventListener {
 
     @Subscribe
     public void handleAllEvents( Object o ) {
-        LOGGER.log( Level.INFO, "Event propagating: {0}", o.getClass().toString());
+        LOGGER.log( Level.INFO, "Event propagating: {0}", o.getClass().toString() );
     }
 
 }

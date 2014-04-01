@@ -26,6 +26,7 @@ import jpo.EventBus.CloseApplicationRequest;
 import jpo.EventBus.JpoEventBus;
 import jpo.EventBus.ShowGroupRequest;
 import jpo.EventBus.ShowQueryRequest;
+import jpo.EventBus.UnsavedUpdatesDialogRequest;
 import jpo.dataModel.Settings;
 import jpo.dataModel.Tools;
 import jpo.gui.ApplicationJMenuBar;
@@ -80,7 +81,7 @@ public class MainWindow
             @Override
             public void windowClosing( WindowEvent e ) {
                 setDefaultCloseOperation( WindowConstants.DO_NOTHING_ON_CLOSE );
-                JpoEventBus.getInstance().post( new CloseApplicationRequest() );
+                JpoEventBus.getInstance().post( new UnsavedUpdatesDialogRequest( new CloseApplicationRequest())  );
             }
         } );
 

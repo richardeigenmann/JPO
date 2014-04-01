@@ -79,7 +79,7 @@ public class ThumbnailPanelTitle
     /**
      * JLabel for holding the thumbnail counts
      * */
-    public JLabel lblPage = new JLabel();	// JA
+    public JLabel lblPage = new JLabel();
 
     /**
      *  the JLabel that holds the description of what is being shown in the TubnmailPanel

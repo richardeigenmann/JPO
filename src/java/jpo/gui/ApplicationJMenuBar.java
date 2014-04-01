@@ -27,6 +27,7 @@ import jpo.EventBus.OpenSearchDialogRequest;
 import jpo.EventBus.SendEmailRequest;
 import jpo.EventBus.StartDoublePanelSlideshowRequest;
 import jpo.EventBus.StartNewCollectionRequest;
+import jpo.EventBus.UnsavedUpdatesDialogRequest;
 import jpo.EventBus.YearBrowserRequest;
 import jpo.EventBus.YearlyAnalysisRequest;
 import jpo.dataModel.RecentFilesChangeListener;
@@ -299,7 +300,7 @@ public class ApplicationJMenuBar
 
             @Override
             public void actionPerformed( ActionEvent e ) {
-                JpoEventBus.getInstance().post( new CloseApplicationRequest() );
+                JpoEventBus.getInstance().post( new UnsavedUpdatesDialogRequest( new CloseApplicationRequest())  );
             }
         } );
         FileJMenu.add( FileExitJMenuItem );

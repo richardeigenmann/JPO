@@ -68,12 +68,15 @@ import jpo.EventBus.SortGroupRequest;
 import jpo.EventBus.StartCameraWatchDaemonRequest;
 import jpo.EventBus.StartDoublePanelSlideshowRequest;
 import jpo.EventBus.StartNewCollectionRequest;
+import jpo.EventBus.UnsavedUpdatesDialogRequest;
 import jpo.EventBus.YearBrowserRequest;
 import jpo.EventBus.YearlyAnalysisRequest;
 import jpo.dataModel.DuplicatesQuery;
 import jpo.dataModel.FlatFileDistiller;
 import jpo.dataModel.FlatGroupNavigator;
 import jpo.dataModel.GroupInfo;
+import jpo.dataModel.GroupNavigator;
+import jpo.dataModel.NodeNavigatorInterface;
 import jpo.dataModel.PictureInfo;
 import jpo.dataModel.QueryNavigator;
 import jpo.dataModel.RandomNavigator;
@@ -202,15 +205,13 @@ public class ApplicationEventHandler {
     }
 
     /**
-     * Handles the close application request by checking if the main application
-     * window size should be saved and saves if necessary. also checks for
-     * unsaved changes before closing the application.
+     * Shuts down JPO.
      */
     @Subscribe
     public void handleCloseApplicationRequest( CloseApplicationRequest request ) {
-        if ( checkUnsavedUpdates() ) {
-            return;
-        }
+        /*if ( checkUnsavedUpdates() ) {
+         return;
+         }*/
 
         if ( Settings.unsavedSettingChanges ) {
             Settings.writeSettings();
@@ -261,19 +262,26 @@ public class ApplicationEventHandler {
     public void handleShowPictureRequest( ShowPictureRequest request ) {
         SortableDefaultMutableTreeNode node = request.getNode();
         Object userObject = node.getUserObject();
-        if ( !( userObject instanceof PictureInfo ) ) {
-            return; // should only be receiving PictureInfo objects
+
+        final NodeNavigatorInterface navigator;
+        int index = 0;
+
+        if ( userObject instanceof PictureInfo ) {
+            navigator = new FlatGroupNavigator( (SortableDefaultMutableTreeNode) node.getParent() );
+            for ( int i = 0; i < navigator.getNumberOfNodes(); i++ ) {
+                if ( navigator.getNode( i ).equals( node ) ) {
+                    index = i;
+                    i = navigator.getNumberOfNodes();
+                }
+            }
+        } else if ( userObject instanceof GroupInfo &&  node.hasChildPictureNodes() ) {
+            navigator = new FlatGroupNavigator( node );
+        } else {
+            return; // should only be receiving PictureInfo or GroupInfo with child pictures
         }
         PictureViewer pictureViewer = new PictureViewer();
-        FlatGroupNavigator sb = new FlatGroupNavigator( (SortableDefaultMutableTreeNode) node.getParent() );
-        int index = 0;
-        for ( int i = 0; i < sb.getNumberOfNodes(); i++ ) {
-            if ( sb.getNode( i ).equals( node ) ) {
-                index = i;
-                i = sb.getNumberOfNodes();
-            }
-        }
-        pictureViewer.show( sb, index );
+        pictureViewer.show( navigator, index );
+
     }
 
     /**
@@ -605,6 +613,7 @@ public class ApplicationEventHandler {
      * The App will respond to this request by saving the file names to a flat
      * file
      *
+     * @param request
      */
     @Subscribe
     public void handleGroupExportFlatFileRequest( ExportGroupToFlatFileRequest request ) {
@@ -839,9 +848,50 @@ public class ApplicationEventHandler {
         new CameraWatchDaemon();
     }
 
-    
-    
-    
+    /**
+     * Brings the unsaved updates dialog if there are unsaved updates. After
+     * saving the next request is fired unless the cancel option was chosen
+     *
+     */
+    @Subscribe
+    public void handleUnsavedUpdatesDialogRequest( UnsavedUpdatesDialogRequest request ) {
+        Tools.checkEDT();
+        if ( Settings.pictureCollection.getUnsavedUpdates() ) {
+            Object[] options = {
+                Settings.jpoResources.getString( "discardChanges" ),
+                Settings.jpoResources.getString( "genericSaveButtonLabel" ),
+                Settings.jpoResources.getString( "FileSaveAsMenuItemText" ),
+                Settings.jpoResources.getString( "genericCancelText" ) };
+            int option = JOptionPane.showOptionDialog(
+                    Settings.anchorFrame,
+                    Settings.jpoResources.getString( "unsavedChanges" ),
+                    Settings.jpoResources.getString( "genericWarning" ),
+                    JOptionPane.OK_CANCEL_OPTION,
+                    JOptionPane.WARNING_MESSAGE,
+                    null,
+                    options,
+                    options[0] );
+
+            switch ( option ) {
+                case 0:
+                    return;
+                case 1:
+                    JpoEventBus.getInstance().post( new FileSaveRequest() );
+                    if ( Settings.pictureCollection.getUnsavedUpdates() ) {
+                        return; // saving wasn't successful
+                    }
+                case 2:
+                    JpoEventBus.getInstance().post( new FileSaveAsRequest() );
+                    if ( Settings.pictureCollection.getUnsavedUpdates() ) {
+                        return; // saving wasn't successful   
+                    }
+                case 3:
+                    return;
+            }
+        }
+        JpoEventBus.getInstance().post( request.getNextRequest() );
+    }
+
     /**
      * Checks for unsaved changes in the data model, pops up a dialog and does
      * the save if so indicated by the user.
