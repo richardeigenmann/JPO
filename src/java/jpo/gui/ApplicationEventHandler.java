@@ -75,7 +75,6 @@ import jpo.dataModel.DuplicatesQuery;
 import jpo.dataModel.FlatFileDistiller;
 import jpo.dataModel.FlatGroupNavigator;
 import jpo.dataModel.GroupInfo;
-import jpo.dataModel.GroupNavigator;
 import jpo.dataModel.NodeNavigatorInterface;
 import jpo.dataModel.PictureInfo;
 import jpo.dataModel.QueryNavigator;
@@ -205,14 +204,11 @@ public class ApplicationEventHandler {
     }
 
     /**
-     * Shuts down JPO.
+     * Shuts down JPO no questions asked. Wrap it as a next request with a
+     * UnsavedUpdatesDialogRequest
      */
     @Subscribe
     public void handleCloseApplicationRequest( CloseApplicationRequest request ) {
-        /*if ( checkUnsavedUpdates() ) {
-         return;
-         }*/
-
         if ( Settings.unsavedSettingChanges ) {
             Settings.writeSettings();
         }
@@ -274,7 +270,7 @@ public class ApplicationEventHandler {
                     i = navigator.getNumberOfNodes();
                 }
             }
-        } else if ( userObject instanceof GroupInfo &&  node.hasChildPictureNodes() ) {
+        } else if ( userObject instanceof GroupInfo && node.hasChildPictureNodes() ) {
             navigator = new FlatGroupNavigator( node );
         } else {
             return; // should only be receiving PictureInfo or GroupInfo with child pictures
@@ -413,13 +409,14 @@ public class ApplicationEventHandler {
 
     /**
      * Brings up a dialog where the user can select the collection to be loaded.
-     * Calls {@link SortableDefaultMutableTreeNode#fileLoad}
+     * Calls {@link SortableDefaultMutableTreeNode#fileLoad} Remember to wrap
+     * this request in an UnsavedUpdatesDialogRequest if you care about unsaved
+     * changes as this request will not check for unsaved changes
      */
     @Subscribe
     public void handleFileLoadRequest( FileLoadRequest request ) {
-        if ( checkUnsavedUpdates() ) {
-            return;
-        }
+        LOGGER.warning( "got to FileLoad" );
+
         final File fileToLoad = Tools.chooseXmlFile();
         Thread t = new Thread() {
 
@@ -444,8 +441,9 @@ public class ApplicationEventHandler {
     }
 
     /**
-     * Calls the unsaved Updated check, clears the collection and starts a new
-     * one.
+     * Clears the collection and starts a new one. Remember to wrap this request
+     * in an UnsavedUpdatesDialogRequest if you care about unsaved changes as
+     * this request will not check for unsaved changes
      */
     @Subscribe
     public void handleStartNewCollectionRequest( StartNewCollectionRequest event ) {
@@ -453,9 +451,6 @@ public class ApplicationEventHandler {
 
             @Override
             public void run() {
-                if ( checkUnsavedUpdates() ) {
-                    return;
-                }
                 Settings.pictureCollection.clearCollection();
                 JpoEventBus.getInstance().post( new GroupSelectionEvent( Settings.pictureCollection.getRootNode() ) );
             }
@@ -471,11 +466,14 @@ public class ApplicationEventHandler {
     @Subscribe
     public void handleFileSaveRequest( FileSaveRequest request ) {
         if ( Settings.pictureCollection.getXmlFile() == null ) {
-            JpoEventBus.getInstance().post( new FileSaveAsRequest() );
+            FileSaveAsRequest fileSaveAsRequest = new FileSaveAsRequest();
+            fileSaveAsRequest.setOnSuccessNextRequest( request.getOnSuccessNextRequest() );
+            JpoEventBus.getInstance().post( fileSaveAsRequest );
         } else {
             LOGGER.info( String.format( "Saving under the name: %s", Settings.pictureCollection.getXmlFile() ) );
             Settings.pictureCollection.fileSave();
             afterFileSaveDialog();
+            JpoEventBus.getInstance().post( request.getOnSuccessNextRequest() );
         }
     }
 
@@ -518,6 +516,7 @@ public class ApplicationEventHandler {
             Settings.memorizeCopyLocation( chosenFile.getParent() );
             Settings.pushRecentCollection( chosenFile.toString() );
             afterFileSaveDialog();
+            JpoEventBus.getInstance().post( request.getOnSuccessNextRequest() );
         }
     }
 
@@ -744,15 +743,14 @@ public class ApplicationEventHandler {
 
     /**
      * Handles the request to open a recent collection ToDo: consider whether
-     * this request should be integrated with the FileLoadRequest
+     * this request should be integrated with the FileLoadRequest Remember to
+     * wrap this request in an UnsavedUpdatesDialogRequest if you care about
+     * unsaved changes as this request will not check for unsaved changes
      */
     @Subscribe
     public void handleOpenRecentCollectionRequest( OpenRecentCollectionRequest request ) {
         final int i = request.getI();
 
-        if ( checkUnsavedUpdates() ) {
-            return;
-        }
         Thread t = new Thread() {
 
             @Override
@@ -849,9 +847,17 @@ public class ApplicationEventHandler {
     }
 
     /**
-     * Brings the unsaved updates dialog if there are unsaved updates. After
-     * saving the next request is fired unless the cancel option was chosen
+     * Brings the unsaved updates dialog if there are unsaved updates and then
+     * fires the next request. Logic is: if unsavedChanges then show dialog
+     * submit next request
      *
+     * The dialog has choices: 0 : discard unsaved changes and go to next
+     * request 1 : fire save request then send next request 2 : fire save-as
+     * request then send next request 3 : cancel - don't proceed with next
+     * request
+     *
+     *
+     * @param request
      */
     @Subscribe
     public void handleUnsavedUpdatesDialogRequest( UnsavedUpdatesDialogRequest request ) {
@@ -874,62 +880,25 @@ public class ApplicationEventHandler {
 
             switch ( option ) {
                 case 0:
+                    JpoEventBus.getInstance().post( request.getNextRequest() );
                     return;
                 case 1:
-                    JpoEventBus.getInstance().post( new FileSaveRequest() );
-                    if ( Settings.pictureCollection.getUnsavedUpdates() ) {
-                        return; // saving wasn't successful
-                    }
+                    FileSaveRequest fileSaveRequest = new FileSaveRequest();
+                    fileSaveRequest.setOnSuccessNextRequest( request.getNextRequest() );
+                    JpoEventBus.getInstance().post( fileSaveRequest );
+                    return;
                 case 2:
                     JpoEventBus.getInstance().post( new FileSaveAsRequest() );
-                    if ( Settings.pictureCollection.getUnsavedUpdates() ) {
-                        return; // saving wasn't successful   
-                    }
+                    FileSaveAsRequest fileSaveAsRequest = new FileSaveAsRequest();
+                    fileSaveAsRequest.setOnSuccessNextRequest( request.getNextRequest() );
+                    return;
                 case 3:
                     return;
             }
+        } else {
+            JpoEventBus.getInstance().post( request.getNextRequest() );
         }
-        JpoEventBus.getInstance().post( request.getNextRequest() );
-    }
 
-    /**
-     * Checks for unsaved changes in the data model, pops up a dialog and does
-     * the save if so indicated by the user.
-     *
-     * @return Returns true if the user want to cancel the close.
-     */
-    public boolean checkUnsavedUpdates() {
-        Tools.checkEDT();
-        if ( Settings.pictureCollection.getUnsavedUpdates() ) {
-            Object[] options = {
-                Settings.jpoResources.getString( "discardChanges" ),
-                Settings.jpoResources.getString( "genericSaveButtonLabel" ),
-                Settings.jpoResources.getString( "FileSaveAsMenuItemText" ),
-                Settings.jpoResources.getString( "genericCancelText" ) };
-            int option = JOptionPane.showOptionDialog(
-                    Settings.anchorFrame,
-                    Settings.jpoResources.getString( "unsavedChanges" ),
-                    Settings.jpoResources.getString( "genericWarning" ),
-                    JOptionPane.OK_CANCEL_OPTION,
-                    JOptionPane.WARNING_MESSAGE,
-                    null,
-                    options,
-                    options[0] );
-
-            switch ( option ) {
-                case 0:
-                    return false;
-                case 1:
-                    JpoEventBus.getInstance().post( new FileSaveRequest() );
-                    return Settings.pictureCollection.getUnsavedUpdates();
-                case 2:
-                    JpoEventBus.getInstance().post( new FileSaveAsRequest() );
-                    return Settings.pictureCollection.getUnsavedUpdates();
-                case 3:
-                    return true;
-            }
-        }
-        return false;
     }
 
 }
