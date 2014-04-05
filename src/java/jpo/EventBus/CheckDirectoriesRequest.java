@@ -1,7 +1,7 @@
 package jpo.EventBus;
 
 /**
- * This request indicates that the user wants to check directories
+ * This request indicates that the user wants to reconcile pictures in the collection to those in a directory
  * 
  * @author Richard eigenmann
  */

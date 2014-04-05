@@ -62,9 +62,9 @@ public class ThumbnailCreationFactory
      * Thread.MIN_PRIOTITY priority to ensure good overall response.
      */
     public ThumbnailCreationFactory() {
-        Thread t = new Thread( this );
-        t.setPriority( Thread.MIN_PRIORITY );
-        t.start();
+        Thread thread = new Thread( this );
+        thread.setPriority( Thread.MIN_PRIORITY );
+        thread.start();
     }
 
     /**
@@ -96,11 +96,11 @@ public class ThumbnailCreationFactory
      * ThumbnailController
      */
     private void processQueueRequest( ThumbnailQueueRequest request ) {
-        //logger.info( String.format( "Processing QueueRequest %s", req.toString() ) );
+        //LOGGER.info( String.format( "Processing QueueRequest %s", request.toString() ) );
         ThumbnailController currentThumb = request.getThumbnailController();
         // now block other threads from accessing the ThumbnailController
         synchronized ( currentThumb ) {
-            SortableDefaultMutableTreeNode referringNode = currentThumb.myNode;
+            SortableDefaultMutableTreeNode referringNode = currentThumb.getNode();
             if ( referringNode == null ) {
                 LOGGER.severe( "ReferringNode was null! Setting Broken Image. This happened on ThumbnailQueueRequest: " + request.toString() + " which refers to Thumbnail: " + currentThumb.toString() );
                 currentThumb.setBrokenIcon();
@@ -138,7 +138,7 @@ public class ThumbnailCreationFactory
             LOGGER.info( "Invoked request with a null Thumbnail. Aborting." );
             return;
         }
-        PictureInfo pi = (PictureInfo) currentThumb.myNode.getUserObject();
+        PictureInfo pi = (PictureInfo) currentThumb.getNode().getUserObject();
         if ( pi == null ) {
             LOGGER.info( "Could not find PictureInfo. Aborting." );
             return;
@@ -301,7 +301,7 @@ public class ThumbnailCreationFactory
             return;
         }
 
-        SortableDefaultMutableTreeNode referringNode = currentThumb.myNode;
+        SortableDefaultMutableTreeNode referringNode = currentThumb.getNode();
         LOGGER.fine( String.format( "Creating Thumbnail %s from %s", ( (PictureInfo) referringNode.getUserObject() ).getLowresLocation(), ( (PictureInfo) referringNode.getUserObject() ).getHighresLocation() ) );
 
         try {
@@ -370,7 +370,7 @@ public class ThumbnailCreationFactory
             // sent ThumbnailChangedEvent ensures that the new image is loaded.
             ImageIcon icon = new ImageIcon( currentPicture.getScaledPicture() );
             //if ((currentThumb.myNode != null) && (currentThumb.myNode == myNode)) {
-            if ( currentThumb.myNode != null ) {
+            if ( currentThumb.getNode() != null ) {
                 // could have changed in the mean time
                 currentThumb.getThumbnail().setThumbnail( icon );
             }
@@ -390,7 +390,7 @@ public class ThumbnailCreationFactory
     private void processGroupRequest( ThumbnailQueueRequest req ) {
         //logger.info( String.format( "Request details: %s", req.toString() ) );
         ThumbnailController currentThumb = req.getThumbnailController();
-        GroupInfo gi = (GroupInfo) currentThumb.myNode.getUserObject();
+        GroupInfo gi = (GroupInfo) currentThumb.getNode().getUserObject();
         URL lowresUrl = null;
 
         if ( Settings.keepThumbnails ) {
@@ -446,7 +446,7 @@ public class ThumbnailCreationFactory
             return;
         }
 
-        SortableDefaultMutableTreeNode referringNode = groupThumbnailController.myNode;
+        SortableDefaultMutableTreeNode referringNode = groupThumbnailController.getNode();
         //logger.info("ThumbnailCreationFactory.createNewGroupThumbnail: Creating ThumbnailController " + ((GroupInfo) myNode.getUserObject()).getLowresLocation() + " from " + ((GroupInfo) myNode.getUserObject()).getLowresLocation());
 
         try {
@@ -539,7 +539,7 @@ public class ThumbnailCreationFactory
             }
 
             //if ( ( groupThumbnailController.myNode != null ) && ( groupThumbnailController.myNode == myNode ) ) {
-            if ( groupThumbnailController.myNode == referringNode ) {
+            if ( groupThumbnailController.getNode() == referringNode ) {
                 // in the meantime it might be displaying something completely else
                 groupThumbnailController.getThumbnail().setThumbnail( new ImageIcon( groupThumbnail ) );
             }

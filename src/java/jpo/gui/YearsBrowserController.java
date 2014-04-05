@@ -10,63 +10,63 @@ import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.tree.DefaultMutableTreeNode;
+import jpo.EventBus.JpoEventBus;
+import jpo.EventBus.ShowQueryRequest;
 import jpo.dataModel.Settings;
+import jpo.dataModel.YearQuery;
 
 /*
-YearlyAnalysisGuiController.java:  The controller that makes the GUI work
+ YearlyAnalysisGuiController.java:  The controller that makes the GUI work
 
-Copyright (C) 2009  Richard Eigenmann.
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or any later version. This program is distributed
-in the hope that it will be useful, but WITHOUT ANY WARRANTY;
-without even the implied warranty of MERCHANTABILITY or FITNESS
-FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-more details. You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-The license is in gpl.txt.
-See http://www.gnu.org/copyleft/gpl.html for the details.
+ Copyright (C) 2009-2014  Richard Eigenmann.
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or any later version. This program is distributed
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ without even the implied warranty of MERCHANTABILITY or FITNESS
+ FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+ more details. You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ The license is in gpl.txt.
+ See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 /**
  * The controller that makes the GUI work
  *
  * @author Richard Eigenmann
  */
-public class YearsBrowserController
-        implements Serializable {
-
-    private final YearlyAnalysis ya;
+public class YearsBrowserController implements Serializable {
+    
+    private final YearlyAnalysis yearlyAnalysis;
 
     /**
      * Defines a logger for this class
      */
     private static final Logger LOGGER = Logger.getLogger( YearsBrowserController.class.getName() );
 
-
     /**
      * Constructor to call to create a new YearlyAnalysisGui
+     *
      * @param startNode
      */
     public YearsBrowserController( DefaultMutableTreeNode startNode ) {
-        ya = new YearlyAnalysis( startNode );
+        yearlyAnalysis = new YearlyAnalysis( startNode );
         YearsBrowser yb = new YearsBrowser();
         yb.setLocationRelativeTo( Settings.anchorFrame );
         yb.setVisible( true );
-
-
-
+        
         JPanel panel = yb.getDisplayPanel();
         panel.setLayout( new FlowLayout() );
         Dimension panelSize = new Dimension( 500, 500 );
         panel.setMaximumSize( panelSize );
-
-        for ( Integer year : ya.getYears() ) {
+        
+        for ( Integer year : yearlyAnalysis.getYears() ) {
             panel.add( new YearButton( year ) );
         }
         panel.revalidate();
-
+        
     }
 
     /**
@@ -78,7 +78,8 @@ public class YearsBrowserController
             implements Serializable {
 
         /**
-         * The maximum dynamic width we want to give this button in addition to the minimum width
+         * The maximum dynamic width we want to give this button in addition to
+         * the minimum width
          */
         int width = 80;
 
@@ -86,23 +87,21 @@ public class YearsBrowserController
          * The height for the button
          */
         int height = 80;
-
-
+        
         public YearButton( final Integer year ) {
             super( "Button" );
-            int count = ya.getYearNodeCount( year );
+            int count = yearlyAnalysis.getYearNodeCount( year );
             setText( String.format( "<html>%d<br>(%d)</html>", year, count ) );
             addActionListener( new ActionListener() {
-
+                
                 @Override
                 public void actionPerformed( ActionEvent e ) {
-                    LOGGER.info( Integer.toString( year ) );
+                    JpoEventBus.getInstance().post( new ShowQueryRequest( new YearQuery( Integer.toString( year )  ) ) );
                 }
             } );
-            setBackground( GradientColor.getColor( GradientColor.BLACK_WHITE_COLORS, (double) count / ya.maxNodesPerMonthInAllYears() ) );
+            setBackground( GradientColor.getColor( GradientColor.BLACK_WHITE_COLORS, (double) count / yearlyAnalysis.maxNodesPerMonthInAllYears() ) );
         }
-
-
+        
         @Override
         public Dimension getPreferredSize() {
             return new Dimension( width, height );

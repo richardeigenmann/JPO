@@ -1,30 +1,31 @@
 package jpo.EventBus;
 
+import java.util.ArrayList;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
 
 /**
- * This request indicates that the user wants to remove a specific node
+ * This request indicates that the user wants to remove specific nodes
  * 
  * @author Richard eigenmann
  */
 public class RemoveNodeRequest implements Request {
 
-    private final SortableDefaultMutableTreeNode node;
+    private final ArrayList<SortableDefaultMutableTreeNode> nodes;
 
     /**
-     * This request indicates that the user wants to remove a specific node
-     * @param node The node to remove from it's parent
+     * This request indicates that the user wants to remove specific nodes
+     * @param nodes The node to remove from it's parent
      */
-    public RemoveNodeRequest( SortableDefaultMutableTreeNode node ) {
-        this.node = node;
+    public RemoveNodeRequest( ArrayList<SortableDefaultMutableTreeNode> nodes ) {
+        this.nodes = nodes;
     }
 
     /**
-     * The node to remove from it's parent
-     * @return the node
+     * The nodes to remove from their parents
+     * @return the nodes
      */
-    public SortableDefaultMutableTreeNode getNode() {
-        return node;
+    public ArrayList<SortableDefaultMutableTreeNode> getNodes() {
+        return nodes;
     }
 
     

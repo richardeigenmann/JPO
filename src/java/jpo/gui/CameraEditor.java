@@ -264,9 +264,9 @@ public class CameraEditor
 
 
     public void notifyActionListeners() {
-        ActionEvent e = new ActionEvent( this, 0, "save" );
-        for ( ActionListener a : listeners ) {
-            a.actionPerformed( e );
+        ActionEvent event = new ActionEvent( this, 0, "save" );
+        for ( ActionListener actionListener : listeners ) {
+            actionListener.actionPerformed( event );
         }
     }
 }

@@ -21,6 +21,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingWorker;
 import static javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE;
+import jpo.EventBus.JpoEventBus;
+import jpo.EventBus.RefreshThumbnailRequest;
 import net.miginfocom.swing.MigLayout;
 
 
@@ -230,7 +232,7 @@ public class IntegrityCheckerJFrame
                     conflicts++;
                     String newThumbnailFilename = testNode.assignNewThumbnailLocation();
                     SortableDefaultMutableTreeNode conflictNode = thumbnailNodeMap.get( thumbnailLocation );
-                    conflictNode.refreshThumbnail();
+                    JpoEventBus.getInstance().post( new RefreshThumbnailRequest(conflictNode, ThumbnailQueueRequest.LOWEST_PRIORITY));
 
                     String logMessage = String.format(
                             "Conflict on the following two nodes:\n%s\n%s\nboth refer to the same thumbnail: %s\nNew thumbnail assigned to second node:%s\n",

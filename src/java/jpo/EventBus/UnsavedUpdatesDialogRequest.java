@@ -3,13 +3,17 @@ package jpo.EventBus;
 /**
  * This request must bring up the unsaved changes dialog
  * and allow the user to save the changes. After a successful save or 
- * Dismiss choice the nextRequest is fired
+ * Dismiss choice the nextRequest is fired.
  * 
- * @author Richard eigenmann
+ * <p>
+ * 
+ * <img src="doc-files/UnsavedChangesLogic.png">
+ * 
+ * @author Richard Eigenmann
  */
 public class UnsavedUpdatesDialogRequest implements Request {
 
-    private Request nextRequest;
+    private final Request nextRequest;
 
     /**
      * A request bring the unsaved changes dialog

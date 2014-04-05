@@ -7,6 +7,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.ArrayList;
 import jpo.dataModel.Settings;
 import jpo.dataModel.Camera;
 import java.util.Vector;
@@ -89,7 +90,7 @@ public class CamerasEditor
     /**
      *  keep a copy of the old cameras so we can restore them with the cancel button.
      */
-    private final Vector<Camera> backupCameras;
+    private final ArrayList<Camera> backupCameras;
 
     /**
      *  This component handles all the editing of the camera information.
@@ -116,7 +117,7 @@ public class CamerasEditor
         } );
 
         // take a backup
-        backupCameras = new Vector<Camera>();
+        backupCameras = new ArrayList<Camera>();
         for ( Camera c : Settings.cameras ) {
             Camera b = new Camera();
             b.setDescription( c.getDescription() );

@@ -12,24 +12,27 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.tree.DefaultMutableTreeNode;
+import jpo.EventBus.JpoEventBus;
+import jpo.EventBus.ShowQueryRequest;
 import jpo.dataModel.Settings;
+import jpo.dataModel.YearQuery;
 
 /*
-YearlyAnalysisGuiController.java:  The controller that makes the GUI work
+ YearlyAnalysisGuiController.java:  The controller that makes the GUI work
 
-Copyright (C) 2009  Richard Eigenmann.
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or any later version. This program is distributed
-in the hope that it will be useful, but WITHOUT ANY WARRANTY;
-without even the implied warranty of MERCHANTABILITY or FITNESS
-FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-more details. You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-The license is in gpl.txt.
-See http://www.gnu.org/copyleft/gpl.html for the details.
+ Copyright (C) 2009-2014  Richard Eigenmann.
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or any later version. This program is distributed
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ without even the implied warranty of MERCHANTABILITY or FITNESS
+ FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+ more details. You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ The license is in gpl.txt.
+ See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 /**
  * The controller that makes the GUI work
@@ -43,9 +46,9 @@ public class YearlyAnalysisGuiController {
      */
     private static final Logger LOGGER = Logger.getLogger( YearlyAnalysisGuiController.class.getName() );
 
-
     /**
      * Constructor to call to create a new YearlyAnalysisGui
+     *
      * @param startNode
      */
     public YearlyAnalysisGuiController( DefaultMutableTreeNode startNode ) {
@@ -56,7 +59,6 @@ public class YearlyAnalysisGuiController {
         yag.setVisible( true );
 
         TreeMap<Integer, TreeMap<Integer, HashSet<DefaultMutableTreeNode>>> yearsMap = ya.getYearMap();
-
 
         JPanel panel = yag.getDisplayPanel();
         GridBagConstraints gc = new GridBagConstraints();
@@ -90,7 +92,8 @@ public class YearlyAnalysisGuiController {
             extends JButton {
 
         /**
-         * The maximum dynamic width we want to give this button in addition to the minimum width
+         * The maximum dynamic width we want to give this button in addition to
+         * the minimum width
          */
         int maxWidth = 400;
 
@@ -109,8 +112,7 @@ public class YearlyAnalysisGuiController {
          */
         int height = 16;
 
-
-        public YearsAnalysisButton( YearlyAnalysis ya, Integer year,
+        public YearsAnalysisButton( YearlyAnalysis ya, final Integer year,
                 Integer month ) {
             super( "Button" );
             int count = ya.getYearMap().get( year ).get( month ).size();
@@ -123,12 +125,11 @@ public class YearlyAnalysisGuiController {
 
                 @Override
                 public void actionPerformed( ActionEvent e ) {
-                    LOGGER.info( Integer.toString( width ) );
+                    JpoEventBus.getInstance().post( new ShowQueryRequest( new YearQuery( year.toString() ) ) );
                 }
             } );
             setBackground( GradientColor.getColor( GradientColor.BLACK_WHITE_COLORS, (double) count / ya.maxNodesPerMonthInAllYears() ) );
         }
-
 
         @Override
         public Dimension getPreferredSize() {

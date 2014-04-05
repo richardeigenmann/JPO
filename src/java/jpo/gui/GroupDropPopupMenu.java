@@ -9,7 +9,7 @@ import jpo.dataModel.Settings;
 
 /*
 GroupDropPopupMenu.java:  class that pops up a menu to ask for the desired action on a group drop
-Copyright (C) 2010  Richard Eigenmann, Zürich
+Copyright (C) 2010-2014  Richard Eigenmann, Zürich
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2

@@ -11,7 +11,10 @@
 
 package jpo.gui;
 
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import javax.swing.JPanel;
+import javax.swing.WindowConstants;
 
 /**
  *
@@ -22,6 +25,14 @@ public class YearsBrowser extends javax.swing.JFrame {
     /** Creates new form YearsBrowser */
     public YearsBrowser() {
         initComponents();
+                addWindowListener( new WindowAdapter() {
+
+            @Override
+            public void windowClosing( WindowEvent e ) {
+                setDefaultCloseOperation( WindowConstants.DISPOSE_ON_CLOSE );
+            }
+        } );
+
     }
 
     /** This method is called from within the constructor to
@@ -35,8 +46,6 @@ public class YearsBrowser extends javax.swing.JFrame {
 
         jScrollPane1 = new javax.swing.JScrollPane();
         yearspanel = new javax.swing.JPanel();
-
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         yearspanel.setMaximumSize(new java.awt.Dimension(500, 500));
         yearspanel.setPreferredSize(new java.awt.Dimension(500, 500));

@@ -54,11 +54,9 @@ import jpo.gui.swing.ThumbnailPanelTitle;
 /**
  * The ThumbnailPanelController manages a JPanel in a JScrollPane that displays
  * a group of pictures in a grid of thumbnailControllers or ad hoc search
- * results. Real pictures are shown as a thumbnail of the image whilst
- * sub-groups are shown as a folder icon. Each thumbnail has it's caption under
- * the image.
+ * results. Real pictures are shown as a thumbnail of the image whilst groups
+ * are shown as a folder icon. Each thumbnail has it's caption under the image.
  * <p>
- *
  * If the size of the component is changed the images are re-laid out and can
  * take advantage of the extra space if there is some.
  *
@@ -70,32 +68,39 @@ public class ThumbnailPanelController
      * Defines a LOGGER for this class
      */
     private static final Logger LOGGER = Logger.getLogger( ThumbnailPanelController.class.getName() );
+
     /**
      * The title above the ThumbnailPanel
      */
     private final ThumbnailPanelTitle titleJPanel = new ThumbnailPanelTitle();
+
     /**
      * The Layout Manager used by the thumbnail panel
      */
     private final ThumbnailLayoutManager thumbnailLayoutManager = new ThumbnailLayoutManager();
+
     /**
      * The Panel that shows the Thumbnails
      */
     private final JPanel thumbnailPane = new JPanel( thumbnailLayoutManager );
+
     /**
      * The Scroll Pane that holds the Thumbnail Panel
      */
     private final JScrollPane thumbnailJScrollPane;
+
     /**
      * currently displayed page
      *
      */
     private int curPage = 1;
+
     /**
      * This object refers to the set of Nodes that is being browsed in the
      * ThumbnailPanelController
      */
     public NodeNavigatorInterface mySetOfNodes;
+
     /**
      * a variable to hold the current starting position of thumbnailControllers
      * being displayed out of a group or search. Range 0..count()-1
@@ -104,20 +109,21 @@ public class ThumbnailPanelController
      * This was invented to allow the number of thumbnailControllers to be
      * restricted so that <<Out of memory>> errors may be averted on long lists
      * of pictures.
-     *
-     *
      */
     private int startIndex;
+
     /**
      * An array that holds the 50 or so ThumbnailComponents that are being
      * displayed
      */
     private ThumbnailController[] thumbnailControllers;
+
     /**
      * An array that holds the 50 or so ThumbnailDescriptionJPanels that are
      * being displayed
      */
     private ThumbnailDescriptionJPanel[] thumbnailDescriptionJPanels;
+
     /**
      * This variable keeps track of how many thumbnailControllers per page the
      * component was initialised with. If the number changes because the user
@@ -125,10 +131,12 @@ public class ThumbnailPanelController
      * arrays are recreated.
      */
     private int initialisedMaxThumbnails = Integer.MIN_VALUE;
+
     /**
      * Factor for the Thumbnails
      */
     private float thumbnailSizeFactor = 1;
+
     /**
      * Point where the mouse was pressed so that we can figure out the rectangle
      * that is being selected.
@@ -138,8 +146,6 @@ public class ThumbnailPanelController
     /**
      * Creates a new ThumbnailPanelController which in turn creates the view
      * objects and hooks itself up so that thumbnails can be shown
-     * <p>
-     *
      *
      * @param thumbnailJScrollPane
      */
@@ -166,10 +172,6 @@ public class ThumbnailPanelController
         return thumbnailJScrollPane;
     }
 
-    /*@Subscribe
-     public void handleGroupSelectionEvents( GroupSelectionEvent event ) {
-     setNode( new GroupNavigator( event.getNode() ), 0 );
-     }*/
     @Subscribe
     public void handleShowGroupRequest( final ShowGroupRequest event ) {
         final Runnable r = new Runnable() {
@@ -204,7 +206,7 @@ public class ThumbnailPanelController
      *
      * @param newNodeNavigator The Interface with the collection of nodes
      */
-    public void show( NodeNavigatorInterface newNodeNavigator ) {
+    private void show( NodeNavigatorInterface newNodeNavigator ) {
         Tools.checkEDT();
 
         if ( this.mySetOfNodes != null ) {
@@ -236,7 +238,7 @@ public class ThumbnailPanelController
      * Listens for changes in the Group and updates the title if anything
      * changed
      */
-    private GroupInfoChangeListener myGroupInfoChangeListener = new GroupInfoChangeListener() {
+    private final GroupInfoChangeListener myGroupInfoChangeListener = new GroupInfoChangeListener() {
 
         @Override
         public void groupInfoChangeEvent( GroupInfoChangeEvent groupInfoChangeEvent ) {
@@ -394,7 +396,7 @@ public class ThumbnailPanelController
                 for ( ThumbnailController thumbnailController : thumbnailControllers ) {
                     thumbnailController.getThumbnail().getBounds( thumbnailRectangle );
                     if ( r.intersects( thumbnailRectangle ) ) {
-                        n = thumbnailController.myNode;
+                        n = thumbnailController.getNode();
                         if ( n != null ) {
                             Settings.pictureCollection.addToSelectedNodes( n );
                         }
@@ -492,7 +494,7 @@ public class ThumbnailPanelController
      * creates the arrays for the thumbnailControllers and the descriptions and
      * adds them to the ThubnailPane.
      */
-    public void initThumbnailsArray() {
+    private void initThumbnailsArray() {
         Tools.checkEDT();
         thumbnailControllers = new ThumbnailController[Settings.maxThumbnails];
         thumbnailDescriptionJPanels = new ThumbnailDescriptionJPanel[Settings.maxThumbnails];
@@ -551,7 +553,8 @@ public class ThumbnailPanelController
     }
 
     /**
-     * Updates the title of the page. (The implementing method takes care that it is on the EDT)
+     * Updates the title of the page. (The implementing method takes care that
+     * it is on the EDT)
      */
     private void updateTitle() {
         LOGGER.fine( String.format( "setting title to: %s", mySetOfNodes.getTitle() ) );
@@ -562,7 +565,7 @@ public class ThumbnailPanelController
      * This method sets whether the first, previous, next and last buttons are
      * visible or not
      */
-    public void setButtonStatus() {
+    private void setButtonStatus() {
         Tools.checkEDT();
         if ( startIndex == 0 ) {
             titleJPanel.firstThumbnailsPageButton.setEnabled( false );
@@ -585,12 +588,12 @@ public class ThumbnailPanelController
     /**
      * This method select all Thumbnails which are not null
      */
-    public void selectAll() {
-        SortableDefaultMutableTreeNode n;
+    private void selectAll() {
+        SortableDefaultMutableTreeNode node;
         for ( ThumbnailController thumbnailController : thumbnailControllers ) {
-            n = thumbnailController.myNode;
-            if ( n != null ) {
-                Settings.pictureCollection.addToSelectedNodes( n );
+            node = thumbnailController.getNode();
+            if ( node != null ) {
+                Settings.pictureCollection.addToSelectedNodes( node );
             }
         }
     }

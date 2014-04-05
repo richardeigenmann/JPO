@@ -8,7 +8,7 @@ import java.util.logging.Logger;
 /*
  ThumbnailCreationQueue.java:  queue that holds requests to create Thumbnails from Highres Images
 
- Copyright (C) 2003-2013  Richard Eigenmann.
+ Copyright (C) 2003-2014  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -33,7 +33,7 @@ public class ThumbnailCreationQueue {
     /**
      * Implemented using a PriorityBlockingQueue
      */
-    private static final PriorityBlockingQueue<ThumbnailQueueRequest> QUEUE = new PriorityBlockingQueue<ThumbnailQueueRequest>();
+    private static final PriorityBlockingQueue<ThumbnailQueueRequest> QUEUE = new PriorityBlockingQueue<>();
     /**
      * Defines a logger for this class
      */
@@ -129,8 +129,7 @@ public class ThumbnailCreationQueue {
      *
      * @param thumbnailController The thumbnail to be removed
      */
-    public static void removeThumbnailQueueRequest(
-            ThumbnailController thumbnailController ) {
+    public static void removeThumbnailQueueRequest( ThumbnailController thumbnailController ) {
         ThumbnailQueueRequest thumbnailQueueRequest = findThumbnailQueueRequest( thumbnailController );
         if ( thumbnailQueueRequest != null ) {
             remove( thumbnailQueueRequest );
@@ -150,7 +149,7 @@ public class ThumbnailCreationQueue {
         ThumbnailQueueRequest req = null, test;
         for ( Iterator i = QUEUE.iterator(); i.hasNext(); ) {
             test = (ThumbnailQueueRequest) i.next();
-            if ((thumbnailController !=null) &&( test.getThumbnailController().equals( thumbnailController ) )) {
+            if ( ( thumbnailController != null ) && ( test.getThumbnailController().equals( thumbnailController ) ) ) {
                 req = test;
                 break;
             }

@@ -25,8 +25,8 @@ import java.util.logging.Logger;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 import javax.swing.tree.DefaultMutableTreeNode;
-import jpo.EventBus.GroupSelectionEvent;
 import jpo.EventBus.JpoEventBus;
+import jpo.EventBus.ShowGroupRequest;
 import jpo.EventBus.ShowPictureRequest;
 import jpo.dataModel.GroupInfo;
 import jpo.dataModel.GroupInfoChangeEvent;
@@ -59,19 +59,19 @@ import jpo.gui.swing.Thumbnail;
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 /**
- * ThumbnailController displays a visual representation of the specified node.
- * On a Picture this is a ThumbnailController thereof, on a Group it is a folder
- * icon.
+ * ThumbnailController controls a visual representation of the specified node.
  *
  * TODO: move the methods to make the ThumbnailController back into this class
  * from ThumbnailCreationFactory TODO: split this class into a GUI component
  * that deals with the GUI stuff and one which deals with the creation stuff and
  * all the model notifications. I.e. MVC..
  */
-public class ThumbnailController
-        implements DropTargetListener,
-        PictureInfoChangeListener,
-        GroupInfoChangeListener {
+public class ThumbnailController {
+
+    /**
+     * Defines a LOGGER for this class
+     */
+    private static final Logger LOGGER = Logger.getLogger( ThumbnailController.class.getName() );
 
     /**
      * Creates a new ThumbnailController object with a reference to the
@@ -92,24 +92,24 @@ public class ThumbnailController
      *
      */
     public ThumbnailController( final int thumbnailSize ) {
-        initComponents( thumbnailSize );
-    }
+        myThumbnail = new Thumbnail();
+        myThumbnail.thumbnailSize = thumbnailSize;
+        myThumbnail.addMouseListener( new ThumbnailMouseAdapter() );
 
-    private void initComponents( final int thumbnailSize ) {
-        Tools.checkEDT();
-        theThumbnail = new Thumbnail();
-        theThumbnail.thumbnailSize = thumbnailSize;
-        theThumbnail.addMouseListener( new ThumbnailMouseAdapter() );
         // set up drag & drop
-        dropTarget = new DropTarget( theThumbnail, ThumbnailController.this );
-        myDragGestureListener = new ThumbnailDragGestureListener();
+        new DropTarget( myThumbnail, new MyDropTargetListener() );
+        DragSource dragSource = DragSource.getDefaultDragSource();
         dragSource.createDefaultDragGestureRecognizer(
-                theThumbnail, DnDConstants.ACTION_COPY_OR_MOVE, myDragGestureListener );
+                myThumbnail, DnDConstants.ACTION_COPY_OR_MOVE, new ThumbnailDragGestureListener() );
 
         // attach the ThumbnailController to the Tree Model to get notifications.
         Settings.pictureCollection.getTreeModel().addTreeModelListener( new MyTreeModelListener() );
-        JpoEventBus.getInstance().register( this );
     }
+
+    /**
+     * Refers to the thumbnail which is being controlled
+     */
+    private Thumbnail myThumbnail;
 
     /**
      * a link to the SortableDefaultMutableTreeNode in the data model. This
@@ -117,13 +117,16 @@ public class ThumbnailController
      * data model.
      *
      */
-    public SortableDefaultMutableTreeNode myNode;
+    private SortableDefaultMutableTreeNode myNode;
 
     /**
-     * Defines a LOGGER for this class
+     * Returns the node for which the controller is acting
+     *
+     * @return the node
      */
-    private static final Logger LOGGER = Logger.getLogger( ThumbnailController.class.getName() );
-    //{ LOGGER.setLevel( Level.ALL ); }
+    public SortableDefaultMutableTreeNode getNode() {
+        return myNode;
+    }
 
     /**
      * A set of picture nodes of which one indicated by {@link #myIndex} is to
@@ -138,32 +141,10 @@ public class ThumbnailController
     public int myIndex = 0;
 
     /**
-     * enables this component to be a Drag Source
-     */
-    public DragSource dragSource = DragSource.getDefaultDragSource();
-
-    /**
-     * enables this component to be a dropTarget
-     */
-    public DropTarget dropTarget;
-
-    /**
-     * The DragGestureListener for a thumbnail.
-     */
-    private DragGestureListener myDragGestureListener;
-
-    /**
-     * The DragSourceListener for a thumbnail.
-     */
-    private final DragSourceListener myDragSourceListener = new ThumbnailDragSourceListener();
-
-    /**
      * The priority this ThumbnailController should have on the
      * ThumbnailCreationQueue
      */
-    private final int priority = ThumbnailQueueRequest.MEDIUM_PRIORITY;
-
-    private Thumbnail theThumbnail;
+    private final int DEFAULT_QUEUE_PRIORITY = ThumbnailQueueRequest.MEDIUM_PRIORITY;
 
     /**
      * returns the Thumbnail that is being controlled by this Controller.
@@ -171,23 +152,8 @@ public class ThumbnailController
      * @return the Thumbnail
      */
     public Thumbnail getThumbnail() {
-        return theThumbnail;
+        return myThumbnail;
     }
-
-    /**
-     * Handle for operations that affect the collection.
-     */
-    private Jpo collectionController;
-
-    /**
-     * remember where we registered as a PictureInfoListener
-     */
-    private PictureInfo registeredPictureInfoChangeListener;
-
-    /**
-     * remember where we registered as a GroupInfoListener
-     */
-    private GroupInfo registeredGroupInfoChangeListener;
 
     /**
      * Returns to the caller whether the thumbnail is already showing the node.
@@ -232,15 +198,29 @@ public class ThumbnailController
         attachChangeListeners();
 
         if ( node == null ) {
-            theThumbnail.setVisible( false );
+            myThumbnail.setVisible( false );
         } else {
-            requestThumbnailCreation( priority, false );
+            requestThumbnailCreation( DEFAULT_QUEUE_PRIORITY, false );
         }
 
         showSlectionStatus();
         determineMailSlectionStatus();
-        determineImageStatus( myNode );
+        drawOfflineIcon( myNode );
     }
+
+    /**
+     * remember where we registered as a PictureInfoListener
+     */
+    private PictureInfo registeredPictureInfoChangeListener = null;
+
+    private MyPictureInfoChangeEventHandler myPictureInfoChangeEventHandler = new MyPictureInfoChangeEventHandler();
+
+    /**
+     * remember where we registered as a GroupInfoListener
+     */
+    private GroupInfo registeredGroupInfoChangeListener = null;
+
+    private MyGroupInfoChangeEventHandler myGroupInfoChangeEventHandler = new MyGroupInfoChangeEventHandler();
 
     /**
      * Unattaches the ThumbnailController from the previously linked
@@ -251,28 +231,27 @@ public class ThumbnailController
     private void attachChangeListeners() {
         // unattach from the change Listener
         if ( registeredPictureInfoChangeListener != null ) {
-            LOGGER.fine( String.format( "unattaching ThumbnailController %d from Picturinfo %d", this.hashCode(), registeredPictureInfoChangeListener.hashCode() ) );
-            registeredPictureInfoChangeListener.removePictureInfoChangeListener( this );
+            LOGGER.fine( String.format( "unattaching MyPictureInfoChangeEventHandler %d from Picturinfo %d", myPictureInfoChangeEventHandler.hashCode(), registeredPictureInfoChangeListener.hashCode() ) );
+            registeredPictureInfoChangeListener.removePictureInfoChangeListener( myPictureInfoChangeEventHandler );
             registeredPictureInfoChangeListener = null;
         }
         // unattach the change Listener from the GroupInfo
         if ( registeredGroupInfoChangeListener != null ) {
-            registeredGroupInfoChangeListener.removeGroupInfoChangeListener( this );
+            registeredGroupInfoChangeListener.removeGroupInfoChangeListener( myGroupInfoChangeEventHandler );
             registeredGroupInfoChangeListener = null;
         }
 
         // attach the change Listener
         if ( myNode != null ) {
             if ( myNode.getUserObject() instanceof PictureInfo ) {
-                PictureInfo pi = (PictureInfo) myNode.getUserObject();
-                LOGGER.fine( String.format( "attaching ThumbnailController %d to Picturinfo %d", this.hashCode(), pi.hashCode() ) );
-                pi.addPictureInfoChangeListener( this );
-                registeredPictureInfoChangeListener = pi; //remember so we can poll
+                PictureInfo pictureInfo = (PictureInfo) myNode.getUserObject();
+                LOGGER.fine( String.format( "attaching ThumbnailController %d to Picturinfo %d", this.hashCode(), pictureInfo.hashCode() ) );
+                pictureInfo.addPictureInfoChangeListener( myPictureInfoChangeEventHandler );
+                registeredPictureInfoChangeListener = pictureInfo; //remember so we can poll
             } else if ( myNode.getUserObject() instanceof GroupInfo ) {
-                GroupInfo pi = (GroupInfo) myNode.getUserObject();
-                pi.addGroupInfoChangeListener( this );
-                registeredGroupInfoChangeListener = pi; //remember so we can poll
-
+                GroupInfo groupInfo = (GroupInfo) myNode.getUserObject();
+                groupInfo.addGroupInfoChangeListener( myGroupInfoChangeEventHandler );
+                registeredGroupInfoChangeListener = groupInfo; //remember so we can poll
             }
         }
     }
@@ -307,9 +286,9 @@ public class ThumbnailController
             return;
         }
         if ( myNode.getUserObject() instanceof PictureInfo ) {
-            theThumbnail.setQueueIcon();
+            myThumbnail.setQueueIcon();
         } else {
-            theThumbnail.setLargeFolderIcon();
+            myThumbnail.setLargeFolderIcon();
         }
     }
 
@@ -320,7 +299,7 @@ public class ThumbnailController
      * @return The maximum unscaled size of the ThumbnailController
      */
     public Dimension getMaximumUnscaledSize() {
-        return new Dimension( theThumbnail.thumbnailSize, theThumbnail.thumbnailSize );
+        return new Dimension( myThumbnail.thumbnailSize, myThumbnail.thumbnailSize );
     }
 
     /**
@@ -332,14 +311,16 @@ public class ThumbnailController
     }
 
     /**
-     * This method determines whether the source image is available online and
-     * sets the {@link Thumbnail#drawOfflineIcon} indicator accordingly.
+     * This method checks if the node is set and whether the highres image is
+     * available. If there is a problem the offline icon is drawn over the
+     * thumbnail. sets the {@link Thumbnail#drawOfflineIcon} indicator
+     * accordingly.
      *
      * @param nodeToCheck The Node to check
      */
-    public void determineImageStatus( DefaultMutableTreeNode nodeToCheck ) {
+    public void drawOfflineIcon( DefaultMutableTreeNode nodeToCheck ) {
         if ( nodeToCheck == null ) {
-            theThumbnail.drawOfflineIcon( false );
+            myThumbnail.drawOfflineIcon( false );
             return;
         }
 
@@ -347,14 +328,14 @@ public class ThumbnailController
         if ( userObject instanceof PictureInfo ) {
             try {
                 ( (PictureInfo) userObject ).getHighresURL().openStream().close();
-                theThumbnail.drawOfflineIcon( false );
+                myThumbnail.drawOfflineIcon( false );
             } catch ( MalformedURLException x ) {
-                theThumbnail.drawOfflineIcon( true );
+                myThumbnail.drawOfflineIcon( true );
             } catch ( IOException x ) {
-                theThumbnail.drawOfflineIcon( true );
+                myThumbnail.drawOfflineIcon( true );
             }
         } else {
-            theThumbnail.drawOfflineIcon( false );
+            myThumbnail.drawOfflineIcon( false );
         }
     }
 
@@ -381,90 +362,100 @@ public class ThumbnailController
                 leftClickResponse( e );
             }
         }
-    }
 
-    /**
-     * Logic for processing a left click on the thumbnail
-     */
-    private void leftClickResponse( MouseEvent e ) {
-        if ( e.isControlDown() ) {
-            if ( Settings.pictureCollection.isSelected( myNode ) ) {
-                Settings.pictureCollection.removeFromSelection( myNode );
+        /**
+         * Logic for processing a left click on the thumbnail
+         */
+        private void leftClickResponse( MouseEvent e ) {
+            if ( e.isControlDown() ) {
+                if ( Settings.pictureCollection.isSelected( myNode ) ) {
+                    Settings.pictureCollection.removeFromSelection( myNode );
+                } else {
+                    LOGGER.fine( String.format( "Adding; Now Selected: %d", Settings.pictureCollection.getSelectedNodes().length ) );
+                    Settings.pictureCollection.addToSelectedNodes( myNode );
+                }
             } else {
-                LOGGER.fine( String.format( "Adding; Now Selected: %d", Settings.pictureCollection.getSelectedNodes().length ) );
-                Settings.pictureCollection.addToSelectedNodes( myNode );
+                if ( Settings.pictureCollection.isSelected( myNode ) ) {
+                    Settings.pictureCollection.clearSelection();
+                } else {
+                    Settings.pictureCollection.clearSelection();
+                    Settings.pictureCollection.addToSelectedNodes( myNode );
+                    LOGGER.fine( String.format( "1 selection added; Now Selected: %d", Settings.pictureCollection.getSelectedNodes().length ) );
+                }
             }
-        } else {
-            if ( Settings.pictureCollection.isSelected( myNode ) ) {
-                Settings.pictureCollection.clearSelection();
+        }
+
+        /**
+         * Logic for processing a right click on the thumbnail
+         */
+        private void rightClickResponse( MouseEvent e ) {
+            if ( myNode.getUserObject() instanceof PictureInfo ) {
+                PicturePopupMenu picturePopupMenu = new PicturePopupMenu( myNodeNavigator, myIndex );
+                picturePopupMenu.show( e.getComponent(), e.getX(), e.getY() );
+            } else if ( myNode.getUserObject() instanceof GroupInfo ) {
+                GroupPopupMenu groupPopupMenu = new GroupPopupMenu( myNode );
+                groupPopupMenu.show( e.getComponent(), e.getX(), e.getY() );
             } else {
-                Settings.pictureCollection.clearSelection();
-                Settings.pictureCollection.addToSelectedNodes( myNode );
-                LOGGER.fine( String.format( "1 selection added; Now Selected: %d", Settings.pictureCollection.getSelectedNodes().length ) );
+                LOGGER.severe( String.format( "Processing a right click response on an unknown node type: %s", myNode.getUserObject().getClass().toString() ) );
+                Thread.dumpStack();
+            }
+        }
+
+        /**
+         * Logic for processing a doubleclick on the thumbnail
+         */
+        private void doubleClickResponse() {
+            if ( myNode.getUserObject() instanceof PictureInfo ) {
+                JpoEventBus.getInstance().post( new ShowPictureRequest( myNode ) );
+            } else if ( myNode.getUserObject() instanceof GroupInfo ) {
+                JpoEventBus.getInstance().post( new ShowGroupRequest(myNode ) );
+            }
+        }
+
+    }
+
+    private class MyPictureInfoChangeEventHandler implements PictureInfoChangeListener {
+
+        /**
+         * here we get notified by the PictureInfo object that something has
+         * changed.
+         *
+         * @param pictureInfoChangeEvent
+         */
+        @Override
+        public void pictureInfoChangeEvent( PictureInfoChangeEvent pictureInfoChangeEvent ) {
+            if ( pictureInfoChangeEvent.getHighresLocationChanged() || pictureInfoChangeEvent.getChecksumChanged() || pictureInfoChangeEvent.getLowresLocationChanged() || pictureInfoChangeEvent.getThumbnailChanged() ) {
+                requestThumbnailCreation( ThumbnailQueueRequest.HIGH_PRIORITY, false );
+            } else if ( pictureInfoChangeEvent.getWasSelected() ) {
+                myThumbnail.showAsSelected();
+            } else if ( pictureInfoChangeEvent.getWasUnselected() ) {
+                myThumbnail.showAsUnselected();
+            } else if ( ( pictureInfoChangeEvent.getWasMailSelected() ) || ( pictureInfoChangeEvent.getWasMailUnselected() ) ) {
+                determineMailSlectionStatus();
+            } else if ( pictureInfoChangeEvent.getRotationChanged() ) {
+                requestThumbnailCreation( ThumbnailQueueRequest.HIGH_PRIORITY, true );
             }
         }
     }
 
-    /**
-     * Logic for processing a right click on the thumbnail
-     */
-    private void rightClickResponse( MouseEvent e ) {
-        if ( myNode.getUserObject() instanceof PictureInfo ) {
-            PicturePopupMenu picturePopupMenu = new PicturePopupMenu( myNodeNavigator, myIndex );
-            picturePopupMenu.show( e.getComponent(), e.getX(), e.getY() );
-        } else if ( myNode.getUserObject() instanceof GroupInfo ) {
-            GroupPopupMenu groupPopupMenu = new GroupPopupMenu( myNode );
-            groupPopupMenu.show( e.getComponent(), e.getX(), e.getY() );
-        } else {
-            LOGGER.severe( String.format( "Processing a right click response on an unknown node type: %s", myNode.getUserObject().getClass().toString() ) );
-            Thread.dumpStack();
-        }
-    }
+    private class MyGroupInfoChangeEventHandler implements GroupInfoChangeListener {
 
-    /**
-     * Logic for processing a doubleclick on the thumbnail
-     */
-    private void doubleClickResponse() {
-        if ( myNode.getUserObject() instanceof PictureInfo ) {
-            //Jpo.browsePictures( myNode );
-            JpoEventBus.getInstance().post( new ShowPictureRequest( myNode ) );
-        } else if ( myNode.getUserObject() instanceof GroupInfo ) {
-            //Jpo.positionToNode( myNode );
-            JpoEventBus.getInstance().post( new GroupSelectionEvent( myNode ) );
-        }
-    }
-
-    /**
-     * here we get notified by the PictureInfo object that something has
-     * changed.
-     */
-    @Override
-    public void pictureInfoChangeEvent( PictureInfoChangeEvent e ) {
-        if ( e.getHighresLocationChanged() || e.getChecksumChanged() || e.getLowresLocationChanged() || e.getThumbnailChanged() ) {
-            requestThumbnailCreation( ThumbnailQueueRequest.HIGH_PRIORITY, false );
-        } else if ( e.getWasSelected() ) {
-            theThumbnail.showAsSelected();
-        } else if ( e.getWasUnselected() ) {
-            theThumbnail.showAsUnselected();
-        } else if ( ( e.getWasMailSelected() ) || ( e.getWasMailUnselected() ) ) {
-            determineMailSlectionStatus();
-        } else if ( e.getRotationChanged() ) {
-            requestThumbnailCreation( ThumbnailQueueRequest.HIGH_PRIORITY, true );
-        }
-    }
-
-    /**
-     * here we get notified by the GroupInfo object that something has changed.
-     */
-    @Override
-    public void groupInfoChangeEvent( GroupInfoChangeEvent e ) {
-        LOGGER.fine( String.format( "Got a Group Change event: %s", e.toString() ) );
-        if ( e.getLowresLocationChanged() ) {
-            requestThumbnailCreation( ThumbnailQueueRequest.HIGH_PRIORITY, false );
-        } else if ( e.getWasSelected() ) {
-            theThumbnail.showAsSelected();
-        } else if ( e.getWasUnselected() ) {
-            theThumbnail.showAsUnselected();
+        /**
+         * here we get notified by the GroupInfo object that something has
+         * changed.
+         *
+         * @param groupInfoChangeEvent
+         */
+        @Override
+        public void groupInfoChangeEvent( GroupInfoChangeEvent groupInfoChangeEvent ) {
+            LOGGER.fine( String.format( "Got a Group Change event: %s", groupInfoChangeEvent.toString() ) );
+            if ( groupInfoChangeEvent.getLowresLocationChanged() ) {
+                requestThumbnailCreation( ThumbnailQueueRequest.HIGH_PRIORITY, false );
+            } else if ( groupInfoChangeEvent.getWasSelected() ) {
+                myThumbnail.showAsSelected();
+            } else if ( groupInfoChangeEvent.getWasUnselected() ) {
+                myThumbnail.showAsUnselected();
+            }
         }
     }
 
@@ -474,9 +465,9 @@ public class ThumbnailController
      */
     public void showSlectionStatus() {
         if ( Settings.pictureCollection.isSelected( myNode ) ) {
-            theThumbnail.showAsSelected();
+            myThumbnail.showAsSelected();
         } else {
-            theThumbnail.showAsUnselected();
+            myThumbnail.showAsUnselected();
         }
 
     }
@@ -489,14 +480,14 @@ public class ThumbnailController
      */
     public void setFactor( float thumbnailSizeFactor ) {
         LOGGER.fine( String.format( "Scaling factor is being set to %f", thumbnailSizeFactor ) );
-        theThumbnail.setFactor( thumbnailSizeFactor );
+        myThumbnail.setFactor( thumbnailSizeFactor );
     }
 
     /**
      * tells the Thumbnail to show a broken icon
      */
     public void setBrokenIcon() {
-        theThumbnail.setBrokenIcon();
+        myThumbnail.setBrokenIcon();
     }
 
     /**
@@ -524,9 +515,9 @@ public class ThumbnailController
      */
     public void determineMailSlectionStatus() {
         if ( ( myNode != null ) && decorateThumbnails && Settings.pictureCollection.isMailSelected( myNode ) ) {
-            theThumbnail.drawMailIcon( true );
+            myThumbnail.drawMailIcon( true );
         } else {
-            theThumbnail.drawMailIcon( false );
+            myThumbnail.drawMailIcon( false );
         }
 
     }
@@ -603,67 +594,72 @@ public class ThumbnailController
         }
     }
 
-    /**
-     * this callback method is invoked every time something is dragged onto the
-     * ThumbnailController. We check if the desired DataFlavor is supported and
-     * then reject the drag if it is not.
-     *
-     * @param event
-     */
-    @Override
-    public void dragEnter( DropTargetDragEvent event ) {
-        if ( !event.isDataFlavorSupported( JpoTransferable.jpoNodeFlavor ) ) {
-            event.rejectDrag();
+    private class MyDropTargetListener implements DropTargetListener {
+
+        /**
+         * this callback method is invoked every time something is dragged onto
+         * the ThumbnailController. We check if the desired DataFlavor is
+         * supported and then reject the drag if it is not.
+         *
+         * @param event
+         */
+        @Override
+        public void dragEnter( DropTargetDragEvent event ) {
+            if ( !event.isDataFlavorSupported( JpoTransferable.jpoNodeFlavor ) ) {
+                event.rejectDrag();
+            }
+
         }
 
-    }
+        /**
+         * this callback method is invoked every time something is dragged over
+         * the ThumbnailController. We could do some highlighting if we so
+         * desired.
+         *
+         * @param event
+         */
+        @Override
+        public void dragOver( DropTargetDragEvent event ) {
+            if ( !event.isDataFlavorSupported( JpoTransferable.jpoNodeFlavor ) ) {
+                event.rejectDrag();
+            }
 
-    /**
-     * this callback method is invoked every time something is dragged over the
-     * ThumbnailController. We could do some highlighting if we so desired.
-     *
-     * @param event
-     */
-    @Override
-    public void dragOver( DropTargetDragEvent event ) {
-        if ( !event.isDataFlavorSupported( JpoTransferable.jpoNodeFlavor ) ) {
-            event.rejectDrag();
         }
 
-    }
+        /**
+         * this callback method is invoked when the user presses or releases
+         * shift when doing a drag. He can signal that he wants to change the
+         * copy / move of the operation. This method could intercept this change
+         * and could modify the event if it needs to. On Thumbnails this does
+         * nothing.
+         *
+         * @param event
+         */
+        @Override
+        public void dropActionChanged( DropTargetDragEvent event ) {
+        }
 
-    /**
-     * this callback method is invoked when the user presses or releases shift
-     * when doing a drag. He can signal that he wants to change the copy / move
-     * of the operation. This method could intercept this change and could
-     * modify the event if it needs to. On Thumbnails this does nothing.
-     *
-     * @param event
-     */
-    @Override
-    public void dropActionChanged( DropTargetDragEvent event ) {
-    }
+        /**
+         * this callback method is invoked to tell the dropTarget that the drag
+         * has moved on to something else. We do nothing here.
+         *
+         * @param event
+         */
+        @Override
+        public void dragExit( DropTargetEvent event ) {
+            LOGGER.fine( "Thumbnail.dragExit( DropTargetEvent ): invoked" );
+        }
 
-    /**
-     * this callback method is invoked to tell the dropTarget that the drag has
-     * moved on to something else. We do nothing here.
-     *
-     * @param event
-     */
-    @Override
-    public void dragExit( DropTargetEvent event ) {
-        LOGGER.fine( "Thumbnail.dragExit( DropTargetEvent ): invoked" );
-    }
-
-    /**
-     * This method is called when the drop occurs. It gives the hard work to the
-     * SortableDefaultMutableTreeNode.
-     *
-     * @param event
-     */
-    @Override
-    public void drop( DropTargetDropEvent event ) {
-        myNode.executeDrop( event );
+        /**
+         * This method is called when the drop occurs. It gives the hard work to
+         * the SortableDefaultMutableTreeNode.
+         *
+         * @param event
+         */
+        @Override
+        public void drop( DropTargetDropEvent event ) {
+            myNode.executeDrop( event );
+        }
     }
 
     /**
@@ -693,7 +689,7 @@ public class ThumbnailController
             }
 
             try {
-                event.startDrag( DragSource.DefaultMoveNoDrop, transferable, myDragSourceListener );
+                event.startDrag( DragSource.DefaultMoveNoDrop, transferable, new ThumbnailDragSourceListener() );
                 LOGGER.log( Level.FINE, "Drag started on node: {0}", myNode.getUserObject().toString() );
             } catch ( InvalidDnDOperationException x ) {
                 LOGGER.log( Level.FINE, "Threw a InvalidDnDOperationException: reason: {0}", x.getMessage() );

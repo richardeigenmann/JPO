@@ -15,6 +15,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.util.Hashtable;
+import java.util.Locale;
 import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
@@ -34,29 +35,32 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.WindowConstants;
+import jpo.EventBus.JpoEventBus;
+import jpo.EventBus.LocaleChangedEvent;
+import jpo.EventBus.UserFunctionsChangedEvent;
 import net.miginfocom.swing.MigLayout;
 
 /*
-SettingsDialog.java:  the class that provides a GUI for the settings
+ SettingsDialog.java:  the class that provides a GUI for the settings
 
-Copyright (C) 2002-2013  Richard Eigenmann, Zürich, Switzerland
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or any later version. This program is distributed
-in the hope that it will be useful, but WITHOUT ANY WARRANTY;
-without even the implied warranty of MERCHANTABILITY or FITNESS
-FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-more details. You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-The license is in gpl.txt.
-See http://www.gnu.org/copyleft/gpl.html for the details.
+ Copyright (C) 2002-2013  Richard Eigenmann, Zürich, Switzerland
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or any later version. This program is distributed
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ without even the implied warranty of MERCHANTABILITY or FITNESS
+ FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+ more details. You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ The license is in gpl.txt.
+ See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 /**
- *  GUI that allows the settings to be changed.
+ * GUI that allows the settings to be changed.
  *
- * @author  Richard Eigenmann
+ * @author Richard Eigenmann
  */
 public class SettingsDialog
         extends JDialog {
@@ -66,154 +70,157 @@ public class SettingsDialog
      */
     private static final Logger LOGGER = Logger.getLogger( SettingsDialog.class.getName() );
     /**
-     *   field that allows the user to capture the file that should be automatically loaded
+     * field that allows the user to capture the file that should be
+     * automatically loaded
      */
     private final JTextField autoLoadJTextField = new JTextField();
     /**
-     *  tickbox that indicates where status information should be written to the log
+     * tickbox that indicates where status information should be written to the
+     * log
      */
     private final JCheckBox logfileJCheckBox = new JCheckBox();
     /**
-     *   field that allows the user to specify where the logs should be written to
+     * field that allows the user to specify where the logs should be written to
      */
     private final JTextField logfileJTextField = new JTextField();
     /**
-     *  checkbox to indicate that JPO should be maximised on startup
+     * checkbox to indicate that JPO should be maximised on startup
      */
     private final JCheckBox maximiseJpoOnStartupJCheckBox = new JCheckBox();
     /**
-     *  Dropdown to indicate what preference the user has for JPO startup
+     * Dropdown to indicate what preference the user has for JPO startup
      */
-    private final JComboBox <String>startupSizeDropdown = new JComboBox<String>();
+    private final JComboBox<String> startupSizeDropdown = new JComboBox<String>();
     /**
-     *  Dropdown to indicate the preferred size of the viewer window
+     * Dropdown to indicate the preferred size of the viewer window
      */
-    private final JComboBox <String>viewerSizeDropdown = new JComboBox<String>();
+    private final JComboBox<String> viewerSizeDropdown = new JComboBox<String>();
     /**
-     *  checkbox to indicate that the screen position should be saved upon exit.
+     * checkbox to indicate that the screen position should be saved upon exit.
      */
     private final JCheckBox saveSizeJCheckBox = new JCheckBox();
     /**
-     *   maximum number of pictures to cache
+     * maximum number of pictures to cache
      */
     private final WholeNumberField maxCacheJTextField = new WholeNumberField( 0, 4 );
     /**
-     *   x coordinates of top left corner of main window
+     * x coordinates of top left corner of main window
      */
     private final WholeNumberField mainX = new WholeNumberField( 0, 6 );
     /**
-     *   y coordinates of top left corner of main window
+     * y coordinates of top left corner of main window
      */
     private final WholeNumberField mainY = new WholeNumberField( 0, 6 );
     /**
-     *   width of specific size window
+     * width of specific size window
      */
     private final WholeNumberField mainWidth = new WholeNumberField( 0, 6 );
     /**
-     *   height of specific size window
+     * height of specific size window
      */
     private final WholeNumberField mainHeight = new WholeNumberField( 0, 6 );
     /**
-     *   x coordinates of top left corner of main window
+     * x coordinates of top left corner of main window
      */
     private final WholeNumberField pictureX = new WholeNumberField( 0, 6 );
     /**
-     *   y coordinates of top left corner of main window
+     * y coordinates of top left corner of main window
      */
     private final WholeNumberField pictureY = new WholeNumberField( 0, 6 );
     /**
-     *   width of specific size window
+     * width of specific size window
      */
     private final WholeNumberField pictureWidth = new WholeNumberField( 0, 6 );
     /**
-     *   height of specific size window
+     * height of specific size window
      */
     private final WholeNumberField pictureHeight = new WholeNumberField( 0, 6 );
     /**
-     *   maximum size of picture
+     * maximum size of picture
      */
     private final WholeNumberField maximumPictureSizeJTextField = new WholeNumberField( 0, 6 );
     /**
-     *  checkbox that indicates whether small images should be enlarged
+     * checkbox that indicates whether small images should be enlarged
      */
     private final JCheckBox dontEnlargeJCheckBox = new JCheckBox( Settings.jpoResources.getString( "dontEnlargeJCheckBoxLabel" ) );
     /**
-     *  tickbox that indicates whether to scale the thumbnails quickly
+     * tickbox that indicates whether to scale the thumbnails quickly
      */
     private final JCheckBox pictureViewerFastScaleJCheckBox = new JCheckBox( Settings.jpoResources.getString( "pictureViewerFastScale" ) );
     /**
-     *   fields that allows the user to capture the path for the thumbnails
+     * fields that allows the user to capture the path for the thumbnails
      */
     private final DirectoryChooser thumbnailPathChooser = new DirectoryChooser( Settings.jpoResources.getString( "genericSelectText" ),
             DirectoryChooser.DIR_MUST_BE_WRITABLE );
     /**
-     *  tickbox that indicates whether thumbnails should be written to disk
+     * tickbox that indicates whether thumbnails should be written to disk
      */
     private final JCheckBox keepThumbnailsJCheckBox = new JCheckBox( Settings.jpoResources.getString( "keepThumbnailsJCheckBoxLabel" ) );
     /**
-     *     field that allows the user to capture the maximum number of thumbnails to be displayed
+     * field that allows the user to capture the maximum number of thumbnails to
+     * be displayed
      */
     private final WholeNumberField maxThumbnails = new WholeNumberField( 0, 4 );
     /**
-     *   fields that allows the user to capture the desired size of thumbnails
+     * fields that allows the user to capture the desired size of thumbnails
      */
     private final WholeNumberField thumbnailSize = new WholeNumberField( 0, 6 );
     /**
-     *  slider that allows the quality of the jpg's to be specified
-     * Should this really be the same as the HTLM Quality Field?
+     * slider that allows the quality of the jpg's to be specified Should this
+     * really be the same as the HTLM Quality Field?
      */
     private final JSlider jpgQualityJSlider = new JSlider( JSlider.HORIZONTAL,
             0, 100, (int) ( Settings.defaultHtmlLowresQuality * 100 ) );
     /**
-     *  tickbox that indicates whether to scale the thumbnails quickly
+     * tickbox that indicates whether to scale the thumbnails quickly
      */
     private final JCheckBox thumbnailFastScaleJCheckBox = new JCheckBox( Settings.jpoResources.getString( "thumbnailFastScale" ) );
     /**
-     *   Text Filed that holds the first user Function
+     * Text Filed that holds the first user Function
      */
     private final JTextField userFunction1NameJTextField = new JTextField();
     /**
-     *   Text Filed that holds the second user Function
+     * Text Filed that holds the second user Function
      */
     private final JTextField userFunction2NameJTextField = new JTextField();
     /**
-     *   Text Filed that holds the third user Function
+     * Text Filed that holds the third user Function
      */
     private final JTextField userFunction3NameJTextField = new JTextField();
     /**
-     *   Text Filed that holds the first user Function
+     * Text Filed that holds the first user Function
      */
     private final JTextField userFunction1CmdJTextField = new JTextField();
     /**
-     *   Text Filed that holds the second user Function
+     * Text Filed that holds the second user Function
      */
     private final JTextField userFunction2CmdJTextField = new JTextField();
     /**
-     *   Text Filed that holds the third user Function
+     * Text Filed that holds the third user Function
      */
     private final JTextField userFunction3CmdJTextField = new JTextField();
     /**
-     *  Drop down box that shows the languages
+     * Drop down box that shows the languages
      */
-    private final JComboBox <String>languageJComboBox = new JComboBox<String>( Settings.supportedLanguages );
+    private final JComboBox<String> languageJComboBox = new JComboBox<String>( Settings.supportedLanguages );
     /**
-     *   Text Field that holds the address of the email server
+     * Text Field that holds the address of the email server
      */
     private final JTextField emailServerJTextField = new JTextField();
     /**
-     *   Text Field that holds the port of the email server
+     * Text Field that holds the port of the email server
      */
     private final JTextField emailPortJTextField = new JTextField();
     /**
      * ComboBox that holds the type of authentication.
      */
-    private final JComboBox <String> authenticationJComboBox = new JComboBox<String>();
+    private final JComboBox<String> authenticationJComboBox = new JComboBox<String>();
     /**
-     *   Text Field that holds the user for the email server
+     * Text Field that holds the user for the email server
      */
     private final JTextField emailUserJTextField = new JTextField();
     /**
-     *   Text Field that holds the password for the email server
+     * Text Field that holds the password for the email server
      */
     //private JTextField emailPasswordJTextField = new JTextField();
     private final JPasswordField emailPasswordJTextField = new JPasswordField();
@@ -223,7 +230,8 @@ public class SettingsDialog
     private static final Dimension SETTINGS_DIALOG_SIZE = new Dimension( 700, 330 );
 
     /**
-     *   Constructor to create the GUI that allows modification of the settings
+     * Constructor to create the GUI that allows modification of the settings
+     *
      * @param modal
      */
     public SettingsDialog( boolean modal ) {
@@ -236,7 +244,7 @@ public class SettingsDialog
     }
 
     /**
-     *   Create the GUI elements
+     * Create the GUI elements
      */
     private void initComponents() {
         setTitle( Settings.jpoResources.getString( "settingsDialogTitle" ) );
@@ -303,13 +311,12 @@ public class SettingsDialog
         generalTab.add( autoLoadJButton );
         // End of Autoload stuff
 
-
         // set up the pictureViewerJPanel
         final JPanel pictureViewerTab = new JPanel( new MigLayout() );
 
         // PictureViewer size stuff
         pictureViewerTab.add( new JLabel( Settings.jpoResources.getString( "pictureViewerSizeChoicesJlabel" ) ) );
-        final DefaultComboBoxModel <String> viewerSizeModel = new DefaultComboBoxModel<String>( windowSizeChoices );
+        final DefaultComboBoxModel<String> viewerSizeModel = new DefaultComboBoxModel<String>( windowSizeChoices );
         viewerSizeDropdown.setModel( viewerSizeModel );
         pictureViewerTab.add( viewerSizeDropdown, "wrap" );
         // End of PictureViewer size stuff
@@ -330,9 +337,6 @@ public class SettingsDialog
 
         pictureViewerTab.add( dontEnlargeJCheckBox, "wrap" );
         pictureViewerTab.add( pictureViewerFastScaleJCheckBox );
-
-
-
 
         // set up the thumbnailSettingsJPanel
         final JPanel thumbnailsTab = new JPanel( new MigLayout() );
@@ -373,9 +377,8 @@ public class SettingsDialog
         thumbnailSize.setMaximumSize( Settings.shortNumberMaximumSize );
         thumbnailsTab.add( thumbnailSize, "wrap" );
 
-
-        final JLabel jpgQualitySlider =
-                new JLabel( Settings.jpoResources.getString( "lowresJpgQualitySlider" ) );
+        final JLabel jpgQualitySlider
+                = new JLabel( Settings.jpoResources.getString( "lowresJpgQualitySlider" ) );
         thumbnailsTab.add( jpgQualitySlider, "wrap" );
 
         //Create the label table
@@ -392,10 +395,7 @@ public class SettingsDialog
         jpgQualityJSlider.setBorder( BorderFactory.createEmptyBorder( 0, 0, 10, 20 ) );
         thumbnailsTab.add( jpgQualityJSlider, "span, grow, wrap" );
 
-
         thumbnailsTab.add( thumbnailFastScaleJCheckBox );
-
-
 
         // User Functions
         final JPanel userFunctionJPanel = new JPanel( new MigLayout() );
@@ -451,10 +451,6 @@ public class SettingsDialog
         userFunctionHelpJTextArea.setLineWrap( true );
         userFunctionJPanel.add( userFunctionHelpJTextArea, "span, grow" );
 
-
-
-
-
         // Email Server
         final JPanel emailJPanel = new JPanel( new MigLayout() );
         final JLabel emailJLabel = new JLabel( Settings.jpoResources.getString( "emailJLabel" ) );
@@ -462,7 +458,7 @@ public class SettingsDialog
 
         emailJPanel.add( new JLabel( Settings.jpoResources.getString( "predefinedEmailJLabel" ) ) );
 
-        JComboBox <Object> predefinedEmailJComboBox = new JComboBox<Object>();
+        JComboBox<Object> predefinedEmailJComboBox = new JComboBox<Object>();
         predefinedEmailJComboBox.addItem( "Localhost" );
         predefinedEmailJComboBox.addItem( "Gmail" );
         predefinedEmailJComboBox.addItem( "Compuserve" );
@@ -504,7 +500,6 @@ public class SettingsDialog
             }
         } );
         emailJPanel.add( predefinedEmailJComboBox, "wrap" );
-
 
         emailJPanel.add( new JLabel( Settings.jpoResources.getString( "emailServerJLabel" ) ) );
         emailServerJTextField.setPreferredSize( Settings.textfieldPreferredSize );
@@ -586,7 +581,6 @@ public class SettingsDialog
         emailJPanel.add( showPasswordButton );
         emailJPanel.add( showPasswordLabel, "wrap" );
 
-
         // Debug Panel
         final JPanel debugTab = new JPanel( new MigLayout() );
 
@@ -638,10 +632,6 @@ public class SettingsDialog
         } );
         debugTab.add( screenSizeTestButton );
 
-
-
-
-
         // set up the main part of the dialog
         getContentPane().setLayout( new BorderLayout() );
 
@@ -660,7 +650,7 @@ public class SettingsDialog
         getContentPane().add( tp, BorderLayout.NORTH );
 
         /**
-         *   container to neatly group the 2 buttons
+         * container to neatly group the 2 buttons
          */
         Container buttonContainer = new Container();
 
@@ -697,9 +687,7 @@ public class SettingsDialog
         } );
         buttonContainer.add( cancelButton );
 
-
         getContentPane().add( buttonContainer, BorderLayout.SOUTH );
-
 
         setDefaultCloseOperation( WindowConstants.DISPOSE_ON_CLOSE );
         addWindowListener( new WindowAdapter() {
@@ -712,8 +700,8 @@ public class SettingsDialog
     }
 
     /**
-     *   This method sets up the GUI fields according to what the
-     *   Settings object's values are
+     * This method sets up the GUI fields according to what the Settings
+     * object's values are
      */
     private void initValues() {
         for ( int i = 0; i < Settings.supportedLanguages.length; i++ ) {
@@ -762,9 +750,11 @@ public class SettingsDialog
     }
 
     /**
-     * returns the index for the size dropdowns based on the supplied parameters.
-     * @param maximise  whether the index should be maximised
-     * @param targetDimension  the target size of the window
+     * returns the index for the size dropdowns based on the supplied
+     * parameters.
+     *
+     * @param maximise whether the index should be maximised
+     * @param targetDimension the target size of the window
      */
     private static int findSizeIndex( boolean maximise,
             Dimension targetDimension ) {
@@ -785,7 +775,8 @@ public class SettingsDialog
     }
 
     /**
-     *   This method checks that the values all make sense and adjusts them if not.
+     * This method checks that the values all make sense and adjusts them if
+     * not.
      */
     private void consistencyCheck() {
         if ( ( !checkLogfile( logfileJTextField.getText() ) ) && logfileJCheckBox.isSelected() ) {
@@ -797,7 +788,6 @@ public class SettingsDialog
             logfileJCheckBox.setSelected( false );
         }
 
-
         if ( ( !thumbnailPathChooser.setColor() ) ) { // TODO: This seems very odd
             JOptionPane.showMessageDialog( Settings.anchorFrame,
                     Settings.jpoResources.getString( "thumbnailDirError" ),
@@ -808,10 +798,16 @@ public class SettingsDialog
     }
 
     /**
-     *   This method writes the values in the GUI widgets into the Settings object.
+     * This method writes the values in the GUI widgets into the Settings
+     * object.
      */
     private void writeValues() {
-        Settings.setLocale( Settings.supportedLocale[languageJComboBox.getSelectedIndex()] );
+        Locale comboBoxLocale = Settings.supportedLocale[languageJComboBox.getSelectedIndex()];
+        boolean localeChanged = Settings.setLocale( comboBoxLocale );
+        if ( localeChanged ) {
+            LOGGER.info( "Locale changed!" );
+            JpoEventBus.getInstance().post( new LocaleChangedEvent() );
+        }
 
         Settings.autoLoad = autoLoadJTextField.getText();
 
@@ -862,7 +858,6 @@ public class SettingsDialog
         Settings.userFunctionCmd[1] = userFunction2CmdJTextField.getText();
         Settings.userFunctionCmd[2] = userFunction3CmdJTextField.getText();
 
-
         Settings.emailServer = emailServerJTextField.getText();
         Settings.emailPort = emailPortJTextField.getText();
         Settings.emailAuthentication = authenticationJComboBox.getSelectedIndex();
@@ -871,13 +866,14 @@ public class SettingsDialog
         Settings.emailPassword = new String( emailPasswordJTextField.getPassword() );
 
         Settings.validateSettings();
-        Settings.notifyUserFunctionsChanged();
+        JpoEventBus.getInstance().post( new UserFunctionsChangedEvent() );
     }
 
     /**
-     *   this method verifies that the file specified in the logfileJTextField
-     *   is valid. It sets the color of the font to red if this is not ok and
-     *   returns false to the caller. If all is fine it returns true;
+     * this method verifies that the file specified in the logfileJTextField is
+     * valid. It sets the color of the font to red if this is not ok and returns
+     * false to the caller. If all is fine it returns true;
+     *
      * @param validationFile The file to test
      * @return true if good, false if bad
      */
@@ -914,9 +910,10 @@ public class SettingsDialog
     }
 
     /**
-     *   this method verifies that the file specified in the logfileJTextField
-     *   is valid. It sets the color of the font to red if this is not ok and
-     *   returns false to the caller. If all is fine it returns true;
+     * this method verifies that the file specified in the logfileJTextField is
+     * valid. It sets the color of the font to red if this is not ok and returns
+     * false to the caller. If all is fine it returns true;
+     *
      * @param validationFile the file to validate
      * @return true if good, false if not
      */
@@ -945,7 +942,7 @@ public class SettingsDialog
     }
 
     /**
-     *  method that gets rid of the SettingsDialog
+     * method that gets rid of the SettingsDialog
      */
     private void getRid() {
         setVisible( false );
@@ -953,8 +950,8 @@ public class SettingsDialog
     }
 
     /**
-     *  method that brings up a JFileChooser and places the path of the file selected into the
-     *  JTextField of the autoFileJTextField.
+     * method that brings up a JFileChooser and places the path of the file
+     * selected into the JTextField of the autoFileJTextField.
      */
     private void autoLoadChooser() {
         JFileChooser jFileChooser = new JFileChooser();
@@ -972,8 +969,8 @@ public class SettingsDialog
     }
 
     /**
-     *  method that brings up a JFileChooser and places the path of the file selected into the
-     *  JTextField of the logfileJTextField.
+     * method that brings up a JFileChooser and places the path of the file
+     * selected into the JTextField of the logfileJTextField.
      */
     private void logfileChooser() {
         JFileChooser jFileChooser = new JFileChooser();
@@ -991,8 +988,8 @@ public class SettingsDialog
     }
 
     /**
-     *  special inner class that verifies whether the path indicated by the component is
-     *  valid
+     * special inner class that verifies whether the path indicated by the
+     * component is valid
      */
     class FileTextFieldVerifier
             extends InputVerifier {
@@ -1021,8 +1018,7 @@ public class SettingsDialog
     }
 
     /**
-     *  brings up an are you sure dialog and then zaps all the
-     *  thumbnail images
+     * brings up an are you sure dialog and then zaps all the thumbnail images
      */
     public void zapThumbnails() {
         if ( ( !thumbnailPathChooser.setColor() ) ) {//TODO: Seems odd to use a GUI component to validate a path

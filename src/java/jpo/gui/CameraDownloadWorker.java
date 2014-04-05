@@ -4,8 +4,11 @@ import java.util.logging.Logger;
 import javax.swing.JProgressBar;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
+import jpo.EventBus.CopyLocationsChangedEvent;
 import jpo.EventBus.GroupSelectionEvent;
 import jpo.EventBus.JpoEventBus;
+import jpo.EventBus.RecentDropNodesChangedEvent;
+import jpo.EventBus.RefreshThumbnailRequest;
 import jpo.dataModel.Settings;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
 
@@ -58,12 +61,14 @@ public class CameraDownloadWorker
     @Override
     protected String doInBackground() throws Exception {
         Settings.memorizeCopyLocation( dataModel.targetDir.toString() );
+        JpoEventBus.getInstance().post( new CopyLocationsChangedEvent() );
         if ( dataModel.getShouldCreateNewGroup() ) {
             LOGGER.fine( String.format( "Adding a new group %s to node %s", dataModel.getNewGroupDescription(), dataModel.getTargetNode().toString() ) );
             SortableDefaultMutableTreeNode newGroupNode = dataModel.getTargetNode().addGroupNode( dataModel.getNewGroupDescription() );
             dataModel.setTargetNode( newGroupNode );
         }
         Settings.memorizeGroupOfDropLocation( dataModel.getTargetNode() );
+        JpoEventBus.getInstance().post( new RecentDropNodesChangedEvent() );
 
         LOGGER.fine( String.format( "About to copyAddPictures to node %s", dataModel.getTargetNode().toString() ) );
         dataModel.getTargetNode().copyAddPictures( dataModel.getNewPictures(),
@@ -73,6 +78,8 @@ public class CameraDownloadWorker
         if ( dataModel.getSortCode() > 1 ) {
             LOGGER.fine( String.format( "Sorting node %s by code %d", dataModel.getTargetNode().toString(), dataModel.getSortCode() ) );
             dataModel.getTargetNode().sortChildren( dataModel.getSortCode() );
+            JpoEventBus.getInstance().post( new RefreshThumbnailRequest( dataModel.getTargetNode(), ThumbnailQueueRequest.LOWEST_PRIORITY ) );
+
         }
 
         InterruptSemaphore interrupter = new InterruptSemaphore();

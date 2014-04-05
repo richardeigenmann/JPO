@@ -3,24 +3,16 @@ package jpo.gui;
 import com.google.common.eventbus.Subscribe;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import jpo.dataModel.ArrayListNavigator;
-import jpo.TagCloud.TagClickListener;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
 import jpo.dataModel.PictureInfo;
 import javax.swing.Timer;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.logging.Logger;
 import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
 import javax.swing.tree.DefaultMutableTreeNode;
 import jpo.EventBus.GroupSelectionEvent;
 import jpo.EventBus.JpoEventBus;
-import jpo.EventBus.ShowQueryRequest;
-import jpo.dataModel.DescriptionWordMap;
-import jpo.TagCloud.TagCloud;
-import jpo.dataModel.Settings;
-import jpo.dataModel.StaticNodesQuery;
+import jpo.EventBus.ShowGroupRequest;
 
 /*
  InfoPanelController.java:  The Controller for the Info Panel
@@ -40,10 +32,9 @@ import jpo.dataModel.StaticNodesQuery;
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 /**
- * Controller for the stuff the InfoPanel shows. Holds the reference to the
- * InfoPanel widget
+ * Manages the Info Panel
  */
-public class InfoPanelController implements TagClickListener {
+public class InfoPanelController {
 
     public InfoPanelController() {
         JpoEventBus.getInstance().register( this );
@@ -53,12 +44,14 @@ public class InfoPanelController implements TagClickListener {
      * Defines a logger for this class
      */
     private static final Logger LOGGER = Logger.getLogger( InfoPanelController.class.getName() );
+
     private final NodeStatisticsController nodeStatisticsController = new NodeStatisticsController();
     /**
      * A millisecond delay for the polling of the thumbnailController queue and
      * memory status
      */
     private static final int DELAY = 5000; //milliseconds
+
     /**
      * A timer to fire off the refresh of the Thumbnail Queue display. Is only
      * alive if the InfoPanel is showing the statistics panel.
@@ -80,14 +73,18 @@ public class InfoPanelController implements TagClickListener {
         return nodeStatisticsController.getJComponent();
     }
 
-    private final TagCloud tagCloud = new TagCloud();
-
-    public JComponent getTagCloud() {
-        return tagCloud;
-    }
-
     @Subscribe
     public void handleGroupSelectionEvent( GroupSelectionEvent event ) {
+        showInfo( event.getNode() );
+    }
+
+    /**
+     * Handles the ShowGroupRequest by updating the display...
+     *
+     * @param event
+     */
+    @Subscribe
+    public void handleGroupSelectionEvent( ShowGroupRequest event ) {
         showInfo( event.getNode() );
     }
 
@@ -114,29 +111,11 @@ public class InfoPanelController implements TagClickListener {
                     //infoPanel.thumbnailController.setNode( new SingleNodeNavigator( node ), 0 );
                     statUpdateTimer.stop();
                 } else {
-                    // ToDo get this stuff off the event handler thread
                     LOGGER.fine( "Updating stats" );
                     nodeStatisticsController.updateStats( node );
                     statUpdateTimer.start();  // updates the queue-count
-
-                    tagCloud.setMaxWordsToShow( Settings.tagCloudWords );
-                    dwm = new DescriptionWordMap( node );
-                    tagCloud.setWordMap( dwm );
-                    tagCloud.addTagClickListener( InfoPanelController.this );
-                    tagCloud.showWords();
                 }
             }
         } );
-    }
-    DescriptionWordMap dwm;
-
-    @Override
-    public void tagClicked( String key ) {
-        HashSet<SortableDefaultMutableTreeNode> hashSet = dwm.getWordNodeMap().get( key );
-        ArrayList<SortableDefaultMutableTreeNode> set = new ArrayList<>( hashSet );
-        StaticNodesQuery query = new StaticNodesQuery( "Word: "+key, set);
-        //ArrayListNavigator alb = new ArrayListNavigator( key, set );
-        //Jpo.showThumbnails( alb );
-        JpoEventBus.getInstance().post ( new ShowQueryRequest ( query)) ;
     }
 }

@@ -20,6 +20,8 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.event.ChangeListener;
+import jpo.EventBus.CopyLocationsChangedEvent;
+import jpo.EventBus.JpoEventBus;
 import jpo.dataModel.GroupInfo;
 import jpo.dataModel.NodeStatistics;
 
@@ -370,6 +372,7 @@ public class ConsolidateGroupJFrame
                         Settings.jpoResources.getString("ConsolitdateProgBarTitle"),
                         Settings.jpoResources.getString("ConsolitdateProgBarDone")));
         Settings.memorizeCopyLocation(highresDirectory.toString());
+        JpoEventBus.getInstance().post( new CopyLocationsChangedEvent() );
 
     }
 }

@@ -1,27 +1,28 @@
 package jpo.EventBus;
 
+import java.util.ArrayList;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
 
 /**
- * Request to indicate that the user would like move the supplied node as last
+ * Request to indicate that the user would like move the supplied nodes as last
  * child on the target node
  *
  * @author Richard eigenmann
  */
 public class MoveNodeToNodeRequest implements Request {
 
-    private final SortableDefaultMutableTreeNode movingNode;
+    private final ArrayList<SortableDefaultMutableTreeNode> movingNodes;
     private final SortableDefaultMutableTreeNode targetNode;
 
     /**
-     * Request to indicate that the user would like move the supplied node as
+     * Request to indicate that the user would like move the supplied nodes as
      * last child on the target node
      *
-     * @param movingNode The node to move
+     * @param movingNodes The nodes to move
      * @param targetNode the target node to which to add the node
      */
-    public MoveNodeToNodeRequest( SortableDefaultMutableTreeNode movingNode, SortableDefaultMutableTreeNode targetNode ) {
-        this.movingNode = movingNode;
+    public MoveNodeToNodeRequest( ArrayList<SortableDefaultMutableTreeNode> movingNodes, SortableDefaultMutableTreeNode targetNode ) {
+        this.movingNodes = movingNodes;
         this.targetNode = targetNode;
     }
 
@@ -30,8 +31,8 @@ public class MoveNodeToNodeRequest implements Request {
      *
      * @return the node
      */
-    public SortableDefaultMutableTreeNode getMovingNode() {
-        return movingNode;
+    public ArrayList<SortableDefaultMutableTreeNode> getMovingNodes() {
+        return movingNodes;
     }
 
     /**

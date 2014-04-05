@@ -19,31 +19,33 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
+import jpo.EventBus.CopyLocationsChangedEvent;
+import jpo.EventBus.JpoEventBus;
 import jpo.dataModel.Tools;
 
 
 /*
-PictureFileChooser.java:  a controller that brings up a filechooser and then adds the pictures
+ PictureFileChooser.java:  a controller that brings up a filechooser and then adds the pictures
 
 
-Copyright (C) 2002, 2010  Richard Eigenmann.
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or any later version. This program is distributed 
-in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
-without even the implied warranty of MERCHANTABILITY or FITNESS 
-FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
-more details. You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-The license is in gpl.txt.
-See http://www.gnu.org/copyleft/gpl.html for the details.
+ Copyright (C) 2002, 2010  Richard Eigenmann.
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or any later version. This program is distributed 
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+ without even the implied warranty of MERCHANTABILITY or FITNESS 
+ FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
+ more details. You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ The license is in gpl.txt.
+ See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 /**
- *   This controller class brings up a Filechooser which allows the user to
- *   select pictures and directories. If the user clicks OK the pictures and
- *   subdirectories are added to the previously indicated group node.
+ * This controller class brings up a Filechooser which allows the user to select
+ * pictures and directories. If the user clicks OK the pictures and
+ * subdirectories are added to the previously indicated group node.
  */
 public class PictureFileChooser
         implements PropertyChangeListener {
@@ -58,12 +60,11 @@ public class PictureFileChooser
      */
     private final JFileChooser jFileChooser = new JFileChooser();
 
-
     /**
-     *  Construct the PictureFileChooser and show it.
+     * Construct the PictureFileChooser and show it.
      *
-     *  @param  startNode   The node to which the selected pictures are to be added.
-     *                      It must be a GroupInfo Node.
+     * @param startNode The node to which the selected pictures are to be added.
+     * It must be a GroupInfo Node.
      */
     public PictureFileChooser( final SortableDefaultMutableTreeNode startNode ) {
         Tools.checkEDT();
@@ -82,11 +83,9 @@ public class PictureFileChooser
         if ( jFileChooser.showOpenDialog( Settings.anchorFrame ) == JFileChooser.APPROVE_OPTION ) {
             final File[] chosenFiles = jFileChooser.getSelectedFiles();
             Settings.memorizeCopyLocation( jFileChooser.getCurrentDirectory().getPath() );
-
-
+            JpoEventBus.getInstance().post( new CopyLocationsChangedEvent() );
 
             Settings.showThumbOnFileChooser = showThumbnailJCheckBox.isSelected();
-
 
             PictureAdder pas = new PictureAdder( startNode, chosenFiles, newOnlyJCheckBox.isSelected(), recurseJCheckBox.isSelected(), retainDirectoriesJCheckBox.isSelected(), categoryJScrollPane.getSelectedCategories() );
             // TODO: Why do these 2 statements have to be executed? Things change in the model so it should find out itself, no?
@@ -96,36 +95,37 @@ public class PictureFileChooser
 
             //logger.info( "Before Execute" );
             /*int added = 0;
-            try {
-            added = pas.get();
-            } catch ( InterruptedException ex ) {
-            Logger.getLogger( PictureFileChooser.class.getName() ).log( Level.SEVERE, null, ex );
-            } catch ( ExecutionException ex ) {
-            Logger.getLogger( PictureFileChooser.class.getName() ).log( Level.SEVERE, null, ex );
-            }
-            logger.info( String.format( "After Execute: %d", added ) );*/
+             try {
+             added = pas.get();
+             } catch ( InterruptedException ex ) {
+             Logger.getLogger( PictureFileChooser.class.getName() ).log( Level.SEVERE, null, ex );
+             } catch ( ExecutionException ex ) {
+             Logger.getLogger( PictureFileChooser.class.getName() ).log( Level.SEVERE, null, ex );
+             }
+             logger.info( String.format( "After Execute: %d", added ) );*/
 
             /*       Runnable r = new Runnable() {
 
-            @Override
-            public void run() {
-            //SortableDefaultMutableTreeNode displayNode = PictureAdder.addPictures( startNode, chosenFiles, newOnlyJCheckBox.isSelected(), recurseJCheckBox.isSelected(), retainDirectoriesJCheckBox.isSelected(), categoryJScrollPane.getSelectedCategories() );
-            //Jpo.positionToNode( displayNode );
-            //displayNode.refreshThumbnail();
+             @Override
+             public void run() {
+             //SortableDefaultMutableTreeNode displayNode = PictureAdder.addPictures( startNode, chosenFiles, newOnlyJCheckBox.isSelected(), recurseJCheckBox.isSelected(), retainDirectoriesJCheckBox.isSelected(), categoryJScrollPane.getSelectedCategories() );
+             //Jpo.positionToNode( displayNode );
+             //displayNode.refreshThumbnail();
             
-            }
-            };
+             }
+             };
 
-            SwingUtilities.invokeLater( r );*/
+             SwingUtilities.invokeLater( r );*/
         }
     }
-
 
     /**
      * This method is invoked from the FileChooser and creates the thumbnail.
      *
-     * See <a href="http://java.sun.com/developer/JDCTechTips/index.html">Core Java Technologies Tech Tips</a> for the March 16 2004 issue on
-     * Preview panels in the JFileChooser.
+     * See <a href="http://java.sun.com/developer/JDCTechTips/index.html">Core
+     * Java Technologies Tech Tips</a> for the March 16 2004 issue on Preview
+     * panels in the JFileChooser.
+     *
      * @param changeEvent The event from the FileChooser that changed
      */
     @Override
@@ -151,35 +151,38 @@ public class PictureFileChooser
     }
 
     /**
-     *  Checkbox that allows the user to specify that pictures already
-     *  in the collection should be ignored.
+     * Checkbox that allows the user to specify that pictures already in the
+     * collection should be ignored.
      */
     private JCheckBox showThumbnailJCheckBox = new JCheckBox( Settings.jpoResources.getString( "showThumbnailJCheckBox" ) );
 
     /**
-     *  preferred size of accessory panel
+     * preferred size of accessory panel
      */
     private static final Dimension OPTIONS_PANEL_DIMENSION = new Dimension( 200, 180 );
 
     /**
-     * Checkbox that allows the user to specify whether pictures in the subdirectories should be added or not.
+     * Checkbox that allows the user to specify whether pictures in the
+     * subdirectories should be added or not.
      */
     private final JCheckBox recurseJCheckBox = new JCheckBox( Settings.jpoResources.getString( "recurseJCheckBox" ) );
 
     /**
      *
-     *  Checkbox that allows the user to specify that pictures already in the collection should be ignored.
+     * Checkbox that allows the user to specify that pictures already in the
+     * collection should be ignored.
      */
     private final JCheckBox newOnlyJCheckBox = new JCheckBox( Settings.jpoResources.getString( "newOnlyJCheckBox" ) );
 
     /**
-     * Checkbox that allows the user to specify whether directory structures should be retained
+     * Checkbox that allows the user to specify whether directory structures
+     * should be retained
      */
     final JCheckBox retainDirectoriesJCheckBox = new JCheckBox( Settings.jpoResources.getString( "retainDirectoriesJCheckBox" ) );
 
     /**
-     *  This component shows the thumbnail. It is a JLabel as we can thus use the
-     *  ImageIcon to display the picture.
+     * This component shows the thumbnail. It is a JLabel as we can thus use the
+     * ImageIcon to display the picture.
      */
     private JLabel thumbnailJLabel = new JLabel();
 
@@ -187,7 +190,6 @@ public class PictureFileChooser
      * Allow the user to choose categories
      */
     private final CategoryJScrollPane categoryJScrollPane = new CategoryJScrollPane();
-
 
     /**
      * Creates the GUI components for the PictureFileChooser controller

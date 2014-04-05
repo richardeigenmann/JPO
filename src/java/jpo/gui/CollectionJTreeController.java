@@ -22,6 +22,7 @@ import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 import jpo.EventBus.GroupSelectionEvent;
 import jpo.EventBus.JpoEventBus;
+import jpo.EventBus.RecentDropNodesChangedEvent;
 import jpo.EventBus.ShowGroupRequest;
 import jpo.EventBus.ShowPictureRequest;
 import jpo.dataModel.GroupInfo;
@@ -244,6 +245,7 @@ public class CollectionJTreeController {
             }
             if ( ( groupOfDropLocation != null ) && ( groupOfDropLocation.getUserObject() instanceof GroupInfo ) ) {
                 Settings.memorizeGroupOfDropLocation( groupOfDropLocation );
+                JpoEventBus.getInstance().post( new RecentDropNodesChangedEvent() );
             } else {
                 LOGGER.info( "Failed to find the group of the drop location. Not memorizing." );
             }

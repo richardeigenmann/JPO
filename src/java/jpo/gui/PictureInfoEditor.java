@@ -49,6 +49,8 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
+import jpo.EventBus.JpoEventBus;
+import jpo.EventBus.RotatePictureRequest;
 import jpo.dataModel.Category;
 import jpo.dataModel.ExifInfo;
 import jpo.dataModel.NodeNavigatorInterface;
@@ -819,7 +821,8 @@ public class PictureInfoEditor extends JFrame {
      * This method saves the rotation value
      */
     private void saveRotation() {
-        pictureInfo.setRotation( (Double) angleModel.getValue() );
+        JpoEventBus.getInstance().post( new RotatePictureRequest( myNode, (double) angleModel.getValue() , ThumbnailQueueRequest.HIGH_PRIORITY) );
+        //pictureInfo.setRotation( (Double) angleModel.getValue() );
     }
 
     /**

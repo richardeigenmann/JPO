@@ -23,6 +23,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
+import jpo.EventBus.CopyLocationsChangedEvent;
+import jpo.EventBus.JpoEventBus;
+import jpo.EventBus.RecentCollectionsChangedEvent;
 
 /*
  CollectionDistillerJFrame.java:  creates a GUI for the export
@@ -255,7 +258,9 @@ class CollectionDistillerJFrame extends JFrame implements ActionListener {
         new XmlDistiller( targetFile, startNode, exportPicsJCheckBox.isSelected(), true );
 
         Settings.memorizeCopyLocation( targetFile.getParent() );
+        JpoEventBus.getInstance().post( new CopyLocationsChangedEvent() );
         Settings.pushRecentCollection( targetFile.toString() );
+        JpoEventBus.getInstance().post( new RecentCollectionsChangedEvent() );
         JOptionPane.showMessageDialog( Settings.anchorFrame,
                 Settings.jpoResources.getString( "collectionSaveBody" ) + targetFile.toString(),
                 Settings.jpoResources.getString( "collectionSaveTitle" ),

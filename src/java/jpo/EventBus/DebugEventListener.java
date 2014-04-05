@@ -19,7 +19,8 @@ public class DebugEventListener {
 
     @Subscribe
     public void handleAllEvents( Object o ) {
-        LOGGER.log( Level.INFO, "Event propagating: {0}", o.getClass().toString() );
+        //LOGGER.log( Level.INFO, "Event propagating: {0}", o.getClass().toString() );
+        System.out.println( String.format ("Event propagating: %s", o.getClass().toString() ));
     }
 
 }

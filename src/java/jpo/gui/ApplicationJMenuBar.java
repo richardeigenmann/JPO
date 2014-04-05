@@ -1,5 +1,6 @@
 package jpo.gui;
 
+import com.google.common.eventbus.Subscribe;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -20,17 +21,19 @@ import jpo.EventBus.FileSaveRequest;
 import jpo.EventBus.FindDuplicatesRequest;
 import jpo.EventBus.OpenHelpAboutFrameRequest;
 import jpo.EventBus.JpoEventBus;
+import jpo.EventBus.LocaleChangedEvent;
+import jpo.EventBus.OpenCategoryEditorRequest;
 import jpo.EventBus.OpenLicenceFrameRequest;
 import jpo.EventBus.OpenPrivacyFrameRequest;
 import jpo.EventBus.OpenRecentCollectionRequest;
 import jpo.EventBus.OpenSearchDialogRequest;
+import jpo.EventBus.RecentCollectionsChangedEvent;
 import jpo.EventBus.SendEmailRequest;
 import jpo.EventBus.StartDoublePanelSlideshowRequest;
 import jpo.EventBus.StartNewCollectionRequest;
 import jpo.EventBus.UnsavedUpdatesDialogRequest;
 import jpo.EventBus.YearBrowserRequest;
 import jpo.EventBus.YearlyAnalysisRequest;
-import jpo.dataModel.RecentFilesChangeListener;
 import jpo.dataModel.Settings;
 
 /*
@@ -51,17 +54,12 @@ import jpo.dataModel.Settings;
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 /**
- * This class deals with the visible components of the Jpo main menu. It creates
- * the widgets and connects the actions back to the JPO application controller
- * which is the Jpo class. It goes back through an Interface but since the main
- * menu is so tightly tied to the application this decoupling just adds another
- * class and can be done away with. The object that creates this menu must
- * connect this menu to the Notifier for a locale change.
- *
+ * Creates the menu for the JPO application. Listens to
+ * RecentCollectionsChangedEvent and LocaleChangedEvent events and updates
+ * itself accordingly. It fires events into the JpoEventBus as per the user
+ * selections.
  */
-public class ApplicationJMenuBar
-        extends JMenuBar
-        implements RecentFilesChangeListener, LocaleChangeListener {
+public class ApplicationJMenuBar extends JMenuBar {
 
     /**
      * The File menu which is part of the JMenuBar for the Jpo application.
@@ -69,12 +67,11 @@ public class ApplicationJMenuBar
      */
     private final JMenu FileJMenu = new JMenu();
 
-    ;
-
     /**
-     *  The Edit menu which is part of the JMenuBar for the Jpo application.
+     * The Edit menu which is part of the JMenuBar for the Jpo application.
      *
-     **/
+     *
+     */
     private final JMenu EditJMenu = new JMenu();
 
     /**
@@ -216,7 +213,110 @@ public class ApplicationJMenuBar
      *
      */
     public ApplicationJMenuBar() {
+        initComponents();
 
+        setMenuTexts();
+        recentFilesChanged();
+
+        JpoEventBus.getInstance().register( new LocaleChangedEventHandler() );
+        JpoEventBus.getInstance().register( new RecentCollectionsChangedEventHandler() );
+    }
+
+    /**
+     * Handler for the LocationChangedEvent.
+     */
+    private class LocaleChangedEventHandler {
+
+        /**
+         * Handle the event by updating the menu texts
+         *
+         * @param event
+         */
+        @Subscribe
+        public void handleLocaleChangedEvent( LocaleChangedEvent event ) {
+            setMenuTexts();
+        }
+    }
+
+    /**
+     * This menu sets the texts of the menu in the language defined by the
+     * locale. The application needs to call this method when the user changes
+     * the Locale in the Settings editor.
+     */
+    public void setMenuTexts() {
+        FileJMenu.setText( Settings.jpoResources.getString( "FileMenuText" ) );
+        FileNewJMenuItem.setText( Settings.jpoResources.getString( "FileNewJMenuItem" ) );
+        FileOpenRecentJMenu.setText( Settings.jpoResources.getString( "FileOpenRecentItemText" ) );
+        FileLoadJMenuItem.setText( Settings.jpoResources.getString( "FileLoadMenuItemText" ) );
+        FileAddJMenuItem.setText( Settings.jpoResources.getString( "FileAddMenuItemText" ) );
+        FileSaveJMenuItem.setText( Settings.jpoResources.getString( "FileSaveMenuItemText" ) );
+        FileSaveAsJMenuItem.setText( Settings.jpoResources.getString( "FileSaveAsMenuItemText" ) );
+        FileExitJMenuItem.setText( Settings.jpoResources.getString( "FileExitMenuItemText" ) );
+
+        EditJMenu.setText( Settings.jpoResources.getString( "EditJMenuText" ) );
+        EditFindJMenuItem.setText( Settings.jpoResources.getString( "EditFindJMenuItemText" ) );
+        EditCamerasJMenuItem.setText( Settings.jpoResources.getString( "EditCamerasJMenuItem" ) );
+        EditSettingsJMenuItem.setText( Settings.jpoResources.getString( "EditSettingsMenuItemText" ) );
+
+        actionJMenu.setText( Settings.jpoResources.getString( "actionJMenu" ) );
+        emailJMenuItem.setText( Settings.jpoResources.getString( "emailJMenuItem" ) );
+        RandomSlideshowJMenuItem.setText( Settings.jpoResources.getString( "RandomSlideshowJMenuItem" ) );
+
+        ExtrasJMenu.setText( "Extras" );
+        EditCheckDirectoriesJMenuItem.setText( Settings.jpoResources.getString( "EditCheckDirectoriesJMenuItemText" ) );
+        EditCheckIntegrityJMenuItem.setText( Settings.jpoResources.getString( "EditCheckIntegrityJMenuItem" ) );
+        EditCategoriesJMenuItem.setText( Settings.jpoResources.getString( "EditCategoriesJMenuItem" ) );
+
+        HelpJMenu.setText( Settings.jpoResources.getString( "HelpJMenuText" ) );
+        HelpAboutJMenuItem.setText( Settings.jpoResources.getString( "HelpAboutMenuItemText" ) );
+        HelpLicenseJMenuItem.setText( Settings.jpoResources.getString( "HelpLicenseMenuItemText" ) );
+        HelpPrivacyJMenuItem.setText( Settings.jpoResources.getString( "HelpPrivacyMenuItemText" ) );
+    }
+
+    /**
+     * Handler for the RecentCollectionsChangedEvent
+     */
+    private class RecentCollectionsChangedEventHandler {
+
+        /**
+         * Handle the event by updating the submenu items
+         *
+         * @param event
+         */
+        @Subscribe
+        public void handleRecentCollectionsChangedEvent( RecentCollectionsChangedEvent event ) {
+            recentFilesChanged();
+        }
+    }
+
+    /**
+     * Sets up the menu entries in the File|OpenRecent sub menu from the
+     * recentCollections in Settings. Can be called by the interface from the
+     * listener on the Settings object.
+     */
+    public void recentFilesChanged() {
+        Runnable r = new Runnable() {
+
+            @Override
+            public void run() {
+                for ( int i = 0; i < Settings.recentCollections.length; i++ ) {
+                    if ( Settings.recentCollections[i] != null ) {
+                        recentOpenedfileJMenuItem[i].setText( Integer.toString( i + 1 ) + ": " + Settings.recentCollections[i] );
+                        recentOpenedfileJMenuItem[i].setVisible( true );
+                    } else {
+                        recentOpenedfileJMenuItem[i].setVisible( false );
+                    }
+                }
+            }
+        };
+        if ( SwingUtilities.isEventDispatchThread() ) {
+            r.run();
+        } else {
+            SwingUtilities.invokeLater( r );
+        }
+    }
+
+    private void initComponents() {
         //Build the file menu.
         FileJMenu.setMnemonic( KeyEvent.VK_F );
         add( FileJMenu );
@@ -270,7 +370,6 @@ public class ApplicationJMenuBar
             recentOpenedfileJMenuItem[i].setAccelerator( KeyStroke.getKeyStroke( "control " + Integer.toString( i ).substring( 1, 1 ) ) );
             FileOpenRecentJMenu.add( recentOpenedfileJMenuItem[i] );
         }
-        Settings.addRecentFilesChangeListener( this );
 
         FileSaveJMenuItem.setMnemonic( KeyEvent.VK_S );
         FileSaveJMenuItem.setAccelerator( KeyStroke.getKeyStroke( 'S', java.awt.event.InputEvent.CTRL_MASK ) );
@@ -421,7 +520,7 @@ public class ApplicationJMenuBar
 
             @Override
             public void actionPerformed( ActionEvent e ) {
-                throw new UnsupportedOperationException( "Not sure what to do here...." );
+                JpoEventBus.getInstance().post( new OpenCategoryEditorRequest() );
             }
         } );
         ExtrasJMenu.add( EditCategoriesJMenuItem );
@@ -460,83 +559,6 @@ public class ApplicationJMenuBar
             }
         } );
         HelpJMenu.add( HelpPrivacyJMenuItem );
-
-        // register an interest in the locale changes
-        Settings.addLocaleChangeListener( this );
-        setMenuTexts();
-        recentFilesChanged();
     }
 
-    /**
-     * This menu sets the texts of the menu in the language defined by the
-     * locale. The application needs to call this method when the user changes
-     * the Locale in the Settings editor.
-     */
-    public void setMenuTexts() {
-        FileJMenu.setText( Settings.jpoResources.getString( "FileMenuText" ) );
-        FileNewJMenuItem.setText( Settings.jpoResources.getString( "FileNewJMenuItem" ) );
-        FileOpenRecentJMenu.setText( Settings.jpoResources.getString( "FileOpenRecentItemText" ) );
-        FileLoadJMenuItem.setText( Settings.jpoResources.getString( "FileLoadMenuItemText" ) );
-        FileAddJMenuItem.setText( Settings.jpoResources.getString( "FileAddMenuItemText" ) );
-        FileSaveJMenuItem.setText( Settings.jpoResources.getString( "FileSaveMenuItemText" ) );
-        FileSaveAsJMenuItem.setText( Settings.jpoResources.getString( "FileSaveAsMenuItemText" ) );
-        FileExitJMenuItem.setText( Settings.jpoResources.getString( "FileExitMenuItemText" ) );
-
-        EditJMenu.setText( Settings.jpoResources.getString( "EditJMenuText" ) );
-        EditFindJMenuItem.setText( Settings.jpoResources.getString( "EditFindJMenuItemText" ) );
-        EditCamerasJMenuItem.setText( Settings.jpoResources.getString( "EditCamerasJMenuItem" ) );
-        EditSettingsJMenuItem.setText( Settings.jpoResources.getString( "EditSettingsMenuItemText" ) );
-
-        actionJMenu.setText( Settings.jpoResources.getString( "actionJMenu" ) );
-        emailJMenuItem.setText( Settings.jpoResources.getString( "emailJMenuItem" ) );
-        RandomSlideshowJMenuItem.setText( Settings.jpoResources.getString( "RandomSlideshowJMenuItem" ) );
-
-        ExtrasJMenu.setText( "Extras" );
-        EditCheckDirectoriesJMenuItem.setText( Settings.jpoResources.getString( "EditCheckDirectoriesJMenuItemText" ) );
-        EditCheckIntegrityJMenuItem.setText( Settings.jpoResources.getString( "EditCheckIntegrityJMenuItem" ) );
-        EditCategoriesJMenuItem.setText( Settings.jpoResources.getString( "EditCategoriesJMenuItem" ) );
-
-        HelpJMenu.setText( Settings.jpoResources.getString( "HelpJMenuText" ) );
-        HelpAboutJMenuItem.setText( Settings.jpoResources.getString( "HelpAboutMenuItemText" ) );
-        HelpLicenseJMenuItem.setText( Settings.jpoResources.getString( "HelpLicenseMenuItemText" ) );
-        HelpPrivacyJMenuItem.setText( Settings.jpoResources.getString( "HelpPrivacyMenuItemText" ) );
-
-    }
-
-    /**
-     * This method handles the change of the application locale. In this class
-     * it simply makes sure the menus are reloaded.
-     */
-    @Override
-    public void localeChanged() {
-        setMenuTexts();
-    }
-
-    /**
-     * Sets up the menu entries in the File|OpenRecent sub menu from the
-     * recentCollections in Settings. Can be called by the interface from the
-     * listener on the Settings object.
-     */
-    @Override
-    public void recentFilesChanged() {
-        Runnable r = new Runnable() {
-
-            @Override
-            public void run() {
-                for ( int i = 0; i < Settings.recentCollections.length; i++ ) {
-                    if ( Settings.recentCollections[i] != null ) {
-                        recentOpenedfileJMenuItem[i].setText( Integer.toString( i + 1 ) + ": " + Settings.recentCollections[i] );
-                        recentOpenedfileJMenuItem[i].setVisible( true );
-                    } else {
-                        recentOpenedfileJMenuItem[i].setVisible( false );
-                    }
-                }
-            }
-        };
-        if ( SwingUtilities.isEventDispatchThread() ) {
-            r.run();
-        } else {
-            SwingUtilities.invokeLater( r );
-        }
-    }
 }

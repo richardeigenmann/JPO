@@ -34,7 +34,7 @@ import jpo.dataModel.GroupInfo;
  ReconcileJFrame.java:  
  a class that creates a GUI, asks for a directory and then tells you if the files are in your collection.
 
- Copyright (C) 2002 - 2010  Richard Eigenmann.
+ Copyright (C) 2002 - 2014  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -49,18 +49,19 @@ import jpo.dataModel.GroupInfo;
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 /**
- * This class creates a JFrame where the user can specify a directory against
- * which he wants to reconcile the current collection. When the reconciliation
- * is started the results are displayed in a JTextArea.<p>
+ * This class creates a GUI where the user can specify a directory against which
+ * he wants to reconcile the pictures in the current collection. When the
+ * reconciliation is started the results are displayed in a JTextArea.<p>
  *
  * The user can choose whether only missing files are to be shown or whether the
  * reconciliation should also show the matched files.
  *
- * TODO: Make this a Swing Worker if it servers a purpose
+ * TODO: Make this a Swing Worker if it serves a purpose
+ * TODO: Switch to MigLayout
+ * TODO: make it possible to add results
  *
  */
-public class ReconcileJFrame
-        extends JFrame {
+public class ReconcileJFrame extends JFrame {
 
     /**
      * Defines a logger for this class
@@ -108,6 +109,10 @@ public class ReconcileJFrame
     public ReconcileJFrame( SortableDefaultMutableTreeNode rootNode ) {
         this.rootNode = rootNode;
 
+        initComponents();
+    }
+
+    private void initComponents() {
         setTitle( Settings.jpoResources.getString( "ReconcileJFrameTitle" ) );
         setDefaultCloseOperation( DISPOSE_ON_CLOSE );
         addWindowListener( new WindowAdapter() {
@@ -170,7 +175,7 @@ public class ReconcileJFrame
         controlJPanel.add( directoryChooser, constraints );
 
         constraints.gridx = 3;
-        JButton cancelJButton = new JButton( Settings.jpoResources.getString( "genericCancelText" ) );
+        JButton cancelJButton = new JButton( Settings.jpoResources.getString( "closeJButton" ) );
         cancelJButton.addActionListener( new ActionListener() {
 
             @Override
