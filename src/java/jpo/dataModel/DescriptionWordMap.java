@@ -13,24 +13,26 @@ import java.util.logging.Logger;
 import jpo.TagCloud.WordMap;
 
 /*
-DescrpitionWordMap.java:  Builds a list of description Words and links to a set of nodes where they were found
+ DescrpitionWordMap.java:  Builds a map of Words from the Nodes linked to the nodes where the word was
 
-Copyright (C) 2009  Richard Eigenmann.
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or any later version. This program is distributed
-in the hope that it will be useful, but WITHOUT ANY WARRANTY;
-without even the implied warranty of MERCHANTABILITY or FITNESS
-FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-more details. You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-The license is in gpl.txt.
-See http://www.gnu.org/copyleft/gpl.html for the details.
+ Copyright (C) 2009.2014  Richard Eigenmann.
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or any later version. This program is distributed
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ without even the implied warranty of MERCHANTABILITY or FITNESS
+ FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+ more details. You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ The license is in gpl.txt.
+ See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 /**
- * Builds a list of description Words and links to a set of nodes where they were found
+ * Builds a list of words from the nodes and links to a set of nodes where they
+ * were found
+ *
  * @author Richard Eigenmann
  */
 public class DescriptionWordMap extends WordMap {
@@ -40,51 +42,50 @@ public class DescriptionWordMap extends WordMap {
      */
     private static final Logger LOGGER = Logger.getLogger( DescriptionWordMap.class.getName() );
 
-
     /**
-     * Map that holds the words and a set of the nodes where the words were found.
+     * Map that holds the words and a set of the nodes where the words were
+     * found.
      */
-    private final TreeMap<String, HashSet<SortableDefaultMutableTreeNode>> wordNodeMap = new TreeMap<String, HashSet<SortableDefaultMutableTreeNode>>();
-
+    private final TreeMap<String, HashSet<SortableDefaultMutableTreeNode>> wordNodeMap = new TreeMap<>();
 
     /**
-     * Constructor
+     * Builds a TreeMap of words that links to a HashSet of Nodes
+     *
      * @param startNode The node from which to start the analysis
      */
     public DescriptionWordMap( SortableDefaultMutableTreeNode startNode ) {
-        buildList( startNode);
+        buildList( startNode );
     }
 
-    
     /**
-     * Constructor
-     * @param navigator The NodeNavigator with the nodes from which to take the words.
+     * Builds a TreeMap of words that links to a HashSet of Nodes
+     *
+     * @param navigator The NodeNavigator with the nodes from which to take the
+     * words.
      */
     public DescriptionWordMap( NodeNavigatorInterface navigator ) {
-        for ( int i = 0; i< navigator.getNumberOfNodes(); i++) {
+        for ( int i = 0; i < navigator.getNumberOfNodes(); i++ ) {
             buildList( navigator.getNode( i ) );
         }
     }
 
-    
     /**
      * Zips through the nodes and builds the word to node set map.
      */
-    private void buildList(SortableDefaultMutableTreeNode startNode ) {
+    private void buildList( SortableDefaultMutableTreeNode startNode ) {
         if ( startNode == null ) {
             // nothing to do
             return;
         }
-        SortableDefaultMutableTreeNode n;
-        Object o;
+        SortableDefaultMutableTreeNode node;
+        Object userObject;
         Enumeration nodes = startNode.breadthFirstEnumeration();
         while ( nodes.hasMoreElements() ) {
-            n = (SortableDefaultMutableTreeNode) nodes.nextElement();
-            o = n.getUserObject();
-            String description = "";
-            if ( o instanceof PictureInfo ) {
-                description = ( (PictureInfo) o ).getDescription();
-                splitAndAdd( description, n );
+            node = (SortableDefaultMutableTreeNode) nodes.nextElement();
+            userObject = node.getUserObject();
+            if ( userObject instanceof PictureInfo ) {
+                String description = ( (PictureInfo) userObject ).getDescription();
+                splitAndAdd( description, node );
             }
         }
     }
@@ -98,26 +99,26 @@ public class DescriptionWordMap extends WordMap {
         "Beim", "Unterwegs", "Image", "man", "Nähe", "Richtung", "wurde", "noch", "nähert",
         "Mit", "meine", "mir", "ich", "wer", "wie", "was", "warum", "wie" };
 
-    final static HashSet<String> strikeWordsSet = new HashSet<String>( Arrays.asList( strikeWords ) );
+    final static HashSet<String> strikeWordsSet = new HashSet<>( Arrays.asList( strikeWords ) );
 
     static String[] multiWordTerms = { "Saudi Arabien", "Petit Bateau", "Marigot Bay", "South Georgia",
         "South Africa", "Goldman Sachs", "New York", "New Zealand", "Quadra Island", "Washington State",
         "Empire State", "Aprés Ski", "Tel Aviv", "Hoch Ybrig", "Den Haag", "Groot Marico", "St Gallen", "Crans Montana" };
 
-
     /**
      * split the string and add the node to the map
-     * @param description  The description of split
-     * @param n The node where the description was found
+     *
+     * @param description The description of split
+     * @param node The node where the description was found
      */
-    private void splitAndAdd( String description, SortableDefaultMutableTreeNode n ) {
+    private void splitAndAdd( String description, SortableDefaultMutableTreeNode node ) {
         // cleanup punctuation
 
         String fixAprostropheS = description.replaceAll( "\\'s", "" );
         String noPunctuation = fixAprostropheS.replaceAll( "[\\.:!,\\'\\\";\\?\\(\\)\\[\\]#\\$\\*\\+<>\\/&=]", "" );
         String noNumbers = noPunctuation.replaceAll( "\\d", "" );
 
-        ArrayList<String> words = new ArrayList<String>();
+        ArrayList<String> words = new ArrayList<>();
         for ( String multiWordTerm : multiWordTerms ) {
             if ( noNumbers.contains( multiWordTerm ) ) {
                 noNumbers = noNumbers.replace( multiWordTerm, "" );
@@ -131,37 +132,36 @@ public class DescriptionWordMap extends WordMap {
 
                 HashSet<SortableDefaultMutableTreeNode> nodeSet;
                 if ( !wordNodeMap.containsKey( s ) ) {
-                    nodeSet = new HashSet<SortableDefaultMutableTreeNode>();
+                    nodeSet = new HashSet<>();
                     wordNodeMap.put( s, nodeSet );
                 } else {
                     nodeSet = wordNodeMap.get( s );
                 }
-                nodeSet.add( n );
+                nodeSet.add( node );
             }
         }
 
     }
 
-
     /**
      * Returns the Word to Node Set to a caller
+     *
      * @return the word to node set map
      */
     public TreeMap<String, HashSet<SortableDefaultMutableTreeNode>> getWordNodeMap() {
         return wordNodeMap;
     }
 
-  
-   
     private HashMap<String, Integer> wordCountMap = null;
 
-
     /**
-     * In this method we return a Map of description terms with the count
-     * of nodes they appear in. In order to ensure that subsequent calls to this
+     * In this method we return a Map of description terms with the count of
+     * nodes they appear in. In order to ensure that subsequent calls to this
      * method return quickly the list is build only once. If it should be
      * rebuilt the wordCountMap variable needs to be set to null;
-     * @return A Map with description terms and a count of nodes where the term is found
+     *
+     * @return A Map with description terms and a count of nodes where the term
+     * is found
      */
     @Override
     public Map<String, Integer> getWordValueMap() {
@@ -177,5 +177,5 @@ public class DescriptionWordMap extends WordMap {
         }
         return wordCountMap;
     }
- 
+
 }

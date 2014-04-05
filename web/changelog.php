@@ -3,6 +3,7 @@
 
             <table class="changelog">
                 <tr><td colspan=2><b>Development Version 0.11</b></td></tr>
+                <tr><td valign="top">6.4.2014</td><td>Improved Flat file Export</td></tr>
                 <tr><td valign="top">30.3.2014</td><td>Started transition to EventBus</td></tr>
                 <tr><td valign="top">22.3.2014</td><td>Upgraded to javax.mail-1.5.1.jar</td></tr>
                 <tr><td valign="top">22.3.2014</td><td>Lots of refactoring to get rid of * imports and Netbeans warnings</td></tr>

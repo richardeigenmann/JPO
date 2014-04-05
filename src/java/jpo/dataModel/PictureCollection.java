@@ -14,6 +14,8 @@ import javax.swing.SwingUtilities;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
+import jpo.EventBus.JpoEventBus;
+import jpo.EventBus.RecentCollectionsChangedEvent;
 import jpo.gui.ThumbnailCreationQueue;
 
 
@@ -44,9 +46,8 @@ public class PictureCollection {
     private static final Logger LOGGER = Logger.getLogger( PictureCollection.class.getName() );
 
     //{
-        //LOGGER.setLevel( Level.ALL );
+    //LOGGER.setLevel( Level.ALL );
     //}
-
     /**
      * Constructs a new PictureCollection object with a root object
      */
@@ -817,7 +818,7 @@ public class PictureCollection {
                 }
             }
         }
-        
+
         getYearsTreeNode().removeAllChildren();
         for ( String year : years ) {
             addYearQuery( year );
@@ -843,6 +844,7 @@ public class PictureCollection {
             setUnsavedUpdates( false );
             success = originalFile.delete();
             Settings.pushRecentCollection( xmlFile.toString() );
+            JpoEventBus.getInstance().post( new RecentCollectionsChangedEvent() );
             return true;
         }
     }
@@ -886,9 +888,9 @@ public class PictureCollection {
         return parentGroups.toArray( new SortableDefaultMutableTreeNode[0] );
     }
     /**
-     * This Hash Set holds references to the selected nodes.
+     * A reference to the selected nodes.
      */
-    public final ArrayList<SortableDefaultMutableTreeNode> selection = new ArrayList<SortableDefaultMutableTreeNode>();
+    public final ArrayList<SortableDefaultMutableTreeNode> selection = new ArrayList<>();
 
     /**
      * This method places the current {@link SortableDefaultMutableTreeNode}
@@ -926,14 +928,14 @@ public class PictureCollection {
     }
 
     /**
-     * This method clears selection HashSet that refers to the selected
+     * This method clears selection that refers to the selected
      * highlighted thumbnails and fires unselectedEvents
      */
     public void clearSelection() {
         //can't use iterator or there is a concurrent modification exception
         Object[] array = selection.toArray();
-        for ( Object item : array ) {
-            removeFromSelection( (SortableDefaultMutableTreeNode) item );
+        for ( Object node : array ) {
+            removeFromSelection( (SortableDefaultMutableTreeNode) node );
         }
     }
 
@@ -958,6 +960,15 @@ public class PictureCollection {
      */
     public SortableDefaultMutableTreeNode[] getSelectedNodes() {
         return (SortableDefaultMutableTreeNode[]) selection.toArray( new SortableDefaultMutableTreeNode[selection.size()] );
+    }
+
+    /**
+     * returns an ArrayList of the selected nodes.
+     *
+     * @return an ArrayList of the selected nodes
+     */
+    public ArrayList<SortableDefaultMutableTreeNode> getSelectedNodesAsArrayList() {
+        return selection;
     }
 
     /**

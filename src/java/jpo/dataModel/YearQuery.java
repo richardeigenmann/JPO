@@ -170,11 +170,8 @@ public class YearQuery implements Serializable, Query {
      * @return The ArrayList of nodes.
      */
     public ArrayList<SortableDefaultMutableTreeNode> extractSearchResults() {
-        LOGGER.info( getLowerDateRange().toString() );
-        LOGGER.info( getUpperDateRange().toString() );
-
         SortableDefaultMutableTreeNode testNode;
-        searchResults = new ArrayList<SortableDefaultMutableTreeNode>();
+        searchResults = new ArrayList<>();
 
         for ( Enumeration e = startNode.breadthFirstEnumeration(); e.hasMoreElements(); ) {
             testNode = (SortableDefaultMutableTreeNode) e.nextElement();

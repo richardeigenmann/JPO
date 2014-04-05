@@ -32,12 +32,13 @@ import jpo.dataModel.Tools;
 import jpo.gui.ApplicationJMenuBar;
 import jpo.gui.CollectionJTreeController;
 import jpo.gui.InfoPanelController;
+import jpo.gui.TagCloudController;
 import jpo.gui.ThumbnailPanelController;
 
 /*
  MainWindow.java:  main window of the JPO application
 
- Copyright (C) 2002 - 2012  Richard Eigenmann.
+ Copyright (C) 2002 - 2014  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -52,14 +53,13 @@ import jpo.gui.ThumbnailPanelController;
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 /**
- * MainWindow is the main window of the JPO application. Based on the MVC
- * pattern this is just the View object. The Jpo object is the controller.
+ *
+ * Main Window of the JPO application.
  *
  *
  * @author Richard Eigenmann, richard.eigenmann@gmail.com
  */
-public class MainWindow
-        extends JFrame {
+public class MainWindow extends JFrame {
 
     /**
      * Defines a logger for this class
@@ -81,7 +81,7 @@ public class MainWindow
             @Override
             public void windowClosing( WindowEvent e ) {
                 setDefaultCloseOperation( WindowConstants.DO_NOTHING_ON_CLOSE );
-                JpoEventBus.getInstance().post( new UnsavedUpdatesDialogRequest( new CloseApplicationRequest())  );
+                JpoEventBus.getInstance().post( new UnsavedUpdatesDialogRequest( new CloseApplicationRequest() ) );
             }
         } );
 
@@ -121,9 +121,22 @@ public class MainWindow
         jpoNavigatorJTabbedPane.setPreferredSize( Settings.jpoNavigatorJTabbedPanePreferredSize );
 
         InfoPanelController infoPanelController = new InfoPanelController();
+        infoPanelController.getInfoPanel().addComponentListener( new ComponentAdapter() {
+
+            @Override
+            public void componentResized( ComponentEvent event ) {
+                int leftDividerSpot = leftSplitPane.getDividerLocation();
+                if ( leftDividerSpot != Settings.preferredLeftDividerSpot ) {
+                    //LOGGER.info( String.format( "infoPanel was resized. Updating preferredLeftDividerSpot to: %d", leftDividerSpot ) );
+                    Settings.preferredLeftDividerSpot = leftDividerSpot;
+                    Settings.unsavedSettingChanges = true;
+                }
+            }
+        } );
 
         final JTabbedPane tabbedPane = new JTabbedPane();
-        tabbedPane.addTab( "Word Cloud", infoPanelController.getTagCloud() );
+        tabbedPane.addTab( "Word Cloud", new TagCloudController().getTagCloud() );
+     
 
         final JScrollPane statsScroller = new JScrollPane( infoPanelController.getInfoPanel() );
         statsScroller.setWheelScrollingEnabled( true );
@@ -131,13 +144,7 @@ public class MainWindow
         tabbedPane.addTab( "Stats", statsScroller );
 
         leftSplitPane.setBottomComponent( tabbedPane );
-        //LOGGER.info( String.format( "Setting divider to: %d", Settings.preferredLeftDividerSpot ) );
 
-        /**
-         * The pane that holds the main window. On the left will go the tree, on
-         * the right will go the thumbnails
-         *
-         */
         final JSplitPane masterSplitPane = new JSplitPane( JSplitPane.HORIZONTAL_SPLIT );
         masterSplitPane.setDividerSize( Settings.dividerWidth );
         masterSplitPane.setOneTouchExpandable( true );
@@ -161,20 +168,6 @@ public class MainWindow
         masterSplitPane.setRightComponent( new ThumbnailPanelController( new JScrollPane() ).getView() );
 
         leftSplitPane.setDividerLocation( Settings.preferredLeftDividerSpot );
-
-        infoPanelController.getInfoPanel().addComponentListener( new ComponentAdapter() {
-
-            @Override
-            public void componentResized( ComponentEvent event ) {
-                int leftDividerSpot = leftSplitPane.getDividerLocation();
-                if ( leftDividerSpot != Settings.preferredLeftDividerSpot ) {
-                    //LOGGER.info( String.format( "infoPanel was resized. Updating preferredLeftDividerSpot to: %d", leftDividerSpot ) );
-                    //Thread.dumpStack();
-                    Settings.preferredLeftDividerSpot = leftDividerSpot;
-                    Settings.unsavedSettingChanges = true;
-                }
-            }
-        } );
 
         jpoNavigatorJTabbedPane.addComponentListener( new ComponentAdapter() {
 

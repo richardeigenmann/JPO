@@ -36,6 +36,10 @@ import javax.swing.JProgressBar;
 import javax.swing.SwingUtilities;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
+import jpo.EventBus.CopyLocationsChangedEvent;
+import jpo.EventBus.JpoEventBus;
+import jpo.EventBus.RecentCollectionsChangedEvent;
+import jpo.gui.ThumbnailController;
 
 
 /*
@@ -107,7 +111,7 @@ public class SortableDefaultMutableTreeNode
 
     /**
      * Call this method to sort the Children of a node by a field. The value of
-     * sortCriteria can be one of null null     {@link Settings#DESCRIPTION}, {@link Settings#FILM_REFERENCE}, {@link Settings#CREATION_TIME},
+     * sortCriteria can be one of null null null     {@link Settings#DESCRIPTION}, {@link Settings#FILM_REFERENCE}, {@link Settings#CREATION_TIME},
      *   {@link Settings#COMMENT}, {@link Settings#PHOTOGRAPHER}, {@link Settings#COPYRIGHT_HOLDER}.
      *
      * @param sortCriteria The criteria by which the pictures should be sorted.
@@ -131,7 +135,6 @@ public class SortableDefaultMutableTreeNode
         }
         getPictureCollection().setUnsavedUpdates();
         getPictureCollection().setSendModelUpdates( true );
-        refreshThumbnail();
 
         // tell the collection that the structure changed
         LOGGER.fine( String.format( "Sending node structure changed event on node %s after sort", this.toString() ) );
@@ -149,7 +152,7 @@ public class SortableDefaultMutableTreeNode
     /**
      * Overridden method to allow sorting of nodes. It uses the static global
      * variable sortfield to figure out what to compare on. The value of
-     * sortfield can be one of null null     {@link Settings#DESCRIPTION}, {@link Settings#FILM_REFERENCE}, {@link Settings#CREATION_TIME},
+     * sortfield can be one of null null null     {@link Settings#DESCRIPTION}, {@link Settings#FILM_REFERENCE}, {@link Settings#CREATION_TIME},
      *   {@link Settings#COMMENT}, {@link Settings#PHOTOGRAPHER}, {@link Settings#COPYRIGHT_HOLDER}.
      *
      * @param o
@@ -931,6 +934,7 @@ public class SortableDefaultMutableTreeNode
 
         Tools.copyPicture( originalUrl, targetFile );
         Settings.memorizeCopyLocation( targetFile.getParent() );
+        JpoEventBus.getInstance().post( new CopyLocationsChangedEvent() );
     }
 
     /**
@@ -1341,6 +1345,7 @@ public class SortableDefaultMutableTreeNode
             InputStream is = new FileInputStream( fileToLoad );
             streamLoad( is );
             Settings.pushRecentCollection( fileToLoad.toString() );
+            JpoEventBus.getInstance().post( new RecentCollectionsChangedEvent() );
         }
     }
 
@@ -1480,25 +1485,6 @@ public class SortableDefaultMutableTreeNode
         return true;
     }
 
-    /**
-     * This method places a thumbnail creation request on the
-     * ThumbnailCreationQueue. It is here for convenience as it should be a
-     * controller doing this sort of stuff.
-     * @link PictureInfo#sendThumbnailChangedEvent()} event.
-     */
-    public void refreshThumbnail() {
-        if ( isRoot() ) {
-            LOGGER.fine( "Ingnoring the request for a thumbnail on the Root Node as the query for it's parent's children will fail" );
-            return;
-        }
-        LOGGER.fine( String.format( "refreshing the thumbnail on the node %s\nAbout to create the thubnail", this.toString() ) );
-        //ThumbnailController t = new ThumbnailController( Settings.thumbnailSize );
-        //t.setNode( new SingleNodeNavigator( this ), 0 );
-        ThumbnailCreationQueue.requestThumbnailCreation( null,
-                ThumbnailQueueRequest.HIGH_PRIORITY, true );
-        //LOGGER.fine( String.format( "Thumbnail %s created. Now chucking it on the creation queue", t.toString() ) );
-        //ThumbnailCreationQueue.requestThumbnailCreation( t, ThumbnailQueueRequest.HIGH_PRIORITY, true );
-    }
 
     /**
      * This method extracts the thumbnail location from the supplied node. It

@@ -13,7 +13,6 @@ import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import java.util.TreeSet;
-import java.util.Vector;
 import java.util.logging.Logger;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
@@ -23,7 +22,6 @@ import javax.swing.filechooser.FileSystemView;
 import jpo.export.HtmlDistillerOptions;
 import jpo.gui.CollectionJTreeController;
 import jpo.gui.Jpo;
-import jpo.gui.LocaleChangeListener;
 
 
 /*
@@ -594,7 +592,7 @@ public class Settings {
     /**
      * Collection of cameras
      */
-    public static Vector<Camera> cameras = new Vector<Camera>();
+    public static ArrayList<Camera> cameras = new ArrayList<>();
     /**
      * list of email senders
      */
@@ -905,8 +903,6 @@ public class Settings {
             }
 
         }
-
-        notifyRecentFilesChanged();  // why? RE, 20.1.2007
     }
 
     /**
@@ -1134,7 +1130,11 @@ public class Settings {
     }
 
     /**
-     * This method memorises a collection file name for the Open > Recent menu
+     * This method memorises a collection file name for the Open > Recent menu.
+     * <p>
+     * The caller should notify any listeners that the recentCollections changed
+     * by sending a 
+     * {@code JpoEventBus.getInstance().post( new RecentCollectionsChangedEvent() ); }
      *
      * @param recentFile The collection file name to be memorised
      */
@@ -1147,7 +1147,7 @@ public class Settings {
                     recentCollections[j] = recentCollections[j - 1];
                 }
                 recentCollections[ 0] = recentFile;
-                notifyRecentFilesChanged();
+                //notifyRecentFilesChanged();
                 return;
             }
         }
@@ -1157,56 +1157,25 @@ public class Settings {
             recentCollections[i] = recentCollections[i - 1];
         }
         recentCollections[ 0] = recentFile;
-        notifyRecentFilesChanged();
+        //notifyRecentFilesChanged();
         writeSettings();
     }
 
     /**
-     * This method clears all the recent collection file names
+     * This method clears all the recent collection file names.
+     * <p>
+     * The caller should notify any listeners that the recentCollections changed
+     * by sending a 
+     * {@code JpoEventBus.getInstance().post( new RecentCollectionsChangedEvent() ); }
      */
     public static void clearRecentCollection() {
         for ( int i = 0; i < Settings.MAX_MEMORISE; i++ ) {
             recentCollections[i] = null;
-            notifyRecentFilesChanged();
+            //notifyRecentFilesChanged();
             writeSettings();
         }
     }
 
-    /**
-     * This method needs to be called when the recentCollections Array is
-     * updated so that the listeners for this change are informed about the
-     * change.
-     */
-    private static void notifyRecentFilesChanged() {
-        for ( RecentFilesChangeListener recentFilesChangeListener : recentFilesChangeListeners ) {
-            recentFilesChangeListener.recentFilesChanged();
-        }
-    }
-    /**
-     * a Vector referring to the objects that want to find out about changes to
-     * the recently opened files
-     */
-    private static final Vector<RecentFilesChangeListener> recentFilesChangeListeners = new Vector<RecentFilesChangeListener>();
-
-    /**
-     * register the listening object of the status events
-     *
-     * @param listener The listener to be notified
-     */
-    public static void addRecentFilesChangeListener(
-            RecentFilesChangeListener listener ) {
-        recentFilesChangeListeners.add( listener );
-    }
-
-    /**
-     * deregister the listening object of the status events
-     *
-     * @param listener The listener to be removed
-     */
-    public static void removeRecentFilesChangeListener(
-            RecentFilesChangeListener listener ) {
-        recentFilesChangeListeners.remove( listener );
-    }
     /*
      * ------------------------------------------------------------------------------
      *
@@ -1253,13 +1222,21 @@ public class Settings {
      */
     public static final Locale[] supportedLocale = { Locale.ENGLISH, Locale.GERMAN, Locale.SIMPLIFIED_CHINESE, Locale.TRADITIONAL_CHINESE };
 
-    public static void setLocale( Locale newLocale ) {
+    /**
+     * Sets the new locale. As of 3 Apr 2014 this doesn't send a
+     * LocaleChangeEvent any more. Instead the widget changing the locale is
+     * expected to send a LocaledChangedEvent
+     *
+     * @param newLocale the new locale
+     * @return true if the locale was changed, false if not.
+     */
+    public static boolean setLocale( Locale newLocale ) {
         Locale oldLocale = currentLocale;
         try {
             jpoResources = ResourceBundle.getBundle( "jpo.gui.JpoResources", newLocale );
             currentLocale = newLocale;
         } catch ( MissingResourceException mre ) {
-            LOGGER.info( "Settings.setDefaults: MissingResourceException: " + mre.getMessage() );
+            LOGGER.info( mre.getMessage() );
             jpoResources = ResourceBundle.getBundle( "jpo.gui.JpoResources", DEFAULT_LOCALE );
             currentLocale = DEFAULT_LOCALE;
         }
@@ -1267,43 +1244,12 @@ public class Settings {
         captionFont = Font.decode( Settings.jpoResources.getString( "SettingsCaptionFont" ) );
 
         if ( currentLocale != oldLocale ) {
-            notifyLocaleChangeListeners();
+            //notifyLocaleChangeListeners();
+            return true;
         }
-    }
-    /**
-     * a Vector referring to the objects that want to find out about changes to
-     * the locale
-     */
-    private static final ArrayList<LocaleChangeListener> localeChangeListeners = new ArrayList<LocaleChangeListener>();
-
-    /**
-     * when the locale is changed this method must be called to inform the
-     * {@link LocaleChangeListener}s that the locale has changed.
-     */
-    private static void notifyLocaleChangeListeners() {
-        Iterator<LocaleChangeListener> i = localeChangeListeners.iterator();
-        while ( i.hasNext() ) {
-            i.next().localeChanged();
-        }
+        return false;
     }
 
-    /**
-     * register the listening object of the status events
-     *
-     * @param listener The listener to add
-     */
-    public static void addLocaleChangeListener( LocaleChangeListener listener ) {
-        localeChangeListeners.add( listener );
-    }
-
-    /**
-     * register the listening object of the status events
-     *
-     * @param listener The listener to remove
-     */
-    public static void removeLocaleChangeListener( LocaleChangeListener listener ) {
-        localeChangeListeners.remove( listener );
-    }
     /**
      * the resourceBundle is a Java thing that sorts out language customisation
      */
@@ -1333,11 +1279,18 @@ public class Settings {
     /**
      * This method memorizes the recent drop targets so that they can be
      * accessed more quickly next time round.
+     * <p>
+     * As of 4 April 2014 this method no longer sends notifications about the
+     * change as this is a GUI thing and doesn't belong in the data model.
+     * Instead send a
+     * {@link jpo.EventBus.RecentDropNodesChangedEvent RecentDropNodesChangedEvent}
+     * onto the EventBus so that GUI widgets can update themselves.
+     * <p>
+     * {@code JpoEventBus.getInstance().post( new RecentDropNodesChangedEvent() );}
      *
      * @param recentNode The recent drop target to add
      */
-    public static void memorizeGroupOfDropLocation(
-            SortableDefaultMutableTreeNode recentNode ) {
+    public static void memorizeGroupOfDropLocation( SortableDefaultMutableTreeNode recentNode ) {
         for ( int i = 0; i < MAX_DROPNODES; i++ ) {
             if ( ( recentDropNodes[i] != null )
                     && ( recentDropNodes[i].hashCode() == recentNode.hashCode() ) ) {
@@ -1355,66 +1308,48 @@ public class Settings {
             recentDropNodes[i] = recentDropNodes[i - 1];
         }
         recentDropNodes[ 0] = recentNode;
-        notifyRecentDropNodesChanged();
-    }
-    /**
-     * a Vector referring to the objects that want to find out about changes to
-     * the recently drop target nodes.
-     */
-    private static final Vector<RecentDropNodeListener> recentDropNodeListeners = new Vector<RecentDropNodeListener>();
-
-    /**
-     * register the listening object of the status events
-     *
-     * @param listener The listener to add
-     */
-    public static void addRecentDropNodeListener(
-            RecentDropNodeListener listener ) {
-        recentDropNodeListeners.add( listener );
+        //notifyRecentDropNodesChanged();
     }
 
     /**
-     * unregister the listening object of the status events
-     *
-     * @param listener the listener to remove
-     */
-    public static void removeRecentDropNodeListener(
-            RecentDropNodeListener listener ) {
-        recentDropNodeListeners.remove( listener );
-    }
-
-    /**
-     * notifies the listeners that the target drop nodes have changed.
-     */
-    private static void notifyRecentDropNodesChanged() {
-        for ( RecentDropNodeListener recentDropNodeListener : recentDropNodeListeners ) {
-            recentDropNodeListener.recentDropNodesChanged();
-        }
-    }
-
-    /**
-     * method to remove one of the recent Drop Nodes. It is important to check
+     * Method to remove one of the recent Drop Nodes. It is important to check
      * each time a node is deleted whether it or one of it's descendents is a
      * drop target as this would no longer be a valid target.
+     * <p>
+     * As of 4 April 2014 this method no longer sends notifications about the
+     * change as this is a GUI thing and doesn't belong in the data model.
+     * Instead send a
+     * {@link jpo.EventBus.RecentDropNodesChangedEvent RecentDropNodesChangedEvent}
+     * onto the EventBus so that GUI widgets can update themselves.
+     * <p>
+     * {@code JpoEventBus.getInstance().post( new RecentDropNodesChangedEvent() );}
      *
-     * @param deathNode rthe node to remove
+     * @param deathNode the node to remove
      */
-    public static void removeRecentDropNode(
-            SortableDefaultMutableTreeNode deathNode ) {
+    public static void removeRecentDropNode( SortableDefaultMutableTreeNode deathNode ) {
         for ( int i = 0; i < recentDropNodes.length; i++ ) {
             if ( deathNode == recentDropNodes[i] ) {
                 recentDropNodes[i] = null;
-                Settings.notifyRecentDropNodesChanged();
+                //Settings.notifyRecentDropNodesChanged();
             }
         }
     }
 
     /**
-     * clears the list of recent drop nodes
+     * Clears the list of recent drop nodes
+     * <p>
+     * As of 4 April 2014 this method no longer sends notifications about the
+     * change as this is a GUI thing and doesn't belong in the data model.
+     * Instead send a
+     * {@link jpo.EventBus.RecentDropNodesChangedEvent RecentDropNodesChangedEvent}
+     * onto the EventBus so that GUI widgets can update themselves.
+     * <p>
+     * {@code JpoEventBus.getInstance().post( new RecentDropNodesChangedEvent() );}
+     *
      */
     public static void clearRecentDropNodes() {
         recentDropNodes = new SortableDefaultMutableTreeNode[MAX_DROPNODES];
-        notifyRecentDropNodesChanged();
+       // notifyRecentDropNodesChanged();
     }
     /*
      * ------------------------------------------------------------------------------
@@ -1433,6 +1368,11 @@ public class Settings {
     /**
      * This method memorises the directories used in copy operations so that
      * they can be offered as options in drop down lists.
+     * <p>
+     * The callers of this method need to make sure they notify interested listeners
+     * of a change by calling:
+     * <p>
+     * {@code JpoEventBus.getInstance().post( new CopyLocationsChangedEvent() );}
      *
      * @param location The new location to memorise
      */
@@ -1455,7 +1395,7 @@ public class Settings {
 
         validateCopyLocations();
         writeSettings();
-        notifyCopyLocationsChanged();
+        //notifyCopyLocationsChanged();
     }
 
     /**
@@ -1516,7 +1456,7 @@ public class Settings {
         for ( int i = 0; i < MAX_MEMORISE; i++ ) {
             copyLocations[i] = null;
         }
-        notifyCopyLocationsChanged();
+        //notifyCopyLocationsChanged();
         writeSettings();
     }
 
@@ -1535,40 +1475,6 @@ public class Settings {
         }
         return new File( System.getProperty( "user.dir" ) );
     }
-    /**
-     * a Vector referring to the objects that want to find out about changes to
-     * the recently drop target nodes.
-     */
-    private static final Vector<CopyLocationsChangeListener> copyLocationChangeListeners = new Vector<CopyLocationsChangeListener>();
-
-    /**
-     * register the listening object of the status events
-     *
-     * @param listener The listener to add
-     */
-    public static void addCopyLocationsChangeListener(
-            CopyLocationsChangeListener listener ) {
-        copyLocationChangeListeners.add( listener );
-    }
-
-    /**
-     * deregister the listening object of the status events
-     *
-     * @param listener
-     */
-    public static void removeCopyLocationsChangeListener(
-            CopyLocationsChangeListener listener ) {
-        copyLocationChangeListeners.remove( listener );
-    }
-
-    /**
-     * notifies the listeners that the target drop nodes have changed.
-     */
-    private static void notifyCopyLocationsChanged() {
-        for ( CopyLocationsChangeListener copyLocationsChangeListener : copyLocationChangeListeners ) {
-            copyLocationsChangeListener.copyLocationsChanged();
-        }
-    }
     /*
      * ------------------------------------------------------------------------------
      * Stuff for user Functions
@@ -1585,38 +1491,5 @@ public class Settings {
      * Array of user function commands
      */
     public static String[] userFunctionCmd = new String[maxUserFunctions];
-    /**
-     * a Vector referring to the objects that want to find out about changes to
-     * the recently drop target nodes.
-     */
-    private static final Vector<UserFunctionsChangeListener> userFunctionsChangeListeners = new Vector<UserFunctionsChangeListener>();
 
-    /**
-     * register the listening object of the changes in user function
-     *
-     * @param listener The listener to add
-     */
-    public static void addUserFunctionsChangeListener(
-            UserFunctionsChangeListener listener ) {
-        userFunctionsChangeListeners.add( listener );
-    }
-
-    /**
-     * deregister the listening object of the user function change events
-     *
-     * @param listener the listener to remove
-     */
-    public static void removeUserFunctionsChangeListener(
-            UserFunctionsChangeListener listener ) {
-        userFunctionsChangeListeners.remove( listener );
-    }
-
-    /**
-     * notifies the listeners that the target drop nodes have changed.
-     */
-    public static void notifyUserFunctionsChanged() {
-        for ( UserFunctionsChangeListener userFunctionsChangeListener : userFunctionsChangeListeners ) {
-            userFunctionsChangeListener.userFunctionsChanged();
-        }
-    }
 }

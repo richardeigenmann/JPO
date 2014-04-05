@@ -42,7 +42,6 @@ import jpo.EventBus.FileLoadRequest;
 import jpo.EventBus.FileSaveAsRequest;
 import jpo.EventBus.FileSaveRequest;
 import jpo.EventBus.FindDuplicatesRequest;
-import jpo.EventBus.GroupSelectionEvent;
 import jpo.EventBus.OpenHelpAboutFrameRequest;
 import jpo.EventBus.JpoEventBus;
 import jpo.EventBus.MoveNodeDownRequest;
@@ -80,7 +79,7 @@ import jpo.EventBus.UnsavedUpdatesDialogRequest;
 import jpo.EventBus.YearBrowserRequest;
 import jpo.EventBus.YearlyAnalysisRequest;
 import jpo.dataModel.DuplicatesQuery;
-import jpo.dataModel.FlatFileDistiller;
+import jpo.gui.swing.FlatFileDistiller;
 import jpo.dataModel.FlatGroupNavigator;
 import jpo.dataModel.GroupInfo;
 import jpo.dataModel.NodeNavigatorInterface;
@@ -454,7 +453,6 @@ public class ApplicationEventHandler {
 
                     return;
                 }
-                //positionToNode( Settings.pictureCollection.getRootNode() );
                 JpoEventBus.getInstance().post( new ShowGroupRequest( Settings.pictureCollection.getRootNode() ) );
             }
         };
@@ -639,24 +637,13 @@ public class ApplicationEventHandler {
     }
 
     /**
-     * The App will respond to this request by saving the file names to a flat
-     * file
+     * The App will respond to this request by creating a FlatFileDistiller
      *
      * @param request
      */
     @Subscribe
-    public void handleGroupExportFlatFileRequest( ExportGroupToFlatFileRequest request ) {
-        SortableDefaultMutableTreeNode nodeToExport = request.getNode();
-        javax.swing.JFileChooser jFileChooser = new javax.swing.JFileChooser();
-        jFileChooser.setFileSelectionMode( javax.swing.JFileChooser.FILES_ONLY );
-        jFileChooser.setDialogTitle( Settings.jpoResources.getString( "saveFlatFileTitle" ) );
-        jFileChooser.setApproveButtonText( Settings.jpoResources.getString( "saveFlatFileButtonLabel" ) );
-        jFileChooser.setCurrentDirectory( Settings.getMostRecentCopyLocation() );
-        int returnVal = jFileChooser.showSaveDialog( Settings.anchorFrame );
-        if ( returnVal == JFileChooser.APPROVE_OPTION ) {
-            File chosenFile = jFileChooser.getSelectedFile();
-            new FlatFileDistiller( chosenFile, nodeToExport );
-        }
+    public void handleExportGroupFlatFileRequest( ExportGroupToFlatFileRequest request ) {
+        new FlatFileDistiller( request );
     }
 
     /**

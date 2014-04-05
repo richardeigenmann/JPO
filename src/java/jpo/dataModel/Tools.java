@@ -1092,6 +1092,7 @@ public class Tools {
     public static void warnOnEDT() {
         if ( SwingUtilities.isEventDispatchThread() ) {
             LOGGER.warning( "We are on the EDT and should not be! This is inefficient Continuing normally." );
+            Thread.dumpStack();
             for ( StackTraceElement trace : new Throwable().getStackTrace() ) {
                 LOGGER.fine( trace.toString() );
             }

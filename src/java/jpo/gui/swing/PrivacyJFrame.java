@@ -13,6 +13,8 @@ import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingWorker;
+import jpo.EventBus.JpoEventBus;
+import jpo.EventBus.RecentCollectionsChangedEvent;
 import jpo.dataModel.Settings;
 import jpo.dataModel.Tools;
 import jpo.gui.ProgressGui;
@@ -226,6 +228,7 @@ public class PrivacyJFrame
          */
         public void clearRecentFiles() {
             Settings.clearRecentCollection();
+            JpoEventBus.getInstance().post( new RecentCollectionsChangedEvent() );
         }
 
 

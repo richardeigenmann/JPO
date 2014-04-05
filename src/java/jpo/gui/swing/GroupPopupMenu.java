@@ -1,5 +1,6 @@
 package jpo.gui.swing;
 
+import com.google.common.eventbus.Subscribe;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -27,6 +28,9 @@ import jpo.EventBus.MoveNodeToNodeRequest;
 import jpo.EventBus.MoveNodeToTopRequest;
 import jpo.EventBus.MoveNodeUpRequest;
 import jpo.EventBus.OpenSearchDialogRequest;
+import jpo.EventBus.RecentCollectionsChangedEvent;
+import jpo.EventBus.RecentDropNodesChangedEvent;
+import jpo.EventBus.RefreshThumbnailRequest;
 import jpo.EventBus.RemoveNodeRequest;
 import jpo.EventBus.ShowCategoryUsageEditorRequest;
 import jpo.EventBus.ShowGroupAsTableRequest;
@@ -34,18 +38,17 @@ import jpo.EventBus.ShowGroupInfoEditorRequest;
 import jpo.EventBus.ShowGroupRequest;
 import jpo.EventBus.ShowPictureRequest;
 import jpo.EventBus.SortGroupRequest;
-import jpo.dataModel.RecentDropNodeListener;
-import jpo.dataModel.RecentFilesChangeListener;
 import jpo.dataModel.Settings;
 import jpo.dataModel.SortOption;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
 import jpo.dataModel.Tools;
+import jpo.gui.ThumbnailQueueRequest;
 import jpo.gui.TreeNodeController;
 
 /*
  GroupPopupMenu.java: popup menu for groups
 
- Copyright (C) 2002 - 2013  Richard Eigenmann.
+ Copyright (C) 2002 - 2014  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -60,16 +63,10 @@ import jpo.gui.TreeNodeController;
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 /**
- * A class that generates a popup menu for a group node. This became necessary
- * primarily because the code was getting a bit long and was cluttering up a
- * different class. Separating out the popup menu and making it an object and
- * forcing an interface on the object instantiating it is probably more in line
- * with the OO philosophy.
+ * Generates a popup menu on a group node
  *
  */
-public class GroupPopupMenu
-        extends JPopupMenu
-        implements RecentDropNodeListener, RecentFilesChangeListener {
+public class GroupPopupMenu extends JPopupMenu {
 
     /**
      * An array of recently opened collections.
@@ -98,6 +95,9 @@ public class GroupPopupMenu
      */
     public GroupPopupMenu( final SortableDefaultMutableTreeNode node ) {
         this.popupNode = node;
+        JpoEventBus.getInstance().register( new RecentCollectionsChangedEventHandler() );
+        JpoEventBus.getInstance().register( new RecentDropNodeChangedEventHandler() );
+
         Runnable r = new Runnable() {
 
             @Override
@@ -169,7 +169,15 @@ public class GroupPopupMenu
 
                 @Override
                 public void actionPerformed( ActionEvent e ) {
-                    popupNode.refreshThumbnail();
+                    ArrayList<SortableDefaultMutableTreeNode> actionNodes = new ArrayList<>();
+                    if ( ( Settings.pictureCollection.countSelectedNodes() > 0 ) && ( Settings.pictureCollection.isSelected( popupNode ) ) ) {
+                        actionNodes.addAll( Settings.pictureCollection.getSelectedNodesAsArrayList() );
+                    } else {
+                        actionNodes.add( popupNode );
+                    }
+
+                    JpoEventBus.getInstance().post( new RefreshThumbnailRequest( popupNode, ThumbnailQueueRequest.HIGH_PRIORITY ) );
+
                 }
             } );
             add( groupRefreshJMenuItem );
@@ -269,6 +277,7 @@ public class GroupPopupMenu
                     public void actionPerformed( ActionEvent e ) {
                         popupNode.moveToLastChild( Settings.recentDropNodes[dropnode] );
                         Settings.memorizeGroupOfDropLocation( Settings.recentDropNodes[dropnode] );
+                        JpoEventBus.getInstance().post( new RecentDropNodesChangedEvent() );
                     }
                 } );
                 moveGroupNodeJMenu.add( recentDropNodes[i] );
@@ -345,8 +354,15 @@ public class GroupPopupMenu
             groupRemove.addActionListener( new ActionListener() {
 
                 @Override
-                public void actionPerformed( ActionEvent e ) {
-                    JpoEventBus.getInstance().post( new RemoveNodeRequest( popupNode ) );
+                public void actionPerformed( ActionEvent event ) {
+                    ArrayList<SortableDefaultMutableTreeNode> actionNodes = new ArrayList<>();
+                    if ( ( Settings.pictureCollection.countSelectedNodes() > 0 ) && ( Settings.pictureCollection.isSelected( popupNode ) ) ) {
+                        actionNodes.addAll( Settings.pictureCollection.getSelectedNodesAsArrayList() );
+                    } else {
+                        actionNodes.add( popupNode );
+                    }
+
+                    JpoEventBus.getInstance().post( new RemoveNodeRequest( actionNodes ) );
                 }
             } );
             add( groupRemove );
@@ -359,7 +375,7 @@ public class GroupPopupMenu
 
                 @Override
                 public void actionPerformed( ActionEvent e ) {
-                    JpoEventBus.getInstance().post( new ConsolidateGroupRequest( popupNode ) );
+                    JpoEventBus.getInstance().post( new ConsolidateGroupRequest( popupNode, null ) );
                 }
             } );
             add( consolidateMoveJMenuItem );
@@ -505,7 +521,6 @@ public class GroupPopupMenu
             @Override
             public void actionPerformed( ActionEvent e ) {
                 JpoEventBus.getInstance().post( new ShowGroupInfoEditorRequest( popupNode ) );
-                //caller.requestEditGroupNode( popupNode );
             }
         } );
         add( groupEditJMenuItem );
@@ -513,9 +528,52 @@ public class GroupPopupMenu
     }
 
     /**
-     * Here we receive notification that the nodes have been updated
+     * checks if the event object is one of the drop nodes
+     *
+     * @return returns true if the object was found in the list and the action
+     * was submitted.
      */
-    @Override
+    private boolean checkDropNodes( Object o ) {
+        for ( int i = 0; i < Settings.MAX_DROPNODES; i++ ) {
+            if ( ( recentDropNodes[i] != null ) && ( o.hashCode() == recentDropNodes[i].hashCode() ) ) {
+                ArrayList<SortableDefaultMutableTreeNode> movingNodes = new ArrayList<>();
+                movingNodes.add( popupNode );
+                JpoEventBus.getInstance().post( new MoveNodeToNodeRequest( movingNodes, Settings.recentDropNodes[i] ) );
+                Settings.memorizeGroupOfDropLocation( Settings.recentDropNodes[i] );
+                JpoEventBus.getInstance().post( new RecentDropNodesChangedEvent() );
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Handler for the RecentDropNodeChangedEvent
+     */
+    private class RecentDropNodeChangedEventHandler {
+
+        /**
+         * Handle the event by updating the submenu items
+         *
+         * @param event
+         */
+        @Subscribe
+        public void handleRecentDropNodeChangedEventHandler( RecentDropNodesChangedEvent event ) {
+            SwingUtilities.invokeLater( new Runnable() {
+
+                @Override
+                public void run() {
+                    recentDropNodesChanged();
+                }
+            } );
+
+        }
+    }
+
+    /**
+     * Here we receive notification that the drop nodes have been updated and go
+     * off and update the submenu items
+     */
     public void recentDropNodesChanged() {
         boolean dropNodesVisible = false;
         for ( int i = 0; i < Settings.MAX_DROPNODES; i++ ) {
@@ -532,24 +590,29 @@ public class GroupPopupMenu
         } else {
             movePictureNodeSeparator.setVisible( false );
         }
-
     }
 
     /**
-     * checks if the event object is one of the drop nodes
-     *
-     * @return returns true if the object was found in the list and the action
-     * was submitted.
+     * Handler for the RecentCollectionsChangedEvent
      */
-    private boolean checkDropNodes( Object o ) {
-        for ( int i = 0; i < Settings.MAX_DROPNODES; i++ ) {
-            if ( ( recentDropNodes[i] != null ) && ( o.hashCode() == recentDropNodes[i].hashCode() ) ) {
-                JpoEventBus.getInstance().post( new MoveNodeToNodeRequest( popupNode, Settings.recentDropNodes[i] ) );
-                Settings.memorizeGroupOfDropLocation( Settings.recentDropNodes[i] );
-                return true;
-            }
+    private class RecentCollectionsChangedEventHandler {
+
+        /**
+         * Handle the event by updating the submenu items
+         *
+         * @param event
+         */
+        @Subscribe
+        public void handleRecentCollectionsChangedEvent( RecentCollectionsChangedEvent event ) {
+            SwingUtilities.invokeLater( new Runnable() {
+
+                @Override
+                public void run() {
+                    recentFilesChanged();
+                }
+            } );
+
         }
-        return false;
     }
 
     /**
@@ -557,7 +620,6 @@ public class GroupPopupMenu
      * recentCollections in Settings. Can be called by the interface from the
      * listener on the Settings object.
      */
-    @Override
     public void recentFilesChanged() {
         Tools.checkEDT();
         for ( int i = 0; i < Settings.recentCollections.length; i++ ) {

@@ -1052,8 +1052,8 @@ public class PictureInfo
      *
      * @param angle
      */
-    public synchronized void rotate( int angle ) {
-        setRotation( (int) ( getRotation() + angle ) % 360 );
+    public synchronized void rotate( double angle ) {
+        setRotation( ( getRotation() + angle ) % 360 );
     }
 
     /**
