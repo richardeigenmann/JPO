@@ -78,6 +78,7 @@ import jpo.EventBus.StartNewCollectionRequest;
 import jpo.EventBus.UnsavedUpdatesDialogRequest;
 import jpo.EventBus.YearBrowserRequest;
 import jpo.EventBus.YearlyAnalysisRequest;
+import jpo.cache.JpoCache;
 import jpo.dataModel.DuplicatesQuery;
 import jpo.gui.swing.FlatFileDistiller;
 import jpo.dataModel.FlatGroupNavigator;
@@ -230,6 +231,8 @@ public class ApplicationEventHandler {
         if ( Settings.unsavedSettingChanges ) {
             Settings.writeSettings();
         }
+        
+        JpoCache.getInstance().shutdown();
 
         LOGGER.info( "Exiting JPO\n------------------------------------------------------------" );
 

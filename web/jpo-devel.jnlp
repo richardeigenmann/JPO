@@ -24,6 +24,7 @@
         <j2se version="1.7+" initial-heap-size="64m" max-heap-size="800m"/>
         <jar href="jpo-0.11.jar" download="eager" main="true"/>
         <jar href="commons-compress-1.8.jar" download="lazy" />
+        <jar href="commons-io-2.4.jar" download="lazy" />
         <jar href="commons-net-3.3.jar" download="lazy" />
         <jar href="gdata-core-1.0.jar" download="lazy" />
         <jar href="gdata-maps-2.0.jar" download="lazy" />
@@ -31,6 +32,7 @@
         <jar href="gdata-photos-2.0.jar" download="lazy" />
         <jar href="guava-16.0.1.jar" download="lazy" />
         <jar href="javax.mail-1.5.1.jar" download="lazy" />
+        <jar href="jcs-1.3.jar" download="lazy" />
         <jar href="jsch-0.1.51.jar" download="lazy" />
         <jar href="metadata-extractor-2.6.4.jar" download="lazy" />
         <jar href="miglayout-4.0.jar" download="eager" />

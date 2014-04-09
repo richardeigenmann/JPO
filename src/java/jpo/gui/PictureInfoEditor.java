@@ -277,7 +277,7 @@ public class PictureInfoEditor extends JFrame {
         spinner.setEditor( new JSpinner.NumberEditor( spinner, "###.##" ) );
         rotationPanel.add( spinner );
 
-        JButton rotateLeftJButton = new JButton( new ImageIcon( Settings.cl.getResource( "jpo/images/icon_RotCCDown.gif" ) ) ) {
+        JButton rotateLeftJButton = new JButton( new ImageIcon( Settings.CLASS_LOADER.getResource( "jpo/images/icon_RotCCDown.gif" ) ) ) {
             {
                 setMnemonic( KeyEvent.VK_L );
                 addActionListener( new ActionListener() {
@@ -295,7 +295,7 @@ public class PictureInfoEditor extends JFrame {
         /**
          * Button to rotate right
          */
-        JButton rotateRightJButton = new JButton( new ImageIcon( Settings.cl.getResource( "jpo/images/icon_RotCWDown.gif" ) ) ) {
+        JButton rotateRightJButton = new JButton( new ImageIcon( Settings.CLASS_LOADER.getResource( "jpo/images/icon_RotCWDown.gif" ) ) ) {
             {
                 setMnemonic( KeyEvent.VK_R );
                 addActionListener( new ActionListener() {

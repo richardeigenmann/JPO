@@ -74,7 +74,7 @@ public class ExifInfoTest
      * Test that we get the correct data off a Nikon D100 image
      */
     public void testExifInfoD100() {
-        ExifInfo exifInfo = new ExifInfo(Settings.cl.getResource("exif-test-nikon-d100-1.jpg"));
+        ExifInfo exifInfo = new ExifInfo(Settings.CLASS_LOADER.getResource("exif-test-nikon-d100-1.jpg"));
         exifInfo.decodeExifTags();
         assertEquals("Aperture parsing verification", "F11", exifInfo.aperture);
         assertEquals("Camera parsing verification", "NIKON D100", exifInfo.camera);
@@ -95,7 +95,7 @@ public class ExifInfoTest
      * doesn't have location info
      */
     public void testExifInfoS4() {
-        ExifInfo exifInfo = new ExifInfo(Settings.cl.getResource("exif-test-samsung-s4.jpg"));
+        ExifInfo exifInfo = new ExifInfo(Settings.CLASS_LOADER.getResource("exif-test-samsung-s4.jpg"));
         exifInfo.decodeExifTags();
         assertEquals("Aperture parsing verification", "F2.2", exifInfo.aperture);
         assertEquals("Camera parsing verification", "GT-I9505", exifInfo.camera);
@@ -115,7 +115,7 @@ public class ExifInfoTest
      * doesn't have location info
      */
     public void testExifInfoS4Loc() {
-        ExifInfo exifInfo = new ExifInfo(Settings.cl.getResource("exif-test-samsung-s4-loc.jpg"));
+        ExifInfo exifInfo = new ExifInfo(Settings.CLASS_LOADER.getResource("exif-test-samsung-s4-loc.jpg"));
         exifInfo.decodeExifTags();
         assertEquals("Aperture parsing verification", "F2.2", exifInfo.aperture);
         assertEquals("Camera parsing verification", "GT-I9505", exifInfo.camera);
@@ -131,7 +131,7 @@ public class ExifInfoTest
     }
 
     public void testExifInfoEos350d() {
-        ExifInfo exifInfo = new ExifInfo(Settings.cl.getResource("exif-test-canon-eos-350d.jpg"));
+        ExifInfo exifInfo = new ExifInfo(Settings.CLASS_LOADER.getResource("exif-test-canon-eos-350d.jpg"));
         exifInfo.decodeExifTags();
         //System.out.println( exifInfo.getAllTags() );
         assertEquals("Aperture parsing verification", "F20", exifInfo.aperture);
@@ -150,7 +150,7 @@ public class ExifInfoTest
     }
 
     public void testExifInfoCanonEos60D() {
-        ExifInfo exifInfo = new ExifInfo(Settings.cl.getResource("exif-test-canon-eos-60d.jpg"));
+        ExifInfo exifInfo = new ExifInfo(Settings.CLASS_LOADER.getResource("exif-test-canon-eos-60d.jpg"));
         exifInfo.decodeExifTags();
         //System.out.println( exifInfo.getAllTags() );
         /*assertEquals("Aperture parsing verification", "F11.3", exifInfo.aperture);
@@ -168,7 +168,7 @@ public class ExifInfoTest
     }
 
     public void testExifInfoCybershot1() {
-        ExifInfo exifInfo = new ExifInfo(Settings.cl.getResource("exif-test-sony-cybershot-1.jpg"));
+        ExifInfo exifInfo = new ExifInfo(Settings.CLASS_LOADER.getResource("exif-test-sony-cybershot-1.jpg"));
         exifInfo.decodeExifTags();
         //System.out.println( exifInfo.getAllTags() );
         assertEquals("Aperture parsing verification", "F4", exifInfo.aperture);
@@ -185,7 +185,7 @@ public class ExifInfoTest
     }
 
     public void testExifInfoSonyD700() {
-        ExifInfo exifInfo = new ExifInfo(Settings.cl.getResource("exif-test-sony-d700.jpg"));
+        ExifInfo exifInfo = new ExifInfo(Settings.CLASS_LOADER.getResource("exif-test-sony-d700.jpg"));
         exifInfo.decodeExifTags();
         //System.out.println( exifInfo.getAllTags() );
         assertEquals("Aperture parsing verification", "F2.4", exifInfo.aperture);
@@ -202,7 +202,7 @@ public class ExifInfoTest
     }
     
         public void testExifInfoSonyP200() {
-        ExifInfo exifInfo = new ExifInfo(Settings.cl.getResource("exif-test-sony-P200.jpg"));
+        ExifInfo exifInfo = new ExifInfo(Settings.CLASS_LOADER.getResource("exif-test-sony-P200.jpg"));
         exifInfo.decodeExifTags();
         //System.out.println( exifInfo.getAllTags() );
         assertEquals("Aperture parsing verification", "F5.6", exifInfo.aperture);

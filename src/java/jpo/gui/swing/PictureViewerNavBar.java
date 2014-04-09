@@ -64,7 +64,7 @@ public class PictureViewerNavBar
         add( previousJButton );
         add( nextJButton );
 
-        final JButton rotateLeftJButton = new NavBarButton( new ImageIcon( Settings.cl.getResource( "jpo/images/icon_RotCCDown.gif" ) ) ) {
+        final JButton rotateLeftJButton = new NavBarButton( new ImageIcon( Settings.CLASS_LOADER.getResource( "jpo/images/icon_RotCCDown.gif" ) ) ) {
 
             {
                 setMnemonic( KeyEvent.VK_L );
@@ -80,7 +80,7 @@ public class PictureViewerNavBar
         };
         add( rotateLeftJButton );
 
-        final JButton rotateRightJButton = new NavBarButton( new ImageIcon( Settings.cl.getResource( "jpo/images/icon_RotCWDown.gif" ) ) ) {
+        final JButton rotateRightJButton = new NavBarButton( new ImageIcon( Settings.CLASS_LOADER.getResource( "jpo/images/icon_RotCWDown.gif" ) ) ) {
 
             {
                 setMnemonic( KeyEvent.VK_R );
@@ -96,7 +96,7 @@ public class PictureViewerNavBar
         };
         add( rotateRightJButton );
 
-        final JButton zoomInJButton = new NavBarButton( new ImageIcon( Settings.cl.getResource( "jpo/images/MagnifyPlus.gif" ) ) ) {
+        final JButton zoomInJButton = new NavBarButton( new ImageIcon( Settings.CLASS_LOADER.getResource( "jpo/images/MagnifyPlus.gif" ) ) ) {
 
             {
                 addActionListener( new ActionListener() {
@@ -111,7 +111,7 @@ public class PictureViewerNavBar
         };
         add( zoomInJButton );
 
-        final JButton zoomOutJButton = new NavBarButton( new ImageIcon( Settings.cl.getResource( "jpo/images/MagnifyMinus.gif" ) ) ) {
+        final JButton zoomOutJButton = new NavBarButton( new ImageIcon( Settings.CLASS_LOADER.getResource( "jpo/images/MagnifyMinus.gif" ) ) ) {
 
             {
                 addActionListener( new ActionListener() {
@@ -126,7 +126,7 @@ public class PictureViewerNavBar
         };
         add( zoomOutJButton );
 
-        final JButton fullScreenJButton = new NavBarButton( new ImageIcon( Settings.cl.getResource( "jpo/images/icon_Frames.gif" ) ) ) {
+        final JButton fullScreenJButton = new NavBarButton( new ImageIcon( Settings.CLASS_LOADER.getResource( "jpo/images/icon_Frames.gif" ) ) ) {
 
             {
                 setMnemonic( KeyEvent.VK_F );
@@ -142,7 +142,7 @@ public class PictureViewerNavBar
         };
 
         add( fullScreenJButton );
-        final JButton popupMenuJButton = new NavBarButton( new ImageIcon( Settings.cl.getResource( "jpo/images/icon_FingerUp.gif" ) ) ) {
+        final JButton popupMenuJButton = new NavBarButton( new ImageIcon( Settings.CLASS_LOADER.getResource( "jpo/images/icon_FingerUp.gif" ) ) ) {
 
             {
                 setMnemonic( KeyEvent.VK_M );
@@ -159,7 +159,7 @@ public class PictureViewerNavBar
 
         add( popupMenuJButton );
 
-        final JButton infoJButton = new NavBarButton( new ImageIcon( Settings.cl.getResource( "jpo/images/icon_info.gif" ) ) ) {
+        final JButton infoJButton = new NavBarButton( new ImageIcon( Settings.CLASS_LOADER.getResource( "jpo/images/icon_info.gif" ) ) ) {
 
             {
                 setMnemonic( KeyEvent.VK_I );
@@ -178,7 +178,7 @@ public class PictureViewerNavBar
         /**
          * Button to resize the image so that it fits in the screen.
          */
-        final JButton resetJButton = new NavBarButton( new ImageIcon( Settings.cl.getResource( "jpo/images/icon_reset.gif" ) ) ) {
+        final JButton resetJButton = new NavBarButton( new ImageIcon( Settings.CLASS_LOADER.getResource( "jpo/images/icon_reset.gif" ) ) ) {
 
             {
                 setMnemonic( KeyEvent.VK_ESCAPE );
@@ -209,7 +209,7 @@ public class PictureViewerNavBar
         } );
         add( speedSlider );
 
-        final JButton closeJButton = new NavBarButton( new ImageIcon( Settings.cl.getResource( "jpo/images/icon_close2.gif" ) ) ) {
+        final JButton closeJButton = new NavBarButton( new ImageIcon( Settings.CLASS_LOADER.getResource( "jpo/images/icon_close2.gif" ) ) ) {
 
             {
                 setMnemonic( KeyEvent.VK_C );
@@ -272,27 +272,27 @@ public class PictureViewerNavBar
     /**
      * Icon pointing right
      */
-    private static final ImageIcon ICON_ARROW_RIGHT = new ImageIcon( Settings.cl.getResource( "jpo/images/icon_next.gif" ) );
+    private static final ImageIcon ICON_ARROW_RIGHT = new ImageIcon( Settings.CLASS_LOADER.getResource( "jpo/images/icon_next.gif" ) );
     /**
      * Double right pointing icon
      */
-    private static final ImageIcon ICON_DOUBLE_ARROW_RIGHT = new ImageIcon( Settings.cl.getResource( "jpo/images/icon_nextnext.gif" ) );
+    private static final ImageIcon ICON_DOUBLE_ARROW_RIGHT = new ImageIcon( Settings.CLASS_LOADER.getResource( "jpo/images/icon_nextnext.gif" ) );
     /**
      * Icon pointing right at a bar to indicate you can't go right
      */
-    private static final ImageIcon ICON_ARROW_RIGHT_STOP = new ImageIcon( Settings.cl.getResource( "jpo/images/icon_nonext.gif" ) );
+    private static final ImageIcon ICON_ARROW_RIGHT_STOP = new ImageIcon( Settings.CLASS_LOADER.getResource( "jpo/images/icon_nonext.gif" ) );
     /**
      * Icon pointing left
      */
-    private static final ImageIcon ICON_ARROW_LEFT = new ImageIcon( Settings.cl.getResource( "jpo/images/icon_previous.gif" ) );
+    private static final ImageIcon ICON_ARROW_LEFT = new ImageIcon( Settings.CLASS_LOADER.getResource( "jpo/images/icon_previous.gif" ) );
     /**
      * Double left pointing icon
      */
-    private static final ImageIcon ICON_DOUBLE_ARROW_LEFT = new ImageIcon( Settings.cl.getResource( "jpo/images/icon_prevprev.gif" ) );
+    private static final ImageIcon ICON_DOUBLE_ARROW_LEFT = new ImageIcon( Settings.CLASS_LOADER.getResource( "jpo/images/icon_prevprev.gif" ) );
     /**
      * Icon pointing left with a bar to indicate you can't go left
      */
-    private static final ImageIcon ICON_ARROW_LEFT_STOP = new ImageIcon( Settings.cl.getResource( "jpo/images/icon_noprev.gif" ) );
+    private static final ImageIcon ICON_ARROW_LEFT_STOP = new ImageIcon( Settings.CLASS_LOADER.getResource( "jpo/images/icon_noprev.gif" ) );
     /**
      * Button that is put in the NavigationPanel to allow the user to navigate
      * to the previous picture. Depending on the context (previous pictures in
@@ -389,11 +389,11 @@ public class PictureViewerNavBar
     /**
      * Icon to indicate that the timer is available
      */
-    public static final ImageIcon ICON_CLOCK_OFF = new ImageIcon( Settings.cl.getResource( "jpo/images/icon_clock_off.gif" ) );
+    public static final ImageIcon ICON_CLOCK_OFF = new ImageIcon( Settings.CLASS_LOADER.getResource( "jpo/images/icon_clock_off.gif" ) );
     /**
      * Icon to indicate that the timer is active
      */
-    public static final ImageIcon ICON_CLOCK_ON = new ImageIcon( Settings.cl.getResource( "jpo/images/icon_clock_on.gif" ) );
+    public static final ImageIcon ICON_CLOCK_ON = new ImageIcon( Settings.CLASS_LOADER.getResource( "jpo/images/icon_clock_on.gif" ) );
     /**
      * Button for the automatic advance timer.
      */

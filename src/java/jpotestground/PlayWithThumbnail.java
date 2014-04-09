@@ -40,7 +40,7 @@ public class PlayWithThumbnail extends JFrame implements ChangeListener {
 
     Box box = new Box();
 
-    ImageIcon testimage = new ImageIcon( Settings.cl.getResource( "jpo/images/testimage.jpg" ) );
+    ImageIcon testimage = new ImageIcon( Settings.CLASS_LOADER.getResource( "jpo/images/testimage.jpg" ) );
 
     public PlayWithThumbnail() {
         s.addChangeListener( this );
@@ -54,7 +54,7 @@ public class PlayWithThumbnail extends JFrame implements ChangeListener {
         setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
 
         l.setText( "Starting with: " + Integer.toString( INIT ) );
-        thumbnailController.getThumbnail().setThumbnail( testimage );
+        thumbnailController.getThumbnail().setImageIcon( testimage );
         setPreferredSize( new Dimension( 400, 400 ) );
         pack();
         setVisible( true );

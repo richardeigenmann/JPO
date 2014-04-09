@@ -93,7 +93,7 @@ public class ThumbnailController {
      */
     public ThumbnailController( final int thumbnailSize ) {
         myThumbnail = new Thumbnail();
-        myThumbnail.thumbnailSize = thumbnailSize;
+        myThumbnail.setThumbnailSize( thumbnailSize );
         myThumbnail.addMouseListener( new ThumbnailMouseAdapter() );
 
         // set up drag & drop
@@ -299,7 +299,7 @@ public class ThumbnailController {
      * @return The maximum unscaled size of the ThumbnailController
      */
     public Dimension getMaximumUnscaledSize() {
-        return new Dimension( myThumbnail.thumbnailSize, myThumbnail.thumbnailSize );
+        return new Dimension( myThumbnail.getThumbnailSize(), myThumbnail.getThumbnailSize() );
     }
 
     /**

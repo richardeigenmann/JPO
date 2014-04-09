@@ -36,7 +36,7 @@ public class RotatePictureRequest implements Request {
     
     /**
      * Returns the angle in degrees that the picture is to be rotated by
-     * @return 
+     * @return  the angle
      */
     public double getAngle() {
         return angle;

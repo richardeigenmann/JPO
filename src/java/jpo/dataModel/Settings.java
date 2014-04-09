@@ -54,98 +54,104 @@ public class Settings {
      * Defines a logger for this class
      */
     private static final Logger LOGGER = Logger.getLogger( Settings.class.getName() );
+
     /**
      * this ClassLoader helps most other objects find the resources they require
      */
-    public static final ClassLoader cl = Settings.class.getClassLoader();
+    public static final ClassLoader CLASS_LOADER = Settings.class.getClassLoader();
+
     /**
      * A static reference to the Collection being displayed. In future perhaps
      * we will allow multiple collections to be loaded.
      *
      */
     public static PictureCollection pictureCollection = new PictureCollection();
-    /**
-     * Indicates whether functions should log that they were called.
-     */
-    public static final boolean logFunctions = true;
-    /**
-     * Indicates whether user actions should be logged
-     */
-    public static final boolean logUserActions = true;
-    /**
-     * Indicates whether errors should be logged
-     */
-    public static final boolean logErrors = true;
+
     /**
      * flag to indicate that debug information should be logged
      */
     public static boolean writeLog = false;
+
     /**
      * the filename of the logfile
      */
     public static File logfile;
+
     /**
      * Flag to indicate whether the JPO window should be maximised on startup or
      * left for the OS to decide on the size together with the JVM
      */
     public static boolean maximiseJpoOnStartup = true;
+
     /**
      * the dimensions of the main JPO frame
      */
     public static Dimension mainFrameDimensions;
+
     /**
      * A set of window sizes that the user can choose his preferred size from.
      * The first option will be to maximise the window
      */
     public static final Dimension[] windowSizes = { new Dimension( 0, 0 ), new Dimension( 1050, 760 ), new Dimension( 1250, 900 ), new Dimension( 1450, 1190 ), new Dimension( 2150, 1300 ) };
+
     /**
      * Flag to indicate whether the JPO window should be maximised on startup or
      * left for the OS to decide on the size together with the JVM
      */
     public static boolean maximisePictureViewerWindow = true;
+
     /**
      * the dimensions of the "Default" picture viewer
      */
     public static Dimension pictureViewerDefaultDimensions;
+
     /**
      * variable to indicate that the window size should be stored when the
      * application closes.
      */
     public static boolean saveSizeOnExit;
+
     /**
      * the default place for the divider.
      *
      */
     public static int preferredMasterDividerSpot = 350;
+
     /**
      * the default place for the left side divider.
      *
      */
     public static int preferredLeftDividerSpot;
+
     /**
      * the default width of the divider
      *
      */
     public static int dividerWidth = 12;
+
     /**
      * the default value for maxThumbnails
      *
      */
     public final static int defaultMaxThumbnails = 50;
+
     /**
      * a variable that sets the maximum number of thumbnails that shall be
      * displayed at one time.
      *
      */
     public static int maxThumbnails = defaultMaxThumbnails;
+
     /**
      * Setting for the width of the thumbnails. Set by default to 350 pixels.
      */
     public static int thumbnailSize = 350;
+
     /**
      * the dimension of mini thumbnails in the group folders
      */
     public static final Dimension miniThumbnailSize = new Dimension( 100, 75 );
+
     /**
      * The minimum width for the left panels
      */

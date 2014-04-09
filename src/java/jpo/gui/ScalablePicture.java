@@ -29,24 +29,25 @@ import jpo.dataModel.SizeCalculator;
 import jpo.dataModel.Tools;
 
 /*
-ScalablePicture.java:  class that can load and save images
+ ScalablePicture.java:  class that can load and save images
 
-Copyright (C) 2002 - 2011  Richard Eigenmann.
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or any later version. This program is distributed 
-in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
-without even the implied warranty of MERCHANTABILITY or FITNESS 
-FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
-more details. You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-The license is in gpl.txt.
-See http://www.gnu.org/copyleft/gpl.html for the details.
+ Copyright (C) 2002 - 2014  Richard Eigenmann.
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or any later version. This program is distributed 
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+ without even the implied warranty of MERCHANTABILITY or FITNESS 
+ FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
+ more details. You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ The license is in gpl.txt.
+ See http://www.gnu.org/copyleft/gpl.html for the details.
  */
-/** 
- *  a class to load and scale an image either immediately or in a separate thread.
+/**
+ * a class to load and scale an image either immediately or in a separate
+ * thread.
  */
 public class ScalablePicture
         implements SourcePictureListener {
@@ -57,48 +58,49 @@ public class ScalablePicture
     private static final Logger LOGGER = Logger.getLogger( ScalablePicture.class.getName() );
 
     /**
-     *   the source picture for the scalable picture
+     * the source picture for the scalable picture
      */
-    public SourcePicture sourcePicture;// = new SourcePicture();
+    public SourcePicture sourcePicture;
 
     /**
-     *  The scaled version of the image
+     * The scaled version of the image
      */
     public BufferedImage scaledPicture = null;
 
     /**
-     *  The scaling factor
+     * The scaling factor
      */
     private double ScaleFactor;
 
     /**
-     *  the URL of the picture
+     * the URL of the picture
      */
     public URL imageUrl = null;
 
     /**
-     *  variable to compose the status message
+     * variable to compose the status message
      */
     private String pictureStatusMessage;
 
     /**
-     *  if true means that the image should be scaled so that it fits inside
-     *  a given dimension (TargetSize). If false the ScaleFactor should be used.
+     * if true means that the image should be scaled so that it fits inside a
+     * given dimension (TargetSize). If false the ScaleFactor should be used.
      */
     private boolean scaleToSize;
 
     /**
-     *  variable to record the size of the box that the scaled image must fit into.
+     * variable to record the size of the box that the scaled image must fit
+     * into.
      */
     private Dimension TargetSize;
 
     /**
-     *  status code used to signal that the picture is not loaded
+     * status code used to signal that the picture is not loaded
      */
     public static final int UNINITIALISED = SourcePicture.LOADING_COMPLETED + 1;
 
     /**
-     *  status code used to signal that the picture is cleaning up memory
+     * status code used to signal that the picture is cleaning up memory
      */
     public static final int GARBAGE_COLLECTION = UNINITIALISED + 1;
 
@@ -113,84 +115,81 @@ public class ScalablePicture
     public static final int LOADED = LOADING + 1;
 
     /**
-     * status code used to signal that the thread has loaded the tread is scaling the image
+     * status code used to signal that the thread has loaded the tread is
+     * scaling the image
      */
     public static final int SCALING = LOADED + 1;
 
     /**
-     *  status code used to signal that the image is available.
+     * status code used to signal that the image is available.
      */
     public static final int READY = SCALING + 1;
 
     /**
-     *  status code used to signal that there was an error
+     * status code used to signal that there was an error
      */
     public static final int ERROR = READY + 1;
 
     /**
-     *   thingy to scale the image
+     * thingy to scale the image
      */
     private AffineTransformOp op;
 
     /**
-     *   the quality with which the JPG pictures shall be written. A value of 0 means poor 1 means great.
+     * the quality with which the JPG pictures shall be written. A value of 0
+     * means poor 1 means great.
      */
     public float jpgQuality = 0.8f;
 
     /**
-     *   which method to use on scaling, a fast one or a good quality one. Unfortunately the
-     *   good quality AffineTransformOp converts the image to a colorspace in the output JPEG file
-     *   which most programs can't read so this flag is currently not considered. RE 7.9.2005
+     * which method to use on scaling, a fast one or a good quality one.
+     * Unfortunately the good quality AffineTransformOp converts the image to a
+     * colorspace in the output JPEG file which most programs can't read so this
+     * flag is currently not considered. RE 7.9.2005
      */
     public boolean fastScale = true;
 
     /**
-     * Variable that indicates how often to scale down the image. Multiple steps (surprisingly)
-     * results in better quality!
+     * Variable that indicates how often to scale down the image. Multiple steps
+     * (surprisingly) results in better quality!
      */
     private int scaleSteps = 1;
 
     /**
-     *  flag that indicates that the image should be scaled after
-     *  a status message is received from the SourcePicture that the
-     *  picture was loaded.
+     * flag that indicates that the image should be scaled after a status
+     * message is received from the SourcePicture that the picture was loaded.
      */
     public boolean scaleAfterLoad = false;
 
-
     /**
-     *   Constructor
+     * Constructor
      */
     public ScalablePicture() {
         setStatus( UNINITIALISED, Settings.jpoResources.getString( "ScalablePictureUninitialisedStatus" ) );
         setScaleFactor( (double) 1 );
     }
 
-
     /**
-     *  method to invoke with a filename or URL of a picture that is to be loaded and scaled in
-     *  a new thread. This is handy to update the screen while the loading chuggs along in the background.
-     *  Make sure you invoked setScaleFactor or setScaleSize before
-     *  invoking this method.
+     * method to invoke with a filename or URL of a picture that is to be loaded
+     * and scaled in a new thread. This is handy to update the screen while the
+     * loading chuggs along in the background. Make sure you invoked
+     * setScaleFactor or setScaleSize before invoking this method.
      *
-     *  Step 1: Am I already loading what I need somewhere?
-     *          If yes -> use it.
-     *	              Has it finished loading?
-     *                    If no -> wait for it
-     *                    If yes -> use it
-     *          Else -> load it
+     * Step 1: Am I already loading what I need somewhere? If yes -> use it. Has
+     * it finished loading? If no -> wait for it If yes -> use it Else -> load
+     * it
      *
-     *  @param	imageUrl	The URL of the image you want to load
-     *  @param 	priority	The Thread priority
-     *  @param	rotation	The rotation 0-360 that the image should be put through
-     *				after loading.
+     * @param	imageUrl	The URL of the image you want to load
+     * @param priority	The Thread priority
+     * @param	rotation	The rotation 0-360 that the image should be put through
+     * after loading.
      */
     public void loadAndScalePictureInThread( URL imageUrl, int priority,
             double rotation ) {
         this.imageUrl = imageUrl;
 
         boolean alreadyLoading = false;
-        LOGGER.log( Level.FINE, "Checking if picture {0} is already being loaded.", imageUrl);
+        LOGGER.log( Level.FINE, "Checking if picture {0} is already being loaded.", imageUrl );
         if ( ( sourcePicture != null ) && ( sourcePicture.getUrl() != null ) && ( sourcePicture.getUrl().equals( imageUrl ) ) ) {
             LOGGER.fine( "the SourcePicture is already loading the sourcePicture image" );
             if ( sourcePicture.getRotation() == rotation ) {
@@ -212,7 +211,7 @@ public class ScalablePicture
             if ( status == null ) {
                 status = "";
             }
-            LOGGER.log( Level.FINE, "Picture in cache! Status: {0}", status);
+            LOGGER.log( Level.FINE, "Picture in cache! Status: {0}", status );
 
             if ( sourcePicture.getRotation() == rotation ) {
                 alreadyLoading = true;
@@ -222,7 +221,6 @@ public class ScalablePicture
                 LOGGER.fine( "Picture was in cache but with wrong rotation. Forcing reload." );
             }
         }
-
 
         if ( alreadyLoading ) {
             switch ( sourcePicture.getStatusCode() ) {
@@ -273,17 +271,17 @@ public class ScalablePicture
         }
     }
 
-
     /**
-     *  Synchroneous method to load the image.
-     *  It should only be called by something which is a thread itself such as the HtmlDistillerThread.
-     *  Since this intended for large batch operations this bypasses the cache.
-     *  There are no status updates
-     *  @param  imageUrl  The Url of the image to be loaded
-     *  @param  rotation  The angle by which it is to be roated upon loading.
+     * Synchroneous method to load the image. It should only be called by
+     * something which is a thread itself such as the HtmlDistillerThread. Since
+     * this intended for large batch operations this bypasses the cache. There
+     * are no status updates
+     *
+     * @param imageUrl The Url of the image to be loaded
+     * @param rotation The angle by which it is to be roated upon loading.
      */
     public void loadPictureImd( URL imageUrl, double rotation ) {
-        LOGGER.log( Level.FINE, "Invoked on URL: {0}", imageUrl.toString());
+        LOGGER.log( Level.FINE, "Invoked on URL: {0}", imageUrl.toString() );
         if ( sourcePicture != null ) {
             sourcePicture.removeListener( this );
         }
@@ -294,10 +292,10 @@ public class ScalablePicture
         sourcePicture.loadPicture( imageUrl, rotation );
     }
 
-
     /**
-     *  stops all picture loading except if the Url we desire is being loaded
-     *  @param  url	The URL of the image which is to be loaded.
+     * stops all picture loading except if the Url we desire is being loaded
+     *
+     * @param url	The URL of the image which is to be loaded.
      */
     public void stopLoadingExcept( URL url ) {
         if ( sourcePicture != null ) {
@@ -309,12 +307,12 @@ public class ScalablePicture
         }
     }
 
-
     /**
-     *  method that is invoked by the SourcePictureListener interface. Usually this
-     *  will be called by the SourcePicture telling the ScalablePicture that
-     *  it has completed loading. The ScalablePicture should then change it's own
-     *  status and tell the ScalableListeners what's up.
+     * method that is invoked by the SourcePictureListener interface. Usually
+     * this will be called by the SourcePicture telling the ScalablePicture that
+     * it has completed loading. The ScalablePicture should then change it's own
+     * status and tell the ScalableListeners what's up.
+     *
      * @param statusCode
      * @param statusMessage
      * @param sp
@@ -358,10 +356,11 @@ public class ScalablePicture
         }
     }
 
-
     /**
-     *  method that creates the scaled image in the background in it's own thread.
-     *  @param priority  The priority this image takes relative to the others.
+     * method that creates the scaled image in the background in it's own
+     * thread.
+     *
+     * @param priority The priority this image takes relative to the others.
      */
     public void createScaledPictureInThread( int priority ) {
         Runnable r = new Runnable() {
@@ -386,11 +385,11 @@ public class ScalablePicture
 
     private BufferedImage biStep;
 
-
     /**
-     *  call this method when the affine transform op is to be executed.
+     * call this method when the affine transform op is to be executed.
      *
-     **/
+     *
+     */
     public void scalePicture() {
         LOGGER.fine( "scaling..." );
         try {
@@ -398,7 +397,7 @@ public class ScalablePicture
 
             if ( ( sourcePicture != null ) && ( sourcePicture.getSourceBufferedImage() != null ) ) {
                 if ( scaleToSize ) {
-                    SizeCalculator sc = new SizeCalculator( sourcePicture.getWidth(), sourcePicture.getHeight(), TargetSize.width, TargetSize.height);
+                    SizeCalculator sc = new SizeCalculator( sourcePicture.getWidth(), sourcePicture.getHeight(), TargetSize.width, TargetSize.height );
                     ScaleFactor = sc.ScaleFactor;
 
                     if ( Settings.dontEnlargeSmallImages && ScaleFactor > 1 ) {
@@ -407,13 +406,12 @@ public class ScalablePicture
                 }
 
                 /* note that I have tried to use other AffineTransformOps such as TYPE_BILINEAR and
-                TYPE_BICUBIC. Only they don't work as they muck about with the color channels
-                and we end up with a non JFIF compliant JPEG image. This doesn't display well
-                in most programs which makes this format useless. This is thoroughly explained
-                in the following article. The workaround doesn't work though.
-                http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4503132
-                RE, 7.9.2005  */
-
+                 TYPE_BICUBIC. Only they don't work as they muck about with the color channels
+                 and we end up with a non JFIF compliant JPEG image. This doesn't display well
+                 in most programs which makes this format useless. This is thoroughly explained
+                 in the following article. The workaround doesn't work though.
+                 http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4503132
+                 RE, 7.9.2005  */
                 double factor;
                 int affineTransformType;
                 if ( fastScale ) {
@@ -460,24 +458,24 @@ public class ScalablePicture
                 }
             }
         } catch ( OutOfMemoryError e ) {
-            LOGGER.log( Level.SEVERE, "ScalablePicture.scalePicture caught an OutOfMemoryError while scaling an image.\n{0}", e.getMessage());
+            LOGGER.log( Level.SEVERE, "ScalablePicture.scalePicture caught an OutOfMemoryError while scaling an image.\n{0}", e.getMessage() );
             setStatus( ERROR, "Out of Memory Error while scaling " + imageUrl.toString() );
             scaledPicture = null;
             PictureCache.clear();
 
             Tools.dealOutOfMemoryError();
-            
+
         }
     }
 
-
     /**
-     *  set the scale factor to the new desired value. The scale factor is a multiplier by which the original picture
-     *  needs to be multiplied to get the size of the picture on the screen. You must
-     *  call {@link #createScaledPictureInThread(int)} to
-     *  make anything happen.<p>
+     * set the scale factor to the new desired value. The scale factor is a
+     * multiplier by which the original picture needs to be multiplied to get
+     * the size of the picture on the screen. You must call
+     * {@link #createScaledPictureInThread(int)} to make anything happen.<p>
      *
-     *  Example: Original is 3000 x 2000 --> Scale Factor 0.10  --> Target Picture is 300 x 200
+     * Example: Original is 3000 x 2000 --> Scale Factor 0.10 --> Target Picture
+     * is 300 x 200
      *
      * @param newFactor
      */
@@ -487,10 +485,11 @@ public class ScalablePicture
         ScaleFactor = newFactor;
     }
 
-
     /**
-     *  invoke this method to tell the scale process to figure out the scale factor
-     *  so that the image fits either by height or by width into the indicated dimension.
+     * invoke this method to tell the scale process to figure out the scale
+     * factor so that the image fits either by height or by width into the
+     * indicated dimension.
+     *
      * @param newSize
      */
     public void setScaleSize( Dimension newSize ) {
@@ -503,49 +502,49 @@ public class ScalablePicture
         }
     }
 
-
     /**
-     *   return the current scale factor
+     * return the current scale factor
+     *
      * @return the scale factor
      */
     public double getScaleFactor() {
         return ScaleFactor;
     }
 
-
     /**
-     *   return the current scale size. This is the area that the picture
-     *   is fitted into. Since the are could be wider or taller than the picture
-     *   will be scaled to there is a different method <code>getScaledSize</code>
-     *   that will return the size of the picture.
+     * return the current scale size. This is the area that the picture is
+     * fitted into. Since the are could be wider or taller than the picture will
+     * be scaled to there is a different method <code>getScaledSize</code> that
+     * will return the size of the picture.
+     *
      * @return the current scale size
      */
     public Dimension getScaleSize() {
         return TargetSize;
     }
 
-
     /**
-     *   return the scaled image
+     * return the scaled image
+     *
      * @return the scaled image
      */
     public BufferedImage getScaledPicture() {
         return scaledPicture;
     }
 
-
     /**
-     *   return the scaled image
+     * return the scaled image
+     *
      * @return the scaled image
      */
     public ImageIcon getScaledImageIcon() {
         return new ImageIcon( scaledPicture );
     }
 
-
     /**
-     *   return the size of the scaled image or Zero if there is none
-     * @return the scaled size 
+     * return the size of the scaled image or Zero if there is none
+     *
+     * @return the scaled size
      */
     public Dimension getScaledSize() {
         if ( scaledPicture != null ) {
@@ -555,9 +554,10 @@ public class ScalablePicture
         }
     }
 
-
     /**
-     *   return the size of the scaled image as a neatly formatted text or Zero if there is none
+     * return the size of the scaled image as a neatly formatted text or Zero if
+     * there is none
+     *
      * @return a string of the scaled size
      */
     public String getScaledSizeString() {
@@ -568,9 +568,9 @@ public class ScalablePicture
         }
     }
 
-
     /**
-     *   return the height of the scaled image or Zero if there is none
+     * return the height of the scaled image or Zero if there is none
+     *
      * @return the scaled height or 0
      */
     public int getScaledHeight() {
@@ -581,9 +581,9 @@ public class ScalablePicture
         }
     }
 
-
     /**
-     *   return the width of the scaled image or Zero if there is none
+     * return the width of the scaled image or Zero if there is none
+     *
      * @return the scaled width or 0
      */
     public int getScaledWidth() {
@@ -594,90 +594,87 @@ public class ScalablePicture
         }
     }
 
-
     /**
-     *   return the image in the original size
+     * return the image in the original size
+     *
      * @return image in the original size
      */
     public BufferedImage getOriginalImage() {
         return sourcePicture.getSourceBufferedImage();
     }
 
-
     /**
-     *   return the image in the original size
+     * return the image in the original size
+     *
      * @return the original picture
      */
     public SourcePicture getSourcePicture() {
         return sourcePicture;
     }
 
-
     /**
-     *   return the size of the original image or Zero if there is none
+     * return the size of the original image or Zero if there is none
+     *
      * @return The original size
      */
     public Dimension getOriginalSize() {
         return sourcePicture.getSize();
     }
 
-
     /**
-     *   return the height of the original image or Zero if there is none
+     * return the height of the original image or Zero if there is none
+     *
      * @return the original height of the image
      */
     public int getOriginalHeight() {
         return sourcePicture.getHeight();
     }
 
-
     /**
-     *   return the width of the original image or Zero if there is none
+     * return the width of the original image or Zero if there is none
+     *
      * @return the original width of the image
      */
     public int getOriginalWidth() {
         return sourcePicture.getWidth();
     }
 
-
     /**
-     *   return the filename of the original image
+     * return the filename of the original image
+     *
      * @return the filename of the original image
      */
     public String getFilename() {
         return imageUrl.toString();
     }
 
-
     /**
-     *  This method allows the ScalablePicture's scaled BufferedImage to be written
-     *  to the desired file.
+     * This method allows the ScalablePicture's scaled BufferedImage to be
+     * written to the desired file.
      *
-     *  @param	writeFile	The File that shall receive the jpg data
+     * @param	writeFile	The File that shall receive the jpg data
      */
     public void writeScaledJpg( File writeFile ) {
         writeJpg( writeFile, scaledPicture, jpgQuality );
     }
 
-
     /**
-     *  This method allows the ScalablePicture's scaled BufferedImage to be written
-     *  to the desired output stream.
+     * This method allows the ScalablePicture's scaled BufferedImage to be
+     * written to the desired output stream.
      *
-     *  @param	writeStream	The Stream that shall receive the jpg data
+     * @param	writeStream	The Stream that shall receive the jpg data
      */
     public void writeScaledJpg( OutputStream writeStream ) {
         writeJpg( writeStream, scaledPicture, jpgQuality );
     }
 
-
     /**
-     *  This static method writes the indicated renderedImage (BufferedImage)
-     *  to the indicated file.
+     * This static method writes the indicated renderedImage (BufferedImage) to
+     * the indicated file.
      *
-     *  @param	writeFile	The File that shall receive the jpg data
-     *  @param	renderedImage	The RenderedImage (BufferedImage) to be written
-     *  @param	jpgQuality	The quality with which to compress to jpg
+     * @param	writeFile	The File that shall receive the jpg data
+     * @param	renderedImage	The RenderedImage (BufferedImage) to be written
+     * @param	jpgQuality	The quality with which to compress to jpg
      */
     public static void writeJpg( File writeFile, RenderedImage renderedImage,
             float jpgQuality ) {
@@ -690,30 +687,26 @@ public class ScalablePicture
         params.setProgressiveMode( ImageWriteParam.MODE_DISABLED );
         params.setDestinationType(
                 new ImageTypeSpecifier( IndexColorModel.getRGBdefault(),
-                IndexColorModel.getRGBdefault().createCompatibleSampleModel( 16, 16 ) ) );
+                        IndexColorModel.getRGBdefault().createCompatibleSampleModel( 16, 16 ) ) );
 
-        try {
-            ImageOutputStream ios = ImageIO.createImageOutputStream(
-                    new FileOutputStream( writeFile ) );
+        try ( ImageOutputStream ios = ImageIO.createImageOutputStream(
+                new FileOutputStream( writeFile ) ) ) {
             writer.setOutput( ios );
             writer.write( null, new IIOImage( renderedImage, null, null ), params );
-            ios.close();
-
         } catch ( IOException e ) {
-            LOGGER.log( Level.INFO, "ScalablePicture.writeJpg caught IOException: {0}\nwhile writing {1}", new Object[]{e.getMessage(), writeFile.toString()});
+            LOGGER.severe( e.getMessage() );
         }
         //writer = null;
         writer.dispose(); //1.4.1 documentation says to do this.
     }
 
-
     /**
-     *  This static method writes the indicated renderedImage (BufferedImage)
-     *  to the indicated file.
+     * This static method writes the indicated renderedImage (BufferedImage) to
+     * the indicated file.
      *
-     *  @param	writeStream	The File that shall receive the jpg data
-     *  @param	renderedImage	The RenderedImage (BufferedImage) to be written
-     *  @param	jpgQuality	The quality with which to compress to jpg
+     * @param	writeStream	The File that shall receive the jpg data
+     * @param	renderedImage	The RenderedImage (BufferedImage) to be written
+     * @param	jpgQuality	The quality with which to compress to jpg
      */
     public static void writeJpg( OutputStream writeStream,
             RenderedImage renderedImage, float jpgQuality ) {
@@ -726,36 +719,32 @@ public class ScalablePicture
         params.setDestinationType( new ImageTypeSpecifier( java.awt.image.IndexColorModel.getRGBdefault(),
                 IndexColorModel.getRGBdefault().createCompatibleSampleModel( 16, 16 ) ) );
 
-        try {
-            ImageOutputStream ios = ImageIO.createImageOutputStream( writeStream );
+        try ( ImageOutputStream ios = ImageIO.createImageOutputStream( writeStream ) ) {
             writer.setOutput( ios );
             writer.write( null, new IIOImage( renderedImage, null, null ), params );
-            ios.close();
-
         } catch ( IOException e ) {
-            LOGGER.log( Level.INFO, "Caught IOException: {0}", e.getMessage());
+            LOGGER.log( Level.INFO, "Caught IOException: {0}", e.getMessage() );
         }
-        //writer = null;
-        writer.dispose(); //1.4.1 documentation says to do this.
+        writer.dispose();
     }
 
     /**
-     *  The listeners to notify when the image operation changes the status.
+     * The listeners to notify when the image operation changes the status.
      */
     private final ArrayList<ScalablePictureListener> scalablePictureStatusListeners = new ArrayList<ScalablePictureListener>();
 
-
     /**
-     *  method to register the listening object of the status events
+     * method to register the listening object of the status events
+     *
      * @param listener
      */
     public void addStatusListener( ScalablePictureListener listener ) {
         scalablePictureStatusListeners.add( listener );
     }
 
-
     /**
-     *  method to register the listening object of the status events
+     * method to register the listening object of the status events
+     *
      * @param listener
      */
     public void removeStatusListener( ScalablePictureListener listener ) {
@@ -763,10 +752,9 @@ public class ScalablePicture
     }
 
     /**
-     *  variable to track the status of the picture
+     * variable to track the status of the picture
      */
     private int pictureStatusCode;
-
 
     /**
      * Method that sets the status of the ScalablePicture object and notifies
@@ -784,9 +772,9 @@ public class ScalablePicture
         }
     }
 
-
     /**
      * pass on the update on the loading Progress to the listening objects
+     *
      * @param statusCode
      * @param percentage
      */
@@ -797,9 +785,9 @@ public class ScalablePicture
         }
     }
 
-
     /**
      * Method that returns the status code of the picture loading.
+     *
      * @return the status code
      */
     public int getStatusCode() {
@@ -807,18 +795,19 @@ public class ScalablePicture
         return pictureStatusCode;
     }
 
-
     /**
      * Method that returns the status message of the picture loading.
+     *
      * @return the status message
      */
     public String getStatusMessage() {
         return pictureStatusMessage;
     }
 
-
     /**
-     * accessor method to set the quality that should be used on jpg write operations.
+     * accessor method to set the quality that should be used on jpg write
+     * operations.
+     *
      * @param quality the quality to use
      */
     public void setJpgQuality( float quality ) {
@@ -829,35 +818,32 @@ public class ScalablePicture
         }
     }
 
-
     /**
-     *  sets the picture into fast scaling mode
+     * sets the picture into fast scaling mode
      */
     public void setFastScale() {
         fastScale = true;
     }
 
-
     /**
-     *  sets the picture into quality scaling mode
+     * sets the picture into quality scaling mode
      */
     public void setQualityScale() {
         fastScale = false;
     }
 
-
-   
     /**
      * The number of steps to use in scaling
+     *
      * @return the scaleSteps
      */
     public int getScaleSteps() {
         return scaleSteps;
     }
 
-
     /**
      * The number of steps to use in scaling
+     *
      * @param scaleSteps the scaleSteps to set
      */
     public void setScaleSteps( int scaleSteps ) {

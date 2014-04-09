@@ -197,7 +197,7 @@ public class CameraEditor
     /**
      *  an icon that displays a camera to beautify the screen.
      */
-    private JLabel cameraIcon = new JLabel( new ImageIcon( Settings.cl.getResource( "jpo/images/camera.jpg" ) ) );
+    private JLabel cameraIcon = new JLabel( new ImageIcon( Settings.CLASS_LOADER.getResource( "jpo/images/camera.jpg" ) ) );
 
     /**
      *   holds the root directory of the camera relative to the host computer's file system

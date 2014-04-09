@@ -182,7 +182,7 @@ public class HtmlDistiller
 
         if ( folderIconRequired ) {
             try {
-                InputStream inStream = Settings.cl.getResource( "jpo/images/icon_folder.gif" ).openStream();
+                InputStream inStream = Settings.CLASS_LOADER.getResource( "jpo/images/icon_folder.gif" ).openStream();
                 File folderIconFile = new File( options.getTargetDirectory(), "jpo_folder_icon.gif" );
                 FileOutputStream outStream = new FileOutputStream( folderIconFile );
                 files.add( folderIconFile );
@@ -466,7 +466,7 @@ public class HtmlDistiller
 
         if ( scp.getStatusCode() == ScalablePicture.ERROR ) {
             LOGGER.log( Level.SEVERE, "Problem reading image {0} using brokenThumbnailPicture instead", pictureInfo.getHighresLocation() );
-            scp.loadPictureImd( Settings.cl.getResource( "jpo/images/broken_thumbnail.gif" ), 0f );
+            scp.loadPictureImd( Settings.CLASS_LOADER.getResource( "jpo/images/broken_thumbnail.gif" ), 0f );
         }
 
         // copy the picture to the target directory

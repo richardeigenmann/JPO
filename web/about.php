@@ -43,6 +43,7 @@
 <p>JPO uses a number of third party libraries because it is better to reuse well written well tested 
     code from others instead of re-inventing the wheel:</p>
 <p><a href="http://commons.apache.org/proper/commons-compress/">Apache Commons Compress</a> which is licensed under the Apache 2.0 license
+    <br><a href="http://commons.apache.org/proper/commons-io/">Apache Commons IO</a> which is licensed under the Apache 2.0 license
     <br><a href="http://commons.apache.org/proper/commons-net/">Apache Commons Net</a> which is licensed under the Apache 2.0 license
     <br><a href="https://developers.google.com/gdata/articles/java_client_lib">Google Data Library</a> which is probably Apache 2.0 licensed
     <br><a href="https://code.google.com/p/guava-libraries/">Google Guava library</a> which is licensed under Apache 2.0
@@ -56,7 +57,7 @@
 
 
 <hr>
-<p>Last update to this page: 29 March 2014<br>
+<p>Last update to this page: 8 April 2014<br>
     Copyright 2003-2014 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
 
 <?php include("page-end.php"); ?>

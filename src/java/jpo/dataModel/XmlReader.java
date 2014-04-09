@@ -330,7 +330,7 @@ public class XmlReader extends DefaultHandler {
      */
     @Override
     public InputSource resolveEntity( String publicId, String systemId ) {
-        return new InputSource( Settings.cl.getResourceAsStream( "jpo/collection.dtd" ) );
+        return new InputSource( XmlReader.class.getClassLoader().getResourceAsStream( "jpo/collection.dtd" ) );
     }
 
 

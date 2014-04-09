@@ -34,7 +34,7 @@ public class XmlReaderTest extends TestCase {
     public void testGetDtd() {
         // not sure how I want to create the object as it needs input streams and stuff so I'll just do the code that
         // the method resolveEntity does.
-        InputSource s =  new InputSource( Settings.cl.getResourceAsStream( "jpo/collection.dtd" ) );
+        InputSource s =  new InputSource( Settings.CLASS_LOADER.getResourceAsStream( "jpo/collection.dtd" ) );
         assertNotNull( "No collection.dtd found", s );
     }
 

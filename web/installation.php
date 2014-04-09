@@ -97,12 +97,15 @@
 <p>First download the jar files and save them in your program directory:<br>
     <a href="http://j-po.sourceforge.net/jpo-0.10.jar">jpo-0.11.jar</a> or <a href="http://j-po.sourceforge.net/jpo-0.11.jar">jpo-0.11.jar</a><br>
     <a href="http://j-po.sourceforge.net/commons-compress-1.8.jar">commons-compress-1.8.jar</a><br>
+    <a href="http://j-po.sourceforge.net/commons-io-2.4.jar">commons-io-2.4.jar</a><br>
+    <a href="http://j-po.sourceforge.net/commons-logging-1.1.3.jar">commons-logging-1.1.3.jar</a><br>
     <a href="http://j-po.sourceforge.net/commons-net-3.3.jar">commons-net-3.3.jar</a><br>
     <a href="http://j-po.sourceforge.net/gdata-core-1.0.jar">gdata-core-1.0.jar</a><br>
     <a href="http://j-po.sourceforge.net/gdata-maps-2.0.jar">gdata-maps-2.0.jar</a><br>
     <a href="http://j-po.sourceforge.net/gdata-media-1.0.jar">gdata-media-1.0.jar</a><br>
     <a href="http://j-po.sourceforge.net/gdata-photos-2.0.jar">gdata-photos-2.0.jar</a><br>
     <a href="http://j-po.sourceforge.net/guava-16.0.1.jar">guava-16.0.1.jar</a><br>
+    <a href="http://j-po.sourceforge.net/jcs-1.3.jar">jcs-1.3.jar</a><br>                
     <a href="http://j-po.sourceforge.net/jsch-0.1.51.jar">jsch-0.1.51.jar</a><br>                
     <a href="http://j-po.sourceforge.net/jwizz-0.1.4.jar">jwizz-0.1.4.jar</a><br>
     <a href="http://j-po.sourceforge.net/javax.mail-1.5.1.jar">javax.mail-1.5.1.jar</a><br>
@@ -118,11 +121,15 @@
 <p> Then you need to create a script or batch file to run everything. On Linux the script would look like this:</p>
 <p><font color="darkRed"><code>/PATH/TO/YOUR/JAVA/bin/java -Xms80M -Xmx2000M -classpath 
         /PATH/TO/YOUR/JPO/JARS/commons-compress-1.8.jar
+        :/PATH/TO/YOUR/JPO/JARS/commons-io-2.4.jar
+        :/PATH/TO/YOUR/JPO/JARS/commons-logging-1.1.3.jar
+        :/PATH/TO/YOUR/JPO/JARS/commons-net-3.3.jar
         :/PATH/TO/YOUR/JPO/JARS/gdata-core-1.0.jar
         :/PATH/TO/YOUR/JPO/JARS/gdata-maps-2.0.jar
         :/PATH/TO/YOUR/JPO/JARS/gdata-media-1.0.jar
         :/PATH/TO/YOUR/JPO/JARS/gdata-photos-2.0.jar
         :/PATH/TO/YOUR/JPO/JARS/guava-16.0.1.jar
+        :/PATH/TO/YOUR/JPO/JARS/jcs-1.3.jar
         :/PATH/TO/YOUR/JPO/JARS/jsch-0.1.51.jar
         :/PATH/TO/YOUR/JPO/JARS/jwizz-0.1.4.jar
         :/PATH/TO/YOUR/JPO/JARS/javax.mail-1.5.1.jar
@@ -143,11 +150,15 @@
 
 <p><code>c:\windows\system32\java -Xms80M -Xmx2000M -classpath "c:\Program Files\Jpo\activation.jar";
         "c:\Program Files\Jpo\commons-compress-1.8.jar";
+        "c:\Program Files\Jpo\commons-io-2.4.jar";
+        "c:\Program Files\Jpo\commons-logging-1.1.3.jar";
+        "c:\Program Files\Jpo\commons-net-3.3.jar";
         "c:\Program Files\Jpo\gdata-core-1.0.jar";
         "c:\Program Files\Jpo\gdata-maps-2.0.jar";
         "c:\Program Files\Jpo\gdata-media-1.0.jar";
         "c:\Program Files\Jpo\gdata-photos-2.0.jar";
         "c:\Program Files\Jpo\guava-16.0.1.jar";
+        "c:\Program Files\Jpo\jcs-1.3.jar";
         "c:\Program Files\Jpo\jsch-0.1.51.jar";
         "c:\Program Files\Jpo\jwizz-0.1.4.jar";
         "c:\Program Files\Jpo\metadata-extractor-2.6.4.jar";
@@ -198,6 +209,6 @@
 
 
 <hr>
-<p>Last update to this page: 23 March 2014<br>
+<p>Last update to this page: 8 April 2014<br>
     Copyright 2003-2014 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
 <?php include("page-end.php"); ?>
