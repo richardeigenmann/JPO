@@ -18,7 +18,8 @@ jcs.default.elementattributes.IsLateral=true
 # PREDEFINED CACHE REGIONS for Highres no disk cache (Images came from disk)
 jcs.region.highresCache=
 jcs.region.highresCache.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
-jcs.region.highresCache.cacheattributes.MaxObjects=50
+# Max highres pictures in cache: 100
+jcs.region.highresCache.cacheattributes.MaxObjects=100
 jcs.region.highresCache.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
 jcs.region.highresCache.cacheattributes.UseMemoryShrinker=true
 jcs.region.highresCache.cacheattributes.MaxMemoryIdleTimeSeconds=3600
@@ -44,7 +45,7 @@ jcs.region.thumbnailCache.elementattributes.IsEternal=false
 jcs.auxiliary.DC=org.apache.jcs.auxiliary.disk.indexed.IndexedDiskCacheFactory
 jcs.auxiliary.DC.attributes=org.apache.jcs.auxiliary.disk.indexed.IndexedDiskCacheAttributes
 jcs.auxiliary.DC.attributes.DiskPath=/tmp/Jpo-JCS-cache
-jcs.auxiliary.DC.attributes.MaxPurgatorySize=10000000
+jcs.auxiliary.DC.attributes.MaxPurgatorySize=5000  
 jcs.auxiliary.DC.attributes.MaxKeySize=1000000
 jcs.auxiliary.DC.attributes.MaxRecycleBinSize=5000
 jcs.auxiliary.DC.attributes.OptimizeAtRemoveCount=300000

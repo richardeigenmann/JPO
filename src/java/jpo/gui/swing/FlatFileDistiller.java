@@ -114,7 +114,6 @@ public class FlatFileDistiller extends SwingWorker<DistillerResult, String> {
                 return new DistillerResult( false, ex );
             }
         }
-        System.out.println( "all fine" );
         return new DistillerResult( true, null );
     }
 

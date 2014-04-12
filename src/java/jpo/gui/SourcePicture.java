@@ -21,7 +21,6 @@ import jpo.cache.ImageBytes;
 import jpo.cache.JpoCache;
 import jpo.dataModel.Settings;
 import jpo.dataModel.Tools;
-import org.apache.commons.io.IOUtils;
 
 
 /*
@@ -177,7 +176,6 @@ public class SourcePicture {
      * sourcePictureBufferedImage object and updates the status when done or
      * failed.
      */
-    @SuppressWarnings( "empty-statement" )
     public void loadPicture() {
         setStatus( LOADING, Settings.jpoResources.getString( "ScalablePictureLoadingStatus" ) );
         abortFlag = false;
@@ -230,7 +228,6 @@ public class SourcePicture {
 
                 setStatus( ERROR, Settings.jpoResources.getString( "ScalablePictureErrorStatus" ) );
                 sourcePictureBufferedImage = null;
-                PictureCache.clear();
 
                 Tools.dealOutOfMemoryError();
                 return;
@@ -271,8 +268,6 @@ public class SourcePicture {
                 setStatus( READY, "Loaded: " + imageUrl.toString() );
                 long end = System.currentTimeMillis();
                 loadTime = end - start;
-                //PictureCache.add( imageUrl, (SourcePicture) this.clone() );
-                PictureCache.add( imageUrl, this );
             } else {
                 loadTime = 0;
                 setStatus( ERROR, "Aborted!" );

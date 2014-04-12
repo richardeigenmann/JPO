@@ -24,10 +24,12 @@ import javax.swing.SwingUtilities;
 import javax.swing.tree.DefaultMutableTreeNode;
 import jpo.EventBus.AddCollectionToGroupRequest;
 import jpo.EventBus.AddEmptyGroupRequest;
+import jpo.EventBus.AddFlatFileRequest;
 import jpo.EventBus.AddGroupToEmailSelectionRequest;
 import jpo.EventBus.CheckDirectoriesRequest;
 import jpo.EventBus.CheckIntegrityRequest;
 import jpo.EventBus.ChooseAndAddCollectionRequest;
+import jpo.EventBus.ChooseAndAddFlatfileRequest;
 import jpo.EventBus.ChooseAndAddPicturesToGroupRequest;
 import jpo.EventBus.CloseApplicationRequest;
 import jpo.EventBus.ConsolidateGroupRequest;
@@ -80,6 +82,7 @@ import jpo.EventBus.YearBrowserRequest;
 import jpo.EventBus.YearlyAnalysisRequest;
 import jpo.cache.JpoCache;
 import jpo.dataModel.DuplicatesQuery;
+import jpo.dataModel.FlatFileReader;
 import jpo.gui.swing.FlatFileDistiller;
 import jpo.dataModel.FlatGroupNavigator;
 import jpo.dataModel.GroupInfo;
@@ -231,7 +234,7 @@ public class ApplicationEventHandler {
         if ( Settings.unsavedSettingChanges ) {
             Settings.writeSettings();
         }
-        
+
         JpoCache.getInstance().shutdown();
 
         LOGGER.info( "Exiting JPO\n------------------------------------------------------------" );
@@ -579,6 +582,8 @@ public class ApplicationEventHandler {
      */
     @Subscribe
     public void handleAddCollectionToGroupRequest( AddCollectionToGroupRequest request ) {
+        LOGGER.info( "Starting" );
+        Tools.checkEDT();
         SortableDefaultMutableTreeNode popupNode = request.getNode();
         File fileToLoad = request.getCollectionFile();
 
@@ -806,16 +811,6 @@ public class ApplicationEventHandler {
     }
 
     /**
-     * Switches the left panel to the queries, expands to the right place and
-     * shows the thumbnails of the query.
-     *
-     * @param node The query node to be displayed
-     *
-     *
-     * public void showQuery( DefaultMutableTreeNode node ) {
-     * mainWindow.tabToSearches(); searchesJTree.setSelectedNode( node ); }
-     */
-    /**
      * Brings up a chooser to pick files and add them to the group.
      *
      * @param request the Request
@@ -823,6 +818,37 @@ public class ApplicationEventHandler {
     @Subscribe
     public void handleChooseAndAddPicturesToGroupRequest( ChooseAndAddPicturesToGroupRequest request ) {
         new PictureFileChooser( request.getNode() );
+    }
+
+    /**
+     * Brings up a chooser to pick a flat file and add them to the group.
+     *
+     * @param request the Request
+     */
+    @Subscribe
+    public void handleChooseAndAddFlatfileRequest( ChooseAndAddFlatfileRequest request ) {
+        JFileChooser jFileChooser = new JFileChooser();
+        jFileChooser.setFileSelectionMode( javax.swing.JFileChooser.FILES_ONLY );
+        jFileChooser.setApproveButtonText( Settings.jpoResources.getString( "fileOpenButtonText" ) );
+        jFileChooser.setDialogTitle( Settings.jpoResources.getString( "addFlatFileTitle" ) );
+        jFileChooser.setCurrentDirectory( Settings.getMostRecentCopyLocation() );
+
+        int returnVal = jFileChooser.showOpenDialog( Settings.anchorFrame );
+        if ( returnVal == JFileChooser.APPROVE_OPTION ) {
+            File chosenFile = jFileChooser.getSelectedFile();
+            JpoEventBus.getInstance().post( new AddFlatFileRequest( request.getNode(), chosenFile ) );
+
+        }
+    }
+
+    /**
+     * Handles the request to add a flat file to a node
+     *
+     * @param request the Request
+     */
+    @Subscribe
+    public void handleAddFlatFileRequest( AddFlatFileRequest request ) {
+        new FlatFileReader( request );
     }
 
     /**

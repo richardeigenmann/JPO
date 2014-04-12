@@ -1,5 +1,6 @@
 package jpo.gui;
 
+import jpo.gui.swing.JTableCopyPasteClipboardAdapter;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.KeyEvent;
@@ -21,7 +22,7 @@ import javax.swing.JTable;
  Originally lifted from the Swing Tutorial on the java.sun.com website. In as far as no prior copyright
  exists the following copyright shall apply. (This code was heavily modified.)
 
- Copyright (C) 2002 - 2013  Richard Eigenmann.
+ Copyright (C) 2002 - 2014  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -45,6 +46,7 @@ public class TableJFrame extends JFrame {
      * Defines a logger for this class
      */
     private static final Logger LOGGER = Logger.getLogger( TableJFrame.class.getName() );
+    
     /**
      * handle to the node being edited
      */
@@ -65,7 +67,7 @@ public class TableJFrame extends JFrame {
         JTable table = new JTable( sorter );
         table.setCellSelectionEnabled( true );
 
-        ExcelAdapter myExcelAdapter = new ExcelAdapter( table );
+        JTableCopyPasteClipboardAdapter myExcelAdapter = new JTableCopyPasteClipboardAdapter( table );
 
         sorter.addMouseListenerToHeaderInTable( table );
         table.setPreferredScrollableViewportSize( new Dimension( 1000, 700 ) );
@@ -106,7 +108,6 @@ public class TableJFrame extends JFrame {
         final String[] columnNames = { "Nr.",
             "Description",
             "Highres Location",
-            "Lowres Location",
             "Film Reference",
             "Creation Time",
             "Comment",
@@ -174,18 +175,16 @@ public class TableJFrame extends JFrame {
                     case 2:
                         return ( (PictureInfo) userObject ).getHighresLocation();
                     case 3:
-                        return ( (PictureInfo) userObject ).getLowresLocation();
-                    case 4:
                         return ( (PictureInfo) userObject ).getFilmReference();
-                    case 5:
+                    case 4:
                         return ( (PictureInfo) userObject ).getCreationTime();
-                    case 6:
+                    case 5:
                         return ( (PictureInfo) userObject ).getComment();
-                    case 7:
+                    case 6:
                         return ( (PictureInfo) userObject ).getPhotographer();
-                    case 8:
+                    case 7:
                         return ( (PictureInfo) userObject ).getCopyrightHolder();
-                    case 9:
+                    case 8:
                         return ( (PictureInfo) userObject ).getLatLngString();
                     default:
                         return "Unknown Column: " + Integer.toString( col );
@@ -219,24 +218,21 @@ public class TableJFrame extends JFrame {
                         ( (PictureInfo) userObject ).setHighresLocation( newString );
                         break;
                     case 3:
-                        ( (PictureInfo) userObject ).setLowresLocation( newString );
-                        break;
-                    case 4:
                         ( (PictureInfo) userObject ).setFilmReference( newString );
                         break;
-                    case 5:
+                    case 4:
                         ( (PictureInfo) userObject ).setCreationTime( newString );
                         break;
-                    case 6:
+                    case 5:
                         ( (PictureInfo) userObject ).setComment( newString );
                         break;
-                    case 7:
+                    case 6:
                         ( (PictureInfo) userObject ).setPhotographer( newString );
                         break;
-                    case 8:
+                    case 7:
                         ( (PictureInfo) userObject ).setCopyrightHolder( newString );
                         break;
-                    case 9:
+                    case 8:
                         ( (PictureInfo) userObject ).setLatLng( newString );
                         break;
                     default:

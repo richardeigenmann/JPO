@@ -2,8 +2,6 @@ package jpo.dataModel;
 
 import java.awt.datatransfer.Transferable;
 import java.util.logging.Level;
-import jpo.gui.ThumbnailCreationQueue;
-import jpo.gui.ThumbnailQueueRequest;
 import jpo.gui.JpoTransferable;
 import jpo.gui.ProgressGui;
 import javax.swing.event.TreeModelEvent;
@@ -11,12 +9,9 @@ import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DropTargetDropEvent;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.net.MalformedURLException;
@@ -39,7 +34,6 @@ import javax.swing.tree.TreePath;
 import jpo.EventBus.CopyLocationsChangedEvent;
 import jpo.EventBus.JpoEventBus;
 import jpo.EventBus.RecentCollectionsChangedEvent;
-import jpo.gui.ThumbnailController;
 
 
 /*
@@ -279,7 +273,8 @@ public class SortableDefaultMutableTreeNode
      * This method collects all pictures under the current node and returns them
      * as an Array List..
      *
-     * @param recursive Whether to add the pictures of any groups nodes or not
+     * @param recursive Pass true if the method is supposed to recursively search
+     * the subgroups, false if not
      * @return An ArrayList of child nodes that hold a picture
      */
     public ArrayList<SortableDefaultMutableTreeNode> getChildPictureNodes(
@@ -667,48 +662,7 @@ public class SortableDefaultMutableTreeNode
         }
     }
 
-    /**
-     * This method adds the specified flat file of images at the current node.
-     *
-     * @param chosenFile
-     * @throws IOException
-     */
-    public void addFlatFile( File chosenFile ) throws IOException {
-        SortableDefaultMutableTreeNode newNode
-                = new SortableDefaultMutableTreeNode(
-                        new GroupInfo( chosenFile.getName() ) );
-        this.add( newNode );
-        BufferedReader in = new BufferedReader( new FileReader( chosenFile ) );
-        String sb = new String();
-        while ( in.ready() ) {
-            sb = in.readLine();
-            File testFile = null;
-            try {
-                testFile = new File( new URI( sb ) );
-            } catch ( URISyntaxException x ) {
-                LOGGER.info( "Conversion of " + sb + " to URI failed: " + x.getMessage() );
-            } catch ( IllegalArgumentException x ) {
-                LOGGER.info( "Conversion of " + sb + " to URI failed: " + x.getMessage() );
-            }
-
-            // dangerous but it doesn't continue if the first condition is true
-            if ( ( testFile != null ) && ( testFile.canRead() ) ) {
-                //logger.info ( "Adding picture: " + sb );
-                SortableDefaultMutableTreeNode newPictureNode = new SortableDefaultMutableTreeNode(
-                        new PictureInfo(
-                                sb,
-                                Tools.getNewLowresFilename(),
-                                Tools.stripOutFilenameRoot( testFile ),
-                                "" ) );
-                newNode.add( newPictureNode );
-            } else {
-                LOGGER.info( "Not adding picture: " + sb + " because it can't be read" );
-            }
-        }
-        in.close();
-        getPictureCollection().sendNodeStructureChanged( this );
-        getPictureCollection().setUnsavedUpdates( false );
-    }
+   
 
     /**
      * This method removes the designated SortableDefaultMutableTreeNode from

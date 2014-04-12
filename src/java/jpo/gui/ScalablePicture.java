@@ -184,8 +184,35 @@ public class ScalablePicture
      * @param	rotation	The rotation 0-360 that the image should be put through
      * after loading.
      */
-    public void loadAndScalePictureInThread( URL imageUrl, int priority,
-            double rotation ) {
+    public void loadAndScalePictureInThread( URL imageUrl, int priority, double rotation ) {
+        this.imageUrl = imageUrl;
+        if ( sourcePicture != null ) {
+            sourcePicture.removeListener( this );
+        }
+        sourcePicture = new SourcePicture();
+        sourcePicture.addListener( this );
+        setStatus( LOADING, Settings.jpoResources.getString( "ScalablePictureLoadingStatus" ) );
+        scaleAfterLoad = true;
+        sourcePicture.loadPictureInThread( imageUrl, priority, rotation );
+        // when the thread is done it sends a sourceStatusChange message to us
+    }
+
+    /**
+     * method to invoke with a filename or URL of a picture that is to be loaded
+     * and scaled in a new thread. This is handy to update the screen while the
+     * loading chuggs along in the background. Make sure you invoked
+     * setScaleFactor or setScaleSize before invoking this method.
+     *
+     * Step 1: Am I already loading what I need somewhere? If yes -> use it. Has
+     * it finished loading? If no -> wait for it If yes -> use it Else -> load
+     * it
+     *
+     * @param	imageUrl	The URL of the image you want to load
+     * @param priority	The Thread priority
+     * @param	rotation	The rotation 0-360 that the image should be put through
+     * after loading.
+     */
+    public void loadAndScalePictureInThreadOld( URL imageUrl, int priority, double rotation ) {
         this.imageUrl = imageUrl;
 
         boolean alreadyLoading = false;
@@ -199,14 +226,15 @@ public class ScalablePicture
                 alreadyLoading = false;
                 LOGGER.fine( "Picture was in cache but with wrong rotation. Forcing reload." );
             }
-        } else if ( PictureCache.isInCache( imageUrl ) ) {
+        //} else if ( PictureCache.isInCache( imageUrl ) ) {
+            } else if ( false ) {
             // in case the old image has a listener connected remove it
             //  fist time round the sourcePicture is still null therefore the if.
             if ( sourcePicture != null ) {
                 sourcePicture.removeListener( this );
             }
 
-            sourcePicture = PictureCache.getSourcePicture( imageUrl );
+            //sourcePicture = PictureCache.getSourcePicture( imageUrl );
             String status = sourcePicture.getStatusMessage();
             if ( status == null ) {
                 status = "";
@@ -272,13 +300,13 @@ public class ScalablePicture
     }
 
     /**
-     * Synchroneous method to load the image. It should only be called by
+     * Synchronous method to load the image. It should only be called by
      * something which is a thread itself such as the HtmlDistillerThread. Since
      * this intended for large batch operations this bypasses the cache. There
      * are no status updates
      *
      * @param imageUrl The Url of the image to be loaded
-     * @param rotation The angle by which it is to be roated upon loading.
+     * @param rotation The angle by which it is to be rotated upon loading.
      */
     public void loadPictureImd( URL imageUrl, double rotation ) {
         LOGGER.log( Level.FINE, "Invoked on URL: {0}", imageUrl.toString() );
@@ -461,10 +489,7 @@ public class ScalablePicture
             LOGGER.log( Level.SEVERE, "ScalablePicture.scalePicture caught an OutOfMemoryError while scaling an image.\n{0}", e.getMessage() );
             setStatus( ERROR, "Out of Memory Error while scaling " + imageUrl.toString() );
             scaledPicture = null;
-            PictureCache.clear();
-
             Tools.dealOutOfMemoryError();
-
         }
     }
 

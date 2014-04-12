@@ -19,10 +19,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.util.Enumeration;
-import java.util.Iterator;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
+//import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.BorderFactory;
@@ -63,6 +62,7 @@ import jpo.dataModel.SortableDefaultMutableTreeNode;
 import jpo.dataModel.Tools;
 import jpo.gui.swing.NonFocussedCaret;
 import jpo.gui.swing.ThreeDotButton;
+import map.MapViewer;
 import net.miginfocom.swing.MigLayout;
 import webserver.Webserver;
 
@@ -137,7 +137,7 @@ public class PictureInfoEditor extends JFrame {
     /**
      * The location of the lowres image file
      */
-    private JTextField lowresLocationJTextField = new JTextField();
+    //private JTextField lowresLocationJTextField = new JTextField();
     /**
      * The location of the image file
      */
@@ -488,13 +488,13 @@ public class PictureInfoEditor extends JFrame {
         fileTab.add( checksumJLabel );
         fileTab.add( checksumJButton, "wrap" );
 
-        JLabel lowresLocationJLabel = new JLabel( Settings.jpoResources.getString( "lowresLocationLabel" ) );
+/*        JLabel lowresLocationJLabel = new JLabel( Settings.jpoResources.getString( "lowresLocationLabel" ) );
         lowresErrorJLabel.setFont( errorLabelFont );
         fileTab.add( lowresLocationJLabel, "wrap" );
         lowresLocationJTextField.setPreferredSize( TEXT_FIELD_DIMENSION );
         fileTab.add( lowresLocationJTextField, "wrap" );
         fileTab.add( lowresErrorJLabel, "wrap" );
-
+*/
         tabs.add( "File", fileTab );
 
         JPanel categoriesTab = new JPanel( new MigLayout() );
@@ -546,6 +546,9 @@ public class PictureInfoEditor extends JFrame {
 
         tabs.add( "Exif", exifJScrollPane );
 
+        MapViewer mapViewer = new MapViewer();
+        tabs.add( "Map", mapViewer.getMapViewer() );
+
         setLayout( new MigLayout() );
         getContentPane().add( mainPanel );
     }
@@ -559,7 +562,7 @@ public class PictureInfoEditor extends JFrame {
         descriptionJTextArea.setText( pictureInfo.getDescription() );
         highresLocationJTextField.setText( pictureInfo.getHighresLocation() );
         checksumJLabel.setText( Settings.jpoResources.getString( "checksumJLabel" ) + pictureInfo.getChecksumAsString() );
-        lowresLocationJTextField.setText( pictureInfo.getLowresLocation() );
+        //lowresLocationJTextField.setText( pictureInfo.getLowresLocation() );
         filmReferenceJTextField.setText( pictureInfo.getFilmReference() );
         angleModel.setValue( pictureInfo.getRotation() );
         latitudeJTextField.setText( Double.toString( pictureInfo.getLatLng().x ) );
@@ -573,29 +576,33 @@ public class PictureInfoEditor extends JFrame {
         listModel.addElement( setupCategories );
         listModel.addElement( noCategories );
 
-        //TODO: can the iterator and enumeration use generics and be written nicer?
-        Iterator i = myNode.getPictureCollection().getCategoryIterator();
-        Integer key;
-        String category;
-        Category categoryObject;
-        Vector<Integer> selections = new Vector<Integer>();
-        while ( i.hasNext() ) {
-            key = (Integer) i.next();
-            category = myNode.getPictureCollection().getCategory( key );
-            categoryObject = new Category( key, category );
+        //TODO: weired stuff....
+        //Iterator i = myNode.getPictureCollection().getCategoryIterator();
+        //Integer key;
+        //String category;
+        //Category categoryObject;
+        //Vector<Integer> selections = new Vector<Integer>();
+        ArrayList<Integer> selections = new ArrayList<>();
+        //while ( i.hasNext() ) {
+        for ( Integer key : myNode.getPictureCollection().getCategoryKeySet()) {
+            //key = (Integer) i.next();
+            String category = myNode.getPictureCollection().getCategory( key );
+            Category categoryObject = new Category( key, category );
             listModel.addElement( categoryObject );
 
             if ( ( pictureInfo.categoryAssignments != null ) && ( pictureInfo.categoryAssignments.contains( key ) ) ) {
-                selections.add( new Integer( listModel.indexOf( categoryObject ) ) );
+                selections.add( listModel.indexOf( categoryObject ));
             }
         }
-        Enumeration e = selections.elements();
+        
         int selectionsArray[] = new int[selections.size()];
-        Object o;
         int j = 0;
-        while ( e.hasMoreElements() ) {
-            o = e.nextElement();
-            selectionsArray[j] = ( (Integer) o ).intValue();
+        for ( Integer key : selections) {
+        //Enumeration e = selections.elements();
+        //Object o;
+        //while ( e.hasMoreElements() ) {
+        //    o = e.nextElement();
+            selectionsArray[j] = ( key );
             j++;
         }
         categoriesJList.setSelectedIndices( selectionsArray );
@@ -633,9 +640,9 @@ public class PictureInfoEditor extends JFrame {
             if ( e.getChecksumChanged() ) {
                 checksumJLabel.setText( Settings.jpoResources.getString( "checksumJLabel" ) + pictureInfo.getChecksumAsString() );
             }
-            if ( e.getLowresLocationChanged() ) {
+            /*if ( e.getLowresLocationChanged() ) {
                 lowresLocationJTextField.setText( pictureInfo.getLowresLocation() );
-            }
+            }*/
             if ( e.getCreationTimeChanged() ) {
                 creationTimeJTextField.setText( pictureInfo.getCreationTime() );
                 parsedCreationTimeJLabel.setText( pictureInfo.getFormattedCreationTime() );
@@ -701,14 +708,14 @@ public class PictureInfoEditor extends JFrame {
             highresErrorJLabel.setText( xh.getMessage() );
         }
 
-        try {
+        /*try {
             testFile( lowresLocationJTextField.getText() );
             lowresLocationJTextField.setForeground( Color.black );
             lowresErrorJLabel.setText( "" );
         } catch ( Exception xl ) {
             lowresLocationJTextField.setForeground( Color.red );
             lowresErrorJLabel.setText( xl.getMessage() );
-        }
+        }*/
     }
 
     /**
@@ -776,7 +783,7 @@ public class PictureInfoEditor extends JFrame {
         pictureInfo.setDescription( descriptionJTextArea.getText() );
         pictureInfo.setCreationTime( creationTimeJTextField.getText() );
         pictureInfo.setHighresLocation( highresLocationJTextField.getText() );
-        pictureInfo.setLowresLocation( lowresLocationJTextField.getText() );
+        //pictureInfo.setLowresLocation( lowresLocationJTextField.getText() );
         pictureInfo.setComment( commentJTextField.getText() );
         pictureInfo.setPhotographer( photographerJTextField.getText() );
         pictureInfo.setFilmReference( filmReferenceJTextField.getText() );

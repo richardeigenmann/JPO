@@ -24,12 +24,13 @@ import jpo.EventBus.CopyLocationsChangedEvent;
 import jpo.EventBus.JpoEventBus;
 import jpo.dataModel.GroupInfo;
 import jpo.dataModel.NodeStatistics;
+import net.miginfocom.swing.MigLayout;
 
 /*
  ConsolidateGroupJFrame.java:  Controller and Visual to consoliodate
  pictures of a node into a directory.
 
- Copyright (C) 2002 - 2013  Richard Eigenmann.
+ Copyright (C) 2002 - 2014  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -62,28 +63,34 @@ public class ConsolidateGroupJFrame
      * Chooser to pick the highres directory
      *
      */
-    private DirectoryChooser highresDirectoryChooser
+    private final DirectoryChooser highresDirectoryChooser
             = new DirectoryChooser(Settings.jpoResources.getString("highresTargetDirJTextField"),
                     DirectoryChooser.DIR_MUST_BE_WRITABLE);
-    /**
+    
+    /*
      * Chooser to pick the lowres directory
      *
-     */
+     *
     private DirectoryChooser lowresDirectoryChooser
             = new DirectoryChooser(Settings.jpoResources.getString("lowresTargetDirJTextField"),
                     DirectoryChooser.DIR_MUST_BE_WRITABLE);
+                    * */
+    
+    
     /**
      * Tickbox that indicates whether pictures or the current group only should
      * be consolidated or whether the subgroups (if any) should be included.
      *
      */
-    private JCheckBox recurseSubgroupsJCheckBox = new JCheckBox(Settings.jpoResources.getString("RecurseSubgroupsLabel"));
-    /**
+    private final JCheckBox recurseSubgroupsJCheckBox = new JCheckBox(Settings.jpoResources.getString("RecurseSubgroupsLabel"));
+    
+    /*
      * Tickbox that indicates whether pictures or the current group only should
      * be consolidated or whether the subgroups (if any) should be included.
      *
-     */
+     *
     private JCheckBox lowresJCheckBox = new JCheckBox(Settings.jpoResources.getString("lowresJCheckBox"));
+    */
 
     /**
      * Creates a GUI that allows the user to specify into which directory he or
@@ -95,7 +102,7 @@ public class ConsolidateGroupJFrame
     public ConsolidateGroupJFrame(SortableDefaultMutableTreeNode startNode) {
         super(Settings.jpoResources.getString("ConsolidateGroupJFrameHeading"));
         this.startNode = startNode;
-        initWidgets();
+        initComponents();
     }
 
     /**
@@ -104,13 +111,14 @@ public class ConsolidateGroupJFrame
      *
      * @param startNode The group node that the user wants the consolidation to
      * be done on. TODO: make this use MIG Layout
+     * @param targetDirectory the target directory
      */
     public ConsolidateGroupJFrame(SortableDefaultMutableTreeNode startNode, File targetDirectory) {
         this(startNode);
         highresDirectoryChooser.setFile(targetDirectory);
     }
 
-    private void initWidgets() {
+    private void initComponents() {
 
         Object userObject = startNode.getUserObject();
         if (!(userObject instanceof GroupInfo)) {
@@ -135,46 +143,46 @@ public class ConsolidateGroupJFrame
         });
 
         JPanel contentJPanel = new javax.swing.JPanel();
-        contentJPanel.setLayout(new GridBagLayout());
+        contentJPanel.setLayout(new MigLayout());
 
-        GridBagConstraints constraints = new GridBagConstraints();
-        constraints.anchor = GridBagConstraints.WEST;
+        //GridBagConstraints constraints = new GridBagConstraints();
+        //constraints.anchor = GridBagConstraints.WEST;
 
         JLabel consolidateGroupBlaBlaJLabel = new JLabel(Settings.jpoResources.getString("ConsolidateGroupBlaBlaLabel"));
-        consolidateGroupBlaBlaJLabel.setPreferredSize(new Dimension(700, 80));
-        consolidateGroupBlaBlaJLabel.setMinimumSize(new Dimension(600, 80));
-        consolidateGroupBlaBlaJLabel.setMaximumSize(new Dimension(800, 100));
-        constraints.gridx = 0;
+        //consolidateGroupBlaBlaJLabel.setPreferredSize(new Dimension(700, 80));
+        //consolidateGroupBlaBlaJLabel.setMinimumSize(new Dimension(600, 80));
+        //consolidateGroupBlaBlaJLabel.setMaximumSize(new Dimension(800, 100));
+        /*constraints.gridx = 0;
         constraints.gridy++;
         constraints.gridwidth = 2;
         constraints.weightx = 1.0;
-        constraints.insets = new Insets(4, 4, 4, 4);
-        contentJPanel.add(consolidateGroupBlaBlaJLabel, constraints);
+        constraints.insets = new Insets(4, 4, 4, 4);*/
+        contentJPanel.add(consolidateGroupBlaBlaJLabel, "wrap");
 
         JLabel targetDirJLabel = new JLabel(Settings.jpoResources.getString("genericTargetDirText"));
-        constraints.gridx = 0;
+        /*constraints.gridx = 0;
         constraints.gridy++;
         constraints.gridwidth = 2;
         constraints.weightx = 1.0;
-        constraints.insets = new Insets(4, 4, 4, 4);
-        contentJPanel.add(targetDirJLabel, constraints);
+        constraints.insets = new Insets(4, 4, 4, 4);*/
+        contentJPanel.add(targetDirJLabel);
 
-        constraints.gridx = 0;
+        /*constraints.gridx = 0;
         constraints.gridy++;
         constraints.gridwidth = 1;
         constraints.weightx = 0.8;
-        constraints.insets = new Insets(4, 4, 4, 4);
-        contentJPanel.add(highresDirectoryChooser, constraints);
+        constraints.insets = new Insets(4, 4, 4, 4);*/
+        contentJPanel.add(highresDirectoryChooser, "wrap");
 
         recurseSubgroupsJCheckBox.setSelected(true);
-        constraints.gridx = 0;
+        /*constraints.gridx = 0;
         constraints.gridy++;
         constraints.gridwidth = 2;
         constraints.weightx = 1.0;
-        constraints.insets = new Insets(4, 4, 4, 4);
-        contentJPanel.add(recurseSubgroupsJCheckBox, constraints);
+        constraints.insets = new Insets(4, 4, 4, 4);*/
+        contentJPanel.add(recurseSubgroupsJCheckBox, "wrap");
 
-        final JLabel targetLowresDirJLabel = new JLabel(Settings.jpoResources.getString("genericTargetDirText"));
+        /*final JLabel targetLowresDirJLabel = new JLabel(Settings.jpoResources.getString("genericTargetDirText"));
 
         lowresJCheckBox.setSelected(true);
         constraints.gridx = 0;
@@ -196,7 +204,7 @@ public class ConsolidateGroupJFrame
         constraints.gridwidth = 1;
         constraints.weightx = 0.8;
         constraints.insets = new Insets(4, 4, 4, 4);
-        contentJPanel.add(lowresDirectoryChooser, constraints);
+        contentJPanel.add(lowresDirectoryChooser, constraints); */
 
         // create a JPanel for the buttons
         JPanel buttonJPanel = new JPanel();
@@ -212,17 +220,17 @@ public class ConsolidateGroupJFrame
 
         // add the cancel button
         final JButton cancelJButton = new JButton(Settings.jpoResources.getString("genericCancelText"));
-        cancelJButton.setPreferredSize(Settings.defaultButtonDimension);
+        /*cancelJButton.setPreferredSize(Settings.defaultButtonDimension);
         cancelJButton.setMinimumSize(Settings.defaultButtonDimension);
-        cancelJButton.setMaximumSize(Settings.defaultButtonDimension);
+        cancelJButton.setMaximumSize(Settings.defaultButtonDimension);*/
         buttonJPanel.add(cancelJButton);
 
-        constraints.gridx = 0;
+        /*constraints.gridx = 0;
         constraints.gridy++;
         constraints.gridwidth = 2;
         constraints.weightx = 0.5;
-        constraints.insets = new Insets(4, 4, 4, 4);
-        contentJPanel.add(buttonJPanel, constraints);
+        constraints.insets = new Insets(4, 4, 4, 4);*/
+        contentJPanel.add(buttonJPanel, "wrap");
 
         setContentPane(contentJPanel);
 
@@ -230,14 +238,14 @@ public class ConsolidateGroupJFrame
         setVisible(true);
 
         // Add the behaviour
-        highresDirectoryChooser.addChangeListener(new ChangeListener() {
+        /*highresDirectoryChooser.addChangeListener(new ChangeListener() {
 
             @Override
             public void stateChanged(ChangeEvent e) {
                 setLowresLocation();
             }
-        });
-        lowresJCheckBox.addActionListener(new ActionListener() {
+        });*/
+        /*lowresJCheckBox.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -245,7 +253,7 @@ public class ConsolidateGroupJFrame
                 lowresDirectoryChooser.setVisible(lowresJCheckBox.isSelected());
                 targetLowresDirJLabel.setVisible(lowresJCheckBox.isSelected());
             }
-        });
+        });*/
         consolidateJButton.addActionListener(new ActionListener() {
 
             @Override
@@ -264,15 +272,15 @@ public class ConsolidateGroupJFrame
 
     }
 
-    /**
+    /*
      * This method sets the lowres location to the highres location with an
      * additional /Lowres at the end. It is typically invoked when the highres
      * location changes.
-     */
+     *
     private void setLowresLocation() {
         lowresDirectoryChooser.setFile(
                 new File(highresDirectoryChooser.getDirectory(), "/Lowres/"));
-    }
+    }*/
 
     /**
      * method that gets rid of this JFrame
@@ -329,7 +337,7 @@ public class ConsolidateGroupJFrame
             return;
         }
 
-        File lowresDirectory = null;
+        /*File lowresDirectory = null;
         if (lowresJCheckBox.isSelected()) {
             lowresDirectory = lowresDirectoryChooser.getDirectory();
             if (!lowresDirectory.exists()) {
@@ -360,14 +368,13 @@ public class ConsolidateGroupJFrame
                         JOptionPane.ERROR_MESSAGE);
                 return;
             }
-        }
+        }*/
 
+        // ToDo: Fix EDT probelm below
         new ConsolidateGroup(
                 highresDirectory,
                 startNode,
                 recurseSubgroupsJCheckBox.isSelected(),
-                lowresJCheckBox.isSelected(),
-                lowresDirectory,
                 new ProgressGui(NodeStatistics.countPictures(startNode, recurseSubgroupsJCheckBox.isSelected()),
                         Settings.jpoResources.getString("ConsolitdateProgBarTitle"),
                         Settings.jpoResources.getString("ConsolitdateProgBarDone")));

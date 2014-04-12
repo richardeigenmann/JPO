@@ -279,8 +279,12 @@ public class Settings {
     public static JFrame anchorFrame = null;
     /**
      * The maximum number of pictures to keep in memory
+     *
+     * public static int maxCache;
      */
-    public static int maxCache;
+
+    public static String thumbnailCacheDirectory;
+
     /**
      * The maximum size a picture is zoomed to. This is to stop the Java engine
      * creating enormous temporary images which lock the computer up completely.
@@ -712,7 +716,9 @@ public class Settings {
         //LOGGER.info( String.format( "preferredLeftDividerSpot: %d", preferredLeftDividerSpot ) );
 
         maximumPictureSize = 6000;
-        maxCache = 4;
+        thumbnailCacheDirectory = System.getProperty( "java.io.tmpdir" ) 
+                + System.getProperty( "file.separator" ) 
+                + "Jpo-Thumbnail-Cache";
 
         pictureViewerDefaultDimensions = new Dimension( windowSizes[1] );
 
@@ -767,7 +773,7 @@ public class Settings {
         thumbnailCounter = prefs.getInt( "thumbnailCounter", thumbnailCounter );
         writeLog = prefs.getBoolean( "writeLog", writeLog );
         logfile = new File( prefs.get( "logfile", logfile.getPath() ) ); // inefficient, RE, 11.11.2006
-        maxCache = prefs.getInt( "maxCache", maxCache );
+        thumbnailCacheDirectory = prefs.get( "thumbnailCacheDirectory", thumbnailCacheDirectory );
         defaultHtmlPicsPerRow = prefs.getInt( "defaultHtmlPicsPerRow", defaultHtmlPicsPerRow );
         defaultHtmlThumbnailWidth = prefs.getInt( "defaultHtmlThumbnailWidth", defaultHtmlThumbnailWidth );
         defaultHtmlThumbnailHeight = prefs.getInt( "defaultHtmlThumbnailHeight", defaultHtmlThumbnailHeight );
@@ -973,7 +979,7 @@ public class Settings {
         prefs.putInt( "thumbnailCounter", thumbnailCounter );
         prefs.putBoolean( "writeLog", writeLog );
         prefs.put( "logfile", logfile.getPath() );
-        prefs.putInt( "maxCache", maxCache );
+        prefs.put( "thumbnailCacheDirectory", thumbnailCacheDirectory );
         prefs.putInt( "defaultHtmlPicsPerRow", defaultHtmlPicsPerRow );
         prefs.putInt( "defaultHtmlThumbnailWidth", defaultHtmlThumbnailWidth );
         prefs.putInt( "defaultHtmlThumbnailHeight", defaultHtmlThumbnailHeight );
@@ -1355,7 +1361,7 @@ public class Settings {
      */
     public static void clearRecentDropNodes() {
         recentDropNodes = new SortableDefaultMutableTreeNode[MAX_DROPNODES];
-       // notifyRecentDropNodesChanged();
+        // notifyRecentDropNodesChanged();
     }
     /*
      * ------------------------------------------------------------------------------
@@ -1375,8 +1381,8 @@ public class Settings {
      * This method memorises the directories used in copy operations so that
      * they can be offered as options in drop down lists.
      * <p>
-     * The callers of this method need to make sure they notify interested listeners
-     * of a change by calling:
+     * The callers of this method need to make sure they notify interested
+     * listeners of a change by calling:
      * <p>
      * {@code JpoEventBus.getInstance().post( new CopyLocationsChangedEvent() );}
      *

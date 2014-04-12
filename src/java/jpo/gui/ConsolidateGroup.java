@@ -15,7 +15,7 @@ import jpo.dataModel.Tools;
 /*
  ConsolidateGroup.java:  class that consolidated the pictures of a group in one directory
 
- Copyright (C) 2002 - 2012  Richard Eigenmann.
+ Copyright (C) 2002 - 2014  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -32,8 +32,7 @@ import jpo.dataModel.Tools;
 /**
  * This class moves all pictures of a group node to a target directory.
  */
-public class ConsolidateGroup
-        extends SwingWorker<Integer, String> {
+public class ConsolidateGroup         extends SwingWorker<Integer, String> {
 
     /**
      * Defines a logger for this class
@@ -48,10 +47,12 @@ public class ConsolidateGroup
      * the directory where the pictures are to be moved to
      */
     private final File targetDirectoryHighres;
-    /**
+    /*
      * the directory where the lowres pictures are to be moved to
-     */
+     *
     private final File targetDirectoryLowres;
+    */
+    
     /**
      * the node to start from
      */
@@ -60,10 +61,11 @@ public class ConsolidateGroup
      * flag that indicates that the subgroups should also be considered
      */
     private final boolean recurseGroups;
-    /**
+    /*
      * This flag says whether to consolidate Lowres images too
-     */
+     *
     private final boolean moveLowres;
+    */
 
     /**
      * Creates a Thread which runs the consolidation.
@@ -71,19 +73,14 @@ public class ConsolidateGroup
      * @param targetDirectoryHighres	Where we want the files moved to
      * @param startNode	The node from which this is all to be built.
      * @param recurseGroups Flag indicating subgroups should be included
-     * @param moveLowres	Flag indication that Lowres should be moved too
-     * @param targetDirectoryLowres Where to move the lowres files to. Only used
      * if the moveLowres flag is true
      */
     public ConsolidateGroup(File targetDirectoryHighres,
             SortableDefaultMutableTreeNode startNode, boolean recurseGroups,
-            boolean moveLowres, File targetDirectoryLowres,
-            ProgressGui progGui) {
+                        ProgressGui progGui) {
         this.targetDirectoryHighres = targetDirectoryHighres;
         this.startNode = startNode;
         this.recurseGroups = recurseGroups;
-        this.moveLowres = moveLowres;
-        this.targetDirectoryLowres = targetDirectoryLowres;
         this.progGui = progGui;
 
 
@@ -95,14 +92,14 @@ public class ConsolidateGroup
             LOGGER.severe(String.format("Aborting because directory %s can't be written to", targetDirectoryHighres.getPath()));
             return;
         }
-        if (moveLowres && (!targetDirectoryLowres.exists())) {
+        /*if (moveLowres && (!targetDirectoryLowres.exists())) {
             LOGGER.info(String.format("Aborting because lowres target directory %s doesn't exist", targetDirectoryLowres.getPath()));
             return;
         }
         if (moveLowres && (!targetDirectoryLowres.canWrite())) {
             LOGGER.info(String.format("Aborting because lowres target directory %s can't be written to", targetDirectoryLowres.getPath()));
             return;
-        }
+        }*/
 
 
         execute();
@@ -110,7 +107,7 @@ public class ConsolidateGroup
     /**
      * This object holds a reference to the progress GUI for the user.
      */
-    private ProgressGui progGui;
+    private final ProgressGui progGui;
 
     /**
      * The run method is fired by starting the thread. It creates a ProgressGui
@@ -154,13 +151,13 @@ public class ConsolidateGroup
             LOGGER.fine(String.format("Running consolidateGroup on GroupInfo: %s", groupNode.toString()));
         }
 
-        if (moveLowres && (!groupNode.isRoot())) {
+        /*if (moveLowres && (!groupNode.isRoot())) {
             // we should move the group thumbnail
             if (!moveLowresPicture(userObject)) {
                 LOGGER.severe(String.format("Could not move lowres picture of node %s. Continuing.", groupNode.toString()));
             }
             LOGGER.fine(String.format("Moved GroupInfo (%s) Thumbnail file to %s", groupNode.toString(), ((GroupInfo) userObject).getLowresFilename()));
-        }
+        }*/
 
         LOGGER.fine(String.format("The node %s has %d children", groupNode.toString(), groupNode.getChildCount()));
         LOGGER.fine(String.format("prog GUI interrupt: %b", progGui.getInterruptor().getShouldInterrupt()));
@@ -177,12 +174,12 @@ public class ConsolidateGroup
                     LOGGER.severe(String.format("Could not move highres picture of node %s. Aborting.", node.toString()));
                 }
                 LOGGER.info(String.format("Successfully Moved Highres file of node %s", pictureInfo.toString()));
-                if (moveLowres) {
+               /* if (moveLowres) {
                     if (!moveLowresPicture(pictureInfo)) {
                         LOGGER.severe(String.format("Could not move lowres picture of node %s. Continuing.", node.toString()));
                     }
-                }
-                LOGGER.info(String.format("Successfully consolidated node %s to highres directory %s and lowres directory %s", node.toString(), targetDirectoryHighres, targetDirectoryLowres));
+                }*/
+                //LOGGER.info(String.format("Successfully consolidated node %s to highres directory %s and lowres directory %s", node.toString(), targetDirectoryHighres, targetDirectoryLowres));
             }
             publish(String.format("Consolidated node: %s", node.toString()));
         }
@@ -221,7 +218,7 @@ public class ConsolidateGroup
         }
     }
 
-    /**
+    /*
      * This method moves a lowres file from an indicated
      * SortableDefaultMutableTreeNode 's PictureInfo object to the target
      * directory. It returns true if the move was successful or ignored false if
@@ -229,7 +226,7 @@ public class ConsolidateGroup
      *
      * @param	object the userObject of the Node to be moved
      * @return True if the move was successful or False if it was not.
-     */
+     *
     private boolean moveLowresPicture(Object object) {
         File oldFile;
         if (object instanceof GroupInfo) {
@@ -265,4 +262,5 @@ public class ConsolidateGroup
         }
 
     }
+    */
 }

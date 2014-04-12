@@ -27,8 +27,7 @@ import jpo.dataModel.Settings;
  *
  * @author Richard Eigenmann
  */
-public class ThreeDotButton
-        extends JButton {
+public class ThreeDotButton extends JButton {
 
     /**
      * Overriden JButton constructor

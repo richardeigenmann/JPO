@@ -21,9 +21,6 @@ import static javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE;
 import javax.swing.tree.DefaultMutableTreeNode;
 import jpo.EventBus.JpoEventBus;
 import jpo.EventBus.ShowQueryRequest;
-import jpo.dataModel.QueryNavigator;
-import jpo.gui.ApplicationEventHandler;
-import jpo.gui.Jpo;
 import net.miginfocom.swing.MigLayout;
 
 

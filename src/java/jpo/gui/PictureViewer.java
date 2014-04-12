@@ -6,6 +6,12 @@ import jpo.dataModel.Settings;
 import jpo.dataModel.PictureInfo;
 import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -17,7 +23,10 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JRadioButton;
 import javax.swing.SwingUtilities;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.event.MouseInputAdapter;
+import javax.swing.tree.DefaultMutableTreeNode;
 import jpo.dataModel.ExifInfo;
 import jpo.dataModel.NodeNavigatorInterface;
 import jpo.dataModel.PictureInfoChangeEvent;
@@ -26,13 +35,14 @@ import jpo.dataModel.RandomNavigator;
 import jpo.dataModel.NodeNavigatorListener;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
 import jpo.dataModel.Tools;
+import jpo.gui.swing.LeftRightButton.BUTTON_STATE;
 import jpo.gui.swing.PictureFrame;
 
 
 /*
  PictureViewer.java:  Controller and Viewer class that browses a set of pictures.
 
- Copyright (C) 2002 - 2011  Richard Eigenmann, Zürich, Switzerland
+ Copyright (C) 2002 - 2014  Richard Eigenmann, Zürich, Switzerland
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -65,7 +75,7 @@ public class PictureViewer
         PictureInfoChangeListener,
         NodeNavigatorListener {
 
-    public PictureFrame pictureFrame = new PictureFrame( this );
+    public PictureFrame pictureFrame = new PictureFrame();
 
     /**
      * The pane that handles the image drawing aspects.
@@ -103,6 +113,138 @@ public class PictureViewer
                 closeViewer();
             }
         } );
+
+        pictureFrame.getDescriptionJTextArea().addFocusListener( new FocusAdapter() {
+
+            @Override
+            public void focusLost( FocusEvent e ) {
+                super.focusLost( e );
+                updateDescription();
+            }
+        } );
+
+        pictureJPanel.addKeyListener( myViewerKeyAdapter );
+
+        pictureFrame.getPictureViewerNavBar().rotateLeftJButton.addActionListener( new ActionListener() {
+
+            @Override
+            public void actionPerformed( ActionEvent e ) {
+                rotate( 270 );
+            }
+        } );
+
+        pictureFrame.getPictureViewerNavBar().rotateRightJButton.addActionListener( new ActionListener() {
+
+            @Override
+            public void actionPerformed( ActionEvent e ) {
+                rotate( 90 );
+            }
+        } );
+
+        pictureFrame.getPictureViewerNavBar().zoomInJButton.addActionListener( new ActionListener() {
+
+            @Override
+            public void actionPerformed( ActionEvent e ) {
+                zoomIn();
+            }
+        } );
+
+        pictureFrame.getPictureViewerNavBar().zoomOutJButton.addActionListener( new ActionListener() {
+
+            @Override
+            public void actionPerformed( ActionEvent e ) {
+                zoomOut();
+            }
+        } );
+
+        pictureFrame.getPictureViewerNavBar().fullScreenJButton.addActionListener( new ActionListener() {
+
+            @Override
+            public void actionPerformed( ActionEvent e ) {
+                requestScreenSizeMenu();
+            }
+        } );
+
+        pictureFrame.getPictureViewerNavBar().popupMenuJButton.addActionListener( new ActionListener() {
+
+            @Override
+            public void actionPerformed( ActionEvent e ) {
+                requestPopupMenu();
+            }
+        } );
+
+        pictureFrame.getPictureViewerNavBar().infoJButton.addActionListener( new ActionListener() {
+
+            @Override
+            public void actionPerformed( ActionEvent e ) {
+                cylceInfoDisplay();
+            }
+        } );
+
+        pictureFrame.getPictureViewerNavBar().resetJButton.addActionListener( new ActionListener() {
+
+            @Override
+            public void actionPerformed( ActionEvent e ) {
+                resetPicture();
+            }
+        } );
+
+        pictureFrame.getPictureViewerNavBar().speedSlider.addChangeListener( new ChangeListener() {
+
+            @Override
+            public void stateChanged( ChangeEvent ce ) {
+                setTimerDelay( pictureFrame.getPictureViewerNavBar().speedSlider.getValue() );
+            }
+        } );
+
+        pictureFrame.getPictureViewerNavBar().closeJButton.addActionListener( new ActionListener() {
+
+            @Override
+            public void actionPerformed( ActionEvent e ) {
+                closeViewer();
+            }
+        } );
+
+        pictureFrame.getPictureViewerNavBar().previousJButton.addActionListener( new ActionListener() {
+
+            @Override
+            public void actionPerformed( ActionEvent e ) {
+                requestPriorPicture();
+            }
+        } );
+
+        pictureFrame.getPictureViewerNavBar().nextJButton.addActionListener( new ActionListener() {
+
+            @Override
+            public void actionPerformed( ActionEvent e ) {
+                requestNextPicture();
+            }
+        } );
+
+        pictureFrame.getPictureViewerNavBar().clockJButton.addActionListener( new ActionListener() {
+
+            @Override
+            public void actionPerformed( ActionEvent e ) {
+                requestAutoAdvance();
+            }
+        } );
+
+    }
+
+    /**
+     * This method sends the text of the textbox to the pictureinfo. This
+     * updates the description if it has changed.
+     */
+    private void updateDescription() {
+        Object userObject = getCurrentNode().getUserObject();
+        if ( userObject != null ) {
+            if ( userObject instanceof PictureInfo ) {
+                LOGGER.fine( "Sending description update to " + pictureFrame.getDescriptionJTextArea().getText() );
+                ( (PictureInfo) userObject ).setDescription(
+                        pictureFrame.getDescriptionJTextArea().getText() );
+            }
+
+        }
     }
 
     /**
@@ -239,7 +381,7 @@ public class PictureViewer
         pictureFrame.descriptionJTextField.setText( pictureInfo.getDescription() );
         setPicture( pictureInfo );
 
-        pictureFrame.getPictureViewerNavBar().setIconDecorations();
+        setIconDecorations();
         pictureJPanel.requestFocusInWindow();
     }
 
@@ -262,7 +404,7 @@ public class PictureViewer
             rotation
                     = pi.getRotation();
         } catch ( MalformedURLException x ) {
-            LOGGER.severe( "MarformedURLException trapped on: " + pi.getHighresLocation() + "\nReason: " + x.getMessage() );
+            LOGGER.severe( x.getMessage() );
             return;
 
         }
@@ -416,7 +558,7 @@ public class PictureViewer
     public void requestAutoAdvance() {
         if ( advanceTimer != null ) {
             stopTimer();
-            pictureFrame.getPictureViewerNavBar().setClockIdle();
+            pictureFrame.getPictureViewerNavBar().clockJButton.setClockIdle();
         } else {
             doAutoAdvanceDialog();
         }
@@ -513,7 +655,7 @@ public class PictureViewer
      */
     public void startAdvanceTimer( int seconds ) {
         advanceTimer = new AdvanceTimer( this, seconds );
-        pictureFrame.getPictureViewerNavBar().setClockBusy();
+        pictureFrame.getPictureViewerNavBar().clockJButton.setClockBusy();
         pictureFrame.getPictureViewerNavBar().showDelaySilder();
     }
 
@@ -818,4 +960,103 @@ public class PictureViewer
             }
         }
     }  //end class Listener
+
+    private final ViewerKeyAdapter myViewerKeyAdapter = new ViewerKeyAdapter();
+
+    private class ViewerKeyAdapter
+            extends KeyAdapter {
+
+        /**
+         * method that analysed the key that was pressed
+         */
+        @Override
+        public void keyPressed( KeyEvent e ) {
+            int k = e.getKeyCode();
+            if ( ( k == KeyEvent.VK_I ) ) {
+                pictureJPanel.cylceInfoDisplay();
+            } else if ( ( k == KeyEvent.VK_N ) ) {
+                requestNextPicture();
+            } else if ( ( k == KeyEvent.VK_M ) ) {
+                requestPopupMenu();
+            } else if ( ( k == KeyEvent.VK_P ) ) {
+                requestPriorPicture();
+            } else if ( ( k == KeyEvent.VK_F ) ) {
+                requestScreenSizeMenu();
+            } else if ( ( k == KeyEvent.VK_SPACE ) || ( k == KeyEvent.VK_HOME ) ) {
+                resetPicture();
+            } else if ( ( k == KeyEvent.VK_PAGE_UP ) ) {
+                zoomIn();
+            } else if ( ( k == KeyEvent.VK_PAGE_DOWN ) ) {
+                zoomOut();
+            } else if ( ( k == KeyEvent.VK_1 ) ) {
+                pictureJPanel.zoomFull();
+            } else if ( ( k == KeyEvent.VK_UP ) || ( k == KeyEvent.VK_KP_UP ) ) {
+                pictureJPanel.scrollDown();
+            } else if ( ( k == KeyEvent.VK_DOWN ) || ( k == KeyEvent.VK_KP_DOWN ) ) {
+                pictureJPanel.scrollUp();
+            } else if ( ( k == KeyEvent.VK_LEFT ) || ( k == KeyEvent.VK_KP_LEFT ) ) {
+                pictureJPanel.scrollRight();
+            } else if ( ( k == KeyEvent.VK_RIGHT ) || ( k == KeyEvent.VK_KP_RIGHT ) ) {
+                pictureJPanel.scrollLeft();
+            } else {
+                JOptionPane.showMessageDialog( pictureFrame.myJFrame,
+                        Settings.jpoResources.getString( "PictureViewerKeycodes" ),
+                        Settings.jpoResources.getString( "PictureViewerKeycodesTitle" ),
+                        JOptionPane.INFORMATION_MESSAGE );
+            }
+        }
+    }
+
+    /**
+     * This method looks at the position the currentNode is in regard to it's
+     * siblings and changes the forward and back icons to reflect the position
+     * of the current node. TODO: This code is not browser aware. It needs to
+     * be.
+     */
+    public void setIconDecorations() {
+        // Set the next and back icons
+        if ( getCurrentNode() != null ) {
+            DefaultMutableTreeNode NextNode = getCurrentNode().getNextSibling();
+            if ( NextNode != null ) {
+                Object nodeInfo = NextNode.getUserObject();
+                if ( nodeInfo instanceof PictureInfo ) {
+                    // because there is a next sibling object of type
+                    // PictureInfo we should set the next icon to the
+                    // icon that indicates a next picture in the group
+                    pictureFrame.getPictureViewerNavBar().nextJButton.setDecoration( BUTTON_STATE.HAS_RIGHT );
+                } else {
+                    // it must be a GroupInfo node
+                    // since we must descend into it it gets a nextnext icon.
+                    pictureFrame.getPictureViewerNavBar().nextJButton.setDecoration( BUTTON_STATE.HAS_NEXT );
+                }
+            } else {
+                // the getNextSibling() method returned null
+                // if the getNextNode also returns null this was the end of the album
+                // otherwise there are more pictures in the next group.
+                if ( getCurrentNode().getNextNode() != null ) {
+                    pictureFrame.getPictureViewerNavBar().nextJButton.setDecoration( BUTTON_STATE.HAS_RIGHT );
+                } else {
+                    pictureFrame.getPictureViewerNavBar().nextJButton.setDecoration( BUTTON_STATE.END );
+                }
+            }
+
+            // let's see what we have in the way of previous siblings..
+            if ( getCurrentNode().getPreviousSibling() != null ) {
+                pictureFrame.getPictureViewerNavBar().previousJButton.setDecoration( BUTTON_STATE.HAS_LEFT );
+            } else {
+                // deterine if there are any previous nodes that are not groups.
+                DefaultMutableTreeNode testNode;
+                testNode = getCurrentNode().getPreviousNode();
+                while ( ( testNode != null ) && ( !( testNode.getUserObject() instanceof PictureInfo ) ) ) {
+                    testNode = testNode.getPreviousNode();
+                }
+                if ( testNode == null ) {
+                    pictureFrame.getPictureViewerNavBar().previousJButton.setDecoration( BUTTON_STATE.BEGINNING );
+                } else {
+                    pictureFrame.getPictureViewerNavBar().previousJButton.setDecoration( BUTTON_STATE.HAS_PREVIOUS );
+                }
+            }
+        }
+    }
+
 }

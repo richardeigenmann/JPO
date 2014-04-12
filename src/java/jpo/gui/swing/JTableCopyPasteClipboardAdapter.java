@@ -1,4 +1,4 @@
-package jpo.gui;
+package jpo.gui.swing;
 
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
@@ -18,14 +18,14 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.table.AbstractTableModel;
 
 /**
- *  ExcelAdapter enables Copy-Paste Clipboard functionality on JTables.
+ *  JTableCopyPasteClipboardAdapter enables Copy-Paste Clipboard functionality on JTables.
  *  The clipboard data format used by the adapter is compatible with
  *  the clipboard format used by Excel. This provides for clipboard
  *  interoperability between enabled JTables and Excel.
  *
- *  from http://www.javaworld.com/javatips/jw-javatip77_p.html
+ *  {@link http://www.javaworld.com/javatips/jw-javatip77_p.html }
  */
-public class ExcelAdapter implements ActionListener {
+public class JTableCopyPasteClipboardAdapter implements ActionListener {
     //private String rowstring,value;
 
     private final Clipboard systemClipboard;
@@ -42,7 +42,7 @@ public class ExcelAdapter implements ActionListener {
      *
      * @param myJTable
      */
-    public ExcelAdapter( JTable myJTable ) {
+    public JTableCopyPasteClipboardAdapter( JTable myJTable ) {
         jTable = myJTable;
         KeyStroke copy1 = KeyStroke.getKeyStroke( KeyEvent.VK_C, ActionEvent.CTRL_MASK, false );
         KeyStroke copy2 = KeyStroke.getKeyStroke( KeyEvent.VK_INSERT, ActionEvent.CTRL_MASK, false );

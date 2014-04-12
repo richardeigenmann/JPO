@@ -60,21 +60,21 @@ public class PictureInfo
     /**
      * Constructor method. Creates the object and sets up the variables.
      *
-     * @param Highres_Name
+     * @param highresLocation
      * @param Lowres_Name
      * @param description	The description of the image
      * @param	filmReference	The reference to the film if any
      */
-    public PictureInfo( String Highres_Name,
+    public PictureInfo( String highresLocation,
             String Lowres_Name,
             String description,
             String filmReference ) {
-        this.highresLocation = Highres_Name;
+        this.highresLocation = highresLocation;
         this.lowresLocation = Lowres_Name;
         this.description = description;
         this.filmReference = filmReference;
 
-        LOGGER.log( Level.FINE, "Highres_Name: {0}", Highres_Name );
+        LOGGER.log( Level.FINE, "Highres_Name: {0}", highresLocation );
         LOGGER.log( Level.FINE, "Lowres_Name: {0}", Lowres_Name );
         LOGGER.log( Level.FINE, "description: {0}", description );
         LOGGER.log( Level.FINE, "filmReference: {0}", filmReference );
@@ -114,6 +114,18 @@ public class PictureInfo
         filmReference = "";
     }
 
+    /**
+     * Constructor with just filename as option.
+     * @param highresLocation The highres location as a String
+     */
+    public PictureInfo(String highresLocation, String description) {
+        this.highresLocation = highresLocation;
+        lowresLocation = "";
+        this.description = description;
+        filmReference = "";
+    }
+
+    
     /**
      * returns the description of the image in the default <code>toString</code>
      * method.

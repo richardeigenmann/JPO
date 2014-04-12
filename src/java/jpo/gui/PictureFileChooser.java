@@ -28,7 +28,7 @@ import jpo.dataModel.Tools;
  PictureFileChooser.java:  a controller that brings up a filechooser and then adds the pictures
 
 
- Copyright (C) 2002, 2010  Richard Eigenmann.
+ Copyright (C) 2002, 2014  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -87,35 +87,8 @@ public class PictureFileChooser
 
             Settings.showThumbOnFileChooser = showThumbnailJCheckBox.isSelected();
 
-            PictureAdder pas = new PictureAdder( startNode, chosenFiles, newOnlyJCheckBox.isSelected(), recurseJCheckBox.isSelected(), retainDirectoriesJCheckBox.isSelected(), categoryJScrollPane.getSelectedCategories() );
-            // TODO: Why do these 2 statements have to be executed? Things change in the model so it should find out itself, no?
-            pas.execute();
-            //Jpo.positionToNode( startNode );
-            //startNode.refreshThumbnail();
-
-            //logger.info( "Before Execute" );
-            /*int added = 0;
-             try {
-             added = pas.get();
-             } catch ( InterruptedException ex ) {
-             Logger.getLogger( PictureFileChooser.class.getName() ).log( Level.SEVERE, null, ex );
-             } catch ( ExecutionException ex ) {
-             Logger.getLogger( PictureFileChooser.class.getName() ).log( Level.SEVERE, null, ex );
-             }
-             logger.info( String.format( "After Execute: %d", added ) );*/
-
-            /*       Runnable r = new Runnable() {
-
-             @Override
-             public void run() {
-             //SortableDefaultMutableTreeNode displayNode = PictureAdder.addPictures( startNode, chosenFiles, newOnlyJCheckBox.isSelected(), recurseJCheckBox.isSelected(), retainDirectoriesJCheckBox.isSelected(), categoryJScrollPane.getSelectedCategories() );
-             //Jpo.positionToNode( displayNode );
-             //displayNode.refreshThumbnail();
-            
-             }
-             };
-
-             SwingUtilities.invokeLater( r );*/
+            PictureAdder pictureAdder = new PictureAdder( startNode, chosenFiles, newOnlyJCheckBox.isSelected(), recurseJCheckBox.isSelected(), retainDirectoriesJCheckBox.isSelected(), categoryJScrollPane.getSelectedCategories() );
+            pictureAdder.execute();
         }
     }
 

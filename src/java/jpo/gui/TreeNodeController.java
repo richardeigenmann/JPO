@@ -9,7 +9,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.MalformedURLException;
 import java.util.Enumeration;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
 import java.util.logging.Logger;
@@ -24,7 +23,7 @@ import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
 /*
  TreeNodeController.java: This class should handle all the interactive GUI stuff for a Tree Node
 
- Copyright (C) 2007 - 2013  Richard Eigenmann.
+ Copyright (C) 2007 - 2014  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -52,36 +51,7 @@ public class TreeNodeController {
      */
     private static final Logger LOGGER = Logger.getLogger( TreeNodeController.class.getName() );
 
-    /**
-     * This method brings up a Filechooser and then loads the images off the
-     * specified flat file.
-     *
-     * @param targetNode The node at which to add the flat file.
-     */
-    public static void addFlatFile( SortableDefaultMutableTreeNode targetNode ) {
-        JFileChooser jFileChooser = new JFileChooser();
-        jFileChooser.setFileSelectionMode( javax.swing.JFileChooser.FILES_ONLY );
-        jFileChooser.setApproveButtonText( Settings.jpoResources.getString( "fileOpenButtonText" ) );
-        jFileChooser.setDialogTitle( Settings.jpoResources.getString( "addFlatFileTitle" ) );
-        jFileChooser.setCurrentDirectory( Settings.getMostRecentCopyLocation() );
-
-        int returnVal = jFileChooser.showOpenDialog( Settings.anchorFrame );
-        if ( returnVal == JFileChooser.APPROVE_OPTION ) {
-            File chosenFile = jFileChooser.getSelectedFile();
-
-            try {
-                targetNode.addFlatFile( chosenFile );
-            } catch ( IOException e ) {
-                LOGGER.log( Level.INFO, "IOException {0}", e.getMessage() );
-                JOptionPane.showMessageDialog( Settings.anchorFrame,
-                        e.getMessage(),
-                        Settings.jpoResources.getString( "genericError" ),
-                        JOptionPane.ERROR_MESSAGE );
-            }
-
-        }
-    }
-
+    
     /**
      * Brings up a JFileChooser to select the target location and then copies
      * the images to the target location

@@ -8,6 +8,7 @@ import java.util.Calendar;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Set;
 import java.util.TreeSet;
 import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
@@ -488,6 +489,16 @@ public class PictureCollection {
         return categories.keySet().iterator();
     }
 
+    /**
+     * Returns a set of of category keys
+     *
+     * @return an set of category keys
+     */
+    public Set<Integer> getCategoryKeySet() {
+        return categories.keySet();
+    }
+    
+    
     /**
      * Returns the Value for the key
      *

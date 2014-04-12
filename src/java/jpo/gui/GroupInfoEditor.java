@@ -13,7 +13,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
-import javax.swing.JTextField;
 import jpo.dataModel.SingleNodeNavigator;
 import jpo.dataModel.Settings;
 import jpo.dataModel.GroupInfo;
@@ -22,7 +21,7 @@ import net.miginfocom.swing.MigLayout;
 
 /*
  GroupInfoEditor.java:  Controller and Vie for editing group properties
- Copyright (C) 2002 - 2009  Richard Eigenmann.
+ Copyright (C) 2002 - 2014  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -67,31 +66,37 @@ public class GroupInfoEditor {
             }
         } );
 
+        initComponents();
+        populateFields();
+    }
+
+    /**
+     * TextArea to edit the description
+     */
+    private final JTextArea descriptionJTextArea = new JTextArea();
+
+    private void initComponents() {
+
         JPanel jPanel = new JPanel();
         jPanel.setLayout( new MigLayout() );
 
         JLabel descriptionJLabel = new JLabel( Settings.jpoResources.getString( "groupDescriptionLabel" ) );
         jPanel.add( descriptionJLabel );
 
-        final GroupInfo gi = ( (GroupInfo) editNode.getUserObject() );
-
-        final JTextArea descriptionJTextArea = new JTextArea();
-        descriptionJTextArea.setText( gi.getGroupName() );
         descriptionJTextArea.setPreferredSize( new Dimension( 400, 150 ) );
         descriptionJTextArea.setWrapStyleWord( true );
         descriptionJTextArea.setLineWrap( true );
         descriptionJTextArea.setEditable( true );
         jPanel.add( descriptionJTextArea, "wrap" );
 
-        JLabel lowresLocationJLabel = new JLabel( Settings.jpoResources.getString( "lowresLocationLabel" ) );
-        jPanel.add( lowresLocationJLabel );
+        /*abel lowresLocationJLabel = new JLabel( Settings.jpoResources.getString( "lowresLocationLabel" ) );
+         jPanel.add( lowresLocationJLabel );
 
-        final JTextField lowresLocationJTextField = new JTextField();
-        Dimension inputDimension = new Dimension( 400, 20 );
-        lowresLocationJTextField.setPreferredSize( inputDimension );
-        lowresLocationJTextField.setText( gi.getLowresLocation() );
-        jPanel.add( lowresLocationJTextField, "wrap" );
-
+         final JTextField lowresLocationJTextField = new JTextField();
+         Dimension inputDimension = new Dimension( 400, 20 );
+         lowresLocationJTextField.setPreferredSize( inputDimension );
+         lowresLocationJTextField.setText( gi.getLowresLocation() );
+         jPanel.add( lowresLocationJTextField, "wrap" );*/
         JPanel buttonJPanel = new JPanel();
 
         JButton OkJButton = new JButton( Settings.jpoResources.getString( "genericOKText" ) );
@@ -104,10 +109,7 @@ public class GroupInfoEditor {
 
             @Override
             public void actionPerformed( ActionEvent e ) {
-                gi.setGroupName( descriptionJTextArea.getText() );
-                gi.setLowresLocation( lowresLocationJTextField.getText() );
-                editNode.getPictureCollection().sendNodeChanged( editNode );
-                getRid();
+                handleOkButtonClick();
             }
         } );
         OkJButton.setDefaultCapable( true );
@@ -144,6 +146,19 @@ public class GroupInfoEditor {
         jFrame.pack();
         jFrame.setLocationRelativeTo( Settings.anchorFrame );
         jFrame.setVisible( true );
+    }
+
+    private void populateFields() {
+        final GroupInfo gi = ( (GroupInfo) editNode.getUserObject() );
+        descriptionJTextArea.setText( gi.getGroupName() );
+
+    }
+
+    private void handleOkButtonClick() {
+        final GroupInfo gi = ( (GroupInfo) editNode.getUserObject() );
+        gi.setGroupName( descriptionJTextArea.getText() );
+        editNode.getPictureCollection().sendNodeChanged( editNode );
+        getRid();
     }
 
     /**

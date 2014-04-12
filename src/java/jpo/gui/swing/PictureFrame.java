@@ -3,22 +3,15 @@ package jpo.gui.swing;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.util.logging.Logger;
 import javax.swing.BorderFactory;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.border.EmptyBorder;
-import jpo.dataModel.PictureInfo;
 import jpo.dataModel.Settings;
 import jpo.dataModel.Tools;
-import jpo.gui.PictureViewerActions;
 import net.miginfocom.swing.MigLayout;
 
 /*
@@ -46,17 +39,14 @@ public class PictureFrame {
 
     /**
      * Constructor. Initialises the GUI widgets.
-     * @param pictureViewerController
      */
-    public PictureFrame( final PictureViewerActions pictureViewerController ) {
-        this.pictureViewerController = pictureViewerController;
+    public PictureFrame() {
         initGui();
-        pictureJPanel.addKeyListener( myViewerKeyAdapter );
     }
     /**
      * A handle back to the Controller the keystrokes can request actions
      */
-    private final PictureViewerActions pictureViewerController;
+    //private final PictureViewerActions pictureViewerController;
     /**
      * Defines a logger for this class
      */
@@ -102,6 +92,11 @@ public class PictureFrame {
      **/
     public JTextArea descriptionJTextField = new JTextArea();
 
+    public JTextArea getDescriptionJTextArea() {
+        return descriptionJTextField;
+    }
+    
+    
     /**
      *  This method creates all the GUI widgets and connects them for the
      *  PictureViewer.
@@ -152,14 +147,6 @@ public class PictureFrame {
         descriptionJTextField.setOpaque( true );
         descriptionJTextField.setBorder( new EmptyBorder( 2, 12, 0, 0 ) );
         descriptionJTextField.setMinimumSize( new Dimension( 80, 26 ) );
-        descriptionJTextField.addFocusListener( new FocusAdapter() {
-
-            @Override
-            public void focusLost( FocusEvent e ) {
-                super.focusLost( e );
-                updateDescription();
-            }
-        } );
 
         JScrollPane descriptionJScrollPane = new JScrollPane( JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER );
         descriptionJScrollPane.setViewportView( descriptionJTextField );
@@ -168,70 +155,9 @@ public class PictureFrame {
         descriptionJScrollPane.setOpaque( true );
         lowerBar.add( descriptionJScrollPane );
 
-        navButtonPanel.setPictureViewer( pictureViewerController );
         lowerBar.add( navButtonPanel );
         viewerPanel.add( lowerBar );
     }
 
 
-    /**
-     * This method sends the text of the textbox to the pictureinfo.
-     * This updates the description if it has changed.
-     */
-    private void updateDescription() {
-        Object userObject = pictureViewerController.getCurrentNode().getUserObject();
-        if ( userObject != null ) {
-            if ( userObject instanceof PictureInfo ) {
-                LOGGER.fine( "Sending description update to " + descriptionJTextField.getText() );
-                ( (PictureInfo) userObject ).setDescription(
-                        descriptionJTextField.getText() );
-            }
-
-        }
-    }
-    private final ViewerKeyAdapter myViewerKeyAdapter = new ViewerKeyAdapter();
-
-    private class ViewerKeyAdapter
-            extends KeyAdapter {
-
-        /**
-         *  method that analysed the key that was pressed
-         */
-        @Override
-        public void keyPressed( KeyEvent e ) {
-            int k = e.getKeyCode();
-            if ( ( k == KeyEvent.VK_I ) ) {
-                pictureJPanel.cylceInfoDisplay();
-            } else if ( ( k == KeyEvent.VK_N ) ) {
-                pictureViewerController.requestNextPicture();
-            } else if ( ( k == KeyEvent.VK_M ) ) {
-                pictureViewerController.requestPopupMenu();
-            } else if ( ( k == KeyEvent.VK_P ) ) {
-                pictureViewerController.requestPriorPicture();
-            } else if ( ( k == KeyEvent.VK_F ) ) {
-                pictureViewerController.requestScreenSizeMenu();
-            } else if ( ( k == KeyEvent.VK_SPACE ) || ( k == KeyEvent.VK_HOME ) ) {
-                pictureViewerController.resetPicture();
-            } else if ( ( k == KeyEvent.VK_PAGE_UP ) ) {
-                pictureViewerController.zoomIn();
-            } else if ( ( k == KeyEvent.VK_PAGE_DOWN ) ) {
-                pictureViewerController.zoomOut();
-            } else if ( ( k == KeyEvent.VK_1 ) ) {
-                pictureJPanel.zoomFull();
-            } else if ( ( k == KeyEvent.VK_UP ) || ( k == KeyEvent.VK_KP_UP ) ) {
-                pictureJPanel.scrollDown();
-            } else if ( ( k == KeyEvent.VK_DOWN ) || ( k == KeyEvent.VK_KP_DOWN ) ) {
-                pictureJPanel.scrollUp();
-            } else if ( ( k == KeyEvent.VK_LEFT ) || ( k == KeyEvent.VK_KP_LEFT ) ) {
-                pictureJPanel.scrollRight();
-            } else if ( ( k == KeyEvent.VK_RIGHT ) || ( k == KeyEvent.VK_KP_RIGHT ) ) {
-                pictureJPanel.scrollLeft();
-            } else {
-                JOptionPane.showMessageDialog( myJFrame,
-                        Settings.jpoResources.getString( "PictureViewerKeycodes" ),
-                        Settings.jpoResources.getString( "PictureViewerKeycodesTitle" ),
-                        JOptionPane.INFORMATION_MESSAGE );
-            }
-        }
-    }
 }

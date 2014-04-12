@@ -405,6 +405,7 @@ public class PicturePane
     /**
      * Constant to indicate that no information should be overlaid on the
      * picture
+     * TODO: Make this an enum
      */
     public static final int DISPLAY_NONE = 0;
 
@@ -528,5 +529,9 @@ public class PicturePane
      */
     public ScalablePicture getScalablePicture() {
         return sclPic;
+    }
+
+    public Object getDescriptionJTextArea() {
+        throw new UnsupportedOperationException( "Not supported yet." ); //To change body of generated methods, choose Tools | Templates.
     }
 }

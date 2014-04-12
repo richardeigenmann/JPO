@@ -15,6 +15,7 @@ import jpo.EventBus.AddCollectionToGroupRequest;
 import jpo.EventBus.AddEmptyGroupRequest;
 import jpo.EventBus.AddGroupToEmailSelectionRequest;
 import jpo.EventBus.ChooseAndAddCollectionRequest;
+import jpo.EventBus.ChooseAndAddFlatfileRequest;
 import jpo.EventBus.ChooseAndAddPicturesToGroupRequest;
 import jpo.EventBus.ConsolidateGroupRequest;
 import jpo.EventBus.ExportGroupToFlatFileRequest;
@@ -227,15 +228,15 @@ public class GroupPopupMenu extends JPopupMenu {
             addGroupJMenu.add( addCollectionJMenu );
 
             // menu item that allows adding a collection of pictures
-            JMenuItem addCollectionFormFile = new JMenuItem( Settings.jpoResources.getString( "addCollectionFormFile" ) );
-            addCollectionFormFile.addActionListener( new ActionListener() {
+            JMenuItem addCollectionFromFile = new JMenuItem( Settings.jpoResources.getString( "addCollectionFormFile" ) );
+            addCollectionFromFile.addActionListener( new ActionListener() {
 
                 @Override
                 public void actionPerformed( ActionEvent e ) {
                     JpoEventBus.getInstance().post( new ChooseAndAddCollectionRequest( popupNode ) );
                 }
             } );
-            addCollectionJMenu.add( addCollectionFormFile );
+            addCollectionJMenu.add( addCollectionFromFile );
 
             // add the recently opened files to the menu
             for ( int i = 0; i < Settings.MAX_MEMORISE; i++ ) {
@@ -259,7 +260,7 @@ public class GroupPopupMenu extends JPopupMenu {
 
                 @Override
                 public void actionPerformed( ActionEvent e ) {
-                    TreeNodeController.addFlatFile( popupNode );
+                    JpoEventBus.getInstance().post( new ChooseAndAddFlatfileRequest( popupNode ) );
                 }
             } );
             addGroupJMenu.add( addFlatFileJMenuItem );
