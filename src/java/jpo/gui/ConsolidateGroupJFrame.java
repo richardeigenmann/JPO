@@ -131,7 +131,7 @@ public class ConsolidateGroupJFrame
             return;
         }
 
-        setSize(460, 300);
+        setSize(460, 500);        
         setLocationRelativeTo(Settings.anchorFrame);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
@@ -145,68 +145,17 @@ public class ConsolidateGroupJFrame
         JPanel contentJPanel = new javax.swing.JPanel();
         contentJPanel.setLayout(new MigLayout());
 
-        //GridBagConstraints constraints = new GridBagConstraints();
-        //constraints.anchor = GridBagConstraints.WEST;
-
         JLabel consolidateGroupBlaBlaJLabel = new JLabel(Settings.jpoResources.getString("ConsolidateGroupBlaBlaLabel"));
-        //consolidateGroupBlaBlaJLabel.setPreferredSize(new Dimension(700, 80));
-        //consolidateGroupBlaBlaJLabel.setMinimumSize(new Dimension(600, 80));
-        //consolidateGroupBlaBlaJLabel.setMaximumSize(new Dimension(800, 100));
-        /*constraints.gridx = 0;
-        constraints.gridy++;
-        constraints.gridwidth = 2;
-        constraints.weightx = 1.0;
-        constraints.insets = new Insets(4, 4, 4, 4);*/
-        contentJPanel.add(consolidateGroupBlaBlaJLabel, "wrap");
+        contentJPanel.add(consolidateGroupBlaBlaJLabel, "span 2, wrap");
 
         JLabel targetDirJLabel = new JLabel(Settings.jpoResources.getString("genericTargetDirText"));
-        /*constraints.gridx = 0;
-        constraints.gridy++;
-        constraints.gridwidth = 2;
-        constraints.weightx = 1.0;
-        constraints.insets = new Insets(4, 4, 4, 4);*/
         contentJPanel.add(targetDirJLabel);
 
-        /*constraints.gridx = 0;
-        constraints.gridy++;
-        constraints.gridwidth = 1;
-        constraints.weightx = 0.8;
-        constraints.insets = new Insets(4, 4, 4, 4);*/
-        contentJPanel.add(highresDirectoryChooser, "wrap");
+        contentJPanel.add(highresDirectoryChooser, "span 2, wrap");
 
         recurseSubgroupsJCheckBox.setSelected(true);
-        /*constraints.gridx = 0;
-        constraints.gridy++;
-        constraints.gridwidth = 2;
-        constraints.weightx = 1.0;
-        constraints.insets = new Insets(4, 4, 4, 4);*/
-        contentJPanel.add(recurseSubgroupsJCheckBox, "wrap");
+        contentJPanel.add(recurseSubgroupsJCheckBox, "span 2, wrap");
 
-        /*final JLabel targetLowresDirJLabel = new JLabel(Settings.jpoResources.getString("genericTargetDirText"));
-
-        lowresJCheckBox.setSelected(true);
-        constraints.gridx = 0;
-        constraints.gridy++;
-        constraints.gridwidth = 2;
-        constraints.weightx = 1.0;
-        constraints.insets = new Insets(4, 4, 4, 4);
-        contentJPanel.add(lowresJCheckBox, constraints);
-
-        constraints.gridx = 0;
-        constraints.gridy++;
-        constraints.gridwidth = 2;
-        constraints.weightx = 1.0;
-        constraints.insets = new Insets(4, 4, 4, 4);
-        contentJPanel.add(targetLowresDirJLabel, constraints);
-
-        constraints.gridx = 0;
-        constraints.gridy++;
-        constraints.gridwidth = 1;
-        constraints.weightx = 0.8;
-        constraints.insets = new Insets(4, 4, 4, 4);
-        contentJPanel.add(lowresDirectoryChooser, constraints); */
-
-        // create a JPanel for the buttons
         JPanel buttonJPanel = new JPanel();
 
         // add the consolidate button
@@ -220,40 +169,16 @@ public class ConsolidateGroupJFrame
 
         // add the cancel button
         final JButton cancelJButton = new JButton(Settings.jpoResources.getString("genericCancelText"));
-        /*cancelJButton.setPreferredSize(Settings.defaultButtonDimension);
         cancelJButton.setMinimumSize(Settings.defaultButtonDimension);
-        cancelJButton.setMaximumSize(Settings.defaultButtonDimension);*/
+        cancelJButton.setMaximumSize(new Dimension(120, 25));
         buttonJPanel.add(cancelJButton);
-
-        /*constraints.gridx = 0;
-        constraints.gridy++;
-        constraints.gridwidth = 2;
-        constraints.weightx = 0.5;
-        constraints.insets = new Insets(4, 4, 4, 4);*/
-        contentJPanel.add(buttonJPanel, "wrap");
+        contentJPanel.add(buttonJPanel, "span 2, wrap");
 
         setContentPane(contentJPanel);
 
         pack();
         setVisible(true);
 
-        // Add the behaviour
-        /*highresDirectoryChooser.addChangeListener(new ChangeListener() {
-
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                setLowresLocation();
-            }
-        });*/
-        /*lowresJCheckBox.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                setLowresLocation();
-                lowresDirectoryChooser.setVisible(lowresJCheckBox.isSelected());
-                targetLowresDirJLabel.setVisible(lowresJCheckBox.isSelected());
-            }
-        });*/
         consolidateJButton.addActionListener(new ActionListener() {
 
             @Override
@@ -271,16 +196,6 @@ public class ConsolidateGroupJFrame
         });
 
     }
-
-    /*
-     * This method sets the lowres location to the highres location with an
-     * additional /Lowres at the end. It is typically invoked when the highres
-     * location changes.
-     *
-    private void setLowresLocation() {
-        lowresDirectoryChooser.setFile(
-                new File(highresDirectoryChooser.getDirectory(), "/Lowres/"));
-    }*/
 
     /**
      * method that gets rid of this JFrame
@@ -337,40 +252,7 @@ public class ConsolidateGroupJFrame
             return;
         }
 
-        /*File lowresDirectory = null;
-        if (lowresJCheckBox.isSelected()) {
-            lowresDirectory = lowresDirectoryChooser.getDirectory();
-            if (!lowresDirectory.exists()) {
-                try {
-                    if (!lowresDirectory.mkdirs()) {
-                        JOptionPane.showMessageDialog(
-                                Settings.anchorFrame,
-                                String.format(Settings.jpoResources.getString("ConsolidateCreateDirFailure"), lowresDirectory),
-                                Settings.jpoResources.getString("genericError"),
-                                JOptionPane.ERROR_MESSAGE);
-                        return;
-                    }
-                } catch (SecurityException e) {
-                    JOptionPane.showMessageDialog(
-                            Settings.anchorFrame,
-                            String.format(Settings.jpoResources.getString("ConsolidateCreateDirFailure"), lowresDirectory),
-                            Settings.jpoResources.getString("genericError"),
-                            JOptionPane.ERROR_MESSAGE);
-                    LOGGER.severe(String.format("SecurityException when creating directory %s. Reason: %s", lowresDirectory, e.getMessage()));
-                }
-            }
 
-            if (!lowresDirectory.canWrite()) {
-                JOptionPane.showMessageDialog(
-                        Settings.anchorFrame,
-                        String.format(Settings.jpoResources.getString("ConsolidateCantWrite"), lowresDirectory),
-                        Settings.jpoResources.getString("genericError"),
-                        JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-        }*/
-
-        // ToDo: Fix EDT probelm below
         new ConsolidateGroup(
                 highresDirectory,
                 startNode,

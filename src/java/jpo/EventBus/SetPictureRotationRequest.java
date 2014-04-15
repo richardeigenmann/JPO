@@ -8,19 +8,22 @@ import jpo.dataModel.SortableDefaultMutableTreeNode;
  *
  * @author Richard eigenmann
  */
-public class ResetPictureRotationRequest implements Request {
+public class SetPictureRotationRequest implements Request {
 
     private final SortableDefaultMutableTreeNode node;
     private final int priority;
+    private final double angle;
 
     /**
      * A request to rotate the picture to 0 degrees rotation
      *
      * @param node The node to rename
+     * @param angle the angle
      * @param priority The queue priority
      */
-    public ResetPictureRotationRequest( SortableDefaultMutableTreeNode node, int priority ) {
+    public SetPictureRotationRequest( SortableDefaultMutableTreeNode node, double angle, int priority ) {
         this.node = node;
+        this.angle = angle;
         this.priority = priority;
     }
 
@@ -34,7 +37,17 @@ public class ResetPictureRotationRequest implements Request {
     }
 
     /**
+     * Returns the angle
+     * @return the new angle
+     */
+    public double getAngle() {
+        return angle;
+
+    }
+
+    /**
      * Returns the queue priority
+     * @return the priority for the queue
      */
     public int getPriority() {
         return priority;

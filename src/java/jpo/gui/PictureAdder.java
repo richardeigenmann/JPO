@@ -14,7 +14,7 @@ import jpo.dataModel.Tools;
 PictureAdder.java:  A Class which brings up a progress bar and adds pictures to the specified node.
 
 
-Copyright (C) 2009-2010  Richard Eigenmann.
+Copyright (C) 2009-2014  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2

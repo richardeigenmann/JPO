@@ -62,7 +62,7 @@ import jpo.EventBus.RecentDropNodesChangedEvent;
 import jpo.EventBus.RefreshThumbnailRequest;
 import jpo.EventBus.RemoveNodeRequest;
 import jpo.EventBus.RenamePictureRequest;
-import jpo.EventBus.ResetPictureRotationRequest;
+import jpo.EventBus.SetPictureRotationRequest;
 import jpo.EventBus.RotatePictureRequest;
 import jpo.EventBus.SendEmailRequest;
 import jpo.EventBus.ShowCategoryUsageEditorRequest;
@@ -987,9 +987,10 @@ public class ApplicationEventHandler {
      * @param request
      */
     @Subscribe
-    public void handleRefreshThumbnailRequest( RotatePictureRequest request ) {
-        PictureInfo pi = (PictureInfo) request.getNode().getUserObject();
-        pi.rotate( request.getAngle() );
+    public void handleRotatePictureRequestRequest( RotatePictureRequest request ) {
+        PictureInfo pictureInfo = (PictureInfo) request.getNode().getUserObject();
+        pictureInfo.rotate( request.getAngle() );
+        LOGGER.info( "Changed the rotation");
         JpoEventBus.getInstance().post( new RefreshThumbnailRequest( request.getNode(), request.getPriority() ) );
         JpoEventBus.getInstance().post( new RefreshThumbnailRequest( (SortableDefaultMutableTreeNode) request.getNode().getParent(), request.getPriority() ) );
     }
@@ -1000,9 +1001,9 @@ public class ApplicationEventHandler {
      * @param request
      */
     @Subscribe
-    public void handleResetPictureRotationRequest( ResetPictureRotationRequest request ) {
+    public void handleSetPictureRotationRequest( SetPictureRotationRequest request ) {
         PictureInfo pi = (PictureInfo) request.getNode().getUserObject();
-        pi.setRotation( 0 );
+        pi.setRotation( request.getAngle() );
         JpoEventBus.getInstance().post( new RefreshThumbnailRequest( request.getNode(), request.getPriority() ) );
         JpoEventBus.getInstance().post( new RefreshThumbnailRequest( (SortableDefaultMutableTreeNode) request.getNode().getParent(), request.getPriority() ) );
     }

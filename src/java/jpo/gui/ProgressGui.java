@@ -20,12 +20,13 @@ import jpo.dataModel.Settings;
 import javax.swing.Timer;
 import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
 import jpo.dataModel.Tools;
+import net.miginfocom.swing.MigLayout;
 
 
 /*
  ProgressGui.java:  a class that shows the progress in adding pictures
 
- Copyright (C) 2002-2011  Richard Eigenmann.
+ Copyright (C) 2002-2015  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -42,9 +43,7 @@ import jpo.dataModel.Tools;
 /**
  * a private class that allows the PictureAdder to show what it is doing.
  */
-public class ProgressGui
-        extends JFrame
-        implements ProgressListener {
+public class ProgressGui extends JFrame implements ProgressListener {
 
     /**
      * button to start the export
@@ -74,7 +73,7 @@ public class ProgressGui
     /**
      * how long the gui should show after it has finished.
      */
-    private static final int timeout = 5 * 60 * 1000;
+    private static final int TIMEOUT = 5 * 60 * 1000;
     /**
      * The minimum size for a ProgressGui
      */
@@ -90,7 +89,7 @@ public class ProgressGui
      */
     public ProgressGui( final int max, final String title, String doneString ) {
         Tools.checkEDT();
-        createGui( doneString, max, title );
+        initComponents( doneString, max, title );
     }
     /**
      * The string that should be shown after completion. Something like "12
@@ -108,7 +107,7 @@ public class ProgressGui
 
     }
 
-    private void createGui( String doneString, int max, String title ) {
+    private void initComponents( String doneString, int max, String title ) {
         setDoneString( doneString );
 
         setTitle( title );
@@ -125,32 +124,24 @@ public class ProgressGui
             }
         } );
 
-        GridBagConstraints constraints = new GridBagConstraints();
-        constraints.anchor = GridBagConstraints.CENTER;
-        constraints.insets = new Insets( 4, 4, 4, 4 );
-
         JPanel contentJPanel = new JPanel();
-        contentJPanel.setLayout( new GridBagLayout() );
-        contentJPanel.setPreferredSize( new Dimension( 250, 100 ) );
+        contentJPanel.setLayout( new MigLayout( "insets 10", // Layout Constraints
+                "[center]", // Column constraints with default align
+                "[top]" ) ); // Row constraints with default align
+
+        //contentJPanel.setPreferredSize( new Dimension( 250, 100 ) );
         getContentPane().add( contentJPanel );
 
         progBar = new JProgressBar( 0, max );
         progBar.setBorder( BorderFactory.createLineBorder( Color.gray, 1 ) );
         progBar.setStringPainted( true );
-        progBar.setPreferredSize( new Dimension( 140, 20 ) );
-        progBar.setMaximumSize( new Dimension( 340, 20 ) );
-        progBar.setMinimumSize( new Dimension( 140, 20 ) );
         progBar.setValue( 0 );
-        constraints.gridx = 0;
-        constraints.gridy = 0;
-        constraints.fill = GridBagConstraints.NONE;
-        contentJPanel.add( progBar, constraints );
+        contentJPanel.add( progBar, "push, wrap" );
 
         progLabel = new JLabel();
         progLabel.setBorder( BorderFactory.createEmptyBorder( 5, 5, 5, 5 ) );
         progLabel.setHorizontalAlignment( javax.swing.SwingConstants.CENTER );
-        constraints.gridy++;
-        contentJPanel.add( progLabel, constraints );
+        contentJPanel.add( progLabel, "wrap" );
 
         okJButton.setPreferredSize( Settings.defaultButtonDimension );
         okJButton.setMinimumSize( Settings.defaultButtonDimension );
@@ -164,8 +155,7 @@ public class ProgressGui
                 getRid();
             }
         } );
-        constraints.gridy++;
-        contentJPanel.add( okJButton, constraints );
+        contentJPanel.add( okJButton, "wrap" );
 
         cancelJButton.setPreferredSize( Settings.defaultButtonDimension );
         cancelJButton.setMinimumSize( Settings.defaultButtonDimension );
@@ -179,8 +169,7 @@ public class ProgressGui
                 interruptor.setShouldInterrupt( true );
             }
         } );
-        constraints.gridy++;
-        contentJPanel.add( cancelJButton, constraints );
+        contentJPanel.add( cancelJButton, "wrap" );
 
         okJButton.setVisible( false );
         this.getRootPane().setDefaultButton( cancelJButton );
@@ -229,6 +218,7 @@ public class ProgressGui
 
     /**
      * set the maximum
+     *
      * @param max
      */
     public void setMaxiumum( int max ) {
@@ -245,7 +235,7 @@ public class ProgressGui
         cancelJButton.setVisible( false );
         progLabel.setText( String.format( doneString, progBar.getValue() ) );
         validate();
-        Timer timer = new Timer( timeout, new ActionListener() {
+        Timer timer = new Timer( TIMEOUT, new ActionListener() {
 
             @Override
             public void actionPerformed( ActionEvent evt ) {

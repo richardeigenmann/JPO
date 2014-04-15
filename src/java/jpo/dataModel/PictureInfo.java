@@ -49,8 +49,7 @@ import java.util.logging.Logger;
  *
  * @see GroupInfo
  */
-public class PictureInfo
-        implements Serializable {
+public class PictureInfo implements Serializable {
 
     /**
      * Defines a LOGGER for this class
@@ -116,16 +115,17 @@ public class PictureInfo
 
     /**
      * Constructor with just filename as option.
+     *
      * @param highresLocation The highres location as a String
+     * @param description Description
      */
-    public PictureInfo(String highresLocation, String description) {
+    public PictureInfo( String highresLocation, String description ) {
         this.highresLocation = highresLocation;
         lowresLocation = "";
         this.description = description;
         filmReference = "";
     }
 
-    
     /**
      * returns the description of the image in the default <code>toString</code>
      * method.
@@ -329,9 +329,7 @@ public class PictureInfo
         File returnFile;
         try {
             returnFile = new File( new URI( highresLocation ) );
-        } catch ( IllegalArgumentException x ) {
-            return null;
-        } catch ( URISyntaxException x ) {
+        } catch ( IllegalArgumentException | URISyntaxException x ) {
             return null;
         }
         return returnFile;
@@ -1462,12 +1460,12 @@ public class PictureInfo
      */
     public boolean anyMatch( String searchString ) {
         String uppercaseSearchString = searchString.toUpperCase();
-        boolean found = descriptionContains( searchString ) 
-                || ( getPhotographer().toUpperCase().contains( uppercaseSearchString ) ) 
-                || ( highresLocation.toUpperCase().contains( uppercaseSearchString ) ) 
-                || ( getFilmReference().toUpperCase().contains( uppercaseSearchString ) ) 
-                || ( getCreationTime().toUpperCase().contains( uppercaseSearchString ) ) 
-                || ( getComment().toUpperCase().contains( uppercaseSearchString ) ) 
+        boolean found = descriptionContains( searchString )
+                || ( getPhotographer().toUpperCase().contains( uppercaseSearchString ) )
+                || ( highresLocation.toUpperCase().contains( uppercaseSearchString ) )
+                || ( getFilmReference().toUpperCase().contains( uppercaseSearchString ) )
+                || ( getCreationTime().toUpperCase().contains( uppercaseSearchString ) )
+                || ( getComment().toUpperCase().contains( uppercaseSearchString ) )
                 || ( getCopyrightHolder().toUpperCase().contains( uppercaseSearchString ) );
 
         return found;

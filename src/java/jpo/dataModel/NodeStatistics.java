@@ -181,7 +181,6 @@ public class NodeStatistics {
      *   @return the number of PictureInfo nodes
      */
     public synchronized static int countPictures( DefaultMutableTreeNode startNode, boolean recurseSubgroups ) {
-        Tools.warnOnEDT();
         if ( startNode == null ) {
             return 0;
         }

@@ -21,7 +21,6 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
-//import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.BorderFactory;
@@ -50,6 +49,7 @@ import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 import jpo.EventBus.JpoEventBus;
 import jpo.EventBus.RotatePictureRequest;
+import jpo.EventBus.SetPictureRotationRequest;
 import jpo.dataModel.Category;
 import jpo.dataModel.ExifInfo;
 import jpo.dataModel.NodeNavigatorInterface;
@@ -69,7 +69,7 @@ import webserver.Webserver;
 /*
  PictureInfoEditor:  Edits the details of a picture
 
- Copyright (C) 2002-2012  Richard Eigenmann.
+ Copyright (C) 2002-2014  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -173,11 +173,11 @@ public class PictureInfoEditor extends JFrame {
     /**
      * The list model supporting the category assignments
      */
-    private final DefaultListModel<Category> listModel = new DefaultListModel<Category>();
+    private final DefaultListModel<Category> listModel = new DefaultListModel<>();
     /**
      * JList to hold the categories
      */
-    private final JList<Category> categoriesJList = new JList<Category>( listModel );
+    private final JList<Category> categoriesJList = new JList<>( listModel );
     private final JScrollPane listJScrollPane = new JScrollPane( categoriesJList );
     private static final Category setupCategories = new Category( Integer.MIN_VALUE, Settings.jpoResources.getString( "setupCategories" ) );
     private static final Category noCategories = new Category( Integer.MIN_VALUE, Settings.jpoResources.getString( "noCategories" ) );
@@ -221,7 +221,6 @@ public class PictureInfoEditor extends JFrame {
             pictureInfo = (PictureInfo) editNode.getUserObject();
         } catch ( ClassCastException x ) {
             LOGGER.severe( "This class can only be called with a PictureInfo bearning node." );
-            x.printStackTrace();
             return;
         }
         this.myNode = editNode;
@@ -270,7 +269,7 @@ public class PictureInfoEditor extends JFrame {
         spinner.addChangeListener( new ChangeListener() {
             @Override
             public void stateChanged( ChangeEvent e ) {
-                saveRotation();
+                //saveRotation();
             }
         } );
         //Make the angle formatted without a thousands separator.
@@ -488,13 +487,13 @@ public class PictureInfoEditor extends JFrame {
         fileTab.add( checksumJLabel );
         fileTab.add( checksumJButton, "wrap" );
 
-/*        JLabel lowresLocationJLabel = new JLabel( Settings.jpoResources.getString( "lowresLocationLabel" ) );
-        lowresErrorJLabel.setFont( errorLabelFont );
-        fileTab.add( lowresLocationJLabel, "wrap" );
-        lowresLocationJTextField.setPreferredSize( TEXT_FIELD_DIMENSION );
-        fileTab.add( lowresLocationJTextField, "wrap" );
-        fileTab.add( lowresErrorJLabel, "wrap" );
-*/
+        /*        JLabel lowresLocationJLabel = new JLabel( Settings.jpoResources.getString( "lowresLocationLabel" ) );
+         lowresErrorJLabel.setFont( errorLabelFont );
+         fileTab.add( lowresLocationJLabel, "wrap" );
+         lowresLocationJTextField.setPreferredSize( TEXT_FIELD_DIMENSION );
+         fileTab.add( lowresLocationJTextField, "wrap" );
+         fileTab.add( lowresErrorJLabel, "wrap" );
+         */
         tabs.add( "File", fileTab );
 
         JPanel categoriesTab = new JPanel( new MigLayout() );
@@ -562,8 +561,8 @@ public class PictureInfoEditor extends JFrame {
         descriptionJTextArea.setText( pictureInfo.getDescription() );
         highresLocationJTextField.setText( pictureInfo.getHighresLocation() );
         checksumJLabel.setText( Settings.jpoResources.getString( "checksumJLabel" ) + pictureInfo.getChecksumAsString() );
-        //lowresLocationJTextField.setText( pictureInfo.getLowresLocation() );
         filmReferenceJTextField.setText( pictureInfo.getFilmReference() );
+        LOGGER.info( String.format( "Retrieving angle: %f", pictureInfo.getRotation() ) );
         angleModel.setValue( pictureInfo.getRotation() );
         latitudeJTextField.setText( Double.toString( pictureInfo.getLatLng().x ) );
         longitudeJTextField.setText( Double.toString( pictureInfo.getLatLng().y ) );
@@ -584,24 +583,24 @@ public class PictureInfoEditor extends JFrame {
         //Vector<Integer> selections = new Vector<Integer>();
         ArrayList<Integer> selections = new ArrayList<>();
         //while ( i.hasNext() ) {
-        for ( Integer key : myNode.getPictureCollection().getCategoryKeySet()) {
+        for ( Integer key : myNode.getPictureCollection().getCategoryKeySet() ) {
             //key = (Integer) i.next();
             String category = myNode.getPictureCollection().getCategory( key );
             Category categoryObject = new Category( key, category );
             listModel.addElement( categoryObject );
 
             if ( ( pictureInfo.categoryAssignments != null ) && ( pictureInfo.categoryAssignments.contains( key ) ) ) {
-                selections.add( listModel.indexOf( categoryObject ));
+                selections.add( listModel.indexOf( categoryObject ) );
             }
         }
-        
+
         int selectionsArray[] = new int[selections.size()];
         int j = 0;
-        for ( Integer key : selections) {
-        //Enumeration e = selections.elements();
-        //Object o;
-        //while ( e.hasMoreElements() ) {
-        //    o = e.nextElement();
+        for ( Integer key : selections ) {
+            //Enumeration e = selections.elements();
+            //Object o;
+            //while ( e.hasMoreElements() ) {
+            //    o = e.nextElement();
             selectionsArray[j] = ( key );
             j++;
         }
@@ -641,8 +640,8 @@ public class PictureInfoEditor extends JFrame {
                 checksumJLabel.setText( Settings.jpoResources.getString( "checksumJLabel" ) + pictureInfo.getChecksumAsString() );
             }
             /*if ( e.getLowresLocationChanged() ) {
-                lowresLocationJTextField.setText( pictureInfo.getLowresLocation() );
-            }*/
+             lowresLocationJTextField.setText( pictureInfo.getLowresLocation() );
+             }*/
             if ( e.getCreationTimeChanged() ) {
                 creationTimeJTextField.setText( pictureInfo.getCreationTime() );
                 parsedCreationTimeJLabel.setText( pictureInfo.getFormattedCreationTime() );
@@ -651,6 +650,7 @@ public class PictureInfoEditor extends JFrame {
                 filmReferenceJTextField.setText( pictureInfo.getFilmReference() );
             }
             if ( e.getRotationChanged() ) {
+                LOGGER.info( String.format( "Processing a Rotation Changed notification: angle is: %f", pictureInfo.getRotation() ) );
                 angleModel.setValue( pictureInfo.getRotation() );
             }
             if ( e.getLatLngChanged() ) {
@@ -678,7 +678,7 @@ public class PictureInfoEditor extends JFrame {
      * @return a string for the selected categories
      */
     private static String selectedJListCategoriesToString( JList<Category> theList ) {
-        StringBuffer resultString = new StringBuffer( "" );
+        StringBuilder resultString = new StringBuilder( "" );
         if ( !theList.isSelectionEmpty() ) {
             List<Category> selectedCategories = theList.getSelectedValuesList();
             String comma = "";
@@ -709,13 +709,13 @@ public class PictureInfoEditor extends JFrame {
         }
 
         /*try {
-            testFile( lowresLocationJTextField.getText() );
-            lowresLocationJTextField.setForeground( Color.black );
-            lowresErrorJLabel.setText( "" );
-        } catch ( Exception xl ) {
-            lowresLocationJTextField.setForeground( Color.red );
-            lowresErrorJLabel.setText( xl.getMessage() );
-        }*/
+         testFile( lowresLocationJTextField.getText() );
+         lowresLocationJTextField.setForeground( Color.black );
+         lowresErrorJLabel.setText( "" );
+         } catch ( Exception xl ) {
+         lowresLocationJTextField.setForeground( Color.red );
+         lowresErrorJLabel.setText( xl.getMessage() );
+         }*/
     }
 
     /**
@@ -730,10 +730,10 @@ public class PictureInfoEditor extends JFrame {
             inputStream.close();
             return true;
         } catch ( MalformedURLException x ) {
-            LOGGER.info( "MalformedURLException: " + x.getMessage() );
+            LOGGER.log( Level.INFO, "MalformedURLException: {0}", x.getMessage());
             throw new Exception( x );
         } catch ( IOException x ) {
-            LOGGER.info( "IOException: " + x.getMessage() );
+            LOGGER.log( Level.INFO, "IOException: {0}", x.getMessage());
             throw new Exception( x );
         }
 
@@ -783,7 +783,6 @@ public class PictureInfoEditor extends JFrame {
         pictureInfo.setDescription( descriptionJTextArea.getText() );
         pictureInfo.setCreationTime( creationTimeJTextField.getText() );
         pictureInfo.setHighresLocation( highresLocationJTextField.getText() );
-        //pictureInfo.setLowresLocation( lowresLocationJTextField.getText() );
         pictureInfo.setComment( commentJTextField.getText() );
         pictureInfo.setPhotographer( photographerJTextField.getText() );
         pictureInfo.setFilmReference( filmReferenceJTextField.getText() );
@@ -820,15 +819,13 @@ public class PictureInfoEditor extends JFrame {
 
             }
         }
-        /*myNode.getPictureCollection().sendNodeChanged( myNode );
-         myNode.getPictureCollection().setUnsavedUpdates();*/
     }
 
     /**
      * This method saves the rotation value
      */
     private void saveRotation() {
-        JpoEventBus.getInstance().post( new RotatePictureRequest( myNode, (double) angleModel.getValue() , ThumbnailQueueRequest.HIGH_PRIORITY) );
+        JpoEventBus.getInstance().post( new SetPictureRotationRequest( myNode, (double) angleModel.getValue(), ThumbnailQueueRequest.HIGH_PRIORITY ) );
         //pictureInfo.setRotation( (Double) angleModel.getValue() );
     }
 

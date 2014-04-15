@@ -33,7 +33,7 @@ import jpo.EventBus.MoveNodeUpRequest;
 import jpo.EventBus.RecentDropNodesChangedEvent;
 import jpo.EventBus.RefreshThumbnailRequest;
 import jpo.EventBus.RenamePictureRequest;
-import jpo.EventBus.ResetPictureRotationRequest;
+import jpo.EventBus.SetPictureRotationRequest;
 import jpo.EventBus.RotatePictureRequest;
 import jpo.EventBus.ShowCategoryUsageEditorRequest;
 import jpo.EventBus.ShowGroupRequest;
@@ -803,7 +803,7 @@ public class PicturePopupMenu extends JPopupMenu {
 
                 @Override
                 public void actionPerformed( ActionEvent e ) {
-                    JpoEventBus.getInstance().post( new ResetPictureRotationRequest( popupNode, ThumbnailQueueRequest.HIGH_PRIORITY ) );
+                    JpoEventBus.getInstance().post( new SetPictureRotationRequest( popupNode, 0f, ThumbnailQueueRequest.HIGH_PRIORITY ) );
                 }
             } );
             add( rotate90JMenuItem );

@@ -1415,7 +1415,7 @@ public class SortableDefaultMutableTreeNode
                 return false; // don't add if there is no reader.
             }
             newPictureInfo.setHighresLocation( addFile.toURI().toURL() );
-            newPictureInfo.setLowresLocation( Tools.getNewLowresFilename() );
+            //newPictureInfo.setLowresLocation( Tools.getNewLowresFilename() );
             newPictureInfo.setDescription( Tools.stripOutFilenameRoot( addFile ) );
             newPictureInfo.setChecksum( Tools.calculateChecksum( addFile ) );
             if ( categoryAssignment != null ) {
@@ -1435,6 +1435,8 @@ public class SortableDefaultMutableTreeNode
         exifInfo.decodeExifTags();
         newPictureInfo.setCreationTime( exifInfo.getCreateDateTime() );
         newPictureInfo.setLatLng( exifInfo.latLng );
+        
+        //Can we add rotation here?
 
         return true;
     }
