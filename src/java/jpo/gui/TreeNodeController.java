@@ -56,7 +56,7 @@ public class TreeNodeController {
      * Brings up a JFileChooser to select the target location and then copies
      * the images to the target location
      *
-     * @param nodes The Vector of nodes to be copied to a new location
+     * @param nodes The Array of nodes to be copied to a new location
      */
     public static void copyToNewLocation( SortableDefaultMutableTreeNode[] nodes ) {
         JFileChooser jFileChooser = new JFileChooser();
@@ -102,7 +102,7 @@ public class TreeNodeController {
      * Brings up a JFileChooser to select the target zip file and then copies
      * the images there
      *
-     * @param nodes The Vector of nodes to be copied to a new location
+     * @param nodes The Array of nodes to be copied to a new location
      */
     public static void copyToNewZipfile( SortableDefaultMutableTreeNode[] nodes ) {
         final JFileChooser jFileChooser = new JFileChooser();

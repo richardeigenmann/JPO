@@ -34,12 +34,13 @@ import javax.swing.tree.TreePath;
 import jpo.EventBus.CopyLocationsChangedEvent;
 import jpo.EventBus.JpoEventBus;
 import jpo.EventBus.RecentCollectionsChangedEvent;
+import jpo.dataModel.Settings.FieldCodes;
 
 
 /*
  SortableDefaultMutableTreeNode.java:  The main data model object for the JPO application
 
- Copyright (C) 2003 - 2011  Richard Eigenmann, Zurich, Switzerland
+ Copyright (C) 2003 - 2014  Richard Eigenmann, Zurich, Switzerland
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -110,7 +111,7 @@ public class SortableDefaultMutableTreeNode
      *
      * @param sortCriteria The criteria by which the pictures should be sorted.
      */
-    public void sortChildren( int sortCriteria ) {
+    public void sortChildren( FieldCodes sortCriteria ) {
         int childCount = getChildCount();
         SortableDefaultMutableTreeNode[] childNodes = new SortableDefaultMutableTreeNode[childCount];
         for ( int i = 0; i < childCount; i++ ) {
@@ -141,7 +142,7 @@ public class SortableDefaultMutableTreeNode
      * this global variable. But that's not very likely on a single user app
      * like this.
      */
-    private static int sortfield;
+    private static FieldCodes sortfield;
 
     /**
      * Overridden method to allow sorting of nodes. It uses the static global
@@ -158,15 +159,15 @@ public class SortableDefaultMutableTreeNode
         Object otherObject = ( (DefaultMutableTreeNode) o ).getUserObject();
         //logger.info( "Comparing " + myObject.toString() + " against " + otherObject.toString() );
 
-        if ( ( myObject instanceof GroupInfo ) && ( otherObject instanceof GroupInfo ) && ( sortfield == Settings.DESCRIPTION ) ) {
+        if ( ( myObject instanceof GroupInfo ) && ( otherObject instanceof GroupInfo ) && ( sortfield == FieldCodes.DESCRIPTION ) ) {
             return ( (GroupInfo) myObject ).getGroupName().compareTo( ( (GroupInfo) otherObject ).getGroupName() );
         }
 
-        if ( ( myObject instanceof GroupInfo ) && ( otherObject instanceof PictureInfo ) && ( sortfield == Settings.DESCRIPTION ) ) {
+        if ( ( myObject instanceof GroupInfo ) && ( otherObject instanceof PictureInfo ) && ( sortfield == FieldCodes.DESCRIPTION ) ) {
             return ( (GroupInfo) myObject ).getGroupName().compareTo( ( (PictureInfo) otherObject ).getDescription() );
         }
 
-        if ( ( myObject instanceof PictureInfo ) && ( otherObject instanceof GroupInfo ) && ( sortfield == Settings.DESCRIPTION ) ) {
+        if ( ( myObject instanceof PictureInfo ) && ( otherObject instanceof GroupInfo ) && ( sortfield == FieldCodes.DESCRIPTION ) ) {
             return ( (PictureInfo) myObject ).getDescription().compareTo( ( (GroupInfo) otherObject ).getGroupName() );
         }
 
@@ -179,17 +180,17 @@ public class SortableDefaultMutableTreeNode
         PictureInfo myPi = (PictureInfo) myObject;
         PictureInfo otherPi = (PictureInfo) otherObject;
         switch ( sortfield ) {
-            case Settings.DESCRIPTION:
+            case DESCRIPTION:
                 return myPi.getDescription().compareTo( otherPi.getDescription() );
-            case Settings.FILM_REFERENCE:
+            case FILM_REFERENCE:
                 return myPi.getFilmReference().compareTo( otherPi.getFilmReference() );
-            case Settings.CREATION_TIME:
+            case CREATION_TIME:
                 return myPi.getCreationTime().compareTo( otherPi.getCreationTime() );
-            case Settings.COMMENT:
+            case COMMENT:
                 return myPi.getComment().compareTo( otherPi.getComment() );
-            case Settings.PHOTOGRAPHER:
+            case PHOTOGRAPHER:
                 return myPi.getPhotographer().compareTo( otherPi.getPhotographer() );
-            case Settings.COPYRIGHT_HOLDER:
+            case COPYRIGHT_HOLDER:
                 return myPi.getCopyrightHolder().compareTo( otherPi.getCopyrightHolder() );
             default:
                 return myPi.getDescription().compareTo( otherPi.getDescription() );
@@ -558,8 +559,7 @@ public class SortableDefaultMutableTreeNode
 
         /**
          * This inner class creates a popup menu for group drop events to find
-         * out whether to drop into before or after the drop node. TODO: Doesn't
-         * really belong here from a MVC perspective...
+         * out whether to drop into before or after the drop node. 
          */
         private GroupDropPopupMenu( final DropTargetDropEvent event,
                 final SortableDefaultMutableTreeNode sourceNode,
@@ -811,7 +811,6 @@ public class SortableDefaultMutableTreeNode
      * already that.<br>
      * When all preconditions are met the image is copied
      *
-     *  //TODO should throw exceptions instead of doing dialogs
      *
      * @param targetFile The target location for the new Picture.
      */
@@ -847,7 +846,6 @@ public class SortableDefaultMutableTreeNode
                 try {
                     String sourceFilename = new File( new URI( originalUrl.toString() ) ).getName();
                     targetFile = Tools.inventPicFilename( targetFile.getParentFile(), sourceFilename );
-                    //logger.info("JTree:validateAndCopyPicture: originalUrl: " + originalUrl.toString() + "\nsourceFilename: " + sourceFilename + "  targetFile: " + targetFile.toString());
                 } catch ( URISyntaxException x ) {
                     JOptionPane.showMessageDialog( Settings.anchorFrame,
                             "URISyntaxException: " + x,
@@ -1428,7 +1426,6 @@ public class SortableDefaultMutableTreeNode
         SortableDefaultMutableTreeNode newNode = new SortableDefaultMutableTreeNode( newPictureInfo );
 
         this.add( newNode );
-        //TODO: Chuck a thumbnail creation on the queue here
         getPictureCollection().setUnsavedUpdates();
 
         ExifInfo exifInfo = new ExifInfo( newPictureInfo.getHighresURLOrNull() );

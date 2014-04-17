@@ -1,10 +1,13 @@
 package jpo.gui;
 
+import jpo.gui.ScalablePicture.ScalablePictureStatus;
+import jpo.gui.SourcePicture.SourcePictureStatus;
+
 
 /*
  statusListener.java:  interface for notification
 
- Copyright (C) 2002  Richard Eigenmann.
+ Copyright (C) 2002-2014  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -30,7 +33,7 @@ public interface ScalablePictureListener {
      * @param statusCode
      * @param statusMessage
      */
-    public void scalableStatusChange( int statusCode, String statusMessage );
+    public void scalableStatusChange( ScalablePictureStatus statusCode, String statusMessage );
 
     /**
      * inform the listener of progress on the loading of the image
@@ -38,6 +41,6 @@ public interface ScalablePictureListener {
      * @param statusCode
      * @param percentage
      */
-    public void sourceLoadProgressNotification( int statusCode, int percentage );
+    public void sourceLoadProgressNotification( SourcePictureStatus statusCode, int percentage );
 
 }

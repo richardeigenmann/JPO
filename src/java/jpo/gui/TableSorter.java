@@ -5,8 +5,9 @@ import javax.swing.event.TableModelEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.InputEvent;
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.Vector;
+import java.util.List;
 import java.util.logging.Logger;
 import javax.swing.JTable;
 import javax.swing.table.JTableHeader;
@@ -31,7 +32,7 @@ import javax.swing.table.TableColumnModel;
 public final class TableSorter extends TableMap {
 
     int indexes[];
-    Vector<Integer> sortingColumns = new Vector<Integer>();
+    List<Integer> sortingColumns = new ArrayList<>();
     boolean ascending = true;
     int compares;
     /**
@@ -149,7 +150,7 @@ public final class TableSorter extends TableMap {
     public int compare( int row1, int row2 ) {
         compares++;
         for ( int level = 0; level < sortingColumns.size(); level++ ) {
-            Integer column = sortingColumns.elementAt( level );
+            Integer column = sortingColumns.get( level );
             int result = compareRowsByColumn( row1, row2, column.intValue() );
             if ( result != 0 ) {
                 return ascending ? result : -result;
@@ -288,8 +289,8 @@ public final class TableSorter extends TableMap {
 
     public void sortByColumn( int column, boolean ascending ) {
         this.ascending = ascending;
-        sortingColumns.removeAllElements();
-        sortingColumns.addElement( column );
+        sortingColumns.clear();
+        sortingColumns.add( column );
         sort( this );
         super.tableChanged( new TableModelEvent( this ) );
     }

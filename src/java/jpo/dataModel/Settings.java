@@ -9,6 +9,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
@@ -512,97 +513,53 @@ public class Settings {
      * Default size for buttons such as OK, cancel etc.
      */
     public static Dimension threeDotButtonDimension = new Dimension( 25, 25 );
-    /**
-     * This object is a handy reference for any component that wants to tell the
-     * main JTree for the collection to reposition itself. ToDo: make this an
-     * interface.
-     */
-    public static CollectionJTreeController mainCollectionJTreeController = null;
-    /**
-     * constant to indicate no sorting to some routines
-     */
-    public final static int NO_SORTING = 1;
-    /**
-     * constant to indicate the Description to some routines
-     */
-    public final static int DESCRIPTION = NO_SORTING + 1;
-    /**
-     * constant to indicate the Picture URL to some routines
-     */
-    public final static int FILE_URL = DESCRIPTION + 1;
-    /**
-     * constant to indicate the Lowres URL to some routines
-     */
-    public final static int FILE_LOWRES_URL = FILE_URL + 1;
-    /**
-     * constant to indicate the Film Reference to some routines
-     */
-    public final static int FILM_REFERENCE = FILE_LOWRES_URL + 1;
-    /**
-     * constant to indicate the Creation Time to some routines
-     */
-    public final static int CREATION_TIME = FILM_REFERENCE + 1;
-    /**
-     * constant to indicate the Comment to some routines
-     */
-    public final static int COMMENT = CREATION_TIME + 1;
-    /**
-     * constant to indicate the Photographer to some routines
-     */
-    public final static int PHOTOGRAPHER = COMMENT + 1;
-    /**
-     * constant to indicate the Copyright Holder to some routines
-     */
-    public final static int COPYRIGHT_HOLDER = PHOTOGRAPHER + 1;
+    
+    public static enum FieldCodes {
+        NO_SORTING,
+        DESCRIPTION, 
+        FILE_URL,
+        FILE_LOWRES_URL,
+        FILM_REFERENCE,
+        CREATION_TIME,
+        COMMENT,
+        PHOTOGRAPHER,
+        COPYRIGHT_HOLDER,
+        ROTATION,
+        LATLNG,
+        CHECKSUM,
+        CATEGORIES,
+        CATEGORY,
+        CATEGORY_DESCRIPTION,
+    }
+    
 
     /**
-     * returns an Arraylist of sort TODO: Why is is not a map?
+     * returns an List of SortOptions
      *
-     * @return the Arraylist of sort options
+     * @return the ArrayList of sort options
      */
-    public static ArrayList<SortOption> getSortOptions() {
-        ArrayList<SortOption> sortOptions = new ArrayList<SortOption>();
-        sortOptions.add( new SortOption( "No Sorting", Settings.NO_SORTING ) );
-        sortOptions.add( new SortOption( Settings.jpoResources.getString( "sortByDescriptionJMenuItem" ), Settings.DESCRIPTION ) );
-        sortOptions.add( new SortOption( Settings.jpoResources.getString( "sortByFilmReferenceJMenuItem" ), Settings.FILM_REFERENCE ) );
-        sortOptions.add( new SortOption( Settings.jpoResources.getString( "sortByCreationTimeJMenuItem" ), Settings.CREATION_TIME ) );
-        sortOptions.add( new SortOption( Settings.jpoResources.getString( "sortByCommentJMenuItem" ), Settings.COMMENT ) );
-        sortOptions.add( new SortOption( Settings.jpoResources.getString( "sortByPhotographerJMenuItem" ), Settings.PHOTOGRAPHER ) );
-        sortOptions.add( new SortOption( Settings.jpoResources.getString( "sortByCopyrightHolderTimeJMenuItem" ), Settings.COPYRIGHT_HOLDER ) );
+    public static List<SortOption> getSortOptions() {
+        List<SortOption> sortOptions = new ArrayList<>();
+        sortOptions.add( new SortOption( "No Sorting", FieldCodes.NO_SORTING ) );
+        sortOptions.add( new SortOption( Settings.jpoResources.getString( "sortByDescriptionJMenuItem" ), FieldCodes.DESCRIPTION ) );
+        sortOptions.add( new SortOption( Settings.jpoResources.getString( "sortByFilmReferenceJMenuItem" ), FieldCodes.FILM_REFERENCE ) );
+        sortOptions.add( new SortOption( Settings.jpoResources.getString( "sortByCreationTimeJMenuItem" ), FieldCodes.CREATION_TIME ) );
+        sortOptions.add( new SortOption( Settings.jpoResources.getString( "sortByCommentJMenuItem" ), FieldCodes.COMMENT ) );
+        sortOptions.add( new SortOption( Settings.jpoResources.getString( "sortByPhotographerJMenuItem" ), FieldCodes.PHOTOGRAPHER ) );
+        sortOptions.add( new SortOption( Settings.jpoResources.getString( "sortByCopyrightHolderTimeJMenuItem" ), FieldCodes.COPYRIGHT_HOLDER ) );
         return sortOptions;
     }
+
     /**
-     * constant to indicate the Rotation to some routines
-     */
-    public final static int ROTATION = COPYRIGHT_HOLDER + 1;
-    /**
-     * constant to indicate the Latitude and Longitude to some routines
-     */
-    public final static int LATLNG = ROTATION + 1;
-    /**
-     * constant to indicate the Rotation to some routines
-     */
-    public final static int CHECKSUM = LATLNG + 1;
-    /**
-     * constant to indicate the Categories are being parsed
-     */
-    public final static int CATEGORIES = CHECKSUM + 1;
-    /**
-     * constant to indicate that a Category is being parsed
-     */
-    public final static int CATEGORY = CATEGORIES + 1;
-    /**
-     * constant to indicate that a Category is being parsed
-     */
-    public final static int CATEGORY_DESCRIPTION = CATEGORY + 1;
-    /**
-     * date format for adding ew pictures from the camera
+     * date format for adding new pictures from the camera
      */
     public static String addFromCameraDateFormat = "dd.MM.yyyy  HH:mm";
+
     /**
      * Collection of cameras
      */
-    public static ArrayList<Camera> cameras = new ArrayList<>();
+    public static List<Camera> cameras = new ArrayList<>();
+
     /**
      * list of email senders
      */
@@ -680,7 +637,7 @@ public class Settings {
     /**
      * The last sort choice of the user
      */
-    public static int lastSortChoice = Settings.CREATION_TIME;
+    public static FieldCodes lastSortChoice = FieldCodes.CREATION_TIME;
     /**
      * The last choice in the Camera Download Wizard whether to copy or move
      */
@@ -828,7 +785,7 @@ public class Settings {
         emailDimensions.width = prefs.getInt( "emailDimensions.width", emailDimensions.width );
         emailDimensions.height = prefs.getInt( "emailDimensions.height", emailDimensions.height );
         tagCloudWords = prefs.getInt( "tagCloudWords", tagCloudWords );
-        lastSortChoice = prefs.getInt( "lastSortChoice", lastSortChoice );
+        lastSortChoice = FieldCodes.valueOf( prefs.get( "lastSortChoiceString", lastSortChoice.toString() ) );  
         lastCameraWizardCopyMode = prefs.getBoolean( "lastCameraWizardCopyMode", lastCameraWizardCopyMode );
 
         rememberGoogleCredentials = prefs.getBoolean( "rememberGoogleCredentials", rememberGoogleCredentials );
@@ -1037,7 +994,7 @@ public class Settings {
         prefs.putInt( "emailDimensions.width", emailDimensions.width );
         prefs.putInt( "emailDimensions.height", emailDimensions.height );
         prefs.putInt( "tagCloudWords", tagCloudWords );
-        prefs.putInt( "lastSortChoice", lastSortChoice );
+        prefs.put( "lastSortChoiceString", lastSortChoice.toString() );
         prefs.putBoolean( "lastCameraWizardCopyMode", lastCameraWizardCopyMode );
 
         prefs.putBoolean( "rememberGoogleCredentials", rememberGoogleCredentials );
@@ -1068,52 +1025,14 @@ public class Settings {
             prefs.putBoolean( "Camera[" + Integer.toString( i ) + "].monitor", c.getMonitorForNewPictures() );
             try {
                 PrefObj.putObject( prefs, "Camera[" + Integer.toString( i ) + "].oldImage", c.getOldImage() );
-            } catch ( IOException ex ) {
-                ex.printStackTrace();
-            } catch ( BackingStoreException ex ) {
-                ex.printStackTrace();
-            } catch ( ClassNotFoundException ex ) {
-                ex.printStackTrace();
+            } catch ( IOException | BackingStoreException | ClassNotFoundException ex ) {
+                LOGGER.severe( ex.getLocalizedMessage());
             }
             i++;
         }
     }
 
-    /**
-     * Writes the Camera settings
-     *
-     * public static void writeCameraSettingsOld() { //logger.info( "Writing
-     * Camera Settings" ); OutputStream out;
-     *
-     * try { PersistenceService ps = (PersistenceService) ServiceManager.lookup(
-     * "javax.jnlp.PersistenceService" ); BasicService bs = (BasicService)
-     * ServiceManager.lookup( "javax.jnlp.BasicService" ); try { URL baseURL =
-     * bs.getCodeBase(); //logger.info( "CodeBase was " + baseURL.toString() );
-     * URL camerasURL = new URL( baseURL, "cameras" ); try { ps.delete(
-     * camerasURL ); } catch ( IOException x ) { // it doesn't matter if we
-     * can't delete the file. logger.info( "Settings.writeSettings: Caught an
-     * IOException when trying to delete the file. Perhaps it didn't exist?.
-     * Continuing. Error message: " + x.getMessage() ); } ps.create( camerasURL,
-     * 4096 ); FileContents fc = ps.get( camerasURL ); logger.info(
-     * "Settings.writeSettings: Running in Java Web Start setting and writing
-     * settings to PersistenceService: " + baseURL.toString() + "/" +
-     * fc.getName() ); out = fc.getOutputStream( true ); } catch (
-     * MalformedURLException x ) { logger.info( "We had a MalformedURLException:
-     * " + x.getMessage() ); return; } catch ( IOException x ) { logger.info(
-     * "We had an IOException: " + x.getMessage() ); return; } } catch (
-     * UnavailableServiceException x ) { logger.info( "Settings.writeSettings:
-     * no PersistenceService available: writing to local file: " +
-     * camerasFile.getPath() ); try { out = new FileOutputStream( camerasFile );
-     * } catch ( IOException y ) { logger.info("Settings.writeSettings: can't
-     * create cameras File. Aborting. Error: " + y.getMessage() ); return; } }
-     *
-     *
-     * try { ObjectOutputStream oos = new ObjectOutputStream( out );
-     *
-     * oos.writeObject( cameras ); oos.close(); } catch ( IOException x ) {
-     * logger.info("Settings.writeCameraSettings failed on an IOException: " +
-     * x.getMessage()); } }
-     */
+
     /**
      * this method attempts to load the cameras
      */
@@ -1130,12 +1049,8 @@ public class Settings {
             c.setOldImage( new HashMap<File, Long>() );
             try {
                 c.setOldImage( (HashMap) PrefObj.getObject( prefs, "Camera[" + Integer.toString( i ) + "].oldImage" ) );
-            } catch ( IOException ex ) {
-                ex.printStackTrace();
-            } catch ( BackingStoreException ex ) {
-                ex.printStackTrace();
-            } catch ( ClassNotFoundException ex ) {
-                ex.printStackTrace();
+            } catch ( IOException | BackingStoreException | ClassNotFoundException ex ) {
+                LOGGER.severe( ex.getLocalizedMessage() );
             }
             cameras.add( c );
         }
@@ -1159,7 +1074,6 @@ public class Settings {
                     recentCollections[j] = recentCollections[j - 1];
                 }
                 recentCollections[ 0] = recentFile;
-                //notifyRecentFilesChanged();
                 return;
             }
         }
@@ -1169,7 +1083,6 @@ public class Settings {
             recentCollections[i] = recentCollections[i - 1];
         }
         recentCollections[ 0] = recentFile;
-        //notifyRecentFilesChanged();
         writeSettings();
     }
 
@@ -1183,7 +1096,6 @@ public class Settings {
     public static void clearRecentCollection() {
         for ( int i = 0; i < Settings.MAX_MEMORISE; i++ ) {
             recentCollections[i] = null;
-            //notifyRecentFilesChanged();
             writeSettings();
         }
     }
@@ -1256,7 +1168,6 @@ public class Settings {
         captionFont = Font.decode( Settings.jpoResources.getString( "SettingsCaptionFont" ) );
 
         if ( currentLocale != oldLocale ) {
-            //notifyLocaleChangeListeners();
             return true;
         }
         return false;
@@ -1320,7 +1231,6 @@ public class Settings {
             recentDropNodes[i] = recentDropNodes[i - 1];
         }
         recentDropNodes[ 0] = recentNode;
-        //notifyRecentDropNodesChanged();
     }
 
     /**
@@ -1342,7 +1252,6 @@ public class Settings {
         for ( int i = 0; i < recentDropNodes.length; i++ ) {
             if ( deathNode == recentDropNodes[i] ) {
                 recentDropNodes[i] = null;
-                //Settings.notifyRecentDropNodesChanged();
             }
         }
     }
@@ -1361,7 +1270,6 @@ public class Settings {
      */
     public static void clearRecentDropNodes() {
         recentDropNodes = new SortableDefaultMutableTreeNode[MAX_DROPNODES];
-        // notifyRecentDropNodesChanged();
     }
     /*
      * ------------------------------------------------------------------------------
@@ -1407,7 +1315,6 @@ public class Settings {
 
         validateCopyLocations();
         writeSettings();
-        //notifyCopyLocationsChanged();
     }
 
     /**
@@ -1432,10 +1339,6 @@ public class Settings {
             memorizedZipFiles[i] = memorizedZipFiles[i - 1];
         }
         memorizedZipFiles[ 0] = location;
-
-        //validateCopyLocations();
-        //writeSettings();
-        //notifyCopyLocationsChanged();
     }
 
     /**
@@ -1445,13 +1348,12 @@ public class Settings {
      * @return Returns true if the array was changed, false if not.
      */
     public static boolean validateCopyLocations() {
-        // validate the locations
-        File f;
+        File file;
         boolean arrayChanged = false;
         for ( int i = 0; i < MAX_MEMORISE; i++ ) {
             if ( copyLocations[i] != null ) {
-                f = new File( copyLocations[i] );
-                if ( !f.exists() ) {
+                file = new File( copyLocations[i] );
+                if ( !file.exists() ) {
                     copyLocations[i] = null;
                     arrayChanged = true;
                 }
@@ -1468,7 +1370,6 @@ public class Settings {
         for ( int i = 0; i < MAX_MEMORISE; i++ ) {
             copyLocations[i] = null;
         }
-        //notifyCopyLocationsChanged();
         writeSettings();
     }
 

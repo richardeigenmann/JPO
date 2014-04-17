@@ -1,9 +1,5 @@
 package jpo.gui;
 
-import jpo.dataModel.FlatGroupNavigator;
-import jpo.gui.swing.PicturePane;
-import jpo.dataModel.Settings;
-import jpo.dataModel.PictureInfo;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -28,15 +24,23 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.MouseInputAdapter;
 import javax.swing.tree.DefaultMutableTreeNode;
 import jpo.dataModel.ExifInfo;
+import jpo.dataModel.FlatGroupNavigator;
 import jpo.dataModel.NodeNavigatorInterface;
+import jpo.dataModel.NodeNavigatorListener;
+import jpo.dataModel.PictureInfo;
 import jpo.dataModel.PictureInfoChangeEvent;
 import jpo.dataModel.PictureInfoChangeListener;
 import jpo.dataModel.RandomNavigator;
-import jpo.dataModel.NodeNavigatorListener;
+import jpo.dataModel.Settings;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
 import jpo.dataModel.Tools;
+import jpo.gui.ScalablePicture.ScalablePictureStatus;
+import static jpo.gui.ScalablePicture.ScalablePictureStatus.SCALABLE_PICTURE_ERROR;
+import static jpo.gui.ScalablePicture.ScalablePictureStatus.SCALABLE_PICTURE_READY;
+import jpo.gui.SourcePicture.SourcePictureStatus;
 import jpo.gui.swing.LeftRightButton.BUTTON_STATE;
 import jpo.gui.swing.PictureFrame;
+import jpo.gui.swing.PicturePane;
 
 
 /*
@@ -690,8 +694,8 @@ public class PictureViewer
      */
     @Override
     public boolean readyToAdvance() {
-        int status = pictureJPanel.getScalablePicture().getStatusCode();
-        return ( status == ScalablePicture.READY ) || ( status == ScalablePicture.ERROR );
+        ScalablePictureStatus status = pictureJPanel.getScalablePicture().getStatusCode();
+        return ( status == SCALABLE_PICTURE_READY ) || ( status == SCALABLE_PICTURE_ERROR );
     }
 
     /**
@@ -714,51 +718,51 @@ public class PictureViewer
      * @param pictureStatusMessage
      */
     @Override
-    public void scalableStatusChange( final int pictureStatusCode,
+    public void scalableStatusChange( final ScalablePictureStatus pictureStatusCode,
             final String pictureStatusMessage ) {
         Runnable r = new Runnable() {
 
             @Override
             public void run() {
                 switch ( pictureStatusCode ) {
-                    case ScalablePicture.UNINITIALISED:
+                    case SCALABLE_PICTURE_UNINITIALISED:
                         pictureFrame.loadJProgressBar.setVisible( false );
                         break;
 
-                    case ScalablePicture.GARBAGE_COLLECTION:
+                    case SCALABLE_PICTURE_GARBAGE_COLLECTION:
                         pictureFrame.loadJProgressBar.setVisible( false );
                         break;
 
-                    case ScalablePicture.LOADING:
+                    case SCALABLE_PICTURE_LOADING:
                         if ( pictureFrame.myJFrame != null ) {
                             pictureFrame.loadJProgressBar.setVisible( true );
                         }
 
                         break;
-                    case ScalablePicture.LOADED:
+                    case SCALABLE_PICTURE_LOADED:
                         pictureFrame.loadJProgressBar.setVisible( false );
                         //descriptionJTextField.setText( getDescription() );
                         break;
 
-                    case ScalablePicture.SCALING:
+                    case SCALABLE_PICTURE_SCALING:
                         pictureFrame.loadJProgressBar.setVisible( false );
                         break;
 
-                    case ScalablePicture.READY:
+                    case SCALABLE_PICTURE_READY:
                         pictureFrame.loadJProgressBar.setVisible( false );
                         if ( pictureFrame.myJFrame != null ) {
                             pictureFrame.myJFrame.toFront();
                         }
 
                         break;
-                    case ScalablePicture.ERROR:
+                    case SCALABLE_PICTURE_ERROR:
                         pictureFrame.loadJProgressBar.setVisible( false );
                         ;
                         break;
 
                     default:
 
-                        LOGGER.warning( "Got called with a code that is not understood: " + Integer.toString( pictureStatusCode ) + " " + pictureStatusMessage );
+                        LOGGER.warning( "Got called with a code that is not understood: " +  pictureStatusCode  + " " + pictureStatusMessage );
                         break;
 
                 }
@@ -780,24 +784,24 @@ public class PictureViewer
      * @param percentage
      */
     @Override
-    public void sourceLoadProgressNotification( final int statusCode,
+    public void sourceLoadProgressNotification( final SourcePictureStatus statusCode,
             final int percentage ) {
         Runnable r = new Runnable() {
 
             @Override
             public void run() {
                 switch ( statusCode ) {
-                    case SourcePicture.LOADING_STARTED:
+                    case SOURCE_PICTURE_LOADING_STARTED:
                         pictureFrame.loadJProgressBar.setValue( 0 );
                         pictureFrame.loadJProgressBar.setVisible( true );
                         break;
 
-                    case SourcePicture.LOADING_PROGRESS:
+                    case SOURCE_PICTURE_LOADING_PROGRESS:
                         pictureFrame.loadJProgressBar.setValue( percentage );
                         pictureFrame.loadJProgressBar.setVisible( true );
                         break;
 
-                    case SourcePicture.LOADING_COMPLETED:
+                    case SOURCE_PICTURE_LOADING_COMPLETED:
                         pictureFrame.loadJProgressBar.setVisible( false );
                         pictureFrame.loadJProgressBar.setValue( 0 ); // prepare for the next load
                         break;
@@ -1010,8 +1014,7 @@ public class PictureViewer
     /**
      * This method looks at the position the currentNode is in regard to it's
      * siblings and changes the forward and back icons to reflect the position
-     * of the current node. TODO: This code is not browser aware. It needs to
-     * be.
+     * of the current node.
      */
     public void setIconDecorations() {
         // Set the next and back icons

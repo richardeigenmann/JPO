@@ -1,6 +1,6 @@
 package jpo.gui;
 
-import java.util.ArrayList;
+import java.util.List;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JComponent;
@@ -97,7 +97,7 @@ public class CameraDownloadWizardStep6 extends AbstractStep {
 
         // Sorting by
         String sortingDescription = "not found!";
-        ArrayList<SortOption> sortOptions = Settings.getSortOptions();
+        List<SortOption> sortOptions = Settings.getSortOptions();
         for ( SortOption sortOption : sortOptions ) {
             if ( sortOption.getSortCode() == dataModel.getSortCode() ) {
                 sortingDescription = sortOption.getDescription();

@@ -1,5 +1,6 @@
 package jpo.EventBus;
 
+import jpo.dataModel.Settings.FieldCodes;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
 
 /**
@@ -10,14 +11,14 @@ import jpo.dataModel.SortableDefaultMutableTreeNode;
 public class SortGroupRequest implements Request {
 
     private final SortableDefaultMutableTreeNode node;
-    private final int sortCriteria;
+    private final FieldCodes sortCriteria;
 
     /**
      * A request to sort the group
      * @param node The node to which should be sorted
      * @param sortCriteria
      */
-    public SortGroupRequest( SortableDefaultMutableTreeNode node, int sortCriteria ) {
+    public SortGroupRequest( SortableDefaultMutableTreeNode node, FieldCodes sortCriteria ) {
         this.node = node;
         this.sortCriteria = sortCriteria;
     }
@@ -34,7 +35,7 @@ public class SortGroupRequest implements Request {
      * Returns the sort criteria
      * @return the sort criteria index
      */
-    public int getSortCriteria() {
+    public FieldCodes getSortCriteria() {
         return sortCriteria;
     }
     

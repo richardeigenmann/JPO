@@ -8,9 +8,9 @@ import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Vector;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
 import jpo.dataModel.PictureInfo;
 import java.util.logging.Logger;
@@ -18,7 +18,7 @@ import java.util.logging.Logger;
 /*
 JpoTransferable.java:  a transferable to drag and drop nodes of the Jpo application
 
-Copyright (C) 2002 - 2010  Richard Eigenmann.
+Copyright (C) 2002 - 2014  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -192,7 +192,7 @@ public class JpoTransferable
      * @return the transferable as a List
      */
     private Object getJavaFileListTransferable() {
-        Vector<File> fileList = new Vector<File>();
+        List<File> fileList = new ArrayList<>();
         for ( Object transferableNode : transferableNodes ) {
             if ( transferableNode instanceof SortableDefaultMutableTreeNode ) {
                 SortableDefaultMutableTreeNode n = (SortableDefaultMutableTreeNode) transferableNode;

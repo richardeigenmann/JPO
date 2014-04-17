@@ -7,6 +7,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import jpo.dataModel.NodeNavigatorInterface;
 import jpo.dataModel.Tools;
 import jpo.dataModel.Settings;
@@ -23,7 +24,6 @@ import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 import jpo.EventBus.ConsolidateGroupRequest;
 import jpo.EventBus.CopyLocationsChangedEvent;
-import jpo.EventBus.GroupSelectionEvent;
 import jpo.EventBus.JpoEventBus;
 import jpo.EventBus.MoveNodeDownRequest;
 import jpo.EventBus.MoveNodeToBottomRequest;
@@ -107,10 +107,7 @@ public class PicturePopupMenu extends JPopupMenu {
 
     /**
      * Constructor for the PicturePopupMenu where we do have a
-     * {@link PictureViewer} that should receive the picture. TODO: Fix the way
-     * this is being called because the whole business of figuring out whether
-     * this is a single node or multi node is silly TODO: Decouple the
-     * presentation from the functionality
+     * {@link PictureViewer} that should receive the picture.
      *
      * @param setOfNodes The set of nodes from which the popup picture is coming
      * @param idx	The picture of the set for which the popup is being shown.
@@ -656,27 +653,27 @@ public class PicturePopupMenu extends JPopupMenu {
      * This method moves the popup node or the selection (if the popup node is
      * part of the selection) to the end of the picked node:
      *
-     * TODO: This is "Controller Stuff" and should be handled in a different
-     * class
-     *
      * @param targetNode To selected node where the node should go
      */
     private void moveToLastChild( SortableDefaultMutableTreeNode targetNode ) {
 
+        List<SortableDefaultMutableTreeNode> movingNodes = new ArrayList<>();
+        
         if ( ( Settings.pictureCollection.countSelectedNodes() > 0 ) && ( Settings.pictureCollection.isSelected( popupNode ) ) ) {
             // move the selected nodes and then unselect them
             LOGGER.info( "Moving the selection." );
             for ( SortableDefaultMutableTreeNode selectedNode : Settings.pictureCollection.getSelectedNodes() ) {
                 if ( selectedNode.getUserObject() instanceof PictureInfo ) {
-                    selectedNode.moveToLastChild( targetNode );
+                    movingNodes.add(selectedNode);
                 }
             }
-
             Settings.pictureCollection.clearSelection();
         } else {
             // move only the popup node
-            popupNode.moveToLastChild( targetNode );
+            movingNodes.add(popupNode);
         }
+
+       MoveNodeToNodeRequest request = new MoveNodeToNodeRequest(movingNodes, targetNode);
 
     }
 
@@ -818,7 +815,6 @@ public class PicturePopupMenu extends JPopupMenu {
         public MoveSubmenu() {
             setText( Settings.jpoResources.getString( "moveNodeJMenuLabel" ) );
 
-            // ToDo: We could try to suppress the current group in the list of drop nodes as it doesn't make sense to move to itself
             for ( int i = 0; i < Settings.MAX_DROPNODES; i++ ) {
                 final int dropnode = i;
                 recentDropNodes[i] = new JMenuItem();

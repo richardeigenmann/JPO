@@ -60,11 +60,6 @@ import jpo.gui.swing.Thumbnail;
  */
 /**
  * ThumbnailController controls a visual representation of the specified node.
- *
- * TODO: move the methods to make the ThumbnailController back into this class
- * from ThumbnailCreationFactory TODO: split this class into a GUI component
- * that deals with the GUI stuff and one which deals with the creation stuff and
- * all the model notifications. I.e. MVC..
  */
 public class ThumbnailController {
 
@@ -213,14 +208,14 @@ public class ThumbnailController {
      */
     private PictureInfo registeredPictureInfoChangeListener = null;
 
-    private MyPictureInfoChangeEventHandler myPictureInfoChangeEventHandler = new MyPictureInfoChangeEventHandler();
+    private final MyPictureInfoChangeEventHandler myPictureInfoChangeEventHandler = new MyPictureInfoChangeEventHandler();
 
     /**
      * remember where we registered as a GroupInfoListener
      */
     private GroupInfo registeredGroupInfoChangeListener = null;
 
-    private MyGroupInfoChangeEventHandler myGroupInfoChangeEventHandler = new MyGroupInfoChangeEventHandler();
+    private final MyGroupInfoChangeEventHandler myGroupInfoChangeEventHandler = new MyGroupInfoChangeEventHandler();
 
     /**
      * Unattaches the ThumbnailController from the previously linked
@@ -408,7 +403,7 @@ public class ThumbnailController {
             if ( myNode.getUserObject() instanceof PictureInfo ) {
                 JpoEventBus.getInstance().post( new ShowPictureRequest( myNode ) );
             } else if ( myNode.getUserObject() instanceof GroupInfo ) {
-                JpoEventBus.getInstance().post( new ShowGroupRequest(myNode ) );
+                JpoEventBus.getInstance().post( new ShowGroupRequest( myNode ) );
             }
         }
 
@@ -498,14 +493,10 @@ public class ThumbnailController {
     /**
      * Determines whether decorations should be drawn or not
      *
-     * TODO: Whatever effect does this have?
-     *
-     * @param b
+     * @param decorateThumbnails
      */
-    public void setDecorateThumbnails( boolean b ) {
-        if ( decorateThumbnails != b ) {
-            decorateThumbnails = b;
-        }
+    public void setDecorateThumbnails( boolean decorateThumbnails ) {
+        this.decorateThumbnails = decorateThumbnails;
     }
 
     /**

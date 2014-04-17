@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
@@ -44,7 +45,6 @@ import jpo.dataModel.SortOption;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
 import jpo.dataModel.Tools;
 import jpo.gui.ThumbnailQueueRequest;
-import jpo.gui.TreeNodeController;
 
 /*
  GroupPopupMenu.java: popup menu for groups
@@ -386,7 +386,7 @@ public class GroupPopupMenu extends JPopupMenu {
             JMenu sortJMenu = new JMenu( Settings.jpoResources.getString( "sortJMenu" ) );
             add( sortJMenu );
             //requests a sort by Description
-            ArrayList<SortOption> sortOptions = Settings.getSortOptions();
+            List<SortOption> sortOptions = Settings.getSortOptions();
             final SortOption sortByDescription = sortOptions.get( 1 );
             JMenuItem sortByDescriptionJMenuItem = new JMenuItem( sortByDescription.getDescription() );
             sortByDescriptionJMenuItem.addActionListener( new ActionListener() {

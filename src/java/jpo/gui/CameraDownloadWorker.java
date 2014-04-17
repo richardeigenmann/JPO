@@ -75,12 +75,9 @@ public class CameraDownloadWorker
                 dataModel.targetDir,
                 dataModel.getCopyMode(),
                 progressBar );
-        if ( dataModel.getSortCode() > 1 ) {
             LOGGER.fine( String.format( "Sorting node %s by code %d", dataModel.getTargetNode().toString(), dataModel.getSortCode() ) );
             dataModel.getTargetNode().sortChildren( dataModel.getSortCode() );
             JpoEventBus.getInstance().post( new RefreshThumbnailRequest( dataModel.getTargetNode(), ThumbnailQueueRequest.LOWEST_PRIORITY ) );
-
-        }
 
         InterruptSemaphore interrupter = new InterruptSemaphore();
         dataModel.getCamera().buildOldImage( this, interrupter );// this, interrupter );

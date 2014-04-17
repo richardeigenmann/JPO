@@ -1,24 +1,24 @@
 package jpo.gui;
 
 import com.google.common.eventbus.Subscribe;
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
-import jpo.dataModel.NodeNavigatorListener;
-import jpo.dataModel.NodeNavigatorInterface;
-import jpo.dataModel.Settings;
-import jpo.dataModel.SortableDefaultMutableTreeNode;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.logging.Logger;
+import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JSlider;
+import javax.swing.OverlayLayout;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -30,7 +30,11 @@ import jpo.dataModel.GroupInfo;
 import jpo.dataModel.GroupInfoChangeEvent;
 import jpo.dataModel.GroupInfoChangeListener;
 import jpo.dataModel.GroupNavigator;
+import jpo.dataModel.NodeNavigatorInterface;
+import jpo.dataModel.NodeNavigatorListener;
 import jpo.dataModel.QueryNavigator;
+import jpo.dataModel.Settings;
+import jpo.dataModel.SortableDefaultMutableTreeNode;
 import jpo.dataModel.Tools;
 import jpo.gui.swing.ThumbnailPanelTitle;
 
@@ -61,13 +65,12 @@ import jpo.gui.swing.ThumbnailPanelTitle;
  * take advantage of the extra space if there is some.
  *
  */
-public class ThumbnailPanelController
-        implements NodeNavigatorListener {
+public class ThumbnailsPanelController implements NodeNavigatorListener {
 
     /**
      * Defines a LOGGER for this class
      */
-    private static final Logger LOGGER = Logger.getLogger( ThumbnailPanelController.class.getName() );
+    private static final Logger LOGGER = Logger.getLogger( ThumbnailsPanelController.class.getName() );
 
     /**
      * The title above the ThumbnailPanel
@@ -79,15 +82,18 @@ public class ThumbnailPanelController
      */
     private final ThumbnailLayoutManager thumbnailLayoutManager = new ThumbnailLayoutManager();
 
+    private boolean paintOverlay = false;
+    private Rectangle overlayRectangle = null;
+
     /**
      * The Panel that shows the Thumbnails
      */
-    private final JPanel thumbnailPane = new JPanel( thumbnailLayoutManager );
+    private final JPanel thumbnailsPane = new JPanel( thumbnailLayoutManager );
 
     /**
      * The Scroll Pane that holds the Thumbnail Panel
      */
-    private final JScrollPane thumbnailJScrollPane;
+    private final JScrollPane thumbnailJScrollPane = new JScrollPane();
 
     /**
      * currently displayed page
@@ -146,11 +152,8 @@ public class ThumbnailPanelController
     /**
      * Creates a new ThumbnailPanelController which in turn creates the view
      * objects and hooks itself up so that thumbnails can be shown
-     *
-     * @param thumbnailJScrollPane
      */
-    public ThumbnailPanelController( JScrollPane thumbnailJScrollPane ) {
-        this.thumbnailJScrollPane = thumbnailJScrollPane;
+    public ThumbnailsPanelController() {
         Tools.checkEDT();
         initComponents();
         registerListeners();
@@ -164,11 +167,11 @@ public class ThumbnailPanelController
     }
 
     /**
-     * Returns a handle to view widget being controlled by this controller
+     * Returns a component to be displayed
      *
      * @return The JScollPane widget
      */
-    public JScrollPane getView() {
+    public Component getView() {
         return thumbnailJScrollPane;
     }
 
@@ -214,7 +217,7 @@ public class ThumbnailPanelController
             this.mySetOfNodes.getRid();
         }
         this.mySetOfNodes = newNodeNavigator;
-        newNodeNavigator.addNodeNavigatorListener( this );  //Todo: investigate how we unattach these...
+        newNodeNavigator.addNodeNavigatorListener( this );
 
         if ( myLastGroupNode != null ) {
             GroupInfo gi = (GroupInfo) myLastGroupNode.getUserObject();
@@ -300,12 +303,37 @@ public class ThumbnailPanelController
         setButtonStatus();
     }
 
+    
     /**
      * Initialises the components for the ThumbnailController Pane
      */
     private void initComponents() {
-        thumbnailJScrollPane.setViewportView( thumbnailPane );
-        thumbnailPane.setBackground( Settings.JPO_BACKGROUND_COLOR );
+        final JLayeredPane layeredPane = new JLayeredPane();
+
+        layeredPane.setLayout( new OverlayLayout( layeredPane ) );
+        layeredPane.add( thumbnailsPane, new Integer( 1 ) );
+
+        final JPanel overlayPanel = new JPanel() {
+            @Override
+            protected void paintComponent( Graphics g ) {
+
+                if ( paintOverlay ) {
+                    super.paintComponent( g );
+
+                    Rectangle outerRect = new Rectangle( 0, 0, thumbnailsPane.getWidth(), thumbnailsPane.getHeight() );
+                    g.setColor( new Color( .6f, .6f, .8f, .6f ) );
+                    g.fillRect( outerRect.x, outerRect.y, outerRect.width, overlayRectangle.y );
+                    g.fillRect( outerRect.x, overlayRectangle.y, overlayRectangle.x, outerRect.height );
+                    g.fillRect( overlayRectangle.x, overlayRectangle.y + overlayRectangle.height, outerRect.width, outerRect.height );
+                    g.fillRect( overlayRectangle.x + overlayRectangle.width, overlayRectangle.y, outerRect.width - overlayRectangle.x - overlayRectangle.width, overlayRectangle.height );
+                }
+            }
+        };
+        overlayPanel.setOpaque( false );
+
+        layeredPane.add( overlayPanel, new Integer( 2 ) );
+        thumbnailJScrollPane.setViewportView( layeredPane );
+        thumbnailsPane.setBackground( Settings.JPO_BACKGROUND_COLOR );
 
         thumbnailJScrollPane.setMinimumSize( Settings.THUMBNAIL_JSCROLLPANE_MINIMUM_SIZE );
         thumbnailJScrollPane.setPreferredSize( Settings.thumbnailJScrollPanePreferredSize );
@@ -356,7 +384,7 @@ public class ThumbnailPanelController
         JPanel whiteArea = new JPanel();
         thumbnailJScrollPane.setCorner( JScrollPane.UPPER_RIGHT_CORNER, whiteArea );
 
-        thumbnailPane.addMouseListener( new MouseInputAdapter() {
+        thumbnailsPane.addMouseListener( new MouseInputAdapter() {
 
             @Override
             public void mousePressed( MouseEvent e ) {
@@ -367,8 +395,8 @@ public class ThumbnailPanelController
             public void mouseReleased( MouseEvent e ) {
                 thumbnailJScrollPane.requestFocusInWindow();
 
-                Graphics g = thumbnailPane.getGraphics();
-                thumbnailPane.paint( g ); //cheap way of undoing old rectancle... TODO: use the glass pane
+                paintOverlay = false;
+                thumbnailsPane.repaint();
 
                 Point mouseMovedToPoint = e.getPoint();
                 Rectangle r = new Rectangle( mousePressedPoint,
@@ -406,7 +434,7 @@ public class ThumbnailPanelController
             }
         } );
 
-        thumbnailPane.addMouseMotionListener( new MouseInputAdapter() {
+        thumbnailsPane.addMouseMotionListener( new MouseInputAdapter() {
 
             @Override
             public void mouseDragged( MouseEvent e ) {
@@ -423,11 +451,11 @@ public class ThumbnailPanelController
                     r.y = mouseMovedToPoint.y;
                     r.height = mousePressedPoint.y - mouseMovedToPoint.y;
                 }
-                Graphics g = thumbnailPane.getGraphics();
-                thumbnailPane.paint( g ); //cheap way of undoing old rectancle...
-                g.drawRect( r.x, r.y, r.width, r.height );
 
-                // find out if we need to scroll the window
+                paintOverlay = true;
+                overlayRectangle = r;
+                thumbnailsPane.repaint();
+
                 Rectangle viewRect = thumbnailJScrollPane.getViewport().getViewRect();
                 JScrollBar verticalScrollBar = thumbnailJScrollPane.getVerticalScrollBar();
                 final int scrolltrigger = 40;
@@ -445,9 +473,11 @@ public class ThumbnailPanelController
                     if ( position > verticalScrollBar.getMinimum() ) {
                         verticalScrollBar.setValue( position - increment );
                     }
-
                 }
+            }
 
+            private Object getComponent() {
+                throw new UnsupportedOperationException( "Not supported yet." ); //To change body of generated methods, choose Tools | Templates.
             }
         } );
 
@@ -456,9 +486,7 @@ public class ThumbnailPanelController
 
                     @Override
                     public void keyReleased( KeyEvent e ) {
-                        //logger.info("thumbnailJScrollPane: Trapped a KeyTyped event for key code: " + Integer.toString( e.getKeyCode() ) );
                         if ( e.getKeyCode() == KeyEvent.VK_A && e.isControlDown() ) {
-                            //logger.info("thumbnailJScrollPane: Got a CTRL-A");
                             selectAll();
                         }
                     }
@@ -486,7 +514,7 @@ public class ThumbnailPanelController
                 thumbnailControllers[i].setFactor( thumbnailSizeFactor );
                 thumbnailDescriptionJPanels[i].setFactor( thumbnailSizeFactor );
             }
-            thumbnailLayoutManager.layoutContainer( thumbnailPane );
+            thumbnailLayoutManager.layoutContainer( thumbnailsPane );
         }
     }
 
@@ -498,13 +526,13 @@ public class ThumbnailPanelController
         Tools.checkEDT();
         thumbnailControllers = new ThumbnailController[Settings.maxThumbnails];
         thumbnailDescriptionJPanels = new ThumbnailDescriptionJPanel[Settings.maxThumbnails];
-        thumbnailPane.removeAll();
+        thumbnailsPane.removeAll();
         initialisedMaxThumbnails = Settings.maxThumbnails;
         for ( int i = 0; i < Settings.maxThumbnails; i++ ) {
             thumbnailControllers[i] = new ThumbnailController( Settings.thumbnailSize );
             thumbnailDescriptionJPanels[i] = new ThumbnailDescriptionJPanel();
-            thumbnailPane.add( thumbnailControllers[i].getThumbnail() );
-            thumbnailPane.add( thumbnailDescriptionJPanels[i] );
+            thumbnailsPane.add( thumbnailControllers[i].getThumbnail() );
+            thumbnailsPane.add( thumbnailDescriptionJPanels[i] );
         }
     }
 

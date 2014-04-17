@@ -1,6 +1,6 @@
 package jpo.EventBus;
 
-import java.util.ArrayList;
+import java.util.List;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
 
 /**
@@ -11,7 +11,7 @@ import jpo.dataModel.SortableDefaultMutableTreeNode;
  */
 public class MoveNodeToNodeRequest implements Request {
 
-    private final ArrayList<SortableDefaultMutableTreeNode> movingNodes;
+    private final List<SortableDefaultMutableTreeNode> movingNodes;
     private final SortableDefaultMutableTreeNode targetNode;
 
     /**
@@ -21,7 +21,7 @@ public class MoveNodeToNodeRequest implements Request {
      * @param movingNodes The nodes to move
      * @param targetNode the target node to which to add the node
      */
-    public MoveNodeToNodeRequest( ArrayList<SortableDefaultMutableTreeNode> movingNodes, SortableDefaultMutableTreeNode targetNode ) {
+    public MoveNodeToNodeRequest( List<SortableDefaultMutableTreeNode> movingNodes, SortableDefaultMutableTreeNode targetNode ) {
         this.movingNodes = movingNodes;
         this.targetNode = targetNode;
     }
@@ -31,7 +31,7 @@ public class MoveNodeToNodeRequest implements Request {
      *
      * @return the node
      */
-    public ArrayList<SortableDefaultMutableTreeNode> getMovingNodes() {
+    public List<SortableDefaultMutableTreeNode> getMovingNodes() {
         return movingNodes;
     }
 

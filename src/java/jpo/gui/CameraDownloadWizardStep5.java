@@ -5,7 +5,7 @@ import jpo.dataModel.Settings;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -78,7 +78,7 @@ public class CameraDownloadWizardStep5
         stepComponent.add( Box.createVerticalGlue() );
 
 
-        ArrayList<SortOption> sortOptions = Settings.getSortOptions();
+        List<SortOption> sortOptions = Settings.getSortOptions();
         JComboBox <SortOption> sortChoice = new JComboBox<SortOption>( sortOptions.toArray( new SortOption[0]) );
         for ( int i = 0; i < sortOptions.size(); i++ ) {
             if ( sortOptions.get(i).getSortCode() == dataModel.getSortCode() ) {

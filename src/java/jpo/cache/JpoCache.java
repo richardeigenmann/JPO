@@ -197,7 +197,7 @@ public class JpoCache {
         int verticalPics = ( getThumbnailDimensions().height - topMargin ) / ( Settings.miniThumbnailSize.height + margin );
         int numberOfPics = horizontalPics * verticalPics;
 
-        StringBuilder sb = new StringBuilder( "Group:" );
+        StringBuilder sb = new StringBuilder( "Group-" );
         for ( int i = 0; ( i < numberOfPics ) && ( i < childPictureNodes.size() ); i++ ) {
             PictureInfo pictureInfo = (PictureInfo) childPictureNodes.get( i ).getUserObject();
             sb.append( String.format( "%s-%fdeg", pictureInfo.getHighresURL().toString(), pictureInfo.getRotation() ) );
@@ -239,8 +239,6 @@ public class JpoCache {
      * and creating a folder icon with embedded images
      */
     private ImageBytes createGroupThumbnailAndStoreInCache( String key, int numberOfPics, ArrayList<SortableDefaultMutableTreeNode> childPictureNodes ) throws IOException {
-
-        //logger.info("ThumbnailCreationFactory.createNewGroupThumbnail: Creating ThumbnailController " + ((GroupInfo) myNode.getUserObject()).getLowresLocation() + " from " + ((GroupInfo) myNode.getUserObject()).getLowresLocation());
         BufferedImage groupThumbnail = ImageIO.read( new BufferedInputStream( Settings.CLASS_LOADER.getResourceAsStream( "jpo/images/icon_folder_large.jpg" ) ) );
         Graphics2D groupThumbnailGraphics = groupThumbnail.createGraphics();
 
@@ -266,7 +264,6 @@ public class JpoCache {
             x = margin + ( ( picsProcessed % horizontalPics ) * ( Settings.miniThumbnailSize.width + margin ) );
             yPos = (int) Math.round( ( (double) picsProcessed / (double) horizontalPics ) - 0.5f );
             y = topMargin + ( yPos * ( Settings.miniThumbnailSize.height + margin ) );
-            //logger.info(Integer.toString(picsProcessed) +": " + Integer.toString(x) + "/" +Integer.toString(y)+ " - " + Integer.toString(yPos) );
 
             scalablePicture.loadPictureImd( pi.getHighresURL(), pi.getRotation() );
 

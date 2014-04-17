@@ -5,26 +5,34 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import jpo.dataModel.Tools;
-import jpo.dataModel.ExifInfo;
-import jpo.dataModel.Settings;
-import java.awt.geom.AffineTransform;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.geom.AffineTransform;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 import javax.swing.JComponent;
+import jpo.dataModel.ExifInfo;
+import jpo.dataModel.Settings;
+import jpo.dataModel.Tools;
 import jpo.gui.ScalablePicture;
+import jpo.gui.ScalablePicture.ScalablePictureStatus;
+import static jpo.gui.ScalablePicture.ScalablePictureStatus.SCALABLE_PICTURE_LOADED;
+import static jpo.gui.ScalablePicture.ScalablePictureStatus.SCALABLE_PICTURE_READY;
 import jpo.gui.ScalablePictureListener;
+import jpo.gui.SourcePicture.SourcePictureStatus;
+import static jpo.gui.swing.PicturePane.InfoOverlay.APPLICATION_OVERLAY;
+import static jpo.gui.swing.PicturePane.InfoOverlay.NO_OVERLAY;
+import static jpo.gui.swing.PicturePane.InfoOverlay.PHOTOGRAPHIC_OVERLAY;
 
 
 /*
  PicturePane.java:  a component that can display an image
 
- Copyright (C) 2002 - 2011 Richard Eigenmann.
+ Copyright (C) 2002 - 2014 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -200,7 +208,7 @@ public class PicturePane
     public void zoomToFit() {
         sclPic.setScaleSize( getSize() );
         // prevent useless rescale events when the picture is not ready
-        if ( sclPic.getStatusCode() == ScalablePicture.LOADED || sclPic.getStatusCode() == ScalablePicture.READY ) {
+        if ( sclPic.getStatusCode() == SCALABLE_PICTURE_LOADED || sclPic.getStatusCode() == SCALABLE_PICTURE_READY ) {
             sclPic.createScaledPictureInThread( Thread.MAX_PRIORITY );
         }
     }
@@ -368,9 +376,9 @@ public class PicturePane
 
             g2d.setColor( infoFontColor );
             switch ( showInfo ) {
-                case DISPLAY_NONE:
+                case NO_OVERLAY:
                     break;
-                case DISPLAY_PHOTOGRAPHIC:
+                case PHOTOGRAPHIC_OVERLAY:
                     g2d.drawString( Settings.jpoResources.getString( "ExifInfoCamera" ), infoPoint.x, infoPoint.y + ( 0 * lineSpacing ) );
                     g2d.drawString( ei.camera, infoPoint.x + tabstop, infoPoint.y + ( 0 * lineSpacing ) );
                     g2d.drawString( Settings.jpoResources.getString( "ExifInfoLens" ), infoPoint.x, infoPoint.y + ( 1 * lineSpacing ) );
@@ -386,7 +394,7 @@ public class PicturePane
                     g2d.drawString( Settings.jpoResources.getString( "ExifInfoTimeStamp" ), infoPoint.x, infoPoint.y + ( 6 * lineSpacing ) );
                     g2d.drawString( ei.getCreateDateTime(), infoPoint.x + tabstop, infoPoint.y + ( 6 * lineSpacing ) );
                     break;
-                case DISPLAY_APPLICATION:
+                case APPLICATION_OVERLAY:
                     g2d.drawString( legend, infoPoint.x, infoPoint.y + ( 0 * lineSpacing ) );
                     g2d.drawString( Settings.jpoResources.getString( "PicturePaneSize" ) + Integer.toString( sclPic.getOriginalWidth() ) + " x " + Integer.toString( sclPic.getOriginalHeight() ) + Settings.jpoResources.getString( "PicturePaneMidpoint" ) + Integer.toString( focusPoint.x ) + " x " + Integer.toString( focusPoint.y ) + " Scale: " + TWO_DECIMAL_FORMATTER.format( sclPic.getScaleFactor() ), infoPoint.x, infoPoint.y + ( 1 * lineSpacing ) );
                     g2d.drawString( "File: " + sclPic.getFilename(), infoPoint.x, infoPoint.y + ( 2 * lineSpacing ) );
@@ -402,29 +410,16 @@ public class PicturePane
         }
     }
 
-    /**
-     * Constant to indicate that no information should be overlaid on the
-     * picture
-     * TODO: Make this an enum
-     */
-    public static final int DISPLAY_NONE = 0;
-
-    /**
-     * Constant to indicate that photographic information should be displayed on
-     * the picture
-     */
-    public static final int DISPLAY_PHOTOGRAPHIC = DISPLAY_NONE + 1;
-
-    /**
-     * Constant to indicate that Application related information should be
-     * displayed on the picture
-     */
-    public static final int DISPLAY_APPLICATION = DISPLAY_PHOTOGRAPHIC + 1;
-
+    public static enum InfoOverlay {
+        NO_OVERLAY,
+        PHOTOGRAPHIC_OVERLAY,
+        APPLICATION_OVERLAY
+    }
+    
     /**
      * Code that determines what info is to be displayed over the picture.
      */
-    private int showInfo = DISPLAY_NONE;
+    private InfoOverlay showInfo = NO_OVERLAY;
 
     /**
      * This function cycles to the next info display. The first is DISPLAY_NONE,
@@ -433,14 +428,14 @@ public class PicturePane
      */
     public void cylceInfoDisplay() {
         switch ( showInfo ) {
-            case DISPLAY_NONE:
-                showInfo = DISPLAY_PHOTOGRAPHIC;
+            case NO_OVERLAY:
+                showInfo = PHOTOGRAPHIC_OVERLAY;
                 break;
-            case DISPLAY_PHOTOGRAPHIC:
-                showInfo = DISPLAY_APPLICATION;
+            case PHOTOGRAPHIC_OVERLAY:
+                showInfo = APPLICATION_OVERLAY;
                 break;
-            case DISPLAY_APPLICATION:
-                showInfo = DISPLAY_NONE;
+            case APPLICATION_OVERLAY:
+                showInfo = NO_OVERLAY;
                 break;
         }
         repaint();
@@ -460,11 +455,11 @@ public class PicturePane
      * @param pictureStatusMessage
      */
     @Override
-    public void scalableStatusChange( int pictureStatusCode,
+    public void scalableStatusChange( ScalablePictureStatus pictureStatusCode,
             String pictureStatusMessage ) {
         LOGGER.fine( "PicturePane.scalableStatusChange: got a status change: " + pictureStatusMessage );
 
-        if ( pictureStatusCode == ScalablePicture.READY ) {
+        if ( pictureStatusCode == SCALABLE_PICTURE_READY ) {
             LOGGER.fine( "PicturePane.scalableStatusChange: a READY status" );
             //pictureStatusMessage = legend;
             pictureStatusMessage = Settings.jpoResources.getString( "PicturePaneReadyStatus" );
@@ -489,19 +484,19 @@ public class PicturePane
      * @param percentage
      */
     @Override
-    public void sourceLoadProgressNotification( int statusCode, int percentage ) {
+    public void sourceLoadProgressNotification( SourcePictureStatus statusCode, int percentage ) {
         for ( ScalablePictureListener scalablePictureListener : picturePaneListeners ) {
             scalablePictureListener.sourceLoadProgressNotification( statusCode, percentage );
         }
     }
 
     /**
-     * This Vector hold references to objects that would like to receive
+     * This List hold references to objects that would like to receive
      * notifications about what is going on with the ScalablePicture being
      * displayed in this PicturePane. These objects must implement the
      * ScalablePictureListener interface.
      */
-    protected ArrayList<ScalablePictureListener> picturePaneListeners = new ArrayList<ScalablePictureListener>();
+    protected List<ScalablePictureListener> picturePaneListeners = new ArrayList<>();
 
     /**
      * method to register the listening object of the status events

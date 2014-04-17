@@ -575,16 +575,8 @@ public class PictureInfoEditor extends JFrame {
         listModel.addElement( setupCategories );
         listModel.addElement( noCategories );
 
-        //TODO: weired stuff....
-        //Iterator i = myNode.getPictureCollection().getCategoryIterator();
-        //Integer key;
-        //String category;
-        //Category categoryObject;
-        //Vector<Integer> selections = new Vector<Integer>();
         ArrayList<Integer> selections = new ArrayList<>();
-        //while ( i.hasNext() ) {
         for ( Integer key : myNode.getPictureCollection().getCategoryKeySet() ) {
-            //key = (Integer) i.next();
             String category = myNode.getPictureCollection().getCategory( key );
             Category categoryObject = new Category( key, category );
             listModel.addElement( categoryObject );
@@ -597,10 +589,6 @@ public class PictureInfoEditor extends JFrame {
         int selectionsArray[] = new int[selections.size()];
         int j = 0;
         for ( Integer key : selections ) {
-            //Enumeration e = selections.elements();
-            //Object o;
-            //while ( e.hasMoreElements() ) {
-            //    o = e.nextElement();
             selectionsArray[j] = ( key );
             j++;
         }

@@ -146,10 +146,10 @@ public class SettingsDialog extends JDialog {
     private final JCheckBox pictureViewerFastScaleJCheckBox = new JCheckBox( Settings.jpoResources.getString( "pictureViewerFastScale" ) );
     /**
      * fields that allows the user to capture the path for the thumbnails
-     */
+     *
     private final DirectoryChooser thumbnailPathChooser = new DirectoryChooser( Settings.jpoResources.getString( "genericSelectText" ),
             DirectoryChooser.DIR_MUST_BE_WRITABLE );
-
+*/
     /**
      * User picks the thumbnail cache directory here
      */
@@ -159,8 +159,10 @@ public class SettingsDialog extends JDialog {
 
     /**
      * tickbox that indicates whether thumbnails should be written to disk
-     */
+     *
     private final JCheckBox keepThumbnailsJCheckBox = new JCheckBox( Settings.jpoResources.getString( "keepThumbnailsJCheckBoxLabel" ) );
+    */
+    
     /**
      * field that allows the user to capture the maximum number of thumbnails to
      * be displayed
@@ -345,25 +347,25 @@ public class SettingsDialog extends JDialog {
         // set up the thumbnailSettingsJPanel
         final JPanel thumbnailsJPanel = new JPanel( new MigLayout() );
 
-        final JLabel thumbnailPathJLabel = new JLabel( Settings.jpoResources.getString( "thumbnailDirLabel" ) );
+        /*final JLabel thumbnailPathJLabel = new JLabel( Settings.jpoResources.getString( "thumbnailDirLabel" ) );
         thumbnailsJPanel.add( thumbnailPathJLabel );
         thumbnailsJPanel.add( thumbnailPathChooser, "wrap" );
 
-        thumbnailsJPanel.add( keepThumbnailsJCheckBox );
+        thumbnailsJPanel.add( keepThumbnailsJCheckBox ); */
 
-        final JButton zapThumbnailsJButton = new JButton( Settings.jpoResources.getString( "zapThumbnails" ) );
+        /*final JButton zapThumbnailsJButton = new JButton( Settings.jpoResources.getString( "zapThumbnails" ) );
         zapThumbnailsJButton.addActionListener( new ActionListener() {
 
             @Override
             public void actionPerformed( ActionEvent e ) {
                 zapThumbnails();
             }
-        } );
+        } ); 
         final Dimension zapButtonSize = new Dimension( 250, Settings.defaultButtonDimension.height );
         zapThumbnailsJButton.setPreferredSize( zapButtonSize );
         zapThumbnailsJButton.setMinimumSize( zapButtonSize );
         zapThumbnailsJButton.setMaximumSize( zapButtonSize );
-        thumbnailsJPanel.add( zapThumbnailsJButton, "wrap" );
+        thumbnailsJPanel.add( zapThumbnailsJButton, "wrap" ); */
 
         final JLabel maxThumbnailsLabel = new JLabel( Settings.jpoResources.getString( "maxThumbnailsLabelText" ) );
         thumbnailsJPanel.add( maxThumbnailsLabel );
@@ -774,11 +776,11 @@ public class SettingsDialog extends JDialog {
         maximumPictureSizeJTextField.setValue( Settings.maximumPictureSize );
         dontEnlargeJCheckBox.setSelected( Settings.dontEnlargeSmallImages );
 
-        thumbnailPathChooser.setText( Settings.thumbnailPath.getPath() );
+        //thumbnailPathChooser.setText( Settings.thumbnailPath.getPath() );
         thumbnailCacheDirPathChooser.setText( Settings.thumbnailCacheDirectory );
         maxThumbnails.setValue( Settings.maxThumbnails );
         thumbnailSize.setValue( Settings.thumbnailSize );
-        keepThumbnailsJCheckBox.setSelected( Settings.keepThumbnails );
+        //keepThumbnailsJCheckBox.setSelected( Settings.keepThumbnails );
         jpgQualityJSlider.setValue( (int) ( Settings.defaultHtmlLowresQuality * 100 ) );
         thumbnailFastScaleJCheckBox.setSelected( Settings.thumbnailFastScale );
 
@@ -843,13 +845,13 @@ public class SettingsDialog extends JDialog {
             logfileJCheckBox.setSelected( false );
         }
 
-        if ( ( !thumbnailPathChooser.setColor() ) ) { // TODO: This seems very odd
+        /*if ( ( !thumbnailPathChooser.setColor() ) ) { // TODO: This seems very odd
             JOptionPane.showMessageDialog( Settings.anchorFrame,
                     Settings.jpoResources.getString( "thumbnailDirError" ),
                     Settings.jpoResources.getString( "settingsError" ),
                     JOptionPane.ERROR_MESSAGE );
-            logfileJCheckBox.setSelected( false );
-        }
+            logfileJCheckBox.setSelected( false ); 
+        }*/
     }
 
     /**
@@ -890,9 +892,9 @@ public class SettingsDialog extends JDialog {
 
         Settings.pictureViewerFastScale = pictureViewerFastScaleJCheckBox.isSelected();
 
-        Settings.thumbnailPath = thumbnailPathChooser.getDirectory();
+        //Settings.thumbnailPath = thumbnailPathChooser.getDirectory();
         Settings.thumbnailCacheDirectory = thumbnailCacheDirPathChooser.getDirectory().toString();
-        Settings.keepThumbnails = keepThumbnailsJCheckBox.isSelected();
+        //Settings.keepThumbnails = keepThumbnailsJCheckBox.isSelected();
 
         if ( ( !Settings.thumbnailPath.exists() ) && Settings.keepThumbnails ) {
             if ( !Settings.thumbnailPath.mkdirs() ) {
@@ -1074,9 +1076,9 @@ public class SettingsDialog extends JDialog {
 
     /**
      * brings up an are you sure dialog and then zaps all the thumbnail images
-     */
+     *
     public void zapThumbnails() {
-        if ( ( !thumbnailPathChooser.setColor() ) ) {//TODO: Seems odd to use a GUI component to validate a path
+        /*if ( ( !thumbnailPathChooser.setColor() ) ) {//TODO: Seems odd to use a GUI component to validate a path
             JOptionPane.showMessageDialog( Settings.anchorFrame,
                     Settings.jpoResources.getString( "thumbnailDirError" ),
                     Settings.jpoResources.getString( "settingsError" ),
@@ -1084,7 +1086,7 @@ public class SettingsDialog extends JDialog {
             return;
         }
 
-        File thumbnailDirFile = thumbnailPathChooser.getDirectory();
+        //File thumbnailDirFile = thumbnailPathChooser.getDirectory();
 
         int option = JOptionPane.showConfirmDialog(
                 Settings.anchorFrame,
@@ -1114,7 +1116,7 @@ public class SettingsDialog extends JDialog {
 
         }
 
-    }
+    }*/
 
     private void updateCacheStats() {
         highresStatsJTA.setText( JpoCache.getInstance().getHighresCacheStats() );

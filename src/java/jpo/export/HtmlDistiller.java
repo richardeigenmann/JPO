@@ -39,6 +39,7 @@ import jpo.dataModel.SortableDefaultMutableTreeNode;
 import jpo.dataModel.Tools;
 import jpo.gui.ProgressGui;
 import jpo.gui.ScalablePicture;
+import static jpo.gui.ScalablePicture.ScalablePictureStatus.SCALABLE_PICTURE_ERROR;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPReply;
@@ -464,7 +465,7 @@ public class HtmlDistiller
         LOGGER.fine( String.format( "Loading: %s", pictureInfo.getHighresLocation() ) );
         scp.loadPictureImd( pictureInfo.getHighresURL(), pictureInfo.getRotation() );
 
-        if ( scp.getStatusCode() == ScalablePicture.ERROR ) {
+        if ( scp.getStatusCode() == SCALABLE_PICTURE_ERROR ) {
             LOGGER.log( Level.SEVERE, "Problem reading image {0} using brokenThumbnailPicture instead", pictureInfo.getHighresLocation() );
             scp.loadPictureImd( Settings.CLASS_LOADER.getResource( "jpo/images/broken_thumbnail.gif" ), 0f );
         }

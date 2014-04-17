@@ -12,6 +12,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.BoxLayout;
@@ -91,6 +92,7 @@ import jpo.dataModel.PictureInfo;
 import jpo.dataModel.QueryNavigator;
 import jpo.dataModel.RandomNavigator;
 import jpo.dataModel.Settings;
+import jpo.dataModel.Settings.FieldCodes;
 import jpo.dataModel.SingleNodeNavigator;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
 import jpo.dataModel.Tools;
@@ -440,6 +442,8 @@ public class ApplicationEventHandler {
      * Calls {@link SortableDefaultMutableTreeNode#fileLoad} Remember to wrap
      * this request in an UnsavedUpdatesDialogRequest if you care about unsaved
      * changes as this request will not check for unsaved changes
+     *
+     * @param request the request
      */
     @Subscribe
     public void handleFileLoadRequest( FileLoadRequest request ) {
@@ -456,7 +460,6 @@ public class ApplicationEventHandler {
                             ex.getMessage(),
                             Settings.jpoResources.getString( "genericError" ),
                             JOptionPane.ERROR_MESSAGE );
-
                     return;
                 }
                 JpoEventBus.getInstance().post( new ShowGroupRequest( Settings.pictureCollection.getRootNode() ) );
@@ -469,6 +472,8 @@ public class ApplicationEventHandler {
      * Clears the collection and starts a new one. Remember to wrap this request
      * in an UnsavedUpdatesDialogRequest if you care about unsaved changes as
      * this request will not check for unsaved changes
+     *
+     * @param event the event
      */
     @Subscribe
     public void handleStartNewCollectionRequest( StartNewCollectionRequest event ) {
@@ -487,6 +492,8 @@ public class ApplicationEventHandler {
      * Calls the {@link jpo.dataModel.PictureCollection#fileSave} method that
      * saves the current collection under it's present name and if it was never
      * saved before brings up a popup window.
+     *
+     * @param request The request
      */
     @Subscribe
     public void handleFileSaveRequest( FileSaveRequest request ) {
@@ -507,6 +514,8 @@ public class ApplicationEventHandler {
     /**
      * method that saves the entire index in XML format. It prompts for the
      * filename first.
+     *
+     * @param request the request
      */
     @Subscribe
     public void handleFileSaveAsRequest( FileSaveAsRequest request ) {
@@ -539,7 +548,12 @@ public class ApplicationEventHandler {
 
             Settings.pictureCollection.setXmlFile( chosenFile );
             boolean success = Settings.pictureCollection.fileSave();
-            //ToDo: do something if saving didn't work
+            if ( !success ) {
+                JOptionPane.showMessageDialog( Settings.anchorFrame,
+                        "There was a problem saving the file.",
+                        Settings.jpoResources.getString( "genericError" ),
+                        JOptionPane.ERROR_MESSAGE );
+            }
 
             Settings.memorizeCopyLocation( chosenFile.getParent() );
             JpoEventBus.getInstance().post( new CopyLocationsChangedEvent() );
@@ -576,7 +590,7 @@ public class ApplicationEventHandler {
 
     /**
      * Handles the request to add a collection supplied as a file to the
-     * supplied group node TODO: Perhaps move this to a DataModelEventHandler
+     * supplied group node
      *
      * @param request
      */
@@ -609,7 +623,7 @@ public class ApplicationEventHandler {
     @Subscribe
     public void handleSortGroupRequest( SortGroupRequest request ) {
         SortableDefaultMutableTreeNode popupNode = request.getNode();
-        int sortCriteria = request.getSortCriteria();
+        FieldCodes sortCriteria = request.getSortCriteria();
         //logger.info( "Sort requested on " + myPopupNode.toString() + " for Criteria: " + Integer.toString( sortCriteria ) );
         popupNode.sortChildren( sortCriteria );
         JpoEventBus.getInstance().post( new RefreshThumbnailRequest( popupNode, ThumbnailQueueRequest.MEDIUM_PRIORITY ) );
@@ -776,10 +790,13 @@ public class ApplicationEventHandler {
     }
 
     /**
-     * Handles the request to open a recent collection ToDo: consider whether
-     * this request should be integrated with the FileLoadRequest Remember to
-     * wrap this request in an UnsavedUpdatesDialogRequest if you care about
-     * unsaved changes as this request will not check for unsaved changes
+     * Handles the request to open a recent collection
+     *
+     * Remember to wrap this request in an UnsavedUpdatesDialogRequest if you
+     * care about unsaved changes as this request will not check for unsaved
+     * changes
+     *
+     * @param request the request
      */
     @Subscribe
     public void handleOpenRecentCollectionRequest( OpenRecentCollectionRequest request ) {
@@ -858,7 +875,7 @@ public class ApplicationEventHandler {
      */
     @Subscribe
     public void handleMoveNodeToNodeRequest( MoveNodeToNodeRequest request ) {
-        ArrayList<SortableDefaultMutableTreeNode> movingNodes = request.getMovingNodes();
+        List<SortableDefaultMutableTreeNode> movingNodes = request.getMovingNodes();
         SortableDefaultMutableTreeNode targetGroup = request.getTargetNode();
         for ( SortableDefaultMutableTreeNode movingNode : movingNodes ) {
             movingNode.moveToLastChild( targetGroup );
@@ -990,7 +1007,7 @@ public class ApplicationEventHandler {
     public void handleRotatePictureRequestRequest( RotatePictureRequest request ) {
         PictureInfo pictureInfo = (PictureInfo) request.getNode().getUserObject();
         pictureInfo.rotate( request.getAngle() );
-        LOGGER.info( "Changed the rotation");
+        LOGGER.info( "Changed the rotation" );
         JpoEventBus.getInstance().post( new RefreshThumbnailRequest( request.getNode(), request.getPriority() ) );
         JpoEventBus.getInstance().post( new RefreshThumbnailRequest( (SortableDefaultMutableTreeNode) request.getNode().getParent(), request.getPriority() ) );
     }

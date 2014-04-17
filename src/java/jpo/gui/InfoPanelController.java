@@ -91,27 +91,23 @@ public class InfoPanelController {
     /**
      * Invoked to tell that we should display something
      *
-     * @param nde The Group or Picture node to be displayed.
+     * @param defaultMutableTreeNode The Group or Picture node to be displayed.
      */
-    public void showInfo( DefaultMutableTreeNode nde ) {
-        if ( !( nde instanceof SortableDefaultMutableTreeNode ) ) {
-            LOGGER.fine( "The node is not a SortableDefaultMutableTreeNode. Don't know what to do. Skipping" );
-            return; //ToDo do something smart when a query is shown.
+    public void showInfo( DefaultMutableTreeNode defaultMutableTreeNode ) {
+        if ( !( defaultMutableTreeNode instanceof SortableDefaultMutableTreeNode ) ) {
+            LOGGER.info( "The node is not a SortableDefaultMutableTreeNode. Don't know what to do. Skipping" );
         }
-        final SortableDefaultMutableTreeNode node = (SortableDefaultMutableTreeNode) nde;
+        final SortableDefaultMutableTreeNode node = (SortableDefaultMutableTreeNode) defaultMutableTreeNode;
         SwingUtilities.invokeLater( new Runnable() {
 
             @Override
             public void run() {
                 if ( node == null ) {
-                    //infoPanel.statsScroller.setViewportView( infoPanel.unknownJPanel );
                     statUpdateTimer.stop();
                     statUpdateTimer.start();  // updates the queue-count
                 } else if ( node.getUserObject() instanceof PictureInfo ) {
-                    //infoPanel.thumbnailController.setNode( new SingleNodeNavigator( node ), 0 );
                     statUpdateTimer.stop();
                 } else {
-                    LOGGER.fine( "Updating stats" );
                     nodeStatisticsController.updateStats( node );
                     statUpdateTimer.start();  // updates the queue-count
                 }

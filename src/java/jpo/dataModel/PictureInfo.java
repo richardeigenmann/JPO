@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -1402,28 +1403,25 @@ public class PictureInfo implements Serializable {
      * A collection that holds all the listeners that want to be notified about
      * changes to this PictureInfo object.
      */
-    private final ArrayList<PictureInfoChangeListener> pictureInfoListeners = new ArrayList<PictureInfoChangeListener>();
+    private final List<PictureInfoChangeListener> pictureInfoListeners = new ArrayList<>();
 
     /**
-     * Method to register the listening object of the status events.
+     * Registers a listener for picture info change events
      *
-     * @param listener	The object that will receive notifications.
+     * @param pictureInfoChangeListener	The object that will receive notifications.
      */
-    public void addPictureInfoChangeListener( PictureInfoChangeListener listener ) {
-        LOGGER.fine( "Listener added on SourcePicture " + Integer.toString( this.hashCode() ) + " of class: " + listener.getClass().toString() );
-        pictureInfoListeners.add( listener );
+    public void addPictureInfoChangeListener( PictureInfoChangeListener pictureInfoChangeListener ) {
+        pictureInfoListeners.add( pictureInfoChangeListener );
     }
 
     /**
-     * Method to register the listening object of the status events. Will NOT
-     * throw an exception if the listener was not in the Vector.
+     * Removes the listener
      *
-     * @param listener	The listener that doesn't want to notifications any more.
+     * @param pictureInfoChangeListener	The listener that doesn't want to notifications any more.
      */
     public void removePictureInfoChangeListener(
-            PictureInfoChangeListener listener ) {
-        LOGGER.fine( "Listener removed from SourcePicture " + Integer.toString( this.hashCode() ) + " of class: " + listener.getClass().toString() );
-        pictureInfoListeners.remove( listener );
+            PictureInfoChangeListener pictureInfoChangeListener ) {
+        pictureInfoListeners.remove( pictureInfoChangeListener );
     }
 
     /**
@@ -1439,14 +1437,6 @@ public class PictureInfo implements Serializable {
         }
     }
 
-    /**
-     * Intended mainly for debugging purposes.
-     *
-     * @return The Vector of change listeners
-     */
-    public ArrayList<PictureInfoChangeListener> getPictureInfoListeners() {
-        return pictureInfoListeners;
-    }
 
     //-------------------------------------------
     /**

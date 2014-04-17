@@ -1,10 +1,12 @@
 package jpo.gui;
 
+import jpo.gui.SourcePicture.SourcePictureStatus;
+
 
 /*
  SourcePictureListener.java:  interface for notification
 
- Copyright (C) 2002-2008  Richard Eigenmann.
+ Copyright (C) 2002-2014 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -19,8 +21,7 @@ package jpo.gui;
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 /**
- * This interface allows an object to inform another object that the status it
- * is listening on has changed.
+ * This interface allows a SourcePicture to inform a listener that the status has changed.
  */
 public interface SourcePictureListener {
 
@@ -31,7 +32,7 @@ public interface SourcePictureListener {
      * @param statusMessage
      * @param sp
      */
-    public void sourceStatusChange( int statusCode, String statusMessage, SourcePicture sp );
+    public void sourceStatusChange( SourcePictureStatus statusCode, String statusMessage, SourcePicture sp );
 
     /**
      * inform the listener of progress on the loading of the image
@@ -39,6 +40,6 @@ public interface SourcePictureListener {
      * @param statusCode
      * @param percentage
      */
-    public void sourceLoadProgressNotification( int statusCode, int percentage );
+    public void sourceLoadProgressNotification( SourcePictureStatus statusCode, int percentage );
 
 }

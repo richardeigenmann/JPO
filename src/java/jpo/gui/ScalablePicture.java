@@ -27,6 +27,14 @@ import javax.swing.ImageIcon;
 import jpo.dataModel.Settings;
 import jpo.dataModel.SizeCalculator;
 import jpo.dataModel.Tools;
+import static jpo.gui.ScalablePicture.ScalablePictureStatus.SCALABLE_PICTURE_ERROR;
+import static jpo.gui.ScalablePicture.ScalablePictureStatus.SCALABLE_PICTURE_LOADED;
+import static jpo.gui.ScalablePicture.ScalablePictureStatus.SCALABLE_PICTURE_LOADING;
+import static jpo.gui.ScalablePicture.ScalablePictureStatus.SCALABLE_PICTURE_READY;
+import static jpo.gui.ScalablePicture.ScalablePictureStatus.SCALABLE_PICTURE_SCALING;
+import static jpo.gui.ScalablePicture.ScalablePictureStatus.SCALABLE_PICTURE_UNINITIALISED;
+import jpo.gui.SourcePicture.SourcePictureStatus;
+import static jpo.gui.SourcePicture.SourcePictureStatus.SOURCE_PICTURE_LOADING_PROGRESS;
 
 /*
  ScalablePicture.java:  class that can load and save images
@@ -94,41 +102,52 @@ public class ScalablePicture
      */
     private Dimension TargetSize;
 
+    public enum ScalablePictureStatus {
+        SCALABLE_PICTURE_UNINITIALISED,
+        SCALABLE_PICTURE_GARBAGE_COLLECTION,
+        SCALABLE_PICTURE_LOADING, 
+        SCALABLE_PICTURE_LOADED, 
+        SCALABLE_PICTURE_SCALING, 
+        SCALABLE_PICTURE_READY,
+        SCALABLE_PICTURE_ERROR
+    }
+    
     /**
      * status code used to signal that the picture is not loaded
-     */
-    public static final int UNINITIALISED = SourcePicture.LOADING_COMPLETED + 1;
+     *
+    public static final int SCALABLE_PICTURE_UNINITIALISED = 1;
 
     /**
      * status code used to signal that the picture is cleaning up memory
-     */
-    public static final int GARBAGE_COLLECTION = UNINITIALISED + 1;
+     *
+    public static final int SCALABLE_PICTURE_GARBAGE_COLLECTION = SCALABLE_PICTURE_UNINITIALISED + 1;
 
     /**
      * status code used to signal that the thread is loading the image
-     */
-    public static final int LOADING = GARBAGE_COLLECTION + 1;
+     *
+    public static final int SCALABLE_PICTURE_LOADING = SCALABLE_PICTURE_GARBAGE_COLLECTION + 1;
 
     /**
      * status code used to signal that the thread has finished loading the image
-     */
-    public static final int LOADED = LOADING + 1;
+     *
+    public static final int SCALABLE_PICTURE_LOADED = SCALABLE_PICTURE_LOADING + 1;
 
     /**
      * status code used to signal that the thread has loaded the tread is
      * scaling the image
-     */
-    public static final int SCALING = LOADED + 1;
+     *
+    public static final int SCALABLE_PICTURE_SCALING = SCALABLE_PICTURE_LOADED + 1;
 
     /**
      * status code used to signal that the image is available.
-     */
-    public static final int READY = SCALING + 1;
+     *
+    public static final int SCALABLE_PICTURE_READY = SCALABLE_PICTURE_SCALING + 1;
 
     /**
      * status code used to signal that there was an error
-     */
-    public static final int ERROR = READY + 1;
+     *
+    public static final int SCALABLE_PICTURE_ERROR = SCALABLE_PICTURE_READY + 1;
+    * */
 
     /**
      * thingy to scale the image
@@ -165,7 +184,7 @@ public class ScalablePicture
      * Constructor
      */
     public ScalablePicture() {
-        setStatus( UNINITIALISED, Settings.jpoResources.getString( "ScalablePictureUninitialisedStatus" ) );
+        setStatus( SCALABLE_PICTURE_UNINITIALISED, Settings.jpoResources.getString( "ScalablePictureUninitialisedStatus" ) );
         setScaleFactor( (double) 1 );
     }
 
@@ -191,7 +210,7 @@ public class ScalablePicture
         }
         sourcePicture = new SourcePicture();
         sourcePicture.addListener( this );
-        setStatus( LOADING, Settings.jpoResources.getString( "ScalablePictureLoadingStatus" ) );
+        setStatus( SCALABLE_PICTURE_LOADING, Settings.jpoResources.getString( "ScalablePictureLoadingStatus" ) );
         scaleAfterLoad = true;
         sourcePicture.loadPictureInThread( imageUrl, priority, rotation );
         // when the thread is done it sends a sourceStatusChange message to us
@@ -252,30 +271,30 @@ public class ScalablePicture
 
         if ( alreadyLoading ) {
             switch ( sourcePicture.getStatusCode() ) {
-                case SourcePicture.UNINITIALISED:
+                case SOURCE_PICTURE_UNINITIALISED:
                     alreadyLoading = false;
                     // logger.info("ScalablePicture.loadAndScalePictureInThread: pictureStatus was: UNINITIALISED");
                     break;
-                case SourcePicture.ERROR:
+                case SOURCE_PICTURE_ERROR:
                     alreadyLoading = false;
                     // logger.info("ScalablePicture.loadAndScalePictureInThread: pictureStatus was: ERROR");
                     break;
-                case SourcePicture.LOADING:
+                case SOURCE_PICTURE_LOADING:
                     // logger.info("ScalablePicture.loadAndScalePictureInThread: pictureStatus was: LOADING");
                     sourcePicture.addListener( this );
-                    setStatus( LOADING, Settings.jpoResources.getString( "ScalablePictureLoadingStatus" ) );
-                    sourceLoadProgressNotification( SourcePicture.LOADING_PROGRESS, sourcePicture.getPercentLoaded() );
+                    setStatus( SCALABLE_PICTURE_LOADING, Settings.jpoResources.getString( "ScalablePictureLoadingStatus" ) );
+                    sourceLoadProgressNotification( SOURCE_PICTURE_LOADING_PROGRESS, sourcePicture.getPercentLoaded() );
                     scaleAfterLoad = true;
                     break;
-                case SourcePicture.ROTATING:
+                case SOURCE_PICTURE_ROTATING:
                     // logger.info("ScalablePicture.loadAndScalePictureInThread: pictureStatus was: ROTATING");
-                    setStatus( LOADING, Settings.jpoResources.getString( "ScalablePictureRotatingStatus" ) );
-                    sourceLoadProgressNotification( SourcePicture.LOADING_PROGRESS, sourcePicture.getPercentLoaded() );
+                    setStatus( SCALABLE_PICTURE_LOADING, Settings.jpoResources.getString( "ScalablePictureRotatingStatus" ) );
+                    sourceLoadProgressNotification( SOURCE_PICTURE_LOADING_PROGRESS, sourcePicture.getPercentLoaded() );
                     scaleAfterLoad = true;
                     break;
-                case SourcePicture.READY:
+                case SOURCE_PICTURE_READY:
                     //logger.info("ScalablePicture.loadAndScalePictureInThread: pictureStatus was: READY. Sending SCALING status.");
-                    setStatus( SCALING, Settings.jpoResources.getString( "ScalablePictureScalingStatus" ) );
+                    setStatus( SCALABLE_PICTURE_SCALING, Settings.jpoResources.getString( "ScalablePictureScalingStatus" ) );
                     createScaledPictureInThread( priority );
                     break;
                 default:
@@ -292,7 +311,7 @@ public class ScalablePicture
             }
             sourcePicture = new SourcePicture();
             sourcePicture.addListener( this );
-            setStatus( LOADING, Settings.jpoResources.getString( "ScalablePictureLoadingStatus" ) );
+            setStatus( SCALABLE_PICTURE_LOADING, Settings.jpoResources.getString( "ScalablePictureLoadingStatus" ) );
             scaleAfterLoad = true;
             sourcePicture.loadPictureInThread( imageUrl, priority, rotation );
             // when the thread is done it sends a sourceStatusChange message to us
@@ -346,31 +365,31 @@ public class ScalablePicture
      * @param sp
      */
     @Override
-    public void sourceStatusChange( int statusCode, String statusMessage,
+    public void sourceStatusChange( SourcePictureStatus statusCode, String statusMessage,
             SourcePicture sp ) {
         //logger.info("ScalablePicture.sourceStatusChange: status received from SourceImage: " + statusMessage);
 
         switch ( statusCode ) {
-            case SourcePicture.UNINITIALISED:
+            case SOURCE_PICTURE_UNINITIALISED:
                 // logger.info("ScalablePicture.sourceStatusChange: pictureStatus was: UNINITIALISED message: " + statusMessage );
-                setStatus( UNINITIALISED, statusMessage );
+                setStatus( SCALABLE_PICTURE_UNINITIALISED, statusMessage );
                 break;
-            case SourcePicture.ERROR:
+            case SOURCE_PICTURE_ERROR:
                 // logger.info("ScalablePicture.sourceStatusChange: pictureStatus was: ERROR message: " + statusMessage );
-                setStatus( ERROR, statusMessage );
+                setStatus( SCALABLE_PICTURE_ERROR, statusMessage );
                 sourcePicture.removeListener( this );
                 break;
-            case SourcePicture.LOADING:
+            case SOURCE_PICTURE_LOADING:
                 // logger.info("ScalablePicture.sourceStatusChange: pictureStatus was: LOADING message: " + statusMessage );
-                setStatus( LOADING, statusMessage );
+                setStatus( SCALABLE_PICTURE_LOADING, statusMessage );
                 break;
-            case SourcePicture.ROTATING:
+            case SOURCE_PICTURE_ROTATING:
                 // logger.info("ScalablePicture.sourceStatusChange: pictureStatus was: ROTATING message: " + statusMessage );
-                setStatus( LOADING, statusMessage );
+                setStatus( SCALABLE_PICTURE_LOADING, statusMessage );
                 break;
-            case SourcePicture.READY:
+            case SOURCE_PICTURE_READY:
                 // logger.info("ScalablePicture.sourceStatusChange: pictureStatus was: READY message: " + statusMessage );
-                setStatus( LOADED, statusMessage );
+                setStatus( SCALABLE_PICTURE_LOADED, statusMessage );
                 sourcePicture.removeListener( this );
                 if ( scaleAfterLoad ) {
                     createScaledPictureInThread( Thread.MAX_PRIORITY );
@@ -421,7 +440,7 @@ public class ScalablePicture
     public void scalePicture() {
         LOGGER.fine( "scaling..." );
         try {
-            setStatus( SCALING, "Scaling picture." );
+            setStatus( SCALABLE_PICTURE_SCALING, "Scaling picture." );
 
             if ( ( sourcePicture != null ) && ( sourcePicture.getSourceBufferedImage() != null ) ) {
                 if ( scaleToSize ) {
@@ -477,17 +496,17 @@ public class ScalablePicture
                 int PictureWidth = scaledPicture.getWidth();
                 int PictureHeight = scaledPicture.getHeight();
 
-                setStatus( READY, "Scaled Picture is ready." );
+                setStatus( SCALABLE_PICTURE_READY, "Scaled Picture is ready." );
             } else {
-                if ( getStatusCode() == LOADING ) {
+                if ( getStatusCode() == SCALABLE_PICTURE_LOADING ) {
                     // logger.info ("ScalablePicture.scalePicture invoked while image is still loading. I wonder why?");
                 } else {
-                    setStatus( ERROR, "Could not scale image as SourceImage is null." );
+                    setStatus( SCALABLE_PICTURE_ERROR, "Could not scale image as SourceImage is null." );
                 }
             }
         } catch ( OutOfMemoryError e ) {
             LOGGER.log( Level.SEVERE, "ScalablePicture.scalePicture caught an OutOfMemoryError while scaling an image.\n{0}", e.getMessage() );
-            setStatus( ERROR, "Out of Memory Error while scaling " + imageUrl.toString() );
+            setStatus( SCALABLE_PICTURE_ERROR, "Out of Memory Error while scaling " + imageUrl.toString() );
             scaledPicture = null;
             Tools.dealOutOfMemoryError();
         }
@@ -779,13 +798,13 @@ public class ScalablePicture
     /**
      * variable to track the status of the picture
      */
-    private int pictureStatusCode;
+    private ScalablePictureStatus pictureStatusCode;
 
     /**
      * Method that sets the status of the ScalablePicture object and notifies
      * interested objects of a change in status (not built yet).
      */
-    private void setStatus( int statusCode, String statusMessage ) {
+    private void setStatus( ScalablePictureStatus statusCode, String statusMessage ) {
         String filename = ( imageUrl == null ) ? "" : imageUrl.toString();
         //logger.info("ScalablePicture.setStatus: sending: " + statusMessage + " to all Listeners from Image: " + filename );
 
@@ -804,7 +823,7 @@ public class ScalablePicture
      * @param percentage
      */
     @Override
-    public void sourceLoadProgressNotification( int statusCode, int percentage ) {
+    public void sourceLoadProgressNotification( SourcePictureStatus statusCode, int percentage ) {
         for ( ScalablePictureListener scalablePictureListener : scalablePictureStatusListeners ) {
             scalablePictureListener.sourceLoadProgressNotification( statusCode, percentage );
         }
@@ -815,7 +834,7 @@ public class ScalablePicture
      *
      * @return the status code
      */
-    public int getStatusCode() {
+    public ScalablePictureStatus getStatusCode() {
         //logger.info(String.format( "Returning status code %d which corresponds to message %s", pictureStatusCode, pictureStatusMessage ));
         return pictureStatusCode;
     }
@@ -874,4 +893,5 @@ public class ScalablePicture
     public void setScaleSteps( int scaleSteps ) {
         this.scaleSteps = scaleSteps;
     }
+
 }

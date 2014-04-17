@@ -9,11 +9,12 @@ import java.io.File;
 import java.util.Collection;
 import java.util.logging.Logger;
 import javax.swing.tree.TreeModel;
+import jpo.dataModel.Settings.FieldCodes;
 
 /*
  CameraDownloadWizardData.java:  holds the data being shown in the Camera download wizard
 
- Copyright (C) 2007 - 2009  Richard Eigenmann.
+ Copyright (C) 2007 - 2014  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -187,7 +188,7 @@ public class CameraDownloadWizardData {
      * Sets whether to create a new Group or not.
      *
      * @param createNewGroup set to true to create a new group node or false if
-     * not desirec
+     * not desired
      */
     public void setShouldCreateNewGroup( boolean createNewGroup ) {
         this.shouldCreateNewGroup = createNewGroup;
@@ -260,14 +261,14 @@ public class CameraDownloadWizardData {
     /**
      * Which field to sort on
      */
-    private int sortCode = Settings.lastSortChoice;
+    private FieldCodes sortCode = Settings.lastSortChoice;
 
     /**
      * Sets the sort Code choice
      *
      * @param sortCode the ne sort code
      */
-    public void setSortCode( int sortCode ) {
+    public void setSortCode( FieldCodes sortCode ) {
         this.sortCode = sortCode;
     }
 
@@ -276,7 +277,7 @@ public class CameraDownloadWizardData {
      *
      * @return the sort code
      */
-    public int getSortCode() {
+    public FieldCodes getSortCode() {
         return sortCode;
     }
 

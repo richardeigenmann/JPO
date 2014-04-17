@@ -33,7 +33,7 @@ import jpo.gui.ApplicationJMenuBar;
 import jpo.gui.CollectionJTreeController;
 import jpo.gui.InfoPanelController;
 import jpo.gui.TagCloudController;
-import jpo.gui.ThumbnailPanelController;
+import jpo.gui.ThumbnailsPanelController;
 
 /*
  MainWindow.java:  main window of the JPO application
@@ -165,7 +165,7 @@ public class MainWindow extends JFrame {
 
         // Set up the Thumbnail Pane
         masterSplitPane.setLeftComponent( leftSplitPane );
-        masterSplitPane.setRightComponent( new ThumbnailPanelController( new JScrollPane() ).getView() );
+        masterSplitPane.setRightComponent( (new ThumbnailsPanelController()).getView() );
 
         leftSplitPane.setDividerLocation( Settings.preferredLeftDividerSpot );
 

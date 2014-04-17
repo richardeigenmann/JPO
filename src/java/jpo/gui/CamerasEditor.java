@@ -8,9 +8,9 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
+import java.util.List;
 import jpo.dataModel.Settings;
 import jpo.dataModel.Camera;
-import java.util.Vector;
 import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -85,12 +85,12 @@ public class CamerasEditor
     /**
      * The JTree to select and manipulate the cameras
      */
-    private JTree cameraJTree = new JTree( treeModel );
+    private final JTree cameraJTree;
 
     /**
      *  keep a copy of the old cameras so we can restore them with the cancel button.
      */
-    private final ArrayList<Camera> backupCameras;
+    private final List<Camera> backupCameras;
 
     /**
      *  This component handles all the editing of the camera information.
@@ -103,6 +103,7 @@ public class CamerasEditor
      */
     public CamerasEditor() {
         Tools.checkEDT();
+        this.cameraJTree = new JTree( treeModel );
         setSize( 500, 400 );
         setLocationRelativeTo( Settings.anchorFrame );
         setTitle( Settings.jpoResources.getString( "CameraEditor" ) );
@@ -117,7 +118,7 @@ public class CamerasEditor
         } );
 
         // take a backup
-        backupCameras = new ArrayList<Camera>();
+        backupCameras = new ArrayList<>();
         for ( Camera c : Settings.cameras ) {
             Camera b = new Camera();
             b.setDescription( c.getDescription() );

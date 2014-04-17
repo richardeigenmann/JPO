@@ -3,6 +3,7 @@
 
             <table class="changelog">
                 <tr><td colspan=2><b>Development Version 0.11</b></td></tr>
+                <tr><td valign="top">18.4.2014</td><td>Figured out how to do overlay selection in the Thumbnail Pane</td></tr>
                 <tr><td valign="top">13.4.2014</td><td>Started integration of Open Street Map maps</td></tr>
                 <tr><td valign="top">13.4.2014</td><td>Finished transition to JCS Cache</td></tr>
                 <tr><td valign="top">13.4.2014</td><td>Improved Flat file Import</td></tr>
@@ -404,6 +405,6 @@
             </table>
 
             <hr>
-            <p>Last update to this page: 22 March 2014<br>
-                Copyright 2003-2013 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
+            <p>Last update to this page: 18 April 2014<br>
+                Copyright 2003-2014 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
     <?php include("page-end.php"); ?>

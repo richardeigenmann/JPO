@@ -9,9 +9,10 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Iterator;
-import java.util.Vector;
+import java.util.List;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
@@ -21,6 +22,14 @@ import jpo.cache.ImageBytes;
 import jpo.cache.JpoCache;
 import jpo.dataModel.Settings;
 import jpo.dataModel.Tools;
+import static jpo.gui.SourcePicture.SourcePictureStatus.SOURCE_PICTURE_ERROR;
+import static jpo.gui.SourcePicture.SourcePictureStatus.SOURCE_PICTURE_LOADING;
+import static jpo.gui.SourcePicture.SourcePictureStatus.SOURCE_PICTURE_LOADING_COMPLETED;
+import static jpo.gui.SourcePicture.SourcePictureStatus.SOURCE_PICTURE_LOADING_PROGRESS;
+import static jpo.gui.SourcePicture.SourcePictureStatus.SOURCE_PICTURE_LOADING_STARTED;
+import static jpo.gui.SourcePicture.SourcePictureStatus.SOURCE_PICTURE_READY;
+import static jpo.gui.SourcePicture.SourcePictureStatus.SOURCE_PICTURE_ROTATING;
+import static jpo.gui.SourcePicture.SourcePictureStatus.SOURCE_PICTURE_UNINITIALISED;
 
 
 /*
@@ -55,48 +64,60 @@ public class SourcePicture {
      */
     private URL imageUrl = null;
 
+    public enum SourcePictureStatus {
+        SOURCE_PICTURE_UNINITIALISED,
+        SOURCE_PICTURE_LOADING,
+        SOURCE_PICTURE_ROTATING,
+        SOURCE_PICTURE_READY,
+        SOURCE_PICTURE_ERROR,
+        SOURCE_PICTURE_LOADING_STARTED,
+        SOURCE_PICTURE_LOADING_PROGRESS,
+        SOURCE_PICTURE_LOADING_COMPLETED
+    }
+    
     /**
      * status code used to signal that the picture is not loaded
-     */
-    public static final int UNINITIALISED = 0;
+     *
+    public static final int SOURCE_PICTURE_UNINITIALISED = 0;
 
     /**
      * status code used to signal that the thread is loading the image
-     */
-    public static final int LOADING = UNINITIALISED + 1;
+     *
+    public static final int SOURCE_PICTURE_LOADING = SOURCE_PICTURE_UNINITIALISED + 1;
 
     /**
      * status code used to signal that the thread is rotating the image
-     */
-    public static final int ROTATING = LOADING + 1;
+     *
+    public static final int SOURCE_PICTURE_ROTATING = SOURCE_PICTURE_LOADING + 1;
 
     /**
      * status code used to signal that the rotated image is available.
-     */
-    public static final int READY = ROTATING + 1;
+     *
+    public static final int SOURCE_PICTURE_READY = SOURCE_PICTURE_ROTATING + 1;
 
     /**
      * status code used to signal that there was an error
-     */
-    public static final int ERROR = READY + 1;
+     *
+    public static final int SOURCE_PICTURE_ERROR = SOURCE_PICTURE_READY + 1;
 
     /**
      * status code used to tell that we have started loading an image but only
      * used on notifySourceLoadProgressListeners
-     */
-    public static final int LOADING_STARTED = ERROR + 1;
+     *
+    public static final int SOURCE_PICTURE_LOADING_STARTED = SOURCE_PICTURE_ERROR + 1;
 
     /**
      * status code used to tell that we have a progress update but only used on
      * notifySourceLoadProgressListeners
-     */
-    public static final int LOADING_PROGRESS = LOADING_STARTED + 1;
+     *
+    public static final int SOURCE_PICTURE_LOADING_PROGRESS = SOURCE_PICTURE_LOADING_STARTED + 1;
 
     /**
      * status code used to tell that we have a finished loading but only used on
      * notifySourceLoadProgressListeners
-     */
-    public static final int LOADING_COMPLETED = LOADING_PROGRESS + 1;
+     *
+    public static final int SOURCE_PICTURE_LOADING_COMPLETED = SOURCE_PICTURE_LOADING_PROGRESS + 1;
+    * */
 
     /**
      * the time it took to load the image
@@ -136,7 +157,7 @@ public class SourcePicture {
      * @param rotation
      */
     public void loadPicture( URL imageUrl, double rotation ) {
-        if ( pictureStatusCode == LOADING ) {
+        if ( pictureStatusCode == SOURCE_PICTURE_LOADING ) {
             stopLoadingExcept( imageUrl );
         }
         this.imageUrl = imageUrl;
@@ -154,7 +175,7 @@ public class SourcePicture {
      * @param	rotation	The rotation 0-360 to be used on this picture
      */
     public void loadPictureInThread( URL imageUrl, int priority, double rotation ) {
-        if ( pictureStatusCode == LOADING ) {
+        if ( pictureStatusCode == SOURCE_PICTURE_LOADING ) {
             stopLoadingExcept( imageUrl );
         }
 
@@ -177,7 +198,7 @@ public class SourcePicture {
      * failed.
      */
     public void loadPicture() {
-        setStatus( LOADING, Settings.jpoResources.getString( "ScalablePictureLoadingStatus" ) );
+        setStatus( SOURCE_PICTURE_LOADING, Settings.jpoResources.getString( "ScalablePictureLoadingStatus" ) );
         abortFlag = false;
         long start = System.currentTimeMillis();
         loadTime = 0;
@@ -226,7 +247,7 @@ public class SourcePicture {
                 reader.removeIIOReadProgressListener( imageProgressListener );
                 reader.dispose();
 
-                setStatus( ERROR, Settings.jpoResources.getString( "ScalablePictureErrorStatus" ) );
+                setStatus( SOURCE_PICTURE_ERROR, Settings.jpoResources.getString( "ScalablePictureErrorStatus" ) );
                 sourcePictureBufferedImage = null;
 
                 Tools.dealOutOfMemoryError();
@@ -238,7 +259,7 @@ public class SourcePicture {
 
             if ( !abortFlag ) {
                 if ( rotation != 0 ) {
-                    setStatus( ROTATING, "Rotating: " + imageUrl.toString() );
+                    setStatus( SOURCE_PICTURE_ROTATING, "Rotating: " + imageUrl.toString() );
                     int xRot = sourcePictureBufferedImage.getWidth() / 2;
                     int yRot = sourcePictureBufferedImage.getHeight() / 2;
                     AffineTransform rotateAf = AffineTransform.getRotateInstance( Math.toRadians( rotation ), xRot, yRot );
@@ -265,16 +286,16 @@ public class SourcePicture {
                     sourcePictureBufferedImage = op.filter( sourcePictureBufferedImage, targetImage );
                 }
 
-                setStatus( READY, "Loaded: " + imageUrl.toString() );
+                setStatus( SOURCE_PICTURE_READY, "Loaded: " + imageUrl.toString() );
                 long end = System.currentTimeMillis();
                 loadTime = end - start;
             } else {
                 loadTime = 0;
-                setStatus( ERROR, "Aborted!" );
+                setStatus( SOURCE_PICTURE_ERROR, "Aborted!" );
                 sourcePictureBufferedImage = null;
             }
         } catch ( IOException e ) {
-            setStatus( ERROR, "Error while reading " + imageUrl.toString() );
+            setStatus( SOURCE_PICTURE_ERROR, "Error while reading " + imageUrl.toString() );
             sourcePictureBufferedImage = null;
         }
         ;
@@ -287,9 +308,9 @@ public class SourcePicture {
     public void stopLoading() {
         LOGGER.fine( "SourcePicture.stopLoading(): called" );
         abortFlag = true;
-        if ( ( pictureStatusCode == LOADING ) && ( reader != null ) ) {
+        if ( ( pictureStatusCode == SOURCE_PICTURE_LOADING ) && ( reader != null ) ) {
             reader.abort();
-            setStatus( ERROR, "Image loading cancelled." );
+            setStatus( SOURCE_PICTURE_ERROR, "Image loading cancelled." );
             try {
                 finalize();
             } catch ( Throwable x ) {
@@ -311,7 +332,7 @@ public class SourcePicture {
             return false; // has never been used yet
         }
 
-        if ( pictureStatusCode != LOADING ) {
+        if ( pictureStatusCode != SOURCE_PICTURE_LOADING ) {
             LOGGER.fine( "SourcePicture.stopLoadingExcept: called but pointless since image is not LOADING: " + imageUrl.toString() );
             return false;
         }
@@ -409,10 +430,10 @@ public class SourcePicture {
     }
 
     /**
-     * A vector that holds all the listeners that want to be notified about
+     * A collection that holds all the listeners that want to be notified about
      * changes to this SourcePicture.
      */
-    private final Vector<SourcePictureListener> sourcePictureListeners = new Vector<SourcePictureListener>();
+    private final List<SourcePictureListener> sourcePictureListeners = new ArrayList<>();
 
     /**
      * method to register the listening object of the status events
@@ -420,7 +441,6 @@ public class SourcePicture {
      * @param listener The listener to add
      */
     public void addListener( SourcePictureListener listener ) {
-        LOGGER.fine( "SourcePicture.addListener: SourcePicture " + Integer.toString( hashCode() ) + " adding listener " + listener.getClass().toString() + " hash: " + Integer.toString( listener.hashCode() ) );
         sourcePictureListeners.add( listener );
     }
 
@@ -430,7 +450,6 @@ public class SourcePicture {
      * @param listener the listener to remove
      */
     public void removeListener( SourcePictureListener listener ) {
-        LOGGER.fine( "SourcePicture.removeListener: SourcePicture " + Integer.toString( hashCode() ) + " removing listener " + listener.getClass().toString() + " hash: " + Integer.toString( listener.hashCode() ) );
         sourcePictureListeners.remove( listener );
     }
 
@@ -439,7 +458,7 @@ public class SourcePicture {
      * times or listeners can be attached to wait for a sourceStatusChange
      * event.
      */
-    private int pictureStatusCode = UNINITIALISED;
+    private SourcePictureStatus pictureStatusCode = SOURCE_PICTURE_UNINITIALISED;
 
     /**
      * This variable track the status message of the picture. It can be queried
@@ -452,13 +471,12 @@ public class SourcePicture {
      * Method that sets the status of the ScalablePicture object and notifies
      * interested objects of a change in status (not built yet).
      */
-    private void setStatus( int statusCode, String statusMessage ) {
-        LOGGER.fine( String.format( "Sending status code %d with message %s to %d listeners", statusCode, statusMessage, sourcePictureListeners.size() ) );
+    private void setStatus( SourcePictureStatus statusCode, String statusMessage ) {
+        LOGGER.fine( String.format( "Sending status code %s with message %s to %d listeners", statusCode, statusMessage, sourcePictureListeners.size() ) );
         pictureStatusCode = statusCode;
         pictureStatusMessage = statusMessage;
-        Enumeration<SourcePictureListener> enumeration = sourcePictureListeners.elements();
-        while ( enumeration.hasMoreElements() ) {
-            enumeration.nextElement().sourceStatusChange( statusCode, statusMessage, this );
+        for ( SourcePictureListener sourcePictureListener : sourcePictureListeners ) {
+            sourcePictureListener.sourceStatusChange( statusCode, statusMessage, this );
         }
     }
 
@@ -467,7 +485,7 @@ public class SourcePicture {
      *
      * @return the status value
      */
-    public int getStatusCode() {
+    public SourcePictureStatus getStatusCode() {
         return pictureStatusCode;
     }
 
@@ -511,7 +529,7 @@ public class SourcePicture {
     private class ImageProgressListener
             implements IIOReadProgressListener {
 
-        private void notifySourceLoadProgressListeners( int statusCode,
+        private void notifySourceLoadProgressListeners( SourcePictureStatus statusCode,
                 int percentage ) {
             percentLoaded = percentage;
             for ( SourcePictureListener sourcePictureListener : sourcePictureListeners ) {
@@ -521,17 +539,17 @@ public class SourcePicture {
 
         @Override
         public void imageComplete( ImageReader source ) {
-            notifySourceLoadProgressListeners( LOADING_COMPLETED, 100 );
+            notifySourceLoadProgressListeners( SOURCE_PICTURE_LOADING_COMPLETED, 100 );
         }
 
         @Override
         public void imageProgress( ImageReader source, float percentageDone ) {
-            notifySourceLoadProgressListeners( LOADING_PROGRESS, ( new Float( percentageDone ) ).intValue() );
+            notifySourceLoadProgressListeners( SOURCE_PICTURE_LOADING_PROGRESS, ( new Float( percentageDone ) ).intValue() );
         }
 
         @Override
         public void imageStarted( ImageReader source, int imageIndex ) {
-            notifySourceLoadProgressListeners( LOADING_STARTED, 0 );
+            notifySourceLoadProgressListeners( SOURCE_PICTURE_LOADING_STARTED, 0 );
         }
 
         @Override

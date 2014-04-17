@@ -3,8 +3,6 @@ package jpo.EventBus;
 /**
  * This request indicates that the user wants open a recent collection
  * <p>
- * ToDo: consider whether this request should be integrated with the FileLoadRequest
- * <p>
  * <strong>Note:</strong> It will not check for unsaved updates. To check for those wrap this in a UnsavedUpdatesDialogRequest:
  * <p>
  * {@code JpoEventBus.getInstance().post( new }{@link jpo.EventBus.UnsavedUpdatesDialogRequest UnsavedUpdatesDialogRequest}{@code ( new OpenRecentCollectionRequest())  ); }

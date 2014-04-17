@@ -108,7 +108,6 @@ public class YearlyAnalysis implements Serializable {
                             maxNodes = nodes.size();
                         }
                         monthMap.put( month, nodes );
-                        //System.out.printf( "Picture %s date %tc has year %d month %d\n", pi.getHighresFilename(), cal, year, month );
                     }
                 }
             }
