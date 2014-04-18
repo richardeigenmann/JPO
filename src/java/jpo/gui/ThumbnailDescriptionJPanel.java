@@ -26,9 +26,9 @@ import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 
 /*
- ThumbnailDescriptionJPanel.java:  class that creates a panel showing the details of a thumbnail
+ ThumbnailDescriptionJPanel.java:  class that creates a panel showing the description of a thumbnail
 
- Copyright (C) 2002 - 2010  Richard Eigenmann, Zürich, Switzerland
+ Copyright (C) 2002 - 2014  Richard Eigenmann, Zürich, Switzerland
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -69,32 +69,32 @@ public class ThumbnailDescriptionJPanel
     /**
      * This object holds the description
      */
-    private JTextArea pictureDescriptionJTA = new JTextArea();
+    private final JTextArea pictureDescriptionJTA = new JTextArea();
 
     /**
      * This JScrollPane holds the JTextArea pictureDescriptionJTA so that it can
      * have multiple lines of text if this is required.
      */
-    private JScrollPane pictureDescriptionJSP = new JScrollPane( pictureDescriptionJTA,
+    private final JScrollPane pictureDescriptionJSP = new JScrollPane( pictureDescriptionJTA,
             JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
             JScrollPane.HORIZONTAL_SCROLLBAR_NEVER );
 
     /**
      * The location of the image file
      */
-    private JTextField highresLocationJTextField = new JTextField();
+    private final JTextField highresLocationJTextField = new JTextField();
 
     /**
      * The location of the lowres image file
      */
-    private JTextField lowresLocationJTextField = new JTextField();
+    private final JTextField lowresLocationJTextField = new JTextField();
 
     /**
      * create a dumbCaret object which prevents undesirable scrolling behaviour
      *
      * @see NonFocussedCaret
      */
-    private NonFocussedCaret dumbCaret = new NonFocussedCaret();
+    private final NonFocussedCaret dumbCaret = new NonFocussedCaret();
 
     /**
      * Constant that indicates that the description should be formatted as a
@@ -341,6 +341,62 @@ public class ThumbnailDescriptionJPanel
     }
 
     /**
+     * changes the colour so that the user sees whether the thumbnail is part of
+     * the selection
+     */
+    public void showSlectionStatus() {
+        if ( Settings.pictureCollection.isSelected( referringNode ) ) {
+            showAsSelected();
+        } else {
+            showAsUnselected();
+        }
+    }
+
+     /**
+     * changes the color so that the user sees that the thumbnail is part of the
+     * selection.<p>
+     * This method is EDT safe.
+     */
+    public void showAsSelected() {
+        Runnable r = new Runnable() {
+
+            @Override
+            public void run() {
+                pictureDescriptionJTA.setBackground( Settings.SELECTED_COLOR_TEXT );
+            }
+        };
+        if ( SwingUtilities.isEventDispatchThread() ) {
+            r.run();
+        } else {
+            SwingUtilities.invokeLater( r );
+        }
+
+    }
+
+    /**
+     * Changes the color so that the user sees that the thumbnail is not part of
+     * the selection<p>
+     * This method is EDT safe
+     */
+    public void showAsUnselected() {
+        Runnable r = new Runnable() {
+
+            @Override
+            public void run() {
+                pictureDescriptionJTA.setBackground( Settings.UNSELECTED_COLOR );
+            }
+        };
+        if ( SwingUtilities.isEventDispatchThread() ) {
+            r.run();
+        } else {
+            SwingUtilities.invokeLater( r );
+        }
+
+    }
+
+    
+    
+    /**
      * Returns the preferred size for the ThumbnailDescription as a Dimension
      * using the thumbnailSize as width and height.
      *
@@ -383,50 +439,34 @@ public class ThumbnailDescriptionJPanel
      * changed.
      */
     @Override
-    public void pictureInfoChangeEvent( final PictureInfoChangeEvent e ) {
-        Runnable r = new Runnable() {
+    public void pictureInfoChangeEvent( final PictureInfoChangeEvent pictureInfoChangeEvent ) {
+        Runnable runnable = new Runnable() {
 
             @Override
             public void run() {
-                if ( e.getDescriptionChanged() ) {
-                    pictureDescriptionJTA.setText( e.getPictureInfo().getDescription() );
+                if ( pictureInfoChangeEvent.getDescriptionChanged() ) {
+                    pictureDescriptionJTA.setText( pictureInfoChangeEvent.getPictureInfo().getDescription() );
                 }
 
-                if ( e.getHighresLocationChanged() ) {
-                    highresLocationJTextField.setText( e.getPictureInfo().getHighresLocation() );
+                if ( pictureInfoChangeEvent.getHighresLocationChanged() ) {
+                    highresLocationJTextField.setText( pictureInfoChangeEvent.getPictureInfo().getHighresLocation() );
                 }
 
-                if ( e.getLowresLocationChanged() ) {
-                    lowresLocationJTextField.setText( e.getPictureInfo().getLowresLocation() );
+                if ( pictureInfoChangeEvent.getLowresLocationChanged() ) {
+                    lowresLocationJTextField.setText( pictureInfoChangeEvent.getPictureInfo().getLowresLocation() );
                 }
-                /*		if ( e.getChecksumChanged() ) {
-                 checksumJLabel.setText( Settings.jpoResources.getString("checksumJLabel") + pi.getChecksumAsString () );
-                 }
-                 if ( e.getCreationTimeChanged() ) {
-                 creationTimeJTextField.setText( pi.getCreationTime () );
-                 parsedCreationTimeJLabel.setText( pi.getFormattedCreationTime() );
-                 }
-                 if ( e.getFilmReferenceChanged() ) {
-                 filmReferenceJTextField.setText( pi.getFilmReference() );
-                 }
-                 if ( e.getRotationChanged() ) {
-                 rotationJTextField.setText( Double.toString( pi.getRotation() ) );
-                 }
-                 if ( e.getCommentChanged() ) {
-                 commentJTextField.setText( pi.getComment() );
-                 }
-                 if ( e.getPhotographerChanged() ) {
-                 photographerJTextField.setText( pi.getPhotographer() );
-                 }
-                 if ( e.getCopyrightHolderChanged() ) {
-                 copyrightHolderJTextField.setText( pi.getCopyrightHolder() );
-                 } */
+
+                if ( pictureInfoChangeEvent.getWasSelected() ) {
+                    showAsSelected();
+                } else if ( pictureInfoChangeEvent.getWasUnselected() ) {
+                    showAsUnselected();
+                }
             }
         };
         if ( SwingUtilities.isEventDispatchThread() ) {
-            r.run();
+            runnable.run();
         } else {
-            SwingUtilities.invokeLater( r );
+            SwingUtilities.invokeLater( runnable );
         }
 
     }

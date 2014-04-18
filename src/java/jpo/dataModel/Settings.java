@@ -550,6 +550,23 @@ public class Settings {
         return sortOptions;
     }
 
+     /**
+     * The color to use when the thumbnail has been selected
+     */
+    public static final Color SELECTED_COLOR = new Color(45,47,84);
+
+        /**
+     * The color to use for text background when the thumbnail has been selected
+     */
+    public static final Color SELECTED_COLOR_TEXT = new Color(145,149,153);
+
+    /**
+     * The color to use when the thumbnail has been selected
+     */
+    public static final Color UNSELECTED_COLOR = Color.WHITE;
+
+    
+    
     /**
      * date format for adding new pictures from the camera
      */

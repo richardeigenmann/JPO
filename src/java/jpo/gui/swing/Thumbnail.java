@@ -15,7 +15,7 @@ import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
-import javax.swing.border.BevelBorder;
+import jpo.dataModel.Settings;
 import jpo.dataModel.Tools;
 
 /*
@@ -37,8 +37,7 @@ import jpo.dataModel.Tools;
  */
 /**
  * This class extends a JComponent showing and ImageIcon. The ImageIcon can be
- * scaled down with the
- * {
+ * scaled down with the {
  *
  * @see @setFactor} method.
  */
@@ -63,7 +62,7 @@ public class Thumbnail extends JComponent {
         Tools.checkEDT();
         setVisible( false );
         setOpaque( false );
-        setBackground( UNSELECTED_COLOR );
+        setBackground( Settings.UNSELECTED_COLOR );
     }
 
     /**
@@ -252,16 +251,6 @@ public class Thumbnail extends JComponent {
     private static final Color HIGHLIGHT_COLOR = Color.DARK_GRAY;
 
     /**
-     * The color to use when the thumbnail has been selected
-     */
-    private static final Color SHADOW_COLOR = Color.LIGHT_GRAY;
-
-    /**
-     * The color to use when the thumbnail has been selected
-     */
-    private static final Color UNSELECTED_COLOR = Color.WHITE;
-
-    /**
      * Sets an icon of a clock to indicate being on a queue
      */
     public void setQueueIcon() {
@@ -323,7 +312,7 @@ public class Thumbnail extends JComponent {
      * Indicates whether the Thumbnail is to draw as a selected Thumbnail or
      * not.
      */
-    private final boolean isSelected = false;
+    private boolean isSelected = false;
 
     /**
      * changes the color so that the user sees that the thumbnail is part of the
@@ -335,9 +324,9 @@ public class Thumbnail extends JComponent {
 
             @Override
             public void run() {
-                setBorder( BorderFactory.createCompoundBorder(
-                        BorderFactory.createBevelBorder( BevelBorder.LOWERED, HIGHLIGHT_COLOR, SHADOW_COLOR ),
-                        BorderFactory.createBevelBorder( BevelBorder.RAISED, HIGHLIGHT_COLOR, SHADOW_COLOR ) ) );
+                setBorder( BorderFactory.createLineBorder( Settings.SELECTED_COLOR, 12 ) );
+                setBackground( Settings.SELECTED_COLOR_TEXT );
+                isSelected = true;
             }
         };
         if ( SwingUtilities.isEventDispatchThread() ) {
@@ -354,12 +343,13 @@ public class Thumbnail extends JComponent {
      * This method is EDT safe
      */
     public void showAsUnselected() {
-        LOGGER.fine( "running show unselected" );
         Runnable r = new Runnable() {
 
             @Override
             public void run() {
                 setBorder( BorderFactory.createEmptyBorder() );
+                setBackground( Settings.UNSELECTED_COLOR );
+                isSelected = false;
             }
         };
         if ( SwingUtilities.isEventDispatchThread() ) {
