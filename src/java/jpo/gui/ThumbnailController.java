@@ -10,10 +10,7 @@ import java.awt.dnd.DragSourceDropEvent;
 import java.awt.dnd.DragSourceEvent;
 import java.awt.dnd.DragSourceListener;
 import java.awt.dnd.DropTarget;
-import java.awt.dnd.DropTargetDragEvent;
 import java.awt.dnd.DropTargetDropEvent;
-import java.awt.dnd.DropTargetEvent;
-import java.awt.dnd.DropTargetListener;
 import java.awt.dnd.InvalidDnDOperationException;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -61,7 +58,7 @@ import jpo.gui.swing.Thumbnail;
 /**
  * ThumbnailController controls a visual representation of the specified node.
  */
-public class ThumbnailController {
+public class ThumbnailController implements JpoDropTargetDropEventHandler {
 
     /**
      * Defines a LOGGER for this class
@@ -79,6 +76,7 @@ public class ThumbnailController {
         this( Settings.thumbnailSize );
     }
 
+
     /**
      * Creates a new ThumbnailController object. This must happen on the EDT
      * because it creates a Thumbnail SWING component
@@ -92,7 +90,7 @@ public class ThumbnailController {
         myThumbnail.addMouseListener( new ThumbnailMouseAdapter() );
 
         // set up drag & drop
-        new DropTarget( myThumbnail, new MyDropTargetListener() );
+        new DropTarget( myThumbnail, new JpoTransferrableDropTargetListener( this ) );
         DragSource dragSource = DragSource.getDefaultDragSource();
         dragSource.createDefaultDragGestureRecognizer(
                 myThumbnail, DnDConstants.ACTION_COPY_OR_MOVE, new ThumbnailDragGestureListener() );
@@ -585,74 +583,6 @@ public class ThumbnailController {
         }
     }
 
-    private class MyDropTargetListener implements DropTargetListener {
-
-        /**
-         * this callback method is invoked every time something is dragged onto
-         * the ThumbnailController. We check if the desired DataFlavor is
-         * supported and then reject the drag if it is not.
-         *
-         * @param event
-         */
-        @Override
-        public void dragEnter( DropTargetDragEvent event ) {
-            if ( !event.isDataFlavorSupported( JpoTransferable.jpoNodeFlavor ) ) {
-                event.rejectDrag();
-            }
-
-        }
-
-        /**
-         * this callback method is invoked every time something is dragged over
-         * the ThumbnailController. We could do some highlighting if we so
-         * desired.
-         *
-         * @param event
-         */
-        @Override
-        public void dragOver( DropTargetDragEvent event ) {
-            if ( !event.isDataFlavorSupported( JpoTransferable.jpoNodeFlavor ) ) {
-                event.rejectDrag();
-            }
-
-        }
-
-        /**
-         * this callback method is invoked when the user presses or releases
-         * shift when doing a drag. He can signal that he wants to change the
-         * copy / move of the operation. This method could intercept this change
-         * and could modify the event if it needs to. On Thumbnails this does
-         * nothing.
-         *
-         * @param event
-         */
-        @Override
-        public void dropActionChanged( DropTargetDragEvent event ) {
-        }
-
-        /**
-         * this callback method is invoked to tell the dropTarget that the drag
-         * has moved on to something else. We do nothing here.
-         *
-         * @param event
-         */
-        @Override
-        public void dragExit( DropTargetEvent event ) {
-            LOGGER.fine( "Thumbnail.dragExit( DropTargetEvent ): invoked" );
-        }
-
-        /**
-         * This method is called when the drop occurs. It gives the hard work to
-         * the SortableDefaultMutableTreeNode.
-         *
-         * @param event
-         */
-        @Override
-        public void drop( DropTargetDropEvent event ) {
-            myNode.executeDrop( event );
-        }
-    }
-
     /**
      * This class extends a DragGestureListener and allows DnD on Thumbnails.
      */
@@ -757,5 +687,9 @@ public class ThumbnailController {
             description = myNode.toString();
         }
         return String.format( "Thumbnail: HashCode: %d, referringNode: %s", hashCode(), description );
+    }
+
+    public void handleJpoDropTargetDropEvent( DropTargetDropEvent event ) {
+        myNode.executeDrop( event );
     }
 }

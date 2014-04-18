@@ -3,6 +3,7 @@
 
             <table class="changelog">
                 <tr><td colspan=2><b>Development Version 0.11</b></td></tr>
+                <tr><td valign="top">18.4.2014</td><td>Added drop to thumbnails panel</td></tr>
                 <tr><td valign="top">18.4.2014</td><td>Figured out how to do overlay selection in the Thumbnail Pane</td></tr>
                 <tr><td valign="top">13.4.2014</td><td>Started integration of Open Street Map maps</td></tr>
                 <tr><td valign="top">13.4.2014</td><td>Finished transition to JCS Cache</td></tr>

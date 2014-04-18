@@ -7,6 +7,8 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.dnd.DropTarget;
+import java.awt.dnd.DropTargetDropEvent;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -65,22 +67,12 @@ import jpo.gui.swing.ThumbnailPanelTitle;
  * take advantage of the extra space if there is some.
  *
  */
-public class ThumbnailsPanelController implements NodeNavigatorListener {
+public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDropTargetDropEventHandler {
 
     /**
      * Defines a LOGGER for this class
      */
     private static final Logger LOGGER = Logger.getLogger( ThumbnailsPanelController.class.getName() );
-
-    /**
-     * The title above the ThumbnailPanel
-     */
-    private final ThumbnailPanelTitle titleJPanel = new ThumbnailPanelTitle();
-
-    /**
-     * The Layout Manager used by the thumbnail panel
-     */
-    private final ThumbnailLayoutManager thumbnailLayoutManager = new ThumbnailLayoutManager();
 
     private boolean paintOverlay = false;
     private Rectangle overlayRectangle = null;
@@ -88,12 +80,12 @@ public class ThumbnailsPanelController implements NodeNavigatorListener {
     /**
      * The Panel that shows the Thumbnails
      */
-    private final JPanel thumbnailsPane = new JPanel( thumbnailLayoutManager );
+    private final JPanel thumbnailsPane;
 
     /**
      * The Scroll Pane that holds the Thumbnail Panel
      */
-    private final JScrollPane thumbnailJScrollPane = new JScrollPane();
+    private final JScrollPane thumbnailJScrollPane;
 
     /**
      * currently displayed page
@@ -117,6 +109,11 @@ public class ThumbnailsPanelController implements NodeNavigatorListener {
      * of pictures.
      */
     private int startIndex;
+
+    /**
+     * The title above the ThumbnailPanel
+     */
+    private final ThumbnailPanelTitle titleJPanel;
 
     /**
      * An array that holds the 50 or so ThumbnailComponents that are being
@@ -155,159 +152,22 @@ public class ThumbnailsPanelController implements NodeNavigatorListener {
      */
     public ThumbnailsPanelController() {
         Tools.checkEDT();
+        titleJPanel = new ThumbnailPanelTitle();
+        thumbnailsPane = new JPanel();
+        thumbnailJScrollPane = new JScrollPane();
+
         initComponents();
         registerListeners();
     }
 
     /**
-     * Registers the controller as a listener
-     */
-    private void registerListeners() {
-        JpoEventBus.getInstance().register( this );
-    }
-
-    /**
-     * Returns a component to be displayed
-     *
-     * @return The JScollPane widget
-     */
-    public Component getView() {
-        return thumbnailJScrollPane;
-    }
-
-    @Subscribe
-    public void handleShowGroupRequest( final ShowGroupRequest event ) {
-        final Runnable r = new Runnable() {
-
-            @Override
-            public void run() {
-                show( new GroupNavigator( event.getNode() ) );
-            }
-        };
-        if ( SwingUtilities.isEventDispatchThread() ) {
-            r.run();
-        } else {
-            SwingUtilities.invokeLater( r );
-        }
-
-    }
-
-    @Subscribe
-    public void handleShowQueryRequest( ShowQueryRequest event ) {
-        show( new QueryNavigator( event.getQuery() ) );
-    }
-
-    /**
-     * Remembers the last GroupInfo we picked so that we can attach a listener
-     * to update the title if it changes
-     */
-    private SortableDefaultMutableTreeNode myLastGroupNode = null;
-
-    /**
-     * Instructs the ThumbnailPanelController to display the specified set of
-     * nodes to be displayed
-     *
-     * @param newNodeNavigator The Interface with the collection of nodes
-     */
-    private void show( NodeNavigatorInterface newNodeNavigator ) {
-        Tools.checkEDT();
-
-        if ( this.mySetOfNodes != null ) {
-            this.mySetOfNodes.removeNodeNavigatorListener( this );
-            this.mySetOfNodes.getRid();
-        }
-        this.mySetOfNodes = newNodeNavigator;
-        newNodeNavigator.addNodeNavigatorListener( this );
-
-        if ( myLastGroupNode != null ) {
-            GroupInfo gi = (GroupInfo) myLastGroupNode.getUserObject();
-            gi.removeGroupInfoChangeListener( myGroupInfoChangeListener );
-        }
-        myLastGroupNode = null;
-        if ( newNodeNavigator instanceof GroupNavigator ) {
-            myLastGroupNode = ( (GroupNavigator) newNodeNavigator ).getGroupNode();
-            GroupInfo gi = (GroupInfo) myLastGroupNode.getUserObject();
-            gi.addGroupInfoChangeListener( myGroupInfoChangeListener );
-        }
-
-        Settings.pictureCollection.clearSelection();
-        thumbnailJScrollPane.getVerticalScrollBar().setValue( 0 );
-        startIndex = 0;
-        curPage = 1;
-        nodeLayoutChanged();
-    }
-
-    /**
-     * Listens for changes in the Group and updates the title if anything
-     * changed
-     */
-    private final GroupInfoChangeListener myGroupInfoChangeListener = new GroupInfoChangeListener() {
-
-        @Override
-        public void groupInfoChangeEvent( GroupInfoChangeEvent groupInfoChangeEvent ) {
-            LOGGER.info( "change event received." );
-            updateTitle();
-        }
-    };
-
-    /**
-     * Request that the ThumbnailPanel show the first page of Thumbnails
-     */
-    private void goToFirstPage() {
-        if ( startIndex == 0 ) {
-            return;
-        }
-
-        startIndex = 0;
-        thumbnailJScrollPane.getVerticalScrollBar().setValue( 0 );
-        curPage = 1;
-        nodeLayoutChanged();
-        setButtonStatus();
-    }
-
-    /**
-     * Request that the ThumbnailPanel show the previous page of Thumbnails
-     */
-    private void goToPreviousPage() {
-        startIndex = startIndex - Settings.maxThumbnails;
-        if ( startIndex < 0 ) {
-            startIndex = 0;
-        }
-        thumbnailJScrollPane.getVerticalScrollBar().setValue( 0 );
-        curPage--;
-        nodeLayoutChanged();
-        setButtonStatus();
-    }
-
-    /**
-     * Request that the ThumbnailPanel show the next page of Thumbnails
-     */
-    private void goToNextPage() {
-        startIndex = startIndex + Settings.maxThumbnails;
-        thumbnailJScrollPane.getVerticalScrollBar().setValue( 0 );
-        curPage++;
-        nodeLayoutChanged();
-        setButtonStatus();
-    }
-
-    /**
-     * Request that the ThumbnailPanel show the last page of Thumbnails
-     */
-    private void goToLastPage() {
-        int last = mySetOfNodes.getNumberOfNodes();
-        int tgtPage = last / Settings.maxThumbnails;
-        curPage = tgtPage + 1;
-        startIndex = tgtPage * Settings.maxThumbnails;
-        thumbnailJScrollPane.getVerticalScrollBar().setValue( 0 );
-        nodeLayoutChanged();
-        setButtonStatus();
-    }
-
-    
-    /**
      * Initialises the components for the ThumbnailController Pane
      */
     private void initComponents() {
+
+        final ThumbnailLayoutManager thumbnailLayoutManager = new ThumbnailLayoutManager();
+        thumbnailsPane.setLayout( thumbnailLayoutManager );
+
         final JLayeredPane layeredPane = new JLayeredPane();
 
         layeredPane.setLayout( new OverlayLayout( layeredPane ) );
@@ -332,6 +192,7 @@ public class ThumbnailsPanelController implements NodeNavigatorListener {
         overlayPanel.setOpaque( false );
 
         layeredPane.add( overlayPanel, new Integer( 2 ) );
+
         thumbnailJScrollPane.setViewportView( layeredPane );
         thumbnailsPane.setBackground( Settings.JPO_BACKGROUND_COLOR );
 
@@ -379,7 +240,19 @@ public class ThumbnailsPanelController implements NodeNavigatorListener {
             }
         } );
 
-        titleJPanel.resizeJSlider.addChangeListener( new SlideChangeListener() );
+        titleJPanel.resizeJSlider.addChangeListener( new ChangeListener() {
+            @Override
+            public void stateChanged( ChangeEvent e ) {
+                JSlider source = (JSlider) e.getSource();
+                thumbnailSizeFactor = (float) source.getValue() / ThumbnailPanelTitle.THUMBNAILSIZE_MAX;
+                thumbnailLayoutManager.setThumbnailWidth( (int) ( 350 * thumbnailSizeFactor ) );
+                for ( int i = 0; i < Settings.maxThumbnails; i++ ) {
+                    thumbnailControllers[i].setFactor( thumbnailSizeFactor );
+                    thumbnailDescriptionJPanels[i].setFactor( thumbnailSizeFactor );
+                }
+                thumbnailLayoutManager.layoutContainer( thumbnailsPane );
+            }
+        } );
 
         JPanel whiteArea = new JPanel();
         thumbnailJScrollPane.setCorner( JScrollPane.UPPER_RIGHT_CORNER, whiteArea );
@@ -494,28 +367,145 @@ public class ThumbnailsPanelController implements NodeNavigatorListener {
     }
 
     /**
-     * Listens to the slider and changes the thumbnail size accordingly
+     * Registers the controller as a listener
      */
-    private class SlideChangeListener
-            implements ChangeListener {
+    private void registerListeners() {
+        JpoEventBus.getInstance().register( this );
 
-        /**
-         * *
-         * Got a slider changed event.
-         *
-         * @param e
-         */
-        @Override
-        public void stateChanged( ChangeEvent e ) {
-            JSlider source = (JSlider) e.getSource();
-            thumbnailSizeFactor = (float) source.getValue() / ThumbnailPanelTitle.THUMBNAILSIZE_MAX;
-            thumbnailLayoutManager.setThumbnailWidth( (int) ( 350 * thumbnailSizeFactor ) );
-            for ( int i = 0; i < Settings.maxThumbnails; i++ ) {
-                thumbnailControllers[i].setFactor( thumbnailSizeFactor );
-                thumbnailDescriptionJPanels[i].setFactor( thumbnailSizeFactor );
+        new DropTarget( thumbnailsPane, new JpoTransferrableDropTargetListener( this ) );
+    }
+
+    /**
+     * Returns a component to be displayed
+     *
+     * @return The JScollPane widget
+     */
+    public Component getView() {
+        return thumbnailJScrollPane;
+    }
+
+    @Subscribe
+    public void handleShowGroupRequest( final ShowGroupRequest event ) {
+        final Runnable r = new Runnable() {
+
+            @Override
+            public void run() {
+                show( new GroupNavigator( event.getNode() ) );
             }
-            thumbnailLayoutManager.layoutContainer( thumbnailsPane );
+        };
+        if ( SwingUtilities.isEventDispatchThread() ) {
+            r.run();
+        } else {
+            SwingUtilities.invokeLater( r );
         }
+
+    }
+
+    @Subscribe
+    public void handleShowQueryRequest( ShowQueryRequest event ) {
+        show( new QueryNavigator( event.getQuery() ) );
+    }
+
+    /**
+     * Remembers the last GroupInfo we picked so that we can attach a listener
+     * to update the title if it changes
+     */
+    private SortableDefaultMutableTreeNode myLastGroupNode = null;
+
+    /**
+     * Instructs the ThumbnailPanelController to display the specified set of
+     * nodes
+     *
+     * @param newNodeNavigator The Interface with the collection of nodes
+     */
+    private void show( NodeNavigatorInterface newNodeNavigator ) {
+        Tools.checkEDT();
+
+        if ( this.mySetOfNodes != null ) {
+            this.mySetOfNodes.removeNodeNavigatorListener( this );
+            this.mySetOfNodes.getRid();
+        }
+        this.mySetOfNodes = newNodeNavigator;
+        newNodeNavigator.addNodeNavigatorListener( this );
+
+        if ( myLastGroupNode != null ) {
+            GroupInfo gi = (GroupInfo) myLastGroupNode.getUserObject();
+            gi.removeGroupInfoChangeListener( myGroupInfoChangeListener );
+        }
+        myLastGroupNode = null;
+        if ( newNodeNavigator instanceof GroupNavigator ) {
+            myLastGroupNode = ( (GroupNavigator) newNodeNavigator ).getGroupNode();
+            GroupInfo gi = (GroupInfo) myLastGroupNode.getUserObject();
+            gi.addGroupInfoChangeListener( myGroupInfoChangeListener );
+        }
+
+        Settings.pictureCollection.clearSelection();
+        thumbnailJScrollPane.getVerticalScrollBar().setValue( 0 );
+        startIndex = 0;
+        curPage = 1;
+        nodeLayoutChanged();
+    }
+
+    /**
+     * Listens for changes in the Group and updates the title if anything
+     * changed
+     */
+    private final GroupInfoChangeListener myGroupInfoChangeListener = new GroupInfoChangeListener() {
+
+        @Override
+        public void groupInfoChangeEvent( GroupInfoChangeEvent groupInfoChangeEvent ) {
+            LOGGER.info( "change event received." );
+            updateTitle();
+        }
+    };
+
+    /**
+     * Request that the ThumbnailPanel show the first page of Thumbnails
+     */
+    private void goToFirstPage() {
+        startIndex = 0;
+        thumbnailJScrollPane.getVerticalScrollBar().setValue( 0 );
+        curPage = 1;
+        nodeLayoutChanged();
+        setButtonStatus();
+    }
+
+    /**
+     * Request that the ThumbnailPanel show the previous page of Thumbnails
+     */
+    private void goToPreviousPage() {
+        startIndex = startIndex - Settings.maxThumbnails;
+        if ( startIndex < 0 ) {
+            startIndex = 0;
+        }
+        thumbnailJScrollPane.getVerticalScrollBar().setValue( 0 );
+        curPage--;
+        nodeLayoutChanged();
+        setButtonStatus();
+    }
+
+    /**
+     * Request that the ThumbnailPanel show the next page of Thumbnails
+     */
+    private void goToNextPage() {
+        startIndex = startIndex + Settings.maxThumbnails;
+        thumbnailJScrollPane.getVerticalScrollBar().setValue( 0 );
+        curPage++;
+        nodeLayoutChanged();
+        setButtonStatus();
+    }
+
+    /**
+     * Request that the ThumbnailPanel show the last page of Thumbnails
+     */
+    private void goToLastPage() {
+        int last = mySetOfNodes.getNumberOfNodes();
+        int tgtPage = last / Settings.maxThumbnails;
+        curPage = tgtPage + 1;
+        startIndex = tgtPage * Settings.maxThumbnails;
+        thumbnailJScrollPane.getVerticalScrollBar().setValue( 0 );
+        nodeLayoutChanged();
+        setButtonStatus();
     }
 
     /**
@@ -545,11 +535,6 @@ public class ThumbnailsPanelController implements NodeNavigatorListener {
     @Override
     public void nodeLayoutChanged() {
         Tools.checkEDT();
-        if ( mySetOfNodes == null ) {
-            LOGGER.severe( "ThumbnailPanelController nodeLayoutChanged was called with a null set of nodes. This is not right." );
-            return;
-        }
-
         updateTitle();
 
         if ( initialisedMaxThumbnails != Settings.maxThumbnails ) {
@@ -564,8 +549,6 @@ public class ThumbnailsPanelController implements NodeNavigatorListener {
             if ( !thumbnailControllers[i].isSameNode( mySetOfNodes, i + startIndex ) ) {
                 thumbnailControllers[i].setNode( mySetOfNodes, i + startIndex );
                 thumbnailDescriptionJPanels[i].setNode( mySetOfNodes.getNode( i + startIndex ) );
-            } else {
-                LOGGER.fine( String.format( "Node %d is unchanged", i ) );
             }
         }
     }
@@ -623,6 +606,13 @@ public class ThumbnailsPanelController implements NodeNavigatorListener {
             if ( node != null ) {
                 Settings.pictureCollection.addToSelectedNodes( node );
             }
+        }
+    }
+
+    @Override
+    public void handleJpoDropTargetDropEvent( DropTargetDropEvent event ) {
+        if ( myLastGroupNode != null ) {
+            myLastGroupNode.executeDrop( event );
         }
     }
 }
