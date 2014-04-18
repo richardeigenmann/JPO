@@ -11,14 +11,62 @@ table {
     margin-left:auto;
     margin-right:auto;
 }
+
+td {
+    padding: 10px;
+}
+
+
 img {
     border-style: none
 }
-.sidepanel {
-    max-width: 180px
+
+.pictureThumbnailCell {
+    vertical-align: bottom;
 }
+
+.groupThumbnailCell {
+    vertical-align: bottom;
+}
+
+.descriptionCell {
+    vertical-align: top;
+}
+
+.midresPictureCell {
+    vertical-align: top;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+.midresSidebarCell {
+    vertical-align: top;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
 #map {
-	width: 180px;
-	height: 180px;
-	border: 1px solid #000;
+    width: 180px;
+    height: 180px;
+    border: 1px solid #000;
+}
+
+.numberPickTable {
+    border-spacing: 1px;
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+.numberPickCell {
+    padding: 3px;
+    border: 1px solid black;
+}
+
+
+.sidepanelMouseover {
+    max-width: 180px;
+    font-family: sans-serif;
+    font-size: small;
 }

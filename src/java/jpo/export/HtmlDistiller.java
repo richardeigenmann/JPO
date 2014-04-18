@@ -46,7 +46,7 @@ import org.apache.commons.net.ftp.FTPReply;
 
 /*
  * HtmlDistiller.java: class that can write html files 
- * Copyright (C) 2002-2013 Richard Eigenmann. 
+ * Copyright (C) 2002-2014 Richard Eigenmann. 
  * 
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General Public License as
@@ -63,19 +63,15 @@ import org.apache.commons.net.ftp.FTPReply;
 /**
  * This class generates a set of HTML pages that allows a user to browse groups
  * of pictures in a web-browser. The resulting html pages can be posted to the
- * Internet. Relative addressing has been used throughout to facilitate this.
+ * Internet. Relative addressing has been used throughout.
  */
-public class HtmlDistiller
-        extends SwingWorker<Integer, String> {
+public class HtmlDistiller extends SwingWorker<Integer, String> {
 
     /**
      * Defines a logger for this class
      */
     private static final Logger LOGGER = Logger.getLogger( HtmlDistiller.class.getName() );
 
-    /*{
-     LOGGER.setLevel( Level.ALL );
-     }*/
     /**
      * Temporary object to scale the image for the html output.
      */
@@ -97,7 +93,7 @@ public class HtmlDistiller
     /**
      * Array of the files created
      */
-    private ArrayList<File> files = new ArrayList<File>();
+    private ArrayList<File> files = new ArrayList<>();
     /**
      * static size of the buffer to be used in copy operations
      */
@@ -133,8 +129,7 @@ public class HtmlDistiller
                 try {
                     progGui.setMaxiumum( get() );
                     progGui.setDoneString( String.format( Settings.jpoResources.getString( "HtmlDistDone" ), get() ) );
-                } catch ( InterruptedException ignore ) {
-                } catch ( ExecutionException ignore ) {
+                } catch ( InterruptedException | ExecutionException ignore ) {
                 }
             }
         }
@@ -246,16 +241,12 @@ public class HtmlDistiller
     @Override
     protected void done() {
         progGui.switchToDoneMode();
-        URI uri;
         try {
-            uri = new URI( "file://" + options.getTargetDirectory() + "/index.htm" );
+            URI uri = new URI( "file://" + options.getTargetDirectory() + "/index.htm" );
             Desktop.getDesktop().browse( uri );
-        } catch ( IOException ex ) {
-            Logger.getLogger( HtmlDistiller.class.getName() ).log( Level.SEVERE, null, ex );
-        } catch ( URISyntaxException ex ) {
-            Logger.getLogger( HtmlDistiller.class.getName() ).log( Level.SEVERE, null, ex );
+        } catch ( IOException | URISyntaxException ex ) {
+            LOGGER.severe( ex.getLocalizedMessage() );
         }
-
     }
 
     /**
@@ -285,24 +276,31 @@ public class HtmlDistiller
 
             LOGGER.fine( String.format( "Writing: %s", groupFile.toString() ) );
             // write header
-            out.write( "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" );
+            //out.write( "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" );
+            //out.newLine();
+            //out.write( "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">" );
+            out.write( "<!DOCTYPE HTML>" );
             out.newLine();
-            out.write( "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">" );
-            out.newLine();
-            out.write( "<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\" lang=\"en\">" );
+            out.write( "<html xml:lang=\"en\" lang=\"en\">" );
             out.newLine();
 
-            out.write( "<head>\n\t<link rel=\"StyleSheet\" href=\"jpo.css\" type=\"text/css\" media=\"screen\" />\n\t<title>" + Tools.stringToHTMLString( ( (GroupInfo) groupNode.getUserObject() ).getGroupName() ) + "</title>\n</head>" );
+            out.write( "<head>\n\t<link rel=\"StyleSheet\" href=\"jpo.css\" type=\"text/css\" media=\"screen\" />\n\t<title>"
+                    + Tools.stringToHTMLString( ( (GroupInfo) groupNode.getUserObject() ).getGroupName() )
+                    + "</title>\n</head>" );
             out.newLine();
 
             // write body
             out.write( "<body>" );
             out.newLine();
 
-            out.write( "<table border=\"0\" cellpadding=\"0\" cellspacing=\"" + Integer.toString( options.getCellspacing() ) + "\" width=\"" + Integer.toString( options.getPicsPerRow() * options.getThumbnailWidth() + ( options.getPicsPerRow() - 1 ) * options.getCellspacing() ) + "\">" );
+            //out.write( "<table border=\"0\" cellpadding=\"0\" cellspacing=\"" + Integer.toString( options.getCellspacing() ) + "\" width=\"" + Integer.toString( options.getPicsPerRow() * options.getThumbnailWidth() + ( options.getPicsPerRow() - 1 ) * options.getCellspacing() ) + "\">" );
+            out.write( "<table  style=\"border-spacing: " + Integer.toString( options.getCellspacing() )
+                    + "px; width: "
+                    + Integer.toString( options.getPicsPerRow() * options.getThumbnailWidth() + ( options.getPicsPerRow() - 1 ) * options.getCellspacing() )
+                    + "px\">" );
             out.newLine();
 
-            out.write( "<tr><td colspan=\"" + Integer.toString( options.getPicsPerRow() ) + "\">" );
+            out.write( String.format( "<tr><td colspan=\"%d\">", options.getPicsPerRow() ) );
 
             out.write( String.format( "<h2>%s</h2>", Tools.stringToHTMLString( ( (GroupInfo) groupNode.getUserObject() ).getGroupName() ) ) );
 
@@ -330,26 +328,25 @@ public class HtmlDistiller
             int childCount = groupNode.getChildCount();
             int childNumber = 1;
             Enumeration kids = groupNode.children();
-            SortableDefaultMutableTreeNode n;
-
             while ( kids.hasMoreElements() && ( !progGui.getInterruptor().getShouldInterrupt() ) ) {
-                n = (SortableDefaultMutableTreeNode) kids.nextElement();
-                if ( n.getUserObject() instanceof GroupInfo ) {
+                SortableDefaultMutableTreeNode node = (SortableDefaultMutableTreeNode) kids.nextElement();
+                if ( node.getUserObject() instanceof GroupInfo ) {
 
-                    out.write( "<td valign=\"bottom\" align=\"left\">" );
+                    out.write( "<td class=\"groupThumbnailCell\" valign=\"bottom\" align=\"left\">" );
 
-                    out.write( "<a href=\"jpo_" + Integer.toString( n.hashCode() ) + ".htm\">" + "<img src=\"jpo_folder_icon.gif\" width=\"32\" height=\"27\" /></a>" );
+                    out.write( "<a href=\"jpo_" + Integer.toString( node.hashCode() ) + ".htm\">"
+                            + "<img src=\"jpo_folder_icon.gif\" width=\"32\" height=\"27\" /></a>" );
 
                     out.write( "</td>" );
                     out.newLine();
 
-                    descriptionsBuffer.putDescription( ( (GroupInfo) n.getUserObject() ).getGroupName() );
+                    descriptionsBuffer.putDescription( ( (GroupInfo) node.getUserObject() ).getGroupName() );
 
                     // recursively call the method to output that group.
-                    writeGroup( n );
+                    writeGroup( node );
                     folderIconRequired = true;
                 } else {
-                    writePicture( n, out, groupFile, childNumber, childCount, descriptionsBuffer );
+                    writePicture( node, out, groupFile, childNumber, childCount, descriptionsBuffer );
                 }
                 childNumber++;
             }
@@ -360,7 +357,7 @@ public class HtmlDistiller
             out.write( "</tr>" );
             descriptionsBuffer.flushDescriptions();
 
-            out.write( "\n<tr><td colspan=\"" + Integer.toString( options.getPicsPerRow() ) + "\">" );
+            out.write( String.format( "\n<tr><td colspan=\"%d\">", options.getPicsPerRow() ) );
             out.write( Settings.jpoResources.getString( "LinkToJpo" ) );
             out.write( "</td></tr></table>" );
             out.newLine();
@@ -494,14 +491,13 @@ public class HtmlDistiller
         int w = scp.getScaledWidth();
         int h = scp.getScaledHeight();
 
-        out.write( "<td valign=\"bottom\">" );
+        out.write( "<td class=\"pictureThumbnailCell\" id=\"" + Tools.stringToHTMLString( lowresFile.getName() ) + "\">" );
 
         // write an anchor so the up come back
         // but only if we are generating MidresHTML pages
-        if ( options.isGenerateMidresHtml() ) {
-            out.write( String.format( "<a name=\"%s\" />", Tools.stringToHTMLString( lowresFile.getName() ) ) );
-        }
-
+        //if ( options.isGenerateMidresHtml() ) {
+        //    out.write( String.format( "<a name=\"%s\" />", Tools.stringToHTMLString( lowresFile.getName() ) ) );
+        //}
         out.write( "<a href=\"" );
         if ( options.isGenerateMidresHtml() ) {
             out.write( midresHtmlFileName );
@@ -533,21 +529,23 @@ public class HtmlDistiller
             String groupDescription
                     = ( (SortableDefaultMutableTreeNode) pictureNode.getParent() ).getUserObject().toString();
 
-            midresHtmlWriter.write( "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" );
+            //midresHtmlWriter.write( "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" );
+            //midresHtmlWriter.newLine();
+            //midresHtmlWriter.write( "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">" );
+            midresHtmlWriter.write( "<!DOCTYPE HTML>" );
             midresHtmlWriter.newLine();
-            midresHtmlWriter.write( "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">" );
-            midresHtmlWriter.newLine();
-            midresHtmlWriter.write( "<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\" lang=\"en\">" );
-            midresHtmlWriter.newLine();
+            //midresHtmlWriter.write( "<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\" lang=\"en\">" );
+            //midresHtmlWriter.newLine();
             midresHtmlWriter.write( "<head>\n\t<link rel=\"StyleSheet\" href=\"jpo.css\" type=\"text/css\" media=\"screen\" />\n\t<title>" + Tools.stringToHTMLString( groupDescription ) + "</title>\n</head>" );
             midresHtmlWriter.newLine();
             midresHtmlWriter.write( "<body onload=\"changetext(content[0])\">" );
             midresHtmlWriter.newLine();
-            midresHtmlWriter.write( "<table cellpadding=\"0\" cellspacing=\"10\">" );
+            //midresHtmlWriter.write( "<table cellpadding=\"0\" cellspacing=\"10\">" );
+            midresHtmlWriter.write( "<table>" );
             midresHtmlWriter.write( "<tr><td colspan=\"2\"><h2>" + Tools.stringToHTMLString( groupDescription ) + "</h2></td></tr>" );
             midresHtmlWriter.newLine();
             midresHtmlWriter.newLine();
-            midresHtmlWriter.write( "<tr><td align=\"center\" valign=\"top\">" );
+            midresHtmlWriter.write( "<tr><td class=\"midresPictureCell\">" );
             String imgTag = "<img src=\"" + midresFile.getName() + "\" width= \"" + Integer.toString( w ) + "\" height=\"" + Integer.toString( h ) + "\" alt=\"" + Tools.stringToHTMLString( pictureInfo.getDescription() ) + "\" />";
 
             if ( options.isLinkToHighres() ) {
@@ -558,14 +556,14 @@ public class HtmlDistiller
                 midresHtmlWriter.write( imgTag );
             }
             midresHtmlWriter.newLine();
-            midresHtmlWriter.write( "<p/>" + Tools.stringToHTMLString( pictureInfo.getDescription() ) );
+            midresHtmlWriter.write( "<p>" + Tools.stringToHTMLString( pictureInfo.getDescription() ) );
             midresHtmlWriter.newLine();
             midresHtmlWriter.write( "</td>" );
             midresHtmlWriter.newLine();
             midresHtmlWriter.newLine();
 
             // now do the right column
-            midresHtmlWriter.write( "<td align=\"center\" valign=\"top\">" );
+            midresHtmlWriter.write( "<td class=\"midresSidebarCell\">" );
 
             if ( options.isGenerateMap() ) {
                 StringBuilder map = new StringBuilder( "" );
@@ -580,31 +578,32 @@ public class HtmlDistiller
             final int indexPerRow = 5;
             final int indexToShow = 35;
             final int matrixWidth = 130;
-            final String font = "<font face=\"Helvetica\" size=\"small\">";
             SortableDefaultMutableTreeNode nde;
             midresHtmlWriter.write( String.format( "Picture %d of %d", childNumber, childCount ) );
             midresHtmlWriter.newLine();
-            midresHtmlWriter.write( "<table cellpadding=\"3\" cellspacing=\"1\" border=\"1\">" );
+            //midresHtmlWriter.write( "<table cellpadding=\"3\" cellspacing=\"1\" border=\"1\">" );
+            midresHtmlWriter.write( "<table class=\"numberPickTable\">" );
             midresHtmlWriter.newLine();
-            StringBuilder dhtmlArray = new StringBuilder( "content[0]='" + font + "<p><b>Picture</b> " + Integer.toString( childNumber ) + " of " + Integer.toString( childCount ) + ":<p>" + "<b>Description:</b><br>" + Tools.stringToHTMLString( pictureInfo.getDescription().replaceAll( "\'", "\\\\'" ).replaceAll( "\n", " " ) ) + "<p>" );
+            String htmlFriendlyDescription = Tools.stringToHTMLString( pictureInfo.getDescription().replaceAll( "\'", "\\\\'" ).replaceAll( "\n", " " ) );
+            StringBuilder dhtmlArray = new StringBuilder( String.format( "content[0]='" + "<p><strong>Picture</strong> %d of %d:</p><p><b>Description:</b><br>%s</p>", childNumber, childCount, htmlFriendlyDescription ) );
             if ( pictureInfo.getCreationTime().length() > 0 ) {
-                dhtmlArray.append( "<b>Date:</b><br>" ).append( pictureInfo.getCreationTime().replaceAll( "\'", "\\\\'" ).replaceAll( "\n", " " ) ).append( "<p>" );
+                dhtmlArray.append( "<p><strong>Date:</strong><br>" ).append( pictureInfo.getCreationTime().replaceAll( "\'", "\\\\'" ).replaceAll( "\n", " " ) ).append( "</p>" );
             }
 
             if ( pictureInfo.getPhotographer().length() > 0 ) {
-                dhtmlArray.append( "<b>Photographer:</b><br>" ).append( pictureInfo.getPhotographer().replaceAll( "\'", "\\\\'" ).replaceAll( "\n", " " ) ).append( "<br>" );
+                dhtmlArray.append( "<strong>Photographer:</strong><br>" ).append( pictureInfo.getPhotographer().replaceAll( "\'", "\\\\'" ).replaceAll( "\n", " " ) ).append( "<br>" );
             }
             if ( pictureInfo.getComment().length() > 0 ) {
                 StringBuilder append = dhtmlArray.append( "<b>Comment:</b><br>" ).append( pictureInfo.getComment().replaceAll( "\'", "\\\\'" ).replaceAll( "\n", " " ) ).append( "<br>" );
             }
             if ( pictureInfo.getFilmReference().length() > 0 ) {
-                dhtmlArray.append( "<b>Film Reference:</b><br>" ).append( pictureInfo.getFilmReference().replaceAll( "\'", "\\\\'" ).replaceAll( "\n", " " ) ).append( "<br>" );
+                dhtmlArray.append( "<strong>Film Reference:</strong><br>" ).append( pictureInfo.getFilmReference().replaceAll( "\'", "\\\\'" ).replaceAll( "\n", " " ) ).append( "<br>" );
             }
             if ( pictureInfo.getCopyrightHolder().length() > 0 ) {
-                dhtmlArray.append( "<b>Copyright Holder:</b><br>" ).append( pictureInfo.getCopyrightHolder().replaceAll( "\'", "\\\\'" ).replaceAll( "\n", " " ) ).append( "<br>" );
+                dhtmlArray.append( "<strong>Copyright Holder:</strong><br>" ).append( pictureInfo.getCopyrightHolder().replaceAll( "\'", "\\\\'" ).replaceAll( "\n", " " ) ).append( "<br>" );
             }
 
-            dhtmlArray.append( "</font>'\n" );
+            dhtmlArray.append( "'\n" );
 
             int startNumber = (int) Math.floor( ( childNumber - indexBeforeCurrent - 1 ) / indexPerRow ) * indexPerRow + 1;
             if ( startNumber < 1 ) {
@@ -621,7 +620,7 @@ public class HtmlDistiller
                     midresHtmlWriter.write( "<tr>" );
                     midresHtmlWriter.newLine();
                 }
-                midresHtmlWriter.write( "<td>" );
+                midresHtmlWriter.write( "<td class=\"numberPickCell\">" );
                 if ( i <= childCount ) {
                     String nodeUrl = "";
                     String lowresFn = "";
@@ -650,13 +649,17 @@ public class HtmlDistiller
                         }
 
                         midresHtmlWriter.write( "<a href=\"" + nodeUrl + "\"" );
+                        String htmlFriendlyDescription2 = Tools.stringToHTMLString( ( (PictureInfo) nde.getUserObject() ).getDescription().replaceAll( "\'", "\\\\'" ).replaceAll( "\n", " " ) );
                         if ( options.isGenerateDHTML() ) {
                             midresHtmlWriter.write( String.format( " onmouseover=\"changetext(content[%d])\" onmouseout=\"changetext(content[0])\"", i ) );
-                            dhtmlArray.append( "content[" ).append( Integer.toString( i ) ).append( "]='" );
+                            dhtmlArray.append( String.format( "content[%d]='", i ) );
 
-                            dhtmlArray.append( font ).append( "<p />Picture " ).append( Integer.toString( i ) ).append( "/" ).append( Integer.toString( childCount ) ).append( ":<p />" + "<img src=\"" ).append( lowresFn ).append( "\" width=\"" ).append( Integer.toString( matrixWidth - 10 ) ).append( "\" alt=\"Thumbnail\" />" + "<p /><i>" ).append( Tools.stringToHTMLString( ( (PictureInfo) nde.getUserObject() ).getDescription().replaceAll( "\'", "\\\\'" ).replaceAll( "\n", " " ) ) ).append( "</i></font>'\n" );
+                            dhtmlArray.append( String.format( "<p>Picture %d/%d:</p>", i, childCount ) );
+                            dhtmlArray.append( String.format( "<p><img src=\"%s\" width=%d alt=\"Thumbnail\"></p>", lowresFn, matrixWidth - 10 ) );
+                            dhtmlArray.append( "<p><i>" + htmlFriendlyDescription2 + "</i></p>'\n" );
                         } else {
-                            dhtmlArray.append( font ).append( "<p />Item " ).append( Integer.toString( i ) ).append( "/" ).append( Integer.toString( childCount ) ).append( ":<p />" ).append( Tools.stringToHTMLString( ( (PictureInfo) nde.getUserObject() ).getDescription().replaceAll( "\'", "\\\\'" ).replaceAll( "\n", " " ) ) ).append( "</i></font>'\n" );
+                            dhtmlArray.append( String.format( "<p>Item %d/%d:</p>", i, childCount ) );
+                            dhtmlArray.append( "<p><i>" + htmlFriendlyDescription2 + "</p></i>'\n" );
                         }
                     }
                     midresHtmlWriter.write( ">" );
@@ -683,80 +686,83 @@ public class HtmlDistiller
             // End of picture matrix
 
             midresHtmlWriter.newLine();
-            //Up Link
-            midresHtmlWriter.write( "<p /><a href=\"" + groupFile.getName() + "#" + Tools.stringToHTMLString( lowresFile.getName() ) + "\">Up</a>" );
-            midresHtmlWriter.write( "&nbsp;" );
-            midresHtmlWriter.newLine();
-            // Link to Previous
-            if ( childNumber != 1 ) {
-                String previousHtmlFilename = "";
-                switch ( options.getPictureNaming() ) {
-                    case PICTURE_NAMING_BY_ORIGINAL_NAME:
-                        SortableDefaultMutableTreeNode priorNode = (SortableDefaultMutableTreeNode) ( (SortableDefaultMutableTreeNode) pictureNode.getParent() ).getChildAt( childNumber - 2 );
-                        Object userObject = priorNode.getUserObject();
-                        if ( userObject instanceof PictureInfo ) {
-                            previousHtmlFilename = Tools.cleanupFilename( Tools.getFilenameRoot( ( (PictureInfo) userObject ).getHighresFilename() ) ) + ".htm";
-                        } else {
-                            previousHtmlFilename = "index.htm"; // actually something has gone horribly wrong
-                        }
-                        break;
-                    case PICTURE_NAMING_BY_SEQUENTIAL_NUMBER:
-                        String convertedNumber = Integer.toString( picsWroteCounter + options.getSequentialStartNumber() - 2 );
-                        String padding = "00000";
-                        String formattedNumber = padding.substring( convertedNumber.length() ) + convertedNumber;
-                        previousHtmlFilename = "jpo_" + formattedNumber + ".htm";
-                        break;
-                    default:  //case HtmlDistillerOptions.PICTURE_NAMING_BY_HASH_CODE:
-                        int hashCode = ( (SortableDefaultMutableTreeNode) pictureNode.getParent() ).getChildAt( childNumber - 2 ).hashCode();
-                        previousHtmlFilename = "jpo_" + Integer.toString( hashCode ) + ".htm";
-                        break;
-                }
-                midresHtmlWriter.write( String.format( "<a href=\"%s\">Previous</a>", previousHtmlFilename ) );
-                midresHtmlWriter.write( "&nbsp;" );
-            }
-            if ( options.isLinkToHighres() ) {
-                midresHtmlWriter.write( "<a href=\"" + pictureInfo.getHighresLocation() + "\">Highres</a>" );
-                midresHtmlWriter.write( "&nbsp;" );
-            } else if ( options.isExportHighres() ) {
-                // Link to Highres in target directory
-                midresHtmlWriter.write( "<a href=\"" + highresFile.getName() + "\">Highres</a>" );
-                midresHtmlWriter.write( "&nbsp;" );
-            }
-            // Linkt to Next
-            if ( childNumber != childCount ) {
-                String nextHtmlFilename = "";
-                switch ( options.getPictureNaming() ) {
-                    case PICTURE_NAMING_BY_ORIGINAL_NAME:
-                        SortableDefaultMutableTreeNode priorNode = (SortableDefaultMutableTreeNode) ( (SortableDefaultMutableTreeNode) pictureNode.getParent() ).getChildAt( childNumber );
-                        Object userObject = priorNode.getUserObject();
-                        if ( userObject instanceof PictureInfo ) {
-                            nextHtmlFilename = Tools.cleanupFilename( Tools.getFilenameRoot( ( (PictureInfo) userObject ).getHighresFilename() ) ) + ".htm";
-                        } else {
-                            nextHtmlFilename = "index.htm"; // actually something has gone horribly wrong
-                        }
-                        break;
-                    case PICTURE_NAMING_BY_SEQUENTIAL_NUMBER:
-                        String convertedNumber = Integer.toString( picsWroteCounter + options.getSequentialStartNumber() );
-                        String padding = "00000";
-                        String formattedNumber = padding.substring( convertedNumber.length() ) + convertedNumber;
-                        nextHtmlFilename = "jpo_" + formattedNumber + ".htm";
-                        break;
-                    default:  //case HtmlDistillerOptions.PICTURE_NAMING_BY_HASH_CODE:
-                        int hashCode = ( (SortableDefaultMutableTreeNode) pictureNode.getParent() ).getChildAt( childNumber ).hashCode();
-                        nextHtmlFilename = "jpo_" + Integer.toString( hashCode ) + ".htm";
-                        break;
-                }
 
-                midresHtmlWriter.write( "<a href=\"" + nextHtmlFilename + "\">Next</a>" );
+            { //Up Link
+                midresHtmlWriter.write( "<p><a href=\"" + groupFile.getName() + "#" + Tools.stringToHTMLString( lowresFile.getName() ) + "\">Up</a>" );
+                midresHtmlWriter.write( "&nbsp;" );
                 midresHtmlWriter.newLine();
-            }
-            if ( options.isGenerateZipfile() ) {
-                midresHtmlWriter.write( "<br /><a href=\"" + options.getDownloadZipFileName() + "\">Download Zip</a>" );
-                midresHtmlWriter.newLine();
+                // Link to Previous
+                if ( childNumber != 1 ) {
+                    String previousHtmlFilename = "";
+                    switch ( options.getPictureNaming() ) {
+                        case PICTURE_NAMING_BY_ORIGINAL_NAME:
+                            SortableDefaultMutableTreeNode priorNode = (SortableDefaultMutableTreeNode) ( (SortableDefaultMutableTreeNode) pictureNode.getParent() ).getChildAt( childNumber - 2 );
+                            Object userObject = priorNode.getUserObject();
+                            if ( userObject instanceof PictureInfo ) {
+                                previousHtmlFilename = Tools.cleanupFilename( Tools.getFilenameRoot( ( (PictureInfo) userObject ).getHighresFilename() ) ) + ".htm";
+                            } else {
+                                previousHtmlFilename = "index.htm"; // actually something has gone horribly wrong
+                            }
+                            break;
+                        case PICTURE_NAMING_BY_SEQUENTIAL_NUMBER:
+                            String convertedNumber = Integer.toString( picsWroteCounter + options.getSequentialStartNumber() - 2 );
+                            String padding = "00000";
+                            String formattedNumber = padding.substring( convertedNumber.length() ) + convertedNumber;
+                            previousHtmlFilename = "jpo_" + formattedNumber + ".htm";
+                            break;
+                        default:  //case HtmlDistillerOptions.PICTURE_NAMING_BY_HASH_CODE:
+                            int hashCode = ( (SortableDefaultMutableTreeNode) pictureNode.getParent() ).getChildAt( childNumber - 2 ).hashCode();
+                            previousHtmlFilename = "jpo_" + Integer.toString( hashCode ) + ".htm";
+                            break;
+                    }
+                    midresHtmlWriter.write( String.format( "<a href=\"%s\">Previous</a>", previousHtmlFilename ) );
+                    midresHtmlWriter.write( "&nbsp;" );
+                }
+                if ( options.isLinkToHighres() ) {
+                    midresHtmlWriter.write( "<a href=\"" + pictureInfo.getHighresLocation() + "\">Highres</a>" );
+                    midresHtmlWriter.write( "&nbsp;" );
+                } else if ( options.isExportHighres() ) {
+                    // Link to Highres in target directory
+                    midresHtmlWriter.write( "<a href=\"" + highresFile.getName() + "\">Highres</a>" );
+                    midresHtmlWriter.write( "&nbsp;" );
+                }
+                // Linkt to Next
+                if ( childNumber != childCount ) {
+                    String nextHtmlFilename = "";
+                    switch ( options.getPictureNaming() ) {
+                        case PICTURE_NAMING_BY_ORIGINAL_NAME:
+                            SortableDefaultMutableTreeNode priorNode = (SortableDefaultMutableTreeNode) ( (SortableDefaultMutableTreeNode) pictureNode.getParent() ).getChildAt( childNumber );
+                            Object userObject = priorNode.getUserObject();
+                            if ( userObject instanceof PictureInfo ) {
+                                nextHtmlFilename = Tools.cleanupFilename( Tools.getFilenameRoot( ( (PictureInfo) userObject ).getHighresFilename() ) ) + ".htm";
+                            } else {
+                                nextHtmlFilename = "index.htm"; // actually something has gone horribly wrong
+                            }
+                            break;
+                        case PICTURE_NAMING_BY_SEQUENTIAL_NUMBER:
+                            String convertedNumber = Integer.toString( picsWroteCounter + options.getSequentialStartNumber() );
+                            String padding = "00000";
+                            String formattedNumber = padding.substring( convertedNumber.length() ) + convertedNumber;
+                            nextHtmlFilename = "jpo_" + formattedNumber + ".htm";
+                            break;
+                        default:  //case HtmlDistillerOptions.PICTURE_NAMING_BY_HASH_CODE:
+                            int hashCode = ( (SortableDefaultMutableTreeNode) pictureNode.getParent() ).getChildAt( childNumber ).hashCode();
+                            nextHtmlFilename = "jpo_" + Integer.toString( hashCode ) + ".htm";
+                            break;
+                    }
+
+                    midresHtmlWriter.write( "<a href=\"" + nextHtmlFilename + "\">Next</a>" );
+                    midresHtmlWriter.newLine();
+                }
+                if ( options.isGenerateZipfile() ) {
+                    midresHtmlWriter.write( "<br><a href=\"" + options.getDownloadZipFileName() + "\">Download Zip</a>" );
+                    midresHtmlWriter.newLine();
+                }
+                midresHtmlWriter.write( "</p>" );
             }
 
             midresHtmlWriter.newLine();
-            midresHtmlWriter.write( "<p />" + Settings.jpoResources.getString( "LinkToJpo" ) );
+            midresHtmlWriter.write( "<p>" + Settings.jpoResources.getString( "LinkToJpo" )  + "</p>");
             midresHtmlWriter.newLine();
 
             if ( options.isGenerateDHTML() ) {
@@ -764,7 +770,7 @@ public class HtmlDistiller
                 midresHtmlWriter.newLine();
                 midresHtmlWriter.write( "<layer id=\"d2\" width=\"" + Integer.toString( matrixWidth ) + "\" height=\"200\">" );
                 midresHtmlWriter.newLine();
-                midresHtmlWriter.write( "<div id=\"descriptions\" class=\"sidepanel\">" );
+                midresHtmlWriter.write( "<div id=\"descriptions\" class=\"sidepanelMouseover\">" );
                 midresHtmlWriter.newLine();
                 midresHtmlWriter.write( "</div></layer></ilayer>" );
             }
@@ -867,7 +873,7 @@ public class HtmlDistiller
          * Checks whether the buffer is full and if so will terminate the
          * current line, flush the buffer and start a new line.
          *
-         * @throws IOException if something went wrong with wrting.
+         * @throws IOException if something went wrong with writing.
          */
         public void flushIfNescessary() throws IOException {
             if ( picCounter == columns ) {
@@ -896,7 +902,7 @@ public class HtmlDistiller
 
             for ( int i = 0; i < columns; i++ ) {
                 if ( descriptions[i] != null ) {
-                    out.write( "<td valign=\"top\">" );
+                    out.write( "<td class=\"descriptionCell\">" );
 
                     out.write( Tools.stringToHTMLString( descriptions[i] ) );
 
