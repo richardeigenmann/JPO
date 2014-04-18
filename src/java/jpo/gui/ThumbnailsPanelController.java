@@ -321,7 +321,7 @@ public class ThumbnailsPanelController implements NodeNavigatorListener {
                     super.paintComponent( g );
 
                     Rectangle outerRect = new Rectangle( 0, 0, thumbnailsPane.getWidth(), thumbnailsPane.getHeight() );
-                    g.setColor( new Color( .6f, .6f, .8f, .6f ) );
+                    g.setColor( new Color( 45, 45, 45, 180 ) );
                     g.fillRect( outerRect.x, outerRect.y, outerRect.width, overlayRectangle.y );
                     g.fillRect( outerRect.x, overlayRectangle.y, overlayRectangle.x, outerRect.height );
                     g.fillRect( overlayRectangle.x, overlayRectangle.y + overlayRectangle.height, outerRect.width, outerRect.height );
