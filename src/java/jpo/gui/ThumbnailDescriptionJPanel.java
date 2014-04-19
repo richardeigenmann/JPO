@@ -84,10 +84,6 @@ public class ThumbnailDescriptionJPanel
      */
     private final JTextField highresLocationJTextField = new JTextField();
 
-    /**
-     * The location of the lowres image file
-     */
-    private final JTextField lowresLocationJTextField = new JTextField();
 
     /**
      * create a dumbCaret object which prevents undesirable scrolling behaviour
@@ -96,6 +92,10 @@ public class ThumbnailDescriptionJPanel
      */
     private final NonFocussedCaret dumbCaret = new NonFocussedCaret();
 
+    public static enum DescriptionSize {
+        
+    };
+    
     /**
      * Constant that indicates that the description should be formatted as a
      * large description meaning large font and just the image description
@@ -256,13 +256,11 @@ public class ThumbnailDescriptionJPanel
             PictureInfo pi = (PictureInfo) referringNode.getUserObject();
             legend = pi.getDescription();
             highresLocationJTextField.setText( pi.getHighresLocation() );
-            lowresLocationJTextField.setText( pi.getLowresLocation() );
             setVisible( true );
         } else {
             // GroupInfo
             legend = ( (GroupInfo) referringNode.getUserObject() ).getGroupName();
             highresLocationJTextField.setText( "" );
-            lowresLocationJTextField.setText( "" );
             setVisible( true );
         }
         pictureDescriptionJTA.setText( legend );
@@ -295,10 +293,8 @@ public class ThumbnailDescriptionJPanel
 
         if ( ( referringNode != null ) && ( referringNode.getUserObject() instanceof PictureInfo ) && ( displayMode == MINI_INFO ) ) {
             highresLocationJTextField.setVisible( true );
-            lowresLocationJTextField.setVisible( true );
         } else {
             highresLocationJTextField.setVisible( false );
-            lowresLocationJTextField.setVisible( false );
         }
 
     }
@@ -450,10 +446,6 @@ public class ThumbnailDescriptionJPanel
 
                 if ( pictureInfoChangeEvent.getHighresLocationChanged() ) {
                     highresLocationJTextField.setText( pictureInfoChangeEvent.getPictureInfo().getHighresLocation() );
-                }
-
-                if ( pictureInfoChangeEvent.getLowresLocationChanged() ) {
-                    lowresLocationJTextField.setText( pictureInfoChangeEvent.getPictureInfo().getLowresLocation() );
                 }
 
                 if ( pictureInfoChangeEvent.getWasSelected() ) {

@@ -25,6 +25,8 @@
         <jar href="jpo-0.11.jar" download="eager" main="true"/>
         <jar href="commons-compress-1.8.jar" download="lazy" />
         <jar href="commons-io-2.4.jar" download="lazy" />
+        <jar href="commons-lang3-3.3.2.jar" download="lazy" />
+        <jar href="commons-logging-1.1.3.jar" download="lazy" />
         <jar href="commons-net-3.3.jar" download="lazy" />
         <jar href="gdata-core-1.0.jar" download="lazy" />
         <jar href="gdata-maps-2.0.jar" download="lazy" />
@@ -34,6 +36,7 @@
         <jar href="javax.mail-1.5.1.jar" download="lazy" />
         <jar href="jcs-1.3.jar" download="lazy" />
         <jar href="jsch-0.1.51.jar" download="lazy" />
+        <jar href="jwizz-0.1.4.jar" download="lazy" />
         <jar href="metadata-extractor-2.6.4.jar" download="lazy" />
         <jar href="miglayout-4.0.jar" download="eager" />
         <jar href="xmpcore.jar" download="lazy" />

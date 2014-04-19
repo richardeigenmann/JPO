@@ -44,6 +44,8 @@
     code from others instead of re-inventing the wheel:</p>
 <p><a href="http://commons.apache.org/proper/commons-compress/">Apache Commons Compress</a> which is licensed under the Apache 2.0 license
     <br><a href="http://commons.apache.org/proper/commons-io/">Apache Commons IO</a> which is licensed under the Apache 2.0 license
+    <br><a href="http://commons.apache.org/proper/commons-io/">Apache Commons Lang</a> which is licensed under the Apache 2.0 license
+    <br><a href="http://commons.apache.org/proper/commons-io/">Apache Commons Logging</a> which is licensed under the Apache 2.0 license
     <br><a href="http://commons.apache.org/proper/commons-net/">Apache Commons Net</a> which is licensed under the Apache 2.0 license
     <br><a href="https://developers.google.com/gdata/articles/java_client_lib">Google Data Library</a> which is probably Apache 2.0 licensed
     <br><a href="https://code.google.com/p/guava-libraries/">Google Guava library</a> which is licensed under Apache 2.0

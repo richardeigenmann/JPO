@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Enumeration;
 import java.util.logging.Logger;
+import javax.swing.SwingUtilities;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -23,6 +24,7 @@ import static jpo.dataModel.Settings.FieldCodes.FILM_REFERENCE;
 import static jpo.dataModel.Settings.FieldCodes.LATLNG;
 import static jpo.dataModel.Settings.FieldCodes.PHOTOGRAPHER;
 import static jpo.dataModel.Settings.FieldCodes.ROTATION;
+import jpo.gui.ClearThumbnailsJFrame;
 import jpo.gui.LoadProgressGui;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
@@ -31,24 +33,25 @@ import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
 
 /*
-XmlReader.java:  class that reads the xml file
+ XmlReader.java:  class that reads the xml file
 
-Copyright (C) 2002 - 2010  Richard Eigenmann.
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or any later version. This program is distributed
-in the hope that it will be useful, but WITHOUT ANY WARRANTY;
-without even the implied warranty of MERCHANTABILITY or FITNESS
-FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-more details. You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-The license is in gpl.txt.
-See http://www.gnu.org/copyleft/gpl.html for the details.
+ Copyright (C) 2002 - 2014  Richard Eigenmann.
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or any later version. This program is distributed
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ without even the implied warranty of MERCHANTABILITY or FITNESS
+ FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+ more details. You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ The license is in gpl.txt.
+ See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 /**
- *  class that reads an XML collection and creates a tree of SortableDefaultMutableTreeNodes
+ * class that reads an XML collection and creates a tree of
+ * SortableDefaultMutableTreeNodes
  */
 public class XmlReader extends DefaultHandler {
 
@@ -58,46 +61,45 @@ public class XmlReader extends DefaultHandler {
     private static final Logger LOGGER = Logger.getLogger( XmlReader.class.getName() );
 
     /**
-     *  temporary reference to the group node being read
+     * temporary reference to the group node being read
      */
     private SortableDefaultMutableTreeNode currentGroup;
 
     /**
-     *  temporary reference to the picture node being read
+     * temporary reference to the picture node being read
      */
     private SortableDefaultMutableTreeNode currentPicture;
 
     /**
-     * 	variable used to interpret what the text is that is coming in
-     *	through the parser.
+     * variable used to interpret what the text is that is coming in through the
+     * parser.
      */
     private FieldCodes currentField;
 
     /**
-     *  Temporary variable to hold the GroupInfo of the group being created.
+     * Temporary variable to hold the GroupInfo of the group being created.
      */
     private GroupInfo groupInfo;
-
+    
     private LoadProgressGui loadProgressGui = new LoadProgressGui();
 
-
     /**
-     *   Constructor an XML parser that can read our picture list XML files.
+     * Constructor an XML parser that can read our picture list XML files.
      *
-     *   @param  inputStream  The stream which is to be parsed
-     *   @param  startNode	The node that becomes the root node for the nodes being read.
-     *  			Whether unsaved changes should be set or not depends entirely on
-     *                      the context and is not set by the parser.
+     * @param inputStream The stream which is to be parsed
+     * @param startNode	The node that becomes the root node for the nodes being
+     * read. Whether unsaved changes should be set or not depends entirely on
+     * the context and is not set by the parser.
      */
     public XmlReader( InputStream inputStream, SortableDefaultMutableTreeNode startNode ) {
         BufferedInputStream bufferedInputStream = new BufferedInputStream( inputStream );
-
+        
         currentGroup = startNode;
 
         // Use the validating parser
         SAXParserFactory factory = SAXParserFactory.newInstance();
         factory.setValidating( true );
-
+        
         try {
             SAXParser saxParser = factory.newSAXParser();
             saxParser.parse( bufferedInputStream, this );
@@ -111,8 +113,7 @@ public class XmlReader extends DefaultHandler {
             if ( spe.getException() != null ) {
                 x = spe.getException();
             }
-            //x.printStackTrace();
-
+            
         } catch ( SAXException sxe ) {
             // Error generated by this application
             // (or a parser-initialization error)
@@ -120,27 +121,32 @@ public class XmlReader extends DefaultHandler {
             if ( sxe.getException() != null ) {
                 x = sxe.getException();
             }
-            //x.printStackTrace();
-
-        } catch ( ParserConfigurationException pce ) {
-            LOGGER.info( "XmlReader: Parser with specified options can't be built" + pce.getMessage() );
-            //pce.printStackTrace();
-
-        } catch ( IOException ioe ) {
-            LOGGER.info( "XmlReader: I/O error: " + ioe.getMessage() );
-            ioe.printStackTrace();
+        } catch ( ParserConfigurationException | IOException ex ) {
+            LOGGER.severe( ex.getLocalizedMessage() );
         }
-
+        
         correctJarReferences( startNode );
         // new IntegrityChecker( startNode );
         loadProgressGui.getRid();
         loadProgressGui = null;
+        
+        if ( lowresUrls.length() > 0 ) {
+            Runnable runnable = new Runnable() {
+                
+                @Override
+                public void run() {
+                    new ClearThumbnailsJFrame( lowresUrls );
+                }
+            };
+            SwingUtilities.invokeLater( runnable );
+            
+        }
     }
-
 
     /**
      * method that gets invoked by the parser when a new element is discovered
-     * @param namespaceURI 
+     *
+     * @param namespaceURI
      * @param lName
      * @param qName
      * @param attrs
@@ -155,14 +161,17 @@ public class XmlReader extends DefaultHandler {
         if ( ( "collection".equals( qName ) ) && ( attrs != null ) ) {
             groupInfo = new GroupInfo( attrs.getValue( "collection_name" ) );
             groupInfo.setLowresLocation( attrs.getValue( "collection_icon" ) );
+            lowresUrls.append( attrs.getValue( "collection_icon" ) );
+            lowresUrls.append( System.getProperty( "line.separator" ) );
             currentGroup.setUserObject( groupInfo );
             currentGroup.getPictureCollection().setAllowEdits( attrs.getValue( "collection_protected" ).equals( "No" ) );
         } else if ( "group".equals( qName ) ) {
             incrementGroupCount();
             groupInfo = new GroupInfo( attrs.getValue( "group_name" ) );
             groupInfo.setLowresLocation( attrs.getValue( "group_icon" ) );
-            SortableDefaultMutableTreeNode nextCurrentGroup =
-                    new SortableDefaultMutableTreeNode( groupInfo );
+            
+            SortableDefaultMutableTreeNode nextCurrentGroup
+                    = new SortableDefaultMutableTreeNode( groupInfo );
             currentGroup.add( nextCurrentGroup );
             currentGroup = nextCurrentGroup;
         } else if ( "picture".equals( qName ) ) {
@@ -175,6 +184,9 @@ public class XmlReader extends DefaultHandler {
             currentField = FILE_URL;
         } else if ( "file_lowres_URL".equals( qName ) ) {
             currentField = FILE_LOWRES_URL;
+            if ( lowresUrls.length() > 0 ) {
+                lowresUrls.append( System.getProperty( "line.separator" ) );
+            }
         } else if ( "film_reference".equals( qName ) ) {
             currentField = FILM_REFERENCE;
         } else if ( "CREATION_TIME".equals( qName ) ) {
@@ -206,19 +218,19 @@ public class XmlReader extends DefaultHandler {
     }
 
     /**
-     *  this field hold the value of the category index being parsed.
+     * this field hold the value of the category index being parsed.
      */
     private String temporaryCategoryIndex = "";
 
     /**
-     *  this field hold the texte of the category being parsed.
+     * this field hold the text of the category being parsed.
      */
     private String temporaryCategory = "";
 
-
     /**
-     *  method that gets invoked by the parser when a end element is discovered; used
-     *  here to go back to the parent group if a \</group\> tag is found.
+     * method that gets invoked by the parser when a end element is discovered;
+     * used here to go back to the parent group if a \</group\> tag is found.
+     *
      * @param namespaceURI
      * @param sName
      * @param qName
@@ -228,34 +240,37 @@ public class XmlReader extends DefaultHandler {
     public void endElement( String namespaceURI,
             String sName, // simple name
             String qName // qualified name
-            )
+    )
             throws SAXException {
-        if ( null != qName ) switch ( qName ) {
-            case "group":
-                currentGroup = (SortableDefaultMutableTreeNode) currentGroup.getParent();
-                break;
-            case "ROTATION":
-                //logger.info("ROTATION here");
-                ( (PictureInfo) currentPicture.getUserObject() ).parseRotation();
-                break;
-            case "LATLNG":
-                ( (PictureInfo) currentPicture.getUserObject() ).parseLatLng();
-                break;
-            case "checksum":
-                //logger.info("CHECKSUM here");
-                ( (PictureInfo) currentPicture.getUserObject() ).parseChecksum();
-                break;
-            case "categoryDescription":
-                currentGroup.getPictureCollection().addCategory( Integer.parseInt( temporaryCategoryIndex ), temporaryCategory );
-                temporaryCategory = "";
-                break;
+        if ( null != qName ) {
+            switch ( qName ) {
+                case "group":
+                    currentGroup = (SortableDefaultMutableTreeNode) currentGroup.getParent();
+                    break;
+                case "ROTATION":
+                    ( (PictureInfo) currentPicture.getUserObject() ).parseRotation();
+                    break;
+                case "LATLNG":
+                    ( (PictureInfo) currentPicture.getUserObject() ).parseLatLng();
+                    break;
+                case "checksum":
+                    ( (PictureInfo) currentPicture.getUserObject() ).parseChecksum();
+                    break;
+                case "categoryDescription":
+                    currentGroup.getPictureCollection().addCategory( Integer.parseInt( temporaryCategoryIndex ), temporaryCategory );
+                    temporaryCategory = "";
+                    break;
+            }
         }
     }
-
+    
+    StringBuilder lowresUrls = new StringBuilder();
 
     /**
      * method invoked by the parser when characters are read between tags. The
-     * variable interpretChars is set so that the characters can be put in the right place
+     * variable interpretChars is set so that the characters can be put in the
+     * right place
+     *
      * @param buf
      * @param offset
      * @param len
@@ -263,9 +278,7 @@ public class XmlReader extends DefaultHandler {
      */
     @Override
     public void characters( char buf[], int offset, int len ) throws SAXException {
-        // LOGGER.info("CHARS:   "+ new String(buf, offset, len));
         String s = new String( buf, offset, len );
-        // LOGGER.info(s);
         switch ( currentField ) {
             case DESCRIPTION:
                 ( (PictureInfo) currentPicture.getUserObject() ).appendToDescription( s );
@@ -275,6 +288,7 @@ public class XmlReader extends DefaultHandler {
                 break;
             case FILE_LOWRES_URL:
                 ( (PictureInfo) currentPicture.getUserObject() ).appendToLowresLocation( s );
+                lowresUrls.append( s );
                 break;
             case FILM_REFERENCE:
                 ( (PictureInfo) currentPicture.getUserObject() ).appendToFilmReference( s );
@@ -312,37 +326,9 @@ public class XmlReader extends DefaultHandler {
         }
     }
 
-
     /**
+     * try to resolve where the file belongs
      *
-     * @param buf
-     * @param offset
-     * @param len
-     * @throws org.xml.sax.SAXException
-     */
-    @Override
-    public void ignorableWhitespace( char buf[], int offset, int len )
-            throws SAXException {
-        // Ignore it
-    }
-
-
-    /**
-     *
-     * @param target
-     * @param data
-     * @throws org.xml.sax.SAXException
-     */
-    @Override
-    public void processingInstruction( String target, String data ) throws SAXException {
-        nl();
-        emit( "PROCESS: " );
-        emit( "<?" + target + " " + data + "?>" );
-    }
-
-
-    /**
-     *  try to resolve where the file belongs
      * @param publicId
      * @param systemId
      * @return the dtd as an input source
@@ -352,66 +338,21 @@ public class XmlReader extends DefaultHandler {
         return new InputSource( XmlReader.class.getClassLoader().getResourceAsStream( "jpo/collection.dtd" ) );
     }
 
-
-    //===========================================================
-    // SAX ErrorHandler methods
-    //===========================================================
-    // treat validation errors as fatal
     /**
+     * This method runs through all the URL strings and changes the jar:&excl;
+     * references with the path to the jar. I am prepared to admit this is a
+     * sloppy way of building this. The problem is that since the parser doesn't
+     * always return the whole URL in one go I could be reading fragments and
+     * those will not translate well. That's also the reason for using append in
+     * the adding of the data.
      *
-     * @param e
-     * @throws org.xml.sax.SAXParseException
-     */
-    @Override
-    public void error( SAXParseException e ) throws SAXParseException {
-        throw e;
-    }
-
-
-    // dump warnings too
-    /**
-     *
-     * @param err
-     * @throws org.xml.sax.SAXParseException
-     */
-    @Override
-    public void warning( SAXParseException err ) throws SAXParseException {
-        LOGGER.info( "** Warning" + ", line " + err.getLineNumber() + ", uri " + err.getSystemId() );
-        LOGGER.info( "   " + err.getMessage() );
-    }
-
-
-    //===========================================================
-    // Utility Methods ...
-    //===========================================================
-    // Wrap I/O exceptions in SAX exceptions, to
-    // suit handler signature requirements
-    private void emit( String s ) throws SAXException {
-    }
-
-
-    // Start a new line
-    // and indent the next line appropriately
-    private void nl() throws SAXException {
-        String lineEnd = System.getProperty( "line.separator" );
-    }
-
-
-    /**
-     *  This method runs through all the URL strings and changes the
-     *  jar:&excl; references with the path to the jar.
-     *  I am prepared to admit this is a sloppy way of building this. The
-     *  problem is that since the parser doesn't always return the whole
-     *  URL in one go I could be reading fragments and those will not translate
-     *  well. That's also the reason for using append in the adding of
-     *  the data.
      * @param startNode
      */
     public void correctJarReferences( SortableDefaultMutableTreeNode startNode ) {
         Enumeration kids = startNode.children();
         while ( kids.hasMoreElements() ) {
             SortableDefaultMutableTreeNode n = (SortableDefaultMutableTreeNode) kids.nextElement();
-
+            
             if ( n.getUserObject() instanceof PictureInfo ) {
                 PictureInfo pi = (PictureInfo) n.getUserObject();
                 if ( pi.getHighresLocation().startsWith( "jar:!" ) ) {
@@ -423,22 +364,21 @@ public class XmlReader extends DefaultHandler {
                             pi.getLowresLocation().replaceFirst( "jar:!", Settings.jarRoot ) );
                 }
             }
-
+            
             if ( n.getChildCount() > 0 ) {
                 correctJarReferences( n );
             }
         }
-
+        
     }
 
     /**
-     *  counter so that listeners can get some indication of what is going on
+     * counter so that listeners can get some indication of what is going on
      */
     private int groupCount = 0;
 
-
     /**
-     *  Method to be called when a new Group is being parsed
+     * Method to be called when a new Group is being parsed
      */
     private void incrementGroupCount() {
         groupCount++;
@@ -448,10 +388,9 @@ public class XmlReader extends DefaultHandler {
     }
 
     /**
-     *  counter so that listeners can get some indication of what is going on
+     * counter so that listeners can get some indication of what is going on
      */
     private int pictureCount = 0;
-
 
     /**
      * Method to be called when a new Picture is being parsed
@@ -463,10 +402,10 @@ public class XmlReader extends DefaultHandler {
         }
     }
 
-
     /**
-     *  method to be called when the progress GUI should be updated. Since updating every picture will slow down the loading
-     *  This should only be called every hundred pictures or so.
+     * method to be called when the progress GUI should be updated. Since
+     * updating every picture will slow down the loading This should only be
+     * called every hundred pictures or so.
      */
     private void informProgressGui() {
         loadProgressGui.update( "Loaded: " + Integer.toString( groupCount ) + " Groups, " + Integer.toString( pictureCount ) + " Pictures" );

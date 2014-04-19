@@ -97,7 +97,8 @@
 <p>First download the jar files and save them in your program directory:<br>
     <a href="http://j-po.sourceforge.net/jpo-0.10.jar">jpo-0.11.jar</a> or <a href="http://j-po.sourceforge.net/jpo-0.11.jar">jpo-0.11.jar</a><br>
     <a href="http://j-po.sourceforge.net/commons-compress-1.8.jar">commons-compress-1.8.jar</a><br>
-    <a href="http://j-po.sourceforge.net/commons-io-2.4.jar">commons-io-2.4.jar</a><br>
+    <a href="http://j-po.sourceforge.net/commons-io-2.4.jar">commons-io-2.4.jar</a><br>    
+    <a href="http://j-po.sourceforge.net/commons-lang3-3.3.2.jar">commons-lang3-3.3.2.jar</a><br>
     <a href="http://j-po.sourceforge.net/commons-logging-1.1.3.jar">commons-logging-1.1.3.jar</a><br>
     <a href="http://j-po.sourceforge.net/commons-net-3.3.jar">commons-net-3.3.jar</a><br>
     <a href="http://j-po.sourceforge.net/gdata-core-1.0.jar">gdata-core-1.0.jar</a><br>
@@ -122,6 +123,7 @@
 <p><font color="darkRed"><code>/PATH/TO/YOUR/JAVA/bin/java -Xms80M -Xmx2000M -classpath 
         /PATH/TO/YOUR/JPO/JARS/commons-compress-1.8.jar
         :/PATH/TO/YOUR/JPO/JARS/commons-io-2.4.jar
+        :/PATH/TO/YOUR/JPO/JARS/commons-lang3-3.3.2.jar
         :/PATH/TO/YOUR/JPO/JARS/commons-logging-1.1.3.jar
         :/PATH/TO/YOUR/JPO/JARS/commons-net-3.3.jar
         :/PATH/TO/YOUR/JPO/JARS/gdata-core-1.0.jar
@@ -151,6 +153,7 @@
 <p><code>c:\windows\system32\java -Xms80M -Xmx2000M -classpath "c:\Program Files\Jpo\activation.jar";
         "c:\Program Files\Jpo\commons-compress-1.8.jar";
         "c:\Program Files\Jpo\commons-io-2.4.jar";
+        "c:\Program Files\Jpo\commons-lang3-3.3.2.jar";
         "c:\Program Files\Jpo\commons-logging-1.1.3.jar";
         "c:\Program Files\Jpo\commons-net-3.3.jar";
         "c:\Program Files\Jpo\gdata-core-1.0.jar";
