@@ -1,10 +1,5 @@
 package jpo.dataModel;
 
-import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import junit.framework.TestCase;
 
 /**
@@ -37,52 +32,6 @@ public class GroupInfoTest
         assertEquals( "To String should give back what whent in", "Tarrantino", gi.getGroupName() );
     }
 
-
-    /**
-     * Test of getLowresLocation method, of class GroupInfo.
-     */
-    public void testGetLowresLocation() {
-        GroupInfo gi = new GroupInfo( "Test" );
-        gi.setLowresLocation( "c:\\" );
-        assertEquals( "To Lowres Location should give back what whent in", "c:\\", gi.getLowresFilename() );
-
-        try {
-            gi.setLowresLocation( new URL( "file:///test.jpg" ) );
-        } catch ( MalformedURLException ex ) {
-            Logger.getLogger( GroupInfoTest.class.getName() ).log( Level.SEVERE, null, ex );
-        }
-        try {
-            assertEquals( "To Lowres Location should give back what whent in", new URL( "file:///test.jpg" ), gi.getLowresURL() );
-        } catch ( MalformedURLException ex ) {
-            Logger.getLogger( GroupInfoTest.class.getName() ).log( Level.SEVERE, null, ex );
-        }
-
-        assertEquals( "To Lowres Location should also give back as a file what went in", new File( "/test.jpg" ), gi.getLowresFile() );
-
-
-    }
-
-
-    /**
-     * Test of getLowresURLOrNull method, of class GroupInfo.
-     */
-    public void testGetLowresURLOrNull() {
-        GroupInfo gi = new GroupInfo( "Test" );
-        assertNull( "Should get null on an uninitialised object", gi.getLowresURLOrNull() );
-        gi.setLowresLocation( "c:\\" );
-        assertNull( "Should not be null after setting the file", gi.getLowresURLOrNull() );
-    }
-
-
-    /**
-     * Test of appendToLowresLocation method, of class GroupInfo.
-     */
-    public void testAppendToLowresLocation() {
-        GroupInfo gi = new GroupInfo( "Test" );
-        gi.setLowresLocation( "c:\\" );
-        gi.appendToLowresLocation( "test.jpg");
-        assertEquals( "To Lowres Location should give back the concatenated string", "c:\\test.jpg", gi.getLowresFilename() );
-  }
 
 
     /**

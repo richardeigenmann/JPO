@@ -1445,7 +1445,7 @@ public class SortableDefaultMutableTreeNode
      * else it will return the STRING "null" (to avoid NPE problems)
      *
      * @return the string with the full path of the thumbnail location
-     */
+     *
     public String getThumbnailLocation() {
         Object nodeObject = getUserObject();
         if ( nodeObject instanceof PictureInfo ) {
@@ -1455,14 +1455,14 @@ public class SortableDefaultMutableTreeNode
         } else {
             return "null";
         }
-    }
+    }*/
 
     /**
      * This method requests that the node assigns a new location to the
      * PictureInfo or GroupInfo object
      *
      * @return the filename of the new thumbnail
-     */
+     *
     public String assignNewThumbnailLocation() {
         String newThumbnailFilename = Tools.getNewLowresFilename();
         Object nodeObject = getUserObject();
@@ -1475,7 +1475,7 @@ public class SortableDefaultMutableTreeNode
             newThumbnailFilename = "null";
         }
         return newThumbnailFilename;
-    }
+    }*/
 
     /**
      * This method returns whether the supplied node is a descendent of the

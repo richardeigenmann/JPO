@@ -171,13 +171,13 @@ public class XmlDistiller
     private void enumerateGroup( SortableDefaultMutableTreeNode groupNode ) throws IOException {
         GroupInfo groupInfo = (GroupInfo) groupNode.getUserObject();
 
-        if ( copyPics && groupInfo.getLowresFile().canRead() ) {
-            File targetLowresFile = Tools.inventPicFilename( lowresTargetDir, groupInfo.getLowresFilename() );
-            Tools.copyPicture( groupInfo.getLowresURL(), targetLowresFile );
-            groupInfo.dumpToXml( out, targetLowresFile.toURI().toURL().toString(), groupNode == startNode, groupNode.getPictureCollection().getAllowEdits() );
-        } else {
+        //if ( copyPics && groupInfo.getLowresFile().canRead() ) {
+            //File targetLowresFile = Tools.inventPicFilename( lowresTargetDir, groupInfo.getLowresFilename() );
+            //Tools.copyPicture( groupInfo.getLowresURL(), targetLowresFile );
+          //  groupInfo.dumpToXml( out, groupNode == startNode, groupNode.getPictureCollection().getAllowEdits() );
+        //} else {
             groupInfo.dumpToXml( out, groupNode == startNode, groupNode.getPictureCollection().getAllowEdits() );
-        }
+        //}
 
         SortableDefaultMutableTreeNode childNode;
         Enumeration kids = groupNode.children();
@@ -201,14 +201,15 @@ public class XmlDistiller
 
         if ( copyPics ) {
             File targetHighresFile = Tools.inventPicFilename( highresTargetDir, pictureInfo.getHighresFilename() );
-            File targetLowresFile = Tools.inventPicFilename( lowresTargetDir, pictureInfo.getLowresFilename() );
+            //File targetLowresFile = Tools.inventPicFilename( lowresTargetDir, pictureInfo.getLowresFilename() );
             Tools.copyPicture( pictureInfo.getHighresURL(), targetHighresFile );
-            if ( pictureInfo.getLowresFile().canRead() ) {
-                Tools.copyPicture( pictureInfo.getLowresURL(), targetLowresFile );
-            }
+            //if ( pictureInfo.getLowresFile().canRead() ) {
+            //    Tools.copyPicture( pictureInfo.getLowresURL(), targetLowresFile );
+            //}
             pictureInfo.dumpToXml( out,
-                    targetHighresFile.toURI().toURL().toString(),
-                    targetLowresFile.toURI().toURL().toString() );
+                    targetHighresFile.toURI().toURL().toString()
+                    //targetLowresFile.toURI().toURL().toString() 
+            );
         } else {
             pictureInfo.dumpToXml( out );
         }

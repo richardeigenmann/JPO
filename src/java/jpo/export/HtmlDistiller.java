@@ -457,7 +457,7 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
             }
         }
 
-        LOGGER.log( Level.FINE, "testing size of thumbnail {0}", pictureInfo.getLowresURL().toString() );
+        //LOGGER.log( Level.FINE, "testing size of thumbnail {0}", pictureInfo.getLowresURL().toString() );
 
         LOGGER.fine( String.format( "Loading: %s", pictureInfo.getHighresLocation() ) );
         scp.loadPictureImd( pictureInfo.getHighresURL(), pictureInfo.getRotation() );

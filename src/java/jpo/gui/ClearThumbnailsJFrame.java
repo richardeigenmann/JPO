@@ -53,6 +53,7 @@ public class ClearThumbnailsJFrame extends javax.swing.JFrame {
         closeButton = new javax.swing.JButton();
         removeButton = new javax.swing.JButton();
         stopButton = new javax.swing.JButton();
+        ignoreButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -93,6 +94,13 @@ public class ClearThumbnailsJFrame extends javax.swing.JFrame {
             }
         });
 
+        ignoreButton.setText("Ignore");
+        ignoreButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ignoreButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -103,6 +111,8 @@ public class ClearThumbnailsJFrame extends javax.swing.JFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(jLabel2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(ignoreButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(closeButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(removeButton)
@@ -128,7 +138,8 @@ public class ClearThumbnailsJFrame extends javax.swing.JFrame {
                     .addComponent(jLabel2)
                     .addComponent(closeButton)
                     .addComponent(removeButton)
-                    .addComponent(stopButton))
+                    .addComponent(stopButton)
+                    .addComponent(ignoreButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 423, Short.MAX_VALUE))
         );
@@ -144,6 +155,7 @@ public class ClearThumbnailsJFrame extends javax.swing.JFrame {
     private void removeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeButtonActionPerformed
         stopButton.setVisible( true );
         removeButton.setVisible( false );
+        ignoreButton.setVisible( false );
         thumbnailRemover.execute();
     }//GEN-LAST:event_removeButtonActionPerformed
 
@@ -151,10 +163,16 @@ public class ClearThumbnailsJFrame extends javax.swing.JFrame {
         thumbnailRemover.cancel( true );
     }//GEN-LAST:event_stopButtonActionPerformed
 
-    private ThumbnailRemover thumbnailRemover = new ThumbnailRemover();
+    private void ignoreButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ignoreButtonActionPerformed
+        setVisible( false );
+        dispose();
+    }//GEN-LAST:event_ignoreButtonActionPerformed
+
+    private final ThumbnailRemover thumbnailRemover = new ThumbnailRemover();
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton closeButton;
+    private javax.swing.JButton ignoreButton;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane2;
@@ -168,6 +186,13 @@ public class ClearThumbnailsJFrame extends javax.swing.JFrame {
 
         boolean firsttime = true;
 
+        /**
+         * Reads each line from the textarea and deletes the thumbnail file if
+         * it exists and is writable. After the deletion the parent directory is
+         * deleted too if it is empty and writable.
+         *
+         * @return nothing.
+         */
         @Override
         protected Void doInBackground() {
             publish( "Log:\n" );
@@ -179,7 +204,7 @@ public class ClearThumbnailsJFrame extends javax.swing.JFrame {
                 }
 
                 line = StringUtils.chomp( line );
-                if ( line.equals( "")) {
+                if ( line.equals( "" ) ) {
                     continue;
                 }
 
@@ -199,7 +224,25 @@ public class ClearThumbnailsJFrame extends javax.swing.JFrame {
                 } else if ( !thumbnail.canWrite() ) {
                     publish( line + "   isn't modifiable --> Can't delete --> you have to delete this file yourself\n" );
                 } else {
-                    publish( line + "   should be deletable.\n" );
+                    if ( thumbnail.delete() ) {
+                        publish( line + "   successfully deleted.\n" );
+                    } else {
+                        publish( line + "   failed to delete --> you have to delete this file yourself\n" );
+                    }
+                }
+
+                // check if the parent directory is empty and writable and then delete it
+                File parentDirectory = thumbnail.getParentFile();
+                if ( parentDirectory != null ) {
+                    if ( parentDirectory.canWrite() ) {
+                        if ( parentDirectory.list().length == 0 ) {
+                            if ( parentDirectory.delete() ) {
+                                publish( String.format( "Parent directory %s successfully deleted\n", parentDirectory.toString() ) );
+                            } else {
+                                publish( String.format( "Parent directory %s failed to delete --> you have to delete this directory yourself\n", parentDirectory.toString() ) );
+                            }
+                        }
+                    }
                 }
 
             }

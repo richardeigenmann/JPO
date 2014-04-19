@@ -1,21 +1,13 @@
 package jpo.gui;
 
 import java.awt.Dimension;
-import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
-import java.io.BufferedInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import jpo.cache.ImageBytes;
 import jpo.cache.JpoCache;
@@ -23,7 +15,6 @@ import jpo.dataModel.GroupInfo;
 import jpo.dataModel.PictureInfo;
 import jpo.dataModel.Settings;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
-import jpo.dataModel.Tools;
 
 /*
  ThumbnailCreationFactory.java:  A factory that creates thumbnails
@@ -224,7 +215,7 @@ public class ThumbnailCreationFactory implements Runnable {
 
     /**
      * creates a thumbnail by loading the highres image and scaling it down
-     */
+     *
     private void createNewPictureThumbnail( ThumbnailController thumbnailController ) {
 
         SortableDefaultMutableTreeNode referringNode = thumbnailController.getNode();
@@ -308,7 +299,7 @@ public class ThumbnailCreationFactory implements Runnable {
         } catch ( MalformedURLException x ) {
             thumbnailController.setBrokenIcon();
         }
-    }
+    }*/
 
     /**
      * This method looks at the supplied ThumbnailQueueRequest and figures out
@@ -316,7 +307,7 @@ public class ThumbnailCreationFactory implements Runnable {
      * displayed. If there isn't it has a new thumbnail created.
      *
      * @param req The request to be processed
-     */
+     *
     private void processGroupRequest( ThumbnailQueueRequest req ) {
         //logger.info( String.format( "Request details: %s", req.toString() ) );
         ThumbnailController thumbnailController = req.getThumbnailController();
@@ -362,12 +353,12 @@ public class ThumbnailCreationFactory implements Runnable {
             LOGGER.fine( "Thumbnail is wrong size: " + icon.getIconWidth() + " x " + icon.getIconHeight() );
             createNewGroupThumbnail( thumbnailController );
         }
-    }
+    }*/
 
     /**
      * Create a Group ThumbnailController by loading the nodes component images
      * and creating a folder icon with embedded images
-     */
+     *
     private void createNewGroupThumbnail( ThumbnailController thumbnailController ) {
         SortableDefaultMutableTreeNode referringNode = thumbnailController.getNode();
         ArrayList<SortableDefaultMutableTreeNode> childPictureNodes = referringNode.getChildPictureNodes( false );
@@ -461,5 +452,5 @@ public class ThumbnailCreationFactory implements Runnable {
             LOGGER.info( "Caught an IOException setting broken icon: " + x.getMessage() );
             thumbnailController.setBrokenIcon();
         }
-    }
+    } */
 }

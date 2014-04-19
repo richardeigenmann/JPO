@@ -6,7 +6,6 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.util.Enumeration;
-import java.util.HashMap;
 import jpo.dataModel.Tools;
 import jpo.dataModel.Settings;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
@@ -21,15 +20,13 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingWorker;
 import static javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE;
-import jpo.EventBus.JpoEventBus;
-import jpo.EventBus.RefreshThumbnailRequest;
 import net.miginfocom.swing.MigLayout;
 
 
 /*
  IntegrityCheckerJFrame.java:  creates a frame and checks the integrity of the collection
 
- Copyright (C) 2002-2013  Richard Eigenmann, Zurich, Switzerland
+ Copyright (C) 2002-2014  Richard Eigenmann, Zurich, Switzerland
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -58,7 +55,7 @@ public class IntegrityCheckerJFrame
     private static final Logger LOGGER = Logger.getLogger( IntegrityCheckerJFrame.class.getName() );
     private final JTextArea resultJTextArea = new JTextArea( 25, 80 );
     private final JButton okJButton = new JButton( Settings.jpoResources.getString( "genericOKText" ) );
-    private final JButton fixThumbnailReferencesJButton = new JButton( "Fix Thumbnail References" );
+    //private final JButton fixThumbnailReferencesJButton = new JButton( "Fix Thumbnail References" );
     private final JButton correctChecksumsJButton = new JButton( "Correct picture checksums" );
     private final JButton interruptJButton = new JButton( "Interrupt" );
     /**
@@ -81,7 +78,7 @@ public class IntegrityCheckerJFrame
         okJButton.setMaximumSize( Settings.defaultButtonDimension );
         okJButton.setMinimumSize( Settings.defaultButtonDimension );
         okJButton.setPreferredSize( Settings.defaultButtonDimension );
-        jPanel.add( fixThumbnailReferencesJButton, "wrap" );
+        //jPanel.add( fixThumbnailReferencesJButton, "wrap" );
         jPanel.add( correctChecksumsJButton, "wrap" );
         final JScrollPane resultScrollPane = new JScrollPane( resultJTextArea );
         jPanel.add( resultScrollPane, "wrap" );
@@ -103,12 +100,12 @@ public class IntegrityCheckerJFrame
                 getRid();
             }
         } );
-        fixThumbnailReferencesJButton.addActionListener( new ActionListener() {
+        /*fixThumbnailReferencesJButton.addActionListener( new ActionListener() {
             @Override
             public void actionPerformed( ActionEvent e ) {
                 fixThumbnailReferences();
             }
-        } );
+        } );*/
         correctChecksumsJButton.addActionListener( new ActionListener() {
             @Override
             public void actionPerformed( ActionEvent e ) {
@@ -143,9 +140,9 @@ public class IntegrityCheckerJFrame
         if ( checksumWorker != null ) {
             checksumWorker.cancel( true );
         }
-        if ( thumbnailWorker != null ) {
-            thumbnailWorker.cancel( true );
-        }
+        //if ( thumbnailWorker != null ) {
+        //    thumbnailWorker.cancel( true );
+        //}
     }
 
     /**
@@ -207,7 +204,7 @@ public class IntegrityCheckerJFrame
     /**
      * This method iterates through all the nodes in the collection and fixes
      * issues where the same thumbnail is being referred to by different nodes
-     */
+     *
     private void fixThumbnailReferences() {
         thumbnailWorker = new FixThumbnailReferencesSwingWorker();
         thumbnailWorker.execute();
@@ -254,5 +251,5 @@ public class IntegrityCheckerJFrame
                 resultJTextArea.append( s );
             }
         }
-    }
+    }*/
 }

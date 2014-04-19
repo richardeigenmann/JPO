@@ -23,7 +23,7 @@ import java.util.logging.Logger;
 /*
  PictureInfo.java:  the definitions for picture data
 
- Copyright (C) 2002-2013  Richard Eigenmann.
+ Copyright (C) 2002-2014  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -61,21 +61,17 @@ public class PictureInfo implements Serializable {
      * Constructor method. Creates the object and sets up the variables.
      *
      * @param highresLocation
-     * @param Lowres_Name
      * @param description	The description of the image
      * @param	filmReference	The reference to the film if any
      */
     public PictureInfo( String highresLocation,
-            String Lowres_Name,
             String description,
             String filmReference ) {
         this.highresLocation = highresLocation;
-        this.lowresLocation = Lowres_Name;
         this.description = description;
         this.filmReference = filmReference;
 
         LOGGER.log( Level.FINE, "Highres_Name: {0}", highresLocation );
-        LOGGER.log( Level.FINE, "Lowres_Name: {0}", Lowres_Name );
         LOGGER.log( Level.FINE, "description: {0}", description );
         LOGGER.log( Level.FINE, "filmReference: {0}", filmReference );
     }
@@ -89,16 +85,13 @@ public class PictureInfo implements Serializable {
      * @param	filmReference	The reference to the film if any
      */
     public PictureInfo( URL highresURL,
-            String Lowres_Name,
             String description,
             String filmReference ) {
         this.highresLocation = highresURL.toString();
-        this.lowresLocation = Lowres_Name;
         this.description = description;
         this.filmReference = filmReference;
 
         LOGGER.log( Level.FINE, "Highres_Name: {0}", highresLocation );
-        LOGGER.log( Level.FINE, "Lowres_Name: {0}", Lowres_Name );
         LOGGER.log( Level.FINE, "description: {0}", description );
         LOGGER.log( Level.FINE, "filmReference: {0}", filmReference );
 
@@ -109,7 +102,6 @@ public class PictureInfo implements Serializable {
      */
     public PictureInfo() {
         highresLocation = "";
-        lowresLocation = "";
         description = "";
         filmReference = "";
     }
@@ -122,7 +114,6 @@ public class PictureInfo implements Serializable {
      */
     public PictureInfo( String highresLocation, String description ) {
         this.highresLocation = highresLocation;
-        lowresLocation = "";
         this.description = description;
         filmReference = "";
     }
@@ -147,7 +138,7 @@ public class PictureInfo implements Serializable {
      */
     public void dumpToXml( BufferedWriter out )
             throws IOException {
-        dumpToXml( out, getHighresLocation(), getLowresLocation() );
+        dumpToXml( out, getHighresLocation() );
     }
 
     /**
@@ -159,10 +150,9 @@ public class PictureInfo implements Serializable {
      *
      * @param out	The Bufferer Writer receiving the xml data
      * @param highres	The URL of the highres file
-     * @param lowres	The URL of the lowres file
      * @throws IOException If there was an IO error
      */
-    public void dumpToXml( BufferedWriter out, String highres, String lowres )
+    public void dumpToXml( BufferedWriter out, String highres )
             throws IOException {
         out.write( "<picture>" );
         out.newLine();
@@ -184,10 +174,6 @@ public class PictureInfo implements Serializable {
             out.newLine();
         }
 
-        if ( lowres.length() > 0 ) {
-            out.write( "\t<file_lowres_URL>" + Tools.escapeXML( lowres ) + "</file_lowres_URL>" );
-            out.newLine();
-        }
 
         if ( getComment().length() > 0 ) {
             out.write( "\t<COMMENT>" + Tools.escapeXML( getComment() ) + "</COMMENT>" );
@@ -551,137 +537,6 @@ public class PictureInfo implements Serializable {
     }
 
     //----------------------------------------
-    /**
-     * The full path to the lowres version of the picture.
-     *
-     * @see #highresLocation
-     */
-    private String lowresLocation = "";
-
-    /**
-     * Returns the full path to the lowres picture.
-     *
-     * @return The lowres location.
-     */
-    public String getLowresLocation() {
-        return lowresLocation;
-    }
-
-    /**
-     * Returns the file handle to the lowres picture.
-     *
-     * @see	#getLowresURL()
-     * @return The file handle for the lowres picture.
-     */
-    public File getLowresFile() {
-        try {
-            return new File( new URI( lowresLocation ) );
-        } catch ( URISyntaxException x ) {
-            LOGGER.info( "Conversion of " + lowresLocation + " to URI failed: " + x.getMessage() );
-            return null;
-        }
-    }
-
-    /**
-     * Returns the URL handle to the lowres picture.
-     *
-     * @return The URL of the lowres picture.
-     * @throws MalformedURLException if there was a drama
-     */
-    public URL getLowresURL() throws MalformedURLException {
-        URL lowresURL = new URL( lowresLocation );
-        return lowresURL;
-    }
-
-    /**
-     * returns the URL handle to the lowres picture or null. I invented this
-     * because I got fed up trying and catching the MalformedURLException that
-     * could be thrown.
-     *
-     * @return the lowres location
-     */
-    public URL getLowresURLOrNull() {
-        try {
-            URL lowresURL = new URL( lowresLocation );
-            return lowresURL;
-        } catch ( MalformedURLException x ) {
-            LOGGER.info( "Caught an unexpected MalformedURLException: " + x.getMessage() );
-            return null;
-        }
-    }
-
-    /**
-     * returns the URI handle to the lores picture.
-     *
-     * @return The lowres URI
-     */
-    public URI getLowresURIOrNull() {
-        try {
-            return new URI( lowresLocation );
-        } catch ( URISyntaxException x ) {
-            return null;
-        }
-    }
-
-    /**
-     * Sets the full path to the lowres picture.
-     *
-     * @param s The new location
-     */
-    public synchronized void setLowresLocation( String s ) {
-        if ( !lowresLocation.equals( s ) ) {
-            lowresLocation = s;
-            sendLowresLocationChangedEvent();
-        }
-    }
-
-    /**
-     * Sets the full path to the highres picture.
-     *
-     * @param u The new location for the highres picture.
-     */
-    public synchronized void setLowresLocation( URL u ) {
-        String s = u.toString();
-        if ( !lowresLocation.equals( s ) ) {
-            lowresLocation = s;
-            sendLowresLocationChangedEvent();
-        }
-    }
-
-    /**
-     * Appends the text to the lowres location (for the XML parser).
-     *
-     * @param s The text fragement to be added to the Lowres Location.
-     */
-    public synchronized void appendToLowresLocation( String s ) {
-        if ( s.length() > 0 ) {
-            lowresLocation = lowresLocation.concat( s );
-            sendLowresLocationChangedEvent();
-        }
-    }
-
-    /**
-     * Returns just the Filename of the lowres picture.
-     *
-     * @return the filename of the lowres picture without any preceeding path.
-     */
-    public String getLowresFilename() {
-        return new File( lowresLocation ).getName();
-
-    }
-
-    /**
-     * Creates a PictureChangedEvent and sends it to inform listening objects
-     * that the lowres location was updated.
-     */
-    private void sendLowresLocationChangedEvent() {
-        if ( Settings.pictureCollection.getSendModelUpdates() ) {
-            PictureInfoChangeEvent pce = new PictureInfoChangeEvent( this );
-            pce.setLowresLocationChanged();
-            sendPictureInfoChangedEvent( pce );
-            Settings.pictureCollection.setUnsavedUpdates();
-        }
-    }
 
     /**
      * Creates a PictureChangedEvent and sends it to inform listening objects
@@ -1389,7 +1244,6 @@ public class PictureInfo implements Serializable {
         PictureInfo clone = new PictureInfo();
         clone.setDescription( this.getDescription() );
         clone.setHighresLocation( this.getHighresLocation() );
-        clone.setLowresLocation( this.getLowresLocation() );
         clone.setFilmReference( this.getFilmReference() );
         clone.setCreationTime( this.getCreationTime() );
         clone.setComment( this.getComment() );

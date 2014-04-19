@@ -322,7 +322,7 @@ public class CollectionJTreeController {
             final PictureInfo pictureInfo = (PictureInfo) userObject;
             File highresFile = pictureInfo.getHighresFile();
             String fileSize = highresFile == null ? "no file" : Tools.fileSizeToString( highresFile.length() );
-            toolTip = String.format( "<html><img src=\"%s\"><br>Picture: %s<br>%s %s</html>", pictureInfo.getLowresLocation(), pictureInfo.getDescription(), Settings.jpoResources.getString( "CollectionSizeJLabel" ), fileSize );
+            toolTip = String.format( "<html>Picture: %s<br>%s %s</html>", pictureInfo.getDescription(), Settings.jpoResources.getString( "CollectionSizeJLabel" ), fileSize );
         }
         return toolTip;
     }

@@ -639,15 +639,15 @@ public class Tools {
                         //logger.info ( "Another picture node was using the same highres URL. Node changed: " + ( (PictureInfo) nodeObject ).getDescription() );
                         ( (PictureInfo) nodeObject ).setHighresLocation( targetFile.toURI().toURL() );
                     }
-                    if ( ( (PictureInfo) nodeObject ).getLowresFile().equals( sourceFile ) ) {
+                    //if ( ( (PictureInfo) nodeObject ).getLowresFile().equals( sourceFile ) ) {
                         //logger.info ( "Another picture node was using the same lowres URL. Node changed: " + ( (PictureInfo) nodeObject ).getDescription() );
-                        ( (PictureInfo) nodeObject ).setLowresLocation( targetFile.toURI().toURL() );
-                    }
+                    //    ( (PictureInfo) nodeObject ).setLowresLocation( targetFile.toURI().toURL() );
+                    //}
                 } else {
-                    if ( ( !node.isRoot() ) && ( !( (GroupInfo) nodeObject ).getLowresLocation().equals( "" ) ) && ( (GroupInfo) nodeObject ).getLowresFile().equals( sourceFile ) ) {
+                    //if ( ( !node.isRoot() ) && ( !( (GroupInfo) nodeObject ).getLowresLocation().equals( "" ) ) && ( (GroupInfo) nodeObject ).getLowresFile().equals( sourceFile ) ) {
                         //logger.info ( "Another group node was using the same lowres URL. Node changed: " + ( (PictureInfo) nodeObject ).getDescription() );
-                        ( (GroupInfo) nodeObject ).setLowresLocation( targetFile.toURI().toURL() );
-                    }
+                      //  ( (GroupInfo) nodeObject ).setLowresLocation( targetFile.toURI().toURL() );
+                    //}
                 }
             } catch ( MalformedURLException x ) {
                 LOGGER.severe( String.format( "Trapped a MalformedURLException: %s", x.toString() ) );

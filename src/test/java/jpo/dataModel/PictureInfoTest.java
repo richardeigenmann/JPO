@@ -21,7 +21,7 @@ public class PictureInfoTest
      * Test of toString method, of class PictureInfo.
      */
     public void testToString() {
-        PictureInfo pi = new PictureInfo( "c:\\picture.jpg", "file:///lores/thumbnail.jpg", "My Sample Picture", "Film 123" );
+        PictureInfo pi = new PictureInfo( "c:\\picture.jpg",  "My Sample Picture", "Film 123" );
         assertEquals( "Should return the description", "My Sample Picture", pi.toString() );
     }
 
@@ -30,7 +30,7 @@ public class PictureInfoTest
      * Test of getDescription method, of class PictureInfo.
      */
     public void testGetDescription() {
-        PictureInfo pi = new PictureInfo( "c:\\picture.jpg", "file:///lores/thumbnail.jpg", "My Sample Picture", "Film 123" );
+        PictureInfo pi = new PictureInfo( "c:\\picture.jpg",  "My Sample Picture", "Film 123" );
         assertEquals( "Should return the description", "My Sample Picture", pi.getDescription() );
     }
 
@@ -110,7 +110,7 @@ public class PictureInfoTest
      * Test of getHighresLocation method, of class PictureInfo.
      */
     public void testGetHighresLocation() {
-        PictureInfo pi = new PictureInfo( "file:///dir/picture.jpg", "file:///lores/thumbnail.jpg", "My Sample Picture", "Film 123" );
+        PictureInfo pi = new PictureInfo( "file:///dir/picture.jpg",  "My Sample Picture", "Film 123" );
         String highresLocation = pi.getHighresLocation();
         assertEquals( "Checking getHighresLocation", "file:///dir/picture.jpg", highresLocation );
     }
@@ -120,7 +120,7 @@ public class PictureInfoTest
      * Test of getHighresFile method, of class PictureInfo.
      */
     public void testGetHighresFile() {
-        PictureInfo pi = new PictureInfo( "file:///dir/picture.jpg", "file:///lores/thumbnail.jpg", "My Sample Picture", "Film 123" );
+        PictureInfo pi = new PictureInfo( "file:///dir/picture.jpg",  "My Sample Picture", "Film 123" );
         File highresFile = pi.getHighresFile();
         assertEquals( "Checking getHighresFile", new File( "/dir/picture.jpg" ), highresFile );
     }
@@ -131,7 +131,7 @@ public class PictureInfoTest
      * @throws Exception 
      */
     public void testGetHighresURL() throws Exception {
-        PictureInfo pi = new PictureInfo( "file:///dir/picture.jpg", "file:///lores/thumbnail.jpg", "My Sample Picture", "Film 123" );
+        PictureInfo pi = new PictureInfo( "file:///dir/picture.jpg",  "My Sample Picture", "Film 123" );
         URL highresURL = pi.getHighresURL();
         assertEquals( "Checking getHighresURL", new URL( "file:///dir/picture.jpg" ), highresURL );
     }
@@ -141,7 +141,7 @@ public class PictureInfoTest
      * Test of getHighresURLOrNull method, of class PictureInfo.
      */
     public void testGetHighresURLOrNull() {
-        PictureInfo pi1 = new PictureInfo( "file:///dir/picture.jpg", "file:///lores/thumbnail.jpg", "My Sample Picture", "Film 123" );
+        PictureInfo pi1 = new PictureInfo( "file:///dir/picture.jpg",  "My Sample Picture", "Film 123" );
         URL highresURL1 = pi1.getHighresURLOrNull();
         try {
             assertEquals( "Checking getHighresURLOrNull", new URL( "file:///dir/picture.jpg" ), highresURL1 );
@@ -150,7 +150,7 @@ public class PictureInfoTest
             fail( "Test should not have thrown an exception: " + ex.getMessage() );
         }
 
-        PictureInfo pi2 = new PictureInfo( "noProtocol:///dir/picture.jpg", "file:///lores/thumbnail.jpg", "My Sample Picture", "Film 123" );
+        PictureInfo pi2 = new PictureInfo( "noProtocol:///dir/picture.jpg",  "My Sample Picture", "Film 123" );
         URL highresURL2 = pi2.getHighresURLOrNull();
         assertNull( "Checking getHighresURLOrNull", highresURL2 );
     }

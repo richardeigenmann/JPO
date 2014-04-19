@@ -29,13 +29,13 @@ public class PictureCollectionTest
      * Let's have a nice little collection for some tests....
      */
     PictureCollection pictureCollection;
-    final PictureInfo pi1 = new PictureInfo("/images/image1.jpg", "/lowresimages/image1lowres.jpg", "Picture 1", "Reference1");
+    final PictureInfo pi1 = new PictureInfo("/images/image1.jpg",  "Picture 1", "Reference1");
     // deliberately re-using image1.jpg so that we can find multiple groups refering to the same image.
-    final PictureInfo pi2 = new PictureInfo("/images/image1.jpg", "/lowresimages/image2lowres.jpg", "Picture 2", "Reference2");
-    final PictureInfo pi3 = new PictureInfo("/images/image1.jpg", "/lowresimages/image3lowres.jpg", "Picture 3", "Reference3");
-    final PictureInfo pi4 = new PictureInfo("/images/image1.jpg", "/lowresimages/image4lowres.jpg", "Picture 4", "Reference4");
-    final PictureInfo pi5 = new PictureInfo("/images/image5.jpg", "/lowresimages/image5lowres.jpg", "Picture 5", "Reference5");
-    final PictureInfo pi6 = new PictureInfo("/images/image6.jpg", "/lowresimages/image6lowres.jpg", "Picture 6", "Reference6");
+    final PictureInfo pi2 = new PictureInfo("/images/image1.jpg",  "Picture 2", "Reference2");
+    final PictureInfo pi3 = new PictureInfo("/images/image1.jpg",  "Picture 3", "Reference3");
+    final PictureInfo pi4 = new PictureInfo("/images/image1.jpg",  "Picture 4", "Reference4");
+    final PictureInfo pi5 = new PictureInfo("/images/image5.jpg",  "Picture 5", "Reference5");
+    final PictureInfo pi6 = new PictureInfo("/images/image6.jpg",  "Picture 6", "Reference6");
     final SortableDefaultMutableTreeNode picture1 = new SortableDefaultMutableTreeNode(pi1);
     final SortableDefaultMutableTreeNode picture2 = new SortableDefaultMutableTreeNode(pi2);
     final SortableDefaultMutableTreeNode picture3 = new SortableDefaultMutableTreeNode(pi3);

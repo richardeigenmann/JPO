@@ -121,137 +121,112 @@ public class GroupInfo
      * The full path to the lowres version of the picture.
      *
      */
-    private String lowresLocation = "";
-
+    //private String lowresLocation = "";
     /**
      * Returns the full path to the lowres picture.
      *
      * @return The lowres location.
-     */
-    public String getLowresLocation() {
-        return lowresLocation;
+     *
+     * public String getLowresLocation() { return lowresLocation;
     }
-
+     */
     /**
      * Returns the file handle to the lowres picture.
      *
      * @see	#getLowresURL()
      * @return The file handle for the lowres picture. Returns null if there is
      * no filename.
-     */
-    public File getLowresFile() {
-        if ( lowresLocation.equals( "" ) ) {
-            return null;
-        }
-        try {
-            return new File( new URI( lowresLocation ) );
-        } catch ( URISyntaxException x ) {
-            LOGGER.info( "Conversion of " + lowresLocation + " to URI failed: " + x.getMessage() );
-            return null;
-        }
+     *
+     * public File getLowresFile() { if ( lowresLocation.equals( "" ) ) { return
+     * null; } try { return new File( new URI( lowresLocation ) ); } catch (
+     * URISyntaxException x ) { LOGGER.info( "Conversion of " + lowresLocation +
+     * " to URI failed: " + x.getMessage() ); return null; }
     }
-
+     */
     /**
      * Returns the URL handle to the lowres picture.
      *
      * @return The URL of the lowres picture.
      * @throws MalformedURLException if there was a drama
-     */
-    public URL getLowresURL() throws MalformedURLException {
-        URL lowresURL = new URL( lowresLocation );
-        return lowresURL;
+     *
+     * public URL getLowresURL() throws MalformedURLException { URL lowresURL =
+     * new URL( lowresLocation ); return lowresURL;
     }
-
+     */
     /**
      * returns the URL handle to the lowres picture or null. I invented this
      * because I got fed up trying and catching the MalformedURLException that
      * could be thrown.
      *
      * @return the lowres location
-     */
-    public URL getLowresURLOrNull() {
-        try {
-            URL lowresURL = new URL( lowresLocation );
-            return lowresURL;
-        } catch ( MalformedURLException x ) {
-            LOGGER.fine( "Caught a MalformedURLException: " + x.getMessage() );
-            return null;
-        }
+     *
+     * public URL getLowresURLOrNull() { try { URL lowresURL = new URL(
+     * lowresLocation ); return lowresURL; } catch ( MalformedURLException x ) {
+     * LOGGER.fine( "Caught a MalformedURLException: " + x.getMessage() );
+     * return null; }
     }
-
+     */
     /**
      * returns the URI handle to the lowres picture or null.
      *
      * @return the lowres location
-     */
-    public URI getLowresURIOrNull() {
-        try {
-            return new URI( lowresLocation );
-        } catch ( URISyntaxException x ) {
-            return null;
-        }
+     *
+     * public URI getLowresURIOrNull() { try { return new URI( lowresLocation );
+     * } catch ( URISyntaxException x ) { return null; }
     }
-
+     */
     /**
      * Sets the full path to the lowres picture.
      *
      * @param s The new location
-     */
-    public synchronized void setLowresLocation( String s ) {
-        if ( !lowresLocation.equals( s ) ) {
-            lowresLocation = s;
-            sendLowresLocationChangedEvent();
-        }
+     *
+     * public synchronized void setLowresLocation( String s ) { if (
+     * !lowresLocation.equals( s ) ) { lowresLocation = s;
+     * sendLowresLocationChangedEvent(); }
     }
-
+     */
     /**
      * Sets the full path to the highres picture.
      *
      * @param u The new location for the highres picture.
-     */
-    public synchronized void setLowresLocation( URL u ) {
-        String s = u.toString();
-        if ( !lowresLocation.equals( s ) ) {
-            lowresLocation = s;
-            sendLowresLocationChangedEvent();
-        }
+     *
+     * public synchronized void setLowresLocation( URL u ) { String s =
+     * u.toString(); if ( !lowresLocation.equals( s ) ) { lowresLocation = s;
+     * sendLowresLocationChangedEvent(); }
     }
-
+     */
     /**
      * Appends the text to the lowres location (for the XML parser).
      *
      * @param s The text fragment to be added to the Lowres Location.
-     */
-    public synchronized void appendToLowresLocation( String s ) {
-        if ( s.length() > 0 ) {
-            lowresLocation = lowresLocation.concat( s );
-            sendLowresLocationChangedEvent();
-        }
+     *
+     * public synchronized void appendToLowresLocation( String s ) { if (
+     * s.length() > 0 ) { lowresLocation = lowresLocation.concat( s );
+     * sendLowresLocationChangedEvent(); }
     }
-
+     */
     /**
      * Returns just the Filename of the lowres picture.
      *
      * @return the filename of the lowres picture without any preceeding path.
+     *
+     * public String getLowresFilename() { return new File( lowresLocation
+     * ).getName();
+     *
+     * }
      */
-    public String getLowresFilename() {
-        return new File( lowresLocation ).getName();
-
-    }
-
     /**
      * Creates a PictureChangedEvent and sends it to inform listening objects
      * that the lowres location was updated.
-     */
-    private void sendLowresLocationChangedEvent() {
-        if ( ( Settings.pictureCollection != null ) && ( Settings.pictureCollection.getSendModelUpdates() ) ) {
-            GroupInfoChangeEvent gice = new GroupInfoChangeEvent( this );
-            gice.setLowresLocationChanged();
-            sendGroupInfoChangedEvent( gice );
-            Settings.pictureCollection.setUnsavedUpdates();
-        }
+     *
+     * private void sendLowresLocationChangedEvent() { if ( (
+     * Settings.pictureCollection != null ) && (
+     * Settings.pictureCollection.getSendModelUpdates() ) ) {
+     * GroupInfoChangeEvent gice = new GroupInfoChangeEvent( this );
+     * gice.setLowresLocationChanged(); sendGroupInfoChangedEvent( gice );
+     * Settings.pictureCollection.setUnsavedUpdates(); }
     }
-
+     */
     /**
      * this method writes all attributes of the picture in the JPO xml data
      * format.
@@ -260,12 +235,12 @@ public class GroupInfo
      * @param rootNode
      * @param protection
      * @throws IOException if there is a drama writing the file.
-     */
+     *
     public void dumpToXml( BufferedWriter out, boolean rootNode,
             boolean protection )
             throws IOException {
-        dumpToXml( out, getLowresLocation(), rootNode, protection );
-    }
+        dumpToXml( out, rootNode, protection );
+    }*/
 
     /**
      * this method writes all attributes of the picture in the JPO xml data
@@ -275,13 +250,11 @@ public class GroupInfo
      * pictures whilst all other attributes are retained.
      *
      * @param out	The Bufferer Writer receiving the xml data
-     * @param lowres	The URL of the lowres file
      * @param rootNode
      * @param protection
      * @throws IOException If there was an IO error
      */
-    public void dumpToXml( BufferedWriter out, String lowres, boolean rootNode,
-            boolean protection )
+    public void dumpToXml( BufferedWriter out, boolean rootNode, boolean protection )
             throws IOException {
 
         if ( rootNode ) {
@@ -291,15 +264,14 @@ public class GroupInfo
         }
         out.newLine();
 
-        if ( lowres.length() > 0 ) {
-            if ( rootNode ) {
-                out.write( "collection_icon=\"" );
-            } else {
-                out.write( "group_icon=\"" );
-            }
-            out.write( Tools.escapeXML( lowres ) + "\"" );
-        }
-
+        /*if ( lowres.length() > 0 ) {
+         if ( rootNode ) {
+         out.write( "collection_icon=\"" );
+         } else {
+         out.write( "group_icon=\"" );
+         }
+         out.write( Tools.escapeXML( lowres ) + "\"" );
+         }*/
         out.write( ">" );
         out.newLine();
     }

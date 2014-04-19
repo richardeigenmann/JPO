@@ -30,23 +30,23 @@ public class NodeStatisticsTest extends TestCase {
 
     SortableDefaultMutableTreeNode group3;
 
-    PictureInfo pi1 = new PictureInfo( "images/image1.jpg", "lowresimages/image1lowres.jpg", "Fist Picture", "Reference1" );
+    PictureInfo pi1 = new PictureInfo( "images/image1.jpg",  "Fist Picture", "Reference1" );
 
     SortableDefaultMutableTreeNode picture1;
 
-    PictureInfo pi2 = new PictureInfo( "images/image2.jpg", "lowresimages/image2lowres.jpg", "Second Picture", "Reference2" );
+    PictureInfo pi2 = new PictureInfo( "images/image2.jpg",  "Second Picture", "Reference2" );
 
     SortableDefaultMutableTreeNode picture2;
 
-    PictureInfo pi3 = new PictureInfo( "images/image3.jpg", "lowresimages/image3lowres.jpg", "Third Picture", "Reference3" );
+    PictureInfo pi3 = new PictureInfo( "images/image3.jpg",  "Third Picture", "Reference3" );
 
     SortableDefaultMutableTreeNode picture3;
 
-    PictureInfo pi4 = new PictureInfo( "images/image4.jpg", "lowresimages/image4lowres.jpg", "Fourth Picture", "Reference4" );
+    PictureInfo pi4 = new PictureInfo( "images/image4.jpg",  "Fourth Picture", "Reference4" );
 
     SortableDefaultMutableTreeNode picture4;
 
-    PictureInfo pi5 = new PictureInfo( "images/image5.jpg", "lowresimages/image5lowres.jpg", "Fifth Picture", "Reference5" );
+    PictureInfo pi5 = new PictureInfo( "images/image5.jpg",  "Fifth Picture", "Reference5" );
 
     SortableDefaultMutableTreeNode picture5;
 

@@ -704,7 +704,7 @@ public class PictureCollection {
         SortableDefaultMutableTreeNode node;
         Object nodeObject;
         File highresFile;
-        File lowresFile;
+        //File lowresFile;
         File groupThumbnail;
         Enumeration e = getRootNode().preorderEnumeration();
         while ( e.hasMoreElements() ) {
@@ -712,19 +712,19 @@ public class PictureCollection {
             nodeObject = node.getUserObject();
             if ( nodeObject instanceof PictureInfo ) {
                 highresFile = ( (PictureInfo) nodeObject ).getHighresFile();
-                lowresFile = ( (PictureInfo) nodeObject ).getLowresFile();
+                //lowresFile = ( (PictureInfo) nodeObject ).getLowresFile();
                 LOGGER.fine( "Checking: " + ( (PictureInfo) nodeObject ).getHighresLocation() );
                 if ( ( highresFile != null ) && ( highresFile.compareTo( file ) == 0 ) ) {
                     LOGGER.info( "Found a match on: " + ( (PictureInfo) nodeObject ).getDescription() );
                     return true;
-                } else if ( ( lowresFile != null ) && ( lowresFile.compareTo( file ) == 0 ) ) {
-                    return true;
-                }
+                }// else if ( ( lowresFile != null ) && ( lowresFile.compareTo( file ) == 0 ) ) {
+                 //   return true;
+                //}
             } else if ( nodeObject instanceof GroupInfo ) {
-                groupThumbnail = ( (GroupInfo) nodeObject ).getLowresFile();
+                /*groupThumbnail = ( (GroupInfo) nodeObject ).getLowresFile();
                 if ( ( groupThumbnail != null ) && ( groupThumbnail.compareTo( file ) == 0 ) ) {
                     return true;
-                }
+                }*/
             }
         }
         return false;

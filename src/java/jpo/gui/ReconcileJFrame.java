@@ -296,7 +296,7 @@ public class ReconcileJFrame extends JFrame {
     /**
      * Do the reconciliation in a SwingWorker
      */
-    class Reconciler
+    private class Reconciler
             extends SwingWorker<String, String> {
 
         private final HashSet<URI> collectionUris = new HashSet<URI>();
@@ -313,10 +313,10 @@ public class ReconcileJFrame extends JFrame {
                 if ( nodeObject instanceof PictureInfo ) {
                     PictureInfo pi = (PictureInfo) nodeObject;
                     collectionUris.add( pi.getHighresURIOrNull() );
-                    collectionUris.add( pi.getLowresURIOrNull() );
+                    //collectionUris.add( pi.getLowresURIOrNull() );
                 } else if ( nodeObject instanceof GroupInfo ) {
                     GroupInfo gi = (GroupInfo) nodeObject;
-                    collectionUris.add( gi.getLowresURIOrNull() );
+                    //collectionUris.add( gi.getLowresURIOrNull() );
                 }
             }
 

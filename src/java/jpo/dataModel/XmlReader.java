@@ -130,7 +130,8 @@ public class XmlReader extends DefaultHandler {
         loadProgressGui.getRid();
         loadProgressGui = null;
         
-        if ( lowresUrls.length() > 0 ) {
+        if ( lowresUrls.length() > 1 ) {
+            LOGGER.info (String.format("lowresUrls length is %d",lowresUrls.length() ));
             Runnable runnable = new Runnable() {
                 
                 @Override
@@ -160,7 +161,8 @@ public class XmlReader extends DefaultHandler {
             throws SAXException {
         if ( ( "collection".equals( qName ) ) && ( attrs != null ) ) {
             groupInfo = new GroupInfo( attrs.getValue( "collection_name" ) );
-            groupInfo.setLowresLocation( attrs.getValue( "collection_icon" ) );
+            //groupInfo.setLowresLocation( attrs.getValue( "collection_icon" ) );
+            lowresUrls.append( System.getProperty( "line.separator" ) );
             lowresUrls.append( attrs.getValue( "collection_icon" ) );
             lowresUrls.append( System.getProperty( "line.separator" ) );
             currentGroup.setUserObject( groupInfo );
@@ -168,7 +170,9 @@ public class XmlReader extends DefaultHandler {
         } else if ( "group".equals( qName ) ) {
             incrementGroupCount();
             groupInfo = new GroupInfo( attrs.getValue( "group_name" ) );
-            groupInfo.setLowresLocation( attrs.getValue( "group_icon" ) );
+            lowresUrls.append( attrs.getValue( "group_icon" ) );
+            lowresUrls.append( System.getProperty( "line.separator" ) );
+            //groupInfo.setLowresLocation( attrs.getValue( "group_icon" ) );
             
             SortableDefaultMutableTreeNode nextCurrentGroup
                     = new SortableDefaultMutableTreeNode( groupInfo );
@@ -184,9 +188,6 @@ public class XmlReader extends DefaultHandler {
             currentField = FILE_URL;
         } else if ( "file_lowres_URL".equals( qName ) ) {
             currentField = FILE_LOWRES_URL;
-            if ( lowresUrls.length() > 0 ) {
-                lowresUrls.append( System.getProperty( "line.separator" ) );
-            }
         } else if ( "film_reference".equals( qName ) ) {
             currentField = FILM_REFERENCE;
         } else if ( "CREATION_TIME".equals( qName ) ) {
@@ -247,6 +248,9 @@ public class XmlReader extends DefaultHandler {
                 case "group":
                     currentGroup = (SortableDefaultMutableTreeNode) currentGroup.getParent();
                     break;
+                case "file_lowres_URL":
+                    lowresUrls.append( System.getProperty( "line.separator" ) );
+                    break;
                 case "ROTATION":
                     ( (PictureInfo) currentPicture.getUserObject() ).parseRotation();
                     break;
@@ -287,7 +291,7 @@ public class XmlReader extends DefaultHandler {
                 ( (PictureInfo) currentPicture.getUserObject() ).appendToHighresLocation( s );
                 break;
             case FILE_LOWRES_URL:
-                ( (PictureInfo) currentPicture.getUserObject() ).appendToLowresLocation( s );
+                //( (PictureInfo) currentPicture.getUserObject() ).appendToLowresLocation( s );
                 lowresUrls.append( s );
                 break;
             case FILM_REFERENCE:
@@ -358,10 +362,6 @@ public class XmlReader extends DefaultHandler {
                 if ( pi.getHighresLocation().startsWith( "jar:!" ) ) {
                     pi.setHighresLocation(
                             pi.getHighresLocation().replaceFirst( "jar:!", Settings.jarRoot ) );
-                }
-                if ( pi.getLowresLocation().startsWith( "jar:!" ) ) {
-                    pi.setLowresLocation(
-                            pi.getLowresLocation().replaceFirst( "jar:!", Settings.jarRoot ) );
                 }
             }
             

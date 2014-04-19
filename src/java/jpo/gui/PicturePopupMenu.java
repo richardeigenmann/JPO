@@ -354,7 +354,7 @@ public class PicturePopupMenu extends JPopupMenu {
 
         if ( option == 0 ) {
             boolean ok = false;
-            File lowresFile = pi.getLowresFile();
+           /* File lowresFile = pi.getLowresFile();
             if ( ( lowresFile != null ) && ( lowresFile.exists() ) ) {
                 ok = lowresFile.delete();
                 if ( !ok ) //logger.info("File deleted: " + lowresFile.toString() );
@@ -362,7 +362,7 @@ public class PicturePopupMenu extends JPopupMenu {
                 {
                     LOGGER.log( Level.INFO, "File deleted failed on: {0}", lowresFile.toString() );
                 }
-            }
+            }*/
 
             if ( highresFile.exists() ) {
                 ok = highresFile.delete();
@@ -409,13 +409,13 @@ public class PicturePopupMenu extends JPopupMenu {
                 if ( selectedNode.getUserObject() instanceof PictureInfo ) {
                     pi = (PictureInfo) selectedNode.getUserObject();
                     boolean ok = false;
-                    File lowresFile = pi.getLowresFile();
+                    /*File lowresFile = pi.getLowresFile();
                     if ( ( lowresFile != null ) && ( lowresFile.exists() ) ) {
                         ok = lowresFile.delete();
                         if ( !ok ) {
                             LOGGER.info( "File deleted failed on: " + lowresFile.toString() );
                         }
-                    }
+                    }*/
 
                     File highresFile = pi.getHighresFile();
                     if ( highresFile.exists() ) {
