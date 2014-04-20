@@ -62,8 +62,11 @@ import jpo.dataModel.SortableDefaultMutableTreeNode;
 import jpo.dataModel.Tools;
 import jpo.gui.swing.NonFocussedCaret;
 import jpo.gui.swing.ThreeDotButton;
+import map.MapClickListener;
 import map.MapViewer;
 import net.miginfocom.swing.MigLayout;
+import org.jdesktop.swingx.JXMapViewer;
+import org.jdesktop.swingx.mapviewer.GeoPosition;
 import webserver.Webserver;
 
 /*
@@ -217,12 +220,7 @@ public class PictureInfoEditor extends JFrame {
     public PictureInfoEditor( final SortableDefaultMutableTreeNode editNode ) {
         super( Settings.jpoResources.getString( "PictureInfoEditorHeading" ) );
 
-        try {
-            pictureInfo = (PictureInfo) editNode.getUserObject();
-        } catch ( ClassCastException x ) {
-            LOGGER.severe( "This class can only be called with a PictureInfo bearning node." );
-            return;
-        }
+        pictureInfo = (PictureInfo) editNode.getUserObject();
         this.myNode = editNode;
 
         // set this up so that we can close the GUI if the picture node is removed while we
@@ -242,6 +240,7 @@ public class PictureInfoEditor extends JFrame {
         initComponents();
 
         loadData();
+        positionMap();
 
         pack();
         setLocationRelativeTo( Settings.anchorFrame );
@@ -545,12 +544,14 @@ public class PictureInfoEditor extends JFrame {
 
         tabs.add( "Exif", exifJScrollPane );
 
-        MapViewer mapViewer = new MapViewer();
-        tabs.add( "Map", mapViewer.getMapViewer() );
+        tabs.add( "Map", mapViewer.getJXMapViewer() );
+        mapViewer.getJXMapViewer().addMouseListener( new MyMapClickListener( mapViewer.getJXMapViewer() ) );
 
         setLayout( new MigLayout() );
         getContentPane().add( mainPanel );
     }
+
+    private final MapViewer mapViewer = new MapViewer();
 
     /**
      * populates the text fields with the values from the PictureInfo object
@@ -644,6 +645,7 @@ public class PictureInfoEditor extends JFrame {
             if ( e.getLatLngChanged() ) {
                 latitudeJTextField.setText( Double.toString( pictureInfo.getLatLng().x ) );
                 longitudeJTextField.setText( Double.toString( pictureInfo.getLatLng().y ) );
+                positionMap();
             }
             if ( e.getCommentChanged() ) {
                 commentJTextField.setText( pictureInfo.getComment() );
@@ -718,10 +720,10 @@ public class PictureInfoEditor extends JFrame {
             inputStream.close();
             return true;
         } catch ( MalformedURLException x ) {
-            LOGGER.log( Level.INFO, "MalformedURLException: {0}", x.getMessage());
+            LOGGER.log( Level.INFO, "MalformedURLException: {0}", x.getMessage() );
             throw new Exception( x );
         } catch ( IOException x ) {
-            LOGGER.log( Level.INFO, "IOException: {0}", x.getMessage());
+            LOGGER.log( Level.INFO, "IOException: {0}", x.getMessage() );
             throw new Exception( x );
         }
 
@@ -778,8 +780,30 @@ public class PictureInfoEditor extends JFrame {
 
         saveRotation();
 
-        Double latitude;
+        pictureInfo.setLatLng( getLatLng() );
+        int[] indexes = categoriesJList.getSelectedIndices();
+        Object o;
+        pictureInfo.clearCategoryAssignments();
 
+        for ( int i = 0; i < indexes.length; i++ ) {
+            o = listModel.getElementAt( indexes[i] );
+
+            if ( o instanceof Category ) {
+                pictureInfo.addCategoryAssignment( ( (Category) o ).getKey() );
+
+            }
+        }
+    }
+
+    /**
+     * Returns a point with the latitude and longitude of the values in the
+     * textfields. If the text can't be parsed properly the previous value is
+     * returned.
+     *
+     * @return
+     */
+    private Point2D.Double getLatLng() {
+        Double latitude;
         try {
             latitude = Double.parseDouble( latitudeJTextField.getText() );
 
@@ -794,19 +818,7 @@ public class PictureInfoEditor extends JFrame {
             longitude = pictureInfo.getLatLng().y;
             LOGGER.info( String.format( "Longitude String %s could not be parsed: %s --> leaving at old value: %f", longitudeJTextField.getText(), ex.getMessage(), longitude ) );
         }
-        pictureInfo.setLatLng( new Point2D.Double( latitude, longitude ) );
-        int[] indexes = categoriesJList.getSelectedIndices();
-        Object o;
-        pictureInfo.clearCategoryAssignments();
-
-        for ( int i = 0; i < indexes.length; i++ ) {
-            o = listModel.getElementAt( indexes[i] );
-
-            if ( o instanceof Category ) {
-                pictureInfo.addCategoryAssignment( ( (Category) o ).getKey() );
-
-            }
-        }
+        return new Point2D.Double( latitude, longitude );
     }
 
     /**
@@ -925,4 +937,24 @@ public class PictureInfoEditor extends JFrame {
             return o;
         }
     }
+
+    private void positionMap() {
+        mapViewer.setMarker( getLatLng() );
+    }
+
+    private class MyMapClickListener extends MapClickListener {
+
+        public MyMapClickListener( JXMapViewer viewer ) {
+            super( viewer );
+        }
+
+        @Override
+        public void mapClicked( GeoPosition location ) {
+            latitudeJTextField.setText( Double.toString( location.getLatitude() ));
+            longitudeJTextField.setText( Double.toString( location.getLongitude() ));
+            positionMap();
+        }
+
+    }
+
 }

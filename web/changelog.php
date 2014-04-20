@@ -3,6 +3,7 @@
 
             <table class="changelog">
                 <tr><td colspan=2><b>Development Version 0.11</b></td></tr>
+                <tr><td valign="top">20.4.2014</td><td>Can now pick location on OpenStreetMap</td></tr>
                 <tr><td valign="top">19.4.2014</td><td>Removed Lowres/Thumbnail code and finished Dialog to remove thumbnails</td></tr>
                 <tr><td valign="top">18.4.2014</td><td>Improved visibility of selected thumbnails</td></tr>
                 <tr><td valign="top">18.4.2014</td><td>Added drop to thumbnails panel</td></tr>
@@ -408,6 +409,6 @@
             </table>
 
             <hr>
-            <p>Last update to this page: 18 April 2014<br>
+            <p>Last update to this page: 20 April 2014<br>
                 Copyright 2003-2014 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
     <?php include("page-end.php"); ?>

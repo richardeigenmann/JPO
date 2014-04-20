@@ -1,17 +1,19 @@
 package map;
 
+import java.awt.Cursor;
+import static java.awt.Cursor.CROSSHAIR_CURSOR;
+import java.awt.geom.Point2D;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Logger;
 import javax.swing.event.MouseInputListener;
 import org.jdesktop.swingx.JXMapViewer;
 import org.jdesktop.swingx.OSMTileFactoryInfo;
 import org.jdesktop.swingx.input.CenterMapListener;
 import org.jdesktop.swingx.input.PanKeyListener;
-import org.jdesktop.swingx.input.PanMouseInputListener;
 import org.jdesktop.swingx.input.ZoomMouseWheelListenerCursor;
 import org.jdesktop.swingx.mapviewer.DefaultTileFactory;
 import org.jdesktop.swingx.mapviewer.DefaultWaypoint;
@@ -25,16 +27,15 @@ import org.jdesktop.swingx.painter.Painter;
 
 /**
  *
- * @author richi
+ * @author Richard Eigenmann
  */
 public class MapViewer {
-    public JXMapViewer getMapViewer() {
-        JXMapViewer mapViewer = new JXMapViewer();
 
+    public MapViewer() {
         // Create a TileFactoryInfo for OpenStreetMap
         TileFactoryInfo info = new OSMTileFactoryInfo();
         DefaultTileFactory tileFactory = new DefaultTileFactory( info );
-        mapViewer.setTileFactory( tileFactory );
+        jxMapViewer.setTileFactory( tileFactory );
 
         // Setup local file cache
         File cacheDir = new File( System.getProperty( "java.io.tmpdir" ) + File.separator + ".jxmapviewer2" );
@@ -43,63 +44,61 @@ public class MapViewer {
         // Use 8 threads in parallel to load the tiles
         tileFactory.setThreadPoolSize( 8 );
 
-        // Set the focus
-        GeoPosition frankfurt = new GeoPosition( 50.11, 8.68 );
-
-        mapViewer.setZoom( 7 );
-        mapViewer.setAddressLocation( frankfurt );
+        jxMapViewer.setZoom( 7 );
 
         // Add interactions
-        MouseInputListener mia = new PanMouseInputListener( mapViewer );
-        mapViewer.addMouseListener( mia );
-        mapViewer.addMouseMotionListener( mia );
+        MouseInputListener mia = new PanMouseInputListener( jxMapViewer );
+        jxMapViewer.addMouseListener( mia );
+        jxMapViewer.addMouseMotionListener( mia );
 
-        mapViewer.addMouseListener( new CenterMapListener( mapViewer ) );
+        jxMapViewer.addMouseListener( new CenterMapListener( jxMapViewer ) );
 
-        mapViewer.addMouseWheelListener( new ZoomMouseWheelListenerCursor( mapViewer ) );
+        jxMapViewer.addMouseWheelListener( new ZoomMouseWheelListenerCursor( jxMapViewer ) );
 
-        mapViewer.addKeyListener( new PanKeyListener( mapViewer ) );
+        jxMapViewer.addKeyListener( new PanKeyListener( jxMapViewer ) );
 
-        // Add a selection painter
-        SelectionAdapter sa = new SelectionAdapter( mapViewer );
-        SelectionPainter sp = new SelectionPainter( sa );
-        mapViewer.addMouseListener( sa );
-        mapViewer.addMouseMotionListener( sa );
-        mapViewer.setOverlayPainter( sp );
-
-        GeoPosition frankfurt2 = new GeoPosition( 50, 7, 0, 8, 41, 0 );
-        GeoPosition wiesbaden = new GeoPosition( 50, 5, 0, 8, 14, 0 );
-        GeoPosition mainz = new GeoPosition( 50, 0, 0, 8, 16, 0 );
-        GeoPosition darmstadt = new GeoPosition( 49, 52, 0, 8, 39, 0 );
-        GeoPosition offenbach = new GeoPosition( 50, 6, 0, 8, 46, 0 );
-
-        // Create a track from the geo-positions
-        List<GeoPosition> track = Arrays.asList( frankfurt2, wiesbaden, mainz, darmstadt, offenbach );
-        RoutePainter routePainter = new RoutePainter( track );
-
-        // Set the focus
-        //mapViewer.zoomToBestFit new HashSet<GeoPosition>( track ), 0.7 );
+        jxMapViewer.setCursor( new Cursor( CROSSHAIR_CURSOR ) );
 
         // Create waypoints from the geo-positions
-        Set<Waypoint> waypoints = new HashSet<Waypoint>( Arrays.asList(
-                new DefaultWaypoint( frankfurt2 ),
-                new DefaultWaypoint( wiesbaden ),
-                new DefaultWaypoint( mainz ),
-                new DefaultWaypoint( darmstadt ),
-                new DefaultWaypoint( offenbach ) ) );
+        //Set<Waypoint> waypoints = new HashSet<Waypoint>( Arrays.asList( new DefaultWaypoint( location ) ) );
+        Set<Waypoint> waypoints = new HashSet<>(); 
+        waypoints.add(defaultWaypoint);
 
         // Create a waypoint painter that takes all the waypoints
-        WaypointPainter<Waypoint> waypointPainter = new WaypointPainter<Waypoint>();
+        WaypointPainter<Waypoint> waypointPainter = new WaypointPainter<>();
         waypointPainter.setWaypoints( waypoints );
 
         // Create a compound painter that uses both the route-painter and the waypoint-painter
         List<Painter<JXMapViewer>> painters = new ArrayList<Painter<JXMapViewer>>();
-        painters.add( routePainter );
+        //painters.add( routePainter );
         painters.add( waypointPainter );
 
         CompoundPainter<JXMapViewer> painter = new CompoundPainter<JXMapViewer>( painters );
-        mapViewer.setOverlayPainter( painter );
-        
-        return mapViewer;
+        jxMapViewer.setOverlayPainter( painter );
+    
+    
     }
+
+    /**
+     * Defines a LOGGER for this class
+     */
+    private static final Logger LOGGER = Logger.getLogger( MapViewer.class.getName() );
+
+    private final JXMapViewer jxMapViewer = new JXMapViewer();
+        DefaultWaypoint defaultWaypoint = new DefaultWaypoint();
+    
+
+    public JXMapViewer getJXMapViewer() {
+        return jxMapViewer;
+    }
+
+    public void setMarker( Point2D.Double latLng ) {
+        // Set the focus
+        GeoPosition location = new GeoPosition( latLng.getX(), latLng.getY() );
+        defaultWaypoint.setPosition( location );
+        jxMapViewer.setAddressLocation( location );
+
+    }
+
+
 }
