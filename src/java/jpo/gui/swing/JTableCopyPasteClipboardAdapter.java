@@ -23,7 +23,7 @@ import javax.swing.table.AbstractTableModel;
  *  the clipboard format used by Excel. This provides for clipboard
  *  interoperability between enabled JTables and Excel.
  *
- *  {@link http://www.javaworld.com/javatips/jw-javatip77_p.html }
+ *  {@link http://www.javaworld.com/javatips/jw-javatip77_p.html}
  */
 public class JTableCopyPasteClipboardAdapter implements ActionListener {
     //private String rowstring,value;

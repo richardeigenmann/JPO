@@ -800,7 +800,7 @@ public class PictureInfoEditor extends JFrame {
      * textfields. If the text can't be parsed properly the previous value is
      * returned.
      *
-     * @return
+     * @return the point on the globe
      */
     private Point2D.Double getLatLng() {
         Double latitude;

@@ -171,7 +171,7 @@ public class JpoCache {
      * Returns the Dimension of the icon_folder_large.jpg image and if there is
      * an ioerror the maximum size of the thumbnails.
      *
-     * @return
+     * @return the dimension for the icon folder image
      */
     private Dimension getThumbnailDimensions() {
         if ( groupThumbnailDimension == null ) {

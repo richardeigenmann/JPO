@@ -84,8 +84,7 @@ public class ThumbnailCreationFactory implements Runnable {
 
     /**
      * Handles the queue request by placing a synchronized lock on the Thumbnail
-     * Controller and passes the request to the {@link #processPictureRequest}
-     * or the {@link #processGroupRequest} method.
+     * Controller and passes the request to the Factory.
      *
      * @param request	the {@link ThumbnailQueueRequest} for which to create the
      * ThumbnailController

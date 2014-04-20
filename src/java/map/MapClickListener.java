@@ -30,7 +30,7 @@ public abstract class MapClickListener extends MouseAdapter {
     }
 
     /**
-     * Gets called on mousePressed events, calculates the GeoPosition and fires
+     * Gets called on mouseClicked events, calculates the GeoPosition and fires
      * the mapClicked method that the extending class needs to implement.
      *
      * @param evt

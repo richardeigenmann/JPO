@@ -68,7 +68,7 @@ import jpotestground.CheckThreadViolationRepaintManager;
  * @author Richard Eigenmann, richard.eigenmann@gmail.com
  * @version 0.11
  * @see CollectionJTree
- * @see ThumbnailPanelController
+ * @see ThumbnailsPanelController
  * @see PictureViewer
  * @since JDK1.7.0
  */
@@ -83,7 +83,7 @@ public class Jpo {
      * Constructor for the Jpo application that creates the main JFrame,
      * attaches an {@link ApplicationJMenuBar}, adds a JSplitPane to which it
      * adds the {@link CollectionJTreeController} on the left side and a
-     * {@link ThumbnailPanelController} on the right side.
+     * {@link ThumbnailsPanelController} on the right side.
      */
     public Jpo() {
 

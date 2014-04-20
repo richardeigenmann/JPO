@@ -37,9 +37,7 @@ import jpo.dataModel.Tools;
  */
 /**
  * This class extends a JComponent showing and ImageIcon. The ImageIcon can be
- * scaled down with the {
- *
- * @see @setFactor} method.
+ * scaled down with the {@link #setFactor} method.
  */
 public class Thumbnail extends JComponent {
 

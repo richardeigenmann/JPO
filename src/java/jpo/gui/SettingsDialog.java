@@ -1075,59 +1075,24 @@ public class SettingsDialog extends JDialog {
     }
 
     /**
-     * brings up an are you sure dialog and then zaps all the thumbnail images
-     *
-    public void zapThumbnails() {
-        /*if ( ( !thumbnailPathChooser.setColor() ) ) {//TODO: Seems odd to use a GUI component to validate a path
-            JOptionPane.showMessageDialog( Settings.anchorFrame,
-                    Settings.jpoResources.getString( "thumbnailDirError" ),
-                    Settings.jpoResources.getString( "settingsError" ),
-                    JOptionPane.ERROR_MESSAGE );
-            return;
-        }
-
-        //File thumbnailDirFile = thumbnailPathChooser.getDirectory();
-
-        int option = JOptionPane.showConfirmDialog(
-                Settings.anchorFrame,
-                Settings.jpoResources.getString( "zapThumbnails" ) + "\n" + thumbnailDirFile.toString() + "\n" + Settings.jpoResources.getString( "areYouSure" ),
-                Settings.jpoResources.getString( "FileDeleteTitle" ),
-                JOptionPane.OK_CANCEL_OPTION );
-
-        if ( option == 0 ) {
-            File[] thumbnailFiles = thumbnailDirFile.listFiles( new java.io.FileFilter() {
-
-                @Override
-                public boolean accept( File file ) {
-                    return file.getName().startsWith( Settings.thumbnailPrefix );
-                }
-            } );
-            for ( File thumbnailFile : thumbnailFiles ) {
-                boolean success = thumbnailFile.delete();
-            }
-            // it is not a good idea to reset the counter since
-            // this can lead to some thumbnails getting the same
-            // id. Especially in different collections.
-            //Settings.thumbnailCounter = 0;
-            JOptionPane.showMessageDialog( Settings.anchorFrame,
-                    Integer.toString( thumbnailFiles.length ) + Settings.jpoResources.getString( "thumbnailsDeleted" ),
-                    Settings.jpoResources.getString( "zapThumbnails" ),
-                    JOptionPane.INFORMATION_MESSAGE );
-
-        }
-
-    }*/
-
+     * Updates the text areas with the JCS cache statistics
+     */
     private void updateCacheStats() {
         highresStatsJTA.setText( JpoCache.getInstance().getHighresCacheStats() );
         lowresStatsJTA.setText( JpoCache.getInstance().getThumbnailCacheStats() );
     }
 
+    /**
+     * Clears the JCS highres picture cache
+     */
     private void clearHighresCache() {
         JpoCache.getInstance().clearHighresCache();
         updateCacheStats();
     }
 
+    /**
+     * Clears the JCS thumbnail cache.
+     */
     private void clearThumbnailCache() {
         JpoCache.getInstance().clearThumbnailCache();
         updateCacheStats();

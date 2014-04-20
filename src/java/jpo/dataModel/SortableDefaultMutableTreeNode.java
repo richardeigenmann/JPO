@@ -105,9 +105,7 @@ public class SortableDefaultMutableTreeNode
     }
 
     /**
-     * Call this method to sort the Children of a node by a field. The value of
-     * sortCriteria can be one of null null null     {@link Settings#DESCRIPTION}, {@link Settings#FILM_REFERENCE}, {@link Settings#CREATION_TIME},
-     *   {@link Settings#COMMENT}, {@link Settings#PHOTOGRAPHER}, {@link Settings#COPYRIGHT_HOLDER}.
+     * Call this method to sort the Children of a node by a field.
      *
      * @param sortCriteria The criteria by which the pictures should be sorted.
      */
@@ -146,9 +144,7 @@ public class SortableDefaultMutableTreeNode
 
     /**
      * Overridden method to allow sorting of nodes. It uses the static global
-     * variable sortfield to figure out what to compare on. The value of
-     * sortfield can be one of null null null     {@link Settings#DESCRIPTION}, {@link Settings#FILM_REFERENCE}, {@link Settings#CREATION_TIME},
-     *   {@link Settings#COMMENT}, {@link Settings#PHOTOGRAPHER}, {@link Settings#COPYRIGHT_HOLDER}.
+     * variable sortfield to figure out what to compare on. 
      *
      * @param o
      * @return the usual compareTo value used for sorting.
@@ -157,7 +153,6 @@ public class SortableDefaultMutableTreeNode
     public int compareTo( Object o ) {
         Object myObject = getUserObject();
         Object otherObject = ( (DefaultMutableTreeNode) o ).getUserObject();
-        //logger.info( "Comparing " + myObject.toString() + " against " + otherObject.toString() );
 
         if ( ( myObject instanceof GroupInfo ) && ( otherObject instanceof GroupInfo ) && ( sortfield == FieldCodes.DESCRIPTION ) ) {
             return ( (GroupInfo) myObject ).getGroupName().compareTo( ( (GroupInfo) otherObject ).getGroupName() );

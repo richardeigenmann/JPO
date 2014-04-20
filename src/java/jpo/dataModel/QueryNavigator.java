@@ -1,9 +1,9 @@
 package jpo.dataModel;
 
 /*
-QueryBrower.java:  an implementation of the ThumbnailBrowserInterface for browsing groups.
+QueryBrower.java:  an implementation of the NodeNavigator for browsing groups.
 
-Copyright (C) 2006-2010  Richard Eigenmann, Zürich Switzerland
+Copyright (C) 2006-2014  Richard Eigenmann, Zürich Switzerland
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -19,7 +19,7 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 /** 
  *  This class implements the {@link jpo.dataModel.NodeNavigator}  in the specific manner that is required for
- *  displaying {@link Query} in the {@link jpo.gui.ThumbnailPanelController}.
+ *  displaying {@link Query} in the {@link jpo.gui.ThumbnailsPanelController}.
  */
 public class QueryNavigator
         extends NodeNavigator {

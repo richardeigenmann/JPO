@@ -12,7 +12,7 @@ import jpo.dataModel.Tools;
 /*
  PictureViewerNavBar.java:  Does the navigation icons and sends the events back to the PictureViewer
 
- Copyright (C) 2002-2011  Richard Eigenmann, Zürich, Switzerland
+ Copyright (C) 2002-2014  Richard Eigenmann, Zürich, Switzerland
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -36,12 +36,12 @@ public class PictureViewerNavBar extends JToolBar {
     /**
      * Button that is put in the NavigationPanel to allow the user to navigate
      * to the previous picture. Depending on the context (previous pictures in
-     * the group, picture in previous group, beginning of pictures) the icon {@link #ICON_ARROW_LEFT}, {@link #ICON_DOUBLE_ARROW_LEFT}
-     *  {@link #ICON_ARROW_LEFT_STOP} should be shown as appropriate.
+     * the group, picture in previous group, beginning of pictures) different
+     * icons are shown.
      *
      */
     public final LeftRightButton previousJButton = new LeftRightButton();
-    
+
     /**
      * Button to move to the next image.
      *
@@ -144,6 +144,5 @@ public class PictureViewerNavBar extends JToolBar {
     public void hideDelaySilder() {
         speedSlider.setVisible( false );
     }
-
 
 }

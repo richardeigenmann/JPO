@@ -80,7 +80,6 @@ public class PictureInfo implements Serializable {
      * Constructor method. Creates the object and sets up the variables.
      *
      * @param highresURL The filename of the high resolution image
-     * @param Lowres_Name
      * @param description	The description of the image
      * @param	filmReference	The reference to the film if any
      */
@@ -291,7 +290,6 @@ public class PictureInfo implements Serializable {
     /**
      * The full path to the high resolution version of the picture.
      *
-     * @see #lowresLocation
      *
      */
     private String highresLocation = "";
