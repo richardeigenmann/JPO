@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -25,7 +26,7 @@ import java.util.regex.Pattern;
 /*
  ExifInfo.java: This class interacts with Drew Noake's library and extracts the Exif information
 
- Copyright (C) 2002 - 2013  Richard Eigenmann.
+ Copyright (C) 2002 - 2014  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -50,7 +51,7 @@ public class ExifInfo {
     /**
      * Defines a LOGGER for this class
      */
-    private static final Logger LOGGER = Logger.getLogger(ExifInfo.class.getName());
+    private static final Logger LOGGER = Logger.getLogger( ExifInfo.class.getName() );
     /**
      * The URL or the image to be decoded
      */
@@ -102,7 +103,7 @@ public class ExifInfo {
     /**
      * The parsed GPS coordinates
      */
-    public Point2D.Double latLng = new Point2D.Double(0, 0);
+    public Point2D.Double latLng = new Point2D.Double( 0, 0 );
     /**
      * The parsed width
      */
@@ -110,11 +111,18 @@ public class ExifInfo {
     /**
      * The parsed width
      */
+
     public String exifHeight = "";
     /**
      * A full dump of the Exif information
      */
-    private final StringBuffer exifDump = new StringBuffer("");
+
+    public int rotation = 0;
+
+    /**
+     * A full dump of the Exif information
+     */
+    private final StringBuffer exifDump = new StringBuffer( "" );
 
     /**
      * Constructor to create the object. Call
@@ -123,7 +131,7 @@ public class ExifInfo {
      *
      * @param pictureUrl
      */
-    public ExifInfo(URL pictureUrl) {
+    public ExifInfo( URL pictureUrl ) {
         this.pictureUrl = pictureUrl;
     }
 
@@ -131,71 +139,75 @@ public class ExifInfo {
      * This method decodes the Exif tags and stores the data
      */
     public void decodeExifTags() {
-        if (pictureUrl == null) {
+        if ( pictureUrl == null ) {
             return;
         }
 
         try {
             InputStream highresStream = pictureUrl.openStream();
             boolean waitforbytes = false;
-            Metadata metadata = ImageMetadataReader.readMetadata(new BufferedInputStream(highresStream), waitforbytes);
+            Metadata metadata = ImageMetadataReader.readMetadata( new BufferedInputStream( highresStream ), waitforbytes );
 
-            JpegDirectory jpegDirectory = metadata.getDirectory(JpegDirectory.class);
-            if (jpegDirectory != null) {
-                exifWidth = tryToGetTag(jpegDirectory, JpegDirectory.TAG_JPEG_IMAGE_WIDTH, exifWidth);
-                exifHeight = tryToGetTag(jpegDirectory, JpegDirectory.TAG_JPEG_IMAGE_HEIGHT, exifHeight);
+            JpegDirectory jpegDirectory = metadata.getDirectory( JpegDirectory.class );
+            if ( jpegDirectory != null ) {
+                exifWidth = tryToGetTag( jpegDirectory, JpegDirectory.TAG_JPEG_IMAGE_WIDTH, exifWidth );
+                exifHeight = tryToGetTag( jpegDirectory, JpegDirectory.TAG_JPEG_IMAGE_HEIGHT, exifHeight );
             }
 
-            ExifSubIFDDirectory exifSubIFDdirectory = metadata.getDirectory(ExifSubIFDDirectory.class);
-            if (exifSubIFDdirectory != null) {
-                setCreateDateTime(tryToGetTag(exifSubIFDdirectory, ExifSubIFDDirectory.TAG_DATETIME_ORIGINAL, getCreateDateTime()));
-                aperture = tryToGetTag(exifSubIFDdirectory, ExifSubIFDDirectory.TAG_FNUMBER, aperture);
-                aperture = tryToGetTag(exifSubIFDdirectory, ExifSubIFDDirectory.TAG_APERTURE, aperture);
-                shutterSpeed = tryToGetTag(exifSubIFDdirectory, ExifSubIFDDirectory.TAG_EXPOSURE_TIME, shutterSpeed);
-                shutterSpeed = tryToGetTag(exifSubIFDdirectory, ExifSubIFDDirectory.TAG_SHUTTER_SPEED, shutterSpeed);
-                focalLength = tryToGetTag(exifSubIFDdirectory, ExifSubIFDDirectory.TAG_FOCAL_LENGTH, focalLength);
-                iso = tryToGetTag(exifSubIFDdirectory, ExifSubIFDDirectory.TAG_ISO_EQUIVALENT, iso);
-                lens = tryToGetTag(exifSubIFDdirectory, ExifSubIFDDirectory.TAG_LENS, lens);
+            ExifSubIFDDirectory exifSubIFDdirectory = metadata.getDirectory( ExifSubIFDDirectory.class );
+            if ( exifSubIFDdirectory != null ) {
+                setCreateDateTime( tryToGetTag( exifSubIFDdirectory, ExifSubIFDDirectory.TAG_DATETIME_ORIGINAL, getCreateDateTime() ) );
+                aperture = tryToGetTag( exifSubIFDdirectory, ExifSubIFDDirectory.TAG_FNUMBER, aperture );
+                aperture = tryToGetTag( exifSubIFDdirectory, ExifSubIFDDirectory.TAG_APERTURE, aperture );
+                shutterSpeed = tryToGetTag( exifSubIFDdirectory, ExifSubIFDDirectory.TAG_EXPOSURE_TIME, shutterSpeed );
+                shutterSpeed = tryToGetTag( exifSubIFDdirectory, ExifSubIFDDirectory.TAG_SHUTTER_SPEED, shutterSpeed );
+                focalLength = tryToGetTag( exifSubIFDdirectory, ExifSubIFDDirectory.TAG_FOCAL_LENGTH, focalLength );
+                iso = tryToGetTag( exifSubIFDdirectory, ExifSubIFDDirectory.TAG_ISO_EQUIVALENT, iso );
+                lens = tryToGetTag( exifSubIFDdirectory, ExifSubIFDDirectory.TAG_LENS, lens );
             }
 
-            ExifIFD0Directory exifSubIFD0directory = metadata.getDirectory(ExifIFD0Directory.class);
-            if (exifSubIFD0directory != null) {
-                camera = rtrim(tryToGetTag(exifSubIFD0directory, ExifIFD0Directory.TAG_MODEL, camera));
+            ExifIFD0Directory exifSubIFD0directory = metadata.getDirectory( ExifIFD0Directory.class );
+            if ( exifSubIFD0directory != null ) {
+                camera = rtrim( tryToGetTag( exifSubIFD0directory, ExifIFD0Directory.TAG_MODEL, camera ) );
+                String rotationString = rtrim( tryToGetTag( exifSubIFD0directory, ExifIFD0Directory.TAG_ORIENTATION, "" ) );
+                // so far have only got definitions for the Samsung Galaxy S4 phone
+                if ( "Top, left side (Horizontal / normal)".equals( rotationString ) ) {
+                    rotation = 0;
+                } else if ( "Right side, top (Rotate 90 CW)".equals( rotationString ) ) {
+                    rotation = 90;
+                } else if ( "Left side, bottom (Rotate 270 CW)".equals( rotationString ) ) {
+                    rotation = 270;
+                } else if ( "Bottom, right side (Rotate 180)".equals( rotationString ) ) {
+                    rotation = 180;
+                } 
             }
 
-            GpsDirectory gpsDirectory = metadata.getDirectory(GpsDirectory.class);
-            if (gpsDirectory != null) {
+            GpsDirectory gpsDirectory = metadata.getDirectory( GpsDirectory.class );
+            if ( gpsDirectory != null ) {
                 GeoLocation location = gpsDirectory.getGeoLocation();
                 latLng.x = location.getLatitude();
                 latLng.y = location.getLongitude();
             }
 
-            NikonType2MakernoteDirectory nikonType2MakernoteDirectory = metadata.getDirectory(NikonType2MakernoteDirectory.class);
-            if (nikonType2MakernoteDirectory != null) {
-                iso = tryToGetTag(nikonType2MakernoteDirectory, NikonType2MakernoteDirectory.TAG_NIKON_TYPE2_ISO_1, iso);
-                lens = tryToGetTag(nikonType2MakernoteDirectory, NikonType2MakernoteDirectory.TAG_NIKON_TYPE2_LENS, lens);
+            NikonType2MakernoteDirectory nikonType2MakernoteDirectory = metadata.getDirectory( NikonType2MakernoteDirectory.class );
+            if ( nikonType2MakernoteDirectory != null ) {
+                iso = tryToGetTag( nikonType2MakernoteDirectory, NikonType2MakernoteDirectory.TAG_NIKON_TYPE2_ISO_1, iso );
+                lens = tryToGetTag( nikonType2MakernoteDirectory, NikonType2MakernoteDirectory.TAG_NIKON_TYPE2_LENS, lens );
             }
 
-            CanonMakernoteDirectory canonMakernoteDirectory = metadata.getDirectory(CanonMakernoteDirectory.class);
-            if (canonMakernoteDirectory != null) {
-                lens = tryToGetTag(canonMakernoteDirectory, CanonMakernoteDirectory.TAG_LENS_MODEL, lens);
+            CanonMakernoteDirectory canonMakernoteDirectory = metadata.getDirectory( CanonMakernoteDirectory.class );
+            if ( canonMakernoteDirectory != null ) {
+                lens = tryToGetTag( canonMakernoteDirectory, CanonMakernoteDirectory.TAG_LENS_MODEL, lens );
             }
 
-            for (Directory directory : metadata.getDirectories()) {
-                for (Tag tag : directory.getTags()) {
-                    exifDump.append(tag.getTagTypeHex()).append(" - ").append(tag.getTagName()).append(":\t").append(tag.getDirectoryName()).append(":\t").append(tag.getDescription()).append("\n");
+            for ( Directory directory : metadata.getDirectories() ) {
+                for ( Tag tag : directory.getTags() ) {
+                    exifDump.append( tag.getTagTypeHex() ).append( " - " ).append( tag.getTagName() ).append( ":\t" ).append( tag.getDirectoryName() ).append( ":\t" ).append( tag.getDescription() ).append( "\n" );
                 }
             }
-        } catch (ImageProcessingException x) {
-            LOGGER.severe("ImageProcessingException: " + x.getMessage());
-        } catch (MalformedURLException x) {
-            LOGGER.severe("MalformedURLException: " + x.getMessage());
-        } catch (IOException x) {
-            LOGGER.severe("IOException: " + x.getMessage());
-        } catch (NullPointerException x) {
-            LOGGER.severe("NullPointerException: " + x.getMessage());
+        } catch ( ImageProcessingException | NullPointerException | IOException x ) {
+            LOGGER.severe( x.getMessage() );
         }
-
 
     }
 
@@ -206,10 +218,10 @@ public class ExifInfo {
      * @param tag the tag to search for
      * @param defaultValue the String to return if the tag was not found.
      */
-    private String tryToGetTag(Directory directory, int tag, String defaultValue) {
+    private String tryToGetTag( Directory directory, int tag, String defaultValue ) {
         String searchString;
-        searchString = directory.getDescription(tag);
-        if (searchString == null) {
+        searchString = directory.getDescription( tag );
+        if ( searchString == null ) {
             searchString = defaultValue;
         }
         return searchString;
@@ -230,10 +242,10 @@ public class ExifInfo {
      * @return Returns a brief summary of the photographic settings
      */
     public String getBriefPhotographicSummary() {
-        return Settings.jpoResources.getString("ExifInfoCamera") + "\t" + camera + "\n"
-                + Settings.jpoResources.getString("ExifInfoShutterSpeed") + "\t" + shutterSpeed + "\n"
-                + Settings.jpoResources.getString("ExifInfoAperture") + "\t" + aperture + "\n"
-                + Settings.jpoResources.getString("ExifInfoTimeStamp") + "\t" + getCreateDateTime() + "\n";
+        return Settings.jpoResources.getString( "ExifInfoCamera" ) + "\t" + camera + "\n"
+                + Settings.jpoResources.getString( "ExifInfoShutterSpeed" ) + "\t" + shutterSpeed + "\n"
+                + Settings.jpoResources.getString( "ExifInfoAperture" ) + "\t" + aperture + "\n"
+                + Settings.jpoResources.getString( "ExifInfoTimeStamp" ) + "\t" + getCreateDateTime() + "\n";
     }
 
     /**
@@ -242,15 +254,15 @@ public class ExifInfo {
      * @return Returns a comprehensive summary of the photographic settings
      */
     public String getComprehensivePhotographicSummary() {
-        return Settings.jpoResources.getString("ExifInfoCamera") + "\t" + camera + "\n"
-                + Settings.jpoResources.getString("ExifInfoLens") + "\t" + lens + "\n"
-                + Settings.jpoResources.getString("ExifInfoShutterSpeed") + "\t" + shutterSpeed + "\n"
-                + Settings.jpoResources.getString("ExifInfoAperture") + "\t" + aperture + "\n"
-                + Settings.jpoResources.getString("ExifInfoFocalLength") + "\t" + focalLength + "\n"
-                + Settings.jpoResources.getString("ExifInfoISO") + "\t" + iso + "\n"
-                + Settings.jpoResources.getString("ExifInfoTimeStamp") + "\t" + getCreateDateTime() + "\n"
-                + Settings.jpoResources.getString("ExifInfoLatitude") + "\t" + latitude + " " + latitudeRef + "\n"
-                + Settings.jpoResources.getString("ExifInfoLongitude") + "\t" + longitude + " " + longitudeRef + "\n";
+        return Settings.jpoResources.getString( "ExifInfoCamera" ) + "\t" + camera + "\n"
+                + Settings.jpoResources.getString( "ExifInfoLens" ) + "\t" + lens + "\n"
+                + Settings.jpoResources.getString( "ExifInfoShutterSpeed" ) + "\t" + shutterSpeed + "\n"
+                + Settings.jpoResources.getString( "ExifInfoAperture" ) + "\t" + aperture + "\n"
+                + Settings.jpoResources.getString( "ExifInfoFocalLength" ) + "\t" + focalLength + "\n"
+                + Settings.jpoResources.getString( "ExifInfoISO" ) + "\t" + iso + "\n"
+                + Settings.jpoResources.getString( "ExifInfoTimeStamp" ) + "\t" + getCreateDateTime() + "\n"
+                + Settings.jpoResources.getString( "ExifInfoLatitude" ) + "\t" + latitude + " " + latitudeRef + "\n"
+                + Settings.jpoResources.getString( "ExifInfoLongitude" ) + "\t" + longitude + " " + longitudeRef + "\n";
     }
 
     /**
@@ -267,7 +279,7 @@ public class ExifInfo {
      *
      * @param dateTime the createDateTime to set
      */
-    private void setCreateDateTime(String dateTime) {
+    private void setCreateDateTime( String dateTime ) {
         this.createDateTime = dateTime;
     }
 
@@ -279,33 +291,33 @@ public class ExifInfo {
         double longitudeD = 0f;
         double latitudeD = 0f;
 
-        if ((longitude == null) || (latitude == null)) {
-            return new Point2D.Double(latitudeD, longitudeD);
+        if ( ( longitude == null ) || ( latitude == null ) ) {
+            return new Point2D.Double( latitudeD, longitudeD );
         }
 
-        LOGGER.fine(String.format("Trying to parse longitude: %s and latitude: %s", longitude, latitude));
-        Pattern pattern = Pattern.compile("(.*)\"(.*)'(.*)");
-        Matcher longitudeMatcher = pattern.matcher(longitude);
-        if (longitudeMatcher.matches()) {
-            longitudeD = Integer.parseInt(longitudeMatcher.group(1)) + (Double.parseDouble(longitudeMatcher.group(2)) / 60) + (Double.parseDouble(longitudeMatcher.group(3)) / 3600);
-            if (longitudeRef.equals("W")) {
+        LOGGER.fine( String.format( "Trying to parse longitude: %s and latitude: %s", longitude, latitude ) );
+        Pattern pattern = Pattern.compile( "(.*)\"(.*)'(.*)" );
+        Matcher longitudeMatcher = pattern.matcher( longitude );
+        if ( longitudeMatcher.matches() ) {
+            longitudeD = Integer.parseInt( longitudeMatcher.group( 1 ) ) + ( Double.parseDouble( longitudeMatcher.group( 2 ) ) / 60 ) + ( Double.parseDouble( longitudeMatcher.group( 3 ) ) / 3600 );
+            if ( longitudeRef.equals( "W" ) ) {
                 longitudeD *= -1f;
             }
-            LOGGER.fine(String.format("Longitude %s matches %s %s %s --> %f", longitude, longitudeMatcher.group(1), longitudeMatcher.group(2), longitudeMatcher.group(3), longitudeD));
+            LOGGER.fine( String.format( "Longitude %s matches %s %s %s --> %f", longitude, longitudeMatcher.group( 1 ), longitudeMatcher.group( 2 ), longitudeMatcher.group( 3 ), longitudeD ) );
         } else {
-            LOGGER.fine(String.format("Longitude %s made no sense", longitude));
+            LOGGER.fine( String.format( "Longitude %s made no sense", longitude ) );
         }
-        Matcher latitudeMatcher = pattern.matcher(latitude);
-        if (latitudeMatcher.matches()) {
-            latitudeD = Integer.parseInt(latitudeMatcher.group(1)) + (Double.parseDouble(latitudeMatcher.group(2)) / 60) + (Double.parseDouble(latitudeMatcher.group(3)) / 3600);
-            if (latitudeRef.equals("S")) {
+        Matcher latitudeMatcher = pattern.matcher( latitude );
+        if ( latitudeMatcher.matches() ) {
+            latitudeD = Integer.parseInt( latitudeMatcher.group( 1 ) ) + ( Double.parseDouble( latitudeMatcher.group( 2 ) ) / 60 ) + ( Double.parseDouble( latitudeMatcher.group( 3 ) ) / 3600 );
+            if ( latitudeRef.equals( "S" ) ) {
                 latitudeD *= -1f;
             }
-            LOGGER.fine(String.format("Latitude %s matches %s %s %s --> %f", latitude, latitudeMatcher.group(1), latitudeMatcher.group(2), latitudeMatcher.group(3), latitudeD));
+            LOGGER.fine( String.format( "Latitude %s matches %s %s %s --> %f", latitude, latitudeMatcher.group( 1 ), latitudeMatcher.group( 2 ), latitudeMatcher.group( 3 ), latitudeD ) );
         } else {
-            LOGGER.fine(String.format("Latitude %s made no sense", latitude));
+            LOGGER.fine( String.format( "Latitude %s made no sense", latitude ) );
         }
-        return new Point2D.Double(latitudeD, longitudeD);
+        return new Point2D.Double( latitudeD, longitudeD );
 
     }
 
@@ -316,11 +328,11 @@ public class ExifInfo {
      * @param s String to rtrim
      * @return the rtrimmed string
      */
-    public static String rtrim(String s) {
+    public static String rtrim( String s ) {
         int i = s.length() - 1;
-        while (i >= 0 && Character.isWhitespace(s.charAt(i))) {
+        while ( i >= 0 && Character.isWhitespace( s.charAt( i ) ) ) {
             i--;
         }
-        return s.substring(0, i + 1);
+        return s.substring( 0, i + 1 );
     }
 }

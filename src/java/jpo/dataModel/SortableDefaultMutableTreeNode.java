@@ -1427,50 +1427,11 @@ public class SortableDefaultMutableTreeNode
         exifInfo.decodeExifTags();
         newPictureInfo.setCreationTime( exifInfo.getCreateDateTime() );
         newPictureInfo.setLatLng( exifInfo.latLng );
-        
-        //Can we add rotation here?
+        newPictureInfo.setRotation( exifInfo.rotation );
 
         return true;
     }
 
-
-    /**
-     * This method extracts the thumbnail location from the supplied node. It
-     * handles PictureInfo and GroupInfo nodes. If the userObject is something
-     * else it will return the STRING "null" (to avoid NPE problems)
-     *
-     * @return the string with the full path of the thumbnail location
-     *
-    public String getThumbnailLocation() {
-        Object nodeObject = getUserObject();
-        if ( nodeObject instanceof PictureInfo ) {
-            return ( (PictureInfo) nodeObject ).getLowresLocation();
-        } else if ( nodeObject instanceof GroupInfo ) {
-            return ( (GroupInfo) nodeObject ).getLowresLocation();
-        } else {
-            return "null";
-        }
-    }*/
-
-    /**
-     * This method requests that the node assigns a new location to the
-     * PictureInfo or GroupInfo object
-     *
-     * @return the filename of the new thumbnail
-     *
-    public String assignNewThumbnailLocation() {
-        String newThumbnailFilename = Tools.getNewLowresFilename();
-        Object nodeObject = getUserObject();
-        if ( nodeObject instanceof PictureInfo ) {
-            ( (PictureInfo) nodeObject ).setLowresLocation( newThumbnailFilename );
-        } else if ( nodeObject instanceof GroupInfo ) {
-            ( (GroupInfo) nodeObject ).setLowresLocation( newThumbnailFilename );
-        } else {
-            LOGGER.severe( "Node: " + toString() + " isn't a PictureInfo or a GroupInfo - can't assign a new lowres Filename" );
-            newThumbnailFilename = "null";
-        }
-        return newThumbnailFilename;
-    }*/
 
     /**
      * This method returns whether the supplied node is a descendent of the
