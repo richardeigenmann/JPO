@@ -66,7 +66,7 @@ import jpotestground.CheckThreadViolationRepaintManager;
  * model in this manner and need no other controls.
  *
  * @author Richard Eigenmann, richard.eigenmann@gmail.com
- * @version 0.11
+ * @version 0.12
  * @see CollectionJTree
  * @see ThumbnailsPanelController
  * @see PictureViewer

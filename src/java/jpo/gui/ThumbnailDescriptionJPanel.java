@@ -266,6 +266,7 @@ public class ThumbnailDescriptionJPanel
         pictureDescriptionJTA.setText( legend );
 
         formatDescription();
+        showSlectionStatus();
     }
 
     /**
