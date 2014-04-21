@@ -14,6 +14,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.List;
 import java.util.logging.Logger;
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
@@ -94,7 +95,7 @@ public class Emailer
      */
     public boolean interrupted = false;
 
-    private final Object[] emailSelected;
+    private final List<SortableDefaultMutableTreeNode> emailSelected;
 
     private final InternetAddress senderAddress;
 
@@ -124,7 +125,7 @@ public class Emailer
      * @param scaleSize
      * @param sendOriginal
      */
-    public Emailer( Object[] emailSelected,
+    public Emailer( List<SortableDefaultMutableTreeNode> emailSelected,
             InternetAddress senderAddress,
             InternetAddress destinationAddress,
             String subjectLine,
@@ -163,7 +164,7 @@ public class Emailer
         c.fill = GridBagConstraints.HORIZONTAL;
         progPanel.add( progressLabel, c );
 
-        progBar = new JProgressBar( 0, emailSelected.length + 3 ); // 3 extra steps
+        progBar = new JProgressBar( 0, emailSelected.size() + 3 ); // 3 extra steps
         progBar.setBorder( BorderFactory.createLineBorder( Color.gray, 1 ) );
         progBar.setStringPainted( true );
         progBar.setPreferredSize( new Dimension( 140, 20 ) );
@@ -291,10 +292,10 @@ public class Emailer
             DataSource ds;
             ByteArrayOutputStream baos;
             EncodedDataSource encds;
-            for ( int i = 0; ( i < emailSelected.length ) && ( !interrupted ); i++ ) {
+            for ( int i = 0; ( i < emailSelected.size() ) && ( !interrupted ); i++ ) {
                 publish( String.format( "%d / %d", progBar.getValue(), progBar.getMaximum() ) );
                 pictureDescriptionMimeBodyPart = new MimeBodyPart();
-                pi = (PictureInfo) ( (SortableDefaultMutableTreeNode) emailSelected[i] ).getUserObject();
+                pi = (PictureInfo) ( (SortableDefaultMutableTreeNode) emailSelected.get(i) ).getUserObject();
 
                 pictureDescriptionMimeBodyPart.setText( pi.getDescription(), "iso-8859-1" );
                 mp.addBodyPart( pictureDescriptionMimeBodyPart );

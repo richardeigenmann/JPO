@@ -689,12 +689,11 @@ public class PictureCollection {
     }
 
     /**
-     * Returns an array of the mailSelected nodes.
-     *
-     * @return the nodes selected for mail
+     * Returns the email-selected nodes
+     * @return 
      */
-    public Object[] getMailSelectedNodes() {
-        return mailSelection.toArray();
+    public ArrayList<SortableDefaultMutableTreeNode> getMailSelectedNodes() {
+        return mailSelection;
     }
 
     /**

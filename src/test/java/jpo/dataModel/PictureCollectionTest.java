@@ -141,32 +141,32 @@ public class PictureCollectionTest
      * here are a few tests to verify the selection thing works.
      */
     public void testMailSelections() {
-        assertEquals("Testing that the mail selection array is empty before we start", 0, pictureCollection.getMailSelectedNodes().length);
+        assertEquals("Testing that the mail selection array is empty before we start", 0, pictureCollection.getMailSelectedNodes().size());
         pictureCollection.addToMailSelection(group1);
         pictureCollection.addToMailSelection(picture1);
-        assertEquals("We should have 2 nodes selected now", 2, pictureCollection.getMailSelectedNodes().length);
+        assertEquals("We should have 2 nodes selected now", 2, pictureCollection.getMailSelectedNodes().size());
         assertTrue("We sould find that the node we selected is actually in the selected set", pictureCollection.isMailSelected(group1));
         assertTrue("We sould find that the second node we selected is actually in the selected set", pictureCollection.isMailSelected(picture1));
         assertFalse("A Node that was not selected should not be in the selection", pictureCollection.isMailSelected(group2));
 
         pictureCollection.removeFromMailSelection(group1);
-        assertEquals("We should have 1 nodes selected now", 1, pictureCollection.getMailSelectedNodes().length);
+        assertEquals("We should have 1 nodes selected now", 1, pictureCollection.getMailSelectedNodes().size());
         assertFalse("We sould find that the node we deselected is actually gone", pictureCollection.isMailSelected(group1));
         assertTrue("We sould find that the second node we selected is still in the selected set", pictureCollection.isMailSelected(picture1));
         assertFalse("A Node that was not selected should not be in the selection", pictureCollection.isMailSelected(group2));
 
         pictureCollection.addToMailSelection(group1);
         pictureCollection.addToMailSelection(group1); //why not add it again?
-        assertEquals("Twice the same node plus one picture equals 2", 2, pictureCollection.getMailSelectedNodes().length);
+        assertEquals("Twice the same node plus one picture equals 2", 2, pictureCollection.getMailSelectedNodes().size());
 
         pictureCollection.toggleMailSelected(picture1);
-        assertEquals("Should be only group1 selected now", 1, pictureCollection.getMailSelectedNodes().length);
+        assertEquals("Should be only group1 selected now", 1, pictureCollection.getMailSelectedNodes().size());
 
         pictureCollection.clearMailSelection(); // this is where we the concurrent modification happened
-        assertEquals("Testing that the selection array is empty again", 0, pictureCollection.getMailSelectedNodes().length);
+        assertEquals("Testing that the selection array is empty again", 0, pictureCollection.getMailSelectedNodes().size());
 
         pictureCollection.removeFromMailSelection(group1); // How about removing somehting that is not there?
-        assertEquals("Testing that the selection array stayed", 0, pictureCollection.getMailSelectedNodes().length);
+        assertEquals("Testing that the selection array stayed", 0, pictureCollection.getMailSelectedNodes().size());
     }
 
     /**
@@ -174,11 +174,11 @@ public class PictureCollectionTest
      * here are a few tests to verify the selection thing works.
      */
     public void testAddToMailSelection() {
-        assertEquals("Testing that the mail selection array is empty before we start", 0, pictureCollection.getMailSelectedNodes().length);
+        assertEquals("Testing that the mail selection array is empty before we start", 0, pictureCollection.getMailSelectedNodes().size());
         pictureCollection.addToMailSelection(picture1);
-        assertEquals("We should have 1 nodes selected now", 1, pictureCollection.getMailSelectedNodes().length);
+        assertEquals("We should have 1 nodes selected now", 1, pictureCollection.getMailSelectedNodes().size());
         pictureCollection.addToMailSelection(picture1); //adding the same node again
-        assertEquals("We should have 1 nodes selected now", 1, pictureCollection.getMailSelectedNodes().length);
+        assertEquals("We should have 1 nodes selected now", 1, pictureCollection.getMailSelectedNodes().size());
     }
     /**
      * Let's create a quick and dirty change listener
