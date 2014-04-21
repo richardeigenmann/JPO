@@ -15,7 +15,7 @@
     <property name="build.export.dir" value="${build.base.classes.dir}/${app.main.package}/export"/>
     <property name="build.docs.dir" value="${build.dir}/docs"/>
     <property name="build.jars.dir" value="${build.dir}/jars"/>
-    <property name="version" value="0.11"/>
+    <property name="version" value="0.12"/>
     
     <property name="libs.dir" value="libs"/>
     <property name="src.dir" value="src"/>
