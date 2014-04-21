@@ -497,8 +497,7 @@ public class PictureCollection {
     public Set<Integer> getCategoryKeySet() {
         return categories.keySet();
     }
-    
-    
+
     /**
      * Returns the Value for the key
      *
@@ -681,6 +680,15 @@ public class PictureCollection {
     }
 
     /**
+     * returns the count of mail-selected nodes
+     *
+     * @return the count of selected nodes
+     */
+    public int countMailSelectedNodes() {
+        return mailSelection.size();
+    }
+
+    /**
      * Returns an array of the mailSelected nodes.
      *
      * @return the nodes selected for mail
@@ -718,13 +726,13 @@ public class PictureCollection {
                     LOGGER.info( "Found a match on: " + ( (PictureInfo) nodeObject ).getDescription() );
                     return true;
                 }// else if ( ( lowresFile != null ) && ( lowresFile.compareTo( file ) == 0 ) ) {
-                 //   return true;
+                //   return true;
                 //}
             } else if ( nodeObject instanceof GroupInfo ) {
                 /*groupThumbnail = ( (GroupInfo) nodeObject ).getLowresFile();
-                if ( ( groupThumbnail != null ) && ( groupThumbnail.compareTo( file ) == 0 ) ) {
-                    return true;
-                }*/
+                 if ( ( groupThumbnail != null ) && ( groupThumbnail.compareTo( file ) == 0 ) ) {
+                 return true;
+                 }*/
             }
         }
         return false;
@@ -901,7 +909,7 @@ public class PictureCollection {
     /**
      * A reference to the selected nodes.
      */
-    public final ArrayList<SortableDefaultMutableTreeNode> selection = new ArrayList<>();
+    private final ArrayList<SortableDefaultMutableTreeNode> selection = new ArrayList<>();
 
     /**
      * This method places the current {@link SortableDefaultMutableTreeNode}
@@ -939,8 +947,8 @@ public class PictureCollection {
     }
 
     /**
-     * This method clears selection that refers to the selected
-     * highlighted thumbnails and fires unselectedEvents
+     * This method clears selection that refers to the selected highlighted
+     * thumbnails and fires unselectedEvents
      */
     public void clearSelection() {
         //can't use iterator or there is a concurrent modification exception

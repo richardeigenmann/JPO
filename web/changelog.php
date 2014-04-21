@@ -2,7 +2,8 @@
     <span class="para-heading" id="Changelog">Changelog</span>
 
             <table class="changelog">
-                <tr><td colspan=2><b>Development Version 0.11</b></td></tr>
+                <tr><td colspan=2><b>Development Version 0.12</b></td></tr>
+                <tr><td valign="top">21.4.2014</td><td>Cleaner code for email selection</td></tr>
                 <tr><td valign="top">21.4.2014</td><td>Fixed bug with thumbnail descriptions showing as highlighted after a move.</td></tr>
                 <tr><td valign="top">21.4.2014</td><td>Rotation of Samsung Galaxy S4 pictures is detected on image load</td></tr>
                 <tr><td valign="top">20.4.2014</td><td>Can now pick location on OpenStreetMap</td></tr>
@@ -15,6 +16,7 @@
                 <tr><td valign="top">13.4.2014</td><td>Improved Flat file Import</td></tr>
                 <tr><td valign="top">6.4.2014</td><td>Improved Flat file Export</td></tr>
                 <tr><td valign="top">30.3.2014</td><td>Started transition to EventBus</td></tr>
+                <tr><td colspan=2><b>Development Version 0.11</b></td></tr>
                 <tr><td valign="top">22.3.2014</td><td>Upgraded to javax.mail-1.5.1.jar</td></tr>
                 <tr><td valign="top">22.3.2014</td><td>Lots of refactoring to get rid of * imports and Netbeans warnings</td></tr>
                 <tr><td valign="top">22.3.2014</td><td>removed dependency on activation.jar as Java now includes it</td></tr>

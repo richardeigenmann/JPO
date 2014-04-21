@@ -136,38 +136,42 @@ public class PicturePopupMenu extends JPopupMenu {
         add( new NavigateToMenu() );
         add( new ShowCategoryUsageJMenuItemMenuItem() );
 
-        JMenuItem pictureMailSelectJMenuItem = new JMenuItem();
+        JMenuItem pictureMailSelectJMenuItem = new JMenuItem( Settings.jpoResources.getString( "pictureMailSelectJMenuItem" ) );
+        pictureMailSelectJMenuItem.addActionListener( new ActionListener() {
+
+            @Override
+            public void actionPerformed( ActionEvent e ) {
+                addToMailSelection();
+            }
+        } );
+
+        JMenuItem pictureMailUnSelectJMenuItem = new JMenuItem( Settings.jpoResources.getString( "pictureMailUnselectJMenuItem" ) );
+        pictureMailUnSelectJMenuItem.addActionListener( new ActionListener() {
+
+            @Override
+            public void actionPerformed( ActionEvent e ) {
+                removeFromMailSelection();
+
+            }
+        } );
+
         JMenuItem pictureMailUnselectAllJMenuItem = new JMenuItem( Settings.jpoResources.getString( "pictureMailUnselectAllJMenuItem" ) );
-        if ( popupNode.getPictureCollection().isMailSelected( popupNode ) ) {
-            pictureMailSelectJMenuItem.setText( Settings.jpoResources.getString( "pictureMailUnselectJMenuItem" ) );
-            pictureMailSelectJMenuItem.addActionListener( new ActionListener() {
+        pictureMailUnselectAllJMenuItem.addActionListener( new ActionListener() {
 
-                @Override
-                public void actionPerformed( ActionEvent e ) {
-                    requestSelectForEmail();
+            @Override
+            public void actionPerformed( ActionEvent e ) {
+                doClearMailSelection();
+            }
+        } );
 
-                }
-            } );
+        if ( !popupNode.getPictureCollection().isMailSelected( popupNode ) ) {
             add( pictureMailSelectJMenuItem );
-
-            pictureMailUnselectAllJMenuItem.addActionListener( new ActionListener() {
-
-                @Override
-                public void actionPerformed( ActionEvent e ) {
-                    doClearMailSelection();
-                }
-            } );
-            add( pictureMailUnselectAllJMenuItem );
         } else {
-            pictureMailSelectJMenuItem.setText( Settings.jpoResources.getString( "pictureMailSelectJMenuItem" ) );
-            pictureMailSelectJMenuItem.addActionListener( new ActionListener() {
+            add( pictureMailUnSelectJMenuItem );
+        }
 
-                @Override
-                public void actionPerformed( ActionEvent e ) {
-                    addToMailSelection();
-                }
-            } );
-            add( pictureMailSelectJMenuItem );
+        if ( Settings.pictureCollection.countMailSelectedNodes() > 0 ) {
+            add( pictureMailUnselectAllJMenuItem );
         }
 
         JMenu userFunctionsJMenu = new JMenu( Settings.jpoResources.getString( "userFunctionsJMenu" ) );
@@ -354,15 +358,15 @@ public class PicturePopupMenu extends JPopupMenu {
 
         if ( option == 0 ) {
             boolean ok = false;
-           /* File lowresFile = pi.getLowresFile();
-            if ( ( lowresFile != null ) && ( lowresFile.exists() ) ) {
-                ok = lowresFile.delete();
-                if ( !ok ) //logger.info("File deleted: " + lowresFile.toString() );
-                // else
-                {
-                    LOGGER.log( Level.INFO, "File deleted failed on: {0}", lowresFile.toString() );
-                }
-            }*/
+            /* File lowresFile = pi.getLowresFile();
+             if ( ( lowresFile != null ) && ( lowresFile.exists() ) ) {
+             ok = lowresFile.delete();
+             if ( !ok ) //logger.info("File deleted: " + lowresFile.toString() );
+             // else
+             {
+             LOGGER.log( Level.INFO, "File deleted failed on: {0}", lowresFile.toString() );
+             }
+             }*/
 
             if ( highresFile.exists() ) {
                 ok = highresFile.delete();
@@ -410,12 +414,12 @@ public class PicturePopupMenu extends JPopupMenu {
                     pi = (PictureInfo) selectedNode.getUserObject();
                     boolean ok = false;
                     /*File lowresFile = pi.getLowresFile();
-                    if ( ( lowresFile != null ) && ( lowresFile.exists() ) ) {
-                        ok = lowresFile.delete();
-                        if ( !ok ) {
-                            LOGGER.info( "File deleted failed on: " + lowresFile.toString() );
-                        }
-                    }*/
+                     if ( ( lowresFile != null ) && ( lowresFile.exists() ) ) {
+                     ok = lowresFile.delete();
+                     if ( !ok ) {
+                     LOGGER.info( "File deleted failed on: " + lowresFile.toString() );
+                     }
+                     }*/
 
                     File highresFile = pi.getHighresFile();
                     if ( highresFile.exists() ) {
@@ -471,21 +475,6 @@ public class PicturePopupMenu extends JPopupMenu {
             } else {
                 HashSet<SortableDefaultMutableTreeNode> hs = new HashSet<>( Arrays.asList( Settings.pictureCollection.getSelectedNodes() ) );
                 JpoEventBus.getInstance().post( new ShowCategoryUsageEditorRequest( hs ) );
-            }
-        }
-    }
-
-    /**
-     * request to select for Email
-     */
-    private void requestSelectForEmail() {
-        if ( Settings.pictureCollection.countSelectedNodes() < 1 ) {
-            popupNode.getPictureCollection().removeFromMailSelection( popupNode );
-        } else {
-            for ( SortableDefaultMutableTreeNode selectedNode : Settings.pictureCollection.getSelectedNodes() ) {
-                if ( selectedNode.getUserObject() instanceof PictureInfo ) {
-                    selectedNode.getPictureCollection().removeFromMailSelection( selectedNode );
-                }
             }
         }
     }
@@ -616,17 +605,20 @@ public class PicturePopupMenu extends JPopupMenu {
     }
 
     /**
-     * Clears the set of images selected for emailing
-     */
-    private void doClearMailSelection() {
-        popupNode.getPictureCollection().clearMailSelection();
-    }
-
-    /**
      * Adds a picture to the selection of pictures to be mailed.
+     *
+     * 1. If no nodes are selected, mail-select the node.
+     *
+     * 2. If multiple nodes are selected but the popup node is not one of them
+     * then mail-select the node
+     *
+     * 3. If multiple nodes are selected and the popup node is one of them then
+     * mail-select them all
      */
     private void addToMailSelection() {
         if ( Settings.pictureCollection.countSelectedNodes() < 1 ) {
+            popupNode.getPictureCollection().addToMailSelection( popupNode );
+        } else if ( !Settings.pictureCollection.isSelected( popupNode ) ) {
             popupNode.getPictureCollection().addToMailSelection( popupNode );
         } else {
             for ( SortableDefaultMutableTreeNode selectedNode : Settings.pictureCollection.getSelectedNodes() ) {
@@ -638,10 +630,25 @@ public class PicturePopupMenu extends JPopupMenu {
     }
 
     /**
+     * removes the current node from the Mail selection. (To unselect all
+     * mail-selected items the user has the remove all option.)
+     */
+    private void removeFromMailSelection() {
+        popupNode.getPictureCollection().removeFromMailSelection( popupNode );
+    }
+
+    /**
+     * Clears the set of images selected for emailing
+     */
+    private void doClearMailSelection() {
+        popupNode.getPictureCollection().clearMailSelection();
+    }
+
+    /**
      * Refresh the selected pictures
      */
     private void refreshSelectedPictures() {
-        if ( ! Settings.pictureCollection.isSelected( popupNode ) ) {
+        if ( !Settings.pictureCollection.isSelected( popupNode ) ) {
             JpoEventBus.getInstance().post( new RefreshThumbnailRequest( popupNode, ThumbnailQueueRequest.HIGH_PRIORITY ) );
         } else {
             JpoEventBus.getInstance().post( new RefreshThumbnailRequest( Settings.pictureCollection.getSelectedNodesAsArrayList(), ThumbnailQueueRequest.HIGH_PRIORITY ) );
@@ -658,22 +665,22 @@ public class PicturePopupMenu extends JPopupMenu {
     private void moveToLastChild( SortableDefaultMutableTreeNode targetNode ) {
 
         List<SortableDefaultMutableTreeNode> movingNodes = new ArrayList<>();
-        
+
         if ( ( Settings.pictureCollection.countSelectedNodes() > 0 ) && ( Settings.pictureCollection.isSelected( popupNode ) ) ) {
             // move the selected nodes and then unselect them
             LOGGER.info( "Moving the selection." );
             for ( SortableDefaultMutableTreeNode selectedNode : Settings.pictureCollection.getSelectedNodes() ) {
                 if ( selectedNode.getUserObject() instanceof PictureInfo ) {
-                    movingNodes.add(selectedNode);
+                    movingNodes.add( selectedNode );
                 }
             }
             Settings.pictureCollection.clearSelection();
         } else {
             // move only the popup node
-            movingNodes.add(popupNode);
+            movingNodes.add( popupNode );
         }
 
-       MoveNodeToNodeRequest request = new MoveNodeToNodeRequest(movingNodes, targetNode);
+        MoveNodeToNodeRequest request = new MoveNodeToNodeRequest( movingNodes, targetNode );
 
     }
 
