@@ -22,7 +22,7 @@ import jpo.dataModel.NodeStatistics;
 import net.miginfocom.swing.MigLayout;
 
 /*
- ConsolidateGroupJFrame.java:  Controller and Visual to consoliodate
+ ConsolidateGroupJFrame.java:  Controller and Visual to consolidate
  pictures of a node into a directory.
 
  Copyright (C) 2002 - 2014  Richard Eigenmann.
@@ -117,7 +117,7 @@ public class ConsolidateGroupJFrame extends JFrame {
             }
         } );
 
-        JPanel contentJPanel = new javax.swing.JPanel();
+        JPanel contentJPanel = new JPanel();
         contentJPanel.setLayout( new MigLayout() );
 
         JLabel consolidateGroupBlaBlaJLabel = new JLabel( Settings.jpoResources.getString( "ConsolidateGroupBlaBlaLabel" ) );

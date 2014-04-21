@@ -3,6 +3,7 @@
 
             <table class="changelog">
                 <tr><td colspan=2><b>Development Version 0.12</b></td></tr>
+                <tr><td valign="top">21.4.2014</td><td>Fixed bug in Consolidate</td></tr>
                 <tr><td valign="top">21.4.2014</td><td>Cleaner code for email selection</td></tr>
                 <tr><td valign="top">21.4.2014</td><td>Fixed bug with thumbnail descriptions showing as highlighted after a move.</td></tr>
                 <tr><td valign="top">21.4.2014</td><td>Rotation of Samsung Galaxy S4 pictures is detected on image load</td></tr>

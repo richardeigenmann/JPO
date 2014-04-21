@@ -34,7 +34,7 @@ import jpo.dataModel.Tools;
 /**
  * This class moves all pictures of a group node to a target directory.
  */
-public class ConsolidateGroup extends SwingWorker<Integer, String> {
+public class ConsolidateGroup extends SwingWorker<Void, String> {
 
     /**
      * Defines a logger for this class
@@ -65,7 +65,7 @@ public class ConsolidateGroup extends SwingWorker<Integer, String> {
      * @param startNode	The node from which this is all to be built.
      * @param recurseGroups Flag indicating subgroups should be included if the
      * moveLowres flag is true
-     * @param progGui A Pgrogress Gui
+     * @param progGui A Progress Gui
      */
     public ConsolidateGroup( File targetDirectoryHighres,
             SortableDefaultMutableTreeNode startNode, boolean recurseGroups,
@@ -98,10 +98,10 @@ public class ConsolidateGroup extends SwingWorker<Integer, String> {
      * @return Integer.MAX_VALUE
      */
     @Override
-    public Integer doInBackground() {
+    public Void doInBackground() {
         consolidateGroup( startNode );
 
-        return Integer.MAX_VALUE;
+        return null;
     }
 
     @Override
@@ -117,8 +117,18 @@ public class ConsolidateGroup extends SwingWorker<Integer, String> {
     @Override
     protected void done() {
         progGui.switchToDoneMode();
+
+        if (errorCount > 0 ) {
+                            JOptionPane.showMessageDialog( progGui,
+                            String.format( "Could not move %d pictures", errorCount ),
+                            Settings.jpoResources.getString( "genericError" ),
+                            JOptionPane.ERROR_MESSAGE );
+        };
+
     }
 
+    private int errorCount = 0;
+    
     /**
      * This method consolidates all the nodes of the supplied group.
      *
@@ -133,8 +143,8 @@ public class ConsolidateGroup extends SwingWorker<Integer, String> {
         LOGGER.fine( String.format( "The node %s has %d children", groupNode.toString(), groupNode.getChildCount() ) );
         LOGGER.fine( String.format( "prog GUI interrupt: %b", progGui.getInterruptor().getShouldInterrupt() ) );
         @SuppressWarnings( "unchecked" )
-        ArrayList<SortableDefaultMutableTreeNode> nodeArrayList = Collections.<SortableDefaultMutableTreeNode>list( groupNode.children() );
-        for ( SortableDefaultMutableTreeNode node : nodeArrayList ) {
+        List<SortableDefaultMutableTreeNode> nodes = Collections.<SortableDefaultMutableTreeNode>list( groupNode.children() );
+        for ( SortableDefaultMutableTreeNode node : nodes ) {
             userObject = node.getUserObject();
             if ( ( userObject instanceof GroupInfo ) && recurseGroups ) {
                 consolidateGroup( node );
@@ -143,11 +153,7 @@ public class ConsolidateGroup extends SwingWorker<Integer, String> {
                 PictureInfo pictureInfo = (PictureInfo) userObject; // let's make sure
                 if ( !moveHighresPicture( pictureInfo ) ) {
                     LOGGER.severe( String.format( "Could not move highres picture of node %s. Aborting.", node.toString() ) );
-                    JOptionPane.showMessageDialog( progGui,
-                            String.format( "Could not move highres picture of node %s. Aborting.", node.toString() ),
-                            Settings.jpoResources.getString( "genericError" ),
-                            JOptionPane.ERROR_MESSAGE );
-                    break;
+                    errorCount++;
                 } else {
                     LOGGER.info( String.format( "Successfully Moved Highres file of node %s", pictureInfo.toString() ) );
                     publish( String.format( "Consolidated node: %s", node.toString() ) );
