@@ -8,31 +8,26 @@ import junit.framework.TestCase;
  */
 public class GroupNavigatorTest extends TestCase {
 
+    /**
+     * Tests for the Group Navigator
+     * @param testName the test name
+     */
     public GroupNavigatorTest( String testName ) {
         super( testName );
     }
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-    }
 
-    @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
-    }
+    private final GroupInfo groupInfo = new GroupInfo( "Group1" );
+    private final SortableDefaultMutableTreeNode groupNode = new SortableDefaultMutableTreeNode( groupInfo );
 
-    GroupInfo groupInfo = new GroupInfo( "Group1" );
-    SortableDefaultMutableTreeNode groupNode = new SortableDefaultMutableTreeNode( groupInfo );
+    private final PictureInfo pictureInfo1 = new PictureInfo();
+    private final SortableDefaultMutableTreeNode pictureNode1 = new SortableDefaultMutableTreeNode( pictureInfo1 );
 
-    PictureInfo pictureInfo1 = new PictureInfo();
-    SortableDefaultMutableTreeNode pictureNode1 = new SortableDefaultMutableTreeNode( pictureInfo1 );
-
-    PictureInfo pictureInfo2 = new PictureInfo();
-    SortableDefaultMutableTreeNode pictureNode2 = new SortableDefaultMutableTreeNode( pictureInfo2 );
+    private final PictureInfo pictureInfo2 = new PictureInfo();
+    private final SortableDefaultMutableTreeNode pictureNode2 = new SortableDefaultMutableTreeNode( pictureInfo2 );
     
-    GroupInfo groupInfo2 = new GroupInfo( "Group2" );
-    SortableDefaultMutableTreeNode groupNode2 = new SortableDefaultMutableTreeNode( groupInfo2 );
+    private final GroupInfo groupInfo2 = new GroupInfo( "Group2" );
+    private final SortableDefaultMutableTreeNode groupNode2 = new SortableDefaultMutableTreeNode( groupInfo2 );
     
 
     /**

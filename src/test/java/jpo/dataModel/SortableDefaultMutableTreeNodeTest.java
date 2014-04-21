@@ -11,18 +11,17 @@ import static junit.framework.Assert.assertTrue;
 import junit.framework.TestCase;
 
 
-/*
- * ApplicationJMenuBarTest.java
- * JUnit based test
- *
- */
 /**
- *
+ * Tests for the SortableDefaultMutableTreeNode tests
  * @author Richard Eigenmann
  */
 public class SortableDefaultMutableTreeNodeTest
         extends TestCase {
 
+    /**
+     * Constructor for the SortableDefaultMutableTreeNode tests
+     * @param testName 
+     */
     public SortableDefaultMutableTreeNodeTest( String testName ) {
         super( testName );
     }

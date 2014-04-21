@@ -275,7 +275,6 @@ public class ThumbnailController implements JpoDropTargetDropEventHandler {
     public void setPendingIcon() {
         if ( myNode == null ) {
             LOGGER.severe( "Referring node is null! How did this happen?" );
-            Thread.dumpStack();
             return;
         }
         if ( myNode.getUserObject() instanceof PictureInfo ) {
@@ -390,7 +389,6 @@ public class ThumbnailController implements JpoDropTargetDropEventHandler {
                 groupPopupMenu.show( e.getComponent(), e.getX(), e.getY() );
             } else {
                 LOGGER.severe( String.format( "Processing a right click response on an unknown node type: %s", myNode.getUserObject().getClass().toString() ) );
-                Thread.dumpStack();
             }
         }
 
@@ -689,6 +687,7 @@ public class ThumbnailController implements JpoDropTargetDropEventHandler {
         return String.format( "Thumbnail: HashCode: %d, referringNode: %s", hashCode(), description );
     }
 
+    @Override
     public void handleJpoDropTargetDropEvent( DropTargetDropEvent event ) {
         myNode.executeDrop( event );
     }

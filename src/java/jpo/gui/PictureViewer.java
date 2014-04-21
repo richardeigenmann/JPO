@@ -450,6 +450,7 @@ public class PictureViewer
     /**
      * here we get notified by the PictureInfo object that something has
      * changed.
+     * @param e
      */
     @Override
     public void pictureInfoChangeEvent( PictureInfoChangeEvent e ) {

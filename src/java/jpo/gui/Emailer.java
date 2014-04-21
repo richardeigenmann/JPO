@@ -19,6 +19,7 @@ import java.util.logging.Logger;
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import javax.activation.URLDataSource;
+import javax.mail.Authenticator;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
@@ -388,7 +389,7 @@ public class Emailer
         props.setProperty( "mail.smtp.starttls.enable", "true" );
 
 
-        Session session = Session.getDefaultInstance( props, new javax.mail.Authenticator() {
+        Session session = Session.getDefaultInstance( props, new Authenticator() {
 
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {

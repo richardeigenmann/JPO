@@ -7,7 +7,7 @@ import java.util.logging.Logger;
 /*
 DuplicatesQuery.java:  Finds duplicates and adds them to a query object
 
-Copyright (C) 2010  Richard Eigenmann.
+Copyright (C) 2010-2014  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -31,13 +31,14 @@ public class DuplicatesQuery
     /**
      * Defines a logger for this class
      */
-    private static Logger logger = Logger.getLogger( DuplicatesQuery.class.getName() );
+    private static final Logger LOGGER = Logger.getLogger( DuplicatesQuery.class.getName() );
 
 
     /**
      * The number of entries found
      * @return the number of entries found
      */
+    @Override
     public int getNumberOfResults() {
         if ( searchResults == null ) {
             extractSearchResults();
@@ -51,6 +52,7 @@ public class DuplicatesQuery
      * @param index The element to be returned
      * @return returns the node or null if the query is not right.
      */
+    @Override
     public SortableDefaultMutableTreeNode getIndex( int index ) {
         if ( index >= getNumberOfResults() ) // forces execute of query if not yet executed
         {
@@ -65,6 +67,7 @@ public class DuplicatesQuery
      * Returns a title for the query
      * @return The title for the query
      */
+    @Override
     public String getTitle() {
         return "Duplicates";
     }
@@ -83,8 +86,9 @@ public class DuplicatesQuery
     /**
      * Refreshes the search results
      */
+    @Override
     public void refresh() {
-        logger.info( "refresh called" );
+        LOGGER.info( "refresh called" );
         extractSearchResults();
     }
 
@@ -99,8 +103,8 @@ public class DuplicatesQuery
      * Finds the duplicates
      */
     private void extractSearchResults() {
-        ArrayList<SortableDefaultMutableTreeNode> results = new ArrayList<SortableDefaultMutableTreeNode>();
-        ArrayList<SortableDefaultMutableTreeNode> nodeList = new ArrayList<SortableDefaultMutableTreeNode>();
+        ArrayList<SortableDefaultMutableTreeNode> results = new ArrayList<>();
+        ArrayList<SortableDefaultMutableTreeNode> nodeList = new ArrayList<>();
         SortableDefaultMutableTreeNode pictureNode;
         for ( Enumeration e = Settings.pictureCollection.getRootNode().preorderEnumeration(); e.hasMoreElements(); ) {
             pictureNode = (SortableDefaultMutableTreeNode) e.nextElement();
@@ -108,7 +112,7 @@ public class DuplicatesQuery
                 nodeList.add( pictureNode );
             }
         }
-        logger.info( String.format( "Build list of %d picture nodes", nodeList.size() ) );
+        LOGGER.info( String.format( "Build list of %d picture nodes", nodeList.size() ) );
 
         SortableDefaultMutableTreeNode baseNode;
         PictureInfo baseNodePictureInfo;
@@ -122,7 +126,7 @@ public class DuplicatesQuery
                 compareNodePictureInfo = (PictureInfo) compareNode.getUserObject();
                 if ( ( baseNodePictureInfo.getHighresLocation().equals( compareNodePictureInfo.getHighresLocation() ) )
                         || ( ( baseNodePictureInfo.getChecksum() != Long.MIN_VALUE ) && ( baseNodePictureInfo.getChecksum() == compareNodePictureInfo.getChecksum() ) ) ) {
-                    logger.info( String.format( "Found a duplicate: %s = %s", baseNode.toString(), compareNode.toString() ) );
+                    LOGGER.info( String.format( "Found a duplicate: %s = %s", baseNode.toString(), compareNode.toString() ) );
                     results.add( baseNode );
                     results.add( compareNode );
                 }

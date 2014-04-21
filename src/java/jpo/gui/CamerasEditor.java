@@ -219,6 +219,7 @@ public class CamerasEditor
         cancelJButton.setBorder( BorderFactory.createRaisedBevelBorder() );
         cancelJButton.addActionListener( new ActionListener() {
 
+            @Override
             public void actionPerformed( ActionEvent e ) {
                 Settings.cameras = backupCameras;
                 getRid();

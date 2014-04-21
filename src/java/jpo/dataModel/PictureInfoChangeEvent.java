@@ -3,7 +3,7 @@ package jpo.dataModel;
 /*
 PictureInfoChangeEvent.java:  This event holds information about how the picture changed
 
-Copyright (C) 2002 - 2011  Richard Eigenmann.
+Copyright (C) 2002 - 2014  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -28,26 +28,26 @@ public class PictureInfoChangeEvent {
     /**
      *  a reference to the PictureInfo firing off the event
      */
-    private PictureInfo pi;
+    private final PictureInfo pictureInfo;
 
 
     /**
      *  Constructor for the PictureInforChangeEvent
      *
-     * @param pi
+     * @param pcitureInfo
      */
-    public PictureInfoChangeEvent( PictureInfo pi ) {
-        this.pi = pi;
+    public PictureInfoChangeEvent( PictureInfo pcitureInfo ) {
+        this.pictureInfo = pcitureInfo;
     }
 
 
     /**
      *  returns the PictureInfo object that created the event
      *
-     * @return the pictureinfo object
+     * @return the pictureInfo object
      */
     public PictureInfo getPictureInfo() {
-        return pi;
+        return pictureInfo;
     }
 
 
@@ -59,7 +59,7 @@ public class PictureInfoChangeEvent {
     @Override
     public String toString() {
         return String.format( "PictureInfoChangeEvent from PictureInfo %s, descriptionChanged: %b, highresLocationChanged %b, lowresLocationChanged: %b, checksumChanged: %b, thumbnailChanged %b, creationTimeChanged %b, filmReferenceChanged: %b, rotationChanged %b, commentChanged: %b, photographerChanged: %b, copyrightHolderChanged: %b, latLngChanged: %b, categoryAssignmentsChanged: %b, wasSelected: %b, wasUnselected: %b, wasMailSelected: %b, wasMailUnselected: %b",
-                pi.toString(), getDescriptionChanged(), getHighresLocationChanged(),
+                pictureInfo.toString(), getDescriptionChanged(), getHighresLocationChanged(),
                 getLowresLocationChanged(), getChecksumChanged(), getThumbnailChanged(),
                 getCreationTimeChanged(), getFilmReferenceChanged(),
                 getRotationChanged(), getCommentChanged(), getPhotographerChanged(),

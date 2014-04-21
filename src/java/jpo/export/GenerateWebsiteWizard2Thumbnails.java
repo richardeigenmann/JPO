@@ -47,6 +47,7 @@ public class GenerateWebsiteWizard2Thumbnails extends AbstractStep {
     /**
      * Asks all the questions we need to know in regards to the thumbnails on
      * the final website.
+     * @param options
      */
     public GenerateWebsiteWizard2Thumbnails( HtmlDistillerOptions options ) {
         super( Settings.jpoResources.getString( "HtmlDistThumbnails" ), Settings.jpoResources.getString( "HtmlDistThumbnails" ) );
@@ -129,7 +130,7 @@ public class GenerateWebsiteWizard2Thumbnails extends AbstractStep {
         wizardPanel.add(
                 new JLabel(
                         Settings.jpoResources.getString( "lowresJpgQualitySlider" ) ), "align label" );
-        Hashtable<Integer, JLabel> labelTable = new Hashtable<Integer, JLabel>();
+        Hashtable<Integer, JLabel> labelTable = new Hashtable<>();
         labelTable.put(
                 0, new JLabel( Settings.jpoResources.getString( "jpgQualityBad" ) ) );
         labelTable.put(

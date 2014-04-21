@@ -145,6 +145,7 @@ public class PrivacyJFrame
         final JButton all = new JButton( Settings.jpoResources.getString( "PrivacyAll" ) );
         all.addActionListener( new ActionListener() {
 
+            @Override
             public void actionPerformed( ActionEvent e ) {
                 privacyController.clearAll();
             }

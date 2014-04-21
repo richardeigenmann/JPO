@@ -37,6 +37,7 @@ public class LoadProgressGui {
     public LoadProgressGui() {
         Runnable r = new Runnable() {
 
+            @Override
             public void run() {
                 initComponents();
             }
@@ -46,15 +47,9 @@ public class LoadProgressGui {
         } else {
             try {
                 SwingUtilities.invokeAndWait( r );
-            } catch ( InterruptedException ex ) {
+            } catch ( InterruptedException | InvocationTargetException ex ) {
                 Logger.getLogger( LoadProgressGui.class.getName() ).log( Level.SEVERE, null, ex );
                 Logger.getLogger( LoadProgressGui.class.getName() ).log( Level.SEVERE, null, "no idea what to do here" );
-                Thread.dumpStack();
-            } catch ( InvocationTargetException ex ) {
-                Logger.getLogger( LoadProgressGui.class.getName() ).log( Level.SEVERE, null, ex );
-                Logger.getLogger( LoadProgressGui.class.getName() ).log( Level.SEVERE, null, "no idea what to do here" );
-                Thread.dumpStack();
-
             }
         }
     }
@@ -106,6 +101,7 @@ public class LoadProgressGui {
     public void update( final String message ) {
         Runnable r = new Runnable() {
 
+            @Override
             public void run() {
                 progLabel.setText( message );
             }
@@ -125,6 +121,7 @@ public class LoadProgressGui {
     public void getRid() {
         Runnable r = new Runnable() {
 
+            @Override
             public void run() {
                 frame.setVisible( false );
                 frame.dispose();

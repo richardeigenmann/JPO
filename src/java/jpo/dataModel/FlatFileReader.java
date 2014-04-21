@@ -3,16 +3,13 @@ package jpo.dataModel;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Iterator;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
-import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
 import javax.swing.JOptionPane;
 import jpo.EventBus.AddFlatFileRequest;
@@ -31,6 +28,10 @@ public class FlatFileReader {
      */
     private static final Logger LOGGER = Logger.getLogger( FlatFileReader.class.getName() );
 
+    /**
+     * Constructs a FlatFileReader and imports the pictures listed in the file
+     * @param request The request
+     */
     public FlatFileReader( AddFlatFileRequest request ) {
         SortableDefaultMutableTreeNode newNode = new SortableDefaultMutableTreeNode(
                 new GroupInfo( request.getFile().getName() ) );

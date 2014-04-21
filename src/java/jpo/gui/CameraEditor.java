@@ -183,7 +183,7 @@ public class CameraEditor
     /**
      * "Root directory of camera on computer's file system:
      */
-    private JLabel cameraDirJLabel = new JLabel( Settings.jpoResources.getString( "cameraDirJLabel" ) );
+    private final JLabel cameraDirJLabel = new JLabel( Settings.jpoResources.getString( "cameraDirJLabel" ) );
 
     /**
      * The save button
@@ -192,63 +192,63 @@ public class CameraEditor
     /**
      *  The new name of the camera
      */
-    private JTextField cameraNameJTextField = new JTextField();
+    private final JTextField cameraNameJTextField = new JTextField();
 
     /**
      *  an icon that displays a camera to beautify the screen.
      */
-    private JLabel cameraIcon = new JLabel( new ImageIcon( Settings.CLASS_LOADER.getResource( "jpo/images/camera.jpg" ) ) );
+    private final JLabel cameraIcon = new JLabel( new ImageIcon( Settings.CLASS_LOADER.getResource( "jpo/images/camera.jpg" ) ) );
 
     /**
      *   holds the root directory of the camera relative to the host computer's file system
      */
-    private DirectoryChooser cameraDirJTextField =
+    private final DirectoryChooser cameraDirJTextField =
             new DirectoryChooser( Settings.jpoResources.getString( "cameraDirJLabel" ),
             DirectoryChooser.DIR_MUST_EXIST );
 
     /**
      * "Number of pictures remembered from last import:"
      */
-    private JLabel memorisedPicsText = new JLabel( Settings.jpoResources.getString( "memorisedPicsJLabel" ) );
+    private final JLabel memorisedPicsText = new JLabel( Settings.jpoResources.getString( "memorisedPicsJLabel" ) );
 
     /**
      *  label that informs how many pictures have been memorised for this camera
      */
-    private JLabel memorisedPicturesJLabel = new JLabel();
+    private final JLabel memorisedPicturesJLabel = new JLabel();
 
     /**
      * Refresh Button to memorise the files on the camera
      */
-    private JButton refreshJButton = new JButton( Settings.jpoResources.getString( "refreshJButton" ) );
+    private final JButton refreshJButton = new JButton( Settings.jpoResources.getString( "refreshJButton" ) );
 
     /**
      *  Button to zero out the memorised pictures on the camera
      */
-    private JButton zeroJButton = new JButton( Settings.jpoResources.getString( "zeroJButton" ) );
+    private final JButton zeroJButton = new JButton( Settings.jpoResources.getString( "zeroJButton" ) );
 
     /**
      *  Button to save the camera information
      */
-    private JButton saveJButton = new JButton( "Save" );
+    private final JButton saveJButton = new JButton( "Save" );
 
     /**
      *  checkbox to indicate that filenames should be used
      */
-    private JCheckBox filenameJCheckBox = new JCheckBox( Settings.jpoResources.getString( "filenameJCheckBox" ) );
+    private final JCheckBox filenameJCheckBox = new JCheckBox( Settings.jpoResources.getString( "filenameJCheckBox" ) );
 
     /**
      *  checkbox to indicate whether to monitor for new pictures
      */
-    private JCheckBox monitorJCheckBox = new JCheckBox( Settings.jpoResources.getString( "monitorJCheckBox" ) );
+    private final JCheckBox monitorJCheckBox = new JCheckBox( Settings.jpoResources.getString( "monitorJCheckBox" ) );
 
     /**
      *   holds the target directory where the images are to be copied to
      */
-    private DirectoryChooser targetDirJTextField =
+    private final DirectoryChooser targetDirJTextField =
             new DirectoryChooser( Settings.jpoResources.getString( "targetDirJLabel" ),
             DirectoryChooser.DIR_MUST_EXIST );
 
-    private HashSet<ActionListener> listeners = new HashSet<ActionListener>();
+    private final HashSet<ActionListener> listeners = new HashSet<>();
 
 
 

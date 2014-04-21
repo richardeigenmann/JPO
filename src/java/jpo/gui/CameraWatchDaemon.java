@@ -87,7 +87,6 @@ public class CameraWatchDaemon implements Runnable {
             try {
                 Thread.sleep( 5000 );
             } catch ( InterruptedException ex ) {
-                ex.printStackTrace();
             }
         }
     }

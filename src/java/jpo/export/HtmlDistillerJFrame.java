@@ -46,7 +46,7 @@ import jpo.gui.DirectoryChooser;
 HtmlDistillerJFrame.java:  Runs a GUI to generate a website
 pre-populates the options with default values.
 
-Copyright (C) 2008-2012  Richard Eigenmann.
+Copyright (C) 2008-2014  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -246,7 +246,7 @@ public class HtmlDistillerJFrame
         targetJPanel.add( Box.createRigidArea( new Dimension( 0, 10 ) ) );
 
         String[] finalTargetOptions = { "Local Directory", "FTP Location", "SCP Location" };
-        final JComboBox <String>finalTarget = new JComboBox<String>( finalTargetOptions );
+        final JComboBox <String>finalTarget = new JComboBox<>( finalTargetOptions );
         finalTarget.setSelectedIndex( 0 );
         finalTarget.addActionListener( new ActionListener() {
 
@@ -309,7 +309,7 @@ public class HtmlDistillerJFrame
         // Thumbnail Quality Slider
         JPanel lowresQualitySliderJPanel = new JPanel( new FlowLayout( FlowLayout.LEFT ) );
         lowresQualitySliderJPanel.add( new JLabel( Settings.jpoResources.getString( "lowresJpgQualitySlider" ) ) );
-        Hashtable<Integer, JLabel> labelTable = new Hashtable<Integer, JLabel>();
+        Hashtable<Integer, JLabel> labelTable = new Hashtable<>();
         labelTable.put( 0, new JLabel( Settings.jpoResources.getString( "jpgQualityBad" ) ) );
         labelTable.put( 80, new JLabel( Settings.jpoResources.getString( "jpgQualityGood" ) ) );
         labelTable.put( 100, new JLabel( Settings.jpoResources.getString( "jpgQualityBest" ) ) );
@@ -373,7 +373,7 @@ public class HtmlDistillerJFrame
 
 
         // Midres Quality Slider
-        Hashtable<Integer, JLabel> labelTable1 = new Hashtable<Integer, JLabel>();
+        Hashtable<Integer, JLabel> labelTable1 = new Hashtable<>();
         labelTable1.put( 0, new JLabel( Settings.jpoResources.getString( "jpgQualityBad" ) ) );
         labelTable1.put( 80, new JLabel( Settings.jpoResources.getString( "jpgQualityGood" ) ) );
         labelTable1.put( 100, new JLabel( Settings.jpoResources.getString( "jpgQualityBest" ) ) );
@@ -609,7 +609,6 @@ public class HtmlDistillerJFrame
             try {
                 htmlDirectory.mkdirs();
             } catch ( SecurityException e ) {
-                e.printStackTrace();
                 JOptionPane.showMessageDialog(
                         this,
                         Settings.jpoResources.getString( "htmlDistCrtDirError" ) + "\n" + e.getMessage(),

@@ -3,28 +3,19 @@ package jpo.dataModel;
 import static junit.framework.Assert.assertNotNull;
 import junit.framework.TestCase;
 import org.xml.sax.InputSource;
-/*
- * XmlReaderTest.java
- * JUnit based test
- *
- */
 
 /**
- *
+ * Tests for the XmlReader class
  * @author Richard Eigenmann
  */
 public class XmlReaderTest extends TestCase {
     
+    /**
+     * Constructor for the XmlReader tests
+     * @param testName 
+     */
     public XmlReaderTest(String testName) {
         super(testName);
-    }
-
-    @Override
-    protected void setUp() throws Exception {
-    }
-
-    @Override
-    protected void tearDown() throws Exception {
     }
 
     /**

@@ -99,7 +99,7 @@ public class CameraDownloadWizardStep1
     class SearchForPicturesThread
             implements Runnable {
 
-        private JLabel progressJLabel;
+        private final JLabel progressJLabel;
 
 
         public SearchForPicturesThread( JLabel progressJLabel ) {
@@ -107,6 +107,7 @@ public class CameraDownloadWizardStep1
         }
 
 
+        @Override
         public void run() {
             LOGGER.info( getClass().toString() + ".run: searching for the new pictures on the camera " + dataModel.getCamera().getDescription() );
             dataModel.setNewPictures( dataModel.getCamera().getNewPictures() );

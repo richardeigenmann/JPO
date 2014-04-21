@@ -16,11 +16,15 @@ import junit.framework.TestCase;
  */
 
 /**
- *
+ * Tests for the resource bundles
  * @author Richard Eigenmann
  */
 public class ResourceBundleTest extends TestCase {
     
+    /**
+     * Tests for the resource bundles
+     * @param testName 
+     */
     public ResourceBundleTest(String testName) {
         super(testName);
     }
@@ -51,22 +55,18 @@ public class ResourceBundleTest extends TestCase {
     }
     
     public void testResourceLocale1() {
-        //System.out.println("English bundle is reporting locale: " + jpoResources1.getLocale());
         assertEquals("Testing English bundle locale", Locale.ENGLISH, jpoResources1.getLocale() );
     }
     
     public void testResourceLocale2() {
-        //System.out.println("German bundle is reporting locale: " + jpoResources2.getLocale());
         assertEquals("Testing German bundle locale", Locale.GERMAN, jpoResources2.getLocale() );
     }
     
     public void testResourceLocale3() {
-        //System.out.println("SimplifiedChinese bundle is reporting locale: " + jpoResources3.getLocale());
         assertEquals("Testing SimplifiedChinese bundle locale", Locale.SIMPLIFIED_CHINESE, jpoResources3.getLocale() );
     }
     
     public void testResourceLocale4() {
-        //System.out.println("TraditionalChinese bundle is reporting locale: " + jpoResources4.getLocale());
         assertEquals("Testing TraditionalChinese bundle locale", Locale.TRADITIONAL_CHINESE, jpoResources4.getLocale() );
     }
     

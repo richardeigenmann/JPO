@@ -76,7 +76,7 @@ public class DirectoryChooser
     /**
      * The drop down list of the previously used directories
      */
-    private final JComboBox <Object> directoryJComboBox = new JComboBox<Object>();
+    private final JComboBox <Object> directoryJComboBox = new JComboBox<>();
     /**
      * Field that allows the user to capture the directory which is a sub object of the JComboBox.
      * This code relies that the ComboBoxEditors are implemented as a JTextField.
@@ -221,7 +221,7 @@ public class DirectoryChooser
      *  A List that holds all the ChangeListeners that want to be notified
      *  when the directory changes.
      */
-    private final ArrayList<ChangeListener> changeListeners = new ArrayList<ChangeListener>();
+    private final ArrayList<ChangeListener> changeListeners = new ArrayList<>();
 
     /**
      * Adds a change listener that will be notified whenever the text in the field changes

@@ -6,7 +6,7 @@ import java.util.logging.Logger;
 import junit.framework.TestCase;
 
 /**
- *
+ * Tests for the Description Word Map
  * @author Richard Eigenmann
  */
 public class DescriptionWordMapTest extends TestCase {
@@ -17,14 +17,20 @@ public class DescriptionWordMapTest extends TestCase {
     private static final Logger LOGGER = Logger.getLogger( DescriptionWordMapTest.class.getName() );
 
 
+    /**
+     * Constructor
+     * @param testName  test name
+     */
     public DescriptionWordMapTest( String testName ) {
         super( testName );
     }
 
 
+    /**
+     * Sets up some nodes
+     * @return a root node with 4 pictureInfo objects
+     */
     private SortableDefaultMutableTreeNode getSomeNodes() {
-
-
         SortableDefaultMutableTreeNode rootNode = new SortableDefaultMutableTreeNode( new GroupInfo( "Root Node" ) );
 
         PictureInfo pi1 = new PictureInfo();

@@ -45,6 +45,7 @@ public class RotatePictureRequest implements Request {
     
     /**
      * Returns the queue priority
+     * @return the queue priority
      */
     public int getPriority() {
         return priority;

@@ -298,7 +298,7 @@ public class SourcePicture {
             setStatus( SOURCE_PICTURE_ERROR, "Error while reading " + imageUrl.toString() );
             sourcePictureBufferedImage = null;
         }
-        ;
+        
 
     }
 

@@ -15,6 +15,12 @@ public class ImageBytes implements Serializable {
     private long lastModification;
     private final byte[] bytes;
 
+    
+    /**
+     * Constructs a new ImageBytes object with the key and the bytes as read from disk
+     * @param key the Key for the object
+     * @param bytes the bytes
+     */
     public ImageBytes( String key, byte[] bytes ) {
         this.key = key;
         this.bytes = bytes;
@@ -38,10 +44,18 @@ public class ImageBytes implements Serializable {
         return bytes;
     }
 
+    /**
+     * Remembers the last modification time of the source file
+     * @param lastModification the last modification time
+     */
     public void setLastModification( FileTime lastModification ) {
         this.lastModification = lastModification.toMillis();
     }
 
+    /**
+     * Returns the last modification time of the data that was stored in the byte array
+     * @return the last modification time
+     */
     public FileTime getLastModification() {
         return FileTime.fromMillis( lastModification );
     }

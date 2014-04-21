@@ -55,13 +55,13 @@ public class LicenseWindow {
         jsp.setPreferredSize( new Dimension( 500, 400 ) );
 
 
-        StringBuffer sb = new StringBuffer( "" );
+        StringBuilder sb = new StringBuilder( "" );
         String textLine;
         try {
             InputStream in = ApplicationJMenuBar.class.getResourceAsStream( "../gpl.txt" );
             BufferedReader bin = new BufferedReader( new InputStreamReader( in ) );
             while ( ( textLine = bin.readLine() ) != null ) {
-                sb.append(textLine + "\n");
+                sb.append( textLine ).append("\n");
             }
             bin.close();
             in.close();

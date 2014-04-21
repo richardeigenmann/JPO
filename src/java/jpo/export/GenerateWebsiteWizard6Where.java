@@ -155,7 +155,7 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
     /**
      * SSH Authentication Options
      */
-    private final JComboBox sshAuthOoptionChooser = new JComboBox<String>( SSH_AUTH_OPTIONS );
+    private final JComboBox sshAuthOoptionChooser = new JComboBox<>( SSH_AUTH_OPTIONS );
     /**
      * The ssh password
      *
@@ -520,7 +520,6 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
             try {
                 targetDirectory.mkdirs();
             } catch ( SecurityException e ) {
-                e.printStackTrace();
                 JOptionPane.showMessageDialog(
                         Settings.anchorFrame,
                         Settings.jpoResources.getString( "htmlDistCrtDirError" ) + "\n" + e.getMessage(),

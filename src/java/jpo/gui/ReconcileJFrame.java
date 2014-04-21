@@ -299,7 +299,7 @@ public class ReconcileJFrame extends JFrame {
     private class Reconciler
             extends SwingWorker<String, String> {
 
-        private final HashSet<URI> collectionUris = new HashSet<URI>();
+        private final HashSet<URI> collectionUris = new HashSet<>();
 
         @Override
         protected String doInBackground() throws Exception {

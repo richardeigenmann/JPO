@@ -24,6 +24,11 @@ public class FileSaveRequest implements Request {
         this.onSucccessNextRequest = onSuccessNextRequest;
     }
 
+    /**
+     * Returns the next event to submit only if the file was successfully saved
+     *
+     * @return The next event to execute on a successful save
+     */
     public Request getOnSuccessNextRequest() {
         return onSucccessNextRequest;
     }

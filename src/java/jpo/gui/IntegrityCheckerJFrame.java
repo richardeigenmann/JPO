@@ -40,6 +40,7 @@ import net.miginfocom.swing.MigLayout;
  The license is in gpl.txt.
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
+
 /**
  * IntegrityChecker.java: creates a frame and checks the integrity of the
  * collection
@@ -55,7 +56,6 @@ public class IntegrityCheckerJFrame
     private static final Logger LOGGER = Logger.getLogger( IntegrityCheckerJFrame.class.getName() );
     private final JTextArea resultJTextArea = new JTextArea( 25, 80 );
     private final JButton okJButton = new JButton( Settings.jpoResources.getString( "genericOKText" ) );
-    //private final JButton fixThumbnailReferencesJButton = new JButton( "Fix Thumbnail References" );
     private final JButton correctChecksumsJButton = new JButton( "Correct picture checksums" );
     private final JButton interruptJButton = new JButton( "Interrupt" );
     /**
@@ -100,12 +100,6 @@ public class IntegrityCheckerJFrame
                 getRid();
             }
         } );
-        /*fixThumbnailReferencesJButton.addActionListener( new ActionListener() {
-            @Override
-            public void actionPerformed( ActionEvent e ) {
-                fixThumbnailReferences();
-            }
-        } );*/
         correctChecksumsJButton.addActionListener( new ActionListener() {
             @Override
             public void actionPerformed( ActionEvent e ) {
@@ -118,7 +112,6 @@ public class IntegrityCheckerJFrame
                 interruptWorkers();
             }
         } );
-
 
 
         pack();
@@ -140,9 +133,6 @@ public class IntegrityCheckerJFrame
         if ( checksumWorker != null ) {
             checksumWorker.cancel( true );
         }
-        //if ( thumbnailWorker != null ) {
-        //    thumbnailWorker.cancel( true );
-        //}
     }
 
     /**
@@ -154,6 +144,7 @@ public class IntegrityCheckerJFrame
         checksumWorker = new CorrectChecksumSwingWorker();
         checksumWorker.execute();
     }
+    
     private CorrectChecksumSwingWorker checksumWorker;
 
     private class CorrectChecksumSwingWorker extends SwingWorker<Integer, String> {
@@ -169,7 +160,7 @@ public class IntegrityCheckerJFrame
             for ( Enumeration e = startNode.breadthFirstEnumeration(); e.hasMoreElements() && ( !isCancelled() ); ) {
                 nodesProcessed++;
                 if ( nodesProcessed % 1000 == 0 ) {
-                    publish( String.format( "%d nodes processed\n", nodesProcessed ) );
+                    publish( String.format( "%d nodes processed%n", nodesProcessed ) );
                 }
                 testNode = (SortableDefaultMutableTreeNode) e.nextElement();
                 nodeObject = testNode.getUserObject();
@@ -182,14 +173,14 @@ public class IntegrityCheckerJFrame
                         if ( oldChecksum != newChecksum ) {
                             corrections++;
                             pictureInfo.setChecksum( newChecksum );
-                            String logMessage = String.format( "Corrected checksum of node %s from %d to %d\n", pictureInfo.getDescription(), oldChecksum, newChecksum );
+                            String logMessage = String.format( "Corrected checksum of node %s from %d to %d%n", pictureInfo.getDescription(), oldChecksum, newChecksum );
                             publish( logMessage );
                             LOGGER.severe( logMessage );
                         }
                     }
                 }
             }
-            publish( String.format( "Corrected %d checksums in %d nodes.\n", corrections, nodesProcessed ) );
+            publish( String.format( "Corrected %d checksums in %d nodes.%n", corrections, nodesProcessed ) );
             return corrections;
         }
 

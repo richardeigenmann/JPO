@@ -81,7 +81,7 @@ public abstract class WordMap {
     public TreeMap<String, Integer> getValueSortedMap() {
         if ( valueSortedTreeMap == null ) {
             LOGGER.fine( "valueSortedTreeMap doesn't exist. Building..." );
-            valueSortedTreeMap = new TreeMap<String, Integer>( new Comparator<String>() {
+            valueSortedTreeMap = new TreeMap<>( new Comparator<String>() {
 
                 /**
                  * override the compare method so that we can have the TreeMap
@@ -112,7 +112,7 @@ public abstract class WordMap {
      * @return an alphabetical set of the highest ranking n words
      */
     public TreeSet<String> getTopWords( int limit ) {
-        TreeSet<String> topWords = new TreeSet<String>();
+        TreeSet<String> topWords = new TreeSet<>();
         if ( limit == 0 ) {
             topWords.add( "" );
             return topWords;
@@ -157,7 +157,7 @@ public abstract class WordMap {
      */
     @Override
     public String toString() {
-        StringBuffer sb = new StringBuffer( "" );
+        StringBuilder sb = new StringBuilder( "" );
         Iterator<Entry<String, Integer>> it = getWordValueMap().entrySet().iterator();
         Entry<String, Integer> pairs;
         int i = 0;

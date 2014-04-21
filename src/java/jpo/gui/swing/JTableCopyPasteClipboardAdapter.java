@@ -171,10 +171,7 @@ public class JTableCopyPasteClipboardAdapter implements ActionListener {
                         ( (AbstractTableModel) jTable.getModel() ).fireTableChanged( tme );
                     }
                 }
-            } catch ( UnsupportedFlavorException ex ) {
-                ex.printStackTrace();
-            } catch ( IOException ex ) {
-                ex.printStackTrace();
+            } catch ( UnsupportedFlavorException | IOException ex ) {
             }
         }
     }

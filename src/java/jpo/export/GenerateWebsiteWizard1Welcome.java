@@ -36,10 +36,6 @@ import net.miginfocom.swing.MigLayout;
 public class GenerateWebsiteWizard1Welcome extends AbstractStep {
 
     /**
-     * The link to the values that this panel should change
-     */
-    private final HtmlDistillerOptions options;
-    /**
      * This label will read "Generate a Web Page showing 10 pictures"
      */
     private final JLabel welcomeLabel = new JLabel( "working..." );
@@ -48,9 +44,12 @@ public class GenerateWebsiteWizard1Welcome extends AbstractStep {
      */
     private final JLabel fromLabel = new JLabel();
 
+    /**
+     * Welcome page for the generate website wizard
+     * @param options 
+     */
     public GenerateWebsiteWizard1Welcome( final HtmlDistillerOptions options ) {
         super( Settings.jpoResources.getString( "welcomeTitle" ), Settings.jpoResources.getString( "HtmlDistillerJFrameHeading" ) );
-        this.options = options;
 
         class getCountWorker extends SwingWorker<Integer, Object> {
 
@@ -63,8 +62,7 @@ public class GenerateWebsiteWizard1Welcome extends AbstractStep {
             protected void done() {
                 try {
                     welcomeLabel.setText( String.format( Settings.jpoResources.getString( "welcomeMsg" ), get() ) );
-                } catch ( InterruptedException ignore ) {
-                } catch ( ExecutionException ignore ) {
+                } catch ( InterruptedException | ExecutionException ignore ) {
                 }
             }
         }

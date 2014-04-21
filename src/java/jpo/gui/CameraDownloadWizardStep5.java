@@ -79,7 +79,7 @@ public class CameraDownloadWizardStep5
 
 
         List<SortOption> sortOptions = Settings.getSortOptions();
-        JComboBox <SortOption> sortChoice = new JComboBox<SortOption>( sortOptions.toArray( new SortOption[0]) );
+        JComboBox <SortOption> sortChoice = new JComboBox<>( sortOptions.toArray( new SortOption[0]) );
         for ( int i = 0; i < sortOptions.size(); i++ ) {
             if ( sortOptions.get(i).getSortCode() == dataModel.getSortCode() ) {
                 sortChoice.setSelectedIndex( i );

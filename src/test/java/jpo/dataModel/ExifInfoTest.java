@@ -29,27 +29,19 @@ import junit.framework.TestCase;
 public class ExifInfoTest
         extends TestCase {
 
+    /**
+     * Constructor
+     * @param testName test name
+     */
     public ExifInfoTest( String testName ) {
         super( testName );
     }
 
+    /**
+     * A handy reference to 0 in the form of a double
+     */
     private static final double ZERO = 0;
 
-    /**
-     *
-     * @throws java.lang.Exception
-     */
-    @Override
-    protected void setUp() throws Exception {
-    }
-
-    /**
-     *
-     * @throws java.lang.Exception
-     */
-    @Override
-    protected void tearDown() throws Exception {
-    }
 
     /**
      * That the Exif reader gracefully handles a null URL
@@ -217,7 +209,9 @@ public class ExifInfoTest
         assertEquals( "Rotation parsing verification", 180, exifInfo.rotation );
     }
 
-    
+    /**
+     * Tests for images from an Canon Eos 350d
+     */
     public void testExifInfoEos350d() {
         ExifInfo exifInfo = new ExifInfo( Settings.CLASS_LOADER.getResource( "exif-test-canon-eos-350d.jpg" ) );
         exifInfo.decodeExifTags();
@@ -237,6 +231,9 @@ public class ExifInfoTest
         assertEquals( "Lens parsing verification", "", exifInfo.lens );
     }
 
+    /**
+     * Tests for images from a Canon Eos 60D
+     */
     public void testExifInfoCanonEos60D() {
         ExifInfo exifInfo = new ExifInfo( Settings.CLASS_LOADER.getResource( "exif-test-canon-eos-60d.jpg" ) );
         exifInfo.decodeExifTags();
@@ -256,6 +253,9 @@ public class ExifInfoTest
         assertEquals( "Rotation parsing verification", 0, exifInfo.rotation );
     }
 
+    /**
+     * Tests for images from an Canon Cybershot
+     */
     public void testExifInfoCybershot1() {
         ExifInfo exifInfo = new ExifInfo( Settings.CLASS_LOADER.getResource( "exif-test-sony-cybershot-1.jpg" ) );
         exifInfo.decodeExifTags();
@@ -274,6 +274,9 @@ public class ExifInfoTest
         assertEquals( "Rotation parsing verification", 0, exifInfo.rotation );
     }
 
+    /**
+     * Tests for a Sony D700
+     */
     public void testExifInfoSonyD700() {
         ExifInfo exifInfo = new ExifInfo( Settings.CLASS_LOADER.getResource( "exif-test-sony-d700.jpg" ) );
         exifInfo.decodeExifTags();
@@ -292,6 +295,9 @@ public class ExifInfoTest
         assertEquals( "Rotation parsing verification", 0, exifInfo.rotation );
     }
 
+    /**
+     * Tests for a Sony P200
+     */
     public void testExifInfoSonyP200() {
         ExifInfo exifInfo = new ExifInfo( Settings.CLASS_LOADER.getResource( "exif-test-sony-P200.jpg" ) );
         exifInfo.decodeExifTags();

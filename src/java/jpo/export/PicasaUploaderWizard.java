@@ -30,7 +30,6 @@ import net.javaprog.ui.wizard.WizardModel;
  */
 public class PicasaUploaderWizard {
 
-    private final PicasaUploadRequest myRequest;
     /**
      * Defines the maximum size for horizontally combined objects on a step
      * panel
@@ -48,7 +47,6 @@ public class PicasaUploaderWizard {
      * @param myRequest the request
      */
     public PicasaUploaderWizard( PicasaUploadRequest myRequest ) {
-        this.myRequest = myRequest;
 
         PicasaUploaderWizard3Upload step3 = new PicasaUploaderWizard3Upload( myRequest );
 

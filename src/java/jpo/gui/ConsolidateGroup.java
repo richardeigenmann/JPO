@@ -1,7 +1,6 @@
 package jpo.gui;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
@@ -111,9 +110,6 @@ public class ConsolidateGroup extends SwingWorker<Void, String> {
         }
     }
 
-    /**
-     *
-     */
     @Override
     protected void done() {
         progGui.switchToDoneMode();

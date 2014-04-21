@@ -5,7 +5,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.logging.Logger;
-import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 import jpo.dataModel.Settings;
 import jpo.dataModel.XmlReader;
@@ -237,9 +236,9 @@ public class ClearThumbnailsJFrame extends javax.swing.JFrame {
                     if ( parentDirectory.canWrite() ) {
                         if ( parentDirectory.list().length == 0 ) {
                             if ( parentDirectory.delete() ) {
-                                publish( String.format( "Parent directory %s successfully deleted\n", parentDirectory.toString() ) );
+                                publish( String.format( "Parent directory %s successfully deleted%n", parentDirectory.toString() ) );
                             } else {
-                                publish( String.format( "Parent directory %s failed to delete --> you have to delete this directory yourself\n", parentDirectory.toString() ) );
+                                publish( String.format( "Parent directory %s failed to delete --> you have to delete this directory yourself%n", parentDirectory.toString() ) );
                             }
                         }
                     }

@@ -23,6 +23,10 @@ public class UnsavedUpdatesDialogRequest implements Request {
         this.nextRequest = nextRequest;
     }
 
+    /**
+     * Returns the request to fire after saving or dismissing but not cancelling
+     * @return the next request
+     */
     public Request getNextRequest() {
         return nextRequest;
     }

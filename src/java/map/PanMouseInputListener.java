@@ -18,7 +18,7 @@ import org.jdesktop.swingx.JXMapViewer;
 public class PanMouseInputListener extends MouseInputAdapter
 {
 	private Point prev;
-	private JXMapViewer viewer;
+	private final JXMapViewer viewer;
         private Cursor priorCursor;
 	
 	/**

@@ -48,7 +48,6 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 import jpo.EventBus.JpoEventBus;
-import jpo.EventBus.RotatePictureRequest;
 import jpo.EventBus.SetPictureRotationRequest;
 import jpo.dataModel.Category;
 import jpo.dataModel.ExifInfo;
@@ -105,7 +104,7 @@ public class PictureInfoEditor extends JFrame {
      * Defines a logger for this class
      */
     private static final Logger LOGGER = Logger.getLogger( PictureInfoEditor.class.getName() );
-    private ThumbnailController thumbnailController = new ThumbnailController( Settings.thumbnailSize );
+    private final ThumbnailController thumbnailController = new ThumbnailController( Settings.thumbnailSize );
     /**
      * The description of the picture
      */
@@ -117,7 +116,7 @@ public class PictureInfoEditor extends JFrame {
     /**
      * This label will hold the parsed date of what was in the creation time.
      */
-    private JLabel parsedCreationTimeJLabel = new JLabel();
+    private final JLabel parsedCreationTimeJLabel = new JLabel();
     /**
      * The location of the image file
      */
@@ -126,7 +125,7 @@ public class PictureInfoEditor extends JFrame {
      * An informative message about what sort of error we have if any on the
      * highres image
      */
-    private JLabel highresErrorJLabel = new JLabel( "" );
+    private final JLabel highresErrorJLabel = new JLabel( "" );
     /**
      * An informative message about what sort of error we have if any on the
      * lowres image
@@ -187,7 +186,7 @@ public class PictureInfoEditor extends JFrame {
     /**
      * The text area to use for showing the Exif data
      */
-    private JTextArea exifTagsJTextArea = new JTextArea();
+    private final JTextArea exifTagsJTextArea = new JTextArea();
     private final SpinnerModel angleModel = new MySpinnerNumberModel();
     /**
      * the node being edited
@@ -262,7 +261,7 @@ public class PictureInfoEditor extends JFrame {
         JLabel rotationJLabel = new JLabel( Settings.jpoResources.getString( "rotationLabel" ) );
         rotationPanel.add( rotationJLabel );
 
-        NumberFormat nf = new DecimalFormat( "###.##" );
+        //NumberFormat nf = new DecimalFormat( "###.##" );
 
         JSpinner spinner = new JSpinner( angleModel );
         spinner.addChangeListener( new ChangeListener() {
@@ -612,7 +611,7 @@ public class PictureInfoEditor extends JFrame {
      * Set up a PictureInfoChangeListener to get updated on change events in the
      * Picture Metadata
      */
-    private PictureInfoChangeListener myPictureInfoChangeListener = new PictureInfoChangeListener() {
+    private final PictureInfoChangeListener myPictureInfoChangeListener = new PictureInfoChangeListener() {
         /**
          * here we get notified by the PictureInfo object that something has
          * changed.
@@ -859,7 +858,7 @@ public class PictureInfoEditor extends JFrame {
      * close the window if the node we are editing has been removed or to update
      * the fields if it was changed.
      */
-    private TreeModelListener myTreeModelListener = new TreeModelListener() {
+    private final TreeModelListener myTreeModelListener = new TreeModelListener() {
         // Here we are not that interested in TreeModel change events other than to find out if our
         // current node was removed in which case we close the Window.
         /**

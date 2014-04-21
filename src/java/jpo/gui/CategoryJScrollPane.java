@@ -136,7 +136,7 @@ public class CategoryJScrollPane extends JScrollPane implements ListSelectionLis
      * @return the hash set of the selected categories
      */
     public HashSet<Object> getSelectedCategories() {
-        HashSet<Object> selectedCategories = new HashSet<Object>();
+        HashSet<Object> selectedCategories = new HashSet<>();
         Category c;
         int status;
         Enumeration e = defaultListModel.elements();

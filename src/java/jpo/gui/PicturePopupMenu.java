@@ -656,33 +656,6 @@ public class PicturePopupMenu extends JPopupMenu {
 
     }
 
-    /**
-     * This method moves the popup node or the selection (if the popup node is
-     * part of the selection) to the end of the picked node:
-     *
-     * @param targetNode To selected node where the node should go
-     */
-    private void moveToLastChild( SortableDefaultMutableTreeNode targetNode ) {
-
-        List<SortableDefaultMutableTreeNode> movingNodes = new ArrayList<>();
-
-        if ( ( Settings.pictureCollection.countSelectedNodes() > 0 ) && ( Settings.pictureCollection.isSelected( popupNode ) ) ) {
-            // move the selected nodes and then unselect them
-            LOGGER.info( "Moving the selection." );
-            for ( SortableDefaultMutableTreeNode selectedNode : Settings.pictureCollection.getSelectedNodes() ) {
-                if ( selectedNode.getUserObject() instanceof PictureInfo ) {
-                    movingNodes.add( selectedNode );
-                }
-            }
-            Settings.pictureCollection.clearSelection();
-        } else {
-            // move only the popup node
-            movingNodes.add( popupNode );
-        }
-
-        MoveNodeToNodeRequest request = new MoveNodeToNodeRequest( movingNodes, targetNode );
-
-    }
 
     private class ShowPictureMenuItem extends JMenuItem {
 

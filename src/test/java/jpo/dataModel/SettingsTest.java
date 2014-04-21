@@ -22,24 +22,6 @@ public class SettingsTest extends TestCase {
         super( testName );
     }
 
-    private int countLocaleChanged;
-
-    /**
-     *
-     * @throws java.lang.Exception
-     */
-    @Override
-    protected void setUp() throws Exception {
-        countLocaleChanged = 0;
-    }
-
-    /**
-     *
-     * @throws java.lang.Exception
-     */
-    @Override
-    protected void tearDown() throws Exception {
-    }
 
     /**
      * As soon as a Settings Object exists there should always be a current
@@ -47,46 +29,29 @@ public class SettingsTest extends TestCase {
      */
     public void testCurrentLocale() {
         assertNotNull( "Testing that current locale exists", Settings.getCurrentLocale() );
-        //System.out.println("The currentLocale at the beginning of the unit test is: " + Settings.getCurrentLocale().toString() );
-        //System.out.println("The jpoResources locale at the beginning of the unit test is: " + Settings.jpoResources.getLocale().toString() );
     }
 
+    /**
+     * Tests setting the locale
+     */
     public void testSetLocale() {
-        //System.out.println("The currentLocale before the change is: " + Settings.getCurrentLocale().toString() );
-        //System.out.println("The jpoResources locale before the change is: " + Settings.jpoResources.getLocale().toString() );
-        //System.out.println("Changing to German");
         Settings.setLocale( Locale.GERMAN );
-        //System.out.println("The currentLocale after the change is: " + Settings.getCurrentLocale().toString() );
-        //System.out.println("The jpoResources locale after the change is: " + Settings.jpoResources.getLocale().toString() );
         assertEquals( "Testing the locale change to German", Locale.GERMAN, Settings.getCurrentLocale() );
-        //System.out.println("Changing to Simplified Chinese");
         Settings.setLocale( Locale.SIMPLIFIED_CHINESE );
-        //System.out.println("The currentLocale after the second change is: " + Settings.getCurrentLocale().toString() );
-        //System.out.println("The jpoResources locale after the change is: " + Settings.jpoResources.getLocale().toString() );
         assertEquals( "Testing the locale change to Simplified Chinese", Locale.SIMPLIFIED_CHINESE, Settings.getCurrentLocale() );
     }
 
     public void testSetLocaleResourceBundleEffect() {
-        //System.out.println("The currentLocale before the change is: " + Settings.getCurrentLocale().toString() );
-        //System.out.println("The jpoResources locale before the change is: " + Settings.jpoResources.getLocale().toString() );
-        //System.out.println("Changing to German");
         Settings.setLocale( Locale.GERMAN );
-        //System.out.println("The currentLocale after the change is: " + Settings.getCurrentLocale().toString() );
-        //System.out.println("The jpoResources locale after the change is: " + Settings.jpoResources.getLocale().toString() );
         assertEquals( "Testing the ResourceBundle change to German", Locale.GERMAN, Settings.jpoResources.getLocale() );
-        //System.out.println("Changing to Simplified Chinese");
         Settings.setLocale( Locale.SIMPLIFIED_CHINESE );
-        //System.out.println("The currentLocale after the second change is: " + Settings.getCurrentLocale().toString() );
-        //System.out.println("The jpoResources locale after the change is: " + Settings.jpoResources.getLocale().toString() );
         assertEquals( "Testing the ResourceBundle change to Simplified Chinese", Locale.SIMPLIFIED_CHINESE, Settings.jpoResources.getLocale() );
     }
 
     public void testSetLocaleResourceBundleStrings() {
         Settings.setLocale( Locale.GERMAN );
-        //System.out.println("After a change to German locale the jpo ResourceBundle returns: " + Settings.jpoResources.getString("FileNewJMenuItem") );
         assertEquals( "Testing the German string", "Neue Sammlung", Settings.jpoResources.getString( "FileNewJMenuItem" ) );
         Settings.setLocale( Locale.SIMPLIFIED_CHINESE );
-        //System.out.println("After a change to Simplified Chinese the jpo ResourceBundle returns: " + Settings.jpoResources.getString("FileNewJMenuItem") );
         assertEquals( "Testing the Simplified Chinese string", "新建图片集", Settings.jpoResources.getString( "FileNewJMenuItem" ) );
     }
 

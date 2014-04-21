@@ -84,6 +84,7 @@ public class GroupDropPopupMenu extends JPopupMenu {
         JMenuItem dropBefore = new JMenuItem( Settings.jpoResources.getString( "GDPMdropBefore" ) );
         dropBefore.addActionListener( new ActionListener() {
 
+            @Override
             public void actionPerformed( ActionEvent e ) {
                 chosenAction = ACTION_DROP_BEFORE;
             }
@@ -94,6 +95,7 @@ public class GroupDropPopupMenu extends JPopupMenu {
         JMenuItem dropAfter = new JMenuItem( Settings.jpoResources.getString( "GDPMdropAfter" ) );
         dropAfter.addActionListener( new ActionListener() {
 
+            @Override
             public void actionPerformed( ActionEvent e ) {
                 chosenAction = ACTION_DROP_AFTER;
             }
@@ -104,6 +106,7 @@ public class GroupDropPopupMenu extends JPopupMenu {
         JMenuItem dropIntoFirst = new JMenuItem( Settings.jpoResources.getString( "GDPMdropIntoFirst" ) );
         dropIntoFirst.addActionListener( new ActionListener() {
 
+            @Override
             public void actionPerformed( ActionEvent e ) {
                 chosenAction = ACTION_DROP_INTO_TOP;
             }
@@ -114,6 +117,7 @@ public class GroupDropPopupMenu extends JPopupMenu {
         JMenuItem dropIntoLast = new JMenuItem( Settings.jpoResources.getString( "GDPMdropIntoLast" ) );
         dropIntoLast.addActionListener( new ActionListener() {
 
+            @Override
             public void actionPerformed( ActionEvent e ) {
                 chosenAction = ACTION_DROP_INTO_BOTTOM;
             }
@@ -124,6 +128,7 @@ public class GroupDropPopupMenu extends JPopupMenu {
         JMenuItem dropCancel = new JMenuItem( Settings.jpoResources.getString( "GDPMdropCancel" ) );
         dropCancel.addActionListener( new ActionListener() {
 
+            @Override
             public void actionPerformed( ActionEvent e ) {
                 chosenAction = ACTION_CANCEL;
             }

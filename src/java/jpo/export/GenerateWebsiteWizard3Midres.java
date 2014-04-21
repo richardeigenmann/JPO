@@ -165,7 +165,7 @@ public class GenerateWebsiteWizard3Midres extends AbstractStep {
 
         // Midres Quality Slider
         wizardPanel.add( new JLabel( Settings.jpoResources.getString( "midresJpgQualitySlider" ) ), "align label" );
-        final Dictionary<Integer, JLabel> labelTable1 = new Hashtable<Integer, JLabel>();
+        final Dictionary<Integer, JLabel> labelTable1 = new Hashtable<>();
         labelTable1.put( 0, new JLabel( Settings.jpoResources.getString( "jpgQualityBad" ) ) );
         labelTable1.put( 80, new JLabel( Settings.jpoResources.getString( "jpgQualityGood" ) ) );
         labelTable1.put( 100, new JLabel( Settings.jpoResources.getString( "jpgQualityBest" ) ) );

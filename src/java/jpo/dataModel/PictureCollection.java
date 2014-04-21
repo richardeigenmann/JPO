@@ -46,17 +46,14 @@ public class PictureCollection {
      */
     private static final Logger LOGGER = Logger.getLogger( PictureCollection.class.getName() );
 
-    //{
-    //LOGGER.setLevel( Level.ALL );
-    //}
     /**
      * Constructs a new PictureCollection object with a root object
      */
     public PictureCollection() {
         setRootNode( new SortableDefaultMutableTreeNode( new Object() ) );
         treeModel = new DefaultTreeModel( getRootNode() );
-        categories = new HashMap<Integer, String>();
-        mailSelection = new ArrayList<SortableDefaultMutableTreeNode>();
+        categories = new HashMap<>();
+        mailSelection = new ArrayList<>();
         setAllowEdits( true );
         setUnsavedUpdates( false );
     }
@@ -87,14 +84,9 @@ public class PictureCollection {
         } else {
             try {
                 SwingUtilities.invokeAndWait( runnable );
-            } catch ( InterruptedException ex ) {
+            } catch ( InterruptedException | InvocationTargetException ex ) {
                 LOGGER.severe( ex.getMessage() );
                 LOGGER.severe( "No idea what to do here!" );
-                Thread.dumpStack();
-            } catch ( InvocationTargetException ex ) {
-                LOGGER.severe( ex.getMessage() );
-                LOGGER.severe( "No idea what to do here!" );
-                Thread.dumpStack();
             }
         }
     }
@@ -385,10 +377,18 @@ public class PictureCollection {
         yearsTreeNode = node;
     }
 
+    /**
+     * Node for the Years tree
+     * @return 
+     */
     public DefaultMutableTreeNode getYearsTreeNode() {
         return yearsTreeNode;
     }
 
+    /**
+     * Adds a year query 
+     * @param year the year
+     */
     public void addYearQuery( String year ) {
         YearQuery yearQuery = new YearQuery( year );
         yearQuery.setStartNode( getRootNode() );
@@ -553,7 +553,7 @@ public class PictureCollection {
      */
     public static ArrayList<SortableDefaultMutableTreeNode> getCategoryUsageNodes(
             Object key, SortableDefaultMutableTreeNode startNode ) {
-        ArrayList<SortableDefaultMutableTreeNode> resultList = new ArrayList<SortableDefaultMutableTreeNode>();
+        ArrayList<SortableDefaultMutableTreeNode> resultList = new ArrayList<>();
         Enumeration nodes = startNode.children();
         SortableDefaultMutableTreeNode n;
         while ( nodes.hasMoreElements() ) {
@@ -641,7 +641,7 @@ public class PictureCollection {
      */
     public void clearMailSelection() {
         //can't use iterator directly or we have a concurrent modification exception
-        ArrayList<SortableDefaultMutableTreeNode> clone = new ArrayList<SortableDefaultMutableTreeNode>( mailSelection.size() );
+        ArrayList<SortableDefaultMutableTreeNode> clone = new ArrayList<>( mailSelection.size() );
         for ( SortableDefaultMutableTreeNode item : mailSelection ) {
             clone.add( item );
         }
@@ -817,7 +817,7 @@ public class PictureCollection {
     }
 
     private void addYearQueries() {
-        TreeSet<String> years = new TreeSet<String>();
+        TreeSet<String> years = new TreeSet<>();
 
         DefaultMutableTreeNode testNode;
         Object nodeObject;
@@ -831,7 +831,7 @@ public class PictureCollection {
                 cal = pi.getCreationTimeAsDate();
                 if ( cal != null ) {
                     int year = cal.get( Calendar.YEAR );
-                    int month = cal.get( Calendar.MONTH );
+                    //int month = cal.get( Calendar.MONTH );
                     years.add( Integer.toString( year ) );
                 }
             }
@@ -883,7 +883,7 @@ public class PictureCollection {
             return null;
         }
 
-        ArrayList<SortableDefaultMutableTreeNode> parentGroups = new ArrayList<SortableDefaultMutableTreeNode>();
+        ArrayList<SortableDefaultMutableTreeNode> parentGroups = new ArrayList<>();
 
         String comparingFilename = ( (PictureInfo) userObject ).getHighresLocation();
         SortableDefaultMutableTreeNode testNode, testNodeParent;

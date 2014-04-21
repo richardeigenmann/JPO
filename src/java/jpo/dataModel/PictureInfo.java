@@ -173,7 +173,6 @@ public class PictureInfo implements Serializable {
             out.newLine();
         }
 
-
         if ( getComment().length() > 0 ) {
             out.write( "\t<COMMENT>" + Tools.escapeXML( getComment() ) + "</COMMENT>" );
             out.newLine();
@@ -195,12 +194,13 @@ public class PictureInfo implements Serializable {
         }
 
         if ( getRotation() != 0 ) {
-            out.write( "\t<ROTATION>" + ( new Double( getRotation() ) ).toString() + "</ROTATION>" );
+            //out.write( "\t<ROTATION>" + ( new Double( getRotation() ) ).toString() + "</ROTATION>" );
+            out.write( String.format( "\t<ROTATION>%f</ROTATION>", getRotation() ) );
             out.newLine();
         }
 
         if ( latLng != null ) {
-            out.write( "\t<LATLNG>" + Double.toString( latLng.x ) + "x" + Double.toString( latLng.y ) + "</LATLNG>" );
+            out.write( String.format("\t<LATLNG>%fx%f</LATLNG>",latLng.x, latLng.y) );
             out.newLine();
         }
 
@@ -535,7 +535,6 @@ public class PictureInfo implements Serializable {
     }
 
     //----------------------------------------
-
     /**
      * Creates a PictureChangedEvent and sends it to inform listening objects
      * that the thumbnail was updated.
@@ -1104,7 +1103,7 @@ public class PictureInfo implements Serializable {
      */
     public synchronized void addCategoryAssignment( Object key ) {
         if ( categoryAssignments == null ) {
-            categoryAssignments = new HashSet<Object>();
+            categoryAssignments = new HashSet<>();
         }
         if ( categoryAssignments.add( key ) ) {
             sendCategoryAssignmentsChangedEvent();
@@ -1260,7 +1259,8 @@ public class PictureInfo implements Serializable {
     /**
      * Registers a listener for picture info change events
      *
-     * @param pictureInfoChangeListener	The object that will receive notifications.
+     * @param pictureInfoChangeListener	The object that will receive
+     * notifications.
      */
     public void addPictureInfoChangeListener( PictureInfoChangeListener pictureInfoChangeListener ) {
         pictureInfoListeners.add( pictureInfoChangeListener );
@@ -1269,7 +1269,8 @@ public class PictureInfo implements Serializable {
     /**
      * Removes the listener
      *
-     * @param pictureInfoChangeListener	The listener that doesn't want to notifications any more.
+     * @param pictureInfoChangeListener	The listener that doesn't want to
+     * notifications any more.
      */
     public void removePictureInfoChangeListener(
             PictureInfoChangeListener pictureInfoChangeListener ) {
@@ -1288,7 +1289,6 @@ public class PictureInfo implements Serializable {
             }
         }
     }
-
 
     //-------------------------------------------
     /**

@@ -2,9 +2,6 @@ package jpo.gui;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -26,7 +23,7 @@ import net.miginfocom.swing.MigLayout;
 /*
  ProgressGui.java:  a class that shows the progress in adding pictures
 
- Copyright (C) 2002-2015  Richard Eigenmann.
+ Copyright (C) 2002-2014  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2

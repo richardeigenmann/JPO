@@ -220,7 +220,7 @@ public class EmailerGui extends JFrame {
 
         jPanel.add( new JLabel( Settings.jpoResources.getString( "emailSizesJLabel" ) ), "" );
 
-        JComboBox<String> sizesJComboBox = new JComboBox<String>();
+        JComboBox<String> sizesJComboBox = new JComboBox<>();
         sizesJComboBox.addItem( Settings.jpoResources.getString( "emailSize1" ) );
         sizesJComboBox.addItem( Settings.jpoResources.getString( "emailSize2" ) );
         sizesJComboBox.addItem( Settings.jpoResources.getString( "emailSize3" ) );
@@ -452,6 +452,6 @@ public class EmailerGui extends JFrame {
         Dimension scaleSize = new Dimension( imageWidthWholeNumberField.getValue(), imageWidthWholeNumberField.getValue() );
 
         putSettings(); // placed here so that we don't store addresses that fail in the AddressExceptions
-        Emailer et = new Emailer( emailSelected, senderAddress, destinationAddress, subjectJTextField.getText(), messageJTextArea.getText(), scaleImages, scaleSize, sendOriginal );
+        new Emailer( emailSelected, senderAddress, destinationAddress, subjectJTextField.getText(), messageJTextArea.getText(), scaleImages, scaleSize, sendOriginal );
     }
 }

@@ -11,24 +11,47 @@ import java.util.logging.Logger;
  */
 public class JpoEventBus extends EventBus {
 
+    /**
+     * Logger for this class
+     */
     private static final Logger LOGGER = Logger.getLogger( JpoEventBus.class.getName() );
 
+    /**
+     * The EventBus singleton
+     */
     private JpoEventBus() {
         register( new DeadEventSubscriber() );
     }
 
+    /**
+     * Returns the EventBus for the JPO application
+     * @return the EventBus singleton
+     */
     public static JpoEventBus getInstance() {
         return JpoEventBusHolder.INSTANCE;
     }
 
+    /**
+     * Singleton for the EventBus
+     */
     private static class JpoEventBusHolder {
 
+        /**
+         * The instance of the event bus
+         */
         private static final JpoEventBus INSTANCE = new JpoEventBus();
 
     }
 
-    private class DeadEventSubscriber {
+    /**
+     * A subscriber for a dead event
+     */
+    private static class DeadEventSubscriber {
 
+        /**
+         * Gets called with dead events
+         * @param deadEvent the dead event
+         */
         @Subscribe
         public void handleDeadEvent( DeadEvent deadEvent ) {
             LOGGER.warning( "Dead event of class: " + deadEvent.getClass().getCanonicalName() );

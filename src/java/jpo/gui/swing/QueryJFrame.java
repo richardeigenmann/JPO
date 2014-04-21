@@ -215,12 +215,8 @@ public class QueryJFrame
     }
     
     private void executeQuery (TextQuery textQuery) {
-        DefaultMutableTreeNode searchTreeNode = Settings.pictureCollection.addQueryToTreeModel( textQuery );
+        Settings.pictureCollection.addQueryToTreeModel( textQuery );
         JpoEventBus.getInstance().post( new ShowQueryRequest( textQuery ));
-        //applicationEventHandler.showQuery( searchTreeNode );
-
-        //QueryNavigator queryBrowser = new QueryNavigator( textQuery );
-        //Jpo.showThumbnails( queryBrowser );
     }
     
 }

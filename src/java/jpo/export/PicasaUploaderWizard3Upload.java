@@ -104,7 +104,7 @@ public class PicasaUploaderWizard3Upload extends AbstractStep implements PicasaU
         wizardPanel.add( progressBar );
 
         SortableDefaultMutableTreeNode node = myRequest.getNode();
-        String albumName = ( (GroupInfo) node.getUserObject() ).getGroupName();
+        //String albumName = ( (GroupInfo) node.getUserObject() ).getGroupName();
         int pics = NodeStatistics.countPictures( node, false );
         progressBar.setMinimum( 0 );
         progressBar.setMaximum( pics );
@@ -130,9 +130,7 @@ public class PicasaUploaderWizard3Upload extends AbstractStep implements PicasaU
         setCanCancel( false );
         try {
             Desktop.getDesktop().browse( new URI( "https://picasaweb.google.com/home" ) );
-        } catch ( IOException ex ) {
-            Logger.getLogger( PicasaUploaderWizard3Upload.class.getName() ).log( Level.SEVERE, null, ex );
-        } catch ( URISyntaxException ex ) {
+        } catch ( IOException | URISyntaxException ex ) {
             Logger.getLogger( PicasaUploaderWizard3Upload.class.getName() ).log( Level.SEVERE, null, ex );
         }
 

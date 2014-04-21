@@ -85,7 +85,6 @@ public class ArrayListNavigator
             return allPictures.size();
         } catch ( NullPointerException ex ) {
             LOGGER.severe( String.format( "Why did we get a NullPointerExecption for the ArrayListNavigator %s?", getTitle() ) );
-            Thread.dumpStack();
             return 0;
         }
     }

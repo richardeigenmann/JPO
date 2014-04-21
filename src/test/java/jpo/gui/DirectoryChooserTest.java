@@ -10,17 +10,24 @@ import javax.swing.event.ChangeListener;
 import junit.framework.TestCase;
 
 /**
- *
+ * Tests for the Directory Chooser
  * @author Richard Eigenmann
  */
 public class DirectoryChooserTest extends TestCase {
 
+    /**
+     * Constructor for the tests
+     * @param testName test name
+     */
     public DirectoryChooserTest( String testName ) {
         super( testName );
     }
     int changesReceived = 0;
     File result = null;
 
+    /**
+     * Test the listener
+     */
     public void testListener() {
         final Runnable r = new Runnable() {
 
@@ -40,12 +47,8 @@ public class DirectoryChooserTest extends TestCase {
         };
         try {
             SwingUtilities.invokeAndWait( r );
-        } catch ( InterruptedException ex ) {
+        } catch ( InterruptedException | InvocationTargetException ex ) {
             Logger.getLogger( DirectoryChooserTest.class.getName() ).log( Level.SEVERE, null, ex );
-        } catch ( InvocationTargetException ex ) {
-            Logger.getLogger( DirectoryChooserTest.class.getName() ).log( Level.SEVERE, null, ex );
-            System.out.println( ex.getCause().getMessage() );
-
         }
         assertEquals( "Checking that what went in is what comes out", new File( "/" ), result );
         assertEquals( "Checking that the changeEvent was fired", 1, changesReceived );

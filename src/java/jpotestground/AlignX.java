@@ -26,7 +26,7 @@ public class AlignX {
   }
 
   private static String makeLabel(String s, int length) {
-    StringBuffer buff = new StringBuffer(length);
+    StringBuilder buff = new StringBuilder(length);
     for (int i=0; i<length; i++) {
       buff.append(s);
     }

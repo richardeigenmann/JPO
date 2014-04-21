@@ -5,14 +5,11 @@ import java.awt.event.WindowEvent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
-import jpo.EventBus.CloseApplicationRequest;
-import jpo.EventBus.JpoEventBus;
-import jpo.EventBus.UnsavedUpdatesDialogRequest;
 
 /*
  YearlyAnalysisGui.java:  Swing based Gui elements to show the Yearly Analysis
 
- Copyright (C) 2009-2010  Richard Eigenmann.
+ Copyright (C) 2009-2014  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2

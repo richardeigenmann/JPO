@@ -95,8 +95,8 @@ public class Main {
     }
 
     /**
-     * A little helper method to help build the strings of the classes that are
-     * present or missing.
+     * A little helper method which checks if the class can be loaded and then appends 
+     * a little text to the good or missing strings.
      *
      * @param className The class to test for
      * @param libraryName The library where this is normally found
@@ -106,9 +106,9 @@ public class Main {
     private static void testClass( String className, String libraryName, StringBuilder good, StringBuilder missing ) {
         try {
             Class.forName( className );
-            good.append( className + " (from " + libraryName + ")\n" );
+            good.append( className ).append( " (from " ).append( libraryName ).append( ")\n");
         } catch ( Exception e ) {
-            missing.append( className + " (from " + libraryName + ")\n" );
+            missing.append( className ).append( " (from " ).append( libraryName ).append( ")\n");
         }
     }
 }

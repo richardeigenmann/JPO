@@ -23,6 +23,10 @@ public class OpenRecentCollectionRequest implements Request {
         this.index = index;
     }
     
+    /**
+     * Returns the Index number of the recent collection that is to be opened
+     * @return  the index number
+     */
     public int getIndex() {
         return index;
     }

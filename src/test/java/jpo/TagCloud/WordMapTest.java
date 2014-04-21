@@ -6,20 +6,28 @@ import java.util.TreeSet;
 import junit.framework.TestCase;
 
 /**
- *
+ * Tests for the Word Map
  * @author Richard Eigenmann
  */
 public class WordMapTest extends TestCase {
 
+    /**
+     * Constructor
+     * @param testName test name
+     */
     public WordMapTest( String testName ) {
         super( testName );
     }
 
-    private class Fruit extends WordMap {
+    private static class Fruit extends WordMap {
 
+        /**
+         * A simple word map with fruit and values
+         * @return  the map
+         */
         @Override
         public Map<String, Integer> getWordValueMap() {
-            Map<String, Integer> fruit = new HashMap<String, Integer>();
+            Map<String, Integer> fruit = new HashMap<>();
             fruit.put( "Apples", 4 );
             fruit.put( "Pears", 2 );
             fruit.put( "Oranges", 9 );
@@ -29,20 +37,20 @@ public class WordMapTest extends TestCase {
         }
     }
 
-    private class EmptyWordMap extends WordMap {
+    private static class EmptyWordMap extends WordMap {
 
         @Override
         public Map<String, Integer> getWordValueMap() {
-            Map<String, Integer> emptyMap = new HashMap<String, Integer>();
+            Map<String, Integer> emptyMap = new HashMap<>();
             return emptyMap;
         }
     }
 
-    private class ZeroValueMap extends WordMap {
+    private static class ZeroValueMap extends WordMap {
 
         @Override
         public Map<String, Integer> getWordValueMap() {
-            Map<String, Integer> zeroValueMap = new HashMap<String, Integer>();
+            Map<String, Integer> zeroValueMap = new HashMap<>();
             zeroValueMap.put( "Apples", -1 );
             zeroValueMap.put( "Pears", -8 );
             zeroValueMap.put( "Oranges", -2 );

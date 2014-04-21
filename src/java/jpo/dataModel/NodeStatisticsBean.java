@@ -3,7 +3,7 @@ package jpo.dataModel;
 /*
  NodeStatisticsBean.java: A class that holds the stats of the NodeStatistics
 
- Copyright (C) 2002 - 2011  Richard Eigenmann.
+ Copyright (C) 2002 - 2014  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -25,16 +25,28 @@ public class NodeStatisticsBean {
 
     private String numberOfNodes = "";
 
+    /**
+     * The number of nodes
+     * @return the number of nodes
+     */
     public String getNumberOfNodes() {
         return numberOfNodes;
     }
 
+    /**
+     * Remembers the number of nodes
+     * @param numberOfNodes the number of nodes
+     */
     public void setNumberOfNodes( String numberOfNodes ) {
         this.numberOfNodes = numberOfNodes;
     }
 
     private String numberOfGroups = "";
 
+    /**
+     * Returns the number of groups
+     * @return the number of groups
+     */
     public String getNumberOfGroups() {
         return numberOfGroups;
     }

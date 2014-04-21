@@ -445,7 +445,7 @@ public class ScalablePicture
             if ( ( sourcePicture != null ) && ( sourcePicture.getSourceBufferedImage() != null ) ) {
                 if ( scaleToSize ) {
                     SizeCalculator sc = new SizeCalculator( sourcePicture.getWidth(), sourcePicture.getHeight(), TargetSize.width, TargetSize.height );
-                    ScaleFactor = sc.ScaleFactor;
+                    ScaleFactor = sc.scaleFactor;
 
                     if ( Settings.dontEnlargeSmallImages && ScaleFactor > 1 ) {
                         ScaleFactor = 1;
@@ -494,7 +494,7 @@ public class ScalablePicture
                 }
 
                 int PictureWidth = scaledPicture.getWidth();
-                int PictureHeight = scaledPicture.getHeight();
+                //int PictureHeight = scaledPicture.getHeight();
 
                 setStatus( SCALABLE_PICTURE_READY, "Scaled Picture is ready." );
             } else {
@@ -775,7 +775,7 @@ public class ScalablePicture
     /**
      * The listeners to notify when the image operation changes the status.
      */
-    private final ArrayList<ScalablePictureListener> scalablePictureStatusListeners = new ArrayList<ScalablePictureListener>();
+    private final ArrayList<ScalablePictureListener> scalablePictureStatusListeners = new ArrayList<>();
 
     /**
      * method to register the listening object of the status events
@@ -805,7 +805,7 @@ public class ScalablePicture
      * interested objects of a change in status (not built yet).
      */
     private void setStatus( ScalablePictureStatus statusCode, String statusMessage ) {
-        String filename = ( imageUrl == null ) ? "" : imageUrl.toString();
+        //String filename = ( imageUrl == null ) ? "" : imageUrl.toString();
         //logger.info("ScalablePicture.setStatus: sending: " + statusMessage + " to all Listeners from Image: " + filename );
 
         pictureStatusCode = statusCode;

@@ -191,7 +191,7 @@ public class Tools {
      * @return cleansed string
      */
     public static String stringToHTMLString( String string ) {
-        StringBuffer sb = new StringBuffer( string.length() );
+        StringBuilder sb = new StringBuilder( string.length() );
         // true if last char was blank
         boolean lastWasBlankChar = false;
         int len = string.length();
@@ -234,7 +234,7 @@ public class Tools {
                     } else {
                         // Not 7 Bit use the unicode system
                         sb.append( "&#" );
-                        sb.append( new Integer( ci ).toString() );
+                        sb.append( Integer.toString(ci) );
                         sb.append( ';' );
                     }
                 }
@@ -341,8 +341,7 @@ public class Tools {
         }
 
         int numFiles = 0;
-        for ( int i = 0; i < fileArray.length; i++ ) {
-            File fileEntry = fileArray[i];
+        for ( File fileEntry : fileArray ) {
             try {
                 if ( !fileEntry.isDirectory() ) {
                     numFiles++;
@@ -576,7 +575,6 @@ public class Tools {
      * @param sourceFile The file to be moved
      * @param targetFile The target file it is to be moved to.
      * @return true if successful, false if not.
-     * @throws IOException
      */
     public static boolean moveFile( File sourceFile, File targetFile ) {
         if ( !sourceFile.exists() ) {
@@ -796,7 +794,6 @@ public class Tools {
             newURL = new URL( getNewLowresFilename() );
         } catch ( MalformedURLException ex ) {
             LOGGER.severe( ex.getMessage() );
-            Thread.dumpStack();
         }
         return newURL;
     }
@@ -839,7 +836,6 @@ public class Tools {
 
     public static void dealOutOfMemoryError() {
         Tools.freeMem();
-        Thread.dumpStack();
         Runnable optionDialog = new Runnable() {
 
             @Override

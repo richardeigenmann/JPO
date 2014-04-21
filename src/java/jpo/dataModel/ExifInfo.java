@@ -16,9 +16,7 @@ import java.awt.geom.Point2D;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -170,15 +168,21 @@ public class ExifInfo {
             if ( exifSubIFD0directory != null ) {
                 camera = rtrim( tryToGetTag( exifSubIFD0directory, ExifIFD0Directory.TAG_MODEL, camera ) );
                 String rotationString = rtrim( tryToGetTag( exifSubIFD0directory, ExifIFD0Directory.TAG_ORIENTATION, "" ) );
+                if ( null != rotationString ) // so far have only got definitions for the Samsung Galaxy S4 phone
                 // so far have only got definitions for the Samsung Galaxy S4 phone
-                if ( "Top, left side (Horizontal / normal)".equals( rotationString ) ) {
-                    rotation = 0;
-                } else if ( "Right side, top (Rotate 90 CW)".equals( rotationString ) ) {
-                    rotation = 90;
-                } else if ( "Left side, bottom (Rotate 270 CW)".equals( rotationString ) ) {
-                    rotation = 270;
-                } else if ( "Bottom, right side (Rotate 180)".equals( rotationString ) ) {
-                    rotation = 180;
+                switch ( rotationString ) {
+                    case "Top, left side (Horizontal / normal)":
+                        rotation = 0;
+                        break;
+                    case "Right side, top (Rotate 90 CW)":
+                        rotation = 90;
+                        break;
+                    case "Left side, bottom (Rotate 270 CW)":
+                        rotation = 270;
+                        break;
+                    case "Bottom, right side (Rotate 180)":
+                        rotation = 180;
+                        break;
                 } 
             }
 

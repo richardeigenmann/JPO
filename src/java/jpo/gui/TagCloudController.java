@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.logging.Logger;
 import javax.swing.JComponent;
-import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 import jpo.EventBus.JpoEventBus;
 import jpo.EventBus.ShowGroupRequest;

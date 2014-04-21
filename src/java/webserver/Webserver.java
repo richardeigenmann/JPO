@@ -22,6 +22,7 @@ import java.awt.geom.Point2D;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -125,8 +126,7 @@ public final class Webserver
             Point2D.Double latLng = pi.getLatLng();
             Desktop.getDesktop().browse( new URI( "http", null, address.getHostAddress(), PORT, "/" + doc, "hashcode=" + Integer.toString( pi.hashCode() ) + ";lat=" + Double.toString( latLng.x ) + ";lng=" + Double.toString( latLng.y ), null ) );
 
-        } catch ( Exception e ) {
-            e.printStackTrace();
+        } catch ( IOException | URISyntaxException e ) {
         }
     }
 }

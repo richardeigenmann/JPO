@@ -86,10 +86,18 @@ public class Camera implements Serializable {
      */
     private boolean useFilename = true;
 
+    /**
+     * Returns whether the user wants to use just filenames to detect new images
+     * @return true if only filenames are to be used
+     */
     public boolean getUseFilename() {
         return useFilename;
     }
 
+    /**
+     * Remembers the user wants to use filenames to identify new pictures
+     * @param useFilename true if we should use filenames
+     */
     public void setUseFilename( boolean useFilename ) {
         this.useFilename = useFilename;
     }
@@ -98,12 +106,20 @@ public class Camera implements Serializable {
      * This HashMap records the old images held on the camera so that we can
      * determine which pictures are new.
      */
-    private HashMap<File, Long> oldImage = new HashMap<File, Long>();
+    private HashMap<File, Long> oldImage = new HashMap<>();
 
+    /**
+     * The old images held on the camera
+     * @return the old images held on the camera
+     */
     public HashMap<File, Long> getOldImage() {
         return oldImage;
     }
 
+    /**
+     * Remembers the old images on the camera
+     * @param oldImage the old images on the camera
+     */
     public void setOldImage( HashMap<File, Long> oldImage ) {
         this.oldImage = oldImage;
     }
@@ -112,7 +128,7 @@ public class Camera implements Serializable {
      * This HashMap is used temporarily when getting new pictures. It should be
      * empty unless pictures are being loaded.
      */
-    private final HashMap<File, Long> newImage = new HashMap<File, Long>();
+    private final HashMap<File, Long> newImage = new HashMap<>();
 
     /**
      * toString method that returns the description of the camera
@@ -313,7 +329,7 @@ public class Camera implements Serializable {
      * @return a collection of new picture files
      */
     public Collection<File> getNewPictures() {
-        HashSet<File> newPics = new HashSet<File>();
+        HashSet<File> newPics = new HashSet<>();
         if ( getCameraMountPoint() == null ) {
             return newPics;
         }

@@ -69,11 +69,11 @@ public class MapViewer {
         waypointPainter.setWaypoints( waypoints );
 
         // Create a compound painter that uses both the route-painter and the waypoint-painter
-        List<Painter<JXMapViewer>> painters = new ArrayList<Painter<JXMapViewer>>();
+        List<Painter<JXMapViewer>> painters = new ArrayList<>();
         //painters.add( routePainter );
         painters.add( waypointPainter );
 
-        CompoundPainter<JXMapViewer> painter = new CompoundPainter<JXMapViewer>( painters );
+        CompoundPainter<JXMapViewer> painter = new CompoundPainter<>( painters );
         jxMapViewer.setOverlayPainter( painter );
     
     

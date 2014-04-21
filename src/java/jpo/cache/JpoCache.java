@@ -65,20 +65,38 @@ public class JpoCache {
         }
     }
 
+    /**
+     * Returns the instance of the JpoCache singleton
+     *
+     * @return
+     */
     public static JpoCache getInstance() {
         return JpoCacheHolder.INSTANCE;
 
     }
 
+    /**
+     * Singleton
+     */
     private static class JpoCacheHolder {
 
         private static final JpoCache INSTANCE = new JpoCache();
     }
 
+    /**
+     * Method to properly shut down the cache
+     */
     public void shutdown() {
         CompositeCacheManager.getInstance().shutDown();
     }
 
+    /**
+     * Returns the highres image bytes from the cache or disk
+     *
+     * @param url the url of the image
+     * @return and ImageBytes object
+     * @throws IOException if something went wrong
+     */
     public ImageBytes getHighresImageBytes( URL url ) throws IOException {
         ImageBytes imageBytes = (ImageBytes) highresMemoryCache.get( url );
         if ( imageBytes != null ) {
@@ -103,6 +121,17 @@ public class JpoCache {
         return imageBytes;
     }
 
+    /**
+     * Returns an ImageBytes object with thumbnail image data for the supplied
+     * url
+     *
+     * @param url The url of the highres picture for which a tumbnail is needed
+     * @param rotation The rotation in degrees (0..360) for the thumbnail
+     * @param maxWidth The maximum width of the thumbnail
+     * @param maxHeight the maximum height of the thumbnail
+     * @return The ImageBytes of the thumbnails
+     * @throws IOException If something went wrong
+     */
     public ImageBytes getThumbnailImageBytes( URL url, double rotation, int maxWidth, int maxHeight ) throws IOException {
         String key = String.format( "%s-%fdeg-w:%dpx-h:%dpx", url, rotation, maxWidth, maxHeight );
         ImageBytes imageBytes = (ImageBytes) thumbnailMemoryAndDiskCache.get( key );
@@ -124,6 +153,15 @@ public class JpoCache {
         return imageBytes;
     }
 
+    /**
+     * Creates a thumbnail and stores it in the cache
+     * @param key the key to store it in the cache
+     * @param imageURL The url of the highres picture
+     * @param rotation the rotation to apply
+     * @param maxWidth the maximum width
+     * @param maxHeight the maximum height
+     * @return the thumbnail
+     */
     private ImageBytes createThumbnailAndStoreInCache( String key, URL imageURL, double rotation, int maxWidth, int maxHeight ) {
         ImageBytes imageBytes = createThumbnail( key, imageURL, rotation, maxWidth, maxHeight );
         try {
@@ -134,6 +172,15 @@ public class JpoCache {
         return imageBytes;
     }
 
+    /**
+     * Creates a thumbnail
+     * @param key the key to store it in the cache
+     * @param imageURL The url of the highres picture
+     * @param rotation the rotation to apply
+     * @param maxWidth the maximum width
+     * @param maxHeight the maximum height
+     * @return the thumbnail
+     */
     private ImageBytes createThumbnail( String key, URL imageURL, double rotation, int maxWidth, int maxHeight ) {
         Dimension maxDimension = new Dimension( maxWidth, maxHeight );
 
@@ -189,6 +236,12 @@ public class JpoCache {
         return groupThumbnailDimension;
     }
 
+    /**
+     * Returns a thumbnail for a group of pictures
+     * @param childPictureNodes The pictures that make up the group
+     * @return The thumbnail
+     * @throws IOException if something went wrong
+     */
     public ImageBytes getGroupThumbnailImageBytes( ArrayList<SortableDefaultMutableTreeNode> childPictureNodes ) throws IOException {
         int leftMargin = 15;
         int margin = 10;
@@ -225,7 +278,7 @@ public class JpoCache {
 
                 }
             } catch ( IOException ex ) {
-                LOGGER.severe(  ex.getLocalizedMessage() );
+                LOGGER.severe( ex.getLocalizedMessage() );
                 throw ( ex );
             }
         } else {
@@ -246,7 +299,7 @@ public class JpoCache {
         int margin = 10;
         int topMargin = 65;
         int horizontalPics = ( groupThumbnail.getWidth() - leftMargin ) / ( Settings.miniThumbnailSize.width + margin );
-        int verticalPics = ( groupThumbnail.getHeight() - topMargin ) / ( Settings.miniThumbnailSize.height + margin );
+        //int verticalPics = ( groupThumbnail.getHeight() - topMargin ) / ( Settings.miniThumbnailSize.height + margin );
 
         int x, y;
         int yPos;
@@ -290,14 +343,25 @@ public class JpoCache {
         return imageBytes;
     }
 
+    /**
+     * Returns a text from the JCS with statistics on the cache
+     * @return a test with statistics from the cache
+     */
     public String getHighresCacheStats() {
         return highresMemoryCache.getStats();
     }
 
+    /**
+     * Returns a text from the JCS with statistics on the cache
+     * @return a test with statistics from the cache
+     */
     public String getThumbnailCacheStats() {
         return thumbnailMemoryAndDiskCache.getStats();
     }
 
+    /**
+     * Clears the highres image cache
+     */
     public void clearHighresCache() {
         try {
             highresMemoryCache.clear();
@@ -306,6 +370,9 @@ public class JpoCache {
         }
     }
 
+    /**
+     * Clears the thumbnail image cache
+     */
     public void clearThumbnailCache() {
         try {
             thumbnailMemoryAndDiskCache.clear();

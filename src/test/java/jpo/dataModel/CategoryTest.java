@@ -11,32 +11,20 @@ import junit.framework.TestCase;
  */
 
 /**
- *
+ * Tests for the Category class
  * @author Richard Eigenmann
  */
 public class CategoryTest extends TestCase {
     
+    
+    /**
+     * Constructor for Category tests
+     * @param testName 
+     */
     public CategoryTest(String testName) {
         super(testName);
     }
 
-
-    
-    /**
-     * 
-     * @throws java.lang.Exception
-     */
-    @Override
-    protected void setUp() throws Exception {
-    }
-
-    /**
-     *
-     * @throws java.lang.Exception
-     */
-    @Override
-    protected void tearDown() throws Exception {
-    }
 
     /**
      * Test of getKey method, of class jpo.Category.
@@ -61,7 +49,7 @@ public class CategoryTest extends TestCase {
      */
     public void testGetValue() {
         Category cat = new Category( 1, "Houses");
-        assertEquals( "Houses", cat.getValue().toString() );
+        assertEquals( "Houses", cat.getValue() );
     }
 
     /**
@@ -70,7 +58,7 @@ public class CategoryTest extends TestCase {
     public void testSetValue() {
         Category cat = new Category( 1, "Houses");
         cat.setValue( "Landscapes" );
-        assertEquals( "Landscapes", cat.getValue().toString() );
+        assertEquals( "Landscapes", cat.getValue() );
     }
     
 

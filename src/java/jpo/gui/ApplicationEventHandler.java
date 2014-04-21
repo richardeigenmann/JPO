@@ -145,7 +145,7 @@ public class ApplicationEventHandler {
 
                 @Override
                 public void run() {
-                    final MainWindow mainWindow = new MainWindow();
+                    new MainWindow();
                 }
             } );
         } catch ( InterruptedException | InvocationTargetException ex ) {
@@ -230,6 +230,7 @@ public class ApplicationEventHandler {
     /**
      * Shuts down JPO no questions asked. Wrap it as a next request with a
      * UnsavedUpdatesDialogRequest
+     * @param request
      */
     @Subscribe
     public void handleCloseApplicationRequest( CloseApplicationRequest request ) {
@@ -990,7 +991,7 @@ public class ApplicationEventHandler {
                 LOGGER.fine( "Ingnoring the request for a thumbnail refresh on the Root Node as the query for it's parent's children will fail" );
                 return;
             }
-            LOGGER.fine( String.format( "refreshing the thumbnail on the node %s\nAbout to create the thubnail", this.toString() ) );
+            LOGGER.fine( String.format( "refreshing the thumbnail on the node %s%nAbout to create the thubnail", this.toString() ) );
             ThumbnailController t = new ThumbnailController( Settings.thumbnailSize );
             t.setNode( new SingleNodeNavigator( node ), 0 );
             ThumbnailCreationQueue.requestThumbnailCreation( t,

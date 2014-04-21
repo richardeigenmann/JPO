@@ -28,16 +28,16 @@ public class GroupInfoChangeEvent {
     /**
      *  a reference to the GroupInfo firing off the event
      */
-    private GroupInfo gi;
+    private final GroupInfo groupInfo;
 
 
     /**
      * Constructor for the PictureInforChangeEvent
      *
-     * @param gi
+     * @param groupInfo
      */
-    public GroupInfoChangeEvent( GroupInfo gi ) {
-        this.gi = gi;
+    public GroupInfoChangeEvent( GroupInfo groupInfo ) {
+        this.groupInfo = groupInfo;
     }
 
 
@@ -47,18 +47,18 @@ public class GroupInfoChangeEvent {
      * @return the GroupInfo object that changed
      */
     public GroupInfo getGroupeInfo() {
-        return gi;
+        return groupInfo;
     }
 
 
     /**
-     * toString method that returns the descrition of the group
+     * toString method that returns the description of the group
      *
      * @return The description of the group
      */
     @Override
     public String toString() {
-        return "This is a GroupInfoChangeEvent from " + gi.toString();
+        return "This is a GroupInfoChangeEvent from " + groupInfo.toString();
     }
 
 //-----------------

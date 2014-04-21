@@ -67,7 +67,7 @@ public class PicasaUploaderWizard2Confirm extends AbstractStep {
         SortableDefaultMutableTreeNode node = myRequest.getNode();
         String albumName = ( (GroupInfo) node.getUserObject() ).getGroupName();
         int pics = NodeStatistics.countPictures( node, false );
-        info.setText( String.format( "Uploading Album\n%s\nwith %d pictures to Picasa", albumName, pics ) );
+        info.setText( String.format( "Uploading Album%n%s%nwith %d pictures to Picasa", albumName, pics ) );
 
         return wizardPanel;
     }

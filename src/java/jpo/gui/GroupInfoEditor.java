@@ -89,16 +89,6 @@ public class GroupInfoEditor {
         descriptionJTextArea.setEditable( true );
         jPanel.add( descriptionJTextArea, "wrap" );
 
-        /*abel lowresLocationJLabel = new JLabel( Settings.jpoResources.getString( "lowresLocationLabel" ) );
-         jPanel.add( lowresLocationJLabel );
-
-         final JTextField lowresLocationJTextField = new JTextField();
-         Dimension inputDimension = new Dimension( 400, 20 );
-         lowresLocationJTextField.setPreferredSize( inputDimension );
-         lowresLocationJTextField.setText( gi.getLowresLocation() );
-         jPanel.add( lowresLocationJTextField, "wrap" );*/
-        JPanel buttonJPanel = new JPanel();
-
         JButton OkJButton = new JButton( Settings.jpoResources.getString( "genericOKText" ) );
         OkJButton.setPreferredSize( Settings.defaultButtonDimension );
         OkJButton.setMinimumSize( Settings.defaultButtonDimension );

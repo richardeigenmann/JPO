@@ -89,7 +89,7 @@ public class PicasaUploaderWorker extends SwingWorker<Boolean, Integer> {
     protected void done() {
         doneHandler.uploadDone();
     }
-    private URL AlbumUrl;
+    private URL albumUrl;
 
     public boolean createAlbum( GroupInfo groupInfo ) {
         LOGGER.info( "Creating Album" );
@@ -108,10 +108,7 @@ public class PicasaUploaderWorker extends SwingWorker<Boolean, Integer> {
 
         try {
             insertedEntry = myRequest.picasaWebService.insert( feedUrl, myAlbum );
-        } catch ( IOException ex ) {
-            LOGGER.severe( ex.getMessage() );
-            return false;
-        } catch ( ServiceException ex ) {
+        } catch ( IOException | ServiceException ex ) {
             LOGGER.severe( ex.getMessage() );
             return false;
         }
@@ -120,33 +117,30 @@ public class PicasaUploaderWorker extends SwingWorker<Boolean, Integer> {
         String albumId = albumIdUrl.substring( albumIdUrl.lastIndexOf( '/' ) + 1 );
         String albumPostUrl = myRequest.getFormattedPicasaUrl() + "/albumid/" + albumId;
         myRequest.setAlbumPostUrl( albumPostUrl );
-        LOGGER.info( String.format( "raw: %s parsed: %s\nrecombined: %s", albumIdUrl, albumId, albumPostUrl ) );
+        LOGGER.info( String.format( "raw: %s parsed: %s%nrecombined: %s", albumIdUrl, albumId, albumPostUrl ) );
 
         try {
-            AlbumUrl = new URL( albumPostUrl );
+            albumUrl = new URL( albumPostUrl );
         } catch ( MalformedURLException ex ) {
             LOGGER.severe( ex.getMessage() );
             return false;
         }
-        LOGGER.info( String.format( "AlbumId: %s", AlbumUrl.toString() ) );
+        LOGGER.info( String.format( "AlbumId: %s", albumUrl.toString() ) );
         return true;
     }
 
-    public boolean postPicture( PictureInfo pi ) {
-        LOGGER.info( "Posting Picture: " + pi.getDescription() );
+    public boolean postPicture( PictureInfo pictureInfo ) {
+        LOGGER.info( "Posting Picture: " + pictureInfo.getDescription() );
         PhotoEntry myPhoto = new PhotoEntry();
-        myPhoto.setTitle( new PlainTextConstruct( pi.getDescription() ) );
-        myPhoto.setDescription( new PlainTextConstruct( pi.getDescription() ) );
+        myPhoto.setTitle( new PlainTextConstruct( pictureInfo.getDescription() ) );
+        myPhoto.setDescription( new PlainTextConstruct( pictureInfo.getDescription() ) );
         myPhoto.setClient( "JPO" );
 
-        MediaFileSource myMedia = new MediaFileSource( pi.getHighresFile(), "image/jpeg" );
+        MediaFileSource myMedia = new MediaFileSource( pictureInfo.getHighresFile(), "image/jpeg" );
         myPhoto.setMediaSource( myMedia );
         try {
-            PhotoEntry returnedPhoto = myRequest.picasaWebService.insert( AlbumUrl, myPhoto );
-        } catch ( IOException ex ) {
-            LOGGER.severe( ex.getMessage() );
-            return false;
-        } catch ( ServiceException ex ) {
+            PhotoEntry returnedPhoto = myRequest.picasaWebService.insert( albumUrl, myPhoto );
+        } catch ( IOException | ServiceException ex ) {
             LOGGER.severe( ex.getMessage() );
             return false;
         }

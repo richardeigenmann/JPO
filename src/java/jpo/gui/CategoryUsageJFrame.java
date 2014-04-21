@@ -96,25 +96,18 @@ public class CategoryUsageJFrame extends JFrame {
      * Creates a GUI to edit the categories of the collection
      *
      *
+     * @param request
      */
     public CategoryUsageJFrame( ShowCategoryUsageEditorRequest request ) {
         this();
         
         Set<SortableDefaultMutableTreeNode> nodes = request.getNodes();
         setSelection( nodes );
-        //logger.info("SDMTN.showCategoryUsageGUI invoked");
-        /*if ( node.getUserObject() instanceof PictureInfo ) {
-            ArrayList<SortableDefaultMutableTreeNode> nodes = new ArrayList<SortableDefaultMutableTreeNode>();
-            nodes.add( node );
-            setSelection( nodes );
-        } else if ( node.getUserObject() instanceof GroupInfo ) {
-            setGroupSelection( node, false );
-        } else {
-            LOGGER.info( "Don't know what kind of editor to use. Ignoring request." );
-        }*/
-
     }
 
+    /**
+     * initialises the components
+     */
     private void initComponents() {
         setTitle( Settings.jpoResources.getString( "CategoryUsageJFrameTitle" ) );
 

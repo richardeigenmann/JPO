@@ -21,7 +21,6 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileSystemView;
 import jpo.export.HtmlDistillerOptions;
-import jpo.gui.CollectionJTreeController;
 import jpo.gui.Jpo;
 
 
@@ -253,14 +252,7 @@ public class Settings {
      * a flag that indicates that small images should not be enlarged
      */
     public static boolean dontEnlargeSmallImages;
-    /**
-     * Object that gets populated by the main Jpo object if it can discover a
-     * file called autostartJarPicturelist in the Classpath. This is only
-     * supposed to be the case for jar bundled archives of pictures and code. If
-     * the file is discovered this URL object is populated. Otherwise it is
-     * null. You can test for null on it.
-     */
-    public static URL jarAutostartList = null;
+
     /**
      * the path to the jar file; derived from jarAutostartList
      */

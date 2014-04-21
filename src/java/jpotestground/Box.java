@@ -79,6 +79,7 @@ public class Box extends JComponent {
     /**
      *  This method sets the scaling factor for the display of a thumbnail.
      *  0 .. 1
+     * @param scaleFactor
      */
     public void setFactor( float scaleFactor ) {
         if ( scaleFactor != this.scaleFactor ) {

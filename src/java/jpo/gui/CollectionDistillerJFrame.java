@@ -235,7 +235,6 @@ class CollectionDistillerJFrame extends JFrame implements ActionListener {
             try {
                 exportDirectory.mkdirs();
             } catch ( SecurityException e ) {
-                e.printStackTrace();
                 JOptionPane.showMessageDialog( this, "Could not create directory " + exportDirectory,
                         "SecurityException",
                         JOptionPane.ERROR_MESSAGE );

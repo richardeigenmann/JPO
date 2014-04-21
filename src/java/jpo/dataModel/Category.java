@@ -110,7 +110,6 @@ public final class Category implements Serializable {
      *  @return  They value of the Category
      **/
     public String getValue() {
-        //LOGGER.fine("Category.getValue: called. Returning: " + value.toString());
         return value;
     }
 
@@ -128,6 +127,6 @@ public final class Category implements Serializable {
      */
     @Override
     public String toString() {
-        return getValue().toString();
+        return getValue();
     }
 }

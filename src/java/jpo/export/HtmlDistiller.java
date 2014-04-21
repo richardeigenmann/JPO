@@ -357,7 +357,7 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
             out.write( "</tr>" );
             descriptionsBuffer.flushDescriptions();
 
-            out.write( String.format( "\n<tr><td colspan=\"%d\">", options.getPicsPerRow() ) );
+            out.write( String.format( "%n<tr><td colspan=\"%d\">", options.getPicsPerRow() ) );
             out.write( Settings.jpoResources.getString( "LinkToJpo" ) );
             out.write( "</td></tr></table>" );
             out.newLine();
@@ -656,10 +656,10 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
 
                             dhtmlArray.append( String.format( "<p>Picture %d/%d:</p>", i, childCount ) );
                             dhtmlArray.append( String.format( "<p><img src=\"%s\" width=%d alt=\"Thumbnail\"></p>", lowresFn, matrixWidth - 10 ) );
-                            dhtmlArray.append( "<p><i>" + htmlFriendlyDescription2 + "</i></p>'\n" );
+                            dhtmlArray.append( "<p><i>" ).append( htmlFriendlyDescription2 ).append( "</i></p>'\n");
                         } else {
                             dhtmlArray.append( String.format( "<p>Item %d/%d:</p>", i, childCount ) );
-                            dhtmlArray.append( "<p><i>" + htmlFriendlyDescription2 + "</p></i>'\n" );
+                            dhtmlArray.append( "<p><i>" ).append( htmlFriendlyDescription2 ).append( "</p></i>'\n");
                         }
                     }
                     midresHtmlWriter.write( ">" );
@@ -941,9 +941,7 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
             }
 
             session.disconnect();
-        } catch ( JSchException ex ) {
-            LOGGER.severe( ex.getMessage() );
-        } catch ( IOException ex ) {
+        } catch ( JSchException | IOException ex ) {
             LOGGER.severe( ex.getMessage() );
         }
     }
@@ -968,7 +966,6 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
 
         if ( checkAck( in ) != 0 ) {
             LOGGER.info( "No Ack 1" );
-            Thread.dumpStack();
         }
 
         if ( ptimestamp ) {
@@ -981,7 +978,6 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
             out.flush();
             if ( checkAck( in ) != 0 ) {
                 LOGGER.info( "No Ack 2" );
-                Thread.dumpStack();
             }
         }
 
@@ -995,7 +991,6 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
         out.flush();
         if ( checkAck( in ) != 0 ) {
             LOGGER.info( "No Ack 3" );
-            Thread.dumpStack();
         }
 
         // send a content of lfile
@@ -1020,7 +1015,6 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
         out.flush();
         if ( checkAck( in ) != 0 ) {
             LOGGER.info( "No Ack 4" );
-            Thread.dumpStack();
         }
         out.close();
 
@@ -1042,7 +1036,7 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
         }
 
         if ( b == 1 || b == 2 ) {
-            StringBuffer sb = new StringBuffer();
+            StringBuilder sb = new StringBuilder();
             int c;
             do {
                 c = in.read();

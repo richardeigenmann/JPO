@@ -82,6 +82,7 @@ public interface PictureViewerActions {
 
      /**
      *  Change the delay associated with the timer
+     * @param delay
      */
     public void setTimerDelay( int delay );
 

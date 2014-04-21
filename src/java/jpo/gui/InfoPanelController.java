@@ -36,6 +36,9 @@ import jpo.EventBus.ShowGroupRequest;
  */
 public class InfoPanelController {
 
+    /**
+     * Constructor for the Info Panel controller
+     */
     public InfoPanelController() {
         JpoEventBus.getInstance().register( this );
     }
@@ -73,18 +76,22 @@ public class InfoPanelController {
         return nodeStatisticsController.getJComponent();
     }
 
+    /**
+     * Handles group selection events by refreshing the display.
+     * @param event The Group Selection Event
+     */
     @Subscribe
     public void handleGroupSelectionEvent( GroupSelectionEvent event ) {
         showInfo( event.getNode() );
     }
 
     /**
-     * Handles the ShowGroupRequest by updating the display...
+     * Handles the ShowGroupRequest by updating the display.
      *
-     * @param event
+     * @param event The Show Group Event
      */
     @Subscribe
-    public void handleGroupSelectionEvent( ShowGroupRequest event ) {
+    public void handleShowGroupRequest( ShowGroupRequest event ) {
         showInfo( event.getNode() );
     }
 

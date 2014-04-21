@@ -94,7 +94,7 @@ public class Jpo {
 
         Settings.loadSettings();
 
-        final ApplicationEventHandler applicationEventHandler = new ApplicationEventHandler();
+        new ApplicationEventHandler();
 
         JpoEventBus.getInstance().register( new DebugEventListener() );
         JpoEventBus.getInstance().post( new OpenMainWindowRequest() );

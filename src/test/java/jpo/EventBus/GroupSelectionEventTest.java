@@ -7,28 +7,27 @@ import static junit.framework.Assert.assertEquals;
 import junit.framework.TestCase;
 
 /**
- *
+ * Test for Group Selection Events
  * @author Richard Eigenmann
  */
 public class GroupSelectionEventTest extends TestCase {
 
+    /**
+     * Constructor
+     * @param testName test name
+     */
     public GroupSelectionEventTest( String testName ) {
         super( testName );
-    }
-
-    JpoEventBus jpoEventBus;
-
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
         jpoEventBus = JpoEventBus.getInstance();
     }
 
-    @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
-    }
+    private final JpoEventBus jpoEventBus;
 
+
+
+    /**
+     * Test receiving an event.
+     */
     public void testReceivingEvent() {
         EventBusSubscriber myEventBusSubscriber = new EventBusSubscriber();
         jpoEventBus.register( myEventBusSubscriber );
@@ -43,8 +42,14 @@ public class GroupSelectionEventTest extends TestCase {
         assertEquals( "After firing a GroupSelectionEvent we expect it to be received by the listener", myGroupSelectionEvent, responseEvent );
     }
 
-    GroupSelectionEvent responseEvent;
+    /**
+     * Receives the event.
+     */
+    private GroupSelectionEvent responseEvent;
 
+    /**
+     * Subscribes to the vent.
+     */
     private class EventBusSubscriber {
 
         @Subscribe

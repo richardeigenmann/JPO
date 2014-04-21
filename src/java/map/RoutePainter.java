@@ -19,10 +19,10 @@ import org.jdesktop.swingx.painter.Painter;
  */
 public class RoutePainter implements Painter<JXMapViewer>
 {
-	private Color color = Color.RED;
-	private boolean antiAlias = true;
+	private final Color color = Color.RED;
+	private final boolean antiAlias = true;
 
-	private List<GeoPosition> track;
+	private final List<GeoPosition> track;
 
 	/**
 	 * @param track the track

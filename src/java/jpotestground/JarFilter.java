@@ -34,6 +34,7 @@ public class JarFilter
      * @param file the File to test
      * @return true if the file is a directory or if the file ends in .jar
      */
+    @Override
     public boolean accept( File file ) {
         return file.isDirectory() || file.getAbsolutePath().toUpperCase().endsWith( ".JAR" );
     }
@@ -44,6 +45,7 @@ public class JarFilter
      *
      * @return  Returns "JAR Files"
      */
+    @Override
     public String getDescription() {
         return "JAR Files";
     }

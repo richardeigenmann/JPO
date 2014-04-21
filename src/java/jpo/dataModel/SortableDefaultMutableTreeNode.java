@@ -393,25 +393,15 @@ public class SortableDefaultMutableTreeNode
             Transferable t = event.getTransferable();
             Object o = t.getTransferData( JpoTransferable.jpoNodeFlavor );
             arrayOfNodes = (Object[]) o;
-        } catch ( java.awt.datatransfer.UnsupportedFlavorException x ) {
-            LOGGER.info( x.getMessage() );
-            event.dropComplete( false );
-            return;
-        } catch ( java.io.IOException x ) {
-            LOGGER.info( x.getMessage() );
-            event.dropComplete( false );
-            return;
-        } catch ( ClassCastException x ) {
+        } catch ( java.awt.datatransfer.UnsupportedFlavorException | java.io.IOException | ClassCastException x ) {
             LOGGER.info( x.getMessage() );
             event.dropComplete( false );
             return;
         }
 
 
-        /* We must ensure that if the action is a move it does not drop into
-         itself or into a child of itself. */
-        for ( int i = 0; i < arrayOfNodes.length; i++ ) {
-            sourceNode = (SortableDefaultMutableTreeNode) arrayOfNodes[i];
+        for ( Object arrayOfNode : arrayOfNodes ) {
+            sourceNode = (SortableDefaultMutableTreeNode) arrayOfNode;
             if ( this.isNodeAncestor( sourceNode ) ) {
                 JOptionPane.showMessageDialog( Settings.anchorFrame,
                         Settings.jpoResources.getString( "moveNodeError" ),
@@ -1415,7 +1405,7 @@ public class SortableDefaultMutableTreeNode
                 newPictureInfo.setCategoryAssignment( categoryAssignment );
             }
         } catch ( MalformedURLException x ) {
-            LOGGER.severe( String.format( "Caught a MalformedURLException: %s\nError: %s", addFile.getPath(), x.getMessage() ) );
+            LOGGER.severe( String.format( "Caught a MalformedURLException: %s%nError: %s", addFile.getPath(), x.getMessage() ) );
             return false;
         }
         SortableDefaultMutableTreeNode newNode = new SortableDefaultMutableTreeNode( newPictureInfo );

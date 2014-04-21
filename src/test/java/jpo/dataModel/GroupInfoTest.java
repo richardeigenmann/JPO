@@ -3,12 +3,17 @@ package jpo.dataModel;
 import junit.framework.TestCase;
 
 /**
- *
+ * Tests for Groupinfo class
  * @author Richard Eigenmann
  */
 public class GroupInfoTest
         extends TestCase {
 
+    
+    /**
+     * Tests for GroupInfo class
+     * @param testName test name
+     */
     public GroupInfoTest( String testName ) {
         super( testName );
     }
@@ -39,6 +44,7 @@ public class GroupInfoTest
      */
     GroupInfoChangeListener groupInfoChangeListener = new GroupInfoChangeListener() {
 
+        @Override
         public void groupInfoChangeEvent( GroupInfoChangeEvent pice ) {
             eventsReceived++;
         }
@@ -47,6 +53,9 @@ public class GroupInfoTest
     int eventsReceived;
 
 
+    /**
+     * Tests the change listener
+     */
     public void testGroupInfoChangeListener() {
         eventsReceived = 0;
         GroupInfo gi = new GroupInfo( "Step0" );

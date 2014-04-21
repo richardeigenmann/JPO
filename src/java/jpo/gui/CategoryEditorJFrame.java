@@ -116,7 +116,7 @@ public class CategoryEditorJFrame
         c.insets = new Insets( 0, 0, 3, 0 );
         jPanel.add( categoryJTextField, c );
 
-        final DefaultListModel<Category> listModel = new DefaultListModel<Category>();
+        final DefaultListModel<Category> listModel = new DefaultListModel<>();
 
         final Dimension defaultButtonSize = new Dimension( 150, 25 );
         final Dimension maxButtonSize = new Dimension( 150, 25 );
@@ -299,7 +299,7 @@ public class CategoryEditorJFrame
         if ( !theList.isSelectionEmpty() ) {
             int index = theList.getSelectedIndex();
             Category cat = (Category) theList.getModel().getElementAt( index );
-            categoryJTextField.setText( cat.getValue().toString() );
+            categoryJTextField.setText( cat.getValue() );
         }
     }
 }

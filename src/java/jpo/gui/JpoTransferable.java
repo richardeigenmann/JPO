@@ -87,11 +87,11 @@ public class JpoTransferable
      * @return a well formated description of the supported transferrables
      */
     private static String flavorsToString() {
-        StringBuffer sb = new StringBuffer( String.format( "%d Transferable flavors supported: ", flavors.length ) );
+        StringBuilder sb = new StringBuilder( String.format( "%d Transferable flavors supported: ", flavors.length ) );
 
 
         for ( DataFlavor flavor : flavors ) {
-            sb.append( flavor.toString() + ", " );
+            sb.append( flavor.toString() ).append( ", ");
         }
         return ( sb.toString() );
 
@@ -157,7 +157,7 @@ public class JpoTransferable
      * @return the transfer data as a String
      */
     private Object getStringDescriptionTransferData() {
-        StringBuffer objectDescriptions = new StringBuffer( "" );
+        StringBuilder objectDescriptions = new StringBuilder( "" );
         for ( Object o : transferableNodes ) {
             objectDescriptions.append( o.toString() + "\n" );
         }
@@ -237,11 +237,10 @@ public class JpoTransferable
      */
     @Override
     public String toString() {
-        StringBuffer objectDescriptions = new StringBuffer( String.format( "JpoTransferable for %d nodes: ", transferableNodes.length ) );
-
+        StringBuilder objectDescriptions = new StringBuilder( String.format( "JpoTransferable for %d nodes: ", transferableNodes.length ) );
 
         for ( Object o : transferableNodes ) {
-            objectDescriptions.append( o.toString() + ", " );
+            objectDescriptions.append( o.toString() ).append( ", ");
 
 
         }

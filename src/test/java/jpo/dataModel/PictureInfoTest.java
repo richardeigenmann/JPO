@@ -6,12 +6,16 @@ import java.net.URL;
 import junit.framework.TestCase;
 
 /**
- *
+ * Tests for the PictureInfo class
  * @author Richard Eigenmann
  */
 public class PictureInfoTest
         extends TestCase {
 
+    /**
+     * Constructor for the PictureInfo tests
+     * @param testName 
+     */
     public PictureInfoTest( String testName ) {
         super( testName );
     }
@@ -206,6 +210,7 @@ public class PictureInfoTest
      */
     PictureInfoChangeListener pictureInfoChangeListener = new PictureInfoChangeListener() {
 
+        @Override
         public void pictureInfoChangeEvent( PictureInfoChangeEvent pice ) {
             eventsReceived++;
         }
@@ -213,6 +218,9 @@ public class PictureInfoTest
 
     int eventsReceived;
 
+    /**
+     * Test the change listener
+     */
     public void testPictureInfoChangeListener() {
         eventsReceived = 0;
         PictureInfo pi = new PictureInfo();

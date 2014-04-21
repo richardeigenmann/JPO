@@ -35,6 +35,10 @@ public class JpoResources_zh_CN extends ListResourceBundle {
 		return contents;
 
 	}
+        
+        /**
+         * the resource bundle
+         */
 	protected static final Object[][] contents = {
 		// Jpo
 		{"ApplicationTitle", "JPO - 图片管理"},
@@ -62,9 +66,9 @@ public class JpoResources_zh_CN extends ListResourceBundle {
 		
 		
 		// Help About Dialog
-		{"HelpAboutText", "JPO 版本 0.11 是基于Java/Swing 开发的软件\n" 
+		{"HelpAboutText", "JPO 版本 0.12 是基于Java/Swing 开发的软件\n" 
 			+ "作者Richard Eigenmann在瑞士苏黎世, \n" 
-			+ "版权 2000 - 2013\n"
+			+ "版权 2000 - 2014\n"
 			+ "邮件地址：richard.eigenmann@gmail.com\n"
 			+ "软件主页网址：http://j-po.sourceforge.net\n"
 			+ "\nExif（可交换图像文件）的抽取部分蒙Drew Noakes的帮助\n"

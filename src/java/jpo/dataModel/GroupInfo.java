@@ -1,13 +1,8 @@
 package jpo.dataModel;
 
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -276,6 +271,12 @@ public class GroupInfo
         out.newLine();
     }
 
+    /**
+     * Closes the xml output
+     * @param out The output stream
+     * @param rootNode true if this si the root node
+     * @throws IOException if something went wrong
+     */
     public void endGroupXML( BufferedWriter out, boolean rootNode )
             throws IOException {
 

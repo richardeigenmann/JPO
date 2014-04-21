@@ -67,6 +67,7 @@ public class CyclingSpinnerListModel extends SpinnerListModel {
         this.linkedModel = linkedModel;
     }
 
+    @Override
     public Object getNextValue() {
         Object value = super.getNextValue();
         if (value == null) {
@@ -78,6 +79,7 @@ public class CyclingSpinnerListModel extends SpinnerListModel {
         return value;
     }
 
+    @Override
     public Object getPreviousValue() {
         Object value = super.getPreviousValue();
         if (value == null) {

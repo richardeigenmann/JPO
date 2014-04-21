@@ -12,44 +12,48 @@ import junit.framework.TestCase;
  */
 public class NodeStatisticsTest extends TestCase {
 
+    /**
+     * Tests for the NodeStatistics
+     *
+     * @param testName the test name
+     */
     public NodeStatisticsTest( String testName ) {
         super( testName );
     }
 
-    SortableDefaultMutableTreeNode rootNode;
+    private SortableDefaultMutableTreeNode rootNode;
 
-    GroupInfo gr1 = new GroupInfo( "Group1" );
+    private GroupInfo gr1 = new GroupInfo( "Group1" );
 
-    SortableDefaultMutableTreeNode group1;
+    private SortableDefaultMutableTreeNode group1;
 
-    GroupInfo gr2 = new GroupInfo( "Group2" );
+    private GroupInfo gr2 = new GroupInfo( "Group2" );
 
-    SortableDefaultMutableTreeNode group2;
+    private SortableDefaultMutableTreeNode group2;
 
-    GroupInfo gr3 = new GroupInfo( "Group3" );
+    private final GroupInfo gr3 = new GroupInfo( "Group3" );
 
-    SortableDefaultMutableTreeNode group3;
+    private SortableDefaultMutableTreeNode group3;
 
-    PictureInfo pi1 = new PictureInfo( "images/image1.jpg",  "Fist Picture", "Reference1" );
+    private final PictureInfo pi1 = new PictureInfo( "images/image1.jpg", "Fist Picture", "Reference1" );
 
-    SortableDefaultMutableTreeNode picture1;
+    private SortableDefaultMutableTreeNode picture1;
 
-    PictureInfo pi2 = new PictureInfo( "images/image2.jpg",  "Second Picture", "Reference2" );
+    private final PictureInfo pi2 = new PictureInfo( "images/image2.jpg", "Second Picture", "Reference2" );
 
-    SortableDefaultMutableTreeNode picture2;
+    private SortableDefaultMutableTreeNode picture2;
 
-    PictureInfo pi3 = new PictureInfo( "images/image3.jpg",  "Third Picture", "Reference3" );
+    private final PictureInfo pi3 = new PictureInfo( "images/image3.jpg", "Third Picture", "Reference3" );
 
-    SortableDefaultMutableTreeNode picture3;
+    private SortableDefaultMutableTreeNode picture3;
 
-    PictureInfo pi4 = new PictureInfo( "images/image4.jpg",  "Fourth Picture", "Reference4" );
+    private final PictureInfo pi4 = new PictureInfo( "images/image4.jpg", "Fourth Picture", "Reference4" );
 
-    SortableDefaultMutableTreeNode picture4;
+    private SortableDefaultMutableTreeNode picture4;
 
-    PictureInfo pi5 = new PictureInfo( "images/image5.jpg",  "Fifth Picture", "Reference5" );
+    private final PictureInfo pi5 = new PictureInfo( "images/image5.jpg", "Fifth Picture", "Reference5" );
 
-    SortableDefaultMutableTreeNode picture5;
-
+    private SortableDefaultMutableTreeNode picture5;
 
     @Override
     protected void setUp() throws Exception {
@@ -72,7 +76,6 @@ public class NodeStatisticsTest extends TestCase {
         group2.add( picture5 );
     }
 
-
     /**
      * Test of getNode method, of class NodeStatistics.
      */
@@ -84,7 +87,6 @@ public class NodeStatisticsTest extends TestCase {
         assertEquals( "When we set a node it should be the one coming back", rootNode, ns1.getNode() );
 
     }
-
 
     /**
      * Test of getNumberOfNodes method, of class NodeStatistics.
@@ -98,7 +100,6 @@ public class NodeStatisticsTest extends TestCase {
 
     }
 
-
     /**
      * Test of getNumberOfGroups method, of class NodeStatistics.
      */
@@ -107,7 +108,6 @@ public class NodeStatisticsTest extends TestCase {
         assertEquals( "Counting number of groups", 3, ns.getNumberOfGroups() );
     }
 
-
     /**
      * Test of getNumberOfPictures method, of class NodeStatistics.
      */
@@ -115,7 +115,6 @@ public class NodeStatisticsTest extends TestCase {
         NodeStatistics ns = new NodeStatistics( rootNode );
         assertEquals( "Counting number of pictures", 5, ns.getNumberOfPictures() );
     }
-
 
     /**
      * Test of countPictures method, of class NodeStatistics.

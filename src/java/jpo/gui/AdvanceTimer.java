@@ -69,6 +69,7 @@ public class AdvanceTimer implements Runnable {
     /**
      *  The Thread method which sleeps and then advances the picture.
      */
+    @Override
     public void run() {
         while ( keepThreadRunning ) {
             caller.requestAdvance();

@@ -22,14 +22,14 @@ public class DebuggingDefaultTreeModel
     /**
      * Defines a logger for this class
      */
-    private static Logger logger = Logger.getLogger( DebuggingDefaultTreeModel.class.getName() );
+    private static final Logger LOGGER = Logger.getLogger( DebuggingDefaultTreeModel.class.getName() );
 
 
     @Override
     public void nodesWereRemoved( TreeNode node,
             int[] childIndices,
             Object[] removedChildren ) {
-        logger.info( String.format( "Listeners: %d, Node: %s, childIndices %d, removedChildren: %d",getTreeModelListeners().length, node.toString(), childIndices.length, removedChildren.length ) );
+        LOGGER.info( String.format( "Listeners: %d, Node: %s, childIndices %d, removedChildren: %d",getTreeModelListeners().length, node.toString(), childIndices.length, removedChildren.length ) );
         super.nodesWereRemoved( node, childIndices, removedChildren );
     }
 
@@ -39,7 +39,7 @@ public class DebuggingDefaultTreeModel
                                     Object[] path,
                                     int[] childIndices,
                                     Object[] children) {
-        logger.info( String.format( "Listeners: %d, Source: %s, path: %d, childIndices %d, children: %d",getTreeModelListeners().length, source.toString(), path.length, childIndices.length, children.length ) );
+        LOGGER.info( String.format( "Listeners: %d, Source: %s, path: %d, childIndices %d, children: %d",getTreeModelListeners().length, source.toString(), path.length, childIndices.length, children.length ) );
         super.fireTreeNodesRemoved(source, path, childIndices, children );
     }
 

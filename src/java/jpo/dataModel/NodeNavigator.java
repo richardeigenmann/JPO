@@ -69,7 +69,7 @@ public abstract class NodeNavigator
      * This ArrayList holds the reference to the listeners that need to be
      * notified if there is a structural change. Observer pattern.
      */
-    private final ArrayList<NodeNavigatorListener> relayoutListeners = new ArrayList<NodeNavigatorListener>();
+    private final ArrayList<NodeNavigatorListener> relayoutListeners = new ArrayList<>();
 
     /**
      * method to register a NodeNavigatorListener as a listener
