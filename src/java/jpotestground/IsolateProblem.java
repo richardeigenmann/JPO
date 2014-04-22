@@ -30,11 +30,12 @@ public class IsolateProblem extends JFrame {
      /**
      * Defines a logger for this class
      */
-    private static Logger logger = Logger.getLogger( IsolateProblem.class.getName() );
+    private final static Logger LOGGER = Logger.getLogger( IsolateProblem.class.getName() );
 
     public static void main( String[] args ) {
         Runnable r = new Runnable() {
 
+            @Override
             public void run() {
                 new IsolateProblem();
             }
@@ -73,6 +74,7 @@ public class IsolateProblem extends JFrame {
             slider.setValue( 1 );
             slider.addChangeListener( new ChangeListener() {
 
+                @Override
                 public void stateChanged( ChangeEvent e ) {
                     populateWithLabels();
                 }
@@ -104,6 +106,7 @@ public class IsolateProblem extends JFrame {
 
     class VerticalScrollPanel extends JPanel implements Scrollable {
 
+        @Override
         public Dimension getPreferredScrollableViewportSize() {
             return getPreferredSize();
 
@@ -132,27 +135,28 @@ public class IsolateProblem extends JFrame {
         }
 
 
+        @Override
         public int getScrollableBlockIncrement( Rectangle visibleRect, int orientation, int direction ) {
             return 1;
         }
 
 
+        @Override
         public boolean getScrollableTracksViewportHeight() {
             return false;
         }
 
 
+        @Override
         public boolean getScrollableTracksViewportWidth() {
             return true;
         }
 
 
+        @Override
         public int getScrollableUnitIncrement( Rectangle visibleRect, int orientation, int direction ) {
             return 1;
         }
     }
 
-    private DescriptionWordMap dwm;
-
-    private int availableWords;
 }

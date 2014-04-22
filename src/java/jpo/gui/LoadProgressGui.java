@@ -19,20 +19,28 @@ import javax.swing.WindowConstants;
 import jpo.dataModel.Tools;
 
 /**
- *  Constructor for a progress GUI for the XML reader
+ * Constructor for a progress GUI for the XML reader
  *
  */
 public class LoadProgressGui {
 
-    private boolean interrupt = false;
-
-    private JLabel progLabel;
-
-    private JFrame frame;
-
+    /**
+     * variable to indicate that the process should be terminated
+     */
+    private boolean interrupt;  // default is false
 
     /**
-     *  Constructor for the LoadProgressGui
+     * Holds the label for the progress dialog
+     */
+    private JLabel progressJLabel;
+
+    /**
+     * Reference for the frame
+     */
+    private JFrame frame;
+
+    /**
+     * Constructor for the LoadProgressGui
      */
     public LoadProgressGui() {
         Runnable r = new Runnable() {
@@ -54,7 +62,9 @@ public class LoadProgressGui {
         }
     }
 
-
+    /**
+     * Creates the components
+     */
     private void initComponents() {
         Tools.checkEDT();
 
@@ -71,7 +81,6 @@ public class LoadProgressGui {
             }
         } );
 
-
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.anchor = GridBagConstraints.CENTER;
         constraints.insets = new Insets( 4, 4, 4, 4 );
@@ -81,29 +90,29 @@ public class LoadProgressGui {
         contentJPanel.setPreferredSize( new Dimension( 260, 30 ) );
         frame.getContentPane().add( contentJPanel );
 
-        progLabel = new JLabel();
-        progLabel.setPreferredSize( new Dimension( 250, 20 ) );
-        progLabel.setBorder( BorderFactory.createEmptyBorder( 5, 5, 5, 5 ) );
-        progLabel.setHorizontalAlignment( javax.swing.SwingConstants.CENTER );
+        progressJLabel = new JLabel();
+        progressJLabel.setPreferredSize( new Dimension( 250, 20 ) );
+        progressJLabel.setBorder( BorderFactory.createEmptyBorder( 5, 5, 5, 5 ) );
+        progressJLabel.setHorizontalAlignment( javax.swing.SwingConstants.CENTER );
 
         constraints.gridy++;
-        contentJPanel.add( progLabel, constraints );
+        contentJPanel.add( progressJLabel, constraints );
 
         frame.pack();
         frame.setVisible( true );
     }
 
-
     /**
+     * Updates the label with the supplied message
      *
-     * @param message
+     * @param message the message to show in the label
      */
     public void update( final String message ) {
         Runnable r = new Runnable() {
 
             @Override
             public void run() {
-                progLabel.setText( message );
+                progressJLabel.setText( message );
             }
         };
         if ( SwingUtilities.isEventDispatchThread() ) {
@@ -114,9 +123,8 @@ public class LoadProgressGui {
 
     }
 
-
     /**
-     *  method that closes te frame and gets rid of it
+     * method that closes the frame and gets rid of it
      */
     public void getRid() {
         Runnable r = new Runnable() {
@@ -135,6 +143,3 @@ public class LoadProgressGui {
 
     }
 }
-
-
-

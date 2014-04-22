@@ -854,7 +854,7 @@ public class PictureInfo implements Serializable {
     /**
      * The rotation factor to apply after loading the image.
      */
-    private double rotation = 0;
+    private double rotation;  // default is 0
 
     /**
      * Temporary variable to allow appending of characters as the XML file is

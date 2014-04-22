@@ -49,11 +49,6 @@ public class GenerateWebsiteWizard {
      * panel
      */
     public static final Dimension normalComponentSize = new Dimension( 350, 25 );
-    /**
-     * Defines the maximum size for taller horizontally combined objects on a
-     * step panel
-     */
-    public static final Dimension tallerComponentSize = new Dimension( 350, 50 );
 
     /**
      * Creates a Wizard for the generation of a website

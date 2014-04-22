@@ -3,15 +3,8 @@ package jpo.gui;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
-import jpo.gui.swing.NonFocussedCaret;
-import jpo.dataModel.Settings;
-import jpo.dataModel.GroupInfo;
-import jpo.dataModel.SortableDefaultMutableTreeNode;
-import jpo.dataModel.PictureInfoChangeEvent;
-import jpo.dataModel.PictureInfoChangeListener;
-import jpo.dataModel.PictureInfo;
-import java.awt.event.AdjustmentListener;
 import java.awt.event.AdjustmentEvent;
+import java.awt.event.AdjustmentListener;
 import java.util.logging.Logger;
 import javax.swing.InputVerifier;
 import javax.swing.JComponent;
@@ -24,6 +17,15 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
+import jpo.dataModel.GroupInfo;
+import jpo.dataModel.PictureInfo;
+import jpo.dataModel.PictureInfoChangeEvent;
+import jpo.dataModel.PictureInfoChangeListener;
+import jpo.dataModel.Settings;
+import jpo.dataModel.SortableDefaultMutableTreeNode;
+import static jpo.gui.ThumbnailDescriptionJPanel.DescriptionSize.LARGE_DESCRIPTION;
+import static jpo.gui.ThumbnailDescriptionJPanel.DescriptionSize.MINI_INFO;
+import jpo.gui.swing.NonFocussedCaret;
 
 /*
  ThumbnailDescriptionJPanel.java:  class that creates a panel showing the description of a thumbnail
@@ -93,21 +95,18 @@ public class ThumbnailDescriptionJPanel
     private final NonFocussedCaret dumbCaret = new NonFocussedCaret();
 
     public static enum DescriptionSize {
-        
+        LARGE_DESCRIPTION,
+        MINI_INFO
     };
     
     /**
-     * Constant that indicates that the description should be formatted as a
-     * large description meaning large font and just the image description
+     * This field controls how the description panel is shown. It can be set to
+     * ThumbnailDescriptionJPanel.LARGE_DESCRIPTION,
+     * ThumbnailDescriptionJPanel.MINI_INFO,
      */
-    public static final int LARGE_DESCRIPTION = 1;
+    private DescriptionSize displayMode = LARGE_DESCRIPTION;
 
-    /**
-     * Constant that indicates that the descriptions should be formatted as a
-     * small info panel meaning small font and much information
-     */
-    public static final int MINI_INFO = LARGE_DESCRIPTION + 1;
-
+    
     /**
      * Font to be used for Large Texts:
      */
@@ -118,12 +117,6 @@ public class ThumbnailDescriptionJPanel
      */
     private static final Font SMALL_FONT = Font.decode( Settings.jpoResources.getString( "ThumbnailDescriptionJPanelSmallFont" ) );
 
-    /**
-     * This field controls how the description panel is shown. It can be set to
-     * ThumbnailDescriptionJPanel.LARGE_DESCRIPTION,
-     * ThumbnailDescriptionJPanel.MINI_INFO,
-     */
-    private int displayMode = LARGE_DESCRIPTION;
 
     /**
      * The factor which is multiplied with the ThumbnailDescription to determine
@@ -276,7 +269,7 @@ public class ThumbnailDescriptionJPanel
      *
      * @param displayMode
      */
-    public void setDisplayMode( int displayMode ) {
+    public void setDisplayMode( DescriptionSize displayMode ) {
         this.displayMode = displayMode;
     }
 

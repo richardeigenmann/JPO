@@ -73,7 +73,7 @@ public class ScalablePicture
     /**
      * The scaled version of the image
      */
-    public BufferedImage scaledPicture = null;
+    public BufferedImage scaledPicture;
 
     /**
      * The scaling factor
@@ -83,7 +83,7 @@ public class ScalablePicture
     /**
      * the URL of the picture
      */
-    public URL imageUrl = null;
+    public URL imageUrl;
 
     /**
      * variable to compose the status message
@@ -103,56 +103,15 @@ public class ScalablePicture
     private Dimension TargetSize;
 
     public enum ScalablePictureStatus {
+
         SCALABLE_PICTURE_UNINITIALISED,
         SCALABLE_PICTURE_GARBAGE_COLLECTION,
-        SCALABLE_PICTURE_LOADING, 
-        SCALABLE_PICTURE_LOADED, 
-        SCALABLE_PICTURE_SCALING, 
+        SCALABLE_PICTURE_LOADING,
+        SCALABLE_PICTURE_LOADED,
+        SCALABLE_PICTURE_SCALING,
         SCALABLE_PICTURE_READY,
         SCALABLE_PICTURE_ERROR
     }
-    
-    /**
-     * status code used to signal that the picture is not loaded
-     *
-    public static final int SCALABLE_PICTURE_UNINITIALISED = 1;
-
-    /**
-     * status code used to signal that the picture is cleaning up memory
-     *
-    public static final int SCALABLE_PICTURE_GARBAGE_COLLECTION = SCALABLE_PICTURE_UNINITIALISED + 1;
-
-    /**
-     * status code used to signal that the thread is loading the image
-     *
-    public static final int SCALABLE_PICTURE_LOADING = SCALABLE_PICTURE_GARBAGE_COLLECTION + 1;
-
-    /**
-     * status code used to signal that the thread has finished loading the image
-     *
-    public static final int SCALABLE_PICTURE_LOADED = SCALABLE_PICTURE_LOADING + 1;
-
-    /**
-     * status code used to signal that the thread has loaded the tread is
-     * scaling the image
-     *
-    public static final int SCALABLE_PICTURE_SCALING = SCALABLE_PICTURE_LOADED + 1;
-
-    /**
-     * status code used to signal that the image is available.
-     *
-    public static final int SCALABLE_PICTURE_READY = SCALABLE_PICTURE_SCALING + 1;
-
-    /**
-     * status code used to signal that there was an error
-     *
-    public static final int SCALABLE_PICTURE_ERROR = SCALABLE_PICTURE_READY + 1;
-    * */
-
-    /**
-     * thingy to scale the image
-     */
-    private AffineTransformOp op;
 
     /**
      * the quality with which the JPG pictures shall be written. A value of 0
@@ -178,7 +137,7 @@ public class ScalablePicture
      * flag that indicates that the image should be scaled after a status
      * message is received from the SourcePicture that the picture was loaded.
      */
-    public boolean scaleAfterLoad = false;
+    public boolean scaleAfterLoad;  // default is false
 
     /**
      * Constructor
@@ -198,9 +157,9 @@ public class ScalablePicture
      * it finished loading? If no -> wait for it If yes -> use it Else -> load
      * it
      *
-     * @param	imageUrl	The URL of the image you want to load
+     * @param imageUrl	The URL of the image you want to load
      * @param priority	The Thread priority
-     * @param	rotation	The rotation 0-360 that the image should be put through
+     * @param rotation	The rotation 0-360 that the image should be put through
      * after loading.
      */
     public void loadAndScalePictureInThread( URL imageUrl, int priority, double rotation ) {
@@ -216,107 +175,6 @@ public class ScalablePicture
         // when the thread is done it sends a sourceStatusChange message to us
     }
 
-    /**
-     * method to invoke with a filename or URL of a picture that is to be loaded
-     * and scaled in a new thread. This is handy to update the screen while the
-     * loading chuggs along in the background. Make sure you invoked
-     * setScaleFactor or setScaleSize before invoking this method.
-     *
-     * Step 1: Am I already loading what I need somewhere? If yes -> use it. Has
-     * it finished loading? If no -> wait for it If yes -> use it Else -> load
-     * it
-     *
-     * @param	imageUrl	The URL of the image you want to load
-     * @param priority	The Thread priority
-     * @param	rotation	The rotation 0-360 that the image should be put through
-     * after loading.
-     */
-    public void loadAndScalePictureInThreadOld( URL imageUrl, int priority, double rotation ) {
-        this.imageUrl = imageUrl;
-
-        boolean alreadyLoading = false;
-        LOGGER.log( Level.FINE, "Checking if picture {0} is already being loaded.", imageUrl );
-        if ( ( sourcePicture != null ) && ( sourcePicture.getUrl() != null ) && ( sourcePicture.getUrl().equals( imageUrl ) ) ) {
-            LOGGER.fine( "the SourcePicture is already loading the sourcePicture image" );
-            if ( sourcePicture.getRotation() == rotation ) {
-                alreadyLoading = true;
-                LOGGER.fine( "Picture was even rotated to the correct angle!" );
-            } else {
-                alreadyLoading = false;
-                LOGGER.fine( "Picture was in cache but with wrong rotation. Forcing reload." );
-            }
-        //} else if ( PictureCache.isInCache( imageUrl ) ) {
-            } else if ( false ) {
-            // in case the old image has a listener connected remove it
-            //  fist time round the sourcePicture is still null therefore the if.
-            if ( sourcePicture != null ) {
-                sourcePicture.removeListener( this );
-            }
-
-            //sourcePicture = PictureCache.getSourcePicture( imageUrl );
-            String status = sourcePicture.getStatusMessage();
-            if ( status == null ) {
-                status = "";
-            }
-            LOGGER.log( Level.FINE, "Picture in cache! Status: {0}", status );
-
-            if ( sourcePicture.getRotation() == rotation ) {
-                alreadyLoading = true;
-                LOGGER.fine( "Picture was even rotated to the correct angle!" );
-            } else {
-                alreadyLoading = false;
-                LOGGER.fine( "Picture was in cache but with wrong rotation. Forcing reload." );
-            }
-        }
-
-        if ( alreadyLoading ) {
-            switch ( sourcePicture.getStatusCode() ) {
-                case SOURCE_PICTURE_UNINITIALISED:
-                    alreadyLoading = false;
-                    // logger.info("ScalablePicture.loadAndScalePictureInThread: pictureStatus was: UNINITIALISED");
-                    break;
-                case SOURCE_PICTURE_ERROR:
-                    alreadyLoading = false;
-                    // logger.info("ScalablePicture.loadAndScalePictureInThread: pictureStatus was: ERROR");
-                    break;
-                case SOURCE_PICTURE_LOADING:
-                    // logger.info("ScalablePicture.loadAndScalePictureInThread: pictureStatus was: LOADING");
-                    sourcePicture.addListener( this );
-                    setStatus( SCALABLE_PICTURE_LOADING, Settings.jpoResources.getString( "ScalablePictureLoadingStatus" ) );
-                    sourceLoadProgressNotification( SOURCE_PICTURE_LOADING_PROGRESS, sourcePicture.getPercentLoaded() );
-                    scaleAfterLoad = true;
-                    break;
-                case SOURCE_PICTURE_ROTATING:
-                    // logger.info("ScalablePicture.loadAndScalePictureInThread: pictureStatus was: ROTATING");
-                    setStatus( SCALABLE_PICTURE_LOADING, Settings.jpoResources.getString( "ScalablePictureRotatingStatus" ) );
-                    sourceLoadProgressNotification( SOURCE_PICTURE_LOADING_PROGRESS, sourcePicture.getPercentLoaded() );
-                    scaleAfterLoad = true;
-                    break;
-                case SOURCE_PICTURE_READY:
-                    //logger.info("ScalablePicture.loadAndScalePictureInThread: pictureStatus was: READY. Sending SCALING status.");
-                    setStatus( SCALABLE_PICTURE_SCALING, Settings.jpoResources.getString( "ScalablePictureScalingStatus" ) );
-                    createScaledPictureInThread( priority );
-                    break;
-                default:
-                    // logger.info("ScalablePicture.loadAndScalePictureInThread: Don't know what status this is:" + Integer.toString(sourcePicture.getStatusCode()) );
-                    break;
-
-            }
-        }
-
-        // if the image is not already there then load it.
-        if ( !alreadyLoading ) {
-            if ( sourcePicture != null ) {
-                sourcePicture.removeListener( this );
-            }
-            sourcePicture = new SourcePicture();
-            sourcePicture.addListener( this );
-            setStatus( SCALABLE_PICTURE_LOADING, Settings.jpoResources.getString( "ScalablePictureLoadingStatus" ) );
-            scaleAfterLoad = true;
-            sourcePicture.loadPictureInThread( imageUrl, priority, rotation );
-            // when the thread is done it sends a sourceStatusChange message to us
-        }
-    }
 
     /**
      * Synchronous method to load the image. It should only be called by

@@ -70,7 +70,7 @@ public class FlatGroupNavigator
     /**
      * A reference to the group for which this FlatGroupNavigator was created.
      */
-    private SortableDefaultMutableTreeNode groupNode = null;
+    private SortableDefaultMutableTreeNode groupNode;
 
     /**
      * returns the title of the node

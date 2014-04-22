@@ -126,11 +126,7 @@ public class PictureInfoEditor extends JFrame {
      * highres image
      */
     private final JLabel highresErrorJLabel = new JLabel( "" );
-    /**
-     * An informative message about what sort of error we have if any on the
-     * lowres image
-     */
-    private JLabel lowresErrorJLabel = new JLabel( "" );
+
     /**
      * Label to display the checksum of the image file. Gets updated so it's
      * here.

@@ -10,7 +10,7 @@ import jpo.dataModel.SortableDefaultMutableTreeNode;
 /*
  HtmlDistillerOptions.java:  Holds the options that configure the html output.
 
- Copyright (C) 2008-2012,  Richard Eigenmann, Zürich
+ Copyright (C) 2008-2014,  Richard Eigenmann, Zürich
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -584,7 +584,7 @@ public class HtmlDistillerOptions {
     /**
      * Whether to write the robots.txt file
      */
-    private boolean writeRobotsTxt = false;
+    private boolean writeRobotsTxt;  // default is false
 
     /**
      * @return the writeRobotsTxt

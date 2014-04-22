@@ -58,9 +58,9 @@ public class PictureInfoChangeEvent {
      */
     @Override
     public String toString() {
-        return String.format( "PictureInfoChangeEvent from PictureInfo %s, descriptionChanged: %b, highresLocationChanged %b, lowresLocationChanged: %b, checksumChanged: %b, thumbnailChanged %b, creationTimeChanged %b, filmReferenceChanged: %b, rotationChanged %b, commentChanged: %b, photographerChanged: %b, copyrightHolderChanged: %b, latLngChanged: %b, categoryAssignmentsChanged: %b, wasSelected: %b, wasUnselected: %b, wasMailSelected: %b, wasMailUnselected: %b",
+        return String.format( "PictureInfoChangeEvent from PictureInfo %s, descriptionChanged: %b, highresLocationChanged %b, checksumChanged: %b, thumbnailChanged %b, creationTimeChanged %b, filmReferenceChanged: %b, rotationChanged %b, commentChanged: %b, photographerChanged: %b, copyrightHolderChanged: %b, latLngChanged: %b, categoryAssignmentsChanged: %b, wasSelected: %b, wasUnselected: %b, wasMailSelected: %b, wasMailUnselected: %b",
                 pictureInfo.toString(), getDescriptionChanged(), getHighresLocationChanged(),
-                getLowresLocationChanged(), getChecksumChanged(), getThumbnailChanged(),
+                getChecksumChanged(), getThumbnailChanged(),
                 getCreationTimeChanged(), getFilmReferenceChanged(),
                 getRotationChanged(), getCommentChanged(), getPhotographerChanged(),
                 getCopyrightHolderChanged(), getLatLngChanged(),
@@ -73,7 +73,7 @@ public class PictureInfoChangeEvent {
     /**
      *  indicates whether the description was changed.
      */
-    private boolean descriptionChanged = false;
+    private boolean descriptionChanged;  // default is false
 
 
     /**
@@ -97,7 +97,7 @@ public class PictureInfoChangeEvent {
     /**
      *  indicates whether the highresLocation was changed.
      */
-    private boolean highresLocationChanged = false;
+    private boolean highresLocationChanged;  // default is false
 
 
     /**
@@ -121,7 +121,7 @@ public class PictureInfoChangeEvent {
     /**
      *  indicates whether the checksum was changed.
      */
-    private boolean checksumChanged = false;
+    private boolean checksumChanged;  // default is false
 
 
     /**
@@ -141,34 +141,11 @@ public class PictureInfoChangeEvent {
         return checksumChanged;
     }
 
-//-----------------
-    /**
-     *  indicates whether the lowresLocation description was changed.
-     */
-    private boolean lowresLocationChanged = false;
-
-
-    /**
-     *  sets the event to reflect that the lowres Location changed
-     **/
-    public void setLowresLocationChanged() {
-        lowresLocationChanged = true;
-    }
-
-
-    /**
-     *  returns whether the lowres Location was changed
-     *
-     * @return true if the lowres loc was changed
-     */
-    public boolean getLowresLocationChanged() {
-        return lowresLocationChanged;
-    }
 
     /**
      *  indicates whether the thumbnail was changed.
      */
-    private boolean thumbnailChanged = false;
+    private boolean thumbnailChanged;  // default is false
 
 
     /**
@@ -192,7 +169,7 @@ public class PictureInfoChangeEvent {
     /**
      *  indicates whether the creation time was changed.
      */
-    private boolean creationTimeChanged = false;
+    private boolean creationTimeChanged;  // default is false
 
 
     /**
@@ -216,7 +193,7 @@ public class PictureInfoChangeEvent {
     /**
      *  indicates whether the film reference was changed.
      */
-    private boolean filmReferenceChanged = false;
+    private boolean filmReferenceChanged;  // default is false
 
 
     /**
@@ -240,7 +217,7 @@ public class PictureInfoChangeEvent {
     /**
      *  indicates whether the rotation was changed.
      */
-    private boolean rotationChanged = false;
+    private boolean rotationChanged;  // default is false
 
 
     /**
@@ -264,7 +241,7 @@ public class PictureInfoChangeEvent {
     /**
      *  indicates whether the comment was changed.
      */
-    private boolean commentChanged = false;
+    private boolean commentChanged;  // default is false
 
 
     /**
@@ -288,7 +265,7 @@ public class PictureInfoChangeEvent {
     /**
      *  indicates whether the photographer was changed.
      */
-    private boolean photographerChanged = false;
+    private boolean photographerChanged;  // default is false
 
 
     /**
@@ -312,7 +289,7 @@ public class PictureInfoChangeEvent {
     /**
      *  indicates whether the copyright holder was changed.
      */
-    private boolean copyrightHolderChanged = false;
+    private boolean copyrightHolderChanged;  // default is false
 
 
     /**
@@ -336,7 +313,7 @@ public class PictureInfoChangeEvent {
     /**
      *  indicates whether the Latitude or Longitude was changed.
      */
-    private boolean latLngChanged = false;
+    private boolean latLngChanged;  // default is false
 
 
     /**
@@ -360,7 +337,7 @@ public class PictureInfoChangeEvent {
     /**
      *  indicates whether the category assignments were changed changed.
      */
-    private boolean categoryAssignmentsChanged = false;
+    private boolean categoryAssignmentsChanged;  // default is false
 
 
     /**
@@ -384,7 +361,7 @@ public class PictureInfoChangeEvent {
     /**
      *  indicates whether the node was selected
      */
-    private boolean wasSelected = false;
+    private boolean wasSelected;  // default is false
 
 
     /**
@@ -408,7 +385,7 @@ public class PictureInfoChangeEvent {
     /**
      *  indicates whether the node was unselected
      */
-    private boolean wasUnselected = false;
+    private boolean wasUnselected;
 
 
     /**
@@ -432,7 +409,7 @@ public class PictureInfoChangeEvent {
     /**
      *  indicates whether the node was mailSelected
      */
-    private boolean wasMailSelected = false;
+    private boolean wasMailSelected;  // default is false
 
 
     /**
@@ -456,7 +433,7 @@ public class PictureInfoChangeEvent {
     /**
      *  indicates whether the node was mailUnselected
      */
-    private boolean wasMailUnselected = false;
+    private boolean wasMailUnselected;
 
 
     /**

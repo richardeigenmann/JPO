@@ -115,7 +115,7 @@ public class ExifInfo {
      * A full dump of the Exif information
      */
 
-    public int rotation = 0;
+    public int rotation;  // default is 0
 
     /**
      * A full dump of the Exif information
@@ -285,44 +285,6 @@ public class ExifInfo {
      */
     private void setCreateDateTime( String dateTime ) {
         this.createDateTime = dateTime;
-    }
-
-    /**
-     * Attempt to parse the GPS data
-     *
-     */
-    private Point2D.Double parseGPS() {
-        double longitudeD = 0f;
-        double latitudeD = 0f;
-
-        if ( ( longitude == null ) || ( latitude == null ) ) {
-            return new Point2D.Double( latitudeD, longitudeD );
-        }
-
-        LOGGER.fine( String.format( "Trying to parse longitude: %s and latitude: %s", longitude, latitude ) );
-        Pattern pattern = Pattern.compile( "(.*)\"(.*)'(.*)" );
-        Matcher longitudeMatcher = pattern.matcher( longitude );
-        if ( longitudeMatcher.matches() ) {
-            longitudeD = Integer.parseInt( longitudeMatcher.group( 1 ) ) + ( Double.parseDouble( longitudeMatcher.group( 2 ) ) / 60 ) + ( Double.parseDouble( longitudeMatcher.group( 3 ) ) / 3600 );
-            if ( longitudeRef.equals( "W" ) ) {
-                longitudeD *= -1f;
-            }
-            LOGGER.fine( String.format( "Longitude %s matches %s %s %s --> %f", longitude, longitudeMatcher.group( 1 ), longitudeMatcher.group( 2 ), longitudeMatcher.group( 3 ), longitudeD ) );
-        } else {
-            LOGGER.fine( String.format( "Longitude %s made no sense", longitude ) );
-        }
-        Matcher latitudeMatcher = pattern.matcher( latitude );
-        if ( latitudeMatcher.matches() ) {
-            latitudeD = Integer.parseInt( latitudeMatcher.group( 1 ) ) + ( Double.parseDouble( latitudeMatcher.group( 2 ) ) / 60 ) + ( Double.parseDouble( latitudeMatcher.group( 3 ) ) / 3600 );
-            if ( latitudeRef.equals( "S" ) ) {
-                latitudeD *= -1f;
-            }
-            LOGGER.fine( String.format( "Latitude %s matches %s %s %s --> %f", latitude, latitudeMatcher.group( 1 ), latitudeMatcher.group( 2 ), latitudeMatcher.group( 3 ), latitudeD ) );
-        } else {
-            LOGGER.fine( String.format( "Latitude %s made no sense", latitude ) );
-        }
-        return new Point2D.Double( latitudeD, longitudeD );
-
     }
 
     /**

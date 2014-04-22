@@ -96,7 +96,7 @@ public class DuplicatesQuery
      * Variable for the resultSet so that the query is not reexecuted every 
      * time a user clicks
      */
-    private ArrayList<SortableDefaultMutableTreeNode> searchResults = null;
+    private ArrayList<SortableDefaultMutableTreeNode> searchResults ;
 
 
     /**

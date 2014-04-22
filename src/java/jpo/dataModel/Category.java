@@ -56,7 +56,7 @@ public final class Category implements Serializable {
      *  variable that records the state of the Category
      *  @see Category#UNDEFINED , Category#SELECTED , Category#UN_SELECTED , Category#BOTH
      */
-    private int status = 0;
+    private int status;  // default is 0
     /**
      * Defines a logger for this class
      */

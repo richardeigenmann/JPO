@@ -90,7 +90,7 @@ public class PicturePane
      * The legend of the picture. Is sent to the listener when the image is
      * ready.
      */
-    public String legend = null;
+    public String legend;
 
     /**
      * location of the info texts if shown
@@ -121,7 +121,7 @@ public class PicturePane
      * This object is a reference to an Exif Info object that tries to keep tabs
      * on the information in the image.
      */
-    public ExifInfo ei = null;
+    public ExifInfo exifInfo;
 
     /**
      * class to format the scale
@@ -380,19 +380,19 @@ public class PicturePane
                     break;
                 case PHOTOGRAPHIC_OVERLAY:
                     g2d.drawString( Settings.jpoResources.getString( "ExifInfoCamera" ), infoPoint.x, infoPoint.y + ( 0 * lineSpacing ) );
-                    g2d.drawString( ei.camera, infoPoint.x + tabstop, infoPoint.y + ( 0 * lineSpacing ) );
+                    g2d.drawString( exifInfo.camera, infoPoint.x + tabstop, infoPoint.y + ( 0 * lineSpacing ) );
                     g2d.drawString( Settings.jpoResources.getString( "ExifInfoLens" ), infoPoint.x, infoPoint.y + ( 1 * lineSpacing ) );
-                    g2d.drawString( ei.lens, infoPoint.x + tabstop, infoPoint.y + ( 1 * lineSpacing ) );
+                    g2d.drawString( exifInfo.lens, infoPoint.x + tabstop, infoPoint.y + ( 1 * lineSpacing ) );
                     g2d.drawString( Settings.jpoResources.getString( "ExifInfoShutterSpeed" ), infoPoint.x, infoPoint.y + ( 2 * lineSpacing ) );
-                    g2d.drawString( ei.shutterSpeed, infoPoint.x + tabstop, infoPoint.y + ( 2 * lineSpacing ) );
+                    g2d.drawString( exifInfo.shutterSpeed, infoPoint.x + tabstop, infoPoint.y + ( 2 * lineSpacing ) );
                     g2d.drawString( Settings.jpoResources.getString( "ExifInfoAperture" ), infoPoint.x, infoPoint.y + ( 3 * lineSpacing ) );
-                    g2d.drawString( ei.aperture, infoPoint.x + tabstop, infoPoint.y + ( 3 * lineSpacing ) );
+                    g2d.drawString( exifInfo.aperture, infoPoint.x + tabstop, infoPoint.y + ( 3 * lineSpacing ) );
                     g2d.drawString( Settings.jpoResources.getString( "ExifInfoFocalLength" ), infoPoint.x, infoPoint.y + ( 4 * lineSpacing ) );
-                    g2d.drawString( ei.focalLength, infoPoint.x + tabstop, infoPoint.y + ( 4 * lineSpacing ) );
+                    g2d.drawString( exifInfo.focalLength, infoPoint.x + tabstop, infoPoint.y + ( 4 * lineSpacing ) );
                     g2d.drawString( Settings.jpoResources.getString( "ExifInfoISO" ), infoPoint.x, infoPoint.y + ( 5 * lineSpacing ) );
-                    g2d.drawString( ei.iso, infoPoint.x + tabstop, infoPoint.y + ( 5 * lineSpacing ) );
+                    g2d.drawString( exifInfo.iso, infoPoint.x + tabstop, infoPoint.y + ( 5 * lineSpacing ) );
                     g2d.drawString( Settings.jpoResources.getString( "ExifInfoTimeStamp" ), infoPoint.x, infoPoint.y + ( 6 * lineSpacing ) );
-                    g2d.drawString( ei.getCreateDateTime(), infoPoint.x + tabstop, infoPoint.y + ( 6 * lineSpacing ) );
+                    g2d.drawString( exifInfo.getCreateDateTime(), infoPoint.x + tabstop, infoPoint.y + ( 6 * lineSpacing ) );
                     break;
                 case APPLICATION_OVERLAY:
                     g2d.drawString( legend, infoPoint.x, infoPoint.y + ( 0 * lineSpacing ) );

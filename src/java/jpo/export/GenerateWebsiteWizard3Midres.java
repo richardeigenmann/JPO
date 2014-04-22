@@ -79,27 +79,25 @@ public class GenerateWebsiteWizard3Midres extends AbstractStep {
      *
      */
     private final JSpinner midresHeightJSpinner = new JSpinner( midresHeightSpinnerNumberModel );
+
     /**
      * Checkbox that indicates whether to generate the midres html files or not.
      * Requested by Jay Christopherson, Nov 2008
      */
     private final JCheckBox generateMidresHtmlJCheckBox = new JCheckBox( Settings.jpoResources.getString( "HtmlDistMidresHtml" ) );
+
     /**
      * Checkbox that indicates whether to add a map ith the location or not.
      */
     private final JCheckBox generateMapJCheckBox = new JCheckBox( Settings.jpoResources.getString( "GenerateMap" ) );
+
     /**
      * Tickbox that indicates whether DHTML tags and effects should be
      * generated.
      *
      */
     private final JCheckBox generateDHTMLJCheckBox = new JCheckBox( Settings.jpoResources.getString( "generateDHTMLJCheckBox" ) );
-    /**
-     * Tickbox that indicates whether a Zipfile should be created to download
-     * the highres pictures
-     *
-     */
-    private final JCheckBox generateZipfileJCheckBox = new JCheckBox( Settings.jpoResources.getString( "generateZipfileJCheckBox" ) );
+
     /**
      * Slider that allows the quality of the midres jpg's to be specified.
      */

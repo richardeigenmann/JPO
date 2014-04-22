@@ -1,14 +1,12 @@
 package jpo.gui.swing;
 
-import javax.swing.Action;
-import javax.swing.Icon;
 import javax.swing.JButton;
 import jpo.dataModel.Settings;
 
 /*
  ThreeDotButton.java:  This class ovewrrides a JButton and sets the size and text.
 
- Copyright (C) 2010  Richard Eigenmann, Zurich, Switzerland
+ Copyright (C) 2010-2014  Richard Eigenmann, Zurich, Switzerland
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -30,63 +28,14 @@ import jpo.dataModel.Settings;
 public class ThreeDotButton extends JButton {
 
     /**
-     * Overriden JButton constructor
+     * Creates a three dot button
      */
     public ThreeDotButton() {
         super();
-        setThreeDotAppearance();
-    }
-
-    /**
-     * Overriden JButton constructor
-     *
-     * @param icon
-     */
-    public ThreeDotButton( Icon icon ) {
-        super( icon );
-        setThreeDotAppearance();
-    }
-
-    /**
-     * Overriden JButton constructor
-     *
-     * @param text
-     */
-    public ThreeDotButton( String text ) {
-        super( text );
-        setThreeDotAppearance();
-    }
-
-    /**
-     * Overriden JButton constructor
-     *
-     * @param a
-     */
-    public ThreeDotButton( Action a ) {
-        super( a );
-        setThreeDotAppearance();
-    }
-
-    /**
-     * Overriden JButton constructor
-     *
-     * @param text
-     * @param icon
-     */
-    public ThreeDotButton( String text,
-            Icon icon ) {
-        super( text, icon );
-        setThreeDotAppearance();
-    }
-
-    /**
-     * Sets the three dot text and the preferred size
-     */
-    private void setThreeDotAppearance() {
         setText( Settings.jpoResources.getString( "threeDotText" ) );
         setPreferredSize( Settings.threeDotButtonDimension );
         setMinimumSize( Settings.threeDotButtonDimension );
         setMaximumSize( Settings.threeDotButtonDimension );
-
     }
+
 }

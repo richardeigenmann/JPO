@@ -8,7 +8,7 @@ import jpo.dataModel.Camera;
 /*
  CameraWatchDaemon.java: Daemon Thread that monitors when a camera has been connected.
 
- Copyright (C) 2002 - 2009  Richard Eigenmann.
+ Copyright (C) 2002 - 2014  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -44,7 +44,7 @@ public class CameraWatchDaemon implements Runnable {
     /**
      * A flag to indicate that the thread should stop at the next iteration.
      */
-    private boolean gracefullyInterrupt = false;
+    private boolean gracefullyInterrupt;  // default is false
 
     /**
      * A method to call when you want to signal that the thread should stop at

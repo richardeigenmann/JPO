@@ -1,28 +1,29 @@
 package jpo.dataModel;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 
 /*
-CategoryQuery.java:  A type of query for Categories
+ CategoryQuery.java:  A type of query for Categories
 
-Copyright (C) 2006-2009  Richard Eigenmann.
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or any later version. This program is distributed 
-in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
-without even the implied warranty of MERCHANTABILITY or FITNESS 
-FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
-more details. You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-The license is in gpl.txt.
-See http://www.gnu.org/copyleft/gpl.html for the details.
+ Copyright (C) 2006-2014  Richard Eigenmann.
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or any later version. This program is distributed 
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+ without even the implied warranty of MERCHANTABILITY or FITNESS 
+ FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
+ more details. You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ The license is in gpl.txt.
+ See http://www.gnu.org/copyleft/gpl.html for the details.
  */
-/** 
- *  This class implements the {@link Query} interface to show all the nodes attached to a category.
+/**
+ * This class implements the {@link Query} interface to show all the nodes
+ * attached to a category.
  */
 public class CategoryQuery implements Query {
 
@@ -34,16 +35,16 @@ public class CategoryQuery implements Query {
     /**
      * the category key for the Query
      */
-    private Integer key = null;
+    private final Integer key;
 
     /**
-     * An ArrayList of the nodes that represent these images
+     * An List of the nodes that represent these images
      */
-    private ArrayList<SortableDefaultMutableTreeNode> resultList = null;
-
+    private List<SortableDefaultMutableTreeNode> resultList;
 
     /**
      * Constructor for a Category Query
+     *
      * @param key
      */
     public CategoryQuery( Integer key ) {
@@ -51,9 +52,9 @@ public class CategoryQuery implements Query {
         this.refresh();
     }
 
-
     /**
-     *  The query must be able to say how many results it will return.
+     * The query must be able to say how many results it will return.
+     *
      * @return the number of results
      */
     @Override
@@ -65,12 +66,11 @@ public class CategoryQuery implements Query {
         return resultList.size();
     }
 
-
     /**
-     *  This method returns the SDMTN node for the indicated position in the query. If the
-     *  index is out of bounds it returns null.
+     * This method returns the SDMTN node for the indicated position in the
+     * query. If the index is out of bounds it returns null.
      *
-     *  @param index   The component index that is to be returned.
+     * @param index The component index that is to be returned.
      * @return the node for the position
      */
     @Override
@@ -85,9 +85,10 @@ public class CategoryQuery implements Query {
         return resultList.get( index );
     }
 
-
     /**
-     *  returns a title for the search that can be used to display the search results under.
+     * returns a title for the search that can be used to display the search
+     * results under.
+     *
      * @return a title
      */
     @Override
@@ -95,9 +96,10 @@ public class CategoryQuery implements Query {
         return toString();
     }
 
-
     /**
-     *  returns a the title for the search that can be used to display the search results under.
+     * returns a the title for the search that can be used to display the search
+     * results under.
+     *
      * @return the title for the search
      */
     @Override
@@ -105,9 +107,8 @@ public class CategoryQuery implements Query {
         return Settings.jpoResources.getString( "CategoryQuery" ) + Settings.pictureCollection.getCategory( key );
     }
 
-
     /**
-     *  This method retrieves a new ArrayList of nodes that match the category.
+     * This method retrieves a new ArrayList of nodes that match the category.
      */
     @Override
     public void refresh() {

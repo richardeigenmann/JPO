@@ -40,9 +40,6 @@ public class ConsolidateGroup extends SwingWorker<Void, String> {
      */
     private static final Logger LOGGER = Logger.getLogger( ConsolidateGroup.class.getName() );
 
-    /*{
-     LOGGER.setLevel(Level.ALL);
-     }*/
     /**
      * the directory where the pictures are to be moved to
      */
@@ -119,11 +116,11 @@ public class ConsolidateGroup extends SwingWorker<Void, String> {
                             String.format( "Could not move %d pictures", errorCount ),
                             Settings.jpoResources.getString( "genericError" ),
                             JOptionPane.ERROR_MESSAGE );
-        };
+        }
 
     }
 
-    private int errorCount = 0;
+    private int errorCount;  // default is 0
     
     /**
      * This method consolidates all the nodes of the supplied group.

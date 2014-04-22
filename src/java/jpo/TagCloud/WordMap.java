@@ -61,11 +61,11 @@ public abstract class WordMap {
     /**
      * Cache of the sorted-by-value list of words.
      */
-    private TreeMap<String, Integer> valueSortedTreeMap = null;
+    private TreeMap<String, Integer> valueSortedTreeMap;
 
     /**
      * This method returns a TreeMap of the words retrieved from @see
-     * #getWordValueMap sorted descendingly by the number in the value of each
+     * #getWordValueMap sorted descending by the number in the value of each
      * entry. It caches the result in a private TreeMap variable and returns
      * this on each subsequent call. If the source words change you need to call
      * @see #rebuild().

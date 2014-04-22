@@ -84,10 +84,7 @@ public class SettingsDialog extends JDialog {
      * field that allows the user to specify where the logs should be written to
      */
     private final JTextField logfileJTextField = new JTextField();
-    /**
-     * checkbox to indicate that JPO should be maximised on startup
-     */
-    private final JCheckBox maximiseJpoOnStartupJCheckBox = new JCheckBox();
+
     /**
      * Dropdown to indicate what preference the user has for JPO startup
      */
@@ -96,42 +93,7 @@ public class SettingsDialog extends JDialog {
      * Dropdown to indicate the preferred size of the viewer window
      */
     private final JComboBox<String> viewerSizeDropdown = new JComboBox<>();
-    /**
-     * checkbox to indicate that the screen position should be saved upon exit.
-     */
-    private final JCheckBox saveSizeJCheckBox = new JCheckBox();
-    /**
-     * x coordinates of top left corner of main window
-     */
-    private final WholeNumberField mainX = new WholeNumberField( 0, 6 );
-    /**
-     * y coordinates of top left corner of main window
-     */
-    private final WholeNumberField mainY = new WholeNumberField( 0, 6 );
-    /**
-     * width of specific size window
-     */
-    private final WholeNumberField mainWidth = new WholeNumberField( 0, 6 );
-    /**
-     * height of specific size window
-     */
-    private final WholeNumberField mainHeight = new WholeNumberField( 0, 6 );
-    /**
-     * x coordinates of top left corner of main window
-     */
-    private final WholeNumberField pictureX = new WholeNumberField( 0, 6 );
-    /**
-     * y coordinates of top left corner of main window
-     */
-    private final WholeNumberField pictureY = new WholeNumberField( 0, 6 );
-    /**
-     * width of specific size window
-     */
-    private final WholeNumberField pictureWidth = new WholeNumberField( 0, 6 );
-    /**
-     * height of specific size window
-     */
-    private final WholeNumberField pictureHeight = new WholeNumberField( 0, 6 );
+
     /**
      * maximum size of picture
      */

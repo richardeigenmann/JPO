@@ -85,7 +85,7 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
      * Indicator that gets set to true if group nodes are being written so that
      * the folder icon is created.
      */
-    private boolean folderIconRequired = false;
+    private boolean folderIconRequired;
     /**
      * Handle for the zipfile
      */
@@ -838,7 +838,7 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
         /**
          * A counter variable.
          */
-        private int picCounter = 0;
+        private int picCounter;
         /**
          * An array holding the strings of the pictures.
          */

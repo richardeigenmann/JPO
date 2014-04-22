@@ -5,8 +5,15 @@ import java.awt.event.ActionListener;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
-import jpo.gui.swing.ResizableJFrame;
 import jpo.dataModel.Settings;
+import static jpo.gui.swing.ResizableJFrame.WindowSize.WINDOW_BOTTOM_LEFT;
+import static jpo.gui.swing.ResizableJFrame.WindowSize.WINDOW_BOTTOM_RIGHT;
+import static jpo.gui.swing.ResizableJFrame.WindowSize.WINDOW_DEFAULT;
+import static jpo.gui.swing.ResizableJFrame.WindowSize.WINDOW_FULLSCREEN;
+import static jpo.gui.swing.ResizableJFrame.WindowSize.WINDOW_LEFT;
+import static jpo.gui.swing.ResizableJFrame.WindowSize.WINDOW_RIGHT;
+import static jpo.gui.swing.ResizableJFrame.WindowSize.WINDOW_TOP_LEFT;
+import static jpo.gui.swing.ResizableJFrame.WindowSize.WINDOW_TOP_RIGHT;
 
 /*
  GroupPopupMenu.java: popup menu for groups
@@ -154,21 +161,21 @@ public class ChangeWindowPopupMenu extends JPopupMenu
         // Group popup menu				
 
         if ( actionEvent.getSource() == fullScreenJMenuItem ) {
-            caller.switchWindowMode( ResizableJFrame.WINDOW_FULLSCREEN );
+            caller.switchWindowMode( WINDOW_FULLSCREEN );
         } else if ( actionEvent.getSource() == leftWindowJMenuItem ) {
-            caller.switchWindowMode( ResizableJFrame.WINDOW_LEFT );
+            caller.switchWindowMode( WINDOW_LEFT );
         } else if ( actionEvent.getSource() == rightWindowJMenuItem ) {
-            caller.switchWindowMode( ResizableJFrame.WINDOW_RIGHT );
+            caller.switchWindowMode( WINDOW_RIGHT );
         } else if ( actionEvent.getSource() == topLeftWindowJMenuItem ) {
-            caller.switchWindowMode( ResizableJFrame.WINDOW_TOP_LEFT );
+            caller.switchWindowMode( WINDOW_TOP_LEFT );
         } else if ( actionEvent.getSource() == topRightWindowJMenuItem ) {
-            caller.switchWindowMode( ResizableJFrame.WINDOW_TOP_RIGHT );
+            caller.switchWindowMode( WINDOW_TOP_RIGHT );
         } else if ( actionEvent.getSource() == bottomLeftWindowJMenuItem ) {
-            caller.switchWindowMode( ResizableJFrame.WINDOW_BOTTOM_LEFT );
+            caller.switchWindowMode( WINDOW_BOTTOM_LEFT );
         } else if ( actionEvent.getSource() == bottomRightWindowJMenuItem ) {
-            caller.switchWindowMode( ResizableJFrame.WINDOW_BOTTOM_RIGHT );
+            caller.switchWindowMode( WINDOW_BOTTOM_RIGHT );
         } else if ( actionEvent.getSource() == defaultWindowJMenuItem ) {
-            caller.switchWindowMode( ResizableJFrame.WINDOW_DEFAULT );
+            caller.switchWindowMode( WINDOW_DEFAULT );
         } else if ( actionEvent.getSource() == windowDecorationsJMenuItem ) {
             caller.switchDecorations( true );
         } else if ( actionEvent.getSource() == windowNoDecorationsJMenuItem ) {

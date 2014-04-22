@@ -74,8 +74,8 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
      */
     private static final Logger LOGGER = Logger.getLogger( ThumbnailsPanelController.class.getName() );
 
-    private boolean paintOverlay = false;
-    private Rectangle overlayRectangle = null;
+    private boolean paintOverlay;  // default is false
+    private Rectangle overlayRectangle;
 
     /**
      * The Panel that shows the Thumbnails
@@ -349,9 +349,6 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
                 }
             }
 
-            private Object getComponent() {
-                throw new UnsupportedOperationException( "Not supported yet." ); //To change body of generated methods, choose Tools | Templates.
-            }
         } );
 
         thumbnailJScrollPane.addKeyListener(
@@ -410,7 +407,7 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
      * Remembers the last GroupInfo we picked so that we can attach a listener
      * to update the title if it changes
      */
-    private SortableDefaultMutableTreeNode myLastGroupNode = null;
+    private SortableDefaultMutableTreeNode myLastGroupNode;
 
     /**
      * Instructs the ThumbnailPanelController to display the specified set of

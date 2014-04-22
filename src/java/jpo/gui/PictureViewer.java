@@ -266,12 +266,12 @@ public class PictureViewer
     /**
      * the context of the browsing
      */
-    private NodeNavigatorInterface mySetOfNodes = null;
+    private NodeNavigatorInterface mySetOfNodes;
 
     /**
      * the position in the context being shown
      */
-    private int myIndex = 0;
+    private int myIndex;
 
     /**
      * Returns the current Node.
@@ -301,7 +301,7 @@ public class PictureViewer
      * the timer that can call back into the object with the instruction to load
      * the next image
      */
-    private AdvanceTimer advanceTimer = null;
+    private AdvanceTimer advanceTimer;
     /**
      * popup menu for window mode changing
      */
@@ -430,8 +430,8 @@ public class PictureViewer
 
         pictureJPanel.sclPic.stopLoadingExcept( filenameURL );
         pictureJPanel.sclPic.loadAndScalePictureInThread( filenameURL, Thread.MAX_PRIORITY, rotation );
-        pictureJPanel.ei = new ExifInfo( filenameURL );
-        pictureJPanel.ei.decodeExifTags();
+        pictureJPanel.exifInfo = new ExifInfo( filenameURL );
+        pictureJPanel.exifInfo.decodeExifTags();
     }
 
     /**
@@ -450,6 +450,7 @@ public class PictureViewer
     /**
      * here we get notified by the PictureInfo object that something has
      * changed.
+     *
      * @param e
      */
     @Override
@@ -763,7 +764,7 @@ public class PictureViewer
 
                     default:
 
-                        LOGGER.warning( "Got called with a code that is not understood: " +  pictureStatusCode  + " " + pictureStatusMessage );
+                        LOGGER.warning( "Got called with a code that is not understood: " + pictureStatusCode + " " + pictureStatusMessage );
                         break;
 
                 }
@@ -862,8 +863,7 @@ public class PictureViewer
      * left button is clicked the picture is zoomed in, middle resets to full
      * screen, right zooms out.
      */
-    class Listener
-            extends MouseInputAdapter {
+    class Listener extends MouseInputAdapter {
 
         /**
          * used in dragging to find out how much the mouse has moved from the
@@ -950,7 +950,7 @@ public class PictureViewer
         /**
          * Flag that lets the object know if the mouse is in dragging mode.
          */
-        private boolean Dragging = false;
+        private boolean Dragging;  // default is false
 
         /**
          * method that is invoked when the user releases the mouse button.
@@ -964,7 +964,7 @@ public class PictureViewer
                 pictureJPanel.setCursor( new Cursor( Cursor.DEFAULT_CURSOR ) );
             }
         }
-    }  //end class Listener
+    }
 
     private final ViewerKeyAdapter myViewerKeyAdapter = new ViewerKeyAdapter();
 

@@ -378,7 +378,7 @@ public class XmlReader extends DefaultHandler {
     /**
      * counter so that listeners can get some indication of what is going on
      */
-    private int groupCount = 0;
+    private int groupCount; // default is 0
 
     /**
      * Method to be called when a new Group is being parsed
@@ -393,7 +393,7 @@ public class XmlReader extends DefaultHandler {
     /**
      * counter so that listeners can get some indication of what is going on
      */
-    private int pictureCount = 0;
+    private int pictureCount; // default is 0
 
     /**
      * Method to be called when a new Picture is being parsed

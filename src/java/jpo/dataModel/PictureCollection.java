@@ -259,7 +259,7 @@ public class PictureCollection {
      * @see #setUnsavedUpdates(boolean)
      * @see #getUnsavedUpdates()
      */
-    private boolean unsavedUpdates = false;
+    private boolean unsavedUpdates; // default is false
 
     /**
      * This method marks the root node of the tree as having unsaved updates.
@@ -323,7 +323,7 @@ public class PictureCollection {
      * This variable holds the reference to the queries executed against the
      * collection.
      */
-    private DefaultTreeModel queriesTreeModel = null;
+    private DefaultTreeModel queriesTreeModel;
 
     /**
      * Call this method when you need the TreeModel for the queries
@@ -366,7 +366,7 @@ public class PictureCollection {
         getQueriesRootNode().add( yearsTreeNode );
     }
 
-    private DefaultMutableTreeNode yearsTreeNode = null;
+    private DefaultMutableTreeNode yearsTreeNode;
 
     /**
      * Remembers the node on which the years were added
@@ -764,7 +764,7 @@ public class PictureCollection {
     /**
      * status variable to find out if a thread is loading a file
      */
-    public boolean fileLoading = false;
+    public boolean fileLoading;  // default is false
     /**
      * A file reference to the file that was loaded. It will come in handy when
      * a save instruction comes along.

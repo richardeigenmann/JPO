@@ -60,7 +60,7 @@ public class TextQuery implements Serializable, Query {
      * The lower date range of the search. If null the lower date will be
      * ignored.
      */
-    private Calendar lowerDateRange = null;
+    private Calendar lowerDateRange;
 
     /**
      * Method to set the lower date range of the search. If null the lower date
@@ -85,7 +85,7 @@ public class TextQuery implements Serializable, Query {
      * The upper date range of the search. If null the upper date will be
      * ignored.
      */
-    private Calendar upperDateRange = null;
+    private Calendar upperDateRange;
 
     /**
      * Method to set the upper date range of the search. If null the upper date
@@ -124,7 +124,7 @@ public class TextQuery implements Serializable, Query {
      * Variable for the resultSet so that the query is not reexecuted every time
      * some object wants to know something.
      */
-    private ArrayList<SortableDefaultMutableTreeNode> searchResults = null;
+    private ArrayList<SortableDefaultMutableTreeNode> searchResults;
 
     /**
      * Returns an ArrayList of nodes which match the query criteria beneath the

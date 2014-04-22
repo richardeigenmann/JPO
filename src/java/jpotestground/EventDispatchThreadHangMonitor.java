@@ -75,11 +75,11 @@ public final class EventDispatchThreadHangMonitor extends EventQueue {
 
     // Help distinguish multiple hangs in the log, and match start and end too.
     // Only access this via getNewHangNumber.
-    private static int hangCount = 0;
+    private static int hangCount;
 
     // Prevents us complaining about hangs during start-up, which are probably
     // the JVM vendor's fault.
-    private boolean haveShownSomeComponent = false;
+    private boolean haveShownSomeComponent;
 
     // The currently outstanding event dispatches. The implementation of
     // modal dialogs is a common cause for multiple outstanding dispatches.

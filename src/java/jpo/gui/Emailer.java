@@ -46,7 +46,7 @@ import jpo.dataModel.Tools;
 /*
 Emailer.java:  class that sends the emails
 
-Copyright (C) 2006 - 2013  Richard Eigenmann.
+Copyright (C) 2006 - 2014  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -94,7 +94,7 @@ public class Emailer
     /**
      *   Variable that signals to the thread to stop immediately.
      */
-    public boolean interrupted = false;
+    public boolean interrupted;  // default is false
 
     private final List<SortableDefaultMutableTreeNode> emailSelected;
 

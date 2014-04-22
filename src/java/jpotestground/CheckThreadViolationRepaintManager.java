@@ -145,18 +145,7 @@ public class CheckThreadViolationRepaintManager extends RepaintManager {
         frame.dispose();
     }
 
-    //this test must pass
-    static void imageUpdateTest() {
-        JFrame frame = new JFrame();
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        JEditorPane editor = new JEditorPane();
-        frame.setContentPane(editor);
-        editor.setContentType("text/html");
-        //it works with no valid image as well 
-        editor.setText("<html><img src=\"file:\\lala.png\"></html>");
-        frame.setSize(300, 200);
-        frame.setVisible(true);
-    }
+
 
     private static JButton test;
     static void repaintTest() {

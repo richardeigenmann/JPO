@@ -154,11 +154,6 @@ public class HtmlDistillerJFrame
             (int) ( Settings.defaultHtmlMidresQuality * 100 ) );
 
     /**
-     *   This table will act as a preview to the color chooser.
-     */
-    private JLabel previewJLabel;
-
-    /**
      *  The preview Panel
      */
     private final JPanel previewPanel = new PreviewPanel();
@@ -657,78 +652,6 @@ public class HtmlDistillerJFrame
 
 
     /**
-     *  
-     *
-    private void exportToPpt() {
-        File pptFile = targetDirChooser.getDirectory();
-        try {
-            SlideShow ppt = new SlideShow();
-
-            Enumeration e = options.getStartNode().postorderEnumeration();
-            while ( e.hasMoreElements() ) {
-                Slide s = ppt.createSlide();
-
-                Object o = ( (SortableDefaultMutableTreeNode) e.nextElement() ).getUserObject();
-                if ( o instanceof GroupInfo ) {
-                    GroupInfo gi = (GroupInfo) o;
-                    TextBox txt = new TextBox();
-                    txt.setText( gi.getGroupName() );
-                    txt.setAnchor( new java.awt.Rectangle( 300, 100, 300, 50 ) );
-
-                    //use RichTextRun to work with the text format
-                    RichTextRun rt = txt.getTextRun().getRichTextRuns()[0];
-                    rt.setFontSize( 32 );
-                    rt.setFontName( "Arial" );
-                    rt.setBold( true );
-                    rt.setItalic( true );
-                    rt.setUnderlined( true );
-                    rt.setFontColor( Color.red );
-                    rt.setAlignment( TextBox.AlignRight );
-
-                    s.addShape( txt );
-                } else if ( o instanceof PictureInfo ) {
-                    PictureInfo pi = (PictureInfo) o;
-
-                    // add a new picture to this slideshow and insert it in a  new slide
-                    int idx = ppt.addPicture( pi.getLowresFile(), Picture.JPEG );
-                    Picture pict = new Picture( idx );
-                    //set image position in the slide
-                    pict.setAnchor( new java.awt.Rectangle( 100, 100, 300, 200 ) );
-                    s.addShape( pict );
-
-                    TextBox txt = new TextBox();
-                    txt.setText( pi.getDescription() );
-                    txt.setAnchor( new java.awt.Rectangle( 300, 100, 300, 50 ) );
-
-                    //use RichTextRun to work with the text format
-                    RichTextRun rt = txt.getTextRun().getRichTextRuns()[0];
-                    rt.setFontSize( 32 );
-                    rt.setFontName( "Arial" );
-                    rt.setBold( true );
-                    rt.setItalic( true );
-                    rt.setUnderlined( true );
-                    rt.setFontColor( Color.blue );
-                    rt.setAlignment( TextBox.AlignRight );
-                    s.addShape( txt );
-
-                }
-
-            }
-
-            FileOutputStream out = new FileOutputStream( pptFile );
-            ppt.write( out );
-            out.close();
-        } catch ( IOException ex ) {
-            Logger.getLogger( HtmlDistillerJFrame.class.getName() ).log( Level.SEVERE, null, ex );
-        }
-
-        getRid();
-
-    }
-    * */
-
-
-    /**
      * Loads the options into the GUI fields. Note that the defaults come from
      * the settings. They are loaded when the options object is created. They are
      * populated by the HtmlDistillerDefaultOptions.
@@ -811,15 +734,7 @@ public class HtmlDistillerJFrame
     public class PreviewPanel
             extends JPanel {
 
-        //private final Font previewFont = new Font( "SansSerif", Font.BOLD, 18  );
         private final Font previewFont = Font.decode( Settings.jpoResources.getString( "HtmlDistillerPreviewFont" ) );
-
-
-        /**
-         *  Constructor
-         */
-        private PreviewPanel() {
-        }
 
 
         /**

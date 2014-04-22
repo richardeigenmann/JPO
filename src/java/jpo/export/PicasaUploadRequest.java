@@ -7,7 +7,7 @@ import jpo.dataModel.SortableDefaultMutableTreeNode;
 /*
  * PicasaUploadRequest.java: The beans needed to upload a group of pictures to Picasa
  * 
- * Copyright (C) 2012-2012 Richard
+ * Copyright (C) 2012-2014 Richard
  * Eigenmann. This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or any later
@@ -79,6 +79,10 @@ public class PicasaUploadRequest {
     public void setPassword ( String password ) {
         this.password = password;
     }
+    
+    /**
+     * Static Picasa address to be prepended to the user
+     */
     public static final String PICASA_URL = "https://picasaweb.google.com/data/feed/api/user/%s";
 
     /**
@@ -93,12 +97,10 @@ public class PicasaUploadRequest {
      */
     private static final Logger LOGGER = Logger.getLogger ( PicasaUploadRequest.class.getName () );
 
-    public void debug () {
-        LOGGER.info ( "getFormattedPicasaUrl(): " + getFormattedPicasaUrl ()
-                + "\nUsername: " + getUsername () );
-        //+ "\nPassword: " + getPassword());
-    }
-    private boolean interrupt = false;
+    /**
+     * semaphore to indicate that the upload should stop
+     */
+    private boolean interrupt;  // default is false
 
     /**
      * @return the interrupt

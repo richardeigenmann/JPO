@@ -301,10 +301,10 @@ public class PictureCollectionTest
 
     }
 
-    int nodeschanged = 0;
-    int nodesinserted = 0;
-    int nodesremoved = 0;
-    int nodestructurechanged = 0;
+    int nodeschanged;  // default is 0
+    int nodesinserted;
+    int nodesremoved;
+    int nodestructurechanged;
 
     /**
      * In this test we want to see whether a change to an attribute in the

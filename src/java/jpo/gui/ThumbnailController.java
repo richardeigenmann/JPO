@@ -125,13 +125,13 @@ public class ThumbnailController implements JpoDropTargetDropEventHandler {
      * A set of picture nodes of which one indicated by {@link #myIndex} is to
      * be shown
      */
-    private NodeNavigatorInterface myNodeNavigator = null;
+    private NodeNavigatorInterface myNodeNavigator;
 
     /**
      * the Index position in the {@link #myNodeNavigator} which is being shown
      * by this component.
      */
-    public int myIndex = 0;
+    public int myIndex;  // default is 0
 
     /**
      * The priority this ThumbnailController should have on the
@@ -204,14 +204,14 @@ public class ThumbnailController implements JpoDropTargetDropEventHandler {
     /**
      * remember where we registered as a PictureInfoListener
      */
-    private PictureInfo registeredPictureInfoChangeListener = null;
+    private PictureInfo registeredPictureInfoChangeListener;
 
     private final MyPictureInfoChangeEventHandler myPictureInfoChangeEventHandler = new MyPictureInfoChangeEventHandler();
 
     /**
      * remember where we registered as a GroupInfoListener
      */
-    private GroupInfo registeredGroupInfoChangeListener = null;
+    private GroupInfo registeredGroupInfoChangeListener;
 
     private final MyGroupInfoChangeEventHandler myGroupInfoChangeEventHandler = new MyGroupInfoChangeEventHandler();
 
@@ -415,7 +415,7 @@ public class ThumbnailController implements JpoDropTargetDropEventHandler {
          */
         @Override
         public void pictureInfoChangeEvent( PictureInfoChangeEvent pictureInfoChangeEvent ) {
-            if ( pictureInfoChangeEvent.getHighresLocationChanged() || pictureInfoChangeEvent.getChecksumChanged() || pictureInfoChangeEvent.getLowresLocationChanged() || pictureInfoChangeEvent.getThumbnailChanged() ) {
+            if ( pictureInfoChangeEvent.getHighresLocationChanged() || pictureInfoChangeEvent.getChecksumChanged() || pictureInfoChangeEvent.getThumbnailChanged() ) {
                 requestThumbnailCreation( ThumbnailQueueRequest.HIGH_PRIORITY, false );
             } else if ( pictureInfoChangeEvent.getWasSelected() ) {
                 myThumbnail.showAsSelected();
@@ -440,9 +440,7 @@ public class ThumbnailController implements JpoDropTargetDropEventHandler {
         @Override
         public void groupInfoChangeEvent( GroupInfoChangeEvent groupInfoChangeEvent ) {
             LOGGER.fine( String.format( "Got a Group Change event: %s", groupInfoChangeEvent.toString() ) );
-            if ( groupInfoChangeEvent.getLowresLocationChanged() ) {
-                requestThumbnailCreation( ThumbnailQueueRequest.HIGH_PRIORITY, false );
-            } else if ( groupInfoChangeEvent.getWasSelected() ) {
+            if ( groupInfoChangeEvent.getWasSelected() ) {
                 myThumbnail.showAsSelected();
             } else if ( groupInfoChangeEvent.getWasUnselected() ) {
                 myThumbnail.showAsUnselected();

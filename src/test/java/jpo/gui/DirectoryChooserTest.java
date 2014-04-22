@@ -22,8 +22,9 @@ public class DirectoryChooserTest extends TestCase {
     public DirectoryChooserTest( String testName ) {
         super( testName );
     }
-    int changesReceived = 0;
-    File result = null;
+    
+    private int changesReceived;
+    private File result;
 
     /**
      * Test the listener

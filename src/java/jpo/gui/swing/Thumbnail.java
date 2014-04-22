@@ -192,12 +192,12 @@ public class Thumbnail extends JComponent {
      * getPreferredSize method not being able to access the ImageObserver to
      * query the height of the thumbnail.
      */
-    private int thumbnailHeight = 0;
+    private int thumbnailHeight;  // default is 0
 
     /**
      * The image that should be displayed
      */
-    private Image img = null;
+    private Image img;
 
     /**
      * The Image Observer of the image that should be displayed
@@ -208,7 +208,7 @@ public class Thumbnail extends JComponent {
      * This variable will hold the darkend or otherwise processed Thumbnail that
      * will be painted when the ThumbnailController is on a selected node.
      */
-    private BufferedImage selectedThumbnail = null;
+    private BufferedImage selectedThumbnail;
 
     /**
      * reference to the ClassLoader to allow retrieval of the static icons.
@@ -243,10 +243,6 @@ public class Thumbnail extends JComponent {
      */
     private static final ImageIcon MAIL_ICON = new ImageIcon( CLASS_LOADER.getResource( "jpo/images/icon_mail.gif" ) );
 
-    /**
-     * The color to use when the thumbnail has been selected
-     */
-    private static final Color HIGHLIGHT_COLOR = Color.DARK_GRAY;
 
     /**
      * Sets an icon of a clock to indicate being on a queue
@@ -273,7 +269,7 @@ public class Thumbnail extends JComponent {
     /**
      * This flag indicates whether the offline icon should be drawn or not.
      */
-    private boolean drawOfflineIcon = false;
+    private boolean drawOfflineIcon;  // default is false
 
     /**
      * Indicates to the Thumbnail that it should or should not draw it's Offline
@@ -291,7 +287,7 @@ public class Thumbnail extends JComponent {
     /**
      * This flag indicates whether the mail icon should be drawn or not.
      */
-    private boolean drawMailIcon = false;
+    private boolean drawMailIcon;  // default is false
 
     /**
      * indicates whether the mail icon should be drawn or not and calls
@@ -310,7 +306,7 @@ public class Thumbnail extends JComponent {
      * Indicates whether the Thumbnail is to draw as a selected Thumbnail or
      * not.
      */
-    private boolean isSelected = false;
+    private boolean isSelected;  // default is false
 
     /**
      * changes the color so that the user sees that the thumbnail is part of the

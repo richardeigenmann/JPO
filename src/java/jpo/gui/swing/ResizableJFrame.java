@@ -5,15 +5,16 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.Rectangle;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
 import jpo.dataModel.Settings;
 import jpo.dataModel.Tools;
 import jpo.gui.ChangeWindowInterface;
+import static jpo.gui.swing.ResizableJFrame.WindowSize.WINDOW_DEFAULT;
+import static jpo.gui.swing.ResizableJFrame.WindowSize.WINDOW_FULLSCREEN;
 
 /*
- Copyright (C) 2002 - 2011  Richard Eigenmann.
+ Copyright (C) 2002 - 2014  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -65,7 +66,7 @@ public class ResizableJFrame
 
         if ( Settings.maximisePictureViewerWindow ) {
             maximise();
-            windowMode = ResizableJFrame.WINDOW_FULLSCREEN;
+            windowMode = WINDOW_FULLSCREEN;
         }
     }
 
@@ -97,7 +98,7 @@ public class ResizableJFrame
     /**
      * indicator that specifies what sort of window should be created
      */
-    private int windowMode = ResizableJFrame.WINDOW_DEFAULT;
+    private WindowSize windowMode = WINDOW_DEFAULT;
     /**
      * Flag that specifies whether the window should be drawn with decoration or
      * not.
@@ -115,34 +116,34 @@ public class ResizableJFrame
      *
      */
     @Override
-    public void switchWindowMode( final int newMode ) {
-        LOGGER.log( Level.FINE, "old mode: {0} new: {1}", new Object[]{ Integer.toString( windowMode ), Integer.toString( newMode ) } );
+    public void switchWindowMode( final WindowSize newMode ) {
+        LOGGER.info(String.format("old mode: %s new: %s", windowMode , newMode ) );
         windowMode = newMode;
         boolean newDecoration = decorateWindow;
         // some intelligence as to when to have window decorations and when not.
         switch ( newMode ) {
-            case ResizableJFrame.WINDOW_FULLSCREEN:
+            case WINDOW_FULLSCREEN:
                 newDecoration = false;
                 break;
-            case ResizableJFrame.WINDOW_LEFT:
+            case WINDOW_LEFT:
                 newDecoration = false;
                 break;
-            case ResizableJFrame.WINDOW_RIGHT:
+            case WINDOW_RIGHT:
                 newDecoration = false;
                 break;
-            case ResizableJFrame.WINDOW_TOP_LEFT:
+            case WINDOW_TOP_LEFT:
                 newDecoration = true;
                 break;
-            case ResizableJFrame.WINDOW_TOP_RIGHT:
+            case WINDOW_TOP_RIGHT:
                 newDecoration = true;
                 break;
-            case ResizableJFrame.WINDOW_BOTTOM_LEFT:
+            case WINDOW_BOTTOM_LEFT:
                 newDecoration = true;
                 break;
-            case ResizableJFrame.WINDOW_BOTTOM_RIGHT:
+            case WINDOW_BOTTOM_RIGHT:
                 newDecoration = true;
                 break;
-            case ResizableJFrame.WINDOW_DEFAULT:
+            case WINDOW_DEFAULT:
                 newDecoration = true;
                 break;
         }
@@ -175,7 +176,8 @@ public class ResizableJFrame
      *
      * @param targetSize The dimension you want the Frame to have
      */
-    public void rezise( final Dimension targetSize ) {
+    @Override
+    public void resize( final Dimension targetSize ) {
         Tools.checkEDT();
         unMaximise();
         setBounds( new Rectangle( targetSize ) );
@@ -185,7 +187,7 @@ public class ResizableJFrame
     /**
      * Resizes the window to the left part of the screen after unmaximising it.
      */
-    public void reziseToLeft() {
+    public void resizeToLeft() {
         Tools.checkEDT();
         unMaximise();
         setBounds( ScreenHelper.getLeftScreenBounds() );
@@ -196,7 +198,7 @@ public class ResizableJFrame
      * Resizes the window to the top left quarter of the screen after
      * unmaximising it.
      */
-    public void reziseToTopLeft() {
+    public void resizeToTopLeft() {
         Tools.checkEDT();
         unMaximise();
         setBounds( ScreenHelper.getTopLeftScreenBounds() );
@@ -207,7 +209,7 @@ public class ResizableJFrame
      * Resizes the window to the bottom left quarter of the screen after
      * unmaximising it.
      */
-    public void reziseToBottomLeft() {
+    public void resizeToBottomLeft() {
         Tools.checkEDT();
         unMaximise();
         setBounds( ScreenHelper.getBottomLeftScreenBounds() );
@@ -217,7 +219,7 @@ public class ResizableJFrame
     /**
      * Resizes the window to the right part of the screen after unmaximising it.
      */
-    public void reziseToRight() {
+    public void resizeToRight() {
         Tools.checkEDT();
         unMaximise();
         setBounds( ScreenHelper.getRightScreenBounds() );
@@ -228,7 +230,7 @@ public class ResizableJFrame
      * Resizes the window to the top right part of the screen after unmaximising
      * it.
      */
-    public void reziseToTopRight() {
+    public void resizeToTopRight() {
         Tools.checkEDT();
         unMaximise();
         setBounds( ScreenHelper.getTopRightScreenBounds() );
@@ -239,51 +241,23 @@ public class ResizableJFrame
      * Resizes the window to the bottom right part of the screen after
      * unmaximising it.
      */
-    public void reziseToBottomRight() {
+    public void resizeToBottomRight() {
         Tools.checkEDT();
         unMaximise();
         setBounds( ScreenHelper.getBottomRightScreenBounds() );
         validate();
     }
-    /**
-     * constant to indicate that a Fullscreen window should be created.
-     */
-    public static final int WINDOW_FULLSCREEN = 1;
-    /**
-     * constant to indicate that the window should be created on the LEFT half
-     * of the display
-     */
-    public static final int WINDOW_LEFT = WINDOW_FULLSCREEN + 1;
-    /**
-     * constant to indicate that the window should be created on the RIGHT half
-     * of the display
-     */
-    public static final int WINDOW_RIGHT = WINDOW_LEFT + 1;
-    /**
-     * constant to indicate that the window should be created on the TOP LEFT
-     * quarter of the display
-     */
-    public static final int WINDOW_TOP_LEFT = WINDOW_RIGHT + 1;
-    /**
-     * constant to indicate that the window should be created on the TOP RIGHT
-     * quarter of the display
-     */
-    public static final int WINDOW_TOP_RIGHT = WINDOW_TOP_LEFT + 1;
-    /**
-     * constant to indicate that the window should be created on the BOTTOM LEFT
-     * quarter of the display
-     */
-    public static final int WINDOW_BOTTOM_LEFT = WINDOW_TOP_RIGHT + 1;
-    /**
-     * constant to indicate that the window should be created on the BOTTOM
-     * RIGHT quarter of the display
-     */
-    public static final int WINDOW_BOTTOM_RIGHT = WINDOW_BOTTOM_LEFT + 1;
-    /**
-     * constant to indicate that the window should be created on the Default
-     * area
-     */
-    public static final int WINDOW_DEFAULT = WINDOW_BOTTOM_RIGHT + 1;
+    
+    public static enum WindowSize {
+        WINDOW_FULLSCREEN,
+        WINDOW_LEFT,
+        WINDOW_RIGHT, 
+        WINDOW_TOP_LEFT, 
+        WINDOW_TOP_RIGHT, 
+        WINDOW_BOTTOM_LEFT,
+        WINDOW_BOTTOM_RIGHT,
+        WINDOW_DEFAULT
+    }
 
     /**
      * Request that the window showing the picture be changed be changed.
@@ -295,28 +269,28 @@ public class ResizableJFrame
      * indicated.
      *
      */
-    public void resizeTo( int newMode ) {
+    public void resizeTo( WindowSize newMode ) {
         switch ( newMode ) {
             case WINDOW_FULLSCREEN:
                 maximise();
                 break;
             case WINDOW_LEFT:
-                reziseToLeft();
+                resizeToLeft();
                 break;
             case WINDOW_RIGHT:
-                reziseToRight();
+                resizeToRight();
                 break;
             case WINDOW_TOP_LEFT:
-                reziseToTopLeft();
+                resizeToTopLeft();
                 break;
             case WINDOW_TOP_RIGHT:
-                reziseToTopRight();
+                resizeToTopRight();
                 break;
             case WINDOW_BOTTOM_LEFT:
-                reziseToBottomLeft();
+                resizeToBottomLeft();
                 break;
             case WINDOW_BOTTOM_RIGHT:
-                reziseToBottomRight();
+                resizeToBottomRight();
                 break;
             case WINDOW_DEFAULT:
                 unMaximise();

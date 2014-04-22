@@ -11,7 +11,7 @@ import net.javaprog.ui.wizard.AbstractStep;
 /*
 CameraDownloadWizardStep5.java: the sixth step in the download from Camera Wizard
 
-Copyright (C) 2007-2011  Richard Eigenmann.
+Copyright (C) 2007-2014  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -49,7 +49,7 @@ public class CameraDownloadWizardStep7
     /**
      *  Holds a reference to the data used by the wizard
      */
-    private CameraDownloadWizardData dataModel = null;
+    private final CameraDownloadWizardData dataModel;
 
     private final JProgressBar progressBar = new JProgressBar();
 
@@ -101,6 +101,6 @@ public class CameraDownloadWizardStep7
      *  This field became necessary as there seems to be a problem with JWIZZ whereby it calls the createComponent repeatedly
      *  when doing a setCanGoBack, thereby starting the thread multiple times.
      */
-    private boolean hasStarted = false;
+    private boolean hasStarted;  // default is false
 }
 

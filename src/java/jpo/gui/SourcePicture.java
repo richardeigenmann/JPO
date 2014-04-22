@@ -9,10 +9,10 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Enumeration;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
+import java.util.Set;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
@@ -34,7 +34,8 @@ import static jpo.gui.SourcePicture.SourcePictureStatus.SOURCE_PICTURE_UNINITIAL
 
 /*
  SourcePicture.java:  class that can load a picture from a URL
- Copyright (C) 2002 - 2009  Richard Eigenmann.
+
+ Copyright (C) 2002 - 2014  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -57,14 +58,15 @@ public class SourcePicture {
     /**
      * the Buffered Image that this class protects and provides features for.
      */
-    public BufferedImage sourcePictureBufferedImage = null;
+    public BufferedImage sourcePictureBufferedImage;
 
     /**
      * the URL of the picture
      */
-    private URL imageUrl = null;
+    private URL imageUrl;
 
     public enum SourcePictureStatus {
+
         SOURCE_PICTURE_UNINITIALISED,
         SOURCE_PICTURE_LOADING,
         SOURCE_PICTURE_ROTATING,
@@ -74,55 +76,11 @@ public class SourcePicture {
         SOURCE_PICTURE_LOADING_PROGRESS,
         SOURCE_PICTURE_LOADING_COMPLETED
     }
-    
-    /**
-     * status code used to signal that the picture is not loaded
-     *
-    public static final int SOURCE_PICTURE_UNINITIALISED = 0;
-
-    /**
-     * status code used to signal that the thread is loading the image
-     *
-    public static final int SOURCE_PICTURE_LOADING = SOURCE_PICTURE_UNINITIALISED + 1;
-
-    /**
-     * status code used to signal that the thread is rotating the image
-     *
-    public static final int SOURCE_PICTURE_ROTATING = SOURCE_PICTURE_LOADING + 1;
-
-    /**
-     * status code used to signal that the rotated image is available.
-     *
-    public static final int SOURCE_PICTURE_READY = SOURCE_PICTURE_ROTATING + 1;
-
-    /**
-     * status code used to signal that there was an error
-     *
-    public static final int SOURCE_PICTURE_ERROR = SOURCE_PICTURE_READY + 1;
-
-    /**
-     * status code used to tell that we have started loading an image but only
-     * used on notifySourceLoadProgressListeners
-     *
-    public static final int SOURCE_PICTURE_LOADING_STARTED = SOURCE_PICTURE_ERROR + 1;
-
-    /**
-     * status code used to tell that we have a progress update but only used on
-     * notifySourceLoadProgressListeners
-     *
-    public static final int SOURCE_PICTURE_LOADING_PROGRESS = SOURCE_PICTURE_LOADING_STARTED + 1;
-
-    /**
-     * status code used to tell that we have a finished loading but only used on
-     * notifySourceLoadProgressListeners
-     *
-    public static final int SOURCE_PICTURE_LOADING_COMPLETED = SOURCE_PICTURE_LOADING_PROGRESS + 1;
-    * */
 
     /**
      * the time it took to load the image
      */
-    public long loadTime = 0;
+    public long loadTime;  //default is 0
 
     /**
      * reference to the inner class that listens to the image loading progress
@@ -137,12 +95,12 @@ public class SourcePicture {
     /**
      * Indicator to tell us if the loading was aborted.
      */
-    private boolean abortFlag = false;
+    private boolean abortFlag;  // default is false
 
     /**
      * Rotation 0-360 that the image is subjected to after loading
      */
-    private double rotation = 0;
+    private double rotation;  // default is 0
 
     /**
      * Defines a logger for this class
@@ -298,7 +256,6 @@ public class SourcePicture {
             setStatus( SOURCE_PICTURE_ERROR, "Error while reading " + imageUrl.toString() );
             sourcePictureBufferedImage = null;
         }
-        
 
     }
 
@@ -433,13 +390,8 @@ public class SourcePicture {
      * A collection that holds all the listeners that want to be notified about
      * changes to this SourcePicture.
      */
-    private final List<SourcePictureListener> sourcePictureListeners = new ArrayList<>();
+    private final Set<SourcePictureListener> sourcePictureListeners = Collections.synchronizedSet( new HashSet<SourcePictureListener>() );
 
-    /**
-     * method to register the listening object of the status events
-     *
-     * @param listener The listener to add
-     */
     public void addListener( SourcePictureListener listener ) {
         sourcePictureListeners.add( listener );
     }
@@ -475,8 +427,10 @@ public class SourcePicture {
         LOGGER.fine( String.format( "Sending status code %s with message %s to %d listeners", statusCode, statusMessage, sourcePictureListeners.size() ) );
         pictureStatusCode = statusCode;
         pictureStatusMessage = statusMessage;
-        for ( SourcePictureListener sourcePictureListener : sourcePictureListeners ) {
-            sourcePictureListener.sourceStatusChange( statusCode, statusMessage, this );
+        synchronized ( sourcePictureListeners ) {
+            for ( SourcePictureListener sourcePictureListener : sourcePictureListeners ) {
+                sourcePictureListener.sourceStatusChange( statusCode, statusMessage, this );
+            }
         }
     }
 
@@ -501,7 +455,7 @@ public class SourcePicture {
     /**
      * variable that records how much has been loaded
      */
-    private int percentLoaded = 0;
+    private int percentLoaded;  // default is 0
 
     /**
      * Returns how much of the image has been loaded

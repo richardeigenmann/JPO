@@ -499,7 +499,6 @@ public class NanoHTTPD
 	private final ServerSocket myServerSocket;
 	private Thread myThread; 
 	
-	File myFileDir;
 
 	// ==================================================
 	// File server code

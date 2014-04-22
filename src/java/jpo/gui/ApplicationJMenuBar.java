@@ -74,12 +74,6 @@ public class ApplicationJMenuBar extends JMenuBar {
      */
     private final JMenu EditJMenu = new JMenu();
 
-    /**
-     * The Tools menu which is part of the JMenuBar for the Jpo application.
-     *
-     *
-     */
-    private final JMenu ToolsMenu = new JMenu();
 
     /**
      * The Action menu which is part of the JMenuBar for the Jpo application.

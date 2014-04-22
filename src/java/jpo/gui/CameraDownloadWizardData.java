@@ -46,16 +46,16 @@ public class CameraDownloadWizardData {
     /**
      * The Camera from which to read the pictures.
      */
-    private Camera c = null;
+    private Camera camera;
 
     /**
      * sets the Camera from which the pictures are to be read. This is required.
      *
-     * @param c The camera from which the pictures are to be read.
+     * @param camera The camera from which the pictures are to be read.
      * @see #setCamera
      */
-    public void setCamera( Camera c ) {
-        this.c = c;
+    public void setCamera( Camera camera ) {
+        this.camera = camera;
     }
 
     /**
@@ -65,14 +65,14 @@ public class CameraDownloadWizardData {
      * @see #setCamera
      */
     public Camera getCamera() {
-        return c;
+        return camera;
     }
 
     /**
      * The Component to which the wizard should be "set relative" to. Is not
      * required but visually more appealing in set correctly.
      */
-    private Component anchorComponent = null;
+    private Component anchorComponent;
 
     /**
      * The Component to which the wizard should be "set relative" to. Is not
@@ -102,7 +102,7 @@ public class CameraDownloadWizardData {
      * The Collection of new Pictures. This is built by the Wizard when it
      * identifies the new pictures on the camera.
      */
-    private Collection<File> newPictures = null;
+    private Collection<File> newPictures;
 
     /**
      * Sets the Collection of new Pictures. This is set by the Wizard when it
@@ -182,7 +182,7 @@ public class CameraDownloadWizardData {
      * A Flag to indicate whether to create a new group or whether to add
      * pictures to an existing group.
      */
-    private boolean shouldCreateNewGroup = false;
+    private boolean shouldCreateNewGroup;  // default is false
 
     /**
      * Sets whether to create a new Group or not.
@@ -235,7 +235,7 @@ public class CameraDownloadWizardData {
     /**
      * The target node for the import operation
      */
-    private SortableDefaultMutableTreeNode targetNode = null;
+    private SortableDefaultMutableTreeNode targetNode;
 
     /**
      * Sets the target node for the picture download. Will be set by the wizard
@@ -266,7 +266,7 @@ public class CameraDownloadWizardData {
     /**
      * Sets the sort Code choice
      *
-     * @param sortCode the ne sort code
+     * @param sortCode the new sort code
      */
     public void setSortCode( FieldCodes sortCode ) {
         this.sortCode = sortCode;
@@ -284,6 +284,6 @@ public class CameraDownloadWizardData {
     /**
      * Holds the target directory where the images are to be copied to.
      */
-    public File targetDir = null;
+    public File targetDir;
 
 }

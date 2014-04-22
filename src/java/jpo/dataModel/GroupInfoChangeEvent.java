@@ -65,7 +65,7 @@ public class GroupInfoChangeEvent {
     /**
      *  indicates whether the description was changed.
      */
-    private boolean descriptionChanged = false;
+    private boolean descriptionChanged;  // default is false
 
 
     /**
@@ -85,35 +85,12 @@ public class GroupInfoChangeEvent {
         return descriptionChanged;
     }
 
-//-----------------
-    /**
-     *  indicates whether the lowresLocation description was changed.
-     */
-    private boolean lowresLocationChanged = false;
-
-
-    /**
-     *  sets the event to reflect that the lowres Location changed
-     **/
-    public void setLowresLocationChanged() {
-        lowresLocationChanged = true;
-    }
-
-
-    /**
-     *  returns whether the lowres Location was changed
-     *
-     * @return true if the lowres location changed, false if not
-     */
-    public boolean getLowresLocationChanged() {
-        return lowresLocationChanged;
-    }
 
     //-----------------
     /**
      *  indicates whether the thumbnail was changed.
      */
-    private boolean thumbnailChanged = false;
+    private boolean thumbnailChanged;  // default is false
 
 
     /**
@@ -137,7 +114,7 @@ public class GroupInfoChangeEvent {
     /**
      *  indicates whether the node was selected
      */
-    private boolean wasSelected = false;
+    private boolean wasSelected;  // default is false
 
 
     /**
@@ -161,7 +138,7 @@ public class GroupInfoChangeEvent {
     /**
      *  indicates whether the node was unselected
      */
-    private boolean wasUnselected = false;
+    private boolean wasUnselected;  // default is false
 
 
     /**

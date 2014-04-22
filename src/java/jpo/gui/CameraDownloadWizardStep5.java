@@ -17,9 +17,9 @@ import jpo.dataModel.SortOption;
 import net.javaprog.ui.wizard.AbstractStep;
 
 /*
-CameraDownloadWizardStep4.java: the fourth step in the download from Camera Wizard
+CameraDownloadWizardStep5.java: the fourth step in the download from Camera Wizard
 
-Copyright (C) 2007 - 2011  Richard Eigenmann.
+Copyright (C) 2007 - 2014  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -42,7 +42,7 @@ public class CameraDownloadWizardStep5
     /**
      * Defines a logger for this class
      */
-    private static final Logger logger = Logger.getLogger( CameraDownloadWizardStep5.class.getName() );
+    private static final Logger LOGGER = Logger.getLogger( CameraDownloadWizardStep5.class.getName() );
 
 
     /**
@@ -59,7 +59,7 @@ public class CameraDownloadWizardStep5
     /**
      *  Holds a reference to the data used by the wizard
      */
-    private CameraDownloadWizardData dataModel = null;
+    private final CameraDownloadWizardData dataModel;
 
 
     /**
@@ -121,7 +121,7 @@ public class CameraDownloadWizardStep5
      * @param sortOption the SortOption that was picked
      */
     private void sortOptionPicked( SortOption sortOption ) {
-        logger.fine( String.format( "Option %s with sortCode %d picked", sortOption.getDescription(), sortOption.getSortCode() ) );
+        LOGGER.fine( String.format( "Option %s with sortCode %d picked", sortOption.getDescription(), sortOption.getSortCode() ) );
         dataModel.setSortCode( sortOption.getSortCode() );
         Settings.lastSortChoice = sortOption.getSortCode();
     }

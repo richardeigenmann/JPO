@@ -529,26 +529,6 @@ public class GroupPopupMenu extends JPopupMenu {
     }
 
     /**
-     * checks if the event object is one of the drop nodes
-     *
-     * @return returns true if the object was found in the list and the action
-     * was submitted.
-     */
-    private boolean checkDropNodes( Object o ) {
-        for ( int i = 0; i < Settings.MAX_DROPNODES; i++ ) {
-            if ( ( recentDropNodes[i] != null ) && ( o.hashCode() == recentDropNodes[i].hashCode() ) ) {
-                ArrayList<SortableDefaultMutableTreeNode> movingNodes = new ArrayList<>();
-                movingNodes.add( popupNode );
-                JpoEventBus.getInstance().post( new MoveNodeToNodeRequest( movingNodes, Settings.recentDropNodes[i] ) );
-                Settings.memorizeGroupOfDropLocation( Settings.recentDropNodes[i] );
-                JpoEventBus.getInstance().post( new RecentDropNodesChangedEvent() );
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
      * Handler for the RecentDropNodeChangedEvent
      */
     private class RecentDropNodeChangedEventHandler {

@@ -103,7 +103,8 @@ import jpo.gui.swing.HelpAboutWindow;
 import jpo.gui.swing.MainWindow;
 import jpo.gui.swing.PrivacyJFrame;
 import jpo.gui.swing.QueryJFrame;
-import jpo.gui.swing.ResizableJFrame;
+import static jpo.gui.swing.ResizableJFrame.WindowSize.WINDOW_LEFT;
+import static jpo.gui.swing.ResizableJFrame.WindowSize.WINDOW_RIGHT;
 import webserver.Webserver;
 
 /**
@@ -267,9 +268,9 @@ public class ApplicationEventHandler {
     public void handleStartDoublePanelSlideshowRequest( StartDoublePanelSlideshowRequest request ) {
         SortableDefaultMutableTreeNode rootNode = request.getNode();
         PictureViewer p1 = new PictureViewer();
-        p1.pictureFrame.myJFrame.switchWindowMode( ResizableJFrame.WINDOW_LEFT );
+        p1.pictureFrame.myJFrame.switchWindowMode( WINDOW_LEFT );
         PictureViewer p2 = new PictureViewer();
-        p2.pictureFrame.myJFrame.switchWindowMode( ResizableJFrame.WINDOW_RIGHT );
+        p2.pictureFrame.myJFrame.switchWindowMode( WINDOW_RIGHT );
         RandomNavigator rb1 = new RandomNavigator( rootNode.getChildPictureNodes( true ), String.format( "Randomised pictures from %s", rootNode.toString() ) );
         RandomNavigator rb2 = new RandomNavigator( rootNode.getChildPictureNodes( true ), String.format( "Randomised pictures from %s", rootNode.toString() ) );
         p1.show( rb1, 0 );

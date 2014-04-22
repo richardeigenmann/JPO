@@ -66,10 +66,6 @@ public class JpoTransferable
      */
     public static final DataFlavor jpoNodeFlavor = new DataFlavor( Object.class, "JpoTransferable" );
 
-    /**
-     *  Definition of the data flavor for the original hash code.
-     */
-    public static final DataFlavor originalHashCodeFlavor = new DataFlavor( Integer.class, "OriginalHashCodeFlavor" );
 
     /**
      *   Definition of the data flavours supported by this Transferrable.
@@ -152,33 +148,20 @@ public class JpoTransferable
     }
 
 
-    /**
-     * Returns the transfer data in the DataFlavor format for a string
-     * @return the transfer data as a String
-     */
-    private Object getStringDescriptionTransferData() {
-        StringBuilder objectDescriptions = new StringBuilder( "" );
-        for ( Object o : transferableNodes ) {
-            objectDescriptions.append( o.toString() + "\n" );
-        }
-        LOGGER.fine( String.format( "Returning the following String as stringFlavor: %s", objectDescriptions.toString() ) );
-        return objectDescriptions.toString();
-    }
-
 
     /**
      * Returns the transfer data in the DataFlavor format for a string
      * @return the transfer data as a String
      */
     private Object getStringTransferData() {
-        StringBuffer filenames = new StringBuffer( "" );
+        StringBuilder filenames = new StringBuilder( "" );
         for ( Object transferableNode : transferableNodes ) {
             if ( transferableNode instanceof SortableDefaultMutableTreeNode ) {
-                SortableDefaultMutableTreeNode n = (SortableDefaultMutableTreeNode) transferableNode;
-                Object userObject = n.getUserObject();
+                SortableDefaultMutableTreeNode node = (SortableDefaultMutableTreeNode) transferableNode;
+                Object userObject = node.getUserObject();
                 if ( userObject instanceof PictureInfo ) {
-                    PictureInfo pi = (PictureInfo) userObject;
-                    filenames.append( pi.getHighresFile() + "\n" );
+                    PictureInfo pictureInfo = (PictureInfo) userObject;
+                    filenames.append( pictureInfo.getHighresFile() ).append( "\n");
                 }
             }
         }
@@ -213,21 +196,21 @@ public class JpoTransferable
      * @return the transferable as a List
      */
     private Object getImageTransferable() {
-        Image img = null;
+        Image image = null;
         for ( Object transferableNode : transferableNodes ) {
             if ( transferableNode instanceof SortableDefaultMutableTreeNode ) {
-                SortableDefaultMutableTreeNode n = (SortableDefaultMutableTreeNode) transferableNode;
-                Object userObject = n.getUserObject();
+                SortableDefaultMutableTreeNode node = (SortableDefaultMutableTreeNode) transferableNode;
+                Object userObject = node.getUserObject();
                 if ( userObject instanceof PictureInfo ) {
-                    PictureInfo pi = (PictureInfo) userObject;
-                    SourcePicture sp = new SourcePicture();
-                    sp.loadPicture( pi.getHighresURLOrNull(), pi.getRotation() );
-                    img = sp.getSourceBufferedImage();
+                    PictureInfo pictureInfo = (PictureInfo) userObject;
+                    SourcePicture sourcePicture = new SourcePicture();
+                    sourcePicture.loadPicture( pictureInfo.getHighresURLOrNull(), pictureInfo.getRotation() );
+                    image = sourcePicture.getSourceBufferedImage();
                 }
             }
         }
         LOGGER.fine( String.format( "Returning a BufferedImage in the Transferable" ) );
-        return img;
+        return image;
     }
 
 

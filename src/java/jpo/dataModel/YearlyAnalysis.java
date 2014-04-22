@@ -117,7 +117,7 @@ public class YearlyAnalysis implements Serializable {
     /**
      * Counter that keeps track of the highest number of nodes in the map
      */
-    private int maxNodes = 0;
+    private int maxNodes;  // default is 0
 
 
     /**

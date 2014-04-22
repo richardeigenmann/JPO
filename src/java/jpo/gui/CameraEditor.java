@@ -5,8 +5,8 @@ import jpo.dataModel.Camera;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashSet;
+import java.util.Set;
 import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
@@ -16,7 +16,7 @@ import net.miginfocom.swing.MigLayout;
 /*
 CameraEditor.java: a class that creates a JPanel and allows camera attributes to be edited
 
-Copyright (C) 2002 - 2011  Richard Eigenmann.
+Copyright (C) 2002 - 2014  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -102,7 +102,7 @@ public class CameraEditor
     /**
      * A Handle to the camera being edited
      */
-    private Camera camera = null;
+    private Camera camera;
 
 
     /**
@@ -186,18 +186,10 @@ public class CameraEditor
     private final JLabel cameraDirJLabel = new JLabel( Settings.jpoResources.getString( "cameraDirJLabel" ) );
 
     /**
-     * The save button
-     *
-    private JButton saveJButton = new JButton( Settings.jpoResources.getString("saveJButton") );*/
-    /**
      *  The new name of the camera
      */
     private final JTextField cameraNameJTextField = new JTextField();
 
-    /**
-     *  an icon that displays a camera to beautify the screen.
-     */
-    private final JLabel cameraIcon = new JLabel( new ImageIcon( Settings.CLASS_LOADER.getResource( "jpo/images/camera.jpg" ) ) );
 
     /**
      *   holds the root directory of the camera relative to the host computer's file system
@@ -241,14 +233,8 @@ public class CameraEditor
      */
     private final JCheckBox monitorJCheckBox = new JCheckBox( Settings.jpoResources.getString( "monitorJCheckBox" ) );
 
-    /**
-     *   holds the target directory where the images are to be copied to
-     */
-    private final DirectoryChooser targetDirJTextField =
-            new DirectoryChooser( Settings.jpoResources.getString( "targetDirJLabel" ),
-            DirectoryChooser.DIR_MUST_EXIST );
 
-    private final HashSet<ActionListener> listeners = new HashSet<>();
+    private final Set<ActionListener> listeners = new HashSet<>();
 
 
 

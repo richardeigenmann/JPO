@@ -31,12 +31,12 @@ public class SizeCalculator {
      * This field holds the scale factor for the transformation from the source
      * dimension to the maximum dimension.
      */
-    public double scaleFactor = 0;
+    public double scaleFactor;  //default is 0
 
     /**
      * This field holds the new scaled dimension.
      */
-    public Dimension scaledSize = null;
+    public Dimension scaledSize;
 
     /**
      * Creates an object for the calculation and immediately populates the

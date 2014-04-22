@@ -43,7 +43,7 @@ public class SingleNodeNavigator
     /**
      *  A reference to the node for which this SingleNodeNavigator was created.
      */
-    private SortableDefaultMutableTreeNode singleNode = null;
+    private SortableDefaultMutableTreeNode singleNode;
 
     /**
      * returns the description of the picture or "Single picture"

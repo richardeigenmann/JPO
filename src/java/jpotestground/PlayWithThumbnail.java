@@ -38,8 +38,6 @@ public class PlayWithThumbnail extends JFrame implements ChangeListener {
 
     ThumbnailController thumbnailController = new ThumbnailController( 350 );
 
-    Box box = new Box();
-
     ImageIcon testimage = new ImageIcon( Settings.CLASS_LOADER.getResource( "jpo/images/testimage.jpg" ) );
 
     public PlayWithThumbnail() {

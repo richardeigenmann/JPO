@@ -152,7 +152,7 @@ public class DescriptionWordMap extends WordMap {
         return wordNodeMap;
     }
 
-    private HashMap<String, Integer> wordCountMap = null;
+    private HashMap<String, Integer> wordCountMap;
 
     /**
      * In this method we return a Map of description terms with the count of

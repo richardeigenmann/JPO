@@ -402,7 +402,7 @@ public class Camera implements Serializable {
     /**
      * Flag to tell the CameraWatchDaemon whether to monitor the camera or not.
      */
-    private boolean monitorForNewPictures = false;
+    private boolean monitorForNewPictures;  // default is false
 
     /**
      * returns whether to monitor for new pictures
@@ -425,7 +425,7 @@ public class Camera implements Serializable {
     /**
      * This variable tracks the last connection status
      */
-    private boolean lastConnectionStatus = false;
+    private boolean lastConnectionStatus;  // default is false
 
     /**
      * Sets the last connection status.

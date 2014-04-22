@@ -254,15 +254,6 @@ public class Tools {
         return getExtension( url.toString() );
     }
 
-    /**
-     * return the file extension of a file.
-     *
-     * @param file The File object for which the extension is being requested
-     * @return file extension
-     */
-    public static String getExtension( File file ) {
-        return getExtension( file.getName() );
-    }
 
     /**
      * return the file extension of a string
@@ -296,20 +287,6 @@ public class Tools {
         return fnroot;
     }
 
-    /**
-     * method that tests the extension of the string in a JTextField for being
-     * the correct extension. If not the correct extension is added. The case of
-     * the extension is ignored.
-     *
-     * @param extension
-     * @param jTextField
-     */
-    public static void setFilenameExtension( String extension,
-            JTextField jTextField ) {
-        if ( !jTextField.getText().toUpperCase().endsWith( extension.toUpperCase() ) ) {
-            jTextField.setText( jTextField.getText() + "." + extension );
-        }
-    }
 
     /**
      * method that tests the file extension of a File object for being the
@@ -684,47 +661,7 @@ public class Tools {
         return suffix;
     }
 
-    /**
-     * searches for an item in the classpath that ends exactly like the supplied
-     * string. Returns a new file object for that item or null if not found.
-     * Invented to find the code classes of the JPO app which sit in jpo.jar
-     * file
-     *
-     * @param searchName
-     * @return the file of the search result
-     */
-    public static File searchClasspath( String searchName ) {
-        // find the jar file as last item in the Jar file.
-        String classpath = System.getProperty( "java.class.path" );
-        LOGGER.log( Level.INFO, "Tools.searchClasspath: searching for {0} in {1}", new Object[]{ searchName, classpath } );
-        String testToken;
-        StringTokenizer st = new StringTokenizer( classpath, ":" );
-        while ( st.hasMoreTokens() ) {
-            testToken = st.nextToken();
-            if ( testToken.endsWith( searchName ) ) {
-                return new File( testToken );
-            }
-        }
-        return null;
-    }
 
-    /**
-     * method that returns a file handle for a picture that does not exist in
-     * the target directory. It tries the combination of path and name first and
-     * then tries to suffix _0 _1 _2 etc to the name. If that fails it combines
-     * random characters and then fails, returning null.
-     *
-     * @param targetDir
-     * @param startName
-     * @return the new URL
-     */
-    public static URL inventPicURL( File targetDir, String startName ) {
-        try {
-            return inventPicFilename( targetDir, startName ).toURI().toURL();
-        } catch ( MalformedURLException x ) {
-            return null;
-        }
-    }
 
     /**
      * Method that returns a file handle for a picture that does not exist in
@@ -798,17 +735,6 @@ public class Tools {
         return newURL;
     }
 
-    /**
-     * method that returns whether a URL is a file:// URL or not. Returns true
-     * if it is a file, false if it's anything else such as http://
-     *
-     * @param testURL
-     * @return true if the URL points to a file
-     */
-    public static boolean isUrlFile( URL testURL ) {
-        return ( testURL.getProtocol().equals( "file" ) );
-
-    }
 
     /**
      * convenience method to log the amount of free memory
@@ -1024,39 +950,6 @@ public class Tools {
         }
     }
 
-    /**
-     * This method figures out the dimensions of the supplied JTextArea for it's
-     * current content. It is not terribly exact.
-     *
-     * @param ta The JTextArea for which you want to know the dimensions
-     * @param horizontalWidth The horizontal width that should be used in the
-     * dimension.
-     * @return the text area dimensions
-     */
-    public static Dimension getJTextAreaDimension( JTextArea ta,
-            int horizontalWidth ) {
-        // figure out the size of the JTextArea
-        int fontHeight = ta.getFontMetrics( ta.getFont() ).getHeight();
-        int stringWidth = ta.getFontMetrics( ta.getFont() ).stringWidth( ta.getText() );
-        int lines = stringWidth / horizontalWidth;
-        int adjustedLines = (int) ( lines * 1.1 ) + 2;
-        //logger.info("ThumbnailDescriptionJPanel: lineCount: " + Integer.toString(lines) + " stringWidth: " + Integer.toString( stringWidth ) );
-        return new Dimension( horizontalWidth, adjustedLines * fontHeight );
-    }
-
-    /**
-     * Converts the Java Color object into a #rgb string for web pages
-     *
-     * @param color The Java Color object to decode
-     * @return The html string of the color in the #rrggbb format
-     */
-    public static String getHtmlColor( Color color ) {
-        String htmlColor = "#";
-        htmlColor += Integer.toString( color.getRed(), 16 );
-        htmlColor += Integer.toString( color.getGreen(), 16 );
-        htmlColor += Integer.toString( color.getBlue(), 16 );
-        return htmlColor;
-    }
 
     /**
      * This method fires up a user function if it can. User functions are only
@@ -1138,11 +1031,6 @@ public class Tools {
         }
     }
 
-    public static void printStackTrace() {
-        for ( StackTraceElement trace : new Throwable().getStackTrace() ) {
-            LOGGER.info( trace.toString() );
-        }
-    }
 
     /**
      * Writes the contents of the specified text file which we have packaged in

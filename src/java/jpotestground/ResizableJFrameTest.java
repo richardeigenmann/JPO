@@ -16,32 +16,41 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
+import static jpo.gui.swing.ResizableJFrame.WindowSize.WINDOW_BOTTOM_LEFT;
+import static jpo.gui.swing.ResizableJFrame.WindowSize.WINDOW_BOTTOM_RIGHT;
+import static jpo.gui.swing.ResizableJFrame.WindowSize.WINDOW_DEFAULT;
+import static jpo.gui.swing.ResizableJFrame.WindowSize.WINDOW_FULLSCREEN;
+import static jpo.gui.swing.ResizableJFrame.WindowSize.WINDOW_LEFT;
+import static jpo.gui.swing.ResizableJFrame.WindowSize.WINDOW_RIGHT;
+import static jpo.gui.swing.ResizableJFrame.WindowSize.WINDOW_TOP_LEFT;
+import static jpo.gui.swing.ResizableJFrame.WindowSize.WINDOW_TOP_RIGHT;
 
 
 /*
-Copyright (C) 2002-2007  Richard Eigenmann.
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or any later version. This program is distributed
-in the hope that it will be useful, but WITHOUT ANY WARRANTY;
-without even the implied warranty of MERCHANTABILITY or FITNESS
-FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-more details. You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-The license is in gpl.txt.
-See http://www.gnu.org/copyleft/gpl.html for the details.
+ Copyright (C) 2002-2014  Richard Eigenmann.
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or any later version. This program is distributed
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ without even the implied warranty of MERCHANTABILITY or FITNESS
+ FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+ more details. You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ The license is in gpl.txt.
+ See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 /**
  *
- * A class to test the ResizableJFrame. This can be problematic
- * because different users are likely to have different screen configurations.
+ * A class to test the ResizableJFrame. This can be problematic because
+ * different users are likely to have different screen configurations.
  */
 public class ResizableJFrameTest {
 
     /**
      * An entry point for standalone screen size testing.
+     *
      * @param args the command line arguments
      */
     public static void main( String[] args ) {
@@ -70,15 +79,13 @@ public class ResizableJFrameTest {
         final ResizableJFrame rjf = new ResizableJFrame( p );
         rjf.setDefaultCloseOperation( JFrame.DISPOSE_ON_CLOSE );
 
-
-
         JPanel buttonPanel = new JPanel();
         JButton fullScreen = new JButton( "FullScreen" );
         fullScreen.addActionListener( new ActionListener() {
 
             @Override
             public void actionPerformed( ActionEvent e ) {
-                rjf.resizeTo( ResizableJFrame.WINDOW_FULLSCREEN );
+                rjf.resizeTo( WINDOW_FULLSCREEN );
             }
         } );
         buttonPanel.add( fullScreen );
@@ -88,7 +95,7 @@ public class ResizableJFrameTest {
 
             @Override
             public void actionPerformed( ActionEvent e ) {
-                rjf.resizeTo( ResizableJFrame.WINDOW_DEFAULT );
+                rjf.resizeTo( WINDOW_DEFAULT );
 
             }
         } );
@@ -99,7 +106,7 @@ public class ResizableJFrameTest {
 
             @Override
             public void actionPerformed( ActionEvent e ) {
-                rjf.resizeTo( ResizableJFrame.WINDOW_LEFT );
+                rjf.resizeTo( WINDOW_LEFT );
             }
         } );
         buttonPanel.add( leftSize );
@@ -109,7 +116,7 @@ public class ResizableJFrameTest {
 
             @Override
             public void actionPerformed( ActionEvent e ) {
-                rjf.resizeTo( ResizableJFrame.WINDOW_TOP_LEFT );
+                rjf.resizeTo( WINDOW_TOP_LEFT );
 
             }
         } );
@@ -120,19 +127,18 @@ public class ResizableJFrameTest {
 
             @Override
             public void actionPerformed( ActionEvent e ) {
-                rjf.resizeTo( ResizableJFrame.WINDOW_BOTTOM_LEFT );
+                rjf.resizeTo( WINDOW_BOTTOM_LEFT );
 
             }
         } );
         buttonPanel.add( bottomLeftSize );
-
 
         JButton rightSize = new JButton( "Right" );
         rightSize.addActionListener( new ActionListener() {
 
             @Override
             public void actionPerformed( ActionEvent e ) {
-                rjf.resizeTo( ResizableJFrame.WINDOW_RIGHT );
+                rjf.resizeTo( WINDOW_RIGHT );
             }
         } );
         buttonPanel.add( rightSize );
@@ -142,7 +148,7 @@ public class ResizableJFrameTest {
 
             @Override
             public void actionPerformed( ActionEvent e ) {
-                rjf.resizeTo( ResizableJFrame.WINDOW_TOP_RIGHT );
+                rjf.resizeTo( WINDOW_TOP_RIGHT );
             }
         } );
         buttonPanel.add( topRightSize );
@@ -152,7 +158,7 @@ public class ResizableJFrameTest {
 
             @Override
             public void actionPerformed( ActionEvent e ) {
-                rjf.resizeTo( ResizableJFrame.WINDOW_BOTTOM_RIGHT );
+                rjf.resizeTo( WINDOW_BOTTOM_RIGHT );
             }
         } );
         buttonPanel.add( bottomRightSize );
@@ -177,10 +183,8 @@ public class ResizableJFrameTest {
         } );
         buttonPanel.add( undecorateButton );
 
-
         final JTextArea jta = new JTextArea( 20, 80 );
         jta.setCaret( new NonFocussedCaret() );
-
 
         JButton refresh = new JButton( "Refresh" );
         refresh.addActionListener( new ActionListener() {

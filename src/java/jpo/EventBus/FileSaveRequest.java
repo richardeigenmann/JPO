@@ -13,7 +13,7 @@ public class FileSaveRequest implements Request {
     public FileSaveRequest() {
     }
 
-    private Request onSucccessNextRequest = null;
+    private Request onSucccessNextRequest;
 
     /**
      * Optional next request to call after successfully saving the file.

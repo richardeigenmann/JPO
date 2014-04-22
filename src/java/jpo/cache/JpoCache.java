@@ -212,7 +212,10 @@ public class JpoCache {
         return imageBytes;
     }
 
-    private Dimension groupThumbnailDimension = null;
+    /**
+     * The dimension for the group thumbnail
+     */    
+    private Dimension groupThumbnailDimension;
 
     /**
      * Returns the Dimension of the icon_folder_large.jpg image and if there is

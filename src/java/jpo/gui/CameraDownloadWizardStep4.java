@@ -13,7 +13,7 @@ import net.javaprog.ui.wizard.AbstractStep;
 /*
 CameraDownloadWizardStep4.java: the fourth step in the download from Camera Wizard
 
-Copyright (C) 2007 - 2011  Richard Eigenmann.
+Copyright (C) 2007 - 2014  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -44,7 +44,7 @@ public class CameraDownloadWizardStep4 extends AbstractStep {
     /**
      *  Holds a reference to the data used by the wizard
      */
-    private CameraDownloadWizardData dataModel = null;
+    private final CameraDownloadWizardData dataModel;
 
     /**
      *  Returns the component that visualises the user intractable stuff for this step of the wizard.

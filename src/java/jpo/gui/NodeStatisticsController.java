@@ -43,7 +43,7 @@ public class NodeStatisticsController {
     private final NodeStatistics nodeStatistics = new NodeStatistics( null );
 
     
-    private NodeStatisticsPanel nodeStatisticsPanel = null;
+    private NodeStatisticsPanel nodeStatisticsPanel;
 
     
     /**

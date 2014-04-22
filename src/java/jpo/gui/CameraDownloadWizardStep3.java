@@ -28,24 +28,26 @@ import net.javaprog.ui.wizard.AbstractStep;
 
 /* CameraDownloadWizardStep3.java: the third step in the download from Camera Wizard
 
-Copyright (C) 2007-2008  Richard Eigenmann.
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or any later version. This program is distributed
-in the hope that it will be useful, but WITHOUT ANY WARRANTY;
-without even the implied warranty of MERCHANTABILITY or FITNESS
-FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-more details. You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-The license is in gpl.txt.
-See http://www.gnu.org/copyleft/gpl.html for the details.
+ Copyright (C) 2007-2014  Richard Eigenmann.
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or any later version. This program is distributed
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ without even the implied warranty of MERCHANTABILITY or FITNESS
+ FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+ more details. You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ The license is in gpl.txt.
+ See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 /**
- *  The third step in the download from camera dialog asks whether to create a new Group, the description for the new Group and
- *  the node for which the operation is to run. If presents a checkbox whether to create a new group. If this is ticked then
- *  the textfield for the new group name is made visible, otherwise it is hidden.
+ * The third step in the download from camera dialog asks whether to create a
+ * new Group, the description for the new Group and the node for which the
+ * operation is to run. If presents a checkbox whether to create a new group. If
+ * this is ticked then the textfield for the new group name is made visible,
+ * otherwise it is hidden.
  */
 public class CameraDownloadWizardStep3
         extends AbstractStep {
@@ -54,7 +56,6 @@ public class CameraDownloadWizardStep3
      * Defines a LOGGER for this class
      */
     private static final Logger LOGGER = Logger.getLogger( CameraDownloadWizardStep3.class.getName() );
-
 
     /**
      *
@@ -67,13 +68,14 @@ public class CameraDownloadWizardStep3
     }
 
     /**
-     *  Holds a reference to the data used by the wizard
+     * Holds a reference to the data used by the wizard
      */
-    private CameraDownloadWizardData dataModel = null;
-
+    private final CameraDownloadWizardData dataModel;
 
     /**
-     *  Returns the component that visualises the user interactable stuff for this step of the wizard.
+     * Returns the component that visualises the user interactable stuff for
+     * this step of the wizard.
+     *
      * @return the component
      */
     @Override
@@ -141,7 +143,7 @@ public class CameraDownloadWizardStep3
 
             @Override
             public void valueChanged( TreeSelectionEvent e ) {
-                LOGGER.fine(String.format( "listening to a value changed event e: %s", e.toString() ));
+                LOGGER.fine( String.format( "listening to a value changed event e: %s", e.toString() ) );
                 // Are we trying to get the last clicked node? Not sure this is best...
                 SortableDefaultMutableTreeNode node = (SortableDefaultMutableTreeNode) collectionJTree.getLastSelectedPathComponent();
                 try {
@@ -172,16 +174,14 @@ public class CameraDownloadWizardStep3
             collectionJTree.setSelectionPath( rp );
         }
 
-
         JScrollPane jsp = new JScrollPane( collectionJTree );
         stepComponent.add( jsp );
         jsp.setAlignmentX( Component.LEFT_ALIGNMENT );
         return stepComponent;
     }
 
-
     /**
-     *  Required by the AbstractSetp but not used.
+     * Required by the AbstractSetp but not used.
      */
     @Override
     public void prepareRendering() {

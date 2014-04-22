@@ -55,7 +55,7 @@ import javax.swing.SpinnerListModel;
  */
 public class CyclingSpinnerListModel extends SpinnerListModel {
     Object firstValue, lastValue;
-    SpinnerModel linkedModel = null;
+    SpinnerModel linkedModel;
 
     public CyclingSpinnerListModel(Object[] values) {
         super(values);
