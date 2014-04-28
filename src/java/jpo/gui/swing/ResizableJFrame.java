@@ -29,10 +29,12 @@ import static jpo.gui.swing.ResizableJFrame.WindowSize.WINDOW_FULLSCREEN;
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 /**
+ * This is basically a JFrame which understands how to resize itself to a
+ * specific
+ * {
  *
- * This is an extended JFrame which has a few useful methods for it to be
- * resized. The resizing doesn't always work very well which is why I
- * encapsulated this into this class.
+ * @see WindowSize} and can switch on and off the window decorations (which
+ * requires disposing of the window and redrawing itself).
  */
 public class ResizableJFrame
         extends JFrame implements ChangeWindowInterface {
@@ -43,62 +45,105 @@ public class ResizableJFrame
     private static final Logger LOGGER = Logger.getLogger( ResizableJFrame.class.getName() );
 
     /**
+     * Window size options
+     */
+    public static enum WindowSize {
+
+        /**
+         * Switches the Window to fullscreen
+         */
+        WINDOW_FULLSCREEN,
+        /**
+         * Switches the window to occupy the left side
+         */
+        WINDOW_LEFT,
+        /**
+         * Switches the window to occupy the right side
+         */
+        WINDOW_RIGHT,
+        /**
+         * Switches the window to occupy the top left of the screen
+         */
+        WINDOW_TOP_LEFT,
+        /**
+         * Switches the window to occupy the top right of the screen
+         */
+        WINDOW_TOP_RIGHT,
+        /**
+         * Switches the window to occupy the bottom left of the screen
+         */
+        WINDOW_BOTTOM_LEFT,
+        /**
+         * Switches the window to occupy the bottom right of the screen
+         */
+        WINDOW_BOTTOM_RIGHT,
+        /**
+         * Switches the window to the default size and location
+         */
+        WINDOW_DEFAULT
+    }
+
+    /**
      * Creates a new instance of ResizableJFrame
      *
-     * @param viewer The Component that the JFrame is the show
+     * @param component The Component to show in the frame
      */
-    public ResizableJFrame( Component viewer ) {
+    public ResizableJFrame( Component component ) {
         super( Settings.jpoResources.getString( "PictureViewerTitle" ) );
         Tools.checkEDT();
+
+        //ToDo: Review this...!
         Dimension initialDimension = (Dimension) Settings.pictureViewerDefaultDimensions.clone();
         if ( ( initialDimension.width == 0 ) || ( initialDimension.height == 0 ) ) {
             // this gets us around the problem that the Affine Transform crashes if the window size is 0,0
             initialDimension = Settings.windowSizes[1];
         }
 
-        setUndecorated( !decorateWindow );
-        setBackground( Settings.PICTUREVIEWER_BACKGROUND_COLOR );
         getContentPane().setLayout( new BorderLayout() );
+        getContentPane().add( "Center", component );
+        setBackground( Settings.PICTUREVIEWER_BACKGROUND_COLOR );
 
+        setUndecorated( !decorateWindow );
         setSize( initialDimension );
-        getContentPane().add( "Center", viewer );
-        setVisible( true );
 
         if ( Settings.maximisePictureViewerWindow ) {
             maximise();
             windowMode = WINDOW_FULLSCREEN;
         }
+
+        setVisible( true );
     }
 
     /**
-     * Call this method on the EDT to maximise the windows
+     * Call this method on the EDT to maximise the windows. Don't forget to call
+     * validate() afterwards.
      */
-    public void maximise() {
+    public final void maximise() {
         Tools.checkEDT();
         if ( this.getToolkit().isFrameStateSupported( Frame.MAXIMIZED_BOTH ) ) {
             setExtendedState( Frame.MAXIMIZED_BOTH );
-            validate();
         } else {
-            LOGGER.severe( "The Window Manager doesn't support Frame.MAXIMIZED_BOTH" );
+            LOGGER.severe( "The Window Manager doesn't support Frame.MAXIMIZED_BOTH. Leaving window unchanged." );
         }
     }
 
     /**
      * Call this method on the EDT to un-maximises the window, restoring the
-     * original size
+     * original size. Don't forget to call validate() afterwards.
      */
     public void unMaximise() {
         Tools.checkEDT();
         if ( this.getToolkit().isFrameStateSupported( Frame.NORMAL ) ) {
             setExtendedState( Frame.NORMAL );
         } else {
-            LOGGER.severe( "The Window Manager doesn't support Frame.NORMAL" );
+            LOGGER.severe( "The Window Manager doesn't support Frame.NORMAL. Leaving window unchanged." );
         }
     }
     /**
      * indicator that specifies what sort of window should be created
      */
     private WindowSize windowMode = WINDOW_DEFAULT;
+
     /**
      * Flag that specifies whether the window should be drawn with decoration or
      * not.
@@ -108,7 +153,7 @@ public class ResizableJFrame
     /**
      * request that the window showing the picture be changed be changed.
      *
-     * @param newMode null null     {@link ResizableJFrame#WINDOW_FULLSCREEN}, {@link ResizableJFrame#WINDOW_LEFT},
+     * @param newMode null null null null null     {@link ResizableJFrame#WINDOW_FULLSCREEN}, {@link ResizableJFrame#WINDOW_LEFT},
      *		{@link ResizableJFrame#WINDOW_RIGHT},  {@link ResizableJFrame#WINDOW_TOP_LEFT},
      *		{@link ResizableJFrame#WINDOW_TOP_RIGHT}, {@link ResizableJFrame#WINDOW_BOTTOM_LEFT},
      *		{@link ResizableJFrame#WINDOW_BOTTOM_RIGHT} or
@@ -150,6 +195,47 @@ public class ResizableJFrame
         switchDecorations( newDecoration );
         resizeTo( windowMode );
     }
+    
+    
+        /**
+     * Request that the window showing the picture be changed be changed.
+     *
+     * @param newMode null null null null null     {@link #WINDOW_FULLSCREEN}, {@link #WINDOW_LEFT},
+     *		{@link #WINDOW_RIGHT},  {@link #WINDOW_TOP_LEFT},
+     *		{@link #WINDOW_TOP_RIGHT}, {@link #WINDOW_BOTTOM_LEFT},
+     *		{@link #WINDOW_BOTTOM_RIGHT} or {@link #WINDOW_DEFAULT} need to be
+     * indicated.
+     *
+     */
+    public void resizeTo( WindowSize newMode ) {
+        switch ( newMode ) {
+            case WINDOW_FULLSCREEN:
+                maximise();
+                break;
+            case WINDOW_LEFT:
+                resizeToLeft();
+                break;
+            case WINDOW_RIGHT:
+                resizeToRight();
+                break;
+            case WINDOW_TOP_LEFT:
+                resizeToTopLeft();
+                break;
+            case WINDOW_TOP_RIGHT:
+                resizeToTopRight();
+                break;
+            case WINDOW_BOTTOM_LEFT:
+                resizeToBottomLeft();
+                break;
+            case WINDOW_BOTTOM_RIGHT:
+                resizeToBottomRight();
+                break;
+            case WINDOW_DEFAULT:
+                unMaximise();
+                break;
+        }
+    }
+
 
     /**
      * This method turns on or turns off the frame around the window. It works
@@ -163,10 +249,10 @@ public class ResizableJFrame
     public void switchDecorations( boolean newDecoration ) {
         if ( decorateWindow != newDecoration ) {
             decorateWindow = newDecoration;
-            LOGGER.fine( "Switching decoration" );
+            Rectangle myBounds = getBounds();
             dispose();
             setUndecorated( !decorateWindow );
-            pack();
+            myBounds.setBounds( myBounds );
             setVisible( true );
         }
     }
@@ -248,81 +334,4 @@ public class ResizableJFrame
         validate();
     }
 
-    /**
-     * Window size options
-     */
-    public static enum WindowSize {
-
-        /**
-         * Switches the Window to fullscreen
-         */
-        WINDOW_FULLSCREEN,
-        /**
-         * Switches the window to occupy the left side
-         */
-        WINDOW_LEFT,
-        /**
-         * Switches the window to occupy the right side
-         */
-        WINDOW_RIGHT,
-        /**
-         * Switches the window to occupy the top left of the screen
-         */
-        WINDOW_TOP_LEFT,
-        /**
-         * Switches the window to occupy the top right of the screen
-         */
-        WINDOW_TOP_RIGHT,
-        /**
-         * Switches the window to occupy the bottom left of the screen
-         */
-        WINDOW_BOTTOM_LEFT,
-        /**
-         * Switches the window to occupy the bottom right of the screen
-         */
-        WINDOW_BOTTOM_RIGHT,
-        /**
-         * Switches the window to the default size and location
-         */
-        WINDOW_DEFAULT
-    }
-
-    /**
-     * Request that the window showing the picture be changed be changed.
-     *
-     * @param newMode null null     {@link #WINDOW_FULLSCREEN}, {@link #WINDOW_LEFT},
-     *		{@link #WINDOW_RIGHT},  {@link #WINDOW_TOP_LEFT},
-     *		{@link #WINDOW_TOP_RIGHT}, {@link #WINDOW_BOTTOM_LEFT},
-     *		{@link #WINDOW_BOTTOM_RIGHT} or {@link #WINDOW_DEFAULT} need to be
-     * indicated.
-     *
-     */
-    public void resizeTo( WindowSize newMode ) {
-        switch ( newMode ) {
-            case WINDOW_FULLSCREEN:
-                maximise();
-                break;
-            case WINDOW_LEFT:
-                resizeToLeft();
-                break;
-            case WINDOW_RIGHT:
-                resizeToRight();
-                break;
-            case WINDOW_TOP_LEFT:
-                resizeToTopLeft();
-                break;
-            case WINDOW_TOP_RIGHT:
-                resizeToTopRight();
-                break;
-            case WINDOW_BOTTOM_LEFT:
-                resizeToBottomLeft();
-                break;
-            case WINDOW_BOTTOM_RIGHT:
-                resizeToBottomRight();
-                break;
-            case WINDOW_DEFAULT:
-                unMaximise();
-                break;
-        }
-    }
 }

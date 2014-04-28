@@ -49,7 +49,7 @@ public class QueriesJTree
         setEditable( false );
         setShowsRootHandles( true );
         setMinimumSize( Settings.JPO_NAVIGATOR_JTABBEDPANE_MINIMUM_SIZE );
-        setModel( Settings.pictureCollection.getQueriesTreeModel() );
+        setModel( Settings.getPictureCollection().getQueriesTreeModel() );
 
         addMouseListener( new MouseAdapter() {
             /**

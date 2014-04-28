@@ -161,7 +161,7 @@ public class ApplicationEventHandler {
     @Subscribe
     public void handleFindDuplicatesRequest( FindDuplicatesRequest request ) {
         DuplicatesQuery duplicatesQuery = new DuplicatesQuery();
-        DefaultMutableTreeNode newNode = Settings.pictureCollection.addQueryToTreeModel( duplicatesQuery );
+        DefaultMutableTreeNode newNode = Settings.getPictureCollection().addQueryToTreeModel( duplicatesQuery );
         QueryNavigator queryBrowser = new QueryNavigator( duplicatesQuery );
         JpoEventBus.getInstance().post( new ShowQueryRequest( duplicatesQuery ) );
     }
@@ -173,7 +173,7 @@ public class ApplicationEventHandler {
      */
     @Subscribe
     public void handleYearlyAnalysisRequest( YearlyAnalysisRequest request ) {
-        new YearlyAnalysisGuiController( Settings.pictureCollection.getRootNode() );
+        new YearlyAnalysisGuiController( Settings.getPictureCollection().getRootNode() );
     }
 
     /**
@@ -183,7 +183,7 @@ public class ApplicationEventHandler {
      */
     @Subscribe
     public void handlerYearBrowserRequest( YearBrowserRequest request ) {
-        new YearsBrowserController( Settings.pictureCollection.getRootNode() );
+        new YearsBrowserController( Settings.getPictureCollection().getRootNode() );
     }
 
     /**
@@ -193,7 +193,7 @@ public class ApplicationEventHandler {
      */
     @Subscribe
     public void handleCheckIntegrityRequest( CheckIntegrityRequest request ) {
-        new IntegrityCheckerJFrame( Settings.pictureCollection.getRootNode() );
+        new IntegrityCheckerJFrame( Settings.getPictureCollection().getRootNode() );
     }
 
     /**
@@ -255,7 +255,7 @@ public class ApplicationEventHandler {
      */
     @Subscribe
     public void handleCheckDirectoriesRequest( CheckDirectoriesRequest request ) {
-        new ReconcileJFrame( Settings.pictureCollection.getRootNode() );
+        new ReconcileJFrame( Settings.getPictureCollection().getRootNode() );
     }
 
     /**
@@ -265,6 +265,7 @@ public class ApplicationEventHandler {
      */
     @Subscribe
     public void handleStartDoublePanelSlideshowRequest( StartDoublePanelSlideshowRequest request ) {
+        Tools.checkEDT();
         SortableDefaultMutableTreeNode rootNode = request.getNode();
         PictureViewer p1 = new PictureViewer();
         p1.pictureFrame.myJFrame.switchWindowMode( WINDOW_LEFT );
@@ -454,7 +455,7 @@ public class ApplicationEventHandler {
             @Override
             public void run() {
                 try {
-                    Settings.pictureCollection.fileLoad( fileToLoad );
+                    Settings.getPictureCollection().fileLoad( fileToLoad );
                 } catch ( FileNotFoundException ex ) {
                     LOGGER.log( Level.INFO, "FileNotFoundExecption: {0}", ex.getMessage() );
                     JOptionPane.showMessageDialog( Settings.anchorFrame,
@@ -463,7 +464,7 @@ public class ApplicationEventHandler {
                             JOptionPane.ERROR_MESSAGE );
                     return;
                 }
-                JpoEventBus.getInstance().post( new ShowGroupRequest( Settings.pictureCollection.getRootNode() ) );
+                JpoEventBus.getInstance().post( new ShowGroupRequest( Settings.getPictureCollection().getRootNode() ) );
             }
         };
         t.start();
@@ -482,8 +483,8 @@ public class ApplicationEventHandler {
 
             @Override
             public void run() {
-                Settings.pictureCollection.clearCollection();
-                JpoEventBus.getInstance().post( new ShowGroupRequest( Settings.pictureCollection.getRootNode() ) );
+                Settings.getPictureCollection().clearCollection();
+                JpoEventBus.getInstance().post( new ShowGroupRequest( Settings.getPictureCollection().getRootNode() ) );
             }
         };
         SwingUtilities.invokeLater( r );
@@ -498,13 +499,13 @@ public class ApplicationEventHandler {
      */
     @Subscribe
     public void handleFileSaveRequest( FileSaveRequest request ) {
-        if ( Settings.pictureCollection.getXmlFile() == null ) {
+        if ( Settings.getPictureCollection().getXmlFile() == null ) {
             FileSaveAsRequest fileSaveAsRequest = new FileSaveAsRequest();
             fileSaveAsRequest.setOnSuccessNextRequest( request.getOnSuccessNextRequest() );
             JpoEventBus.getInstance().post( fileSaveAsRequest );
         } else {
-            LOGGER.info( String.format( "Saving under the name: %s", Settings.pictureCollection.getXmlFile() ) );
-            Settings.pictureCollection.fileSave();
+            LOGGER.info( String.format( "Saving under the name: %s", Settings.getPictureCollection().getXmlFile() ) );
+            Settings.getPictureCollection().fileSave();
             afterFileSaveDialog();
             if ( request.getOnSuccessNextRequest() != null ) {
                 JpoEventBus.getInstance().post( request.getOnSuccessNextRequest() );
@@ -526,8 +527,8 @@ public class ApplicationEventHandler {
         jFileChooser.setDialogTitle( Settings.jpoResources.getString( "fileSaveAsTitle" ) );
         jFileChooser.setMultiSelectionEnabled( false );
         jFileChooser.setFileFilter( new XmlFilter() );
-        if ( Settings.pictureCollection.getXmlFile() != null ) {
-            jFileChooser.setCurrentDirectory( Settings.pictureCollection.getXmlFile() );
+        if ( Settings.getPictureCollection().getXmlFile() != null ) {
+            jFileChooser.setCurrentDirectory( Settings.getPictureCollection().getXmlFile() );
         } else {
             jFileChooser.setCurrentDirectory( Settings.getMostRecentCopyLocation() );
         }
@@ -547,8 +548,8 @@ public class ApplicationEventHandler {
                 }
             }
 
-            Settings.pictureCollection.setXmlFile( chosenFile );
-            boolean success = Settings.pictureCollection.fileSave();
+            Settings.getPictureCollection().setXmlFile( chosenFile );
+            boolean success = Settings.getPictureCollection().fileSave();
             if ( !success ) {
                 JOptionPane.showMessageDialog( Settings.anchorFrame,
                         "There was a problem saving the file.",
@@ -573,9 +574,9 @@ public class ApplicationEventHandler {
     public void afterFileSaveDialog() {
         JPanel p = new JPanel();
         p.setLayout( new BoxLayout( p, BoxLayout.Y_AXIS ) );
-        p.add( new JLabel( Settings.jpoResources.getString( "collectionSaveBody" ) + Settings.pictureCollection.getXmlFile().toString() ) );
+        p.add( new JLabel( Settings.jpoResources.getString( "collectionSaveBody" ) + Settings.getPictureCollection().getXmlFile().toString() ) );
         JCheckBox setAutoload = new JCheckBox( Settings.jpoResources.getString( "setAutoload" ) );
-        if ( ( !( Settings.autoLoad == null ) ) && ( ( new File( Settings.autoLoad ) ).compareTo( Settings.pictureCollection.getXmlFile() ) == 0 ) ) {
+        if ( ( !( Settings.autoLoad == null ) ) && ( ( new File( Settings.autoLoad ) ).compareTo( Settings.getPictureCollection().getXmlFile() ) == 0 ) ) {
             setAutoload.setSelected( true );
         }
         p.add( setAutoload );
@@ -584,7 +585,7 @@ public class ApplicationEventHandler {
                 Settings.jpoResources.getString( "collectionSaveTitle" ),
                 JOptionPane.INFORMATION_MESSAGE );
         if ( setAutoload.isSelected() ) {
-            Settings.autoLoad = Settings.pictureCollection.getXmlFile().toString();
+            Settings.autoLoad = Settings.getPictureCollection().getXmlFile().toString();
             Settings.writeSettings();
         }
     }
@@ -707,7 +708,7 @@ public class ApplicationEventHandler {
         for ( Enumeration e = groupNode.breadthFirstEnumeration(); e.hasMoreElements(); ) {
             n = (SortableDefaultMutableTreeNode) e.nextElement();
             if ( n.getUserObject() instanceof PictureInfo ) {
-                Settings.pictureCollection.addToMailSelection( n );
+                Settings.getPictureCollection().addToMailSelection( n );
             }
         }
     }
@@ -809,7 +810,7 @@ public class ApplicationEventHandler {
             public void run() {
                 final File fileToLoad = new File( Settings.recentCollections[i] );
                 try {
-                    Settings.pictureCollection.fileLoad( fileToLoad );
+                    Settings.getPictureCollection().fileLoad( fileToLoad );
                 } catch ( FileNotFoundException ex ) {
                     Logger.getLogger( Jpo.class.getName() ).log( Level.SEVERE, null, ex );
                     LOGGER.log( Level.INFO, "FileNotFoundExecption: {0}", ex.getMessage() );
@@ -819,7 +820,7 @@ public class ApplicationEventHandler {
                             JOptionPane.ERROR_MESSAGE );
                     return;
                 }
-                JpoEventBus.getInstance().post( new ShowGroupRequest( Settings.pictureCollection.getRootNode() ) );
+                JpoEventBus.getInstance().post( new ShowGroupRequest( Settings.getPictureCollection().getRootNode() ) );
 
                 Settings.pushRecentCollection( fileToLoad.toString() );
                 JpoEventBus.getInstance().post( new RecentCollectionsChangedEvent() );
@@ -940,7 +941,7 @@ public class ApplicationEventHandler {
     @Subscribe
     public void handleUnsavedUpdatesDialogRequest( UnsavedUpdatesDialogRequest request ) {
         Tools.checkEDT();
-        if ( Settings.pictureCollection.getUnsavedUpdates() ) {
+        if ( Settings.getPictureCollection().getUnsavedUpdates() ) {
             Object[] options = {
                 Settings.jpoResources.getString( "discardChanges" ),
                 Settings.jpoResources.getString( "genericSaveButtonLabel" ),

@@ -75,7 +75,7 @@ public class MainWindow extends JFrame {
         Tools.checkEDT();
         initComponents();
         registerOnEventBus();
-        Settings.pictureCollection.getTreeModel().addTreeModelListener( new MainAppModelListener() );
+        Settings.getPictureCollection().getTreeModel().addTreeModelListener( new MainAppModelListener() );
         addWindowListener( new WindowAdapter() {
 
             @Override
@@ -309,7 +309,7 @@ public class MainWindow extends JFrame {
      * xml file if any.
      */
     private void updateApplicationTitle() {
-        final File xmlFile = Settings.pictureCollection.getXmlFile();
+        final File xmlFile = Settings.getPictureCollection().getXmlFile();
         if ( xmlFile != null ) {
             updateApplicationTitleEDT( Settings.jpoResources.getString( "ApplicationTitle" ) + ":  " + xmlFile.toString() );
         } else {

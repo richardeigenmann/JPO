@@ -74,7 +74,7 @@ public class EmailerGui extends JFrame {
      *
      */
     public EmailerGui() {
-        emailSelected = Settings.pictureCollection.getMailSelectedNodes();
+        emailSelected = Settings.getPictureCollection().getMailSelectedNodes();
 
         // if no picutres have been selected pop up an error message
         if ( emailSelected.size() < 1 ) {

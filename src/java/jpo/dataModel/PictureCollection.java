@@ -86,8 +86,7 @@ public class PictureCollection {
             try {
                 SwingUtilities.invokeAndWait( runnable );
             } catch ( InterruptedException | InvocationTargetException ex ) {
-                LOGGER.severe( ex.getMessage() );
-                LOGGER.severe( "No idea what to do here!" );
+                // ignore
             }
         }
     }
@@ -380,14 +379,16 @@ public class PictureCollection {
 
     /**
      * Node for the Years tree
-     * @return 
+     *
+     * @return
      */
     public DefaultMutableTreeNode getYearsTreeNode() {
         return yearsTreeNode;
     }
 
     /**
-     * Adds a year query 
+     * Adds a year query
+     *
      * @param year the year
      */
     public void addYearQuery( String year ) {
@@ -400,6 +401,7 @@ public class PictureCollection {
      * Clear out the nodes in the existing queries Tree Model
      */
     public void clearQueriesTreeModel() {
+        Tools.checkEDT();
         getQueriesRootNode().removeAllChildren();
     }
 
@@ -691,7 +693,8 @@ public class PictureCollection {
 
     /**
      * Returns the email-selected nodes
-     * @return 
+     *
+     * @return
      */
     public List<SortableDefaultMutableTreeNode> getMailSelectedNodes() {
         return mailSelection;
@@ -818,7 +821,7 @@ public class PictureCollection {
     }
 
     private void addYearQueries() {
-        TreeSet<String> years = new TreeSet<>();
+        final TreeSet<String> years = new TreeSet<>();
 
         DefaultMutableTreeNode testNode;
         Object nodeObject;
@@ -838,10 +841,16 @@ public class PictureCollection {
             }
         }
 
-        getYearsTreeNode().removeAllChildren();
-        for ( String year : years ) {
-            addYearQuery( year );
-        }
+        Runnable r = new Runnable() {
+            @Override
+            public void run() {
+                getYearsTreeNode().removeAllChildren();
+                for ( String year : years ) {
+                    addYearQuery( year );
+                }
+            }
+        };
+        SwingUtilities.invokeLater( r );
 
     }
 

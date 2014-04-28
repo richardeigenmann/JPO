@@ -135,9 +135,9 @@ public class PictureInfoTest
      * @throws Exception 
      */
     public void testGetHighresURL() throws Exception {
-        PictureInfo pi = new PictureInfo( "file:///dir/picture.jpg",  "My Sample Picture", "Film 123" );
+        PictureInfo pi = new PictureInfo( "file://dir/picture.jpg",  "My Sample Picture", "Film 123" );
         URL highresURL = pi.getHighresURL();
-        assertEquals( "Checking getHighresURL", new URL( "file:///dir/picture.jpg" ), highresURL );
+        assertEquals( "Checking getHighresURL", new URL( "file://dir/picture.jpg" ), highresURL );
     }
 
 
@@ -145,16 +145,15 @@ public class PictureInfoTest
      * Test of getHighresURLOrNull method, of class PictureInfo.
      */
     public void testGetHighresURLOrNull() {
-        PictureInfo pi1 = new PictureInfo( "file:///dir/picture.jpg",  "My Sample Picture", "Film 123" );
+        PictureInfo pi1 = new PictureInfo( "file://dir/picture.jpg",  "My Sample Picture", "Film 123" );
         URL highresURL1 = pi1.getHighresURLOrNull();
         try {
-            assertEquals( "Checking getHighresURLOrNull", new URL( "file:///dir/picture.jpg" ), highresURL1 );
+            assertEquals( "Checking getHighresURLOrNull", new URL( "file://dir/picture.jpg" ), highresURL1 );
         } catch ( MalformedURLException ex ) {
-            ex.printStackTrace();
             fail( "Test should not have thrown an exception: " + ex.getMessage() );
         }
 
-        PictureInfo pi2 = new PictureInfo( "noProtocol:///dir/picture.jpg",  "My Sample Picture", "Film 123" );
+        PictureInfo pi2 = new PictureInfo( "noProtocol://dir/picture.jpg",  "My Sample Picture", "Film 123" );
         URL highresURL2 = pi2.getHighresURLOrNull();
         assertNull( "Checking getHighresURLOrNull", highresURL2 );
     }

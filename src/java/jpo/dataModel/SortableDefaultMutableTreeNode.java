@@ -92,7 +92,7 @@ public class SortableDefaultMutableTreeNode
      * @return the picture collection.
      */
     public PictureCollection getPictureCollection() {
-        return Settings.pictureCollection;
+        return Settings.getPictureCollection();
     }
 
     /**
@@ -111,6 +111,7 @@ public class SortableDefaultMutableTreeNode
      * @param sortCriteria The criteria by which the pictures should be sorted.
      */
     public void sortChildren( FieldCodes sortCriteria ) {
+        Tools.checkEDT();  // because of removeAllChildren
         int childCount = getChildCount();
         SortableDefaultMutableTreeNode[] childNodes = new SortableDefaultMutableTreeNode[childCount];
         for ( int i = 0; i < childCount; i++ ) {
@@ -320,7 +321,7 @@ public class SortableDefaultMutableTreeNode
      * @param o
      */
     @Override
-    public void setUserObject( Object o ) {
+    public final void setUserObject( Object o ) {
         if ( o instanceof String ) {
             LOGGER.severe( "Why is ever being called?" );
             Object obj = getUserObject();
@@ -1161,7 +1162,7 @@ public class SortableDefaultMutableTreeNode
             if ( !addFile.isDirectory() ) {
                 File targetFile = Tools.inventPicFilename( targetDir, addFile.getName() );
                 long crc = Tools.copyPicture( addFile, targetFile );
-                if ( newOnly && Settings.pictureCollection.isInCollection( crc ) ) {
+                if ( newOnly && Settings.getPictureCollection().isInCollection( crc ) ) {
                     boolean success = targetFile.delete();
                     progGui.decrementTotal();
                 } else {
@@ -1445,4 +1446,6 @@ public class SortableDefaultMutableTreeNode
         }
         return false;
     }
+
+    
 }

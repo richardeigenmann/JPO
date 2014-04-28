@@ -88,13 +88,13 @@ public class CategoryJScrollPane extends JScrollPane implements ListSelectionLis
     public void loadCategories() {
         // load categories
         defaultListModel.clear();
-        Iterator i = Settings.pictureCollection.getCategoryIterator();
+        Iterator i = Settings.getPictureCollection().getCategoryIterator();
         Integer key;
         String category;
         Category categoryObject;
         while ( i.hasNext() ) {
             key = (Integer) i.next();
-            category = (String) Settings.pictureCollection.getCategory( key );
+            category = (String) Settings.getPictureCollection().getCategory( key );
             categoryObject = new Category( key, category );
             defaultListModel.addElement( categoryObject );
         }

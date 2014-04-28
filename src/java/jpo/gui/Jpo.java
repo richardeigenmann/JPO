@@ -128,13 +128,13 @@ public class Jpo {
                 return false;
             } else {
                 try {
-                    Settings.pictureCollection.fileLoad( xmlFile );
+                    Settings.getPictureCollection().fileLoad( xmlFile );
                 } catch ( FileNotFoundException ex ) {
                     Logger.getLogger( Jpo.class.getName() ).log( Level.SEVERE, null, ex );
                     return false;
                 }
 
-                JpoEventBus.getInstance().post( new ShowGroupRequest( Settings.pictureCollection.getRootNode() ) );
+                JpoEventBus.getInstance().post( new ShowGroupRequest( Settings.getPictureCollection().getRootNode() ) );
 
                 return true;
             }

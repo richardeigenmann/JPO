@@ -60,7 +60,7 @@ public class PictureAdder
         progGui = new ProgressGui( Tools.countfiles( chosenFiles ),
                 Settings.jpoResources.getString( "PictureAdderProgressDialogTitle" ),
                 Settings.jpoResources.getString( "picturesAdded" ) );
-        Settings.pictureCollection.setSendModelUpdates( false );
+        Settings.getPictureCollection().setSendModelUpdates( false );
 
 
     }
@@ -138,7 +138,7 @@ public class PictureAdder
         if ( retainDirectories ) {
             directoryNode = new SortableDefaultMutableTreeNode( new GroupInfo( dir.getName() ) );
             parentNode.add( directoryNode );
-            Settings.pictureCollection.setUnsavedUpdates();
+            Settings.getPictureCollection().setUnsavedUpdates();
         } else {
             directoryNode = parentNode;
         }
@@ -186,8 +186,8 @@ public class PictureAdder
      */
     @Override
     protected void done() {
-        Settings.pictureCollection.setSendModelUpdates( true );
-        Settings.pictureCollection.sendNodeStructureChanged( startNode );
+        Settings.getPictureCollection().setSendModelUpdates( true );
+        Settings.getPictureCollection().sendNodeStructureChanged( startNode );
         progGui.switchToDoneMode();
     }
 

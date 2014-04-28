@@ -210,7 +210,7 @@ public class CameraDownloadWizardData {
      * than one collection you could specify which collection to add the
      * pictures to here.
      */
-    private TreeModel treeModel = Settings.pictureCollection.getTreeModel();
+    private TreeModel treeModel = Settings.getPictureCollection().getTreeModel();
 
     /**
      * Sets the TreeModel of the collection to which the pictures should be

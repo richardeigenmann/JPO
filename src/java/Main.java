@@ -1,4 +1,7 @@
 
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import jpo.dataModel.Settings;
 import jpo.gui.Jpo;
@@ -107,7 +110,7 @@ public class Main {
         try {
             Class.forName( className );
             good.append( className ).append( " (from " ).append( libraryName ).append( ")\n");
-        } catch ( Exception e ) {
+        } catch ( ClassNotFoundException e ) {
             missing.append( className ).append( " (from " ).append( libraryName ).append( ")\n");
         }
     }

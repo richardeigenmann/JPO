@@ -96,7 +96,7 @@ public class ThumbnailController implements JpoDropTargetDropEventHandler {
                 myThumbnail, DnDConstants.ACTION_COPY_OR_MOVE, new ThumbnailDragGestureListener() );
 
         // attach the ThumbnailController to the Tree Model to get notifications.
-        Settings.pictureCollection.getTreeModel().addTreeModelListener( new MyTreeModelListener() );
+        Settings.getPictureCollection().getTreeModel().addTreeModelListener( new MyTreeModelListener() );
     }
 
     /**
@@ -360,19 +360,19 @@ public class ThumbnailController implements JpoDropTargetDropEventHandler {
          */
         private void leftClickResponse( MouseEvent e ) {
             if ( e.isControlDown() ) {
-                if ( Settings.pictureCollection.isSelected( myNode ) ) {
-                    Settings.pictureCollection.removeFromSelection( myNode );
+                if ( Settings.getPictureCollection().isSelected( myNode ) ) {
+                    Settings.getPictureCollection().removeFromSelection( myNode );
                 } else {
-                    LOGGER.fine( String.format( "Adding; Now Selected: %d", Settings.pictureCollection.getSelectedNodes().length ) );
-                    Settings.pictureCollection.addToSelectedNodes( myNode );
+                    LOGGER.fine( String.format( "Adding; Now Selected: %d", Settings.getPictureCollection().getSelectedNodes().length ) );
+                    Settings.getPictureCollection().addToSelectedNodes( myNode );
                 }
             } else {
-                if ( Settings.pictureCollection.isSelected( myNode ) ) {
-                    Settings.pictureCollection.clearSelection();
+                if ( Settings.getPictureCollection().isSelected( myNode ) ) {
+                    Settings.getPictureCollection().clearSelection();
                 } else {
-                    Settings.pictureCollection.clearSelection();
-                    Settings.pictureCollection.addToSelectedNodes( myNode );
-                    LOGGER.fine( String.format( "1 selection added; Now Selected: %d", Settings.pictureCollection.getSelectedNodes().length ) );
+                    Settings.getPictureCollection().clearSelection();
+                    Settings.getPictureCollection().addToSelectedNodes( myNode );
+                    LOGGER.fine( String.format( "1 selection added; Now Selected: %d", Settings.getPictureCollection().getSelectedNodes().length ) );
                 }
             }
         }
@@ -453,7 +453,7 @@ public class ThumbnailController implements JpoDropTargetDropEventHandler {
      * the selection
      */
     public void showSlectionStatus() {
-        if ( Settings.pictureCollection.isSelected( myNode ) ) {
+        if ( Settings.getPictureCollection().isSelected( myNode ) ) {
             myThumbnail.showAsSelected();
         } else {
             myThumbnail.showAsUnselected();
@@ -499,7 +499,7 @@ public class ThumbnailController implements JpoDropTargetDropEventHandler {
      * image.
      */
     public void determineMailSlectionStatus() {
-        if ( ( myNode != null ) && decorateThumbnails && Settings.pictureCollection.isMailSelected( myNode ) ) {
+        if ( ( myNode != null ) && decorateThumbnails && Settings.getPictureCollection().isMailSelected( myNode ) ) {
             myThumbnail.drawMailIcon( true );
         } else {
             myThumbnail.drawMailIcon( false );
@@ -598,11 +598,11 @@ public class ThumbnailController implements JpoDropTargetDropEventHandler {
 
             JpoTransferable transferable;
 
-            if ( Settings.pictureCollection.countSelectedNodes() < 1 ) {
+            if ( Settings.getPictureCollection().countSelectedNodes() < 1 ) {
                 Object[] nodes = { myNode };
                 transferable = new JpoTransferable( nodes );
             } else {
-                transferable = new JpoTransferable( Settings.pictureCollection.getSelectedNodes() );
+                transferable = new JpoTransferable( Settings.getPictureCollection().getSelectedNodes() );
             }
 
             try {
@@ -667,7 +667,7 @@ public class ThumbnailController implements JpoDropTargetDropEventHandler {
          */
         @Override
         public void dragDropEnd( DragSourceDropEvent event ) {
-            Settings.pictureCollection.clearSelection();
+            Settings.getPictureCollection().clearSelection();
         }
     }
 

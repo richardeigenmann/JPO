@@ -76,8 +76,8 @@ public class ResizableJFrameTest {
         final JPanel p = new JPanel();
         p.setLayout( new BorderLayout() );
 
-        final ResizableJFrame rjf = new ResizableJFrame( p );
-        rjf.setDefaultCloseOperation( JFrame.DISPOSE_ON_CLOSE );
+        final ResizableJFrame resizableJFrame = new ResizableJFrame( p );
+        resizableJFrame.setDefaultCloseOperation( JFrame.DISPOSE_ON_CLOSE );
 
         JPanel buttonPanel = new JPanel();
         JButton fullScreen = new JButton( "FullScreen" );
@@ -85,7 +85,7 @@ public class ResizableJFrameTest {
 
             @Override
             public void actionPerformed( ActionEvent e ) {
-                rjf.resizeTo( WINDOW_FULLSCREEN );
+                resizableJFrame.resizeTo( WINDOW_FULLSCREEN );
             }
         } );
         buttonPanel.add( fullScreen );
@@ -95,7 +95,7 @@ public class ResizableJFrameTest {
 
             @Override
             public void actionPerformed( ActionEvent e ) {
-                rjf.resizeTo( WINDOW_DEFAULT );
+                resizableJFrame.resizeTo( WINDOW_DEFAULT );
 
             }
         } );
@@ -106,7 +106,7 @@ public class ResizableJFrameTest {
 
             @Override
             public void actionPerformed( ActionEvent e ) {
-                rjf.resizeTo( WINDOW_LEFT );
+                resizableJFrame.resizeTo( WINDOW_LEFT );
             }
         } );
         buttonPanel.add( leftSize );
@@ -116,7 +116,7 @@ public class ResizableJFrameTest {
 
             @Override
             public void actionPerformed( ActionEvent e ) {
-                rjf.resizeTo( WINDOW_TOP_LEFT );
+                resizableJFrame.resizeTo( WINDOW_TOP_LEFT );
 
             }
         } );
@@ -127,7 +127,7 @@ public class ResizableJFrameTest {
 
             @Override
             public void actionPerformed( ActionEvent e ) {
-                rjf.resizeTo( WINDOW_BOTTOM_LEFT );
+                resizableJFrame.resizeTo( WINDOW_BOTTOM_LEFT );
 
             }
         } );
@@ -138,7 +138,7 @@ public class ResizableJFrameTest {
 
             @Override
             public void actionPerformed( ActionEvent e ) {
-                rjf.resizeTo( WINDOW_RIGHT );
+                resizableJFrame.resizeTo( WINDOW_RIGHT );
             }
         } );
         buttonPanel.add( rightSize );
@@ -148,7 +148,7 @@ public class ResizableJFrameTest {
 
             @Override
             public void actionPerformed( ActionEvent e ) {
-                rjf.resizeTo( WINDOW_TOP_RIGHT );
+                resizableJFrame.resizeTo( WINDOW_TOP_RIGHT );
             }
         } );
         buttonPanel.add( topRightSize );
@@ -158,27 +158,27 @@ public class ResizableJFrameTest {
 
             @Override
             public void actionPerformed( ActionEvent e ) {
-                rjf.resizeTo( WINDOW_BOTTOM_RIGHT );
+                resizableJFrame.resizeTo( WINDOW_BOTTOM_RIGHT );
             }
         } );
         buttonPanel.add( bottomRightSize );
 
-        JButton decorateButton = new JButton( "Turn on decorations" );
+        JButton decorateButton = new JButton( "Decorate" );
         decorateButton.addActionListener( new ActionListener() {
 
             @Override
             public void actionPerformed( ActionEvent e ) {
-                rjf.switchDecorations( true );
+                resizableJFrame.switchDecorations( true );
             }
         } );
         buttonPanel.add( decorateButton );
 
-        JButton undecorateButton = new JButton( "Turn off decorations" );
+        JButton undecorateButton = new JButton( "Undecorate" );
         undecorateButton.addActionListener( new ActionListener() {
 
             @Override
             public void actionPerformed( ActionEvent e ) {
-                rjf.switchDecorations( false );
+                resizableJFrame.switchDecorations( false );
             }
         } );
         buttonPanel.add( undecorateButton );
@@ -201,7 +201,7 @@ public class ResizableJFrameTest {
         final JScrollPane jsp = new JScrollPane( jta );
         p.add( jsp, BorderLayout.CENTER );
 
-        rjf.validate();
+        resizableJFrame.validate();
 
         jta.setText( ScreenHelper.explainGraphicsEnvironment().toString() );
 

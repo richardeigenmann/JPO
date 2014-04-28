@@ -603,7 +603,7 @@ public class Tools {
         //  search for other picture nodes in the tree using this image file
         SortableDefaultMutableTreeNode node;
         Object nodeObject;
-        Enumeration e = Settings.pictureCollection.getRootNode().preorderEnumeration();
+        Enumeration e = Settings.getPictureCollection().getRootNode().preorderEnumeration();
         while ( e.hasMoreElements() ) {
             node = (SortableDefaultMutableTreeNode) e.nextElement();
             nodeObject = node.getUserObject();

@@ -171,8 +171,8 @@ public class GroupPopupMenu extends JPopupMenu {
                 @Override
                 public void actionPerformed( ActionEvent e ) {
                     List<SortableDefaultMutableTreeNode> actionNodes = new ArrayList<>();
-                    if ( ( Settings.pictureCollection.countSelectedNodes() > 0 ) && ( Settings.pictureCollection.isSelected( popupNode ) ) ) {
-                        actionNodes.addAll( Settings.pictureCollection.getSelectedNodesAsList() );
+                    if ( ( Settings.getPictureCollection().countSelectedNodes() > 0 ) && ( Settings.getPictureCollection().isSelected( popupNode ) ) ) {
+                        actionNodes.addAll( Settings.getPictureCollection().getSelectedNodesAsList() );
                     } else {
                         actionNodes.add( popupNode );
                     }
@@ -357,8 +357,8 @@ public class GroupPopupMenu extends JPopupMenu {
                 @Override
                 public void actionPerformed( ActionEvent event ) {
                     List<SortableDefaultMutableTreeNode> actionNodes = new ArrayList<>();
-                    if ( ( Settings.pictureCollection.countSelectedNodes() > 0 ) && ( Settings.pictureCollection.isSelected( popupNode ) ) ) {
-                        actionNodes.addAll( Settings.pictureCollection.getSelectedNodesAsList() );
+                    if ( ( Settings.getPictureCollection().countSelectedNodes() > 0 ) && ( Settings.getPictureCollection().isSelected( popupNode ) ) ) {
+                        actionNodes.addAll( Settings.getPictureCollection().getSelectedNodesAsList() );
                     } else {
                         actionNodes.add( popupNode );
                     }

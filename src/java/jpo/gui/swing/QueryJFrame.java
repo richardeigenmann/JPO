@@ -215,7 +215,7 @@ public class QueryJFrame
     }
     
     private void executeQuery (TextQuery textQuery) {
-        Settings.pictureCollection.addQueryToTreeModel( textQuery );
+        Settings.getPictureCollection().addQueryToTreeModel( textQuery );
         JpoEventBus.getInstance().post( new ShowQueryRequest( textQuery ));
     }
     

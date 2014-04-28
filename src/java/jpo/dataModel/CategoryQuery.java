@@ -104,7 +104,7 @@ public class CategoryQuery implements Query {
      */
     @Override
     public String toString() {
-        return Settings.jpoResources.getString( "CategoryQuery" ) + Settings.pictureCollection.getCategory( key );
+        return Settings.jpoResources.getString( "CategoryQuery" ) + Settings.getPictureCollection().getCategory( key );
     }
 
     /**
@@ -113,6 +113,6 @@ public class CategoryQuery implements Query {
     @Override
     public void refresh() {
         resultList = null;
-        resultList = PictureCollection.getCategoryUsageNodes( key, Settings.pictureCollection.getRootNode() );
+        resultList = PictureCollection.getCategoryUsageNodes( key, Settings.getPictureCollection().getRootNode() );
     }
 }

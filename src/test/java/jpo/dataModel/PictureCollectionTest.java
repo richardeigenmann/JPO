@@ -54,6 +54,7 @@ public class PictureCollectionTest
 
     /**
      * Set up tests
+     *
      * @throws Exception can throw an Exception
      */
     @Override
@@ -113,7 +114,7 @@ public class PictureCollectionTest
      * Test remembering the xml file
      */
     public void testSetXmlFile() {
-        File f = new File( "/dir/test.xml" );
+        File f = new File( "dir/test.xml" );
         pictureCollection.setXmlFile( f );
         File f2 = pictureCollection.getXmlFile();
         assertEquals( "Checking that we get the same file back that we put in", f, f2 );
@@ -347,7 +348,7 @@ public class PictureCollectionTest
 
         //TODO: review this; why does the root node, the model and the picturecollection have to be tied together
         // via the Settings?
-        Settings.pictureCollection = pictureCollection;
+        Settings.setPictureCollection( pictureCollection );
         assertEquals( "Before updating the description we should have 0 nodes changed: ", 0, nodeschanged );
         pi1.setDescription( "Changed Description" );
         try {

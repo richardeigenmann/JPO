@@ -27,6 +27,7 @@ public class NodeStatisticsBean {
 
     /**
      * The number of nodes
+     *
      * @return the number of nodes
      */
     public String getNumberOfNodes() {
@@ -35,6 +36,7 @@ public class NodeStatisticsBean {
 
     /**
      * Remembers the number of nodes
+     *
      * @param numberOfNodes the number of nodes
      */
     public void setNumberOfNodes( String numberOfNodes ) {
@@ -45,15 +47,18 @@ public class NodeStatisticsBean {
 
     /**
      * Returns the number of groups
+     *
      * @return the number of groups
      */
     public String getNumberOfGroups() {
         return numberOfGroups;
     }
-/**
- * Remembers the number of group nodes
- * @param numberOfGroups the number of group nodes
- */
+
+    /**
+     * Remembers the number of group nodes
+     *
+     * @param numberOfGroups the number of group nodes
+     */
     public void setNumberOfGroups( String numberOfGroups ) {
         this.numberOfGroups = numberOfGroups;
     }
@@ -62,6 +67,7 @@ public class NodeStatisticsBean {
 
     /**
      * Returns the number of pictures
+     *
      * @return the number of pictures
      */
     public String getNumberOfPictures() {
@@ -70,6 +76,7 @@ public class NodeStatisticsBean {
 
     /**
      * Sets the number of pictures
+     *
      * @param numberOfPictures the number of pictures
      */
     public void setNumberOfPictures( String numberOfPictures ) {
@@ -80,6 +87,7 @@ public class NodeStatisticsBean {
 
     /**
      * Returns a string with the memory occupied by the pictures
+     *
      * @return a string with the bytes used by the pictures
      */
     public String getSizeOfPictures() {
@@ -88,6 +96,7 @@ public class NodeStatisticsBean {
 
     /**
      * Sets the sie of Pictures string
+     *
      * @param sizeOfPictures the new string
      */
     public void setSizeOfPictures( String sizeOfPictures ) {
@@ -96,29 +105,59 @@ public class NodeStatisticsBean {
 
     private String freeMemory = "";
 
+    /**
+     * Returns the free memory
+     *
+     * @return the free memory string
+     */
     public String getFreeMemory() {
         return freeMemory;
     }
 
+    /**
+     * Stores the free memory string
+     *
+     * @param freeMemory the free memory string
+     */
     public void setFreeMemory( String freeMemory ) {
         this.freeMemory = freeMemory;
     }
 
     private String queueCount = "";
 
+    /**
+     * Returns the number of thumbnails on the queue
+     *
+     * @return the number of thumbnails on the queue
+     */
     public String getQueueCount() {
         return queueCount;
     }
 
+    /**
+     * Stores the number of thumbnails on the queue
+     *
+     * @param queueCount the number of thumbnails on the queue
+     */
     public void setQueueCount( String queueCount ) {
         this.queueCount = queueCount;
     }
     private String selectedCount = "";
 
+    /**
+     * Returns the number of selected nodes
+     *
+     * @return the number of selected nodes
+     */
     public String getSelectedCount() {
         return selectedCount;
     }
 
+    /**
+     * Stores the number of selected nodes
+     *
+     * @param selectedCount the number of selected nodes
+     */
     public void setSelectedCount( String selectedCount ) {
         this.selectedCount = selectedCount;
     }

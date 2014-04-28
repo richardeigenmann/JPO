@@ -44,7 +44,7 @@ public class FlatGroupNavigator
      */
     public FlatGroupNavigator( SortableDefaultMutableTreeNode groupNode ) {
         this.groupNode = groupNode;
-        Settings.pictureCollection.getTreeModel().addTreeModelListener( this );
+        Settings.getPictureCollection().getTreeModel().addTreeModelListener( this );
         buildFromScratch();
     }
 
@@ -63,7 +63,7 @@ public class FlatGroupNavigator
     @Override
     public void getRid() {
         LOGGER.info( "Deregistering the Navigator from the data model notifications." );
-        Settings.pictureCollection.getTreeModel().removeTreeModelListener( this );
+        Settings.getPictureCollection().getTreeModel().removeTreeModelListener( this );
         groupNode = null;
         super.getRid();
     }

@@ -290,7 +290,7 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
                 boolean shiftpressed = ( e.getModifiersEx() & MouseEvent.SHIFT_DOWN_MASK ) == MouseEvent.SHIFT_DOWN_MASK;
 
                 if ( !( ctrlpressed | shiftpressed ) ) {
-                    Settings.pictureCollection.clearSelection();
+                    Settings.getPictureCollection().clearSelection();
                 }
                 Rectangle thumbnailRectangle = new Rectangle();
                 SortableDefaultMutableTreeNode n;
@@ -299,7 +299,7 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
                     if ( r.intersects( thumbnailRectangle ) ) {
                         n = thumbnailController.getNode();
                         if ( n != null ) {
-                            Settings.pictureCollection.addToSelectedNodes( n );
+                            Settings.getPictureCollection().addToSelectedNodes( n );
                         }
                     }
                 }
@@ -387,7 +387,9 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
 
             @Override
             public void run() {
-                show( new GroupNavigator( event.getNode() ) );
+                GroupNavigator groupNavigator = new GroupNavigator();
+                groupNavigator.setNode( event.getNode() );
+                show( groupNavigator );
             }
         };
         if ( SwingUtilities.isEventDispatchThread() ) {
@@ -436,7 +438,7 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
             groupInfo.addGroupInfoChangeListener( myGroupInfoChangeListener );
         }
 
-        Settings.pictureCollection.clearSelection();
+        Settings.getPictureCollection().clearSelection();
         thumbnailJScrollPane.getVerticalScrollBar().setValue( 0 );
         startIndex = 0;
         curPage = 1;
@@ -601,7 +603,7 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
         for ( ThumbnailController thumbnailController : thumbnailControllers ) {
             node = thumbnailController.getNode();
             if ( node != null ) {
-                Settings.pictureCollection.addToSelectedNodes( node );
+                Settings.getPictureCollection().addToSelectedNodes( node );
             }
         }
     }

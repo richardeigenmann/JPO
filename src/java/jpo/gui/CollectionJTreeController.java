@@ -69,7 +69,7 @@ public class CollectionJTreeController {
     public CollectionJTreeController() {
         Tools.checkEDT();
 
-        collectionJTree.setModel( Settings.pictureCollection.getTreeModel() );
+        collectionJTree.setModel( Settings.getPictureCollection().getTreeModel() );
         collectionJTree.setEditable( true ); // doing this in the controller as it might not always be desired (like in the CameraDownloadWizard)
         collectionJTree.getSelectionModel().setSelectionMode( TreeSelectionModel.SINGLE_TREE_SELECTION );
         collectionJTree.setTransferHandler( new MyTransferHandler() );

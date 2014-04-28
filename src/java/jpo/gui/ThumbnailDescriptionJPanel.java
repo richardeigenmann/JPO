@@ -135,7 +135,7 @@ public class ThumbnailDescriptionJPanel
 
     private void initComponents() {
         // attach this panel to the tree model so that it is notified about changes
-        Settings.pictureCollection.getTreeModel().addTreeModelListener( this );
+        Settings.getPictureCollection().getTreeModel().addTreeModelListener( this );
 
         setBackground( Color.WHITE );
 
@@ -335,7 +335,7 @@ public class ThumbnailDescriptionJPanel
      * the selection
      */
     public void showSlectionStatus() {
-        if ( Settings.pictureCollection.isSelected( referringNode ) ) {
+        if ( Settings.getPictureCollection().isSelected( referringNode ) ) {
             showAsSelected();
         } else {
             showAsUnselected();

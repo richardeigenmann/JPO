@@ -19,6 +19,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JRadioButton;
 import javax.swing.SwingUtilities;
+import javax.swing.Timer;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.MouseInputAdapter;
@@ -75,7 +76,6 @@ import jpo.gui.swing.PicturePane;
  */
 public class PictureViewer
         implements PictureViewerActions, ScalablePictureListener,
-        AdvanceTimerInterface,
         PictureInfoChangeListener,
         NodeNavigatorListener {
 
@@ -197,7 +197,9 @@ public class PictureViewer
 
             @Override
             public void stateChanged( ChangeEvent ce ) {
-                setTimerDelay( pictureFrame.getPictureViewerNavBar().speedSlider.getValue() );
+                if ( !pictureFrame.getPictureViewerNavBar().speedSlider.getValueIsAdjusting() ) {
+                    setTimerDelay( pictureFrame.getPictureViewerNavBar().speedSlider.getValue() );
+                }
             }
         } );
 
@@ -256,9 +258,10 @@ public class PictureViewer
      */
     @Override
     public void closeViewer() {
-        //getRid of the old navigator
-        mySetOfNodes.removeNodeNavigatorListener( this );
-        mySetOfNodes.getRid(); // help Grabage collection remove the listener
+        if ( mySetOfNodes != null ) {
+            mySetOfNodes.removeNodeNavigatorListener( this );
+            mySetOfNodes.getRid(); // help Grabage collection remove the listener
+        }
         stopTimer();
         pictureFrame.myJFrame.dispose();
     }
@@ -297,11 +300,7 @@ public class PictureViewer
      * the collection
      */
     private final boolean cycleAll = true;
-    /**
-     * the timer that can call back into the object with the instruction to load
-     * the next image
-     */
-    private AdvanceTimer advanceTimer;
+
     /**
      * popup menu for window mode changing
      */
@@ -627,7 +626,7 @@ public class PictureViewer
             if ( randomAdvanceJRadioButton.isSelected() ) {
                 if ( useAllPicturesJRadioButton.isSelected() ) //addAllPictureNodes( pictureNodesArrayList, (SortableDefaultMutableTreeNode) currentNode.getRoot()  );
                 {
-                    mySetOfNodes = new RandomNavigator( Settings.pictureCollection.getRootNode().getChildPictureNodes( true ), String.format( "Randomised pictures from %s", Settings.pictureCollection.getRootNode().toString() ) );
+                    mySetOfNodes = new RandomNavigator( Settings.getPictureCollection().getRootNode().getChildPictureNodes( true ), String.format( "Randomised pictures from %s", Settings.getPictureCollection().getRootNode().toString() ) );
                 } else //addAllPictureNodes( pictureNodesArrayList, (SortableDefaultMutableTreeNode) currentNode.getParent() );
                 {
                     mySetOfNodes = new RandomNavigator( ( (SortableDefaultMutableTreeNode) getCurrentNode().getParent() ).getChildPictureNodes( true ),
@@ -655,12 +654,30 @@ public class PictureViewer
     }
 
     /**
+     * the timer that can call back into the object with the instruction to load
+     * the next image
+     */
+    //private AdvanceTimer advanceTimer;
+    private Timer advanceTimer;
+
+    /**
      * This method sets up the Advance Timer
      *
      * @param seconds
      */
     public void startAdvanceTimer( int seconds ) {
-        advanceTimer = new AdvanceTimer( this, seconds );
+
+        Tools.checkEDT();
+        advanceTimer = new Timer( seconds * 1000, new ActionListener() {
+
+            @Override
+            public void actionPerformed( ActionEvent e ) {
+                if ( readyToAdvance() ) {
+                    requestNextPicture();
+                }
+            }
+        } );
+        advanceTimer.start();
         pictureFrame.getPictureViewerNavBar().clockJButton.setClockBusy();
         pictureFrame.getPictureViewerNavBar().showDelaySilder();
     }
@@ -668,12 +685,12 @@ public class PictureViewer
     /**
      * This method sets up the Advance Timer
      *
-     * @param delay the delay (in seconds?)
+     * @param delay the delay (in seconds)
      */
     @Override
     public void setTimerDelay( int delay ) {
         if ( advanceTimer != null ) {
-            advanceTimer.setDelay( delay );
+            advanceTimer.setDelay( delay * 1000 );
         }
     }
 
@@ -682,7 +699,7 @@ public class PictureViewer
      */
     public void stopTimer() {
         if ( advanceTimer != null ) {
-            advanceTimer.stopThread();
+            advanceTimer.stop();
         }
 
         advanceTimer = null;
@@ -694,20 +711,11 @@ public class PictureViewer
      * picture or not This important to avoid the submission of new picture
      * requests before the old ones have been met.
      */
-    @Override
     public boolean readyToAdvance() {
         ScalablePictureStatus status = pictureJPanel.getScalablePicture().getStatusCode();
         return ( status == SCALABLE_PICTURE_READY ) || ( status == SCALABLE_PICTURE_ERROR );
     }
 
-    /**
-     * this method is invoked from the timer thread that notifies our object
-     * that it is time to advance to the next picture.
-     */
-    @Override
-    public void requestAdvance() {
-        requestNextPicture();
-    }
 
     /**
      * this method gets invoked from the PicturePane object to notify of status

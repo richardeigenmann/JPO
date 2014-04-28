@@ -23,11 +23,11 @@ public class NodeStatisticsTest extends TestCase {
 
     private SortableDefaultMutableTreeNode rootNode;
 
-    private GroupInfo gr1 = new GroupInfo( "Group1" );
+    private final GroupInfo gr1 = new GroupInfo( "Group1" );
 
     private SortableDefaultMutableTreeNode group1;
 
-    private GroupInfo gr2 = new GroupInfo( "Group2" );
+    private final GroupInfo gr2 = new GroupInfo( "Group2" );
 
     private SortableDefaultMutableTreeNode group2;
 

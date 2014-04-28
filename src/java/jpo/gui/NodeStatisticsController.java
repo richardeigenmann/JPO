@@ -63,7 +63,7 @@ public class NodeStatisticsController {
      *  @param  statisticsNode   The node that is being analysed.
      */
     public void updateStats( DefaultMutableTreeNode statisticsNode ) {
-        if ( Settings.pictureCollection.fileLoading ) {
+        if ( Settings.getPictureCollection().fileLoading ) {
             LOGGER.info( "Still busy loading the file. Aborting" );
             return;
         }
@@ -96,7 +96,7 @@ public class NodeStatisticsController {
                 if ( Settings.writeLog ) {
                     nodeStatisticsBean.setFreeMemory( Tools.freeMemory() );
                     nodeStatisticsBean.setQueueCount( Settings.jpoResources.getString( "queCountJLabel" ) + ThumbnailCreationQueue.size() );
-                    nodeStatisticsBean.setSelectedCount( String.format( "Selected: %d", Settings.pictureCollection.getSelectedNodes().length ) ); 
+                    nodeStatisticsBean.setSelectedCount( String.format( "Selected: %d", Settings.getPictureCollection().getSelectedNodes().length ) ); 
                 }
                 return null;
             }

@@ -103,12 +103,12 @@ public class GroupInfo
      */
     private void sendGroupNameChangedEvent() {
         LOGGER.fine( "preparing to send GroupName changed event" );
-        if ( ( Settings.pictureCollection != null ) && ( Settings.pictureCollection.getSendModelUpdates() ) ) {
+        if ( ( Settings.getPictureCollection() != null ) && ( Settings.getPictureCollection().getSendModelUpdates() ) ) {
             GroupInfoChangeEvent gice = new GroupInfoChangeEvent( this );
             gice.setGroupNameChanged();
             sendGroupInfoChangedEvent( gice );
             LOGGER.fine( "sent description changed event" );
-            Settings.pictureCollection.setUnsavedUpdates();
+            Settings.getPictureCollection().setUnsavedUpdates();
         }
     }
 
@@ -220,7 +220,7 @@ public class GroupInfo
      * @param groupInfoChangeEvent The Event we want to notify.
      */
     private void sendGroupInfoChangedEvent( GroupInfoChangeEvent groupInfoChangeEvent ) {
-        if ( Settings.pictureCollection.getSendModelUpdates() ) {
+        if ( Settings.getPictureCollection().getSendModelUpdates() ) {
             synchronized ( groupInfoListeners ) {
                 for ( GroupInfoChangeListener groupInfoChangeListener : groupInfoListeners ) {
                     groupInfoChangeListener.groupInfoChangeEvent( groupInfoChangeEvent );

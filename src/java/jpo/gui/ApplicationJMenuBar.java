@@ -331,7 +331,7 @@ public class ApplicationJMenuBar extends JMenuBar {
 
             @Override
             public void actionPerformed( ActionEvent e ) {
-                JpoEventBus.getInstance().post( new ChooseAndAddPicturesToGroupRequest( Settings.pictureCollection.getRootNode() ) );
+                JpoEventBus.getInstance().post( new ChooseAndAddPicturesToGroupRequest( Settings.getPictureCollection().getRootNode() ) );
             }
         } );
         FileJMenu.add( FileAddJMenuItem );
@@ -407,7 +407,7 @@ public class ApplicationJMenuBar extends JMenuBar {
 
             @Override
             public void actionPerformed( ActionEvent e ) {
-                JpoEventBus.getInstance().post( new OpenSearchDialogRequest( Settings.pictureCollection.getRootNode() ) );
+                JpoEventBus.getInstance().post( new OpenSearchDialogRequest( Settings.getPictureCollection().getRootNode() ) );
             }
         } );
         EditJMenu.add( EditFindJMenuItem );
@@ -448,7 +448,7 @@ public class ApplicationJMenuBar extends JMenuBar {
 
             @Override
             public void actionPerformed( ActionEvent e ) {
-                JpoEventBus.getInstance().post( new StartDoublePanelSlideshowRequest( Settings.pictureCollection.getRootNode() ) );
+                JpoEventBus.getInstance().post( new StartDoublePanelSlideshowRequest( Settings.getPictureCollection().getRootNode() ) );
             }
         } );
         actionJMenu.add( RandomSlideshowJMenuItem );

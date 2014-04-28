@@ -277,12 +277,12 @@ public class PictureInfo implements Serializable {
      */
     private void sendDescriptionChangedEvent() {
         LOGGER.fine( "preparing to send description changed event" );
-        if ( Settings.pictureCollection.getSendModelUpdates() ) {
+        if ( Settings.getPictureCollection().getSendModelUpdates() ) {
             PictureInfoChangeEvent pce = new PictureInfoChangeEvent( this );
             pce.setDescriptionChanged();
             sendPictureInfoChangedEvent( pce );
             LOGGER.fine( "sent description changed event" );
-            Settings.pictureCollection.setUnsavedUpdates();
+            Settings.getPictureCollection().setUnsavedUpdates();
         }
     }
 
@@ -416,11 +416,11 @@ public class PictureInfo implements Serializable {
      * that the highres location was updated.
      */
     private void sendHighresLocationChangedEvent() {
-        if ( Settings.pictureCollection.getSendModelUpdates() ) {
+        if ( Settings.getPictureCollection().getSendModelUpdates() ) {
             PictureInfoChangeEvent pce = new PictureInfoChangeEvent( this );
             pce.setHighresLocationChanged();
             sendPictureInfoChangedEvent( pce );
-            Settings.pictureCollection.setUnsavedUpdates();
+            Settings.getPictureCollection().setUnsavedUpdates();
         }
     }
 
@@ -493,11 +493,11 @@ public class PictureInfo implements Serializable {
      * that the checksum was updated.
      */
     private void sendChecksumChangedEvent() {
-        if ( Settings.pictureCollection.getSendModelUpdates() ) {
+        if ( Settings.getPictureCollection().getSendModelUpdates() ) {
             PictureInfoChangeEvent pce = new PictureInfoChangeEvent( this );
             pce.setChecksumChanged();
             sendPictureInfoChangedEvent( pce );
-            Settings.pictureCollection.setUnsavedUpdates();
+            Settings.getPictureCollection().setUnsavedUpdates();
         }
     }
 
@@ -540,7 +540,7 @@ public class PictureInfo implements Serializable {
      * that the thumbnail was updated.
      */
     public void sendThumbnailChangedEvent() {
-        if ( Settings.pictureCollection.getSendModelUpdates() ) {
+        if ( Settings.getPictureCollection().getSendModelUpdates() ) {
             PictureInfoChangeEvent pce = new PictureInfoChangeEvent( this );
             pce.setThumbnailChanged();
             sendPictureInfoChangedEvent( pce );
@@ -591,11 +591,11 @@ public class PictureInfo implements Serializable {
      * that the film reference was updated.
      */
     private void sendFilmReferenceChangedEvent() {
-        if ( Settings.pictureCollection.getSendModelUpdates() ) {
+        if ( Settings.getPictureCollection().getSendModelUpdates() ) {
             PictureInfoChangeEvent pce = new PictureInfoChangeEvent( this );
             pce.setFilmReferenceChanged();
             sendPictureInfoChangedEvent( pce );
-            Settings.pictureCollection.setUnsavedUpdates();
+            Settings.getPictureCollection().setUnsavedUpdates();
         }
     }
 
@@ -684,11 +684,11 @@ public class PictureInfo implements Serializable {
      * that the film reference was updated.
      */
     private void sendCreationTimeChangedEvent() {
-        if ( Settings.pictureCollection.getSendModelUpdates() ) {
+        if ( Settings.getPictureCollection().getSendModelUpdates() ) {
             PictureInfoChangeEvent pce = new PictureInfoChangeEvent( this );
             pce.setCreationTimeChanged();
             sendPictureInfoChangedEvent( pce );
-            Settings.pictureCollection.setUnsavedUpdates();
+            Settings.getPictureCollection().setUnsavedUpdates();
         }
     }
 
@@ -737,11 +737,11 @@ public class PictureInfo implements Serializable {
      * that the comment was updated.
      */
     private void sendCommentChangedEvent() {
-        if ( Settings.pictureCollection.getSendModelUpdates() ) {
+        if ( Settings.getPictureCollection().getSendModelUpdates() ) {
             PictureInfoChangeEvent pce = new PictureInfoChangeEvent( this );
             pce.setCommentChanged();
             sendPictureInfoChangedEvent( pce );
-            Settings.pictureCollection.setUnsavedUpdates();
+            Settings.getPictureCollection().setUnsavedUpdates();
         }
     }
 
@@ -790,11 +790,11 @@ public class PictureInfo implements Serializable {
      * that the photographer was updated.
      */
     private void sendPhotographerChangedEvent() {
-        if ( Settings.pictureCollection.getSendModelUpdates() ) {
+        if ( Settings.getPictureCollection().getSendModelUpdates() ) {
             PictureInfoChangeEvent pce = new PictureInfoChangeEvent( this );
             pce.setPhotographerChanged();
             sendPictureInfoChangedEvent( pce );
-            Settings.pictureCollection.setUnsavedUpdates();
+            Settings.getPictureCollection().setUnsavedUpdates();
         }
     }
 
@@ -842,11 +842,11 @@ public class PictureInfo implements Serializable {
      * that the copyright holder was updated.
      */
     private void sendCopyrightHolderChangedEvent() {
-        if ( Settings.pictureCollection.getSendModelUpdates() ) {
+        if ( Settings.getPictureCollection().getSendModelUpdates() ) {
             PictureInfoChangeEvent pce = new PictureInfoChangeEvent( this );
             pce.setCopyrightHolderChanged();
             sendPictureInfoChangedEvent( pce );
-            Settings.pictureCollection.setUnsavedUpdates();
+            Settings.getPictureCollection().setUnsavedUpdates();
         }
     }
 
@@ -933,11 +933,11 @@ public class PictureInfo implements Serializable {
      * that the copyright holder was updated.
      */
     private void sendRotationChangedEvent() {
-        if ( Settings.pictureCollection.getSendModelUpdates() ) {
+        if ( Settings.getPictureCollection().getSendModelUpdates() ) {
             PictureInfoChangeEvent pce = new PictureInfoChangeEvent( this );
             pce.setRotationChanged();
             sendPictureInfoChangedEvent( pce );
-            Settings.pictureCollection.setUnsavedUpdates();
+            Settings.getPictureCollection().setUnsavedUpdates();
         }
     }
 
@@ -1033,11 +1033,11 @@ public class PictureInfo implements Serializable {
      * that the copyright holder was updated.
      */
     private void sendLatLngChangedEvent() {
-        if ( Settings.pictureCollection.getSendModelUpdates() ) {
+        if ( Settings.getPictureCollection().getSendModelUpdates() ) {
             PictureInfoChangeEvent pce = new PictureInfoChangeEvent( this );
             pce.setLatLngChanged();
             sendPictureInfoChangedEvent( pce );
-            Settings.pictureCollection.setUnsavedUpdates();
+            Settings.getPictureCollection().setUnsavedUpdates();
         }
     }
 
@@ -1167,11 +1167,11 @@ public class PictureInfo implements Serializable {
      * that the copyright holder was updated.
      */
     private void sendCategoryAssignmentsChangedEvent() {
-        if ( Settings.pictureCollection.getSendModelUpdates() ) {
+        if ( Settings.getPictureCollection().getSendModelUpdates() ) {
             PictureInfoChangeEvent pce = new PictureInfoChangeEvent( this );
             pce.setCategoryAssignmentsChanged();
             sendPictureInfoChangedEvent( pce );
-            Settings.pictureCollection.setUnsavedUpdates();
+            Settings.getPictureCollection().setUnsavedUpdates();
         }
     }
 
@@ -1282,7 +1282,7 @@ public class PictureInfo implements Serializable {
      * @param pce The Event we want to notify.
      */
     private void sendPictureInfoChangedEvent( PictureInfoChangeEvent pce ) {
-        if ( Settings.pictureCollection.getSendModelUpdates() ) {
+        if ( Settings.getPictureCollection().getSendModelUpdates() ) {
             synchronized ( pictureInfoListeners ) {
                 for ( PictureInfoChangeListener pictureInfoChangeListener : pictureInfoListeners ) {
                     pictureInfoChangeListener.pictureInfoChangeEvent( pce );

@@ -104,7 +104,7 @@ public class DuplicatesQuery
         List<SortableDefaultMutableTreeNode> results = new ArrayList<>();
         List<SortableDefaultMutableTreeNode> nodeList = new ArrayList<>();
         SortableDefaultMutableTreeNode pictureNode;
-        for ( Enumeration e = Settings.pictureCollection.getRootNode().preorderEnumeration(); e.hasMoreElements(); ) {
+        for ( Enumeration e = Settings.getPictureCollection().getRootNode().preorderEnumeration(); e.hasMoreElements(); ) {
             pictureNode = (SortableDefaultMutableTreeNode) e.nextElement();
             if ( pictureNode.getUserObject() instanceof PictureInfo ) {
                 nodeList.add( pictureNode );

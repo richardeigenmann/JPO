@@ -59,8 +59,6 @@ public class JpoCache {
             highresMemoryCache = JCS.getInstance( "highresCache" );
             thumbnailMemoryAndDiskCache = JCS.getInstance( "thumbnailCache" );
         } catch ( CacheException ex ) {
-            highresMemoryCache = null;
-            thumbnailMemoryAndDiskCache = null;
             LOGGER.severe( ex.getLocalizedMessage() );
         }
     }
@@ -104,14 +102,14 @@ public class JpoCache {
                 Path imagePath = Paths.get( url.toURI() );
                 FileTime lastModification = ( Files.getLastModifiedTime( imagePath ) );
                 if ( lastModification.compareTo( imageBytes.getLastModification() ) > 0 ) {
-                    imageBytes = new ImageBytes( url.toString(), IOUtils.toByteArray( url.openStream() ) );
+                    imageBytes = new ImageBytes(  IOUtils.toByteArray( url.openStream() ) );
 
                 }
             } catch ( URISyntaxException | IOException ex ) {
                 LOGGER.severe( ex.getLocalizedMessage() );
             }
         } else {
-            imageBytes = new ImageBytes( url.toString(), IOUtils.toByteArray( url.openStream() ) );
+            imageBytes = new ImageBytes( IOUtils.toByteArray( url.openStream() ) );
             try {
                 highresMemoryCache.put( url, imageBytes );
             } catch ( CacheException ex ) {
@@ -198,7 +196,7 @@ public class JpoCache {
         scalablePicture.scalePicture();
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         scalablePicture.writeScaledJpg( bos );
-        ImageBytes imageBytes = new ImageBytes( key, bos.toByteArray() );
+        ImageBytes imageBytes = new ImageBytes( bos.toByteArray() );
 
         try {
             Path imagePath = Paths.get( imageURL.toURI() );
@@ -256,7 +254,7 @@ public class JpoCache {
         StringBuilder sb = new StringBuilder( "Group-" );
         for ( int i = 0; ( i < numberOfPics ) && ( i < childPictureNodes.size() ); i++ ) {
             PictureInfo pictureInfo = (PictureInfo) childPictureNodes.get( i ).getUserObject();
-            sb.append( String.format( "%s-%fdeg", pictureInfo.getHighresURL().toString(), pictureInfo.getRotation() ) );
+            sb.append( String.format( "%s-%fdeg-", pictureInfo.getHighresURL().toString(), pictureInfo.getRotation() ) );
         }
 
         String key = sb.toString();
@@ -295,7 +293,7 @@ public class JpoCache {
      * and creating a folder icon with embedded images
      */
     private ImageBytes createGroupThumbnailAndStoreInCache( String key, int numberOfPics, List<SortableDefaultMutableTreeNode> childPictureNodes ) throws IOException {
-        BufferedImage groupThumbnail = ImageIO.read( new BufferedInputStream( Settings.CLASS_LOADER.getResourceAsStream( "exif-test-samsung-s4-roation-0.jpg" ) ) );
+        BufferedImage groupThumbnail = ImageIO.read( new BufferedInputStream( Settings.CLASS_LOADER.getResourceAsStream( "jpo/images/icon_folder_large.jpg" ) ) );
         Graphics2D groupThumbnailGraphics = groupThumbnail.createGraphics();
 
         int leftMargin = 15;
@@ -333,7 +331,7 @@ public class JpoCache {
 
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         ScalablePicture.writeJpg( bos, groupThumbnail, 0.8f );
-        ImageBytes imageBytes = new ImageBytes( key, bos.toByteArray() );
+        ImageBytes imageBytes = new ImageBytes( bos.toByteArray() );
 
         imageBytes.setLastModification( mostRecentPictureModification );
 

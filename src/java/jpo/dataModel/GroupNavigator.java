@@ -40,14 +40,6 @@ public class GroupNavigator extends NodeNavigator {
      */
     private SortableDefaultMutableTreeNode myNode;
 
-    /**
-     * Constructs a new Group Browser object for a specific group node
-     *
-     * @param node
-     */
-    public GroupNavigator( SortableDefaultMutableTreeNode node ) {
-        setNode( node );
-    }
 
     /**
      * call this method to specify the node that this GroupNavigator should
@@ -169,7 +161,7 @@ public class GroupNavigator extends NodeNavigator {
             // of the current group
             TreePath myPath = new TreePath( myNode.getPath() );
             if ( myPath.equals( treeModelEvent.getTreePath() ) ) {
-                LOGGER.fine( String.format( "A Node was changed. No need to get excited at the group level. myNode: %s, notification node %s", myPath.toString(), ( (SortableDefaultMutableTreeNode) treeModelEvent.getTreePath().getLastPathComponent() ).toString() ) );
+                LOGGER.fine( String.format( "A Node was changed. No need to get excited at the group level. myNode: %s, notification node %s", myPath.toString(), treeModelEvent.getTreePath().getLastPathComponent().toString() ) );
             }
         }
 
@@ -225,7 +217,7 @@ public class GroupNavigator extends NodeNavigator {
                 // node is the current group
                 TreePath myPath = new TreePath( myNode.getPath() );
                 if ( myPath.equals( treeModelEvent.getTreePath() ) ) {
-                    LOGGER.fine( String.format( "Children were removed from the current node. We must therefore relayout the children; myPath: %s, lastPathComponent: [%s]", myPath.toString(), ( (SortableDefaultMutableTreeNode) treeModelEvent.getTreePath().getLastPathComponent() ).toString() ) );
+                    LOGGER.fine( String.format( "Children were removed from the current node. We must therefore relayout the children; myPath: %s, lastPathComponent: [%s]", myPath.toString(), treeModelEvent.getTreePath().getLastPathComponent().toString() ) );
                     notifyNodeNavigatorListeners();
                 }
             }

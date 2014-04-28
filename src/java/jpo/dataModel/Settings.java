@@ -64,8 +64,24 @@ public class Settings {
      * we will allow multiple collections to be loaded.
      *
      */
-    public static PictureCollection pictureCollection = new PictureCollection();
+    private static PictureCollection pictureCollection = new PictureCollection();
 
+        /**
+     * @return the main pictureCollection
+     */
+    public static PictureCollection getPictureCollection() {
+        return pictureCollection;
+    }
+
+    /**
+     * @param pictureCollection the pictureCollection to set
+     */
+    public static void setPictureCollection( PictureCollection pictureCollection ) {
+        Settings.pictureCollection = pictureCollection;
+    }
+
+    
+    
     /**
      * flag to indicate that debug information should be logged
      */
@@ -504,6 +520,7 @@ public class Settings {
      * Default size for buttons such as OK, cancel etc.
      */
     public static Dimension threeDotButtonDimension = new Dimension( 25, 25 );
+
     
     /**
      * Codes to indicate the field

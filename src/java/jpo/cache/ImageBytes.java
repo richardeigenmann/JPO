@@ -10,19 +10,16 @@ import java.nio.file.attribute.FileTime;
  */
 public class ImageBytes implements Serializable {
 
-    private static final long serialVersionUID = 2;
-    private final String key;
+    private static final long serialVersionUID = 3;
     private long lastModification;
     private final byte[] bytes;
 
     
     /**
      * Constructs a new ImageBytes object with the key and the bytes as read from disk
-     * @param key the Key for the object
      * @param bytes the bytes
      */
-    public ImageBytes( String key, byte[] bytes ) {
-        this.key = key;
+    public ImageBytes(  byte[] bytes ) {
         this.bytes = bytes;
     }
 
