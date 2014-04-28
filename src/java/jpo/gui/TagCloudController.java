@@ -4,7 +4,7 @@ import com.google.common.eventbus.Subscribe;
 import jpo.TagCloud.TagClickListener;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.Set;
 import java.util.logging.Logger;
 import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
@@ -81,9 +81,8 @@ public class TagCloudController implements TagClickListener {
 
     @Override
     public void tagClicked( String key ) {
-        HashSet<SortableDefaultMutableTreeNode> hashSet = descriptionWordMap.getWordNodeMap().get( key );
-        ArrayList<SortableDefaultMutableTreeNode> set = new ArrayList<>( hashSet );
-        StaticNodesQuery query = new StaticNodesQuery( "Word: " + key, set );
+        Set<SortableDefaultMutableTreeNode> set = descriptionWordMap.getWordNodeMap().get( key );
+        StaticNodesQuery query = new StaticNodesQuery( "Word: " + key, new ArrayList<SortableDefaultMutableTreeNode>( set ) );
         JpoEventBus.getInstance().post( new ShowQueryRequest( query ) );
     }
 }

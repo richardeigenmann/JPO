@@ -3,6 +3,7 @@ package jpo.gui;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.RepaintManager;
@@ -22,7 +23,7 @@ import jpotestground.CheckThreadViolationRepaintManager;
 /*
  Jpo.java:  The collection controller object of the JPO application
 
- Copyright (C) 2002 - 2013  Richard Eigenmann.
+ Copyright (C) 2002 - 2014  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -103,7 +104,7 @@ public class Jpo {
             JpoEventBus.getInstance().post( new StartNewCollectionRequest() );
         }
 
-        final ArrayList<ThumbnailCreationFactory> THUMBNAIL_FACTORIES = new ArrayList<>();
+        final List<ThumbnailCreationFactory> THUMBNAIL_FACTORIES = new ArrayList<>();
         for ( int i = 1; i <= Settings.numberOfThumbnailCreationThreads; i++ ) {
             THUMBNAIL_FACTORIES.add( new ThumbnailCreationFactory() );
         }

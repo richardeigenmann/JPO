@@ -55,6 +55,10 @@ public class NodeStatisticsTest extends TestCase {
 
     private SortableDefaultMutableTreeNode picture5;
 
+    /**
+     * Set up tests
+     * @throws Exception 
+     */
     @Override
     protected void setUp() throws Exception {
         rootNode = new SortableDefaultMutableTreeNode();

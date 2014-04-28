@@ -108,7 +108,7 @@ public class CategoryQuery implements Query {
     }
 
     /**
-     * This method retrieves a new ArrayList of nodes that match the category.
+     * This method retrieves a new List of nodes that match the category.
      */
     @Override
     public void refresh() {

@@ -1,6 +1,8 @@
 package jpo.dataModel;
 
-import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.logging.Logger;
 
 /*
@@ -62,33 +64,28 @@ public abstract class NodeNavigator
      */
     @Override
     public void getRid() {
-        relayoutListeners.clear();
+        nodeNavigatorListeners.clear();
     }
 
     /**
-     * This ArrayList holds the reference to the listeners that need to be
-     * notified if there is a structural change. Observer pattern.
+     * The listeners to notify about a structural change
      */
-    private final ArrayList<NodeNavigatorListener> relayoutListeners = new ArrayList<>();
+    private final Set<NodeNavigatorListener> nodeNavigatorListeners = Collections.synchronizedSet( new HashSet<NodeNavigatorListener>() );
 
     /**
-     * method to register a NodeNavigatorListener as a listener
+     * Registers a NodeNavigatorListener
      */
     @Override
-    public void addNodeNavigatorListener( NodeNavigatorListener listener ) {
-        LOGGER.fine( String.format( "adding listener: %s", listener.toString() ) );
-        relayoutListeners.add( listener );
-        LOGGER.fine( String.format( "We now have %d relayout listeners.", relayoutListeners.size() ) );
+    public void addNodeNavigatorListener( NodeNavigatorListener nodeNavigatorListener ) {
+        nodeNavigatorListeners.add( nodeNavigatorListener );
     }
 
     /**
-     * method to remove a NodeNavigatorListener as a listener
+     * Removes a NodeNavigatorListener
      */
     @Override
-    public void removeNodeNavigatorListener( NodeNavigatorListener listener ) {
-        LOGGER.fine( String.format( "removing listener: %s", listener.toString() ) );
-        relayoutListeners.remove( listener );
-        LOGGER.fine( String.format( "We now have %d relayout listeners.", relayoutListeners.size() ) );
+    public void removeNodeNavigatorListener( NodeNavigatorListener nodeNavigatorListener ) {
+        nodeNavigatorListeners.remove( nodeNavigatorListener );
     }
 
     /**
@@ -97,12 +94,10 @@ public abstract class NodeNavigator
      */
     @Override
     public void notifyNodeNavigatorListeners() {
-        LOGGER.fine( String.format( "notifying %d NodeNavigatorListeners.", relayoutListeners.size() ) );
-        @SuppressWarnings( "unchecked" )
-        ArrayList<NodeNavigatorListener> stableRelayoutListeners = (ArrayList<NodeNavigatorListener>) relayoutListeners.clone();
-        for ( NodeNavigatorListener relayoutListener : stableRelayoutListeners ) {
-            LOGGER.fine( String.format( "   now notifying relayout listener: %s", relayoutListener.toString() ) );
-            relayoutListener.nodeLayoutChanged();
+        synchronized ( nodeNavigatorListeners ) {
+            for ( NodeNavigatorListener nodeNavigatorListener : nodeNavigatorListeners ) {
+                nodeNavigatorListener.nodeLayoutChanged();
+            }
         }
     }
 

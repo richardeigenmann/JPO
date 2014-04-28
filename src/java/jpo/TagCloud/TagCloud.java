@@ -2,8 +2,10 @@ package jpo.TagCloud;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 import java.util.TreeSet;
 import java.util.logging.Logger;
 import javax.swing.JLabel;
@@ -13,7 +15,7 @@ import jpo.dataModel.Tools;
 /*
  TagCloud.java:  A Widget that shows a TagCloud
 
- Copyright (C) 2009-2011  Richard Eigenmann.
+ Copyright (C) 2009-2014  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -151,21 +153,22 @@ public class TagCloud extends JScrollPane {
      * @param tag the tag that was clicked
      */
     private void notifyTagClickListeners( String tag ) {
-        for ( TagClickListener tagClickListener : tagClickListeners ) {
-            tagClickListener.tagClicked( tag );
+        synchronized ( tagClickListeners ) {
+            for ( TagClickListener tagClickListener : tagClickListeners ) {
+                tagClickListener.tagClicked( tag );
+            }
         }
     }
 
     /**
-     * Reference to the TagClickListeners that want to be notified when the user
-     * clicks on a Tag.
+     * The TagClickListeners that want to be notified when the user clicks on a Tag.
      */
-    private final ArrayList<TagClickListener> tagClickListeners = new ArrayList<>();
+    private final Set<TagClickListener> tagClickListeners = Collections.synchronizedSet( new HashSet<TagClickListener>() );
 
     /**
-     * Register a TagClickListener to receive user click notifications.
+     * Register a TagClickListener to receive the word a user clicked on.
      *
-     * @param listener The listener that will be notified
+     * @param listener The listener that will be registered
      */
     public void addTagClickListener( TagClickListener listener ) {
         tagClickListeners.add( listener );
@@ -174,7 +177,7 @@ public class TagCloud extends JScrollPane {
     /**
      * Remove the specified TagClickListener.
      *
-     * @param listener	The listener that will no longer get notified
+     * @param listener	The listener to deregister
      */
     public void removeTagClickListener( TagClickListener listener ) {
         tagClickListeners.remove( listener );

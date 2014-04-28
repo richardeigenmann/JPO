@@ -760,6 +760,9 @@ public class Tools {
         return ( Settings.jpoResources.getString( "freeMemory" ) + Integer.toString( freeMemory ) + "MB/" + Integer.toString( totalMemory ) + "MB/" + Integer.toString( maxMemory ) + "MB" );
     }
 
+    /**
+     * Brings up a popup about having run out of memory and runs a Garbage Collection
+     */
     public static void dealOutOfMemoryError() {
         Tools.freeMem();
         Runnable optionDialog = new Runnable() {

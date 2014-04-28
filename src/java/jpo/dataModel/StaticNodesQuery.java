@@ -1,6 +1,6 @@
 package jpo.dataModel;
 
-import java.util.AbstractList;
+import java.util.List;
 
 /**
  *
@@ -8,14 +8,14 @@ import java.util.AbstractList;
  */
 public class StaticNodesQuery implements Query {
 
-    AbstractList<SortableDefaultMutableTreeNode> nodes;
+    List<SortableDefaultMutableTreeNode> nodes;
 
     /**
      * Creates a static nodes query
      * @param title the title
      * @param nodes  the nodes
      */
-    public StaticNodesQuery( String title, AbstractList<SortableDefaultMutableTreeNode> nodes ) {
+    public StaticNodesQuery( String title, List<SortableDefaultMutableTreeNode> nodes ) {
         this.title = title;
         this.nodes = nodes;
     }

@@ -12,8 +12,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URL;
-import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.IIOImage;
@@ -34,7 +36,6 @@ import static jpo.gui.ScalablePicture.ScalablePictureStatus.SCALABLE_PICTURE_REA
 import static jpo.gui.ScalablePicture.ScalablePictureStatus.SCALABLE_PICTURE_SCALING;
 import static jpo.gui.ScalablePicture.ScalablePictureStatus.SCALABLE_PICTURE_UNINITIALISED;
 import jpo.gui.SourcePicture.SourcePictureStatus;
-import static jpo.gui.SourcePicture.SourcePictureStatus.SOURCE_PICTURE_LOADING_PROGRESS;
 
 /*
  ScalablePicture.java:  class that can load and save images
@@ -174,7 +175,6 @@ public class ScalablePicture
         sourcePicture.loadPictureInThread( imageUrl, priority, rotation );
         // when the thread is done it sends a sourceStatusChange message to us
     }
-
 
     /**
      * Synchronous method to load the image. It should only be called by
@@ -633,7 +633,7 @@ public class ScalablePicture
     /**
      * The listeners to notify when the image operation changes the status.
      */
-    private final ArrayList<ScalablePictureListener> scalablePictureStatusListeners = new ArrayList<>();
+    private final Set<ScalablePictureListener> scalablePictureStatusListeners = Collections.synchronizedSet( new HashSet<ScalablePictureListener>() );
 
     /**
      * method to register the listening object of the status events
@@ -663,14 +663,13 @@ public class ScalablePicture
      * interested objects of a change in status (not built yet).
      */
     private void setStatus( ScalablePictureStatus statusCode, String statusMessage ) {
-        //String filename = ( imageUrl == null ) ? "" : imageUrl.toString();
-        //logger.info("ScalablePicture.setStatus: sending: " + statusMessage + " to all Listeners from Image: " + filename );
-
         pictureStatusCode = statusCode;
         pictureStatusMessage = statusMessage;
 
-        for ( ScalablePictureListener scalablePictureListener : scalablePictureStatusListeners ) {
-            scalablePictureListener.scalableStatusChange( pictureStatusCode, pictureStatusMessage );
+        synchronized ( scalablePictureStatusListeners ) {
+            for ( ScalablePictureListener scalablePictureListener : scalablePictureStatusListeners ) {
+                scalablePictureListener.scalableStatusChange( pictureStatusCode, pictureStatusMessage );
+            }
         }
     }
 

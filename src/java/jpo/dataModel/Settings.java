@@ -5,7 +5,6 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -506,6 +505,9 @@ public class Settings {
      */
     public static Dimension threeDotButtonDimension = new Dimension( 25, 25 );
     
+    /**
+     * Codes to indicate the field
+     */
     public static enum FieldCodes {
         NO_SORTING,
         DESCRIPTION, 
@@ -528,7 +530,7 @@ public class Settings {
     /**
      * returns an List of SortOptions
      *
-     * @return the ArrayList of sort options
+     * @return the List of sort options
      */
     public static List<SortOption> getSortOptions() {
         List<SortOption> sortOptions = new ArrayList<>();
@@ -1135,10 +1137,6 @@ public class Settings {
     }
 
     /**
-     * The language to be used for the application
-     */
-    //private static String currentLanguage = "English";
-    /**
      * returns the Language the application is running in.
      *
      * @return The Language
@@ -1247,9 +1245,7 @@ public class Settings {
      * each time a node is deleted whether it or one of it's descendents is a
      * drop target as this would no longer be a valid target.
      * <p>
-     * As of 4 April 2014 this method no longer sends notifications about the
-     * change as this is a GUI thing and doesn't belong in the data model.
-     * Instead send a
+     * Don't forget to send a 
      * {@link jpo.EventBus.RecentDropNodesChangedEvent RecentDropNodesChangedEvent}
      * onto the EventBus so that GUI widgets can update themselves.
      * <p>
@@ -1268,9 +1264,7 @@ public class Settings {
     /**
      * Clears the list of recent drop nodes
      * <p>
-     * As of 4 April 2014 this method no longer sends notifications about the
-     * change as this is a GUI thing and doesn't belong in the data model.
-     * Instead send a
+     * Don't forget to send a 
      * {@link jpo.EventBus.RecentDropNodesChangedEvent RecentDropNodesChangedEvent}
      * onto the EventBus so that GUI widgets can update themselves.
      * <p>

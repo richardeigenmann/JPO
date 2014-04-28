@@ -141,6 +141,9 @@ public class PicasaUploaderWizard1Login extends AbstractStep {
         return wizardPanel;
     }
 
+    /**
+     * Required but not needed
+     */
     @Override
     public void prepareRendering() {
     }

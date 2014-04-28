@@ -28,9 +28,9 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 /**
  * Builds a TreeMap by year and month of the nodes under the input node.
- * The first TreeMap has keys <Interger> by year and the value is a second
- * TreeMap. The second map has the key <Integer> by month (starting with 0)
- * and a value <HashSet> with the nodes that fall into that year and month.
+ * The first TreeMap has keys by year and the value is a second
+ * TreeMap. The second map has the key by month (starting with 0)
+ * and a value with the nodes that fall into that year and month.
  *
  * @author Richard Eigenmann
  */

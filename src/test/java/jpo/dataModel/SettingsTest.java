@@ -7,17 +7,16 @@ import static junit.framework.Assert.assertTrue;
 import junit.framework.TestCase;
 
 
-/*
- * ApplicationJMenuBarTest.java
- * JUnit based test
- *
- */
 /**
- *
+ * Tests for the Settings class
  * @author Richard Eigenmann
  */
 public class SettingsTest extends TestCase {
 
+    /**
+     * Constructor
+     * @param testName
+     */
     public SettingsTest( String testName ) {
         super( testName );
     }
@@ -41,6 +40,9 @@ public class SettingsTest extends TestCase {
         assertEquals( "Testing the locale change to Simplified Chinese", Locale.SIMPLIFIED_CHINESE, Settings.getCurrentLocale() );
     }
 
+    /**
+     * test the switching of resource bundles
+     */
     public void testSetLocaleResourceBundleEffect() {
         Settings.setLocale( Locale.GERMAN );
         assertEquals( "Testing the ResourceBundle change to German", Locale.GERMAN, Settings.jpoResources.getLocale() );
@@ -48,6 +50,9 @@ public class SettingsTest extends TestCase {
         assertEquals( "Testing the ResourceBundle change to Simplified Chinese", Locale.SIMPLIFIED_CHINESE, Settings.jpoResources.getLocale() );
     }
 
+    /**
+     * test that different languages are returned after switching the locale
+     */
     public void testSetLocaleResourceBundleStrings() {
         Settings.setLocale( Locale.GERMAN );
         assertEquals( "Testing the German string", "Neue Sammlung", Settings.jpoResources.getString( "FileNewJMenuItem" ) );

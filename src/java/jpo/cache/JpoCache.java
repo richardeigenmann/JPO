@@ -12,7 +12,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.FileTime;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -245,7 +245,7 @@ public class JpoCache {
      * @return The thumbnail
      * @throws IOException if something went wrong
      */
-    public ImageBytes getGroupThumbnailImageBytes( ArrayList<SortableDefaultMutableTreeNode> childPictureNodes ) throws IOException {
+    public ImageBytes getGroupThumbnailImageBytes( List<SortableDefaultMutableTreeNode> childPictureNodes ) throws IOException {
         int leftMargin = 15;
         int margin = 10;
         int topMargin = 65;
@@ -294,8 +294,8 @@ public class JpoCache {
      * Create a Group ThumbnailController by loading the nodes component images
      * and creating a folder icon with embedded images
      */
-    private ImageBytes createGroupThumbnailAndStoreInCache( String key, int numberOfPics, ArrayList<SortableDefaultMutableTreeNode> childPictureNodes ) throws IOException {
-        BufferedImage groupThumbnail = ImageIO.read( new BufferedInputStream( Settings.CLASS_LOADER.getResourceAsStream( "jpo/images/icon_folder_large.jpg" ) ) );
+    private ImageBytes createGroupThumbnailAndStoreInCache( String key, int numberOfPics, List<SortableDefaultMutableTreeNode> childPictureNodes ) throws IOException {
+        BufferedImage groupThumbnail = ImageIO.read( new BufferedInputStream( Settings.CLASS_LOADER.getResourceAsStream( "exif-test-samsung-s4-roation-0.jpg" ) ) );
         Graphics2D groupThumbnailGraphics = groupThumbnail.createGraphics();
 
         int leftMargin = 15;

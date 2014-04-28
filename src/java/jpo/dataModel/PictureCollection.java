@@ -8,6 +8,7 @@ import java.util.Calendar;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.logging.Logger;
@@ -545,15 +546,15 @@ public class PictureCollection {
     }
 
     /**
-     * Returns an ArrayList of the nodes that match this category
+     * Returns an List of the nodes that match this category
      *
      * @param key The key of the category to find
      * @param startNode the node at which to start
      * @return the list of nodes
      */
-    public static ArrayList<SortableDefaultMutableTreeNode> getCategoryUsageNodes(
+    public static List<SortableDefaultMutableTreeNode> getCategoryUsageNodes(
             Object key, SortableDefaultMutableTreeNode startNode ) {
-        ArrayList<SortableDefaultMutableTreeNode> resultList = new ArrayList<>();
+        List<SortableDefaultMutableTreeNode> resultList = new ArrayList<>();
         Enumeration nodes = startNode.children();
         SortableDefaultMutableTreeNode n;
         while ( nodes.hasMoreElements() ) {
@@ -603,7 +604,7 @@ public class PictureCollection {
      * just like the selection HashSet only that the purpose is a different one.
      * As such it has different behaviour.
      */
-    private final ArrayList<SortableDefaultMutableTreeNode> mailSelection;
+    private final List<SortableDefaultMutableTreeNode> mailSelection;
 
     /**
      * This method places the current SDMTN into the mailSelection HashSet.
@@ -641,7 +642,7 @@ public class PictureCollection {
      */
     public void clearMailSelection() {
         //can't use iterator directly or we have a concurrent modification exception
-        ArrayList<SortableDefaultMutableTreeNode> clone = new ArrayList<>( mailSelection.size() );
+        List<SortableDefaultMutableTreeNode> clone = new ArrayList<>( mailSelection.size() );
         for ( SortableDefaultMutableTreeNode item : mailSelection ) {
             clone.add( item );
         }
@@ -692,7 +693,7 @@ public class PictureCollection {
      * Returns the email-selected nodes
      * @return 
      */
-    public ArrayList<SortableDefaultMutableTreeNode> getMailSelectedNodes() {
+    public List<SortableDefaultMutableTreeNode> getMailSelectedNodes() {
         return mailSelection;
     }
 
@@ -883,7 +884,7 @@ public class PictureCollection {
             return null;
         }
 
-        ArrayList<SortableDefaultMutableTreeNode> parentGroups = new ArrayList<>();
+        List<SortableDefaultMutableTreeNode> parentGroups = new ArrayList<>();
 
         String comparingFilename = ( (PictureInfo) userObject ).getHighresLocation();
         SortableDefaultMutableTreeNode testNode, testNodeParent;
@@ -908,7 +909,7 @@ public class PictureCollection {
     /**
      * A reference to the selected nodes.
      */
-    private final ArrayList<SortableDefaultMutableTreeNode> selection = new ArrayList<>();
+    private final List<SortableDefaultMutableTreeNode> selection = new ArrayList<>();
 
     /**
      * This method places the current {@link SortableDefaultMutableTreeNode}
@@ -981,11 +982,11 @@ public class PictureCollection {
     }
 
     /**
-     * returns an ArrayList of the selected nodes.
+     * returns an List of the selected nodes.
      *
-     * @return an ArrayList of the selected nodes
+     * @return a List of the selected nodes
      */
-    public ArrayList<SortableDefaultMutableTreeNode> getSelectedNodesAsArrayList() {
+    public List<SortableDefaultMutableTreeNode> getSelectedNodesAsList() {
         return selection;
     }
 

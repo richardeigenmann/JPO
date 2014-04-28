@@ -148,14 +148,26 @@ public class Thumbnail extends JComponent {
      */
     private int thumbnailSize;
 
+    /**
+     * Sets the maximum Thumbnail size
+     * @param thumbnailSize the maximum thumbnail size
+     */
     public void setThumbnailSize( int thumbnailSize ) {
         this.thumbnailSize = thumbnailSize;
     }
 
+    /**
+     * Returns the maximum thumbnail size
+     * @return the thumbnail size
+     */
     public int getThumbnailSize() {
         return this.thumbnailSize;
     }
 
+    /**
+     * Returns the maximum thumbnail dimension
+     * @return  the thumbnail dimension
+     */
     public Dimension getThumbnailDimension() {
         return new Dimension( thumbnailSize, thumbnailSize );
     }

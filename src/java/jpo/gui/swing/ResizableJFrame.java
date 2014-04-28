@@ -108,7 +108,7 @@ public class ResizableJFrame
     /**
      * request that the window showing the picture be changed be changed.
      *
-     * @param newMode null     {@link ResizableJFrame#WINDOW_FULLSCREEN}, {@link ResizableJFrame#WINDOW_LEFT},
+     * @param newMode null null     {@link ResizableJFrame#WINDOW_FULLSCREEN}, {@link ResizableJFrame#WINDOW_LEFT},
      *		{@link ResizableJFrame#WINDOW_RIGHT},  {@link ResizableJFrame#WINDOW_TOP_LEFT},
      *		{@link ResizableJFrame#WINDOW_TOP_RIGHT}, {@link ResizableJFrame#WINDOW_BOTTOM_LEFT},
      *		{@link ResizableJFrame#WINDOW_BOTTOM_RIGHT} or
@@ -117,7 +117,7 @@ public class ResizableJFrame
      */
     @Override
     public void switchWindowMode( final WindowSize newMode ) {
-        LOGGER.info(String.format("old mode: %s new: %s", windowMode , newMode ) );
+        LOGGER.info( String.format( "old mode: %s new: %s", windowMode, newMode ) );
         windowMode = newMode;
         boolean newDecoration = decorateWindow;
         // some intelligence as to when to have window decorations and when not.
@@ -247,22 +247,50 @@ public class ResizableJFrame
         setBounds( ScreenHelper.getBottomRightScreenBounds() );
         validate();
     }
-    
+
+    /**
+     * Window size options
+     */
     public static enum WindowSize {
+
+        /**
+         * Switches the Window to fullscreen
+         */
         WINDOW_FULLSCREEN,
+        /**
+         * Switches the window to occupy the left side
+         */
         WINDOW_LEFT,
-        WINDOW_RIGHT, 
-        WINDOW_TOP_LEFT, 
-        WINDOW_TOP_RIGHT, 
+        /**
+         * Switches the window to occupy the right side
+         */
+        WINDOW_RIGHT,
+        /**
+         * Switches the window to occupy the top left of the screen
+         */
+        WINDOW_TOP_LEFT,
+        /**
+         * Switches the window to occupy the top right of the screen
+         */
+        WINDOW_TOP_RIGHT,
+        /**
+         * Switches the window to occupy the bottom left of the screen
+         */
         WINDOW_BOTTOM_LEFT,
+        /**
+         * Switches the window to occupy the bottom right of the screen
+         */
         WINDOW_BOTTOM_RIGHT,
+        /**
+         * Switches the window to the default size and location
+         */
         WINDOW_DEFAULT
     }
 
     /**
      * Request that the window showing the picture be changed be changed.
      *
-     * @param newMode null     {@link #WINDOW_FULLSCREEN}, {@link #WINDOW_LEFT},
+     * @param newMode null null     {@link #WINDOW_FULLSCREEN}, {@link #WINDOW_LEFT},
      *		{@link #WINDOW_RIGHT},  {@link #WINDOW_TOP_LEFT},
      *		{@link #WINDOW_TOP_RIGHT}, {@link #WINDOW_BOTTOM_LEFT},
      *		{@link #WINDOW_BOTTOM_RIGHT} or {@link #WINDOW_DEFAULT} need to be

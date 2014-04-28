@@ -82,7 +82,7 @@ public class SingleNodeNavigator
     }
 
     /**
-     *  This method unregisters the TreeModelListener and sets the variables to null;
+     *  This sets the variables to null;
      */
     @Override
     public void getRid() {

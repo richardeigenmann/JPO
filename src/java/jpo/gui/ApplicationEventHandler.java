@@ -10,7 +10,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
-import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.logging.Level;
@@ -783,7 +782,7 @@ public class ApplicationEventHandler {
      */
     @Subscribe
     public void handleRemoveNodeRequest( RemoveNodeRequest request ) {
-        ArrayList<SortableDefaultMutableTreeNode> nodesToRemove = request.getNodes();
+        List<SortableDefaultMutableTreeNode> nodesToRemove = request.getNodes();
         SortableDefaultMutableTreeNode firstParentNode = (SortableDefaultMutableTreeNode) nodesToRemove.get( 0 ).getParent();
         for ( SortableDefaultMutableTreeNode deleteNode : nodesToRemove ) {
             deleteNode.deleteNode();

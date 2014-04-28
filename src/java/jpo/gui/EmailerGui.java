@@ -29,7 +29,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
 import static javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE;
-import jpo.dataModel.ArrayListNavigator;
+import jpo.dataModel.ListNavigator;
 import jpo.dataModel.Settings;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
 import net.miginfocom.swing.MigLayout;
@@ -394,13 +394,13 @@ public class EmailerGui extends JFrame {
         c.anchor = GridBagConstraints.LINE_START;
         c.insets = new Insets( 4, 4, 4, 4 );
         c.gridy = 0;
-        ArrayListNavigator arrayListNavigator = new ArrayListNavigator();
+        ListNavigator listNavigator = new ListNavigator();
 
         for ( int i = 0; i < emailSelected.size(); i++ ) {
             //logger.info("EmailerGui.loadThumbnails: running on " + emailSelected[i].toString() );
-            arrayListNavigator.addNode( (SortableDefaultMutableTreeNode) emailSelected.get( i ) );
+            listNavigator.addNode( (SortableDefaultMutableTreeNode) emailSelected.get( i ) );
             ThumbnailController thumbnailController = new ThumbnailController( thumbnailSize );
-            thumbnailController.setNode( arrayListNavigator, i );
+            thumbnailController.setNode( listNavigator, i );
             thumbnailController.setDecorateThumbnails( false );
             thumbnailController.determineMailSlectionStatus();
             thumbnailController.setFactor( factor );

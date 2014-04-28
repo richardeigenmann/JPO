@@ -158,7 +158,7 @@ public class CameraDownloadWizardData {
 
     /**
      * Sets the name for the new group, if a new group should be created. If
-     * this is not set a default of "Download <<date>>" is proposed. Calling
+     * this is not set a default of "Download date" is proposed. Calling
      * this method can change that name. If the (@link #shouldCreateNewGroup}
      * flag has been set a new group is created, otherwise this String will not
      * be used.

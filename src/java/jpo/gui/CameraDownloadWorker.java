@@ -45,6 +45,12 @@ public class CameraDownloadWorker
     private static final Logger LOGGER = Logger.getLogger( CameraDownloadWorker.class.getName() );
     //{logger.setLevel( Level.ALL ); }
 
+    /**
+     * A SwingWorker to download pictures from the camera
+     * @param dataModel
+     * @param progressBar
+     * @param step7
+     */
     public CameraDownloadWorker( CameraDownloadWizardData dataModel,
             JProgressBar progressBar, CameraDownloadWizardStep7 step7 ) {
         this.dataModel = dataModel;

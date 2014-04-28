@@ -432,8 +432,8 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
         myLastGroupNode = null;
         if ( newNodeNavigator instanceof GroupNavigator ) {
             myLastGroupNode = ( (GroupNavigator) newNodeNavigator ).getGroupNode();
-            GroupInfo gi = (GroupInfo) myLastGroupNode.getUserObject();
-            gi.addGroupInfoChangeListener( myGroupInfoChangeListener );
+            GroupInfo groupInfo = (GroupInfo) myLastGroupNode.getUserObject();
+            groupInfo.addGroupInfoChangeListener( myGroupInfoChangeListener );
         }
 
         Settings.pictureCollection.clearSelection();

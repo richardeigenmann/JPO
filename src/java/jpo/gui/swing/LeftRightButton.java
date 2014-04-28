@@ -4,16 +4,43 @@ import javax.swing.ImageIcon;
 
 /**
  *
+ * @author richi
  */
 public class LeftRightButton extends NavBarButton {
 
+    /**
+     *
+     */
     public enum BUTTON_STATE {
 
-        BEGINNING, HAS_LEFT, HAS_PREVIOUS, HAS_RIGHT, HAS_NEXT, END
+        /**
+         * Indicates that we are at the beginning of a set
+         */
+        BEGINNING,
+        /**
+         * Indicates that we are at a set boundary but can go back
+         */
+        HAS_LEFT,
+        /**
+         * Indicates that we can go back
+         */
+        HAS_PREVIOUS,
+        /**
+         * Indicates that we can go forward
+         */
+        HAS_RIGHT,
+        /**
+         * Indicates that we are at a boundary but can go forward
+         */
+        HAS_NEXT,
+        /**
+         * Indicates that we are at the end of set
+         */
+        END
     };
 
     private static final ClassLoader CLASS_LOADER = LeftRightButton.class.getClassLoader();
-    
+
     /**
      * Icon pointing left
      */
@@ -49,6 +76,7 @@ public class LeftRightButton extends NavBarButton {
 
     /**
      * Sets the appropriate icon for the state
+     *
      * @param state the state from the enum to set
      */
     public void setDecoration( BUTTON_STATE state ) {

@@ -62,6 +62,10 @@ public class PicasaUploaderWizard3Upload extends AbstractStep implements PicasaU
         this.myRequest = myRequest;
     }
 
+    /**
+     * Wizard model listener
+     * @param model
+     */
     public void attachWizardModelListener( WizardModel model ) {
         this.model = model;
         model.addWizardModelListener( new WizardModelListener() {
@@ -123,6 +127,9 @@ public class PicasaUploaderWizard3Upload extends AbstractStep implements PicasaU
         setCanGoBack( false );
     }
 
+    /**
+     * Respond to upload complete
+     */
     @Override
     public void uploadDone() {
         setCanFinish( true );

@@ -50,27 +50,46 @@ public class NodeStatisticsBean {
     public String getNumberOfGroups() {
         return numberOfGroups;
     }
-
+/**
+ * Remembers the number of group nodes
+ * @param numberOfGroups the number of group nodes
+ */
     public void setNumberOfGroups( String numberOfGroups ) {
         this.numberOfGroups = numberOfGroups;
     }
 
     private String numberOfPictures = "";
 
+    /**
+     * Returns the number of pictures
+     * @return the number of pictures
+     */
     public String getNumberOfPictures() {
         return numberOfPictures;
     }
 
+    /**
+     * Sets the number of pictures
+     * @param numberOfPictures the number of pictures
+     */
     public void setNumberOfPictures( String numberOfPictures ) {
         this.numberOfPictures = numberOfPictures;
     }
 
     private String sizeOfPictures = "";
 
+    /**
+     * Returns a string with the memory occupied by the pictures
+     * @return a string with the bytes used by the pictures
+     */
     public String getSizeOfPictures() {
         return sizeOfPictures;
     }
 
+    /**
+     * Sets the sie of Pictures string
+     * @param sizeOfPictures the new string
+     */
     public void setSizeOfPictures( String sizeOfPictures ) {
         this.sizeOfPictures = sizeOfPictures;
     }

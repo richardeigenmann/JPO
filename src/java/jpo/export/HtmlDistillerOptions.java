@@ -40,6 +40,10 @@ public class HtmlDistillerOptions {
      */
     private File targetDirectory;
 
+    /**
+     * Returns the background color
+     * @return the background color
+     */
     public Color getBackgroundColor() {
         return backgroundColor;
     }

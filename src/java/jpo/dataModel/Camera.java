@@ -46,10 +46,18 @@ public class Camera implements Serializable {
      */
     private String description = Settings.jpoResources.getString( "newCamera" );
 
+    /**
+     * Sets a new description for the camera
+     * @param newDescription
+     */
     public void setDescription( String newDescription ) {
         description = newDescription;
     }
 
+    /**
+     * returns the description of the camera
+     * @return the description of the camera
+     */
     public String getDescription() {
         return description;
     }

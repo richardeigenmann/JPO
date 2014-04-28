@@ -23,6 +23,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashSet;
+import java.util.List;
 import java.util.logging.Logger;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
@@ -271,11 +272,11 @@ public class SortableDefaultMutableTreeNode
      *
      * @param recursive Pass true if the method is supposed to recursively search
      * the subgroups, false if not
-     * @return An ArrayList of child nodes that hold a picture
+     * @return A List of child nodes that hold a picture
      */
-    public ArrayList<SortableDefaultMutableTreeNode> getChildPictureNodes(
+    public List<SortableDefaultMutableTreeNode> getChildPictureNodes(
             boolean recursive ) {
-        ArrayList<SortableDefaultMutableTreeNode> pictureNodes = new ArrayList<>();
+        List<SortableDefaultMutableTreeNode> pictureNodes = new ArrayList<>();
         Enumeration kids = this.children();
         SortableDefaultMutableTreeNode node;
 
@@ -320,7 +321,6 @@ public class SortableDefaultMutableTreeNode
      */
     @Override
     public void setUserObject( Object o ) {
-        //logger.info( "setUserObject fired with o: " + o.toString() + " of class: " + o.getClass().toString() );
         if ( o instanceof String ) {
             LOGGER.severe( "Why is ever being called?" );
             Object obj = getUserObject();
@@ -330,7 +330,7 @@ public class SortableDefaultMutableTreeNode
                 ( (PictureInfo) obj ).setDescription( (String) o );
             }
         } else if ( o instanceof PictureInfo ) {
-            PictureInfo pi = (PictureInfo) o;
+            PictureInfo pictureInfo = (PictureInfo) o;
             Object oldUserObject = getUserObject();
             if ( oldUserObject != null ) {
                 if ( oldUserObject instanceof PictureInfo ) {
@@ -338,7 +338,7 @@ public class SortableDefaultMutableTreeNode
                     oldPi.removePictureInfoChangeListener( this );
                 }
             }
-            pi.addPictureInfoChangeListener( this );
+            pictureInfo.addPictureInfoChangeListener( this );
             super.setUserObject( o );
         } else {
             // fall back on the default behaviour
@@ -359,8 +359,6 @@ public class SortableDefaultMutableTreeNode
      * @param event The event the listening object received.
      */
     public void executeDrop( DropTargetDropEvent event ) {
-        //logger.info( "SDMTN.executeDrop: invoked");
-
         if ( !event.isLocalTransfer() ) {
             LOGGER.info( "SDMTN.executeDrop: detected that the drop is not a local Transfer. These are not supported. Aborting drop." );
             event.rejectDrop();

@@ -11,8 +11,9 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.geom.AffineTransform;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.logging.Logger;
 import javax.swing.JComponent;
 import jpo.dataModel.ExifInfo;
@@ -411,11 +412,12 @@ public class PicturePane
     }
 
     public static enum InfoOverlay {
+
         NO_OVERLAY,
         PHOTOGRAPHIC_OVERLAY,
         APPLICATION_OVERLAY
     }
-    
+
     /**
      * Code that determines what info is to be displayed over the picture.
      */
@@ -439,7 +441,6 @@ public class PicturePane
                 break;
         }
         repaint();
-        //pictureJPanel.requestFocusInWindow();
     }
 
     /**
@@ -471,8 +472,10 @@ public class PicturePane
             repaint();
         }
 
-        for ( ScalablePictureListener scalablePictureListener : picturePaneListeners ) {
-            scalablePictureListener.scalableStatusChange( pictureStatusCode, pictureStatusMessage );
+        synchronized ( picturePaneListeners ) {
+            for ( ScalablePictureListener scalablePictureListener : picturePaneListeners ) {
+                scalablePictureListener.scalableStatusChange( pictureStatusCode, pictureStatusMessage );
+            }
         }
     }
 
@@ -485,18 +488,20 @@ public class PicturePane
      */
     @Override
     public void sourceLoadProgressNotification( SourcePictureStatus statusCode, int percentage ) {
-        for ( ScalablePictureListener scalablePictureListener : picturePaneListeners ) {
-            scalablePictureListener.sourceLoadProgressNotification( statusCode, percentage );
+        synchronized ( picturePaneListeners ) {
+            for ( ScalablePictureListener scalablePictureListener : picturePaneListeners ) {
+                scalablePictureListener.sourceLoadProgressNotification( statusCode, percentage );
+            }
         }
     }
 
     /**
-     * This List hold references to objects that would like to receive
+     * The  objects that would like to receive
      * notifications about what is going on with the ScalablePicture being
      * displayed in this PicturePane. These objects must implement the
      * ScalablePictureListener interface.
      */
-    protected List<ScalablePictureListener> picturePaneListeners = new ArrayList<>();
+    private final Set<ScalablePictureListener> picturePaneListeners = Collections.synchronizedSet( new HashSet<ScalablePictureListener>() );
 
     /**
      * method to register the listening object of the status events

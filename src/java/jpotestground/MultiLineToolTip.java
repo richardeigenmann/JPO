@@ -11,6 +11,7 @@ import java.awt.Dimension;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JComponent;
 import javax.swing.JToolTip;
 import javax.swing.SwingUtilities;
@@ -69,7 +70,7 @@ public class MultiLineToolTip
             }
             StringTokenizer st = new StringTokenizer(tipText, "|");
             int maxWidth = 0;
-            ArrayList<String> v = new ArrayList<String>();
+            List<String> v = new ArrayList<String>();
             while (st.hasMoreTokens()) {
                 String token = st.nextToken();
                 int width = SwingUtilities.computeStringWidth(metrics, token);

@@ -6,8 +6,10 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.logging.Logger;
 import jpo.TagCloud.WordMap;
@@ -118,7 +120,7 @@ public class DescriptionWordMap extends WordMap {
         String noPunctuation = fixAprostropheS.replaceAll( "[\\.:!,\\'\\\";\\?\\(\\)\\[\\]#\\$\\*\\+<>\\/&=]", "" );
         String noNumbers = noPunctuation.replaceAll( "\\d", "" );
 
-        ArrayList<String> words = new ArrayList<>();
+        List<String> words = new ArrayList<>();
         for ( String multiWordTerm : multiWordTerms ) {
             if ( noNumbers.contains( multiWordTerm ) ) {
                 noNumbers = noNumbers.replace( multiWordTerm, "" );

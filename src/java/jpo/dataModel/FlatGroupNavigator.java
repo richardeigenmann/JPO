@@ -28,7 +28,7 @@ import javax.swing.tree.TreePath;
  * sequentially.
  */
 public class FlatGroupNavigator
-        extends ArrayListNavigator
+        extends ListNavigator
         implements TreeModelListener {
 
     /**
@@ -128,7 +128,6 @@ public class FlatGroupNavigator
             if ( removedChild.isDescendant( currentNodeTreePath ) ) {
                 LOGGER.info( String.format( "Oh dear, our group has just disappeared." ) );
                 allPictures.clear();
-                //notifyNodeChangeListeners( indexMapping );
                 notifyNodeNavigatorListeners();
                 return; // no point in continuing the loop; the group is gone.
             }

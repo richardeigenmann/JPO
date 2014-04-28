@@ -4,6 +4,7 @@ import jpo.dataModel.Settings;
 import jpo.dataModel.Camera;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import javax.swing.BorderFactory;
@@ -14,36 +15,37 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import net.miginfocom.swing.MigLayout;
 /*
-CameraEditor.java: a class that creates a JPanel and allows camera attributes to be edited
+ CameraEditor.java: a class that creates a JPanel and allows camera attributes to be edited
 
-Copyright (C) 2002 - 2014  Richard Eigenmann.
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or any later version. This program is distributed
-in the hope that it will be useful, but WITHOUT ANY WARRANTY;
-without even the implied warranty of MERCHANTABILITY or FITNESS
-FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-more details. You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-The license is in gpl.txt.
-See http://www.gnu.org/copyleft/gpl.html for the details.
+ Copyright (C) 2002 - 2014  Richard Eigenmann.
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or any later version. This program is distributed
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ without even the implied warranty of MERCHANTABILITY or FITNESS
+ FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+ more details. You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ The license is in gpl.txt.
+ See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 
 /**
- *   This class creates a JPanel and allows attributes of a single camera to be edited on it.
+ * This class creates a JPanel and allows attributes of a single camera to be
+ * edited on it.
  *
- *   @author Richard Eigenmann richard.eigenmann@gmail.com
+ * @author Richard Eigenmann richard.eigenmann@gmail.com
  */
 public class CameraEditor
         extends JPanel {
 
-    /** 
+    /**
      * Constructor for the editor gui
      */
     public CameraEditor() {
-        setLayout( new MigLayout("nogrid") );
+        setLayout( new MigLayout( "nogrid" ) );
         JLabel cameraNameJLabel = new JLabel( Settings.jpoResources.getString( "cameraNameJLabel" ) );
         add( cameraNameJLabel, "wrap" );
         add( cameraNameJTextField, "grow, wrap unrel" );
@@ -96,7 +98,7 @@ public class CameraEditor
                 saveCamera();
             }
         } );
-        add( saveJButton, "align right");
+        add( saveJButton, "align right" );
     }
 
     /**
@@ -104,18 +106,18 @@ public class CameraEditor
      */
     private Camera camera;
 
-
     /**
      * Return the camera object
+     *
      * @return the Camera object
      */
     public Camera getCamera() {
         return camera;
     }
 
-
     /**
      * Call this method to set the camera this panel is supposed to edit
+     *
      * @param camera the camera object
      */
     public void setCamera( Camera camera ) {
@@ -123,9 +125,8 @@ public class CameraEditor
         loadFields();
     }
 
-
     /**
-     *  This method loads the values from the camera to the GUI fields.
+     * This method loads the values from the camera to the GUI fields.
      */
     private void loadFields() {
         if ( getCamera() == null ) {
@@ -156,9 +157,8 @@ public class CameraEditor
         }
     }
 
-
     /**
-     *  save the currently edited camera details into the set of cameras
+     * save the currently edited camera details into the set of cameras
      */
     public void saveCamera() {
         if ( getCamera() != null ) {
@@ -171,7 +171,6 @@ public class CameraEditor
             notifyActionListeners();
         }
     }
-
 
     /**
      * Updates the memorised pictures label
@@ -186,17 +185,17 @@ public class CameraEditor
     private final JLabel cameraDirJLabel = new JLabel( Settings.jpoResources.getString( "cameraDirJLabel" ) );
 
     /**
-     *  The new name of the camera
+     * The new name of the camera
      */
     private final JTextField cameraNameJTextField = new JTextField();
 
-
     /**
-     *   holds the root directory of the camera relative to the host computer's file system
+     * holds the root directory of the camera relative to the host computer's
+     * file system
      */
-    private final DirectoryChooser cameraDirJTextField =
-            new DirectoryChooser( Settings.jpoResources.getString( "cameraDirJLabel" ),
-            DirectoryChooser.DIR_MUST_EXIST );
+    private final DirectoryChooser cameraDirJTextField
+            = new DirectoryChooser( Settings.jpoResources.getString( "cameraDirJLabel" ),
+                    DirectoryChooser.DIR_MUST_EXIST );
 
     /**
      * "Number of pictures remembered from last import:"
@@ -204,7 +203,7 @@ public class CameraEditor
     private final JLabel memorisedPicsText = new JLabel( Settings.jpoResources.getString( "memorisedPicsJLabel" ) );
 
     /**
-     *  label that informs how many pictures have been memorised for this camera
+     * label that informs how many pictures have been memorised for this camera
      */
     private final JLabel memorisedPicturesJLabel = new JLabel();
 
@@ -214,45 +213,45 @@ public class CameraEditor
     private final JButton refreshJButton = new JButton( Settings.jpoResources.getString( "refreshJButton" ) );
 
     /**
-     *  Button to zero out the memorised pictures on the camera
+     * Button to zero out the memorised pictures on the camera
      */
     private final JButton zeroJButton = new JButton( Settings.jpoResources.getString( "zeroJButton" ) );
 
     /**
-     *  Button to save the camera information
+     * Button to save the camera information
      */
     private final JButton saveJButton = new JButton( "Save" );
 
     /**
-     *  checkbox to indicate that filenames should be used
+     * checkbox to indicate that filenames should be used
      */
     private final JCheckBox filenameJCheckBox = new JCheckBox( Settings.jpoResources.getString( "filenameJCheckBox" ) );
 
     /**
-     *  checkbox to indicate whether to monitor for new pictures
+     * checkbox to indicate whether to monitor for new pictures
      */
     private final JCheckBox monitorJCheckBox = new JCheckBox( Settings.jpoResources.getString( "monitorJCheckBox" ) );
 
+    /**
+     * A collection that holds all the listeners that want to be notified about
+     * changes to this Camera
+     */
+    private final Set<ActionListener> listeners = Collections.synchronizedSet( new HashSet<ActionListener>() );
 
-    private final Set<ActionListener> listeners = new HashSet<>();
-
-
-
-    public void addActionListener( ActionListener l ) {
-        listeners.add( l );
+    public void addActionListener( ActionListener actionListener ) {
+        listeners.add( actionListener );
     }
 
-
-
-    public void removeActionListener( ActionListener l ) {
-        listeners.remove( l );
+    public void removeActionListener( ActionListener actionListener ) {
+        listeners.remove( actionListener );
     }
-
 
     public void notifyActionListeners() {
         ActionEvent event = new ActionEvent( this, 0, "save" );
-        for ( ActionListener actionListener : listeners ) {
-            actionListener.actionPerformed( event );
+        synchronized ( listeners ) {
+            for ( ActionListener actionListener : listeners ) {
+                actionListener.actionPerformed( event );
+            }
         }
     }
 }

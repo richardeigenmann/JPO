@@ -4,11 +4,12 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Enumeration;
+import java.util.List;
 
 /*
  TextQuery.java:  The parameters for a search
 
- Copyright (C) 2002 - 2009  Richard Eigenmann.
+ Copyright (C) 2002 - 2014  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -23,7 +24,7 @@ import java.util.Enumeration;
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 /**
- * This class stores the parameters for a search and can return an ArrayList of
+ * This class stores the parameters for a search and can return a List of
  * the search results.
  */
 public class TextQuery implements Serializable, Query {
@@ -124,15 +125,15 @@ public class TextQuery implements Serializable, Query {
      * Variable for the resultSet so that the query is not reexecuted every time
      * some object wants to know something.
      */
-    private ArrayList<SortableDefaultMutableTreeNode> searchResults;
+    private List<SortableDefaultMutableTreeNode> searchResults;
 
     /**
-     * Returns an ArrayList of nodes which match the query criteria beneath the
+     * Returns a List of nodes which match the query criteria beneath the
      * supplied node.
      *
-     * @return The ArrayList of nodes.
+     * @return The List of nodes.
      */
-    public ArrayList<SortableDefaultMutableTreeNode> getSearchResults() {
+    public List<SortableDefaultMutableTreeNode> getSearchResults() {
         if ( searchResults == null ) {
             searchResults = extractSearchResults();
         }
@@ -168,12 +169,12 @@ public class TextQuery implements Serializable, Query {
     }
 
     /**
-     * Returns an ArrayList of nodes which match the query criteria beneath the
+     * Returns a List of nodes which match the query criteria beneath the
      * supplied node.
      *
-     * @return The ArrayList of nodes.
+     * @return The List of nodes.
      */
-    public ArrayList<SortableDefaultMutableTreeNode> extractSearchResults() {
+    public List<SortableDefaultMutableTreeNode> extractSearchResults() {
         SortableDefaultMutableTreeNode testNode;
         searchResults = new ArrayList<>();
 

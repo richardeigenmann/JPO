@@ -42,6 +42,10 @@ public class AdvanceTimer implements Runnable {
      */
     private int delaySeconds;
 
+    /**
+     * Sets the delay for the timer
+     * @param delay
+     */
     public void setDelay( int delay ) {
         delaySeconds = delay;
     }

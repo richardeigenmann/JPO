@@ -18,7 +18,7 @@ import jpo.dataModel.SortableDefaultMutableTreeNode;
 
 /*
  * PicasaUploaderWorker.java: service using Google provided code. Copyright (C)
- * 2012-2012 Richard Eigenmann. This program is free software; you can
+ * 2012-2014 Richard Eigenmann. This program is free software; you can
  * redistribute it and/or modify it under the terms of the GNU General Public
  * License as published by the Free Software Foundation; either version 2 of the
  * License, or any later version. This program is distributed in the hope that
@@ -40,6 +40,12 @@ public class PicasaUploaderWorker extends SwingWorker<Boolean, Integer> {
     private final JProgressBar progressBar;
     private final PicasaUploaderDoneInterface doneHandler;
 
+    /**
+     * Creates a SwingWorker to upload the pictures to Picasa
+     * @param myRequest the request
+     * @param progressBar the progress bar
+     * @param doneHandler the done handler to call afterwards
+     */
     public PicasaUploaderWorker( PicasaUploadRequest myRequest, JProgressBar progressBar, PicasaUploaderDoneInterface doneHandler ) {
         this.myRequest = myRequest;
         this.progressBar = progressBar;
@@ -91,6 +97,11 @@ public class PicasaUploaderWorker extends SwingWorker<Boolean, Integer> {
     }
     private URL albumUrl;
 
+    /**
+     * Creates a group on Picasa
+     * @param groupInfo the group for which to create the "album"
+     * @return  true if success, false if not
+     */
     public boolean createAlbum( GroupInfo groupInfo ) {
         LOGGER.info( "Creating Album" );
         AlbumEntry myAlbum = new AlbumEntry();
@@ -129,6 +140,11 @@ public class PicasaUploaderWorker extends SwingWorker<Boolean, Integer> {
         return true;
     }
 
+    /**
+     * Uploads a picture to Picasa
+     * @param pictureInfo the picture to upload
+     * @return true if success, false if not
+     */
     public boolean postPicture( PictureInfo pictureInfo ) {
         LOGGER.info( "Posting Picture: " + pictureInfo.getDescription() );
         PhotoEntry myPhoto = new PhotoEntry();

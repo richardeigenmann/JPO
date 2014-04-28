@@ -50,18 +50,18 @@ public interface NodeNavigatorInterface {
     public SortableDefaultMutableTreeNode getNode( int componentNumber );
 
     /**
-     * method to register a NodeNavigatorListener
+     * Registers a NodeNavigatorListener
      *
-     * @param listener a NodeNavigatorListener to notify
+     * @param nodeNavigatorListener a NodeNavigatorListener to notify
      */
-    public void addNodeNavigatorListener( NodeNavigatorListener listener );
+    public void addNodeNavigatorListener( NodeNavigatorListener nodeNavigatorListener );
 
     /**
-     * method to remove a NodeNavigatorListener
+     * Removes a NodeNavigatorListener
      *
-     * @param listener the listener to remove
+     * @param nodeNavigatorListener the listener to remove
      */
-    public void removeNodeNavigatorListener( NodeNavigatorListener listener );
+    public void removeNodeNavigatorListener( NodeNavigatorListener nodeNavigatorListener );
 
     /**
      * Node Navigators must be able to send notifications to their listeners.

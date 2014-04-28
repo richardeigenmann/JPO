@@ -1,7 +1,7 @@
 package jpo.dataModel;
 
-import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 
 /*
@@ -28,9 +28,9 @@ public class RandomNavigator
         extends NodeNavigator {
 
     /**
-     *  This ArrayList holds all the nodes that the NodeNavigator will serve
+     *  This List holds all the nodes that the NodeNavigator will serve
      */
-    private final ArrayList<SortableDefaultMutableTreeNode> nodes;
+    private final List<SortableDefaultMutableTreeNode> nodes;
 
     /**
      * The title of this set of nodes
@@ -40,10 +40,10 @@ public class RandomNavigator
     /**
      *  Constructor for a RandomNavigator.
      *
-     *  @param nodes An ArrayList of nodes to randomly navigate
+     *  @param nodes A List of nodes to randomly navigate
      *  @param  title The title of the nodes
      */
-    public RandomNavigator( ArrayList<SortableDefaultMutableTreeNode> nodes, String title ) {
+    public RandomNavigator( List<SortableDefaultMutableTreeNode> nodes, String title ) {
         this.nodes = nodes;
         this.title = title;
         Collections.shuffle( this.nodes );

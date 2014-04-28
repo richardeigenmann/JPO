@@ -2,27 +2,29 @@ package jpo.dataModel;
 
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.logging.Logger;
 
 /*
-DuplicatesQuery.java:  Finds duplicates and adds them to a query object
+ DuplicatesQuery.java:  Finds duplicates and adds them to a query object
 
-Copyright (C) 2010-2014  Richard Eigenmann.
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or any later version. This program is distributed
-in the hope that it will be useful, but WITHOUT ANY WARRANTY;
-without even the implied warranty of MERCHANTABILITY or FITNESS
-FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-more details. You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-The license is in gpl.txt.
-See http://www.gnu.org/copyleft/gpl.html for the details.
+ Copyright (C) 2010-2014  Richard Eigenmann.
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or any later version. This program is distributed
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ without even the implied warranty of MERCHANTABILITY or FITNESS
+ FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+ more details. You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ The license is in gpl.txt.
+ See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 /**
  * This class finds duplicates and adds them to a query object
+ *
  * @author Richard Eigenmann
  */
 public class DuplicatesQuery
@@ -33,9 +35,9 @@ public class DuplicatesQuery
      */
     private static final Logger LOGGER = Logger.getLogger( DuplicatesQuery.class.getName() );
 
-
     /**
      * The number of entries found
+     *
      * @return the number of entries found
      */
     @Override
@@ -46,9 +48,9 @@ public class DuplicatesQuery
         return searchResults.size();
     }
 
-
     /**
      * Returns the element specified in the index
+     *
      * @param index The element to be returned
      * @return returns the node or null if the query is not right.
      */
@@ -62,9 +64,9 @@ public class DuplicatesQuery
         }
     }
 
-
     /**
      * Returns a title for the query
+     *
      * @return The title for the query
      */
     @Override
@@ -72,16 +74,14 @@ public class DuplicatesQuery
         return "Duplicates";
     }
 
-
     /**
-     * returns a the title for the search that can be used to display the
-     * search results under. The JTree asks for toString()
+     * returns a the title for the search that can be used to display the search
+     * results under. The JTree asks for toString()
      */
     @Override
     public String toString() {
         return getTitle();
     }
-
 
     /**
      * Refreshes the search results
@@ -93,18 +93,16 @@ public class DuplicatesQuery
     }
 
     /**
-     * Variable for the resultSet so that the query is not reexecuted every 
-     * time a user clicks
+     * ResultSet so that the query is not reexecuted every time a user clicks
      */
-    private ArrayList<SortableDefaultMutableTreeNode> searchResults ;
-
+    private List<SortableDefaultMutableTreeNode> searchResults;
 
     /**
      * Finds the duplicates
      */
     private void extractSearchResults() {
-        ArrayList<SortableDefaultMutableTreeNode> results = new ArrayList<>();
-        ArrayList<SortableDefaultMutableTreeNode> nodeList = new ArrayList<>();
+        List<SortableDefaultMutableTreeNode> results = new ArrayList<>();
+        List<SortableDefaultMutableTreeNode> nodeList = new ArrayList<>();
         SortableDefaultMutableTreeNode pictureNode;
         for ( Enumeration e = Settings.pictureCollection.getRootNode().preorderEnumeration(); e.hasMoreElements(); ) {
             pictureNode = (SortableDefaultMutableTreeNode) e.nextElement();

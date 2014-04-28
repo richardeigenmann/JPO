@@ -237,8 +237,8 @@ public class ThumbnailDescriptionJPanel
 
         // attach the change Listener
         if ( ( referringNode != null ) && ( referringNode.getUserObject() instanceof PictureInfo ) ) {
-            PictureInfo pi = (PictureInfo) referringNode.getUserObject();
-            pi.addPictureInfoChangeListener( this );
+            PictureInfo pictureInfo = (PictureInfo) referringNode.getUserObject();
+            pictureInfo.addPictureInfoChangeListener( this );
         }
 
         String legend;

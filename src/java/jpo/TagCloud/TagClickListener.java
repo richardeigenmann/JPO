@@ -25,7 +25,8 @@ package jpo.TagCloud;
 public interface TagClickListener {
 
     /**
-     * returns the Tag the user selected
+     * The implementing class should implement this method to get notified which
+     * word the user clicked on
      *
      * @param word The word that was clicked 
      */

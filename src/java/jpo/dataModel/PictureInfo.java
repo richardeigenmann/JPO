@@ -12,11 +12,11 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.text.NumberFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -200,7 +200,7 @@ public class PictureInfo implements Serializable {
         }
 
         if ( latLng != null ) {
-            out.write( String.format("\t<LATLNG>%fx%f</LATLNG>",latLng.x, latLng.y) );
+            out.write( String.format( "\t<LATLNG>%fx%f</LATLNG>", latLng.x, latLng.y ) );
             out.newLine();
         }
 
@@ -1251,10 +1251,9 @@ public class PictureInfo implements Serializable {
     }
 
     /**
-     * A collection that holds all the listeners that want to be notified about
-     * changes to this PictureInfo object.
+     * The listeners to be notified about changes to this PictureInfo object.
      */
-    private final List<PictureInfoChangeListener> pictureInfoListeners = new ArrayList<>();
+    private final Set<PictureInfoChangeListener> pictureInfoListeners = Collections.synchronizedSet( new HashSet<PictureInfoChangeListener>() );
 
     /**
      * Registers a listener for picture info change events
@@ -1267,7 +1266,7 @@ public class PictureInfo implements Serializable {
     }
 
     /**
-     * Removes the listener
+     * Removes the supplied listener
      *
      * @param pictureInfoChangeListener	The listener that doesn't want to
      * notifications any more.
@@ -1284,8 +1283,10 @@ public class PictureInfo implements Serializable {
      */
     private void sendPictureInfoChangedEvent( PictureInfoChangeEvent pce ) {
         if ( Settings.pictureCollection.getSendModelUpdates() ) {
-            for ( PictureInfoChangeListener pictureInfoChangeListener : pictureInfoListeners ) {
-                pictureInfoChangeListener.pictureInfoChangeEvent( pce );
+            synchronized ( pictureInfoListeners ) {
+                for ( PictureInfoChangeListener pictureInfoChangeListener : pictureInfoListeners ) {
+                    pictureInfoChangeListener.pictureInfoChangeEvent( pce );
+                }
             }
         }
     }

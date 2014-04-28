@@ -651,7 +651,7 @@ public class PicturePopupMenu extends JPopupMenu {
         if ( !Settings.pictureCollection.isSelected( popupNode ) ) {
             JpoEventBus.getInstance().post( new RefreshThumbnailRequest( popupNode, ThumbnailQueueRequest.HIGH_PRIORITY ) );
         } else {
-            JpoEventBus.getInstance().post( new RefreshThumbnailRequest( Settings.pictureCollection.getSelectedNodesAsArrayList(), ThumbnailQueueRequest.HIGH_PRIORITY ) );
+            JpoEventBus.getInstance().post( new RefreshThumbnailRequest( Settings.pictureCollection.getSelectedNodesAsList(), ThumbnailQueueRequest.HIGH_PRIORITY ) );
         }
 
     }
@@ -812,9 +812,9 @@ public class PicturePopupMenu extends JPopupMenu {
                     @Override
                     public void actionPerformed( ActionEvent event ) {
                         SortableDefaultMutableTreeNode targetNode = Settings.recentDropNodes[dropnode];
-                        ArrayList<SortableDefaultMutableTreeNode> movingNodes = new ArrayList<>();
+                        List<SortableDefaultMutableTreeNode> movingNodes = new ArrayList<>();
                         if ( ( Settings.pictureCollection.countSelectedNodes() > 0 ) && ( Settings.pictureCollection.isSelected( popupNode ) ) ) {
-                            movingNodes.addAll( Settings.pictureCollection.getSelectedNodesAsArrayList() );
+                            movingNodes.addAll( Settings.pictureCollection.getSelectedNodesAsList() );
                             Settings.pictureCollection.clearSelection();
                         } else {
                             movingNodes.add( popupNode );

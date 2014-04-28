@@ -9,7 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Set;
@@ -20,7 +20,6 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 import static javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE;
 import jpo.EventBus.ShowCategoryUsageEditorRequest;
 import jpo.dataModel.Category;
@@ -341,10 +340,11 @@ public class CategoryUsageJFrame extends JFrame {
         Enumeration e;
 
         HashSet<Object> selectedCategories = categoryJScrollPane.getSelectedCategories();
-
+synchronized( categoryGuiListeners ) {
         for ( CategoryGuiListenerInterface listener : categoryGuiListeners ) {
             listener.categoriesChosen( selectedCategories );
         }
+}
 
         // update the selected pictures
         if ( selectedNodes == null ) {
@@ -374,7 +374,7 @@ public class CategoryUsageJFrame extends JFrame {
     /**
      * This list holds references to categoryGuiListeners
      */
-    protected ArrayList<CategoryGuiListenerInterface> categoryGuiListeners = new ArrayList<CategoryGuiListenerInterface>();
+    private final Set<CategoryGuiListenerInterface> categoryGuiListeners = Collections.synchronizedSet( new HashSet<CategoryGuiListenerInterface>() );
 
     /**
      * This method registers the categoryGuiListener

@@ -52,6 +52,10 @@ public class PictureCollectionTest
     private final SortableDefaultMutableTreeNode group5 = new SortableDefaultMutableTreeNode( new GroupInfo( "Group5" ) );
     private final SortableDefaultMutableTreeNode group6 = new SortableDefaultMutableTreeNode( new GroupInfo( "Group6" ) );
 
+    /**
+     * Set up tests
+     * @throws Exception can throw an Exception
+     */
     @Override
     protected void setUp() throws Exception {
         pictureCollection = new PictureCollection();
@@ -217,6 +221,9 @@ public class PictureCollectionTest
     int mailSelectedCount;
     int mailUnselectedCount;
 
+    /**
+     * Test for the Select notification
+     */
     public void testSelectNotification() {
         pi1.addPictureInfoChangeListener( listener );
         selectedCount = 0;

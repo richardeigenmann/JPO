@@ -101,11 +101,11 @@ public class GenerateWebsiteWizard3Midres extends AbstractStep {
     /**
      * Slider that allows the quality of the midres jpg's to be specified.
      */
-    private final JSlider midresJpgQualityJSlider =
-            new JSlider(
-            JSlider.HORIZONTAL,
-            0, 100,
-            (int) ( Settings.defaultHtmlMidresQuality * 100 ) );
+    private final JSlider midresJpgQualityJSlider
+            = new JSlider(
+                    JSlider.HORIZONTAL,
+                    0, 100,
+                    (int) ( Settings.defaultHtmlMidresQuality * 100 ) );
 
     /**
      * Create the widgets.
@@ -134,7 +134,6 @@ public class GenerateWebsiteWizard3Midres extends AbstractStep {
         } );
         wizardPanel.add( generateMapJCheckBox, "spanx, wrap" );
 
-
         generateDHTMLJCheckBox.addChangeListener( new ChangeListener() {
             @Override
             public void stateChanged( ChangeEvent arg0 ) {
@@ -146,11 +145,11 @@ public class GenerateWebsiteWizard3Midres extends AbstractStep {
         wizardPanel.add( new JLabel( Settings.jpoResources.getString( "thubnailSizeJLabel" ) ), "align label" );
         midresWidthJSpinner.addChangeListener(
                 new ChangeListener() {
-            @Override
-            public void stateChanged( ChangeEvent arg0 ) {
-                options.setMidresWidth( ( (SpinnerNumberModel) ( midresWidthJSpinner.getModel() ) ).getNumber().intValue() );
-            }
-        } );
+                    @Override
+                    public void stateChanged( ChangeEvent arg0 ) {
+                        options.setMidresWidth( ( (SpinnerNumberModel) ( midresWidthJSpinner.getModel() ) ).getNumber().intValue() );
+                    }
+                } );
         wizardPanel.add( midresWidthJSpinner, "split 3" );
         wizardPanel.add( new JLabel( " x " ) );
         midresHeightJSpinner.addChangeListener( new ChangeListener() {
@@ -183,7 +182,9 @@ public class GenerateWebsiteWizard3Midres extends AbstractStep {
         return wizardPanel;
     }
 
-    // required but not used
+    /**
+     * required but not used
+     */
     @Override
     public void prepareRendering() {
     }

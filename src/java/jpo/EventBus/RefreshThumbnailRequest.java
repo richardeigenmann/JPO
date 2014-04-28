@@ -1,6 +1,7 @@
 package jpo.EventBus;
 
 import java.util.ArrayList;
+import java.util.List;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
 
 /**
@@ -11,7 +12,7 @@ import jpo.dataModel.SortableDefaultMutableTreeNode;
  */
 public class RefreshThumbnailRequest implements Request {
 
-    private final ArrayList<SortableDefaultMutableTreeNode> nodes;
+    private final List<SortableDefaultMutableTreeNode> nodes;
     private final int priority;
 
     /**
@@ -34,7 +35,7 @@ public class RefreshThumbnailRequest implements Request {
      * @param nodes The nodes to be refreshed
      * @param priority The priority for the creation queue
      */
-    public RefreshThumbnailRequest( ArrayList<SortableDefaultMutableTreeNode> nodes, int priority ) {
+    public RefreshThumbnailRequest( List<SortableDefaultMutableTreeNode> nodes, int priority ) {
         this.nodes = nodes;
         this.priority = priority;
     }
@@ -44,7 +45,7 @@ public class RefreshThumbnailRequest implements Request {
      *
      * @return the Nodes to refresh
      */
-    public ArrayList<SortableDefaultMutableTreeNode> getNodes() {
+    public List<SortableDefaultMutableTreeNode> getNodes() {
         return nodes;
     }
 

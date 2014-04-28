@@ -44,6 +44,10 @@ public class ToolsTest extends TestCase {
     }
 
     boolean onEDT_ErrorThrown;
+    
+    /**
+     * Test that an error is thrown when we are on the EDT and call the checkEDT method
+     */
     public void testCheckEDT_OnEDT() {
         // if on EDT must not throw Error
         onEDT_ErrorThrown = false;

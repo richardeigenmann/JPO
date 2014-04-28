@@ -571,7 +571,7 @@ public class PictureInfoEditor extends JFrame {
         listModel.addElement( setupCategories );
         listModel.addElement( noCategories );
 
-        ArrayList<Integer> selections = new ArrayList<>();
+        List<Integer> selections = new ArrayList<>();
         for ( Integer key : myNode.getPictureCollection().getCategoryKeySet() ) {
             String category = myNode.getPictureCollection().getCategory( key );
             Category categoryObject = new Category( key, category );

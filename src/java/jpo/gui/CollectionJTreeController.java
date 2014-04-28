@@ -77,11 +77,9 @@ public class CollectionJTreeController {
         collectionJTree.setDropMode( DropMode.ON_OR_INSERT );
         ToolTipManager.sharedInstance().registerComponent( collectionJTree );
 
-        // embed the JTree in a JScrollPane
         collectionJScrollPane.setMinimumSize( Settings.JPO_NAVIGATOR_JTABBEDPANE_MINIMUM_SIZE );
         collectionJScrollPane.setPreferredSize( Settings.jpoNavigatorJTabbedPanePreferredSize );
 
-        //Add listener to components that can bring up groupPopupJPopupMenu menus.
         CollectionMouseAdapter mouseAdapter = new CollectionMouseAdapter( this );
         collectionJTree.addMouseListener( mouseAdapter );
         registerOnEventBus();

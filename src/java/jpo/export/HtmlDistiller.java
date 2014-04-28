@@ -93,7 +93,7 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
     /**
      * Array of the files created
      */
-    private ArrayList<File> files = new ArrayList<>();
+    private List<File> files = new ArrayList<>();
     /**
      * static size of the buffer to be used in copy operations
      */
@@ -917,7 +917,7 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
         }
     }
 
-    private void sshCopyToServer( ArrayList<File> files ) {
+    private void sshCopyToServer( List<File> files ) {
         LOGGER.info( "Setting up ssh connection:" );
         String response = "";
         JSch jsch = new JSch();
@@ -1052,7 +1052,7 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
         return b;
     }
 
-    private void ftpCopyToServer( ArrayList<File> files ) {
+    private void ftpCopyToServer( List<File> files ) {
         LOGGER.info( "Setting up ftp connection:" );
         final FTPClient ftp = new FTPClient();
         int reply;

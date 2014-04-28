@@ -3,8 +3,8 @@ package jpo.gui;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
@@ -115,7 +115,7 @@ public class ThumbnailCreationFactory implements Runnable {
                     thumbnailController.getThumbnail().setImageIcon( icon );
 
                 } else if ( userObject instanceof GroupInfo ) {
-                    ArrayList<SortableDefaultMutableTreeNode> childPictureNodes = thumbnailController.getNode().getChildPictureNodes( false );
+                    List<SortableDefaultMutableTreeNode> childPictureNodes = thumbnailController.getNode().getChildPictureNodes( false );
 
                     ImageBytes imageBytes = JpoCache.getInstance().getGroupThumbnailImageBytes( childPictureNodes );
                     ImageIcon icon = new ImageIcon( imageBytes.getBytes() );

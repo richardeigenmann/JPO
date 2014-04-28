@@ -24,7 +24,7 @@ public interface PictureInfoChangeListener {
     /**
      * inform the listener that the status has changed
      *
-     * @param pictureInfoChangeEvent
+     * @param pictureInfoChangeEvent the event object with details about what changed
      */
     public void pictureInfoChangeEvent( PictureInfoChangeEvent pictureInfoChangeEvent );
 }
