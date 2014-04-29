@@ -1,7 +1,5 @@
 package jpo.dataModel;
 
-import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DragSource;
 import java.awt.dnd.DragSourceContext;
@@ -28,7 +26,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Scanner;
-import java.util.StringTokenizer;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -37,8 +34,6 @@ import javax.imageio.ImageIO;
 import javax.imageio.stream.FileImageInputStream;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
 import jpo.gui.XmlFilter;
@@ -234,7 +229,7 @@ public class Tools {
                     } else {
                         // Not 7 Bit use the unicode system
                         sb.append( "&#" );
-                        sb.append( Integer.toString(ci) );
+                        sb.append( Integer.toString( ci ) );
                         sb.append( ';' );
                     }
                 }
@@ -253,7 +248,6 @@ public class Tools {
     public static String getExtension( URL url ) {
         return getExtension( url.toString() );
     }
-
 
     /**
      * return the file extension of a string
@@ -286,7 +280,6 @@ public class Tools {
         }
         return fnroot;
     }
-
 
     /**
      * method that tests the file extension of a File object for being the
@@ -376,19 +369,14 @@ public class Tools {
      * @return true if the JVM has a reader false if not.
      */
     public static boolean jvmHasReader( File testFile ) {
-        try {
-            FileImageInputStream testStream = new FileImageInputStream( testFile );
-            boolean hasReader = ImageIO.getImageReaders( testStream ).hasNext();
-            testStream.close();
+
+        boolean hasReader;
+        try ( FileImageInputStream testStream = new FileImageInputStream( testFile ) ) {
+            hasReader = ImageIO.getImageReaders( testStream ).hasNext();
             return hasReader;
-        } catch ( MalformedURLException x ) {
-            LOGGER.log( Level.INFO, "Tools.jvmHasReader.MalformedURLException: {0}\nError: {1}", new Object[]{ testFile.getPath(), x.getMessage() } );
-            return false;
-        } catch ( FileNotFoundException x ) {
-            LOGGER.log( Level.INFO, "Tools.jvmHasReader.File not found: {0}\nError: {1}", new Object[]{ testFile.getPath(), x.getMessage() } );
-            return false;
+
         } catch ( IOException x ) {
-            LOGGER.log( Level.INFO, "Tools.jvmHasReader.IO Exception on: {0}\nError: {1}", new Object[]{ testFile.getPath(), x.getMessage() } );
+            LOGGER.log( Level.INFO, x.getLocalizedMessage() );
             return false;
         }
     }
@@ -410,14 +398,13 @@ public class Tools {
             return false;
         }
 
-        for ( int i = 0; i < fileArray.length; i++ ) {
-            if ( fileArray[i].isDirectory() ) {
-                if ( hasPictures( fileArray[i] ) ) {
+        for ( File file : fileArray ) {
+            if ( file.isDirectory() ) {
+                if ( hasPictures( file ) ) {
                     return true;
                 }
             } else {
-                //logger.info( "PictureAdder.hasPictures: checking: " + fileArray[i].toString() );
-                if ( Tools.jvmHasReader( fileArray[i] ) ) {
+                if ( Tools.jvmHasReader( file ) ) {
                     return true;
                 }
             }
@@ -615,13 +602,13 @@ public class Tools {
                         ( (PictureInfo) nodeObject ).setHighresLocation( targetFile.toURI().toURL() );
                     }
                     //if ( ( (PictureInfo) nodeObject ).getLowresFile().equals( sourceFile ) ) {
-                        //logger.info ( "Another picture node was using the same lowres URL. Node changed: " + ( (PictureInfo) nodeObject ).getDescription() );
+                    //logger.info ( "Another picture node was using the same lowres URL. Node changed: " + ( (PictureInfo) nodeObject ).getDescription() );
                     //    ( (PictureInfo) nodeObject ).setLowresLocation( targetFile.toURI().toURL() );
                     //}
                 } else {
                     //if ( ( !node.isRoot() ) && ( !( (GroupInfo) nodeObject ).getLowresLocation().equals( "" ) ) && ( (GroupInfo) nodeObject ).getLowresFile().equals( sourceFile ) ) {
-                        //logger.info ( "Another group node was using the same lowres URL. Node changed: " + ( (PictureInfo) nodeObject ).getDescription() );
-                      //  ( (GroupInfo) nodeObject ).setLowresLocation( targetFile.toURI().toURL() );
+                    //logger.info ( "Another group node was using the same lowres URL. Node changed: " + ( (PictureInfo) nodeObject ).getDescription() );
+                    //  ( (GroupInfo) nodeObject ).setLowresLocation( targetFile.toURI().toURL() );
                     //}
                 }
             } catch ( MalformedURLException x ) {
@@ -660,8 +647,6 @@ public class Tools {
         suffix = Long.toString( size ) + suffix;
         return suffix;
     }
-
-
 
     /**
      * Method that returns a file handle for a picture that does not exist in
@@ -735,7 +720,6 @@ public class Tools {
         return newURL;
     }
 
-
     /**
      * convenience method to log the amount of free memory
      *
@@ -761,7 +745,8 @@ public class Tools {
     }
 
     /**
-     * Brings up a popup about having run out of memory and runs a Garbage Collection
+     * Brings up a popup about having run out of memory and runs a Garbage
+     * Collection
      */
     public static void dealOutOfMemoryError() {
         Tools.freeMem();
@@ -953,7 +938,6 @@ public class Tools {
         }
     }
 
-
     /**
      * This method fires up a user function if it can. User functions are only
      * valid on PictureInfo nodes.
@@ -1033,7 +1017,6 @@ public class Tools {
             }
         }
     }
-
 
     /**
      * Writes the contents of the specified text file which we have packaged in

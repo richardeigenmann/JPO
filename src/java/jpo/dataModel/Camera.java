@@ -35,6 +35,8 @@ import java.util.logging.Logger;
  */
 public class Camera implements Serializable {
 
+    private static final long serialVersionUID = 1;
+
     /**
      * Defines a logger for this class
      */
@@ -48,6 +50,7 @@ public class Camera implements Serializable {
 
     /**
      * Sets a new description for the camera
+     *
      * @param newDescription
      */
     public void setDescription( String newDescription ) {
@@ -56,6 +59,7 @@ public class Camera implements Serializable {
 
     /**
      * returns the description of the camera
+     *
      * @return the description of the camera
      */
     public String getDescription() {
@@ -96,6 +100,7 @@ public class Camera implements Serializable {
 
     /**
      * Returns whether the user wants to use just filenames to detect new images
+     *
      * @return true if only filenames are to be used
      */
     public boolean getUseFilename() {
@@ -104,6 +109,7 @@ public class Camera implements Serializable {
 
     /**
      * Remembers the user wants to use filenames to identify new pictures
+     *
      * @param useFilename true if we should use filenames
      */
     public void setUseFilename( boolean useFilename ) {
@@ -118,6 +124,7 @@ public class Camera implements Serializable {
 
     /**
      * The old images held on the camera
+     *
      * @return the old images held on the camera
      */
     public HashMap<File, Long> getOldImage() {
@@ -126,6 +133,7 @@ public class Camera implements Serializable {
 
     /**
      * Remembers the old images on the camera
+     *
      * @param oldImage the old images on the camera
      */
     public void setOldImage( HashMap<File, Long> oldImage ) {
@@ -243,7 +251,7 @@ public class Camera implements Serializable {
     public File getRootDir() {
         File rootDir = new File( this.cameraMountPoint );
         if ( !rootDir.isDirectory() ) {
-            LOGGER.info( "Camera.buildOldImage was attempted on a non directory: " + this.cameraMountPoint );
+            LOGGER.info( String.format( "%s is not a directory", this.cameraMountPoint ) );
             return null;
         }
         return rootDir;
@@ -266,7 +274,7 @@ public class Camera implements Serializable {
     public void buildOldImage() {
         int count = countFiles();
         if ( count < 1 ) {
-            LOGGER.info( "Camera.buildOldImage was attempted for no files. Not building old image on camera as the camera is probably disconnected." );
+            LOGGER.info( "No files. Not building old image on camera as the camera is probably disconnected." );
             return;
         }
 
@@ -290,7 +298,7 @@ public class Camera implements Serializable {
     public void buildOldImage( ProgressListener progressListener, InterruptSemaphore interrupter ) {
         File rootDir = new File( this.cameraMountPoint );
         if ( !rootDir.isDirectory() ) {
-            LOGGER.info( "Camera.buildOldImage was attempted on a non directory: " + this.cameraMountPoint );
+            LOGGER.info( String.format( "%s is not a directory: ", this.cameraMountPoint ) );
             return;
         }
         zapOldImage();

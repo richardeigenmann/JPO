@@ -2,6 +2,7 @@ package jpo.dataModel;
 
 import java.io.File;
 import java.util.Enumeration;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
@@ -47,7 +48,7 @@ public class NodeStatistics {
      */
     public NodeStatistics( DefaultMutableTreeNode nodeToAnalyse ) {
         if ( nodeToAnalyse != null ) {
-            LOGGER.fine( "new NodeStatistics on node: " + nodeToAnalyse.toString() );
+            LOGGER.log( Level.FINE, "new NodeStatistics on node: {0}", nodeToAnalyse.toString());
         } else {
             LOGGER.fine( "new NodeStatistics on null node" );
         }
@@ -59,7 +60,7 @@ public class NodeStatistics {
      *
      * @param nodeToAnalyse
      */
-    public void setNode( DefaultMutableTreeNode nodeToAnalyse ) {
+    public final void setNode( DefaultMutableTreeNode nodeToAnalyse ) {
         myNode = nodeToAnalyse;
     }
 

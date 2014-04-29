@@ -48,10 +48,18 @@ public class HtmlDistillerOptions {
         return backgroundColor;
     }
 
+    /**
+     * Sets the background color for the webpage
+     * @param backgroundColor 
+     */
     public void setBackgroundColor( Color backgroundColor ) {
         this.backgroundColor = backgroundColor;
     }
 
+    /**
+     * returns the Cellspacing
+     * @return 
+     */
     public int getCellspacing() {
         return cellspacing;
     }

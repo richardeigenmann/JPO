@@ -11,6 +11,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -107,7 +108,7 @@ public class PictureCollection {
     /**
      * controls whether updates should be fired from add, delete, insert methods
      */
-    public static boolean sendModelUpdates = true;
+    private boolean sendModelUpdates = true;
 
     /**
      * Returns true if edits are allowed on this collection
@@ -135,7 +136,7 @@ public class PictureCollection {
      */
     public void sendNodeStructureChanged(
             final TreeNode changedNode ) {
-        LOGGER.fine( "Sending a node structure change on node: " + changedNode.toString() );
+        LOGGER.log( Level.FINE, "Sending a node structure change on node: {0}", changedNode.toString());
         if ( SwingUtilities.isEventDispatchThread() ) {
             getTreeModel().nodeStructureChanged( changedNode );
         } else {
@@ -157,7 +158,7 @@ public class PictureCollection {
      */
     public void sendNodeChanged(
             final TreeNode changedNode ) {
-        LOGGER.fine( "Sending a node change on node: " + changedNode.toString() );
+        LOGGER.log( Level.FINE, "Sending a node change on node: {0}", changedNode.toString());
         if ( SwingUtilities.isEventDispatchThread() ) {
             getTreeModel().nodeChanged( changedNode );
         } else {
@@ -182,7 +183,7 @@ public class PictureCollection {
     public void sendNodesWereInserted(
             final TreeNode changedNode,
             final int[] childIndices ) {
-        LOGGER.fine( "Sending a node was inserted notification on node: " + changedNode.toString() );
+        LOGGER.log( Level.FINE, "Sending a node was inserted notification on node: {0}", changedNode.toString());
         if ( SwingUtilities.isEventDispatchThread() ) {
             getTreeModel().nodesWereInserted( changedNode, childIndices );
         } else {
@@ -207,7 +208,7 @@ public class PictureCollection {
     public void sendNodesWereRemoved( final TreeNode node,
             final int[] childIndices,
             final Object[] removedChildren ) {
-        LOGGER.fine( "Sending a node was removed change on node: " + node.toString() );
+        LOGGER.log( Level.FINE, "Sending a node was removed change on node: {0}", node.toString());
         if ( SwingUtilities.isEventDispatchThread() ) {
             getTreeModel().nodesWereRemoved( node, childIndices, removedChildren );
         } else {
@@ -232,7 +233,7 @@ public class PictureCollection {
      *
      * @return the root node
      */
-    public SortableDefaultMutableTreeNode getRootNode() {
+    public final SortableDefaultMutableTreeNode getRootNode() {
         return rootNode;
     }
 
@@ -241,7 +242,7 @@ public class PictureCollection {
      */
     private void setRootNode( SortableDefaultMutableTreeNode rootNode ) {
         if ( rootNode != null ) {
-            LOGGER.fine( "setting root node to " + rootNode.toString() );
+            LOGGER.log( Level.FINE, "setting root node to {0}", rootNode.toString());
         } else {
             LOGGER.info( "setting root node to null. Why ?" );
         }
@@ -279,7 +280,7 @@ public class PictureCollection {
      * none
      * @see #unsavedUpdates
      */
-    public void setUnsavedUpdates( boolean b ) {
+    public final void setUnsavedUpdates( boolean b ) {
         unsavedUpdates = b;
     }
 
@@ -315,7 +316,7 @@ public class PictureCollection {
      *
      * @param status pass true to allow edits, false to forbid
      */
-    public void setAllowEdits( boolean status ) {
+    public final void setAllowEdits( boolean status ) {
         allowEdits = status;
     }
 
@@ -650,7 +651,7 @@ public class PictureCollection {
         }
 
         for ( SortableDefaultMutableTreeNode node : clone ) {
-            LOGGER.fine( "Removing node: " + node.toString() );
+            LOGGER.log( Level.FINE, "Removing node: {0}", node.toString());
             removeFromMailSelection( node );
         }
     }
@@ -724,9 +725,9 @@ public class PictureCollection {
             if ( nodeObject instanceof PictureInfo ) {
                 highresFile = ( (PictureInfo) nodeObject ).getHighresFile();
                 //lowresFile = ( (PictureInfo) nodeObject ).getLowresFile();
-                LOGGER.fine( "Checking: " + ( (PictureInfo) nodeObject ).getHighresLocation() );
+                LOGGER.log( Level.FINE, "Checking: {0}", ( (PictureInfo) nodeObject ).getHighresLocation());
                 if ( ( highresFile != null ) && ( highresFile.compareTo( file ) == 0 ) ) {
-                    LOGGER.info( "Found a match on: " + ( (PictureInfo) nodeObject ).getDescription() );
+                    LOGGER.log( Level.INFO, "Found a match on: {0}", ( (PictureInfo) nodeObject ).getDescription());
                     return true;
                 }// else if ( ( lowresFile != null ) && ( lowresFile.compareTo( file ) == 0 ) ) {
                 //   return true;
@@ -756,9 +757,9 @@ public class PictureCollection {
             node = (SortableDefaultMutableTreeNode) e.nextElement();
             nodeObject = node.getUserObject();
             if ( nodeObject instanceof PictureInfo ) {
-                LOGGER.fine( "Checking: " + ( (PictureInfo) nodeObject ).getHighresLocation() );
+                LOGGER.log( Level.FINE, "Checking: {0}", ( (PictureInfo) nodeObject ).getHighresLocation());
                 if ( ( (PictureInfo) nodeObject ).getChecksum() == checksum ) {
-                    LOGGER.fine( "Found a match on: " + ( (PictureInfo) nodeObject ).getDescription() );
+                    LOGGER.log( Level.FINE, "Found a match on: {0}", ( (PictureInfo) nodeObject ).getDescription());
                     return true;
                 }
             }
@@ -859,21 +860,20 @@ public class PictureCollection {
      *
      * @return true if successful, false if not
      */
-    public boolean fileSave() {
+    public void fileSave() {
         if ( xmlFile == null ) {
             LOGGER.severe( "xmlFile is null. Not saving!" );
-            return false;
+            return;
         } else {
             File temporaryFile = new File( xmlFile.getPath() + ".!!!" );
             new XmlDistiller( temporaryFile, getRootNode(), false, false );
             File originalFile = new File( xmlFile.getPath() + ".orig" );
-            boolean success = xmlFile.renameTo( originalFile );
-            success = temporaryFile.renameTo( xmlFile );
+            xmlFile.renameTo( originalFile );
+            temporaryFile.renameTo( xmlFile );
             setUnsavedUpdates( false );
-            success = originalFile.delete();
+            originalFile.delete();
             Settings.pushRecentCollection( xmlFile.toString() );
             JpoEventBus.getInstance().post( new RecentCollectionsChangedEvent() );
-            return true;
         }
     }
 
@@ -907,7 +907,7 @@ public class PictureCollection {
                 if ( pi.getHighresLocation().equals( comparingFilename ) ) {
                     testNodeParent = (SortableDefaultMutableTreeNode) testNode.getParent();
                     if ( !parentGroups.contains( testNodeParent ) ) {
-                        LOGGER.fine( "adding node: " + testNodeParent.toString() );
+                        LOGGER.log( Level.FINE, "adding node: {0}", testNodeParent.toString());
                         parentGroups.add( testNodeParent );
                     }
                 }

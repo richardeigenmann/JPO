@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Iterator;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.imageio.stream.ImageInputStream;
@@ -40,7 +41,7 @@ public class FlatFileReader {
             while ( in.ready() ) {
                 String line = in.readLine();
                 File testFile;
-                LOGGER.info( "Testing file: " + line );
+                //LOGGER.info( "Testing file: " + line );
                 try {
                     testFile = new File( new URI( line ) );
                 } catch ( URISyntaxException | IllegalArgumentException x ) {
@@ -51,7 +52,7 @@ public class FlatFileReader {
                 }
 
                 if ( !testFile.canRead() ) {
-                    LOGGER.info( "Can't read file: " + line );
+                    LOGGER.log( Level.INFO, "Can''t read file: {0}", line);
                     continue;
                 }
 
@@ -59,16 +60,16 @@ public class FlatFileReader {
                         ImageInputStream iis = ImageIO.createImageInputStream( fis ); ) {
                     Iterator i = ImageIO.getImageReaders( iis );
                     if ( !i.hasNext() ) {
-                        LOGGER.info( "No reader for file: " + line );
+                        LOGGER.log( Level.INFO, "No reader for file: {0}", line);
                         continue;
                     }
-                    LOGGER.info( "I do have a reader for file: " + line );
+                    LOGGER.log( Level.INFO, "I do have a reader for file: {0}", line);
                 } catch ( IOException ex ) {
                     LOGGER.info( ex.getLocalizedMessage() );
                     continue;
                 }
 
-                LOGGER.info( "adding file to node: " + line );
+                LOGGER.log( Level.INFO, "adding file to node: {0}", line);
                 SortableDefaultMutableTreeNode newPictureNode = new SortableDefaultMutableTreeNode(
                         new PictureInfo( line, Tools.stripOutFilenameRoot( testFile ) ) );
                 newNode.add( newPictureNode );

@@ -81,7 +81,7 @@ public class CameraDownloadWorker
                 dataModel.targetDir,
                 dataModel.getCopyMode(),
                 progressBar );
-            LOGGER.fine( String.format( "Sorting node %s by code %d", dataModel.getTargetNode().toString(), dataModel.getSortCode() ) );
+            LOGGER.fine( String.format( "Sorting node %s by code %s", dataModel.getTargetNode().toString(), dataModel.getSortCode() ) );
             dataModel.getTargetNode().sortChildren( dataModel.getSortCode() );
             JpoEventBus.getInstance().post( new RefreshThumbnailRequest( dataModel.getTargetNode(), ThumbnailQueueRequest.LOWEST_PRIORITY ) );
 

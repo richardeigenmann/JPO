@@ -26,6 +26,7 @@ import jpo.EventBus.AddCollectionToGroupRequest;
 import jpo.EventBus.AddEmptyGroupRequest;
 import jpo.EventBus.AddFlatFileRequest;
 import jpo.EventBus.AddGroupToEmailSelectionRequest;
+import jpo.EventBus.ApplicationStartupRequest;
 import jpo.EventBus.CheckDirectoriesRequest;
 import jpo.EventBus.CheckIntegrityRequest;
 import jpo.EventBus.ChooseAndAddCollectionRequest;
@@ -40,6 +41,7 @@ import jpo.EventBus.ExportGroupToFlatFileRequest;
 import jpo.EventBus.ExportGroupToHtmlRequest;
 import jpo.EventBus.ExportGroupToNewCollectionRequest;
 import jpo.EventBus.ExportGroupToPicasaRequest;
+import jpo.EventBus.FileLoadDialogRequest;
 import jpo.EventBus.FileLoadRequest;
 import jpo.EventBus.FileSaveAsRequest;
 import jpo.EventBus.FileSaveRequest;
@@ -132,6 +134,39 @@ public class ApplicationEventHandler {
     }
 
     /**
+     * Handles the application startup.
+     *
+     * @param request the startup request
+     */
+    @Subscribe
+    public void handleApplicationStartupRequest( ApplicationStartupRequest request ) {
+        LOGGER.info( "------------------------------------------------------------\n      Starting JPO" );
+
+        // Check for EDT violations
+        // RepaintManager.setCurrentManager( new CheckThreadViolationRepaintManager() );
+        Settings.loadSettings();
+
+        // JpoEventBus.getInstance().register( new DebugEventListener() );
+        JpoEventBus.getInstance().post( new OpenMainWindowRequest() );
+
+        JpoEventBus.getInstance().post( new StartCameraWatchDaemonRequest() );
+
+        //final List<ThumbnailCreationFactory> THUMBNAIL_FACTORIES = new ArrayList<>();
+        for ( int i = 1; i <= Settings.numberOfThumbnailCreationThreads; i++ ) {
+            //THUMBNAIL_FACTORIES.add( new ThumbnailCreationFactory() );
+            new ThumbnailCreationFactory();
+        }
+
+        if ( ( Settings.autoLoad != null ) && ( Settings.autoLoad.length() > 0 ) ) {
+            File xmlFile = new File( Settings.autoLoad );
+            JpoEventBus.getInstance().post( new FileLoadRequest( xmlFile ) );
+        } else {
+            JpoEventBus.getInstance().post( new StartNewCollectionRequest() );
+        }
+
+    }
+
+    /**
      * Opens the MainWindow
      *
      * @param request
@@ -161,8 +196,8 @@ public class ApplicationEventHandler {
     @Subscribe
     public void handleFindDuplicatesRequest( FindDuplicatesRequest request ) {
         DuplicatesQuery duplicatesQuery = new DuplicatesQuery();
-        DefaultMutableTreeNode newNode = Settings.getPictureCollection().addQueryToTreeModel( duplicatesQuery );
-        QueryNavigator queryBrowser = new QueryNavigator( duplicatesQuery );
+        Settings.getPictureCollection().addQueryToTreeModel( duplicatesQuery );
+        new QueryNavigator( duplicatesQuery );
         JpoEventBus.getInstance().post( new ShowQueryRequest( duplicatesQuery ) );
     }
 
@@ -230,6 +265,7 @@ public class ApplicationEventHandler {
     /**
      * Shuts down JPO no questions asked. Wrap it as a next request with a
      * UnsavedUpdatesDialogRequest
+     *
      * @param request
      */
     @Subscribe
@@ -441,33 +477,76 @@ public class ApplicationEventHandler {
 
     /**
      * Brings up a dialog where the user can select the collection to be loaded.
-     * Calls {@link SortableDefaultMutableTreeNode#fileLoad} Remember to wrap
-     * this request in an UnsavedUpdatesDialogRequest if you care about unsaved
-     * changes as this request will not check for unsaved changes
+     * Then fires a {@link FileLoadRequest}.
+     * <p>
+     * Enclose this request in an {@link UnsavedUpdatesDialogRequest} if you
+     * care about unsaved changes as this request will not check for unsaved
+     * changes
+     *
+     * @param request the request
+     */
+    @Subscribe
+    public void handleFileLoadDialogRequest( FileLoadDialogRequest request ) {
+        final File fileToLoad = Tools.chooseXmlFile();
+        JpoEventBus.getInstance().post( new FileLoadRequest( fileToLoad ) );
+        /* Thread t = new Thread() {
+
+         @Override
+         public void run() {
+         try {
+         Settings.getPictureCollection().fileLoad( fileToLoad );
+         } catch ( FileNotFoundException ex ) {
+         LOGGER.log( Level.INFO, "FileNotFoundExecption: {0}", ex.getMessage() );
+         JOptionPane.showMessageDialog( Settings.anchorFrame,
+         ex.getMessage(),
+         Settings.jpoResources.getString( "genericError" ),
+         JOptionPane.ERROR_MESSAGE );
+         return;
+         }
+         JpoEventBus.getInstance().post( new ShowGroupRequest( Settings.getPictureCollection().getRootNode() ) );
+         }
+         };
+         t.start();  */
+    }
+
+    /**
+     * Loads the file by calling
+     * {@link SortableDefaultMutableTreeNode#fileLoad}. If there is a problem
+     * creates a new collection.
+     * <p>
+     * Remember to wrap this request in an UnsavedUpdatesDialogRequest if you
+     * care about unsaved changes as this request will not check for unsaved
+     * changes
      *
      * @param request the request
      */
     @Subscribe
     public void handleFileLoadRequest( FileLoadRequest request ) {
-        final File fileToLoad = Tools.chooseXmlFile();
-        Thread t = new Thread() {
+        final File fileToLoad = request.getFileToLoad();
+        new Thread( "FileLoadRequest" ) {
 
             @Override
             public void run() {
                 try {
                     Settings.getPictureCollection().fileLoad( fileToLoad );
-                } catch ( FileNotFoundException ex ) {
-                    LOGGER.log( Level.INFO, "FileNotFoundExecption: {0}", ex.getMessage() );
-                    JOptionPane.showMessageDialog( Settings.anchorFrame,
-                            ex.getMessage(),
-                            Settings.jpoResources.getString( "genericError" ),
-                            JOptionPane.ERROR_MESSAGE );
-                    return;
+                    JpoEventBus.getInstance().post( new ShowGroupRequest( Settings.getPictureCollection().getRootNode() ) );
+                } catch ( final FileNotFoundException ex ) {
+                    Runnable r = new Runnable() {
+
+                        @Override
+                        public void run() {
+                            LOGGER.log( Level.INFO, "FileNotFoundExecption: {0}", ex.getMessage() );
+                            JOptionPane.showMessageDialog( Settings.anchorFrame,
+                                    ex.getMessage(),
+                                    Settings.jpoResources.getString( "genericError" ),
+                                    JOptionPane.ERROR_MESSAGE );
+                            JpoEventBus.getInstance().post( new StartNewCollectionRequest() );
+                        }
+                    };
+                    SwingUtilities.invokeLater( r );
                 }
-                JpoEventBus.getInstance().post( new ShowGroupRequest( Settings.getPictureCollection().getRootNode() ) );
             }
-        };
-        t.start();
+        }.start();
     }
 
     /**
@@ -479,15 +558,14 @@ public class ApplicationEventHandler {
      */
     @Subscribe
     public void handleStartNewCollectionRequest( StartNewCollectionRequest event ) {
-        Runnable r = new Runnable() {
+        SwingUtilities.invokeLater( new Runnable() {
 
             @Override
             public void run() {
                 Settings.getPictureCollection().clearCollection();
                 JpoEventBus.getInstance().post( new ShowGroupRequest( Settings.getPictureCollection().getRootNode() ) );
             }
-        };
-        SwingUtilities.invokeLater( r );
+        } );
     }
 
     /**
@@ -549,13 +627,7 @@ public class ApplicationEventHandler {
             }
 
             Settings.getPictureCollection().setXmlFile( chosenFile );
-            boolean success = Settings.getPictureCollection().fileSave();
-            if ( !success ) {
-                JOptionPane.showMessageDialog( Settings.anchorFrame,
-                        "There was a problem saving the file.",
-                        Settings.jpoResources.getString( "genericError" ),
-                        JOptionPane.ERROR_MESSAGE );
-            }
+            Settings.getPictureCollection().fileSave();
 
             Settings.memorizeCopyLocation( chosenFile.getParent() );
             JpoEventBus.getInstance().post( new CopyLocationsChangedEvent() );
@@ -804,7 +876,7 @@ public class ApplicationEventHandler {
     public void handleOpenRecentCollectionRequest( OpenRecentCollectionRequest request ) {
         final int i = request.getIndex();
 
-        Thread t = new Thread() {
+        new Thread( "OpenRecentCollectionRequest" ) {
 
             @Override
             public void run() {
@@ -812,7 +884,7 @@ public class ApplicationEventHandler {
                 try {
                     Settings.getPictureCollection().fileLoad( fileToLoad );
                 } catch ( FileNotFoundException ex ) {
-                    Logger.getLogger( Jpo.class.getName() ).log( Level.SEVERE, null, ex );
+                    Logger.getLogger( ApplicationEventHandler.class.getName() ).log( Level.SEVERE, null, ex );
                     LOGGER.log( Level.INFO, "FileNotFoundExecption: {0}", ex.getMessage() );
                     JOptionPane.showMessageDialog( Settings.anchorFrame,
                             ex.getMessage(),
@@ -825,8 +897,7 @@ public class ApplicationEventHandler {
                 Settings.pushRecentCollection( fileToLoad.toString() );
                 JpoEventBus.getInstance().post( new RecentCollectionsChangedEvent() );
             }
-        };
-        t.start();
+        }.start();
     }
 
     /**
@@ -892,7 +963,6 @@ public class ApplicationEventHandler {
     @Subscribe
     public void handleOpenLicenceFrameRequest( OpenLicenceFrameRequest request ) {
         new LicenseWindow();
-
     }
 
     /**

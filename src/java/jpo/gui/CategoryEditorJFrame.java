@@ -152,7 +152,7 @@ public class CategoryEditorJFrame
         c.insets = new Insets( 0, 0, 0, 5 );
         jPanel.add( categoriesJLabel, c );
 
-        final JList<Category> categoriesJList = new JList<Category>( listModel );
+        final JList<Category> categoriesJList = new JList<>( listModel );
         categoriesJList.setPreferredSize( new Dimension( 180, 250 ) );
         categoriesJList.setMinimumSize( new Dimension( 180, 50 ) );
         //categoriesJList.setMaximumSize( new Dimension( 1000, 500) );

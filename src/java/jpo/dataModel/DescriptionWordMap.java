@@ -9,7 +9,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.TreeMap;
 import java.util.logging.Logger;
 import jpo.TagCloud.WordMap;
@@ -92,18 +91,17 @@ public class DescriptionWordMap extends WordMap {
         }
     }
 
-    static String[] strikeWords = { "Die", "auf", "auf", "bei", "beim",
+
+    private final static HashSet<String> strikeWordsSet = new HashSet<>( Arrays.asList( "Die", "auf", "auf", "bei", "beim",
         "dem", "den", "der", "Der", "des", "die", "dsc", "mit", "nach", "vom", "von", "vor",
         "aus", "zum", "das", "Blick", "einem", "und", "Auf", "Das", "Ein",
         "ein", "eine", "einen", "für", "sich", "wird", "über", "zur", "einer", "unter",
         "hat", "the", "unterwegs", "ueber", "eines", "neben", "uns", "während", "zwischen",
         "nicht", "gesehen", "and", "als", "durch", "ist", "hinter", "Aufstieg", "Bei",
         "Beim", "Unterwegs", "Image", "man", "Nähe", "Richtung", "wurde", "noch", "nähert",
-        "Mit", "meine", "mir", "ich", "wer", "wie", "was", "warum", "wie" };
+        "Mit", "meine", "mir", "ich", "wer", "wie", "was", "warum", "wie" ) );
 
-    final static HashSet<String> strikeWordsSet = new HashSet<>( Arrays.asList( strikeWords ) );
-
-    static String[] multiWordTerms = { "Saudi Arabien", "Petit Bateau", "Marigot Bay", "South Georgia",
+    private static String[] multiWordTerms = { "Saudi Arabien", "Petit Bateau", "Marigot Bay", "South Georgia",
         "South Africa", "Goldman Sachs", "New York", "New Zealand", "Quadra Island", "Washington State",
         "Empire State", "Aprés Ski", "Tel Aviv", "Hoch Ybrig", "Den Haag", "Groot Marico", "St Gallen", "Crans Montana" };
 
@@ -169,7 +167,7 @@ public class DescriptionWordMap extends WordMap {
     public Map<String, Integer> getWordValueMap() {
         if ( wordCountMap == null ) {
             LOGGER.fine( "Building wordCountMap" );
-            wordCountMap = new HashMap<String, Integer>();
+            wordCountMap = new HashMap<>();
             Iterator<Entry<String, HashSet<SortableDefaultMutableTreeNode>>> it = wordNodeMap.entrySet().iterator();
             Entry<String, HashSet<SortableDefaultMutableTreeNode>> pairs;
             while ( it.hasNext() ) {

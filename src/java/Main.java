@@ -1,10 +1,10 @@
 
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import jpo.EventBus.ApplicationStartupRequest;
+import jpo.EventBus.JpoEventBus;
 import jpo.dataModel.Settings;
-import jpo.gui.Jpo;
+import jpo.gui.ApplicationEventHandler;
+
 
 /*
  Main.java:  starting point for the JPO application
@@ -27,14 +27,15 @@ import jpo.gui.Jpo;
  * The first class to be started to get the JPO application going.
  *
  * @author Richard Eigenmann, richard.eigenmann@gmail.com
- * @version 0.11
- * @since JDK1.6.0
+ * @version 0.12
+ * @since JDK1.7.0
  */
 public class Main {
 
     /**
      * The main method is the entry point for this application (or any) Java
-     * application. No parameter passing is used in the Jpo application. <p>
+     * application. No parameter passing is used in the Jpo application.
+     * <p>
      *
      * The method verifies that the user has the correct Java Virtual Machine (>
      * 1.6.0) and then created a new {@link Jpo} object.
@@ -63,13 +64,11 @@ public class Main {
                 + "to redistribute it under certain conditions;\n"
                 + "see Help | License for details.\n\n" );
 
-
         System.out.println( "Checking installation." );
         StringBuilder good = new StringBuilder( "These classes were found:\n" );
         StringBuilder missing = new StringBuilder( "The Installation is faulty! The following classes and libraries are missing:\n" );
 
         testClass( "jpo.gui.Jpo", "Jpo-0.11.jar", good, missing );
-        //testClass( "javax.activation.DataSource", "activation.jar", good, missing );
         testClass( "org.apache.commons.compress.archivers.zip.ZipArchiveEntry", "commons-compress-1.8.jar", good, missing );
         testClass( "org.apache.commons.io.IOUtils", "commons-io-2.4.jar", good, missing );
         testClass( "org.apache.commons.lang3.StringUtils", "commons-lang3-3.3.2.jar", good, missing );
@@ -94,12 +93,14 @@ public class Main {
             System.out.println( missing.toString() );
         }
 
-        new Jpo();
+        new ApplicationEventHandler();
+        JpoEventBus.getInstance().post( new ApplicationStartupRequest() );
+
     }
 
     /**
-     * A little helper method which checks if the class can be loaded and then appends 
-     * a little text to the good or missing strings.
+     * A little helper method which checks if the class can be loaded and then
+     * appends a little text to the good or missing strings.
      *
      * @param className The class to test for
      * @param libraryName The library where this is normally found
@@ -109,9 +110,9 @@ public class Main {
     private static void testClass( String className, String libraryName, StringBuilder good, StringBuilder missing ) {
         try {
             Class.forName( className );
-            good.append( className ).append( " (from " ).append( libraryName ).append( ")\n");
+            good.append( className ).append( " (from " ).append( libraryName ).append( ")\n" );
         } catch ( ClassNotFoundException e ) {
-            missing.append( className ).append( " (from " ).append( libraryName ).append( ")\n");
+            missing.append( className ).append( " (from " ).append( libraryName ).append( ")\n" );
         }
     }
 }

@@ -6,35 +6,41 @@ import java.util.Enumeration;
 import java.util.TreeMap;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 /*
-YearlyAnalysis.java:  Builds a TreeMap by year and month of the nodes under the input node
+ YearlyAnalysis.java:  Builds a TreeMap by year and month of the nodes under the input node
 
-Copyright (C) 2009-2014  Richard Eigenmann.
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or any later version. This program is distributed
-in the hope that it will be useful, but WITHOUT ANY WARRANTY;
-without even the implied warranty of MERCHANTABILITY or FITNESS
-FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-more details. You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-The license is in gpl.txt.
-See http://www.gnu.org/copyleft/gpl.html for the details.
+ Copyright (C) 2009-2014  Richard Eigenmann.
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or any later version. This program is distributed
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ without even the implied warranty of MERCHANTABILITY or FITNESS
+ FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+ more details. You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ The license is in gpl.txt.
+ See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 /**
- * Builds a TreeMap by year and month of the nodes under the input node.
- * The first TreeMap has keys by year and the value is a second
- * TreeMap. The second map has the key by month (starting with 0)
- * and a value with the nodes that fall into that year and month.
+ * Builds a TreeMap by year and month of the nodes under the input node. The
+ * first TreeMap has keys by year and the value is a second TreeMap. The second
+ * map has the key by month (starting with 0) and a value with the nodes that
+ * fall into that year and month.
  *
  * @author Richard Eigenmann
  */
 public class YearlyAnalysis implements Serializable {
+
+    /**
+     * Keep serialisation happy
+     */
+    private static final long serialVersionUID = 1;
 
     /**
      * The starting node in the model to analyse.
@@ -42,7 +48,8 @@ public class YearlyAnalysis implements Serializable {
     private final DefaultMutableTreeNode startNode;
 
     /**
-     * A flag to indicate whether to add the nodes that don't parse a valid date.
+     * A flag to indicate whether to add the nodes that don't parse a valid
+     * date.
      */
     private final boolean includeNonParsable = false;
 
@@ -51,23 +58,21 @@ public class YearlyAnalysis implements Serializable {
      */
     private static final Logger LOGGER = Logger.getLogger( YearlyAnalysis.class.getName() );
 
-
     /**
      * Constructor for a YearlyAnalysis Object. Create it with a startNode and
      * then pick up the TreeMap with the getMap() method.
+     *
      * @param startNode
      */
     public YearlyAnalysis( DefaultMutableTreeNode startNode ) {
         this.startNode = startNode;
         buildMaps();
-        LOGGER.fine( toString() );
     }
 
     /**
      * The target data structure.
      */
     private TreeMap<Integer, TreeMap<Integer, HashSet<DefaultMutableTreeNode>>> yearsMap;
-
 
     /**
      * Builds the TreeMaps.
@@ -88,7 +93,7 @@ public class YearlyAnalysis implements Serializable {
                         // TODO: add the nodes to a catchall node.
                     }
                 } else {
-                    LOGGER.fine( "IntegrityChecker.checkDates:" + pi.getFormattedCreationTime() + " from " + pi.getCreationTime() + " from Node: " + pi.getDescription() );
+                    LOGGER.log( Level.FINE, "IntegrityChecker.checkDates:{0} from {1} from Node: {2}", new Object[]{ pi.getFormattedCreationTime(), pi.getCreationTime(), pi.getDescription() });
                     cal = pi.getCreationTimeAsDate();
                     if ( cal != null ) {
                         int year = cal.get( Calendar.YEAR );
@@ -119,38 +124,38 @@ public class YearlyAnalysis implements Serializable {
      */
     private int maxNodes;  // default is 0
 
-
     /**
      * Returns the maximum number of nodes in all years
+     *
      * @return The maximum number of nodes in all years
      */
     public int maxNodesPerMonthInAllYears() {
         return maxNodes;
     }
 
-
     /**
-     * This method returns the results of the analysis. It is a TreeMap where each element
-     * is another TreeMap where the next level down is a HashSet of nodes.
+     * This method returns the results of the analysis. It is a TreeMap where
+     * each element is another TreeMap where the next level down is a HashSet of
+     * nodes.
+     *
      * @return the data model with the nodes
      */
     public TreeMap<Integer, TreeMap<Integer, HashSet<DefaultMutableTreeNode>>> getYearMap() {
         return yearsMap;
     }
 
-
     /**
-     * Returns a set of Integers representing the years
-     * in the analysis.
+     * Returns a set of Integers representing the years in the analysis.
+     *
      * @return The years in the analysis.
      */
     public Set<Integer> getYears() {
         return getYearMap().keySet();
     }
 
-
     /**
      * Returns the number of nodes in a year
+     *
      * @param year The year to be counted
      * @return The number of nodes in a year
      */
@@ -162,26 +167,27 @@ public class YearlyAnalysis implements Serializable {
         return count;
     }
 
-
     /**
      * Returns the number of nodes in a month of a year
+     *
      * @param year The year to be counted
      * @param month The month to be counted
      * @return The number of nodes in a month of the year
      */
     public int getMonthNodeCount( Integer year, Integer month ) {
-        LOGGER.fine( year +  "  " + month );
+        LOGGER.log( Level.FINE, "{0}  {1}", new Object[]{ year, month });
         try {
             return getNodes( year, month ).size();
         } catch ( NullPointerException ex ) {
-            LOGGER.info( "Got a NPE on Year " + year + " Month " + month );
+            LOGGER.log( Level.INFO, "Got a NPE on Year {0} Month {1}", new Object[]{ year, month });
             return 0;
         }
     }
 
-
     /**
-     * Returns a map with the months of the specified year and a set of the nodes in each months
+     * Returns a map with the months of the specified year and a set of the
+     * nodes in each months
+     *
      * @param year The year for which the months are to be returned
      * @return The map with the results
      */
@@ -189,20 +195,19 @@ public class YearlyAnalysis implements Serializable {
         return yearsMap.get( year );
     }
 
-
     /**
-     * Returns a set of Integers representing the months
-     * in the analysis.
-     * @param  year The year for which the months set should be returned
+     * Returns a set of Integers representing the months in the analysis.
+     *
+     * @param year The year for which the months set should be returned
      * @return The months in the analysis.
      */
     public Set<Integer> getMonths( Integer year ) {
         return getMonthMap( year ).keySet();
     }
 
-
     /**
      * Returns a string representing the name of the month
+     *
      * @param month
      * @return The name of the month
      */
@@ -215,9 +220,9 @@ public class YearlyAnalysis implements Serializable {
         return monthName[month];
     }
 
-
     /**
      * Returns the set of nodes for a year and month.
+     *
      * @param year The year for which to provide the nodes
      * @param month The month for which to provide the nodes
      * @return The set for the year and month
@@ -226,9 +231,9 @@ public class YearlyAnalysis implements Serializable {
         return getMonthMap( year ).get( month );
     }
 
-
     /**
      * Simple dump method to help debug the contents of the map.
+     *
      * @return a long string with the dump of the maps.
      */
     @Override

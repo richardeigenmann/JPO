@@ -24,10 +24,15 @@ import java.util.List;
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 /**
- * This class stores the parameters for a search and can return a List of
- * the search results.
+ * This class stores the parameters for a search and can return a List of the
+ * search results.
  */
 public class TextQuery implements Serializable, Query {
+
+    /**
+     * Keep serialisation happy
+     */
+    private static final long serialVersionUID = 1;
 
     /**
      * If defined this String will be checked against any field on the nodes

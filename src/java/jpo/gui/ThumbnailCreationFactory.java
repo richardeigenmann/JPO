@@ -55,7 +55,7 @@ public class ThumbnailCreationFactory implements Runnable {
      * Thread.MIN_PRIOTITY priority to ensure good overall response.
      */
     public ThumbnailCreationFactory() {
-        Thread thread = new Thread( this );
+        Thread thread = new Thread( this, "ThumbnailCreationFactory" );
         thread.setPriority( Thread.MIN_PRIORITY );
         thread.start();
     }

@@ -646,7 +646,7 @@ public class HtmlDistillerJFrame
         storeSettings();
 
         HtmlDistiller htmlDistiller = new HtmlDistiller( options );
-        Thread thread = new Thread( htmlDistiller );
+        Thread thread = new Thread( htmlDistiller, "HtmlDistiller" );
         thread.start();
     }
 

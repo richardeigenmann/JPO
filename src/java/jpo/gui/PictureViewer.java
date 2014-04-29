@@ -425,10 +425,10 @@ public class PictureViewer
             double rotation ) {
         pictureJPanel.legend = legendParam;
         pictureJPanel.centerWhenScaled = true;
-        pictureJPanel.sclPic.setScaleSize( pictureJPanel.getSize() );
+        pictureJPanel.scalablePicture.setScaleSize( pictureJPanel.getSize() );
 
-        pictureJPanel.sclPic.stopLoadingExcept( filenameURL );
-        pictureJPanel.sclPic.loadAndScalePictureInThread( filenameURL, Thread.MAX_PRIORITY, rotation );
+        pictureJPanel.scalablePicture.stopLoadingExcept( filenameURL );
+        pictureJPanel.scalablePicture.loadAndScalePictureInThread( filenameURL, Thread.MAX_PRIORITY, rotation );
         pictureJPanel.exifInfo = new ExifInfo( filenameURL );
         pictureJPanel.exifInfo.decodeExifTags();
     }
@@ -906,8 +906,8 @@ public class PictureViewer
                 int Y_Offset = e.getY() - ( WindowHeight / 2 );
 
                 pictureJPanel.setCenterLocation(
-                        pictureJPanel.focusPoint.x + (int) ( X_Offset / pictureJPanel.sclPic.getScaleFactor() ),
-                        pictureJPanel.focusPoint.y + (int) ( Y_Offset / pictureJPanel.sclPic.getScaleFactor() ) );
+                        pictureJPanel.focusPoint.x + (int) ( X_Offset / pictureJPanel.scalablePicture.getScaleFactor() ),
+                        pictureJPanel.focusPoint.y + (int) ( Y_Offset / pictureJPanel.scalablePicture.getScaleFactor() ) );
                 pictureJPanel.centerWhenScaled = false;
                 zoomIn();
             }
@@ -931,8 +931,8 @@ public class PictureViewer
                 // was already dragging
                 int x = e.getX(), y = e.getY();
 
-                pictureJPanel.focusPoint.setLocation( (int) ( (double) pictureJPanel.focusPoint.x + ( ( last_x - x ) / pictureJPanel.sclPic.getScaleFactor() ) ),
-                        (int) ( (double) pictureJPanel.focusPoint.y + ( ( last_y - y ) / pictureJPanel.sclPic.getScaleFactor() ) ) );
+                pictureJPanel.focusPoint.setLocation( (int) ( (double) pictureJPanel.focusPoint.x + ( ( last_x - x ) / pictureJPanel.scalablePicture.getScaleFactor() ) ),
+                        (int) ( (double) pictureJPanel.focusPoint.y + ( ( last_y - y ) / pictureJPanel.scalablePicture.getScaleFactor() ) ) );
                 last_x = x;
                 last_y = y;
 

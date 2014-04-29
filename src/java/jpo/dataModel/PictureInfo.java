@@ -53,6 +53,11 @@ import java.util.logging.Logger;
 public class PictureInfo implements Serializable {
 
     /**
+     * Keep serialisation happy
+     */
+    private static final long serialVersionUID = 1;
+
+    /**
      * Defines a LOGGER for this class
      */
     private static final Logger LOGGER = Logger.getLogger( PictureInfo.class.getName() );
@@ -344,7 +349,7 @@ public class PictureInfo implements Serializable {
             URL highresURL = new URL( highresLocation );
             return highresURL;
         } catch ( MalformedURLException x ) {
-            LOGGER.fine( "Caught an unexpected MalformedURLException: " + x.getMessage() );
+            LOGGER.log( Level.FINE, "Caught an unexpected MalformedURLException: {0}", x.getMessage());
             return null;
         }
     }
@@ -468,7 +473,7 @@ public class PictureInfo implements Serializable {
     public void calculateChecksum() {
         URL pictureURL = getHighresURLOrNull();
         if ( pictureURL == null ) {
-            LOGGER.severe( "Aborting due to bad URL: " + getHighresLocation() );
+            LOGGER.log( Level.SEVERE, "Aborting due to bad URL: {0}", getHighresLocation());
             return;
         }
 
@@ -484,7 +489,7 @@ public class PictureInfo implements Serializable {
 
         checksum = Tools.calculateChecksum( bin );
 
-        LOGGER.fine( "Checksum is: " + Long.toString( checksum ) );
+        LOGGER.log( Level.FINE, "Checksum is: {0}", Long.toString( checksum ));
         sendChecksumChangedEvent();
     }
 
@@ -524,11 +529,11 @@ public class PictureInfo implements Serializable {
      */
     public void parseChecksum() {
         try {
-            LOGGER.fine( "PictureInfo.parseChecksum: " + checksumString );
+            LOGGER.log( Level.FINE, "PictureInfo.parseChecksum: {0}", checksumString);
             checksum = ( new Long( checksumString ) );
             checksumString = "";
         } catch ( NumberFormatException x ) {
-            LOGGER.info( "PictureInfo.parseChecksum: invalid checksum: " + checksumString + " on picture: " + getHighresFilename() + " --> Set to MIN" );
+            LOGGER.log( Level.INFO, "PictureInfo.parseChecksum: invalid checksum: {0} on picture: {1} --> Set to MIN", new Object[]{ checksumString, getHighresFilename() });
             checksum = Long.MIN_VALUE;
         }
         sendChecksumChangedEvent();
@@ -882,7 +887,7 @@ public class PictureInfo implements Serializable {
             rotation = ( new Double( rotationString ) );
             rotationString = null;
         } catch ( NumberFormatException x ) {
-            LOGGER.info( "invalid rotation: " + rotationString + " on picture: " + getHighresFilename() + " --> Set to Zero" );
+            LOGGER.log( Level.INFO, "invalid rotation: {0} on picture: {1} --> Set to Zero", new Object[]{ rotationString, getHighresFilename() });
             rotation = 0;
         }
         sendRotationChangedEvent();
@@ -1131,7 +1136,7 @@ public class PictureInfo implements Serializable {
             categoryAssignmentString = "";
             addCategoryAssignment( category );
         } catch ( NumberFormatException x ) {
-            LOGGER.info( "PictureInfo.parseCategoryAssignment: NumberFormatException: " + categoryAssignmentString + " on picture: " + getHighresFilename() + " because: " + x.getMessage() );
+            LOGGER.log( Level.INFO, "PictureInfo.parseCategoryAssignment: NumberFormatException: {0} on picture: {1} because: {2}", new Object[]{ categoryAssignmentString, getHighresFilename(), x.getMessage() });
         }
         sendCategoryAssignmentsChangedEvent();
     }
@@ -1253,7 +1258,7 @@ public class PictureInfo implements Serializable {
     /**
      * The listeners to be notified about changes to this PictureInfo object.
      */
-    private final Set<PictureInfoChangeListener> pictureInfoListeners = Collections.synchronizedSet( new HashSet<PictureInfoChangeListener>() );
+    private final transient Set<PictureInfoChangeListener> pictureInfoListeners = Collections.synchronizedSet( new HashSet<PictureInfoChangeListener>() );
 
     /**
      * Registers a listener for picture info change events

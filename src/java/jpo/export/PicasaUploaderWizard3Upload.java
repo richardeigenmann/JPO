@@ -10,7 +10,6 @@ import java.util.logging.Logger;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
-import jpo.dataModel.GroupInfo;
 import jpo.dataModel.NodeStatistics;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
 import net.javaprog.ui.wizard.AbstractStep;
@@ -22,7 +21,7 @@ import net.miginfocom.swing.MigLayout;
 /*
  * PicasaUploaderWizard2Upload.java:
  *
- * Copyright (C) 2012 Richard Eigenmann. Zürich
+ * Copyright (C) 2012 -2014 Richard Eigenmann. Zürich
  *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software

@@ -28,14 +28,18 @@ import javax.swing.tree.TreePath;
  * sequentially.
  */
 public class FlatGroupNavigator
-        extends ListNavigator
-        implements TreeModelListener {
+        extends ListNavigator {
 
     /**
      * Logger for this class
      */
     private static final Logger LOGGER = Logger.getLogger( FlatGroupNavigator.class.getName() );
 
+    /**
+     * Listener for tree model events
+     */
+    private final MyTreeModelListener myTreeModelListener = new MyTreeModelListener();
+    
     /**
      * Constructor for a FlatGroupNavigator.
      *
@@ -44,7 +48,7 @@ public class FlatGroupNavigator
      */
     public FlatGroupNavigator( SortableDefaultMutableTreeNode groupNode ) {
         this.groupNode = groupNode;
-        Settings.getPictureCollection().getTreeModel().addTreeModelListener( this );
+        Settings.getPictureCollection().getTreeModel().addTreeModelListener( myTreeModelListener );
         buildFromScratch();
     }
 
@@ -62,8 +66,8 @@ public class FlatGroupNavigator
      */
     @Override
     public void getRid() {
-        LOGGER.info( "Deregistering the Navigator from the data model notifications." );
-        Settings.getPictureCollection().getTreeModel().removeTreeModelListener( this );
+        //LOGGER.info( "Deregistering the Navigator from the data model notifications." );
+        Settings.getPictureCollection().getTreeModel().removeTreeModelListener( myTreeModelListener );
         groupNode = null;
         super.getRid();
     }
@@ -86,69 +90,72 @@ public class FlatGroupNavigator
         }
     }
 
-    /**
-     * We are notified here that a node changed
-     *
-     * @param e The notification event details
-     */
-    @Override
-    public void treeNodesChanged( TreeModelEvent e ) {
-    }
+    private class MyTreeModelListener implements TreeModelListener {
 
-    /**
-     * We are notified here that a node was inserted
-     *
-     * @param e
-     */
-    @Override
-    public void treeNodesInserted( TreeModelEvent e ) {
-    }
+        /**
+         * We are notified here that a node changed
+         *
+         * @param e The notification event details
+         */
+        @Override
+        public void treeNodesChanged( TreeModelEvent e ) {
+        }
 
-    /**
-     * The TreeModelListener interface tells us of tree node removal events. If
-     * we receive a removal event we need to find out if one of our nodes was
-     * removed
-     *
-     * @param e The Notification event
-     */
-    @Override
-    public void treeNodesRemoved( TreeModelEvent e ) {
-        LOGGER.info( String.format( "Investigating a remove event: %s", e.toString() ) );
+        /**
+         * We are notified here that a node was inserted
+         *
+         * @param e
+         */
+        @Override
+        public void treeNodesInserted( TreeModelEvent e ) {
+        }
 
-        // Problem here is that if the current node was removed we are no longer on the node that was removed
-        TreePath currentNodeTreePath = new TreePath( groupNode.getPath() );
-        LOGGER.fine( String.format( "The current group node has this path: %s", currentNodeTreePath.toString() ) );
+        /**
+         * The TreeModelListener interface tells us of tree node removal events.
+         * If we receive a removal event we need to find out if one of our nodes
+         * was removed
+         *
+         * @param e The Notification event
+         */
+        @Override
+        public void treeNodesRemoved( TreeModelEvent e ) {
+            LOGGER.info( String.format( "Investigating a remove event: %s", e.toString() ) );
 
-        // step through the array of removed nodes
-        Object[] children = e.getChildren();
-        TreePath removedChild;
-        for ( int i = 0; i < children.length; i++ ) {
-            removedChild = new TreePath( children[i] );
-            LOGGER.fine( String.format( "Deleted child[%d] has path: %s", i, removedChild.toString() ) );
-            if ( removedChild.isDescendant( currentNodeTreePath ) ) {
-                LOGGER.info( String.format( "Oh dear, our group has just disappeared." ) );
-                allPictures.clear();
-                notifyNodeNavigatorListeners();
-                return; // no point in continuing the loop; the group is gone.
-            }
+            // Problem here is that if the current node was removed we are no longer on the node that was removed
+            TreePath currentNodeTreePath = new TreePath( groupNode.getPath() );
+            LOGGER.fine( String.format( "The current group node has this path: %s", currentNodeTreePath.toString() ) );
 
-            TreePath parentOfRemoved = e.getTreePath();
-            if ( currentNodeTreePath.equals( parentOfRemoved ) ) {
-                int[] childIndices = e.getChildIndices();
-                int myNodeCount = getNumberOfNodes();
-                LOGGER.info( String.format( "The removed %d node(s) are children of the current group (which has %d nodes)", childIndices.length, myNodeCount ) );
-                buildFromScratch();
-                notifyNodeNavigatorListeners();
+            // step through the array of removed nodes
+            Object[] children = e.getChildren();
+            TreePath removedChild;
+            for ( int i = 0; i < children.length; i++ ) {
+                removedChild = new TreePath( children[i] );
+                LOGGER.fine( String.format( "Deleted child[%d] has path: %s", i, removedChild.toString() ) );
+                if ( removedChild.isDescendant( currentNodeTreePath ) ) {
+                    LOGGER.info( String.format( "Oh dear, our group has just disappeared." ) );
+                    allPictures.clear();
+                    notifyNodeNavigatorListeners();
+                    return; // no point in continuing the loop; the group is gone.
+                }
+
+                TreePath parentOfRemoved = e.getTreePath();
+                if ( currentNodeTreePath.equals( parentOfRemoved ) ) {
+                    int[] childIndices = e.getChildIndices();
+                    int myNodeCount = getNumberOfNodes();
+                    LOGGER.info( String.format( "The removed %d node(s) are children of the current group (which has %d nodes)", childIndices.length, myNodeCount ) );
+                    buildFromScratch();
+                    notifyNodeNavigatorListeners();
+                }
             }
         }
-    }
 
-    /**
-     * We are notified here if the structure changed
-     *
-     * @param e
-     */
-    @Override
-    public void treeStructureChanged( TreeModelEvent e ) {
+        /**
+         * We are notified here if the structure changed
+         *
+         * @param e
+         */
+        @Override
+        public void treeStructureChanged( TreeModelEvent e ) {
+        }
     }
 }

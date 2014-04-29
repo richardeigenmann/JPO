@@ -18,8 +18,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /*
  ExifInfo.java: This class interacts with Drew Noake's library and extracts the Exif information
@@ -170,27 +168,34 @@ public class ExifInfo {
                 String rotationString = rtrim( tryToGetTag( exifSubIFD0directory, ExifIFD0Directory.TAG_ORIENTATION, "" ) );
                 if ( null != rotationString ) // so far have only got definitions for the Samsung Galaxy S4 phone
                 // so far have only got definitions for the Samsung Galaxy S4 phone
-                switch ( rotationString ) {
-                    case "Top, left side (Horizontal / normal)":
-                        rotation = 0;
-                        break;
-                    case "Right side, top (Rotate 90 CW)":
-                        rotation = 90;
-                        break;
-                    case "Left side, bottom (Rotate 270 CW)":
-                        rotation = 270;
-                        break;
-                    case "Bottom, right side (Rotate 180)":
-                        rotation = 180;
-                        break;
-                } 
+                {
+                    switch ( rotationString ) {
+                        case "Top, left side (Horizontal / normal)":
+                            rotation = 0;
+                            break;
+                        case "Right side, top (Rotate 90 CW)":
+                            rotation = 90;
+                            break;
+                        case "Left side, bottom (Rotate 270 CW)":
+                            rotation = 270;
+                            break;
+                        case "Bottom, right side (Rotate 180)":
+                            rotation = 180;
+                            break;
+                        default:
+                            rotation = 0;
+                            break;
+                    }
+                }
             }
 
             GpsDirectory gpsDirectory = metadata.getDirectory( GpsDirectory.class );
             if ( gpsDirectory != null ) {
                 GeoLocation location = gpsDirectory.getGeoLocation();
-                latLng.x = location.getLatitude();
-                latLng.y = location.getLongitude();
+                if ( location != null ) {
+                    latLng.x = location.getLatitude();
+                    latLng.y = location.getLongitude();
+                }
             }
 
             NikonType2MakernoteDirectory nikonType2MakernoteDirectory = metadata.getDirectory( NikonType2MakernoteDirectory.class );

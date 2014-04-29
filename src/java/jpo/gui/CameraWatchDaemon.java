@@ -1,5 +1,6 @@
 package jpo.gui;
 
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
 import jpo.dataModel.Settings;
@@ -38,8 +39,7 @@ public class CameraWatchDaemon implements Runnable {
      * Creates a new instance of CameraWatchDaemon. The Thread iterates over the
      */
     public CameraWatchDaemon() {
-        Thread t = new Thread( this );
-        t.start();
+        new Thread( this, "CameraWatchDaemon" ).start();
     }
     /**
      * A flag to indicate that the thread should stop at the next iteration.
@@ -67,7 +67,7 @@ public class CameraWatchDaemon implements Runnable {
                 for ( Camera c : Settings.cameras ) {
                     boolean isConnected = c.isCameraConnected();
                     if ( c.getMonitorForNewPictures() && isConnected && ( !c.getLastConnectionStatus() ) ) {
-                        LOGGER.info( getClass().toString() + ": Camera " + c.toString() + " has been connected " );
+                        LOGGER.log( Level.INFO, "{0}: Camera {1} has been connected ", new Object[]{ getClass().toString(), c.toString() });
                         final CameraDownloadWizardData dm = new CameraDownloadWizardData();
                         dm.setCamera( c );
                         dm.setAnchorFrame( Settings.anchorFrame );

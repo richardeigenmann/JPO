@@ -238,14 +238,25 @@ public class CameraEditor
      */
     private final Set<ActionListener> listeners = Collections.synchronizedSet( new HashSet<ActionListener>() );
 
+    /**
+     * Adds a listener
+     * @param actionListener 
+     */
     public void addActionListener( ActionListener actionListener ) {
         listeners.add( actionListener );
     }
 
+    /**
+     * Removes a listener
+     * @param actionListener 
+     */
     public void removeActionListener( ActionListener actionListener ) {
         listeners.remove( actionListener );
     }
 
+    /**
+     * Notifies the listeners
+     */
     public void notifyActionListeners() {
         ActionEvent event = new ActionEvent( this, 0, "save" );
         synchronized ( listeners ) {

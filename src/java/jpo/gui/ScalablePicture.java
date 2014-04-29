@@ -268,15 +268,12 @@ public class ScalablePicture
      * @param priority The priority this image takes relative to the others.
      */
     public void createScaledPictureInThread( int priority ) {
-        Runnable r = new Runnable() {
-
+        Thread t = new Thread( "ScalablePicture.createScaledPictureInThread" ) {
             @Override
             public void run() {
                 scalePicture();
             }
         };
-
-        Thread t = new Thread( r );
         t.setPriority( priority );
         t.start();
     }

@@ -29,6 +29,9 @@ import jpo.dataModel.Category;
  */
 public class CategoryListCellRenderer extends JCheckBox implements ListCellRenderer<Category> {
 
+    /**
+     * Constructor
+     */
     public CategoryListCellRenderer() {
         setOpaque( true );
     }

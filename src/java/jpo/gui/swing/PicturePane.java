@@ -72,7 +72,7 @@ public class PicturePane
     /**
      * The currently displayed ScalablePicture.
      */
-    public ScalablePicture sclPic = new ScalablePicture();
+    public ScalablePicture scalablePicture = new ScalablePicture();
 
     /**
      * Flag that lets this JComponent know if the picture is to be fitted into
@@ -142,11 +142,11 @@ public class PicturePane
         // make graphics faster
         this.setDoubleBuffered( false );
 
-        sclPic.addStatusListener( this );
+        scalablePicture.addStatusListener( this );
         if ( Settings.pictureViewerFastScale ) {
-            sclPic.setFastScale();
+            scalablePicture.setFastScale();
         } else {
-            sclPic.setQualityScale();
+            scalablePicture.setQualityScale();
         }
 
         this.addComponentListener( new ComponentAdapter() {
@@ -172,7 +172,7 @@ public class PicturePane
      * ready and should be repainted.
      */
     public void zoomIn() {
-        double OldScaleFactor = sclPic.getScaleFactor();
+        double OldScaleFactor = scalablePicture.getScaleFactor();
         double NewScaleFactor = OldScaleFactor * 1.5;
 
         // If scaling goes from scale down to scale up, set ScaleFactor to exactly 1
@@ -181,9 +181,9 @@ public class PicturePane
         }
 
         // Check if the picture would get to large and cause the system to "hang"
-        if ( ( sclPic.getOriginalWidth() * sclPic.getScaleFactor() < Settings.maximumPictureSize ) && ( sclPic.getOriginalHeight() * sclPic.getScaleFactor() < Settings.maximumPictureSize ) ) {
-            sclPic.setScaleFactor( NewScaleFactor );
-            sclPic.createScaledPictureInThread( Thread.MAX_PRIORITY );
+        if ( ( scalablePicture.getOriginalWidth() * scalablePicture.getScaleFactor() < Settings.maximumPictureSize ) && ( scalablePicture.getOriginalHeight() * scalablePicture.getScaleFactor() < Settings.maximumPictureSize ) ) {
+            scalablePicture.setScaleFactor( NewScaleFactor );
+            scalablePicture.createScaledPictureInThread( Thread.MAX_PRIORITY );
         }
     }
 
@@ -194,8 +194,8 @@ public class PicturePane
      * the image is ready and should be repainted.
      */
     public void zoomOut() {
-        sclPic.setScaleFactor( sclPic.getScaleFactor() / 1.5 );
-        sclPic.createScaledPictureInThread( Thread.MAX_PRIORITY );
+        scalablePicture.setScaleFactor( scalablePicture.getScaleFactor() / 1.5 );
+        scalablePicture.createScaledPictureInThread( Thread.MAX_PRIORITY );
     }
 
     /**
@@ -207,10 +207,10 @@ public class PicturePane
      *
      */
     public void zoomToFit() {
-        sclPic.setScaleSize( getSize() );
+        scalablePicture.setScaleSize( getSize() );
         // prevent useless rescale events when the picture is not ready
-        if ( sclPic.getStatusCode() == SCALABLE_PICTURE_LOADED || sclPic.getStatusCode() == SCALABLE_PICTURE_READY ) {
-            sclPic.createScaledPictureInThread( Thread.MAX_PRIORITY );
+        if ( scalablePicture.getStatusCode() == SCALABLE_PICTURE_LOADED || scalablePicture.getStatusCode() == SCALABLE_PICTURE_READY ) {
+            scalablePicture.createScaledPictureInThread( Thread.MAX_PRIORITY );
         }
     }
 
@@ -221,8 +221,8 @@ public class PicturePane
      * ready and should be repainted.
      */
     public void zoomFull() {
-        sclPic.setScaleFactor( 1 );
-        sclPic.createScaledPictureInThread( Thread.MAX_PRIORITY );
+        scalablePicture.setScaleFactor( 1 );
+        scalablePicture.createScaledPictureInThread( Thread.MAX_PRIORITY );
     }
 
     ///////////////////////////////////////////////////////////////
@@ -236,8 +236,8 @@ public class PicturePane
      * need to take place.
      */
     public void centerImage() {
-        if ( sclPic.getOriginalImage() != null ) {
-            setCenterLocation( sclPic.getOriginalWidth() / 2, sclPic.getOriginalHeight() / 2 );
+        if ( scalablePicture.getOriginalImage() != null ) {
+            setCenterLocation( scalablePicture.getOriginalWidth() / 2, scalablePicture.getOriginalHeight() / 2 );
             repaint();
         }
     }
@@ -262,8 +262,8 @@ public class PicturePane
      */
     public void scrollUp() {
         // if the bottom edge of the picture is visible, do not scroll
-        if ( ( ( sclPic.getOriginalHeight() - focusPoint.y ) * sclPic.getScaleFactor() ) + getSize().height / 2 > getSize().height ) {
-            focusPoint.y = focusPoint.y + (int) ( getSize().height * scrollFactor / sclPic.getScaleFactor() );
+        if ( ( ( scalablePicture.getOriginalHeight() - focusPoint.y ) * scalablePicture.getScaleFactor() ) + getSize().height / 2 > getSize().height ) {
+            focusPoint.y = focusPoint.y + (int) ( getSize().height * scrollFactor / scalablePicture.getScaleFactor() );
             repaint();
         } else {
             LOGGER.warning( "scrollUp rejected because bottom of picture is already showing." );
@@ -282,8 +282,8 @@ public class PicturePane
      * @see #scrollRight()
      */
     public void scrollDown() {
-        if ( getSize().height / 2 - focusPoint.y * sclPic.getScaleFactor() < 0 ) {
-            focusPoint.y = focusPoint.y - (int) ( getSize().height * scrollFactor / sclPic.getScaleFactor() );
+        if ( getSize().height / 2 - focusPoint.y * scalablePicture.getScaleFactor() < 0 ) {
+            focusPoint.y = focusPoint.y - (int) ( getSize().height * scrollFactor / scalablePicture.getScaleFactor() );
             repaint();
         } else {
             LOGGER.warning( "PicturePane.scrollDown rejected because top edge is aready visible" );
@@ -303,8 +303,8 @@ public class PicturePane
      */
     public void scrollLeft() {
         // if the bottom edge of the picture is visible, do not scroll
-        if ( ( ( sclPic.getOriginalWidth() - focusPoint.x ) * sclPic.getScaleFactor() ) + getSize().width / 2 > getSize().width ) {
-            focusPoint.x = focusPoint.x + (int) ( getSize().width * scrollFactor / sclPic.getScaleFactor() );
+        if ( ( ( scalablePicture.getOriginalWidth() - focusPoint.x ) * scalablePicture.getScaleFactor() ) + getSize().width / 2 > getSize().width ) {
+            focusPoint.x = focusPoint.x + (int) ( getSize().width * scrollFactor / scalablePicture.getScaleFactor() );
             repaint();
         } else {
             LOGGER.warning( "scrollLeft rejected because right edge of picture is already showing." );
@@ -323,8 +323,8 @@ public class PicturePane
      * @see #scrollRight()
      */
     public void scrollRight() {
-        if ( getSize().width / 2 - focusPoint.x * sclPic.getScaleFactor() < 0 ) {
-            focusPoint.x = focusPoint.x - (int) ( getSize().width * scrollFactor / sclPic.getScaleFactor() );
+        if ( getSize().width / 2 - focusPoint.x * scalablePicture.getScaleFactor() < 0 ) {
+            focusPoint.x = focusPoint.x - (int) ( getSize().width * scrollFactor / scalablePicture.getScaleFactor() );
             repaint();
         } else {
             LOGGER.warning( "scrollRight rejected because left edge is aready visible" );
@@ -359,11 +359,11 @@ public class PicturePane
         int WindowWidth = getSize().width;
         int WindowHeight = getSize().height;
 
-        if ( sclPic.getScaledPicture() != null ) {
+        if ( scalablePicture.getScaledPicture() != null ) {
             Graphics2D g2d = (Graphics2D) g;
 
-            int X_Offset = (int) ( (double) ( WindowWidth / 2 ) - ( focusPoint.x * sclPic.getScaleFactor() ) );
-            int Y_Offset = (int) ( (double) ( WindowHeight / 2 ) - ( focusPoint.y * sclPic.getScaleFactor() ) );
+            int X_Offset = (int) ( (double) ( WindowWidth / 2 ) - ( focusPoint.x * scalablePicture.getScaleFactor() ) );
+            int Y_Offset = (int) ( (double) ( WindowHeight / 2 ) - ( focusPoint.y * scalablePicture.getScaleFactor() ) );
 
             // clear damaged component area
             Rectangle clipBounds = g2d.getClipBounds();
@@ -373,7 +373,7 @@ public class PicturePane
                     clipBounds.width,
                     clipBounds.height );
 
-            g2d.drawRenderedImage( sclPic.getScaledPicture(), AffineTransform.getTranslateInstance( X_Offset, Y_Offset ) );
+            g2d.drawRenderedImage( scalablePicture.getScaledPicture(), AffineTransform.getTranslateInstance( X_Offset, Y_Offset ) );
 
             g2d.setColor( infoFontColor );
             switch ( showInfo ) {
@@ -397,9 +397,9 @@ public class PicturePane
                     break;
                 case APPLICATION_OVERLAY:
                     g2d.drawString( legend, infoPoint.x, infoPoint.y + ( 0 * lineSpacing ) );
-                    g2d.drawString( Settings.jpoResources.getString( "PicturePaneSize" ) + Integer.toString( sclPic.getOriginalWidth() ) + " x " + Integer.toString( sclPic.getOriginalHeight() ) + Settings.jpoResources.getString( "PicturePaneMidpoint" ) + Integer.toString( focusPoint.x ) + " x " + Integer.toString( focusPoint.y ) + " Scale: " + TWO_DECIMAL_FORMATTER.format( sclPic.getScaleFactor() ), infoPoint.x, infoPoint.y + ( 1 * lineSpacing ) );
-                    g2d.drawString( "File: " + sclPic.getFilename(), infoPoint.x, infoPoint.y + ( 2 * lineSpacing ) );
-                    g2d.drawString( Settings.jpoResources.getString( "PicturePaneLoadTime" ) + TWO_DECIMAL_FORMATTER.format( sclPic.getSourcePicture().loadTime / 1000F ) + Settings.jpoResources.getString( "PicturePaneSeconds" ), infoPoint.x, infoPoint.y + ( 3 * lineSpacing ) );
+                    g2d.drawString( Settings.jpoResources.getString( "PicturePaneSize" ) + Integer.toString( scalablePicture.getOriginalWidth() ) + " x " + Integer.toString( scalablePicture.getOriginalHeight() ) + Settings.jpoResources.getString( "PicturePaneMidpoint" ) + Integer.toString( focusPoint.x ) + " x " + Integer.toString( focusPoint.y ) + " Scale: " + TWO_DECIMAL_FORMATTER.format( scalablePicture.getScaleFactor() ), infoPoint.x, infoPoint.y + ( 1 * lineSpacing ) );
+                    g2d.drawString( "File: " + scalablePicture.getFilename(), infoPoint.x, infoPoint.y + ( 2 * lineSpacing ) );
+                    g2d.drawString( Settings.jpoResources.getString( "PicturePaneLoadTime" ) + TWO_DECIMAL_FORMATTER.format( scalablePicture.getSourcePicture().loadTime / 1000F ) + Settings.jpoResources.getString( "PicturePaneSeconds" ), infoPoint.x, infoPoint.y + ( 3 * lineSpacing ) );
                     g2d.drawString( Settings.jpoResources.getString( "PicturePaneFreeMemory" ) + Tools.freeMemory(), infoPoint.x, infoPoint.y + ( 4 * lineSpacing ) );
                     break;
             }
@@ -528,7 +528,7 @@ public class PicturePane
      * @return the scaled image
      */
     public ScalablePicture getScalablePicture() {
-        return sclPic;
+        return scalablePicture;
     }
 
     public Object getDescriptionJTextArea() {

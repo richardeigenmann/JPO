@@ -986,7 +986,7 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
         command = "C0644 " + filesize + " ";
         command += file.getName();
         command += "\n";
-        LOGGER.info( "Command: " + command );
+        LOGGER.log( Level.INFO, "Command: {0}", command);
         out.write( command.getBytes() );
         out.flush();
         if ( checkAck( in ) != 0 ) {
@@ -994,11 +994,10 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
         }
 
         // send a content of lfile
-        FileInputStream fis = null;
-        fis = new FileInputStream( file );
+        FileInputStream fis = new FileInputStream( file );
         byte[] buf = new byte[1024];
         while ( true ) {
-            LOGGER.info( "Sending bytes: " + buf.length );
+            LOGGER.log( Level.INFO, "Sending bytes: {0}", buf.length);
             int len = fis.read( buf, 0, buf.length );
             if ( len <= 0 ) {
                 break;
@@ -1006,7 +1005,6 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
             out.write( buf, 0, len ); //out.flush();
         }
         fis.close();
-        fis = null;
 
         LOGGER.info( "Sending \0" );
         // send '\0'

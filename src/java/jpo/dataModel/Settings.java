@@ -20,7 +20,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileSystemView;
 import jpo.export.HtmlDistillerOptions;
-import jpo.gui.Jpo;
+
 
 
 /*
@@ -715,7 +715,7 @@ public class Settings {
     /**
      * handle to the user Preferences
      */
-    public static Preferences prefs = Preferences.userNodeForPackage( Jpo.class );
+    public static Preferences prefs = Preferences.userNodeForPackage( Settings.class );
 
     /**
      * This method reads the settings from the preferences.
@@ -1068,19 +1068,19 @@ public class Settings {
     public static void loadCameraSettings() {
         int numberOfCameras = prefs.getInt( "NumberOfCameras", 0 );
         for ( int i = 0; i < numberOfCameras; i++ ) {
-            Camera c = new Camera();
-            c.setDescription( prefs.get( "Camera[" + Integer.toString( i ) + "].description", "unknown" ) );
-            c.setCameraMountPoint( prefs.get( "Camera[" + Integer.toString( i ) + "].cameraMountPoint", FileSystemView.getFileSystemView().getHomeDirectory().toString() ) );
-            c.setUseFilename( prefs.getBoolean( "Camera[" + Integer.toString( i ) + "].useFilename", true ) );
-            c.setMonitorForNewPictures( prefs.getBoolean( "Camera[" + Integer.toString( i ) + "].monitor", true ) );
+            Camera camera = new Camera();
+            camera.setDescription( prefs.get( "Camera[" + Integer.toString( i ) + "].description", "unknown" ) );
+            camera.setCameraMountPoint( prefs.get( "Camera[" + Integer.toString( i ) + "].cameraMountPoint", FileSystemView.getFileSystemView().getHomeDirectory().toString() ) );
+            camera.setUseFilename( prefs.getBoolean( "Camera[" + Integer.toString( i ) + "].useFilename", true ) );
+            camera.setMonitorForNewPictures( prefs.getBoolean( "Camera[" + Integer.toString( i ) + "].monitor", true ) );
 
-            c.setOldImage( new HashMap<File, Long>() );
+            camera.setOldImage( new HashMap<File, Long>() );
             try {
-                c.setOldImage( (HashMap) PrefObj.getObject( prefs, "Camera[" + Integer.toString( i ) + "].oldImage" ) );
+                camera.setOldImage( (HashMap) PrefObj.getObject( prefs, "Camera[" + Integer.toString( i ) + "].oldImage" ) );
             } catch ( IOException | BackingStoreException | ClassNotFoundException ex ) {
                 LOGGER.severe( ex.getLocalizedMessage() );
             }
-            cameras.add( c );
+            cameras.add( camera );
         }
     }
 

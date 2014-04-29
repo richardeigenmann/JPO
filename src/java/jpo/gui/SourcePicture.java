@@ -65,8 +65,10 @@ public class SourcePicture {
      */
     private URL imageUrl;
 
+    /**
+     * States of the source picture
+     */
     public enum SourcePictureStatus {
-
         SOURCE_PICTURE_UNINITIALISED,
         SOURCE_PICTURE_LOADING,
         SOURCE_PICTURE_ROTATING,
@@ -85,7 +87,7 @@ public class SourcePicture {
     /**
      * reference to the inner class that listens to the image loading progress
      */
-    private final ImageProgressListener imageProgressListener = new ImageProgressListener();
+    private final MyIIOReadProgressListener myIIOReadProgressListener = new MyIIOReadProgressListener();
 
     /**
      * the reader object that will read the image
@@ -139,7 +141,7 @@ public class SourcePicture {
 
         this.imageUrl = imageUrl;
         this.rotation = rotation;
-        Thread t = new Thread() {
+        Thread t = new Thread( "SourcePicture.loadPictureInThread" ) {
 
             @Override
             public void run() {
@@ -182,7 +184,7 @@ public class SourcePicture {
             reader = (ImageReader) i.next();  // grab the first one
             i = null;
 
-            reader.addIIOReadProgressListener( imageProgressListener );
+            reader.addIIOReadProgressListener( myIIOReadProgressListener );
             reader.setInput( iis );
             sourcePictureBufferedImage = null;
             try {
@@ -202,7 +204,7 @@ public class SourcePicture {
             } catch ( OutOfMemoryError e ) {
                 LOGGER.severe( "SourcePicture caught an OutOfMemoryError while loading an image." );
                 iis.close();
-                reader.removeIIOReadProgressListener( imageProgressListener );
+                reader.removeIIOReadProgressListener( myIIOReadProgressListener );
                 reader.dispose();
 
                 setStatus( SOURCE_PICTURE_ERROR, Settings.jpoResources.getString( "ScalablePictureErrorStatus" ) );
@@ -211,7 +213,7 @@ public class SourcePicture {
                 Tools.dealOutOfMemoryError();
                 return;
             }
-            reader.removeIIOReadProgressListener( imageProgressListener );
+            reader.removeIIOReadProgressListener( myIIOReadProgressListener );
             reader.dispose();
             iis.close();
 
@@ -263,16 +265,16 @@ public class SourcePicture {
      * this method can be invoked to stop the current reader
      */
     public void stopLoading() {
-        LOGGER.fine( "SourcePicture.stopLoading(): called" );
+        //LOGGER.fine( "SourcePicture.stopLoading(): called" );
         abortFlag = true;
-        if ( ( pictureStatusCode == SOURCE_PICTURE_LOADING ) && ( reader != null ) ) {
+        /*if ( ( pictureStatusCode == SOURCE_PICTURE_LOADING ) && ( reader != null ) ) {
             reader.abort();
             setStatus( SOURCE_PICTURE_ERROR, "Image loading cancelled." );
             try {
                 finalize();
             } catch ( Throwable x ) {
             }
-        }
+        }*/
     }
 
     /**
@@ -393,7 +395,8 @@ public class SourcePicture {
 
     /**
      * Adds a listener
-     * @param listener 
+     *
+     * @param listener
      */
     public void addListener( SourcePictureListener listener ) {
         sourcePictureListeners.add( listener );
@@ -483,7 +486,7 @@ public class SourcePicture {
      * Special class that allows to catch notifications about how the image
      * reading is getting along
      */
-    private class ImageProgressListener
+    private class MyIIOReadProgressListener
             implements IIOReadProgressListener {
 
         private void notifySourceLoadProgressListeners( SourcePictureStatus statusCode,
@@ -501,6 +504,9 @@ public class SourcePicture {
 
         @Override
         public void imageProgress( ImageReader source, float percentageDone ) {
+            if ( abortFlag ) {
+                reader.abort();
+            }
             notifySourceLoadProgressListeners( SOURCE_PICTURE_LOADING_PROGRESS, ( new Float( percentageDone ) ).intValue() );
         }
 
@@ -527,6 +533,9 @@ public class SourcePicture {
 
         @Override
         public void thumbnailProgress( ImageReader source, float percentageDone ) {
+            if ( abortFlag ) {
+                reader.abort();
+            }
         }
 
         @Override

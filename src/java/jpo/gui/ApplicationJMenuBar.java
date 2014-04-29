@@ -15,7 +15,7 @@ import jpo.EventBus.ChooseAndAddPicturesToGroupRequest;
 import jpo.EventBus.CloseApplicationRequest;
 import jpo.EventBus.EditCamerasRequest;
 import jpo.EventBus.EditSettingsRequest;
-import jpo.EventBus.FileLoadRequest;
+import jpo.EventBus.FileLoadDialogRequest;
 import jpo.EventBus.FileSaveAsRequest;
 import jpo.EventBus.FileSaveRequest;
 import jpo.EventBus.FindDuplicatesRequest;
@@ -237,7 +237,7 @@ public class ApplicationJMenuBar extends JMenuBar {
      * locale. The application needs to call this method when the user changes
      * the Locale in the Settings editor.
      */
-    public void setMenuTexts() {
+    public final void setMenuTexts() {
         FileJMenu.setText( Settings.jpoResources.getString( "FileMenuText" ) );
         FileNewJMenuItem.setText( Settings.jpoResources.getString( "FileNewJMenuItem" ) );
         FileOpenRecentJMenu.setText( Settings.jpoResources.getString( "FileOpenRecentItemText" ) );
@@ -288,7 +288,7 @@ public class ApplicationJMenuBar extends JMenuBar {
      * recentCollections in Settings. Can be called by the interface from the
      * listener on the Settings object.
      */
-    public void recentFilesChanged() {
+    public final void recentFilesChanged() {
         Runnable r = new Runnable() {
 
             @Override
@@ -342,7 +342,7 @@ public class ApplicationJMenuBar extends JMenuBar {
 
             @Override
             public void actionPerformed( ActionEvent e ) {
-                JpoEventBus.getInstance().post( new UnsavedUpdatesDialogRequest( new FileLoadRequest() ) );
+                JpoEventBus.getInstance().post( new UnsavedUpdatesDialogRequest( new FileLoadDialogRequest() ) );
             }
         } );
         FileJMenu.add( FileLoadJMenuItem );

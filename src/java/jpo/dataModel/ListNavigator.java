@@ -62,7 +62,7 @@ public class ListNavigator
      *
      * @param newTitle
      */
-    public void setTitle( String newTitle ) {
+    public final void setTitle( String newTitle ) {
         title = newTitle;
     }
 
@@ -121,7 +121,7 @@ public class ListNavigator
      *
      * @param newList the new List with the nodes to display.
      */
-    public void setList(
+    public final void setList(
             List<SortableDefaultMutableTreeNode> newList ) {
         allPictures = newList;
     }

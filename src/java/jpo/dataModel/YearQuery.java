@@ -26,16 +26,24 @@ import java.util.logging.Logger;
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 /**
- * This class stores the parameters for a search and can return a List of
- * the search results.
+ * This class stores the parameters for a search and can return a List of the
+ * search results.
  */
 public class YearQuery implements Serializable, Query {
 
+    /**
+     * Keep serialisation happy
+     */
+    private static final long serialVersionUID = 1;
+
+    /**
+     * Define a logger
+     */
     private static final Logger LOGGER = Logger.getLogger( YearQuery.class.getName() );
 
     /**
      * This flag indicates whether dates that can't be parsed should be treaded
-     * as matches or fails	
+     * as matches or fails
      */
     public boolean includeNullDates;  // default is false
 
@@ -65,7 +73,7 @@ public class YearQuery implements Serializable, Query {
      *
      * @param lowerDateRange
      */
-    public void setLowerDateRange( Calendar lowerDateRange ) {
+    public final void setLowerDateRange( Calendar lowerDateRange ) {
         this.lowerDateRange = lowerDateRange;
     }
 
@@ -90,7 +98,7 @@ public class YearQuery implements Serializable, Query {
      *
      * @param upperDateRange The upper date range
      */
-    public void setUpperDateRange( Calendar upperDateRange ) {
+    public final void setUpperDateRange( Calendar upperDateRange ) {
         this.upperDateRange = upperDateRange;
     }
 

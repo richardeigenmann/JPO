@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JProgressBar;
 import javax.swing.SwingWorker;
@@ -86,7 +87,6 @@ public class PicasaUploaderWorker extends SwingWorker<Boolean, Integer> {
     @Override
     protected void process( List<Integer> chunks ) {
         for ( int number : chunks ) {
-            //LOGGER.info ( String.format ( "Processing: %d", number ) );
             progressBar.setValue( progressBar.getValue() + 1 );
         }
     }
@@ -146,7 +146,7 @@ public class PicasaUploaderWorker extends SwingWorker<Boolean, Integer> {
      * @return true if success, false if not
      */
     public boolean postPicture( PictureInfo pictureInfo ) {
-        LOGGER.info( "Posting Picture: " + pictureInfo.getDescription() );
+        LOGGER.log( Level.INFO, "Posting Picture: {0}", pictureInfo.getDescription());
         PhotoEntry myPhoto = new PhotoEntry();
         myPhoto.setTitle( new PlainTextConstruct( pictureInfo.getDescription() ) );
         myPhoto.setDescription( new PlainTextConstruct( pictureInfo.getDescription() ) );
@@ -155,7 +155,7 @@ public class PicasaUploaderWorker extends SwingWorker<Boolean, Integer> {
         MediaFileSource myMedia = new MediaFileSource( pictureInfo.getHighresFile(), "image/jpeg" );
         myPhoto.setMediaSource( myMedia );
         try {
-            PhotoEntry returnedPhoto = myRequest.picasaWebService.insert( albumUrl, myPhoto );
+            myRequest.picasaWebService.insert( albumUrl, myPhoto );
         } catch ( IOException | ServiceException ex ) {
             LOGGER.severe( ex.getMessage() );
             return false;

@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Enumeration;
 import java.util.Iterator;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
@@ -86,7 +87,7 @@ public class XmlDistiller
         this.copyPics = copyPics;
 
         if ( runAsThread ) {
-            Thread t = new Thread( this );
+            Thread t = new Thread( this, "XmlDistiller" );
             t.start();
         } else {
             run();
@@ -97,7 +98,7 @@ public class XmlDistiller
      * method that is invoked by the thread to do things asynchroneousely
      */
     @Override
-    public void run() {
+    public final void run() {
         try {
             if ( copyPics ) {
                 highresTargetDir = new File( xmlOutputFile.getParentFile(), "Highres" );
@@ -152,13 +153,13 @@ public class XmlDistiller
 
         } catch ( SecurityException x ) {
             //e.printStackTrace();
-            LOGGER.info( "XmlDistiller.run: SecurityException: " + x.getMessage() );
+            LOGGER.log( Level.INFO, "XmlDistiller.run: SecurityException: {0}", x.getMessage() );
             JOptionPane.showMessageDialog( null, x.getMessage(),
                     "XmlDistiller: SecurityException",
                     JOptionPane.ERROR_MESSAGE );
         } catch ( IOException x ) {
             //x.printStackTrace();
-            LOGGER.info( "XmlDistiller.run: IOException: " + x.getMessage() );
+            LOGGER.log( Level.INFO, "XmlDistiller.run: IOException: {0}", x.getMessage() );
             JOptionPane.showMessageDialog( null, x.getMessage(),
                     "XmlDistiller: IOExeption",
                     JOptionPane.ERROR_MESSAGE );
@@ -172,11 +173,11 @@ public class XmlDistiller
         GroupInfo groupInfo = (GroupInfo) groupNode.getUserObject();
 
         //if ( copyPics && groupInfo.getLowresFile().canRead() ) {
-            //File targetLowresFile = Tools.inventPicFilename( lowresTargetDir, groupInfo.getLowresFilename() );
-            //Tools.copyPicture( groupInfo.getLowresURL(), targetLowresFile );
-          //  groupInfo.dumpToXml( out, groupNode == startNode, groupNode.getPictureCollection().getAllowEdits() );
+        //File targetLowresFile = Tools.inventPicFilename( lowresTargetDir, groupInfo.getLowresFilename() );
+        //Tools.copyPicture( groupInfo.getLowresURL(), targetLowresFile );
+        //  groupInfo.dumpToXml( out, groupNode == startNode, groupNode.getPictureCollection().getAllowEdits() );
         //} else {
-            groupInfo.dumpToXml( out, groupNode == startNode, groupNode.getPictureCollection().getAllowEdits() );
+        groupInfo.dumpToXml( out, groupNode == startNode, groupNode.getPictureCollection().getAllowEdits() );
         //}
 
         SortableDefaultMutableTreeNode childNode;
@@ -208,7 +209,7 @@ public class XmlDistiller
             //}
             pictureInfo.dumpToXml( out,
                     targetHighresFile.toURI().toURL().toString()
-                    //targetLowresFile.toURI().toURL().toString() 
+            //targetLowresFile.toURI().toURL().toString() 
             );
         } else {
             pictureInfo.dumpToXml( out );
@@ -222,14 +223,12 @@ public class XmlDistiller
      * @param directory
      */
     public void writeCollectionDTD( File directory ) {
-        try {
-            ClassLoader cl = this.getClass().getClassLoader();
-            InputStream in = cl.getResource( "jpo/collection.dtd" ).openStream();
-            FileOutputStream outStream = new FileOutputStream( new File( directory, "collection.dtd" ) );
-
-            BufferedInputStream bin = new BufferedInputStream( in );
-            BufferedOutputStream bout = new BufferedOutputStream( outStream );
-
+        ClassLoader cl = this.getClass().getClassLoader();
+        try (
+                InputStream in = cl.getResource( "jpo/collection.dtd" ).openStream();
+                FileOutputStream outStream = new FileOutputStream( new File( directory, "collection.dtd" ) );
+                BufferedInputStream bin = new BufferedInputStream( in );
+                BufferedOutputStream bout = new BufferedOutputStream( outStream ); ) {
             int c;
 
             while ( ( c = bin.read() ) != -1 ) {

@@ -37,13 +37,18 @@ import java.util.logging.Logger;
  *
  * @see PictureInfo
  */
-public class GroupInfo
-        implements Serializable {
+public final class GroupInfo implements Serializable {
+
+    /**
+     * Keep serialisation happy
+     */
+    private static final long serialVersionUID = 1;
 
     /**
      * Defines a logger for this class
      */
     private static final Logger LOGGER = Logger.getLogger( GroupInfo.class.getName() );
+
 
     /**
      * The description of the GroupInfo.
@@ -192,7 +197,7 @@ public class GroupInfo
     /**
      * The listeners to notify about changes on this GroupInfo object
      */
-    private final Set<GroupInfoChangeListener> groupInfoListeners = Collections.synchronizedSet( new HashSet<GroupInfoChangeListener>() );
+    private final transient Set<GroupInfoChangeListener> groupInfoListeners = Collections.synchronizedSet( new HashSet<GroupInfoChangeListener>() );
 
     /**
      * Adds a change listener

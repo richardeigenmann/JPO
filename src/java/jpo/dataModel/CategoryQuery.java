@@ -49,7 +49,7 @@ public class CategoryQuery implements Query {
      */
     public CategoryQuery( Integer key ) {
         this.key = key;
-        this.refresh();
+        refresh();
     }
 
     /**
@@ -111,7 +111,7 @@ public class CategoryQuery implements Query {
      * This method retrieves a new List of nodes that match the category.
      */
     @Override
-    public void refresh() {
+    public final void refresh() {
         resultList = null;
         resultList = PictureCollection.getCategoryUsageNodes( key, Settings.getPictureCollection().getRootNode() );
     }

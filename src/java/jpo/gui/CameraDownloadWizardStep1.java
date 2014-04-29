@@ -1,5 +1,6 @@
 package jpo.gui;
 
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -77,7 +78,7 @@ public class CameraDownloadWizardStep1
 
         JLabel analysisLabel = new JLabel( Settings.jpoResources.getString( "DownloadCameraWizardStep1Text4" ) );
         stepComponent.add( analysisLabel );
-        Thread t = new Thread( new SearchForPicturesThread( analysisLabel ) );
+        Thread t = new Thread( new SearchForPicturesThread( analysisLabel ), "CameraDownloadWizard" );
         t.start();
 
         return stepComponent;
@@ -109,7 +110,7 @@ public class CameraDownloadWizardStep1
 
         @Override
         public void run() {
-            LOGGER.info( getClass().toString() + ".run: searching for the new pictures on the camera " + dataModel.getCamera().getDescription() );
+            LOGGER.log( Level.INFO, "{0}.run: searching for the new pictures on the camera {1}", new Object[]{ getClass().toString(), dataModel.getCamera().getDescription() });
             dataModel.setNewPictures( dataModel.getCamera().getNewPictures() );
 
             // now update the GUI on the EDT

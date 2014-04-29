@@ -13,6 +13,7 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
@@ -224,7 +225,7 @@ public class CategoryUsageJFrame extends JFrame {
      *
      * @param nodes
      */
-    public void setSelection( Set<SortableDefaultMutableTreeNode> nodes ) {
+    public final void setSelection( Set<SortableDefaultMutableTreeNode> nodes ) {
         selectedNodes = nodes;
         updateCategories();
     }
@@ -239,7 +240,7 @@ public class CategoryUsageJFrame extends JFrame {
      */
     public void setGroupSelection( SortableDefaultMutableTreeNode groupNode,
             boolean recurse ) {
-        selectedNodes = new HashSet<SortableDefaultMutableTreeNode>();
+        selectedNodes = new HashSet<>();
         SortableDefaultMutableTreeNode n;
         Enumeration nodes = groupNode.children();
         while ( nodes.hasMoreElements() ) {
@@ -270,7 +271,7 @@ public class CategoryUsageJFrame extends JFrame {
         Enumeration categoryEnumeration = listModel.elements();
         while ( categoryEnumeration.hasMoreElements() ) {
             c = (Category) categoryEnumeration.nextElement();
-            LOGGER.info( "Setting Status to undefined on Category: " + c.getKey().toString() + " " + c.toString() );
+            LOGGER.log( Level.INFO, "Setting Status to undefined on Category: {0} {1}", new Object[]{ c.getKey().toString(), c.toString() });
             c.setStatus( Category.UNDEFINED );
             // force screen update:
             listModel.setElementAt( c, listModel.indexOf( c ) );

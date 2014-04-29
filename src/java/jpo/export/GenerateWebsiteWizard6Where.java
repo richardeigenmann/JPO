@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.SocketException;
 import java.util.Properties;
+import java.util.logging.Level;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
@@ -96,15 +97,15 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
         }
 
     }
-    private static final String[] TARGET_OPTIONS = {"Local Directory", "FTP Location", "SSH Location"};
+    private static final String[] TARGET_OPTIONS = { "Local Directory", "FTP Location", "SSH Location" };
     private final JComboBox finalTarget = new JComboBox<>( TARGET_OPTIONS );
     /**
      * Text field that holds the directory that the html is to be exported to.
      *
      */
-    private final DirectoryChooser targetDirJTextField =
-            new DirectoryChooser( Settings.jpoResources.getString( "HtmlDistillerChooserTitle" ),
-            DirectoryChooser.DIR_MUST_BE_WRITABLE );
+    private final DirectoryChooser targetDirJTextField
+            = new DirectoryChooser( Settings.jpoResources.getString( "HtmlDistillerChooserTitle" ),
+                    DirectoryChooser.DIR_MUST_BE_WRITABLE );
     /**
      * The ftp Server
      *
@@ -151,7 +152,7 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
     /**
      * SSH Authentication Options
      */
-    private static final String[] SSH_AUTH_OPTIONS = {"Password", "SSH KEY File"};
+    private static final String[] SSH_AUTH_OPTIONS = { "Password", "SSH KEY File" };
     /**
      * SSH Authentication Options
      */
@@ -214,8 +215,6 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
         wizardPanel.add( finalTarget, "wrap" );
         wizardPanel.add( new JLabel( Settings.jpoResources.getString( "genericTargetDirText" ) ), "align label, wrap" );
 
-        //targetDirJTextField.setAlignmentX( Component.LEFT_ALIGNMENT );
-        //targetDirJTextField.setMaximumSize( GenerateWebsiteWizard.normalComponentSize );
         wizardPanel.add( targetDirJTextField, "wrap" );
 
         JButton checkButton = new JButton( Settings.jpoResources.getString( "check" ) );
@@ -240,7 +239,6 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
             }
         } );
         ftpPanel.add( ftpServer, "growx, wrap" );
-
 
         ftpPanel.add( new JLabel( "FTP Port " ), "align label" );
         // Records the ftp port number, 0 to 65535, start at 21 increment 1
@@ -290,12 +288,12 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
         final JButton ftpTestJButton = new JButton( "Test" );
         ftpTestJButton.addActionListener(
                 new ActionListener() {
-            @Override
-            public void actionPerformed( ActionEvent e ) {
-                String returnString = testFtpConnection();
-                ftpError.setText( returnString );
-            }
-        } );
+                    @Override
+                    public void actionPerformed( ActionEvent e ) {
+                        String returnString = testFtpConnection();
+                        ftpError.setText( returnString );
+                    }
+                } );
         ftpPanel.add( ftpTestJButton, "align label" );
 
         ftpPanel.add( ftpError,
@@ -304,29 +302,26 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
         final JButton ftpMkdirJButton = new JButton( "mkdir" );
         ftpMkdirJButton.addActionListener(
                 new ActionListener() {
-            @Override
-            public void actionPerformed( ActionEvent e ) {
-                String returnString = ftpMkdir();
-                ftpError.setText( returnString );
-            }
-        } );
+                    @Override
+                    public void actionPerformed( ActionEvent e ) {
+                        String returnString = ftpMkdir();
+                        ftpError.setText( returnString );
+                    }
+                } );
         ftpPanel.add( ftpMkdirJButton, "align label, wrap" );
 
         wizardPanel.add( ftpPanel,
                 "hidemode 3, wrap" );
 
-
-
-
         sshPanel.add(
                 new JLabel( "SSH Server:" ), "align label" );
         sshServer.addFocusListener(
                 new FocusAdapter() {
-            @Override
-            public void focusLost( FocusEvent e ) {
-                options.setSshServer( sshServer.getText() );
-            }
-        } );
+                    @Override
+                    public void focusLost( FocusEvent e ) {
+                        options.setSshServer( sshServer.getText() );
+                    }
+                } );
         sshPanel.add( sshServer,
                 "growx, wrap" );
 
@@ -334,11 +329,11 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
                 new JLabel( "SSH Port " ), "align label" );
         sshPort.addChangeListener(
                 new ChangeListener() {
-            @Override
-            public void stateChanged( ChangeEvent arg0 ) {
-                options.setSshPort( ( (SpinnerNumberModel) ( sshPort.getModel() ) ).getNumber().intValue() );
-            }
-        } );
+                    @Override
+                    public void stateChanged( ChangeEvent arg0 ) {
+                        options.setSshPort( ( (SpinnerNumberModel) ( sshPort.getModel() ) ).getNumber().intValue() );
+                    }
+                } );
         sshPanel.add( sshPort,
                 "wrap" );
 
@@ -346,14 +341,13 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
                 new JLabel( "SSH user:" ), "align label" );
         sshUser.addFocusListener(
                 new FocusAdapter() {
-            @Override
-            public void focusLost( FocusEvent e ) {
-                options.setSshUser( sshUser.getText() );
-            }
-        } );
+                    @Override
+                    public void focusLost( FocusEvent e ) {
+                        options.setSshUser( sshUser.getText() );
+                    }
+                } );
         sshPanel.add( sshUser,
                 "growx, wrap" );
-
 
         final JLabel sshPasswordLabel = new JLabel( "SSH password:" );
         final JLabel sshKeyfileLabel = new JLabel( "SSH keyfile:" );
@@ -362,26 +356,26 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
                 new JLabel( "SSH Auth:" ), "align label" );
         sshAuthOoptionChooser.addActionListener(
                 new ActionListener() {
-            @Override
-            public void actionPerformed( ActionEvent arg0 ) {
-                switch ( sshAuthOoptionChooser.getSelectedIndex() ) {
-                    case 0:
-                        sshPasswordLabel.setVisible( true );
-                        sshPassword.setVisible( true );
-                        sshKeyfileLabel.setVisible( false );
-                        sshKeyFile.setVisible( false );
-                        GenerateWebsiteWizard6Where.this.options.setSshAuthType( HtmlDistillerOptions.SshAuthType.SSH_AUTH_PASSWORD );
-                        break;
-                    case 1:
-                        sshPasswordLabel.setVisible( false );
-                        sshPassword.setVisible( false );
-                        sshKeyfileLabel.setVisible( true );
-                        sshKeyFile.setVisible( true );
-                        GenerateWebsiteWizard6Where.this.options.setSshAuthType( HtmlDistillerOptions.SshAuthType.SSH_AUTH_KEYFILE );
-                        break;
-                }
-            }
-        } );
+                    @Override
+                    public void actionPerformed( ActionEvent arg0 ) {
+                        switch ( sshAuthOoptionChooser.getSelectedIndex() ) {
+                            case 0:
+                                sshPasswordLabel.setVisible( true );
+                                sshPassword.setVisible( true );
+                                sshKeyfileLabel.setVisible( false );
+                                sshKeyFile.setVisible( false );
+                                GenerateWebsiteWizard6Where.this.options.setSshAuthType( HtmlDistillerOptions.SshAuthType.SSH_AUTH_PASSWORD );
+                                break;
+                            case 1:
+                                sshPasswordLabel.setVisible( false );
+                                sshPassword.setVisible( false );
+                                sshKeyfileLabel.setVisible( true );
+                                sshKeyFile.setVisible( true );
+                                GenerateWebsiteWizard6Where.this.options.setSshAuthType( HtmlDistillerOptions.SshAuthType.SSH_AUTH_KEYFILE );
+                                break;
+                        }
+                    }
+                } );
         sshPanel.add( sshAuthOoptionChooser,
                 "wrap" );
 
@@ -389,25 +383,24 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
                 "hidemode 3, align label" );
         sshPassword.addFocusListener(
                 new FocusAdapter() {
-            @Override
-            public void focusLost( FocusEvent e ) {
-                options.setSshPassword( sshPassword.getText() );
-                LOGGER.info( String.format( "Saving SSH Password: %s into options: %s", sshPassword.getText(), options.getSshPassword() ) );
-            }
-        } );
+                    @Override
+                    public void focusLost( FocusEvent e ) {
+                        options.setSshPassword( sshPassword.getText() );
+                        LOGGER.info( String.format( "Saving SSH Password: %s into options: %s", sshPassword.getText(), options.getSshPassword() ) );
+                    }
+                } );
         sshPanel.add( sshPassword,
                 "hidemode 3, growx, wrap" );
-
 
         sshPanel.add( sshKeyfileLabel,
                 "hidemode 3, align label" );
         sshKeyFile.addFocusListener(
                 new FocusAdapter() {
-            @Override
-            public void focusLost( FocusEvent e ) {
-                options.setSshKeyFile( sshKeyFile.getText() );
-            }
-        } );
+                    @Override
+                    public void focusLost( FocusEvent e ) {
+                        options.setSshKeyFile( sshKeyFile.getText() );
+                    }
+                } );
         sshPanel.add( sshKeyFile,
                 "hidemode 3, growx, wrap" );
 
@@ -415,11 +408,11 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
                 new JLabel( "SSH Target dir:" ), "align label" );
         sshTargetDir.addFocusListener(
                 new FocusAdapter() {
-            @Override
-            public void focusLost( FocusEvent e ) {
-                options.setSshTargetDir( sshTargetDir.getText() );
-            }
-        } );
+                    @Override
+                    public void focusLost( FocusEvent e ) {
+                        options.setSshTargetDir( sshTargetDir.getText() );
+                    }
+                } );
         sshPanel.add( sshTargetDir,
                 "growx, wrap" );
 
@@ -427,11 +420,11 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
 
         sshTestJButton.addActionListener(
                 new ActionListener() {
-            @Override
-            public void actionPerformed( ActionEvent e ) {
-                testSshConnection();
-            }
-        } );
+                    @Override
+                    public void actionPerformed( ActionEvent e ) {
+                        testSshConnection();
+                    }
+                } );
         sshPanel.add( sshTestJButton,
                 "align label" );
         sshPanel.add( sshError,
@@ -441,14 +434,13 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
 
         sshMkdirJButton.addActionListener(
                 new ActionListener() {
-            @Override
-            public void actionPerformed( ActionEvent e ) {
-                sshMkdir();
-            }
-        } );
+                    @Override
+                    public void actionPerformed( ActionEvent e ) {
+                        sshMkdir();
+                    }
+                } );
         sshPanel.add( sshMkdirJButton,
                 "align label, wrap" );
-
 
         final Font errorLabelFont = Font.decode( Settings.jpoResources.getString( "ThumbnailDescriptionJPanelLargeFont" ) );
 
@@ -587,10 +579,9 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
             session.setConfig( config );
             session.connect();
 
-
             LOGGER.info( "Opening Channel \"exec\"..." );
             Channel channel = session.openChannel( "exec" );
-            LOGGER.info( "Setting command: " + command );
+            LOGGER.log( Level.INFO, "Setting command: {0}", command );
             ( (ChannelExec) channel ).setCommand( command );
 
             InputStream in = channel.getInputStream();
@@ -610,22 +601,18 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
                 }
                 if ( channel.isClosed() ) {
                     response += "exit-status: " + channel.getExitStatus();
-                    LOGGER.info( "exit-status: " + channel.getExitStatus() );
+                    LOGGER.log( Level.INFO, "exit-status: {0}", channel.getExitStatus() );
                     break;
                 }
             }
 
             channel.disconnect();
             session.disconnect();
-        } catch ( JSchException ex ) {
-            LOGGER.severe( ex.getMessage() );
-            response = ex.getMessage();
-        } catch ( IOException ex ) {
+        } catch ( JSchException | IOException ex ) {
             LOGGER.severe( ex.getMessage() );
             response = ex.getMessage();
         }
         return response;
-
 
     }
 

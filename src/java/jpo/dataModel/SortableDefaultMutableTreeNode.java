@@ -146,7 +146,7 @@ public class SortableDefaultMutableTreeNode
 
     /**
      * Overridden method to allow sorting of nodes. It uses the static global
-     * variable sortfield to figure out what to compare on. 
+     * variable sortfield to figure out what to compare on.
      *
      * @param o
      * @return the usual compareTo value used for sorting.
@@ -271,8 +271,8 @@ public class SortableDefaultMutableTreeNode
      * This method collects all pictures under the current node and returns them
      * as an Array List..
      *
-     * @param recursive Pass true if the method is supposed to recursively search
-     * the subgroups, false if not
+     * @param recursive Pass true if the method is supposed to recursively
+     * search the subgroups, false if not
      * @return A List of child nodes that hold a picture
      */
     public List<SortableDefaultMutableTreeNode> getChildPictureNodes(
@@ -397,7 +397,6 @@ public class SortableDefaultMutableTreeNode
             event.dropComplete( false );
             return;
         }
-
 
         for ( Object arrayOfNode : arrayOfNodes ) {
             sourceNode = (SortableDefaultMutableTreeNode) arrayOfNode;
@@ -543,7 +542,7 @@ public class SortableDefaultMutableTreeNode
 
         /**
          * This inner class creates a popup menu for group drop events to find
-         * out whether to drop into before or after the drop node. 
+         * out whether to drop into before or after the drop node.
          */
         private GroupDropPopupMenu( final DropTargetDropEvent event,
                 final SortableDefaultMutableTreeNode sourceNode,
@@ -645,8 +644,6 @@ public class SortableDefaultMutableTreeNode
             add( dropCancel );
         }
     }
-
-   
 
     /**
      * This method removes the designated SortableDefaultMutableTreeNode from
@@ -865,7 +862,7 @@ public class SortableDefaultMutableTreeNode
         targetFile = Tools.correctFilenameExtension( Tools.getExtension( originalUrl ), targetFile );
 
         if ( !targetFile.getParentFile().exists() ) {
-            boolean success = targetFile.getParentFile().mkdirs();
+            targetFile.getParentFile().mkdirs();
         }
 
         Tools.copyPicture( originalUrl, targetFile );
@@ -1163,7 +1160,7 @@ public class SortableDefaultMutableTreeNode
                 File targetFile = Tools.inventPicFilename( targetDir, addFile.getName() );
                 long crc = Tools.copyPicture( addFile, targetFile );
                 if ( newOnly && Settings.getPictureCollection().isInCollection( crc ) ) {
-                    boolean success = targetFile.delete();
+                    targetFile.delete();
                     progGui.decrementTotal();
                 } else {
                     receivingNode.addPicture( targetFile, selectedCategories );
@@ -1181,7 +1178,7 @@ public class SortableDefaultMutableTreeNode
                     boolean a = copyAddPictures1( addFile.listFiles(), targetDir, subNode, progGui, newOnly, retainDirectories, selectedCategories );
                     picturesAdded = a || picturesAdded;
                 } else {
-                    LOGGER.info( "No pictures in directory " + addFile.toString() );
+                    LOGGER.log( Level.INFO, "No pictures in directory {0}", addFile.toString() );
                 }
             }
         }
@@ -1246,24 +1243,23 @@ public class SortableDefaultMutableTreeNode
             boolean copyMode, final JProgressBar progressBar ) {
         LOGGER.fine( String.format( "Copy/Moving %d pictures to target directory %s", newPictures.size(), targetDir.toString() ) );
         getPictureCollection().setSendModelUpdates( false );
-        for ( File f : newPictures ) {
-            LOGGER.fine( String.format( "Processing file %s", f.toString() ) );
+        for ( File file : newPictures ) {
+            LOGGER.fine( String.format( "Processing file %s", file.toString() ) );
             if ( progressBar != null ) {
-                Runnable r = new Runnable() {
+                SwingUtilities.invokeLater( new Runnable() {
 
                     @Override
                     public void run() {
                         progressBar.setValue( progressBar.getValue() + 1 );
                     }
-                };
-                SwingUtilities.invokeLater( r );
+                } );
             }
-            File targetFile = Tools.inventPicFilename( targetDir, f.getName() );
+            File targetFile = Tools.inventPicFilename( targetDir, file.getName() );
             LOGGER.fine( String.format( "Target file name chosen as: %s", targetFile.toString() ) );
-            Tools.copyPicture( f, targetFile );
+            Tools.copyPicture( file, targetFile );
 
             if ( !copyMode ) {
-                boolean success = f.delete();
+                file.delete();
             }
             addPicture( targetFile, null );
         }
@@ -1333,7 +1329,7 @@ public class SortableDefaultMutableTreeNode
                     long crc = Tools.copyPicture( addFile, targetFile );
                     cam.storePictureNewImage( addFile, crc ); // remember it next time
                     if ( cam.inOldImage( crc ) ) {
-                        boolean success = targetFile.delete();
+                        targetFile.delete();
                         progGui.decrementTotal();
                     } else {
                         receivingNode.addPicture( targetFile, selectedCategories );
@@ -1352,7 +1348,7 @@ public class SortableDefaultMutableTreeNode
                     boolean a = copyAddPictures1( addFile.listFiles(), targetDir, subNode, progGui, cam, retainDirectories, selectedCategories );
                     picturesAdded = a || picturesAdded;
                 } else {
-                    LOGGER.info( "No pictures in directory " + addFile.toString() );
+                    LOGGER.log( Level.INFO, "No pictures in directory {0}", addFile.toString());
                 }
             }
         }
@@ -1421,7 +1417,6 @@ public class SortableDefaultMutableTreeNode
         return true;
     }
 
-
     /**
      * This method returns whether the supplied node is a descendent of the
      * deletions that have been detected in the TreeModelListener delivered
@@ -1447,5 +1442,4 @@ public class SortableDefaultMutableTreeNode
         return false;
     }
 
-    
 }

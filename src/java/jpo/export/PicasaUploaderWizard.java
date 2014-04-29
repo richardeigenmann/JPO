@@ -1,6 +1,5 @@
 package jpo.export;
 
-import java.awt.Dimension;
 import jpo.dataModel.Settings;
 import net.javaprog.ui.wizard.DefaultWizardModel;
 import net.javaprog.ui.wizard.Step;
