@@ -46,6 +46,9 @@ public final class Webserver
      */
     private static Webserver instance;
 
+    /**
+     * The port to use. Constant 36126
+     */
     public static final int PORT = 36126;
 
     /**

@@ -3,7 +3,7 @@ package jpo.gui.swing;
 import javax.swing.ImageIcon;
 
 /**
- *
+ * An icon of a clock
  */
 public class ClockButton extends NavBarButton {
 

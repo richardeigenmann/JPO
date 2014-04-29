@@ -14,6 +14,7 @@ import java.text.DecimalFormat;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JComponent;
 import jpo.dataModel.ExifInfo;
@@ -458,7 +459,7 @@ public class PicturePane
     @Override
     public void scalableStatusChange( ScalablePictureStatus pictureStatusCode,
             String pictureStatusMessage ) {
-        LOGGER.fine( "PicturePane.scalableStatusChange: got a status change: " + pictureStatusMessage );
+        LOGGER.log( Level.FINE, "PicturePane.scalableStatusChange: got a status change: {0}", pictureStatusMessage);
 
         if ( pictureStatusCode == SCALABLE_PICTURE_READY ) {
             LOGGER.fine( "PicturePane.scalableStatusChange: a READY status" );

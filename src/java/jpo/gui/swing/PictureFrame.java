@@ -92,6 +92,10 @@ public class PictureFrame {
      **/
     public JTextArea descriptionJTextField = new JTextArea();
 
+    /**
+     * The test field with the description
+     * @return 
+     */
     public JTextArea getDescriptionJTextArea() {
         return descriptionJTextField;
     }

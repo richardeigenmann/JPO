@@ -313,7 +313,6 @@ public class PrivacyJFrame
             @Override
             protected void process( List<String> messages ) {
                 for ( String message : messages ) {
-                    //logger.info( String.format( "messge: %s", message ) );
                     progGui.progressIncrement();
                 }
             }

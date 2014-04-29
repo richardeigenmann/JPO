@@ -84,6 +84,10 @@ public class NodeStatisticsPanel extends JPanel {
         add( selectedCountJLabel, "wrap" );
     }
 
+    /**
+     * Updates the statistics
+     * @param nodeStatisticsBean 
+     */
     public void updateStats( NodeStatisticsBean nodeStatisticsBean ) {
         collectionItemsLabel.setText( nodeStatisticsBean.getNumberOfNodes() );
         collectionGroupsLabel.setText( nodeStatisticsBean.getNumberOfGroups() );

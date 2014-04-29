@@ -166,6 +166,9 @@ public class FlatFileDistiller extends SwingWorker<DistillerResult, String> {
                 JOptionPane.INFORMATION_MESSAGE );
     }
 
+    /**
+     * Distiller Result
+     */
     public class DistillerResult {
 
         private final boolean success;

@@ -289,7 +289,7 @@ public class CategoryUsageJFrame extends JFrame {
         categoryEnumeration = listModel.elements();
         while ( categoryEnumeration.hasMoreElements() ) {
             c = (Category) categoryEnumeration.nextElement();
-            LOGGER.info( "Checking Category: " + c.getKey().toString() + " " + c.toString() );
+            LOGGER.log( Level.INFO, "Checking Category: {0} {1}", new Object[]{ c.getKey().toString(), c.toString() });
 
             for ( SortableDefaultMutableTreeNode pictureNode : selectedNodes ) {
                 //pictureNodes = selectedNodes.elements();
@@ -300,7 +300,7 @@ public class CategoryUsageJFrame extends JFrame {
                     pi = (PictureInfo) myObject;
                     if ( pi.containsCategory( c.getKey() ) ) {
                         currentStatus = c.getStatus();
-                        LOGGER.info( "Status of category is: " + Integer.toString( currentStatus ) );
+                        LOGGER.log( Level.INFO, "Status of category is: {0}", Integer.toString( currentStatus ));
                         if ( currentStatus == Category.UNDEFINED ) {
                             c.setStatus( Category.SELECTED );
                             // force screen update:
@@ -314,7 +314,7 @@ public class CategoryUsageJFrame extends JFrame {
                     } else {
                         // we get here if there was no category match
                         currentStatus = c.getStatus();
-                        LOGGER.info( "Status of category is: " + Integer.toString( currentStatus ) );
+                        LOGGER.log( Level.INFO, "Status of category is: {0}", Integer.toString( currentStatus ));
                         if ( currentStatus == Category.UNDEFINED ) {
                             c.setStatus( Category.UN_SELECTED );
                             // force screen update:

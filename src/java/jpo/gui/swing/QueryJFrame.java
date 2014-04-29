@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.logging.Level;
 import jpo.dataModel.Tools;
 import jpo.dataModel.Settings;
 import jpo.dataModel.GroupInfo;
@@ -18,7 +19,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import static javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE;
-import javax.swing.tree.DefaultMutableTreeNode;
 import jpo.EventBus.JpoEventBus;
 import jpo.EventBus.ShowQueryRequest;
 import net.miginfocom.swing.MigLayout;
@@ -70,7 +70,7 @@ public class QueryJFrame
      */
     public QueryJFrame( SortableDefaultMutableTreeNode startSearchNode ) {
         if ( !( startSearchNode.getUserObject() instanceof GroupInfo ) ) {
-            LOGGER.info( "Method can only be invoked on GroupInfo nodes! Ignoring request. You are on node: " + this.toString() );
+            LOGGER.log( Level.INFO, "Method can only be invoked on GroupInfo nodes! Ignoring request. You are on node: {0}", this.toString());
             getRid();
         }
 

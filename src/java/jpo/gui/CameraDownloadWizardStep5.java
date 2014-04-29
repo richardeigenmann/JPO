@@ -121,7 +121,7 @@ public class CameraDownloadWizardStep5
      * @param sortOption the SortOption that was picked
      */
     private void sortOptionPicked( SortOption sortOption ) {
-        LOGGER.fine( String.format( "Option %s with sortCode %d picked", sortOption.getDescription(), sortOption.getSortCode() ) );
+        LOGGER.fine( String.format( "Option %s with sortCode %s picked", sortOption.getDescription(), sortOption.getSortCode() ) );
         dataModel.setSortCode( sortOption.getSortCode() );
         Settings.lastSortChoice = sortOption.getSortCode();
     }
