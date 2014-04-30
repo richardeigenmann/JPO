@@ -3,6 +3,7 @@ package jpo.gui;
 import jpo.dataModel.Settings;
 import java.text.NumberFormat;
 import java.text.ParseException;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JTextField;
 import javax.swing.text.AttributeSet;
@@ -109,8 +110,7 @@ public class WholeNumberField extends JTextField {
      *
      * @param value
      */
-    public void setValue( int value ) {
-        LOGGER.fine("WholeNumberField.setValue("+Integer.toString(value)+")");
+    public final void setValue( int value ) {
         setText( Integer.toString( value ) );
     }
 
@@ -162,7 +162,7 @@ public class WholeNumberField extends JTextField {
 
                     result[j++] = source[i];
                 } else {
-                    LOGGER.info( "WholdNumberField.WholdNumberDocument.insertString_ Refusing to insert character: " + source[i] );
+                    LOGGER.log( Level.INFO, "Refusing to insert character: {0}", source[i]);
                 }
             }
             super.insertString( offs, new String( result, 0, j ), a );

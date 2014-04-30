@@ -9,7 +9,7 @@ import javax.swing.ImageIcon;
 public class LeftRightButton extends NavBarButton {
 
     /**
-     *
+     * The state of the button
      */
     public enum BUTTON_STATE {
 

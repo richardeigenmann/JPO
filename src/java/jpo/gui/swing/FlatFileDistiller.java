@@ -57,6 +57,7 @@ public class FlatFileDistiller extends SwingWorker<DistillerResult, String> {
     /**
      * First opens a filechooser for the output file. Optionally asks if the
      * file should be overwritten then
+     *
      * @param request
      */
     public FlatFileDistiller( ExportGroupToFlatFileRequest request ) {
@@ -174,15 +175,26 @@ public class FlatFileDistiller extends SwingWorker<DistillerResult, String> {
         private final boolean success;
         private final Exception exception;
 
+        /**
+         * returns the Distiller Result
+         */
         public DistillerResult( boolean success, Exception excpetion ) {
             this.success = success;
             this.exception = excpetion;
         }
 
+        /**
+         * Returns true if the writing was successful
+         * @return true if successful
+         */
         public boolean getSuccess() {
             return success;
         }
 
+        /**
+         * Returns the exception
+         * @return the exception
+         */
         public Exception getException() {
             return exception;
         }

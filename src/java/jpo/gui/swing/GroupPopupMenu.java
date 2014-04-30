@@ -26,7 +26,6 @@ import jpo.EventBus.ExportGroupToPicasaRequest;
 import jpo.EventBus.JpoEventBus;
 import jpo.EventBus.MoveNodeDownRequest;
 import jpo.EventBus.MoveNodeToBottomRequest;
-import jpo.EventBus.MoveNodeToNodeRequest;
 import jpo.EventBus.MoveNodeToTopRequest;
 import jpo.EventBus.MoveNodeUpRequest;
 import jpo.EventBus.OpenSearchDialogRequest;

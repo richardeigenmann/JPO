@@ -1,5 +1,6 @@
 package jpo.gui.swing;
 
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import jpo.dataModel.Settings;
 import javax.swing.JOptionPane;
@@ -43,11 +44,11 @@ public class HelpAboutWindow {
 
         // while we're at it dump the stuff to the log
         LOGGER.info( "HelpAboutWindow: Help About showed the following information" );
-        LOGGER.info( "User: " + System.getProperty( "user.name" ) );
-        LOGGER.info( "Operating System: " + System.getProperty( "os.name" ) + "  " + System.getProperty( "os.version" ) );
-        LOGGER.info( "Java: " + System.getProperty( "java.version" ) );
-        LOGGER.info( "Max Memory: " + Long.toString( Runtime.getRuntime().maxMemory() / 1024 / 1024, 0 ) + " MB" );
-        LOGGER.info( "Free Memory: " + Long.toString( Runtime.getRuntime().freeMemory() / 1024 / 1024, 0 ) + " MB" );
+        LOGGER.log( Level.INFO, "User: {0}", System.getProperty( "user.name" ));
+        LOGGER.log( Level.INFO, "Operating System: {0}  {1}", new Object[]{ System.getProperty( "os.name" ), System.getProperty( "os.version" ) });
+        LOGGER.log( Level.INFO, "Java: {0}", System.getProperty( "java.version" ));
+        LOGGER.log( Level.INFO, "Max Memory: {0} MB", Long.toString( Runtime.getRuntime().maxMemory() / 1024 / 1024, 0 ));
+        LOGGER.log( Level.INFO, "Free Memory: {0} MB", Long.toString( Runtime.getRuntime().freeMemory() / 1024 / 1024, 0 ));
     }
 }
 

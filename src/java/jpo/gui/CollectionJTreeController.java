@@ -288,7 +288,23 @@ public class CollectionJTreeController {
 
         @Override
         public String getToolTipText( MouseEvent mouseEvent ) {
-            return overriddenGetToolTipText( mouseEvent );
+            if ( collectionJTree.getRowForLocation( mouseEvent.getX(), mouseEvent.getY() ) == -1 ) {
+                return null;
+            }
+            TreePath curPath = collectionJTree.getPathForLocation( mouseEvent.getX(), mouseEvent.getY() );
+            SortableDefaultMutableTreeNode node = (SortableDefaultMutableTreeNode) curPath.getLastPathComponent();
+            Object userObject = node.getUserObject();
+            String toolTip = "";
+            if ( userObject instanceof GroupInfo ) {
+                GroupInfo groupInfo = (GroupInfo) userObject;
+                toolTip = String.format( "<html>Group: %s</html>", groupInfo.getGroupName() );
+            } else if ( userObject instanceof PictureInfo ) {
+                final PictureInfo pictureInfo = (PictureInfo) userObject;
+                File highresFile = pictureInfo.getHighresFile();
+                String fileSize = highresFile == null ? "no file" : Tools.fileSizeToString( highresFile.length() );
+                toolTip = String.format( "<html>Picture: %s<br>%s %s</html>", pictureInfo.getDescription(), Settings.jpoResources.getString( "CollectionSizeJLabel" ), fileSize );
+            }
+            return toolTip;
         }
     };
     /**
@@ -304,27 +320,6 @@ public class CollectionJTreeController {
     public JScrollPane getJScrollPane() {
         return collectionJScrollPane;
     }
-
-    public String overriddenGetToolTipText( MouseEvent mouseEvent ) {
-        if ( collectionJTree.getRowForLocation( mouseEvent.getX(), mouseEvent.getY() ) == -1 ) {
-            return null;
-        }
-        TreePath curPath = collectionJTree.getPathForLocation( mouseEvent.getX(), mouseEvent.getY() );
-        SortableDefaultMutableTreeNode node = (SortableDefaultMutableTreeNode) curPath.getLastPathComponent();
-        Object userObject = node.getUserObject();
-        String toolTip = "";
-        if ( userObject instanceof GroupInfo ) {
-            GroupInfo groupInfo = (GroupInfo) userObject;
-            toolTip = String.format( "<html>Group: %s</html>", groupInfo.getGroupName() );
-        } else if ( userObject instanceof PictureInfo ) {
-            final PictureInfo pictureInfo = (PictureInfo) userObject;
-            File highresFile = pictureInfo.getHighresFile();
-            String fileSize = highresFile == null ? "no file" : Tools.fileSizeToString( highresFile.length() );
-            toolTip = String.format( "<html>Picture: %s<br>%s %s</html>", pictureInfo.getDescription(), Settings.jpoResources.getString( "CollectionSizeJLabel" ), fileSize );
-        }
-        return toolTip;
-    }
-
 
     /**
      * This class decides what to do with mouse events on the JTree. Since there

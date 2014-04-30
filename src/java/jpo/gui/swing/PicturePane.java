@@ -412,6 +412,9 @@ public class PicturePane
         }
     }
 
+    /**
+     * The type of overlay that should be shown
+     */
     public static enum InfoOverlay {
 
         NO_OVERLAY,

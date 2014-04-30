@@ -5,15 +5,12 @@ import java.util.logging.Level;
 import jpo.dataModel.Settings;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Enumeration;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
 import java.util.logging.Logger;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import jpo.dataModel.PictureInfo;
@@ -51,7 +48,6 @@ public class TreeNodeController {
      */
     private static final Logger LOGGER = Logger.getLogger( TreeNodeController.class.getName() );
 
-    
     /**
      * Brings up a JFileChooser to select the target location and then copies
      * the images to the target location
@@ -125,6 +121,13 @@ public class TreeNodeController {
     // 4MB buffer
     private static final byte[] BUFFER = new byte[4096 * 1024];
 
+    /**
+     * Copies an input stream to an output stream
+     *
+     * @param input the input stream
+     * @param output the output stream
+     * @throws IOException The exception it can throw
+     */
     public static void streamcopy( InputStream input, OutputStream output ) throws IOException {
         int bytesRead;
         while ( ( bytesRead = input.read( BUFFER ) ) != -1 ) {
@@ -147,8 +150,7 @@ public class TreeNodeController {
         PictureInfo pictureInfo;
         File sourceFile;
         byte[] buf = new byte[1024];
-        try {
-            ZipArchiveOutputStream zipArchiveOutputStream = new ZipArchiveOutputStream( tempfile );
+        try ( ZipArchiveOutputStream zipArchiveOutputStream = new ZipArchiveOutputStream( tempfile ); ) {
             zipArchiveOutputStream.setLevel( 9 );
             for ( SortableDefaultMutableTreeNode node : nodes ) {
                 if ( node.getUserObject() instanceof PictureInfo ) {
@@ -159,9 +161,9 @@ public class TreeNodeController {
                     ZipArchiveEntry entry = new ZipArchiveEntry( sourceFile, sourceFile.getName() );
                     zipArchiveOutputStream.putArchiveEntry( entry );
 
-                    FileInputStream fis = new FileInputStream( sourceFile );
-                    streamcopy( fis, zipArchiveOutputStream );
-                    fis.close();
+                    try ( FileInputStream fis = new FileInputStream( sourceFile ) ) {
+                        streamcopy( fis, zipArchiveOutputStream );
+                    }
                     zipArchiveOutputStream.closeArchiveEntry();
 
                     picsCopied++;
@@ -187,9 +189,6 @@ public class TreeNodeController {
             }
             zipArchiveOutputStream.finish();
             zipArchiveOutputStream.close();
-        } catch ( FileNotFoundException ex ) {
-            Logger.getLogger( TreeNodeController.class.getName() ).log( Level.SEVERE, null, ex );
-            tempfile.delete();
         } catch ( IOException ex ) {
             Logger.getLogger( TreeNodeController.class.getName() ).log( Level.SEVERE, null, ex );
             tempfile.delete();
@@ -208,5 +207,5 @@ public class TreeNodeController {
                 JOptionPane.INFORMATION_MESSAGE );
 
     }
-  
+
 }

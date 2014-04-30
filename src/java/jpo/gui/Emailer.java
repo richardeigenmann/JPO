@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
@@ -44,24 +45,24 @@ import jpo.dataModel.SortableDefaultMutableTreeNode;
 import jpo.dataModel.Tools;
 
 /*
-Emailer.java:  class that sends the emails
+ Emailer.java:  class that sends the emails
 
-Copyright (C) 2006 - 2014  Richard Eigenmann.
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or any later version. This program is distributed 
-in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
-without even the implied warranty of MERCHANTABILITY or FITNESS 
-FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
-more details. You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-The license is in gpl.txt.
-See http://www.gnu.org/copyleft/gpl.html for the details.
+ Copyright (C) 2006 - 2014  Richard Eigenmann.
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or any later version. This program is distributed 
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+ without even the implied warranty of MERCHANTABILITY or FITNESS 
+ FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
+ more details. You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ The license is in gpl.txt.
+ See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 /**
- *  This thread sends the emails.
+ * This thread sends the emails.
  */
 public class Emailer
         extends SwingWorker<String, String> {
@@ -72,27 +73,27 @@ public class Emailer
     private static final Logger LOGGER = Logger.getLogger( Emailer.class.getName() );
 
     /**
-     *   Frame to show what the thread is doing.
+     * Frame to show what the thread is doing.
      */
     private final JFrame progressFrame;
 
     /**
-     *  Label to show what is being processed.
+     * Label to show what is being processed.
      */
     private JLabel progressLabel;
 
     /**
-     *  Progress Indicator.
+     * Progress Indicator.
      */
     private final JProgressBar progBar;
 
     /**
-     *  Cancel Button.
+     * Cancel Button.
      */
     private final JButton cancelButton;
 
     /**
-     *   Variable that signals to the thread to stop immediately.
+     * Variable that signals to the thread to stop immediately.
      */
     public boolean interrupted;  // default is false
 
@@ -112,10 +113,9 @@ public class Emailer
 
     private final boolean sendOriginal;
 
-
     /**
-     *  Creates and starts a Thread that writes the picture nodes from the specified
-     *  startNode to the target directory.
+     * Creates and starts a Thread that writes the picture nodes from the
+     * specified startNode to the target directory.
      *
      * @param emailSelected
      * @param senderAddress
@@ -144,7 +144,6 @@ public class Emailer
         this.scaleSize = scaleSize;
         this.sendOriginal = sendOriginal;
 
-
         Tools.checkEDT();
 
         GridBagConstraints c = new GridBagConstraints();
@@ -154,7 +153,6 @@ public class Emailer
         JPanel progPanel = new JPanel();
         progPanel.setBorder( BorderFactory.createEmptyBorder( 5, 5, 5, 5 ) );
         progPanel.setLayout( new GridBagLayout() );
-
 
         progressLabel = new JLabel();
         progressLabel.setPreferredSize( new Dimension( 400, 20 ) );
@@ -199,13 +197,12 @@ public class Emailer
         progressFrame.setVisible( true );
         progressFrame.setLocationRelativeTo( Settings.anchorFrame );
 
-
         execute();
     }
 
-
     /**
      * This is where the SwingWorker does it's stuff
+     *
      * @return "Done"
      * @throws Exception
      */
@@ -224,7 +221,6 @@ public class Emailer
         }
         return ( "Done" );
     }
-
 
     @Override
     protected void done() {
@@ -247,7 +243,6 @@ public class Emailer
      */
     private String error = "";
 
-
     /**
      *
      * @param chunks
@@ -261,9 +256,9 @@ public class Emailer
 
     }
 
-
     /**
      * This method returns the MimeMessage object that should be emailed.
+     *
      * @return The MimeMessage for the email.
      */
     private MimeMessage buildMessage( Session session ) {
@@ -281,7 +276,6 @@ public class Emailer
             mbp1.setText( bodyText );
             mp.addBodyPart( mbp1 );
 
-
             MimeBodyPart scaledPictureMimeBodyPart;
             MimeBodyPart originalPictureMimeBodyPart;
             MimeBodyPart pictureDescriptionMimeBodyPart;
@@ -296,27 +290,26 @@ public class Emailer
             for ( int i = 0; ( i < emailSelected.size() ) && ( !interrupted ); i++ ) {
                 publish( String.format( "%d / %d", progBar.getValue(), progBar.getMaximum() ) );
                 pictureDescriptionMimeBodyPart = new MimeBodyPart();
-                pi = (PictureInfo) ( (SortableDefaultMutableTreeNode) emailSelected.get(i) ).getUserObject();
+                pi = (PictureInfo) ( (SortableDefaultMutableTreeNode) emailSelected.get( i ) ).getUserObject();
 
                 pictureDescriptionMimeBodyPart.setText( pi.getDescription(), "iso-8859-1" );
                 mp.addBodyPart( pictureDescriptionMimeBodyPart );
 
                 if ( scaleImages ) {
-                    LOGGER.info( Settings.jpoResources.getString( "EmailerLoading" ) + pi.getHighresFilename() );
+                    LOGGER.log( Level.INFO, "{0}{1}", new Object[]{ Settings.jpoResources.getString( "EmailerLoading" ), pi.getHighresFilename() } );
                     scalablePicture.loadPictureImd( pi.getHighresURLOrNull(), pi.getRotation() );
-                    LOGGER.info( Settings.jpoResources.getString( "EmailerScaling" ) + pi.getHighresFilename() );
+                    LOGGER.log( Level.INFO, "{0}{1}", new Object[]{ Settings.jpoResources.getString( "EmailerScaling" ), pi.getHighresFilename() } );
                     scalablePicture.scalePicture();
                     baos = new ByteArrayOutputStream();
-                    LOGGER.info( Settings.jpoResources.getString( "EmailerWriting" ) + pi.getHighresFilename() );
+                    LOGGER.log( Level.INFO, "{0}{1}", new Object[]{ Settings.jpoResources.getString( "EmailerWriting" ), pi.getHighresFilename() } );
                     scalablePicture.writeScaledJpg( baos );
                     encds = new EncodedDataSource( "image/jpeg", pi.getHighresFilename(), baos );
                     scaledPictureMimeBodyPart = new MimeBodyPart();
                     scaledPictureMimeBodyPart.setDataHandler( new DataHandler( encds ) );
                     scaledPictureMimeBodyPart.setFileName( pi.getHighresFilename() );
-                    LOGGER.info( Settings.jpoResources.getString( "EmailerAdding" ) + pi.getHighresFilename() );
+                    LOGGER.log( Level.INFO, "{0}{1}", new Object[]{ Settings.jpoResources.getString( "EmailerAdding" ), pi.getHighresFilename() } );
                     mp.addBodyPart( scaledPictureMimeBodyPart );
                 }
-
 
                 if ( sendOriginal ) {
                     // create the message part fro the original image
@@ -336,7 +329,6 @@ public class Emailer
             message.setContent( mp );
             publish( "Sending..." );
 
-
         } catch ( MessagingException x ) {
             LOGGER.severe( "MessagingException: " + x.getMessage() );
             error = x.getMessage();
@@ -345,9 +337,8 @@ public class Emailer
         return message;
     }
 
-
     /**
-     *  method that sends the email
+     * method that sends the email
      */
     private void sendEmailNoAuth() {
         Properties props = System.getProperties();
@@ -373,9 +364,8 @@ public class Emailer
         }
     }
 
-
     /**
-     *  method that sends the email
+     * method that sends the email
      */
     private void sendEmailAuth() {
         Properties props = System.getProperties();
@@ -387,7 +377,6 @@ public class Emailer
         props.setProperty( "mail.smtp.socketFactory.fallback", "false" );
         props.setProperty( "mail.smtp.socketFactory.port", Settings.emailPort );
         props.setProperty( "mail.smtp.starttls.enable", "true" );
-
 
         Session session = Session.getDefaultInstance( props, new Authenticator() {
 
@@ -407,15 +396,14 @@ public class Emailer
                 Transport.send( buildMessage( session ) );
                 publish( Settings.jpoResources.getString( "EmailerSent" ) );
             } catch ( MessagingException x ) {
-                LOGGER.severe( "MessagingException: " + x.getMessage() );
+                LOGGER.severe( x.getLocalizedMessage() );
                 error = x.getMessage();
             }
         }
     }
 
-
     /**
-     *  method that sends the email via SSL
+     * method that sends the email via SSL
      */
     private void sendEmailSSL() {
         Properties props = System.getProperties();
@@ -444,14 +432,14 @@ public class Emailer
                 Transport.send( buildMessage( session ) );
                 publish( Settings.jpoResources.getString( "EmailerSent" ) );
             } catch ( MessagingException x ) {
-                LOGGER.severe( "MessagingException: " + x.getMessage() );
+                LOGGER.severe( x.getLocalizedMessage() );
                 error = x.getMessage();
             }
         }
     }
 
     /**
-     *  A class that somehow helps with the emailing
+     * A class that somehow helps with the emailing
      */
     private class EncodedDataSource
             implements DataSource {
@@ -469,24 +457,20 @@ public class Emailer
 
         ByteArrayOutputStream baos;
 
-
         @Override
         public InputStream getInputStream() throws IOException {
             return new ByteArrayInputStream( baos.toByteArray() );
         }
-
 
         @Override
         public OutputStream getOutputStream() throws IOException {
             return null;//new OutputStream();
         }
 
-
         @Override
         public String getContentType() {
             return contentType;
         }
-
 
         @Override
         public String getName() {
