@@ -7,6 +7,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.logging.Level;
 import jpo.dataModel.GroupInfo;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
 import jpo.dataModel.PictureInfo;
@@ -236,7 +237,7 @@ public class TableJFrame extends JFrame {
                         ( (PictureInfo) userObject ).setLatLng( newString );
                         break;
                     default:
-                        LOGGER.info( "Bad column: " + Integer.toString( col ) );
+                        LOGGER.log( Level.INFO, "Bad column: {0}", Integer.toString( col ));
                         break;
                 }
             } else {
@@ -246,7 +247,7 @@ public class TableJFrame extends JFrame {
                         ( (GroupInfo) userObject ).setGroupName( newString );
                         break;
                     default:
-                        LOGGER.info( "Bad column: " + Integer.toString( col ) );
+                        LOGGER.log( Level.INFO, "Bad column: {0}", Integer.toString( col ));
                         break;
                 }
             }

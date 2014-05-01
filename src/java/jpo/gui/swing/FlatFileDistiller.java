@@ -177,6 +177,7 @@ public class FlatFileDistiller extends SwingWorker<DistillerResult, String> {
 
         /**
          * returns the Distiller Result
+         * @param success whether the distiller succeeded or not
          */
         public DistillerResult( boolean success, Exception excpetion ) {
             this.success = success;

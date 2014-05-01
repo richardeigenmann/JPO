@@ -10,6 +10,7 @@ import javax.swing.JFrame;
 import jpo.dataModel.Settings;
 import jpo.dataModel.Tools;
 import jpo.gui.ChangeWindowInterface;
+import jpo.gui.swing.ResizableJFrame.WindowSize;
 import static jpo.gui.swing.ResizableJFrame.WindowSize.WINDOW_DEFAULT;
 import static jpo.gui.swing.ResizableJFrame.WindowSize.WINDOW_FULLSCREEN;
 
@@ -30,10 +31,9 @@ import static jpo.gui.swing.ResizableJFrame.WindowSize.WINDOW_FULLSCREEN;
  */
 /**
  * This is basically a JFrame which understands how to resize itself to a
- * specific
- * {
+ * specific {
  *
- * @see WindowSize} and can switch on and off the window decorations (which
+ * {@link WindowSize} and can switch on and off the window decorations (which
  * requires disposing of the window and redrawing itself).
  */
 public class ResizableJFrame
@@ -148,16 +148,16 @@ public class ResizableJFrame
      * Flag that specifies whether the window should be drawn with decoration or
      * not.
      */
-    private transient boolean decorateWindow = true;
+    private boolean decorateWindow = true;
 
     /**
      * request that the window showing the picture be changed be changed.
      *
-     * @param newMode null null null null null     {@link ResizableJFrame#WINDOW_FULLSCREEN}, {@link ResizableJFrame#WINDOW_LEFT},
-     *		{@link ResizableJFrame#WINDOW_RIGHT},  {@link ResizableJFrame#WINDOW_TOP_LEFT},
-     *		{@link ResizableJFrame#WINDOW_TOP_RIGHT}, {@link ResizableJFrame#WINDOW_BOTTOM_LEFT},
-     *		{@link ResizableJFrame#WINDOW_BOTTOM_RIGHT} or
-     * {@link ResizableJFrame#WINDOW_DEFAULT} need to be indicated.
+     * @param newMode {@link WindowSize#WINDOW_FULLSCREEN}, {@link WindowSize#WINDOW_LEFT},
+     * {@link WindowSize#WINDOW_RIGHT},  {@link WindowSize#WINDOW_TOP_LEFT}, 
+     * {@link WindowSize#WINDOW_TOP_RIGHT}, {@link WindowSize#WINDOW_BOTTOM_LEFT},
+     * {@link WindowSize#WINDOW_BOTTOM_RIGHT} or
+     * {@link WindowSize#WINDOW_DEFAULT} need to be indicated.
      *
      */
     @Override
@@ -195,15 +195,14 @@ public class ResizableJFrame
         switchDecorations( newDecoration );
         resizeTo( windowMode );
     }
-    
-    
-        /**
+
+    /**
      * Request that the window showing the picture be changed be changed.
      *
-     * @param newMode null null null null null     {@link #WINDOW_FULLSCREEN}, {@link #WINDOW_LEFT},
-     *		{@link #WINDOW_RIGHT},  {@link #WINDOW_TOP_LEFT},
-     *		{@link #WINDOW_TOP_RIGHT}, {@link #WINDOW_BOTTOM_LEFT},
-     *		{@link #WINDOW_BOTTOM_RIGHT} or {@link #WINDOW_DEFAULT} need to be
+     * @param newMode {@link WindowSize#WINDOW_FULLSCREEN}, {@link WindowSize#WINDOW_LEFT},
+     *		{@link WindowSize#WINDOW_RIGHT},  {@link WindowSize#WINDOW_TOP_LEFT},
+     *		{@link WindowSize#WINDOW_TOP_RIGHT}, {@link WindowSize#WINDOW_BOTTOM_LEFT},
+     *		{@link WindowSize#WINDOW_BOTTOM_RIGHT} or {@link WindowSize#WINDOW_DEFAULT} need to be
      * indicated.
      *
      */
@@ -235,7 +234,6 @@ public class ResizableJFrame
                 break;
         }
     }
-
 
     /**
      * This method turns on or turns off the frame around the window. It works

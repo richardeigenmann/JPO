@@ -43,8 +43,11 @@ public class TagCloudController implements TagClickListener {
      */
     private final TagCloud tagCloud = new TagCloud();
 
+    /**
+     * Constructs the Controller
+     */
     public TagCloudController() {
-        JpoEventBus.getInstance().register( this );
+        JpoEventBus.getInstance().register( TagCloudController.this );
         tagCloud.addTagClickListener( TagCloudController.this );
         tagCloud.setMaxWordsToShow( Settings.tagCloudWords );
     }
@@ -56,6 +59,10 @@ public class TagCloudController implements TagClickListener {
 
     private DescriptionWordMap descriptionWordMap;
 
+    /**
+     * Returns the tag cloud component
+     * @return  the tag cloud component
+     */
     public JComponent getTagCloud() {
         return tagCloud;
     }
@@ -82,7 +89,7 @@ public class TagCloudController implements TagClickListener {
     @Override
     public void tagClicked( String key ) {
         Set<SortableDefaultMutableTreeNode> set = descriptionWordMap.getWordNodeMap().get( key );
-        StaticNodesQuery query = new StaticNodesQuery( "Word: " + key, new ArrayList<SortableDefaultMutableTreeNode>( set ) );
+        StaticNodesQuery query = new StaticNodesQuery( "Word: " + key, new ArrayList<>( set ) );
         JpoEventBus.getInstance().post( new ShowQueryRequest( query ) );
     }
 }

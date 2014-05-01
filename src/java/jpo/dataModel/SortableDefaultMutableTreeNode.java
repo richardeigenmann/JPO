@@ -62,7 +62,7 @@ import jpo.dataModel.Settings.FieldCodes;
  */
 public class SortableDefaultMutableTreeNode
         extends DefaultMutableTreeNode
-        implements Comparable, Serializable, PictureInfoChangeListener {
+        implements Comparable, PictureInfoChangeListener {
 
     /**
      * Defines a logger for this class

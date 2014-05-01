@@ -425,7 +425,7 @@ public class PicturePopupMenu extends JPopupMenu {
                     if ( highresFile.exists() ) {
                         ok = highresFile.delete();
                         if ( !ok ) {
-                            LOGGER.info( "File deleted failed on: " + highresFile.toString() );
+                            LOGGER.log( Level.INFO, "File deleted failed on: {0}", highresFile.toString());
                         }
                     }
 
@@ -453,6 +453,7 @@ public class PicturePopupMenu extends JPopupMenu {
      * being displayed.
      */
     private final NodeNavigatorInterface mySetOfNodes;
+    
     /**
      * Index of the {@link #mySetOfNodes} being popped up.
      */

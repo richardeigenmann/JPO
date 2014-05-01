@@ -1,6 +1,5 @@
 package jpo.gui;
 
-import java.io.FileNotFoundException;
 import java.util.logging.Level;
 import jpo.dataModel.Settings;
 import java.io.File;
@@ -149,7 +148,6 @@ public class TreeNodeController {
         int picsCopied = 0;
         PictureInfo pictureInfo;
         File sourceFile;
-        byte[] buf = new byte[1024];
         try ( ZipArchiveOutputStream zipArchiveOutputStream = new ZipArchiveOutputStream( tempfile ); ) {
             zipArchiveOutputStream.setLevel( 9 );
             for ( SortableDefaultMutableTreeNode node : nodes ) {

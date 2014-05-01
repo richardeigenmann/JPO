@@ -13,6 +13,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
@@ -69,13 +70,37 @@ public class SourcePicture {
      * States of the source picture
      */
     public enum SourcePictureStatus {
+        /**
+         * The picture could be uninitialised
+         */
         SOURCE_PICTURE_UNINITIALISED,
+        /**
+         * The picture could be loading
+         */
         SOURCE_PICTURE_LOADING,
+        /**
+         * The picture could be rotating
+         */
         SOURCE_PICTURE_ROTATING,
+        /**
+         * The picture could be ready
+         */
         SOURCE_PICTURE_READY,
+        /**
+         * The picture could be in error
+         */
         SOURCE_PICTURE_ERROR,
+        /**
+         * The picture could have stared loading
+         */
         SOURCE_PICTURE_LOADING_STARTED,
+        /**
+         * The picture could be making progress while loading
+         */
         SOURCE_PICTURE_LOADING_PROGRESS,
+        /**
+         * The picture could have finished loading
+         */
         SOURCE_PICTURE_LOADING_COMPLETED
     }
 
@@ -182,7 +207,6 @@ public class SourcePicture {
                 throw new IOException( "No Readers Available!" );
             }
             reader = (ImageReader) i.next();  // grab the first one
-            i = null;
 
             reader.addIIOReadProgressListener( myIIOReadProgressListener );
             reader.setInput( iis );
@@ -292,12 +316,12 @@ public class SourcePicture {
         }
 
         if ( pictureStatusCode != SOURCE_PICTURE_LOADING ) {
-            LOGGER.fine( "SourcePicture.stopLoadingExcept: called but pointless since image is not LOADING: " + imageUrl.toString() );
+            LOGGER.log( Level.FINE, "SourcePicture.stopLoadingExcept: called but pointless since image is not LOADING: {0}", imageUrl.toString());
             return false;
         }
 
         if ( !exemptionURL.equals( imageUrl ) ) {
-            LOGGER.fine( "SourcePicture.stopLoadingExcept: called with Url " + exemptionURL.toString() + " --> stopping loading of " + imageUrl.toString() );
+            LOGGER.log( Level.FINE, "SourcePicture.stopLoadingExcept: called with Url {0} --> stopping loading of {1}", new Object[]{ exemptionURL.toString(), imageUrl.toString() });
             stopLoading();
             return true;
         } else {
@@ -305,21 +329,6 @@ public class SourcePicture {
         }
     }
 
-    /**
-     * Some stuff to help the Garbage collector.
-     *
-     * @throws java.lang.Throwable
-     */
-    @Override
-    protected void finalize() throws Throwable {
-        try {
-            LOGGER.fine( "SourcePicture.finalize: called" );
-            sourcePictureBufferedImage = null;
-            imageUrl = null;
-        } finally {
-            super.finalize();
-        }
-    }
 
     /**
      * return the size of the image or Zero if there is none
@@ -507,7 +516,7 @@ public class SourcePicture {
             if ( abortFlag ) {
                 reader.abort();
             }
-            notifySourceLoadProgressListeners( SOURCE_PICTURE_LOADING_PROGRESS, ( new Float( percentageDone ) ).intValue() );
+            notifySourceLoadProgressListeners( SOURCE_PICTURE_LOADING_PROGRESS, (  Float.valueOf( percentageDone ) ).intValue() );
         }
 
         @Override

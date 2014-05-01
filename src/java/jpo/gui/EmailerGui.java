@@ -1,5 +1,6 @@
 package jpo.gui;
 
+import jpo.gui.swing.WholeNumberField;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;

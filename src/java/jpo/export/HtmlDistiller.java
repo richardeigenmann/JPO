@@ -954,7 +954,7 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
 
         LOGGER.info( "Opening Channel \"exec\"..." );
         Channel channel = session.openChannel( "exec" );
-        LOGGER.info( "Setting command: " + command );
+        LOGGER.log( Level.INFO, "Setting command: {0}", command);
         ( (ChannelExec) channel ).setCommand( command );
 
         // get I/O streams for remote scp

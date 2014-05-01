@@ -58,16 +58,23 @@ public class HtmlDistillerOptions {
 
     /**
      * returns the Cellspacing
-     * @return 
+     * @return the cellspacing
      */
     public int getCellspacing() {
         return cellspacing;
     }
 
+    /**
+     * sets the Cellspacing
+     */
     public void setCellspacing( int cellspacing ) {
         this.cellspacing = cellspacing;
     }
 
+    /**
+     * Returns if we should export highres pictures
+     * @return true if highres pictures are to be exported
+     */
     public boolean isExportHighres() {
         return exportHighres;
     }

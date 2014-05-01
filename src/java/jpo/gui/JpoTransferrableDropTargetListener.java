@@ -7,7 +7,7 @@ import java.awt.dnd.DropTargetListener;
 import java.util.logging.Logger;
 
 /**
- *
+ * A drop target listener for the transferable
  * @author Richard Eigenmann
  */
 public class JpoTransferrableDropTargetListener implements DropTargetListener {
@@ -22,6 +22,10 @@ public class JpoTransferrableDropTargetListener implements DropTargetListener {
      */
     private final JpoDropTargetDropEventHandler jpoDropTargetDropEventHandler;
 
+    /**
+     * Constructor
+     * @param jpoDropTargetDropEventHandler 
+     */
     public JpoTransferrableDropTargetListener( JpoDropTargetDropEventHandler jpoDropTargetDropEventHandler ) {
         this.jpoDropTargetDropEventHandler = jpoDropTargetDropEventHandler;
     }

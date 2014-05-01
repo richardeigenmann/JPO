@@ -71,7 +71,6 @@ public class YearlyAnalysisGuiController {
 
             TreeMap<Integer, HashSet<DefaultMutableTreeNode>> monthMap = yearsMap.get( year );
             for ( Integer month : monthMap.keySet() ) {
-                HashSet<DefaultMutableTreeNode> nodes = monthMap.get( month );
                 gc.gridx = 1;
                 panel.add( new JLabel( String.format( "%s", YearlyAnalysis.getMonthName( month ) ) ), gc );
                 gc.gridx = 2;

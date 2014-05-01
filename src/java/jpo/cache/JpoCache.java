@@ -66,7 +66,7 @@ public class JpoCache {
     /**
      * Returns the instance of the JpoCache singleton
      *
-     * @return
+     * @return the instance of the cache object
      */
     public static JpoCache getInstance() {
         return JpoCacheHolder.INSTANCE;
@@ -381,6 +381,10 @@ public class JpoCache {
             LOGGER.severe( ex.getLocalizedMessage() );
 
         }
+    }
+    
+    public JCS getHighresMemoryCacheForTesting() {
+        return highresMemoryCache;
     }
 
 }

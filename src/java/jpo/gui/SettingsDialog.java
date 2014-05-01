@@ -1,5 +1,6 @@
 package jpo.gui;
 
+import jpo.gui.swing.WholeNumberField;
 import java.util.logging.Level;
 import jpotestground.ResizableJFrameTest;
 import jpo.dataModel.Settings;
@@ -288,7 +289,7 @@ public class SettingsDialog extends JDialog {
 
         // PictureViewer size stuff
         pictureViewerJPanel.add( new JLabel( Settings.jpoResources.getString( "pictureViewerSizeChoicesJlabel" ) ) );
-        final DefaultComboBoxModel<String> viewerSizeModel = new DefaultComboBoxModel<String>( windowSizeChoices );
+        final DefaultComboBoxModel<String> viewerSizeModel = new DefaultComboBoxModel<>( windowSizeChoices );
         viewerSizeDropdown.setModel( viewerSizeModel );
         pictureViewerJPanel.add( viewerSizeDropdown, "wrap" );
         // End of PictureViewer size stuff
@@ -308,26 +309,6 @@ public class SettingsDialog extends JDialog {
 
         // set up the thumbnailSettingsJPanel
         final JPanel thumbnailsJPanel = new JPanel( new MigLayout() );
-
-        /*final JLabel thumbnailPathJLabel = new JLabel( Settings.jpoResources.getString( "thumbnailDirLabel" ) );
-        thumbnailsJPanel.add( thumbnailPathJLabel );
-        thumbnailsJPanel.add( thumbnailPathChooser, "wrap" );
-
-        thumbnailsJPanel.add( keepThumbnailsJCheckBox ); */
-
-        /*final JButton zapThumbnailsJButton = new JButton( Settings.jpoResources.getString( "zapThumbnails" ) );
-        zapThumbnailsJButton.addActionListener( new ActionListener() {
-
-            @Override
-            public void actionPerformed( ActionEvent e ) {
-                zapThumbnails();
-            }
-        } ); 
-        final Dimension zapButtonSize = new Dimension( 250, Settings.defaultButtonDimension.height );
-        zapThumbnailsJButton.setPreferredSize( zapButtonSize );
-        zapThumbnailsJButton.setMinimumSize( zapButtonSize );
-        zapThumbnailsJButton.setMaximumSize( zapButtonSize );
-        thumbnailsJPanel.add( zapThumbnailsJButton, "wrap" ); */
 
         final JLabel maxThumbnailsLabel = new JLabel( Settings.jpoResources.getString( "maxThumbnailsLabelText" ) );
         thumbnailsJPanel.add( maxThumbnailsLabel );

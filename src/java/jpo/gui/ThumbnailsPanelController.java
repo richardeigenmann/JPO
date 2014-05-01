@@ -381,6 +381,10 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
         return thumbnailJScrollPane;
     }
 
+    /**
+     * Handles the ShowGroupRequest by showing the group
+     * @param event the ShowGroupRequest
+     */
     @Subscribe
     public void handleShowGroupRequest( final ShowGroupRequest event ) {
         final Runnable r = new Runnable() {
@@ -400,6 +404,10 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
 
     }
 
+    /**
+     * Handles the ShowQueryRequest by showing the query results
+     * @param event the ShowQueryRequest
+     */
     @Subscribe
     public void handleShowQueryRequest( ShowQueryRequest event ) {
         show( new QueryNavigator( event.getQuery() ) );

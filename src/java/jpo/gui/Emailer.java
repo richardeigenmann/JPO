@@ -320,7 +320,7 @@ public class Emailer
                     originalPictureMimeBodyPart.setDataHandler( new DataHandler( ds ) );
                     originalPictureMimeBodyPart.setFileName( pi.getHighresFilename() );
                     // create the Multipart and add its parts to it
-                    LOGGER.info( Settings.jpoResources.getString( "EmailerAdding" ) + pi.getHighresFilename() );
+                    LOGGER.log( Level.INFO, "{0}{1}", new Object[]{ Settings.jpoResources.getString( "EmailerAdding" ), pi.getHighresFilename() });
                     mp.addBodyPart( originalPictureMimeBodyPart );
                 }
 
@@ -330,7 +330,7 @@ public class Emailer
             publish( "Sending..." );
 
         } catch ( MessagingException x ) {
-            LOGGER.severe( "MessagingException: " + x.getMessage() );
+            LOGGER.log( Level.SEVERE, "MessagingException: {0}", x.getMessage());
             error = x.getMessage();
             return null;
         }
@@ -358,7 +358,7 @@ public class Emailer
                 Transport.send( buildMessage( session ) );
                 publish( Settings.jpoResources.getString( "EmailerSent" ) );
             } catch ( MessagingException x ) {
-                LOGGER.severe( "MessagingException: " + x.getMessage() );
+                LOGGER.log( Level.SEVERE, "MessagingException: {0}", x.getMessage());
                 error = x.getMessage();
             }
         }

@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.InputVerifier;
 import javax.swing.JComponent;
@@ -86,7 +87,6 @@ public class ThumbnailDescriptionJPanel
      */
     private final JTextField highresLocationJTextField = new JTextField();
 
-
     /**
      * create a dumbCaret object which prevents undesirable scrolling behaviour
      *
@@ -94,11 +94,21 @@ public class ThumbnailDescriptionJPanel
      */
     private final NonFocussedCaret dumbCaret = new NonFocussedCaret();
 
+    /**
+     * choices for the Description size
+     */
     public static enum DescriptionSize {
+
+        /**
+         * Descriptions should be in a large font
+         */
         LARGE_DESCRIPTION,
+        /**
+         * Descriptions should be in a small font
+         */
         MINI_INFO
     };
-    
+
     /**
      * This field controls how the description panel is shown. It can be set to
      * ThumbnailDescriptionJPanel.LARGE_DESCRIPTION,
@@ -106,7 +116,6 @@ public class ThumbnailDescriptionJPanel
      */
     private DescriptionSize displayMode = LARGE_DESCRIPTION;
 
-    
     /**
      * Font to be used for Large Texts:
      */
@@ -116,7 +125,6 @@ public class ThumbnailDescriptionJPanel
      * Font to be used for small texts:
      */
     private static final Font SMALL_FONT = Font.decode( Settings.jpoResources.getString( "ThumbnailDescriptionJPanelSmallFont" ) );
-
 
     /**
      * The factor which is multiplied with the ThumbnailDescription to determine
@@ -299,7 +307,7 @@ public class ThumbnailDescriptionJPanel
     public void setTextAreaSize() {
         Dimension textAreaSize = pictureDescriptionJTA.getPreferredSize();
 
-        int targetHeight = 0;
+        int targetHeight;
         if ( textAreaSize.height < pictureDescriptionJSP.getMinimumSize().height ) {
             targetHeight = pictureDescriptionJSP.getMinimumSize().height;
         } else if ( textAreaSize.height > pictureDescriptionJSP.getMaximumSize().height ) {
@@ -312,9 +320,8 @@ public class ThumbnailDescriptionJPanel
         int targetWidth = (int) ( Settings.thumbnailSize * thumbnailSizeFactor );
         if ( ( targetHeight != scrollPaneSize.height ) || ( targetWidth != scrollPaneSize.width ) ) {
             pictureDescriptionJSP.setPreferredSize( new Dimension( targetWidth, targetHeight ) );
-            LOGGER.fine( "ThumbnailDescriptionJPanel.setTextAreaSize set to: " + Integer.toString( targetWidth ) + " / " + Integer.toString( targetHeight ) );
+            LOGGER.log( Level.FINE, "ThumbnailDescriptionJPanel.setTextAreaSize set to: {0} / {1}", new Object[]{ Integer.toString( targetWidth ), Integer.toString( targetHeight ) });
         }
-        //pictureDescriptionJSP.getParent().validate();
     }
 
     /**
@@ -327,7 +334,6 @@ public class ThumbnailDescriptionJPanel
         super.setVisible( visibility );
         pictureDescriptionJTA.setVisible( visibility );
         pictureDescriptionJSP.setVisible( visibility );
-        //validate();
     }
 
     /**
@@ -342,7 +348,7 @@ public class ThumbnailDescriptionJPanel
         }
     }
 
-     /**
+    /**
      * changes the color so that the user sees that the thumbnail is part of the
      * selection.<p>
      * This method is EDT safe.
@@ -384,8 +390,6 @@ public class ThumbnailDescriptionJPanel
 
     }
 
-    
-    
     /**
      * Returns the preferred size for the ThumbnailDescription as a Dimension
      * using the thumbnailSize as width and height.
@@ -412,7 +416,6 @@ public class ThumbnailDescriptionJPanel
     public void setFactor( float thumbnailSizeFactor ) {
         this.thumbnailSizeFactor = thumbnailSizeFactor;
         setTextAreaSize();
-        //setVisible( isVisible() );
     }
 
     /**

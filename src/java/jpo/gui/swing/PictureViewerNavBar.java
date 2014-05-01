@@ -48,15 +48,40 @@ public class PictureViewerNavBar extends JToolBar {
      */
     public final LeftRightButton nextJButton = new LeftRightButton();
 
+    /**
+     * A button for the rotation to the left
+     */
     public final JButton rotateLeftJButton = new NavBarButton( new ImageIcon( Settings.CLASS_LOADER.getResource( "jpo/images/icon_RotCCDown.gif" ) ) );
+    /**
+     * A button for the rotation to the right
+     */
     public final JButton rotateRightJButton = new NavBarButton( new ImageIcon( Settings.CLASS_LOADER.getResource( "jpo/images/icon_RotCWDown.gif" ) ) );
 
+    /**
+     * A button to zoom in with
+     */
     public final JButton zoomInJButton = new NavBarButton( new ImageIcon( Settings.CLASS_LOADER.getResource( "jpo/images/MagnifyPlus.gif" ) ) );
+
+    /**
+     * A button to zoom out with
+     */
     public final JButton zoomOutJButton = new NavBarButton( new ImageIcon( Settings.CLASS_LOADER.getResource( "jpo/images/MagnifyMinus.gif" ) ) );
 
+    /**
+     * A button to bring up the screen sizes button
+     */
     public final JButton fullScreenJButton = new NavBarButton( new ImageIcon( Settings.CLASS_LOADER.getResource( "jpo/images/icon_Frames.gif" ) ) );
+    /**
+     * A button to bring up the popup menu
+     */
     public final JButton popupMenuJButton = new NavBarButton( new ImageIcon( Settings.CLASS_LOADER.getResource( "jpo/images/icon_FingerUp.gif" ) ) );
+    /**
+     * A button to show the info overlay
+     */
     public final JButton infoJButton = new NavBarButton( new ImageIcon( Settings.CLASS_LOADER.getResource( "jpo/images/icon_info.gif" ) ) );
+    /**
+     * A button to close the panel
+     */
     public final JButton closeJButton = new NavBarButton( new ImageIcon( Settings.CLASS_LOADER.getResource( "jpo/images/icon_close2.gif" ) ) );
 
     /**
@@ -137,10 +162,16 @@ public class PictureViewerNavBar extends JToolBar {
      */
     public final JSlider speedSlider = new JSlider( 1, 60, 4 );
 
+    /**
+     * Turns on the showing of the delay slider
+     */
     public void showDelaySilder() {
         speedSlider.setVisible( true );
     }
 
+    /**
+     * Turns off the showing of the delay slider
+     */
     public void hideDelaySilder() {
         speedSlider.setVisible( false );
     }

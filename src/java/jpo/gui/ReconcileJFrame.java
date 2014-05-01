@@ -16,6 +16,7 @@ import java.net.URI;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -274,7 +275,7 @@ public class ReconcileJFrame extends JFrame {
                         JOptionPane.ERROR_MESSAGE );
                 return false;
             }
-            LOGGER.info( "File is not a directory. Using it's parent: " + scanDir.getPath() );
+            LOGGER.log( Level.INFO, "File is not a directory. Using it''s parent: {0}", scanDir.getPath());
         }
 
         // is the File object readable?
@@ -313,10 +314,6 @@ public class ReconcileJFrame extends JFrame {
                 if ( nodeObject instanceof PictureInfo ) {
                     PictureInfo pi = (PictureInfo) nodeObject;
                     collectionUris.add( pi.getHighresURIOrNull() );
-                    //collectionUris.add( pi.getLowresURIOrNull() );
-                } else if ( nodeObject instanceof GroupInfo ) {
-                    GroupInfo gi = (GroupInfo) nodeObject;
-                    //collectionUris.add( gi.getLowresURIOrNull() );
                 }
             }
 

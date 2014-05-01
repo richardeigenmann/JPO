@@ -3,6 +3,7 @@ package jpo.EventBus;
 import com.google.common.eventbus.DeadEvent;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -54,7 +55,7 @@ public class JpoEventBus extends EventBus {
          */
         @Subscribe
         public void handleDeadEvent( DeadEvent deadEvent ) {
-            LOGGER.warning( "Dead event of class: " + deadEvent.getClass().getCanonicalName() );
+            LOGGER.log( Level.WARNING, "Dead event of class: {0}", deadEvent.getClass().getCanonicalName());
         }
 
     }

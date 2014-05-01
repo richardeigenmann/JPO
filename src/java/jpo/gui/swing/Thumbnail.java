@@ -150,6 +150,7 @@ public class Thumbnail extends JComponent {
 
     /**
      * Sets the maximum Thumbnail size
+     *
      * @param thumbnailSize the maximum thumbnail size
      */
     public void setThumbnailSize( int thumbnailSize ) {
@@ -158,6 +159,7 @@ public class Thumbnail extends JComponent {
 
     /**
      * Returns the maximum thumbnail size
+     *
      * @return the thumbnail size
      */
     public int getThumbnailSize() {
@@ -166,7 +168,8 @@ public class Thumbnail extends JComponent {
 
     /**
      * Returns the maximum thumbnail dimension
-     * @return  the thumbnail dimension
+     *
+     * @return the thumbnail dimension
      */
     public Dimension getThumbnailDimension() {
         return new Dimension( thumbnailSize, thumbnailSize );
@@ -220,7 +223,7 @@ public class Thumbnail extends JComponent {
      * This variable will hold the darkend or otherwise processed Thumbnail that
      * will be painted when the ThumbnailController is on a selected node.
      */
-    private BufferedImage selectedThumbnail;
+    private transient BufferedImage selectedThumbnail;
 
     /**
      * reference to the ClassLoader to allow retrieval of the static icons.
@@ -254,7 +257,6 @@ public class Thumbnail extends JComponent {
      * available
      */
     private static final ImageIcon MAIL_ICON = new ImageIcon( CLASS_LOADER.getResource( "jpo/images/icon_mail.gif" ) );
-
 
     /**
      * Sets an icon of a clock to indicate being on a queue
@@ -390,8 +392,8 @@ public class Thumbnail extends JComponent {
             int focusPointx = (int) ( img.getWidth( imgOb ) * thumbnailSizeFactor / 2 );
             int focusPointy = (int) ( img.getHeight( imgOb ) * thumbnailSizeFactor / 2 );
 
-            int X_Offset = (int) ( (double) ( WindowWidth / 2 ) - ( focusPointx ) );
-            int Y_Offset = (int) ( (double) ( WindowHeight / 2 ) - ( focusPointy ) );
+            int X_Offset = (int) ( ( WindowWidth / (double) 2 ) - ( focusPointx ) );
+            int Y_Offset = (int) ( ( WindowHeight / (double) 2 ) - ( focusPointy ) );
 
             // clear damaged component area
             Rectangle clipBounds = g2d.getClipBounds();

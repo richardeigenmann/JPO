@@ -1,5 +1,6 @@
 package jpo.gui;
 
+import jpo.gui.swing.WholeNumberField;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -13,6 +14,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ButtonGroup;
 import javax.swing.JLabel;
@@ -79,6 +81,9 @@ public class PictureViewer
         PictureInfoChangeListener,
         NodeNavigatorListener {
 
+    /**
+     * PictureFrame
+     */
     public PictureFrame pictureFrame = new PictureFrame();
 
     /**
@@ -245,7 +250,7 @@ public class PictureViewer
         Object userObject = getCurrentNode().getUserObject();
         if ( userObject != null ) {
             if ( userObject instanceof PictureInfo ) {
-                LOGGER.fine( "Sending description update to " + pictureFrame.getDescriptionJTextArea().getText() );
+                LOGGER.log( Level.FINE, "Sending description update to {0}", pictureFrame.getDescriptionJTextArea().getText());
                 ( (PictureInfo) userObject ).setDescription(
                         pictureFrame.getDescriptionJTextArea().getText() );
             }
@@ -394,7 +399,7 @@ public class PictureViewer
      * @param pi The PicutreInfo object that should be displayed
      */
     private void setPicture( PictureInfo pi ) {
-        LOGGER.fine( "Set picture to PictureInfo: " + pi.toString() );
+        LOGGER.log( Level.FINE, "Set picture to PictureInfo: {0}", pi.toString());
         URL pictureURL;
 
         String description;
@@ -457,7 +462,7 @@ public class PictureViewer
         if ( e.getDescriptionChanged() ) {
             String s = e.getPictureInfo().getDescription();
             if ( s == null ) {
-                LOGGER.warning( "Got called without a description in the picture. " + e.toString() );
+                LOGGER.log( Level.WARNING, "Got called without a description in the picture. {0}", e.toString());
             } else {
                 pictureFrame.descriptionJTextField.setText( s );
             }
@@ -466,14 +471,14 @@ public class PictureViewer
         if ( e.getHighresLocationChanged() ) {
             SortableDefaultMutableTreeNode node = mySetOfNodes.getNode( myIndex );
             if ( node == null ) {
-                LOGGER.warning( "Highres change got called without a node. Index: " + Integer.toString( myIndex ) + mySetOfNodes.toString() );
+                LOGGER.log( Level.WARNING, "Highres change got called without a node. Index: {0}{1}", new Object[]{ Integer.toString( myIndex ), mySetOfNodes.toString() });
                 return;
 
             }
 
             PictureInfo pi = (PictureInfo) node.getUserObject();
             if ( pi == null ) {
-                LOGGER.warning( "Highres location change got called without a PictureInfor user object. " + e.toString() );
+                LOGGER.log( Level.WARNING, "Highres location change got called without a PictureInfor user object. {0}", e.toString());
             } else {
                 setPicture( pi );
             }
@@ -482,7 +487,7 @@ public class PictureViewer
         if ( e.getRotationChanged() ) {
             PictureInfo pi = (PictureInfo) mySetOfNodes.getNode( myIndex ).getUserObject();
             if ( pi == null ) {
-                LOGGER.warning( "Rotation change got called without a PictureInfor user object. " + e.toString() );
+                LOGGER.log( Level.WARNING, "Rotation change got called without a PictureInfor user object. {0}", e.toString());
             } else {
                 setPicture( pi );
             }
@@ -515,7 +520,7 @@ public class PictureViewer
     public boolean requestNextPicture() {
         LOGGER.fine( String.format( "Using the context aware step forward. The browser contains: %d pictures and we are on picture %d", mySetOfNodes.getNumberOfNodes(), myIndex ) );
         if ( mySetOfNodes.getNumberOfNodes() > myIndex + 1 ) {
-            LOGGER.fine( "PictureViewer.requestNextPicture: requesting node: " + Integer.toString( myIndex + 1 ) );
+            LOGGER.log( Level.FINE, "Requesting node: {0}", Integer.toString( myIndex + 1 ));
             Runnable r = new Runnable() {
 
                 @Override
@@ -707,11 +712,13 @@ public class PictureViewer
     }
 
     /**
-     * method that tells the AdvanceTimer whether it is OK to advance the
+     * Tells the AdvanceTimer whether it is OK to advance the
      * picture or not This important to avoid the submission of new picture
      * requests before the old ones have been met.
+     * 
+     * @return true if ready to advance
      */
-    public boolean readyToAdvance() {
+    private boolean readyToAdvance() {
         ScalablePictureStatus status = pictureJPanel.getScalablePicture().getStatusCode();
         return ( status == SCALABLE_PICTURE_READY ) || ( status == SCALABLE_PICTURE_ERROR );
     }
@@ -772,7 +779,7 @@ public class PictureViewer
 
                     default:
 
-                        LOGGER.warning( "Got called with a code that is not understood: " + pictureStatusCode + " " + pictureStatusMessage );
+                        LOGGER.log( Level.WARNING, "Got called with a code that is not understood: {0} {1}", new Object[]{ pictureStatusCode, pictureStatusMessage });
                         break;
 
                 }

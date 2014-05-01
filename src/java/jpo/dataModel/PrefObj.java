@@ -13,6 +13,11 @@ import java.util.prefs.Preferences;
 /* The licensing is not clear. There are no copyright notices in the code yet there is a lot of standard legal stuff on the download
  page. My take is that this is pretty low key stuff so IBM will not get overly upset by my using their sample code. If I am wrong 
  then please let me know and I will have to re-invent the wheel on these preference things. */
+
+/**
+ * Class used to serialise the memorised pictures of a camera
+ * @author Richard Eigenmann
+ */
 public class PrefObj {
   // Max byte count is 3/4 max string length (see Preferences
     // documentation).
@@ -85,6 +90,15 @@ public class PrefObj {
         return o;
     }
 
+    /**
+     * Puts an object in the preferences
+     * @param prefs the preferences to store into
+     * @param key the key 
+     * @param o the object
+     * @throws IOException
+     * @throws BackingStoreException
+     * @throws ClassNotFoundException 
+     */
     static public void putObject( Preferences prefs, String key, Object o )
             throws IOException, BackingStoreException, ClassNotFoundException {
         byte raw[] = object2Bytes( o );
@@ -92,6 +106,15 @@ public class PrefObj {
         writePieces( prefs, key, pieces );
     }
 
+    /**
+     * Retrieves the object from the preferences
+     * @param prefs the preferences to retrieve from
+     * @param key the key
+     * @return the object
+     * @throws IOException
+     * @throws BackingStoreException
+     * @throws ClassNotFoundException
+     */
     static public Object getObject( Preferences prefs, String key )
             throws IOException, BackingStoreException, ClassNotFoundException {
         byte pieces[][] = readPieces( prefs, key );

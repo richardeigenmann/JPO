@@ -79,7 +79,7 @@ public class ScalablePicture
     /**
      * The scaling factor
      */
-    private double ScaleFactor;
+    private double scaleFactor;
 
     /**
      * the URL of the picture
@@ -101,16 +101,40 @@ public class ScalablePicture
      * variable to record the size of the box that the scaled image must fit
      * into.
      */
-    private Dimension TargetSize;
+    private Dimension targetSize;
 
+    /**
+     * Status that the Scalable Picture could have
+     */
     public enum ScalablePictureStatus {
 
+        /**
+         * It can be unititialized
+         */
         SCALABLE_PICTURE_UNINITIALISED,
+        /**
+         * It could be garbage collecting
+         */
         SCALABLE_PICTURE_GARBAGE_COLLECTION,
+        /**
+         * It could be loading
+         */
         SCALABLE_PICTURE_LOADING,
+        /**
+         * It could have loaded the picture
+         */
         SCALABLE_PICTURE_LOADED,
+        /**
+         * It could be scaling
+         */
         SCALABLE_PICTURE_SCALING,
+        /**
+         * It could be ready
+         */
         SCALABLE_PICTURE_READY,
+        /**
+         * It could be in error state
+         */
         SCALABLE_PICTURE_ERROR
     }
 
@@ -299,11 +323,11 @@ public class ScalablePicture
 
             if ( ( sourcePicture != null ) && ( sourcePicture.getSourceBufferedImage() != null ) ) {
                 if ( scaleToSize ) {
-                    SizeCalculator sc = new SizeCalculator( sourcePicture.getWidth(), sourcePicture.getHeight(), TargetSize.width, TargetSize.height );
-                    ScaleFactor = sc.scaleFactor;
+                    SizeCalculator sc = new SizeCalculator( sourcePicture.getWidth(), sourcePicture.getHeight(), targetSize.width, targetSize.height );
+                    scaleFactor = sc.scaleFactor;
 
-                    if ( Settings.dontEnlargeSmallImages && ScaleFactor > 1 ) {
-                        ScaleFactor = 1;
+                    if ( Settings.dontEnlargeSmallImages && scaleFactor > 1 ) {
+                        scaleFactor = 1;
                     }
                 }
 
@@ -318,10 +342,10 @@ public class ScalablePicture
                 int affineTransformType;
                 if ( fastScale ) {
                     affineTransformType = AffineTransformOp.TYPE_NEAREST_NEIGHBOR;
-                    factor = ScaleFactor;
+                    factor = scaleFactor;
                 } else {
                     affineTransformType = AffineTransformOp.TYPE_BICUBIC;
-                    factor = Math.pow( ScaleFactor, 1f / getScaleSteps() );
+                    factor = Math.pow( scaleFactor, 1f / getScaleSteps() );
                 }
 
                 afStep = AffineTransform.getScaleInstance( factor, factor );
@@ -347,20 +371,14 @@ public class ScalablePicture
                     biStep = new BufferedImage( x, y, imageType );
                     scaledPicture = opStep.filter( scaledPicture, biStep );
                 }
-
-                int PictureWidth = scaledPicture.getWidth();
-                //int PictureHeight = scaledPicture.getHeight();
-
                 setStatus( SCALABLE_PICTURE_READY, "Scaled Picture is ready." );
             } else {
-                if ( getStatusCode() == SCALABLE_PICTURE_LOADING ) {
-                    // logger.info ("ScalablePicture.scalePicture invoked while image is still loading. I wonder why?");
-                } else {
+                if ( getStatusCode() != SCALABLE_PICTURE_LOADING ) {
                     setStatus( SCALABLE_PICTURE_ERROR, "Could not scale image as SourceImage is null." );
                 }
             }
         } catch ( OutOfMemoryError e ) {
-            LOGGER.log( Level.SEVERE, "ScalablePicture.scalePicture caught an OutOfMemoryError while scaling an image.\n{0}", e.getMessage() );
+            LOGGER.log( Level.SEVERE, "Caught an OutOfMemoryError while scaling an image.\n{0}", e.getMessage() );
             setStatus( SCALABLE_PICTURE_ERROR, "Out of Memory Error while scaling " + imageUrl.toString() );
             scaledPicture = null;
             Tools.dealOutOfMemoryError();
@@ -380,8 +398,8 @@ public class ScalablePicture
      */
     public final void setScaleFactor( double newFactor ) {
         scaleToSize = false;
-        TargetSize = null;
-        ScaleFactor = newFactor;
+        targetSize = null;
+        scaleFactor = newFactor;
     }
 
     /**
@@ -395,9 +413,9 @@ public class ScalablePicture
         scaleToSize = true;
         if ( ( newSize.height < 1 ) || ( newSize.width < 1 ) ) {
             // to prevent the affine transform from failing on a 0 size.
-            TargetSize = new Dimension( 100, 100 );
+            targetSize = new Dimension( 100, 100 );
         } else {
-            TargetSize = newSize;
+            targetSize = newSize;
         }
     }
 
@@ -407,7 +425,7 @@ public class ScalablePicture
      * @return the scale factor
      */
     public double getScaleFactor() {
-        return ScaleFactor;
+        return scaleFactor;
     }
 
     /**
@@ -419,7 +437,7 @@ public class ScalablePicture
      * @return the current scale size
      */
     public Dimension getScaleSize() {
-        return TargetSize;
+        return targetSize;
     }
 
     /**
@@ -592,10 +610,10 @@ public class ScalablePicture
                 new FileOutputStream( writeFile ) ) ) {
             writer.setOutput( ios );
             writer.write( null, new IIOImage( renderedImage, null, null ), params );
+            ios.close();
         } catch ( IOException e ) {
             LOGGER.severe( e.getMessage() );
         }
-        //writer = null;
         writer.dispose(); //1.4.1 documentation says to do this.
     }
 

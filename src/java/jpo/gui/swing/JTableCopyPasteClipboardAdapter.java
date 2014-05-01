@@ -23,7 +23,7 @@ import javax.swing.table.AbstractTableModel;
  *  the clipboard format used by Excel. This provides for clipboard
  *  interoperability between enabled JTables and Excel.
  *
- *  {@link http://www.javaworld.com/javatips/jw-javatip77_p.html}
+ *  @see <a href="http:////www.javaworld.com//javatips//jw-javatip77_p.html">http:////www.javaworld.com//javatips//jw-javatip77_p.html</a>
  */
 public class JTableCopyPasteClipboardAdapter implements ActionListener {
     //private String rowstring,value;
@@ -52,10 +52,10 @@ public class JTableCopyPasteClipboardAdapter implements ActionListener {
         KeyStroke paste2 = KeyStroke.getKeyStroke( KeyEvent.VK_INSERT, ActionEvent.SHIFT_MASK, false );
         // Identifying the Paste KeyStroke user can modify this
         //to copy on some other Key combination.
-        jTable.registerKeyboardAction( this, "Copy", copy1, JComponent.WHEN_FOCUSED );
-        jTable.registerKeyboardAction( this, "Copy", copy2, JComponent.WHEN_FOCUSED );
-        jTable.registerKeyboardAction( this, "Paste", paste1, JComponent.WHEN_FOCUSED );
-        jTable.registerKeyboardAction( this, "Paste", paste2, JComponent.WHEN_FOCUSED );
+        jTable.registerKeyboardAction( JTableCopyPasteClipboardAdapter.this, "Copy", copy1, JComponent.WHEN_FOCUSED );
+        jTable.registerKeyboardAction( JTableCopyPasteClipboardAdapter.this, "Copy", copy2, JComponent.WHEN_FOCUSED );
+        jTable.registerKeyboardAction( JTableCopyPasteClipboardAdapter.this, "Paste", paste1, JComponent.WHEN_FOCUSED );
+        jTable.registerKeyboardAction( JTableCopyPasteClipboardAdapter.this, "Paste", paste2, JComponent.WHEN_FOCUSED );
         systemClipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
     }
 

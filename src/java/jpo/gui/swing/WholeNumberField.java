@@ -1,4 +1,4 @@
-package jpo.gui;
+package jpo.gui.swing;
 
 import jpo.dataModel.Settings;
 import java.text.NumberFormat;
@@ -13,66 +13,62 @@ import javax.swing.text.PlainDocument;
 
 
 /*
-I would guess this is at least partially if not wholly copyright of Sun Microsystems 
-since I lifted this code from their Java Swing Tutorial. Richard Eigenmann February 2002.
-
-WholeNumberField.java:  a textfield that allows only entry of proper numbers
-
-Copyright (C) 2002-2009  Richard Eigenmann (for the modifications over the original I copied)
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or any later version. This program is distributed 
-in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
-without even the implied warranty of MERCHANTABILITY or FITNESS 
-FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
-more details. You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-The license is in gpl.txt.
-See http://www.gnu.org/copyleft/gpl.html for the details.
+ Copyright (C) 2002-2014  Richard Eigenmann (for the modifications over the original I copied)
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or any later version. This program is distributed 
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+ without even the implied warranty of MERCHANTABILITY or FITNESS 
+ FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
+ more details. You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ The license is in gpl.txt.
+ See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 /**
- *  a clever JTextField that allows only numbers to be captured
+ * This class extends the JTextField and allow only entry of digits.
+ *
+ * This was the suggested method in the Swing tutorials in February 2002 when I
+ * wrote this class. Java probably didn't have NumberFormatter,
+ * FormattedTextFields etc. in those days.
+ *
  */
 public class WholeNumberField extends JTextField {
 
-       /**
+    /**
      * Defines a logger for this class
      */
     private static final Logger LOGGER = Logger.getLogger( WholeNumberField.class.getName() );
-    
+
     /**
-     *  not quite sure what this is for.
+     * @see NumberFormat
      */
     private final NumberFormat integerFormatter;
 
-
-    /**
-     *  Constructor.
-     *  @param 	value	The initial value of the field
-     *  @param	columns	The width of the field
-     */
-    public WholeNumberField( int value, int columns ) {
-        super( columns );
+    public WholeNumberField() {
+        super( 8 );
         integerFormatter = NumberFormat.getNumberInstance( Settings.getCurrentLocale() );
         integerFormatter.setParseIntegerOnly( true );
-        setValue( value );
+        setValue( 0 );
     }
 
-
     /**
-     *  indicate whether the WholeNumberField is supposed to allow decimals
+     * Constructor.
      *
-     * @param allowDecimal
+     * @param defaultValue The initial value of the field
+     * @param width The width of the field in number of characters
      */
-    public void setAllowDecimal( boolean allowDecimal ) {
-        integerFormatter.setParseIntegerOnly( false );
+    public WholeNumberField( int defaultValue, int width ) {
+        super( width );
+        integerFormatter = NumberFormat.getNumberInstance( Settings.getCurrentLocale() );
+        integerFormatter.setParseIntegerOnly( true );
+        setValue( defaultValue );
     }
 
-
     /**
-     *  method that returns the value of the WholeNumberField
+     * method that returns the value of the WholeNumberField
      *
      * @return the value of the field
      */
@@ -83,13 +79,12 @@ public class WholeNumberField extends JTextField {
         } catch ( ParseException e ) {
             // This should never happen because insertString allows
             // only properly formatted data to get in the field.
-          }
+        }
         return retVal;
     }
 
-
     /**
-     *  method that returns the value of the WholeNumberField
+     * method that returns the value of the WholeNumberField
      *
      * @return the value of the field
      */
@@ -104,9 +99,8 @@ public class WholeNumberField extends JTextField {
         return retVal;
     }
 
-
     /**
-     *  method that sets the value of the WholeNumberField
+     * method that sets the value of the WholeNumberField
      *
      * @param value
      */
@@ -114,9 +108,8 @@ public class WholeNumberField extends JTextField {
         setText( Integer.toString( value ) );
     }
 
-
     /**
-     *  method that sets the value of the WholeNumberField
+     * method that sets the value of the WholeNumberField
      *
      * @param value
      */
@@ -124,9 +117,8 @@ public class WholeNumberField extends JTextField {
         setText( integerFormatter.format( value ) );
     }
 
-
     /**
-     *  part of the inner workings
+     * part of the inner workings
      *
      * @return the document
      */
@@ -141,31 +133,30 @@ public class WholeNumberField extends JTextField {
     protected class WholeNumberDocument extends PlainDocument {
 
         /**
-         * 
-         * @param offs
-         * @param str
-         * @param a
+         *
+         * @param offset
+         * @param string
+         * @param attributeSet
          * @throws javax.swing.text.BadLocationException
          */
         @Override
-        public void insertString( int offs,
-                String str,
-                AttributeSet a )
+        public void insertString( int offset,
+                String string,
+                AttributeSet attributeSet )
                 throws BadLocationException {
 
-            char[] source = str.toCharArray();
+            char[] source = string.toCharArray();
             char[] result = new char[source.length];
             int j = 0;
 
             for ( int i = 0; i < result.length; i++ ) {
                 if ( Character.isDigit( source[i] ) ) {
-
                     result[j++] = source[i];
                 } else {
-                    LOGGER.log( Level.INFO, "Refusing to insert character: {0}", source[i]);
+                    LOGGER.log( Level.INFO, "Refusing to insert character: {0}", source[i] );
                 }
             }
-            super.insertString( offs, new String( result, 0, j ), a );
+            super.insertString( offset, new String( result, 0, j ), attributeSet );
         }
     }
 }

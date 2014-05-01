@@ -143,7 +143,7 @@ public class PicturePane
         // make graphics faster
         this.setDoubleBuffered( false );
 
-        scalablePicture.addStatusListener( this );
+        scalablePicture.addStatusListener( PicturePane.this );
         if ( Settings.pictureViewerFastScale ) {
             scalablePicture.setFastScale();
         } else {
@@ -263,7 +263,7 @@ public class PicturePane
      */
     public void scrollUp() {
         // if the bottom edge of the picture is visible, do not scroll
-        if ( ( ( scalablePicture.getOriginalHeight() - focusPoint.y ) * scalablePicture.getScaleFactor() ) + getSize().height / 2 > getSize().height ) {
+        if ( ( ( scalablePicture.getOriginalHeight() - focusPoint.y ) * scalablePicture.getScaleFactor() ) + getSize().height / (double) 2 > getSize().height ) {
             focusPoint.y = focusPoint.y + (int) ( getSize().height * scrollFactor / scalablePicture.getScaleFactor() );
             repaint();
         } else {
@@ -283,7 +283,7 @@ public class PicturePane
      * @see #scrollRight()
      */
     public void scrollDown() {
-        if ( getSize().height / 2 - focusPoint.y * scalablePicture.getScaleFactor() < 0 ) {
+        if ( getSize().height / (double) 2 - focusPoint.y * scalablePicture.getScaleFactor() < 0 ) {
             focusPoint.y = focusPoint.y - (int) ( getSize().height * scrollFactor / scalablePicture.getScaleFactor() );
             repaint();
         } else {
@@ -304,7 +304,7 @@ public class PicturePane
      */
     public void scrollLeft() {
         // if the bottom edge of the picture is visible, do not scroll
-        if ( ( ( scalablePicture.getOriginalWidth() - focusPoint.x ) * scalablePicture.getScaleFactor() ) + getSize().width / 2 > getSize().width ) {
+        if ( ( ( scalablePicture.getOriginalWidth() - focusPoint.x ) * scalablePicture.getScaleFactor() ) + getSize().width / (double) 2 > getSize().width ) {
             focusPoint.x = focusPoint.x + (int) ( getSize().width * scrollFactor / scalablePicture.getScaleFactor() );
             repaint();
         } else {
@@ -324,7 +324,7 @@ public class PicturePane
      * @see #scrollRight()
      */
     public void scrollRight() {
-        if ( getSize().width / 2 - focusPoint.x * scalablePicture.getScaleFactor() < 0 ) {
+        if ( getSize().width / (double) 2 - focusPoint.x * scalablePicture.getScaleFactor() < 0 ) {
             focusPoint.x = focusPoint.x - (int) ( getSize().width * scrollFactor / scalablePicture.getScaleFactor() );
             repaint();
         } else {
@@ -363,8 +363,8 @@ public class PicturePane
         if ( scalablePicture.getScaledPicture() != null ) {
             Graphics2D g2d = (Graphics2D) g;
 
-            int X_Offset = (int) ( (double) ( WindowWidth / 2 ) - ( focusPoint.x * scalablePicture.getScaleFactor() ) );
-            int Y_Offset = (int) ( (double) ( WindowHeight / 2 ) - ( focusPoint.y * scalablePicture.getScaleFactor() ) );
+            int X_Offset = (int) ( (double) ( WindowWidth / (double) 2 ) - ( focusPoint.x * scalablePicture.getScaleFactor() ) );
+            int Y_Offset = (int) ( (double) ( WindowHeight / (double) 2 ) - ( focusPoint.y * scalablePicture.getScaleFactor() ) );
 
             // clear damaged component area
             Rectangle clipBounds = g2d.getClipBounds();
@@ -417,8 +417,18 @@ public class PicturePane
      */
     public static enum InfoOverlay {
 
+        /**
+         * No overlay
+         */
         NO_OVERLAY,
+        /**
+         * Overlay with Photographic information such as aperture and shutter
+         * speed
+         */
         PHOTOGRAPHIC_OVERLAY,
+        /**
+         * Overlay with technical information
+         */
         APPLICATION_OVERLAY
     }
 
@@ -462,7 +472,7 @@ public class PicturePane
     @Override
     public void scalableStatusChange( ScalablePictureStatus pictureStatusCode,
             String pictureStatusMessage ) {
-        LOGGER.log( Level.FINE, "PicturePane.scalableStatusChange: got a status change: {0}", pictureStatusMessage);
+        LOGGER.log( Level.FINE, "PicturePane.scalableStatusChange: got a status change: {0}", pictureStatusMessage );
 
         if ( pictureStatusCode == SCALABLE_PICTURE_READY ) {
             LOGGER.fine( "PicturePane.scalableStatusChange: a READY status" );
@@ -500,10 +510,9 @@ public class PicturePane
     }
 
     /**
-     * The  objects that would like to receive
-     * notifications about what is going on with the ScalablePicture being
-     * displayed in this PicturePane. These objects must implement the
-     * ScalablePictureListener interface.
+     * The objects that would like to receive notifications about what is going
+     * on with the ScalablePicture being displayed in this PicturePane. These
+     * objects must implement the ScalablePictureListener interface.
      */
     private final Set<ScalablePictureListener> picturePaneListeners = Collections.synchronizedSet( new HashSet<ScalablePictureListener>() );
 
@@ -535,6 +544,10 @@ public class PicturePane
         return scalablePicture;
     }
 
+    /**
+     * Returns the text area with the description
+     * @return the text area
+     */
     public Object getDescriptionJTextArea() {
         throw new UnsupportedOperationException( "Not supported yet." ); //To change body of generated methods, choose Tools | Templates.
     }

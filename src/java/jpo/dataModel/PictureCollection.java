@@ -381,7 +381,7 @@ public class PictureCollection {
     /**
      * Node for the Years tree
      *
-     * @return
+     * @return the node
      */
     public DefaultMutableTreeNode getYearsTreeNode() {
         return yearsTreeNode;
@@ -695,7 +695,7 @@ public class PictureCollection {
     /**
      * Returns the email-selected nodes
      *
-     * @return
+     * @return the nodes selected for emailing
      */
     public List<SortableDefaultMutableTreeNode> getMailSelectedNodes() {
         return mailSelection;
@@ -805,7 +805,7 @@ public class PictureCollection {
      */
     public void fileLoad( File file ) throws FileNotFoundException {
         if ( fileLoading ) {
-            LOGGER.info( this.getClass().toString() + ".fileLoad: already busy loading another file. Aborting" );
+            LOGGER.log( Level.INFO, "{0}.fileLoad: already busy loading another file. Aborting", this.getClass().toString());
             return;
         }
         fileLoading = true;
@@ -858,12 +858,10 @@ public class PictureCollection {
     /**
      * method that saves the entire index in XML format.
      *
-     * @return true if successful, false if not
      */
     public void fileSave() {
         if ( xmlFile == null ) {
             LOGGER.severe( "xmlFile is null. Not saving!" );
-            return;
         } else {
             File temporaryFile = new File( xmlFile.getPath() + ".!!!" );
             new XmlDistiller( temporaryFile, getRootNode(), false, false );

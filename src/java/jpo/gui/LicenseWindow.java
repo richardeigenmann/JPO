@@ -6,6 +6,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
@@ -14,21 +15,21 @@ import javax.swing.JTextArea;
 import webserver.NanoHTTPD;
 
 /*
-LicenseWindow.java:  Creates the License window
+ LicenseWindow.java:  Creates the License window
 
-Copyright (C) 2007 - 2010 Richard Eigenmann, Zürich, Switzerland
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or any later version. This program is distributed
-in the hope that it will be useful, but WITHOUT ANY WARRANTY;
-without even the implied warranty of MERCHANTABILITY or FITNESS
-FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-more details. You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-The license is in gpl.txt.
-See http://www.gnu.org/copyleft/gpl.html for the details.
+ Copyright (C) 2007 - 2014 Richard Eigenmann, Zürich, Switzerland
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or any later version. This program is distributed
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ without even the implied warranty of MERCHANTABILITY or FITNESS
+ FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+ more details. You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ The license is in gpl.txt.
+ See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 /**
  * This class creates the License window
@@ -40,9 +41,8 @@ public class LicenseWindow {
      */
     private static final Logger LOGGER = Logger.getLogger( LicenseWindow.class.getName() );
 
-
     /**
-     *
+     * Creates the Licnese Window
      */
     public LicenseWindow() {
         JTextArea licenseJTextArea = new JTextArea( "reading the file gpl.txt" );
@@ -54,25 +54,23 @@ public class LicenseWindow {
                 JScrollPane.HORIZONTAL_SCROLLBAR_NEVER );
         jsp.setPreferredSize( new Dimension( 500, 400 ) );
 
-
         StringBuilder sb = new StringBuilder( "" );
         String textLine;
-        try {
-            InputStream in = ApplicationJMenuBar.class.getResourceAsStream( "../gpl.txt" );
-            BufferedReader bin = new BufferedReader( new InputStreamReader( in ) );
+        try (
+                InputStream in = ApplicationJMenuBar.class.getResourceAsStream( "../gpl.txt" );
+                BufferedReader bin = new BufferedReader( new InputStreamReader( in ) ); ) {
             while ( ( textLine = bin.readLine() ) != null ) {
-                sb.append( textLine ).append("\n");
+                sb.append( textLine ).append( "\n" );
             }
             bin.close();
             in.close();
         } catch ( IOException e ) {
-            LOGGER.info( "Jpo.java: Error while reading gpl.txt: " + e.getMessage() );
+            LOGGER.log( Level.INFO, "Jpo.java: Error while reading gpl.txt: {0}", e.getMessage());
         }
-        sb.append("\n\n------------------------\nLicense for embedded NanoHTTPD:\n\n");
-        sb.append(NanoHTTPD.LICENCE );
+        sb.append( "\n\n------------------------\nLicense for embedded NanoHTTPD:\n\n" );
+        sb.append( NanoHTTPD.LICENCE );
         licenseJTextArea.setText( sb.toString() );
         licenseJTextArea.setCaretPosition( 0 );
-
 
         Object[] License = { jsp };
 
@@ -90,4 +88,3 @@ public class LicenseWindow {
         dialog.setVisible( true );
     }
 }
-

@@ -2,13 +2,13 @@ package jpotestground;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedInputStream;
-import java.io.IOException;
 import java.util.logging.Logger;
 import javax.swing.Timer;
+import jpo.cache.ImageBytes;
 import jpo.cache.JpoCache;
 import jpo.dataModel.Settings;
-import org.apache.commons.io.IOUtils;
+import jpo.gui.swing.WholeNumberField;
+import org.apache.jcs.access.exception.CacheException;
 
 /**
  *
@@ -16,28 +16,39 @@ import org.apache.commons.io.IOUtils;
  */
 public class CachePerformanceTester extends javax.swing.JFrame {
 
+
     /**
      * Creates new form CachePerformanceTester
      */
     public CachePerformanceTester() {
         initComponents();
-        timer = new Timer(400, new ActionListener() {
+
+        Settings.loadSettings();
+        LOGGER.info( Settings.thumbnailCacheDirectory );
+        myCache = JpoCache.getInstance();
+
+        timer = new Timer( 400, new ActionListener() {
 
             @Override
             public void actionPerformed( ActionEvent e ) {
                 updateInfo();
             }
-        });
+        } );
         timer.start();
-        Settings.loadSettings();
-        LOGGER.info(Settings.thumbnailCacheDirectory);
-        myCache = JpoCache.getInstance();
-        
+
+        Timer randomWalker = new Timer( 800, new ActionListener() {
+
+            @Override
+            public void actionPerformed( ActionEvent e ) {
+                hitCache();
+            }
+        } );
+        randomWalker.start();
     }
 
     private final Timer timer;
     private final JpoCache myCache;
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -54,13 +65,17 @@ public class CachePerformanceTester extends javax.swing.JFrame {
         totalMemory = new javax.swing.JLabel();
         freeMemory = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        progressTextArea = new javax.swing.JTextArea();
         jButton1 = new javax.swing.JButton();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         cacheInfo = new javax.swing.JTextArea();
         jLabel8 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        picturesCached = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -77,11 +92,11 @@ public class CachePerformanceTester extends javax.swing.JFrame {
 
         freeMemory.setText("jLabel9");
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane1.setViewportView(jTextArea1);
+        progressTextArea.setColumns(20);
+        progressTextArea.setRows(5);
+        jScrollPane1.setViewportView(progressTextArea);
 
-        jButton1.setText("Load 1000 pictures into Cache");
+        jButton1.setText("Load pictures");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
@@ -98,28 +113,27 @@ public class CachePerformanceTester extends javax.swing.JFrame {
 
         jLabel8.setText("Free Memory");
 
+        jLabel9.setText("Pictures Cached:");
+
+        picturesCached.setText("jLabel9");
+
+        jLabel3.setText("Size (in KB):");
+
+        jLabel4.setText("Number to load:");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(43, 43, 43)
-                        .addComponent(jLabel6)
-                        .addGap(124, 124, 124)
-                        .addComponent(jLabel7))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(68, 68, 68)
-                        .addComponent(jButton1)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(76, 76, 76)
+                .addComponent(jLabel6)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel7)
+                .addGap(110, 110, 110))
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel1)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel2)
@@ -127,10 +141,26 @@ public class CachePerformanceTester extends javax.swing.JFrame {
                             .addComponent(jLabel8))
                         .addGap(32, 32, 32)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(freeMemory)
-                            .addComponent(totalMemory)
-                            .addComponent(maxMemory, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addGap(0, 232, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(freeMemory)
+                                    .addComponent(picturesCached))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jButton1))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(maxMemory, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(totalMemory))
+                                .addGap(0, 0, Short.MAX_VALUE))))
+                    .addComponent(jLabel9))
+                .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 279, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel4)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 283, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -139,32 +169,39 @@ public class CachePerformanceTester extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(maxMemory))
+                    .addComponent(maxMemory)
+                    .addComponent(jLabel3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(totalMemoryLabel)
-                    .addComponent(totalMemory))
+                    .addComponent(totalMemory)
+                    .addComponent(jLabel4))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel8)
-                    .addComponent(freeMemory))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel8)
+                            .addComponent(freeMemory))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(picturesCached)
+                            .addComponent(jLabel9)))
+                    .addComponent(jButton1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
                     .addComponent(jLabel7))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 172, Short.MAX_VALUE)
-                    .addComponent(jScrollPane2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton1))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 590, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2)))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        doLoad1000Pictures();
+        loadPictures();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
@@ -214,45 +251,73 @@ public class CachePerformanceTester extends javax.swing.JFrame {
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTextArea jTextArea1;
     private javax.swing.JLabel maxMemory;
+    private javax.swing.JLabel picturesCached;
+    private javax.swing.JTextArea progressTextArea;
     private javax.swing.JLabel totalMemory;
     private javax.swing.JLabel totalMemoryLabel;
     // End of variables declaration//GEN-END:variables
 
-    private void doLoad1000Pictures() {
-        //JpoCache.getInstance();
-
-        for ( int i = 0; i < 1; i++ ) {
+    private void loadPictures() {
+        long number = 0;//(Long) numberField.getValue();
+        for ( int i = 0; i < number; i++ ) {
             String key = String.format( "Image-%d", i );
-            try ( BufferedInputStream bin = new BufferedInputStream( CachePerformanceTester.class.getClassLoader().getResourceAsStream( "exif-test-samsung-s4-roation-0.jpg" ) ) ) {
-                byte[] bytes = IOUtils.toByteArray( bin );
-                LOGGER.info( String.format( "read %d bytes", bytes.length ) );
-            } catch ( IOException ex ) {
-                LOGGER.severe( ex.getLocalizedMessage() );
-                LOGGER.info( "you have to copy the file exif-test-samsung-s4-roation-0.jpg to the root classes folder." );
+
+            long size = 0; //(Long) sizeField.getValue();
+            byte[] bytes = new byte[(int) size];
+            ImageBytes imageBytes = new ImageBytes( bytes );
+            try {
+                myCache.getHighresMemoryCacheForTesting().put( key, imageBytes );
+            } catch ( CacheException ex ) {
+                LOGGER.info( ex.getLocalizedMessage() );
             }
         }
+
+        progressTextArea.append( String.format( "Added %d Pictures.\n", number ) );
+        picturesCachedCount += number;
         updateInfo();
 
     }
 
+    private void hitCache() {
+        if ( picturesCachedCount > 0 ) {
+            int randomKey = (int) ( Math.random() * picturesCachedCount );
+            String key = String.format( "Image-%d", randomKey );
+            ImageBytes imageBytes = (ImageBytes) myCache.getHighresMemoryCacheForTesting().get( key );
+            progressTextArea.append( "Retrieved " );
+            progressTextArea.append( key );
+            if ( imageBytes == null ) {
+                progressTextArea.append( " as null\n" );
+            } else {
+                progressTextArea.append( " as image\n" );
+            }
+        }
+    }
+
+    /**
+     * Remember the number of pictures cached
+     */
+    private int picturesCachedCount;
+
     private void updateInfo() {
-        int freeMemoryMB = (int) Runtime.getRuntime().freeMemory() / 1024 / 1024;
-        int totalMemoryMB = (int) Runtime.getRuntime().totalMemory() / 1024 / 1024;
-        int maxMemoryMB = (int) Runtime.getRuntime().maxMemory() / 1024 / 1024;
+        int freeMemoryMB = (int) ( Runtime.getRuntime().freeMemory() / 1024 / 1024 );
+        int totalMemoryMB = (int) ( Runtime.getRuntime().totalMemory() / 1024 / 1024 );
+        int maxMemoryMB = (int) ( Runtime.getRuntime().maxMemory() / 1024 / 1024 );
 
         freeMemory.setText( String.format( "%dMB", freeMemoryMB ) );
         totalMemory.setText( String.format( "%dMB", totalMemoryMB ) );
         maxMemory.setText( String.format( "%dMB", maxMemoryMB ) );
-        
+
         cacheInfo.setText( myCache.getHighresCacheStats() );
+        picturesCached.setText( Integer.toString( picturesCachedCount ) );
     }
 
-    
 }

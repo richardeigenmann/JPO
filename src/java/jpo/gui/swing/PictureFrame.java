@@ -93,8 +93,8 @@ public class PictureFrame {
     public JTextArea descriptionJTextField = new JTextArea();
 
     /**
-     * The test field with the description
-     * @return 
+     * The text field with the description
+     * @return the text field
      */
     public JTextArea getDescriptionJTextArea() {
         return descriptionJTextField;

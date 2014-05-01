@@ -661,7 +661,7 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
                     break __main;
                 }
 
-                LOGGER.info( "Remote system is " + ftp.getSystemType() );
+                LOGGER.log( Level.INFO, "Remote system is {0}", ftp.getSystemType());
                 ftp.setFileType( FTP.BINARY_FILE_TYPE );
                 ftp.enterLocalPassiveMode();
 
@@ -710,7 +710,7 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
                     break __main;
                 }
 
-                LOGGER.info( "Remote system is " + ftp.getSystemType() );
+                LOGGER.log( Level.INFO, "Remote system is {0}", ftp.getSystemType());
                 ftp.setFileType( FTP.BINARY_FILE_TYPE );
                 ftp.enterLocalPassiveMode();
 

@@ -218,7 +218,7 @@ public class XmlReader extends DefaultHandler {
         } else if ( "categoryDescription".equals( qName ) ) {
             currentField = CATEGORY_DESCRIPTION;
         } else {
-            LOGGER.info( "XmlReader: Don't know what to do with ELEMENT: " + qName );
+            LOGGER.log( Level.INFO, "XmlReader: Don''t know what to do with ELEMENT: {0}", qName);
         }
     }
 
