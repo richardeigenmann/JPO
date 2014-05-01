@@ -176,11 +176,11 @@
         </fileset>
     </path>
     
-    <manifestclasspath property="manifest-classpath" jarfile="${build.jars.dir}/jpo-${version}.jar">
-        <classpath refid="build-classpath" />
-    </manifestclasspath>
         
     <target name="buildjar" depends="clean, cleanupSource, compile" description="Builds the  file containing the Jpo Classes">  <!-- , test -->
+        <manifestclasspath property="manifest-classpath" jarfile="${build.jars.dir}/jpo-${version}.jar">
+            <classpath refid="build-classpath" />
+        </manifestclasspath>
         <jar destfile="${build.jars.dir}/jpo-${version}.jar"
              basedir="${build.base.classes.dir}"
              compress="no"
@@ -299,7 +299,7 @@
     <target name="publish" depends="publish-jar, publish-javadoc, publish-webpages" description="Publishes the lates Jpo Version and webpages to the SourceForge project"/>
 
     
-    <target name="run" description="Runs the program" depends="compile">
+    <target name="run" description="Runs the program" depends="prepare, compile">
         <java classname="${app.main.class}"
               fork="yes"
               maxmemory="2000m">

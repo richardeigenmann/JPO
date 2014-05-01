@@ -15,13 +15,16 @@
         </td>
         <td>
 
-            <h2 id="windows">Build on Windows</h2>
+            <h2 id="windows">Build your own with Netbeans</h2>
             <p>Have you installed the Java Software Developer Kit (SDK)?
                 <a href="http://www.oracle.com/technetwork/java/javase/downloads/index.html">Link</a><br>
                 Have you installed Netbeans? <a href="http://netbeans.org/downloads/index.html">Link</a><br>
+                And does your Netbeans have the CVS plugin?<br>
 
-            <p>Start Netbeans and click the menu item Team > CVS > Checkout. Into the CVS Root field 
-                paste :pserver:anonymous@j-po.cvs.sourceforge.net:/cvsroot/j-po into the field Click Next Click Finish. 
+            <p>Start Netbeans and click the menu item <pre>Team > Other CVS > Checkout</pre>. Into the CVS Root field 
+                paste the following:<br>
+            <pre>:pserver:anonymous@j-po.cvs.sourceforge.net:/cvsroot/j-po</pre>
+             Click Next Click Finish. 
                 On the dialog that appears click Open Project. To compile and run the application press the F6 key.</p>
 
 
