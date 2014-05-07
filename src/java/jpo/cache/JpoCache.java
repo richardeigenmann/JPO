@@ -395,8 +395,5 @@ public class JpoCache {
         }
     }
     
-    public CacheAccess<URL, ImageBytes> getHighresMemoryCacheForTesting() {
-        return highresMemoryCache;
-    }
 
 }
