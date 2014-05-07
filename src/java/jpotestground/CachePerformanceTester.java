@@ -2,20 +2,21 @@ package jpotestground;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.Timer;
 import jpo.cache.ImageBytes;
 import jpo.cache.JpoCache;
 import jpo.dataModel.Settings;
-import jpo.gui.swing.WholeNumberField;
-import org.apache.jcs.access.exception.CacheException;
+import org.apache.commons.jcs.access.exception.CacheException;
 
 /**
  *
  * @author Richard Eigenmann
  */
 public class CachePerformanceTester extends javax.swing.JFrame {
-
 
     /**
      * Creates new form CachePerformanceTester
@@ -25,7 +26,7 @@ public class CachePerformanceTester extends javax.swing.JFrame {
 
         Settings.loadSettings();
         LOGGER.info( Settings.thumbnailCacheDirectory );
-        myCache = JpoCache.getInstance();
+        
 
         timer = new Timer( 400, new ActionListener() {
 
@@ -36,18 +37,21 @@ public class CachePerformanceTester extends javax.swing.JFrame {
         } );
         timer.start();
 
-        Timer randomWalker = new Timer( 800, new ActionListener() {
+        Timer randomWalker = new Timer( 100, new ActionListener() {
 
             @Override
             public void actionPerformed( ActionEvent e ) {
-                hitCache();
+                try {
+                    hitCache();
+                } catch ( MalformedURLException ex ) {
+                    Logger.getLogger( CachePerformanceTester.class.getName() ).log( Level.SEVERE, null, ex );
+                }
             }
         } );
         randomWalker.start();
     }
 
     private final Timer timer;
-    private final JpoCache myCache;
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -281,15 +285,20 @@ public class CachePerformanceTester extends javax.swing.JFrame {
     private void loadPictures() {
         int number = numberField.getValue();
         for ( int i = 0; i < number; i++ ) {
-            String key = String.format( "Image-%d", i );
-
-            int size = sizeField.getValue();
-            byte[] bytes = new byte[(int) size];
-            ImageBytes imageBytes = new ImageBytes( bytes );
             try {
-                myCache.getHighresMemoryCacheForTesting().put( key, imageBytes );
-            } catch ( CacheException ex ) {
-                LOGGER.info( ex.getLocalizedMessage() );
+                URL key = new URL( String.format( "file://Image-%d", i ) );
+                
+                int size = sizeField.getValue();
+                byte[] bytes = new byte[(int) size];
+                ImageBytes imageBytes = new ImageBytes( bytes );
+                try {
+                    JpoCache.getInstance().getHighresMemoryCacheForTesting().put( key, imageBytes );
+                    //Thread.sleep( 1000 );
+                } catch ( CacheException  ex ) {
+                    LOGGER.info( ex.getLocalizedMessage() );
+                }
+            } catch ( MalformedURLException ex ) {
+                Logger.getLogger( CachePerformanceTester.class.getName() ).log( Level.SEVERE, null, ex);
             }
         }
 
@@ -299,13 +308,13 @@ public class CachePerformanceTester extends javax.swing.JFrame {
 
     }
 
-    private void hitCache() {
+    private void hitCache() throws MalformedURLException {
         if ( picturesCachedCount > 0 ) {
             int randomKey = (int) ( Math.random() * picturesCachedCount );
-            String key = String.format( "Image-%d", randomKey );
-            ImageBytes imageBytes = (ImageBytes) myCache.getHighresMemoryCacheForTesting().get( key );
+            URL key = new URL( String.format( "file://Image-%d", randomKey ) );
+            ImageBytes imageBytes = (ImageBytes) JpoCache.getInstance().getHighresMemoryCacheForTesting().get( key );
             progressTextArea.append( "Retrieved " );
-            progressTextArea.append( key );
+            progressTextArea.append( key.toString() );
             if ( imageBytes == null ) {
                 progressTextArea.append( " as null\n" );
             } else {
@@ -328,7 +337,7 @@ public class CachePerformanceTester extends javax.swing.JFrame {
         totalMemory.setText( String.format( "%dMB", totalMemoryMB ) );
         maxMemory.setText( String.format( "%dMB", maxMemoryMB ) );
 
-        cacheInfo.setText( myCache.getHighresCacheStats() );
+        cacheInfo.setText( JpoCache.getInstance().getHighresCacheStats() );
         picturesCached.setText( Integer.toString( picturesCachedCount ) );
     }
 

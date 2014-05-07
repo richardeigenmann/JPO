@@ -22,9 +22,10 @@ import jpo.dataModel.Settings;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
 import jpo.gui.ScalablePicture;
 import org.apache.commons.io.IOUtils;
-import org.apache.jcs.JCS;
-import org.apache.jcs.access.exception.CacheException;
-import org.apache.jcs.engine.control.CompositeCacheManager;
+import org.apache.commons.jcs.JCS;
+import org.apache.commons.jcs.access.CacheAccess;
+import org.apache.commons.jcs.access.exception.CacheException;
+import org.apache.commons.jcs.engine.control.CompositeCacheManager;
 
 /**
  *
@@ -37,8 +38,13 @@ public class JpoCache {
      */
     private static final Logger LOGGER = Logger.getLogger( JpoCache.class.getName() );
 
-    private JCS highresMemoryCache;
-    private JCS thumbnailMemoryAndDiskCache;
+    private static final String highresCacheRegionName = "highresCache";
+    private static final String thumbnailCacheRegionName = "thumbnailCache";
+    
+    //private JCS highresMemoryCache;
+    private CacheAccess<URL, ImageBytes> highresMemoryCache;
+    //private JCS thumbnailMemoryAndDiskCache;
+    private CacheAccess<String, ImageBytes> thumbnailMemoryAndDiskCache;
 
     private JpoCache() {
         Properties props = new Properties();
@@ -56,8 +62,10 @@ public class JpoCache {
         ccm.configure( props );
 
         try {
-            highresMemoryCache = JCS.getInstance( "highresCache" );
-            thumbnailMemoryAndDiskCache = JCS.getInstance( "thumbnailCache" );
+            highresMemoryCache = JCS.getInstance( highresCacheRegionName );
+            //setCache(highresMemoryCache);
+            thumbnailMemoryAndDiskCache = JCS.getInstance( thumbnailCacheRegionName );
+            //setCache(thumbnailMemoryAndDiskCache);
         } catch ( CacheException ex ) {
             LOGGER.severe( ex.getLocalizedMessage() );
         }
@@ -85,7 +93,11 @@ public class JpoCache {
      * Method to properly shut down the cache
      */
     public void shutdown() {
-        CompositeCacheManager.getInstance().shutDown();
+        try {
+            CompositeCacheManager.getInstance().shutDown();
+        } catch ( CacheException ex ) {
+            Logger.getLogger( JpoCache.class.getName() ).log( Level.SEVERE, null, ex );
+        }
     }
 
     /**
@@ -383,7 +395,7 @@ public class JpoCache {
         }
     }
     
-    public JCS getHighresMemoryCacheForTesting() {
+    public CacheAccess<URL, ImageBytes> getHighresMemoryCacheForTesting() {
         return highresMemoryCache;
     }
 

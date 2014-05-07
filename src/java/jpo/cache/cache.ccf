@@ -1,12 +1,12 @@
 # DEFAULT CACHE REGION
 jcs.default=DC
-jcs.default.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
+jcs.default.cacheattributes=org.apache.commons.jcs.engine.CompositeCacheAttributes
 jcs.default.cacheattributes.MaxObjects=1000
 jcs.default.cacheattributes.MemoryCacheName=org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache
 jcs.default.cacheattributes.UseMemoryShrinker=true
 jcs.default.cacheattributes.MaxMemoryIdleTimeSeconds=3600
 jcs.default.cacheattributes.ShrinkerIntervalSeconds=60
-jcs.default.elementattributes=org.apache.jcs.engine.ElementAttributes
+jcs.default.elementattributes=org.apache.commons.jcs.engine.ElementAttributes
 jcs.default.elementattributes.IsEternal=false
 jcs.default.elementattributes.MaxLifeSeconds=21600
 jcs.default.elementattributes.IdleTime=1800
@@ -17,33 +17,36 @@ jcs.default.elementattributes.IsLateral=true
 
 # PREDEFINED CACHE REGIONS for Highres no disk cache (Images came from disk)
 jcs.region.highresCache=
-jcs.region.highresCache.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
+jcs.region.highresCache.cacheattributes=org.apache.commons.jcs.engine.CompositeCacheAttributes
 # Max highres pictures in cache: 100
-jcs.region.highresCache.cacheattributes.MaxObjects=100
-jcs.region.highresCache.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
+jcs.region.highresCache.cacheattributes.MaxObjects=1000
+#jcs.region.highresCache.cacheattributes.MemoryCacheName=org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache
+#jcs.region.highresCache.cacheattributes.MemoryCacheName=org.apache.commons.jcs.engine.memory.lru.LHMLRUMemoryCache
+#jcs.region.highresCache.cacheattributes.MemoryCacheName=org.apache.commons.jcs.engine.memory.fifo.FIFOMemoryCache
+jcs.region.highresCache.cacheattributes.MemoryCacheName=org.apache.commons.jcs.engine.memory.mru.MRUMemoryCache
 jcs.region.highresCache.cacheattributes.UseMemoryShrinker=true
 jcs.region.highresCache.cacheattributes.MaxMemoryIdleTimeSeconds=3600
 jcs.region.highresCache.cacheattributes.ShrinkerIntervalSeconds=60
 jcs.region.highresCache.cacheattributes.MaxSpoolPerRun=500
-jcs.region.highresCache.elementattributes=org.apache.jcs.engine.ElementAttributes
+jcs.region.highresCache.elementattributes=org.apache.commons.jcs.engine.ElementAttributes
 jcs.region.highresCache.elementattributes.IsEternal=false
 
 
 # PREDEFINED CACHE REGIONS
 jcs.region.thumbnailCache=DC
-jcs.region.thumbnailCache.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
+jcs.region.thumbnailCache.cacheattributes=org.apache.commons.jcs.engine.CompositeCacheAttributes
 jcs.region.thumbnailCache.cacheattributes.MaxObjects=1000
-jcs.region.thumbnailCache.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
+jcs.region.thumbnailCache.cacheattributes.MemoryCacheName=org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache
 jcs.region.thumbnailCache.cacheattributes.UseMemoryShrinker=true
 jcs.region.thumbnailCache.cacheattributes.MaxMemoryIdleTimeSeconds=3600
 jcs.region.thumbnailCache.cacheattributes.ShrinkerIntervalSeconds=60
 jcs.region.thumbnailCache.cacheattributes.MaxSpoolPerRun=500
-jcs.region.thumbnailCache.elementattributes=org.apache.jcs.engine.ElementAttributes
+jcs.region.thumbnailCache.elementattributes=org.apache.commons.jcs.engine.ElementAttributes
 jcs.region.thumbnailCache.elementattributes.IsEternal=false
 
 # AVAILABLE AUXILIARY CACHES
-jcs.auxiliary.DC=org.apache.jcs.auxiliary.disk.indexed.IndexedDiskCacheFactory
-jcs.auxiliary.DC.attributes=org.apache.jcs.auxiliary.disk.indexed.IndexedDiskCacheAttributes
+jcs.auxiliary.DC=org.apache.commons.jcs.auxiliary.disk.indexed.IndexedDiskCacheFactory
+jcs.auxiliary.DC.attributes=org.apache.commons.jcs.auxiliary.disk.indexed.IndexedDiskCacheAttributes
 jcs.auxiliary.DC.attributes.DiskPath=/tmp/Jpo-JCS-cache
 jcs.auxiliary.DC.attributes.MaxPurgatorySize=5000  
 jcs.auxiliary.DC.attributes.MaxKeySize=1000000

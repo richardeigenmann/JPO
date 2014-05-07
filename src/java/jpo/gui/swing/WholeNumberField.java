@@ -1,8 +1,8 @@
 package jpo.gui.swing;
 
-import jpo.dataModel.Settings;
 import java.text.NumberFormat;
 import java.text.ParseException;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JTextField;
@@ -49,7 +49,7 @@ public class WholeNumberField extends JTextField {
 
     public WholeNumberField() {
         super( 8 );
-        integerFormatter = NumberFormat.getNumberInstance( Settings.getCurrentLocale() );
+        integerFormatter = NumberFormat.getNumberInstance( Locale.getDefault() );
         integerFormatter.setParseIntegerOnly( true );
         setValue( 0 );
     }
@@ -62,7 +62,7 @@ public class WholeNumberField extends JTextField {
      */
     public WholeNumberField( int defaultValue, int width ) {
         super( width );
-        integerFormatter = NumberFormat.getNumberInstance( Settings.getCurrentLocale() );
+        integerFormatter = NumberFormat.getNumberInstance( Locale.getDefault() );
         integerFormatter.setParseIntegerOnly( true );
         setValue( defaultValue );
     }
