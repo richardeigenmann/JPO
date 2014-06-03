@@ -3,6 +3,7 @@
 
             <table class="changelog">
                 <tr><td colspan=2><b>Development Version 0.12</b></td></tr>
+                <tr><td valign="top">3.6.2014</td><td>Integrated jxmapviewer2 properly</td></tr>
                 <tr><td valign="top">21.4.2014</td><td>Fixed bug in Consolidate</td></tr>
                 <tr><td valign="top">21.4.2014</td><td>Cleaner code for email selection</td></tr>
                 <tr><td valign="top">21.4.2014</td><td>Fixed bug with thumbnail descriptions showing as highlighted after a move.</td></tr>
@@ -414,6 +415,6 @@
             </table>
 
             <hr>
-            <p>Last update to this page: 20 April 2014<br>
+            <p>Last update to this page: 3 June 2014<br>
                 Copyright 2003-2014 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
     <?php include("page-end.php"); ?>

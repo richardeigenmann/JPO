@@ -173,6 +173,7 @@
             <include name="jcs-1.3.jar"/>
             <include name="jsch-0.1.51.jar"/>
             <include name="jwizz-0.1.4.jar"/>
+            <include name="jxmapviewer2-1.3.1.jar"/>
             <include name="metadata-extractor-2.6.4.jar"/>
             <include name="miglayout-4.0.jar"/>
             <include name="xmpcore.jar"/>
@@ -395,5 +396,5 @@
         <echo message="Testing if JSch is present: ${jsch.present}" />
     </target>
 
-    
+   
 </project>

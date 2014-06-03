@@ -61,10 +61,10 @@ import jpo.dataModel.SortableDefaultMutableTreeNode;
 import jpo.dataModel.Tools;
 import jpo.gui.swing.NonFocussedCaret;
 import jpo.gui.swing.ThreeDotButton;
-import map.MapClickListener;
 import map.MapViewer;
 import net.miginfocom.swing.MigLayout;
 import org.jdesktop.swingx.JXMapViewer;
+import org.jdesktop.swingx.input.MapClickListener;
 import org.jdesktop.swingx.mapviewer.GeoPosition;
 import webserver.Webserver;
 

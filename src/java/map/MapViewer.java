@@ -14,6 +14,7 @@ import org.jdesktop.swingx.JXMapViewer;
 import org.jdesktop.swingx.OSMTileFactoryInfo;
 import org.jdesktop.swingx.input.CenterMapListener;
 import org.jdesktop.swingx.input.PanKeyListener;
+import org.jdesktop.swingx.input.PanMouseInputListener;
 import org.jdesktop.swingx.input.ZoomMouseWheelListenerCursor;
 import org.jdesktop.swingx.mapviewer.DefaultTileFactory;
 import org.jdesktop.swingx.mapviewer.DefaultWaypoint;
@@ -61,8 +62,8 @@ public class MapViewer {
 
         // Create waypoints from the geo-positions
         //Set<Waypoint> waypoints = new HashSet<Waypoint>( Arrays.asList( new DefaultWaypoint( location ) ) );
-        Set<Waypoint> waypoints = new HashSet<>(); 
-        waypoints.add(defaultWaypoint);
+        Set<Waypoint> waypoints = new HashSet<>();
+        waypoints.add( defaultWaypoint );
 
         // Create a waypoint painter that takes all the waypoints
         WaypointPainter<Waypoint> waypointPainter = new WaypointPainter<>();
@@ -75,8 +76,7 @@ public class MapViewer {
 
         CompoundPainter<JXMapViewer> painter = new CompoundPainter<>( painters );
         jxMapViewer.setOverlayPainter( painter );
-    
-    
+
     }
 
     /**
@@ -85,8 +85,7 @@ public class MapViewer {
     private static final Logger LOGGER = Logger.getLogger( MapViewer.class.getName() );
 
     private final JXMapViewer jxMapViewer = new JXMapViewer();
-        DefaultWaypoint defaultWaypoint = new DefaultWaypoint();
-    
+    DefaultWaypoint defaultWaypoint = new DefaultWaypoint();
 
     public JXMapViewer getJXMapViewer() {
         return jxMapViewer;
@@ -99,6 +98,5 @@ public class MapViewer {
         jxMapViewer.setAddressLocation( location );
 
     }
-
 
 }
