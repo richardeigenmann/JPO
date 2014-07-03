@@ -1,20 +1,26 @@
 package jpo.gui;
 
 import com.google.common.eventbus.Subscribe;
-import jpo.TagCloud.TagClickListener;
-import jpo.dataModel.SortableDefaultMutableTreeNode;
 import java.util.ArrayList;
-import java.util.Set;
+import java.util.Arrays;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
 import jpo.EventBus.JpoEventBus;
 import jpo.EventBus.ShowGroupRequest;
 import jpo.EventBus.ShowQueryRequest;
-import jpo.dataModel.DescriptionWordMap;
-import jpo.TagCloud.TagCloud;
+import jpo.dataModel.PictureInfo;
 import jpo.dataModel.Settings;
-import jpo.dataModel.StaticNodesQuery;
+import jpo.dataModel.SortableDefaultMutableTreeNode;
+import jpo.dataModel.TextQuery;
+import org.TagCloud.TagClickListener;
+import org.TagCloud.TagCloud;
+import org.TagCloud.WeightedWord;
 
 /*
  TagCloudController.java:  The Controller for the TagCloud
@@ -33,6 +39,8 @@ import jpo.dataModel.StaticNodesQuery;
  The license is in gpl.txt.
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
+
+
 /**
  * Manages the Tag Cloud
  */
@@ -57,15 +65,17 @@ public class TagCloudController implements TagClickListener {
      */
     private static final Logger LOGGER = Logger.getLogger( TagCloudController.class.getName() );
 
-    private DescriptionWordMap descriptionWordMap;
-
+    //private DescriptionWordMap descriptionWordMap;
     /**
      * Returns the tag cloud component
-     * @return  the tag cloud component
+     *
+     * @return the tag cloud component
      */
     public JComponent getTagCloud() {
         return tagCloud;
     }
+
+    private NodeWordMapper nodeWordMapper;
 
     /**
      * Handles the ShowGroupRequest by updating the display...
@@ -78,18 +88,244 @@ public class TagCloudController implements TagClickListener {
 
             @Override
             public void run() {
-                descriptionWordMap = new DescriptionWordMap( event.getNode() );
-                tagCloud.setWordMap( descriptionWordMap );
-                tagCloud.showWords();
+                nodeWordMapper = new NodeWordMapper( event.getNode() );
+                tagCloud.setWordsList( nodeWordMapper.getWeightedWords() );
             }
         } );
     }
 
-
     @Override
-    public void tagClicked( String key ) {
-        Set<SortableDefaultMutableTreeNode> set = descriptionWordMap.getWordNodeMap().get( key );
-        StaticNodesQuery query = new StaticNodesQuery( "Word: " + key, new ArrayList<>( set ) );
-        JpoEventBus.getInstance().post( new ShowQueryRequest( query ) );
+    public void tagClicked( WeightedWord weightedWord ) {
+        if ( nodeWordMapper == null ) {
+            return;
+        }
+
+        TextQuery textQuery = new TextQuery( weightedWord.getWord() );
+        textQuery.setStartNode( nodeWordMapper.getRootNode() );
+        JpoEventBus.getInstance().post( new ShowQueryRequest( textQuery ) );
+    }
+
+    private final static HashSet<String> strikeWordsSet = new HashSet<>( Arrays.asList(
+            "als", 
+            "Am",
+            "am", 
+            "an",
+            "An",
+            "and", 
+            "at",
+            "auf",
+            "Auf",
+            "Aufstieg", 
+            "aus",
+            "bei",
+            "Bei",
+            "Beim",
+            "beim",
+            "Blick",
+            "by",
+            "das",
+            "Das",
+            "de", 
+            "del",
+            "dem",
+            "den",
+            "der", 
+            "Der", 
+            "des", 
+            "Die",
+            "die", 
+            "DSC",
+            "dsc", 
+            "DSCN",
+            "durch", 
+            "Ein",
+            "ein",
+            "eine", 
+            "einem",
+            "einen", 
+            "einer", 
+            "eines", 
+            "El",
+            "en",
+            "fuer",
+            "für", 
+            "gesehen", 
+            "hat",
+            "hinter", 
+            "ich",
+            "II",
+            "Il", 
+            "im", 
+            "Im", 
+            "Image",
+            "img", 
+            "IMG", 
+            "in",
+            "In",
+            "in", 
+            "ist", 
+            "je",
+            "La", 
+            "man",
+            "meine",
+            "MG",
+            "mir",
+            "Mit",
+            "mit", 
+            "nach", 
+            "neben", 
+            "Neuer",
+            "nicht",
+            "noch",
+            "Nähe",
+            "nähert",
+            "ob",
+            "of",
+            "of",
+            "on",
+            "Richtung",
+            "san",
+            "SDC",
+            "sein",
+            "sich", 
+            "The",
+            "the", 
+            "to", 
+            "ueber", 
+            "um",
+            "und",
+            "uns", 
+            "unter",
+            "Unterwegs",
+            "unterwegs", 
+            "van",
+            "vom", 
+            "von", 
+            "vor",
+            "warum",
+            "was",
+            "wer",
+            "wie",
+            "wie",
+            "wir",
+            "wird", 
+            "with",
+            "without",
+            "wurde",
+            "während", 
+            "zu", 
+            "zum",
+            "zur", 
+            "zwischen",
+            "über"
+    ) );
+
+    private static String[] multiWordTerms = { 
+        "Aprés Ski", 
+        "Cape Town",
+        "Crans Montana",
+        "Den Haag", 
+        "Empire State", 
+        "Goldman Sachs", 
+        "Groot Marico", 
+        "Halfmoon Bay",
+        "Hoch Ybrig", 
+        "Lions Head",
+        "Marigot Bay", 
+        "Nags Head",
+        "New York", 
+        "New Zealand", 
+        "Persischer Golf",
+        "Petit Bateau", 
+        "Quadra Island", 
+        "Red Sea",
+        "Rotes Meer",
+        "Saudi Arabien", 
+        "Seleger Moor",
+        "South Africa", 
+        "South Georgia",
+        "St Gallen",
+        "St. Petersinsel",
+        "Tel Aviv", 
+        "Toten Meer",
+        "Totes Meer",
+        "Vic Falls",
+        "Victoria Falls",
+        "Washington State"
+    };
+
+    private class NodeWordMapper {
+
+        private List<WeightedWord> weightedWordList = new ArrayList<>();
+
+        private SortableDefaultMutableTreeNode rootNode;
+
+        NodeWordMapper( SortableDefaultMutableTreeNode node ) {
+            this.rootNode = node;
+            buildList();
+        }
+
+        public List<WeightedWord> getWeightedWords() {
+            return weightedWordList;
+        }
+
+        public SortableDefaultMutableTreeNode getRootNode() {
+            return rootNode;
+        }
+
+        /**
+         * Zips through the nodes and builds the word to node set map.
+         */
+        private void buildList() {
+            SortableDefaultMutableTreeNode node;
+            Object userObject;
+            Enumeration nodes = rootNode.breadthFirstEnumeration();
+            while ( nodes.hasMoreElements() ) {
+                node = (SortableDefaultMutableTreeNode) nodes.nextElement();
+                userObject = node.getUserObject();
+                if ( userObject instanceof PictureInfo ) {
+                    String description = ( (PictureInfo) userObject ).getDescription();
+                    splitAndAdd( description );
+                }
+            }
+            for ( String key : wordCountMap.keySet() ) {
+                weightedWordList.add( new WeightedWord( key, wordCountMap.get( key ) ) );
+            }
+        }
+
+        /**
+         * split the string and add the node to the map
+         *
+         * @param description The description of split
+         */
+        private void splitAndAdd( String description ) {
+            String fixAprostropheS = description.replaceAll( "\\'s", "" );
+            String noPunctuation = fixAprostropheS.replaceAll( "[\\.:!,\\'\\\";\\?\\(\\)\\[\\]#\\$\\*\\+<>\\/&=]", "" );
+            String noNumbers = noPunctuation.replaceAll( "\\d", "" );
+
+            for ( String multiWordTerm : multiWordTerms ) {
+                if ( noNumbers.contains( multiWordTerm ) ) {
+                    noNumbers = noNumbers.replace( multiWordTerm, "" );
+                    addWord( multiWordTerm );
+                }
+            }
+
+            for ( String s : noNumbers.split( "[\\s_\\-]+" ) ) {
+                if ( !strikeWordsSet.contains( s ) ) {
+                    addWord( s );
+                }
+            }
+        }
+
+        private Map<String, Integer> wordCountMap = new HashMap<>();
+
+        private void addWord( String word ) {
+            if ( wordCountMap.containsKey( word ) ) {
+                wordCountMap.put( word, wordCountMap.get( word ) + 1 );
+            } else {
+                wordCountMap.put( word, 1 );
+            }
+        }
+
     }
 }

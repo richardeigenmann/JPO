@@ -22,48 +22,43 @@
                 And does your Netbeans have the CVS plugin?<br>
 
             <p>Start Netbeans and click the menu item <pre>Team > Other CVS > Checkout</pre>. Into the CVS Root field 
-                paste the following:<br>
+            paste the following:<br>
             <pre>:pserver:anonymous@j-po.cvs.sourceforge.net:/cvsroot/j-po</pre>
-             Click Next Click Finish. 
-                On the dialog that appears click Open Project. To compile and run the application press the F6 key.</p>
+            Click Next Click Finish. 
+            On the dialog that appears click Open Project. To compile and run the application press the F6 key.</p>
 
 
             <h2 id="source">Installing the source:</h2>
-            <p>These instructions are now a little dated as they stem from the 
-                pre-Netbeans development phase. RE 8 Oct 2011</p>
 
-            <p>Naturally there are some prerequisites:
-                a Java Software Development Kit (SDK), Apache Ant, a CVS client and JUnit.</p>
-            <p>Pitfalls to be aware of: Ant can be very fussy and annoying with cryptic,
-                incomprehensible error messages. On my SuSE 11.2 machine things have gotten
-                much better. SuSE have done all sorts of magic with the Java installation and 
-                the 6 release seems to be found by the command line without too much hassle.
-                Ant also does some magic so that as long as the ant command itself is found 
-                ant is perfectly happy to build. But, to be honest, I have also spent many
-                frustrating hours fiddling with things I didn't understand. I can say that 
-                there are two very important environment things: the location of the JVM and
-                the location of ANT. The location of the JVM can be specified on a Linux (bash) 
-                system by:</p>
-            <code>export JVM=/usr/java/jdk1.5.0_07</code>
+            <p>Do you have the prerequisites?</p>
+            <ul>
+                <li>Java Software Development Kit (SDK) 1.7 or later</li>
+                <li>Apache Ant</li>
+                <li>CVS</li>
+                <li>Junit</li>
+            </ul>
+
+
+            <p>I've had my fair share of issues with the prerequisites. Here is how to test your set-up:</p>
+
+            <code># Depending on your environment you might need to<br>
+                export JVM=/usr/java/jdk1.7.0_55<br>
+                # or<br>
+                export JAVA_HOME=/usr/java/jdk1.7.0_55<br></code>
             <p>Test it with this command:</p>
             <code>$JVM/bin/java -version</code>
             <p>If you get something like the following it's ok, otherwise sort out your Java SDK installation first!</p>
-            <code>Java(TM) 2 Runtime Environment, Standard Edition (build 1.5.0_07-b03)<br>
-                Java HotSpot(TM) Client VM (build 1.5.0_07-b03, mixed mode, sharing)</code>
+            <code>java version "1.7.0_55"
+                Java(TM) SE Runtime Environment (build 1.7.0_55-b13)<br>
+                Java HotSpot(TM) 64-Bit Server VM (build 24.55-b03, mixed mode)</code>
 
-            <p>Not sure, but JAVA_HOME can be used for the same thing and on my system is set to the
-                same directory. I have both variables set to the same thing and it works. Good enough for me.</p>
-
-            <p>Check you have a working java compiler with:</p>
+            <p>Check you have a working Java compiler with:</p>
             <code>javac -version<br><br>
-                javac 1.5.0_10<br>
-                javac: no source files<br>
-                Usage: ....</code>
+                javac 1.7.0_55</code>
 
-            <p>Now check that your ant works properly (and this is where the
-                ANT_HOME environment variable can be important):</p>
+            <p>Now check that your ant works properly (and you might have to set the ANT_HOME environment variable):</p>
             <code>ant -version<br><br>
-                Apache Ant version 1.6.5 compiled on May 3 2006</code>
+                Apache Ant(TM) version 1.9.2 compiled on October 2 2013</code>
 
             <p>Use the following command to checkout the latest cvs source from sourceforge:</p>
             <code>cvs -z3 -d:pserver:anonymous@j-po.cvs.sourceforge.net:/cvsroot/j-po checkout -P Jpo</code>
@@ -73,17 +68,30 @@
 
             <p>In order to run the unit tests (without which you can't build) you need
                 a working JUnit installation. Check this out with the following command:</p>
-            <code>ant JUNIT</code>
+            <code>ant JUNIT
+                Buildfile: /home/richi/Downloads/Jpo/build.xml<br>
+                [echo] Apache Ant(TM) version 1.9.2 compiled on October 2 2013 is using the <br>
+                [echo] build file /wherever/you/put/the/code/Jpo/build.xml to build the project<br>
+                [echo] "Java Picture Organizer" Use the "-debug" switch to see loads of<br>
+                [echo] debug information, "ant --help" reminds you of what other options<br>
+                [echo] there are and "ant -p" tells you what targets this build file supports.<br>
+                <br>
+                JUNIT:<br>
+                [echo] Testing if JUnit is present: true<br>
+                <br>
+                BUILD SUCCESSFUL<br>
+                Total time: 0 seconds<br>
+            </code>
 
-            <p>A lot of stuff will scroll over the screen but if the last lines say something
-                like the following you are good:</p>
+            <p>The line with "Testing if JUnit is present: true" is the key here.</p>
             <code>JUNIT:<br><br>BUILD SUCCESSFUL<br>Total time: 0 seconds</code>
 
 
-            <p>If the above doesn't work fix it! The command <code>ant -diagnostics</code> might
+            <p>The command <code>ant -diagnostics</code> might
                 be helpful. I wish someone had told be about this years ago. Also <code>ant -debug target</code>.
-                Well actually, read the <a href = "http://www.oreilly.com/catalog/anttdg/">O'Reilly Ant book</a>.<br>
-                Next you compile the code with the command</p>
+                Well actually, read the <a href = "http://www.oreilly.com/catalog/anttdg/">O'Reilly Ant book</a>.</p>
+                
+                <p>Now compile the code:</p>
             <code>ant compile</code>
             <p>And then run it with</p>
             <code>ant go</code>

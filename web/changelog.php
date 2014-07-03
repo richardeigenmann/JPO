@@ -3,6 +3,8 @@
 
             <table class="changelog">
                 <tr><td colspan=2><b>Development Version 0.12</b></td></tr>
+                <tr><td valign="top">8.6.2014</td><td>Fixed issue of no longer relayouting when resizing ThumbnailJScrollPaneTransitioned to externalised TagCloud</td></tr>
+                <tr><td valign="top">8.6.2014</td><td>Transitioned to externalised TagCloud</td></tr>
                 <tr><td valign="top">3.6.2014</td><td>Integrated jxmapviewer2 properly</td></tr>
                 <tr><td valign="top">21.4.2014</td><td>Fixed bug in Consolidate</td></tr>
                 <tr><td valign="top">21.4.2014</td><td>Cleaner code for email selection</td></tr>
@@ -396,25 +398,6 @@
 
 
             <hr>
-            <span class="para-heading" id="Bugs">Bugs</span>
-
-            <table>
-                <tr><td valign="top">1</td><td>Drop in the Thumbnail pane is not working correctly - Fixed 19.1.2003</td></tr>
-                <tr><td valign="top">2</td><td>Clicking on the three dot icon in the Info Window and not selecting a file can throw null pointer errors and stuff</td></tr>
-            </table>
-
-
-
-            <hr>
-            <span class="para-heading" id="PotentialFeatures">Potential Future Features</span>
-
-            <table>
-                <tr><td valign="top">1</td><td>Collection Extraction to Zip file and ability to load images from Zip file</td></tr>
-                <tr><td valign="top">2</td><td>Thumbnails for Groups could show mini-icons of some pictures in the group</td></tr>
-                <tr><td valign="top">3</td><td>Some sort of integration with email to send pictures directly</td></tr>
-            </table>
-
-            <hr>
-            <p>Last update to this page: 3 June 2014<br>
+            <p>Last update to this page: 3 July 2014<br>
                 Copyright 2003-2014 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
     <?php include("page-end.php"); ?>

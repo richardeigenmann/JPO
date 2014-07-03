@@ -16,6 +16,7 @@
 <p>Click on the link you prefer:<br>
     <a href="jpo-stable.jnlp">JPO Stable</a><br>
     <a href="jpo-devel.jnlp">JPO Development</a><br></p>
+    <a href="jpo-0.12.jnlp">JPO Development 0.12 version</a><br></p>
 
 <p><strong>Note:</strong> You will see the following warning screen:</p>
 
@@ -113,6 +114,7 @@
     <a href="http://j-po.sourceforge.net/jxmapviewer2-1.3.1.jar">jxmapviewer2-1.3.1</a><br>
     <a href="http://j-po.sourceforge.net/metadata-extractor-2.6.4.jar">metadata-extractor-2.6.4.jar</a><br>
     <a href="http://j-po.sourceforge.net/miglayout-4.0.jar">miglayout-4.0.jar</a><br>
+    <a href="http://j-po.sourceforge.net/TagCloud.jar">TagCloud.jar</a><br>
     <a href="http://j-po.sourceforge.net/xmpcore.jar">xmpcore.jar</a><br>
 </p>
 
@@ -139,6 +141,7 @@
         :/PATH/TO/YOUR/JPO/JARS/jxmapviewer2-1.3.1
         :/PATH/TO/YOUR/JPO/JARS/metadata-extractor-2.6.4.jar
         :/PATH/TO/YOUR/JPO/JARS/miglayout-4.0.jar
+        :/PATH/TO/YOUR/JPO/JARS/TagCloud.jar
         :/PATH/TO/YOUR/JPO/JARS/xmpcore.jar
         :/PATH/TO/YOUR/JPO/JARS/jpo-0.11.jar Main</code></font></p>
 
@@ -169,6 +172,7 @@
         "c:\Program Files\Jpo\jxmapviewer2-1.3.1.jar";
         "c:\Program Files\Jpo\metadata-extractor-2.6.4.jar";
         "c:\Program Files\Jpo\miglayout-4.0.jar";
+        "c:\Program Files\Jpo\TagCloud.jar";
         "c:\Program Files\Jpo\xmpcore.jar";
         "c:\Program Files\Jpo\jpo-0.11.jar" Main</code></p>
 
@@ -215,6 +219,6 @@
 
 
 <hr>
-<p>Last update to this page: 3 June 2014<br>
+<p>Last update to this page: 8 June 2014<br>
     Copyright 2003-2014 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
 <?php include("page-end.php"); ?>
