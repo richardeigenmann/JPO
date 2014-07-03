@@ -90,8 +90,8 @@
             <p>The command <code>ant -diagnostics</code> might
                 be helpful. I wish someone had told be about this years ago. Also <code>ant -debug target</code>.
                 Well actually, read the <a href = "http://www.oreilly.com/catalog/anttdg/">O'Reilly Ant book</a>.</p>
-                
-                <p>Now compile the code:</p>
+
+            <p>Now compile the code:</p>
             <code>ant compile</code>
             <p>And then run it with</p>
             <code>ant go</code>
@@ -103,12 +103,11 @@
                 <a href="http://java.sun.com/products/javawebstart/docs/developersguide.html">http://java.sun.com/products/javawebstart/docs/developersguide.html</a></p>
 
 
-            <p>For convenience I have set up a shell script that sets my environment. I run it with the
-                <code>source jpoenv.sh</code> command. It does the following:</p>
+            <p>For convenience used to use a shell script that sets up my environment. I used to run it with the
+                <code>source jpoenv.sh</code> command. It did the following:</p>
             <pre>
 #!/bin/sh  
-JAVA_HOME=/opt/IBMJava2-14
-JAVA_DEV_ROOT=/path_to_my_sources/Jpo 
+JAVA_HOME=JAVA_HOME=/usr/lib64/jvm/java-1.7.0
 IS_UNIX=true 
 JAVA_KEY_STORE=/path_to_my_keystore/javaKeyStore
 JAVA_KEY_STORE_KEY=my_secret_key
@@ -163,8 +162,8 @@ cd /path_to_my_sources/Jpo
             <p>To run right-click on the build.xml file and click run-as Ant Build file.
 
             <hr>
-            <p>Last update to this page: 6 April 2013<br>
-                Copyright 2003-2013 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
+            <p>Last update to this page: 4 July 2014<br>
+                Copyright 2003-2014 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
         </td>
     </tr>
 

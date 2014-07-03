@@ -86,8 +86,7 @@
                deprecation="yes"
                source="1.7"
                target="1.7"
-               includeantruntime="false"
-               encoding="UTF-8" >
+               includeantruntime="false" >
             <src path="${src.java.dir}"/>
             <classpath refid="classpath"/>
             <compilerarg value="-Xlint:unchecked" />
@@ -176,6 +175,7 @@
             <include name="jxmapviewer2-1.3.1.jar"/>
             <include name="metadata-extractor-2.6.4.jar"/>
             <include name="miglayout-4.0.jar"/>
+            <include name="TagCloud.jar"/>
             <include name="xmpcore.jar"/>
         </fileset>
     </path>
