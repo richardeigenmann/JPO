@@ -41,6 +41,7 @@ public class JpoResources_en extends ListResourceBundle {
         { "ApplicationTitle", "JPO - Java Picture Organizer" },
         { "jpoTabbedPaneCollection", "Collection" },
         { "jpoTabbedPaneSearches", "Searches" },
+
         // Generic texts
         { "genericTargetDirText", "Target Directory:" },
         { "genericCancelText", "Cancel" },
@@ -237,6 +238,7 @@ public class JpoResources_en extends ListResourceBundle {
         { "ReconcileNullFileError", "Bad directory" },
         { "ReconcileStart", "Reconciling directory: " },
         { "ReconcileNoFiles", "No Files Found.\n" },
+
         // CollectionDistillerJFrame
         { "CollectionDistillerJFrameFrameHeading", "Export to new Collection" },
         { "collectionExportPicturesText", "Export Pictures" },
@@ -254,13 +256,14 @@ public class JpoResources_en extends ListResourceBundle {
         { "ConsolitdateProgBarTitle", "Running Consolidation" },
         { "ConsolitdateProgBarDone", "%d pictures Consolidated" },
         { "lowresJCheckBox", "consolidate Lowres too" },
-	{"ConsolidateCreateDirFailure", "Aborted because directory %s can't be created." },
+	    {"ConsolidateCreateDirFailure", "Aborted because directory %s can't be created." },
         {"ConsolidateCantWrite", "Aborted because directory %s is not writable." },
 
         // JarDistillerJFrame
         { "groupExportJarTitleText", "Export to Jar" },
         { "JarDistillerLabel", "Jar (Java Archive) to create:" },
         { "SelectJarFileTitle", "Select directory to export pictures to" },
+
         // PictureInfoEditor
         { "PictureInfoEditorHeading", "Picture Properties" },
         { "highresChooserTitle", "Choose Highres Image" },
@@ -283,9 +286,11 @@ public class JpoResources_en extends ListResourceBundle {
         { "categoriesJLabel-2", "Categories:" },
         { "setupCategories", ">> Set up categories <<" },
         { "noCategories", ">> None <<" },
+
         //GroupInfoEditor
         { "GroupInfoEditorHeading", "Edit Group Description" },
         { "groupDescriptionLabel", "Group description:" },
+
         // GroupPopupMenu
         { "groupShowJMenuItem", "Show Group" },
         { "groupSlideshowJMenuItem", "Show Pictures" },
@@ -316,7 +321,7 @@ public class JpoResources_en extends ListResourceBundle {
         { "sortByCommentJMenuItem", "Comment" },
         { "sortByPhotographerJMenuItem", "Photographer" },
         { "sortByCopyrightHolderTimeJMenuItem", "Copyright Holder" },
-	{ "groupSelectForEmail", "Select all for Emailing"},
+	    { "groupSelectForEmail", "Select all for Emailing"},
         { "groupExportHtmlMenuText", "Generate Website" },
         { "groupExportFlatFileMenuText", "Export to Flat File" },
         { "groupExportJarMenuText", "Export to Jar Archive" },
@@ -358,6 +363,7 @@ public class JpoResources_en extends ListResourceBundle {
         { "ThumbnailToolTipPrevious", "Previous Page" },
         { "ThumbnailToolTipNext", "Next Page" },
         { "ThumbnailJScrollPanePage", "Page " },
+
         //ChangeWindowPopupMenu
         { "fullScreenLabel", "Fullscreen" },
         { "leftWindowLabel", "Left" },
@@ -369,6 +375,7 @@ public class JpoResources_en extends ListResourceBundle {
         { "defaultWindowLabel", "Default" },
         { "windowDecorationsLabel", "Window Frame" },
         { "windowNoDecorationsLabel", "No Frame" },
+
         // CollectionJTree
         { "DefaultRootNodeText", "New Collection" },
         { "CopyImageDialogButton", "Copy" },
@@ -395,6 +402,7 @@ public class JpoResources_en extends ListResourceBundle {
         { "fileDeleteTitle", "Delete File" },
         { "fileDeleteError", "The file could not be deleted:\n" },
         { "deleteRootNodeError", "You can't remove the root node of the collection." },
+
         // ApplicationJMenuBar
         { "FileMenuText", "File" },
         { "FileNewJMenuItem", "New Collection" },
@@ -426,9 +434,11 @@ public class JpoResources_en extends ListResourceBundle {
         { "restrictToGroupJRadioButtonLabel", "Restrict to current Group" },
         { "useAllPicturesJRadioButtonLabel", "Cycle through all Pictures" },
         { "timerSecondsJLabelLabel", "Advance Delay (seconds)" },
+
         // ExifViewerJFrame
         { "ExifTitle", "EXIF Headers\n" },
         { "noExifTags", "No EXIF tags found" },
+
         // PictureAdder
         { "PictureAdderDialogTitle", "Add Pictures and Directories" },
         { "PictureAdderProgressDialogTitle", "Adding Pictures" },
@@ -469,12 +479,15 @@ public class JpoResources_en extends ListResourceBundle {
         { "filenameJCheckBox", "rely on filenames to remember pictures (faster)" },
         { "refreshJButtonError", "Save your changes first!" },
         { "monitorJCheckBox", "automatically monitor for new pictures" },
+
         // Camera
         { "countingChecksum", "Building Checksums" },
         { "countingChecksumComplete", " checksums calculated" },
         { "newCamera", "New Camera" },
+
         // XmlDistiller
         { "DtdCopyError", "Could not copy collection.dtd\n" },
+
         // CollectionProperties
         { "CollectionPropertiesJFrameTitle", "Collection Properties" },
         { "CollectionNodeCountLabel", "Number of Nodes: " },
@@ -483,16 +496,19 @@ public class JpoResources_en extends ListResourceBundle {
         { "CollectionSizeJLabel", "Disk space used: " },
         { "queCountJLabel", "Thumbnails on queue: " },
         { "editProtectJCheckBoxLabel", "Protect Collection from Edits" },
+
         // Tools
         { "copyPictureError1", "Could not copy\n" },
         { "copyPictureError2", "\nto: " },
         { "copyPictureError3", "\nbecause: " },
         { "freeMemory", "Memory: " },
+
         // PictureAdder
         { "recurseJCheckBox", "Recurse subdirectories" },
         { "retainDirectoriesJCheckBox", "Retain directory structure" },
         { "newOnlyJCheckBox", "Add new pictures only" },
         { "showThumbnailJCheckBox", "Show Thumbnail" },
+
         // IntegrityChecker
         { "IntegrityCheckerTitle", "Checking Collection Integrity" },
         { "integrityCheckerLabel", "Checking the integrity:" },
@@ -638,7 +654,11 @@ public class JpoResources_en extends ListResourceBundle {
 		{ "PrivacyTumbProgBarTitle", "Deleting Thumbnails" },
 		{ "PrivacyTumbProgBarDone", "%d Thumbnails Deleted" },
 
-        { "Template", "Template" }
+
+        { "jpo.dataModel.XmlReader.loadProgressGuiTitle", "Loading File" },
+        { "jpo.dataModel.XmlReader.progressUpdate", "Loaded: %d Groups, %d Pictures" }
+
+
     };
 }
 

@@ -3,6 +3,8 @@
 
             <table class="changelog">
                 <tr><td colspan=2><b>Development Version 0.12</b></td></tr>
+                <tr><td valign="top">13.7.2014</td><td>Removed the Year Browser Guis</td></tr>
+                <tr><td valign="top">13.7.2014</td><td>Removed all GridBagLayouts and replaced them with MigLayouts</td></tr>
                 <tr><td valign="top">12.7.2014</td><td>Corrected UTF-8 encoding of file</td></tr>
                 <tr><td valign="top">8.6.2014</td><td>Fixed issue of no longer relayouting when resizing ThumbnailJScrollPaneTransitioned to externalised TagCloud</td></tr>
                 <tr><td valign="top">8.6.2014</td><td>Transitioned to externalised TagCloud</td></tr>

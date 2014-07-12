@@ -709,13 +709,14 @@ public class JpoResources_zh_TW extends ListResourceBundle {
 		{ "PrivacySelected", "Do Selected" },
 		{ "PrivacyClose", "Close Window" },
 		{ "PrivacyAll", "All" },
-		{ "PrivacyClear", "clear" },
+		{ "PrivacyClear", "抹去" },
 		{ "PrivacyTumbProgBarTitle", "Deleting Thumbnails" },
 		{ "PrivacyTumbProgBarDone", "%d Thumbnails Deleted" },
 
 
 
-		{"Template", "模板"}
+        { "jpo.dataModel.XmlReader.loadProgressGuiTitle", "裝載文件" },
+        { "jpo.dataModel.XmlReader.progressUpdate", "%d 組 %d 圖片 負荷" }
 		
 		
 	};

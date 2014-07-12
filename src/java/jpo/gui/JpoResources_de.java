@@ -710,7 +710,8 @@ public class JpoResources_de extends ListResourceBundle {
 		{ "PrivacyTumbProgBarTitle", "Verkleinerungen Löschen" },
 		{ "PrivacyTumbProgBarDone", "%d Verkleinerungen gelöscht" },
 
-		{"Template", "Template"}
+        { "jpo.dataModel.XmlReader.loadProgressGuiTitle", "Lade Datei" },
+        { "jpo.dataModel.XmlReader.progressUpdate", "%d Gruppen und %d Bilder geladen" }
 		
 		
 		};

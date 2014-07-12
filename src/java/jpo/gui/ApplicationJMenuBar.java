@@ -32,8 +32,6 @@ import jpo.EventBus.SendEmailRequest;
 import jpo.EventBus.StartDoublePanelSlideshowRequest;
 import jpo.EventBus.StartNewCollectionRequest;
 import jpo.EventBus.UnsavedUpdatesDialogRequest;
-import jpo.EventBus.YearBrowserRequest;
-import jpo.EventBus.YearlyAnalysisRequest;
 import jpo.dataModel.Settings;
 
 /*
@@ -479,25 +477,6 @@ public class ApplicationJMenuBar extends JMenuBar {
         } );
         ExtrasJMenu.add( EditCheckIntegrityJMenuItem );
 
-        JMenuItem yearsBrowser = new JMenuItem( "Years Browser" );
-        yearsBrowser.addActionListener( new ActionListener() {
-
-            @Override
-            public void actionPerformed( ActionEvent e ) {
-                JpoEventBus.getInstance().post( new YearBrowserRequest() );
-            }
-        } );
-        ExtrasJMenu.add( yearsBrowser );
-
-        JMenuItem yearlyAnalysis = new JMenuItem( "Yearly Analysis" );
-        yearlyAnalysis.addActionListener( new ActionListener() {
-
-            @Override
-            public void actionPerformed( ActionEvent e ) {
-                JpoEventBus.getInstance().post( new YearlyAnalysisRequest() );
-            }
-        } );
-        ExtrasJMenu.add( yearlyAnalysis );
 
         JMenuItem findDuplicates = new JMenuItem( "Find Duplicates" );
         findDuplicates.addActionListener( new ActionListener() {

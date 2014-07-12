@@ -11,7 +11,7 @@ import jpo.dataModel.XmlReader;
 import org.apache.commons.lang3.StringUtils;
 
 /**
- *
+ * GUI to remove old thumbnails that have been discovered when loading a collection
  * @author Richard Eigenmann
  */
 public class ClearThumbnailsJFrame extends javax.swing.JFrame {

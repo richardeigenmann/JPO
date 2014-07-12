@@ -2,9 +2,6 @@ package jpo.gui;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Properties;
@@ -43,6 +40,7 @@ import jpo.dataModel.PictureInfo;
 import jpo.dataModel.Settings;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
 import jpo.dataModel.Tools;
+import net.miginfocom.swing.MigLayout;
 
 /*
  Emailer.java:  class that sends the emails
@@ -146,22 +144,14 @@ public class Emailer
 
         Tools.checkEDT();
 
-        GridBagConstraints c = new GridBagConstraints();
-        c.anchor = GridBagConstraints.WEST;
-        c.insets = new Insets( 4, 4, 4, 4 );
-
         JPanel progPanel = new JPanel();
         progPanel.setBorder( BorderFactory.createEmptyBorder( 5, 5, 5, 5 ) );
-        progPanel.setLayout( new GridBagLayout() );
+        progPanel.setLayout( new MigLayout() );
 
         progressLabel = new JLabel();
         progressLabel.setPreferredSize( new Dimension( 400, 20 ) );
         progressLabel.setBorder( BorderFactory.createEmptyBorder( 5, 5, 5, 5 ) );
-        c.gridx = 0;
-        c.gridy = 0;
-        c.gridwidth = 2;
-        c.fill = GridBagConstraints.HORIZONTAL;
-        progPanel.add( progressLabel, c );
+        progPanel.add( progressLabel, "wrap" );
 
         progBar = new JProgressBar( 0, emailSelected.size() + 3 ); // 3 extra steps
         progBar.setBorder( BorderFactory.createLineBorder( Color.gray, 1 ) );
@@ -170,9 +160,7 @@ public class Emailer
         progBar.setMaximumSize( new Dimension( 240, 20 ) );
         progBar.setMinimumSize( new Dimension( 140, 20 ) );
         progBar.setValue( 0 );
-        c.gridy++;
-        c.fill = GridBagConstraints.NONE;
-        progPanel.add( progBar, c );
+        progPanel.add( progBar );
 
         cancelButton = new JButton( "Cancel" );
         cancelButton.addActionListener( new ActionListener() {
@@ -187,9 +175,7 @@ public class Emailer
         cancelButton.setMaximumSize( Settings.defaultButtonDimension );
         cancelButton.setMinimumSize( Settings.defaultButtonDimension );
 
-        c.gridx++;
-        c.anchor = GridBagConstraints.EAST;
-        progPanel.add( cancelButton, c );
+        progPanel.add( cancelButton, "tag[cancel]" );
 
         progressFrame = new JFrame( Settings.jpoResources.getString( "EmailerJFrame" ) );
         progressFrame.getContentPane().add( progPanel );

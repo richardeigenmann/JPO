@@ -3,9 +3,6 @@ package jpo.gui;
 import jpo.gui.swing.WholeNumberField;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -174,9 +171,9 @@ public class EmailerGui extends JFrame {
         jPanel.add( imagesCountJLabel, "spanx 2, wrap" );
 
 
-        imagesJPanel.setLayout( new GridBagLayout() );
-        imagesJScrollPane.setMinimumSize( new Dimension( 300, 165 ) );
-        imagesJScrollPane.setPreferredSize( new Dimension( 500, 165 ) );
+        imagesJPanel.setLayout( new MigLayout() );
+        imagesJScrollPane.setMinimumSize( new Dimension( 300, 170 ) );
+        imagesJScrollPane.setPreferredSize( new Dimension( 600, 170 ) );
 
         jPanel.add( imagesJScrollPane, "spanx 2, wrap" );
 
@@ -390,24 +387,16 @@ public class EmailerGui extends JFrame {
         int thumbnailSize = Settings.thumbnailSize;
         int desiredSize = 140;
         float factor = (float) desiredSize / (float) thumbnailSize;
-        GridBagConstraints c = new GridBagConstraints();
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.anchor = GridBagConstraints.LINE_START;
-        c.insets = new Insets( 4, 4, 4, 4 );
-        c.gridy = 0;
         ListNavigator listNavigator = new ListNavigator();
 
         for ( int i = 0; i < emailSelected.size(); i++ ) {
-            //logger.info("EmailerGui.loadThumbnails: running on " + emailSelected[i].toString() );
             listNavigator.addNode( (SortableDefaultMutableTreeNode) emailSelected.get( i ) );
             ThumbnailController thumbnailController = new ThumbnailController( thumbnailSize );
             thumbnailController.setNode( listNavigator, i );
             thumbnailController.setDecorateThumbnails( false );
             thumbnailController.determineMailSlectionStatus();
             thumbnailController.setFactor( factor );
-            c.gridx = i;
-            //logger.info( c.toString() + " x= " + Integer.toString( c.gridx ) + " y= " + Integer.toString( c.gridy ) );
-            imagesJPanel.add( thumbnailController.getThumbnail(), c );
+            imagesJPanel.add( thumbnailController.getThumbnail() );
             thumbnailController.getThumbnail().setVisible( true );
         }
         imagesJPanel.revalidate();

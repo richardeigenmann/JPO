@@ -2,9 +2,6 @@ package jpo.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -28,6 +25,7 @@ import jpo.dataModel.GroupInfo;
 import jpo.dataModel.PictureInfo;
 import jpo.dataModel.Settings;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
+import net.miginfocom.swing.MigLayout;
 
 /*
  CategoryUsageJFrame.java:  Creates a Window in which the categories are shown
@@ -111,39 +109,19 @@ public class CategoryUsageJFrame extends JFrame {
 
         final JPanel jPanel = new JPanel();
         jPanel.setBorder( BorderFactory.createEmptyBorder( 8, 8, 8, 8 ) );
-        jPanel.setLayout( new GridBagLayout() );
+        jPanel.setLayout( new MigLayout() );
 
-        GridBagConstraints c = new GridBagConstraints();
-
-        c.gridx = 0;
-        c.gridy = 0;
-
-        c.weightx = 0.1;
-        c.weighty = 0;
-        c.anchor = GridBagConstraints.PAGE_START;
-        c.insets = new Insets( 0, 0, 3, 5 );
-        c.fill = GridBagConstraints.HORIZONTAL;
 
         final Dimension defaultButtonSize = new Dimension( 150, 25 );
         final Dimension maxButtonSize = new Dimension( 150, 25 );
 
-        c.gridx++;
-        c.anchor = GridBagConstraints.FIRST_LINE_START;
-        c.weightx = 0.6;
-        c.weighty = 0.6;
-        c.fill = GridBagConstraints.BOTH;
-        c.insets = new Insets( 0, 0, 0, 0 );
-        jPanel.add( categoryJScrollPane, c );
+        jPanel.add( categoryJScrollPane );
 
         final JPanel buttonJPanel = new JPanel();
-        buttonJPanel.setLayout( new GridBagLayout() );
-        GridBagConstraints bc = new GridBagConstraints();
-        bc.gridx = 0;
-        bc.gridy = 0;
-        bc.fill = GridBagConstraints.NONE;
+        buttonJPanel.setLayout( new MigLayout() );
 
         numberOfPicturesJLabel.setHorizontalAlignment( JLabel.LEFT );
-        buttonJPanel.add( numberOfPicturesJLabel, bc );
+        buttonJPanel.add( numberOfPicturesJLabel, "wrap" );
 
         final JButton modifyCategoryJButton = new JButton( Settings.jpoResources.getString( "modifyCategoryJButton" ) );
         modifyCategoryJButton.setPreferredSize( defaultButtonSize );
@@ -155,8 +133,7 @@ public class CategoryUsageJFrame extends JFrame {
                 new CategoryEditorJFrame();
             }
         } );
-        bc.gridy++;
-        buttonJPanel.add( modifyCategoryJButton, bc );
+        buttonJPanel.add( modifyCategoryJButton, "wrap" );
 
         final JButton refreshJButton = new JButton( Settings.jpoResources.getString( "refreshJButtonCUJF" ) );
         refreshJButton.setPreferredSize( defaultButtonSize );
@@ -168,8 +145,7 @@ public class CategoryUsageJFrame extends JFrame {
                 updateCategories();
             }
         } );
-        bc.gridy++;
-        buttonJPanel.add( refreshJButton, bc );
+        buttonJPanel.add( refreshJButton, "wrap" );
 
         final JButton updateJButton = new JButton( Settings.jpoResources.getString( "updateJButton" ) );
         updateJButton.setPreferredSize( defaultButtonSize );
@@ -182,8 +158,7 @@ public class CategoryUsageJFrame extends JFrame {
                 getRid();
             }
         } );
-        bc.gridy++;
-        buttonJPanel.add( updateJButton, bc );
+        buttonJPanel.add( updateJButton, "wrap" );
 
         final JButton cancelJButton = new JButton( Settings.jpoResources.getString( "cancelJButton" ) );
         cancelJButton.setPreferredSize( defaultButtonSize );
@@ -195,15 +170,9 @@ public class CategoryUsageJFrame extends JFrame {
                 getRid();
             }
         } );
-        bc.gridy++;
-        buttonJPanel.add( cancelJButton, bc );
+        buttonJPanel.add( cancelJButton, "wrap" );
 
-        c.gridx++;
-        c.anchor = GridBagConstraints.FIRST_LINE_END;
-        c.weightx = 0.1;
-        c.weighty = 0;
-        c.fill = GridBagConstraints.NONE;
-        jPanel.add( buttonJPanel, c );
+        jPanel.add( buttonJPanel, "aligny top" );
 
         getContentPane().add( jPanel, BorderLayout.CENTER );
         pack();

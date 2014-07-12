@@ -259,7 +259,9 @@ public class ResizableJFrame
      * Resizes the screen to the specified size after unmaximising it.
      *
      * @param targetSize The dimension you want the Frame to have
+     * 
      */
+    @SuppressWarnings( "deprecation" )
     @Override
     public void resize( final Dimension targetSize ) {
         Tools.checkEDT();

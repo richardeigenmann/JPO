@@ -79,8 +79,6 @@ import jpo.EventBus.StartCameraWatchDaemonRequest;
 import jpo.EventBus.StartDoublePanelSlideshowRequest;
 import jpo.EventBus.StartNewCollectionRequest;
 import jpo.EventBus.UnsavedUpdatesDialogRequest;
-import jpo.EventBus.YearBrowserRequest;
-import jpo.EventBus.YearlyAnalysisRequest;
 import jpo.cache.JpoCache;
 import jpo.dataModel.DuplicatesQuery;
 import jpo.dataModel.FlatFileReader;
@@ -200,25 +198,6 @@ public class ApplicationEventHandler {
         JpoEventBus.getInstance().post( new ShowQueryRequest( duplicatesQuery ) );
     }
 
-    /**
-     * Opens up a Year Browser
-     *
-     * @param request The request
-     */
-    @Subscribe
-    public void handleYearlyAnalysisRequest( YearlyAnalysisRequest request ) {
-        new YearlyAnalysisGuiController( Settings.getPictureCollection().getRootNode() );
-    }
-
-    /**
-     * Opens up a Year Browser
-     *
-     * @param request The request
-     */
-    @Subscribe
-    public void handlerYearBrowserRequest( YearBrowserRequest request ) {
-        new YearsBrowserController( Settings.getPictureCollection().getRootNode() );
-    }
 
     /**
      * Creates an IntegrityChecker that does it's magic on the collection.
@@ -390,11 +369,7 @@ public class ApplicationEventHandler {
         new QueryJFrame( request.getStartNode() );
     }
 
-    /**
-     * This function opens the CategoryUsageEditor.
-     *
-     * @param node
-     */
+
     /**
      * When the app sees a ShowCategoryUsageEditorRequest it will open the
      * CategoryUsageEditor for the supplied node

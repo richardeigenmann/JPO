@@ -717,9 +717,8 @@ public class JpoResources_zh_CN extends ListResourceBundle {
 		{ "PrivacyTumbProgBarTitle", "Deleting Thumbnails" },
 		{ "PrivacyTumbProgBarDone", "%d Thumbnails Deleted" },
 
-
-
-		{"Template", "模板"}
+        { "jpo.dataModel.XmlReader.loadProgressGuiTitle", "装载文件" },
+        { "jpo.dataModel.XmlReader.progressUpdate", "%d 组 %d 图片 负荷" }
 		
 		
 	};

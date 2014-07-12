@@ -1,9 +1,6 @@
 package jpo.gui;
 
 import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -29,7 +26,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingWorker;
 import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
-import jpo.dataModel.GroupInfo;
+import net.miginfocom.swing.MigLayout;
 
 /*
  ReconcileJFrame.java:  
@@ -57,9 +54,8 @@ import jpo.dataModel.GroupInfo;
  * The user can choose whether only missing files are to be shown or whether the
  * reconciliation should also show the matched files.
  *
- * TODO: Make this a Swing Worker if it serves a purpose
- * TODO: Switch to MigLayout
- * TODO: make it possible to add results
+ * TODO: Make this a Swing Worker if it serves a purpose TODO: Switch to
+ * MigLayout TODO: make it possible to add results
  *
  */
 public class ReconcileJFrame extends JFrame {
@@ -125,32 +121,18 @@ public class ReconcileJFrame extends JFrame {
         } );
 
         JPanel controlJPanel = new JPanel();
-        controlJPanel.setLayout( new GridBagLayout() );
+        controlJPanel.setLayout( new MigLayout() );
 
-        GridBagConstraints constraints = new GridBagConstraints();
-        constraints.anchor = GridBagConstraints.WEST;
+        controlJPanel.add( new JLabel( Settings.jpoResources.getString( "ReconcileBlaBlaLabel" ) ), "spanx 3, wrap" );
 
-        JLabel reconcileBlaBlaJLabel = new JLabel( Settings.jpoResources.getString( "ReconcileBlaBlaLabel" ) );
-        constraints.gridx = 0;
-        constraints.gridy = 0;
-        constraints.gridwidth = 3;
-        constraints.weightx = 1.0;
-        constraints.fill = GridBagConstraints.HORIZONTAL;
-        constraints.insets = new Insets( 4, 4, 4, 4 );
-        controlJPanel.add( reconcileBlaBlaJLabel, constraints );
-
-        JLabel directoryJLabel = new JLabel( Settings.jpoResources.getString( "directoryJLabelLabel" ) );
-        constraints.gridy++;
-        constraints.gridwidth = 2;
-        constraints.insets = new Insets( 4, 4, 4, 4 );
-        controlJPanel.add( directoryJLabel, constraints );
+        controlJPanel.add( new JLabel( Settings.jpoResources.getString( "directoryJLabelLabel" ) ) );
 
         final DirectoryChooser directoryChooser
                 = new DirectoryChooser( Settings.jpoResources.getString( "directoryCheckerChooserTitle" ),
                         DirectoryChooser.DIR_MUST_EXIST );
 
-        constraints.gridx = 3;
-        constraints.fill = GridBagConstraints.NONE;
+        controlJPanel.add( directoryChooser );
+
         JButton okJButton = new JButton( Settings.jpoResources.getString( "ReconcileOkButtonLabel" ) );
         okJButton.setPreferredSize( Settings.defaultButtonDimension );
         okJButton.setMinimumSize( Settings.defaultButtonDimension );
@@ -166,16 +148,10 @@ public class ReconcileJFrame extends JFrame {
                 runReconciliationEDT();
             }
         } );
-        controlJPanel.add( okJButton, constraints );
+        controlJPanel.add( okJButton, "wrap" );
 
-        // create the JTextField that holds the reference to the targetDirJTextField
-        constraints.gridx = 0;
-        constraints.gridy++;
-        constraints.gridwidth = 1;
-        constraints.insets = new Insets( 4, 4, 4, 4 );
-        controlJPanel.add( directoryChooser, constraints );
+        controlJPanel.add( recurseSubdirectoriesJCheckBox, "spanx 2" );
 
-        constraints.gridx = 3;
         JButton cancelJButton = new JButton( Settings.jpoResources.getString( "closeJButton" ) );
         cancelJButton.addActionListener( new ActionListener() {
 
@@ -192,29 +168,18 @@ public class ReconcileJFrame extends JFrame {
         cancelJButton.setMinimumSize( Settings.defaultButtonDimension );
         cancelJButton.setMaximumSize( Settings.defaultButtonDimension );
         cancelJButton.setBorder( BorderFactory.createRaisedBevelBorder() );
-        controlJPanel.add( cancelJButton, constraints );
+        controlJPanel.add( cancelJButton, "wrap" );
 
-        constraints.gridx = 0;
-        constraints.gridy++;
-        constraints.gridwidth = 2;
-        controlJPanel.add( recurseSubdirectoriesJCheckBox, constraints );
         recurseSubdirectoriesJCheckBox.setSelected( true );
 
-        constraints.gridx = 0;
-        constraints.gridy++;
-        constraints.gridwidth = 2;
-        controlJPanel.add( listPositivesJCheckBox, constraints );
+        controlJPanel.add( listPositivesJCheckBox, "spanx 3, wrap" );
         listPositivesJCheckBox.setSelected( false );
 
         logJTextArea.setLineWrap( false );
         logJScrollPane.setMinimumSize( new Dimension( 400, 250 ) );
         logJScrollPane.setMaximumSize( new Dimension( 2000, 1000 ) );
 
-        constraints.gridx = 0;
-        constraints.gridy++;
-        constraints.gridwidth = 4;
-        constraints.fill = GridBagConstraints.BOTH;
-        controlJPanel.add( logJScrollPane, constraints );
+        controlJPanel.add( logJScrollPane, "spanx 3, wrap" );
 
         getContentPane().add( controlJPanel );
 
@@ -224,7 +189,7 @@ public class ReconcileJFrame extends JFrame {
     }
 
     /**
-     * method that closes te frame and gets rid of it
+     * method that closes the frame and gets rid of it
      */
     private void getRid() {
         setVisible( false );
@@ -275,7 +240,7 @@ public class ReconcileJFrame extends JFrame {
                         JOptionPane.ERROR_MESSAGE );
                 return false;
             }
-            LOGGER.log( Level.INFO, "File is not a directory. Using it''s parent: {0}", scanDir.getPath());
+            LOGGER.log( Level.INFO, "File is not a directory. Using it''s parent: {0}", scanDir.getPath() );
         }
 
         // is the File object readable?

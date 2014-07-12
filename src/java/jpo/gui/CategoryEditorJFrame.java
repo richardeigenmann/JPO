@@ -2,9 +2,6 @@ package jpo.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -29,11 +26,12 @@ import jpo.dataModel.Category;
 import jpo.dataModel.PictureCollection;
 import jpo.dataModel.Settings;
 import jpo.dataModel.Tools;
+import net.miginfocom.swing.MigLayout;
 
 /*
  CategoryEditorJFrame.java:  creates a GUI to allow the user to specify his search
 
- Copyright (C) 2002 - 2012  Richard Eigenmann.
+ Copyright (C) 2002 - 2014  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -91,30 +89,16 @@ public class CategoryEditorJFrame
 
         final JPanel jPanel = new JPanel();
         jPanel.setBorder( BorderFactory.createEmptyBorder( 8, 8, 8, 8 ) );
-        jPanel.setLayout( new GridBagLayout() );
-
-        GridBagConstraints c = new GridBagConstraints();
-
-        c.gridx = 0;
-        c.gridy = 0;
+        jPanel.setLayout( new MigLayout("") );
 
         final JLabel categoryJLabel = new JLabel( Settings.jpoResources.getString( "categoryJLabel" ) );
         categoryJLabel.setHorizontalAlignment( JLabel.LEFT );
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.weightx = 0.1;
-        c.weighty = 0;
-        c.anchor = GridBagConstraints.PAGE_START;
-        c.insets = new Insets( 0, 0, 3, 5 );
-        jPanel.add( categoryJLabel, c );
+        jPanel.add( categoryJLabel );
 
         categoryJTextField.setPreferredSize( new Dimension( 200, 25 ) );
         categoryJTextField.setMinimumSize( new Dimension( 200, 25 ) );
         categoryJTextField.setMaximumSize( new Dimension( 600, 25 ) );
-        c.gridx++;
-        c.weightx = 0.6;
-        c.anchor = GridBagConstraints.PAGE_START;
-        c.insets = new Insets( 0, 0, 3, 0 );
-        jPanel.add( categoryJTextField, c );
+        jPanel.add( categoryJTextField );
 
         final DefaultListModel<Category> listModel = new DefaultListModel<>();
 
@@ -134,28 +118,17 @@ public class CategoryEditorJFrame
                 Category categoryObject = new Category( key, category );
                 listModel.addElement( categoryObject );
                 categoryJTextField.setText( "" );
-                //logger.info("I want to add a category: " + categoryJTextField.getText() );
             }
         } );
-        c.gridx++;
-        c.weightx = 0.1;
-        c.anchor = GridBagConstraints.FIRST_LINE_END;
-        c.fill = GridBagConstraints.NONE;
-        jPanel.add( addCategoryJButton, c );
+        jPanel.add( addCategoryJButton, "alignx center, wrap" );
 
         final JLabel categoriesJLabel = new JLabel( Settings.jpoResources.getString( "categoriesJLabel" ) );
         categoriesJLabel.setHorizontalAlignment( JLabel.LEFT );
-        c.gridy++;
-        c.gridx = 0;
-        c.weightx = 0.1;
-        c.anchor = GridBagConstraints.FIRST_LINE_START;
-        c.insets = new Insets( 0, 0, 0, 5 );
-        jPanel.add( categoriesJLabel, c );
+        jPanel.add( categoriesJLabel );
 
         final JList<Category> categoriesJList = new JList<>( listModel );
         categoriesJList.setPreferredSize( new Dimension( 180, 250 ) );
         categoriesJList.setMinimumSize( new Dimension( 180, 50 ) );
-        //categoriesJList.setMaximumSize( new Dimension( 1000, 500) );
         categoriesJList.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
         categoriesJList.addListSelectionListener( this );
 
@@ -173,20 +146,10 @@ public class CategoryEditorJFrame
         final JScrollPane listJScrollPane = new JScrollPane( categoriesJList );
         listJScrollPane.setPreferredSize( new Dimension( 200, 270 ) );
         listJScrollPane.setMinimumSize( new Dimension( 200, 50 ) );
-        c.gridx++;
-        c.anchor = GridBagConstraints.FIRST_LINE_START;
-        c.weightx = 0.6;
-        c.weighty = 0.6;
-        c.fill = GridBagConstraints.BOTH;
-        c.insets = new Insets( 0, 0, 0, 0 );
-        jPanel.add( listJScrollPane, c );
+        jPanel.add( listJScrollPane );
 
         final JPanel buttonJPanel = new JPanel();
-        buttonJPanel.setLayout( new GridBagLayout() );
-        GridBagConstraints bc = new GridBagConstraints();
-        bc.gridx = 0;
-        bc.gridy = 0;
-        bc.fill = GridBagConstraints.NONE;
+        buttonJPanel.setLayout( new MigLayout() );
 
         final JButton deleteCategoryJButton = new JButton( Settings.jpoResources.getString( "deleteCategoryJButton" ) );
         deleteCategoryJButton.setPreferredSize( defaultButtonSize );
@@ -196,7 +159,6 @@ public class CategoryEditorJFrame
 
             @Override
             public void actionPerformed( ActionEvent evt ) {
-                //logger.info("I want to remove the selected category " );
                 int index = categoriesJList.getSelectedIndex();
                 if ( index < 0 ) {
                     return; // nothing selected
@@ -218,10 +180,9 @@ public class CategoryEditorJFrame
                 }
                 listModel.remove( index );
                 Settings.getPictureCollection().removeCategory( cat.getKey() );
-                //logger.info("I want to delete: " + cat.value.toString());
             }
         } );
-        buttonJPanel.add( deleteCategoryJButton, bc );
+        buttonJPanel.add( deleteCategoryJButton, "wrap" );
 
         final JButton renameCategoryJButton = new JButton( Settings.jpoResources.getString( "renameCategoryJButton" ) );
         renameCategoryJButton.setPreferredSize( defaultButtonSize );
@@ -246,8 +207,7 @@ public class CategoryEditorJFrame
                 categoryJTextField.setText( "" );
             }
         } );
-        bc.gridy++;
-        buttonJPanel.add( renameCategoryJButton, bc );
+        buttonJPanel.add( renameCategoryJButton, "wrap" );
 
         final JButton doneJButton = new JButton( Settings.jpoResources.getString( "doneJButton" ) );
         doneJButton.setPreferredSize( defaultButtonSize );
@@ -260,15 +220,9 @@ public class CategoryEditorJFrame
                 getRid();
             }
         } );
-        bc.gridy++;
-        buttonJPanel.add( doneJButton, bc );
+        buttonJPanel.add( doneJButton, "wrap" );
 
-        c.gridx++;
-        c.anchor = GridBagConstraints.FIRST_LINE_END;
-        c.weightx = 0.1;
-        c.weighty = 0;
-        c.fill = GridBagConstraints.NONE;
-        jPanel.add( buttonJPanel, c );
+        jPanel.add( buttonJPanel, "aligny top, wrap" );
 
         getContentPane().add( jPanel, BorderLayout.CENTER );
         pack();
@@ -277,7 +231,7 @@ public class CategoryEditorJFrame
     }
 
     /**
-     * method that closes te frame and gets rid of it
+     * method that closes the frame and gets rid of it
      */
     private void getRid() {
         setVisible( false );

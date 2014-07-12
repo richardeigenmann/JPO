@@ -2,7 +2,6 @@ package jpo.gui;
 
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -26,11 +25,12 @@ import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
 import jpo.EventBus.CopyLocationsChangedEvent;
 import jpo.EventBus.JpoEventBus;
 import jpo.EventBus.RecentCollectionsChangedEvent;
+import net.miginfocom.swing.MigLayout;
 
 /*
  CollectionDistillerJFrame.java:  creates a GUI for the export
 
- Copyright (C) 2002 - 2009  Richard Eigenmann.
+ Copyright (C) 2002 - 2014  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -45,15 +45,22 @@ import jpo.EventBus.RecentCollectionsChangedEvent;
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 /**
- * class that generates a GUI for the export of a collection
+ * Frame to capture the details of the collection export
  */
-class CollectionDistillerJFrame extends JFrame implements ActionListener {
+class CollectionDistillerJFrame extends JFrame {
 
     /**
      * Defines a logger for this class
      */
     private static final Logger LOGGER = Logger.getLogger( CollectionDistillerJFrame.class.getName() );
 
+    
+    /**
+     * Size for this frame
+     */
+    private final static Dimension FRAME_SIZE = new Dimension(460, 300);
+
+    
     /**
      * the node from which to start the export
      */
@@ -74,23 +81,11 @@ class CollectionDistillerJFrame extends JFrame implements ActionListener {
     private final JTextField xmlFileNameJTextField = new JTextField();
 
     /**
-     * Tickbox that indicates whether the pictures are to be copied to the
+     * JCheckBox that indicates whether the pictures are to be copied to the
      * target directory structure.
      *
      */
     private final JCheckBox exportPicsJCheckBox = new JCheckBox( Settings.jpoResources.getString( "collectionExportPicturesText" ) );
-
-    /**
-     * button to start the export
-     *
-     */
-    private final JButton exportJButton = new JButton( Settings.jpoResources.getString( "genericExportButtonText" ) );
-
-    /**
-     * button to cancel the dialog
-     *
-     */
-    private final JButton cancelJButton = new JButton( Settings.jpoResources.getString( "genericCancelText" ) );
 
     /**
      * Constructor for the Export Dialog window.
@@ -105,8 +100,7 @@ class CollectionDistillerJFrame extends JFrame implements ActionListener {
     }
 
     public final void initComponents() {
-
-        setSize( 460, 300 );
+        setSize( FRAME_SIZE );
         setLocationRelativeTo( Settings.anchorFrame );
         setDefaultCloseOperation( DISPOSE_ON_CLOSE );
         addWindowListener( new WindowAdapter() {
@@ -118,34 +112,12 @@ class CollectionDistillerJFrame extends JFrame implements ActionListener {
         } );
 
         JPanel contentJPanel = new javax.swing.JPanel();
-        contentJPanel.setLayout( new GridBagLayout() );
+        contentJPanel.setLayout( new MigLayout() );
+        
+        contentJPanel.add( new JLabel( Settings.jpoResources.getString( "genericTargetDirText" ) ) );
+        contentJPanel.add( targetDirChooser, "wrap" );
 
-        GridBagConstraints constraints = new GridBagConstraints();
-        constraints.anchor = GridBagConstraints.WEST;
-
-        JLabel targetDirJLabel = new JLabel( Settings.jpoResources.getString( "genericTargetDirText" ) );
-        constraints.gridx = 0;
-        constraints.gridy = 0;
-        constraints.gridwidth = 2;
-        constraints.weightx = 1.0;
-        constraints.insets = new Insets( 4, 4, 4, 4 );
-        contentJPanel.add( targetDirJLabel, constraints );
-
-        // create the JTextField that holds the reference to the targetDirChooser
-        constraints.gridx = 0;
-        constraints.gridy++;
-        constraints.gridwidth = 1;
-        constraints.weightx = 0.8;
-        constraints.insets = new Insets( 4, 4, 4, 4 );
-        contentJPanel.add( targetDirChooser, constraints );
-
-        JLabel xmlFileNameJLabel = new JLabel( Settings.jpoResources.getString( "xmlFileNameLabel" ) );
-        constraints.gridx = 0;
-        constraints.gridy++;
-        constraints.gridwidth = 2;
-        constraints.weightx = 1.0;
-        constraints.insets = new Insets( 4, 4, 4, 4 );
-        contentJPanel.add( xmlFileNameJLabel, constraints );
+        contentJPanel.add( new JLabel( Settings.jpoResources.getString( "xmlFileNameLabel" ) ) );
 
         xmlFileNameJTextField.setPreferredSize( new Dimension( 240, 20 ) );
         xmlFileNameJTextField.setMinimumSize( new Dimension( 240, 20 ) );
@@ -155,7 +127,6 @@ class CollectionDistillerJFrame extends JFrame implements ActionListener {
 
             @Override
             public boolean shouldYieldFocus( JComponent input ) {
-                //logger.info( "CollectionDistillerJFrame:xmlFileNameJTestField.shouldYieldFocus was triggered" );
                 String validationFile = ( (JTextField) input ).getText();
                 if ( !validationFile.toUpperCase().endsWith( ".XML" ) ) {
                     ( (JTextField) input ).setText( validationFile + ".xml" );
@@ -168,47 +139,43 @@ class CollectionDistillerJFrame extends JFrame implements ActionListener {
                 return true;
             }
         } );
-
-        constraints.gridx = 0;
-        constraints.gridy++;
-        constraints.gridwidth = 1;
-        constraints.weightx = 0.8;
-        constraints.insets = new Insets( 4, 4, 4, 4 );
-        contentJPanel.add( xmlFileNameJTextField, constraints );
+        contentJPanel.add( xmlFileNameJTextField, "wrap" );
 
         exportPicsJCheckBox.setSelected( true );
-        constraints.gridx = 0;
-        constraints.gridy++;
-        constraints.gridwidth = 2;
-        constraints.weightx = 1.0;
-        constraints.insets = new Insets( 4, 4, 4, 4 );
-        contentJPanel.add( exportPicsJCheckBox, constraints );
+        contentJPanel.add( exportPicsJCheckBox, "spanx 2, wrap" );
 
-        // crate a JPanel for the buttons
         JPanel buttonJPanel = new JPanel();
 
-        // add the export button
+        final JButton exportJButton = new JButton( Settings.jpoResources.getString( "genericExportButtonText" ) );
         exportJButton.setPreferredSize( Settings.defaultButtonDimension );
         exportJButton.setMinimumSize( Settings.defaultButtonDimension );
         exportJButton.setMaximumSize( Settings.defaultButtonDimension );
         exportJButton.setDefaultCapable( true );
         this.getRootPane().setDefaultButton( exportJButton );
-        exportJButton.addActionListener( this );
+        exportJButton.addActionListener( new ActionListener() {
+
+            @Override
+            public void actionPerformed( ActionEvent e ) {
+                exportToDirectory();
+                getRid();
+            }
+        } );
         buttonJPanel.add( exportJButton );
 
-        // add the cancel button
+        final JButton cancelJButton = new JButton( Settings.jpoResources.getString( "genericCancelText" ) );
         cancelJButton.setPreferredSize( Settings.defaultButtonDimension );
         cancelJButton.setMinimumSize( Settings.defaultButtonDimension );
         cancelJButton.setMaximumSize( Settings.defaultButtonDimension );
-        cancelJButton.addActionListener( this );
+        cancelJButton.addActionListener( new ActionListener() {
+
+            @Override
+            public void actionPerformed( ActionEvent e ) {
+                getRid();
+            }
+        } );
         buttonJPanel.add( cancelJButton );
 
-        constraints.gridx = 0;
-        constraints.gridy++;
-        constraints.gridwidth = 2;
-        constraints.weightx = 0.5;
-        constraints.insets = new Insets( 4, 4, 4, 4 );
-        contentJPanel.add( buttonJPanel, constraints );
+        contentJPanel.add( buttonJPanel, "spanx 2, wrap" );
 
         setContentPane( contentJPanel );
 
@@ -267,21 +234,4 @@ class CollectionDistillerJFrame extends JFrame implements ActionListener {
 
     }
 
-    /**
-     * method that analyses the user initiated action and performs what the user
-     * requested
-     *
-     */
-    @Override
-    public void actionPerformed( ActionEvent e ) {
-        if ( e.getSource() == cancelJButton ) {
-            getRid();
-        }
-        if ( e.getSource() == exportJButton ) {
-            exportToDirectory();
-            getRid();
-        }
-    }
-
-;
 }
