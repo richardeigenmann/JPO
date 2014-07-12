@@ -3,6 +3,7 @@
 
             <table class="changelog">
                 <tr><td colspan=2><b>Development Version 0.12</b></td></tr>
+                <tr><td valign="top">12.7.2014</td><td>Corrected UTF-8 encoding of file</td></tr>
                 <tr><td valign="top">8.6.2014</td><td>Fixed issue of no longer relayouting when resizing ThumbnailJScrollPaneTransitioned to externalised TagCloud</td></tr>
                 <tr><td valign="top">8.6.2014</td><td>Transitioned to externalised TagCloud</td></tr>
                 <tr><td valign="top">3.6.2014</td><td>Integrated jxmapviewer2 properly</td></tr>
@@ -398,6 +399,6 @@
 
 
             <hr>
-            <p>Last update to this page: 3 July 2014<br>
+            <p>Last update to this page: 12 July 2014<br>
                 Copyright 2003-2014 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
     <?php include("page-end.php"); ?>

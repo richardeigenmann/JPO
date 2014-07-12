@@ -5,9 +5,9 @@ import java.io.BufferedOutputStream;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStreamWriter;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.logging.Level;
@@ -15,9 +15,9 @@ import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /*
- XmlDistiller.java:  class that writes the xml file
+ XmlDistiller.java:  Writes the JPO collection to an xml formatted file
 
- Copyright (C) 2002-2010  Richard Eigenmann.
+ Copyright (C) 2002-2014  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -32,7 +32,7 @@ import javax.swing.JOptionPane;
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 /**
- * a class that exports a tree of chapters to an XML file
+ * Writes the JPO Collection to an xml formatted file
  */
 public class XmlDistiller
         implements Runnable {
@@ -43,24 +43,9 @@ public class XmlDistiller
     private static final Logger LOGGER = Logger.getLogger( XmlDistiller.class.getName() );
 
     /**
-     * output file handle
-     */
-    private BufferedWriter out;
-
-    /**
      * variable to hold the name of the output file
      */
     private final File xmlOutputFile;
-
-    /**
-     * highres picture directory if pictures need to be copied
-     */
-    private File highresTargetDir;
-
-    /**
-     * lowres picture directory if pictures need to be copied
-     */
-    private File lowresTargetDir;
 
     /**
      * the node to start from
@@ -68,7 +53,7 @@ public class XmlDistiller
     private final SortableDefaultMutableTreeNode startNode;
 
     /**
-     * temporary variable that indicates that the pictures should be copied too.
+     * Indicates that the pictures should be copied too.
      */
     private final boolean copyPics;
 
@@ -76,7 +61,7 @@ public class XmlDistiller
      * @param xmlOutputFile The name of the file that is to be created
      * @param startNode	The node from which this is all to be built.
      * @param copyPics	Flag which instructs pictures to be copied too
-     * @param runAsThread	Flag which can instruct this job not to run as a
+     * @param runAsThread Flag which can instruct this job not to run as a
      * thread.
      */
     public XmlDistiller( File xmlOutputFile,
@@ -94,38 +79,41 @@ public class XmlDistiller
         }
     }
 
+
     /**
-     * method that is invoked by the thread to do things asynchroneousely
+     * Holds the target directory for the pictures if copyPics is true
+     */
+    private File highresTargetDir;
+    
+    /**
+     * method that is invoked by the thread to do things asynchronously
      */
     @Override
     public final void run() {
         try {
             if ( copyPics ) {
                 highresTargetDir = new File( xmlOutputFile.getParentFile(), "Highres" );
-                lowresTargetDir = new File( xmlOutputFile.getParentFile(), "Lowres" );
 
                 highresTargetDir.mkdirs();
-                lowresTargetDir.mkdirs();
-                if ( !( highresTargetDir.canWrite() && lowresTargetDir.canWrite() ) ) {
-                    LOGGER.severe( String.format( "There was a problem creating dir %s or dir %s", highresTargetDir.toString(), lowresTargetDir.toString() ) );
+                if ( !( highresTargetDir.canWrite() ) ) {
+                    LOGGER.severe( String.format( "There was a problem creating dir %s", highresTargetDir.toString() ) );
                     return;
                 }
             }
 
-            FileWriter fw = new FileWriter( xmlOutputFile );
-            out = new BufferedWriter( fw );
+            BufferedWriter bufferedWriter = new BufferedWriter( new OutputStreamWriter( new FileOutputStream( xmlOutputFile ), "UTF-8" ) );
 
             // header
-            out.write( "<?xml version='1.0' encoding='" + fw.getEncoding() + "'?>" );
-            out.newLine();
-            out.write( "<!DOCTYPE collection SYSTEM \"" + Settings.COLLECTION_DTD + "\">" );
-            out.newLine();
+            bufferedWriter.write( "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" );
+            bufferedWriter.newLine();
+            bufferedWriter.write( "<!DOCTYPE collection SYSTEM \"" + Settings.COLLECTION_DTD + "\">" );
+            bufferedWriter.newLine();
 
-            enumerateGroup( startNode );
+            enumerateGroup( startNode, bufferedWriter );
 
             // categories
-            out.write( "<categories>" );
-            out.newLine();
+            bufferedWriter.write( "<categories>" );
+            bufferedWriter.newLine();
 
             Iterator i = startNode.getPictureCollection().getCategoryIterator();
             Integer key;
@@ -133,27 +121,26 @@ public class XmlDistiller
             while ( i.hasNext() ) {
                 key = (Integer) i.next();
                 category = startNode.getPictureCollection().getCategory( key );
-                out.write( "\t<category index=\"" + key.toString() + "\">" );
-                out.newLine();
-                out.write( "\t\t<categoryDescription><![CDATA[" + category + "]]></categoryDescription>" );
-                out.newLine();
-                out.write( "\t</category>" );
-                out.newLine();
+                bufferedWriter.write( "\t<category index=\"" + key.toString() + "\">" );
+                bufferedWriter.newLine();
+                bufferedWriter.write( "\t\t<categoryDescription><![CDATA[" + category + "]]></categoryDescription>" );
+                bufferedWriter.newLine();
+                bufferedWriter.write( "\t</category>" );
+                bufferedWriter.newLine();
             }
 
-            out.write( "</categories>" );
-            out.newLine();
+            bufferedWriter.write( "</categories>" );
+            bufferedWriter.newLine();
 
-            out.write( "</collection>" );
-            out.newLine();
+            bufferedWriter.write( "</collection>" );
+            bufferedWriter.newLine();
 
-            out.close();
+            bufferedWriter.close();
 
             writeCollectionDTD( xmlOutputFile.getParentFile() );
 
         } catch ( SecurityException x ) {
-            //e.printStackTrace();
-            LOGGER.log( Level.INFO, "XmlDistiller.run: SecurityException: {0}", x.getMessage() );
+            LOGGER.log( Level.INFO, x.getMessage() );
             JOptionPane.showMessageDialog( null, x.getMessage(),
                     "XmlDistiller: SecurityException",
                     JOptionPane.ERROR_MESSAGE );
@@ -169,56 +156,44 @@ public class XmlDistiller
     /**
      * recursively invoked method to report all groups.
      */
-    private void enumerateGroup( SortableDefaultMutableTreeNode groupNode ) throws IOException {
+    private void enumerateGroup( SortableDefaultMutableTreeNode groupNode, BufferedWriter bufferedWriter ) throws IOException {
         GroupInfo groupInfo = (GroupInfo) groupNode.getUserObject();
 
-        //if ( copyPics && groupInfo.getLowresFile().canRead() ) {
-        //File targetLowresFile = Tools.inventPicFilename( lowresTargetDir, groupInfo.getLowresFilename() );
-        //Tools.copyPicture( groupInfo.getLowresURL(), targetLowresFile );
-        //  groupInfo.dumpToXml( out, groupNode == startNode, groupNode.getPictureCollection().getAllowEdits() );
-        //} else {
-        groupInfo.dumpToXml( out, groupNode == startNode, groupNode.getPictureCollection().getAllowEdits() );
-        //}
+        groupInfo.dumpToXml( bufferedWriter, groupNode == startNode, groupNode.getPictureCollection().getAllowEdits() );
 
         SortableDefaultMutableTreeNode childNode;
         Enumeration kids = groupNode.children();
         while ( kids.hasMoreElements() ) {
             childNode = (SortableDefaultMutableTreeNode) kids.nextElement();
             if ( childNode.getUserObject() instanceof GroupInfo ) {
-                enumerateGroup( childNode );
+                enumerateGroup( childNode, bufferedWriter );
             } else {
-                writePicture( childNode );
+                writePicture( childNode, bufferedWriter );
             }
         }
 
-        groupInfo.endGroupXML( out, groupNode == startNode );
+        groupInfo.endGroupXML( bufferedWriter, groupNode == startNode );
     }
 
     /**
      * write a picture to the output
      */
-    private void writePicture( SortableDefaultMutableTreeNode pictureNode ) throws IOException {
+    private void writePicture( SortableDefaultMutableTreeNode pictureNode, BufferedWriter bufferedWriter ) throws IOException {
         PictureInfo pictureInfo = (PictureInfo) pictureNode.getUserObject();
 
         if ( copyPics ) {
             File targetHighresFile = Tools.inventPicFilename( highresTargetDir, pictureInfo.getHighresFilename() );
-            //File targetLowresFile = Tools.inventPicFilename( lowresTargetDir, pictureInfo.getLowresFilename() );
             Tools.copyPicture( pictureInfo.getHighresURL(), targetHighresFile );
-            //if ( pictureInfo.getLowresFile().canRead() ) {
-            //    Tools.copyPicture( pictureInfo.getLowresURL(), targetLowresFile );
-            //}
-            pictureInfo.dumpToXml( out,
+            pictureInfo.dumpToXml( bufferedWriter,
                     targetHighresFile.toURI().toURL().toString()
-            //targetLowresFile.toURI().toURL().toString() 
             );
         } else {
-            pictureInfo.dumpToXml( out );
+            pictureInfo.dumpToXml( bufferedWriter );
         }
     }
 
     /**
-     * writes the collection.dtd file to the target directory. This file war
-     * written manually and added to the jar.
+     * Write the collection.dtd file to the target directory.
      *
      * @param directory
      */
@@ -244,7 +219,6 @@ public class XmlDistiller
                     Settings.jpoResources.getString( "DtdCopyError" ) + e.getMessage(),
                     Settings.jpoResources.getString( "genericWarning" ),
                     JOptionPane.ERROR_MESSAGE );
-
         }
     }
 }
