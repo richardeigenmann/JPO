@@ -227,7 +227,7 @@ public class JpoResources_en extends ListResourceBundle {
         { "ReconcileBlaBlaLabel", "<HTML>This function will check whether the files in the indicated directory are present <br>in the current collection</HTML>" },
         { "directoryJLabelLabel", "Directory to reconcile:" },
         { "directoryCheckerChooserTitle", "Directory to reconcile" },
-        { "ReconcileFound", " found in collection as " },
+        { "jpo.gui.ReconcileFound", "%s found in collection.\n" },
         { "ReconcileNotFound", "Not in collection: " },
         { "ReconcileDone", "Done.\n" },
         { "ReconcileInterrupted", "Interrupted.\n" },

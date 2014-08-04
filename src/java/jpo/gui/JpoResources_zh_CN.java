@@ -261,7 +261,7 @@ public class JpoResources_zh_CN extends ListResourceBundle {
 		{"ReconcileBlaBlaLabel", "<HTML>检查文件夹中的文件是否出现在图片集中</HTML>"},
 		{"directoryJLabelLabel", "需要检查的文件夹"},
 		{"directoryCheckerChooserTitle", "选择需要检查的文件夹"},
-		{"ReconcileFound", "在图片集中监测到的文件"},
+		{"jpo.gui.ReconcileFound", "%s 在图片集中监测到的文件\n"},
 		{"ReconcileNotFound", "不在图片集中的有： "},
 		{"ReconcileDone", "完成检查\n"},
 		{"ReconcileInterrupted", "检查被中断\n"},
