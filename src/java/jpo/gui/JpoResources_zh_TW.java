@@ -213,7 +213,7 @@ public class JpoResources_zh_TW extends ListResourceBundle {
 		{"exportHighresJCheckBox", "導出清晰圖片"},
 		{"rotateHighresJCheckBox", "Rotate Highres pictures"},
 		{"linkToHighresJCheckBox", "使用當前位置鏈接到清晰圖片"},
-		{"generateDHTMLJCheckBox", "生成DHTML鼠標移動效果"},
+		{"jpo.export.GenerateWebsiteWizard3Midres.generateMouseoverJCheckBox", "生成鼠標移動效果"},
 		{"generateZipfileJCheckBox", "生成清晰圖片可用于下載的壓縮文件包"},
 		{"picsPerRowText", "列"},
 		{"thubnailSizeJLabel", "所略圖尺寸"},

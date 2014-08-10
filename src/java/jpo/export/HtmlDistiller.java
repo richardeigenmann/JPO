@@ -274,11 +274,7 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
             BufferedWriter out = new BufferedWriter( new FileWriter( groupFile ) );
             DescriptionsBuffer descriptionsBuffer = new DescriptionsBuffer( options.getPicsPerRow(), out );
 
-            LOGGER.fine( String.format( "Writing: %s", groupFile.toString() ) );
-            // write header
-            //out.write( "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" );
-            //out.newLine();
-            //out.write( "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">" );
+            LOGGER.info( String.format( "Writing: %s", groupFile.toString() ) );
             out.write( "<!DOCTYPE HTML>" );
             out.newLine();
             out.write( "<html xml:lang=\"en\" lang=\"en\">" );
@@ -406,6 +402,7 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
         File highresFile;
         String midresHtmlFileName;
 
+        LOGGER.info( "Before Switch" );
         switch ( options.getPictureNaming() ) {
             case PICTURE_NAMING_BY_ORIGINAL_NAME:
                 String rootName = Tools.cleanupFilename( Tools.getFilenameRoot( pictureInfo.getHighresFilename() ) );
@@ -434,6 +431,7 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
         }
         files.add( lowresFile );
         files.add( midresFile );
+        LOGGER.info( "After Switch" );
 
         if ( options.isGenerateZipfile() ) {
             LOGGER.fine( String.format( "Adding to zipfile: %s", highresFile.toString() ) );
@@ -457,11 +455,10 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
             }
         }
 
-        //LOGGER.log( Level.FINE, "testing size of thumbnail {0}", pictureInfo.getLowresURL().toString() );
-
-        LOGGER.fine( String.format( "Loading: %s", pictureInfo.getHighresLocation() ) );
+        LOGGER.info( String.format( "Loading: %s", pictureInfo.getHighresLocation() ) );
         scp.loadPictureImd( pictureInfo.getHighresURL(), pictureInfo.getRotation() );
 
+        LOGGER.info( String.format( "Done Loading: %s", pictureInfo.getHighresLocation() ) );
         if ( scp.getStatusCode() == SCALABLE_PICTURE_ERROR ) {
             LOGGER.log( Level.SEVERE, "Problem reading image {0} using brokenThumbnailPicture instead", pictureInfo.getHighresLocation() );
             scp.loadPictureImd( Settings.CLASS_LOADER.getResource( "jpo/images/broken_thumbnail.gif" ), 0f );
@@ -483,9 +480,9 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
         }
 
         scp.setScaleSize( options.getThumbnailDimension() );
-        LOGGER.fine( String.format( "Scaling: %s", pictureInfo.getHighresLocation() ) );
+        LOGGER.info( String.format( "Scaling: %s", pictureInfo.getHighresLocation() ) );
         scp.scalePicture();
-        LOGGER.fine( String.format( "Writing: %s", lowresFile.toString() ) );
+        LOGGER.info( String.format( "Writing: %s", lowresFile.toString() ) );
         scp.setJpgQuality( options.getLowresJpgQuality() );
         scp.writeScaledJpg( lowresFile );
         int w = scp.getScaledWidth();
@@ -650,7 +647,7 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
 
                         midresHtmlWriter.write( "<a href=\"" + nodeUrl + "\"" );
                         String htmlFriendlyDescription2 = Tools.stringToHTMLString( ( (PictureInfo) nde.getUserObject() ).getDescription().replaceAll( "\'", "\\\\'" ).replaceAll( "\n", " " ) );
-                        if ( options.isGenerateDHTML() ) {
+                        if ( options.isGenerateMouseover() ) {
                             midresHtmlWriter.write( String.format( " onmouseover=\"changetext(content[%d])\" onmouseout=\"changetext(content[0])\"", i ) );
                             dhtmlArray.append( String.format( "content[%d]='", i ) );
 
@@ -765,7 +762,7 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
             midresHtmlWriter.write( "<p>" + Settings.jpoResources.getString( "LinkToJpo" )  + "</p>");
             midresHtmlWriter.newLine();
 
-            if ( options.isGenerateDHTML() ) {
+            if ( options.isGenerateMouseover() ) {
                 midresHtmlWriter.write( "<ilayer id=\"d1\" width=\"" + Integer.toString( matrixWidth ) + "\" height=\"200\" visibility=\"hide\">" );
                 midresHtmlWriter.newLine();
                 midresHtmlWriter.write( "<layer id=\"d2\" width=\"" + Integer.toString( matrixWidth ) + "\" height=\"200\">" );
@@ -781,7 +778,7 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
             midresHtmlWriter.write( "</table>" );
             midresHtmlWriter.newLine();
 
-            if ( options.isGenerateDHTML() ) {
+            if ( options.isGenerateMouseover() ) {
                 Tools.copyFromJarToFile( HtmlDistiller.class, "jpo.js", options.getTargetDirectory(), "jpo.js" );
                 files.add( new File( options.getTargetDirectory(), "jpo.js" ) );
                 midresHtmlWriter.write( "<script type=\"text/javascript\" src=\"jpo.js\" ></script>" );

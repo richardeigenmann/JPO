@@ -189,12 +189,9 @@ public class SourcePicture {
         loadTime = 0;
 
         try {
-            // Java 1.4 way with a Listener
-            //ImageBytes imageBytes = new ImageBytes( imageUrl.toString(), IOUtils.toByteArray( imageUrl.openStream() ) );
             ImageBytes imageBytes = JpoCache.getInstance().getHighresImageBytes( imageUrl );
             ByteArrayInputStream bis = imageBytes.getByteArrayInputStream();
 
-            //ImageInputStream iis = ImageIO.createImageInputStream( imageUrl.openStream() );
             ImageInputStream iis = ImageIO.createImageInputStream( bis );
             LOGGER.fine( "Searching for ImageIO readers..." );
             Iterator readerIterator = ImageIO.getImageReaders( iis );
@@ -286,19 +283,10 @@ public class SourcePicture {
     }
 
     /**
-     * this method can be invoked to stop the current reader
+     * this method can be invoked to flag the current reader to stop at a convenient moment
      */
     public void stopLoading() {
-        //LOGGER.fine( "SourcePicture.stopLoading(): called" );
         abortFlag = true;
-        /*if ( ( pictureStatusCode == SOURCE_PICTURE_LOADING ) && ( reader != null ) ) {
-            reader.abort();
-            setStatus( SOURCE_PICTURE_ERROR, "Image loading cancelled." );
-            try {
-                finalize();
-            } catch ( Throwable x ) {
-            }
-        }*/
     }
 
     /**
@@ -311,17 +299,17 @@ public class SourcePicture {
      */
     public boolean stopLoadingExcept( URL exemptionURL ) {
         if ( ( imageUrl == null ) || ( exemptionURL == null ) ) {
-            LOGGER.fine( "SourcePicture.stopLoadingExcept: exiting on a null parameter. How did this happen?" );
+            LOGGER.fine( "exiting on a null parameter. How did this happen?" );
             return false; // has never been used yet
         }
 
         if ( pictureStatusCode != SOURCE_PICTURE_LOADING ) {
-            LOGGER.log( Level.FINE, "SourcePicture.stopLoadingExcept: called but pointless since image is not LOADING: {0}", imageUrl.toString());
+            LOGGER.log( Level.FINE, "called but pointless since image is not LOADING: {0}", imageUrl.toString());
             return false;
         }
 
         if ( !exemptionURL.equals( imageUrl ) ) {
-            LOGGER.log( Level.FINE, "SourcePicture.stopLoadingExcept: called with Url {0} --> stopping loading of {1}", new Object[]{ exemptionURL.toString(), imageUrl.toString() });
+            LOGGER.log( Level.FINE, "called with Url {0} --> stopping loading of {1}", new Object[]{ exemptionURL.toString(), imageUrl.toString() });
             stopLoading();
             return true;
         } else {

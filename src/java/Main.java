@@ -68,7 +68,7 @@ public class Main {
         StringBuilder good = new StringBuilder( "These classes were found:\n" );
         StringBuilder missing = new StringBuilder( "The Installation is faulty! The following classes and libraries are missing:\n" );
 
-        testClass( "jpo.gui.Jpo", "Jpo-0.11.jar", good, missing );
+        testClass( "jpo.gui.ApplicationEventHandler", "Jpo-0.12.jar", good, missing );
         testClass( "org.apache.commons.compress.archivers.zip.ZipArchiveEntry", "commons-compress-1.8.jar", good, missing );
         testClass( "org.apache.commons.io.IOUtils", "commons-io-2.4.jar", good, missing );
         testClass( "org.apache.commons.lang3.StringUtils", "commons-lang3-3.3.2.jar", good, missing );

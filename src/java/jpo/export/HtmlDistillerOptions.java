@@ -117,12 +117,12 @@ public class HtmlDistillerOptions {
         this.generateMap = generateMap;
     }
 
-    public boolean isGenerateDHTML() {
-        return generateDHTML;
+    public boolean isGenerateMouseover() {
+        return generateMouseover;
     }
 
-    public void setGenerateDHTML( boolean generateDHTML ) {
-        this.generateDHTML = generateDHTML;
+    public void setGenerateMouseover( boolean generateDHTML ) {
+        this.generateMouseover = generateDHTML;
     }
 
     public boolean isGenerateZipfile() {
@@ -427,7 +427,7 @@ public class HtmlDistillerOptions {
     /**
      * A flag to indicate whether DHTML elements should be generated.
      */
-    private boolean generateDHTML;
+    private boolean generateMouseover;
     /**
      * A flag to indicate whether a Zipfile with Highres Images should be
      * generated.
@@ -816,7 +816,7 @@ public class HtmlDistillerOptions {
         sb.append( "\n" ).append( Settings.jpoResources.getString( "HtmlDistMidres" ) ).append( "\n" );
         sb.append( isGenerateMidresHtml() ? Settings.jpoResources.getString( "HtmlDistMidresHtml" ) + "\n" : "No medium size navigation pages\n" );
         sb.append( isGenerateMap() ? Settings.jpoResources.getString( "GenerateMap" ) + "\n" : "No map\n" );
-        sb.append( isGenerateDHTML() ? Settings.jpoResources.getString( "generateDHTMLJCheckBox" ) + "\n" : "No  DHTML mouseover effects\n" );
+        sb.append( isGenerateMouseover() ? Settings.jpoResources.getString( "jpo.export.GenerateWebsiteWizard3Midres.generateMouseoverJCheckBox" ) + "\n" : "No  DHTML mouseover effects\n" );
         sb.append( Settings.jpoResources.getString( "midresSizeJLabel" ) ).append( " " ).append( Integer.toString( getMidresWidth() ) ).append( " x " ).append( Integer.toString( getMidresHeight() ) ).append( "\n" );
         sb.append( Settings.jpoResources.getString( "midresJpgQualitySlider" ) ).append( " " ).append( Integer.toString( getMidresJpgQualityPercent() ) ).append( "\n" );
 
@@ -884,7 +884,7 @@ public class HtmlDistillerOptions {
         Settings.defaultHtmlLowresQuality = getLowresJpgQuality();
         Settings.defaultGenerateMidresHtml = isGenerateMidresHtml();
         Settings.defaultGenerateMap = isGenerateMap();
-        Settings.defaultGenerateDHTML = isGenerateDHTML();
+        Settings.defaultGenerateDHTML = isGenerateMouseover();
         Settings.defaultHtmlMidresWidth = getMidresWidth();
         Settings.defaultHtmlMidresHeight = getMidresHeight();
         Settings.defaultHtmlMidresQuality = getMidresJpgQuality();

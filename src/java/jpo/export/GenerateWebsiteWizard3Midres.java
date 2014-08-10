@@ -18,7 +18,7 @@ import net.miginfocom.swing.MigLayout;
 /*
  GenerateWebsiteWizard3Midres.java:  Midres stuff
 
- Copyright (C) 2008-2013  Richard Eigenmann.
+ Copyright (C) 2008-2014  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -56,7 +56,7 @@ public class GenerateWebsiteWizard3Midres extends AbstractStep {
         // populate the widgets with the values from the options
         generateMidresHtmlJCheckBox.setSelected( options.isGenerateMidresHtml() );
         generateMapJCheckBox.setSelected( options.isGenerateMap() );
-        generateDHTMLJCheckBox.setSelected( options.isGenerateDHTML() );
+        mouseoverJCheckBox.setSelected( options.isGenerateMouseover() );
         midresWidthSpinnerNumberModel.setValue( options.getMidresWidth() );
         midresHeightSpinnerNumberModel.setValue( options.getMidresHeight() );
         midresJpgQualityJSlider.setValue( options.getMidresJpgQualityPercent() );
@@ -96,7 +96,7 @@ public class GenerateWebsiteWizard3Midres extends AbstractStep {
      * generated.
      *
      */
-    private final JCheckBox generateDHTMLJCheckBox = new JCheckBox( Settings.jpoResources.getString( "generateDHTMLJCheckBox" ) );
+    private final JCheckBox mouseoverJCheckBox = new JCheckBox( Settings.jpoResources.getString( "jpo.export.GenerateWebsiteWizard3Midres.generateMouseoverJCheckBox" ) );
 
     /**
      * Slider that allows the quality of the midres jpg's to be specified.
@@ -120,7 +120,7 @@ public class GenerateWebsiteWizard3Midres extends AbstractStep {
             @Override
             public void stateChanged( ChangeEvent arg0 ) {
                 generateMapJCheckBox.setEnabled( generateMidresHtmlJCheckBox.isSelected() );
-                generateDHTMLJCheckBox.setEnabled( generateMidresHtmlJCheckBox.isSelected() );
+                mouseoverJCheckBox.setEnabled( generateMidresHtmlJCheckBox.isSelected() );
                 options.setGenerateMidresHtml( generateMidresHtmlJCheckBox.isSelected() );
             }
         } );
@@ -134,13 +134,13 @@ public class GenerateWebsiteWizard3Midres extends AbstractStep {
         } );
         wizardPanel.add( generateMapJCheckBox, "spanx, wrap" );
 
-        generateDHTMLJCheckBox.addChangeListener( new ChangeListener() {
+        mouseoverJCheckBox.addChangeListener( new ChangeListener() {
             @Override
             public void stateChanged( ChangeEvent arg0 ) {
-                options.setGenerateDHTML( generateDHTMLJCheckBox.isSelected() );
+                options.setGenerateMouseover( mouseoverJCheckBox.isSelected() );
             }
         } );
-        wizardPanel.add( generateDHTMLJCheckBox, "spanx, wrap" );
+        wizardPanel.add( mouseoverJCheckBox, "spanx, wrap" );
 
         wizardPanel.add( new JLabel( Settings.jpoResources.getString( "thubnailSizeJLabel" ) ), "align label" );
         midresWidthJSpinner.addChangeListener(

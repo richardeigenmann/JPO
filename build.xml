@@ -27,7 +27,7 @@
     <property name="src.unittestimages.dir" value="${src.dir}/test/images"/>
     <property name="testdir" value="${src.dir}/test/java"/>
     <property name="results" location="/tmp"/>
-    
+
     <property name="TALK" value="true" />
     <path id="classpath">
         <pathelement location="${build.base.classes.dir}"/>
@@ -180,6 +180,8 @@
         </fileset>
     </path>
     
+
+    <echo>build-classpath: ${ant.refid:build-classpath}</echo>
         
     <target name="buildjar" depends="clean, cleanupSource, compile" description="Builds the  file containing the Jpo Classes">  <!-- , test -->
         <manifestclasspath property="manifest-classpath" jarfile="${build.jars.dir}/jpo-${version}.jar">

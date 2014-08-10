@@ -48,7 +48,7 @@ public class HtmlDistillerDefaultOptions extends HtmlDistillerOptions {
         setMidresJpgQuality( Settings.defaultHtmlMidresQuality );
         setGenerateMidresHtml( Settings.defaultGenerateMidresHtml );
         setGenerateMap( Settings.defaultGenerateMap );
-        setGenerateDHTML( Settings.defaultGenerateDHTML );
+        setGenerateMouseover( Settings.defaultGenerateDHTML );
         setGenerateZipfile( Settings.defaultGenerateZipfile );
         setLinkToHighres( Settings.defaultLinkToHighres );
         setExportHighres( Settings.defaultExportHighres );

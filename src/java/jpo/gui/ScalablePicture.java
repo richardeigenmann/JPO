@@ -109,7 +109,7 @@ public class ScalablePicture
     public enum ScalablePictureStatus {
 
         /**
-         * It can be unititialized
+         * It can be uninitialized
          */
         SCALABLE_PICTURE_UNINITIALISED,
         /**
@@ -589,13 +589,12 @@ public class ScalablePicture
      * This static method writes the indicated renderedImage (BufferedImage) to
      * the indicated file.
      *
-     * @param	writeFile	The File that shall receive the jpg data
+     * @param	targetFile	The File that shall receive the jpg data
      * @param	renderedImage	The RenderedImage (BufferedImage) to be written
      * @param	jpgQuality	The quality with which to compress to jpg
      */
-    public static void writeJpg( File writeFile, RenderedImage renderedImage,
+    public static void writeJpg( File targetFile, RenderedImage renderedImage,
             float jpgQuality ) {
-        // should be rewritten to use the method below after creating the FileOutputstream, RE 9.1.2005
         Iterator writers = ImageIO.getImageWritersByFormatName( "jpg" );
         ImageWriter writer = (ImageWriter) writers.next();
         JPEGImageWriteParam params = new JPEGImageWriteParam( null );
@@ -606,15 +605,14 @@ public class ScalablePicture
                 new ImageTypeSpecifier( IndexColorModel.getRGBdefault(),
                         IndexColorModel.getRGBdefault().createCompatibleSampleModel( 16, 16 ) ) );
 
-        try ( ImageOutputStream ios = ImageIO.createImageOutputStream(
-                new FileOutputStream( writeFile ) ) ) {
-            writer.setOutput( ios );
+        try ( ImageOutputStream imageOutputStream = ImageIO.createImageOutputStream(
+                new FileOutputStream( targetFile ) ) ) {
+            writer.setOutput( imageOutputStream );
             writer.write( null, new IIOImage( renderedImage, null, null ), params );
-            ios.close();
         } catch ( IOException e ) {
             LOGGER.severe( e.getMessage() );
         }
-        writer.dispose(); //1.4.1 documentation says to do this.
+        writer.dispose();
     }
 
     /**
@@ -640,7 +638,7 @@ public class ScalablePicture
             writer.setOutput( ios );
             writer.write( null, new IIOImage( renderedImage, null, null ), params );
         } catch ( IOException e ) {
-            LOGGER.log( Level.INFO, "Caught IOException: {0}", e.getMessage() );
+            LOGGER.info( "Caught IOException: " + e.getMessage() );
         }
         writer.dispose();
     }

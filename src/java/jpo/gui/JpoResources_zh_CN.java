@@ -214,7 +214,7 @@ public class JpoResources_zh_CN extends ListResourceBundle {
 		{ "exportHighresJCheckBox", "导出清晰图片"},
 		{ "rotateHighresJCheckBox", "Rotate Highres pictures"},
 		{ "linkToHighresJCheckBox", "使用当前位置链接到清晰图片"},
-		{ "generateDHTMLJCheckBox", "生成DHTML鼠标移动效果"},
+		{ "jpo.export.GenerateWebsiteWizard3Midres.generateMouseoverJCheckBox", "生成鼠标移动效果"},
 		{ "generateZipfileJCheckBox", "生成清晰图片可用于下载的压缩文件包"},
 		{ "picsPerRowText", "列"},
 		{ "thubnailSizeJLabel", "所略图尺寸"},
