@@ -3,6 +3,7 @@
 
             <table class="changelog">
                 <tr><td colspan=2><b>Development Version 0.12</b></td></tr>
+                <tr><td valign="top">10.8.2014</td><td>Recalculate Checksum doesn't run on EDT any longer</td></tr>
                 <tr><td valign="top">5.8.2014</td><td>Cleanup of Reconcile function</td></tr>
                 <tr><td valign="top">13.7.2014</td><td>Removed the Year Browser Guis</td></tr>
                 <tr><td valign="top">13.7.2014</td><td>Removed all GridBagLayouts and replaced them with MigLayouts</td></tr>
@@ -402,6 +403,6 @@
 
 
             <hr>
-            <p>Last update to this page: 12 July 2014<br>
+            <p>Last update to this page: 10 August 2014<br>
                 Copyright 2003-2014 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
     <?php include("page-end.php"); ?>

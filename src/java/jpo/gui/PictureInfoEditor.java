@@ -41,6 +41,7 @@ import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
@@ -258,7 +259,6 @@ public class PictureInfoEditor extends JFrame {
         rotationPanel.add( rotationJLabel );
 
         //NumberFormat nf = new DecimalFormat( "###.##" );
-
         JSpinner spinner = new JSpinner( angleModel );
         spinner.addChangeListener( new ChangeListener() {
             @Override
@@ -467,27 +467,25 @@ public class PictureInfoEditor extends JFrame {
         fileTab.add( highresLocationJButton, "wrap" );
         fileTab.add( highresErrorJLabel, "span 2, wrap" );
 
-        JButton checksumJButton = new JButton( Settings.jpoResources.getString( "checksumJButton" ) );
-        checksumJButton.setPreferredSize( new Dimension( 80, 25 ) );
-        checksumJButton.setMinimumSize( new Dimension( 80, 25 ) );
-        checksumJButton.setMaximumSize( new Dimension( 80, 25 ) );
-        checksumJButton.addActionListener( new ActionListener() {
+        JButton refreshChecksumJButton = new JButton( Settings.jpoResources.getString( "checksumJButton" ) );
+        refreshChecksumJButton.setPreferredSize( new Dimension( 80, 25 ) );
+        refreshChecksumJButton.setMinimumSize( new Dimension( 80, 25 ) );
+        refreshChecksumJButton.setMaximumSize( new Dimension( 80, 25 ) );
+        refreshChecksumJButton.addActionListener( new ActionListener() {
             @Override
             public void actionPerformed( ActionEvent e ) {
-                pictureInfo.calculateChecksum();
+                new Thread() {
+                    public void run() {
+                        pictureInfo.calculateChecksum();
+                    }
+                }.start();
+
             }
         } );
 
         fileTab.add( checksumJLabel );
-        fileTab.add( checksumJButton, "wrap" );
+        fileTab.add( refreshChecksumJButton, "wrap" );
 
-        /*        JLabel lowresLocationJLabel = new JLabel( Settings.jpoResources.getString( "lowresLocationLabel" ) );
-         lowresErrorJLabel.setFont( errorLabelFont );
-         fileTab.add( lowresLocationJLabel, "wrap" );
-         lowresLocationJTextField.setPreferredSize( TEXT_FIELD_DIMENSION );
-         fileTab.add( lowresLocationJTextField, "wrap" );
-         fileTab.add( lowresErrorJLabel, "wrap" );
-         */
         tabs.add( "File", fileTab );
 
         JPanel categoriesTab = new JPanel( new MigLayout() );
@@ -509,7 +507,6 @@ public class PictureInfoEditor extends JFrame {
                 if ( e.getValueIsAdjusting() ) {
                     return;
                 }
-                //JList <Category> theList = (JList<Category>) e.getSource();
                 if ( categoriesJList.isSelectedIndex( ( (DefaultListModel) categoriesJList.getModel() ).indexOf( setupCategories ) ) ) {
                     new CategoryEditorJFrame();
                 } else if ( categoriesJList.isSelectedIndex( ( (DefaultListModel) categoriesJList.getModel() ).indexOf( noCategories ) ) ) {
@@ -945,8 +942,8 @@ public class PictureInfoEditor extends JFrame {
 
         @Override
         public void mapClicked( GeoPosition location ) {
-            latitudeJTextField.setText( Double.toString( location.getLatitude() ));
-            longitudeJTextField.setText( Double.toString( location.getLongitude() ));
+            latitudeJTextField.setText( Double.toString( location.getLatitude() ) );
+            longitudeJTextField.setText( Double.toString( location.getLongitude() ) );
             positionMap();
         }
 
