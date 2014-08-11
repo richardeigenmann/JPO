@@ -1,52 +1,9 @@
 package jpo.gui;
 
-import jpo.gui.swing.WholeNumberField;
-import java.util.logging.Level;
-import jpotestground.ResizableJFrameTest;
-import jpo.dataModel.Settings;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Frame;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.io.File;
-import java.util.Hashtable;
-import java.util.Locale;
-import java.util.logging.Logger;
-import javax.swing.BorderFactory;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.InputVerifier;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JDialog;
-import javax.swing.JFileChooser;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JPasswordField;
-import javax.swing.JScrollPane;
-import javax.swing.JSlider;
-import javax.swing.JTabbedPane;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
-import javax.swing.WindowConstants;
-import jpo.EventBus.JpoEventBus;
-import jpo.EventBus.LocaleChangedEvent;
-import jpo.EventBus.UserFunctionsChangedEvent;
-import jpo.cache.JpoCache;
-import net.miginfocom.swing.MigLayout;
-
 /*
  SettingsDialog.java:  the class that provides a GUI for the settings
 
- Copyright (C) 2002-2013  Richard Eigenmann, Zürich, Switzerland
+ Copyright (C) 2002-2014  Richard Eigenmann, Zürich, Switzerland
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -60,6 +17,50 @@ import net.miginfocom.swing.MigLayout;
  The license is in gpl.txt.
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Frame;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.File;
+import java.util.Hashtable;
+import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.BorderFactory;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.InputVerifier;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JDialog;
+import javax.swing.JFileChooser;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JScrollPane;
+import javax.swing.JSlider;
+import javax.swing.JSpinner;
+import javax.swing.JTabbedPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.SpinnerModel;
+import javax.swing.SpinnerNumberModel;
+import javax.swing.WindowConstants;
+import jpo.EventBus.JpoEventBus;
+import jpo.EventBus.LocaleChangedEvent;
+import jpo.EventBus.UserFunctionsChangedEvent;
+import jpo.cache.JpoCache;
+import jpo.dataModel.Settings;
+import jpo.gui.swing.WholeNumberField;
+import net.miginfocom.swing.MigLayout;
+
 /**
  * GUI that allows the settings to be changed.
  *
@@ -76,15 +77,13 @@ public class SettingsDialog extends JDialog {
      * automatically loaded
      */
     private final JTextField autoLoadJTextField = new JTextField();
-    /**
-     * tickbox that indicates where status information should be written to the
-     * log
-     */
-    private final JCheckBox logfileJCheckBox = new JCheckBox();
-    /**
-     * field that allows the user to specify where the logs should be written to
-     */
-    private final JTextField logfileJTextField = new JTextField();
+
+    final SpinnerModel model
+            = new SpinnerNumberModel( Settings.tagCloudWords, //initial value
+                    0, //min
+                    2000, //max
+                    1 );                //step
+    final JSpinner tagCloudWordsJSpinner = new JSpinner( model );
 
     /**
      * Dropdown to indicate what preference the user has for JPO startup
@@ -110,9 +109,10 @@ public class SettingsDialog extends JDialog {
     /**
      * fields that allows the user to capture the path for the thumbnails
      *
-    private final DirectoryChooser thumbnailPathChooser = new DirectoryChooser( Settings.jpoResources.getString( "genericSelectText" ),
-            DirectoryChooser.DIR_MUST_BE_WRITABLE );
-*/
+     * private final DirectoryChooser thumbnailPathChooser = new
+     * DirectoryChooser( Settings.jpoResources.getString( "genericSelectText" ),
+     * DirectoryChooser.DIR_MUST_BE_WRITABLE );
+     */
     /**
      * User picks the thumbnail cache directory here
      */
@@ -123,9 +123,9 @@ public class SettingsDialog extends JDialog {
     /**
      * tickbox that indicates whether thumbnails should be written to disk
      *
-    private final JCheckBox keepThumbnailsJCheckBox = new JCheckBox( Settings.jpoResources.getString( "keepThumbnailsJCheckBoxLabel" ) );
-    */
-    
+     * private final JCheckBox keepThumbnailsJCheckBox = new JCheckBox(
+     * Settings.jpoResources.getString( "keepThumbnailsJCheckBoxLabel" ) );
+     */
     /**
      * field that allows the user to capture the maximum number of thumbnails to
      * be displayed
@@ -281,8 +281,12 @@ public class SettingsDialog extends JDialog {
                 autoLoadChooser();
             }
         } );
-        generalJPanel.add( autoLoadJButton );
-        // End of Autoload stuff
+        generalJPanel.add( autoLoadJButton, "wrap" );
+
+        final JLabel wordCloudWordJLabel = new JLabel( "Max Word Cloud Words" );
+        generalJPanel.add( wordCloudWordJLabel );
+
+        generalJPanel.add( tagCloudWordsJSpinner, "wrap" );
 
         // set up the pictureViewerJPanel
         final JPanel pictureViewerJPanel = new JPanel( new MigLayout() );
@@ -539,7 +543,7 @@ public class SettingsDialog extends JDialog {
 
         cacheJPanel.add( new JLabel( Settings.jpoResources.getString( "thumbnailDirLabel" ) ) );
         cacheJPanel.add( thumbnailCacheDirPathChooser );
-        cacheJPanel.add( new JLabel( "(Needs restart)"), "wrap" );
+        cacheJPanel.add( new JLabel( "(Needs restart)" ), "wrap" );
 
         cacheJPanel.add( new JLabel( "Highres Stats:" ) );
         cacheJPanel.add( new JLabel( "Lowres Stats:" ), "wrap" );
@@ -578,57 +582,6 @@ public class SettingsDialog extends JDialog {
         } );
         cacheJPanel.add( updateCacheStatsJButton );
 
-        // Debug Panel
-        final JPanel debugJPanel = new JPanel( new MigLayout() );
-
-        // Logfile stuff
-        logfileJCheckBox.setText( Settings.jpoResources.getString( "logfileJCheckBoxLabel" ) );
-        final JLabel logfileJLabel = new JLabel( Settings.jpoResources.getString( "logfileJLabelLabel" ) );
-        final JButton logfileJButton = new JButton( Settings.jpoResources.getString( "threeDotText" ) );
-        logfileJCheckBox.addActionListener( new ActionListener() {
-
-            @Override
-            public void actionPerformed( ActionEvent e ) {
-                logfileJLabel.setVisible( logfileJCheckBox.isSelected() );
-                logfileJTextField.setVisible( logfileJCheckBox.isSelected() );
-                logfileJButton.setVisible( logfileJCheckBox.isSelected() );
-                checkLogfile( logfileJTextField.getText() );
-            }
-        } );
-        debugJPanel.add( logfileJCheckBox, "wrap" );
-
-        debugJPanel.add( logfileJLabel );
-
-        logfileJTextField.setPreferredSize( Settings.filenameFieldPreferredSize );
-        logfileJTextField.setMinimumSize( Settings.filenameFieldMinimumSize );
-        logfileJTextField.setMaximumSize( Settings.filenameFieldMaximumSize );
-        logfileJTextField.setInputVerifier( new FileTextFieldVerifier() );
-        debugJPanel.add( logfileJTextField );
-
-        logfileJButton.setPreferredSize( Settings.threeDotButtonSize );
-        logfileJButton.setMinimumSize( Settings.threeDotButtonSize );
-        logfileJButton.setMaximumSize( Settings.threeDotButtonSize );
-        logfileJButton.addActionListener( new ActionListener() {
-
-            @Override
-            public void actionPerformed( ActionEvent e ) {
-                logfileChooser();
-            }
-        } );
-        debugJPanel.add( logfileJButton, "wrap" );
-        // end of Logfile Stuff
-
-        JButton screenSizeTestButton = new JButton( "Window Resize Test" );
-        screenSizeTestButton.addActionListener( new ActionListener() {
-
-            @Override
-            public void actionPerformed( ActionEvent e ) {
-                getRid(); // the dialog is modal and would prevent us using the frame
-                new ResizableJFrameTest();
-            }
-        } );
-        debugJPanel.add( screenSizeTestButton );
-
         // set up the main part of the dialog
         getContentPane().setLayout( new BorderLayout() );
 
@@ -643,7 +596,6 @@ public class SettingsDialog extends JDialog {
         tabbedPanel.add( Settings.jpoResources.getString( "userFunctionJPanel" ), userFunctionsJPanel );
         tabbedPanel.add( Settings.jpoResources.getString( "emailJPanel" ), emailServerJPanel );
         tabbedPanel.add( "Cache", cacheJPanel );
-        tabbedPanel.add( "Debug", debugJPanel );
 
         getContentPane().add( tabbedPanel, BorderLayout.NORTH );
 
@@ -663,7 +615,6 @@ public class SettingsDialog extends JDialog {
 
             @Override
             public void actionPerformed( ActionEvent e ) {
-                consistencyCheck();
                 writeValues();
                 Settings.writeSettings();
                 getRid();
@@ -710,8 +661,6 @@ public class SettingsDialog extends JDialog {
         }
 
         autoLoadJTextField.setText( Settings.autoLoad );
-        logfileJCheckBox.setSelected( Settings.writeLog );
-        logfileJTextField.setText( Settings.logfile.getPath() );
 
         startupSizeDropdown.setSelectedIndex( findSizeIndex( Settings.maximiseJpoOnStartup, Settings.mainFrameDimensions ) );
         viewerSizeDropdown.setSelectedIndex( findSizeIndex( Settings.maximisePictureViewerWindow, Settings.pictureViewerDefaultDimensions ) );
@@ -743,7 +692,6 @@ public class SettingsDialog extends JDialog {
 
         // deliberately placed here to stop change events being triggered while the fields are
         // being initialised.
-        checkLogfile( logfileJTextField.getText() );
         checkAutoLoad( autoLoadJTextField.getText() );
         updateCacheStats();
 
@@ -775,29 +723,6 @@ public class SettingsDialog extends JDialog {
     }
 
     /**
-     * This method checks that the values all make sense and adjusts them if
-     * not.
-     */
-    private void consistencyCheck() {
-        if ( ( !checkLogfile( logfileJTextField.getText() ) ) && logfileJCheckBox.isSelected() ) {
-            // disable logging if logfile is not in order
-            JOptionPane.showMessageDialog( Settings.anchorFrame,
-                    Settings.jpoResources.getString( "generalLogFileError" ),
-                    Settings.jpoResources.getString( "settingsError" ),
-                    JOptionPane.ERROR_MESSAGE );
-            logfileJCheckBox.setSelected( false );
-        }
-
-        /*if ( ( !thumbnailPathChooser.setColor() ) ) { // TODO: This seems very odd
-            JOptionPane.showMessageDialog( Settings.anchorFrame,
-                    Settings.jpoResources.getString( "thumbnailDirError" ),
-                    Settings.jpoResources.getString( "settingsError" ),
-                    JOptionPane.ERROR_MESSAGE );
-            logfileJCheckBox.setSelected( false ); 
-        }*/
-    }
-
-    /**
      * This method writes the values in the GUI widgets into the Settings
      * object.
      */
@@ -811,8 +736,7 @@ public class SettingsDialog extends JDialog {
 
         Settings.autoLoad = autoLoadJTextField.getText();
 
-        Settings.logfile = new File( logfileJTextField.getText() );
-        Settings.writeLog = logfileJCheckBox.isSelected();
+        Settings.tagCloudWords = (Integer) tagCloudWordsJSpinner.getValue();
 
         if ( startupSizeDropdown.getSelectedIndex() == 0 ) {
             Settings.maximiseJpoOnStartup = true;
@@ -870,48 +794,8 @@ public class SettingsDialog extends JDialog {
     }
 
     /**
-     * this method verifies that the file specified in the logfileJTextField is
-     * valid. It sets the color of the font to red if this is not ok and returns
-     * false to the caller. If all is fine it returns true;
-     *
-     * @param validationFile The file to test
-     * @return true if good, false if bad
-     */
-    public boolean checkLogfile( String validationFile ) {
-        File testFile = new File( validationFile );
-
-        if ( testFile.exists() ) {
-            if ( !testFile.canWrite() ) {
-                logfileJTextField.setForeground( Color.red );
-                LOGGER.log( Level.WARNING, "logfile exists but can''t be written: {0}", testFile );
-                return false;
-            }
-            if ( !testFile.isFile() ) {
-                logfileJTextField.setForeground( Color.red );
-                LOGGER.log( Level.WARNING, "isFile failed: {0}", testFile );
-                return false;
-            }
-        } else {
-            File testFileParent = testFile.getParentFile();
-            if ( testFileParent == null ) {
-                logfileJTextField.setForeground( Color.red );
-                LOGGER.warning( "Logfile can't be the root directory!" );
-                return false;
-            }
-            if ( !testFileParent.canWrite() ) {
-                logfileJTextField.setForeground( Color.red );
-                LOGGER.warning( "Parent Directory is read only!" );
-                return false;
-            }
-        }
-
-        logfileJTextField.setForeground( Color.black );
-        return true;
-    }
-
-    /**
-     * this method verifies that the file specified in the logfileJTextField is
-     * valid. It sets the color of the font to red if this is not ok and returns
+     * this method verifies that the file specified in the AutoLoadJTextField is
+     * valid. It sets the color of the font to red if this is not OK and returns
      * false to the caller. If all is fine it returns true;
      *
      * @param validationFile the file to validate
@@ -969,25 +853,6 @@ public class SettingsDialog extends JDialog {
     }
 
     /**
-     * method that brings up a JFileChooser and places the path of the file
-     * selected into the JTextField of the logfileJTextField.
-     */
-    private void logfileChooser() {
-        JFileChooser jFileChooser = new JFileChooser();
-        //jFileChooser.setFileFilter( new XmlFilter() );
-
-        jFileChooser.setFileSelectionMode( JFileChooser.FILES_ONLY );
-        jFileChooser.setDialogTitle( Settings.jpoResources.getString( "logfileChooserTitle" ) );
-        jFileChooser.setCurrentDirectory( new File( autoLoadJTextField.getText() ) );
-
-        int returnVal = jFileChooser.showDialog( this, Settings.jpoResources.getString( "genericSelectText" ) );
-        if ( returnVal == JFileChooser.APPROVE_OPTION ) {
-            logfileJTextField.setText( jFileChooser.getSelectedFile().getPath() );
-            checkLogfile( logfileJTextField.getText() );
-        }
-    }
-
-    /**
      * special inner class that verifies whether the path indicated by the
      * component is valid
      */
@@ -999,11 +864,9 @@ public class SettingsDialog extends JDialog {
             String validationFile = ( (JTextField) input ).getText();
             LOGGER.log( Level.INFO, "SettingsDialog.FileTextFieldVerifyer.shouldYieldFocus: called with: {0}", validationFile );
             LOGGER.log( Level.INFO, "JComponent = {0}", Integer.toString( input.hashCode() ) );
-            LOGGER.log( Level.INFO, "logfileJTextField = {0}", Integer.toString( logfileJTextField.hashCode() ) );
             LOGGER.log( Level.INFO, "autoLoadJTextField = {0}", Integer.toString( autoLoadJTextField.hashCode() ) );
-            if ( input.hashCode() == logfileJTextField.hashCode() ) {
-                checkLogfile( validationFile );
-            } else if ( input.hashCode() == autoLoadJTextField.hashCode() ) {
+
+            if ( input.hashCode() == autoLoadJTextField.hashCode() ) {
                 checkAutoLoad( validationFile );
             }
 

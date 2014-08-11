@@ -3,6 +3,7 @@
 
             <table class="changelog">
                 <tr><td colspan=2><b>Development Version 0.12</b></td></tr>
+                <tr><td valign="top">11.8.2014</td><td>Removed Debug Tab from Settings Menu</td></tr>
                 <tr><td valign="top">11.8.2014</td><td>Corrected navigation icons in Picture Pane</td></tr>
                 <tr><td valign="top">11.8.2014</td><td>Fixed a careless close which broke the generate website functionality.</td></tr>
                 <tr><td valign="top">10.8.2014</td><td>Recalculate Checksum doesn't run on EDT any longer</td></tr>
@@ -405,6 +406,6 @@
 
 
             <hr>
-            <p>Last update to this page: 10 August 2014<br>
+            <p>Last update to this page: 11 August 2014<br>
                 Copyright 2003-2014 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
     <?php include("page-end.php"); ?>

@@ -134,12 +134,6 @@ public class JpoResources_de extends ListResourceBundle {
 		{"browserWindowSettingsJPanel", "Allgemein"},
 		{"languageJLabel", "Sprache:"},
 		{"autoLoadJLabelLabel", "Automatisch laden:"},
-		{"logfileJCheckBoxLabel", "Logdatei schreiben"},
-		{"logfileJLabelLabel", "Pfad der Logdatei und Filenamen:"},
-		//{"maximiseJpoOnStartupJCheckBoxLabel", "JPO Fenster beim Programmstart maximieren"},
-		//{"saveSizeJCheckBoxLabel", "Fensterposition und Grösse bei Applikationsende speichern"},
-		//{"MainCoordinates", "Koordinaten des Hauptfensters (x/y):"},
-		//{"MainSize", "Grösse des Hauptfensters (b/h):"},
 		{"windowSizeChoicesJlabel", "Fenstergrösse beim JPO Programmstart:"},
 		{"windowSizeChoicesMaximum", "Maximum"},
 		
