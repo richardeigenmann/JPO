@@ -19,8 +19,6 @@ import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.event.TreeModelEvent;
-import javax.swing.event.TreeModelListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import jpo.EventBus.JpoEventBus;
 import jpo.EventBus.ShowGroupRequest;
@@ -94,9 +92,6 @@ public class ThumbnailController implements JpoDropTargetDropEventHandler {
         DragSource dragSource = DragSource.getDefaultDragSource();
         dragSource.createDefaultDragGestureRecognizer(
                 myThumbnail, DnDConstants.ACTION_COPY_OR_MOVE, new ThumbnailDragGestureListener() );
-
-        // attach the ThumbnailController to the Tree Model to get notifications.
-        Settings.getPictureCollection().getTreeModel().addTreeModelListener( new MyTreeModelListener() );
     }
 
     /**
@@ -507,77 +502,7 @@ public class ThumbnailController implements JpoDropTargetDropEventHandler {
 
     }
 
-    private class MyTreeModelListener implements TreeModelListener {
 
-        /**
-         * implemented here to satisfy the TreeModelListener interface; not
-         * used.
-         *
-         * @param e
-         */
-        @Override
-        public void treeNodesChanged( TreeModelEvent e ) {
-            LOGGER.fine( String.format( "ThumbnailController %d detected a treeNodesChanged event: %s", hashCode(), e ) );
-
-            // find out whether our node was changed
-            Object[] children = e.getChildren();
-            if ( children == null ) {
-                // the root path does not have children as it doesn'transferable have a parent
-                LOGGER.fine( "Supposedly we got the root node?" );
-                return;
-            }
-
-            for ( Object children1 : children ) {
-                if ( children1 == myNode ) {
-                    // we are displaying a changed node. What changed?
-                    Object userObject = myNode.getUserObject();
-                    if ( userObject instanceof GroupInfo ) {
-                        // determine if the icon changed
-                        // LOGGER.info( "ThumbnailController should be reloading the icon..." );
-                        requestThumbnailCreation( ThumbnailQueueRequest.HIGH_PRIORITY, false );
-                    } else {
-                        LOGGER.fine( String.format( "ThumbnailController %d detected a treeNodesChanged event: %s on a PictureInfo node", hashCode(), e ) );
-
-                    }
-                }
-            }
-        }
-
-        /**
-         * implemented here to satisfy the TreeModelListener interface; not
-         * used.
-         *
-         * @param e
-         */
-        @Override
-        public void treeNodesInserted( TreeModelEvent e ) {
-            LOGGER.fine( String.format( "ThumbnailController %d detected a treeNodesInserted event: %s", hashCode(), e ) );
-        }
-
-        /**
-         * The TreeModelListener interface tells us of tree node removal events.
-         *
-         * @param e
-         */
-        @Override
-        public void treeNodesRemoved( TreeModelEvent e ) {
-            LOGGER.fine( String.format( "ThumbnailController %d detected a treeNodesRemoved event: %s", hashCode(), e ) );
-        }
-
-        /**
-         * implemented here to satisfy the TreeModelListener interface; not
-         * used.
-         *
-         * @param e
-         */
-        @Override
-        public void treeStructureChanged( TreeModelEvent e ) {
-            LOGGER.fine( String.format( "ThumbnailController %d detected a treeStructureChanged event: %s", hashCode(), e ) );
-
-            attachChangeListeners();
-
-        }
-    }
 
     /**
      * This class extends a DragGestureListener and allows DnD on Thumbnails.

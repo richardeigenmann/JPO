@@ -407,8 +407,7 @@ public class PictureCollection {
     }
 
     /**
-     * Adds a query to the Query Tree Model. It has been made synchronous on the
-     * EDT
+     * Adds a query to the Query Tree Model.
      *
      * @param query The new Query to add
      * @return The node that was added.
