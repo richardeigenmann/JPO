@@ -287,9 +287,9 @@ public class ApplicationEventHandler {
         p2.pictureFrame.myJFrame.switchWindowMode( WINDOW_RIGHT );
         RandomNavigator rb1 = new RandomNavigator( rootNode.getChildPictureNodes( true ), String.format( "Randomised pictures from %s", rootNode.toString() ) );
         RandomNavigator rb2 = new RandomNavigator( rootNode.getChildPictureNodes( true ), String.format( "Randomised pictures from %s", rootNode.toString() ) );
-        p1.show( rb1, 0 );
+        p1.showNode( rb1, 0 );
         p1.startAdvanceTimer( 10 );
-        p2.show( rb2, 0 );
+        p2.showNode( rb2, 0 );
         p2.startAdvanceTimer( 10 );
     }
 
@@ -322,7 +322,7 @@ public class ApplicationEventHandler {
             return; // should only be receiving PictureInfo or GroupInfo with child pictures
         }
         PictureViewer pictureViewer = new PictureViewer();
-        pictureViewer.show( navigator, index );
+        pictureViewer.showNode( navigator, index );
 
     }
 

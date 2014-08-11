@@ -339,7 +339,7 @@ public class PictureViewer
      * shown
      * @param myIndex The index of the set of nodes to be shown.
      */
-    public void show( NodeNavigatorInterface mySetOfNodes,
+    public void showNode( NodeNavigatorInterface mySetOfNodes,
             int myIndex ) {
         LOGGER.fine( String.format( "Navigator: %s Nodes: %d Index: %d", mySetOfNodes.toString(), mySetOfNodes.getNumberOfNodes(), myIndex ) );
         Tools.checkEDT();
@@ -501,7 +501,7 @@ public class PictureViewer
     @Override
     public void nodeLayoutChanged() {
         LOGGER.info( String.format( "Got notified to relayout" ) );
-        show( mySetOfNodes, myIndex );
+        showNode( mySetOfNodes, myIndex );
 
     }
 
@@ -509,7 +509,7 @@ public class PictureViewer
      * This method is invoked by the GUI button or keyboard shortcut to advance
      * the picture. It calls
      * {@link SortableDefaultMutableTreeNode#getNextPicture} to find the image.
-     * If the call returned a non null node {@link #show} is called to request
+     * If the call returned a non null node {@link #showNode} is called to request
      * the loading and display of the new picture.
      *
      * @return true if the next picture was located, false if none available
@@ -525,7 +525,7 @@ public class PictureViewer
 
                 @Override
                 public void run() {
-                    show( mySetOfNodes, myIndex + 1 );
+                    showNode( mySetOfNodes, myIndex + 1 );
                 }
             };
             SwingUtilities.invokeLater( r );
@@ -551,7 +551,7 @@ public class PictureViewer
 
                 @Override
                 public void run() {
-                    show( mySetOfNodes, myIndex - 1 );
+                    showNode( mySetOfNodes, myIndex - 1 );
                 }
             };
             SwingUtilities.invokeLater( r );
@@ -645,12 +645,12 @@ public class PictureViewer
                 }
 
                 myIndex = 0;
-                show(
+                showNode(
                         mySetOfNodes, myIndex );
             }
 
             myIndex = 0;
-            show(
+            showNode(
                     mySetOfNodes, myIndex );
             startAdvanceTimer(
                     timerSecondsField.getValue() );
@@ -1053,7 +1053,7 @@ public class PictureViewer
                 // if the getNextNode also returns null this was the end of the album
                 // otherwise there are more pictures in the next group.
                 if ( getCurrentNode().getNextNode() != null ) {
-                    pictureFrame.getPictureViewerNavBar().nextJButton.setDecoration( BUTTON_STATE.HAS_RIGHT );
+                    pictureFrame.getPictureViewerNavBar().nextJButton.setDecoration( BUTTON_STATE.HAS_NEXT );
                 } else {
                     pictureFrame.getPictureViewerNavBar().nextJButton.setDecoration( BUTTON_STATE.END );
                 }
