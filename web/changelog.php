@@ -3,6 +3,7 @@
 
             <table class="changelog">
                 <tr><td colspan=2><b>Development Version 0.12</b></td></tr>
+                <tr><td valign="top">11.8.2014</td><td>When a group has no pictures it no longer offers to show them</td></tr>
                 <tr><td valign="top">11.8.2014</td><td>Removed Debug Tab from Settings Menu</td></tr>
                 <tr><td valign="top">11.8.2014</td><td>Corrected navigation icons in Picture Pane</td></tr>
                 <tr><td valign="top">11.8.2014</td><td>Fixed a careless close which broke the generate website functionality.</td></tr>

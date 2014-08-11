@@ -123,6 +123,9 @@ public class PicturePopupMenu extends JPopupMenu {
         initComponents();
     }
 
+    /**
+     * Initializes the GUI components
+     */
     private void initComponents() {
         String title = getTitle();
         setLabel( title );
@@ -358,21 +361,10 @@ public class PicturePopupMenu extends JPopupMenu {
 
         if ( option == 0 ) {
             boolean ok = false;
-            /* File lowresFile = pi.getLowresFile();
-             if ( ( lowresFile != null ) && ( lowresFile.exists() ) ) {
-             ok = lowresFile.delete();
-             if ( !ok ) //logger.info("File deleted: " + lowresFile.toString() );
-             // else
-             {
-             LOGGER.log( Level.INFO, "File deleted failed on: {0}", lowresFile.toString() );
-             }
-             }*/
 
             if ( highresFile.exists() ) {
                 ok = highresFile.delete();
-                if ( !ok ) //logger.info("File deleted: " + highresFile.toString() );
-                //else
-                {
+                if ( !ok )  {
                     LOGGER.log( Level.INFO, "File deleted failed on: {0}", highresFile.toString() );
                 }
             }
@@ -413,13 +405,6 @@ public class PicturePopupMenu extends JPopupMenu {
                 if ( selectedNode.getUserObject() instanceof PictureInfo ) {
                     pi = (PictureInfo) selectedNode.getUserObject();
                     boolean ok = false;
-                    /*File lowresFile = pi.getLowresFile();
-                     if ( ( lowresFile != null ) && ( lowresFile.exists() ) ) {
-                     ok = lowresFile.delete();
-                     if ( !ok ) {
-                     LOGGER.info( "File deleted failed on: " + lowresFile.toString() );
-                     }
-                     }*/
 
                     File highresFile = pi.getHighresFile();
                     if ( highresFile.exists() ) {
@@ -443,7 +428,7 @@ public class PicturePopupMenu extends JPopupMenu {
         }
 
     }
-    //  Controller type Stuff
+    
     /**
      * The node the popup menu was created for
      */

@@ -136,6 +136,9 @@ public class GroupPopupMenu extends JPopupMenu {
             }
         } );
         add( groupSlideshowJMenuItem );
+        if ( ! popupNode.hasChildPictureNodes() ) {
+            groupSlideshowJMenuItem.setEnabled( false);
+        }
 
         JMenuItem groupFindJMenuItem = new JMenuItem( Settings.jpoResources.getString( "groupFindJMenuItemLabel" ) );
         groupFindJMenuItem.addActionListener( new ActionListener() {
