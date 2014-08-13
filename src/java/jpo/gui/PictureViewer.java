@@ -26,7 +26,8 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.MouseInputAdapter;
 import javax.swing.tree.DefaultMutableTreeNode;
-import jpo.dataModel.ExifInfo;
+import jpo.EventBus.JpoEventBus;
+import jpo.EventBus.RotatePictureRequest;
 import jpo.dataModel.FlatGroupNavigator;
 import jpo.dataModel.NodeNavigatorInterface;
 import jpo.dataModel.NodeNavigatorListener;
@@ -41,9 +42,9 @@ import jpo.gui.ScalablePicture.ScalablePictureStatus;
 import static jpo.gui.ScalablePicture.ScalablePictureStatus.SCALABLE_PICTURE_ERROR;
 import static jpo.gui.ScalablePicture.ScalablePictureStatus.SCALABLE_PICTURE_READY;
 import jpo.gui.SourcePicture.SourcePictureStatus;
-import jpo.gui.swing.LeftRightButton.BUTTON_STATE;
 import jpo.gui.swing.PictureFrame;
-import jpo.gui.swing.PicturePane;
+import jpo.gui.swing.PictureController;
+import jpo.gui.swing.ResizableJFrame.WindowSize;
 
 
 /*
@@ -76,21 +77,12 @@ import jpo.gui.swing.PicturePane;
  * <img src="../PictureViewer.png" border=0>
  *
  */
-public class PictureViewer
-        implements PictureViewerActions, ScalablePictureListener,
-        PictureInfoChangeListener,
-        NodeNavigatorListener {
+public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorListener {
 
     /**
      * PictureFrame
      */
-    public PictureFrame pictureFrame = new PictureFrame();
-
-    /**
-     * The pane that handles the image drawing aspects.
-     *
-     */
-    private final PicturePane pictureJPanel = pictureFrame.getPictureJPanel();
+    private final PictureFrame pictureFrame = new PictureFrame();
 
     /**
      * Defines a logger for this class
@@ -104,18 +96,126 @@ public class PictureViewer
      *
      */
     public PictureViewer() {
-        initComponents();
+        attachListeners();
     }
 
-    private void initComponents() {
-        pictureJPanel.addStatusListener( this );
+    private void attachListeners() {
+        PictureController pictureJPanel = pictureFrame.getPictureController();
+        pictureJPanel.addStatusListener( new ScalablePictureListener() {
 
-        // register an interest in mouse events
-        Listener MouseListener = new Listener();
-        pictureJPanel.addMouseListener( MouseListener );
-        pictureJPanel.addMouseMotionListener( MouseListener );
+            /**
+             * this method gets invoked from the PicturePane object to notify of
+             * status changes. It updates the description panel at the bottom of
+             * the screen with the status. If the status was a notification of
+             * the image starting to load the progress bar is made visible. Any
+             * other status hides the progress bar.
+             *
+             * @param pictureStatusCode
+             * @param pictureStatusMessage
+             */
+            @Override
+            public void scalableStatusChange( final ScalablePictureStatus pictureStatusCode,
+                    final String pictureStatusMessage ) {
+                Runnable r = new Runnable() {
 
-        pictureFrame.myJFrame.addWindowListener( new WindowAdapter() {
+                    @Override
+                    public void run() {
+                        switch ( pictureStatusCode ) {
+                            case SCALABLE_PICTURE_UNINITIALISED:
+                                pictureFrame.loadJProgressBar.setVisible( false );
+                                break;
+
+                            case SCALABLE_PICTURE_GARBAGE_COLLECTION:
+                                pictureFrame.loadJProgressBar.setVisible( false );
+                                break;
+
+                            case SCALABLE_PICTURE_LOADING:
+                                //if ( pictureFrame.myJFrame != null ) {
+                                    pictureFrame.loadJProgressBar.setVisible( true );
+                                //}
+
+                                break;
+                            case SCALABLE_PICTURE_LOADED:
+                                pictureFrame.loadJProgressBar.setVisible( false );
+                                //descriptionJTextField.setText( getDescription() );
+                                break;
+
+                            case SCALABLE_PICTURE_SCALING:
+                                pictureFrame.loadJProgressBar.setVisible( false );
+                                break;
+
+                            case SCALABLE_PICTURE_READY:
+                                pictureFrame.loadJProgressBar.setVisible( false );
+                                //if ( pictureFrame.myJFrame != null ) {
+                                    pictureFrame.getResizableJFrame().toFront();
+                                //}
+
+                                break;
+                            case SCALABLE_PICTURE_ERROR:
+                                pictureFrame.loadJProgressBar.setVisible( false );
+                                ;
+                                break;
+
+                            default:
+
+                                LOGGER.log( Level.WARNING, "Got called with a code that is not understood: {0} {1}", new Object[]{ pictureStatusCode, pictureStatusMessage } );
+                                break;
+
+                        }
+                    }
+                };
+                if ( SwingUtilities.isEventDispatchThread() ) {
+                    r.run();
+                } else {
+                    SwingUtilities.invokeLater( r );
+                }
+
+            }
+
+            /**
+             * method that gets invoked from the PicturePane object to notify of
+             * status changes
+             *
+             * @param statusCode
+             * @param percentage
+             */
+            @Override
+            public void sourceLoadProgressNotification( final SourcePictureStatus statusCode,
+                    final int percentage ) {
+                Runnable r = new Runnable() {
+
+                    @Override
+                    public void run() {
+                        switch ( statusCode ) {
+                            case SOURCE_PICTURE_LOADING_STARTED:
+                                pictureFrame.loadJProgressBar.setValue( 0 );
+                                pictureFrame.loadJProgressBar.setVisible( true );
+                                break;
+
+                            case SOURCE_PICTURE_LOADING_PROGRESS:
+                                pictureFrame.loadJProgressBar.setValue( percentage );
+                                pictureFrame.loadJProgressBar.setVisible( true );
+                                break;
+
+                            case SOURCE_PICTURE_LOADING_COMPLETED:
+                                pictureFrame.loadJProgressBar.setVisible( false );
+                                pictureFrame.loadJProgressBar.setValue( 0 ); // prepare for the next load
+                                break;
+
+                        }
+                    }
+                };
+                if ( SwingUtilities.isEventDispatchThread() ) {
+                    r.run();
+                } else {
+                    SwingUtilities.invokeLater( r );
+                }
+
+            }
+        } );
+
+
+        pictureFrame.getResizableJFrame().addWindowListener( new WindowAdapter() {
 
             @Override
             public void windowClosing( WindowEvent we ) {
@@ -123,22 +223,24 @@ public class PictureViewer
             }
         } );
 
-        pictureFrame.getDescriptionJTextArea().addFocusListener( new FocusAdapter() {
+        pictureFrame.getFocussableDescriptionField().addFocusListener( new FocusAdapter() {
 
             @Override
             public void focusLost( FocusEvent e ) {
                 super.focusLost( e );
-                updateDescription();
+                saveChangedDescription();
             }
         } );
 
-        pictureJPanel.addKeyListener( myViewerKeyAdapter );
+
+        pictureJPanel.addKeyListener( new ViewerKeyAdapter() );
 
         pictureFrame.getPictureViewerNavBar().rotateLeftJButton.addActionListener( new ActionListener() {
 
             @Override
             public void actionPerformed( ActionEvent e ) {
-                rotate( 270 );
+                JpoEventBus.getInstance().post( new RotatePictureRequest( getCurrentNode(), 270, ThumbnailQueueRequest.HIGH_PRIORITY ) );
+                pictureFrame.getPictureController().requestFocusInWindow();
             }
         } );
 
@@ -146,7 +248,8 @@ public class PictureViewer
 
             @Override
             public void actionPerformed( ActionEvent e ) {
-                rotate( 90 );
+                JpoEventBus.getInstance().post( new RotatePictureRequest( getCurrentNode(), 90, ThumbnailQueueRequest.HIGH_PRIORITY ) );
+                pictureFrame.getPictureController().requestFocusInWindow();
             }
         } );
 
@@ -154,7 +257,7 @@ public class PictureViewer
 
             @Override
             public void actionPerformed( ActionEvent e ) {
-                zoomIn();
+                pictureFrame.getPictureController().zoomIn();
             }
         } );
 
@@ -162,7 +265,7 @@ public class PictureViewer
 
             @Override
             public void actionPerformed( ActionEvent e ) {
-                zoomOut();
+                pictureFrame.getPictureController().zoomOut();
             }
         } );
 
@@ -194,7 +297,7 @@ public class PictureViewer
 
             @Override
             public void actionPerformed( ActionEvent e ) {
-                resetPicture();
+                pictureFrame.getPictureController().resetPicture();
             }
         } );
 
@@ -224,7 +327,7 @@ public class PictureViewer
             }
         } );
 
-        pictureFrame.getPictureViewerNavBar().nextJButton.addActionListener( new ActionListener() {
+        pictureFrame.getPictureViewerNavBar().getNextJButton().addActionListener( new ActionListener() {
 
             @Override
             public void actionPerformed( ActionEvent e ) {
@@ -243,32 +346,26 @@ public class PictureViewer
     }
 
     /**
-     * This method sends the text of the textbox to the pictureinfo. This
-     * updates the description if it has changed.
+     * This method saves the text of the textbox to the pictureinfo.
      */
-    private void updateDescription() {
+    private void saveChangedDescription() {
         Object userObject = getCurrentNode().getUserObject();
-        if ( userObject != null ) {
-            if ( userObject instanceof PictureInfo ) {
-                LOGGER.log( Level.FINE, "Sending description update to {0}", pictureFrame.getDescriptionJTextArea().getText());
-                ( (PictureInfo) userObject ).setDescription(
-                        pictureFrame.getDescriptionJTextArea().getText() );
-            }
-
+        if ( userObject instanceof PictureInfo ) {
+            ( (PictureInfo) userObject ).setDescription(
+                    pictureFrame.getDescription() );
         }
     }
 
     /**
      * Closes the PictureViewer and all dangling references.
      */
-    @Override
-    public void closeViewer() {
+    private void closeViewer() {
         if ( mySetOfNodes != null ) {
             mySetOfNodes.removeNodeNavigatorListener( this );
             mySetOfNodes.getRid(); // help Grabage collection remove the listener
         }
         stopTimer();
-        pictureFrame.myJFrame.dispose();
+        pictureFrame.getRid();
     }
 
     /**
@@ -289,8 +386,7 @@ public class PictureViewer
      * initialised or there is some other error null shall be returned. TODO:
      * Shouldn't this be more context aware?
      */
-    @Override
-    public SortableDefaultMutableTreeNode getCurrentNode() {
+    private SortableDefaultMutableTreeNode getCurrentNode() {
         try {
             return mySetOfNodes.getNode( myIndex );
         } catch ( NullPointerException npe ) {
@@ -309,27 +405,25 @@ public class PictureViewer
     /**
      * popup menu for window mode changing
      */
-    private final ChangeWindowPopupMenu changeWindowPopupMenu = new ChangeWindowPopupMenu( pictureFrame.myJFrame );
+    private final ChangeWindowPopupMenu changeWindowPopupMenu = new ChangeWindowPopupMenu( pictureFrame.getResizableJFrame() );
 
     /**
      * Shows a resize popup menu
      *
      */
-    @Override
-    public void requestScreenSizeMenu() {
+    private void requestScreenSizeMenu() {
         changeWindowPopupMenu.show( pictureFrame.getPictureViewerNavBar(), 96, (int) ( 0 - changeWindowPopupMenu.getSize().getHeight() ) );
-        pictureJPanel.requestFocusInWindow();
+        pictureFrame.getPictureController().requestFocusInWindow();
     }
 
     /**
      * Requests that the popup menu be shown
      *
      */
-    @Override
-    public void requestPopupMenu() {
+    private void requestPopupMenu() {
         PicturePopupMenu picturePopupMenu = new PicturePopupMenu( mySetOfNodes, myIndex );
         picturePopupMenu.show( pictureFrame.getPictureViewerNavBar(), 120, (int) ( 0 - picturePopupMenu.getSize().getHeight() ) );
-        pictureJPanel.requestFocusInWindow();
+        pictureFrame.getPictureController().requestFocusInWindow();
     }
 
     /**
@@ -352,8 +446,8 @@ public class PictureViewer
             return;
         }
 
-        Object uo = node.getUserObject();
-        if ( !( uo instanceof PictureInfo ) ) {
+        Object userObject = node.getUserObject();
+        if ( !( userObject instanceof PictureInfo ) ) {
             LOGGER.severe( String.format( "The new node is not for a PictureInfo object. Aborting. userObject class: %s, mySetOfNodes: %s, index: %d", node.getUserObject().getClass().toString(), mySetOfNodes.toString(), myIndex ) );
             closeViewer();
             return;
@@ -364,7 +458,7 @@ public class PictureViewer
             ( (PictureInfo) this.mySetOfNodes.getNode( this.myIndex ).getUserObject() ).removePictureInfoChangeListener( this );
         }
         // attach the pictureinfo change listener
-        PictureInfo pictureInfo = (PictureInfo) uo;
+        PictureInfo pictureInfo = (PictureInfo) userObject;
         pictureInfo.addPictureInfoChangeListener( this );
 
         if ( this.mySetOfNodes == null ) {
@@ -386,11 +480,11 @@ public class PictureViewer
 
         this.myIndex = myIndex;
 
-        pictureFrame.descriptionJTextField.setText( pictureInfo.getDescription() );
+        pictureFrame.setDescription( pictureInfo.getDescription() );
         setPicture( pictureInfo );
 
         setIconDecorations();
-        pictureJPanel.requestFocusInWindow();
+        pictureFrame.getPictureController().requestFocusInWindow();
     }
 
     /**
@@ -399,7 +493,7 @@ public class PictureViewer
      * @param pi The PicutreInfo object that should be displayed
      */
     private void setPicture( PictureInfo pi ) {
-        LOGGER.log( Level.FINE, "Set picture to PictureInfo: {0}", pi.toString());
+        LOGGER.log( Level.FINE, "Set picture to PictureInfo: {0}", pi.toString() );
         URL pictureURL;
 
         String description;
@@ -416,82 +510,30 @@ public class PictureViewer
             return;
 
         }
-        setPicture( pictureURL, description, rotation );
-    }
-
-    /**
-     * brings up the indicated picture on the display.
-     *
-     * @param filenameURL The URL of the picture to display
-     * @param legendParam	The description of the picture
-     * @param rotation The rotation that should be applied
-     */
-    private void setPicture( URL filenameURL, String legendParam,
-            double rotation ) {
-        pictureJPanel.legend = legendParam;
-        pictureJPanel.centerWhenScaled = true;
-        pictureJPanel.scalablePicture.setScaleSize( pictureJPanel.getSize() );
-
-        pictureJPanel.scalablePicture.stopLoadingExcept( filenameURL );
-        pictureJPanel.scalablePicture.loadAndScalePictureInThread( filenameURL, Thread.MAX_PRIORITY, rotation );
-        pictureJPanel.exifInfo = new ExifInfo( filenameURL );
-        pictureJPanel.exifInfo.decodeExifTags();
-    }
-
-    /**
-     * Requests that the current picture be rotated from it's current rotation
-     * by the specified amount.
-     *
-     * @param angle The angle by which the picture should be rotated
-     */
-    @Override
-    public void rotate( int angle ) {
-        PictureInfo pi = (PictureInfo) getCurrentNode().getUserObject();
-        pi.rotate( angle );
-        pictureJPanel.requestFocusInWindow();
+        pictureFrame.getPictureController().setPicture( pictureURL, description, rotation );
     }
 
     /**
      * here we get notified by the PictureInfo object that something has
      * changed.
      *
-     * @param e
+     * @param pictureInfoChangedEvent
      */
     @Override
-    public void pictureInfoChangeEvent( PictureInfoChangeEvent e ) {
-        if ( e.getDescriptionChanged() ) {
-            String s = e.getPictureInfo().getDescription();
-            if ( s == null ) {
-                LOGGER.log( Level.WARNING, "Got called without a description in the picture. {0}", e.toString());
-            } else {
-                pictureFrame.descriptionJTextField.setText( s );
-            }
-
+    public void pictureInfoChangeEvent( PictureInfoChangeEvent pictureInfoChangedEvent ) {
+        if ( pictureInfoChangedEvent.getDescriptionChanged() ) {
+            pictureFrame.setDescription( pictureInfoChangedEvent.getPictureInfo().getDescription() );
         }
-        if ( e.getHighresLocationChanged() ) {
+
+        if ( pictureInfoChangedEvent.getHighresLocationChanged() ) {
             SortableDefaultMutableTreeNode node = mySetOfNodes.getNode( myIndex );
-            if ( node == null ) {
-                LOGGER.log( Level.WARNING, "Highres change got called without a node. Index: {0}{1}", new Object[]{ Integer.toString( myIndex ), mySetOfNodes.toString() });
-                return;
-
-            }
-
-            PictureInfo pi = (PictureInfo) node.getUserObject();
-            if ( pi == null ) {
-                LOGGER.log( Level.WARNING, "Highres location change got called without a PictureInfor user object. {0}", e.toString());
-            } else {
-                setPicture( pi );
-            }
-
+            PictureInfo pictureInfo = (PictureInfo) node.getUserObject();
+            setPicture( pictureInfo );
         }
-        if ( e.getRotationChanged() ) {
-            PictureInfo pi = (PictureInfo) mySetOfNodes.getNode( myIndex ).getUserObject();
-            if ( pi == null ) {
-                LOGGER.log( Level.WARNING, "Rotation change got called without a PictureInfor user object. {0}", e.toString());
-            } else {
-                setPicture( pi );
-            }
 
+        if ( pictureInfoChangedEvent.getRotationChanged() ) {
+            PictureInfo pictureInfo = (PictureInfo) mySetOfNodes.getNode( myIndex ).getUserObject();
+            setPicture( pictureInfo );
         }
     }
 
@@ -506,21 +548,17 @@ public class PictureViewer
     }
 
     /**
-     * This method is invoked by the GUI button or keyboard shortcut to advance
-     * the picture. It calls
+     * Request the PictureViewer to display the next picture. It calls
      * {@link SortableDefaultMutableTreeNode#getNextPicture} to find the image.
-     * If the call returned a non null node {@link #showNode} is called to request
-     * the loading and display of the new picture.
+     * If the call returned a non null node {@link #showNode} is called to
+     * request the loading and display of the new picture.
      *
      * @return true if the next picture was located, false if none available
      *
      * @see #requestPriorPicture()
      */
-    @Override
-    public boolean requestNextPicture() {
-        LOGGER.fine( String.format( "Using the context aware step forward. The browser contains: %d pictures and we are on picture %d", mySetOfNodes.getNumberOfNodes(), myIndex ) );
+    private boolean requestNextPicture() {
         if ( mySetOfNodes.getNumberOfNodes() > myIndex + 1 ) {
-            LOGGER.log( Level.FINE, "Requesting node: {0}", Integer.toString( myIndex + 1 ));
             Runnable r = new Runnable() {
 
                 @Override
@@ -543,9 +581,7 @@ public class PictureViewer
      * @see #requestNextPicture()
      * @return true if successful, false if not.
      */
-    @Override
-    public boolean requestPriorPicture() {
-        LOGGER.fine( "PictureViewer.requestPriorPicture: using the context aware step backward" );
+    private boolean requestPriorPicture() {
         if ( myIndex > 0 ) {
             Runnable r = new Runnable() {
 
@@ -561,11 +597,10 @@ public class PictureViewer
     }
 
     /**
-     * method that cancels a timer if one is running or calls the method to
-     * bring up the dialog to start a timer
+     * Brings up the dialog for the AutoAdvance timer or shuts the running one
+     * down.
      */
-    @Override
-    public void requestAutoAdvance() {
+    private void requestAutoAdvance() {
         if ( advanceTimer != null ) {
             stopTimer();
             pictureFrame.getPictureViewerNavBar().clockJButton.setClockIdle();
@@ -573,7 +608,7 @@ public class PictureViewer
             doAutoAdvanceDialog();
         }
 
-        pictureJPanel.requestFocusInWindow();
+        pictureFrame.getPictureController().requestFocusInWindow();
     }
 
     /**
@@ -615,7 +650,7 @@ public class PictureViewer
         };
 
         int selectedValue = JOptionPane.showOptionDialog(
-                pictureFrame.myJFrame,
+                pictureFrame.getResizableJFrame(),
                 objects,
                 Settings.jpoResources.getString( "autoAdvanceDialogTitle" ),
                 JOptionPane.OK_CANCEL_OPTION,
@@ -692,8 +727,7 @@ public class PictureViewer
      *
      * @param delay the delay (in seconds)
      */
-    @Override
-    public void setTimerDelay( int delay ) {
+    private void setTimerDelay( int delay ) {
         if ( advanceTimer != null ) {
             advanceTimer.setDelay( delay * 1000 );
         }
@@ -702,7 +736,7 @@ public class PictureViewer
     /**
      * method to stop any timer that might be running
      */
-    public void stopTimer() {
+    private void stopTimer() {
         if ( advanceTimer != null ) {
             advanceTimer.stop();
         }
@@ -712,276 +746,39 @@ public class PictureViewer
     }
 
     /**
-     * Tells the AdvanceTimer whether it is OK to advance the
-     * picture or not This important to avoid the submission of new picture
-     * requests before the old ones have been met.
-     * 
+     * Tells the AdvanceTimer whether it is OK to advance the picture or not
+     * This important to avoid the submission of new picture requests before the
+     * old ones have been met.
+     *
      * @return true if ready to advance
      */
     private boolean readyToAdvance() {
+        PictureController pictureJPanel = pictureFrame.getPictureController();
         ScalablePictureStatus status = pictureJPanel.getScalablePicture().getStatusCode();
         return ( status == SCALABLE_PICTURE_READY ) || ( status == SCALABLE_PICTURE_ERROR );
     }
 
-
     /**
-     * this method gets invoked from the PicturePane object to notify of status
-     * changes. It updates the description panel at the bottom of the screen
-     * with the status. If the status was a notification of the image starting
-     * to load the progress bar is made visible. Any other status hides the
-     * progress bar.
-     *
-     * @param pictureStatusCode
-     * @param pictureStatusMessage
-     */
-    @Override
-    public void scalableStatusChange( final ScalablePictureStatus pictureStatusCode,
-            final String pictureStatusMessage ) {
-        Runnable r = new Runnable() {
-
-            @Override
-            public void run() {
-                switch ( pictureStatusCode ) {
-                    case SCALABLE_PICTURE_UNINITIALISED:
-                        pictureFrame.loadJProgressBar.setVisible( false );
-                        break;
-
-                    case SCALABLE_PICTURE_GARBAGE_COLLECTION:
-                        pictureFrame.loadJProgressBar.setVisible( false );
-                        break;
-
-                    case SCALABLE_PICTURE_LOADING:
-                        if ( pictureFrame.myJFrame != null ) {
-                            pictureFrame.loadJProgressBar.setVisible( true );
-                        }
-
-                        break;
-                    case SCALABLE_PICTURE_LOADED:
-                        pictureFrame.loadJProgressBar.setVisible( false );
-                        //descriptionJTextField.setText( getDescription() );
-                        break;
-
-                    case SCALABLE_PICTURE_SCALING:
-                        pictureFrame.loadJProgressBar.setVisible( false );
-                        break;
-
-                    case SCALABLE_PICTURE_READY:
-                        pictureFrame.loadJProgressBar.setVisible( false );
-                        if ( pictureFrame.myJFrame != null ) {
-                            pictureFrame.myJFrame.toFront();
-                        }
-
-                        break;
-                    case SCALABLE_PICTURE_ERROR:
-                        pictureFrame.loadJProgressBar.setVisible( false );
-                        ;
-                        break;
-
-                    default:
-
-                        LOGGER.log( Level.WARNING, "Got called with a code that is not understood: {0} {1}", new Object[]{ pictureStatusCode, pictureStatusMessage });
-                        break;
-
-                }
-            }
-        };
-        if ( SwingUtilities.isEventDispatchThread() ) {
-            r.run();
-        } else {
-            SwingUtilities.invokeLater( r );
-        }
-
-    }
-
-    /**
-     * method that gets invoked from the PicturePane object to notify of status
-     * changes
-     *
-     * @param statusCode
-     * @param percentage
-     */
-    @Override
-    public void sourceLoadProgressNotification( final SourcePictureStatus statusCode,
-            final int percentage ) {
-        Runnable r = new Runnable() {
-
-            @Override
-            public void run() {
-                switch ( statusCode ) {
-                    case SOURCE_PICTURE_LOADING_STARTED:
-                        pictureFrame.loadJProgressBar.setValue( 0 );
-                        pictureFrame.loadJProgressBar.setVisible( true );
-                        break;
-
-                    case SOURCE_PICTURE_LOADING_PROGRESS:
-                        pictureFrame.loadJProgressBar.setValue( percentage );
-                        pictureFrame.loadJProgressBar.setVisible( true );
-                        break;
-
-                    case SOURCE_PICTURE_LOADING_COMPLETED:
-                        pictureFrame.loadJProgressBar.setVisible( false );
-                        pictureFrame.loadJProgressBar.setValue( 0 ); // prepare for the next load
-                        break;
-
-                }
-            }
-        };
-        if ( SwingUtilities.isEventDispatchThread() ) {
-            r.run();
-        } else {
-            SwingUtilities.invokeLater( r );
-        }
-
-    }
-
-    /**
-     * Sets the scale of the picture to the current screen size and centres it
-     * there.
-     */
-    @Override
-    public void resetPicture() {
-        pictureJPanel.zoomToFit();
-        pictureJPanel.centerImage();
-        pictureJPanel.requestFocusInWindow();
-    }
-
-    /**
-     * This function cycles to the next info display. The first is DISPLAY_NONE,
-     * DISPLAY_PHOTOGRAPHIC and DISPLAY_APPLICATION
+     * This function cycles to the next info display overlay. The first is
+     * DISPLAY_NONE, DISPLAY_PHOTOGRAPHIC and DISPLAY_APPLICATION
      *
      */
-    @Override
-    public void cylceInfoDisplay() {
+    private void cylceInfoDisplay() {
+        PictureController pictureJPanel = pictureFrame.getPictureController();
         pictureJPanel.cylceInfoDisplay();
         pictureJPanel.requestFocusInWindow();
     }
 
     /**
-     * Makes the PictureJPanel zoom in
+     * The location and size of the Window can be changed by a call to this method
+     * @param newMode 
      */
-    @Override
-    public void zoomIn() {
-        pictureJPanel.zoomIn();
+    public void switchWindowMode( WindowSize newMode ) {
+        pictureFrame.switchWindowMode( newMode);
     }
+            
 
-    /**
-     * Makes the PictureJPanel zoom out
-     */
-    @Override
-    public void zoomOut() {
-        pictureJPanel.zoomOut();
-    }
-
-    /**
-     * This class deals with the mouse events. Is built so that the picture can
-     * be dragged if the mouse button is pressed and the mouse moved. If the
-     * left button is clicked the picture is zoomed in, middle resets to full
-     * screen, right zooms out.
-     */
-    class Listener extends MouseInputAdapter {
-
-        /**
-         * used in dragging to find out how much the mouse has moved from the
-         * last time
-         */
-        private int last_x, last_y;
-
-        /**
-         * This method traps the mouse events and changes the scale and position
-         * of the displayed picture.
-         */
-        @Override
-        public void mouseClicked( MouseEvent e ) {
-            LOGGER.fine( "PicturePane.mouseClicked" );
-            if ( e.getButton() == 3 ) {
-                // Right Mousebutton zooms out
-                pictureJPanel.centerWhenScaled = false;
-                zoomOut();
-            } else if ( e.getButton() == 2 ) {
-                // Middle Mousebutton resets
-                pictureJPanel.zoomToFit();
-                pictureJPanel.centerWhenScaled = true;
-            } else if ( e.getButton() == 1 ) {
-                // Left Mousebutton zooms in on selected spot
-                // Convert screen coordinates of the mouse click into true
-                // coordinates on the picture:
-
-                int WindowWidth = pictureJPanel.getSize().width;
-                int WindowHeight = pictureJPanel.getSize().height;
-
-                int X_Offset = e.getX() - ( WindowWidth / 2 );
-                int Y_Offset = e.getY() - ( WindowHeight / 2 );
-
-                pictureJPanel.setCenterLocation(
-                        pictureJPanel.focusPoint.x + (int) ( X_Offset / pictureJPanel.scalablePicture.getScaleFactor() ),
-                        pictureJPanel.focusPoint.y + (int) ( Y_Offset / pictureJPanel.scalablePicture.getScaleFactor() ) );
-                pictureJPanel.centerWhenScaled = false;
-                zoomIn();
-            }
-        }
-
-        /**
-         * method that is invoked when the user drags the mouse with a button
-         * pressed. Moves the picture around
-         */
-        @Override
-        public void mouseDragged( MouseEvent e ) {
-            if ( !Dragging ) {
-                // Switch into dragging mode and record current coordinates
-                LOGGER.fine( "PicturePane.mouseDragged: Switching to drag mode." );
-                last_x = e.getX();
-                last_y = e.getY();
-
-                setDragging( true );
-
-            } else {
-                // was already dragging
-                int x = e.getX(), y = e.getY();
-
-                pictureJPanel.focusPoint.setLocation( (int) ( (double) pictureJPanel.focusPoint.x + ( ( last_x - x ) / pictureJPanel.scalablePicture.getScaleFactor() ) ),
-                        (int) ( (double) pictureJPanel.focusPoint.y + ( ( last_y - y ) / pictureJPanel.scalablePicture.getScaleFactor() ) ) );
-                last_x = x;
-                last_y = y;
-
-                setDragging( true );
-                pictureJPanel.repaint();
-            }
-            pictureJPanel.centerWhenScaled = false;
-        }
-
-        /**
-         *
-         * @param parameter
-         */
-        public void setDragging( boolean parameter ) {
-            Dragging = parameter;
-            if ( Dragging == false ) {
-                //pictureJPanel.setCursor( new Cursor( Cursor.WAIT_CURSOR ) );
-                pictureJPanel.setCursor( new Cursor( Cursor.DEFAULT_CURSOR ) );
-            } else {
-                pictureJPanel.setCursor( new Cursor( Cursor.MOVE_CURSOR ) );
-            }
-        }
-        /**
-         * Flag that lets the object know if the mouse is in dragging mode.
-         */
-        private boolean Dragging;  // default is false
-
-        /**
-         * method that is invoked when the user releases the mouse button.
-         */
-        @Override
-        public void mouseReleased( MouseEvent e ) {
-            LOGGER.fine( "PicturePane.mouseReleased." );
-            if ( Dragging ) {
-                //Dragging has ended
-                Dragging = false;
-                pictureJPanel.setCursor( new Cursor( Cursor.DEFAULT_CURSOR ) );
-            }
-        }
-    }
-
-    private final ViewerKeyAdapter myViewerKeyAdapter = new ViewerKeyAdapter();
+    
 
     private class ViewerKeyAdapter
             extends KeyAdapter {
@@ -991,9 +788,10 @@ public class PictureViewer
          */
         @Override
         public void keyPressed( KeyEvent e ) {
+            PictureController pictureController = pictureFrame.getPictureController();
             int k = e.getKeyCode();
             if ( ( k == KeyEvent.VK_I ) ) {
-                pictureJPanel.cylceInfoDisplay();
+                pictureController.cylceInfoDisplay();
             } else if ( ( k == KeyEvent.VK_N ) ) {
                 requestNextPicture();
             } else if ( ( k == KeyEvent.VK_M ) ) {
@@ -1003,23 +801,23 @@ public class PictureViewer
             } else if ( ( k == KeyEvent.VK_F ) ) {
                 requestScreenSizeMenu();
             } else if ( ( k == KeyEvent.VK_SPACE ) || ( k == KeyEvent.VK_HOME ) ) {
-                resetPicture();
+                pictureController.resetPicture();
             } else if ( ( k == KeyEvent.VK_PAGE_UP ) ) {
-                zoomIn();
+                pictureController.zoomIn();
             } else if ( ( k == KeyEvent.VK_PAGE_DOWN ) ) {
-                zoomOut();
+                pictureController.zoomOut();
             } else if ( ( k == KeyEvent.VK_1 ) ) {
-                pictureJPanel.zoomFull();
+                pictureController.zoomFull();
             } else if ( ( k == KeyEvent.VK_UP ) || ( k == KeyEvent.VK_KP_UP ) ) {
-                pictureJPanel.scrollDown();
+                pictureController.scrollDown();
             } else if ( ( k == KeyEvent.VK_DOWN ) || ( k == KeyEvent.VK_KP_DOWN ) ) {
-                pictureJPanel.scrollUp();
+                pictureController.scrollUp();
             } else if ( ( k == KeyEvent.VK_LEFT ) || ( k == KeyEvent.VK_KP_LEFT ) ) {
-                pictureJPanel.scrollRight();
+                pictureController.scrollRight();
             } else if ( ( k == KeyEvent.VK_RIGHT ) || ( k == KeyEvent.VK_KP_RIGHT ) ) {
-                pictureJPanel.scrollLeft();
+                pictureController.scrollLeft();
             } else {
-                JOptionPane.showMessageDialog( pictureFrame.myJFrame,
+                JOptionPane.showMessageDialog( pictureFrame.getResizableJFrame(),
                         Settings.jpoResources.getString( "PictureViewerKeycodes" ),
                         Settings.jpoResources.getString( "PictureViewerKeycodesTitle" ),
                         JOptionPane.INFORMATION_MESSAGE );
@@ -1032,7 +830,7 @@ public class PictureViewer
      * siblings and changes the forward and back icons to reflect the position
      * of the current node.
      */
-    public void setIconDecorations() {
+    private void setIconDecorations() {
         // Set the next and back icons
         if ( getCurrentNode() != null ) {
             DefaultMutableTreeNode NextNode = getCurrentNode().getNextSibling();
@@ -1042,26 +840,26 @@ public class PictureViewer
                     // because there is a next sibling object of type
                     // PictureInfo we should set the next icon to the
                     // icon that indicates a next picture in the group
-                    pictureFrame.getPictureViewerNavBar().nextJButton.setDecoration( BUTTON_STATE.HAS_RIGHT );
+                    pictureFrame.getPictureViewerNavBar().setNextButtonHasRight();
                 } else {
                     // it must be a GroupInfo node
                     // since we must descend into it it gets a nextnext icon.
-                    pictureFrame.getPictureViewerNavBar().nextJButton.setDecoration( BUTTON_STATE.HAS_NEXT );
+                    pictureFrame.getPictureViewerNavBar().setNextButtonHasNext();
                 }
             } else {
                 // the getNextSibling() method returned null
                 // if the getNextNode also returns null this was the end of the album
                 // otherwise there are more pictures in the next group.
                 if ( getCurrentNode().getNextNode() != null ) {
-                    pictureFrame.getPictureViewerNavBar().nextJButton.setDecoration( BUTTON_STATE.HAS_NEXT );
+                    pictureFrame.getPictureViewerNavBar().setNextButtonHasNext();
                 } else {
-                    pictureFrame.getPictureViewerNavBar().nextJButton.setDecoration( BUTTON_STATE.END );
+                    pictureFrame.getPictureViewerNavBar().setNextButtonEnd();
                 }
             }
 
             // let's see what we have in the way of previous siblings..
             if ( getCurrentNode().getPreviousSibling() != null ) {
-                pictureFrame.getPictureViewerNavBar().previousJButton.setDecoration( BUTTON_STATE.HAS_LEFT );
+                pictureFrame.getPictureViewerNavBar().setPreviousButtonHasLeft();
             } else {
                 // deterine if there are any previous nodes that are not groups.
                 DefaultMutableTreeNode testNode;
@@ -1070,9 +868,9 @@ public class PictureViewer
                     testNode = testNode.getPreviousNode();
                 }
                 if ( testNode == null ) {
-                    pictureFrame.getPictureViewerNavBar().previousJButton.setDecoration( BUTTON_STATE.BEGINNING );
+                    pictureFrame.getPictureViewerNavBar().setPreviousButtonBeginning();
                 } else {
-                    pictureFrame.getPictureViewerNavBar().previousJButton.setDecoration( BUTTON_STATE.HAS_PREVIOUS );
+                    pictureFrame.getPictureViewerNavBar().setPreviousButtonHasPrevious();
                 }
             }
         }

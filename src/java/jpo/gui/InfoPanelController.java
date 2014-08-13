@@ -59,7 +59,7 @@ public class InfoPanelController {
      * A timer to fire off the refresh of the Thumbnail Queue display. Is only
      * alive if the InfoPanel is showing the statistics panel.
      */
-    private final Timer statUpdateTimer = new Timer( DELAY, new ActionListener() {
+    private final Timer statsUpdateTimer = new Timer( DELAY, new ActionListener() {
 
         @Override
         public void actionPerformed( ActionEvent ae ) {
@@ -78,6 +78,7 @@ public class InfoPanelController {
 
     /**
      * Handles group selection events by refreshing the display.
+     *
      * @param event The Group Selection Event
      */
     @Subscribe
@@ -101,22 +102,16 @@ public class InfoPanelController {
      * @param defaultMutableTreeNode The Group or Picture node to be displayed.
      */
     public void showInfo( DefaultMutableTreeNode defaultMutableTreeNode ) {
-        if ( !( defaultMutableTreeNode instanceof SortableDefaultMutableTreeNode ) ) {
-            LOGGER.info( "The node is not a SortableDefaultMutableTreeNode. Don't know what to do. Skipping" );
-        }
         final SortableDefaultMutableTreeNode node = (SortableDefaultMutableTreeNode) defaultMutableTreeNode;
         SwingUtilities.invokeLater( new Runnable() {
 
             @Override
             public void run() {
-                if ( node == null ) {
-                    statUpdateTimer.stop();
-                    statUpdateTimer.start();  // updates the queue-count
-                } else if ( node.getUserObject() instanceof PictureInfo ) {
-                    statUpdateTimer.stop();
+                if ( node.getUserObject() instanceof PictureInfo ) {
+                    statsUpdateTimer.stop();
                 } else {
                     nodeStatisticsController.updateStats( node );
-                    statUpdateTimer.start();  // updates the queue-count
+                    statsUpdateTimer.start(); 
                 }
             }
         } );

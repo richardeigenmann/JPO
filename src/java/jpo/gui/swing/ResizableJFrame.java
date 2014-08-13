@@ -110,7 +110,7 @@ public class ResizableJFrame
             maximise();
             windowMode = WINDOW_FULLSCREEN;
         }
-
+        pack();
         setVisible( true );
     }
 

@@ -1,6 +1,7 @@
 package jpo.gui.swing;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.util.logging.Logger;
@@ -41,12 +42,9 @@ public class PictureFrame {
      * Constructor. Initialises the GUI widgets.
      */
     public PictureFrame() {
-        initGui();
+        inittializeGui();
     }
-    /**
-     * A handle back to the Controller the keystrokes can request actions
-     */
-    //private final PictureViewerActions pictureViewerController;
+
     /**
      * Defines a logger for this class
      */
@@ -54,14 +52,14 @@ public class PictureFrame {
     /**
      *   The pane that handles the image drawing aspects.
      **/
-    private final PicturePane pictureJPanel = new PicturePane();
+    private final PictureController pictureController = new PictureController();
 
     /**
      * Provides direct access to the panel that shows the picture.
      * @return the Picture Panel
      */
-    public PicturePane getPictureJPanel() {
-        return pictureJPanel;
+    public PictureController getPictureController() {
+        return pictureController;
     }
     /**
      *  Navigation Panel
@@ -82,7 +80,7 @@ public class PictureFrame {
     /**
      *  The Window in which the viewer will place it's components.
      **/
-    public ResizableJFrame myJFrame = new ResizableJFrame( viewerPanel );
+    private ResizableJFrame myJFrame = new ResizableJFrame( viewerPanel );
     /**
      *   progress bar to track the pictures loaded so far
      */
@@ -90,13 +88,14 @@ public class PictureFrame {
     /**
      *   This textarea shows the description of the picture being shown
      **/
-    public JTextArea descriptionJTextField = new JTextArea();
+    private final JTextArea descriptionJTextField = new JTextArea();
 
     /**
-     * The text field with the description
-     * @return the text field
+     * Returns the Component of the Description Text Area so that others can
+     * attach a FocusListener to it.
+     * @return Component of the Description Text Area
      */
-    public JTextArea getDescriptionJTextArea() {
+    public Component getFocussableDescriptionField() {
         return descriptionJTextField;
     }
     
@@ -105,7 +104,7 @@ public class PictureFrame {
      *  This method creates all the GUI widgets and connects them for the
      *  PictureViewer.
      */
-    private void initGui() {
+    private void inittializeGui() {
         Tools.checkEDT();
 
         viewerPanel.setBackground( Settings.PICTUREVIEWER_BACKGROUND_COLOR );
@@ -114,12 +113,7 @@ public class PictureFrame {
 
         viewerPanel.setLayout( new MigLayout( "insets 0", "[grow, fill]", "[grow, fill][]" ) );
 
-        // Picture Painter Pane
-        pictureJPanel.setBackground( Settings.PICTUREVIEWER_BACKGROUND_COLOR );
-        pictureJPanel.setVisible( true );
-        pictureJPanel.setOpaque( true );
-        pictureJPanel.setFocusable( true );
-        viewerPanel.add( pictureJPanel, "span, grow" );
+        viewerPanel.add( pictureController, "span, grow" );
 
         final JPanel lowerBar = new JPanel( new MigLayout( "insets 0, wrap 3", "[left][grow, fill][right]", "[]" ) );
         lowerBar.setBackground( Settings.PICTUREVIEWER_BACKGROUND_COLOR );
@@ -163,5 +157,35 @@ public class PictureFrame {
         viewerPanel.add( lowerBar );
     }
 
+    /**
+     * Sets the description to the supplied string.
+     * @param newDescription The new description to be shown
+     */
+    public void setDescription(String newDescription) {
+        Tools.checkEDT();
+        descriptionJTextField.setText( newDescription );
+    }
+    
+    /**
+     * Returns the description that the user could have modified
+     */
+    public String getDescription() {
+        return descriptionJTextField.getText();
+    }
+    
+     /**
+     * The location and size of the Window can be changed by a call to this method
+     * @param newMode 
+     */
+    public void switchWindowMode( ResizableJFrame.WindowSize newMode ) {
+        myJFrame.switchWindowMode( newMode);
+    }
 
+    public void getRid() {
+        myJFrame.dispose();
+    }
+    
+    public ResizableJFrame getResizableJFrame() {
+        return myJFrame;
+    }
 }

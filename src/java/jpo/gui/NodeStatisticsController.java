@@ -86,8 +86,6 @@ public class NodeStatisticsController {
 
             @Override
             public String doInBackground() {
-                //LOGGER.fine( "Counting nodes on Background Thread" );
-                //Tools.warnOnEDT();
                 nodeStatisticsBean.setNumberOfNodes( nodeStatistics.getNumberOfNodesString() );
                 nodeStatisticsBean.setNumberOfGroups( nodeStatistics.getNumberOfGroupsString() );
                 nodeStatisticsBean.setNumberOfPictures( nodeStatistics.getNumberOfPicturesString() );
@@ -98,13 +96,12 @@ public class NodeStatisticsController {
                     nodeStatisticsBean.setQueueCount( Settings.jpoResources.getString( "queCountJLabel" ) + ThumbnailCreationQueue.size() );
                     nodeStatisticsBean.setSelectedCount( String.format( "Selected: %d", Settings.getPictureCollection().getSelectedNodes().length ) ); 
                 }
-                return null;
+                return "done";
             }
 
             @Override
             protected void done() {
                 try {
-                    //Tools.checkEDT();
                     nodeStatisticsPanel.updateStats( nodeStatisticsBean );
                 } catch ( Exception ignore ) {
                 }

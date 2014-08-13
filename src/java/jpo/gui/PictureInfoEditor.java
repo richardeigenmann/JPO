@@ -913,20 +913,20 @@ public class PictureInfoEditor extends JFrame {
 
         @Override
         public Object getNextValue() {
-            Object o = super.getNextValue();
-            if ( o == null ) {
-                o = 0.0;
+            Object object = super.getNextValue();
+            if ( object == null ) {
+                object = 0.0;
             }
-            return o;
+            return object;
         }
 
         @Override
         public Object getPreviousValue() {
-            Object o = super.getPreviousValue();
-            if ( o == null ) {
-                o = 359.9;
+            Object object = super.getPreviousValue();
+            if ( object == null ) {
+                object = 359.9;
             }
-            return o;
+            return object;
         }
     }
 

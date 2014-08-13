@@ -142,11 +142,11 @@ public class CollectionJTreeController {
          * This method is used to query what actions are supported by the source
          * component
          *
-         * @param c the Object to query
+         * @param component the Object to query
          * @return COPY_OR_MOVE for this TransferHandler
          */
         @Override
-        public int getSourceActions( JComponent c ) {
+        public int getSourceActions( JComponent component ) {
             return COPY_OR_MOVE;
         }
 
@@ -154,18 +154,18 @@ public class CollectionJTreeController {
          * This method bundles up the data to be exported into a Transferable
          * object in preparation for the transfer.
          *
-         * @param c
+         * @param component
          * @return a transferable
          */
         @Override
-        protected Transferable createTransferable( JComponent c ) {
+        protected Transferable createTransferable( JComponent component ) {
             TreePath selected = collectionJTree.getSelectionPath();
-            SortableDefaultMutableTreeNode dmtn = (SortableDefaultMutableTreeNode) selected.getLastPathComponent();
-            if ( dmtn.isRoot() ) {
+            SortableDefaultMutableTreeNode node = (SortableDefaultMutableTreeNode) selected.getLastPathComponent();
+            if ( node.isRoot() ) {
                 LOGGER.info( "The Root node must not be dragged. Dragging disabled." );
                 return null;
             }
-            final Object t[] = { dmtn };
+            final Object t[] = { node };
             JpoTransferable draggedNode = new JpoTransferable( t );
             return draggedNode;
         }

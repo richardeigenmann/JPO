@@ -1,13 +1,16 @@
 package jpo.gui.swing;
 
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
+import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.Collections;
 import java.util.HashSet;
@@ -15,6 +18,7 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JComponent;
+import javax.swing.event.MouseInputAdapter;
 import jpo.dataModel.ExifInfo;
 import jpo.dataModel.Settings;
 import jpo.dataModel.Tools;
@@ -24,9 +28,9 @@ import static jpo.gui.ScalablePicture.ScalablePictureStatus.SCALABLE_PICTURE_LOA
 import static jpo.gui.ScalablePicture.ScalablePictureStatus.SCALABLE_PICTURE_READY;
 import jpo.gui.ScalablePictureListener;
 import jpo.gui.SourcePicture.SourcePictureStatus;
-import static jpo.gui.swing.PicturePane.InfoOverlay.APPLICATION_OVERLAY;
-import static jpo.gui.swing.PicturePane.InfoOverlay.NO_OVERLAY;
-import static jpo.gui.swing.PicturePane.InfoOverlay.PHOTOGRAPHIC_OVERLAY;
+import static jpo.gui.swing.PictureController.InfoOverlay.APPLICATION_OVERLAY;
+import static jpo.gui.swing.PictureController.InfoOverlay.NO_OVERLAY;
+import static jpo.gui.swing.PictureController.InfoOverlay.PHOTOGRAPHIC_OVERLAY;
 
 
 /*
@@ -64,7 +68,7 @@ import static jpo.gui.swing.PicturePane.InfoOverlay.PHOTOGRAPHIC_OVERLAY;
  * The {@link #showInfo} flag controls whether information about the picture is
  * overlayed on the image.
  */
-public class PicturePane
+public class PictureController
         extends JComponent
         implements ScalablePictureListener {
 
@@ -131,25 +135,70 @@ public class PicturePane
     /**
      * Defines a logger for this class
      */
-    private static final Logger LOGGER = Logger.getLogger( PicturePane.class.getName() );
+    private static final Logger LOGGER = Logger.getLogger( PictureController.class.getName() );
 
     /**
      * Constructs a PicturePane components.
      *
      */
-    public PicturePane() {
+    public PictureController() {
+        initComponents();
+
         // make graphics faster
         this.setDoubleBuffered( false );
 
-        scalablePicture.addStatusListener( PicturePane.this );
+        scalablePicture.addStatusListener( PictureController.this );
         if ( Settings.pictureViewerFastScale ) {
             scalablePicture.setFastScale();
         } else {
             scalablePicture.setQualityScale();
         }
+        
+                // register an interest in mouse events
+        Listener MouseListener = new Listener();
+        addMouseListener( MouseListener );
+        addMouseMotionListener( MouseListener );
 
+
+    }
+
+    private void initComponents() {
         setFont( infoFont );
+        setBackground( Settings.PICTUREVIEWER_BACKGROUND_COLOR );
+        setFocusable( true );
         setMinimumSize( new Dimension( 100, 100 ) );
+    }
+    
+    
+        /**
+     * brings up the indicated picture on the display.
+     *
+     * @param filenameURL The URL of the picture to display
+     * @param description	The description of the picture
+     * @param rotation The rotation that should be applied
+     */
+    public void setPicture( URL filenameURL, String description,
+            double rotation ) {
+        legend = description;
+        centerWhenScaled = true;
+        System.out.println( getSize() );
+        scalablePicture.setScaleSize( getSize() );
+
+        scalablePicture.stopLoadingExcept( filenameURL );
+        scalablePicture.loadAndScalePictureInThread( filenameURL, Thread.MAX_PRIORITY, rotation );
+        exifInfo = new ExifInfo( filenameURL );
+        exifInfo.decodeExifTags();
+    }
+    
+    
+     /**
+     * Sets the scale of the picture to the current screen size and centres it
+     * there.
+     */
+    public void resetPicture() {
+        zoomToFit();
+        centerImage();
+        requestFocusInWindow();
     }
 
     /////////////////////////
@@ -536,9 +585,133 @@ public class PicturePane
 
     /**
      * Returns the text area with the description
+     *
      * @return the text area
      */
     public Object getDescriptionJTextArea() {
         throw new UnsupportedOperationException( "Not supported yet." ); //To change body of generated methods, choose Tools | Templates.
     }
+    
+    
+        /**
+     * This class deals with the mouse events. Is built so that the picture can
+     * be dragged if the mouse button is pressed and the mouse moved. If the
+     * left button is clicked the picture is zoomed in, middle resets to full
+     * screen, right zooms out.
+     */
+    class Listener extends MouseInputAdapter {
+
+        /**
+         * used in dragging to find out how much the mouse has moved from the
+         * last time
+         */
+        private int last_x, last_y;
+
+        /**
+         * This method traps the mouse events and changes the scale and position
+         * of the displayed picture.
+         */
+        @Override
+        public void mouseClicked( MouseEvent e ) {
+            if ( e.getButton() == 3 ) {
+                // Right Mousebutton zooms out
+                centerWhenScaled = false;
+                zoomOut();
+            } else if ( e.getButton() == 2 ) {
+                // Middle Mousebutton resets
+                zoomToFit();
+                centerWhenScaled = true;
+            } else if ( e.getButton() == 1 ) {
+                // Left Mousebutton zooms in on selected spot
+                // Convert screen coordinates of the mouse click into true
+                // coordinates on the picture:
+
+                int WindowWidth = getSize().width;
+                int WindowHeight = getSize().height;
+
+                int X_Offset = e.getX() - ( WindowWidth / 2 );
+                int Y_Offset = e.getY() - ( WindowHeight / 2 );
+
+                setCenterLocation(
+                        focusPoint.x + (int) ( X_Offset / scalablePicture.getScaleFactor() ),
+                        focusPoint.y + (int) ( Y_Offset / scalablePicture.getScaleFactor() ) );
+                centerWhenScaled = false;
+                zoomIn();
+            }
+        }
+
+        /**
+         * method that is invoked when the user drags the mouse with a button
+         * pressed. Moves the picture around
+         */
+        @Override
+        public void mouseDragged( MouseEvent e ) {
+            if ( !dragging ) {
+                // Switch into dragging mode and record current coordinates
+                LOGGER.fine( "PicturePane.mouseDragged: Switching to drag mode." );
+                last_x = e.getX();
+                last_y = e.getY();
+
+                setDragging( true );
+
+            } else {
+                // was already dragging
+                int x = e.getX(), y = e.getY();
+
+                focusPoint.setLocation( (int) ( (double) focusPoint.x + ( ( last_x - x ) / scalablePicture.getScaleFactor() ) ),
+                        (int) ( (double) focusPoint.y + ( ( last_y - y ) / scalablePicture.getScaleFactor() ) ) );
+                last_x = x;
+                last_y = y;
+
+                setDragging( true );
+                repaint();
+            }
+            centerWhenScaled = false;
+        }
+
+        /**
+         * Flag that lets the object know if the mouse is in dragging mode.
+         */
+        private boolean dragging;  // Java sets default to false
+
+        /**
+         * Sets the cursor to a move cursor if dragging is on
+         *
+         * @param dragging true if dragging, false if not dragging
+         */
+        public void setDragging( boolean dragging ) {
+            this.dragging = dragging;
+            if ( !this.dragging ) {
+                setDefaultCursor();
+            } else {
+                setMoveCursor();
+            }
+        }
+
+        /**
+         * Makes the cursor in the picture panel a default cursor
+         */
+        private void setDefaultCursor() {
+            setCursor( new Cursor( Cursor.DEFAULT_CURSOR ) );
+        }
+
+        /**
+         * Makes the cursor in the picture panel a move cursor
+         */
+        private void setMoveCursor() {
+            setCursor( new Cursor( Cursor.MOVE_CURSOR ) );
+        }
+
+        /**
+         * When mouse is releases we switch off the dragging mode
+         */
+        @Override
+        public void mouseReleased( MouseEvent e ) {
+            if ( dragging ) {
+                setDragging( false );
+            }
+        }
+    }
+
+    
 }

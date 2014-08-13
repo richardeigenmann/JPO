@@ -282,9 +282,9 @@ public class ApplicationEventHandler {
         Tools.checkEDT();
         SortableDefaultMutableTreeNode rootNode = request.getNode();
         PictureViewer p1 = new PictureViewer();
-        p1.pictureFrame.myJFrame.switchWindowMode( WINDOW_LEFT );
+        p1.switchWindowMode( WINDOW_LEFT );
         PictureViewer p2 = new PictureViewer();
-        p2.pictureFrame.myJFrame.switchWindowMode( WINDOW_RIGHT );
+        p2.switchWindowMode( WINDOW_RIGHT );
         RandomNavigator rb1 = new RandomNavigator( rootNode.getChildPictureNodes( true ), String.format( "Randomised pictures from %s", rootNode.toString() ) );
         RandomNavigator rb2 = new RandomNavigator( rootNode.getChildPictureNodes( true ), String.format( "Randomised pictures from %s", rootNode.toString() ) );
         p1.showNode( rb1, 0 );

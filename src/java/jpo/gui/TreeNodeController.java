@@ -188,7 +188,7 @@ public class TreeNodeController {
             zipArchiveOutputStream.finish();
             zipArchiveOutputStream.close();
         } catch ( IOException ex ) {
-            Logger.getLogger( TreeNodeController.class.getName() ).log( Level.SEVERE, null, ex );
+            LOGGER.severe( ex.getMessage() );
             tempfile.delete();
         }
 

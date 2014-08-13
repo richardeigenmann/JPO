@@ -46,7 +46,11 @@ public class PictureViewerNavBar extends JToolBar {
      * Button to move to the next image.
      *
      */
-    public final LeftRightButton nextJButton = new LeftRightButton();
+    private final LeftRightButton nextJButton = new LeftRightButton();
+
+    public JButton getNextJButton() {
+        return nextJButton;
+    }
 
     /**
      * A button for the rotation to the left
@@ -174,6 +178,30 @@ public class PictureViewerNavBar extends JToolBar {
      */
     public void hideDelaySilder() {
         speedSlider.setVisible( false );
+    }
+
+    public void setNextButtonHasRight() {
+        nextJButton.setDecoration( LeftRightButton.BUTTON_STATE.HAS_RIGHT );
+    }
+
+    public void setNextButtonHasNext() {
+        nextJButton.setDecoration( LeftRightButton.BUTTON_STATE.HAS_NEXT );
+    }
+
+    public void setNextButtonEnd() {
+        nextJButton.setDecoration( LeftRightButton.BUTTON_STATE.END );
+    }
+
+    public void setPreviousButtonHasLeft() {
+        previousJButton.setDecoration( LeftRightButton.BUTTON_STATE.HAS_LEFT );
+    }
+
+    public void setPreviousButtonHasPrevious() {
+        previousJButton.setDecoration( LeftRightButton.BUTTON_STATE.HAS_PREVIOUS );
+    }
+
+    public void setPreviousButtonBeginning() {
+        previousJButton.setDecoration( LeftRightButton.BUTTON_STATE.BEGINNING );
     }
 
 }
