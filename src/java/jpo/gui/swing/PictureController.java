@@ -218,7 +218,7 @@ public class PictureController
     }
 
     /**
-     * brings up the indicated picture on the display.
+     * Brings up the indicated picture on the display.
      *
      * @param filenameURL The URL of the picture to display
      * @param description	The description of the picture
