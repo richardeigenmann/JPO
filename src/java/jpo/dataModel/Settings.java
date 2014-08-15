@@ -659,9 +659,15 @@ public class Settings {
      */
     public static final Color PICTUREVIEWER_TEXT_COLOR = Color.WHITE;
     /**
+     * The PictureViewer minimum size
+     */
+    public static final Dimension PICTUREVIEWER_MINIMUM_SIZE = new Dimension( 300, 300);
+
+    
+    /**
      * The number of Words that the TagCloud should show.
      */
-    public static int tagCloudWords = 40;
+    public static int tagCloudWords = 200;
     /**
      * The last sort choice of the user
      */

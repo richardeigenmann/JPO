@@ -2,12 +2,15 @@ package jpo.gui.swing;
 
 import java.awt.Color;
 import java.awt.Cursor;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 import java.net.URL;
@@ -34,7 +37,7 @@ import static jpo.gui.swing.PictureController.InfoOverlay.PHOTOGRAPHIC_OVERLAY;
 
 
 /*
- PicturePane.java:  a component that can display an image
+ PictureController.java:  a component that can display an image
 
  Copyright (C) 2002 - 2014 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
@@ -146,31 +149,75 @@ public class PictureController
 
         // make graphics faster
         this.setDoubleBuffered( false );
-
+        
         scalablePicture.addStatusListener( PictureController.this );
         if ( Settings.pictureViewerFastScale ) {
             scalablePicture.setFastScale();
         } else {
             scalablePicture.setQualityScale();
         }
-        
-                // register an interest in mouse events
+
+        // register an interest in mouse events
         Listener MouseListener = new Listener();
         addMouseListener( MouseListener );
         addMouseMotionListener( MouseListener );
+        
+        addKeyListener( new KeyAdapter() {
+            @Override
+            public void keyPressed( KeyEvent keyEvent ) {
+                int k = keyEvent.getKeyCode();
+                if ( ( k == KeyEvent.VK_SPACE ) || ( k == KeyEvent.VK_HOME ) ) {
+                    resetPicture();
+                    keyEvent.consume();
+                } else if ( ( k == KeyEvent.VK_PAGE_UP ) ) {
+                    zoomIn();
+                    keyEvent.consume();
+                } else if ( ( k == KeyEvent.VK_PAGE_DOWN ) ) {
+                    zoomOut();
+                    keyEvent.consume();
+                } else if ( ( k == KeyEvent.VK_1 ) ) {
+                    zoomFull();
+                    keyEvent.consume();
+                } else if ( ( k == KeyEvent.VK_UP ) || ( k == KeyEvent.VK_KP_UP ) ) {
+                    scrollDown();
+                    keyEvent.consume();
+                } else if ( ( k == KeyEvent.VK_DOWN ) || ( k == KeyEvent.VK_KP_DOWN ) ) {
+                    scrollUp();
+                    keyEvent.consume();
+                } else if ( ( k == KeyEvent.VK_LEFT ) || ( k == KeyEvent.VK_KP_LEFT ) ) {
+                    scrollRight();
+                    keyEvent.consume();
+                } else if ( ( k == KeyEvent.VK_RIGHT ) || ( k == KeyEvent.VK_KP_RIGHT ) ) {
+                    scrollLeft();
+                    keyEvent.consume();
+                }
+            }
+        } );
+        
+        addComponentListener( new ComponentAdapter() {
 
-
+            @Override
+            public void componentResized( ComponentEvent e ) {
+                if (centerWhenScaled ) {
+                    resetPicture();
+                }
+            }
+            
+        } );
+        
     }
 
+    /**
+     * Initialises the widgets
+     */
     private void initComponents() {
         setFont( infoFont );
         setBackground( Settings.PICTUREVIEWER_BACKGROUND_COLOR );
         setFocusable( true );
-        setMinimumSize( new Dimension( 100, 100 ) );
+        setMinimumSize( Settings.PICTUREVIEWER_MINIMUM_SIZE );
     }
-    
-    
-        /**
+
+    /**
      * brings up the indicated picture on the display.
      *
      * @param filenameURL The URL of the picture to display
@@ -183,15 +230,14 @@ public class PictureController
         centerWhenScaled = true;
         System.out.println( getSize() );
         scalablePicture.setScaleSize( getSize() );
-
+        
         scalablePicture.stopLoadingExcept( filenameURL );
         scalablePicture.loadAndScalePictureInThread( filenameURL, Thread.MAX_PRIORITY, rotation );
         exifInfo = new ExifInfo( filenameURL );
         exifInfo.decodeExifTags();
     }
-    
-    
-     /**
+
+    /**
      * Sets the scale of the picture to the current screen size and centres it
      * there.
      */
@@ -199,6 +245,7 @@ public class PictureController
         zoomToFit();
         centerImage();
         requestFocusInWindow();
+        centerWhenScaled=true;
     }
 
     /////////////////////////
@@ -372,7 +419,7 @@ public class PictureController
     }
 
     /**
-     * method to set the center of the image to the true coordinates in the
+     * method to set the centre of the image to the true coordinates in the
      * picture but doesn't call <code>repaint()</code>
      *
      * @param Xparameter
@@ -398,10 +445,10 @@ public class PictureController
     public void paintComponent( Graphics g ) {
         int WindowWidth = getSize().width;
         int WindowHeight = getSize().height;
-
+        
         if ( scalablePicture.getScaledPicture() != null ) {
             Graphics2D g2d = (Graphics2D) g;
-
+            
             int X_Offset = (int) ( (double) ( WindowWidth / (double) 2 ) - ( focusPoint.x * scalablePicture.getScaleFactor() ) );
             int Y_Offset = (int) ( (double) ( WindowHeight / (double) 2 ) - ( focusPoint.y * scalablePicture.getScaleFactor() ) );
 
@@ -412,9 +459,9 @@ public class PictureController
                     clipBounds.y,
                     clipBounds.width,
                     clipBounds.height );
-
+            
             g2d.drawRenderedImage( scalablePicture.getScaledPicture(), AffineTransform.getTranslateInstance( X_Offset, Y_Offset ) );
-
+            
             g2d.setColor( infoFontColor );
             switch ( showInfo ) {
                 case NO_OVERLAY:
@@ -512,7 +559,7 @@ public class PictureController
     public void scalableStatusChange( ScalablePictureStatus pictureStatusCode,
             String pictureStatusMessage ) {
         LOGGER.log( Level.FINE, "PicturePane.scalableStatusChange: got a status change: {0}", pictureStatusMessage );
-
+        
         if ( pictureStatusCode == SCALABLE_PICTURE_READY ) {
             LOGGER.fine( "PicturePane.scalableStatusChange: a READY status" );
             //pictureStatusMessage = legend;
@@ -524,7 +571,7 @@ public class PictureController
             LOGGER.fine( "PicturePane.scalableStatusChange: forcing Panel repaint" );
             repaint();
         }
-
+        
         synchronized ( picturePaneListeners ) {
             for ( ScalablePictureListener scalablePictureListener : picturePaneListeners ) {
                 scalablePictureListener.scalableStatusChange( pictureStatusCode, pictureStatusMessage );
@@ -591,9 +638,8 @@ public class PictureController
     public Object getDescriptionJTextArea() {
         throw new UnsupportedOperationException( "Not supported yet." ); //To change body of generated methods, choose Tools | Templates.
     }
-    
-    
-        /**
+
+    /**
      * This class deals with the mouse events. Is built so that the picture can
      * be dragged if the mouse button is pressed and the mouse moved. If the
      * left button is clicked the picture is zoomed in, middle resets to full
@@ -628,10 +674,10 @@ public class PictureController
 
                 int WindowWidth = getSize().width;
                 int WindowHeight = getSize().height;
-
+                
                 int X_Offset = e.getX() - ( WindowWidth / 2 );
                 int Y_Offset = e.getY() - ( WindowHeight / 2 );
-
+                
                 setCenterLocation(
                         focusPoint.x + (int) ( X_Offset / scalablePicture.getScaleFactor() ),
                         focusPoint.y + (int) ( Y_Offset / scalablePicture.getScaleFactor() ) );
@@ -651,18 +697,18 @@ public class PictureController
                 LOGGER.fine( "PicturePane.mouseDragged: Switching to drag mode." );
                 last_x = e.getX();
                 last_y = e.getY();
-
+                
                 setDragging( true );
-
+                
             } else {
                 // was already dragging
                 int x = e.getX(), y = e.getY();
-
+                
                 focusPoint.setLocation( (int) ( (double) focusPoint.x + ( ( last_x - x ) / scalablePicture.getScaleFactor() ) ),
                         (int) ( (double) focusPoint.y + ( ( last_y - y ) / scalablePicture.getScaleFactor() ) ) );
                 last_x = x;
                 last_y = y;
-
+                
                 setDragging( true );
                 repaint();
             }
@@ -712,6 +758,5 @@ public class PictureController
             }
         }
     }
-
     
 }
