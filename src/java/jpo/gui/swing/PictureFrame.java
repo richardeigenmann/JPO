@@ -13,96 +13,109 @@ import javax.swing.JTextArea;
 import javax.swing.border.EmptyBorder;
 import jpo.dataModel.Settings;
 import jpo.dataModel.Tools;
+import jpo.gui.OverlayedPictureController;
+import jpo.gui.ScalablePicture;
 import net.miginfocom.swing.MigLayout;
 
 /*
-PictureFrame.java:  Class that manages the frame and display of the Picutre
+ PictureFrame.java:  Class that manages the frame and display of the Picutre
 
-Copyright (C) 2002-2011  Richard Eigenmann.
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or any later version. This program is distributed 
-in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
-without even the implied warranty of MERCHANTABILITY or FITNESS 
-FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
-more details. You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-The license is in gpl.txt.
-See http://www.gnu.org/copyleft/gpl.html for the details.
+ Copyright (C) 2002-2011  Richard Eigenmann.
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or any later version. This program is distributed 
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+ without even the implied warranty of MERCHANTABILITY or FITNESS 
+ FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
+ more details. You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ The license is in gpl.txt.
+ See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 /**
  * Class that manages the frame and display of the Picture.
+ *
  * @author Richard Eigenmann
  */
 public class PictureFrame {
-
-    /**
-     * Constructor. Initialises the GUI widgets.
-     */
-    public PictureFrame() {
-        inittializeGui();
-    }
 
     /**
      * Defines a logger for this class
      */
     private static final Logger LOGGER = Logger.getLogger( PictureFrame.class.getName() );
     /**
-     *   The pane that handles the image drawing aspects.
-     **/
-    private final PictureController pictureController = new PictureController();
+     * The pane that handles the image drawing aspects.
+     *
+     */
+    private final OverlayedPictureController pictureController = new OverlayedPictureController( new ScalablePicture() );
 
     /**
      * Provides direct access to the panel that shows the picture.
-     * @return the Picture Panel
+     *
+     * @return the Picture Controller
      */
-    public PictureController getPictureController() {
+    public OverlayedPictureController getPictureController() {
         return pictureController;
     }
     /**
-     *  Navigation Panel
+     * Navigation Panel
      */
     private final PictureViewerNavBar navButtonPanel = new PictureViewerNavBar();
 
     /**
      * Provides direct access to the navButtonPanel
+     *
      * @return the navButtonPanel
      */
     public PictureViewerNavBar getPictureViewerNavBar() {
         return navButtonPanel;
     }
+
     /**
-     *  The root JPanel
+     * The root JPanel
      */
-    private final JPanel viewerPanel = new JPanel();
+    private final JPanel viewerPanel;
+
     /**
-     *  The Window in which the viewer will place it's components.
-     **/
-    private ResizableJFrame myJFrame = new ResizableJFrame( viewerPanel );
-    /**
-     *   progress bar to track the pictures loaded so far
+     * The Window in which the viewer will place it's components.
+     *
      */
-    public final JProgressBar loadJProgressBar = new JProgressBar();
+    private final ResizableJFrame myJFrame;
+
     /**
-     *   This textarea shows the description of the picture being shown
-     **/
+     * progress bar to track the pictures loaded so far
+     */
+    private final JProgressBar loadJProgressBar = new JProgressBar();
+    /**
+     * This textarea shows the description of the picture being shown
+     *
+     */
     private final JTextArea descriptionJTextField = new JTextArea();
 
     /**
      * Returns the Component of the Description Text Area so that others can
      * attach a FocusListener to it.
+     *
      * @return Component of the Description Text Area
      */
     public Component getFocussableDescriptionField() {
         return descriptionJTextField;
     }
-    
-    
+
     /**
-     *  This method creates all the GUI widgets and connects them for the
-     *  PictureViewer.
+     * Constructor. Initialises the GUI widgets.
+     */
+    public PictureFrame() {
+        viewerPanel = new JPanel();
+        inittializeGui();
+        myJFrame = new ResizableJFrame( Settings.jpoResources.getString( "PictureViewerTitle" ), viewerPanel );
+    }
+
+    /**
+     * This method creates all the GUI widgets and connects them for the
+     * PictureViewer.
      */
     private void inittializeGui() {
         Tools.checkEDT();
@@ -159,33 +172,63 @@ public class PictureFrame {
 
     /**
      * Sets the description to the supplied string.
+     *
      * @param newDescription The new description to be shown
      */
-    public void setDescription(String newDescription) {
+    public void setDescription( String newDescription ) {
         Tools.checkEDT();
         descriptionJTextField.setText( newDescription );
     }
-    
+
     /**
      * Returns the description that the user could have modified
+     *
+     * @return the description
      */
     public String getDescription() {
         return descriptionJTextField.getText();
     }
-    
-     /**
-     * The location and size of the Window can be changed by a call to this method
-     * @param newMode 
+
+    /**
+     * The location and size of the Window can be changed by a call to this
+     * method
+     *
+     * @param newMode
      */
     public void switchWindowMode( ResizableJFrame.WindowSize newMode ) {
-        myJFrame.switchWindowMode( newMode);
+        myJFrame.switchWindowMode( newMode );
     }
 
     public void getRid() {
         myJFrame.dispose();
     }
-    
+
     public ResizableJFrame getResizableJFrame() {
         return myJFrame;
     }
+
+    /**
+     * Passes the parameter to the setVisible method of the ProgressBar
+     *
+     * @param visible true if visible, false if not.
+     */
+    public void setProgressBarVisible( boolean visible ) {
+        loadJProgressBar.setVisible( visible );
+    }
+
+    /**
+     * Passes the parameter to the setValue method of the ProgressBar
+     *
+     * @param value the progress bar value
+     */
+    public void setProgressBarValue( int value ) {
+        loadJProgressBar.setValue( value );
+    }
+
+    public void cycleInfoDisplay() {
+        pictureController.cycleInfoDisplay();
+        pictureController.requestFocusInWindow();
+    }
+
+ 
 }

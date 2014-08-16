@@ -1,7 +1,6 @@
 package jpo.gui;
 
 import jpo.gui.swing.WholeNumberField;
-import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -9,7 +8,6 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.net.MalformedURLException;
@@ -24,7 +22,6 @@ import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.event.MouseInputAdapter;
 import javax.swing.tree.DefaultMutableTreeNode;
 import jpo.EventBus.JpoEventBus;
 import jpo.EventBus.RotatePictureRequest;
@@ -100,7 +97,7 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
     }
 
     private void attachListeners() {
-        PictureController pictureJPanel = pictureFrame.getPictureController();
+        OverlayedPictureController pictureJPanel = pictureFrame.getPictureController();
         pictureJPanel.addStatusListener( new ScalablePictureListener() {
 
             /**
@@ -122,37 +119,37 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
                     public void run() {
                         switch ( pictureStatusCode ) {
                             case SCALABLE_PICTURE_UNINITIALISED:
-                                pictureFrame.loadJProgressBar.setVisible( false );
+                                pictureFrame.setProgressBarVisible( false );
                                 break;
 
                             case SCALABLE_PICTURE_GARBAGE_COLLECTION:
-                                pictureFrame.loadJProgressBar.setVisible( false );
+                                pictureFrame.setProgressBarVisible( false );
                                 break;
 
                             case SCALABLE_PICTURE_LOADING:
                                 //if ( pictureFrame.myJFrame != null ) {
-                                    pictureFrame.loadJProgressBar.setVisible( true );
+                                pictureFrame.setProgressBarVisible( true );
                                 //}
 
                                 break;
                             case SCALABLE_PICTURE_LOADED:
-                                pictureFrame.loadJProgressBar.setVisible( false );
+                                pictureFrame.setProgressBarVisible( false );
                                 //descriptionJTextField.setText( getDescription() );
                                 break;
 
                             case SCALABLE_PICTURE_SCALING:
-                                pictureFrame.loadJProgressBar.setVisible( false );
+                                pictureFrame.setProgressBarVisible( false );
                                 break;
 
                             case SCALABLE_PICTURE_READY:
-                                pictureFrame.loadJProgressBar.setVisible( false );
+                                pictureFrame.setProgressBarVisible( false );
                                 //if ( pictureFrame.myJFrame != null ) {
-                                    pictureFrame.getResizableJFrame().toFront();
+                                pictureFrame.getResizableJFrame().toFront();
                                 //}
 
                                 break;
                             case SCALABLE_PICTURE_ERROR:
-                                pictureFrame.loadJProgressBar.setVisible( false );
+                                pictureFrame.setProgressBarVisible( false );
                                 ;
                                 break;
 
@@ -188,20 +185,19 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
                     public void run() {
                         switch ( statusCode ) {
                             case SOURCE_PICTURE_LOADING_STARTED:
-                                pictureFrame.loadJProgressBar.setValue( 0 );
-                                pictureFrame.loadJProgressBar.setVisible( true );
+                                pictureFrame.setProgressBarValue(  0 );
+                                pictureFrame.setProgressBarVisible( true );
                                 break;
 
                             case SOURCE_PICTURE_LOADING_PROGRESS:
-                                pictureFrame.loadJProgressBar.setValue( percentage );
-                                pictureFrame.loadJProgressBar.setVisible( true );
+                                pictureFrame.setProgressBarValue( percentage );
+                                pictureFrame.setProgressBarVisible( true );
                                 break;
 
                             case SOURCE_PICTURE_LOADING_COMPLETED:
-                                pictureFrame.loadJProgressBar.setVisible( false );
-                                pictureFrame.loadJProgressBar.setValue( 0 ); // prepare for the next load
+                                pictureFrame.setProgressBarVisible( false );
+                                //pictureFrame.setProgressBarValue( 0 ); // prepare for the next load
                                 break;
-
                         }
                     }
                 };
@@ -213,7 +209,6 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
 
             }
         } );
-
 
         pictureFrame.getResizableJFrame().addWindowListener( new WindowAdapter() {
 
@@ -232,8 +227,37 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
             }
         } );
 
-
-        pictureJPanel.addKeyListener( new ViewerKeyAdapter() );
+        pictureJPanel.addKeyListener( new KeyAdapter() {
+            /**
+             * method that analysed the key that was pressed
+             */
+            @Override
+            public void keyPressed( KeyEvent keyEvent ) {
+                int k = keyEvent.getKeyCode();
+                if ( ( k == KeyEvent.VK_I ) ) {
+                    pictureFrame.cycleInfoDisplay();
+                    keyEvent.consume();
+                } else if ( ( k == KeyEvent.VK_N ) ) {
+                    requestNextPicture();
+                    keyEvent.consume();
+                } else if ( ( k == KeyEvent.VK_M ) ) {
+                    requestPopupMenu();
+                    keyEvent.consume();
+                } else if ( ( k == KeyEvent.VK_P ) ) {
+                    requestPriorPicture();
+                    keyEvent.consume();
+                } else if ( ( k == KeyEvent.VK_F ) ) {
+                    requestScreenSizeMenu();
+                    keyEvent.consume();
+                }
+                if ( !keyEvent.isConsumed() ) {
+                    JOptionPane.showMessageDialog( pictureFrame.getResizableJFrame(),
+                            Settings.jpoResources.getString( "PictureViewerKeycodes" ),
+                            Settings.jpoResources.getString( "PictureViewerKeycodesTitle" ),
+                            JOptionPane.INFORMATION_MESSAGE );
+                }
+            }
+        } );
 
         pictureFrame.getPictureViewerNavBar().rotateLeftJButton.addActionListener( new ActionListener() {
 
@@ -289,7 +313,7 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
 
             @Override
             public void actionPerformed( ActionEvent e ) {
-                cylceInfoDisplay();
+                cycleInfoDisplay();
             }
         } );
 
@@ -490,21 +514,21 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
     /**
      * brings up the indicated picture on the display.
      *
-     * @param pi The PicutreInfo object that should be displayed
+     * @param pictureInfo The PicutreInfo object that should be displayed
      */
-    private void setPicture( PictureInfo pi ) {
-        LOGGER.log( Level.FINE, "Set picture to PictureInfo: {0}", pi.toString() );
+    private void setPicture( PictureInfo pictureInfo ) {
+        LOGGER.log( Level.FINE, "Set picture to PictureInfo: {0}", pictureInfo.toString() );
         URL pictureURL;
 
         String description;
 
         double rotation = 0;
         try {
-            pictureURL = pi.getHighresURL();
+            pictureURL = pictureInfo.getHighresURL();
             description
-                    = pi.getDescription();
+                    = pictureInfo.getDescription();
             rotation
-                    = pi.getRotation();
+                    = pictureInfo.getRotation();
         } catch ( MalformedURLException x ) {
             LOGGER.severe( x.getMessage() );
             return;
@@ -753,76 +777,29 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
      * @return true if ready to advance
      */
     private boolean readyToAdvance() {
-        PictureController pictureJPanel = pictureFrame.getPictureController();
+        OverlayedPictureController pictureJPanel = pictureFrame.getPictureController();
         ScalablePictureStatus status = pictureJPanel.getScalablePicture().getStatusCode();
         return ( status == SCALABLE_PICTURE_READY ) || ( status == SCALABLE_PICTURE_ERROR );
     }
 
     /**
-     * This function cycles to the next info display overlay. The first is
-     * DISPLAY_NONE, DISPLAY_PHOTOGRAPHIC and DISPLAY_APPLICATION
+     * This function cycles to the next info display overlay. 
      *
      */
-    private void cylceInfoDisplay() {
-        PictureController pictureJPanel = pictureFrame.getPictureController();
-        pictureJPanel.cylceInfoDisplay();
-        pictureJPanel.requestFocusInWindow();
+    private void cycleInfoDisplay() {
+        //PictureController pictureJPanel = pictureFrame.getPictureController();
+        pictureFrame.cycleInfoDisplay();
+        //pictureJPanel.requestFocusInWindow();
     }
 
     /**
-     * The location and size of the Window can be changed by a call to this method
-     * @param newMode 
+     * The location and size of the Window can be changed by a call to this
+     * method
+     *
+     * @param newMode
      */
     public void switchWindowMode( WindowSize newMode ) {
-        pictureFrame.switchWindowMode( newMode);
-    }
-            
-
-    
-
-    private class ViewerKeyAdapter
-            extends KeyAdapter {
-
-        /**
-         * method that analysed the key that was pressed
-         */
-        @Override
-        public void keyPressed( KeyEvent e ) {
-            PictureController pictureController = pictureFrame.getPictureController();
-            int k = e.getKeyCode();
-            if ( ( k == KeyEvent.VK_I ) ) {
-                pictureController.cylceInfoDisplay();
-            } else if ( ( k == KeyEvent.VK_N ) ) {
-                requestNextPicture();
-            } else if ( ( k == KeyEvent.VK_M ) ) {
-                requestPopupMenu();
-            } else if ( ( k == KeyEvent.VK_P ) ) {
-                requestPriorPicture();
-            } else if ( ( k == KeyEvent.VK_F ) ) {
-                requestScreenSizeMenu();
-            } else if ( ( k == KeyEvent.VK_SPACE ) || ( k == KeyEvent.VK_HOME ) ) {
-                pictureController.resetPicture();
-            } else if ( ( k == KeyEvent.VK_PAGE_UP ) ) {
-                pictureController.zoomIn();
-            } else if ( ( k == KeyEvent.VK_PAGE_DOWN ) ) {
-                pictureController.zoomOut();
-            } else if ( ( k == KeyEvent.VK_1 ) ) {
-                pictureController.zoomFull();
-            } else if ( ( k == KeyEvent.VK_UP ) || ( k == KeyEvent.VK_KP_UP ) ) {
-                pictureController.scrollDown();
-            } else if ( ( k == KeyEvent.VK_DOWN ) || ( k == KeyEvent.VK_KP_DOWN ) ) {
-                pictureController.scrollUp();
-            } else if ( ( k == KeyEvent.VK_LEFT ) || ( k == KeyEvent.VK_KP_LEFT ) ) {
-                pictureController.scrollRight();
-            } else if ( ( k == KeyEvent.VK_RIGHT ) || ( k == KeyEvent.VK_KP_RIGHT ) ) {
-                pictureController.scrollLeft();
-            } else {
-                JOptionPane.showMessageDialog( pictureFrame.getResizableJFrame(),
-                        Settings.jpoResources.getString( "PictureViewerKeycodes" ),
-                        Settings.jpoResources.getString( "PictureViewerKeycodesTitle" ),
-                        JOptionPane.INFORMATION_MESSAGE );
-            }
-        }
+        pictureFrame.switchWindowMode( newMode );
     }
 
     /**

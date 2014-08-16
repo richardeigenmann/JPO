@@ -1,8 +1,6 @@
 package jpo.gui.swing;
 
-import java.awt.Color;
 import java.awt.Cursor;
-import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -13,27 +11,11 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
-import java.net.URL;
-import java.text.DecimalFormat;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JComponent;
 import javax.swing.event.MouseInputAdapter;
-import jpo.dataModel.ExifInfo;
 import jpo.dataModel.Settings;
-import jpo.dataModel.Tools;
 import jpo.gui.ScalablePicture;
-import jpo.gui.ScalablePicture.ScalablePictureStatus;
-import static jpo.gui.ScalablePicture.ScalablePictureStatus.SCALABLE_PICTURE_LOADED;
-import static jpo.gui.ScalablePicture.ScalablePictureStatus.SCALABLE_PICTURE_READY;
-import jpo.gui.ScalablePictureListener;
-import jpo.gui.SourcePicture.SourcePictureStatus;
-import static jpo.gui.swing.PictureController.InfoOverlay.APPLICATION_OVERLAY;
-import static jpo.gui.swing.PictureController.InfoOverlay.NO_OVERLAY;
-import static jpo.gui.swing.PictureController.InfoOverlay.PHOTOGRAPHIC_OVERLAY;
 
 
 /*
@@ -68,17 +50,13 @@ import static jpo.gui.swing.PictureController.InfoOverlay.PHOTOGRAPHIC_OVERLAY;
  * <img src=../Mathematics.png border=0><p>
  *
  *
- * The {@link #showInfo} flag controls whether information about the picture is
- * overlayed on the image.
  */
-public class PictureController
-        extends JComponent
-        implements ScalablePictureListener {
+public class PictureController extends JComponent {
 
     /**
-     * The currently displayed ScalablePicture.
+     * Defines a logger for this class
      */
-    public ScalablePicture scalablePicture = new ScalablePicture();
+    private static final Logger LOGGER = Logger.getLogger( PictureController.class.getName() );
 
     /**
      * Flag that lets this JComponent know if the picture is to be fitted into
@@ -93,75 +71,24 @@ public class PictureController
      */
     public Point focusPoint = new Point();
 
-    /**
-     * The legend of the picture. Is sent to the listener when the image is
-     * ready.
-     */
-    public String legend;
-
-    /**
-     * location of the info texts if shown
-     */
-    private static final Point INFO_COORDINATES = new Point( 15, 15 );
-
-    /**
-     * line spacing for the info text that can be superimposed on the picture
-     */
-    private static final int LINE_SPACING = 12;
-
-    /**
-     * Tabstop distance
-     */
-    private static final int TABSTOP = 90;
-
-    /**
-     * Font for the info if shown.
-     */
-    private static final Font infoFont = Font.decode( Settings.jpoResources.getString( "PicturePaneInfoFont" ) );
-
-    /**
-     * Color for the info overly
-     */
-    private static final Color infoFontColor = Color.white;
-
-    /**
-     * This object is a reference to an Exif Info object that tries to keep tabs
-     * on the information in the image.
-     */
-    public ExifInfo exifInfo;
-
-    /**
-     * class to format the scale
-     */
-    private static final DecimalFormat TWO_DECIMAL_FORMATTER = new DecimalFormat( "###0.00" );
-
-    /**
-     * Defines a logger for this class
-     */
-    private static final Logger LOGGER = Logger.getLogger( PictureController.class.getName() );
+    private PictureControllerImage pictureControllerImage;
 
     /**
      * Constructs a PicturePane components.
      *
      */
-    public PictureController() {
+    public PictureController( PictureControllerImage pictureControllerImage ) {
+        this.pictureControllerImage = pictureControllerImage;
         initComponents();
 
         // make graphics faster
         this.setDoubleBuffered( false );
-        
-        scalablePicture.addStatusListener( PictureController.this );
-        if ( Settings.pictureViewerFastScale ) {
-            scalablePicture.setFastScale();
-        } else {
-            scalablePicture.setQualityScale();
-        }
 
         // register an interest in mouse events
         Listener MouseListener = new Listener();
         addMouseListener( MouseListener );
         addMouseMotionListener( MouseListener );
-        
+
         addKeyListener( new KeyAdapter() {
             @Override
             public void keyPressed( KeyEvent keyEvent ) {
@@ -193,48 +120,25 @@ public class PictureController
                 }
             }
         } );
-        
+
         addComponentListener( new ComponentAdapter() {
 
             @Override
             public void componentResized( ComponentEvent e ) {
-                if (centerWhenScaled ) {
+                if ( centerWhenScaled ) {
                     resetPicture();
                 }
             }
-            
+
         } );
-        
+
     }
 
     /**
      * Initialises the widgets
      */
     private void initComponents() {
-        setFont( infoFont );
-        setBackground( Settings.PICTUREVIEWER_BACKGROUND_COLOR );
         setFocusable( true );
-        setMinimumSize( Settings.PICTUREVIEWER_MINIMUM_SIZE );
-    }
-
-    /**
-     * Brings up the indicated picture on the display.
-     *
-     * @param filenameURL The URL of the picture to display
-     * @param description	The description of the picture
-     * @param rotation The rotation that should be applied
-     */
-    public void setPicture( URL filenameURL, String description,
-            double rotation ) {
-        legend = description;
-        centerWhenScaled = true;
-        System.out.println( getSize() );
-        scalablePicture.setScaleSize( getSize() );
-        
-        scalablePicture.stopLoadingExcept( filenameURL );
-        scalablePicture.loadAndScalePictureInThread( filenameURL, Thread.MAX_PRIORITY, rotation );
-        exifInfo = new ExifInfo( filenameURL );
-        exifInfo.decodeExifTags();
     }
 
     /**
@@ -245,7 +149,7 @@ public class PictureController
         zoomToFit();
         centerImage();
         requestFocusInWindow();
-        centerWhenScaled=true;
+        centerWhenScaled = true;
     }
 
     /////////////////////////
@@ -259,7 +163,7 @@ public class PictureController
      * ready and should be repainted.
      */
     public void zoomIn() {
-        double OldScaleFactor = scalablePicture.getScaleFactor();
+        double OldScaleFactor = pictureControllerImage.getScaleFactor();
         double NewScaleFactor = OldScaleFactor * 1.5;
 
         // If scaling goes from scale down to scale up, set ScaleFactor to exactly 1
@@ -268,9 +172,9 @@ public class PictureController
         }
 
         // Check if the picture would get to large and cause the system to "hang"
-        if ( ( scalablePicture.getOriginalWidth() * scalablePicture.getScaleFactor() < Settings.maximumPictureSize ) && ( scalablePicture.getOriginalHeight() * scalablePicture.getScaleFactor() < Settings.maximumPictureSize ) ) {
-            scalablePicture.setScaleFactor( NewScaleFactor );
-            scalablePicture.createScaledPictureInThread( Thread.MAX_PRIORITY );
+        if ( ( pictureControllerImage.getOriginalWidth() * pictureControllerImage.getScaleFactor() < Settings.maximumPictureSize ) && ( pictureControllerImage.getOriginalHeight() * pictureControllerImage.getScaleFactor() < Settings.maximumPictureSize ) ) {
+            pictureControllerImage.setScaleFactor( NewScaleFactor );
+            pictureControllerImage.createScaledPictureInThread( Thread.MAX_PRIORITY );
         }
     }
 
@@ -281,8 +185,8 @@ public class PictureController
      * the image is ready and should be repainted.
      */
     public void zoomOut() {
-        scalablePicture.setScaleFactor( scalablePicture.getScaleFactor() / 1.5 );
-        scalablePicture.createScaledPictureInThread( Thread.MAX_PRIORITY );
+        pictureControllerImage.setScaleFactor( pictureControllerImage.getScaleFactor() / 1.5 );
+        pictureControllerImage.createScaledPictureInThread( Thread.MAX_PRIORITY );
     }
 
     /**
@@ -294,11 +198,11 @@ public class PictureController
      *
      */
     public void zoomToFit() {
-        scalablePicture.setScaleSize( getSize() );
+        pictureControllerImage.setScaleSize( getSize() );
         // prevent useless rescale events when the picture is not ready
-        if ( scalablePicture.getStatusCode() == SCALABLE_PICTURE_LOADED || scalablePicture.getStatusCode() == SCALABLE_PICTURE_READY ) {
-            scalablePicture.createScaledPictureInThread( Thread.MAX_PRIORITY );
-        }
+        //if ( pictureControllerImage.getStatusCode() == SCALABLE_PICTURE_LOADED || pictureControllerImage.getStatusCode() == SCALABLE_PICTURE_READY ) {
+        pictureControllerImage.createScaledPictureInThread( Thread.MAX_PRIORITY );
+        //}
     }
 
     /**
@@ -308,8 +212,8 @@ public class PictureController
      * ready and should be repainted.
      */
     public void zoomFull() {
-        scalablePicture.setScaleFactor( 1 );
-        scalablePicture.createScaledPictureInThread( Thread.MAX_PRIORITY );
+        pictureControllerImage.setScaleFactor( 1 );
+        pictureControllerImage.createScaledPictureInThread( Thread.MAX_PRIORITY );
     }
 
     ///////////////////////////////////////////////////////////////
@@ -323,15 +227,19 @@ public class PictureController
      * need to take place.
      */
     public void centerImage() {
-        if ( scalablePicture.getOriginalImage() != null ) {
-            setCenterLocation( scalablePicture.getOriginalWidth() / 2, scalablePicture.getOriginalHeight() / 2 );
+//        if ( pictureControllerImage.getOriginalImage() != null ) {
+        int originalHeight = pictureControllerImage.getOriginalHeight();
+        if ( originalHeight != 0 ) {
+            setCenterLocation( pictureControllerImage.getOriginalWidth() / 2, originalHeight / 2 );
             repaint();
         }
+
+        //      }
     }
 
     /**
      * This is the factor by how much the scrollxxx methods will scroll.
-     * Currently set to a fixed 10%.
+     * Currently set to a fixed 5%.
      */
     private static final float scrollFactor = 0.05f;
 
@@ -349,8 +257,8 @@ public class PictureController
      */
     public void scrollUp() {
         // if the bottom edge of the picture is visible, do not scroll
-        if ( ( ( scalablePicture.getOriginalHeight() - focusPoint.y ) * scalablePicture.getScaleFactor() ) + getSize().height / (double) 2 > getSize().height ) {
-            focusPoint.y = focusPoint.y + (int) ( getSize().height * scrollFactor / scalablePicture.getScaleFactor() );
+        if ( ( ( pictureControllerImage.getOriginalHeight() - focusPoint.y ) * pictureControllerImage.getScaleFactor() ) + getSize().height / (double) 2 > getSize().height ) {
+            focusPoint.y = focusPoint.y + (int) ( getSize().height * scrollFactor / pictureControllerImage.getScaleFactor() );
             repaint();
         } else {
             LOGGER.warning( "scrollUp rejected because bottom of picture is already showing." );
@@ -369,8 +277,8 @@ public class PictureController
      * @see #scrollRight()
      */
     public void scrollDown() {
-        if ( getSize().height / (double) 2 - focusPoint.y * scalablePicture.getScaleFactor() < 0 ) {
-            focusPoint.y = focusPoint.y - (int) ( getSize().height * scrollFactor / scalablePicture.getScaleFactor() );
+        if ( getSize().height / (double) 2 - focusPoint.y * pictureControllerImage.getScaleFactor() < 0 ) {
+            focusPoint.y = focusPoint.y - (int) ( getSize().height * scrollFactor / pictureControllerImage.getScaleFactor() );
             repaint();
         } else {
             LOGGER.warning( "PicturePane.scrollDown rejected because top edge is aready visible" );
@@ -390,8 +298,8 @@ public class PictureController
      */
     public void scrollLeft() {
         // if the bottom edge of the picture is visible, do not scroll
-        if ( ( ( scalablePicture.getOriginalWidth() - focusPoint.x ) * scalablePicture.getScaleFactor() ) + getSize().width / (double) 2 > getSize().width ) {
-            focusPoint.x = focusPoint.x + (int) ( getSize().width * scrollFactor / scalablePicture.getScaleFactor() );
+        if ( ( ( pictureControllerImage.getOriginalWidth() - focusPoint.x ) * pictureControllerImage.getScaleFactor() ) + getSize().width / (double) 2 > getSize().width ) {
+            focusPoint.x = focusPoint.x + (int) ( getSize().width * scrollFactor / pictureControllerImage.getScaleFactor() );
             repaint();
         } else {
             LOGGER.warning( "scrollLeft rejected because right edge of picture is already showing." );
@@ -401,7 +309,7 @@ public class PictureController
     /**
      * method that moves the image right by 10% of the pixels shown on the
      * screen. This method calls <code>repaint()</code> directly since no time
-     * consuming image operations need to take place. works just liks
+     * consuming image operations need to take place. works just like
      * {@link #scrollDown()}.
      *
      * @see #scrollUp()
@@ -410,8 +318,8 @@ public class PictureController
      * @see #scrollRight()
      */
     public void scrollRight() {
-        if ( getSize().width / (double) 2 - focusPoint.x * scalablePicture.getScaleFactor() < 0 ) {
-            focusPoint.x = focusPoint.x - (int) ( getSize().width * scrollFactor / scalablePicture.getScaleFactor() );
+        if ( getSize().width / (double) 2 - focusPoint.x * pictureControllerImage.getScaleFactor() < 0 ) {
+            focusPoint.x = focusPoint.x - (int) ( getSize().width * scrollFactor / pictureControllerImage.getScaleFactor() );
             repaint();
         } else {
             LOGGER.warning( "scrollRight rejected because left edge is aready visible" );
@@ -432,12 +340,12 @@ public class PictureController
     /**
      * we are overriding the default paintComponent method, grabbing the
      * Graphics handle and doing our own drawing here. Essentially this method
-     * draws a large black rectangle. A drawRenderedImage is then painted doing
-     * an affine transformation on the scaled image to position it so the the
-     * desired point is in the middle of the Graphics object. The picture is not
-     * scaled here because this is a slow operation and only needs to be done
-     * once, while moving the image is something the user is likely to do more
-     * often.
+     * draws a large background color rectangle. A drawRenderedImage is then
+     * painted doing an affine transformation on the scaled image to position it
+     * so the the desired point is in the middle of the Graphics object. The
+     * picture is not scaled here because this is a slow operation and only
+     * needs to be done once, while moving the image is something the user is
+     * likely to do more often.
      *
      * @param g
      */
@@ -445,12 +353,12 @@ public class PictureController
     public void paintComponent( Graphics g ) {
         int WindowWidth = getSize().width;
         int WindowHeight = getSize().height;
-        
-        if ( scalablePicture.getScaledPicture() != null ) {
+
+        if ( pictureControllerImage.getScaledPicture() != null ) {
             Graphics2D g2d = (Graphics2D) g;
-            
-            int X_Offset = (int) ( (double) ( WindowWidth / (double) 2 ) - ( focusPoint.x * scalablePicture.getScaleFactor() ) );
-            int Y_Offset = (int) ( (double) ( WindowHeight / (double) 2 ) - ( focusPoint.y * scalablePicture.getScaleFactor() ) );
+
+            int X_Offset = (int) ( (double) ( WindowWidth / (double) 2 ) - ( focusPoint.x * pictureControllerImage.getScaleFactor() ) );
+            int Y_Offset = (int) ( (double) ( WindowHeight / (double) 2 ) - ( focusPoint.y * pictureControllerImage.getScaleFactor() ) );
 
             // clear damaged component area
             Rectangle clipBounds = g2d.getClipBounds();
@@ -459,184 +367,15 @@ public class PictureController
                     clipBounds.y,
                     clipBounds.width,
                     clipBounds.height );
-            
-            g2d.drawRenderedImage( scalablePicture.getScaledPicture(), AffineTransform.getTranslateInstance( X_Offset, Y_Offset ) );
-            
-            g2d.setColor( infoFontColor );
-            switch ( showInfo ) {
-                case NO_OVERLAY:
-                    break;
-                case PHOTOGRAPHIC_OVERLAY:
-                    g2d.drawString( Settings.jpoResources.getString( "ExifInfoCamera" ), INFO_COORDINATES.x, INFO_COORDINATES.y + ( 0 * LINE_SPACING ) );
-                    g2d.drawString( exifInfo.camera, INFO_COORDINATES.x + TABSTOP, INFO_COORDINATES.y + ( 0 * LINE_SPACING ) );
-                    g2d.drawString( Settings.jpoResources.getString( "ExifInfoLens" ), INFO_COORDINATES.x, INFO_COORDINATES.y + ( 1 * LINE_SPACING ) );
-                    g2d.drawString( exifInfo.lens, INFO_COORDINATES.x + TABSTOP, INFO_COORDINATES.y + ( 1 * LINE_SPACING ) );
-                    g2d.drawString( Settings.jpoResources.getString( "ExifInfoShutterSpeed" ), INFO_COORDINATES.x, INFO_COORDINATES.y + ( 2 * LINE_SPACING ) );
-                    g2d.drawString( exifInfo.shutterSpeed, INFO_COORDINATES.x + TABSTOP, INFO_COORDINATES.y + ( 2 * LINE_SPACING ) );
-                    g2d.drawString( Settings.jpoResources.getString( "ExifInfoAperture" ), INFO_COORDINATES.x, INFO_COORDINATES.y + ( 3 * LINE_SPACING ) );
-                    g2d.drawString( exifInfo.aperture, INFO_COORDINATES.x + TABSTOP, INFO_COORDINATES.y + ( 3 * LINE_SPACING ) );
-                    g2d.drawString( Settings.jpoResources.getString( "ExifInfoFocalLength" ), INFO_COORDINATES.x, INFO_COORDINATES.y + ( 4 * LINE_SPACING ) );
-                    g2d.drawString( exifInfo.focalLength, INFO_COORDINATES.x + TABSTOP, INFO_COORDINATES.y + ( 4 * LINE_SPACING ) );
-                    g2d.drawString( Settings.jpoResources.getString( "ExifInfoISO" ), INFO_COORDINATES.x, INFO_COORDINATES.y + ( 5 * LINE_SPACING ) );
-                    g2d.drawString( exifInfo.iso, INFO_COORDINATES.x + TABSTOP, INFO_COORDINATES.y + ( 5 * LINE_SPACING ) );
-                    g2d.drawString( Settings.jpoResources.getString( "ExifInfoTimeStamp" ), INFO_COORDINATES.x, INFO_COORDINATES.y + ( 6 * LINE_SPACING ) );
-                    g2d.drawString( exifInfo.getCreateDateTime(), INFO_COORDINATES.x + TABSTOP, INFO_COORDINATES.y + ( 6 * LINE_SPACING ) );
-                    break;
-                case APPLICATION_OVERLAY:
-                    g2d.drawString( legend, INFO_COORDINATES.x, INFO_COORDINATES.y + ( 0 * LINE_SPACING ) );
-                    g2d.drawString( Settings.jpoResources.getString( "PicturePaneSize" ) + Integer.toString( scalablePicture.getOriginalWidth() ) + " x " + Integer.toString( scalablePicture.getOriginalHeight() ) + Settings.jpoResources.getString( "PicturePaneMidpoint" ) + Integer.toString( focusPoint.x ) + " x " + Integer.toString( focusPoint.y ) + " Scale: " + TWO_DECIMAL_FORMATTER.format( scalablePicture.getScaleFactor() ), INFO_COORDINATES.x, INFO_COORDINATES.y + ( 1 * LINE_SPACING ) );
-                    g2d.drawString( "File: " + scalablePicture.getFilename(), INFO_COORDINATES.x, INFO_COORDINATES.y + ( 2 * LINE_SPACING ) );
-                    g2d.drawString( Settings.jpoResources.getString( "PicturePaneLoadTime" ) + TWO_DECIMAL_FORMATTER.format( scalablePicture.getSourcePicture().loadTime / 1000F ) + Settings.jpoResources.getString( "PicturePaneSeconds" ), INFO_COORDINATES.x, INFO_COORDINATES.y + ( 3 * LINE_SPACING ) );
-                    g2d.drawString( Settings.jpoResources.getString( "PicturePaneFreeMemory" ) + Tools.freeMemory(), INFO_COORDINATES.x, INFO_COORDINATES.y + ( 4 * LINE_SPACING ) );
-                    break;
-            }
+
+            g2d.drawRenderedImage( pictureControllerImage.getScaledPicture(), AffineTransform.getTranslateInstance( X_Offset, Y_Offset ) );
+
         } else {
             // paint a black square
             g.setClip( 0, 0, WindowWidth, WindowHeight );
-            g.setColor( Color.black );
+            g.setColor( getBackground() );
             g.fillRect( 0, 0, WindowWidth, WindowHeight );
         }
-    }
-
-    /**
-     * The type of overlay that should be shown
-     */
-    public static enum InfoOverlay {
-
-        /**
-         * No overlay
-         */
-        NO_OVERLAY,
-        /**
-         * Overlay with Photographic information such as aperture and shutter
-         * speed
-         */
-        PHOTOGRAPHIC_OVERLAY,
-        /**
-         * Overlay with technical information
-         */
-        APPLICATION_OVERLAY
-    }
-
-    /**
-     * Code that determines what info is to be displayed over the picture.
-     */
-    private InfoOverlay showInfo = NO_OVERLAY;
-
-    /**
-     * This function cycles to the next info display. The first is DISPLAY_NONE,
-     * DISPLAY_PHOTOGRAPHIC and DISPLAY_APPLICATION
-     *
-     */
-    public void cylceInfoDisplay() {
-        switch ( showInfo ) {
-            case NO_OVERLAY:
-                showInfo = PHOTOGRAPHIC_OVERLAY;
-                break;
-            case PHOTOGRAPHIC_OVERLAY:
-                showInfo = APPLICATION_OVERLAY;
-                break;
-            case APPLICATION_OVERLAY:
-                showInfo = NO_OVERLAY;
-                break;
-        }
-        repaint();
-    }
-
-    /**
-     * method that gets invoked from the ScalablePicture object to notify of
-     * status changes. The ScalablePicture goes through several statuses:
-     * UNINITIALISED, GARBAGE_COLLECTION, LOADING, SCALING, READY, ERROR.<p>
-     * Each status is passed to the listener upon receipt.<p>
-     * When the ScalablePicture signals that it is READY the legend of the
-     * picture is sent to the listener. The method {@link #centerImage} is
-     * called and a repaint is requested.
-     *
-     * @param pictureStatusCode
-     * @param pictureStatusMessage
-     */
-    @Override
-    public void scalableStatusChange( ScalablePictureStatus pictureStatusCode,
-            String pictureStatusMessage ) {
-        LOGGER.log( Level.FINE, "PicturePane.scalableStatusChange: got a status change: {0}", pictureStatusMessage );
-        
-        if ( pictureStatusCode == SCALABLE_PICTURE_READY ) {
-            LOGGER.fine( "PicturePane.scalableStatusChange: a READY status" );
-            //pictureStatusMessage = legend;
-            pictureStatusMessage = Settings.jpoResources.getString( "PicturePaneReadyStatus" );
-            if ( centerWhenScaled ) {
-                LOGGER.fine( "PicturePane.scalableStatusChange: centering image" );
-                centerImage();
-            }
-            LOGGER.fine( "PicturePane.scalableStatusChange: forcing Panel repaint" );
-            repaint();
-        }
-        
-        synchronized ( picturePaneListeners ) {
-            for ( ScalablePictureListener scalablePictureListener : picturePaneListeners ) {
-                scalablePictureListener.scalableStatusChange( pictureStatusCode, pictureStatusMessage );
-            }
-        }
-    }
-
-    /**
-     * pass messages about progress onto the PictureViewer for updating of the
-     * progress bar
-     *
-     * @param statusCode
-     * @param percentage
-     */
-    @Override
-    public void sourceLoadProgressNotification( SourcePictureStatus statusCode, int percentage ) {
-        synchronized ( picturePaneListeners ) {
-            for ( ScalablePictureListener scalablePictureListener : picturePaneListeners ) {
-                scalablePictureListener.sourceLoadProgressNotification( statusCode, percentage );
-            }
-        }
-    }
-
-    /**
-     * The objects that would like to receive notifications about what is going
-     * on with the ScalablePicture being displayed in this PicturePane. These
-     * objects must implement the ScalablePictureListener interface.
-     */
-    private final Set<ScalablePictureListener> picturePaneListeners = Collections.synchronizedSet( new HashSet<ScalablePictureListener>() );
-
-    /**
-     * method to register the listening object of the status events
-     *
-     * @param listener
-     */
-    public void addStatusListener( ScalablePictureListener listener ) {
-        picturePaneListeners.add( listener );
-    }
-
-    /**
-     * deregister the listening object of the status events
-     *
-     * @param listener the listener to remove
-     */
-    public void removeStatusListener( ScalablePictureListener listener ) {
-        picturePaneListeners.remove( listener );
-    }
-
-    /**
-     * method that returns a handle to the scalable picture that this component
-     * is displaying
-     *
-     * @return the scaled image
-     */
-    public ScalablePicture getScalablePicture() {
-        return scalablePicture;
-    }
-
-    /**
-     * Returns the text area with the description
-     *
-     * @return the text area
-     */
-    public Object getDescriptionJTextArea() {
-        throw new UnsupportedOperationException( "Not supported yet." ); //To change body of generated methods, choose Tools | Templates.
     }
 
     /**
@@ -674,13 +413,13 @@ public class PictureController
 
                 int WindowWidth = getSize().width;
                 int WindowHeight = getSize().height;
-                
+
                 int X_Offset = e.getX() - ( WindowWidth / 2 );
                 int Y_Offset = e.getY() - ( WindowHeight / 2 );
-                
+
                 setCenterLocation(
-                        focusPoint.x + (int) ( X_Offset / scalablePicture.getScaleFactor() ),
-                        focusPoint.y + (int) ( Y_Offset / scalablePicture.getScaleFactor() ) );
+                        focusPoint.x + (int) ( X_Offset / pictureControllerImage.getScaleFactor() ),
+                        focusPoint.y + (int) ( Y_Offset / pictureControllerImage.getScaleFactor() ) );
                 centerWhenScaled = false;
                 zoomIn();
             }
@@ -697,18 +436,18 @@ public class PictureController
                 LOGGER.fine( "PicturePane.mouseDragged: Switching to drag mode." );
                 last_x = e.getX();
                 last_y = e.getY();
-                
+
                 setDragging( true );
-                
+
             } else {
                 // was already dragging
                 int x = e.getX(), y = e.getY();
-                
-                focusPoint.setLocation( (int) ( (double) focusPoint.x + ( ( last_x - x ) / scalablePicture.getScaleFactor() ) ),
-                        (int) ( (double) focusPoint.y + ( ( last_y - y ) / scalablePicture.getScaleFactor() ) ) );
+
+                focusPoint.setLocation( (int) ( (double) focusPoint.x + ( ( last_x - x ) / pictureControllerImage.getScaleFactor() ) ),
+                        (int) ( (double) focusPoint.y + ( ( last_y - y ) / pictureControllerImage.getScaleFactor() ) ) );
                 last_x = x;
                 last_y = y;
-                
+
                 setDragging( true );
                 repaint();
             }
@@ -758,5 +497,5 @@ public class PictureController
             }
         }
     }
-    
+
 }

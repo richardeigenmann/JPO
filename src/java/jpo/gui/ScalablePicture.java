@@ -36,6 +36,7 @@ import static jpo.gui.ScalablePicture.ScalablePictureStatus.SCALABLE_PICTURE_REA
 import static jpo.gui.ScalablePicture.ScalablePictureStatus.SCALABLE_PICTURE_SCALING;
 import static jpo.gui.ScalablePicture.ScalablePictureStatus.SCALABLE_PICTURE_UNINITIALISED;
 import jpo.gui.SourcePicture.SourcePictureStatus;
+import jpo.gui.swing.PictureControllerImage;
 
 /*
  ScalablePicture.java:  class that can load and save images
@@ -59,7 +60,7 @@ import jpo.gui.SourcePicture.SourcePictureStatus;
  * thread.
  */
 public class ScalablePicture
-        implements SourcePictureListener {
+        implements SourcePictureListener, PictureControllerImage  {
 
     /**
      * Defines a logger for this class
@@ -291,6 +292,7 @@ public class ScalablePicture
      *
      * @param priority The priority this image takes relative to the others.
      */
+    @Override
     public void createScaledPictureInThread( int priority ) {
         Thread t = new Thread( "ScalablePicture.createScaledPictureInThread" ) {
             @Override
@@ -396,6 +398,7 @@ public class ScalablePicture
      *
      * @param newFactor
      */
+    @Override
     public final void setScaleFactor( double newFactor ) {
         scaleToSize = false;
         targetSize = null;
@@ -409,6 +412,7 @@ public class ScalablePicture
      *
      * @param newSize
      */
+    @Override
     public void setScaleSize( Dimension newSize ) {
         scaleToSize = true;
         if ( ( newSize.height < 1 ) || ( newSize.width < 1 ) ) {
@@ -445,6 +449,7 @@ public class ScalablePicture
      *
      * @return the scaled image
      */
+    @Override
     public BufferedImage getScaledPicture() {
         return scaledPicture;
     }
