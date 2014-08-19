@@ -417,7 +417,6 @@ public class JpoResources_zh_CN extends ListResourceBundle {
 		{"DefaultRootNodeText", "新建图片集"},
 		{"CopyImageDialogButton", "复制"},
 		{"CopyImageDialogTitle", "指定复制的位置："},
-		{"CopyImageNullError", "复制文件夹的参数无效，复制终止。"},
 		{"CopyImageDirError", "不能创建目标文件夹，复制终止。\n"},
 		{"fileOpenButtonText", "打开"},
 		{"fileOpenHeading", "打开图片集"},

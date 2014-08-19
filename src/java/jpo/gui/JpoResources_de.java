@@ -412,7 +412,6 @@ public class JpoResources_de extends ListResourceBundle {
 		{"DefaultRootNodeText", "Neue Sammlung"},
 		{"CopyImageDialogButton", "Kopieren"},
 		{"CopyImageDialogTitle", "Zieldatei angeben für: "},
-		{"CopyImageNullError", "validateAndCopyPicture mit null Argumenten aufgerufen! Kopieren abgebrochen."},
 		{"CopyImageDirError", "Zielverzeichnis kann nicht erstellt werden. Kopieren abgebrochen.\n"},
 		{"fileOpenButtonText", "öffnen"},
 		{"fileOpenHeading", "Sammlung öffnen"},

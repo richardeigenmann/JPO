@@ -3,6 +3,8 @@
 
             <table class="changelog">
                 <tr><td colspan=2><b>Development Version 0.12</b></td></tr>
+                <tr><td valign="top">20.8.2014</td><td>Fixed bug with copy to readonly directory</td></tr>
+                <tr><td valign="top">16.8.2014</td><td>Refactored PictureViewer</td></tr>
                 <tr><td valign="top">11.8.2014</td><td>When a group has no pictures it no longer offers to show them</td></tr>
                 <tr><td valign="top">11.8.2014</td><td>Removed Debug Tab from Settings Menu</td></tr>
                 <tr><td valign="top">11.8.2014</td><td>Corrected navigation icons in Picture Pane</td></tr>

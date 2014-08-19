@@ -413,16 +413,17 @@ public class Tools {
     }
 
     /**
-     * method to copy any file from a source location to a target location
+     * method to copy any file from sourceUrl source location to sourceUrl
+     * target location
      *
-     * @param a source url
-     * @param b target url
+     * @param sourceUrl source url
+     * @param targetUrl target url
      * @return the crc
      */
-    public static long copyPicture( URL a, URL b ) {
+    public static long copyPicture( URL sourceUrl, URL targetUrl ) {
         try {
-            InputStream in = a.openStream();
-            OutputStream out = b.openConnection().getOutputStream();
+            InputStream in = sourceUrl.openStream();
+            OutputStream out = targetUrl.openConnection().getOutputStream();
 
             BufferedInputStream bin = new BufferedInputStream( in );
             BufferedOutputStream bout = new BufferedOutputStream( out );
@@ -434,7 +435,7 @@ public class Tools {
         } catch ( IOException e ) {
             JOptionPane.showMessageDialog(
                     Settings.anchorFrame,
-                    Settings.jpoResources.getString( "copyPictureError1" ) + a.toString() + Settings.jpoResources.getString( "copyPictureError2" ) + b.toString() + Settings.jpoResources.getString( "copyPictureError3" ) + e.getMessage(),
+                    Settings.jpoResources.getString( "copyPictureError1" ) + sourceUrl.toString() + Settings.jpoResources.getString( "copyPictureError2" ) + targetUrl.toString() + Settings.jpoResources.getString( "copyPictureError3" ) + e.getMessage(),
                     Settings.jpoResources.getString( "genericError" ),
                     JOptionPane.ERROR_MESSAGE );
             return Long.MIN_VALUE;
@@ -442,17 +443,18 @@ public class Tools {
     }
 
     /**
-     * method to copy any file from a source location to a target File location.
-     * Works better because files are writable whilst most URL are read only.
+     * method to copy any file from sourceUrl source location to sourceUrl
+     * target File location. Works better because files are writable whilst most
+     * URL are read only.
      *
-     * @param a source URL
-     * @param b target file
-     * @return a long for the CRC
+     * @param sourceUrl source URL
+     * @param targetFile target file
+     * @return sourceUrl long for the CRC
      */
-    public static long copyPicture( URL a, File b ) {
+    public static long copyPicture( URL sourceUrl, File targetFile ) {
         try {
-            InputStream in = a.openStream();
-            OutputStream out = new FileOutputStream( b );
+            InputStream in = sourceUrl.openStream();
+            OutputStream out = new FileOutputStream( targetFile );
 
             BufferedInputStream bin = new BufferedInputStream( in );
             BufferedOutputStream bout = new BufferedOutputStream( out );
@@ -464,7 +466,7 @@ public class Tools {
         } catch ( IOException e ) {
             JOptionPane.showMessageDialog(
                     Settings.anchorFrame,
-                    Settings.jpoResources.getString( "copyPictureError1" ) + a.toString() + Settings.jpoResources.getString( "copyPictureError2" ) + b.toString() + Settings.jpoResources.getString( "copyPictureError3" ) + e.getMessage(),
+                    Settings.jpoResources.getString( "copyPictureError1" ) + sourceUrl.toString() + Settings.jpoResources.getString( "copyPictureError2" ) + targetFile.toString() + Settings.jpoResources.getString( "copyPictureError3" ) + e.getMessage(),
                     Settings.jpoResources.getString( "genericError" ),
                     JOptionPane.ERROR_MESSAGE );
             return Long.MIN_VALUE;
@@ -472,17 +474,18 @@ public class Tools {
     }
 
     /**
-     * Copy any file from a source File to a target File location.
+     * Copy any file from sourceFile source File to sourceFile target File
+     * location.
      *
-     * @param a the source file location
-     * @param b the target file location
+     * @param sourceFile the source file location
+     * @param targetFile the target file location
      * @return The crc of the copied picture.
      */
-    public static long copyPicture( File a, File b ) {
-        LOGGER.fine( String.format( "Copying file %s to file %s", a.toString(), b.toString() ) );
+    public static long copyPicture( File sourceFile, File targetFile ) {
+        LOGGER.fine( String.format( "Copying file %s to file %s", sourceFile.toString(), targetFile.toString() ) );
         try {
-            InputStream in = new FileInputStream( a );
-            OutputStream out = new FileOutputStream( b );
+            InputStream in = new FileInputStream( sourceFile );
+            OutputStream out = new FileOutputStream( targetFile );
 
             BufferedInputStream bin = new BufferedInputStream( in );
             BufferedOutputStream bout = new BufferedOutputStream( out );
@@ -494,10 +497,26 @@ public class Tools {
         } catch ( IOException e ) {
             JOptionPane.showMessageDialog(
                     Settings.anchorFrame,
-                    Settings.jpoResources.getString( "copyPictureError1" ) + a.toString() + Settings.jpoResources.getString( "copyPictureError2" ) + b.toString() + Settings.jpoResources.getString( "copyPictureError3" ) + e.getMessage(),
+                    Settings.jpoResources.getString( "copyPictureError1" ) + sourceFile.toString() + Settings.jpoResources.getString( "copyPictureError2" ) + targetFile.toString() + Settings.jpoResources.getString( "copyPictureError3" ) + e.getMessage(),
                     Settings.jpoResources.getString( "genericError" ),
                     JOptionPane.ERROR_MESSAGE );
             return Long.MIN_VALUE;
+        }
+    }
+
+    /**
+     * Copies an input stream to an output stream
+     *
+     * @param input the input stream
+     * @param output the output stream
+     * @throws IOException The exception it can throw
+     */
+    public static void streamcopy( InputStream input, OutputStream output ) throws IOException {
+        // 4MB buffer
+        byte[] BUFFER = new byte[4096 * 1024];
+        int bytesRead;
+        while ( ( bytesRead = input.read( BUFFER ) ) != -1 ) {
+            output.write( BUFFER, 0, bytesRead );
         }
     }
 

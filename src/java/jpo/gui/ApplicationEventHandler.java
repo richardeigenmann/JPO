@@ -7,7 +7,9 @@ package jpo.gui;
 
 import com.google.common.eventbus.Subscribe;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.util.Enumeration;
@@ -34,6 +36,10 @@ import jpo.EventBus.ChooseAndAddPicturesToGroupRequest;
 import jpo.EventBus.CloseApplicationRequest;
 import jpo.EventBus.ConsolidateGroupRequest;
 import jpo.EventBus.CopyLocationsChangedEvent;
+import jpo.EventBus.CopyToDirRequest;
+import jpo.EventBus.CopyToNewLocationRequest;
+import jpo.EventBus.CopyToNewZipfileRequest;
+import jpo.EventBus.CopyToZipfileRequest;
 import jpo.EventBus.EditCamerasRequest;
 import jpo.EventBus.EditSettingsRequest;
 import jpo.EventBus.ExportGroupToFlatFileRequest;
@@ -45,7 +51,6 @@ import jpo.EventBus.FileLoadRequest;
 import jpo.EventBus.FileSaveAsRequest;
 import jpo.EventBus.FileSaveRequest;
 import jpo.EventBus.FindDuplicatesRequest;
-import jpo.EventBus.OpenHelpAboutFrameRequest;
 import jpo.EventBus.JpoEventBus;
 import jpo.EventBus.MoveNodeDownRequest;
 import jpo.EventBus.MoveNodeToBottomRequest;
@@ -53,6 +58,7 @@ import jpo.EventBus.MoveNodeToNodeRequest;
 import jpo.EventBus.MoveNodeToTopRequest;
 import jpo.EventBus.MoveNodeUpRequest;
 import jpo.EventBus.OpenCategoryEditorRequest;
+import jpo.EventBus.OpenHelpAboutFrameRequest;
 import jpo.EventBus.OpenLicenceFrameRequest;
 import jpo.EventBus.OpenMainWindowRequest;
 import jpo.EventBus.OpenPrivacyFrameRequest;
@@ -63,9 +69,9 @@ import jpo.EventBus.RecentDropNodesChangedEvent;
 import jpo.EventBus.RefreshThumbnailRequest;
 import jpo.EventBus.RemoveNodeRequest;
 import jpo.EventBus.RenamePictureRequest;
-import jpo.EventBus.SetPictureRotationRequest;
 import jpo.EventBus.RotatePictureRequest;
 import jpo.EventBus.SendEmailRequest;
+import jpo.EventBus.SetPictureRotationRequest;
 import jpo.EventBus.ShowCategoryUsageEditorRequest;
 import jpo.EventBus.ShowGroupAsTableRequest;
 import jpo.EventBus.ShowGroupInfoEditorRequest;
@@ -82,7 +88,6 @@ import jpo.EventBus.UnsavedUpdatesDialogRequest;
 import jpo.cache.JpoCache;
 import jpo.dataModel.DuplicatesQuery;
 import jpo.dataModel.FlatFileReader;
-import jpo.gui.swing.FlatFileDistiller;
 import jpo.dataModel.FlatGroupNavigator;
 import jpo.dataModel.GroupInfo;
 import jpo.dataModel.NodeNavigatorInterface;
@@ -97,12 +102,16 @@ import jpo.dataModel.Tools;
 import jpo.export.GenerateWebsiteWizard;
 import jpo.export.PicasaUploadRequest;
 import jpo.export.PicasaUploaderWizard;
+import static jpo.dataModel.Tools.streamcopy;
+import jpo.gui.swing.FlatFileDistiller;
 import jpo.gui.swing.HelpAboutWindow;
 import jpo.gui.swing.MainWindow;
 import jpo.gui.swing.PrivacyJFrame;
 import jpo.gui.swing.QueryJFrame;
 import static jpo.gui.swing.ResizableJFrame.WindowSize.WINDOW_LEFT;
 import static jpo.gui.swing.ResizableJFrame.WindowSize.WINDOW_RIGHT;
+import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
+import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
 import webserver.Webserver;
 
 /**
@@ -197,7 +206,6 @@ public class ApplicationEventHandler {
         new QueryNavigator( duplicatesQuery );
         JpoEventBus.getInstance().post( new ShowQueryRequest( duplicatesQuery ) );
     }
-
 
     /**
      * Creates an IntegrityChecker that does it's magic on the collection.
@@ -368,7 +376,6 @@ public class ApplicationEventHandler {
     public void handleOpenSearchDialogRequest( OpenSearchDialogRequest request ) {
         new QueryJFrame( request.getStartNode() );
     }
-
 
     /**
      * When the app sees a ShowCategoryUsageEditorRequest it will open the
@@ -774,6 +781,163 @@ public class ApplicationEventHandler {
         }
     }
 
+    /**
+     * Brings up a JFileChooser to select the target location and then copies
+     * the images to the target location
+     *
+     * @param request The request
+     */
+    @Subscribe
+    public void handleCopyToNewLocationRequest( CopyToNewLocationRequest request ) {
+        JFileChooser jFileChooser = new JFileChooser();
+
+        jFileChooser.setFileSelectionMode( JFileChooser.DIRECTORIES_ONLY );
+        jFileChooser.setApproveButtonText( Settings.jpoResources.getString( "CopyImageDialogButton" ) );
+        jFileChooser.setDialogTitle( Settings.jpoResources.getString( "CopyImageDialogTitle" ) );
+        jFileChooser.setCurrentDirectory( Settings.getMostRecentCopyLocation() );
+
+        int returnVal = jFileChooser.showSaveDialog( Settings.anchorFrame );
+        if ( returnVal != JFileChooser.APPROVE_OPTION ) {
+            return;
+        }
+
+        JpoEventBus.getInstance().post( new CopyToDirRequest( request.getNodes(), jFileChooser.getSelectedFile() ) );
+    }
+
+    /**
+     * Copies the pictures of the supplied nodes to the target directory
+     *
+     * @param request The request
+     */
+    @Subscribe
+    public static void handleCopyToDirRequest( CopyToDirRequest request ) {
+        if ( !request.getTargetLocation().canWrite() ) {
+            JOptionPane.showMessageDialog( Settings.anchorFrame,
+                    Settings.jpoResources.getString( "htmlDistCanWriteError" ),
+                    Settings.jpoResources.getString( "genericError" ),
+                    JOptionPane.ERROR_MESSAGE );
+            return;
+        }
+
+        int picsCopied = 0;
+        for ( SortableDefaultMutableTreeNode node : request.getNodes() ) {
+            if ( node.getUserObject() instanceof PictureInfo ) {
+                if ( node.validateAndCopyPicture( request.getTargetLocation() ) ) {
+                    picsCopied++;
+                }
+            } else {
+                LOGGER.info( String.format( "Skipping non PictureInfo node %s", node.toString() ) );
+            }
+        }
+        JOptionPane.showMessageDialog( Settings.anchorFrame,
+                String.format( Settings.jpoResources.getString( "copyToNewLocationSuccess" ), picsCopied, request.getNodes().length ),
+                Settings.jpoResources.getString( "genericInfo" ),
+                JOptionPane.INFORMATION_MESSAGE );
+
+    }
+
+        /**
+     * Brings up a JFileChooser to select the target zip file and then copies
+     * the images there
+     *
+     * @param request The request
+     */
+    @Subscribe
+    public void handleCopyToNewZipfileRequest( CopyToNewZipfileRequest request ) {
+        final JFileChooser jFileChooser = new JFileChooser();
+
+        jFileChooser.setFileSelectionMode( JFileChooser.FILES_ONLY );
+        // TODO: internationalise this Settings.jpoResources.getString( "CopyImageDialogButton" )
+        jFileChooser.setApproveButtonText( "Select" );
+        jFileChooser.setDialogTitle( "Pick the zipfile to which the pictures should be added" );
+        jFileChooser.setCurrentDirectory( Settings.getMostRecentCopyLocation() );
+
+        int returnVal = jFileChooser.showDialog( Settings.anchorFrame, "Select" );
+        if ( returnVal != JFileChooser.APPROVE_OPTION ) {
+            return;
+        }
+
+        final File chosenFile = jFileChooser.getSelectedFile();
+        Settings.memorizeZipFile( chosenFile.getPath() );
+        //copyToZipfile( request.getNodes(), chosenFile );
+
+        JpoEventBus.getInstance().post( new CopyToZipfileRequest( request.getNodes(), chosenFile ) );
+    }
+
+    
+    /**
+     * Copies the pictures of the supplied nodes to the target zipfile, creating
+     * it if need be. This method does append to the zipfile by writing to a
+     * temporary file and then copying the old zip file over to this one as the
+     * API doesn't support directly appending to a zip file.
+     *
+     * @param request The request
+     */
+    @Subscribe
+    public void handleCopyToZipfileRequest( CopyToZipfileRequest request ) {
+        
+                File tempfile = new File( request.getTargetZipfile().getAbsolutePath() + ".jpo.temp" );
+        int picsCopied = 0;
+        PictureInfo pictureInfo;
+        File sourceFile;
+        try ( ZipArchiveOutputStream zipArchiveOutputStream = new ZipArchiveOutputStream( tempfile ); ) {
+            zipArchiveOutputStream.setLevel( 9 );
+            for ( SortableDefaultMutableTreeNode node : request.getNodes() ) {
+                if ( node.getUserObject() instanceof PictureInfo ) {
+                    pictureInfo = (PictureInfo) node.getUserObject();
+                    sourceFile = pictureInfo.getHighresFile();
+                    LOGGER.info( String.format( "Processing file %s", sourceFile.toString() ) );
+
+                    ZipArchiveEntry entry = new ZipArchiveEntry( sourceFile, sourceFile.getName() );
+                    zipArchiveOutputStream.putArchiveEntry( entry );
+
+                    try ( FileInputStream fis = new FileInputStream( sourceFile ) ) {
+                        streamcopy( fis, zipArchiveOutputStream );
+                    }
+                    zipArchiveOutputStream.closeArchiveEntry();
+
+                    picsCopied++;
+
+                } else {
+                    LOGGER.info( String.format( "Skipping non PictureInfo node %s", node.toString() ) );
+                }
+            }
+
+            if ( request.getTargetZipfile().exists() ) {
+                // copy the old entries over
+                org.apache.commons.compress.archivers.zip.ZipFile oldzip = new org.apache.commons.compress.archivers.zip.ZipFile( request.getTargetZipfile() );
+                Enumeration entries = oldzip.getEntries();
+                while ( entries.hasMoreElements() ) {
+                    ZipArchiveEntry e = (ZipArchiveEntry) entries.nextElement();
+                    LOGGER.info( String.format( "streamcopy: %s", e.getName() ) );
+                    zipArchiveOutputStream.putArchiveEntry( e );
+                    if ( !e.isDirectory() ) {
+                        streamcopy( oldzip.getInputStream( e ), zipArchiveOutputStream );
+                    }
+                    zipArchiveOutputStream.closeArchiveEntry();
+                }
+            }
+            zipArchiveOutputStream.finish();
+            zipArchiveOutputStream.close();
+        } catch ( IOException ex ) {
+            LOGGER.severe( ex.getMessage() );
+            tempfile.delete();
+        }
+
+        if ( request.getTargetZipfile().exists() ) {
+            LOGGER.info( String.format( "Deleting old file %s", request.getTargetZipfile().getAbsolutePath() ) );
+            request.getTargetZipfile().delete();
+        }
+        LOGGER.info( String.format( "Renaming temp file %s to %s", tempfile.getAbsolutePath(), request.getTargetZipfile().getAbsolutePath() ) );
+        tempfile.renameTo( request.getTargetZipfile() );
+
+        JOptionPane.showMessageDialog( Settings.anchorFrame,
+                String.format( "Copied %d files of %d to zipfile %s", picsCopied, request.getNodes().length, request.getTargetZipfile().toString() ),
+                Settings.jpoResources.getString( "genericInfo" ),
+                JOptionPane.INFORMATION_MESSAGE );
+
+    }
+    
     /**
      * Moves the node to the first position in the group
      *

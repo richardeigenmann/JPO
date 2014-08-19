@@ -782,43 +782,36 @@ public class SortableDefaultMutableTreeNode
     /**
      * Validates the target of the picture copy instruction and tries to find
      * the appropriate thing to do. It does the following steps:<br>
-     * 1. If any input is null the copy is aborted with an error dialog.<br>
-     * 2: If the target is a directory the filename of the original is used.<br>
-     * 3: If the target is an existing file the copy is aborted<br>
-     * 4: If the target directory doesn't exist then the directories are
+     * 1: If the target is a directory the filename of the original is used.<br>
+     * 2: If the target is an existing file the copy is aborted<br>
+     * 3: If the target directory doesn't exist then the directories are
      * created.<br>
-     * 5: The file extension is made to be that of the original if it isn't
+     * 4: The file extension is made to be that of the original if it isn't
      * already that.<br>
      * When all preconditions are met the image is copied
      *
      *
      * @param targetFile The target location for the new Picture.
+     * @return true if successful, false if not
      */
-    public void validateAndCopyPicture( File targetFile ) {
-        if ( ( this == null ) || ( targetFile == null ) ) {
-            JOptionPane.showMessageDialog( Settings.anchorFrame,
-                    Settings.jpoResources.getString( "CopyImageNullError" ),
-                    Settings.jpoResources.getString( "genericError" ),
-                    JOptionPane.ERROR_MESSAGE );
-            return;
-        }
-
+    public boolean validateAndCopyPicture( File targetFile ) {
         if ( !( this.getUserObject() instanceof PictureInfo ) ) {
-            LOGGER.info( "SDMTN.copyToNewLocation: inkoked on a non PictureInfo type node! Aborted." );
-            return;
+            LOGGER.severe( "Only PictureInfo nodes can be copied! Copy for this picture aborted." );
+            return false;
         }
 
+        PictureInfo pictureInfo = (PictureInfo) this.getUserObject();
         URL originalUrl;
         try {
-            originalUrl = ( (PictureInfo) this.getUserObject() ).getHighresURL();
+            originalUrl = pictureInfo.getHighresURL();
         } catch ( MalformedURLException x ) {
-            LOGGER.log( Level.INFO, "MarformedURLException trapped on: {0}\nReason: {1}", new Object[]{ ( (PictureInfo) this.getUserObject() ).getHighresLocation(), x.getMessage() } );
+            LOGGER.log( Level.INFO, "MarformedURLException trapped on: {0}\nReason: {1}", new Object[]{ pictureInfo.getHighresLocation(), x.getMessage() } );
             JOptionPane.showMessageDialog(
                     Settings.anchorFrame,
                     "MarformedURLException trapped on: " + ( (PictureInfo) this.getUserObject() ).getHighresLocation() + "\nReason: " + x.getMessage(),
                     Settings.jpoResources.getString( "genericError" ),
                     JOptionPane.ERROR_MESSAGE );
-            return;
+            return false;
         }
 
         if ( targetFile.exists() ) {
@@ -831,7 +824,7 @@ public class SortableDefaultMutableTreeNode
                             "URISyntaxException: " + x,
                             Settings.jpoResources.getString( "genericError" ),
                             JOptionPane.ERROR_MESSAGE );
-                    return;
+                    return false;
                 }
             }
         } else {
@@ -841,11 +834,18 @@ public class SortableDefaultMutableTreeNode
                         Settings.jpoResources.getString( "CopyImageDirError" ) + targetFile.toString(),
                         Settings.jpoResources.getString( "genericError" ),
                         JOptionPane.ERROR_MESSAGE );
-                return;
+                return false;
             }
         }
 
         if ( targetFile.isDirectory() ) {
+            if ( !targetFile.canWrite() ) {
+                JOptionPane.showMessageDialog( Settings.anchorFrame,
+                        Settings.jpoResources.getString( "htmlDistCanWriteError" ),
+                        Settings.jpoResources.getString( "genericError" ),
+                        JOptionPane.ERROR_MESSAGE );
+                return false;
+            }
             try {
                 String sourceFilename = new File( new URI( originalUrl.toString() ) ).getName();
                 targetFile = Tools.inventPicFilename( targetFile, sourceFilename );
@@ -854,7 +854,7 @@ public class SortableDefaultMutableTreeNode
                         "URISyntaxException: " + x,
                         Settings.jpoResources.getString( "genericError" ),
                         JOptionPane.ERROR_MESSAGE );
-                return;
+                return false;
             }
         }
 
@@ -867,6 +867,7 @@ public class SortableDefaultMutableTreeNode
         Tools.copyPicture( originalUrl, targetFile );
         Settings.memorizeCopyLocation( targetFile.getParent() );
         JpoEventBus.getInstance().post( new CopyLocationsChangedEvent() );
+        return true;
     }
 
     /**
@@ -1347,7 +1348,7 @@ public class SortableDefaultMutableTreeNode
                     boolean a = copyAddPictures1( addFile.listFiles(), targetDir, subNode, progGui, cam, retainDirectories, selectedCategories );
                     picturesAdded = a || picturesAdded;
                 } else {
-                    LOGGER.log( Level.INFO, "No pictures in directory {0}", addFile.toString());
+                    LOGGER.log( Level.INFO, "No pictures in directory {0}", addFile.toString() );
                 }
             }
         }

@@ -374,7 +374,6 @@ public class JpoResources_en extends ListResourceBundle {
         { "DefaultRootNodeText", "New Collection" },
         { "CopyImageDialogButton", "Copy" },
         { "CopyImageDialogTitle", "Specify target for: " },
-        { "CopyImageNullError", "validateAndCopyPicture invoked with null arguments! Copy aborted." },
         { "CopyImageDirError", "Target directory can't be created. Copy aborted.\n" },
         { "fileOpenButtonText", "Open" },
         { "fileOpenHeading", "Open Collection" },

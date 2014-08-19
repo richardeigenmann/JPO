@@ -8,11 +8,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
-import jpo.dataModel.NodeNavigatorInterface;
-import jpo.dataModel.Tools;
-import jpo.dataModel.Settings;
-import jpo.dataModel.SortableDefaultMutableTreeNode;
-import jpo.dataModel.PictureInfo;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JMenu;
@@ -24,6 +19,10 @@ import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 import jpo.EventBus.ConsolidateGroupRequest;
 import jpo.EventBus.CopyLocationsChangedEvent;
+import jpo.EventBus.CopyToDirRequest;
+import jpo.EventBus.CopyToNewLocationRequest;
+import jpo.EventBus.CopyToNewZipfileRequest;
+import jpo.EventBus.CopyToZipfileRequest;
 import jpo.EventBus.JpoEventBus;
 import jpo.EventBus.MoveNodeDownRequest;
 import jpo.EventBus.MoveNodeToBottomRequest;
@@ -33,14 +32,19 @@ import jpo.EventBus.MoveNodeUpRequest;
 import jpo.EventBus.RecentDropNodesChangedEvent;
 import jpo.EventBus.RefreshThumbnailRequest;
 import jpo.EventBus.RenamePictureRequest;
-import jpo.EventBus.SetPictureRotationRequest;
 import jpo.EventBus.RotatePictureRequest;
+import jpo.EventBus.SetPictureRotationRequest;
 import jpo.EventBus.ShowCategoryUsageEditorRequest;
 import jpo.EventBus.ShowGroupRequest;
 import jpo.EventBus.ShowPictureInfoEditorRequest;
 import jpo.EventBus.ShowPictureOnMapRequest;
 import jpo.EventBus.ShowPictureRequest;
 import jpo.EventBus.UserFunctionsChangedEvent;
+import jpo.dataModel.NodeNavigatorInterface;
+import jpo.dataModel.PictureInfo;
+import jpo.dataModel.Settings;
+import jpo.dataModel.SortableDefaultMutableTreeNode;
+import jpo.dataModel.Tools;
 
 /*
  PicturePopupMenu.java:  a popup menu for pictures
@@ -124,7 +128,7 @@ public class PicturePopupMenu extends JPopupMenu {
     }
 
     /**
-     * Initializes the GUI components
+     * initialises the GUI components
      */
     private void initComponents() {
         String title = getTitle();
@@ -240,12 +244,10 @@ public class PicturePopupMenu extends JPopupMenu {
                 public void actionPerformed( ActionEvent e ) {
                     if ( Settings.getPictureCollection().countSelectedNodes() < 1 ) {
                         JpoEventBus.getInstance().post( new RenamePictureRequest( popupNode ) );
-                        //TreeNodeController.fileRename( popupNode );
                     } else {
                         for ( SortableDefaultMutableTreeNode selectedNode : Settings.getPictureCollection().getSelectedNodes() ) {
                             if ( selectedNode.getUserObject() instanceof PictureInfo ) {
                                 JpoEventBus.getInstance().post( new RenamePictureRequest( selectedNode ) );
-                                //TreeNodeController.fileRename( selectedNode );
                             }
                         }
                     }
@@ -364,7 +366,7 @@ public class PicturePopupMenu extends JPopupMenu {
 
             if ( highresFile.exists() ) {
                 ok = highresFile.delete();
-                if ( !ok )  {
+                if ( !ok ) {
                     LOGGER.log( Level.INFO, "File deleted failed on: {0}", highresFile.toString() );
                 }
             }
@@ -410,7 +412,7 @@ public class PicturePopupMenu extends JPopupMenu {
                     if ( highresFile.exists() ) {
                         ok = highresFile.delete();
                         if ( !ok ) {
-                            LOGGER.log( Level.INFO, "File deleted failed on: {0}", highresFile.toString());
+                            LOGGER.log( Level.INFO, "File deleted failed on: {0}", highresFile.toString() );
                         }
                     }
 
@@ -428,7 +430,7 @@ public class PicturePopupMenu extends JPopupMenu {
         }
 
     }
-    
+
     /**
      * The node the popup menu was created for
      */
@@ -438,7 +440,7 @@ public class PicturePopupMenu extends JPopupMenu {
      * being displayed.
      */
     private final NodeNavigatorInterface mySetOfNodes;
-    
+
     /**
      * Index of the {@link #mySetOfNodes} being popped up.
      */
@@ -641,7 +643,6 @@ public class PicturePopupMenu extends JPopupMenu {
         }
 
     }
-
 
     private class ShowPictureMenuItem extends JMenuItem {
 
@@ -941,9 +942,9 @@ public class PicturePopupMenu extends JPopupMenu {
                     if ( Settings.getPictureCollection().countSelectedNodes() < 1 ) {
                         SortableDefaultMutableTreeNode[] nodes = new SortableDefaultMutableTreeNode[1];
                         nodes[0] = popupNode;
-                        TreeNodeController.copyToNewLocation( nodes );
+                        JpoEventBus.getInstance().post( new CopyToNewLocationRequest( nodes ) );
                     } else {
-                        TreeNodeController.copyToNewLocation( Settings.getPictureCollection().getSelectedNodes() );
+                        JpoEventBus.getInstance().post( new CopyToNewLocationRequest( Settings.getPictureCollection().getSelectedNodes() ) );
                     }
                 }
             } );
@@ -961,9 +962,9 @@ public class PicturePopupMenu extends JPopupMenu {
                         if ( Settings.getPictureCollection().countSelectedNodes() < 1 ) {
                             SortableDefaultMutableTreeNode[] nodes = new SortableDefaultMutableTreeNode[1];
                             nodes[0] = popupNode;
-                            TreeNodeController.copyToLocation( nodes, new File( Settings.copyLocations[item] ) );
+                            JpoEventBus.getInstance().post( new CopyToDirRequest( nodes, new File( Settings.copyLocations[item] ) ) );
                         } else {
-                            TreeNodeController.copyToLocation( Settings.getPictureCollection().getSelectedNodes(), new File( Settings.copyLocations[item] ) );
+                            JpoEventBus.getInstance().post( new CopyToDirRequest( Settings.getPictureCollection().getSelectedNodes(), new File( Settings.copyLocations[item] ) ) );
                         }
                     }
                 } );
@@ -981,9 +982,9 @@ public class PicturePopupMenu extends JPopupMenu {
                     if ( Settings.getPictureCollection().countSelectedNodes() < 1 ) {
                         SortableDefaultMutableTreeNode[] nodes = new SortableDefaultMutableTreeNode[1];
                         nodes[0] = popupNode;
-                        TreeNodeController.copyToNewZipfile( nodes );
+                        JpoEventBus.getInstance().post( new CopyToNewZipfileRequest( nodes ) );
                     } else {
-                        TreeNodeController.copyToNewZipfile( Settings.getPictureCollection().getSelectedNodes() );
+                        JpoEventBus.getInstance().post( new CopyToNewZipfileRequest( Settings.getPictureCollection().getSelectedNodes() ) );
                     }
                 }
             } );
@@ -999,9 +1000,9 @@ public class PicturePopupMenu extends JPopupMenu {
                         if ( Settings.getPictureCollection().countSelectedNodes() < 1 ) {
                             SortableDefaultMutableTreeNode[] nodes = new SortableDefaultMutableTreeNode[1];
                             nodes[0] = popupNode;
-                            TreeNodeController.copyToZipfile( nodes, new File( Settings.memorizedZipFiles[item] ) );
+                            JpoEventBus.getInstance().post( new CopyToZipfileRequest( nodes, new File( Settings.memorizedZipFiles[item] ) ) );
                         } else {
-                            TreeNodeController.copyToZipfile( Settings.getPictureCollection().getSelectedNodes(), new File( Settings.memorizedZipFiles[item] ) );
+                            JpoEventBus.getInstance().post( new CopyToZipfileRequest( Settings.getPictureCollection().getSelectedNodes(), new File( Settings.memorizedZipFiles[item] ) ) );
                         }
                     }
                 } );
