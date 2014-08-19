@@ -69,8 +69,6 @@ public class QueriesJTree
                     if ( ( clickNode == null ) || ( clickNode.getUserObject() == null ) || ( !( clickNode.getUserObject() instanceof Query ) ) ) {
                         return;
                     }
-                    //QueryNavigator queryBrowser = new QueryNavigator( (Query) clickNode.getUserObject() );
-                    //Jpo.showThumbnails( queryBrowser );
                     JpoEventBus.getInstance().post( new ShowQueryRequest((Query) clickNode.getUserObject()  ));
                 }
             }

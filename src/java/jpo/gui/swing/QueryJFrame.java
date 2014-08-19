@@ -60,8 +60,6 @@ public class QueryJFrame
     private final SortableDefaultMutableTreeNode startSearchNode;
 
 
-    //private static final Dimension compactSize = new Dimension( 300, 350 );
-    //private static final Dimension advancedSize = new Dimension( 300, 550 );
     /**
      * Creates a Frame to specify the search criteria.
      *
@@ -73,9 +71,8 @@ public class QueryJFrame
             LOGGER.log( Level.INFO, "Method can only be invoked on GroupInfo nodes! Ignoring request. You are on node: {0}", this.toString());
             getRid();
         }
-
         this.startSearchNode = startSearchNode;
-        initWidgets();
+        initComponents();
     }
 
     /**
@@ -83,9 +80,16 @@ public class QueryJFrame
      */
     private final JTextField searchStringJTextField = new JTextField( 20 );
 
+    /**
+     * The Advanced Find Button
+     */
     private final JButton advancedFindJButton = new JButton( Settings.jpoResources.getString( "advancedFindJButtonOpen" ) );
     
+    /**
+     * The label saying date range
+     */
     private final JLabel dateRangeJLabel = new JLabel( Settings.jpoResources.getString( "lowerDateJLabel" ) );
+    
     /**
      * the lower date for a specified range
      */
@@ -97,7 +101,10 @@ public class QueryJFrame
     private final JTextField upperDateJTextField = new JTextField( 10 );
 
 
-    private void initWidgets() {
+    /**
+     * Creates the components
+     */
+    private void initComponents() {
         setDefaultCloseOperation( DO_NOTHING_ON_CLOSE );
         addWindowListener( new WindowAdapter() {
             @Override
@@ -210,13 +217,10 @@ public class QueryJFrame
             return;
         }
 
-        executeQuery (textQuery);
+        Settings.getPictureCollection().addQueryToTreeModel( textQuery );
+        JpoEventBus.getInstance().post( new ShowQueryRequest( textQuery ));
         getRid();
     }
     
-    private void executeQuery (TextQuery textQuery) {
-        Settings.getPictureCollection().addQueryToTreeModel( textQuery );
-        JpoEventBus.getInstance().post( new ShowQueryRequest( textQuery ));
-    }
     
 }
