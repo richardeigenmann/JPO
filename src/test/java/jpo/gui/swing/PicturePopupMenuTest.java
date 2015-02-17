@@ -1,12 +1,19 @@
 package jpo.gui.swing;
 
+import com.google.common.eventbus.Subscribe;
 import java.lang.reflect.Field;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.SwingUtilities;
+import jpo.EventBus.JpoEventBus;
+import jpo.EventBus.ShowGroupRequest;
+import jpo.EventBus.ShowPictureOnMapRequest;
+import jpo.EventBus.ShowPictureRequest;
+import jpo.dataModel.GroupInfo;
 import jpo.dataModel.PictureInfo;
+import jpo.dataModel.Settings;
 import jpo.dataModel.SingleNodeNavigator;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
 import junit.framework.TestCase;
@@ -33,36 +40,42 @@ public class PicturePopupMenuTest extends TestCase {
         super( testName );
     }
 
-    protected PictureInfo myPictureInfo = new PictureInfo();
-
+    final private PictureInfo myPictureInfo = new PictureInfo();
     {
         myPictureInfo.setDescription( "My Picture" );
     }
-    protected SortableDefaultMutableTreeNode myNode = new SortableDefaultMutableTreeNode( myPictureInfo );
-    protected SingleNodeNavigator myNavigator = new SingleNodeNavigator( myNode );
-    protected PicturePopupMenu myPicturePopupMenu;
+    final private GroupInfo myGroupInfo = new GroupInfo( "Parent Group" );
+    final private SortableDefaultMutableTreeNode myNode = new SortableDefaultMutableTreeNode( myPictureInfo );
+    final private SortableDefaultMutableTreeNode myParentNode = new SortableDefaultMutableTreeNode( myGroupInfo );
+    {
+        myParentNode.add( myNode );
+        Settings.getPictureCollection().getRootNode().add( myParentNode );
+    }
+    final private SingleNodeNavigator myNavigator = new SingleNodeNavigator( myNode );
+    private PicturePopupMenu myPicturePopupMenu;
 
-    protected JMenuItem title;
-    protected JMenuItem showPicture;
-    protected JMenuItem showMap;
-    protected JMenu navigateTo;
-    protected JMenuItem categories;
-    protected JMenuItem selectForEmail;
-    protected JMenu userFunction;
-    protected JMenu rotation;
-    protected JMenuItem rotate90;
-    protected JMenuItem rotate180;
-    protected JMenuItem rotate270;
-    protected JMenuItem rotate0;
-    protected JMenuItem refreshThumbnail;
-    protected JMenu move;
-    protected JMenu copyImage;
-    protected JMenuItem copyImageChooseTargetDir;
-    protected JMenuItem copyImageToZipFile;
-    protected JMenuItem removeNode;
-    protected JMenu fileOperations;
-    protected JMenuItem properties;
-    protected JMenuItem consolidateHere;
+    private JMenuItem title;
+    private JMenuItem showPicture;
+    private JMenuItem showMap;
+    private JMenu navigateTo;
+    private JMenuItem navigateTo_0;
+    private JMenuItem categories;
+    private JMenuItem selectForEmail;
+    private JMenu userFunction;
+    private JMenu rotation;
+    private JMenuItem rotate90;
+    private JMenuItem rotate180;
+    private JMenuItem rotate270;
+    private JMenuItem rotate0;
+    private JMenuItem refreshThumbnail;
+    private JMenu move;
+    private JMenu copyImage;
+    private JMenuItem copyImageChooseTargetDir;
+    private JMenuItem copyImageToZipFile;
+    private JMenuItem removeNode;
+    private JMenu fileOperations;
+    private JMenuItem properties;
+    private JMenuItem consolidateHere;
 
     /**
      * Creates the objects for testing. Runs on the EDT.
@@ -81,6 +94,7 @@ public class PicturePopupMenuTest extends TestCase {
                 showPicture = (JMenuItem) myPicturePopupMenu.getComponent( 2 );
                 showMap = (JMenuItem) myPicturePopupMenu.getComponent( 3 );
                 navigateTo = (JMenu) myPicturePopupMenu.getComponent( 4 );
+                navigateTo_0 = navigateTo.getItem( 0 );
                 categories = (JMenuItem) myPicturePopupMenu.getComponent( 5 );
                 selectForEmail = (JMenuItem) myPicturePopupMenu.getComponent( 6 );
                 userFunction = (JMenu) myPicturePopupMenu.getComponent( 7 );
@@ -147,4 +161,55 @@ public class PicturePopupMenuTest extends TestCase {
         assertEquals( "Properties", properties.getText() );
         assertEquals( "Consolidate Here", consolidateHere.getText() );
     }
+
+    private int showPictureEventCount = 0;
+
+    /**
+     * Test clicking showPicture
+     */
+    public void testShowPicture() {
+        JpoEventBus.getInstance().register( new Object() {
+            @Subscribe
+            public void handleShowPictureRequest( ShowPictureRequest request ) {
+                SortableDefaultMutableTreeNode node = request.getNode();
+                Object userObject = node.getUserObject();
+                showPictureEventCount++;
+            }
+        } );
+        assertEquals( "Before clicking on the node the event count should be 0", 0, showPictureEventCount );
+        showPicture.doClick();
+        assertEquals( "After clicking on the node the event count should be 1", 1, showPictureEventCount );
+    }
+
+    private int showMapEventCount = 0;
+
+    /**
+     * Test clicking showMap
+     */
+    public void testShowMap() {
+        JpoEventBus.getInstance().register( new Object() {
+            @Subscribe
+            public void handleShowPictureOnMapRequest( ShowPictureOnMapRequest request ) {
+                showMapEventCount++;
+            }
+        } );
+        assertEquals( "Before clicking on the node the event count should be 0", 0, showMapEventCount );
+        showMap.doClick();
+        assertEquals( "After clicking on the node the event count should be 1", 1, showMapEventCount );
+    }
+
+    private int navigateToEventCount = 0;
+
+    public void testNavigateTo() {
+        JpoEventBus.getInstance().register( new Object() {
+            @Subscribe
+            public void handleShowGroupRequest( ShowGroupRequest request ) {
+                navigateToEventCount++;
+            }
+        } );
+        assertEquals( "Before clicking on the node the event count should be 0", 0, navigateToEventCount );
+        navigateTo_0.doClick();
+        assertEquals( "After clicking on the node the event count should be 1", 1, navigateToEventCount );
+    }
+
 }

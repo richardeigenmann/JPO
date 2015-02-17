@@ -470,24 +470,6 @@ public class ApplicationEventHandler {
     public void handleFileLoadDialogRequest( FileLoadDialogRequest request ) {
         final File fileToLoad = Tools.chooseXmlFile();
         JpoEventBus.getInstance().post( new FileLoadRequest( fileToLoad ) );
-        /* Thread t = new Thread() {
-
-         @Override
-         public void run() {
-         try {
-         Settings.getPictureCollection().fileLoad( fileToLoad );
-         } catch ( FileNotFoundException ex ) {
-         LOGGER.log( Level.INFO, "FileNotFoundExecption: {0}", ex.getMessage() );
-         JOptionPane.showMessageDialog( Settings.anchorFrame,
-         ex.getMessage(),
-         Settings.jpoResources.getString( "genericError" ),
-         JOptionPane.ERROR_MESSAGE );
-         return;
-         }
-         JpoEventBus.getInstance().post( new ShowGroupRequest( Settings.getPictureCollection().getRootNode() ) );
-         }
-         };
-         t.start();  */
     }
 
     /**

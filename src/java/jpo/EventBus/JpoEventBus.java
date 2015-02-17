@@ -26,6 +26,7 @@ public class JpoEventBus extends EventBus {
 
     /**
      * Returns the EventBus for the JPO application
+     *
      * @return the EventBus singleton
      */
     public static JpoEventBus getInstance() {
@@ -51,11 +52,12 @@ public class JpoEventBus extends EventBus {
 
         /**
          * Gets called with dead events
+         *
          * @param deadEvent the dead event
          */
         @Subscribe
         public void handleDeadEvent( DeadEvent deadEvent ) {
-            LOGGER.log( Level.WARNING, "Dead event of class: {0}", deadEvent.getClass().getCanonicalName());
+            LOGGER.log( Level.WARNING, "Dead event of class: {0}", deadEvent.getClass().getCanonicalName() );
         }
 
     }

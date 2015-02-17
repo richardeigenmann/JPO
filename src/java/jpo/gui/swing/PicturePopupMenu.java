@@ -89,9 +89,9 @@ public class PicturePopupMenu extends JPopupMenu {
      *
      */
     private final JMenuItem[] copyLocationsJMenuItems = new JMenuItem[Settings.MAX_MEMORISE];
+    
     /**
-     * array of menu items that allows the user to copy pictures to a recently
-     * used zip file
+     * array of menu items that remembers the zip file names
      *
      *
      */
@@ -187,7 +187,23 @@ public class PicturePopupMenu extends JPopupMenu {
 
             @Override
             public void actionPerformed( ActionEvent e ) {
-                requestCategories();
+                if ( Settings.getPictureCollection().countSelectedNodes() < 1 ) {
+                    HashSet<SortableDefaultMutableTreeNode> hashSet = new HashSet<>();
+                    hashSet.add( popupNode );
+                    JpoEventBus.getInstance().post( new ShowCategoryUsageEditorRequest( hashSet ) );
+                } else {
+                    if ( !Settings.getPictureCollection().isSelected( popupNode ) ) {
+                        Settings.getPictureCollection().clearSelection();
+                        HashSet<SortableDefaultMutableTreeNode> hashSet = new HashSet<>();
+                        hashSet.add( popupNode );
+                        JpoEventBus.getInstance().post( new ShowCategoryUsageEditorRequest( hashSet ) );
+                    } else {
+                        HashSet<SortableDefaultMutableTreeNode> hs = new HashSet<>( Arrays.asList( Settings.getPictureCollection().getSelectedNodes() ) );
+                        JpoEventBus.getInstance().post( new ShowCategoryUsageEditorRequest( hs ) );
+
+                    }
+                }
+
             }
         } );
 
@@ -199,9 +215,30 @@ public class PicturePopupMenu extends JPopupMenu {
                 new ActionListener() {
 
                     @Override
-                    public void actionPerformed( ActionEvent e
-                    ) {
-                        addToMailSelection();
+                    public void actionPerformed( ActionEvent e ) {
+                        /*
+                         * Adds a picture to the selection of pictures to be mailed.
+                         *
+                         * 1. If no nodes are selected, mail-select the node.
+                         *
+                         * 2. If multiple nodes are selected but the popup node is not one of them
+                         * then mail-select the node
+                         *
+                         * 3. If multiple nodes are selected and the popup node is one of them then
+                         * mail-select them all
+                         */
+                        if ( Settings.getPictureCollection().countSelectedNodes() < 1 ) {
+                            popupNode.getPictureCollection().addToMailSelection( popupNode );
+                        } else if ( !Settings.getPictureCollection().isSelected( popupNode ) ) {
+                            popupNode.getPictureCollection().addToMailSelection( popupNode );
+                        } else {
+                            for ( SortableDefaultMutableTreeNode selectedNode : Settings.getPictureCollection().getSelectedNodes() ) {
+                                if ( selectedNode.getUserObject() instanceof PictureInfo ) {
+                                    selectedNode.getPictureCollection().addToMailSelection( selectedNode );
+                                }
+                            }
+                        }
+
                     }
                 }
         );
@@ -212,9 +249,8 @@ public class PicturePopupMenu extends JPopupMenu {
                 new ActionListener() {
 
                     @Override
-                    public void actionPerformed( ActionEvent e
-                    ) {
-                        removeFromMailSelection();
+                    public void actionPerformed( ActionEvent e ) {
+                        popupNode.getPictureCollection().removeFromMailSelection( popupNode );
 
                     }
                 }
@@ -226,9 +262,8 @@ public class PicturePopupMenu extends JPopupMenu {
                 new ActionListener() {
 
                     @Override
-                    public void actionPerformed( ActionEvent e
-                    ) {
-                        doClearMailSelection();
+                    public void actionPerformed( ActionEvent e ) {
+                        popupNode.getPictureCollection().clearMailSelection();
                     }
                 }
         );
@@ -320,9 +355,12 @@ public class PicturePopupMenu extends JPopupMenu {
                 new ActionListener() {
 
                     @Override
-                    public void actionPerformed( ActionEvent e
-                    ) {
-                        refreshSelectedPictures();
+                    public void actionPerformed( ActionEvent e ) {
+                        if ( !Settings.getPictureCollection().isSelected( popupNode ) ) {
+                            JpoEventBus.getInstance().post( new RefreshThumbnailRequest( popupNode, ThumbnailQueueRequest.HIGH_PRIORITY ) );
+                        } else {
+                            JpoEventBus.getInstance().post( new RefreshThumbnailRequest( Settings.getPictureCollection().getSelectedNodesAsList(), ThumbnailQueueRequest.HIGH_PRIORITY ) );
+                        }
                     }
                 }
         );
@@ -343,7 +381,16 @@ public class PicturePopupMenu extends JPopupMenu {
 
                 @Override
                 public void actionPerformed( ActionEvent e ) {
-                    requestRemoveNode();
+                    SortableDefaultMutableTreeNode actionNode = mySetOfNodes.getNode( index );
+                    if ( ( Settings.getPictureCollection().countSelectedNodes() > 1 ) && ( Settings.getPictureCollection().isSelected( actionNode ) ) ) {
+                        for ( SortableDefaultMutableTreeNode selectedNode : Settings.getPictureCollection().getSelectedNodes() ) {
+                            if ( selectedNode.getUserObject() instanceof PictureInfo ) {
+                                selectedNode.deleteNode();
+                            }
+                        }
+                    } else {
+                        popupNode.deleteNode();
+                    }
 
                 }
             } );
@@ -376,14 +423,27 @@ public class PicturePopupMenu extends JPopupMenu {
 
                 @Override
                 public void actionPerformed( ActionEvent e ) {
-                    requestDelete();
+                    SortableDefaultMutableTreeNode actionNode = mySetOfNodes.getNode( index );
+                    if ( ( Settings.getPictureCollection().countSelectedNodes() > 1 ) && ( Settings.getPictureCollection().isSelected( actionNode ) ) ) {
+                        multiDeleteDialog();
+                    } else {
+                        fileDelete( actionNode );
+                    }
+
                 }
             } );
             fileOperationsJMenu.add( fileDeleteJMenuItem );
         }
 
-        add(
-                new ShowPictureInfoEditorMenuItem() );
+        JMenuItem showPictureInfoEditorMenuItem = new JMenuItem( Settings.jpoResources.getString( "pictureEditJMenuItemLabel" ) );
+        showPictureInfoEditorMenuItem.addActionListener( new ActionListener() {
+
+            @Override
+            public void actionPerformed( ActionEvent e ) {
+                JpoEventBus.getInstance().post( new ShowPictureInfoEditorRequest( popupNode ) );
+            }
+        } );
+        add( showPictureInfoEditorMenuItem );
 
         JMenuItem consolidateHereMenuItem = new JMenuItem( "Consolidate Here" );
 
@@ -427,42 +487,6 @@ public class PicturePopupMenu extends JPopupMenu {
             }
         }
         return title;
-    }
-
-    /**
-     * Request to remove a node. What happens depends on the selection: If the
-     * node on which the popup was performed is one of a selection of nodes, the
-     * multi-delete dialog is opened. If, however it is not part of a
-     * potentially existing selection then only the specified node will be
-     * deleted.
-     */
-    private void requestRemoveNode() {
-        SortableDefaultMutableTreeNode actionNode = mySetOfNodes.getNode( index );
-        if ( ( Settings.getPictureCollection().countSelectedNodes() > 1 ) && ( Settings.getPictureCollection().isSelected( actionNode ) ) ) {
-            for ( SortableDefaultMutableTreeNode selectedNode : Settings.getPictureCollection().getSelectedNodes() ) {
-                if ( selectedNode.getUserObject() instanceof PictureInfo ) {
-                    selectedNode.deleteNode();
-                }
-            }
-        } else {
-            popupNode.deleteNode();
-        }
-    }
-
-    /**
-     * the Delete menu was clicked. What happens depends on the selection: If
-     * the node on which the popup was performed is one of a selection of nodes,
-     * the multi-delete dialog is opened. If, however it is not part of a
-     * potentially existing selection then only the specified node will be
-     * deleted.
-     */
-    private void requestDelete() {
-        SortableDefaultMutableTreeNode actionNode = mySetOfNodes.getNode( index );
-        if ( ( Settings.getPictureCollection().countSelectedNodes() > 1 ) && ( Settings.getPictureCollection().isSelected( actionNode ) ) ) {
-            multiDeleteDialog();
-        } else {
-            fileDelete( actionNode );
-        }
     }
 
     /**
@@ -574,28 +598,6 @@ public class PicturePopupMenu extends JPopupMenu {
      * Index of the {@link #mySetOfNodes} being popped up.
      */
     private int index;  // default is 0
-
-    /**
-     * handle the Categories click
-     */
-    private void requestCategories() {
-        if ( Settings.getPictureCollection().countSelectedNodes() < 1 ) {
-            HashSet<SortableDefaultMutableTreeNode> hs = new HashSet<>();
-            hs.add( popupNode );
-            JpoEventBus.getInstance().post( new ShowCategoryUsageEditorRequest( hs ) );
-        } else {
-            if ( !Settings.getPictureCollection().isSelected( popupNode ) ) {
-                Settings.getPictureCollection().clearSelection();
-                HashSet<SortableDefaultMutableTreeNode> hs = new HashSet<>();
-                hs.add( popupNode );
-                JpoEventBus.getInstance().post( new ShowCategoryUsageEditorRequest( hs ) );
-            } else {
-                HashSet<SortableDefaultMutableTreeNode> hs = new HashSet<>( Arrays.asList( Settings.getPictureCollection().getSelectedNodes() ) );
-                JpoEventBus.getInstance().post( new ShowCategoryUsageEditorRequest( hs ) );
-
-            }
-        }
-    }
 
     /**
      * Handler for the RecentDropNodeChangedEvent
@@ -723,73 +725,6 @@ public class PicturePopupMenu extends JPopupMenu {
         }
     }
 
-    /**
-     * Adds a picture to the selection of pictures to be mailed.
-     *
-     * 1. If no nodes are selected, mail-select the node.
-     *
-     * 2. If multiple nodes are selected but the popup node is not one of them
-     * then mail-select the node
-     *
-     * 3. If multiple nodes are selected and the popup node is one of them then
-     * mail-select them all
-     */
-    private void addToMailSelection() {
-        if ( Settings.getPictureCollection().countSelectedNodes() < 1 ) {
-            popupNode.getPictureCollection().addToMailSelection( popupNode );
-        } else if ( !Settings.getPictureCollection().isSelected( popupNode ) ) {
-            popupNode.getPictureCollection().addToMailSelection( popupNode );
-        } else {
-            for ( SortableDefaultMutableTreeNode selectedNode : Settings.getPictureCollection().getSelectedNodes() ) {
-                if ( selectedNode.getUserObject() instanceof PictureInfo ) {
-                    selectedNode.getPictureCollection().addToMailSelection( selectedNode );
-                }
-            }
-        }
-    }
-
-    /**
-     * removes the current node from the Mail selection. (To unselect all
-     * mail-selected items the user has the remove all option.)
-     */
-    private void removeFromMailSelection() {
-        popupNode.getPictureCollection().removeFromMailSelection( popupNode );
-    }
-
-    /**
-     * Clears the set of images selected for emailing
-     */
-    private void doClearMailSelection() {
-        popupNode.getPictureCollection().clearMailSelection();
-    }
-
-    /**
-     * Refresh the selected pictures
-     */
-    private void refreshSelectedPictures() {
-        if ( !Settings.getPictureCollection().isSelected( popupNode ) ) {
-            JpoEventBus.getInstance().post( new RefreshThumbnailRequest( popupNode, ThumbnailQueueRequest.HIGH_PRIORITY ) );
-        } else {
-            JpoEventBus.getInstance().post( new RefreshThumbnailRequest( Settings.getPictureCollection().getSelectedNodesAsList(), ThumbnailQueueRequest.HIGH_PRIORITY ) );
-
-        }
-
-    }
-
-    private class ShowPictureInfoEditorMenuItem extends JMenuItem {
-
-        public ShowPictureInfoEditorMenuItem() {
-            setText( Settings.jpoResources.getString( "pictureEditJMenuItemLabel" ) );
-            addActionListener( new ActionListener() {
-
-                @Override
-                public void actionPerformed( ActionEvent e ) {
-                    JpoEventBus.getInstance().post( new ShowPictureInfoEditorRequest( popupNode ) );
-                }
-            } );
-
-        }
-    }
 
     private class MoveSubmenu extends JMenu {
 
