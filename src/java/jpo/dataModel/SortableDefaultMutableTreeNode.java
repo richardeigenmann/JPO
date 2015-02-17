@@ -40,7 +40,7 @@ import jpo.dataModel.Settings.FieldCodes;
 /*
  SortableDefaultMutableTreeNode.java:  The main data model object for the JPO application
 
- Copyright (C) 2003 - 2014  Richard Eigenmann, Zurich, Switzerland
+ Copyright (C) 2003 - 2015  Richard Eigenmann, Zurich, Switzerland
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -55,8 +55,10 @@ import jpo.dataModel.Settings.FieldCodes;
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 /**
- * This is the main data model object for the JPO Collection. It extends the
- * DefaultMutableTreeNode with the Comparable Interface that allows our nodes to
+ * This is the main data structure object for the JPO Collection. Holds a reference
+ * to either a PictureInfo or GroupInfo object in its getUserObject.
+ * 
+ * It extends the DefaultMutableTreeNode with the Comparable Interface that allows our nodes to
  * be compared.
  */
 public class SortableDefaultMutableTreeNode
@@ -76,7 +78,8 @@ public class SortableDefaultMutableTreeNode
     }
 
     /**
-     * Constructor for a new node including a user object.
+     * Constructor for a new node including a user object. The user object
+     * must be a PictureInfo or GroupInfo object
      *
      * @param userObject
      */
@@ -94,15 +97,6 @@ public class SortableDefaultMutableTreeNode
         return Settings.getPictureCollection();
     }
 
-    /**
-     * Returns a NodeStatistics object which can be queried for stuff about the
-     * node
-     *
-     * @return a new NodeStatistics object
-     */
-    public NodeStatistics getNodeStatistics() {
-        return new NodeStatistics( this );
-    }
 
     /**
      * Call this method to sort the Children of a node by a field.

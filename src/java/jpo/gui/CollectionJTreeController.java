@@ -1,5 +1,6 @@
 package jpo.gui;
 
+import jpo.gui.swing.PicturePopupMenu;
 import com.google.common.eventbus.Subscribe;
 import jpo.gui.swing.GroupPopupMenu;
 import java.awt.datatransfer.Transferable;

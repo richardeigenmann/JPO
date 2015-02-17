@@ -23,7 +23,7 @@ import java.util.logging.Logger;
 /*
  PictureInfo.java:  the definitions for picture data
 
- Copyright (C) 2002-2014  Richard Eigenmann.
+ Copyright (C) 2002-2015  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -64,10 +64,12 @@ public class PictureInfo implements Serializable {
 
     /**
      * Constructor method. Creates the object and sets up the variables.
+     * 
+     * TODO: What a strange signature. When would I erver use this?? RE, 2015
      *
      * @param highresLocation
      * @param description	The description of the image
-     * @param	filmReference	The reference to the film if any
+     * @param filmReference	The reference to the film if any
      */
     public PictureInfo( String highresLocation,
             String description,
@@ -83,6 +85,8 @@ public class PictureInfo implements Serializable {
 
     /**
      * Constructor method. Creates the object and sets up the variables.
+     * 
+     * TODO: What a strange signature. When would I erver use this?? RE, 2015
      *
      * @param highresURL The filename of the high resolution image
      * @param description	The description of the image

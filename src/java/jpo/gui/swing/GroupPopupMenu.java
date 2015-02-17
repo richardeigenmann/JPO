@@ -48,7 +48,7 @@ import jpo.gui.ThumbnailQueueRequest;
 /*
  GroupPopupMenu.java: popup menu for groups
 
- Copyright (C) 2002 - 2014  Richard Eigenmann.
+ Copyright (C) 2002 - 2015  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -254,7 +254,7 @@ public class GroupPopupMenu extends JPopupMenu {
                 recentOpenedfileJMenuItem[i].setVisible( false );
                 addCollectionJMenu.add( recentOpenedfileJMenuItem[i] );
             }
-            recentFilesChanged();
+            populateRecentFilesMenuItems();
 
             // menu item that allows adding from a list of filenames
             JMenuItem addFlatFileJMenuItem = new JMenuItem( Settings.jpoResources.getString( "addFlatFileJMenuItemLabel" ) );
@@ -286,7 +286,7 @@ public class GroupPopupMenu extends JPopupMenu {
                 moveGroupNodeJMenu.add( recentDropNodes[i] );
             }
             moveGroupNodeJMenu.add( movePictureNodeSeparator );
-            recentDropNodesChanged();
+            populateRecentDropNodeMenuItems();
 
             //menu item that allows move to top op list
             JMenuItem moveGroupToTopJMenuItem = new JMenuItem( Settings.jpoResources.getString( "moveGroupToTopJMenuItem" ) );
@@ -531,7 +531,8 @@ public class GroupPopupMenu extends JPopupMenu {
     }
 
     /**
-     * Handler for the RecentDropNodeChangedEvent
+     * Here we receive notification that the drop nodes have been updated. We 
+     * then populate the Move submenu with the current drop nodes.
      */
     private class RecentDropNodeChangedEventHandler {
 
@@ -546,7 +547,7 @@ public class GroupPopupMenu extends JPopupMenu {
 
                 @Override
                 public void run() {
-                    recentDropNodesChanged();
+                    populateRecentDropNodeMenuItems();
                 }
             } );
 
@@ -554,10 +555,10 @@ public class GroupPopupMenu extends JPopupMenu {
     }
 
     /**
-     * Here we receive notification that the drop nodes have been updated and go
-     * off and update the submenu items
+     * Populates the Move menu with the recent drop nodes of the application. 
+     * If there are no recent drop nodes the list is empty.
      */
-    public void recentDropNodesChanged() {
+    public void populateRecentDropNodeMenuItems() {
         boolean dropNodesVisible = false;
         for ( int i = 0; i < Settings.MAX_DROPNODES; i++ ) {
             if ( ( Settings.recentDropNodes[i] != null ) ) {
@@ -576,7 +577,8 @@ public class GroupPopupMenu extends JPopupMenu {
     }
 
     /**
-     * Handler for the RecentCollectionsChangedEvent
+     * Receives an Event when the RecentCollections array has been modified. 
+     * Ensures that the menu entries are updated in line with the new recent collections.
      */
     private class RecentCollectionsChangedEventHandler {
 
@@ -591,7 +593,7 @@ public class GroupPopupMenu extends JPopupMenu {
 
                 @Override
                 public void run() {
-                    recentFilesChanged();
+                    populateRecentFilesMenuItems();
                 }
             } );
 
@@ -599,11 +601,10 @@ public class GroupPopupMenu extends JPopupMenu {
     }
 
     /**
-     * Sets up the menu entries in the File|OpenRecent sub menu from the
-     * recentCollections in Settings. Can be called by the interface from the
-     * listener on the Settings object.
+     * Sets up the menu entries in the Add > Collection sub menu from the
+     * recentCollections in the application. Has to be run on the EDT.
      */
-    public void recentFilesChanged() {
+    public void populateRecentFilesMenuItems() {
         Tools.checkEDT();
         for ( int i = 0; i < Settings.recentCollections.length; i++ ) {
             if ( Settings.recentCollections[i] != null ) {

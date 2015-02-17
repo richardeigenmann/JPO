@@ -196,9 +196,7 @@
                     <ide-action name="profile"/>
                 </context-menu>
             </view>
-            <subprojects>
-                <project>.</project>
-            </subprojects>
+            <subprojects/>
         </general-data>
         <java-data xmlns="http://www.netbeans.org/ns/freeform-project-java/3">
             <compilation-unit>

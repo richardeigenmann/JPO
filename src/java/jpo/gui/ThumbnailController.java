@@ -1,5 +1,6 @@
 package jpo.gui;
 
+import jpo.gui.swing.PicturePopupMenu;
 import java.awt.Dimension;
 import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DragGestureEvent;

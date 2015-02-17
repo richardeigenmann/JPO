@@ -53,7 +53,6 @@ public class JpoTransferable
     public JpoTransferable( Object[] transferableNodes ) {
         LOGGER.fine( String.format( "A Transferable has been created with %d nodes", transferableNodes.length ) );
         this.transferableNodes = transferableNodes;
-        //originalHashCode = java.util.Arrays.hashCode( transferableNodes );
     }
 
     /**
