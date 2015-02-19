@@ -22,17 +22,20 @@ import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 import jpo.EventBus.AddCollectionToGroupRequest;
 import jpo.EventBus.AddEmptyGroupRequest;
 import jpo.EventBus.AddFlatFileRequest;
 import jpo.EventBus.AddGroupToEmailSelectionRequest;
+import jpo.EventBus.AddPictureNodesToEmailSelectionRequest;
 import jpo.EventBus.ApplicationStartupRequest;
 import jpo.EventBus.CheckDirectoriesRequest;
 import jpo.EventBus.CheckIntegrityRequest;
 import jpo.EventBus.ChooseAndAddCollectionRequest;
 import jpo.EventBus.ChooseAndAddFlatfileRequest;
 import jpo.EventBus.ChooseAndAddPicturesToGroupRequest;
+import jpo.EventBus.ClearEmailSelectionRequest;
 import jpo.EventBus.CloseApplicationRequest;
 import jpo.EventBus.ConsolidateGroupRequest;
 import jpo.EventBus.CopyLocationsChangedEvent;
@@ -40,6 +43,8 @@ import jpo.EventBus.CopyToDirRequest;
 import jpo.EventBus.CopyToNewLocationRequest;
 import jpo.EventBus.CopyToNewZipfileRequest;
 import jpo.EventBus.CopyToZipfileRequest;
+import jpo.EventBus.DeleteMultiNodeFileRequest;
+import jpo.EventBus.DeleteNodeFileRequest;
 import jpo.EventBus.EditCamerasRequest;
 import jpo.EventBus.EditSettingsRequest;
 import jpo.EventBus.ExportGroupToFlatFileRequest;
@@ -68,8 +73,10 @@ import jpo.EventBus.RecentCollectionsChangedEvent;
 import jpo.EventBus.RecentDropNodesChangedEvent;
 import jpo.EventBus.RefreshThumbnailRequest;
 import jpo.EventBus.RemoveNodeRequest;
+import jpo.EventBus.RemovePictureNodesFromEmailSelectionRequest;
 import jpo.EventBus.RenamePictureRequest;
 import jpo.EventBus.RotatePictureRequest;
+import jpo.EventBus.RunUserFunctionRequest;
 import jpo.EventBus.SendEmailRequest;
 import jpo.EventBus.SetPictureRotationRequest;
 import jpo.EventBus.ShowCategoryUsageEditorRequest;
@@ -384,7 +391,7 @@ public class ApplicationEventHandler {
      * @param request
      */
     @Subscribe
-    public void handleShowGroupInfoEditorRequest( ShowCategoryUsageEditorRequest request ) {
+    public void handleShowCategoryUsageEditorRequest( ShowCategoryUsageEditorRequest request ) {
         new CategoryUsageJFrame( request );
     }
 
@@ -417,11 +424,7 @@ public class ApplicationEventHandler {
             File newName = new File( selectedValue );
             if ( highresFile.renameTo( newName ) ) {
                 LOGGER.log( Level.INFO, "Sucessufully renamed: {0} to: {1}", new Object[]{ highresFile.toString(), selectedValue } );
-                try {
-                    pi.setHighresLocation( newName.toURI().toURL() );
-                } catch ( MalformedURLException x ) {
-                    LOGGER.log( Level.INFO, "Caught a MalformedURLException because of: {0}", x.getMessage() );
-                }
+                pi.setHighresLocation( newName );
             } else {
                 LOGGER.log( Level.INFO, "Rename failed from : {0} to: {1}", new Object[]{ highresFile.toString(), selectedValue } );
             }
@@ -749,6 +752,47 @@ public class ApplicationEventHandler {
     }
 
     /**
+     * Adds the picture nodes in the supplied request to the email selection
+     *
+     * @param request
+     */
+    @Subscribe
+    public void handleAddPictureModesToEmailSelectionRequest( AddPictureNodesToEmailSelectionRequest request ) {
+        List<SortableDefaultMutableTreeNode> nodesList = request.getNodesList();
+        for ( SortableDefaultMutableTreeNode n : nodesList ) {
+            if ( n.getUserObject() instanceof PictureInfo ) {
+                Settings.getPictureCollection().addToMailSelection( n );
+            }
+        }
+    }
+
+    /**
+     * Removes the picture nodes in the supplied request from the email
+     * selection
+     *
+     * @param request
+     */
+    @Subscribe
+    public void handleRemovePictureModesFromEmailSelectionRequest( RemovePictureNodesFromEmailSelectionRequest request ) {
+        List<SortableDefaultMutableTreeNode> nodesList = request.getNodesList();
+        for ( SortableDefaultMutableTreeNode n : nodesList ) {
+            if ( n.getUserObject() instanceof PictureInfo ) {
+                Settings.getPictureCollection().removeFromMailSelection( n );
+            }
+        }
+    }
+
+    /**
+     * Clears the the email selection
+     *
+     * @param request
+     */
+    @Subscribe
+    public void handleClearEmailSelectionRequest( ClearEmailSelectionRequest request ) {
+        Settings.getPictureCollection().clearMailSelection();
+    }
+
+    /**
      * Opens the consolidate group dialog
      *
      * @param request The request
@@ -818,7 +862,7 @@ public class ApplicationEventHandler {
 
     }
 
-        /**
+    /**
      * Brings up a JFileChooser to select the target zip file and then copies
      * the images there
      *
@@ -846,7 +890,6 @@ public class ApplicationEventHandler {
         JpoEventBus.getInstance().post( new CopyToZipfileRequest( request.getNodes(), chosenFile ) );
     }
 
-    
     /**
      * Copies the pictures of the supplied nodes to the target zipfile, creating
      * it if need be. This method does append to the zipfile by writing to a
@@ -857,8 +900,8 @@ public class ApplicationEventHandler {
      */
     @Subscribe
     public void handleCopyToZipfileRequest( CopyToZipfileRequest request ) {
-        
-                File tempfile = new File( request.getTargetZipfile().getAbsolutePath() + ".jpo.temp" );
+
+        File tempfile = new File( request.getTargetZipfile().getAbsolutePath() + ".jpo.temp" );
         int picsCopied = 0;
         PictureInfo pictureInfo;
         File sourceFile;
@@ -919,7 +962,7 @@ public class ApplicationEventHandler {
                 JOptionPane.INFORMATION_MESSAGE );
 
     }
-    
+
     /**
      * Moves the node to the first position in the group
      *
@@ -981,6 +1024,104 @@ public class ApplicationEventHandler {
             deleteNode.deleteNode();
         }
         JpoEventBus.getInstance().post( new ShowGroupRequest( firstParentNode ) );
+    }
+
+    /**
+     * Deletes the file and the node
+     *
+     * @param request
+     */
+    @Subscribe
+    public void handleDeleteNodeFileRequest( DeleteNodeFileRequest request ) {
+        SortableDefaultMutableTreeNode node = request.getNode();
+        Object userObj = node.getUserObject();
+        if ( !( userObj instanceof PictureInfo ) ) {
+            return;
+        }
+
+        PictureInfo pi = (PictureInfo) userObj;
+        File highresFile = pi.getHighresFile();
+        if ( highresFile == null ) {
+            return;
+        }
+
+        int option = JOptionPane.showConfirmDialog(
+                Settings.anchorFrame,
+                Settings.jpoResources.getString( "FileDeleteLabel" ) + highresFile.toString() + "\n" + Settings.jpoResources.getString( "areYouSure" ),
+                Settings.jpoResources.getString( "FileDeleteTitle" ),
+                JOptionPane.OK_CANCEL_OPTION );
+
+        if ( option == 0 ) {
+            boolean ok = false;
+
+            if ( highresFile.exists() ) {
+                ok = highresFile.delete();
+                if ( !ok ) {
+                    LOGGER.log( Level.INFO, "File deleted failed on: {0}", highresFile.toString() );
+                }
+            }
+
+            node.deleteNode();
+
+            if ( !ok ) {
+                JOptionPane.showMessageDialog( Settings.anchorFrame,
+                        Settings.jpoResources.getString( "fileDeleteError" ) + highresFile.toString(),
+                        Settings.jpoResources.getString( "genericError" ),
+                        JOptionPane.ERROR_MESSAGE );
+            }
+        }
+    }
+
+    /**
+     * Deletes the file and the node
+     *
+     * @param request
+     */
+    @Subscribe
+    public void handleDeleteMultiNodeFileRequest( DeleteMultiNodeFileRequest request ) {
+        List<SortableDefaultMutableTreeNode> nodes = request.getNodes();
+        JTextArea textArea = new JTextArea();
+        textArea.setText( "" );
+        for ( SortableDefaultMutableTreeNode selectedNode : nodes ) {
+            if ( selectedNode.getUserObject() instanceof PictureInfo ) {
+                textArea.append( ( (PictureInfo) selectedNode.getUserObject() ).getHighresLocation() + "\n" );
+            }
+        }
+        textArea.append( Settings.jpoResources.getString( "areYouSure" ) );
+
+        int option = JOptionPane.showConfirmDialog(
+                Settings.anchorFrame, //very annoying if the main window is used as it forces itself into focus.
+                textArea,
+                Settings.jpoResources.getString( "FileDeleteLabel" ),
+                JOptionPane.OK_CANCEL_OPTION );
+
+        if ( option == 0 ) {
+            for ( SortableDefaultMutableTreeNode selectedNode : nodes ) {
+                PictureInfo pi;
+                if ( selectedNode.getUserObject() instanceof PictureInfo ) {
+                    pi = (PictureInfo) selectedNode.getUserObject();
+                    boolean ok = false;
+
+                    File highresFile = pi.getHighresFile();
+                    if ( highresFile.exists() ) {
+                        ok = highresFile.delete();
+                        if ( !ok ) {
+                            LOGGER.log( Level.INFO, "File deleted failed on: {0}", highresFile.toString() );
+                        }
+                    }
+
+                    selectedNode.deleteNode();
+
+                    if ( !ok ) {
+                        JOptionPane.showMessageDialog( Settings.anchorFrame,
+                                Settings.jpoResources.getString( "fileDeleteError" ) + highresFile.toString(),
+                                Settings.jpoResources.getString( "genericError" ),
+                                JOptionPane.ERROR_MESSAGE );
+                    }
+                }
+            }
+            Settings.getPictureCollection().clearSelection();
+        }
     }
 
     /**
@@ -1205,14 +1346,15 @@ public class ApplicationEventHandler {
     }
 
     /**
-     * Handles the ResetPictureRotationRequest request
+     * Handles the SetPictureRotationRequest request by setting the rotation and
+     * calling the refresh thumbnails methods
      *
      * @param request
      */
     @Subscribe
     public void handleSetPictureRotationRequest( SetPictureRotationRequest request ) {
-        PictureInfo pi = (PictureInfo) request.getNode().getUserObject();
-        pi.setRotation( request.getAngle() );
+        PictureInfo pictureInfo = (PictureInfo) request.getNode().getUserObject();
+        pictureInfo.setRotation( request.getAngle() );
         JpoEventBus.getInstance().post( new RefreshThumbnailRequest( request.getNode(), request.getPriority() ) );
         JpoEventBus.getInstance().post( new RefreshThumbnailRequest( (SortableDefaultMutableTreeNode) request.getNode().getParent(), request.getPriority() ) );
     }
@@ -1225,6 +1367,21 @@ public class ApplicationEventHandler {
     @Subscribe
     public void handleOpenCategoryEditorRequest( OpenCategoryEditorRequest request ) {
         new CategoryEditorJFrame();
+    }
+
+    /**
+     * Handles the RunUserFunctionRequest request
+     *
+     * @param request
+     */
+    @Subscribe
+    public void handleRunUserFunctionRequest( RunUserFunctionRequest request ) {
+        try {
+            Tools.runUserFunction( request.getUserFunctionIndex(), request.getPictureInfo() );
+        } catch ( ClassCastException | NullPointerException x ) {
+            LOGGER.severe( x.getMessage() );
+        }
+
     }
 
 }

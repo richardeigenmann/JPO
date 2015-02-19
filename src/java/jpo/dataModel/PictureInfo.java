@@ -324,6 +324,7 @@ public class PictureInfo implements Serializable {
         try {
             returnFile = new File( new URI( highresLocation ) );
         } catch ( IllegalArgumentException | URISyntaxException x ) {
+            LOGGER.severe( x.getMessage() );
             return null;
         }
         return returnFile;
@@ -398,6 +399,20 @@ public class PictureInfo implements Serializable {
         }
     }
 
+    /**
+     * Sets the highres location
+     *
+     * @param file The new file of the highres picture.
+     */
+    public synchronized void setHighresLocation( File file ) {
+        try {
+            setHighresLocation (file.toURI().toURL());
+        } catch ( MalformedURLException ex ) {
+            LOGGER.severe( ex.getMessage() );
+        }
+    }
+    
+    
     /**
      * Appends the text to the field (used by XML parser).
      *

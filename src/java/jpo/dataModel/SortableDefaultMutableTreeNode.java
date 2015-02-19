@@ -55,11 +55,11 @@ import jpo.dataModel.Settings.FieldCodes;
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 /**
- * This is the main data structure object for the JPO Collection. Holds a reference
- * to either a PictureInfo or GroupInfo object in its getUserObject.
- * 
- * It extends the DefaultMutableTreeNode with the Comparable Interface that allows our nodes to
- * be compared.
+ * This is the main data structure object for the JPO Collection. Holds a
+ * reference to either a PictureInfo or GroupInfo object in its getUserObject.
+ *
+ * It extends the DefaultMutableTreeNode with the Comparable Interface that
+ * allows our nodes to be compared.
  */
 public class SortableDefaultMutableTreeNode
         extends DefaultMutableTreeNode
@@ -78,8 +78,8 @@ public class SortableDefaultMutableTreeNode
     }
 
     /**
-     * Constructor for a new node including a user object. The user object
-     * must be a PictureInfo or GroupInfo object
+     * Constructor for a new node including a user object. The user object must
+     * be a PictureInfo or GroupInfo object
      *
      * @param userObject
      */
@@ -96,7 +96,6 @@ public class SortableDefaultMutableTreeNode
     public PictureCollection getPictureCollection() {
         return Settings.getPictureCollection();
     }
-
 
     /**
      * Call this method to sort the Children of a node by a field.
@@ -1381,21 +1380,16 @@ public class SortableDefaultMutableTreeNode
         LOGGER.fine( String.format( "Adding file %s to the node %s", addFile.toString(), toString() ) );
         PictureInfo newPictureInfo = new PictureInfo();
 
-        try {
-            if ( !Tools.jvmHasReader( addFile ) ) {
-                LOGGER.info( String.format( "Not adding file %s because the Java Virtual Machine has not got a reader for the file.", addFile.toString() ) );
-                return false; // don't add if there is no reader.
-            }
-            newPictureInfo.setHighresLocation( addFile.toURI().toURL() );
-            //newPictureInfo.setLowresLocation( Tools.getNewLowresFilename() );
-            newPictureInfo.setDescription( Tools.stripOutFilenameRoot( addFile ) );
-            newPictureInfo.setChecksum( Tools.calculateChecksum( addFile ) );
-            if ( categoryAssignment != null ) {
-                newPictureInfo.setCategoryAssignment( categoryAssignment );
-            }
-        } catch ( MalformedURLException x ) {
-            LOGGER.severe( String.format( "Caught a MalformedURLException: %s%nError: %s", addFile.getPath(), x.getMessage() ) );
-            return false;
+        if ( !Tools.jvmHasReader( addFile ) ) {
+            LOGGER.info( String.format( "Not adding file %s because the Java Virtual Machine has not got a reader for the file.", addFile.toString() ) );
+            return false; // don't add if there is no reader.
+        }
+        newPictureInfo.setHighresLocation( addFile );
+        //newPictureInfo.setLowresLocation( Tools.getNewLowresFilename() );
+        newPictureInfo.setDescription( Tools.stripOutFilenameRoot( addFile ) );
+        newPictureInfo.setChecksum( Tools.calculateChecksum( addFile ) );
+        if ( categoryAssignment != null ) {
+            newPictureInfo.setCategoryAssignment( categoryAssignment );
         }
         SortableDefaultMutableTreeNode newNode = new SortableDefaultMutableTreeNode( newPictureInfo );
 
