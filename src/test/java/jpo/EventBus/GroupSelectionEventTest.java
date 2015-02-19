@@ -4,20 +4,18 @@ import com.google.common.eventbus.Subscribe;
 import jpo.dataModel.GroupInfo;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
 import static junit.framework.Assert.assertEquals;
-import junit.framework.TestCase;
+import org.junit.Test;
 
 /**
  * Test for Group Selection Events
  * @author Richard Eigenmann
  */
-public class GroupSelectionEventTest extends TestCase {
+public class GroupSelectionEventTest  {
 
     /**
      * Constructor
-     * @param testName test name
      */
-    public GroupSelectionEventTest( String testName ) {
-        super( testName );
+    public GroupSelectionEventTest() {
         jpoEventBus = JpoEventBus.getInstance();
     }
 
@@ -28,6 +26,7 @@ public class GroupSelectionEventTest extends TestCase {
     /**
      * Test receiving an event.
      */
+    @Test
     public void testReceivingEvent() {
         EventBusSubscriber myEventBusSubscriber = new EventBusSubscriber();
         jpoEventBus.register( myEventBusSubscriber );

@@ -37,30 +37,26 @@ import jpo.dataModel.PictureInfo;
 import jpo.dataModel.Settings;
 import jpo.dataModel.SingleNodeNavigator;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
-import junit.framework.TestCase;
+import org.junit.Test;
+import static org.junit.Assert.*;
+import org.junit.Before;
+import org.junit.BeforeClass;
 
 /**
  * Tests for the GroupPopupMenu Class
  *
  * @author Richard Eigenmann
  */
-public class PicturePopupMenuTest extends TestCase {
+public class PicturePopupMenuTest  {
 
-    /**
-     * Constructor for the tests.
-     *
+    /*
      * Note these tests are burdened with reflection to get at the inner
      * workings of the popup menu. Should I open up the fields in the popup menu
      * class? I think not because other classes don't need to see into the inner
      * workings of the popup menu. With the exception of this one that has to
      * make sure the details of the class are working properly.
      *
-     * @param testName test name
      */
-    public PicturePopupMenuTest( String testName ) {
-        super( testName );
-    }
-
     final private PictureInfo myPictureInfo = new PictureInfo();
 
     {
@@ -126,8 +122,8 @@ public class PicturePopupMenuTest extends TestCase {
      *
      * @throws Exception
      */
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         myPicturePopupMenu = new PicturePopupMenu( myNavigator, 0 );
 
         Runnable r = new Runnable() {
@@ -178,6 +174,7 @@ public class PicturePopupMenuTest extends TestCase {
     /**
      * Test that out Group Node was created for the correct node.
      */
+    @Test
     public void testRememberingPopupNode() {
         try {
             Field popupNodeField;
@@ -195,6 +192,7 @@ public class PicturePopupMenuTest extends TestCase {
     /**
      * Get the children
      */
+    @Test
     public void testGetChildren() {
         assertEquals( "My Picture", title.getText() );
         assertEquals( "Show Picture", showPicture.getText() );
@@ -230,6 +228,7 @@ public class PicturePopupMenuTest extends TestCase {
     /**
      * Test clicking showPicture
      */
+    @Test
     public void testShowPicture() {
         JpoEventBus.getInstance().register( new Object() {
             @Subscribe
@@ -249,6 +248,7 @@ public class PicturePopupMenuTest extends TestCase {
     /**
      * Test clicking showMap
      */
+    @Test
     public void testShowMap() {
         JpoEventBus.getInstance().register( new Object() {
             @Subscribe
@@ -263,6 +263,7 @@ public class PicturePopupMenuTest extends TestCase {
 
     private int navigateToEventCount = 0;
 
+    @Test
     public void testNavigateTo() {
         JpoEventBus.getInstance().register( new Object() {
             @Subscribe
@@ -277,6 +278,7 @@ public class PicturePopupMenuTest extends TestCase {
 
     private int categoriesEventCount = 0;
 
+    @Test
     public void testCategories() {
         JpoEventBus.getInstance().register( new Object() {
             @Subscribe
@@ -291,6 +293,7 @@ public class PicturePopupMenuTest extends TestCase {
 
     private int addToMailSelectEventCount = 0;
 
+    @Test
     public void testSelectForEmail() {
         JpoEventBus.getInstance().register( new Object() {
             @Subscribe
@@ -305,6 +308,7 @@ public class PicturePopupMenuTest extends TestCase {
 
     private int removeFromMailSelectEventCount = 0;
 
+    @Test
     public void testUnselectForEmail() {
         JpoEventBus.getInstance().register( new Object() {
             @Subscribe
@@ -319,6 +323,7 @@ public class PicturePopupMenuTest extends TestCase {
 
     private int clearEmailSelectionEventCount = 0;
 
+    @Test
     public void testClearEmailSelection() {
         JpoEventBus.getInstance().register( new Object() {
             @Subscribe
@@ -334,6 +339,7 @@ public class PicturePopupMenuTest extends TestCase {
     // TODO: Test the selection logic of the Select for EMail and unselect for EMail
     private int userFunctionEventCount = 0;
 
+    @Test
     public void testUserFunctions() {
         JpoEventBus.getInstance().register( new Object() {
             @Subscribe
@@ -350,6 +356,7 @@ public class PicturePopupMenuTest extends TestCase {
 
     private int rotationEventCount = 0;
 
+    @Test
     public void testRotation() {
         JpoEventBus.getInstance().register( new Object() {
             @Subscribe
@@ -373,6 +380,7 @@ public class PicturePopupMenuTest extends TestCase {
 
     private int refreshEventCount = 0;
 
+    @Test
     public void testRefresh() {
         JpoEventBus.getInstance().register( new Object() {
             @Subscribe
@@ -387,6 +395,7 @@ public class PicturePopupMenuTest extends TestCase {
 
     private int moveEventCount = 0;
 
+    @Test
     public void testMove() {
         JpoEventBus.getInstance().register( new Object() {
             @Subscribe
@@ -408,10 +417,12 @@ public class PicturePopupMenuTest extends TestCase {
             public void handleMoveNodeToBottomRequest( MoveNodeToBottomRequest request ) {
                 moveEventCount++;
             }
+
             @Subscribe
             public void handleMoveIndentRequest( MoveIndentRequest request ) {
                 moveEventCount++;
             }
+
             @Subscribe
             public void handleMoveOutdentRequest( MoveOutdentRequest request ) {
                 moveEventCount++;
@@ -429,6 +440,7 @@ public class PicturePopupMenuTest extends TestCase {
 
     private int removeEventCount = 0;
 
+    @Test
     public void testRemoveNode() {
         JpoEventBus.getInstance().register( new Object() {
             @Subscribe
@@ -443,6 +455,7 @@ public class PicturePopupMenuTest extends TestCase {
 
     private int renameEventCount = 0;
 
+    @Test
     public void testFileRename() {
         JpoEventBus.getInstance().register( new Object() {
             @Subscribe
@@ -457,6 +470,7 @@ public class PicturePopupMenuTest extends TestCase {
 
     private int deleteEventCount = 0;
 
+    @Test
     public void testFileDelete() {
         JpoEventBus.getInstance().register( new Object() {
             @Subscribe
@@ -472,7 +486,8 @@ public class PicturePopupMenuTest extends TestCase {
 
     private int propertiesEventCount = 0;
 
-    public void testProperties() {
+    @Test
+    public void properties() {
         JpoEventBus.getInstance().register( new Object() {
             @Subscribe
             public void handleShowPictureInfoEditorRequest( ShowPictureInfoEditorRequest request ) {
@@ -486,7 +501,8 @@ public class PicturePopupMenuTest extends TestCase {
 
     private int consolidateHereEventCount = 0;
 
-    public void testConsolidateHere() {
+    @Test
+    public void consolidateHere() {
         JpoEventBus.getInstance().register( new Object() {
             @Subscribe
             public void handleConsolidateGroupRequest( ConsolidateGroupRequest request ) {
