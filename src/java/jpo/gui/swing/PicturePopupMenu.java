@@ -25,11 +25,13 @@ import jpo.EventBus.CopyToZipfileRequest;
 import jpo.EventBus.DeleteMultiNodeFileRequest;
 import jpo.EventBus.DeleteNodeFileRequest;
 import jpo.EventBus.JpoEventBus;
+import jpo.EventBus.MoveIndentRequest;
 import jpo.EventBus.MoveNodeDownRequest;
 import jpo.EventBus.MoveNodeToBottomRequest;
 import jpo.EventBus.MoveNodeToNodeRequest;
 import jpo.EventBus.MoveNodeToTopRequest;
 import jpo.EventBus.MoveNodeUpRequest;
+import jpo.EventBus.MoveOutdentRequest;
 import jpo.EventBus.RecentDropNodesChangedEvent;
 import jpo.EventBus.RefreshThumbnailRequest;
 import jpo.EventBus.RemoveNodeRequest;
@@ -49,7 +51,6 @@ import jpo.dataModel.PictureCollection;
 import jpo.dataModel.PictureInfo;
 import jpo.dataModel.Settings;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
-import jpo.gui.PictureViewer;
 import jpo.gui.ThumbnailQueueRequest;
 
 /*
@@ -477,7 +478,8 @@ public class PicturePopupMenu extends JPopupMenu {
 
             @Override
             public void actionPerformed( ActionEvent event ) {
-                if ( Settings.getPictureCollection().countSelectedNodes() < 1 ) {
+                if ( ( Settings.getPictureCollection().countSelectedNodes() < 1 )
+                        || ( !pictureCollection.isSelected( popupNode ) ) ) {
                     JpoEventBus.getInstance().post( new MoveNodeToTopRequest( popupNode ) );
                 } else {
                     for ( SortableDefaultMutableTreeNode selectedNode : Settings.getPictureCollection().getSelectedNodes() ) {
@@ -495,7 +497,8 @@ public class PicturePopupMenu extends JPopupMenu {
 
             @Override
             public void actionPerformed( ActionEvent e ) {
-                if ( Settings.getPictureCollection().countSelectedNodes() < 1 ) {
+                if ( ( Settings.getPictureCollection().countSelectedNodes() < 1 )
+                        || ( !pictureCollection.isSelected( popupNode ) ) ) {
                     JpoEventBus.getInstance().post( new MoveNodeUpRequest( popupNode ) );
                 } else {
                     for ( SortableDefaultMutableTreeNode selectedNode : Settings.getPictureCollection().getSelectedNodes() ) {
@@ -513,7 +516,7 @@ public class PicturePopupMenu extends JPopupMenu {
 
             @Override
             public void actionPerformed( ActionEvent e ) {
-                if ( Settings.getPictureCollection().countSelectedNodes() < 1 ) {
+                if ( ( Settings.getPictureCollection().countSelectedNodes() < 1 ) || ( !pictureCollection.isSelected( popupNode ) ) ) {
                     JpoEventBus.getInstance().post( new MoveNodeDownRequest( popupNode ) );
                 } else {
                     for ( SortableDefaultMutableTreeNode selectedNode : Settings.getPictureCollection().getSelectedNodes() ) {
@@ -532,7 +535,8 @@ public class PicturePopupMenu extends JPopupMenu {
 
             @Override
             public void actionPerformed( ActionEvent e ) {
-                if ( Settings.getPictureCollection().countSelectedNodes() < 1 ) {
+                if ( ( Settings.getPictureCollection().countSelectedNodes() < 1 )
+                        || ( !pictureCollection.isSelected( popupNode ) ) ) {
                     JpoEventBus.getInstance().post( new MoveNodeToBottomRequest( popupNode ) );
                 } else {
                     for ( SortableDefaultMutableTreeNode selectedNode : Settings.getPictureCollection().getSelectedNodes() ) {
@@ -550,15 +554,20 @@ public class PicturePopupMenu extends JPopupMenu {
 
             @Override
             public void actionPerformed( ActionEvent e ) {
-                if ( Settings.getPictureCollection().countSelectedNodes() < 1 ) {
-                    popupNode.indentNode();
+                ArrayList<SortableDefaultMutableTreeNode> nodes = new ArrayList<>();
+                if ( ( Settings.getPictureCollection().countSelectedNodes() < 1 )
+                        || ( !pictureCollection.isSelected( popupNode ) ) ) {
+                    nodes.add( popupNode );
+                    //popupNode.indentNode();
                 } else {
                     for ( SortableDefaultMutableTreeNode selectedNode : Settings.getPictureCollection().getSelectedNodes() ) {
                         if ( selectedNode.getUserObject() instanceof PictureInfo ) {
-                            selectedNode.indentNode();
+                            nodes.add( selectedNode );
+                            //selectedNode.indentNode();
                         }
                     }
                 }
+                JpoEventBus.getInstance().post( new MoveIndentRequest( nodes ) );
             }
         } );
         moveJMenu.add( indentJMenuItem );
@@ -568,15 +577,18 @@ public class PicturePopupMenu extends JPopupMenu {
 
             @Override
             public void actionPerformed( ActionEvent e ) {
-                if ( Settings.getPictureCollection().countSelectedNodes() < 1 ) {
-                    popupNode.outdentNode();
+                ArrayList<SortableDefaultMutableTreeNode> nodes = new ArrayList<>();
+                if ( ( Settings.getPictureCollection().countSelectedNodes() < 1 )
+                        || ( !pictureCollection.isSelected( popupNode ) ) ) {
+                    nodes.add( popupNode );
                 } else {
                     for ( SortableDefaultMutableTreeNode selectedNode : Settings.getPictureCollection().getSelectedNodes() ) {
                         if ( selectedNode.getUserObject() instanceof PictureInfo ) {
-                            selectedNode.outdentNode();
+                            nodes.add( selectedNode );
                         }
                     }
                 }
+                JpoEventBus.getInstance().post( new MoveOutdentRequest( nodes ) );
             }
         } );
         moveJMenu.add( outdentJMenuItem );
@@ -792,7 +804,7 @@ public class PicturePopupMenu extends JPopupMenu {
      * The node the popup menu was created for
      */
     private final SortableDefaultMutableTreeNode popupNode;
-    
+
     /**
      * Reference to the {@link NodeNavigatorInterface} which indicates the nodes
      * being displayed.

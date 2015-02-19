@@ -14,6 +14,12 @@ import jpo.EventBus.ClearEmailSelectionRequest;
 import jpo.EventBus.ConsolidateGroupRequest;
 import jpo.EventBus.DeleteNodeFileRequest;
 import jpo.EventBus.JpoEventBus;
+import jpo.EventBus.MoveIndentRequest;
+import jpo.EventBus.MoveNodeDownRequest;
+import jpo.EventBus.MoveNodeToBottomRequest;
+import jpo.EventBus.MoveNodeToTopRequest;
+import jpo.EventBus.MoveNodeUpRequest;
+import jpo.EventBus.MoveOutdentRequest;
 import jpo.EventBus.RefreshThumbnailRequest;
 import jpo.EventBus.RemoveNodeRequest;
 import jpo.EventBus.RemovePictureNodesFromEmailSelectionRequest;
@@ -60,13 +66,13 @@ public class PicturePopupMenuTest extends TestCase {
     {
         myPictureInfo.setDescription( "My Picture" );
         try {
-            File temp = File.createTempFile( "JPO-Unit-Test", ".jpg");
+            File temp = File.createTempFile( "JPO-Unit-Test", ".jpg" );
             temp.deleteOnExit();
             myPictureInfo.setHighresLocation( temp );
         } catch ( IOException ex ) {
             Logger.getLogger( PicturePopupMenuTest.class.getName() ).log( Level.SEVERE, null, ex );
         }
-        
+
     }
     final private GroupInfo myGroupInfo = new GroupInfo( "Parent Group" );
     final private SortableDefaultMutableTreeNode myNode = new SortableDefaultMutableTreeNode( myPictureInfo );
@@ -99,13 +105,19 @@ public class PicturePopupMenuTest extends TestCase {
     private JMenuItem rotate0;
     private JMenuItem refreshThumbnail;
     private JMenu move;
+    private JMenuItem moveToTop;
+    private JMenuItem moveUp;
+    private JMenuItem moveDown;
+    private JMenuItem moveToBottom;
+    private JMenuItem moveIndent;
+    private JMenuItem moveOutdent;
     private JMenu copyImage;
     private JMenuItem copyImageChooseTargetDir;
     private JMenuItem copyImageToZipFile;
     private JMenuItem removeNode;
     private JMenu fileOperations;
-    private JMenuItem rename;
-    private JMenuItem delete;
+    private JMenuItem fileOperationsRename;
+    private JMenuItem fileoperationsDelete;
     private JMenuItem properties;
     private JMenuItem consolidateHere;
 
@@ -142,13 +154,19 @@ public class PicturePopupMenuTest extends TestCase {
                 rotate0 = rotation.getItem( 3 );
                 refreshThumbnail = (JMenuItem) myPicturePopupMenu.getComponent( 11 );
                 move = (JMenu) myPicturePopupMenu.getComponent( 12 );
+                moveToTop = move.getItem( Settings.MAX_DROPNODES + 1 );
+                moveUp = move.getItem( Settings.MAX_DROPNODES + 2 );
+                moveDown = move.getItem( Settings.MAX_DROPNODES + 3 );
+                moveToBottom = move.getItem( Settings.MAX_DROPNODES + 4 );
+                moveIndent = move.getItem( Settings.MAX_DROPNODES + 5 );
+                moveOutdent = move.getItem( Settings.MAX_DROPNODES + 6 );
                 copyImage = (JMenu) myPicturePopupMenu.getComponent( 13 );
                 copyImageChooseTargetDir = copyImage.getItem( 0 );
                 copyImageToZipFile = copyImage.getItem( 12 );
                 removeNode = (JMenuItem) myPicturePopupMenu.getComponent( 14 );
                 fileOperations = (JMenu) myPicturePopupMenu.getComponent( 15 );
-                rename = fileOperations.getItem( 0 );
-                delete = fileOperations.getItem( 1 );
+                fileOperationsRename = fileOperations.getItem( 0 );
+                fileoperationsDelete = fileOperations.getItem( 1 );
                 properties = (JMenuItem) myPicturePopupMenu.getComponent( 16 );
                 consolidateHere = (JMenuItem) myPicturePopupMenu.getComponent( 17 );
             }
@@ -192,6 +210,12 @@ public class PicturePopupMenuTest extends TestCase {
         assertEquals( "No Rotation", rotate0.getText() );
         assertEquals( "Refresh Thumbnail", refreshThumbnail.getText() );
         assertEquals( "Move", move.getText() );
+        assertEquals( "to Top", moveToTop.getText() );
+        assertEquals( "Up", moveUp.getText() );
+        assertEquals( "Down", moveDown.getText() );
+        assertEquals( "indent", moveIndent.getText() );
+        assertEquals( "outdent", moveOutdent.getText() );
+        assertEquals( "to Bottom", moveToBottom.getText() );
         assertEquals( "Copy Image", copyImage.getText() );
         assertEquals( "choose target directory", copyImageChooseTargetDir.getText() );
         assertEquals( "to zip file", copyImageToZipFile.getText() );
@@ -361,9 +385,51 @@ public class PicturePopupMenuTest extends TestCase {
         assertEquals( "After clicking on the node the event count should be 1", 1, refreshEventCount );
     }
 
+    private int moveEventCount = 0;
+
+    public void testMove() {
+        JpoEventBus.getInstance().register( new Object() {
+            @Subscribe
+            public void handleMoveNodeToTopRequest( MoveNodeToTopRequest request ) {
+                moveEventCount++;
+            }
+
+            @Subscribe
+            public void handleMoveNodeUpRequest( MoveNodeUpRequest request ) {
+                moveEventCount++;
+            }
+
+            @Subscribe
+            public void handleMoveNodeDownRequest( MoveNodeDownRequest request ) {
+                moveEventCount++;
+            }
+
+            @Subscribe
+            public void handleMoveNodeToBottomRequest( MoveNodeToBottomRequest request ) {
+                moveEventCount++;
+            }
+            @Subscribe
+            public void handleMoveIndentRequest( MoveIndentRequest request ) {
+                moveEventCount++;
+            }
+            @Subscribe
+            public void handleMoveOutdentRequest( MoveOutdentRequest request ) {
+                moveEventCount++;
+            }
+        } );
+        assertEquals( "Before clicking on the node the event count should be 0", 0, moveEventCount );
+        moveToTop.doClick();
+        moveDown.doClick();
+        moveUp.doClick();
+        moveToBottom.doClick();
+        moveIndent.doClick();
+        moveOutdent.doClick();
+        assertEquals( "After clicking on the node the event count should be 1", 6, moveEventCount );
+    }
+
     private int removeEventCount = 0;
 
-    public void testRemove() {
+    public void testRemoveNode() {
         JpoEventBus.getInstance().register( new Object() {
             @Subscribe
             public void handleRemoveNodeRequest( RemoveNodeRequest request ) {
@@ -377,7 +443,7 @@ public class PicturePopupMenuTest extends TestCase {
 
     private int renameEventCount = 0;
 
-    public void testRename() {
+    public void testFileRename() {
         JpoEventBus.getInstance().register( new Object() {
             @Subscribe
             public void handleRenamePictureRequest( RenamePictureRequest request ) {
@@ -385,13 +451,13 @@ public class PicturePopupMenuTest extends TestCase {
             }
         } );
         assertEquals( "Before clicking on the node the event count should be 0", 0, renameEventCount );
-        rename.doClick();
+        fileOperationsRename.doClick();
         assertEquals( "After clicking on the node the event count should be 1", 1, renameEventCount );
     }
 
     private int deleteEventCount = 0;
 
-    public void testDelete() {
+    public void testFileDelete() {
         JpoEventBus.getInstance().register( new Object() {
             @Subscribe
             public void handleDeleteNodeFileRequest( DeleteNodeFileRequest request ) {
@@ -400,7 +466,7 @@ public class PicturePopupMenuTest extends TestCase {
             }
         } );
         assertEquals( "Before clicking on the node the event count should be 0", 0, deleteEventCount );
-        delete.doClick();
+        fileoperationsDelete.doClick();
         assertEquals( "After clicking on the node the event count should be 1", 1, deleteEventCount );
     }
 

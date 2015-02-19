@@ -57,11 +57,13 @@ import jpo.EventBus.FileSaveAsRequest;
 import jpo.EventBus.FileSaveRequest;
 import jpo.EventBus.FindDuplicatesRequest;
 import jpo.EventBus.JpoEventBus;
+import jpo.EventBus.MoveIndentRequest;
 import jpo.EventBus.MoveNodeDownRequest;
 import jpo.EventBus.MoveNodeToBottomRequest;
 import jpo.EventBus.MoveNodeToNodeRequest;
 import jpo.EventBus.MoveNodeToTopRequest;
 import jpo.EventBus.MoveNodeUpRequest;
+import jpo.EventBus.MoveOutdentRequest;
 import jpo.EventBus.OpenCategoryEditorRequest;
 import jpo.EventBus.OpenHelpAboutFrameRequest;
 import jpo.EventBus.OpenLicenceFrameRequest;
@@ -1009,6 +1011,37 @@ public class ApplicationEventHandler {
         SortableDefaultMutableTreeNode popupNode = request.getNode();
         popupNode.moveNodeToBottom();
         JpoEventBus.getInstance().post( new RefreshThumbnailRequest( (SortableDefaultMutableTreeNode) popupNode.getParent(), ThumbnailQueueRequest.MEDIUM_PRIORITY ) );
+    }
+
+    /**
+     * Indents the nodes
+     *
+     * @param request
+     */
+    @Subscribe
+    public void handleMoveIndentRequest( MoveIndentRequest request ) {
+        List<SortableDefaultMutableTreeNode> nodes = request.getNodes();
+        for ( SortableDefaultMutableTreeNode node : nodes ) {
+            node.indentNode();
+        }
+        // ToDo: Figure out what to refresh. New Group node for instance
+        //JpoEventBus.getInstance().post( new RefreshThumbnailRequest( (SortableDefaultMutableTreeNode) popupNode.getParent(), ThumbnailQueueRequest.MEDIUM_PRIORITY ) );
+    }
+
+    /**
+     * Outdents the nodes
+     *
+     * @param request
+     */
+    @Subscribe
+    public void handleMoveOutdentRequest( MoveOutdentRequest request ) {
+        List<SortableDefaultMutableTreeNode> nodes = request.getNodes();
+        for ( SortableDefaultMutableTreeNode node : nodes ) {
+            node.outdentNode();
+        }
+        // ToDo: Figure out what to refresh. New Group node for instance
+        // ToDo: Could also delete the left over group node if it is empty
+        //JpoEventBus.getInstance().post( new RefreshThumbnailRequest( (SortableDefaultMutableTreeNode) popupNode.getParent(), ThumbnailQueueRequest.MEDIUM_PRIORITY ) );
     }
 
     /**
