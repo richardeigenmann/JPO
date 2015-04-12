@@ -12,6 +12,7 @@ import javax.swing.SwingUtilities;
 import jpo.EventBus.AddPictureNodesToEmailSelectionRequest;
 import jpo.EventBus.ClearEmailSelectionRequest;
 import jpo.EventBus.ConsolidateGroupRequest;
+import jpo.EventBus.CopyToClipboardRequest;
 import jpo.EventBus.DeleteNodeFileRequest;
 import jpo.EventBus.JpoEventBus;
 import jpo.EventBus.MoveIndentRequest;
@@ -47,7 +48,7 @@ import org.junit.BeforeClass;
  *
  * @author Richard Eigenmann
  */
-public class PicturePopupMenuTest  {
+public class PicturePopupMenuTest {
 
     /*
      * Note these tests are burdened with reflection to get at the inner
@@ -110,6 +111,7 @@ public class PicturePopupMenuTest  {
     private JMenu copyImage;
     private JMenuItem copyImageChooseTargetDir;
     private JMenuItem copyImageToZipFile;
+    private JMenuItem copyToClipboard;
     private JMenuItem removeNode;
     private JMenu fileOperations;
     private JMenuItem fileOperationsRename;
@@ -159,6 +161,7 @@ public class PicturePopupMenuTest  {
                 copyImage = (JMenu) myPicturePopupMenu.getComponent( 13 );
                 copyImageChooseTargetDir = copyImage.getItem( 0 );
                 copyImageToZipFile = copyImage.getItem( 12 );
+                copyToClipboard = copyImage.getItem( 13 );
                 removeNode = (JMenuItem) myPicturePopupMenu.getComponent( 14 );
                 fileOperations = (JMenu) myPicturePopupMenu.getComponent( 15 );
                 fileOperationsRename = fileOperations.getItem( 0 );
@@ -217,6 +220,7 @@ public class PicturePopupMenuTest  {
         assertEquals( "Copy Image", copyImage.getText() );
         assertEquals( "choose target directory", copyImageChooseTargetDir.getText() );
         assertEquals( "to zip file", copyImageToZipFile.getText() );
+        assertEquals( "Copy to Clipboard", copyToClipboard.getText() );
         assertEquals( "Remove Node", removeNode.getText() );
         assertEquals( "File operations", fileOperations.getText() );
         assertEquals( "Properties", properties.getText() );
@@ -436,6 +440,21 @@ public class PicturePopupMenuTest  {
         moveIndent.doClick();
         moveOutdent.doClick();
         assertEquals( "After clicking on the node the event count should be 1", 6, moveEventCount );
+    }
+
+    private int clipboardEventCount = 0;
+
+    @Test
+    public void testCopyToClipboard() {
+        JpoEventBus.getInstance().register( new Object() {
+            @Subscribe
+            public void handleCopyToClipboardRequest( CopyToClipboardRequest request ) {
+                clipboardEventCount++;
+            }
+        } );
+        assertEquals( "Before clicking on the node the event count should be 0", 0, clipboardEventCount );
+        copyToClipboard.doClick();
+        assertEquals( "After clicking on the node the event count should be 1", 1, clipboardEventCount );
     }
 
     private int removeEventCount = 0;

@@ -18,6 +18,7 @@ import jpo.EventBus.AddPictureNodesToEmailSelectionRequest;
 import jpo.EventBus.ClearEmailSelectionRequest;
 import jpo.EventBus.ConsolidateGroupRequest;
 import jpo.EventBus.CopyLocationsChangedEvent;
+import jpo.EventBus.CopyToClipboardRequest;
 import jpo.EventBus.CopyToDirRequest;
 import jpo.EventBus.CopyToNewLocationRequest;
 import jpo.EventBus.CopyToNewZipfileRequest;
@@ -644,6 +645,7 @@ public class PicturePopupMenu extends JPopupMenu {
 
             @Override
             public void actionPerformed( ActionEvent e ) {
+                // TODO: Refactor this to be a List
                 if ( Settings.getPictureCollection().countSelectedNodes() < 1 ) {
                     SortableDefaultMutableTreeNode[] nodes = new SortableDefaultMutableTreeNode[1];
                     nodes[0] = popupNode;
@@ -654,6 +656,23 @@ public class PicturePopupMenu extends JPopupMenu {
             }
         } );
         copyJMenu.add( copyToNewZipfileJMenuItem );
+
+        final JMenuItem copyToClipboard = new JMenuItem( "Copy to Clipboard" );
+        copyToClipboard.addActionListener( new ActionListener() {
+
+            @Override
+            public void actionPerformed( ActionEvent e ) {
+                ArrayList<SortableDefaultMutableTreeNode> nodes = new ArrayList<>();
+                if ( Settings.getPictureCollection().countSelectedNodes() < 1 ) {
+                    nodes.add( popupNode );
+
+                } else {
+                    JpoEventBus.getInstance().post( new CopyToClipboardRequest( Settings.getPictureCollection().getSelectedNodesAsList() ) );
+                }
+                JpoEventBus.getInstance().post( new CopyToClipboardRequest( nodes ) );
+            }
+        } );
+        copyJMenu.add( copyToClipboard );
 
         for ( int i = 0; i < Settings.MAX_MEMORISE; i++ ) {
             final int item = i;

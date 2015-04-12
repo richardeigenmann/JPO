@@ -18,6 +18,8 @@ import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.io.Serializable;
 import java.net.MalformedURLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -525,10 +527,12 @@ public class ThumbnailController implements JpoDropTargetDropEventHandler {
             JpoTransferable transferable;
 
             if ( Settings.getPictureCollection().countSelectedNodes() < 1 ) {
-                Object[] nodes = { myNode };
-                transferable = new JpoTransferable( nodes );
+                //Object[] nodes = { myNode };
+                List<SortableDefaultMutableTreeNode> transferableNodes = new ArrayList<>();
+                transferableNodes.add( myNode );
+                transferable = new JpoTransferable( transferableNodes );
             } else {
-                transferable = new JpoTransferable( Settings.getPictureCollection().getSelectedNodes() );
+                transferable = new JpoTransferable( Settings.getPictureCollection().getSelectedNodesAsList());
             }
 
             try {

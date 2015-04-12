@@ -30,30 +30,36 @@
             </folders>
             <ide-actions>
                 <action name="build">
+                    <script>nbproject/nbjdk.xml</script>
                     <target>compile</target>
                 </action>
                 <action name="clean">
+                    <script>nbproject/nbjdk.xml</script>
                     <target>clean</target>
                 </action>
                 <action name="javadoc">
+                    <script>nbproject/nbjdk.xml</script>
                     <target>javadoc</target>
                 </action>
                 <action name="run">
+                    <script>nbproject/nbjdk.xml</script>
                     <target>run</target>
                 </action>
                 <action name="rebuild">
+                    <script>nbproject/nbjdk.xml</script>
                     <target>clean</target>
                     <target>compile</target>
                 </action>
                 <action name="test">
+                    <script>nbproject/nbjdk.xml</script>
                     <target>test</target>
                 </action>
                 <action name="debug">
-                    <script>nbproject/ide-targets.xml</script>
+                    <script>nbproject/nbjdk.xml</script>
                     <target>debug-nb</target>
                 </action>
                 <action name="compile.single">
-                    <script>nbproject/ide-file-targets.xml</script>
+                    <script>nbproject/nbjdk.xml</script>
                     <target>compile-selected-files-in-java</target>
                     <context>
                         <property>files</property>
@@ -66,7 +72,7 @@
                     </context>
                 </action>
                 <action name="run.single">
-                    <script>nbproject/ide-file-targets.xml</script>
+                    <script>nbproject/nbjdk.xml</script>
                     <target>run-selected-file-in-java</target>
                     <context>
                         <property>run.class</property>
@@ -79,7 +85,7 @@
                     </context>
                 </action>
                 <action name="run.single">
-                    <script>nbproject/ide-file-targets.xml</script>
+                    <script>nbproject/nbjdk.xml</script>
                     <target>run-selected-file-in-java</target>
                     <context>
                         <property>run.class</property>
@@ -92,7 +98,7 @@
                     </context>
                 </action>
                 <action name="test.single">
-                    <script>build.xml</script>
+                    <script>nbproject/nbjdk.xml</script>
                     <target>test-single</target>
                     <context>
                         <property>test.class</property>
@@ -105,7 +111,7 @@
                     </context>
                 </action>
                 <action name="compile.single">
-                    <script>nbproject/ide-file-targets.xml</script>
+                    <script>nbproject/nbjdk.xml</script>
                     <target>compile-selected-files-in-java</target>
                     <context>
                         <property>files</property>
@@ -118,7 +124,7 @@
                     </context>
                 </action>
                 <action name="compile.single">
-                    <script>nbproject/ide-file-targets.xml</script>
+                    <script>nbproject/nbjdk.xml</script>
                     <target>compile-selected-files-in-java</target>
                     <context>
                         <property>files</property>
@@ -131,7 +137,7 @@
                     </context>
                 </action>
                 <action name="compile.single">
-                    <script>nbproject/ide-file-targets.xml</script>
+                    <script>nbproject/nbjdk.xml</script>
                     <target>compile-selected-files-in-java</target>
                     <context>
                         <property>files</property>
@@ -144,7 +150,7 @@
                     </context>
                 </action>
                 <action name="compile.single">
-                    <script>nbproject/ide-file-targets.xml</script>
+                    <script>nbproject/nbjdk.xml</script>
                     <target>compile-selected-files-in-java</target>
                     <context>
                         <property>files</property>
@@ -157,18 +163,20 @@
                     </context>
                 </action>
                 <action name="profile">
-                    <script>nbproject/ide-targets.xml</script>
+                    <script>nbproject/nbjdk.xml</script>
                     <target>profile-nb</target>
                 </action>
             </ide-actions>
             <export>
                 <type>folder</type>
                 <location>build/unittestclasses/jpo</location>
+                <script>nbproject/nbjdk.xml</script>
                 <build-target>compile</build-target>
             </export>
             <export>
                 <type>folder</type>
                 <location>build/classes</location>
+                <script>nbproject/nbjdk.xml</script>
                 <build-target>compile</build-target>
             </export>
             <view>
@@ -202,13 +210,13 @@
             <compilation-unit>
                 <package-root>src/test/java</package-root>
                 <unit-tests/>
-                <classpath mode="compile">build/classes:libs/commons-compress-1.8.jar:libs/commons-net-3.3.jar:libs/gdata-core-1.0.jar:libs/gdata-maps-2.0.jar:libs/gdata-media-1.0.jar:libs/gdata-photos-2.0.jar:libs/guava-16.0.1.jar:libs/javax.mail-1.5.1.jar:libs/jsch-0.1.51.jar:libs/jwizz-0.1.4.jar:libs/metadata-extractor-2.6.4.jar:libs/miglayout-4.0.jar:libs/xmpcore.jar:libs/commons-io-2.4.jar:libs/commons-logging-1.1.3.jar:libs/commons-lang3-3.3.2.jar:libs/concurrent.jar:libs/commons-jcs-core-2.0-SNAPSHOT.jar:libs/commons-jcs-jcache-2.0-SNAPSHOT.jar:libs/commons-jcs-jcache-tck-2.0-SNAPSHOT.jar:libs/jxmapviewer2-1.3.1.jar:libs/TagCloud.jar:/home/richi/netbeans-8.0/platform/modules/ext/junit-4.10.jar</classpath>
+                <classpath mode="compile">build/classes:libs/commons-compress-1.8.jar:libs/commons-net-3.3.jar:libs/gdata-core-1.0.jar:libs/gdata-maps-2.0.jar:libs/gdata-media-1.0.jar:libs/gdata-photos-2.0.jar:libs/guava-16.0.1.jar:libs/javax.mail-1.5.1.jar:libs/jsch-0.1.51.jar:libs/jwizz-0.1.4.jar:libs/metadata-extractor-2.6.4.jar:libs/miglayout-4.0.jar:libs/xmpcore.jar:libs/commons-io-2.4.jar:libs/commons-logging-1.1.3.jar:libs/commons-lang3-3.3.2.jar:libs/concurrent.jar:libs/jxmapviewer2-1.3.1.jar:libs/TagCloud.jar:/home/richi/netbeans-8.0/platform/modules/ext/junit-4.10.jar:libs/commons-jcs-core-2.0-beta-1.jar:libs/commons-jcs-jcache-2.0-beta-1.jar:libs/commons-jcs-jcache-tck-2.0-beta-1.jar</classpath>
                 <built-to>build/unittestclasses/jpo</built-to>
                 <source-level>1.7</source-level>
             </compilation-unit>
             <compilation-unit>
                 <package-root>src/java</package-root>
-                <classpath mode="compile">libs/miglayout-4.0.jar:libs/gdata-core-1.0.jar:libs/gdata-maps-2.0.jar:libs/gdata-media-1.0.jar:libs/gdata-photos-2.0.jar:libs/jwizz-0.1.4.jar:libs/metadata-extractor-2.6.4.jar:libs/commons-net-3.2.jar:libs/javax.mail-1.5.1.jar:libs/commons-compress-1.8.jar:libs/commons-net-3.3.jar:libs/guava-16.0.1.jar:libs/jsch-0.1.51.jar:libs/xmpcore.jar:libs/commons-io-2.4.jar:libs/commons-logging-1.1.3.jar:libs/commons-lang3-3.3.2.jar:libs/commons-jcs-core-2.0-SNAPSHOT.jar:libs/commons-jcs-jcache-2.0-SNAPSHOT.jar:libs/commons-jcs-jcache-tck-2.0-SNAPSHOT.jar:nbproject/maven-ant-tasks-2.1.3.jar:libs/jxmapviewer2-1.3.1.jar:libs/TagCloud.jar</classpath>
+                <classpath mode="compile">libs/miglayout-4.0.jar:libs/gdata-core-1.0.jar:libs/gdata-maps-2.0.jar:libs/gdata-media-1.0.jar:libs/gdata-photos-2.0.jar:libs/jwizz-0.1.4.jar:libs/metadata-extractor-2.6.4.jar:libs/commons-net-3.2.jar:libs/javax.mail-1.5.1.jar:libs/commons-compress-1.8.jar:libs/commons-net-3.3.jar:libs/guava-16.0.1.jar:libs/jsch-0.1.51.jar:libs/xmpcore.jar:libs/commons-io-2.4.jar:libs/commons-logging-1.1.3.jar:libs/commons-lang3-3.3.2.jar:nbproject/maven-ant-tasks-2.1.3.jar:libs/jxmapviewer2-1.3.1.jar:libs/TagCloud.jar:libs/commons-jcs-core-2.0-beta-1.jar:libs/commons-jcs-jcache-2.0-beta-1.jar:libs/commons-jcs-jcache-tck-2.0-beta-1.jar</classpath>
                 <built-to>build/classes</built-to>
                 <javadoc-built-to>build/docs</javadoc-built-to>
                 <source-level>1.7</source-level>

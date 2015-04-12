@@ -6,6 +6,10 @@
 package jpo.gui;
 
 import com.google.common.eventbus.Subscribe;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.ClipboardOwner;
+import java.awt.datatransfer.Transferable;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -39,6 +43,7 @@ import jpo.EventBus.ClearEmailSelectionRequest;
 import jpo.EventBus.CloseApplicationRequest;
 import jpo.EventBus.ConsolidateGroupRequest;
 import jpo.EventBus.CopyLocationsChangedEvent;
+import jpo.EventBus.CopyToClipboardRequest;
 import jpo.EventBus.CopyToDirRequest;
 import jpo.EventBus.CopyToNewLocationRequest;
 import jpo.EventBus.CopyToNewZipfileRequest;
@@ -868,6 +873,8 @@ public class ApplicationEventHandler {
      * Brings up a JFileChooser to select the target zip file and then copies
      * the images there
      *
+     * TODO: Refactor to use a list
+     *
      * @param request The request
      */
     @Subscribe
@@ -963,6 +970,24 @@ public class ApplicationEventHandler {
                 Settings.jpoResources.getString( "genericInfo" ),
                 JOptionPane.INFORMATION_MESSAGE );
 
+    }
+
+    /**
+     * Copies the supplied picture nodes to the system clipboard
+     *
+     * @param request The request
+     */
+    @Subscribe
+    public void handleCopyToClipboardRequest( CopyToClipboardRequest request ) {
+        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+        JpoTransferable transferable = new JpoTransferable(request.getNodes() );
+        clipboard.setContents( transferable, new ClipboardOwner() {
+
+            @Override
+            public void lostOwnership( Clipboard clipboard, Transferable contents ) {
+                LOGGER.info( "Lost Ownership of clipboard - not an issue");
+            }
+        } );
     }
 
     /**

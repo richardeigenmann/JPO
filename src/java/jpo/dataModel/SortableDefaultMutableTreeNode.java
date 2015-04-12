@@ -351,6 +351,7 @@ public class SortableDefaultMutableTreeNode
      *
      * @param event The event the listening object received.
      */
+    @SuppressWarnings({"unchecked"})
     public void executeDrop( DropTargetDropEvent event ) {
         if ( !event.isLocalTransfer() ) {
             LOGGER.info( "SDMTN.executeDrop: detected that the drop is not a local Transfer. These are not supported. Aborting drop." );
@@ -376,22 +377,22 @@ public class SortableDefaultMutableTreeNode
             return;
         }
 
-        SortableDefaultMutableTreeNode sourceNode;
+        //SortableDefaultMutableTreeNode sourceNode;
         int originalHashCode;
-        Object[] arrayOfNodes;
+        List<SortableDefaultMutableTreeNode> transferableNodes;
 
         try {
             Transferable t = event.getTransferable();
             Object o = t.getTransferData( JpoTransferable.jpoNodeFlavor );
-            arrayOfNodes = (Object[]) o;
+            transferableNodes = (List<SortableDefaultMutableTreeNode>) o;
         } catch ( java.awt.datatransfer.UnsupportedFlavorException | java.io.IOException | ClassCastException x ) {
             LOGGER.info( x.getMessage() );
             event.dropComplete( false );
             return;
         }
 
-        for ( Object arrayOfNode : arrayOfNodes ) {
-            sourceNode = (SortableDefaultMutableTreeNode) arrayOfNode;
+        for ( SortableDefaultMutableTreeNode sourceNode : transferableNodes ) {
+            //sourceNode = (SortableDefaultMutableTreeNode) arrayOfNode;
             if ( this.isNodeAncestor( sourceNode ) ) {
                 JOptionPane.showMessageDialog( Settings.anchorFrame,
                         Settings.jpoResources.getString( "moveNodeError" ),
@@ -418,8 +419,8 @@ public class SortableDefaultMutableTreeNode
         }
 
         boolean dropcomplete = false;
-        for ( Object arrayOfNode : arrayOfNodes ) {
-            sourceNode = (SortableDefaultMutableTreeNode) arrayOfNode;
+        for ( SortableDefaultMutableTreeNode sourceNode : transferableNodes ) {
+            //sourceNode = (SortableDefaultMutableTreeNode) arrayOfNode;
             if ( ( sourceNode.getUserObject() instanceof PictureInfo ) && ( this.getUserObject() instanceof GroupInfo ) ) {
                 // a picture is being dropped onto a group; add it at the end
                 if ( actionType == DnDConstants.ACTION_MOVE ) {

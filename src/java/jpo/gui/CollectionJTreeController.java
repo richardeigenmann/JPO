@@ -7,6 +7,8 @@ import java.awt.datatransfer.Transferable;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DropMode;
@@ -166,8 +168,10 @@ public class CollectionJTreeController {
                 LOGGER.info( "The Root node must not be dragged. Dragging disabled." );
                 return null;
             }
-            final Object t[] = { node };
-            JpoTransferable draggedNode = new JpoTransferable( t );
+            //final Object t[] = { node };
+            List<SortableDefaultMutableTreeNode> transferableNodes = new ArrayList<>();
+            transferableNodes.add( node );
+            JpoTransferable draggedNode = new JpoTransferable( transferableNodes );
             return draggedNode;
         }
 
@@ -193,6 +197,7 @@ public class CollectionJTreeController {
          * @return true if successful
          */
         @Override
+        @SuppressWarnings({"unchecked"})
         public boolean importData( TransferSupport support ) {
             JTree.DropLocation dropLocation = (JTree.DropLocation) support.getDropLocation();
             SortableDefaultMutableTreeNode targetNode = (SortableDefaultMutableTreeNode) dropLocation.getPath().getLastPathComponent();
@@ -204,13 +209,15 @@ public class CollectionJTreeController {
                 return false;
             }
 
-            SortableDefaultMutableTreeNode sourceNode;
-            Object[] arrayOfNodes;
+            //SortableDefaultMutableTreeNode sourceNode;
+            //Object[] arrayOfNodes;
+            List<SortableDefaultMutableTreeNode> transferableNodes;
 
             try {
                 Transferable t = support.getTransferable();
                 Object o = t.getTransferData( JpoTransferable.jpoNodeFlavor );
-                arrayOfNodes = (Object[]) o;
+                //arrayOfNodes = (Object[]) o;
+                transferableNodes = (List<SortableDefaultMutableTreeNode>) o;
             } catch ( java.awt.datatransfer.UnsupportedFlavorException x ) {
                 LOGGER.log( Level.INFO, "Caught an UnsupportedFlavorException: message: {0}", x.getMessage() );
                 return false;
@@ -222,8 +229,8 @@ public class CollectionJTreeController {
                 return false;
             }
 
-            for ( Object arrayOfNode : arrayOfNodes ) {
-                sourceNode = (SortableDefaultMutableTreeNode) arrayOfNode;
+            for ( SortableDefaultMutableTreeNode sourceNode : transferableNodes ) {
+                //sourceNode = (SortableDefaultMutableTreeNode) arrayOfNode;
                 if ( targetNode.isNodeAncestor( sourceNode ) ) {
                     JOptionPane.showMessageDialog( Settings.anchorFrame,
                             Settings.jpoResources.getString( "moveNodeError" ),
@@ -249,8 +256,8 @@ public class CollectionJTreeController {
                 LOGGER.info( "Failed to find the group of the drop location. Not memorizing." );
             }
 
-            for ( Object arrayOfNode : arrayOfNodes ) {
-                sourceNode = (SortableDefaultMutableTreeNode) arrayOfNode;
+            for ( SortableDefaultMutableTreeNode sourceNode : transferableNodes ) {
+                //sourceNode = (SortableDefaultMutableTreeNode) arrayOfNode;
                 if ( actionType == TransferHandler.MOVE ) {
                     if ( dropLocation.getChildIndex() == -1 ) {
                         if ( targetNode.getUserObject() instanceof GroupInfo ) {

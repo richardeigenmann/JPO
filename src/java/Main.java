@@ -1,4 +1,9 @@
 
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
+import java.util.logging.StreamHandler;
 import javax.swing.JOptionPane;
 import jpo.EventBus.ApplicationStartupRequest;
 import jpo.EventBus.JpoEventBus;
@@ -9,7 +14,7 @@ import jpo.gui.ApplicationEventHandler;
 /*
  Main.java:  starting point for the JPO application
 
- Copyright (C) 2002 - 2014  Richard Eigenmann.
+ Copyright (C) 2002 - 2015  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -38,7 +43,7 @@ public class Main {
      * <p>
      *
      * The method verifies that the user has the correct Java Virtual Machine (>
-     * 1.6.0) and then created a new {@link Jpo} object.
+     * 1.7.0) and then created a new {@link Jpo} object.
      *
      * @param args The command line arguments
      */

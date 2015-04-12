@@ -99,6 +99,9 @@
     <a href="http://j-po.sourceforge.net/jpo-0.10.jar">jpo-0.11.jar</a> or <a href="http://j-po.sourceforge.net/jpo-0.11.jar">jpo-0.11.jar</a><br>
     <a href="http://j-po.sourceforge.net/commons-compress-1.8.jar">commons-compress-1.8.jar</a><br>
     <a href="http://j-po.sourceforge.net/commons-io-2.4.jar">commons-io-2.4.jar</a><br>    
+    <a href="http://j-po.sourceforge.net/commons-jcs-core-2.0-beta-1.jar">commons-jcs-core-2.0-beta-1.jar</a><br>
+    <a href="http://j-po.sourceforge.net/commons-jcs-jcache-2.0-beta-1.jar">commons-jcs-jcache-2.0-beta-1.jar</a><br>
+    <a href="http://j-po.sourceforge.net/commons-jcs-jcache-tck-2.0-beta-1.jar">commons-jcs-jcache-tck-2.0-beta-1.jar</a><br>
     <a href="http://j-po.sourceforge.net/commons-lang3-3.3.2.jar">commons-lang3-3.3.2.jar</a><br>
     <a href="http://j-po.sourceforge.net/commons-logging-1.1.3.jar">commons-logging-1.1.3.jar</a><br>
     <a href="http://j-po.sourceforge.net/commons-net-3.3.jar">commons-net-3.3.jar</a><br>
@@ -107,7 +110,6 @@
     <a href="http://j-po.sourceforge.net/gdata-media-1.0.jar">gdata-media-1.0.jar</a><br>
     <a href="http://j-po.sourceforge.net/gdata-photos-2.0.jar">gdata-photos-2.0.jar</a><br>
     <a href="http://j-po.sourceforge.net/guava-16.0.1.jar">guava-16.0.1.jar</a><br>
-    <a href="http://j-po.sourceforge.net/jcs-1.3.jar">jcs-1.3.jar</a><br>                
     <a href="http://j-po.sourceforge.net/jsch-0.1.51.jar">jsch-0.1.51.jar</a><br>                
     <a href="http://j-po.sourceforge.net/jwizz-0.1.4.jar">jwizz-0.1.4.jar</a><br>
     <a href="http://j-po.sourceforge.net/javax.mail-1.5.1.jar">javax.mail-1.5.1.jar</a><br>
@@ -126,6 +128,9 @@
 <p><font color="darkRed"><code>/PATH/TO/YOUR/JAVA/bin/java -Xms80M -Xmx2000M -classpath 
         /PATH/TO/YOUR/JPO/JARS/commons-compress-1.8.jar
         :/PATH/TO/YOUR/JPO/JARS/commons-io-2.4.jar
+        :/PATH/TO/YOUR/JPO/JARS/commons-jcs-core-2.0-beta-1.jar
+        :/PATH/TO/YOUR/JPO/JARS/commons-jcs-jcache-2.0-beta-1.jar
+        :/PATH/TO/YOUR/JPO/JARS/commons-jcs-jcache-tck-2.0-beta-1.jar
         :/PATH/TO/YOUR/JPO/JARS/commons-lang3-3.3.2.jar
         :/PATH/TO/YOUR/JPO/JARS/commons-logging-1.1.3.jar
         :/PATH/TO/YOUR/JPO/JARS/commons-net-3.3.jar
@@ -134,10 +139,9 @@
         :/PATH/TO/YOUR/JPO/JARS/gdata-media-1.0.jar
         :/PATH/TO/YOUR/JPO/JARS/gdata-photos-2.0.jar
         :/PATH/TO/YOUR/JPO/JARS/guava-16.0.1.jar
-        :/PATH/TO/YOUR/JPO/JARS/jcs-1.3.jar
+        :/PATH/TO/YOUR/JPO/JARS/javax.mail-1.5.1.jar
         :/PATH/TO/YOUR/JPO/JARS/jsch-0.1.51.jar
         :/PATH/TO/YOUR/JPO/JARS/jwizz-0.1.4.jar
-        :/PATH/TO/YOUR/JPO/JARS/javax.mail-1.5.1.jar
         :/PATH/TO/YOUR/JPO/JARS/jxmapviewer2-1.3.1
         :/PATH/TO/YOUR/JPO/JARS/metadata-extractor-2.6.4.jar
         :/PATH/TO/YOUR/JPO/JARS/miglayout-4.0.jar
@@ -155,25 +159,27 @@
 <p>On a particular Windows XP machine I installed Jpo into c:\Program Files\Jpo. The resulting Batch
     file looks like this: (you can download it here: <a href="Jpo.bat">Jpo.bat</a></p>
 
-<p><code>c:\windows\system32\java -Xms80M -Xmx2000M -classpath "c:\Program Files\Jpo\activation.jar";
-        "c:\Program Files\Jpo\commons-compress-1.8.jar";
-        "c:\Program Files\Jpo\commons-io-2.4.jar";
-        "c:\Program Files\Jpo\commons-lang3-3.3.2.jar";
-        "c:\Program Files\Jpo\commons-logging-1.1.3.jar";
-        "c:\Program Files\Jpo\commons-net-3.3.jar";
-        "c:\Program Files\Jpo\gdata-core-1.0.jar";
-        "c:\Program Files\Jpo\gdata-maps-2.0.jar";
-        "c:\Program Files\Jpo\gdata-media-1.0.jar";
-        "c:\Program Files\Jpo\gdata-photos-2.0.jar";
-        "c:\Program Files\Jpo\guava-16.0.1.jar";
-        "c:\Program Files\Jpo\jcs-1.3.jar";
-        "c:\Program Files\Jpo\jsch-0.1.51.jar";
-        "c:\Program Files\Jpo\jwizz-0.1.4.jar";
-        "c:\Program Files\Jpo\jxmapviewer2-1.3.1.jar";
-        "c:\Program Files\Jpo\metadata-extractor-2.6.4.jar";
-        "c:\Program Files\Jpo\miglayout-4.0.jar";
-        "c:\Program Files\Jpo\TagCloud.jar";
-        "c:\Program Files\Jpo\xmpcore.jar";
+<p><code>c:\windows\system32\java -Xms80M -Xmx2000M -classpath "c:\Program Files\Jpo\activation.jar";^
+        "c:\Program Files\Jpo\commons-compress-1.8.jar";^
+        "c:\Program Files\Jpo\commons-io-2.4.jar";^
+        "c:\Program Files\Jpo\commons-jcs-core-2.0-beta-1.jar";^
+        "c:\Program Files\Jpo\commons-jcs-jcache-2.0-beta-1.jar";^
+        "c:\Program Files\Jpo\commons-jcs-jcache-tck-2.0-beta-1.jar";^
+        "c:\Program Files\Jpo\commons-lang3-3.3.2.jar";^
+        "c:\Program Files\Jpo\commons-logging-1.1.3.jar";^
+        "c:\Program Files\Jpo\commons-net-3.3.jar";^
+        "c:\Program Files\Jpo\gdata-core-1.0.jar";^
+        "c:\Program Files\Jpo\gdata-maps-2.0.jar";^
+        "c:\Program Files\Jpo\gdata-media-1.0.jar";^
+        "c:\Program Files\Jpo\gdata-photos-2.0.jar";^
+        "c:\Program Files\Jpo\guava-16.0.1.jar";^
+        "c:\Program Files\Jpo\jsch-0.1.51.jar";^
+        "c:\Program Files\Jpo\jwizz-0.1.4.jar";^
+        "c:\Program Files\Jpo\jxmapviewer2-1.3.1.jar";^
+        "c:\Program Files\Jpo\metadata-extractor-2.6.4.jar";^
+        "c:\Program Files\Jpo\miglayout-4.0.jar";^
+        "c:\Program Files\Jpo\TagCloud.jar";^
+        "c:\Program Files\Jpo\xmpcore.jar";^
         "c:\Program Files\Jpo\jpo-0.11.jar" Main</code></p>
 
 
@@ -219,6 +225,6 @@
 
 
 <hr>
-<p>Last update to this page: 8 June 2014<br>
-    Copyright 2003-2014 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
+<p>Last update to this page: 13 April 2015<br>
+    Copyright 2003-2015 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
 <?php include("page-end.php"); ?>

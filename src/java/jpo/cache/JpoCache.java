@@ -40,7 +40,7 @@ public class JpoCache {
 
     private static final String highresCacheRegionName = "highresCache";
     private static final String thumbnailCacheRegionName = "thumbnailCache";
-    
+
     //private JCS highresMemoryCache;
     private CacheAccess<URL, ImageBytes> highresMemoryCache;
     //private JCS thumbnailMemoryAndDiskCache;
@@ -114,7 +114,7 @@ public class JpoCache {
                 Path imagePath = Paths.get( url.toURI() );
                 FileTime lastModification = ( Files.getLastModifiedTime( imagePath ) );
                 if ( lastModification.compareTo( imageBytes.getLastModification() ) > 0 ) {
-                    imageBytes = new ImageBytes(  IOUtils.toByteArray( url.openStream() ) );
+                    imageBytes = new ImageBytes( IOUtils.toByteArray( url.openStream() ) );
 
                 }
             } catch ( URISyntaxException | IOException ex ) {
@@ -165,6 +165,7 @@ public class JpoCache {
 
     /**
      * Creates a thumbnail and stores it in the cache
+     *
      * @param key the key to store it in the cache
      * @param imageURL The url of the highres picture
      * @param rotation the rotation to apply
@@ -184,6 +185,7 @@ public class JpoCache {
 
     /**
      * Creates a thumbnail
+     *
      * @param key the key to store it in the cache
      * @param imageURL The url of the highres picture
      * @param rotation the rotation to apply
@@ -224,7 +226,7 @@ public class JpoCache {
 
     /**
      * The dimension for the group thumbnail
-     */    
+     */
     private Dimension groupThumbnailDimension;
 
     /**
@@ -251,6 +253,7 @@ public class JpoCache {
 
     /**
      * Returns a thumbnail for a group of pictures
+     *
      * @param childPictureNodes The pictures that make up the group
      * @return The thumbnail
      * @throws IOException if something went wrong
@@ -358,6 +361,7 @@ public class JpoCache {
 
     /**
      * Returns a text from the JCS with statistics on the cache
+     *
      * @return a test with statistics from the cache
      */
     public String getHighresCacheStats() {
@@ -366,6 +370,7 @@ public class JpoCache {
 
     /**
      * Returns a text from the JCS with statistics on the cache
+     *
      * @return a test with statistics from the cache
      */
     public String getThumbnailCacheStats() {
@@ -394,6 +399,5 @@ public class JpoCache {
 
         }
     }
-    
 
 }
