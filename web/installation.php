@@ -96,7 +96,7 @@
 <hr>
 <span class="para-heading" id="local">Local Installation</span>
 <p>First download the jar files and save them in your program directory:<br>
-    <a href="http://j-po.sourceforge.net/jpo-0.10.jar">jpo-0.11.jar</a> or <a href="http://j-po.sourceforge.net/jpo-0.11.jar">jpo-0.11.jar</a><br>
+    <a href="http://j-po.sourceforge.net/jpo-0.10.jar">jpo-0.12.jar</a> or <a href="http://j-po.sourceforge.net/jpo-0.11.jar">jpo-0.11.jar</a><br>
     <a href="http://j-po.sourceforge.net/commons-compress-1.8.jar">commons-compress-1.8.jar</a><br>
     <a href="http://j-po.sourceforge.net/commons-io-2.4.jar">commons-io-2.4.jar</a><br>    
     <a href="http://j-po.sourceforge.net/commons-jcs-core-2.0-beta-1.jar">commons-jcs-core-2.0-beta-1.jar</a><br>
@@ -113,7 +113,7 @@
     <a href="http://j-po.sourceforge.net/jsch-0.1.51.jar">jsch-0.1.51.jar</a><br>                
     <a href="http://j-po.sourceforge.net/jwizz-0.1.4.jar">jwizz-0.1.4.jar</a><br>
     <a href="http://j-po.sourceforge.net/javax.mail-1.5.1.jar">javax.mail-1.5.1.jar</a><br>
-    <a href="http://j-po.sourceforge.net/jxmapviewer2-1.3.1.jar">jxmapviewer2-1.3.1</a><br>
+    <a href="http://j-po.sourceforge.net/jxmapviewer2-2.0.jar">jxmapviewer2-1.0.jar</a><br>
     <a href="http://j-po.sourceforge.net/metadata-extractor-2.6.4.jar">metadata-extractor-2.6.4.jar</a><br>
     <a href="http://j-po.sourceforge.net/miglayout-4.0.jar">miglayout-4.0.jar</a><br>
     <a href="http://j-po.sourceforge.net/TagCloud.jar">TagCloud.jar</a><br>
@@ -142,7 +142,7 @@
         :/PATH/TO/YOUR/JPO/JARS/javax.mail-1.5.1.jar
         :/PATH/TO/YOUR/JPO/JARS/jsch-0.1.51.jar
         :/PATH/TO/YOUR/JPO/JARS/jwizz-0.1.4.jar
-        :/PATH/TO/YOUR/JPO/JARS/jxmapviewer2-1.3.1
+        :/PATH/TO/YOUR/JPO/JARS/jxmapviewer2-2.0.jar
         :/PATH/TO/YOUR/JPO/JARS/metadata-extractor-2.6.4.jar
         :/PATH/TO/YOUR/JPO/JARS/miglayout-4.0.jar
         :/PATH/TO/YOUR/JPO/JARS/TagCloud.jar
@@ -175,7 +175,7 @@
         "c:\Program Files\Jpo\guava-16.0.1.jar";^
         "c:\Program Files\Jpo\jsch-0.1.51.jar";^
         "c:\Program Files\Jpo\jwizz-0.1.4.jar";^
-        "c:\Program Files\Jpo\jxmapviewer2-1.3.1.jar";^
+        "c:\Program Files\Jpo\jxmapviewer2-2.0.jar";^
         "c:\Program Files\Jpo\metadata-extractor-2.6.4.jar";^
         "c:\Program Files\Jpo\miglayout-4.0.jar";^
         "c:\Program Files\Jpo\TagCloud.jar";^

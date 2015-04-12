@@ -41,7 +41,6 @@ import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
-import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
@@ -64,9 +63,9 @@ import jpo.gui.swing.NonFocussedCaret;
 import jpo.gui.swing.ThreeDotButton;
 import map.MapViewer;
 import net.miginfocom.swing.MigLayout;
-import org.jdesktop.swingx.JXMapViewer;
-import org.jdesktop.swingx.input.MapClickListener;
-import org.jdesktop.swingx.mapviewer.GeoPosition;
+import org.jxmapviewer.JXMapViewer;
+import org.jxmapviewer.input.MapClickListener;
+import org.jxmapviewer.viewer.GeoPosition;
 import webserver.Webserver;
 
 /*

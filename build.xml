@@ -171,10 +171,9 @@
             <include name="gdata-photos-2.0.jar"/>
             <include name="guava-16.0.1.jar"/>
             <include name="javax.mail-1.5.1.jar"/>
-<!--            <include name="jcs-1.3.jar"/>-->
             <include name="jsch-0.1.51.jar"/>
             <include name="jwizz-0.1.4.jar"/>
-            <include name="jxmapviewer2-1.3.1.jar"/>
+            <include name="jxmapviewer2-2.0.jar"/>
             <include name="metadata-extractor-2.6.4.jar"/>
             <include name="miglayout-4.0.jar"/>
             <include name="TagCloud.jar"/>
@@ -197,7 +196,7 @@
                 <attribute name="Main-Class" value="${app.main.class}"/>
                 <attribute name="Class-Path" value="${manifest-classpath}"/>
                 <section name="Copyright">
-                    <attribute name="Copy" value="(c) 2001-2014, Richard Eigenmann, Zürich, Switzerland"/>
+                    <attribute name="Copy" value="(c) 2001-2015, Richard Eigenmann, Zürich, Switzerland"/>
                 </section>
                 <attribute name="Permissions" value="all-permissions" />
             </manifest>
