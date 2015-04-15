@@ -6,11 +6,11 @@ import com.drew.lang.GeoLocation;
 import com.drew.metadata.Directory;
 import com.drew.metadata.Metadata;
 import com.drew.metadata.Tag;
-import com.drew.metadata.exif.CanonMakernoteDirectory;
+import com.drew.metadata.exif.makernotes.CanonMakernoteDirectory;
 import com.drew.metadata.exif.ExifIFD0Directory;
 import com.drew.metadata.exif.ExifSubIFDDirectory;
 import com.drew.metadata.exif.GpsDirectory;
-import com.drew.metadata.exif.NikonType2MakernoteDirectory;
+import com.drew.metadata.exif.makernotes.NikonType2MakernoteDirectory;
 import com.drew.metadata.jpeg.JpegDirectory;
 import java.awt.geom.Point2D;
 import java.io.BufferedInputStream;
@@ -141,16 +141,15 @@ public class ExifInfo {
 
         try {
             InputStream highresStream = pictureUrl.openStream();
-            boolean waitforbytes = false;
-            Metadata metadata = ImageMetadataReader.readMetadata( new BufferedInputStream( highresStream ), waitforbytes );
+            Metadata metadata = ImageMetadataReader.readMetadata( new BufferedInputStream( highresStream ) );
 
-            JpegDirectory jpegDirectory = metadata.getDirectory( JpegDirectory.class );
+            JpegDirectory jpegDirectory = metadata.getFirstDirectoryOfType( JpegDirectory.class );
             if ( jpegDirectory != null ) {
-                exifWidth = tryToGetTag( jpegDirectory, JpegDirectory.TAG_JPEG_IMAGE_WIDTH, exifWidth );
-                exifHeight = tryToGetTag( jpegDirectory, JpegDirectory.TAG_JPEG_IMAGE_HEIGHT, exifHeight );
+                exifWidth = tryToGetTag( jpegDirectory, JpegDirectory.TAG_IMAGE_WIDTH, exifWidth );
+                exifHeight = tryToGetTag( jpegDirectory, JpegDirectory.TAG_IMAGE_HEIGHT, exifHeight );
             }
 
-            ExifSubIFDDirectory exifSubIFDdirectory = metadata.getDirectory( ExifSubIFDDirectory.class );
+            ExifSubIFDDirectory exifSubIFDdirectory = metadata.getFirstDirectoryOfType( ExifSubIFDDirectory.class );
             if ( exifSubIFDdirectory != null ) {
                 setCreateDateTime( tryToGetTag( exifSubIFDdirectory, ExifSubIFDDirectory.TAG_DATETIME_ORIGINAL, getCreateDateTime() ) );
                 aperture = tryToGetTag( exifSubIFDdirectory, ExifSubIFDDirectory.TAG_FNUMBER, aperture );
@@ -162,7 +161,7 @@ public class ExifInfo {
                 lens = tryToGetTag( exifSubIFDdirectory, ExifSubIFDDirectory.TAG_LENS, lens );
             }
 
-            ExifIFD0Directory exifSubIFD0directory = metadata.getDirectory( ExifIFD0Directory.class );
+            ExifIFD0Directory exifSubIFD0directory = metadata.getFirstDirectoryOfType( ExifIFD0Directory.class );
             if ( exifSubIFD0directory != null ) {
                 camera = rtrim( tryToGetTag( exifSubIFD0directory, ExifIFD0Directory.TAG_MODEL, camera ) );
                 String rotationString = rtrim( tryToGetTag( exifSubIFD0directory, ExifIFD0Directory.TAG_ORIENTATION, "" ) );
@@ -189,7 +188,7 @@ public class ExifInfo {
                 }
             }
 
-            GpsDirectory gpsDirectory = metadata.getDirectory( GpsDirectory.class );
+            GpsDirectory gpsDirectory = metadata.getFirstDirectoryOfType( GpsDirectory.class );
             if ( gpsDirectory != null ) {
                 GeoLocation location = gpsDirectory.getGeoLocation();
                 if ( location != null ) {
@@ -198,13 +197,13 @@ public class ExifInfo {
                 }
             }
 
-            NikonType2MakernoteDirectory nikonType2MakernoteDirectory = metadata.getDirectory( NikonType2MakernoteDirectory.class );
+            NikonType2MakernoteDirectory nikonType2MakernoteDirectory = metadata.getFirstDirectoryOfType( NikonType2MakernoteDirectory.class );
             if ( nikonType2MakernoteDirectory != null ) {
-                iso = tryToGetTag( nikonType2MakernoteDirectory, NikonType2MakernoteDirectory.TAG_NIKON_TYPE2_ISO_1, iso );
-                lens = tryToGetTag( nikonType2MakernoteDirectory, NikonType2MakernoteDirectory.TAG_NIKON_TYPE2_LENS, lens );
+                iso = tryToGetTag( nikonType2MakernoteDirectory, NikonType2MakernoteDirectory.TAG_ISO_1, iso );
+                lens = tryToGetTag( nikonType2MakernoteDirectory, NikonType2MakernoteDirectory.TAG_LENS, lens );
             }
 
-            CanonMakernoteDirectory canonMakernoteDirectory = metadata.getDirectory( CanonMakernoteDirectory.class );
+            CanonMakernoteDirectory canonMakernoteDirectory = metadata.getFirstDirectoryOfType( CanonMakernoteDirectory.class );
             if ( canonMakernoteDirectory != null ) {
                 lens = tryToGetTag( canonMakernoteDirectory, CanonMakernoteDirectory.TAG_LENS_MODEL, lens );
             }

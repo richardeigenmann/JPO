@@ -31,6 +31,7 @@ public class ExifInfoTest
 
     /**
      * Constructor
+     *
      * @param testName test name
      */
     public ExifInfoTest( String testName ) {
@@ -41,7 +42,6 @@ public class ExifInfoTest
      * A handy reference to 0 in the form of a double
      */
     private static final double ZERO = 0;
-
 
     /**
      * That the Exif reader gracefully handles a null URL
@@ -188,7 +188,7 @@ public class ExifInfoTest
         assertEquals( "Rotation parsing verification", 270, exifInfo.rotation );
     }
 
-        /**
+    /**
      * Test that we get the correct rotation data off a Samsung Galaxy S4 image
      * which was rotated upside down
      */
@@ -238,18 +238,18 @@ public class ExifInfoTest
         ExifInfo exifInfo = new ExifInfo( Settings.CLASS_LOADER.getResource( "exif-test-canon-eos-60d.jpg" ) );
         exifInfo.decodeExifTags();
         //System.out.println( exifInfo.getAllTags() );
-        /*assertEquals("Aperture parsing verification", "F11.3", exifInfo.aperture);
-         assertEquals("ShutterSpeed parsing verification", "1/511 sec", exifInfo.shutterSpeed);
-         assertEquals("Camera parsing verification", "Canon EOS 60D", exifInfo.camera);
-         assertEquals("CreateDateTime parsing verification", "2013:05:09 13:55:16", exifInfo.getCreateDateTime());
-         assertEquals("ExifHeight parsing verification", "3456 pixels", exifInfo.exifHeight);
-         assertEquals("ExifWidth parsing verification", "5184 pixels", exifInfo.exifWidth);
-         assertEquals("FocalLength parsing verification", "85.0 mm", exifInfo.focalLength);
-         assertEquals("ISO parsing verification", "400", exifInfo.iso);
-         assertEquals("Longitude parsing verification", ZERO, exifInfo.latLng.getX());
-         assertEquals("Latitude parsing verification", ZERO, exifInfo.latLng.getY());
-         assertEquals("Lens parsing verification", "EF-S17-85mm f/4-5.6 IS USM", exifInfo.lens);
-         * */
+        assertEquals( "Aperture parsing verification", "F11.3", exifInfo.aperture );
+        assertEquals( "ShutterSpeed parsing verification", "1/511 sec", exifInfo.shutterSpeed );
+        assertEquals( "Camera parsing verification", "Canon EOS 60D", exifInfo.camera );
+        assertEquals( "CreateDateTime parsing verification", "2013:05:09 13:55:16", exifInfo.getCreateDateTime() );
+        assertEquals( "ExifHeight parsing verification", "3456 pixels", exifInfo.exifHeight );
+        assertEquals( "ExifWidth parsing verification", "5184 pixels", exifInfo.exifWidth );
+        assertEquals( "FocalLength parsing verification", "85.0 mm", exifInfo.focalLength );
+        assertEquals( "ISO parsing verification", "400", exifInfo.iso );
+        assertEquals( "Longitude parsing verification", ZERO, exifInfo.latLng.getX() );
+        assertEquals( "Latitude parsing verification", ZERO, exifInfo.latLng.getY() );
+        assertEquals( "Lens parsing verification", "EF-S17-85mm f/4-5.6 IS USM", exifInfo.lens );
+
         assertEquals( "Rotation parsing verification", 0, exifInfo.rotation );
     }
 

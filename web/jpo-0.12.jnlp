@@ -40,10 +40,10 @@
         <jar href="jsch-0.1.51.jar" download="lazy" />
         <jar href="jwizz-0.1.4.jar" download="lazy" />
         <jar href="jxmapviewer2-2.0.jar" download="lazy" />
-        <jar href="metadata-extractor-2.6.4.jar" download="lazy" />
+        <jar href="metadata-extractor-2.8.0.jar" download="lazy" />
         <jar href="miglayout-4.0.jar" download="eager" />
         <jar href="TagCloud.jar" download="eager" />
-        <jar href="xmpcore.jar" download="lazy" />
+        <jar href="xmpcore-5.1.2.jar" download="lazy" />
     </resources>
 
     <application-desc 

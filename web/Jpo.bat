@@ -16,9 +16,9 @@ c:\windows\system32\java -Xms200M -Xmx2000M -classpath ^
 "c:\Program Files\Jpo\jsch-0.1.51.jar";^
 "c:\Program Files\Jpo\jwizz-0.1.4.jar";^
 "c:\Program Files\Jpo\jxmapviewer2-2.0.jar";^
-"c:\Program Files\Jpo\metadata-extractor-2.6.4.jar";^
+"c:\Program Files\Jpo\metadata-extractor-2.8.0.jar";^
 "c:\Program Files\Jpo\miglayout-4.0.jar";^
 "c:\Program Files\Jpo\TagCloud.jar";^
-"c:\Program Files\Jpo\xmpcore.jar";^
+"c:\Program Files\Jpo\xmpcore-5.1.2.jar";^
 "c:\Program Files\Jpo\jpo-0.11.jar" ^
 Main

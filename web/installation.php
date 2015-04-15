@@ -114,10 +114,10 @@
     <a href="http://j-po.sourceforge.net/jwizz-0.1.4.jar">jwizz-0.1.4.jar</a><br>
     <a href="http://j-po.sourceforge.net/javax.mail-1.5.1.jar">javax.mail-1.5.1.jar</a><br>
     <a href="http://j-po.sourceforge.net/jxmapviewer2-2.0.jar">jxmapviewer2-1.0.jar</a><br>
-    <a href="http://j-po.sourceforge.net/metadata-extractor-2.6.4.jar">metadata-extractor-2.6.4.jar</a><br>
+    <a href="http://j-po.sourceforge.net/metadata-extractor-2.8.0.jar">metadata-extractor-2.8.0.jar</a><br>
     <a href="http://j-po.sourceforge.net/miglayout-4.0.jar">miglayout-4.0.jar</a><br>
     <a href="http://j-po.sourceforge.net/TagCloud.jar">TagCloud.jar</a><br>
-    <a href="http://j-po.sourceforge.net/xmpcore.jar">xmpcore.jar</a><br>
+    <a href="http://j-po.sourceforge.net/xmpcore-5.1.2.jar">xmpcore-5.1.2.jar</a><br>
 </p>
 
 <p><strong>Note:</strong> Make sure they retain the <code>.jar</code> file extension. I've seen
@@ -143,10 +143,10 @@
         :/PATH/TO/YOUR/JPO/JARS/jsch-0.1.51.jar
         :/PATH/TO/YOUR/JPO/JARS/jwizz-0.1.4.jar
         :/PATH/TO/YOUR/JPO/JARS/jxmapviewer2-2.0.jar
-        :/PATH/TO/YOUR/JPO/JARS/metadata-extractor-2.6.4.jar
+        :/PATH/TO/YOUR/JPO/JARS/metadata-extractor-2.8.0.jar
         :/PATH/TO/YOUR/JPO/JARS/miglayout-4.0.jar
         :/PATH/TO/YOUR/JPO/JARS/TagCloud.jar
-        :/PATH/TO/YOUR/JPO/JARS/xmpcore.jar
+        :/PATH/TO/YOUR/JPO/JARS/xmpcore-5.1.2.jar
         :/PATH/TO/YOUR/JPO/JARS/jpo-0.11.jar Main</code></font></p>
 
 <p><strong>Note:</strong> Put everything on one long line. The space characters do
@@ -176,11 +176,11 @@
         "c:\Program Files\Jpo\jsch-0.1.51.jar";^
         "c:\Program Files\Jpo\jwizz-0.1.4.jar";^
         "c:\Program Files\Jpo\jxmapviewer2-2.0.jar";^
-        "c:\Program Files\Jpo\metadata-extractor-2.6.4.jar";^
+        "c:\Program Files\Jpo\metadata-extractor-2.8.0.jar";^
         "c:\Program Files\Jpo\miglayout-4.0.jar";^
         "c:\Program Files\Jpo\TagCloud.jar";^
-        "c:\Program Files\Jpo\xmpcore.jar";^
-        "c:\Program Files\Jpo\jpo-0.11.jar" Main</code></p>
+        "c:\Program Files\Jpo\xmpcore-5.1.2.jar";^
+        "c:\Program Files\Jpo\jpo-0.12.jar" Main</code></p>
 
 
 <p>Actually I think I have managed to improve on this on 5.2.2007: I learned that I can
@@ -225,6 +225,6 @@
 
 
 <hr>
-<p>Last update to this page: 13 April 2015<br>
+<p>Last update to this page: 16 April 2015<br>
     Copyright 2003-2015 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
 <?php include("page-end.php"); ?>
