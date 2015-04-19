@@ -40,7 +40,7 @@ public class GenerateWebsiteWizard7Summary extends AbstractStep {
     /**
      * This Wizard step summarises the settings and then goes off and does them
      *
-     * @param options
+     * @param options Options
      */
     public GenerateWebsiteWizard7Summary( HtmlDistillerOptions options ) {
         super( Settings.jpoResources.getString( "summary" ), Settings.jpoResources.getString( "summary" ) );

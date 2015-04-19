@@ -195,7 +195,7 @@ public class ApplicationEventHandler {
     /**
      * Opens the MainWindow
      *
-     * @param request
+     * @param request The request
      */
     @Subscribe
     public void handleOpenMainWindowRequest( OpenMainWindowRequest request ) {
@@ -272,7 +272,7 @@ public class ApplicationEventHandler {
      * Shuts down JPO no questions asked. Wrap it as a next request with a
      * UnsavedUpdatesDialogRequest
      *
-     * @param request
+     * @param request The request
      */
     @Subscribe
     public void handleCloseApplicationRequest( CloseApplicationRequest request ) {
@@ -358,7 +358,7 @@ public class ApplicationEventHandler {
      * When the app sees a ShowPictureOnMapRequest it will start a webserver and
      * will spawn the Google maps with the teardrop on the indicated location.
      *
-     * @param request
+     * @param request The request
      */
     @Subscribe
     public void handleShowPictureOnMapRequest( ShowPictureOnMapRequest request ) {
@@ -369,7 +369,7 @@ public class ApplicationEventHandler {
      * When the app sees a ShowPictureInfoEditorRequest it will open the
      * PictureInfoEditor for the supplied node
      *
-     * @param request
+     * @param request The request
      */
     @Subscribe
     public void handleShowPictureInfoEditorRequest( ShowPictureInfoEditorRequest request ) {
@@ -380,7 +380,7 @@ public class ApplicationEventHandler {
      * When the app sees a ShowGroupInfoEditorRequest it will open the
      * PictureInfoEditor for the supplied node
      *
-     * @param request
+     * @param request The request
      */
     @Subscribe
     public void handleShowGroupInfoEditorRequest( ShowGroupInfoEditorRequest request ) {
@@ -390,7 +390,7 @@ public class ApplicationEventHandler {
     /**
      * When the app sees a OpenSearchDialog it will open the QueryJFrame
      *
-     * @param request
+     * @param request The request
      */
     @Subscribe
     public void handleOpenSearchDialogRequest( OpenSearchDialogRequest request ) {
@@ -436,7 +436,7 @@ public class ApplicationEventHandler {
      * When the app sees a ShowCategoryUsageEditorRequest it will open the
      * CategoryUsageEditor for the supplied node
      *
-     * @param request
+     * @param request The request
      */
     @Subscribe
     public void handleShowCategoryUsageEditorRequest( ShowCategoryUsageEditorRequest request ) {
@@ -447,7 +447,7 @@ public class ApplicationEventHandler {
      * Bring up a Dialog where the user can input a new name for a file and
      * rename it.
      *
-     * @param request
+     * @param request the request
      */
     @Subscribe
     public static void handleRenamePictureRequest( RenamePictureRequest request ) {
@@ -483,7 +483,7 @@ public class ApplicationEventHandler {
      * When the app sees a ChooseAndAddCollectionRequest it will open the a
      * chooser dialog and will add the collection to the supplied node
      *
-     * @param request
+     * @param request the request
      */
     @Subscribe
     public void handleChooseAndAddCollectionRequest( ChooseAndAddCollectionRequest request ) {
@@ -498,7 +498,7 @@ public class ApplicationEventHandler {
      * When the app sees a ShowGroupAsTableRequest it will open the the group in
      * a table.
      *
-     * @param request
+     * @param request the request
      */
     @Subscribe
     public void handleShowGroupAsTableRequest( ShowGroupAsTableRequest request ) {
@@ -680,7 +680,7 @@ public class ApplicationEventHandler {
      * Handles the request to add a collection supplied as a file to the
      * supplied group node
      *
-     * @param request
+     * @param request the request
      */
     @Subscribe
     public void handleAddCollectionToGroupRequest( AddCollectionToGroupRequest request ) {
@@ -738,7 +738,7 @@ public class ApplicationEventHandler {
     /**
      * The App will respond to this request by opening the Export to HTML wizard
      *
-     * @param request
+     * @param request the request
      */
     @Subscribe
     public void handleExportGroupToHtmlRequest( ExportGroupToHtmlRequest request ) {
@@ -749,7 +749,7 @@ public class ApplicationEventHandler {
     /**
      * The App will respond to this request by creating a FlatFileDistiller
      *
-     * @param request
+     * @param request the request
      */
     @Subscribe
     public void handleExportGroupFlatFileRequest( ExportGroupToFlatFileRequest request ) {
@@ -760,7 +760,7 @@ public class ApplicationEventHandler {
      * Opens a dialog asking for the name of the new collection
      *
      *
-     * @param request
+     * @param request the request
      */
     @Subscribe
     public void handleExportGroupToNewCollectionRequest( ExportGroupToNewCollectionRequest request ) {
@@ -772,7 +772,7 @@ public class ApplicationEventHandler {
      * When the app receives the ExportGroupToPicasaRequest the dialog will be
      * opened to export the pictures to Picasa
      *
-     * @param request
+     * @param request the request
      */
     @Subscribe
     public void handleExportGroupToPicasaRequest( ExportGroupToPicasaRequest request ) {
@@ -785,7 +785,7 @@ public class ApplicationEventHandler {
     /**
      * Adds the pictures in the supplied group to the email selection
      *
-     * @param request
+     * @param request the request
      */
     @Subscribe
     public void handleAddGroupToEmailSelectionRequest( AddGroupToEmailSelectionRequest request ) {
@@ -802,7 +802,7 @@ public class ApplicationEventHandler {
     /**
      * Adds the picture nodes in the supplied request to the email selection
      *
-     * @param request
+     * @param request the request
      */
     @Subscribe
     public void handleAddPictureModesToEmailSelectionRequest( AddPictureNodesToEmailSelectionRequest request ) {
@@ -818,7 +818,7 @@ public class ApplicationEventHandler {
      * Removes the picture nodes in the supplied request from the email
      * selection
      *
-     * @param request
+     * @param request the request
      */
     @Subscribe
     public void handleRemovePictureModesFromEmailSelectionRequest( RemovePictureNodesFromEmailSelectionRequest request ) {
@@ -833,7 +833,7 @@ public class ApplicationEventHandler {
     /**
      * Clears the the email selection
      *
-     * @param request
+     * @param request the request
      */
     @Subscribe
     public void handleClearEmailSelectionRequest( ClearEmailSelectionRequest request ) {
@@ -1046,7 +1046,7 @@ public class ApplicationEventHandler {
     /**
      * Moves the node up one position
      *
-     * @param request
+     * @param request the request
      */
     @Subscribe
     public void handleMoveNodeUpRequest( MoveNodeUpRequest request ) {
@@ -1058,7 +1058,7 @@ public class ApplicationEventHandler {
     /**
      * Moves the node down one position
      *
-     * @param request
+     * @param request the request
      */
     @Subscribe
     public void handleMoveNodeDownRequest( MoveNodeDownRequest request ) {
@@ -1070,7 +1070,7 @@ public class ApplicationEventHandler {
     /**
      * Moves the node to the last position
      *
-     * @param request
+     * @param request the request
      */
     @Subscribe
     public void handleMoveNodeToBottomRequest( MoveNodeToBottomRequest request ) {
@@ -1082,7 +1082,7 @@ public class ApplicationEventHandler {
     /**
      * Indents the nodes
      *
-     * @param request
+     * @param request the request
      */
     @Subscribe
     public void handleMoveIndentRequest( MoveIndentRequest request ) {
@@ -1097,7 +1097,7 @@ public class ApplicationEventHandler {
     /**
      * Outdents the nodes
      *
-     * @param request
+     * @param request the request
      */
     @Subscribe
     public void handleMoveOutdentRequest( MoveOutdentRequest request ) {
@@ -1128,7 +1128,7 @@ public class ApplicationEventHandler {
     /**
      * Deletes the file and the node
      *
-     * @param request
+     * @param request the request the request
      */
     @Subscribe
     public void handleDeleteNodeFileRequest( DeleteNodeFileRequest request ) {
@@ -1174,7 +1174,7 @@ public class ApplicationEventHandler {
     /**
      * Deletes the file and the node
      *
-     * @param request
+     * @param request the request
      */
     @Subscribe
     public void handleDeleteMultiNodeFileRequest( DeleteMultiNodeFileRequest request ) {
@@ -1304,7 +1304,7 @@ public class ApplicationEventHandler {
     /**
      * Moves the movingNode into the last child position of the target node
      *
-     * @param request
+     * @param request the request
      */
     @Subscribe
     public void handleMoveNodeToNodeRequest( MoveNodeToNodeRequest request ) {
@@ -1318,7 +1318,7 @@ public class ApplicationEventHandler {
     /**
      * Opens the License window
      *
-     * @param request
+     * @param request the request
      */
     @Subscribe
     public void handleOpenLicenceFrameRequest( OpenLicenceFrameRequest request ) {
@@ -1328,7 +1328,7 @@ public class ApplicationEventHandler {
     /**
      * Opens the Help About window
      *
-     * @param request
+     * @param request the request
      */
     @Subscribe
     public void handleHelpAboutFrameRequest( OpenHelpAboutFrameRequest request ) {
@@ -1338,7 +1338,7 @@ public class ApplicationEventHandler {
     /**
      * Opens the Privacy window
      *
-     * @param request
+     * @param request the request
      */
     @Subscribe
     public void handleOpenPrivacyFrameRequest( OpenPrivacyFrameRequest request ) {
@@ -1348,7 +1348,7 @@ public class ApplicationEventHandler {
     /**
      * Starts the Camera Watch Daemon
      *
-     * @param request
+     * @param request the request
      */
     @Subscribe
     public void handleStartCameraWatchDaemonRequest( StartCameraWatchDaemonRequest request ) {
@@ -1366,7 +1366,7 @@ public class ApplicationEventHandler {
      * request
      *
      *
-     * @param request
+     * @param request the request
      */
     @Subscribe
     public void handleUnsavedUpdatesDialogRequest( UnsavedUpdatesDialogRequest request ) {

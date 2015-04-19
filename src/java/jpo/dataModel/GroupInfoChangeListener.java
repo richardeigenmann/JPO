@@ -26,7 +26,7 @@ public interface GroupInfoChangeListener {
     /**
      *  inform the listener that the GroupInfo has changed
      *
-     * @param groupInfoChangeEvent
+     * @param groupInfoChangeEvent The Change event
      */
     public void groupInfoChangeEvent( GroupInfoChangeEvent groupInfoChangeEvent );
 }

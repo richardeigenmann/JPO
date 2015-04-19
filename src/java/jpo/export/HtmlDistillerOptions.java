@@ -50,7 +50,7 @@ public class HtmlDistillerOptions {
 
     /**
      * Sets the background color for the webpage
-     * @param backgroundColor 
+     * @param backgroundColor background color for the website
      */
     public void setBackgroundColor( Color backgroundColor ) {
         this.backgroundColor = backgroundColor;
@@ -66,6 +66,7 @@ public class HtmlDistillerOptions {
 
     /**
      * sets the Cellspacing
+     * @param cellspacing Cellspacing in the output
      */
     public void setCellspacing( int cellspacing ) {
         this.cellspacing = cellspacing;
@@ -240,7 +241,7 @@ public class HtmlDistillerOptions {
      * 100 as an integer. If the value is out of bounds it is raised to 0 or
      * lowered to 100.
      *
-     * @param lowresJpgQuality
+     * @param lowresJpgQuality the lowres quality
      */
     public void setLowresJpgQualityPercent( int lowresJpgQuality ) {
         if ( lowresJpgQuality > 100 ) {
@@ -385,7 +386,7 @@ public class HtmlDistillerOptions {
     /**
      * Indicate that a highres image should be rotated
      *
-     * @param rotateHighres
+     * @param rotateHighres whether to rotate highres images
      */
     public void setRotateHighres( boolean rotateHighres ) {
         this.rotateHighres = rotateHighres;
@@ -577,7 +578,7 @@ public class HtmlDistillerOptions {
      * Sets the method for picture naming. Validates that the number is in the
      * bounds
      *
-     * @param pictureNaming
+     * @param pictureNaming Picture Naming Type
      */
     public void setPictureNaming( PictureNamingType pictureNaming ) {
         this.pictureNaming = pictureNaming;
@@ -643,7 +644,7 @@ public class HtmlDistillerOptions {
     /**
      * Sets the method for output targets
      *
-     * @param outputTarget
+     * @param outputTarget the output target
      */
     public void setOutputTarget( OutputTarget outputTarget ) {
         this.outputTarget = outputTarget;
@@ -698,7 +699,7 @@ public class HtmlDistillerOptions {
     /**
      * Sets the ftp port
      *
-     * @param ftpPort
+     * @param ftpPort the ftp port
      */
     public void setFtpPort( int ftpPort ) {
         this.ftpPort = ftpPort;
@@ -720,7 +721,7 @@ public class HtmlDistillerOptions {
     /**
      * Sets the ssh port
      *
-     * @param sshPort
+     * @param sshPort the ssh port
      */
     public void setSshPort( int sshPort ) {
         this.sshPort = sshPort;

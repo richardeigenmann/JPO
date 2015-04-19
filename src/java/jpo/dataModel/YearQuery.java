@@ -71,7 +71,7 @@ public class YearQuery implements Serializable, Query {
      * Method to set the lower date range of the search. If null the lower date
      * will be ignored.
      *
-     * @param lowerDateRange
+     * @param lowerDateRange Lower date range
      */
     public final void setLowerDateRange( Calendar lowerDateRange ) {
         this.lowerDateRange = lowerDateRange;
@@ -119,7 +119,7 @@ public class YearQuery implements Serializable, Query {
     /**
      * set the start node for the search
      *
-     * @param n
+     * @param n node
      */
     public void setStartNode( SortableDefaultMutableTreeNode n ) {
         this.startNode = n;

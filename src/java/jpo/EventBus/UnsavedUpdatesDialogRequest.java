@@ -7,7 +7,7 @@ package jpo.EventBus;
  * 
  * <p>
  * 
- * <img src="doc-files/UnsavedChangesLogic.png">
+ * <img src="doc-files/UnsavedChangesLogic.png" alt="Unsaved Changes Logic">
  * 
  * @author Richard Eigenmann
  */

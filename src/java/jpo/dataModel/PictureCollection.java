@@ -239,6 +239,7 @@ public class PictureCollection {
 
     /**
      * This method sets the root node of the collection
+     * @param rootNode  The root node
      */
     private void setRootNode( SortableDefaultMutableTreeNode rootNode ) {
         if ( rootNode != null ) {
@@ -372,7 +373,7 @@ public class PictureCollection {
     /**
      * Remembers the node on which the years were added
      *
-     * @param node
+     * @param node The node 
      */
     private void rememberYearsTreeNode( DefaultMutableTreeNode node ) {
         yearsTreeNode = node;
@@ -437,8 +438,8 @@ public class PictureCollection {
     /**
      * This adds a category to the HashMap
      *
-     * @param index
-     * @param category
+     * @param index The index
+     * @param category The category
      */
     public void addCategory( Integer index, String category ) {
         categories.put( index, category );
@@ -457,7 +458,7 @@ public class PictureCollection {
     /**
      * This adds a category to the HashMap
      *
-     * @param category
+     * @param category The category
      * @return the number at which the category was added
      */
     public Integer addCategory( String category ) {
@@ -475,8 +476,8 @@ public class PictureCollection {
     /**
      * Renames a category in the HashMap
      *
-     * @param key
-     * @param category
+     * @param key The Key
+     * @param category The category
      */
     public void renameCategory( Integer key, String category ) {
         removeCategory( key );

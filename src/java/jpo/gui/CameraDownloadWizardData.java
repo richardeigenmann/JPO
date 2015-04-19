@@ -152,7 +152,7 @@ public class CameraDownloadWizardData {
     }
 
     /**
-     * The description of the new Group. It defaults to "Download <<date>>"
+     * The description of the new Group. It defaults to "Download &lt;&lt;date&gt;&gt;"
      */
     private String newGroupDescription = "Download " + Tools.currentDate( Settings.addFromCameraDateFormat );
 

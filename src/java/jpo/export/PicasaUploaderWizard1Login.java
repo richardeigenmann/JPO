@@ -53,7 +53,7 @@ public class PicasaUploaderWizard1Login extends AbstractStep {
      * Asks all the questions we need to know in regards to the thumbnails on
      * the final website.
      *
-     * @param myRequest
+     * @param myRequest my request
      */
     public PicasaUploaderWizard1Login( PicasaUploadRequest myRequest ) {
         super( "Login to Picasa", "Login to Picasa" );

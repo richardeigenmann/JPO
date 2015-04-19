@@ -463,6 +463,7 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
 
     /**
      * Loads the data from the options into the GUI widgets
+     * @param options options
      */
     private void setWidgets( HtmlDistillerOptions options ) {
         // load the options into the GUI components
@@ -504,7 +505,7 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
      * Checks whether the supplied file is good for webpage generation and spams
      * popups if not
      *
-     * @param targetDirectory
+     * @param targetDirectory Target directory
      * @return true if ok, false if not
      */
     public static boolean check( File targetDirectory ) {

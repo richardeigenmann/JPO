@@ -279,10 +279,10 @@ public class XmlReader extends DefaultHandler {
      * variable interpretChars is set so that the characters can be put in the
      * right place
      *
-     * @param buf
-     * @param offset
-     * @param len
-     * @throws SAXException
+     * @param buf The buffer
+     * @param offset Start offset
+     * @param len Length
+     * @throws SAXException Throws and exception if parsing doesn't work
      */
     @Override
     public void characters( char buf[], int offset, int len ) throws SAXException {
@@ -337,8 +337,8 @@ public class XmlReader extends DefaultHandler {
     /**
      * try to resolve where the file belongs
      *
-     * @param publicId
-     * @param systemId
+     * @param publicId public id
+     * @param systemId system id
      * @return the dtd as an input source
      */
     @Override
@@ -347,14 +347,14 @@ public class XmlReader extends DefaultHandler {
     }
 
     /**
-     * This method runs through all the URL strings and changes the jar:&excl;
+     * This method runs through all the URL strings and changes the jar:
      * references with the path to the jar. I am prepared to admit this is a
      * sloppy way of building this. The problem is that since the parser doesn't
      * always return the whole URL in one go I could be reading fragments and
      * those will not translate well. That's also the reason for using append in
      * the adding of the data.
      *
-     * @param startNode
+     * @param startNode Start Node
      */
     public void correctJarReferences( SortableDefaultMutableTreeNode startNode ) {
         Enumeration kids = startNode.children();

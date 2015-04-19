@@ -31,8 +31,8 @@ public class ListNavigator
     /**
      * Optional Constructor for a ListNavigator.
      *
-     * @param title
-     * @param nodes
+     * @param title Title
+     * @param nodes Nodes
      */
     public ListNavigator( String title,
             List<SortableDefaultMutableTreeNode> nodes ) {
@@ -60,7 +60,7 @@ public class ListNavigator
      * Sets the title to be returned if any component tried to display the title
      * of the list
      *
-     * @param newTitle
+     * @param newTitle The title of the list
      */
     public final void setTitle( String newTitle ) {
         title = newTitle;

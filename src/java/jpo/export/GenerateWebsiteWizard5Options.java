@@ -48,7 +48,7 @@ public class GenerateWebsiteWizard5Options extends AbstractStep {
 
     /**
      * This step asks about the options that we require to generate a website
-     * @param options
+     * @param options options
      */
     public GenerateWebsiteWizard5Options( HtmlDistillerOptions options ) {
         super( Settings.jpoResources.getString( "HtmlDistOptions" ), Settings.jpoResources.getString( "HtmlDistOptions" ) );

@@ -51,7 +51,7 @@ public class Camera implements Serializable {
     /**
      * Sets a new description for the camera
      *
-     * @param newDescription
+     * @param newDescription The description of the camera
      */
     public void setDescription( String newDescription ) {
         description = newDescription;
@@ -86,7 +86,8 @@ public class Camera implements Serializable {
      * This method sets the mount point of the camera in the computer's file
      * system
      *
-     * @param newDir
+     * @param newDir The new mount point
+     * 
      */
     public void setCameraMountPoint( String newDir ) {
         cameraMountPoint = newDir;
@@ -159,9 +160,9 @@ public class Camera implements Serializable {
     /**
      * stores the checksum and file in the provided HashMap
      *
-     * @param hm
-     * @param f
-     * @param checksum
+     * @param hm The HashMap in which to store the picture
+     * @param f the file to store
+     * @param checksum the file's checksum
      */
     public static void storePicture( HashMap<File, Long> hm, File f, long checksum ) {
         hm.put( f, checksum );
@@ -170,8 +171,8 @@ public class Camera implements Serializable {
     /**
      * stores the checksum and file in the newImage HashMap
      *
-     * @param f
-     * @param checksum
+     * @param f The file
+     * @param checksum The checksum
      */
     public void storePictureNewImage( File f, long checksum ) {
         storePicture( newImage, f, checksum );
@@ -181,8 +182,8 @@ public class Camera implements Serializable {
      * returns whether the provided checksum or file is registered in the old
      * camera image.
      *
-     * @param f
-     * @param checksum
+     * @param f The file
+     * @param checksum The checksum
      * @return true if the file was known before
      */
     public boolean inOldImage( File f, long checksum ) {
@@ -194,7 +195,7 @@ public class Camera implements Serializable {
      * it determines whether to check by checksum or file based on the
      * useChecksum and useFilename flags.
      *
-     * @param checksum
+     * @param checksum The checksum
      * @return true if the image was known before based on the checksum
      */
     public boolean inOldImage( long checksum ) {
@@ -207,7 +208,7 @@ public class Camera implements Serializable {
      * it determines whether to check by checksum or file based on the
      * useChecksum and useFilename flags.
      *
-     * @param f
+     * @param f the file
      * @return true if file is found in old camera
      */
     public boolean inOldImage( File f ) {
@@ -219,7 +220,7 @@ public class Camera implements Serializable {
      * copies the entry specified by the file in the oldImage HashMap to the
      * newImage HashMap.
      *
-     * @param f
+     * @param f the file
      */
     public void copyToNewImage( File f ) {
         Long checksumLong = getOldImage().get( f );
@@ -292,8 +293,8 @@ public class Camera implements Serializable {
      * build a list of old image from the files on the camera-directory. This
      * method notifies a ProgressListener if one is defined.
      *
-     * @param progressListener
-     * @param interrupter
+     * @param progressListener The ProgressListener
+     * @param interrupter The semaphore to interrupt the job
      */
     public void buildOldImage( ProgressListener progressListener, InterruptSemaphore interrupter ) {
         File rootDir = new File( this.cameraMountPoint );
@@ -358,8 +359,8 @@ public class Camera implements Serializable {
      * This method returns a collection of new pictures found on the camera not
      * previously found there
      *
-     * @param files
-     * @param newFiles
+     * @param files The files to test
+     * @param newFiles The collection to which to add them
      * @return a collection of new picture files
      */
     protected Collection<File> getNewPicturesLoop( File[] files, Collection<File> newFiles ) {
@@ -432,7 +433,7 @@ public class Camera implements Serializable {
     /**
      * sets whether to monitor for new pictures
      *
-     * @param monitorForNewPictures
+     * @param monitorForNewPictures whether to monitor for new files
      */
     public void setMonitorForNewPictures( boolean monitorForNewPictures ) {
         this.monitorForNewPictures = monitorForNewPictures;

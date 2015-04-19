@@ -57,7 +57,7 @@ public interface PictureControllerImage {
      * The image should only be scaled when 
      * {@link #createScaledPictureInThread(int)} is called.<p>
      *
-     * Example: Original is 3000 x 2000 --> Scale Factor 0.10 --> Target Picture
+     * Example: Original is 3000 x 2000 --&gt; Scale Factor 0.10 --&gt; Target Picture
      * is 300 x 200
      *
      * @param newFactor

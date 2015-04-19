@@ -16,7 +16,7 @@ public class SortGroupRequest implements Request {
     /**
      * A request to sort the group
      * @param node The node to which should be sorted
-     * @param sortCriteria
+     * @param sortCriteria The sort criteria
      */
     public SortGroupRequest( SortableDefaultMutableTreeNode node, FieldCodes sortCriteria ) {
         this.node = node;

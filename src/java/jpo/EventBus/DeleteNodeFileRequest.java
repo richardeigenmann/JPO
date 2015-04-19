@@ -14,7 +14,7 @@ public class DeleteNodeFileRequest implements Request {
     /**
      * This request indicates that the user wants to delete the file of a specific node
      *
-     * @param nodes The node for which the file and the node are to be deleted
+     * @param node The node for which the file and the node are to be deleted
      */
     public DeleteNodeFileRequest( SortableDefaultMutableTreeNode node ) {
         this.node = node;

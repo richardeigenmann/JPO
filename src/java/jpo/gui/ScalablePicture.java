@@ -178,8 +178,8 @@ public class ScalablePicture
      * loading chuggs along in the background. Make sure you invoked
      * setScaleFactor or setScaleSize before invoking this method.
      *
-     * Step 1: Am I already loading what I need somewhere? If yes -> use it. Has
-     * it finished loading? If no -> wait for it If yes -> use it Else -> load
+     * Step 1: Am I already loading what I need somewhere? If yes -&gt; use it. Has
+     * it finished loading? If no -&gt; wait for it If yes -&gt; use it Else -&gt; load
      * it
      *
      * @param imageUrl	The URL of the image you want to load
@@ -411,7 +411,7 @@ public class ScalablePicture
      * the size of the picture on the screen. You must call
      * {@link #createScaledPictureInThread(int)} to make anything happen.<p>
      *
-     * Example: Original is 3000 x 2000 --> Scale Factor 0.10 --> Target Picture
+     * Example: Original is 3000 x 2000 --&gt; Scale Factor 0.10 --&gt; Target Picture
      * is 300 x 200
      *
      * @param newFactor

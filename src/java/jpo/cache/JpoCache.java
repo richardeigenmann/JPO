@@ -306,6 +306,11 @@ public class JpoCache {
     /**
      * Create a Group ThumbnailController by loading the nodes component images
      * and creating a folder icon with embedded images
+     * @throws IOException when things go wrong
+     * @param key The key for the image in the cache
+     * @param numberOfPics  the number of pictures to include
+     * @param childPictureNodes The nodes from which to create the mini thumbnails
+     * @return the image
      */
     private ImageBytes createGroupThumbnailAndStoreInCache( String key, int numberOfPics, List<SortableDefaultMutableTreeNode> childPictureNodes ) throws IOException {
         BufferedImage groupThumbnail = ImageIO.read( new BufferedInputStream( Settings.CLASS_LOADER.getResourceAsStream( "jpo/images/icon_folder_large.jpg" ) ) );

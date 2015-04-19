@@ -72,7 +72,7 @@ import jpo.gui.swing.ResizableJFrame.WindowSize;
  * space and centres it there. The right mouse button zooms out.<p>
  *
  *
- * <img src="../PictureViewer.png" border=0>
+ * <img src="../PictureViewer.png" border=0 alt="Picture Viewer">
  *
  */
 public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorListener {

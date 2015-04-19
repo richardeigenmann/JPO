@@ -16,7 +16,7 @@ public class AddCollectionToGroupRequest implements Request {
     /**
      * A request to add the supplied collection file to the node
      * @param node The node to which the collection should be added
-     * @param collectionFile
+     * @param collectionFile The file with the collection
      */
     public AddCollectionToGroupRequest( SortableDefaultMutableTreeNode node, File collectionFile ) {
         this.node = node;

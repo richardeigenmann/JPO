@@ -343,8 +343,8 @@ public class NanoHTTPD
 		}
 
 		/**
-		 * Decodes the percent encoding scheme. <br/>
-		 * For example: "an+example%20string" -> "an example string"
+		 * Decodes the percent encoding scheme. 
+		 * For example: "an+example%20string" -&gt; "an example string"
 		 */
 		private String decodePercent( String str ) throws InterruptedException
 		{
@@ -379,7 +379,7 @@ public class NanoHTTPD
 
 		/**
 		 * Decodes parameters in percent-encoded URI-format
-		 * ( e.g. "name=Jack%20Daniels&pass=Single%20Malt" ) and
+		 * ( e.g. "name=Jack%20Daniels&amp;pass=Single%20Malt" ) and
 		 * adds them to given Properties. NOTE: this doesn't support multiple
 		 * identical keys due to the simplicity of Properties -- if you need multiples,
 		 * you might want to replace the Properties with a Hastable of Vectors or such.
@@ -648,7 +648,7 @@ public class NanoHTTPD
 	}
 
 	/**
-	 * Hashtable mapping (String)FILENAME_EXTENSION -> (String)MIME_TYPE
+	 * Hashtable mapping (String)FILENAME_EXTENSION -&gt; (String)MIME_TYPE
 	 */
 	private static final Hashtable<Object,Object> theMimeTypes = new Hashtable<Object, Object>();
 	static

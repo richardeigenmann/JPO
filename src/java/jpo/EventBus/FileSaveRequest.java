@@ -18,7 +18,7 @@ public class FileSaveRequest implements Request {
     /**
      * Optional next request to call after successfully saving the file.
      *
-     * @param onSuccessNextRequest
+     * @param onSuccessNextRequest the next request
      */
     public void setOnSuccessNextRequest( Request onSuccessNextRequest ) {
         this.onSucccessNextRequest = onSuccessNextRequest;

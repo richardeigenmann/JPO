@@ -46,7 +46,7 @@ public class GenerateWebsiteWizard1Welcome extends AbstractStep {
 
     /**
      * Welcome page for the generate website wizard
-     * @param options 
+     * @param options Options
      */
     public GenerateWebsiteWizard1Welcome( final HtmlDistillerOptions options ) {
         super( Settings.jpoResources.getString( "welcomeTitle" ), Settings.jpoResources.getString( "HtmlDistillerJFrameHeading" ) );

@@ -47,7 +47,7 @@ public class GenerateWebsiteWizard2Thumbnails extends AbstractStep {
     /**
      * Asks all the questions we need to know in regards to the thumbnails on
      * the final website.
-     * @param options
+     * @param options Options
      */
     public GenerateWebsiteWizard2Thumbnails( HtmlDistillerOptions options ) {
         super( Settings.jpoResources.getString( "HtmlDistThumbnails" ), Settings.jpoResources.getString( "HtmlDistThumbnails" ) );

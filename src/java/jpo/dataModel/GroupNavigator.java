@@ -40,7 +40,6 @@ public class GroupNavigator extends NodeNavigator {
      */
     private SortableDefaultMutableTreeNode myNode;
 
-
     /**
      * call this method to specify the node that this GroupNavigator should
      * refer to. The node is validated that it's payload is of type GroupInfo.
@@ -77,15 +76,15 @@ public class GroupNavigator extends NodeNavigator {
             return "<no group>";
         }
     }
-    
+
     /**
      * Returns the group node of the Navigator
+     *
      * @return the group node
      */
     public SortableDefaultMutableTreeNode getGroupNode() {
         return myNode;
     }
-    
 
     /**
      * On a group we return the number of children in the group.
@@ -148,7 +147,7 @@ public class GroupNavigator extends NodeNavigator {
          * dramatic way. The nodes that were changed have their Constraints
          * reevaluated and a revalidate is called to update the screen.
          *
-         * @param treeModelEvent
+         * @param treeModelEvent The event
          */
         @Override
         public void treeNodesChanged( TreeModelEvent treeModelEvent ) {
@@ -172,7 +171,7 @@ public class GroupNavigator extends NodeNavigator {
          * as to whether they are at the right place. Revalidate is called to
          * update the screen.
          *
-         * @param treeModelEvent
+         * @param treeModelEvent The event
          */
         @Override
         public void treeNodesInserted( TreeModelEvent treeModelEvent ) {
@@ -190,14 +189,15 @@ public class GroupNavigator extends NodeNavigator {
 
         /**
          * This method is defined by the TreeModelListener interface and gives
-         * the GroupNavigator a notification that some nodes were removed. Case
-         * 1: the removal affected some other part of the tree --> we don't care
-         * Case 2: the Group being shown was wiped off the tree --> we
-         * reposition to the last node still in existence (could be the root
-         * node) Case 3: a child of our current Group was removed --> we
-         * relayout the nodes.
+         * the GroupNavigator a notification that some nodes were removed.
          *
-         * @param treeModelEvent
+         * Case 1: the removal affected some other part of the tree. Result: we
+         * don't care Case 2: the Group being shown was wiped off the tree.
+         * Result: We reposition to the last node still in existence (could be
+         * the root node) Case 3: a child of our current Group was removed.
+         * Result: we relayout the nodes.
+         *
+         * @param treeModelEvent The event
          */
         @Override
         public void treeNodesRemoved( TreeModelEvent treeModelEvent ) {
@@ -229,7 +229,7 @@ public class GroupNavigator extends NodeNavigator {
          * change in the tree. In this event all laying out shall stop and the
          * group should be laid out from scratch.
          *
-         * @param treeModelEvent
+         * @param treeModelEvent The event
          */
         @Override
         public void treeStructureChanged( TreeModelEvent treeModelEvent ) {

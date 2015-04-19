@@ -47,7 +47,7 @@ import jpo.gui.ScalablePicture;
  * {@link ScalablePicture#setScaleFactor( double )} to the coordinate space of
  * the JComponent<p>
  *
- * <img src=../Mathematics.png border=0><p>
+ * <img src=../Mathematics.png border=0 alt="Mathematics"><p>
  *
  *
  */
@@ -248,7 +248,7 @@ public class PictureController extends JComponent {
      * This method calls <code>repaint()</code> directly since no time consuming
      * image operations need to take place.
      * <p>
-     * <img src=../scrollUp.png border=0><p>
+     * <img src=../scrollUp.png border=0 alt="Scroll Up"><p>
      * @see #scrollUp()
      * @see #scrollDown()
      * @see #scrollLeft()
@@ -270,7 +270,7 @@ public class PictureController extends JComponent {
      * screen. This method calls <code>repaint()</code> directly since no time
      * consuming image operations need to take place.
      * <p>
-     * <img src=../scrollDown.png border=0><p>
+     * <img src=../scrollDown.png border=0 alt="Scroll Down"><p>
      * @see #scrollUp()
      * @see #scrollDown()
      * @see #scrollLeft()

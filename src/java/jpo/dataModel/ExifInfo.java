@@ -125,7 +125,7 @@ public class ExifInfo {
      *
      * @see #decodeExifTags() next.
      *
-     * @param pictureUrl
+     * @param pictureUrl The URL of the picture
      */
     public ExifInfo( URL pictureUrl ) {
         this.pictureUrl = pictureUrl;
@@ -225,6 +225,7 @@ public class ExifInfo {
      * @param directory The EXIF Directory
      * @param tag the tag to search for
      * @param defaultValue the String to return if the tag was not found.
+     * @return the tag 
      */
     private String tryToGetTag( Directory directory, int tag, String defaultValue ) {
         String searchString;

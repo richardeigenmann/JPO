@@ -107,7 +107,7 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
      * <p>
      *
      * This was invented to allow the number of thumbnailControllers to be
-     * restricted so that <<Out of memory>> errors may be averted on long lists
+     * restricted so that "Out of memory" errors may be averted on long lists
      * of pictures.
      */
     private int startIndex;

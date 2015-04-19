@@ -125,8 +125,8 @@ public final class GroupInfo implements Serializable {
      * pictures whilst all other attributes are retained.
      *
      * @param out	The Bufferer Writer receiving the xml data
-     * @param rootNode
-     * @param protection
+     * @param rootNode  The starting node
+     * @param protection Whether the collection is protected or not
      * @throws IOException If there was an IO error
      */
     public void dumpToXml( BufferedWriter out, boolean rootNode, boolean protection )

@@ -54,7 +54,7 @@ public class PicasaUploaderWizard3Upload extends AbstractStep implements PicasaU
     /**
      * Upload the album
      *
-     * @param myRequest
+     * @param myRequest My Request
      */
     public PicasaUploaderWizard3Upload( PicasaUploadRequest myRequest ) {
         super( "Upload", "Upload" );
@@ -63,7 +63,7 @@ public class PicasaUploaderWizard3Upload extends AbstractStep implements PicasaU
 
     /**
      * Wizard model listener
-     * @param model
+     * @param model The Wizard Model
      */
     public void attachWizardModelListener( WizardModel model ) {
         this.model = model;

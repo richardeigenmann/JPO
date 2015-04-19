@@ -44,7 +44,7 @@ public class PicasaUploaderWizard2Confirm extends AbstractStep {
 
     /**
      * Upload the album
-     * @param myRequest
+     * @param myRequest My request
      */
     public PicasaUploaderWizard2Confirm( PicasaUploadRequest myRequest ) {
         super( "Confirm upload", "Confirm upload" );

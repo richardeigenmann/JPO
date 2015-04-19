@@ -58,7 +58,7 @@ public class NodeStatistics {
     /**
      * Sets the node to analysed
      *
-     * @param nodeToAnalyse
+     * @param nodeToAnalyse the nodes
      */
     public final void setNode( DefaultMutableTreeNode nodeToAnalyse ) {
         myNode = nodeToAnalyse;

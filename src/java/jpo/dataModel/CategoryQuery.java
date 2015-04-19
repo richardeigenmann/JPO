@@ -45,7 +45,7 @@ public class CategoryQuery implements Query {
     /**
      * Constructor for a Category Query
      *
-     * @param key
+     * @param key The key for the category
      */
     public CategoryQuery( Integer key ) {
         this.key = key;

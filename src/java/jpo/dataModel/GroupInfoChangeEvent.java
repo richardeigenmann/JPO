@@ -34,7 +34,7 @@ public class GroupInfoChangeEvent {
     /**
      * Constructor for the PictureInforChangeEvent
      *
-     * @param groupInfo
+     * @param groupInfo The group info
      */
     public GroupInfoChangeEvent( GroupInfo groupInfo ) {
         this.groupInfo = groupInfo;

@@ -18,6 +18,7 @@ public class CopyToDirRequest implements Request {
      * selected nodes to a target directory
      *
      * @param nodes The nodes for which the user would like copy the pictures
+     * @param targetLocation The target directory
      */
     public CopyToDirRequest( SortableDefaultMutableTreeNode[] nodes, File targetLocation ) {
         this.nodes = nodes;
@@ -35,7 +36,7 @@ public class CopyToDirRequest implements Request {
 
     /**
      * Returns the target directory
-     * @return the target directoy
+     * @return the target directory
      */
     public File getTargetLocation() {
         return targetLocation;

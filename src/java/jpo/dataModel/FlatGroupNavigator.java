@@ -104,7 +104,7 @@ public class FlatGroupNavigator
         /**
          * We are notified here that a node was inserted
          *
-         * @param e
+         * @param e The event that we will be notified on
          */
         @Override
         public void treeNodesInserted( TreeModelEvent e ) {
@@ -152,7 +152,7 @@ public class FlatGroupNavigator
         /**
          * We are notified here if the structure changed
          *
-         * @param e
+         * @param e The event
          */
         @Override
         public void treeStructureChanged( TreeModelEvent e ) {

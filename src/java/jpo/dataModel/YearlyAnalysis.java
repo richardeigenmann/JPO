@@ -62,7 +62,7 @@ public class YearlyAnalysis implements Serializable {
      * Constructor for a YearlyAnalysis Object. Create it with a startNode and
      * then pick up the TreeMap with the getMap() method.
      *
-     * @param startNode
+     * @param startNode Start Node
      */
     public YearlyAnalysis( DefaultMutableTreeNode startNode ) {
         this.startNode = startNode;
@@ -208,7 +208,7 @@ public class YearlyAnalysis implements Serializable {
     /**
      * Returns a string representing the name of the month
      *
-     * @param month
+     * @param month Month
      * @return The name of the month
      */
     public static String getMonthName( Integer month ) {

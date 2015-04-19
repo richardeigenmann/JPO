@@ -523,10 +523,10 @@ public class Tools {
     /**
      * method to copy any file from a source stream to a output stream
      *
-     * @param bin
-     * @param bout
-     * @return the crc of the file
-     * @throws IOException
+     * @param bin Buffered Input Stream
+     * @param bout Buffered Output Stream
+     * @return the crc of the file 
+     * @throws IOException Exception of error
      */
     public static long copyBufferedStream( BufferedInputStream bin,
             BufferedOutputStream bout )
@@ -601,7 +601,7 @@ public class Tools {
      *
      * @param sourceFile The file that was moved
      * @param targetFile The new location of the source file
-     * @throws MalformedURLException
+     * @throws MalformedURLException Throws this if the URL is bad
      */
     private static void correctReferences( File sourceFile, File targetFile ) {
         LOGGER.info( "entering correct References" );

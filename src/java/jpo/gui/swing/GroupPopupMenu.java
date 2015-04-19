@@ -601,7 +601,7 @@ public class GroupPopupMenu extends JPopupMenu {
     }
 
     /**
-     * Sets up the menu entries in the Add > Collection sub menu from the
+     * Sets up the menu entries in the Add &gt; Collection sub menu from the
      * recentCollections in the application. Has to be run on the EDT.
      */
     public void populateRecentFilesMenuItems() {

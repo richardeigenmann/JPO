@@ -105,7 +105,7 @@ public final class Category implements Serializable {
      * Call this method to set the state of the Category to selected or not
      * selected.
      *
-     * @param newState
+     * @param newState The new state
      */
     public void setStatus( int newState ) {
         status = newState;
