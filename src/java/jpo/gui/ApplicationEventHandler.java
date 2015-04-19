@@ -10,23 +10,27 @@ import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.ClipboardOwner;
 import java.awt.datatransfer.Transferable;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.net.MalformedURLException;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import jpo.EventBus.AddCollectionToGroupRequest;
 import jpo.EventBus.AddEmptyGroupRequest;
@@ -112,18 +116,20 @@ import jpo.dataModel.Settings;
 import jpo.dataModel.Settings.FieldCodes;
 import jpo.dataModel.SingleNodeNavigator;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
+import jpo.dataModel.TextQuery;
 import jpo.dataModel.Tools;
 import jpo.export.GenerateWebsiteWizard;
 import jpo.export.PicasaUploadRequest;
 import jpo.export.PicasaUploaderWizard;
 import static jpo.dataModel.Tools.streamcopy;
+import jpo.gui.swing.FindJPanel;
 import jpo.gui.swing.FlatFileDistiller;
 import jpo.gui.swing.HelpAboutWindow;
 import jpo.gui.swing.MainWindow;
 import jpo.gui.swing.PrivacyJFrame;
-import jpo.gui.swing.QueryJFrame;
 import static jpo.gui.swing.ResizableJFrame.WindowSize.WINDOW_LEFT;
 import static jpo.gui.swing.ResizableJFrame.WindowSize.WINDOW_RIGHT;
+import net.miginfocom.swing.MigLayout;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
 import webserver.Webserver;
@@ -388,7 +394,42 @@ public class ApplicationEventHandler {
      */
     @Subscribe
     public void handleOpenSearchDialogRequest( OpenSearchDialogRequest request ) {
-        new QueryJFrame( request.getStartNode() );
+        if ( !( request.getStartNode().getUserObject() instanceof GroupInfo ) ) {
+            LOGGER.log( Level.INFO, "Method can only be invoked on GroupInfo nodes! Ignoring request. You are on node: {0}", this.toString() );
+            JOptionPane.showMessageDialog(
+                    Settings.anchorFrame,
+                    "Method can only be invoked on GroupInfo nodes! Ignoring request. You are on node: " +  this.toString(),
+                    Settings.jpoResources.getString( "genericError" ),
+                    JOptionPane.ERROR_MESSAGE );
+            return;
+        }
+
+        FindJPanel findPanel = new FindJPanel();
+        int result = JOptionPane.showConfirmDialog( Settings.anchorFrame, findPanel,
+                Settings.jpoResources.getString( "searchDialogTitle" ),
+                JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE );
+        if ( result == JOptionPane.OK_OPTION ) {
+
+            TextQuery textQuery = new TextQuery( findPanel.getSearchArgument() );
+            textQuery.setStartNode( request.getStartNode() );
+
+            if ( findPanel.getSearchByDate() ) {
+                textQuery.setLowerDateRange( Tools.parseDate( findPanel.getLowerDate() ) );
+                textQuery.setUpperDateRange( Tools.parseDate( findPanel.getHigherDate() ) );
+
+                if ( ( textQuery.getLowerDateRange() != null ) && ( textQuery.getUpperDateRange() != null ) && ( textQuery.getLowerDateRange().compareTo( textQuery.getUpperDateRange() ) > 0 ) ) {
+                    JOptionPane.showMessageDialog(
+                            Settings.anchorFrame,
+                            Settings.jpoResources.getString( "dateRangeError" ),
+                            Settings.jpoResources.getString( "genericError" ),
+                            JOptionPane.ERROR_MESSAGE );
+                    return;
+                }
+            }
+
+            Settings.getPictureCollection().addQueryToTreeModel( textQuery );
+            JpoEventBus.getInstance().post( new ShowQueryRequest( textQuery ) );
+        }
     }
 
     /**
@@ -980,12 +1021,12 @@ public class ApplicationEventHandler {
     @Subscribe
     public void handleCopyToClipboardRequest( CopyToClipboardRequest request ) {
         Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-        JpoTransferable transferable = new JpoTransferable(request.getNodes() );
+        JpoTransferable transferable = new JpoTransferable( request.getNodes() );
         clipboard.setContents( transferable, new ClipboardOwner() {
 
             @Override
             public void lostOwnership( Clipboard clipboard, Transferable contents ) {
-                LOGGER.info( "Lost Ownership of clipboard - not an issue");
+                LOGGER.info( "Lost Ownership of clipboard - not an issue" );
             }
         } );
     }

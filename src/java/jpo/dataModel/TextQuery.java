@@ -9,7 +9,7 @@ import java.util.List;
 /*
  TextQuery.java:  The parameters for a search
 
- Copyright (C) 2002 - 2014  Richard Eigenmann.
+ Copyright (C) 2002 - 2015  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -41,11 +41,6 @@ public class TextQuery implements Serializable, Query {
     public String anyField;
 
     /**
-     * This flag indicates whether a clone of the original node should be
-     * returned or whether we want the node which matches.
-     */
-    //public boolean clone = true;  // must be for the time being because we change the parent of the node later on
-    /**
      * This flag indicates whether dates that can't be parsed should be treaded
      * as matches or fails	;
      */
@@ -66,7 +61,7 @@ public class TextQuery implements Serializable, Query {
      * The lower date range of the search. If null the lower date will be
      * ignored.
      */
-    private Calendar lowerDateRange;
+    private Calendar lowerDateRange = null;
 
     /**
      * Method to set the lower date range of the search. If null the lower date
@@ -91,7 +86,7 @@ public class TextQuery implements Serializable, Query {
      * The upper date range of the search. If null the upper date will be
      * ignored.
      */
-    private Calendar upperDateRange;
+    private Calendar upperDateRange = null;
 
     /**
      * Method to set the upper date range of the search. If null the upper date
