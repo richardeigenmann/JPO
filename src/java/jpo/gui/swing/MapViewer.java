@@ -1,4 +1,4 @@
-package map;
+package jpo.gui.swing;
 
 import java.awt.Cursor;
 import static java.awt.Cursor.CROSSHAIR_CURSOR;

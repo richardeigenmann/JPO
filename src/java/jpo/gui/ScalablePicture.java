@@ -27,7 +27,6 @@ import javax.imageio.plugins.jpeg.JPEGImageWriteParam;
 import javax.imageio.stream.ImageOutputStream;
 import javax.swing.ImageIcon;
 import jpo.dataModel.Settings;
-import jpo.dataModel.SizeCalculator;
 import jpo.dataModel.Tools;
 import static jpo.gui.ScalablePicture.ScalablePictureStatus.SCALABLE_PICTURE_ERROR;
 import static jpo.gui.ScalablePicture.ScalablePictureStatus.SCALABLE_PICTURE_LOADED;
@@ -325,8 +324,7 @@ public class ScalablePicture
 
             if ( ( sourcePicture != null ) && ( sourcePicture.getSourceBufferedImage() != null ) ) {
                 if ( scaleToSize ) {
-                    SizeCalculator sc = new SizeCalculator( sourcePicture.getWidth(), sourcePicture.getHeight(), targetSize.width, targetSize.height );
-                    scaleFactor = sc.scaleFactor;
+                    scaleFactor = calcScaleSourceToTarget( sourcePicture.getWidth(), sourcePicture.getHeight(), targetSize.width, targetSize.height  );
 
                     if ( Settings.dontEnlargeSmallImages && scaleFactor > 1 ) {
                         scaleFactor = 1;
@@ -384,6 +382,26 @@ public class ScalablePicture
             setStatus( SCALABLE_PICTURE_ERROR, "Out of Memory Error while scaling " + imageUrl.toString() );
             scaledPicture = null;
             Tools.dealOutOfMemoryError();
+        }
+    }
+    
+    /**
+     * Returns the scale factor maintaining aspect ratio to fit the source image into the target
+     * dimension..
+     *
+     * @param sourceWidth the width of the original dimension
+     * @param sourceHeight the height of the original dimension
+     * @param maxWidth the maximum width of the output dimension
+     * @param maxHeight the maximum height of the output dimension
+     */
+    public static double calcScaleSourceToTarget( int sourceWidth, int sourceHeight, int maxWidth, int maxHeight ) {
+        // Scale so that the enire picture fits in the component.
+        if ( ( (double) sourceHeight / maxHeight ) > ( (double) sourceWidth / maxWidth ) ) {
+            // Vertical scaling
+            return  ( (double) maxHeight / sourceHeight );
+        } else {
+            // Horizontal scaling
+            return  ( (double) maxWidth / sourceWidth );
         }
     }
 
