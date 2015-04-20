@@ -118,7 +118,7 @@ public class CollectionJTreeController {
      * Expands the nodes and scroll the tree so that the indicated node is
      * visible.
      *
-     * @param node
+     * @param node The node
      */
     private void expandAndScroll( SortableDefaultMutableTreeNode node ) {
         final TreePath tp = new TreePath( node.getPath() );
@@ -157,7 +157,7 @@ public class CollectionJTreeController {
          * This method bundles up the data to be exported into a Transferable
          * object in preparation for the transfer.
          *
-         * @param component
+         * @param component The component
          * @return a transferable
          */
         @Override
@@ -193,7 +193,7 @@ public class CollectionJTreeController {
          * the transfer of data to the target component. This method returns
          * true if the import was successful and false otherwise.
          *
-         * @param support
+         * @param support the TransferSupport
          * @return true if successful
          */
         @Override

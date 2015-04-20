@@ -28,17 +28,17 @@ public interface SourcePictureListener {
     /**
      * inform the listener that the status has changed
      *
-     * @param statusCode
-     * @param statusMessage
-     * @param sp
+     * @param statusCode status code
+     * @param statusMessage status message
+     * @param sp source picture
      */
     public void sourceStatusChange( SourcePictureStatus statusCode, String statusMessage, SourcePicture sp );
 
     /**
      * inform the listener of progress on the loading of the image
      *
-     * @param statusCode
-     * @param percentage
+     * @param statusCode status code
+     * @param percentage percentage
      */
     public void sourceLoadProgressNotification( SourcePictureStatus statusCode, int percentage );
 

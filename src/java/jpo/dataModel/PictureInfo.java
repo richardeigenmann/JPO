@@ -65,9 +65,9 @@ public class PictureInfo implements Serializable {
     /**
      * Constructor method. Creates the object and sets up the variables.
      * 
-     * TODO: What a strange signature. When would I erver use this?? RE, 2015
+     * TODO: What a strange signature. When would I ever use this?? RE, 2015
      *
-     * @param highresLocation
+     * @param highresLocation The highres location
      * @param description	The description of the image
      * @param filmReference	The reference to the film if any
      */
@@ -685,12 +685,11 @@ public class PictureInfo implements Serializable {
     }
 
     /**
-     * Returns the creationTime as a string after it has been parsed.
-     * Essentially this is a utility method to identify what the Date parser is
-     * doing.
+     * Returns the creationTime as a formatted String. If the dateTime is null
+     * a polite "Failed to Parse" string is returned
      *
-     * @param dateTime
-     * @return the creation time
+     * @param dateTime the Calendar to format
+     * @return the creation time as a formatted string
      */
     public static String getFormattedCreationTime( Calendar dateTime ) {
         String formattedDate;
@@ -937,7 +936,7 @@ public class PictureInfo implements Serializable {
     /**
      * Changes the angle by the supplied angle the picture by an angle.
      *
-     * @param angle
+     * @param angle the new angle
      */
     public synchronized void rotate( double angle ) {
         setRotation( ( getRotation() + angle ) % 360 );
@@ -1163,7 +1162,7 @@ public class PictureInfo implements Serializable {
     /**
      * Returns whether the category is part of the attributes of the picture
      *
-     * @param key
+     * @param key the key
      * @return true if the key was in the categories
      */
     public boolean containsCategory( Object key ) {

@@ -134,7 +134,7 @@ public class Thumbnail extends JComponent {
      * This method sets the scaling factor for the display of a thumbnail. 0 ..
      * 1
      *
-     * @param thumbnailSizeFactor
+     * @param thumbnailSizeFactor factor
      */
     public void setFactor( float thumbnailSizeFactor ) {
         LOGGER.fine( String.format( "Scaling factor is being set to %f", thumbnailSizeFactor ) );
@@ -375,7 +375,7 @@ public class Thumbnail extends JComponent {
      * affine transformation on the image to position it so the the desired
      * point is in the middle of the Graphics object.
      *
-     * @param graphics
+     * @param graphics Graphics
      */
     @Override
     public void paintComponent( Graphics graphics ) {

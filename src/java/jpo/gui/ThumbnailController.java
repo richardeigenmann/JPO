@@ -355,6 +355,7 @@ public class ThumbnailController implements JpoDropTargetDropEventHandler {
 
         /**
          * Logic for processing a left click on the thumbnail
+         * @param e the mouse event
          */
         private void leftClickResponse( MouseEvent e ) {
             if ( e.isControlDown() ) {
@@ -377,6 +378,7 @@ public class ThumbnailController implements JpoDropTargetDropEventHandler {
 
         /**
          * Logic for processing a right click on the thumbnail
+         * @param e Mouse event
          */
         private void rightClickResponse( MouseEvent e ) {
             if ( myNode.getUserObject() instanceof PictureInfo ) {
@@ -409,7 +411,7 @@ public class ThumbnailController implements JpoDropTargetDropEventHandler {
          * here we get notified by the PictureInfo object that something has
          * changed.
          *
-         * @param pictureInfoChangeEvent
+         * @param pictureInfoChangeEvent event
          */
         @Override
         public void pictureInfoChangeEvent( PictureInfoChangeEvent pictureInfoChangeEvent ) {
@@ -433,7 +435,7 @@ public class ThumbnailController implements JpoDropTargetDropEventHandler {
          * here we get notified by the GroupInfo object that something has
          * changed.
          *
-         * @param groupInfoChangeEvent
+         * @param groupInfoChangeEvent event
          */
         @Override
         public void groupInfoChangeEvent( GroupInfoChangeEvent groupInfoChangeEvent ) {
@@ -463,7 +465,7 @@ public class ThumbnailController implements JpoDropTargetDropEventHandler {
      * This method sets the scaling factor for the display of a thumbnail. 0 ..
      * 1
      *
-     * @param thumbnailSizeFactor
+     * @param thumbnailSizeFactor Factor
      */
     public void setFactor( float thumbnailSizeFactor ) {
         LOGGER.fine( String.format( "Scaling factor is being set to %f", thumbnailSizeFactor ) );
@@ -485,7 +487,7 @@ public class ThumbnailController implements JpoDropTargetDropEventHandler {
     /**
      * Determines whether decorations should be drawn or not
      *
-     * @param decorateThumbnails
+     * @param decorateThumbnails Whether to decorate
      */
     public void setDecorateThumbnails( boolean decorateThumbnails ) {
         this.decorateThumbnails = decorateThumbnails;

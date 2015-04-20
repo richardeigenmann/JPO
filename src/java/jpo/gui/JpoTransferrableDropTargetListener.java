@@ -24,7 +24,7 @@ public class JpoTransferrableDropTargetListener implements DropTargetListener {
 
     /**
      * Constructor
-     * @param jpoDropTargetDropEventHandler 
+     * @param jpoDropTargetDropEventHandler Event handler
      */
     public JpoTransferrableDropTargetListener( JpoDropTargetDropEventHandler jpoDropTargetDropEventHandler ) {
         this.jpoDropTargetDropEventHandler = jpoDropTargetDropEventHandler;
@@ -36,7 +36,7 @@ public class JpoTransferrableDropTargetListener implements DropTargetListener {
      * ThumbnailController. We check if the desired DataFlavor is supported and
      * then reject the drag if it is not.
      *
-     * @param event
+     * @param event The event
      */
     @Override
     public void dragEnter( DropTargetDragEvent event ) {
@@ -50,7 +50,7 @@ public class JpoTransferrableDropTargetListener implements DropTargetListener {
      * this callback method is invoked every time something is dragged over the
      * ThumbnailController. We could do some highlighting if we so desired.
      *
-     * @param event
+     * @param event The event 
      */
     @Override
     public void dragOver( DropTargetDragEvent event ) {
@@ -66,7 +66,7 @@ public class JpoTransferrableDropTargetListener implements DropTargetListener {
      * of the operation. This method could intercept this change and could
      * modify the event if it needs to. On Thumbnails this does nothing.
      *
-     * @param event
+     * @param event The event
      */
     @Override
     public void dropActionChanged( DropTargetDragEvent event ) {
@@ -76,7 +76,7 @@ public class JpoTransferrableDropTargetListener implements DropTargetListener {
      * this callback method is invoked to tell the dropTarget that the drag has
      * moved on to something else. We do nothing here.
      *
-     * @param event
+     * @param event The event
      */
     @Override
     public void dragExit( DropTargetEvent event ) {
@@ -87,7 +87,7 @@ public class JpoTransferrableDropTargetListener implements DropTargetListener {
      * This method is called when the drop occurs. It gives the hard work to the
      * SortableDefaultMutableTreeNode.
      *
-     * @param event
+     * @param event The event
      */
     @Override
     public void drop( DropTargetDropEvent event ) {

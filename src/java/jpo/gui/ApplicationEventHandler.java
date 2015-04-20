@@ -1113,7 +1113,7 @@ public class ApplicationEventHandler {
     /**
      * Removes the supplied node from it's parent
      *
-     * @param request
+     * @param request The request
      */
     @Subscribe
     public void handleRemoveNodeRequest( RemoveNodeRequest request ) {
@@ -1413,7 +1413,7 @@ public class ApplicationEventHandler {
     /**
      * Handles the RefreshThumbnailRequest
      *
-     * @param request
+     * @param request The request
      */
     @Subscribe
     public void handleRefreshThumbnailRequest( RefreshThumbnailRequest request ) {
@@ -1433,7 +1433,7 @@ public class ApplicationEventHandler {
     /**
      * Handles the RotatePictureRequest request
      *
-     * @param request
+     * @param request The request
      */
     @Subscribe
     public void handleRotatePictureRequestRequest( RotatePictureRequest request ) {
@@ -1448,7 +1448,7 @@ public class ApplicationEventHandler {
      * Handles the SetPictureRotationRequest request by setting the rotation and
      * calling the refresh thumbnails methods
      *
-     * @param request
+     * @param request The request
      */
     @Subscribe
     public void handleSetPictureRotationRequest( SetPictureRotationRequest request ) {
@@ -1461,7 +1461,7 @@ public class ApplicationEventHandler {
     /**
      * Handles the OpenCategoryEditorRequest request
      *
-     * @param request
+     * @param request The request
      */
     @Subscribe
     public void handleOpenCategoryEditorRequest( OpenCategoryEditorRequest request ) {
@@ -1471,7 +1471,7 @@ public class ApplicationEventHandler {
     /**
      * Handles the RunUserFunctionRequest request
      *
-     * @param request
+     * @param request The request
      */
     @Subscribe
     public void handleRunUserFunctionRequest( RunUserFunctionRequest request ) {

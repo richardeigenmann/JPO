@@ -86,7 +86,7 @@ public class NodeStatisticsPanel extends JPanel {
 
     /**
      * Updates the statistics
-     * @param nodeStatisticsBean 
+     * @param nodeStatisticsBean bean
      */
     public void updateStats( NodeStatisticsBean nodeStatisticsBean ) {
         collectionItemsLabel.setText( nodeStatisticsBean.getNumberOfNodes() );

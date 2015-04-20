@@ -40,7 +40,7 @@ public class JTableCopyPasteClipboardAdapter implements ActionListener {
      *   JTable on which it enables Copy-Paste and acts
      *   as a Clipboard listener.
      *
-     * @param myJTable
+     * @param myJTable tabke
      */
     public JTableCopyPasteClipboardAdapter( JTable myJTable ) {
         jTable = myJTable;
@@ -87,7 +87,7 @@ public class JTableCopyPasteClipboardAdapter implements ActionListener {
      *   Paste is done by aligning the upper left corner of the selection with the
      *   1st element in the current selection of the JTable.
      *
-     * @param event
+     * @param event event
      */
     @Override
     public void actionPerformed( ActionEvent event ) {

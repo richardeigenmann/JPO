@@ -92,7 +92,7 @@ public class CategoryUsageJFrame extends JFrame {
      * Creates a GUI to edit the categories of the collection
      *
      *
-     * @param request
+     * @param request The request
      */
     public CategoryUsageJFrame( ShowCategoryUsageEditorRequest request ) {
         this();
@@ -192,7 +192,7 @@ public class CategoryUsageJFrame extends JFrame {
     /**
      * This method receives the selection the Category Editor is working on
      *
-     * @param nodes
+     * @param nodes The nodes
      */
     public final void setSelection( Set<SortableDefaultMutableTreeNode> nodes ) {
         selectedNodes = nodes;
@@ -349,7 +349,7 @@ synchronized( categoryGuiListeners ) {
     /**
      * This method registers the categoryGuiListener
      *
-     * @param listener
+     * @param listener The listener to register
      */
     public void addCategoryGuiListener( CategoryGuiListenerInterface listener ) {
         categoryGuiListeners.add( listener );
@@ -358,7 +358,7 @@ synchronized( categoryGuiListeners ) {
     /**
      * This method deregisters the categoryGuiListener
      *
-     * @param listener
+     * @param listener the listener
      */
     public void removeCategoryGuiListener( CategoryGuiListenerInterface listener ) {
         categoryGuiListeners.remove( listener );

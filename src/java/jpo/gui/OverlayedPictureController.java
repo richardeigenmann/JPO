@@ -214,8 +214,8 @@ public class OverlayedPictureController extends PictureController implements Sca
      * picture is sent to the listener. The method {@link #centerImage} is
      * called and a repaint is requested.
      *
-     * @param pictureStatusCode
-     * @param pictureStatusMessage
+     * @param pictureStatusCode New Status Code
+     * @param pictureStatusMessage New Status Message
      */
     @Override
     public void scalableStatusChange( ScalablePicture.ScalablePictureStatus pictureStatusCode,
@@ -245,8 +245,8 @@ public class OverlayedPictureController extends PictureController implements Sca
      * pass messages about progress onto the PictureViewer for updating of the
      * progress bar
      *
-     * @param statusCode
-     * @param percentage
+     * @param statusCode status code
+     * @param percentage percentage
      */
     @Override
     public void sourceLoadProgressNotification( SourcePicture.SourcePictureStatus statusCode, int percentage ) {
@@ -267,7 +267,7 @@ public class OverlayedPictureController extends PictureController implements Sca
     /**
      * method to register the listening object of the status events
      *
-     * @param listener
+     * @param listener Listener
      */
     public void addStatusListener( ScalablePictureListener listener ) {
         picturePaneListeners.add( listener );

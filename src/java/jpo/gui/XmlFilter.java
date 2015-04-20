@@ -31,7 +31,7 @@ public class XmlFilter extends javax.swing.filechooser.FileFilter {
     /**
      * accepts directories and files ending in .xml
      *
-     * @param file
+     * @param file file
      * @return true if the files ends in .xml
      */
     @Override

@@ -242,7 +242,7 @@ public class CategoryEditorJFrame
      * Method from the ListSelectionListener implementation that tracks when an
      * element was selected.
      *
-     * @param e
+     * @param e The event
      */
     @Override
     public void valueChanged( ListSelectionEvent e ) {

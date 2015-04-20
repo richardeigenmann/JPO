@@ -1,16 +1,8 @@
 package jpo.gui;
-
-import java.awt.Dimension;
-import java.awt.Container;
-import java.awt.Component;
-import java.awt.LayoutManager;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 /*
  ThumbnailLayoutManger.java:  a Layout Manager for the Thumbnail pane
 
- Copyright (C) 2006 - 2009 Richard Eigenmann (for the modifications over the original I copied)
+ Copyright (C) 2006 - 2014 Richard Eigenmann (for the modifications over the original I copied)
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -24,6 +16,15 @@ import java.util.logging.Logger;
  The license is in gpl.txt.
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
+
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.LayoutManager;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JComponent;
+
 /**
  * a Layout Manager for the Thumbnail pane
  */
@@ -35,38 +36,50 @@ public class ThumbnailLayoutManager implements LayoutManager {
     private static final Logger LOGGER = Logger.getLogger( ThumbnailLayoutManager.class.getName() );
 
     /**
-     * This method gets called when an object is added to the parent component.
+     * Constructs the LayoutManager. We need a reference to the JComponent to
+     * query for the width to which we are supposed to lay out the thumbnails.
      *
-     * @param name
-     * @param comp
+     * @param widthProvider The width providing JComponent. Typically the
+     * JViewport of the JScrollPane showing the thumbnails.
      */
-    @Override
-    public void addLayoutComponent( String name, Component comp ) {
-        LOGGER.fine( "ThumbnailLayoutManager.addLayoutComponent (LayoutManager): called" );
+    public ThumbnailLayoutManager( JComponent widthProvider ) {
+        this.widthProvider = widthProvider;
     }
 
     /**
-     * This method is called when an object is removed from the parent
-     * component.
+     * Reference to the JViewport to query for the width to which to lay out.
+     */
+    private final JComponent widthProvider;
+
+    /**
+     * Must have for LayoutManager interface
      *
-     * @param comp
+     * @param name name
+     * @param comp component
+     */
+    @Override
+    public void addLayoutComponent( String name, Component comp ) {
+    }
+
+    /**
+     * Must have for LayoutManager interface
+     *
+     * @param comp component
      */
     @Override
     public void removeLayoutComponent( Component comp ) {
-        LOGGER.fine( "ThumbnailLayoutManager.removeLayoutComponent: called" );
     }
 
     /**
      * Returns the preferredLayoutSize for the managed component
      *
-     * @param parent
+     * @param parent parent
      * @return preferred size
      */
     @Override
     public Dimension preferredLayoutSize( Container parent ) {
-        LOGGER.fine( "ThumbnailLayoutManager.preferredLayoutSize: requested" );
         synchronized ( parent.getTreeLock() ) {
-            calculateCols( parent );
+            calculateCols();
             int columns = getCols();
             int width = columns * ( getThumbnailWidth() + getHorizontalGutter() );
             int height = 0;
@@ -78,13 +91,13 @@ public class ThumbnailLayoutManager implements LayoutManager {
                 if ( ( logicalThumbnail % columns ) == 0 ) {
                     rowComponentHeight = getHeightOfRow( parent, i, columns ) // Thumbnails
                             + getHeightOfRow( parent, i + 1, columns ); // Descriptions
-                    LOGGER.log( Level.FINE, "Description height of row {0} is {1}", new Object[]{ Integer.toString( ( logicalThumbnail / columns ) ), Integer.toString( getHeightOfRow( parent, i + 1, columns ) ) });
+                    //LOGGER.log( Level.INFO, "Description height of row {0} is {1}", new Object[]{ Integer.toString( ( logicalThumbnail / columns ) ), Integer.toString( getHeightOfRow( parent, i + 1, columns ) ) } );
                     if ( rowComponentHeight > 0 ) {
                         height += rowComponentHeight + ( 2 * getVerticalGutter() );
                     }
                 }
             }
-            LOGGER.log( Level.FINE, "Returning width: {0} height: {1}", new Object[]{ Integer.toString( width ), Integer.toString( height ) });
+            //LOGGER.log( Level.INFO, "Returning preferredLayoutSize width: {0} height: {1}", new Object[]{ Integer.toString( width ), Integer.toString( height ) } );
             return new Dimension( width, height );
         }
     }
@@ -92,7 +105,7 @@ public class ThumbnailLayoutManager implements LayoutManager {
     /**
      * Returns the minimumLayoutSize for the managed component
      *
-     * @param target
+     * @param target Target
      * @return preferred size
      */
     @Override
@@ -101,7 +114,8 @@ public class ThumbnailLayoutManager implements LayoutManager {
     }
 
     /**
-     * The width of the thumbnails in pixels
+     * The width of the thumbnails in pixels //TODO: Why is this constant here
+     * and not in Settings?
      */
     private int thumbnailWidth = 350;
 
@@ -170,17 +184,16 @@ public class ThumbnailLayoutManager implements LayoutManager {
     }
 
     /**
-     * This method seems to be called by the parent container when it wants to
-     * have the components laid out. This implementation runs through all the
-     * Thumbnail and Thumbnail description objects and puts them to the right
-     * place.
+     * This method is called by the parent container when it wants to have the
+     * components laid out. This implementation runs through all the Thumbnail
+     * and Thumbnail Description objects and puts them to the right place.
      *
-     * @param parent
+     * @param parent Parent
      */
     @Override
     public void layoutContainer( Container parent ) {
         synchronized ( parent.getTreeLock() ) {
-            calculateCols( parent );
+            calculateCols();
             int columns = getCols();
 
             int column = 0;
@@ -222,13 +235,13 @@ public class ThumbnailLayoutManager implements LayoutManager {
      * @return The height of the row
      */
     private int getHeightOfRow( Container parent, int index, int cols ) {
-        LOGGER.log( Level.FINE, "Called for index={0} and columns: {1}", new Object[]{ Integer.toString( index ), Integer.toString( cols ) });
+        //LOGGER.log( Level.FINE, "Called for index={0} and columns: {1}", new Object[]{ Integer.toString( index ), Integer.toString( cols ) } );
         int height = 0;
         for ( int i = 0; ( ( 2 * i ) + index < parent.getComponentCount() ) && ( i < cols ); i++ ) {
             height = Math.max( height, parent.getComponent( index + ( 2 * i ) ).getPreferredSize().height );
-            LOGGER.log( Level.FINE, "Height of component {0} is {1}", new Object[]{ Integer.toString( index + ( 2 * i ) ), parent.getComponent( index + ( 2 * i ) ).getPreferredSize().height });
+            //LOGGER.log( Level.FINE, "Height of component {0} is {1}", new Object[]{ Integer.toString( index + ( 2 * i ) ), parent.getComponent( index + ( 2 * i ) ).getPreferredSize().height } );
         }
-        LOGGER.log( Level.FINE, "index={0} / height={1}", new Object[]{ Integer.toString( index ), Integer.toString( height ) });
+        //LOGGER.log( Level.FINE, "index={0} / height={1}", new Object[]{ Integer.toString( index ), Integer.toString( height ) } );
         return height;
     }
 
@@ -236,12 +249,10 @@ public class ThumbnailLayoutManager implements LayoutManager {
      * Calculates the number of columns we have on the panel and saves the
      * result.
      *
-     * @param parent
      * @return true if the number of columns changed, false if not changed
      */
-    public boolean calculateCols( Container parent ) {
-        int width = getParentComponentWidth( parent );
-        int newCols = calculateCols( width );
+    public boolean calculateCols() {
+        int newCols = calculateCols( widthProvider.getWidth() );
         if ( newCols != getCols() ) {
             setCols( newCols );
             return true;
@@ -253,7 +264,7 @@ public class ThumbnailLayoutManager implements LayoutManager {
     /**
      * Calculates the number of columns we can show given a specified width
      *
-     * @param width
+     * @param width Width
      * @return the number of columns
      */
     public int calculateCols( int width ) {
@@ -261,6 +272,7 @@ public class ThumbnailLayoutManager implements LayoutManager {
         if ( newCols < 1 ) {
             newCols = 1;
         }
+        //LOGGER.info( String.format( "Calculating columns for parent width: %d, returning %d columns", width, newCols ) );
         return newCols;
     }
 
@@ -269,13 +281,15 @@ public class ThumbnailLayoutManager implements LayoutManager {
      * and that is not interesting so we go the parent's parent which is the
      * JViewport and ask that for it's width.
      *
-     * @param parent
+     * @param parent Parent
      * @return the width of the parent component.
      */
     public static int getParentComponentWidth( Container parent ) {
+        LOGGER.info( parent.toString() );
         Container queryComponent = parent;
         if ( parent.getParent() != null ) {
             queryComponent = parent.getParent();  // get the size of the JViewport
+            LOGGER.info( queryComponent.toString() );
         }
         return queryComponent.getBounds().width;
     }

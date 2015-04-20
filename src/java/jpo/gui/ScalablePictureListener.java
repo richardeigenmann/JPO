@@ -30,16 +30,16 @@ public interface ScalablePictureListener {
     /**
      * inform the listener that the status has changed
      *
-     * @param statusCode
-     * @param statusMessage
+     * @param statusCode statis code
+     * @param statusMessage status message
      */
     public void scalableStatusChange( ScalablePictureStatus statusCode, String statusMessage );
 
     /**
      * inform the listener of progress on the loading of the image
      *
-     * @param statusCode
-     * @param percentage
+     * @param statusCode status code
+     * @param percentage status message
      */
     public void sourceLoadProgressNotification( SourcePictureStatus statusCode, int percentage );
 

@@ -148,11 +148,11 @@ public class XmlReader extends DefaultHandler {
     /**
      * method that gets invoked by the parser when a new element is discovered
      *
-     * @param namespaceURI
-     * @param lName
-     * @param qName
-     * @param attrs
-     * @throws SAXException
+     * @param namespaceURI Namespace
+     * @param lName local name
+     * @param qName qualified name
+     * @param attrs attributes
+     * @throws SAXException Exception if bad
      */
     @Override
     public void startElement( String namespaceURI,
@@ -234,12 +234,12 @@ public class XmlReader extends DefaultHandler {
 
     /**
      * method that gets invoked by the parser when a end element is discovered;
-     * used here to go back to the parent group if a \</group\> tag is found.
+     * used here to go back to the parent group if a &lt;group&gt; tag is found.
      *
-     * @param namespaceURI
-     * @param sName
-     * @param qName
-     * @throws SAXException
+     * @param namespaceURI the URI
+     * @param sName the simple name
+     * @param qName the qualified name
+     * @throws SAXException Exception if it went wrong
      */
     @Override
     public void endElement( String namespaceURI,

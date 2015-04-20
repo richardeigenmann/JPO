@@ -216,7 +216,7 @@ public class ProgressGui extends JFrame implements ProgressListener {
     /**
      * set the maximum
      *
-     * @param max
+     * @param max maximum
      */
     public void setMaxiumum( int max ) {
         progBar.setMaximum( max );

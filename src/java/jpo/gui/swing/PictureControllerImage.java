@@ -60,7 +60,7 @@ public interface PictureControllerImage {
      * Example: Original is 3000 x 2000 --&gt; Scale Factor 0.10 --&gt; Target Picture
      * is 300 x 200
      *
-     * @param newFactor
+     * @param newFactor new facture
      */
     public void setScaleFactor( double newFactor );
 
@@ -78,7 +78,7 @@ public interface PictureControllerImage {
      * factor so that the image fits either by height or by width into the
      * indicated dimension.
      *
-     * @param newSize
+     * @param newSize new size
      */
     public void setScaleSize( Dimension newSize );
 

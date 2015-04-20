@@ -72,7 +72,7 @@ import jpo.gui.swing.ResizableJFrame.WindowSize;
  * space and centres it there. The right mouse button zooms out.<p>
  *
  *
- * <img src="../PictureViewer.png" border=0 alt="Picture Viewer">
+ * <img src="../PictureViewer.png" alt="Picture Viewer">
  *
  */
 public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorListener {
@@ -542,7 +542,7 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
      * here we get notified by the PictureInfo object that something has
      * changed.
      *
-     * @param pictureInfoChangedEvent
+     * @param pictureInfoChangedEvent The event
      */
     @Override
     public void pictureInfoChangeEvent( PictureInfoChangeEvent pictureInfoChangedEvent ) {
@@ -728,7 +728,7 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
     /**
      * This method sets up the Advance Timer
      *
-     * @param seconds
+     * @param seconds Seconds
      */
     public void startAdvanceTimer( int seconds ) {
 
@@ -797,7 +797,7 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
      * The location and size of the Window can be changed by a call to this
      * method
      *
-     * @param newMode
+     * @param newMode new window mode
      */
     public void switchWindowMode( WindowSize newMode ) {
         pictureFrame.switchWindowMode( newMode );

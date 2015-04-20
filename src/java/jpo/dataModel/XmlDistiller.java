@@ -155,6 +155,9 @@ public class XmlDistiller
 
     /**
      * recursively invoked method to report all groups.
+     * @param groupNode The group node
+     * @param bufferedWriter The writer
+     * @throws IOException bubbel-up IOException
      */
     private void enumerateGroup( SortableDefaultMutableTreeNode groupNode, BufferedWriter bufferedWriter ) throws IOException {
         GroupInfo groupInfo = (GroupInfo) groupNode.getUserObject();
@@ -177,6 +180,9 @@ public class XmlDistiller
 
     /**
      * write a picture to the output
+     * @param pictureNode  the picture to write
+     * @param bufferedWriter the writer to which to write
+     * @throws IOException bubbel-up IOException
      */
     private void writePicture( SortableDefaultMutableTreeNode pictureNode, BufferedWriter bufferedWriter ) throws IOException {
         PictureInfo pictureInfo = (PictureInfo) pictureNode.getUserObject();
@@ -195,7 +201,7 @@ public class XmlDistiller
     /**
      * Write the collection.dtd file to the target directory.
      *
-     * @param directory
+     * @param directory The directory to write to
      */
     public void writeCollectionDTD( File directory ) {
         ClassLoader cl = this.getClass().getClassLoader();

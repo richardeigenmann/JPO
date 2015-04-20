@@ -193,7 +193,7 @@ public class PictureFrame {
      * The location and size of the Window can be changed by a call to this
      * method
      *
-     * @param newMode
+     * @param newMode new mode
      */
     public void switchWindowMode( ResizableJFrame.WindowSize newMode ) {
         myJFrame.switchWindowMode( newMode );

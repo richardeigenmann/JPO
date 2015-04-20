@@ -211,6 +211,7 @@ public class ReconcileJFrame extends JFrame {
      * it returns false. It pops up JOptionPanes to explain what is wrong.
      *
      * @param reconcileDir The directory to validate
+     * @return true if good, false if not
      */
     private boolean validateDir( File reconcileDir ) {
         if ( reconcileDir == null ) {

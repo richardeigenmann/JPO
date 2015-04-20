@@ -33,7 +33,7 @@ public interface CategoryGuiListenerInterface {
 	/**
 	 *  This method is invoked on the target object when the categories have been chosen.
          *
-         * @param selectedCategories 
+         * @param selectedCategories  The selected Categories
          */
 	public void categoriesChosen( HashSet<Object> selectedCategories );
 

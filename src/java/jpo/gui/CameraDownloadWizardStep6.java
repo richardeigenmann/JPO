@@ -35,7 +35,7 @@ public class CameraDownloadWizardStep6 extends AbstractStep {
 
     /**
      *
-     * @param dataModel
+     * @param dataModel The data model
      */
     public CameraDownloadWizardStep6( CameraDownloadWizardData dataModel ) {
         //pass step title and description

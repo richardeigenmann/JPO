@@ -36,8 +36,8 @@ public class TableMap extends AbstractTableModel
 
     /**
      * By default, implement TableModel by forwarding all messages to the model.
-     * @param aRow
-     * @param aColumn
+     * @param aRow a row
+     * @param aColumn a column
      * @return the value
      */
     @Override
@@ -46,10 +46,10 @@ public class TableMap extends AbstractTableModel
     }
 
     /**
-     *
-     * @param aValue
-     * @param aRow
-     * @param aColumn
+     * Set cell value
+     * @param aValue a value
+     * @param aRow a row
+     * @param aColumn a column
      */
     @Override
     public void setValueAt( Object aValue, int aRow, int aColumn ) {
@@ -84,7 +84,7 @@ public class TableMap extends AbstractTableModel
     /**
      * Implementation of the TableModelListener interface, By default forward
      * all events to all the listeners.
-     * @param e
+     * @param e event
      */
     @Override
     public void tableChanged( TableModelEvent e ) {

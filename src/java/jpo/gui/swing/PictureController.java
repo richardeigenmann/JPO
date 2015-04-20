@@ -45,9 +45,8 @@ import jpo.gui.ScalablePicture;
  * The image is centred on the component to the {@link #focusPoint} in the
  * coordinate space of the image. This translated using the
  * {@link ScalablePicture#setScaleFactor( double )} to the coordinate space of
- * the JComponent<p>
- *
- * <img src=../Mathematics.png border=0 alt="Mathematics"><p>
+ * the JComponent
+ * <p> <img src=../Mathematics.png alt="Mathematics"></p>
  *
  *
  */
@@ -75,7 +74,7 @@ public class PictureController extends JComponent {
 
     /**
      * Constructs a PicturePane components.
-     *
+     * @param pictureControllerImage image
      */
     public PictureController( PictureControllerImage pictureControllerImage ) {
         this.pictureControllerImage = pictureControllerImage;
@@ -247,8 +246,8 @@ public class PictureController extends JComponent {
      * method that moves the image up by 10% of the pixels shown on the screen.
      * This method calls <code>repaint()</code> directly since no time consuming
      * image operations need to take place.
-     * <p>
-     * <img src=../scrollUp.png border=0 alt="Scroll Up"><p>
+     * <p><img src=../scrollUp.png alt="Scroll Up"></p>
+     * 
      * @see #scrollUp()
      * @see #scrollDown()
      * @see #scrollLeft()
@@ -269,8 +268,7 @@ public class PictureController extends JComponent {
      * method that moves the image down by 10% of the pixels shown on the
      * screen. This method calls <code>repaint()</code> directly since no time
      * consuming image operations need to take place.
-     * <p>
-     * <img src=../scrollDown.png border=0 alt="Scroll Down"><p>
+     * <p><img src=../scrollDown.png alt="Scroll Down"></p>
      * @see #scrollUp()
      * @see #scrollDown()
      * @see #scrollLeft()
@@ -330,8 +328,8 @@ public class PictureController extends JComponent {
      * method to set the centre of the image to the true coordinates in the
      * picture but doesn't call <code>repaint()</code>
      *
-     * @param Xparameter
-     * @param Yparameter
+     * @param Xparameter the x coordinates
+     * @param Yparameter the y coordinates
      */
     public void setCenterLocation( int Xparameter, int Yparameter ) {
         focusPoint.setLocation( Xparameter, Yparameter );
@@ -347,7 +345,7 @@ public class PictureController extends JComponent {
      * needs to be done once, while moving the image is something the user is
      * likely to do more often.
      *
-     * @param g
+     * @param g Graphics
      */
     @Override
     public void paintComponent( Graphics g ) {

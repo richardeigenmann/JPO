@@ -55,6 +55,7 @@ public class LabelFrame {
 
     /**
      * Creates the components
+     * @param title title for the frame
      */
     private void initComponents( String title ) {
         jFrame = new JFrame();

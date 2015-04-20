@@ -37,8 +37,8 @@ import net.javaprog.ui.wizard.AbstractStep;
 public class CameraDownloadWizardStep2 extends AbstractStep {
 
     /**
-     *
-     * @param dataModel
+     * Second step constructor
+     * @param dataModel The data model
      */
     public CameraDownloadWizardStep2( CameraDownloadWizardData dataModel ) {
         //pass step title and description

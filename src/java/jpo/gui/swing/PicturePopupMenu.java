@@ -843,7 +843,7 @@ public class PicturePopupMenu extends JPopupMenu {
         /**
          * Handle the event by updating the submenu items
          *
-         * @param event
+         * @param event event
          */
         @Subscribe
         public void handleRecentDropNodeChangedEventHandler( RecentDropNodesChangedEvent event ) {
@@ -891,7 +891,7 @@ public class PicturePopupMenu extends JPopupMenu {
         /**
          * Handle the event by updating the submenu items
          *
-         * @param event
+         * @param event event
          */
         @Subscribe
         public void handleCopyLocationsChangedEvent( CopyLocationsChangedEvent event ) {
@@ -929,7 +929,7 @@ public class PicturePopupMenu extends JPopupMenu {
         /**
          * Handle the event by updating the submenu items
          *
-         * @param event
+         * @param event event
          */
         @Subscribe
         public void handleUserFunctionsChangedEvent( UserFunctionsChangedEvent event ) {

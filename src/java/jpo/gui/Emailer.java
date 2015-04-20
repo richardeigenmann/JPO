@@ -115,14 +115,14 @@ public class Emailer
      * Creates and starts a Thread that writes the picture nodes from the
      * specified startNode to the target directory.
      *
-     * @param emailSelected
-     * @param senderAddress
-     * @param destinationAddress
-     * @param subjectLine
-     * @param bodyText
-     * @param scaleImages
-     * @param scaleSize
-     * @param sendOriginal
+     * @param emailSelected List of nodes for emailing
+     * @param senderAddress The sender address
+     * @param destinationAddress The destination Address
+     * @param subjectLine The subject line
+     * @param bodyText The body Text
+     * @param scaleImages Whether to scale images
+     * @param scaleSize The size to scale them to
+     * @param sendOriginal Whether to include originals
      */
     public Emailer( List<SortableDefaultMutableTreeNode> emailSelected,
             InternetAddress senderAddress,
@@ -190,7 +190,7 @@ public class Emailer
      * This is where the SwingWorker does it's stuff
      *
      * @return "Done"
-     * @throws Exception
+     * @throws Exception An Exception if something went wrong
      */
     @Override
     protected String doInBackground() throws Exception {
@@ -231,7 +231,7 @@ public class Emailer
 
     /**
      *
-     * @param chunks
+     * @param chunks Chunks
      */
     @Override
     protected void process( java.util.List<String> chunks ) {
@@ -245,6 +245,7 @@ public class Emailer
     /**
      * This method returns the MimeMessage object that should be emailed.
      *
+     * @param session the session
      * @return The MimeMessage for the email.
      */
     private MimeMessage buildMessage( Session session ) {

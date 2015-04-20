@@ -242,9 +242,9 @@ public class ScalablePicture
      * it has completed loading. The ScalablePicture should then change it's own
      * status and tell the ScalableListeners what's up.
      *
-     * @param statusCode
-     * @param statusMessage
-     * @param sp
+     * @param statusCode status code
+     * @param statusMessage status message
+     * @param sp source picture
      */
     @Override
     public void sourceStatusChange( SourcePictureStatus statusCode, String statusMessage,
@@ -393,6 +393,7 @@ public class ScalablePicture
      * @param sourceHeight the height of the original dimension
      * @param maxWidth the maximum width of the output dimension
      * @param maxHeight the maximum height of the output dimension
+     * @return The scale factor by which to multiply the source dimension
      */
     public static double calcScaleSourceToTarget( int sourceWidth, int sourceHeight, int maxWidth, int maxHeight ) {
         // Scale so that the enire picture fits in the component.
@@ -414,7 +415,7 @@ public class ScalablePicture
      * Example: Original is 3000 x 2000 --&gt; Scale Factor 0.10 --&gt; Target Picture
      * is 300 x 200
      *
-     * @param newFactor
+     * @param newFactor new factor
      */
     @Override
     public final void setScaleFactor( double newFactor ) {
@@ -428,7 +429,7 @@ public class ScalablePicture
      * factor so that the image fits either by height or by width into the
      * indicated dimension.
      *
-     * @param newSize
+     * @param newSize new size
      */
     @Override
     public void setScaleSize( Dimension newSize ) {
@@ -674,7 +675,7 @@ public class ScalablePicture
     /**
      * method to register the listening object of the status events
      *
-     * @param listener
+     * @param listener Listener
      */
     public void addStatusListener( ScalablePictureListener listener ) {
         scalablePictureStatusListeners.add( listener );
@@ -683,7 +684,7 @@ public class ScalablePicture
     /**
      * method to register the listening object of the status events
      *
-     * @param listener
+     * @param listener Listener
      */
     public void removeStatusListener( ScalablePictureListener listener ) {
         scalablePictureStatusListeners.remove( listener );
@@ -697,6 +698,8 @@ public class ScalablePicture
     /**
      * Method that sets the status of the ScalablePicture object and notifies
      * interested objects of a change in status (not built yet).
+     * @param statusCode status code
+     * @param statusMessage  status message
      */
     private void setStatus( ScalablePictureStatus statusCode, String statusMessage ) {
         pictureStatusCode = statusCode;
@@ -712,8 +715,8 @@ public class ScalablePicture
     /**
      * pass on the update on the loading Progress to the listening objects
      *
-     * @param statusCode
-     * @param percentage
+     * @param statusCode status code
+     * @param percentage percentage
      */
     @Override
     public void sourceLoadProgressNotification( SourcePictureStatus statusCode, int percentage ) {

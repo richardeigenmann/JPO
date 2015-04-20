@@ -200,8 +200,8 @@ public class PictureInfoEditor extends JFrame {
     /**
      * Constructs a Picture Properties Dialog
      *
-     * @param setOfNodes
-     * @param index
+     * @param setOfNodes Set of nodes
+     * @param index index
      */
     public PictureInfoEditor( NodeNavigatorInterface setOfNodes, int index ) {
         this( setOfNodes.getNode( index ) );
@@ -655,7 +655,7 @@ public class PictureInfoEditor extends JFrame {
      * This utility method builds a string from the selected categories in a
      * supplied JList
      *
-     * @param theList
+     * @param theList the List
      * @return a string for the selected categories
      */
     private static String selectedJListCategoriesToString( JList<Category> theList ) {
@@ -702,7 +702,9 @@ public class PictureInfoEditor extends JFrame {
     /**
      * Returns true if the file is good, an Exception if bad.
      *
+     * @param fileToTest File to test
      * @return true if the file is good, an Exception if bad.
+     * @throws Exception if inputs were no good
      */
     private boolean testFile( String fileToTest ) throws Exception {
         try {
@@ -751,7 +753,7 @@ public class PictureInfoEditor extends JFrame {
      * Parses the supplied timestamp and shows the result in the
      * parsedCreationTimeJLabel
      *
-     * @param timestamp
+     * @param timestamp Timestamp
      */
     private void parseTimestamp( String timestamp ) {
         parsedCreationTimeJLabel.setText( String.format( "%tc", Tools.parseDate( timestamp ) ) );

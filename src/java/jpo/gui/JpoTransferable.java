@@ -222,8 +222,8 @@ public class JpoTransferable
     /**
      * Comes from the clipboard owner interface
      *
-     * @param clipboard
-     * @param contents
+     * @param clipboard The clipboard
+     * @param contents The transferable
      */
     @Override
     public void lostOwnership( Clipboard clipboard, Transferable contents ) {

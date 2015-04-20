@@ -67,7 +67,7 @@ public class TextQuery implements Serializable, Query {
      * Method to set the lower date range of the search. If null the lower date
      * will be ignored.
      *
-     * @param lowerDateRange
+     * @param lowerDateRange The lower date range as String
      */
     public void setLowerDateRange( Calendar lowerDateRange ) {
         this.lowerDateRange = lowerDateRange;
@@ -115,7 +115,7 @@ public class TextQuery implements Serializable, Query {
     /**
      * set the start node for the search
      *
-     * @param startNode
+     * @param startNode The start node
      */
     public void setStartNode( SortableDefaultMutableTreeNode startNode ) {
         this.startNode = startNode;

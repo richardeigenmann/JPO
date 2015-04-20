@@ -36,7 +36,7 @@ public class NonFocussedCaret
      *  All we do in this class is to override this method with nothing
      *  so that scrolling doesn't happen any more.
      *
-     * @param nloc
+     * @param nloc rectangle
      */
     @Override
     protected void adjustVisibility( Rectangle nloc ) {

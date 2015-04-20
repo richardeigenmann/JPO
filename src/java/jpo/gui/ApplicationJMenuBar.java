@@ -222,7 +222,7 @@ public class ApplicationJMenuBar extends JMenuBar {
         /**
          * Handle the event by updating the menu texts
          *
-         * @param event
+         * @param event The event
          */
         @Subscribe
         public void handleLocaleChangedEvent( LocaleChangedEvent event ) {
@@ -273,7 +273,7 @@ public class ApplicationJMenuBar extends JMenuBar {
         /**
          * Handle the event by updating the submenu items
          *
-         * @param event
+         * @param event The event
          */
         @Subscribe
         public void handleRecentCollectionsChangedEvent( RecentCollectionsChangedEvent event ) {

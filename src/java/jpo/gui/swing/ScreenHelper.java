@@ -242,7 +242,7 @@ public class ScreenHelper {
 
     /**
      * concatenates strings with a system dependent newline.
-     * @param s 
+     * @param s String
      */
     private static void sbadd( String s ) {
         b.append( s ).append( System.getProperty( "line.separator" ));
@@ -304,7 +304,7 @@ public class ScreenHelper {
 
     /**
      *  Explains the graphics device to the log file
-     * @param d
+     * @param d GraphicsDevice
      */
     public static void explainGraphicsDevice( GraphicsDevice d ) {
         String id = d.getIDstring();
@@ -340,8 +340,8 @@ public class ScreenHelper {
 
     /**
      *  Explains the display mode to the log file
-     * @param id
-     * @param dm
+     * @param id Id
+     * @param dm DisplayMode
      */
     public static void explainDisplayMode( String id, DisplayMode dm ) {
         sbadd( "DisplayMode for Device: " + id + " Bit Depth: " + Integer.toString( dm.getBitDepth() ) + " RefreshRate: " + Integer.toString( dm.getRefreshRate() ) + " Width: " + Integer.toString( dm.getWidth() ) + " Height: " + Integer.toString( dm.getHeight() ) );
@@ -350,8 +350,8 @@ public class ScreenHelper {
 
     /**
      *  Explains the graphics configuration to the log file
-     * @param id 
-     * @param gc
+     * @param id Id
+     * @param gc GraphicsConfiguration
      */
     public static void explainGraphicsConfiguration( String id,
             GraphicsConfiguration gc ) {

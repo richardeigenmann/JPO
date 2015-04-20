@@ -87,7 +87,7 @@ public class FindJPanel extends JPanel {
     /**
      * Show or hide the advanced options
      *
-     * @param visible
+     * @param visible flag
      */
     private void setAdvancedOptionsVisible( boolean visible ) {
         dateRangeJLabel.setVisible( visible );
@@ -133,7 +133,7 @@ public class FindJPanel extends JPanel {
     /**
      * Returns if the user keyed in a date range string
      *
-     * @return
+     * @return true if search by date desired
      */
     public boolean getSearchByDate() {
         return dateRangeJLabel.isVisible();

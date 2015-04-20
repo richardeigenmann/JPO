@@ -275,7 +275,7 @@ public class ThumbnailDescriptionJPanel
      * ThumbnailDescriptionJPanel.LARGE_DESCRIPTION,
      * ThumbnailDescriptionJPanel.MINI_INFO,
      *
-     * @param displayMode
+     * @param displayMode display Mode
      */
     public void setDisplayMode( DescriptionSize displayMode ) {
         this.displayMode = displayMode;
@@ -411,7 +411,7 @@ public class ThumbnailDescriptionJPanel
      * This method sets the scaling factor for the display of a thumbnail
      * description
      *
-     * @param thumbnailSizeFactor
+     * @param thumbnailSizeFactor Factor
      */
     public void setFactor( float thumbnailSizeFactor ) {
         this.thumbnailSizeFactor = thumbnailSizeFactor;
@@ -465,7 +465,7 @@ public class ThumbnailDescriptionJPanel
     /**
      * implemented here to satisfy the TreeModelListener interface; not used.
      *
-     * @param e
+     * @param e event
      */
     @Override
     public void treeNodesChanged( TreeModelEvent e ) {
@@ -493,7 +493,7 @@ public class ThumbnailDescriptionJPanel
     /**
      * implemented here to satisfy the TreeModelListener interface; not used.
      *
-     * @param e
+     * @param e event
      */
     @Override
     public void treeNodesInserted( TreeModelEvent e ) {
@@ -502,7 +502,7 @@ public class ThumbnailDescriptionJPanel
     /**
      * The TreeModelListener interface tells us of tree node removal events.
      *
-     * @param e
+     * @param e event
      */
     @Override
     public void treeNodesRemoved( TreeModelEvent e ) {
@@ -511,7 +511,7 @@ public class ThumbnailDescriptionJPanel
     /**
      * implemented here to satisfy the TreeModelListener interface; not used.
      *
-     * @param e
+     * @param e event
      */
     @Override
     public void treeStructureChanged( TreeModelEvent e ) {

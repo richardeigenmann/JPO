@@ -138,8 +138,8 @@ public class SourcePicture {
      * method to invoke with a filename or URL of a picture that is to be loaded
      * in the main thread.
      *
-     * @param imageUrl
-     * @param rotation
+     * @param imageUrl Image URL
+     * @param rotation Image rotation
      */
     public void loadPicture( URL imageUrl, double rotation ) {
         if ( pictureStatusCode == SOURCE_PICTURE_LOADING ) {
@@ -393,7 +393,7 @@ public class SourcePicture {
     /**
      * Adds a listener
      *
-     * @param listener
+     * @param listener Listener
      */
     public void addListener( SourcePictureListener listener ) {
         sourcePictureListeners.add( listener );
@@ -425,6 +425,8 @@ public class SourcePicture {
     /**
      * Method that sets the status of the ScalablePicture object and notifies
      * interested objects of a change in status (not built yet).
+     * @param statusCode status code
+     * @param statusMessage status message
      */
     private void setStatus( SourcePictureStatus statusCode, String statusMessage ) {
         LOGGER.fine( String.format( "Sending status code %s with message %s to %d listeners", statusCode, statusMessage, sourcePictureListeners.size() ) );

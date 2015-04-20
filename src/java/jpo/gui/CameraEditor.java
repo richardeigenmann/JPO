@@ -240,7 +240,7 @@ public class CameraEditor
 
     /**
      * Adds a listener
-     * @param actionListener 
+     * @param actionListener The Listener
      */
     public void addActionListener( ActionListener actionListener ) {
         listeners.add( actionListener );
@@ -248,7 +248,7 @@ public class CameraEditor
 
     /**
      * Removes a listener
-     * @param actionListener 
+     * @param actionListener The Listener
      */
     public void removeActionListener( ActionListener actionListener ) {
         listeners.remove( actionListener );

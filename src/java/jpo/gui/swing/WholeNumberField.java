@@ -102,7 +102,7 @@ public class WholeNumberField extends JTextField {
     /**
      * method that sets the value of the WholeNumberField
      *
-     * @param value
+     * @param value value
      */
     public final void setValue( int value ) {
         setText( Integer.toString( value ) );
@@ -111,7 +111,7 @@ public class WholeNumberField extends JTextField {
     /**
      * method that sets the value of the WholeNumberField
      *
-     * @param value
+     * @param value value
      */
     public void setValue( double value ) {
         setText( integerFormatter.format( value ) );
@@ -133,11 +133,11 @@ public class WholeNumberField extends JTextField {
     protected class WholeNumberDocument extends PlainDocument {
 
         /**
-         *
-         * @param offset
-         * @param string
-         * @param attributeSet
-         * @throws javax.swing.text.BadLocationException
+         * Inserts String
+         * @param offset Offset
+         * @param string String
+         * @param attributeSet attribute set
+         * @throws javax.swing.text.BadLocationException when it goes bad
          */
         @Override
         public void insertString( int offset,

@@ -833,7 +833,7 @@ public class Settings {
     }
 
     /**
-     * method that validates the settings & brings up the Settings dialog if not
+     * method that validates the settings &amp; brings up the Settings dialog if not
      * ok
      */
     public static void validateSettings() {
@@ -1091,7 +1091,7 @@ public class Settings {
     }
 
     /**
-     * This method memorises a collection file name for the Open > Recent menu.
+     * This method memorises a collection file name for the Open &gt; Recent menu.
      * <p>
      * The caller should notify any listeners that the recentCollections changed
      * by sending a 

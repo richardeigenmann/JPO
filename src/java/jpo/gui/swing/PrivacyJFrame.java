@@ -287,7 +287,7 @@ public class PrivacyJFrame
              * array and updates the progress bar while doing so.
              * It can be interrupted by clicking the cancel button.
              * @return The string "Done"
-             * @throws Exception
+             * @throws Exception when something bad happens
              */
             @Override
             protected String doInBackground() throws Exception {

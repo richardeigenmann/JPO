@@ -80,7 +80,7 @@ public class TagCloudController implements TagClickListener {
     /**
      * Handles the ShowGroupRequest by updating the display...
      *
-     * @param event
+     * @param event Event
      */
     @Subscribe
     public void handleGroupSelectionEvent( final ShowGroupRequest event ) {

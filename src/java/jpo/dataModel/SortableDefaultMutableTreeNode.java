@@ -81,7 +81,7 @@ public class SortableDefaultMutableTreeNode
      * Constructor for a new node including a user object. The user object must
      * be a PictureInfo or GroupInfo object
      *
-     * @param userObject
+     * @param userObject User Object
      */
     public SortableDefaultMutableTreeNode( Object userObject ) {
         super();
@@ -140,7 +140,7 @@ public class SortableDefaultMutableTreeNode
      * Overridden method to allow sorting of nodes. It uses the static global
      * variable sortfield to figure out what to compare on.
      *
-     * @param o
+     * @param o the object to compare to
      * @return the usual compareTo value used for sorting.
      */
     @Override
@@ -310,7 +310,7 @@ public class SortableDefaultMutableTreeNode
      * class. My overriding this we can intercept this and update the
      * PictureInfo or GroupInfo accordingly.
      *
-     * @param o
+     * @param o The object to attach to the node
      */
     @Override
     public final void setUserObject( Object o ) {
@@ -488,7 +488,7 @@ public class SortableDefaultMutableTreeNode
      * This is where the Nodes in the tree find out about changes in the
      * PictureInfo object
      *
-     * @param e
+     * @param e The event
      */
     @Override
     public void pictureInfoChangeEvent( PictureInfoChangeEvent e ) {
@@ -536,6 +536,9 @@ public class SortableDefaultMutableTreeNode
         /**
          * This inner class creates a popup menu for group drop events to find
          * out whether to drop into before or after the drop node.
+         * @param event The event
+         * @param sourceNode the source node
+         * @param targetNode the target node
          */
         private GroupDropPopupMenu( final DropTargetDropEvent event,
                 final SortableDefaultMutableTreeNode sourceNode,
@@ -731,7 +734,7 @@ public class SortableDefaultMutableTreeNode
      * loading of collections (which of course massively change the collection
      * in memory) to report nothing changed.
      *
-     * @param newNode
+     * @param newNode the new node
      */
     public void add( SortableDefaultMutableTreeNode newNode ) {
         super.add( newNode );
@@ -746,7 +749,7 @@ public class SortableDefaultMutableTreeNode
     /**
      * Adds a new Group to the current node with the indicated description.
      *
-     * @param description
+     * @param description Description for the group
      * @return The new node is returned for convenience.
      */
     public SortableDefaultMutableTreeNode addGroupNode( String description ) {
@@ -758,11 +761,11 @@ public class SortableDefaultMutableTreeNode
     }
 
     /**
-     * Override method which will do the default behaviour and then sends a
-     * notification to the Tree Model.
+     * Inserts the node and notifies the tree model of changes if we are sending 
+     * Model updates
      *
-     * @param node
-     * @param index
+     * @param node The node
+     * @param index the index position
      */
     public void insert( SortableDefaultMutableTreeNode node, int index ) {
         LOGGER.log( Level.FINE, "insert was called for node: {0}", node.toString() );
@@ -1126,13 +1129,13 @@ public class SortableDefaultMutableTreeNode
      * Copies the pictures from the source tree to the target directory and adds
      * them to the collection. This method does the actual loop.
      *
-     * @param files
-     * @param targetDir
-     * @param receivingNode
-     * @param progGui
-     * @param newOnly
-     * @param retainDirectories
-     * @param selectedCategories
+     * @param files Files to add
+     * @param targetDir Target Directory
+     * @param receivingNode Receiving Node
+     * @param progGui Progress GUI
+     * @param newOnly whether to add only new pictures
+     * @param retainDirectories Whether to retain the directory structure
+     * @param selectedCategories Categories to add
      * @return true if pictures were added, false if not.
      *
      */
@@ -1184,13 +1187,13 @@ public class SortableDefaultMutableTreeNode
      * them to the collection only if they have not been seen by the camera
      * before.
      *
-     * @param sourceDir
-     * @param targetDir
+     * @param sourceDir source directory
+     * @param targetDir target directory
      * @param cam The camera object with knows the checksums of the pictures
      * seen before.
-     * @param groupName
-     * @param retainDirectories
-     * @param selectedCategories
+     * @param groupName name of the new group
+     * @param retainDirectories whether to retain the directory structure
+     * @param selectedCategories categories to apply
      * @return the new group
      *
      */
@@ -1264,7 +1267,7 @@ public class SortableDefaultMutableTreeNode
      * Loads the collection indicated by the File at the "this" node
      *
      * @param fileToLoad	The File object that is to be loaded.
-     * @throws FileNotFoundException
+     * @throws FileNotFoundException When no good
      */
     public void fileLoad( File fileToLoad ) throws FileNotFoundException {
         if ( fileToLoad != null ) {
@@ -1291,13 +1294,13 @@ public class SortableDefaultMutableTreeNode
      * Copies the pictures from the source tree to the target directory and adds
      * them to the collection. This method does the actual loop.
      *
-     * @param files
-     * @param targetDir
-     * @param receivingNode
-     * @param progGui
-     * @param cam
-     * @param retainDirectories
-     * @param selectedCategories
+     * @param files The files to copy
+     * @param targetDir The target directory
+     * @param receivingNode The node to which to add them
+     * @param progGui A Progress GUI
+     * @param cam A camera
+     * @param retainDirectories Whether to retain directories
+     * @param selectedCategories Selected categories
      * @return true if OK, false if not
      */
     protected static boolean copyAddPictures1( File[] files,
@@ -1356,7 +1359,7 @@ public class SortableDefaultMutableTreeNode
      * @param addFile the file of the picture that should be added
      * @param newOnly flag whether to check if the picture is in the collection
      * already; if true will only add the picture if its not yet included
-     * @param selectedCategories
+     * @param selectedCategories selected categories
      * @return true if the node was added, false if not.
      */
     public boolean addSinglePicture( File addFile, boolean newOnly,

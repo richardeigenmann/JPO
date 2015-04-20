@@ -34,7 +34,7 @@ public class PictureInfoChangeEvent {
     /**
      *  Constructor for the PictureInforChangeEvent
      *
-     * @param pcitureInfo
+     * @param pcitureInfo Picture object
      */
     public PictureInfoChangeEvent( PictureInfo pcitureInfo ) {
         this.pictureInfo = pcitureInfo;

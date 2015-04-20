@@ -539,7 +539,7 @@ public class GroupPopupMenu extends JPopupMenu {
         /**
          * Handle the event by updating the submenu items
          *
-         * @param event
+         * @param event event
          */
         @Subscribe
         public void handleRecentDropNodeChangedEventHandler( RecentDropNodesChangedEvent event ) {
@@ -585,7 +585,7 @@ public class GroupPopupMenu extends JPopupMenu {
         /**
          * Handle the event by updating the submenu items
          *
-         * @param event
+         * @param event event
          */
         @Subscribe
         public void handleRecentCollectionsChangedEvent( RecentCollectionsChangedEvent event ) {

@@ -630,7 +630,7 @@ public class PictureCollection {
     /**
      * This method inverts the status of the node on the mail selection HashSet
      *
-     * @param node
+     * @param node The node
      */
     public void toggleMailSelected( SortableDefaultMutableTreeNode node ) {
         if ( isMailSelected( node ) ) {
@@ -672,7 +672,7 @@ public class PictureCollection {
     /**
      * This returns whether the SDMTN is part of the mailSelection HashSet.
      *
-     * @param node
+     * @param node The node
      * @return true if part of the mailing set, false if not
      */
     public boolean isMailSelected( SortableDefaultMutableTreeNode node ) {
@@ -800,8 +800,8 @@ public class PictureCollection {
      * to be called off the EDT. Then the clearCollection runs on the same
      * thread.
      *
-     * @param file
-     * @throws FileNotFoundException
+     * @param file The file
+     * @throws FileNotFoundException bubble-up exception
      */
     public void fileLoad( File file ) throws FileNotFoundException {
         if ( fileLoading ) {
@@ -922,7 +922,7 @@ public class PictureCollection {
      * This method places the current {@link SortableDefaultMutableTreeNode}
      * into the selection HashSet.
      *
-     * @param node
+     * @param node The node
      */
     public void addToSelectedNodes( SortableDefaultMutableTreeNode node ) {
         if ( isSelected( node ) ) {
@@ -968,7 +968,7 @@ public class PictureCollection {
     /**
      * This returns whether the SDMTN is part of the selection HashSet.
      *
-     * @param node
+     * @param node the node
      * @return true if the node is selected
      */
     public boolean isSelected( SortableDefaultMutableTreeNode node ) {

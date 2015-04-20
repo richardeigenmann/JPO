@@ -69,7 +69,7 @@ public class Tools {
     private static final Logger LOGGER = Logger.getLogger( Tools.class.getName() );
 
     /**
-     * method that converts any XML problem characters (&, <, >, ", ') to the
+     * method that converts any XML problem characters (&amp;, &lt;, &gt;, ", ') to the
      * predefined codes.
      *
      * @param s string to escape
@@ -287,8 +287,8 @@ public class Tools {
      * is created with the correct extension. If not the correct extension is
      * added. The case of the extension is ignored.
      *
-     * @param extension
-     * @param testFile
+     * @param extension The extension
+     * @param testFile File to test
      * @return the file
      */
     public static File correctFilenameExtension( String extension, File testFile ) {
@@ -301,11 +301,10 @@ public class Tools {
     /**
      * Counts the number of real files in the array of files.
      *
-     * @param fileArray
+     * @param fileArray The files to count
      * @return the number of real files in the array of files
      */
     public static int countfiles( File[] fileArray ) {
-        //warnOnEDT();
         if ( fileArray == null ) {
             return 0;
         }
@@ -338,8 +337,8 @@ public class Tools {
      * Test the supplied File on whether it is a directory and whether is can be
      * written to.
      *
-     * @param testDir
-     * @param validationType
+     * @param testDir Directory to test
+     * @param validationType the flag for which test is to be performed
      * @return true if good, false if bad
      */
     public static boolean checkDirectory( File testDir, int validationType ) {
@@ -601,7 +600,6 @@ public class Tools {
      *
      * @param sourceFile The file that was moved
      * @param targetFile The new location of the source file
-     * @throws MalformedURLException Throws this if the URL is bad
      */
     private static void correctReferences( File sourceFile, File targetFile ) {
         LOGGER.info( "entering correct References" );
@@ -789,7 +787,7 @@ public class Tools {
      * <p>
      * Example: c:\directory\geysir.jpg returns geysir
      *
-     * @param file
+     * @param file The file object from which to strip out the name
      * @return the name of the file without extension
      */
     public static String stripOutFilenameRoot( File file ) {
@@ -900,7 +898,7 @@ public class Tools {
      * returns the current date and time formatted per the formatting string.
      * See the API doc on SimpleDateFormat for the meaning of the letters.
      *
-     * @param formatString
+     * @param formatString The format string
      * @return current date and time
      */
     public static String currentDate( String formatString ) {

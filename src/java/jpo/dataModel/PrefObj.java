@@ -93,11 +93,11 @@ public class PrefObj {
     /**
      * Puts an object in the preferences
      * @param prefs the preferences to store into
-     * @param key the key 
-     * @param o the object
-     * @throws IOException
-     * @throws BackingStoreException
-     * @throws ClassNotFoundException 
+     * @param key the key  Key under which to store
+     * @param o the object Object to store
+     * @throws IOException Error when no good
+     * @throws BackingStoreException Error when no good
+     * @throws ClassNotFoundException Error when no good
      */
     static public void putObject( Preferences prefs, String key, Object o )
             throws IOException, BackingStoreException, ClassNotFoundException {
@@ -109,11 +109,11 @@ public class PrefObj {
     /**
      * Retrieves the object from the preferences
      * @param prefs the preferences to retrieve from
-     * @param key the key
-     * @return the object
-     * @throws IOException
-     * @throws BackingStoreException
-     * @throws ClassNotFoundException
+     * @param key the key the key
+     * @return the object The object
+     * @throws IOException Error if no good
+     * @throws BackingStoreException Error if no good
+     * @throws ClassNotFoundException Error if no good
      */
     static public Object getObject( Preferences prefs, String key )
             throws IOException, BackingStoreException, ClassNotFoundException {

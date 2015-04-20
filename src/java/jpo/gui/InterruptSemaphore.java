@@ -40,7 +40,7 @@ public class InterruptSemaphore {
      * use this method to indicate that the thread should be interrupted at the
      * next safe point
      *
-     * @param shouldInterrupt
+     * @param shouldInterrupt set to true when you want to interrupt gracefully
      */
     public void setShouldInterrupt( boolean shouldInterrupt ) {
         this.shouldInterrupt = shouldInterrupt;

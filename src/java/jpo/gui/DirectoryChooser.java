@@ -280,6 +280,8 @@ public class DirectoryChooser
     /**
      * This method creates an Object from a String. As discussed in the Java API
      * for JComboBox.addItem
+     * @param item item to add
+     * @return The created object
      */
     private Object makeObj( final String item ) {
         return new Object() {

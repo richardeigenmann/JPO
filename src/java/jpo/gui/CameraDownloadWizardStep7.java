@@ -38,7 +38,7 @@ public class CameraDownloadWizardStep7
 
     /**
      *
-     * @param dataModel
+     * @param dataModel Data Model
      */
     public CameraDownloadWizardStep7( CameraDownloadWizardData dataModel ) {
         //pass step title and description

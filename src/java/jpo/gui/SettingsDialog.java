@@ -205,7 +205,7 @@ public class SettingsDialog extends JDialog {
     /**
      * Constructor to create the GUI that allows modification of the settings
      *
-     * @param modal
+     * @param modal flag to say if modal or not
      */
     public SettingsDialog( boolean modal ) {
         super( Settings.anchorFrame, modal );
@@ -703,6 +703,7 @@ public class SettingsDialog extends JDialog {
      *
      * @param maximise whether the index should be maximised
      * @param targetDimension the target size of the window
+     * @return the index
      */
     private static int findSizeIndex( boolean maximise,
             Dimension targetDimension ) {

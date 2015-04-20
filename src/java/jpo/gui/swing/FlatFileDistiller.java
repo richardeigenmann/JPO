@@ -58,7 +58,7 @@ public class FlatFileDistiller extends SwingWorker<DistillerResult, String> {
      * First opens a filechooser for the output file. Optionally asks if the
      * file should be overwritten then
      *
-     * @param request
+     * @param request Request
      */
     public FlatFileDistiller( ExportGroupToFlatFileRequest request ) {
         Tools.checkEDT();
@@ -121,6 +121,8 @@ public class FlatFileDistiller extends SwingWorker<DistillerResult, String> {
 
     /**
      * recursively invoked method to report all groups.
+     * @param groupNode group to work on
+     * @throws IOException if there is a failure
      */
     private void enumerateGroup( SortableDefaultMutableTreeNode groupNode ) throws IOException {
         //GroupInfo groupInfo = (GroupInfo) groupNode.getUserObject();
@@ -178,10 +180,11 @@ public class FlatFileDistiller extends SwingWorker<DistillerResult, String> {
         /**
          * returns the Distiller Result
          * @param success whether the distiller succeeded or not
+         * @param exception Exception
          */
-        public DistillerResult( boolean success, Exception excpetion ) {
+        public DistillerResult( boolean success, Exception exception ) {
             this.success = success;
-            this.exception = excpetion;
+            this.exception = exception;
         }
 
         /**

@@ -57,7 +57,10 @@ public final class Webserver
     public static InetAddress address;
 
 
-    /** Konstruktor ist privat, Klasse darf nicht von außen instanziiert werden. */
+    /** 
+     * Konstruktor ist privat, Klasse darf nicht von außen instanziiert werden.
+     * @throws IOException when things go bad
+     */
     private Webserver() throws IOException {
         super( address, PORT );
     }
@@ -120,7 +123,7 @@ public final class Webserver
 
     /**
      * Opens the browser on the desktop and puts it onto
-     * @param sdmtn
+     * @param sdmtn node
      */
     public void browse( SortableDefaultMutableTreeNode sdmtn ) {
         try {

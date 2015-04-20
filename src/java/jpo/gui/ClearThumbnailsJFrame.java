@@ -24,7 +24,7 @@ public class ClearThumbnailsJFrame extends javax.swing.JFrame {
     /**
      * Creates new form ClearThumbnailsJFrame
      *
-     * @param lowresUrls
+     * @param lowresUrls The lowres Urls
      */
     public ClearThumbnailsJFrame( StringBuilder lowresUrls ) {
         initComponents();

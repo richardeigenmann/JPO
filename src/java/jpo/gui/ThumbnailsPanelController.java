@@ -350,7 +350,7 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
      * dragging. If the destination is to the left or higher than the
      * mousePressedPoint the rectangle corrects this.
      *
-     * @param mousePoint
+     * @param mousePoint mouse point
      * @return The rectangle in the coordinate space of the parent component
      */
     private Rectangle getMouseRectangle( Point mousePoint ) {

@@ -213,10 +213,10 @@ public final class TableSorter extends TableMap {
      * between N-1 and NlogN depending on the initial order but the main reason
      * for using it here is that, unlike qsort, it is stable.
      *
-     * @param from
-     * @param to
-     * @param low
-     * @param high
+     * @param from From
+     * @param to To
+     * @param low Low
+     * @param high Hight
      */
     public void shuttlesort( int from[], int to[], int low, int high ) {
         if ( high - low < 2 ) {
@@ -299,7 +299,7 @@ public final class TableSorter extends TableMap {
      * There is no-where else to put this. Add a mouse listener to the Table to
      * trigger a table sort when a column heading is clicked in the JTable.
      *
-     * @param table
+     * @param table Table
      */
     public void addMouseListenerToHeaderInTable( JTable table ) {
         final TableSorter sorter = this;

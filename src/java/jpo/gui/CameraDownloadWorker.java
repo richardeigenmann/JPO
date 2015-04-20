@@ -46,9 +46,9 @@ public class CameraDownloadWorker
 
     /**
      * A SwingWorker to download pictures from the camera
-     * @param dataModel
-     * @param progressBar
-     * @param step7
+     * @param dataModel the data model
+     * @param progressBar The progress bar
+     * @param step7 step 7
      */
     public CameraDownloadWorker( CameraDownloadWizardData dataModel,
             JProgressBar progressBar, CameraDownloadWizardStep7 step7 ) {

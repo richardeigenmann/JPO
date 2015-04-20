@@ -163,7 +163,7 @@ public class CameraDownloadWizardData {
      * flag has been set a new group is created, otherwise this String will not
      * be used.
      *
-     * @param newGroupDescription
+     * @param newGroupDescription name for the new Group
      */
     public void setNewGroupDescription( String newGroupDescription ) {
         this.newGroupDescription = newGroupDescription;

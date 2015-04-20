@@ -86,25 +86,26 @@ public class ResizableJFrame
     /**
      * Creates a new instance of ResizableJFrame
      *
+     * @param title Title for the frame
      * @param component The Component to show in the frame
      */
-    public ResizableJFrame( Component component ) {
-        super( Settings.jpoResources.getString( "PictureViewerTitle" ) );
+    public ResizableJFrame( String title, Component component ) {
+        super( title  );
         Tools.checkEDT();
 
         //ToDo: Review this...!
-        Dimension initialDimension = (Dimension) Settings.pictureViewerDefaultDimensions.clone();
+   /*     Dimension initialDimension = (Dimension) Settings.pictureViewerDefaultDimensions.clone();
         if ( ( initialDimension.width == 0 ) || ( initialDimension.height == 0 ) ) {
             // this gets us around the problem that the Affine Transform crashes if the window size is 0,0
             initialDimension = Settings.windowSizes[1];
-        }
+        }  */
 
         getContentPane().setLayout( new BorderLayout() );
         getContentPane().add( "Center", component );
         setBackground( Settings.PICTUREVIEWER_BACKGROUND_COLOR );
 
         setUndecorated( !decorateWindow );
-        setSize( initialDimension );
+//        setSize( initialDimension );
 
         if ( Settings.maximisePictureViewerWindow ) {
             maximise();
@@ -192,7 +193,7 @@ public class ResizableJFrame
                 newDecoration = true;
                 break;
         }
-        switchDecorations( newDecoration );
+        showWindowDecorations( newDecoration );
         resizeTo( windowMode );
     }
 
@@ -241,10 +242,10 @@ public class ResizableJFrame
      * decorations. It uses the decorateWindow flag to determine if the
      * decorations are being shown.
      *
-     * @param newDecoration
+     * @param newDecoration Send true if decorations should be shown, false if they should not be shown
      */
     @Override
-    public void switchDecorations( boolean newDecoration ) {
+    public void showWindowDecorations( boolean newDecoration ) {
         if ( decorateWindow != newDecoration ) {
             decorateWindow = newDecoration;
             Rectangle myBounds = getBounds();
