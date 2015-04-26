@@ -75,6 +75,7 @@ import jpo.EventBus.RecentCollectionsChangedEvent;
 import jpo.EventBus.RecentDropNodesChangedEvent;
 import jpo.EventBus.RefreshThumbnailRequest;
 import jpo.EventBus.RemoveNodeRequest;
+import jpo.EventBus.RemoveOldLowresThumbnailsRequest;
 import jpo.EventBus.RemovePictureNodesFromEmailSelectionRequest;
 import jpo.EventBus.RenamePictureRequest;
 import jpo.EventBus.RotatePictureRequest;
@@ -1495,4 +1496,23 @@ public class ApplicationEventHandler {
 
     }
 
+    
+    /**
+     * Handles the RemoveOldLowresThumbnailsRequest request
+     *
+     * @param request The request with the lowres urls to remove
+     */
+    @Subscribe
+    public void handleRemoveOldLowresThumbnailsRequest( final RemoveOldLowresThumbnailsRequest request ) {
+            Runnable runnable = new Runnable() {
+
+                @Override
+                public void run() {
+                    new ClearThumbnailsJFrame( request.getLowresUrls() );
+                }
+            };
+            SwingUtilities.invokeLater( runnable );
+    }
+    
+    
 }

@@ -1,5 +1,6 @@
 package jpo.gui;
 
+import jpo.gui.swing.ChangeWindowPopupMenu;
 import jpo.gui.swing.PicturePopupMenu;
 import jpo.gui.swing.WholeNumberField;
 import java.awt.Dimension;

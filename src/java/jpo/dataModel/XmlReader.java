@@ -10,6 +10,8 @@ import javax.swing.SwingUtilities;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
+import jpo.EventBus.JpoEventBus;
+import jpo.EventBus.RemoveOldLowresThumbnailsRequest;
 import jpo.dataModel.Settings.FieldCodes;
 import static jpo.dataModel.Settings.FieldCodes.CATEGORIES;
 import static jpo.dataModel.Settings.FieldCodes.CATEGORY;
@@ -133,14 +135,7 @@ public class XmlReader extends DefaultHandler {
 
         if ( lowresUrls.length() > 1 ) {
             LOGGER.info( String.format( "lowresUrls length is %d", lowresUrls.length() ) );
-            Runnable runnable = new Runnable() {
-
-                @Override
-                public void run() {
-                    new ClearThumbnailsJFrame( lowresUrls );
-                }
-            };
-            SwingUtilities.invokeLater( runnable );
+            JpoEventBus.getInstance().post( new RemoveOldLowresThumbnailsRequest( lowresUrls) );
 
         }
     }

@@ -1,4 +1,4 @@
-package jpo.gui;
+package jpo.gui.swing;
 
 import java.awt.Dimension;
 import java.util.Enumeration;
@@ -84,11 +84,12 @@ public class CategoryJScrollPane extends JScrollPane implements ListSelectionLis
 
     /**
      * Load Categories
+     * @param i the categories
      */
-    public void loadCategories() {
+    public void loadCategories(Iterator i) {
         // load categories
         defaultListModel.clear();
-        Iterator i = Settings.getPictureCollection().getCategoryIterator();
+        //Iterator i = Settings.getPictureCollection().getCategoryIterator();
         Integer key;
         String category;
         Category categoryObject;

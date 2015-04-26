@@ -1,5 +1,6 @@
 package jpo.gui;
 
+import jpo.gui.swing.CategoryJScrollPane;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -68,12 +69,14 @@ public class CategoryUsageJFrame extends JFrame {
     private Set<SortableDefaultMutableTreeNode> selectedNodes;
     final JLabel numberOfPicturesJLabel = new JLabel( "" );
 
+
     /**
      * Creates a GUI to edit the categories of the collection
      *
      *
+     * @param request The request
      */
-    public CategoryUsageJFrame() {
+    public CategoryUsageJFrame( ShowCategoryUsageEditorRequest request ) {
         addWindowListener( new WindowAdapter() {
             @Override
             public void windowClosing( WindowEvent e ) {
@@ -86,16 +89,6 @@ public class CategoryUsageJFrame extends JFrame {
         listModel = categoryJScrollPane.getDefaultListModel();
 
         initComponents();
-    }
-
-    /**
-     * Creates a GUI to edit the categories of the collection
-     *
-     *
-     * @param request The request
-     */
-    public CategoryUsageJFrame( ShowCategoryUsageEditorRequest request ) {
-        this();
         
         Set<SortableDefaultMutableTreeNode> nodes = request.getNodes();
         setSelection( nodes );
@@ -233,7 +226,7 @@ public class CategoryUsageJFrame extends JFrame {
         }
         numberOfPicturesJLabel.setText( String.format( Settings.jpoResources.getString( "numberOfPicturesJLabel" ), selectedNodes.size() ) );
 
-        categoryJScrollPane.loadCategories();
+        categoryJScrollPane.loadCategories( Settings.getPictureCollection().getCategoryIterator() );
 
         // zero out the categories
         Category c;

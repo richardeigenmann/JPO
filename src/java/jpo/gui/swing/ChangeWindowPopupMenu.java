@@ -1,4 +1,4 @@
-package jpo.gui;
+package jpo.gui.swing;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -6,6 +6,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import jpo.dataModel.Settings;
+import jpo.gui.ChangeWindowInterface;
 import static jpo.gui.swing.ResizableJFrame.WindowSize.WINDOW_BOTTOM_LEFT;
 import static jpo.gui.swing.ResizableJFrame.WindowSize.WINDOW_BOTTOM_RIGHT;
 import static jpo.gui.swing.ResizableJFrame.WindowSize.WINDOW_DEFAULT;
@@ -177,9 +178,9 @@ public class ChangeWindowPopupMenu extends JPopupMenu
         } else if ( actionEvent.getSource() == defaultWindowJMenuItem ) {
             caller.switchWindowMode( WINDOW_DEFAULT );
         } else if ( actionEvent.getSource() == windowDecorationsJMenuItem ) {
-            caller.switchDecorations( true );
+            caller.showWindowDecorations( true );
         } else if ( actionEvent.getSource() == windowNoDecorationsJMenuItem ) {
-            caller.switchDecorations( false );
+            caller.showWindowDecorations( false );
         } else {
             JOptionPane.showMessageDialog( null,
                     "Unknown event",

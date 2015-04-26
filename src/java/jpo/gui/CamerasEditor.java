@@ -52,8 +52,7 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  * attributes of the cameras.
  * @author Richard Eigenmann  richard.eigenmann@gmail.com
  */
-public class CamerasEditor
-        extends JFrame {
+public class CamerasEditor        extends JFrame {
 
     /**
      * Defines a logger for this class

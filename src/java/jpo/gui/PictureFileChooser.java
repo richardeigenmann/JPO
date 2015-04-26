@@ -1,5 +1,6 @@
 package jpo.gui;
 
+import jpo.gui.swing.CategoryJScrollPane;
 import jpo.dataModel.Settings;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -182,7 +183,7 @@ public class PictureFileChooser
         optionsJPanel.setPreferredSize( OPTIONS_PANEL_DIMENSION );
         thumbnailJLabel.setPreferredSize( OPTIONS_PANEL_DIMENSION );
 
-        categoryJScrollPane.loadCategories();
+        categoryJScrollPane.loadCategories( Settings.getPictureCollection().getCategoryIterator() );
 
         JTabbedPane tabbedPane = new JTabbedPane();
         tabbedPane.setBorder( BorderFactory.createEmptyBorder( 0, 5, 0, 0 ) );
