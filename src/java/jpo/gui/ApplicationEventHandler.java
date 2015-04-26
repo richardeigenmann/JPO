@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package jpo.gui;
 
 import com.google.common.eventbus.Subscribe;
@@ -10,8 +5,6 @@ import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.ClipboardOwner;
 import java.awt.datatransfer.Transferable;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -21,22 +14,20 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
-import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import jpo.EventBus.AddCollectionToGroupRequest;
 import jpo.EventBus.AddEmptyGroupRequest;
 import jpo.EventBus.AddFlatFileRequest;
 import jpo.EventBus.AddGroupToEmailSelectionRequest;
 import jpo.EventBus.AddPictureNodesToEmailSelectionRequest;
+import jpo.EventBus.AfterFileSaveRequest;
 import jpo.EventBus.ApplicationStartupRequest;
 import jpo.EventBus.CheckDirectoriesRequest;
 import jpo.EventBus.CheckIntegrityRequest;
@@ -129,17 +120,32 @@ import jpo.gui.swing.MainWindow;
 import jpo.gui.swing.PrivacyJFrame;
 import static jpo.gui.swing.ResizableJFrame.WindowSize.WINDOW_LEFT;
 import static jpo.gui.swing.ResizableJFrame.WindowSize.WINDOW_RIGHT;
-import net.miginfocom.swing.MigLayout;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
 import webserver.Webserver;
 
-/**
- *
- * @author Richard Eigenmann
+/*
+ ApplicationEventHandler.java:  The Event dispatcher for the JPO Application 
+
+ Copyright (C) 2014-2015  Richard Eigenmann.
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or any later version. This program is distributed 
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+ without even the implied warranty of MERCHANTABILITY or FITNESS 
+ FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
+ more details. You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ The license is in gpl.txt.
+ See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 /**
- * This class handles all the Application Menu Events
+ * This class handles all the Application Events. It uses the Google Guava
+ * EventBus
+ *
+ * @author Richard Eigenmann
  */
 public class ApplicationEventHandler {
 
@@ -398,7 +404,7 @@ public class ApplicationEventHandler {
             LOGGER.log( Level.INFO, "Method can only be invoked on GroupInfo nodes! Ignoring request. You are on node: {0}", this.toString() );
             JOptionPane.showMessageDialog(
                     Settings.anchorFrame,
-                    "Method can only be invoked on GroupInfo nodes! Ignoring request. You are on node: " +  this.toString(),
+                    "Method can only be invoked on GroupInfo nodes! Ignoring request. You are on node: " + this.toString(),
                     Settings.jpoResources.getString( "genericError" ),
                     JOptionPane.ERROR_MESSAGE );
             return;
@@ -598,7 +604,7 @@ public class ApplicationEventHandler {
         } else {
             LOGGER.info( String.format( "Saving under the name: %s", Settings.getPictureCollection().getXmlFile() ) );
             Settings.getPictureCollection().fileSave();
-            afterFileSaveDialog();
+            JpoEventBus.getInstance().post( new AfterFileSaveRequest( Settings.getPictureCollection().getXmlFile().toString() ) );
             if ( request.getOnSuccessNextRequest() != null ) {
                 JpoEventBus.getInstance().post( request.getOnSuccessNextRequest() );
             }
@@ -647,7 +653,7 @@ public class ApplicationEventHandler {
             JpoEventBus.getInstance().post( new CopyLocationsChangedEvent() );
             Settings.pushRecentCollection( chosenFile.toString() );
             JpoEventBus.getInstance().post( new RecentCollectionsChangedEvent() );
-            afterFileSaveDialog();
+            JpoEventBus.getInstance().post( new AfterFileSaveRequest( Settings.getPictureCollection().getXmlFile().toString() ) );
             if ( request.getOnSuccessNextRequest() != null ) {
                 JpoEventBus.getInstance().post( request.getOnSuccessNextRequest() );
             }
@@ -655,23 +661,29 @@ public class ApplicationEventHandler {
     }
 
     /**
-     * Ask whether the file should be opened by default.
+     * Brings up the dialog after a file save and allows the saved collection to
+     * be set as the default start up collection.
+     *
+     * @param request the request
      */
-    public void afterFileSaveDialog() {
-        JPanel p = new JPanel();
-        p.setLayout( new BoxLayout( p, BoxLayout.Y_AXIS ) );
-        p.add( new JLabel( Settings.jpoResources.getString( "collectionSaveBody" ) + Settings.getPictureCollection().getXmlFile().toString() ) );
+    @Subscribe
+    public void handleAfterFileSaveRequest( AfterFileSaveRequest request ) {
+        JPanel panel = new JPanel();
+        panel.setLayout( new BoxLayout( panel, BoxLayout.Y_AXIS ) );
+        panel.add( new JLabel( Settings.jpoResources.getString( "collectionSaveBody" ) + Settings.getPictureCollection().getXmlFile().toString() ) );
         JCheckBox setAutoload = new JCheckBox( Settings.jpoResources.getString( "setAutoload" ) );
         if ( ( !( Settings.autoLoad == null ) ) && ( ( new File( Settings.autoLoad ) ).compareTo( Settings.getPictureCollection().getXmlFile() ) == 0 ) ) {
             setAutoload.setSelected( true );
         }
-        p.add( setAutoload );
+        panel.add( setAutoload );
         JOptionPane.showMessageDialog( Settings.anchorFrame,
-                p,
+                panel,
                 Settings.jpoResources.getString( "collectionSaveTitle" ),
                 JOptionPane.INFORMATION_MESSAGE );
+        
+        
         if ( setAutoload.isSelected() ) {
-            Settings.autoLoad = Settings.getPictureCollection().getXmlFile().toString();
+            Settings.autoLoad = request.getAutoLoadCollectionFile();
             Settings.writeSettings();
         }
     }
