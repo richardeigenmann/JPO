@@ -174,7 +174,7 @@
             <include name="jsch-0.1.51.jar"/>
             <include name="jwizz-0.1.4.jar"/>
             <include name="jxmapviewer2-2.0.jar"/>
-            <include name="metadata-extractor-2.8.0.jar"/>
+            <include name="metadata-extractor-2.8.1.jar"/>
             <include name="miglayout-4.0.jar"/>
             <include name="TagCloud.jar"/>
             <include name="xmpcore-5.1.2.jar"/>

@@ -114,7 +114,7 @@
     <a href="http://j-po.sourceforge.net/jwizz-0.1.4.jar">jwizz-0.1.4.jar</a><br>
     <a href="http://j-po.sourceforge.net/javax.mail-1.5.1.jar">javax.mail-1.5.1.jar</a><br>
     <a href="http://j-po.sourceforge.net/jxmapviewer2-2.0.jar">jxmapviewer2-1.0.jar</a><br>
-    <a href="http://j-po.sourceforge.net/metadata-extractor-2.8.0.jar">metadata-extractor-2.8.0.jar</a><br>
+    <a href="http://j-po.sourceforge.net/metadata-extractor-2.8.1.jar">metadata-extractor-2.8.1.jar</a><br>
     <a href="http://j-po.sourceforge.net/miglayout-4.0.jar">miglayout-4.0.jar</a><br>
     <a href="http://j-po.sourceforge.net/TagCloud.jar">TagCloud.jar</a><br>
     <a href="http://j-po.sourceforge.net/xmpcore-5.1.2.jar">xmpcore-5.1.2.jar</a><br>
@@ -134,6 +134,7 @@
         :/PATH/TO/YOUR/JPO/JARS/commons-lang3-3.3.2.jar
         :/PATH/TO/YOUR/JPO/JARS/commons-logging-1.1.3.jar
         :/PATH/TO/YOUR/JPO/JARS/commons-net-3.3.jar
+        :/PATH/TO/YOUR/JPO/JARS/concurrent.jar
         :/PATH/TO/YOUR/JPO/JARS/gdata-core-1.0.jar
         :/PATH/TO/YOUR/JPO/JARS/gdata-maps-2.0.jar
         :/PATH/TO/YOUR/JPO/JARS/gdata-media-1.0.jar
@@ -143,7 +144,7 @@
         :/PATH/TO/YOUR/JPO/JARS/jsch-0.1.51.jar
         :/PATH/TO/YOUR/JPO/JARS/jwizz-0.1.4.jar
         :/PATH/TO/YOUR/JPO/JARS/jxmapviewer2-2.0.jar
-        :/PATH/TO/YOUR/JPO/JARS/metadata-extractor-2.8.0.jar
+        :/PATH/TO/YOUR/JPO/JARS/metadata-extractor-2.8.1.jar
         :/PATH/TO/YOUR/JPO/JARS/miglayout-4.0.jar
         :/PATH/TO/YOUR/JPO/JARS/TagCloud.jar
         :/PATH/TO/YOUR/JPO/JARS/xmpcore-5.1.2.jar
@@ -168,6 +169,7 @@
         "c:\Program Files\Jpo\commons-lang3-3.3.2.jar";^
         "c:\Program Files\Jpo\commons-logging-1.1.3.jar";^
         "c:\Program Files\Jpo\commons-net-3.3.jar";^
+        "c:\Program Files\Jpo\concurrent.jar";^
         "c:\Program Files\Jpo\gdata-core-1.0.jar";^
         "c:\Program Files\Jpo\gdata-maps-2.0.jar";^
         "c:\Program Files\Jpo\gdata-media-1.0.jar";^
@@ -176,7 +178,7 @@
         "c:\Program Files\Jpo\jsch-0.1.51.jar";^
         "c:\Program Files\Jpo\jwizz-0.1.4.jar";^
         "c:\Program Files\Jpo\jxmapviewer2-2.0.jar";^
-        "c:\Program Files\Jpo\metadata-extractor-2.8.0.jar";^
+        "c:\Program Files\Jpo\metadata-extractor-2.8.1.jar";^
         "c:\Program Files\Jpo\miglayout-4.0.jar";^
         "c:\Program Files\Jpo\TagCloud.jar";^
         "c:\Program Files\Jpo\xmpcore-5.1.2.jar";^
