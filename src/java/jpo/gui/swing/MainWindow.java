@@ -1,18 +1,20 @@
 package jpo.gui.swing;
 
 import com.google.common.eventbus.Subscribe;
-import java.awt.BorderLayout;
+import info.clearthought.layout.TableLayout;
+import java.awt.Component;
 import static java.awt.Frame.MAXIMIZED_BOTH;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
+import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.util.logging.Logger;
+import javax.swing.AbstractAction;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
@@ -34,11 +36,26 @@ import jpo.gui.CollectionJTreeController;
 import jpo.gui.InfoPanelController;
 import jpo.gui.TagCloudController;
 import jpo.gui.ThumbnailsPanelController;
+import org.noos.xing.mydoggy.Content;
+import org.noos.xing.mydoggy.ContentManager;
+import org.noos.xing.mydoggy.DockedTypeDescriptor;
+import org.noos.xing.mydoggy.FloatingTypeDescriptor;
+import org.noos.xing.mydoggy.RepresentativeAnchorDescriptor;
+import org.noos.xing.mydoggy.SlidingTypeDescriptor;
+import org.noos.xing.mydoggy.ToolWindow;
+import org.noos.xing.mydoggy.ToolWindowActionHandler;
+import org.noos.xing.mydoggy.ToolWindowAnchor;
+import org.noos.xing.mydoggy.ToolWindowBar;
+import org.noos.xing.mydoggy.ToolWindowManager;
+import org.noos.xing.mydoggy.ToolWindowManagerDescriptor;
+import org.noos.xing.mydoggy.ToolWindowType;
+import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
+import org.noos.xing.mydoggy.plaf.ui.content.MyDoggyMultiSplitContentManagerUI;
 
 /*
  MainWindow.java:  main window of the JPO application
 
- Copyright (C) 2002 - 2014  Richard Eigenmann.
+ Copyright (C) 2002 - 2015  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -112,47 +129,42 @@ public class MainWindow extends JFrame {
         ttm.setDismissDelay( 1500 );
         ttm.setInitialDelay( 100 );
 
-        final JSplitPane leftSplitPane = new JSplitPane( JSplitPane.VERTICAL_SPLIT );
-        leftSplitPane.setDividerSize( Settings.dividerWidth );
-        leftSplitPane.setOneTouchExpandable( true );
-        leftSplitPane.setContinuousLayout( true );
-
+        //final JSplitPane leftSplitPane = new JSplitPane( JSplitPane.VERTICAL_SPLIT );
+        //leftSplitPane.setDividerSize( Settings.dividerWidth );
+        //leftSplitPane.setOneTouchExpandable( true );
+        //leftSplitPane.setContinuousLayout( true );
         jpoNavigatorJTabbedPane.setMinimumSize( Settings.JPO_NAVIGATOR_JTABBEDPANE_MINIMUM_SIZE );
         jpoNavigatorJTabbedPane.setPreferredSize( Settings.jpoNavigatorJTabbedPanePreferredSize );
 
         InfoPanelController infoPanelController = new InfoPanelController();
-        infoPanelController.getInfoPanel().addComponentListener( new ComponentAdapter() {
+        //infoPanelController.getInfoPanel().addComponentListener( new ComponentAdapter() {
 
-            @Override
-            public void componentResized( ComponentEvent event ) {
-                int leftDividerSpot = leftSplitPane.getDividerLocation();
-                if ( leftDividerSpot != Settings.preferredLeftDividerSpot ) {
-                    //LOGGER.info( String.format( "infoPanel was resized. Updating preferredLeftDividerSpot to: %d", leftDividerSpot ) );
-                    Settings.preferredLeftDividerSpot = leftDividerSpot;
-                    Settings.unsavedSettingChanges = true;
-                }
-            }
-        } );
-
-        final JTabbedPane tabbedPane = new JTabbedPane();
-        tabbedPane.addTab( "Word Cloud", new TagCloudController().getTagCloud() );
-     
-
+        //    @Override
+        //    public void componentResized( ComponentEvent event ) {
+        //        int leftDividerSpot = leftSplitPane.getDividerLocation();
+        //       if ( leftDividerSpot != Settings.preferredLeftDividerSpot ) {
+        //           //LOGGER.info( String.format( "infoPanel was resized. Updating preferredLeftDividerSpot to: %d", leftDividerSpot ) );
+        //           Settings.preferredLeftDividerSpot = leftDividerSpot;
+        //          Settings.unsavedSettingChanges = true;
+        //      }
+        // }
+        //} );
+        //final JTabbedPane tabbedPane = new JTabbedPane();
+        //tabbedPane.addTab( "Word Cloud", new TagCloudController().getTagCloud() );
         final JScrollPane statsScroller = new JScrollPane( infoPanelController.getInfoPanel() );
         statsScroller.setWheelScrollingEnabled( true );
         statsScroller.getVerticalScrollBar().setUnitIncrement( 20 );
-        tabbedPane.addTab( "Stats", statsScroller );
+        //tabbedPane.addTab( "Stats", statsScroller );
 
-        leftSplitPane.setBottomComponent( tabbedPane );
+        //leftSplitPane.setBottomComponent( tabbedPane );
 
-        final JSplitPane masterSplitPane = new JSplitPane( JSplitPane.HORIZONTAL_SPLIT );
-        masterSplitPane.setDividerSize( Settings.dividerWidth );
-        masterSplitPane.setOneTouchExpandable( true );
-        masterSplitPane.setContinuousLayout( true );
-        masterSplitPane.setDividerLocation( Settings.preferredMasterDividerSpot );
-
+        /*final JSplitPane masterSplitPane = new JSplitPane( JSplitPane.HORIZONTAL_SPLIT );
+         masterSplitPane.setDividerSize( Settings.dividerWidth );
+         masterSplitPane.setOneTouchExpandable( true );
+         masterSplitPane.setContinuousLayout( true );
+         masterSplitPane.setDividerLocation( Settings.preferredMasterDividerSpot );*/
         //Add the split pane to this frame.
-        getContentPane().add( masterSplitPane, BorderLayout.CENTER );
+        //getContentPane().add( masterSplitPane, BorderLayout.CENTER );
         pack();
 
         if ( Settings.maximiseJpoOnStartup ) {
@@ -161,27 +173,129 @@ public class MainWindow extends JFrame {
 
         jpoNavigatorJTabbedPane.add( Settings.jpoResources.getString( "jpoTabbedPaneCollection" ), collectionTab );
         jpoNavigatorJTabbedPane.add( Settings.jpoResources.getString( "jpoTabbedPaneSearches" ), searchesTab );
-        leftSplitPane.setTopComponent( jpoNavigatorJTabbedPane );
+        //leftSplitPane.setTopComponent( jpoNavigatorJTabbedPane );
 
         // Set up the Thumbnail Pane
-        masterSplitPane.setLeftComponent( leftSplitPane );
-        masterSplitPane.setRightComponent( (new ThumbnailsPanelController()).getView() );
+        //masterSplitPane.setLeftComponent( leftSplitPane );
+        Component thumbnailPanel = ( new ThumbnailsPanelController() ).getView();
+        //masterSplitPane.setRightComponent( thumbnailPanel );
 
-        leftSplitPane.setDividerLocation( Settings.preferredLeftDividerSpot );
+        //leftSplitPane.setDividerLocation( Settings.preferredLeftDividerSpot );
 
-        jpoNavigatorJTabbedPane.addComponentListener( new ComponentAdapter() {
+        /* jpoNavigatorJTabbedPane.addComponentListener( new ComponentAdapter() {
 
-            @Override
-            public void componentResized( ComponentEvent event ) {
-                int dividerSpot = masterSplitPane.getDividerLocation();
-                if ( dividerSpot != Settings.preferredMasterDividerSpot ) {
-                    Settings.preferredMasterDividerSpot = dividerSpot;
-                    Settings.unsavedSettingChanges = true;
-                }
-            }
-        } );
+         @Override
+         public void componentResized( ComponentEvent event ) {
+         int dividerSpot = masterSplitPane.getDividerLocation();
+         if ( dividerSpot != Settings.preferredMasterDividerSpot ) {
+         Settings.preferredMasterDividerSpot = dividerSpot;
+         Settings.unsavedSettingChanges = true;
+         }
+         }
+         } );*/
+        getContentPane().setLayout( new TableLayout( new double[][]{ { 0, -1, 0 }, { 0, -1, 0 } } ) );
+
+        // Create a new instance of MyDoggyToolWindowManager passing the frame.
+        MyDoggyToolWindowManager myDoggyToolWindowManager = new MyDoggyToolWindowManager();
+
+        ToolWindowManagerDescriptor toolWindowManagerDescriptor = myDoggyToolWindowManager.getToolWindowManagerDescriptor();
+        toolWindowManagerDescriptor.setNumberingEnabled( false );
+        toolWindowManagerDescriptor.setPreviewEnabled( true );
+
+        ContentManager contentManager = myDoggyToolWindowManager.getContentManager();
+        contentManager.setContentManagerUI( new MyDoggyMultiSplitContentManagerUI() );
+
+        Content content = contentManager.addContent( "ThumbnailPanel",
+                "Thumbnail Panel",
+                null, // An icon
+                thumbnailPanel );
+
+        // Register another Tool.
+        ToolWindow infoToolWindow = myDoggyToolWindowManager.registerToolWindow( "Info", // Id
+                "Info", // Title
+                null, // Icon
+                new TagCloudController().getTagCloud(), // Component
+                ToolWindowAnchor.LEFT );     // Anchor
+        setupToolWindow( infoToolWindow );
+
+        // Register a Tool.
+        ToolWindow collectionToolWindow = myDoggyToolWindowManager.registerToolWindow( "Collection", // Id
+                "Collection", // Title
+                null, // Icon
+                collectionTab, // Component
+                ToolWindowAnchor.LEFT );       // Anchor
+
+        setupToolWindow( collectionToolWindow );
+
+        infoToolWindow.addToolWindowTab( "Stats", statsScroller );
+
+        ToolWindowBar leftToolWindowBar = myDoggyToolWindowManager.getToolWindowBar( ToolWindowAnchor.LEFT );
+        leftToolWindowBar.setAggregateMode( true );
+        leftToolWindowBar.setToolsVisible( true );
+        leftToolWindowBar.setVisible( true );
+
+        // Make all tools available
+        for ( ToolWindow window : myDoggyToolWindowManager.getToolWindows() ) {
+            window.setAvailable( true );
+        }
+
+        // Add myDoggyToolWindowManager to the frame. MyDoggyToolWindowManager is an extension of a JPanel
+        getContentPane().add( myDoggyToolWindowManager, "1,1," );
+
         setVisible( true );
 
+    }
+
+    protected void setupToolWindow( ToolWindow toolWindow ) {
+        toolWindow.setActive( true );
+        toolWindow.setVisible( true );
+        toolWindow.aggregate();
+        toolWindow.setType( ToolWindowType.DOCKED );
+
+        // RepresentativeAnchorDescriptor
+        RepresentativeAnchorDescriptor representativeAnchorDescriptor = toolWindow.getRepresentativeAnchorDescriptor();
+        representativeAnchorDescriptor.setPreviewEnabled( true );
+        representativeAnchorDescriptor.setPreviewDelay( 1500 );
+        representativeAnchorDescriptor.setPreviewTransparentRatio( 0.4f );
+
+        // DockedTypeDescriptor
+        DockedTypeDescriptor dockedTypeDescriptor = (DockedTypeDescriptor) toolWindow.getTypeDescriptor( ToolWindowType.DOCKED );
+        dockedTypeDescriptor.setAnimating( true );
+        dockedTypeDescriptor.setHideRepresentativeButtonOnVisible( true );
+        dockedTypeDescriptor.setDockLength( 300 );
+        dockedTypeDescriptor.setPopupMenuEnabled( true );
+        JMenu toolsMenu = dockedTypeDescriptor.getToolsMenu();
+        toolsMenu.add( new AbstractAction( "Hello World!!!" ) {
+            public void actionPerformed( ActionEvent e ) {
+                JOptionPane.showMessageDialog( Settings.anchorFrame, "Hello World!!!" );
+            }
+        } );
+        dockedTypeDescriptor.setToolWindowActionHandler( new ToolWindowActionHandler() {
+            public void onHideButtonClick( ToolWindow toolWindow ) {
+                JOptionPane.showMessageDialog( Settings.anchorFrame, "Hiding..." );
+                toolWindow.setVisible( false );
+            }
+        } );
+        dockedTypeDescriptor.setAnimating( true );
+
+        // SlidingTypeDescriptor
+        SlidingTypeDescriptor slidingTypeDescriptor = (SlidingTypeDescriptor) toolWindow.getTypeDescriptor( ToolWindowType.SLIDING );
+        slidingTypeDescriptor.setEnabled( false );
+        slidingTypeDescriptor.setTransparentMode( true );
+        slidingTypeDescriptor.setTransparentRatio( 0.8f );
+        slidingTypeDescriptor.setTransparentDelay( 0 );
+        slidingTypeDescriptor.setAnimating( true );
+
+        // FloatingTypeDescriptor
+        FloatingTypeDescriptor floatingTypeDescriptor = (FloatingTypeDescriptor) toolWindow.getTypeDescriptor( ToolWindowType.FLOATING );
+        floatingTypeDescriptor.setEnabled( true );
+        floatingTypeDescriptor.setLocation( 150, 200 );
+        floatingTypeDescriptor.setSize( 520, 200 );
+        floatingTypeDescriptor.setModal( false );
+        floatingTypeDescriptor.setTransparentMode( true );
+        floatingTypeDescriptor.setTransparentRatio( 0.2f );
+        floatingTypeDescriptor.setTransparentDelay( 1000 );
+        floatingTypeDescriptor.setAnimating( true );
     }
 
     /**
