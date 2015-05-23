@@ -76,7 +76,7 @@ public class ResizableJFrameTest {
         final JPanel p = new JPanel();
         p.setLayout( new BorderLayout() );
 
-        final ResizableJFrame resizableJFrame = new ResizableJFrame( p );
+        final ResizableJFrame resizableJFrame = new ResizableJFrame("ResizableJFrameTest", p );
         resizableJFrame.setDefaultCloseOperation( JFrame.DISPOSE_ON_CLOSE );
 
         JPanel buttonPanel = new JPanel();
@@ -168,7 +168,7 @@ public class ResizableJFrameTest {
 
             @Override
             public void actionPerformed( ActionEvent e ) {
-                resizableJFrame.switchDecorations( true );
+                resizableJFrame.showWindowDecorations( true );
             }
         } );
         buttonPanel.add( decorateButton );
@@ -178,7 +178,7 @@ public class ResizableJFrameTest {
 
             @Override
             public void actionPerformed( ActionEvent e ) {
-                resizableJFrame.switchDecorations( false );
+                resizableJFrame.showWindowDecorations(false );
             }
         } );
         buttonPanel.add( undecorateButton );

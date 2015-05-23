@@ -7,7 +7,7 @@ import jpo.gui.swing.ResizableJFrame.WindowSize;
 ChangeWindowInterface.java:  defines what a caller of the ChangeWindowPopupMenu
 must be able to do.
 
-Copyright (C) 2002-2014  Richard Eigenmann.
+Copyright (C) 2002-2015  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -36,9 +36,8 @@ public interface ChangeWindowInterface {
     public void switchWindowMode( WindowSize newMode );
 
     /**
-     * Instruct the caller to switch to the window decorations.
-     * @param newDecorations True if the decorations must be changed, false
-     * if not
+     * Instruct the caller to show or suppress the window decorations.
+     * @param newDecoration Send true if decorations should be shown, false if they should not be shown
      */
-    public void switchDecorations( boolean newDecorations );
+    public void showWindowDecorations( boolean newDecoration );
 }

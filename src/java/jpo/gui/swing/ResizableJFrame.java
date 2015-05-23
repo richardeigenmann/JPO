@@ -44,6 +44,7 @@ public class ResizableJFrame
      */
     private static final Logger LOGGER = Logger.getLogger( ResizableJFrame.class.getName() );
 
+
     /**
      * Window size options
      */
