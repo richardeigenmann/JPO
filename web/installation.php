@@ -96,7 +96,7 @@
 <hr>
 <span class="para-heading" id="local">Local Installation</span>
 <p>First download the jar files and save them in your program directory:<br>
-    <a href="http://j-po.sourceforge.net/jpo-0.10.jar">jpo-0.12.jar</a> or <a href="http://j-po.sourceforge.net/jpo-0.11.jar">jpo-0.11.jar</a><br>
+    <a href="http://j-po.sourceforge.net/jpo-0.12.jar">jpo-0.12.jar</a> or <a href="http://j-po.sourceforge.net/jpo-0.12.jar">jpo-0.12.jar</a><br>
     <a href="http://j-po.sourceforge.net/commons-compress-1.8.jar">commons-compress-1.8.jar</a><br>
     <a href="http://j-po.sourceforge.net/commons-io-2.4.jar">commons-io-2.4.jar</a><br>    
     <a href="http://j-po.sourceforge.net/commons-jcs-core-2.0-beta-1.jar">commons-jcs-core-2.0-beta-1.jar</a><br>
@@ -110,12 +110,16 @@
     <a href="http://j-po.sourceforge.net/gdata-media-1.0.jar">gdata-media-1.0.jar</a><br>
     <a href="http://j-po.sourceforge.net/gdata-photos-2.0.jar">gdata-photos-2.0.jar</a><br>
     <a href="http://j-po.sourceforge.net/guava-16.0.1.jar">guava-16.0.1.jar</a><br>
+    <a href="http://j-po.sourceforge.net/javax.mail-1.5.1.jar">javax.mail-1.5.1.jar</a><br>
     <a href="http://j-po.sourceforge.net/jsch-0.1.51.jar">jsch-0.1.51.jar</a><br>                
     <a href="http://j-po.sourceforge.net/jwizz-0.1.4.jar">jwizz-0.1.4.jar</a><br>
-    <a href="http://j-po.sourceforge.net/javax.mail-1.5.1.jar">javax.mail-1.5.1.jar</a><br>
-    <a href="http://j-po.sourceforge.net/jxmapviewer2-2.0.jar">jxmapviewer2-1.0.jar</a><br>
+    <a href="http://j-po.sourceforge.net/jxmapviewer2-2.0.jar">jxmapviewer2-2.0.jar</a><br>
     <a href="http://j-po.sourceforge.net/metadata-extractor-2.8.1.jar">metadata-extractor-2.8.1.jar</a><br>
     <a href="http://j-po.sourceforge.net/miglayout-4.0.jar">miglayout-4.0.jar</a><br>
+    <a href="http://j-po.sourceforge.net/mydoggy-api-1.5.0.jar">mydoggy-api-1.5.0.jar</a><br>
+    <a href="http://j-po.sourceforge.net/mydoggy-plaf-1.5.0.jar">mydoggy-plaf-1.5.0.jar</a><br>
+    <a href="http://j-po.sourceforge.net/mydoggy-res-1.5.0.jar">mydoggy-res-1.5.0.jar</a><br>
+    <a href="http://j-po.sourceforge.net/TableLayout-20050920.jar">TableLayout-20050920.jar</a><br>
     <a href="http://j-po.sourceforge.net/TagCloud.jar">TagCloud.jar</a><br>
     <a href="http://j-po.sourceforge.net/xmpcore-5.1.2.jar">xmpcore-5.1.2.jar</a><br>
 </p>
@@ -146,9 +150,13 @@
         :/PATH/TO/YOUR/JPO/JARS/jxmapviewer2-2.0.jar
         :/PATH/TO/YOUR/JPO/JARS/metadata-extractor-2.8.1.jar
         :/PATH/TO/YOUR/JPO/JARS/miglayout-4.0.jar
+        :/PATH/TO/YOUR/JPO/JARS/mydoggy-api-1.5.0.jar
+        :/PATH/TO/YOUR/JPO/JARS/mydoggy-plaf-1.5.0.jar
+        :/PATH/TO/YOUR/JPO/JARS/mydoggy-res-1.5.0.jar
+        :/PATH/TO/YOUR/JPO/JARS/TableLayout-20050920.jar
         :/PATH/TO/YOUR/JPO/JARS/TagCloud.jar
         :/PATH/TO/YOUR/JPO/JARS/xmpcore-5.1.2.jar
-        :/PATH/TO/YOUR/JPO/JARS/jpo-0.11.jar Main</code></font></p>
+        :/PATH/TO/YOUR/JPO/JARS/jpo-0.12.jar Main</code></font></p>
 
 <p><strong>Note:</strong> Put everything on one long line. The space characters do
     matter; don't put spaces between the jars separated by colons(:) in the classpath!</p>
@@ -160,7 +168,7 @@
 <p>On a particular Windows XP machine I installed Jpo into c:\Program Files\Jpo. The resulting Batch
     file looks like this: (you can download it here: <a href="Jpo.bat">Jpo.bat</a></p>
 
-<p><code>c:\windows\system32\java -Xms80M -Xmx2000M -classpath "c:\Program Files\Jpo\activation.jar";^
+<p><code>c:\windows\system32\java -Xms80M -Xmx2000M -classpath ^
         "c:\Program Files\Jpo\commons-compress-1.8.jar";^
         "c:\Program Files\Jpo\commons-io-2.4.jar";^
         "c:\Program Files\Jpo\commons-jcs-core-2.0-beta-1.jar";^
@@ -180,6 +188,10 @@
         "c:\Program Files\Jpo\jxmapviewer2-2.0.jar";^
         "c:\Program Files\Jpo\metadata-extractor-2.8.1.jar";^
         "c:\Program Files\Jpo\miglayout-4.0.jar";^
+        "c:\Program Files\Jpo\mydoggy-api-1.5.0.jar";^
+        "c:\Program Files\Jpo\mydoggy-plaf-1.5.0.jar";^
+        "c:\Program Files\Jpo\mydoggy-res-1.5.0.jar";^
+        "c:\Program Files\Jpo\TableLayout-20050920.jar";^
         "c:\Program Files\Jpo\TagCloud.jar";^
         "c:\Program Files\Jpo\xmpcore-5.1.2.jar";^
         "c:\Program Files\Jpo\jpo-0.12.jar" Main</code></p>
@@ -190,7 +202,7 @@
     all that is needed to run the program is then a &quot;simple&quot; command like this:</p>
 
 <p><font color="darkRed"><code>/PATH/TO/YOUR/JAVA/bin/java -Xms80M -Xmx2000M
-        -jar /PATH/TO/YOUR/JPO/JARS/jpo-0.11.jar </code></font></p>
+        -jar /PATH/TO/YOUR/JPO/JARS/jpo-0.12.jar </code></font></p>
 
 <hr>
 <span class="para-heading" id="problems">Potential problems:</span>
@@ -227,6 +239,6 @@
 
 
 <hr>
-<p>Last update to this page: 16 April 2015<br>
+<p>Last update to this page: 23 May 2015<br>
     Copyright 2003-2015 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
 <?php include("page-end.php"); ?>

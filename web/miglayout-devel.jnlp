@@ -7,7 +7,8 @@
    </information>
    <offline-allowed/>
    <resources>
-      <jar href="miglayout-3.7.4.jar"/>
+      <jar href="miglayout-4.0.jar"/>
+      <jar href="xmpcore-5.1.2.jar"/>
    </resources>
    <component-desc/>
 </jnlp>

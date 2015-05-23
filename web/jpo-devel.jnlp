@@ -3,10 +3,10 @@
     spec="1.0+"
     codebase="http://j-po.sourceforge.net/"
     href="jpo-devel.jnlp"
-    version="0.11" >
+    version="0.12" >
   
     <information>
-        <title>Java Picture Organizer Development Version 0.11</title>
+        <title>Java Picture Organizer Development Version 0.12</title>
         <vendor>Richard Eigenmann</vendor>
         <homepage href="http://j-po.sourceforge.net"/>
         <description>JPO Java Picture Organizer</description>
@@ -21,10 +21,13 @@
     </security>
 
     <resources>
-        <j2se version="1.7+" initial-heap-size="64m" max-heap-size="800m"/>
-        <jar href="jpo-0.11.jar" download="eager" main="true"/>
+        <j2se version="1.7+" initial-heap-size="64m" max-heap-size="8000m"/>
+        <jar href="jpo-0.12.jar" download="eager" main="true"/>
         <jar href="commons-compress-1.8.jar" download="lazy" />
         <jar href="commons-io-2.4.jar" download="lazy" />
+        <jar href="commons-jcs-core-2.0-beta-1.jar" download="lazy" />
+        <jar href="commons-jcs-jcache-2.0-beta-1.jar" download="lazy" />
+        <jar href="commons-jcs-jcache-tck-2.0-beta-1.jar" download="lazy" />
         <jar href="commons-lang3-3.3.2.jar" download="lazy" />
         <jar href="commons-logging-1.1.3.jar" download="lazy" />
         <jar href="commons-net-3.3.jar" download="lazy" />
@@ -38,8 +41,14 @@
         <jar href="jcs-1.3.jar" download="lazy" />
         <jar href="jsch-0.1.51.jar" download="lazy" />
         <jar href="jwizz-0.1.4.jar" download="lazy" />
+        <jar href="jxmapviewer2-2.0.jar" download="lazy" />
         <jar href="metadata-extractor-2.8.1.jar" download="lazy" />
         <jar href="miglayout-4.0.jar" download="eager" />
+        <jar href="mydoggy-api-1.5.0.jar" download="eager" />
+        <jar href="mydoggy-plaf-1.5.0.jar" download="eager" />
+        <jar href="mydoggy-res-1.5.0.jar" download="eager" />
+        <jar href="TableLayout-20050920.jar" download="eager" />
+        <jar href="TagCloud.jar" download="eager" />
         <jar href="xmpcore-5.1.2.jar" download="lazy" />
     </resources>
 
