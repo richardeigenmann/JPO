@@ -28,6 +28,7 @@ import jpo.EventBus.OpenPrivacyFrameRequest;
 import jpo.EventBus.OpenRecentCollectionRequest;
 import jpo.EventBus.OpenSearchDialogRequest;
 import jpo.EventBus.RecentCollectionsChangedEvent;
+import jpo.EventBus.RestoreDockablesPositionsRequest;
 import jpo.EventBus.SendEmailRequest;
 import jpo.EventBus.StartDoublePanelSlideshowRequest;
 import jpo.EventBus.StartNewCollectionRequest;
@@ -37,7 +38,7 @@ import jpo.dataModel.Settings;
 /*
  ApplicationJMenuBar.java:  main menu for the application
 
- Copyright (C) 2002 -2014 Richard Eigenmann.
+ Copyright (C) 2002 -2015 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -56,6 +57,8 @@ import jpo.dataModel.Settings;
  * RecentCollectionsChangedEvent and LocaleChangedEvent events and updates
  * itself accordingly. It fires events into the JpoEventBus as per the user
  * selections.
+ *
+ * @author Richard Eigenmann
  */
 public class ApplicationJMenuBar extends JMenuBar {
 
@@ -71,7 +74,6 @@ public class ApplicationJMenuBar extends JMenuBar {
      *
      */
     private final JMenu EditJMenu = new JMenu();
-
 
     /**
      * The Action menu which is part of the JMenuBar for the Jpo application.
@@ -201,6 +203,11 @@ public class ApplicationJMenuBar extends JMenuBar {
     private final JMenuItem HelpPrivacyJMenuItem = new JMenuItem();
 
     /**
+     * Menu item to reset the windows
+     */
+    private final JMenuItem HelpResetWindowsJMenuItem = new JMenuItem();
+
+    /**
      * Creates a menu object for use in the main frame of the application.
      *
      */
@@ -263,6 +270,7 @@ public class ApplicationJMenuBar extends JMenuBar {
         HelpAboutJMenuItem.setText( Settings.jpoResources.getString( "HelpAboutMenuItemText" ) );
         HelpLicenseJMenuItem.setText( Settings.jpoResources.getString( "HelpLicenseMenuItemText" ) );
         HelpPrivacyJMenuItem.setText( Settings.jpoResources.getString( "HelpPrivacyMenuItemText" ) );
+        HelpResetWindowsJMenuItem.setText( "Reset Windows" );
     }
 
     /**
@@ -477,7 +485,6 @@ public class ApplicationJMenuBar extends JMenuBar {
         } );
         ExtrasJMenu.add( EditCheckIntegrityJMenuItem );
 
-
         JMenuItem findDuplicates = new JMenuItem( "Find Duplicates" );
         findDuplicates.addActionListener( new ActionListener() {
 
@@ -532,6 +539,17 @@ public class ApplicationJMenuBar extends JMenuBar {
             }
         } );
         HelpJMenu.add( HelpPrivacyJMenuItem );
+
+        HelpResetWindowsJMenuItem.addActionListener( new ActionListener() {
+
+            @Override
+            public void actionPerformed( ActionEvent e ) {
+                JpoEventBus.getInstance().post( new RestoreDockablesPositionsRequest() );
+
+            }
+        } );
+        HelpJMenu.add( HelpResetWindowsJMenuItem );
+
     }
 
 }

@@ -56,11 +56,12 @@
     <br><a href="https://code.google.com/p/metadata-extractor/">Metadata-Extractor</a> by Drew Noakes is licensed under Apache License 2.0
     <br><a href="http://www.miglayout.com/">MigLayout</a> by Mikael Grev is licensed under a BSD style license or GPL
     <br><a href="http://www.adobe.com/devnet/xmp.html">Adobe XMPCore</a> is licensed under the BSD license. It is needed for the Metadata-Extractor
+    <br><a href="http://dock.javaforge.com">Docking Frames</a> is licensed under LGPL 2.1
 </p>
 
 
 <hr>
-<p>Last update to this page: 3 June 2014<br>
-    Copyright 2003-2014 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
+<p>Last update to this page: 25 May 2015<br>
+    Copyright 2003-2015 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
 
 <?php include("page-end.php"); ?>

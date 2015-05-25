@@ -116,10 +116,8 @@
     <a href="http://j-po.sourceforge.net/jxmapviewer2-2.0.jar">jxmapviewer2-2.0.jar</a><br>
     <a href="http://j-po.sourceforge.net/metadata-extractor-2.8.1.jar">metadata-extractor-2.8.1.jar</a><br>
     <a href="http://j-po.sourceforge.net/miglayout-4.0.jar">miglayout-4.0.jar</a><br>
-    <a href="http://j-po.sourceforge.net/mydoggy-api-1.5.0.jar">mydoggy-api-1.5.0.jar</a><br>
-    <a href="http://j-po.sourceforge.net/mydoggy-plaf-1.5.0.jar">mydoggy-plaf-1.5.0.jar</a><br>
-    <a href="http://j-po.sourceforge.net/mydoggy-res-1.5.0.jar">mydoggy-res-1.5.0.jar</a><br>
-    <a href="http://j-po.sourceforge.net/TableLayout-20050920.jar">TableLayout-20050920.jar</a><br>
+    <a href="http://j-po.sourceforge.net/docking-frames-common.jar">docking-frames-common.jar</a><br>
+    <a href="http://j-po.sourceforge.net/docking-frames-core.jar">docking-frames-core.jar</a><br>
     <a href="http://j-po.sourceforge.net/TagCloud.jar">TagCloud.jar</a><br>
     <a href="http://j-po.sourceforge.net/xmpcore-5.1.2.jar">xmpcore-5.1.2.jar</a><br>
 </p>
@@ -150,10 +148,8 @@
         :/PATH/TO/YOUR/JPO/JARS/jxmapviewer2-2.0.jar
         :/PATH/TO/YOUR/JPO/JARS/metadata-extractor-2.8.1.jar
         :/PATH/TO/YOUR/JPO/JARS/miglayout-4.0.jar
-        :/PATH/TO/YOUR/JPO/JARS/mydoggy-api-1.5.0.jar
-        :/PATH/TO/YOUR/JPO/JARS/mydoggy-plaf-1.5.0.jar
-        :/PATH/TO/YOUR/JPO/JARS/mydoggy-res-1.5.0.jar
-        :/PATH/TO/YOUR/JPO/JARS/TableLayout-20050920.jar
+        :/PATH/TO/YOUR/JPO/JARS/docking-frames-common.jar
+        :/PATH/TO/YOUR/JPO/JARS/docking-frames-core.jar
         :/PATH/TO/YOUR/JPO/JARS/TagCloud.jar
         :/PATH/TO/YOUR/JPO/JARS/xmpcore-5.1.2.jar
         :/PATH/TO/YOUR/JPO/JARS/jpo-0.12.jar Main</code></font></p>
@@ -188,10 +184,8 @@
         "c:\Program Files\Jpo\jxmapviewer2-2.0.jar";^
         "c:\Program Files\Jpo\metadata-extractor-2.8.1.jar";^
         "c:\Program Files\Jpo\miglayout-4.0.jar";^
-        "c:\Program Files\Jpo\mydoggy-api-1.5.0.jar";^
-        "c:\Program Files\Jpo\mydoggy-plaf-1.5.0.jar";^
-        "c:\Program Files\Jpo\mydoggy-res-1.5.0.jar";^
-        "c:\Program Files\Jpo\TableLayout-20050920.jar";^
+        "c:\Program Files\Jpo\docking-frames-common.jar";^
+        "c:\Program Files\Jpo\docking-frames-core.jar";^
         "c:\Program Files\Jpo\TagCloud.jar";^
         "c:\Program Files\Jpo\xmpcore-5.1.2.jar";^
         "c:\Program Files\Jpo\jpo-0.12.jar" Main</code></p>
@@ -239,6 +233,6 @@
 
 
 <hr>
-<p>Last update to this page: 23 May 2015<br>
+<p>Last update to this page: 25 May 2015<br>
     Copyright 2003-2015 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
 <?php include("page-end.php"); ?>

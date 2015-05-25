@@ -57,6 +57,7 @@ import jpo.EventBus.FileSaveAsRequest;
 import jpo.EventBus.FileSaveRequest;
 import jpo.EventBus.FindDuplicatesRequest;
 import jpo.EventBus.JpoEventBus;
+import jpo.EventBus.LoadDockablesPositionsRequest;
 import jpo.EventBus.MoveIndentRequest;
 import jpo.EventBus.MoveNodeDownRequest;
 import jpo.EventBus.MoveNodeToBottomRequest;
@@ -80,6 +81,7 @@ import jpo.EventBus.RemovePictureNodesFromEmailSelectionRequest;
 import jpo.EventBus.RenamePictureRequest;
 import jpo.EventBus.RotatePictureRequest;
 import jpo.EventBus.RunUserFunctionRequest;
+import jpo.EventBus.SaveDockablesPositionsRequest;
 import jpo.EventBus.SendEmailRequest;
 import jpo.EventBus.SetPictureRotationRequest;
 import jpo.EventBus.ShowCategoryUsageEditorRequest;
@@ -214,6 +216,7 @@ public class ApplicationEventHandler {
                 @Override
                 public void run() {
                     new MainWindow();
+                    JpoEventBus.getInstance().post( new LoadDockablesPositionsRequest() );
                 }
             } );
         } catch ( InterruptedException | InvocationTargetException ex ) {
@@ -283,7 +286,7 @@ public class ApplicationEventHandler {
      */
     @Subscribe
     public void handleCloseApplicationRequest( CloseApplicationRequest request ) {
-//        Settings.getMainWindow().saveWindowLayoutToSettings();
+        JpoEventBus.getInstance().post( new SaveDockablesPositionsRequest() );
         if ( Settings.unsavedSettingChanges ) {
             Settings.writeSettings();
         }

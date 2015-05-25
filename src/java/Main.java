@@ -1,9 +1,4 @@
 
-import java.util.logging.Handler;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
-import java.util.logging.StreamHandler;
 import javax.swing.JOptionPane;
 import jpo.EventBus.ApplicationStartupRequest;
 import jpo.EventBus.JpoEventBus;

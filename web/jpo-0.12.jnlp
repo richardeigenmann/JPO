@@ -43,6 +43,8 @@
         <jar href="jxmapviewer2-2.0.jar" download="lazy" />
         <jar href="metadata-extractor-2.8.1.jar" download="lazy" />
         <jar href="miglayout-4.0.jar" download="eager" />
+        <jar href="docking-frames-common.jar" download="eager" />
+        <jar href="docking-frames-core.jar" download="eager" />
         <jar href="TagCloud.jar" download="eager" />
         <jar href="xmpcore-5.1.2.jar" download="lazy" />
     </resources>

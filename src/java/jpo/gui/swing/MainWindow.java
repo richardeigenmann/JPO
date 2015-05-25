@@ -1,25 +1,26 @@
 package jpo.gui.swing;
 
+import bibliothek.gui.dock.common.CContentArea;
+import bibliothek.gui.dock.common.CControl;
+import bibliothek.gui.dock.common.CGrid;
+import bibliothek.gui.dock.common.DefaultSingleCDockable;
+import bibliothek.gui.dock.common.SingleCDockable;
 import com.google.common.eventbus.Subscribe;
-import info.clearthought.layout.TableLayout;
 import java.awt.Component;
 import static java.awt.Frame.MAXIMIZED_BOTH;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
+import java.io.IOException;
 import java.util.logging.Logger;
-import javax.swing.AbstractAction;
-import javax.swing.JComponent;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JMenu;
-import javax.swing.JOptionPane;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
 import javax.swing.UIManager;
@@ -30,6 +31,9 @@ import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreePath;
 import jpo.EventBus.CloseApplicationRequest;
 import jpo.EventBus.JpoEventBus;
+import jpo.EventBus.LoadDockablesPositionsRequest;
+import jpo.EventBus.RestoreDockablesPositionsRequest;
+import jpo.EventBus.SaveDockablesPositionsRequest;
 import jpo.EventBus.ShowGroupRequest;
 import jpo.EventBus.ShowQueryRequest;
 import jpo.EventBus.UnsavedUpdatesDialogRequest;
@@ -40,20 +44,6 @@ import jpo.gui.CollectionJTreeController;
 import jpo.gui.InfoPanelController;
 import jpo.gui.TagCloudController;
 import jpo.gui.ThumbnailsPanelController;
-import org.noos.xing.mydoggy.Content;
-import org.noos.xing.mydoggy.ContentManager;
-import org.noos.xing.mydoggy.DockedTypeDescriptor;
-import org.noos.xing.mydoggy.FloatingTypeDescriptor;
-import org.noos.xing.mydoggy.RepresentativeAnchorDescriptor;
-import org.noos.xing.mydoggy.SlidingTypeDescriptor;
-import org.noos.xing.mydoggy.ToolWindow;
-import org.noos.xing.mydoggy.ToolWindowActionHandler;
-import org.noos.xing.mydoggy.ToolWindowAnchor;
-import org.noos.xing.mydoggy.ToolWindowBar;
-import org.noos.xing.mydoggy.ToolWindowManagerDescriptor;
-import org.noos.xing.mydoggy.ToolWindowType;
-import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
-import org.noos.xing.mydoggy.plaf.ui.content.MyDoggyMultiSplitContentManagerUI;
 
 /*
  MainWindow.java:  main window of the JPO application
@@ -74,10 +64,9 @@ import org.noos.xing.mydoggy.plaf.ui.content.MyDoggyMultiSplitContentManagerUI;
  */
 /**
  *
- * Main Window of the JPO application.
- *
- *
- * @author Richard Eigenmann, richard.eigenmann@gmail.com
+ * Main Window of the JPO application. It uses the
+ * {@link http://dock.javaforge.com Docking Frames} framework to handle the
+ * internal windows. * @author Richard Eigenmann
  */
 public class MainWindow extends JFrame {
 
@@ -86,17 +75,27 @@ public class MainWindow extends JFrame {
      */
     private static final Logger LOGGER = Logger.getLogger( MainWindow.class.getName() );
 
-    // Create a new instance of MyDoggyToolWindowManager passing the frame.
-    private final MyDoggyToolWindowManager myDoggyToolWindowManager = new MyDoggyToolWindowManager();
+    /**
+     * The controller for the Docking Frames framework that controls all the
+     * internal windows.
+     */
+    private final CControl control;
+
+    /**
+     * The grid to which all components are added
+     */
+    final CGrid grid;
 
     /**
      * Creates the JPO window and lays our the components
      */
     public MainWindow() {
+        // Set up Docking Frames
+        control = new CControl( this );
+        grid = new CGrid( control );
+
         Settings.setMainWindow( this );
 
-        this.collectionTab = new CollectionJTreeController().getJScrollPane();
-        this.searchesTab = new QueriesJTree().getJComponent();
         Tools.checkEDT();
         initComponents();
         registerOnEventBus();
@@ -112,6 +111,17 @@ public class MainWindow extends JFrame {
 
     }
 
+    /**
+     * Registers the MainWindow on the event bus. Main Window handles the
+     * following requests:
+     *
+     * @see ShowGroupRequest
+     * @see ShowQueryRequest
+     * @see SaveDockablesPositionsRequest
+     * @see LoadDockablesPositionsRequest
+     * @see RestoreDockablesPositionsRequest
+     *
+     */
     private void registerOnEventBus() {
         JpoEventBus.getInstance().register( this );
     }
@@ -137,9 +147,6 @@ public class MainWindow extends JFrame {
         ttm.setDismissDelay( 1500 );
         ttm.setInitialDelay( 100 );
 
-        jpoNavigatorJTabbedPane.setMinimumSize( Settings.JPO_NAVIGATOR_JTABBEDPANE_MINIMUM_SIZE );
-        jpoNavigatorJTabbedPane.setPreferredSize( Settings.jpoNavigatorJTabbedPanePreferredSize );
-
         InfoPanelController infoPanelController = new InfoPanelController();
         final JScrollPane statsScroller = new JScrollPane( infoPanelController.getInfoPanel() );
         statsScroller.setWheelScrollingEnabled( true );
@@ -150,144 +157,87 @@ public class MainWindow extends JFrame {
             setExtendedState( MAXIMIZED_BOTH );
         }
 
-        jpoNavigatorJTabbedPane.add( Settings.jpoResources.getString( "jpoTabbedPaneCollection" ), collectionTab );
-        jpoNavigatorJTabbedPane.add( Settings.jpoResources.getString( "jpoTabbedPaneSearches" ), searchesTab );
         Component thumbnailPanel = ( new ThumbnailsPanelController() ).getView();
-        getContentPane().setLayout( new TableLayout( new double[][]{ { 0, -1, 0 }, { 0, -1, 0 } } ) );
 
-        ToolWindowManagerDescriptor toolWindowManagerDescriptor = myDoggyToolWindowManager.getToolWindowManagerDescriptor();
-        toolWindowManagerDescriptor.setNumberingEnabled( false );
-        toolWindowManagerDescriptor.setPreviewEnabled( true );
+        tree = new DefaultSingleCDockable( "TreeId",
+                Settings.jpoResources.getString( "jpoTabbedPaneCollection" ),
+                new CollectionJTreeController().getJScrollPane() );
+        searches = new DefaultSingleCDockable( "SearchId",
+                Settings.jpoResources.getString( "jpoTabbedPaneSearches" ),
+                new QueriesJTree().getJComponent() );
 
-        ContentManager contentManager = myDoggyToolWindowManager.getContentManager();
-        contentManager.setContentManagerUI( new MyDoggyMultiSplitContentManagerUI() );
+        JButton loadJButton = new JButton( "Properties - Load" );
+        loadJButton.addActionListener( new ActionListener() {
 
-        Content content = contentManager.addContent( "ThumbnailPanel",
-                "Thumbnail Panel",
-                null, // An icon
-                thumbnailPanel );
-
-        // Register another Tool.
-        ToolWindow infoToolWindow = myDoggyToolWindowManager.registerToolWindow( "Info", // Id
-                "Info", // Title
-                null, // Icon
-                new TagCloudController().getTagCloud(), // Component
-                ToolWindowAnchor.LEFT );     // Anchor
-        setupToolWindow( infoToolWindow );
-
-        // Register a Tool.
-        ToolWindow collectionToolWindow = myDoggyToolWindowManager.registerToolWindow( "Collection", // Id
-                "Collection", // Title
-                null, // Icon
-                collectionTab, // Component
-                ToolWindowAnchor.LEFT );       // Anchor
-
-        setupToolWindow( collectionToolWindow );
-
-        infoToolWindow.addToolWindowTab( "Stats", statsScroller );
-
-        ToolWindowBar leftToolWindowBar = myDoggyToolWindowManager.getToolWindowBar( ToolWindowAnchor.LEFT );
-        leftToolWindowBar.setAggregateMode( true );
-        leftToolWindowBar.setToolsVisible( true );
-        leftToolWindowBar.setVisible( true );
-
-        // Make all tools available
-//        for ( ToolWindow window : myDoggyToolWindowManager.getToolWindows() ) {
-//            window.setAvailable( true );
-//        }
-
-//        if ( !Settings.myDoggyWindowsLayout.equals( "" ) ) {
-//            InputStream baos = new ByteArrayInputStream( Settings.myDoggyWindowsLayout.getBytes( StandardCharsets.UTF_8 ) );
-//            myDoggyToolWindowManager.getPersistenceDelegate().apply( baos );
-//        }
-        // Add myDoggyToolWindowManager to the frame. MyDoggyToolWindowManager is an extension of a JPanel
-        getContentPane().add( myDoggyToolWindowManager, "1,1," );
-
-        //setVisible( true );
-        final MainWindow mainWindow = this;
-        SwingUtilities.invokeLater( new Runnable() {
-            public void run() {
-                //frame.setExtendedState( JFrame.MAXIMIZED_BOTH );
-                mainWindow.setVisible( true );
-                for ( ToolWindow toolWindow : myDoggyToolWindowManager.getToolWindows() ) {
-                    toolWindow.setAvailable( true );
-                    toolWindow.setVisible( true );
-                }
-            }
-        } );
-
-    }
-
-    protected void setupToolWindow( ToolWindow toolWindow ) {
-        toolWindow.setActive( true );
-        toolWindow.setVisible( true );
-        toolWindow.aggregate();
-        toolWindow.setType( ToolWindowType.DOCKED );
-        DockedTypeDescriptor desc = (DockedTypeDescriptor) toolWindow.getTypeDescriptor( ToolWindowType.DOCKED );
-
-        // RepresentativeAnchorDescriptor
-        RepresentativeAnchorDescriptor representativeAnchorDescriptor = toolWindow.getRepresentativeAnchorDescriptor();
-        representativeAnchorDescriptor.setPreviewEnabled( true );
-        representativeAnchorDescriptor.setPreviewDelay( 1500 );
-        representativeAnchorDescriptor.setPreviewTransparentRatio( 0.4f );
-
-        // DockedTypeDescriptor
-        DockedTypeDescriptor dockedTypeDescriptor = (DockedTypeDescriptor) toolWindow.getTypeDescriptor( ToolWindowType.DOCKED );
-        dockedTypeDescriptor.setAnimating( true );
-        dockedTypeDescriptor.setHideRepresentativeButtonOnVisible( true );
-        dockedTypeDescriptor.setDockLength( 550 );
-        dockedTypeDescriptor.setMinimumDockLength( 450 );
-        dockedTypeDescriptor.setPopupMenuEnabled( true );
-        
-        JMenu toolsMenu = dockedTypeDescriptor.getToolsMenu();
-        toolsMenu.add( new AbstractAction( "Hello World!!!" ) {
+            @Override
             public void actionPerformed( ActionEvent e ) {
-                JOptionPane.showMessageDialog( Settings.anchorFrame, "Hello World!!!" );
+                JpoEventBus.getInstance().post( new LoadDockablesPositionsRequest() );
             }
         } );
-        dockedTypeDescriptor.setToolWindowActionHandler( new ToolWindowActionHandler() {
-            public void onHideButtonClick( ToolWindow toolWindow ) {
-                JOptionPane.showMessageDialog( Settings.anchorFrame, "Hiding..." );
-                toolWindow.setVisible( false );
+        JButton saveJbutton = new JButton( "Save" );
+        saveJbutton.addActionListener( new ActionListener() {
+
+            @Override
+            public void actionPerformed( ActionEvent e ) {
+                JpoEventBus.getInstance().post( new SaveDockablesPositionsRequest() );
             }
         } );
-        dockedTypeDescriptor.setAnimating( true );
+        JButton resetJbutton = new JButton( "Reset" );
+        resetJbutton.addActionListener( new ActionListener() {
 
-        // SlidingTypeDescriptor
-        SlidingTypeDescriptor slidingTypeDescriptor = (SlidingTypeDescriptor) toolWindow.getTypeDescriptor( ToolWindowType.SLIDING );
-        slidingTypeDescriptor.setEnabled( false );
-        slidingTypeDescriptor.setTransparentMode( true );
-        slidingTypeDescriptor.setTransparentRatio( 0.8f );
-        slidingTypeDescriptor.setTransparentDelay( 0 );
-        slidingTypeDescriptor.setAnimating( true );
+            @Override
+            public void actionPerformed( ActionEvent e ) {
+                JpoEventBus.getInstance().post( new RestoreDockablesPositionsRequest() );
+            }
+        } );
 
-        // FloatingTypeDescriptor
-        FloatingTypeDescriptor floatingTypeDescriptor = (FloatingTypeDescriptor) toolWindow.getTypeDescriptor( ToolWindowType.FLOATING );
-        floatingTypeDescriptor.setEnabled( true );
-        floatingTypeDescriptor.setLocation( 150, 200 );
-        floatingTypeDescriptor.setSize( 520, 500 );
-        floatingTypeDescriptor.setModal( false );
-        floatingTypeDescriptor.setTransparentMode( true );
-        floatingTypeDescriptor.setTransparentRatio( 0.2f );
-        floatingTypeDescriptor.setTransparentDelay( 1000 );
-        floatingTypeDescriptor.setAnimating( true );
+        JPanel propertiesJPanel = new JPanel();
+        propertiesJPanel.setLayout( new BoxLayout( propertiesJPanel, BoxLayout.Y_AXIS ) );
+        propertiesJPanel.add( loadJButton );
+        propertiesJPanel.add( saveJbutton );
+        propertiesJPanel.add( resetJbutton );
+
+        SingleCDockable properties = new DefaultSingleCDockable( "PropertiesId", "Properties", propertiesJPanel );
+
+        SingleCDockable map = new DefaultSingleCDockable( "MapId", "Map", new JLabel( "a map would go here" ) );
+        SingleCDockable tagDockable = new DefaultSingleCDockable( "TagId", "TagCloud", new TagCloudController().getTagCloud() );
+        SingleCDockable statsDockable = new DefaultSingleCDockable( "StatsId", "Stats", statsScroller );
+        SingleCDockable thumbnailsDockable = new DefaultSingleCDockable( "ThumbnailsId", "Thumbnails", thumbnailPanel );
+
+        grid.add( 0, 0, 0.2, 0.8, tree );
+        grid.add( 0, 0, 0.2, 0.8, searches );
+        grid.add( 0, 1, 0.2, 0.2, tagDockable );
+        grid.add( 0, 1, 0.2, 0.2, statsDockable );
+        grid.add( 1, 0, .5, 2, thumbnailsDockable );
+        grid.add( 2, 0, 0.3, .5, properties );
+        grid.add( 2, 1, 0.3, .5, map );
+
+        final CContentArea content = control.getContentArea();
+        content.deploy( grid );
+
+        thumbnailsDockable.setVisible( true );
+        tree.setVisible( true );
+        searches.setVisible( true );
+        tagDockable.setVisible( true );
+        properties.setVisible( true );
+        map.setVisible( true );
+
+        getContentPane().add( control.getContentArea() );
+
+        setVisible( true );
+
     }
 
     /**
-     * Reference to the collection tab
+     * A handle to the Collection Tree so that we can ask it to move to the
+     * front.
      */
-    private final JComponent collectionTab;
+    private DefaultSingleCDockable tree;
 
     /**
-     * Reference to the searches tab
+     * A handle to the Searches Tree so that we can ask it to move to the front.
      */
-    private final JComponent searchesTab;
-
-    /**
-     * The multi tab panel top left that allows the collection to be shown and
-     * then the searches etc.
-     */
-    private final JTabbedPane jpoNavigatorJTabbedPane = new JTabbedPane();
+    private DefaultSingleCDockable searches;
 
     /**
      * If a ShowGroupRequest is seen we will switch the collection tab to the
@@ -297,14 +247,7 @@ public class MainWindow extends JFrame {
      */
     @Subscribe
     public void handleShowGroupRequest( ShowGroupRequest request ) {
-        tabToCollection();
-    }
-
-    /**
-     * Instructs the MainWindow to show the collection in the left panel
-     */
-    private void tabToCollection() {
-        jpoNavigatorJTabbedPane.setSelectedComponent( collectionTab );
+        tree.toFront();
     }
 
     /**
@@ -315,14 +258,7 @@ public class MainWindow extends JFrame {
      */
     @Subscribe
     public void handleShowQueryRequest( ShowQueryRequest request ) {
-        tabToSearches();
-    }
-
-    /**
-     * Instructs the MainWindow to show the searches in the left panel
-     */
-    private void tabToSearches() {
-        jpoNavigatorJTabbedPane.setSelectedComponent( searchesTab );
+        searches.toFront();
     }
 
     /**
@@ -407,19 +343,45 @@ public class MainWindow extends JFrame {
     }
 
     /**
-     * Saves the Window Layout to the Settings so that they are saved to Disk
-     * with the Settings
+     * Handle the SaveDockablesPositionsRequest by saving the dockable windows
+     * layout to the Preferences of the JVM
+     *
+     * @param request The SaveDockablesPositionsRequest
      */
-//    public void saveWindowLayoutToSettings() {
-//        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-//        myDoggyToolWindowManager.getPersistenceDelegate().save( baos );
-//        String savedWindowData = new String( baos.toByteArray(), StandardCharsets.UTF_8 );
-//        if ( !Settings.myDoggyWindowsLayout.equals( savedWindowData ) ) {
-//            System.out.println( savedWindowData );
-//            Settings.unsavedSettingChanges = true;
-//            Settings.myDoggyWindowsLayout = savedWindowData;
-//        }
-//
-//    }
+    @Subscribe
+    public void handleSaveDockablesPositionsRequest( SaveDockablesPositionsRequest request ) {
+        try {
+            control.getResources().writePreferences();
+        } catch ( IOException ex ) {
+            LOGGER.severe( ex.getMessage() );
+        }
+    }
+
+    /**
+     * Handle the LoadDockablesPositionsRequest by loading the saved dockable
+     * windows layout from the Preferences of the JVM
+     *
+     * @param request The LoadDockablesPositionsRequest
+     */
+    @Subscribe
+    public void handleLoadDockablesPositionsRequest( LoadDockablesPositionsRequest request ) {
+        try {
+            control.getResources().readPreferences();
+        } catch ( IOException ex ) {
+            LOGGER.severe( ex.getMessage() );
+        }
+    }
+
+    /**
+     * Handle the RestoreDockablesPositionsRequest by deploying the default grid
+     * to the content.
+     *
+     * @param request The RestoreDockablesPositionsRequest
+     */
+    @Subscribe
+    public void handleRestoreDockablesPositionsRequest( RestoreDockablesPositionsRequest request ) {
+        CContentArea content = control.getContentArea();
+        content.deploy( grid );
+    }
 
 }

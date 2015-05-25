@@ -19,10 +19,8 @@ c:\windows\system32\java -Xms200M -Xmx2000M -classpath ^
 "c:\Program Files\Jpo\jxmapviewer2-2.0.jar";^
 "c:\Program Files\Jpo\metadata-extractor-2.8.1.jar";^
 "c:\Program Files\Jpo\miglayout-4.0.jar";^
-"c:\Program Files\Jpo\mydoggy-api-1.5.0.jar";^
-"c:\Program Files\Jpo\mydoggy-plaf-1.5.0.jar";^
-"c:\Program Files\Jpo\mydoggy-res-1.5.0.jar";^
-"c:\Program Files\Jpo\TableLayout-20050920.jar";^
+"c:\Program Files\Jpo\docking-frames-common.jar";^
+"c:\Program Files\Jpo\docking-frames-core.jar";^
 "c:\Program Files\Jpo\TagCloud.jar";^
 "c:\Program Files\Jpo\xmpcore-5.1.2.jar";^
 "c:\Program Files\Jpo\jpo-0.12.jar" ^
