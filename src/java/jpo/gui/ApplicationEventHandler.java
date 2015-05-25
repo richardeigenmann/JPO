@@ -283,6 +283,7 @@ public class ApplicationEventHandler {
      */
     @Subscribe
     public void handleCloseApplicationRequest( CloseApplicationRequest request ) {
+//        Settings.getMainWindow().saveWindowLayoutToSettings();
         if ( Settings.unsavedSettingChanges ) {
             Settings.writeSettings();
         }

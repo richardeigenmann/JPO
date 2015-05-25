@@ -7,7 +7,11 @@ import static java.awt.Frame.MAXIMIZED_BOTH;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.JComponent;
@@ -46,7 +50,6 @@ import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.ToolWindowActionHandler;
 import org.noos.xing.mydoggy.ToolWindowAnchor;
 import org.noos.xing.mydoggy.ToolWindowBar;
-import org.noos.xing.mydoggy.ToolWindowManager;
 import org.noos.xing.mydoggy.ToolWindowManagerDescriptor;
 import org.noos.xing.mydoggy.ToolWindowType;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
@@ -83,10 +86,15 @@ public class MainWindow extends JFrame {
      */
     private static final Logger LOGGER = Logger.getLogger( MainWindow.class.getName() );
 
+    // Create a new instance of MyDoggyToolWindowManager passing the frame.
+    private final MyDoggyToolWindowManager myDoggyToolWindowManager = new MyDoggyToolWindowManager();
+
     /**
      * Creates the JPO window and lays our the components
      */
     public MainWindow() {
+        Settings.setMainWindow( this );
+
         this.collectionTab = new CollectionJTreeController().getJScrollPane();
         this.searchesTab = new QueriesJTree().getJComponent();
         Tools.checkEDT();
@@ -129,42 +137,13 @@ public class MainWindow extends JFrame {
         ttm.setDismissDelay( 1500 );
         ttm.setInitialDelay( 100 );
 
-        //final JSplitPane leftSplitPane = new JSplitPane( JSplitPane.VERTICAL_SPLIT );
-        //leftSplitPane.setDividerSize( Settings.dividerWidth );
-        //leftSplitPane.setOneTouchExpandable( true );
-        //leftSplitPane.setContinuousLayout( true );
         jpoNavigatorJTabbedPane.setMinimumSize( Settings.JPO_NAVIGATOR_JTABBEDPANE_MINIMUM_SIZE );
         jpoNavigatorJTabbedPane.setPreferredSize( Settings.jpoNavigatorJTabbedPanePreferredSize );
 
         InfoPanelController infoPanelController = new InfoPanelController();
-        //infoPanelController.getInfoPanel().addComponentListener( new ComponentAdapter() {
-
-        //    @Override
-        //    public void componentResized( ComponentEvent event ) {
-        //        int leftDividerSpot = leftSplitPane.getDividerLocation();
-        //       if ( leftDividerSpot != Settings.preferredLeftDividerSpot ) {
-        //           //LOGGER.info( String.format( "infoPanel was resized. Updating preferredLeftDividerSpot to: %d", leftDividerSpot ) );
-        //           Settings.preferredLeftDividerSpot = leftDividerSpot;
-        //          Settings.unsavedSettingChanges = true;
-        //      }
-        // }
-        //} );
-        //final JTabbedPane tabbedPane = new JTabbedPane();
-        //tabbedPane.addTab( "Word Cloud", new TagCloudController().getTagCloud() );
         final JScrollPane statsScroller = new JScrollPane( infoPanelController.getInfoPanel() );
         statsScroller.setWheelScrollingEnabled( true );
         statsScroller.getVerticalScrollBar().setUnitIncrement( 20 );
-        //tabbedPane.addTab( "Stats", statsScroller );
-
-        //leftSplitPane.setBottomComponent( tabbedPane );
-
-        /*final JSplitPane masterSplitPane = new JSplitPane( JSplitPane.HORIZONTAL_SPLIT );
-         masterSplitPane.setDividerSize( Settings.dividerWidth );
-         masterSplitPane.setOneTouchExpandable( true );
-         masterSplitPane.setContinuousLayout( true );
-         masterSplitPane.setDividerLocation( Settings.preferredMasterDividerSpot );*/
-        //Add the split pane to this frame.
-        //getContentPane().add( masterSplitPane, BorderLayout.CENTER );
         pack();
 
         if ( Settings.maximiseJpoOnStartup ) {
@@ -173,30 +152,8 @@ public class MainWindow extends JFrame {
 
         jpoNavigatorJTabbedPane.add( Settings.jpoResources.getString( "jpoTabbedPaneCollection" ), collectionTab );
         jpoNavigatorJTabbedPane.add( Settings.jpoResources.getString( "jpoTabbedPaneSearches" ), searchesTab );
-        //leftSplitPane.setTopComponent( jpoNavigatorJTabbedPane );
-
-        // Set up the Thumbnail Pane
-        //masterSplitPane.setLeftComponent( leftSplitPane );
         Component thumbnailPanel = ( new ThumbnailsPanelController() ).getView();
-        //masterSplitPane.setRightComponent( thumbnailPanel );
-
-        //leftSplitPane.setDividerLocation( Settings.preferredLeftDividerSpot );
-
-        /* jpoNavigatorJTabbedPane.addComponentListener( new ComponentAdapter() {
-
-         @Override
-         public void componentResized( ComponentEvent event ) {
-         int dividerSpot = masterSplitPane.getDividerLocation();
-         if ( dividerSpot != Settings.preferredMasterDividerSpot ) {
-         Settings.preferredMasterDividerSpot = dividerSpot;
-         Settings.unsavedSettingChanges = true;
-         }
-         }
-         } );*/
         getContentPane().setLayout( new TableLayout( new double[][]{ { 0, -1, 0 }, { 0, -1, 0 } } ) );
-
-        // Create a new instance of MyDoggyToolWindowManager passing the frame.
-        MyDoggyToolWindowManager myDoggyToolWindowManager = new MyDoggyToolWindowManager();
 
         ToolWindowManagerDescriptor toolWindowManagerDescriptor = myDoggyToolWindowManager.getToolWindowManagerDescriptor();
         toolWindowManagerDescriptor.setNumberingEnabled( false );
@@ -235,14 +192,29 @@ public class MainWindow extends JFrame {
         leftToolWindowBar.setVisible( true );
 
         // Make all tools available
-        for ( ToolWindow window : myDoggyToolWindowManager.getToolWindows() ) {
-            window.setAvailable( true );
-        }
+//        for ( ToolWindow window : myDoggyToolWindowManager.getToolWindows() ) {
+//            window.setAvailable( true );
+//        }
 
+//        if ( !Settings.myDoggyWindowsLayout.equals( "" ) ) {
+//            InputStream baos = new ByteArrayInputStream( Settings.myDoggyWindowsLayout.getBytes( StandardCharsets.UTF_8 ) );
+//            myDoggyToolWindowManager.getPersistenceDelegate().apply( baos );
+//        }
         // Add myDoggyToolWindowManager to the frame. MyDoggyToolWindowManager is an extension of a JPanel
         getContentPane().add( myDoggyToolWindowManager, "1,1," );
 
-        setVisible( true );
+        //setVisible( true );
+        final MainWindow mainWindow = this;
+        SwingUtilities.invokeLater( new Runnable() {
+            public void run() {
+                //frame.setExtendedState( JFrame.MAXIMIZED_BOTH );
+                mainWindow.setVisible( true );
+                for ( ToolWindow toolWindow : myDoggyToolWindowManager.getToolWindows() ) {
+                    toolWindow.setAvailable( true );
+                    toolWindow.setVisible( true );
+                }
+            }
+        } );
 
     }
 
@@ -251,6 +223,7 @@ public class MainWindow extends JFrame {
         toolWindow.setVisible( true );
         toolWindow.aggregate();
         toolWindow.setType( ToolWindowType.DOCKED );
+        DockedTypeDescriptor desc = (DockedTypeDescriptor) toolWindow.getTypeDescriptor( ToolWindowType.DOCKED );
 
         // RepresentativeAnchorDescriptor
         RepresentativeAnchorDescriptor representativeAnchorDescriptor = toolWindow.getRepresentativeAnchorDescriptor();
@@ -262,8 +235,10 @@ public class MainWindow extends JFrame {
         DockedTypeDescriptor dockedTypeDescriptor = (DockedTypeDescriptor) toolWindow.getTypeDescriptor( ToolWindowType.DOCKED );
         dockedTypeDescriptor.setAnimating( true );
         dockedTypeDescriptor.setHideRepresentativeButtonOnVisible( true );
-        dockedTypeDescriptor.setDockLength( 300 );
+        dockedTypeDescriptor.setDockLength( 550 );
+        dockedTypeDescriptor.setMinimumDockLength( 450 );
         dockedTypeDescriptor.setPopupMenuEnabled( true );
+        
         JMenu toolsMenu = dockedTypeDescriptor.getToolsMenu();
         toolsMenu.add( new AbstractAction( "Hello World!!!" ) {
             public void actionPerformed( ActionEvent e ) {
@@ -290,7 +265,7 @@ public class MainWindow extends JFrame {
         FloatingTypeDescriptor floatingTypeDescriptor = (FloatingTypeDescriptor) toolWindow.getTypeDescriptor( ToolWindowType.FLOATING );
         floatingTypeDescriptor.setEnabled( true );
         floatingTypeDescriptor.setLocation( 150, 200 );
-        floatingTypeDescriptor.setSize( 520, 200 );
+        floatingTypeDescriptor.setSize( 520, 500 );
         floatingTypeDescriptor.setModal( false );
         floatingTypeDescriptor.setTransparentMode( true );
         floatingTypeDescriptor.setTransparentRatio( 0.2f );
@@ -418,7 +393,7 @@ public class MainWindow extends JFrame {
     }
 
     /**
-     * Sets the application title to the default tile based on the
+     * Sets the application title to the default title based on the
      * Resourcebundle string ApplicationTitle and the file name of the loaded
      * xml file if any.
      */
@@ -430,5 +405,21 @@ public class MainWindow extends JFrame {
             updateApplicationTitleEDT( Settings.jpoResources.getString( "ApplicationTitle" ) );
         }
     }
+
+    /**
+     * Saves the Window Layout to the Settings so that they are saved to Disk
+     * with the Settings
+     */
+//    public void saveWindowLayoutToSettings() {
+//        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//        myDoggyToolWindowManager.getPersistenceDelegate().save( baos );
+//        String savedWindowData = new String( baos.toByteArray(), StandardCharsets.UTF_8 );
+//        if ( !Settings.myDoggyWindowsLayout.equals( savedWindowData ) ) {
+//            System.out.println( savedWindowData );
+//            Settings.unsavedSettingChanges = true;
+//            Settings.myDoggyWindowsLayout = savedWindowData;
+//        }
+//
+//    }
 
 }

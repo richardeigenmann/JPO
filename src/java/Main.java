@@ -86,12 +86,14 @@ public class Main {
         testClass( "com.google.common.math.IntMath", "guava-16.0.1.jar", good, missing );
         testClass( "com.google.common.eventbus.EventBus", "guava-16.0.1.jar", good, missing );
         testClass( "javax.mail.Message", "javax-mail-1.5.1.jar", good, missing );
-        testClass( "org.apache.jcs.JCS", "jcs-1.3.jar", good, missing );
+        testClass( "org.apache.commons.jcs.JCS", "commons-jcs-core-2.0-beta-1.jar", good, missing );
         testClass( "com.jcraft.jsch.JSch", "jsch-0.1.51.jar", good, missing );
         testClass( "net.javaprog.ui.wizard.AbstractStep", "jwizz-0.1.4.jar", good, missing );
-        testClass( "org.jdesktop.swingx.JXMapViewer", "jxmapviewer2-1.1.jar", good, missing );
-        testClass( "com.drew.imaging.jpeg.JpegMetadataReader", "metadata-extractor-2.6.4.jar", good, missing );
+        testClass( "org.jxmapviewer.JXMapViewer", "jxmapviewer2-2.0.jar", good, missing );
+        testClass( "com.drew.imaging.jpeg.JpegMetadataReader", "metadata-extractor-2.8.1.jar", good, missing );
         testClass( "net.miginfocom.swing.MigLayout", "miglayout-4.0.jar", good, missing );
+        testClass( "org.noos.xing.mydoggy.ToolWindow", "mydoggy-api-1.5.0.jar", good, missing );
+        testClass( "org.noos.xing.mydoggy.plaf.MyDoggyToolWindow", "mydoggy-plaf-1.5.0.jar", good, missing );
         testClass( "com.adobe.xmp.XMPUtils", "xmpcore.jar", good, missing );
 
         if ( missing.length() > 80 ) {

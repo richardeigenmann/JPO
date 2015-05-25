@@ -20,8 +20,8 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileSystemView;
 import jpo.export.HtmlDistillerOptions;
-
-
+import jpo.gui.swing.MainWindow;
+import org.apache.commons.lang3.text.StrBuilder;
 
 /*
  * Settings.java: class that holds the settings of the JPO application
@@ -66,7 +66,7 @@ public class Settings {
      */
     private static PictureCollection pictureCollection = new PictureCollection();
 
-        /**
+    /**
      * @return the main pictureCollection
      */
     public static PictureCollection getPictureCollection() {
@@ -80,8 +80,6 @@ public class Settings {
         Settings.pictureCollection = pictureCollection;
     }
 
-    
-    
     /**
      * flag to indicate that debug information should be logged
      */
@@ -521,13 +519,13 @@ public class Settings {
      */
     public static Dimension threeDotButtonDimension = new Dimension( 25, 25 );
 
-    
     /**
      * Codes to indicate the field
      */
     public static enum FieldCodes {
+
         NO_SORTING,
-        DESCRIPTION, 
+        DESCRIPTION,
         FILE_URL,
         FILE_LOWRES_URL,
         FILM_REFERENCE,
@@ -542,7 +540,6 @@ public class Settings {
         CATEGORY,
         CATEGORY_DESCRIPTION,
     }
-    
 
     /**
      * returns an List of SortOptions
@@ -561,23 +558,21 @@ public class Settings {
         return sortOptions;
     }
 
-     /**
+    /**
      * The color to use when the thumbnail has been selected
      */
-    public static final Color SELECTED_COLOR = new Color(45,47,84);
+    public static final Color SELECTED_COLOR = new Color( 45, 47, 84 );
 
-        /**
+    /**
      * The color to use for text background when the thumbnail has been selected
      */
-    public static final Color SELECTED_COLOR_TEXT = new Color(145,149,153);
+    public static final Color SELECTED_COLOR_TEXT = new Color( 145, 149, 153 );
 
     /**
      * The color to use when the thumbnail has been selected
      */
     public static final Color UNSELECTED_COLOR = Color.WHITE;
 
-    
-    
     /**
      * date format for adding new pictures from the camera
      */
@@ -661,9 +656,8 @@ public class Settings {
     /**
      * The PictureViewer minimum size
      */
-    public static final Dimension PICTUREVIEWER_MINIMUM_SIZE = new Dimension( 300, 300);
+    public static final Dimension PICTUREVIEWER_MINIMUM_SIZE = new Dimension( 300, 300 );
 
-    
     /**
      * The number of Words that the TagCloud should show.
      */
@@ -707,8 +701,8 @@ public class Settings {
         //LOGGER.info( String.format( "preferredLeftDividerSpot: %d", preferredLeftDividerSpot ) );
 
         maximumPictureSize = 6000;
-        thumbnailCacheDirectory = System.getProperty( "java.io.tmpdir" ) 
-                + System.getProperty( "file.separator" ) 
+        thumbnailCacheDirectory = System.getProperty( "java.io.tmpdir" )
+                + System.getProperty( "file.separator" )
                 + "Jpo-Thumbnail-Cache";
 
         pictureViewerDefaultDimensions = new Dimension( windowSizes[1] );
@@ -741,6 +735,21 @@ public class Settings {
         //LOGGER.info( String.format( "Loaded preferredLeftDividerSpot as: %d", preferredLeftDividerSpot ) );
 
         dividerWidth = prefs.getInt( "dividerWidth", dividerWidth );
+
+//        int segments = prefs.getInt( "myDoggyWindowsLayout.stringSegments", -1 );
+//        StringBuilder sb = new StringBuilder("");
+//        if ( segments > -1 ) {
+//            for ( int i = 0; i <= segments; i++ ) {
+//                sb.append( prefs.get( "myDoggyWindowsLayout."+i, ""));
+//            }
+//        } else {
+//            System.out.println( "no myDoggyWindowsLayout loaded" );
+//        }
+//        myDoggyWindowsLayout = sb.toString();
+//        System.out.println( myDoggyWindowsLayout );
+//        
+//                
+//        myDoggyWindowsLayout = prefs.get( "myDoggyWindowsLayout", "" );
         autoLoad = prefs.get( "autoload", autoLoad );
 
         maximisePictureViewerWindow = prefs.getBoolean( "maximisePictureViewerWindow", maximisePictureViewerWindow );
@@ -819,7 +828,7 @@ public class Settings {
         emailDimensions.width = prefs.getInt( "emailDimensions.width", emailDimensions.width );
         emailDimensions.height = prefs.getInt( "emailDimensions.height", emailDimensions.height );
         tagCloudWords = prefs.getInt( "tagCloudWords", tagCloudWords );
-        lastSortChoice = FieldCodes.valueOf( prefs.get( "lastSortChoiceString", lastSortChoice.toString() ) );  
+        lastSortChoice = FieldCodes.valueOf( prefs.get( "lastSortChoiceString", lastSortChoice.toString() ) );
         lastCameraWizardCopyMode = prefs.getBoolean( "lastCameraWizardCopyMode", lastCameraWizardCopyMode );
 
         rememberGoogleCredentials = prefs.getBoolean( "rememberGoogleCredentials", rememberGoogleCredentials );
@@ -833,8 +842,8 @@ public class Settings {
     }
 
     /**
-     * method that validates the settings &amp; brings up the Settings dialog if not
-     * ok
+     * method that validates the settings &amp; brings up the Settings dialog if
+     * not ok
      */
     public static void validateSettings() {
         if ( maxThumbnails < 1 ) { //how can this happen?
@@ -922,6 +931,22 @@ public class Settings {
         prefs.putInt( "mainFrameDimensions.height", mainFrameDimensions.height );
         prefs.putInt( "preferredMasterDividerSpot", preferredMasterDividerSpot );
         prefs.putInt( "preferredLeftDividerSpot", preferredLeftDividerSpot );
+
+        // bother, the windows layout is a rather long string....
+//        int size = myDoggyWindowsLayout.length();
+//        int cnt = 0;
+//        for ( int idx = 0; idx < size; cnt++ ) {
+//            if ( ( size - idx ) > Preferences.MAX_VALUE_LENGTH ) {
+//                prefs.put( "myDoggyWindowsLayout." + cnt, myDoggyWindowsLayout.substring( idx, idx + Preferences.MAX_VALUE_LENGTH ));
+//                idx += Preferences.MAX_VALUE_LENGTH;
+//            } else {
+//                prefs.put( "myDoggyWindowsLayout." + cnt, myDoggyWindowsLayout.substring( idx ));
+//                idx = size;
+//            }
+//        }
+//        prefs.putInt( "myDoggyWindowsLayout.stringSegments", cnt);
+
+
         //LOGGER.info( String.format( "Writing preferredLeftDividerSpot: %d", preferredLeftDividerSpot ) );
         prefs.putInt( "dividerWidth", dividerWidth );
         if ( !( autoLoad == null ) ) {
@@ -1060,12 +1085,11 @@ public class Settings {
             try {
                 PrefObj.putObject( prefs, "Camera[" + Integer.toString( i ) + "].oldImage", c.getOldImage() );
             } catch ( IOException | BackingStoreException | ClassNotFoundException ex ) {
-                LOGGER.severe( ex.getLocalizedMessage());
+                LOGGER.severe( ex.getLocalizedMessage() );
             }
             i++;
         }
     }
-
 
     /**
      * this method attempts to load the cameras
@@ -1091,7 +1115,8 @@ public class Settings {
     }
 
     /**
-     * This method memorises a collection file name for the Open &gt; Recent menu.
+     * This method memorises a collection file name for the Open &gt; Recent
+     * menu.
      * <p>
      * The caller should notify any listeners that the recentCollections changed
      * by sending a 
@@ -1107,7 +1132,7 @@ public class Settings {
                 for ( int j = i; j > 0; j-- ) {
                     recentCollections[j] = recentCollections[j - 1];
                 }
-                recentCollections[ 0] = recentFile;
+                recentCollections[0] = recentFile;
                 return;
             }
         }
@@ -1116,7 +1141,7 @@ public class Settings {
         for ( int i = Settings.MAX_MEMORISE - 1; i > 0; i-- ) {
             recentCollections[i] = recentCollections[i - 1];
         }
-        recentCollections[ 0] = recentFile;
+        recentCollections[0] = recentFile;
         writeSettings();
     }
 
@@ -1251,7 +1276,7 @@ public class Settings {
                 for ( int j = i; j > 0; j-- ) {
                     recentDropNodes[j] = recentDropNodes[j - 1];
                 }
-                recentDropNodes[ 0] = recentNode;
+                recentDropNodes[0] = recentNode;
                 return;
             }
         }
@@ -1260,7 +1285,7 @@ public class Settings {
         for ( int i = MAX_DROPNODES - 1; i > 0; i-- ) {
             recentDropNodes[i] = recentDropNodes[i - 1];
         }
-        recentDropNodes[ 0] = recentNode;
+        recentDropNodes[0] = recentNode;
     }
 
     /**
@@ -1268,7 +1293,7 @@ public class Settings {
      * each time a node is deleted whether it or one of it's descendents is a
      * drop target as this would no longer be a valid target.
      * <p>
-     * Don't forget to send a 
+     * Don't forget to send a
      * {@link jpo.EventBus.RecentDropNodesChangedEvent RecentDropNodesChangedEvent}
      * onto the EventBus so that GUI widgets can update themselves.
      * <p>
@@ -1287,7 +1312,7 @@ public class Settings {
     /**
      * Clears the list of recent drop nodes
      * <p>
-     * Don't forget to send a 
+     * Don't forget to send a
      * {@link jpo.EventBus.RecentDropNodesChangedEvent RecentDropNodesChangedEvent}
      * onto the EventBus so that GUI widgets can update themselves.
      * <p>
@@ -1328,7 +1353,7 @@ public class Settings {
                 for ( int j = i; j > 0; j-- ) {
                     copyLocations[j] = copyLocations[j - 1];
                 }
-                copyLocations[ 0] = location;
+                copyLocations[0] = location;
                 return;
             }
         }
@@ -1337,7 +1362,7 @@ public class Settings {
         for ( int i = MAX_MEMORISE - 1; i > 0; i-- ) {
             copyLocations[i] = copyLocations[i - 1];
         }
-        copyLocations[ 0] = location;
+        copyLocations[0] = location;
 
         validateCopyLocations();
         writeSettings();
@@ -1355,7 +1380,7 @@ public class Settings {
                 for ( int j = i; j > 0; j-- ) {
                     memorizedZipFiles[j] = memorizedZipFiles[j - 1];
                 }
-                memorizedZipFiles[ 0] = location;
+                memorizedZipFiles[0] = location;
                 return;
             }
         }
@@ -1364,7 +1389,7 @@ public class Settings {
         for ( int i = MAX_MEMORISE - 1; i > 0; i-- ) {
             memorizedZipFiles[i] = memorizedZipFiles[i - 1];
         }
-        memorizedZipFiles[ 0] = location;
+        memorizedZipFiles[0] = location;
     }
 
     /**
@@ -1430,5 +1455,17 @@ public class Settings {
      * Array of user function commands
      */
     public static String[] userFunctionCmd = new String[maxUserFunctions];
+
+    private static MainWindow mainWindow;
+
+    public static void setMainWindow( MainWindow newMainWindow ) {
+        mainWindow = newMainWindow;
+    }
+
+    public static MainWindow getMainWindow() {
+        return mainWindow;
+    }
+
+    //public static String myDoggyWindowsLayout = "";
 
 }
