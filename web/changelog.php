@@ -3,6 +3,7 @@
 
             <table class="changelog">
                 <tr><td colspan=2><b>Development Version 0.12</b></td></tr>
+                <tr><td valign="top">27.5.2015</td><td>Made MainWindow more passive as an EventListener</td></tr>
                 <tr><td valign="top">25.5.2015</td><td>Introduced the <a href="http://dock.javaforge.com/">Docking Frames</a> window manager</td></tr>
                 <tr><td valign="top">23.5.2015</td><td>Moved source code from CVS to Git on Sourceforge</td></tr>
                 <tr><td valign="top">20.8.2014</td><td>Fixed bug with copy to readonly directory</td></tr>
