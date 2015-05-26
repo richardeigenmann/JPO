@@ -5,7 +5,7 @@ import jpo.dataModel.SortableDefaultMutableTreeNode;
 /**
  * This request indicates that the search dialog should be brought up
  *
- * @author Richard eigenmann
+ * @author Richard Eigenmann
  */
 public class OpenSearchDialogRequest implements Request {
 

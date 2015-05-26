@@ -4,7 +4,7 @@ import jpo.dataModel.SortableDefaultMutableTreeNode;
 
 /**
  * Request to indicate that the user would like move the supplied node up in the group
- * @author Richard eigenmann
+ * @author Richard Eigenmann
  */
 public class MoveNodeUpRequest implements Request {
 

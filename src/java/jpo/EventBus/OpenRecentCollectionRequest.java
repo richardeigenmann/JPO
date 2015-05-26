@@ -8,7 +8,7 @@ package jpo.EventBus;
  * {@code JpoEventBus.getInstance().post( new }{@link jpo.EventBus.UnsavedUpdatesDialogRequest UnsavedUpdatesDialogRequest}{@code ( new OpenRecentCollectionRequest())  ); }
  
  *
- * @author Richard eigenmann
+ * @author Richard Eigenmann
  */
 public class OpenRecentCollectionRequest implements Request {
 

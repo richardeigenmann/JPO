@@ -4,7 +4,7 @@ import jpo.dataModel.SortableDefaultMutableTreeNode;
 
 /**
  * An event to indicate that a picture was selected
- * @author Richard eigenmann
+ * @author Richard Eigenmann
  */
 public class PictureSelectionEvent implements NodeSelectionEvent {
 

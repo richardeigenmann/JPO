@@ -3,7 +3,7 @@ package jpo.EventBus;
 /**
  * This request desires to clear all nodes from the email selection
  *
- * @author Richard eigenmann
+ * @author Richard Eigenmann
  */
 public class ClearEmailSelectionRequest implements Request {
 

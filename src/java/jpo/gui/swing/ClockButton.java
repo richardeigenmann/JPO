@@ -4,6 +4,7 @@ import javax.swing.ImageIcon;
 
 /**
  * An icon of a clock
+ * @author Richard Eigenmann
  */
 public class ClockButton extends NavBarButton {
 

@@ -5,7 +5,7 @@ import jpo.dataModel.SortableDefaultMutableTreeNode;
 /**
  * This request indicates that the user wants to edit the group as a table
  * 
- * @author Richard eigenmann
+ * @author Richard Eigenmann
  */
 public class ShowGroupAsTableRequest implements Request {
 

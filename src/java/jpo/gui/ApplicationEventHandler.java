@@ -22,6 +22,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
+import javax.swing.event.TreeModelEvent;
+import javax.swing.event.TreeModelListener;
+import javax.swing.tree.TreePath;
 import jpo.EventBus.AddCollectionToGroupRequest;
 import jpo.EventBus.AddEmptyGroupRequest;
 import jpo.EventBus.AddFlatFileRequest;
@@ -97,6 +100,7 @@ import jpo.EventBus.StartCameraWatchDaemonRequest;
 import jpo.EventBus.StartDoublePanelSlideshowRequest;
 import jpo.EventBus.StartNewCollectionRequest;
 import jpo.EventBus.UnsavedUpdatesDialogRequest;
+import jpo.EventBus.UpdateApplicationTitleRequest;
 import jpo.cache.JpoCache;
 import jpo.dataModel.DuplicatesQuery;
 import jpo.dataModel.FlatFileReader;
@@ -217,6 +221,7 @@ public class ApplicationEventHandler {
                 public void run() {
                     new MainWindow();
                     JpoEventBus.getInstance().post( new LoadDockablesPositionsRequest() );
+                    Settings.getPictureCollection().getTreeModel().addTreeModelListener( new MainAppModelListener() );
                 }
             } );
         } catch ( InterruptedException | InvocationTargetException ex ) {
@@ -685,8 +690,7 @@ public class ApplicationEventHandler {
                 panel,
                 Settings.jpoResources.getString( "collectionSaveTitle" ),
                 JOptionPane.INFORMATION_MESSAGE );
-        
-        
+
         if ( setAutoload.isSelected() ) {
             Settings.autoLoad = request.getAutoLoadCollectionFile();
             Settings.writeSettings();
@@ -1500,7 +1504,6 @@ public class ApplicationEventHandler {
 
     }
 
-    
     /**
      * Handles the RemoveOldLowresThumbnailsRequest request
      *
@@ -1508,15 +1511,66 @@ public class ApplicationEventHandler {
      */
     @Subscribe
     public void handleRemoveOldLowresThumbnailsRequest( final RemoveOldLowresThumbnailsRequest request ) {
-            Runnable runnable = new Runnable() {
+        Runnable runnable = new Runnable() {
 
-                @Override
-                public void run() {
-                    new ClearThumbnailsJFrame( request.getLowresUrls() );
-                }
-            };
-            SwingUtilities.invokeLater( runnable );
+            @Override
+            public void run() {
+                new ClearThumbnailsJFrame( request.getLowresUrls() );
+            }
+        };
+        SwingUtilities.invokeLater( runnable );
     }
-    
-    
+
+    /**
+     * Inner class that monitors the collection for changes and figures out
+     * whether the root node changed and asks the application to change the
+     * title of the Window accordingly
+     */
+    private class MainAppModelListener
+            implements TreeModelListener {
+
+        @Override
+        public void treeNodesChanged( TreeModelEvent e ) {
+            TreePath tp = e.getTreePath();
+            LOGGER.fine( String.format( "The main app model listener trapped a tree node change event on the tree path: %s", tp.toString() ) );
+            if ( tp.getPathCount() == 1 ) { //if the root node sent the event
+                LOGGER.fine( "Since this is the root node we will update the ApplicationTitle" );
+
+                updateApplicationTitle();
+            }
+        }
+
+        @Override
+        public void treeNodesInserted( TreeModelEvent e ) {
+            // ignore
+        }
+
+        @Override
+        public void treeNodesRemoved( TreeModelEvent e ) {
+            // ignore, the root can't be removed ... Really?
+        }
+
+        @Override
+        public void treeStructureChanged( TreeModelEvent e ) {
+            TreePath tp = e.getTreePath();
+            if ( tp.getPathCount() == 1 ) { //if the root node sent the event
+                updateApplicationTitle();
+            }
+        }
+
+        /**
+         * Sets the application title to the default title based on the
+         * Resourcebundle string ApplicationTitle and the file name of the
+         * loaded xml file if any.
+         */
+        private void updateApplicationTitle() {
+            final File xmlFile = Settings.getPictureCollection().getXmlFile();
+            if ( xmlFile != null ) {
+                JpoEventBus.getInstance().post( new UpdateApplicationTitleRequest( Settings.jpoResources.getString( "ApplicationTitle" ) + ":  " + xmlFile.toString() ) );
+            } else {
+                JpoEventBus.getInstance().post( new UpdateApplicationTitleRequest( Settings.jpoResources.getString( "ApplicationTitle" ) ) );
+            }
+        }
+    }
+
 }

@@ -6,7 +6,7 @@ import jpo.dataModel.SortableDefaultMutableTreeNode;
 /**
  * The receiver of this request is supposed to bring up the file rename dialog for the selected node
  * 
- * @author Richard eigenmann
+ * @author Richard Eigenmann
  */
 public class RenamePictureRequest implements Request {
 

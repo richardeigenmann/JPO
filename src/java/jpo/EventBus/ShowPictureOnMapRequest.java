@@ -8,7 +8,7 @@ import jpo.dataModel.SortableDefaultMutableTreeNode;
 /**
  * The receiver of this request is supposed to show a map with a teardrop for the location of the picture
  * 
- * @author Richard eigenmann
+ * @author Richard Eigenmann
  */
 public class ShowPictureOnMapRequest implements Request {
 

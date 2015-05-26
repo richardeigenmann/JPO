@@ -3,7 +3,7 @@ package jpo.EventBus;
 /**
  * This event indicates that the user functions in the Settings object changed
  * 
- * @author Richard eigenmann
+ * @author Richard Eigenmann
  */
 public class UserFunctionsChangedEvent implements  NotificationEvent {
 

@@ -25,7 +25,7 @@ import jpo.dataModel.Category;
  */
 /**
  * A class which formats a Category for use in a JList
- *
+ * @author Richard Eigenmann
  */
 public class CategoryListCellRenderer extends JCheckBox implements ListCellRenderer<Category> {
 

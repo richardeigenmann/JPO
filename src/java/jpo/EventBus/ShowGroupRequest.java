@@ -5,7 +5,7 @@ import jpo.dataModel.SortableDefaultMutableTreeNode;
 /**
  * This request indicates that the user wants to see a set of thumbnails
  * 
- * @author Richard eigenmann
+ * @author Richard Eigenmann
  */
 public class ShowGroupRequest implements Request {
 

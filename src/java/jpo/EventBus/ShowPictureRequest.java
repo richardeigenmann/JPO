@@ -7,7 +7,7 @@ import jpo.dataModel.SortableDefaultMutableTreeNode;
  * The receiver of this request is supposed to spawn a full screen view of the picture 
  * under the supplied node.
  * 
- * @author Richard eigenmann
+ * @author Richard Eigenmann
  */
 public class ShowPictureRequest implements Request {
 

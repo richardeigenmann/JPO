@@ -7,7 +7,7 @@ import jpo.dataModel.SortableDefaultMutableTreeNode;
  * Request to indicate that the user would like move the supplied nodes as last
  * child on the target node
  *
- * @author Richard eigenmann
+ * @author Richard Eigenmann
  */
 public class MoveNodeToNodeRequest implements Request {
 

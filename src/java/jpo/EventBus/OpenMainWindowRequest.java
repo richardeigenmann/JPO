@@ -3,7 +3,7 @@ package jpo.EventBus;
 /**
  * This request indicates that the app wants to open the MainWindow
  * 
- * @author Richard eigenmann
+ * @author Richard Eigenmann
  */
 public class OpenMainWindowRequest implements Request {
 

@@ -3,7 +3,7 @@ package jpo.EventBus;
 /**
  * This request indicates that the user wants to save the collection
  *
- * @author Richard eigenmann
+ * @author Richard Eigenmann
  */
 public class FileSaveRequest implements Request {
 

@@ -3,9 +3,10 @@ package jpo.EventBus;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
 
 /**
- * This request indicates that the user wants to bring up a GUI to pick pictures and add them to the group
+ * This request indicates that the user wants to bring up a GUI to pick pictures 
+ * and add them to the group
  * 
- * @author Richard eigenmann
+ * @author Richard Eigenmann
  */
 public class ChooseAndAddPicturesToGroupRequest implements Request {
 

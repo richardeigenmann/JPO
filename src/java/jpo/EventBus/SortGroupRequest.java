@@ -6,7 +6,7 @@ import jpo.dataModel.SortableDefaultMutableTreeNode;
 /**
  * This request indicates that the user wants to sort a group by the specified criteria
  * 
- * @author Richard eigenmann
+ * @author Richard Eigenmann
  */
 public class SortGroupRequest implements Request {
 

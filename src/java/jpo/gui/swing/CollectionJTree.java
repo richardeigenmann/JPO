@@ -18,7 +18,7 @@ import jpo.dataModel.Tools;
 /*
 CollectionJTree.java:  class that creates a JTree for the collection
 
-Copyright (C) 2002 - 2010  Richard Eigenmann, Zurich, Switzerland
+Copyright (C) 2002 - 2015  Richard Eigenmann, Zurich, Switzerland
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -36,6 +36,7 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  *  This is the View object of the CollectionJTreeController.
  *  All it can do is display the nodes of the data model and add a non standard set of icons depending on
  *  the userObject in the TreeNodes.
+ * @author Richard Eigenmann
  */
 public class CollectionJTree
         extends JTree {

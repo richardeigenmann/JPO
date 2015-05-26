@@ -10,7 +10,7 @@ package jpo.EventBus;
  * StartNewCollectionRequest()) );
  *
  *
- * @author Richard eigenmann
+ * @author Richard Eigenmann
  */
 public class StartNewCollectionRequest implements Request {
 

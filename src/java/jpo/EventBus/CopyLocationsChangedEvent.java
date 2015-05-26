@@ -3,7 +3,7 @@ package jpo.EventBus;
 /**
  * This event indicates that the copy locations in the Settings object changed
  * 
- * @author Richard eigenmann
+ * @author Richard Eigenmann
  */
 public class CopyLocationsChangedEvent implements  NotificationEvent {
 

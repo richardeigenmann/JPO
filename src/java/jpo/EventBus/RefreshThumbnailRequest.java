@@ -8,7 +8,7 @@ import jpo.dataModel.SortableDefaultMutableTreeNode;
  * This request indicates that the thumbnails of the specified nodes are
  * supposed to be refreshed
  *
- * @author Richard eigenmann
+ * @author Richard Eigenmann
  */
 public class RefreshThumbnailRequest implements Request {
 

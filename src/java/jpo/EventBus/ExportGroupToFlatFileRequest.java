@@ -4,7 +4,7 @@ import jpo.dataModel.SortableDefaultMutableTreeNode;
 
 /**
  * Request to indicate that the user would like to export the pictures to a flat file
- * @author Richard eigenmann
+ * @author Richard Eigenmann
  */
 public class ExportGroupToFlatFileRequest implements Request {
 

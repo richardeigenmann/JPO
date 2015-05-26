@@ -18,7 +18,7 @@ import static jpo.gui.swing.ResizableJFrame.WindowSize.WINDOW_TOP_RIGHT;
 
 /*
  GroupPopupMenu.java: popup menu for groups
- Copyright (C) 2002-2011  Richard Eigenmann.
+ Copyright (C) 2002-2015  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -39,6 +39,7 @@ import static jpo.gui.swing.ResizableJFrame.WindowSize.WINDOW_TOP_RIGHT;
  * forcing an interface on the object instantiating it is probably more in line
  * with the OO philosophy.
  *
+ * @author Richard Eigenmann
  */
 public class ChangeWindowPopupMenu extends JPopupMenu
         implements ActionListener {

@@ -5,7 +5,7 @@ import jpo.dataModel.SortableDefaultMutableTreeNode;
 /**
  * This request indicates that the group's child nodes should be added to the email selection
  * 
- * @author Richard eigenmann
+ * @author Richard Eigenmann
  */
 public class AddGroupToEmailSelectionRequest implements Request {
 

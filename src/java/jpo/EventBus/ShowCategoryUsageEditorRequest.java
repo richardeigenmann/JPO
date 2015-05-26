@@ -9,7 +9,7 @@ import jpo.dataModel.SortableDefaultMutableTreeNode;
  * The receiver of this request is supposed to spawn the CategoryUsageEditor
  * for the supplied node.
  * 
- * @author Richard eigenmann
+ * @author Richard Eigenmann
  */
 public class ShowCategoryUsageEditorRequest implements Request {
 

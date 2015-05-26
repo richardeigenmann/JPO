@@ -3,7 +3,7 @@ package jpo.EventBus;
 /**
  * This request indicates that the user wants bring up the find duplicates GUI
  * 
- * @author Richard eigenmann
+ * @author Richard Eigenmann
  */
 public class FindDuplicatesRequest implements Request {
 

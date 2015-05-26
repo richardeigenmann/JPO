@@ -8,7 +8,7 @@ import jpo.dataModel.SortableDefaultMutableTreeNode;
  * The receiver of this request is supposed to spawn the Group Info Editor
  * for the supplied node.
  * 
- * @author Richard eigenmann
+ * @author Richard Eigenmann
  */
 public class ShowGroupInfoEditorRequest implements Request {
 

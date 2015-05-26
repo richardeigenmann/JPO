@@ -6,7 +6,7 @@ import jpo.dataModel.SortableDefaultMutableTreeNode;
 /**
  * Request to copy the picture nodes to the system clipboard
  *
- * @author Richard eigenmann
+ * @author Richard Eigenmann
  */
 public class CopyToClipboardRequest implements Request {
 

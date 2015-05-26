@@ -6,7 +6,7 @@ import jpo.dataModel.SortableDefaultMutableTreeNode;
 /**
  * This request indicates that the user wants to add the supplied collection to the supplied group
  * 
- * @author Richard eigenmann
+ * @author Richard Eigenmann
  */
 public class AddCollectionToGroupRequest implements Request {
 

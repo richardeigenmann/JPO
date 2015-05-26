@@ -1,15 +1,15 @@
 package jpo.EventBus;
 
 /**
- * This request indicates that the user wants to open the Licence window
+ * This request indicates that the user wants to open the license window
  * 
- * @author Richard eigenmann
+ * @author Richard Eigenmann
  */
 public class OpenLicenceFrameRequest implements Request {
 
 
     /**
-     * A request to open the licence window
+     * A request to open the license window
      */
     public OpenLicenceFrameRequest() {
     }

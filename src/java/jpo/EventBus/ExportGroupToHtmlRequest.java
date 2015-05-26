@@ -4,7 +4,7 @@ import jpo.dataModel.SortableDefaultMutableTreeNode;
 
 /**
  * Request to indicate that the user would like to see the Export to HTML wizard
- * @author Richard eigenmann
+ * @author Richard Eigenmann
  */
 public class ExportGroupToHtmlRequest implements Request {
 

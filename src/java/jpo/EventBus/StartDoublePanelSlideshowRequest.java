@@ -6,7 +6,7 @@ import jpo.dataModel.SortableDefaultMutableTreeNode;
 /**
  * The receiver of this request is supposed to spawn two panels and start a random slideshow
  * 
- * @author Richard eigenmann
+ * @author Richard Eigenmann
  */
 public class StartDoublePanelSlideshowRequest implements Request {
 

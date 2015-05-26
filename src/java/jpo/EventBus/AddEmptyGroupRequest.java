@@ -5,7 +5,7 @@ import jpo.dataModel.SortableDefaultMutableTreeNode;
 /**
  * This request indicates that the user wants to add an empty group to the supplied node
  * 
- * @author Richard eigenmann
+ * @author Richard Eigenmann
  */
 public class AddEmptyGroupRequest implements Request {
 

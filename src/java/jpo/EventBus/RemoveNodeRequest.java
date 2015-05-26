@@ -6,7 +6,7 @@ import jpo.dataModel.SortableDefaultMutableTreeNode;
 /**
  * This request indicates that the user wants to remove specific nodes
  *
- * @author Richard eigenmann
+ * @author Richard Eigenmann
  */
 public class RemoveNodeRequest implements Request {
 

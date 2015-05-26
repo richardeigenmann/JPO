@@ -5,7 +5,7 @@ import jpo.dataModel.SortableDefaultMutableTreeNode;
 /**
  * This request indicates that the user wants to delete the file of a specific node and remove the node
  *
- * @author Richard eigenmann
+ * @author Richard Eigenmann
  */
 public class DeleteNodeFileRequest implements Request {
 

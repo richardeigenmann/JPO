@@ -5,7 +5,7 @@ import jpo.dataModel.PictureInfo;
 /**
  * Requests a user function to be run
  *
- * @author Richard eigenmann
+ * @author Richard Eigenmann
  */
 public class RunUserFunctionRequest implements Request {
 

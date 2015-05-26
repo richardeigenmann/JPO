@@ -7,7 +7,7 @@ import jpo.dataModel.SortableDefaultMutableTreeNode;
  * This request indicates that the supplied picture nodes should be removed
  * from the email selection
  *
- * @author Richard eigenmann
+ * @author Richard Eigenmann
  */
 public class RemovePictureNodesFromEmailSelectionRequest implements Request {
 

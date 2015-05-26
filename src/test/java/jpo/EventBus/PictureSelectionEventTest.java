@@ -7,7 +7,7 @@ import junit.framework.TestCase;
 
 /**
  * Picture Selection Event Tests
- * @author Richard eigenmann
+ * @author Richard Eigenmann
  */
 public class PictureSelectionEventTest extends TestCase {
 

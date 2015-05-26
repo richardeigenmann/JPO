@@ -5,7 +5,7 @@ import jpo.dataModel.Query;
 /**
  * This request indicates that the user wants to see the results of a query
  *
- * @author Richard eigenmann
+ * @author Richard Eigenmann
  */
 public class ShowQueryRequest implements Request {
 

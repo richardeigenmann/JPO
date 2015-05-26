@@ -12,7 +12,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.File;
 import java.io.IOException;
 import java.util.logging.Logger;
 import javax.swing.BoxLayout;
@@ -26,9 +25,6 @@ import javax.swing.ToolTipManager;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.WindowConstants;
-import javax.swing.event.TreeModelEvent;
-import javax.swing.event.TreeModelListener;
-import javax.swing.tree.TreePath;
 import jpo.EventBus.CloseApplicationRequest;
 import jpo.EventBus.JpoEventBus;
 import jpo.EventBus.LoadDockablesPositionsRequest;
@@ -37,6 +33,7 @@ import jpo.EventBus.SaveDockablesPositionsRequest;
 import jpo.EventBus.ShowGroupRequest;
 import jpo.EventBus.ShowQueryRequest;
 import jpo.EventBus.UnsavedUpdatesDialogRequest;
+import jpo.EventBus.UpdateApplicationTitleRequest;
 import jpo.dataModel.Settings;
 import jpo.dataModel.Tools;
 import jpo.gui.ApplicationJMenuBar;
@@ -65,8 +62,10 @@ import jpo.gui.ThumbnailsPanelController;
 /**
  *
  * Main Window of the JPO application. It uses the
- * {@link http://dock.javaforge.com Docking Frames} framework to handle the
- * internal windows. * @author Richard Eigenmann
+ * <a href="http://dock.javaforge.com">Docking Frames</a> framework to handle the
+ * internal windows.
+ *
+ * @author Richard Eigenmann
  */
 public class MainWindow extends JFrame {
 
@@ -84,10 +83,20 @@ public class MainWindow extends JFrame {
     /**
      * The grid to which all components are added
      */
-    final CGrid grid;
+    private final CGrid grid;
 
     /**
-     * Creates the JPO window and lays our the components
+     * Creates the JPO window and lays out the components. It registers itself
+     * on the Eventbus and handles the below events. If the window close handles
+     * are activated it sends an {@link UnsavedUpdatesDialogRequest} with an
+     * embedded {@link CloseApplicationRequest} to the event handlers.
+     *
+     * @see ShowGroupRequest
+     * @see ShowQueryRequest
+     * @see SaveDockablesPositionsRequest
+     * @see LoadDockablesPositionsRequest
+     * @see RestoreDockablesPositionsRequest
+     * @see UpdateApplicationTitleRequest
      */
     public MainWindow() {
         // Set up Docking Frames
@@ -98,8 +107,8 @@ public class MainWindow extends JFrame {
 
         Tools.checkEDT();
         initComponents();
-        registerOnEventBus();
-        Settings.getPictureCollection().getTreeModel().addTreeModelListener( new MainAppModelListener() );
+        JpoEventBus.getInstance().register( this );
+
         addWindowListener( new WindowAdapter() {
 
             @Override
@@ -108,22 +117,6 @@ public class MainWindow extends JFrame {
                 JpoEventBus.getInstance().post( new UnsavedUpdatesDialogRequest( new CloseApplicationRequest() ) );
             }
         } );
-
-    }
-
-    /**
-     * Registers the MainWindow on the event bus. Main Window handles the
-     * following requests:
-     *
-     * @see ShowGroupRequest
-     * @see ShowQueryRequest
-     * @see SaveDockablesPositionsRequest
-     * @see LoadDockablesPositionsRequest
-     * @see RestoreDockablesPositionsRequest
-     *
-     */
-    private void registerOnEventBus() {
-        JpoEventBus.getInstance().register( this );
     }
 
     private void initComponents() {
@@ -262,83 +255,26 @@ public class MainWindow extends JFrame {
     }
 
     /**
-     * This method updates the title of the MainWindow. In most operating
-     * systems this is shown on the top of the window and in the taskbar. Note:
-     * you must be on the EDT when calling this method.
+     * When a UpdateApplicationTitleRequest is seen we will update the title of
+     * the JFrame. If the request is received on the EDT it is executed
+     * immediately else it is packed into a Runnable and
+     * SwingUtilities.invokeLater -ed.
      *
-     * @param newTitle The new title of the Frame
+     * @param request The new Title Request
      */
-    public void updateApplicationTitle( final String newTitle ) {
-        Tools.checkEDT();
-        setTitle( newTitle );
-    }
-
-    /**
-     * This method calls the {@link #updateApplicationTitle} method but can be
-     * called if you don't know whether you are on the EDT or not.
-     *
-     * @param newTitle The new title of the Frame
-     */
-    public void updateApplicationTitleEDT( final String newTitle ) {
+    @Subscribe
+    public void handleUpdateApplicationTitleRequest( final UpdateApplicationTitleRequest request ) {
         if ( SwingUtilities.isEventDispatchThread() ) {
-            updateApplicationTitle( newTitle );
+            setTitle( request.getTitle() );
         } else {
             Runnable r = new Runnable() {
 
                 @Override
                 public void run() {
-                    updateApplicationTitle( newTitle );
+                    setTitle( request.getTitle() );
                 }
             };
             SwingUtilities.invokeLater( r );
-
-        }
-    }
-
-    private class MainAppModelListener
-            implements TreeModelListener {
-
-        @Override
-        public void treeNodesChanged( TreeModelEvent e ) {
-            TreePath tp = e.getTreePath();
-            LOGGER.fine( String.format( "The main app model listener trapped a tree node change event on the tree path: %s", tp.toString() ) );
-            if ( tp.getPathCount() == 1 ) { //if the root node sent the event
-                LOGGER.fine( "Since this is the root node we will update the ApplicationTitle" );
-
-                updateApplicationTitle();
-            }
-        }
-
-        @Override
-        public void treeNodesInserted( TreeModelEvent e ) {
-            // ignore
-        }
-
-        @Override
-        public void treeNodesRemoved( TreeModelEvent e ) {
-            // ignore, the root can't be removed ... Really?
-        }
-
-        @Override
-        public void treeStructureChanged( TreeModelEvent e ) {
-            TreePath tp = e.getTreePath();
-            if ( tp.getPathCount() == 1 ) { //if the root node sent the event
-                updateApplicationTitle();
-            }
-        }
-    }
-
-    /**
-     * Sets the application title to the default title based on the
-     * Resourcebundle string ApplicationTitle and the file name of the loaded
-     * xml file if any.
-     */
-    private void updateApplicationTitle() {
-        final File xmlFile = Settings.getPictureCollection().getXmlFile();
-        if ( xmlFile != null ) {
-            updateApplicationTitleEDT( Settings.jpoResources.getString( "ApplicationTitle" ) + ":  " + xmlFile.toString() );
-        } else {
-            updateApplicationTitleEDT( Settings.jpoResources.getString( "ApplicationTitle" ) );
         }
     }
 

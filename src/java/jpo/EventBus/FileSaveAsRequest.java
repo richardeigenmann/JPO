@@ -4,7 +4,7 @@ package jpo.EventBus;
  * This request indicates that the user wants to save the collection under a new
  * name
  *
- * @author Richard eigenmann
+ * @author Richard Eigenmann
  */
 public class FileSaveAsRequest implements Request {
 

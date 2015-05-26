@@ -4,7 +4,7 @@ package jpo.EventBus;
  * This request indicates that the GUI to remove the old lowres thumbnail files
  * should be shown
  *
- * @author Richard eigenmann
+ * @author Richard Eigenmann
  */
 public class RemoveOldLowresThumbnailsRequest implements Request {
 

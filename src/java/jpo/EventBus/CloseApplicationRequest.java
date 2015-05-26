@@ -7,7 +7,7 @@ package jpo.EventBus;
  * 
  * e.g. JpoEventBus.getInstance().post( new UnsavedUpdatesDialogRequest( new CloseApplicationRequest())  );
  * 
- * @author Richard eigenmann
+ * @author Richard Eigenmann
  */
 public class CloseApplicationRequest implements Request {
 

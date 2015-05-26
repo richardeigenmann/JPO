@@ -3,8 +3,8 @@ package jpo.EventBus;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
 
 /**
- * Request to indicate that the user would like to export the pictures to Picas
- * @author Richard eigenmann
+ * Request to indicate that the user would like to export the pictures to Picasa
+ * @author Richard Eigenmann
  */
 public class ExportGroupToPicasaRequest implements Request {
 

@@ -6,7 +6,7 @@ import jpo.dataModel.SortableDefaultMutableTreeNode;
  * The receiver of this request is supposed to rotate the picture to the 0
  * rotation angle
  *
- * @author Richard eigenmann
+ * @author Richard Eigenmann
  */
 public class SetPictureRotationRequest implements Request {
 

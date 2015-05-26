@@ -7,7 +7,7 @@ import jpo.dataModel.SortableDefaultMutableTreeNode;
  * Request to indicate that the user would like bring up the Consolidate Group
  * dialog
  *
- * @author Richard eigenmann
+ * @author Richard Eigenmann
  */
 public class ConsolidateGroupRequest implements Request {
 
@@ -19,7 +19,8 @@ public class ConsolidateGroupRequest implements Request {
      * Group dialog
      *
      * @param node The node for which the user would like the dialog to be done
-     * @param targetDir the target directory. Set to null if you want the filechooser to pick
+     * @param targetDir the target directory. Set to null if you want the 
+     *  filechooser to pick
      */
     public ConsolidateGroupRequest( SortableDefaultMutableTreeNode node, File targetDir ) {
         this.node = node;

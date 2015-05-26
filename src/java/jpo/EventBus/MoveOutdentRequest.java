@@ -6,7 +6,7 @@ import jpo.dataModel.SortableDefaultMutableTreeNode;
 /**
  * This request indicates that the nodes should be outdented
  *
- * @author Richard eigenmann
+ * @author Richard Eigenmann
  */
 public class MoveOutdentRequest implements Request {
 

@@ -3,9 +3,10 @@ package jpo.EventBus;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
 
 /**
- * Request to copy the pictures of the supplied nodes to a directory to be picked from a Filechooser
+ * Request to copy the pictures of the supplied nodes to a directory to be 
+ * picked from a Filechooser
  *
- * @author Richard eigenmann
+ * @author Richard Eigenmann
  */
 public class CopyToNewLocationRequest implements Request {
 

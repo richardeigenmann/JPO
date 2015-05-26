@@ -6,7 +6,7 @@ import jpo.dataModel.SortableDefaultMutableTreeNode;
 /**
  * Request to copy the pictures of the supplied nodes to the supplied zipfile
  *
- * @author Richard eigenmann
+ * @author Richard Eigenmann
  */
 public class CopyToZipfileRequest implements Request {
 

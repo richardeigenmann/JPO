@@ -3,7 +3,7 @@ package jpo.EventBus;
 /**
  * This request opens the dialog after a file save
  *
- * @author Richard eigenmann
+ * @author Richard Eigenmann
  */
 public class AfterFileSaveRequest implements Request {
 

@@ -10,7 +10,7 @@ import java.io.File;
  * <p>
  * {@code JpoEventBus.getInstance().post( new UnsavedUpdatesDialogRequest( new FileLoadRequest()) ); }
  *
- * @author Richard eigenmann
+ * @author Richard Eigenmann
  */
 public class FileLoadRequest implements Request {
 

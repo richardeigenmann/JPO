@@ -7,7 +7,7 @@ import jpo.dataModel.SortableDefaultMutableTreeNode;
  * This request indicates that the supplied picture nodes should be added
  * to the email selection
  *
- * @author Richard eigenmann
+ * @author Richard Eigenmann
  */
 public class AddPictureNodesToEmailSelectionRequest implements Request {
 
