@@ -69,7 +69,7 @@ public class ExifInfoTest
     public void testExifInfoD100() {
         ExifInfo exifInfo = new ExifInfo( Settings.CLASS_LOADER.getResource( "exif-test-nikon-d100-1.jpg" ) );
         exifInfo.decodeExifTags();
-        assertEquals( "Aperture parsing verification", "F11", exifInfo.aperture );
+        assertEquals( "Aperture parsing verification", "f/11.0", exifInfo.aperture );
         assertEquals( "Camera parsing verification", "NIKON D100", exifInfo.camera );
         assertEquals( "CreateDateTime parsing verification", "2008:11:07 16:23:25", exifInfo.getCreateDateTime() );
         assertEquals( "ExifHeight parsing verification", "233 pixels", exifInfo.exifHeight );
@@ -90,7 +90,7 @@ public class ExifInfoTest
     public void testExifInfoS4() {
         ExifInfo exifInfo = new ExifInfo( Settings.CLASS_LOADER.getResource( "exif-test-samsung-s4.jpg" ) );
         exifInfo.decodeExifTags();
-        assertEquals( "Aperture parsing verification", "F2.2", exifInfo.aperture );
+        assertEquals( "Aperture parsing verification", "f/2.2", exifInfo.aperture );
         assertEquals( "Camera parsing verification", "GT-I9505", exifInfo.camera );
         assertEquals( "CreateDateTime parsing verification", "2013:08:27 23:37:56", exifInfo.getCreateDateTime() );
         assertEquals( "ExifHeight parsing verification", "1836 pixels", exifInfo.exifHeight );
@@ -111,7 +111,7 @@ public class ExifInfoTest
     public void testExifInfoS4Loc() {
         ExifInfo exifInfo = new ExifInfo( Settings.CLASS_LOADER.getResource( "exif-test-samsung-s4-loc.jpg" ) );
         exifInfo.decodeExifTags();
-        assertEquals( "Aperture parsing verification", "F2.2", exifInfo.aperture );
+        assertEquals( "Aperture parsing verification", "f/2.2", exifInfo.aperture );
         assertEquals( "Camera parsing verification", "GT-I9505", exifInfo.camera );
         assertEquals( "CreateDateTime parsing verification", "2014:01:15 12:11:46", exifInfo.getCreateDateTime() );
         assertEquals( "ExifHeight parsing verification", "1836 pixels", exifInfo.exifHeight );
@@ -216,7 +216,7 @@ public class ExifInfoTest
         ExifInfo exifInfo = new ExifInfo( Settings.CLASS_LOADER.getResource( "exif-test-canon-eos-350d.jpg" ) );
         exifInfo.decodeExifTags();
         //System.out.println( exifInfo.getAllTags() );
-        assertEquals( "Aperture parsing verification", "F20", exifInfo.aperture );
+        assertEquals( "Aperture parsing verification", "f/20.0", exifInfo.aperture );
         assertEquals( "ShutterSpeed parsing verification", "1/200 sec", exifInfo.shutterSpeed );
         assertEquals( "Camera parsing verification", "Canon EOS 350D DIGITAL", exifInfo.camera );
         assertEquals( "CreateDateTime parsing verification", "2006:10:06 15:13:54", exifInfo.getCreateDateTime() );
@@ -238,7 +238,7 @@ public class ExifInfoTest
         ExifInfo exifInfo = new ExifInfo( Settings.CLASS_LOADER.getResource( "exif-test-canon-eos-60d.jpg" ) );
         exifInfo.decodeExifTags();
         //System.out.println( exifInfo.getAllTags() );
-        assertEquals( "Aperture parsing verification", "F11.3", exifInfo.aperture );
+        assertEquals( "Aperture parsing verification", "f/11.3", exifInfo.aperture );
         assertEquals( "ShutterSpeed parsing verification", "1/511 sec", exifInfo.shutterSpeed );
         assertEquals( "Camera parsing verification", "Canon EOS 60D", exifInfo.camera );
         assertEquals( "CreateDateTime parsing verification", "2013:05:09 13:55:16", exifInfo.getCreateDateTime() );
@@ -260,7 +260,7 @@ public class ExifInfoTest
         ExifInfo exifInfo = new ExifInfo( Settings.CLASS_LOADER.getResource( "exif-test-sony-cybershot-1.jpg" ) );
         exifInfo.decodeExifTags();
         //System.out.println( exifInfo.getAllTags() );
-        assertEquals( "Aperture parsing verification", "F4", exifInfo.aperture );
+        assertEquals( "Aperture parsing verification", "f/4.0", exifInfo.aperture );
         assertEquals( "ShutterSpeed parsing verification", "1/480 sec", exifInfo.shutterSpeed );
         assertEquals( "Camera parsing verification", "CYBERSHOT", exifInfo.camera );
         assertEquals( "CreateDateTime parsing verification", "2002:02:20 16:17:37", exifInfo.getCreateDateTime() );
@@ -281,7 +281,7 @@ public class ExifInfoTest
         ExifInfo exifInfo = new ExifInfo( Settings.CLASS_LOADER.getResource( "exif-test-sony-d700.jpg" ) );
         exifInfo.decodeExifTags();
         //System.out.println( exifInfo.getAllTags() );
-        assertEquals( "Aperture parsing verification", "F2.4", exifInfo.aperture );
+        assertEquals( "Aperture parsing verification", "f/2.4", exifInfo.aperture );
         assertEquals( "ShutterSpeed parsing verification", "1/32 sec", exifInfo.shutterSpeed );
         assertEquals( "Camera parsing verification", "DSC-D700", exifInfo.camera );
         assertEquals( "CreateDateTime parsing verification", "1998:12:01 14:22:36", exifInfo.getCreateDateTime() );
@@ -302,7 +302,7 @@ public class ExifInfoTest
         ExifInfo exifInfo = new ExifInfo( Settings.CLASS_LOADER.getResource( "exif-test-sony-P200.jpg" ) );
         exifInfo.decodeExifTags();
         //System.out.println( exifInfo.getAllTags() );
-        assertEquals( "Aperture parsing verification", "F5.6", exifInfo.aperture );
+        assertEquals( "Aperture parsing verification", "f/5.6", exifInfo.aperture );
         assertEquals( "ShutterSpeed parsing verification", "1/400 sec", exifInfo.shutterSpeed );
         assertEquals( "Camera parsing verification", "DSC-P200", exifInfo.camera );
         assertEquals( "CreateDateTime parsing verification", "2013:07:04 13:44:46", exifInfo.getCreateDateTime() );

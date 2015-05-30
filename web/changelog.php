@@ -3,6 +3,8 @@
 
             <table class="changelog">
                 <tr><td colspan=2><b>Development Version 0.12</b></td></tr>
+                <tr><td valign="top">31.5.2015</td><td>Improved the build system so that also Windows installer builds are automated</td></tr>
+                <tr><td valign="top">30.5.2015</td><td>Combined all the third party libraries into one single jar for hassle free deployment</td></tr>
                 <tr><td valign="top">27.5.2015</td><td>Made MainWindow more passive as an EventListener</td></tr>
                 <tr><td valign="top">25.5.2015</td><td>Introduced the <a href="http://dock.javaforge.com/">Docking Frames</a> window manager</td></tr>
                 <tr><td valign="top">23.5.2015</td><td>Moved source code from CVS to Git on Sourceforge</td></tr>
@@ -412,6 +414,6 @@
 
 
             <hr>
-            <p>Last update to this page: 11 August 2014<br>
-                Copyright 2003-2014 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
+            <p>Last update to this page: 31 May 2015<br>
+                Copyright 2003-2015 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
     <?php include("page-end.php"); ?>

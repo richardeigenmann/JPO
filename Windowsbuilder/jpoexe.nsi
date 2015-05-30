@@ -10,7 +10,7 @@ SilentInstall silent
 AutoCloseWindow true
 ShowInstDetails nevershow
  
-!define CLASSPATH "commons-compress-1.8.jar;commons-io-2.4.jar;commons-jcs-core-2.0-beta-1.jar;commons-jcs-jcache-2.0-beta-1.jar;commons-jcs-jcache-tck-2.0-beta-1.jar;commons-lang3-3.3.2.jar;commons-logging-1.1.3.jar;commons-net-3.3.jar;concurrent.jar;gdata-core-1.0.jar;gdata-maps-2.0.jar;gdata-media-1.0.jar;gdata-photos-2.0.jar;guava-16.0.jar;javax.mail-1.5.1.jar;jsch-0.1.51.jar;jwizz-0.1.4.jar;jxmapviewer2-2.0.jar;metadata-extractor-2.8.1.jar;miglayout-4.0.jar;mydoggy-api-1.5.0.jar;mydoggy-plaf-1.5.0.jar;mydoggy-res-1.5.0.jar;TableLayout-20050920.jar;TagCloud.jar;xmpcore-5.1.2.jar;jpo-0.12.jar"
+!define CLASSPATH "jpo-0.12.jar"
 !define CLASS "Main"
 ; Careful here: I tried Xmx4000M and it refused to start.
 !define OPTIONS "-Xms80M -Xmx1000M"

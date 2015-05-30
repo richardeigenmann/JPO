@@ -1,31 +1,47 @@
 <?php include("page-start.php"); ?>
-<span class="para-heading" id="windows">Installing on Windows</span>
-<p>For Windows users there is a packaged installer version available. Download it from the 
-    <a href="http://sourceforge.net/projects/j-po/files">SourceForge download area</a>.
-    This version is best suited if you want to run JPO in an offline environment. There is only the one installation file. 
-    You do need to have Java installed on the box before running the installer though.</p>
+<h2>Installing on Windows</h2>
+
+
+<a href="http://sourceforge.net/projects/j-po/files"> 
+    <h2><span class="label label-success">
+            <span class="glyphicon glyphicon-save" aria-hidden="true"></span>
+            SourceForge download area
+        </span>
+    </h2></a>
 
 <hr>
 <span class="para-heading" id="javawebstart">Java Web Start</span>
 
-<p>This version is great if you have Java installed and properly integrated
-    with your browser. You just click on the link and Java Web start fires up
-    and downloads all the pieces. It automatically keeps the application up-to-date
-    when new releases are made.</p>
+<a href="jpo-devel.jnlp">
+    <h2><span class="label label-success">
+            <span class="glyphicon glyphicon-play" aria-hidden="true"></span>
+            Current Version (0.12)
+        </span>
+    </h2>
+</a><br>
+<a href="jpo-stable.jnlp">
+    <h2><span class="label label-default">
+            <span class="glyphicon glyphicon-play" aria-hidden="true"></span>
+            Old Version (0.9)
+        </span>
+    </h2>
+</a>
 
-<p>Click on the link you prefer:<br>
-    <a href="jpo-stable.jnlp">JPO Stable</a><br>
-    <a href="jpo-devel.jnlp">JPO Development</a><br></p>
-    <a href="jpo-0.12.jnlp">JPO Development 0.12 version</a><br></p>
+
+<h2>Scary Warnings</h2>
+<p>I have not figured out how do get a certificate with which to sign
+this Free Open Source Software. Consequently Java, your browser and everyone 
+else feel they are at liberty to pop up increasingly alarmist messages 
+warning against the use of this software. At this point all I can recommend
+is that you click away the warnings and use JPO if you find it useful.</p>
+
+<p>If you have any suggestions on how to improve on this state of affairs,
+please get in touch with me.</p>
 
 <p><strong>Note:</strong> You will see the following warning screen:</p>
 
 <p><img src="jpo_scr_4.jpg" width="493" height="240" border="0"></p>
 
-<p>Please carefully consider the security warning.
-    I think it appears because I am a hobbyist developer and not a large
-    corporation with an information security department that has a budget
-    to go out and buy security certificates.</p>
 
 <p><strong>Potential problem:</strong> Your browser needs to know that it should
     start "Java Web Start" when it downloads a <code>.jnlp</code> extension file (Mimetype 
@@ -64,139 +80,26 @@
 
 
 <hr>
-<span class="para-heading" id="Options">Installation Options</span>
-
-<p>You can run JPO with Java Web Start technology (which I recommend) or you
-    can install the programs locally on your machine. If you want a local installation
-    you can either use the packaged Microsoft Windows version (out of date at the time
-    of writing) or download the jar files from this web site. You can also download the
-    source code and compile your own version.</p>
-
-<p>The Java Web Start option is probably the simplest choice because you can run JPO directly
-    from your web browser by clicking on the "Start now!" link at the top left of this page.
-    Your browser then fire up the Java Web Start program which downloads all the pieces 
-    from the Web and launches JPO. Each time you launch the application Java Web Start
-    checks if I have released a new version and keeps your installation up to date 
-    automatically.</p>
-
-<p>The Microsoft Windows package is a good choice for people who want to run JPO
-    on this operating system. Anyone familiar with installing software on this OS
-    will feel at home with the Installer interface. Unfortunately I have not released an
-    updated package for quite a while. Due to the publicity which such a release attracts
-    I feel a need to fix some more bugs and perform a very thorough test before
-    the next release.</p>
-
-<p>Downloading the jars gives you full control about memory allocations and
-    any tweaks you would like to make on your JVM.</p>
-
-<p>Downloading the source and compiling your own version gives you the ability to
-    change the source code and do whatever you like (provided you stick to the 
-    lenient restrictions of the GPL license).</p>
-
-<hr>
 <span class="para-heading" id="local">Local Installation</span>
-<p>First download the jar files and save them in your program directory:<br>
+<p>First download the jar file and save it in your program directory:<br>
     <a href="http://j-po.sourceforge.net/jpo-0.12.jar">jpo-0.12.jar</a> or <a href="http://j-po.sourceforge.net/jpo-0.12.jar">jpo-0.12.jar</a><br>
-    <a href="http://j-po.sourceforge.net/commons-compress-1.8.jar">commons-compress-1.8.jar</a><br>
-    <a href="http://j-po.sourceforge.net/commons-io-2.4.jar">commons-io-2.4.jar</a><br>    
-    <a href="http://j-po.sourceforge.net/commons-jcs-core-2.0-beta-1.jar">commons-jcs-core-2.0-beta-1.jar</a><br>
-    <a href="http://j-po.sourceforge.net/commons-jcs-jcache-2.0-beta-1.jar">commons-jcs-jcache-2.0-beta-1.jar</a><br>
-    <a href="http://j-po.sourceforge.net/commons-jcs-jcache-tck-2.0-beta-1.jar">commons-jcs-jcache-tck-2.0-beta-1.jar</a><br>
-    <a href="http://j-po.sourceforge.net/commons-lang3-3.3.2.jar">commons-lang3-3.3.2.jar</a><br>
-    <a href="http://j-po.sourceforge.net/commons-logging-1.1.3.jar">commons-logging-1.1.3.jar</a><br>
-    <a href="http://j-po.sourceforge.net/commons-net-3.3.jar">commons-net-3.3.jar</a><br>
-    <a href="http://j-po.sourceforge.net/gdata-core-1.0.jar">gdata-core-1.0.jar</a><br>
-    <a href="http://j-po.sourceforge.net/gdata-maps-2.0.jar">gdata-maps-2.0.jar</a><br>
-    <a href="http://j-po.sourceforge.net/gdata-media-1.0.jar">gdata-media-1.0.jar</a><br>
-    <a href="http://j-po.sourceforge.net/gdata-photos-2.0.jar">gdata-photos-2.0.jar</a><br>
-    <a href="http://j-po.sourceforge.net/guava-16.0.1.jar">guava-16.0.1.jar</a><br>
-    <a href="http://j-po.sourceforge.net/javax.mail-1.5.1.jar">javax.mail-1.5.1.jar</a><br>
-    <a href="http://j-po.sourceforge.net/jsch-0.1.51.jar">jsch-0.1.51.jar</a><br>                
-    <a href="http://j-po.sourceforge.net/jwizz-0.1.4.jar">jwizz-0.1.4.jar</a><br>
-    <a href="http://j-po.sourceforge.net/jxmapviewer2-2.0.jar">jxmapviewer2-2.0.jar</a><br>
-    <a href="http://j-po.sourceforge.net/metadata-extractor-2.8.1.jar">metadata-extractor-2.8.1.jar</a><br>
-    <a href="http://j-po.sourceforge.net/miglayout-4.0.jar">miglayout-4.0.jar</a><br>
-    <a href="http://j-po.sourceforge.net/docking-frames-common.jar">docking-frames-common.jar</a><br>
-    <a href="http://j-po.sourceforge.net/docking-frames-core.jar">docking-frames-core.jar</a><br>
-    <a href="http://j-po.sourceforge.net/TagCloud.jar">TagCloud.jar</a><br>
-    <a href="http://j-po.sourceforge.net/xmpcore-5.1.2.jar">xmpcore-5.1.2.jar</a><br>
 </p>
 
-<p><strong>Note:</strong> Make sure they retain the <code>.jar</code> file extension. I've seen
-    one XP box save the files as a <code>.zip</code>. With such a wrong extension it will not work!
+<p><strong>Note:</strong> Make sure they retain the <code>.jar</code> file extension. 
+    One Microsoft XP computer I saw saved the file with a <code>.zip</code> extension.
+    Java then was not able to read the code.
 
 
 <p> Then you need to create a script or batch file to run everything. On Linux the script would look like this:</p>
-<p><font color="darkRed"><code>/PATH/TO/YOUR/JAVA/bin/java -Xms80M -Xmx2000M -classpath 
-        /PATH/TO/YOUR/JPO/JARS/commons-compress-1.8.jar
-        :/PATH/TO/YOUR/JPO/JARS/commons-io-2.4.jar
-        :/PATH/TO/YOUR/JPO/JARS/commons-jcs-core-2.0-beta-1.jar
-        :/PATH/TO/YOUR/JPO/JARS/commons-jcs-jcache-2.0-beta-1.jar
-        :/PATH/TO/YOUR/JPO/JARS/commons-jcs-jcache-tck-2.0-beta-1.jar
-        :/PATH/TO/YOUR/JPO/JARS/commons-lang3-3.3.2.jar
-        :/PATH/TO/YOUR/JPO/JARS/commons-logging-1.1.3.jar
-        :/PATH/TO/YOUR/JPO/JARS/commons-net-3.3.jar
-        :/PATH/TO/YOUR/JPO/JARS/concurrent.jar
-        :/PATH/TO/YOUR/JPO/JARS/gdata-core-1.0.jar
-        :/PATH/TO/YOUR/JPO/JARS/gdata-maps-2.0.jar
-        :/PATH/TO/YOUR/JPO/JARS/gdata-media-1.0.jar
-        :/PATH/TO/YOUR/JPO/JARS/gdata-photos-2.0.jar
-        :/PATH/TO/YOUR/JPO/JARS/guava-16.0.1.jar
-        :/PATH/TO/YOUR/JPO/JARS/javax.mail-1.5.1.jar
-        :/PATH/TO/YOUR/JPO/JARS/jsch-0.1.51.jar
-        :/PATH/TO/YOUR/JPO/JARS/jwizz-0.1.4.jar
-        :/PATH/TO/YOUR/JPO/JARS/jxmapviewer2-2.0.jar
-        :/PATH/TO/YOUR/JPO/JARS/metadata-extractor-2.8.1.jar
-        :/PATH/TO/YOUR/JPO/JARS/miglayout-4.0.jar
-        :/PATH/TO/YOUR/JPO/JARS/docking-frames-common.jar
-        :/PATH/TO/YOUR/JPO/JARS/docking-frames-core.jar
-        :/PATH/TO/YOUR/JPO/JARS/TagCloud.jar
-        :/PATH/TO/YOUR/JPO/JARS/xmpcore-5.1.2.jar
-        :/PATH/TO/YOUR/JPO/JARS/jpo-0.12.jar Main</code></font></p>
+<p><font color="darkRed"><code>/PATH/TO/YOUR/JAVA/bin/java -Xms80M -Xmx2000M -classpath /PATH/TO/YOUR/JPO/JAR/jpo-0.12.jar Main</code></font></p>
 
-<p><strong>Note:</strong> Put everything on one long line. The space characters do
-    matter; don't put spaces between the jars separated by colons(:) in the classpath!</p>
-
-<p><strong>Note:</strong> On <font color="red">Windows</font> machines the classpath must be
-    separated by semicolons (;) on Linux machines by colons (:)</p>
-
+<p><strong>Note:</strong> Put everything on one long line.</p>
 
 <p>On a particular Windows XP machine I installed Jpo into c:\Program Files\Jpo. The resulting Batch
     file looks like this: (you can download it here: <a href="Jpo.bat">Jpo.bat</a></p>
 
-<p><code>c:\windows\system32\java -Xms80M -Xmx2000M -classpath ^
-        "c:\Program Files\Jpo\commons-compress-1.8.jar";^
-        "c:\Program Files\Jpo\commons-io-2.4.jar";^
-        "c:\Program Files\Jpo\commons-jcs-core-2.0-beta-1.jar";^
-        "c:\Program Files\Jpo\commons-jcs-jcache-2.0-beta-1.jar";^
-        "c:\Program Files\Jpo\commons-jcs-jcache-tck-2.0-beta-1.jar";^
-        "c:\Program Files\Jpo\commons-lang3-3.3.2.jar";^
-        "c:\Program Files\Jpo\commons-logging-1.1.3.jar";^
-        "c:\Program Files\Jpo\commons-net-3.3.jar";^
-        "c:\Program Files\Jpo\concurrent.jar";^
-        "c:\Program Files\Jpo\gdata-core-1.0.jar";^
-        "c:\Program Files\Jpo\gdata-maps-2.0.jar";^
-        "c:\Program Files\Jpo\gdata-media-1.0.jar";^
-        "c:\Program Files\Jpo\gdata-photos-2.0.jar";^
-        "c:\Program Files\Jpo\guava-16.0.1.jar";^
-        "c:\Program Files\Jpo\jsch-0.1.51.jar";^
-        "c:\Program Files\Jpo\jwizz-0.1.4.jar";^
-        "c:\Program Files\Jpo\jxmapviewer2-2.0.jar";^
-        "c:\Program Files\Jpo\metadata-extractor-2.8.1.jar";^
-        "c:\Program Files\Jpo\miglayout-4.0.jar";^
-        "c:\Program Files\Jpo\docking-frames-common.jar";^
-        "c:\Program Files\Jpo\docking-frames-core.jar";^
-        "c:\Program Files\Jpo\TagCloud.jar";^
-        "c:\Program Files\Jpo\xmpcore-5.1.2.jar";^
-        "c:\Program Files\Jpo\jpo-0.12.jar" Main</code></p>
+<p><code>c:\windows\system32\java -Xms80M -Xmx2000M -jar "c:\Program Files\Jpo\jpo-0.12.jar"</code></p>
 
-
-<p>Actually I think I have managed to improve on this on 5.2.2007: I learned that I can
-    set a classpath in the manifest of the main jar. If all the jars are in the same directory
-    all that is needed to run the program is then a &quot;simple&quot; command like this:</p>
-
-<p><font color="darkRed"><code>/PATH/TO/YOUR/JAVA/bin/java -Xms80M -Xmx2000M
-        -jar /PATH/TO/YOUR/JPO/JARS/jpo-0.12.jar </code></font></p>
 
 <hr>
 <span class="para-heading" id="problems">Potential problems:</span>
@@ -233,6 +136,6 @@
 
 
 <hr>
-<p>Last update to this page: 25 May 2015<br>
+<p>Last update to this page: 30 May 2015<br>
     Copyright 2003-2015 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
 <?php include("page-end.php"); ?>

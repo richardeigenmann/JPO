@@ -202,8 +202,8 @@ public class MainWindow extends JFrame {
         grid.add( 0, 1, 0.2, 0.2, tagDockable );
         grid.add( 0, 1, 0.2, 0.2, statsDockable );
         grid.add( 1, 0, .5, 2, thumbnailsDockable );
-        grid.add( 2, 0, 0.3, .5, properties );
-        grid.add( 2, 1, 0.3, .5, map );
+        //grid.add( 2, 0, 0.3, .5, properties );
+        //grid.add( 2, 1, 0.3, .5, map );
 
         final CContentArea content = control.getContentArea();
         content.deploy( grid );
@@ -212,8 +212,8 @@ public class MainWindow extends JFrame {
         tree.setVisible( true );
         searches.setVisible( true );
         tagDockable.setVisible( true );
-        properties.setVisible( true );
-        map.setVisible( true );
+        //properties.setVisible( true );
+        //map.setVisible( true );
 
         getContentPane().add( control.getContentArea() );
 
