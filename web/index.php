@@ -1,6 +1,91 @@
 <?php include("page-start.php"); ?>
 
-<img src="jpo_scr_3.png" width=700 height=580 alt="Screenshot of JPO"><br>
+<!--<img src="jpo_scr_3.png" width=700 height=580 alt="Screenshot of JPO"><br>-->
+
+
+<div id="myCarousel" class="carousel slide" data-ride="carousel">
+    <!-- Indicators -->
+    <ol class="carousel-indicators">
+        <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+        <li data-target="#myCarousel" data-slide-to="1"></li>
+        <li data-target="#myCarousel" data-slide-to="2"></li>
+        <li data-target="#myCarousel" data-slide-to="3"></li>
+        <li data-target="#myCarousel" data-slide-to="4"></li>
+        <li data-target="#myCarousel" data-slide-to="5"></li>
+        <li data-target="#myCarousel" data-slide-to="6"></li>
+    </ol>
+
+    <!-- Wrapper for slides -->
+    <div class="carousel-inner" role="listbox">
+        <div class="item active">
+            <img src="jpo_scr_3.png" width=700 height=580 alt="Screenshot of JPO">
+            <div class="carousel-caption">
+                <h3>Organize your Pictures</h3>
+            </div>
+        </div>
+
+        <div class="item">
+            <img src="jpo_scr_3.png" width=700 height=580 alt="Screenshot of JPO">
+            <div class="carousel-caption">
+                <h3>Present your Pictures</h3>
+            </div>
+        </div>
+
+        <div class="item">
+            <img src="jpo_scr_6_foss.png" width=700 height=580 alt="JPO is Free Open Source Software">
+            <div class="carousel-caption">
+                <h3>Free Open Source Software</h3>
+                <p><a href="about.php#License">GPL License</a></p>
+            </div>
+        </div>
+
+        <div class="item">
+            <img src="jpo_scr_3.png" width=700 height=580 alt="Screenshot of JPO">
+            <div class="carousel-caption">
+                <h3>Share your Pictures</h3>
+                <p>Use Email, Generate a Website or upload them to the Google Photos Cloud</p>
+            </div>
+        </div>
+
+        <div class="item">
+            <img src="jpo_scr_3.png" width=700 height=580 alt="Screenshot of JPO">
+            <div class="carousel-caption">
+                <h3>Cross Platform</h3>
+                <p>Runs on any Java enabled computer</p>
+            </div>
+        </div>
+
+        <div class="item">
+            <img src="jpo_scr_3.png" width=700 height=580 alt="Screenshot of JPO">
+            <div class="carousel-caption">
+                <h3>See where the Picture was taken</h3>
+                <p>Inspect Exif Data and view on Map</p>
+            </div>
+        </div>
+
+        <div class="item">
+            <img src="jpo_scr_3.png" width=700 height=580 alt="Screenshot of JPO">
+            <div class="carousel-caption">
+                <h3>Non destructive</h3>
+                <p>Never changes your image files</p>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Left and right controls -->
+    <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
+        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+        <span class="sr-only">Previous</span>
+    </a>
+    <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
+        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+        <span class="sr-only">Next</span>
+    </a>
+</div>
+
+
+
 
 <span class="para-heading" id="Introduction">Introduction</span><br>
 <p>JPO is a program that helps you organise your digital pictures by putting them in
@@ -100,6 +185,6 @@
 <p>Why don't you let the author know? Send him an encouraging email at <a href="mailto:richard.eigenmann@gmail.com">richard.eigenmann@gmail.com</a></p>
 <hr>
 
-<p>Last update to this page: 23 Mar 2014<br>
-    Copyright 2003-2014 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
+<p>Last update to this page: 31 May 2015<br>
+    Copyright 2003-2015 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
 <?php include("page-end.php"); ?>
