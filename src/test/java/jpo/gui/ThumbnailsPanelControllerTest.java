@@ -25,6 +25,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import javax.swing.SwingUtilities;
+import jpo.dataModel.Tools;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.fail;
 import org.junit.Test;
@@ -38,8 +39,9 @@ public class ThumbnailsPanelControllerTest  {
     /**
      * Test of nodeLayoutChanged getMouseRectangle, of class ThumbnailsPanelController.
      */
-//    @Test
+    @Test
     public void testGetMouseRectangle() {
+        Tools.warnOnEDT();
         Runnable r = new Runnable() {
 
             @Override
@@ -51,16 +53,19 @@ public class ThumbnailsPanelControllerTest  {
                     mousePressedPoint.setAccessible( true );
                     Point topLeft = new Point( 50, 200 );
                     mousePressedPoint.set( thumbnailsPanelController, topLeft );
+                    System.out.println( "Checkpoint 1" );
 
                     Method getMouseRectangle = thumbnailsPanelController.getClass().getDeclaredMethod( "getMouseRectangle", Point.class );
                     getMouseRectangle.setAccessible( true );
                     Point bottomRight = new Point( 70, 230 );
                     Rectangle r1 = (Rectangle) getMouseRectangle.invoke( thumbnailsPanelController, bottomRight );
+                    System.out.println( "Checkpoint 2" );
 
                     assertEquals( "Checking top left x", topLeft.x, r1.x );
                     assertEquals( "Checking top left y", topLeft.y, r1.y );
                     assertEquals( "Checking width", bottomRight.x - topLeft.x, r1.width );
                     assertEquals( "Checking height", bottomRight.y - topLeft.y, r1.height );
+                    System.out.println( "Checkpoint 3" );
 
                     Point higherLeftPoint = new Point( 20, 30 );
                     Rectangle r2 = (Rectangle) getMouseRectangle.invoke( thumbnailsPanelController, higherLeftPoint );
