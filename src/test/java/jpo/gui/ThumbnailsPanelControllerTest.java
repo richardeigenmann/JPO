@@ -27,17 +27,18 @@ import java.lang.reflect.Method;
 import javax.swing.SwingUtilities;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.fail;
-import junit.framework.TestCase;
+import org.junit.Test;
 
 /**
  *
  * @author Richard Eigenmann
  */
-public class ThumbnailsPanelControllerTest extends TestCase {
+public class ThumbnailsPanelControllerTest  {
 
     /**
      * Test of nodeLayoutChanged getMouseRectangle, of class ThumbnailsPanelController.
      */
+    @Test
     public void testGetMouseRectangle() {
         Runnable r = new Runnable() {
 
