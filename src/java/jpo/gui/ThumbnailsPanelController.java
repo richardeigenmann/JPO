@@ -191,31 +191,18 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
         overlayPanel.setOpaque( false );
 
         layeredPane.add( overlayPanel, new Integer( 2 ) );
-        System.out.println( "checkpoint 22" );
 
         thumbnailJScrollPane.setViewportView( layeredPane );
-        System.out.println( "checkpoint 23" );
         thumbnailsPane.setBackground( Settings.JPO_BACKGROUND_COLOR );
-                System.out.println( "checkpoint 24" );
-
-
         thumbnailJScrollPane.setMinimumSize( Settings.THUMBNAIL_JSCROLLPANE_MINIMUM_SIZE );
-                System.out.println( "checkpoint 25" );
-
         thumbnailJScrollPane.setPreferredSize( Settings.thumbnailJScrollPanePreferredSize );
-                System.out.println( "checkpoint 26" );
-
         thumbnailJScrollPane.setWheelScrollingEnabled( true );
-                System.out.println( "checkpoint 27" );
-
         thumbnailJScrollPane.setFocusable( true );
-                System.out.println( "checkpoint 28" );
 
 
         //  set the amount by which the panel scrolls down when the user clicks the
         //  little down or up arrow in the scrollbar
         thumbnailJScrollPane.getVerticalScrollBar().setUnitIncrement( 80 );
-                System.out.println( "checkpoint 29" );
 
 
         thumbnailJScrollPane.setColumnHeaderView( titleJPanel );
@@ -556,11 +543,17 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
      */
     private void initThumbnailsArray() {
         Tools.checkEDT();
+        System.out.println( "after EDT" );
         thumbnailControllers = new ThumbnailController[Settings.maxThumbnails];
+        System.out.println( "check 1" );
         thumbnailDescriptionJPanels = new ThumbnailDescriptionJPanel[Settings.maxThumbnails];
+        System.out.println( "check 2" );
         thumbnailsPane.removeAll();
+        System.out.println( "check 3" );
         initialisedMaxThumbnails = Settings.maxThumbnails;
+        System.out.println( "check 4" );
         for ( int i = 0; i < Settings.maxThumbnails; i++ ) {
+            System.out.println( "loop "+ i );
             thumbnailControllers[i] = new ThumbnailController( Settings.thumbnailSize );
             thumbnailDescriptionJPanels[i] = new ThumbnailDescriptionJPanel();
             thumbnailsPane.add( thumbnailControllers[i].getThumbnail() );
