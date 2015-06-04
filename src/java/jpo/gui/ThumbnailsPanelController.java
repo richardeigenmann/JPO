@@ -151,7 +151,6 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
         titleJPanel = new ThumbnailPanelTitle();
         thumbnailsPane = new JPanel();
         thumbnailJScrollPane = new JScrollPane();
-        System.out.println( "scrollpane ok" );
 
         initComponents();
         System.out.println( "init ok" );
@@ -165,12 +164,9 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
      * Initialises the components for the ThumbnailController Pane
      */
     private void initComponents() {
-        System.out.println( "inside initComponents" );
         final ThumbnailLayoutManager thumbnailLayoutManager = new ThumbnailLayoutManager( thumbnailJScrollPane.getViewport() );
-        System.out.println( "next set layout" );
         thumbnailsPane.setLayout( thumbnailLayoutManager );
 
-        System.out.println( "layered pane" );
         final JLayeredPane layeredPane = new JLayeredPane();
 
         layeredPane.setLayout( new OverlayLayout( layeredPane ) );
@@ -198,18 +194,33 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
         System.out.println( "checkpoint 22" );
 
         thumbnailJScrollPane.setViewportView( layeredPane );
+        System.out.println( "checkpoint 23" );
         thumbnailsPane.setBackground( Settings.JPO_BACKGROUND_COLOR );
+                System.out.println( "checkpoint 24" );
+
 
         thumbnailJScrollPane.setMinimumSize( Settings.THUMBNAIL_JSCROLLPANE_MINIMUM_SIZE );
+                System.out.println( "checkpoint 25" );
+
         thumbnailJScrollPane.setPreferredSize( Settings.thumbnailJScrollPanePreferredSize );
+                System.out.println( "checkpoint 26" );
+
         thumbnailJScrollPane.setWheelScrollingEnabled( true );
+                System.out.println( "checkpoint 27" );
+
         thumbnailJScrollPane.setFocusable( true );
+                System.out.println( "checkpoint 28" );
+
 
         //  set the amount by which the panel scrolls down when the user clicks the
         //  little down or up arrow in the scrollbar
         thumbnailJScrollPane.getVerticalScrollBar().setUnitIncrement( 80 );
+                System.out.println( "checkpoint 29" );
+
 
         thumbnailJScrollPane.setColumnHeaderView( titleJPanel );
+                System.out.println( "checkpoint 30" );
+
 
         initThumbnailsArray();
         System.out.println( "checpoint33" );
