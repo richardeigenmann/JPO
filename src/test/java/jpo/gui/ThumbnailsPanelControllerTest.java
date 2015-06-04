@@ -38,7 +38,7 @@ public class ThumbnailsPanelControllerTest  {
     /**
      * Test of nodeLayoutChanged getMouseRectangle, of class ThumbnailsPanelController.
      */
-    @Test
+//    @Test
     public void testGetMouseRectangle() {
         Runnable r = new Runnable() {
 
