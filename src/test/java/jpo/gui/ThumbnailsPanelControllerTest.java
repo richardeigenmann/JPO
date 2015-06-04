@@ -45,7 +45,6 @@ public class ThumbnailsPanelControllerTest  {
 
             @Override
             public void run() {
-                System.out.println( "Inside the testGetMouseRectangle Runnable." );
                 System.out.println( "Fetching a ThumbnailsPanelController.." );
                 ThumbnailsPanelController thumbnailsPanelController = new ThumbnailsPanelController();
                 System.out.println( "got one" );

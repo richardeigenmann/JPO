@@ -147,13 +147,9 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
      * objects and hooks itself up so that thumbnails can be shown
      */
     public ThumbnailsPanelController() {
-        System.out.println( "Constructor for ThumbnailsPanelController" );
         Tools.checkEDT();
-        System.out.println( "edt ok" );
         titleJPanel = new ThumbnailPanelTitle();
-        System.out.println( "title panel ok" );
         thumbnailsPane = new JPanel();
-        System.out.println( "JPanel OK" );
         thumbnailJScrollPane = new JScrollPane();
         System.out.println( "scrollpane ok" );
 
@@ -169,10 +165,12 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
      * Initialises the components for the ThumbnailController Pane
      */
     private void initComponents() {
-
+        System.out.println( "inside initComponents" );
         final ThumbnailLayoutManager thumbnailLayoutManager = new ThumbnailLayoutManager( thumbnailJScrollPane.getViewport() );
+        System.out.println( "next set layout" );
         thumbnailsPane.setLayout( thumbnailLayoutManager );
 
+        System.out.println( "layered pane" );
         final JLayeredPane layeredPane = new JLayeredPane();
 
         layeredPane.setLayout( new OverlayLayout( layeredPane ) );
@@ -197,6 +195,7 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
         overlayPanel.setOpaque( false );
 
         layeredPane.add( overlayPanel, new Integer( 2 ) );
+        System.out.println( "checkpoint 22" );
 
         thumbnailJScrollPane.setViewportView( layeredPane );
         thumbnailsPane.setBackground( Settings.JPO_BACKGROUND_COLOR );
@@ -213,6 +212,7 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
         thumbnailJScrollPane.setColumnHeaderView( titleJPanel );
 
         initThumbnailsArray();
+        System.out.println( "checpoint33" );
 
         // Wire up the events
         titleJPanel.firstThumbnailsPageButton.addActionListener( new ActionListener() {

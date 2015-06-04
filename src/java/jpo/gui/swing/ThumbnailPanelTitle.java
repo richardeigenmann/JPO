@@ -44,9 +44,7 @@ public class ThumbnailPanelTitle
      */
     public ThumbnailPanelTitle() {
         super();
-        System.out.println( "super done fine init next" );
         initComponents();
-        System.out.println( "init done fine" );
     }
 
     /**
