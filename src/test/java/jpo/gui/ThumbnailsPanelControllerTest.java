@@ -41,17 +41,22 @@ public class ThumbnailsPanelControllerTest  {
      */
     @Test
     public void testGetMouseRectangle() {
-        Tools.warnOnEDT();
         Runnable r = new Runnable() {
 
             @Override
             public void run() {
-                System.out.println( "Inside the testGetMouseRectangle Runnable" );
+                System.out.println( "Inside the testGetMouseRectangle Runnable." );
+                System.out.println( "Fetching a ThumbnailsPanelController.." );
                 ThumbnailsPanelController thumbnailsPanelController = new ThumbnailsPanelController();
+                System.out.println( "got one" );
                 try {
+                    System.out.println( "fetching the mousePressedPoint" );
                     Field mousePressedPoint = thumbnailsPanelController.getClass().getDeclaredField( "mousePressedPoint" );
+                    System.out.println( "got it. Now making it accessible" );
                     mousePressedPoint.setAccessible( true );
+                    System.out.println( "done that. Now creating some coordinates" );
                     Point topLeft = new Point( 50, 200 );
+                    System.out.println( "done that. Now setting the coordinates" );
                     mousePressedPoint.set( thumbnailsPanelController, topLeft );
                     System.out.println( "Checkpoint 1" );
 
