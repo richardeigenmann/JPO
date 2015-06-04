@@ -43,6 +43,7 @@ public class ThumbnailsPanelControllerTest extends TestCase {
 
             @Override
             public void run() {
+                System.out.println( "Inside the testGetMouseRectangle Runnable" );
                 ThumbnailsPanelController thumbnailsPanelController = new ThumbnailsPanelController();
                 try {
                     Field mousePressedPoint = thumbnailsPanelController.getClass().getDeclaredField( "mousePressedPoint" );

@@ -203,7 +203,6 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
         //  little down or up arrow in the scrollbar
         thumbnailJScrollPane.getVerticalScrollBar().setUnitIncrement( 80 );
 
-        //titleJPanel = new ThumbnailPanelTitle();
         thumbnailJScrollPane.setColumnHeaderView( titleJPanel );
 
         initThumbnailsArray();
@@ -375,7 +374,8 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
     private void registerListeners() {
         JpoEventBus.getInstance().register( this );
 
-        new DropTarget( thumbnailsPane, new JpoTransferrableDropTargetListener( this ) );
+        //Netbeans says this is never used, is there a side effect?
+//        new DropTarget( thumbnailsPane, new JpoTransferrableDropTargetListener( this ) );
 
         thumbnailJScrollPane.addComponentListener( new ComponentAdapter() {
 
