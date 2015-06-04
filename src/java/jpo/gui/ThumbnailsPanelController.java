@@ -151,11 +151,16 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
         Tools.checkEDT();
         System.out.println( "edt ok" );
         titleJPanel = new ThumbnailPanelTitle();
+        System.out.println( "title panel ok" );
         thumbnailsPane = new JPanel();
+        System.out.println( "JPanel OK" );
         thumbnailJScrollPane = new JScrollPane();
+        System.out.println( "scrollpane ok" );
 
         initComponents();
+        System.out.println( "init ok" );
         registerListeners();
+        System.out.println( "listeners ok" );
     }
 
     private static final Color DIMMED_COLOR = new Color( 45, 45, 45, 180 );
