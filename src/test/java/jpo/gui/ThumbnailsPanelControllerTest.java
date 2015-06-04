@@ -80,7 +80,10 @@ public class ThumbnailsPanelControllerTest  {
                     assertEquals( "Checking width", topLeft.x - higherLeftPoint.x, r2.width );
                     assertEquals( "Checking height", topLeft.y - higherLeftPoint.y, r2.height );
                 } catch ( NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException | NoSuchMethodException | InvocationTargetException ex ) {
+                    System.out.println( "We hit the catch" );
+                    System.out.println( ex.getMessage() );
                     fail( ex.getMessage() );
+                    
                 }
             }
         };
