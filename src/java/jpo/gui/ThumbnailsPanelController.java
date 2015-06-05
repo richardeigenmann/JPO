@@ -550,6 +550,7 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
         System.out.println( "mxThumbnails" + Settings.maxThumbnails );
         for ( int i = 0; i < Settings.maxThumbnails; i++ ) {
             System.out.println( "loop "+ i );
+            System.out.println( "Settings.thumbnailSize "  + Settings.thumbnailSize);
             thumbnailControllers[i] = new ThumbnailController( Settings.thumbnailSize );
         System.out.println( "check 1" );
             thumbnailDescriptionJPanels[i] = new ThumbnailDescriptionJPanel();
