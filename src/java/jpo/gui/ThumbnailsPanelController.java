@@ -543,21 +543,21 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
      */
     private void initThumbnailsArray() {
         Tools.checkEDT();
-        System.out.println( "after EDT" );
         thumbnailControllers = new ThumbnailController[Settings.maxThumbnails];
-        System.out.println( "check 1" );
         thumbnailDescriptionJPanels = new ThumbnailDescriptionJPanel[Settings.maxThumbnails];
-        System.out.println( "check 2" );
         thumbnailsPane.removeAll();
-        System.out.println( "check 3" );
         initialisedMaxThumbnails = Settings.maxThumbnails;
-        System.out.println( "check 4" );
+        System.out.println( "mxThumbnails" + Settings.maxThumbnails );
         for ( int i = 0; i < Settings.maxThumbnails; i++ ) {
             System.out.println( "loop "+ i );
             thumbnailControllers[i] = new ThumbnailController( Settings.thumbnailSize );
+        System.out.println( "check 1" );
             thumbnailDescriptionJPanels[i] = new ThumbnailDescriptionJPanel();
+        System.out.println( "check 2" );
             thumbnailsPane.add( thumbnailControllers[i].getThumbnail() );
+        System.out.println( "check 3" );
             thumbnailsPane.add( thumbnailDescriptionJPanels[i] );
+        System.out.println( "check 4" );
         }
     }
 
