@@ -90,30 +90,11 @@ public class ThumbnailController implements JpoDropTargetDropEventHandler {
         myThumbnail = new Thumbnail();
         myThumbnail.setThumbnailSize( thumbnailSize );
         myThumbnail.addMouseListener( new ThumbnailMouseAdapter() );
-        System.out.println( "setting up DND" );
         // set up drag & drop
-        try {
             new DropTarget( myThumbnail, new JpoTransferrableDropTargetListener( this ) );
-        } catch (HeadlessException ex) {
-            System.out.println( "Caught a headless Exception!" );
-            System.out.println( "Caught a headless Exception!" );
-            System.out.println( "Caught a headless Exception!" );
-            System.out.println( "Caught a headless Exception!" );
-            System.out.println( "Caught a headless Exception!" );
-            System.out.println( "Caught a headless Exception!" );
-            System.out.println( "Caught a headless Exception!" );
-            System.out.println( "Caught a headless Exception!" );
-            System.out.println( "Caught a headless Exception!" );
-            System.out.println( "Caught a headless Exception!" );
-            System.out.println( "Caught a headless Exception!" );
-            Thread.dumpStack();
-        }
-        System.out.println( "point 1" );
         DragSource dragSource = DragSource.getDefaultDragSource();
-        System.out.println( "point 2" );
         dragSource.createDefaultDragGestureRecognizer(
                 myThumbnail, DnDConstants.ACTION_COPY_OR_MOVE, new ThumbnailDragGestureListener() );
-        System.out.println( "end constructor" );
     }
 
     /**

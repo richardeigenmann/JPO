@@ -3,8 +3,9 @@ package jpo.EventBus;
 import com.google.common.eventbus.Subscribe;
 import jpo.dataModel.GroupInfo;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
-import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
 import org.junit.Test;
+
 
 /**
  * Test for Group Selection Events

@@ -19,7 +19,11 @@
     <property name="version" value="0.12"/>
     
     <property name="libs.dir" value="libs"/>
-    <property name="junit" value="${libs.dir}/junit-4.12.jar"/>
+    <property name="compile-libs.dir" value="compile-libs"/>
+    <property name="junit" value="${compile-libs.dir}/junit-4.12.jar"/>
+    <property name="hamcrest" value="${compile-libs.dir}/hamcrest-core-1.3.jar"/>
+    <property name="ant-junit4" value="${compile-libs.dir}/ant-junit4.jar"/>
+
     <property name="src.dir" value="src"/>
     <property name="src.java.dir" value="${src.dir}/java"/>
     <property name="src.cache.dir" value="${src.dir}/java/jpo/cache"/>
@@ -163,11 +167,17 @@
             failureproperty="test.failed"
             haltonfailure="yes" 
             fork="yes"
+            includeantruntime="yes"
             showoutput="yes">
             <formatter type="plain" usefile="false"/>
             <classpath>
                 <pathelement location="${unit.test.classes.dir}" />
                 <pathelement location="${junit}" />
+                <pathelement location="${hamcrest}" />
+                <pathelement location="${ant-junit4}" />
+                <!--<pathelement location="/usr/share/java/ant/ant-junit4.jar" />-->
+                <!--<pathelement location="/usr/share/java/ant-launcher.jar" />-->
+<!--                <pathelement location="/usr/share/java/ant.jar" />-->
             </classpath>
             <classpath refid="classpath"/>
             

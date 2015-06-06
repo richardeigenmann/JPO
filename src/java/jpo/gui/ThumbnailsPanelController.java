@@ -206,11 +206,7 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
 
 
         thumbnailJScrollPane.setColumnHeaderView( titleJPanel );
-                System.out.println( "checkpoint 30" );
-
-
         initThumbnailsArray();
-        System.out.println( "checpoint33" );
 
         // Wire up the events
         titleJPanel.firstThumbnailsPageButton.addActionListener( new ActionListener() {

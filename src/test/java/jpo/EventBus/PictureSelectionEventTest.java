@@ -3,20 +3,19 @@ package jpo.EventBus;
 import com.google.common.eventbus.Subscribe;
 import jpo.dataModel.PictureInfo;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
-import junit.framework.TestCase;
+import static junit.framework.TestCase.assertEquals;
+import org.junit.Test;
 
 /**
  * Picture Selection Event Tests
  * @author Richard Eigenmann
  */
-public class PictureSelectionEventTest extends TestCase {
+public class PictureSelectionEventTest {
 
     /**
-     * Constructor for the PictureSelectionEvent tests
-     * @param testName 
+     * Constructor for the PictureSelectionEvent tests 
      */
-    public PictureSelectionEventTest( String testName ) {
-        super( testName );
+    public PictureSelectionEventTest() {
         jpoEventBus = JpoEventBus.getInstance();
     }
 
@@ -30,6 +29,7 @@ public class PictureSelectionEventTest extends TestCase {
     /**
      * sends an event and hopes to receive it back
      */
+    @Test
     public void testReceivingEvent() {
         EventBusSubscriber myEventBusSubscriber = new EventBusSubscriber();
         jpoEventBus.register( myEventBusSubscriber );
@@ -45,7 +45,7 @@ public class PictureSelectionEventTest extends TestCase {
     }
 
     /**
-     *Here we are supposed to recieve the event
+     *Here we are supposed to receive the event
      */
     private PictureSelectionEvent responseEvent;
 
