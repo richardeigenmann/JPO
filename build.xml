@@ -7,8 +7,8 @@
     <property name="build.dir" value="build"/>
     <property name="build.base.classes.dir" value="${build.dir}/classes"/>
     <property name="unit.test.classes.dir" value="${build.dir}/unittestclasses"/>
-<!--    <property name="junit" value="/usr/share/java/junit.jar"/>-->
-<!--    <property name="jsch.dir" value="/usr/share/java/jsch.jar"/>-->
+    <!--    <property name="junit" value="/usr/share/java/junit.jar"/>-->
+    <!--    <property name="jsch.dir" value="/usr/share/java/jsch.jar"/>-->
     <property name="build.images.dir" value="${build.base.classes.dir}/${app.main.package}/images"/>
     <property name="build.dtd.dir" value="${build.base.classes.dir}/${app.main.package}"/>
     <property name="build.cache.dir" value="${build.base.classes.dir}/"/>
@@ -156,7 +156,12 @@
         </copy>
     </target>
     
-    
+
+    <!-- To run the tests in headless mode on a headed environment from 
+         the command line:
+         unset DISPLAY
+         ant -Djava.awt.headless=true test
+    -->
 
     <target name="test" depends="compile-test" description="Runs the unit tests">
         <!-- <splash imageurl="http://www.bar-solutions.com/software/ant_splash.jpg"
@@ -175,9 +180,6 @@
                 <pathelement location="${junit}" />
                 <pathelement location="${hamcrest}" />
                 <pathelement location="${ant-junit4}" />
-                <!--<pathelement location="/usr/share/java/ant/ant-junit4.jar" />-->
-                <!--<pathelement location="/usr/share/java/ant-launcher.jar" />-->
-<!--                <pathelement location="/usr/share/java/ant.jar" />-->
             </classpath>
             <classpath refid="classpath"/>
             
@@ -450,7 +452,7 @@
     
     
     
-<!--    <target name="JSCH" description="Checks if JSch is available">
+    <!--    <target name="JSCH" description="Checks if JSch is available">
         <available property="jsch.present" classname="com.jcraft.jsch.JSch" classpath="${junit}"  />
         <echo message="Testing if JSch is present: ${jsch.present}" />
     </target>-->
