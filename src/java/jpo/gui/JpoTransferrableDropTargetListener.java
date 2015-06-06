@@ -27,7 +27,9 @@ public class JpoTransferrableDropTargetListener implements DropTargetListener {
      * @param jpoDropTargetDropEventHandler Event handler
      */
     public JpoTransferrableDropTargetListener( JpoDropTargetDropEventHandler jpoDropTargetDropEventHandler ) {
+        System.out.println( "constructor JpoTransferrableDropTargetListener" );
         this.jpoDropTargetDropEventHandler = jpoDropTargetDropEventHandler;
+        System.out.println( "end constructor JpoTransferrableDropTargetListener" );
     }
     
 
