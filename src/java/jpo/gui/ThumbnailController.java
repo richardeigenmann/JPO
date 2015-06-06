@@ -2,6 +2,7 @@ package jpo.gui;
 
 import jpo.gui.swing.PicturePopupMenu;
 import java.awt.Dimension;
+import java.awt.HeadlessException;
 import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DragGestureEvent;
 import java.awt.dnd.DragGestureListener;
@@ -91,7 +92,22 @@ public class ThumbnailController implements JpoDropTargetDropEventHandler {
         myThumbnail.addMouseListener( new ThumbnailMouseAdapter() );
         System.out.println( "setting up DND" );
         // set up drag & drop
-        new DropTarget( myThumbnail, new JpoTransferrableDropTargetListener( this ) );
+        try {
+            new DropTarget( myThumbnail, new JpoTransferrableDropTargetListener( this ) );
+        } catch (HeadlessException ex) {
+            System.out.println( "Caught a headless Exception!" );
+            System.out.println( "Caught a headless Exception!" );
+            System.out.println( "Caught a headless Exception!" );
+            System.out.println( "Caught a headless Exception!" );
+            System.out.println( "Caught a headless Exception!" );
+            System.out.println( "Caught a headless Exception!" );
+            System.out.println( "Caught a headless Exception!" );
+            System.out.println( "Caught a headless Exception!" );
+            System.out.println( "Caught a headless Exception!" );
+            System.out.println( "Caught a headless Exception!" );
+            System.out.println( "Caught a headless Exception!" );
+            Thread.dumpStack();
+        }
         System.out.println( "point 1" );
         DragSource dragSource = DragSource.getDefaultDragSource();
         System.out.println( "point 2" );
