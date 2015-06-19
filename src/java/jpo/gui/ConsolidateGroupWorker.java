@@ -16,7 +16,7 @@ import jpo.dataModel.Tools;
 /*
  ConsolidateGroup.java:  class that consolidated the pictures of a group in one directory
 
- Copyright (C) 2002 - 2014  Richard Eigenmann.
+ Copyright (C) 2002 - 2015  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -33,12 +33,12 @@ import jpo.dataModel.Tools;
 /**
  * This class moves all pictures of a group node to a target directory.
  */
-public class ConsolidateGroup extends SwingWorker<Void, String> {
+public class ConsolidateGroupWorker extends SwingWorker<Void, String> {
 
     /**
      * Defines a logger for this class
      */
-    private static final Logger LOGGER = Logger.getLogger( ConsolidateGroup.class.getName() );
+    private static final Logger LOGGER = Logger.getLogger(ConsolidateGroupWorker.class.getName() );
 
     /**
      * the directory where the pictures are to be moved to
@@ -63,7 +63,7 @@ public class ConsolidateGroup extends SwingWorker<Void, String> {
      * moveLowres flag is true
      * @param progGui A Progress Gui
      */
-    public ConsolidateGroup( File targetDirectoryHighres,
+    public ConsolidateGroupWorker( File targetDirectoryHighres,
             SortableDefaultMutableTreeNode startNode, boolean recurseGroups,
             ProgressGui progGui ) {
         this.targetDirectoryHighres = targetDirectoryHighres;
