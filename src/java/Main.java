@@ -77,7 +77,7 @@ public class Main {
         testClass( "org.apache.commons.lang3.StringUtils", "commons-lang3-3.3.2.jar", good, missing );
         testClass( "org.apache.commons.logging.Log", "commons-logging-1.1.3.jar", good, missing );
         testClass( "org.apache.commons.net.SocketClient", "commons-net-3.3.jar", good, missing );
-        testClass( "bibliothek.gui.dock.common.CContrl", "docking-frames-common.jar", good, missing );
+        testClass( "bibliothek.gui.dock.common.CControl", "docking-frames-common.jar", good, missing );
         testClass( "bibliothek.gui.Dockable", "docking-frames-core.jar", good, missing );
         testClass( "com.google.gdata.util.AuthenticationException", "gdata-core-1.0.jar", good, missing );
         testClass( "com.google.gdata.client.maps.MapsService", "gdata-maps-2.0.jar", good, missing );
