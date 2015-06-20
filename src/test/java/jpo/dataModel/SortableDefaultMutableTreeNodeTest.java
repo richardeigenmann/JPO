@@ -8,23 +8,15 @@ import static junit.framework.Assert.assertNotSame;
 import static junit.framework.Assert.assertNull;
 import static junit.framework.Assert.assertSame;
 import static junit.framework.Assert.assertTrue;
-import junit.framework.TestCase;
-
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Tests for the SortableDefaultMutableTreeNode tests
+ *
  * @author Richard Eigenmann
  */
-public class SortableDefaultMutableTreeNodeTest
-        extends TestCase {
-
-    /**
-     * Constructor for the SortableDefaultMutableTreeNode tests
-     * @param testName 
-     */
-    public SortableDefaultMutableTreeNodeTest( String testName ) {
-        super( testName );
-    }
+public class SortableDefaultMutableTreeNodeTest {
 
     SortableDefaultMutableTreeNode rootNode;
 
@@ -70,10 +62,11 @@ public class SortableDefaultMutableTreeNodeTest
 
     /**
      * Set up for each test
+     *
      * @throws Exception
      */
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
 
         rootNode = new SortableDefaultMutableTreeNode();
         group1 = new SortableDefaultMutableTreeNode( gr1 );
@@ -117,6 +110,7 @@ public class SortableDefaultMutableTreeNodeTest
     /**
      * Tests that the root node gets created
      */
+    @Test
     public void testConstructor() {
         assertNotNull( "Checking that rootNode was constructed properly", rootNode );
     }
@@ -124,6 +118,7 @@ public class SortableDefaultMutableTreeNodeTest
     /**
      * tests that we can get to a previous picture
      */
+    @Test
     public void testGetPreviousPicture() {
         assertSame( "Checking the GetPreviousPicture", picture3, picture4.getPreviousPicture() );
     }
@@ -131,13 +126,15 @@ public class SortableDefaultMutableTreeNodeTest
     /**
      * tests that we can go to a next picture across a group boundary
      */
+    @Test
     public void testGetPreviousPictureAcrossGroupBoundary() {
         assertSame( "Checking the GetPreviousPicture across a group boundary", picture2, picture3.getPreviousPicture() );
     }
 
     /**
-     *test that we can't go back further than the beginning
+     * test that we can't go back further than the beginning
      */
+    @Test
     public void testGetPreviousPictureAtBeginning() {
         assertSame( "Checking the GetPreviousPicture at the beginning", null, picture1.getPreviousPicture() );
     }
@@ -145,6 +142,7 @@ public class SortableDefaultMutableTreeNodeTest
     /**
      * assets that group nodes can have children and pictures can't
      */
+    @Test
     public void testGetAllowChildren() {
         assertTrue( "Checking that a GroupInfo node allows children", group1.getAllowsChildren() );
         assertFalse( "Checking that a PictureInfo node does not allow children", picture1.getAllowsChildren() );
@@ -153,6 +151,7 @@ public class SortableDefaultMutableTreeNodeTest
     /**
      * test for moving a node onto another
      */
+    @Test
     public void testMoveToNode() {
         assertTrue( "Before moving, picture4 is owned by Group2", picture4.getParent().equals( group2 ) );
         assertTrue( "Move should work", picture4.moveToLastChild( group1 ) );
@@ -172,6 +171,7 @@ public class SortableDefaultMutableTreeNodeTest
     /**
      * test for moving a node up
      */
+    @Test
     public void testMoveBeforeError1() {
         assertNull( "The parent of the root node is null before a move", rootNode.getParent() );
         assertFalse( "Move should fail", rootNode.moveBefore( group1 ) );
@@ -181,6 +181,7 @@ public class SortableDefaultMutableTreeNodeTest
     /**
      * test for moving a node up
      */
+    @Test
     public void testMoveBeforeError2() {
         assertFalse( "Move should fail", group1.moveBefore( rootNode ) );
         assertEquals( "The parent of group1 is still the root node because the move before the root node was not done", rootNode, group1.getParent() );
@@ -189,6 +190,7 @@ public class SortableDefaultMutableTreeNodeTest
     /**
      * test for moving a node onto it's parent
      */
+    @Test
     public void testMoveBeforeNoParentGroup() {
         SortableDefaultMutableTreeNode noParentGroup = new SortableDefaultMutableTreeNode();
         assertTrue( "Move should succeed", noParentGroup.moveBefore( picture4 ) );
@@ -198,6 +200,7 @@ public class SortableDefaultMutableTreeNodeTest
     /**
      * test for moving a node before a group
      */
+    @Test
     public void testMoveBeforeMoveGroup() {
         assertTrue( "Before moving, picture4 is owned by Group2", picture4.getParent().equals( group2 ) );
         assertTrue( "Move should work", picture4.moveBefore( picture2 ) );
@@ -208,6 +211,7 @@ public class SortableDefaultMutableTreeNodeTest
     /**
      * test for moving a node up
      */
+    @Test
     public void testMoveBefore2() {
         assertTrue( "Before moving, picture4 is owned by Group2", picture4.getParent().equals( group2 ) );
         assertTrue( "Before moving, picture3 is owned by Group2", picture3.getParent().equals( group2 ) );
@@ -222,6 +226,7 @@ public class SortableDefaultMutableTreeNodeTest
     /**
      * test for moving a node up
      */
+    @Test
     public void testMoveBeforeMoveUp() {
         assertTrue( "Before moving, picture4 is owned by Group2", picture4.getParent().equals( group2 ) );
         assertTrue( "Before moving, picture3 is owned by Group2", picture3.getParent().equals( group2 ) );
@@ -236,6 +241,7 @@ public class SortableDefaultMutableTreeNodeTest
     /**
      * test for moving a node down
      */
+    @Test
     public void testMoveBeforeMoveDown() {
         assertEquals( "Before moving, picture1 should be at index 0 of Group1", 0, group1.getIndex( picture1 ) );
         assertTrue( "Move should work", picture4.moveBefore( picture2 ) );
@@ -251,6 +257,7 @@ public class SortableDefaultMutableTreeNodeTest
     /**
      * test for moving a node onto an index position
      */
+    @Test
     public void testMoveToIndex() {
         assertEquals( "Before moving, picture1 should be at index 0 of Group1", 0, group1.getIndex( picture1 ) );
         assertEquals( "Before moving, picture2 should be at index 1 of Group1", 1, group1.getIndex( picture2 ) );
@@ -278,6 +285,7 @@ public class SortableDefaultMutableTreeNodeTest
     /**
      * test moving to an invalid index
      */
+    @Test
     public void testMoveToIndexErrors1() {
         assertFalse( "Move should fail", group2.moveToIndex( group2, 0 ) );
     }
@@ -295,17 +303,19 @@ public class SortableDefaultMutableTreeNodeTest
     /**
      * test the cloning of a picture
      */
+    @Test
     public void testGetClonePicture() {
         SortableDefaultMutableTreeNode cloneNode = picture1.getClone();
         assertNotSame( "The clone must be a new Object", picture1, cloneNode );
         assertNotSame( "The user object must be a new Object", picture1.getUserObject(), cloneNode.getUserObject() );
         assertNull( "The clone has no parent", cloneNode.getParent() );
-        assertEquals( "The clone node has the same highres picture as the original", pi1.getHighresLocation(), ( (PictureInfo) cloneNode.getUserObject() ).getHighresLocation() );
+        assertEquals( "The clone node has the same highres picture as the original", pi1.getHighresLocation(), ( ( PictureInfo ) cloneNode.getUserObject() ).getHighresLocation() );
     }
 
     /**
      * test the cloning of a group
      */
+    @Test
     public void testGetCloneGroup() {
         SortableDefaultMutableTreeNode cloneNode = group2.getClone();
         assertNotSame( "The clone must be a new Object", group2, cloneNode );
@@ -318,6 +328,7 @@ public class SortableDefaultMutableTreeNodeTest
     /**
      * test that we end up with the correct child nodes
      */
+    @Test
     public void testgetChildPictureNodes() {
         List<SortableDefaultMutableTreeNode> allPicturesFromRoot = rootNode.getChildPictureNodes( true );
         assertEquals( "There should be 5 pictures in the result set from root, recursive", 5, allPicturesFromRoot.size() );
@@ -329,6 +340,7 @@ public class SortableDefaultMutableTreeNodeTest
     /**
      * Tests the hasChildPictureNodes method
      */
+    @Test
     public void testHasChildPictureNodes() {
         assertTrue( "The root node of the test tree should report it has pictures", rootNode.hasChildPictureNodes() );
         assertTrue( "The group1 node of the test tree should report it has pictures", group1.hasChildPictureNodes() );

@@ -1,7 +1,7 @@
 package jpo.dataModel;
 
-import static junit.framework.Assert.assertEquals;
-import junit.framework.TestCase;
+import static junit.framework.TestCase.assertEquals;
+import org.junit.Test;
 
 /*
  ExifInfoTest.java: This class interacts with Drew Noake's library and extracts the Exif information
@@ -26,17 +26,8 @@ import junit.framework.TestCase;
  *
  * @author Richard Eigenmann
  */
-public class ExifInfoTest
-        extends TestCase {
+public class ExifInfoTest {
 
-    /**
-     * Constructor
-     *
-     * @param testName test name
-     */
-    public ExifInfoTest( String testName ) {
-        super( testName );
-    }
 
     /**
      * A handy reference to 0 in the form of a double
@@ -46,6 +37,7 @@ public class ExifInfoTest
     /**
      * That the Exif reader gracefully handles a null URL
      */
+    @Test
     public void testExifInfoNull() {
         ExifInfo exifInfo = new ExifInfo( null );
         exifInfo.decodeExifTags();
@@ -66,6 +58,7 @@ public class ExifInfoTest
     /**
      * Test that we get the correct data off a Nikon D100 image
      */
+    @Test
     public void testExifInfoD100() {
         ExifInfo exifInfo = new ExifInfo( Settings.CLASS_LOADER.getResource( "exif-test-nikon-d100-1.jpg" ) );
         exifInfo.decodeExifTags();
@@ -87,6 +80,7 @@ public class ExifInfoTest
      * Test that we get the correct data off a Samsung Galaxy S4 image which
      * doesn't have location info
      */
+    @Test
     public void testExifInfoS4() {
         ExifInfo exifInfo = new ExifInfo( Settings.CLASS_LOADER.getResource( "exif-test-samsung-s4.jpg" ) );
         exifInfo.decodeExifTags();
@@ -108,6 +102,7 @@ public class ExifInfoTest
      * Test that we get the correct data off a Samsung Galaxy S4 image which
      * doesn't have location info
      */
+    @Test
     public void testExifInfoS4Loc() {
         ExifInfo exifInfo = new ExifInfo( Settings.CLASS_LOADER.getResource( "exif-test-samsung-s4-loc.jpg" ) );
         exifInfo.decodeExifTags();
@@ -129,6 +124,7 @@ public class ExifInfoTest
      * Test that we get the correct rotation data off a Samsung Galaxy S4 image
      * which was not rotated
      */
+    @Test
     public void testExifInfoS4Rot0() {
         ExifInfo exifInfo = new ExifInfo( Settings.CLASS_LOADER.getResource( "exif-test-samsung-s4-roation-0.jpg" ) );
         exifInfo.decodeExifTags();
@@ -150,6 +146,7 @@ public class ExifInfoTest
      * Test that we get the correct rotation data off a Samsung Galaxy S4 image
      * which was rotated left
      */
+    @Test
     public void testExifInfoS4RotLeft() {
         ExifInfo exifInfo = new ExifInfo( Settings.CLASS_LOADER.getResource( "exif-test-samsung-s4-roation-left.jpg" ) );
         exifInfo.decodeExifTags();
@@ -171,6 +168,7 @@ public class ExifInfoTest
      * Test that we get the correct rotation data off a Samsung Galaxy S4 image
      * which was rotated left
      */
+    @Test
     public void testExifInfoS4RotRight() {
         ExifInfo exifInfo = new ExifInfo( Settings.CLASS_LOADER.getResource( "exif-test-samsung-s4-roation-right.jpg" ) );
         exifInfo.decodeExifTags();
@@ -192,6 +190,7 @@ public class ExifInfoTest
      * Test that we get the correct rotation data off a Samsung Galaxy S4 image
      * which was rotated upside down
      */
+    @Test
     public void testExifInfoS4RotUpsideDown() {
         ExifInfo exifInfo = new ExifInfo( Settings.CLASS_LOADER.getResource( "exif-test-samsung-s4-upside-down.jpg" ) );
         exifInfo.decodeExifTags();
@@ -212,6 +211,7 @@ public class ExifInfoTest
     /**
      * Tests for images from an Canon Eos 350d
      */
+    @Test
     public void testExifInfoEos350d() {
         ExifInfo exifInfo = new ExifInfo( Settings.CLASS_LOADER.getResource( "exif-test-canon-eos-350d.jpg" ) );
         exifInfo.decodeExifTags();
@@ -234,6 +234,7 @@ public class ExifInfoTest
     /**
      * Tests for images from a Canon Eos 60D
      */
+    @Test
     public void testExifInfoCanonEos60D() {
         ExifInfo exifInfo = new ExifInfo( Settings.CLASS_LOADER.getResource( "exif-test-canon-eos-60d.jpg" ) );
         exifInfo.decodeExifTags();
@@ -256,6 +257,7 @@ public class ExifInfoTest
     /**
      * Tests for images from an Canon Cybershot
      */
+    @Test
     public void testExifInfoCybershot1() {
         ExifInfo exifInfo = new ExifInfo( Settings.CLASS_LOADER.getResource( "exif-test-sony-cybershot-1.jpg" ) );
         exifInfo.decodeExifTags();
@@ -277,6 +279,7 @@ public class ExifInfoTest
     /**
      * Tests for a Sony D700
      */
+    @Test
     public void testExifInfoSonyD700() {
         ExifInfo exifInfo = new ExifInfo( Settings.CLASS_LOADER.getResource( "exif-test-sony-d700.jpg" ) );
         exifInfo.decodeExifTags();
@@ -298,6 +301,7 @@ public class ExifInfoTest
     /**
      * Tests for a Sony P200
      */
+    @Test
     public void testExifInfoSonyP200() {
         ExifInfo exifInfo = new ExifInfo( Settings.CLASS_LOADER.getResource( "exif-test-sony-P200.jpg" ) );
         exifInfo.decodeExifTags();

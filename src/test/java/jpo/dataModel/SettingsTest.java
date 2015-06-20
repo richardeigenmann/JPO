@@ -4,28 +4,20 @@ import java.util.Locale;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
-import junit.framework.TestCase;
-
+import org.junit.Test;
 
 /**
  * Tests for the Settings class
+ *
  * @author Richard Eigenmann
  */
-public class SettingsTest extends TestCase {
-
-    /**
-     * Constructor
-     * @param testName
-     */
-    public SettingsTest( String testName ) {
-        super( testName );
-    }
-
+public class SettingsTest {
 
     /**
      * As soon as a Settings Object exists there should always be a current
      * locale available.
      */
+    @Test
     public void testCurrentLocale() {
         assertNotNull( "Testing that current locale exists", Settings.getCurrentLocale() );
     }
@@ -33,6 +25,7 @@ public class SettingsTest extends TestCase {
     /**
      * Tests setting the locale
      */
+    @Test
     public void testSetLocale() {
         Settings.setLocale( Locale.GERMAN );
         assertEquals( "Testing the locale change to German", Locale.GERMAN, Settings.getCurrentLocale() );
@@ -43,6 +36,7 @@ public class SettingsTest extends TestCase {
     /**
      * test the switching of resource bundles
      */
+    @Test
     public void testSetLocaleResourceBundleEffect() {
         Settings.setLocale( Locale.GERMAN );
         assertEquals( "Testing the ResourceBundle change to German", Locale.GERMAN, Settings.jpoResources.getLocale() );
@@ -53,6 +47,7 @@ public class SettingsTest extends TestCase {
     /**
      * test that different languages are returned after switching the locale
      */
+    @Test
     public void testSetLocaleResourceBundleStrings() {
         Settings.setLocale( Locale.GERMAN );
         assertEquals( "Testing the German string", "Neue Sammlung", Settings.jpoResources.getString( "FileNewJMenuItem" ) );
@@ -64,6 +59,7 @@ public class SettingsTest extends TestCase {
      * Test the saving and reading back of the settings and whether the locale
      * gets messed up along the way
      */
+    @Test
     public void testReadWriteSettingsLocale() {
         // load the settings first or we have unititialised objects which crash the writing
         Settings.loadSettings();
@@ -96,6 +92,7 @@ public class SettingsTest extends TestCase {
     /**
      * Test the saving and reading back of the maxThumbnails setting
      */
+    @Test
     public void testReadWriteMaxThumbnails() {
         int saveMaxThumbnails = Settings.maxThumbnails;
         Settings.maxThumbnails = -1; //a value that it never should have

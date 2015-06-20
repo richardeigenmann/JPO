@@ -7,28 +7,23 @@ import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import junit.framework.TestCase;
+import static junit.framework.TestCase.assertEquals;
+import org.junit.Test;
 
 /**
  * Tests for the Directory Chooser
+ *
  * @author Richard Eigenmann
  */
-public class DirectoryChooserTest extends TestCase {
+public class DirectoryChooserTest {
 
-    /**
-     * Constructor for the tests
-     * @param testName test name
-     */
-    public DirectoryChooserTest( String testName ) {
-        super( testName );
-    }
-    
     private int changesReceived;
     private File result;
 
     /**
      * Test the listener
      */
+    @Test
     public void testListener() {
         final Runnable r = new Runnable() {
 

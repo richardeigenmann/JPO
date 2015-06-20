@@ -4,20 +4,23 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
-import junit.framework.TestCase;
+import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertTrue;
+import org.junit.Test;
 
 /**
  * Tests for the Tools class
+ *
  * @author Richard Eigenmann
  */
-public class ToolsTest extends TestCase {
+public class ToolsTest {
 
     boolean notOnEDT_ErrorThrown;
-
 
     /**
      * Constructor for the Tools Test class
      */
+    @Test
     public void testCheckEDT_notOnEDT() {
         // if not on EDT must throw Error
         notOnEDT_ErrorThrown = false;
@@ -44,10 +47,12 @@ public class ToolsTest extends TestCase {
     }
 
     boolean onEDT_ErrorThrown;
-    
+
     /**
-     * Test that an error is thrown when we are on the EDT and call the checkEDT method
+     * Test that an error is thrown when we are on the EDT and call the checkEDT
+     * method
      */
+    @Test
     public void testCheckEDT_OnEDT() {
         // if on EDT must not throw Error
         onEDT_ErrorThrown = false;
@@ -71,9 +76,10 @@ public class ToolsTest extends TestCase {
 
     }
 
-      /**
+    /**
      * Test of cleanupFilename method, of class HtmlDistiller.
      */
+    @Test
     public void testCleanupFilename() {
         String filename = "directory\\file.xml";  // actually contains directoy\file.xml
         String wanted = "directory_file.xml";  // actually contains directoy\file.xml

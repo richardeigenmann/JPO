@@ -19,8 +19,7 @@ public class ConsolidateGroupRequest implements Request {
      * Group dialog
      *
      * @param node The node for which the user would like the dialog to be done
-     * @param targetDir the target directory. Set to null if you want the 
-     *  filechooser to pick
+     * @param targetDir the target directory. 
      */
     public ConsolidateGroupRequest( SortableDefaultMutableTreeNode node, File targetDir ) {
         this.node = node;

@@ -242,11 +242,6 @@ public class PictureCollection {
      * @param rootNode  The root node
      */
     private void setRootNode( SortableDefaultMutableTreeNode rootNode ) {
-        if ( rootNode != null ) {
-            LOGGER.log( Level.FINE, "setting root node to {0}", rootNode.toString());
-        } else {
-            LOGGER.info( "setting root node to null. Why ?" );
-        }
         this.rootNode = rootNode;
     }
     /**

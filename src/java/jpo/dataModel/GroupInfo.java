@@ -139,14 +139,6 @@ public final class GroupInfo implements Serializable {
         }
         out.newLine();
 
-        /*if ( lowres.length() > 0 ) {
-         if ( rootNode ) {
-         out.write( "collection_icon=\"" );
-         } else {
-         out.write( "group_icon=\"" );
-         }
-         out.write( Tools.escapeXML( lowres ) + "\"" );
-         }*/
         out.write( ">" );
         out.newLine();
     }

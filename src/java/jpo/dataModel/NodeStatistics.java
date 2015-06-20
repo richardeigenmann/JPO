@@ -2,7 +2,6 @@ package jpo.dataModel;
 
 import java.io.File;
 import java.util.Enumeration;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
@@ -47,16 +46,11 @@ public class NodeStatistics {
      * @param nodeToAnalyse The node for which to perform the analysis
      */
     public NodeStatistics( DefaultMutableTreeNode nodeToAnalyse ) {
-        if ( nodeToAnalyse != null ) {
-            LOGGER.log( Level.FINE, "new NodeStatistics on node: {0}", nodeToAnalyse.toString());
-        } else {
-            LOGGER.fine( "new NodeStatistics on null node" );
-        }
         setNode( nodeToAnalyse );
     }
 
     /**
-     * Sets the node to analysed
+     * Sets the node to be analysed
      *
      * @param nodeToAnalyse the nodes
      */
@@ -256,9 +250,6 @@ public class NodeStatistics {
      */
     private static long sizeOfPicturesLong( DefaultMutableTreeNode startNode ) {
         Tools.warnOnEDT();
-        if ( startNode == null ) {
-            return 0;
-        }
 
         long size = 0;
         File testfile;

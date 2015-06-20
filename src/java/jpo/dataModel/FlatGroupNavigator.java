@@ -6,7 +6,8 @@ import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreePath;
 
 /*
- FlatGroupNavigator.java:  an implementation of the NodeNavigator for browsing all the pictures of a group sequentially.
+ FlatGroupNavigator.java:  an implementation of the NodeNavigator for 
+browsing all the pictures of a group sequentially.
 
  Copyright (C) 2006-2014 Richard Eigenmann, Zürich, Switzerland
  This program is free software; you can redistribute it and/or
@@ -23,9 +24,7 @@ import javax.swing.tree.TreePath;
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 /**
- * This class implements the Node Navigator Interface so that all the
- * potentially nested child pictures of the specified group are browsed
- * sequentially.
+ * Converts a tree of notes into a flat list of pictures
  */
 public class FlatGroupNavigator
         extends ListNavigator {
@@ -68,13 +67,12 @@ public class FlatGroupNavigator
     public void getRid() {
         //LOGGER.info( "Deregistering the Navigator from the data model notifications." );
         Settings.getPictureCollection().getTreeModel().removeTreeModelListener( myTreeModelListener );
-        groupNode = null;
         super.getRid();
     }
     /**
      * A reference to the group for which this FlatGroupNavigator was created.
      */
-    private SortableDefaultMutableTreeNode groupNode;
+    private final SortableDefaultMutableTreeNode groupNode;
 
     /**
      * returns the title of the node

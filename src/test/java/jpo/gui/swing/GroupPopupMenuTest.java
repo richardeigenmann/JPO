@@ -7,29 +7,16 @@ import javax.swing.JMenuItem;
 import javax.swing.SwingUtilities;
 import jpo.dataModel.GroupInfo;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
-import junit.framework.TestCase;
+import static junit.framework.TestCase.assertEquals;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Tests for the GroupPopupMenu Class
  *
  * @author Richard Eigenmann
  */
-public class GroupPopupMenuTest extends TestCase {
-
-    /**
-     * Constructor for the tests.
-     * 
-     * Note these tests are burdened with reflection to get at the inner workings
-     * of the popup menu. Should I open up the fields in the popup menu class?
-     * I think not because other classes don't need to see into the inner workings
-     * of the popup menu. With the exception of this one that has to make sure 
-     * the details of the class are working properly.
-     *
-     * @param testName test name
-     */
-    public GroupPopupMenuTest( String testName ) {
-        super( testName );
-    }
+public class GroupPopupMenuTest {
 
     protected GroupInfo myGroupInfo = new GroupInfo( "My Group" );
     protected SortableDefaultMutableTreeNode myNode = new SortableDefaultMutableTreeNode( myGroupInfo );
@@ -58,31 +45,31 @@ public class GroupPopupMenuTest extends TestCase {
      *
      * @throws Exception
      */
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         myGroupPopupMenu = new GroupPopupMenu( myNode );
 
         Runnable r = new Runnable() {
 
             @Override
             public void run() {
-                showGroup = (JMenuItem) myGroupPopupMenu.getComponent( 0 );
-                showPictures = (JMenuItem) myGroupPopupMenu.getComponent( 1 );
-                find = (JMenuItem) myGroupPopupMenu.getComponent( 2 );
-                categories = (JMenuItem) myGroupPopupMenu.getComponent( 4 );
-                refreshIcon = (JMenuItem) myGroupPopupMenu.getComponent( 5 );
-                editAsTable = (JMenuItem) myGroupPopupMenu.getComponent( 7 );
-                add = (JMenuItem) myGroupPopupMenu.getComponent( 9 );
-                move = (JMenuItem) myGroupPopupMenu.getComponent( 10 );
-                removeNode = (JMenuItem) myGroupPopupMenu.getComponent( 11 );
-                consolidate = (JMenuItem) myGroupPopupMenu.getComponent( 13 );
-                sortBy = (JMenuItem) myGroupPopupMenu.getComponent( 15 );
-                selectAllForEmailing = (JMenuItem) myGroupPopupMenu.getComponent( 17 );
-                generateWebsite = (JMenuItem) myGroupPopupMenu.getComponent( 18 );
-                exportToCollection = (JMenuItem) myGroupPopupMenu.getComponent( 19 );
-                exportToFlatFile = (JMenuItem) myGroupPopupMenu.getComponent( 20 );
-                exportToPicasa = (JMenuItem) myGroupPopupMenu.getComponent( 21 );
-                properties = (JMenuItem) myGroupPopupMenu.getComponent( 23 );
+                showGroup = ( JMenuItem ) myGroupPopupMenu.getComponent( 0 );
+                showPictures = ( JMenuItem ) myGroupPopupMenu.getComponent( 1 );
+                find = ( JMenuItem ) myGroupPopupMenu.getComponent( 2 );
+                categories = ( JMenuItem ) myGroupPopupMenu.getComponent( 4 );
+                refreshIcon = ( JMenuItem ) myGroupPopupMenu.getComponent( 5 );
+                editAsTable = ( JMenuItem ) myGroupPopupMenu.getComponent( 7 );
+                add = ( JMenuItem ) myGroupPopupMenu.getComponent( 9 );
+                move = ( JMenuItem ) myGroupPopupMenu.getComponent( 10 );
+                removeNode = ( JMenuItem ) myGroupPopupMenu.getComponent( 11 );
+                consolidate = ( JMenuItem ) myGroupPopupMenu.getComponent( 13 );
+                sortBy = ( JMenuItem ) myGroupPopupMenu.getComponent( 15 );
+                selectAllForEmailing = ( JMenuItem ) myGroupPopupMenu.getComponent( 17 );
+                generateWebsite = ( JMenuItem ) myGroupPopupMenu.getComponent( 18 );
+                exportToCollection = ( JMenuItem ) myGroupPopupMenu.getComponent( 19 );
+                exportToFlatFile = ( JMenuItem ) myGroupPopupMenu.getComponent( 20 );
+                exportToPicasa = ( JMenuItem ) myGroupPopupMenu.getComponent( 21 );
+                properties = ( JMenuItem ) myGroupPopupMenu.getComponent( 23 );
             }
         };
         SwingUtilities.invokeAndWait( r );
@@ -92,13 +79,14 @@ public class GroupPopupMenuTest extends TestCase {
     /**
      * Test that out Group Node was created for the correct node.
      */
+    @Test
     public void testRememberingPopupNode() {
         try {
             Field popupNodeField;
             popupNodeField = GroupPopupMenu.class.getDeclaredField( "popupNode" );
             popupNodeField.setAccessible( true );
-            SortableDefaultMutableTreeNode verifyNode = (SortableDefaultMutableTreeNode) popupNodeField.get( myGroupPopupMenu );
-            GroupInfo verifyGroupInfo = (GroupInfo) verifyNode.getUserObject();
+            SortableDefaultMutableTreeNode verifyNode = ( SortableDefaultMutableTreeNode ) popupNodeField.get( myGroupPopupMenu );
+            GroupInfo verifyGroupInfo = ( GroupInfo ) verifyNode.getUserObject();
             assertEquals( myGroupInfo, verifyGroupInfo );
         } catch ( NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException ex ) {
             Logger.getLogger( GroupPopupMenuTest.class.getName() ).log( Level.SEVERE, null, ex );
@@ -109,6 +97,7 @@ public class GroupPopupMenuTest extends TestCase {
     /**
      * Get the children
      */
+    @Test
     public void testGetChildren() {
         assertEquals( "Show Group", showGroup.getText() );
         assertEquals( "Show Pictures", showPictures.getText() );

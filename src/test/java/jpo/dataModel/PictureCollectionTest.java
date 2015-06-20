@@ -5,24 +5,21 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
-import junit.framework.TestCase;
+import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertFalse;
+import static junit.framework.TestCase.assertNotNull;
+import static junit.framework.TestCase.assertNull;
+import static junit.framework.TestCase.assertTrue;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * tests for the Picture Collection
  *
  * @author Richard Eigenmann
  */
-public class PictureCollectionTest
-        extends TestCase {
+public class PictureCollectionTest {
 
-    /**
-     * Tests for the picture collection
-     *
-     * @param testName the test name
-     */
-    public PictureCollectionTest( String testName ) {
-        super( testName );
-    }
     /**
      * Defines a logger for this class
      */
@@ -57,8 +54,8 @@ public class PictureCollectionTest
      *
      * @throws Exception can throw an Exception
      */
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         pictureCollection = new PictureCollection();
         pictureCollection.getRootNode().add( group1 );
         pictureCollection.getRootNode().add( group2 );
@@ -77,6 +74,7 @@ public class PictureCollectionTest
     /**
      * Test the find parents group method
      */
+    @Test
     public void testFindParentGroups() {
         assertNotNull( "Test that something is returned when looking for parent groups", pictureCollection.findParentGroups( picture1 ) );
     }
@@ -84,6 +82,7 @@ public class PictureCollectionTest
     /**
      * Test the find parents group method
      */
+    @Test
     public void testFindParentGroups1() {
         assertNull( "Test that it returns null if the node is not a PictureInfo node", pictureCollection.findParentGroups( group1 ) );
     }
@@ -91,6 +90,7 @@ public class PictureCollectionTest
     /**
      * Test the find parents group method
      */
+    @Test
     public void testFindParentGroups2() {
         //test that the parent group is one of the returned groups
         SortableDefaultMutableTreeNode[] sdmtns = pictureCollection.findParentGroups( picture1 );
@@ -104,6 +104,7 @@ public class PictureCollectionTest
     /**
      * Test the find parents group method
      */
+    @Test
     public void testFindParentGroups3() {
         //test that the 4 groups which refer to the same picture are returned
         SortableDefaultMutableTreeNode[] sdmtns = pictureCollection.findParentGroups( picture1 );
@@ -113,6 +114,7 @@ public class PictureCollectionTest
     /**
      * Test remembering the xml file
      */
+    @Test
     public void testSetXmlFile() {
         File f = new File( "dir/test.xml" );
         pictureCollection.setXmlFile( f );
@@ -128,6 +130,7 @@ public class PictureCollectionTest
      * I had a concurrent modification problem on "clear selections" so here are
      * a few tests to verify the selection thing works.
      */
+    @Test
     public void testSelections() {
         assertEquals( "Testing that the selection array is empty before we start", 0, pictureCollection.getSelectedNodes().length );
         pictureCollection.addToSelectedNodes( group1 );
@@ -159,6 +162,7 @@ public class PictureCollectionTest
      * I had a concurrent modification problem on "clear selections" so here are
      * a few tests to verify the selection thing works.
      */
+    @Test
     public void testMailSelections() {
         assertEquals( "Testing that the mail selection array is empty before we start", 0, pictureCollection.getMailSelectedNodes().size() );
         pictureCollection.addToMailSelection( group1 );
@@ -192,6 +196,7 @@ public class PictureCollectionTest
      * Since I had a concurrent modification problem on the clear selections
      * here are a few tests to verify the selection thing works.
      */
+    @Test
     public void testAddToMailSelection() {
         assertEquals( "Testing that the mail selection array is empty before we start", 0, pictureCollection.getMailSelectedNodes().size() );
         pictureCollection.addToMailSelection( picture1 );
@@ -206,13 +211,13 @@ public class PictureCollectionTest
 
         @Override
         public void pictureInfoChangeEvent( PictureInfoChangeEvent e ) {
-            if ( e.getWasSelected() ) {
+            if (e.getWasSelected()) {
                 selectedCount++;
-            } else if ( e.getWasUnselected() ) {
+            } else if (e.getWasUnselected()) {
                 unselectedCount++;
-            } else if ( e.getWasMailSelected() ) {
+            } else if (e.getWasMailSelected()) {
                 mailSelectedCount++;
-            } else if ( e.getWasMailUnselected() ) {
+            } else if (e.getWasMailUnselected()) {
                 mailUnselectedCount++;
             }
         }
@@ -225,6 +230,7 @@ public class PictureCollectionTest
     /**
      * Test for the Select notification
      */
+    @Test
     public void testSelectNotification() {
         pi1.addPictureInfoChangeListener( listener );
         selectedCount = 0;
@@ -260,6 +266,7 @@ public class PictureCollectionTest
     /**
      * test the clearMailSelection method
      */
+    @Test
     public void testClearMailSelection() {
         pi1.addPictureInfoChangeListener( listener );
         mailSelectedCount = 0;
@@ -275,6 +282,7 @@ public class PictureCollectionTest
     /**
      * test the mail selection method
      */
+    @Test
     public void testMailSelectNotification() {
         pi1.addPictureInfoChangeListener( listener );
         mailSelectedCount = 0;
@@ -318,6 +326,7 @@ public class PictureCollectionTest
      * In this test we want to see whether a change to an attribute in the
      * picture results in a treeModel change event being fired
      */
+    @Test
     public void testChangeNotification() {
         nodeschanged = 0;
         nodesinserted = 0;

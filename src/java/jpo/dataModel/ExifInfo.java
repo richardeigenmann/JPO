@@ -135,10 +135,6 @@ public class ExifInfo {
      * This method decodes the Exif tags and stores the data
      */
     public void decodeExifTags() {
-        if ( pictureUrl == null ) {
-            return;
-        }
-
         try {
             InputStream highresStream = pictureUrl.openStream();
             Metadata metadata = ImageMetadataReader.readMetadata( new BufferedInputStream( highresStream ) );

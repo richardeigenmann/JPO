@@ -47,27 +47,20 @@ public class ThumbnailsPanelControllerTest {
             public void run() {
                 try {
                     ThumbnailsPanelController thumbnailsPanelController = new ThumbnailsPanelController();
-                    System.out.println( "fetching the mousePressedPoint" );
                     Field mousePressedPoint = thumbnailsPanelController.getClass().getDeclaredField( "mousePressedPoint" );
-                    System.out.println( "got it. Now making it accessible" );
                     mousePressedPoint.setAccessible( true );
-                    System.out.println( "done that. Now creating some coordinates" );
                     Point topLeft = new Point( 50, 200 );
-                    System.out.println( "done that. Now setting the coordinates" );
                     mousePressedPoint.set( thumbnailsPanelController, topLeft );
-                    System.out.println( "Checkpoint 1" );
 
                     Method getMouseRectangle = thumbnailsPanelController.getClass().getDeclaredMethod( "getMouseRectangle", Point.class );
                     getMouseRectangle.setAccessible( true );
                     Point bottomRight = new Point( 70, 230 );
                     Rectangle r1 = (Rectangle) getMouseRectangle.invoke( thumbnailsPanelController, bottomRight );
-                    System.out.println( "Checkpoint 2" );
 
                     assertEquals( "Checking top left x", topLeft.x, r1.x );
                     assertEquals( "Checking top left y", topLeft.y, r1.y );
                     assertEquals( "Checking width", bottomRight.x - topLeft.x, r1.width );
                     assertEquals( "Checking height", bottomRight.y - topLeft.y, r1.height );
-                    System.out.println( "Checkpoint 3" );
 
                     Point higherLeftPoint = new Point( 20, 30 );
                     Rectangle r2 = (Rectangle) getMouseRectangle.invoke( thumbnailsPanelController, higherLeftPoint );
@@ -77,7 +70,6 @@ public class ThumbnailsPanelControllerTest {
                     assertEquals( "Checking width", topLeft.x - higherLeftPoint.x, r2.width );
                     assertEquals( "Checking height", topLeft.y - higherLeftPoint.y, r2.height );
                 } catch ( NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException | NoSuchMethodException | InvocationTargetException ex ) {
-                    System.out.println( "We hit the catch" );
                     System.out.println( ex.getMessage() );
                     fail( ex.getMessage() );
                 } catch ( HeadlessException ex ) {

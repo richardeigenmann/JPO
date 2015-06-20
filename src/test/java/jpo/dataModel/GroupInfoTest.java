@@ -1,27 +1,20 @@
 package jpo.dataModel;
 
-import junit.framework.TestCase;
+import static junit.framework.TestCase.assertEquals;
+import org.junit.Test;
 
 /**
  * Tests for Groupinfo class
  * @author Richard Eigenmann
  */
-public class GroupInfoTest
-        extends TestCase {
+public class GroupInfoTest {
 
     
-    /**
-     * Tests for GroupInfo class
-     * @param testName test name
-     */
-    public GroupInfoTest( String testName ) {
-        super( testName );
-    }
-
 
     /**
      * Test of toString method, of class GroupInfo.
      */
+    @Test
     public void testToString() {
         GroupInfo gi = new GroupInfo( "Test" );
         assertEquals( "To String should give back what whent in", "Test", gi.toString() );
@@ -31,6 +24,7 @@ public class GroupInfoTest
     /**
      * Test of getGroupName method, of class GroupInfo.
      */
+    @Test
     public void testGetGroupName() {
         GroupInfo gi = new GroupInfo( "Test" );
         gi.setGroupName( "Tarrantino" );
@@ -56,6 +50,7 @@ public class GroupInfoTest
     /**
      * Tests the change listener
      */
+    @Test
     public void testGroupInfoChangeListener() {
         eventsReceived = 0;
         GroupInfo gi = new GroupInfo( "Step0" );

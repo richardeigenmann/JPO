@@ -3,47 +3,42 @@ package jpo.dataModel;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
-import junit.framework.TestCase;
+import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertNull;
+import static junit.framework.TestCase.fail;
+import org.junit.Test;
 
 /**
  * Tests for the PictureInfo class
+ *
  * @author Richard Eigenmann
  */
-public class PictureInfoTest
-        extends TestCase {
-
-    /**
-     * Constructor for the PictureInfo tests
-     * @param testName 
-     */
-    public PictureInfoTest( String testName ) {
-        super( testName );
-    }
-
+public class PictureInfoTest {
 
     /**
      * Test of toString method, of class PictureInfo.
      */
+    @Test
     public void testToString() {
-        PictureInfo pi = new PictureInfo( "c:\\picture.jpg",  "My Sample Picture", "Film 123" );
+        PictureInfo pi = new PictureInfo( "c:\\picture.jpg", "My Sample Picture", "Film 123" );
         assertEquals( "Should return the description", "My Sample Picture", pi.toString() );
     }
-
 
     /**
      * Test of getDescription method, of class PictureInfo.
      */
+    @Test
     public void testGetDescription() {
-        PictureInfo pi = new PictureInfo( "c:\\picture.jpg",  "My Sample Picture", "Film 123" );
+        PictureInfo pi = new PictureInfo( "c:\\picture.jpg", "My Sample Picture", "Film 123" );
         assertEquals( "Should return the description", "My Sample Picture", pi.getDescription() );
     }
 
     int changeEvents;
 
-
     /**
      * Test of setDescription method, of class PictureInfo.
      */
+    @Test
     public void testSetDescription() {
         PictureInfo pi = new PictureInfo();
         changeEvents = 0;
@@ -65,10 +60,10 @@ public class PictureInfoTest
 
     int countEvents;
 
-
     /**
      * Test Description change event
      */
+    @Test
     public void testSetDescriptionSame() {
         PictureInfo pi = new PictureInfo();
         countEvents = 0;
@@ -88,10 +83,10 @@ public class PictureInfoTest
         assertEquals( "Expecting no new change event because it was the same that went in", 1, countEvents );
     }
 
-
     /**
      * Test of appendToDescription method, of class PictureInfo.
      */
+    @Test
     public void testAppendToDescription() {
         PictureInfo pi = new PictureInfo();
         pi.setDescription( "Rubbish" );
@@ -99,53 +94,54 @@ public class PictureInfoTest
         assertEquals( "Expecting that the description concatenated", "RubbishBin", pi.getDescription() );
     }
 
-
     /**
      * Test of descriptionContains method, of class PictureInfo.
      */
+    @Test
     public void testDescriptionContains() {
         PictureInfo pi = new PictureInfo();
         pi.setDescription( "RubbishBinTrash" );
         assertEquals( "Expecting to find a substring", true, pi.descriptionContains( "Bin" ) );
     }
 
-
     /**
      * Test of getHighresLocation method, of class PictureInfo.
      */
+    @Test
     public void testGetHighresLocation() {
-        PictureInfo pi = new PictureInfo( "file:///dir/picture.jpg",  "My Sample Picture", "Film 123" );
+        PictureInfo pi = new PictureInfo( "file:///dir/picture.jpg", "My Sample Picture", "Film 123" );
         String highresLocation = pi.getHighresLocation();
         assertEquals( "Checking getHighresLocation", "file:///dir/picture.jpg", highresLocation );
     }
 
-
     /**
      * Test of getHighresFile method, of class PictureInfo.
      */
+    @Test
     public void testGetHighresFile() {
-        PictureInfo pi = new PictureInfo( "file:///dir/picture.jpg",  "My Sample Picture", "Film 123" );
+        PictureInfo pi = new PictureInfo( "file:///dir/picture.jpg", "My Sample Picture", "Film 123" );
         File highresFile = pi.getHighresFile();
         assertEquals( "Checking getHighresFile", new File( "/dir/picture.jpg" ), highresFile );
     }
 
-
     /**
      * Test of getHighresURL method, of class PictureInfo.
-     * @throws Exception 
+     *
+     * @throws Exception
      */
+    @Test
     public void testGetHighresURL() throws Exception {
-        PictureInfo pi = new PictureInfo( "file://dir/picture.jpg",  "My Sample Picture", "Film 123" );
+        PictureInfo pi = new PictureInfo( "file://dir/picture.jpg", "My Sample Picture", "Film 123" );
         URL highresURL = pi.getHighresURL();
         assertEquals( "Checking getHighresURL", new URL( "file://dir/picture.jpg" ), highresURL );
     }
 
-
     /**
      * Test of getHighresURLOrNull method, of class PictureInfo.
      */
+    @Test
     public void testGetHighresURLOrNull() {
-        PictureInfo pi1 = new PictureInfo( "file://dir/picture.jpg",  "My Sample Picture", "Film 123" );
+        PictureInfo pi1 = new PictureInfo( "file://dir/picture.jpg", "My Sample Picture", "Film 123" );
         URL highresURL1 = pi1.getHighresURLOrNull();
         try {
             assertEquals( "Checking getHighresURLOrNull", new URL( "file://dir/picture.jpg" ), highresURL1 );
@@ -153,15 +149,15 @@ public class PictureInfoTest
             fail( "Test should not have thrown an exception: " + ex.getMessage() );
         }
 
-        PictureInfo pi2 = new PictureInfo( "noProtocol://dir/picture.jpg",  "My Sample Picture", "Film 123" );
+        PictureInfo pi2 = new PictureInfo( "noProtocol://dir/picture.jpg", "My Sample Picture", "Film 123" );
         URL highresURL2 = pi2.getHighresURLOrNull();
         assertNull( "Checking getHighresURLOrNull", highresURL2 );
     }
 
-
     /**
      * Test of setHighresLocation method, of class PictureInfo.
      */
+    @Test
     public void testSetHighresLocation_String() {
         PictureInfo pi = new PictureInfo();
         pi.setHighresLocation( "file:///dir/picture.jpg" );
@@ -169,11 +165,12 @@ public class PictureInfoTest
         assertEquals( "Testing that the Highres Location was memorised correctly", f.toString(), "/dir/picture.jpg" );
     }
 
-
     /**
      * Test of setHighresLocation method, of class PictureInfo.
+     *
      * @throws MalformedURLException
      */
+    @Test
     public void testSetHighresLocation_URL() throws MalformedURLException {
         PictureInfo pi = new PictureInfo();
         pi.setHighresLocation( new URL( "file:///dir/picture.jpg" ) );
@@ -181,10 +178,10 @@ public class PictureInfoTest
         assertEquals( "Testing that the Highres Location was memorised correctly", f.toString(), "/dir/picture.jpg" );
     }
 
-
     /**
      * Test of appendToHighresLocation method, of class PictureInfo.
      */
+    @Test
     public void testAppendToHighresLocation() {
         PictureInfo pi = new PictureInfo();
         pi.setHighresLocation( "file:///dir/picture" );
@@ -193,10 +190,10 @@ public class PictureInfoTest
         assertEquals( "Testing that the Highres Location was memorised correctly", f.toString(), "/dir/picture.jpg" );
     }
 
-
     /**
      * Test of getHighresFilename method, of class PictureInfo.
      */
+    @Test
     public void testGetHighresFilename() {
         PictureInfo pi = new PictureInfo();
         pi.setHighresLocation( "file:///dir/picture.jpg" );
@@ -220,17 +217,18 @@ public class PictureInfoTest
     /**
      * Test the change listener
      */
+    @Test
     public void testPictureInfoChangeListener() {
         eventsReceived = 0;
         PictureInfo pi = new PictureInfo();
-        assertEquals( "To start off there should be no events", 0, eventsReceived);
-        pi.setDescription( "Step 1");
-        assertEquals( "There is no listener attached so there is no event", 0, eventsReceived);
+        assertEquals( "To start off there should be no events", 0, eventsReceived );
+        pi.setDescription( "Step 1" );
+        assertEquals( "There is no listener attached so there is no event", 0, eventsReceived );
         pi.addPictureInfoChangeListener( pictureInfoChangeListener );
-        pi.setDescription( "Step 2");
-        assertEquals( "The listener should have fired and we should have 1 event", 1, eventsReceived);
+        pi.setDescription( "Step 2" );
+        assertEquals( "The listener should have fired and we should have 1 event", 1, eventsReceived );
         pi.removePictureInfoChangeListener( pictureInfoChangeListener );
-        pi.setDescription( "Step 3");
-        assertEquals( "The detached listener should not have fired", 1, eventsReceived);
+        pi.setDescription( "Step 3" );
+        assertEquals( "The detached listener should not have fired", 1, eventsReceived );
     }
 }
