@@ -269,7 +269,7 @@ public class JpoCache {
         StringBuilder sb = new StringBuilder( "Group-" );
         for ( int i = 0; ( i < numberOfPics ) && ( i < childPictureNodes.size() ); i++ ) {
             PictureInfo pictureInfo = (PictureInfo) childPictureNodes.get( i ).getUserObject();
-            sb.append( String.format( "%s-%fdeg-", pictureInfo.getHighresURL().toString(), pictureInfo.getRotation() ) );
+            sb.append( String.format( "%s-%fdeg-", pictureInfo.getImageURL().toString(), pictureInfo.getRotation() ) );
         }
 
         String key = sb.toString();
@@ -282,7 +282,7 @@ public class JpoCache {
                 boolean thumbnailNeedsRefresh = false;
                 for ( int i = 0; ( i < numberOfPics ) && ( i < childPictureNodes.size() ); i++ ) {
                     PictureInfo pictureInfo = (PictureInfo) childPictureNodes.get( i ).getUserObject();
-                    Path imagePath = Paths.get( pictureInfo.getHighresURIOrNull() );
+                    Path imagePath = Paths.get( pictureInfo.getImageURIOrNull() );
                     FileTime lastModification = ( Files.getLastModifiedTime( imagePath ) );
                     if ( lastModification.compareTo( thumbnailLastModification ) > 0 ) {
                         thumbnailNeedsRefresh = true;
@@ -329,7 +329,7 @@ public class JpoCache {
         for ( int picsProcessed = 0; ( picsProcessed < numberOfPics ) && ( picsProcessed < childPictureNodes.size() ); picsProcessed++ ) {
             PictureInfo pi = (PictureInfo) childPictureNodes.get( picsProcessed ).getUserObject();
 
-            Path imagePath = Paths.get( pi.getHighresURIOrNull() );
+            Path imagePath = Paths.get( pi.getImageURIOrNull() );
             FileTime lastModification = ( Files.getLastModifiedTime( imagePath ) );
             if ( lastModification.compareTo( mostRecentPictureModification ) > 0 ) {
                 mostRecentPictureModification = lastModification;
@@ -339,7 +339,7 @@ public class JpoCache {
             yPos = (int) Math.round( ( (double) picsProcessed / (double) horizontalPics ) - 0.5f );
             y = topMargin + ( yPos * ( Settings.miniThumbnailSize.height + margin ) );
 
-            scalablePicture.loadPictureImd( pi.getHighresURL(), pi.getRotation() );
+            scalablePicture.loadPictureImd( pi.getImageURL(), pi.getRotation() );
 
             scalablePicture.setScaleSize( Settings.miniThumbnailSize );
             scalablePicture.scalePicture();

@@ -105,44 +105,44 @@ public class PictureInfoTest {
     }
 
     /**
-     * Test of getHighresLocation method, of class PictureInfo.
+     * Test of getImageLocation method, of class PictureInfo.
      */
     @Test
     public void testGetHighresLocation() {
         PictureInfo pi = new PictureInfo( "file:///dir/picture.jpg", "My Sample Picture", "Film 123" );
-        String highresLocation = pi.getHighresLocation();
+        String highresLocation = pi.getImageLocation();
         assertEquals( "Checking getHighresLocation", "file:///dir/picture.jpg", highresLocation );
     }
 
     /**
-     * Test of getHighresFile method, of class PictureInfo.
+     * Test of getImageFile method, of class PictureInfo.
      */
     @Test
     public void testGetHighresFile() {
         PictureInfo pi = new PictureInfo( "file:///dir/picture.jpg", "My Sample Picture", "Film 123" );
-        File highresFile = pi.getHighresFile();
+        File highresFile = pi.getImageFile();
         assertEquals( "Checking getHighresFile", new File( "/dir/picture.jpg" ), highresFile );
     }
 
     /**
-     * Test of getHighresURL method, of class PictureInfo.
+     * Test of getImageURL method, of class PictureInfo.
      *
      * @throws Exception
      */
     @Test
     public void testGetHighresURL() throws Exception {
         PictureInfo pi = new PictureInfo( "file://dir/picture.jpg", "My Sample Picture", "Film 123" );
-        URL highresURL = pi.getHighresURL();
+        URL highresURL = pi.getImageURL();
         assertEquals( "Checking getHighresURL", new URL( "file://dir/picture.jpg" ), highresURL );
     }
 
     /**
-     * Test of getHighresURLOrNull method, of class PictureInfo.
+     * Test of getImageURLOrNull method, of class PictureInfo.
      */
     @Test
     public void testGetHighresURLOrNull() {
         PictureInfo pi1 = new PictureInfo( "file://dir/picture.jpg", "My Sample Picture", "Film 123" );
-        URL highresURL1 = pi1.getHighresURLOrNull();
+        URL highresURL1 = pi1.getImageURLOrNull();
         try {
             assertEquals( "Checking getHighresURLOrNull", new URL( "file://dir/picture.jpg" ), highresURL1 );
         } catch ( MalformedURLException ex ) {
@@ -150,54 +150,54 @@ public class PictureInfoTest {
         }
 
         PictureInfo pi2 = new PictureInfo( "noProtocol://dir/picture.jpg", "My Sample Picture", "Film 123" );
-        URL highresURL2 = pi2.getHighresURLOrNull();
+        URL highresURL2 = pi2.getImageURLOrNull();
         assertNull( "Checking getHighresURLOrNull", highresURL2 );
     }
 
     /**
-     * Test of setHighresLocation method, of class PictureInfo.
+     * Test of setImageLocation method, of class PictureInfo.
      */
     @Test
     public void testSetHighresLocation_String() {
         PictureInfo pi = new PictureInfo();
-        pi.setHighresLocation( "file:///dir/picture.jpg" );
-        File f = pi.getHighresFile();
+        pi.setImageLocation( "file:///dir/picture.jpg" );
+        File f = pi.getImageFile();
         assertEquals( "Testing that the Highres Location was memorised correctly", f.toString(), "/dir/picture.jpg" );
     }
 
     /**
-     * Test of setHighresLocation method, of class PictureInfo.
+     * Test of setImageLocation method, of class PictureInfo.
      *
      * @throws MalformedURLException
      */
     @Test
     public void testSetHighresLocation_URL() throws MalformedURLException {
         PictureInfo pi = new PictureInfo();
-        pi.setHighresLocation( new URL( "file:///dir/picture.jpg" ) );
-        File f = pi.getHighresFile();
+        pi.setImageLocation( new URL( "file:///dir/picture.jpg" ) );
+        File f = pi.getImageFile();
         assertEquals( "Testing that the Highres Location was memorised correctly", f.toString(), "/dir/picture.jpg" );
     }
 
     /**
-     * Test of appendToHighresLocation method, of class PictureInfo.
+     * Test of appendToImageLocation method, of class PictureInfo.
      */
     @Test
     public void testAppendToHighresLocation() {
         PictureInfo pi = new PictureInfo();
-        pi.setHighresLocation( "file:///dir/picture" );
-        pi.appendToHighresLocation( ".jpg" );
-        File f = pi.getHighresFile();
+        pi.setImageLocation( "file:///dir/picture" );
+        pi.appendToImageLocation( ".jpg" );
+        File f = pi.getImageFile();
         assertEquals( "Testing that the Highres Location was memorised correctly", f.toString(), "/dir/picture.jpg" );
     }
 
     /**
-     * Test of getHighresFilename method, of class PictureInfo.
+     * Test of getImageFilename method, of class PictureInfo.
      */
     @Test
     public void testGetHighresFilename() {
         PictureInfo pi = new PictureInfo();
-        pi.setHighresLocation( "file:///dir/picture.jpg" );
-        String filename = pi.getHighresFilename();
+        pi.setImageLocation( "file:///dir/picture.jpg" );
+        String filename = pi.getImageFilename();
         assertEquals( "Testing that the filename can be derived from the Highres Location correctly", filename, "picture.jpg" );
     }
 

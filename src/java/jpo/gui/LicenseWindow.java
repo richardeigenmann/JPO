@@ -42,7 +42,7 @@ public class LicenseWindow {
     private static final Logger LOGGER = Logger.getLogger( LicenseWindow.class.getName() );
 
     /**
-     * Creates the Licnese Window
+     * Creates the License Window
      */
     public LicenseWindow() {
         JTextArea licenseJTextArea = new JTextArea( "reading the file gpl.txt" );

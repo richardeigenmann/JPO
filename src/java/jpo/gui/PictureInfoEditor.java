@@ -551,7 +551,7 @@ public class PictureInfoEditor extends JFrame {
         creationTimeJTextField.setText( pictureInfo.getCreationTime() );
         parsedCreationTimeJLabel.setText( pictureInfo.getFormattedCreationTime() );
         descriptionJTextArea.setText( pictureInfo.getDescription() );
-        highresLocationJTextField.setText( pictureInfo.getHighresLocation() );
+        highresLocationJTextField.setText( pictureInfo.getImageLocation() );
         checksumJLabel.setText( Settings.jpoResources.getString( "checksumJLabel" ) + pictureInfo.getChecksumAsString() );
         filmReferenceJTextField.setText( pictureInfo.getFilmReference() );
         LOGGER.info( String.format( "Retrieving angle: %f", pictureInfo.getRotation() ) );
@@ -587,7 +587,7 @@ public class PictureInfoEditor extends JFrame {
         categoriesJList.setSelectedIndices( selectionsArray );
         categoryAssignmentsJLabel.setText( selectedJListCategoriesToString( categoriesJList ) );
 
-        ExifInfo exifInfo = new ExifInfo( pictureInfo.getHighresURLOrNull() );
+        ExifInfo exifInfo = new ExifInfo( pictureInfo.getImageURLOrNull() );
         exifInfo.decodeExifTags();
 
         sizeJLabel.setText( String.format( "%s x %s", exifInfo.exifWidth, exifInfo.exifHeight ) );
@@ -614,7 +614,7 @@ public class PictureInfoEditor extends JFrame {
                 descriptionJTextArea.setText( pictureInfo.getDescription() );
             }
             if ( e.getHighresLocationChanged() ) {
-                highresLocationJTextField.setText( pictureInfo.getHighresLocation() );
+                highresLocationJTextField.setText( pictureInfo.getImageLocation() );
             }
             if ( e.getChecksumChanged() ) {
                 checksumJLabel.setText( Settings.jpoResources.getString( "checksumJLabel" ) + pictureInfo.getChecksumAsString() );
@@ -765,7 +765,7 @@ public class PictureInfoEditor extends JFrame {
     private void saveFieldData() {
         pictureInfo.setDescription( descriptionJTextArea.getText() );
         pictureInfo.setCreationTime( creationTimeJTextField.getText() );
-        pictureInfo.setHighresLocation( highresLocationJTextField.getText() );
+        pictureInfo.setImageLocation( highresLocationJTextField.getText() );
         pictureInfo.setComment( commentJTextField.getText() );
         pictureInfo.setPhotographer( photographerJTextField.getText() );
         pictureInfo.setFilmReference( filmReferenceJTextField.getText() );

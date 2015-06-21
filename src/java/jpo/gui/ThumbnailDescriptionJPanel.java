@@ -202,7 +202,7 @@ public class ThumbnailDescriptionJPanel
 
     /**
      * doUpdate writes the changed text back to the data model and submits an
-     * nodeChanged notification on the model. It get's called by the
+     * nodeChanged notification on the model. It gets called by the
      * Inputverifier on the text area.
      */
     public void doUpdate() {
@@ -256,7 +256,7 @@ public class ThumbnailDescriptionJPanel
         } else if ( referringNode.getUserObject() instanceof PictureInfo ) {
             PictureInfo pi = (PictureInfo) referringNode.getUserObject();
             legend = pi.getDescription();
-            highresLocationJTextField.setText( pi.getHighresLocation() );
+            highresLocationJTextField.setText( pi.getImageLocation() );
             setVisible( true );
         } else {
             // GroupInfo
@@ -442,7 +442,7 @@ public class ThumbnailDescriptionJPanel
                 }
 
                 if ( pictureInfoChangeEvent.getHighresLocationChanged() ) {
-                    highresLocationJTextField.setText( pictureInfoChangeEvent.getPictureInfo().getHighresLocation() );
+                    highresLocationJTextField.setText( pictureInfoChangeEvent.getPictureInfo().getImageLocation() );
                 }
 
                 if ( pictureInfoChangeEvent.getWasSelected() ) {

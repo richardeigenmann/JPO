@@ -260,7 +260,7 @@ public class NodeStatistics {
             for ( int i = 0; i < q.getNumberOfResults(); i++ ) {
                 n = (DefaultMutableTreeNode) q.getIndex( i );
                 if ( n.getUserObject() instanceof PictureInfo ) {
-                    testfile = ( (PictureInfo) n.getUserObject() ).getHighresFile();
+                    testfile = ( (PictureInfo) n.getUserObject() ).getImageFile();
                     if ( testfile != null ) {
                         size += testfile.length();
                     }
@@ -271,7 +271,7 @@ public class NodeStatistics {
             while ( nodes.hasMoreElements() ) {
                 n = (DefaultMutableTreeNode) nodes.nextElement();
                 if ( n.getUserObject() instanceof PictureInfo ) {
-                    testfile = ( (PictureInfo) n.getUserObject() ).getHighresFile();
+                    testfile = ( (PictureInfo) n.getUserObject() ).getImageFile();
                     if ( testfile != null ) {
                         size += testfile.length();
                     }

@@ -10,17 +10,22 @@ import java.util.prefs.Preferences;
 
 /* This class was downloaded from IBM developer works: http://www-128.ibm.com/developerworks/java/library/j-prefapi.html */
 
-/* The licensing is not clear. There are no copyright notices in the code yet there is a lot of standard legal stuff on the download
- page. My take is that this is pretty low key stuff so IBM will not get overly upset by my using their sample code. If I am wrong 
- then please let me know and I will have to re-invent the wheel on these preference things. */
-
+/* The licensing is not clear. There are no copyright notices in the code yet 
+ there is a lot of standard legal stuff on the download
+ page. My take is that this is pretty low key stuff so IBM will not get 
+ overly upset by my using their sample code. If I am wrong 
+ then please let me know and I will have to re-invent the wheel on 
+ these preference things. */
 /**
  * Class used to serialise the memorised pictures of a camera
+ *
  * @author Richard Eigenmann
  */
 public class PrefObj {
-  // Max byte count is 3/4 max string length (see Preferences
+
+    // Max byte count is 3/4 max string length (see Preferences
     // documentation).
+
     static private final int pieceLength
             = ( ( 3 * Preferences.MAX_VALUE_LENGTH ) / 4 );
 
@@ -92,8 +97,9 @@ public class PrefObj {
 
     /**
      * Puts an object in the preferences
+     *
      * @param prefs the preferences to store into
-     * @param key the key  Key under which to store
+     * @param key the key Key under which to store
      * @param o the object Object to store
      * @throws IOException Error when no good
      * @throws BackingStoreException Error when no good
@@ -108,6 +114,7 @@ public class PrefObj {
 
     /**
      * Retrieves the object from the preferences
+     *
      * @param prefs the preferences to retrieve from
      * @param key the key the key
      * @return the object The object

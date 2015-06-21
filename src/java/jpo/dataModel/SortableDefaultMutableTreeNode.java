@@ -800,12 +800,12 @@ public class SortableDefaultMutableTreeNode
         PictureInfo pictureInfo = (PictureInfo) this.getUserObject();
         URL originalUrl;
         try {
-            originalUrl = pictureInfo.getHighresURL();
+            originalUrl = pictureInfo.getImageURL();
         } catch ( MalformedURLException x ) {
-            LOGGER.log( Level.INFO, "MarformedURLException trapped on: {0}\nReason: {1}", new Object[]{ pictureInfo.getHighresLocation(), x.getMessage() } );
+            LOGGER.log( Level.INFO, "MarformedURLException trapped on: {0}\nReason: {1}", new Object[]{ pictureInfo.getImageLocation(), x.getMessage() } );
             JOptionPane.showMessageDialog(
                     Settings.anchorFrame,
-                    "MarformedURLException trapped on: " + ( (PictureInfo) this.getUserObject() ).getHighresLocation() + "\nReason: " + x.getMessage(),
+                    "MarformedURLException trapped on: " + ( (PictureInfo) this.getUserObject() ).getImageLocation() + "\nReason: " + x.getMessage(),
                     Settings.jpoResources.getString( "genericError" ),
                     JOptionPane.ERROR_MESSAGE );
             return false;
@@ -1388,7 +1388,7 @@ public class SortableDefaultMutableTreeNode
             LOGGER.info( String.format( "Not adding file %s because the Java Virtual Machine has not got a reader for the file.", addFile.toString() ) );
             return false; // don't add if there is no reader.
         }
-        newPictureInfo.setHighresLocation( addFile );
+        newPictureInfo.setImageLocation( addFile );
         //newPictureInfo.setLowresLocation( Tools.getNewLowresFilename() );
         newPictureInfo.setDescription( Tools.stripOutFilenameRoot( addFile ) );
         newPictureInfo.setChecksum( Tools.calculateChecksum( addFile ) );
@@ -1400,7 +1400,7 @@ public class SortableDefaultMutableTreeNode
         this.add( newNode );
         getPictureCollection().setUnsavedUpdates();
 
-        ExifInfo exifInfo = new ExifInfo( newPictureInfo.getHighresURLOrNull() );
+        ExifInfo exifInfo = new ExifInfo( newPictureInfo.getImageURLOrNull() );
         exifInfo.decodeExifTags();
         newPictureInfo.setCreationTime( exifInfo.getCreateDateTime() );
         newPictureInfo.setLatLng( exifInfo.latLng );

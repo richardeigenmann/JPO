@@ -124,7 +124,6 @@ public class IntegrityCheckerJFrame
      */
     private void getRid() {
         interruptWorkers();
-        startNode = null;
         setVisible( false );
         dispose();
     }
@@ -166,9 +165,9 @@ public class IntegrityCheckerJFrame
                 nodeObject = testNode.getUserObject();
                 if ( ( nodeObject instanceof PictureInfo ) ) {
                     pictureInfo = (PictureInfo) nodeObject;
-                    File highresFile = pictureInfo.getHighresFile();
-                    if ( highresFile != null ) {
-                        newChecksum = Tools.calculateChecksum( highresFile );
+                    File imageFile = pictureInfo.getImageFile();
+                    if ( imageFile != null ) {
+                        newChecksum = Tools.calculateChecksum(imageFile );
                         oldChecksum = pictureInfo.getChecksum();
                         if ( oldChecksum != newChecksum ) {
                             corrections++;

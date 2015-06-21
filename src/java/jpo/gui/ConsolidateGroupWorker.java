@@ -2,6 +2,7 @@ package jpo.gui;
 
 import java.io.File;
 import java.util.Collections;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -33,12 +34,12 @@ import jpo.dataModel.Tools;
 /**
  * This class moves all pictures of a group node to a target directory.
  */
-public class ConsolidateGroupWorker extends SwingWorker<Void, String> {
+public class ConsolidateGroupWorker extends SwingWorker<String, String> {
 
     /**
      * Defines a logger for this class
      */
-    private static final Logger LOGGER = Logger.getLogger(ConsolidateGroupWorker.class.getName() );
+    private static final Logger LOGGER = Logger.getLogger( ConsolidateGroupWorker.class.getName() );
 
     /**
      * the directory where the pictures are to be moved to
@@ -94,10 +95,10 @@ public class ConsolidateGroupWorker extends SwingWorker<Void, String> {
      * @return Integer.MAX_VALUE
      */
     @Override
-    public Void doInBackground() {
+    protected String doInBackground() {
         consolidateGroup( startNode );
 
-        return null;
+        return "done";
     }
 
     @Override
@@ -111,79 +112,94 @@ public class ConsolidateGroupWorker extends SwingWorker<Void, String> {
     protected void done() {
         progGui.switchToDoneMode();
 
-        if (errorCount > 0 ) {
-                            JOptionPane.showMessageDialog( progGui,
-                            String.format( "Could not move %d pictures", errorCount ),
-                            Settings.jpoResources.getString( "genericError" ),
-                            JOptionPane.ERROR_MESSAGE );
+        if ( errorCount > 0 ) {
+            JOptionPane.showMessageDialog( progGui,
+                    String.format( "Could not move %d pictures", errorCount ),
+                    Settings.jpoResources.getString( "genericError" ),
+                    JOptionPane.ERROR_MESSAGE );
         }
 
     }
 
-    private int errorCount;  // default is 0
-    
+    private int notMovedCount;
+    private int movedCount;
+    private int errorCount;
+
     /**
      * This method consolidates all the nodes of the supplied group.
      *
      * @param groupNode the Group whose nodes are to be consolidated.
      */
     private void consolidateGroup( SortableDefaultMutableTreeNode groupNode ) {
-        Object userObject = groupNode.getUserObject();
-        if ( !( userObject instanceof GroupInfo ) ) {
-            return;
-        }
-
-        LOGGER.fine( String.format( "The node %s has %d children", groupNode.toString(), groupNode.getChildCount() ) );
-        LOGGER.fine( String.format( "prog GUI interrupt: %b", progGui.getInterruptor().getShouldInterrupt() ) );
-        @SuppressWarnings( "unchecked" )
-        List<SortableDefaultMutableTreeNode> nodes = Collections.<SortableDefaultMutableTreeNode>list( groupNode.children() );
+        List<SortableDefaultMutableTreeNode> nodes = groupNode.getChildPictureNodes( recurseGroups );
+        System.out.println( "List Size: " + nodes.size() );
         for ( SortableDefaultMutableTreeNode node : nodes ) {
-            userObject = node.getUserObject();
-            if ( ( userObject instanceof GroupInfo ) && recurseGroups ) {
-                consolidateGroup( node );
-            } else {
-                // it's a PictureInfo object
-                PictureInfo pictureInfo = (PictureInfo) userObject; // let's make sure
-                if ( !moveHighresPicture( pictureInfo ) ) {
+            PictureInfo pictureInfo = (PictureInfo) node.getUserObject();
+            System.out.println( "node: " + pictureInfo.toString() );
+            if ( needToMovePicture( pictureInfo, targetDirectoryHighres ) ) {
+                if ( movePicture( pictureInfo, targetDirectoryHighres ) ) {
+                    LOGGER.info( String.format( "Successfully Moved Highres file of node %s", pictureInfo.toString() ) );
+                    movedCount++;
+                    publish( String.format( "Consolidated node: %s", node.toString() ) );
+                } else {
                     LOGGER.severe( String.format( "Could not move highres picture of node %s. Aborting.", node.toString() ) );
                     errorCount++;
-                } else {
-                    LOGGER.info( String.format( "Successfully Moved Highres file of node %s", pictureInfo.toString() ) );
-                    publish( String.format( "Consolidated node: %s", node.toString() ) );
                 }
+            } else {
+                notMovedCount++;
+                publish( String.format( "No need to move node: %s", node.toString() ) );
             }
         }
-        LOGGER.fine( String.format( "End of loop prog GUI interrupt: %b", progGui.getInterruptor().getShouldInterrupt() ) );
     }
 
     /**
-     * This method moves a highres file from an indicated
-     * SortableDefaultMutableTreeNode 's PictureInfo object to the target
-     * directory. It returns true if the move was successful or ignored false if
-     * there was a problem
+     * Returns true if the picture needs to be moved, false if not
      *
-     * @param	pictureInfo the userObject of type PictureInfo of the Node to be
-     * moved
-     * @return True if the move was successful or False if it was not.
+     * @param pictureInfo the PictureInfo pointing to the image to move
+     * @param targetDirectory the target directory to move it to
+     * @return True if a move is needed False if not.
      */
-    private boolean moveHighresPicture( PictureInfo pictureInfo ) {
-        File oldFile = pictureInfo.getHighresFile();
-        if ( oldFile == null ) {
-            LOGGER.log( Level.INFO, "getHighresFile returned null on node {0}. Crashing here.", pictureInfo.toString() );
+    public static boolean needToMovePicture( PictureInfo pictureInfo, File targetDirectory ) {
+        File pictureFile = pictureInfo.getImageFile();
+        // don't move if the pictureInfo points at a null file
+        if ( pictureFile == null ) {
             return false;
         }
 
-        File oldFileParent = pictureInfo.getHighresFile().getParentFile();
-        if ( ( oldFileParent != null ) && ( oldFileParent.equals( targetDirectoryHighres ) ) ) {
-            LOGGER.info( String.format( "Directory of file %s is already the correct location %s. Leaving file as is.", pictureInfo.toString(), targetDirectoryHighres ) );
+        // don't move if the file is already in the correct directory
+        File parentDirectory = pictureFile.getParentFile();
+        if ( ( parentDirectory != null ) && ( parentDirectory.equals( targetDirectory ) ) ) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * This method moves a PictureInfo's highres file to the target directory if
+     * it exists and can be moved necessary.
+     *
+     * @param pictureInfo the PictureInfopointing to the highres file to move
+     * @param targetDirectory the target directory
+     * @return True if a real move was done False if not.
+     */
+    public static boolean movePicture( PictureInfo pictureInfo, File targetDirectory ) {
+        File pictureFile = pictureInfo.getImageFile();
+
+        // don't move if the file is already in the correct directory but report true to move
+        File parentDirectory = pictureFile.getParentFile();
+        if ( ( parentDirectory != null ) && ( parentDirectory.equals( targetDirectory ) ) ) {
             return true;
         }
 
-        File newFile = Tools.inventPicFilename( targetDirectoryHighres, pictureInfo.getHighresFilename() );
-        if ( Tools.moveFile( oldFile, newFile ) ) {
+        File newFile = Tools.inventPicFilename( targetDirectory, pictureInfo.getImageFilename() );
+        if ( Tools.moveFile( pictureFile, newFile ) ) {
+            pictureInfo.setImageLocation( newFile );
+            Tools.correctReferences( pictureFile, newFile );
+
             return true;
         } else {
-            LOGGER.log( Level.INFO, "Failed to move {0} to {1}. Returning false", new Object[]{ oldFile.toString(), newFile.toString() } );
+            LOGGER.info( String.format( "Failed to move file %s to %s.", pictureFile.toString(), newFile.toString() ) );
             return false;
         }
     }

@@ -6,7 +6,6 @@ import java.io.InputStream;
 import java.util.Enumeration;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.SwingUtilities;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -27,7 +26,6 @@ import static jpo.dataModel.Settings.FieldCodes.FILM_REFERENCE;
 import static jpo.dataModel.Settings.FieldCodes.LATLNG;
 import static jpo.dataModel.Settings.FieldCodes.PHOTOGRAPHER;
 import static jpo.dataModel.Settings.FieldCodes.ROTATION;
-import jpo.gui.ClearThumbnailsJFrame;
 import jpo.gui.LabelFrame;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
@@ -38,7 +36,7 @@ import org.xml.sax.helpers.DefaultHandler;
 /*
  XmlReader.java:  class that reads the xml file
 
- Copyright (C) 2002 - 2014  Richard Eigenmann.
+ Copyright (C) 2002 - 2015  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -287,7 +285,7 @@ public class XmlReader extends DefaultHandler {
                 ( (PictureInfo) currentPicture.getUserObject() ).appendToDescription( s );
                 break;
             case FILE_URL:
-                ( (PictureInfo) currentPicture.getUserObject() ).appendToHighresLocation( s );
+                ( (PictureInfo) currentPicture.getUserObject() ).appendToImageLocation( s );
                 break;
             case FILE_LOWRES_URL:
                 //( (PictureInfo) currentPicture.getUserObject() ).appendToLowresLocation( s );
@@ -358,9 +356,9 @@ public class XmlReader extends DefaultHandler {
 
             if ( n.getUserObject() instanceof PictureInfo ) {
                 PictureInfo pi = (PictureInfo) n.getUserObject();
-                if ( pi.getHighresLocation().startsWith( "jar:!" ) ) {
-                    pi.setHighresLocation(
-                            pi.getHighresLocation().replaceFirst( "jar:!", Settings.jarRoot ) );
+                if ( pi.getImageLocation().startsWith( "jar:!" ) ) {
+                    pi.setImageLocation(
+                            pi.getImageLocation().replaceFirst( "jar:!", Settings.jarRoot ) );
                 }
             }
 

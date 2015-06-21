@@ -139,14 +139,14 @@ public class CamerasEditor        extends JFrame {
 
             @Override
             public void valueChanged( TreeSelectionEvent e ) {
-                DefaultMutableTreeNode n = (DefaultMutableTreeNode) cameraJTree.getLastSelectedPathComponent();
-                if ( n == null ) {
+                DefaultMutableTreeNode node = (DefaultMutableTreeNode) cameraJTree.getLastSelectedPathComponent();
+                if ( node == null ) {
                     return;
                 }
-                Object o = n.getUserObject();
-                if ( o instanceof Camera ) {
-                    Camera cam = (Camera) o;
-                    cameraPicked( cam );
+                Object object = node.getUserObject();
+                if ( object instanceof Camera ) {
+                    Camera camera = (Camera) object;
+                    cameraPicked(camera );
                 } else {
                     LOGGER.fine( "Very odd: the camera JTree repored a valueChanged but there is no selected camera. Could be the root node" );
                 }
@@ -249,9 +249,9 @@ public class CamerasEditor        extends JFrame {
         getContentPane().add( vjsp );
 
         /* Why are we setting the path on the empty tree in the constructor?
-        Object o = treeModel.getChild( rootNode, 0 );
-        if ( o != null ) {
-            cameraJTree.setSelectionPath( new TreePath( ( (DefaultMutableTreeNode) o ).getPath() ) );
+        Object object = treeModel.getChild( rootNode, 0 );
+        if ( object != null ) {
+            cameraJTree.setSelectionPath( new TreePath( ( (DefaultMutableTreeNode) object ).getPath() ) );
         }*/
 
         pack();
@@ -282,20 +282,20 @@ public class CamerasEditor        extends JFrame {
      * Deletes camera from the list
      */
     private void deleteCameraAction() {
-        DefaultMutableTreeNode n = (DefaultMutableTreeNode) cameraJTree.getLastSelectedPathComponent();
-        if ( n == null ) {
+        DefaultMutableTreeNode node = (DefaultMutableTreeNode) cameraJTree.getLastSelectedPathComponent();
+        if ( node == null ) {
             LOGGER.warning( "got a delete event without a node. Ignorning" );
             return;
         }
-        if ( n.isRoot() ) {
+        if ( node.isRoot() ) {
             LOGGER.fine( "Not allowing the root node to be deleted" );
             return;
         }
-        DefaultMutableTreeNode nextsibling = n.getNextSibling();
-        DefaultMutableTreeNode previousNode = n.getPreviousNode();
-        treeModel.removeNodeFromParent( n );
+        DefaultMutableTreeNode nextsibling = node.getNextSibling();
+        DefaultMutableTreeNode previousNode = node.getPreviousNode();
+        treeModel.removeNodeFromParent(node );
         synchronized ( Settings.cameras ) {
-            Settings.cameras.remove( n.getUserObject() );
+            Settings.cameras.remove(node.getUserObject() );
         }
         if ( nextsibling != null ) {
             cameraJTree.setSelectionPath( new TreePath( nextsibling.getPath() ) );

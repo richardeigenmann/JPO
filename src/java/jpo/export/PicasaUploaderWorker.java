@@ -152,7 +152,7 @@ public class PicasaUploaderWorker extends SwingWorker<Boolean, Integer> {
         myPhoto.setDescription( new PlainTextConstruct( pictureInfo.getDescription() ) );
         myPhoto.setClient( "JPO" );
 
-        MediaFileSource myMedia = new MediaFileSource( pictureInfo.getHighresFile(), "image/jpeg" );
+        MediaFileSource myMedia = new MediaFileSource( pictureInfo.getImageFile(), "image/jpeg" );
         myPhoto.setMediaSource( myMedia );
         try {
             myRequest.picasaWebService.insert( albumUrl, myPhoto );

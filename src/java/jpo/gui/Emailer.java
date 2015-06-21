@@ -283,31 +283,31 @@ public class Emailer
                 mp.addBodyPart( pictureDescriptionMimeBodyPart );
 
                 if ( scaleImages ) {
-                    LOGGER.log( Level.INFO, "{0}{1}", new Object[]{ Settings.jpoResources.getString( "EmailerLoading" ), pi.getHighresFilename() } );
-                    scalablePicture.loadPictureImd( pi.getHighresURLOrNull(), pi.getRotation() );
-                    LOGGER.log( Level.INFO, "{0}{1}", new Object[]{ Settings.jpoResources.getString( "EmailerScaling" ), pi.getHighresFilename() } );
+                    LOGGER.log( Level.INFO, "{0}{1}", new Object[]{ Settings.jpoResources.getString( "EmailerLoading" ), pi.getImageFilename() } );
+                    scalablePicture.loadPictureImd( pi.getImageURLOrNull(), pi.getRotation() );
+                    LOGGER.log( Level.INFO, "{0}{1}", new Object[]{ Settings.jpoResources.getString( "EmailerScaling" ), pi.getImageFilename() } );
                     scalablePicture.scalePicture();
                     baos = new ByteArrayOutputStream();
-                    LOGGER.log( Level.INFO, "{0}{1}", new Object[]{ Settings.jpoResources.getString( "EmailerWriting" ), pi.getHighresFilename() } );
+                    LOGGER.log( Level.INFO, "{0}{1}", new Object[]{ Settings.jpoResources.getString( "EmailerWriting" ), pi.getImageFilename() } );
                     scalablePicture.writeScaledJpg( baos );
-                    encds = new EncodedDataSource( "image/jpeg", pi.getHighresFilename(), baos );
+                    encds = new EncodedDataSource( "image/jpeg", pi.getImageFilename(), baos );
                     scaledPictureMimeBodyPart = new MimeBodyPart();
                     scaledPictureMimeBodyPart.setDataHandler( new DataHandler( encds ) );
-                    scaledPictureMimeBodyPart.setFileName( pi.getHighresFilename() );
-                    LOGGER.log( Level.INFO, "{0}{1}", new Object[]{ Settings.jpoResources.getString( "EmailerAdding" ), pi.getHighresFilename() } );
+                    scaledPictureMimeBodyPart.setFileName( pi.getImageFilename() );
+                    LOGGER.log( Level.INFO, "{0}{1}", new Object[]{ Settings.jpoResources.getString( "EmailerAdding" ), pi.getImageFilename() } );
                     mp.addBodyPart( scaledPictureMimeBodyPart );
                 }
 
                 if ( sendOriginal ) {
                     // create the message part fro the original image
                     originalPictureMimeBodyPart = new MimeBodyPart();
-                    highresURL = pi.getHighresURLOrNull();
+                    highresURL = pi.getImageURLOrNull();
                     // attach the file to the message
                     ds = new URLDataSource( highresURL );
                     originalPictureMimeBodyPart.setDataHandler( new DataHandler( ds ) );
-                    originalPictureMimeBodyPart.setFileName( pi.getHighresFilename() );
+                    originalPictureMimeBodyPart.setFileName( pi.getImageFilename() );
                     // create the Multipart and add its parts to it
-                    LOGGER.log( Level.INFO, "{0}{1}", new Object[]{ Settings.jpoResources.getString( "EmailerAdding" ), pi.getHighresFilename() });
+                    LOGGER.log( Level.INFO, "{0}{1}", new Object[]{ Settings.jpoResources.getString( "EmailerAdding" ), pi.getImageFilename() });
                     mp.addBodyPart( originalPictureMimeBodyPart );
                 }
 
@@ -317,8 +317,7 @@ public class Emailer
             publish( "Sending..." );
 
         } catch ( MessagingException x ) {
-            LOGGER.log( Level.SEVERE, "MessagingException: {0}", x.getMessage());
-            error = x.getMessage();
+            LOGGER.severe( x.getMessage() );
             return null;
         }
         return message;
@@ -345,8 +344,7 @@ public class Emailer
                 Transport.send( buildMessage( session ) );
                 publish( Settings.jpoResources.getString( "EmailerSent" ) );
             } catch ( MessagingException x ) {
-                LOGGER.log( Level.SEVERE, "MessagingException: {0}", x.getMessage());
-                error = x.getMessage();
+                LOGGER.severe( x.getMessage());
             }
         }
     }

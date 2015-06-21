@@ -786,7 +786,7 @@ public class PicturePopupMenu extends JPopupMenu {
                         JpoEventBus.getInstance().post(
                                 new ConsolidateGroupRequest(
                                         (SortableDefaultMutableTreeNode) popupNode.getParent(),
-                                        ( (PictureInfo) popupNode.getUserObject() ).getHighresFile().getParentFile() )
+                                        ( (PictureInfo) popupNode.getUserObject() ).getImageFile().getParentFile() )
                         );
                     }
                 }

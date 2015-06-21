@@ -77,41 +77,38 @@ public class ConsolidateGroupController implements ConsolidateGroupActionCallbac
      * method that outputs the selected group to a directory
      */
     @Override
-    public void consolidateGroupCallback(File highresDirectory, boolean rescurseSubgroups) {
-        if (!highresDirectory.exists()) {
+    public void consolidateGroupCallback(File targetDirectory, boolean rescurseSubgroups) {
+        if (!targetDirectory.exists()) {
             try {
-                if (!highresDirectory.mkdirs()) {
-                    JOptionPane.showMessageDialog(
-                            Settings.anchorFrame,
-                            String.format(Settings.jpoResources.getString("ConsolidateCreateDirFailure"), highresDirectory),
+                if (!targetDirectory.mkdirs()) {
+                    JOptionPane.showMessageDialog(Settings.anchorFrame,
+                            String.format(Settings.jpoResources.getString("ConsolidateCreateDirFailure"), targetDirectory),
                             Settings.jpoResources.getString("genericError"),
                             JOptionPane.ERROR_MESSAGE);
                     return;
                 }
             } catch (SecurityException e) {
-                JOptionPane.showMessageDialog(
-                        Settings.anchorFrame,
-                        String.format(Settings.jpoResources.getString("ConsolidateCreateDirFailure"), highresDirectory),
+                JOptionPane.showMessageDialog(Settings.anchorFrame,
+                        String.format(Settings.jpoResources.getString("ConsolidateCreateDirFailure"), targetDirectory),
                         Settings.jpoResources.getString("genericError"),
                         JOptionPane.ERROR_MESSAGE);
-                LOGGER.severe(String.format("SecurityException when creating directory %s. Reason: %s", highresDirectory, e.getMessage()));
+                LOGGER.severe(String.format("SecurityException when creating directory %s. Reason: %s", targetDirectory, e.getMessage()));
                 return;
             }
         }
 
-        if (!highresDirectory.canWrite()) {
-            JOptionPane.showMessageDialog(
-                    Settings.anchorFrame,
-                    String.format(Settings.jpoResources.getString("ConsolidateCantWrite"), highresDirectory),
+        if (!targetDirectory.canWrite()) {
+            JOptionPane.showMessageDialog(Settings.anchorFrame,
+                    String.format(Settings.jpoResources.getString("ConsolidateCantWrite"), targetDirectory),
                     Settings.jpoResources.getString("genericError"),
                     JOptionPane.ERROR_MESSAGE);
             return;
         }
 
-        Settings.memorizeCopyLocation(highresDirectory.toString());
+        Settings.memorizeCopyLocation(targetDirectory.toString());
         
         new ConsolidateGroupWorker(
-                highresDirectory,
+                targetDirectory,
                 request.getNode(),
                 rescurseSubgroups,
                 new ProgressGui(NodeStatistics.countPictures(request.getNode(), rescurseSubgroups),

@@ -153,9 +153,7 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
         thumbnailJScrollPane = new JScrollPane();
 
         initComponents();
-        System.out.println( "init ok" );
         registerListeners();
-        System.out.println( "listeners ok" );
     }
 
     private static final Color DIMMED_COLOR = new Color( 45, 45, 45, 180 );

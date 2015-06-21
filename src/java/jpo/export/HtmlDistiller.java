@@ -396,7 +396,7 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
         PictureInfo pictureInfo = (PictureInfo) pictureNode.getUserObject();
         publish( String.format( "Writing picture node %d: %s", picsWroteCounter, pictureInfo.toString() ) );
 
-        String extension = Tools.getExtension( pictureInfo.getHighresFilename() );
+        String extension = Tools.getExtension( pictureInfo.getImageFilename() );
         File lowresFile;
         File midresFile;
         File highresFile;
@@ -405,7 +405,7 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
         LOGGER.info( "Before Switch" );
         switch ( options.getPictureNaming() ) {
             case PICTURE_NAMING_BY_ORIGINAL_NAME:
-                String rootName = Tools.cleanupFilename( Tools.getFilenameRoot( pictureInfo.getHighresFilename() ) );
+                String rootName = Tools.cleanupFilename( Tools.getFilenameRoot( pictureInfo.getImageFilename() ) );
                 lowresFile = new File( options.getTargetDirectory(), rootName + "_l." + extension );
                 midresFile = new File( options.getTargetDirectory(), rootName + "_m." + extension );
                 highresFile = new File( options.getTargetDirectory(), rootName + "_h." + extension );
@@ -436,7 +436,7 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
         if ( options.isGenerateZipfile() ) {
             LOGGER.fine( String.format( "Adding to zipfile: %s", highresFile.toString() ) );
             try {
-                InputStream in = pictureInfo.getHighresURL().openStream();
+                InputStream in = pictureInfo.getImageURL().openStream();
                 BufferedInputStream bin = new BufferedInputStream( in );
 
                 ZipEntry entry = new ZipEntry( highresFile.getName() );
@@ -455,12 +455,12 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
             }
         }
 
-        LOGGER.info( String.format( "Loading: %s", pictureInfo.getHighresLocation() ) );
-        scp.loadPictureImd( pictureInfo.getHighresURL(), pictureInfo.getRotation() );
+        LOGGER.info( String.format( "Loading: %s", pictureInfo.getImageLocation() ) );
+        scp.loadPictureImd( pictureInfo.getImageURL(), pictureInfo.getRotation() );
 
-        LOGGER.info( String.format( "Done Loading: %s", pictureInfo.getHighresLocation() ) );
+        LOGGER.info( String.format( "Done Loading: %s", pictureInfo.getImageLocation() ) );
         if ( scp.getStatusCode() == SCALABLE_PICTURE_ERROR ) {
-            LOGGER.log( Level.SEVERE, "Problem reading image {0} using brokenThumbnailPicture instead", pictureInfo.getHighresLocation() );
+            LOGGER.log( Level.SEVERE, "Problem reading image {0} using brokenThumbnailPicture instead", pictureInfo.getImageLocation() );
             scp.loadPictureImd( Settings.CLASS_LOADER.getResource( "jpo/images/broken_thumbnail.gif" ), 0f );
         }
 
@@ -468,19 +468,19 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
         if ( options.isExportHighres() ) {
             files.add( highresFile );
             if ( options.isRotateHighres() && ( pictureInfo.getRotation() != 0 ) ) {
-                LOGGER.fine( String.format( "Copying and rotating picture %s to %s", pictureInfo.getHighresLocation(), highresFile.toString() ) );
+                LOGGER.fine( String.format( "Copying and rotating picture %s to %s", pictureInfo.getImageLocation(), highresFile.toString() ) );
                 scp.setScaleFactor( 1 );
                 scp.scalePicture();
                 scp.setJpgQuality( options.getMidresJpgQuality() );
                 scp.writeScaledJpg( highresFile );
             } else {
-                LOGGER.fine( String.format( "Copying picture %s to %s", pictureInfo.getHighresLocation(), highresFile.toString() ) );
-                Tools.copyPicture( pictureInfo.getHighresURL(), highresFile );
+                LOGGER.fine( String.format( "Copying picture %s to %s", pictureInfo.getImageLocation(), highresFile.toString() ) );
+                Tools.copyPicture( pictureInfo.getImageURL(), highresFile );
             }
         }
 
         scp.setScaleSize( options.getThumbnailDimension() );
-        LOGGER.info( String.format( "Scaling: %s", pictureInfo.getHighresLocation() ) );
+        LOGGER.info( String.format( "Scaling: %s", pictureInfo.getImageLocation() ) );
         scp.scalePicture();
         LOGGER.info( String.format( "Writing: %s", lowresFile.toString() ) );
         scp.setJpgQuality( options.getLowresJpgQuality() );
@@ -509,7 +509,7 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
         descriptionsBuffer.putDescription( pictureInfo.getDescription() );
 
         scp.setScaleSize( options.getMidresDimension() );
-        LOGGER.log( Level.FINE, "Scaling: {0}", pictureInfo.getHighresLocation() );
+        LOGGER.log( Level.FINE, "Scaling: {0}", pictureInfo.getImageLocation() );
         scp.scalePicture();
         LOGGER.log( Level.FINE, "Writing: {0}", midresFile.toString() );
         scp.setJpgQuality( options.getMidresJpgQuality() );
@@ -546,7 +546,7 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
             String imgTag = "<img src=\"" + midresFile.getName() + "\" width= \"" + Integer.toString( w ) + "\" height=\"" + Integer.toString( h ) + "\" alt=\"" + Tools.stringToHTMLString( pictureInfo.getDescription() ) + "\" />";
 
             if ( options.isLinkToHighres() ) {
-                midresHtmlWriter.write( "<a href=\"" + pictureInfo.getHighresLocation() + "\">" + imgTag + "</a>" );
+                midresHtmlWriter.write( "<a href=\"" + pictureInfo.getImageLocation() + "\">" + imgTag + "</a>" );
             } else if ( options.isExportHighres() ) {
                 midresHtmlWriter.write( "<a href=\"" + highresFile.getName() + "\">" + imgTag + "</a>" );
             } else {
@@ -627,7 +627,7 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
                         switch ( options.getPictureNaming() ) {
                             case PICTURE_NAMING_BY_ORIGINAL_NAME:
                                 PictureInfo pi = (PictureInfo) nde.getUserObject();
-                                String rootName = Tools.cleanupFilename( Tools.getFilenameRoot( pi.getHighresFilename() ) );
+                                String rootName = Tools.cleanupFilename( Tools.getFilenameRoot( pi.getImageFilename() ) );
                                 nodeUrl = rootName + ".htm";
                                 lowresFn = rootName + "_l." + extension;
                                 break;
@@ -696,7 +696,7 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
                             SortableDefaultMutableTreeNode priorNode = (SortableDefaultMutableTreeNode) ( (SortableDefaultMutableTreeNode) pictureNode.getParent() ).getChildAt( childNumber - 2 );
                             Object userObject = priorNode.getUserObject();
                             if ( userObject instanceof PictureInfo ) {
-                                previousHtmlFilename = Tools.cleanupFilename( Tools.getFilenameRoot( ( (PictureInfo) userObject ).getHighresFilename() ) ) + ".htm";
+                                previousHtmlFilename = Tools.cleanupFilename( Tools.getFilenameRoot( ( (PictureInfo) userObject ).getImageFilename() ) ) + ".htm";
                             } else {
                                 previousHtmlFilename = "index.htm"; // actually something has gone horribly wrong
                             }
@@ -716,7 +716,7 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
                     midresHtmlWriter.write( "&nbsp;" );
                 }
                 if ( options.isLinkToHighres() ) {
-                    midresHtmlWriter.write( "<a href=\"" + pictureInfo.getHighresLocation() + "\">Highres</a>" );
+                    midresHtmlWriter.write( "<a href=\"" + pictureInfo.getImageLocation() + "\">Highres</a>" );
                     midresHtmlWriter.write( "&nbsp;" );
                 } else if ( options.isExportHighres() ) {
                     // Link to Highres in target directory
@@ -731,7 +731,7 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
                             SortableDefaultMutableTreeNode priorNode = (SortableDefaultMutableTreeNode) ( (SortableDefaultMutableTreeNode) pictureNode.getParent() ).getChildAt( childNumber );
                             Object userObject = priorNode.getUserObject();
                             if ( userObject instanceof PictureInfo ) {
-                                nextHtmlFilename = Tools.cleanupFilename( Tools.getFilenameRoot( ( (PictureInfo) userObject ).getHighresFilename() ) ) + ".htm";
+                                nextHtmlFilename = Tools.cleanupFilename( Tools.getFilenameRoot( ( (PictureInfo) userObject ).getImageFilename() ) ) + ".htm";
                             } else {
                                 nextHtmlFilename = "index.htm"; // actually something has gone horribly wrong
                             }

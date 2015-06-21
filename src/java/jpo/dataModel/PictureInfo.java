@@ -74,7 +74,7 @@ public class PictureInfo implements Serializable {
     public PictureInfo( String highresLocation,
             String description,
             String filmReference ) {
-        this.highresLocation = highresLocation;
+        this.imageLocation = highresLocation;
         this.description = description;
         this.filmReference = filmReference;
 
@@ -95,11 +95,11 @@ public class PictureInfo implements Serializable {
     public PictureInfo( URL highresURL,
             String description,
             String filmReference ) {
-        this.highresLocation = highresURL.toString();
+        this.imageLocation = highresURL.toString();
         this.description = description;
         this.filmReference = filmReference;
 
-        LOGGER.log( Level.FINE, "Highres_Name: {0}", highresLocation );
+        LOGGER.log(Level.FINE, "Highres_Name: {0}", imageLocation );
         LOGGER.log( Level.FINE, "description: {0}", description );
         LOGGER.log( Level.FINE, "filmReference: {0}", filmReference );
 
@@ -109,7 +109,7 @@ public class PictureInfo implements Serializable {
      * Constructor without options. All strings are set to blanks
      */
     public PictureInfo() {
-        highresLocation = "";
+        imageLocation = "";
         description = "";
         filmReference = "";
     }
@@ -121,7 +121,7 @@ public class PictureInfo implements Serializable {
      * @param description Description
      */
     public PictureInfo( String highresLocation, String description ) {
-        this.highresLocation = highresLocation;
+        this.imageLocation = highresLocation;
         this.description = description;
         filmReference = "";
     }
@@ -146,7 +146,7 @@ public class PictureInfo implements Serializable {
      */
     public void dumpToXml( BufferedWriter out )
             throws IOException {
-        dumpToXml( out, getHighresLocation() );
+        dumpToXml( out, getImageLocation() );
     }
 
     /**
@@ -301,28 +301,28 @@ public class PictureInfo implements Serializable {
      *
      *
      */
-    private String highresLocation = "";
+    private String imageLocation = "";
 
     /**
      * Returns the full path to the highres picture.
      *
      * @return The highres location
-     * @see #setHighresLocation
+     * @see #setImageLocation
      */
-    public String getHighresLocation() {
-        return highresLocation;
+    public String getImageLocation() {
+        return imageLocation;
     }
 
     /**
      * returns the file handle to the highres picture.
      *
-     * @see	#getHighresURL()
+     * @see	#getImageURL()
      * @return the highres location or null if there is a failure
      */
-    public File getHighresFile() {
+    public File getImageFile() {
         File returnFile;
         try {
-            returnFile = new File( new URI( highresLocation ) );
+            returnFile = new File( new URI( imageLocation ) );
         } catch ( IllegalArgumentException | URISyntaxException x ) {
             LOGGER.severe( x.getMessage() );
             return null;
@@ -331,27 +331,27 @@ public class PictureInfo implements Serializable {
     }
 
     /**
-     * returns the URL handle to the highres picture.
+     * returns the URL handle to the picture.
      *
-     * @return the highres location
+     * @return the image location
      * @throws MalformedURLException if the location could not be converted to a
      * URL.
      */
-    public URL getHighresURL() throws MalformedURLException {
-        URL highresURL = new URL( highresLocation );
+    public URL getImageURL() throws MalformedURLException {
+        URL highresURL = new URL( imageLocation );
         return highresURL;
     }
 
     /**
-     * returns the URL handle to the highres picture or null. I invented this
+     * returns the URL handle to the picture or null. I invented this
      * because I got fed up trying and catching the MalformedURLException that
      * could be thrown.
      *
-     * @return the highres location
+     * @return the image location
      */
-    public URL getHighresURLOrNull() {
+    public URL getImageURLOrNull() {
         try {
-            URL highresURL = new URL( highresLocation );
+            URL highresURL = new URL( imageLocation );
             return highresURL;
         } catch ( MalformedURLException x ) {
             LOGGER.log( Level.FINE, "Caught an unexpected MalformedURLException: {0}", x.getMessage());
@@ -360,53 +360,53 @@ public class PictureInfo implements Serializable {
     }
 
     /**
-     * returns the URI handle to the highres picture.
+     * returns the URI handle to the picture.
      *
-     * @return The highres location
+     * @return The image location
      */
-    public URI getHighresURIOrNull() {
+    public URI getImageURIOrNull() {
         try {
-            return new URI( highresLocation );
+            return new URI( imageLocation );
         } catch ( URISyntaxException x ) {
             return null;
         }
     }
 
     /**
-     * Sets the full path to the highres picture.
+     * Sets the full path to the picture.
      *
-     * @param s The new location for the highres picture.
-     * @see #getHighresLocation
+     * @param s The new location for the picture.
+     * @see #getImageLocation
      */
-    public synchronized void setHighresLocation( String s ) {
-        if ( !highresLocation.equals( s ) ) {
-            highresLocation = s;
-            sendHighresLocationChangedEvent();
+    public synchronized void setImageLocation( String s ) {
+        if ( !imageLocation.equals( s ) ) {
+            imageLocation = s;
+            sendImageLocationChangedEvent();
         }
-        getHighresFile(); // just so that it creates a failure if the filename is not conform.
+        getImageFile(); // just so that it creates a failure if the filename is not conform.
     }
 
     /**
-     * Sets the full path to the highres picture.
+     * Sets the full path to the picture.
      *
-     * @param u The new location for the highres picture.
+     * @param u The new location for the picture.
      */
-    public synchronized void setHighresLocation( URL u ) {
+    public synchronized void setImageLocation( URL u ) {
         String s = u.toString();
-        if ( !highresLocation.equals( s ) ) {
-            highresLocation = s;
-            sendHighresLocationChangedEvent();
+        if ( !imageLocation.equals( s ) ) {
+            imageLocation = s;
+            sendImageLocationChangedEvent();
         }
     }
 
     /**
-     * Sets the highres location
+     * Sets the image location
      *
-     * @param file The new file of the highres picture.
+     * @param file The new file of the picture.
      */
-    public synchronized void setHighresLocation( File file ) {
+    public synchronized void setImageLocation( File file ) {
         try {
-            setHighresLocation (file.toURI().toURL());
+            PictureInfo.this.setImageLocation (file.toURI().toURL());
         } catch ( MalformedURLException ex ) {
             LOGGER.severe( ex.getMessage() );
         }
@@ -416,30 +416,30 @@ public class PictureInfo implements Serializable {
     /**
      * Appends the text to the field (used by XML parser).
      *
-     * @param s The text fragment to be added to the Highres Location
+     * @param s The text fragment to be added to the image Location
      */
-    public synchronized void appendToHighresLocation( String s ) {
+    public synchronized void appendToImageLocation( String s ) {
         if ( s.length() > 0 ) {
-            highresLocation = highresLocation.concat( s );
-            sendHighresLocationChangedEvent();
+            imageLocation = imageLocation.concat( s );
+            sendImageLocationChangedEvent();
         }
     }
 
     /**
-     * Returns just the Filename of the highres picture.
+     * Returns just the Filename of the picture.
      *
-     * @return the highres Filename
+     * @return the Filename
      */
-    public String getHighresFilename() {
-        return new File( highresLocation ).getName();
+    public String getImageFilename() {
+        return new File( imageLocation ).getName();
 
     }
 
     /**
      * Creates a PictureChangedEvent and sends it to inform listening objects
-     * that the highres location was updated.
+     * that the image location was updated.
      */
-    private void sendHighresLocationChangedEvent() {
+    private void sendImageLocationChangedEvent() {
         if ( Settings.getPictureCollection().getSendModelUpdates() ) {
             PictureInfoChangeEvent pce = new PictureInfoChangeEvent( this );
             pce.setHighresLocationChanged();
@@ -490,9 +490,9 @@ public class PictureInfo implements Serializable {
      * calculates the Adler32 checksum of the current picture.
      */
     public void calculateChecksum() {
-        URL pictureURL = getHighresURLOrNull();
+        URL pictureURL = getImageURLOrNull();
         if ( pictureURL == null ) {
-            LOGGER.log( Level.SEVERE, "Aborting due to bad URL: {0}", getHighresLocation());
+            LOGGER.log(Level.SEVERE, "Aborting due to bad URL: {0}", getImageLocation());
             return;
         }
 
@@ -552,7 +552,7 @@ public class PictureInfo implements Serializable {
             checksum = ( new Long( checksumString ) );
             checksumString = "";
         } catch ( NumberFormatException x ) {
-            LOGGER.log( Level.INFO, "PictureInfo.parseChecksum: invalid checksum: {0} on picture: {1} --> Set to MIN", new Object[]{ checksumString, getHighresFilename() });
+            LOGGER.log(Level.INFO, "PictureInfo.parseChecksum: invalid checksum: {0} on picture: {1} --> Set to MIN", new Object[]{ checksumString, getImageFilename() });
             checksum = Long.MIN_VALUE;
         }
         sendChecksumChangedEvent();
@@ -905,7 +905,7 @@ public class PictureInfo implements Serializable {
             rotation = ( new Double( rotationString ) );
             rotationString = null;
         } catch ( NumberFormatException x ) {
-            LOGGER.log( Level.INFO, "invalid rotation: {0} on picture: {1} --> Set to Zero", new Object[]{ rotationString, getHighresFilename() });
+            LOGGER.log(Level.INFO, "invalid rotation: {0} on picture: {1} --> Set to Zero", new Object[]{ rotationString, getImageFilename() });
             rotation = 0;
         }
         sendRotationChangedEvent();
@@ -1154,7 +1154,7 @@ public class PictureInfo implements Serializable {
             categoryAssignmentString = "";
             addCategoryAssignment( category );
         } catch ( NumberFormatException x ) {
-            LOGGER.log( Level.INFO, "PictureInfo.parseCategoryAssignment: NumberFormatException: {0} on picture: {1} because: {2}", new Object[]{ categoryAssignmentString, getHighresFilename(), x.getMessage() });
+            LOGGER.log(Level.INFO, "PictureInfo.parseCategoryAssignment: NumberFormatException: {0} on picture: {1} because: {2}", new Object[]{ categoryAssignmentString, getImageFilename(), x.getMessage() });
         }
         sendCategoryAssignmentsChangedEvent();
     }
@@ -1263,7 +1263,7 @@ public class PictureInfo implements Serializable {
     public PictureInfo getClone() {
         PictureInfo clone = new PictureInfo();
         clone.setDescription( this.getDescription() );
-        clone.setHighresLocation( this.getHighresLocation() );
+        clone.setImageLocation(this.getImageLocation() );
         clone.setFilmReference( this.getFilmReference() );
         clone.setCreationTime( this.getCreationTime() );
         clone.setComment( this.getComment() );
@@ -1328,7 +1328,7 @@ public class PictureInfo implements Serializable {
         String uppercaseSearchString = searchString.toUpperCase();
         boolean found = descriptionContains( searchString )
                 || ( getPhotographer().toUpperCase().contains( uppercaseSearchString ) )
-                || ( highresLocation.toUpperCase().contains( uppercaseSearchString ) )
+                || ( imageLocation.toUpperCase().contains( uppercaseSearchString ) )
                 || ( getFilmReference().toUpperCase().contains( uppercaseSearchString ) )
                 || ( getCreationTime().toUpperCase().contains( uppercaseSearchString ) )
                 || ( getComment().toUpperCase().contains( uppercaseSearchString ) )

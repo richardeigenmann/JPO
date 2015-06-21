@@ -150,8 +150,8 @@ public class JpoTransferable
             Object userObject = node.getUserObject();
             if ( userObject instanceof PictureInfo ) {
                 PictureInfo pictureInfo = (PictureInfo) userObject;
-                //filenames.append( pictureInfo.getHighresFile() ).append( "\n" );
-                filenames.append( "\"" ).append( pictureInfo.getHighresFile() ).append( "\", " );
+                //filenames.append( pictureInfo.getImageFile() ).append( "\n" );
+                filenames.append( "\"" ).append( pictureInfo.getImageFile() ).append( "\", " );
             }
         }
         LOGGER.info( String.format( "Returning the following String as stringFlavor: %s", filenames.toString() ) );
@@ -171,7 +171,7 @@ public class JpoTransferable
                 Object userObject = n.getUserObject();
                 if ( userObject instanceof PictureInfo ) {
                     PictureInfo pi = (PictureInfo) userObject;
-                    fileList.add( pi.getHighresFile() );
+                    fileList.add( pi.getImageFile() );
                 }
             }
         }
@@ -185,7 +185,6 @@ public class JpoTransferable
      * @return the transferable as a List of Images
      */
     private Object getImageTransferable() {
-        //Image image = null;
         List<Object> imageList = new ArrayList<>();
         for ( Object transferableNode : transferableNodes ) {
             if ( transferableNode instanceof SortableDefaultMutableTreeNode ) {
@@ -194,7 +193,7 @@ public class JpoTransferable
                 if ( userObject instanceof PictureInfo ) {
                     PictureInfo pictureInfo = (PictureInfo) userObject;
                     SourcePicture sourcePicture = new SourcePicture();
-                    sourcePicture.loadPicture( pictureInfo.getHighresURLOrNull(), pictureInfo.getRotation() );
+                    sourcePicture.loadPicture( pictureInfo.getImageURLOrNull(), pictureInfo.getRotation() );
                     imageList.add( sourcePicture.getSourceBufferedImage() );
                 }
             }

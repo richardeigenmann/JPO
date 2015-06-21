@@ -308,7 +308,7 @@ public class CollectionJTreeController {
                 toolTip = String.format( "<html>Group: %s</html>", groupInfo.getGroupName() );
             } else if ( userObject instanceof PictureInfo ) {
                 final PictureInfo pictureInfo = (PictureInfo) userObject;
-                File highresFile = pictureInfo.getHighresFile();
+                File highresFile = pictureInfo.getImageFile();
                 String fileSize = highresFile == null ? "no file" : Tools.fileSizeToString( highresFile.length() );
                 toolTip = String.format( "<html>Picture: %s<br>%s %s</html>", pictureInfo.getDescription(), Settings.jpoResources.getString( "CollectionSizeJLabel" ), fileSize );
             }

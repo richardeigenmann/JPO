@@ -174,7 +174,7 @@ public class TableJFrame extends JFrame {
                     case 1:
                         return ( (PictureInfo) userObject ).getDescription();
                     case 2:
-                        return ( (PictureInfo) userObject ).getHighresLocation();
+                        return ( (PictureInfo) userObject ).getImageLocation();
                     case 3:
                         return ( (PictureInfo) userObject ).getFilmReference();
                     case 4:
@@ -216,7 +216,7 @@ public class TableJFrame extends JFrame {
                         ( (PictureInfo) userObject ).setDescription( newString );
                         break;
                     case 2:
-                        ( (PictureInfo) userObject ).setHighresLocation( newString );
+                        ( (PictureInfo) userObject ).setImageLocation( newString );
                         break;
                     case 3:
                         ( (PictureInfo) userObject ).setFilmReference( newString );

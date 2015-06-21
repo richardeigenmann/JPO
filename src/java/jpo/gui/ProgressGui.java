@@ -23,7 +23,7 @@ import net.miginfocom.swing.MigLayout;
 /*
  ProgressGui.java:  a class that shows the progress in adding pictures
 
- Copyright (C) 2002-2014  Richard Eigenmann.
+ Copyright (C) 2002-2015  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -63,10 +63,9 @@ public class ProgressGui extends JFrame implements ProgressListener {
     /**
      * variable that is checked periodically that stops the addDirectory loop in
      * a controlled way
-     *
-     * public boolean interrupt = false;
      */
     private final InterruptSemaphore interruptor = new InterruptSemaphore();
+    
     /**
      * how long the gui should show after it has finished.
      */
@@ -126,7 +125,6 @@ public class ProgressGui extends JFrame implements ProgressListener {
                 "[center]", // Column constraints with default align
                 "[top]" ) ); // Row constraints with default align
 
-        //contentJPanel.setPreferredSize( new Dimension( 250, 100 ) );
         getContentPane().add( contentJPanel );
 
         progBar = new JProgressBar( 0, max );

@@ -188,8 +188,8 @@ public class XmlDistiller
         PictureInfo pictureInfo = (PictureInfo) pictureNode.getUserObject();
 
         if ( copyPics ) {
-            File targetHighresFile = Tools.inventPicFilename( highresTargetDir, pictureInfo.getHighresFilename() );
-            Tools.copyPicture( pictureInfo.getHighresURL(), targetHighresFile );
+            File targetHighresFile = Tools.inventPicFilename( highresTargetDir, pictureInfo.getImageFilename() );
+            Tools.copyPicture( pictureInfo.getImageURL(), targetHighresFile );
             pictureInfo.dumpToXml( bufferedWriter,
                     targetHighresFile.toURI().toURL().toString()
             );

@@ -317,7 +317,7 @@ public class ThumbnailController implements JpoDropTargetDropEventHandler {
         Object userObject = nodeToCheck.getUserObject();
         if ( userObject instanceof PictureInfo ) {
             try {
-                ( (PictureInfo) userObject ).getHighresURL().openStream().close();
+                ( (PictureInfo) userObject ).getImageURL().openStream().close();
                 myThumbnail.drawOfflineIcon( false );
             } catch ( MalformedURLException x ) {
                 myThumbnail.drawOfflineIcon( true );

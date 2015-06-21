@@ -718,9 +718,9 @@ public class PictureCollection {
             node = (SortableDefaultMutableTreeNode) e.nextElement();
             nodeObject = node.getUserObject();
             if ( nodeObject instanceof PictureInfo ) {
-                highresFile = ( (PictureInfo) nodeObject ).getHighresFile();
+                highresFile = ( (PictureInfo) nodeObject ).getImageFile();
                 //lowresFile = ( (PictureInfo) nodeObject ).getLowresFile();
-                LOGGER.log( Level.FINE, "Checking: {0}", ( (PictureInfo) nodeObject ).getHighresLocation());
+                LOGGER.log( Level.FINE, "Checking: {0}", ( (PictureInfo) nodeObject ).getImageLocation());
                 if ( ( highresFile != null ) && ( highresFile.compareTo( file ) == 0 ) ) {
                     LOGGER.log( Level.INFO, "Found a match on: {0}", ( (PictureInfo) nodeObject ).getDescription());
                     return true;
@@ -752,7 +752,7 @@ public class PictureCollection {
             node = (SortableDefaultMutableTreeNode) e.nextElement();
             nodeObject = node.getUserObject();
             if ( nodeObject instanceof PictureInfo ) {
-                LOGGER.log( Level.FINE, "Checking: {0}", ( (PictureInfo) nodeObject ).getHighresLocation());
+                LOGGER.log( Level.FINE, "Checking: {0}", ( (PictureInfo) nodeObject ).getImageLocation());
                 if ( ( (PictureInfo) nodeObject ).getChecksum() == checksum ) {
                     LOGGER.log( Level.FINE, "Found a match on: {0}", ( (PictureInfo) nodeObject ).getDescription());
                     return true;
@@ -888,7 +888,7 @@ public class PictureCollection {
 
         List<SortableDefaultMutableTreeNode> parentGroups = new ArrayList<>();
 
-        String comparingFilename = ( (PictureInfo) userObject ).getHighresLocation();
+        String comparingFilename = ( (PictureInfo) userObject ).getImageLocation();
         SortableDefaultMutableTreeNode testNode, testNodeParent;
         Object nodeObject;
         PictureInfo pi;
@@ -897,7 +897,7 @@ public class PictureCollection {
             nodeObject = testNode.getUserObject();
             if ( ( nodeObject instanceof PictureInfo ) ) {
                 pi = (PictureInfo) nodeObject;
-                if ( pi.getHighresLocation().equals( comparingFilename ) ) {
+                if ( pi.getImageLocation().equals( comparingFilename ) ) {
                     testNodeParent = (SortableDefaultMutableTreeNode) testNode.getParent();
                     if ( !parentGroups.contains( testNodeParent ) ) {
                         LOGGER.log( Level.FINE, "adding node: {0}", testNodeParent.toString());

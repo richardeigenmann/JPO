@@ -309,7 +309,7 @@ public class SortableDefaultMutableTreeNodeTest {
         assertNotSame( "The clone must be a new Object", picture1, cloneNode );
         assertNotSame( "The user object must be a new Object", picture1.getUserObject(), cloneNode.getUserObject() );
         assertNull( "The clone has no parent", cloneNode.getParent() );
-        assertEquals( "The clone node has the same highres picture as the original", pi1.getHighresLocation(), ( ( PictureInfo ) cloneNode.getUserObject() ).getHighresLocation() );
+        assertEquals( "The clone node has the same highres picture as the original", pi1.getImageLocation(), ( ( PictureInfo ) cloneNode.getUserObject() ).getImageLocation() );
     }
 
     /**

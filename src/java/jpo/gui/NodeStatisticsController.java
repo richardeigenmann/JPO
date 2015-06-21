@@ -13,7 +13,7 @@ import jpo.gui.swing.NodeStatisticsPanel;
 /*
 NodeStatisticsController.java: a controller that makes the NodeStatisticsPanel show interesting stats
 
-Copyright (C) 2002 - 2014  Richard Eigenmann.
+Copyright (C) 2002 - 2015  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2

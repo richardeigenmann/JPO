@@ -69,8 +69,8 @@ public class Tools {
     private static final Logger LOGGER = Logger.getLogger( Tools.class.getName() );
 
     /**
-     * method that converts any XML problem characters (&amp;, &lt;, &gt;, ", ') to the
-     * predefined codes.
+     * method that converts any XML problem characters (&amp;, &lt;, &gt;, ", ')
+     * to the predefined codes.
      *
      * @param s string to escape
      * @return the escaped string
@@ -524,7 +524,7 @@ public class Tools {
      *
      * @param bin Buffered Input Stream
      * @param bout Buffered Output Stream
-     * @return the crc of the file 
+     * @return the crc of the file
      * @throws IOException Exception of error
      */
     public static long copyBufferedStream( BufferedInputStream bin,
@@ -550,9 +550,8 @@ public class Tools {
      * File.renameTo. This doesn't work across different mounted filesystems so
      * if that fails it tries to copy the data from the source file to the
      * target file and deletes the source.
-     *
-     * If successful it calls correctReferences to update any other references
-     * in the collection that might be pointing at the moved file.
+     * 
+     * Don't forget to call correctReferences if required.
      *
      * @param sourceFile The file to be moved
      * @param targetFile The target file it is to be moved to.
@@ -590,7 +589,6 @@ public class Tools {
             }
         }
 
-        correctReferences( sourceFile, targetFile );
         return true;
     }
 
@@ -598,38 +596,28 @@ public class Tools {
      * Searches for any references in the current collection to the source file
      * and updates them to the target file.
      *
-     * @param sourceFile The file that was moved
-     * @param targetFile The new location of the source file
+     * @param oldReference The file that was moved
+     * @param newReference The new location of the source file
      */
-    private static void correctReferences( File sourceFile, File targetFile ) {
-        LOGGER.info( "entering correct References" );
+    public static void correctReferences( File oldReference, File newReference ) {
         warnOnEDT();
         //  search for other picture nodes in the tree using this image file
         SortableDefaultMutableTreeNode node;
         Object nodeObject;
+        int count = 0;
         Enumeration e = Settings.getPictureCollection().getRootNode().preorderEnumeration();
         while ( e.hasMoreElements() ) {
             node = (SortableDefaultMutableTreeNode) e.nextElement();
             nodeObject = node.getUserObject();
             if ( nodeObject instanceof PictureInfo ) {
-                //logger.info( "Tools.movePicture: checking: " + ( (PictureInfo) nodeObject ).getHighresLocation() + " against " + sourceFile );
-                if ( ( (PictureInfo) nodeObject ).getHighresFile().equals( sourceFile ) ) {
-                    //logger.info ( "Another picture node was using the same highres URL. Node changed: " + ( (PictureInfo) nodeObject ).getDescription() );
-                    ( (PictureInfo) nodeObject ).setHighresLocation( targetFile );
+                File imageFile = ( (PictureInfo) nodeObject ).getImageFile();
+                if ( imageFile != null && imageFile.equals( oldReference ) ) {
+                    ( (PictureInfo) nodeObject ).setImageLocation( newReference );
+                    count++;
                 }
-                    //if ( ( (PictureInfo) nodeObject ).getLowresFile().equals( sourceFile ) ) {
-                //logger.info ( "Another picture node was using the same lowres URL. Node changed: " + ( (PictureInfo) nodeObject ).getDescription() );
-                //    ( (PictureInfo) nodeObject ).setLowresLocation( targetFile.toURI().toURL() );
-                //}
-            } else {
-                    //if ( ( !node.isRoot() ) && ( !( (GroupInfo) nodeObject ).getLowresLocation().equals( "" ) ) && ( (GroupInfo) nodeObject ).getLowresFile().equals( sourceFile ) ) {
-                //logger.info ( "Another group node was using the same lowres URL. Node changed: " + ( (PictureInfo) nodeObject ).getDescription() );
-                //  ( (GroupInfo) nodeObject ).setLowresLocation( targetFile.toURI().toURL() );
-                //}
             }
         }
-        LOGGER.info( "enxiting correct References" );
-
+        LOGGER.info( String.format( "%d other Picture Nodes were pointing at the same picture and were corrected", count ) );
     }
 
     /**
@@ -971,13 +959,13 @@ public class Tools {
             return;
         }
 
-        String filename = ( myObject ).getHighresFile().toString();
+        String filename = ( myObject ).getImageFile().toString();
         command = command.replaceAll( "%f", filename );
 
         String escapedFilename = filename.replaceAll( "\\s", "\\\\\\\\ " );
         command = command.replaceAll( "%e", escapedFilename );
 
-        URL pictureURL = ( myObject ).getHighresURLOrNull();
+        URL pictureURL = ( myObject ).getImageURLOrNull();
         if ( pictureURL == null ) {
             LOGGER.info( "The picture doesn't have a valid URL. This is bad. Aborted." );
             return;

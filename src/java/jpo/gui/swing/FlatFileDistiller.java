@@ -133,7 +133,7 @@ public class FlatFileDistiller extends SwingWorker<DistillerResult, String> {
                 enumerateGroup( childNode );
             } else {
                 PictureInfo pictureInfo = (PictureInfo) childNode.getUserObject();
-                out.write( pictureInfo.getHighresLocation() );
+                out.write( pictureInfo.getImageLocation() );
                 out.newLine();
 
             }

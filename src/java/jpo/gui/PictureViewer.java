@@ -526,7 +526,7 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
 
         double rotation = 0;
         try {
-            pictureURL = pictureInfo.getHighresURL();
+            pictureURL = pictureInfo.getImageURL();
             description
                     = pictureInfo.getDescription();
             rotation

@@ -313,7 +313,7 @@ public class ReconcileJFrame extends JFrame {
                 nodeObject = node.getUserObject();
                 if ( nodeObject instanceof PictureInfo ) {
                     PictureInfo pictureInfo = (PictureInfo) nodeObject;
-                    collectionUris.add( pictureInfo.getHighresURIOrNull() );
+                    collectionUris.add( pictureInfo.getImageURIOrNull() );
                 }
             }
 

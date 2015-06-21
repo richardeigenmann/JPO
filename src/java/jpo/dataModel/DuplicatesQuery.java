@@ -122,7 +122,7 @@ public class DuplicatesQuery
                 compareNode = nodeList.get( j );
                 baseNodePictureInfo = (PictureInfo) baseNode.getUserObject();
                 compareNodePictureInfo = (PictureInfo) compareNode.getUserObject();
-                if ( ( baseNodePictureInfo.getHighresLocation().equals( compareNodePictureInfo.getHighresLocation() ) )
+                if ( ( baseNodePictureInfo.getImageLocation().equals( compareNodePictureInfo.getImageLocation() ) )
                         || ( ( baseNodePictureInfo.getChecksum() != Long.MIN_VALUE ) && ( baseNodePictureInfo.getChecksum() == compareNodePictureInfo.getChecksum() ) ) ) {
                     LOGGER.info( String.format( "Found a duplicate: %s = %s", baseNode.toString(), compareNode.toString() ) );
                     results.add( baseNode );

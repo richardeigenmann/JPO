@@ -118,6 +118,7 @@ public class NanoHTTPD {
 
         /**
          * Basic constructor.
+         *
          * @param status status
          * @param mimeType mime type
          * @param data data
@@ -143,6 +144,7 @@ public class NanoHTTPD {
 
         /**
          * Adds given line to the header.
+         *
          * @param name name
          * @param value value
          */
@@ -305,13 +307,13 @@ public class NanoHTTPD {
                         }
                     }
                     String postLine = "";
-                    char buf[] = new char[512];
-                    int read = in.read( buf );
+                    char[] buffer = new char[512];
+                    int read = in.read( buffer );
                     while ( read >= 0 && size > 0 && !postLine.endsWith( "\r\n" ) ) {
                         size -= read;
-                        postLine += String.valueOf( buf, 0, read );
+                        postLine += String.valueOf( buffer, 0, read );
                         if ( size > 0 ) {
-                            read = in.read( buf );
+                            read = in.read( buffer );
                         }
                     }
                     postLine = postLine.trim();
@@ -319,11 +321,11 @@ public class NanoHTTPD {
                 }
 
                 // Ok, now do the serve()
-                Response r = serve( uri, method, header, parms );
-                if ( r == null ) {
+                Response response = serve( uri, method, header, parms );
+                if ( response == null ) {
                     sendError( HTTP_INTERNALERROR, "SERVER INTERNAL ERROR: Serve() returned a null response." );
                 } else {
-                    sendResponse( r.status, r.mimeType, r.header, r.data );
+                    sendResponse( response.status, response.mimeType, response.header, response.data );
                 }
 
                 in.close();
@@ -401,6 +403,7 @@ public class NanoHTTPD {
         /**
          * Returns an error message as a HTTP response and throws
          * InterruptedException to stop further request processing.
+         *
          * @param status status
          * @param msg msg
          * @throws InterruptedException When interrupted
@@ -412,8 +415,9 @@ public class NanoHTTPD {
 
         /**
          * Sends given response to the socket.
+         *
          * @param status status
-         * @param mime  mime type
+         * @param mime mime type
          * @param header header
          * @param data data
          */

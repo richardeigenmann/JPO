@@ -65,7 +65,7 @@ public class PicturePopupMenuTest {
         try {
             File temp = File.createTempFile( "JPO-Unit-Test", ".jpg" );
             temp.deleteOnExit();
-            myPictureInfo.setHighresLocation( temp );
+            myPictureInfo.setImageLocation( temp );
         } catch ( IOException ex ) {
             Logger.getLogger( PicturePopupMenuTest.class.getName() ).log( Level.SEVERE, null, ex );
         }

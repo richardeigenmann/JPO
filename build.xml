@@ -7,8 +7,6 @@
     <property name="build.dir" value="build"/>
     <property name="build.base.classes.dir" value="${build.dir}/classes"/>
     <property name="unit.test.classes.dir" value="${build.dir}/unittestclasses"/>
-    <!--    <property name="junit" value="/usr/share/java/junit.jar"/>-->
-    <!--    <property name="jsch.dir" value="/usr/share/java/jsch.jar"/>-->
     <property name="build.images.dir" value="${build.base.classes.dir}/${app.main.package}/images"/>
     <property name="build.dtd.dir" value="${build.base.classes.dir}/${app.main.package}"/>
     <property name="build.cache.dir" value="${build.base.classes.dir}/"/>
@@ -320,6 +318,8 @@
             <classpath>
                 <pathelement location="${unit.test.classes.dir}" />
                 <pathelement location="${junit}" />
+                <pathelement location="${hamcrest}" />
+                <pathelement location="${ant-junit4}" />
             </classpath>
             <classpath refid="classpath"/>
             <test name="${test.class}Test" todir="${results}">
@@ -334,7 +334,7 @@
     <target name="run" description="Runs the program" depends="prepare, compile">
         <java classname="${app.main.class}"
               fork="yes"
-              maxmemory="16000m">
+              maxmemory="1000m">
             <!-- add for debugging: jvmargs="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,address=8888,suspend=n" -->
             <classpath refid="classpath"/>
         </java>

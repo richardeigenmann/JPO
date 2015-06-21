@@ -87,6 +87,5 @@ public class SingleNodeNavigator
     @Override
     public void getRid() {
         super.getRid();
-        singleNode = null;
     }
 }
