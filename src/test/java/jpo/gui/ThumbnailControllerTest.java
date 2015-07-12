@@ -5,6 +5,7 @@
  */
 package jpo.gui;
 
+import java.awt.GraphicsEnvironment;
 import java.lang.reflect.InvocationTargetException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -43,12 +44,20 @@ public class ThumbnailControllerTest {
     public void tearDown() {
     }
 
-
     private Thumbnail thumbnail = null;
 
     @Test
     public void testConstructor() {
-        TestCase.assertNull(thumbnail);
+
+        // TravisCI runs headless so we can't execute the below test
+        GraphicsEnvironment ge
+                = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        if ( ge.isHeadless() ) {
+            return;
+        }
+        
+
+        TestCase.assertNull( thumbnail );
         try {
             SwingUtilities.invokeAndWait( new Runnable() {
 
@@ -58,7 +67,7 @@ public class ThumbnailControllerTest {
 
                 }
             } );
-            TestCase.assertNotNull(thumbnail);
+            TestCase.assertNotNull( thumbnail );
             ThumbnailController thumbnailController = new ThumbnailController( thumbnail, 350 );
             return;
         } catch ( InterruptedException ex ) {
