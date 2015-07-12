@@ -60,7 +60,7 @@ import jpo.gui.swing.Thumbnail;
 /**
  * ThumbnailController controls a visual representation of the specified node.
  */
-public class ThumbnailController implements JpoDropTargetDropEventHandler {
+public class ThumbnailController implements JpoDropTargetDropEventHandler, ThumbnailQueueRequestCallbackHandler {
 
     /**
      * Defines a LOGGER for this class
@@ -78,7 +78,7 @@ public class ThumbnailController implements JpoDropTargetDropEventHandler {
         myThumbnail = thumbnail;
         myThumbnail.setThumbnailSize( thumbnailSize );
         myThumbnail.addMouseListener( new ThumbnailMouseAdapter() );
-        
+
         new DropTarget( myThumbnail, new JpoTransferrableDropTargetListener( this ) );
         DragSource dragSource = DragSource.getDefaultDragSource();
         dragSource.createDefaultDragGestureRecognizer(
@@ -179,7 +179,7 @@ public class ThumbnailController implements JpoDropTargetDropEventHandler {
         if ( node == null ) {
             myThumbnail.setVisible( false );
         } else {
-            requestThumbnailCreation( DEFAULT_QUEUE_PRIORITY, false );
+            requestThumbnailCreation( DEFAULT_QUEUE_PRIORITY );
         }
 
         showSlectionStatus();
@@ -241,12 +241,10 @@ public class ThumbnailController implements JpoDropTargetDropEventHandler {
      *
      * @param	priority	The priority with which the request is to be treated on
      * the queue
-     * @param	force	Set to true if the thumbnail needs to be rebuilt from
-     * source, false if using a cached version is OK.
      */
-    public void requestThumbnailCreation( QUEUE_PRIORITY priority, boolean force ) {
+    public void requestThumbnailCreation( QUEUE_PRIORITY priority ) {
         boolean newRequest = ThumbnailCreationQueue.requestThumbnailCreation(
-                this, priority, force );
+                this, priority );
         if ( newRequest ) {
             setPendingIcon();
         } else {
@@ -280,8 +278,6 @@ public class ThumbnailController implements JpoDropTargetDropEventHandler {
         return new Dimension( myThumbnail.getThumbnailSize(), myThumbnail.getThumbnailSize() );
     }
 
-  
-
     /**
      * This method checks if the node is set and whether the highres image is
      * available. If there is a problem the offline icon is drawn over the
@@ -309,6 +305,15 @@ public class ThumbnailController implements JpoDropTargetDropEventHandler {
         } else {
             myThumbnail.drawOfflineIcon( false );
         }
+    }
+
+    /**
+     * Entry point for the callback handler
+     * @param thumbnailQueueRequest 
+     */
+    @Override
+    public void callbackThumbnailCreated( ThumbnailQueueRequest thumbnailQueueRequest ) {
+        getThumbnail().setImageIcon( thumbnailQueueRequest.getIcon() );
     }
 
     /**
@@ -400,7 +405,7 @@ public class ThumbnailController implements JpoDropTargetDropEventHandler {
         @Override
         public void pictureInfoChangeEvent( PictureInfoChangeEvent pictureInfoChangeEvent ) {
             if ( pictureInfoChangeEvent.getHighresLocationChanged() || pictureInfoChangeEvent.getChecksumChanged() || pictureInfoChangeEvent.getThumbnailChanged() ) {
-                requestThumbnailCreation( QUEUE_PRIORITY.HIGH_PRIORITY, false );
+                requestThumbnailCreation( QUEUE_PRIORITY.HIGH_PRIORITY );
             } else if ( pictureInfoChangeEvent.getWasSelected() ) {
                 myThumbnail.showAsSelected();
             } else if ( pictureInfoChangeEvent.getWasUnselected() ) {
@@ -408,7 +413,7 @@ public class ThumbnailController implements JpoDropTargetDropEventHandler {
             } else if ( ( pictureInfoChangeEvent.getWasMailSelected() ) || ( pictureInfoChangeEvent.getWasMailUnselected() ) ) {
                 determineMailSlectionStatus();
             } else if ( pictureInfoChangeEvent.getRotationChanged() ) {
-                requestThumbnailCreation( QUEUE_PRIORITY.HIGH_PRIORITY, true );
+                requestThumbnailCreation( QUEUE_PRIORITY.HIGH_PRIORITY );
             }
         }
     }
@@ -456,13 +461,7 @@ public class ThumbnailController implements JpoDropTargetDropEventHandler {
         myThumbnail.setFactor( thumbnailSizeFactor );
     }
 
-    /**
-     * tells the Thumbnail to show a broken icon
-     */
-    public void setBrokenIcon() {
-        myThumbnail.setBrokenIcon();
-    }
-
+   
     /**
      * This flag indicates where decorations should be drawn at all
      */
@@ -584,8 +583,6 @@ public class ThumbnailController implements JpoDropTargetDropEventHandler {
             Settings.getPictureCollection().clearSelection();
         }
     }
-
-   
 
     @Override
     public void handleJpoDropTargetDropEvent( DropTargetDropEvent event ) {

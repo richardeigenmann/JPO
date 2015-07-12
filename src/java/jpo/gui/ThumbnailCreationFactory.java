@@ -1,8 +1,6 @@
 package jpo.gui;
 
-import java.io.IOException;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import jpo.cache.ImageBytes;
@@ -42,6 +40,13 @@ public class ThumbnailCreationFactory implements Runnable {
      */
     private static final Logger LOGGER = Logger.getLogger( ThumbnailCreationFactory.class.getName() );
 
+    
+    /**
+     * An icon that indicates a broken image used when there is a problem
+     * rendering the correct thumbnail.
+     */
+    private static final ImageIcon BROKEN_THUMBNAIL_PICTURE = new ImageIcon( ThumbnailCreationFactory.class.getClassLoader().getResource( "jpo/images/broken_thumbnail.gif" ) );
+
     /**
      * Flag to indicate that the thread should die.
      */
@@ -64,15 +69,15 @@ public class ThumbnailCreationFactory implements Runnable {
     @Override
     public void run() {
         while ( !endThread ) {
-            ThumbnailQueueRequest req = ThumbnailCreationQueue.poll();
-            if ( req == null ) {
+            ThumbnailQueueRequest request = ThumbnailCreationQueue.poll();
+            if ( request == null ) {
                 try {
                     Thread.sleep( Settings.ThumbnailCreationThreadPollingTime );
                 } catch ( InterruptedException x ) {
                     // so we got interrupted? Don' care.
                 }
             } else {
-                processQueueRequest( req );
+                processQueueRequest(request );
             }
         }
     }
@@ -84,52 +89,38 @@ public class ThumbnailCreationFactory implements Runnable {
      * @param request	the {@link ThumbnailQueueRequest} for which to create the
      * ThumbnailController
      */
-    private void processQueueRequest( ThumbnailQueueRequest request ) {
-        ThumbnailController thumbnailController = request.getThumbnailController();
-        if ( thumbnailController == null ) {
-            LOGGER.info( "Invoked request with a null Thumbnail. Aborting." );
-            return;
-        }
-        LOGGER.fine( String.format( "Processing Queue Request details: %s", request.toString() ) );
-        Object userObject = thumbnailController.getNode().getUserObject();
+    private static void processQueueRequest( ThumbnailQueueRequest request ) {
+        Object userObject = request.getNode().getUserObject();
         if ( userObject == null ) {
-            LOGGER.info( "Could not find PictureInfo. Aborting." );
+            LOGGER.severe( "Queue request for a null Could not find PictureInfo. Aborting." );
             return;
         }
 
-        // now block other threads from accessing the ThumbnailController
-        synchronized ( thumbnailController ) {
+        // now block other threads from accessing the ThumbnailQueueRequestCallbackHandler
+        ThumbnailQueueRequestCallbackHandler callbackHandler = request.getThumbnailQueueRequestCallbackHandler();
+        synchronized ( callbackHandler ) {
             try {
                 if ( userObject instanceof PictureInfo ) {
-                    PictureInfo pi = (PictureInfo) userObject;
+                    PictureInfo pictureinfo = (PictureInfo) userObject;
 
-                    ImageBytes imageBytes = JpoCache.getInstance().getThumbnailImageBytes(
-                            pi.getImageURL(),
-                            pi.getRotation(),
-                            thumbnailController.getMaximumUnscaledSize().width,
-                            thumbnailController.getMaximumUnscaledSize().height );
-                    ImageIcon icon = new ImageIcon( imageBytes.getBytes() );
-                    thumbnailController.getThumbnail().setImageIcon( icon );
-
+                    ImageBytes imageBytes = JpoCache.getInstance().getThumbnailImageBytes(pictureinfo.getImageURL(),
+                            pictureinfo.getRotation(),
+                            request.getSize() );
+                    request.setIcon( new ImageIcon( imageBytes.getBytes() ) );
                 } else if ( userObject instanceof GroupInfo ) {
-                    List<SortableDefaultMutableTreeNode> childPictureNodes = thumbnailController.getNode().getChildPictureNodes( false );
+                    List<SortableDefaultMutableTreeNode> childPictureNodes = request.getNode().getChildPictureNodes( false );
 
                     ImageBytes imageBytes = JpoCache.getInstance().getGroupThumbnailImageBytes( childPictureNodes );
-                    ImageIcon icon = new ImageIcon( imageBytes.getBytes() );
-                    thumbnailController.getThumbnail().setImageIcon( icon );
-
+                    request.setIcon( new ImageIcon( imageBytes.getBytes() ) );
                 } else {
-                    thumbnailController.setBrokenIcon();
+                    request.setIcon(BROKEN_THUMBNAIL_PICTURE);
                 }
-            } catch ( IOException ex ) {
-                Logger.getLogger( ThumbnailCreationFactory.class.getName() ).log( Level.SEVERE, null, ex );
-                thumbnailController.setBrokenIcon();
+            } catch ( Exception ex ) {
+                LOGGER.severe( ex.getMessage() );
+                request.setIcon(BROKEN_THUMBNAIL_PICTURE);
             }
-
+            callbackHandler.callbackThumbnailCreated( request );
         }
     }
 
-    
-
-    
 }

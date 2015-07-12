@@ -57,11 +57,11 @@ public class ThumbnailCreationQueue {
      */
     public static boolean requestThumbnailCreation(
             ThumbnailController thumbnailController,
-            QUEUE_PRIORITY priority, boolean force ) {
+            QUEUE_PRIORITY priority) {
         //LOGGER.fine( "Chucking a request on the queue for ThumbnailController: " + thumbnailController.toString() );
         ThumbnailQueueRequest requestFoundOnQueue = findThumbnailQueueRequest( thumbnailController );
         if ( requestFoundOnQueue == null ) {
-            ThumbnailQueueRequest thumbnailQueueRequest = new ThumbnailQueueRequest( thumbnailController, priority, force );
+            ThumbnailQueueRequest thumbnailQueueRequest = new ThumbnailQueueRequest( thumbnailController, thumbnailController.getNode(), priority, thumbnailController.getMaximumUnscaledSize() );
             //logger.info( String.format( "There is no prior request on the queue, we add a new one: %s", tqr.toString() ) );
             add( thumbnailQueueRequest );
             return true;
@@ -73,9 +73,9 @@ public class ThumbnailCreationQueue {
             //}
             requestFoundOnQueue.increasePriorityTo( priority );
             // must we now rebuild the image?
-            if ( force && ( requestFoundOnQueue.getForce() != force ) ) {
-                requestFoundOnQueue.setForce( true );
-            }
+            //if ( force && ( requestFoundOnQueue.getForce() != force ) ) {
+            //    requestFoundOnQueue.setForce( true );
+            //}
             return false;
         }
     }
@@ -150,7 +150,7 @@ public class ThumbnailCreationQueue {
         ThumbnailQueueRequest req = null, test;
         for ( Iterator i = QUEUE.iterator(); i.hasNext(); ) {
             test = (ThumbnailQueueRequest) i.next();
-            if ( ( thumbnailController != null ) && ( test.getThumbnailController().equals( thumbnailController ) ) ) {
+            if ( ( thumbnailController != null ) && ( test.getThumbnailQueueRequestCallbackHandler().equals( thumbnailController ) ) ) {
                 req = test;
                 break;
             }

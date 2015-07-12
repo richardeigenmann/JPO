@@ -210,13 +210,10 @@ public class ScalablePicture
      * @param rotation The angle by which it is to be rotated upon loading.
      */
     public void loadPictureImd( URL imageUrl, double rotation ) {
-        LOGGER.log( Level.FINE, "Invoked on URL: {0}", imageUrl.toString() );
         if ( sourcePicture != null ) {
             sourcePicture.removeListener( this );
         }
         sourcePicture = new SourcePicture();
-        //sourcePicture.addListener( this );
-        //setStatus( LOADING, Settings.jpoResources.getString( "ScalablePictureLoadingStatus" ) );
         scaleAfterLoad = false;
         sourcePicture.loadPicture( imageUrl, rotation );
     }

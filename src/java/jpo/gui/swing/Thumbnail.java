@@ -246,11 +246,6 @@ public class Thumbnail extends JComponent {
      */
     private static final ImageIcon OFFLINE_ICON = new ImageIcon( CLASS_LOADER.getResource( "jpo/images/icon_offline.gif" ) );
 
-    /**
-     * An icon that indicates a broken image used when there is a problem
-     * rendering the correct thumbnail.
-     */
-    private static final ImageIcon BROKEN_THUMBNAIL_PICTURE = new ImageIcon( CLASS_LOADER.getResource( "jpo/images/broken_thumbnail.gif" ) );
 
     /**
      * The icon to superimpose on the picture if the highres picture is not
@@ -272,13 +267,6 @@ public class Thumbnail extends JComponent {
         setImageIcon( LARGE_FOLDER_ICON );
     }
 
-    /**
-     * Sets an icon to mark that the thumbnail is in loading state before a
-     * final icon is put in place by a ThumbnailCreation
-     */
-    public void setBrokenIcon() {
-        setImageIcon( BROKEN_THUMBNAIL_PICTURE );
-    }
 
     /**
      * This flag indicates whether the offline icon should be drawn or not.

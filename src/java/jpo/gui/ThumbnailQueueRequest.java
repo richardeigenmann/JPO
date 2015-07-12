@@ -1,9 +1,13 @@
 package jpo.gui;
 
+import java.awt.Dimension;
+import javax.swing.ImageIcon;
+import jpo.dataModel.SortableDefaultMutableTreeNode;
+
 /*
  ThumbnailQueueRequest.java: Element on the ThumbnailController Queue
 
- Copyright (C) 2002 - 2009  Richard Eigenmann.
+ Copyright (C) 2002 - 2015  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -42,7 +46,7 @@ public class ThumbnailQueueRequest implements Comparable<ThumbnailQueueRequest> 
         }
     }
 
-    protected ThumbnailController thumbnailController;
+    protected ThumbnailQueueRequestCallbackHandler callbackHandler;
     /**
      * the priority the request has on the queue.
      */
@@ -54,32 +58,55 @@ public class ThumbnailQueueRequest implements Comparable<ThumbnailQueueRequest> 
     protected boolean force;
 
     /**
+     * The size we should scale the thumbnail to
+     */
+    protected final Dimension size;
+
+    /**
+     * The node for which we are to create a thumbnail
+     */
+    protected final SortableDefaultMutableTreeNode node;
+
+    /**
+     * The resulting image icon
+     */
+    private ImageIcon icon;
+
+    /**
      * Constructs a ThumbnailQueueRequest object
      *
-     * @param	thumb	The ThumbnailController object for which the thumbnail is to
-     * be created
-     * @param	priority	The priority with which the thumbnail is to be created
-     * Possible values are {@link #HIGH_PRIORITY}
-     *	{@link #MEDIUM_PRIORITY} and {@link #LOW_PRIORITY}.
-     * @param	force	set to true if the ThumbnailController must be read from
+     * @param callbackHandler	The callback handler that will be notified when 
+     * the image icon is ready
+     * @param node the node for which the image is to be created
+     * @param priority	The queue priority with which the thumbnail is to be created
+     * Possible values are {@link #HIGH_PRIORITY}, {@link #MEDIUM_PRIORITY}, {@link #LOW_PRIORITY} and  {@link #LOWEST_PRIORITY}.
+     //* @param force	set to true if the ThumbnailController must be read from
      * source if set to false it is permissible to just reload the cached
      * ThumbnailController.
+     * @param size the maximum size of the thumbnail
      */
-    ThumbnailQueueRequest( ThumbnailController thumb, QUEUE_PRIORITY priority, boolean force ) {
-        this.thumbnailController = thumb;
+    ThumbnailQueueRequest(
+            ThumbnailQueueRequestCallbackHandler callbackHandler,
+            SortableDefaultMutableTreeNode node,
+            QUEUE_PRIORITY priority,
+            //boolean force,
+            Dimension size ) {
+        this.callbackHandler = callbackHandler;
+        this.node = node;
         this.priority = priority;
-        this.force = force;
+        //this.force = force;
+        this.size = size;
     }
 
     /**
-     * returns the {@link ThumbnailController} which is to be created.
+     * returns the {@link ThumbnailQueueRequestCallbackHandler} that should be
+     * notified when the ImageIcon is ready
      *
      * @return the thumbnail
      */
-    public ThumbnailController getThumbnailController() {
-        return thumbnailController;
+    public ThumbnailQueueRequestCallbackHandler getThumbnailQueueRequestCallbackHandler() {
+        return callbackHandler;
     }
-
 
     /**
      * sets the priority in which the {@link ThumbnailController} is to be
@@ -100,9 +127,9 @@ public class ThumbnailQueueRequest implements Comparable<ThumbnailQueueRequest> 
      *
      * @return true if the thumbnail creation must be forced, false if not.
      */
-    public boolean getForce() {
-        return force;
-    }
+    //public boolean getForce() {
+    //    return force;
+    //}
 
     /**
      * sets whether the rebuilding of the {@link ThumbnailController} must be
@@ -111,9 +138,9 @@ public class ThumbnailQueueRequest implements Comparable<ThumbnailQueueRequest> 
      * @param newForce true if the thumbnail creation must be forced, false if
      * not.
      */
-    public void setForce( boolean newForce ) {
-        force = newForce;
-    }
+    //public void setForce( boolean newForce ) {
+    //    force = newForce;
+    //}
 
     /**
      * Compares to another request based on priority.
@@ -124,20 +151,54 @@ public class ThumbnailQueueRequest implements Comparable<ThumbnailQueueRequest> 
      */
     @Override
     public int compareTo( ThumbnailQueueRequest thumbnailQueueRequest ) {
-        return priority.compareTo(thumbnailQueueRequest.priority);
+        return priority.compareTo( thumbnailQueueRequest.priority );
     }
-    
+
     /**
-     * Increases the priority of the request to the supplied higher priority
-     * if the supplied priority is higher.
-     * 
+     * Increases the priority of the request to the supplied higher priority if
+     * the supplied priority is higher.
+     *
      * @param newPriority the new, possibly higher priority
      */
     public void increasePriorityTo( QUEUE_PRIORITY newPriority ) {
         if ( priority.compareTo( newPriority ) > 0 ) {
             setPriority( newPriority );
         }
-        
+
+    }
+
+    /**
+     * The size the thumbnail should be scaled to
+     *
+     * @return the size
+     */
+    public Dimension getSize() {
+        return size;
+    }
+
+    /**
+     * Returns the node for the request
+     *
+     * @return the node
+     */
+    public SortableDefaultMutableTreeNode getNode() {
+        return node;
+    }
+
+    /**
+     * @return the icon that was created
+     */
+    public ImageIcon getIcon() {
+        return icon;
+    }
+
+    /**
+     * Sets the icon after the creation queue
+     *
+     * @param icon the new icon
+     */
+    public void setIcon( ImageIcon icon ) {
+        this.icon = icon;
     }
 
     /**
@@ -147,7 +208,7 @@ public class ThumbnailQueueRequest implements Comparable<ThumbnailQueueRequest> 
      */
     @Override
     public String toString() {
-        return String.format( "ThumbnailQueueRequest: Hash: %d, Priority: %d, Force: %b, Thumbnail: %s", this.hashCode(), priority, force, thumbnailController.toString() );
+        return String.format( "ThumbnailQueueRequest: Hash: %d, Priority: %s, Force: %b, Thumbnail: %s", this.hashCode(), priority, force, callbackHandler.toString() );
 
     }
 }

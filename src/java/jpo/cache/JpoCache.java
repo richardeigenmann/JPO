@@ -137,12 +137,13 @@ public class JpoCache {
      *
      * @param url The url of the highres picture for which a tumbnail is needed
      * @param rotation The rotation in degrees (0..360) for the thumbnail
-     * @param maxWidth The maximum width of the thumbnail
-     * @param maxHeight the maximum height of the thumbnail
+     * @param size The maximum size of the thumbnail
      * @return The ImageBytes of the thumbnails
      * @throws IOException If something went wrong
      */
-    public ImageBytes getThumbnailImageBytes( URL url, double rotation, int maxWidth, int maxHeight ) throws IOException {
+    public ImageBytes getThumbnailImageBytes( URL url, double rotation, Dimension size ) throws IOException {
+        int maxWidth = size.width;
+        int maxHeight = size.height;
         String key = String.format( "%s-%fdeg-w:%dpx-h:%dpx", url, rotation, maxWidth, maxHeight );
         ImageBytes imageBytes = (ImageBytes) thumbnailMemoryAndDiskCache.get( key );
         if ( imageBytes != null ) {
@@ -306,10 +307,12 @@ public class JpoCache {
     /**
      * Create a Group ThumbnailController by loading the nodes component images
      * and creating a folder icon with embedded images
+     *
      * @throws IOException when things go wrong
      * @param key The key for the image in the cache
-     * @param numberOfPics  the number of pictures to include
-     * @param childPictureNodes The nodes from which to create the mini thumbnails
+     * @param numberOfPics the number of pictures to include
+     * @param childPictureNodes The nodes from which to create the mini
+     * thumbnails
      * @return the image
      */
     private ImageBytes createGroupThumbnailAndStoreInCache( String key, int numberOfPics, List<SortableDefaultMutableTreeNode> childPictureNodes ) throws IOException {

@@ -1443,7 +1443,7 @@ public class ApplicationEventHandler {
             ThumbnailController t = new ThumbnailController( new Thumbnail(), Settings.thumbnailSize );
             t.setNode( new SingleNodeNavigator( node ), 0 );
             ThumbnailCreationQueue.requestThumbnailCreation( t,
-                    request.getPriority(), true );
+                    request.getPriority() );
         }
     }
 
