@@ -1,5 +1,6 @@
 package jpo.gui;
 
+import jpo.cache.ThumbnailCreationFactory;
 import com.google.common.eventbus.Subscribe;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
@@ -120,7 +121,7 @@ import jpo.export.GenerateWebsiteWizard;
 import jpo.export.PicasaUploadRequest;
 import jpo.export.PicasaUploaderWizard;
 import static jpo.dataModel.Tools.streamcopy;
-import jpo.gui.ThumbnailQueueRequest.QUEUE_PRIORITY;
+import jpo.cache.ThumbnailQueueRequest.QUEUE_PRIORITY;
 import jpo.gui.swing.FindJPanel;
 import jpo.gui.swing.FlatFileDistiller;
 import jpo.gui.swing.HelpAboutWindow;
@@ -195,7 +196,7 @@ public class ApplicationEventHandler {
         //final List<ThumbnailCreationFactory> THUMBNAIL_FACTORIES = new ArrayList<>();
         for ( int i = 1; i <= Settings.numberOfThumbnailCreationThreads; i++ ) {
             //THUMBNAIL_FACTORIES.add( new ThumbnailCreationFactory() );
-            new ThumbnailCreationFactory();
+            new ThumbnailCreationFactory( Settings.ThumbnailCreationThreadPollingTime );
         }
 
         if ( ( Settings.autoLoad != null ) && ( Settings.autoLoad.length() > 0 ) ) {
@@ -1442,8 +1443,8 @@ public class ApplicationEventHandler {
             LOGGER.fine( String.format( "refreshing the thumbnail on the node %s%nAbout to create the thubnail", this.toString() ) );
             ThumbnailController t = new ThumbnailController( new Thumbnail(), Settings.thumbnailSize );
             t.setNode( new SingleNodeNavigator( node ), 0 );
-            ThumbnailCreationQueue.requestThumbnailCreation( t,
-                    request.getPriority() );
+            //ThumbnailCreationQueue.requestThumbnailCreation( t, node, 
+            //        request.getPriority() );
         }
     }
 

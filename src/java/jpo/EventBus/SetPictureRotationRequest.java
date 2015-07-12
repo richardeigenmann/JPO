@@ -1,7 +1,7 @@
 package jpo.EventBus;
 
 import jpo.dataModel.SortableDefaultMutableTreeNode;
-import jpo.gui.ThumbnailQueueRequest.QUEUE_PRIORITY;
+import jpo.cache.ThumbnailQueueRequest.QUEUE_PRIORITY;
 
 /*
  SetPictureRotationRequest: Request to rotate picture

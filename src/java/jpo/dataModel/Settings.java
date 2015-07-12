@@ -211,7 +211,7 @@ public class Settings {
      * The polling interval in milliseconds for the ThumbnailCreationThreads to
      * check Whether there is something new to render.
      */
-    public static final int ThumbnailCreationThreadPollingTime = 500;
+    public static final int ThumbnailCreationThreadPollingTime = 200;
     /**
      * The number of thumbnail creation threads to spawn.
      *

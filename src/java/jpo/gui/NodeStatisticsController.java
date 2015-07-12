@@ -1,5 +1,6 @@
 package jpo.gui;
 
+import jpo.cache.ThumbnailCreationQueue;
 import java.util.logging.Logger;
 import javax.swing.JComponent;
 import javax.swing.SwingWorker;

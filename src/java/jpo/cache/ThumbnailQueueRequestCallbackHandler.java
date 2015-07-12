@@ -1,4 +1,4 @@
-package jpo.gui;
+package jpo.cache;
 
 /*
  ThumbnailQueueRequestCallbackHandler.java: Defines the method that the must be 

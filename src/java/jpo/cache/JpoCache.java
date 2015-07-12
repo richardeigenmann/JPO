@@ -27,8 +27,28 @@ import org.apache.commons.jcs.access.CacheAccess;
 import org.apache.commons.jcs.access.exception.CacheException;
 import org.apache.commons.jcs.engine.control.CompositeCacheManager;
 
+
+/*
+ JpoCache.java: Cache for the Jpo application
+
+ Copyright (C) 2014 - 2015  Richard Eigenmann.
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or any later version. This program is distributed 
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+ without even the implied warranty of MERCHANTABILITY or FITNESS 
+ FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
+ more details. You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ The license is in gpl.txt.
+ See http://www.gnu.org/copyleft/gpl.html for the details.
+ */
+
 /**
- *
+ * Cache for the Jpo application
+ * 
  * @author Richard Eigenmann
  */
 public class JpoCache {
@@ -41,9 +61,7 @@ public class JpoCache {
     private static final String highresCacheRegionName = "highresCache";
     private static final String thumbnailCacheRegionName = "thumbnailCache";
 
-    //private JCS highresMemoryCache;
     private CacheAccess<URL, ImageBytes> highresMemoryCache;
-    //private JCS thumbnailMemoryAndDiskCache;
     private CacheAccess<String, ImageBytes> thumbnailMemoryAndDiskCache;
 
     private JpoCache() {
@@ -135,10 +153,10 @@ public class JpoCache {
      * Returns an ImageBytes object with thumbnail image data for the supplied
      * url
      *
-     * @param url The url of the highres picture for which a tumbnail is needed
+     * @param url The url of the highres picture for which a thumbnail is needed
      * @param rotation The rotation in degrees (0..360) for the thumbnail
      * @param size The maximum size of the thumbnail
-     * @return The ImageBytes of the thumbnails
+     * @return The ImageBytes of the thumbnail
      * @throws IOException If something went wrong
      */
     public ImageBytes getThumbnailImageBytes( URL url, double rotation, Dimension size ) throws IOException {
@@ -168,7 +186,7 @@ public class JpoCache {
      * Creates a thumbnail and stores it in the cache
      *
      * @param key the key to store it in the cache
-     * @param imageURL The url of the highres picture
+     * @param imageURL The url of the picture
      * @param rotation the rotation to apply
      * @param maxWidth the maximum width
      * @param maxHeight the maximum height
@@ -188,7 +206,7 @@ public class JpoCache {
      * Creates a thumbnail
      *
      * @param key the key to store it in the cache
-     * @param imageURL The url of the highres picture
+     * @param imageURL The url of the picture
      * @param rotation the rotation to apply
      * @param maxWidth the maximum width
      * @param maxHeight the maximum height

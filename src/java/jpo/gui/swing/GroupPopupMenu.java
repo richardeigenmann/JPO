@@ -43,7 +43,7 @@ import jpo.dataModel.Settings;
 import jpo.dataModel.SortOption;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
 import jpo.dataModel.Tools;
-import jpo.gui.ThumbnailQueueRequest.QUEUE_PRIORITY;
+import jpo.cache.ThumbnailQueueRequest.QUEUE_PRIORITY;
 
 /*
  GroupPopupMenu.java: popup menu for groups

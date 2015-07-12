@@ -1,9 +1,11 @@
-package jpo.gui;
+package jpo.cache;
 
+import java.awt.Dimension;
 import java.util.Iterator;
 import java.util.concurrent.PriorityBlockingQueue;
 import java.util.logging.Logger;
-import jpo.gui.ThumbnailQueueRequest.QUEUE_PRIORITY;
+import jpo.dataModel.SortableDefaultMutableTreeNode;
+import jpo.cache.ThumbnailQueueRequest.QUEUE_PRIORITY;
 
 
 /*
@@ -23,9 +25,8 @@ import jpo.gui.ThumbnailQueueRequest.QUEUE_PRIORITY;
  The license is in gpl.txt.
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
-
 /**
- * Queue that holds requests to create Thumbnails from Images. 
+ * Queue that holds requests to create Thumbnails from Images.
  *
  */
 public class ThumbnailCreationQueue {
@@ -33,7 +34,7 @@ public class ThumbnailCreationQueue {
     /**
      * Implemented using a PriorityBlockingQueue
      */
-    private static final PriorityBlockingQueue<ThumbnailQueueRequest> QUEUE = new PriorityBlockingQueue<>();
+    protected static final PriorityBlockingQueue<ThumbnailQueueRequest> QUEUE = new PriorityBlockingQueue<>();
     /**
      * Defines a logger for this class
      */
@@ -47,46 +48,39 @@ public class ThumbnailCreationQueue {
      * rebuild of the image this is also updated in the request.
      *
      *
-     * @param	thumbnailController	The ThumbnailController which is to be loaded
-     * @param	priority	The priority with which the request is to be treated on
+     * @param	callbackHandler	The ThumbnailQueueRequestCallbackHandler which is
+     * to be notified when done
+     * @param node The node for which to extract a thumbnail
+     * @param priority The priority with which the request is to be treated on
      * the queue
-     * @param	force	Set to true if the thumbnail needs to be rebuilt from
-     * source, false if using a cached version is OK.
+     * @param size the maximum size to extract
      * @return true if the request was added to the queue, false if the request
      * already existed.
      */
     public static boolean requestThumbnailCreation(
-            ThumbnailController thumbnailController,
-            QUEUE_PRIORITY priority) {
-        //LOGGER.fine( "Chucking a request on the queue for ThumbnailController: " + thumbnailController.toString() );
-        ThumbnailQueueRequest requestFoundOnQueue = findThumbnailQueueRequest( thumbnailController );
+            ThumbnailQueueRequestCallbackHandler callbackHandler,
+            SortableDefaultMutableTreeNode node,
+            QUEUE_PRIORITY priority,
+            Dimension size ) {
+        ThumbnailQueueRequest newThumbnailQueueRequest = new ThumbnailQueueRequest( callbackHandler, node, priority, size );
+
+        ThumbnailQueueRequest requestFoundOnQueue = findThumbnailQueueRequest( callbackHandler );
         if ( requestFoundOnQueue == null ) {
-            ThumbnailQueueRequest thumbnailQueueRequest = new ThumbnailQueueRequest( thumbnailController, thumbnailController.getNode(), priority, thumbnailController.getMaximumUnscaledSize() );
-            //logger.info( String.format( "There is no prior request on the queue, we add a new one: %s", tqr.toString() ) );
-            add( thumbnailQueueRequest );
+            QUEUE.add( newThumbnailQueueRequest );
             return true;
         } else {
-            //logger.info( "Such a request is already on the queue" );
-            // thumbnail already on queue, should we up the priority?
-            //if ( requestFoundOnQueue.getPriority() > priority ) {
-            //    requestFoundOnQueue.setPriority( priority );
-            //}
-            requestFoundOnQueue.increasePriorityTo( priority );
-            // must we now rebuild the image?
-            //if ( force && ( requestFoundOnQueue.getForce() != force ) ) {
-            //    requestFoundOnQueue.setForce( true );
-            //}
-            return false;
+            if ( ( requestFoundOnQueue.getNode() != node )
+                    || ( requestFoundOnQueue.getSize().width != size.width )
+                    || ( requestFoundOnQueue.getSize().height != size.height ) ) {
+                requestFoundOnQueue.cancel();
+                QUEUE.remove( requestFoundOnQueue );
+                QUEUE.add( newThumbnailQueueRequest );
+                return true;
+            } else {
+                requestFoundOnQueue.increasePriorityTo( priority );
+                return false;
+            }
         }
-    }
-
-    /**
-     * Adds a request to the queue.
-     *
-     * @param thumbnailQueueRequest The request to add
-     */
-    public static void add( ThumbnailQueueRequest thumbnailQueueRequest ) {
-        QUEUE.add( thumbnailQueueRequest );
     }
 
     /**
@@ -97,16 +91,6 @@ public class ThumbnailCreationQueue {
     public static ThumbnailQueueRequest poll() {
         ThumbnailQueueRequest thumbnailQueueRequest = QUEUE.poll();
         return thumbnailQueueRequest;
-    }
-
-    /**
-     * Retrieves and removes the head of this queue, or returns null if this
-     * queue is empty.
-     *
-     * @param tqr The request to poll
-     */
-    public static void remove( ThumbnailQueueRequest tqr ) {
-        QUEUE.remove( tqr );
     }
 
     /**
@@ -128,12 +112,20 @@ public class ThumbnailCreationQueue {
     /**
      * removes the request for a specific ThumbnailController from the queue.
      *
-     * @param thumbnailController The thumbnail to be removed
+     * @param thumbnailQueueRequestCallbackHandler The thumbnail handler to be
+     * removed
      */
-    public static void removeThumbnailQueueRequest( ThumbnailController thumbnailController ) {
-        ThumbnailQueueRequest thumbnailQueueRequest = findThumbnailQueueRequest( thumbnailController );
-        if ( thumbnailQueueRequest != null ) {
-            remove( thumbnailQueueRequest );
+    public static void removeThumbnailQueueRequest( ThumbnailQueueRequestCallbackHandler thumbnailQueueRequestCallbackHandler ) {
+        ThumbnailQueueRequest foundThumbnailQueueRequest = findThumbnailQueueRequest( thumbnailQueueRequestCallbackHandler );
+        if ( foundThumbnailQueueRequest != null ) {
+            // 20150712 RE I was having odd artefacts here as group nodes are 
+            // slower to create they could still be coming in after they were no 
+            // longer requested. I hopy my calling the cancel which is synchronized
+            // inside the request object I can stop the propagation of a notification
+            // even if I am too late with the remove instruction below.
+            foundThumbnailQueueRequest.cancel();
+            QUEUE.remove( foundThumbnailQueueRequest );
+
         }
     }
 
@@ -141,16 +133,16 @@ public class ThumbnailCreationQueue {
      * This method returns the {@link ThumbnailQueueRequest} for the supplied
      * ThumbnailController if such a request exists. Otherwise it returns null.
      *
-     * @param thumbnailController The {@link ThumbnailController} for which the
-     * request is to be found
+     * @param callbackHandler The {@link ThumbnailQueueRequestCallbackHandler}
+     * for which the request is to be found
      * @return The ThumbnailQueueRequest if it exists.
      */
-    public static ThumbnailQueueRequest findThumbnailQueueRequest(
-            ThumbnailController thumbnailController ) {
+    protected static ThumbnailQueueRequest findThumbnailQueueRequest(
+            ThumbnailQueueRequestCallbackHandler callbackHandler ) {
         ThumbnailQueueRequest req = null, test;
         for ( Iterator i = QUEUE.iterator(); i.hasNext(); ) {
             test = (ThumbnailQueueRequest) i.next();
-            if ( ( thumbnailController != null ) && ( test.getThumbnailQueueRequestCallbackHandler().equals( thumbnailController ) ) ) {
+            if ( ( callbackHandler != null ) && ( test.getThumbnailQueueRequestCallbackHandler().equals( callbackHandler ) ) ) {
                 req = test;
                 break;
             }

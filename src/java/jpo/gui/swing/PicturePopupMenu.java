@@ -52,8 +52,8 @@ import jpo.dataModel.PictureCollection;
 import jpo.dataModel.PictureInfo;
 import jpo.dataModel.Settings;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
-import jpo.gui.ThumbnailQueueRequest;
-import jpo.gui.ThumbnailQueueRequest.QUEUE_PRIORITY;
+import jpo.cache.ThumbnailQueueRequest;
+import jpo.cache.ThumbnailQueueRequest.QUEUE_PRIORITY;
 
 /*
  PicturePopupMenu.java:  a popup menu for pictures

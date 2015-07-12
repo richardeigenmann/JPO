@@ -3,27 +3,23 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package jpo.gui;
+package jpo.cache;
 
 
+import jpo.dataModel.Settings;
 import org.junit.Assert;
 import org.junit.Test;
 
 /**
  *
- * @author richi
+ * @author Richard Eigenmann
  */
 public class ThumbnailCreationFactoryTest {
-    
-    public ThumbnailCreationFactoryTest() {
-    }
 
-    // TODO add test methods here.
-    // The methods must be annotated with annotation @Test. For example:
-    //
+
     @Test
-    public void ThumbnailCreationFactoryTest() {
-        ThumbnailCreationFactory tcf = new ThumbnailCreationFactory();
+    public void thumbnailCreationFactoryTest() {
+        ThumbnailCreationFactory tcf = new ThumbnailCreationFactory( Settings.ThumbnailCreationThreadPollingTime );
         Assert.assertNotNull(tcf);
         tcf.endThread = true;
     }

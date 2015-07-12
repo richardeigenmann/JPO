@@ -1,11 +1,11 @@
-package jpo.gui;
+package jpo.cache;
 
 import java.awt.Dimension;
 import javax.swing.ImageIcon;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
 
 /*
- ThumbnailQueueRequest.java: Element on the ThumbnailController Queue
+ ThumbnailQueueRequest.java: Element on the ThumbnailCreationQueue Queue
 
  Copyright (C) 2002 - 2015  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
@@ -51,11 +51,6 @@ public class ThumbnailQueueRequest implements Comparable<ThumbnailQueueRequest> 
      * the priority the request has on the queue.
      */
     protected QUEUE_PRIORITY priority;
-    /**
-     * indicates that the thumbnail must be recreated regardless of any
-     * pre-existing thumbnail
-     */
-    protected boolean force;
 
     /**
      * The size we should scale the thumbnail to
@@ -75,26 +70,25 @@ public class ThumbnailQueueRequest implements Comparable<ThumbnailQueueRequest> 
     /**
      * Constructs a ThumbnailQueueRequest object
      *
-     * @param callbackHandler	The callback handler that will be notified when 
+     * @param callbackHandler	The callback handler that will be notified when
      * the image icon is ready
      * @param node the node for which the image is to be created
-     * @param priority	The queue priority with which the thumbnail is to be created
-     * Possible values are {@link #HIGH_PRIORITY}, {@link #MEDIUM_PRIORITY}, {@link #LOW_PRIORITY} and  {@link #LOWEST_PRIORITY}.
-     //* @param force	set to true if the ThumbnailController must be read from
-     * source if set to false it is permissible to just reload the cached
-     * ThumbnailController.
+     * @param priority	The queue priority with which the thumbnail is to be
+     * created Possible values are
+     * {@link #HIGH_PRIORITY}, {@link #MEDIUM_PRIORITY}, {@link #LOW_PRIORITY}
+     * and {@link #LOWEST_PRIORITY}. //* @param force	set to true if the
+     * ThumbnailController must be read from source if set to false it is
+     * permissible to just reload the cached ThumbnailController.
      * @param size the maximum size of the thumbnail
      */
-    ThumbnailQueueRequest(
+    public ThumbnailQueueRequest(
             ThumbnailQueueRequestCallbackHandler callbackHandler,
             SortableDefaultMutableTreeNode node,
             QUEUE_PRIORITY priority,
-            //boolean force,
             Dimension size ) {
         this.callbackHandler = callbackHandler;
         this.node = node;
         this.priority = priority;
-        //this.force = force;
         this.size = size;
     }
 
@@ -109,10 +103,22 @@ public class ThumbnailQueueRequest implements Comparable<ThumbnailQueueRequest> 
     }
 
     /**
+     * sends the notification that the Icon is available to the callback handler
+     * if the request was not canceled in the mean time.
+     */
+    public void notifyCallbackHandler() {
+        if ( !isCancelled() ) {
+            callbackHandler.callbackThumbnailCreated( this );
+        } else {
+            System.out.println( "Suppressing notification" );
+        }
+    }
+
+    /**
      * sets the priority in which the {@link ThumbnailController} is to be
      * created. The possible values are
-     * {@link #LOW_PRIORITY}, {@link #MEDIUM_PRIORITY} or
-     * {@link #HIGH_PRIORITY}. A high numeric value means less priority.
+     * {@link #LOWEST_PRIORITY}, {@link #LOW_PRIORITY}, {@link #MEDIUM_PRIORITY}
+     * or {@link #HIGH_PRIORITY}. A high numeric value means less priority.
      *
      * @param newPriority The priority of the request:
      * {@link #LOW_PRIORITY}, {@link #MEDIUM_PRIORITY} or {@link #HIGH_PRIORITY}
@@ -120,27 +126,6 @@ public class ThumbnailQueueRequest implements Comparable<ThumbnailQueueRequest> 
     public void setPriority( QUEUE_PRIORITY newPriority ) {
         priority = newPriority;
     }
-
-    /**
-     * returns whether the rebuilding of the {@link ThumbnailController} must be
-     * forced or whether an available cached thumbnail will suffice.
-     *
-     * @return true if the thumbnail creation must be forced, false if not.
-     */
-    //public boolean getForce() {
-    //    return force;
-    //}
-
-    /**
-     * sets whether the rebuilding of the {@link ThumbnailController} must be
-     * forced or whether an available cached thumbnail will suffice.
-     *
-     * @param newForce true if the thumbnail creation must be forced, false if
-     * not.
-     */
-    //public void setForce( boolean newForce ) {
-    //    force = newForce;
-    //}
 
     /**
      * Compares to another request based on priority.
@@ -202,13 +187,24 @@ public class ThumbnailQueueRequest implements Comparable<ThumbnailQueueRequest> 
     }
 
     /**
-     * Inform about the request
-     *
-     * @return information about the request
+     * A flag to indicate that the request was cancelled.
      */
-    @Override
-    public String toString() {
-        return String.format( "ThumbnailQueueRequest: Hash: %d, Priority: %s, Force: %b, Thumbnail: %s", this.hashCode(), priority, force, callbackHandler.toString() );
+    protected Boolean isCancelled = false;
 
+    /**
+     *
+     * @return true is the request is cancelled
+     */
+    public boolean isCancelled() {
+        synchronized ( isCancelled ) {
+            return isCancelled;
+        }
     }
+
+    public void cancel() {
+        synchronized ( isCancelled ) {
+            this.isCancelled = true;
+        }
+    }
+
 }

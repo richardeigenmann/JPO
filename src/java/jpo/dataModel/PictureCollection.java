@@ -19,7 +19,7 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
 import jpo.EventBus.JpoEventBus;
 import jpo.EventBus.RecentCollectionsChangedEvent;
-import jpo.gui.ThumbnailCreationQueue;
+import jpo.cache.ThumbnailCreationQueue;
 
 
 /*

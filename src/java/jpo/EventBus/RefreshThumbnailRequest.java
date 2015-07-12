@@ -3,7 +3,7 @@ package jpo.EventBus;
 import java.util.ArrayList;
 import java.util.List;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
-import jpo.gui.ThumbnailQueueRequest.QUEUE_PRIORITY;
+import jpo.cache.ThumbnailQueueRequest.QUEUE_PRIORITY;
 
 /*
  RefreshThumbnailRequest.java: Request to refresh thumbnails

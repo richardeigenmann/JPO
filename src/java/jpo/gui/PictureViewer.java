@@ -41,7 +41,7 @@ import jpo.gui.ScalablePicture.ScalablePictureStatus;
 import static jpo.gui.ScalablePicture.ScalablePictureStatus.SCALABLE_PICTURE_ERROR;
 import static jpo.gui.ScalablePicture.ScalablePictureStatus.SCALABLE_PICTURE_READY;
 import jpo.gui.SourcePicture.SourcePictureStatus;
-import jpo.gui.ThumbnailQueueRequest.QUEUE_PRIORITY;
+import jpo.cache.ThumbnailQueueRequest.QUEUE_PRIORITY;
 import jpo.gui.swing.PictureFrame;
 import jpo.gui.swing.ResizableJFrame.WindowSize;
 

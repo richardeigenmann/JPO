@@ -1,5 +1,8 @@
 package jpo.gui;
 
+import jpo.cache.ThumbnailCreationQueue;
+import jpo.cache.ThumbnailQueueRequestCallbackHandler;
+import jpo.cache.ThumbnailQueueRequest;
 import jpo.gui.swing.PicturePopupMenu;
 import java.awt.Dimension;
 import java.awt.dnd.DnDConstants;
@@ -36,7 +39,7 @@ import jpo.dataModel.PictureInfoChangeListener;
 import jpo.dataModel.Settings;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
 import jpo.dataModel.Tools;
-import jpo.gui.ThumbnailQueueRequest.QUEUE_PRIORITY;
+import jpo.cache.ThumbnailQueueRequest.QUEUE_PRIORITY;
 import jpo.gui.swing.GroupPopupMenu;
 import jpo.gui.swing.Thumbnail;
 
@@ -146,9 +149,9 @@ public class ThumbnailController implements JpoDropTargetDropEventHandler, Thumb
             int newIndex ) {
         if ( !newNavigator.equals( myNodeNavigator ) ) {
             return false;
-        } else if ( newIndex == myIndex ) {
+        };
+        if ( newIndex == myIndex ) {
             LOGGER.fine( String.format( "Same index: %d on same Browser %s. But is it actually the same node?", newIndex, newNavigator.toString() ) );
-            //return true;
             SortableDefaultMutableTreeNode testNode = newNavigator.getNode( newIndex );
             LOGGER.fine( String.format( "The refferingNode is the same as the newNode: %b", testNode == myNode ) );
             return testNode == myNode;
@@ -166,7 +169,6 @@ public class ThumbnailController implements JpoDropTargetDropEventHandler, Thumb
      */
     public void setNode( NodeNavigatorInterface mySetOfNodes, int index ) {
         LOGGER.fine( String.format( "Setting Thubnail %d to index %d in Browser %s ", this.hashCode(), index, mySetOfNodes.toString() ) );
-        ThumbnailCreationQueue.removeThumbnailQueueRequest( this );
 
         this.myNodeNavigator = mySetOfNodes;
         this.myIndex = index;
@@ -178,6 +180,7 @@ public class ThumbnailController implements JpoDropTargetDropEventHandler, Thumb
 
         if ( node == null ) {
             myThumbnail.setVisible( false );
+            ThumbnailCreationQueue.removeThumbnailQueueRequest( this );
         } else {
             requestThumbnailCreation( DEFAULT_QUEUE_PRIORITY );
         }
@@ -243,13 +246,14 @@ public class ThumbnailController implements JpoDropTargetDropEventHandler, Thumb
      * the queue
      */
     public void requestThumbnailCreation( QUEUE_PRIORITY priority ) {
+        myThumbnail.setQueueIcon();
         boolean newRequest = ThumbnailCreationQueue.requestThumbnailCreation(
-                this, priority );
-        if ( newRequest ) {
+                this, myNode, priority, getMaximumUnscaledSize() );
+        /*if ( newRequest ) {
             setPendingIcon();
         } else {
             LOGGER.fine( String.format( "Why have we just sent in a request for Thumbnail creation for %s when it's already on the queue?", toString() ) );
-        }
+        }*/
     }
 
     /**
