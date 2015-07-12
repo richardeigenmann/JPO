@@ -36,6 +36,7 @@ import jpo.dataModel.PictureInfoChangeListener;
 import jpo.dataModel.Settings;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
 import jpo.dataModel.Tools;
+import jpo.gui.ThumbnailQueueRequest.QUEUE_PRIORITY;
 import jpo.gui.swing.GroupPopupMenu;
 import jpo.gui.swing.Thumbnail;
 
@@ -66,19 +67,19 @@ public class ThumbnailController implements JpoDropTargetDropEventHandler {
      */
     private static final Logger LOGGER = Logger.getLogger( ThumbnailController.class.getName() );
 
-
     /**
-     * Creates a new ThumbnailController object. 
+     * Creates a new ThumbnailController object.
      *
-     * @param	thumbnailSize	The size in which the thumbnail is to be created
+     * @param thumbnail The thumbnail to manage
+     * @param thumbnailSize	The size in which the thumbnail is to be created
      *
      */
-    public ThumbnailController(Thumbnail thumbnail, final int thumbnailSize ) {
+    public ThumbnailController( Thumbnail thumbnail, final int thumbnailSize ) {
         myThumbnail = thumbnail;
         myThumbnail.setThumbnailSize( thumbnailSize );
         myThumbnail.addMouseListener( new ThumbnailMouseAdapter() );
-        // set up drag & drop
-            new DropTarget( myThumbnail, new JpoTransferrableDropTargetListener( this ) );
+        
+        new DropTarget( myThumbnail, new JpoTransferrableDropTargetListener( this ) );
         DragSource dragSource = DragSource.getDefaultDragSource();
         dragSource.createDefaultDragGestureRecognizer(
                 myThumbnail, DnDConstants.ACTION_COPY_OR_MOVE, new ThumbnailDragGestureListener() );
@@ -122,7 +123,7 @@ public class ThumbnailController implements JpoDropTargetDropEventHandler {
      * The priority this ThumbnailController should have on the
      * ThumbnailCreationQueue
      */
-    private final int DEFAULT_QUEUE_PRIORITY = ThumbnailQueueRequest.MEDIUM_PRIORITY;
+    private final QUEUE_PRIORITY DEFAULT_QUEUE_PRIORITY = QUEUE_PRIORITY.MEDIUM_PRIORITY;
 
     /**
      * returns the Thumbnail that is being controlled by this Controller.
@@ -165,7 +166,7 @@ public class ThumbnailController implements JpoDropTargetDropEventHandler {
      */
     public void setNode( NodeNavigatorInterface mySetOfNodes, int index ) {
         LOGGER.fine( String.format( "Setting Thubnail %d to index %d in Browser %s ", this.hashCode(), index, mySetOfNodes.toString() ) );
-        unqueue();
+        ThumbnailCreationQueue.removeThumbnailQueueRequest( this );
 
         this.myNodeNavigator = mySetOfNodes;
         this.myIndex = index;
@@ -243,7 +244,7 @@ public class ThumbnailController implements JpoDropTargetDropEventHandler {
      * @param	force	Set to true if the thumbnail needs to be rebuilt from
      * source, false if using a cached version is OK.
      */
-    public void requestThumbnailCreation( int priority, boolean force ) {
+    public void requestThumbnailCreation( QUEUE_PRIORITY priority, boolean force ) {
         boolean newRequest = ThumbnailCreationQueue.requestThumbnailCreation(
                 this, priority, force );
         if ( newRequest ) {
@@ -279,13 +280,7 @@ public class ThumbnailController implements JpoDropTargetDropEventHandler {
         return new Dimension( myThumbnail.getThumbnailSize(), myThumbnail.getThumbnailSize() );
     }
 
-    /**
-     * Removes any request for this thumbnail from the ThumbnailCreationQueue.
-     * No problem if it was not on the queue.
-     */
-    public void unqueue() {
-        ThumbnailCreationQueue.removeThumbnailQueueRequest( this );
-    }
+  
 
     /**
      * This method checks if the node is set and whether the highres image is
@@ -342,6 +337,7 @@ public class ThumbnailController implements JpoDropTargetDropEventHandler {
 
         /**
          * Logic for processing a left click on the thumbnail
+         *
          * @param e the mouse event
          */
         private void leftClickResponse( MouseEvent e ) {
@@ -365,6 +361,7 @@ public class ThumbnailController implements JpoDropTargetDropEventHandler {
 
         /**
          * Logic for processing a right click on the thumbnail
+         *
          * @param e Mouse event
          */
         private void rightClickResponse( MouseEvent e ) {
@@ -403,7 +400,7 @@ public class ThumbnailController implements JpoDropTargetDropEventHandler {
         @Override
         public void pictureInfoChangeEvent( PictureInfoChangeEvent pictureInfoChangeEvent ) {
             if ( pictureInfoChangeEvent.getHighresLocationChanged() || pictureInfoChangeEvent.getChecksumChanged() || pictureInfoChangeEvent.getThumbnailChanged() ) {
-                requestThumbnailCreation( ThumbnailQueueRequest.HIGH_PRIORITY, false );
+                requestThumbnailCreation( QUEUE_PRIORITY.HIGH_PRIORITY, false );
             } else if ( pictureInfoChangeEvent.getWasSelected() ) {
                 myThumbnail.showAsSelected();
             } else if ( pictureInfoChangeEvent.getWasUnselected() ) {
@@ -411,7 +408,7 @@ public class ThumbnailController implements JpoDropTargetDropEventHandler {
             } else if ( ( pictureInfoChangeEvent.getWasMailSelected() ) || ( pictureInfoChangeEvent.getWasMailUnselected() ) ) {
                 determineMailSlectionStatus();
             } else if ( pictureInfoChangeEvent.getRotationChanged() ) {
-                requestThumbnailCreation( ThumbnailQueueRequest.HIGH_PRIORITY, true );
+                requestThumbnailCreation( QUEUE_PRIORITY.HIGH_PRIORITY, true );
             }
         }
     }
@@ -494,8 +491,6 @@ public class ThumbnailController implements JpoDropTargetDropEventHandler {
 
     }
 
-
-
     /**
      * This class extends a DragGestureListener and allows DnD on Thumbnails.
      */
@@ -521,7 +516,7 @@ public class ThumbnailController implements JpoDropTargetDropEventHandler {
                 transferableNodes.add( myNode );
                 transferable = new JpoTransferable( transferableNodes );
             } else {
-                transferable = new JpoTransferable( Settings.getPictureCollection().getSelectedNodesAsList());
+                transferable = new JpoTransferable( Settings.getPictureCollection().getSelectedNodesAsList() );
             }
 
             try {
@@ -590,19 +585,7 @@ public class ThumbnailController implements JpoDropTargetDropEventHandler {
         }
     }
 
-    /**
-     * Give some info about the ThumbnailController.
-     *
-     * @return some info about the ThumbnailController
-     */
-    @Override
-    public String toString() {
-        String description = "none";
-        if ( myNode != null ) {
-            description = myNode.toString();
-        }
-        return String.format( "Thumbnail: HashCode: %d, referringNode: %s", hashCode(), description );
-    }
+   
 
     @Override
     public void handleJpoDropTargetDropEvent( DropTargetDropEvent event ) {

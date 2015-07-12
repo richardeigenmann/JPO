@@ -43,7 +43,7 @@ import jpo.dataModel.Settings;
 import jpo.dataModel.SortOption;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
 import jpo.dataModel.Tools;
-import jpo.gui.ThumbnailQueueRequest;
+import jpo.gui.ThumbnailQueueRequest.QUEUE_PRIORITY;
 
 /*
  GroupPopupMenu.java: popup menu for groups
@@ -179,7 +179,7 @@ public class GroupPopupMenu extends JPopupMenu {
                         actionNodes.add( popupNode );
                     }
 
-                    JpoEventBus.getInstance().post( new RefreshThumbnailRequest( popupNode, ThumbnailQueueRequest.HIGH_PRIORITY ) );
+                    JpoEventBus.getInstance().post( new RefreshThumbnailRequest( popupNode, QUEUE_PRIORITY.HIGH_PRIORITY ) );
 
                 }
             } );

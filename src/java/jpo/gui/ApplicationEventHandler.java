@@ -120,6 +120,7 @@ import jpo.export.GenerateWebsiteWizard;
 import jpo.export.PicasaUploadRequest;
 import jpo.export.PicasaUploaderWizard;
 import static jpo.dataModel.Tools.streamcopy;
+import jpo.gui.ThumbnailQueueRequest.QUEUE_PRIORITY;
 import jpo.gui.swing.FindJPanel;
 import jpo.gui.swing.FlatFileDistiller;
 import jpo.gui.swing.HelpAboutWindow;
@@ -735,7 +736,7 @@ public class ApplicationEventHandler {
         FieldCodes sortCriteria = request.getSortCriteria();
         //logger.info( "Sort requested on " + myPopupNode.toString() + " for Criteria: " + Integer.toString( sortCriteria ) );
         popupNode.sortChildren( sortCriteria );
-        JpoEventBus.getInstance().post( new RefreshThumbnailRequest( popupNode, ThumbnailQueueRequest.MEDIUM_PRIORITY ) );
+        JpoEventBus.getInstance().post( new RefreshThumbnailRequest( popupNode, QUEUE_PRIORITY.MEDIUM_PRIORITY ) );
     }
 
     /**
@@ -1056,7 +1057,7 @@ public class ApplicationEventHandler {
     public void handleMoveNodeToTopRequest( MoveNodeToTopRequest request ) {
         SortableDefaultMutableTreeNode popupNode = request.getNode();
         popupNode.moveNodeToTop();
-        JpoEventBus.getInstance().post( new RefreshThumbnailRequest( (SortableDefaultMutableTreeNode) popupNode.getParent(), ThumbnailQueueRequest.MEDIUM_PRIORITY ) );
+        JpoEventBus.getInstance().post( new RefreshThumbnailRequest( (SortableDefaultMutableTreeNode) popupNode.getParent(), QUEUE_PRIORITY.MEDIUM_PRIORITY ) );
     }
 
     /**
@@ -1068,7 +1069,7 @@ public class ApplicationEventHandler {
     public void handleMoveNodeUpRequest( MoveNodeUpRequest request ) {
         SortableDefaultMutableTreeNode popupNode = request.getNode();
         popupNode.moveNodeUp();
-        JpoEventBus.getInstance().post( new RefreshThumbnailRequest( (SortableDefaultMutableTreeNode) popupNode.getParent(), ThumbnailQueueRequest.MEDIUM_PRIORITY ) );
+        JpoEventBus.getInstance().post( new RefreshThumbnailRequest( (SortableDefaultMutableTreeNode) popupNode.getParent(), QUEUE_PRIORITY.MEDIUM_PRIORITY ) );
     }
 
     /**
@@ -1080,7 +1081,7 @@ public class ApplicationEventHandler {
     public void handleMoveNodeDownRequest( MoveNodeDownRequest request ) {
         SortableDefaultMutableTreeNode popupNode = request.getNode();
         popupNode.moveNodeDown();
-        JpoEventBus.getInstance().post( new RefreshThumbnailRequest( (SortableDefaultMutableTreeNode) popupNode.getParent(), ThumbnailQueueRequest.MEDIUM_PRIORITY ) );
+        JpoEventBus.getInstance().post( new RefreshThumbnailRequest( (SortableDefaultMutableTreeNode) popupNode.getParent(), QUEUE_PRIORITY.MEDIUM_PRIORITY ) );
     }
 
     /**
@@ -1092,7 +1093,7 @@ public class ApplicationEventHandler {
     public void handleMoveNodeToBottomRequest( MoveNodeToBottomRequest request ) {
         SortableDefaultMutableTreeNode popupNode = request.getNode();
         popupNode.moveNodeToBottom();
-        JpoEventBus.getInstance().post( new RefreshThumbnailRequest( (SortableDefaultMutableTreeNode) popupNode.getParent(), ThumbnailQueueRequest.MEDIUM_PRIORITY ) );
+        JpoEventBus.getInstance().post( new RefreshThumbnailRequest( (SortableDefaultMutableTreeNode) popupNode.getParent(), QUEUE_PRIORITY.MEDIUM_PRIORITY ) );
     }
 
     /**

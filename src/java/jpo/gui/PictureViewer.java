@@ -41,15 +41,15 @@ import jpo.gui.ScalablePicture.ScalablePictureStatus;
 import static jpo.gui.ScalablePicture.ScalablePictureStatus.SCALABLE_PICTURE_ERROR;
 import static jpo.gui.ScalablePicture.ScalablePictureStatus.SCALABLE_PICTURE_READY;
 import jpo.gui.SourcePicture.SourcePictureStatus;
+import jpo.gui.ThumbnailQueueRequest.QUEUE_PRIORITY;
 import jpo.gui.swing.PictureFrame;
-import jpo.gui.swing.PictureController;
 import jpo.gui.swing.ResizableJFrame.WindowSize;
 
 
 /*
  PictureViewer.java:  Controller and Viewer class that browses a set of pictures.
 
- Copyright (C) 2002 - 2014  Richard Eigenmann, Zürich, Switzerland
+ Copyright (C) 2002 - 2015  Richard Eigenmann, Zürich, Switzerland
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -265,7 +265,7 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
 
             @Override
             public void actionPerformed( ActionEvent e ) {
-                JpoEventBus.getInstance().post( new RotatePictureRequest( getCurrentNode(), 270, ThumbnailQueueRequest.HIGH_PRIORITY ) );
+                JpoEventBus.getInstance().post( new RotatePictureRequest( getCurrentNode(), 270, QUEUE_PRIORITY.HIGH_PRIORITY ) );
                 pictureFrame.getPictureController().requestFocusInWindow();
             }
         } );
@@ -274,7 +274,7 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
 
             @Override
             public void actionPerformed( ActionEvent e ) {
-                JpoEventBus.getInstance().post( new RotatePictureRequest( getCurrentNode(), 90, ThumbnailQueueRequest.HIGH_PRIORITY ) );
+                JpoEventBus.getInstance().post( new RotatePictureRequest( getCurrentNode(), 90, QUEUE_PRIORITY.HIGH_PRIORITY ) );
                 pictureFrame.getPictureController().requestFocusInWindow();
             }
         } );

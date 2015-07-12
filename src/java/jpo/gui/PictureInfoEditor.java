@@ -59,6 +59,7 @@ import jpo.dataModel.Settings;
 import jpo.dataModel.SingleNodeNavigator;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
 import jpo.dataModel.Tools;
+import jpo.gui.ThumbnailQueueRequest.QUEUE_PRIORITY;
 import jpo.gui.swing.NonFocussedCaret;
 import jpo.gui.swing.ThreeDotButton;
 import jpo.gui.swing.MapViewer;
@@ -819,7 +820,7 @@ public class PictureInfoEditor extends JFrame {
      * This method saves the rotation value
      */
     private void saveRotation() {
-        JpoEventBus.getInstance().post( new SetPictureRotationRequest( myNode, (double) angleModel.getValue(), ThumbnailQueueRequest.HIGH_PRIORITY ) );
+        JpoEventBus.getInstance().post( new SetPictureRotationRequest( myNode, (double) angleModel.getValue(), QUEUE_PRIORITY.HIGH_PRIORITY ) );
         //pictureInfo.setRotation( (Double) angleModel.getValue() );
     }
 

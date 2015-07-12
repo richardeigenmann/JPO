@@ -53,6 +53,7 @@ import jpo.dataModel.PictureInfo;
 import jpo.dataModel.Settings;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
 import jpo.gui.ThumbnailQueueRequest;
+import jpo.gui.ThumbnailQueueRequest.QUEUE_PRIORITY;
 
 /*
  PicturePopupMenu.java:  a popup menu for pictures
@@ -382,7 +383,7 @@ public class PicturePopupMenu extends JPopupMenu {
 
                 @Override
                 public void actionPerformed( ActionEvent e ) {
-                    JpoEventBus.getInstance().post( new RotatePictureRequest( popupNode, 90, ThumbnailQueueRequest.HIGH_PRIORITY ) );
+                    JpoEventBus.getInstance().post( new RotatePictureRequest( popupNode, 90, QUEUE_PRIORITY.HIGH_PRIORITY ) );
                 }
             } );
             rotationMenu.add( rotate90JMenuItem );
@@ -392,7 +393,7 @@ public class PicturePopupMenu extends JPopupMenu {
 
                 @Override
                 public void actionPerformed( ActionEvent e ) {
-                    JpoEventBus.getInstance().post( new RotatePictureRequest( popupNode, 180, ThumbnailQueueRequest.HIGH_PRIORITY ) );
+                    JpoEventBus.getInstance().post( new RotatePictureRequest( popupNode, 180, QUEUE_PRIORITY.HIGH_PRIORITY ) );
                 }
             } );
             rotationMenu.add( rotate180JMenuItem );
@@ -402,7 +403,7 @@ public class PicturePopupMenu extends JPopupMenu {
 
                 @Override
                 public void actionPerformed( ActionEvent e ) {
-                    JpoEventBus.getInstance().post( new RotatePictureRequest( popupNode, 270, ThumbnailQueueRequest.HIGH_PRIORITY ) );
+                    JpoEventBus.getInstance().post( new RotatePictureRequest( popupNode, 270, QUEUE_PRIORITY.HIGH_PRIORITY ) );
                 }
             } );
             rotationMenu.add( rotate270JMenuItem );
@@ -412,7 +413,7 @@ public class PicturePopupMenu extends JPopupMenu {
 
                 @Override
                 public void actionPerformed( ActionEvent e ) {
-                    JpoEventBus.getInstance().post( new SetPictureRotationRequest( popupNode, 0f, ThumbnailQueueRequest.HIGH_PRIORITY ) );
+                    JpoEventBus.getInstance().post( new SetPictureRotationRequest( popupNode, 0f, QUEUE_PRIORITY.HIGH_PRIORITY ) );
                 }
             } );
             rotationMenu.add( rotate0JMenuItem );
@@ -427,9 +428,9 @@ public class PicturePopupMenu extends JPopupMenu {
                     @Override
                     public void actionPerformed( ActionEvent e ) {
                         if ( !Settings.getPictureCollection().isSelected( popupNode ) ) {
-                            JpoEventBus.getInstance().post( new RefreshThumbnailRequest( popupNode, ThumbnailQueueRequest.HIGH_PRIORITY ) );
+                            JpoEventBus.getInstance().post( new RefreshThumbnailRequest( popupNode, QUEUE_PRIORITY.HIGH_PRIORITY ) );
                         } else {
-                            JpoEventBus.getInstance().post( new RefreshThumbnailRequest( Settings.getPictureCollection().getSelectedNodesAsList(), ThumbnailQueueRequest.HIGH_PRIORITY ) );
+                            JpoEventBus.getInstance().post( new RefreshThumbnailRequest( Settings.getPictureCollection().getSelectedNodesAsList(), QUEUE_PRIORITY.HIGH_PRIORITY ) );
                         }
                     }
                 }

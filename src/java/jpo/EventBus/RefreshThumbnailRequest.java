@@ -3,6 +3,26 @@ package jpo.EventBus;
 import java.util.ArrayList;
 import java.util.List;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
+import jpo.gui.ThumbnailQueueRequest.QUEUE_PRIORITY;
+
+/*
+ RefreshThumbnailRequest.java: Request to refresh thumbnails
+
+ Copyright (C) 2015  Richard Eigenmann.
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or any later version. This program is distributed 
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+ without even the implied warranty of MERCHANTABILITY or FITNESS 
+ FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
+ more details. You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ The license is in gpl.txt.
+ See http://www.gnu.org/copyleft/gpl.html for the details.
+ */
+
 
 /**
  * This request indicates that the thumbnails of the specified nodes are
@@ -13,7 +33,7 @@ import jpo.dataModel.SortableDefaultMutableTreeNode;
 public class RefreshThumbnailRequest implements Request {
 
     private final List<SortableDefaultMutableTreeNode> nodes;
-    private final int priority;
+    private final QUEUE_PRIORITY priority;
 
     /**
      * A request to indicate that the specified thumbnail is supposed to be
@@ -22,7 +42,7 @@ public class RefreshThumbnailRequest implements Request {
      * @param node The node with the thumbnails to show
      * @param priority The priority for the creation queue
      */
-    public RefreshThumbnailRequest( SortableDefaultMutableTreeNode node, int priority ) {
+    public RefreshThumbnailRequest( SortableDefaultMutableTreeNode node, QUEUE_PRIORITY priority ) {
         nodes = new ArrayList<>();
         nodes.add( node );
         this.priority = priority;
@@ -35,7 +55,7 @@ public class RefreshThumbnailRequest implements Request {
      * @param nodes The nodes to be refreshed
      * @param priority The priority for the creation queue
      */
-    public RefreshThumbnailRequest( List<SortableDefaultMutableTreeNode> nodes, int priority ) {
+    public RefreshThumbnailRequest( List<SortableDefaultMutableTreeNode> nodes, QUEUE_PRIORITY priority ) {
         this.nodes = nodes;
         this.priority = priority;
     }
@@ -53,7 +73,7 @@ public class RefreshThumbnailRequest implements Request {
      * Return the queue priority
      * @return The priority for the queue
      */
-    public int getPriority() {
+    public QUEUE_PRIORITY getPriority() {
         return priority;
     }
 

@@ -3,12 +3,13 @@ package jpo.gui;
 import java.util.Iterator;
 import java.util.concurrent.PriorityBlockingQueue;
 import java.util.logging.Logger;
+import jpo.gui.ThumbnailQueueRequest.QUEUE_PRIORITY;
 
 
 /*
  ThumbnailCreationQueue.java:  queue that holds requests to create Thumbnails from Highres Images
 
- Copyright (C) 2003-2014  Richard Eigenmann.
+ Copyright (C) 2003-2015  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -22,10 +23,9 @@ import java.util.logging.Logger;
  The license is in gpl.txt.
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
+
 /**
- * Queue that holds requests to create Thumbnails from Highres Images. It is
- * deliberately static so that there is only one queue for the entire
- * application.
+ * Queue that holds requests to create Thumbnails from Images. 
  *
  */
 public class ThumbnailCreationQueue {
@@ -57,7 +57,7 @@ public class ThumbnailCreationQueue {
      */
     public static boolean requestThumbnailCreation(
             ThumbnailController thumbnailController,
-            int priority, boolean force ) {
+            QUEUE_PRIORITY priority, boolean force ) {
         //LOGGER.fine( "Chucking a request on the queue for ThumbnailController: " + thumbnailController.toString() );
         ThumbnailQueueRequest requestFoundOnQueue = findThumbnailQueueRequest( thumbnailController );
         if ( requestFoundOnQueue == null ) {
@@ -68,9 +68,10 @@ public class ThumbnailCreationQueue {
         } else {
             //logger.info( "Such a request is already on the queue" );
             // thumbnail already on queue, should we up the priority?
-            if ( requestFoundOnQueue.getPriority() > priority ) {
-                requestFoundOnQueue.setPriority( priority );
-            }
+            //if ( requestFoundOnQueue.getPriority() > priority ) {
+            //    requestFoundOnQueue.setPriority( priority );
+            //}
+            requestFoundOnQueue.increasePriorityTo( priority );
             // must we now rebuild the image?
             if ( force && ( requestFoundOnQueue.getForce() != force ) ) {
                 requestFoundOnQueue.setForce( true );

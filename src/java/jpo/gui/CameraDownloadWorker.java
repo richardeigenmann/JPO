@@ -11,6 +11,7 @@ import jpo.EventBus.RecentDropNodesChangedEvent;
 import jpo.EventBus.RefreshThumbnailRequest;
 import jpo.dataModel.Settings;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
+import jpo.gui.ThumbnailQueueRequest.QUEUE_PRIORITY;
 
 
 /*
@@ -82,7 +83,7 @@ public class CameraDownloadWorker
                 progressBar );
             LOGGER.fine( String.format( "Sorting node %s by code %s", dataModel.getTargetNode().toString(), dataModel.getSortCode() ) );
             dataModel.getTargetNode().sortChildren( dataModel.getSortCode() );
-            JpoEventBus.getInstance().post( new RefreshThumbnailRequest( dataModel.getTargetNode(), ThumbnailQueueRequest.LOWEST_PRIORITY ) );
+            JpoEventBus.getInstance().post( new RefreshThumbnailRequest( dataModel.getTargetNode(), QUEUE_PRIORITY.LOWEST_PRIORITY ) );
 
         InterruptSemaphore interrupter = new InterruptSemaphore();
         dataModel.getCamera().buildOldImage( this, interrupter );// this, interrupter );
