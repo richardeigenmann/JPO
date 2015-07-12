@@ -30,12 +30,13 @@ import static javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE;
 import jpo.dataModel.ListNavigator;
 import jpo.dataModel.Settings;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
+import jpo.gui.swing.Thumbnail;
 import net.miginfocom.swing.MigLayout;
 
 /*
  EmailerGui.java:  creates a GUI to allow the user to specify his search
 
- Copyright (C) 2004-2014  Richard Eigenmann.
+ Copyright (C) 2004-2015  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -391,7 +392,7 @@ public class EmailerGui extends JFrame {
 
         for ( int i = 0; i < emailSelected.size(); i++ ) {
             listNavigator.addNode( (SortableDefaultMutableTreeNode) emailSelected.get( i ) );
-            ThumbnailController thumbnailController = new ThumbnailController( thumbnailSize );
+            ThumbnailController thumbnailController = new ThumbnailController(new Thumbnail(), thumbnailSize );
             thumbnailController.setNode( listNavigator, i );
             thumbnailController.setDecorateThumbnails( false );
             thumbnailController.determineMailSlectionStatus();

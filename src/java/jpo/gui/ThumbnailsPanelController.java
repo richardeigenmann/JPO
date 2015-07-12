@@ -7,7 +7,6 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.awt.dnd.DropTarget;
 import java.awt.dnd.DropTargetDropEvent;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -40,12 +39,13 @@ import jpo.dataModel.QueryNavigator;
 import jpo.dataModel.Settings;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
 import jpo.dataModel.Tools;
+import jpo.gui.swing.Thumbnail;
 import jpo.gui.swing.ThumbnailPanelTitle;
 
 /*
  ThumbnailPanelController.java:  a JScrollPane that shows thumbnailControllers
 
- Copyright (C) 2002 - 2014  Richard Eigenmann.
+ Copyright (C) 2002 - 2015  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -542,7 +542,7 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
         thumbnailsPane.removeAll();
         initialisedMaxThumbnails = Settings.maxThumbnails;
         for ( int i = 0; i < Settings.maxThumbnails; i++ ) {
-            thumbnailControllers[i] = new ThumbnailController( Settings.thumbnailSize );
+            thumbnailControllers[i] = new ThumbnailController(new Thumbnail(), Settings.thumbnailSize );
             thumbnailDescriptionJPanels[i] = new ThumbnailDescriptionJPanel();
             thumbnailsPane.add( thumbnailControllers[i].getThumbnail() );
             thumbnailsPane.add( thumbnailDescriptionJPanels[i] );

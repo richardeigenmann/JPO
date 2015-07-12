@@ -62,6 +62,7 @@ import jpo.dataModel.Tools;
 import jpo.gui.swing.NonFocussedCaret;
 import jpo.gui.swing.ThreeDotButton;
 import jpo.gui.swing.MapViewer;
+import jpo.gui.swing.Thumbnail;
 import net.miginfocom.swing.MigLayout;
 import org.jxmapviewer.JXMapViewer;
 import org.jxmapviewer.input.MapClickListener;
@@ -71,7 +72,7 @@ import webserver.Webserver;
 /*
  PictureInfoEditor:  Edits the details of a picture
 
- Copyright (C) 2002-2014  Richard Eigenmann.
+ Copyright (C) 2002-2015  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -104,7 +105,7 @@ public class PictureInfoEditor extends JFrame {
      * Defines a logger for this class
      */
     private static final Logger LOGGER = Logger.getLogger( PictureInfoEditor.class.getName() );
-    private final ThumbnailController thumbnailController = new ThumbnailController( Settings.thumbnailSize );
+    private final ThumbnailController thumbnailController = new ThumbnailController( new Thumbnail(), Settings.thumbnailSize );
     /**
      * The description of the picture
      */

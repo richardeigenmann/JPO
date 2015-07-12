@@ -17,11 +17,12 @@ import jpo.dataModel.SingleNodeNavigator;
 import jpo.dataModel.Settings;
 import jpo.dataModel.GroupInfo;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
+import jpo.gui.swing.Thumbnail;
 import net.miginfocom.swing.MigLayout;
 
 /*
  GroupInfoEditor.java:  Controller and Vie for editing group properties
- Copyright (C) 2002 - 2014  Richard Eigenmann.
+ Copyright (C) 2002 - 2015  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -128,7 +129,7 @@ public class GroupInfoEditor {
         nodeStatisticsController.updateStats( editNode );
         tabbedPane.addTab( "Statistics", nodeStatisticsController.getJComponent() );
 
-        ThumbnailController thumbnailController = new ThumbnailController();
+        ThumbnailController thumbnailController = new ThumbnailController(new Thumbnail(), Settings.thumbnailSize );
         thumbnailController.setNode( new SingleNodeNavigator( editNode ), 0 );
         tabbedPane.addTab( "Thumbnail", thumbnailController.getThumbnail() );
 

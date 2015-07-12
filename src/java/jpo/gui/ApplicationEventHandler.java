@@ -127,6 +127,7 @@ import jpo.gui.swing.MainWindow;
 import jpo.gui.swing.PrivacyJFrame;
 import static jpo.gui.swing.ResizableJFrame.WindowSize.WINDOW_LEFT;
 import static jpo.gui.swing.ResizableJFrame.WindowSize.WINDOW_RIGHT;
+import jpo.gui.swing.Thumbnail;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
 import webserver.Webserver;
@@ -1438,7 +1439,7 @@ public class ApplicationEventHandler {
                 return;
             }
             LOGGER.fine( String.format( "refreshing the thumbnail on the node %s%nAbout to create the thubnail", this.toString() ) );
-            ThumbnailController t = new ThumbnailController( Settings.thumbnailSize );
+            ThumbnailController t = new ThumbnailController( new Thumbnail(), Settings.thumbnailSize );
             t.setNode( new SingleNodeNavigator( node ), 0 );
             ThumbnailCreationQueue.requestThumbnailCreation( t,
                     request.getPriority(), true );

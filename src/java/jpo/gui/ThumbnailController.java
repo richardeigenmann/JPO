@@ -2,7 +2,6 @@ package jpo.gui;
 
 import jpo.gui.swing.PicturePopupMenu;
 import java.awt.Dimension;
-import java.awt.HeadlessException;
 import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DragGestureEvent;
 import java.awt.dnd.DragGestureListener;
@@ -43,7 +42,7 @@ import jpo.gui.swing.Thumbnail;
 /*
  ThumbnailController.java:  class that displays a visual respresentation of the specified node
 
- Copyright (C) 2002 - 2014  Richard Eigenmann.
+ Copyright (C) 2002 - 2015  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -67,27 +66,15 @@ public class ThumbnailController implements JpoDropTargetDropEventHandler {
      */
     private static final Logger LOGGER = Logger.getLogger( ThumbnailController.class.getName() );
 
-    /**
-     * Creates a new ThumbnailController object with a reference to the
-     * ThumbnailPanelController which must receive notifications that a new node
-     * should be selected.
-     *
-     *
-     */
-    public ThumbnailController() {
-        this( Settings.thumbnailSize );
-    }
-
 
     /**
-     * Creates a new ThumbnailController object. This must happen on the EDT
-     * because it creates a Thumbnail SWING component
+     * Creates a new ThumbnailController object. 
      *
      * @param	thumbnailSize	The size in which the thumbnail is to be created
      *
      */
-    public ThumbnailController( final int thumbnailSize ) {
-        myThumbnail = new Thumbnail();
+    public ThumbnailController(Thumbnail thumbnail, final int thumbnailSize ) {
+        myThumbnail = thumbnail;
         myThumbnail.setThumbnailSize( thumbnailSize );
         myThumbnail.addMouseListener( new ThumbnailMouseAdapter() );
         // set up drag & drop
@@ -100,7 +87,7 @@ public class ThumbnailController implements JpoDropTargetDropEventHandler {
     /**
      * Refers to the thumbnail which is being controlled
      */
-    private Thumbnail myThumbnail;
+    private final Thumbnail myThumbnail;
 
     /**
      * a link to the SortableDefaultMutableTreeNode in the data model. This

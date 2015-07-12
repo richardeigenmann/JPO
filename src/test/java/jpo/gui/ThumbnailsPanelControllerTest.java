@@ -24,7 +24,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import javax.swing.SwingUtilities;
-import jpo.dataModel.Tools;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.fail;
 import org.junit.Test;
