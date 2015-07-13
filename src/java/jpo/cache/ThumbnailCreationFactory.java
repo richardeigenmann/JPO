@@ -112,8 +112,6 @@ public class ThumbnailCreationFactory implements Runnable {
 
                 ImageBytes imageBytes = JpoCache.getInstance().getGroupThumbnailImageBytes( childPictureNodes );
                 request.setIcon( new ImageIcon( imageBytes.getBytes() ) );
-                //TODO: remove this speed break
-                Thread.sleep( 1000);
             } else {
                 request.setIcon( BROKEN_THUMBNAIL_PICTURE );
             }

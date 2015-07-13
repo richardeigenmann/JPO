@@ -57,7 +57,8 @@ public class Main {
         // somewhat rabid way of allowing the application access to the local filesystem. RE 13. Nov 2007
         System.setSecurityManager( null );
 
-        System.out.println( "\nJPO version 0.12\n" + "Copyright (C) 2000-2014 Richard Eigenmann\n"
+        System.out.println( "\nJPO version 0.12\n" 
+                + "Copyright (C) 2000-2015 Richard Eigenmann,\nZurich, Switzerland\n"
                 + "JPO comes with ABSOLUTELY NO WARRANTY;\n"
                 + "for details Look at the Help | License menu item.\n"
                 + "This is free software, and you are welcome\n"

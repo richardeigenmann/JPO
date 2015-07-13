@@ -3,6 +3,7 @@
 
             <table class="changelog">
                 <tr><td colspan=2><b>Development Version 0.12</b></td></tr>
+                <tr><td valign="top">13.7.2015</td><td>Refactored code to ensure that we no longer have odd thumbnails appearing after changing the groups</td></tr>
                 <tr><td valign="top">31.5.2015</td><td>Improved the build system so that also Windows installer builds are automated</td></tr>
                 <tr><td valign="top">30.5.2015</td><td>Combined all the third party libraries into one single jar for hassle free deployment</td></tr>
                 <tr><td valign="top">27.5.2015</td><td>Made MainWindow more passive as an EventListener</td></tr>
@@ -414,6 +415,6 @@
 
 
             <hr>
-            <p>Last update to this page: 31 May 2015<br>
+            <p>Last update to this page: 13 July 2015<br>
                 Copyright 2003-2015 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
     <?php include("page-end.php"); ?>

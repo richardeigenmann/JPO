@@ -39,7 +39,7 @@ public class ThumbnailQueueRequest implements Comparable<ThumbnailQueueRequest> 
         LOW_PRIORITY( 2 ),
         LOWEST_PRIORITY( 3 );
 
-        private Integer priority;
+        private final Integer priority;
 
         private QUEUE_PRIORITY( int priority ) {
             this.priority = priority;
@@ -107,11 +107,9 @@ public class ThumbnailQueueRequest implements Comparable<ThumbnailQueueRequest> 
      * if the request was not canceled in the mean time.
      */
     public void notifyCallbackHandler() {
-        if ( !isCancelled() ) {
+        if ( !isCanceled() ) {
             callbackHandler.callbackThumbnailCreated( this );
-        } else {
-            System.out.println( "Suppressing notification" );
-        }
+        } 
     }
 
     /**
@@ -187,23 +185,23 @@ public class ThumbnailQueueRequest implements Comparable<ThumbnailQueueRequest> 
     }
 
     /**
-     * A flag to indicate that the request was cancelled.
+     * A flag to indicate that the request was canceled.
      */
-    protected Boolean isCancelled = false;
+    protected Boolean isCanceled = false;
 
     /**
      *
-     * @return true is the request is cancelled
+     * @return true is the request is canceled
      */
-    public boolean isCancelled() {
-        synchronized ( isCancelled ) {
-            return isCancelled;
+    public boolean isCanceled() {
+        synchronized ( isCanceled ) {
+            return isCanceled;
         }
     }
 
     public void cancel() {
-        synchronized ( isCancelled ) {
-            this.isCancelled = true;
+        synchronized ( isCanceled ) {
+            this.isCanceled = true;
         }
     }
 

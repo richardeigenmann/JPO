@@ -19,7 +19,11 @@ jcs.default.elementattributes.IsLateral=true
 jcs.region.highresCache=
 jcs.region.highresCache.cacheattributes=org.apache.commons.jcs.engine.CompositeCacheAttributes
 # Max highres pictures in cache: 100
-jcs.region.highresCache.cacheattributes.MaxObjects=1000
+#    5 @ 1000M OK
+#   50 @ 1000M Blows out of memory errors when loading large pictures
+#  100 @ 1000M Blows out of memory errors when loading large pictures
+# 1000 @ 1000M Blows out of memory errors
+jcs.region.highresCache.cacheattributes.MaxObjects=50
 #jcs.region.highresCache.cacheattributes.MemoryCacheName=org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache
 #jcs.region.highresCache.cacheattributes.MemoryCacheName=org.apache.commons.jcs.engine.memory.lru.LHMLRUMemoryCache
 #jcs.region.highresCache.cacheattributes.MemoryCacheName=org.apache.commons.jcs.engine.memory.fifo.FIFOMemoryCache
@@ -35,7 +39,9 @@ jcs.region.highresCache.elementattributes.IsEternal=false
 # PREDEFINED CACHE REGIONS
 jcs.region.thumbnailCache=DC
 jcs.region.thumbnailCache.cacheattributes=org.apache.commons.jcs.engine.CompositeCacheAttributes
-jcs.region.thumbnailCache.cacheattributes.MaxObjects=1000
+# 200 @ 1000M 
+# 500 @ 1000M Out of Memory
+jcs.region.thumbnailCache.cacheattributes.MaxObjects=200
 jcs.region.thumbnailCache.cacheattributes.MemoryCacheName=org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache
 jcs.region.thumbnailCache.cacheattributes.UseMemoryShrinker=true
 jcs.region.thumbnailCache.cacheattributes.MaxMemoryIdleTimeSeconds=3600

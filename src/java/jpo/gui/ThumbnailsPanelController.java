@@ -568,7 +568,8 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
         setPageStats();
         setButtonStatus();
 
-        for ( int i = 0; i < Settings.maxThumbnails; i++ ) {
+        //for ( int i = 0; i < Settings.maxThumbnails; i++ ) {
+        for ( int i = Settings.maxThumbnails -1 ; i > -1 ; i-- ) {
             if ( !thumbnailControllers[i].isSameNode( mySetOfNodes, i + startIndex ) ) {
                 thumbnailControllers[i].setNode( mySetOfNodes, i + startIndex );
                 thumbnailDescriptionJPanels[i].setNode( mySetOfNodes.getNode( i + startIndex ) );

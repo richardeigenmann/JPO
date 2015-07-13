@@ -57,7 +57,7 @@ public class ThumbnailCreationQueue {
      * @return true if the request was added to the queue, false if the request
      * already existed.
      */
-    public static boolean requestThumbnailCreation(
+    public static ThumbnailQueueRequest requestThumbnailCreation(
             ThumbnailQueueRequestCallbackHandler callbackHandler,
             SortableDefaultMutableTreeNode node,
             QUEUE_PRIORITY priority,
@@ -67,18 +67,19 @@ public class ThumbnailCreationQueue {
         ThumbnailQueueRequest requestFoundOnQueue = findThumbnailQueueRequest( callbackHandler );
         if ( requestFoundOnQueue == null ) {
             QUEUE.add( newThumbnailQueueRequest );
-            return true;
+            return newThumbnailQueueRequest;
         } else {
-            if ( ( requestFoundOnQueue.getNode() != node )
+            if ( ( requestFoundOnQueue.getThumbnailQueueRequestCallbackHandler() != callbackHandler )
+                    || ( requestFoundOnQueue.getNode() != node )
                     || ( requestFoundOnQueue.getSize().width != size.width )
                     || ( requestFoundOnQueue.getSize().height != size.height ) ) {
                 requestFoundOnQueue.cancel();
                 QUEUE.remove( requestFoundOnQueue );
                 QUEUE.add( newThumbnailQueueRequest );
-                return true;
+                return newThumbnailQueueRequest;
             } else {
                 requestFoundOnQueue.increasePriorityTo( priority );
-                return false;
+                return requestFoundOnQueue;
             }
         }
     }
@@ -114,7 +115,7 @@ public class ThumbnailCreationQueue {
      *
      * @param thumbnailQueueRequestCallbackHandler The thumbnail handler to be
      * removed
-     */
+     *
     public static void removeThumbnailQueueRequest( ThumbnailQueueRequestCallbackHandler thumbnailQueueRequestCallbackHandler ) {
         ThumbnailQueueRequest foundThumbnailQueueRequest = findThumbnailQueueRequest( thumbnailQueueRequestCallbackHandler );
         if ( foundThumbnailQueueRequest != null ) {
@@ -127,6 +128,15 @@ public class ThumbnailCreationQueue {
             QUEUE.remove( foundThumbnailQueueRequest );
 
         }
+    }*/
+
+    /**
+     * removes the request for a specific ThumbnailController from the queue.
+     *
+     * @param requestToRemove The request to remove
+     */
+    public static void remove( ThumbnailQueueRequest requestToRemove ) {
+        QUEUE.remove( requestToRemove );
     }
 
     /**

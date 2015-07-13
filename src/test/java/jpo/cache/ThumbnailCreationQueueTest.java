@@ -114,11 +114,11 @@ public class ThumbnailCreationQueueTest {
         MyThumbnailQueueRequestCallbackHandler mtqrch2 = new MyThumbnailQueueRequestCallbackHandler();
         SortableDefaultMutableTreeNode node1 = new SortableDefaultMutableTreeNode();
         SortableDefaultMutableTreeNode node2 = new SortableDefaultMutableTreeNode();
-        ThumbnailCreationQueue.requestThumbnailCreation( mtqrch1, node1, ThumbnailQueueRequest.QUEUE_PRIORITY.LOW_PRIORITY, new Dimension( 350, 350 ) );
-        ThumbnailCreationQueue.requestThumbnailCreation( mtqrch2, node2, ThumbnailQueueRequest.QUEUE_PRIORITY.MEDIUM_PRIORITY, new Dimension( 350, 350 ) );
+        ThumbnailQueueRequest req1 = ThumbnailCreationQueue.requestThumbnailCreation( mtqrch1, node1, ThumbnailQueueRequest.QUEUE_PRIORITY.LOW_PRIORITY, new Dimension( 350, 350 ) );
+        ThumbnailQueueRequest req2 = ThumbnailCreationQueue.requestThumbnailCreation( mtqrch2, node2, ThumbnailQueueRequest.QUEUE_PRIORITY.MEDIUM_PRIORITY, new Dimension( 350, 350 ) );
         Assert.assertEquals( "Queue should have two entries after 2 requests", 2, ThumbnailCreationQueue.size() );
 
-        ThumbnailCreationQueue.removeThumbnailQueueRequest( mtqrch1 );
+        ThumbnailCreationQueue.remove( req1 );
         Assert.assertEquals( "Queue should have one entry after removal", 1, ThumbnailCreationQueue.size() );
 
         ThumbnailQueueRequest findResult1 = ThumbnailCreationQueue.findThumbnailQueueRequest( mtqrch1 );

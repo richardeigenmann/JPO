@@ -5,6 +5,7 @@ import jpo.cache.ThumbnailQueueRequestCallbackHandler;
 import jpo.cache.ThumbnailQueueRequest;
 import jpo.gui.swing.PicturePopupMenu;
 import java.awt.Dimension;
+import java.awt.Point;
 import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DragGestureEvent;
 import java.awt.dnd.DragGestureListener;
@@ -25,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JViewport;
 import javax.swing.tree.DefaultMutableTreeNode;
 import jpo.EventBus.JpoEventBus;
 import jpo.EventBus.ShowGroupRequest;
@@ -161,6 +163,8 @@ public class ThumbnailController implements JpoDropTargetDropEventHandler, Thumb
         }
     }
 
+    private ThumbnailQueueRequest myThumbnailQueueRequest = null;
+
     /**
      * Sets the node being visualised by this ThumbnailController object.
      *
@@ -168,21 +172,37 @@ public class ThumbnailController implements JpoDropTargetDropEventHandler, Thumb
      * @param index	The position of this object to be displayed.
      */
     public void setNode( NodeNavigatorInterface mySetOfNodes, int index ) {
-        LOGGER.fine( String.format( "Setting Thubnail %d to index %d in Browser %s ", this.hashCode(), index, mySetOfNodes.toString() ) );
-
         this.myNodeNavigator = mySetOfNodes;
         this.myIndex = index;
         SortableDefaultMutableTreeNode node = mySetOfNodes.getNode( index );
 
         this.myNode = node;
 
-        attachChangeListeners();
+        // remove and silence the old request if it is still alive
+        if ( myThumbnailQueueRequest != null ) {
+            myThumbnailQueueRequest.cancel();
+            ThumbnailCreationQueue.remove( myThumbnailQueueRequest );
+        }
 
+        attachChangeListeners();
         if ( node == null ) {
             myThumbnail.setVisible( false );
-            ThumbnailCreationQueue.removeThumbnailQueueRequest( this );
+            myThumbnailQueueRequest = null;
         } else {
-            requestThumbnailCreation( DEFAULT_QUEUE_PRIORITY );
+            QUEUE_PRIORITY priority = QUEUE_PRIORITY.MEDIUM_PRIORITY;
+            try {
+                if ( getThumbnail().getParent().getParent().getParent() instanceof JViewport ) {
+                    JViewport viewport = (JViewport) getThumbnail().getParent().getParent().getParent();
+                    Point point = getThumbnail().getLocation();
+                    if ( viewport.getViewRect().contains( point ) ) {
+                        priority = QUEUE_PRIORITY.HIGH_PRIORITY;
+                    }
+                }
+            } catch ( NullPointerException npe ) {
+                LOGGER.severe( "Something is wrong - Thumbnail Controller being used in an unexpected context. Optimisation to prioretise visible Thumbnails didn't work correctly. Check the code!" );
+                Thread.dumpStack();
+            }
+            myThumbnailQueueRequest = requestThumbnailCreation( priority );
         }
 
         showSlectionStatus();
@@ -245,15 +265,15 @@ public class ThumbnailController implements JpoDropTargetDropEventHandler, Thumb
      * @param	priority	The priority with which the request is to be treated on
      * the queue
      */
-    public void requestThumbnailCreation( QUEUE_PRIORITY priority ) {
+    public ThumbnailQueueRequest requestThumbnailCreation( QUEUE_PRIORITY priority ) {
         myThumbnail.setQueueIcon();
-        boolean newRequest = ThumbnailCreationQueue.requestThumbnailCreation(
+        return ThumbnailCreationQueue.requestThumbnailCreation(
                 this, myNode, priority, getMaximumUnscaledSize() );
         /*if ( newRequest ) {
-            setPendingIcon();
-        } else {
-            LOGGER.fine( String.format( "Why have we just sent in a request for Thumbnail creation for %s when it's already on the queue?", toString() ) );
-        }*/
+         setPendingIcon();
+         } else {
+         LOGGER.fine( String.format( "Why have we just sent in a request for Thumbnail creation for %s when it's already on the queue?", toString() ) );
+         }*/
     }
 
     /**
@@ -313,11 +333,13 @@ public class ThumbnailController implements JpoDropTargetDropEventHandler, Thumb
 
     /**
      * Entry point for the callback handler
-     * @param thumbnailQueueRequest 
+     *
+     * @param thumbnailQueueRequest
      */
     @Override
     public void callbackThumbnailCreated( ThumbnailQueueRequest thumbnailQueueRequest ) {
         getThumbnail().setImageIcon( thumbnailQueueRequest.getIcon() );
+        myThumbnailQueueRequest = null;
     }
 
     /**
@@ -465,7 +487,6 @@ public class ThumbnailController implements JpoDropTargetDropEventHandler, Thumb
         myThumbnail.setFactor( thumbnailSizeFactor );
     }
 
-   
     /**
      * This flag indicates where decorations should be drawn at all
      */

@@ -217,7 +217,7 @@ public class Settings {
      *
      * @see jpo.gui.ThumbnailCreationQueue
      */
-    public static final int numberOfThumbnailCreationThreads = 2;
+    public static final int numberOfThumbnailCreationThreads = 5;
     /**
      * The KDE Panel has the unfortunate habit of insisting on being on top so
      * this parameter allows you to specify how much space should be left from
