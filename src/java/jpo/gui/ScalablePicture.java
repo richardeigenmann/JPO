@@ -393,7 +393,7 @@ public class ScalablePicture
      * @return The scale factor by which to multiply the source dimension
      */
     public static double calcScaleSourceToTarget( int sourceWidth, int sourceHeight, int maxWidth, int maxHeight ) {
-        // Scale so that the enire picture fits in the component.
+        // Scale so that the entire picture fits in the component.
         if ( ( (double) sourceHeight / maxHeight ) > ( (double) sourceWidth / maxWidth ) ) {
             // Vertical scaling
             return  ( (double) maxHeight / sourceHeight );
