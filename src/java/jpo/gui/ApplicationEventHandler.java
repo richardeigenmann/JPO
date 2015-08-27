@@ -217,7 +217,7 @@ public class ApplicationEventHandler {
     public void handleOpenMainWindowRequest( OpenMainWindowRequest request ) {
         try {
             // Activate OpenGL performance improvements
-            System.setProperty( "sun.java2d.opengl", "true" );
+            //System.setProperty( "sun.java2d.opengl", "true" );
             SwingUtilities.invokeAndWait( new Runnable() {
 
                 @Override
