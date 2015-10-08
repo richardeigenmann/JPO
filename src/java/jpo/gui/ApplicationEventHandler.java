@@ -424,9 +424,17 @@ public class ApplicationEventHandler {
         }
 
         FindJPanel findPanel = new FindJPanel();
-        int result = JOptionPane.showConfirmDialog( Settings.anchorFrame, findPanel,
+        Object[] options = { "OK", "Cancel" };
+        int result = JOptionPane.showOptionDialog( 
+                Settings.anchorFrame, 
+                findPanel,
                 Settings.jpoResources.getString( "searchDialogTitle" ),
-                JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE );
+                JOptionPane.OK_CANCEL_OPTION, 
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                options,
+                null
+                );
         if ( result == JOptionPane.OK_OPTION ) {
 
             TextQuery textQuery = new TextQuery( findPanel.getSearchArgument() );

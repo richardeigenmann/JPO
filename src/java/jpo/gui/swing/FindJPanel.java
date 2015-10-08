@@ -2,10 +2,14 @@ package jpo.gui.swing;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.AbstractAction;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.event.AncestorEvent;
+import javax.swing.event.AncestorListener;
 import jpo.dataModel.Settings;
 import jpo.dataModel.Tools;
 import net.miginfocom.swing.MigLayout;
@@ -81,7 +85,9 @@ public class FindJPanel extends JPanel {
         add( dateRangeJLabel, "hidemode 0" );
         add( lowerDateJTextField, "wrap, hidemode 0" );
         add( upperDateJTextField, "skip, wrap, hidemode 0" );
+
         setAdvancedOptionsVisible( false );
+
     }
 
     /**
