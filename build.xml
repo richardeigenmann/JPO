@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <project name="Java Picture Organizer" default="run">
-    
+
     <property name="app.main.package" value="jpo"/>
     <property name="app.main.class" value="Main"/>
-    
+
     <property name="build.dir" value="build"/>
     <property name="build.base.classes.dir" value="${build.dir}/classes"/>
     <property name="unit.test.classes.dir" value="${build.dir}/unittestclasses"/>
@@ -15,7 +15,7 @@
     <property name="build.jars.dir" value="${build.dir}/jars"/>
     <property name="Windowsbuilder" value="Windowsbuilder"/>
     <property name="version" value="0.12"/>
-    
+
     <property name="libs.dir" value="libs"/>
     <property name="compile-libs.dir" value="compile-libs"/>
     <property name="junit" value="${compile-libs.dir}/junit-4.12.jar"/>
@@ -33,7 +33,7 @@
     <property name="results" location="/tmp"/>
 
     <property name="TALK" value="true" />
-    
+
     <path id="classpath">
         <pathelement location="${build.base.classes.dir}"/>
         <fileset dir="${libs.dir}">
@@ -50,7 +50,7 @@
     <echo message="&quot;${ant.project.name}&quot; Use the &quot;-debug&quot; switch to see loads of"/>
     <echo message="debug information, &quot;ant --help&quot; reminds you of what other options"/>
     <echo message="there are and &quot;ant -p&quot; tells you what targets this build file supports."/>
-    
+
     <!-- <echo message="The base directory for the project         ${basedir}"/> -->
     <!-- <echo message="The java source files are being read from: ${src.java.dir}"/> -->
     <!-- <echo message="The compiled Java .class files will go to: ${build.base.classes.dir}"/> -->
@@ -63,7 +63,7 @@
         <mkdir dir="${build.docs.dir}"/>
         <mkdir dir="${build.jars.dir}"/>
     </target>
-    
+
     <target name="clean" description="Deletes the build directory and all classes and jars contained in it" >
         <delete verbose="${TALK}">
             <fileset dir="${testdir}" includes="**/*.class" />
@@ -71,14 +71,14 @@
         <delete dir="${build.dir}"/>
     </target>
 
-        
+
     <target name="cleanupSource" description="Deletes the ~ files that some editors create" >
         <delete verbose="${TALK}">
             <fileset dir="${src.java.dir}/jpo/" includes="*~" defaultexcludes="no" />
         </delete>
     </target>
 
-    
+
     <target name="compile"
             depends="prepare"
             description="Compiles the .java files">
@@ -130,7 +130,7 @@
         <echo message="Testing if JUnit is present: ${junit.present}" />
     </target>
 
-    
+
     <target name="compile-test" depends="JUNIT, compile" description="Compiles the JUnit test cases">
         <mkdir dir="${unit.test.classes.dir}"/>
         <javac srcdir="${testdir}"
@@ -153,9 +153,9 @@
             </fileset>
         </copy>
     </target>
-    
 
-    <!-- To run the tests in headless mode on a headed environment from 
+
+    <!-- To run the tests in headless mode on a headed environment from
          the command line:
          unset DISPLAY
          ant -Djava.awt.headless=true test
@@ -168,7 +168,7 @@
             printsummary="yes"
             errorProperty="test.failed"
             failureproperty="test.failed"
-            haltonfailure="yes" 
+            haltonfailure="yes"
             fork="yes"
             includeantruntime="yes"
             showoutput="yes">
@@ -180,7 +180,7 @@
                 <pathelement location="${ant-junit4}" />
             </classpath>
             <classpath refid="classpath"/>
-            
+
             <batchtest todir="${results}">
                 <fileset dir="${unit.test.classes.dir}">
                     <include name="**/*Test.class"/>
@@ -189,9 +189,9 @@
         </junit>
         <fail message="Tests failed!" if="test.failed"/>
     </target>
-    
-    
-            
+
+
+
     <target name="javadoc"
             description="Creates the JavaDoc of the project">
         <copy todir="${build.docs.dir}">
@@ -218,10 +218,10 @@
             <link href="http://docs.oracle.com/javase/7/docs/api/"/>
         </javadoc>
     </target>
-    
-    
-    
-    
+
+
+
+
     <fileset id="ThirdPartyLibraries" dir="${libs.dir}">
         <include name="commons-compress-1.8.jar"/>
         <include name="commons-io-2.4.jar" />
@@ -246,10 +246,10 @@
         <include name="TagCloud.jar"/>
         <include name="xmpcore-5.1.2.jar"/>  <!-- metadata-extractor dependency -->
     </fileset>
-    
 
-        
-    <target name="buildjar" depends="clean, cleanupSource, test" description="Builds the all encompassing Jar file">  
+
+
+    <target name="buildjar" depends="clean, cleanupSource, test" description="Builds the all encompassing Jar file">
         <jar destfile="${build.jars.dir}/jpo-${version}.jar"
              basedir="${build.base.classes.dir}"
              compress="no"
@@ -262,7 +262,7 @@
                 </section>
                 <attribute name="Permissions" value="all-permissions" />
             </manifest>
-            
+
             <!-- Include the Third Party Libraries into the target jar -->
             <!-- <echo>ThirdPartyLibraries: ${ant.refid:ThirdPartyLibraries}</echo> -->
             <restrict>
@@ -275,19 +275,19 @@
                         <fileset refid="ThirdPartyLibraries" />
                     </zips>
                 </archives>
-                
+
             </restrict>
         </jar>
     </target>
-    
+
     <!-- This target signs the unsinged jars so that they can be used in the Java Web Start context.
-         You need to have a Java Keystore 
+         You need to have a Java Keystore
     -->
     <target name="signjar" depends="buildjar" description="Signs the jar files">
         <signjar alias="richi"
                  keystore="${javaKeyStore}"
                  storepass="${javaKeyStorePassword}"
-                 jar="${build.jars.dir}/jpo-${version}.jar" 
+                 jar="${build.jars.dir}/jpo-${version}.jar"
                  tsaurl="http://timestamp.digicert.com"
         />
     </target>
@@ -295,7 +295,7 @@
 
     <!-- In OpenSUSE an NSIS builder package can be installed from the unofficial
     repositories via the webpage -->
-    <target name="build-windows" description="Runs the windows buillder" depends="signjar"> 
+    <target name="build-windows" description="Runs the windows buillder" depends="signjar">
         <exec executable="/usr/bin/makensis">
             <arg value="Windowsbuilder/jpoexe.nsi" />
         </exec>
@@ -306,12 +306,12 @@
 
 
     <!-- To run from the command line: ant -Dtest.class=jpo.dataModel.ExifInfo test-single -->
-    <target name="test-single" description="Run individual Unit tests" depends="compile, compile-test" >  
+    <target name="test-single" description="Run individual Unit tests" depends="compile, compile-test" >
         <junit
             printsummary="yes"
             errorProperty="test.failed"
             failureproperty="test.failed"
-            haltonfailure="yes" 
+            haltonfailure="yes"
             fork="yes"
             showoutput="yes">
             <formatter type="plain" usefile="false"/>
@@ -327,14 +327,14 @@
         </junit>
         <fail message="Tests failed!" if="test.failed"/>
     </target>
-    
 
 
-    
+
+
     <target name="run" description="Runs the program" depends="prepare, compile">
         <java classname="${app.main.class}"
               fork="yes"
-              maxmemory="1000m">
+              maxmemory="6000m">
             <!-- add for debugging: jvmargs="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,address=8888,suspend=n" -->
             <classpath refid="classpath"/>
         </java>
@@ -350,9 +350,9 @@
     <target name="runjar" description="Runs the program from the jar" depends="">  <!-- buildjar -->
         <java jar="${build.jars.dir}/jpo-${version}.jar"
               fork="yes"
-        />        
+        />
     </target>
-    
+
 
 
     <!-- This target will only be of use to the person who does the deployment
@@ -372,8 +372,8 @@
             </fileset>
         </scp>
     </target>
-    
-    
+
+
     <!-- pushes the jpo jar to sourceforge  -->
     <target name="publish-jar" depends="signjar"  description="Publishes the Jars to SourceForge website">
         <scp todir="richieigenmann,j-po@web.sourceforge.net:/home/groups/j/j-/j-po/htdocs"
@@ -425,7 +425,7 @@
         </scp>
     </target>
 
-    
+
 
     <!-- pushes the jpo jar to sourceforge  -->
     <target name="publish-windows" depends="build-windows"  description="Publishes the compiled Windows installer to SourceForge">
@@ -448,14 +448,14 @@
     <target name="publish" depends="publish-jar, publish-javadoc, publish-webpages" description="Publishes the lates Jpo Version and webpages to the SourceForge project"/>
 
 
-    
-    
-    
-    
+
+
+
+
     <!--    <target name="JSCH" description="Checks if JSch is available">
         <available property="jsch.present" classname="com.jcraft.jsch.JSch" classpath="${junit}"  />
         <echo message="Testing if JSch is present: ${jsch.present}" />
     </target>-->
 
-   
+
 </project>
