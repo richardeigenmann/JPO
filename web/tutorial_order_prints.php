@@ -1,9 +1,10 @@
 <?php include("page-start.php"); ?>
-<span class="para-heading"  id="title">Tutorial: Order prints from a lab</span>
-<h3>Objective:</h3>
-<p>In this tutorial you will learn:<ul><li>How to order prints from from a lab that has a website with upload</li>
-    <li>How to copy the pictures onto a Memory Stick</li>
-</ul></p>
+<div class="container">
+    <span class="para-heading"  id="title">Tutorial: Order prints from a lab</span>
+    <h3>Objective:</h3>
+    <p>In this tutorial you will learn:<ul><li>How to order prints from from a lab that has a website with upload</li>
+        <li>How to copy the pictures onto a Memory Stick</li>
+    </ul></p>
 
 <h3>Quick Take</h3>
 <p>Simply select the pictures you want printed and drag them to the web site of the lab.</p>
@@ -17,4 +18,5 @@
 <hr>
 <p>Last update to this page: 22 Mar 2014<br>
     Copyright 2009-2014 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
+</div>
 <?php include("page-end.php"); ?>

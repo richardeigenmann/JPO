@@ -445,7 +445,7 @@
     </target>
 
 
-    <target name="publish" depends="publish-jar, publish-javadoc, publish-webpages" description="Publishes the lates Jpo Version and webpages to the SourceForge project"/>
+    <target name="publish" depends="publish-jar, publish-javadoc, publish-webpages, publish-windows" description="Publishes the lates Jpo Version and webpages to the SourceForge project"/>
 
 
 
