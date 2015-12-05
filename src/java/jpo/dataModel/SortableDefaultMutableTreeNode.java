@@ -104,21 +104,23 @@ public class SortableDefaultMutableTreeNode
      */
     public void sortChildren( FieldCodes sortCriteria ) {
         Tools.checkEDT();  // because of removeAllChildren
-        int childCount = getChildCount();
-        SortableDefaultMutableTreeNode[] childNodes = new SortableDefaultMutableTreeNode[childCount];
-        for ( int i = 0; i < childCount; i++ ) {
-            childNodes[i] = (SortableDefaultMutableTreeNode) getChildAt( i );
-        }
+        synchronized ( this.getRoot() ) {
+            int childCount = getChildCount();
+            SortableDefaultMutableTreeNode[] childNodes = new SortableDefaultMutableTreeNode[childCount];
+            for ( int i = 0; i < childCount; i++ ) {
+                childNodes[i] = (SortableDefaultMutableTreeNode) getChildAt( i );
+            }
 
-        // sort the array
-        sortfield = sortCriteria;
-        Arrays.sort( childNodes );
+            // sort the array
+            sortfield = sortCriteria;
+            Arrays.sort( childNodes );
 
-        //Remove all children from the node
-        getPictureCollection().setSendModelUpdates( false );
-        removeAllChildren();
-        for ( SortableDefaultMutableTreeNode childNode : childNodes ) {
-            add( childNode );
+            //Remove all children from the node
+            getPictureCollection().setSendModelUpdates( false );
+            removeAllChildren();
+            for ( SortableDefaultMutableTreeNode childNode : childNodes ) {
+                add( childNode );
+            }
         }
         getPictureCollection().setUnsavedUpdates();
         getPictureCollection().setSendModelUpdates( true );
@@ -194,11 +196,13 @@ public class SortableDefaultMutableTreeNode
      * none found.
      */
     public SortableDefaultMutableTreeNode getPreviousPicture() {
-        DefaultMutableTreeNode prevNode = getPreviousNode();
-        while ( ( prevNode != null ) && ( !( prevNode.getUserObject() instanceof PictureInfo ) ) ) {
-            prevNode = prevNode.getPreviousNode();
+        synchronized ( this.getRoot() ) {
+            DefaultMutableTreeNode prevNode = getPreviousNode();
+            while ( ( prevNode != null ) && ( !( prevNode.getUserObject() instanceof PictureInfo ) ) ) {
+                prevNode = prevNode.getPreviousNode();
+            }
+            return (SortableDefaultMutableTreeNode) prevNode;
         }
-        return (SortableDefaultMutableTreeNode) prevNode;
     }
 
     /**
@@ -211,11 +215,13 @@ public class SortableDefaultMutableTreeNode
      *
      */
     public SortableDefaultMutableTreeNode getNextPicture() {
-        DefaultMutableTreeNode nextNode = getNextNode();
-        while ( ( nextNode != null ) && ( !( nextNode.getUserObject() instanceof PictureInfo ) ) ) {
-            nextNode = nextNode.getNextNode();
+        synchronized ( this.getRoot() ) {
+            DefaultMutableTreeNode nextNode = getNextNode();
+            while ( ( nextNode != null ) && ( !( nextNode.getUserObject() instanceof PictureInfo ) ) ) {
+                nextNode = nextNode.getNextNode();
+            }
+            return (SortableDefaultMutableTreeNode) nextNode;
         }
-        return (SortableDefaultMutableTreeNode) nextNode;
     }
 
     /**
@@ -228,11 +234,13 @@ public class SortableDefaultMutableTreeNode
      *
      */
     public SortableDefaultMutableTreeNode getNextGroupPicture() {
-        DefaultMutableTreeNode nextNode = getNextSibling();
-        while ( ( nextNode != null ) && ( !( nextNode.getUserObject() instanceof PictureInfo ) ) ) {
-            nextNode = nextNode.getNextNode();
+        synchronized ( this.getRoot() ) {
+            DefaultMutableTreeNode nextNode = getNextSibling();
+            while ( ( nextNode != null ) && ( !( nextNode.getUserObject() instanceof PictureInfo ) ) ) {
+                nextNode = nextNode.getNextNode();
+            }
+            return (SortableDefaultMutableTreeNode) nextNode;
         }
-        return (SortableDefaultMutableTreeNode) nextNode;
     }
 
     /**
@@ -351,7 +359,7 @@ public class SortableDefaultMutableTreeNode
      *
      * @param event The event the listening object received.
      */
-    @SuppressWarnings({"unchecked"})
+    @SuppressWarnings( { "unchecked" } )
     public void executeDrop( DropTargetDropEvent event ) {
         if ( !event.isLocalTransfer() ) {
             LOGGER.info( "SDMTN.executeDrop: detected that the drop is not a local Transfer. These are not supported. Aborting drop." );
@@ -463,11 +471,10 @@ public class SortableDefaultMutableTreeNode
                 }
                 dropcomplete = true;
                 getPictureCollection().setUnsavedUpdates();
-            } else {
-                //logger.info("SDMTN.executeDrop: we are dropping a GroupInfo object");
-                // we are dropping a GroupInfo object; all others move down one step.
-                // find out at which index to insert the group
-                if ( !this.isRoot() ) {
+            } else //logger.info("SDMTN.executeDrop: we are dropping a GroupInfo object");
+            // we are dropping a GroupInfo object; all others move down one step.
+            // find out at which index to insert the group
+             if ( !this.isRoot() ) {
 
                     GroupDropPopupMenu groupDropPopupMenu = new GroupDropPopupMenu( event, sourceNode, this );
                     groupDropPopupMenu.show( event.getDropTargetContext().getDropTarget().getComponent(), event.getLocation().x, event.getLocation().y );
@@ -478,7 +485,6 @@ public class SortableDefaultMutableTreeNode
                     dropcomplete = true;
                     getPictureCollection().setUnsavedUpdates();
                 }
-            }
         }
         event.dropComplete( dropcomplete );
 
@@ -536,6 +542,7 @@ public class SortableDefaultMutableTreeNode
         /**
          * This inner class creates a popup menu for group drop events to find
          * out whether to drop into before or after the drop node.
+         *
          * @param event The event
          * @param sourceNode the source node
          * @param targetNode the target node
@@ -597,11 +604,13 @@ public class SortableDefaultMutableTreeNode
 
                 @Override
                 public void actionPerformed( ActionEvent e ) {
-                    sourceNode.removeFromParent();
-                    targetNode.insert( sourceNode, 0 );
-
+                    synchronized ( targetNode.getRoot() ) {
+                        sourceNode.removeFromParent();
+                        targetNode.insert( sourceNode, 0 );
+                    }
                     event.dropComplete( true );
                     getPictureCollection().setUnsavedUpdates();
+
                 }
             } );
             add( dropIntoFirst );
@@ -610,19 +619,20 @@ public class SortableDefaultMutableTreeNode
 
                 @Override
                 public void actionPerformed( ActionEvent e ) {
-                    int childCount = targetNode.getChildCount();
-                    int offset = 0;
-                    if ( childCount > 0 ) {
-                        // position is one less if the source is further up the list than the target
-                        // and at the same level
-                        if ( targetNode.isNodeSibling( sourceNode.getFirstChild() ) ) {
-                            offset = -1;
+                    synchronized ( targetNode.getRoot() ) {
+                        int childCount = targetNode.getChildCount();
+                        int offset = 0;
+                        if ( childCount > 0 ) {
+                            // position is one less if the source is further up the list than the target
+                            // and at the same level
+                            if ( targetNode.isNodeSibling( sourceNode.getFirstChild() ) ) {
+                                offset = -1;
+                            }
                         }
+
+                        sourceNode.removeFromParent();
+                        targetNode.insert( sourceNode, childCount + offset );
                     }
-
-                    sourceNode.removeFromParent();
-                    targetNode.insert( sourceNode, childCount + offset );
-
                     event.dropComplete( true );
                     getPictureCollection().setUnsavedUpdates();
                 }
@@ -658,17 +668,20 @@ public class SortableDefaultMutableTreeNode
                     JOptionPane.ERROR_MESSAGE );
             return false;
         }
-        SortableDefaultMutableTreeNode parentNode = (SortableDefaultMutableTreeNode) this.getParent();
         getPictureCollection().setUnsavedUpdates();
+        synchronized ( this.getRoot() ) {
 
-        int[] childIndices = { parentNode.getIndex( this ) };
-        Object[] removedChildren = { this };
+            SortableDefaultMutableTreeNode parentNode = (SortableDefaultMutableTreeNode) this.getParent();
 
-        super.removeFromParent();
+            int[] childIndices = { parentNode.getIndex( this ) };
+            Object[] removedChildren = { this };
 
-        if ( getPictureCollection().getSendModelUpdates() ) {
-            LOGGER.fine( String.format( "Sending delete message. Model: %s, Parent: %s, ChildIndex %d, removedChild: %s ", getPictureCollection().getTreeModel(), parentNode, childIndices[0], removedChildren[0].toString() ) );
-            getPictureCollection().sendNodesWereRemoved( parentNode, childIndices, removedChildren );
+            super.removeFromParent();
+
+            if ( getPictureCollection().getSendModelUpdates() ) {
+                LOGGER.fine( String.format( "Sending delete message. Model: %s, Parent: %s, ChildIndex %d, removedChild: %s ", getPictureCollection().getTreeModel(), parentNode, childIndices[0], removedChildren[0].toString() ) );
+                getPictureCollection().sendNodesWereRemoved( parentNode, childIndices, removedChildren );
+            }
         }
 
         /**
@@ -684,23 +697,27 @@ public class SortableDefaultMutableTreeNode
     }
 
     /**
-     * Overridden method which will do the default behaviour and then sends a
+     * Overridden method which will do the default behavior and then sends a
      * notification to the Tree Model.
      */
     @Override
     public void removeFromParent() {
-        SortableDefaultMutableTreeNode oldParentNode = (SortableDefaultMutableTreeNode) this.getParent();
-        if ( oldParentNode == null ) {
-            LOGGER.info( String.format( "Why would you try to remove node %s from it's parent when it has none?", toString() ) );
-            return;
-        }
-        int oldParentIndex = oldParentNode.getIndex( this );
-        //logger.info( "SDMTN.removeFromParent: Currentnode: " + this.toString() + " Parent Node:" + oldParentNode.toString() );
-        super.removeFromParent();
-        if ( getPictureCollection().getSendModelUpdates() ) {
-            getPictureCollection().sendNodesWereRemoved( oldParentNode,
-                    new int[]{ oldParentIndex },
-                    new Object[]{ this } );
+        synchronized ( this.getRoot() ) {
+
+            SortableDefaultMutableTreeNode oldParentNode = (SortableDefaultMutableTreeNode) this.getParent();
+            if ( oldParentNode == null ) {
+                LOGGER.info( String.format( "Why would you try to remove node %s from it's parent when it has none?", toString() ) );
+                return;
+            }
+            int oldParentIndex = oldParentNode.getIndex( this );
+            //logger.info( "SDMTN.removeFromParent: Currentnode: " + this.toString() + " Parent Node:" + oldParentNode.toString() );
+            super.removeFromParent();
+
+            if ( getPictureCollection().getSendModelUpdates() ) {
+                getPictureCollection().sendNodesWereRemoved( oldParentNode,
+                        new int[]{ oldParentIndex },
+                        new Object[]{ this } );
+            }
         }
     }
 
@@ -737,7 +754,9 @@ public class SortableDefaultMutableTreeNode
      * @param newNode the new node
      */
     public void add( SortableDefaultMutableTreeNode newNode ) {
-        super.add( newNode );
+        synchronized ( this.getRoot() ) {
+            super.add( newNode );
+        }
         if ( getPictureCollection().getSendModelUpdates() ) {
             int index = this.getIndex( newNode );
             LOGGER.fine( String.format( "The new node %s has index %d", newNode, index ) );
@@ -753,15 +772,17 @@ public class SortableDefaultMutableTreeNode
      * @return The new node is returned for convenience.
      */
     public SortableDefaultMutableTreeNode addGroupNode( String description ) {
-        SortableDefaultMutableTreeNode newNode
-                = new SortableDefaultMutableTreeNode(
-                        new GroupInfo( description ) );
-        add( newNode );
-        return newNode;
+        synchronized ( this.getRoot() ) {
+            SortableDefaultMutableTreeNode newNode
+                    = new SortableDefaultMutableTreeNode(
+                            new GroupInfo( description ) );
+            add( newNode );
+            return newNode;
+        }
     }
 
     /**
-     * Inserts the node and notifies the tree model of changes if we are sending 
+     * Inserts the node and notifies the tree model of changes if we are sending
      * Model updates
      *
      * @param node The node
@@ -769,7 +790,9 @@ public class SortableDefaultMutableTreeNode
      */
     public void insert( SortableDefaultMutableTreeNode node, int index ) {
         LOGGER.log( Level.FINE, "insert was called for node: {0}", node.toString() );
-        super.insert( node, index );
+        synchronized ( this.getRoot() ) {
+            super.insert( node, index );
+        }
         getPictureCollection().setUnsavedUpdates();
         if ( getPictureCollection().getSendModelUpdates() ) {
             getPictureCollection().sendNodesWereInserted( this, new int[]{ index } );
@@ -824,16 +847,14 @@ public class SortableDefaultMutableTreeNode
                     return false;
                 }
             }
-        } else {
-            // it doesn't exist
-            if ( !targetFile.mkdirs() ) {
+        } else // it doesn't exist
+         if ( !targetFile.mkdirs() ) {
                 JOptionPane.showMessageDialog( Settings.anchorFrame,
                         Settings.jpoResources.getString( "CopyImageDirError" ) + targetFile.toString(),
                         Settings.jpoResources.getString( "genericError" ),
                         JOptionPane.ERROR_MESSAGE );
                 return false;
             }
-        }
 
         if ( targetFile.isDirectory() ) {
             if ( !targetFile.canWrite() ) {
@@ -875,13 +896,15 @@ public class SortableDefaultMutableTreeNode
         if ( this.isRoot() ) {
             return;  // don't do anything with a root node.
         }
-        SortableDefaultMutableTreeNode parentNode = (SortableDefaultMutableTreeNode) this.getParent();
-        // abort if this action was attempted on the top node
-        if ( parentNode.getIndex( this ) < 1 ) {
-            return;
+        synchronized ( this.getRoot() ) {
+            SortableDefaultMutableTreeNode parentNode = (SortableDefaultMutableTreeNode) this.getParent();
+            // abort if this action was attempted on the top node
+            if ( parentNode.getIndex( this ) < 1 ) {
+                return;
+            }
+            this.removeFromParent();
+            parentNode.insert( this, 0 );
         }
-        this.removeFromParent();
-        parentNode.insert( this, 0 );
         getPictureCollection().setUnsavedUpdates();
     }
 
@@ -893,14 +916,16 @@ public class SortableDefaultMutableTreeNode
         if ( this.isRoot() ) {
             return;  // don't do anything with a root node.
         }
-        SortableDefaultMutableTreeNode parentNode = (SortableDefaultMutableTreeNode) this.getParent();
-        int currentIndex = parentNode.getIndex( this );
-        // abort if this action was attempted on the top node or not a child
-        if ( currentIndex < 1 ) {
-            return;
+        synchronized ( this.getRoot() ) {
+            SortableDefaultMutableTreeNode parentNode = (SortableDefaultMutableTreeNode) this.getParent();
+            int currentIndex = parentNode.getIndex( this );
+            // abort if this action was attempted on the top node or not a child
+            if ( currentIndex < 1 ) {
+                return;
+            }
+            this.removeFromParent();
+            parentNode.insert( this, currentIndex - 1 );
         }
-        this.removeFromParent();
-        parentNode.insert( this, currentIndex - 1 );
         getPictureCollection().setUnsavedUpdates();
     }
 
@@ -911,16 +936,18 @@ public class SortableDefaultMutableTreeNode
         if ( this.isRoot() ) {
             return;  // don't do anything with a root node.
         }
-        SortableDefaultMutableTreeNode parentNode = (SortableDefaultMutableTreeNode) this.getParent();
-        int childCount = parentNode.getChildCount();
-        int currentIndex = parentNode.getIndex( this );
-        // abort if this action was attempted on the bootom node
-        if ( ( currentIndex == -1 )
-                || ( currentIndex == childCount - 1 ) ) {
-            return;
+        synchronized ( this.getRoot() ) {
+            SortableDefaultMutableTreeNode parentNode = (SortableDefaultMutableTreeNode) this.getParent();
+            int childCount = parentNode.getChildCount();
+            int currentIndex = parentNode.getIndex( this );
+            // abort if this action was attempted on the bootom node
+            if ( ( currentIndex == -1 )
+                    || ( currentIndex == childCount - 1 ) ) {
+                return;
+            }
+            this.removeFromParent();
+            parentNode.insert( this, currentIndex + 1 );
         }
-        this.removeFromParent();
-        parentNode.insert( this, currentIndex + 1 );
         getPictureCollection().setUnsavedUpdates();
     }
 
@@ -932,15 +959,17 @@ public class SortableDefaultMutableTreeNode
             return;  // don't do anything with a root node.
         }
 
-        SortableDefaultMutableTreeNode parentNode = (SortableDefaultMutableTreeNode) this.getParent();
-        int childCount = parentNode.getChildCount();
-        // abort if this action was attempted on the bootom node
-        if ( ( parentNode.getIndex( this ) == -1 )
-                || ( parentNode.getIndex( this ) == childCount - 1 ) ) {
-            return;
+        synchronized ( this.getRoot() ) {
+            SortableDefaultMutableTreeNode parentNode = (SortableDefaultMutableTreeNode) this.getParent();
+            int childCount = parentNode.getChildCount();
+            // abort if this action was attempted on the bootom node
+            if ( ( parentNode.getIndex( this ) == -1 )
+                    || ( parentNode.getIndex( this ) == childCount - 1 ) ) {
+                return;
+            }
+            this.removeFromParent();
+            parentNode.insert( this, childCount - 1 );
         }
-        this.removeFromParent();
-        parentNode.insert( this, childCount - 1 );
         getPictureCollection().setUnsavedUpdates();
     }
 
@@ -952,22 +981,25 @@ public class SortableDefaultMutableTreeNode
         if ( this.isRoot() ) {
             return;  // don't do anything with a root node.
         }
-        SortableDefaultMutableTreeNode parentNode = (SortableDefaultMutableTreeNode) this.getParent();
-        SortableDefaultMutableTreeNode childBefore = this;
-        do {
-            childBefore = (SortableDefaultMutableTreeNode) parentNode.getChildBefore( childBefore );
-        } while ( ( childBefore != null ) && ( !( childBefore.getUserObject() instanceof GroupInfo ) ) );
 
-        if ( childBefore == null ) {
-            SortableDefaultMutableTreeNode newGroup
-                    = new SortableDefaultMutableTreeNode(
-                            new GroupInfo( Settings.jpoResources.getString( "newGroup" ) ) );
-            parentNode.insert( newGroup, 0 );
-            this.removeFromParent();
-            newGroup.add( this );
-        } else {
-            this.removeFromParent();
-            childBefore.add( this );
+        synchronized ( this.getRoot() ) {
+            SortableDefaultMutableTreeNode parentNode = (SortableDefaultMutableTreeNode) this.getParent();
+            SortableDefaultMutableTreeNode childBefore = this;
+            do {
+                childBefore = (SortableDefaultMutableTreeNode) parentNode.getChildBefore( childBefore );
+            } while ( ( childBefore != null ) && ( !( childBefore.getUserObject() instanceof GroupInfo ) ) );
+
+            if ( childBefore == null ) {
+                SortableDefaultMutableTreeNode newGroup
+                        = new SortableDefaultMutableTreeNode(
+                                new GroupInfo( Settings.jpoResources.getString( "newGroup" ) ) );
+                parentNode.insert( newGroup, 0 );
+                this.removeFromParent();
+                newGroup.add( this );
+            } else {
+                this.removeFromParent();
+                childBefore.add( this );
+            }
         }
         getPictureCollection().setUnsavedUpdates();
     }
@@ -984,11 +1016,14 @@ public class SortableDefaultMutableTreeNode
         if ( parentNode.isRoot() ) {
             return;  // don't do anything with a root parent node.
         }
-        SortableDefaultMutableTreeNode grandParentNode = (SortableDefaultMutableTreeNode) parentNode.getParent();
-        int index = grandParentNode.getIndex( parentNode );
 
-        this.removeFromParent();
-        grandParentNode.insert( this, index + 1 );
+        synchronized ( this.getRoot() ) {
+            SortableDefaultMutableTreeNode grandParentNode = (SortableDefaultMutableTreeNode) parentNode.getParent();
+            int index = grandParentNode.getIndex( parentNode );
+
+            this.removeFromParent();
+            grandParentNode.insert( this, index + 1 );
+        }
         getPictureCollection().setUnsavedUpdates();
     }
 
@@ -1007,8 +1042,11 @@ public class SortableDefaultMutableTreeNode
             LOGGER.fine( "You can't move a node onto a node that doesn't allow child nodes." );
             return false;
         }
-        this.removeFromParent();
-        targetNode.add( this );
+
+        synchronized ( targetNode.getRoot() ) {
+            this.removeFromParent();
+            targetNode.add( this );
+        }
 
         getPictureCollection().setUnsavedUpdates();
         return true;
@@ -1031,10 +1069,11 @@ public class SortableDefaultMutableTreeNode
             return false;
         }
 
-        SortableDefaultMutableTreeNode targetParentNode = (SortableDefaultMutableTreeNode) targetNode.getParent();
-        int targetIndex = targetParentNode.getIndex( targetNode );
-
-        return moveToIndex( targetParentNode, targetIndex );
+        synchronized ( targetNode.getRoot() ) {
+            SortableDefaultMutableTreeNode targetParentNode = (SortableDefaultMutableTreeNode) targetNode.getParent();
+            int targetIndex = targetParentNode.getIndex( targetNode );
+            return moveToIndex( targetParentNode, targetIndex );
+        }
     }
 
     /**
@@ -1164,19 +1203,17 @@ public class SortableDefaultMutableTreeNode
                     progGui.progressIncrement();
                     picturesAdded = true;
                 }
-            } else {
-                if ( Tools.hasPictures( addFile ) ) {
-                    SortableDefaultMutableTreeNode subNode;
-                    if ( retainDirectories ) {
-                        subNode = receivingNode.addGroupNode( addFile.getName() );
-                    } else {
-                        subNode = receivingNode;
-                    }
-                    boolean a = copyAddPictures1( addFile.listFiles(), targetDir, subNode, progGui, newOnly, retainDirectories, selectedCategories );
-                    picturesAdded = a || picturesAdded;
+            } else if ( Tools.hasPictures( addFile ) ) {
+                SortableDefaultMutableTreeNode subNode;
+                if ( retainDirectories ) {
+                    subNode = receivingNode.addGroupNode( addFile.getName() );
                 } else {
-                    LOGGER.log( Level.INFO, "No pictures in directory {0}", addFile.toString() );
+                    subNode = receivingNode;
                 }
+                boolean a = copyAddPictures1( addFile.listFiles(), targetDir, subNode, progGui, newOnly, retainDirectories, selectedCategories );
+                picturesAdded = a || picturesAdded;
+            } else {
+                LOGGER.log( Level.INFO, "No pictures in directory {0}", addFile.toString() );
             }
         }
         return picturesAdded;
@@ -1334,19 +1371,17 @@ public class SortableDefaultMutableTreeNode
                         picturesAdded = true;
                     }
                 }
-            } else {
-                if ( Tools.hasPictures( addFile ) ) {
-                    SortableDefaultMutableTreeNode subNode;
-                    if ( retainDirectories ) {
-                        subNode = receivingNode.addGroupNode( addFile.getName() );
-                    } else {
-                        subNode = receivingNode;
-                    }
-                    boolean a = copyAddPictures1( addFile.listFiles(), targetDir, subNode, progGui, cam, retainDirectories, selectedCategories );
-                    picturesAdded = a || picturesAdded;
+            } else if ( Tools.hasPictures( addFile ) ) {
+                SortableDefaultMutableTreeNode subNode;
+                if ( retainDirectories ) {
+                    subNode = receivingNode.addGroupNode( addFile.getName() );
                 } else {
-                    LOGGER.log( Level.INFO, "No pictures in directory {0}", addFile.toString() );
+                    subNode = receivingNode;
                 }
+                boolean a = copyAddPictures1( addFile.listFiles(), targetDir, subNode, progGui, cam, retainDirectories, selectedCategories );
+                picturesAdded = a || picturesAdded;
+            } else {
+                LOGGER.log( Level.INFO, "No pictures in directory {0}", addFile.toString() );
             }
         }
         return picturesAdded;

@@ -1,18 +1,18 @@
 package jpo.gui;
 
 import java.io.File;
-import java.util.Collections;
-import java.util.Enumeration;
+import java.io.IOException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.SwingWorker;
-import jpo.dataModel.GroupInfo;
 import jpo.dataModel.PictureInfo;
 import jpo.dataModel.Settings;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
 import jpo.dataModel.Tools;
+import org.apache.commons.io.FileExistsException;
+import static org.apache.commons.io.FileUtils.moveFile;
 
 /*
  ConsolidateGroup.java:  class that consolidated the pictures of a group in one directory
@@ -44,7 +44,7 @@ public class ConsolidateGroupWorker extends SwingWorker<String, String> {
     /**
      * the directory where the pictures are to be moved to
      */
-    private final File targetDirectoryHighres;
+    private final File targetDirectory;
 
     /**
      * the node to start from
@@ -58,26 +58,26 @@ public class ConsolidateGroupWorker extends SwingWorker<String, String> {
     /**
      * Creates a Thread which runs the consolidation.
      *
-     * @param targetDirectoryHighres	Where we want the files moved to
+     * @param targetDirectory	Where we want the files moved to
      * @param startNode	The node from which this is all to be built.
      * @param recurseGroups Flag indicating subgroups should be included if the
      * moveLowres flag is true
      * @param progGui A Progress Gui
      */
-    public ConsolidateGroupWorker( File targetDirectoryHighres,
+    public ConsolidateGroupWorker( File targetDirectory,
             SortableDefaultMutableTreeNode startNode, boolean recurseGroups,
             ProgressGui progGui ) {
-        this.targetDirectoryHighres = targetDirectoryHighres;
+        this.targetDirectory = targetDirectory;
         this.startNode = startNode;
         this.recurseGroups = recurseGroups;
         this.progGui = progGui;
 
-        if ( !targetDirectoryHighres.exists() ) {
-            LOGGER.severe( String.format( "Aborting because target directory %s doesn't exist", targetDirectoryHighres.getPath() ) );
+        if ( !targetDirectory.exists() ) {
+            LOGGER.severe(String.format("Aborting because target directory %s doesn't exist", targetDirectory.getPath() ) );
             return;
         }
-        if ( !targetDirectoryHighres.canWrite() ) {
-            LOGGER.severe( String.format( "Aborting because directory %s can't be written to", targetDirectoryHighres.getPath() ) );
+        if ( !targetDirectory.canWrite() ) {
+            LOGGER.severe(String.format("Aborting because directory %s can't be written to", targetDirectory.getPath() ) );
             return;
         }
 
@@ -136,8 +136,8 @@ public class ConsolidateGroupWorker extends SwingWorker<String, String> {
         for ( SortableDefaultMutableTreeNode node : nodes ) {
             PictureInfo pictureInfo = (PictureInfo) node.getUserObject();
             System.out.println( "node: " + pictureInfo.toString() );
-            if ( needToMovePicture( pictureInfo, targetDirectoryHighres ) ) {
-                if ( movePicture( pictureInfo, targetDirectoryHighres ) ) {
+            if ( needToMovePicture(pictureInfo, targetDirectory ) ) {
+                if ( movePicture(pictureInfo, targetDirectory ) ) {
                     LOGGER.info( String.format( "Successfully Moved Highres file of node %s", pictureInfo.toString() ) );
                     movedCount++;
                     publish( String.format( "Consolidated node: %s", node.toString() ) );
@@ -165,6 +165,10 @@ public class ConsolidateGroupWorker extends SwingWorker<String, String> {
         if ( pictureFile == null ) {
             return false;
         }
+        
+        if (! pictureFile.exists()) {
+            return false;
+        }
 
         // don't move if the file is already in the correct directory
         File parentDirectory = pictureFile.getParentFile();
@@ -176,8 +180,8 @@ public class ConsolidateGroupWorker extends SwingWorker<String, String> {
     }
 
     /**
-     * This method moves a PictureInfo's highres file to the target directory if
-     * it exists and can be moved necessary.
+     * This method moves a PictureInfo's file to the target directory if it
+     * exists and can be moved necessary.
      *
      * @param pictureInfo the PictureInfopointing to the highres file to move
      * @param targetDirectory the target directory
@@ -192,16 +196,19 @@ public class ConsolidateGroupWorker extends SwingWorker<String, String> {
             return true;
         }
 
+        // make sure that we get a new filename. Some cameras might keep reusing the name DSC_01234.jpg 
+        // over and over again which would overwrite pictures in the worst case.
         File newFile = Tools.inventPicFilename( targetDirectory, pictureInfo.getImageFilename() );
-        if ( Tools.moveFile( pictureFile, newFile ) ) {
-            pictureInfo.setImageLocation( newFile );
-            Tools.correctReferences( pictureFile, newFile );
-
-            return true;
-        } else {
-            LOGGER.info( String.format( "Failed to move file %s to %s.", pictureFile.toString(), newFile.toString() ) );
+        try {
+            moveFile( pictureFile, newFile );
+        } catch ( FileExistsException ex ) {
+        } catch ( IOException ex ) {
+            LOGGER.severe( String.format( "Failed to move file %s to %s.\nException: ", pictureFile.toString(), newFile.toString(), ex.getLocalizedMessage() ) );
             return false;
         }
-    }
+        pictureInfo.setImageLocation( newFile );
+        Tools.correctReferences( pictureFile, newFile );
 
+        return true;
+    }
 }

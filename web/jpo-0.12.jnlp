@@ -21,7 +21,8 @@
     </security>
 
     <resources>
-        <j2se version="1.7+" initial-heap-size="64m" max-heap-size="2000m"/>
+        <java version="1.7+" java-vm-args="-XX:+AggressiveHeap" />
+        <!-- initial-heap-size="64m" max-heap-size="2000m" -->
         <jar href="jpo-0.12.jar" download="eager" main="true"/>
     </resources>
 

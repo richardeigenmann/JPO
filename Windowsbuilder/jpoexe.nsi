@@ -13,7 +13,8 @@ ShowInstDetails nevershow
 !define CLASSPATH "jpo-0.12.jar"
 !define CLASS "Main"
 ; Careful here: I tried Xmx4000M and it refused to start.
-!define OPTIONS "-Xms80M -Xmx1000M"
+;define OPTIONS "-Xms80M -Xmx1000M"
+!define OPTIONS "-XX:+AggressiveHeap"
  
 Section ""
   Call GetJRE

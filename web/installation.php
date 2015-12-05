@@ -15,6 +15,13 @@
 <a href="jpo-devel.jnlp">
     <h2><span class="label label-success">
             <span class="glyphicon glyphicon-play" aria-hidden="true"></span>
+            Development Version (0.12)
+        </span>
+    </h2>
+</a><br>
+<a href="jpo-0.12.jnlp">
+    <h2><span class="label label-success">
+            <span class="glyphicon glyphicon-play" aria-hidden="true"></span>
             Current Version (0.12)
         </span>
     </h2>
@@ -30,13 +37,13 @@
 
 <h2>Scary Warnings</h2>
 <p>I have not figured out how do get a certificate with which to sign
-this Free Open Source Software. Consequently Java, your browser and everyone 
-else feel they are at liberty to pop up increasingly alarmist messages 
-warning against the use of this software. At this point all I can recommend
-is that you click away the warnings and use JPO if you find it useful.</p>
+    this Free Open Source Software. Consequently Java, your browser and everyone 
+    else feel they are at liberty to pop up increasingly alarmist messages 
+    warning against the use of this software. At this point all I can recommend
+    is that you click away the warnings and use JPO if you find it useful.</p>
 
 <p>If you have any suggestions on how to improve on this state of affairs,
-please get in touch with me.</p>
+    please get in touch with me.</p>
 
 <p><strong>Note:</strong> You will see the following warning screen:</p>
 
@@ -91,14 +98,16 @@ please get in touch with me.</p>
 
 
 <p> Then you need to create a script or batch file to run everything. On Linux the script would look like this:</p>
-<p><font color="darkRed"><code>/PATH/TO/YOUR/JAVA/bin/java -Xms80M -Xmx2000M -classpath /PATH/TO/YOUR/JPO/JAR/jpo-0.12.jar Main</code></font></p>
+<p><font color="darkRed"><code>/PATH/TO/YOUR/JAVA/bin/java -XX:+AggressiveHeap -classpath /PATH/TO/YOUR/JPO/JAR/jpo-0.12.jar Main</code></font></p>
+<!-- -Xms80M -Xmx2000M -->
 
 <p><strong>Note:</strong> Put everything on one long line.</p>
 
 <p>On a particular Windows XP machine I installed Jpo into c:\Program Files\Jpo. The resulting Batch
     file looks like this: (you can download it here: <a href="Jpo.bat">Jpo.bat</a></p>
 
-<p><code>c:\windows\system32\java -Xms80M -Xmx2000M -jar "c:\Program Files\Jpo\jpo-0.12.jar"</code></p>
+<p><code>c:\windows\system32\java -XX:+AggressiveHeap -jar "c:\Program Files\Jpo\jpo-0.12.jar"</code></p>
+<!-- -Xms80M -Xmx2000M -->
 
 
 <hr>
@@ -110,6 +119,7 @@ please get in touch with me.</p>
     the -Xms and the maximum memory heap with the -Xmx parameters. Of course this can also be done on 
     the web start version but you would have to set Jpo up on your own webserver so that you 
     could specify the memory settings in the .jnlp configuration file.</p>
+<p>I have discovered the option -XX:+AggressiveHeap which sounds great for what JPO needs. Please let me know if you have issues with this.</p>
 
 <h2>Chinese Font</h2>
 <p>Franklin He has been kind enough to translate the User Interface to Traditional and Simplified
@@ -136,6 +146,6 @@ please get in touch with me.</p>
 
 
 <hr>
-<p>Last update to this page: 30 May 2015<br>
+<p>Last update to this page: 5 Dec 2015<br>
     Copyright 2003-2015 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
 <?php include("page-end.php"); ?>

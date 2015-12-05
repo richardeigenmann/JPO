@@ -81,19 +81,17 @@ public class SortableDefaultMutableTreeNodeTest {
         picture5 = new SortableDefaultMutableTreeNode( pi5 );
 
         /*
-        
          rootNode
          !----group1
-         !----picture1
-         !----picture2
+              !----picture1
+              !----picture2
          !----group2
-         !----picture3
-         !----picture4
+              !----picture3
+              !----picture4
          !----group3
-         !----picture5
-         !----group4
+              !----picture5
+              !----group4
          !----group5
-        
          */
         rootNode.add( group1 );
         rootNode.add( group2 );
@@ -293,6 +291,7 @@ public class SortableDefaultMutableTreeNodeTest {
     /**
      * test moving to an invalid index
      */
+    @Test
     public void testMoveToIndexErrors2() {
         assertNull( "The parent of the root node is null before a move", rootNode.getParent() );
         assertFalse( "Move should fail", rootNode.moveToIndex( group1, 0 ) );
@@ -309,7 +308,7 @@ public class SortableDefaultMutableTreeNodeTest {
         assertNotSame( "The clone must be a new Object", picture1, cloneNode );
         assertNotSame( "The user object must be a new Object", picture1.getUserObject(), cloneNode.getUserObject() );
         assertNull( "The clone has no parent", cloneNode.getParent() );
-        assertEquals( "The clone node has the same highres picture as the original", pi1.getImageLocation(), ( ( PictureInfo ) cloneNode.getUserObject() ).getImageLocation() );
+        assertEquals( "The clone node has the same highres picture as the original", pi1.getImageLocation(), ( (PictureInfo) cloneNode.getUserObject() ).getImageLocation() );
     }
 
     /**

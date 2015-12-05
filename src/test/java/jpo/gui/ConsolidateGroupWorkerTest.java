@@ -8,12 +8,11 @@ import java.io.InputStream;
 import jpo.dataModel.PictureInfo;
 import jpo.dataModel.Settings;
 import junit.framework.TestCase;
+import org.apache.commons.compress.utils.IOUtils;
+import org.junit.Test;
 import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertTrue;
 import static junit.framework.TestCase.fail;
-import org.apache.commons.compress.utils.IOUtils;
-import org.junit.AfterClass;
-import org.junit.Test;
 
 /**
  *
@@ -22,56 +21,68 @@ import org.junit.Test;
 public class ConsolidateGroupWorkerTest {
 
     /**
-     * Creating a temporary directory to experiment with moving pictures
-     */
-    private static File tempDirectory1 = Files.createTempDir();
-
-    @AfterClass
-    public static void afterClass() {
-        tempDirectory1.delete();
-    }
-
-    /**
      * Show that a null image file doesn't need to be moved.
      */
     @Test
     public void testNeedToMovePictureNull() {
         PictureInfo pi = new PictureInfo();
+        File tempTargetDirectory = Files.createTempDir();
 
         try {
-            boolean returnCode = ConsolidateGroupWorker.needToMovePicture( pi, tempDirectory1 );
+            boolean returnCode = ConsolidateGroupWorker.needToMovePicture( pi, tempTargetDirectory );
             assertFalse( "Consolidation of a PictureInfo with a \"null\" image file should return false", returnCode );
         } catch ( NullPointerException ex ) {
             System.out.println( ex.getMessage() );
             Thread.dumpStack();
             fail( "Consolidation of a PictureInfo with a \"null\" image file should not throw a NPE" );
         }
+        tempTargetDirectory.delete();
     }
 
     /**
-     * Test need to move Move a picture to the same directory
+     * Show that an image that doesn't exist doesn't need to be moved.
+     */
+    @Test
+    public void testNeedToMoveInexistentPicture() {
+        File tempSourceDirectory = Files.createTempDir();
+        File sourceImageFile = new File( tempSourceDirectory, "Image1.jpg" );
+        // Java File object exists but not on the disk
+
+        PictureInfo pi = new PictureInfo();
+        pi.setImageLocation( sourceImageFile );
+
+        File tempTargetDirectory = Files.createTempDir();
+        boolean returnCode = ConsolidateGroupWorker.needToMovePicture( pi, tempTargetDirectory );
+        assertFalse( "needToMovePicture on an inexistant file should return false but returns true", returnCode );
+        tempSourceDirectory.delete();
+        tempTargetDirectory.delete();
+    }
+
+    /**
+     * Test need to move Move a picture to the same directory returns false
      */
     @Test
     public void testNeedToMovePictureSameDirectory() {
-        // create the image file
-        File imageFile = new File( tempDirectory1, "Image1.jpg" );
+        File tempSourceDirectory = Files.createTempDir();
+        File sourceImageFile = new File( tempSourceDirectory, "Image1.jpg" );
 
         try ( InputStream in = Settings.CLASS_LOADER.getResourceAsStream( "exif-test-nikon-d100-1.jpg" );
-                FileOutputStream fout = new FileOutputStream( imageFile ) ) {
+                FileOutputStream fout = new FileOutputStream( sourceImageFile ) ) {
             IOUtils.copy( in, fout );
         } catch ( IOException ex ) {
             System.out.println( ex.getMessage() );
             fail( "Failed to create test image file" );
         }
         // test that is really exists
-        assertTrue( "The image File must exist and be readable", imageFile.canRead() );
+        assertTrue( "The image File must exist and be readable", sourceImageFile.canRead() );
 
         PictureInfo pi = new PictureInfo();
-        pi.setImageLocation( imageFile );
+        pi.setImageLocation( sourceImageFile );
 
-        boolean returnCode = ConsolidateGroupWorker.needToMovePicture( pi, tempDirectory1 );
+        boolean returnCode = ConsolidateGroupWorker.needToMovePicture( pi, tempSourceDirectory );
         assertFalse( "Consolidation of a PictureInfo to the same directory should return false as nothing was moved", returnCode );
-        imageFile.delete();
+        sourceImageFile.delete();
+        tempSourceDirectory.delete();
     }
 
     /**
@@ -79,8 +90,8 @@ public class ConsolidateGroupWorkerTest {
      */
     @Test
     public void testNeedToMovePictureNewDirectory() {
-        // create the image file
-        File imageFile = new File( tempDirectory1, "Image1.jpg" );
+        File tempSourceDirectory = Files.createTempDir();
+        File imageFile = new File( tempSourceDirectory, "Image1.jpg" );
 
         try ( InputStream in = Settings.CLASS_LOADER.getResourceAsStream( "exif-test-nikon-d100-1.jpg" );
                 FileOutputStream fout = new FileOutputStream( imageFile ) ) {
@@ -95,166 +106,185 @@ public class ConsolidateGroupWorkerTest {
         PictureInfo pi = new PictureInfo();
         pi.setImageLocation( imageFile );
 
-        File tempDirectory2 = new File( tempDirectory1, "subdir" );
-        tempDirectory2.mkdir();
+        File tempTargetDirectory = Files.createTempDir();
+        tempTargetDirectory.mkdir();
 
-        boolean returnCode = ConsolidateGroupWorker.needToMovePicture( pi, tempDirectory2 );
+        boolean returnCode = ConsolidateGroupWorker.needToMovePicture( pi, tempTargetDirectory );
         assertTrue( "Consolidation of a PictureInfo to a new directory should succeed", returnCode );
 
         imageFile.delete();
-        tempDirectory2.delete();
+        tempTargetDirectory.delete();
+        tempSourceDirectory.delete();
     }
 
     /**
-     * Test need to Move a read only picture to a new directory
+     * Test if we would need to move a picture to a new directory or if it can
+     * stay in the place it was.
+     *
+     * @see
+     * <a href="http://stackoverflow.com/questions/28366433/file-canwrite-and-files-iswritable-not-giving-correct-value-on-linux">Stackoverflow</a>
      */
     @Test
     public void testNeedToMoveReadonlyPicture() {
-        // create the image file
-        File imageFile = new File( tempDirectory1, "ReadOnlyImage.jpg" );
+
+        File tempSourceDirectory = Files.createTempDir();
+        File sourceImageFile = new File( tempSourceDirectory, "ReadOnlyImage.jpg" );
 
         try ( InputStream in = Settings.CLASS_LOADER.getResourceAsStream( "exif-test-nikon-d100-1.jpg" );
-                FileOutputStream fout = new FileOutputStream( imageFile ) ) {
+                FileOutputStream fout = new FileOutputStream( sourceImageFile ) ) {
             IOUtils.copy( in, fout );
         } catch ( IOException ex ) {
             System.out.println( ex.getMessage() );
             fail( "Failed to create test image file" );
         }
-        assertTrue( "The test needs the image file to be read only.", imageFile.setReadOnly() );
-        assertTrue( "The image File must exist and be readable", imageFile.canRead() );
-        assertFalse( "The image File must exist and be readonly", imageFile.canWrite() );
+        sourceImageFile.setReadOnly();
+        assertTrue( "The image File must exist and be readable", sourceImageFile.canRead() );
+        if ( !System.getProperty( "user.name" ).equals( "root" ) ) {
+            //This test doesn't work when running on Linux as root because root can always write to a file.
+            assertFalse( "The image File must exist and be readonly", sourceImageFile.canWrite() );
+        }
 
         PictureInfo pi = new PictureInfo();
-        pi.setImageLocation( imageFile );
+        pi.setImageLocation( sourceImageFile );
 
-        File tempDirectory2 = new File( tempDirectory1, "subdir" );
-        tempDirectory2.mkdir();
+        File tempTargetDirectory = new File( tempSourceDirectory, "subdir" );
+        tempTargetDirectory.mkdir();
 
-        boolean returnCode = ConsolidateGroupWorker.needToMovePicture( pi, tempDirectory2 );
+        boolean returnCode = ConsolidateGroupWorker.needToMovePicture( pi, tempTargetDirectory );
         assertTrue( "Consolidation of a readonly PictureInfo to a new directory should return true", returnCode );
 
-        imageFile.setWritable( true );
-        imageFile.delete();
-        tempDirectory2.delete();
+        sourceImageFile.setWritable( true );
+        sourceImageFile.delete();
+        tempTargetDirectory.delete();
+        tempSourceDirectory.delete();
     }
 
     /**
-     * Show that consolidation of a PictureInfo with a null highres file
-     * succeeds because they can't be moved.
+     * Show that consolidation of a PictureInfo with a null file succeeds
+     * because they can't be moved.
      */
     @Test
-    public void testMoveHighresPictureNull() {
+    public void testMovePictureNull() {
         PictureInfo pi = new PictureInfo();
+        File tempTargetDirectory = Files.createTempDir();
 
         try {
-            boolean returnCode = ConsolidateGroupWorker.movePicture( pi, tempDirectory1 );
+            boolean returnCode = ConsolidateGroupWorker.movePicture( pi, tempTargetDirectory );
             assertFalse( "Consolidation of a PictureInfo with a \"null\" highres file should return false", returnCode );
         } catch ( NullPointerException ex ) {
             return;
         }
         fail( "Consolidation of a PictureInfo with a \"null\" highres file should throw a NPE" );
-
+        tempTargetDirectory.delete();
     }
 
     /**
-     * Move a picture to the same directory
+     * Move a picture to the same directory and verify that it stays in the same
+     * place.
      */
     @Test
-    public void testMoveHighresPictureSameDirectory() {
-        // create the image file
-        File imageFile = new File( tempDirectory1, "Image1.jpg" );
+    public void testMovePictureSameDirectory() {
+        File tempSourceDirectory = Files.createTempDir();
+        File sourceImageFile = new File( tempSourceDirectory, "Image1.jpg" );
 
         try ( InputStream in = Settings.CLASS_LOADER.getResourceAsStream( "exif-test-nikon-d100-1.jpg" );
-                FileOutputStream fout = new FileOutputStream( imageFile ) ) {
+                FileOutputStream fout = new FileOutputStream( sourceImageFile ) ) {
             IOUtils.copy( in, fout );
         } catch ( IOException ex ) {
             System.out.println( ex.getMessage() );
-            fail( "Failed to create test image file" );
+            fail( "Failed to create test image file in test testMovePictureSameDirectory." );
         }
-        // test that is really exists
-        assertTrue( "The image File must exist and be readable", imageFile.canRead() );
+        assertTrue( "The image File must exist", sourceImageFile.exists() );
+        assertTrue( "The image File must be readable", sourceImageFile.canRead() );
 
         PictureInfo pi = new PictureInfo();
-        pi.setImageLocation( imageFile );
+        pi.setImageLocation( sourceImageFile );
 
-        boolean returnCode = ConsolidateGroupWorker.movePicture( pi, tempDirectory1 );
+        boolean returnCode = ConsolidateGroupWorker.movePicture( pi, tempSourceDirectory );
         assertTrue( "Consolidation of a PictureInfo to the same directory should return true", returnCode );
 
-        assertTrue( "The image File must be in the same place", imageFile.canRead() );
-        imageFile.delete();
+        assertTrue( "The image File must be in the same place", sourceImageFile.exists() );
+        sourceImageFile.delete();
+        tempSourceDirectory.delete();
     }
 
     /**
      * Move a picture to a new directory
      */
     @Test
-    public void testMoveHighresPictureNewDirectory() {
-        // create the image file
-        File imageFile = new File( tempDirectory1, "Image1.jpg" );
+    public void testMovePictureNewDirectory() {
+        File tempSourceDirectory = Files.createTempDir();
+        File sopurceImageFile = new File( tempSourceDirectory, "Image1.jpg" );
 
         try ( InputStream in = Settings.CLASS_LOADER.getResourceAsStream( "exif-test-nikon-d100-1.jpg" );
-                FileOutputStream fout = new FileOutputStream( imageFile ) ) {
+                FileOutputStream fout = new FileOutputStream( sopurceImageFile ) ) {
             IOUtils.copy( in, fout );
         } catch ( IOException ex ) {
             System.out.println( ex.getMessage() );
             fail( "Failed to create test image file" );
         }
         // test that is really exists
-        assertTrue( "The image File must exist and be readable", imageFile.canRead() );
+        assertTrue( "The image File must exist and be readable", sopurceImageFile.canRead() );
 
         PictureInfo pi = new PictureInfo();
-        pi.setImageLocation( imageFile );
+        pi.setImageLocation( sopurceImageFile );
 
-        File tempDirectory2 = new File( tempDirectory1, "subdir" );
-        tempDirectory2.mkdir();
+        File tempTargetDirectory = new File( tempSourceDirectory, "subdir" );
+        tempTargetDirectory.mkdir();
 
-        boolean returnCode = ConsolidateGroupWorker.movePicture( pi, tempDirectory2 );
+        boolean returnCode = ConsolidateGroupWorker.movePicture( pi, tempTargetDirectory );
         assertTrue( "Consolidation of a PictureInfo to a new directory should succeed", returnCode );
 
-        assertFalse( "The old image File must be gone", imageFile.canRead() );
+        assertFalse( "The old image File must be gone", sopurceImageFile.canRead() );
         File newFile = pi.getImageFile();
         assertTrue( "The PictureInfo points to the new file where it is readable", newFile.canRead() );
         newFile.delete();
-        tempDirectory2.delete();
+        tempTargetDirectory.delete();
+        tempSourceDirectory.delete();
     }
 
     /**
-     * Move a read only picture to a new directory
+     * Try to move a read only picture to a new directory and verify that this
+     * succeeds.
      */
     @Test
     public void testMoveReadonlyPictureNewDirectory() {
-        // create the image file
-        File imageFile = new File( tempDirectory1, "ReadOnlyImage.jpg" );
+        File tempSourceDirectory = Files.createTempDir();
+        File sourceImageFile = new File( tempSourceDirectory, "ReadOnlyImage.jpg" );
 
         try ( InputStream in = Settings.CLASS_LOADER.getResourceAsStream( "exif-test-nikon-d100-1.jpg" );
-                FileOutputStream fout = new FileOutputStream( imageFile ) ) {
+                FileOutputStream fout = new FileOutputStream( sourceImageFile ) ) {
             IOUtils.copy( in, fout );
         } catch ( IOException ex ) {
             System.out.println( ex.getMessage() );
             fail( "Failed to create test image file" );
         }
-        assertTrue( "The test needs the image file to be read only.", imageFile.setReadOnly() );
-        assertTrue( "The image File must exist and be readable", imageFile.canRead() );
-        assertFalse( "The image File must exist and be readonly", imageFile.canWrite() );
+        sourceImageFile.setReadOnly();
+        assertTrue( "The source image File must exist and be readable but we can't read file: " + sourceImageFile, sourceImageFile.canRead() );
+        if ( !System.getProperty( "user.name" ).equals( "root" ) ) {
+            // on Linux as root a file is always writable therefore bypassing this non-essentical check
+            assertFalse( "The source image File must exist and must not be writable but we can write to file: " + sourceImageFile, sourceImageFile.canWrite() );
+        }
 
         PictureInfo pi = new PictureInfo();
-        pi.setImageLocation( imageFile );
+        pi.setImageLocation( sourceImageFile );
 
-        File tempDirectory2 = new File( tempDirectory1, "subdir" );
-        tempDirectory2.mkdir();
+        File tempTargetDirectory = Files.createTempDir();
+        tempTargetDirectory.mkdir();
 
-        boolean returnCode = ConsolidateGroupWorker.movePicture( pi, tempDirectory2 );
-        assertFalse( "Consolidation of a readonly PictureInfo to a new directory should fail", returnCode );
+        boolean returnCode = ConsolidateGroupWorker.movePicture( pi, tempTargetDirectory );
+        assertTrue( "Consolidation of a readonly PictureInfo to a new directory should succed but the move from " + sourceImageFile + " to " + tempTargetDirectory + " seems to have failed!", returnCode );
 
-        assertTrue( "The old image File must still be there", imageFile.canRead() );
-        File newFile = pi.getImageFile();
-        assertTrue( "The PictureInfo points to the readable location", newFile.canRead() );
+        assertFalse( "The old image File must be gone", sourceImageFile.exists() );
+        File piFile = pi.getImageFile();
+        assertTrue( "The PictureInfo points to the readable location", piFile.canRead() );
 
-        TestCase.assertEquals( "Old File and new Location are the same", imageFile, newFile );
+        TestCase.assertEquals( "File is in the new Location", tempTargetDirectory, piFile.getParentFile() );
 
-        imageFile.setWritable( true );
-        imageFile.delete();
-        tempDirectory2.delete();
+        sourceImageFile.setWritable( true );
+        sourceImageFile.delete();
+        tempTargetDirectory.delete();
+        tempSourceDirectory.delete();
     }
 
 }

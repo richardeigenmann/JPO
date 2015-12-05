@@ -136,7 +136,7 @@ public class PictureCollection {
      */
     public void sendNodeStructureChanged(
             final TreeNode changedNode ) {
-        LOGGER.log( Level.FINE, "Sending a node structure change on node: {0}", changedNode.toString());
+        LOGGER.log( Level.FINE, "Sending a node structure change on node: {0}", changedNode.toString() );
         if ( SwingUtilities.isEventDispatchThread() ) {
             getTreeModel().nodeStructureChanged( changedNode );
         } else {
@@ -158,7 +158,7 @@ public class PictureCollection {
      */
     public void sendNodeChanged(
             final TreeNode changedNode ) {
-        LOGGER.log( Level.FINE, "Sending a node change on node: {0}", changedNode.toString());
+        LOGGER.log( Level.FINE, "Sending a node change on node: {0}", changedNode.toString() );
         if ( SwingUtilities.isEventDispatchThread() ) {
             getTreeModel().nodeChanged( changedNode );
         } else {
@@ -183,8 +183,10 @@ public class PictureCollection {
     public void sendNodesWereInserted(
             final TreeNode changedNode,
             final int[] childIndices ) {
-        LOGGER.log( Level.FINE, "Sending a node was inserted notification on node: {0}", changedNode.toString());
-        if ( SwingUtilities.isEventDispatchThread() ) {
+        LOGGER.log( Level.FINE, "Sending a node was inserted notification on node: {0}", changedNode.toString() );
+        getTreeModel().nodesWereInserted( changedNode, childIndices );
+
+        /*if ( SwingUtilities.isEventDispatchThread() ) {
             getTreeModel().nodesWereInserted( changedNode, childIndices );
         } else {
             Runnable r = new Runnable() {
@@ -194,7 +196,8 @@ public class PictureCollection {
                 }
             };
             SwingUtilities.invokeLater( r );
-        }
+        }*/
+
     }
 
     /**
@@ -208,7 +211,7 @@ public class PictureCollection {
     public void sendNodesWereRemoved( final TreeNode node,
             final int[] childIndices,
             final Object[] removedChildren ) {
-        LOGGER.log( Level.FINE, "Sending a node was removed change on node: {0}", node.toString());
+        LOGGER.log( Level.FINE, "Sending a node was removed change on node: {0}", node.toString() );
         if ( SwingUtilities.isEventDispatchThread() ) {
             getTreeModel().nodesWereRemoved( node, childIndices, removedChildren );
         } else {
@@ -239,7 +242,8 @@ public class PictureCollection {
 
     /**
      * This method sets the root node of the collection
-     * @param rootNode  The root node
+     *
+     * @param rootNode The root node
      */
     private void setRootNode( SortableDefaultMutableTreeNode rootNode ) {
         this.rootNode = rootNode;
@@ -368,7 +372,7 @@ public class PictureCollection {
     /**
      * Remembers the node on which the years were added
      *
-     * @param node The node 
+     * @param node The node
      */
     private void rememberYearsTreeNode( DefaultMutableTreeNode node ) {
         yearsTreeNode = node;
@@ -646,7 +650,7 @@ public class PictureCollection {
         }
 
         for ( SortableDefaultMutableTreeNode node : clone ) {
-            LOGGER.log( Level.FINE, "Removing node: {0}", node.toString());
+            LOGGER.log( Level.FINE, "Removing node: {0}", node.toString() );
             removeFromMailSelection( node );
         }
     }
@@ -720,9 +724,9 @@ public class PictureCollection {
             if ( nodeObject instanceof PictureInfo ) {
                 highresFile = ( (PictureInfo) nodeObject ).getImageFile();
                 //lowresFile = ( (PictureInfo) nodeObject ).getLowresFile();
-                LOGGER.log( Level.FINE, "Checking: {0}", ( (PictureInfo) nodeObject ).getImageLocation());
+                LOGGER.log( Level.FINE, "Checking: {0}", ( (PictureInfo) nodeObject ).getImageLocation() );
                 if ( ( highresFile != null ) && ( highresFile.compareTo( file ) == 0 ) ) {
-                    LOGGER.log( Level.INFO, "Found a match on: {0}", ( (PictureInfo) nodeObject ).getDescription());
+                    LOGGER.log( Level.INFO, "Found a match on: {0}", ( (PictureInfo) nodeObject ).getDescription() );
                     return true;
                 }// else if ( ( lowresFile != null ) && ( lowresFile.compareTo( file ) == 0 ) ) {
                 //   return true;
@@ -752,9 +756,9 @@ public class PictureCollection {
             node = (SortableDefaultMutableTreeNode) e.nextElement();
             nodeObject = node.getUserObject();
             if ( nodeObject instanceof PictureInfo ) {
-                LOGGER.log( Level.FINE, "Checking: {0}", ( (PictureInfo) nodeObject ).getImageLocation());
+                LOGGER.log( Level.FINE, "Checking: {0}", ( (PictureInfo) nodeObject ).getImageLocation() );
                 if ( ( (PictureInfo) nodeObject ).getChecksum() == checksum ) {
-                    LOGGER.log( Level.FINE, "Found a match on: {0}", ( (PictureInfo) nodeObject ).getDescription());
+                    LOGGER.log( Level.FINE, "Found a match on: {0}", ( (PictureInfo) nodeObject ).getDescription() );
                     return true;
                 }
             }
@@ -800,7 +804,7 @@ public class PictureCollection {
      */
     public void fileLoad( File file ) throws FileNotFoundException {
         if ( fileLoading ) {
-            LOGGER.log( Level.INFO, "{0}.fileLoad: already busy loading another file. Aborting", this.getClass().toString());
+            LOGGER.log( Level.INFO, "{0}.fileLoad: already busy loading another file. Aborting", this.getClass().toString() );
             return;
         }
         fileLoading = true;
@@ -900,7 +904,7 @@ public class PictureCollection {
                 if ( pi.getImageLocation().equals( comparingFilename ) ) {
                     testNodeParent = (SortableDefaultMutableTreeNode) testNode.getParent();
                     if ( !parentGroups.contains( testNodeParent ) ) {
-                        LOGGER.log( Level.FINE, "adding node: {0}", testNodeParent.toString());
+                        LOGGER.log( Level.FINE, "adding node: {0}", testNodeParent.toString() );
                         parentGroups.add( testNodeParent );
                     }
                 }

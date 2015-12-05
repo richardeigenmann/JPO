@@ -552,7 +552,7 @@ public class Tools {
      * target file and deletes the source.
      * 
      * Don't forget to call correctReferences if required.
-     *
+     * @deprecated use apache.commons moveFile instead
      * @param sourceFile The file to be moved
      * @param targetFile The target file it is to be moved to.
      * @return true if successful, false if not.
