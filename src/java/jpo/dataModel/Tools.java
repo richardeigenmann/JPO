@@ -17,7 +17,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.ParseException;
@@ -26,7 +25,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Scanner;
-
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.Adler32;
@@ -35,7 +33,6 @@ import javax.imageio.stream.FileImageInputStream;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
-
 import jpo.gui.XmlFilter;
 
 
@@ -402,10 +399,8 @@ public class Tools {
                 if ( hasPictures( file ) ) {
                     return true;
                 }
-            } else {
-                if ( Tools.jvmHasReader( file ) ) {
-                    return true;
-                }
+            } else if ( Tools.jvmHasReader( file ) ) {
+                return true;
             }
         }
         return false;
@@ -550,8 +545,9 @@ public class Tools {
      * File.renameTo. This doesn't work across different mounted filesystems so
      * if that fails it tries to copy the data from the source file to the
      * target file and deletes the source.
-     * 
+     *
      * Don't forget to call correctReferences if required.
+     *
      * @deprecated use apache.commons moveFile instead
      * @param sourceFile The file to be moved
      * @param targetFile The target file it is to be moved to.
@@ -630,19 +626,19 @@ public class Tools {
     public static String fileSizeToString( long size ) {
         String suffix = " B";
         if ( size > 1024 ) {
-            size = size / 1024;
+            size /= 1024;
             suffix = " KB";
         }
         if ( size > 1024 ) {
-            size = size / 1024;
+            size /= 1024;
             suffix = " MB";
         }
         if ( size > 1024 ) {
-            size = size / 1024;
+            size /= 1024;
             suffix = " GB";
         }
         if ( size > 1024 ) {
-            size = size / 1024;
+            size /= 1024;
             suffix = " TB";
         }
         suffix = Long.toString( size ) + suffix;
@@ -665,7 +661,7 @@ public class Tools {
             return testFile;
         }
 
-        int dotPoint = startName.lastIndexOf( "." );
+        int dotPoint = startName.lastIndexOf('.');
         String startNameRoot = startName.substring( 0, dotPoint );
         String startNameSuffix = startName.substring( dotPoint );
 
@@ -751,17 +747,12 @@ public class Tools {
      */
     public static void dealOutOfMemoryError() {
         Tools.freeMem();
-        Runnable optionDialog = new Runnable() {
-
-            @Override
-            public void run() {
-                JOptionPane.showMessageDialog( Settings.anchorFrame,
+        SwingUtilities.invokeLater(
+                () -> JOptionPane.showMessageDialog( Settings.anchorFrame,
                         Settings.jpoResources.getString( "outOfMemoryError" ),
                         Settings.jpoResources.getString( "genericError" ),
-                        JOptionPane.ERROR_MESSAGE );
-            }
-        };
-        SwingUtilities.invokeLater( optionDialog );
+                        JOptionPane.ERROR_MESSAGE )
+        );
 
         System.gc();
         System.runFinalization();
@@ -780,7 +771,7 @@ public class Tools {
      */
     public static String stripOutFilenameRoot( File file ) {
         String description = file.getName();
-        int lastDotIndex = description.lastIndexOf( "." );
+        int lastDotIndex = description.lastIndexOf('.');
         if ( lastDotIndex > -1 ) {
             description = description.substring( 0, lastDotIndex );
         }
@@ -976,7 +967,7 @@ public class Tools {
         try {
             // Had big issues here because the simple exec (String) calls a StringTokenizer
             // which messes up the filename parameters
-            int blank = command.indexOf( " " );
+            int blank = command.indexOf(' ');
             if ( blank > -1 ) {
                 String[] cmdarray = new String[2];
                 cmdarray[0] = command.substring( 0, blank );
@@ -1082,7 +1073,7 @@ public class Tools {
             in.close();
         } catch ( IOException x ) {
             fileContent = String.format( "<html><head></head><body>Failed to read file %s from Class %s because of exception: %s</body></html>", fileInJar, rootClass.toString(), x.getMessage() );
-            System.out.println( "Exception: " + x.getMessage() );
+            LOGGER.log(Level.SEVERE, "Exception: {0}", x.getMessage());
         }
         return fileContent;
     }

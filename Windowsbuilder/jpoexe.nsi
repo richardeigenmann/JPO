@@ -10,7 +10,7 @@ SilentInstall silent
 AutoCloseWindow true
 ShowInstDetails nevershow
  
-!define CLASSPATH "jpo-0.12.jar"
+!define CLASSPATH "jpo-0.13.jar"
 !define CLASS "Main"
 ; Careful here: I tried Xmx4000M and it refused to start.
 ;define OPTIONS "-Xms80M -Xmx1000M"

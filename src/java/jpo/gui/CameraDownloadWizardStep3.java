@@ -1,17 +1,9 @@
 package jpo.gui;
 
-import jpo.dataModel.Settings;
-import jpo.gui.swing.CollectionJTree;
-import jpo.dataModel.GroupInfo;
-import jpo.dataModel.SortableDefaultMutableTreeNode;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
-import java.awt.Dimension;
 import java.util.logging.Logger;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -22,7 +14,13 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JTree;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.TreeSelectionEvent;
 import javax.swing.tree.TreePath;
+import jpo.dataModel.GroupInfo;
+import jpo.dataModel.Settings;
+import jpo.dataModel.SortableDefaultMutableTreeNode;
+import jpo.gui.swing.CollectionJTree;
 import net.javaprog.ui.wizard.AbstractStep;
 
 
@@ -104,21 +102,17 @@ public class CameraDownloadWizardStep3
             selectNodeLabel.setText( Settings.jpoResources.getString( "DownloadCameraWizardStep3Text2b" ) );
         }
 
-        createSubGroupCheckBox.addChangeListener( new ChangeListener() {
-
-            @Override
-            public void stateChanged( ChangeEvent e ) {
-                dataModel.setShouldCreateNewGroup( createSubGroupCheckBox.isSelected() );
-                titleLabel.setVisible( createSubGroupCheckBox.isSelected() );
-                newGroupName.setVisible( createSubGroupCheckBox.isSelected() );
-                secondStrut.setVisible( createSubGroupCheckBox.isSelected() );
-                if ( createSubGroupCheckBox.isSelected() ) {
-                    selectNodeLabel.setText( Settings.jpoResources.getString( "DownloadCameraWizardStep3Text2a" ) );
-                } else {
-                    selectNodeLabel.setText( Settings.jpoResources.getString( "DownloadCameraWizardStep3Text2b" ) );
-                }
+        createSubGroupCheckBox.addChangeListener(( ChangeEvent e ) -> {
+            dataModel.setShouldCreateNewGroup( createSubGroupCheckBox.isSelected() );
+            titleLabel.setVisible( createSubGroupCheckBox.isSelected() );
+            newGroupName.setVisible( createSubGroupCheckBox.isSelected() );
+            secondStrut.setVisible( createSubGroupCheckBox.isSelected() );
+            if ( createSubGroupCheckBox.isSelected() ) {
+                selectNodeLabel.setText( Settings.jpoResources.getString( "DownloadCameraWizardStep3Text2a" ) );
+            } else {
+                selectNodeLabel.setText( Settings.jpoResources.getString( "DownloadCameraWizardStep3Text2b" ) );
             }
-        } );
+        });
         stepComponent.add( createSubGroupCheckBox );
         stepComponent.add( Box.createVerticalStrut( 8 ) );
         stepComponent.add( titleLabel );
@@ -139,27 +133,23 @@ public class CameraDownloadWizardStep3
         final JTree collectionJTree = new CollectionJTree();
         collectionJTree.setModel( dataModel.getTreeModel() );
         collectionJTree.setEditable( false );
-        collectionJTree.addTreeSelectionListener( new TreeSelectionListener() {
-
-            @Override
-            public void valueChanged( TreeSelectionEvent e ) {
-                LOGGER.fine( String.format( "listening to a value changed event e: %s", e.toString() ) );
-                // Are we trying to get the last clicked node? Not sure this is best...
-                SortableDefaultMutableTreeNode node = (SortableDefaultMutableTreeNode) collectionJTree.getLastSelectedPathComponent();
-                try {
-                    if ( node.getUserObject() instanceof GroupInfo ) {
-                        dataModel.setTargetNode( node );
-                        setCanGoNext( true );
-                    } else {
-                        dataModel.setTargetNode( null );
-                        setCanGoNext( false );
-                    }
-                } catch ( NullPointerException x ) {
-                    LOGGER.fine( String.format( "The listener on the Download Wizard picked up a node change event on the node tree but got a NPE: %s", x.getMessage() ) );
+        collectionJTree.addTreeSelectionListener(( TreeSelectionEvent e ) -> {
+            LOGGER.fine( String.format( "listening to a value changed event e: %s", e.toString() ) );
+            // Are we trying to get the last clicked node? Not sure this is best...
+            SortableDefaultMutableTreeNode node = (SortableDefaultMutableTreeNode) collectionJTree.getLastSelectedPathComponent();
+            try {
+                if ( node.getUserObject() instanceof GroupInfo ) {
+                    dataModel.setTargetNode( node );
+                    setCanGoNext( true );
+                } else {
+                    dataModel.setTargetNode( null );
                     setCanGoNext( false );
                 }
+            } catch ( NullPointerException x ) {
+                LOGGER.fine( String.format( "The listener on the Download Wizard picked up a node change event on the node tree but got a NPE: %s", x.getMessage() ) );
+                setCanGoNext( false );
             }
-        } );
+        });
 
         // if there is only a root node in the collection, select it by default
         Object root = dataModel.getTreeModel().getRoot();

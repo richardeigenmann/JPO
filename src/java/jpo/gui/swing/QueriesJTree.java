@@ -10,8 +10,8 @@ import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 import jpo.EventBus.JpoEventBus;
 import jpo.EventBus.ShowQueryRequest;
-import jpo.dataModel.Settings;
 import jpo.dataModel.Query;
+import jpo.dataModel.Settings;
 import jpo.dataModel.Tools;
 
 /*

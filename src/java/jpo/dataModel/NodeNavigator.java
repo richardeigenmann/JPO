@@ -95,9 +95,9 @@ public abstract class NodeNavigator
     @Override
     public void notifyNodeNavigatorListeners() {
         synchronized ( nodeNavigatorListeners ) {
-            for ( NodeNavigatorListener nodeNavigatorListener : nodeNavigatorListeners ) {
+            nodeNavigatorListeners.stream().forEach( ( nodeNavigatorListener ) -> {
                 nodeNavigatorListener.nodeLayoutChanged();
-            }
+            } );
         }
     }
 

@@ -1,12 +1,8 @@
 package jpo.gui;
 
-import jpo.gui.swing.CategoryJScrollPane;
-import jpo.dataModel.Settings;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Image;
-import jpo.dataModel.GroupInfo;
-import jpo.dataModel.SortableDefaultMutableTreeNode;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
@@ -22,7 +18,11 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import jpo.EventBus.CopyLocationsChangedEvent;
 import jpo.EventBus.JpoEventBus;
+import jpo.dataModel.GroupInfo;
+import jpo.dataModel.Settings;
+import jpo.dataModel.SortableDefaultMutableTreeNode;
 import jpo.dataModel.Tools;
+import jpo.gui.swing.CategoryJScrollPane;
 
 
 /*

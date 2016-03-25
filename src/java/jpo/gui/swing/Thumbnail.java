@@ -71,34 +71,30 @@ public class Thumbnail extends JComponent {
      */
     public void setImageIcon( final ImageIcon icon ) {
         LOGGER.fine( String.format( "Setting image on thumbnail %d", hashCode() ) );
-        Runnable r = new Runnable() {
-
-            @Override
-            public void run() {
-                if ( icon == null ) {
-                    return;
-                }
-                img = icon.getImage();
-                if ( img == null ) {
-                    return;
-                }
-                imgOb = icon.getImageObserver();
-                thumbnailHeight = img.getHeight( imgOb );
-
-                RescaleOp darkenOp = new RescaleOp( .6f, 0, null );
-                BufferedImage source = new BufferedImage( img.getWidth( imgOb ), thumbnailHeight, BufferedImage.TYPE_INT_BGR );
-                source.createGraphics().drawImage( img, 0, 0, null );
-                selectedThumbnail = darkenOp.filter( source, null );
-
-                // force update of layout
-                setVisible( false );
-                setVisible( true );
+        Runnable runnable = () -> {
+            if ( icon == null ) {
+                return;
             }
+            img = icon.getImage();
+            if ( img == null ) {
+                return;
+            }
+            imgOb = icon.getImageObserver();
+            thumbnailHeight = img.getHeight( imgOb );
+
+            RescaleOp darkenOp = new RescaleOp( .6f, 0, null );
+            BufferedImage source = new BufferedImage( img.getWidth( imgOb ), thumbnailHeight, BufferedImage.TYPE_INT_BGR );
+            source.createGraphics().drawImage( img, 0, 0, null );
+            selectedThumbnail = darkenOp.filter( source, null );
+
+            // force update of layout
+            setVisible( false );
+            setVisible( true );
         };
         if ( SwingUtilities.isEventDispatchThread() ) {
-            r.run();
+            runnable.run();
         } else {
-            SwingUtilities.invokeLater( r );
+            SwingUtilities.invokeLater( runnable );
         }
     }
 
@@ -246,7 +242,6 @@ public class Thumbnail extends JComponent {
      */
     private static final ImageIcon OFFLINE_ICON = new ImageIcon( CLASS_LOADER.getResource( "jpo/images/icon_offline.gif" ) );
 
-
     /**
      * The icon to superimpose on the picture if the highres picture is not
      * available
@@ -266,7 +261,6 @@ public class Thumbnail extends JComponent {
     public void setLargeFolderIcon() {
         setImageIcon( LARGE_FOLDER_ICON );
     }
-
 
     /**
      * This flag indicates whether the offline icon should be drawn or not.
@@ -316,19 +310,15 @@ public class Thumbnail extends JComponent {
      * This method is EDT safe.
      */
     public void showAsSelected() {
-        Runnable r = new Runnable() {
-
-            @Override
-            public void run() {
-                setBorder( BorderFactory.createLineBorder( Settings.SELECTED_COLOR, 12 ) );
-                setBackground( Settings.SELECTED_COLOR_TEXT );
-                isSelected = true;
-            }
+        Runnable runnable = () -> {
+            setBorder( BorderFactory.createLineBorder( Settings.SELECTED_COLOR, 12 ) );
+            setBackground( Settings.SELECTED_COLOR_TEXT );
+            isSelected = true;
         };
         if ( SwingUtilities.isEventDispatchThread() ) {
-            r.run();
+            runnable.run();
         } else {
-            SwingUtilities.invokeLater( r );
+            SwingUtilities.invokeLater( runnable );
         }
 
     }
@@ -339,19 +329,15 @@ public class Thumbnail extends JComponent {
      * This method is EDT safe
      */
     public void showAsUnselected() {
-        Runnable r = new Runnable() {
-
-            @Override
-            public void run() {
-                setBorder( BorderFactory.createEmptyBorder() );
-                setBackground( Settings.UNSELECTED_COLOR );
-                isSelected = false;
-            }
+        Runnable runnable = () -> {
+            setBorder( BorderFactory.createEmptyBorder() );
+            setBackground( Settings.UNSELECTED_COLOR );
+            isSelected = false;
         };
         if ( SwingUtilities.isEventDispatchThread() ) {
-            r.run();
+            runnable.run();
         } else {
-            SwingUtilities.invokeLater( r );
+            SwingUtilities.invokeLater( runnable );
         }
 
     }
@@ -392,7 +378,7 @@ public class Thumbnail extends JComponent {
                     clipBounds.height );
 
             AffineTransform af1 = AffineTransform.getTranslateInstance( X_Offset, Y_Offset );
-            AffineTransform af2 = AffineTransform.getScaleInstance( (double) thumbnailSizeFactor, (double) thumbnailSizeFactor );
+            AffineTransform af2 = AffineTransform.getScaleInstance( thumbnailSizeFactor, thumbnailSizeFactor );
             af2.concatenate( af1 );
             //op = new AffineTransformOp( af2, AffineTransformOp.TYPE_NEAREST_NEIGHBOR );
 

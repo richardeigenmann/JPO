@@ -3,7 +3,6 @@ package jpo.cache;
 import java.awt.Dimension;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
 import org.junit.Assert;
-
 import org.junit.Test;
 
 /**

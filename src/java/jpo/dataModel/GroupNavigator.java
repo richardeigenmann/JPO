@@ -4,12 +4,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
+import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 
 /*
  GroupBrower.java:  an implementation of the NodeNavigator for browsing groups.
 
- Copyright (C) 2002 - 2014  Richard Eigenmann.
+ Copyright (C) 2002 - 2016  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -237,7 +238,7 @@ public class GroupNavigator extends NodeNavigator {
             if ( myNode == null ) {
                 return;
             }
-            if ( myNode.isNodeDescendant( (SortableDefaultMutableTreeNode) treeModelEvent.getTreePath().getLastPathComponent() ) ) {
+            if ( myNode.isNodeDescendant( (DefaultMutableTreeNode) treeModelEvent.getTreePath().getLastPathComponent() ) ) {
                 notifyNodeNavigatorListeners();
             }
         }

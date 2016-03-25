@@ -1,12 +1,12 @@
 package jpo.gui.swing;
 
-import jpo.dataModel.Settings;
 import java.awt.Dimension;
 import java.awt.event.KeyEvent;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JSlider;
 import javax.swing.JToolBar;
+import jpo.dataModel.Settings;
 import jpo.dataModel.Tools;
 
 /*

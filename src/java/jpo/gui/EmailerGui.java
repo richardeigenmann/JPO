@@ -1,12 +1,9 @@
 package jpo.gui;
 
-import jpo.gui.swing.WholeNumberField;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.Iterator;
@@ -31,6 +28,7 @@ import jpo.dataModel.ListNavigator;
 import jpo.dataModel.Settings;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
 import jpo.gui.swing.Thumbnail;
+import jpo.gui.swing.WholeNumberField;
 import net.miginfocom.swing.MigLayout;
 
 /*
@@ -225,40 +223,36 @@ public class EmailerGui extends JFrame {
         sizesJComboBox.addItem( Settings.jpoResources.getString( "emailSize3" ) );
         sizesJComboBox.addItem( Settings.jpoResources.getString( "emailSize4" ) );
         sizesJComboBox.addItem( Settings.jpoResources.getString( "emailSize5" ) );
-        sizesJComboBox.addActionListener( new ActionListener() {
-
-            @Override
-            public void actionPerformed( ActionEvent e ) {
-                JComboBox cb = (JComboBox) e.getSource();
-                String cbSelection = (String) cb.getSelectedItem();
-                if ( cbSelection.equals( Settings.jpoResources.getString( "emailSize1" ) ) ) {
-                    imageWidthWholeNumberField.setText( "350" );
-                    imageHeightWholeNumberField.setText( "300" );
-                    scalePicturesJCheckBox.setSelected( true );
-                    sendOriginalsJCheckBox.setSelected( false );
-                } else if ( cbSelection.equals( Settings.jpoResources.getString( "emailSize2" ) ) ) {
-                    imageWidthWholeNumberField.setText( "700" );
-                    imageHeightWholeNumberField.setText( "550" );
-                    scalePicturesJCheckBox.setSelected( true );
-                    sendOriginalsJCheckBox.setSelected( false );
-                } else if ( cbSelection.equals( Settings.jpoResources.getString( "emailSize3" ) ) ) {
-                    imageWidthWholeNumberField.setText( "700" );
-                    imageHeightWholeNumberField.setText( "550" );
-                    sendOriginalsJCheckBox.setSelected( true );
-                    scalePicturesJCheckBox.setSelected( true );
-                } else if ( cbSelection.equals( Settings.jpoResources.getString( "emailSize4" ) ) ) {
-                    imageWidthWholeNumberField.setText( "1000" );
-                    imageHeightWholeNumberField.setText( "800" );
-                    scalePicturesJCheckBox.setSelected( true );
-                    sendOriginalsJCheckBox.setSelected( false );
-                } else if ( cbSelection.equals( Settings.jpoResources.getString( "emailSize5" ) ) ) {
-                    imageWidthWholeNumberField.setText( "0" );
-                    imageHeightWholeNumberField.setText( "0" );
-                    scalePicturesJCheckBox.setSelected( false );
-                    sendOriginalsJCheckBox.setSelected( true );
-                }
+        sizesJComboBox.addActionListener(( ActionEvent e ) -> {
+            JComboBox cb = (JComboBox) e.getSource();
+            String cbSelection = (String) cb.getSelectedItem();
+            if ( cbSelection.equals( Settings.jpoResources.getString( "emailSize1" ) ) ) {
+                imageWidthWholeNumberField.setText( "350" );
+                imageHeightWholeNumberField.setText( "300" );
+                scalePicturesJCheckBox.setSelected( true );
+                sendOriginalsJCheckBox.setSelected( false );
+            } else if ( cbSelection.equals( Settings.jpoResources.getString( "emailSize2" ) ) ) {
+                imageWidthWholeNumberField.setText( "700" );
+                imageHeightWholeNumberField.setText( "550" );
+                scalePicturesJCheckBox.setSelected( true );
+                sendOriginalsJCheckBox.setSelected( false );
+            } else if ( cbSelection.equals( Settings.jpoResources.getString( "emailSize3" ) ) ) {
+                imageWidthWholeNumberField.setText( "700" );
+                imageHeightWholeNumberField.setText( "550" );
+                sendOriginalsJCheckBox.setSelected( true );
+                scalePicturesJCheckBox.setSelected( true );
+            } else if ( cbSelection.equals( Settings.jpoResources.getString( "emailSize4" ) ) ) {
+                imageWidthWholeNumberField.setText( "1000" );
+                imageHeightWholeNumberField.setText( "800" );
+                scalePicturesJCheckBox.setSelected( true );
+                sendOriginalsJCheckBox.setSelected( false );
+            } else if ( cbSelection.equals( Settings.jpoResources.getString( "emailSize5" ) ) ) {
+                imageWidthWholeNumberField.setText( "0" );
+                imageHeightWholeNumberField.setText( "0" );
+                scalePicturesJCheckBox.setSelected( false );
+                sendOriginalsJCheckBox.setSelected( true );
             }
-        } );
+        });
         sizesJComboBox.setPreferredSize( Settings.filenameFieldPreferredSize );
         sizesJComboBox.setMinimumSize( Settings.filenameFieldMinimumSize );
         sizesJComboBox.setMaximumSize( Settings.filenameFieldMaximumSize );
@@ -274,19 +268,15 @@ public class EmailerGui extends JFrame {
         scaleSizeJPanel.setMaximumSize( new Dimension( 1000, 25 ) );
         //scaleSizeJPanel.setInsets( new Insets(0,0,0,0) );
 
-        scalePicturesJCheckBox.addItemListener( new ItemListener() {
-
-            @Override
-            public void itemStateChanged( ItemEvent e ) {
-                if ( e.getStateChange() == ItemEvent.DESELECTED ) {
-                    imageWidthWholeNumberField.setEnabled( false );
-                    imageHeightWholeNumberField.setEnabled( false );
-                } else if ( e.getStateChange() == ItemEvent.SELECTED ) {
-                    imageWidthWholeNumberField.setEnabled( true );
-                    imageHeightWholeNumberField.setEnabled( true );
-                }
+        scalePicturesJCheckBox.addItemListener(( ItemEvent e ) -> {
+            if ( e.getStateChange() == ItemEvent.DESELECTED ) {
+                imageWidthWholeNumberField.setEnabled( false );
+                imageHeightWholeNumberField.setEnabled( false );
+            } else if ( e.getStateChange() == ItemEvent.SELECTED ) {
+                imageWidthWholeNumberField.setEnabled( true );
+                imageHeightWholeNumberField.setEnabled( true );
             }
-        } );
+        });
         //scalePicturesJCheckBox.setInsets( new Insets(0,0,0,0) );
         scaleSizeJPanel.add( scalePicturesJCheckBox );
 
@@ -310,24 +300,16 @@ public class EmailerGui extends JFrame {
 
         final JPanel buttonJPanel = new JPanel();
         final JButton emailJButton = new JButton( Settings.jpoResources.getString( "emailJButton" ) );
-        emailJButton.addActionListener( new ActionListener() {
-
-            @Override
-            public void actionPerformed( ActionEvent evt ) {
-                prepareSend();
-                getRid();
-            }
-        } );
+        emailJButton.addActionListener(( ActionEvent evt ) -> {
+            prepareSend();
+            getRid();
+        });
         buttonJPanel.add( emailJButton );
 
         final JButton cancelJButton = new JButton( Settings.jpoResources.getString( "genericCancelText" ) );
-        cancelJButton.addActionListener( new ActionListener() {
-
-            @Override
-            public void actionPerformed( ActionEvent evt ) {
-                getRid();
-            }
-        } );
+        cancelJButton.addActionListener(( ActionEvent evt ) -> {
+            getRid();
+        });
         buttonJPanel.add( cancelJButton );
 
         jPanel.add( buttonJPanel, "spanx 2, wrap" );
@@ -387,11 +369,11 @@ public class EmailerGui extends JFrame {
     private void loadThumbnails() {
         int thumbnailSize = Settings.thumbnailSize;
         int desiredSize = 140;
-        float factor = (float) desiredSize / (float) thumbnailSize;
+        float factor = desiredSize / (float) thumbnailSize;
         ListNavigator listNavigator = new ListNavigator();
 
         for ( int i = 0; i < emailSelected.size(); i++ ) {
-            listNavigator.addNode( (SortableDefaultMutableTreeNode) emailSelected.get( i ) );
+            listNavigator.addNode( emailSelected.get( i ) );
             ThumbnailController thumbnailController = new ThumbnailController(new Thumbnail(), thumbnailSize );
             thumbnailController.setNode( listNavigator, i );
             thumbnailController.setDecorateThumbnails( false );

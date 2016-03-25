@@ -7,13 +7,13 @@ package jpo.EventBus;
  */
 public class FileSaveRequest implements Request {
 
+
+    private Request onSucccessNextRequest;
     /**
      * A request to save the collection
      */
     public FileSaveRequest() {
     }
-
-    private Request onSucccessNextRequest;
 
     /**
      * Optional next request to call after successfully saving the file.

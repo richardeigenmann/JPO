@@ -1,13 +1,12 @@
 package jpo.gui;
 
-import javax.swing.event.ChangeEvent;
-import jpo.dataModel.Settings;
 import java.awt.Component;
 import javax.swing.BoxLayout;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.event.ChangeListener;
+import javax.swing.event.ChangeEvent;
+import jpo.dataModel.Settings;
 import net.javaprog.ui.wizard.AbstractStep;
 
 /*
@@ -63,12 +62,8 @@ public class CameraDownloadWizardStep4 extends AbstractStep {
                 DirectoryChooser.DIR_MUST_BE_WRITABLE);
         dirChooser.setAlignmentX(Component.LEFT_ALIGNMENT);
         stepComponent.add(dirChooser);
-        dirChooser.addChangeListener(new ChangeListener() {
-
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                dataModel.targetDir = dirChooser.getDirectory();
-            }
+        dirChooser.addChangeListener(( ChangeEvent e ) -> {
+            dataModel.targetDir = dirChooser.getDirectory();
         });
         // get default value from the dirChooser
         dataModel.targetDir = dirChooser.getDirectory();

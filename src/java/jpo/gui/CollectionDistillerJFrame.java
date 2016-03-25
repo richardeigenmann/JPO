@@ -1,16 +1,10 @@
 package jpo.gui;
 
 import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
-import jpo.dataModel.Settings;
-import jpo.dataModel.SortableDefaultMutableTreeNode;
-import jpo.dataModel.XmlDistiller;
 import java.util.logging.Logger;
 import javax.swing.InputVerifier;
 import javax.swing.JButton;
@@ -22,9 +16,13 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
+import javax.swing.text.JTextComponent;
 import jpo.EventBus.CopyLocationsChangedEvent;
 import jpo.EventBus.JpoEventBus;
 import jpo.EventBus.RecentCollectionsChangedEvent;
+import jpo.dataModel.JpoWriter;
+import jpo.dataModel.Settings;
+import jpo.dataModel.SortableDefaultMutableTreeNode;
 import net.miginfocom.swing.MigLayout;
 
 /*
@@ -47,20 +45,18 @@ import net.miginfocom.swing.MigLayout;
 /**
  * Frame to capture the details of the collection export
  */
-class CollectionDistillerJFrame extends JFrame {
+public class CollectionDistillerJFrame extends JFrame {
 
     /**
      * Defines a logger for this class
      */
     private static final Logger LOGGER = Logger.getLogger( CollectionDistillerJFrame.class.getName() );
 
-    
     /**
      * Size for this frame
      */
-    private final static Dimension FRAME_SIZE = new Dimension(460, 300);
+    private final static Dimension FRAME_SIZE = new Dimension( 460, 300 );
 
-    
     /**
      * the node from which to start the export
      */
@@ -99,7 +95,7 @@ class CollectionDistillerJFrame extends JFrame {
         initComponents();
     }
 
-    public final void initComponents() {
+    public void initComponents() {
         setSize( FRAME_SIZE );
         setLocationRelativeTo( Settings.anchorFrame );
         setDefaultCloseOperation( DISPOSE_ON_CLOSE );
@@ -113,7 +109,7 @@ class CollectionDistillerJFrame extends JFrame {
 
         JPanel contentJPanel = new javax.swing.JPanel();
         contentJPanel.setLayout( new MigLayout() );
-        
+
         contentJPanel.add( new JLabel( Settings.jpoResources.getString( "genericTargetDirText" ) ) );
         contentJPanel.add( targetDirChooser, "wrap" );
 
@@ -127,9 +123,9 @@ class CollectionDistillerJFrame extends JFrame {
 
             @Override
             public boolean shouldYieldFocus( JComponent input ) {
-                String validationFile = ( (JTextField) input ).getText();
+                String validationFile = ( (JTextComponent) input ).getText();
                 if ( !validationFile.toUpperCase().endsWith( ".XML" ) ) {
-                    ( (JTextField) input ).setText( validationFile + ".xml" );
+                    ( (JTextComponent) input ).setText( validationFile + ".xml" );
                 }
                 return true;
             }
@@ -152,13 +148,9 @@ class CollectionDistillerJFrame extends JFrame {
         exportJButton.setMaximumSize( Settings.defaultButtonDimension );
         exportJButton.setDefaultCapable( true );
         this.getRootPane().setDefaultButton( exportJButton );
-        exportJButton.addActionListener( new ActionListener() {
-
-            @Override
-            public void actionPerformed( ActionEvent e ) {
-                exportToDirectory();
-                getRid();
-            }
+        exportJButton.addActionListener( ( ActionEvent e ) -> {
+            exportToDirectory();
+            getRid();
         } );
         buttonJPanel.add( exportJButton );
 
@@ -166,12 +158,8 @@ class CollectionDistillerJFrame extends JFrame {
         cancelJButton.setPreferredSize( Settings.defaultButtonDimension );
         cancelJButton.setMinimumSize( Settings.defaultButtonDimension );
         cancelJButton.setMaximumSize( Settings.defaultButtonDimension );
-        cancelJButton.addActionListener( new ActionListener() {
-
-            @Override
-            public void actionPerformed( ActionEvent e ) {
-                getRid();
-            }
+        cancelJButton.addActionListener( ( ActionEvent e ) -> {
+            getRid();
         } );
         buttonJPanel.add( cancelJButton );
 
@@ -221,7 +209,10 @@ class CollectionDistillerJFrame extends JFrame {
                 return;
             }
         }
-        new XmlDistiller( targetFile, startNode, exportPicsJCheckBox.isSelected(), true );
+        Thread t = new Thread( ()
+                -> new JpoWriter( targetFile, startNode, exportPicsJCheckBox.isSelected() )
+        );
+        t.start();
 
         Settings.memorizeCopyLocation( targetFile.getParent() );
         JpoEventBus.getInstance().post( new CopyLocationsChangedEvent() );

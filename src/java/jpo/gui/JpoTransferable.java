@@ -10,9 +10,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import jpo.dataModel.SortableDefaultMutableTreeNode;
-import jpo.dataModel.PictureInfo;
 import java.util.logging.Logger;
+import jpo.dataModel.PictureInfo;
+import jpo.dataModel.SortableDefaultMutableTreeNode;
 
 /*
  JpoTransferable.java:  a transferable to drag and drop nodes of the Jpo application
@@ -176,7 +176,7 @@ public class JpoTransferable
             }
         }
         LOGGER.info( String.format( "Returning %d files in a list", fileList.size() ) );
-        return (List) fileList;
+        return fileList;
     }
 
     /**
@@ -211,10 +211,9 @@ public class JpoTransferable
     public String toString() {
         StringBuilder objectDescriptions = new StringBuilder( String.format( "JpoTransferable for %d nodes: ", transferableNodes.size() ) );
 
-        for ( Object o : transferableNodes ) {
+        transferableNodes.stream().forEach( ( o ) -> {
             objectDescriptions.append( o.toString() ).append( ", " );
-
-        }
+        } );
         return objectDescriptions.toString();
     }
 

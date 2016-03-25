@@ -21,7 +21,6 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.LayoutManager;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JComponent;
 
@@ -86,7 +85,7 @@ public class ThumbnailLayoutManager implements LayoutManager {
 
             int rowComponentHeight;
             int logicalThumbnail;
-            for ( int i = 0; i < parent.getComponentCount(); i = i + 2 ) {
+            for ( int i = 0; i < parent.getComponentCount(); i += 2 ) {
                 logicalThumbnail = i / 2;
                 if ( ( logicalThumbnail % columns ) == 0 ) {
                     rowComponentHeight = getHeightOfRow( parent, i, columns ) // Thumbnails
@@ -200,7 +199,7 @@ public class ThumbnailLayoutManager implements LayoutManager {
             int rowBaseline = 0 - getVerticalGutter();
             int previousDescriptionRowHeight = 0;
             int logicalThumbnail;
-            for ( int i = 0; i < parent.getComponentCount(); i = i + 2 ) {
+            for ( int i = 0; i < parent.getComponentCount(); i += 2 ) {
                 logicalThumbnail = i / 2;
                 if ( ( logicalThumbnail % columns ) == 0 ) {
                     rowBaseline = rowBaseline + getHeightOfRow( parent, i, columns ) + previousDescriptionRowHeight + ( 2 * getVerticalGutter() );

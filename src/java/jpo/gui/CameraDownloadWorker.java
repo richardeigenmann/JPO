@@ -9,9 +9,9 @@ import jpo.EventBus.GroupSelectionEvent;
 import jpo.EventBus.JpoEventBus;
 import jpo.EventBus.RecentDropNodesChangedEvent;
 import jpo.EventBus.RefreshThumbnailRequest;
+import jpo.cache.ThumbnailQueueRequest.QUEUE_PRIORITY;
 import jpo.dataModel.Settings;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
-import jpo.cache.ThumbnailQueueRequest.QUEUE_PRIORITY;
 
 
 /*
@@ -104,14 +104,8 @@ public class CameraDownloadWorker
 
     @Override
     public void progressIncrement() {
-        LOGGER.fine( "Got a progress Increment message" );
-        Runnable r = new Runnable() {
-
-            @Override
-            public void run() {
-                progressBar.setValue( progressBar.getValue() + 1 );
-            }
-        };
-        SwingUtilities.invokeLater( r );
+        SwingUtilities.invokeLater( 
+                () -> progressBar.setValue( progressBar.getValue() + 1 )
+        );
     }
 }

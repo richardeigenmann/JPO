@@ -2,11 +2,11 @@
 <jnlp
     spec="1.0+"
     codebase="http://j-po.sourceforge.net/"
-    href="jpo-0.12.jnlp"
-    version="0.12" >
+    href="jpo-0.13.jnlp"
+    version="0.13" >
   
     <information>
-        <title>Java Picture Organizer Development Version 0.12</title>
+        <title>Java Picture Organizer Development Version 0.13</title>
         <vendor>Richard Eigenmann</vendor>
         <homepage href="http://j-po.sourceforge.net"/>
         <description>JPO Java Picture Organizer</description>
@@ -21,9 +21,9 @@
     </security>
 
     <resources>
-        <java version="1.7+" java-vm-args="-XX:+AggressiveHeap" />
+        <java version="1.8+" java-vm-args="-XX:+AggressiveHeap" />
         <!-- initial-heap-size="64m" max-heap-size="2000m" -->
-        <jar href="jpo-0.12.jar" download="eager" main="true"/>
+        <jar href="jpo-0.13.jar" download="eager" main="true"/>
     </resources>
 
     <application-desc 

@@ -1,6 +1,5 @@
 package jpo.gui;
 
-import jpo.dataModel.Settings;
 import java.awt.Dimension;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -12,6 +11,7 @@ import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import jpo.dataModel.Settings;
 import webserver.NanoHTTPD;
 
 /*
@@ -44,7 +44,7 @@ public class LicenseWindow {
     /**
      * Creates the License Window
      */
-    public LicenseWindow() {
+    LicenseWindow() {
         JTextArea licenseJTextArea = new JTextArea( "reading the file gpl.txt" );
         licenseJTextArea.setWrapStyleWord( true );
         licenseJTextArea.setLineWrap( true );

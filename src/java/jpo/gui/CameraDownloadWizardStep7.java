@@ -1,11 +1,11 @@
 package jpo.gui;
 
-import jpo.dataModel.Settings;
 import java.util.logging.Logger;
 import javax.swing.BoxLayout;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
+import jpo.dataModel.Settings;
 import net.javaprog.ui.wizard.AbstractStep;
 
 /*

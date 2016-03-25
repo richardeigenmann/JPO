@@ -9,7 +9,7 @@ import jpo.gui.ApplicationEventHandler;
 /*
  Main.java:  starting point for the JPO application
 
- Copyright (C) 2002 - 2015  Richard Eigenmann.
+ Copyright (C) 2002 - 2016  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -27,8 +27,8 @@ import jpo.gui.ApplicationEventHandler;
  * The first class to be started to get the JPO application going.
  *
  * @author Richard Eigenmann, richard.eigenmann@gmail.com
- * @version 0.12
- * @since JDK1.7.0
+ * @version 0.13
+ * @since JDK1.8.0
  */
 public class Main {
 
@@ -45,7 +45,7 @@ public class Main {
     public static void main( String[] args ) {
         // Verify that we have to correct version of the jvm
         String jvmVersion = System.getProperty( "java.version" );
-        String jvmMainVersion = jvmVersion.substring( 0, jvmVersion.lastIndexOf( "." ) );
+        String jvmMainVersion = jvmVersion.substring( 0, jvmVersion.lastIndexOf('.') );
         float jvmVersionFloat = Float.parseFloat( jvmMainVersion );
         if ( jvmVersionFloat < 1.7f ) {
             String message = "The JPO application uses new features\nthat were added to the Java language in version 1.7.\nYour Java installation reports version " + jvmVersion + "\n";
@@ -57,8 +57,8 @@ public class Main {
         // somewhat rabid way of allowing the application access to the local filesystem. RE 13. Nov 2007
         System.setSecurityManager( null );
 
-        System.out.println( "\nJPO version 0.12\n" 
-                + "Copyright (C) 2000-2015 Richard Eigenmann,\nZurich, Switzerland\n"
+        System.out.println( "\nJPO version 0.13\n" 
+                + "Copyright (C) 2000-2016 Richard Eigenmann,\nZurich, Switzerland\n"
                 + "JPO comes with ABSOLUTELY NO WARRANTY;\n"
                 + "for details Look at the Help | License menu item.\n"
                 + "This is free software, and you are welcome\n"
@@ -69,7 +69,7 @@ public class Main {
         StringBuilder good = new StringBuilder( "These classes were found:\n" );
         StringBuilder missing = new StringBuilder( "The Installation is faulty! The following classes and libraries are missing:\n" );
 
-        testClass( "jpo.gui.ApplicationEventHandler", "Jpo-0.12.jar", good, missing );
+        testClass( "jpo.gui.ApplicationEventHandler", "Jpo-0.13.jar", good, missing );
         testClass( "org.TagCloud.TagCloud", "TagCloud.jar", good, missing );
         testClass( "org.apache.commons.compress.archivers.zip.ZipArchiveEntry", "commons-compress-1.8.jar", good, missing );
         testClass( "org.apache.commons.io.IOUtils", "commons-io-2.4.jar", good, missing );

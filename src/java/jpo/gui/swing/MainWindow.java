@@ -9,7 +9,6 @@ import com.google.common.eventbus.Subscribe;
 import java.awt.Component;
 import static java.awt.Frame.MAXIMIZED_BOTH;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
@@ -62,8 +61,8 @@ import jpo.gui.ThumbnailsPanelController;
 /**
  *
  * Main Window of the JPO application. It uses the
- * <a href="http://dock.javaforge.com">Docking Frames</a> framework to handle the
- * internal windows.
+ * <a href="http://dock.javaforge.com">Docking Frames</a> framework to handle
+ * the internal windows.
  *
  * @author Richard Eigenmann
  */
@@ -160,29 +159,17 @@ public class MainWindow extends JFrame {
                 new QueriesJTree().getJComponent() );
 
         JButton loadJButton = new JButton( "Properties - Load" );
-        loadJButton.addActionListener( new ActionListener() {
-
-            @Override
-            public void actionPerformed( ActionEvent e ) {
-                JpoEventBus.getInstance().post( new LoadDockablesPositionsRequest() );
-            }
-        } );
+        loadJButton.addActionListener(( ActionEvent e ) -> {
+            JpoEventBus.getInstance().post( new LoadDockablesPositionsRequest() );
+        });
         JButton saveJbutton = new JButton( "Save" );
-        saveJbutton.addActionListener( new ActionListener() {
-
-            @Override
-            public void actionPerformed( ActionEvent e ) {
-                JpoEventBus.getInstance().post( new SaveDockablesPositionsRequest() );
-            }
-        } );
+        saveJbutton.addActionListener(( ActionEvent e ) -> {
+            JpoEventBus.getInstance().post( new SaveDockablesPositionsRequest() );
+        });
         JButton resetJbutton = new JButton( "Reset" );
-        resetJbutton.addActionListener( new ActionListener() {
-
-            @Override
-            public void actionPerformed( ActionEvent e ) {
-                JpoEventBus.getInstance().post( new RestoreDockablesPositionsRequest() );
-            }
-        } );
+        resetJbutton.addActionListener(( ActionEvent e ) -> {
+            JpoEventBus.getInstance().post( new RestoreDockablesPositionsRequest() );
+        });
 
         JPanel propertiesJPanel = new JPanel();
         propertiesJPanel.setLayout( new BoxLayout( propertiesJPanel, BoxLayout.Y_AXIS ) );
@@ -267,14 +254,9 @@ public class MainWindow extends JFrame {
         if ( SwingUtilities.isEventDispatchThread() ) {
             setTitle( request.getTitle() );
         } else {
-            Runnable r = new Runnable() {
-
-                @Override
-                public void run() {
-                    setTitle( request.getTitle() );
-                }
-            };
-            SwingUtilities.invokeLater( r );
+            SwingUtilities.invokeLater( ()
+                    -> setTitle( request.getTitle() )
+            );
         }
     }
 

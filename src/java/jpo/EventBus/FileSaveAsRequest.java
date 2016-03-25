@@ -8,13 +8,13 @@ package jpo.EventBus;
  */
 public class FileSaveAsRequest implements Request {
 
+
+    private Request onSucccessNextRequest;
     /**
      * A request to save the collection under a new name
      */
     public FileSaveAsRequest() {
     }
-
-    private Request onSucccessNextRequest;
 
     /**
      * Optional next request to call after successfully saving the file.

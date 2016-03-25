@@ -206,16 +206,14 @@ public class NanoHTTPD {
     public NanoHTTPD( InetAddress address, int port ) throws IOException {
         System.out.println( String.format( "Binding to: %s:%d", address.getHostAddress(), port ) );
         myServerSocket = new ServerSocket( port, 0, address );
-        myThread = new Thread( new Runnable() {
-            public void run() {
-                try {
-                    while ( true ) {
-                        new HTTPSession( myServerSocket.accept() );
-                    }
-                } catch ( IOException ioe ) {
+        myThread = new Thread( () -> {
+            try {
+                while ( true ) {
+                    new HTTPSession( myServerSocket.accept() );
                 }
+            } catch ( IOException ioe ) {
             }
-        } );
+        });
         myThread.setDaemon( true );
         myThread.start();
     }
@@ -227,8 +225,7 @@ public class NanoHTTPD {
         try {
             myServerSocket.close();
             myThread.join();
-        } catch ( IOException ioe ) {
-        } catch ( InterruptedException e ) {
+        } catch ( IOException | InterruptedException ioe ) {
         }
     }
 
@@ -238,13 +235,14 @@ public class NanoHTTPD {
      */
     private class HTTPSession implements Runnable {
 
-        public HTTPSession( Socket s ) {
+        HTTPSession( Socket s ) {
             mySocket = s;
             Thread t = new Thread( this );
             t.setDaemon( true );
             t.start();
         }
 
+        @Override
         public void run() {
             try {
                 InputStream is = mySocket.getInputStream();
@@ -298,7 +296,7 @@ public class NanoHTTPD {
                 // If the method is POST, there may be parameters
                 // in data section, too, read it:
                 if ( method.equalsIgnoreCase( "POST" ) ) {
-                    long size = 0x7FFFFFFFFFFFFFFFl;
+                    long size = 0x7FFF_FFFF_FFFF_FFFFl;
                     String contentLength = header.getProperty( "content-length" );
                     if ( contentLength != null ) {
                         try {
@@ -332,7 +330,7 @@ public class NanoHTTPD {
             } catch ( IOException ioe ) {
                 try {
                     sendError( HTTP_INTERNALERROR, "SERVER INTERNAL ERROR: IOException: " + ioe.getMessage() );
-                } catch ( Throwable t ) {
+                } catch ( InterruptedException t ) {
                 }
             } catch ( InterruptedException ie ) {
                 // Thrown by sendError, ignore and exit the thread.
@@ -366,7 +364,7 @@ public class NanoHTTPD {
                     }
                 }
                 return new String( sb.toString().getBytes() );
-            } catch ( Exception e ) {
+            } catch ( NumberFormatException e ) {
                 sendError( HTTP_BADREQUEST, "BAD REQUEST: Bad percent-encoding." );
                 return null;
             }
@@ -470,12 +468,12 @@ public class NanoHTTPD {
                 // Couldn't write? No can do.
                 try {
                     mySocket.close();
-                } catch ( Throwable t ) {
+                } catch ( IOException t ) {
                 }
             }
         }
 
-        private Socket mySocket;
+        private final Socket mySocket;
     };
 
     /**
@@ -537,7 +535,7 @@ public class NanoHTTPD {
         }
 
         // Prohibit getting out of current directory
-        if ( uri.startsWith( ".." ) || uri.endsWith( ".." ) || uri.indexOf( "../" ) >= 0 ) {
+        if ( uri.startsWith( ".." ) || uri.endsWith( ".." ) || uri.contains( "../" ) ) {
             return new Response( HTTP_FORBIDDEN, MIME_PLAINTEXT,
                     "FORBIDDEN: Won't serve ../ for security reasons." );
         }
@@ -659,7 +657,7 @@ public class NanoHTTPD {
     /**
      * Hashtable mapping (String)FILENAME_EXTENSION -&gt; (String)MIME_TYPE
      */
-    private static final Hashtable<Object, Object> theMimeTypes = new Hashtable<Object, Object>();
+    private static final Hashtable<Object, Object> theMimeTypes = new Hashtable<>();
 
     static {
         StringTokenizer st = new StringTokenizer(

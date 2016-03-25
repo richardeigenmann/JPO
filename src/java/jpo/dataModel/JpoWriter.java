@@ -15,7 +15,7 @@ import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /*
- XmlDistiller.java:  Writes the JPO collection to an xml formatted file
+ JpoWriter.java:  Writes the JPO collection to an xml formatted file
 
  Copyright (C) 2002-2014  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
@@ -34,13 +34,12 @@ import javax.swing.JOptionPane;
 /**
  * Writes the JPO Collection to an xml formatted file
  */
-public class XmlDistiller
-        implements Runnable {
+public class JpoWriter {
 
     /**
      * Defines a logger for this class
      */
-    private static final Logger LOGGER = Logger.getLogger( XmlDistiller.class.getName() );
+    private static final Logger LOGGER = Logger.getLogger(JpoWriter.class.getName() );
 
     /**
      * variable to hold the name of the output file
@@ -61,22 +60,14 @@ public class XmlDistiller
      * @param xmlOutputFile The name of the file that is to be created
      * @param startNode	The node from which this is all to be built.
      * @param copyPics	Flag which instructs pictures to be copied too
-     * @param runAsThread Flag which can instruct this job not to run as a
-     * thread.
      */
-    public XmlDistiller( File xmlOutputFile,
-            SortableDefaultMutableTreeNode startNode, boolean copyPics,
-            boolean runAsThread ) {
+    public JpoWriter( File xmlOutputFile,
+            SortableDefaultMutableTreeNode startNode, boolean copyPics ) {
         this.xmlOutputFile = xmlOutputFile;
         this.startNode = startNode;
         this.copyPics = copyPics;
 
-        if ( runAsThread ) {
-            Thread t = new Thread( this, "XmlDistiller" );
-            t.start();
-        } else {
-            run();
-        }
+        write();
     }
 
 
@@ -88,8 +79,7 @@ public class XmlDistiller
     /**
      * method that is invoked by the thread to do things asynchronously
      */
-    @Override
-    public final void run() {
+    public void write() {
         try {
             if ( copyPics ) {
                 highresTargetDir = new File( xmlOutputFile.getParentFile(), "Highres" );

@@ -95,7 +95,7 @@ public class CategoryJScrollPane extends JScrollPane implements ListSelectionLis
         Category categoryObject;
         while ( i.hasNext() ) {
             key = (Integer) i.next();
-            category = (String) Settings.getPictureCollection().getCategory( key );
+            category = Settings.getPictureCollection().getCategory( key );
             categoryObject = new Category( key, category );
             defaultListModel.addElement( categoryObject );
         }

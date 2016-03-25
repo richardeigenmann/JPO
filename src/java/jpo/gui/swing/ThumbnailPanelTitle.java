@@ -181,18 +181,13 @@ public class ThumbnailPanelTitle
      *				the name of the group
      */
     public void setTitle( final String titleString ) {
-        Runnable r = new Runnable() {
-
-            @Override
-            public void run() {
-                Tools.checkEDT();
-                title.setText( titleString );
-            }
+        Runnable runnable = () -> {
+            title.setText( titleString );
         };
         if ( ! SwingUtilities.isEventDispatchThread() ) {
-            SwingUtilities.invokeLater( r );
+            SwingUtilities.invokeLater(runnable );
         } else {
-            r.run();
+            runnable.run();
         }
 
     }

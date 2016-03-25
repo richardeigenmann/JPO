@@ -37,7 +37,7 @@ import java.util.logging.Logger;
  *
  * @see PictureInfo
  */
-public final class GroupInfo implements Serializable {
+public class GroupInfo implements Serializable {
 
     /**
      * Keep serialisation happy
@@ -219,9 +219,9 @@ public final class GroupInfo implements Serializable {
     private void sendGroupInfoChangedEvent( GroupInfoChangeEvent groupInfoChangeEvent ) {
         if ( Settings.getPictureCollection().getSendModelUpdates() ) {
             synchronized ( groupInfoListeners ) {
-                for ( GroupInfoChangeListener groupInfoChangeListener : groupInfoListeners ) {
+                groupInfoListeners.stream().forEach( ( groupInfoChangeListener ) -> {
                     groupInfoChangeListener.groupInfoChangeEvent( groupInfoChangeEvent );
-                }
+                } );
             }
         }
     }

@@ -58,11 +58,24 @@ public class JpoCache {
      */
     private static final Logger LOGGER = Logger.getLogger( JpoCache.class.getName() );
 
-    private static final String highresCacheRegionName = "highresCache";
-    private static final String thumbnailCacheRegionName = "thumbnailCache";
+    private static final String HIGHRES_CACHE_REGION_NAME = "highresCache";
+    private static final String THUMBNAIL_CACHE_REGION_NAME = "thumbnailCache";
+    /**
+     * Returns the instance of the JpoCache singleton
+     *
+     * @return the instance of the cache object
+     */
+    public static JpoCache getInstance() {
+        return JpoCacheHolder.INSTANCE;
+        
+    }
 
     private CacheAccess<URL, ImageBytes> highresMemoryCache;
     private CacheAccess<String, ImageBytes> thumbnailMemoryAndDiskCache;
+    /**
+     * The dimension for the group thumbnail
+     */
+    private Dimension groupThumbnailDimension;
 
     private JpoCache() {
         Properties props = new Properties();
@@ -80,32 +93,15 @@ public class JpoCache {
         ccm.configure( props );
 
         try {
-            highresMemoryCache = JCS.getInstance( highresCacheRegionName );
+            highresMemoryCache = JCS.getInstance(HIGHRES_CACHE_REGION_NAME );
             //setCache(highresMemoryCache);
-            thumbnailMemoryAndDiskCache = JCS.getInstance( thumbnailCacheRegionName );
+            thumbnailMemoryAndDiskCache = JCS.getInstance(THUMBNAIL_CACHE_REGION_NAME );
             //setCache(thumbnailMemoryAndDiskCache);
         } catch ( CacheException ex ) {
             LOGGER.severe( ex.getLocalizedMessage() );
         }
     }
 
-    /**
-     * Returns the instance of the JpoCache singleton
-     *
-     * @return the instance of the cache object
-     */
-    public static JpoCache getInstance() {
-        return JpoCacheHolder.INSTANCE;
-
-    }
-
-    /**
-     * Singleton
-     */
-    private static class JpoCacheHolder {
-
-        private static final JpoCache INSTANCE = new JpoCache();
-    }
 
     /**
      * Method to properly shut down the cache
@@ -126,7 +122,7 @@ public class JpoCache {
      * @throws IOException if something went wrong
      */
     public ImageBytes getHighresImageBytes( URL url ) throws IOException {
-        ImageBytes imageBytes = (ImageBytes) highresMemoryCache.get( url );
+        ImageBytes imageBytes = highresMemoryCache.get( url );
         if ( imageBytes != null ) {
             try {
                 Path imagePath = Paths.get( url.toURI() );
@@ -163,7 +159,7 @@ public class JpoCache {
         int maxWidth = size.width;
         int maxHeight = size.height;
         String key = String.format( "%s-%fdeg-w:%dpx-h:%dpx", url, rotation, maxWidth, maxHeight );
-        ImageBytes imageBytes = (ImageBytes) thumbnailMemoryAndDiskCache.get( key );
+        ImageBytes imageBytes = thumbnailMemoryAndDiskCache.get( key );
         if ( imageBytes != null ) {
             try {
                 Path imagePath = Paths.get( url.toURI() );
@@ -243,10 +239,6 @@ public class JpoCache {
         return imageBytes;
     }
 
-    /**
-     * The dimension for the group thumbnail
-     */
-    private Dimension groupThumbnailDimension;
 
     /**
      * Returns the Dimension of the icon_folder_large.jpg image and if there is
@@ -292,7 +284,7 @@ public class JpoCache {
         }
 
         String key = sb.toString();
-        ImageBytes imageBytes = (ImageBytes) thumbnailMemoryAndDiskCache.get( key );
+        ImageBytes imageBytes = thumbnailMemoryAndDiskCache.get( key );
 
         if ( imageBytes != null ) {
             try {
@@ -357,7 +349,7 @@ public class JpoCache {
             }
 
             x = margin + ( ( picsProcessed % horizontalPics ) * ( Settings.miniThumbnailSize.width + margin ) );
-            yPos = (int) Math.round( ( (double) picsProcessed / (double) horizontalPics ) - 0.5f );
+            yPos = (int) Math.round( (  picsProcessed / (double) horizontalPics ) - 0.5f );
             y = topMargin + ( yPos * ( Settings.miniThumbnailSize.height + margin ) );
 
             scalablePicture.loadPictureImd( pi.getImageURL(), pi.getRotation() );
@@ -424,6 +416,13 @@ public class JpoCache {
             LOGGER.severe( ex.getLocalizedMessage() );
 
         }
+    }
+    /**
+     * Singleton
+     */
+    private static class JpoCacheHolder {
+        
+        private static final JpoCache INSTANCE = new JpoCache();
     }
 
 }

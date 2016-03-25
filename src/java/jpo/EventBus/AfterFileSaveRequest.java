@@ -7,6 +7,8 @@ package jpo.EventBus;
  */
 public class AfterFileSaveRequest implements Request {
 
+    private final String autoLoadCollectionFile;
+    
     /**
      * A request opens the dialog after a file save
      * @param autoLoadCollectionFile The file to automatically load if the checkbox is ticked
@@ -14,8 +16,6 @@ public class AfterFileSaveRequest implements Request {
     public AfterFileSaveRequest( String autoLoadCollectionFile ) {
         this.autoLoadCollectionFile = autoLoadCollectionFile;
     }
-
-    private final String autoLoadCollectionFile;
 
 
     /**

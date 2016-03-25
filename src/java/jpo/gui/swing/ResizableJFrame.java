@@ -44,7 +44,6 @@ public class ResizableJFrame
      */
     private static final Logger LOGGER = Logger.getLogger( ResizableJFrame.class.getName() );
 
-
     /**
      * Window size options
      */
@@ -91,22 +90,14 @@ public class ResizableJFrame
      * @param component The Component to show in the frame
      */
     public ResizableJFrame( String title, Component component ) {
-        super( title  );
+        super( title );
         Tools.checkEDT();
-
-        //ToDo: Review this...!
-   /*     Dimension initialDimension = (Dimension) Settings.pictureViewerDefaultDimensions.clone();
-        if ( ( initialDimension.width == 0 ) || ( initialDimension.height == 0 ) ) {
-            // this gets us around the problem that the Affine Transform crashes if the window size is 0,0
-            initialDimension = Settings.windowSizes[1];
-        }  */
 
         getContentPane().setLayout( new BorderLayout() );
         getContentPane().add( "Center", component );
         setBackground( Settings.PICTUREVIEWER_BACKGROUND_COLOR );
 
         setUndecorated( !decorateWindow );
-//        setSize( initialDimension );
 
         if ( Settings.maximisePictureViewerWindow ) {
             maximise();
@@ -120,7 +111,7 @@ public class ResizableJFrame
      * Call this method on the EDT to maximise the windows. Don't forget to call
      * validate() afterwards.
      */
-    public final void maximise() {
+    public void maximise() {
         Tools.checkEDT();
         if ( this.getToolkit().isFrameStateSupported( Frame.MAXIMIZED_BOTH ) ) {
             setExtendedState( Frame.MAXIMIZED_BOTH );
@@ -156,7 +147,7 @@ public class ResizableJFrame
      * request that the window showing the picture be changed be changed.
      *
      * @param newMode {@link WindowSize#WINDOW_FULLSCREEN}, {@link WindowSize#WINDOW_LEFT},
-     * {@link WindowSize#WINDOW_RIGHT},  {@link WindowSize#WINDOW_TOP_LEFT}, 
+     * {@link WindowSize#WINDOW_RIGHT},  {@link WindowSize#WINDOW_TOP_LEFT},
      * {@link WindowSize#WINDOW_TOP_RIGHT}, {@link WindowSize#WINDOW_BOTTOM_LEFT},
      * {@link WindowSize#WINDOW_BOTTOM_RIGHT} or
      * {@link WindowSize#WINDOW_DEFAULT} need to be indicated.
@@ -204,8 +195,8 @@ public class ResizableJFrame
      * @param newMode {@link WindowSize#WINDOW_FULLSCREEN}, {@link WindowSize#WINDOW_LEFT},
      *		{@link WindowSize#WINDOW_RIGHT},  {@link WindowSize#WINDOW_TOP_LEFT},
      *		{@link WindowSize#WINDOW_TOP_RIGHT}, {@link WindowSize#WINDOW_BOTTOM_LEFT},
-     *		{@link WindowSize#WINDOW_BOTTOM_RIGHT} or {@link WindowSize#WINDOW_DEFAULT} need to be
-     * indicated.
+     *		{@link WindowSize#WINDOW_BOTTOM_RIGHT} or
+     * {@link WindowSize#WINDOW_DEFAULT} need to be indicated.
      *
      */
     public void resizeTo( WindowSize newMode ) {
@@ -243,7 +234,8 @@ public class ResizableJFrame
      * decorations. It uses the decorateWindow flag to determine if the
      * decorations are being shown.
      *
-     * @param newDecoration Send true if decorations should be shown, false if they should not be shown
+     * @param newDecoration Send true if decorations should be shown, false if
+     * they should not be shown
      */
     @Override
     public void showWindowDecorations( boolean newDecoration ) {
@@ -261,7 +253,7 @@ public class ResizableJFrame
      * Resizes the screen to the specified size after unmaximising it.
      *
      * @param targetSize The dimension you want the Frame to have
-     * 
+     *
      */
     @SuppressWarnings( "deprecation" )
     @Override

@@ -1,6 +1,7 @@
 package jpo.EventBus;
 
 import com.google.common.eventbus.Subscribe;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -24,8 +25,8 @@ public class DebugEventListener {
      */
     @Subscribe
     public void handleAllEvents( Object o ) {
-        //LOGGER.log( Level.INFO, "Event propagating: {0}", o.getClass().toString() );
-        System.out.println( String.format( "Event propagating: %s", o.getClass().toString() ) );
+        LOGGER.log( Level.INFO, "Event propagating: {0}", o.getClass().toString() );
+        //System.out.println( String.format( "Event propagating: %s", o.getClass().toString() ) );
     }
 
 }

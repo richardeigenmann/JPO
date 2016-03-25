@@ -1,6 +1,5 @@
 package jpo.gui;
 
-import jpo.gui.swing.JTableCopyPasteClipboardAdapter;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.KeyEvent;
@@ -8,14 +7,15 @@ import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.logging.Level;
-import jpo.dataModel.GroupInfo;
-import jpo.dataModel.SortableDefaultMutableTreeNode;
-import jpo.dataModel.PictureInfo;
-import javax.swing.table.AbstractTableModel;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.table.AbstractTableModel;
+import jpo.dataModel.GroupInfo;
+import jpo.dataModel.PictureInfo;
+import jpo.dataModel.SortableDefaultMutableTreeNode;
+import jpo.gui.swing.JTableCopyPasteClipboardAdapter;
 
 /*
  TableDemo.java:  class that creates a JFrame and shows the children of a SortableDefaultMutableTreeNode in it

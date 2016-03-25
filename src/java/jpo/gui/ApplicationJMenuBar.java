@@ -2,7 +2,6 @@ package jpo.gui;
 
 import com.google.common.eventbus.Subscribe;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -19,10 +18,10 @@ import jpo.EventBus.FileLoadDialogRequest;
 import jpo.EventBus.FileSaveAsRequest;
 import jpo.EventBus.FileSaveRequest;
 import jpo.EventBus.FindDuplicatesRequest;
-import jpo.EventBus.OpenHelpAboutFrameRequest;
 import jpo.EventBus.JpoEventBus;
 import jpo.EventBus.LocaleChangedEvent;
 import jpo.EventBus.OpenCategoryEditorRequest;
+import jpo.EventBus.OpenHelpAboutFrameRequest;
 import jpo.EventBus.OpenLicenceFrameRequest;
 import jpo.EventBus.OpenPrivacyFrameRequest;
 import jpo.EventBus.OpenRecentCollectionRequest;
@@ -242,7 +241,7 @@ public class ApplicationJMenuBar extends JMenuBar {
      * locale. The application needs to call this method when the user changes
      * the Locale in the Settings editor.
      */
-    public final void setMenuTexts() {
+    public void setMenuTexts() {
         FileJMenu.setText( Settings.jpoResources.getString( "FileMenuText" ) );
         FileNewJMenuItem.setText( Settings.jpoResources.getString( "FileNewJMenuItem" ) );
         FileOpenRecentJMenu.setText( Settings.jpoResources.getString( "FileOpenRecentItemText" ) );
@@ -294,25 +293,21 @@ public class ApplicationJMenuBar extends JMenuBar {
      * recentCollections in Settings. Can be called by the interface from the
      * listener on the Settings object.
      */
-    public final void recentFilesChanged() {
-        Runnable r = new Runnable() {
-
-            @Override
-            public void run() {
-                for ( int i = 0; i < Settings.recentCollections.length; i++ ) {
-                    if ( Settings.recentCollections[i] != null ) {
-                        recentOpenedfileJMenuItem[i].setText( Integer.toString( i + 1 ) + ": " + Settings.recentCollections[i] );
-                        recentOpenedfileJMenuItem[i].setVisible( true );
-                    } else {
-                        recentOpenedfileJMenuItem[i].setVisible( false );
-                    }
+    public void recentFilesChanged() {
+        Runnable runnable = () -> {
+            for ( int i = 0; i < Settings.recentCollections.length; i++ ) {
+                if ( Settings.recentCollections[i] != null ) {
+                    recentOpenedfileJMenuItem[i].setText( Integer.toString( i + 1 ) + ": " + Settings.recentCollections[i] );
+                    recentOpenedfileJMenuItem[i].setVisible( true );
+                } else {
+                    recentOpenedfileJMenuItem[i].setVisible( false );
                 }
             }
         };
         if ( SwingUtilities.isEventDispatchThread() ) {
-            r.run();
+            runnable.run();
         } else {
-            SwingUtilities.invokeLater( r );
+            SwingUtilities.invokeLater(runnable );
         }
     }
 
@@ -323,34 +318,22 @@ public class ApplicationJMenuBar extends JMenuBar {
 
         FileNewJMenuItem.setMnemonic( KeyEvent.VK_N );
         FileNewJMenuItem.setAccelerator( KeyStroke.getKeyStroke( 'N', java.awt.event.InputEvent.CTRL_MASK ) );
-        FileNewJMenuItem.addActionListener( new ActionListener() {
-
-            @Override
-            public void actionPerformed( ActionEvent e ) {
-                JpoEventBus.getInstance().post( new UnsavedUpdatesDialogRequest( new StartNewCollectionRequest() ) );
-            }
-        } );
+        FileNewJMenuItem.addActionListener(( ActionEvent e ) -> {
+            JpoEventBus.getInstance().post( new UnsavedUpdatesDialogRequest( new StartNewCollectionRequest() ) );
+        });
         FileJMenu.add( FileNewJMenuItem );
 
         FileAddJMenuItem.setMnemonic( KeyEvent.VK_A );
-        FileAddJMenuItem.addActionListener( new ActionListener() {
-
-            @Override
-            public void actionPerformed( ActionEvent e ) {
-                JpoEventBus.getInstance().post( new ChooseAndAddPicturesToGroupRequest( Settings.getPictureCollection().getRootNode() ) );
-            }
-        } );
+        FileAddJMenuItem.addActionListener(( ActionEvent e ) -> {
+            JpoEventBus.getInstance().post( new ChooseAndAddPicturesToGroupRequest( Settings.getPictureCollection().getRootNode() ) );
+        });
         FileJMenu.add( FileAddJMenuItem );
 
         FileLoadJMenuItem.setMnemonic( KeyEvent.VK_O );
         FileLoadJMenuItem.setAccelerator( KeyStroke.getKeyStroke( 'O', java.awt.event.InputEvent.CTRL_MASK ) );
-        FileLoadJMenuItem.addActionListener( new ActionListener() {
-
-            @Override
-            public void actionPerformed( ActionEvent e ) {
-                JpoEventBus.getInstance().post( new UnsavedUpdatesDialogRequest( new FileLoadDialogRequest() ) );
-            }
-        } );
+        FileLoadJMenuItem.addActionListener(( ActionEvent e ) -> {
+            JpoEventBus.getInstance().post( new UnsavedUpdatesDialogRequest( new FileLoadDialogRequest() ) );
+        });
         FileJMenu.add( FileLoadJMenuItem );
 
         FileOpenRecentJMenu.setMnemonic( KeyEvent.VK_R );
@@ -359,13 +342,9 @@ public class ApplicationJMenuBar extends JMenuBar {
         for ( int i = 0; i < Settings.MAX_MEMORISE; i++ ) {
             recentOpenedfileJMenuItem[i] = new JMenuItem();
             final int index = i;  // the anonymous innter class needs a final variable
-            recentOpenedfileJMenuItem[i].addActionListener( new ActionListener() {
-
-                @Override
-                public void actionPerformed( ActionEvent e ) {
-                    JpoEventBus.getInstance().post( new UnsavedUpdatesDialogRequest( new OpenRecentCollectionRequest( index ) ) );
-                }
-            } );
+            recentOpenedfileJMenuItem[i].addActionListener(( ActionEvent e ) -> {
+                JpoEventBus.getInstance().post( new UnsavedUpdatesDialogRequest( new OpenRecentCollectionRequest( index ) ) );
+            });
             recentOpenedfileJMenuItem[i].setVisible( false );
             recentOpenedfileJMenuItem[i].setAccelerator( KeyStroke.getKeyStroke( "control " + Integer.toString( i ).substring( 1, 1 ) ) );
             FileOpenRecentJMenu.add( recentOpenedfileJMenuItem[i] );
@@ -373,34 +352,22 @@ public class ApplicationJMenuBar extends JMenuBar {
 
         FileSaveJMenuItem.setMnemonic( KeyEvent.VK_S );
         FileSaveJMenuItem.setAccelerator( KeyStroke.getKeyStroke( 'S', java.awt.event.InputEvent.CTRL_MASK ) );
-        FileSaveJMenuItem.addActionListener( new ActionListener() {
-
-            @Override
-            public void actionPerformed( ActionEvent e ) {
-                JpoEventBus.getInstance().post( new FileSaveRequest() );
-            }
-        } );
+        FileSaveJMenuItem.addActionListener(( ActionEvent e ) -> {
+            JpoEventBus.getInstance().post( new FileSaveRequest() );
+        });
         FileJMenu.add( FileSaveJMenuItem );
 
         FileSaveAsJMenuItem.setMnemonic( KeyEvent.VK_A );
         FileSaveAsJMenuItem.setAccelerator( KeyStroke.getKeyStroke( 'A', java.awt.event.InputEvent.ALT_MASK ) );
-        FileSaveAsJMenuItem.addActionListener( new ActionListener() {
-
-            @Override
-            public void actionPerformed( ActionEvent e ) {
-                JpoEventBus.getInstance().post( new FileSaveAsRequest() );
-            }
-        } );
+        FileSaveAsJMenuItem.addActionListener(( ActionEvent e ) -> {
+            JpoEventBus.getInstance().post( new FileSaveAsRequest() );
+        });
         FileJMenu.add( FileSaveAsJMenuItem );
 
         FileExitJMenuItem.setAccelerator( KeyStroke.getKeyStroke( KeyEvent.VK_F4, java.awt.event.InputEvent.ALT_MASK ) );
-        FileExitJMenuItem.addActionListener( new ActionListener() {
-
-            @Override
-            public void actionPerformed( ActionEvent e ) {
-                JpoEventBus.getInstance().post( new UnsavedUpdatesDialogRequest( new CloseApplicationRequest() ) );
-            }
-        } );
+        FileExitJMenuItem.addActionListener(( ActionEvent e ) -> {
+            JpoEventBus.getInstance().post( new UnsavedUpdatesDialogRequest( new CloseApplicationRequest() ) );
+        });
         FileJMenu.add( FileExitJMenuItem );
 
         //Build the Edit menu.
@@ -409,54 +376,34 @@ public class ApplicationJMenuBar extends JMenuBar {
 
         EditFindJMenuItem.setMnemonic( KeyEvent.VK_F );
         EditFindJMenuItem.setAccelerator( KeyStroke.getKeyStroke( 'F', java.awt.event.InputEvent.CTRL_MASK ) );
-        EditFindJMenuItem.addActionListener( new ActionListener() {
-
-            @Override
-            public void actionPerformed( ActionEvent e ) {
-                JpoEventBus.getInstance().post( new OpenSearchDialogRequest( Settings.getPictureCollection().getRootNode() ) );
-            }
-        } );
+        EditFindJMenuItem.addActionListener(( ActionEvent e ) -> {
+            JpoEventBus.getInstance().post( new OpenSearchDialogRequest( Settings.getPictureCollection().getRootNode() ) );
+        });
         EditJMenu.add( EditFindJMenuItem );
 
         EditCamerasJMenuItem.setMnemonic( KeyEvent.VK_D );
-        EditCamerasJMenuItem.addActionListener( new ActionListener() {
-
-            @Override
-            public void actionPerformed( ActionEvent e ) {
-                JpoEventBus.getInstance().post( new EditCamerasRequest() );
-            }
-        } );
+        EditCamerasJMenuItem.addActionListener(( ActionEvent e ) -> {
+            JpoEventBus.getInstance().post( new EditCamerasRequest() );
+        });
         EditJMenu.add( EditCamerasJMenuItem );
 
         EditSettingsJMenuItem.setMnemonic( KeyEvent.VK_S );
-        EditSettingsJMenuItem.addActionListener( new ActionListener() {
-
-            @Override
-            public void actionPerformed( ActionEvent e ) {
-                JpoEventBus.getInstance().post( new EditSettingsRequest() );
-            }
-        } );
+        EditSettingsJMenuItem.addActionListener(( ActionEvent e ) -> {
+            JpoEventBus.getInstance().post( new EditSettingsRequest() );
+        });
         EditJMenu.add( EditSettingsJMenuItem );
 
         // Build the Action menu
         emailJMenuItem.setMnemonic( KeyEvent.VK_E );
-        emailJMenuItem.addActionListener( new ActionListener() {
-
-            @Override
-            public void actionPerformed( ActionEvent e ) {
-                JpoEventBus.getInstance().post( new SendEmailRequest() );
-            }
-        } );
+        emailJMenuItem.addActionListener(( ActionEvent e ) -> {
+            JpoEventBus.getInstance().post( new SendEmailRequest() );
+        });
         actionJMenu.add( emailJMenuItem );
 
         RandomSlideshowJMenuItem.setMnemonic( KeyEvent.VK_S );
-        RandomSlideshowJMenuItem.addActionListener( new ActionListener() {
-
-            @Override
-            public void actionPerformed( ActionEvent e ) {
-                JpoEventBus.getInstance().post( new StartDoublePanelSlideshowRequest( Settings.getPictureCollection().getRootNode() ) );
-            }
-        } );
+        RandomSlideshowJMenuItem.addActionListener(( ActionEvent e ) -> {
+            JpoEventBus.getInstance().post( new StartDoublePanelSlideshowRequest( Settings.getPictureCollection().getRootNode() ) );
+        });
         actionJMenu.add( RandomSlideshowJMenuItem );
 
         actionJMenu.setMnemonic( KeyEvent.VK_A );
@@ -466,43 +413,27 @@ public class ApplicationJMenuBar extends JMenuBar {
         ExtrasJMenu.setMnemonic( KeyEvent.VK_X );
         add( ExtrasJMenu );
         EditCheckDirectoriesJMenuItem.setMnemonic( KeyEvent.VK_D );
-        EditCheckDirectoriesJMenuItem.addActionListener( new ActionListener() {
-
-            @Override
-            public void actionPerformed( ActionEvent e ) {
-                JpoEventBus.getInstance().post( new CheckDirectoriesRequest() );
-            }
-        } );
+        EditCheckDirectoriesJMenuItem.addActionListener(( ActionEvent e ) -> {
+            JpoEventBus.getInstance().post( new CheckDirectoriesRequest() );
+        });
         ExtrasJMenu.add( EditCheckDirectoriesJMenuItem );
 
         EditCheckIntegrityJMenuItem.setMnemonic( KeyEvent.VK_C );
-        EditCheckIntegrityJMenuItem.addActionListener( new ActionListener() {
-
-            @Override
-            public void actionPerformed( ActionEvent e ) {
-                JpoEventBus.getInstance().post( new CheckIntegrityRequest() );
-            }
-        } );
+        EditCheckIntegrityJMenuItem.addActionListener(( ActionEvent e ) -> {
+            JpoEventBus.getInstance().post( new CheckIntegrityRequest() );
+        });
         ExtrasJMenu.add( EditCheckIntegrityJMenuItem );
 
         JMenuItem findDuplicates = new JMenuItem( "Find Duplicates" );
-        findDuplicates.addActionListener( new ActionListener() {
-
-            @Override
-            public void actionPerformed( ActionEvent e ) {
-                JpoEventBus.getInstance().post( new FindDuplicatesRequest() );
-            }
-        } );
+        findDuplicates.addActionListener(( ActionEvent e ) -> {
+            JpoEventBus.getInstance().post( new FindDuplicatesRequest() );
+        });
         ExtrasJMenu.add( findDuplicates );
 
         EditCategoriesJMenuItem.setMnemonic( KeyEvent.VK_D );
-        EditCategoriesJMenuItem.addActionListener( new ActionListener() {
-
-            @Override
-            public void actionPerformed( ActionEvent e ) {
-                JpoEventBus.getInstance().post( new OpenCategoryEditorRequest() );
-            }
-        } );
+        EditCategoriesJMenuItem.addActionListener(( ActionEvent e ) -> {
+            JpoEventBus.getInstance().post( new OpenCategoryEditorRequest() );
+        });
         ExtrasJMenu.add( EditCategoriesJMenuItem );
 
         // Build the Help menu.
@@ -510,44 +441,26 @@ public class ApplicationJMenuBar extends JMenuBar {
         add( HelpJMenu );
 
         HelpAboutJMenuItem.setMnemonic( KeyEvent.VK_A );
-        HelpAboutJMenuItem.addActionListener( new ActionListener() {
-
-            @Override
-            public void actionPerformed( ActionEvent e ) {
-                JpoEventBus.getInstance().post( new OpenHelpAboutFrameRequest() );
-            }
-        } );
+        HelpAboutJMenuItem.addActionListener(( ActionEvent e ) -> {
+            JpoEventBus.getInstance().post( new OpenHelpAboutFrameRequest() );
+        });
         HelpJMenu.add( HelpAboutJMenuItem );
 
         HelpLicenseJMenuItem.setMnemonic( KeyEvent.VK_L );
-        HelpLicenseJMenuItem.addActionListener( new ActionListener() {
-
-            @Override
-            public void actionPerformed( ActionEvent e ) {
-                JpoEventBus.getInstance().post( new OpenLicenceFrameRequest() );
-            }
-        } );
+        HelpLicenseJMenuItem.addActionListener(( ActionEvent e ) -> {
+            JpoEventBus.getInstance().post( new OpenLicenceFrameRequest() );
+        });
         HelpJMenu.add( HelpLicenseJMenuItem );
 
         HelpPrivacyJMenuItem.setMnemonic( KeyEvent.VK_P );
-        HelpPrivacyJMenuItem.addActionListener( new ActionListener() {
-
-            @Override
-            public void actionPerformed( ActionEvent e ) {
-                JpoEventBus.getInstance().post( new OpenPrivacyFrameRequest() );
-
-            }
-        } );
+        HelpPrivacyJMenuItem.addActionListener(( ActionEvent e ) -> {
+            JpoEventBus.getInstance().post( new OpenPrivacyFrameRequest() );
+        });
         HelpJMenu.add( HelpPrivacyJMenuItem );
 
-        HelpResetWindowsJMenuItem.addActionListener( new ActionListener() {
-
-            @Override
-            public void actionPerformed( ActionEvent e ) {
-                JpoEventBus.getInstance().post( new RestoreDockablesPositionsRequest() );
-
-            }
-        } );
+        HelpResetWindowsJMenuItem.addActionListener(( ActionEvent e ) -> {
+            JpoEventBus.getInstance().post( new RestoreDockablesPositionsRequest() );
+        });
         HelpJMenu.add( HelpResetWindowsJMenuItem );
 
     }

@@ -3,15 +3,14 @@ package jpo.gui;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.Properties;
-import java.net.URL;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URL;
 import java.util.List;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.activation.DataHandler;
@@ -163,13 +162,9 @@ public class Emailer
         progPanel.add( progBar );
 
         cancelButton = new JButton( "Cancel" );
-        cancelButton.addActionListener( new ActionListener() {
-
-            @Override
-            public void actionPerformed( ActionEvent e ) {
-                progressLabel.setText( Settings.jpoResources.getString( "htmlDistillerInterrupt" ) );
-                interrupted = true;
-            }
+        cancelButton.addActionListener( ( ActionEvent e ) -> {
+            progressLabel.setText( Settings.jpoResources.getString( "htmlDistillerInterrupt" ) );
+            interrupted = true;
         } );
         cancelButton.setPreferredSize( Settings.defaultButtonDimension );
         cancelButton.setMaximumSize( Settings.defaultButtonDimension );
@@ -277,7 +272,7 @@ public class Emailer
             for ( int i = 0; ( i < emailSelected.size() ) && ( !interrupted ); i++ ) {
                 publish( String.format( "%d / %d", progBar.getValue(), progBar.getMaximum() ) );
                 pictureDescriptionMimeBodyPart = new MimeBodyPart();
-                pi = (PictureInfo) ( (SortableDefaultMutableTreeNode) emailSelected.get( i ) ).getUserObject();
+                pi = (PictureInfo) emailSelected.get( i ).getUserObject();
 
                 pictureDescriptionMimeBodyPart.setText( pi.getDescription(), "iso-8859-1" );
                 mp.addBodyPart( pictureDescriptionMimeBodyPart );
@@ -307,7 +302,7 @@ public class Emailer
                     originalPictureMimeBodyPart.setDataHandler( new DataHandler( ds ) );
                     originalPictureMimeBodyPart.setFileName( pi.getImageFilename() );
                     // create the Multipart and add its parts to it
-                    LOGGER.log( Level.INFO, "{0}{1}", new Object[]{ Settings.jpoResources.getString( "EmailerAdding" ), pi.getImageFilename() });
+                    LOGGER.log( Level.INFO, "{0}{1}", new Object[]{ Settings.jpoResources.getString( "EmailerAdding" ), pi.getImageFilename() } );
                     mp.addBodyPart( originalPictureMimeBodyPart );
                 }
 
@@ -344,7 +339,7 @@ public class Emailer
                 Transport.send( buildMessage( session ) );
                 publish( Settings.jpoResources.getString( "EmailerSent" ) );
             } catch ( MessagingException x ) {
-                LOGGER.severe( x.getMessage());
+                LOGGER.severe( x.getMessage() );
             }
         }
     }
@@ -403,11 +398,11 @@ public class Emailer
         Session session = Session.getDefaultInstance( props,
                 new javax.mail.Authenticator() {
 
-                    @Override
-                    protected PasswordAuthentication getPasswordAuthentication() {
-                        return new PasswordAuthentication( Settings.emailUser, Settings.emailPassword );
-                    }
-                } );
+            @Override
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication( Settings.emailUser, Settings.emailPassword );
+            }
+        } );
         //session.setDebug( true );
         if ( interrupted ) {
             LOGGER.info( "EmailerThread: message not sent due to user clicking cancel." );

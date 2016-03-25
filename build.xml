@@ -14,7 +14,7 @@
     <property name="build.docs.dir" value="${build.dir}/docs"/>
     <property name="build.jars.dir" value="${build.dir}/jars"/>
     <property name="Windowsbuilder" value="Windowsbuilder"/>
-    <property name="version" value="0.12"/>
+    <property name="version" value="0.13"/>
 
     <property name="libs.dir" value="libs"/>
     <property name="compile-libs.dir" value="compile-libs"/>
@@ -89,8 +89,8 @@
                fork="yes"
                listfiles="yes"
                deprecation="yes"
-               source="1.7"
-               target="1.7"
+               source="1.8"
+               target="1.8"
                bootclasspath="/usr/lib64/jvm/java-1.7.0/jre/lib/rt.jar"
                encoding="UTF-8"
                includeantruntime="false" >
@@ -205,17 +205,17 @@
                  Doctitle="JPO application documentation"
                  Windowtitle="JPO application documentation"
                  Header="JPO application documentation"
-                 Bottom="&lt;font size=&quot;-1&quot;&gt;Copyright (c) 2002 - 2015 by Richard Eigenmann &lt;a href=&quot;http://richieigenmann.users.sourceforge.net/&quot;&gt;http://richieigenmann.users.sourceforge.net/&lt;/a&gt;&lt;/font&gt;"
+                 Bottom="&lt;font size=&quot;-1&quot;&gt;Copyright (c) 2002 - 2016 by Richard Eigenmann &lt;a href=&quot;http://richieigenmann.users.sourceforge.net/&quot;&gt;http://richieigenmann.users.sourceforge.net/&lt;/a&gt;&lt;/font&gt;"
                  author="true"
                  version="true"
                  use="true"
                  private="true"
-                 source="1.7"
+                 source="1.8"
                  linksource="yes"
         >
             <sourcepath path="${src.java.dir}" />
             <classpath refid="classpath"/>
-            <link href="http://docs.oracle.com/javase/7/docs/api/"/>
+            <link href="http://docs.oracle.com/javase/8/docs/api/"/>
         </javadoc>
     </target>
 
@@ -258,7 +258,7 @@
                 <attribute name="Main-Class" value="${app.main.class}"/>
                 <attribute name="Class-Path" value="${manifest-classpath}"/>
                 <section name="Copyright">
-                    <attribute name="Copy" value="(c) 2001-2015, Richard Eigenmann, Zürich, Switzerland"/>
+                    <attribute name="Copy" value="(c) 2001-2016, Richard Eigenmann, Zürich, Switzerland"/>
                 </section>
                 <attribute name="Permissions" value="all-permissions" />
             </manifest>

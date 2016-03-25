@@ -6,8 +6,8 @@
 package jpo.gui.swing;
 
 import java.awt.geom.Point2D;
-import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.Test;
 import org.jxmapviewer.JXMapViewer;
 import org.jxmapviewer.viewer.GeoPosition;
 

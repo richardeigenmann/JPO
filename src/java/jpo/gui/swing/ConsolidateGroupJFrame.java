@@ -2,7 +2,6 @@ package jpo.gui.swing;
 
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
@@ -107,18 +106,12 @@ public class ConsolidateGroupJFrame extends JFrame {
         setContentPane(contentJPanel);
         pack();
         setVisible(true);
-        consolidateJButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                consolidateGroupAction.consolidateGroupCallback(highresDirectoryChooser.getDirectory(), recurseSubgroupsJCheckBox.isSelected());
-                getRid();
-            }
+        consolidateJButton.addActionListener(( ActionEvent e ) -> {
+            consolidateGroupAction.consolidateGroupCallback(highresDirectoryChooser.getDirectory(), recurseSubgroupsJCheckBox.isSelected());
+            getRid();
         });
-        cancelJButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                getRid();
-            }
+        cancelJButton.addActionListener(( ActionEvent e ) -> {
+            getRid();
         });
     }
 

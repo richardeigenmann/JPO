@@ -1,14 +1,9 @@
 package jpo.dataModel;
 
 import java.awt.datatransfer.Transferable;
-import java.util.logging.Level;
-import jpo.gui.JpoTransferable;
-import jpo.gui.ProgressGui;
-import javax.swing.event.TreeModelEvent;
 import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DropTargetDropEvent;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -23,18 +18,22 @@ import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JProgressBar;
 import javax.swing.SwingUtilities;
+import javax.swing.event.TreeModelEvent;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 import jpo.EventBus.CopyLocationsChangedEvent;
 import jpo.EventBus.JpoEventBus;
 import jpo.EventBus.RecentCollectionsChangedEvent;
 import jpo.dataModel.Settings.FieldCodes;
+import jpo.gui.JpoTransferable;
+import jpo.gui.ProgressGui;
 
 
 /*
@@ -318,20 +317,20 @@ public class SortableDefaultMutableTreeNode
      * class. My overriding this we can intercept this and update the
      * PictureInfo or GroupInfo accordingly.
      *
-     * @param o The object to attach to the node
+     * @param userObject The object to attach to the node
      */
     @Override
-    public final void setUserObject( Object o ) {
-        if ( o instanceof String ) {
+    public void setUserObject( Object userObject ) {
+        if ( userObject instanceof String ) {
             LOGGER.severe( "Why is ever being called?" );
             Object obj = getUserObject();
             if ( obj instanceof GroupInfo ) {
-                ( (GroupInfo) obj ).setGroupName( (String) o );
+                ( (GroupInfo) obj ).setGroupName((String) userObject );
             } else if ( obj instanceof PictureInfo ) {
-                ( (PictureInfo) obj ).setDescription( (String) o );
+                ( (PictureInfo) obj ).setDescription((String) userObject );
             }
-        } else if ( o instanceof PictureInfo ) {
-            PictureInfo pictureInfo = (PictureInfo) o;
+        } else if ( userObject instanceof PictureInfo ) {
+            PictureInfo pictureInfo = (PictureInfo) userObject;
             Object oldUserObject = getUserObject();
             if ( oldUserObject != null ) {
                 if ( oldUserObject instanceof PictureInfo ) {
@@ -340,10 +339,10 @@ public class SortableDefaultMutableTreeNode
                 }
             }
             pictureInfo.addPictureInfoChangeListener( this );
-            super.setUserObject( o );
+            super.setUserObject(userObject );
         } else {
             // fall back on the default behaviour
-            super.setUserObject( o );
+            super.setUserObject(userObject );
         }
         if ( getPictureCollection() != null ) {
             if ( getPictureCollection().getSendModelUpdates() ) {
@@ -550,103 +549,82 @@ public class SortableDefaultMutableTreeNode
         private GroupDropPopupMenu( final DropTargetDropEvent event,
                 final SortableDefaultMutableTreeNode sourceNode,
                 final SortableDefaultMutableTreeNode targetNode ) {
-            dropBefore.addActionListener( new ActionListener() {
-
-                @Override
-                public void actionPerformed( ActionEvent e ) {
-                    SortableDefaultMutableTreeNode parentNode = (SortableDefaultMutableTreeNode) targetNode.getParent();
-                    int currentIndex = parentNode.getIndex( targetNode );
-
-                    // position is one less if the source is further up the list than the target
-                    // and at the same level
-                    int offset = 0;
-                    if ( targetNode.isNodeSibling( sourceNode ) ) {
-                        //logger.info ("The target is a sibling of the sourceNode");
-                        if ( parentNode.getIndex( sourceNode ) < parentNode.getIndex( targetNode ) ) {
-                            offset = -1;
-                        }
+            dropBefore.addActionListener(( ActionEvent e ) -> {
+                SortableDefaultMutableTreeNode parentNode = (SortableDefaultMutableTreeNode) targetNode.getParent();
+                int currentIndex = parentNode.getIndex( targetNode );
+                
+                // position is one less if the source is further up the list than the target
+                // and at the same level
+                int offset = 0;
+                if ( targetNode.isNodeSibling( sourceNode ) ) {
+                    //logger.info ("The target is a sibling of the sourceNode");
+                    if ( parentNode.getIndex( sourceNode ) < parentNode.getIndex( targetNode ) ) {
+                        offset = -1;
                     }
-                    sourceNode.removeFromParent();
-                    parentNode.insert( sourceNode, currentIndex + offset );
-
-                    event.dropComplete( true );
-                    getPictureCollection().setUnsavedUpdates();
                 }
-            } );
+                sourceNode.removeFromParent();
+                parentNode.insert( sourceNode, currentIndex + offset );
+                
+                event.dropComplete( true );
+                getPictureCollection().setUnsavedUpdates();
+            });
             add( dropBefore );
 
-            dropAfter.addActionListener( new ActionListener() {
+            dropAfter.addActionListener(( ActionEvent e ) -> {
+                SortableDefaultMutableTreeNode parentNode = (SortableDefaultMutableTreeNode) targetNode.getParent();
+                int currentIndex = parentNode.getIndex( targetNode );
+                
+                // position is one less if the source is further up the list than the target
+                // and at the same level
+                int offset = 0;
+                if ( targetNode.isNodeSibling( sourceNode ) ) {
+                    //logger.info ("The target is a sibling of the sourceNode");
+                    if ( parentNode.getIndex( sourceNode ) < parentNode.getIndex( targetNode ) ) {
+                        offset = -1;
+                    }
+                }
+                sourceNode.removeFromParent();
+                parentNode.insert( sourceNode, currentIndex + offset + 1 );
+                
+                event.dropComplete( true );
+                getPictureCollection().setUnsavedUpdates();
+            });
+            add( dropAfter );
 
-                @Override
-                public void actionPerformed( ActionEvent e ) {
-                    SortableDefaultMutableTreeNode parentNode = (SortableDefaultMutableTreeNode) targetNode.getParent();
-                    int currentIndex = parentNode.getIndex( targetNode );
+            dropIntoFirst.addActionListener(( ActionEvent e ) -> {
+                synchronized ( targetNode.getRoot() ) {
+                    sourceNode.removeFromParent();
+                    targetNode.insert( sourceNode, 0 );
+                }
+                event.dropComplete( true );
+                getPictureCollection().setUnsavedUpdates();
+            });
+            add( dropIntoFirst );
 
-                    // position is one less if the source is further up the list than the target
-                    // and at the same level
+            dropIntoLast.addActionListener(( ActionEvent e ) -> {
+                synchronized ( targetNode.getRoot() ) {
+                    int childCount = targetNode.getChildCount();
                     int offset = 0;
-                    if ( targetNode.isNodeSibling( sourceNode ) ) {
-                        //logger.info ("The target is a sibling of the sourceNode");
-                        if ( parentNode.getIndex( sourceNode ) < parentNode.getIndex( targetNode ) ) {
+                    if ( childCount > 0 ) {
+                        // position is one less if the source is further up the list than the target
+                        // and at the same level
+                        if ( targetNode.isNodeSibling( sourceNode.getFirstChild() ) ) {
                             offset = -1;
                         }
                     }
+                    
                     sourceNode.removeFromParent();
-                    parentNode.insert( sourceNode, currentIndex + offset + 1 );
-
-                    event.dropComplete( true );
-                    getPictureCollection().setUnsavedUpdates();
+                    targetNode.insert( sourceNode, childCount + offset );
                 }
-            } );
-            add( dropAfter );
-
-            dropIntoFirst.addActionListener( new ActionListener() {
-
-                @Override
-                public void actionPerformed( ActionEvent e ) {
-                    synchronized ( targetNode.getRoot() ) {
-                        sourceNode.removeFromParent();
-                        targetNode.insert( sourceNode, 0 );
-                    }
-                    event.dropComplete( true );
-                    getPictureCollection().setUnsavedUpdates();
-
-                }
-            } );
-            add( dropIntoFirst );
-
-            dropIntoLast.addActionListener( new ActionListener() {
-
-                @Override
-                public void actionPerformed( ActionEvent e ) {
-                    synchronized ( targetNode.getRoot() ) {
-                        int childCount = targetNode.getChildCount();
-                        int offset = 0;
-                        if ( childCount > 0 ) {
-                            // position is one less if the source is further up the list than the target
-                            // and at the same level
-                            if ( targetNode.isNodeSibling( sourceNode.getFirstChild() ) ) {
-                                offset = -1;
-                            }
-                        }
-
-                        sourceNode.removeFromParent();
-                        targetNode.insert( sourceNode, childCount + offset );
-                    }
-                    event.dropComplete( true );
-                    getPictureCollection().setUnsavedUpdates();
-                }
-            } );
+                event.dropComplete( true );
+                getPictureCollection().setUnsavedUpdates();
+            });
             add( dropIntoLast );
 
-            dropCancel.addActionListener( new ActionListener() {
-
-                @Override
-                public void actionPerformed( ActionEvent e ) {
-                    LOGGER.info( "cancel drop" );
-                    event.dropComplete( false );
-                }
-            } );
+            dropCancel.addActionListener(( ActionEvent e ) -> {
+                LOGGER.info( "cancel drop" );
+                event.dropComplete( false );
+            });
             add( dropCancel );
         }
     }
@@ -1280,13 +1258,9 @@ public class SortableDefaultMutableTreeNode
         for ( File file : newPictures ) {
             LOGGER.fine( String.format( "Processing file %s", file.toString() ) );
             if ( progressBar != null ) {
-                SwingUtilities.invokeLater( new Runnable() {
-
-                    @Override
-                    public void run() {
-                        progressBar.setValue( progressBar.getValue() + 1 );
-                    }
-                } );
+                SwingUtilities.invokeLater(
+                        () -> progressBar.setValue( progressBar.getValue() + 1 )
+                );
             }
             File targetFile = Tools.inventPicFilename( targetDir, file.getName() );
             LOGGER.fine( String.format( "Target file name chosen as: %s", targetFile.toString() ) );

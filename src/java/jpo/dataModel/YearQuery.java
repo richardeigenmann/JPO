@@ -73,7 +73,7 @@ public class YearQuery implements Serializable, Query {
      *
      * @param lowerDateRange Lower date range
      */
-    public final void setLowerDateRange( Calendar lowerDateRange ) {
+    public void setLowerDateRange( Calendar lowerDateRange ) {
         this.lowerDateRange = lowerDateRange;
     }
 
@@ -98,7 +98,7 @@ public class YearQuery implements Serializable, Query {
      *
      * @param upperDateRange The upper date range
      */
-    public final void setUpperDateRange( Calendar upperDateRange ) {
+    public void setUpperDateRange( Calendar upperDateRange ) {
         this.upperDateRange = upperDateRange;
     }
 

@@ -7,7 +7,7 @@ import java.util.logging.Logger;
 /*
  ListNavigator.java:  an implementation of the NodeNavigator for browsing pictures.
 
- Copyright (C) 2006-2014 Richard Eigenmann, Zürich, Switzerland
+ Copyright (C) 2006-2016 Richard Eigenmann, Zürich, Switzerland
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -45,7 +45,7 @@ public class ListNavigator
      */
     public ListNavigator() {
         setTitle( "" );
-        setList( new ArrayList<SortableDefaultMutableTreeNode>() );
+        setList( new ArrayList<>() );
     }
     /**
      * Logger for this class
@@ -62,7 +62,7 @@ public class ListNavigator
      *
      * @param newTitle The title of the list
      */
-    public final void setTitle( String newTitle ) {
+    public void setTitle( String newTitle ) {
         title = newTitle;
     }
 
@@ -121,7 +121,7 @@ public class ListNavigator
      *
      * @param newList the new List with the nodes to display.
      */
-    public final void setList(
+    public void setList(
             List<SortableDefaultMutableTreeNode> newList ) {
         allPictures = newList;
     }

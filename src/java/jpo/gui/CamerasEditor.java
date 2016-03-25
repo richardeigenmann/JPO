@@ -2,15 +2,12 @@ package jpo.gui;
 
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.List;
-import jpo.dataModel.Settings;
-import jpo.dataModel.Camera;
 import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -22,11 +19,12 @@ import javax.swing.JSplitPane;
 import javax.swing.JTree;
 import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
 import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
+import jpo.dataModel.Camera;
+import jpo.dataModel.Settings;
 import jpo.dataModel.Tools;
 
 /*
@@ -118,7 +116,7 @@ public class CamerasEditor        extends JFrame {
 
         // take a backup
         backupCameras = new ArrayList<>();
-        for ( Camera c : Settings.cameras ) {
+        Settings.cameras.stream().map( ( c ) -> {
             Camera b = new Camera();
             b.setDescription( c.getDescription() );
             b.setCameraMountPoint( c.getCameraMountPoint() );
@@ -126,8 +124,10 @@ public class CamerasEditor        extends JFrame {
             b.setMonitorForNewPictures( c.getMonitorForNewPictures() );
             b.setOldImage( c.getOldImage() ); // shallow copy!
             b.setUseFilename( c.getUseFilename() );
+            return b;
+        } ).forEach( ( b ) -> {
             backupCameras.add( b );
-        }
+        } );
 
         loadTree();
         cameraJTree.getSelectionModel().setSelectionMode( TreeSelectionModel.SINGLE_TREE_SELECTION );
@@ -135,23 +135,19 @@ public class CamerasEditor        extends JFrame {
         cameraJTree.setOpaque( true );
         cameraJTree.setShowsRootHandles( true );
         cameraJTree.expandPath( new TreePath( rootNode ) );
-        cameraJTree.addTreeSelectionListener( new TreeSelectionListener() {
-
-            @Override
-            public void valueChanged( TreeSelectionEvent e ) {
-                DefaultMutableTreeNode node = (DefaultMutableTreeNode) cameraJTree.getLastSelectedPathComponent();
-                if ( node == null ) {
-                    return;
-                }
-                Object object = node.getUserObject();
-                if ( object instanceof Camera ) {
-                    Camera camera = (Camera) object;
-                    cameraPicked(camera );
-                } else {
-                    LOGGER.fine( "Very odd: the camera JTree repored a valueChanged but there is no selected camera. Could be the root node" );
-                }
+        cameraJTree.addTreeSelectionListener(( TreeSelectionEvent e ) -> {
+            DefaultMutableTreeNode node = (DefaultMutableTreeNode) cameraJTree.getLastSelectedPathComponent();
+            if ( node == null ) {
+                return;
             }
-        } );
+            Object object = node.getUserObject();
+            if ( object instanceof Camera ) {
+                Camera camera = (Camera) object;
+                cameraPicked(camera );
+            } else {
+                LOGGER.fine( "Very odd: the camera JTree repored a valueChanged but there is no selected camera. Could be the root node" );
+            }
+        });
         cameraJTree.setEditable( true );
         cameraJTree.addKeyListener( new KeyAdapter() {
 
@@ -173,14 +169,9 @@ public class CamerasEditor        extends JFrame {
         addJButton.setMinimumSize( Settings.defaultButtonDimension );
         addJButton.setMaximumSize( Settings.defaultButtonDimension );
         addJButton.setBorder( BorderFactory.createRaisedBevelBorder() );
-        addJButton.addActionListener(
-                new ActionListener() {
-
-                    @Override
-                    public void actionPerformed( ActionEvent e ) {
-                        addCameraAction();
-                    }
-                } );
+        addJButton.addActionListener(( ActionEvent e ) -> {
+            addCameraAction();
+        });
         addDeleteButtonPanel.add( addJButton );
 
         JButton deleteJButton = new JButton( Settings.jpoResources.getString( "deleteJButton" ) );
@@ -188,13 +179,9 @@ public class CamerasEditor        extends JFrame {
         deleteJButton.setMinimumSize( Settings.defaultButtonDimension );
         deleteJButton.setMaximumSize( Settings.defaultButtonDimension );
         deleteJButton.setBorder( BorderFactory.createRaisedBevelBorder() );
-        deleteJButton.addActionListener( new ActionListener() {
-
-            @Override
-            public void actionPerformed( ActionEvent e ) {
-                deleteCameraAction();
-            }
-        } );
+        deleteJButton.addActionListener(( ActionEvent e ) -> {
+            deleteCameraAction();
+        });
         addDeleteButtonPanel.add( deleteJButton );
 
         JPanel leftPanel = new JPanel();
@@ -216,15 +203,10 @@ public class CamerasEditor        extends JFrame {
         cancelJButton.setMinimumSize( Settings.defaultButtonDimension );
         cancelJButton.setMaximumSize( Settings.defaultButtonDimension );
         cancelJButton.setBorder( BorderFactory.createRaisedBevelBorder() );
-        cancelJButton.addActionListener( new ActionListener() {
-
-            @Override
-            public void actionPerformed( ActionEvent e ) {
-                Settings.cameras = backupCameras;
-                getRid();
-
-            }
-        } );
+        cancelJButton.addActionListener(( ActionEvent e ) -> {
+            Settings.cameras = backupCameras;
+            getRid();
+        });
         buttonJPanel.add( cancelJButton );
 
         JButton closeJButton = new JButton( Settings.jpoResources.getString( "closeJButton" ) );
@@ -234,15 +216,10 @@ public class CamerasEditor        extends JFrame {
         closeJButton.setBorder( BorderFactory.createRaisedBevelBorder() );
         closeJButton.setDefaultCapable( true );
         getRootPane().setDefaultButton( closeJButton );
-        closeJButton.addActionListener( new ActionListener() {
-
-            @Override
-            public void actionPerformed( ActionEvent e ) {
-                singleCameraEditor.saveCamera();
-                getRid();
-
-            }
-        } );
+        closeJButton.addActionListener(( ActionEvent e ) -> {
+            singleCameraEditor.saveCamera();
+            getRid();
+        });
         buttonJPanel.add( closeJButton );
 
         JSplitPane vjsp = new JSplitPane( JSplitPane.VERTICAL_SPLIT, hjsp, buttonJPanel );
@@ -331,9 +308,9 @@ public class CamerasEditor        extends JFrame {
      * to that the daemon can scan them afresh.
      */
     private void getRid() {
-        for ( Camera c : Settings.cameras ) {
+        Settings.cameras.stream().forEach( ( c ) -> {
             c.setLastConnectionStatus( false ); // so that the daemon gets a chance
-        }
+        } );
 
         setVisible( false );
         dispose();

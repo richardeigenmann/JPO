@@ -433,9 +433,9 @@ public class SourcePicture {
         pictureStatusCode = statusCode;
         pictureStatusMessage = statusMessage;
         synchronized ( sourcePictureListeners ) {
-            for ( SourcePictureListener sourcePictureListener : sourcePictureListeners ) {
+            sourcePictureListeners.stream().forEach( ( sourcePictureListener ) -> {
                 sourcePictureListener.sourceStatusChange( statusCode, statusMessage, this );
-            }
+            } );
         }
     }
 
@@ -491,9 +491,9 @@ public class SourcePicture {
         private void notifySourceLoadProgressListeners( SourcePictureStatus statusCode,
                 int percentage ) {
             percentLoaded = percentage;
-            for ( SourcePictureListener sourcePictureListener : sourcePictureListeners ) {
+            sourcePictureListeners.stream().forEach( ( sourcePictureListener ) -> {
                 sourcePictureListener.sourceLoadProgressNotification( statusCode, percentage );
-            }
+            } );
         }
 
         @Override

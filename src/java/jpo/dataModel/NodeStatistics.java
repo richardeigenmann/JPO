@@ -54,7 +54,7 @@ public class NodeStatistics {
      *
      * @param nodeToAnalyse the nodes
      */
-    public final void setNode( DefaultMutableTreeNode nodeToAnalyse ) {
+    public void setNode( DefaultMutableTreeNode nodeToAnalyse ) {
         myNode = nodeToAnalyse;
     }
 
@@ -258,7 +258,7 @@ public class NodeStatistics {
         if ( startNode.getUserObject() instanceof Query ) {
             Query q = (Query) startNode.getUserObject();
             for ( int i = 0; i < q.getNumberOfResults(); i++ ) {
-                n = (DefaultMutableTreeNode) q.getIndex( i );
+                n = q.getIndex(i );
                 if ( n.getUserObject() instanceof PictureInfo ) {
                     testfile = ( (PictureInfo) n.getUserObject() ).getImageFile();
                     if ( testfile != null ) {

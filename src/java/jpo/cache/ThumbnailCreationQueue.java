@@ -4,8 +4,8 @@ import java.awt.Dimension;
 import java.util.Iterator;
 import java.util.concurrent.PriorityBlockingQueue;
 import java.util.logging.Logger;
-import jpo.dataModel.SortableDefaultMutableTreeNode;
 import jpo.cache.ThumbnailQueueRequest.QUEUE_PRIORITY;
+import jpo.dataModel.SortableDefaultMutableTreeNode;
 
 
 /*
@@ -68,19 +68,17 @@ public class ThumbnailCreationQueue {
         if ( requestFoundOnQueue == null ) {
             QUEUE.add( newThumbnailQueueRequest );
             return newThumbnailQueueRequest;
+        } else if ( ( requestFoundOnQueue.getThumbnailQueueRequestCallbackHandler() != callbackHandler )
+                || ( requestFoundOnQueue.getNode() != node )
+                || ( requestFoundOnQueue.getSize().width != size.width )
+                || ( requestFoundOnQueue.getSize().height != size.height ) ) {
+            requestFoundOnQueue.cancel();
+            QUEUE.remove( requestFoundOnQueue );
+            QUEUE.add( newThumbnailQueueRequest );
+            return newThumbnailQueueRequest;
         } else {
-            if ( ( requestFoundOnQueue.getThumbnailQueueRequestCallbackHandler() != callbackHandler )
-                    || ( requestFoundOnQueue.getNode() != node )
-                    || ( requestFoundOnQueue.getSize().width != size.width )
-                    || ( requestFoundOnQueue.getSize().height != size.height ) ) {
-                requestFoundOnQueue.cancel();
-                QUEUE.remove( requestFoundOnQueue );
-                QUEUE.add( newThumbnailQueueRequest );
-                return newThumbnailQueueRequest;
-            } else {
-                requestFoundOnQueue.increasePriorityTo( priority );
-                return requestFoundOnQueue;
-            }
+            requestFoundOnQueue.increasePriorityTo( priority );
+            return requestFoundOnQueue;
         }
     }
 
@@ -109,26 +107,6 @@ public class ThumbnailCreationQueue {
     public static int size() {
         return QUEUE.size();
     }
-
-    /**
-     * removes the request for a specific ThumbnailController from the queue.
-     *
-     * @param thumbnailQueueRequestCallbackHandler The thumbnail handler to be
-     * removed
-     *
-    public static void removeThumbnailQueueRequest( ThumbnailQueueRequestCallbackHandler thumbnailQueueRequestCallbackHandler ) {
-        ThumbnailQueueRequest foundThumbnailQueueRequest = findThumbnailQueueRequest( thumbnailQueueRequestCallbackHandler );
-        if ( foundThumbnailQueueRequest != null ) {
-            // 20150712 RE I was having odd artefacts here as group nodes are 
-            // slower to create they could still be coming in after they were no 
-            // longer requested. I hopy my calling the cancel which is synchronized
-            // inside the request object I can stop the propagation of a notification
-            // even if I am too late with the remove instruction below.
-            foundThumbnailQueueRequest.cancel();
-            QUEUE.remove( foundThumbnailQueueRequest );
-
-        }
-    }*/
 
     /**
      * removes the request for a specific ThumbnailController from the queue.

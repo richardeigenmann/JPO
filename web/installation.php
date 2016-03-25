@@ -22,14 +22,21 @@
     <a href="jpo-devel.jnlp">
         <h2><span class="label label-success">
                 <span class="glyphicon glyphicon-play" aria-hidden="true"></span>
-                Development Version (0.12)
+                Development Version (0.13)
+            </span>
+        </h2>
+    </a><br>
+    <a href="jpo-0.13.jnlp">
+        <h2><span class="label label-success">
+                <span class="glyphicon glyphicon-play" aria-hidden="true"></span>
+                Current Version (0.13)
             </span>
         </h2>
     </a><br>
     <a href="jpo-0.12.jnlp">
         <h2><span class="label label-success">
                 <span class="glyphicon glyphicon-play" aria-hidden="true"></span>
-                Current Version (0.12)
+                Old Version (0.12)
             </span>
         </h2>
     </a><br>
@@ -75,7 +82,7 @@
     <p>JPO is a pure Java application so it runs on any computer that runs Java.</p>
 
     <p>You need <strong>a recent Java runtime installation</strong>. You must have Java 
-        1.7.0 or later. Use the command <code>java -version</code> to find out 
+        1.8.0 or later. Use the command <code>java -version</code> to find out 
         what version you are running if you aren't sure.</p>
 
 
@@ -96,7 +103,7 @@
     <hr>
     <span class="para-heading" id="local">Local Installation</span>
     <p>First download the jar file and save it in your program directory:<br>
-        <a href="http://j-po.sourceforge.net/jpo-0.12.jar">jpo-0.12.jar</a> or <a href="http://j-po.sourceforge.net/jpo-0.12.jar">jpo-0.12.jar</a><br>
+        <a href="http://j-po.sourceforge.net/jpo-0.12.jar">jpo-0.13.jar</a> or <a href="http://j-po.sourceforge.net/jpo-0.12.jar">jpo-0.13.jar</a><br>
     </p>
 
     <p><strong>Note:</strong> Make sure they retain the <code>.jar</code> file extension. 
@@ -105,7 +112,7 @@
 
 
     <p> Then you need to create a script or batch file to run everything. On Linux the script would look like this:</p>
-    <p><font color="darkRed"><code>/PATH/TO/YOUR/JAVA/bin/java -XX:+AggressiveHeap -classpath /PATH/TO/YOUR/JPO/JAR/jpo-0.12.jar Main</code></font></p>
+    <p><font color="darkRed"><code>/PATH/TO/YOUR/JAVA/bin/java -XX:+AggressiveHeap -classpath /PATH/TO/YOUR/JPO/JAR/jpo-0.13.jar Main</code></font></p>
     <!-- -Xms80M -Xmx2000M -->
 
     <p><strong>Note:</strong> Put everything on one long line.</p>
@@ -113,7 +120,7 @@
     <p>On a particular Windows XP machine I installed Jpo into c:\Program Files\Jpo. The resulting Batch
         file looks like this: (you can download it here: <a href="Jpo.bat">Jpo.bat</a></p>
 
-    <p><code>c:\windows\system32\java -XX:+AggressiveHeap -jar "c:\Program Files\Jpo\jpo-0.12.jar"</code></p>
+    <p><code>c:\windows\system32\java -XX:+AggressiveHeap -jar "c:\Program Files\Jpo\jpo-0.13.jar"</code></p>
     <!-- -Xms80M -Xmx2000M -->
 
 
@@ -146,7 +153,7 @@
         <code>Unsupported major.minor version 51.0</code> then that is the problem. If you can't 
         upgrade your Java due to "Mordac" or don't want to get dirty with the source-code and compile 
         your own send me an email and perhaps I can compile for an old 
-        version for you. Currently I am compiling to Java version 1.7 on a Java 7 compiler.</p>
+        version for you. Currently I am compiling to Java version 1.8 on a Java 8 compiler.</p>
 
     <p>Please let me know of specific installation issues you have so that I may extend this section for the benefit of other users who might have the same issue.</p>
 
@@ -154,6 +161,6 @@
 
     <hr>
     <p>Last update to this page: 5 Dec 2015<br>
-        Copyright 2003-2015 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
+        Copyright 2003-2016 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
 </div>
 <?php include("page-end.php"); ?>

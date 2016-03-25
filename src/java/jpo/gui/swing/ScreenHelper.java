@@ -208,7 +208,7 @@ public class ScreenHelper {
     public static Rectangle getBottomLeftScreenBounds() {
         Rectangle bounds = getLeftScreenBounds();
         bounds.height = ( bounds.height / 2 );
-        bounds.y = bounds.y + bounds.height;
+        bounds.y += bounds.height;
         return bounds;
     }
 
@@ -231,7 +231,7 @@ public class ScreenHelper {
     public static Rectangle getBottomRightScreenBounds() {
         Rectangle bounds = getRightScreenBounds();
         bounds.height = ( bounds.height / 2 );
-        bounds.y = bounds.y + bounds.height;
+        bounds.y += bounds.height;
         return bounds;
     }
 

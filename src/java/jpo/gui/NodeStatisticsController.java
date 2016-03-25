@@ -1,10 +1,10 @@
 package jpo.gui;
 
-import jpo.cache.ThumbnailCreationQueue;
 import java.util.logging.Logger;
 import javax.swing.JComponent;
 import javax.swing.SwingWorker;
 import javax.swing.tree.DefaultMutableTreeNode;
+import jpo.cache.ThumbnailCreationQueue;
 import jpo.dataModel.NodeStatistics;
 import jpo.dataModel.NodeStatisticsBean;
 import jpo.dataModel.Settings;

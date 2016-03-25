@@ -30,7 +30,7 @@
         computers since 1983. In 1999 he started using Linux.</p>
 
     <p>Contact: <a href="mailto:richard.eigenmann@gmail.com">richard.eigenmann@gmail.com</a><br>
-        Homepage: <a href="http://www.lomumba.ch/richi">http://www.lomumba.ch/richi</a></p>
+        Homepage: <a href="http://richieigenmann.users.sourceforge.net">http://richieigenmann.users.sourceforge.net</a></p>
 
     <p>JPO was written in Z&uuml;rich, Switzerland but also while on vacation in South Africa and the 
         Caribbean. The sites I wrote JPO at included aeroplanes, trains, cars, safari camps, sail boats, 
@@ -62,7 +62,7 @@
 
 
     <hr>
-    <p>Last update to this page: 25 May 2015<br>
-        Copyright 2003-2015 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
+    <p>Last update to this page: 30 Dec 2015<br>
+        Copyright 2003-2016 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
 </div>
 <?php include("page-end.php"); ?>

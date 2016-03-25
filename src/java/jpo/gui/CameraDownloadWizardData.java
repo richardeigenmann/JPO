@@ -1,15 +1,15 @@
 package jpo.gui;
 
-import jpo.dataModel.Tools;
-import jpo.dataModel.Settings;
-import jpo.dataModel.SortableDefaultMutableTreeNode;
-import jpo.dataModel.Camera;
 import java.awt.Component;
 import java.io.File;
 import java.util.Collection;
 import java.util.logging.Logger;
 import javax.swing.tree.TreeModel;
+import jpo.dataModel.Camera;
+import jpo.dataModel.Settings;
 import jpo.dataModel.Settings.FieldCodes;
+import jpo.dataModel.SortableDefaultMutableTreeNode;
+import jpo.dataModel.Tools;
 
 /*
  CameraDownloadWizardData.java:  holds the data being shown in the Camera download wizard

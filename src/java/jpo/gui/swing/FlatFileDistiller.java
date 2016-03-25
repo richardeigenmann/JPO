@@ -6,21 +6,22 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.concurrent.ExecutionException;
+import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.SwingWorker;
 import jpo.EventBus.ExportGroupToFlatFileRequest;
-import jpo.gui.swing.FlatFileDistiller.DistillerResult;
 import jpo.dataModel.GroupInfo;
 import jpo.dataModel.PictureInfo;
 import jpo.dataModel.Settings;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
 import jpo.dataModel.Tools;
+import jpo.gui.swing.FlatFileDistiller.DistillerResult;
 
 /*
  FlatFileDistiller.java:  class that writes the filenames of the pictures to a flat file
  *
- Copyright (C) 2002-2014  Richard Eigenmann.
+ Copyright (C) 2002-2016  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -38,6 +39,11 @@ import jpo.dataModel.Tools;
  * a class that exports a tree of chapters to an XML file
  */
 public class FlatFileDistiller extends SwingWorker<DistillerResult, String> {
+
+    /**
+     * Defines a logger for this class
+     */
+    private static final Logger LOGGER = Logger.getLogger( FlatFileDistiller.class.getName() );
 
     /**
      * the node to start from
@@ -107,7 +113,7 @@ public class FlatFileDistiller extends SwingWorker<DistillerResult, String> {
         try {
             enumerateGroup( startNode );
         } catch ( IOException ex ) {
-            System.out.println( "catching it" + ex.getLocalizedMessage() );
+            LOGGER.severe( "catching it" + ex.getLocalizedMessage() );
             return new DistillerResult( false, ex );
         } finally {
             try {
@@ -121,6 +127,7 @@ public class FlatFileDistiller extends SwingWorker<DistillerResult, String> {
 
     /**
      * recursively invoked method to report all groups.
+     *
      * @param groupNode group to work on
      * @throws IOException if there is a failure
      */
@@ -179,6 +186,7 @@ public class FlatFileDistiller extends SwingWorker<DistillerResult, String> {
 
         /**
          * returns the Distiller Result
+         *
          * @param success whether the distiller succeeded or not
          * @param exception Exception
          */
@@ -189,6 +197,7 @@ public class FlatFileDistiller extends SwingWorker<DistillerResult, String> {
 
         /**
          * Returns true if the writing was successful
+         *
          * @return true if successful
          */
         public boolean getSuccess() {
@@ -197,6 +206,7 @@ public class FlatFileDistiller extends SwingWorker<DistillerResult, String> {
 
         /**
          * Returns the exception
+         *
          * @return the exception
          */
         public Exception getException() {

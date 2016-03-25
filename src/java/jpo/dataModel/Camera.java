@@ -5,10 +5,10 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import jpo.gui.InterruptSemaphore;
-import jpo.gui.ProgressListener;
-import jpo.gui.ProgressGui;
 import java.util.logging.Logger;
+import jpo.gui.InterruptSemaphore;
+import jpo.gui.ProgressGui;
+import jpo.gui.ProgressListener;
 
 
 /*

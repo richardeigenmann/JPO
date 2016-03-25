@@ -10,7 +10,6 @@ import javax.swing.JSlider;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import jpo.dataModel.Settings;
 import net.javaprog.ui.wizard.AbstractStep;
 import net.miginfocom.swing.MigLayout;
@@ -116,48 +115,32 @@ public class GenerateWebsiteWizard3Midres extends AbstractStep {
     protected JComponent createComponent() {
         JPanel wizardPanel = new JPanel( new MigLayout( "", "[][250:250:800]", "" ) );
 
-        generateMidresHtmlJCheckBox.addChangeListener( new ChangeListener() {
-            @Override
-            public void stateChanged( ChangeEvent arg0 ) {
-                generateMapJCheckBox.setEnabled( generateMidresHtmlJCheckBox.isSelected() );
-                mouseoverJCheckBox.setEnabled( generateMidresHtmlJCheckBox.isSelected() );
-                options.setGenerateMidresHtml( generateMidresHtmlJCheckBox.isSelected() );
-            }
-        } );
+        generateMidresHtmlJCheckBox.addChangeListener(( ChangeEvent arg0 ) -> {
+            generateMapJCheckBox.setEnabled( generateMidresHtmlJCheckBox.isSelected() );
+            mouseoverJCheckBox.setEnabled( generateMidresHtmlJCheckBox.isSelected() );
+            options.setGenerateMidresHtml( generateMidresHtmlJCheckBox.isSelected() );
+        });
         wizardPanel.add( generateMidresHtmlJCheckBox, "spanx, wrap" );
 
-        generateMapJCheckBox.addChangeListener( new ChangeListener() {
-            @Override
-            public void stateChanged( ChangeEvent arg0 ) {
-                options.setGenerateMap( generateMapJCheckBox.isSelected() );
-            }
-        } );
+        generateMapJCheckBox.addChangeListener(( ChangeEvent arg0 ) -> {
+            options.setGenerateMap( generateMapJCheckBox.isSelected() );
+        });
         wizardPanel.add( generateMapJCheckBox, "spanx, wrap" );
 
-        mouseoverJCheckBox.addChangeListener( new ChangeListener() {
-            @Override
-            public void stateChanged( ChangeEvent arg0 ) {
-                options.setGenerateMouseover( mouseoverJCheckBox.isSelected() );
-            }
-        } );
+        mouseoverJCheckBox.addChangeListener(( ChangeEvent arg0 ) -> {
+            options.setGenerateMouseover( mouseoverJCheckBox.isSelected() );
+        });
         wizardPanel.add( mouseoverJCheckBox, "spanx, wrap" );
 
         wizardPanel.add( new JLabel( Settings.jpoResources.getString( "thubnailSizeJLabel" ) ), "align label" );
-        midresWidthJSpinner.addChangeListener(
-                new ChangeListener() {
-                    @Override
-                    public void stateChanged( ChangeEvent arg0 ) {
-                        options.setMidresWidth( ( (SpinnerNumberModel) ( midresWidthJSpinner.getModel() ) ).getNumber().intValue() );
-                    }
-                } );
+        midresWidthJSpinner.addChangeListener(( ChangeEvent arg0 ) -> {
+            options.setMidresWidth( ( (SpinnerNumberModel) ( midresWidthJSpinner.getModel() ) ).getNumber().intValue() );
+        });
         wizardPanel.add( midresWidthJSpinner, "split 3" );
         wizardPanel.add( new JLabel( " x " ) );
-        midresHeightJSpinner.addChangeListener( new ChangeListener() {
-            @Override
-            public void stateChanged( ChangeEvent arg0 ) {
-                options.setMidresHeight( ( (SpinnerNumberModel) ( midresHeightJSpinner.getModel() ) ).getNumber().intValue() );
-            }
-        } );
+        midresHeightJSpinner.addChangeListener(( ChangeEvent arg0 ) -> {
+            options.setMidresHeight( ( (SpinnerNumberModel) ( midresHeightJSpinner.getModel() ) ).getNumber().intValue() );
+        });
         wizardPanel.add( midresHeightJSpinner, "wrap" );
 
         // Midres Quality Slider
@@ -172,12 +155,9 @@ public class GenerateWebsiteWizard3Midres extends AbstractStep {
         midresJpgQualityJSlider.setMinorTickSpacing( 5 );
         midresJpgQualityJSlider.setPaintTicks( true );
         midresJpgQualityJSlider.setPaintLabels( true );
-        midresJpgQualityJSlider.addChangeListener( new ChangeListener() {
-            @Override
-            public void stateChanged( ChangeEvent arg0 ) {
-                options.setMidresJpgQualityPercent( midresJpgQualityJSlider.getValue() );
-            }
-        } );
+        midresJpgQualityJSlider.addChangeListener(( ChangeEvent arg0 ) -> {
+            options.setMidresJpgQualityPercent( midresJpgQualityJSlider.getValue() );
+        });
         wizardPanel.add( midresJpgQualityJSlider, "growx, wrap" );
         return wizardPanel;
     }

@@ -69,5 +69,5 @@
 
                     <hr>
                     <p>Last update to this page: 22 Mar 2014<br>
-			Copyright 2007-2013 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
+			Copyright 2007-2016 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
     <?php include("page-end.php"); ?>

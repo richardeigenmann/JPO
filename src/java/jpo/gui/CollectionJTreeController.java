@@ -1,8 +1,6 @@
 package jpo.gui;
 
-import jpo.gui.swing.PicturePopupMenu;
 import com.google.common.eventbus.Subscribe;
-import jpo.gui.swing.GroupPopupMenu;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -35,6 +33,8 @@ import jpo.dataModel.SingleNodeNavigator;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
 import jpo.dataModel.Tools;
 import jpo.gui.swing.CollectionJTree;
+import jpo.gui.swing.GroupPopupMenu;
+import jpo.gui.swing.PicturePopupMenu;
 
 /*
  * CollectionJTreeController.java: class that manages a JTree for the collection
@@ -122,14 +122,10 @@ public class CollectionJTreeController {
      */
     private void expandAndScroll( SortableDefaultMutableTreeNode node ) {
         final TreePath tp = new TreePath( node.getPath() );
-        Runnable r = new Runnable() {
-
-            @Override
-            public void run() {
-                collectionJTree.expandPath( tp );
-                collectionJTree.scrollPathToVisible( tp );
-                collectionJTree.setSelectionPath( tp );
-            }
+        Runnable r = () -> {
+            collectionJTree.expandPath( tp );
+            collectionJTree.scrollPathToVisible( tp );
+            collectionJTree.setSelectionPath( tp );
         };
         if ( SwingUtilities.isEventDispatchThread() ) {
             r.run();
@@ -256,7 +252,7 @@ public class CollectionJTreeController {
                 LOGGER.info( "Failed to find the group of the drop location. Not memorizing." );
             }
 
-            for ( SortableDefaultMutableTreeNode sourceNode : transferableNodes ) {
+            transferableNodes.stream().forEach( ( sourceNode ) -> {
                 //sourceNode = (SortableDefaultMutableTreeNode) arrayOfNode;
                 if ( actionType == TransferHandler.MOVE ) {
                     if ( dropLocation.getChildIndex() == -1 ) {
@@ -285,7 +281,7 @@ public class CollectionJTreeController {
                         cloneNode.moveToIndex( targetNode, dropLocation.getChildIndex() );
                     }
                 }
-            }
+            } );
             return true;
         }
     }
@@ -400,13 +396,9 @@ public class CollectionJTreeController {
 
                 if ( nodeInfo instanceof GroupInfo ) {
                     final MouseEvent fe = e;
-                    Runnable r = new Runnable() {
-
-                        @Override
-                        public void run() {
-                            GroupPopupMenu groupPopupMenu = new GroupPopupMenu( popupNode );
-                            groupPopupMenu.show( fe.getComponent(), fe.getX(), fe.getY() );
-                        }
+                    Runnable r = () -> {
+                        GroupPopupMenu groupPopupMenu = new GroupPopupMenu( popupNode );
+                        groupPopupMenu.show( fe.getComponent(), fe.getX(), fe.getY() );
                     };
                     if ( SwingUtilities.isEventDispatchThread() ) {
                         r.run();

@@ -1,5 +1,6 @@
 package jpo.cache;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
@@ -115,7 +116,7 @@ public class ThumbnailCreationFactory implements Runnable {
             } else {
                 request.setIcon( BROKEN_THUMBNAIL_PICTURE );
             }
-        } catch ( Exception ex ) {
+        } catch ( IOException ex ) {
             LOGGER.severe( ex.getMessage() );
             request.setIcon( BROKEN_THUMBNAIL_PICTURE );
         }

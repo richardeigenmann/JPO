@@ -32,20 +32,9 @@ import jpo.dataModel.SortableDefaultMutableTreeNode;
  */
 public class ThumbnailQueueRequest implements Comparable<ThumbnailQueueRequest> {
 
-    public enum QUEUE_PRIORITY {
-
-        HIGH_PRIORITY( 0 ),
-        MEDIUM_PRIORITY( 1 ),
-        LOW_PRIORITY( 2 ),
-        LOWEST_PRIORITY( 3 );
-
-        private final Integer priority;
-
-        private QUEUE_PRIORITY( int priority ) {
-            this.priority = priority;
-        }
-    }
-
+    /**
+     *
+     */
     protected ThumbnailQueueRequestCallbackHandler callbackHandler;
     /**
      * the priority the request has on the queue.
@@ -66,6 +55,10 @@ public class ThumbnailQueueRequest implements Comparable<ThumbnailQueueRequest> 
      * The resulting image icon
      */
     private ImageIcon icon;
+    /**
+     * A flag to indicate that the request was canceled.
+     */
+    protected Boolean isCanceled = false;
 
     /**
      * Constructs a ThumbnailQueueRequest object
@@ -184,24 +177,59 @@ public class ThumbnailQueueRequest implements Comparable<ThumbnailQueueRequest> 
         this.icon = icon;
     }
 
-    /**
-     * A flag to indicate that the request was canceled.
-     */
-    protected Boolean isCanceled = false;
-
+/**
+ * @see https://www.securecoding.cert.org/confluence/display/java/LCK01-J.+Do+not+synchronize+on+objects+that+may+be+reused
+ */
+    private final Object lock = new Object();
+    
     /**
      *
      * @return true is the request is canceled
      */
     public boolean isCanceled() {
-        synchronized ( isCanceled ) {
+        synchronized ( lock ) {
             return isCanceled;
         }
     }
 
+    /**
+     * Cancel the request
+     */
     public void cancel() {
-        synchronized ( isCanceled ) {
+        synchronized ( lock ) {
             this.isCanceled = true;
+        }
+    }
+
+    /**
+     * Priority enum
+     */
+    public enum QUEUE_PRIORITY {
+        
+        /**
+         *
+         */
+        HIGH_PRIORITY( 0 ),
+
+        /**
+         *
+         */
+        MEDIUM_PRIORITY( 1 ),
+
+        /**
+         *
+         */
+        LOW_PRIORITY( 2 ),
+
+        /**
+         *
+         */
+        LOWEST_PRIORITY( 3 );
+        
+        private final Integer priority;
+        
+        private QUEUE_PRIORITY( int priority ) {
+            this.priority = priority;
         }
     }
 

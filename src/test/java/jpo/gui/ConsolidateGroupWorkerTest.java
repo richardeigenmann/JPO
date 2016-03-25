@@ -5,14 +5,33 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.logging.Logger;
 import jpo.dataModel.PictureInfo;
 import jpo.dataModel.Settings;
 import junit.framework.TestCase;
-import org.apache.commons.compress.utils.IOUtils;
-import org.junit.Test;
 import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertTrue;
 import static junit.framework.TestCase.fail;
+import org.apache.commons.compress.utils.IOUtils;
+import org.junit.Test;
+
+/*
+ ConsolidateGroupWorkerTest.java: 
+
+ Copyright (C) 2016  Richard Eigenmann.
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or any later version. This program is distributed 
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+ without even the implied warranty of MERCHANTABILITY or FITNESS 
+ FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
+ more details. You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ The license is in gpl.txt.
+ See http://www.gnu.org/copyleft/gpl.html for the details.
+ */
 
 /**
  *
@@ -21,19 +40,24 @@ import static junit.framework.TestCase.fail;
 public class ConsolidateGroupWorkerTest {
 
     /**
+     * Defines a logger for this class
+     */
+    private static final Logger LOGGER = Logger.getLogger( ConsolidateGroupWorkerTest.class.getName() );
+
+    /**
      * Show that a null image file doesn't need to be moved.
      */
     @Test
     public void testNeedToMovePictureNull() {
-        PictureInfo pi = new PictureInfo();
+        PictureInfo pictureInfo = new PictureInfo();
         File tempTargetDirectory = Files.createTempDir();
 
         try {
-            boolean returnCode = ConsolidateGroupWorker.needToMovePicture( pi, tempTargetDirectory );
+            boolean returnCode = ConsolidateGroupWorker.needToMovePicture(pictureInfo, tempTargetDirectory );
             assertFalse( "Consolidation of a PictureInfo with a \"null\" image file should return false", returnCode );
         } catch ( NullPointerException ex ) {
-            System.out.println( ex.getMessage() );
-            Thread.dumpStack();
+            LOGGER.severe( ex.getMessage() );
+            //Thread.dumpStack();
             fail( "Consolidation of a PictureInfo with a \"null\" image file should not throw a NPE" );
         }
         tempTargetDirectory.delete();
@@ -70,7 +94,7 @@ public class ConsolidateGroupWorkerTest {
                 FileOutputStream fout = new FileOutputStream( sourceImageFile ) ) {
             IOUtils.copy( in, fout );
         } catch ( IOException ex ) {
-            System.out.println( ex.getMessage() );
+            LOGGER.severe( ex.getMessage() );
             fail( "Failed to create test image file" );
         }
         // test that is really exists
@@ -97,7 +121,7 @@ public class ConsolidateGroupWorkerTest {
                 FileOutputStream fout = new FileOutputStream( imageFile ) ) {
             IOUtils.copy( in, fout );
         } catch ( IOException ex ) {
-            System.out.println( ex.getMessage() );
+            LOGGER.severe( ex.getMessage() );
             fail( "Failed to create test image file" );
         }
         // test that is really exists
@@ -134,7 +158,7 @@ public class ConsolidateGroupWorkerTest {
                 FileOutputStream fout = new FileOutputStream( sourceImageFile ) ) {
             IOUtils.copy( in, fout );
         } catch ( IOException ex ) {
-            System.out.println( ex.getMessage() );
+            LOGGER.severe( ex.getMessage() );
             fail( "Failed to create test image file" );
         }
         sourceImageFile.setReadOnly();
@@ -191,7 +215,7 @@ public class ConsolidateGroupWorkerTest {
                 FileOutputStream fout = new FileOutputStream( sourceImageFile ) ) {
             IOUtils.copy( in, fout );
         } catch ( IOException ex ) {
-            System.out.println( ex.getMessage() );
+            LOGGER.severe( ex.getMessage() );
             fail( "Failed to create test image file in test testMovePictureSameDirectory." );
         }
         assertTrue( "The image File must exist", sourceImageFile.exists() );
@@ -220,7 +244,7 @@ public class ConsolidateGroupWorkerTest {
                 FileOutputStream fout = new FileOutputStream( sopurceImageFile ) ) {
             IOUtils.copy( in, fout );
         } catch ( IOException ex ) {
-            System.out.println( ex.getMessage() );
+            LOGGER.severe( ex.getMessage() );
             fail( "Failed to create test image file" );
         }
         // test that is really exists
@@ -256,7 +280,7 @@ public class ConsolidateGroupWorkerTest {
                 FileOutputStream fout = new FileOutputStream( sourceImageFile ) ) {
             IOUtils.copy( in, fout );
         } catch ( IOException ex ) {
-            System.out.println( ex.getMessage() );
+            LOGGER.severe( ex.getMessage() );
             fail( "Failed to create test image file" );
         }
         sourceImageFile.setReadOnly();
@@ -266,17 +290,17 @@ public class ConsolidateGroupWorkerTest {
             assertFalse( "The source image File must exist and must not be writable but we can write to file: " + sourceImageFile, sourceImageFile.canWrite() );
         }
 
-        PictureInfo pi = new PictureInfo();
-        pi.setImageLocation( sourceImageFile );
+        PictureInfo pictureInfo = new PictureInfo();
+        pictureInfo.setImageLocation( sourceImageFile );
 
         File tempTargetDirectory = Files.createTempDir();
         tempTargetDirectory.mkdir();
 
-        boolean returnCode = ConsolidateGroupWorker.movePicture( pi, tempTargetDirectory );
+        boolean returnCode = ConsolidateGroupWorker.movePicture(pictureInfo, tempTargetDirectory );
         assertTrue( "Consolidation of a readonly PictureInfo to a new directory should succed but the move from " + sourceImageFile + " to " + tempTargetDirectory + " seems to have failed!", returnCode );
 
         assertFalse( "The old image File must be gone", sourceImageFile.exists() );
-        File piFile = pi.getImageFile();
+        File piFile = pictureInfo.getImageFile();
         assertTrue( "The PictureInfo points to the readable location", piFile.canRead() );
 
         TestCase.assertEquals( "File is in the new Location", tempTargetDirectory, piFile.getParentFile() );

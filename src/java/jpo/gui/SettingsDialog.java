@@ -53,6 +53,7 @@ import javax.swing.JTextField;
 import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.WindowConstants;
+import javax.swing.text.JTextComponent;
 import jpo.EventBus.JpoEventBus;
 import jpo.EventBus.LocaleChangedEvent;
 import jpo.EventBus.UserFunctionsChangedEvent;
@@ -274,13 +275,9 @@ public class SettingsDialog extends JDialog {
         autoLoadJButton.setPreferredSize( Settings.threeDotButtonSize );
         autoLoadJButton.setMinimumSize( Settings.threeDotButtonSize );
         autoLoadJButton.setMaximumSize( Settings.threeDotButtonSize );
-        autoLoadJButton.addActionListener( new ActionListener() {
-
-            @Override
-            public void actionPerformed( ActionEvent e ) {
-                autoLoadChooser();
-            }
-        } );
+        autoLoadJButton.addActionListener(( ActionEvent e ) -> {
+            autoLoadChooser();
+        });
         generalJPanel.add( autoLoadJButton, "wrap" );
 
         final JLabel wordCloudWordJLabel = new JLabel( "Max Word Cloud Words" );
@@ -417,41 +414,36 @@ public class SettingsDialog extends JDialog {
         predefinedEmailJComboBox.addItem( "Compuserve" );
         predefinedEmailJComboBox.addItem( "Hotmail" );
         predefinedEmailJComboBox.addItem( "Other" );
-        predefinedEmailJComboBox.addActionListener( new ActionListener() {
-
-            @Override
-            public void actionPerformed( ActionEvent e ) {
-                JComboBox cb = (JComboBox) e.getSource();
-                String cbSelection = (String) cb.getSelectedItem();
-                if ( cbSelection.equals( "Localhost" ) ) {
-                    emailServerJTextField.setText( "localhost" );
-                    emailPortJTextField.setText( "25" );
-                    authenticationJComboBox.setSelectedIndex( 1 ); //Password
-                } else if ( cbSelection.equals( "Compuserve" ) ) {
-                    emailServerJTextField.setText( "smtp.compuserve.com" );
-                    emailPortJTextField.setText( "25" );
-                    //emailUserJTextField.setText( "set your username" );
-                    //emailPasswordJTextField.setText( "set your password" );
-                    authenticationJComboBox.setSelectedIndex( 1 ); //Password
-                } else if ( cbSelection.equals( "Gmail" ) ) {
-                    emailServerJTextField.setText( "smtp.gmail.com" );
-                    emailPortJTextField.setText( "465" );
-                    //emailUserJTextField.setText( "set your username" );
-                    //emailPasswordJTextField.setText( "set your password" );
-                    authenticationJComboBox.setSelectedIndex( 2 ); //SSL
-                } else if ( cbSelection.equals( "Hotmail" ) ) {
-                    emailServerJTextField.setText( "smtp.live.com" );
-                    emailPortJTextField.setText( "25" );
-                    //emailUserJTextField.setText( "set your username" );
-                    //emailPasswordJTextField.setText( "set your password" );
-                    authenticationJComboBox.setSelectedIndex( 1 ); //Password
-                } else if ( cbSelection.equals( "Other" ) ) {
-                    emailServerJTextField.setText( "" );
-                    emailPortJTextField.setText( "25" );
-                }
-
+        predefinedEmailJComboBox.addActionListener(( ActionEvent e ) -> {
+            JComboBox cb = (JComboBox) e.getSource();
+            String cbSelection = (String) cb.getSelectedItem();
+            if ( cbSelection.equals( "Localhost" ) ) {
+                emailServerJTextField.setText( "localhost" );
+                emailPortJTextField.setText( "25" );
+                authenticationJComboBox.setSelectedIndex( 1 ); //Password
+            } else if ( cbSelection.equals( "Compuserve" ) ) {
+                emailServerJTextField.setText( "smtp.compuserve.com" );
+                emailPortJTextField.setText( "25" );
+                //emailUserJTextField.setText( "set your username" );
+                //emailPasswordJTextField.setText( "set your password" );
+                authenticationJComboBox.setSelectedIndex( 1 ); //Password
+            } else if ( cbSelection.equals( "Gmail" ) ) {
+                emailServerJTextField.setText( "smtp.gmail.com" );
+                emailPortJTextField.setText( "465" );
+                //emailUserJTextField.setText( "set your username" );
+                //emailPasswordJTextField.setText( "set your password" );
+                authenticationJComboBox.setSelectedIndex( 2 ); //SSL
+            } else if ( cbSelection.equals( "Hotmail" ) ) {
+                emailServerJTextField.setText( "smtp.live.com" );
+                emailPortJTextField.setText( "25" );
+                //emailUserJTextField.setText( "set your username" );
+                //emailPasswordJTextField.setText( "set your password" );
+                authenticationJComboBox.setSelectedIndex( 1 ); //Password
+            } else if ( cbSelection.equals( "Other" ) ) {
+                emailServerJTextField.setText( "" );
+                emailPortJTextField.setText( "25" );
             }
-        } );
+        });
         emailServerJPanel.add( predefinedEmailJComboBox, "wrap" );
 
         emailServerJPanel.add( new JLabel( Settings.jpoResources.getString( "emailServerJLabel" ) ) );
@@ -476,43 +468,38 @@ public class SettingsDialog extends JDialog {
         authenticationJComboBox.addItem( "None" );
         authenticationJComboBox.addItem( "Password" );
         authenticationJComboBox.addItem( "SSL" );
-        authenticationJComboBox.addActionListener( new ActionListener() {
-
-            @Override
-            public void actionPerformed( ActionEvent e ) {
-                JComboBox cb = (JComboBox) e.getSource();
-                String cbSelection = (String) cb.getSelectedItem();
-                switch ( cbSelection ) {
-                    case "None":
-                        emailUserJTextField.setText( "" );
-                        userNameJLabel.setVisible( false );
-                        emailUserJTextField.setVisible( false );
-                        emailPasswordJTextField.setText( "" );
-                        passwordJLabel.setVisible( false );
-                        emailPasswordJTextField.setVisible( false );
-                        showPasswordButton.setVisible( false );
-                        showPasswordLabel.setVisible( false );
-                        break;
-                    case "Password":
-                        userNameJLabel.setVisible( true );
-                        emailUserJTextField.setVisible( true );
-                        passwordJLabel.setVisible( true );
-                        emailPasswordJTextField.setVisible( true );
-                        showPasswordButton.setVisible( true );
-                        showPasswordLabel.setVisible( true );
-                        break;
-                    case "SSL":
-                        userNameJLabel.setVisible( true );
-                        emailUserJTextField.setVisible( true );
-                        passwordJLabel.setVisible( true );
-                        emailPasswordJTextField.setVisible( true );
-                        showPasswordButton.setVisible( true );
-                        showPasswordLabel.setVisible( true );
-                        break;
-                }
-
+        authenticationJComboBox.addActionListener(( ActionEvent e ) -> {
+            JComboBox cb = (JComboBox) e.getSource();
+            String cbSelection = (String) cb.getSelectedItem();
+            switch ( cbSelection ) {
+                case "None":
+                    emailUserJTextField.setText( "" );
+                    userNameJLabel.setVisible( false );
+                    emailUserJTextField.setVisible( false );
+                    emailPasswordJTextField.setText( "" );
+                    passwordJLabel.setVisible( false );
+                    emailPasswordJTextField.setVisible( false );
+                    showPasswordButton.setVisible( false );
+                    showPasswordLabel.setVisible( false );
+                    break;
+                case "Password":
+                    userNameJLabel.setVisible( true );
+                    emailUserJTextField.setVisible( true );
+                    passwordJLabel.setVisible( true );
+                    emailPasswordJTextField.setVisible( true );
+                    showPasswordButton.setVisible( true );
+                    showPasswordLabel.setVisible( true );
+                    break;
+                case "SSL":
+                    userNameJLabel.setVisible( true );
+                    emailUserJTextField.setVisible( true );
+                    passwordJLabel.setVisible( true );
+                    emailPasswordJTextField.setVisible( true );
+                    showPasswordButton.setVisible( true );
+                    showPasswordLabel.setVisible( true );
+                    break;
             }
-        } );
+        });
         emailServerJPanel.add( authenticationJComboBox, "wrap" );
 
         emailServerJPanel.add( userNameJLabel );
@@ -527,13 +514,9 @@ public class SettingsDialog extends JDialog {
         emailPasswordJTextField.setMaximumSize( Settings.textfieldMaximumSize );
         emailServerJPanel.add( emailPasswordJTextField, "wrap" );
 
-        showPasswordButton.addActionListener( new ActionListener() {
-
-            @Override
-            public void actionPerformed( ActionEvent ae ) {
-                showPasswordLabel.setText( new String( emailPasswordJTextField.getPassword() ) );
-            }
-        } );
+        showPasswordButton.addActionListener(( ActionEvent ae ) -> {
+            showPasswordLabel.setText( new String( emailPasswordJTextField.getPassword() ) );
+        });
 
         emailServerJPanel.add( showPasswordButton );
         emailServerJPanel.add( showPasswordLabel, "wrap" );
@@ -552,34 +535,22 @@ public class SettingsDialog extends JDialog {
         cacheJPanel.add( new JScrollPane( lowresStatsJTA ), "wrap" );
 
         JButton clearHighresCacheJButton = new JButton( "Clear" );
-        clearHighresCacheJButton.addActionListener( new ActionListener() {
-
-            @Override
-            public void actionPerformed( ActionEvent e ) {
-                clearHighresCache();
-            }
-        } );
+        clearHighresCacheJButton.addActionListener(( ActionEvent e ) -> {
+            clearHighresCache();
+        });
 
         JButton clearThumbnailCacheJButton = new JButton( "Clear" );
-        clearThumbnailCacheJButton.addActionListener( new ActionListener() {
-
-            @Override
-            public void actionPerformed( ActionEvent e ) {
-                clearThumbnailCache();
-            }
-        } );
+        clearThumbnailCacheJButton.addActionListener(( ActionEvent e ) -> {
+            clearThumbnailCache();
+        });
 
         cacheJPanel.add( clearHighresCacheJButton );
         cacheJPanel.add( clearThumbnailCacheJButton );
 
         JButton updateCacheStatsJButton = new JButton( "Update" );
-        updateCacheStatsJButton.addActionListener( new ActionListener() {
-
-            @Override
-            public void actionPerformed( ActionEvent e ) {
-                updateCacheStats();
-            }
-        } );
+        updateCacheStatsJButton.addActionListener(( ActionEvent e ) -> {
+            updateCacheStats();
+        });
         cacheJPanel.add( updateCacheStatsJButton );
 
         // set up the main part of the dialog
@@ -611,15 +582,11 @@ public class SettingsDialog extends JDialog {
         saveButton.setMinimumSize( Settings.defaultButtonDimension );
         saveButton.setMaximumSize( Settings.defaultButtonDimension );
         saveButton.setBorder( BorderFactory.createRaisedBevelBorder() );
-        saveButton.addActionListener( new ActionListener() {
-
-            @Override
-            public void actionPerformed( ActionEvent e ) {
-                writeValues();
-                Settings.writeSettings();
-                getRid();
-            }
-        } );
+        saveButton.addActionListener(( ActionEvent e ) -> {
+            writeValues();
+            Settings.writeSettings();
+            getRid();
+        });
         buttonContainer.add( saveButton );
 
         JButton cancelButton = new JButton( Settings.jpoResources.getString( "genericCancelText" ) );
@@ -627,13 +594,9 @@ public class SettingsDialog extends JDialog {
         cancelButton.setMinimumSize( Settings.defaultButtonDimension );
         cancelButton.setMaximumSize( Settings.defaultButtonDimension );
         cancelButton.setBorder( BorderFactory.createRaisedBevelBorder() );
-        cancelButton.addActionListener( new ActionListener() {
-
-            @Override
-            public void actionPerformed( ActionEvent e ) {
-                getRid();
-            }
-        } );
+        cancelButton.addActionListener(( ActionEvent e ) -> {
+            getRid();
+        });
         buttonContainer.add( cancelButton );
 
         getContentPane().add( buttonContainer, BorderLayout.SOUTH );
@@ -862,7 +825,7 @@ public class SettingsDialog extends JDialog {
 
         @Override
         public boolean shouldYieldFocus( JComponent input ) {
-            String validationFile = ( (JTextField) input ).getText();
+            String validationFile = ( (JTextComponent) input ).getText();
             LOGGER.log( Level.INFO, "SettingsDialog.FileTextFieldVerifyer.shouldYieldFocus: called with: {0}", validationFile );
             LOGGER.log( Level.INFO, "JComponent = {0}", Integer.toString( input.hashCode() ) );
             LOGGER.log( Level.INFO, "autoLoadJTextField = {0}", Integer.toString( autoLoadJTextField.hashCode() ) );
@@ -876,7 +839,7 @@ public class SettingsDialog extends JDialog {
 
         @Override
         public boolean verify( JComponent input ) {
-            LOGGER.log( Level.INFO, "SettingsDialog.FileTextFieldVerifyer.verify: called with: {0}", ( (JTextField) input ).getText() );
+            LOGGER.log( Level.INFO, "SettingsDialog.FileTextFieldVerifyer.verify: called with: {0}", ( (JTextComponent) input ).getText() );
             return true;
         }
     }

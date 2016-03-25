@@ -2,7 +2,6 @@ package jpo.gui;
 
 import java.awt.Color;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.Collections;
 import java.util.HashSet;
@@ -118,14 +117,9 @@ public class DirectoryChooser
      * Add listeners to the GUI components
      */
     private void addBehaviour() {
-        directoryJComboBox.addActionListener( new ActionListener() {
-
-            @Override
-            public void actionPerformed( ActionEvent e ) {
-                sendChangeNotification();
-
-            }
-        } );
+        directoryJComboBox.addActionListener(( ActionEvent e ) -> {
+            sendChangeNotification();
+        });
 
         directoryJTextField.setInputVerifier( new InputVerifier() {
 
@@ -142,23 +136,19 @@ public class DirectoryChooser
             }
         } );
 
-        directoryChooserJButton.addActionListener( new ActionListener() {
-
-            @Override
-            public void actionPerformed( ActionEvent e ) {
-                JFileChooser jFileChooser = new JFileChooser();
-                jFileChooser.setFileSelectionMode( JFileChooser.DIRECTORIES_ONLY );
-                jFileChooser.setApproveButtonText( Settings.jpoResources.getString( "genericSelectText" ) );
-                jFileChooser.setDialogTitle( chooserTitle );
-                jFileChooser.setCurrentDirectory( new File( getText() ) );
-
-                int returnVal = jFileChooser.showOpenDialog( DirectoryChooser.this );
-                if ( returnVal == JFileChooser.APPROVE_OPTION ) {
-                    setText( jFileChooser.getSelectedFile().getPath() );
-                    sendChangeNotification();
-                }
+        directoryChooserJButton.addActionListener(( ActionEvent e ) -> {
+            JFileChooser jFileChooser = new JFileChooser();
+            jFileChooser.setFileSelectionMode( JFileChooser.DIRECTORIES_ONLY );
+            jFileChooser.setApproveButtonText( Settings.jpoResources.getString( "genericSelectText" ) );
+            jFileChooser.setDialogTitle( chooserTitle );
+            jFileChooser.setCurrentDirectory( new File( getText() ) );
+            
+            int returnVal = jFileChooser.showOpenDialog( DirectoryChooser.this );
+            if ( returnVal == JFileChooser.APPROVE_OPTION ) {
+                setText( jFileChooser.getSelectedFile().getPath() );
+                sendChangeNotification();
             }
-        } );
+        });
 
     }
 
@@ -222,9 +212,9 @@ public class DirectoryChooser
             setColor();
             oldFieldContents = newFieldContents;
             synchronized ( changeListeners ) {
-                for ( ChangeListener changeListener : changeListeners ) {
+                changeListeners.stream().forEach( ( changeListener ) -> {
                     changeListener.stateChanged( new ChangeEvent( this ) );
-                }
+                } );
             }
         }
     }

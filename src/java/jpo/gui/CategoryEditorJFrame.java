@@ -3,7 +3,6 @@ package jpo.gui;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.Iterator;
@@ -109,17 +108,13 @@ public class CategoryEditorJFrame
         addCategoryJButton.setPreferredSize( defaultButtonSize );
         addCategoryJButton.setMinimumSize( defaultButtonSize );
         addCategoryJButton.setMaximumSize( maxButtonSize );
-        addCategoryJButton.addActionListener( new ActionListener() {
-
-            @Override
-            public void actionPerformed( ActionEvent evt ) {
-                String category = categoryJTextField.getText();
-                Integer key = Settings.getPictureCollection().addCategory( category );
-                Category categoryObject = new Category( key, category );
-                listModel.addElement( categoryObject );
-                categoryJTextField.setText( "" );
-            }
-        } );
+        addCategoryJButton.addActionListener(( ActionEvent evt ) -> {
+            String category = categoryJTextField.getText();
+            Integer key = Settings.getPictureCollection().addCategory( category );
+            Category categoryObject = new Category( key, category );
+            listModel.addElement( categoryObject );
+            categoryJTextField.setText( "" );
+        });
         jPanel.add( addCategoryJButton, "alignx center, wrap" );
 
         final JLabel categoriesJLabel = new JLabel( Settings.jpoResources.getString( "categoriesJLabel" ) );
@@ -155,71 +150,58 @@ public class CategoryEditorJFrame
         deleteCategoryJButton.setPreferredSize( defaultButtonSize );
         deleteCategoryJButton.setMinimumSize( defaultButtonSize );
         deleteCategoryJButton.setMaximumSize( maxButtonSize );
-        deleteCategoryJButton.addActionListener( new ActionListener() {
-
-            @Override
-            public void actionPerformed( ActionEvent evt ) {
-                int index = categoriesJList.getSelectedIndex();
-                if ( index < 0 ) {
-                    return; // nothing selected
-                } // nothing selected
-                Category cat = (Category) categoriesJList.getModel().getElementAt( index );
-                int count = PictureCollection.countCategoryUsage( cat.getKey(), Settings.getPictureCollection().getRootNode() );
-                if ( count > 0 ) {
-                    int answer = JOptionPane.showConfirmDialog( CategoryEditorJFrame.this,
-                            Settings.jpoResources.getString( "countCategoryUsageWarning1" ) + Integer.toString( count ) + Settings.jpoResources.getString( "countCategoryUsageWarning2" ),
-                            Settings.jpoResources.getString( "genericWarning" ),
-                            JOptionPane.OK_CANCEL_OPTION,
-                            JOptionPane.QUESTION_MESSAGE );
-                    if ( answer == JOptionPane.CANCEL_OPTION ) {
-                        return;
-                    } else {
-                        Settings.getPictureCollection().removeCategoryUsage( cat.getKey(), Settings.getPictureCollection().getRootNode() );
-                    }
-
+        deleteCategoryJButton.addActionListener(( ActionEvent evt ) -> {
+            int index = categoriesJList.getSelectedIndex();
+            if ( index < 0 ) {
+                return; // nothing selected
+            } // nothing selected
+            Category cat = categoriesJList.getModel().getElementAt( index );
+            int count = PictureCollection.countCategoryUsage( cat.getKey(), Settings.getPictureCollection().getRootNode() );
+            if ( count > 0 ) {
+                int answer = JOptionPane.showConfirmDialog( CategoryEditorJFrame.this,
+                        Settings.jpoResources.getString( "countCategoryUsageWarning1" ) + Integer.toString( count ) + Settings.jpoResources.getString( "countCategoryUsageWarning2" ),
+                        Settings.jpoResources.getString( "genericWarning" ),
+                        JOptionPane.OK_CANCEL_OPTION,
+                        JOptionPane.QUESTION_MESSAGE );
+                if ( answer == JOptionPane.CANCEL_OPTION ) {
+                    return;
+                } else {
+                    Settings.getPictureCollection().removeCategoryUsage( cat.getKey(), Settings.getPictureCollection().getRootNode() );
                 }
-                listModel.remove( index );
-                Settings.getPictureCollection().removeCategory( cat.getKey() );
+
             }
-        } );
+            listModel.remove( index );
+            Settings.getPictureCollection().removeCategory( cat.getKey() );
+        });
         buttonJPanel.add( deleteCategoryJButton, "wrap" );
 
         final JButton renameCategoryJButton = new JButton( Settings.jpoResources.getString( "renameCategoryJButton" ) );
         renameCategoryJButton.setPreferredSize( defaultButtonSize );
         renameCategoryJButton.setMinimumSize( defaultButtonSize );
         renameCategoryJButton.setMaximumSize( maxButtonSize );
-        renameCategoryJButton.addActionListener( new ActionListener() {
-
-            @Override
-            public void actionPerformed( ActionEvent evt ) {
-                LOGGER.info( "I want to rename the selected category " );
-                int index = categoriesJList.getSelectedIndex();
-                if ( index < 0 ) {
-                    return; // nothing selected
-                } // nothing selected
-                Category cat = (Category) categoriesJList.getModel().getElementAt( index );
-                listModel.remove( index );
-
-                String category = categoryJTextField.getText();
-                Settings.getPictureCollection().renameCategory( cat.getKey(), category );
-                Category categoryObject = new Category( cat.getKey(), category );
-                listModel.insertElementAt( categoryObject, index );
-                categoryJTextField.setText( "" );
-            }
-        } );
+        renameCategoryJButton.addActionListener(( ActionEvent evt ) -> {
+            LOGGER.info( "I want to rename the selected category " );
+            int index = categoriesJList.getSelectedIndex();
+            if ( index < 0 ) {
+                return; // nothing selected
+            } // nothing selected
+            Category cat = categoriesJList.getModel().getElementAt( index );
+            listModel.remove( index );
+            String category1 = categoryJTextField.getText();
+            Settings.getPictureCollection().renameCategory( cat.getKey(), category1 );
+            Category categoryObject1 = new Category( cat.getKey(), category1 );
+            listModel.insertElementAt( categoryObject1, index );
+            categoryJTextField.setText( "" );
+        });
         buttonJPanel.add( renameCategoryJButton, "wrap" );
 
         final JButton doneJButton = new JButton( Settings.jpoResources.getString( "doneJButton" ) );
         doneJButton.setPreferredSize( defaultButtonSize );
         doneJButton.setMinimumSize( defaultButtonSize );
         doneJButton.setMaximumSize( maxButtonSize );
-        doneJButton.addActionListener( new ActionListener() {
-
-            @Override
-            public void actionPerformed( ActionEvent evt ) {
-                getRid();
-            }
-        } );
+        doneJButton.addActionListener(( ActionEvent evt ) -> {
+            getRid();
+        });
         buttonJPanel.add( doneJButton, "wrap" );
 
         jPanel.add( buttonJPanel, "aligny top, wrap" );

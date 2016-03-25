@@ -9,7 +9,6 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.dnd.DropTargetDropEvent;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.KeyAdapter;
@@ -24,7 +23,6 @@ import javax.swing.JSlider;
 import javax.swing.OverlayLayout;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.swing.event.MouseInputAdapter;
 import jpo.EventBus.JpoEventBus;
 import jpo.EventBus.ShowGroupRequest;
@@ -207,48 +205,29 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
         initThumbnailsArray();
 
         // Wire up the events
-        titleJPanel.firstThumbnailsPageButton.addActionListener( new ActionListener() {
+        titleJPanel.firstThumbnailsPageButton.addActionListener(( ActionEvent e ) -> {
+            goToFirstPage();
+        });
+        titleJPanel.previousThumbnailsPageButton.addActionListener(( ActionEvent e ) -> {
+            goToPreviousPage();
+        });
+        titleJPanel.nextThumbnailsPageButton.addActionListener(( ActionEvent e ) -> {
+            goToNextPage();
+        });
+        titleJPanel.lastThumbnailsPageButton.addActionListener(( ActionEvent e ) -> {
+            goToLastPage();
+        });
 
-            @Override
-            public void actionPerformed( ActionEvent e ) {
-                goToFirstPage();
+        titleJPanel.resizeJSlider.addChangeListener(( ChangeEvent e ) -> {
+            JSlider source = (JSlider) e.getSource();
+            thumbnailSizeFactor = (float) source.getValue() / ThumbnailPanelTitle.THUMBNAILSIZE_MAX;
+            thumbnailLayoutManager.setThumbnailWidth( (int) ( 350 * thumbnailSizeFactor ) );
+            for ( int i = 0; i < Settings.maxThumbnails; i++ ) {
+                thumbnailControllers[i].setFactor( thumbnailSizeFactor );
+                thumbnailDescriptionJPanels[i].setFactor( thumbnailSizeFactor );
             }
-        } );
-        titleJPanel.previousThumbnailsPageButton.addActionListener( new ActionListener() {
-
-            @Override
-            public void actionPerformed( ActionEvent e ) {
-                goToPreviousPage();
-            }
-        } );
-        titleJPanel.nextThumbnailsPageButton.addActionListener( new ActionListener() {
-
-            @Override
-            public void actionPerformed( ActionEvent e ) {
-                goToNextPage();
-            }
-        } );
-        titleJPanel.lastThumbnailsPageButton.addActionListener( new ActionListener() {
-
-            @Override
-            public void actionPerformed( ActionEvent e ) {
-                goToLastPage();
-            }
-        } );
-
-        titleJPanel.resizeJSlider.addChangeListener( new ChangeListener() {
-            @Override
-            public void stateChanged( ChangeEvent e ) {
-                JSlider source = (JSlider) e.getSource();
-                thumbnailSizeFactor = (float) source.getValue() / ThumbnailPanelTitle.THUMBNAILSIZE_MAX;
-                thumbnailLayoutManager.setThumbnailWidth( (int) ( 350 * thumbnailSizeFactor ) );
-                for ( int i = 0; i < Settings.maxThumbnails; i++ ) {
-                    thumbnailControllers[i].setFactor( thumbnailSizeFactor );
-                    thumbnailDescriptionJPanels[i].setFactor( thumbnailSizeFactor );
-                }
-                thumbnailLayoutManager.layoutContainer( thumbnailsPane );
-            }
-        } );
+            thumbnailLayoutManager.layoutContainer( thumbnailsPane );
+        });
 
         JPanel whiteArea = new JPanel();
         thumbnailJScrollPane.setCorner( JScrollPane.UPPER_RIGHT_CORNER, whiteArea );
@@ -402,14 +381,10 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
      */
     @Subscribe
     public void handleShowGroupRequest( final ShowGroupRequest event ) {
-        final Runnable runnable = new Runnable() {
-
-            @Override
-            public void run() {
-                GroupNavigator groupNavigator = new GroupNavigator();
-                groupNavigator.setNode( event.getNode() );
-                show( groupNavigator );
-            }
+        final Runnable runnable = () -> {
+            GroupNavigator groupNavigator = new GroupNavigator();
+            groupNavigator.setNode( event.getNode() );
+            show( groupNavigator );
         };
         if ( SwingUtilities.isEventDispatchThread() ) {
             runnable.run();
@@ -473,13 +448,9 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
      * Listens for changes in the Group and updates the title if anything
      * changed
      */
-    private final GroupInfoChangeListener myGroupInfoChangeListener = new GroupInfoChangeListener() {
-
-        @Override
-        public void groupInfoChangeEvent( GroupInfoChangeEvent groupInfoChangeEvent ) {
-            LOGGER.info( "change event received." );
-            updateTitle();
-        }
+    private final GroupInfoChangeListener myGroupInfoChangeListener = ( GroupInfoChangeEvent groupInfoChangeEvent ) -> {
+        LOGGER.info( "change event received." );
+        updateTitle();
     };
 
     /**
@@ -497,7 +468,7 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
      * Request that the ThumbnailPanel show the previous page of Thumbnails
      */
     private void goToPreviousPage() {
-        startIndex = startIndex - Settings.maxThumbnails;
+        startIndex -= Settings.maxThumbnails;
         if ( startIndex < 0 ) {
             startIndex = 0;
         }
@@ -511,7 +482,7 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
      * Request that the ThumbnailPanel show the next page of Thumbnails
      */
     private void goToNextPage() {
-        startIndex = startIndex + Settings.maxThumbnails;
+        startIndex += Settings.maxThumbnails;
         thumbnailJScrollPane.getVerticalScrollBar().setValue( 0 );
         curPage++;
         nodeLayoutChanged();

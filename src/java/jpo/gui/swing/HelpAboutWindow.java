@@ -2,8 +2,8 @@ package jpo.gui.swing;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import jpo.dataModel.Settings;
 import javax.swing.JOptionPane;
+import jpo.dataModel.Settings;
 import jpo.dataModel.Tools;
 
 /*

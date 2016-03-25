@@ -3,7 +3,6 @@ package jpo.gui;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.SwingWorker;
@@ -103,9 +102,9 @@ public class ConsolidateGroupWorker extends SwingWorker<String, String> {
 
     @Override
     protected void process( List<String> messages ) {
-        for ( String message : messages ) {
+        messages.stream().forEach( ( _item ) -> {
             progGui.progressIncrement();
-        }
+        } );
     }
 
     @Override
@@ -132,10 +131,10 @@ public class ConsolidateGroupWorker extends SwingWorker<String, String> {
      */
     private void consolidateGroup( SortableDefaultMutableTreeNode groupNode ) {
         List<SortableDefaultMutableTreeNode> nodes = groupNode.getChildPictureNodes( recurseGroups );
-        System.out.println( "List Size: " + nodes.size() );
-        for ( SortableDefaultMutableTreeNode node : nodes ) {
+        LOGGER.info( "List Size: " + nodes.size() );
+        nodes.stream().forEach( ( node ) -> {
             PictureInfo pictureInfo = (PictureInfo) node.getUserObject();
-            System.out.println( "node: " + pictureInfo.toString() );
+            LOGGER.info( "node: " + pictureInfo.toString() );
             if ( needToMovePicture(pictureInfo, targetDirectory ) ) {
                 if ( movePicture(pictureInfo, targetDirectory ) ) {
                     LOGGER.info( String.format( "Successfully Moved Highres file of node %s", pictureInfo.toString() ) );
@@ -149,7 +148,7 @@ public class ConsolidateGroupWorker extends SwingWorker<String, String> {
                 notMovedCount++;
                 publish( String.format( "No need to move node: %s", node.toString() ) );
             }
-        }
+        } );
     }
 
     /**

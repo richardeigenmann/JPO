@@ -6,7 +6,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import static junit.framework.TestCase.assertEquals;
 import org.junit.Test;
 
@@ -25,24 +24,15 @@ public class DirectoryChooserTest {
      */
     @Test
     public void testListener() {
-        final Runnable r = new Runnable() {
-
-            @Override
-            public void run() {
+        try {
+            SwingUtilities.invokeAndWait( () -> {
                 final DirectoryChooser dc = new DirectoryChooser( "Title", DirectoryChooser.DIR_MUST_EXIST );
-                dc.addChangeListener( new ChangeListener() {
-
-                    @Override
-                    public void stateChanged( ChangeEvent e ) {
-                        changesReceived++;
-                    }
-                } );
+                dc.addChangeListener(( ChangeEvent e ) -> {
+                    changesReceived++;
+                });
                 dc.setText( "/" );
                 result = dc.getDirectory();
-            }
-        };
-        try {
-            SwingUtilities.invokeAndWait( r );
+            } );
         } catch ( InterruptedException | InvocationTargetException ex ) {
             Logger.getLogger( DirectoryChooserTest.class.getName() ).log( Level.SEVERE, null, ex );
         }

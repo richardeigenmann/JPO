@@ -3,8 +3,8 @@ package jpo.dataModel;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Iterator;
@@ -37,7 +37,7 @@ public class FlatFileReader {
         SortableDefaultMutableTreeNode newNode = new SortableDefaultMutableTreeNode(
                 new GroupInfo( request.getFile().getName() ) );
 
-        try ( BufferedReader in = new BufferedReader( new FileReader( request.getFile() ) ) ) {
+        try ( BufferedReader in = new BufferedReader( new InputStreamReader(new FileInputStream(request.getFile()), "UTF-8")  ) ) {
             while ( in.ready() ) {
                 String line = in.readLine();
                 File testFile;

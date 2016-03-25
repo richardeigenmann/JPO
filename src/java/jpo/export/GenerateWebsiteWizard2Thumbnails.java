@@ -8,7 +8,6 @@ import javax.swing.JSlider;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import jpo.dataModel.Settings;
 import net.javaprog.ui.wizard.AbstractStep;
 import net.miginfocom.swing.MigLayout;
@@ -47,6 +46,7 @@ public class GenerateWebsiteWizard2Thumbnails extends AbstractStep {
     /**
      * Asks all the questions we need to know in regards to the thumbnails on
      * the final website.
+     *
      * @param options Options
      */
     public GenerateWebsiteWizard2Thumbnails( HtmlDistillerOptions options ) {
@@ -54,9 +54,9 @@ public class GenerateWebsiteWizard2Thumbnails extends AbstractStep {
         this.options = options;
 
         // load the options into the GUI components
-        ( (SpinnerNumberModel) ( picsPerRow.getModel() ) ).setValue( options.getPicsPerRow() );
-        ( (SpinnerNumberModel) ( thumbWidth.getModel() ) ).setValue( options.getThumbnailWidth() );
-        ( (SpinnerNumberModel) ( thumbHeight.getModel() ) ).setValue( options.getThumbnailHeight() );
+        picsPerRow.getModel().setValue( options.getPicsPerRow() );
+        thumbWidth.getModel().setValue( options.getThumbnailWidth() );
+        thumbHeight.getModel().setValue( options.getThumbnailHeight() );
         lowresJpgQualityJSlider.setValue( options.getLowresJpgQualityPercent() );
     }
     /**
@@ -101,28 +101,19 @@ public class GenerateWebsiteWizard2Thumbnails extends AbstractStep {
     protected JComponent createComponent() {
         JPanel wizardPanel = new JPanel( new MigLayout( "", "[][250:250:800]" ) );
         wizardPanel.add( new JLabel( Settings.jpoResources.getString( "picsPerRowText" ) ), "align label" );
-        picsPerRow.addChangeListener( new ChangeListener() {
-            @Override
-            public void stateChanged( ChangeEvent arg0 ) {
-                options.setPicsPerRow( ( (SpinnerNumberModel) ( picsPerRow.getModel() ) ).getNumber().intValue() );
-            }
+        picsPerRow.addChangeListener( ( ChangeEvent arg0 ) -> {
+            options.setPicsPerRow( ( (SpinnerNumberModel) ( picsPerRow.getModel() ) ).getNumber().intValue() );
         } );
         wizardPanel.add( picsPerRow, "wrap" );
 
         wizardPanel.add( new JLabel( Settings.jpoResources.getString( "thubnailSizeJLabel" ) ), "align label" );
-        thumbWidth.addChangeListener( new ChangeListener() {
-            @Override
-            public void stateChanged( ChangeEvent arg0 ) {
-                options.setThumbnailWidth( ( (SpinnerNumberModel) ( thumbWidth.getModel() ) ).getNumber().intValue() );
-            }
+        thumbWidth.addChangeListener( ( ChangeEvent arg0 ) -> {
+            options.setThumbnailWidth( ( (SpinnerNumberModel) ( thumbWidth.getModel() ) ).getNumber().intValue() );
         } );
         wizardPanel.add( thumbWidth, "split 3" );
         wizardPanel.add( new JLabel( " x " ) );
-        thumbHeight.addChangeListener( new ChangeListener() {
-            @Override
-            public void stateChanged( ChangeEvent arg0 ) {
-                options.setThumbnailHeight( ( (SpinnerNumberModel) ( thumbHeight.getModel() ) ).getNumber().intValue() );
-            }
+        thumbHeight.addChangeListener( ( ChangeEvent arg0 ) -> {
+            options.setThumbnailHeight( ( (SpinnerNumberModel) ( thumbHeight.getModel() ) ).getNumber().intValue() );
         } );
         wizardPanel.add( thumbHeight, "wrap" );
 
@@ -146,22 +137,15 @@ public class GenerateWebsiteWizard2Thumbnails extends AbstractStep {
                 true );
         lowresJpgQualityJSlider.setPaintLabels(
                 true );
-        lowresJpgQualityJSlider.addChangeListener(
-                new ChangeListener() {
-                    @Override
-                    public void stateChanged( ChangeEvent arg0 ) {
-                        options.setLowresJpgQualityPercent( lowresJpgQualityJSlider.getValue() );
-                    }
-                } );
+        lowresJpgQualityJSlider.addChangeListener( ( ChangeEvent arg0 ) -> {
+            options.setLowresJpgQualityPercent( lowresJpgQualityJSlider.getValue() );
+        } );
 
         wizardPanel.add( lowresJpgQualityJSlider, "growx, wrap" );
         wizardPanel.add( new JLabel( Settings.jpoResources.getString( "scalingSteps" ) ) );
 
-        scalingSteps.addChangeListener( new ChangeListener() {
-            @Override
-            public void stateChanged( ChangeEvent arg0 ) {
-                options.setScalingSteps( ( (SpinnerNumberModel) ( scalingSteps.getModel() ) ).getNumber().intValue() );
-            }
+        scalingSteps.addChangeListener( ( ChangeEvent arg0 ) -> {
+            options.setScalingSteps( ( (SpinnerNumberModel) ( scalingSteps.getModel() ) ).getNumber().intValue() );
         } );
         wizardPanel.add( scalingSteps, "wrap" );
         return wizardPanel;

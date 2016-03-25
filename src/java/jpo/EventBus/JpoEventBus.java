@@ -17,12 +17,6 @@ public class JpoEventBus extends EventBus {
      */
     private static final Logger LOGGER = Logger.getLogger( JpoEventBus.class.getName() );
 
-    /**
-     * The EventBus singleton
-     */
-    private JpoEventBus() {
-        register( new DeadEventSubscriber() );
-    }
 
     /**
      * Returns the EventBus for the JPO application
@@ -31,6 +25,12 @@ public class JpoEventBus extends EventBus {
      */
     public static JpoEventBus getInstance() {
         return JpoEventBusHolder.INSTANCE;
+    }
+    /**
+     * The EventBus singleton
+     */
+    private JpoEventBus() {
+        register( new DeadEventSubscriber() );
     }
 
     /**

@@ -1,15 +1,10 @@
 package jpo.gui;
 
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.util.Enumeration;
-import jpo.dataModel.Tools;
-import jpo.dataModel.Settings;
-import jpo.dataModel.SortableDefaultMutableTreeNode;
-import jpo.dataModel.PictureInfo;
 import java.util.List;
 import java.util.logging.Logger;
 import javax.swing.JButton;
@@ -20,6 +15,10 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingWorker;
 import static javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE;
+import jpo.dataModel.PictureInfo;
+import jpo.dataModel.Settings;
+import jpo.dataModel.SortableDefaultMutableTreeNode;
+import jpo.dataModel.Tools;
 import net.miginfocom.swing.MigLayout;
 
 
@@ -61,7 +60,7 @@ public class IntegrityCheckerJFrame
     /**
      * reference to the node that should be checked
      */
-    private SortableDefaultMutableTreeNode startNode;
+    private final SortableDefaultMutableTreeNode startNode;
 
     /**
      * Constructor for the window that shows the various checks being performed.
@@ -94,24 +93,15 @@ public class IntegrityCheckerJFrame
                 getRid();
             }
         } );
-        okJButton.addActionListener( new ActionListener() {
-            @Override
-            public void actionPerformed( ActionEvent e ) {
-                getRid();
-            }
-        } );
-        correctChecksumsJButton.addActionListener( new ActionListener() {
-            @Override
-            public void actionPerformed( ActionEvent e ) {
-                correctChecksums();
-            }
-        } );
-        interruptJButton.addActionListener( new ActionListener() {
-            @Override
-            public void actionPerformed( ActionEvent e ) {
-                interruptWorkers();
-            }
-        } );
+        okJButton.addActionListener(( ActionEvent e ) -> {
+            getRid();
+        });
+        correctChecksumsJButton.addActionListener(( ActionEvent e ) -> {
+            correctChecksums();
+        });
+        interruptJButton.addActionListener(( ActionEvent e ) -> {
+            interruptWorkers();
+        });
 
 
         pack();
@@ -185,9 +175,9 @@ public class IntegrityCheckerJFrame
 
         @Override
         protected void process( List<String> chunks ) {
-            for ( String s : chunks ) {
+            chunks.stream().forEach( ( s ) -> {
                 resultJTextArea.append( s );
-            }
+            } );
         }
     }
 

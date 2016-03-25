@@ -1,17 +1,17 @@
 package jpo.gui;
 
-import javax.swing.table.TableModel;
-import javax.swing.event.TableModelEvent;
+import java.awt.event.InputEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.InputEvent;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 import javax.swing.JTable;
+import javax.swing.event.TableModelEvent;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableModel;
 
 /**
  * A sorter for TableModels. The sorter has a model (conforming to TableModel)
@@ -151,7 +151,7 @@ public final class TableSorter extends TableMap {
         compares++;
         for ( int level = 0; level < sortingColumns.size(); level++ ) {
             Integer column = sortingColumns.get( level );
-            int result = compareRowsByColumn( row1, row2, column.intValue() );
+            int result = compareRowsByColumn(row1, row2, column);
             if ( result != 0 ) {
                 return ascending ? result : -result;
             }

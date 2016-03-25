@@ -1,21 +1,19 @@
 package jpotestground;
 
+import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
 import java.lang.reflect.InvocationTargetException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import jpo.gui.swing.ScreenHelper;
-import jpo.gui.swing.ResizableJFrame;
-import jpo.gui.swing.NonFocussedCaret;
-import jpo.dataModel.Settings;
-import java.awt.BorderLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
+import jpo.dataModel.Settings;
+import jpo.gui.swing.NonFocussedCaret;
+import jpo.gui.swing.ResizableJFrame;
 import static jpo.gui.swing.ResizableJFrame.WindowSize.WINDOW_BOTTOM_LEFT;
 import static jpo.gui.swing.ResizableJFrame.WindowSize.WINDOW_BOTTOM_RIGHT;
 import static jpo.gui.swing.ResizableJFrame.WindowSize.WINDOW_DEFAULT;
@@ -24,6 +22,7 @@ import static jpo.gui.swing.ResizableJFrame.WindowSize.WINDOW_LEFT;
 import static jpo.gui.swing.ResizableJFrame.WindowSize.WINDOW_RIGHT;
 import static jpo.gui.swing.ResizableJFrame.WindowSize.WINDOW_TOP_LEFT;
 import static jpo.gui.swing.ResizableJFrame.WindowSize.WINDOW_TOP_RIGHT;
+import jpo.gui.swing.ScreenHelper;
 
 
 /*
@@ -56,13 +55,9 @@ public class ResizableJFrameTest {
     public static void main( String[] args ) {
         Settings.loadSettings();
         try {
-            SwingUtilities.invokeAndWait( new Runnable() {
-
-                @Override
-                public void run() {
-                    new ResizableJFrameTest();
-                }
-            } );
+            SwingUtilities.invokeAndWait( ()
+                    -> new ResizableJFrameTest()
+            );
         } catch ( InterruptedException | InvocationTargetException ex ) {
             Logger.getLogger( ResizableJFrameTest.class.getName() ).log( Level.SEVERE, null, ex );
         }
@@ -76,110 +71,67 @@ public class ResizableJFrameTest {
         final JPanel p = new JPanel();
         p.setLayout( new BorderLayout() );
 
-        final ResizableJFrame resizableJFrame = new ResizableJFrame("ResizableJFrameTest", p );
+        final ResizableJFrame resizableJFrame = new ResizableJFrame( "ResizableJFrameTest", p );
         resizableJFrame.setDefaultCloseOperation( JFrame.DISPOSE_ON_CLOSE );
 
         JPanel buttonPanel = new JPanel();
         JButton fullScreen = new JButton( "FullScreen" );
-        fullScreen.addActionListener( new ActionListener() {
-
-            @Override
-            public void actionPerformed( ActionEvent e ) {
-                resizableJFrame.resizeTo( WINDOW_FULLSCREEN );
-            }
+        fullScreen.addActionListener( ( ActionEvent e ) -> {
+            resizableJFrame.resizeTo( WINDOW_FULLSCREEN );
         } );
         buttonPanel.add( fullScreen );
 
         JButton normalScreen = new JButton( "Normal" );
-        normalScreen.addActionListener( new ActionListener() {
-
-            @Override
-            public void actionPerformed( ActionEvent e ) {
-                resizableJFrame.resizeTo( WINDOW_DEFAULT );
-
-            }
+        normalScreen.addActionListener( ( ActionEvent e ) -> {
+            resizableJFrame.resizeTo( WINDOW_DEFAULT );
         } );
         buttonPanel.add( normalScreen );
 
         JButton leftSize = new JButton( "Left" );
-        leftSize.addActionListener( new ActionListener() {
-
-            @Override
-            public void actionPerformed( ActionEvent e ) {
-                resizableJFrame.resizeTo( WINDOW_LEFT );
-            }
+        leftSize.addActionListener( ( ActionEvent e ) -> {
+            resizableJFrame.resizeTo( WINDOW_LEFT );
         } );
         buttonPanel.add( leftSize );
 
         JButton topLeftSize = new JButton( "Top Left" );
-        topLeftSize.addActionListener( new ActionListener() {
-
-            @Override
-            public void actionPerformed( ActionEvent e ) {
-                resizableJFrame.resizeTo( WINDOW_TOP_LEFT );
-
-            }
+        topLeftSize.addActionListener( ( ActionEvent e ) -> {
+            resizableJFrame.resizeTo( WINDOW_TOP_LEFT );
         } );
         buttonPanel.add( topLeftSize );
 
         JButton bottomLeftSize = new JButton( "Bottom Left" );
-        bottomLeftSize.addActionListener( new ActionListener() {
-
-            @Override
-            public void actionPerformed( ActionEvent e ) {
-                resizableJFrame.resizeTo( WINDOW_BOTTOM_LEFT );
-
-            }
+        bottomLeftSize.addActionListener( ( ActionEvent e ) -> {
+            resizableJFrame.resizeTo( WINDOW_BOTTOM_LEFT );
         } );
         buttonPanel.add( bottomLeftSize );
 
         JButton rightSize = new JButton( "Right" );
-        rightSize.addActionListener( new ActionListener() {
-
-            @Override
-            public void actionPerformed( ActionEvent e ) {
-                resizableJFrame.resizeTo( WINDOW_RIGHT );
-            }
+        rightSize.addActionListener( ( ActionEvent e ) -> {
+            resizableJFrame.resizeTo( WINDOW_RIGHT );
         } );
         buttonPanel.add( rightSize );
 
         JButton topRightSize = new JButton( "Top Right" );
-        topRightSize.addActionListener( new ActionListener() {
-
-            @Override
-            public void actionPerformed( ActionEvent e ) {
-                resizableJFrame.resizeTo( WINDOW_TOP_RIGHT );
-            }
+        topRightSize.addActionListener( ( ActionEvent e ) -> {
+            resizableJFrame.resizeTo( WINDOW_TOP_RIGHT );
         } );
         buttonPanel.add( topRightSize );
 
         JButton bottomRightSize = new JButton( "Bottom Right" );
-        bottomRightSize.addActionListener( new ActionListener() {
-
-            @Override
-            public void actionPerformed( ActionEvent e ) {
-                resizableJFrame.resizeTo( WINDOW_BOTTOM_RIGHT );
-            }
+        bottomRightSize.addActionListener( ( ActionEvent e ) -> {
+            resizableJFrame.resizeTo( WINDOW_BOTTOM_RIGHT );
         } );
         buttonPanel.add( bottomRightSize );
 
         JButton decorateButton = new JButton( "Decorate" );
-        decorateButton.addActionListener( new ActionListener() {
-
-            @Override
-            public void actionPerformed( ActionEvent e ) {
-                resizableJFrame.showWindowDecorations( true );
-            }
+        decorateButton.addActionListener( ( ActionEvent e ) -> {
+            resizableJFrame.showWindowDecorations( true );
         } );
         buttonPanel.add( decorateButton );
 
         JButton undecorateButton = new JButton( "Undecorate" );
-        undecorateButton.addActionListener( new ActionListener() {
-
-            @Override
-            public void actionPerformed( ActionEvent e ) {
-                resizableJFrame.showWindowDecorations(false );
-            }
+        undecorateButton.addActionListener( ( ActionEvent e ) -> {
+            resizableJFrame.showWindowDecorations( false );
         } );
         buttonPanel.add( undecorateButton );
 
@@ -187,12 +139,8 @@ public class ResizableJFrameTest {
         jta.setCaret( new NonFocussedCaret() );
 
         JButton refresh = new JButton( "Refresh" );
-        refresh.addActionListener( new ActionListener() {
-
-            @Override
-            public void actionPerformed( ActionEvent e ) {
-                jta.setText( ScreenHelper.explainGraphicsEnvironment().toString() );
-            }
+        refresh.addActionListener( ( ActionEvent e ) -> {
+            jta.setText( ScreenHelper.explainGraphicsEnvironment().toString() );
         } );
         buttonPanel.add( refresh );
 

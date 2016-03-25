@@ -1,7 +1,6 @@
 package jpo.gui.swing;
 
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
@@ -77,79 +76,51 @@ public class PrivacyJFrame
         final JCheckBox clearRecentFiles = new JCheckBox( Settings.jpoResources.getString( "PrivacyClearRecentFiles" ) );
         privacyPanel.add( clearRecentFiles );
         final JButton clearRecentFilesButton = new JButton( Settings.jpoResources.getString( "PrivacyClear" ) );
-        clearRecentFilesButton.addActionListener( new ActionListener() {
-
-            @Override
-            public void actionPerformed( ActionEvent e ) {
-                privacyController.clearRecentFiles();
-            }
-        } );
+        clearRecentFilesButton.addActionListener(( ActionEvent e ) -> {
+            privacyController.clearRecentFiles();
+        });
         privacyPanel.add( clearRecentFilesButton, "wrap" );
 
         final JCheckBox clearThumbnails = new JCheckBox( Settings.jpoResources.getString( "PrivacyClearThumbnails" ) );
         privacyPanel.add( clearThumbnails );
         final JButton clearThumbnailsButton = new JButton( Settings.jpoResources.getString( "PrivacyClear" ) );
-        clearThumbnailsButton.addActionListener( new ActionListener() {
-
-            @Override
-            public void actionPerformed( ActionEvent e ) {
-                privacyController.clearThumbnails();
-            }
-        } );
+        clearThumbnailsButton.addActionListener(( ActionEvent e ) -> {
+            privacyController.clearThumbnails();
+        });
         privacyPanel.add( clearThumbnailsButton, "wrap" );
 
         final JCheckBox clearAutoload = new JCheckBox( Settings.jpoResources.getString( "PrivacyClearAutoload" ) );
         privacyPanel.add( clearAutoload );
         final JButton clearAutoloadButton = new JButton( Settings.jpoResources.getString( "PrivacyClear" ) );
-        clearAutoloadButton.addActionListener( new ActionListener() {
-
-            @Override
-            public void actionPerformed( ActionEvent e ) {
-                privacyController.clearAutoload();
-            }
-        } );
+        clearAutoloadButton.addActionListener(( ActionEvent e ) -> {
+            privacyController.clearAutoload();
+        });
         privacyPanel.add( clearAutoloadButton, "wrap" );
 
         final JCheckBox clearMemorisedDirs = new JCheckBox( Settings.jpoResources.getString( "PrivacyClearMemorisedDirs" ) );
         privacyPanel.add( clearMemorisedDirs );
         final JButton clearMemorisedDirsButton = new JButton( Settings.jpoResources.getString( "PrivacyClear" ) );
-        clearMemorisedDirsButton.addActionListener( new ActionListener() {
-
-            @Override
-            public void actionPerformed( ActionEvent e ) {
-                privacyController.clearMemorisedDirs();
-            }
-        } );
+        clearMemorisedDirsButton.addActionListener(( ActionEvent e ) -> {
+            privacyController.clearMemorisedDirs();
+        });
         privacyPanel.add( clearMemorisedDirsButton, "wrap" );
 
         final JButton selected = new JButton( Settings.jpoResources.getString( "PrivacySelected" ) );
-        selected.addActionListener( new ActionListener() {
-
-            @Override
-            public void actionPerformed( ActionEvent e ) {
-                privacyController.clearSelected( clearRecentFiles.isSelected(), clearThumbnails.isSelected(), clearAutoload.isSelected(), clearMemorisedDirs.isSelected() );
-            }
-        } );
+        selected.addActionListener(( ActionEvent e ) -> {
+            privacyController.clearSelected( clearRecentFiles.isSelected(), clearThumbnails.isSelected(), clearAutoload.isSelected(), clearMemorisedDirs.isSelected() );
+        });
         privacyPanel.add( selected, "split 2" );
 
         final JButton cancel = new JButton( Settings.jpoResources.getString( "PrivacyClose" ) );
-        cancel.addActionListener( new ActionListener() {
-
-            @Override
-            public void actionPerformed( ActionEvent e ) {
-                getRid();
-            }
-        } );
+        cancel.addActionListener(( ActionEvent e ) -> {
+            getRid();
+        });
         privacyPanel.add( cancel );
 
         final JButton all = new JButton( Settings.jpoResources.getString( "PrivacyAll" ) );
-        all.addActionListener( new ActionListener() {
-
-            @Override
-            public void actionPerformed( ActionEvent e ) {
-                privacyController.clearAll();
-            }
-        } );
+        all.addActionListener(( ActionEvent e ) -> {
+            privacyController.clearAll();
+        });
         privacyPanel.add( all );
 
 
@@ -261,16 +232,12 @@ public class PrivacyJFrame
              * Constructs the Thumbnail Deleter. Builds an array of the thumbnail
              * files and then uses the doInBackground() method to do the actual deletion.
              */
-            public ThumbnailDeleter() {
+            ThumbnailDeleter() {
                 File thumbnailDir = Settings.thumbnailPath;
-                FilenameFilter thumbnailFilter = new FilenameFilter() {
-
-                    @Override
-                    public boolean accept( File dir, String name ) {
-                        boolean matches = name.matches( "^" + Settings.thumbnailPrefix + "[0-9]+[.]jpg$" );
-                        //logger.info( String.format( "Considering: %s matches: %b", name, matches ) );
-                        return matches;
-                    }
+                FilenameFilter thumbnailFilter = ( File dir, String name1 ) -> {
+                    boolean matches = name1.matches( "^" + Settings.thumbnailPrefix + "[0-9]+[.]jpg$" );
+                    //logger.info( String.format( "Considering: %s matches: %b", name, matches ) );
+                    return matches;
                 };
                 deleteableThumbnails = thumbnailDir.listFiles( thumbnailFilter );
 
@@ -312,9 +279,9 @@ public class PrivacyJFrame
              */
             @Override
             protected void process( List<String> messages ) {
-                for ( String message : messages ) {
+                messages.stream().forEach( ( _item ) -> {
                     progGui.progressIncrement();
-                }
+                } );
             }
 
 

@@ -65,21 +65,18 @@ public class PictureCollection {
      * the TreeModel it has been made synchronous on the EDT.
      */
     public void clearCollection() {
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                getRootNode().removeAllChildren();
-                getRootNode().setUserObject( new GroupInfo( Settings.jpoResources.getString( "DefaultRootNodeText" ) ) );
-                clearQueriesTreeModel();
-                categories.clear();
-                clearMailSelection();
-                setAllowEdits( true );
-                setUnsavedUpdates( false );
-                setXmlFile( null );
-                getTreeModel().reload();
-                Settings.clearRecentDropNodes();
-                ThumbnailCreationQueue.clear();
-            }
+        Runnable runnable = () -> {
+            getRootNode().removeAllChildren();
+            getRootNode().setUserObject( new GroupInfo( Settings.jpoResources.getString( "DefaultRootNodeText" ) ) );
+            clearQueriesTreeModel();
+            categories.clear();
+            clearMailSelection();
+            setAllowEdits( true );
+            setUnsavedUpdates( false );
+            setXmlFile( null );
+            getTreeModel().reload();
+            Settings.clearRecentDropNodes();
+            ThumbnailCreationQueue.clear();
         };
         if ( SwingUtilities.isEventDispatchThread() ) {
             runnable.run();
@@ -140,13 +137,9 @@ public class PictureCollection {
         if ( SwingUtilities.isEventDispatchThread() ) {
             getTreeModel().nodeStructureChanged( changedNode );
         } else {
-            Runnable r = new Runnable() {
-                @Override
-                public void run() {
-                    getTreeModel().nodeStructureChanged( changedNode );
-                }
-            };
-            SwingUtilities.invokeLater( r );
+            SwingUtilities.invokeLater(
+                    () -> getTreeModel().nodeStructureChanged( changedNode )
+            );
         }
     }
 
@@ -162,20 +155,17 @@ public class PictureCollection {
         if ( SwingUtilities.isEventDispatchThread() ) {
             getTreeModel().nodeChanged( changedNode );
         } else {
-            Runnable r = new Runnable() {
-                @Override
-                public void run() {
-                    Tools.checkEDT();
-                    getTreeModel().nodeChanged( changedNode );
-                }
-            };
-            SwingUtilities.invokeLater( r );
+            SwingUtilities.invokeLater(
+                    () -> getTreeModel().nodeChanged( changedNode )
+            );
         }
     }
 
     /**
      * This method sends a nodesWereInserted event through to the listeners of
-     * the Collection's model. It makes sure the event is sent on the EDT
+     * the Collection's model.
+     *
+     * TODO: why does this method not ensure this is happening on the EDT?
      *
      * @param changedNode The node that was inserted
      * @param childIndices The Child indices
@@ -197,7 +187,6 @@ public class PictureCollection {
             };
             SwingUtilities.invokeLater( r );
         }*/
-
     }
 
     /**
@@ -215,13 +204,8 @@ public class PictureCollection {
         if ( SwingUtilities.isEventDispatchThread() ) {
             getTreeModel().nodesWereRemoved( node, childIndices, removedChildren );
         } else {
-            Runnable r = new Runnable() {
-                @Override
-                public void run() {
-                    getTreeModel().nodesWereRemoved( node, childIndices, removedChildren );
-                }
-            };
-            SwingUtilities.invokeLater( r );
+            SwingUtilities.invokeLater(
+                    () -> getTreeModel().nodesWereRemoved( node, childIndices, removedChildren ) );
         }
     }
     /**
@@ -236,7 +220,7 @@ public class PictureCollection {
      *
      * @return the root node
      */
-    public final SortableDefaultMutableTreeNode getRootNode() {
+    public SortableDefaultMutableTreeNode getRootNode() {
         return rootNode;
     }
 
@@ -276,12 +260,12 @@ public class PictureCollection {
      * This method allows the programmer to set whether the tree has unsaved
      * updates or not.
      *
-     * @param b Set to true if there are unsaved updates, false if there are
+     * @param unsavedUpdates Set to true if there are unsaved updates, false if there are
      * none
      * @see #unsavedUpdates
      */
-    public final void setUnsavedUpdates( boolean b ) {
-        unsavedUpdates = b;
+    public void setUnsavedUpdates( boolean unsavedUpdates ) {
+        this.unsavedUpdates = unsavedUpdates;
     }
 
     /**
@@ -312,12 +296,12 @@ public class PictureCollection {
     }
 
     /**
-     * sets the allow edit status of this collection
+     * sets the allow edit allowedEdits of this collection
      *
-     * @param status pass true to allow edits, false to forbid
+     * @param allowedEdits pass true to allow edits, false to forbid
      */
-    public final void setAllowEdits( boolean status ) {
-        allowEdits = status;
+    public void setAllowEdits( boolean allowedEdits ) {
+        allowEdits = allowedEdits;
     }
 
     /**
@@ -445,13 +429,9 @@ public class PictureCollection {
 
         // add a new CategoryQuery to the Searches tree
         final CategoryQuery categoryQuery = new CategoryQuery( index );
-        Runnable r = new Runnable() {
-            @Override
-            public void run() {
-                addQueryToTreeModel( categoryQuery );
-            }
-        };
-        SwingUtilities.invokeLater( r );
+        SwingUtilities.invokeLater(
+                () -> addQueryToTreeModel( categoryQuery )
+        );
     }
 
     /**
@@ -645,9 +625,9 @@ public class PictureCollection {
     public void clearMailSelection() {
         //can't use iterator directly or we have a concurrent modification exception
         List<SortableDefaultMutableTreeNode> clone = new ArrayList<>( mailSelection.size() );
-        for ( SortableDefaultMutableTreeNode item : mailSelection ) {
+        mailSelection.stream().forEach( ( item ) -> {
             clone.add( item );
-        }
+        } );
 
         for ( SortableDefaultMutableTreeNode node : clone ) {
             LOGGER.log( Level.FINE, "Removing node: {0}", node.toString() );
@@ -841,16 +821,14 @@ public class PictureCollection {
             }
         }
 
-        Runnable r = new Runnable() {
-            @Override
-            public void run() {
-                getYearsTreeNode().removeAllChildren();
-                for ( String year : years ) {
-                    addYearQuery( year );
+        SwingUtilities.invokeLater(
+                () -> {
+                    getYearsTreeNode().removeAllChildren();
+                    years.stream().forEach( ( year ) -> {
+                        addYearQuery( year );
+            } );
                 }
-            }
-        };
-        SwingUtilities.invokeLater( r );
+        );
 
     }
 
@@ -863,7 +841,7 @@ public class PictureCollection {
             LOGGER.severe( "xmlFile is null. Not saving!" );
         } else {
             File temporaryFile = new File( xmlFile.getPath() + ".!!!" );
-            new XmlDistiller( temporaryFile, getRootNode(), false, false );
+            new JpoWriter( temporaryFile, getRootNode(), false );
             File originalFile = new File( xmlFile.getPath() + ".orig" );
             xmlFile.renameTo( originalFile );
             temporaryFile.renameTo( xmlFile );
@@ -910,7 +888,7 @@ public class PictureCollection {
                 }
             }
         }
-        return parentGroups.toArray( new SortableDefaultMutableTreeNode[0] );
+        return parentGroups.toArray( new SortableDefaultMutableTreeNode[parentGroups.size()] );
     }
     /**
      * A reference to the selected nodes.
@@ -984,7 +962,7 @@ public class PictureCollection {
      * @return an array of the selected nodes
      */
     public SortableDefaultMutableTreeNode[] getSelectedNodes() {
-        return (SortableDefaultMutableTreeNode[]) selection.toArray( new SortableDefaultMutableTreeNode[selection.size()] );
+        return selection.toArray( new SortableDefaultMutableTreeNode[selection.size()] );
     }
 
     /**

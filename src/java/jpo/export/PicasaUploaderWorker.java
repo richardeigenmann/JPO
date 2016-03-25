@@ -86,9 +86,9 @@ public class PicasaUploaderWorker extends SwingWorker<Boolean, Integer> {
 
     @Override
     protected void process( List<Integer> chunks ) {
-        for ( int number : chunks ) {
+        chunks.stream().forEach( ( _item ) -> {
             progressBar.setValue( progressBar.getValue() + 1 );
-        }
+        } );
     }
 
     @Override

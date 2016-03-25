@@ -3,7 +3,7 @@ package jpo.gui;
 /*
  ThumbnailsPanelControllerTest.java:  Tests for the ThumbnailsPanelController
 
- Copyright (C) 2014  Richard Eigenmann.
+ Copyright (C) 2014-2016  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -23,6 +23,7 @@ import java.awt.Rectangle;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.fail;
@@ -35,15 +36,18 @@ import org.junit.Test;
 public class ThumbnailsPanelControllerTest {
 
     /**
+     * Defines a logger for this class
+     */
+    private static final Logger LOGGER = Logger.getLogger( ThumbnailsPanelControllerTest.class.getName() );
+
+    /**
      * Test of nodeLayoutChanged getMouseRectangle, of class
      * ThumbnailsPanelController.
      */
     @Test
     public void testGetMouseRectangle() {
-        Runnable r = new Runnable() {
-
-            @Override
-            public void run() {
+        try {
+            SwingUtilities.invokeAndWait( () -> {
                 try {
                     ThumbnailsPanelController thumbnailsPanelController = new ThumbnailsPanelController();
                     Field mousePressedPoint = thumbnailsPanelController.getClass().getDeclaredField( "mousePressedPoint" );
@@ -69,15 +73,12 @@ public class ThumbnailsPanelControllerTest {
                     assertEquals( "Checking width", topLeft.x - higherLeftPoint.x, r2.width );
                     assertEquals( "Checking height", topLeft.y - higherLeftPoint.y, r2.height );
                 } catch ( NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException | NoSuchMethodException | InvocationTargetException ex ) {
-                    System.out.println( ex.getMessage() );
+                    LOGGER.severe( ex.getMessage() );
                     fail( ex.getMessage() );
                 } catch ( HeadlessException ex ) {
-                    System.out.println( "The tests are running in a headless environment. This test can't be executed. Letting it pass." );
+                    LOGGER.severe( "The tests are running in a headless environment. This test can't be executed. Letting it pass." );
                 }
-            }
-        };
-        try {
-            SwingUtilities.invokeAndWait( r );
+            } );
         } catch ( InterruptedException | InvocationTargetException ex ) {
             fail( ex.getMessage() );
         }

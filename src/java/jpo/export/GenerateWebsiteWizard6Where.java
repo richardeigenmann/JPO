@@ -6,27 +6,17 @@ import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 import java.awt.Component;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.io.File;
-import java.util.logging.Logger;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import jpo.dataModel.Settings;
-import static jpo.export.HtmlDistillerOptions.OutputTarget.OUTPUT_FTP_LOCATION;
-import static jpo.export.HtmlDistillerOptions.OutputTarget.OUTPUT_LOCAL_DIRECTORY;
-import static jpo.export.HtmlDistillerOptions.OutputTarget.OUTPUT_SSH_LOCATION;
-import jpo.gui.DirectoryChooser;
-import net.javaprog.ui.wizard.AbstractStep;
-import net.miginfocom.swing.MigLayout;
-import java.awt.Font;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.SocketException;
 import java.util.Properties;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
@@ -37,6 +27,14 @@ import javax.swing.JSpinner;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.event.ChangeEvent;
+import jpo.dataModel.Settings;
+import static jpo.export.HtmlDistillerOptions.OutputTarget.OUTPUT_FTP_LOCATION;
+import static jpo.export.HtmlDistillerOptions.OutputTarget.OUTPUT_LOCAL_DIRECTORY;
+import static jpo.export.HtmlDistillerOptions.OutputTarget.OUTPUT_SSH_LOCATION;
+import jpo.gui.DirectoryChooser;
+import net.javaprog.ui.wizard.AbstractStep;
+import net.miginfocom.swing.MigLayout;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPReply;
@@ -44,7 +42,7 @@ import org.apache.commons.net.ftp.FTPReply;
 /*
  GenerateWebsiteWizard6Where: Ask where to generate the website
 
- Copyright (C) 2008-2013  Richard Eigenmann.
+ Copyright (C) 2008-2016  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -114,7 +112,7 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
     /**
      * The FTP port
      */
-    private final JSpinner ftpPort = new JSpinner( new SpinnerNumberModel( 21, 0, 65535, 1 ) );
+    private final JSpinner ftpPort = new JSpinner( new SpinnerNumberModel( 21, 0, 65_535, 1 ) );
     /**
      * The ftp user
      *
@@ -143,7 +141,7 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
     /**
      * ssh Port
      */
-    private final JSpinner sshPort = new JSpinner( new SpinnerNumberModel( 22, 0, 65535, 1 ) );
+    private final JSpinner sshPort = new JSpinner( new SpinnerNumberModel( 22, 0, 65_535, 1 ) );
     /**
      * The ssh user
      *
@@ -189,28 +187,25 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
         final JPanel ftpPanel = new JPanel( new MigLayout( "", "[][250:250:800]", "" ) );
         final JPanel sshPanel = new JPanel( new MigLayout( "", "[][250:250:800]", "" ) );
 
-        finalTarget.addActionListener( new ActionListener() {
-            @Override
-            public void actionPerformed( ActionEvent arg0 ) {
-                switch ( finalTarget.getSelectedIndex() ) {
-                    case 0:
-                        ftpPanel.setVisible( false );
-                        sshPanel.setVisible( false );
-                        GenerateWebsiteWizard6Where.this.options.setOutputTarget( HtmlDistillerOptions.OutputTarget.OUTPUT_LOCAL_DIRECTORY );
-                        break;
-                    case 1:
-                        ftpPanel.setVisible( true );
-                        sshPanel.setVisible( false );
-                        GenerateWebsiteWizard6Where.this.options.setOutputTarget( HtmlDistillerOptions.OutputTarget.OUTPUT_FTP_LOCATION );
-                        break;
-                    case 2:
-                        ftpPanel.setVisible( false );
-                        sshPanel.setVisible( true );
-                        GenerateWebsiteWizard6Where.this.options.setOutputTarget( HtmlDistillerOptions.OutputTarget.OUTPUT_SSH_LOCATION );
-                        break;
-                }
+        finalTarget.addActionListener(( ActionEvent arg0 ) -> {
+            switch ( finalTarget.getSelectedIndex() ) {
+                case 0:
+                    ftpPanel.setVisible( false );
+                    sshPanel.setVisible( false );
+                    GenerateWebsiteWizard6Where.this.options.setOutputTarget( HtmlDistillerOptions.OutputTarget.OUTPUT_LOCAL_DIRECTORY );
+                    break;
+                case 1:
+                    ftpPanel.setVisible( true );
+                    sshPanel.setVisible( false );
+                    GenerateWebsiteWizard6Where.this.options.setOutputTarget( HtmlDistillerOptions.OutputTarget.OUTPUT_FTP_LOCATION );
+                    break;
+                case 2:
+                    ftpPanel.setVisible( false );
+                    sshPanel.setVisible( true );
+                    GenerateWebsiteWizard6Where.this.options.setOutputTarget( HtmlDistillerOptions.OutputTarget.OUTPUT_SSH_LOCATION );
+                    break;
             }
-        } );
+        });
 
         wizardPanel.add( finalTarget, "wrap" );
         wizardPanel.add( new JLabel( Settings.jpoResources.getString( "genericTargetDirText" ) ), "align label, wrap" );
@@ -220,13 +215,10 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
         JButton checkButton = new JButton( Settings.jpoResources.getString( "check" ) );
         checkButton.setAlignmentX( Component.LEFT_ALIGNMENT );
         checkButton.setMaximumSize( Settings.defaultButtonDimension );
-        checkButton.addActionListener( new ActionListener() {
-            @Override
-            public void actionPerformed( ActionEvent arg0 ) {
-                options.setTargetDirectory( targetDirJTextField.getDirectory() );
-                setCanGoNext( check( options.getTargetDirectory() ) );
-            }
-        } );
+        checkButton.addActionListener(( ActionEvent arg0 ) -> {
+            options.setTargetDirectory( targetDirJTextField.getDirectory() );
+            setCanGoNext( check( options.getTargetDirectory() ) );
+        });
         wizardPanel.add( checkButton, "wrap" );
 
         ftpPanel.add( new JLabel( "Ftp Server:" ), "align label" );
@@ -243,12 +235,9 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
         ftpPanel.add( new JLabel( "FTP Port " ), "align label" );
         // Records the ftp port number, 0 to 65535, start at 21 increment 1
 
-        ftpPort.addChangeListener( new ChangeListener() {
-            @Override
-            public void stateChanged( ChangeEvent arg0 ) {
-                options.setFtpPort( ( (SpinnerNumberModel) ( ftpPort.getModel() ) ).getNumber().intValue() );
-            }
-        } );
+        ftpPort.addChangeListener(( ChangeEvent arg0 ) -> {
+            options.setFtpPort( ( (SpinnerNumberModel) ( ftpPort.getModel() ) ).getNumber().intValue() );
+        });
         ftpPanel.add( ftpPort, "wrap" );
 
         ftpPanel.add( new JLabel( "FTP user:" ), "align label" );
@@ -286,28 +275,20 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
                 "growx, wrap" );
 
         final JButton ftpTestJButton = new JButton( "Test" );
-        ftpTestJButton.addActionListener(
-                new ActionListener() {
-                    @Override
-                    public void actionPerformed( ActionEvent e ) {
-                        String returnString = testFtpConnection();
-                        ftpError.setText( returnString );
-                    }
-                } );
+        ftpTestJButton.addActionListener(( ActionEvent e ) -> {
+            String returnString = testFtpConnection();
+            ftpError.setText( returnString );
+        });
         ftpPanel.add( ftpTestJButton, "align label" );
 
         ftpPanel.add( ftpError,
                 "grow, spany2, wrap" );
 
         final JButton ftpMkdirJButton = new JButton( "mkdir" );
-        ftpMkdirJButton.addActionListener(
-                new ActionListener() {
-                    @Override
-                    public void actionPerformed( ActionEvent e ) {
-                        String returnString = ftpMkdir();
-                        ftpError.setText( returnString );
-                    }
-                } );
+        ftpMkdirJButton.addActionListener(( ActionEvent e ) -> {
+            String returnString = ftpMkdir();
+            ftpError.setText( returnString );
+        });
         ftpPanel.add( ftpMkdirJButton, "align label, wrap" );
 
         wizardPanel.add( ftpPanel,
@@ -327,13 +308,9 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
 
         sshPanel.add(
                 new JLabel( "SSH Port " ), "align label" );
-        sshPort.addChangeListener(
-                new ChangeListener() {
-                    @Override
-                    public void stateChanged( ChangeEvent arg0 ) {
-                        options.setSshPort( ( (SpinnerNumberModel) ( sshPort.getModel() ) ).getNumber().intValue() );
-                    }
-                } );
+        sshPort.addChangeListener(( ChangeEvent arg0 ) -> {
+            options.setSshPort( ( (SpinnerNumberModel) ( sshPort.getModel() ) ).getNumber().intValue() );
+        });
         sshPanel.add( sshPort,
                 "wrap" );
 
@@ -354,28 +331,24 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
 
         sshPanel.add(
                 new JLabel( "SSH Auth:" ), "align label" );
-        sshAuthOoptionChooser.addActionListener(
-                new ActionListener() {
-                    @Override
-                    public void actionPerformed( ActionEvent arg0 ) {
-                        switch ( sshAuthOoptionChooser.getSelectedIndex() ) {
-                            case 0:
-                                sshPasswordLabel.setVisible( true );
-                                sshPassword.setVisible( true );
-                                sshKeyfileLabel.setVisible( false );
-                                sshKeyFile.setVisible( false );
-                                GenerateWebsiteWizard6Where.this.options.setSshAuthType( HtmlDistillerOptions.SshAuthType.SSH_AUTH_PASSWORD );
-                                break;
-                            case 1:
-                                sshPasswordLabel.setVisible( false );
-                                sshPassword.setVisible( false );
-                                sshKeyfileLabel.setVisible( true );
-                                sshKeyFile.setVisible( true );
-                                GenerateWebsiteWizard6Where.this.options.setSshAuthType( HtmlDistillerOptions.SshAuthType.SSH_AUTH_KEYFILE );
-                                break;
-                        }
-                    }
-                } );
+        sshAuthOoptionChooser.addActionListener(( ActionEvent arg0 ) -> {
+            switch ( sshAuthOoptionChooser.getSelectedIndex() ) {
+                case 0:
+                    sshPasswordLabel.setVisible( true );
+                    sshPassword.setVisible( true );
+                    sshKeyfileLabel.setVisible( false );
+                    sshKeyFile.setVisible( false );
+                    GenerateWebsiteWizard6Where.this.options.setSshAuthType( HtmlDistillerOptions.SshAuthType.SSH_AUTH_PASSWORD );
+                    break;
+                case 1:
+                    sshPasswordLabel.setVisible( false );
+                    sshPassword.setVisible( false );
+                    sshKeyfileLabel.setVisible( true );
+                    sshKeyFile.setVisible( true );
+                    GenerateWebsiteWizard6Where.this.options.setSshAuthType( HtmlDistillerOptions.SshAuthType.SSH_AUTH_KEYFILE );
+                    break;
+            }
+        });
         sshPanel.add( sshAuthOoptionChooser,
                 "wrap" );
 
@@ -418,13 +391,9 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
 
         final JButton sshTestJButton = new JButton( "Test" );
 
-        sshTestJButton.addActionListener(
-                new ActionListener() {
-                    @Override
-                    public void actionPerformed( ActionEvent e ) {
-                        testSshConnection();
-                    }
-                } );
+        sshTestJButton.addActionListener(( ActionEvent e ) -> {
+            testSshConnection();
+        });
         sshPanel.add( sshTestJButton,
                 "align label" );
         sshPanel.add( sshError,
@@ -432,13 +401,9 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
 
         JButton sshMkdirJButton = new JButton( "mkdir" );
 
-        sshMkdirJButton.addActionListener(
-                new ActionListener() {
-                    @Override
-                    public void actionPerformed( ActionEvent e ) {
-                        sshMkdir();
-                    }
-                } );
+        sshMkdirJButton.addActionListener(( ActionEvent e ) -> {
+            sshMkdir();
+        });
         sshPanel.add( sshMkdirJButton,
                 "align label, wrap" );
 
@@ -625,7 +590,7 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
 
         private static final long serialVersionUID = 1L;
 
-        public JMultilineLabel() {
+        JMultilineLabel() {
             super();
             setEditable( false );
             setCursor( null );

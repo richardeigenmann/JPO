@@ -35,7 +35,8 @@ The license is in gpl.txt.
 See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 /**
- * Asks all the questions we need to know in regard to the options for the website
+ * Asks all the questions we need to know in regard to the options for the
+ * website
  *
  * @author Richard Eigenmann
  */
@@ -48,6 +49,7 @@ public class GenerateWebsiteWizard5Options extends AbstractStep {
 
     /**
      * This step asks about the options that we require to generate a website
+     *
      * @param options options
      */
     public GenerateWebsiteWizard5Options( HtmlDistillerOptions options ) {
@@ -75,39 +77,45 @@ public class GenerateWebsiteWizard5Options extends AbstractStep {
                 sequentialStartJSpinner.setEnabled( true );
                 break;
         }
-        ( (SpinnerNumberModel) ( sequentialStartJSpinner.getModel() ) ).setValue( options.getSequentialStartNumber() );
+        sequentialStartJSpinner.getModel().setValue( options.getSequentialStartNumber() );
         generateRobotsJCheckBox.setSelected( options.isWriteRobotsTxt() );
 
     }
     /**
-     * Radio Button to indicate that the java hash code should be used to get the image name
+     * Radio Button to indicate that the java hash code should be used to get
+     * the image name
      */
     private JRadioButton hashcodeRadioButton = new JRadioButton( Settings.jpoResources.getString( "hashcodeRadioButton" ) );
     /**
-     * Radio Button to indicate that the original name should be used to get the image name
+     * Radio Button to indicate that the original name should be used to get the
+     * image name
      */
     private JRadioButton originalNameRadioButton = new JRadioButton( Settings.jpoResources.getString( "originalNameRadioButton" ) );
     /**
-     * Radio Button to indicate that a sequential number should be used to get the image name
+     * Radio Button to indicate that a sequential number should be used to get
+     * the image name
      */
     private JRadioButton sequentialRadioButton = new JRadioButton( Settings.jpoResources.getString( "sequentialRadioButton" ) );
     /**
-     * Allow the user to specify a start number for the sequential numbering, 1..999999999, start 1, increment 1
-     * Requested by Jay Christopherson, Nov 2008
+     * Allow the user to specify a start number for the sequential numbering,
+     * 1..999999999, start 1, increment 1 Requested by Jay Christopherson, Nov
+     * 2008
      */
-    private final JSpinner sequentialStartJSpinner = new JSpinner( new SpinnerNumberModel( 1, 1, 999999999, 1 ) );
+    private final JSpinner sequentialStartJSpinner = new JSpinner( new SpinnerNumberModel( 1, 1, 999_999_999, 1 ) );
     /**
-     *  Tickbox that indicates whether to write a robots.txt
-     **/
+     * Tickbox that indicates whether to write a robots.txt
+     *
+     */
     private JCheckBox generateRobotsJCheckBox = new JCheckBox( Settings.jpoResources.getString( "generateRobotsJCheckBox" ) );
 
     /**
      * Creates the GUI widgets
+     *
      * @return The component to be shown
      */
     @Override
     protected JComponent createComponent() {
-        JPanel wizardPanel = new JPanel(new MigLayout());
+        JPanel wizardPanel = new JPanel( new MigLayout() );
 
         ButtonGroup bg = new ButtonGroup();
         bg.add( hashcodeRadioButton );
@@ -119,21 +127,17 @@ public class GenerateWebsiteWizard5Options extends AbstractStep {
         final JLabel sequentialStartLabel = new JLabel( Settings.jpoResources.getString( "sequentialRadioButtonStart" ) );
         bg.add( sequentialRadioButton );
         wizardPanel.add( sequentialRadioButton, "wrap" );
-        ChangeListener radioButtonChangeListener = new ChangeListener() {
-
-            @Override
-            public void stateChanged( ChangeEvent arg0 ) {
-                if ( hashcodeRadioButton.isSelected() ) {
-                    options.setPictureNaming( HtmlDistillerOptions.PictureNamingType.PICTURE_NAMING_BY_HASH_CODE );
-                } else if ( originalNameRadioButton.isSelected() ) {
-                    options.setPictureNaming( HtmlDistillerOptions.PictureNamingType.PICTURE_NAMING_BY_ORIGINAL_NAME );
-                } else {
-                    options.setPictureNaming( HtmlDistillerOptions.PictureNamingType.PICTURE_NAMING_BY_SEQUENTIAL_NUMBER );
-                }
-                if ( sequentialStartJSpinner.isEnabled() != sequentialRadioButton.isSelected() ) {
-                    sequentialStartJSpinner.setEnabled( sequentialRadioButton.isSelected() );
-                    sequentialStartLabel.setEnabled( sequentialRadioButton.isSelected() );
-                }
+        ChangeListener radioButtonChangeListener = ( ChangeEvent arg0 ) -> {
+            if ( hashcodeRadioButton.isSelected() ) {
+                options.setPictureNaming( HtmlDistillerOptions.PictureNamingType.PICTURE_NAMING_BY_HASH_CODE );
+            } else if ( originalNameRadioButton.isSelected() ) {
+                options.setPictureNaming( HtmlDistillerOptions.PictureNamingType.PICTURE_NAMING_BY_ORIGINAL_NAME );
+            } else {
+                options.setPictureNaming( HtmlDistillerOptions.PictureNamingType.PICTURE_NAMING_BY_SEQUENTIAL_NUMBER );
+            }
+            if ( sequentialStartJSpinner.isEnabled() != sequentialRadioButton.isSelected() ) {
+                sequentialStartJSpinner.setEnabled( sequentialRadioButton.isSelected() );
+                sequentialStartLabel.setEnabled( sequentialRadioButton.isSelected() );
             }
         };
         hashcodeRadioButton.addChangeListener( radioButtonChangeListener );
@@ -146,25 +150,16 @@ public class GenerateWebsiteWizard5Options extends AbstractStep {
         sequentialNumberJPanel.setMaximumSize( GenerateWebsiteWizard.normalComponentSize );
         sequentialNumberJPanel.setAlignmentX( Container.LEFT_ALIGNMENT );
         sequentialNumberJPanel.add( sequentialStartLabel );
-        sequentialStartJSpinner.addChangeListener( new ChangeListener() {
-
-            @Override
-            public void stateChanged( ChangeEvent arg0 ) {
-                options.setSequentialStartNumber( ( (SpinnerNumberModel) sequentialStartJSpinner.getModel() ).getNumber().intValue() );
-            }
+        sequentialStartJSpinner.addChangeListener( ( ChangeEvent arg0 ) -> {
+            options.setSequentialStartNumber( ( (SpinnerNumberModel) sequentialStartJSpinner.getModel() ).getNumber().intValue() );
         } );
         sequentialNumberJPanel.add( sequentialStartJSpinner );
         wizardPanel.add( sequentialNumberJPanel, "wrap" );
 
-        generateRobotsJCheckBox.addChangeListener( new ChangeListener() {
-
-            @Override
-            public void stateChanged( ChangeEvent arg0 ) {
-                options.setWriteRobotsTxt( generateRobotsJCheckBox.isSelected() );
-            }
+        generateRobotsJCheckBox.addChangeListener( ( ChangeEvent arg0 ) -> {
+            options.setWriteRobotsTxt( generateRobotsJCheckBox.isSelected() );
         } );
         wizardPanel.add( generateRobotsJCheckBox, "wrap" );
-
 
         return wizardPanel;
     }

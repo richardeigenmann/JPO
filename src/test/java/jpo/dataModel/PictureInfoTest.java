@@ -42,12 +42,8 @@ public class PictureInfoTest {
     public void testSetDescription() {
         PictureInfo pi = new PictureInfo();
         changeEvents = 0;
-        PictureInfoChangeListener picl = new PictureInfoChangeListener() {
-
-            @Override
-            public void pictureInfoChangeEvent( PictureInfoChangeEvent arg0 ) {
-                changeEvents += 1;
-            }
+        PictureInfoChangeListener picl = ( PictureInfoChangeEvent arg0 ) -> {
+            changeEvents += 1;
         };
         pi.addPictureInfoChangeListener( picl );
         pi.setDescription( "Rubbish" );
@@ -67,12 +63,8 @@ public class PictureInfoTest {
     public void testSetDescriptionSame() {
         PictureInfo pi = new PictureInfo();
         countEvents = 0;
-        PictureInfoChangeListener picl = new PictureInfoChangeListener() {
-
-            @Override
-            public void pictureInfoChangeEvent( PictureInfoChangeEvent arg0 ) {
-                countEvents += 1;
-            }
+        PictureInfoChangeListener picl = ( PictureInfoChangeEvent arg0 ) -> {
+            countEvents += 1;
         };
         pi.addPictureInfoChangeListener( picl );
         pi.setDescription( "Rubbish" );

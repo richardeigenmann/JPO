@@ -60,8 +60,8 @@ public class CategoryQuery implements Query {
     @Override
     public int getNumberOfResults() {
         if ( resultList == null ) {
-            LOGGER.info( "CategoryQuery.getNumberOfResults: called on a null result set." );
-            Thread.dumpStack();
+            LOGGER.severe( "CategoryQuery.getNumberOfResults: called on a null result set." );
+            //Thread.dumpStack();
             return 0;
         }
         return resultList.size();
@@ -112,7 +112,7 @@ public class CategoryQuery implements Query {
      * This method retrieves a new List of nodes that match the category.
      */
     @Override
-    public final void refresh() {
+    public void refresh() {
         resultList = null;
         resultList = PictureCollection.getCategoryUsageNodes( key, Settings.getPictureCollection().getRootNode() );
     }

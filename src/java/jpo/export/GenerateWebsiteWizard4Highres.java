@@ -4,7 +4,6 @@ import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import jpo.dataModel.Settings;
 import net.javaprog.ui.wizard.AbstractStep;
 import net.miginfocom.swing.MigLayout;
@@ -89,39 +88,27 @@ public class GenerateWebsiteWizard4Highres extends AbstractStep {
         JPanel wizardPanel = new JPanel( new MigLayout() );
 
         // create checkbox for highres export
-        exportHighresJCheckBox.addChangeListener( new ChangeListener() {
-            @Override
-            public void stateChanged( ChangeEvent arg0 ) {
-                options.setExportHighres( exportHighresJCheckBox.isSelected() );
-            }
-        } );
+        exportHighresJCheckBox.addChangeListener(( ChangeEvent arg0 ) -> {
+            options.setExportHighres( exportHighresJCheckBox.isSelected() );
+        });
         wizardPanel.add( exportHighresJCheckBox, "wrap" );
 
         // create checkbox for highres rotate
-        rotateHighresJCheckBox.addChangeListener( new ChangeListener() {
-            @Override
-            public void stateChanged( ChangeEvent arg0 ) {
-                options.setRotateHighres( rotateHighresJCheckBox.isSelected() );
-            }
-        } );
+        rotateHighresJCheckBox.addChangeListener(( ChangeEvent arg0 ) -> {
+            options.setRotateHighres( rotateHighresJCheckBox.isSelected() );
+        });
         wizardPanel.add( rotateHighresJCheckBox, "wrap" );
 
 
-        generateZipfileJCheckBox.addChangeListener( new ChangeListener() {
-            @Override
-            public void stateChanged( ChangeEvent arg0 ) {
-                options.setGenerateZipfile( generateZipfileJCheckBox.isSelected() );
-            }
-        } );
+        generateZipfileJCheckBox.addChangeListener(( ChangeEvent arg0 ) -> {
+            options.setGenerateZipfile( generateZipfileJCheckBox.isSelected() );
+        });
         wizardPanel.add( generateZipfileJCheckBox, "wrap" );
 
         // create checkbox for linking to highres
-        linkToHighresJCheckBox.addChangeListener( new ChangeListener() {
-            @Override
-            public void stateChanged( ChangeEvent arg0 ) {
-                options.setLinkToHighres( linkToHighresJCheckBox.isSelected() );
-            }
-        } );
+        linkToHighresJCheckBox.addChangeListener(( ChangeEvent arg0 ) -> {
+            options.setLinkToHighres( linkToHighresJCheckBox.isSelected() );
+        });
         wizardPanel.add( linkToHighresJCheckBox, "wrap" );
 
         return wizardPanel;

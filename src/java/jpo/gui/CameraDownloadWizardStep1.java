@@ -8,15 +8,15 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
-import jpo.dataModel.Tools;
 import jpo.dataModel.Settings;
+import jpo.dataModel.Tools;
 import net.javaprog.ui.wizard.AbstractStep;
 
 
 /*
  CameraDownloadWizardStep1.java: the first step in the download from Camera Wizard
 
- Copyright (C) 2007 - 2014  Richard Eigenmann.
+ Copyright (C) 2007 - 2016  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -99,12 +99,12 @@ public class CameraDownloadWizardStep1
      * then the setCanGoNext method is called which will allow the user to move
      * forward. If there are no new pictures then the user can only cancel.
      */
-    class SearchForPicturesThread
+    private class SearchForPicturesThread
             implements Runnable {
 
         private final JLabel progressJLabel;
 
-        public SearchForPicturesThread( JLabel progressJLabel ) {
+        SearchForPicturesThread( JLabel progressJLabel ) {
             this.progressJLabel = progressJLabel;
         }
 
@@ -114,17 +114,13 @@ public class CameraDownloadWizardStep1
             dataModel.setNewPictures( dataModel.getCamera().getNewPictures() );
 
             // now update the GUI on the EDT
-            Runnable r = new Runnable() {
-
-                @Override
-                public void run() {
-                    if ( dataModel.getNewPictures().size() > 0 ) {
-                        setCanGoNext( true );
-                    } else {
-                        setCanGoNext( false );
-                    }
-                    progressJLabel.setText( Integer.toString( dataModel.getNewPictures().size() ) + Settings.jpoResources.getString( "DownloadCameraWizardStep1Text3" ) );
+            Runnable r = () -> {
+                if ( dataModel.getNewPictures().size() > 0 ) {
+                    setCanGoNext( true );
+                } else {
+                    setCanGoNext( false );
                 }
+                progressJLabel.setText( Integer.toString( dataModel.getNewPictures().size() ) + Settings.jpoResources.getString( "DownloadCameraWizardStep1Text3" ) );
             };
             if ( SwingUtilities.isEventDispatchThread() ) {
                 r.run();

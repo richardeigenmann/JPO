@@ -2,13 +2,9 @@ package jpo.gui;
 
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
-import jpo.dataModel.Settings;
-import jpo.dataModel.SortableDefaultMutableTreeNode;
-import jpo.dataModel.PictureInfo;
 import java.net.URI;
 import java.util.Enumeration;
 import java.util.HashSet;
@@ -26,6 +22,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingWorker;
 import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
+import jpo.dataModel.PictureInfo;
+import jpo.dataModel.Settings;
+import jpo.dataModel.SortableDefaultMutableTreeNode;
 import net.miginfocom.swing.MigLayout;
 
 /*
@@ -132,30 +131,22 @@ public class ReconcileJFrame extends JFrame {
         okJButton.setBorder( BorderFactory.createRaisedBevelBorder() );
         okJButton.setDefaultCapable( true );
         getRootPane().setDefaultButton( okJButton );
-        okJButton.addActionListener( new ActionListener() {
-
-            @Override
-            public void actionPerformed( ActionEvent e ) {
-                File scanDir = directoryChooser.getDirectory();
-                runReconciliation( scanDir );
-            }
-        } );
+        okJButton.addActionListener(( ActionEvent e ) -> {
+            File scanDir = directoryChooser.getDirectory();
+            runReconciliation( scanDir );
+        });
         controlJPanel.add( okJButton, "wrap" );
 
         controlJPanel.add( recurseSubdirectoriesJCheckBox, "spanx 2" );
 
         JButton cancelJButton = new JButton( Settings.jpoResources.getString( "closeJButton" ) );
-        cancelJButton.addActionListener( new ActionListener() {
-
-            @Override
-            public void actionPerformed( ActionEvent e ) {
-                if ( ( reconciler == null ) || ( reconciler.isDone() ) ) {
-                    getRid();
-                } else {
-                    reconciler.cancel( false );
-                }
+        cancelJButton.addActionListener(( ActionEvent e ) -> {
+            if ( ( reconciler == null ) || ( reconciler.isDone() ) ) {
+                getRid();
+            } else {
+                reconciler.cancel( false );
             }
-        } );
+        });
         cancelJButton.setPreferredSize( Settings.defaultButtonDimension );
         cancelJButton.setMinimumSize( Settings.defaultButtonDimension );
         cancelJButton.setMaximumSize( Settings.defaultButtonDimension );
@@ -357,9 +348,9 @@ public class ReconcileJFrame extends JFrame {
 
         @Override
         protected void process( List<String> chunks ) {
-            for ( String s : chunks ) {
+            chunks.stream().forEach( ( s ) -> {
                 outputTextArea.append( s );
-            }
+            } );
         }
 
         @Override

@@ -50,29 +50,19 @@ public class ThumbnailControllerTest {
     public void testConstructor() {
 
         // TravisCI runs headless so we can't execute the below test
-        GraphicsEnvironment ge
-                = GraphicsEnvironment.getLocalGraphicsEnvironment();
-        if ( ge.isHeadless() ) {
+        if ( GraphicsEnvironment.isHeadless() ) {
             return;
         }
-        
 
         TestCase.assertNull( thumbnail );
         try {
-            SwingUtilities.invokeAndWait( new Runnable() {
-
-                @Override
-                public void run() {
-                    thumbnail = new Thumbnail();
-
-                }
-            } );
+            SwingUtilities.invokeAndWait( ()
+                    -> thumbnail = new Thumbnail()
+            );
             TestCase.assertNotNull( thumbnail );
             ThumbnailController thumbnailController = new ThumbnailController( thumbnail, 350 );
             return;
-        } catch ( InterruptedException ex ) {
-            Logger.getLogger( ThumbnailControllerTest.class.getName() ).log( Level.SEVERE, null, ex );
-        } catch ( InvocationTargetException ex ) {
+        } catch ( InterruptedException | InvocationTargetException ex ) {
             Logger.getLogger( ThumbnailControllerTest.class.getName() ).log( Level.SEVERE, null, ex );
         }
         fail( "Could not construct a Thumbnail Controller" );

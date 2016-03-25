@@ -39,8 +39,6 @@ import org.TagCloud.WeightedWord;
  The license is in gpl.txt.
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
-
-
 /**
  * Manages the Tag Cloud
  */
@@ -84,13 +82,9 @@ public class TagCloudController implements TagClickListener {
      */
     @Subscribe
     public void handleGroupSelectionEvent( final ShowGroupRequest event ) {
-        SwingUtilities.invokeLater( new Runnable() {
-
-            @Override
-            public void run() {
-                nodeWordMapper = new NodeWordMapper( event.getNode() );
-                tagCloud.setWordsList( nodeWordMapper.getWeightedWords() );
-            }
+        SwingUtilities.invokeLater( () -> {
+            nodeWordMapper = new NodeWordMapper( event.getNode() );
+            tagCloud.setWordsList( nodeWordMapper.getWeightedWords() );
         } );
     }
 
@@ -106,16 +100,16 @@ public class TagCloudController implements TagClickListener {
     }
 
     private final static HashSet<String> strikeWordsSet = new HashSet<>( Arrays.asList(
-            "als", 
+            "als",
             "Am",
-            "am", 
+            "am",
             "an",
             "An",
-            "and", 
+            "and",
             "at",
             "auf",
             "Auf",
-            "Aufstieg", 
+            "Aufstieg",
             "aus",
             "bei",
             "Bei",
@@ -125,55 +119,55 @@ public class TagCloudController implements TagClickListener {
             "by",
             "das",
             "Das",
-            "de", 
+            "de",
             "del",
             "dem",
             "den",
-            "der", 
-            "Der", 
-            "des", 
+            "der",
+            "Der",
+            "des",
             "Die",
-            "die", 
+            "die",
             "DSC",
-            "dsc", 
+            "dsc",
             "DSCN",
-            "durch", 
+            "durch",
             "Ein",
             "ein",
-            "eine", 
+            "eine",
             "einem",
-            "einen", 
-            "einer", 
-            "eines", 
+            "einen",
+            "einer",
+            "eines",
             "El",
             "en",
             "fuer",
-            "für", 
-            "gesehen", 
+            "für",
+            "gesehen",
             "hat",
-            "hinter", 
+            "hinter",
             "ich",
             "II",
-            "Il", 
-            "im", 
-            "Im", 
+            "Il",
+            "im",
+            "Im",
             "Image",
-            "img", 
-            "IMG", 
+            "img",
+            "IMG",
             "in",
             "In",
-            "in", 
-            "ist", 
+            "in",
+            "ist",
             "je",
-            "La", 
+            "La",
             "man",
             "meine",
             "MG",
             "mir",
             "Mit",
-            "mit", 
-            "nach", 
-            "neben", 
+            "mit",
+            "nach",
+            "neben",
             "Neuer",
             "nicht",
             "noch",
@@ -187,20 +181,20 @@ public class TagCloudController implements TagClickListener {
             "san",
             "SDC",
             "sein",
-            "sich", 
+            "sich",
             "The",
-            "the", 
-            "to", 
-            "ueber", 
+            "the",
+            "to",
+            "ueber",
             "um",
             "und",
-            "uns", 
+            "uns",
             "unter",
             "Unterwegs",
-            "unterwegs", 
+            "unterwegs",
             "van",
-            "vom", 
-            "von", 
+            "vom",
+            "von",
             "vor",
             "warum",
             "was",
@@ -208,45 +202,45 @@ public class TagCloudController implements TagClickListener {
             "wie",
             "wie",
             "wir",
-            "wird", 
+            "wird",
             "with",
             "without",
             "wurde",
-            "während", 
-            "zu", 
+            "während",
+            "zu",
             "zum",
-            "zur", 
+            "zur",
             "zwischen",
             "über"
     ) );
 
-    private static String[] multiWordTerms = { 
-        "Aprés Ski", 
+    private static final String[] multiWordTerms = {
+        "Aprés Ski",
         "Cape Town",
         "Crans Montana",
-        "Den Haag", 
-        "Empire State", 
-        "Goldman Sachs", 
-        "Groot Marico", 
+        "Den Haag",
+        "Empire State",
+        "Goldman Sachs",
+        "Groot Marico",
         "Halfmoon Bay",
-        "Hoch Ybrig", 
+        "Hoch Ybrig",
         "Lions Head",
-        "Marigot Bay", 
+        "Marigot Bay",
         "Nags Head",
-        "New York", 
-        "New Zealand", 
+        "New York",
+        "New Zealand",
         "Persischer Golf",
-        "Petit Bateau", 
-        "Quadra Island", 
+        "Petit Bateau",
+        "Quadra Island",
         "Red Sea",
         "Rotes Meer",
-        "Saudi Arabien", 
+        "Saudi Arabien",
         "Seleger Moor",
-        "South Africa", 
+        "South Africa",
         "South Georgia",
         "St Gallen",
         "St. Petersinsel",
-        "Tel Aviv", 
+        "Tel Aviv",
         "Toten Meer",
         "Totes Meer",
         "Vic Falls",
@@ -256,9 +250,9 @@ public class TagCloudController implements TagClickListener {
 
     private class NodeWordMapper {
 
-        private List<WeightedWord> weightedWordList = new ArrayList<>();
+        private final List<WeightedWord> weightedWordList = new ArrayList<>();
 
-        private SortableDefaultMutableTreeNode rootNode;
+        private final SortableDefaultMutableTreeNode rootNode;
 
         NodeWordMapper( SortableDefaultMutableTreeNode node ) {
             this.rootNode = node;
@@ -288,9 +282,9 @@ public class TagCloudController implements TagClickListener {
                     splitAndAdd( description );
                 }
             }
-            for ( String key : wordCountMap.keySet() ) {
+            wordCountMap.keySet().stream().forEach( ( key ) -> {
                 weightedWordList.add( new WeightedWord( key, wordCountMap.get( key ) ) );
-            }
+            } );
         }
 
         /**
@@ -317,7 +311,7 @@ public class TagCloudController implements TagClickListener {
             }
         }
 
-        private Map<String, Integer> wordCountMap = new HashMap<>();
+        private final Map<String, Integer> wordCountMap = new HashMap<>();
 
         private void addWord( String word ) {
             if ( wordCountMap.containsKey( word ) ) {

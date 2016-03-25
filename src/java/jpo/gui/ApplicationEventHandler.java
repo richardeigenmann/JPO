@@ -1,10 +1,8 @@
 package jpo.gui;
 
-import jpo.cache.ThumbnailCreationFactory;
 import com.google.common.eventbus.Subscribe;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.ClipboardOwner;
 import java.awt.datatransfer.Transferable;
 import java.io.File;
 import java.io.FileInputStream;
@@ -103,6 +101,8 @@ import jpo.EventBus.StartNewCollectionRequest;
 import jpo.EventBus.UnsavedUpdatesDialogRequest;
 import jpo.EventBus.UpdateApplicationTitleRequest;
 import jpo.cache.JpoCache;
+import jpo.cache.ThumbnailCreationFactory;
+import jpo.cache.ThumbnailQueueRequest.QUEUE_PRIORITY;
 import jpo.dataModel.DuplicatesQuery;
 import jpo.dataModel.FlatFileReader;
 import jpo.dataModel.FlatGroupNavigator;
@@ -117,11 +117,10 @@ import jpo.dataModel.SingleNodeNavigator;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
 import jpo.dataModel.TextQuery;
 import jpo.dataModel.Tools;
+import static jpo.dataModel.Tools.streamcopy;
 import jpo.export.GenerateWebsiteWizard;
 import jpo.export.PicasaUploadRequest;
 import jpo.export.PicasaUploaderWizard;
-import static jpo.dataModel.Tools.streamcopy;
-import jpo.cache.ThumbnailQueueRequest.QUEUE_PRIORITY;
 import jpo.gui.swing.FindJPanel;
 import jpo.gui.swing.FlatFileDistiller;
 import jpo.gui.swing.HelpAboutWindow;
@@ -137,7 +136,7 @@ import webserver.Webserver;
 /*
  ApplicationEventHandler.java:  The Event dispatcher for the JPO Application 
 
- Copyright (C) 2014-2015  Richard Eigenmann.
+ Copyright (C) 2014-2016  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -218,15 +217,13 @@ public class ApplicationEventHandler {
         try {
             // Activate OpenGL performance improvements
             //System.setProperty( "sun.java2d.opengl", "true" );
-            SwingUtilities.invokeAndWait( new Runnable() {
-
-                @Override
-                public void run() {
-                    new MainWindow();
-                    JpoEventBus.getInstance().post( new LoadDockablesPositionsRequest() );
-                    Settings.getPictureCollection().getTreeModel().addTreeModelListener( new MainAppModelListener() );
-                }
-            } );
+            SwingUtilities.invokeAndWait(
+                    () -> {
+                        new MainWindow();
+                        JpoEventBus.getInstance().post( new LoadDockablesPositionsRequest() );
+                        Settings.getPictureCollection().getTreeModel().addTreeModelListener( new MainAppModelListener() );
+                    }
+            );
         } catch ( InterruptedException | InvocationTargetException ex ) {
             LOGGER.log( Level.SEVERE, null, ex );
         }
@@ -425,16 +422,16 @@ public class ApplicationEventHandler {
 
         FindJPanel findPanel = new FindJPanel();
         Object[] options = { "OK", "Cancel" };
-        int result = JOptionPane.showOptionDialog( 
-                Settings.anchorFrame, 
+        int result = JOptionPane.showOptionDialog(
+                Settings.anchorFrame,
                 findPanel,
                 Settings.jpoResources.getString( "searchDialogTitle" ),
-                JOptionPane.OK_CANCEL_OPTION, 
+                JOptionPane.OK_CANCEL_OPTION,
                 JOptionPane.QUESTION_MESSAGE,
                 null,
                 options,
                 null
-                );
+        );
         if ( result == JOptionPane.OK_OPTION ) {
 
             TextQuery textQuery = new TextQuery( findPanel.getSearchArgument() );
@@ -571,19 +568,16 @@ public class ApplicationEventHandler {
                     Settings.getPictureCollection().fileLoad( fileToLoad );
                     JpoEventBus.getInstance().post( new ShowGroupRequest( Settings.getPictureCollection().getRootNode() ) );
                 } catch ( final FileNotFoundException ex ) {
-                    Runnable r = new Runnable() {
 
-                        @Override
-                        public void run() {
-                            LOGGER.log( Level.INFO, "FileNotFoundExecption: {0}", ex.getMessage() );
-                            JOptionPane.showMessageDialog( Settings.anchorFrame,
-                                    ex.getMessage(),
-                                    Settings.jpoResources.getString( "genericError" ),
-                                    JOptionPane.ERROR_MESSAGE );
-                            JpoEventBus.getInstance().post( new StartNewCollectionRequest() );
-                        }
-                    };
-                    SwingUtilities.invokeLater( r );
+                    SwingUtilities.invokeLater( () -> {
+                        LOGGER.log( Level.INFO, "FileNotFoundExecption: {0}", ex.getMessage() );
+                        JOptionPane.showMessageDialog( Settings.anchorFrame,
+                                ex.getMessage(),
+                                Settings.jpoResources.getString( "genericError" ),
+                                JOptionPane.ERROR_MESSAGE );
+                        JpoEventBus.getInstance().post( new StartNewCollectionRequest() );
+                    }
+                    );
                 }
             }
         }.start();
@@ -598,14 +592,12 @@ public class ApplicationEventHandler {
      */
     @Subscribe
     public void handleStartNewCollectionRequest( StartNewCollectionRequest event ) {
-        SwingUtilities.invokeLater( new Runnable() {
-
-            @Override
-            public void run() {
-                Settings.getPictureCollection().clearCollection();
-                JpoEventBus.getInstance().post( new ShowGroupRequest( Settings.getPictureCollection().getRootNode() ) );
-            }
-        } );
+        SwingUtilities.invokeLater(
+                () -> {
+                    Settings.getPictureCollection().clearCollection();
+                    JpoEventBus.getInstance().post( new ShowGroupRequest( Settings.getPictureCollection().getRootNode() ) );
+                }
+        );
     }
 
     /**
@@ -1048,13 +1040,9 @@ public class ApplicationEventHandler {
     public void handleCopyToClipboardRequest( CopyToClipboardRequest request ) {
         Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
         JpoTransferable transferable = new JpoTransferable( request.getNodes() );
-        clipboard.setContents( transferable, new ClipboardOwner() {
-
-            @Override
-            public void lostOwnership( Clipboard clipboard, Transferable contents ) {
-                LOGGER.info( "Lost Ownership of clipboard - not an issue" );
-            }
-        } );
+        clipboard.setContents(transferable, ( Clipboard clipboard1, Transferable contents ) -> {
+            LOGGER.info( "Lost Ownership of clipboard - not an issue" );
+        });
     }
 
     /**
@@ -1516,14 +1504,9 @@ public class ApplicationEventHandler {
      */
     @Subscribe
     public void handleRemoveOldLowresThumbnailsRequest( final RemoveOldLowresThumbnailsRequest request ) {
-        Runnable runnable = new Runnable() {
-
-            @Override
-            public void run() {
-                new ClearThumbnailsJFrame( request.getLowresUrls() );
-            }
-        };
-        SwingUtilities.invokeLater( runnable );
+        SwingUtilities.invokeLater(
+                () -> new ClearThumbnailsJFrame( request.getLowresUrls() )
+        );
     }
 
     /**

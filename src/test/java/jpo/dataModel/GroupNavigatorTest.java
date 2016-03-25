@@ -14,17 +14,17 @@ import org.junit.Test;
  */
 public class GroupNavigatorTest {
 
-    private final GroupInfo groupInfo = new GroupInfo("Group1");
-    private final SortableDefaultMutableTreeNode groupNode = new SortableDefaultMutableTreeNode(groupInfo);
+    private final GroupInfo groupInfo = new GroupInfo( "Group1" );
+    private final SortableDefaultMutableTreeNode groupNode = new SortableDefaultMutableTreeNode( groupInfo );
 
     private final PictureInfo pictureInfo1 = new PictureInfo();
-    private final SortableDefaultMutableTreeNode pictureNode1 = new SortableDefaultMutableTreeNode(pictureInfo1);
+    private final SortableDefaultMutableTreeNode pictureNode1 = new SortableDefaultMutableTreeNode( pictureInfo1 );
 
     private final PictureInfo pictureInfo2 = new PictureInfo();
-    private final SortableDefaultMutableTreeNode pictureNode2 = new SortableDefaultMutableTreeNode(pictureInfo2);
+    private final SortableDefaultMutableTreeNode pictureNode2 = new SortableDefaultMutableTreeNode( pictureInfo2 );
 
-    private final GroupInfo groupInfo2 = new GroupInfo("Group2");
-    private final SortableDefaultMutableTreeNode groupNode2 = new SortableDefaultMutableTreeNode(groupInfo2);
+    private final GroupInfo groupInfo2 = new GroupInfo( "Group2" );
+    private final SortableDefaultMutableTreeNode groupNode2 = new SortableDefaultMutableTreeNode( groupInfo2 );
 
     /**
      * Test of setNode method, of class GroupNavigator.
@@ -32,8 +32,8 @@ public class GroupNavigatorTest {
     @Before
     public void testSetNode() {
         GroupNavigator gn = new GroupNavigator();
-        gn.setNode(groupNode2);
-        assertEquals("After setNode the Navigator should return the new node", groupNode2, gn.getGroupNode());
+        gn.setNode( groupNode2 );
+        assertEquals( "After setNode the Navigator should return the new node", groupNode2, gn.getGroupNode() );
     }
 
     /**
@@ -42,8 +42,8 @@ public class GroupNavigatorTest {
     @Test
     public void testGetTitle() {
         GroupNavigator gn = new GroupNavigator();
-        gn.setNode(groupNode);
-        assertEquals("After creation of the Navigator we should be able to retrieve the correct title", "Group1", gn.getTitle());
+        gn.setNode( groupNode );
+        assertEquals( "After creation of the Navigator we should be able to retrieve the correct title", "Group1", gn.getTitle() );
     }
 
     /**
@@ -52,25 +52,19 @@ public class GroupNavigatorTest {
     @Test
     public void testGetNumberOfNodes() {
         GroupNavigator gn = new GroupNavigator();
-        gn.setNode(groupNode);
-        assertEquals("Empty group has no nodes", 0, gn.getNumberOfNodes());
-        groupNode.add(pictureNode1);
-        groupNode.add(pictureNode2);
-        assertEquals("After adding 2 nodes we expect to have 2 nodes", 2, gn.getNumberOfNodes());
-        Runnable r = new Runnable() {
-
-            @Override
-            public void run() {
-                groupNode.removeAllChildren();
-            }
-        };
+        gn.setNode( groupNode );
+        assertEquals( "Empty group has no nodes", 0, gn.getNumberOfNodes() );
+        groupNode.add( pictureNode1 );
+        groupNode.add( pictureNode2 );
+        assertEquals( "After adding 2 nodes we expect to have 2 nodes", 2, gn.getNumberOfNodes() );
         try {
-            SwingUtilities.invokeAndWait(r);
-        } catch (InterruptedException | InvocationTargetException ex) {
-            Logger.getLogger(GroupNavigatorTest.class.getName()).log(Level.SEVERE, null, ex);
+            SwingUtilities.invokeAndWait( ()
+                    -> groupNode.removeAllChildren() );
+        } catch ( InterruptedException | InvocationTargetException ex ) {
+            Logger.getLogger( GroupNavigatorTest.class.getName() ).log( Level.SEVERE, null, ex );
         }
 
-        assertEquals("After removing all children we expect to have 0 nodes", 0, gn.getNumberOfNodes());
+        assertEquals( "After removing all children we expect to have 0 nodes", 0, gn.getNumberOfNodes() );
     }
 
 }

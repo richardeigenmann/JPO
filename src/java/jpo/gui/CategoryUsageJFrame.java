@@ -1,10 +1,8 @@
 package jpo.gui;
 
-import jpo.gui.swing.CategoryJScrollPane;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.Collections;
@@ -26,12 +24,13 @@ import jpo.dataModel.GroupInfo;
 import jpo.dataModel.PictureInfo;
 import jpo.dataModel.Settings;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
+import jpo.gui.swing.CategoryJScrollPane;
 import net.miginfocom.swing.MigLayout;
 
 /*
  CategoryUsageJFrame.java:  Creates a Window in which the categories are shown
 
- Copyright (C) 2002-2014  Richard Eigenmann.
+ Copyright (C) 2002-2016  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -61,14 +60,13 @@ public class CategoryUsageJFrame extends JFrame {
     private static final Logger LOGGER = Logger.getLogger( CategoryUsageJFrame.class.getName() );
 
     private final DefaultListModel<Category> listModel;
-    
+
     private final CategoryJScrollPane categoryJScrollPane;
     /**
      * An Array to record the selected nodes
      */
     private Set<SortableDefaultMutableTreeNode> selectedNodes;
     final JLabel numberOfPicturesJLabel = new JLabel( "" );
-
 
     /**
      * Creates a GUI to edit the categories of the collection
@@ -89,7 +87,7 @@ public class CategoryUsageJFrame extends JFrame {
         listModel = categoryJScrollPane.getDefaultListModel();
 
         initComponents();
-        
+
         Set<SortableDefaultMutableTreeNode> nodes = request.getNodes();
         setSelection( nodes );
     }
@@ -103,7 +101,6 @@ public class CategoryUsageJFrame extends JFrame {
         final JPanel jPanel = new JPanel();
         jPanel.setBorder( BorderFactory.createEmptyBorder( 8, 8, 8, 8 ) );
         jPanel.setLayout( new MigLayout() );
-
 
         final Dimension defaultButtonSize = new Dimension( 150, 25 );
         final Dimension maxButtonSize = new Dimension( 150, 25 );
@@ -120,11 +117,8 @@ public class CategoryUsageJFrame extends JFrame {
         modifyCategoryJButton.setPreferredSize( defaultButtonSize );
         modifyCategoryJButton.setMinimumSize( defaultButtonSize );
         modifyCategoryJButton.setMaximumSize( maxButtonSize );
-        modifyCategoryJButton.addActionListener( new ActionListener() {
-            @Override
-            public void actionPerformed( ActionEvent evt ) {
-                new CategoryEditorJFrame();
-            }
+        modifyCategoryJButton.addActionListener( ( ActionEvent evt ) -> {
+            new CategoryEditorJFrame();
         } );
         buttonJPanel.add( modifyCategoryJButton, "wrap" );
 
@@ -132,11 +126,8 @@ public class CategoryUsageJFrame extends JFrame {
         refreshJButton.setPreferredSize( defaultButtonSize );
         refreshJButton.setMinimumSize( defaultButtonSize );
         refreshJButton.setMaximumSize( maxButtonSize );
-        refreshJButton.addActionListener( new ActionListener() {
-            @Override
-            public void actionPerformed( ActionEvent evt ) {
-                updateCategories();
-            }
+        refreshJButton.addActionListener( ( ActionEvent evt ) -> {
+            updateCategories();
         } );
         buttonJPanel.add( refreshJButton, "wrap" );
 
@@ -144,12 +135,9 @@ public class CategoryUsageJFrame extends JFrame {
         updateJButton.setPreferredSize( defaultButtonSize );
         updateJButton.setMinimumSize( defaultButtonSize );
         updateJButton.setMaximumSize( maxButtonSize );
-        updateJButton.addActionListener( new ActionListener() {
-            @Override
-            public void actionPerformed( ActionEvent evt ) {
-                storeSelection();
-                getRid();
-            }
+        updateJButton.addActionListener( ( ActionEvent evt ) -> {
+            storeSelection();
+            getRid();
         } );
         buttonJPanel.add( updateJButton, "wrap" );
 
@@ -157,11 +145,8 @@ public class CategoryUsageJFrame extends JFrame {
         cancelJButton.setPreferredSize( defaultButtonSize );
         cancelJButton.setMinimumSize( defaultButtonSize );
         cancelJButton.setMaximumSize( maxButtonSize );
-        cancelJButton.addActionListener( new ActionListener() {
-            @Override
-            public void actionPerformed( ActionEvent evt ) {
-                getRid();
-            }
+        cancelJButton.addActionListener( ( ActionEvent evt ) -> {
+            getRid();
         } );
         buttonJPanel.add( cancelJButton, "wrap" );
 
@@ -187,7 +172,7 @@ public class CategoryUsageJFrame extends JFrame {
      *
      * @param nodes The nodes
      */
-    public final void setSelection( Set<SortableDefaultMutableTreeNode> nodes ) {
+    public void setSelection( Set<SortableDefaultMutableTreeNode> nodes ) {
         selectedNodes = nodes;
         updateCategories();
     }
@@ -233,7 +218,7 @@ public class CategoryUsageJFrame extends JFrame {
         Enumeration categoryEnumeration = listModel.elements();
         while ( categoryEnumeration.hasMoreElements() ) {
             c = (Category) categoryEnumeration.nextElement();
-            LOGGER.log( Level.INFO, "Setting Status to undefined on Category: {0} {1}", new Object[]{ c.getKey().toString(), c.toString() });
+            LOGGER.log( Level.INFO, "Setting Status to undefined on Category: {0} {1}", new Object[]{ c.getKey().toString(), c.toString() } );
             c.setStatus( Category.UNDEFINED );
             // force screen update:
             listModel.setElementAt( c, listModel.indexOf( c ) );
@@ -251,7 +236,7 @@ public class CategoryUsageJFrame extends JFrame {
         categoryEnumeration = listModel.elements();
         while ( categoryEnumeration.hasMoreElements() ) {
             c = (Category) categoryEnumeration.nextElement();
-            LOGGER.log( Level.INFO, "Checking Category: {0} {1}", new Object[]{ c.getKey().toString(), c.toString() });
+            LOGGER.log( Level.INFO, "Checking Category: {0} {1}", new Object[]{ c.getKey().toString(), c.toString() } );
 
             for ( SortableDefaultMutableTreeNode pictureNode : selectedNodes ) {
                 //pictureNodes = selectedNodes.elements();
@@ -262,7 +247,7 @@ public class CategoryUsageJFrame extends JFrame {
                     pi = (PictureInfo) myObject;
                     if ( pi.containsCategory( c.getKey() ) ) {
                         currentStatus = c.getStatus();
-                        LOGGER.log( Level.INFO, "Status of category is: {0}", Integer.toString( currentStatus ));
+                        LOGGER.log( Level.INFO, "Status of category is: {0}", Integer.toString( currentStatus ) );
                         if ( currentStatus == Category.UNDEFINED ) {
                             c.setStatus( Category.SELECTED );
                             // force screen update:
@@ -276,7 +261,7 @@ public class CategoryUsageJFrame extends JFrame {
                     } else {
                         // we get here if there was no category match
                         currentStatus = c.getStatus();
-                        LOGGER.log( Level.INFO, "Status of category is: {0}", Integer.toString( currentStatus ));
+                        LOGGER.log( Level.INFO, "Status of category is: {0}", Integer.toString( currentStatus ) );
                         if ( currentStatus == Category.UNDEFINED ) {
                             c.setStatus( Category.UN_SELECTED );
                             // force screen update:
@@ -303,11 +288,11 @@ public class CategoryUsageJFrame extends JFrame {
         Enumeration e;
 
         HashSet<Object> selectedCategories = categoryJScrollPane.getSelectedCategories();
-synchronized( categoryGuiListeners ) {
-        for ( CategoryGuiListenerInterface listener : categoryGuiListeners ) {
-            listener.categoriesChosen( selectedCategories );
+        synchronized ( categoryGuiListeners ) {
+            categoryGuiListeners.stream().forEach( ( listener )
+                    -> listener.categoriesChosen( selectedCategories )
+            );
         }
-}
 
         // update the selected pictures
         if ( selectedNodes == null ) {

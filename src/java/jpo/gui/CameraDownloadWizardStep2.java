@@ -1,7 +1,6 @@
 package jpo.gui;
 
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
@@ -68,22 +67,16 @@ public class CameraDownloadWizardStep2 extends AbstractStep {
         stepComponent.add( Box.createVerticalStrut( 8 ) );
 
         JRadioButton moveButton = new JRadioButton( Settings.jpoResources.getString( "DownloadCameraWizardStep2Text3" ) );
-        moveButton.addActionListener( new ActionListener() {
-            @Override
-            public void actionPerformed( ActionEvent e ) {
-                dataModel.setCopyMode( false );
-                Settings.lastCameraWizardCopyMode = false;
-            }
-        } );
+        moveButton.addActionListener(( ActionEvent e ) -> {
+            dataModel.setCopyMode( false );
+            Settings.lastCameraWizardCopyMode = false;
+        });
         stepComponent.add( moveButton );
         JRadioButton copyButton = new JRadioButton( Settings.jpoResources.getString( "DownloadCameraWizardStep2Text4" ) );
-        copyButton.addActionListener( new ActionListener() {
-            @Override
-            public void actionPerformed( ActionEvent e ) {
-                dataModel.setCopyMode( true );
-                Settings.lastCameraWizardCopyMode = true;
-            }
-        } );
+        copyButton.addActionListener(( ActionEvent e ) -> {
+            dataModel.setCopyMode( true );
+            Settings.lastCameraWizardCopyMode = true;
+        });
         stepComponent.add( copyButton );
         ButtonGroup group = new ButtonGroup();
         group.add( moveButton );

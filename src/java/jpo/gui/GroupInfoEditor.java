@@ -3,7 +3,6 @@ package jpo.gui;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import javax.swing.BorderFactory;
@@ -13,9 +12,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
-import jpo.dataModel.SingleNodeNavigator;
-import jpo.dataModel.Settings;
 import jpo.dataModel.GroupInfo;
+import jpo.dataModel.Settings;
+import jpo.dataModel.SingleNodeNavigator;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
 import jpo.gui.swing.Thumbnail;
 import net.miginfocom.swing.MigLayout;
@@ -96,13 +95,9 @@ public class GroupInfoEditor {
         OkJButton.setMaximumSize( Settings.defaultButtonDimension );
         OkJButton.setBorder( BorderFactory.createRaisedBevelBorder() );
         OkJButton.setAlignmentX( Component.LEFT_ALIGNMENT );
-        OkJButton.addActionListener( new ActionListener() {
-
-            @Override
-            public void actionPerformed( ActionEvent e ) {
-                handleOkButtonClick();
-            }
-        } );
+        OkJButton.addActionListener(( ActionEvent e ) -> {
+            handleOkButtonClick();
+        });
         OkJButton.setDefaultCapable( true );
         jFrame.getRootPane().setDefaultButton( OkJButton );
         jPanel.add( OkJButton, "tag ok, span, split 2" );
@@ -113,13 +108,9 @@ public class GroupInfoEditor {
         CancelButton.setMaximumSize( Settings.defaultButtonDimension );
         CancelButton.setBorder( BorderFactory.createRaisedBevelBorder() );
         CancelButton.setAlignmentX( Component.RIGHT_ALIGNMENT );
-        CancelButton.addActionListener( new ActionListener() {
-
-            @Override
-            public void actionPerformed( ActionEvent e ) {
-                getRid();
-            }
-        } );
+        CancelButton.addActionListener(( ActionEvent e ) -> {
+            getRid();
+        });
         jPanel.add( CancelButton, "tag cancel" );
 
         JTabbedPane tabbedPane = new JTabbedPane();

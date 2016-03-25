@@ -31,6 +31,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 import javax.swing.JOptionPane;
 import javax.swing.SwingWorker;
+import javax.swing.tree.DefaultMutableTreeNode;
 import jpo.dataModel.GroupInfo;
 import jpo.dataModel.NodeStatistics;
 import jpo.dataModel.PictureInfo;
@@ -46,7 +47,7 @@ import org.apache.commons.net.ftp.FTPReply;
 
 /*
  * HtmlDistiller.java: class that can write html files 
- * Copyright (C) 2002-2014 Richard Eigenmann. 
+ * Copyright (C) 2002-2016 Richard Eigenmann. 
  * 
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General Public License as
@@ -524,7 +525,7 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
 
             BufferedWriter midresHtmlWriter = new BufferedWriter( new FileWriter( midresHtmlFile ) );
             String groupDescription
-                    = ( (SortableDefaultMutableTreeNode) pictureNode.getParent() ).getUserObject().toString();
+                    = ( (DefaultMutableTreeNode) pictureNode.getParent() ).getUserObject().toString();
 
             //midresHtmlWriter.write( "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" );
             //midresHtmlWriter.newLine();
@@ -693,7 +694,7 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
                     String previousHtmlFilename = "";
                     switch ( options.getPictureNaming() ) {
                         case PICTURE_NAMING_BY_ORIGINAL_NAME:
-                            SortableDefaultMutableTreeNode priorNode = (SortableDefaultMutableTreeNode) ( (SortableDefaultMutableTreeNode) pictureNode.getParent() ).getChildAt( childNumber - 2 );
+                            SortableDefaultMutableTreeNode priorNode = (SortableDefaultMutableTreeNode) (  pictureNode.getParent() ).getChildAt( childNumber - 2 );
                             Object userObject = priorNode.getUserObject();
                             if ( userObject instanceof PictureInfo ) {
                                 previousHtmlFilename = Tools.cleanupFilename( Tools.getFilenameRoot( ( (PictureInfo) userObject ).getImageFilename() ) ) + ".htm";
@@ -708,7 +709,7 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
                             previousHtmlFilename = "jpo_" + formattedNumber + ".htm";
                             break;
                         default:  //case HtmlDistillerOptions.PICTURE_NAMING_BY_HASH_CODE:
-                            int hashCode = ( (SortableDefaultMutableTreeNode) pictureNode.getParent() ).getChildAt( childNumber - 2 ).hashCode();
+                            int hashCode = ( pictureNode.getParent() ).getChildAt( childNumber - 2 ).hashCode();
                             previousHtmlFilename = "jpo_" + Integer.toString( hashCode ) + ".htm";
                             break;
                     }
@@ -728,7 +729,7 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
                     String nextHtmlFilename = "";
                     switch ( options.getPictureNaming() ) {
                         case PICTURE_NAMING_BY_ORIGINAL_NAME:
-                            SortableDefaultMutableTreeNode priorNode = (SortableDefaultMutableTreeNode) ( (SortableDefaultMutableTreeNode) pictureNode.getParent() ).getChildAt( childNumber );
+                            SortableDefaultMutableTreeNode priorNode = (SortableDefaultMutableTreeNode) ( pictureNode.getParent() ).getChildAt( childNumber );
                             Object userObject = priorNode.getUserObject();
                             if ( userObject instanceof PictureInfo ) {
                                 nextHtmlFilename = Tools.cleanupFilename( Tools.getFilenameRoot( ( (PictureInfo) userObject ).getImageFilename() ) ) + ".htm";
@@ -743,7 +744,7 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
                             nextHtmlFilename = "jpo_" + formattedNumber + ".htm";
                             break;
                         default:  //case HtmlDistillerOptions.PICTURE_NAMING_BY_HASH_CODE:
-                            int hashCode = ( (SortableDefaultMutableTreeNode) pictureNode.getParent() ).getChildAt( childNumber ).hashCode();
+                            int hashCode = ( pictureNode.getParent() ).getChildAt( childNumber ).hashCode();
                             nextHtmlFilename = "jpo_" + Integer.toString( hashCode ) + ".htm";
                             break;
                     }
@@ -847,7 +848,7 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
          * @param	columns	The number of columns being generated
          * @param	out	The Thumbnail page
          */
-        public DescriptionsBuffer( int columns, BufferedWriter out ) {
+        DescriptionsBuffer( int columns, BufferedWriter out ) {
             this.columns = columns;
             this.out = out;
             descriptions = new String[options.getPicsPerRow()];
@@ -1038,10 +1039,10 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
                 sb.append( (char) c );
             } while ( c != '\n' );
             if ( b == 1 ) { // error
-                System.out.print( sb.toString() );
+                LOGGER.info( sb.toString() );
             }
             if ( b == 2 ) { // fatal error
-                System.out.print( sb.toString() );
+                LOGGER.info( sb.toString() );
             }
         }
         return b;
@@ -1071,7 +1072,7 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
                     break __main;
                 }
 
-                System.out.println( "Remote system is " + ftp.getSystemType() );
+                LOGGER.info( "Remote system is " + ftp.getSystemType() );
                 ftp.setFileType( FTP.BINARY_FILE_TYPE );
                 ftp.enterLocalPassiveMode();
             }

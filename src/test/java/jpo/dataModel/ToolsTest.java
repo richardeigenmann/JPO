@@ -24,18 +24,13 @@ public class ToolsTest {
     public void testCheckEDT_notOnEDT() {
         // if not on EDT must throw Error
         notOnEDT_ErrorThrown = false;
-        Runnable r = new Runnable() {
-
-            @Override
-            public void run() {
-                try {
-                    Tools.checkEDT();
-                } catch ( Error ex ) {
-                    notOnEDT_ErrorThrown = true;
-                }
+        Thread t = new Thread( () -> {
+            try {
+                Tools.checkEDT();
+            } catch ( Error ex ) {
+                notOnEDT_ErrorThrown = true;
             }
-        };
-        Thread t = new Thread( r );
+        } );
         t.start();
         try {
             t.join();
@@ -56,19 +51,14 @@ public class ToolsTest {
     public void testCheckEDT_OnEDT() {
         // if on EDT must not throw Error
         onEDT_ErrorThrown = false;
-        Runnable r = new Runnable() {
-
-            @Override
-            public void run() {
+        try {
+            SwingUtilities.invokeAndWait( () -> {
                 try {
                     Tools.checkEDT();
                 } catch ( Error ex ) {
                     onEDT_ErrorThrown = true;
                 }
-            }
-        };
-        try {
-            SwingUtilities.invokeAndWait( r );
+            } );
         } catch ( InterruptedException | InvocationTargetException ex ) {
             assertTrue( "Something went wrong", false );
         }

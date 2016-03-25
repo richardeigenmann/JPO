@@ -5,11 +5,10 @@ import com.drew.imaging.ImageProcessingException;
 import com.drew.lang.GeoLocation;
 import com.drew.metadata.Directory;
 import com.drew.metadata.Metadata;
-import com.drew.metadata.Tag;
-import com.drew.metadata.exif.makernotes.CanonMakernoteDirectory;
 import com.drew.metadata.exif.ExifIFD0Directory;
 import com.drew.metadata.exif.ExifSubIFDDirectory;
 import com.drew.metadata.exif.GpsDirectory;
+import com.drew.metadata.exif.makernotes.CanonMakernoteDirectory;
 import com.drew.metadata.exif.makernotes.NikonType2MakernoteDirectory;
 import com.drew.metadata.jpeg.JpegDirectory;
 import java.awt.geom.Point2D;
@@ -161,27 +160,27 @@ public class ExifInfo {
             if ( exifSubIFD0directory != null ) {
                 camera = rtrim( tryToGetTag( exifSubIFD0directory, ExifIFD0Directory.TAG_MODEL, camera ) );
                 String rotationString = rtrim( tryToGetTag( exifSubIFD0directory, ExifIFD0Directory.TAG_ORIENTATION, "" ) );
-                if ( null != rotationString ) // so far have only got definitions for the Samsung Galaxy S4 phone
                 // so far have only got definitions for the Samsung Galaxy S4 phone
-                {
-                    switch ( rotationString ) {
-                        case "Top, left side (Horizontal / normal)":
-                            rotation = 0;
-                            break;
-                        case "Right side, top (Rotate 90 CW)":
-                            rotation = 90;
-                            break;
-                        case "Left side, bottom (Rotate 270 CW)":
-                            rotation = 270;
-                            break;
-                        case "Bottom, right side (Rotate 180)":
-                            rotation = 180;
-                            break;
-                        default:
-                            rotation = 0;
-                            break;
-                    }
+                // so far have only got definitions for the Samsung Galaxy S4 phone
+
+                switch ( rotationString ) {
+                    case "Top, left side (Horizontal / normal)":
+                        rotation = 0;
+                        break;
+                    case "Right side, top (Rotate 90 CW)":
+                        rotation = 90;
+                        break;
+                    case "Left side, bottom (Rotate 270 CW)":
+                        rotation = 270;
+                        break;
+                    case "Bottom, right side (Rotate 180)":
+                        rotation = 180;
+                        break;
+                    default:
+                        rotation = 0;
+                        break;
                 }
+
             }
 
             GpsDirectory gpsDirectory = metadata.getFirstDirectoryOfType( GpsDirectory.class );
@@ -205,9 +204,9 @@ public class ExifInfo {
             }
 
             for ( Directory directory : metadata.getDirectories() ) {
-                for ( Tag tag : directory.getTags() ) {
+                directory.getTags().stream().forEach( ( tag ) -> {
                     exifDump.append( tag.getTagTypeHex() ).append( " - " ).append( tag.getTagName() ).append( ":\t" ).append( tag.getDirectoryName() ).append( ":\t" ).append( tag.getDescription() ).append( "\n" );
-                }
+                } );
             }
         } catch ( ImageProcessingException | NullPointerException | IOException x ) {
             LOGGER.severe( x.getMessage() );
@@ -221,7 +220,7 @@ public class ExifInfo {
      * @param directory The EXIF Directory
      * @param tag the tag to search for
      * @param defaultValue the String to return if the tag was not found.
-     * @return the tag 
+     * @return the tag
      */
     private String tryToGetTag( Directory directory, int tag, String defaultValue ) {
         String searchString;

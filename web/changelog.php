@@ -4,6 +4,8 @@
     <span class="para-heading" id="Changelog">Changelog</span>
 
     <table class="changelog">
+        <tr><td colspan=2><b>Development Version 0.13</b></td></tr>
+        <tr><td valign="top">24.3.2016</td><td>Upgrade to Java 8; introduce Lambdas</td></tr>
         <tr><td colspan=2><b>Development Version 0.12</b></td></tr>
         <tr><td valign="top">6.12.2015</td><td>Changed memory settings, synchronized Nodes and Improved Consolidate</td></tr>
         <tr><td valign="top">9.10.2015</td><td>Changed the Find dialog to have the cursor on the text field</td></tr>
@@ -419,7 +421,7 @@
 
 
     <hr>
-    <p>Last update to this page: 6 December 2015<br>
-        Copyright 2003-2015 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
+    <p>Last update to this page: 24 March 2016<br>
+        Copyright 2003-2016 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
 </div>
 <?php include("page-end.php"); ?>

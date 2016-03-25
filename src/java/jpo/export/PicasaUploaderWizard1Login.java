@@ -3,7 +3,6 @@ package jpo.export;
 import com.google.gdata.util.AuthenticationException;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -93,36 +92,32 @@ public class PicasaUploaderWizard1Login extends AbstractStep {
         wizardPanel.add( rememberCredentialsJCheckkBox, "wrap" );
         loginJButton.setText( "Log in" );
         wizardPanel.add( loginJButton, "span 2" );
-        loginJButton.addActionListener( new ActionListener() {
-
-            @Override
-            public void actionPerformed( ActionEvent ae ) {
-                try {
-                    errorJTextArea.setText( "Logging in..." );
-                    if ( rememberCredentialsJCheckkBox.isSelected() ) {
-                        LOGGER.info( "saving" );
-                        Settings.rememberGoogleCredentials = true;
-                        Settings.googleUsername = userNameJTextField.getText();
-                        Settings.googlePassword = new String( passwordJPasswordField.getPassword() );
-                        Settings.unsavedSettingChanges = true;
-                    } else {
-                        LOGGER.info( "wiping" );
-                        Settings.rememberGoogleCredentials = false;
-                        Settings.googleUsername = "";
-                        Settings.googlePassword = "";
-                    }
-                    myRequest.setUsername( userNameJTextField.getText() );
-                    myRequest.setPassword( new String( passwordJPasswordField.getPassword() ) );
-                    myRequest.picasaWebService.setUserCredentials( myRequest.getUsername(), myRequest.getPassword() );
-                    setCanGoNext( true );
-                    errorJTextArea.setText( "Successfully logged into Picasa." );
-                } catch ( AuthenticationException ex ) {
-                    LOGGER.severe( ex.getMessage() );
-                    errorJTextArea.setText( ex.getMessage() );
-                    setCanGoNext( false );
+        loginJButton.addActionListener(( ActionEvent ae ) -> {
+            try {
+                errorJTextArea.setText( "Logging in..." );
+                if ( rememberCredentialsJCheckkBox.isSelected() ) {
+                    LOGGER.info( "saving" );
+                    Settings.rememberGoogleCredentials = true;
+                    Settings.googleUsername = userNameJTextField.getText();
+                    Settings.googlePassword = new String( passwordJPasswordField.getPassword() );
+                    Settings.unsavedSettingChanges = true;
+                } else {
+                    LOGGER.info( "wiping" );
+                    Settings.rememberGoogleCredentials = false;
+                    Settings.googleUsername = "";
+                    Settings.googlePassword = "";
                 }
+                myRequest.setUsername( userNameJTextField.getText() );
+                myRequest.setPassword( new String( passwordJPasswordField.getPassword() ) );
+                myRequest.picasaWebService.setUserCredentials( myRequest.getUsername(), myRequest.getPassword() );
+                setCanGoNext( true );
+                errorJTextArea.setText( "Successfully logged into Picasa." );
+            } catch ( AuthenticationException ex ) {
+                LOGGER.severe( ex.getMessage() );
+                errorJTextArea.setText( ex.getMessage() );
+                setCanGoNext( false );
             }
-        } );
+        });
 
         errorJTextArea.setMinimumSize( new Dimension( 450, 150 ) );
         errorJTextArea.setMaximumSize( new Dimension( 550, 300 ) );

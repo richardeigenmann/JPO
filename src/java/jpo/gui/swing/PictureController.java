@@ -70,7 +70,7 @@ public class PictureController extends JComponent {
      */
     public Point focusPoint = new Point();
 
-    private PictureControllerImage pictureControllerImage;
+    private final PictureControllerImage pictureControllerImage;
 
     /**
      * Constructs a PicturePane components.
@@ -257,7 +257,7 @@ public class PictureController extends JComponent {
     public void scrollUp() {
         // if the bottom edge of the picture is visible, do not scroll
         if ( ( ( pictureControllerImage.getOriginalHeight() - focusPoint.y ) * pictureControllerImage.getScaleFactor() ) + getSize().height / (double) 2 > getSize().height ) {
-            focusPoint.y = focusPoint.y + (int) ( getSize().height * scrollFactor / pictureControllerImage.getScaleFactor() );
+            focusPoint.y += (int) ( getSize().height * scrollFactor / pictureControllerImage.getScaleFactor() );
             repaint();
         } else {
             LOGGER.warning( "scrollUp rejected because bottom of picture is already showing." );
@@ -276,7 +276,7 @@ public class PictureController extends JComponent {
      */
     public void scrollDown() {
         if ( getSize().height / (double) 2 - focusPoint.y * pictureControllerImage.getScaleFactor() < 0 ) {
-            focusPoint.y = focusPoint.y - (int) ( getSize().height * scrollFactor / pictureControllerImage.getScaleFactor() );
+            focusPoint.y -= (int) ( getSize().height * scrollFactor / pictureControllerImage.getScaleFactor() );
             repaint();
         } else {
             LOGGER.warning( "PicturePane.scrollDown rejected because top edge is aready visible" );
@@ -297,7 +297,7 @@ public class PictureController extends JComponent {
     public void scrollLeft() {
         // if the bottom edge of the picture is visible, do not scroll
         if ( ( ( pictureControllerImage.getOriginalWidth() - focusPoint.x ) * pictureControllerImage.getScaleFactor() ) + getSize().width / (double) 2 > getSize().width ) {
-            focusPoint.x = focusPoint.x + (int) ( getSize().width * scrollFactor / pictureControllerImage.getScaleFactor() );
+            focusPoint.x += (int) ( getSize().width * scrollFactor / pictureControllerImage.getScaleFactor() );
             repaint();
         } else {
             LOGGER.warning( "scrollLeft rejected because right edge of picture is already showing." );
@@ -317,7 +317,7 @@ public class PictureController extends JComponent {
      */
     public void scrollRight() {
         if ( getSize().width / (double) 2 - focusPoint.x * pictureControllerImage.getScaleFactor() < 0 ) {
-            focusPoint.x = focusPoint.x - (int) ( getSize().width * scrollFactor / pictureControllerImage.getScaleFactor() );
+            focusPoint.x -= (int) ( getSize().width * scrollFactor / pictureControllerImage.getScaleFactor() );
             repaint();
         } else {
             LOGGER.warning( "scrollRight rejected because left edge is aready visible" );
@@ -355,8 +355,8 @@ public class PictureController extends JComponent {
         if ( pictureControllerImage.getScaledPicture() != null ) {
             Graphics2D g2d = (Graphics2D) g;
 
-            int X_Offset = (int) ( (double) ( WindowWidth / (double) 2 ) - ( focusPoint.x * pictureControllerImage.getScaleFactor() ) );
-            int Y_Offset = (int) ( (double) ( WindowHeight / (double) 2 ) - ( focusPoint.y * pictureControllerImage.getScaleFactor() ) );
+            int X_Offset = (int) (  ( WindowWidth /  2.0 ) - ( focusPoint.x * pictureControllerImage.getScaleFactor() ) );
+            int Y_Offset = (int) (  ( WindowHeight /  2.0 ) - ( focusPoint.y * pictureControllerImage.getScaleFactor() ) );
 
             // clear damaged component area
             Rectangle clipBounds = g2d.getClipBounds();
@@ -441,8 +441,8 @@ public class PictureController extends JComponent {
                 // was already dragging
                 int x = e.getX(), y = e.getY();
 
-                focusPoint.setLocation( (int) ( (double) focusPoint.x + ( ( last_x - x ) / pictureControllerImage.getScaleFactor() ) ),
-                        (int) ( (double) focusPoint.y + ( ( last_y - y ) / pictureControllerImage.getScaleFactor() ) ) );
+                focusPoint.setLocation( (int) ( focusPoint.x + ( ( last_x - x ) / pictureControllerImage.getScaleFactor() ) ),
+                        (int) ( focusPoint.y + ( ( last_y - y ) / pictureControllerImage.getScaleFactor() ) ) );
                 last_x = x;
                 last_y = y;
 

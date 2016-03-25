@@ -1307,9 +1307,9 @@ public class PictureInfo implements Serializable {
     private void sendPictureInfoChangedEvent( PictureInfoChangeEvent pce ) {
         if ( Settings.getPictureCollection().getSendModelUpdates() ) {
             synchronized ( pictureInfoListeners ) {
-                for ( PictureInfoChangeListener pictureInfoChangeListener : pictureInfoListeners ) {
+                pictureInfoListeners.stream().forEach( ( pictureInfoChangeListener ) -> {
                     pictureInfoChangeListener.pictureInfoChangeEvent( pce );
-                }
+                } );
             }
         }
     }

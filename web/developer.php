@@ -32,7 +32,7 @@
 
             <p>Do you have the prerequisites?</p>
             <ul>
-                <li>Java Software Development Kit (SDK) 1.7 or later</li>
+                <li>Java Software Development Kit (SDK) 1.8 or later</li>
                 <li>Apache Ant</li>
                 <li>CVS</li>
                 <li>Junit</li>
@@ -42,19 +42,19 @@
             <p>I've had my fair share of issues with the prerequisites. Here is how to test your set-up:</p>
 
             <code># Depending on your environment you might need to<br>
-                export JVM=/usr/java/jdk1.7.0_55<br>
+                export JVM=/usr/java/jdk1.8.0_65<br>
                 # or<br>
-                export JAVA_HOME=/usr/java/jdk1.7.0_55<br></code>
+                export JAVA_HOME=/usr/java/jdk1.8.0_65<br></code>
             <p>Test it with this command:</p>
             <code>$JVM/bin/java -version</code>
             <p>If you get something like the following it's ok, otherwise sort out your Java SDK installation first!</p>
-            <code>java version "1.7.0_55"
-                Java(TM) SE Runtime Environment (build 1.7.0_55-b13)<br>
-                Java HotSpot(TM) 64-Bit Server VM (build 24.55-b03, mixed mode)</code>
+            <code>java version "1.8.0_65"
+                Java(TM) SE Runtime Environment (build 1.8.0_65-b17)<br>
+                Java HotSpot(TM) 64-Bit Server VM (build 25.65-b01, mixed mode)</code>
 
             <p>Check you have a working Java compiler with:</p>
             <code>javac -version<br><br>
-                javac 1.7.0_55</code>
+                javac 1.8.0_65</code>
 
             <p>Now check that your ant works properly (and you might have to set the ANT_HOME environment variable):</p>
             <code>ant -version<br><br>

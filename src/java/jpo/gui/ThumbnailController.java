@@ -1,9 +1,5 @@
 package jpo.gui;
 
-import jpo.cache.ThumbnailCreationQueue;
-import jpo.cache.ThumbnailQueueRequestCallbackHandler;
-import jpo.cache.ThumbnailQueueRequest;
-import jpo.gui.swing.PicturePopupMenu;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.dnd.DnDConstants;
@@ -31,6 +27,10 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import jpo.EventBus.JpoEventBus;
 import jpo.EventBus.ShowGroupRequest;
 import jpo.EventBus.ShowPictureRequest;
+import jpo.cache.ThumbnailCreationQueue;
+import jpo.cache.ThumbnailQueueRequest;
+import jpo.cache.ThumbnailQueueRequest.QUEUE_PRIORITY;
+import jpo.cache.ThumbnailQueueRequestCallbackHandler;
 import jpo.dataModel.GroupInfo;
 import jpo.dataModel.GroupInfoChangeEvent;
 import jpo.dataModel.GroupInfoChangeListener;
@@ -41,14 +41,14 @@ import jpo.dataModel.PictureInfoChangeListener;
 import jpo.dataModel.Settings;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
 import jpo.dataModel.Tools;
-import jpo.cache.ThumbnailQueueRequest.QUEUE_PRIORITY;
 import jpo.gui.swing.GroupPopupMenu;
+import jpo.gui.swing.PicturePopupMenu;
 import jpo.gui.swing.Thumbnail;
 
 /*
  ThumbnailController.java:  class that displays a visual respresentation of the specified node
 
- Copyright (C) 2002 - 2015  Richard Eigenmann.
+ Copyright (C) 2002 - 2016  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -151,7 +151,7 @@ public class ThumbnailController implements JpoDropTargetDropEventHandler, Thumb
             int newIndex ) {
         if ( !newNavigator.equals( myNodeNavigator ) ) {
             return false;
-        };
+        }
         if ( newIndex == myIndex ) {
             LOGGER.fine( String.format( "Same index: %d on same Browser %s. But is it actually the same node?", newIndex, newNavigator.toString() ) );
             SortableDefaultMutableTreeNode testNode = newNavigator.getNode( newIndex );
@@ -262,8 +262,8 @@ public class ThumbnailController implements JpoDropTargetDropEventHandler, Thumb
      * This method forwards the request to create the thumbnail to the
      * ThumbnailCreationQueue
      *
-     * @param	priority	The priority with which the request is to be treated on
-     * the queue
+     * @param	priority	The priority with which the request is to be treated on the queue
+     * @return the request
      */
     public ThumbnailQueueRequest requestThumbnailCreation( QUEUE_PRIORITY priority ) {
         myThumbnail.setQueueIcon();

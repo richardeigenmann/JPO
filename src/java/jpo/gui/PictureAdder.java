@@ -170,14 +170,13 @@ public class PictureAdder
      */
     @Override
     protected void process( List<Integer> chunks ) {
-        for ( int i : chunks ) {
+        chunks.stream().forEach( ( i ) -> {
             if ( i > 0 ) {
                 progGui.progressIncrement();
             } else {
                 progGui.decrementTotal();
             }
-
-        }
+        } );
     }
 
 

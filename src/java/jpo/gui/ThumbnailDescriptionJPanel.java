@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.AdjustmentEvent;
-import java.awt.event.AdjustmentListener;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.InputVerifier;
@@ -188,13 +187,9 @@ public class ThumbnailDescriptionJPanel
             }
         } );
 
-        pictureDescriptionJSP.getVerticalScrollBar().addAdjustmentListener( new AdjustmentListener() {
-
-            @Override
-            public void adjustmentValueChanged( AdjustmentEvent e ) {
-                setTextAreaSize();
-            }
-        } );
+        pictureDescriptionJSP.getVerticalScrollBar().addAdjustmentListener(( AdjustmentEvent e ) -> {
+            setTextAreaSize();
+        });
 
         setVisible( false );
         add( pictureDescriptionJSP );
@@ -320,7 +315,7 @@ public class ThumbnailDescriptionJPanel
         int targetWidth = (int) ( Settings.thumbnailSize * thumbnailSizeFactor );
         if ( ( targetHeight != scrollPaneSize.height ) || ( targetWidth != scrollPaneSize.width ) ) {
             pictureDescriptionJSP.setPreferredSize( new Dimension( targetWidth, targetHeight ) );
-            LOGGER.log( Level.FINE, "ThumbnailDescriptionJPanel.setTextAreaSize set to: {0} / {1}", new Object[]{ Integer.toString( targetWidth ), Integer.toString( targetHeight ) });
+            LOGGER.log( Level.FINE, "ThumbnailDescriptionJPanel.setTextAreaSize set to: {0} / {1}", new Object[]{ Integer.toString( targetWidth ), Integer.toString( targetHeight ) } );
         }
     }
 
@@ -354,12 +349,8 @@ public class ThumbnailDescriptionJPanel
      * This method is EDT safe.
      */
     public void showAsSelected() {
-        Runnable r = new Runnable() {
-
-            @Override
-            public void run() {
-                pictureDescriptionJTA.setBackground( Settings.SELECTED_COLOR_TEXT );
-            }
+        Runnable r = () -> {
+            pictureDescriptionJTA.setBackground( Settings.SELECTED_COLOR_TEXT );
         };
         if ( SwingUtilities.isEventDispatchThread() ) {
             r.run();
@@ -375,17 +366,13 @@ public class ThumbnailDescriptionJPanel
      * This method is EDT safe
      */
     public void showAsUnselected() {
-        Runnable r = new Runnable() {
-
-            @Override
-            public void run() {
-                pictureDescriptionJTA.setBackground( Settings.UNSELECTED_COLOR );
-            }
+        Runnable runnable = () -> {
+            pictureDescriptionJTA.setBackground( Settings.UNSELECTED_COLOR );
         };
         if ( SwingUtilities.isEventDispatchThread() ) {
-            r.run();
+            runnable.run();
         } else {
-            SwingUtilities.invokeLater( r );
+            SwingUtilities.invokeLater(runnable );
         }
 
     }
@@ -433,23 +420,19 @@ public class ThumbnailDescriptionJPanel
      */
     @Override
     public void pictureInfoChangeEvent( final PictureInfoChangeEvent pictureInfoChangeEvent ) {
-        Runnable runnable = new Runnable() {
-
-            @Override
-            public void run() {
-                if ( pictureInfoChangeEvent.getDescriptionChanged() ) {
-                    pictureDescriptionJTA.setText( pictureInfoChangeEvent.getPictureInfo().getDescription() );
-                }
-
-                if ( pictureInfoChangeEvent.getHighresLocationChanged() ) {
-                    highresLocationJTextField.setText( pictureInfoChangeEvent.getPictureInfo().getImageLocation() );
-                }
-
-                if ( pictureInfoChangeEvent.getWasSelected() ) {
-                    showAsSelected();
-                } else if ( pictureInfoChangeEvent.getWasUnselected() ) {
-                    showAsUnselected();
-                }
+        Runnable runnable = () -> {
+            if ( pictureInfoChangeEvent.getDescriptionChanged() ) {
+                pictureDescriptionJTA.setText( pictureInfoChangeEvent.getPictureInfo().getDescription() );
+            }
+            
+            if ( pictureInfoChangeEvent.getHighresLocationChanged() ) {
+                highresLocationJTextField.setText( pictureInfoChangeEvent.getPictureInfo().getImageLocation() );
+            }
+            
+            if ( pictureInfoChangeEvent.getWasSelected() ) {
+                showAsSelected();
+            } else if ( pictureInfoChangeEvent.getWasUnselected() ) {
+                showAsUnselected();
             }
         };
         if ( SwingUtilities.isEventDispatchThread() ) {

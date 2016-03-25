@@ -2,17 +2,16 @@ package jpo.gui;
 
 import com.google.common.eventbus.Subscribe;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import jpo.dataModel.SortableDefaultMutableTreeNode;
-import jpo.dataModel.PictureInfo;
-import javax.swing.Timer;
 import java.util.logging.Logger;
 import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
+import javax.swing.Timer;
 import javax.swing.tree.DefaultMutableTreeNode;
 import jpo.EventBus.GroupSelectionEvent;
 import jpo.EventBus.JpoEventBus;
 import jpo.EventBus.ShowGroupRequest;
+import jpo.dataModel.PictureInfo;
+import jpo.dataModel.SortableDefaultMutableTreeNode;
 
 /*
  InfoPanelController.java:  The Controller for the Info Panel
@@ -59,13 +58,9 @@ public class InfoPanelController {
      * A timer to fire off the refresh of the Thumbnail Queue display. Is only
      * alive if the InfoPanel is showing the statistics panel.
      */
-    private final Timer statsUpdateTimer = new Timer( DELAY, new ActionListener() {
-
-        @Override
-        public void actionPerformed( ActionEvent ae ) {
-            nodeStatisticsController.updateStats();
-        }
-    } );
+    private final Timer statsUpdateTimer = new Timer( DELAY, ( ActionEvent ae ) -> {
+        nodeStatisticsController.updateStats();
+    });
 
     /**
      * Returns the InfoPanel Widget
@@ -102,18 +97,15 @@ public class InfoPanelController {
      * @param defaultMutableTreeNode The Group or Picture node to be displayed.
      */
     public void showInfo( DefaultMutableTreeNode defaultMutableTreeNode ) {
-        final SortableDefaultMutableTreeNode node = (SortableDefaultMutableTreeNode) defaultMutableTreeNode;
-        SwingUtilities.invokeLater( new Runnable() {
-
-            @Override
-            public void run() {
-                if ( node.getUserObject() instanceof PictureInfo ) {
-                    statsUpdateTimer.stop();
-                } else {
-                    nodeStatisticsController.updateStats( node );
-                    statsUpdateTimer.start(); 
+        SwingUtilities.invokeLater(
+                () -> {
+                    if ( defaultMutableTreeNode.getUserObject() instanceof PictureInfo ) {
+                        statsUpdateTimer.stop();
+                    } else {
+                        nodeStatisticsController.updateStats( defaultMutableTreeNode );
+                        statsUpdateTimer.start();
+                    }
                 }
-            }
-        } );
+        );
     }
 }

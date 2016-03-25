@@ -104,7 +104,7 @@ public class WholeNumberField extends JTextField {
      *
      * @param value value
      */
-    public final void setValue( int value ) {
+    public void setValue( int value ) {
         setText( Integer.toString( value ) );
     }
 

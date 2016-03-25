@@ -1,10 +1,8 @@
 package jpo.gui;
 
-import java.awt.event.ActionEvent;
-import jpo.dataModel.Settings;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 import java.util.List;
 import java.util.logging.Logger;
 import javax.swing.Box;
@@ -13,6 +11,7 @@ import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import jpo.dataModel.Settings;
 import jpo.dataModel.SortOption;
 import net.javaprog.ui.wizard.AbstractStep;
 
@@ -89,15 +88,11 @@ public class CameraDownloadWizardStep5
         sortChoice.setPreferredSize( new Dimension( 120, 25 ) );
         sortChoice.setMaximumSize( new Dimension( 220, 30 ) );
         stepComponent.add( sortChoice );
-        sortChoice.addActionListener( new ActionListener() {
-
-            @Override
-            public void actionPerformed( ActionEvent e ) {
-                JComboBox cb = (JComboBox) e.getSource();
-                SortOption sortOption = (SortOption) cb.getSelectedItem();
-                sortOptionPicked( sortOption );
-            }
-        } );
+        sortChoice.addActionListener(( ActionEvent e ) -> {
+            JComboBox cb = (JComboBox) e.getSource();
+            SortOption sortOption = (SortOption) cb.getSelectedItem();
+            sortOptionPicked( sortOption );
+        });
 
 
         stepComponent.add( Box.createVerticalGlue() );

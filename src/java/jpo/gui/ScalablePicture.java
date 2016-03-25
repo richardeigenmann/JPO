@@ -59,7 +59,7 @@ import jpo.gui.swing.PictureControllerImage;
  * thread.
  */
 public class ScalablePicture
-        implements SourcePictureListener, PictureControllerImage  {
+        implements SourcePictureListener, PictureControllerImage {
 
     /**
      * Defines a logger for this class
@@ -169,7 +169,7 @@ public class ScalablePicture
      */
     public ScalablePicture() {
         setStatus( SCALABLE_PICTURE_UNINITIALISED, Settings.jpoResources.getString( "ScalablePictureUninitialisedStatus" ) );
-        setScaleFactor( (double) 1 );
+        setScaleFactor( 1 );
     }
 
     /**
@@ -178,9 +178,9 @@ public class ScalablePicture
      * loading chuggs along in the background. Make sure you invoked
      * setScaleFactor or setScaleSize before invoking this method.
      *
-     * Step 1: Am I already loading what I need somewhere? If yes -&gt; use it. Has
-     * it finished loading? If no -&gt; wait for it If yes -&gt; use it Else -&gt; load
-     * it
+     * Step 1: Am I already loading what I need somewhere? If yes -&gt; use it.
+     * Has it finished loading? If no -&gt; wait for it If yes -&gt; use it Else
+     * -&gt; load it
      *
      * @param imageUrl	The URL of the image you want to load
      * @param priority	The Thread priority
@@ -321,7 +321,7 @@ public class ScalablePicture
 
             if ( ( sourcePicture != null ) && ( sourcePicture.getSourceBufferedImage() != null ) ) {
                 if ( scaleToSize ) {
-                    scaleFactor = calcScaleSourceToTarget( sourcePicture.getWidth(), sourcePicture.getHeight(), targetSize.width, targetSize.height  );
+                    scaleFactor = calcScaleSourceToTarget( sourcePicture.getWidth(), sourcePicture.getHeight(), targetSize.width, targetSize.height );
 
                     if ( Settings.dontEnlargeSmallImages && scaleFactor > 1 ) {
                         scaleFactor = 1;
@@ -349,7 +349,7 @@ public class ScalablePicture
                 opStep = new AffineTransformOp( afStep, affineTransformType );
                 scaledPicture = sourcePicture.getSourceBufferedImage();
                 for ( int i = 0; i < getScaleSteps(); i++ ) {
-                    pStep = new Point2D.Float( (float) scaledPicture.getWidth(), (float) ( scaledPicture.getHeight() ) );
+                    pStep = new Point2D.Float( scaledPicture.getWidth(), scaledPicture.getHeight() );
                     pStep = afStep.transform( pStep, null );
                     int x = (int) Math.rint( pStep.getX() );
                     int y = (int) Math.rint( pStep.getY() );
@@ -369,10 +369,8 @@ public class ScalablePicture
                     scaledPicture = opStep.filter( scaledPicture, biStep );
                 }
                 setStatus( SCALABLE_PICTURE_READY, "Scaled Picture is ready." );
-            } else {
-                if ( getStatusCode() != SCALABLE_PICTURE_LOADING ) {
-                    setStatus( SCALABLE_PICTURE_ERROR, "Could not scale image as SourceImage is null." );
-                }
+            } else if ( getStatusCode() != SCALABLE_PICTURE_LOADING ) {
+                setStatus( SCALABLE_PICTURE_ERROR, "Could not scale image as SourceImage is null." );
             }
         } catch ( OutOfMemoryError e ) {
             LOGGER.log( Level.SEVERE, "Caught an OutOfMemoryError while scaling an image.\n{0}", e.getMessage() );
@@ -381,10 +379,10 @@ public class ScalablePicture
             Tools.dealOutOfMemoryError();
         }
     }
-    
+
     /**
-     * Returns the scale factor maintaining aspect ratio to fit the source image into the target
-     * dimension..
+     * Returns the scale factor maintaining aspect ratio to fit the source image
+     * into the target dimension..
      *
      * @param sourceWidth the width of the original dimension
      * @param sourceHeight the height of the original dimension
@@ -396,10 +394,10 @@ public class ScalablePicture
         // Scale so that the entire picture fits in the component.
         if ( ( (double) sourceHeight / maxHeight ) > ( (double) sourceWidth / maxWidth ) ) {
             // Vertical scaling
-            return  ( (double) maxHeight / sourceHeight );
+            return ( (double) maxHeight / sourceHeight );
         } else {
             // Horizontal scaling
-            return  ( (double) maxWidth / sourceWidth );
+            return ( (double) maxWidth / sourceWidth );
         }
     }
 
@@ -409,13 +407,13 @@ public class ScalablePicture
      * the size of the picture on the screen. You must call
      * {@link #createScaledPictureInThread(int)} to make anything happen.<p>
      *
-     * Example: Original is 3000 x 2000 --&gt; Scale Factor 0.10 --&gt; Target Picture
-     * is 300 x 200
+     * Example: Original is 3000 x 2000 --&gt; Scale Factor 0.10 --&gt; Target
+     * Picture is 300 x 200
      *
      * @param newFactor new factor
      */
     @Override
-    public final void setScaleFactor( double newFactor ) {
+    public void setScaleFactor( double newFactor ) {
         scaleToSize = false;
         targetSize = null;
         scaleFactor = newFactor;
@@ -444,6 +442,7 @@ public class ScalablePicture
      *
      * @return the scale factor
      */
+    @Override
     public double getScaleFactor() {
         return scaleFactor;
     }
@@ -564,6 +563,7 @@ public class ScalablePicture
      *
      * @return the original height of the image
      */
+    @Override
     public int getOriginalHeight() {
         return sourcePicture.getHeight();
     }
@@ -573,6 +573,7 @@ public class ScalablePicture
      *
      * @return the original width of the image
      */
+    @Override
     public int getOriginalWidth() {
         return sourcePicture.getWidth();
     }
@@ -695,17 +696,18 @@ public class ScalablePicture
     /**
      * Method that sets the status of the ScalablePicture object and notifies
      * interested objects of a change in status (not built yet).
+     *
      * @param statusCode status code
-     * @param statusMessage  status message
+     * @param statusMessage status message
      */
     private void setStatus( ScalablePictureStatus statusCode, String statusMessage ) {
         pictureStatusCode = statusCode;
         pictureStatusMessage = statusMessage;
 
         synchronized ( scalablePictureStatusListeners ) {
-            for ( ScalablePictureListener scalablePictureListener : scalablePictureStatusListeners ) {
+            scalablePictureStatusListeners.stream().forEach( ( scalablePictureListener ) -> {
                 scalablePictureListener.scalableStatusChange( pictureStatusCode, pictureStatusMessage );
-            }
+            } );
         }
     }
 
@@ -717,9 +719,9 @@ public class ScalablePicture
      */
     @Override
     public void sourceLoadProgressNotification( SourcePictureStatus statusCode, int percentage ) {
-        for ( ScalablePictureListener scalablePictureListener : scalablePictureStatusListeners ) {
+        scalablePictureStatusListeners.stream().forEach( ( scalablePictureListener ) -> {
             scalablePictureListener.sourceLoadProgressNotification( statusCode, percentage );
-        }
+        } );
     }
 
     /**

@@ -21,7 +21,6 @@ import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileSystemView;
 import jpo.export.HtmlDistillerOptions;
 import jpo.gui.swing.MainWindow;
-import org.apache.commons.lang3.text.StrBuilder;
 
 /*
  * Settings.java: class that holds the settings of the JPO application
@@ -1104,7 +1103,7 @@ public class Settings {
             camera.setUseFilename( prefs.getBoolean( "Camera[" + Integer.toString( i ) + "].useFilename", true ) );
             camera.setMonitorForNewPictures( prefs.getBoolean( "Camera[" + Integer.toString( i ) + "].monitor", true ) );
 
-            camera.setOldImage( new HashMap<File, Long>() );
+            camera.setOldImage( new HashMap<>() );
             try {
                 camera.setOldImage( (HashMap) PrefObj.getObject( prefs, "Camera[" + Integer.toString( i ) + "].oldImage" ) );
             } catch ( IOException | BackingStoreException | ClassNotFoundException ex ) {

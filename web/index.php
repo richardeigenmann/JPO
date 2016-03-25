@@ -186,6 +186,6 @@
     <hr>
 
     <p>Last update to this page: 31 May 2015<br>
-        Copyright 2003-2015 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
+        Copyright 2003-2016 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
 </div>
 <?php include("page-end.php"); ?>

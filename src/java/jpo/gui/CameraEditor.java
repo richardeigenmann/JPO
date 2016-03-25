@@ -1,7 +1,5 @@
 package jpo.gui;
 
-import jpo.dataModel.Settings;
-import jpo.dataModel.Camera;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Collections;
@@ -13,24 +11,9 @@ import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import jpo.dataModel.Camera;
+import jpo.dataModel.Settings;
 import net.miginfocom.swing.MigLayout;
-/*
- CameraEditor.java: a class that creates a JPanel and allows camera attributes to be edited
-
- Copyright (C) 2002 - 2014  Richard Eigenmann.
- This program is free software; you can redistribute it and/or
- modify it under the terms of the GNU General Public License
- as published by the Free Software Foundation; either version 2
- of the License, or any later version. This program is distributed
- in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- without even the implied warranty of MERCHANTABILITY or FITNESS
- FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
- more details. You should have received a copy of the GNU General Public License
- along with this program; if not, write to the Free Software
- Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
- The license is in gpl.txt.
- See http://www.gnu.org/copyleft/gpl.html for the details.
- */
 
 /**
  * This class creates a JPanel and allows attributes of a single camera to be
@@ -63,41 +46,29 @@ public class CameraEditor
         refreshJButton.setMinimumSize( Settings.defaultButtonDimension );
         refreshJButton.setMaximumSize( Settings.defaultButtonDimension );
         refreshJButton.setBorder( BorderFactory.createRaisedBevelBorder() );
-        refreshJButton.addActionListener( new ActionListener() {
-
-            @Override
-            public void actionPerformed( ActionEvent e ) {
-                getCamera().buildOldImage();
-                updateMemorisedPicturesJLabel();
-            }
-        } );
+        refreshJButton.addActionListener(( ActionEvent e ) -> {
+            getCamera().buildOldImage();
+            updateMemorisedPicturesJLabel();
+        });
         add( refreshJButton );
 
         zeroJButton.setPreferredSize( Settings.defaultButtonDimension );
         zeroJButton.setMinimumSize( Settings.defaultButtonDimension );
         zeroJButton.setMaximumSize( Settings.defaultButtonDimension );
         zeroJButton.setBorder( BorderFactory.createRaisedBevelBorder() );
-        zeroJButton.addActionListener( new ActionListener() {
-
-            @Override
-            public void actionPerformed( ActionEvent e ) {
-                getCamera().zapOldImage();
-                updateMemorisedPicturesJLabel();
-            }
-        } );
+        zeroJButton.addActionListener(( ActionEvent e ) -> {
+            getCamera().zapOldImage();
+            updateMemorisedPicturesJLabel();
+        });
         add( zeroJButton, "wrap unrel" );
 
         saveJButton.setPreferredSize( Settings.defaultButtonDimension );
         saveJButton.setMinimumSize( Settings.defaultButtonDimension );
         saveJButton.setMaximumSize( Settings.defaultButtonDimension );
         saveJButton.setBorder( BorderFactory.createRaisedBevelBorder() );
-        saveJButton.addActionListener( new ActionListener() {
-
-            @Override
-            public void actionPerformed( ActionEvent e ) {
-                saveCamera();
-            }
-        } );
+        saveJButton.addActionListener(( ActionEvent e ) -> {
+            saveCamera();
+        });
         add( saveJButton, "align right" );
     }
 
@@ -260,9 +231,9 @@ public class CameraEditor
     public void notifyActionListeners() {
         ActionEvent event = new ActionEvent( this, 0, "save" );
         synchronized ( listeners ) {
-            for ( ActionListener actionListener : listeners ) {
+            listeners.stream().forEach( ( actionListener ) -> {
                 actionListener.actionPerformed( event );
-            }
+            } );
         }
     }
 }

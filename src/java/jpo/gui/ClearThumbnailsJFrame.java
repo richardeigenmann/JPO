@@ -73,32 +73,16 @@ public class ClearThumbnailsJFrame extends javax.swing.JFrame {
         jScrollPane2.setViewportView(lowresUrls);
 
         closeButton.setText("Close");
-        closeButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                closeButtonActionPerformed(evt);
-            }
-        });
+        closeButton.addActionListener(this::closeButtonActionPerformed);
 
         removeButton.setText("Remove");
-        removeButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                removeButtonActionPerformed(evt);
-            }
-        });
+        removeButton.addActionListener(this::removeButtonActionPerformed);
 
         stopButton.setText("Stop");
-        stopButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                stopButtonActionPerformed(evt);
-            }
-        });
+        stopButton.addActionListener(this::stopButtonActionPerformed);
 
         ignoreButton.setText("Ignore");
-        ignoreButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ignoreButtonActionPerformed(evt);
-            }
-        });
+        ignoreButton.addActionListener(this::ignoreButtonActionPerformed);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -263,9 +247,9 @@ public class ClearThumbnailsJFrame extends javax.swing.JFrame {
                 lowresUrls.setText( "" );
                 firsttime = false;
             }
-            for ( String chunk : chunks ) {
+            chunks.stream().forEach( ( chunk ) -> {
                 lowresUrls.append( chunk );
-            }
+            } );
         }
 
     }

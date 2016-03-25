@@ -5,7 +5,6 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
@@ -42,13 +41,12 @@ import javax.swing.ListSelectionModel;
 import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 import jpo.EventBus.JpoEventBus;
 import jpo.EventBus.SetPictureRotationRequest;
+import jpo.cache.ThumbnailQueueRequest.QUEUE_PRIORITY;
 import jpo.dataModel.Category;
 import jpo.dataModel.ExifInfo;
 import jpo.dataModel.NodeNavigatorInterface;
@@ -59,10 +57,9 @@ import jpo.dataModel.Settings;
 import jpo.dataModel.SingleNodeNavigator;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
 import jpo.dataModel.Tools;
-import jpo.cache.ThumbnailQueueRequest.QUEUE_PRIORITY;
+import jpo.gui.swing.MapViewer;
 import jpo.gui.swing.NonFocussedCaret;
 import jpo.gui.swing.ThreeDotButton;
-import jpo.gui.swing.MapViewer;
 import jpo.gui.swing.Thumbnail;
 import net.miginfocom.swing.MigLayout;
 import org.jxmapviewer.JXMapViewer;
@@ -261,11 +258,8 @@ public class PictureInfoEditor extends JFrame {
 
         //NumberFormat nf = new DecimalFormat( "###.##" );
         JSpinner spinner = new JSpinner( angleModel );
-        spinner.addChangeListener( new ChangeListener() {
-            @Override
-            public void stateChanged( ChangeEvent e ) {
-                //saveRotation();
-            }
+        spinner.addChangeListener( ( ChangeEvent e ) -> {
+            //saveRotation();
         } );
         //Make the angle formatted without a thousands separator.
         spinner.setEditor( new JSpinner.NumberEditor( spinner, "###.##" ) );
@@ -274,12 +268,9 @@ public class PictureInfoEditor extends JFrame {
         JButton rotateLeftJButton = new JButton( new ImageIcon( Settings.CLASS_LOADER.getResource( "jpo/images/icon_RotCCDown.gif" ) ) ) {
             {
                 setMnemonic( KeyEvent.VK_L );
-                addActionListener( new ActionListener() {
-                    @Override
-                    public void actionPerformed( ActionEvent e ) {
-                        angleModel.setValue( ( (Double) angleModel.getValue() + 270 ) % 360 );
-                        saveRotation();
-                    }
+                addActionListener( ( ActionEvent e ) -> {
+                    angleModel.setValue( ( (Double) angleModel.getValue() + 270 ) % 360 );
+                    saveRotation();
                 } );
                 setToolTipText( Settings.jpoResources.getString( "rotateLeftJButton.ToolTipText" ) );
             }
@@ -292,12 +283,9 @@ public class PictureInfoEditor extends JFrame {
         JButton rotateRightJButton = new JButton( new ImageIcon( Settings.CLASS_LOADER.getResource( "jpo/images/icon_RotCWDown.gif" ) ) ) {
             {
                 setMnemonic( KeyEvent.VK_R );
-                addActionListener( new ActionListener() {
-                    @Override
-                    public void actionPerformed( ActionEvent e ) {
-                        angleModel.setValue( ( (Double) angleModel.getValue() + 90 ) % 360 );
-                        saveRotation();
-                    }
+                addActionListener( ( ActionEvent e ) -> {
+                    angleModel.setValue( ( (Double) angleModel.getValue() + 90 ) % 360 );
+                    saveRotation();
                 } );
                 setToolTipText( Settings.jpoResources.getString( "rotateRightJButton.ToolTipText" ) );
             }
@@ -314,12 +302,9 @@ public class PictureInfoEditor extends JFrame {
         OkJButton.setMinimumSize( Settings.defaultButtonDimension );
         OkJButton.setMaximumSize( Settings.defaultButtonDimension );
         OkJButton.setBorder( BorderFactory.createRaisedBevelBorder() );
-        OkJButton.addActionListener( new ActionListener() {
-            @Override
-            public void actionPerformed( ActionEvent e ) {
-                saveFieldData();
-                getRid();
-            }
+        OkJButton.addActionListener( ( ActionEvent e ) -> {
+            saveFieldData();
+            getRid();
         } );
         OkJButton.setDefaultCapable( true );
         getRootPane().setDefaultButton( OkJButton );
@@ -330,11 +315,8 @@ public class PictureInfoEditor extends JFrame {
         CancelButton.setMinimumSize( Settings.defaultButtonDimension );
         CancelButton.setMaximumSize( Settings.defaultButtonDimension );
         CancelButton.setBorder( BorderFactory.createRaisedBevelBorder() );
-        CancelButton.addActionListener( new ActionListener() {
-            @Override
-            public void actionPerformed( ActionEvent e ) {
-                getRid();
-            }
+        CancelButton.addActionListener( ( ActionEvent e ) -> {
+            getRid();
         } );
         buttonJPanel.add( CancelButton );
 
@@ -343,11 +325,8 @@ public class PictureInfoEditor extends JFrame {
         resetJButton.setMinimumSize( Settings.defaultButtonDimension );
         resetJButton.setMaximumSize( Settings.defaultButtonDimension );
         resetJButton.setBorder( BorderFactory.createRaisedBevelBorder() );
-        resetJButton.addActionListener( new ActionListener() {
-            @Override
-            public void actionPerformed( ActionEvent e ) {
-                loadData();
-            }
+        resetJButton.addActionListener( ( ActionEvent e ) -> {
+            loadData();
         } );
         buttonJPanel.add( resetJButton );
         mainPanel.add( buttonJPanel );
@@ -386,11 +365,8 @@ public class PictureInfoEditor extends JFrame {
 
         JButton reparseButton = new JButton( "reparse" );
         infoTab.add( reparseButton, "wrap" );
-        reparseButton.addActionListener( new ActionListener() {
-            @Override
-            public void actionPerformed( ActionEvent e ) {
-                doReparseDate();
-            }
+        reparseButton.addActionListener( ( ActionEvent e ) -> {
+            doReparseDate();
         } );
 
         JLabel filmReferenceJLabel = new JLabel( Settings.jpoResources.getString( "filmReferenceLabel" ) );
@@ -433,11 +409,8 @@ public class PictureInfoEditor extends JFrame {
         infoTab.add( longitudeJTextField, "wrap" );
 
         JButton mapButton = new JButton( "Open Map (in Browser)" );
-        mapButton.addActionListener( new ActionListener() {
-            @Override
-            public void actionPerformed( ActionEvent e ) {
-                Webserver.getInstance().browse( myNode );
-            }
+        mapButton.addActionListener( ( ActionEvent e ) -> {
+            Webserver.getInstance().browse( myNode );
         } );
         infoTab.add( mapButton, "span 2, wrap" );
 
@@ -459,11 +432,8 @@ public class PictureInfoEditor extends JFrame {
 
         //JButton highresLocationJButton = new JButton( Settings.jpoResources.getString( "threeDotText" ) );
         JButton highresLocationJButton = new ThreeDotButton();
-        highresLocationJButton.addActionListener( new ActionListener() {
-            @Override
-            public void actionPerformed( ActionEvent e ) {
-                chooseFile();
-            }
+        highresLocationJButton.addActionListener( ( ActionEvent e ) -> {
+            chooseFile();
         } );
         fileTab.add( highresLocationJButton, "wrap" );
         fileTab.add( highresErrorJLabel, "span 2, wrap" );
@@ -472,16 +442,8 @@ public class PictureInfoEditor extends JFrame {
         refreshChecksumJButton.setPreferredSize( new Dimension( 80, 25 ) );
         refreshChecksumJButton.setMinimumSize( new Dimension( 80, 25 ) );
         refreshChecksumJButton.setMaximumSize( new Dimension( 80, 25 ) );
-        refreshChecksumJButton.addActionListener( new ActionListener() {
-            @Override
-            public void actionPerformed( ActionEvent e ) {
-                new Thread() {
-                    public void run() {
-                        pictureInfo.calculateChecksum();
-                    }
-                }.start();
-
-            }
+        refreshChecksumJButton.addActionListener( ( ActionEvent e ) -> {
+            new Thread( () -> pictureInfo.calculateChecksum() ).start();
         } );
 
         fileTab.add( checksumJLabel );
@@ -496,26 +458,23 @@ public class PictureInfoEditor extends JFrame {
         categoriesTab.add( categoryAssignmentsJLabel, "wrap" );
 
         categoriesJList.setSelectionMode( ListSelectionModel.MULTIPLE_INTERVAL_SELECTION );
-        categoriesJList.addListSelectionListener( new ListSelectionListener() {
-            /**
-             * Method from the ListSelectionListener implementation that tracks
-             * when an element was selected.
-             *
-             * @param e
-             */
-            @Override
-            public void valueChanged( ListSelectionEvent e ) {
-                if ( e.getValueIsAdjusting() ) {
-                    return;
-                }
-                if ( categoriesJList.isSelectedIndex( ( (DefaultListModel) categoriesJList.getModel() ).indexOf( setupCategories ) ) ) {
-                    new CategoryEditorJFrame();
-                } else if ( categoriesJList.isSelectedIndex( ( (DefaultListModel) categoriesJList.getModel() ).indexOf( noCategories ) ) ) {
-                    categoriesJList.clearSelection();
-                }
-                categoryAssignmentsJLabel.setText( selectedJListCategoriesToString( categoriesJList ) );
+        categoriesJList.addListSelectionListener( ( ListSelectionEvent e ) -> {
+            if ( e.getValueIsAdjusting() ) {
+                return;
             }
-        } );
+            if ( categoriesJList.isSelectedIndex( ( (DefaultListModel) categoriesJList.getModel() ).indexOf( setupCategories ) ) ) {
+                new CategoryEditorJFrame();
+            } else if ( categoriesJList.isSelectedIndex( ( (DefaultListModel) categoriesJList.getModel() ).indexOf( noCategories ) ) ) {
+                categoriesJList.clearSelection();
+            }
+            categoryAssignmentsJLabel.setText( selectedJListCategoriesToString( categoriesJList ) );
+        } /**
+         * Method from the ListSelectionListener implementation that tracks when
+         * an element was selected.
+         *
+         * @param e
+         */
+        );
 
         categoriesTab.add( listJScrollPane, "wrap" );
         tabs.add( "Categories", categoriesTab );
@@ -570,15 +529,14 @@ public class PictureInfoEditor extends JFrame {
         listModel.addElement( noCategories );
 
         List<Integer> selections = new ArrayList<>();
-        for ( Integer key : myNode.getPictureCollection().getCategoryKeySet() ) {
+        myNode.getPictureCollection().getCategoryKeySet().stream().forEach( ( key ) -> {
             String category = myNode.getPictureCollection().getCategory( key );
             Category categoryObject = new Category( key, category );
             listModel.addElement( categoryObject );
-
             if ( ( pictureInfo.categoryAssignments != null ) && ( pictureInfo.categoryAssignments.contains( key ) ) ) {
                 selections.add( listModel.indexOf( categoryObject ) );
             }
-        }
+        } );
 
         int selectionsArray[] = new int[selections.size()];
         int j = 0;
@@ -907,7 +865,7 @@ public class PictureInfoEditor extends JFrame {
     private class MySpinnerNumberModel
             extends SpinnerNumberModel {
 
-        public MySpinnerNumberModel() {
+        MySpinnerNumberModel() {
             super( 0.0, //initial value
                     0.0, //min
                     359.9, //max
@@ -939,7 +897,7 @@ public class PictureInfoEditor extends JFrame {
 
     private class MyMapClickListener extends MapClickListener {
 
-        public MyMapClickListener( JXMapViewer viewer ) {
+        MyMapClickListener( JXMapViewer viewer ) {
             super( viewer );
         }
 

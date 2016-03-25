@@ -3,7 +3,6 @@ package jpo.gui;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import javax.swing.BorderFactory;
@@ -13,9 +12,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.SwingUtilities;
-import jpo.dataModel.Settings;
 import javax.swing.Timer;
 import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
+import jpo.dataModel.Settings;
 import jpo.dataModel.Tools;
 import net.miginfocom.swing.MigLayout;
 
@@ -143,13 +142,9 @@ public class ProgressGui extends JFrame implements ProgressListener {
         okJButton.setMaximumSize( Settings.defaultButtonDimension );
         okJButton.setBorder( BorderFactory.createRaisedBevelBorder() );
         okJButton.setDefaultCapable( true );
-        okJButton.addActionListener( new ActionListener() {
-
-            @Override
-            public void actionPerformed( ActionEvent e ) {
-                getRid();
-            }
-        } );
+        okJButton.addActionListener(( ActionEvent e ) -> {
+            getRid();
+        });
         contentJPanel.add( okJButton, "wrap" );
 
         cancelJButton.setPreferredSize( Settings.defaultButtonDimension );
@@ -157,13 +152,9 @@ public class ProgressGui extends JFrame implements ProgressListener {
         cancelJButton.setMaximumSize( Settings.defaultButtonDimension );
         cancelJButton.setBorder( BorderFactory.createRaisedBevelBorder() );
         cancelJButton.setDefaultCapable( true );
-        cancelJButton.addActionListener( new ActionListener() {
-
-            @Override
-            public void actionPerformed( ActionEvent e ) {
-                interruptor.setShouldInterrupt( true );
-            }
-        } );
+        cancelJButton.addActionListener(( ActionEvent e ) -> {
+            interruptor.setShouldInterrupt( true );
+        });
         contentJPanel.add( cancelJButton, "wrap" );
 
         okJButton.setVisible( false );
@@ -178,13 +169,9 @@ public class ProgressGui extends JFrame implements ProgressListener {
      * method that closes the frame and gets rid of it
      */
     private void getRid() {
-        Runnable r = new Runnable() {
-
-            @Override
-            public void run() {
-                setVisible( false );
-                dispose();
-            }
+        Runnable r = () -> {
+            setVisible( false );
+            dispose();
         };
         if ( SwingUtilities.isEventDispatchThread() ) {
             r.run();
@@ -230,13 +217,9 @@ public class ProgressGui extends JFrame implements ProgressListener {
         cancelJButton.setVisible( false );
         progLabel.setText( String.format( doneString, progBar.getValue() ) );
         validate();
-        Timer timer = new Timer( TIMEOUT, new ActionListener() {
-
-            @Override
-            public void actionPerformed( ActionEvent evt ) {
-                getRid();
-            }
-        } );
+        Timer timer = new Timer( TIMEOUT, ( ActionEvent evt ) -> {
+            getRid();
+        });
         timer.setRepeats( false );
         timer.start();
     }

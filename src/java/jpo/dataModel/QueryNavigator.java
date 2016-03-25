@@ -44,7 +44,7 @@ public class QueryNavigator
      *
      *  @param  queryToBrowse   The {@link Query} which should be browsed.
      */
-    public final void setQuery( Query queryToBrowse ) {
+    public void setQuery( Query queryToBrowse ) {
         myQuery = queryToBrowse;
         myQuery.refresh();
     }

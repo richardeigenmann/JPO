@@ -1,12 +1,12 @@
 package jpo.gui;
 
-import jpo.dataModel.Settings;
-import java.lang.reflect.InvocationTargetException;
 import java.awt.Dimension;
+import java.lang.reflect.InvocationTargetException;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
+import jpo.dataModel.Settings;
 
 /**
  * Creates a JFrame that holds a centred JLabel.
@@ -35,18 +35,14 @@ public class LabelFrame {
      * @param title The title for the JFrame
      */
     public LabelFrame( final String title ) {
-        Runnable r = new Runnable() {
-
-            @Override
-            public void run() {
-                initComponents( title );
-            }
+        Runnable runnable = () -> {
+            initComponents( title );
         };
         if ( SwingUtilities.isEventDispatchThread() ) {
-            r.run();
+            runnable.run();
         } else {
             try {
-                SwingUtilities.invokeAndWait( r );
+                SwingUtilities.invokeAndWait(runnable );
             } catch ( InterruptedException | InvocationTargetException ex ) {
                 // don't care
             }
@@ -78,17 +74,13 @@ public class LabelFrame {
      * @param message the message to show in the label
      */
     public void update( final String message ) {
-        Runnable r = new Runnable() {
-
-            @Override
-            public void run() {
-                progressJLabel.setText( message );
-            }
+        Runnable runnable = () -> {
+            progressJLabel.setText( message );
         };
         if ( SwingUtilities.isEventDispatchThread() ) {
-            r.run();
+            runnable.run();
         } else {
-            SwingUtilities.invokeLater( r );
+            SwingUtilities.invokeLater(runnable );
         }
 
     }
@@ -97,18 +89,14 @@ public class LabelFrame {
      * method that closes the frame and gets rid of it
      */
     public void getRid() {
-        Runnable r = new Runnable() {
-
-            @Override
-            public void run() {
-                jFrame.setVisible( false );
-                jFrame.dispose();
-            }
+        Runnable runnable = () -> {
+            jFrame.setVisible( false );
+            jFrame.dispose();
         };
         if ( SwingUtilities.isEventDispatchThread() ) {
-            r.run();
+            runnable.run();
         } else {
-            SwingUtilities.invokeLater( r );
+            SwingUtilities.invokeLater(runnable );
         }
     }
 }

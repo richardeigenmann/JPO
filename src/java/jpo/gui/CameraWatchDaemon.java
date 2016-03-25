@@ -4,7 +4,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
 import jpo.dataModel.Settings;
-import jpo.dataModel.Camera;
 
 /*
  CameraWatchDaemon.java: Daemon Thread that monitors when a camera has been connected.
@@ -64,25 +63,19 @@ public class CameraWatchDaemon implements Runnable {
 
         while ( !gracefullyInterrupt ) {
             synchronized ( Settings.cameras ) {
-                for ( Camera c : Settings.cameras ) {
+                Settings.cameras.stream().forEach( ( c ) -> {
                     boolean isConnected = c.isCameraConnected();
                     if ( c.getMonitorForNewPictures() && isConnected && ( !c.getLastConnectionStatus() ) ) {
-                        LOGGER.log( Level.INFO, "{0}: Camera {1} has been connected ", new Object[]{ getClass().toString(), c.toString() });
+                        LOGGER.log( Level.INFO, "{0}: Camera {1} has been connected ", new Object[]{ getClass().toString(), c.toString() } );
                         final CameraDownloadWizardData dm = new CameraDownloadWizardData();
                         dm.setCamera( c );
                         dm.setAnchorFrame( Settings.anchorFrame );
-                        Runnable r;
-                        r = new Runnable() {
-
-                            @Override
-                            public void run() {
-                                new CameraDownloadWizard( dm );
-                            }
-                        };
-                        SwingUtilities.invokeLater( r );
+                        SwingUtilities.invokeLater(
+                                () -> new CameraDownloadWizard( dm )
+                        );
                     }
                     c.setLastConnectionStatus( isConnected );
-                }
+                } );
             }
             try {
                 Thread.sleep( 5000 );
