@@ -333,10 +333,11 @@
 
     <target name="run" description="Runs the program" depends="prepare, compile">
         <java classname="${app.main.class}"
-              fork="yes"
-              jvmargs="-XX:+AggressiveHeap">
+              fork="yes">
+              <!-- jvmargs="-XX:+AggressiveHeap"-->
             <!-- add for debugging: jvmargs="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,address=8888,suspend=n" maxmemory="6000m"-->
             <classpath refid="classpath"/>
+            <arg value="-XX:+AggressiveHeap"/>
         </java>
     </target>
 
