@@ -210,7 +210,8 @@ public class SourcePicture {
             sourcePictureBufferedImage = null;
             try {
                 sourcePictureBufferedImage = reader.read( 0 ); // just get the first image
-
+                //LOGGER.info( sourcePictureBufferedImage.getColorModel().toString() );
+                
                 if ( sourcePictureBufferedImage.getType() != BufferedImage.TYPE_3BYTE_BGR ) {
                     LOGGER.fine( String.format( "Got wrong image type: %d instead of %d. Trying to convert...", sourcePictureBufferedImage.getType(), BufferedImage.TYPE_3BYTE_BGR ) );
 
