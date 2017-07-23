@@ -201,11 +201,12 @@
                     <fileset dir="${build.base.classes.dir}"/>
                 </classfiles>
                 <sourcefiles encoding="UTF-8">
-                    <fileset dir="src"/>
+                    <fileset dir="${src.java.dir}"/>
                 </sourcefiles>
             </structure>
                         
             <html destdir="report"/>
+            <xml destfile="report.xml"/>
         </jacoco:report>
         <fail message="Tests failed!" if="test.failed"/>
     </target>
