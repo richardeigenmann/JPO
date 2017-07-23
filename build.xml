@@ -57,10 +57,6 @@
     <!-- <echo message="The new jar file will go to:               ${build.jars.dir}"/> -->
 
 
-    <taskdef uri="antlib:org.jacoco.ant" resource="org/jacoco/ant/antlib.xml">
-        <classpath path="libs/jacocoant.jar"/>
-    </taskdef>
-
     <target name="prepare" description="Makes the build directory tree with mkdir">
         <mkdir dir="${build.dir}"/>
         <mkdir dir="${build.base.classes.dir}"/>
@@ -162,74 +158,57 @@
          unset DISPLAY
          ant -Djava.awt.headless=true test
     -->
+    <taskdef uri="antlib:org.jacoco.ant" resource="org/jacoco/ant/antlib.xml">
+        <classpath path="libs/jacocoant.jar"/>
+    </taskdef>
 
     <target name="test" depends="compile-test" description="Runs the unit tests">
         <!-- <splash imageurl="http://www.bar-solutions.com/software/ant_splash.jpg"
         showduration="5000"/> -->
-        <junit
-            printsummary="yes"
-            errorProperty="test.failed"
-            failureproperty="test.failed"
-            haltonfailure="yes"
-            fork="yes"
-            includeantruntime="yes"
-            showoutput="yes">
-            <formatter type="plain" usefile="false"/>
-            <classpath>
-                <pathelement location="${unit.test.classes.dir}" />
-                <pathelement location="${junit}" />
-                <pathelement location="${hamcrest}" />
-                <pathelement location="${ant-junit4}" />
-            </classpath>
-            <classpath refid="classpath"/>
+        <jacoco:coverage>
+            <junit
+                printsummary="yes"
+                errorProperty="test.failed"
+                failureproperty="test.failed"
+                haltonfailure="yes"
+                fork="yes"
+                includeantruntime="yes"
+                showoutput="yes">
+                <formatter type="plain" usefile="false"/>
+                <classpath>
+                    <pathelement location="${unit.test.classes.dir}" />
+                    <pathelement location="${junit}" />
+                    <pathelement location="${hamcrest}" />
+                    <pathelement location="${ant-junit4}" />
+                </classpath>
+                <classpath refid="classpath"/>
 
-            <batchtest todir="${results}">
-                <fileset dir="${unit.test.classes.dir}">
-                    <include name="**/*Test.class"/>
-                </fileset>
-            </batchtest>
-        </junit>
+                <batchtest todir="${results}">
+                    <fileset dir="${unit.test.classes.dir}">
+                        <include name="**/*Test.class"/>
+                    </fileset>
+                </batchtest>
+            </junit>
+        </jacoco:coverage>
+
+        <jacoco:report>         
+            <executiondata>
+                <file file="jacoco.exec"/>
+            </executiondata>
+                        
+            <structure name="Java Picture Organizer Coverage Report">
+                <classfiles>
+                    <fileset dir="${build.base.classes.dir}"/>
+                </classfiles>
+                <sourcefiles encoding="UTF-8">
+                    <fileset dir="src"/>
+                </sourcefiles>
+            </structure>
+                        
+            <html destdir="report"/>
+        </jacoco:report>
         <fail message="Tests failed!" if="test.failed"/>
     </target>
-
-    <jacoco:coverage>
-        <junit 
-            fork="true" 
-            forkmode="once"
-            includeantruntime="yes" >
-            <classpath>
-                <pathelement location="${unit.test.classes.dir}" />
-                <pathelement location="${junit}" />
-                <pathelement location="${hamcrest}" />
-                <pathelement location="${ant-junit4}" />
-            </classpath>
-            
-            <classpath refid="classpath"/>
-            
-            <batchtest todir="${results}">
-                <fileset dir="${unit.test.classes.dir}">
-                    <include name="**/*Test.class"/>
-                </fileset>
-            </batchtest>
-        </junit>
-    </jacoco:coverage>
-
-    <jacoco:report>         
-        <executiondata>
-            <file file="jacoco.exec"/>
-        </executiondata>
-                        
-        <structure name="Java Picture Organizer Coverage Report">
-            <classfiles>
-                <fileset dir="${build.base.classes.dir}"/>
-            </classfiles>
-            <sourcefiles encoding="UTF-8">
-                <fileset dir="src"/>
-            </sourcefiles>
-        </structure>
-                        
-        <html destdir="report"/>
-    </jacoco:report>
 
     <target name="javadoc"
             description="Creates the JavaDoc of the project">
