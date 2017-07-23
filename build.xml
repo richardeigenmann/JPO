@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<project name="Java Picture Organizer" default="run">
+<project name="Java Picture Organizer" default="run" xmlns:jacoco="antlib:org.jacoco.ant">
 
     <property name="app.main.package" value="jpo"/>
     <property name="app.main.class" value="Main"/>
@@ -57,6 +57,10 @@
     <!-- <echo message="The new jar file will go to:               ${build.jars.dir}"/> -->
 
 
+    <taskdef uri="antlib:org.jacoco.ant" resource="org/jacoco/ant/antlib.xml">
+        <classpath path="libs/jacocoant.jar"/>
+    </taskdef>
+
     <target name="prepare" description="Makes the build directory tree with mkdir">
         <mkdir dir="${build.dir}"/>
         <mkdir dir="${build.base.classes.dir}"/>
@@ -77,7 +81,6 @@
             <fileset dir="${src.java.dir}/jpo/" includes="*~" defaultexcludes="no" />
         </delete>
     </target>
-
 
     <target name="compile"
             depends="prepare"
@@ -129,7 +132,6 @@
         <available property="junit.present" classname="junit.framework.TestCase" classpath="${junit}" />
         <echo message="Testing if JUnit is present: ${junit.present}" />
     </target>
-
 
     <target name="compile-test" depends="JUNIT, compile" description="Compiles the JUnit test cases">
         <mkdir dir="${unit.test.classes.dir}"/>
@@ -190,7 +192,44 @@
         <fail message="Tests failed!" if="test.failed"/>
     </target>
 
+    <jacoco:coverage>
+        <junit 
+            fork="true" 
+            forkmode="once"
+            includeantruntime="yes" >
+            <classpath>
+                <pathelement location="${unit.test.classes.dir}" />
+                <pathelement location="${junit}" />
+                <pathelement location="${hamcrest}" />
+                <pathelement location="${ant-junit4}" />
+            </classpath>
+            
+            <classpath refid="classpath"/>
+            
+            <batchtest todir="${results}">
+                <fileset dir="${unit.test.classes.dir}">
+                    <include name="**/*Test.class"/>
+                </fileset>
+            </batchtest>
+        </junit>
+    </jacoco:coverage>
 
+    <jacoco:report>         
+        <executiondata>
+            <file file="jacoco.exec"/>
+        </executiondata>
+                        
+        <structure name="Java Picture Organizer Coverage Report">
+            <classfiles>
+                <fileset dir="${build.base.classes.dir}"/>
+            </classfiles>
+            <sourcefiles encoding="UTF-8">
+                <fileset dir="src"/>
+            </sourcefiles>
+        </structure>
+                        
+        <html destdir="report"/>
+    </jacoco:report>
 
     <target name="javadoc"
             description="Creates the JavaDoc of the project">
@@ -219,9 +258,6 @@
         </javadoc>
     </target>
 
-
-
-
     <fileset id="ThirdPartyLibraries" dir="${libs.dir}">
         <include name="commons-compress-1.8.jar"/>
         <include name="commons-io-2.4.jar" />
@@ -246,8 +282,6 @@
         <include name="TagCloud.jar"/>
         <include name="xmpcore-5.1.2.jar"/>  <!-- metadata-extractor dependency -->
     </fileset>
-
-
 
     <target name="buildjar" depends="clean, cleanupSource, test" description="Builds the all encompassing Jar file">
         <jar destfile="${build.jars.dir}/jpo-${version}.jar"
@@ -292,7 +326,6 @@
         />
     </target>
 
-
     <!-- In OpenSUSE an NSIS builder package can be installed from the unofficial
     repositories via the webpage -->
     <target name="build-windows" description="Runs the windows buillder" depends="signjar">
@@ -328,33 +361,25 @@
         <fail message="Tests failed!" if="test.failed"/>
     </target>
 
-
-
-
     <target name="run" description="Runs the program" depends="prepare, compile">
         <java classname="${app.main.class}"
               fork="yes">
-              <!-- jvmargs="-XX:+AggressiveHeap"-->
+            <!-- jvmargs="-XX:+AggressiveHeap"-->
             <!-- add for debugging: jvmargs="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,address=8888,suspend=n" maxmemory="6000m"-->
             <classpath refid="classpath"/>
             <arg value="-XX:+AggressiveHeap"/>
         </java>
     </target>
 
-
-
     <target name="go"
             depends="compile, run"
             description="Compile and run the project"/>
-
 
     <target name="runjar" description="Runs the program from the jar" depends="">  <!-- buildjar -->
         <java jar="${build.jars.dir}/jpo-${version}.jar"
               fork="yes"
         />
     </target>
-
-
 
     <!-- This target will only be of use to the person who does the deployment
     of JPO to souceforge.  -->
@@ -398,7 +423,6 @@
         </scp>
     </target>
 
-
     <!-- This target will only be of use to the person who does the deployment
     of JPO to souceforge.  -->
     <target name="publish-webpages" description="Publishes the latest Jpo web pages SourceForge project">
@@ -426,8 +450,6 @@
         </scp>
     </target>
 
-
-
     <!-- pushes the jpo jar to sourceforge  -->
     <target name="publish-windows" depends="build-windows"  description="Publishes the compiled Windows installer to SourceForge">
         <scp todir="richieigenmann,j-po@web.sourceforge.net:/home/frs/project/j-po"
@@ -445,18 +467,6 @@
         </scp>
     </target>
 
-
     <target name="publish" depends="publish-jar, publish-javadoc, publish-webpages, publish-windows" description="Publishes the lates Jpo Version and webpages to the SourceForge project"/>
-
-
-
-
-
-
-    <!--    <target name="JSCH" description="Checks if JSch is available">
-        <available property="jsch.present" classname="com.jcraft.jsch.JSch" classpath="${junit}"  />
-        <echo message="Testing if JSch is present: ${jsch.present}" />
-    </target>-->
-
 
 </project>

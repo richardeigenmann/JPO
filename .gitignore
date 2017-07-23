@@ -3,5 +3,7 @@ JPO_cameras.dta
 build/
 /nbproject/private/
 Windowsbuilder/JPO-Installer-0.13.exe
+Windowsbuilder/JPO-Installer-0.12.exe
 Windowsbuilder/Jpo.exe
-
+jacoco.exec
+report/
