@@ -245,18 +245,6 @@ public class Settings {
      */
     public static String[] recentCollections = new String[MAX_MEMORISE];
     /**
-     * the path where thumbnails are to be kept if at all
-     */
-    public static File thumbnailPath;
-    /**
-     * the prefix for thumbnail files in the thumbnail directory
-     */
-    public static final String thumbnailPrefix = "JPO_Thumbnail_";
-    /**
-     * a flag that indicates whether thumbnails are to be kept as files at all
-     */
-    public static boolean keepThumbnails;
-    /**
      * A counter that keeps track of the number of thumbnails created
      */
     public static int thumbnailCounter = 0;
@@ -705,10 +693,6 @@ public class Settings {
                 + "Jpo-Thumbnail-Cache";
 
         pictureViewerDefaultDimensions = new Dimension( windowSizes[1] );
-
-        keepThumbnails = true;
-        thumbnailPath = new File( new File( System.getProperty( "java.io.tmpdir" ) ), "JPO_thumbnails" + File.separator );
-
         dontEnlargeSmallImages = true;
     }
     /**
@@ -731,24 +715,8 @@ public class Settings {
         mainFrameDimensions.height = prefs.getInt( "mainFrameDimensions.height", mainFrameDimensions.height );
         preferredMasterDividerSpot = prefs.getInt( "preferredMasterDividerSpot", preferredMasterDividerSpot );
         preferredLeftDividerSpot = prefs.getInt( "preferredLeftDividerSpot", preferredLeftDividerSpot );
-        //LOGGER.info( String.format( "Loaded preferredLeftDividerSpot as: %d", preferredLeftDividerSpot ) );
 
         dividerWidth = prefs.getInt( "dividerWidth", dividerWidth );
-
-//        int segments = prefs.getInt( "myDoggyWindowsLayout.stringSegments", -1 );
-//        StringBuilder sb = new StringBuilder("");
-//        if ( segments > -1 ) {
-//            for ( int i = 0; i <= segments; i++ ) {
-//                sb.append( prefs.get( "myDoggyWindowsLayout."+i, ""));
-//            }
-//        } else {
-//            System.out.println( "no myDoggyWindowsLayout loaded" );
-//        }
-//        myDoggyWindowsLayout = sb.toString();
-//        System.out.println( myDoggyWindowsLayout );
-//        
-//                
-//        myDoggyWindowsLayout = prefs.get( "myDoggyWindowsLayout", "" );
         autoLoad = prefs.get( "autoload", autoLoad );
 
         maximisePictureViewerWindow = prefs.getBoolean( "maximisePictureViewerWindow", maximisePictureViewerWindow );
@@ -766,8 +734,6 @@ public class Settings {
             userFunctionNames[i] = prefs.get( "userFunctionName-" + Integer.toString( i ), null );
             userFunctionCmd[i] = prefs.get( "userFunctionCmd-" + Integer.toString( i ), null );
         }
-        keepThumbnails = prefs.getBoolean( "keepThumbnails", keepThumbnails );
-        thumbnailPath = new File( prefs.get( "thumbnailPath", thumbnailPath.getPath() ) ); // inefficient RE, 11.11.2006
         dontEnlargeSmallImages = prefs.getBoolean( "dontEnlargeSmallImages", dontEnlargeSmallImages );
         thumbnailCounter = prefs.getInt( "thumbnailCounter", thumbnailCounter );
         writeLog = prefs.getBoolean( "writeLog", writeLog );
@@ -847,36 +813,6 @@ public class Settings {
     public static void validateSettings() {
         if ( maxThumbnails < 1 ) { //how can this happen?
             maxThumbnails = defaultMaxThumbnails;
-        }
-        if ( keepThumbnails ) {
-            if ( !thumbnailPath.exists() ) {
-                try {
-                    thumbnailPath.mkdirs();
-                } catch ( SecurityException x ) {
-                    // do nothing here because
-                    // the error situation will
-                    // be flagged in the next steps.
-                }
-            }
-            if ( !thumbnailPath.exists() ) {
-                JOptionPane.showMessageDialog( Settings.anchorFrame,
-                        Settings.jpoResources.getString( "thumbNoExistError" ),
-                        Settings.jpoResources.getString( "settingsError" ),
-                        JOptionPane.ERROR_MESSAGE );
-                keepThumbnails = false;
-            } else if ( !thumbnailPath.canWrite() ) {
-                JOptionPane.showMessageDialog( Settings.anchorFrame,
-                        Settings.jpoResources.getString( "thumbNoWriteError" ),
-                        Settings.jpoResources.getString( "settingsError" ),
-                        JOptionPane.ERROR_MESSAGE );
-                keepThumbnails = false;
-            } else if ( !thumbnailPath.isDirectory() ) {
-                JOptionPane.showMessageDialog( Settings.anchorFrame,
-                        Settings.jpoResources.getString( "thumbNoDirError" ),
-                        Settings.jpoResources.getString( "settingsError" ),
-                        JOptionPane.ERROR_MESSAGE );
-                keepThumbnails = false;
-            }
         }
 
         if ( writeLog ) {
@@ -988,8 +924,6 @@ public class Settings {
                 n++;
             }
         }
-        prefs.putBoolean( "keepThumbnails", keepThumbnails );
-        prefs.put( "thumbnailPath", thumbnailPath.getPath() );
         prefs.putBoolean( "dontEnlargeSmallImages", dontEnlargeSmallImages );
         prefs.putInt( "thumbnailCounter", thumbnailCounter );
         prefs.putBoolean( "writeLog", writeLog );

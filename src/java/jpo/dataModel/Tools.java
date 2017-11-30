@@ -675,47 +675,6 @@ public class Tools {
         return null;
     }
 
-    /**
-     * Method that returns a new lowres URL that has not been used before.
-     *
-     * @return the lowres url
-     */
-    public static String getNewLowresFilename() {
-        warnOnEDT();
-        File testLowresFilename;
-        for ( int i = 1; i < 10000; i++ ) {
-            Settings.thumbnailCounter++;
-            //if ( (Settings.thumbnailCounter % 10) == 0 )
-            //logger.info ("considering " + Settings.thumbnailCounter + " filenames for lowres filename");
-            testLowresFilename = new File( Settings.thumbnailPath, Settings.thumbnailPrefix + Integer.toString( Settings.thumbnailCounter ) + ".jpg" );
-            if ( !testLowresFilename.exists() ) {
-                try {
-                    //logger.info( "Tools.getNewLowresFilename: assigning: " + testLowresFilename.toURI().toURL().toString());
-                    Settings.unsavedSettingChanges = true;
-                    return ( testLowresFilename.toURI().toURL().toString() );
-                } catch ( MalformedURLException x ) {
-                    return ( null );
-                }
-            }
-        }
-        LOGGER.info( "lowresFilename: Could not create a lowres filename." );
-        return null;
-    }
-
-    /**
-     * Returns a new URL for a thumbnail. Calls getNewLowresFilename
-     *
-     * @return a new URL or null if something went very wrong.
-     */
-    public static URL getNewLowresURL() {
-        URL newURL = null;
-        try {
-            newURL = new URL( getNewLowresFilename() );
-        } catch ( MalformedURLException ex ) {
-            LOGGER.severe( ex.getMessage() );
-        }
-        return newURL;
-    }
 
     /**
      * convenience method to log the amount of free memory

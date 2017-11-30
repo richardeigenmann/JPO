@@ -724,14 +724,14 @@ public class SettingsDialog extends JDialog {
         Settings.pictureViewerFastScale = pictureViewerFastScaleJCheckBox.isSelected();
 
         //Settings.thumbnailPath = thumbnailPathChooser.getDirectory();
-        Settings.thumbnailCacheDirectory = thumbnailCacheDirPathChooser.getDirectory().toString();
+        //Settings.thumbnailCacheDirectory = thumbnailCacheDirPathChooser.getDirectory().toString();
         //Settings.keepThumbnails = keepThumbnailsJCheckBox.isSelected();
 
-        if ( ( !Settings.thumbnailPath.exists() ) && Settings.keepThumbnails ) {
+        /*if ( ( !Settings.thumbnailPath.exists() ) && Settings.keepThumbnails ) {
             if ( !Settings.thumbnailPath.mkdirs() ) {
                 LOGGER.severe( String.format( "Could not create directory: %s", Settings.thumbnailPath.toString() ) );
             }
-        }
+        }*/
 
         Settings.maxThumbnails = maxThumbnails.getValue();
         Settings.thumbnailSize = thumbnailSize.getValue();
