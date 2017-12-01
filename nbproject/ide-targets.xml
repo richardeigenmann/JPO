@@ -4,9 +4,9 @@
 
     <!-- (more info: http://www.netbeans.org/kb/41/freeform-config.html#debugj2se) -->
     <target depends="compile" description="Runs the program" name="debug-nb">
-        <echo>build-classpath: ${ant.refid:build-classpath}</echo>
+        <echo>build-classpath: ${ant.refid:classpath}</echo>
         <nbjpdastart addressproperty="jpda.address" name="Java Picture Organizer" transport="dt_socket">
-            <classpath refid="build-classpath"/>
+            <classpath refid="classpath"/>
         </nbjpdastart>
         <java classname="${app.main.class}" fork="yes"  >
              <classpath refid="classpath"/>
