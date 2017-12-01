@@ -8,3 +8,4 @@ Windowsbuilder/Jpo.exe
 jacoco.exec
 report/
 report.xml
+.gradle
