@@ -122,18 +122,6 @@ public class GroupNavigator extends NodeNavigator {
         }
     }
 
-    /**
-     * This method unregisters the TreeModelListener and sets the variables to
-     * null;
-     */
-    @Override
-    public void getRid() {
-        super.getRid();
-        if ( myNode != null ) {
-            myNode.getPictureCollection().getTreeModel().removeTreeModelListener( myTreeModelListener );
-            myNode = null;
-        }
-    }
 
     private final MyTreeModelListener myTreeModelListener = new MyTreeModelListener();
 

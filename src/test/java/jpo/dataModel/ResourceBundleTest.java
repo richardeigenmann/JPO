@@ -3,11 +3,11 @@ package jpo.dataModel;
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.fail;
 import org.junit.Before;
 import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 
 /**
  * Tests for the resource bundles
@@ -16,10 +16,10 @@ import org.junit.Test;
  */
 public class ResourceBundleTest {
 
-    ResourceBundle jpoResources1;
-    ResourceBundle jpoResources2;
-    ResourceBundle jpoResources3;
-    ResourceBundle jpoResources4;
+    private ResourceBundle jpoResources1;
+    private ResourceBundle jpoResources2;
+    private ResourceBundle jpoResources3;
+    private ResourceBundle jpoResources4;
 
     /**
      * Set up for each test

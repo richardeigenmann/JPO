@@ -3,7 +3,7 @@ package jpo.gui;
 /*
  SettingsDialog.java:  the class that provides a GUI for the settings
 
- Copyright (C) 2002-2014  Richard Eigenmann, Zürich, Switzerland
+ Copyright (C) 2002-2017  Richard Eigenmann, Zürich, Switzerland
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -417,29 +417,29 @@ public class SettingsDialog extends JDialog {
         predefinedEmailJComboBox.addActionListener(( ActionEvent e ) -> {
             JComboBox cb = (JComboBox) e.getSource();
             String cbSelection = (String) cb.getSelectedItem();
-            if ( cbSelection.equals( "Localhost" ) ) {
+            if ( "Localhost".equals( cbSelection ) ) {
                 emailServerJTextField.setText( "localhost" );
                 emailPortJTextField.setText( "25" );
                 authenticationJComboBox.setSelectedIndex( 1 ); //Password
-            } else if ( cbSelection.equals( "Compuserve" ) ) {
+            } else if ( "Compuserve".equals( cbSelection ) ) {
                 emailServerJTextField.setText( "smtp.compuserve.com" );
                 emailPortJTextField.setText( "25" );
                 //emailUserJTextField.setText( "set your username" );
                 //emailPasswordJTextField.setText( "set your password" );
                 authenticationJComboBox.setSelectedIndex( 1 ); //Password
-            } else if ( cbSelection.equals( "Gmail" ) ) {
+            } else if ( "Gmail".equals( cbSelection ) ) {
                 emailServerJTextField.setText( "smtp.gmail.com" );
                 emailPortJTextField.setText( "465" );
                 //emailUserJTextField.setText( "set your username" );
                 //emailPasswordJTextField.setText( "set your password" );
                 authenticationJComboBox.setSelectedIndex( 2 ); //SSL
-            } else if ( cbSelection.equals( "Hotmail" ) ) {
+            } else if ( "Hotmail".equals( cbSelection ) ) {
                 emailServerJTextField.setText( "smtp.live.com" );
                 emailPortJTextField.setText( "25" );
                 //emailUserJTextField.setText( "set your username" );
                 //emailPasswordJTextField.setText( "set your password" );
                 authenticationJComboBox.setSelectedIndex( 1 ); //Password
-            } else if ( cbSelection.equals( "Other" ) ) {
+            } else if ( "Other".equals( cbSelection ) ) {
                 emailServerJTextField.setText( "" );
                 emailPortJTextField.setText( "25" );
             }

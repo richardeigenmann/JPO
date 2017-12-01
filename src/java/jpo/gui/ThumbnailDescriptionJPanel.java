@@ -30,7 +30,7 @@ import jpo.gui.swing.NonFocussedCaret;
 /*
  ThumbnailDescriptionJPanel.java:  class that creates a panel showing the description of a thumbnail
 
- Copyright (C) 2002 - 2014  Richard Eigenmann, Zürich, Switzerland
+ Copyright (C) 2002 - 2017  Richard Eigenmann, Zürich, Switzerland
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -201,7 +201,7 @@ public class ThumbnailDescriptionJPanel
      * Inputverifier on the text area.
      */
     public void doUpdate() {
-        if ( referringNode == null ) {
+        if ( referringNode.equals( null ) ) {
             return;
         }
         Object userObject = referringNode.getUserObject();
@@ -454,13 +454,13 @@ public class ThumbnailDescriptionJPanel
     public void treeNodesChanged( TreeModelEvent e ) {
         // find out whether our node was changed
         Object[] children = e.getChildren();
-        if ( children == null ) {
+        if ( children.equals( null ) ) {
             // the root node does not have children as it doesn't have a parent
             return;
         }
 
         for ( Object child : children ) {
-            if ( child == referringNode ) {
+            if ( child.equals( referringNode ) ) {
                 // we are displaying a changed node. What changed?
                 Object userObject = referringNode.getUserObject();
                 if ( userObject instanceof GroupInfo ) {

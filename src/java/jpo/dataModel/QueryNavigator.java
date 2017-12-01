@@ -3,7 +3,7 @@ package jpo.dataModel;
 /*
 QueryBrower.java:  an implementation of the NodeNavigator for browsing groups.
 
-Copyright (C) 2006-2014  Richard Eigenmann, Zürich Switzerland
+Copyright (C) 2006-2017  Richard Eigenmann, Zürich Switzerland
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -103,11 +103,4 @@ public class QueryNavigator
     }
 
 
-    /**
-     *  This method unregisters the TreeModelListener and sets the variables to null;
-     */
-    @Override
-    public void getRid() {
-        super.getRid();
-    }
 }

@@ -8,10 +8,4 @@ package jpo.EventBus;
  */
 public class CheckIntegrityRequest implements Request {
 
-    /**
-     * A request to bring up the integrity checker GUI
-     */
-    public CheckIntegrityRequest() {
-    }
-
 }

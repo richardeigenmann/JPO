@@ -1,11 +1,9 @@
 package jpo.dataModel;
 
-import java.util.logging.Logger;
-
 /*
 SingleNodeBrower.java:  an implementation of the ThumbnailBrowserInterface for "browsing" a single picture.
 
-Copyright (C) 2006-2014  Richard Eigenmann, Zürich, Switzerland
+Copyright (C) 2006-2017  Richard Eigenmann, Zürich, Switzerland
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -29,7 +27,7 @@ public class SingleNodeNavigator
     /**
      * Logger for this class
      */
-    private static final Logger LOGGER = Logger.getLogger( SingleNodeNavigator.class.getName() );
+    //private static final Logger LOGGER = Logger.getLogger( SingleNodeNavigator.class.getName() );
 
     /**
      *  Constructor for a SingleNodeNavigator.
@@ -37,7 +35,6 @@ public class SingleNodeNavigator
      *  @param singleNode    The Node which is to be "browsed".
      */
     public SingleNodeNavigator( SortableDefaultMutableTreeNode singleNode ) {
-        //logger.info("SingleNodeNavigator: constructor called on node: " + singleNode.toString() );
         this.singleNode = singleNode;
     }
     /**
@@ -81,11 +78,5 @@ public class SingleNodeNavigator
         return singleNode;
     }
 
-    /**
-     *  This sets the variables to null;
-     */
-    @Override
-    public void getRid() {
-        super.getRid();
-    }
+    
 }

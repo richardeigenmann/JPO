@@ -167,7 +167,7 @@ public class ClearThumbnailsJFrame extends javax.swing.JFrame {
 
     private class ThumbnailRemover extends SwingWorker<Void, String> {
 
-        boolean firsttime = true;
+        private boolean firsttime = true;
 
         /**
          * Reads each line from the textarea and deletes the thumbnail file if

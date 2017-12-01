@@ -23,7 +23,7 @@ import jpo.gui.swing.JTableCopyPasteClipboardAdapter;
  Originally lifted from the Swing Tutorial on the java.sun.com website. In as far as no prior copyright
  exists the following copyright shall apply. (This code was heavily modified.)
 
- Copyright (C) 2002 - 2014  Richard Eigenmann.
+ Copyright (C) 2002 - 2017  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -68,7 +68,7 @@ public class TableJFrame extends JFrame {
         JTable table = new JTable( sorter );
         table.setCellSelectionEnabled( true );
 
-        JTableCopyPasteClipboardAdapter myExcelAdapter = new JTableCopyPasteClipboardAdapter( table );
+        //JTableCopyPasteClipboardAdapter myExcelAdapter = new JTableCopyPasteClipboardAdapter( table );
 
         sorter.addMouseListenerToHeaderInTable( table );
         table.setPreferredScrollableViewportSize( new Dimension( 1000, 700 ) );
