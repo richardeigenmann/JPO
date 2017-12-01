@@ -326,7 +326,6 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
     private void closeViewer() {
         if ( mySetOfNodes != null ) {
             mySetOfNodes.removeNodeNavigatorListener( this );
-            mySetOfNodes.getRid(); // help Grabage collection remove the listener
         }
         stopTimer();
         pictureFrame.getRid();
@@ -429,7 +428,6 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
                 LOGGER.info( String.format( "Got a new navigator: old: %s new: %s", this.mySetOfNodes.toString(), mySetOfNodes.toString() ) );
                 //get rid of the old navigator
                 this.mySetOfNodes.removeNodeNavigatorListener( this );
-                this.mySetOfNodes.getRid(); // help Grabage collection remove the listener
                 // add viewer to the new one
                 this.mySetOfNodes = mySetOfNodes;
                 mySetOfNodes.addNodeNavigatorListener( this );

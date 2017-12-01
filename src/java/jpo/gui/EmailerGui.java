@@ -88,7 +88,6 @@ public class EmailerGui extends JFrame {
                     Settings.jpoResources.getString( "emailNoServer" ),
                     Settings.jpoResources.getString( "genericError" ),
                     JOptionPane.ERROR_MESSAGE );
-            //getRid();
             return;
         }
 

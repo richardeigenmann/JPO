@@ -396,7 +396,7 @@ public class Emailer
         props.setProperty( "mail.smtp.socketFactory.fallback", "false" );
 
         Session session = Session.getDefaultInstance( props,
-                new javax.mail.Authenticator() {
+                new Authenticator() {
 
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {
@@ -431,11 +431,11 @@ public class Emailer
             this.baos = baos;
         }
 
-        String contentType;
+        private final String contentType;
 
-        String filename;
+        private final String filename;
 
-        ByteArrayOutputStream baos;
+        private final ByteArrayOutputStream baos;
 
         @Override
         public InputStream getInputStream() throws IOException {
