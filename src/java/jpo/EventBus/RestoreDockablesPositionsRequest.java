@@ -11,13 +11,4 @@ package jpo.EventBus;
  */
 public class RestoreDockablesPositionsRequest implements Request {
 
-    /**
-     * Request to restore the default positions of the internal windows
-     *
-     * @see SaveDockablesPositionsRequest
-     * @see LoadDockablesPositionsRequest
-     */
-    public RestoreDockablesPositionsRequest() {
-    }
-
 }

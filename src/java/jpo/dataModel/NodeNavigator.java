@@ -33,7 +33,7 @@ public abstract class NodeNavigator
     /**
      * Logger for this class
      */
-    private static final Logger LOGGER = Logger.getLogger( NodeNavigator.class.getName() );
+    //private static final Logger LOGGER = Logger.getLogger( NodeNavigator.class.getName() );
 
     /**
      * The implementing class must return the title for the images being shown.
@@ -70,7 +70,7 @@ public abstract class NodeNavigator
     /**
      * The listeners to notify about a structural change
      */
-    private final Set<NodeNavigatorListener> nodeNavigatorListeners = Collections.synchronizedSet( new HashSet<NodeNavigatorListener>() );
+    private final Set<NodeNavigatorListener> nodeNavigatorListeners = Collections.synchronizedSet( new HashSet<>() );
 
     /**
      * Registers a NodeNavigatorListener

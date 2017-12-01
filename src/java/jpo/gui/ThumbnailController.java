@@ -48,7 +48,7 @@ import jpo.gui.swing.Thumbnail;
 /*
  ThumbnailController.java:  class that displays a visual respresentation of the specified node
 
- Copyright (C) 2002 - 2016  Richard Eigenmann.
+ Copyright (C) 2002 - 2017  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -68,7 +68,7 @@ import jpo.gui.swing.Thumbnail;
 public class ThumbnailController implements JpoDropTargetDropEventHandler, ThumbnailQueueRequestCallbackHandler {
 
     /**
-     * Defines a LOGGER for this class
+     * Defines a LOGGER for this classComponents
      */
     private static final Logger LOGGER = Logger.getLogger( ThumbnailController.class.getName() );
 
@@ -140,7 +140,7 @@ public class ThumbnailController implements JpoDropTargetDropEventHandler, Thumb
     }
 
     /**
-     * Returns to the caller whether the thumbnail is already showing the node.
+     * Returns to the caller whether the ThumbnailController is already showing the node.
      *
      * @param newNavigator The NodeNavigatorInterface from which the node is
      * coming
@@ -155,8 +155,8 @@ public class ThumbnailController implements JpoDropTargetDropEventHandler, Thumb
         if ( newIndex == myIndex ) {
             LOGGER.fine( String.format( "Same index: %d on same Browser %s. But is it actually the same node?", newIndex, newNavigator.toString() ) );
             SortableDefaultMutableTreeNode testNode = newNavigator.getNode( newIndex );
-            LOGGER.fine( String.format( "The refferingNode is the same as the newNode: %b", testNode == myNode ) );
-            return testNode == myNode;
+            LOGGER.fine( String.format( "The referringNode is the same as the newNode: %b", testNode == myNode ) );
+            return testNode.equals( myNode );
         } else {
             LOGGER.fine( String.format( "Same Browser but Different index: new: %d old: %d", newIndex, myIndex ) );
             return false;

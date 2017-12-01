@@ -359,12 +359,6 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
         }
 
     }
-    /**
-     * variable which controls whether the autoadvance cycles through the
-     * current group only or whether it is allowed to cycle through images in
-     * the collection
-     */
-    private final boolean cycleAll = true;
 
     /**
      * popup menu for window mode changing
@@ -462,7 +456,7 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
 
         String description;
 
-        double rotation = 0;
+        double rotation;
         try {
             pictureURL = pictureInfo.getImageURL();
             description

@@ -4,6 +4,7 @@
  */
 package jpo.dataModel;
 
+import java.net.URL;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertNull;
 import static junit.framework.TestCase.fail;
@@ -31,11 +32,11 @@ public class NodeStatisticsTest{
 
     private SortableDefaultMutableTreeNode group3;
 
-    private final PictureInfo pi1 = new PictureInfo("images/image1.jpg", "Fist Picture", "Reference1");
+    private final PictureInfo pi1 = new PictureInfo(Settings.CLASS_LOADER.getResource( "exif-test-canon-eos-350d.jpg" ), "First Picture", "Reference1");
 
     private SortableDefaultMutableTreeNode picture1;
 
-    private final PictureInfo pi2 = new PictureInfo("images/image2.jpg", "Second Picture", "Reference2");
+    private final PictureInfo pi2 = new PictureInfo(Settings.CLASS_LOADER.getResource( "exif-test-canon-eos-60d.jpg" ), "Second Picture", "Reference2");
 
     private SortableDefaultMutableTreeNode picture2;
 
@@ -134,7 +135,7 @@ public class NodeStatisticsTest{
      * Test sizeOfPictures returns 0 when a null node is sent in
      */
     @Test
-    public void testSizeOfPictures() {
+    public void testSizeOfPicturesNull() {
         NodeStatistics ns = new NodeStatistics(null);
         try {
             long size = ns.getSizeOfPictures();
@@ -143,4 +144,24 @@ public class NodeStatisticsTest{
         }
         fail("Should have thown a NPE!");
     }
+    
+    /**
+     * Test sizeOfPictures on a single PictureInfo Node
+     */
+    @Test
+    public void testSizeOfPicturesPictureInfo() {
+        NodeStatistics ns = new NodeStatistics(picture1);
+        assertEquals( 3148102, ns.getSizeOfPictures() );
+    }
+
+    
+        /**
+     * Test sizeOfPictures on a GroupInfo Node tree
+     */
+    @Test
+    public void testSizeOfPicturesGroupInfo() {
+        NodeStatistics ns = new NodeStatistics(rootNode);
+        assertEquals( 9061284, ns.getSizeOfPictures() );
+    }
+
 }

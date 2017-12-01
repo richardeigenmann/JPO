@@ -18,47 +18,47 @@ import org.junit.Test;
  */
 public class SortableDefaultMutableTreeNodeTest {
 
-    SortableDefaultMutableTreeNode rootNode;
+    private SortableDefaultMutableTreeNode rootNode;
 
-    GroupInfo gr1 = new GroupInfo( "Group1" );
+    private final GroupInfo gr1 = new GroupInfo( "Group1" );
 
-    SortableDefaultMutableTreeNode group1;
+    private SortableDefaultMutableTreeNode group1;
 
-    GroupInfo gr2 = new GroupInfo( "Group2" );
+    private final GroupInfo gr2 = new GroupInfo( "Group2" );
 
-    SortableDefaultMutableTreeNode group2;
+    private SortableDefaultMutableTreeNode group2;
 
-    GroupInfo gr3 = new GroupInfo( "Group3" );
+    private final GroupInfo gr3 = new GroupInfo( "Group3" );
 
-    SortableDefaultMutableTreeNode group3;
+    private SortableDefaultMutableTreeNode group3;
 
-    GroupInfo gr4 = new GroupInfo( "Group4" );
+    private final GroupInfo gr4 = new GroupInfo( "Group4" );
 
-    SortableDefaultMutableTreeNode group4;
+    private SortableDefaultMutableTreeNode group4;
 
-    GroupInfo gr5 = new GroupInfo( "Group5" );
+    private final GroupInfo gr5 = new GroupInfo( "Group5" );
 
-    SortableDefaultMutableTreeNode group5;
+    private SortableDefaultMutableTreeNode group5;
 
-    PictureInfo pi1 = new PictureInfo( "file:///images/image1.jpg", "Fist Picture", "Reference1" );
+    private final PictureInfo pi1 = new PictureInfo( "file:///images/image1.jpg", "Fist Picture", "Reference1" );
 
-    SortableDefaultMutableTreeNode picture1;
+    private SortableDefaultMutableTreeNode picture1;
 
-    PictureInfo pi2 = new PictureInfo( "file:///images/image2.jpg", "Second Picture", "Reference2" );
+    private final PictureInfo pi2 = new PictureInfo( "file:///images/image2.jpg", "Second Picture", "Reference2" );
 
-    SortableDefaultMutableTreeNode picture2;
+    private SortableDefaultMutableTreeNode picture2;
 
-    PictureInfo pi3 = new PictureInfo( "file:///images/image3.jpg", "Third Picture", "Reference3" );
+    private final PictureInfo pi3 = new PictureInfo( "file:///images/image3.jpg", "Third Picture", "Reference3" );
 
-    SortableDefaultMutableTreeNode picture3;
+    private SortableDefaultMutableTreeNode picture3;
 
-    PictureInfo pi4 = new PictureInfo( "file:///images/image4.jpg", "Fourth Picture", "Reference4" );
+    private final PictureInfo pi4 = new PictureInfo( "file:///images/image4.jpg", "Fourth Picture", "Reference4" );
 
-    SortableDefaultMutableTreeNode picture4;
+    private SortableDefaultMutableTreeNode picture4;
 
-    PictureInfo pi5 = new PictureInfo( "file:///images/image5.jpg", "Fifth Picture", "Reference5" );
+    private final PictureInfo pi5 = new PictureInfo( "file:///images/image5.jpg", "Fifth Picture", "Reference5" );
 
-    SortableDefaultMutableTreeNode picture5;
+    private SortableDefaultMutableTreeNode picture5;
 
     /**
      * Set up for each test

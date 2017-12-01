@@ -26,8 +26,8 @@ import javax.swing.tree.TreeNode;
 /**
  * A Class that counts nodes, groups, pictures and disk usage on the supplied
  * node
- * 
-* @author Richard Eigenmann
+ *
+ * @author Richard Eigenmann
  */
 public class NodeStatistics {
 
@@ -54,7 +54,7 @@ public class NodeStatistics {
      *
      * @param nodeToAnalyse the nodes
      */
-    public void setNode( DefaultMutableTreeNode nodeToAnalyse ) {
+    public final void setNode( DefaultMutableTreeNode nodeToAnalyse ) {
         myNode = nodeToAnalyse;
     }
 
@@ -258,23 +258,19 @@ public class NodeStatistics {
         if ( startNode.getUserObject() instanceof Query ) {
             Query q = (Query) startNode.getUserObject();
             for ( int i = 0; i < q.getNumberOfResults(); i++ ) {
-                n = q.getIndex(i );
+                n = q.getIndex( i );
                 if ( n.getUserObject() instanceof PictureInfo ) {
-                    testfile = ( (PictureInfo) n.getUserObject() ).getImageFile();
-                    if ( testfile != null ) {
-                        size += testfile.length();
-                    }
+                    size += sizeOfPictureInfo( (PictureInfo)n.getUserObject() );
                 }
             }
+        } else if ( startNode.getUserObject() instanceof PictureInfo ) {
+            size = sizeOfPictureInfo( (PictureInfo) startNode.getUserObject() );
         } else {
             Enumeration nodes = startNode.children();
             while ( nodes.hasMoreElements() ) {
                 n = (DefaultMutableTreeNode) nodes.nextElement();
                 if ( n.getUserObject() instanceof PictureInfo ) {
-                    testfile = ( (PictureInfo) n.getUserObject() ).getImageFile();
-                    if ( testfile != null ) {
-                        size += testfile.length();
-                    }
+                    size += sizeOfPictureInfo( (PictureInfo)n.getUserObject() );
                 }
                 if ( n.getChildCount() > 0 ) {
                     size += sizeOfPicturesLong( n );
@@ -283,5 +279,19 @@ public class NodeStatistics {
         }
 
         return size;
+    }
+
+    /**
+     * Returns the number of bytes in the pictureInfo object
+     *
+     * @param pictureInfo The PictureInfo to query
+     * @return The number of bytes
+     */
+    private static long sizeOfPictureInfo( PictureInfo pictureInfo ) {
+        File testfile = ( pictureInfo.getImageFile() );
+        if ( testfile != null ) {
+            return testfile.length();
+        }
+        return 0;
     }
 }
