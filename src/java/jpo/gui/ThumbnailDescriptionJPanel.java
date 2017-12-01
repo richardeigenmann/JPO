@@ -201,7 +201,7 @@ public class ThumbnailDescriptionJPanel
      * Inputverifier on the text area.
      */
     public void doUpdate() {
-        if ( referringNode.equals( null ) ) {
+        if ( referringNode == null ) {
             return;
         }
         Object userObject = referringNode.getUserObject();
@@ -454,7 +454,7 @@ public class ThumbnailDescriptionJPanel
     public void treeNodesChanged( TreeModelEvent e ) {
         // find out whether our node was changed
         Object[] children = e.getChildren();
-        if ( children.equals( null ) ) {
+        if ( children == null ) {
             // the root node does not have children as it doesn't have a parent
             return;
         }
