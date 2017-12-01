@@ -421,7 +421,6 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
 
         if ( this.mySetOfNodes != null ) {
             this.mySetOfNodes.removeNodeNavigatorListener( this );
-            this.mySetOfNodes.getRid();
         }
         this.mySetOfNodes = newNodeNavigator;
         newNodeNavigator.addNodeNavigatorListener( this );
