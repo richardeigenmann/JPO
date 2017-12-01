@@ -9,7 +9,7 @@ import javax.swing.tree.TreePath;
  FlatGroupNavigator.java:  an implementation of the NodeNavigator for 
 browsing all the pictures of a group sequentially.
 
- Copyright (C) 2006-2014 Richard Eigenmann, Zürich, Switzerland
+ Copyright (C) 2006-2017 Richard Eigenmann, Zürich, Switzerland
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -59,16 +59,6 @@ public class FlatGroupNavigator
         allPictures = groupNode.getChildPictureNodes( true );
     }
 
-    /**
-     * This method shuts down the object and makes it available for garbage
-     * collection
-     */
-    @Override
-    public void getRid() {
-        //LOGGER.info( "Deregistering the Navigator from the data model notifications." );
-        Settings.getPictureCollection().getTreeModel().removeTreeModelListener( myTreeModelListener );
-        super.getRid();
-    }
     /**
      * A reference to the group for which this FlatGroupNavigator was created.
      */

@@ -3,7 +3,6 @@ package jpo.dataModel;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.logging.Logger;
 
 /*
  NodeNavigator.java:  an implementation of the NodeNavigatorInterface for browsing pictures sequentially.
@@ -56,16 +55,6 @@ public abstract class NodeNavigator
      */
     @Override
     public abstract SortableDefaultMutableTreeNode getNode( int index );
-
-    /**
-     * This method unregisters the TreeModelListener and sets the variables to
-     * null; a super must be called to ensure that the NodeNavigator cleans up
-     * the relayoutListeners
-     */
-    @Override
-    public void getRid() {
-        nodeNavigatorListeners.clear();
-    }
 
     /**
      * The listeners to notify about a structural change

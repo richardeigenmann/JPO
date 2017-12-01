@@ -4,7 +4,7 @@ package jpo.dataModel;
  NodeNavigatorInterface.java:  defines the methods that a "set of nodes" must 
  implement so that the Controller can  identify the Nodes to be displayed.
 
- Copyright (C) 2002 - 2014  Richard Eigenmann, Zürich, Switzerland
+ Copyright (C) 2002 - 2017  Richard Eigenmann, Zürich, Switzerland
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -68,10 +68,5 @@ public interface NodeNavigatorInterface {
      */
     public void notifyNodeNavigatorListeners();
 
-    /**
-     * method that must be implemented which gives the implementing object the
-     * chance to free variables and deallocate itself from listeners and things.
-     */
-    public void getRid();
 
 }

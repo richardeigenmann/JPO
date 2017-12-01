@@ -7,7 +7,7 @@ import java.util.logging.Logger;
 /*
  ListNavigator.java:  an implementation of the NodeNavigator for browsing pictures.
 
- Copyright (C) 2006-2016 Richard Eigenmann, Zürich, Switzerland
+ Copyright (C) 2006-2017 Richard Eigenmann, Zürich, Switzerland
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -36,21 +36,25 @@ public class ListNavigator
      */
     public ListNavigator( String title,
             List<SortableDefaultMutableTreeNode> nodes ) {
-        setTitle( title );
-        setList( nodes );
+        this.title = title;
+        //setTitle( title );
+        allPictures = nodes;
+        //setList( nodes );
     }
 
     /**
      * Optional Constructor for a ListNavigator.
      */
     public ListNavigator() {
-        setTitle( "" );
-        setList( new ArrayList<>() );
+        this("", new ArrayList<>());
+        //setTitle( "" );
+        //setList( new ArrayList<>() );
     }
     /**
      * Logger for this class
      */
     private static final Logger LOGGER = Logger.getLogger( ListNavigator.class.getName() );
+    
     /**
      * title for this List of images.
      */
@@ -62,9 +66,9 @@ public class ListNavigator
      *
      * @param newTitle The title of the list
      */
-    public void setTitle( String newTitle ) {
-        title = newTitle;
-    }
+    //public void setTitle( String newTitle ) {
+    //    title = newTitle;
+    //}
 
     /**
      * Returns the title of the node set
@@ -121,10 +125,10 @@ public class ListNavigator
      *
      * @param newList the new List with the nodes to display.
      */
-    public void setList(
-            List<SortableDefaultMutableTreeNode> newList ) {
-        allPictures = newList;
-    }
+    //public void setList(
+    //        List<SortableDefaultMutableTreeNode> newList ) {
+    //    allPictures = newList;
+    //}
 
     /**
      * adds a node to the List
@@ -142,15 +146,6 @@ public class ListNavigator
      */
     public void removeNode( SortableDefaultMutableTreeNode removeNode ) {
         allPictures.remove( removeNode );
-    }
-
-    /**
-     * Release the variables used
-     */
-    @Override
-    public void getRid() {
-        super.getRid();
-        allPictures = null;
     }
 
     /**
