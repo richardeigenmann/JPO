@@ -1,6 +1,7 @@
 package jpo.gui.swing;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JMenuItem;
@@ -9,7 +10,6 @@ import jpo.dataModel.GroupInfo;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
 import static junit.framework.TestCase.assertEquals;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -19,8 +19,8 @@ import org.junit.Test;
  */
 public class GroupPopupMenuTest {
 
-    private GroupInfo myGroupInfo = new GroupInfo( "My Group" );
-    private SortableDefaultMutableTreeNode myNode = new SortableDefaultMutableTreeNode( myGroupInfo );
+    private final GroupInfo myGroupInfo = new GroupInfo( "My Group" );
+    private final SortableDefaultMutableTreeNode myNode = new SortableDefaultMutableTreeNode( myGroupInfo );
     private GroupPopupMenu myGroupPopupMenu;
 
     private JMenuItem showGroup;
@@ -78,14 +78,22 @@ public class GroupPopupMenuTest {
     @Test
     public void testRememberingPopupNode() {
         try {
-            Field popupNodeField;
-            popupNodeField = GroupPopupMenu.class.getDeclaredField( "popupNode" );
-            popupNodeField.setAccessible( true );
-            SortableDefaultMutableTreeNode verifyNode = (SortableDefaultMutableTreeNode) popupNodeField.get( myGroupPopupMenu );
-            GroupInfo verifyGroupInfo = (GroupInfo) verifyNode.getUserObject();
-            assertEquals( myGroupInfo, verifyGroupInfo );
-        } catch ( NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException ex ) {
-            Logger.getLogger( GroupPopupMenuTest.class.getName() ).log( Level.SEVERE, null, ex );
+            SwingUtilities.invokeAndWait( () -> {
+                try {
+                    Field popupNodeField;
+                    popupNodeField = GroupPopupMenu.class.getDeclaredField( "popupNode" );
+                    popupNodeField.setAccessible( true );
+                    SortableDefaultMutableTreeNode verifyNode = (SortableDefaultMutableTreeNode) popupNodeField.get( myGroupPopupMenu );
+                    GroupInfo verifyGroupInfo = (GroupInfo) verifyNode.getUserObject();
+                    assertEquals( myGroupInfo, verifyGroupInfo );
+                } catch ( NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException ex ) {
+                    Logger.getLogger( GroupPopupMenuTest.class.getName() ).log( Level.SEVERE, null, ex );
+                }
+            } );
+        } catch ( InterruptedException ex ) {
+            Logger.getLogger( GroupPopupMenuTest.class.getName() ).log( Level.SEVERE, null, "Why were we interrupted? " + ex );
+        } catch ( InvocationTargetException ex ) {
+            Logger.getLogger( GroupPopupMenuTest.class.getName() ).log( Level.SEVERE, null, "InvocationTargetException: " + ex );
         }
 
     }
@@ -94,24 +102,31 @@ public class GroupPopupMenuTest {
      * Get the children
      */
     @Test
-    @Ignore
     public void testGetChildren() {
-        assertEquals( "Show Group", showGroup.getText() );
-        assertEquals( "Show Pictures", showPictures.getText() );
-        assertEquals( "Find", find.getText() );
-        assertEquals( "Categories", categories.getText() );
-        assertEquals( "Refresh Icon", refreshIcon.getText() );
-        assertEquals( "Edit as Table", editAsTable.getText() );
-        assertEquals( "Add", add.getText() );
-        assertEquals( "Move", move.getText() );
-        assertEquals( "Remove Node", removeNode.getText() );
-        assertEquals( "Consolidate/Move", consolidate.getText() );
-        assertEquals( "Sort by", sortBy.getText() );
-        assertEquals( "Select all for Emailing", selectAllForEmailing.getText() );
-        assertEquals( "Generate Website", generateWebsite.getText() );
-        assertEquals( "Export to Collection", exportToCollection.getText() );
-        assertEquals( "Export to Flat File", exportToFlatFile.getText() );
-        assertEquals( "Export to Picasa", exportToPicasa.getText() );
-        assertEquals( "Properties", properties.getText() );
+        try {
+            SwingUtilities.invokeAndWait( () -> {
+                assertEquals( "Show Group", showGroup.getText() );
+                assertEquals( "Show Pictures", showPictures.getText() );
+                assertEquals( "Find", find.getText() );
+                assertEquals( "Categories", categories.getText() );
+                assertEquals( "Refresh Icon", refreshIcon.getText() );
+                assertEquals( "Edit as Table", editAsTable.getText() );
+                assertEquals( "Add", add.getText() );
+                assertEquals( "Move", move.getText() );
+                assertEquals( "Remove Node", removeNode.getText() );
+                assertEquals( "Consolidate/Move", consolidate.getText() );
+                assertEquals( "Sort by", sortBy.getText() );
+                assertEquals( "Select all for Emailing", selectAllForEmailing.getText() );
+                assertEquals( "Generate Website", generateWebsite.getText() );
+                assertEquals( "Export to Collection", exportToCollection.getText() );
+                assertEquals( "Export to Flat File", exportToFlatFile.getText() );
+                assertEquals( "Export to Picasa", exportToPicasa.getText() );
+                assertEquals( "Properties", properties.getText() );
+            } );
+        } catch ( InterruptedException ex ) {
+            Logger.getLogger( GroupPopupMenuTest.class.getName() ).log( Level.SEVERE, null, "Why were we interrupted? " + ex );
+        } catch ( InvocationTargetException ex ) {
+            Logger.getLogger( GroupPopupMenuTest.class.getName() ).log( Level.SEVERE, null, "InvocationTargetException: " + ex );
+        }
     }
 }

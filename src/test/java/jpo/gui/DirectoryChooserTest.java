@@ -27,17 +27,17 @@ public class DirectoryChooserTest {
         try {
             SwingUtilities.invokeAndWait( () -> {
                 final DirectoryChooser dc = new DirectoryChooser( "Title", DirectoryChooser.DIR_MUST_EXIST );
-                dc.addChangeListener(( ChangeEvent e ) -> {
+                dc.addChangeListener( ( ChangeEvent e ) -> {
                     changesReceived++;
-                });
+                } );
                 dc.setText( "/" );
                 result = dc.getDirectory();
+                assertEquals( "Checking that what went in is what comes out", new File( "/" ), result );
+                assertEquals( "Checking that the changeEvent was fired", 1, changesReceived );
             } );
         } catch ( InterruptedException | InvocationTargetException ex ) {
             Logger.getLogger( DirectoryChooserTest.class.getName() ).log( Level.SEVERE, null, ex );
         }
-        assertEquals( "Checking that what went in is what comes out", new File( "/" ), result );
-        assertEquals( "Checking that the changeEvent was fired", 1, changesReceived );
 
     }
 }

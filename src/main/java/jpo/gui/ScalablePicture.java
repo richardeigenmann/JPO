@@ -40,7 +40,7 @@ import jpo.gui.swing.PictureControllerImage;
 /*
  ScalablePicture.java:  class that can load and save images
 
- Copyright (C) 2002 - 2014  Richard Eigenmann.
+ Copyright (C) 2002 - 2017  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -617,6 +617,9 @@ public class ScalablePicture
      */
     public static void writeJpg( File targetFile, RenderedImage renderedImage,
             float jpgQuality ) {
+        if (renderedImage == null ) {
+            return;
+        }
         Iterator writers = ImageIO.getImageWritersByFormatName( "jpg" );
         ImageWriter writer = (ImageWriter) writers.next();
         JPEGImageWriteParam params = new JPEGImageWriteParam( null );

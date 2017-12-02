@@ -47,7 +47,7 @@ import jpo.gui.swing.WholeNumberField;
 /*
  PictureViewer.java:  Controller and Viewer class that browses a set of pictures.
 
- Copyright (C) 2002 - 2016  Richard Eigenmann, Zürich, Switzerland
+ Copyright (C) 2002 - 2017  Richard Eigenmann, Zürich, Switzerland
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -68,7 +68,7 @@ import jpo.gui.swing.WholeNumberField;
  *
  * The user can zoom in on a picture coordinate by clicking the left mouse
  * button. The middle button scales the picture so that it fits in the available
- * space and centres it there. The right mouse button zooms out.<p>
+ * space and centers it there. The right mouse button zooms out.<p>
  *
  *
  * <img src="../PictureViewer.png" alt="Picture Viewer">
@@ -118,43 +118,28 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
                         case SCALABLE_PICTURE_UNINITIALISED:
                             pictureFrame.setProgressBarVisible( false );
                             break;
-
                         case SCALABLE_PICTURE_GARBAGE_COLLECTION:
                             pictureFrame.setProgressBarVisible( false );
                             break;
-
                         case SCALABLE_PICTURE_LOADING:
-                            //if ( pictureFrame.myJFrame != null ) {
                             pictureFrame.setProgressBarVisible( true );
-                            //}
-
                             break;
                         case SCALABLE_PICTURE_LOADED:
                             pictureFrame.setProgressBarVisible( false );
-                            //descriptionJTextField.setText( getDescription() );
                             break;
-
                         case SCALABLE_PICTURE_SCALING:
                             pictureFrame.setProgressBarVisible( false );
                             break;
-
                         case SCALABLE_PICTURE_READY:
                             pictureFrame.setProgressBarVisible( false );
-                            //if ( pictureFrame.myJFrame != null ) {
                             pictureFrame.getResizableJFrame().toFront();
-                            //}
-
                             break;
                         case SCALABLE_PICTURE_ERROR:
                             pictureFrame.setProgressBarVisible( false );
-                            ;
                             break;
-
                         default:
-
                             LOGGER.log( Level.WARNING, "Got called with a code that is not understood: {0} {1}", new Object[]{ pictureStatusCode, pictureStatusMessage } );
                             break;
-
                     }
                 };
                 if ( SwingUtilities.isEventDispatchThread() ) {
@@ -162,7 +147,6 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
                 } else {
                     SwingUtilities.invokeLater( runnable );
                 }
-
             }
 
             /**
@@ -181,15 +165,12 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
                             pictureFrame.setProgressBarValue( 0 );
                             pictureFrame.setProgressBarVisible( true );
                             break;
-
                         case SOURCE_PICTURE_LOADING_PROGRESS:
                             pictureFrame.setProgressBarValue( percentage );
                             pictureFrame.setProgressBarVisible( true );
                             break;
-
                         case SOURCE_PICTURE_LOADING_COMPLETED:
                             pictureFrame.setProgressBarVisible( false );
-                            //pictureFrame.setProgressBarValue( 0 ); // prepare for the next load
                             break;
                     }
                 };
@@ -198,12 +179,10 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
                 } else {
                     SwingUtilities.invokeLater( runnable );
                 }
-
             }
         } );
 
         pictureFrame.getResizableJFrame().addWindowListener( new WindowAdapter() {
-
             @Override
             public void windowClosing( WindowEvent we ) {
                 closeViewer();
@@ -569,23 +548,16 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
         ButtonGroup advanceButtonGroup = new ButtonGroup();
         advanceButtonGroup.add( randomAdvanceJRadioButton );
         advanceButtonGroup.add( sequentialAdvanceJRadioButton );
-        //if ( randomAdvance )
         randomAdvanceJRadioButton.setSelected( true );
-        //else
-        //sequentialAdvanceJRadioButton.setSelected( true );
 
         JRadioButton restrictToGroupJRadioButton = new JRadioButton( Settings.jpoResources.getString( "restrictToGroupJRadioButtonLabel" ) );
         JRadioButton useAllPicturesJRadioButton = new JRadioButton( Settings.jpoResources.getString( "useAllPicturesJRadioButtonLabel" ) );
         ButtonGroup cycleButtonGroup = new ButtonGroup();
         cycleButtonGroup.add( restrictToGroupJRadioButton );
         cycleButtonGroup.add( useAllPicturesJRadioButton );
-        //if ( cycleAll )
         useAllPicturesJRadioButton.setSelected( true );
-        //else
-        //restrictToGroupJRadioButton.setSelected( true );
 
         JLabel timerSecondsJLabel = new JLabel( Settings.jpoResources.getString( "timerSecondsJLabelLabel" ) );
-        //JTextField timerSecondsJTextField = new JTextField();
         WholeNumberField timerSecondsField = new WholeNumberField( 4, 3 );
         timerSecondsField.setPreferredSize( new Dimension( 50, 20 ) );
         timerSecondsField.setMaximumSize( new Dimension( 50, 20 ) );
@@ -608,9 +580,6 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
                 null );
 
         if ( selectedValue == 0 ) {
-            //randomAdvance = randomAdvanceJRadioButton.isSelected();
-            //cycleAll = useAllPicturesJRadioButton.isSelected();
-
             if ( randomAdvanceJRadioButton.isSelected() ) {
                 if ( useAllPicturesJRadioButton.isSelected() ) //addAllPictureNodes( pictureNodesArrayList, (SortableDefaultMutableTreeNode) currentNode.getRoot()  );
                 {

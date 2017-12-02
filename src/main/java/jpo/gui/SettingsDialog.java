@@ -79,12 +79,12 @@ public class SettingsDialog extends JDialog {
      */
     private final JTextField autoLoadJTextField = new JTextField();
 
-    final SpinnerModel model
+    private final SpinnerModel model
             = new SpinnerNumberModel( Settings.tagCloudWords, //initial value
                     0, //min
                     2000, //max
                     1 );                //step
-    final JSpinner tagCloudWordsJSpinner = new JSpinner( model );
+    private final JSpinner tagCloudWordsJSpinner = new JSpinner( model );
 
     /**
      * Dropdown to indicate what preference the user has for JPO startup

@@ -5,13 +5,11 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import jpo.dataModel.Settings;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-import org.junit.Ignore;
+import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertFalse;
+import static junit.framework.TestCase.assertNotNull;
+import static junit.framework.TestCase.assertTrue;
+import static junit.framework.TestCase.fail;
 import org.junit.Test;
 
 /**
@@ -26,12 +24,10 @@ public class ScalablePictureTest {
      * Test that we can load a source image
      */
     @Test
-    @Ignore
     public void testLoading() {
         ScalablePicture scalablePicture = new ScalablePicture();
         assertNotNull( "Checking that the scalablePicture is not null", scalablePicture );
-        Settings.loadSettings();
-        URL imageUrl = Settings.CLASS_LOADER.getResource( "exif-test-nikon-d100-1.jpg" );
+        URL imageUrl = ScalablePictureTest.class.getClassLoader().getResource( "exif-test-nikon-d100-1.jpg" );
         scalablePicture.loadPictureImd( imageUrl, 0.0 );
         assertEquals( "Check that the image is 350 pixels wide", 350, scalablePicture.getSourcePicture().getWidth() );
         assertEquals( "Check that the image is 233 pixels high", 233, scalablePicture.getSourcePicture().getHeight() );
@@ -41,12 +37,10 @@ public class ScalablePictureTest {
      * Test that we can load a source image and rotate it
      */
     @Test
-    @Ignore
     public void testLoadingWithRotation() {
         ScalablePicture scalablePicture = new ScalablePicture();
         assertNotNull( "Checking that the scalablePicture is not null", scalablePicture );
-        Settings.loadSettings();
-        URL imageUrl = Settings.CLASS_LOADER.getResource( "exif-test-nikon-d100-1.jpg" );
+        URL imageUrl = ScalablePictureTest.class.getClassLoader().getResource( "exif-test-nikon-d100-1.jpg" );
         scalablePicture.loadPictureImd( imageUrl, 90.0 );
         assertEquals( "Check that the image is 233 pixels wide", 233, scalablePicture.getSourcePicture().getWidth() );
         assertEquals( "Check that the image is 350 pixels high", 350, scalablePicture.getSourcePicture().getHeight() );
@@ -56,13 +50,11 @@ public class ScalablePictureTest {
      * Test that we can load a source image, rotate it and scale it up
      */
     @Test
-    @Ignore
     public void testLoadingWithRotationAndUpscaling() {
         ScalablePicture scalablePicture = new ScalablePicture();
         assertNotNull( "Checking that the scalablePicture is not null", scalablePicture );
 
-        Settings.loadSettings();
-        URL imageUrl = Settings.CLASS_LOADER.getResource( "exif-test-nikon-d100-1.jpg" );
+        URL imageUrl = ScalablePictureTest.class.getClassLoader().getResource( "exif-test-nikon-d100-1.jpg" );
         scalablePicture.loadPictureImd( imageUrl, 90.0 );
         assertEquals( "Check that the image is 233 pixels wide", 233, scalablePicture.getSourcePicture().getWidth() );
         assertEquals( "Check that the image is 350 pixels high", 350, scalablePicture.getSourcePicture().getHeight() );
@@ -77,13 +69,12 @@ public class ScalablePictureTest {
      * Test that we can load a source image, scale it and write it
      */
     @Test
-    @Ignore
     public void testLoadingScalingWriting() {
         ScalablePicture scalablePicture = new ScalablePicture();
         assertNotNull( "Checking that the scalablePicture is not null", scalablePicture );
 
-        Settings.loadSettings();
-        URL imageUrl = Settings.CLASS_LOADER.getResource( "exif-test-nikon-d100-1.jpg" );
+        //Settings.loadSettings();
+        URL imageUrl = ScalablePictureTest.class.getClassLoader().getResource( "exif-test-nikon-d100-1.jpg" );
         scalablePicture.loadPictureImd( imageUrl, 0.0 );
         assertEquals( "Check that the image is 350 pixels wide", 350, scalablePicture.getSourcePicture().getWidth() );
         assertEquals( "Check that the image is 233 pixels high", 233, scalablePicture.getSourcePicture().getHeight() );

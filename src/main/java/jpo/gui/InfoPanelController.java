@@ -11,7 +11,6 @@ import jpo.EventBus.GroupSelectionEvent;
 import jpo.EventBus.JpoEventBus;
 import jpo.EventBus.ShowGroupRequest;
 import jpo.dataModel.PictureInfo;
-import jpo.dataModel.SortableDefaultMutableTreeNode;
 
 /*
  InfoPanelController.java:  The Controller for the Info Panel

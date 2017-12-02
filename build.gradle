@@ -105,12 +105,12 @@ sourceSets {
 }
     
 
-test {
-    println(classpath.asPath)
-    sourceSets.main.resources.each { File file ->
-        println file.name
-    }
+/*test {
+println(classpath.asPath)
+sourceSets.main.resources.each { File file ->
+println file.name
 }
+}*/
 
 jar {
     baseName = 'jpo'
@@ -129,14 +129,18 @@ jar {
     into ('jpo/images') { from 'src/images' }
 }
 
+
+// this task creates the FatJar whith everything in it
 shadowJar {
     into ('/') { from 'src/main/java/jpo/cache/cache.ccf' }
     into ('jpo/images') { from 'src/images' }
     into ('/') { from 'src/dtd/collection.dtd' }
 }
 
+
 task runFatJar(type: JavaExec) {
-        classpath = files( 'build/libs/Jpo-all.jar' )
-        main = 'Main'
+    dependsOn shadowJar
+    classpath = files( 'build/libs/Jpo-all.jar' )
+    main = 'Main'
 }
 //ant.importBuild 'build.xml'

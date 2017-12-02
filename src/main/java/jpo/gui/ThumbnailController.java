@@ -140,7 +140,8 @@ public class ThumbnailController implements JpoDropTargetDropEventHandler, Thumb
     }
 
     /**
-     * Returns to the caller whether the ThumbnailController is already showing the node.
+     * Returns to the caller whether the ThumbnailController is already showing
+     * the node.
      *
      * @param newNavigator The NodeNavigatorInterface from which the node is
      * coming
@@ -193,9 +194,14 @@ public class ThumbnailController implements JpoDropTargetDropEventHandler, Thumb
             try {
                 if ( getThumbnail().getParent().getParent().getParent() instanceof JViewport ) {
                     JViewport viewport = (JViewport) getThumbnail().getParent().getParent().getParent();
-                    Point point = getThumbnail().getLocation();
-                    if ( viewport.getViewRect().contains( point ) ) {
-                        priority = QUEUE_PRIORITY.HIGH_PRIORITY;
+                    Thumbnail thumbnail = getThumbnail();
+                    if ( thumbnail != null ) {
+                        Point point = thumbnail.getLocation();
+                        if ( point != null ) {
+                            if ( viewport.getViewRect().contains( point ) ) {
+                                priority = QUEUE_PRIORITY.HIGH_PRIORITY;
+                            }
+                        }
                     }
                 }
             } catch ( NullPointerException npe ) {
@@ -262,7 +268,8 @@ public class ThumbnailController implements JpoDropTargetDropEventHandler, Thumb
      * This method forwards the request to create the thumbnail to the
      * ThumbnailCreationQueue
      *
-     * @param	priority	The priority with which the request is to be treated on the queue
+     * @param	priority	The priority with which the request is to be treated on
+     * the queue
      * @return the request
      */
     public ThumbnailQueueRequest requestThumbnailCreation( QUEUE_PRIORITY priority ) {

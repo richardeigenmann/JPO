@@ -1,11 +1,11 @@
 function changetext(whichcontent){
     if (document.all||document.getElementById){
-        cross_el=document.getElementById? document.getElementById("descriptions"):document.all.descriptions
-        cross_el.innerHTML=whichcontent
+        cross_el=document.getElementById? document.getElementById("descriptions"):document.all.descriptions;
+        cross_el.innerHTML=whichcontent;
     }
     else if (document.layers){
-        document.d1.document.d2.document.write(whichcontent)
-        document.d1.document.close()
+        document.d1.document.d2.document.write(whichcontent);
+        document.d1.document.close();
     }
 }
 
@@ -28,7 +28,7 @@ function changetext(whichcontent){
             position: markerLatLng,
             map: map,
             draggable: false
-        })
+        });
     }
 
 })();

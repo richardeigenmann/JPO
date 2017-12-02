@@ -5,8 +5,7 @@
         var lng = 0;
         var hashcode;
         var locationSearch = location.search.substr(1).split(";");
-        for (var i=0; i<locationSearch.length;i++)
-        {
+        for (var i=0; i<locationSearch.length;i++) {
             var y = locationSearch[i].split("=");
             if ( y[0] == "lat" ) {
                 lat = y[1];
@@ -34,7 +33,7 @@
             position: markerLatLng,
             map: map,
             draggable: true
-        })
+        });
 
         google.maps.event.addListener(marker, 'position_changed', function() {
             updatePsn(marker.getPosition() );

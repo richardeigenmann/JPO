@@ -10,6 +10,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
 import java.awt.image.RescaleOp;
+import java.net.URL;
 import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -21,7 +22,7 @@ import jpo.dataModel.Tools;
 /*
  Thumbnail.java:  This class shows a single Thumbnail
 
- Copyright (C) 2010-2015  Richard Eigenmann, Zurich, Switzerland
+ Copyright (C) 2010-2017  Richard Eigenmann, Zurich, Switzerland
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -222,31 +223,65 @@ public class Thumbnail extends JComponent {
     private transient BufferedImage selectedThumbnail;
 
     /**
-     * reference to the ClassLoader to allow retrieval of the static icons.
-     */
-    private static final ClassLoader CLASS_LOADER = Thumbnail.class.getClassLoader();
-
-    /**
      * This icon indicates that the thumbnail creation is sitting on the queue.
      */
-    private static final ImageIcon QUEUE_ICON = new ImageIcon( CLASS_LOADER.getResource( "jpo/images/queued_thumbnail.gif" ) );
+    private static final ImageIcon QUEUE_ICON;
+    static {
+        final String QUEUE_ICON_FILE = "queued_thumbnail.gif";
+        URL resource = Thumbnail.class.getClassLoader().getResource( QUEUE_ICON_FILE );
+        if ( resource == null ) {
+            LOGGER.severe ("Classloader failed to load file: " + QUEUE_ICON_FILE);
+            QUEUE_ICON = null;
+        } else {
+            QUEUE_ICON = new ImageIcon( resource );    
+        }
+    }
 
     /**
      * This icon shows a large yellow folder.
      */
-    private static final ImageIcon LARGE_FOLDER_ICON = new ImageIcon( CLASS_LOADER.getResource( "jpo/images/icon_folder_large.jpg" ) );
+    private static final ImageIcon LARGE_FOLDER_ICON;
+    static {
+        final String LARGE_FOLDER_ICON_FILE = "icon_folder_large.jpg";
+        URL resource = Thumbnail.class.getClassLoader().getResource( LARGE_FOLDER_ICON_FILE );
+        if ( resource == null ) {
+            LOGGER.severe ("Classloader failed to load file: " + LARGE_FOLDER_ICON_FILE);
+            LARGE_FOLDER_ICON = null;
+        } else {
+            LARGE_FOLDER_ICON = new ImageIcon( resource );    
+        }
+    }
 
     /**
      * The icon to superimpose on the picture if the highres picture is not
      * available
      */
-    private static final ImageIcon OFFLINE_ICON = new ImageIcon( CLASS_LOADER.getResource( "jpo/images/icon_offline.gif" ) );
+    private static final ImageIcon OFFLINE_ICON;
+    static {
+        final String OFFLINE_ICON_FILE = "icon_offline.gif";
+        URL resource = Thumbnail.class.getClassLoader().getResource( OFFLINE_ICON_FILE );
+        if ( resource == null ) {
+            LOGGER.severe ("Classloader failed to load file: " + OFFLINE_ICON_FILE);
+            OFFLINE_ICON = null;
+        } else {
+            OFFLINE_ICON = new ImageIcon( resource );    
+        }
+    }
 
     /**
-     * The icon to superimpose on the picture if the highres picture is not
-     * available
+     * The mail icon to superimpose on the picture
      */
-    private static final ImageIcon MAIL_ICON = new ImageIcon( CLASS_LOADER.getResource( "jpo/images/icon_mail.gif" ) );
+    private static final ImageIcon MAIL_ICON;
+    static {
+        final String MAIL_ICON_FILE = "icon_mail.gif";
+        URL resource = Thumbnail.class.getClassLoader().getResource( MAIL_ICON_FILE );
+        if ( resource == null ) {
+            LOGGER.severe ("Classloader failed to load file: " + MAIL_ICON_FILE);
+            MAIL_ICON = null;
+        } else {
+            MAIL_ICON = new ImageIcon( resource );    
+        }
+    }
 
     /**
      * Sets an icon of a clock to indicate being on a queue

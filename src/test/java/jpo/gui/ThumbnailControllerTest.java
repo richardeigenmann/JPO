@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package jpo.gui;
 
 import java.awt.GraphicsEnvironment;
@@ -11,44 +6,19 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
 import jpo.gui.swing.Thumbnail;
-import junit.framework.TestCase;
-import static junit.framework.TestCase.fail;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
+import static junit.framework.TestCase.assertNotNull;
+import static junit.framework.TestCase.assertNull;
 import org.junit.Test;
 
 /**
  *
- * @author richi
+ * @author Richard Eigenmann
  */
 public class ThumbnailControllerTest {
-
-    public ThumbnailControllerTest() {
-    }
-
-    @BeforeClass
-    public static void setUpClass() {
-    }
-
-    @AfterClass
-    public static void tearDownClass() {
-    }
-
-    @Before
-    public void setUp() {
-    }
-
-    @After
-    public void tearDown() {
-    }
 
     private Thumbnail thumbnail = null;
 
     @Test
-    @Ignore
     public void testConstructor() {
 
         // TravisCI runs headless so we can't execute the below test
@@ -56,18 +26,18 @@ public class ThumbnailControllerTest {
             return;
         }
 
-        TestCase.assertNull( thumbnail );
         try {
-            SwingUtilities.invokeAndWait( ()
-                    -> thumbnail = new Thumbnail()
-            );
-            TestCase.assertNotNull( thumbnail );
-            ThumbnailController thumbnailController = new ThumbnailController( thumbnail, 350 );
-            return;
+            SwingUtilities.invokeAndWait( () -> {
+                assertNull( thumbnail );
+                thumbnail = new Thumbnail();
+                assertNotNull( thumbnail );
+                
+                ThumbnailController thumbnailController = new ThumbnailController( thumbnail, 350 );
+                assertNotNull( thumbnailController );
+            } );
         } catch ( InterruptedException | InvocationTargetException ex ) {
             Logger.getLogger( ThumbnailControllerTest.class.getName() ).log( Level.SEVERE, null, ex );
         }
-        fail( "Could not construct a Thumbnail Controller" );
 
     }
 }

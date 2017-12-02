@@ -11,7 +11,6 @@ import jpo.gui.ThumbnailController;
 import jpo.gui.swing.Thumbnail;
 import static junit.framework.TestCase.fail;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -21,7 +20,6 @@ import org.junit.Test;
 public class ThumbnailQueueRequestTest {
 
     @Test
-    @Ignore
     public void increasePriorityToTest() {
         // TravisCI runs headless so we can't execute the below test
         if ( GraphicsEnvironment.isHeadless() ) {

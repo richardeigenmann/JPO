@@ -17,7 +17,7 @@ import jpo.gui.DirectoryChooser;
 import net.miginfocom.swing.MigLayout;
 
 /*
- Copyright (C) 2015  Richard Eigenmann.
+ Copyright (C) 2015-2017  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -54,11 +54,11 @@ public class ConsolidateGroupJFrame extends JFrame {
      *
      */
     private final JCheckBox recurseSubgroupsJCheckBox = new JCheckBox(Settings.jpoResources.getString("RecurseSubgroupsLabel"));
-    private final ConsolidateGroupController outer;
+    private final ConsolidateGroupController controller;
 
-    public ConsolidateGroupJFrame(ConsolidateGroupActionCallback consolidateGroupAction, final ConsolidateGroupController outer) {
+    public ConsolidateGroupJFrame(ConsolidateGroupActionCallback consolidateGroupAction, final ConsolidateGroupController controller) {
         super(Settings.jpoResources.getString("ConsolidateGroupJFrameHeading"));
-        this.outer = outer;
+        this.controller = controller;
         this.consolidateGroupAction = consolidateGroupAction;
         initComponents();
     }

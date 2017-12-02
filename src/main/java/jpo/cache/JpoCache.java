@@ -242,10 +242,16 @@ public class JpoCache {
             scalablePicture.setQualityScale();
         }
         scalablePicture.setScaleSize( maxDimension );
-
         scalablePicture.loadPictureImd( imageURL, rotation );
+        if ( scalablePicture.sourcePicture == null ) {
+            return null;
+        }
 
         scalablePicture.scalePicture();
+        
+        if ( scalablePicture.scaledPicture == null ) {
+            return null;
+        }
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         scalablePicture.writeScaledJpg( bos );
         ImageBytes imageBytes = new ImageBytes( bos.toByteArray() );

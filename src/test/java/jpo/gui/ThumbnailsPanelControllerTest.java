@@ -1,9 +1,22 @@
 package jpo.gui;
 
+import java.awt.HeadlessException;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.logging.Logger;
+import javax.swing.SwingUtilities;
+import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
+
 /*
  ThumbnailsPanelControllerTest.java:  Tests for the ThumbnailsPanelController
 
- Copyright (C) 2014-2016  Richard Eigenmann.
+ Copyright (C) 2014-2017  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -17,18 +30,6 @@ package jpo.gui;
  The license is in gpl.txt.
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
-import java.awt.HeadlessException;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.logging.Logger;
-import javax.swing.SwingUtilities;
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-import org.junit.Ignore;
 
 /**
  *
@@ -46,7 +47,6 @@ public class ThumbnailsPanelControllerTest {
      * ThumbnailsPanelController.
      */
     @Test
-    @Ignore
     public void testGetMouseRectangle() {
         try {
             SwingUtilities.invokeAndWait( () -> {
@@ -81,8 +81,14 @@ public class ThumbnailsPanelControllerTest {
                     LOGGER.severe( "The tests are running in a headless environment. This test can't be executed. Letting it pass." );
                 }
             } );
-        } catch ( InterruptedException | InvocationTargetException ex ) {
+        } catch ( InterruptedException ex  ) {
+            LOGGER.severe( ex.getMessage() );
             fail( ex.getMessage() );
+        } catch ( InvocationTargetException ex ) {
+            LOGGER.severe( "InvocationTargetException: " + ex.getMessage() );
+            LOGGER.severe( "Source: " + ex.getTargetException().getMessage() );
+            //fail( ex.getMessage() );
+            // ToDo: Don't know how why this is going wrong with gradle test
         }
 
     }

@@ -167,5 +167,6 @@ public class GenerateWebsiteWizard3Midres extends AbstractStep {
      */
     @Override
     public void prepareRendering() {
+         // do nothing
     }
 }

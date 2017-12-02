@@ -1,6 +1,7 @@
 package jpo.cache;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.List;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
@@ -42,13 +43,25 @@ public class ThumbnailCreationFactory implements Runnable {
      * An icon that indicates a broken image used when there is a problem
      * rendering the correct thumbnail.
      */
-    private static final ImageIcon BROKEN_THUMBNAIL_PICTURE = new ImageIcon( ThumbnailCreationFactory.class.getClassLoader().getResource( "jpo/images/broken_thumbnail.gif" ) );
+    private static final ImageIcon BROKEN_THUMBNAIL_PICTURE;
+
+    static {
+        //final String BROKEN_THUMBNAIL_PICTURE_FILE = "jpo/images/broken_thumbnail.gif";
+        final String BROKEN_THUMBNAIL_PICTURE_FILE = "broken_thumbnail.gif";
+        URL resource = ThumbnailCreationFactory.class.getClassLoader().getResource( BROKEN_THUMBNAIL_PICTURE_FILE );
+        if ( resource == null ) {
+            LOGGER.severe( "Classloader could not find the file: " + BROKEN_THUMBNAIL_PICTURE_FILE );
+            BROKEN_THUMBNAIL_PICTURE = null;
+        } else {
+            BROKEN_THUMBNAIL_PICTURE = new ImageIcon( resource );
+        }
+    }
 
     /**
      * Flag to indicate that the thread should die.
      */
     public boolean endThread;  // default is false
-    
+
     /**
      * The polling interval in milliseconds
      */
@@ -57,7 +70,8 @@ public class ThumbnailCreationFactory implements Runnable {
     /**
      * Constructor that creates the thread. It creates the thread with a
      * Thread.MIN_PRIOTITY priority to ensure good overall response.
-     * @param pollingInterval  The polling interval in milliseconds
+     *
+     * @param pollingInterval The polling interval in milliseconds
      */
     public ThumbnailCreationFactory( int pollingInterval ) {
         this.pollingInterval = pollingInterval;
@@ -107,12 +121,20 @@ public class ThumbnailCreationFactory implements Runnable {
                 ImageBytes imageBytes = JpoCache.getInstance().getThumbnailImageBytes( pictureinfo.getImageURL(),
                         pictureinfo.getRotation(),
                         request.getSize() );
-                request.setIcon( new ImageIcon( imageBytes.getBytes() ) );
+                if (imageBytes == null ) {
+                    request.setIcon( BROKEN_THUMBNAIL_PICTURE );
+                } else {
+                    request.setIcon( new ImageIcon( imageBytes.getBytes() ) );
+                }
             } else if ( userObject instanceof GroupInfo ) {
                 List<SortableDefaultMutableTreeNode> childPictureNodes = request.getNode().getChildPictureNodes( false );
 
                 ImageBytes imageBytes = JpoCache.getInstance().getGroupThumbnailImageBytes( childPictureNodes );
-                request.setIcon( new ImageIcon( imageBytes.getBytes() ) );
+                if (imageBytes == null ) {
+                    request.setIcon( BROKEN_THUMBNAIL_PICTURE );
+                } else {
+                    request.setIcon( new ImageIcon( imageBytes.getBytes() ) );
+                }
             } else {
                 request.setIcon( BROKEN_THUMBNAIL_PICTURE );
             }
@@ -122,5 +144,6 @@ public class ThumbnailCreationFactory implements Runnable {
         }
         request.notifyCallbackHandler();
     }
+
 
 }

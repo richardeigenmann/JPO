@@ -15,7 +15,7 @@ import net.miginfocom.swing.MigLayout;
 /*
  GenerateWebsiteWizard2Thumbnails.java:  Specify stuff about the Thumbnails
 
- Copyright (C) 2008-2013  Richard Eigenmann. Zürich
+ Copyright (C) 2008-2017  Richard Eigenmann. Zürich
 
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
@@ -156,5 +156,6 @@ public class GenerateWebsiteWizard2Thumbnails extends AbstractStep {
      */
     @Override
     public void prepareRendering() {
+        // do nothing
     }
 }

@@ -4,6 +4,7 @@ import com.google.common.eventbus.Subscribe;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JMenu;
@@ -40,7 +41,6 @@ import jpo.dataModel.SingleNodeNavigator;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
 import static org.junit.Assert.*;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -175,13 +175,21 @@ public class PicturePopupMenuTest {
     @Test
     public void testRememberingPopupNode() {
         try {
-            Field popupNodeField;
-            popupNodeField = PicturePopupMenu.class.getDeclaredField( "popupNode" );
-            popupNodeField.setAccessible( true );
-            SortableDefaultMutableTreeNode verifyNode = (SortableDefaultMutableTreeNode) popupNodeField.get( myPicturePopupMenu );
-            PictureInfo verifyPictureInfo = (PictureInfo) verifyNode.getUserObject();
-            assertEquals( myPictureInfo, verifyPictureInfo );
-        } catch ( NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException ex ) {
+            SwingUtilities.invokeAndWait( () -> {
+                try {
+                    Field popupNodeField;
+                    popupNodeField = PicturePopupMenu.class.getDeclaredField( "popupNode" );
+                    popupNodeField.setAccessible( true );
+                    SortableDefaultMutableTreeNode verifyNode = (SortableDefaultMutableTreeNode) popupNodeField.get( myPicturePopupMenu );
+                    PictureInfo verifyPictureInfo = (PictureInfo) verifyNode.getUserObject();
+                    assertEquals( myPictureInfo, verifyPictureInfo );
+                } catch ( NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException ex ) {
+                    Logger.getLogger( PicturePopupMenuTest.class.getName() ).log( Level.SEVERE, null, ex );
+                }
+            } );
+        } catch ( InterruptedException ex ) {
+            Logger.getLogger( PicturePopupMenuTest.class.getName() ).log( Level.SEVERE, null, ex );
+        } catch ( InvocationTargetException ex ) {
             Logger.getLogger( PicturePopupMenuTest.class.getName() ).log( Level.SEVERE, null, ex );
         }
 
@@ -191,36 +199,43 @@ public class PicturePopupMenuTest {
      * Get the children
      */
     @Test
-    @Ignore
     public void testGetChildren() {
-        assertEquals( "My Picture", title.getText() );
-        assertEquals( "Show Picture", showPicture.getText() );
-        assertEquals( "Show Map", showMap.getText() );
-        assertEquals( "Navigate to", navigateTo.getText() );
-        assertEquals( "Categories", categories.getText() );
-        assertEquals( "Select for email", selectForEmail.getText() );
-        assertEquals( "User Function", userFunction.getText() );
-        assertEquals( "Rotation", rotation.getText() );
-        assertEquals( "Rotate Right 90", rotate90.getText() );
-        assertEquals( "Rotate 180", rotate180.getText() );
-        assertEquals( "Rotate Left 270", rotate270.getText() );
-        assertEquals( "No Rotation", rotate0.getText() );
-        assertEquals( "Refresh Thumbnail", refreshThumbnail.getText() );
-        assertEquals( "Move", move.getText() );
-        assertEquals( "to Top", moveToTop.getText() );
-        assertEquals( "Up", moveUp.getText() );
-        assertEquals( "Down", moveDown.getText() );
-        assertEquals( "indent", moveIndent.getText() );
-        assertEquals( "outdent", moveOutdent.getText() );
-        assertEquals( "to Bottom", moveToBottom.getText() );
-        assertEquals( "Copy Image", copyImage.getText() );
-        assertEquals( "choose target directory", copyImageChooseTargetDir.getText() );
-        assertEquals( "to zip file", copyImageToZipFile.getText() );
-        assertEquals( "Copy to Clipboard", copyToClipboard.getText() );
-        assertEquals( "Remove Node", removeNode.getText() );
-        assertEquals( "File operations", fileOperations.getText() );
-        assertEquals( "Properties", properties.getText() );
-        assertEquals( "Consolidate Here", consolidateHere.getText() );
+        try {
+            SwingUtilities.invokeAndWait( () -> {
+                assertEquals( "My Picture", title.getText() );
+                assertEquals( "Show Picture", showPicture.getText() );
+                assertEquals( "Show Map", showMap.getText() );
+                assertEquals( "Navigate to", navigateTo.getText() );
+                assertEquals( "Categories", categories.getText() );
+                assertEquals( "Select for email", selectForEmail.getText() );
+                assertEquals( "User Function", userFunction.getText() );
+                assertEquals( "Rotation", rotation.getText() );
+                assertEquals( "Rotate Right 90", rotate90.getText() );
+                assertEquals( "Rotate 180", rotate180.getText() );
+                assertEquals( "Rotate Left 270", rotate270.getText() );
+                assertEquals( "No Rotation", rotate0.getText() );
+                assertEquals( "Refresh Thumbnail", refreshThumbnail.getText() );
+                assertEquals( "Move", move.getText() );
+                assertEquals( "to Top", moveToTop.getText() );
+                assertEquals( "Up", moveUp.getText() );
+                assertEquals( "Down", moveDown.getText() );
+                assertEquals( "indent", moveIndent.getText() );
+                assertEquals( "outdent", moveOutdent.getText() );
+                assertEquals( "to Bottom", moveToBottom.getText() );
+                assertEquals( "Copy Image", copyImage.getText() );
+                assertEquals( "choose target directory", copyImageChooseTargetDir.getText() );
+                assertEquals( "to zip file", copyImageToZipFile.getText() );
+                assertEquals( "Copy to Clipboard", copyToClipboard.getText() );
+                assertEquals( "Remove Node", removeNode.getText() );
+                assertEquals( "File operations", fileOperations.getText() );
+                assertEquals( "Properties", properties.getText() );
+                assertEquals( "Consolidate Here", consolidateHere.getText() );
+            } );
+        } catch ( InterruptedException ex ) {
+            Logger.getLogger( PicturePopupMenuTest.class.getName() ).log( Level.SEVERE, null, ex );
+        } catch ( InvocationTargetException ex ) {
+            Logger.getLogger( PicturePopupMenuTest.class.getName() ).log( Level.SEVERE, null, ex );
+        }
     }
 
     private int showPictureEventCount = 0;
