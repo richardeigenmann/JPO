@@ -1,4 +1,3 @@
-
 import javax.swing.JOptionPane;
 import jpo.EventBus.ApplicationStartupRequest;
 import jpo.EventBus.JpoEventBus;

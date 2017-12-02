@@ -17,7 +17,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -353,8 +352,8 @@ public class Tools {
                         return false;
                     }
                 }
+            default: return false;
         }
-        return false;
     }
 
     /**

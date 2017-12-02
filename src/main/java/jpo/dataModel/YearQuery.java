@@ -5,13 +5,12 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Enumeration;
 import java.util.List;
-import java.util.logging.Logger;
 
 
 /*
  YearQuery.java:  The parameters for a search
 
- Copyright (C) 2014  Richard Eigenmann.
+ Copyright (C) 2014-2017  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -39,7 +38,7 @@ public class YearQuery implements Serializable, Query {
     /**
      * Define a logger
      */
-    private static final Logger LOGGER = Logger.getLogger( YearQuery.class.getName() );
+    //private static final Logger LOGGER = Logger.getLogger( YearQuery.class.getName() );
 
     /**
      * This flag indicates whether dates that can't be parsed should be treaded

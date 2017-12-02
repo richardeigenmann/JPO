@@ -47,7 +47,7 @@ import org.apache.commons.net.ftp.FTPReply;
 
 /*
  * HtmlDistiller.java: class that can write html files 
- * Copyright (C) 2002-2016 Richard Eigenmann. 
+ * Copyright (C) 2002-2017 Richard Eigenmann. 
  * 
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General Public License as
@@ -1018,7 +1018,7 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
         channel.disconnect();
     }
 
-    static int checkAck( InputStream in ) throws IOException {
+    private static int checkAck( InputStream in ) throws IOException {
         int b = in.read();
         // b may be 0 for success,
         //          1 for error,

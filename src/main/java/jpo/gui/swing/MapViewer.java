@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Logger;
 import javax.swing.event.MouseInputListener;
 import org.jxmapviewer.JXMapViewer;
 import org.jxmapviewer.OSMTileFactoryInfo;
@@ -25,6 +24,23 @@ import org.jxmapviewer.viewer.LocalResponseCache;
 import org.jxmapviewer.viewer.TileFactoryInfo;
 import org.jxmapviewer.viewer.Waypoint;
 import org.jxmapviewer.viewer.WaypointPainter;
+
+/*
+Copyright (C) 2017  Richard Eigenmann.
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or any later version. This program is distributed 
+in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+without even the implied warranty of MERCHANTABILITY or FITNESS 
+FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
+more details. You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+The license is in gpl.txt.
+See http://www.gnu.org/copyleft/gpl.html for the details.
+ */
+
 
 /**
  *
@@ -82,10 +98,10 @@ public class MapViewer {
     /**
      * Defines a LOGGER for this class
      */
-    private static final Logger LOGGER = Logger.getLogger( MapViewer.class.getName() );
+    //private static final Logger LOGGER = Logger.getLogger( MapViewer.class.getName() );
 
     private final JXMapViewer jxMapViewer = new JXMapViewer();
-    DefaultWaypoint defaultWaypoint = new DefaultWaypoint();
+    private final DefaultWaypoint defaultWaypoint = new DefaultWaypoint();
 
     public JXMapViewer getJXMapViewer() {
         return jxMapViewer;

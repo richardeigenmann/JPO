@@ -10,7 +10,7 @@ import jpo.dataModel.SortableDefaultMutableTreeNode;
 /*
  HtmlDistillerOptions.java:  Holds the options that configure the html output.
 
- Copyright (C) 2008-2014,  Richard Eigenmann, Zürich
+ Copyright (C) 2008-2017,  Richard Eigenmann, Zürich
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -241,16 +241,18 @@ public class HtmlDistillerOptions {
      * 100 as an integer. If the value is out of bounds it is raised to 0 or
      * lowered to 100.
      *
-     * @param lowresJpgQuality the lowres quality
+     * @param lowresJpgQualityPercent the lowres quality
      */
-    public void setLowresJpgQualityPercent( int lowresJpgQuality ) {
-        if ( lowresJpgQuality > 100 ) {
-            lowresJpgQuality = 100;
-        } else if ( lowresJpgQuality < 0 ) {
-            lowresJpgQuality = 0;
+    public void setLowresJpgQualityPercent( int lowresJpgQualityPercent ) {
+        if ( lowresJpgQualityPercent > 100 ) {
+            lowresJpgQualityPercent = 100;
+        } else if ( lowresJpgQualityPercent < 0 ) {
+            lowresJpgQualityPercent = 0;
         }
-        setLowresJpgQuality( (float) lowresJpgQuality / 100 );
+        setLowresJpgQuality((float) lowresJpgQualityPercent / 100 );
     }
+    
+    
     //------------------Midres-------------------
     /**
      * The width the midres picture must not exceed.

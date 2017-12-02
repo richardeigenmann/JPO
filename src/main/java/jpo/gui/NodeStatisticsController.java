@@ -83,7 +83,7 @@ public class NodeStatisticsController {
      */
     public void updateStats() {
         class updateStatsWorker extends SwingWorker<Object, Object> {
-            NodeStatisticsBean nodeStatisticsBean = new NodeStatisticsBean();
+            private NodeStatisticsBean nodeStatisticsBean = new NodeStatisticsBean();
 
             @Override
             public String doInBackground() {

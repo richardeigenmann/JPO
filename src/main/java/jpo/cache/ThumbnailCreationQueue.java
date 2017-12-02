@@ -127,7 +127,8 @@ public class ThumbnailCreationQueue {
      */
     protected static ThumbnailQueueRequest findThumbnailQueueRequest(
             ThumbnailQueueRequestCallbackHandler callbackHandler ) {
-        ThumbnailQueueRequest req = null, test;
+        ThumbnailQueueRequest req = null;
+        ThumbnailQueueRequest test;
         for ( Iterator i = QUEUE.iterator(); i.hasNext(); ) {
             test = (ThumbnailQueueRequest) i.next();
             if ( ( callbackHandler != null ) && ( test.getThumbnailQueueRequestCallbackHandler().equals( callbackHandler ) ) ) {

@@ -9,6 +9,10 @@ buildscript {
     }    
 }
 
+plugins {
+  id "org.sonarqube" version "2.5"
+}
+
 apply plugin: "com.github.johnrengelman.shadow"
 apply plugin: 'java'
 
@@ -144,3 +148,4 @@ task runFatJar(type: JavaExec) {
     main = 'Main'
 }
 //ant.importBuild 'build.xml'
+

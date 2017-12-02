@@ -3,20 +3,15 @@ package jpo.gui.swing;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.File;
-import java.io.FilenameFilter;
-import java.util.List;
 import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.SwingWorker;
 import jpo.EventBus.JpoEventBus;
 import jpo.EventBus.RecentCollectionsChangedEvent;
 import jpo.dataModel.Settings;
 import jpo.dataModel.Tools;
-import jpo.gui.ProgressGui;
 import net.miginfocom.swing.MigLayout;
 
 /*
