@@ -11,7 +11,7 @@ import jpo.dataModel.SortableDefaultMutableTreeNode;
 /*
  ThumbnailCreationQueue.java:  queue that holds requests to create Thumbnails from Highres Images
 
- Copyright (C) 2003-2015  Richard Eigenmann.
+ Copyright (C) 2003-2017  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2

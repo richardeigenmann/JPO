@@ -6,6 +6,7 @@ import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
@@ -31,7 +32,7 @@ import org.apache.commons.jcs.engine.control.CompositeCacheManager;
 /*
  JpoCache.java: Cache for the Jpo application
 
- Copyright (C) 2014 - 2015  Richard Eigenmann.
+ Copyright (C) 2014 - 2017  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -45,10 +46,9 @@ import org.apache.commons.jcs.engine.control.CompositeCacheManager;
  The license is in gpl.txt.
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
-
 /**
  * Cache for the Jpo application
- * 
+ *
  * @author Richard Eigenmann
  */
 public class JpoCache {
@@ -60,6 +60,7 @@ public class JpoCache {
 
     private static final String HIGHRES_CACHE_REGION_NAME = "highresCache";
     private static final String THUMBNAIL_CACHE_REGION_NAME = "thumbnailCache";
+
     /**
      * Returns the instance of the JpoCache singleton
      *
@@ -67,7 +68,7 @@ public class JpoCache {
      */
     public static JpoCache getInstance() {
         return JpoCacheHolder.INSTANCE;
-        
+
     }
 
     private CacheAccess<URL, ImageBytes> highresMemoryCache;
@@ -78,31 +79,54 @@ public class JpoCache {
     private Dimension groupThumbnailDimension;
 
     private JpoCache() {
-        Properties props = new Properties();
-
-        try {
-            // load a properties file
-            props.load( JpoCache.class.getClassLoader().getResourceAsStream( "cache.ccf" ) );
-        } catch ( IOException e ) {
-            LOGGER.severe( e.getLocalizedMessage() );
-        }
-
-        props.setProperty( "jcs.auxiliary.DC.attributes.DiskPath", Settings.thumbnailCacheDirectory );
-
+        LOGGER.info( "Creating JpoCache");
         CompositeCacheManager ccm = CompositeCacheManager.getUnconfiguredInstance();
+        System.out.println( "2" );
+        Properties props = loadProperties();
+        System.out.println( "3" );
         ccm.configure( props );
+        System.out.println( "4" );
 
         try {
-            highresMemoryCache = JCS.getInstance(HIGHRES_CACHE_REGION_NAME );
+            highresMemoryCache = JCS.getInstance( HIGHRES_CACHE_REGION_NAME );
             //setCache(highresMemoryCache);
-            thumbnailMemoryAndDiskCache = JCS.getInstance(THUMBNAIL_CACHE_REGION_NAME );
+            thumbnailMemoryAndDiskCache = JCS.getInstance( THUMBNAIL_CACHE_REGION_NAME );
             //setCache(thumbnailMemoryAndDiskCache);
         } catch ( CacheException ex ) {
             LOGGER.severe( ex.getLocalizedMessage() );
         }
     }
 
+    /**
+     * Loads the properties from the cache .ccf file in the bundle
+     * @return 
+     */
+    public static Properties loadProperties() {
+        final String CACHE_DEFINITION_FILE = "cache.ccf";
+        URL ccfUrl = JpoCache.class.getClassLoader().getResource( CACHE_DEFINITION_FILE );
+        if ( ccfUrl == null ) {
+            LOGGER.severe( "Classloader didn't find file " + CACHE_DEFINITION_FILE );
+            return null;
+        } else {
+            LOGGER.info( "Cache definition file found at: " + ccfUrl.toString() );
+        }
 
+        Properties props = new Properties();
+        try {
+            // load a properties file
+            //InputStream cacheCcf = JpoCache.class.getClassLoader().getResourceAsStream(CACHE_DEFINITION_FILE );
+            props.load( ccfUrl.openStream() );
+        } catch ( IOException e ) {
+            LOGGER.severe( "Failed to load " + CACHE_DEFINITION_FILE + "IOException: " + e.getLocalizedMessage() );
+            return null;
+        }
+
+        LOGGER.info( "setting jcs.auxiliary.DC.attributes.DiskPath to: " + Settings.thumbnailCacheDirectory );
+        props.setProperty( "jcs.auxiliary.DC.attributes.DiskPath", Settings.thumbnailCacheDirectory );
+
+        return props;
+    }
+    
     /**
      * Method to properly shut down the cache
      */
@@ -239,7 +263,6 @@ public class JpoCache {
         return imageBytes;
     }
 
-
     /**
      * Returns the Dimension of the icon_folder_large.jpg image and if there is
      * an ioerror the maximum size of the thumbnails.
@@ -349,7 +372,7 @@ public class JpoCache {
             }
 
             x = margin + ( ( picsProcessed % horizontalPics ) * ( Settings.miniThumbnailSize.width + margin ) );
-            yPos = (int) Math.round( (  picsProcessed / (double) horizontalPics ) - 0.5f );
+            yPos = (int) Math.round( ( picsProcessed / (double) horizontalPics ) - 0.5f );
             y = topMargin + ( yPos * ( Settings.miniThumbnailSize.height + margin ) );
 
             scalablePicture.loadPictureImd( pi.getImageURL(), pi.getRotation() );
@@ -417,11 +440,12 @@ public class JpoCache {
 
         }
     }
+
     /**
      * Singleton
      */
     private static class JpoCacheHolder {
-        
+
         private static final JpoCache INSTANCE = new JpoCache();
     }
 

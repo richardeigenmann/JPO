@@ -8,7 +8,7 @@
     <property name="build.base.classes.dir" value="${build.dir}/classes"/>
     <property name="unit.test.classes.dir" value="${build.dir}/unittestclasses"/>
     <property name="build.images.dir" value="${build.base.classes.dir}/${app.main.package}/images"/>
-    <property name="build.dtd.dir" value="${build.base.classes.dir}/${app.main.package}"/>
+    <property name="build.dtd.dir" value="${build.base.classes.dir}"/>
     <property name="build.cache.dir" value="${build.base.classes.dir}/"/>
     <property name="build.export.dir" value="${build.base.classes.dir}/${app.main.package}/export"/>
     <property name="build.docs.dir" value="${build.dir}/docs"/>

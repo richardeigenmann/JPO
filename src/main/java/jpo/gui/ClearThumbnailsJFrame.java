@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.logging.Logger;
 import javax.swing.SwingWorker;
 import jpo.dataModel.Settings;
-import jpo.dataModel.XmlReader;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -19,7 +18,7 @@ public class ClearThumbnailsJFrame extends javax.swing.JFrame {
     /**
      * Defines a LOGGER for this class
      */
-    private static final Logger LOGGER = Logger.getLogger( XmlReader.class.getName() );
+    private static final Logger LOGGER = Logger.getLogger( ClearThumbnailsJFrame.class.getName() );
 
     /**
      * Creates new form ClearThumbnailsJFrame

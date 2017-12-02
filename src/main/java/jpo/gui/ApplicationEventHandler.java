@@ -108,6 +108,7 @@ import jpo.dataModel.FlatFileReader;
 import jpo.dataModel.FlatGroupNavigator;
 import jpo.dataModel.GroupInfo;
 import jpo.dataModel.NodeNavigatorInterface;
+import jpo.dataModel.PictureCollection;
 import jpo.dataModel.PictureInfo;
 import jpo.dataModel.QueryNavigator;
 import jpo.dataModel.RandomNavigator;
@@ -566,6 +567,8 @@ public class ApplicationEventHandler {
             public void run() {
                 try {
                     Settings.getPictureCollection().fileLoad( fileToLoad );
+                    Settings.pushRecentCollection( fileToLoad.toString() );
+                    JpoEventBus.getInstance().post( new RecentCollectionsChangedEvent() );
                     JpoEventBus.getInstance().post( new ShowGroupRequest( Settings.getPictureCollection().getRootNode() ) );
                 } catch ( final FileNotFoundException ex ) {
 
@@ -714,7 +717,7 @@ public class ApplicationEventHandler {
 
         SortableDefaultMutableTreeNode newNode = popupNode.addGroupNode( "New Group" );
         try {
-            newNode.fileLoad( fileToLoad );
+            PictureCollection.fileLoad( fileToLoad, newNode );
         } catch ( FileNotFoundException x ) {
             LOGGER.log( Level.INFO, "{0}.fileToLoad: FileNotFoundExecption: {1}", new Object[]{ this.getClass().toString(), x.getMessage() } );
             JOptionPane.showMessageDialog( Settings.anchorFrame,
@@ -1040,9 +1043,9 @@ public class ApplicationEventHandler {
     public void handleCopyToClipboardRequest( CopyToClipboardRequest request ) {
         Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
         JpoTransferable transferable = new JpoTransferable( request.getNodes() );
-        clipboard.setContents(transferable, ( Clipboard clipboard1, Transferable contents ) -> {
+        clipboard.setContents( transferable, ( Clipboard clipboard1, Transferable contents ) -> {
             LOGGER.info( "Lost Ownership of clipboard - not an issue" );
-        });
+        } );
     }
 
     /**

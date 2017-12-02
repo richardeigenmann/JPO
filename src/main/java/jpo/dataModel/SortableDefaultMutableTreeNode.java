@@ -325,9 +325,9 @@ public class SortableDefaultMutableTreeNode
             LOGGER.severe( "Why is ever being called?" );
             Object obj = getUserObject();
             if ( obj instanceof GroupInfo ) {
-                ( (GroupInfo) obj ).setGroupName((String) userObject );
+                ( (GroupInfo) obj ).setGroupName( (String) userObject );
             } else if ( obj instanceof PictureInfo ) {
-                ( (PictureInfo) obj ).setDescription((String) userObject );
+                ( (PictureInfo) obj ).setDescription( (String) userObject );
             }
         } else if ( userObject instanceof PictureInfo ) {
             PictureInfo pictureInfo = (PictureInfo) userObject;
@@ -339,10 +339,10 @@ public class SortableDefaultMutableTreeNode
                 }
             }
             pictureInfo.addPictureInfoChangeListener( this );
-            super.setUserObject(userObject );
+            super.setUserObject( userObject );
         } else {
             // fall back on the default behaviour
-            super.setUserObject(userObject );
+            super.setUserObject( userObject );
         }
         if ( getPictureCollection() != null ) {
             if ( getPictureCollection().getSendModelUpdates() ) {
@@ -473,17 +473,17 @@ public class SortableDefaultMutableTreeNode
             } else //logger.info("SDMTN.executeDrop: we are dropping a GroupInfo object");
             // we are dropping a GroupInfo object; all others move down one step.
             // find out at which index to insert the group
-             if ( !this.isRoot() ) {
+            if ( !this.isRoot() ) {
 
-                    GroupDropPopupMenu groupDropPopupMenu = new GroupDropPopupMenu( event, sourceNode, this );
-                    groupDropPopupMenu.show( event.getDropTargetContext().getDropTarget().getComponent(), event.getLocation().x, event.getLocation().y );
-                } else {
-                    // Group was dropped on the root node --> add at first place.
-                    sourceNode.removeFromParent();
-                    this.insert( sourceNode, 0 );
-                    dropcomplete = true;
-                    getPictureCollection().setUnsavedUpdates();
-                }
+                GroupDropPopupMenu groupDropPopupMenu = new GroupDropPopupMenu( event, sourceNode, this );
+                groupDropPopupMenu.show( event.getDropTargetContext().getDropTarget().getComponent(), event.getLocation().x, event.getLocation().y );
+            } else {
+                // Group was dropped on the root node --> add at first place.
+                sourceNode.removeFromParent();
+                this.insert( sourceNode, 0 );
+                dropcomplete = true;
+                getPictureCollection().setUnsavedUpdates();
+            }
         }
         event.dropComplete( dropcomplete );
 
@@ -549,10 +549,10 @@ public class SortableDefaultMutableTreeNode
         private GroupDropPopupMenu( final DropTargetDropEvent event,
                 final SortableDefaultMutableTreeNode sourceNode,
                 final SortableDefaultMutableTreeNode targetNode ) {
-            dropBefore.addActionListener(( ActionEvent e ) -> {
+            dropBefore.addActionListener( ( ActionEvent e ) -> {
                 SortableDefaultMutableTreeNode parentNode = (SortableDefaultMutableTreeNode) targetNode.getParent();
                 int currentIndex = parentNode.getIndex( targetNode );
-                
+
                 // position is one less if the source is further up the list than the target
                 // and at the same level
                 int offset = 0;
@@ -564,16 +564,16 @@ public class SortableDefaultMutableTreeNode
                 }
                 sourceNode.removeFromParent();
                 parentNode.insert( sourceNode, currentIndex + offset );
-                
+
                 event.dropComplete( true );
                 getPictureCollection().setUnsavedUpdates();
-            });
+            } );
             add( dropBefore );
 
-            dropAfter.addActionListener(( ActionEvent e ) -> {
+            dropAfter.addActionListener( ( ActionEvent e ) -> {
                 SortableDefaultMutableTreeNode parentNode = (SortableDefaultMutableTreeNode) targetNode.getParent();
                 int currentIndex = parentNode.getIndex( targetNode );
-                
+
                 // position is one less if the source is further up the list than the target
                 // and at the same level
                 int offset = 0;
@@ -585,23 +585,23 @@ public class SortableDefaultMutableTreeNode
                 }
                 sourceNode.removeFromParent();
                 parentNode.insert( sourceNode, currentIndex + offset + 1 );
-                
+
                 event.dropComplete( true );
                 getPictureCollection().setUnsavedUpdates();
-            });
+            } );
             add( dropAfter );
 
-            dropIntoFirst.addActionListener(( ActionEvent e ) -> {
+            dropIntoFirst.addActionListener( ( ActionEvent e ) -> {
                 synchronized ( targetNode.getRoot() ) {
                     sourceNode.removeFromParent();
                     targetNode.insert( sourceNode, 0 );
                 }
                 event.dropComplete( true );
                 getPictureCollection().setUnsavedUpdates();
-            });
+            } );
             add( dropIntoFirst );
 
-            dropIntoLast.addActionListener(( ActionEvent e ) -> {
+            dropIntoLast.addActionListener( ( ActionEvent e ) -> {
                 synchronized ( targetNode.getRoot() ) {
                     int childCount = targetNode.getChildCount();
                     int offset = 0;
@@ -612,19 +612,19 @@ public class SortableDefaultMutableTreeNode
                             offset = -1;
                         }
                     }
-                    
+
                     sourceNode.removeFromParent();
                     targetNode.insert( sourceNode, childCount + offset );
                 }
                 event.dropComplete( true );
                 getPictureCollection().setUnsavedUpdates();
-            });
+            } );
             add( dropIntoLast );
 
-            dropCancel.addActionListener(( ActionEvent e ) -> {
+            dropCancel.addActionListener( ( ActionEvent e ) -> {
                 LOGGER.info( "cancel drop" );
                 event.dropComplete( false );
-            });
+            } );
             add( dropCancel );
         }
     }
@@ -826,13 +826,13 @@ public class SortableDefaultMutableTreeNode
                 }
             }
         } else // it doesn't exist
-         if ( !targetFile.mkdirs() ) {
-                JOptionPane.showMessageDialog( Settings.anchorFrame,
-                        Settings.jpoResources.getString( "CopyImageDirError" ) + targetFile.toString(),
-                        Settings.jpoResources.getString( "genericError" ),
-                        JOptionPane.ERROR_MESSAGE );
-                return false;
-            }
+        if ( !targetFile.mkdirs() ) {
+            JOptionPane.showMessageDialog( Settings.anchorFrame,
+                    Settings.jpoResources.getString( "CopyImageDirError" ) + targetFile.toString(),
+                    Settings.jpoResources.getString( "genericError" ),
+                    JOptionPane.ERROR_MESSAGE );
+            return false;
+        }
 
         if ( targetFile.isDirectory() ) {
             if ( !targetFile.canWrite() ) {
@@ -1274,32 +1274,7 @@ public class SortableDefaultMutableTreeNode
         getPictureCollection().setSendModelUpdates( true );
     }
 
-    /**
-     * Loads the collection indicated by the File at the "this" node
-     *
-     * @param fileToLoad	The File object that is to be loaded.
-     * @throws FileNotFoundException When no good
-     */
-    public void fileLoad( File fileToLoad ) throws FileNotFoundException {
-        if ( fileToLoad != null ) {
-            InputStream is = new FileInputStream( fileToLoad );
-            streamLoad( is );
-            Settings.pushRecentCollection( fileToLoad.toString() );
-            JpoEventBus.getInstance().post( new RecentCollectionsChangedEvent() );
-        }
-    }
 
-    /**
-     * Loads the collection indicated by the Input stream at the "this" node.
-     *
-     * @param is	The inputstream that is to be loaded.
-     */
-    public void streamLoad( InputStream is ) {
-        getPictureCollection().setSendModelUpdates( false ); // turn off model notification of each add for performance
-        new XmlReader( is, this );
-        getPictureCollection().setSendModelUpdates( true );
-        getPictureCollection().sendNodeStructureChanged( this );
-    }
 
     /**
      * Copies the pictures from the source tree to the target directory and adds

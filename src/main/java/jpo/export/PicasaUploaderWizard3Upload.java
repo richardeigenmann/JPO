@@ -21,7 +21,7 @@ import net.miginfocom.swing.MigLayout;
 /*
  * PicasaUploaderWizard2Upload.java:
  *
- * Copyright (C) 2012 -2014 Richard Eigenmann. Zürich
+ * Copyright (C) 2012 -2017 Richard Eigenmann. Zürich
  *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software

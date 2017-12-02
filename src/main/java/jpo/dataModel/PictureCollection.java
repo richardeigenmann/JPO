@@ -1,7 +1,9 @@
 package jpo.dataModel;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -260,8 +262,8 @@ public class PictureCollection {
      * This method allows the programmer to set whether the tree has unsaved
      * updates or not.
      *
-     * @param unsavedUpdates Set to true if there are unsaved updates, false if there are
-     * none
+     * @param unsavedUpdates Set to true if there are unsaved updates, false if
+     * there are none
      * @see #unsavedUpdates
      */
     public void setUnsavedUpdates( boolean unsavedUpdates ) {
@@ -791,13 +793,39 @@ public class PictureCollection {
         clearCollection();
         setXmlFile( file );
         try {
-            getRootNode().fileLoad( getXmlFile() );
+            fileLoad( getXmlFile(), getRootNode() );
             addYearQueries();
             fileLoading = false;
         } catch ( FileNotFoundException ex ) {
             fileLoading = false;
             throw ex;
         }
+    }
+
+    /**
+     * Loads the collection indicated by the File at the supplied node
+     *
+     * @param fileToLoad	The File object that is to be loaded.
+     * @param node the node to load it into
+     * @throws FileNotFoundException When no good
+     */
+    public static void fileLoad( File fileToLoad, SortableDefaultMutableTreeNode node ) throws FileNotFoundException {
+        LOGGER.info( "Loading file: " + fileToLoad.toString() );
+        InputStream is = new FileInputStream( fileToLoad );
+        streamLoad( is, node );
+    }
+
+    /**
+     * Loads the collection indicated by the Input stream at the "this" node.
+     *
+     * @param is	The InputStream that is to be loaded.
+     * @param node the node to load it into
+     */
+    public static void streamLoad( InputStream is, SortableDefaultMutableTreeNode node ) {
+        node.getPictureCollection().setSendModelUpdates( false ); // turn off model notification of each add for performance
+        new XmlReader( is, node );
+        node.getPictureCollection().setSendModelUpdates( true );
+        node.getPictureCollection().sendNodeStructureChanged( node );
     }
 
     private void addYearQueries() {
@@ -826,7 +854,7 @@ public class PictureCollection {
                     getYearsTreeNode().removeAllChildren();
                     years.stream().forEach( ( year ) -> {
                         addYearQuery( year );
-            } );
+                    } );
                 }
         );
 

@@ -1,8 +1,6 @@
 package jpo.dataModel;
 
-import static junit.framework.Assert.assertNotNull;
 import org.junit.Test;
-import org.xml.sax.InputSource;
 
 /**
  * Tests for the XmlReader class
@@ -16,11 +14,10 @@ public class XmlReaderTest {
      * build is poor this unit test checks whether it is there
      */
     @Test
-    public void testGetDtd() {
-        // not sure how I want to create the object as it needs input streams and stuff so I'll just do the code that
-        // the method resolveEntity does.
-        InputSource s = new InputSource( Settings.CLASS_LOADER.getResourceAsStream( "jpo/collection.dtd" ) );
-        assertNotNull( "No collection.dtd found", s );
+    public void testCorrectJarReferences() {
+        SortableDefaultMutableTreeNode n = new SortableDefaultMutableTreeNode();
+        XmlReader.correctJarReferences(n);
+        //TODO: figure out how to test this thing!
     }
 
 }
