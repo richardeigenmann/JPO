@@ -109,11 +109,7 @@ public class XmlReader {
 
     /**
      * This method runs through all the URL strings and changes the jar:
-     * references with the path to the jar. I am prepared to admit this is a
-     * sloppy way of building this. The problem is that since the parser doesn't
-     * always return the whole URL in one go I could be reading fragments and
-     * those will not translate well. That's also the reason for using append in
-     * the adding of the data.
+     * references with the path to the jar. 
      *
      * @param startNode Start Node
      */

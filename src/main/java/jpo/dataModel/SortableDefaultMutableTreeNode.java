@@ -5,9 +5,6 @@ import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DropTargetDropEvent;
 import java.awt.event.ActionEvent;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -30,7 +27,6 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 import jpo.EventBus.CopyLocationsChangedEvent;
 import jpo.EventBus.JpoEventBus;
-import jpo.EventBus.RecentCollectionsChangedEvent;
 import jpo.dataModel.Settings.FieldCodes;
 import jpo.gui.JpoTransferable;
 import jpo.gui.ProgressGui;
@@ -39,7 +35,7 @@ import jpo.gui.ProgressGui;
 /*
  SortableDefaultMutableTreeNode.java:  The main data model object for the JPO application
 
- Copyright (C) 2003 - 2015  Richard Eigenmann, Zurich, Switzerland
+ Copyright (C) 2003 - 2017  Richard Eigenmann, Zurich, Switzerland
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2

@@ -25,7 +25,7 @@ import jpo.gui.swing.MainWindow;
 /*
  * Settings.java: class that holds the settings of the JPO application
  *
- * Copyright (C) 2002 - 2014 Richard Eigenmann, Zürich, Switzerland This program
+ * Copyright (C) 2002 - 2017 Richard Eigenmann, Zürich, Switzerland This program
  * is free software; you can redistribute it and/or modify it under the terms of
  * the GNU General Public License as published by the Free Software Foundation;
  * either version 2 of the License, or any later version. This program is
@@ -47,6 +47,7 @@ import jpo.gui.swing.MainWindow;
  *
  */
 public class Settings {
+
 
     /**
      * Defines a logger for this class
@@ -705,7 +706,7 @@ public class Settings {
      */
     public static void loadSettings() {
         setDefaults();
-
+        
         setLocale( new Locale( prefs.get( "currentLocale", getCurrentLocale().toString() ) ) );
         maximumPictureSize = prefs.getInt( "maximumPictureSize", maximumPictureSize );
         maxThumbnails = prefs.getInt( "maxThumbnails", maxThumbnails );

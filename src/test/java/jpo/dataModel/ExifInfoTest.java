@@ -1,6 +1,8 @@
 package jpo.dataModel;
 
+import java.net.URL;
 import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.fail;
 import org.junit.Test;
 
 /*
@@ -60,14 +62,19 @@ public class ExifInfoTest {
      */
     @Test
     public void testExifInfoD100() {
-        ExifInfo exifInfo = new ExifInfo( Settings.CLASS_LOADER.getResource( "exif-test-nikon-d100-1.jpg" ) );
+        final String NIKON_D100_IMAGE = "exif-test-nikon-d100-1.jpg";
+        URL imageUrl = Settings.CLASS_LOADER.getResource( NIKON_D100_IMAGE );
+        if ( imageUrl == null ) {
+            fail("Unable to locate the test image: " + NIKON_D100_IMAGE);
+        }
+        ExifInfo exifInfo = new ExifInfo( imageUrl );
         exifInfo.decodeExifTags();
         assertEquals( "Aperture parsing verification", "f/11.0", exifInfo.aperture );
         assertEquals( "Camera parsing verification", "NIKON D100", exifInfo.camera );
         assertEquals( "CreateDateTime parsing verification", "2008:11:07 16:23:25", exifInfo.getCreateDateTime() );
         assertEquals( "ExifHeight parsing verification", "233 pixels", exifInfo.exifHeight );
         assertEquals( "ExifWidth parsing verification", "350 pixels", exifInfo.exifWidth );
-        assertEquals( "FocalLength parsing verification", "82.0 mm", exifInfo.focalLength );
+        assertEquals( "FocalLength parsing verification", "82 mm", exifInfo.focalLength );
         assertEquals( "ISO parsing verification", "ISO 640", exifInfo.iso );
         assertEquals( "Longitude parsing verification", ZERO, exifInfo.latLng.getX() );
         assertEquals( "Latitude parsing verification", ZERO, exifInfo.latLng.getY() );
@@ -82,7 +89,12 @@ public class ExifInfoTest {
      */
     @Test
     public void testExifInfoS4() {
-        ExifInfo exifInfo = new ExifInfo( Settings.CLASS_LOADER.getResource( "exif-test-samsung-s4.jpg" ) );
+        final String SAMSUNG_S4_IMAGE = "exif-test-samsung-s4.jpg";
+        URL imageUrl = Settings.CLASS_LOADER.getResource( SAMSUNG_S4_IMAGE );
+        if ( imageUrl == null ) {
+            fail("Unable to locate the test image: " + SAMSUNG_S4_IMAGE);
+        }
+        ExifInfo exifInfo = new ExifInfo( imageUrl );
         exifInfo.decodeExifTags();
         assertEquals( "Aperture parsing verification", "f/2.2", exifInfo.aperture );
         assertEquals( "Camera parsing verification", "GT-I9505", exifInfo.camera );
@@ -104,7 +116,12 @@ public class ExifInfoTest {
      */
     @Test
     public void testExifInfoS4Loc() {
-        ExifInfo exifInfo = new ExifInfo( Settings.CLASS_LOADER.getResource( "exif-test-samsung-s4-loc.jpg" ) );
+        final String SAMSUNG_S4_LOC_IMAGE = "exif-test-samsung-s4-loc.jpg";
+        URL imageUrl = Settings.CLASS_LOADER.getResource( SAMSUNG_S4_LOC_IMAGE );
+        if ( imageUrl == null ) {
+            fail("Unable to locate the test image: " + SAMSUNG_S4_LOC_IMAGE);
+        }
+        ExifInfo exifInfo = new ExifInfo( imageUrl );
         exifInfo.decodeExifTags();
         assertEquals( "Aperture parsing verification", "f/2.2", exifInfo.aperture );
         assertEquals( "Camera parsing verification", "GT-I9505", exifInfo.camera );
@@ -126,7 +143,12 @@ public class ExifInfoTest {
      */
     @Test
     public void testExifInfoS4Rot0() {
-        ExifInfo exifInfo = new ExifInfo( Settings.CLASS_LOADER.getResource( "exif-test-samsung-s4-roation-0.jpg" ) );
+        final String SAMSUNG_S4_ROT0_IMAGE = "exif-test-samsung-s4-roation-0.jpg";
+        URL imageUrl = Settings.CLASS_LOADER.getResource( SAMSUNG_S4_ROT0_IMAGE );
+        if ( imageUrl == null ) {
+            fail("Unable to locate the test image: " + SAMSUNG_S4_ROT0_IMAGE);
+        }
+        ExifInfo exifInfo = new ExifInfo( imageUrl );
         exifInfo.decodeExifTags();
         assertEquals( "Aperture parsing verification", "", exifInfo.aperture );
         assertEquals( "Camera parsing verification", "GT-I9505", exifInfo.camera );
@@ -148,7 +170,12 @@ public class ExifInfoTest {
      */
     @Test
     public void testExifInfoS4RotLeft() {
-        ExifInfo exifInfo = new ExifInfo( Settings.CLASS_LOADER.getResource( "exif-test-samsung-s4-roation-left.jpg" ) );
+        final String SAMSUNG_S4_ROT_LEFT_IMAGE = "exif-test-samsung-s4-roation-left.jpg";
+        URL imageUrl = Settings.CLASS_LOADER.getResource( SAMSUNG_S4_ROT_LEFT_IMAGE );
+        if ( imageUrl == null ) {
+            fail("Unable to locate the test image: " + SAMSUNG_S4_ROT_LEFT_IMAGE);
+        }
+        ExifInfo exifInfo = new ExifInfo( imageUrl );
         exifInfo.decodeExifTags();
         assertEquals( "Aperture parsing verification", "", exifInfo.aperture );
         assertEquals( "Camera parsing verification", "GT-I9505", exifInfo.camera );
@@ -170,7 +197,12 @@ public class ExifInfoTest {
      */
     @Test
     public void testExifInfoS4RotRight() {
-        ExifInfo exifInfo = new ExifInfo( Settings.CLASS_LOADER.getResource( "exif-test-samsung-s4-roation-right.jpg" ) );
+        final String SAMSUNG_S4_ROT_RIGHT_IMAGE = "exif-test-samsung-s4-roation-right.jpg";
+        URL imageUrl = Settings.CLASS_LOADER.getResource( SAMSUNG_S4_ROT_RIGHT_IMAGE );
+        if ( imageUrl == null ) {
+            fail("Unable to locate the test image: " + SAMSUNG_S4_ROT_RIGHT_IMAGE);
+        }
+        ExifInfo exifInfo = new ExifInfo( imageUrl );
         exifInfo.decodeExifTags();
         assertEquals( "Aperture parsing verification", "", exifInfo.aperture );
         assertEquals( "Camera parsing verification", "GT-I9505", exifInfo.camera );
@@ -192,7 +224,12 @@ public class ExifInfoTest {
      */
     @Test
     public void testExifInfoS4RotUpsideDown() {
-        ExifInfo exifInfo = new ExifInfo( Settings.CLASS_LOADER.getResource( "exif-test-samsung-s4-upside-down.jpg" ) );
+        final String SAMSUNG_S4_ROT_UPSIDEDOWN_IMAGE = "exif-test-samsung-s4-upside-down.jpg";
+        URL imageUrl = Settings.CLASS_LOADER.getResource( SAMSUNG_S4_ROT_UPSIDEDOWN_IMAGE );
+        if ( imageUrl == null ) {
+            fail("Unable to locate the test image: " + SAMSUNG_S4_ROT_UPSIDEDOWN_IMAGE);
+        }
+        ExifInfo exifInfo = new ExifInfo( imageUrl );
         exifInfo.decodeExifTags();
         assertEquals( "Aperture parsing verification", "", exifInfo.aperture );
         assertEquals( "Camera parsing verification", "GT-I9505", exifInfo.camera );
@@ -213,16 +250,20 @@ public class ExifInfoTest {
      */
     @Test
     public void testExifInfoEos350d() {
-        ExifInfo exifInfo = new ExifInfo( Settings.CLASS_LOADER.getResource( "exif-test-canon-eos-350d.jpg" ) );
+        final String CANON_EOS350D_IMAGE = "exif-test-canon-eos-350d.jpg";
+        URL imageUrl = Settings.CLASS_LOADER.getResource( CANON_EOS350D_IMAGE );
+        if ( imageUrl == null ) {
+            fail("Unable to locate the test image: " + CANON_EOS350D_IMAGE);
+        }
+        ExifInfo exifInfo = new ExifInfo( imageUrl );
         exifInfo.decodeExifTags();
-        //System.out.println( exifInfo.getAllTags() );
         assertEquals( "Aperture parsing verification", "f/20.0", exifInfo.aperture );
         assertEquals( "ShutterSpeed parsing verification", "1/200 sec", exifInfo.shutterSpeed );
         assertEquals( "Camera parsing verification", "Canon EOS 350D DIGITAL", exifInfo.camera );
         assertEquals( "CreateDateTime parsing verification", "2006:10:06 15:13:54", exifInfo.getCreateDateTime() );
         assertEquals( "ExifHeight parsing verification", "1664 pixels", exifInfo.exifHeight );
         assertEquals( "ExifWidth parsing verification", "2496 pixels", exifInfo.exifWidth );
-        assertEquals( "FocalLength parsing verification", "18.0 mm", exifInfo.focalLength );
+        assertEquals( "FocalLength parsing verification", "18 mm", exifInfo.focalLength );
         assertEquals( "ISO parsing verification", "200", exifInfo.iso );
         assertEquals( "Longitude parsing verification", ZERO, exifInfo.latLng.getX() );
         assertEquals( "Latitude parsing verification", ZERO, exifInfo.latLng.getY() );
@@ -236,16 +277,20 @@ public class ExifInfoTest {
      */
     @Test
     public void testExifInfoCanonEos60D() {
-        ExifInfo exifInfo = new ExifInfo( Settings.CLASS_LOADER.getResource( "exif-test-canon-eos-60d.jpg" ) );
+        final String CANON_EOS60D_IMAGE = "exif-test-canon-eos-60d.jpg";
+        URL imageUrl = Settings.CLASS_LOADER.getResource( CANON_EOS60D_IMAGE );
+        if ( imageUrl == null ) {
+            fail("Unable to locate the test image: " + CANON_EOS60D_IMAGE);
+        }
+        ExifInfo exifInfo = new ExifInfo( imageUrl );
         exifInfo.decodeExifTags();
-        //System.out.println( exifInfo.getAllTags() );
         assertEquals( "Aperture parsing verification", "f/11.3", exifInfo.aperture );
         assertEquals( "ShutterSpeed parsing verification", "1/511 sec", exifInfo.shutterSpeed );
         assertEquals( "Camera parsing verification", "Canon EOS 60D", exifInfo.camera );
         assertEquals( "CreateDateTime parsing verification", "2013:05:09 13:55:16", exifInfo.getCreateDateTime() );
         assertEquals( "ExifHeight parsing verification", "3456 pixels", exifInfo.exifHeight );
         assertEquals( "ExifWidth parsing verification", "5184 pixels", exifInfo.exifWidth );
-        assertEquals( "FocalLength parsing verification", "85.0 mm", exifInfo.focalLength );
+        assertEquals( "FocalLength parsing verification", "85 mm", exifInfo.focalLength );
         assertEquals( "ISO parsing verification", "400", exifInfo.iso );
         assertEquals( "Longitude parsing verification", ZERO, exifInfo.latLng.getX() );
         assertEquals( "Latitude parsing verification", ZERO, exifInfo.latLng.getY() );
@@ -259,9 +304,13 @@ public class ExifInfoTest {
      */
     @Test
     public void testExifInfoCybershot1() {
-        ExifInfo exifInfo = new ExifInfo( Settings.CLASS_LOADER.getResource( "exif-test-sony-cybershot-1.jpg" ) );
+        final String CANON_CYBERSHOT1_IMAGE = "exif-test-sony-cybershot-1.jpg";
+        URL imageUrl = Settings.CLASS_LOADER.getResource( CANON_CYBERSHOT1_IMAGE );
+        if ( imageUrl == null ) {
+            fail("Unable to locate the test image: " + CANON_CYBERSHOT1_IMAGE);
+        }
+        ExifInfo exifInfo = new ExifInfo( imageUrl );
         exifInfo.decodeExifTags();
-        //System.out.println( exifInfo.getAllTags() );
         assertEquals( "Aperture parsing verification", "f/4.0", exifInfo.aperture );
         assertEquals( "ShutterSpeed parsing verification", "1/480 sec", exifInfo.shutterSpeed );
         assertEquals( "Camera parsing verification", "CYBERSHOT", exifInfo.camera );
@@ -281,9 +330,13 @@ public class ExifInfoTest {
      */
     @Test
     public void testExifInfoSonyD700() {
-        ExifInfo exifInfo = new ExifInfo( Settings.CLASS_LOADER.getResource( "exif-test-sony-d700.jpg" ) );
+        final String SONY_D700_IMAGE = "exif-test-sony-d700.jpg";
+        URL imageUrl = Settings.CLASS_LOADER.getResource( SONY_D700_IMAGE );
+        if ( imageUrl == null ) {
+            fail("Unable to locate the test image: " + SONY_D700_IMAGE);
+        }
+        ExifInfo exifInfo = new ExifInfo( imageUrl );
         exifInfo.decodeExifTags();
-        //System.out.println( exifInfo.getAllTags() );
         assertEquals( "Aperture parsing verification", "f/2.4", exifInfo.aperture );
         assertEquals( "ShutterSpeed parsing verification", "1/32 sec", exifInfo.shutterSpeed );
         assertEquals( "Camera parsing verification", "DSC-D700", exifInfo.camera );
@@ -303,7 +356,12 @@ public class ExifInfoTest {
      */
     @Test
     public void testExifInfoSonyP200() {
-        ExifInfo exifInfo = new ExifInfo( Settings.CLASS_LOADER.getResource( "exif-test-sony-P200.jpg" ) );
+        final String SONY_P200_IMAGE = "exif-test-sony-P200.jpg";
+        URL imageUrl = Settings.CLASS_LOADER.getResource( SONY_P200_IMAGE );
+        if ( imageUrl == null ) {
+            fail("Unable to locate the test image: " + SONY_P200_IMAGE);
+        }
+        ExifInfo exifInfo = new ExifInfo( imageUrl );
         exifInfo.decodeExifTags();
         //System.out.println( exifInfo.getAllTags() );
         assertEquals( "Aperture parsing verification", "f/5.6", exifInfo.aperture );

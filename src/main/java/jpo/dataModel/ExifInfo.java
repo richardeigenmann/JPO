@@ -21,7 +21,7 @@ import java.util.logging.Logger;
 /*
  ExifInfo.java: This class interacts with Drew Noake's library and extracts the Exif information
 
- Copyright (C) 2002 - 2014  Richard Eigenmann.
+ Copyright (C) 2002 - 2017  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -134,6 +134,11 @@ public class ExifInfo {
      * This method decodes the Exif tags and stores the data
      */
     public void decodeExifTags() {
+        if ( pictureUrl == null ) {
+            LOGGER.severe( "Can't decode Exif tags on a null URL!");
+            Thread.dumpStack();
+            return;
+        }
         try {
             InputStream highresStream = pictureUrl.openStream();
             Metadata metadata = ImageMetadataReader.readMetadata( new BufferedInputStream( highresStream ) );
@@ -210,6 +215,7 @@ public class ExifInfo {
             }
         } catch ( ImageProcessingException | NullPointerException | IOException x ) {
             LOGGER.severe( x.getMessage() );
+            Thread.dumpStack();
         }
 
     }

@@ -1,5 +1,12 @@
 package jpo.dataModel;
 
+import java.io.File;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import static junit.framework.TestCase.fail;
+import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 /**
@@ -10,14 +17,29 @@ import org.junit.Test;
 public class XmlReaderTest {
 
     /**
-     * Jpo uses the dtd file in the classpath. As this can go missing if the
-     * build is poor this unit test checks whether it is there
+     * Test the correction of a Jar reference where it is not needed
      */
     @Test
     public void testCorrectJarReferences() {
-        SortableDefaultMutableTreeNode n = new SortableDefaultMutableTreeNode();
-        XmlReader.correctJarReferences(n);
-        //TODO: figure out how to test this thing!
+        final SortableDefaultMutableTreeNode rootNode = new SortableDefaultMutableTreeNode();
+
+        URL image = Settings.CLASS_LOADER.getResource( "exif-test-canon-eos-350d.jpg" );
+        File imageFile = null;
+        try {
+            imageFile = new File (image.toURI());
+        } catch ( URISyntaxException ex ) {
+            Logger.getLogger( XmlReaderTest.class.getName() ).log( Level.SEVERE, null, ex );
+            fail("Could not create imageFile");
+        }
+                
+        final PictureInfo pi = new PictureInfo( imageFile.toString(), "First Picture", "Reference1" );
+        final SortableDefaultMutableTreeNode picture1 = new SortableDefaultMutableTreeNode(pi);
+        
+        rootNode.add( picture1 );
+        
+        XmlReader.correctJarReferences( rootNode );
+        
+        assertEquals(((PictureInfo) picture1.getUserObject()).getImageFilename(), pi.getImageFilename());
     }
 
 }
