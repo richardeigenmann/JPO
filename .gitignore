@@ -9,3 +9,4 @@ jacoco.exec
 report/
 report.xml
 .gradle
+/Java Picture Organizer/.nb-gradle/

@@ -17,6 +17,7 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -47,6 +48,7 @@ public class ThumbnailControllerTest {
     private Thumbnail thumbnail = null;
 
     @Test
+    @Ignore
     public void testConstructor() {
 
         // TravisCI runs headless so we can't execute the below test

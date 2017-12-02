@@ -214,7 +214,7 @@ public class Settings {
     /**
      * The number of thumbnail creation threads to spawn.
      *
-     * @see jpo.gui.ThumbnailCreationQueue
+     * @see jpo.cache.ThumbnailCreationQueue
      */
     public static final int numberOfThumbnailCreationThreads = 5;
     /**

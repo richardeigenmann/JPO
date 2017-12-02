@@ -23,8 +23,8 @@ public class RemoveOldLowresThumbnailsRequest implements Request {
     private final StringBuilder lowresUrls;
     
     /**
-     *
-     * @return
+     * Returns a StringBuilder of the lowres Urls
+     * @return Returns a StringBuilder of the lowres Urls
      */
     public StringBuilder getLowresUrls() {
         return lowresUrls;

@@ -25,9 +25,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.fail;
 import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+import org.junit.Ignore;
 
 /**
  *
@@ -45,6 +46,7 @@ public class ThumbnailsPanelControllerTest {
      * ThumbnailsPanelController.
      */
     @Test
+    @Ignore
     public void testGetMouseRectangle() {
         try {
             SwingUtilities.invokeAndWait( () -> {

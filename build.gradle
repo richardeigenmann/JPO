@@ -1,1 +1,93 @@
-ant.importBuild 'build.xml'
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        //compile 'com.github.jengelman.gradle.plugins:shadow:2.0.1'
+        classpath 'com.github.jengelman.gradle.plugins:shadow:2.0.1'
+    }    
+}
+
+apply plugin: "com.github.johnrengelman.shadow"
+apply plugin: 'java'
+
+repositories {
+    mavenCentral()
+}
+
+
+dependencies {
+    //compile 'com.miglayout:miglayout-swing:5.0'
+    compile files('libs/commons-compress-1.8.jar')
+    compile files('libs/commons-io-2.4.jar')
+    compile files('libs/commons-jcs-core-2.0-beta-1.jar')
+    compile files('libs/commons-jcs-jcache-2.0-beta-1.jar')
+    compile files('libs/commons-lang3-3.3.2.jar')
+    compile files('libs/commons-net-3.3.jar')
+    compile files('libs/gdata-core-1.0.jar')
+    compile files('libs/gdata-maps-2.0.jar')
+    compile files('libs/gdata-media-1.0.jar')
+    compile files('libs/gdata-photos-2.0.jar')
+    compile files('libs/guava-16.0.1.jar')
+    compile files('libs/javax.mail-1.5.1.jar')
+    compile files('libs/jsch-0.1.51.jar')
+    compile files('libs/jwizz-0.1.4.jar')
+    compile files('libs/jxmapviewer2-2.0.jar')
+    compile files('libs/metadata-extractor-2.8.1.jar')
+    compile files('libs/miglayout-4.0.jar')
+    compile files('libs/docking-frames-common.jar')
+    compile files('libs/docking-frames-core.jar')
+    compile files('libs/TagCloud.jar')
+    compile files('libs/xmpcore-5.1.2.jar')
+
+    testCompile "junit:junit:4.12"
+
+}
+
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+
+sourceSets {
+    main {
+        resources {
+            srcDirs = ['src/images', 'dtd', 'src/main/java/jpo/cache']
+            includes = ["**/*.gif", "**/*.jpg", "**/dtd", "**/css", "**/html", "**/js", "**/txt","**/ccf"]
+        }
+    }
+    test {
+        resources  {
+            srcDirs = ['src/test/images', 'src/main/java/jpo/cache']
+            includes = ["**/*.jpg","**/ccf"]
+        }
+    }
+}
+    
+
+/*test {
+println(classpath.asPath)
+}*/
+
+jar {
+    baseName = 'jpo'
+    version =  '0.13'
+    
+    manifest {
+        attributes(
+            "Class-Path": configurations.compile.collect { it.getName() }.join(' '),
+            "Main-Class": 'Main',
+            'Permissions': 'all-permissions'
+        )
+        attributes(
+            [ "Copy": "(c) 2001-2017, Richard Eigenmann, Zürich, Switzerland" ], "Copyright"
+        )
+    }
+    into ('jpo/images') { from 'src/images' }
+}
+
+shadowJar {
+    into ('jpo/images') { from 'src/images' }
+}
+//ant.importBuild 'build.xml'

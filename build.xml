@@ -23,8 +23,8 @@
     <property name="ant-junit4" value="${compile-libs.dir}/ant-junit4.jar"/>
 
     <property name="src.dir" value="src"/>
-    <property name="src.java.dir" value="${src.dir}/java"/>
-    <property name="src.cache.dir" value="${src.dir}/java/jpo/cache"/>
+    <property name="src.java.dir" value="${src.dir}/main/java"/>
+    <property name="src.cache.dir" value="${src.dir}/main/java/jpo/cache"/>
     <property name="src.images.dir" value="${src.dir}/images"/>
     <property name="src.docs.dir" value="${src.dir}/docsrc"/>
     <property name="src.dtd.dir" value="${src.dir}/dtd"/>
@@ -272,7 +272,7 @@
                 <attribute name="Main-Class" value="${app.main.class}"/>
                 <attribute name="Class-Path" value="${manifest-classpath}"/>
                 <section name="Copyright">
-                    <attribute name="Copy" value="(c) 2001-2016, Richard Eigenmann, Zürich, Switzerland"/>
+                    <attribute name="Copy" value="(c) 2001-2017, Richard Eigenmann, Zürich, Switzerland"/>
                 </section>
                 <attribute name="Permissions" value="all-permissions" />
             </manifest>

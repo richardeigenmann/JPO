@@ -9,7 +9,7 @@ import jpo.gui.ApplicationEventHandler;
 /*
  Main.java:  starting point for the JPO application
 
- Copyright (C) 2002 - 2016  Richard Eigenmann.
+ Copyright (C) 2002 - 2017  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -38,7 +38,8 @@ public class Main {
      * <p>
      *
      * The method verifies that the user has the correct Java Virtual Machine (>
-     * 1.7.0) and then created a new {@link Jpo} object.
+     * 1.7.0) and then creates a new {@link ApplicationEventHandler} object which
+     * it asks to post a {@link ApplicationStartupRequest} to.
      *
      * @param args The command line arguments
      */
@@ -69,7 +70,7 @@ public class Main {
         StringBuilder good = new StringBuilder( "These classes were found:\n" );
         StringBuilder missing = new StringBuilder( "The Installation is faulty! The following classes and libraries are missing:\n" );
 
-        testClass( "jpo.gui.ApplicationEventHandler", "Jpo-0.13.jar", good, missing );
+   /*     testClass( "jpo.gui.ApplicationEventHandler", "Jpo-0.13.jar", good, missing );
         testClass( "org.TagCloud.TagCloud", "TagCloud.jar", good, missing );
         testClass( "org.apache.commons.compress.archivers.zip.ZipArchiveEntry", "commons-compress-1.8.jar", good, missing );
         testClass( "org.apache.commons.io.IOUtils", "commons-io-2.4.jar", good, missing );
@@ -96,7 +97,7 @@ public class Main {
 
         if ( missing.length() > 80 ) {
             System.out.println( missing.toString() );
-        }
+        }*/
 
         new ApplicationEventHandler();
         JpoEventBus.getInstance().post( new ApplicationStartupRequest() );

@@ -5,9 +5,8 @@
  */
 package jpo.cache;
 
-
-import jpo.dataModel.Settings;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -18,8 +17,9 @@ public class ThumbnailCreationFactoryTest {
 
 
     @Test
+    @Ignore
     public void thumbnailCreationFactoryTest() {
-        ThumbnailCreationFactory tcf = new ThumbnailCreationFactory( Settings.ThumbnailCreationThreadPollingTime );
+        ThumbnailCreationFactory tcf = new ThumbnailCreationFactory( 500 );
         Assert.assertNotNull(tcf);
         tcf.endThread = true;
     }

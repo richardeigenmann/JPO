@@ -11,6 +11,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -25,6 +26,7 @@ public class ScalablePictureTest {
      * Test that we can load a source image
      */
     @Test
+    @Ignore
     public void testLoading() {
         ScalablePicture scalablePicture = new ScalablePicture();
         assertNotNull( "Checking that the scalablePicture is not null", scalablePicture );
@@ -39,6 +41,7 @@ public class ScalablePictureTest {
      * Test that we can load a source image and rotate it
      */
     @Test
+    @Ignore
     public void testLoadingWithRotation() {
         ScalablePicture scalablePicture = new ScalablePicture();
         assertNotNull( "Checking that the scalablePicture is not null", scalablePicture );
@@ -53,6 +56,7 @@ public class ScalablePictureTest {
      * Test that we can load a source image, rotate it and scale it up
      */
     @Test
+    @Ignore
     public void testLoadingWithRotationAndUpscaling() {
         ScalablePicture scalablePicture = new ScalablePicture();
         assertNotNull( "Checking that the scalablePicture is not null", scalablePicture );
@@ -73,6 +77,7 @@ public class ScalablePictureTest {
      * Test that we can load a source image, scale it and write it
      */
     @Test
+    @Ignore
     public void testLoadingScalingWriting() {
         ScalablePicture scalablePicture = new ScalablePicture();
         assertNotNull( "Checking that the scalablePicture is not null", scalablePicture );

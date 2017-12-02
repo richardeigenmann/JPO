@@ -40,6 +40,7 @@ import jpo.dataModel.SingleNodeNavigator;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
 import static org.junit.Assert.*;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -190,6 +191,7 @@ public class PicturePopupMenuTest {
      * Get the children
      */
     @Test
+    @Ignore
     public void testGetChildren() {
         assertEquals( "My Picture", title.getText() );
         assertEquals( "Show Picture", showPicture.getText() );

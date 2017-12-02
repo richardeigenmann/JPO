@@ -7,6 +7,7 @@ package jpo.gui.swing;
 
 import java.awt.geom.Point2D;
 import static org.junit.Assert.*;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.jxmapviewer.JXMapViewer;
 import org.jxmapviewer.viewer.GeoPosition;
@@ -21,6 +22,7 @@ public class MapViewerTest {
      * Test of getJXMapViewer method, of class MapViewer.
      */
     @Test
+    @Ignore
     public void testGetJXMapViewer() {
         MapViewer instance = new MapViewer();
         JXMapViewer result = instance.getJXMapViewer();
@@ -31,6 +33,7 @@ public class MapViewerTest {
      * Test of setMarker method, of class MapViewer.
      */
     @Test
+    @Ignore
     public void testSetMarker() {
         Point2D.Double latLng = new Point2D.Double(47.557306, 7.797439);
         MapViewer mapViewer = new MapViewer();

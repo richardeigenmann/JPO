@@ -24,7 +24,7 @@ import jpo.dataModel.SortableDefaultMutableTreeNode;
 /**
  * The ThumbnailQueueRequest is the type of object that will sit on the
  * {@link ThumbnailCreationQueue} with a references to the
- * {@link ThumbnailController}, the queue priority and an indicator whether the
+ * {@link jpo.gui.ThumbnailController}, the queue priority and an indicator whether the
  * thumbnail creation must be forced. TODO: Analyse how often a new picture is
  * thrown on the queue. Could be a bit too often... TODO: Perhaps we should not
  * throw thumbnails on the queue but lowresimages as these are not exactly the
@@ -68,10 +68,9 @@ public class ThumbnailQueueRequest implements Comparable<ThumbnailQueueRequest> 
      * @param node the node for which the image is to be created
      * @param priority	The queue priority with which the thumbnail is to be
      * created Possible values are
-     * {@link #HIGH_PRIORITY}, {@link #MEDIUM_PRIORITY}, {@link #LOW_PRIORITY}
-     * and {@link #LOWEST_PRIORITY}. //* @param force	set to true if the
-     * ThumbnailController must be read from source if set to false it is
-     * permissible to just reload the cached ThumbnailController.
+     * {@link QUEUE_PRIORITY#HIGH_PRIORITY}, {@link QUEUE_PRIORITY#MEDIUM_PRIORITY}, 
+     * {@link QUEUE_PRIORITY#LOW_PRIORITY}
+     * and {@link QUEUE_PRIORITY#LOWEST_PRIORITY}. 
      * @param size the maximum size of the thumbnail
      */
     public ThumbnailQueueRequest(
@@ -106,13 +105,14 @@ public class ThumbnailQueueRequest implements Comparable<ThumbnailQueueRequest> 
     }
 
     /**
-     * sets the priority in which the {@link ThumbnailController} is to be
+     * sets the priority in which the {@link jpo.gui.ThumbnailController} is to be
      * created. The possible values are
-     * {@link #LOWEST_PRIORITY}, {@link #LOW_PRIORITY}, {@link #MEDIUM_PRIORITY}
-     * or {@link #HIGH_PRIORITY}. A high numeric value means less priority.
+     * {@link QUEUE_PRIORITY#LOWEST_PRIORITY}, {@link QUEUE_PRIORITY#LOW_PRIORITY}, 
+     * {@link QUEUE_PRIORITY#MEDIUM_PRIORITY}
+     * or {@link QUEUE_PRIORITY#HIGH_PRIORITY}. A high numeric value means less priority.
      *
      * @param newPriority The priority of the request:
-     * {@link #LOW_PRIORITY}, {@link #MEDIUM_PRIORITY} or {@link #HIGH_PRIORITY}
+     * {@link QUEUE_PRIORITY#LOW_PRIORITY}, {@link QUEUE_PRIORITY#MEDIUM_PRIORITY} or {@link QUEUE_PRIORITY#HIGH_PRIORITY}
      */
     public void setPriority( QUEUE_PRIORITY newPriority ) {
         priority = newPriority;
