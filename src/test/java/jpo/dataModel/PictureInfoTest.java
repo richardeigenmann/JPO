@@ -1,8 +1,15 @@
 package jpo.dataModel;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.IOException;
+import java.io.StringWriter;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertNull;
 import static junit.framework.TestCase.fail;
@@ -20,7 +27,7 @@ public class PictureInfoTest {
      */
     @Test
     public void testToString() {
-        PictureInfo pi = new PictureInfo( "c:\\picture.jpg", "My Sample Picture", "Film 123" );
+        PictureInfo pi = new PictureInfo( "c:\\picture.jpg", "My Sample Picture" );
         assertEquals( "Should return the description", "My Sample Picture", pi.toString() );
     }
 
@@ -29,7 +36,7 @@ public class PictureInfoTest {
      */
     @Test
     public void testGetDescription() {
-        PictureInfo pi = new PictureInfo( "c:\\picture.jpg", "My Sample Picture", "Film 123" );
+        PictureInfo pi = new PictureInfo( "c:\\picture.jpg", "My Sample Picture" );
         assertEquals( "Should return the description", "My Sample Picture", pi.getDescription() );
     }
 
@@ -101,7 +108,7 @@ public class PictureInfoTest {
      */
     @Test
     public void testGetHighresLocation() {
-        PictureInfo pi = new PictureInfo( "file:///dir/picture.jpg", "My Sample Picture", "Film 123" );
+        PictureInfo pi = new PictureInfo( "file:///dir/picture.jpg", "My Sample Picture" );
         String highresLocation = pi.getImageLocation();
         assertEquals( "Checking getHighresLocation", "file:///dir/picture.jpg", highresLocation );
     }
@@ -111,7 +118,7 @@ public class PictureInfoTest {
      */
     @Test
     public void testGetHighresFile() {
-        PictureInfo pi = new PictureInfo( "file:///dir/picture.jpg", "My Sample Picture", "Film 123" );
+        PictureInfo pi = new PictureInfo( "file:///dir/picture.jpg", "My Sample Picture" );
         File highresFile = pi.getImageFile();
         assertEquals( "Checking getHighresFile", new File( "/dir/picture.jpg" ), highresFile );
     }
@@ -123,7 +130,7 @@ public class PictureInfoTest {
      */
     @Test
     public void testGetHighresURL() throws Exception {
-        PictureInfo pi = new PictureInfo( "file://dir/picture.jpg", "My Sample Picture", "Film 123" );
+        PictureInfo pi = new PictureInfo( "file://dir/picture.jpg", "My Sample Picture" );
         URL highresURL = pi.getImageURL();
         assertEquals( "Checking getHighresURL", new URL( "file://dir/picture.jpg" ), highresURL );
     }
@@ -132,18 +139,41 @@ public class PictureInfoTest {
      * Test of getImageURLOrNull method, of class PictureInfo.
      */
     @Test
-    public void testGetHighresURLOrNull() {
-        PictureInfo pi1 = new PictureInfo( "file://dir/picture.jpg", "My Sample Picture", "Film 123" );
+    public void testGetImageURLOrNull() {
+        PictureInfo pi1 = new PictureInfo( "file://dir/picture.jpg", "My Sample Picture" );
         URL highresURL1 = pi1.getImageURLOrNull();
         try {
-            assertEquals( "Checking getHighresURLOrNull", new URL( "file://dir/picture.jpg" ), highresURL1 );
+            assertEquals( "Checking getImageURLOrNull", new URL( "file://dir/picture.jpg" ), highresURL1 );
         } catch ( MalformedURLException ex ) {
             fail( "Test should not have thrown an exception: " + ex.getMessage() );
         }
 
-        PictureInfo pi2 = new PictureInfo( "noProtocol://dir/picture.jpg", "My Sample Picture", "Film 123" );
+        PictureInfo pi2 = new PictureInfo( "noProtocol://dir/picture.jpg", "My Sample Picture" );
         URL highresURL2 = pi2.getImageURLOrNull();
         assertNull( "Checking getHighresURLOrNull", highresURL2 );
+    }
+
+    /**
+     * Test of getImageURIOrNull method, of class PictureInfo.
+     */
+    @Test
+    public void testGetImageURIOrNull() {
+        PictureInfo pi = new PictureInfo();
+        String goodLocation = "file://image.jpg";
+        pi.setImageLocation( goodLocation );
+        URI pulledUri = pi.getImageURIOrNull();
+        assertEquals( goodLocation, pulledUri.toString() );
+
+        PictureInfo pi2 = new PictureInfo();
+        URI nullUri = pi2.getImageURIOrNull();
+        assertEquals( "", nullUri.toString() );
+
+        PictureInfo pi3 = new PictureInfo();
+        String badLocation = "?äöü&~`";
+        pi3.setImageLocation( badLocation );
+        URI nullUri2 = pi3.getImageURIOrNull();
+        assertNull( nullUri2 );
+
     }
 
     /**
@@ -223,4 +253,68 @@ public class PictureInfoTest {
         pi.setDescription( "Step 3" );
         assertEquals( "The detached listener should not have fired", 1, eventsReceived );
     }
+
+    /**
+     * Test dumpToXml
+     */
+    @Test
+    public void testDumpToXml() {
+        final PictureInfo pi = new PictureInfo( Settings.CLASS_LOADER.getResource( "exif-test-canon-eos-350d.jpg" ), "First Picture" );
+        pi.setComment( "Comment" );
+        pi.setFilmReference( "Reference" );
+        pi.setRotation( 45.1 );
+        pi.setPhotographer( "Richard Eigenmann" );
+        pi.setLatLng( "22.67x33.89" );
+        pi.setCopyrightHolder( "Sandra Keller" );
+        pi.addCategoryAssignment( "1" );
+        pi.setChecksum( 1234 );
+
+        StringWriter sw = new StringWriter();
+        try (
+                //FileWriter sw = new FileWriter( "/tmp/output.xml" );
+                BufferedWriter bw = new BufferedWriter( sw ); ) {
+            pi.dumpToXml( bw );
+        } catch ( IOException ex ) {
+            Logger.getLogger( PictureInfoTest.class.getName() ).log( Level.SEVERE, "The dumpToXml should really not throw an IOException", ex );
+            fail( "Unexpected IOException" );
+        }
+
+        String expected = "<picture>\n"
+                + "\t<description><![CDATA[First Picture]]></description>\n"
+                + "\t<file_URL>file:/richi/Src/Jpo/build/resources/test/exif-test-canon-eos-350d.jpg</file_URL>\n"
+                + "\t<checksum>1234</checksum>\n"
+                + "\t<COMMENT>Comment</COMMENT>\n"
+                + "\t<PHOTOGRAPHER>Richard Eigenmann</PHOTOGRAPHER>\n"
+                + "\t<film_reference>Reference</film_reference>\n"
+                + "\t<COPYRIGHT_HOLDER>Sandra Keller</COPYRIGHT_HOLDER>\n"
+                + "\t<ROTATION>45.100000</ROTATION>\n"
+                + "\t<LATLNG>22.670000x33.890000</LATLNG>\n"
+                + "\t<categoryAssignment index=\"1\"/>\n"
+                + "</picture>\n";
+
+        String result = sw.toString();
+        assertEquals( expected, result );
+    }
+
+    @Test
+    public void testChecksum() {
+        PictureInfo pi = new PictureInfo();
+        pi.setChecksum( 123456789 );
+        assertEquals( 123456789, pi.getChecksum() );
+        assertEquals( "123456789", pi.getChecksumAsString() );
+
+        pi.setChecksum( Long.MIN_VALUE );
+        assertEquals( Long.MIN_VALUE, pi.getChecksum() );
+        assertEquals( "N/A", pi.getChecksumAsString() );
+    }
+
+    @Test
+    public void testCalculateChecksum() {
+        URL image = Settings.CLASS_LOADER.getResource( "exif-test-canon-eos-350d.jpg" );
+        PictureInfo pi = new PictureInfo( image, "Sample Picture" );
+        assertEquals( "N/A", pi.getChecksumAsString() );
+        pi.calculateChecksum();
+        assertEquals( "778423829", pi.getChecksumAsString() );
+    }
+
 }

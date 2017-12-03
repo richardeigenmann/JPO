@@ -80,11 +80,8 @@ public class JpoCache {
     private JpoCache() {
         LOGGER.info( "Creating JpoCache");
         CompositeCacheManager ccm = CompositeCacheManager.getUnconfiguredInstance();
-        System.out.println( "2" );
         Properties props = loadProperties();
-        System.out.println( "3" );
         ccm.configure( props );
-        System.out.println( "4" );
 
         try {
             highresMemoryCache = JCS.getInstance( HIGHRES_CACHE_REGION_NAME );

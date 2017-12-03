@@ -40,23 +40,23 @@ public class SortableDefaultMutableTreeNodeTest {
 
     private SortableDefaultMutableTreeNode group5;
 
-    private final PictureInfo pi1 = new PictureInfo( "file:///images/image1.jpg", "Fist Picture", "Reference1" );
+    private final PictureInfo pi1 = new PictureInfo( "file:///images/image1.jpg", "Fist Picture");
 
     private SortableDefaultMutableTreeNode picture1;
 
-    private final PictureInfo pi2 = new PictureInfo( "file:///images/image2.jpg", "Second Picture", "Reference2" );
+    private final PictureInfo pi2 = new PictureInfo( "file:///images/image2.jpg", "Second Picture" );
 
     private SortableDefaultMutableTreeNode picture2;
 
-    private final PictureInfo pi3 = new PictureInfo( "file:///images/image3.jpg", "Third Picture", "Reference3" );
+    private final PictureInfo pi3 = new PictureInfo( "file:///images/image3.jpg", "Third Picture");
 
     private SortableDefaultMutableTreeNode picture3;
 
-    private final PictureInfo pi4 = new PictureInfo( "file:///images/image4.jpg", "Fourth Picture", "Reference4" );
+    private final PictureInfo pi4 = new PictureInfo( "file:///images/image4.jpg", "Fourth Picture" );
 
     private SortableDefaultMutableTreeNode picture4;
 
-    private final PictureInfo pi5 = new PictureInfo( "file:///images/image5.jpg", "Fifth Picture", "Reference5" );
+    private final PictureInfo pi5 = new PictureInfo( "file:///images/image5.jpg", "Fifth Picture");
 
     private SortableDefaultMutableTreeNode picture5;
 

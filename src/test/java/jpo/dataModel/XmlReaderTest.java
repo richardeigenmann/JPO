@@ -32,7 +32,7 @@ public class XmlReaderTest {
             fail("Could not create imageFile");
         }
                 
-        final PictureInfo pi = new PictureInfo( imageFile.toString(), "First Picture", "Reference1" );
+        final PictureInfo pi = new PictureInfo( imageFile.toString(), "First Picture" );
         final SortableDefaultMutableTreeNode picture1 = new SortableDefaultMutableTreeNode(pi);
         
         rootNode.add( picture1 );

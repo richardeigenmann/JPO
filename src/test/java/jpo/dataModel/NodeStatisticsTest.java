@@ -32,23 +32,23 @@ public class NodeStatisticsTest{
 
     private SortableDefaultMutableTreeNode group3;
 
-    private final PictureInfo pi1 = new PictureInfo(Settings.CLASS_LOADER.getResource( "exif-test-canon-eos-350d.jpg" ), "First Picture", "Reference1");
+    private final PictureInfo pi1 = new PictureInfo(Settings.CLASS_LOADER.getResource( "exif-test-canon-eos-350d.jpg" ), "First Picture");
 
     private SortableDefaultMutableTreeNode picture1;
 
-    private final PictureInfo pi2 = new PictureInfo(Settings.CLASS_LOADER.getResource( "exif-test-canon-eos-60d.jpg" ), "Second Picture", "Reference2");
+    private final PictureInfo pi2 = new PictureInfo(Settings.CLASS_LOADER.getResource( "exif-test-canon-eos-60d.jpg" ), "Second Picture");
 
     private SortableDefaultMutableTreeNode picture2;
 
-    private final PictureInfo pi3 = new PictureInfo("images/image3.jpg", "Third Picture", "Reference3");
+    private final PictureInfo pi3 = new PictureInfo("images/image3.jpg", "Third Picture");
 
     private SortableDefaultMutableTreeNode picture3;
 
-    private final PictureInfo pi4 = new PictureInfo("images/image4.jpg", "Fourth Picture", "Reference4");
+    private final PictureInfo pi4 = new PictureInfo("images/image4.jpg", "Fourth Picture");
 
     private SortableDefaultMutableTreeNode picture4;
 
-    private final PictureInfo pi5 = new PictureInfo("images/image5.jpg", "Fifth Picture", "Reference5");
+    private final PictureInfo pi5 = new PictureInfo("images/image5.jpg", "Fifth Picture");
 
     private SortableDefaultMutableTreeNode picture5;
 
