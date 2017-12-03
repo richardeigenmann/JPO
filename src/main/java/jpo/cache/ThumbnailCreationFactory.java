@@ -92,7 +92,8 @@ public class ThumbnailCreationFactory implements Runnable {
                 try {
                     Thread.sleep( pollingInterval );
                 } catch ( InterruptedException x ) {
-                    // so we got interrupted? Don' care.
+                    // Restore interrupted state
+                    Thread.currentThread().interrupt();
                 }
             } else {
                 processQueueRequest( request );
@@ -121,7 +122,7 @@ public class ThumbnailCreationFactory implements Runnable {
                 ImageBytes imageBytes = JpoCache.getInstance().getThumbnailImageBytes( pictureinfo.getImageURL(),
                         pictureinfo.getRotation(),
                         request.getSize() );
-                if (imageBytes == null ) {
+                if ( imageBytes == null ) {
                     request.setIcon( BROKEN_THUMBNAIL_PICTURE );
                 } else {
                     request.setIcon( new ImageIcon( imageBytes.getBytes() ) );
@@ -130,7 +131,7 @@ public class ThumbnailCreationFactory implements Runnable {
                 List<SortableDefaultMutableTreeNode> childPictureNodes = request.getNode().getChildPictureNodes( false );
 
                 ImageBytes imageBytes = JpoCache.getInstance().getGroupThumbnailImageBytes( childPictureNodes );
-                if (imageBytes == null ) {
+                if ( imageBytes == null ) {
                     request.setIcon( BROKEN_THUMBNAIL_PICTURE );
                 } else {
                     request.setIcon( new ImageIcon( imageBytes.getBytes() ) );
@@ -144,6 +145,5 @@ public class ThumbnailCreationFactory implements Runnable {
         }
         request.notifyCallbackHandler();
     }
-
 
 }

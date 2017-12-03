@@ -17,7 +17,7 @@ import javax.swing.JOptionPane;
 /*
  JpoWriter.java:  Writes the JPO collection to an xml formatted file
 
- Copyright (C) 2002-2014  Richard Eigenmann.
+ Copyright (C) 2002-2017  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -39,22 +39,7 @@ public class JpoWriter {
     /**
      * Defines a logger for this class
      */
-    private static final Logger LOGGER = Logger.getLogger(JpoWriter.class.getName() );
-
-    /**
-     * variable to hold the name of the output file
-     */
-    private final File xmlOutputFile;
-
-    /**
-     * the node to start from
-     */
-    private final SortableDefaultMutableTreeNode startNode;
-
-    /**
-     * Indicates that the pictures should be copied too.
-     */
-    private final boolean copyPics;
+    private static final Logger LOGGER = Logger.getLogger( JpoWriter.class.getName() );
 
     /**
      * @param xmlOutputFile The name of the file that is to be created
@@ -63,23 +48,15 @@ public class JpoWriter {
      */
     public JpoWriter( File xmlOutputFile,
             SortableDefaultMutableTreeNode startNode, boolean copyPics ) {
-        this.xmlOutputFile = xmlOutputFile;
-        this.startNode = startNode;
-        this.copyPics = copyPics;
 
-        write();
+        write( xmlOutputFile, startNode, copyPics );
     }
 
-
-    /**
-     * Holds the target directory for the pictures if copyPics is true
-     */
-    private File highresTargetDir;
-    
     /**
      * method that is invoked by the thread to do things asynchronously
      */
-    public void write() {
+    public static void write( File xmlOutputFile, SortableDefaultMutableTreeNode startNode, boolean copyPics ) {
+        File highresTargetDir = null;
         try {
             if ( copyPics ) {
                 highresTargetDir = new File( xmlOutputFile.getParentFile(), "Highres" );
@@ -91,65 +68,71 @@ public class JpoWriter {
                 }
             }
 
-            BufferedWriter bufferedWriter = new BufferedWriter( new OutputStreamWriter( new FileOutputStream( xmlOutputFile ), "UTF-8" ) );
+            try ( BufferedWriter bufferedWriter = new BufferedWriter( new OutputStreamWriter( new FileOutputStream( xmlOutputFile ), "UTF-8" ) ); ) {
 
-            // header
-            bufferedWriter.write( "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" );
-            bufferedWriter.newLine();
-            bufferedWriter.write( "<!DOCTYPE collection SYSTEM \"" + Settings.COLLECTION_DTD + "\">" );
-            bufferedWriter.newLine();
-
-            enumerateGroup( startNode, bufferedWriter );
-
-            // categories
-            bufferedWriter.write( "<categories>" );
-            bufferedWriter.newLine();
-
-            Iterator i = startNode.getPictureCollection().getCategoryIterator();
-            Integer key;
-            String category;
-            while ( i.hasNext() ) {
-                key = (Integer) i.next();
-                category = startNode.getPictureCollection().getCategory( key );
-                bufferedWriter.write( "\t<category index=\"" + key.toString() + "\">" );
+                // header
+                bufferedWriter.write( "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" );
                 bufferedWriter.newLine();
-                bufferedWriter.write( "\t\t<categoryDescription><![CDATA[" + category + "]]></categoryDescription>" );
+                bufferedWriter.write( "<!DOCTYPE collection SYSTEM \"" + Settings.COLLECTION_DTD + "\">" );
                 bufferedWriter.newLine();
-                bufferedWriter.write( "\t</category>" );
+
+                enumerateGroup( startNode, startNode, bufferedWriter, highresTargetDir, copyPics );
+
+                // categories
+                bufferedWriter.write( "<categories>" );
                 bufferedWriter.newLine();
+
+                Iterator i = startNode.getPictureCollection().getCategoryIterator();
+                Integer key;
+                String category;
+                while ( i.hasNext() ) {
+                    key = (Integer) i.next();
+                    category = startNode.getPictureCollection().getCategory( key );
+                    bufferedWriter.write( "\t<category index=\"" + key.toString() + "\">" );
+                    bufferedWriter.newLine();
+                    bufferedWriter.write( "\t\t<categoryDescription><![CDATA[" + category + "]]></categoryDescription>" );
+                    bufferedWriter.newLine();
+                    bufferedWriter.write( "\t</category>" );
+                    bufferedWriter.newLine();
+                }
+
+                bufferedWriter.write( "</categories>" );
+                bufferedWriter.newLine();
+
+                bufferedWriter.write( "</collection>" );
+                bufferedWriter.newLine();
+
+                bufferedWriter.close();
+
+                writeCollectionDTD( xmlOutputFile.getParentFile() );
+            } catch ( IOException x ) {
+                //x.printStackTrace();
+                LOGGER.log( Level.INFO, "IOException: {0}", x.getMessage() );
+                JOptionPane.showMessageDialog( null, x.getMessage(),
+                        "JpoWriter: IOExeption",
+                        JOptionPane.ERROR_MESSAGE );
             }
-
-            bufferedWriter.write( "</categories>" );
-            bufferedWriter.newLine();
-
-            bufferedWriter.write( "</collection>" );
-            bufferedWriter.newLine();
-
-            bufferedWriter.close();
-
-            writeCollectionDTD( xmlOutputFile.getParentFile() );
 
         } catch ( SecurityException x ) {
             LOGGER.log( Level.INFO, x.getMessage() );
             JOptionPane.showMessageDialog( null, x.getMessage(),
                     "XmlDistiller: SecurityException",
                     JOptionPane.ERROR_MESSAGE );
-        } catch ( IOException x ) {
-            //x.printStackTrace();
-            LOGGER.log( Level.INFO, "XmlDistiller.run: IOException: {0}", x.getMessage() );
-            JOptionPane.showMessageDialog( null, x.getMessage(),
-                    "XmlDistiller: IOExeption",
-                    JOptionPane.ERROR_MESSAGE );
+
         }
     }
 
     /**
      * recursively invoked method to report all groups.
+     *
      * @param groupNode The group node
      * @param bufferedWriter The writer
      * @throws IOException bubbel-up IOException
      */
-    private void enumerateGroup( SortableDefaultMutableTreeNode groupNode, BufferedWriter bufferedWriter ) throws IOException {
+    private static void enumerateGroup( SortableDefaultMutableTreeNode startNode, SortableDefaultMutableTreeNode groupNode,
+            BufferedWriter bufferedWriter,
+            File highresTargetDir,
+            boolean copyPics ) throws IOException {
         GroupInfo groupInfo = (GroupInfo) groupNode.getUserObject();
 
         groupInfo.dumpToXml( bufferedWriter, groupNode == startNode, groupNode.getPictureCollection().getAllowEdits() );
@@ -159,9 +142,9 @@ public class JpoWriter {
         while ( kids.hasMoreElements() ) {
             childNode = (SortableDefaultMutableTreeNode) kids.nextElement();
             if ( childNode.getUserObject() instanceof GroupInfo ) {
-                enumerateGroup( childNode, bufferedWriter );
+                enumerateGroup( startNode, childNode, bufferedWriter, highresTargetDir, copyPics );
             } else {
-                writePicture( childNode, bufferedWriter );
+                writePicture( childNode, bufferedWriter, highresTargetDir, copyPics );
             }
         }
 
@@ -170,11 +153,16 @@ public class JpoWriter {
 
     /**
      * write a picture to the output
-     * @param pictureNode  the picture to write
+     *
+     * @param pictureNode the picture to write
      * @param bufferedWriter the writer to which to write
      * @throws IOException bubbel-up IOException
      */
-    private void writePicture( SortableDefaultMutableTreeNode pictureNode, BufferedWriter bufferedWriter ) throws IOException {
+    private static void writePicture( SortableDefaultMutableTreeNode pictureNode,
+            BufferedWriter bufferedWriter,
+            File highresTargetDir,
+            boolean copyPics
+    ) throws IOException {
         PictureInfo pictureInfo = (PictureInfo) pictureNode.getUserObject();
 
         if ( copyPics ) {
@@ -193,10 +181,10 @@ public class JpoWriter {
      *
      * @param directory The directory to write to
      */
-    public void writeCollectionDTD( File directory ) {
-        ClassLoader cl = this.getClass().getClassLoader();
+    public static void writeCollectionDTD( File directory ) {
+        ClassLoader cl = JpoWriter.class.getClassLoader();
         try (
-                InputStream in = cl.getResource( "jpo/collection.dtd" ).openStream();
+                InputStream in = cl.getResource( "collection.dtd" ).openStream();
                 FileOutputStream outStream = new FileOutputStream( new File( directory, "collection.dtd" ) );
                 BufferedInputStream bin = new BufferedInputStream( in );
                 BufferedOutputStream bout = new BufferedOutputStream( outStream ); ) {
