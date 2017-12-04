@@ -280,7 +280,8 @@ public class PictureInfoTest {
 
         String expected = "<picture>\n"
                 + "\t<description><![CDATA[First Picture]]></description>\n"
-                + "\t<file_URL>file:/richi/Src/Jpo/build/resources/test/exif-test-canon-eos-350d.jpg</file_URL>\n"
+                + "\t<file_URL>file:" + System.getProperty("user.dir") + File.separator
+                + "build/resources/test/exif-test-canon-eos-350d.jpg</file_URL>\n"
                 + "\t<checksum>1234</checksum>\n"
                 + "\t<COMMENT>Comment</COMMENT>\n"
                 + "\t<PHOTOGRAPHER>Richard Eigenmann</PHOTOGRAPHER>\n"

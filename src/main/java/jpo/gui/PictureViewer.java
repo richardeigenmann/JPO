@@ -292,8 +292,9 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
      * This method saves the text of the textbox to the PictureInfo.
      */
     private void saveChangedDescription() {
-        if ( getCurrentNode() != null ) {
-            Object userObject = getCurrentNode().getUserObject();
+        SortableDefaultMutableTreeNode node = getCurrentNode();
+        if ( node != null ) {
+            Object userObject = node.getUserObject();
             if ( userObject instanceof PictureInfo ) {
                 ( (PictureInfo) userObject ).setDescription(
                         pictureFrame.getDescription() );

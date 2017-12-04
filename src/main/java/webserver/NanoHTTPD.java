@@ -213,7 +213,7 @@ public class NanoHTTPD {
                 }
             } catch ( IOException ioe ) {
             }
-        });
+        } );
         myThread.setDaemon( true );
         myThread.start();
     }
@@ -331,9 +331,11 @@ public class NanoHTTPD {
                 try {
                     sendError( HTTP_INTERNALERROR, "SERVER INTERNAL ERROR: IOException: " + ioe.getMessage() );
                 } catch ( InterruptedException t ) {
+                    Thread.currentThread().interrupt();
                 }
             } catch ( InterruptedException ie ) {
                 // Thrown by sendError, ignore and exit the thread.
+                Thread.currentThread().interrupt();
             }
         }
 

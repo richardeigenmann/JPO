@@ -86,9 +86,9 @@ public class SaxEventHandler extends DefaultHandler {
             }
             currentGroup.setUserObject( groupInfo );
             currentGroup.getPictureCollection().setAllowEdits( attrs.getValue( "collection_protected" ).equals( "No" ) );
-        } else if ( "group".equals( qName ) ) {
+        } else if ( "group".equals( qName ) && attrs != null ) {
             incrementGroupCount();
-            groupInfo = new GroupInfo( attrs.getValue( "group_name" ) != null  ? attrs.getValue( "group_name" ) : "" );
+            groupInfo = new GroupInfo( attrs.getValue( "group_name" ) != null ? attrs.getValue( "group_name" ) : "" );
             if ( attrs.getValue( "group_icon" ).length() > 1 ) {
                 lowresUrls.append( attrs.getValue( "group_icon" ) );
                 lowresUrls.append( System.getProperty( "line.separator" ) );
@@ -123,11 +123,11 @@ public class SaxEventHandler extends DefaultHandler {
             currentField = LATLNG;
         } else if ( "checksum".equals( qName ) ) {
             currentField = CHECKSUM;
-        } else if ( "categoryAssignment".equals( qName ) && attrs.getValue( "index" ) != null ) {
+        } else if ( "categoryAssignment".equals( qName ) && attrs != null && attrs.getValue( "index" ) != null ) {
             ( (PictureInfo) currentPicture.getUserObject() ).addCategoryAssignment( attrs.getValue( "index" ) );
         } else if ( "categories".equals( qName ) ) {
             currentField = CATEGORIES;
-        } else if ( "category".equals( qName ) && attrs.getValue( "index" ) != null ) {
+        } else if ( "category".equals( qName ) && attrs != null && attrs.getValue( "index" ) != null ) {
             temporaryCategoryIndex = attrs.getValue( "index" );
             currentField = CATEGORY;
         } else if ( "categoryDescription".equals( qName ) ) {

@@ -132,12 +132,13 @@ import static jpo.gui.swing.ResizableJFrame.WindowSize.WINDOW_RIGHT;
 import jpo.gui.swing.Thumbnail;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
+import org.apache.commons.compress.archivers.zip.ZipFile;
 import webserver.Webserver;
 
 /*
  ApplicationEventHandler.java:  The Event dispatcher for the JPO Application 
 
- Copyright (C) 2014-2016  Richard Eigenmann.
+ Copyright (C) 2014-2017  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -1001,16 +1002,18 @@ public class ApplicationEventHandler {
 
             if ( request.getTargetZipfile().exists() ) {
                 // copy the old entries over
-                org.apache.commons.compress.archivers.zip.ZipFile oldzip = new org.apache.commons.compress.archivers.zip.ZipFile( request.getTargetZipfile() );
-                Enumeration entries = oldzip.getEntries();
-                while ( entries.hasMoreElements() ) {
-                    ZipArchiveEntry e = (ZipArchiveEntry) entries.nextElement();
-                    LOGGER.info( String.format( "streamcopy: %s", e.getName() ) );
-                    zipArchiveOutputStream.putArchiveEntry( e );
-                    if ( !e.isDirectory() ) {
-                        streamcopy( oldzip.getInputStream( e ), zipArchiveOutputStream );
+                try (
+                        ZipFile oldzip = new ZipFile( request.getTargetZipfile() ); ) {
+                    Enumeration entries = oldzip.getEntries();
+                    while ( entries.hasMoreElements() ) {
+                        ZipArchiveEntry e = (ZipArchiveEntry) entries.nextElement();
+                        LOGGER.info( String.format( "streamcopy: %s", e.getName() ) );
+                        zipArchiveOutputStream.putArchiveEntry( e );
+                        if ( !e.isDirectory() ) {
+                            streamcopy( oldzip.getInputStream( e ), zipArchiveOutputStream );
+                        }
+                        zipArchiveOutputStream.closeArchiveEntry();
                     }
-                    zipArchiveOutputStream.closeArchiveEntry();
                 }
             }
             zipArchiveOutputStream.finish();
