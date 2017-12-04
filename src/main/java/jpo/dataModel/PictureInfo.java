@@ -1024,7 +1024,7 @@ public class PictureInfo implements Serializable {
      *
      * @return The Latitude and Longitude
      */
-    public Point2D.Double getLatLng() {
+    public synchronized Point2D.Double getLatLng() {
         if ( latLng == null ) {
             setLatLng( new Point2D.Double( 0, 0 ) );
         }

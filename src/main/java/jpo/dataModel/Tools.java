@@ -206,28 +206,34 @@ public class Tools {
                 lastWasBlankChar = false;
                 //
                 // HTML Special Chars
-                if ( c == '"' ) {
-                    sb.append( "&quot;" );
-                } else if ( c == '&' ) {
-                    sb.append( "&amp;" );
-                } else if ( c == '<' ) {
-                    sb.append( "&lt;" );
-                } else if ( c == '>' ) {
-                    sb.append( "&gt;" );
-                } else if ( c == '\n' ) // Handle Newline
-                {
-                    sb.append( "&lt;br/&gt;" );
-                } else {
-                    int ci = 0xffff & c;
-                    if ( ci < 160 ) // nothing special only 7 Bit
-                    {
-                        sb.append( c );
-                    } else {
-                        // Not 7 Bit use the unicode system
-                        sb.append( "&#" );
-                        sb.append( Integer.toString( ci ) );
-                        sb.append( ';' );
-                    }
+                switch ( c ) {
+                    case '"':
+                        sb.append( "&quot;" );
+                        break;
+                    case '&':
+                        sb.append( "&amp;" );
+                        break;
+                    case '<':
+                        sb.append( "&lt;" );
+                        break;
+                    case '>':
+                        sb.append( "&gt;" );
+                        break;
+                    case '\n':
+                        sb.append( "&lt;br/&gt;" );
+                        break;
+                    default:
+                        int ci = 0xffff & c;
+                        if ( ci < 160 ) // nothing special only 7 Bit
+                        {
+                            sb.append( c );
+                        } else {
+                            // Not 7 Bit use the unicode system
+                            sb.append( "&#" );
+                            sb.append( Integer.toString( ci ) );
+                            sb.append( ';' );
+                        }
+                        break;
                 }
 
             }
@@ -352,7 +358,8 @@ public class Tools {
                         return false;
                     }
                 }
-            default: return false;
+            default:
+                return false;
         }
     }
 
@@ -414,10 +421,9 @@ public class Tools {
      * @return the crc
      */
     public static long copyPicture( URL sourceUrl, URL targetUrl ) {
-        try {
-            InputStream in = sourceUrl.openStream();
-            OutputStream out = targetUrl.openConnection().getOutputStream();
-
+        try (
+                InputStream in = sourceUrl.openStream();
+                OutputStream out = targetUrl.openConnection().getOutputStream(); ) {
             BufferedInputStream bin = new BufferedInputStream( in );
             BufferedOutputStream bout = new BufferedOutputStream( out );
 
@@ -445,9 +451,9 @@ public class Tools {
      * @return sourceUrl long for the CRC
      */
     public static long copyPicture( URL sourceUrl, File targetFile ) {
-        try {
-            InputStream in = sourceUrl.openStream();
-            OutputStream out = new FileOutputStream( targetFile );
+        try (
+                InputStream in = sourceUrl.openStream();
+                OutputStream out = new FileOutputStream( targetFile ); ) {
 
             BufferedInputStream bin = new BufferedInputStream( in );
             BufferedOutputStream bout = new BufferedOutputStream( out );
@@ -476,9 +482,9 @@ public class Tools {
      */
     public static long copyPicture( File sourceFile, File targetFile ) {
         LOGGER.fine( String.format( "Copying file %s to file %s", sourceFile.toString(), targetFile.toString() ) );
-        try {
-            InputStream in = new FileInputStream( sourceFile );
-            OutputStream out = new FileOutputStream( targetFile );
+        try (
+                InputStream in = new FileInputStream( sourceFile );
+                OutputStream out = new FileOutputStream( targetFile ); ) {
 
             BufferedInputStream bin = new BufferedInputStream( in );
             BufferedOutputStream bout = new BufferedOutputStream( out );
@@ -660,7 +666,7 @@ public class Tools {
             return testFile;
         }
 
-        int dotPoint = startName.lastIndexOf('.');
+        int dotPoint = startName.lastIndexOf( '.' );
         String startNameRoot = startName.substring( 0, dotPoint );
         String startNameSuffix = startName.substring( dotPoint );
 
@@ -673,7 +679,6 @@ public class Tools {
         LOGGER.severe( String.format( "Could not invent a picture filename for the directory %s and the name %s", targetDir.toString(), startName ) );
         return null;
     }
-
 
     /**
      * convenience method to log the amount of free memory
@@ -729,7 +734,7 @@ public class Tools {
      */
     public static String stripOutFilenameRoot( File file ) {
         String description = file.getName();
-        int lastDotIndex = description.lastIndexOf('.');
+        int lastDotIndex = description.lastIndexOf( '.' );
         if ( lastDotIndex > -1 ) {
             description = description.substring( 0, lastDotIndex );
         }
@@ -925,7 +930,7 @@ public class Tools {
         try {
             // Had big issues here because the simple exec (String) calls a StringTokenizer
             // which messes up the filename parameters
-            int blank = command.indexOf(' ');
+            int blank = command.indexOf( ' ' );
             if ( blank > -1 ) {
                 String[] cmdarray = new String[2];
                 cmdarray[0] = command.substring( 0, blank );
@@ -1031,7 +1036,7 @@ public class Tools {
             in.close();
         } catch ( IOException x ) {
             fileContent = String.format( "<html><head></head><body>Failed to read file %s from Class %s because of exception: %s</body></html>", fileInJar, rootClass.toString(), x.getMessage() );
-            LOGGER.log(Level.SEVERE, "Exception: {0}", x.getMessage());
+            LOGGER.log( Level.SEVERE, "Exception: {0}", x.getMessage() );
         }
         return fileContent;
     }

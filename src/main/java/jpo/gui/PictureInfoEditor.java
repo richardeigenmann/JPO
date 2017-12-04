@@ -70,7 +70,7 @@ import webserver.Webserver;
 /*
  PictureInfoEditor:  Edits the details of a picture
 
- Copyright (C) 2002-2015  Richard Eigenmann.
+ Copyright (C) 2002-2017  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -194,7 +194,7 @@ public class PictureInfoEditor extends JFrame {
     /**
      * Font used to show the error label
      */
-    private static final Font errorLabelFont = Font.decode( Settings.jpoResources.getString( "ThumbnailDescriptionJPanelLargeFont" ) );
+    private static final Font ERROR_LABEL_FONT = Font.decode( Settings.jpoResources.getString( "ThumbnailDescriptionJPanelLargeFont" ) );
 
     /**
      * Constructs a Picture Properties Dialog
@@ -265,31 +265,25 @@ public class PictureInfoEditor extends JFrame {
         spinner.setEditor( new JSpinner.NumberEditor( spinner, "###.##" ) );
         rotationPanel.add( spinner );
 
-        JButton rotateLeftJButton = new JButton( new ImageIcon( Settings.CLASS_LOADER.getResource( "jpo/images/icon_RotCCDown.gif" ) ) ) {
-            {
-                setMnemonic( KeyEvent.VK_L );
-                addActionListener( ( ActionEvent e ) -> {
-                    angleModel.setValue( ( (Double) angleModel.getValue() + 270 ) % 360 );
-                    saveRotation();
-                } );
-                setToolTipText( Settings.jpoResources.getString( "rotateLeftJButton.ToolTipText" ) );
-            }
-        };
+        JButton rotateLeftJButton = new JButton( new ImageIcon( Settings.CLASS_LOADER.getResource( "jpo/images/icon_RotCCDown.gif" ) ) );
+        rotateLeftJButton.setMnemonic( KeyEvent.VK_L );
+        rotateLeftJButton.addActionListener( ( ActionEvent e ) -> {
+            angleModel.setValue( ( (Double) angleModel.getValue() + 270 ) % 360 );
+            saveRotation();
+        } );
+        rotateLeftJButton.setToolTipText( Settings.jpoResources.getString( "rotateLeftJButton.ToolTipText" ) );
         rotationPanel.add( rotateLeftJButton );
 
         /**
          * Button to rotate right
          */
-        JButton rotateRightJButton = new JButton( new ImageIcon( Settings.CLASS_LOADER.getResource( "jpo/images/icon_RotCWDown.gif" ) ) ) {
-            {
-                setMnemonic( KeyEvent.VK_R );
-                addActionListener( ( ActionEvent e ) -> {
-                    angleModel.setValue( ( (Double) angleModel.getValue() + 90 ) % 360 );
-                    saveRotation();
-                } );
-                setToolTipText( Settings.jpoResources.getString( "rotateRightJButton.ToolTipText" ) );
-            }
-        };
+        JButton rotateRightJButton = new JButton( new ImageIcon( Settings.CLASS_LOADER.getResource( "jpo/images/icon_RotCWDown.gif" ) ) );
+        rotateRightJButton.setMnemonic( KeyEvent.VK_R );
+        rotateRightJButton.addActionListener( ( ActionEvent e ) -> {
+            angleModel.setValue( ( (Double) angleModel.getValue() + 90 ) % 360 );
+            saveRotation();
+        } );
+        rotateRightJButton.setToolTipText( Settings.jpoResources.getString( "rotateRightJButton.ToolTipText" ) );
         rotationPanel.add( rotateRightJButton );
 
         mainPanel.add( rotationPanel );
@@ -360,7 +354,7 @@ public class PictureInfoEditor extends JFrame {
         } );
         infoTab.add( creationTimeJTextField, "wrap" );
 
-        parsedCreationTimeJLabel.setFont( errorLabelFont );
+        parsedCreationTimeJLabel.setFont( ERROR_LABEL_FONT );
         infoTab.add( parsedCreationTimeJLabel, "wrap" );
 
         JButton reparseButton = new JButton( "reparse" );
@@ -426,7 +420,7 @@ public class PictureInfoEditor extends JFrame {
         JPanel fileTab = new JPanel( new MigLayout() );
         JLabel highresLocationJLabel = new JLabel( Settings.jpoResources.getString( "highresLocationLabel" ) );
         fileTab.add( highresLocationJLabel, "span 2, wrap" );
-        highresErrorJLabel.setFont( errorLabelFont );
+        highresErrorJLabel.setFont( ERROR_LABEL_FONT );
         highresLocationJTextField.setPreferredSize( TEXT_FIELD_DIMENSION );
         fileTab.add( highresLocationJTextField );
 
@@ -704,8 +698,10 @@ public class PictureInfoEditor extends JFrame {
             String timestamp = exifInfo.getCreateDateTime();
             creationTimeJTextField.setText( timestamp );
             parseTimestamp( timestamp );
+
         } catch ( MalformedURLException ex ) {
-            Logger.getLogger( PictureInfoEditor.class.getName() ).log( Level.SEVERE, null, ex );
+            Logger.getLogger( PictureInfoEditor.class
+                    .getName() ).log( Level.SEVERE, null, ex );
         }
     }
 
@@ -893,6 +889,7 @@ public class PictureInfoEditor extends JFrame {
 
     private void positionMap() {
         mapViewer.setMarker( getLatLng() );
+
     }
 
     private class MyMapClickListener extends MapClickListener {

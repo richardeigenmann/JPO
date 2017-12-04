@@ -149,15 +149,15 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
         scp.setQualityScale();
         scp.setScaleSteps( options.getScalingSteps() );
 
-        // create zip
-        try {
-            if ( options.isGenerateZipfile() ) {
-                FileOutputStream dest = new FileOutputStream( new File( options.getTargetDirectory(), options.getDownloadZipFileName() ) );
-                zipFile = new ZipOutputStream( new BufferedOutputStream( dest ) );
+        if ( options.isGenerateZipfile() ) {
+            try (
+                    FileOutputStream dest = new FileOutputStream( new File( options.getTargetDirectory(), options.getDownloadZipFileName() ) );
+                    BufferedOutputStream buf = new BufferedOutputStream( dest ); ) {
+                zipFile = new ZipOutputStream( buf );
+            } catch ( FileNotFoundException x ) {
+                LOGGER.log( Level.SEVERE, "Error creating Zipfile. Coninuing without Zip\n{0}", x.toString() );
+                options.setGenerateZipfile( false );
             }
-        } catch ( FileNotFoundException x ) {
-            LOGGER.log( Level.SEVERE, "Error creating Zipfile. Coninuing without Zip\n{0}", x.toString() );
-            options.setGenerateZipfile( false );
         }
 
         Tools.copyFromJarToFile( HtmlDistiller.class, "jpo.css", options.getTargetDirectory(), "jpo.css" );
@@ -178,26 +178,19 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
         }
 
         if ( folderIconRequired ) {
-            try {
-                InputStream inStream = Settings.CLASS_LOADER.getResource( "jpo/images/icon_folder.gif" ).openStream();
-                File folderIconFile = new File( options.getTargetDirectory(), "jpo_folder_icon.gif" );
-                FileOutputStream outStream = new FileOutputStream( folderIconFile );
+            File folderIconFile = new File( options.getTargetDirectory(), "jpo_folder_icon.gif" );
+            try (
+                    InputStream inStream = Settings.CLASS_LOADER.getResource( "jpo/images/icon_folder.gif" ).openStream();
+                    FileOutputStream outStream = new FileOutputStream( folderIconFile );
+                    BufferedInputStream bin = new BufferedInputStream( inStream );
+                    BufferedOutputStream bout = new BufferedOutputStream( outStream ); ) {
                 files.add( folderIconFile );
-
-                BufferedInputStream bin = new BufferedInputStream( inStream );
-                BufferedOutputStream bout = new BufferedOutputStream( outStream );
 
                 int count;
                 byte data[] = new byte[BUFFER_SIZE];
                 while ( ( count = bin.read( data, 0, BUFFER_SIZE ) ) != -1 ) {
                     bout.write( data, 0, count );
                 }
-
-                bin.close();
-                bout.close();
-
-                inStream.close();
-                outStream.close();
             } catch ( IOException x ) {
                 JOptionPane.showMessageDialog(
                         Settings.anchorFrame,
@@ -230,10 +223,12 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
      */
     @Override
     protected void process( List<String> messages ) {
-        for ( String message : messages ) {
+        messages.stream().map( ( message ) -> {
             LOGGER.info( String.format( "messge: %s", message ) );
+            return message;
+        } ).forEachOrdered( ( _item ) -> {
             progGui.progressIncrement();
-        }
+        } );
     }
 
     /**
@@ -436,9 +431,9 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
 
         if ( options.isGenerateZipfile() ) {
             LOGGER.fine( String.format( "Adding to zipfile: %s", highresFile.toString() ) );
-            try {
-                InputStream in = pictureInfo.getImageURL().openStream();
-                BufferedInputStream bin = new BufferedInputStream( in );
+            try (
+                    InputStream in = pictureInfo.getImageURL().openStream();
+                    BufferedInputStream bin = new BufferedInputStream( in ); ) {
 
                 ZipEntry entry = new ZipEntry( highresFile.getName() );
                 zipFile.putNextEntry( entry );
@@ -448,9 +443,6 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
                 while ( ( count = bin.read( data, 0, BUFFER_SIZE ) ) != -1 ) {
                     zipFile.write( data, 0, count );
                 }
-
-                bin.close();
-                in.close();
             } catch ( IOException e ) {
                 LOGGER.log( Level.SEVERE, "Could not create zipfile entry for {0}\n{1}", new Object[]{ highresFile.toString(), e.toString() } );
             }
@@ -527,18 +519,12 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
             String groupDescription
                     = ( (DefaultMutableTreeNode) pictureNode.getParent() ).getUserObject().toString();
 
-            //midresHtmlWriter.write( "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" );
-            //midresHtmlWriter.newLine();
-            //midresHtmlWriter.write( "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">" );
             midresHtmlWriter.write( "<!DOCTYPE HTML>" );
             midresHtmlWriter.newLine();
-            //midresHtmlWriter.write( "<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\" lang=\"en\">" );
-            //midresHtmlWriter.newLine();
             midresHtmlWriter.write( "<head>\n\t<link rel=\"StyleSheet\" href=\"jpo.css\" type=\"text/css\" media=\"screen\" />\n\t<title>" + Tools.stringToHTMLString( groupDescription ) + "</title>\n</head>" );
             midresHtmlWriter.newLine();
             midresHtmlWriter.write( "<body onload=\"changetext(content[0])\">" );
             midresHtmlWriter.newLine();
-            //midresHtmlWriter.write( "<table cellpadding=\"0\" cellspacing=\"10\">" );
             midresHtmlWriter.write( "<table>" );
             midresHtmlWriter.write( "<tr><td colspan=\"2\"><h2>" + Tools.stringToHTMLString( groupDescription ) + "</h2></td></tr>" );
             midresHtmlWriter.newLine();
@@ -654,10 +640,10 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
 
                             dhtmlArray.append( String.format( "<p>Picture %d/%d:</p>", i, childCount ) );
                             dhtmlArray.append( String.format( "<p><img src=\"%s\" width=%d alt=\"Thumbnail\"></p>", lowresFn, matrixWidth - 10 ) );
-                            dhtmlArray.append( "<p><i>" ).append( htmlFriendlyDescription2 ).append( "</i></p>'\n");
+                            dhtmlArray.append( "<p><i>" ).append( htmlFriendlyDescription2 ).append( "</i></p>'\n" );
                         } else {
                             dhtmlArray.append( String.format( "<p>Item %d/%d:</p>", i, childCount ) );
-                            dhtmlArray.append( "<p><i>" ).append( htmlFriendlyDescription2 ).append( "</p></i>'\n");
+                            dhtmlArray.append( "<p><i>" ).append( htmlFriendlyDescription2 ).append( "</p></i>'\n" );
                         }
                     }
                     midresHtmlWriter.write( ">" );
@@ -694,7 +680,7 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
                     String previousHtmlFilename = "";
                     switch ( options.getPictureNaming() ) {
                         case PICTURE_NAMING_BY_ORIGINAL_NAME:
-                            SortableDefaultMutableTreeNode priorNode = (SortableDefaultMutableTreeNode) (  pictureNode.getParent() ).getChildAt( childNumber - 2 );
+                            SortableDefaultMutableTreeNode priorNode = (SortableDefaultMutableTreeNode) ( pictureNode.getParent() ).getChildAt( childNumber - 2 );
                             Object userObject = priorNode.getUserObject();
                             if ( userObject instanceof PictureInfo ) {
                                 previousHtmlFilename = Tools.cleanupFilename( Tools.getFilenameRoot( ( (PictureInfo) userObject ).getImageFilename() ) ) + ".htm";
@@ -760,7 +746,7 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
             }
 
             midresHtmlWriter.newLine();
-            midresHtmlWriter.write( "<p>" + Settings.jpoResources.getString( "LinkToJpo" )  + "</p>");
+            midresHtmlWriter.write( "<p>" + Settings.jpoResources.getString( "LinkToJpo" ) + "</p>" );
             midresHtmlWriter.newLine();
 
             if ( options.isGenerateMouseover() ) {
@@ -952,7 +938,7 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
 
         LOGGER.info( "Opening Channel \"exec\"..." );
         Channel channel = session.openChannel( "exec" );
-        LOGGER.log( Level.INFO, "Setting command: {0}", command);
+        LOGGER.log( Level.INFO, "Setting command: {0}", command );
         ( (ChannelExec) channel ).setCommand( command );
 
         // get I/O streams for remote scp
@@ -984,7 +970,7 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
         command = "C0644 " + filesize + " ";
         command += file.getName();
         command += "\n";
-        LOGGER.log( Level.INFO, "Command: {0}", command);
+        LOGGER.log( Level.INFO, "Command: {0}", command );
         out.write( command.getBytes() );
         out.flush();
         if ( checkAck( in ) != 0 ) {
@@ -995,7 +981,7 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
         FileInputStream fis = new FileInputStream( file );
         byte[] buf = new byte[1024];
         while ( true ) {
-            LOGGER.log( Level.INFO, "Sending bytes: {0}", buf.length);
+            LOGGER.log( Level.INFO, "Sending bytes: {0}", buf.length );
             int len = fis.read( buf, 0, buf.length );
             if ( len <= 0 ) {
                 break;
