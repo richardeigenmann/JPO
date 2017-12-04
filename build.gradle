@@ -10,7 +10,7 @@ buildscript {
 }
 
 plugins {
-  id "org.sonarqube" version "2.5"
+    id "org.sonarqube" version "2.5"
 }
 
 apply plugin: "com.github.johnrengelman.shadow"
@@ -109,12 +109,16 @@ sourceSets {
 }
     
 
-/*test {
-println(classpath.asPath)
-sourceSets.main.resources.each { File file ->
-println file.name
+test {
+    //println(classpath.asPath)
+    //sourceSets.main.resources.each { File file ->
+    //println file.name
+    //}
+    testLogging {
+        events "passed", "skipped", "failed"
+        exceptionFormat "full"
+    }
 }
-}*/
 
 jar {
     baseName = 'jpo'
