@@ -33,6 +33,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import jpo.gui.XmlFilter;
+import jpo.gui.swing.EdtViolationException;
 
 
 /*
@@ -77,7 +78,6 @@ public class Tools {
      * Defines a logger for this class
      */
     private static final Logger LOGGER = Logger.getLogger( Tools.class.getName() );
-
 
     /**
      * Translates characters which are problematic in a filename into
@@ -172,7 +172,6 @@ public class Tools {
 
         return returnString;
     }
-
 
     /**
      * returns the file extension of the indicated url
@@ -328,7 +327,6 @@ public class Tools {
      */
     public static boolean hasPictures( File subDirectory ) {
         File[] fileArray = subDirectory.listFiles();
-        //logger.info( "Tools.hasPictures: directory " + subDirectory.toString() + " has " + Integer.toString(fileArray.length) + " entries" );
         if ( fileArray == null ) {
             return false;
         }
@@ -360,14 +358,16 @@ public class Tools {
             BufferedInputStream bin = new BufferedInputStream( in );
             BufferedOutputStream bout = new BufferedOutputStream( out );
 
-            long crc = copyBufferedStream( bin, bout );
-
-            return crc;
-
+            return copyBufferedStream( bin, bout );
         } catch ( IOException e ) {
             JOptionPane.showMessageDialog(
                     Settings.anchorFrame,
-                    Settings.jpoResources.getString( "copyPictureError1" ) + sourceUrl.toString() + Settings.jpoResources.getString( "copyPictureError2" ) + targetUrl.toString() + Settings.jpoResources.getString( "copyPictureError3" ) + e.getMessage(),
+                    Settings.jpoResources.getString( "copyPictureError1" )
+                    + sourceUrl.toString()
+                    + Settings.jpoResources.getString( "copyPictureError2" )
+                    + targetUrl.toString()
+                    + Settings.jpoResources.getString( "copyPictureError3" )
+                    + e.getMessage(),
                     Settings.jpoResources.getString( "genericError" ),
                     JOptionPane.ERROR_MESSAGE );
             return Long.MIN_VALUE;
@@ -381,7 +381,7 @@ public class Tools {
      *
      * @param sourceUrl source URL
      * @param targetFile target file
-     * @return sourceUrl long for the CRC
+     * @return the CRC
      */
     public static long copyPicture( URL sourceUrl, File targetFile ) {
         try (
@@ -391,14 +391,16 @@ public class Tools {
             BufferedInputStream bin = new BufferedInputStream( in );
             BufferedOutputStream bout = new BufferedOutputStream( out );
 
-            long crc = copyBufferedStream( bin, bout );
-
-            return crc;
-
+            return copyBufferedStream( bin, bout );
         } catch ( IOException e ) {
             JOptionPane.showMessageDialog(
                     Settings.anchorFrame,
-                    Settings.jpoResources.getString( "copyPictureError1" ) + sourceUrl.toString() + Settings.jpoResources.getString( "copyPictureError2" ) + targetFile.toString() + Settings.jpoResources.getString( "copyPictureError3" ) + e.getMessage(),
+                    Settings.jpoResources.getString( "copyPictureError1" )
+                    + sourceUrl.toString()
+                    + Settings.jpoResources.getString( "copyPictureError2" )
+                    + targetFile.toString()
+                    + Settings.jpoResources.getString( "copyPictureError3" )
+                    + e.getMessage(),
                     Settings.jpoResources.getString( "genericError" ),
                     JOptionPane.ERROR_MESSAGE );
             return Long.MIN_VALUE;
@@ -422,14 +424,16 @@ public class Tools {
             BufferedInputStream bin = new BufferedInputStream( in );
             BufferedOutputStream bout = new BufferedOutputStream( out );
 
-            long crc = copyBufferedStream( bin, bout );
-
-            return crc;
-
+            return copyBufferedStream( bin, bout );
         } catch ( IOException e ) {
             JOptionPane.showMessageDialog(
                     Settings.anchorFrame,
-                    Settings.jpoResources.getString( "copyPictureError1" ) + sourceFile.toString() + Settings.jpoResources.getString( "copyPictureError2" ) + targetFile.toString() + Settings.jpoResources.getString( "copyPictureError3" ) + e.getMessage(),
+                    Settings.jpoResources.getString( "copyPictureError1" )
+                    + sourceFile.toString()
+                    + Settings.jpoResources.getString( "copyPictureError2" )
+                    + targetFile.toString()
+                    + Settings.jpoResources.getString( "copyPictureError3" )
+                    + e.getMessage(),
                     Settings.jpoResources.getString( "genericError" ),
                     JOptionPane.ERROR_MESSAGE );
             return Long.MIN_VALUE;
@@ -445,10 +449,10 @@ public class Tools {
      */
     public static void streamcopy( InputStream input, OutputStream output ) throws IOException {
         // 4MB buffer
-        byte[] BUFFER = new byte[4096 * 1024];
+        byte[] buffer = new byte[4096 * 1024];
         int bytesRead;
-        while ( ( bytesRead = input.read( BUFFER ) ) != -1 ) {
-            output.write( BUFFER, 0, bytesRead );
+        while ( ( bytesRead = input.read( buffer ) ) != -1 ) {
+            output.write( buffer, 0, bytesRead );
         }
     }
 
@@ -476,54 +480,6 @@ public class Tools {
         bout.close();
         return crc.getValue();
 
-    }
-
-    /**
-     * This method moves the source file to the target file. It tries a java
-     * File.renameTo. This doesn't work across different mounted filesystems so
-     * if that fails it tries to copy the data from the source file to the
-     * target file and deletes the source.
-     *
-     * Don't forget to call correctReferences if required.
-     *
-     * @deprecated use apache.commons moveFile instead
-     * @param sourceFile The file to be moved
-     * @param targetFile The target file it is to be moved to.
-     * @return true if successful, false if not.
-     */
-    public static boolean moveFile( File sourceFile, File targetFile ) {
-        if ( !sourceFile.exists() ) {
-            LOGGER.severe( String.format( "Source File %s doesn't exist. Move aborted!", sourceFile.toString() ) );
-            return false;
-        }
-        if ( targetFile.exists() ) {
-            LOGGER.warning( String.format( "Target File %s already exists. Move aborted!", targetFile.toString() ) );
-            return false;
-        }
-        if ( !sourceFile.canWrite() ) {
-            LOGGER.warning( String.format( "Source File %s is write protected. Move aborted!", sourceFile.getPath() ) );
-            return false;
-        }
-        if ( sourceFile.renameTo( targetFile ) ) {
-            LOGGER.info( String.format( "Successfully renamed %s to %s", sourceFile.toString(), targetFile.toString() ) );
-        } else {
-            // perhaps target was on a different filesystem. Trying copying
-            LOGGER.info( String.format( "Rename from %s to %s failed. Trying to copy and delete...", sourceFile.toString(), targetFile.toString() ) );
-            if ( copyPicture( sourceFile, targetFile ) > Long.MIN_VALUE ) {
-                LOGGER.info( "... copy worked. Now deleting source file...." );
-                if ( !sourceFile.delete() ) {
-                    LOGGER.info( "Nope, deleting source file failed." );
-                    return false;
-                } else {
-                    LOGGER.info( "...delete worked." );
-                }
-            } else {
-                LOGGER.info( "Nope, Copy failed too." );
-                return false;
-            }
-        }
-
-        return true;
     }
 
     /**
@@ -650,7 +606,8 @@ public class Tools {
                         JOptionPane.ERROR_MESSAGE )
         );
 
-        System.gc();
+        // Sonar says not to run gc - don't be smarter than the garbage collector
+        //System.gc();
         System.runFinalization();
 
         LOGGER.info( "ScalablePicture.scalePicture: JPO has now run a garbage collection and finalization." );
@@ -706,7 +663,6 @@ public class Tools {
      * adjusted
      */
     public static void setDragCursor( DragSourceDragEvent event ) {
-        //logger.info( "Tools.setDragCursor: invoked");
         DragSourceContext context = event.getDragSourceContext();
         int dndCode = event.getDropAction();
         if ( ( dndCode & DnDConstants.ACTION_COPY ) != 0 ) {
@@ -714,12 +670,6 @@ public class Tools {
         } else if ( ( dndCode & DnDConstants.ACTION_MOVE ) != 0 ) {
             context.setCursor( DragSource.DefaultMoveDrop );
         } else {
-            //logger.info( "ACTION_COPY is: " + Integer.toString( DnDConstants.ACTION_COPY ) );
-            //logger.info( "ACTION_COPY_OR_MOVE is: " + Integer.toString( DnDConstants.ACTION_COPY_OR_MOVE ) );
-            //logger.info( "ACTION_LINK is: " + Integer.toString( DnDConstants.ACTION_LINK ) );
-            //logger.info( "ACTION_MOVE is: " + Integer.toString( DnDConstants.ACTION_MOVE ) );
-            //logger.info( "ACTION_NONE is: " + Integer.toString( DnDConstants.ACTION_NONE ) );
-            //logger.info( "ACTION_REFERENCE is: " + Integer.toString( DnDConstants.ACTION_REFERENCE ) );
             context.setCursor( DragSource.DefaultMoveNoDrop );
         }
     }
@@ -758,7 +708,7 @@ public class Tools {
 
         try {
             while ( ( blockLen = inputStream.available() ) > 0 ) {
-                byte ba[] = new byte[blockLen];
+                byte[] ba = new byte[blockLen];
                 inputStream.read( ba );
                 crc.update( ba );
             }
@@ -779,8 +729,7 @@ public class Tools {
     public static String currentDate( String formatString ) {
         SimpleDateFormat formatter = new SimpleDateFormat( formatString );
         Date currentTime = new Date();
-        String dateString = formatter.format( currentTime );
-        return dateString;
+        return formatter.format( currentTime );
     }
 
     /**
@@ -793,15 +742,23 @@ public class Tools {
     public static Calendar parseDate( String dateString ) {
         SimpleDateFormat df = new SimpleDateFormat();
         df.setLenient( true );
-        String[] patterns = { "dd.MM.yyyy HH:mm",
-            "yyyy:MM:dd HH:mm:ss",
+        String[] patterns = { 
+            "dd.MM.yyyy HH:mm:ss",
+            "dd.MM.yyyy HH:mm",
             "dd.MM.yyyy",
+            "yyyy:MM:dd HH:mm:ss",
+            "yyyy:MM:dd HH:mm",
+            "yyyy:MM:dd",
             "MM.yyyy",
             "MM-yyyy",
             "dd-MM-yyyy",
             "dd.MM.yy",
             "dd-MM-yy",
+            "MM/dd/yy HH:mm:ss",
+            "MM/dd/yy HH:mm",
             "MM/dd/yy",
+            "MM/dd/yyyy HH:mm:ss",
+            "MM/dd/yyyy HH:mm",
             "MM/dd/yyyy",
             "dd MMM yyyy",
             "dd MMM yy",
@@ -815,6 +772,7 @@ public class Tools {
                 d = df.parse( dateString );
                 notFound = false;
             } catch ( ParseException x ) {
+                // skip and continue with next pattern
             }
         }
         if ( d != null ) {
@@ -885,9 +843,9 @@ public class Tools {
      * the EDT. This method allows easy checking by writing:
      * <code>Tools.checkEDT()</code>
      */
-    public static void checkEDT() {
+    public static void checkEDT() throws EdtViolationException {
         if ( !SwingUtilities.isEventDispatchThread() ) {
-            throw new Error( "Not on EDT! Throwing error." );
+            throw new EdtViolationException( "Not on EDT! Throwing error." );
         }
     }
 
@@ -934,10 +892,6 @@ public class Tools {
                 bout.newLine();
             }
             bout.flush();
-            bout.close();
-            osw.close();
-            out.close();
-            bin.close();
         } catch ( IOException x ) {
             JOptionPane.showMessageDialog(
                     Settings.anchorFrame,
@@ -964,9 +918,6 @@ public class Tools {
                 BufferedReader bin = new BufferedReader( new InputStreamReader( in ) );
                 Scanner scanner = new Scanner( bin ).useDelimiter( "\\Z" ); ) {
             fileContent = scanner.next();
-            scanner.close();
-            bin.close();
-            in.close();
         } catch ( IOException x ) {
             fileContent = String.format( "<html><head></head><body>Failed to read file %s from Class %s because of exception: %s</body></html>", fileInJar, rootClass.toString(), x.getMessage() );
             LOGGER.log( Level.SEVERE, "Exception: {0}", x.getMessage() );

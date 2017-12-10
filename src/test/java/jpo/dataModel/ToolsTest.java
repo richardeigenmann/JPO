@@ -1,9 +1,11 @@
 package jpo.dataModel;
 
 import java.lang.reflect.InvocationTargetException;
+import java.text.SimpleDateFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
+import jpo.gui.swing.EdtViolationException;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
 import static junit.framework.TestCase.fail;
@@ -24,7 +26,6 @@ import org.junit.Test;
  The license is in gpl.txt.
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
-
 /**
  * Tests for the Tools class
  *
@@ -44,17 +45,17 @@ public class ToolsTest {
         Thread t = new Thread( () -> {
             try {
                 Tools.checkEDT();
-            } catch ( Error ex ) {
+            } catch ( EdtViolationException ex ) {
                 notOnEDT_ErrorThrown = true;
             }
         } );
         t.start();
         try {
             t.join();
-            assertEquals( "When not on EDT must throw an error", true, notOnEDT_ErrorThrown );
+            assertTrue( "When not on EDT must throw an error", notOnEDT_ErrorThrown );
         } catch ( InterruptedException ex ) {
             Logger.getLogger( ToolsTest.class.getName() ).log( Level.SEVERE, null, ex );
-            assertTrue( "Something went wrong", false );
+            fail( "EDT violation not thrown" );
         }
     }
 
@@ -71,13 +72,13 @@ public class ToolsTest {
                 onEDTErrorThrown = false;
                 try {
                     Tools.checkEDT();
-                } catch ( Error ex ) {
+                } catch ( EdtViolationException ex ) {
                     onEDTErrorThrown = true;
                 }
-                assertEquals( "When on EDT must not throw an error", false, onEDTErrorThrown );
+                assertTrue( "When on EDT must not throw an error", ! onEDTErrorThrown );
             } );
         } catch ( InterruptedException | InvocationTargetException ex ) {
-            fail( "Something went wrong");
+            fail( "Something went wrong with the EDT thread test" );
         }
 
     }
@@ -93,4 +94,88 @@ public class ToolsTest {
         assertEquals( "A backslash could be made into an underscore", wanted, got );
     }
 
+    /**
+     * Test of parseDate
+     */
+    @Test
+    public void testParseDateTime() {
+        String d = "2017:01:28 12:26:04";
+        String expected = "2017-01-28 12:26:04";
+        SimpleDateFormat format = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" );
+        String result = format.format( Tools.parseDate( d ).getTime() );
+        assertEquals( expected, result );
+    }
+
+    /**
+     * Test of parseDate
+     */
+    @Test
+    public void testParseDate() {
+        String d = "2017:01:28";
+        String expected = "2017-01-28 00:00:00";
+        SimpleDateFormat format = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" );
+        String result = format.format( Tools.parseDate( d ).getTime() );
+        assertEquals( expected, result );
+    }
+
+        /**
+     * Test of parseDate
+     */
+    @Test
+    public void testParseDateGerman() {
+        String d = "15.01.2017";
+        String expected = "2017-01-15 00:00:00";
+        SimpleDateFormat format = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" );
+        String result = format.format( Tools.parseDate( d ).getTime() );
+        assertEquals( expected, result );
+    }
+    
+    
+        /**
+     * Test of parseDate
+     */
+    @Test
+    public void testParseDateGermanMinutes() {
+        String d = "15.01.2017 18:11";
+        String expected = "2017-01-15 18:11:00";
+        SimpleDateFormat format = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" );
+        String result = format.format( Tools.parseDate( d ).getTime() );
+        assertEquals( expected, result );
+    }
+    
+            /**
+     * Test of parseDate
+     */
+    @Test
+    public void testParseDateGermanSeconds() {
+        String d = "15.01.2017 18:11:33";
+        String expected = "2017-01-15 18:11:33";
+        SimpleDateFormat format = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" );
+        String result = format.format( Tools.parseDate( d ).getTime() );
+        assertEquals( expected, result );
+    }
+    
+    /**
+     * Test of parseDate
+     */
+    @Test
+    public void testParseDateAmerican() {
+        String d = "9/11/2001";
+        String expected = "2001-09-11 00:00:00";
+        SimpleDateFormat format = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" );
+        String result = format.format( Tools.parseDate( d ).getTime() );
+        assertEquals( expected, result );
+    }
+
+    /**
+     * Test of parseDate
+     */
+    @Test
+    public void testParseDateAmericanTime() {
+        String d = "9/11/2001 08:46";
+        String expected = "2001-09-11 08:46:00";
+        SimpleDateFormat format = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" );
+        String result = format.format( Tools.parseDate( d ).getTime() );
+        assertEquals( expected, result );
+    }
 }
