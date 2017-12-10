@@ -130,15 +130,15 @@ public class CollectionJTree
     /**
      *  Icon of a closed folder to be used on groups that are not expanded in the JTree.
      */
-    private static final ImageIcon CLOSED_FOLDER_ICON = new ImageIcon( Settings.CLASS_LOADER.getResource( "jpo/images/icon_folder_closed.gif" ) );
+    private static final ImageIcon CLOSED_FOLDER_ICON = new ImageIcon( CollectionJTree.class.getClassLoader().getResource( "jpo/images/icon_folder_closed.gif" ) );
 
     /**
      *  Icon of an open folder to be used on groups that are expanded in the JTree.
      */
-    private static final ImageIcon OPEN_FOLDER_ICON = new ImageIcon( Settings.CLASS_LOADER.getResource( "jpo/images/icon_folder_open.gif" ) );
+    private static final ImageIcon OPEN_FOLDER_ICON = new ImageIcon( CollectionJTree.class.getClassLoader().getResource( "jpo/images/icon_folder_open.gif" ) );
 
     /**
      *  Icon of a picture for use on picture bearing nodes in the JTree.
      */
-    private static final ImageIcon PICTURE_ICON = new ImageIcon( Settings.CLASS_LOADER.getResource( "jpo/images/icon_picture.gif" ) );
+    private static final ImageIcon PICTURE_ICON = new ImageIcon( CollectionJTree.class.getClassLoader().getResource( "jpo/images/icon_picture.gif" ) );
 }

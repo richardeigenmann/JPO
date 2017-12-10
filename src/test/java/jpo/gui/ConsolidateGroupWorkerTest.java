@@ -90,7 +90,7 @@ public class ConsolidateGroupWorkerTest {
         File tempSourceDirectory = Files.createTempDir();
         File sourceImageFile = new File( tempSourceDirectory, "Image1.jpg" );
 
-        try ( InputStream in = Settings.CLASS_LOADER.getResourceAsStream( "exif-test-nikon-d100-1.jpg" );
+        try ( InputStream in = ConsolidateGroupWorkerTest.class.getClassLoader().getResourceAsStream( "exif-test-nikon-d100-1.jpg" );
                 FileOutputStream fout = new FileOutputStream( sourceImageFile ) ) {
             IOUtils.copy( in, fout );
         } catch ( IOException ex ) {
@@ -117,7 +117,7 @@ public class ConsolidateGroupWorkerTest {
         File tempSourceDirectory = Files.createTempDir();
         File imageFile = new File( tempSourceDirectory, "Image1.jpg" );
 
-        try ( InputStream in = Settings.CLASS_LOADER.getResourceAsStream( "exif-test-nikon-d100-1.jpg" );
+        try ( InputStream in = ConsolidateGroupWorkerTest.class.getClassLoader().getResourceAsStream( "exif-test-nikon-d100-1.jpg" );
                 FileOutputStream fout = new FileOutputStream( imageFile ) ) {
             IOUtils.copy( in, fout );
         } catch ( IOException ex ) {
@@ -154,7 +154,7 @@ public class ConsolidateGroupWorkerTest {
         File tempSourceDirectory = Files.createTempDir();
         File sourceImageFile = new File( tempSourceDirectory, "ReadOnlyImage.jpg" );
 
-        try ( InputStream in = Settings.CLASS_LOADER.getResourceAsStream( "exif-test-nikon-d100-1.jpg" );
+        try ( InputStream in = ConsolidateGroupWorkerTest.class.getClassLoader().getResourceAsStream( "exif-test-nikon-d100-1.jpg" );
                 FileOutputStream fout = new FileOutputStream( sourceImageFile ) ) {
             IOUtils.copy( in, fout );
         } catch ( IOException ex ) {
@@ -211,7 +211,7 @@ public class ConsolidateGroupWorkerTest {
         File tempSourceDirectory = Files.createTempDir();
         File sourceImageFile = new File( tempSourceDirectory, "Image1.jpg" );
 
-        try ( InputStream in = Settings.CLASS_LOADER.getResourceAsStream( "exif-test-nikon-d100-1.jpg" );
+        try ( InputStream in = ConsolidateGroupWorkerTest.class.getClassLoader().getResourceAsStream( "exif-test-nikon-d100-1.jpg" );
                 FileOutputStream fout = new FileOutputStream( sourceImageFile ) ) {
             IOUtils.copy( in, fout );
         } catch ( IOException ex ) {
@@ -240,7 +240,7 @@ public class ConsolidateGroupWorkerTest {
         File tempSourceDirectory = Files.createTempDir();
         File sopurceImageFile = new File( tempSourceDirectory, "Image1.jpg" );
 
-        try ( InputStream in = Settings.CLASS_LOADER.getResourceAsStream( "exif-test-nikon-d100-1.jpg" );
+        try ( InputStream in = ConsolidateGroupWorkerTest.class.getClassLoader().getResourceAsStream( "exif-test-nikon-d100-1.jpg" );
                 FileOutputStream fout = new FileOutputStream( sopurceImageFile ) ) {
             IOUtils.copy( in, fout );
         } catch ( IOException ex ) {
@@ -276,7 +276,7 @@ public class ConsolidateGroupWorkerTest {
         File tempSourceDirectory = Files.createTempDir();
         File sourceImageFile = new File( tempSourceDirectory, "ReadOnlyImage.jpg" );
 
-        try ( InputStream in = Settings.CLASS_LOADER.getResourceAsStream( "exif-test-nikon-d100-1.jpg" );
+        try ( InputStream in = ConsolidateGroupWorkerTest.class.getClassLoader().getResourceAsStream( "exif-test-nikon-d100-1.jpg" );
                 FileOutputStream fout = new FileOutputStream( sourceImageFile ) ) {
             IOUtils.copy( in, fout );
         } catch ( IOException ex ) {

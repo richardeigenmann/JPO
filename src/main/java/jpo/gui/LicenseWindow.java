@@ -12,12 +12,12 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import jpo.dataModel.Settings;
-import webserver.NanoHTTPD;
+
 
 /*
  LicenseWindow.java:  Creates the License window
 
- Copyright (C) 2007 - 2014 Richard Eigenmann, Zürich, Switzerland
+ Copyright (C) 2007 - 2017 Richard Eigenmann, Zürich, Switzerland
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -32,7 +32,7 @@ import webserver.NanoHTTPD;
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 /**
- * This class creates the License window
+ * This class creates and Shows the License window
  */
 public class LicenseWindow {
 
@@ -44,38 +44,34 @@ public class LicenseWindow {
     /**
      * Creates the License Window
      */
-    LicenseWindow() {
+    public LicenseWindow() {
         JTextArea licenseJTextArea = new JTextArea( "reading the file gpl.txt" );
         licenseJTextArea.setWrapStyleWord( true );
         licenseJTextArea.setLineWrap( true );
         licenseJTextArea.setEditable( false );
-        JScrollPane jsp = new JScrollPane( licenseJTextArea,
+        JScrollPane jScrollPane = new JScrollPane( licenseJTextArea,
                 JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
                 JScrollPane.HORIZONTAL_SCROLLBAR_NEVER );
-        jsp.setPreferredSize( new Dimension( 500, 400 ) );
+        jScrollPane.setPreferredSize( new Dimension( 500, 400 ) );
 
         StringBuilder sb = new StringBuilder( "" );
         String textLine;
         try (
-                InputStream in = ApplicationJMenuBar.class.getResourceAsStream( "../gpl.txt" );
+                InputStream in = LicenseWindow.class.getClassLoader().getResourceAsStream( "gpl.txt" );
                 BufferedReader bin = new BufferedReader( new InputStreamReader( in ) ); ) {
             while ( ( textLine = bin.readLine() ) != null ) {
                 sb.append( textLine ).append( "\n" );
             }
-            bin.close();
-            in.close();
-        } catch ( IOException e ) {
-            LOGGER.log( Level.INFO, "Jpo.java: Error while reading gpl.txt: {0}", e.getMessage());
+        } catch ( IOException | NullPointerException e ) {
+            LOGGER.log( Level.SEVERE, "Jpo.java: Error while reading gpl.txt: {0}", e.getMessage());
         }
-        sb.append( "\n\n------------------------\nLicense for embedded NanoHTTPD:\n\n" );
-        sb.append( NanoHTTPD.LICENCE );
         licenseJTextArea.setText( sb.toString() );
         licenseJTextArea.setCaretPosition( 0 );
 
-        Object[] License = { jsp };
+        Object[] License = { jScrollPane };
 
-        final String btnString1 = "OK";
-        Object[] options = { btnString1 };
+        final String OK = "OK";
+        Object[] options = { OK };
 
         JOptionPane pane = new JOptionPane( License,
                 JOptionPane.INFORMATION_MESSAGE,

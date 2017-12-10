@@ -91,7 +91,6 @@ import jpo.EventBus.ShowGroupAsTableRequest;
 import jpo.EventBus.ShowGroupInfoEditorRequest;
 import jpo.EventBus.ShowGroupRequest;
 import jpo.EventBus.ShowPictureInfoEditorRequest;
-import jpo.EventBus.ShowPictureOnMapRequest;
 import jpo.EventBus.ShowPictureRequest;
 import jpo.EventBus.ShowQueryRequest;
 import jpo.EventBus.SortGroupRequest;
@@ -133,7 +132,6 @@ import jpo.gui.swing.Thumbnail;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
 import org.apache.commons.compress.archivers.zip.ZipFile;
-import webserver.Webserver;
 
 /*
  ApplicationEventHandler.java:  The Event dispatcher for the JPO Application 
@@ -370,17 +368,6 @@ public class ApplicationEventHandler {
         PictureViewer pictureViewer = new PictureViewer();
         pictureViewer.showNode( navigator, index );
 
-    }
-
-    /**
-     * When the app sees a ShowPictureOnMapRequest it will start a webserver and
-     * will spawn the Google maps with the teardrop on the indicated location.
-     *
-     * @param request The request
-     */
-    @Subscribe
-    public void handleShowPictureOnMapRequest( ShowPictureOnMapRequest request ) {
-        Webserver.getInstance().browse( request.getNode() );
     }
 
     /**

@@ -56,25 +56,25 @@ public class ThumbnailPanelTitle
      *  a button to navigate back to the first page
      **/
     public JButton firstThumbnailsPageButton =
-            new JButton( new ImageIcon( Settings.CLASS_LOADER.getResource( "jpo/images/icon_first.gif" ) ) );
+            new JButton( new ImageIcon( ThumbnailPanelTitle.class.getClassLoader().getResource( "jpo/images/icon_first.gif" ) ) );
 
     /**
      *  a button to navigate to the next page
      **/
     public JButton nextThumbnailsPageButton =
-            new JButton( new ImageIcon( Settings.CLASS_LOADER.getResource( "jpo/images/Forward24.gif" ) ) );
+            new JButton( new ImageIcon( ThumbnailPanelTitle.class.getClassLoader().getResource( "jpo/images/Forward24.gif" ) ) );
 
     /**
      *  a button to navigate to the last page
      **/
     public JButton lastThumbnailsPageButton =
-            new JButton( new ImageIcon( Settings.CLASS_LOADER.getResource( "jpo/images/icon_last.gif" ) ) );
+            new JButton( new ImageIcon( ThumbnailPanelTitle.class.getClassLoader().getResource( "jpo/images/icon_last.gif" ) ) );
 
     /**
      *  a button to navigate to the first page
      **/
     public JButton previousThumbnailsPageButton =
-            new JButton( new ImageIcon( Settings.CLASS_LOADER.getResource( "jpo/images/Back24.gif" ) ) );
+            new JButton( new ImageIcon( ThumbnailPanelTitle.class.getClassLoader().getResource( "jpo/images/Back24.gif" ) ) );
 
     /**
      * JLabel for holding the thumbnail counts

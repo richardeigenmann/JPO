@@ -258,7 +258,7 @@ public class PictureInfoTest {
      */
     @Test
     public void testDumpToXml() {
-        final PictureInfo pi = new PictureInfo( Settings.CLASS_LOADER.getResource( "exif-test-canon-eos-350d.jpg" ), "First <Picture> & difficult xml chars ' \"" );
+        final PictureInfo pi = new PictureInfo( PictureInfoTest.class.getClassLoader().getResource( "exif-test-canon-eos-350d.jpg" ), "First <Picture> & difficult xml chars ' \"" );
         pi.setComment( "Comment <<&>'\">" );
         pi.setFilmReference( "Reference <<&>'\">" );
         pi.setRotation( 45.1 );
@@ -278,10 +278,13 @@ public class PictureInfoTest {
             fail( "Unexpected IOException" );
         }
 
+        URL jpgResource = PictureInfoTest.class.getClassLoader().getResource( "exif-test-canon-eos-350d.jpg" );
+
         String expected = "<picture>\n"
                 + "\t<description><![CDATA[First <Picture> & difficult xml chars ' \"]]></description>\n"
-                + "\t<file_URL>file:" + System.getProperty("user.dir") + File.separator
-                + "build/resources/test/exif-test-canon-eos-350d.jpg</file_URL>\n"
+                + "\t<file_URL>"
+                + jpgResource.toString()
+                + "</file_URL>\n"
                 + "\t<checksum>1234</checksum>\n"
                 + "\t<COMMENT>Comment &lt;&lt;&amp;&gt;&apos;&quot;&gt;</COMMENT>\n"
                 + "\t<PHOTOGRAPHER>Richard Eigenmann &lt;&lt;&amp;&gt;&apos;&quot;&gt;</PHOTOGRAPHER>\n"
@@ -310,7 +313,7 @@ public class PictureInfoTest {
 
     @Test
     public void testCalculateChecksum() {
-        URL image = Settings.CLASS_LOADER.getResource( "exif-test-canon-eos-350d.jpg" );
+        URL image = PictureInfoTest.class.getClassLoader().getResource( "exif-test-canon-eos-350d.jpg" );
         PictureInfo pi = new PictureInfo( image, "Sample Picture" );
         assertEquals( "N/A", pi.getChecksumAsString() );
         pi.calculateChecksum();

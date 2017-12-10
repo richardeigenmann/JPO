@@ -65,7 +65,6 @@ import net.miginfocom.swing.MigLayout;
 import org.jxmapviewer.JXMapViewer;
 import org.jxmapviewer.input.MapClickListener;
 import org.jxmapviewer.viewer.GeoPosition;
-import webserver.Webserver;
 
 /*
  PictureInfoEditor:  Edits the details of a picture
@@ -265,7 +264,7 @@ public class PictureInfoEditor extends JFrame {
         spinner.setEditor( new JSpinner.NumberEditor( spinner, "###.##" ) );
         rotationPanel.add( spinner );
 
-        JButton rotateLeftJButton = new JButton( new ImageIcon( Settings.CLASS_LOADER.getResource( "jpo/images/icon_RotCCDown.gif" ) ) );
+        JButton rotateLeftJButton = new JButton( new ImageIcon( PictureInfoEditor.class.getClassLoader().getResource( "jpo/images/icon_RotCCDown.gif" ) ) );
         rotateLeftJButton.setMnemonic( KeyEvent.VK_L );
         rotateLeftJButton.addActionListener( ( ActionEvent e ) -> {
             angleModel.setValue( ( (Double) angleModel.getValue() + 270 ) % 360 );
@@ -277,7 +276,7 @@ public class PictureInfoEditor extends JFrame {
         /**
          * Button to rotate right
          */
-        JButton rotateRightJButton = new JButton( new ImageIcon( Settings.CLASS_LOADER.getResource( "jpo/images/icon_RotCWDown.gif" ) ) );
+        JButton rotateRightJButton = new JButton( new ImageIcon( PictureInfoEditor.class.getClassLoader().getResource( "jpo/images/icon_RotCWDown.gif" ) ) );
         rotateRightJButton.setMnemonic( KeyEvent.VK_R );
         rotateRightJButton.addActionListener( ( ActionEvent e ) -> {
             angleModel.setValue( ( (Double) angleModel.getValue() + 90 ) % 360 );
@@ -337,8 +336,13 @@ public class PictureInfoEditor extends JFrame {
         descriptionJTextArea.setEditable( true );
         infoTab.add( descriptionJTextArea, "span 2, wrap" );
 
+        final JLabel sizeLabelJLabel = new JLabel( "Size:" );
+        infoTab.add( sizeLabelJLabel, "aligny top" );
+
+        infoTab.add( sizeJLabel, "aligny top, wrap" );
+        
         JLabel creationTimeJLabel = new JLabel( Settings.jpoResources.getString( "creationTimeLabel" ) );
-        infoTab.add( creationTimeJLabel, "spany 2, aligny top" );
+        infoTab.add( creationTimeJLabel, "spany 3, aligny top" );
 
         creationTimeJTextField.setPreferredSize( SHORT_FIELD_DIMENSION );
         creationTimeJTextField.addFocusListener( new FocusListener() {
@@ -396,22 +400,11 @@ public class PictureInfoEditor extends JFrame {
         infoTab.add( latitudeJTextField, "wrap" );
 
         final JLabel longitudeJLabel = new JLabel( Settings.jpoResources.getString( "longitudeLabel" ) );
-        infoTab.add( longitudeJLabel, "spany 2, aligny top" );
+        infoTab.add( longitudeJLabel, "aligny top" );
 
         longitudeJTextField = new JFormattedTextField( nfl );
         longitudeJTextField.setPreferredSize( SHORT_FIELD_DIMENSION );
         infoTab.add( longitudeJTextField, "wrap" );
-
-        JButton mapButton = new JButton( "Open Map (in Browser)" );
-        mapButton.addActionListener( ( ActionEvent e ) -> {
-            Webserver.getInstance().browse( myNode );
-        } );
-        infoTab.add( mapButton, "span 2, wrap" );
-
-        final JLabel sizeLabelJLabel = new JLabel( "Size:" );
-        infoTab.add( sizeLabelJLabel, "aligny top" );
-
-        infoTab.add( sizeJLabel, "aligny top, wrap" );
 
         JScrollPane jScrollPane = new JScrollPane( infoTab );
         jScrollPane.setWheelScrollingEnabled( true );
@@ -470,7 +463,7 @@ public class PictureInfoEditor extends JFrame {
          */
         );
 
-        categoriesTab.add( listJScrollPane, "wrap" );
+        categoriesTab.add( listJScrollPane, "push, grow, wrap" );
         tabs.add( "Categories", categoriesTab );
 
         // Add Exif panel

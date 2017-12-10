@@ -274,7 +274,7 @@ public class JpoCache {
     private Dimension getThumbnailDimensions() {
         if ( groupThumbnailDimension == null ) {
             BufferedImage groupThumbnail;
-            try ( BufferedInputStream bis = new BufferedInputStream( Settings.CLASS_LOADER.getResourceAsStream( "jpo/images/icon_folder_large.jpg" ) ) ) {
+            try ( BufferedInputStream bis = new BufferedInputStream( JpoCache.class.getClassLoader().getResourceAsStream( "jpo/images/icon_folder_large.jpg" ) ) ) {
                 groupThumbnail = ImageIO.read( bis );
                 groupThumbnailDimension = new Dimension( groupThumbnail.getWidth(), groupThumbnail.getHeight() );
 
@@ -351,7 +351,7 @@ public class JpoCache {
      * @return the image
      */
     private ImageBytes createGroupThumbnailAndStoreInCache( String key, int numberOfPics, List<SortableDefaultMutableTreeNode> childPictureNodes ) throws IOException {
-        BufferedImage groupThumbnail = ImageIO.read( new BufferedInputStream( Settings.CLASS_LOADER.getResourceAsStream( "jpo/images/icon_folder_large.jpg" ) ) );
+        BufferedImage groupThumbnail = ImageIO.read( new BufferedInputStream( JpoCache.class.getClassLoader().getResourceAsStream( "jpo/images/icon_folder_large.jpg" ) ) );
         Graphics2D groupThumbnailGraphics = groupThumbnail.createGraphics();
 
         int leftMargin = 15;

@@ -63,6 +63,6 @@
 
     <hr>
     <p>Last update to this page: 30 Dec 2015<br>
-        Copyright 2003-2016 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
+        Copyright 2003-2017 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
 </div>
 <?php include("page-end.php"); ?>

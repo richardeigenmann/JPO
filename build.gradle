@@ -91,9 +91,6 @@ sourceSets {
             
             srcDir 'src/dtd'
             include '**/*.dtd'
-            include '**/*.css'
-            include '**/*.html'
-            include '**/*.js'
             include '**/*.txt'
                 
             srcDir 'src/main/java/jpo/cache'

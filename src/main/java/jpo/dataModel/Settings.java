@@ -55,11 +55,6 @@ public class Settings {
     private static final Logger LOGGER = Logger.getLogger( Settings.class.getName() );
 
     /**
-     * this ClassLoader helps most other objects find the resources they require
-     */
-    public static final ClassLoader CLASS_LOADER = Settings.class.getClassLoader();
-
-    /**
      * A static reference to the Collection being displayed. In future perhaps
      * we will allow multiple collections to be loaded.
      *

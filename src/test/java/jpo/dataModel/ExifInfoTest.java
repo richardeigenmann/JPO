@@ -63,7 +63,7 @@ public class ExifInfoTest {
     @Test
     public void testExifInfoD100() {
         final String NIKON_D100_IMAGE = "exif-test-nikon-d100-1.jpg";
-        URL imageUrl = Settings.CLASS_LOADER.getResource( NIKON_D100_IMAGE );
+        URL imageUrl = ExifInfoTest.class.getClassLoader().getResource( NIKON_D100_IMAGE );
         if ( imageUrl == null ) {
             fail("Unable to locate the test image: " + NIKON_D100_IMAGE);
         }
@@ -90,7 +90,7 @@ public class ExifInfoTest {
     @Test
     public void testExifInfoS4() {
         final String SAMSUNG_S4_IMAGE = "exif-test-samsung-s4.jpg";
-        URL imageUrl = Settings.CLASS_LOADER.getResource( SAMSUNG_S4_IMAGE );
+        URL imageUrl = ExifInfoTest.class.getClassLoader().getResource( SAMSUNG_S4_IMAGE );
         if ( imageUrl == null ) {
             fail("Unable to locate the test image: " + SAMSUNG_S4_IMAGE);
         }
@@ -117,7 +117,7 @@ public class ExifInfoTest {
     @Test
     public void testExifInfoS4Loc() {
         final String SAMSUNG_S4_LOC_IMAGE = "exif-test-samsung-s4-loc.jpg";
-        URL imageUrl = Settings.CLASS_LOADER.getResource( SAMSUNG_S4_LOC_IMAGE );
+        URL imageUrl = ExifInfoTest.class.getClassLoader().getResource( SAMSUNG_S4_LOC_IMAGE );
         if ( imageUrl == null ) {
             fail("Unable to locate the test image: " + SAMSUNG_S4_LOC_IMAGE);
         }
@@ -144,7 +144,7 @@ public class ExifInfoTest {
     @Test
     public void testExifInfoS4Rot0() {
         final String SAMSUNG_S4_ROT0_IMAGE = "exif-test-samsung-s4-roation-0.jpg";
-        URL imageUrl = Settings.CLASS_LOADER.getResource( SAMSUNG_S4_ROT0_IMAGE );
+        URL imageUrl = ExifInfoTest.class.getClassLoader().getResource( SAMSUNG_S4_ROT0_IMAGE );
         if ( imageUrl == null ) {
             fail("Unable to locate the test image: " + SAMSUNG_S4_ROT0_IMAGE);
         }
@@ -171,7 +171,7 @@ public class ExifInfoTest {
     @Test
     public void testExifInfoS4RotLeft() {
         final String SAMSUNG_S4_ROT_LEFT_IMAGE = "exif-test-samsung-s4-roation-left.jpg";
-        URL imageUrl = Settings.CLASS_LOADER.getResource( SAMSUNG_S4_ROT_LEFT_IMAGE );
+        URL imageUrl = ExifInfoTest.class.getClassLoader().getResource( SAMSUNG_S4_ROT_LEFT_IMAGE );
         if ( imageUrl == null ) {
             fail("Unable to locate the test image: " + SAMSUNG_S4_ROT_LEFT_IMAGE);
         }
@@ -198,7 +198,7 @@ public class ExifInfoTest {
     @Test
     public void testExifInfoS4RotRight() {
         final String SAMSUNG_S4_ROT_RIGHT_IMAGE = "exif-test-samsung-s4-roation-right.jpg";
-        URL imageUrl = Settings.CLASS_LOADER.getResource( SAMSUNG_S4_ROT_RIGHT_IMAGE );
+        URL imageUrl = ExifInfoTest.class.getClassLoader().getResource( SAMSUNG_S4_ROT_RIGHT_IMAGE );
         if ( imageUrl == null ) {
             fail("Unable to locate the test image: " + SAMSUNG_S4_ROT_RIGHT_IMAGE);
         }
@@ -225,7 +225,7 @@ public class ExifInfoTest {
     @Test
     public void testExifInfoS4RotUpsideDown() {
         final String SAMSUNG_S4_ROT_UPSIDEDOWN_IMAGE = "exif-test-samsung-s4-upside-down.jpg";
-        URL imageUrl = Settings.CLASS_LOADER.getResource( SAMSUNG_S4_ROT_UPSIDEDOWN_IMAGE );
+        URL imageUrl = ExifInfoTest.class.getClassLoader().getResource( SAMSUNG_S4_ROT_UPSIDEDOWN_IMAGE );
         if ( imageUrl == null ) {
             fail("Unable to locate the test image: " + SAMSUNG_S4_ROT_UPSIDEDOWN_IMAGE);
         }
@@ -251,7 +251,7 @@ public class ExifInfoTest {
     @Test
     public void testExifInfoEos350d() {
         final String CANON_EOS350D_IMAGE = "exif-test-canon-eos-350d.jpg";
-        URL imageUrl = Settings.CLASS_LOADER.getResource( CANON_EOS350D_IMAGE );
+        URL imageUrl = ExifInfoTest.class.getClassLoader().getResource( CANON_EOS350D_IMAGE );
         if ( imageUrl == null ) {
             fail("Unable to locate the test image: " + CANON_EOS350D_IMAGE);
         }
@@ -278,7 +278,7 @@ public class ExifInfoTest {
     @Test
     public void testExifInfoCanonEos60D() {
         final String CANON_EOS60D_IMAGE = "exif-test-canon-eos-60d.jpg";
-        URL imageUrl = Settings.CLASS_LOADER.getResource( CANON_EOS60D_IMAGE );
+        URL imageUrl = ExifInfoTest.class.getClassLoader().getResource( CANON_EOS60D_IMAGE );
         if ( imageUrl == null ) {
             fail("Unable to locate the test image: " + CANON_EOS60D_IMAGE);
         }
@@ -305,7 +305,7 @@ public class ExifInfoTest {
     @Test
     public void testExifInfoCybershot1() {
         final String CANON_CYBERSHOT1_IMAGE = "exif-test-sony-cybershot-1.jpg";
-        URL imageUrl = Settings.CLASS_LOADER.getResource( CANON_CYBERSHOT1_IMAGE );
+        URL imageUrl = ExifInfoTest.class.getClassLoader().getResource( CANON_CYBERSHOT1_IMAGE );
         if ( imageUrl == null ) {
             fail("Unable to locate the test image: " + CANON_CYBERSHOT1_IMAGE);
         }
@@ -331,7 +331,7 @@ public class ExifInfoTest {
     @Test
     public void testExifInfoSonyD700() {
         final String SONY_D700_IMAGE = "exif-test-sony-d700.jpg";
-        URL imageUrl = Settings.CLASS_LOADER.getResource( SONY_D700_IMAGE );
+        URL imageUrl = ExifInfoTest.class.getClassLoader().getResource( SONY_D700_IMAGE );
         if ( imageUrl == null ) {
             fail("Unable to locate the test image: " + SONY_D700_IMAGE);
         }
@@ -357,7 +357,7 @@ public class ExifInfoTest {
     @Test
     public void testExifInfoSonyP200() {
         final String SONY_P200_IMAGE = "exif-test-sony-P200.jpg";
-        URL imageUrl = Settings.CLASS_LOADER.getResource( SONY_P200_IMAGE );
+        URL imageUrl = ExifInfoTest.class.getClassLoader().getResource( SONY_P200_IMAGE );
         if ( imageUrl == null ) {
             fail("Unable to locate the test image: " + SONY_P200_IMAGE);
         }

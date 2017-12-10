@@ -23,23 +23,23 @@ public class XmlReaderTest {
     public void testCorrectJarReferences() {
         final SortableDefaultMutableTreeNode rootNode = new SortableDefaultMutableTreeNode();
 
-        URL image = Settings.CLASS_LOADER.getResource( "exif-test-canon-eos-350d.jpg" );
+        URL image = XmlReaderTest.class.getClassLoader().getResource( "exif-test-canon-eos-350d.jpg" );
         File imageFile = null;
         try {
-            imageFile = new File (image.toURI());
-        } catch ( URISyntaxException ex ) {
+            imageFile = new File( image.toURI() );
+        } catch ( URISyntaxException | NullPointerException ex ) {
             Logger.getLogger( XmlReaderTest.class.getName() ).log( Level.SEVERE, null, ex );
-            fail("Could not create imageFile");
+            fail( "Could not create imageFile" );
         }
-                
+
         final PictureInfo pi = new PictureInfo( imageFile.toString(), "First Picture" );
-        final SortableDefaultMutableTreeNode picture1 = new SortableDefaultMutableTreeNode(pi);
-        
+        final SortableDefaultMutableTreeNode picture1 = new SortableDefaultMutableTreeNode( pi );
+
         rootNode.add( picture1 );
-        
+
         XmlReader.correctJarReferences( rootNode );
-        
-        assertEquals(((PictureInfo) picture1.getUserObject()).getImageFilename(), pi.getImageFilename());
+
+        assertEquals( ( (PictureInfo) picture1.getUserObject() ).getImageFilename(), pi.getImageFilename() );
     }
 
 }

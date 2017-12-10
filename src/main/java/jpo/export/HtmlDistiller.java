@@ -180,7 +180,7 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
         if ( folderIconRequired ) {
             File folderIconFile = new File( options.getTargetDirectory(), "jpo_folder_icon.gif" );
             try (
-                    InputStream inStream = Settings.CLASS_LOADER.getResource( "jpo/images/icon_folder.gif" ).openStream();
+                    InputStream inStream = HtmlDistiller.class.getClassLoader().getResource( "jpo/images/icon_folder.gif" ).openStream();
                     FileOutputStream outStream = new FileOutputStream( folderIconFile );
                     BufferedInputStream bin = new BufferedInputStream( inStream );
                     BufferedOutputStream bout = new BufferedOutputStream( outStream ); ) {
@@ -454,7 +454,7 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
         LOGGER.info( String.format( "Done Loading: %s", pictureInfo.getImageLocation() ) );
         if ( scp.getStatusCode() == SCALABLE_PICTURE_ERROR ) {
             LOGGER.log( Level.SEVERE, "Problem reading image {0} using brokenThumbnailPicture instead", pictureInfo.getImageLocation() );
-            scp.loadPictureImd( Settings.CLASS_LOADER.getResource( "jpo/images/broken_thumbnail.gif" ), 0f );
+            scp.loadPictureImd( HtmlDistiller.class.getClassLoader().getResource( "jpo/images/broken_thumbnail.gif" ), 0f );
         }
 
         // copy the picture to the target directory

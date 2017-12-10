@@ -4,7 +4,6 @@
  */
 package jpo.dataModel;
 
-import java.net.URL;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertNull;
 import static junit.framework.TestCase.fail;
@@ -32,11 +31,11 @@ public class NodeStatisticsTest{
 
     private SortableDefaultMutableTreeNode group3;
 
-    private final PictureInfo pi1 = new PictureInfo(Settings.CLASS_LOADER.getResource( "exif-test-canon-eos-350d.jpg" ), "First Picture");
+    private final PictureInfo pi1 = new PictureInfo(NodeStatisticsTest.class.getClassLoader().getResource( "exif-test-canon-eos-350d.jpg" ), "First Picture");
 
     private SortableDefaultMutableTreeNode picture1;
 
-    private final PictureInfo pi2 = new PictureInfo(Settings.CLASS_LOADER.getResource( "exif-test-canon-eos-60d.jpg" ), "Second Picture");
+    private final PictureInfo pi2 = new PictureInfo(NodeStatisticsTest.class.getClassLoader().getResource( "exif-test-canon-eos-60d.jpg" ), "Second Picture");
 
     private SortableDefaultMutableTreeNode picture2;
 
