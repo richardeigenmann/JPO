@@ -28,7 +28,7 @@ import jpo.cache.ThumbnailCreationQueue;
  * PictureCollection.java: Information about the collection and owns the tree
  * model
  *
- * Copyright (C) 2006 - 2014 Richard Eigenmann, Zurich, Switzerland This program
+ * Copyright (C) 2006 - 2017 Richard Eigenmann, Zurich, Switzerland This program
  * is free software; you can redistribute it and/or modify it under the terms of
  * the GNU General Public License as published by the Free Software Foundation;
  * either version 2 of the License, or any later version. This program is
@@ -627,9 +627,9 @@ public class PictureCollection {
     public void clearMailSelection() {
         //can't use iterator directly or we have a concurrent modification exception
         List<SortableDefaultMutableTreeNode> clone = new ArrayList<>( mailSelection.size() );
-        mailSelection.stream().forEach( ( item ) -> {
-            clone.add( item );
-        } );
+        mailSelection.stream().forEach( item
+                -> clone.add( item )
+        );
 
         for ( SortableDefaultMutableTreeNode node : clone ) {
             LOGGER.log( Level.FINE, "Removing node: {0}", node.toString() );
@@ -852,9 +852,9 @@ public class PictureCollection {
         SwingUtilities.invokeLater(
                 () -> {
                     getYearsTreeNode().removeAllChildren();
-                    years.stream().forEach( ( year ) -> {
-                        addYearQuery( year );
-                    } );
+                    years.stream().forEach( year
+                            -> addYearQuery( year )
+                    );
                 }
         );
 

@@ -135,7 +135,7 @@ public class ExifInfo {
      */
     public void decodeExifTags() {
         if ( pictureUrl == null ) {
-            LOGGER.severe( "Can't decode Exif tags on a null URL!");
+            LOGGER.severe( "Can't decode Exif tags on a null URL!" );
             Thread.dumpStack();
             return;
         }
@@ -209,9 +209,9 @@ public class ExifInfo {
             }
 
             for ( Directory directory : metadata.getDirectories() ) {
-                directory.getTags().stream().forEach( ( tag ) -> {
-                    exifDump.append( tag.getTagTypeHex() ).append( " - " ).append( tag.getTagName() ).append( ":\t" ).append( tag.getDirectoryName() ).append( ":\t" ).append( tag.getDescription() ).append( "\n" );
-                } );
+                directory.getTags().stream().forEach( tag
+                        -> exifDump.append( tag.getTagTypeHex() ).append( " - " ).append( tag.getTagName() ).append( ":\t" ).append( tag.getDirectoryName() ).append( ":\t" ).append( tag.getDescription() ).append( "\n" )
+                );
             }
         } catch ( ImageProcessingException | NullPointerException | IOException x ) {
             LOGGER.severe( x.getMessage() );

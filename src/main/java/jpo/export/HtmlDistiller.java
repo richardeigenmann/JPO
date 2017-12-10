@@ -224,12 +224,12 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
      */
     @Override
     protected void process( List<String> messages ) {
-        messages.stream().map( ( message ) -> {
+        messages.stream().map( message -> {
             LOGGER.info( String.format( "messge: %s", message ) );
             return message;
-        } ).forEachOrdered( ( _item ) -> {
-            progGui.progressIncrement();
-        } );
+        } ).forEachOrdered( _item
+                -> progGui.progressIncrement()
+        );
     }
 
     /**

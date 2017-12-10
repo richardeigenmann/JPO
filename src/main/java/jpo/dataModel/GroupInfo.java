@@ -86,9 +86,10 @@ public class GroupInfo implements Serializable {
     public String getGroupName() {
         return groupName.toString();
     }
-    
-        /**
-     * Returns the description of the group with the HTML characters safely escaped.
+
+    /**
+     * Returns the description of the group with the HTML characters safely
+     * escaped.
      *
      * @return	The description of the Group.
      * @see #getGroupName
@@ -97,7 +98,6 @@ public class GroupInfo implements Serializable {
     public String getGroupNameHtml() {
         return StringEscapeUtils.escapeHtml4( groupName.toString() );
     }
-
 
     /**
      * Set name of the GroupInfo
@@ -146,10 +146,10 @@ public class GroupInfo implements Serializable {
 
         if ( rootNode ) {
             out.write( "<collection collection_name=\""
-                    + StringEscapeUtils.escapeXml11( getGroupName() ) 
-                    + "\" collection_created=\"" 
-                    + DateFormat.getDateInstance().format( Calendar.getInstance().getTime() ) 
-                    + "\"" 
+                    + StringEscapeUtils.escapeXml11( getGroupName() )
+                    + "\" collection_created=\""
+                    + DateFormat.getDateInstance().format( Calendar.getInstance().getTime() )
+                    + "\""
                     + ( protection ? " collection_protected=\"No\"" : " collection_protected=\"Yes\"" ) );
         } else {
             out.write( "<group group_name=\"" + StringEscapeUtils.escapeXml11( getGroupName() ) + "\"" );
@@ -236,9 +236,9 @@ public class GroupInfo implements Serializable {
     private void sendGroupInfoChangedEvent( GroupInfoChangeEvent groupInfoChangeEvent ) {
         if ( Settings.getPictureCollection().getSendModelUpdates() ) {
             synchronized ( groupInfoListeners ) {
-                groupInfoListeners.stream().forEach( ( groupInfoChangeListener ) -> {
-                    groupInfoChangeListener.groupInfoChangeEvent( groupInfoChangeEvent );
-                } );
+                groupInfoListeners.stream().forEach( groupInfoChangeListener
+                        -> groupInfoChangeListener.groupInfoChangeEvent( groupInfoChangeEvent )
+                );
             }
         }
     }

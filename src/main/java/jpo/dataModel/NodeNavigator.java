@@ -7,7 +7,7 @@ import java.util.Set;
 /*
  NodeNavigator.java:  an implementation of the NodeNavigatorInterface for browsing pictures sequentially.
 
- Copyright (C) 2006-2014 Richard Eigenmann, Zürich, Switzerland
+ Copyright (C) 2006-2017 Richard Eigenmann, Zürich, Switzerland
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -33,7 +33,6 @@ public abstract class NodeNavigator
      * Logger for this class
      */
     //private static final Logger LOGGER = Logger.getLogger( NodeNavigator.class.getName() );
-
     /**
      * The implementing class must return the title for the images being shown.
      */
@@ -84,9 +83,9 @@ public abstract class NodeNavigator
     @Override
     public void notifyNodeNavigatorListeners() {
         synchronized ( nodeNavigatorListeners ) {
-            nodeNavigatorListeners.stream().forEach( ( nodeNavigatorListener ) -> {
-                nodeNavigatorListener.nodeLayoutChanged();
-            } );
+            nodeNavigatorListeners.stream().forEach( nodeNavigatorListener
+                    -> nodeNavigatorListener.nodeLayoutChanged()
+            );
         }
     }
 

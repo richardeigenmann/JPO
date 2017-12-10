@@ -78,8 +78,7 @@ public class PictureInfo implements Serializable {
      *
      * LOGGER.log( Level.FINE, "Highres_Name: {0}", highresLocation );
      * LOGGER.log( Level.FINE, "description: {0}", description ); LOGGER.log(
-     * Level.FINE, "filmReference: {0}", filmReference );
-    }
+     * Level.FINE, "filmReference: {0}", filmReference ); }
      */
     /**
      * Constructor method. Creates the object and sets up the variables.
@@ -1302,9 +1301,9 @@ public class PictureInfo implements Serializable {
     private void sendPictureInfoChangedEvent( PictureInfoChangeEvent pce ) {
         if ( Settings.getPictureCollection().getSendModelUpdates() ) {
             synchronized ( pictureInfoListeners ) {
-                pictureInfoListeners.stream().forEach( ( pictureInfoChangeListener ) -> {
-                    pictureInfoChangeListener.pictureInfoChangeEvent( pce );
-                } );
+                pictureInfoListeners.stream().forEach( pictureInfoChangeListener
+                        -> pictureInfoChangeListener.pictureInfoChangeEvent( pce )
+                );
             }
         }
     }
