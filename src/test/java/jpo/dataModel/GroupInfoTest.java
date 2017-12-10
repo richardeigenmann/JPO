@@ -33,8 +33,31 @@ public class GroupInfoTest {
     @Test
     public void testGetGroupName() {
         GroupInfo gi = new GroupInfo( "Test" );
-        gi.setGroupName( "Tarrantino" );
-        assertEquals( "To String should give back what whent in", "Tarrantino", gi.getGroupName() );
+        String expected = "Tarrantino";
+        gi.setGroupName( expected );
+        assertEquals( "To String should give back what whent in", expected, gi.getGroupName() );
+    }
+    
+    /**
+     * Test of getGroupNameHtml method, of class GroupInfo.
+     */
+    @Test
+    public void testGetGroupNameHtml() {
+        GroupInfo gi = new GroupInfo( "Test" );
+        String expected = "Tarrantino";
+        gi.setGroupName( expected );
+        assertEquals( "To String should give back what whent in", expected, gi.getGroupNameHtml() );
+        
+        String quotedString = "Holiday in <Cambodia> a 1970's Hit by Kim Wilde";
+        String expectedQuotedString = "Holiday in &lt;Cambodia&gt; a 1970's Hit by Kim Wilde";
+        gi.setGroupName( quotedString);
+        assertEquals( "Special chars are to be escaped", expectedQuotedString, gi.getGroupNameHtml() );
+        
+        String umlautString = "Rüeblitorten gären im Brötlikorb";
+        String expectedUmlautString = "R&uuml;eblitorten g&auml;ren im Br&ouml;tlikorb";
+        gi.setGroupName( quotedString);
+        assertEquals( "German umlauts are to be escaped", expectedQuotedString, gi.getGroupNameHtml() );
+        
     }
 
     /**

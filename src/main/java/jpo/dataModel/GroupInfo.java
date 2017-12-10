@@ -86,6 +86,18 @@ public class GroupInfo implements Serializable {
     public String getGroupName() {
         return groupName.toString();
     }
+    
+        /**
+     * Returns the description of the group with the HTML characters safely escaped.
+     *
+     * @return	The description of the Group.
+     * @see #getGroupName
+     *
+     */
+    public String getGroupNameHtml() {
+        return StringEscapeUtils.escapeHtml4( groupName.toString() );
+    }
+
 
     /**
      * Set name of the GroupInfo

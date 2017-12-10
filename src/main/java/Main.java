@@ -78,6 +78,7 @@ public class Main {
         isClassLoadable("org.apache.commons.lang3.StringUtils", "commons-lang3-3.3.2.jar", foundClasses, missingClasses );
         isClassLoadable("org.apache.commons.logging.Log", "commons-logging-1.1.3.jar", foundClasses, missingClasses );
         isClassLoadable("org.apache.commons.net.SocketClient", "commons-net-3.3.jar", foundClasses, missingClasses );
+        isClassLoadable("org.apache.commons.text.StringEscapeUtils", "commons-text-1.1.jar", foundClasses, missingClasses );
         isClassLoadable("bibliothek.gui.dock.common.CControl", "docking-frames-common.jar", foundClasses, missingClasses );
         isClassLoadable("bibliothek.gui.Dockable", "docking-frames-core.jar", foundClasses, missingClasses );
         isClassLoadable("com.google.gdata.util.AuthenticationException", "gdata-core-1.0.jar", foundClasses, missingClasses );

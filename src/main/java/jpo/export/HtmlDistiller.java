@@ -44,6 +44,7 @@ import static jpo.gui.ScalablePicture.ScalablePictureStatus.SCALABLE_PICTURE_ERR
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPReply;
+import org.apache.commons.text.StringEscapeUtils;
 
 /*
  * HtmlDistiller.java: class that can write html files 
@@ -277,7 +278,7 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
             out.newLine();
 
             out.write( "<head>\n\t<link rel=\"StyleSheet\" href=\"jpo.css\" type=\"text/css\" media=\"screen\" />\n\t<title>"
-                    + Tools.stringToHTMLString( ( (GroupInfo) groupNode.getUserObject() ).getGroupName() )
+                    + ( (GroupInfo) groupNode.getUserObject() ).getGroupNameHtml()
                     + "</title>\n</head>" );
             out.newLine();
 
@@ -294,7 +295,7 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
 
             out.write( String.format( "<tr><td colspan=\"%d\">", options.getPicsPerRow() ) );
 
-            out.write( String.format( "<h2>%s</h2>", Tools.stringToHTMLString( ( (GroupInfo) groupNode.getUserObject() ).getGroupName() ) ) );
+            out.write( String.format( "<h2>%s</h2>", ( (GroupInfo) groupNode.getUserObject() ).getGroupNameHtml() ) );
 
             if ( groupNode.equals( options.getStartNode() ) ) {
                 if ( options.isGenerateZipfile() ) {
@@ -481,20 +482,27 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
         int w = scp.getScaledWidth();
         int h = scp.getScaledHeight();
 
-        out.write( "<td class=\"pictureThumbnailCell\" id=\"" + Tools.stringToHTMLString( lowresFile.getName() ) + "\">" );
+        out.write( "<td class=\"pictureThumbnailCell\" id=\"" + StringEscapeUtils.escapeHtml4( lowresFile.getName() ) + "\">" );
 
         // write an anchor so the up come back
         // but only if we are generating MidresHTML pages
-        //if ( options.isGenerateMidresHtml() ) {
-        //    out.write( String.format( "<a name=\"%s\" />", Tools.stringToHTMLString( lowresFile.getName() ) ) );
-        //}
         out.write( "<a href=\"" );
         if ( options.isGenerateMidresHtml() ) {
             out.write( midresHtmlFileName );
         } else {
             out.write( midresFile.getName() );
         }
-        out.write( "\">" + "<img src=\"" + lowresFile.getName() + "\" width=\"" + Integer.toString( w ) + "\" height=\"" + Integer.toString( h ) + "\" alt=\"" + Tools.stringToHTMLString( pictureInfo.getDescription() ) + "\" " + " />" + "</a>" );
+        out.write( "\">" + "<img src=\""
+                + lowresFile.getName()
+                + "\" width=\""
+                + Integer.toString( w )
+                + "\" height=\""
+                + Integer.toString( h )
+                + "\" alt=\""
+                + StringEscapeUtils.escapeHtml4( pictureInfo.getDescription() )
+                + "\" "
+                + " />"
+                + "</a>" );
 
         out.write( "</td>" );
         out.newLine();
@@ -516,21 +524,23 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
             files.add( midresHtmlFile );
 
             BufferedWriter midresHtmlWriter = new BufferedWriter( new FileWriter( midresHtmlFile ) );
-            String groupDescription
-                    = ( (DefaultMutableTreeNode) pictureNode.getParent() ).getUserObject().toString();
+            String groupDescriptionHtml
+                    = StringEscapeUtils.escapeHtml4( ( (DefaultMutableTreeNode) pictureNode.getParent() ).getUserObject().toString() );
 
             midresHtmlWriter.write( "<!DOCTYPE HTML>" );
             midresHtmlWriter.newLine();
-            midresHtmlWriter.write( "<head>\n\t<link rel=\"StyleSheet\" href=\"jpo.css\" type=\"text/css\" media=\"screen\" />\n\t<title>" + Tools.stringToHTMLString( groupDescription ) + "</title>\n</head>" );
+            midresHtmlWriter.write( "<head>\n\t<link rel=\"StyleSheet\" href=\"jpo.css\" type=\"text/css\" media=\"screen\" />\n\t<title>" + groupDescriptionHtml + "</title>\n</head>" );
             midresHtmlWriter.newLine();
             midresHtmlWriter.write( "<body onload=\"changetext(content[0])\">" );
             midresHtmlWriter.newLine();
             midresHtmlWriter.write( "<table>" );
-            midresHtmlWriter.write( "<tr><td colspan=\"2\"><h2>" + Tools.stringToHTMLString( groupDescription ) + "</h2></td></tr>" );
+            midresHtmlWriter.write( "<tr><td colspan=\"2\"><h2>" + groupDescriptionHtml + "</h2></td></tr>" );
             midresHtmlWriter.newLine();
             midresHtmlWriter.newLine();
             midresHtmlWriter.write( "<tr><td class=\"midresPictureCell\">" );
-            String imgTag = "<img src=\"" + midresFile.getName() + "\" width= \"" + Integer.toString( w ) + "\" height=\"" + Integer.toString( h ) + "\" alt=\"" + Tools.stringToHTMLString( pictureInfo.getDescription() ) + "\" />";
+            String imgTag = "<img src=\"" + midresFile.getName() + "\" width= \"" + Integer.toString( w ) + "\" height=\""
+                    + Integer.toString( h ) + "\" alt=\""
+                    + StringEscapeUtils.escapeHtml4( pictureInfo.getDescription() ) + "\" />";
 
             if ( options.isLinkToHighres() ) {
                 midresHtmlWriter.write( "<a href=\"" + pictureInfo.getImageLocation() + "\">" + imgTag + "</a>" );
@@ -540,7 +550,7 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
                 midresHtmlWriter.write( imgTag );
             }
             midresHtmlWriter.newLine();
-            midresHtmlWriter.write( "<p>" + Tools.stringToHTMLString( pictureInfo.getDescription() ) );
+            midresHtmlWriter.write( "<p>" + StringEscapeUtils.escapeHtml4( pictureInfo.getDescription() ) );
             midresHtmlWriter.newLine();
             midresHtmlWriter.write( "</td>" );
             midresHtmlWriter.newLine();
@@ -568,7 +578,7 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
             //midresHtmlWriter.write( "<table cellpadding=\"3\" cellspacing=\"1\" border=\"1\">" );
             midresHtmlWriter.write( "<table class=\"numberPickTable\">" );
             midresHtmlWriter.newLine();
-            String htmlFriendlyDescription = Tools.stringToHTMLString( pictureInfo.getDescription().replaceAll( "\'", "\\\\'" ).replaceAll( "\n", " " ) );
+            String htmlFriendlyDescription = StringEscapeUtils.escapeHtml4( pictureInfo.getDescription().replaceAll( "\'", "\\\\'" ).replaceAll( "\n", " " ) );
             StringBuilder dhtmlArray = new StringBuilder( String.format( "content[0]='" + "<p><strong>Picture</strong> %d of %d:</p><p><b>Description:</b><br>%s</p>", childNumber, childCount, htmlFriendlyDescription ) );
             if ( pictureInfo.getCreationTime().length() > 0 ) {
                 dhtmlArray.append( "<p><strong>Date:</strong><br>" ).append( pictureInfo.getCreationTime().replaceAll( "\'", "\\\\'" ).replaceAll( "\n", " " ) ).append( "</p>" );
@@ -633,7 +643,7 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
                         }
 
                         midresHtmlWriter.write( "<a href=\"" + nodeUrl + "\"" );
-                        String htmlFriendlyDescription2 = Tools.stringToHTMLString( ( (PictureInfo) nde.getUserObject() ).getDescription().replaceAll( "\'", "\\\\'" ).replaceAll( "\n", " " ) );
+                        String htmlFriendlyDescription2 = StringEscapeUtils.escapeHtml4( ( (PictureInfo) nde.getUserObject() ).getDescription().replaceAll( "\'", "\\\\'" ).replaceAll( "\n", " " ) );
                         if ( options.isGenerateMouseover() ) {
                             midresHtmlWriter.write( String.format( " onmouseover=\"changetext(content[%d])\" onmouseout=\"changetext(content[0])\"", i ) );
                             dhtmlArray.append( String.format( "content[%d]='", i ) );
@@ -672,7 +682,11 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
             midresHtmlWriter.newLine();
 
             { //Up Link
-                midresHtmlWriter.write( "<p><a href=\"" + groupFile.getName() + "#" + Tools.stringToHTMLString( lowresFile.getName() ) + "\">Up</a>" );
+                midresHtmlWriter.write( "<p><a href=\""
+                        + groupFile.getName()
+                        + "#"
+                        + StringEscapeUtils.escapeHtml4( lowresFile.getName() )
+                        + "\">Up</a>" );
                 midresHtmlWriter.write( "&nbsp;" );
                 midresHtmlWriter.newLine();
                 // Link to Previous
@@ -888,7 +902,7 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
                 if ( descriptions[i] != null ) {
                     out.write( "<td class=\"descriptionCell\">" );
 
-                    out.write( Tools.stringToHTMLString( descriptions[i] ) );
+                    out.write( StringEscapeUtils.escapeHtml4( descriptions[i] ) );
 
                     out.write( "</td>" );
                     out.newLine();

@@ -246,6 +246,7 @@
         <include name="commons-lang3-3.3.2.jar" />
         <include name="commons-logging-1.1.3.jar" />
         <include name="commons-net-3.3.jar" />
+        <include name="commons-text-1.1.jar" /> <!-- added 10 Dec 2017 -->
         <include name="gdata-core-1.0.jar"/>
         <include name="gdata-maps-2.0.jar"/>
         <include name="gdata-media-1.0.jar"/>
