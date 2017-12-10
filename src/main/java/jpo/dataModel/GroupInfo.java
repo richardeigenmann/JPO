@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Logger;
+import org.apache.commons.lang3.StringEscapeUtils;
 
 
 /*
@@ -48,7 +49,6 @@ public class GroupInfo implements Serializable {
      * Defines a logger for this class
      */
     private static final Logger LOGGER = Logger.getLogger( GroupInfo.class.getName() );
-
 
     /**
      * The description of the GroupInfo.
@@ -125,7 +125,7 @@ public class GroupInfo implements Serializable {
      * pictures whilst all other attributes are retained.
      *
      * @param out	The Bufferer Writer receiving the xml data
-     * @param rootNode  The starting node
+     * @param rootNode The starting node
      * @param protection Whether the collection is protected or not
      * @throws IOException If there was an IO error
      */
@@ -133,9 +133,14 @@ public class GroupInfo implements Serializable {
             throws IOException {
 
         if ( rootNode ) {
-            out.write( "<collection collection_name=\"" + Tools.escapeXML( getGroupName() ) + "\" collection_created=\"" + DateFormat.getDateInstance().format( Calendar.getInstance().getTime() ) + "\"" + ( protection ? " collection_protected=\"No\"" : " collection_protected=\"Yes\"" ) );
+            out.write( "<collection collection_name=\""
+                    + StringEscapeUtils.escapeXml11( getGroupName() ) 
+                    + "\" collection_created=\"" 
+                    + DateFormat.getDateInstance().format( Calendar.getInstance().getTime() ) 
+                    + "\"" 
+                    + ( protection ? " collection_protected=\"No\"" : " collection_protected=\"Yes\"" ) );
         } else {
-            out.write( "<group group_name=\"" + Tools.escapeXML( getGroupName() ) + "\"" );
+            out.write( "<group group_name=\"" + StringEscapeUtils.escapeXml11( getGroupName() ) + "\"" );
         }
         out.newLine();
 

@@ -258,13 +258,13 @@ public class PictureInfoTest {
      */
     @Test
     public void testDumpToXml() {
-        final PictureInfo pi = new PictureInfo( Settings.CLASS_LOADER.getResource( "exif-test-canon-eos-350d.jpg" ), "First Picture" );
-        pi.setComment( "Comment" );
-        pi.setFilmReference( "Reference" );
+        final PictureInfo pi = new PictureInfo( Settings.CLASS_LOADER.getResource( "exif-test-canon-eos-350d.jpg" ), "First <Picture> & difficult xml chars ' \"" );
+        pi.setComment( "Comment <<&>'\">" );
+        pi.setFilmReference( "Reference <<&>'\">" );
         pi.setRotation( 45.1 );
-        pi.setPhotographer( "Richard Eigenmann" );
+        pi.setPhotographer( "Richard Eigenmann <<&>'\">" );
         pi.setLatLng( "22.67x33.89" );
-        pi.setCopyrightHolder( "Sandra Keller" );
+        pi.setCopyrightHolder( "Sandra Keller <<&>'\">" );
         pi.addCategoryAssignment( "1" );
         pi.setChecksum( 1234 );
 
@@ -279,14 +279,14 @@ public class PictureInfoTest {
         }
 
         String expected = "<picture>\n"
-                + "\t<description><![CDATA[First Picture]]></description>\n"
+                + "\t<description><![CDATA[First <Picture> & difficult xml chars ' \"]]></description>\n"
                 + "\t<file_URL>file:" + System.getProperty("user.dir") + File.separator
                 + "build/resources/test/exif-test-canon-eos-350d.jpg</file_URL>\n"
                 + "\t<checksum>1234</checksum>\n"
-                + "\t<COMMENT>Comment</COMMENT>\n"
-                + "\t<PHOTOGRAPHER>Richard Eigenmann</PHOTOGRAPHER>\n"
-                + "\t<film_reference>Reference</film_reference>\n"
-                + "\t<COPYRIGHT_HOLDER>Sandra Keller</COPYRIGHT_HOLDER>\n"
+                + "\t<COMMENT>Comment &lt;&lt;&amp;&gt;&apos;&quot;&gt;</COMMENT>\n"
+                + "\t<PHOTOGRAPHER>Richard Eigenmann &lt;&lt;&amp;&gt;&apos;&quot;&gt;</PHOTOGRAPHER>\n"
+                + "\t<film_reference>Reference &lt;&lt;&amp;&gt;&apos;&quot;&gt;</film_reference>\n"
+                + "\t<COPYRIGHT_HOLDER>Sandra Keller &lt;&lt;&amp;&gt;&apos;&quot;&gt;</COPYRIGHT_HOLDER>\n"
                 + "\t<ROTATION>45.100000</ROTATION>\n"
                 + "\t<LATLNG>22.670000x33.890000</LATLNG>\n"
                 + "\t<categoryAssignment index=\"1\"/>\n"

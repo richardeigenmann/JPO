@@ -38,7 +38,7 @@ import jpo.gui.XmlFilter;
 /*
  Tools.java:  utilities for the JPO application
  *
- Copyright (C) 2002-2011  Richard Eigenmann.
+ Copyright (C) 2002-2017  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -60,25 +60,24 @@ import jpo.gui.XmlFilter;
 public class Tools {
 
     /**
+     * Private constructor to hide implicit public one. Explanation: Utility
+     * classes, which are collections of static members, are not meant to be
+     * instantiated. Even abstract utility classes, which can be extended,
+     * should not have public constructors. From Sonarcloud bug report
+     *
+     * Java adds an implicit public constructor to every class which does not
+     * define at least one explicitly. Hence, at least one non-public
+     * constructor should be defined.
+     */
+    private Tools() {
+        throw new IllegalStateException( "Utility class" );
+    }
+
+    /**
      * Defines a logger for this class
      */
     private static final Logger LOGGER = Logger.getLogger( Tools.class.getName() );
 
-    /**
-     * method that converts any XML problem characters (&amp;, &lt;, &gt;, ", ')
-     * to the predefined codes.
-     *
-     * @param s string to escape
-     * @return the escaped string
-     */
-    public static String escapeXML( String s ) {
-        s = s.replaceAll( "&", "&amp;" );
-        s = s.replaceAll( "<", "&lt;" );
-        s = s.replaceAll( ">", "&gt;" );
-        s = s.replaceAll( "\"", "&quot;" );
-        s = s.replaceAll( "'", "&apos;" );
-        return s;
-    }
 
     /**
      * Translates characters which are problematic in a filename into

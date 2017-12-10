@@ -19,6 +19,7 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.commons.lang3.StringEscapeUtils;
 
 /*
  PictureInfo.java:  the definitions for picture data
@@ -168,7 +169,7 @@ public class PictureInfo implements Serializable {
         }
 
         if ( highres.length() > 0 ) {
-            out.write( "\t<file_URL>" + Tools.escapeXML( highres ) + "</file_URL>" );
+            out.write( "\t<file_URL>" + StringEscapeUtils.escapeXml11( highres ) + "</file_URL>" );
             out.newLine();
         }
 
@@ -178,22 +179,22 @@ public class PictureInfo implements Serializable {
         }
 
         if ( getComment().length() > 0 ) {
-            out.write( "\t<COMMENT>" + Tools.escapeXML( getComment() ) + "</COMMENT>" );
+            out.write( "\t<COMMENT>" + StringEscapeUtils.escapeXml11( getComment() ) + "</COMMENT>" );
             out.newLine();
         }
 
         if ( getPhotographer().length() > 0 ) {
-            out.write( "\t<PHOTOGRAPHER>" + Tools.escapeXML( getPhotographer() ) + "</PHOTOGRAPHER>" );
+            out.write( "\t<PHOTOGRAPHER>" + StringEscapeUtils.escapeXml11( getPhotographer() ) + "</PHOTOGRAPHER>" );
             out.newLine();
         }
 
         if ( getFilmReference().length() > 0 ) {
-            out.write( "\t<film_reference>" + Tools.escapeXML( getFilmReference() ) + "</film_reference>" );
+            out.write( "\t<film_reference>" + StringEscapeUtils.escapeXml11( getFilmReference() ) + "</film_reference>" );
             out.newLine();
         }
 
         if ( getCopyrightHolder().length() > 0 ) {
-            out.write( "\t<COPYRIGHT_HOLDER>" + Tools.escapeXML( getCopyrightHolder() ) + "</COPYRIGHT_HOLDER>" );
+            out.write( "\t<COPYRIGHT_HOLDER>" + StringEscapeUtils.escapeXml11( getCopyrightHolder() ) + "</COPYRIGHT_HOLDER>" );
             out.newLine();
         }
 
