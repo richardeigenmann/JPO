@@ -700,47 +700,49 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
      * of the current node.
      */
     private void setIconDecorations() {
+        SortableDefaultMutableTreeNode currentNode = getCurrentNode();
+        if ( currentNode == null ) {
+            return;
+        }
         // Set the next and back icons
-        if ( getCurrentNode() != null ) {
-            DefaultMutableTreeNode NextNode = getCurrentNode().getNextSibling();
-            if ( NextNode != null ) {
-                Object nodeInfo = NextNode.getUserObject();
-                if ( nodeInfo instanceof PictureInfo ) {
-                    // because there is a next sibling object of type
-                    // PictureInfo we should set the next icon to the
-                    // icon that indicates a next picture in the group
-                    pictureFrame.getPictureViewerNavBar().setNextButtonHasRight();
-                } else {
-                    // it must be a GroupInfo node
-                    // since we must descend into it it gets a nextnext icon.
-                    pictureFrame.getPictureViewerNavBar().setNextButtonHasNext();
-                }
-            } else // the getNextSibling() method returned null
-            // if the getNextNode also returns null this was the end of the album
-            // otherwise there are more pictures in the next group.
-            {
-                if ( getCurrentNode().getNextNode() != null ) {
-                    pictureFrame.getPictureViewerNavBar().setNextButtonHasNext();
-                } else {
-                    pictureFrame.getPictureViewerNavBar().setNextButtonEnd();
-                }
-            }
-
-            // let's see what we have in the way of previous siblings..
-            if ( getCurrentNode().getPreviousSibling() != null ) {
-                pictureFrame.getPictureViewerNavBar().setPreviousButtonHasLeft();
+        DefaultMutableTreeNode NextNode = currentNode.getNextSibling();
+        if ( NextNode != null ) {
+            Object nodeInfo = NextNode.getUserObject();
+            if ( nodeInfo instanceof PictureInfo ) {
+                // because there is a next sibling object of type
+                // PictureInfo we should set the next icon to the
+                // icon that indicates a next picture in the group
+                pictureFrame.getPictureViewerNavBar().setNextButtonHasRight();
             } else {
-                // deterine if there are any previous nodes that are not groups.
-                DefaultMutableTreeNode testNode;
-                testNode = getCurrentNode().getPreviousNode();
-                while ( ( testNode != null ) && ( !( testNode.getUserObject() instanceof PictureInfo ) ) ) {
-                    testNode = testNode.getPreviousNode();
-                }
-                if ( testNode == null ) {
-                    pictureFrame.getPictureViewerNavBar().setPreviousButtonBeginning();
-                } else {
-                    pictureFrame.getPictureViewerNavBar().setPreviousButtonHasPrevious();
-                }
+                // it must be a GroupInfo node
+                // since we must descend into it it gets a nextnext icon.
+                pictureFrame.getPictureViewerNavBar().setNextButtonHasNext();
+            }
+        } else // the getNextSibling() method returned null
+        // if the getNextNode also returns null this was the end of the album
+        // otherwise there are more pictures in the next group.
+        {
+            if ( currentNode.getNextNode() != null ) {
+                pictureFrame.getPictureViewerNavBar().setNextButtonHasNext();
+            } else {
+                pictureFrame.getPictureViewerNavBar().setNextButtonEnd();
+            }
+        }
+
+        // let's see what we have in the way of previous siblings..
+        if ( currentNode.getPreviousSibling() != null ) {
+            pictureFrame.getPictureViewerNavBar().setPreviousButtonHasLeft();
+        } else {
+            // deterine if there are any previous nodes that are not groups.
+            DefaultMutableTreeNode testNode;
+            testNode = currentNode.getPreviousNode();
+            while ( ( testNode != null ) && ( !( testNode.getUserObject() instanceof PictureInfo ) ) ) {
+                testNode = testNode.getPreviousNode();
+            }
+            if ( testNode == null ) {
+                pictureFrame.getPictureViewerNavBar().setPreviousButtonBeginning();
+            } else {
+                pictureFrame.getPictureViewerNavBar().setPreviousButtonHasPrevious();
             }
         }
     }

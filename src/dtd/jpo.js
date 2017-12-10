@@ -29,6 +29,6 @@ function changetext(whichcontent){
             map: map,
             draggable: false
         });
-    }
+    };
 
 })();
