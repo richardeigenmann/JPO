@@ -365,8 +365,11 @@ public class ApplicationEventHandler {
         } else {
             return; // should only be receiving PictureInfo or GroupInfo with child pictures
         }
-        PictureViewer pictureViewer = new PictureViewer();
-        pictureViewer.showNode( navigator, index );
+        final int myIndex = index;
+        SwingUtilities.invokeLater( () -> {
+            PictureViewer pictureViewer = new PictureViewer();
+            pictureViewer.showNode( navigator, myIndex );
+        } );
 
     }
 
