@@ -1,5 +1,8 @@
 package jpo.cache;
 
+import java.lang.reflect.InvocationTargetException;
+import javax.swing.SwingUtilities;
+import static junit.framework.TestCase.fail;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -9,11 +12,16 @@ import org.junit.Test;
  */
 public class ThumbnailCreationFactoryTest {
 
-
     @Test
     public void thumbnailCreationFactoryTest() {
-        ThumbnailCreationFactory tcf = new ThumbnailCreationFactory( 500 );
-        Assert.assertNotNull(tcf);
-        tcf.endThread = true;
+        try {
+            SwingUtilities.invokeAndWait( () -> {
+                ThumbnailCreationFactory tcf = new ThumbnailCreationFactory( 500 );
+                Assert.assertNotNull( tcf );
+                tcf.endThread();
+            } );
+        } catch ( InterruptedException | InvocationTargetException ex ) {
+            fail( ex.getMessage() );
+        }
     }
 }

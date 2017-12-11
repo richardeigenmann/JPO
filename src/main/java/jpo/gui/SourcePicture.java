@@ -184,7 +184,6 @@ public class SourcePicture {
      */
     public void loadPicture() {
         setStatus( SOURCE_PICTURE_LOADING, Settings.jpoResources.getString( "ScalablePictureLoadingStatus" ) );
-        abortFlag = false;
         long start = System.currentTimeMillis();
         loadTime = 0;
 

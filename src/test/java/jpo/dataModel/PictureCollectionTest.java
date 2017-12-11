@@ -387,4 +387,18 @@ public class PictureCollectionTest {
         assertEquals( "No nodes should have been removed: ", 0, nodesremoved );
         assertEquals( "No nodes structure change should have been notified: ", 0, nodestructurechanged );
     }
+    
+     /**
+     * Test sendModelUpdates
+     */
+    @Test
+    public void testSendModelUpdates() {
+        PictureCollection pc = new PictureCollection();
+        assertTrue("Default of sendModelUpdates should be true", pc.getSendModelUpdates());
+        pc.setSendModelUpdates( false );
+        assertFalse("sendModelUpdates should be false when changed", pc.getSendModelUpdates());
+        pc.setSendModelUpdates( true );
+        assertTrue("sendModelUpdates should be true when turned on again", pc.getSendModelUpdates());
+    }
+        
 }

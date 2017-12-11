@@ -110,8 +110,9 @@ public class FlatFileDistiller extends SwingWorker<DistillerResult, String> {
 
     @Override
     protected DistillerResult doInBackground() {
+        DistillerResult distillerResult = new DistillerResult( true, null );
         try {
-            enumerateGroup( startNode );
+            enumerateGroup( startNode, out );
         } catch ( IOException ex ) {
             LOGGER.severe( "catching it" + ex.getLocalizedMessage() );
             return new DistillerResult( false, ex );
@@ -119,10 +120,10 @@ public class FlatFileDistiller extends SwingWorker<DistillerResult, String> {
             try {
                 out.close();
             } catch ( IOException ex ) {
-                return new DistillerResult( false, ex );
+                distillerResult =  new DistillerResult( false, ex );
             }
         }
-        return new DistillerResult( true, null );
+        return distillerResult;
     }
 
     /**
@@ -131,13 +132,13 @@ public class FlatFileDistiller extends SwingWorker<DistillerResult, String> {
      * @param groupNode group to work on
      * @throws IOException if there is a failure
      */
-    private void enumerateGroup( SortableDefaultMutableTreeNode groupNode ) throws IOException {
+    private static void enumerateGroup( SortableDefaultMutableTreeNode groupNode, BufferedWriter out ) throws IOException {
         //GroupInfo groupInfo = (GroupInfo) groupNode.getUserObject();
         Enumeration kids = groupNode.children();
         while ( kids.hasMoreElements() ) {
             SortableDefaultMutableTreeNode childNode = (SortableDefaultMutableTreeNode) kids.nextElement();
             if ( childNode.getUserObject() instanceof GroupInfo ) {
-                enumerateGroup( childNode );
+                enumerateGroup( childNode, out );
             } else {
                 PictureInfo pictureInfo = (PictureInfo) childNode.getUserObject();
                 out.write( pictureInfo.getImageLocation() );

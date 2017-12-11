@@ -114,7 +114,7 @@ public class PictureCollection {
      *
      * @return true if edits are allowed, false if not
      */
-    public boolean getSendModelUpdates() {
+    public synchronized boolean getSendModelUpdates() {
         return sendModelUpdates;
     }
 
@@ -123,7 +123,9 @@ public class PictureCollection {
      *
      * @param status the new flag value
      */
-    public void setSendModelUpdates( boolean status ) {
+    public synchronized void setSendModelUpdates( boolean status ) {
+        System.err.println( "Setting it to " + status);
+        Thread.dumpStack();
         sendModelUpdates = status;
     }
 

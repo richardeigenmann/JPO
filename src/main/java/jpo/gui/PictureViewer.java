@@ -581,34 +581,39 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
                 null,
                 null,
                 null );
-
-        if ( selectedValue == 0 ) {
-            if ( randomAdvanceJRadioButton.isSelected() ) {
-                if ( useAllPicturesJRadioButton.isSelected() ) //addAllPictureNodes( pictureNodesArrayList, (SortableDefaultMutableTreeNode) currentNode.getRoot()  );
-                {
-                    mySetOfNodes = new RandomNavigator( Settings.getPictureCollection().getRootNode().getChildPictureNodes( true ), String.format( "Randomised pictures from %s", Settings.getPictureCollection().getRootNode().toString() ) );
-                } else //addAllPictureNodes( pictureNodesArrayList, (SortableDefaultMutableTreeNode) currentNode.getParent() );
-                {
-                    mySetOfNodes = new RandomNavigator( ( (SortableDefaultMutableTreeNode) getCurrentNode().getParent() ).getChildPictureNodes( true ),
-                            String.format( "Randomised pictures from %s", ( getCurrentNode().getParent() ).toString() ) );
-                }
-            } else {
-                if ( useAllPicturesJRadioButton.isSelected() ) {
-                    mySetOfNodes = new FlatGroupNavigator( (SortableDefaultMutableTreeNode) getCurrentNode().getRoot() );
+        try {
+            if ( selectedValue == 0 ) {
+                if ( randomAdvanceJRadioButton.isSelected() ) {
+                    if ( useAllPicturesJRadioButton.isSelected() ) {
+                        SortableDefaultMutableTreeNode rootNode = Settings.getPictureCollection().getRootNode();
+                        mySetOfNodes
+                                = new RandomNavigator(
+                                        rootNode.getChildPictureNodes( true ),
+                                        String.format( "Randomised pictures from %s",
+                                                Settings.getPictureCollection().getRootNode().toString() ) );
+                    } else {
+                        mySetOfNodes = new RandomNavigator(
+                                ( (SortableDefaultMutableTreeNode) getCurrentNode().getParent() ).getChildPictureNodes( true ),
+                                String.format( "Randomised pictures from %s",
+                                        ( getCurrentNode().getParent() ).toString() ) );
+                    }
                 } else {
-                    mySetOfNodes = new FlatGroupNavigator( (SortableDefaultMutableTreeNode) getCurrentNode().getParent() );
+                    if ( useAllPicturesJRadioButton.isSelected() ) {
+                        mySetOfNodes = new FlatGroupNavigator( (SortableDefaultMutableTreeNode) getCurrentNode().getRoot() );
+                    } else {
+                        mySetOfNodes = new FlatGroupNavigator( (SortableDefaultMutableTreeNode) getCurrentNode().getParent() );
+                    }
+
+                    myIndex = 0;
+                    showNode( mySetOfNodes, myIndex );
                 }
 
                 myIndex = 0;
-                showNode(
-                        mySetOfNodes, myIndex );
+                showNode( mySetOfNodes, myIndex );
+                startAdvanceTimer( timerSecondsField.getValue() );
             }
-
-            myIndex = 0;
-            showNode(
-                    mySetOfNodes, myIndex );
-            startAdvanceTimer(
-                    timerSecondsField.getValue() );
+        } catch ( NullPointerException ex ) {
+            LOGGER.severe( "NPE!" );
         }
 
     }

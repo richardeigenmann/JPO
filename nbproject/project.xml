@@ -166,6 +166,19 @@
                     <script>nbproject/nbjdk.xml</script>
                     <target>profile-nb</target>
                 </action>
+                <action name="debug.single">
+                    <script>nbproject/ide-file-targets.xml</script>
+                    <target>debug-selected-file-in-java</target>
+                    <context>
+                        <property>debug.class</property>
+                        <folder>src/test/java</folder>
+                        <pattern>\.java$</pattern>
+                        <format>java-name</format>
+                        <arity>
+                            <one-file-only/>
+                        </arity>
+                    </context>
+                </action>
             </ide-actions>
             <export>
                 <type>folder</type>

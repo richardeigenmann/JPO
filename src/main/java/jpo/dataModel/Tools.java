@@ -694,7 +694,7 @@ public class Tools {
     /**
      * Returns a checksum from the supplied input stream using Adler32 crc.
      * Originally taken from: Java ist auch eine Insel (2. Aufl.) von Christian
-     * Ullenboom Programmieren fuer die Java 2-Plattform inputStream der Version
+     * Ullenboom Programmieren für die Java 2-Plattform inputStream der Version
      * 1.4
      *
      * @param inputStream The InputStream to read
@@ -709,14 +709,15 @@ public class Tools {
         try {
             while ( ( blockLen = inputStream.available() ) > 0 ) {
                 byte[] ba = new byte[blockLen];
-                inputStream.read( ba );
-                crc.update( ba );
+                int read = inputStream.read( ba );
+                crc.update( ba, 0, read );
             }
             return crc.getValue();
         } catch ( IOException x ) {
             LOGGER.log( Level.INFO, "Tools.calculateChecksum trapped an IOException. Aborting. Reason:\n{0}", x.getMessage() );
             return Long.MIN_VALUE;
         }
+        
     }
 
     /**

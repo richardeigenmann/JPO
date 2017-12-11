@@ -153,7 +153,7 @@ public class MainWindow extends JFrame {
 
         tree = new DefaultSingleCDockable( "TreeId",
                 Settings.jpoResources.getString( "jpoTabbedPaneCollection" ),
-                new CollectionJTreeController().getJScrollPane() );
+                new CollectionJTreeController(Settings.getPictureCollection()).getJScrollPane() );
         searches = new DefaultSingleCDockable( "SearchId",
                 Settings.jpoResources.getString( "jpoTabbedPaneSearches" ),
                 new QueriesJTree().getJComponent() );

@@ -27,6 +27,7 @@ import jpo.EventBus.RecentDropNodesChangedEvent;
 import jpo.EventBus.ShowGroupRequest;
 import jpo.EventBus.ShowPictureRequest;
 import jpo.dataModel.GroupInfo;
+import jpo.dataModel.PictureCollection;
 import jpo.dataModel.PictureInfo;
 import jpo.dataModel.Settings;
 import jpo.dataModel.SingleNodeNavigator;
@@ -69,11 +70,10 @@ public class CollectionJTreeController {
      * respond to or instruct the JTree to do and show.
      *
      */
-    public CollectionJTreeController() {
+    public CollectionJTreeController(PictureCollection pictureCollection) {
         Tools.checkEDT();
-
-        collectionJTree.setModel( Settings.getPictureCollection().getTreeModel() );
-        collectionJTree.setEditable( true ); // doing this in the controller as it might not always be desired (like in the CameraDownloadWizard)
+        collectionJTree.setModel( pictureCollection.getTreeModel() );
+        collectionJTree.setEditable( true );
         collectionJTree.getSelectionModel().setSelectionMode( TreeSelectionModel.SINGLE_TREE_SELECTION );
         collectionJTree.setTransferHandler( new MyTransferHandler() );
         collectionJTree.setDragEnabled( true );
@@ -285,6 +285,8 @@ public class CollectionJTreeController {
             return true;
         }
     }
+
+
     /**
      * The private reference to the JTree representing the collection
      */
@@ -311,6 +313,8 @@ public class CollectionJTreeController {
             return toolTip;
         }
     };
+
+
     /**
      * The private reference to the JScrollPane that holds the JTree.
      */

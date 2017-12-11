@@ -60,7 +60,7 @@ public class ThumbnailCreationFactory implements Runnable {
     /**
      * Flag to indicate that the thread should die.
      */
-    public boolean endThread;  // default is false
+    private boolean endThread;  // default is false
 
     /**
      * The polling interval in milliseconds
@@ -101,6 +101,13 @@ public class ThumbnailCreationFactory implements Runnable {
         }
     }
 
+    /**
+     * A requestor can ask for the thread to be shut down.
+     */
+    public void endThread() {
+        endThread = true;
+    }
+    
     /**
      * Handles the queue request by placing a synchronized lock on the Thumbnail
      * Controller and passes the request to the Factory.

@@ -79,6 +79,7 @@ public class GroupInfoTest {
     @Test
     public void testGroupInfoChangeListener() {
         eventsReceived = 0;
+        Settings.getPictureCollection().setSendModelUpdates( true );
         GroupInfo gi = new GroupInfo( "Step0" );
         assertEquals( "To start off there should be no events", 0, eventsReceived );
         gi.setGroupName( "Step 1" );
@@ -86,11 +87,16 @@ public class GroupInfoTest {
         gi.addGroupInfoChangeListener( groupInfoChangeListener );
         gi.setGroupName( "Step 2" );
         assertEquals( "The listener should have fired and we should have 1 event", 1, eventsReceived );
-        gi.removeGroupInfoChangeListener( groupInfoChangeListener );
+        Settings.getPictureCollection().setSendModelUpdates( false );
         gi.setGroupName( "Step 3" );
+        assertEquals( "We should remain at 1 event", 1, eventsReceived );
+        gi.removeGroupInfoChangeListener( groupInfoChangeListener );
+        gi.setGroupName( "Step 4" );
         assertEquals( "The detached listener should not have fired", 1, eventsReceived );
+        Settings.getPictureCollection().setSendModelUpdates( true );
     }
 
+    
     /**
      * Test dumpToXml
      * TODO: Is the collectionprotected done correctly? Is it used for anything?
@@ -104,6 +110,7 @@ public class GroupInfoTest {
                 //FileWriter sw = new FileWriter( "/tmp/output.xml" );
                 BufferedWriter bw = new BufferedWriter( sw ); ) {
             gi.dumpToXml( bw, true, false );
+            gi.endGroupXML (bw, true);
         } catch ( IOException ex ) {
             Logger.getLogger( GroupInfoTest.class.getName() ).log( Level.SEVERE, "The dumpToXml should really not throw an IOException", ex );
             fail( "Unexpected IOException" );
@@ -111,7 +118,7 @@ public class GroupInfoTest {
 
         String expected = "<collection collection_name=\"Holiday in &lt;Cambodia&gt; with Kim Wilde = 1970&apos;s music &amp; a &quot; sign\" collection_created=\"" 
                 + DateFormat.getDateInstance().format( Calendar.getInstance().getTime() ) 
-                + "\" collection_protected=\"Yes\"\n>\n";
+                + "\" collection_protected=\"Yes\"\n>\n\n";
         
         String result = sw.toString();
         assertEquals( expected, result );
@@ -130,6 +137,7 @@ public class GroupInfoTest {
                 //FileWriter sw = new FileWriter( "/tmp/output.xml" );
                 BufferedWriter bw = new BufferedWriter( sw ); ) {
             gi.dumpToXml( bw, true, true );
+            gi.endGroupXML (bw, true);
         } catch ( IOException ex ) {
             Logger.getLogger( GroupInfoTest.class.getName() ).log( Level.SEVERE, "The dumpToXml should really not throw an IOException", ex );
             fail( "Unexpected IOException" );
@@ -137,7 +145,7 @@ public class GroupInfoTest {
 
         String expected = "<collection collection_name=\"Holiday in &lt;Cambodia&gt; with Kim Wilde = 1970&apos;s music &amp; a &quot; sign\" collection_created=\"" 
                 + DateFormat.getDateInstance().format( Calendar.getInstance().getTime() ) 
-                + "\" collection_protected=\"No\"\n>\n";
+                + "\" collection_protected=\"No\"\n>\n\n";
         
         String result = sw.toString();
         assertEquals( expected, result );
@@ -156,12 +164,13 @@ public class GroupInfoTest {
                 //FileWriter sw = new FileWriter( "/tmp/output.xml" );
                 BufferedWriter bw = new BufferedWriter( sw ); ) {
             gi.dumpToXml( bw, false, true );
+            gi.endGroupXML (bw, false);
         } catch ( IOException ex ) {
             Logger.getLogger( GroupInfoTest.class.getName() ).log( Level.SEVERE, "The dumpToXml should really not throw an IOException", ex );
             fail( "Unexpected IOException" );
         }
 
-        String expected = "<group group_name=\"Holiday in &lt;Cambodia&gt; with Kim Wilde = 1970&apos;s music &amp; a &quot; sign\"\n>\n";
+        String expected = "<group group_name=\"Holiday in &lt;Cambodia&gt; with Kim Wilde = 1970&apos;s music &amp; a &quot; sign\"\n>\n</group>\n";
         
         String result = sw.toString();
         assertEquals( expected, result );

@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.logging.Logger;
 import jpo.dataModel.PictureInfo;
-import jpo.dataModel.Settings;
 import junit.framework.TestCase;
 import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertTrue;
