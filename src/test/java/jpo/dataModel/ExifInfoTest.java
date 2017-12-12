@@ -257,7 +257,7 @@ public class ExifInfoTest {
         }
         ExifInfo exifInfo = new ExifInfo( imageUrl );
         exifInfo.decodeExifTags();
-        assertEquals( "Aperture parsing verification", "f/20.0", exifInfo.aperture );
+        assertEquals( "Aperture parsing verification", "f/20.01", exifInfo.aperture );
         assertEquals( "ShutterSpeed parsing verification", "1/200 sec", exifInfo.shutterSpeed );
         assertEquals( "Camera parsing verification", "Canon EOS 350D DIGITAL", exifInfo.camera );
         assertEquals( "CreateDateTime parsing verification", "2006:10:06 15:13:54", exifInfo.getCreateDateTime() );
