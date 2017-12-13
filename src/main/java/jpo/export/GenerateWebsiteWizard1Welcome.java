@@ -7,13 +7,12 @@ import javax.swing.JPanel;
 import javax.swing.SwingWorker;
 import jpo.dataModel.NodeStatistics;
 import jpo.dataModel.Settings;
+import jpo.dataModel.SortableDefaultMutableTreeNode;
 import net.javaprog.ui.wizard.AbstractStep;
 import net.miginfocom.swing.MigLayout;
 
 /*
- GenerateWebsiteWizard1Welcome.java:  Welcome Step
-
- Copyright (C) 2008-2013  Richard Eigenmann.
+ Copyright (C) 2008-2017  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -46,16 +45,18 @@ public class GenerateWebsiteWizard1Welcome extends AbstractStep {
 
     /**
      * Welcome page for the generate website wizard
+     *
      * @param options Options
      */
     public GenerateWebsiteWizard1Welcome( final HtmlDistillerOptions options ) {
         super( Settings.jpoResources.getString( "welcomeTitle" ), Settings.jpoResources.getString( "HtmlDistillerJFrameHeading" ) );
 
+        final SortableDefaultMutableTreeNode startNode = options.getStartNode();
         class getCountWorker extends SwingWorker<Integer, Object> {
 
             @Override
             public Integer doInBackground() {
-                return NodeStatistics.countPictures( options.getStartNode(), true );
+                return NodeStatistics.countPictures( startNode, true );
             }
 
             @Override
@@ -68,7 +69,9 @@ public class GenerateWebsiteWizard1Welcome extends AbstractStep {
         }
         ( new getCountWorker() ).execute();
 
-        fromLabel.setText( Settings.jpoResources.getString( "generateFrom" ) + options.getStartNode().toString() );
+        final String labelText = Settings.jpoResources.getString( "generateFrom" )
+                + ( ( startNode != null ) ? startNode.toString() : "null" );
+        fromLabel.setText( labelText );
     }
 
     /**

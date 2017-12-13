@@ -22,6 +22,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.tree.DefaultMutableTreeNode;
 import jpo.EventBus.JpoEventBus;
 import jpo.EventBus.RotatePictureRequest;
+import jpo.EventBus.ShowAutoAdvanceDialogRequest;
 import jpo.cache.ThumbnailQueueRequest.QUEUE_PRIORITY;
 import jpo.dataModel.FlatGroupNavigator;
 import jpo.dataModel.NodeNavigatorInterface;
@@ -45,8 +46,6 @@ import jpo.gui.swing.WholeNumberField;
 
 
 /*
- PictureViewer.java:  Controller and Viewer class that browses a set of pictures.
-
  Copyright (C) 2002 - 2017  Richard Eigenmann, Zürich, Switzerland
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
@@ -535,7 +534,8 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
             stopTimer();
             pictureFrame.getPictureViewerNavBar().clockJButton.setClockIdle();
         } else {
-            doAutoAdvanceDialog();
+            JpoEventBus.getInstance().post(new ShowAutoAdvanceDialogRequest(pictureFrame,getCurrentNode()) );
+            //doAutoAdvanceDialog();
         }
 
         pictureFrame.getPictureController().requestFocusInWindow();
@@ -615,7 +615,6 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
         } catch ( NullPointerException ex ) {
             LOGGER.severe( "NPE!" );
         }
-
     }
 
     /**

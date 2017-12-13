@@ -130,6 +130,17 @@ public class NodeStatisticsTest{
         assertEquals("Non Recursive picture count", 2, NodeStatistics.countPictures(group1, false));
     }
 
+    
+    /**
+     * Test of countPictures with null parameter
+     */
+    @Test
+    public void testCountPicturesNull() {
+        assertEquals(0, NodeStatistics.countPictures(null, true));
+        assertEquals(0, NodeStatistics.countPictures(null, false));
+    }
+
+    
     /**
      * Test sizeOfPictures returns 0 when a null node is sent in
      */

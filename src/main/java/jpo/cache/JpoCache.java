@@ -95,7 +95,7 @@ public class JpoCache {
 
     /**
      * Loads the properties from the cache .ccf file in the bundle
-     * @return 
+     * @return The properties object created from the ccf file
      */
     public static Properties loadProperties() {
         final String CACHE_DEFINITION_FILE = "cache.ccf";

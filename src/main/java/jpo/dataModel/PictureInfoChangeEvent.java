@@ -1,9 +1,7 @@
 package jpo.dataModel;
 
 /*
-PictureInfoChangeEvent.java:  This event holds information about how the picture changed
-
-Copyright (C) 2002 - 2014  Richard Eigenmann.
+Copyright (C) 2002 - 2017  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -34,10 +32,10 @@ public class PictureInfoChangeEvent {
     /**
      *  Constructor for the PictureInforChangeEvent
      *
-     * @param pcitureInfo Picture object
+     * @param pictureInfo Picture object
      */
-    public PictureInfoChangeEvent( PictureInfo pcitureInfo ) {
-        this.pictureInfo = pcitureInfo;
+    public PictureInfoChangeEvent( PictureInfo pictureInfo ) {
+        this.pictureInfo = pictureInfo;
     }
 
 

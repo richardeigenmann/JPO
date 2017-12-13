@@ -341,7 +341,7 @@ public class ThumbnailController implements JpoDropTargetDropEventHandler, Thumb
     /**
      * Entry point for the callback handler
      *
-     * @param thumbnailQueueRequest
+     * @param thumbnailQueueRequest The request from the queue
      */
     @Override
     public void callbackThumbnailCreated( ThumbnailQueueRequest thumbnailQueueRequest ) {

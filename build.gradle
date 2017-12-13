@@ -145,7 +145,7 @@ shadowJar {
 }
 
 
-task runFatJar(type: JavaExec) {
+task run(type: JavaExec) {
     dependsOn shadowJar
     classpath = files( 'build/libs/Jpo-all.jar' )
     main = 'Main'

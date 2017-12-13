@@ -13,12 +13,12 @@ public class ClockButton extends NavBarButton {
     /**
      * Icon to indicate that the timer is active
      */
-    private static final ImageIcon ICON_CLOCK_ON = new ImageIcon( CLASS_LOADER.getResource( "jpo/images/icon_clock_on.gif" ) );
+    private static final ImageIcon ICON_CLOCK_ON = new ImageIcon( CLASS_LOADER.getResource( "icon_clock_on.gif" ) );
 
     /**
      * Icon to indicate that the timer is available
      */
-    private static final ImageIcon ICON_CLOCK_OFF = new ImageIcon( CLASS_LOADER.getResource( "jpo/images/icon_clock_off.gif" ) );
+    private static final ImageIcon ICON_CLOCK_OFF = new ImageIcon( CLASS_LOADER.getResource( "icon_clock_off.gif" ) );
 
     private final boolean onOff;
 

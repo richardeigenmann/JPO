@@ -12,7 +12,7 @@ import jpo.dataModel.Tools;
 /*
  PictureViewerNavBar.java:  Does the navigation icons and sends the events back to the PictureViewer
 
- Copyright (C) 2002-2014  Richard Eigenmann, Zürich, Switzerland
+ Copyright (C) 2002-2017  Richard Eigenmann, Zürich, Switzerland
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -55,38 +55,38 @@ public class PictureViewerNavBar extends JToolBar {
     /**
      * A button for the rotation to the left
      */
-    public final JButton rotateLeftJButton = new NavBarButton( new ImageIcon( PictureViewerNavBar.class.getClassLoader().getResource( "jpo/images/icon_RotCCDown.gif" ) ) );
+    public final JButton rotateLeftJButton = new NavBarButton( new ImageIcon( PictureViewerNavBar.class.getClassLoader().getResource( "icon_RotCCDown.gif" ) ) );
     /**
      * A button for the rotation to the right
      */
-    public final JButton rotateRightJButton = new NavBarButton( new ImageIcon( PictureViewerNavBar.class.getClassLoader().getResource( "jpo/images/icon_RotCWDown.gif" ) ) );
+    public final JButton rotateRightJButton = new NavBarButton( new ImageIcon( PictureViewerNavBar.class.getClassLoader().getResource( "icon_RotCWDown.gif" ) ) );
 
     /**
      * A button to zoom in with
      */
-    public final JButton zoomInJButton = new NavBarButton( new ImageIcon( PictureViewerNavBar.class.getClassLoader().getResource( "jpo/images/MagnifyPlus.gif" ) ) );
+    public final JButton zoomInJButton = new NavBarButton( new ImageIcon( PictureViewerNavBar.class.getClassLoader().getResource( "MagnifyPlus.gif" ) ) );
 
     /**
      * A button to zoom out with
      */
-    public final JButton zoomOutJButton = new NavBarButton( new ImageIcon( PictureViewerNavBar.class.getClassLoader().getResource( "jpo/images/MagnifyMinus.gif" ) ) );
+    public final JButton zoomOutJButton = new NavBarButton( new ImageIcon( PictureViewerNavBar.class.getClassLoader().getResource( "MagnifyMinus.gif" ) ) );
 
     /**
      * A button to bring up the screen sizes button
      */
-    public final JButton fullScreenJButton = new NavBarButton( new ImageIcon( PictureViewerNavBar.class.getClassLoader().getResource( "jpo/images/icon_Frames.gif" ) ) );
+    public final JButton fullScreenJButton = new NavBarButton( new ImageIcon( PictureViewerNavBar.class.getClassLoader().getResource( "icon_Frames.gif" ) ) );
     /**
      * A button to bring up the popup menu
      */
-    public final JButton popupMenuJButton = new NavBarButton( new ImageIcon( PictureViewerNavBar.class.getClassLoader().getResource( "jpo/images/icon_FingerUp.gif" ) ) );
+    public final JButton popupMenuJButton = new NavBarButton( new ImageIcon( PictureViewerNavBar.class.getClassLoader().getResource( "icon_FingerUp.gif" ) ) );
     /**
      * A button to show the info overlay
      */
-    public final JButton infoJButton = new NavBarButton( new ImageIcon( PictureViewerNavBar.class.getClassLoader().getResource( "jpo/images/icon_info.gif" ) ) );
+    public final JButton infoJButton = new NavBarButton( new ImageIcon( PictureViewerNavBar.class.getClassLoader().getResource( "icon_info.gif" ) ) );
     /**
      * A button to close the panel
      */
-    public final JButton closeJButton = new NavBarButton( new ImageIcon( PictureViewerNavBar.class.getClassLoader().getResource( "jpo/images/icon_close2.gif" ) ) );
+    public final JButton closeJButton = new NavBarButton( new ImageIcon( PictureViewerNavBar.class.getClassLoader().getResource( "icon_close2.gif" ) ) );
 
     /**
      * Button for the automatic advance timer.
@@ -96,7 +96,7 @@ public class PictureViewerNavBar extends JToolBar {
     /**
      * Button to resize the image so that it fits in the screen.
      */
-    public final JButton resetJButton = new NavBarButton( new ImageIcon( PictureViewerNavBar.class.getClassLoader().getResource( "jpo/images/icon_reset.gif" ) ) );
+    public final JButton resetJButton = new NavBarButton( new ImageIcon( PictureViewerNavBar.class.getClassLoader().getResource( "icon_reset.gif" ) ) );
 
     /**
      * Constructor for a new instance of PictureViewerNavBar

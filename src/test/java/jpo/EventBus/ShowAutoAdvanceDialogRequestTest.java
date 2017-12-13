@@ -1,9 +1,15 @@
 package jpo.EventBus;
 
 import com.google.common.eventbus.Subscribe;
+import java.lang.reflect.InvocationTargetException;
+import javax.swing.SwingUtilities;
 import jpo.dataModel.GroupInfo;
+import jpo.dataModel.SingleNodeNavigator;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
+import jpo.gui.swing.PictureFrame;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 import org.junit.Test;
 
 /*
@@ -26,12 +32,12 @@ import org.junit.Test;
  *
  * @author Richard Eigenmann
  */
-public class GroupSelectionEventTest {
+public class ShowAutoAdvanceDialogRequestTest {
 
     /**
      * Constructor
      */
-    public GroupSelectionEventTest() {
+    public ShowAutoAdvanceDialogRequestTest() {
         jpoEventBus = JpoEventBus.getInstance();
     }
 
@@ -45,20 +51,27 @@ public class GroupSelectionEventTest {
         EventBusSubscriber myEventBusSubscriber = new EventBusSubscriber();
         jpoEventBus.register( myEventBusSubscriber );
 
-        final GroupInfo groupInfo = new GroupInfo( "Empty Group" );
-        final SortableDefaultMutableTreeNode node = new SortableDefaultMutableTreeNode( groupInfo );
+        try {
+            SwingUtilities.invokeAndWait( () -> {
+                final PictureFrame pictureFrame = new PictureFrame();
+                final SortableDefaultMutableTreeNode node = new SortableDefaultMutableTreeNode();
 
-        GroupSelectionEvent myGroupSelectionEvent = new GroupSelectionEvent( node );
-        jpoEventBus.post( myGroupSelectionEvent );
-        assertEquals( "After firing a GroupSelectionEvent we expect it to be received by the listener",
-                myGroupSelectionEvent, responseEvent );
-        assertEquals( node, responseEvent.getNode() );
+                ShowAutoAdvanceDialogRequest showAutoAdvanceDialogRequest = new ShowAutoAdvanceDialogRequest( pictureFrame, node );
+                jpoEventBus.post( showAutoAdvanceDialogRequest );
+
+                assertEquals( showAutoAdvanceDialogRequest, responseEvent );
+                assertEquals( pictureFrame, responseEvent.pictureFrame );
+                assertEquals( node, responseEvent.currentNode );
+            } );
+        } catch ( InterruptedException | InvocationTargetException ex ) {
+            fail( "Failed to send the ShowAutoAdvanceDialogRequest" );
+        }
     }
 
     /**
      * Receives the event.
      */
-    private GroupSelectionEvent responseEvent;
+    private ShowAutoAdvanceDialogRequest responseEvent;
 
     /**
      * Subscribes to the vent.
@@ -66,7 +79,7 @@ public class GroupSelectionEventTest {
     private class EventBusSubscriber {
 
         @Subscribe
-        public void handleGroupSelectionEvent( GroupSelectionEvent event ) {
+        public void handleGroupSelectionEvent( ShowAutoAdvanceDialogRequest event ) {
             responseEvent = event;
         }
     }

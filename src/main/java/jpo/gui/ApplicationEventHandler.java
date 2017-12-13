@@ -86,6 +86,7 @@ import jpo.EventBus.RunUserFunctionRequest;
 import jpo.EventBus.SaveDockablesPositionsRequest;
 import jpo.EventBus.SendEmailRequest;
 import jpo.EventBus.SetPictureRotationRequest;
+import jpo.EventBus.ShowAutoAdvanceDialogRequest;
 import jpo.EventBus.ShowCategoryUsageEditorRequest;
 import jpo.EventBus.ShowGroupAsTableRequest;
 import jpo.EventBus.ShowGroupInfoEditorRequest;
@@ -460,6 +461,16 @@ public class ApplicationEventHandler {
     }
 
     /**
+     * When the app sees a ShowAutoAdvanceDialog it needs to show the Auto Advance dialog
+     *
+     * @param request The request
+     */
+    @Subscribe
+    public void handleShowAutoAdvanceDialog( ShowAutoAdvanceDialogRequest request ) {
+        LOGGER.severe( "Not implemented yet");
+    }    
+    
+    /**
      * Bring up a Dialog where the user can input a new name for a file and
      * rename it.
      *
@@ -540,7 +551,7 @@ public class ApplicationEventHandler {
 
     /**
      * Loads the file by calling
-     * {@link SortableDefaultMutableTreeNode#fileLoad}. If there is a problem
+     * {@link PictureCollection#fileLoad}. If there is a problem
      * creates a new collection.
      * <p>
      * Remember to wrap this request in an UnsavedUpdatesDialogRequest if you

@@ -1,9 +1,12 @@
-package jpo.EventBus;
+package jpo.gui.swing;
 
-import jpo.dataModel.SortableDefaultMutableTreeNode;
+import java.lang.reflect.InvocationTargetException;
+import javax.swing.SwingUtilities;
+import static org.junit.Assert.*;
+import org.junit.Test;
 
 /*
- Copyright (C) 2008-2017,  Richard Eigenmann, Zürich
+ Copyright (C) 2017-2017,  Richard Eigenmann, Zürich
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -18,30 +21,25 @@ import jpo.dataModel.SortableDefaultMutableTreeNode;
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 
-
 /**
- * This request indicates that the user wants to see a set of thumbnails
- * 
+ *
  * @author Richard Eigenmann
  */
-public class ShowGroupRequest implements Request {
-
-    private final SortableDefaultMutableTreeNode node;
+public class LeftRightButtonTest {
 
     /**
-     * A request to show the thumbnails of the group node
-     * @param node The node with the thumbnails to show
+     * Test constructor
      */
-    public ShowGroupRequest( SortableDefaultMutableTreeNode node ) {
-        this.node = node;
-    }
-
-    /**
-     * Returns the node for which the thumbnails are to be shown.
-     * @return the Node with the group
-     */
-    public SortableDefaultMutableTreeNode getNode() {
-        return node;
+    @Test
+    public void testConstructor() {
+        try {
+            SwingUtilities.invokeAndWait( () -> {
+                LeftRightButton leftRightButton = new LeftRightButton();
+                assertNotNull( leftRightButton );
+            } );
+        } catch ( InterruptedException | InvocationTargetException ex ) {
+            fail("Failed to create a PictureFrame");
+        }
     }
 
 }

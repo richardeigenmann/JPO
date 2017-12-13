@@ -36,7 +36,7 @@ public class Main {
      * application. No parameter passing is used in the Jpo application.
      * <p>
      *
-     * The method verifies that the user has the correct Java Virtual Machine (>
+     * The method verifies that the user has the correct Java Virtual Machine (&gt;
      * 1.7.0) and then creates a new {@link ApplicationEventHandler} object which
      * it asks to post a {@link ApplicationStartupRequest} to.
      *

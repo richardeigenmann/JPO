@@ -69,6 +69,7 @@ public class CollectionJTreeController {
      * JTree. Instead it is a plain simple old class that does all the things to
      * respond to or instruct the JTree to do and show.
      *
+     * @param pictureCollection the PictureCollection to control
      */
     public CollectionJTreeController(PictureCollection pictureCollection) {
         Tools.checkEDT();

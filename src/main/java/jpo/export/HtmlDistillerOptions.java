@@ -8,8 +8,6 @@ import jpo.dataModel.Settings;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
 
 /*
- HtmlDistillerOptions.java:  Holds the options that configure the html output.
-
  Copyright (C) 2008-2017,  Richard Eigenmann, Zürich
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
@@ -24,6 +22,7 @@ import jpo.dataModel.SortableDefaultMutableTreeNode;
  The license is in gpl.txt.
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
+
 /**
  * This object holds the details of how the HtmlDistiller is supposed to
  * generate the output pages. It simplifies the interaction between the GUI and

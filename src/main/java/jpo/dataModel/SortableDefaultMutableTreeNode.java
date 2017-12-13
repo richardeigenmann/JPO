@@ -1414,4 +1414,15 @@ public class SortableDefaultMutableTreeNode
         return false;
     }
 
+    
+    @Override
+    public SortableDefaultMutableTreeNode getParent() {
+        return (SortableDefaultMutableTreeNode) super.getParent();
+    }
+
+    @Override
+    public SortableDefaultMutableTreeNode getRoot() {
+        return (SortableDefaultMutableTreeNode) super.getRoot();
+    }
+
 }

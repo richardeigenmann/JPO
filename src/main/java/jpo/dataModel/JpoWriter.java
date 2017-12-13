@@ -54,6 +54,9 @@ public class JpoWriter {
 
     /**
      * method that is invoked by the thread to do things asynchronously
+     * @param xmlOutputFile The output file to write to
+     * @param startNode The node to start from
+     * @param copyPics whether to copy the pictures to the target dir
      */
     public static void write( File xmlOutputFile, SortableDefaultMutableTreeNode startNode, boolean copyPics ) {
         File highresTargetDir = null;
