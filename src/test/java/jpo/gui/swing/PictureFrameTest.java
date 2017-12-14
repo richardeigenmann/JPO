@@ -1,5 +1,6 @@
 package jpo.gui.swing;
 
+import java.awt.GraphicsEnvironment;
 import java.lang.reflect.InvocationTargetException;
 import javax.swing.SwingUtilities;
 import static org.junit.Assert.*;
@@ -20,7 +21,6 @@ import org.junit.Test;
  The license is in gpl.txt.
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
-
 /**
  *
  * @author Richard Eigenmann
@@ -32,13 +32,17 @@ public class PictureFrameTest {
      */
     @Test
     public void testConstructor() {
+        // TravisCI runs headless so we can't execute the below test
+        if ( GraphicsEnvironment.isHeadless() ) {
+            return;
+        }
         try {
             SwingUtilities.invokeAndWait( () -> {
                 PictureFrame pictureFrame = new PictureFrame();
                 assertNotNull( pictureFrame );
             } );
         } catch ( InterruptedException | InvocationTargetException ex ) {
-            fail("Failed to create a PictureFrame");
+            fail( "Failed to create a PictureFrame" );
         }
     }
 

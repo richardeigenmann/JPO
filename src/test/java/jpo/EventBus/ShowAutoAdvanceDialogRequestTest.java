@@ -3,12 +3,10 @@ package jpo.EventBus;
 import com.google.common.eventbus.Subscribe;
 import java.lang.reflect.InvocationTargetException;
 import javax.swing.SwingUtilities;
-import jpo.dataModel.GroupInfo;
-import jpo.dataModel.SingleNodeNavigator;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
-import jpo.gui.swing.PictureFrame;
+import jpo.gui.ComponentMock;
+import jpo.gui.PictureViewer;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 import org.junit.Test;
 
@@ -53,15 +51,17 @@ public class ShowAutoAdvanceDialogRequestTest {
 
         try {
             SwingUtilities.invokeAndWait( () -> {
-                final PictureFrame pictureFrame = new PictureFrame();
+                final ComponentMock componentMock = new ComponentMock();
                 final SortableDefaultMutableTreeNode node = new SortableDefaultMutableTreeNode();
+                final PictureViewer pictureViewer = new PictureViewer();
 
-                ShowAutoAdvanceDialogRequest showAutoAdvanceDialogRequest = new ShowAutoAdvanceDialogRequest( pictureFrame, node );
+                ShowAutoAdvanceDialogRequest showAutoAdvanceDialogRequest = new ShowAutoAdvanceDialogRequest( componentMock, node, pictureViewer );
                 jpoEventBus.post( showAutoAdvanceDialogRequest );
 
                 assertEquals( showAutoAdvanceDialogRequest, responseEvent );
-                assertEquals( pictureFrame, responseEvent.pictureFrame );
+                assertEquals( componentMock, responseEvent.parentComponent );
                 assertEquals( node, responseEvent.currentNode );
+                assertEquals( pictureViewer, responseEvent.autoAdvanceTarget);
             } );
         } catch ( InterruptedException | InvocationTargetException ex ) {
             fail( "Failed to send the ShowAutoAdvanceDialogRequest" );

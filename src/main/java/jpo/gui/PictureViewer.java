@@ -1,6 +1,5 @@
 package jpo.gui;
 
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
@@ -12,10 +11,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.ButtonGroup;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JRadioButton;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import javax.swing.event.ChangeEvent;
@@ -24,13 +20,11 @@ import jpo.EventBus.JpoEventBus;
 import jpo.EventBus.RotatePictureRequest;
 import jpo.EventBus.ShowAutoAdvanceDialogRequest;
 import jpo.cache.ThumbnailQueueRequest.QUEUE_PRIORITY;
-import jpo.dataModel.FlatGroupNavigator;
 import jpo.dataModel.NodeNavigatorInterface;
 import jpo.dataModel.NodeNavigatorListener;
 import jpo.dataModel.PictureInfo;
 import jpo.dataModel.PictureInfoChangeEvent;
 import jpo.dataModel.PictureInfoChangeListener;
-import jpo.dataModel.RandomNavigator;
 import jpo.dataModel.Settings;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
 import jpo.dataModel.Tools;
@@ -42,7 +36,6 @@ import jpo.gui.swing.ChangeWindowPopupMenu;
 import jpo.gui.swing.PictureFrame;
 import jpo.gui.swing.PicturePopupMenu;
 import jpo.gui.swing.ResizableJFrame.WindowSize;
-import jpo.gui.swing.WholeNumberField;
 
 
 /*
@@ -73,7 +66,7 @@ import jpo.gui.swing.WholeNumberField;
  * <img src="../PictureViewer.png" alt="Picture Viewer">
  *
  */
-public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorListener {
+public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorListener, AutoAdvanceInterface {
 
     /**
      * PictureFrame
@@ -534,87 +527,10 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
             stopTimer();
             pictureFrame.getPictureViewerNavBar().clockJButton.setClockIdle();
         } else {
-            JpoEventBus.getInstance().post(new ShowAutoAdvanceDialogRequest(pictureFrame,getCurrentNode()) );
-            //doAutoAdvanceDialog();
+            JpoEventBus.getInstance().post( new ShowAutoAdvanceDialogRequest( pictureFrame.getResizableJFrame(), getCurrentNode(), this ) );
         }
 
         pictureFrame.getPictureController().requestFocusInWindow();
-    }
-
-    /**
-     * method that brings up a dialog box and asks the user how he would like
-     * auto advance to work
-     */
-    private void doAutoAdvanceDialog() {
-        JRadioButton randomAdvanceJRadioButton = new JRadioButton( Settings.jpoResources.getString( "randomAdvanceJRadioButtonLabel" ) );
-        JRadioButton sequentialAdvanceJRadioButton = new JRadioButton( Settings.jpoResources.getString( "sequentialAdvanceJRadioButtonLabel" ) );
-        ButtonGroup advanceButtonGroup = new ButtonGroup();
-        advanceButtonGroup.add( randomAdvanceJRadioButton );
-        advanceButtonGroup.add( sequentialAdvanceJRadioButton );
-        randomAdvanceJRadioButton.setSelected( true );
-
-        JRadioButton restrictToGroupJRadioButton = new JRadioButton( Settings.jpoResources.getString( "restrictToGroupJRadioButtonLabel" ) );
-        JRadioButton useAllPicturesJRadioButton = new JRadioButton( Settings.jpoResources.getString( "useAllPicturesJRadioButtonLabel" ) );
-        ButtonGroup cycleButtonGroup = new ButtonGroup();
-        cycleButtonGroup.add( restrictToGroupJRadioButton );
-        cycleButtonGroup.add( useAllPicturesJRadioButton );
-        useAllPicturesJRadioButton.setSelected( true );
-
-        JLabel timerSecondsJLabel = new JLabel( Settings.jpoResources.getString( "timerSecondsJLabelLabel" ) );
-        WholeNumberField timerSecondsField = new WholeNumberField( 4, 3 );
-        timerSecondsField.setPreferredSize( new Dimension( 50, 20 ) );
-        timerSecondsField.setMaximumSize( new Dimension( 50, 20 ) );
-        Object[] objects = { randomAdvanceJRadioButton,
-            sequentialAdvanceJRadioButton,
-            restrictToGroupJRadioButton,
-            useAllPicturesJRadioButton,
-            timerSecondsJLabel,
-            timerSecondsField
-        };
-
-        int selectedValue = JOptionPane.showOptionDialog(
-                pictureFrame.getResizableJFrame(),
-                objects,
-                Settings.jpoResources.getString( "autoAdvanceDialogTitle" ),
-                JOptionPane.OK_CANCEL_OPTION,
-                JOptionPane.PLAIN_MESSAGE,
-                null,
-                null,
-                null );
-        try {
-            if ( selectedValue == 0 ) {
-                if ( randomAdvanceJRadioButton.isSelected() ) {
-                    if ( useAllPicturesJRadioButton.isSelected() ) {
-                        SortableDefaultMutableTreeNode rootNode = Settings.getPictureCollection().getRootNode();
-                        mySetOfNodes
-                                = new RandomNavigator(
-                                        rootNode.getChildPictureNodes( true ),
-                                        String.format( "Randomised pictures from %s",
-                                                Settings.getPictureCollection().getRootNode().toString() ) );
-                    } else {
-                        mySetOfNodes = new RandomNavigator(
-                                ( (SortableDefaultMutableTreeNode) getCurrentNode().getParent() ).getChildPictureNodes( true ),
-                                String.format( "Randomised pictures from %s",
-                                        ( getCurrentNode().getParent() ).toString() ) );
-                    }
-                } else {
-                    if ( useAllPicturesJRadioButton.isSelected() ) {
-                        mySetOfNodes = new FlatGroupNavigator( (SortableDefaultMutableTreeNode) getCurrentNode().getRoot() );
-                    } else {
-                        mySetOfNodes = new FlatGroupNavigator( (SortableDefaultMutableTreeNode) getCurrentNode().getParent() );
-                    }
-
-                    myIndex = 0;
-                    showNode( mySetOfNodes, myIndex );
-                }
-
-                myIndex = 0;
-                showNode( mySetOfNodes, myIndex );
-                startAdvanceTimer( timerSecondsField.getValue() );
-            }
-        } catch ( NullPointerException ex ) {
-            LOGGER.severe( "NPE!" );
-        }
     }
 
     /**
@@ -629,6 +545,7 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
      *
      * @param seconds Seconds
      */
+    @Override
     public void startAdvanceTimer( int seconds ) {
 
         Tools.checkEDT();

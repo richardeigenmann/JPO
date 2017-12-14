@@ -1,6 +1,6 @@
 package jpo.gui;
 
-import com.sun.javafx.collections.SortableList;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.util.logging.Logger;
 import javax.swing.ButtonGroup;
@@ -32,7 +32,10 @@ import jpo.gui.swing.WholeNumberField;
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 /**
- * Brings up an Auto Advance Dialog and sends off an new request if successful
+ * Brings up an Auto Advance Dialog and sends off an new request if successful.
+ * 
+ * Note that if the request's parentComponent is a ComponentMock then the actual
+ * modal dialog is skipped.
  *
  * @author Richard Eigenmann
  */
@@ -42,6 +45,7 @@ public class AutoAdvanceDialog {
 
     public AutoAdvanceDialog( ShowAutoAdvanceDialogRequest request ) {
         this.request = request;
+        doAutoAdvanceDialog();
     }
 
     /**
@@ -80,15 +84,9 @@ public class AutoAdvanceDialog {
             timerSecondsField
         };
 
-        int selectedValue = JOptionPane.showOptionDialog(
-                request.pictureFrame.getResizableJFrame(),
-                objects,
-                Settings.jpoResources.getString( "autoAdvanceDialogTitle" ),
-                JOptionPane.OK_CANCEL_OPTION,
-                JOptionPane.PLAIN_MESSAGE,
-                null,
-                null,
-                null );
+        Component parentComponent = request.parentComponent;
+        int selectedValue = showDialog( parentComponent, objects );
+
         try {
             NodeNavigator mySetOfNodes;
             int myIndex;
@@ -115,16 +113,32 @@ public class AutoAdvanceDialog {
                     }
 
                     myIndex = 0;
-                    //showNode( mySetOfNodes, myIndex );
+                    request.autoAdvanceTarget.showNode( mySetOfNodes, myIndex );
                 }
 
                 myIndex = 0;
-                //showNode( mySetOfNodes, myIndex );
-                //startAdvanceTimer( timerSecondsField.getValue() );
+                request.autoAdvanceTarget.showNode( mySetOfNodes, myIndex );
+                request.autoAdvanceTarget.startAdvanceTimer( timerSecondsField.getValue() );
             }
         } catch ( NullPointerException ex ) {
             LOGGER.severe( "NPE!" );
         }
+    }
+
+    private int showDialog( Component parentComponent, Object message ) {
+        // hack to facilitate unit testing
+        if ( parentComponent instanceof ComponentMock ) {
+            return 0;
+        }
+        return JOptionPane.showOptionDialog(
+                parentComponent,
+                message,
+                Settings.jpoResources.getString( "autoAdvanceDialogTitle" ),
+                JOptionPane.OK_CANCEL_OPTION,
+                JOptionPane.PLAIN_MESSAGE,
+                null,
+                null,
+                null );
     }
 
 }

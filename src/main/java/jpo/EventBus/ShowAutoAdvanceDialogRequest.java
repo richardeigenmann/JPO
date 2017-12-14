@@ -1,7 +1,8 @@
 package jpo.EventBus;
 
+import java.awt.Component;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
-import jpo.gui.swing.PictureFrame;
+import jpo.gui.AutoAdvanceInterface;
 
 /*
  Copyright (C) 2017-2017,  Richard Eigenmann, Zürich
@@ -25,12 +26,20 @@ import jpo.gui.swing.PictureFrame;
  */
 public class ShowAutoAdvanceDialogRequest implements Request {
 
-    public final PictureFrame pictureFrame;
-    public SortableDefaultMutableTreeNode currentNode;
+    public final Component parentComponent;
+    public final SortableDefaultMutableTreeNode currentNode;
+    public final AutoAdvanceInterface autoAdvanceTarget;
 
-    public ShowAutoAdvanceDialogRequest( PictureFrame pictureFrame, SortableDefaultMutableTreeNode currentNode ) {
-        this.pictureFrame = pictureFrame;
+    /**
+     * A request to open the AutoAdvanceDialog
+     * @param parentComponent The component which anchors the dialog
+     * @param currentNode The current node on which the dialog is opened
+     * @param autoAdvanceTarget The target widget that will do the auto advance
+     */
+    public ShowAutoAdvanceDialogRequest( Component parentComponent, SortableDefaultMutableTreeNode currentNode, AutoAdvanceInterface autoAdvanceTarget ) {
+        this.parentComponent = parentComponent;
         this.currentNode = currentNode;
+        this.autoAdvanceTarget = autoAdvanceTarget;
     }
 
 }

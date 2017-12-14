@@ -1,6 +1,8 @@
 package jpo.gui;
 
-import org.junit.Assert;
+
+import jpo.EventBus.JpoEventBus;
+import static org.junit.Assert.assertNotNull;
 import org.junit.Test;
 
 
@@ -34,6 +36,7 @@ public class ApplicationEventHandlerTest {
     @Test
     public void testConstructor() {
         ApplicationEventHandler aeh = new ApplicationEventHandler();
-        Assert.assertNotNull(aeh);
+        assertNotNull(aeh);
+        assertNotNull( JpoEventBus.getInstance() );
     }
 }

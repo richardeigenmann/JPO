@@ -7,9 +7,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
 
 /*
- NodeStatistics.java: A Class that counts nodes, groups, pictures and disk usage on the supplied node
-
- Copyright (C) 2002 - 2014  Richard Eigenmann.
+ Copyright (C) 2002 - 2017  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -260,7 +258,7 @@ public class NodeStatistics {
             for ( int i = 0; i < q.getNumberOfResults(); i++ ) {
                 n = q.getIndex( i );
                 if ( n.getUserObject() instanceof PictureInfo ) {
-                    size += sizeOfPictureInfo( (PictureInfo)n.getUserObject() );
+                    size += sizeOfPictureInfo( (PictureInfo) n.getUserObject() );
                 }
             }
         } else if ( startNode.getUserObject() instanceof PictureInfo ) {
@@ -270,7 +268,7 @@ public class NodeStatistics {
             while ( nodes.hasMoreElements() ) {
                 n = (DefaultMutableTreeNode) nodes.nextElement();
                 if ( n.getUserObject() instanceof PictureInfo ) {
-                    size += sizeOfPictureInfo( (PictureInfo)n.getUserObject() );
+                    size += sizeOfPictureInfo( (PictureInfo) n.getUserObject() );
                 }
                 if ( n.getChildCount() > 0 ) {
                     size += sizeOfPicturesLong( n );

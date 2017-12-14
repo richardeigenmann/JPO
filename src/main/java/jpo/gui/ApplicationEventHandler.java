@@ -467,7 +467,7 @@ public class ApplicationEventHandler {
      */
     @Subscribe
     public void handleShowAutoAdvanceDialog( ShowAutoAdvanceDialogRequest request ) {
-        LOGGER.severe( "Not implemented yet");
+        new AutoAdvanceDialog(request );
     }    
     
     /**
