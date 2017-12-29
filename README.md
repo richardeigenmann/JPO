@@ -9,3 +9,5 @@ Java Picture Organizer
 
 Homepage: http://j-po.sourceforge.net/
 
+Sonacloud: https://sonarcloud.io/dashboard?id=Jpo
+
