@@ -2,7 +2,6 @@ package jpo.gui.swing;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;

@@ -1,6 +1,5 @@
 package jpo.export;
 
-import java.util.logging.Logger;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
@@ -11,8 +10,6 @@ import net.javaprog.ui.wizard.AbstractStep;
 import net.miginfocom.swing.MigLayout;
 
 /*
- * PicasaUploaderWizard2Upload.java:
- *
  * Copyright (C) 2012-2017 Richard Eigenmann. Zürich
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -36,7 +33,7 @@ public class PicasaUploaderWizard2Confirm extends AbstractStep {
     /**
      * Defines a logger for this class
      */
-    private static final Logger LOGGER = Logger.getLogger( PicasaUploaderWizard2Confirm.class.getName() );
+    //private static final Logger LOGGER = Logger.getLogger( PicasaUploaderWizard2Confirm.class.getName() );
     /**
      * The link to the values that this panel should change
      */

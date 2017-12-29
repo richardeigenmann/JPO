@@ -642,14 +642,14 @@ public class Tools {
      */
     public static File chooseXmlFile() {
         JFileChooser jFileChooser = new JFileChooser();
-        jFileChooser.setFileSelectionMode( javax.swing.JFileChooser.FILES_ONLY );
+        jFileChooser.setFileSelectionMode( JFileChooser.FILES_ONLY );
         jFileChooser.setApproveButtonText( Settings.jpoResources.getString( "fileOpenButtonText" ) );
         jFileChooser.setDialogTitle( Settings.jpoResources.getString( "fileOpenHeading" ) );
         jFileChooser.setFileFilter( new XmlFilter() );
         jFileChooser.setCurrentDirectory( Settings.getMostRecentCopyLocation() );
 
         int returnVal = jFileChooser.showOpenDialog( Settings.anchorFrame );
-        if ( returnVal == javax.swing.JFileChooser.APPROVE_OPTION ) {
+        if ( returnVal == JFileChooser.APPROVE_OPTION ) {
             return jFileChooser.getSelectedFile();
         } else {
             return null;

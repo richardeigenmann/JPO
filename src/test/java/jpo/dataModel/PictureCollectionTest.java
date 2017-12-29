@@ -40,7 +40,7 @@ public class PictureCollectionTest {
     /**
      * Defines a logger for this class
      */
-    private static final Logger LOGGER = Logger.getLogger( PictureCollectionTest.class.getName() );
+    //private static final Logger LOGGER = Logger.getLogger( PictureCollectionTest.class.getName() );
 
     /**
      * Let's have a nice little collection for some tests....
@@ -334,10 +334,10 @@ public class PictureCollectionTest {
 
     }
 
-    int nodeschanged;  // default is 0
-    int nodesinserted;
-    int nodesremoved;
-    int nodestructurechanged;
+    private int nodeschanged;  // default is 0
+    private int nodesinserted;
+    private int nodesremoved;
+    private int nodestructurechanged;
 
     /**
      * In this test we want to see whether a change to an attribute in the

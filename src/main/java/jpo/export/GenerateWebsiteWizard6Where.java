@@ -189,11 +189,6 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
 
         finalTarget.addActionListener(( ActionEvent arg0 ) -> {
             switch ( finalTarget.getSelectedIndex() ) {
-                case 0:
-                    ftpPanel.setVisible( false );
-                    sshPanel.setVisible( false );
-                    GenerateWebsiteWizard6Where.this.options.setOutputTarget( HtmlDistillerOptions.OutputTarget.OUTPUT_LOCAL_DIRECTORY );
-                    break;
                 case 1:
                     ftpPanel.setVisible( true );
                     sshPanel.setVisible( false );
@@ -203,6 +198,11 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
                     ftpPanel.setVisible( false );
                     sshPanel.setVisible( true );
                     GenerateWebsiteWizard6Where.this.options.setOutputTarget( HtmlDistillerOptions.OutputTarget.OUTPUT_SSH_LOCATION );
+                    break;
+                default: // case 0:
+                    ftpPanel.setVisible( false );
+                    sshPanel.setVisible( false );
+                    GenerateWebsiteWizard6Where.this.options.setOutputTarget( HtmlDistillerOptions.OutputTarget.OUTPUT_LOCAL_DIRECTORY );
                     break;
             }
         });
@@ -333,19 +333,19 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
                 new JLabel( "SSH Auth:" ), "align label" );
         sshAuthOoptionChooser.addActionListener(( ActionEvent arg0 ) -> {
             switch ( sshAuthOoptionChooser.getSelectedIndex() ) {
-                case 0:
-                    sshPasswordLabel.setVisible( true );
-                    sshPassword.setVisible( true );
-                    sshKeyfileLabel.setVisible( false );
-                    sshKeyFile.setVisible( false );
-                    GenerateWebsiteWizard6Where.this.options.setSshAuthType( HtmlDistillerOptions.SshAuthType.SSH_AUTH_PASSWORD );
-                    break;
                 case 1:
                     sshPasswordLabel.setVisible( false );
                     sshPassword.setVisible( false );
                     sshKeyfileLabel.setVisible( true );
                     sshKeyFile.setVisible( true );
                     GenerateWebsiteWizard6Where.this.options.setSshAuthType( HtmlDistillerOptions.SshAuthType.SSH_AUTH_KEYFILE );
+                    break;
+                default: // case 0:
+                    sshPasswordLabel.setVisible( true );
+                    sshPassword.setVisible( true );
+                    sshKeyfileLabel.setVisible( false );
+                    sshKeyFile.setVisible( false );
+                    GenerateWebsiteWizard6Where.this.options.setSshAuthType( HtmlDistillerOptions.SshAuthType.SSH_AUTH_PASSWORD );
                     break;
             }
         });
@@ -433,14 +433,14 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
     private void setWidgets( HtmlDistillerOptions options ) {
         // load the options into the GUI components
         switch ( options.getOutputTarget() ) {
-            case OUTPUT_LOCAL_DIRECTORY:
-                finalTarget.setSelectedIndex( 0 );
-                break;
             case OUTPUT_FTP_LOCATION:
                 finalTarget.setSelectedIndex( 1 );
                 break;
             case OUTPUT_SSH_LOCATION:
                 finalTarget.setSelectedIndex( 2 );
+                break;
+            default : //case OUTPUT_LOCAL_DIRECTORY:
+                finalTarget.setSelectedIndex( 0 );
                 break;
         }
 

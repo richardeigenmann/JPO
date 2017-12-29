@@ -3,7 +3,6 @@ package jpo.export;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.io.File;
-import java.util.logging.Logger;
 import jpo.dataModel.Settings;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
 
@@ -33,7 +32,7 @@ public class HtmlDistillerOptions {
     /**
      * Defines a logger for this class
      */
-    private static final Logger LOGGER = Logger.getLogger( HtmlDistillerOptions.class.getName() );
+    //private static final Logger LOGGER = Logger.getLogger( HtmlDistillerOptions.class.getName() );
     /**
      * The directory into which the web page will be generated.
      */
@@ -860,7 +859,7 @@ public class HtmlDistillerOptions {
             case PICTURE_NAMING_BY_ORIGINAL_NAME:
                 sb.append( Settings.jpoResources.getString( "originalNameRadioButton" ) );
                 break;
-            case PICTURE_NAMING_BY_SEQUENTIAL_NUMBER:
+            default: // case PICTURE_NAMING_BY_SEQUENTIAL_NUMBER:
                 sb.append( Settings.jpoResources.getString( "sequentialRadioButton" ) );
                 sb.append( Settings.jpoResources.getString( "sequentialRadioButtonStart" ) ).append( " " ).append( Integer.toString( getSequentialStartNumber() ) );
                 break;

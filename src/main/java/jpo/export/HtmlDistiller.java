@@ -900,7 +900,6 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
 
     private void sshCopyToServer( List<File> files ) {
         LOGGER.info( "Setting up ssh connection:" );
-        String response = "";
         JSch jsch = new JSch();
         try {
             LOGGER.info( String.format( "Setting up session for user: %s server: %s port: %d and connecting...", options.getSshUser(), options.getSshServer(), options.getSshPort() ) );
@@ -910,7 +909,6 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
             } else {
                 jsch.addIdentity( options.getSshKeyFile() );
             }
-            //jsch.setKnownHosts( "/home"+ options.getSshUser() + "/.ssh/known_hosts");
             Properties config = new Properties();
             config.put( "StrictHostKeyChecking", "no" );
             session.setConfig( config );

@@ -1172,10 +1172,8 @@ public class PictureInfo implements Serializable {
      * @param key the key to search for
      */
     public synchronized void removeCategory( Object key ) {
-        if ( categoryAssignments != null ) {
-            if ( categoryAssignments.remove( key ) ) {
-                sendCategoryAssignmentsChangedEvent();
-            }
+        if ( categoryAssignments != null && categoryAssignments.remove( key ) ) {
+            sendCategoryAssignmentsChangedEvent();
         }
     }
 
