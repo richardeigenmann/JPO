@@ -120,8 +120,6 @@ public class ConsolidateGroupWorker extends SwingWorker<String, String> {
 
     }
 
-    private int notMovedCount;
-    private int movedCount;
     private int errorCount;
 
     /**
@@ -138,14 +136,12 @@ public class ConsolidateGroupWorker extends SwingWorker<String, String> {
             if ( needToMovePicture(pictureInfo, targetDirectory ) ) {
                 if ( movePicture(pictureInfo, targetDirectory ) ) {
                     LOGGER.info( String.format( "Successfully Moved Highres file of node %s", pictureInfo.toString() ) );
-                    movedCount++;
                     publish( String.format( "Consolidated node: %s", node.toString() ) );
                 } else {
                     LOGGER.severe( String.format( "Could not move highres picture of node %s. Aborting.", node.toString() ) );
                     errorCount++;
                 }
             } else {
-                notMovedCount++;
                 publish( String.format( "No need to move node: %s", node.toString() ) );
             }
         } );

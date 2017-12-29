@@ -7,12 +7,4 @@ package jpo.EventBus;
  */
 public class SendEmailRequest implements Request {
 
-
-    /**
-     * A request to bring up the send email GUI
-     */
-    public SendEmailRequest() {
-    }
-
-
 }

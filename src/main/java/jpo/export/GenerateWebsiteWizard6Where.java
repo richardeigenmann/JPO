@@ -83,14 +83,14 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
 
         // load the options into the GUI components
         switch ( options.getOutputTarget() ) {
-            case OUTPUT_LOCAL_DIRECTORY:
-                finalTarget.setSelectedIndex( 0 );
-                break;
             case OUTPUT_FTP_LOCATION:
                 finalTarget.setSelectedIndex( 1 );
                 break;
             case OUTPUT_SSH_LOCATION:
                 finalTarget.setSelectedIndex( 2 );
+                break;
+            default : // case OUTPUT_LOCAL_DIRECTORY:
+                finalTarget.setSelectedIndex( 0 );
                 break;
         }
 

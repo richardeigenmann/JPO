@@ -17,9 +17,7 @@ import jpo.dataModel.Settings;
 import jpo.dataModel.Tools;
 
 /*
-ThumbnailPanelTitle.java:  This class does the widgets at the top of the ThumbnailPanel
-
-Copyright (C) 2009-2014  Richard Eigenmann, Zürich, Switzerland
+Copyright (C) 2009-2017  Richard Eigenmann, Zürich, Switzerland
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -50,7 +48,7 @@ public class ThumbnailPanelTitle
     /**
      * Defines a logger for this class
      */
-    private static final Logger LOGGER = Logger.getLogger( ThumbnailPanelTitle.class.getName() );
+    //private static final Logger LOGGER = Logger.getLogger( ThumbnailPanelTitle.class.getName() );
 
     /**
      *  a button to navigate back to the first page

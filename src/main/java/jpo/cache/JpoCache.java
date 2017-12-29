@@ -78,7 +78,7 @@ public class JpoCache {
     private Dimension groupThumbnailDimension;
 
     private JpoCache() {
-        LOGGER.info( "Creating JpoCache");
+        LOGGER.info( "Creating JpoCache" );
         CompositeCacheManager ccm = CompositeCacheManager.getUnconfiguredInstance();
         Properties props = loadProperties();
         ccm.configure( props );
@@ -95,6 +95,7 @@ public class JpoCache {
 
     /**
      * Loads the properties from the cache .ccf file in the bundle
+     *
      * @return The properties object created from the ccf file
      */
     public static Properties loadProperties() {
@@ -122,7 +123,7 @@ public class JpoCache {
 
         return props;
     }
-    
+
     /**
      * Method to properly shut down the cache
      */
@@ -245,7 +246,7 @@ public class JpoCache {
         }
 
         scalablePicture.scalePicture();
-        
+
         if ( scalablePicture.scaledPicture == null ) {
             return null;
         }
@@ -350,18 +351,19 @@ public class JpoCache {
      * thumbnails
      * @return the image
      */
-    private ImageBytes createGroupThumbnailAndStoreInCache( String key, int numberOfPics, List<SortableDefaultMutableTreeNode> childPictureNodes ) throws IOException {
-        BufferedImage groupThumbnail = ImageIO.read( new BufferedInputStream( JpoCache.class.getClassLoader().getResourceAsStream( "jpo/images/icon_folder_large.jpg" ) ) );
+    private ImageBytes createGroupThumbnailAndStoreInCache(
+            String key,
+            int numberOfPics,
+            List<SortableDefaultMutableTreeNode> childPictureNodes )
+            throws IOException {
+        BufferedImage groupThumbnail = ImageIO.read( new BufferedInputStream( JpoCache.class.getClassLoader().getResourceAsStream( "icon_folder_large.jpg" ) ) );
         Graphics2D groupThumbnailGraphics = groupThumbnail.createGraphics();
 
         int leftMargin = 15;
         int margin = 10;
         int topMargin = 65;
         int horizontalPics = ( groupThumbnail.getWidth() - leftMargin ) / ( Settings.miniThumbnailSize.width + margin );
-        //int verticalPics = ( groupThumbnail.getHeight() - topMargin ) / ( Settings.miniThumbnailSize.height + margin );
 
-        int x, y;
-        int yPos;
         ScalablePicture scalablePicture = new ScalablePicture();
         FileTime mostRecentPictureModification = FileTime.fromMillis( 0 );
         for ( int picsProcessed = 0; ( picsProcessed < numberOfPics ) && ( picsProcessed < childPictureNodes.size() ); picsProcessed++ ) {
@@ -373,9 +375,9 @@ public class JpoCache {
                 mostRecentPictureModification = lastModification;
             }
 
-            x = margin + ( ( picsProcessed % horizontalPics ) * ( Settings.miniThumbnailSize.width + margin ) );
-            yPos = (int) Math.round( ( picsProcessed / (double) horizontalPics ) - 0.5f );
-            y = topMargin + ( yPos * ( Settings.miniThumbnailSize.height + margin ) );
+            int x = margin + ( ( picsProcessed % horizontalPics ) * ( Settings.miniThumbnailSize.width + margin ) );
+            int yPos = (int) Math.round( ( picsProcessed / (double) horizontalPics ) - 0.5f );
+            int y = topMargin + ( yPos * ( Settings.miniThumbnailSize.height + margin ) );
 
             scalablePicture.loadPictureImd( pi.getImageURL(), pi.getRotation() );
 

@@ -1,6 +1,7 @@
 package jpo.EventBus;
 
 import com.google.common.eventbus.Subscribe;
+import java.awt.GraphicsEnvironment;
 import java.lang.reflect.InvocationTargetException;
 import javax.swing.SwingUtilities;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
@@ -46,6 +47,11 @@ public class ShowAutoAdvanceDialogRequestTest {
      */
     @Test
     public void testReceivingEvent() {
+        // TravisCI runs headless so we can't execute the below test
+        if ( GraphicsEnvironment.isHeadless() ) {
+            return;
+        }
+
         EventBusSubscriber myEventBusSubscriber = new EventBusSubscriber();
         jpoEventBus.register( myEventBusSubscriber );
 
@@ -61,7 +67,7 @@ public class ShowAutoAdvanceDialogRequestTest {
                 assertEquals( showAutoAdvanceDialogRequest, responseEvent );
                 assertEquals( componentMock, responseEvent.parentComponent );
                 assertEquals( node, responseEvent.currentNode );
-                assertEquals( pictureViewer, responseEvent.autoAdvanceTarget);
+                assertEquals( pictureViewer, responseEvent.autoAdvanceTarget );
             } );
         } catch ( InterruptedException | InvocationTargetException ex ) {
             fail( "Failed to send the ShowAutoAdvanceDialogRequest. Exception was: " + ex.getMessage() );

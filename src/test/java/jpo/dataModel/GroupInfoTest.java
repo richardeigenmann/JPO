@@ -55,8 +55,8 @@ public class GroupInfoTest {
         
         String umlautString = "Rüeblitorten gären im Brötlikorb";
         String expectedUmlautString = "R&uuml;eblitorten g&auml;ren im Br&ouml;tlikorb";
-        gi.setGroupName( quotedString);
-        assertEquals( "German umlauts are to be escaped", expectedQuotedString, gi.getGroupNameHtml() );
+        gi.setGroupName( umlautString);
+        assertEquals( "German umlauts are to be escaped", expectedUmlautString, gi.getGroupNameHtml() );
         
     }
 

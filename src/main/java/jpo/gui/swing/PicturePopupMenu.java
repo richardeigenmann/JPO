@@ -101,8 +101,8 @@ public class PicturePopupMenu extends JPopupMenu {
      * array of menu items that remembers the zip file names
      *
      *
-     */
-    private final JMenuItem[] memorizedZipFileJMenuItems = new JMenuItem[Settings.MAX_MEMORISE];
+     *
+    private final JMenuItem[] memorizedZipFileJMenuItems = new JMenuItem[Settings.MAX_MEMORISE];*/
 
     /**
      * a separator for the Move menu. Declared here because other class methods
@@ -568,6 +568,7 @@ public class PicturePopupMenu extends JPopupMenu {
         });
         copyJMenu.add( copyToClipboard );
 
+        JMenuItem[] memorizedZipFileJMenuItems = new JMenuItem[Settings.MAX_MEMORISE];
         for ( int i = 0; i < Settings.MAX_MEMORISE; i++ ) {
             final int item = i;
             memorizedZipFileJMenuItems[i] = new JMenuItem();

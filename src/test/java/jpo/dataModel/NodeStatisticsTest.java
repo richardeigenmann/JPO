@@ -148,7 +148,7 @@ public class NodeStatisticsTest{
     public void testSizeOfPicturesNull() {
         NodeStatistics ns = new NodeStatistics(null);
         try {
-            long size = ns.getSizeOfPictures();
+            ns.getSizeOfPictures();
         } catch (NullPointerException ex) {
             return;
         }

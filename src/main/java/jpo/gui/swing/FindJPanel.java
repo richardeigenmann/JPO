@@ -93,12 +93,9 @@ public class FindJPanel extends JPanel {
         upperDateJTextField.setVisible( visible );
     }
 
-    private String savedLowerDateValue;
-    private String savedUpperDateValue;
-
     private void toggleAdvancedCriteria() {
-        savedLowerDateValue = Tools.currentDate( "dd.MM.yyyy" );
-        savedUpperDateValue = Tools.currentDate( "dd.MM.yyyy" );
+        String savedLowerDateValue = Tools.currentDate( "dd.MM.yyyy" );
+        String savedUpperDateValue = Tools.currentDate( "dd.MM.yyyy" );
 
         if ( dateRangeJLabel.isVisible() ) {
             savedLowerDateValue = lowerDateJTextField.getText();

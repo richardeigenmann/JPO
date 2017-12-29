@@ -203,7 +203,7 @@ public class ClearThumbnailsJFrame extends javax.swing.JFrame {
                 }
 
                 line = StringUtils.chomp( line );
-                if ( line.equals( "" ) ) {
+                if ( "".equals( line ) ) {
                     continue;
                 }
 

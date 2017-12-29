@@ -192,7 +192,7 @@ public class PictureInfoTest {
      * @throws MalformedURLException
      */
     @Test
-    public void testSetHighresLocation_URL() throws MalformedURLException {
+    public void testSetHighresLocationUrl() throws MalformedURLException {
         PictureInfo pi = new PictureInfo();
         pi.setImageLocation( new URL( "file:///dir/picture.jpg" ) );
         File f = pi.getImageFile();
