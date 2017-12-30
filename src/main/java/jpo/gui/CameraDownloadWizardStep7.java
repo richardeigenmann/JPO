@@ -1,6 +1,5 @@
 package jpo.gui;
 
-import java.util.logging.Logger;
 import javax.swing.BoxLayout;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
@@ -9,9 +8,7 @@ import jpo.dataModel.Settings;
 import net.javaprog.ui.wizard.AbstractStep;
 
 /*
-CameraDownloadWizardStep5.java: the sixth step in the download from Camera Wizard
-
-Copyright (C) 2007-2014  Richard Eigenmann.
+Copyright (C) 2007-2017  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -34,7 +31,7 @@ public class CameraDownloadWizardStep7
     /**
      * Defines a LOGGER for this class
      */
-    private static final Logger LOGGER = Logger.getLogger( CameraDownloadWizardStep7.class.getName() );
+    //private static final Logger LOGGER = Logger.getLogger( CameraDownloadWizardStep7.class.getName() );
 
     /**
      *

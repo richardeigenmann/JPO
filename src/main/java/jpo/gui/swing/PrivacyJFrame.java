@@ -3,7 +3,6 @@ package jpo.gui.swing;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
@@ -15,8 +14,6 @@ import jpo.dataModel.Tools;
 import net.miginfocom.swing.MigLayout;
 
 /*
-PrivacyJFrame.java:  a dialog to clear private data from JPO
-
 Copyright (C) 2002 - 2017 Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -32,7 +29,7 @@ The license is in gpl.txt.
 See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 /**
- *
+ * A dialog to clear private data from JPO
  * @author Richard Eigenmann
  */
 public class PrivacyJFrame
@@ -58,7 +55,7 @@ public class PrivacyJFrame
     /**
      * Defines a logger for this class
      */
-    private static final Logger LOGGER = Logger.getLogger( PrivacyJFrame.class.getName() );
+    //private static final Logger LOGGER = Logger.getLogger( PrivacyJFrame.class.getName() );
 
 
     /**
@@ -75,14 +72,6 @@ public class PrivacyJFrame
             privacyController.clearRecentFiles();
         });
         privacyPanel.add( clearRecentFilesButton, "wrap" );
-
-        /*final JCheckBox clearThumbnails = new JCheckBox( Settings.jpoResources.getString( "PrivacyClearThumbnails" ) );
-        privacyPanel.add( clearThumbnails );
-        final JButton clearThumbnailsButton = new JButton( Settings.jpoResources.getString( "PrivacyClear" ) );
-        clearThumbnailsButton.addActionListener(( ActionEvent e ) -> {
-            privacyController.clearThumbnails();
-        });
-        privacyPanel.add( clearThumbnailsButton, "wrap" );*/
 
         final JCheckBox clearAutoload = new JCheckBox( Settings.jpoResources.getString( "PrivacyClearAutoload" ) );
         privacyPanel.add( clearAutoload );
@@ -151,7 +140,7 @@ public class PrivacyJFrame
         /**
          * Defines a logger for this class
          */
-        private final Logger LOGGER = Logger.getLogger( getClass().getName() );
+        //private final Logger LOGGER = Logger.getLogger( getClass().getName() );
 
 
         /**

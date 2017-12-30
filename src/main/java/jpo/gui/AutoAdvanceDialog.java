@@ -41,7 +41,7 @@ import jpo.gui.swing.WholeNumberField;
  */
 public class AutoAdvanceDialog {
 
-    final ShowAutoAdvanceDialogRequest request;
+    private final ShowAutoAdvanceDialogRequest request;
 
     public AutoAdvanceDialog( ShowAutoAdvanceDialogRequest request ) {
         this.request = request;

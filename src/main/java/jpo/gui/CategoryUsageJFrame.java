@@ -28,9 +28,7 @@ import jpo.gui.swing.CategoryJScrollPane;
 import net.miginfocom.swing.MigLayout;
 
 /*
- CategoryUsageJFrame.java:  Creates a Window in which the categories are shown
-
- Copyright (C) 2002-2016  Richard Eigenmann.
+ Copyright (C) 2002-2017  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -225,7 +223,6 @@ public class CategoryUsageJFrame extends JFrame {
         }
 
         Object[] pictureCategories;
-        int pictureCategoryKey;
         int currentStatus;
         boolean found;
         PictureInfo pi;
@@ -239,9 +236,6 @@ public class CategoryUsageJFrame extends JFrame {
             LOGGER.log( Level.INFO, "Checking Category: {0} {1}", new Object[]{ c.getKey().toString(), c.toString() } );
 
             for ( SortableDefaultMutableTreeNode pictureNode : selectedNodes ) {
-                //pictureNodes = selectedNodes.elements();
-                //while ( pictureNodes.hasMoreElements() ) {
-                //myObject = ( (SortableDefaultMutableTreeNode) pictureNodes.nextElement() ).getUserObject();
                 myObject = pictureNode.getUserObject();
                 if ( myObject instanceof PictureInfo ) {
                     pi = (PictureInfo) myObject;
@@ -322,7 +316,7 @@ public class CategoryUsageJFrame extends JFrame {
     /**
      * This list holds references to categoryGuiListeners
      */
-    private final Set<CategoryGuiListenerInterface> categoryGuiListeners = Collections.synchronizedSet( new HashSet<CategoryGuiListenerInterface>() );
+    private final Set<CategoryGuiListenerInterface> categoryGuiListeners = Collections.synchronizedSet( new HashSet<>() );
 
     /**
      * This method registers the categoryGuiListener

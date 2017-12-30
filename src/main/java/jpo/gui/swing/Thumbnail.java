@@ -20,8 +20,6 @@ import jpo.dataModel.Settings;
 import jpo.dataModel.Tools;
 
 /*
- Thumbnail.java:  This class shows a single Thumbnail
-
  Copyright (C) 2010-2017  Richard Eigenmann, Zurich, Switzerland
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
@@ -110,14 +108,11 @@ public class Thumbnail extends JComponent {
     public void setVisible( final boolean visibility ) {
         Tools.checkEDT();
         super.setVisible( visibility );
-        if ( visibility ) {
-            if ( getSize().height != thumbnailHeight ) {
-                //logger.info("ThumbnailController.setVisible: The Size is not right!");
-                // finally I found the solution to the size issue! Unless it's set to
-                //  non visible the whole rendering engine sees no point in fixing the size.
-                Thumbnail.super.setVisible( false );
-                Thumbnail.super.setVisible( true );
-            }
+        if ( visibility && getSize().height != thumbnailHeight ) {
+            // finally I found the solution to the size issue! Unless it's set to
+            // non visible the whole rendering engine sees no point in fixing the size.
+            Thumbnail.super.setVisible( false );
+            Thumbnail.super.setVisible( true );
         }
     }
 
@@ -226,14 +221,15 @@ public class Thumbnail extends JComponent {
      * This icon indicates that the thumbnail creation is sitting on the queue.
      */
     private static final ImageIcon QUEUE_ICON;
+
     static {
         final String QUEUE_ICON_FILE = "queued_thumbnail.gif";
         URL resource = Thumbnail.class.getClassLoader().getResource( QUEUE_ICON_FILE );
         if ( resource == null ) {
-            LOGGER.severe ("Classloader failed to load file: " + QUEUE_ICON_FILE);
+            LOGGER.severe( "Classloader failed to load file: " + QUEUE_ICON_FILE );
             QUEUE_ICON = null;
         } else {
-            QUEUE_ICON = new ImageIcon( resource );    
+            QUEUE_ICON = new ImageIcon( resource );
         }
     }
 
@@ -241,14 +237,15 @@ public class Thumbnail extends JComponent {
      * This icon shows a large yellow folder.
      */
     private static final ImageIcon LARGE_FOLDER_ICON;
+
     static {
         final String LARGE_FOLDER_ICON_FILE = "icon_folder_large.jpg";
         URL resource = Thumbnail.class.getClassLoader().getResource( LARGE_FOLDER_ICON_FILE );
         if ( resource == null ) {
-            LOGGER.severe ("Classloader failed to load file: " + LARGE_FOLDER_ICON_FILE);
+            LOGGER.severe( "Classloader failed to load file: " + LARGE_FOLDER_ICON_FILE );
             LARGE_FOLDER_ICON = null;
         } else {
-            LARGE_FOLDER_ICON = new ImageIcon( resource );    
+            LARGE_FOLDER_ICON = new ImageIcon( resource );
         }
     }
 
@@ -257,14 +254,15 @@ public class Thumbnail extends JComponent {
      * available
      */
     private static final ImageIcon OFFLINE_ICON;
+
     static {
         final String OFFLINE_ICON_FILE = "icon_offline.gif";
         URL resource = Thumbnail.class.getClassLoader().getResource( OFFLINE_ICON_FILE );
         if ( resource == null ) {
-            LOGGER.severe ("Classloader failed to load file: " + OFFLINE_ICON_FILE);
+            LOGGER.severe( "Classloader failed to load file: " + OFFLINE_ICON_FILE );
             OFFLINE_ICON = null;
         } else {
-            OFFLINE_ICON = new ImageIcon( resource );    
+            OFFLINE_ICON = new ImageIcon( resource );
         }
     }
 
@@ -272,14 +270,15 @@ public class Thumbnail extends JComponent {
      * The mail icon to superimpose on the picture
      */
     private static final ImageIcon MAIL_ICON;
+
     static {
         final String MAIL_ICON_FILE = "icon_mail.gif";
         URL resource = Thumbnail.class.getClassLoader().getResource( MAIL_ICON_FILE );
         if ( resource == null ) {
-            LOGGER.severe ("Classloader failed to load file: " + MAIL_ICON_FILE);
+            LOGGER.severe( "Classloader failed to load file: " + MAIL_ICON_FILE );
             MAIL_ICON = null;
         } else {
-            MAIL_ICON = new ImageIcon( resource );    
+            MAIL_ICON = new ImageIcon( resource );
         }
     }
 

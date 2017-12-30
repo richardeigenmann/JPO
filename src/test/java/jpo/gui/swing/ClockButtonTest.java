@@ -34,7 +34,7 @@ public class ClockButtonTest {
     public void testConstructor() {
         try {
             SwingUtilities.invokeAndWait( () -> {
-                ClockButton clockButton = new ClockButton(true );
+                ClockButton clockButton = new ClockButton( );
                 assertNotNull( clockButton );
             } );
         } catch ( InterruptedException | InvocationTargetException ex ) {

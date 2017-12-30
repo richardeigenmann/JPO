@@ -1,14 +1,11 @@
 package jpo.export;
 
 import com.google.gdata.client.photos.PicasawebService;
-import java.util.logging.Logger;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
 
 /*
- * PicasaUploadRequest.java: The beans needed to upload a group of pictures to Picasa
- * 
- * Copyright (C) 2012-2014 Richard
- * Eigenmann. This program is free software; you can redistribute it and/or
+ * Copyright (C) 2012-2017 RichardEigenmann. 
+ * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or any later
  * version. This program is distributed in the hope that it will be useful, but
@@ -24,6 +21,10 @@ import jpo.dataModel.SortableDefaultMutableTreeNode;
  * @author Richard Eigenmann
  */
 public class PicasaUploadRequest {
+    /**
+     * Defines a logger for this class
+     */
+    //private static final Logger LOGGER = Logger.getLogger ( PicasaUploadRequest.class.getName () );
 
     /**
      * The Group Node that is to be uploaded
@@ -92,10 +93,6 @@ public class PicasaUploadRequest {
     public String getFormattedPicasaUrl () {
         return String.format ( PICASA_URL, getUsername () );
     }
-    /**
-     * Defines a logger for this class
-     */
-    private static final Logger LOGGER = Logger.getLogger ( PicasaUploadRequest.class.getName () );
 
     /**
      * semaphore to indicate that the upload should stop

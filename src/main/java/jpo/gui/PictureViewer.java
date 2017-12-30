@@ -161,7 +161,7 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
                             pictureFrame.setProgressBarValue( percentage );
                             pictureFrame.setProgressBarVisible( true );
                             break;
-                        case SOURCE_PICTURE_LOADING_COMPLETED:
+                            default: // SOURCE_PICTURE_LOADING_COMPLETED:
                             pictureFrame.setProgressBarVisible( false );
                             break;
                     }

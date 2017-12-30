@@ -33,7 +33,7 @@ import org.junit.Test;
  */
 public class ToolsTest {
 
-    boolean notOnEDT_ErrorThrown;
+    private boolean notOnEDT_ErrorThrown;
 
     /**
      * Constructor for the Tools Test class

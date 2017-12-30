@@ -190,15 +190,15 @@ public class Emailer
     @Override
     protected String doInBackground() throws Exception {
         switch ( Settings.emailAuthentication ) {
-            case 0:
-                sendEmailNoAuth();
-                break; // No Authentication
             case 1:
                 sendEmailAuth();
                 break; // Password
             case 2:
                 sendEmailSSL();
                 break;// SSL
+            default:
+                sendEmailNoAuth();
+                break; // No Authentication
         }
         return ( "Done" );
     }

@@ -222,7 +222,7 @@ public class ResizableJFrame
             case WINDOW_BOTTOM_RIGHT:
                 resizeToBottomRight();
                 break;
-            case WINDOW_DEFAULT:
+            default: // case WINDOW_DEFAULT:
                 unMaximise();
                 break;
         }

@@ -10,8 +10,6 @@ import jpo.dataModel.Settings;
 import jpo.dataModel.Tools;
 
 /*
- PictureViewerNavBar.java:  Does the navigation icons and sends the events back to the PictureViewer
-
  Copyright (C) 2002-2017  Richard Eigenmann, Zürich, Switzerland
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
@@ -91,7 +89,7 @@ public class PictureViewerNavBar extends JToolBar {
     /**
      * Button for the automatic advance timer.
      */
-    public final ClockButton clockJButton = new ClockButton( false );
+    public final ClockButton clockJButton = new ClockButton( );
 
     /**
      * Button to resize the image so that it fits in the screen.

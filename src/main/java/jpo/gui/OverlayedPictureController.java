@@ -117,7 +117,9 @@ public class OverlayedPictureController extends PictureController implements Sca
             case APPLICATION_OVERLAY:
                 showInfo = NO_OVERLAY;
                 break;
-            default: showInfo = NO_OVERLAY;
+            default: 
+                showInfo = NO_OVERLAY;
+                break;
         }
         repaint();
     }
@@ -233,17 +235,17 @@ public class OverlayedPictureController extends PictureController implements Sca
     @Override
     public void scalableStatusChange( ScalablePicture.ScalablePictureStatus pictureStatusCode,
             String pictureStatusMessage ) {
-        LOGGER.log( Level.FINE, "PicturePane.scalableStatusChange: got a status change: {0}", pictureStatusMessage );
+        LOGGER.log( Level.FINE, "Got a status change: {0}", pictureStatusMessage );
 
         if ( pictureStatusCode == SCALABLE_PICTURE_READY ) {
-            LOGGER.fine( "PicturePane.scalableStatusChange: a READY status" );
+            LOGGER.fine( "READY status" );
             //pictureStatusMessage = legend;
             pictureStatusMessage = Settings.jpoResources.getString( "PicturePaneReadyStatus" );
             if ( centerWhenScaled ) {
-                LOGGER.fine( "PicturePane.scalableStatusChange: centering image" );
+                LOGGER.fine( "centering image" );
                 centerImage();
             }
-            LOGGER.fine( "PicturePane.scalableStatusChange: forcing Panel repaint" );
+            LOGGER.fine( "forcing Panel repaint" );
             repaint();
         }
 

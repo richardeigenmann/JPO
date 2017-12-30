@@ -15,8 +15,6 @@ import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /*
- JpoWriter.java:  Writes the JPO collection to an xml formatted file
-
  Copyright (C) 2002-2017  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
@@ -138,7 +136,7 @@ public class JpoWriter {
             boolean copyPics ) throws IOException {
         GroupInfo groupInfo = (GroupInfo) groupNode.getUserObject();
 
-        groupInfo.dumpToXml( bufferedWriter, groupNode == startNode, groupNode.getPictureCollection().getAllowEdits() );
+        groupInfo.dumpToXml( bufferedWriter, groupNode.equals( startNode), groupNode.getPictureCollection().getAllowEdits() );
 
         SortableDefaultMutableTreeNode childNode;
         Enumeration kids = groupNode.children();

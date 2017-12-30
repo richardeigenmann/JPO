@@ -148,7 +148,7 @@ public class PictureFileChooser
      * Checkbox that allows the user to specify whether directory structures
      * should be retained
      */
-    final JCheckBox retainDirectoriesJCheckBox = new JCheckBox( Settings.jpoResources.getString( "retainDirectoriesJCheckBox" ) );
+    private final JCheckBox retainDirectoriesJCheckBox = new JCheckBox( Settings.jpoResources.getString( "retainDirectoriesJCheckBox" ) );
 
     /**
      * This component shows the thumbnail. It is a JLabel as we can thus use the

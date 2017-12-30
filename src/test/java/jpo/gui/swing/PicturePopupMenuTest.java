@@ -43,6 +43,22 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
+/*
+ Copyright (C) 2017  Richard Eigenmann.
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or any later version. This program is distributed 
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+ without even the implied warranty of MERCHANTABILITY or FITNESS 
+ FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
+ more details. You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ The license is in gpl.txt.
+ See http://www.gnu.org/copyleft/gpl.html for the details.
+ */
+
 /**
  * Tests for the GroupPopupMenu Class
  *
@@ -59,18 +75,6 @@ public class PicturePopupMenuTest {
      *
      */
     final private PictureInfo myPictureInfo = new PictureInfo();
-
-    {
-        myPictureInfo.setDescription( "My Picture" );
-        try {
-            File temp = File.createTempFile( "JPO-Unit-Test", ".jpg" );
-            temp.deleteOnExit();
-            myPictureInfo.setImageLocation( temp );
-        } catch ( IOException ex ) {
-            Logger.getLogger( PicturePopupMenuTest.class.getName() ).log( Level.SEVERE, null, ex );
-        }
-
-    }
     final private GroupInfo myGroupInfo = new GroupInfo( "Parent Group" );
     final private SortableDefaultMutableTreeNode myNode = new SortableDefaultMutableTreeNode( myPictureInfo );
     final private SortableDefaultMutableTreeNode myParentNode = new SortableDefaultMutableTreeNode( myGroupInfo );
@@ -126,6 +130,15 @@ public class PicturePopupMenuTest {
      */
     @Before
     public void setUp() throws Exception {
+        myPictureInfo.setDescription( "My Picture" );
+        try {
+            File temp = File.createTempFile( "JPO-Unit-Test", ".jpg" );
+            temp.deleteOnExit();
+            myPictureInfo.setImageLocation( temp );
+        } catch ( IOException ex ) {
+            Logger.getLogger( PicturePopupMenuTest.class.getName() ).log( Level.SEVERE, null, ex );
+        }
+        
         myPicturePopupMenu = new PicturePopupMenu( myNavigator, 0 );
 
         SwingUtilities.invokeAndWait( () -> {
@@ -231,9 +244,7 @@ public class PicturePopupMenuTest {
                 assertEquals( "Properties", properties.getText() );
                 assertEquals( "Consolidate Here", consolidateHere.getText() );
             } );
-        } catch ( InterruptedException ex ) {
-            Logger.getLogger( PicturePopupMenuTest.class.getName() ).log( Level.SEVERE, null, ex );
-        } catch ( InvocationTargetException ex ) {
+        } catch ( InterruptedException | InvocationTargetException ex ) {
             Logger.getLogger( PicturePopupMenuTest.class.getName() ).log( Level.SEVERE, null, ex );
         }
     }
@@ -248,8 +259,8 @@ public class PicturePopupMenuTest {
         JpoEventBus.getInstance().register( new Object() {
             @Subscribe
             public void handleShowPictureRequest( ShowPictureRequest request ) {
-                SortableDefaultMutableTreeNode node = request.getNode();
-                Object userObject = node.getUserObject();
+                //SortableDefaultMutableTreeNode node = request.getNode();
+                //Object userObject = node.getUserObject();
                 showPictureEventCount++;
             }
         } );

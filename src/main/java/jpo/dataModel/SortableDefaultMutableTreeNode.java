@@ -343,10 +343,8 @@ public class SortableDefaultMutableTreeNode
             // fall back on the default behaviour
             super.setUserObject( userObject );
         }
-        if ( getPictureCollection() != null ) {
-            if ( getPictureCollection().getSendModelUpdates() ) {
-                getPictureCollection().sendNodeChanged( this );
-            }
+        if ( getPictureCollection() != null && getPictureCollection().getSendModelUpdates() ) {
+            getPictureCollection().sendNodeChanged( this );
         }
     }
 
@@ -573,20 +571,9 @@ public class SortableDefaultMutableTreeNode
                 final SortableDefaultMutableTreeNode targetNode ) {
             dropBefore.addActionListener( ( ActionEvent e ) -> {
                 SortableDefaultMutableTreeNode parentNode = (SortableDefaultMutableTreeNode) targetNode.getParent();
-                int currentIndex = parentNode.getIndex( targetNode );
-
-                // position is one less if the source is further up the list than the target
-                // and at the same level
-                int offset = 0;
-                if ( targetNode.isNodeSibling( sourceNode ) ) {
-                    //logger.info ("The target is a sibling of the sourceNode");
-                    if ( parentNode.getIndex( sourceNode ) < parentNode.getIndex( targetNode ) ) {
-                        offset = -1;
-                    }
-                }
                 sourceNode.removeFromParent();
-                parentNode.insert( sourceNode, currentIndex + offset );
-
+                int currentIndex = parentNode.getIndex( targetNode );
+                parentNode.insert( sourceNode, currentIndex );
                 event.dropComplete( true );
                 getPictureCollection().setUnsavedUpdates();
             } );
@@ -594,20 +581,9 @@ public class SortableDefaultMutableTreeNode
 
             dropAfter.addActionListener( ( ActionEvent e ) -> {
                 SortableDefaultMutableTreeNode parentNode = (SortableDefaultMutableTreeNode) targetNode.getParent();
-                int currentIndex = parentNode.getIndex( targetNode );
-
-                // position is one less if the source is further up the list than the target
-                // and at the same level
-                int offset = 0;
-                if ( targetNode.isNodeSibling( sourceNode ) ) {
-                    //logger.info ("The target is a sibling of the sourceNode");
-                    if ( parentNode.getIndex( sourceNode ) < parentNode.getIndex( targetNode ) ) {
-                        offset = -1;
-                    }
-                }
                 sourceNode.removeFromParent();
-                parentNode.insert( sourceNode, currentIndex + offset + 1 );
-
+                int currentIndex = parentNode.getIndex( targetNode );
+                parentNode.insert( sourceNode, currentIndex + 1 );
                 event.dropComplete( true );
                 getPictureCollection().setUnsavedUpdates();
             } );
@@ -625,18 +601,9 @@ public class SortableDefaultMutableTreeNode
 
             dropIntoLast.addActionListener( ( ActionEvent e ) -> {
                 synchronized ( targetNode.getRoot() ) {
-                    int childCount = targetNode.getChildCount();
-                    int offset = 0;
-                    if ( childCount > 0 ) {
-                        // position is one less if the source is further up the list than the target
-                        // and at the same level
-                        if ( targetNode.isNodeSibling( sourceNode.getFirstChild() ) ) {
-                            offset = -1;
-                        }
-                    }
-
                     sourceNode.removeFromParent();
-                    targetNode.insert( sourceNode, childCount + offset );
+                    int childCount = targetNode.getChildCount();
+                    targetNode.insert( sourceNode, childCount );
                 }
                 event.dropComplete( true );
                 getPictureCollection().setUnsavedUpdates();
@@ -661,7 +628,7 @@ public class SortableDefaultMutableTreeNode
     public boolean deleteNode() {
         LOGGER.fine( String.format( "Delete requested for node: %s", toString() ) );
         if ( this.isRoot() ) {
-            LOGGER.info( "SDMTN.deleteNode: attempted on Root node. Can't do this! Aborted." );
+            LOGGER.info( "Delete attempted on Root node. Can't do this! Aborted." );
             JOptionPane.showMessageDialog( Settings.anchorFrame,
                     Settings.jpoResources.getString( "deleteRootNodeError" ),
                     Settings.jpoResources.getString( "genericError" ),
@@ -1091,11 +1058,9 @@ public class SortableDefaultMutableTreeNode
 
         int offset = 0;
         if ( this.getParent() != null ) {
-            if ( this.getParent().equals( parentNode ) ) {
-                if ( this.getParent().getIndex( this ) < index ) {
-                    // correct the index because the poll will take away one slot
-                    offset = -1;
-                }
+            if ( this.getParent().equals( parentNode ) && ( this.getParent().getIndex( this ) < index ) ) {
+                // correct the index because the poll will take away one slot
+                offset = -1;
             }
             this.removeFromParent();
         }

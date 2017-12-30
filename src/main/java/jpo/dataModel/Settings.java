@@ -23,8 +23,6 @@ import jpo.export.HtmlDistillerOptions;
 import jpo.gui.swing.MainWindow;
 
 /*
- * Settings.java: class that holds the settings of the JPO application
- *
  * Copyright (C) 2002 - 2017 Richard Eigenmann, Zürich, Switzerland This program
  * is free software; you can redistribute it and/or modify it under the terms of
  * the GNU General Public License as published by the Free Software Foundation;
@@ -1151,10 +1149,7 @@ public class Settings {
         titleFont = Font.decode( Settings.jpoResources.getString( "SettingsTitleFont" ) );
         captionFont = Font.decode( Settings.jpoResources.getString( "SettingsCaptionFont" ) );
 
-        if ( currentLocale != oldLocale ) {
-            return true;
-        }
-        return false;
+        return ( currentLocale != oldLocale );
     }
 
     /**

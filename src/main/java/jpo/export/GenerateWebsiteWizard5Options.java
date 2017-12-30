@@ -18,8 +18,6 @@ import net.miginfocom.swing.MigLayout;
 
 
 /*
-GenerateWebsiteWizard5Options.java: Ask about the options
-
 Copyright (C) 2008 -2013 Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -70,7 +68,7 @@ public class GenerateWebsiteWizard5Options extends AbstractStep {
                 sequentialRadioButton.setSelected( false );
                 sequentialStartJSpinner.setEnabled( false );
                 break;
-            case PICTURE_NAMING_BY_SEQUENTIAL_NUMBER:
+            default: // PICTURE_NAMING_BY_SEQUENTIAL_NUMBER:
                 hashcodeRadioButton.setSelected( false );
                 originalNameRadioButton.setSelected( false );
                 sequentialRadioButton.setSelected( true );

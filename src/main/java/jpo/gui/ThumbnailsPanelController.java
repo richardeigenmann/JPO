@@ -41,8 +41,6 @@ import jpo.gui.swing.Thumbnail;
 import jpo.gui.swing.ThumbnailPanelTitle;
 
 /*
- ThumbnailPanelController.java:  a JScrollPane that shows thumbnailControllers
-
  Copyright (C) 2002 - 2017  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
@@ -538,7 +536,6 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
         setPageStats();
         setButtonStatus();
 
-        //for ( int i = 0; i < Settings.maxThumbnails; i++ ) {
         for ( int i = Settings.maxThumbnails -1 ; i > -1 ; i-- ) {
             if ( !thumbnailControllers[i].isSameNode( mySetOfNodes, i + startIndex ) ) {
                 thumbnailControllers[i].setNode( mySetOfNodes, i + startIndex );

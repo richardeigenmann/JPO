@@ -2,14 +2,31 @@ package jpo.gui.swing;
 
 import javax.swing.ImageIcon;
 
+/*
+ Copyright (C) 2017  Richard Eigenmann.
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or any later version. This program is distributed 
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+ without even the implied warranty of MERCHANTABILITY or FITNESS 
+ FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
+ more details. You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ The license is in gpl.txt.
+ See http://www.gnu.org/copyleft/gpl.html for the details.
+ */
+
 /**
  * An icon of a clock
+ *
  * @author Richard Eigenmann
  */
 public class ClockButton extends NavBarButton {
 
-     private static final ClassLoader CLASS_LOADER = LeftRightButton.class.getClassLoader();
-    
+    private static final ClassLoader CLASS_LOADER = LeftRightButton.class.getClassLoader();
+
     /**
      * Icon to indicate that the timer is active
      */
@@ -20,17 +37,12 @@ public class ClockButton extends NavBarButton {
      */
     private static final ImageIcon ICON_CLOCK_OFF = new ImageIcon( CLASS_LOADER.getResource( "icon_clock_off.gif" ) );
 
-    private final boolean onOff;
-
     /**
      * Constructs clock icon in the off state.
      *
-     * @param onOff true if on, false if off
      */
-    ClockButton( boolean onOff ) {
+    ClockButton() {
         super( ICON_CLOCK_OFF );
-        this.onOff = onOff;
-
     }
 
     /**

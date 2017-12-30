@@ -5,7 +5,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
-import java.util.logging.Logger;
 import javax.swing.InputVerifier;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -26,9 +25,7 @@ import jpo.dataModel.SortableDefaultMutableTreeNode;
 import net.miginfocom.swing.MigLayout;
 
 /*
- CollectionDistillerJFrame.java:  creates a GUI for the export
-
- Copyright (C) 2002 - 2014  Richard Eigenmann.
+ Copyright (C) 2002 - 2017  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -50,7 +47,7 @@ public class CollectionDistillerJFrame extends JFrame {
     /**
      * Defines a logger for this class
      */
-    private static final Logger LOGGER = Logger.getLogger( CollectionDistillerJFrame.class.getName() );
+    //private static final Logger LOGGER = Logger.getLogger( CollectionDistillerJFrame.class.getName() );
 
     /**
      * Size for this frame

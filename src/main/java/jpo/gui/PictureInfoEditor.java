@@ -67,8 +67,6 @@ import org.jxmapviewer.input.MapClickListener;
 import org.jxmapviewer.viewer.GeoPosition;
 
 /*
- PictureInfoEditor:  Edits the details of a picture
-
  Copyright (C) 2002-2017  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
@@ -611,7 +609,7 @@ public class PictureInfoEditor extends JFrame {
             List<Category> selectedCategories = theList.getSelectedValuesList();
             String comma = "";
             for ( Category c : selectedCategories ) {
-                if ( ( c == setupCategories ) || ( c == noCategories ) ) {
+                if ( ( c.equals( setupCategories) ) || ( c.equals(noCategories) ) ) {
                     // skip them
                 } else {
                     resultString.append( comma ).append( c.toString() );

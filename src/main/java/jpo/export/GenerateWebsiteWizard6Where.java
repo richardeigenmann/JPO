@@ -30,7 +30,6 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import jpo.dataModel.Settings;
 import static jpo.export.HtmlDistillerOptions.OutputTarget.OUTPUT_FTP_LOCATION;
-import static jpo.export.HtmlDistillerOptions.OutputTarget.OUTPUT_LOCAL_DIRECTORY;
 import static jpo.export.HtmlDistillerOptions.OutputTarget.OUTPUT_SSH_LOCATION;
 import jpo.gui.DirectoryChooser;
 import net.javaprog.ui.wizard.AbstractStep;
@@ -40,9 +39,7 @@ import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPReply;
 
 /*
- GenerateWebsiteWizard6Where: Ask where to generate the website
-
- Copyright (C) 2008-2016  Richard Eigenmann.
+ Copyright (C) 2008-2017  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -454,11 +451,11 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
         sshPort.setValue( options.getSshPort() );
         sshUser.setText( options.getSshUser() );
         switch ( options.getSshAuthType() ) {
-            case SSH_AUTH_PASSWORD:
-                sshAuthOoptionChooser.setSelectedIndex( 0 );
-                break;
             case SSH_AUTH_KEYFILE:
                 sshAuthOoptionChooser.setSelectedIndex( 1 );
+                break;
+            default: // case SSH_AUTH_PASSWORD:
+                sshAuthOoptionChooser.setSelectedIndex( 0 );
                 break;
         }
         sshPassword.setText( options.getSshPassword() );

@@ -4,9 +4,7 @@ import jpo.cache.ThumbnailQueueRequest.QUEUE_PRIORITY;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
 
 /*
- RotatePictureRequest: Request to rotate picture
-
- Copyright (C) 2015 Richard Eigenmann.
+ Copyright (C) 2015.2017 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2

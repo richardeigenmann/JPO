@@ -46,8 +46,6 @@ import jpo.gui.swing.PicturePopupMenu;
 import jpo.gui.swing.Thumbnail;
 
 /*
- ThumbnailController.java:  class that displays a visual respresentation of the specified node
-
  Copyright (C) 2002 - 2017  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
@@ -65,7 +63,8 @@ import jpo.gui.swing.Thumbnail;
 /**
  * ThumbnailController controls a visual representation of the specified node.
  */
-public class ThumbnailController implements JpoDropTargetDropEventHandler, ThumbnailQueueRequestCallbackHandler {
+public class ThumbnailController
+        implements JpoDropTargetDropEventHandler, ThumbnailQueueRequestCallbackHandler {
 
     /**
      * Defines a LOGGER for this classComponents
@@ -143,25 +142,30 @@ public class ThumbnailController implements JpoDropTargetDropEventHandler, Thumb
      * Returns to the caller whether the ThumbnailController is already showing
      * the node.
      *
-     * @param newNavigator The NodeNavigatorInterface from which the node is
+     * @param nodeNavigator The NodeNavigatorInterface from which the node is
      * coming
-     * @param newIndex The index position that should be checked.
+     * @param index The index position that should be checked.
      * @return true if the indicated node is already showing, false if not
      */
-    public boolean isSameNode( NodeNavigatorInterface newNavigator,
-            int newIndex ) {
-        if ( !newNavigator.equals( myNodeNavigator ) ) {
+    public boolean isSameNode( NodeNavigatorInterface nodeNavigator,
+            int index ) {
+        if ( !nodeNavigator.equals( myNodeNavigator ) ) {
             return false;
         }
-        if ( newIndex == myIndex ) {
-            LOGGER.fine( String.format( "Same index: %d on same Browser %s. But is it actually the same node?", newIndex, newNavigator.toString() ) );
-            SortableDefaultMutableTreeNode testNode = newNavigator.getNode( newIndex );
-            LOGGER.fine( String.format( "The referringNode is the same as the newNode: %b", testNode == myNode ) );
-            return testNode.equals( myNode );
-        } else {
-            LOGGER.fine( String.format( "Same Browser but Different index: new: %d old: %d", newIndex, myIndex ) );
+
+        if ( index != myIndex ) {
+            LOGGER.info( String.format( "Same Navigator but different index: new: %d old: %d", index, myIndex ) );
             return false;
         }
+
+        LOGGER.info( String.format( "Same index: %d on same Navigator %s. But is it actually the same node?", index, nodeNavigator.toString() ) );
+        SortableDefaultMutableTreeNode testNode = nodeNavigator.getNode( index );
+        if ( testNode == null ) {
+            return false;
+        }
+
+        LOGGER.info( String.format( "The referringNode is the same as the newNode: %b", testNode.equals( myNode ) ) );
+        return testNode.equals( myNode );
     }
 
     private ThumbnailQueueRequest myThumbnailQueueRequest = null;
@@ -197,10 +201,8 @@ public class ThumbnailController implements JpoDropTargetDropEventHandler, Thumb
                     Thumbnail thumbnail = getThumbnail();
                     if ( thumbnail != null ) {
                         Point point = thumbnail.getLocation();
-                        if ( point != null ) {
-                            if ( viewport.getViewRect().contains( point ) ) {
-                                priority = QUEUE_PRIORITY.HIGH_PRIORITY;
-                            }
+                        if ( point != null && viewport.getViewRect().contains( point ) ) {
+                            priority = QUEUE_PRIORITY.HIGH_PRIORITY;
                         }
                     }
                 }
@@ -526,7 +528,7 @@ public class ThumbnailController implements JpoDropTargetDropEventHandler, Thumb
      * This class extends a DragGestureListener and allows DnD on Thumbnails.
      */
     private class ThumbnailDragGestureListener
-            implements DragGestureListener, Serializable {
+            implements DragGestureListener {
 
         /**
          * This method is invoked by the drag and drop framework. It signifies
@@ -542,7 +544,6 @@ public class ThumbnailController implements JpoDropTargetDropEventHandler, Thumb
             JpoTransferable transferable;
 
             if ( Settings.getPictureCollection().countSelectedNodes() < 1 ) {
-                //Object[] nodes = { myNode };
                 List<SortableDefaultMutableTreeNode> transferableNodes = new ArrayList<>();
                 transferableNodes.add( myNode );
                 transferable = new JpoTransferable( transferableNodes );
@@ -564,7 +565,7 @@ public class ThumbnailController implements JpoDropTargetDropEventHandler, Thumb
      * originating from this thumbnail.
      */
     private class ThumbnailDragSourceListener
-            implements DragSourceListener, Serializable {
+            implements DragSourceListener {
 
         /**
          * this callback method is invoked after the dropTaget had a chance to

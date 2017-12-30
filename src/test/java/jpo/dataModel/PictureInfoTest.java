@@ -39,7 +39,7 @@ public class PictureInfoTest {
         assertEquals( "Should return the description", "My Sample Picture", pi.getDescription() );
     }
 
-    int changeEvents;
+    private int changeEvents;
 
     /**
      * Test of setDescription method, of class PictureInfo.
@@ -60,7 +60,7 @@ public class PictureInfoTest {
         assertEquals( "Expecting a second change event", 2, changeEvents );
     }
 
-    int countEvents;
+    private int countEvents;
 
     /**
      * Test Description change event
