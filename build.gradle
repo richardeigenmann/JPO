@@ -150,5 +150,15 @@ task run(type: JavaExec) {
     classpath = files( 'build/libs/Jpo-all.jar' )
     main = 'Main'
 }
+
+jacocoTestReport {
+    reports {
+        xml.enabled = true
+        html.enabled = true
+    }
+}
+
+check.dependsOn jacocoTestReport
+
 //ant.importBuild 'build.xml'
 
