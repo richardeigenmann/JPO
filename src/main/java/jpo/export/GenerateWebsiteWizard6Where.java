@@ -30,6 +30,7 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import jpo.dataModel.Settings;
 import static jpo.export.HtmlDistillerOptions.OutputTarget.OUTPUT_FTP_LOCATION;
+import static jpo.export.HtmlDistillerOptions.OutputTarget.OUTPUT_LOCAL_DIRECTORY;
 import static jpo.export.HtmlDistillerOptions.OutputTarget.OUTPUT_SSH_LOCATION;
 import jpo.gui.DirectoryChooser;
 import net.javaprog.ui.wizard.AbstractStep;
@@ -189,17 +190,17 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
                 case 1:
                     ftpPanel.setVisible( true );
                     sshPanel.setVisible( false );
-                    GenerateWebsiteWizard6Where.this.options.setOutputTarget( HtmlDistillerOptions.OutputTarget.OUTPUT_FTP_LOCATION );
+                    GenerateWebsiteWizard6Where.this.options.setOutputTarget( OUTPUT_FTP_LOCATION );
                     break;
                 case 2:
                     ftpPanel.setVisible( false );
                     sshPanel.setVisible( true );
-                    GenerateWebsiteWizard6Where.this.options.setOutputTarget( HtmlDistillerOptions.OutputTarget.OUTPUT_SSH_LOCATION );
+                    GenerateWebsiteWizard6Where.this.options.setOutputTarget( OUTPUT_SSH_LOCATION );
                     break;
                 default: // case 0:
                     ftpPanel.setVisible( false );
                     sshPanel.setVisible( false );
-                    GenerateWebsiteWizard6Where.this.options.setOutputTarget( HtmlDistillerOptions.OutputTarget.OUTPUT_LOCAL_DIRECTORY );
+                    GenerateWebsiteWizard6Where.this.options.setOutputTarget( OUTPUT_LOCAL_DIRECTORY );
                     break;
             }
         });

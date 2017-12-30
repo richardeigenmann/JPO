@@ -11,9 +11,7 @@ import java.util.logging.Logger;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 /*
- YearlyAnalysis.java:  Builds a TreeMap by year and month of the nodes under the input node
-
- Copyright (C) 2009-2014  Richard Eigenmann.
+ Copyright (C) 2009-2017  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -47,11 +45,6 @@ public class YearlyAnalysis implements Serializable {
      */
     private final DefaultMutableTreeNode startNode;
 
-    /**
-     * A flag to indicate whether to add the nodes that don't parse a valid
-     * date.
-     */
-    private final boolean includeNonParsable = false;
 
     /**
      * Defines a logger for this class
@@ -88,11 +81,7 @@ public class YearlyAnalysis implements Serializable {
             nodeObject = testNode.getUserObject();
             if ( ( nodeObject instanceof PictureInfo ) ) {
                 pi = (PictureInfo) nodeObject;
-                if ( pi.getCreationTimeAsDate() == null ) {
-                    if ( includeNonParsable ) {
-                        // TODO: add the nodes to a catchall node.
-                    }
-                } else {
+                if ( pi.getCreationTimeAsDate() != null ) {
                     LOGGER.log( Level.FINE, "IntegrityChecker.checkDates:{0} from {1} from Node: {2}", new Object[]{ pi.getFormattedCreationTime(), pi.getCreationTime(), pi.getDescription() });
                     cal = pi.getCreationTimeAsDate();
                     if ( cal != null ) {

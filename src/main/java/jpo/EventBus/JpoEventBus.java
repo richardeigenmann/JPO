@@ -58,6 +58,14 @@ public class JpoEventBus extends EventBus {
          * The instance of the event bus
          */
         private static final JpoEventBus INSTANCE = new JpoEventBus();
+        
+        /**
+         * Explicit private constructor to prevent the default constructor.
+         * @see https://sonarcloud.io/organizations/richardeigenmann-github/rules#rule_key=squid%3AS1118
+         */
+        private JpoEventBusHolder() {
+            throw new IllegalStateException("Utility class");
+        }
 
     }
 

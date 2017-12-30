@@ -329,11 +329,10 @@ public class SortableDefaultMutableTreeNode
         } else if ( userObject instanceof PictureInfo ) {
             PictureInfo pictureInfo = (PictureInfo) userObject;
             Object oldUserObject = getUserObject();
-            if ( oldUserObject != null ) {
-                if ( oldUserObject instanceof PictureInfo ) {
-                    PictureInfo oldPi = (PictureInfo) oldUserObject;
-                    oldPi.removePictureInfoChangeListener( this );
-                }
+            if ( oldUserObject != null
+                    && oldUserObject instanceof PictureInfo ) {
+                PictureInfo oldPi = (PictureInfo) oldUserObject;
+                oldPi.removePictureInfoChangeListener( this );
             }
             pictureInfo.addPictureInfoChangeListener( this );
             super.setUserObject( userObject );

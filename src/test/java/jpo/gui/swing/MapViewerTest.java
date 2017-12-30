@@ -46,6 +46,7 @@ public class MapViewerTest {
             } );
         } catch ( InterruptedException | InvocationTargetException ex ) {
             Logger.getLogger( PicturePopupMenuTest.class.getName() ).log( Level.SEVERE, null, ex );
+            fail("Was not supposed to throw exception: " + ex.getMessage());
         }
     }
 
@@ -65,6 +66,7 @@ public class MapViewerTest {
             } );
         } catch ( InterruptedException | InvocationTargetException ex ) {
             Logger.getLogger( PicturePopupMenuTest.class.getName() ).log( Level.SEVERE, null, ex );
+            fail("Was not supposed to throw exception: " + ex.getMessage());
         }
 
     }

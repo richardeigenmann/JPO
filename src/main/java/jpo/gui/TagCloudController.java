@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
 import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
 import jpo.EventBus.JpoEventBus;
@@ -23,9 +22,7 @@ import org.TagCloud.TagCloud;
 import org.TagCloud.WeightedWord;
 
 /*
- TagCloudController.java:  The Controller for the TagCloud
-
- Copyright (C) 2009-2014  Richard Eigenmann.
+ Copyright (C) 2009-2017  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -61,9 +58,8 @@ public class TagCloudController implements TagClickListener {
     /**
      * Defines a logger for this class
      */
-    private static final Logger LOGGER = Logger.getLogger( TagCloudController.class.getName() );
+    //private static final Logger LOGGER = Logger.getLogger( TagCloudController.class.getName() );
 
-    //private DescriptionWordMap descriptionWordMap;
     /**
      * Returns the tag cloud component
      *

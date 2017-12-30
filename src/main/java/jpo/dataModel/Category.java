@@ -1,12 +1,9 @@
 package jpo.dataModel;
 
 import java.io.Serializable;
-import java.util.logging.Logger;
 
 
 /*
- Category.java:  A class which represents a Category
-
  Copyright (C) 2002-2016  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
@@ -67,7 +64,7 @@ public class Category implements Serializable {
     /**
      * Defines a logger for this class
      */
-    private static final Logger LOGGER = Logger.getLogger( Category.class.getName() );
+    //private static final Logger LOGGER = Logger.getLogger( Category.class.getName() );
 
     /**
      * Constructs a new category for the key and value
@@ -77,7 +74,6 @@ public class Category implements Serializable {
      *
      */
     public Category( Integer key, String value ) {
-        //LOGGER.fine("Creating Category Object: key: " + key.toString() + " value: " + value.toString());
         setKey( key );
         setValue( value );
     }

@@ -541,10 +541,9 @@ public class PictureCollection {
         SortableDefaultMutableTreeNode n;
         while ( nodes.hasMoreElements() ) {
             n = (SortableDefaultMutableTreeNode) nodes.nextElement();
-            if ( n.getUserObject() instanceof PictureInfo ) {
-                if ( ( (PictureInfo) n.getUserObject() ).containsCategory( key ) ) {
-                    resultList.add( n );
-                }
+            if ( n.getUserObject() instanceof PictureInfo
+                    && ( (PictureInfo) n.getUserObject() ).containsCategory( key ) ) {
+                resultList.add( n );
             }
             if ( n.getChildCount() > 0 ) {
                 resultList.addAll( getCategoryUsageNodes( key, n ) );

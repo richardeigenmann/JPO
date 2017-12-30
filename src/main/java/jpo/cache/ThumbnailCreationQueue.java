@@ -9,8 +9,6 @@ import jpo.dataModel.SortableDefaultMutableTreeNode;
 
 
 /*
- ThumbnailCreationQueue.java:  queue that holds requests to create Thumbnails from Highres Images
-
  Copyright (C) 2003-2017  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
@@ -35,6 +33,7 @@ public class ThumbnailCreationQueue {
      * Implemented using a PriorityBlockingQueue
      */
     protected static final PriorityBlockingQueue<ThumbnailQueueRequest> QUEUE = new PriorityBlockingQueue<>();
+
     /**
      * Defines a logger for this class
      */
@@ -73,7 +72,7 @@ public class ThumbnailCreationQueue {
                 || ( requestFoundOnQueue.getSize().width != size.width )
                 || ( requestFoundOnQueue.getSize().height != size.height ) ) {
             requestFoundOnQueue.cancel();
-            QUEUE.remove( requestFoundOnQueue );
+            remove( requestFoundOnQueue );
             QUEUE.add( newThumbnailQueueRequest );
             return newThumbnailQueueRequest;
         } else {
@@ -114,7 +113,9 @@ public class ThumbnailCreationQueue {
      * @param requestToRemove The request to remove
      */
     public static void remove( ThumbnailQueueRequest requestToRemove ) {
-        QUEUE.remove( requestToRemove );
+       if ( ! QUEUE.remove( requestToRemove ) ) {
+           LOGGER.info( "Failed to remove request: " + requestToRemove.toString() + " from QUEUE");
+       }
     }
 
     /**

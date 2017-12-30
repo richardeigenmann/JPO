@@ -86,12 +86,6 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
     private final JScrollPane thumbnailJScrollPane;
 
     /**
-     * currently displayed page
-     *
-     */
-    private int curPage = 1;
-
-    /**
      * This object refers to the set of Nodes that is being browsed in the
      * ThumbnailPanelController
      */
@@ -437,7 +431,6 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
         Settings.getPictureCollection().clearSelection();
         thumbnailJScrollPane.getVerticalScrollBar().setValue( 0 );
         startIndex = 0;
-        curPage = 1;
         nodeLayoutChanged();
     }
 
@@ -456,7 +449,6 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
     private void goToFirstPage() {
         startIndex = 0;
         thumbnailJScrollPane.getVerticalScrollBar().setValue( 0 );
-        curPage = 1;
         nodeLayoutChanged();
         setButtonStatus();
     }
@@ -470,7 +462,6 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
             startIndex = 0;
         }
         thumbnailJScrollPane.getVerticalScrollBar().setValue( 0 );
-        curPage--;
         nodeLayoutChanged();
         setButtonStatus();
     }
@@ -481,7 +472,6 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
     private void goToNextPage() {
         startIndex += Settings.maxThumbnails;
         thumbnailJScrollPane.getVerticalScrollBar().setValue( 0 );
-        curPage++;
         nodeLayoutChanged();
         setButtonStatus();
     }
@@ -492,7 +482,6 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
     private void goToLastPage() {
         int last = mySetOfNodes.getNumberOfNodes();
         int tgtPage = last / Settings.maxThumbnails;
-        curPage = tgtPage + 1;
         startIndex = tgtPage * Settings.maxThumbnails;
         thumbnailJScrollPane.getVerticalScrollBar().setValue( 0 );
         nodeLayoutChanged();

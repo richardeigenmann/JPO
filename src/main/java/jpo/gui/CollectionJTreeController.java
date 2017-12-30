@@ -38,9 +38,7 @@ import jpo.gui.swing.GroupPopupMenu;
 import jpo.gui.swing.PicturePopupMenu;
 
 /*
- * CollectionJTreeController.java: class that manages a JTree for the collection
- *
- * Copyright (C) 2002 - 2014 Richard Eigenmann, Zurich, Switzerland This
+ * Copyright (C) 2002 - 2017 Richard Eigenmann, Zurich, Switzerland This
  * program is free software; you can redistribute it and/or modify it under the
  * terms of the GNU General Public License as published by the Free Software
  * Foundation; either version 2 of the License, or any later version. This
@@ -84,7 +82,7 @@ public class CollectionJTreeController {
         collectionJScrollPane.setMinimumSize( Settings.JPO_NAVIGATOR_JTABBEDPANE_MINIMUM_SIZE );
         collectionJScrollPane.setPreferredSize( Settings.jpoNavigatorJTabbedPanePreferredSize );
 
-        CollectionMouseAdapter mouseAdapter = new CollectionMouseAdapter( this );
+        CollectionMouseAdapter mouseAdapter = new CollectionMouseAdapter();
         collectionJTree.addMouseListener( mouseAdapter );
         registerOnEventBus();
     }
@@ -340,10 +338,6 @@ public class CollectionJTreeController {
      */
     private class CollectionMouseAdapter
             extends MouseAdapter {
-
-        private CollectionMouseAdapter(
-                CollectionJTreeController collectionJTreeController ) {
-        }
 
         /**
          * If the mouse was clicked more than once using the left mouse button
