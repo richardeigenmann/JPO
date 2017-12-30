@@ -135,8 +135,6 @@ import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
 import org.apache.commons.compress.archivers.zip.ZipFile;
 
 /*
- ApplicationEventHandler.java:  The Event dispatcher for the JPO Application 
-
  Copyright (C) 2014-2017  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
@@ -689,7 +687,7 @@ public class ApplicationEventHandler {
         panel.setLayout( new BoxLayout( panel, BoxLayout.Y_AXIS ) );
         panel.add( new JLabel( Settings.jpoResources.getString( "collectionSaveBody" ) + Settings.getPictureCollection().getXmlFile().toString() ) );
         JCheckBox setAutoload = new JCheckBox( Settings.jpoResources.getString( "setAutoload" ) );
-        if ( ( !( Settings.autoLoad == null ) ) && ( ( new File( Settings.autoLoad ) ).compareTo( Settings.getPictureCollection().getXmlFile() ) == 0 ) ) {
+        if (  Settings.autoLoad != null   && ( ( new File( Settings.autoLoad ) ).compareTo( Settings.getPictureCollection().getXmlFile() ) == 0 ) ) {
             setAutoload.setSelected( true );
         }
         panel.add( setAutoload );
@@ -1422,7 +1420,7 @@ public class ApplicationEventHandler {
                     fileSaveAsRequest.setOnSuccessNextRequest( request.getNextRequest() );
                     JpoEventBus.getInstance().post( fileSaveAsRequest );
                     return;
-                case 3:
+                default: //case 3:
                     return;
             }
         } else {

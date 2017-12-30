@@ -149,7 +149,7 @@ public class JpoWriter {
             }
         }
 
-        groupInfo.endGroupXML( bufferedWriter, groupNode == startNode );
+        groupInfo.endGroupXML( bufferedWriter, groupNode.equals(startNode) );
     }
 
     /**

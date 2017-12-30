@@ -47,7 +47,6 @@ import org.apache.commons.net.ftp.FTPReply;
 import org.apache.commons.text.StringEscapeUtils;
 
 /*
- * HtmlDistiller.java: class that can write html files 
  * Copyright (C) 2002-2017 Richard Eigenmann. 
  * 
  * This program is free software; you can redistribute it
@@ -204,7 +203,7 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
             case OUTPUT_SSH_LOCATION:
                 sshCopyToServer( files );
                 break;
-            case OUTPUT_FTP_LOCATION:
+            default: // case OUTPUT_FTP_LOCATION:
                 ftpCopyToServer( files );
                 break;
         }

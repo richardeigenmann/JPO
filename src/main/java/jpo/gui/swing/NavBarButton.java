@@ -14,7 +14,7 @@ import jpo.dataModel.Settings;
  */
 public class NavBarButton extends JButton {
 
-    final Dimension navButtonSize = new Dimension( 24, 24 );
+    private final Dimension navButtonSize = new Dimension( 24, 24 );
 
     /**
      * Constructs the NavBarButton

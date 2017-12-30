@@ -878,7 +878,7 @@ public class Settings {
 
         //LOGGER.info( String.format( "Writing preferredLeftDividerSpot: %d", preferredLeftDividerSpot ) );
         prefs.putInt( "dividerWidth", dividerWidth );
-        if ( !( autoLoad == null ) ) {
+        if ( autoLoad != null ) {
             prefs.put( "autoload", autoLoad );
         }
         prefs.putBoolean( "maximisePictureViewerWindow", maximisePictureViewerWindow );
@@ -1149,7 +1149,7 @@ public class Settings {
         titleFont = Font.decode( Settings.jpoResources.getString( "SettingsTitleFont" ) );
         captionFont = Font.decode( Settings.jpoResources.getString( "SettingsCaptionFont" ) );
 
-        return ( currentLocale != oldLocale );
+        return (! currentLocale.equals(oldLocale) );
     }
 
     /**

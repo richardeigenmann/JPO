@@ -12,9 +12,7 @@ import jpo.gui.ProgressListener;
 
 
 /*
- Camera.java:  information about the digital camera as seen by the filesystem
-
- Copyright (C) 2002 - 2009  Richard Eigenmann.
+ Copyright (C) 2002 - 2017  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -87,7 +85,7 @@ public class Camera implements Serializable {
      * system
      *
      * @param newDir The new mount point
-     * 
+     *
      */
     public void setCameraMountPoint( String newDir ) {
         cameraMountPoint = newDir;
@@ -366,11 +364,8 @@ public class Camera implements Serializable {
     protected Collection<File> getNewPicturesLoop( File[] files, Collection<File> newFiles ) {
         for ( File f : files ) {
             if ( !f.isDirectory() ) {
-                if ( Tools.jvmHasReader( f ) ) {
-                    if ( !inOldImage( f ) ) {
-                        newFiles.add( f );
-                    }
-
+                if ( Tools.jvmHasReader( f ) && !inOldImage( f ) ) {
+                    newFiles.add( f );
                 }
             } else {
                 getNewPicturesLoop( f.listFiles(), newFiles );

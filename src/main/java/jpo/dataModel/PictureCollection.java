@@ -25,9 +25,6 @@ import jpo.cache.ThumbnailCreationQueue;
 
 
 /*
- * PictureCollection.java: Information about the collection and owns the tree
- * model
- *
  * Copyright (C) 2006 - 2017 Richard Eigenmann, Zurich, Switzerland This program
  * is free software; you can redistribute it and/or modify it under the terms of
  * the GNU General Public License as published by the Free Software Foundation;
@@ -124,7 +121,7 @@ public class PictureCollection {
      * @param status the new flag value
      */
     public synchronized void setSendModelUpdates( boolean status ) {
-        System.err.println( "Setting it to " + status);
+        System.err.println( "Setting it to " + status );
         Thread.dumpStack();
         sendModelUpdates = status;
     }
@@ -519,10 +516,9 @@ public class PictureCollection {
         SortableDefaultMutableTreeNode n;
         while ( nodes.hasMoreElements() ) {
             n = (SortableDefaultMutableTreeNode) nodes.nextElement();
-            if ( n.getUserObject() instanceof PictureInfo ) {
-                if ( ( (PictureInfo) n.getUserObject() ).containsCategory( key ) ) {
-                    count++;
-                }
+            if ( n.getUserObject() instanceof PictureInfo
+                    && ( (PictureInfo) n.getUserObject() ).containsCategory( key ) ) {
+                count++;
             }
             if ( n.getChildCount() > 0 ) {
                 count += countCategoryUsage( key, n );
@@ -901,7 +897,8 @@ public class PictureCollection {
         List<SortableDefaultMutableTreeNode> parentGroups = new ArrayList<>();
 
         String comparingFilename = ( (PictureInfo) userObject ).getImageLocation();
-        SortableDefaultMutableTreeNode testNode, testNodeParent;
+        SortableDefaultMutableTreeNode testNode;
+        SortableDefaultMutableTreeNode testNodeParent;
         Object nodeObject;
         PictureInfo pi;
         for ( Enumeration e = getRootNode().preorderEnumeration(); e.hasMoreElements(); ) {

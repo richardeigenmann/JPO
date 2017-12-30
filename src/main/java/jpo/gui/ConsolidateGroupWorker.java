@@ -14,8 +14,6 @@ import org.apache.commons.io.FileExistsException;
 import static org.apache.commons.io.FileUtils.moveFile;
 
 /*
- ConsolidateGroup.java:  class that consolidated the pictures of a group in one directory
-
  Copyright (C) 2002 - 2017  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
@@ -72,11 +70,11 @@ public class ConsolidateGroupWorker extends SwingWorker<String, String> {
         this.progGui = progGui;
 
         if ( !targetDirectory.exists() ) {
-            LOGGER.severe(String.format("Aborting because target directory %s doesn't exist", targetDirectory.getPath() ) );
+            LOGGER.severe( String.format( "Aborting because target directory %s doesn't exist", targetDirectory.getPath() ) );
             return;
         }
         if ( !targetDirectory.canWrite() ) {
-            LOGGER.severe(String.format("Aborting because directory %s can't be written to", targetDirectory.getPath() ) );
+            LOGGER.severe( String.format( "Aborting because directory %s can't be written to", targetDirectory.getPath() ) );
             return;
         }
 
@@ -133,8 +131,8 @@ public class ConsolidateGroupWorker extends SwingWorker<String, String> {
         nodes.stream().forEach( ( node ) -> {
             PictureInfo pictureInfo = (PictureInfo) node.getUserObject();
             LOGGER.info( "node: " + pictureInfo.toString() );
-            if ( needToMovePicture(pictureInfo, targetDirectory ) ) {
-                if ( movePicture(pictureInfo, targetDirectory ) ) {
+            if ( needToMovePicture( pictureInfo, targetDirectory ) ) {
+                if ( movePicture( pictureInfo, targetDirectory ) ) {
                     LOGGER.info( String.format( "Successfully Moved Highres file of node %s", pictureInfo.toString() ) );
                     publish( String.format( "Consolidated node: %s", node.toString() ) );
                 } else {
@@ -160,18 +158,14 @@ public class ConsolidateGroupWorker extends SwingWorker<String, String> {
         if ( pictureFile == null ) {
             return false;
         }
-        
-        if (! pictureFile.exists()) {
+
+        if ( !pictureFile.exists() ) {
             return false;
         }
 
         // don't move if the file is already in the correct directory
         File parentDirectory = pictureFile.getParentFile();
-        if ( ( parentDirectory != null ) && ( parentDirectory.equals( targetDirectory ) ) ) {
-            return false;
-        }
-
-        return true;
+        return ( !( parentDirectory != null && ( parentDirectory.equals( targetDirectory ) ) ) );
     }
 
     /**

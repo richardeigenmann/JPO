@@ -767,7 +767,7 @@ public class SettingsDialog extends JDialog {
         LOGGER.log( Level.FINE, "SettingsDialog.checkAutoLoad: called on: {0}", validationFile );
         File testFile = new File( validationFile );
 
-        if ( validationFile.equals( "" ) ) {
+        if ( "".equals( validationFile ) ) {
             autoLoadJTextField.setForeground( Color.black );
             return false;
         }

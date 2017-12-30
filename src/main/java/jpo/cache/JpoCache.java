@@ -29,8 +29,6 @@ import org.apache.commons.jcs.engine.control.CompositeCacheManager;
 
 
 /*
- JpoCache.java: Cache for the Jpo application
-
  Copyright (C) 2014 - 2017  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
@@ -210,7 +208,7 @@ public class JpoCache {
      * @return the thumbnail
      */
     private ImageBytes createThumbnailAndStoreInCache( String key, URL imageURL, double rotation, int maxWidth, int maxHeight ) {
-        ImageBytes imageBytes = createThumbnail( key, imageURL, rotation, maxWidth, maxHeight );
+        ImageBytes imageBytes = createThumbnail( imageURL, rotation, maxWidth, maxHeight );
         try {
             thumbnailMemoryAndDiskCache.put( key, imageBytes );
         } catch ( CacheException ex ) {
@@ -222,14 +220,13 @@ public class JpoCache {
     /**
      * Creates a thumbnail
      *
-     * @param key the key to store it in the cache
      * @param imageURL The url of the picture
      * @param rotation the rotation to apply
      * @param maxWidth the maximum width
      * @param maxHeight the maximum height
      * @return the thumbnail
      */
-    private ImageBytes createThumbnail( String key, URL imageURL, double rotation, int maxWidth, int maxHeight ) {
+    private ImageBytes createThumbnail( URL imageURL, double rotation, int maxWidth, int maxHeight ) {
         Dimension maxDimension = new Dimension( maxWidth, maxHeight );
 
         // create a new thumbnail from the highres

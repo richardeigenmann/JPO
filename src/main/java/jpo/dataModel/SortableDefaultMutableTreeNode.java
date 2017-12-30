@@ -36,8 +36,6 @@ import jpo.gui.ProgressGui;
 
 
 /*
- SortableDefaultMutableTreeNode.java:  The main data model object for the JPO application
-
  Copyright (C) 2003 - 2017  Richard Eigenmann, Zurich, Switzerland
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
@@ -655,7 +653,6 @@ public class SortableDefaultMutableTreeNode
          * removeThumbnailRequest the move targets here *
          */
         Enumeration e = this.breadthFirstEnumeration();
-        SortableDefaultMutableTreeNode testNode;
         while ( e.hasMoreElements() ) {
             Settings.removeRecentDropNode( (SortableDefaultMutableTreeNode) e.nextElement() );
         }

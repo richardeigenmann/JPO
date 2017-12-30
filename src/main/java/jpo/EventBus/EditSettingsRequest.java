@@ -23,12 +23,4 @@ package jpo.EventBus;
  */
 public class EditSettingsRequest implements Request {
 
-
-    /**
-     * A request to edit the settings
-     */
-    public EditSettingsRequest() {
-    }
-
-
 }

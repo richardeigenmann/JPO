@@ -3,11 +3,8 @@ package jpo.gui;
 import java.util.ListResourceBundle;
 
 
-
 /*
-JpoResources_fr.java:  class that holds the translated french labels for the JPO application
-
-Copyright (C) 2002-2007  Richard Eigenmann.
+Copyright (C) 2002-2017  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -24,7 +21,7 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 
 
 /**
- *  class that holds the translated french labels for the JPO application
+ *  class that holds the translated French labels for the JPO application
  */
 
 public class JpoResources_fr extends ListResourceBundle {
@@ -38,7 +35,7 @@ public class JpoResources_fr extends ListResourceBundle {
 		return contents;
 	}
 	
-	static final Object[][] contents = {
+	protected static final Object[][] contents = {
 	     	// END OF MATERIAL TO LOCALIZE
  		};
 	}

@@ -145,7 +145,8 @@ public class IntegrityCheckerJFrame
             SortableDefaultMutableTreeNode testNode;
             PictureInfo pictureInfo;
             Object nodeObject;
-            long oldChecksum, newChecksum;
+            long oldChecksum;
+            long newChecksum;
             for ( Enumeration e = startNode.breadthFirstEnumeration(); e.hasMoreElements() && ( !isCancelled() ); ) {
                 nodesProcessed++;
                 if ( nodesProcessed % 1000 == 0 ) {

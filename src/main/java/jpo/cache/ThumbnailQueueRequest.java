@@ -5,8 +5,6 @@ import javax.swing.ImageIcon;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
 
 /*
- ThumbnailQueueRequest.java: Element on the ThumbnailCreationQueue Queue
-
  Copyright (C) 2002 - 2017  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
@@ -226,10 +224,8 @@ public class ThumbnailQueueRequest implements Comparable<ThumbnailQueueRequest> 
          */
         LOWEST_PRIORITY( 3 );
         
-        private final Integer priority;
         
         private QUEUE_PRIORITY( int priority ) {
-            this.priority = priority;
         }
     }
 

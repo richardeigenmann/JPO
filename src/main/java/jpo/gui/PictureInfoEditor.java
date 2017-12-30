@@ -599,6 +599,8 @@ public class PictureInfoEditor extends JFrame {
     /**
      * This utility method builds a string from the selected categories in a
      * supplied JList
+     * 
+     * TODO: Make it a Java 8 stream?
      *
      * @param theList the List
      * @return a string for the selected categories
@@ -609,9 +611,7 @@ public class PictureInfoEditor extends JFrame {
             List<Category> selectedCategories = theList.getSelectedValuesList();
             String comma = "";
             for ( Category c : selectedCategories ) {
-                if ( ( c.equals( setupCategories) ) || ( c.equals(noCategories) ) ) {
-                    // skip them
-                } else {
+                if ( ! ( ( c.equals( setupCategories) ) || ( c.equals(noCategories) ) ) ) {
                     resultString.append( comma ).append( c.toString() );
                     comma = ", ";
                 }

@@ -42,9 +42,7 @@ import jpo.dataModel.Tools;
 import net.miginfocom.swing.MigLayout;
 
 /*
- Emailer.java:  class that sends the emails
-
- Copyright (C) 2006 - 2014  Richard Eigenmann.
+ Copyright (C) 2006 - 2017  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -83,11 +81,6 @@ public class Emailer
      * Progress Indicator.
      */
     private final JProgressBar progBar;
-
-    /**
-     * Cancel Button.
-     */
-    private final JButton cancelButton;
 
     /**
      * Variable that signals to the thread to stop immediately.
@@ -161,7 +154,7 @@ public class Emailer
         progBar.setValue( 0 );
         progPanel.add( progBar );
 
-        cancelButton = new JButton( "Cancel" );
+        JButton cancelButton = new JButton( "Cancel" );
         cancelButton.addActionListener( ( ActionEvent e ) -> {
             progressLabel.setText( Settings.jpoResources.getString( "htmlDistillerInterrupt" ) );
             interrupted = true;
@@ -206,7 +199,7 @@ public class Emailer
     @Override
     protected void done() {
         progressFrame.dispose();
-        if ( error.equals( "" ) ) {
+        if ( "".equals( error ) ) {
             JOptionPane.showMessageDialog( Settings.anchorFrame,
                     Settings.jpoResources.getString( "emailOK" ),
                     Settings.jpoResources.getString( "genericOKText" ),

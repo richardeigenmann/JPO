@@ -54,11 +54,9 @@ public class ConsolidateGroupJFrame extends JFrame {
      *
      */
     private final JCheckBox recurseSubgroupsJCheckBox = new JCheckBox(Settings.jpoResources.getString("RecurseSubgroupsLabel"));
-    private final ConsolidateGroupController controller;
 
-    public ConsolidateGroupJFrame(ConsolidateGroupActionCallback consolidateGroupAction, final ConsolidateGroupController controller) {
+    public ConsolidateGroupJFrame(ConsolidateGroupActionCallback consolidateGroupAction) {
         super(Settings.jpoResources.getString("ConsolidateGroupJFrameHeading"));
-        this.controller = controller;
         this.consolidateGroupAction = consolidateGroupAction;
         initComponents();
     }

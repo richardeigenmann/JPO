@@ -19,8 +19,6 @@ import net.javaprog.ui.wizard.WizardModelListener;
 import net.miginfocom.swing.MigLayout;
 
 /*
- * PicasaUploaderWizard2Upload.java:
- *
  * Copyright (C) 2012 -2017 Richard Eigenmann. Zürich
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -49,7 +47,6 @@ public class PicasaUploaderWizard3Upload extends AbstractStep implements PicasaU
      * The link to the values that this panel should change
      */
     private final PicasaUploadRequest myRequest;
-    private WizardModel model;
 
     /**
      * Upload the album
@@ -66,7 +63,6 @@ public class PicasaUploaderWizard3Upload extends AbstractStep implements PicasaU
      * @param model The Wizard Model
      */
     public void attachWizardModelListener( WizardModel model ) {
-        this.model = model;
         model.addWizardModelListener( new WizardModelListener() {
 
             @Override

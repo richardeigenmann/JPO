@@ -19,9 +19,7 @@ import jpo.gui.ScalablePicture;
 
 
 /*
- PictureController.java:  a component that can display an image
-
- Copyright (C) 2002 - 2014 Richard Eigenmann.
+ Copyright (C) 2002 - 2017 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -439,7 +437,8 @@ public class PictureController extends JComponent {
 
             } else {
                 // was already dragging
-                int x = e.getX(), y = e.getY();
+                int x = e.getX();
+                int y = e.getY();
 
                 focusPoint.setLocation( (int) ( focusPoint.x + ( ( last_x - x ) / pictureControllerImage.getScaleFactor() ) ),
                         (int) ( focusPoint.y + ( ( last_y - y ) / pictureControllerImage.getScaleFactor() ) ) );

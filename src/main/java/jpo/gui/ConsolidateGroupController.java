@@ -63,7 +63,7 @@ public class ConsolidateGroupController implements ConsolidateGroupActionCallbac
             return;
         }
 
-        ConsolidateGroupJFrame conslidateGroupJFrame = new ConsolidateGroupJFrame(this, this);
+        ConsolidateGroupJFrame conslidateGroupJFrame = new ConsolidateGroupJFrame(this );
 
         if (request.getTargetDir() != null) {
             conslidateGroupJFrame.setTargetDir(request.getTargetDir());

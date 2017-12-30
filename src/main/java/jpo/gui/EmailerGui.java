@@ -32,9 +32,7 @@ import jpo.gui.swing.WholeNumberField;
 import net.miginfocom.swing.MigLayout;
 
 /*
- EmailerGui.java:  creates a GUI to allow the user to specify his search
-
- Copyright (C) 2004-2015  Richard Eigenmann.
+ Copyright (C) 2004-2017  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -83,7 +81,7 @@ public class EmailerGui extends JFrame {
         }
 
 
-        if ( Settings.emailServer.equals( "" ) ) { //perhaps make this a better test of the server
+        if ( "".equals( Settings.emailServer ) ) { //perhaps make this a better test of the server
             JOptionPane.showMessageDialog( Settings.anchorFrame,
                     Settings.jpoResources.getString( "emailNoServer" ),
                     Settings.jpoResources.getString( "genericError" ),

@@ -45,7 +45,7 @@ public class PictureCollectionTest {
     /**
      * Let's have a nice little collection for some tests....
      */
-    PictureCollection pictureCollection;
+    private PictureCollection pictureCollection;
     private final PictureInfo pi1 = new PictureInfo( "/images/image1.jpg", "Picture 1" );
     // deliberately re-using image1.jpg so that we can find multiple groups refering to the same image.
     private final PictureInfo pi2 = new PictureInfo( "/images/image1.jpg", "Picture 2");
@@ -113,7 +113,7 @@ public class PictureCollectionTest {
         SortableDefaultMutableTreeNode[] sdmtns = pictureCollection.findParentGroups( picture1 );
         boolean found = false;
         for ( SortableDefaultMutableTreeNode sdmtn : sdmtns ) {
-            found = found || ( sdmtn == group1 );
+            found = found || ( sdmtn.equals( group1 ) );
         }
         assertTrue( "Test that the parent group is amongst the found groups", found );
     }

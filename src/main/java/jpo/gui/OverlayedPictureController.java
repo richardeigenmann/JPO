@@ -191,8 +191,6 @@ public class OverlayedPictureController extends PictureController implements Sca
         Graphics2D g2d = (Graphics2D) g;
         g2d.setColor( INFO_FONT_COLOR );
         switch ( showInfo ) {
-            case NO_OVERLAY:
-                break;
             case PHOTOGRAPHIC_OVERLAY:
                 g2d.drawString( Settings.jpoResources.getString( "ExifInfoCamera" ), INFO_COORDINATES.x, INFO_COORDINATES.y + ( 0 * LINE_SPACING ) );
                 g2d.drawString( exifInfo.camera, INFO_COORDINATES.x + TABSTOP, INFO_COORDINATES.y + ( 0 * LINE_SPACING ) );
@@ -215,6 +213,8 @@ public class OverlayedPictureController extends PictureController implements Sca
                 g2d.drawString( "File: " + scalablePicture.getFilename(), INFO_COORDINATES.x, INFO_COORDINATES.y + ( 2 * LINE_SPACING ) );
                 g2d.drawString( Settings.jpoResources.getString( "PicturePaneLoadTime" ) + TWO_DECIMAL_FORMATTER.format( scalablePicture.getSourcePicture().loadTime / 1000F ) + Settings.jpoResources.getString( "PicturePaneSeconds" ), INFO_COORDINATES.x, INFO_COORDINATES.y + ( 3 * LINE_SPACING ) );
                 g2d.drawString( Settings.jpoResources.getString( "PicturePaneFreeMemory" ) + Tools.freeMemory(), INFO_COORDINATES.x, INFO_COORDINATES.y + ( 4 * LINE_SPACING ) );
+                break;
+            default: // case NO_OVERLAY:
                 break;
         }
 

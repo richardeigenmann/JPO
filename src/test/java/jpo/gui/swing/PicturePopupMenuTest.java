@@ -79,10 +79,6 @@ public class PicturePopupMenuTest {
     final private SortableDefaultMutableTreeNode myNode = new SortableDefaultMutableTreeNode( myPictureInfo );
     final private SortableDefaultMutableTreeNode myParentNode = new SortableDefaultMutableTreeNode( myGroupInfo );
 
-    {
-        myParentNode.add( myNode );
-        Settings.getPictureCollection().getRootNode().add( myParentNode );
-    }
     final private SingleNodeNavigator myNavigator = new SingleNodeNavigator( myNode );
     private PicturePopupMenu myPicturePopupMenu;
 
@@ -138,6 +134,9 @@ public class PicturePopupMenuTest {
         } catch ( IOException ex ) {
             Logger.getLogger( PicturePopupMenuTest.class.getName() ).log( Level.SEVERE, null, ex );
         }
+
+        myParentNode.add( myNode );
+        Settings.getPictureCollection().getRootNode().add( myParentNode );
         
         myPicturePopupMenu = new PicturePopupMenu( myNavigator, 0 );
 

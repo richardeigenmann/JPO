@@ -15,11 +15,8 @@ import javax.swing.table.AbstractTableModel;
 import jpo.dataModel.GroupInfo;
 import jpo.dataModel.PictureInfo;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
-import jpo.gui.swing.JTableCopyPasteClipboardAdapter;
 
 /*
- TableDemo.java:  class that creates a JFrame and shows the children of a SortableDefaultMutableTreeNode in it
-
  Originally lifted from the Swing Tutorial on the java.sun.com website. In as far as no prior copyright
  exists the following copyright shall apply. (This code was heavily modified.)
 
@@ -104,9 +101,9 @@ public class TableJFrame extends JFrame {
 
     }
 
-    class MyTableModel extends AbstractTableModel {
+    private class MyTableModel extends AbstractTableModel {
 
-        final String[] columnNames = { "Nr.",
+        private final String[] columnNames = { "Nr.",
             "Description",
             "Highres Location",
             "Film Reference",

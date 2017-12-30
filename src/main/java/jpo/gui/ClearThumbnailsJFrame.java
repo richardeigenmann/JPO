@@ -24,10 +24,10 @@ import org.apache.commons.lang3.StringUtils;
  The license is in gpl.txt.
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
-
-
 /**
- * GUI to remove old thumbnails that have been discovered when loading a collection
+ * GUI to remove old thumbnails that have been discovered when loading a
+ * collection
+ *
  * @author Richard Eigenmann
  */
 public class ClearThumbnailsJFrame extends javax.swing.JFrame {
@@ -232,15 +232,11 @@ public class ClearThumbnailsJFrame extends javax.swing.JFrame {
 
                 // check if the parent directory is empty and writable and then delete it
                 File parentDirectory = thumbnail.getParentFile();
-                if ( parentDirectory != null ) {
-                    if ( parentDirectory.canWrite() ) {
-                        if ( parentDirectory.list().length == 0 ) {
-                            if ( parentDirectory.delete() ) {
-                                publish( String.format( "Parent directory %s successfully deleted%n", parentDirectory.toString() ) );
-                            } else {
-                                publish( String.format( "Parent directory %s failed to delete --> you have to delete this directory yourself%n", parentDirectory.toString() ) );
-                            }
-                        }
+                if ( parentDirectory != null && parentDirectory.canWrite() && parentDirectory.list().length == 0 ) {
+                    if ( parentDirectory.delete() ) {
+                        publish( String.format( "Parent directory %s successfully deleted%n", parentDirectory.toString() ) );
+                    } else {
+                        publish( String.format( "Parent directory %s failed to delete --> you have to delete this directory yourself%n", parentDirectory.toString() ) );
                     }
                 }
 

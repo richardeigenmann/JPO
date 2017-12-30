@@ -64,7 +64,7 @@ public class CategoryUsageJFrame extends JFrame {
      * An Array to record the selected nodes
      */
     private Set<SortableDefaultMutableTreeNode> selectedNodes;
-    final JLabel numberOfPicturesJLabel = new JLabel( "" );
+    private final JLabel numberOfPicturesJLabel = new JLabel( "" );
 
     /**
      * Creates a GUI to edit the categories of the collection
@@ -224,7 +224,6 @@ public class CategoryUsageJFrame extends JFrame {
 
         Object[] pictureCategories;
         int currentStatus;
-        boolean found;
         PictureInfo pi;
         Enumeration pictureNodes;
         Object myObject;
