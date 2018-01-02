@@ -6,6 +6,7 @@ import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DragGestureEvent;
 import java.awt.dnd.DragGestureListener;
 import java.awt.dnd.DragSource;
+import java.awt.dnd.DragSourceContext;
 import java.awt.dnd.DragSourceDragEvent;
 import java.awt.dnd.DragSourceDropEvent;
 import java.awt.dnd.DragSourceEvent;
@@ -16,7 +17,6 @@ import java.awt.dnd.InvalidDnDOperationException;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
-import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,13 +40,12 @@ import jpo.dataModel.PictureInfoChangeEvent;
 import jpo.dataModel.PictureInfoChangeListener;
 import jpo.dataModel.Settings;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
-import jpo.dataModel.Tools;
 import jpo.gui.swing.GroupPopupMenu;
 import jpo.gui.swing.PicturePopupMenu;
 import jpo.gui.swing.Thumbnail;
 
 /*
- Copyright (C) 2002 - 2017  Richard Eigenmann.
+ Copyright (C) 2002 - 2018  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -575,7 +574,7 @@ public class ThumbnailController
          */
         @Override
         public void dragEnter( DragSourceDragEvent event ) {
-            Tools.setDragCursor( event );
+            setDragCursor( event );
         }
 
         /**
@@ -586,7 +585,7 @@ public class ThumbnailController
          */
         @Override
         public void dragOver( DragSourceDragEvent event ) {
-            Tools.setDragCursor( event );
+            setDragCursor( event );
         }
 
         /**
@@ -604,7 +603,7 @@ public class ThumbnailController
          */
         @Override
         public void dropActionChanged( DragSourceDragEvent event ) {
-            Tools.setDragCursor( event );
+            setDragCursor( event );
         }
 
         /**
@@ -615,6 +614,25 @@ public class ThumbnailController
         public void dragDropEnd( DragSourceDropEvent event ) {
             Settings.getPictureCollection().clearSelection();
         }
+
+        /**
+         * Analyses the drag event and sets the cursor to the appropriate style.
+         *
+         * @param event the DragSourceDragEvent for which the cursor is to be
+         * adjusted
+         */
+        public void setDragCursor( DragSourceDragEvent event ) {
+            DragSourceContext context = event.getDragSourceContext();
+            int dndCode = event.getDropAction();
+            if ( ( dndCode & DnDConstants.ACTION_COPY ) != 0 ) {
+                context.setCursor( DragSource.DefaultCopyDrop );
+            } else if ( ( dndCode & DnDConstants.ACTION_MOVE ) != 0 ) {
+                context.setCursor( DragSource.DefaultMoveDrop );
+            } else {
+                context.setCursor( DragSource.DefaultMoveNoDrop );
+            }
+        }
+
     }
 
     @Override

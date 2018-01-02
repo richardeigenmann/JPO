@@ -187,7 +187,7 @@ public class DirectoryChooser
      * doesn't
      */
     public boolean setColor() {
-        if ( Tools.checkDirectory( getDirectory(), validationType ) ) {
+        if ( checkDirectory( getDirectory(), validationType ) ) {
             directoryJTextField.setForeground( COLOR_GOOD );
             return true;
         } else {
@@ -195,6 +195,44 @@ public class DirectoryChooser
             return false;
         }
     }
+    
+        /**
+     * Constant that indicates that the directory must exist
+     */
+    public static final int DIR_MUST_EXIST = 1;
+    /**
+     * Constant that indicates that the directory must exist and be writable;
+     */
+    public static final int DIR_MUST_BE_WRITABLE = DIR_MUST_EXIST + 1;
+
+    /**
+     * Test the supplied File on whether it is a directory and whether is can be
+     * written to.
+     *
+     * @param testDir Directory to test
+     * @param validationType the flag for which test is to be performed
+     * @return true if good, false if bad
+     */
+    public static boolean checkDirectory( File testDir, int validationType ) {
+        switch ( validationType ) {
+            case DIR_MUST_EXIST:
+                return testDir.exists() && testDir.isDirectory();
+            case DIR_MUST_BE_WRITABLE:
+                if ( testDir.exists() ) {
+                    return testDir.canWrite() && testDir.isDirectory();
+                } else {
+                    File testDirParent = testDir.getParentFile();
+                    if ( testDirParent != null ) {
+                        return checkDirectory( testDirParent, validationType );
+                    } else {
+                        return false;
+                    }
+                }
+            default:
+                return false;
+        }
+    }
+    
     /**
      * Variable to memorise what was in the field the last time to detect real
      * changes
@@ -316,16 +354,4 @@ public class DirectoryChooser
         directoryJTextField.setEnabled( enabled );
         directoryChooserJButton.setEnabled( enabled );
     }
-    /**
-     * Constant that indicates that the directory must exist.
-     *
-     * @see Tools#DIR_MUST_EXIST
-     */
-    public static final int DIR_MUST_EXIST = Tools.DIR_MUST_EXIST;
-    /**
-     * Constant that indicates that the directory must exist and be writable;
-     *
-     * @see Tools#DIR_MUST_BE_WRITABLE
-     */
-    public static final int DIR_MUST_BE_WRITABLE = Tools.DIR_MUST_BE_WRITABLE;
 }

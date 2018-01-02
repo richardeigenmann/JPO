@@ -16,6 +16,22 @@ import javax.swing.JOptionPane;
 import jpo.EventBus.AddFlatFileRequest;
 import jpo.EventBus.JpoEventBus;
 import jpo.EventBus.ShowGroupRequest;
+import org.apache.commons.io.FilenameUtils;
+
+/*
+ * Copyright (C) 2017 - 2018 Richard Eigenmann, Zurich, Switzerland This program
+ * is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or any later version. This program is
+ * distribted in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ * PARTICULAR PURPOSE. See the GNU General Public License for more details. You
+ * should have received a copy of the GNU General Public License along with this
+ * program; if not, write to the Free Software Foundation, Inc., 59 Temple Place
+ * - Suite 330, Boston, MA 02111-1307, USA. The license is in gpl.txt. See
+ * http://www.gnu.org/copyleft/gpl.html for the details.
+ */
+
 
 /**
  * Class to import a flat file of pictures into the supplied node
@@ -41,7 +57,6 @@ public class FlatFileReader {
             while ( in.ready() ) {
                 String line = in.readLine();
                 File testFile;
-                //LOGGER.info( "Testing file: " + line );
                 try {
                     testFile = new File( new URI( line ) );
                 } catch ( URISyntaxException | IllegalArgumentException x ) {
@@ -71,7 +86,7 @@ public class FlatFileReader {
 
                 LOGGER.log( Level.INFO, "adding file to node: {0}", line);
                 SortableDefaultMutableTreeNode newPictureNode = new SortableDefaultMutableTreeNode(
-                        new PictureInfo( line, Tools.stripOutFilenameRoot( testFile ) ) );
+                        new PictureInfo( line, FilenameUtils.getBaseName( testFile.getName() ) ) );
                 newNode.add( newPictureNode );
             }
             in.close();

@@ -1,10 +1,8 @@
-
 buildscript {
     repositories {
         jcenter()
     }
     dependencies {
-        //compile 'com.github.jengelman.gradle.plugins:shadow:2.0.1'
         classpath 'com.github.jengelman.gradle.plugins:shadow:2.0.1'
     }    
 }
@@ -23,57 +21,38 @@ repositories {
 
 
 dependencies {
-    //compile files('libs/commons-compress-1.8.jar')
     compile 'org.apache.commons:commons-compress:1.15'
-    //compile files('libs/commons-io-2.4.jar')
     compile 'org.apache.directory.studio:org.apache.commons.io:2.4'
-    //compile files('libs/commons-jcs-core-2.0-beta-1.jar')
     compile 'org.apache.commons:commons-jcs-core:2.2'
-    //compile files('libs/commons-jcs-jcache-2.0-beta-1.jar')
     compile 'org.apache.commons:commons-jcs-jcache:2.2'
-    //compile files('libs/commons-lang3-3.3.2.jar')
     compile 'org.apache.commons:commons-lang3:3.7'
-    //compile files('libs/commons-logging-1.1.3.jar')
     compile 'commons-logging:commons-logging:1.2'
-    //compile files('libs/commons-net-3.3.jar')
     compile 'commons-net:commons-net:3.6'
     compile 'org.apache.commons:commons-text:1.1'
-    //compile files('libs/gdata-core-1.0.jar')
+    compile 'commons-io:commons-io:2.6'
     compile 'com.google.gdata:core:1.47.1'
 
     compile files('libs/gdata-maps-2.0.jar')
     compile files('libs/gdata-media-1.0.jar')
     compile files('libs/gdata-photos-2.0.jar')
     
-    //compile files('libs/guava-16.0.1.jar')
     compile 'com.google.guava:guava:23.5-jre'
-    //compile files('libs/javax.mail-1.5.1.jar')
     compile 'javax.mail:javax.mail-api:1.6.0'
-    //compile files('libs/jsch-0.1.51.jar')
     compile 'com.jcraft:jsch:0.1.54'
 
     compile files('libs/jwizz-0.1.4.jar')
     
-    //compile files('libs/jxmapviewer2-2.0.jar')
     compile 'org.jxmapviewer:jxmapviewer2:2.2'
-    //compile files('libs/metadata-extractor-2.8.1.jar')
-    //compile files('libs/metadata-extractor-2.11.0.jar')
     compile 'com.drewnoakes:metadata-extractor:2.11.0'
 
-    //compile files('libs/miglayout-4.0.jar')
     compile 'com.miglayout:miglayout-swing:5.0'
-    //compile files('libs/docking-frames-common.jar')
     compile 'org.dockingframes:docking-frames-common:1.1.1'
-    //compile files('libs/docking-frames-core.jar')
     compile 'org.dockingframes:docking-frames-core:1.1.1'
 
     compile files('libs/TagCloud.jar')
     
     //used by Metadata Extractor. Note only 5.x seems to be compatible
-    //compile files('libs/xmpcore-5.1.2.jar')
-    //compile 'com.adobe.xmp:xmpcore:6.1.10'
     compile 'com.adobe.xmp:xmpcore:5.1.3'
-    //compile 'com.adobe.xmp:xmpcore:6.0.4'
 
     testCompile "junit:junit:4.12"
 
@@ -94,6 +73,8 @@ sourceSets {
             srcDir 'src/dtd'
             include '**/*.dtd'
             include '**/*.txt'
+            include '**/*.css'
+            include '**/*.js'
                 
             srcDir 'src/main/java/jpo/cache'
             include '**/*.ccf'
@@ -139,9 +120,7 @@ jar {
 
 // this task creates the FatJar whith everything in it
 shadowJar {
-    into ('/') { from 'src/main/java/jpo/cache/cache.ccf' }
     into ('jpo/images') { from 'src/images' }
-    into ('/') { from 'src/dtd/collection.dtd' }
 }
 
 
@@ -159,6 +138,3 @@ jacocoTestReport {
 }
 
 check.dependsOn jacocoTestReport
-
-//ant.importBuild 'build.xml'
-

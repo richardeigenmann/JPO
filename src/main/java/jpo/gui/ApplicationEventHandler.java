@@ -8,7 +8,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.net.URL;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.logging.Level;
@@ -118,7 +121,6 @@ import jpo.dataModel.SingleNodeNavigator;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
 import jpo.dataModel.TextQuery;
 import jpo.dataModel.Tools;
-import static jpo.dataModel.Tools.streamcopy;
 import jpo.export.GenerateWebsiteWizard;
 import jpo.export.PicasaUploadRequest;
 import jpo.export.PicasaUploaderWizard;
@@ -135,7 +137,7 @@ import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
 import org.apache.commons.compress.archivers.zip.ZipFile;
 
 /*
- Copyright (C) 2014-2017  Richard Eigenmann.
+ Copyright (C) 2014-2018  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -511,7 +513,7 @@ public class ApplicationEventHandler {
      */
     @Subscribe
     public void handleChooseAndAddCollectionRequest( ChooseAndAddCollectionRequest request ) {
-        File fileToLoad = Tools.chooseXmlFile();
+        File fileToLoad = chooseXmlFile();
         if ( fileToLoad != null ) {
             JpoEventBus.getInstance().post( new AddCollectionToGroupRequest( request.getNode(), fileToLoad ) );
         }
@@ -543,10 +545,31 @@ public class ApplicationEventHandler {
      */
     @Subscribe
     public void handleFileLoadDialogRequest( FileLoadDialogRequest request ) {
-        final File fileToLoad = Tools.chooseXmlFile();
+        final File fileToLoad = chooseXmlFile();
         JpoEventBus.getInstance().post( new FileLoadRequest( fileToLoad ) );
     }
 
+    /**
+     * Method that chooses an xml file or returns null
+     *
+     * @return the xml file or null
+     */
+    public static File chooseXmlFile() {
+        JFileChooser jFileChooser = new JFileChooser();
+        jFileChooser.setFileSelectionMode( JFileChooser.FILES_ONLY );
+        jFileChooser.setApproveButtonText( Settings.jpoResources.getString( "fileOpenButtonText" ) );
+        jFileChooser.setDialogTitle( Settings.jpoResources.getString( "fileOpenHeading" ) );
+        jFileChooser.setFileFilter( new XmlFilter() );
+        jFileChooser.setCurrentDirectory( Settings.getMostRecentCopyLocation() );
+
+        int returnVal = jFileChooser.showOpenDialog( Settings.anchorFrame );
+        if ( returnVal == JFileChooser.APPROVE_OPTION ) {
+            return jFileChooser.getSelectedFile();
+        } else {
+            return null;
+        }
+    }    
+    
     /**
      * Loads the file by calling
      * {@link PictureCollection#fileLoad}. If there is a problem
@@ -1036,6 +1059,22 @@ public class ApplicationEventHandler {
 
     }
 
+        /**
+     * Copies an input stream to an output stream
+     *
+     * @param input the input stream
+     * @param output the output stream
+     * @throws IOException The exception it can throw
+     */
+    public static void streamcopy( InputStream input, OutputStream output ) throws IOException {
+        // 4MB buffer
+        byte[] buffer = new byte[4096 * 1024];
+        int bytesRead;
+        while ( ( bytesRead = input.read( buffer ) ) != -1 ) {
+            output.write( buffer, 0, bytesRead );
+        }
+    }
+    
     /**
      * Copies the supplied picture nodes to the system clipboard
      *
@@ -1495,13 +1534,68 @@ public class ApplicationEventHandler {
     @Subscribe
     public void handleRunUserFunctionRequest( RunUserFunctionRequest request ) {
         try {
-            Tools.runUserFunction( request.getUserFunctionIndex(), request.getPictureInfo() );
+            runUserFunction( request.getUserFunctionIndex(), request.getPictureInfo() );
         } catch ( ClassCastException | NullPointerException x ) {
             LOGGER.severe( x.getMessage() );
         }
 
     }
 
+    
+     /**
+     * This method fires up a user function if it can. User functions are only
+     * valid on PictureInfo nodes.
+     *
+     * @param userFunction	The user function to be executed in the array
+     * Settings.userFunctionCmd
+     * @param myObject The PictureInfo upon which the user function should be
+     * executed.
+     */
+    public static void runUserFunction( int userFunction, PictureInfo myObject ) {
+        if ( ( userFunction < 0 ) || ( userFunction >= Settings.maxUserFunctions ) ) {
+            LOGGER.info( "Error: called with an out of bounds index" );
+            return;
+        }
+        String command = Settings.userFunctionCmd[userFunction];
+        if ( ( command == null ) || ( command.length() == 0 ) ) {
+            LOGGER.log( Level.INFO, "Command {0} is not properly defined", Integer.toString( userFunction ) );
+            return;
+        }
+
+        String filename = ( myObject ).getImageFile().toString();
+        command = command.replaceAll( "%f", filename );
+
+        String escapedFilename = filename.replaceAll( "\\s", "\\\\\\\\ " );
+        command = command.replaceAll( "%e", escapedFilename );
+
+        URL pictureURL = ( myObject ).getImageURLOrNull();
+        if ( pictureURL == null ) {
+            LOGGER.info( "The picture doesn't have a valid URL. This is bad. Aborted." );
+            return;
+        }
+        command = command.replaceAll( "%u", pictureURL.toString() );
+
+        LOGGER.log( Level.INFO, "Command to run is: {0}", command );
+        try {
+            // Had big issues here because the simple exec (String) calls a StringTokenizer
+            // which messes up the filename parameters
+            int blank = command.indexOf( ' ' );
+            if ( blank > -1 ) {
+                String[] cmdarray = new String[2];
+                cmdarray[0] = command.substring( 0, blank );
+                cmdarray[1] = command.substring( blank + 1 );
+                Runtime.getRuntime().exec( cmdarray );
+            } else {
+                String[] cmdarray = new String[1];
+                cmdarray[0] = command;
+                Runtime.getRuntime().exec( cmdarray );
+            }
+        } catch ( IOException x ) {
+            LOGGER.log( Level.INFO, "Runtime.exec collapsed with and IOException: {0}", x.getMessage() );
+        }
+    }
+
+    
     /**
      * Handles the RemoveOldLowresThumbnailsRequest request
      *

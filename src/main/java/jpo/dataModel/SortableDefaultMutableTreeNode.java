@@ -5,8 +5,14 @@ import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DropTargetDropEvent;
 import java.awt.event.ActionEvent;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -31,12 +37,14 @@ import javax.swing.tree.TreePath;
 import jpo.EventBus.CopyLocationsChangedEvent;
 import jpo.EventBus.JpoEventBus;
 import jpo.dataModel.Settings.FieldCodes;
+import static jpo.dataModel.Tools.copyBufferedStream;
 import jpo.gui.JpoTransferable;
 import jpo.gui.ProgressGui;
+import org.apache.commons.io.FilenameUtils;
 
 
 /*
- Copyright (C) 2003 - 2017  Richard Eigenmann, Zurich, Switzerland
+ Copyright (C) 2003 - 2018  Richard Eigenmann, Zurich, Switzerland
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -837,7 +845,7 @@ public class SortableDefaultMutableTreeNode
             }
         }
 
-        targetFile = Tools.correctFilenameExtension( Tools.getExtension( originalUrl ), targetFile );
+        targetFile = Tools.correctFilenameExtension( FilenameUtils.getExtension(  originalUrl.getFile() ), targetFile );
 
         if ( !targetFile.getParentFile().exists() ) {
             targetFile.getParentFile().mkdirs();
@@ -1154,7 +1162,7 @@ public class SortableDefaultMutableTreeNode
             File addFile = files[i];
             if ( !addFile.isDirectory() ) {
                 File targetFile = Tools.inventPicFilename( targetDir, addFile.getName() );
-                long crc = Tools.copyPicture( addFile, targetFile );
+                long crc = copyPicture( addFile, targetFile );
                 if ( newOnly && Settings.getPictureCollection().isInCollection( crc ) ) {
                     targetFile.delete();
                     progGui.decrementTotal();
@@ -1179,6 +1187,39 @@ public class SortableDefaultMutableTreeNode
         return picturesAdded;
     }
 
+        /**
+     * Copy any file from sourceFile source File to sourceFile target File
+     * location.
+     *
+     * @param sourceFile the source file location
+     * @param targetFile the target file location
+     * @return The crc of the copied picture.
+     */
+    public static long copyPicture( File sourceFile, File targetFile ) {
+        LOGGER.fine( String.format( "Copying file %s to file %s", sourceFile.toString(), targetFile.toString() ) );
+        try (
+                InputStream in = new FileInputStream( sourceFile );
+                OutputStream out = new FileOutputStream( targetFile ); ) {
+
+            BufferedInputStream bin = new BufferedInputStream( in );
+            BufferedOutputStream bout = new BufferedOutputStream( out );
+
+            return copyBufferedStream( bin, bout );
+        } catch ( IOException e ) {
+            JOptionPane.showMessageDialog(
+                    Settings.anchorFrame,
+                    Settings.jpoResources.getString( "copyPictureError1" )
+                    + sourceFile.toString()
+                    + Settings.jpoResources.getString( "copyPictureError2" )
+                    + targetFile.toString()
+                    + Settings.jpoResources.getString( "copyPictureError3" )
+                    + e.getMessage(),
+                    Settings.jpoResources.getString( "genericError" ),
+                    JOptionPane.ERROR_MESSAGE );
+            return Long.MIN_VALUE;
+        }
+    }
+    
     /**
      * Copies the pictures from the source tree to the target directory and adds
      * them to the collection only if they have not been seen by the camera
@@ -1246,7 +1287,7 @@ public class SortableDefaultMutableTreeNode
             }
             File targetFile = Tools.inventPicFilename( targetDir, file.getName() );
             LOGGER.fine( String.format( "Target file name chosen as: %s", targetFile.toString() ) );
-            Tools.copyPicture( file, targetFile );
+            copyPicture( file, targetFile );
 
             if ( !copyMode ) {
                 file.delete();
@@ -1289,7 +1330,7 @@ public class SortableDefaultMutableTreeNode
                     progGui.decrementTotal();
                 } else {
                     File targetFile = Tools.inventPicFilename( targetDir, addFile.getName() );
-                    long crc = Tools.copyPicture( addFile, targetFile );
+                    long crc = copyPicture( addFile, targetFile );
                     cam.storePictureNewImage( addFile, crc ); // remember it next time
                     if ( cam.inOldImage( crc ) ) {
                         targetFile.delete();
@@ -1353,8 +1394,7 @@ public class SortableDefaultMutableTreeNode
             return false; // don't add if there is no reader.
         }
         newPictureInfo.setImageLocation( addFile );
-        //newPictureInfo.setLowresLocation( Tools.getNewLowresFilename() );
-        newPictureInfo.setDescription( Tools.stripOutFilenameRoot( addFile ) );
+        newPictureInfo.setDescription( FilenameUtils.getBaseName( addFile.getName() ) );
         newPictureInfo.setChecksum( Tools.calculateChecksum( addFile ) );
         if ( categoryAssignment != null ) {
             newPictureInfo.setCategoryAssignment( categoryAssignment );

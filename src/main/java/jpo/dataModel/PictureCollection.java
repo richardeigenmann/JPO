@@ -25,7 +25,7 @@ import jpo.cache.ThumbnailCreationQueue;
 
 
 /*
- * Copyright (C) 2006 - 2017 Richard Eigenmann, Zurich, Switzerland This program
+ * Copyright (C) 2006 - 2018 Richard Eigenmann, Zurich, Switzerland This program
  * is free software; you can redistribute it and/or modify it under the terms of
  * the GNU General Public License as published by the Free Software Foundation;
  * either version 2 of the License, or any later version. This program is
@@ -121,8 +121,6 @@ public class PictureCollection {
      * @param status the new flag value
      */
     public synchronized void setSendModelUpdates( boolean status ) {
-        System.err.println( "Setting it to " + status );
-        Thread.dumpStack();
         sendModelUpdates = status;
     }
 

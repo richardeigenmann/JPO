@@ -10,6 +10,7 @@ report.xml
 nbproject
 gradle
 .nbproject/
+nbproject
 .nb-gradle/
 gradlew
 gradlew.bat

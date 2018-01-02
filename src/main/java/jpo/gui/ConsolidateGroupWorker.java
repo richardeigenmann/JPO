@@ -2,6 +2,7 @@ package jpo.gui;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -10,6 +11,7 @@ import jpo.dataModel.PictureInfo;
 import jpo.dataModel.Settings;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
 import jpo.dataModel.Tools;
+import static jpo.dataModel.Tools.warnOnEDT;
 import org.apache.commons.io.FileExistsException;
 import static org.apache.commons.io.FileUtils.moveFile;
 
@@ -196,8 +198,36 @@ public class ConsolidateGroupWorker extends SwingWorker<String, String> {
             return false;
         }
         pictureInfo.setImageLocation( newFile );
-        Tools.correctReferences( pictureFile, newFile );
+        correctReferences( pictureFile, newFile );
 
         return true;
+    }
+
+    /**
+     * Searches for any references in the current collection to the source file
+     * and updates them to the target file.
+     *
+     * @param oldReference The file that was moved
+     * @param newReference The new location of the source file
+     */
+    public static void correctReferences( File oldReference, File newReference ) {
+        warnOnEDT();
+        //  search for other picture nodes in the tree using this image file
+        SortableDefaultMutableTreeNode node;
+        Object nodeObject;
+        int count = 0;
+        Enumeration e = Settings.getPictureCollection().getRootNode().preorderEnumeration();
+        while ( e.hasMoreElements() ) {
+            node = (SortableDefaultMutableTreeNode) e.nextElement();
+            nodeObject = node.getUserObject();
+            if ( nodeObject instanceof PictureInfo ) {
+                File imageFile = ( (PictureInfo) nodeObject ).getImageFile();
+                if ( imageFile != null && imageFile.equals( oldReference ) ) {
+                    ( (PictureInfo) nodeObject ).setImageLocation( newReference );
+                    count++;
+                }
+            }
+        }
+        LOGGER.info( String.format( "%d other Picture Nodes were pointing at the same picture and were corrected", count ) );
     }
 }

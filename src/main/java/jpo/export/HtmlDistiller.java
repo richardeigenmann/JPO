@@ -33,6 +33,7 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingWorker;
 import javax.swing.tree.DefaultMutableTreeNode;
 import jpo.dataModel.GroupInfo;
+import jpo.dataModel.JpoWriter;
 import jpo.dataModel.NodeStatistics;
 import jpo.dataModel.PictureInfo;
 import jpo.dataModel.Settings;
@@ -41,13 +42,14 @@ import jpo.dataModel.Tools;
 import jpo.gui.ProgressGui;
 import jpo.gui.ScalablePicture;
 import static jpo.gui.ScalablePicture.ScalablePictureStatus.SCALABLE_PICTURE_ERROR;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPReply;
 import org.apache.commons.text.StringEscapeUtils;
 
 /*
- * Copyright (C) 2002-2017 Richard Eigenmann. 
+ * Copyright (C) 2002-2018 Richard Eigenmann. 
  * 
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General Public License as
@@ -113,7 +115,6 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
     public HtmlDistiller( final HtmlDistillerOptions options ) {
         this.options = options;
         Tools.checkEDT();
-        //int totalNodes = ( new NodeStatistics( options.getStartNode() ) ).getNumberOfNodes();
         progGui = new ProgressGui( Integer.MAX_VALUE,
                 Settings.jpoResources.getString( "HtmlDistillerThreadTitle" ),
                 String.format( Settings.jpoResources.getString( "HtmlDistDone" ), 0 ) );
@@ -122,7 +123,7 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
 
             @Override
             public Integer doInBackground() {
-                return NodeStatistics.countPictures( options.getStartNode(), true );
+                return NodeStatistics.countPicturesRecursively( options.getStartNode() );
             }
 
             @Override
@@ -146,6 +147,7 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
      */
     @Override
     protected Integer doInBackground() throws Exception {
+        LOGGER.info( "Hitting doInBackground" );
         scp.setQualityScale();
         scp.setScaleSteps( options.getScalingSteps() );
 
@@ -160,12 +162,14 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
             }
         }
 
-        Tools.copyFromJarToFile( HtmlDistiller.class, "jpo.css", options.getTargetDirectory(), "jpo.css" );
+        writeCss( options.getTargetDirectory() );
         files.add( new File( options.getTargetDirectory(), "jpo.css" ) );
         if ( options.isWriteRobotsTxt() ) {
-            Tools.copyFromJarToFile( HtmlDistiller.class, "robots.txt", options.getTargetDirectory(), "robots.txt" );
+            writeRobotsTxt(options.getTargetDirectory());
             files.add( new File( options.getTargetDirectory(), "robots.txt" ) );
         }
+        LOGGER.info( "Done static files" );
+
         writeGroup( options.getStartNode() );
 
         try {
@@ -256,8 +260,9 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
      *
      */
     public void writeGroup( SortableDefaultMutableTreeNode groupNode ) {
+        LOGGER.info( String.format( "Processing Group: %s", groupNode.toString() ) );
         try {
-            publish( String.format( "Writing a picture for group node: %s", groupNode.toString() ) );
+            publish( String.format( "Processing Group: %s", groupNode.toString() ) );
 
             File groupFile;
             if ( groupNode.equals( options.getStartNode() ) ) {
@@ -392,7 +397,7 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
         PictureInfo pictureInfo = (PictureInfo) pictureNode.getUserObject();
         publish( String.format( "Writing picture node %d: %s", picsWroteCounter, pictureInfo.toString() ) );
 
-        String extension = Tools.getExtension( pictureInfo.getImageFilename() );
+        String extension = FilenameUtils.getExtension(  pictureInfo.getImageFilename() );
         File lowresFile;
         File midresFile;
         File highresFile;
@@ -401,7 +406,7 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
         LOGGER.info( "Before Switch" );
         switch ( options.getPictureNaming() ) {
             case PICTURE_NAMING_BY_ORIGINAL_NAME:
-                String rootName = Tools.cleanupFilename( Tools.getFilenameRoot( pictureInfo.getImageFilename() ) );
+                String rootName = cleanupFilename( getFilenameRoot( pictureInfo.getImageFilename() ) );
                 lowresFile = new File( options.getTargetDirectory(), rootName + "_l." + extension );
                 midresFile = new File( options.getTargetDirectory(), rootName + "_m." + extension );
                 highresFile = new File( options.getTargetDirectory(), rootName + "_h." + extension );
@@ -606,7 +611,7 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
                             switch ( options.getPictureNaming() ) {
                                 case PICTURE_NAMING_BY_ORIGINAL_NAME:
                                     PictureInfo pi = (PictureInfo) nde.getUserObject();
-                                    String rootName = Tools.cleanupFilename( Tools.getFilenameRoot( pi.getImageFilename() ) );
+                                    String rootName = cleanupFilename( getFilenameRoot( pi.getImageFilename() ) );
                                     nodeUrl = rootName + ".htm";
                                     lowresFn = rootName + "_l." + extension;
                                     break;
@@ -679,7 +684,7 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
                                 SortableDefaultMutableTreeNode priorNode = (SortableDefaultMutableTreeNode) ( pictureNode.getParent() ).getChildAt( childNumber - 2 );
                                 Object userObject = priorNode.getUserObject();
                                 if ( userObject instanceof PictureInfo ) {
-                                    previousHtmlFilename = Tools.cleanupFilename( Tools.getFilenameRoot( ( (PictureInfo) userObject ).getImageFilename() ) ) + ".htm";
+                                    previousHtmlFilename = cleanupFilename( getFilenameRoot( ( (PictureInfo) userObject ).getImageFilename() ) ) + ".htm";
                                 } else {
                                     previousHtmlFilename = "index.htm"; // actually something has gone horribly wrong
                                 }
@@ -714,7 +719,7 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
                                 SortableDefaultMutableTreeNode priorNode = (SortableDefaultMutableTreeNode) ( pictureNode.getParent() ).getChildAt( childNumber );
                                 Object userObject = priorNode.getUserObject();
                                 if ( userObject instanceof PictureInfo ) {
-                                    nextHtmlFilename = Tools.cleanupFilename( Tools.getFilenameRoot( ( (PictureInfo) userObject ).getImageFilename() ) ) + ".htm";
+                                    nextHtmlFilename = cleanupFilename( getFilenameRoot( ( (PictureInfo) userObject ).getImageFilename() ) ) + ".htm";
                                 } else {
                                     nextHtmlFilename = "index.htm"; // actually something has gone horribly wrong
                                 }
@@ -762,7 +767,7 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
                 midresHtmlWriter.newLine();
 
                 if ( options.isGenerateMouseover() ) {
-                    Tools.copyFromJarToFile( HtmlDistiller.class, "jpo.js", options.getTargetDirectory(), "jpo.js" );
+                    writeJpoJs( options.getTargetDirectory() );
                     files.add( new File( options.getTargetDirectory(), "jpo.js" ) );
                     midresHtmlWriter.write( "<script type=\"text/javascript\" src=\"jpo.js\" ></script>" );
                     midresHtmlWriter.newLine();
@@ -800,6 +805,118 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
         picsWroteCounter++;
     }
 
+        /**
+     * return everything of the filename up to the extension.
+     *
+     * @param s The string for which the root of the filename is being requested
+     * @return the filename
+     */
+    public static String getFilenameRoot( String s ) {
+        String fnroot = null;
+        int i = s.lastIndexOf( '.' );
+
+        if ( i > 0 && i < s.length() - 1 ) {
+            fnroot = s.substring( 0, i );
+        }
+        return fnroot;
+    }
+    
+    
+    /**
+     * Translates characters which are problematic in a filename into
+     * unproblematic characters
+     *
+     * @param string The filename to clean up
+     * @return The cleaned up filename
+     */
+    public static String cleanupFilename( String string ) {
+        String returnString = string;
+        if ( returnString.contains( " " ) ) {
+            returnString = returnString.replaceAll( " ", "_" );  // replace blank with underscore
+        }
+        if ( returnString.contains( "%20" ) ) {
+            returnString = returnString.replaceAll( "%20", "_" );  // replace blank with underscore
+        }
+        if ( returnString.contains( "&" ) ) {
+            returnString = returnString.replace( "&", "_and_" );  // replace ampersand with _and_
+        }
+        if ( returnString.contains( "|" ) ) {
+            returnString = returnString.replace( "|", "l" );  // replace pipe with lowercase L
+        }
+        if ( returnString.contains( "<" ) ) {
+            returnString = returnString.replace( "<", "_" );
+        }
+        if ( returnString.contains( ">" ) ) {
+            returnString = returnString.replace( ">", "_" );
+        }
+        if ( returnString.contains( "@" ) ) {
+            returnString = returnString.replace( "@", "_" );
+        }
+        if ( returnString.contains( ":" ) ) {
+            returnString = returnString.replace( ":", "_" );
+        }
+        if ( returnString.contains( "$" ) ) {
+            returnString = returnString.replace( "$", "_" );
+        }
+        if ( returnString.contains( "£" ) ) {
+            returnString = returnString.replace( "£", "_" );
+        }
+        if ( returnString.contains( "^" ) ) {
+            returnString = returnString.replace( "^", "_" );
+        }
+        if ( returnString.contains( "~" ) ) {
+            returnString = returnString.replace( "~", "_" );
+        }
+        if ( returnString.contains( "\"" ) ) {
+            returnString = returnString.replace( "\"", "_" );
+        }
+        if ( returnString.contains( "'" ) ) {
+            returnString = returnString.replace( "'", "_" );
+        }
+        if ( returnString.contains( "`" ) ) {
+            returnString = returnString.replace( "`", "_" );
+        }
+        if ( returnString.contains( "?" ) ) {
+            returnString = returnString.replace( "?", "_" );
+        }
+        if ( returnString.contains( "[" ) ) {
+            returnString = returnString.replace( "[", "_" );
+        }
+        if ( returnString.contains( "]" ) ) {
+            returnString = returnString.replace( "]", "_" );
+        }
+        if ( returnString.contains( "{" ) ) {
+            returnString = returnString.replace( "{", "_" );
+        }
+        if ( returnString.contains( "}" ) ) {
+            returnString = returnString.replace( "}", "_" );
+        }
+        if ( returnString.contains( "(" ) ) {
+            returnString = returnString.replace( "(", "_" );
+        }
+        if ( returnString.contains( ")" ) ) {
+            returnString = returnString.replace( ")", "_" );
+        }
+        if ( returnString.contains( "*" ) ) {
+            returnString = returnString.replace( "*", "_" );
+        }
+        if ( returnString.contains( "+" ) ) {
+            returnString = returnString.replace( "+", "_" );
+        }
+        if ( returnString.contains( "/" ) ) {
+            returnString = returnString.replace( "/", "_" );
+        }
+        if ( returnString.contains( "\\" ) ) {
+            returnString = returnString.replaceAll( "\\\\", "_" );
+        }
+        if ( returnString.contains( "%" ) ) {
+            returnString = returnString.replace( "%", "_" );  //Important for this one to be at the end as the loading into JPO converts funny chars to %xx values
+        }
+
+        return returnString;
+    }
+    
+    
     /**
      * Inner class that keeps a buffer of the picture descriptions and will
      * output a table row with the buffered descriptions when the buffer has
@@ -1097,4 +1214,96 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
         }
 
     }
+    
+    /**
+     * Write the jpo.css file to the target directory.
+     *
+     * @param directory The directory to write to
+     */
+    public static void writeCss( File directory ) {
+        ClassLoader cl = JpoWriter.class.getClassLoader();
+        try (
+                InputStream in = cl.getResource( "jpo.css" ).openStream();
+                FileOutputStream outStream = new FileOutputStream( new File( directory, "jpo.css" ) );
+                BufferedInputStream bin = new BufferedInputStream( in );
+                BufferedOutputStream bout = new BufferedOutputStream( outStream ); ) {
+            int c;
+
+            while ( ( c = bin.read() ) != -1 ) {
+                outStream.write( c );
+            }
+
+            in.close();
+            outStream.close();
+
+        } catch ( IOException e ) {
+            JOptionPane.showMessageDialog(
+                    Settings.anchorFrame,
+                    Settings.jpoResources.getString( "CssCopyError" ) + e.getMessage(),
+                    Settings.jpoResources.getString( "genericWarning" ),
+                    JOptionPane.ERROR_MESSAGE );
+        }
+    }
+
+    /**
+     * Write the robots.txt file to the target directory.
+     *
+     * @param directory The directory to write to
+     */
+    public static void writeRobotsTxt( File directory ) {
+        ClassLoader cl = JpoWriter.class.getClassLoader();
+        try (
+                InputStream in = cl.getResource( "robots.txt" ).openStream();
+                FileOutputStream outStream = new FileOutputStream( new File( directory, "robots.txt" ) );
+                BufferedInputStream bin = new BufferedInputStream( in );
+                BufferedOutputStream bout = new BufferedOutputStream( outStream ); ) {
+            int c;
+
+            while ( ( c = bin.read() ) != -1 ) {
+                outStream.write( c );
+            }
+
+            in.close();
+            outStream.close();
+
+        } catch ( IOException e ) {
+            JOptionPane.showMessageDialog(
+                    Settings.anchorFrame,
+                    Settings.jpoResources.getString( "CssCopyError" ) + e.getMessage(),
+                    Settings.jpoResources.getString( "genericWarning" ),
+                    JOptionPane.ERROR_MESSAGE );
+        }
+    }
+
+        /**
+     * Write the jpo.js file to the target directory.
+     *
+     * @param directory The directory to write to
+     */
+    public static void writeJpoJs( File directory ) {
+        ClassLoader cl = JpoWriter.class.getClassLoader();
+        try (
+                InputStream in = cl.getResource( "jpo.js" ).openStream();
+                FileOutputStream outStream = new FileOutputStream( new File( directory, "jpo.js" ) );
+                BufferedInputStream bin = new BufferedInputStream( in );
+                BufferedOutputStream bout = new BufferedOutputStream( outStream ); ) {
+            int c;
+
+            while ( ( c = bin.read() ) != -1 ) {
+                outStream.write( c );
+            }
+
+            in.close();
+            outStream.close();
+
+        } catch ( IOException e ) {
+            JOptionPane.showMessageDialog(
+                    Settings.anchorFrame,
+                    Settings.jpoResources.getString( "CssCopyError" ) + e.getMessage(),
+                    Settings.jpoResources.getString( "genericWarning" ),
+                    JOptionPane.ERROR_MESSAGE );
+        }
+    }
+
+    
 }

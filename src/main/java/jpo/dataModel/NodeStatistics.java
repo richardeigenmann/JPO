@@ -5,9 +5,10 @@ import java.util.Enumeration;
 import java.util.logging.Logger;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
+import org.apache.commons.io.FileUtils;
 
 /*
- Copyright (C) 2002 - 2017  Richard Eigenmann.
+ Copyright (C) 2002 - 2018  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -183,6 +184,17 @@ public class NodeStatistics {
     }
 
     /**
+     * Returns the number of PictureInfo nodes in a subtree recursing through
+     * the Groups.
+     *
+     * @param startNode The Start node
+     * @return The number of PictureInfo nodes
+     */
+    public static int countPicturesRecursively( DefaultMutableTreeNode startNode ) {
+        return countPictures( startNode, true );
+    }
+
+    /**
      * Returns the number of PictureInfo Nodes in a subtree. Useful for progress
      * monitors. If called with a null start node it returns 0. If called with a
      * node that is actually a Query object it asks the Query for the count.
@@ -202,19 +214,19 @@ public class NodeStatistics {
         }
 
         int count = 0;
-        DefaultMutableTreeNode n;
+        Object nextElement;
         Enumeration nodes = startNode.children();
+        DefaultMutableTreeNode node;
         while ( nodes.hasMoreElements() ) {
-            try {
-                n = (DefaultMutableTreeNode) nodes.nextElement();
-                if ( n.getUserObject() instanceof PictureInfo ) {
+            nextElement = nodes.nextElement();
+            if ( nextElement instanceof DefaultMutableTreeNode ) {
+                node = ( (DefaultMutableTreeNode) nextElement );
+                if ( node.getUserObject() instanceof PictureInfo ) {
                     count++;
                 }
-                if ( recurseSubgroups && ( n.getChildCount() > 0 ) ) {
-                    count += countPictures( n, true );
+                if ( recurseSubgroups && ( node.getChildCount() > 0 ) ) {
+                    count += countPictures( node, true );
                 }
-            } catch ( ClassCastException ex ) {
-                //ignore failing cast from nextElement()
             }
         }
         return count;
@@ -236,7 +248,7 @@ public class NodeStatistics {
      * @return Returns the bytes of the pictures underneath the supplied node
      */
     public String getSizeOfPicturesString() {
-        return Settings.jpoResources.getString( "CollectionSizeJLabel" ) + Tools.fileSizeToString( getSizeOfPictures() );
+        return Settings.jpoResources.getString( "CollectionSizeJLabel" ) + FileUtils.byteCountToDisplaySize( getSizeOfPictures() );
     }
 
     /**

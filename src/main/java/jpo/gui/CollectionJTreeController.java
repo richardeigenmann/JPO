@@ -36,6 +36,7 @@ import jpo.dataModel.Tools;
 import jpo.gui.swing.CollectionJTree;
 import jpo.gui.swing.GroupPopupMenu;
 import jpo.gui.swing.PicturePopupMenu;
+import org.apache.commons.io.FileUtils;
 
 /*
  * Copyright (C) 2002 - 2017 Richard Eigenmann, Zurich, Switzerland This
@@ -306,7 +307,7 @@ public class CollectionJTreeController {
             } else if ( userObject instanceof PictureInfo ) {
                 final PictureInfo pictureInfo = (PictureInfo) userObject;
                 File highresFile = pictureInfo.getImageFile();
-                String fileSize = highresFile == null ? "no file" : Tools.fileSizeToString( highresFile.length() );
+                String fileSize = highresFile == null ? "no file" : FileUtils.byteCountToDisplaySize( highresFile.length() );
                 toolTip = String.format( "<html>Picture: %s<br>%s %s</html>", pictureInfo.getDescription(), Settings.jpoResources.getString( "CollectionSizeJLabel" ), fileSize );
             }
             return toolTip;

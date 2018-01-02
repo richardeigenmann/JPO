@@ -12,7 +12,7 @@ import static junit.framework.TestCase.fail;
 import org.junit.Test;
 
 /*
- Copyright (C) 2017  Richard Eigenmann.
+ Copyright (C) 2017-2018  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -75,7 +75,7 @@ public class ToolsTest {
                 } catch ( EdtViolationException ex ) {
                     onEDTErrorThrown = true;
                 }
-                assertTrue( "When on EDT must not throw an error", ! onEDTErrorThrown );
+                assertTrue( "When on EDT must not throw an error", !onEDTErrorThrown );
             } );
         } catch ( InterruptedException | InvocationTargetException ex ) {
             fail( "Something went wrong with the EDT thread test" );
@@ -83,16 +83,7 @@ public class ToolsTest {
 
     }
 
-    /**
-     * Test of cleanupFilename method, of class HtmlDistiller.
-     */
-    @Test
-    public void testCleanupFilename() {
-        String filename = "directory\\file.xml";  // actually contains directoy\file.xml
-        String wanted = "directory_file.xml";  // actually contains directoy\file.xml
-        String got = Tools.cleanupFilename( filename );
-        assertEquals( "A backslash could be made into an underscore", wanted, got );
-    }
+
 
     /**
      * Test of parseDate
@@ -118,7 +109,7 @@ public class ToolsTest {
         assertEquals( expected, result );
     }
 
-        /**
+    /**
      * Test of parseDate
      */
     @Test
@@ -129,9 +120,8 @@ public class ToolsTest {
         String result = format.format( Tools.parseDate( d ).getTime() );
         assertEquals( expected, result );
     }
-    
-    
-        /**
+
+    /**
      * Test of parseDate
      */
     @Test
@@ -142,8 +132,8 @@ public class ToolsTest {
         String result = format.format( Tools.parseDate( d ).getTime() );
         assertEquals( expected, result );
     }
-    
-            /**
+
+    /**
      * Test of parseDate
      */
     @Test
@@ -154,7 +144,7 @@ public class ToolsTest {
         String result = format.format( Tools.parseDate( d ).getTime() );
         assertEquals( expected, result );
     }
-    
+
     /**
      * Test of parseDate
      */
@@ -178,4 +168,7 @@ public class ToolsTest {
         String result = format.format( Tools.parseDate( d ).getTime() );
         assertEquals( expected, result );
     }
+
+
+
 }

@@ -26,7 +26,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 /*
- Copyright (C) 2017  Richard Eigenmann.
+ Copyright (C) 2017-2018  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -199,7 +199,8 @@ public class SaxEventHandler extends DefaultHandler {
                     temporaryCategory = "";
                     break;
                 default:
-                    LOGGER.severe( "Don't recognize qName: " + qName + " Ignoring" );
+                    //LOGGER.severe( "Don't recognize qName: " + qName + " Ignoring" );
+                    //Nothing needs to be done on the other types of endElement
                     break;
             }
         }
