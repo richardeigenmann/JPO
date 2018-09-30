@@ -31,24 +31,34 @@ import jpo.gui.ApplicationEventHandler;
  */
 public class Main {
 
-    /**
-     * The main method is the entry point for this application (or any) Java
-     * application. No parameter passing is used in the Jpo application.
-     * <p>
-     *
+   /**
      * The method verifies that the user has the correct Java Virtual Machine (&gt;
      * 1.7.0) and then creates a new {@link ApplicationEventHandler} object which
      * it asks to post a {@link ApplicationStartupRequest} to.
+     * @returns true is good, false if bad
+     */
+    private static boolean verifyJavaVersion() {
+        String jvmVersion = System.getProperty( "java.version" );
+        String jvmMainVersion;
+        if ( jvmVersion.lastIndexOf('.') > 0 ) {
+            jvmMainVersion = jvmVersion.substring( 0, jvmVersion.lastIndexOf('.') );
+        } else {
+            // From Java 9 upward
+            jvmMainVersion = jvmVersion;
+        }
+        float jvmVersionFloat = Float.parseFloat( jvmMainVersion );
+        return ( jvmVersionFloat >= 1.7f );
+    }
+
+    /**
+     * The main method is the entry point for this application (or any) Java
+     * application. No parameter passing is used in the Jpo application.  
      *
      * @param args The command line arguments
      */
     public static void main( String[] args ) {
-        // Verify that we have to correct version of the jvm
-        String jvmVersion = System.getProperty( "java.version" );
-        String jvmMainVersion = jvmVersion.substring( 0, jvmVersion.lastIndexOf('.') );
-        float jvmVersionFloat = Float.parseFloat( jvmMainVersion );
-        if ( jvmVersionFloat < 1.7f ) {
-            String message = "The JPO application uses new features\nthat were added to the Java language in version 1.7.\nYour Java installation reports version " + jvmVersion + "\n";
+        if (! verifyJavaVersion() ) {
+            String message = "The JPO application uses new features\nthat were added to the Java language in version 1.7.\nYour Java installation reports version " + System.getProperty( "java.version" ) + "\n";
             System.out.println( message );
             JOptionPane.showMessageDialog( Settings.anchorFrame, message, "Old Version Error", JOptionPane.ERROR_MESSAGE );
             System.exit( 1 );
