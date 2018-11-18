@@ -1181,8 +1181,6 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
                 input.close();
             }
 
-        } catch ( SocketException ex ) {
-            Logger.getLogger( HtmlDistiller.class.getName() ).log( Level.SEVERE, null, ex );
         } catch ( IOException ex ) {
             Logger.getLogger( HtmlDistiller.class.getName() ).log( Level.SEVERE, null, ex );
         }

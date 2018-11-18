@@ -725,11 +725,11 @@ public class PictureInfoEditor extends JFrame {
         Object o;
         pictureInfo.clearCategoryAssignments();
 
-        for ( int i = 0; i < indexes.length; i++ ) {
-            o = listModel.getElementAt( indexes[i] );
+        for (int indexe : indexes) {
+            o = listModel.getElementAt(indexe);
 
-            if ( o instanceof Category ) {
-                pictureInfo.addCategoryAssignment( ( (Category) o ).getKey() );
+            if (o instanceof Category) {
+                pictureInfo.addCategoryAssignment(((Category) o).getKey());
 
             }
         }

@@ -97,9 +97,7 @@ public class GroupPopupMenu extends JPopupMenu {
         JpoEventBus.getInstance().register( new RecentCollectionsChangedEventHandler() );
         JpoEventBus.getInstance().register( new RecentDropNodeChangedEventHandler() );
 
-        Runnable runnable = () -> {
-            initComponents();
-        };
+        Runnable runnable = this::initComponents;
         if ( SwingUtilities.isEventDispatchThread() ) {
             runnable.run();
         } else {
@@ -452,9 +450,7 @@ public class GroupPopupMenu extends JPopupMenu {
          */
         @Subscribe
         public void handleRecentCollectionsChangedEvent( RecentCollectionsChangedEvent event ) {
-            SwingUtilities.invokeLater( () -> {
-                populateRecentFilesMenuItems();
-            } );
+            SwingUtilities.invokeLater(GroupPopupMenu.this::populateRecentFilesMenuItems);
 
         }
     }

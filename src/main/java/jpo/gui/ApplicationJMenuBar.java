@@ -318,9 +318,7 @@ public class ApplicationJMenuBar extends JMenuBar {
 
         FileNewJMenuItem.setMnemonic( KeyEvent.VK_N );
         FileNewJMenuItem.setAccelerator( KeyStroke.getKeyStroke( 'N', java.awt.event.InputEvent.CTRL_MASK ) );
-        FileNewJMenuItem.addActionListener(( ActionEvent e ) -> {
-            JpoEventBus.getInstance().post( new UnsavedUpdatesDialogRequest( new StartNewCollectionRequest() ) );
-        });
+        FileNewJMenuItem.addActionListener(( ActionEvent e ) -> JpoEventBus.getInstance().post( new UnsavedUpdatesDialogRequest( new StartNewCollectionRequest() ) ));
         FileJMenu.add( FileNewJMenuItem );
 
         FileAddJMenuItem.setMnemonic( KeyEvent.VK_A );

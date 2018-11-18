@@ -622,9 +622,7 @@ public class PictureCollection {
     public void clearMailSelection() {
         //can't use iterator directly or we have a concurrent modification exception
         List<SortableDefaultMutableTreeNode> clone = new ArrayList<>( mailSelection.size() );
-        mailSelection.stream().forEach( item
-                -> clone.add( item )
-        );
+        mailSelection.stream().forEach(clone::add);
 
         for ( SortableDefaultMutableTreeNode node : clone ) {
             LOGGER.log( Level.FINE, "Removing node: {0}", node.toString() );

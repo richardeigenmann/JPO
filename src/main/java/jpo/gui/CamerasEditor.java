@@ -125,9 +125,7 @@ public class CamerasEditor        extends JFrame {
             b.setOldImage( c.getOldImage() ); // shallow copy!
             b.setUseFilename( c.getUseFilename() );
             return b;
-        } ).forEach( ( b ) -> {
-            backupCameras.add( b );
-        } );
+        } ).forEach(backupCameras::add);
 
         loadTree();
         cameraJTree.getSelectionModel().setSelectionMode( TreeSelectionModel.SINGLE_TREE_SELECTION );

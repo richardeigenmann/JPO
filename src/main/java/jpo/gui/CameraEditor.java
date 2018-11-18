@@ -62,14 +62,18 @@ public class CameraEditor
         });
         add( zeroJButton, "wrap unrel" );
 
+        /**
+         * Button to save the camera information
+         */
+        JButton saveJButton = new JButton("Save");
         saveJButton.setPreferredSize( Settings.defaultButtonDimension );
         saveJButton.setMinimumSize( Settings.defaultButtonDimension );
         saveJButton.setMaximumSize( Settings.defaultButtonDimension );
         saveJButton.setBorder( BorderFactory.createRaisedBevelBorder() );
-        saveJButton.addActionListener(( ActionEvent e ) -> {
+        saveJButton.addActionListener((ActionEvent e ) -> {
             saveCamera();
         });
-        add( saveJButton, "align right" );
+        add(saveJButton, "align right" );
     }
 
     /**
@@ -189,11 +193,6 @@ public class CameraEditor
     private final JButton zeroJButton = new JButton( Settings.jpoResources.getString( "zeroJButton" ) );
 
     /**
-     * Button to save the camera information
-     */
-    private final JButton saveJButton = new JButton( "Save" );
-
-    /**
      * checkbox to indicate that filenames should be used
      */
     private final JCheckBox filenameJCheckBox = new JCheckBox( Settings.jpoResources.getString( "filenameJCheckBox" ) );
@@ -207,7 +206,7 @@ public class CameraEditor
      * A collection that holds all the listeners that want to be notified about
      * changes to this Camera
      */
-    private final Set<ActionListener> listeners = Collections.synchronizedSet( new HashSet<ActionListener>() );
+    private final Set<ActionListener> listeners = Collections.synchronizedSet(new HashSet<>() );
 
     /**
      * Adds a listener

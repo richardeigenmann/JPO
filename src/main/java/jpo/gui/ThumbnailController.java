@@ -329,8 +329,6 @@ public class ThumbnailController
             try {
                 ( (PictureInfo) userObject ).getImageURL().openStream().close();
                 myThumbnail.drawOfflineIcon( false );
-            } catch ( MalformedURLException x ) {
-                myThumbnail.drawOfflineIcon( true );
             } catch ( IOException x ) {
                 myThumbnail.drawOfflineIcon( true );
             }

@@ -83,8 +83,7 @@ public abstract class NodeNavigator
     @Override
     public void notifyNodeNavigatorListeners() {
         synchronized ( nodeNavigatorListeners ) {
-            nodeNavigatorListeners.stream().forEach( nodeNavigatorListener
-                    -> nodeNavigatorListener.nodeLayoutChanged()
+            nodeNavigatorListeners.stream().forEach(NodeNavigatorListener::nodeLayoutChanged
             );
         }
     }

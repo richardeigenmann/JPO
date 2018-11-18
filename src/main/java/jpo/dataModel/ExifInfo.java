@@ -80,14 +80,6 @@ public class ExifInfo {
      */
     private String createDateTime = "";
     /**
-     * The Longitude
-     */
-    private final String longitude = "";
-    /**
-     * Whether it's W or E
-     */
-    private final String longitudeRef = "";
-    /**
      * The latitude
      */
     private final String latitude = "";
@@ -264,6 +256,14 @@ public class ExifInfo {
      * @return Returns a comprehensive summary of the photographic settings
      */
     public String getComprehensivePhotographicSummary() {
+        /**
+         * The Longitude
+         */
+        String longitude = "";
+        /**
+         * Whether it's W or E
+         */
+        String longitudeRef = "";
         return Settings.jpoResources.getString( "ExifInfoCamera" ) + "\t" + camera + "\n"
                 + Settings.jpoResources.getString( "ExifInfoLens" ) + "\t" + lens + "\n"
                 + Settings.jpoResources.getString( "ExifInfoShutterSpeed" ) + "\t" + shutterSpeed + "\n"

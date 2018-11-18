@@ -55,8 +55,7 @@ public class ResizableJFrameTest {
     public static void main( String[] args ) {
         Settings.loadSettings();
         try {
-            SwingUtilities.invokeAndWait( ()
-                    -> new ResizableJFrameTest()
+            SwingUtilities.invokeAndWait(ResizableJFrameTest::new
             );
         } catch ( InterruptedException | InvocationTargetException ex ) {
             Logger.getLogger( ResizableJFrameTest.class.getName() ).log( Level.SEVERE, null, ex );

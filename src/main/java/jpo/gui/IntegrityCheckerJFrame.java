@@ -176,9 +176,7 @@ public class IntegrityCheckerJFrame
 
         @Override
         protected void process( List<String> chunks ) {
-            chunks.stream().forEach( ( s ) -> {
-                resultJTextArea.append( s );
-            } );
+            chunks.stream().forEach(resultJTextArea::append);
         }
     }
 

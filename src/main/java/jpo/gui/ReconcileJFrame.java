@@ -348,9 +348,7 @@ public class ReconcileJFrame extends JFrame {
 
         @Override
         protected void process( List<String> chunks ) {
-            chunks.stream().forEach( ( s ) -> {
-                outputTextArea.append( s );
-            } );
+            chunks.stream().forEach(outputTextArea::append);
         }
 
         @Override

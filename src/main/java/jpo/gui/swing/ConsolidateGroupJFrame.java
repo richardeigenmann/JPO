@@ -1,20 +1,16 @@
 package jpo.gui.swing;
 
-import java.awt.Dimension;
+import jpo.dataModel.Settings;
+import jpo.gui.ConsolidateGroupActionCallback;
+import jpo.gui.DirectoryChooser;
+import net.miginfocom.swing.MigLayout;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import jpo.dataModel.Settings;
-import jpo.gui.ConsolidateGroupActionCallback;
-import jpo.gui.ConsolidateGroupController;
-import jpo.gui.DirectoryChooser;
-import net.miginfocom.swing.MigLayout;
 
 /*
  Copyright (C) 2015-2017  Richard Eigenmann.

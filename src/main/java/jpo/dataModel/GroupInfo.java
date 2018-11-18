@@ -206,7 +206,7 @@ public class GroupInfo implements Serializable {
     /**
      * The listeners to notify about changes on this GroupInfo object
      */
-    private final transient Set<GroupInfoChangeListener> groupInfoListeners = Collections.synchronizedSet( new HashSet<GroupInfoChangeListener>() );
+    private final transient Set<GroupInfoChangeListener> groupInfoListeners = Collections.synchronizedSet(new HashSet<>() );
 
     /**
      * Adds a change listener

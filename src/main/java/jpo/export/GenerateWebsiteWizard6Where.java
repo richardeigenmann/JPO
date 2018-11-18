@@ -638,9 +638,6 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
             }
             ftp.disconnect();
 
-        } catch ( SocketException ex ) {
-            LOGGER.severe( ex.getMessage() );
-            return ex.getMessage();
         } catch ( IOException ex ) {
             LOGGER.severe( ex.getMessage() );
             return ex.getMessage();
@@ -687,9 +684,6 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
             }
             ftp.disconnect();
 
-        } catch ( SocketException ex ) {
-            LOGGER.severe( ex.getMessage() );
-            return ex.getMessage();
         } catch ( IOException ex ) {
             LOGGER.severe( ex.getMessage() );
             return ex.getMessage();

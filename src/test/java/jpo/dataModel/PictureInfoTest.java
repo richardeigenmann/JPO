@@ -9,10 +9,10 @@ import java.net.URI;
 import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertNull;
-import static junit.framework.TestCase.fail;
+
 import org.junit.Test;
+
+import static junit.framework.TestCase.*;
 
 /*
  Copyright (C) 2017 - 2017 Richard Eigenmann.
@@ -116,7 +116,7 @@ public class PictureInfoTest {
     public void testDescriptionContains() {
         PictureInfo pi = new PictureInfo();
         pi.setDescription( "RubbishBinTrash" );
-        assertEquals( "Expecting to find a substring", true, pi.descriptionContains( "Bin" ) );
+        assertTrue("Expecting to find a substring", pi.descriptionContains("Bin"));
     }
 
     /**

@@ -1084,9 +1084,7 @@ public class ApplicationEventHandler {
     public void handleCopyToClipboardRequest( CopyToClipboardRequest request ) {
         Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
         JpoTransferable transferable = new JpoTransferable( request.getNodes() );
-        clipboard.setContents( transferable, ( Clipboard clipboard1, Transferable contents ) -> {
-            LOGGER.info( "Lost Ownership of clipboard - not an issue" );
-        } );
+        clipboard.setContents( transferable, ( Clipboard clipboard1, Transferable contents ) -> LOGGER.info( "Lost Ownership of clipboard - not an issue" ));
     }
 
     /**

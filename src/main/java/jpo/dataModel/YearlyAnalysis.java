@@ -87,12 +87,8 @@ public class YearlyAnalysis implements Serializable {
                     if ( cal != null ) {
                         int year = cal.get( Calendar.YEAR );
                         int month = cal.get( Calendar.MONTH );
-                        TreeMap<Integer, HashSet<DefaultMutableTreeNode>> monthMap = yearsMap.get( year );
-                        if ( monthMap == null ) {
-                            monthMap = new TreeMap<>();
-                            //monthMap.put( new Integer( month ), new HashSet<SortableDefaultMutableTreeNode>() );
-                            yearsMap.put( year, monthMap );
-                        }
+                        TreeMap<Integer, HashSet<DefaultMutableTreeNode>> monthMap = yearsMap.computeIfAbsent(year, k -> new TreeMap<>());
+                        //monthMap.put( new Integer( month ), new HashSet<SortableDefaultMutableTreeNode>() );
                         HashSet<DefaultMutableTreeNode> nodes = monthMap.get( month );
                         if ( nodes == null ) {
                             nodes = new HashSet<>();

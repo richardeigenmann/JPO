@@ -58,8 +58,7 @@ public class GroupNavigatorTest {
         groupNode.add( pictureNode2 );
         assertEquals( "After adding 2 nodes we expect to have 2 nodes", 2, gn.getNumberOfNodes() );
         try {
-            SwingUtilities.invokeAndWait( ()
-                    -> groupNode.removeAllChildren() );
+            SwingUtilities.invokeAndWait(groupNode::removeAllChildren);
         } catch ( InterruptedException | InvocationTargetException ex ) {
             Logger.getLogger( GroupNavigatorTest.class.getName() ).log( Level.SEVERE, null, ex );
         }

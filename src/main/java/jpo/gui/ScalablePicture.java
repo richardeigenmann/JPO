@@ -671,7 +671,7 @@ public class ScalablePicture
     /**
      * The listeners to notify when the image operation changes the status.
      */
-    private final Set<ScalablePictureListener> scalablePictureStatusListeners = Collections.synchronizedSet( new HashSet<ScalablePictureListener>() );
+    private final Set<ScalablePictureListener> scalablePictureStatusListeners = Collections.synchronizedSet(new HashSet<>() );
 
     /**
      * method to register the listening object of the status events

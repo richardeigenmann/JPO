@@ -1268,7 +1268,7 @@ public class PictureInfo implements Serializable {
     /**
      * The listeners to be notified about changes to this PictureInfo object.
      */
-    private final transient Set<PictureInfoChangeListener> pictureInfoListeners = Collections.synchronizedSet( new HashSet<PictureInfoChangeListener>() );
+    private final transient Set<PictureInfoChangeListener> pictureInfoListeners = Collections.synchronizedSet(new HashSet<>() );
 
     /**
      * Registers a listener for picture info change events

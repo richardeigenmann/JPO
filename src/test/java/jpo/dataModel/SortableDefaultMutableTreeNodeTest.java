@@ -151,19 +151,19 @@ public class SortableDefaultMutableTreeNodeTest {
      */
     @Test
     public void testMoveToNode() {
-        assertTrue( "Before moving, picture4 is owned by Group2", picture4.getParent().equals( group2 ) );
+        assertEquals("Before moving, picture4 is owned by Group2", picture4.getParent(), group2);
         assertTrue( "Move should work", picture4.moveToLastChild( group1 ) );
-        assertTrue( "After moving, picture4 is owned by Group1", picture4.getParent().equals( group1 ) );
+        assertEquals("After moving, picture4 is owned by Group1", picture4.getParent(), group1);
 
         assertNull( "The parent of the root node is null before a move", rootNode.getParent() );
         assertFalse( "Move should fail", rootNode.moveToLastChild( group1 ) );
         assertNull( "The parent of the root node is null after a move because it was not moved", rootNode.getParent() );
 
-        assertTrue( "Before the move group2 was a child of rootNode", group2.getParent().equals( rootNode ) );
+        assertEquals("Before the move group2 was a child of rootNode", group2.getParent(), rootNode);
         assertFalse( "Move should fail", group2.moveToLastChild( picture2 ) );
-        assertTrue( "The group2 is still a child of rootNode because picture2 doesn't allow children", group2.getParent().equals( rootNode ) );
+        assertEquals("The group2 is still a child of rootNode because picture2 doesn't allow children", group2.getParent(), rootNode);
         assertTrue( "Move should work", group2.moveToLastChild( group1 ) );
-        assertTrue( "After the move group2 is child of group1", group2.getParent().equals( group1 ) );
+        assertEquals("After the move group2 is child of group1", group2.getParent(), group1);
     }
 
     /**
@@ -200,9 +200,9 @@ public class SortableDefaultMutableTreeNodeTest {
      */
     @Test
     public void testMoveBeforeMoveGroup() {
-        assertTrue( "Before moving, picture4 is owned by Group2", picture4.getParent().equals( group2 ) );
+        assertEquals("Before moving, picture4 is owned by Group2", picture4.getParent(), group2);
         assertTrue( "Move should work", picture4.moveBefore( picture2 ) );
-        assertTrue( "After moving, picture4 is owned by Group1", picture4.getParent().equals( group1 ) );
+        assertEquals("After moving, picture4 is owned by Group1", picture4.getParent(), group1);
         assertEquals( "After moving, picture4 should be at index 1 of Group1", 1, group1.getIndex( picture4 ) );
     }
 
@@ -211,11 +211,11 @@ public class SortableDefaultMutableTreeNodeTest {
      */
     @Test
     public void testMoveBefore2() {
-        assertTrue( "Before moving, picture4 is owned by Group2", picture4.getParent().equals( group2 ) );
-        assertTrue( "Before moving, picture3 is owned by Group2", picture3.getParent().equals( group2 ) );
+        assertEquals("Before moving, picture4 is owned by Group2", picture4.getParent(), group2);
+        assertEquals("Before moving, picture3 is owned by Group2", picture3.getParent(), group2);
         assertTrue( "Move should work", picture4.moveBefore( picture2 ) );
         assertTrue( "Move should work", picture3.moveBefore( picture4 ) );
-        assertTrue( "After moving, picture3 is owned by Group1", picture2.getParent().equals( group1 ) );
+        assertEquals("After moving, picture3 is owned by Group1", picture2.getParent(), group1);
         assertEquals( "After moving, picture3 should be at index 1 of Group1", 1, group1.getIndex( picture3 ) );
         assertEquals( "After moving, picture4 should have fallen back to index 2 of Group1", 2, group1.getIndex( picture4 ) );
         assertEquals( "After moving, picture2 should have fallen back to index 3 of Group1", 3, group1.getIndex( picture2 ) );
@@ -226,8 +226,8 @@ public class SortableDefaultMutableTreeNodeTest {
      */
     @Test
     public void testMoveBeforeMoveUp() {
-        assertTrue( "Before moving, picture4 is owned by Group2", picture4.getParent().equals( group2 ) );
-        assertTrue( "Before moving, picture3 is owned by Group2", picture3.getParent().equals( group2 ) );
+        assertEquals("Before moving, picture4 is owned by Group2", picture4.getParent(), group2);
+        assertEquals("Before moving, picture3 is owned by Group2", picture3.getParent(), group2);
         assertTrue( "Move should work", picture4.moveBefore( picture2 ) );
         assertTrue( "Move should work", picture3.moveBefore( picture4 ) );
         assertTrue( "Move should work", picture2.moveBefore( picture3 ) );

@@ -277,7 +277,7 @@ public class OverlayedPictureController extends PictureController implements Sca
      * on with the ScalablePicture being displayed in this PicturePane. These
      * objects must implement the ScalablePictureListener interface.
      */
-    private final Set<ScalablePictureListener> picturePaneListeners = Collections.synchronizedSet( new HashSet<ScalablePictureListener>() );
+    private final Set<ScalablePictureListener> picturePaneListeners = Collections.synchronizedSet(new HashSet<>() );
 
     /**
      * method to register the listening object of the status events

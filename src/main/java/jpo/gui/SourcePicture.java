@@ -388,7 +388,7 @@ public class SourcePicture {
     /**
      * The listeners to notify about changes on this SourcePicture.
      */
-    private final Set<SourcePictureListener> sourcePictureListeners = Collections.synchronizedSet( new HashSet<SourcePictureListener>() );
+    private final Set<SourcePictureListener> sourcePictureListeners = Collections.synchronizedSet(new HashSet<>() );
 
     /**
      * Adds a listener

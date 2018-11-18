@@ -75,14 +75,14 @@ public class PrefObj {
 
     static private byte[] combinePieces( byte pieces[][] ) {
         int length = 0;
-        for ( int i = 0; i < pieces.length; ++i ) {
-            length += pieces[i].length;
+        for (byte[] piece : pieces) {
+            length += piece.length;
         }
         byte raw[] = new byte[length];
         int cursor = 0;
-        for ( int i = 0; i < pieces.length; ++i ) {
-            System.arraycopy( pieces[i], 0, raw, cursor, pieces[i].length );
-            cursor += pieces[i].length;
+        for (byte[] piece : pieces) {
+            System.arraycopy(piece, 0, raw, cursor, piece.length);
+            cursor += piece.length;
         }
         return raw;
     }

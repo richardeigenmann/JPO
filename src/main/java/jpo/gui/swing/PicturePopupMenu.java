@@ -713,9 +713,7 @@ public class PicturePopupMenu extends JPopupMenu {
          */
         @Subscribe
         public void handleRecentDropNodeChangedEventHandler( RecentDropNodesChangedEvent event ) {
-            SwingUtilities.invokeLater( () -> {
-                labelRecentDropNodes();
-            } );
+            SwingUtilities.invokeLater(PicturePopupMenu.this::labelRecentDropNodes);
 
         }
     }
@@ -757,9 +755,7 @@ public class PicturePopupMenu extends JPopupMenu {
          */
         @Subscribe
         public void handleCopyLocationsChangedEvent( CopyLocationsChangedEvent event ) {
-            SwingUtilities.invokeLater( () -> {
-                labelCopyLocations();
-            } );
+            SwingUtilities.invokeLater(PicturePopupMenu.this::labelCopyLocations);
 
         }
     }
@@ -791,8 +787,7 @@ public class PicturePopupMenu extends JPopupMenu {
          */
         @Subscribe
         public void handleUserFunctionsChangedEvent( UserFunctionsChangedEvent event ) {
-            SwingUtilities.invokeLater( ()
-                    -> labelUserFunctions()
+            SwingUtilities.invokeLater(PicturePopupMenu.this::labelUserFunctions
             );
         }
     }
