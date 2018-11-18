@@ -1,14 +1,16 @@
 package jpo.gui;
 
+import jpo.dataModel.Settings;
+import org.apache.commons.lang3.StringUtils;
+
+import javax.swing.*;
+import java.awt.*;
 import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.Objects;
 import java.util.logging.Logger;
-import javax.swing.*;
-
-import jpo.dataModel.Settings;
-import org.apache.commons.lang3.StringUtils;
 
 /*
  Copyright (C) 2017  Richard Eigenmann.
@@ -31,7 +33,7 @@ import org.apache.commons.lang3.StringUtils;
  *
  * @author Richard Eigenmann
  */
-public class ClearThumbnailsJFrame extends javax.swing.JFrame {
+class ClearThumbnailsJFrame extends JFrame {
 
     /**
      * Defines a LOGGER for this class
@@ -43,7 +45,7 @@ public class ClearThumbnailsJFrame extends javax.swing.JFrame {
      *
      * @param lowresUrls The lowres Urls
      */
-    public ClearThumbnailsJFrame( StringBuilder lowresUrls ) {
+    ClearThumbnailsJFrame(StringBuilder lowresUrls) {
         initComponents();
         setLocationRelativeTo( Settings.anchorFrame );
         this.lowresUrls.setText( lowresUrls.toString() );
@@ -61,17 +63,17 @@ public class ClearThumbnailsJFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        JTextArea jTextArea1 = new javax.swing.JTextArea();
-        JLabel jLabel1 = new javax.swing.JLabel();
-        JLabel jLabel2 = new javax.swing.JLabel();
-        JScrollPane jScrollPane2 = new javax.swing.JScrollPane();
-        lowresUrls = new javax.swing.JTextArea();
-        closeButton = new javax.swing.JButton();
-        removeButton = new javax.swing.JButton();
-        stopButton = new javax.swing.JButton();
-        ignoreButton = new javax.swing.JButton();
+        JTextArea jTextArea1 = new JTextArea();
+        JLabel jLabel1 = new JLabel();
+        JLabel jLabel2 = new JLabel();
+        JScrollPane jScrollPane2 = new JScrollPane();
+        lowresUrls = new JTextArea();
+        closeButton = new JButton();
+        removeButton = new JButton();
+        stopButton = new JButton();
+        ignoreButton = new JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         jTextArea1.setEditable(false);
         jTextArea1.setColumns(20);
@@ -80,7 +82,7 @@ public class ClearThumbnailsJFrame extends javax.swing.JFrame {
         jTextArea1.setText("JPO now has an improved cache for thumbnail pictures. The old thumbnail images should be removed.");
         jTextArea1.setFocusable(false);
 
-        jLabel1.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Dialog", Font.BOLD, 24)); // NOI18N
         jLabel1.setText("Remove Old Thumbnails");
 
         jLabel2.setText("You will only be asked once!");
@@ -101,47 +103,47 @@ public class ClearThumbnailsJFrame extends javax.swing.JFrame {
         ignoreButton.setText("Ignore");
         ignoreButton.addActionListener(this::ignoreButtonActionPerformed);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        GroupLayout layout = new GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                    .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(jLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(ignoreButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(closeButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(removeButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(stopButton))
                     .addComponent(jScrollPane2)
                     .addComponent(jTextArea1))
                 .addContainerGap())
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel1)
                 .addGap(325, 325, 325))
         );
         layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(5, 5, 5)
                 .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextArea1, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jTextArea1, GroupLayout.PREFERRED_SIZE, 51, GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(closeButton)
                     .addComponent(removeButton)
                     .addComponent(stopButton)
                     .addComponent(ignoreButton))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 423, Short.MAX_VALUE))
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane2, GroupLayout.DEFAULT_SIZE, 423, Short.MAX_VALUE))
         );
 
         pack();
@@ -171,11 +173,11 @@ public class ClearThumbnailsJFrame extends javax.swing.JFrame {
     private final ThumbnailRemover thumbnailRemover = new ThumbnailRemover();
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton closeButton;
-    private javax.swing.JButton ignoreButton;
-    private javax.swing.JTextArea lowresUrls;
-    private javax.swing.JButton removeButton;
-    private javax.swing.JButton stopButton;
+    private JButton closeButton;
+    private JButton ignoreButton;
+    private JTextArea lowresUrls;
+    private JButton removeButton;
+    private JButton stopButton;
     // End of variables declaration//GEN-END:variables
 
     private class ThumbnailRemover extends SwingWorker<Void, String> {
@@ -229,7 +231,7 @@ public class ClearThumbnailsJFrame extends javax.swing.JFrame {
 
                 // check if the parent directory is empty and writable and then delete it
                 File parentDirectory = thumbnail.getParentFile();
-                if ( parentDirectory != null && parentDirectory.canWrite() && parentDirectory.list().length == 0 ) {
+                if ( parentDirectory != null && parentDirectory.canWrite() && Objects.requireNonNull(parentDirectory.list()).length == 0 ) {
                     if ( parentDirectory.delete() ) {
                         publish( String.format( "Parent directory %s successfully deleted%n", parentDirectory.toString() ) );
                     } else {
@@ -256,9 +258,7 @@ public class ClearThumbnailsJFrame extends javax.swing.JFrame {
                 lowresUrls.setText( "" );
                 firsttime = false;
             }
-            chunks.stream().forEach( ( chunk ) -> {
-                lowresUrls.append( chunk );
-            } );
+            chunks.forEach( (chunk ) -> lowresUrls.append( chunk ));
         }
 
     }

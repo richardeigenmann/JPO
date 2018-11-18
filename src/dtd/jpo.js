@@ -1,10 +1,10 @@
-function changetext(whichcontent){
-    if (document.all||document.getElementById){
-        cross_el=document.getElementById? document.getElementById("descriptions"):document.all.descriptions;
-        cross_el.innerHTML=whichcontent;
+function changetext(newtext){
+    if (document.all || document.getElementById){
+        element=document.getElementById ? document.getElementById("descriptions") : document.all.descriptions;
+        element.innerHTML=newtext;
     }
     else if (document.layers){
-        document.d1.document.d2.document.write(whichcontent);
+        document.d1.document.d2.document.write(newtext);
         document.d1.document.close();
     }
 }
