@@ -30,14 +30,14 @@ public interface NodeNavigatorInterface {
      *
      * @return a title for the browser
      */
-    public String getTitle();
+    String getTitle();
 
     /**
      * The implementing class must return the number of nodes it contains.
      *
      * @return the number of nodes
      */
-    public int getNumberOfNodes();
+    int getNumberOfNodes();
 
     /**
      * This method must return the SortableDefaultMutableTreeNode indicated by
@@ -47,26 +47,26 @@ public interface NodeNavigatorInterface {
      * @param componentNumber The number between 0 and #getNumberOfNodes()
      * @return the node for the index
      */
-    public SortableDefaultMutableTreeNode getNode( int componentNumber );
+    SortableDefaultMutableTreeNode getNode(int componentNumber);
 
     /**
      * Registers a NodeNavigatorListener
      *
      * @param nodeNavigatorListener a NodeNavigatorListener to notify
      */
-    public void addNodeNavigatorListener( NodeNavigatorListener nodeNavigatorListener );
+    void addNodeNavigatorListener(NodeNavigatorListener nodeNavigatorListener);
 
     /**
      * Removes a NodeNavigatorListener
      *
      * @param nodeNavigatorListener the listener to remove
      */
-    public void removeNodeNavigatorListener( NodeNavigatorListener nodeNavigatorListener );
+    void removeNodeNavigatorListener(NodeNavigatorListener nodeNavigatorListener);
 
     /**
      * Node Navigators must be able to send notifications to their listeners.
      */
-    public void notifyNodeNavigatorListeners();
+    void notifyNodeNavigatorListeners();
 
 
 }

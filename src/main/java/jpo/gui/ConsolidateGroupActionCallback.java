@@ -33,5 +33,5 @@ public interface ConsolidateGroupActionCallback {
      * @param rescurseSubgroups true if the sub-groups are to consolidated,
      * false if not
      */
-    public void consolidateGroupCallback(File highresDirectory, boolean rescurseSubgroups);
+    void consolidateGroupCallback(File highresDirectory, boolean rescurseSubgroups);
 }

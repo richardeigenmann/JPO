@@ -124,7 +124,7 @@ public class GroupInfoTest {
         StringWriter sw = new StringWriter();
         try (
                 //FileWriter sw = new FileWriter( "/tmp/output.xml" );
-                BufferedWriter bw = new BufferedWriter( sw ); ) {
+                BufferedWriter bw = new BufferedWriter( sw )) {
             gi.dumpToXml( bw, true, false );
             gi.endGroupXML (bw, true);
         } catch ( IOException ex ) {
@@ -151,7 +151,7 @@ public class GroupInfoTest {
         StringWriter sw = new StringWriter();
         try (
                 //FileWriter sw = new FileWriter( "/tmp/output.xml" );
-                BufferedWriter bw = new BufferedWriter( sw ); ) {
+                BufferedWriter bw = new BufferedWriter( sw )) {
             gi.dumpToXml( bw, true, true );
             gi.endGroupXML (bw, true);
         } catch ( IOException ex ) {
@@ -178,7 +178,7 @@ public class GroupInfoTest {
         StringWriter sw = new StringWriter();
         try (
                 //FileWriter sw = new FileWriter( "/tmp/output.xml" );
-                BufferedWriter bw = new BufferedWriter( sw ); ) {
+                BufferedWriter bw = new BufferedWriter( sw )) {
             gi.dumpToXml( bw, false, true );
             gi.endGroupXML (bw, false);
         } catch ( IOException ex ) {

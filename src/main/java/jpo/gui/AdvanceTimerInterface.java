@@ -32,7 +32,7 @@ public interface AdvanceTimerInterface {
 	/**
 	 *  This method is invoked on the target when a picture should be advanced.
 	 */
-	public void requestAdvance();
+	void requestAdvance();
 	
 	
 	/**
@@ -42,7 +42,7 @@ public interface AdvanceTimerInterface {
 	 *  
 	 *  @return   True if the next picture can be advanced, false if not.
 	 */
-	public boolean readyToAdvance();
+	boolean readyToAdvance();
 
 }
 

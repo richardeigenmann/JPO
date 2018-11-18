@@ -32,7 +32,7 @@ public interface SourcePictureListener {
      * @param statusMessage status message
      * @param sp source picture
      */
-    public void sourceStatusChange( SourcePictureStatus statusCode, String statusMessage, SourcePicture sp );
+    void sourceStatusChange(SourcePictureStatus statusCode, String statusMessage, SourcePicture sp);
 
     /**
      * inform the listener of progress on the loading of the image
@@ -40,6 +40,6 @@ public interface SourcePictureListener {
      * @param statusCode status code
      * @param percentage percentage
      */
-    public void sourceLoadProgressNotification( SourcePictureStatus statusCode, int percentage );
+    void sourceLoadProgressNotification(SourcePictureStatus statusCode, int percentage);
 
 }

@@ -96,7 +96,7 @@ public class ThumbnailDescriptionJPanel
     /**
      * choices for the Description size
      */
-    public static enum DescriptionSize {
+    public enum DescriptionSize {
 
         /**
          * Descriptions should be in a large font
@@ -106,7 +106,7 @@ public class ThumbnailDescriptionJPanel
          * Descriptions should be in a small font
          */
         MINI_INFO
-    };
+    }
 
     /**
      * This field controls how the description panel is shown. It can be set to

@@ -47,7 +47,7 @@ public class ResizableJFrame
     /**
      * Window size options
      */
-    public static enum WindowSize {
+    public enum WindowSize {
 
         /**
          * Switches the Window to fullscreen

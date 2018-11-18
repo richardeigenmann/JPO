@@ -28,6 +28,6 @@ public interface GroupInfoChangeListener {
      *
      * @param groupInfoChangeEvent The Change event
      */
-    public void groupInfoChangeEvent( GroupInfoChangeEvent groupInfoChangeEvent );
+    void groupInfoChangeEvent(GroupInfoChangeEvent groupInfoChangeEvent);
 }
 

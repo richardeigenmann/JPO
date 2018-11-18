@@ -18,7 +18,7 @@ import jpo.dataModel.Tools;
 /*
 CollectionJTree.java:  class that creates a JTree for the collection
 
-Copyright (C) 2002 - 2015  Richard Eigenmann, Zurich, Switzerland
+Copyright (C) 2002 - 2018  Richard Eigenmann, Zurich, Switzerland
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -56,8 +56,8 @@ public class CollectionJTree
 
             /**
              *  Overridden method that sets the icon in the JTree to either a
-             *  {@link #CLOSED_FOLDER_ICON} or a {@link #OPEN_FOLDER_ICON} or a
-             *  {@link #PICTURE_ICON} depending on what sort of userObject
+             *  {@link CollectionJTree#CLOSED_FOLDER_ICON} or a {@link CollectionJTree#OPEN_FOLDER_ICON} or a
+             *  {@link CollectionJTree#PICTURE_ICON} depending on what sort of userObject
              *  the SortableDefaultMutableTreeNode is carrying and the expansion state
              *  of the node.
              *  First we let the super implementation give us the component.

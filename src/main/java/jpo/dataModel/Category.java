@@ -61,10 +61,6 @@ public class Category implements Serializable {
      * Category#BOTH
      */
     private int status;  // default is 0
-    /**
-     * Defines a logger for this class
-     */
-    //private static final Logger LOGGER = Logger.getLogger( Category.class.getName() );
 
     /**
      * Constructs a new category for the key and value

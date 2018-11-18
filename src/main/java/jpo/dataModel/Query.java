@@ -28,7 +28,7 @@ public interface Query {
      *
      * @return the number of results
      */
-    public int getNumberOfResults();
+    int getNumberOfResults();
 
 
     /**
@@ -39,7 +39,7 @@ public interface Query {
      *  @param index   The component index that is to be returned 0 to {@link #getNumberOfResults}.
      *  @return the node for the index
      */
-    public SortableDefaultMutableTreeNode getIndex( int index );
+    SortableDefaultMutableTreeNode getIndex(int index);
 
 
     /**
@@ -47,7 +47,7 @@ public interface Query {
      *
      *  @return a string for the title
      */
-    public String getTitle();
+    String getTitle();
 
 
     /**
@@ -56,11 +56,11 @@ public interface Query {
      *  @return a title
      */
     @Override
-    public String toString();
+    String toString();
 
 
     /**
      *  Forces the results to be refreshed
      */
-    public void refresh();
+    void refresh();
 }

@@ -173,7 +173,7 @@ public class Tools {
     public static long copyPicture( URL sourceUrl, File targetFile ) {
         try (
                 InputStream in = sourceUrl.openStream();
-                OutputStream out = new FileOutputStream( targetFile ); ) {
+                OutputStream out = new FileOutputStream( targetFile )) {
 
             BufferedInputStream bin = new BufferedInputStream( in );
             BufferedOutputStream bout = new BufferedOutputStream( out );

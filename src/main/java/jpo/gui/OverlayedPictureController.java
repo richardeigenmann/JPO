@@ -79,7 +79,7 @@ public class OverlayedPictureController extends PictureController implements Sca
     /**
      * The type of overlay that should be shown
      */
-    public static enum InfoOverlay {
+    public enum InfoOverlay {
 
         /**
          * No overlay

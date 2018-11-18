@@ -5,7 +5,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.logging.Logger;
-import javax.swing.SwingWorker;
+import javax.swing.*;
+
 import jpo.dataModel.Settings;
 import org.apache.commons.lang3.StringUtils;
 
@@ -60,10 +61,10 @@ public class ClearThumbnailsJFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jTextArea1 = new javax.swing.JTextArea();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jScrollPane2 = new javax.swing.JScrollPane();
+        JTextArea jTextArea1 = new javax.swing.JTextArea();
+        JLabel jLabel1 = new javax.swing.JLabel();
+        JLabel jLabel2 = new javax.swing.JLabel();
+        JScrollPane jScrollPane2 = new javax.swing.JScrollPane();
         lowresUrls = new javax.swing.JTextArea();
         closeButton = new javax.swing.JButton();
         removeButton = new javax.swing.JButton();
@@ -172,10 +173,6 @@ public class ClearThumbnailsJFrame extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton closeButton;
     private javax.swing.JButton ignoreButton;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextArea lowresUrls;
     private javax.swing.JButton removeButton;
     private javax.swing.JButton stopButton;

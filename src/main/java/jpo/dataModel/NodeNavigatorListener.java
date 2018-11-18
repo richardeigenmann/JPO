@@ -28,6 +28,6 @@ public interface NodeNavigatorListener {
      *  Gets called when the node need to be laid out again because the
      *  layout changed.
      */
-    public void nodeLayoutChanged();
+    void nodeLayoutChanged();
 }
 

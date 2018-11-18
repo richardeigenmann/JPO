@@ -999,7 +999,7 @@ public class ApplicationEventHandler {
         int picsCopied = 0;
         PictureInfo pictureInfo;
         File sourceFile;
-        try ( ZipArchiveOutputStream zipArchiveOutputStream = new ZipArchiveOutputStream( tempfile ); ) {
+        try ( ZipArchiveOutputStream zipArchiveOutputStream = new ZipArchiveOutputStream( tempfile )) {
             zipArchiveOutputStream.setLevel( 9 );
             for ( SortableDefaultMutableTreeNode node : request.getNodes() ) {
                 if ( node.getUserObject() instanceof PictureInfo ) {
@@ -1025,7 +1025,7 @@ public class ApplicationEventHandler {
             if ( request.getTargetZipfile().exists() ) {
                 // copy the old entries over
                 try (
-                        ZipFile oldzip = new ZipFile( request.getTargetZipfile() ); ) {
+                        ZipFile oldzip = new ZipFile( request.getTargetZipfile() )) {
                     Enumeration entries = oldzip.getEntries();
                     while ( entries.hasMoreElements() ) {
                         ZipArchiveEntry e = (ZipArchiveEntry) entries.nextElement();

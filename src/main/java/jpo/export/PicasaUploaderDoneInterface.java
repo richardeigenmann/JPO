@@ -9,5 +9,5 @@ public interface PicasaUploaderDoneInterface {
     /**
      * indicates that the upload is complete
      */
-    public void uploadDone();
+    void uploadDone();
 }

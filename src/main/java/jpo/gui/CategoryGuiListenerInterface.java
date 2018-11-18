@@ -35,6 +35,6 @@ public interface CategoryGuiListenerInterface {
          *
          * @param selectedCategories  The selected Categories
          */
-	public void categoriesChosen( HashSet<Object> selectedCategories );
+	void categoriesChosen(HashSet<Object> selectedCategories);
 
 }

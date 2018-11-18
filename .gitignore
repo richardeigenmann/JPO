@@ -14,3 +14,7 @@ nbproject
 .nb-gradle/
 gradlew
 gradlew.bat
+.idea
+out
+Jpo.iml
+

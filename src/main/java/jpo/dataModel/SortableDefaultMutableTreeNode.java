@@ -1199,7 +1199,7 @@ public class SortableDefaultMutableTreeNode
         LOGGER.fine( String.format( "Copying file %s to file %s", sourceFile.toString(), targetFile.toString() ) );
         try (
                 InputStream in = new FileInputStream( sourceFile );
-                OutputStream out = new FileOutputStream( targetFile ); ) {
+                OutputStream out = new FileOutputStream( targetFile )) {
 
             BufferedInputStream bin = new BufferedInputStream( in );
             BufferedOutputStream bout = new BufferedOutputStream( out );

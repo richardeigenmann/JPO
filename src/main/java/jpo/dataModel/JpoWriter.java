@@ -8,6 +8,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.logging.Level;
@@ -69,7 +70,7 @@ public class JpoWriter {
                 }
             }
 
-            try ( BufferedWriter bufferedWriter = new BufferedWriter( new OutputStreamWriter( new FileOutputStream( xmlOutputFile ), "UTF-8" ) ); ) {
+            try (BufferedWriter bufferedWriter = new BufferedWriter( new OutputStreamWriter( new FileOutputStream( xmlOutputFile ), StandardCharsets.UTF_8) )) {
 
                 // header
                 bufferedWriter.write( "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" );
@@ -188,7 +189,7 @@ public class JpoWriter {
                 InputStream in = cl.getResource( "collection.dtd" ).openStream();
                 FileOutputStream outStream = new FileOutputStream( new File( directory, "collection.dtd" ) );
                 BufferedInputStream bin = new BufferedInputStream( in );
-                BufferedOutputStream bout = new BufferedOutputStream( outStream ); ) {
+                BufferedOutputStream bout = new BufferedOutputStream( outStream )) {
             int c;
 
             while ( ( c = bin.read() ) != -1 ) {

@@ -154,7 +154,7 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
         if ( options.isGenerateZipfile() ) {
             try (
                     FileOutputStream dest = new FileOutputStream( new File( options.getTargetDirectory(), options.getDownloadZipFileName() ) );
-                    BufferedOutputStream buf = new BufferedOutputStream( dest ); ) {
+                    BufferedOutputStream buf = new BufferedOutputStream( dest )) {
                 zipFile = new ZipOutputStream( buf );
             } catch ( FileNotFoundException x ) {
                 LOGGER.log( Level.SEVERE, "Error creating Zipfile. Coninuing without Zip\n{0}", x.toString() );
@@ -187,7 +187,7 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
                     InputStream inStream = HtmlDistiller.class.getClassLoader().getResource( "jpo/images/icon_folder.gif" ).openStream();
                     FileOutputStream outStream = new FileOutputStream( folderIconFile );
                     BufferedInputStream bin = new BufferedInputStream( inStream );
-                    BufferedOutputStream bout = new BufferedOutputStream( outStream ); ) {
+                    BufferedOutputStream bout = new BufferedOutputStream( outStream )) {
                 files.add( folderIconFile );
 
                 int count;
@@ -512,7 +512,7 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
             File midresHtmlFile = new File( options.getTargetDirectory(), midresHtmlFileName );
             files.add( midresHtmlFile );
             try (
-                    BufferedWriter midresHtmlWriter = new BufferedWriter( new FileWriter( midresHtmlFile ) ); ) {
+                    BufferedWriter midresHtmlWriter = new BufferedWriter( new FileWriter( midresHtmlFile ) )) {
                 String groupDescriptionHtml
                         = StringEscapeUtils.escapeHtml4( ( (DefaultMutableTreeNode) pictureNode.getParent() ).getUserObject().toString() );
 
@@ -1053,7 +1053,7 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
         try (
                 // get I/O streams for remote scp
                 OutputStream out = channel.getOutputStream();
-                InputStream in = channel.getInputStream(); ) {
+                InputStream in = channel.getInputStream()) {
             LOGGER.info( "Connecting Channel..." );
             channel.connect();
 
@@ -1088,7 +1088,7 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
 
             // send a content of lfile
             try (
-                    FileInputStream fis = new FileInputStream( file ); ) {
+                    FileInputStream fis = new FileInputStream( file )) {
                 byte[] buf = new byte[1024];
                 while ( true ) {
                     LOGGER.log( Level.INFO, "Sending bytes: {0}", buf.length );
@@ -1199,7 +1199,7 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
         LOGGER.fine( String.format( "Adding to zipfile: %s", highresFile.toString() ) );
         try (
                 InputStream in = pictureInfo.getImageURL().openStream();
-                BufferedInputStream bin = new BufferedInputStream( in ); ) {
+                BufferedInputStream bin = new BufferedInputStream( in )) {
 
             ZipEntry entry = new ZipEntry( highresFile.getName() );
             zipFile.putNextEntry( entry );
@@ -1226,7 +1226,7 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
                 InputStream in = cl.getResource( "jpo.css" ).openStream();
                 FileOutputStream outStream = new FileOutputStream( new File( directory, "jpo.css" ) );
                 BufferedInputStream bin = new BufferedInputStream( in );
-                BufferedOutputStream bout = new BufferedOutputStream( outStream ); ) {
+                BufferedOutputStream bout = new BufferedOutputStream( outStream )) {
             int c;
 
             while ( ( c = bin.read() ) != -1 ) {
@@ -1256,7 +1256,7 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
                 InputStream in = cl.getResource( "robots.txt" ).openStream();
                 FileOutputStream outStream = new FileOutputStream( new File( directory, "robots.txt" ) );
                 BufferedInputStream bin = new BufferedInputStream( in );
-                BufferedOutputStream bout = new BufferedOutputStream( outStream ); ) {
+                BufferedOutputStream bout = new BufferedOutputStream( outStream )) {
             int c;
 
             while ( ( c = bin.read() ) != -1 ) {
@@ -1286,7 +1286,7 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
                 InputStream in = cl.getResource( "jpo.js" ).openStream();
                 FileOutputStream outStream = new FileOutputStream( new File( directory, "jpo.js" ) );
                 BufferedInputStream bin = new BufferedInputStream( in );
-                BufferedOutputStream bout = new BufferedOutputStream( outStream ); ) {
+                BufferedOutputStream bout = new BufferedOutputStream( outStream )) {
             int c;
 
             while ( ( c = bin.read() ) != -1 ) {

@@ -503,7 +503,7 @@ public class Settings {
     /**
      * Codes to indicate the field
      */
-    public static enum FieldCodes {
+    public enum FieldCodes {
 
         NO_SORTING,
         DESCRIPTION,

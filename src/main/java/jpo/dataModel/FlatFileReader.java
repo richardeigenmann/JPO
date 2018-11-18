@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -53,7 +54,7 @@ public class FlatFileReader {
         SortableDefaultMutableTreeNode newNode = new SortableDefaultMutableTreeNode(
                 new GroupInfo( request.getFile().getName() ) );
 
-        try ( BufferedReader in = new BufferedReader( new InputStreamReader(new FileInputStream(request.getFile()), "UTF-8")  ) ) {
+        try ( BufferedReader in = new BufferedReader( new InputStreamReader(new FileInputStream(request.getFile()), StandardCharsets.UTF_8)  ) ) {
             while ( in.ready() ) {
                 String line = in.readLine();
                 File testFile;
@@ -72,7 +73,7 @@ public class FlatFileReader {
                 }
 
                 try ( FileInputStream fis = new FileInputStream( testFile );
-                        ImageInputStream iis = ImageIO.createImageInputStream( fis ); ) {
+                        ImageInputStream iis = ImageIO.createImageInputStream( fis )) {
                     Iterator i = ImageIO.getImageReaders( iis );
                     if ( !i.hasNext() ) {
                         LOGGER.log( Level.INFO, "No reader for file: {0}", line);

@@ -288,7 +288,7 @@ public class PictureInfoTest {
         StringWriter sw = new StringWriter();
         try (
                 //FileWriter sw = new FileWriter( "/tmp/output.xml" );
-                BufferedWriter bw = new BufferedWriter( sw ); ) {
+                BufferedWriter bw = new BufferedWriter( sw )) {
             pi.dumpToXml( bw );
         } catch ( IOException ex ) {
             Logger.getLogger( PictureInfoTest.class.getName() ).log( Level.SEVERE, "The dumpToXml should really not throw an IOException", ex );

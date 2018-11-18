@@ -58,7 +58,7 @@ public class LicenseWindow {
         String textLine;
         try (
                 InputStream in = LicenseWindow.class.getClassLoader().getResourceAsStream( "gpl.txt" );
-                BufferedReader bin = new BufferedReader( new InputStreamReader( in ) ); ) {
+                BufferedReader bin = new BufferedReader( new InputStreamReader( in ) )) {
             while ( ( textLine = bin.readLine() ) != null ) {
                 sb.append( textLine ).append( "\n" );
             }

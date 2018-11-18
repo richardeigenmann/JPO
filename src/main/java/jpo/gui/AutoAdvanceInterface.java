@@ -13,7 +13,7 @@ public interface AutoAdvanceInterface {
      *
      * @param seconds Seconds
      */
-    public void startAdvanceTimer( int seconds );
+    void startAdvanceTimer(int seconds);
 
     /**
      * Puts the picture of the indicated node onto the viewer panel
@@ -22,5 +22,5 @@ public interface AutoAdvanceInterface {
      * shown
      * @param myIndex The index of the set of nodes to be shown.
      */
-    public void showNode( NodeNavigatorInterface mySetOfNodes, int myIndex );
+    void showNode(NodeNavigatorInterface mySetOfNodes, int myIndex);
 }

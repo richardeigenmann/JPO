@@ -33,11 +33,11 @@ public interface ChangeWindowInterface {
      *  window position indicated by the parameter.
      *  @param newMode The new window mode
      */
-    public void switchWindowMode( WindowSize newMode );
+    void switchWindowMode(WindowSize newMode);
 
     /**
      * Instruct the caller to show or suppress the window decorations.
      * @param newDecoration Send true if decorations should be shown, false if they should not be shown
      */
-    public void showWindowDecorations( boolean newDecoration );
+    void showWindowDecorations(boolean newDecoration);
 }

@@ -29,11 +29,6 @@ public class CameraDownloadWizardStep7
         extends AbstractStep {
 
     /**
-     * Defines a LOGGER for this class
-     */
-    //private static final Logger LOGGER = Logger.getLogger( CameraDownloadWizardStep7.class.getName() );
-
-    /**
      *
      * @param dataModel Data Model
      */

@@ -28,6 +28,6 @@ public interface ProgressListener {
     /**
      *  this method to be called when a progress increment has taken place
      */
-    public void progressIncrement();
+    void progressIncrement();
 
 }

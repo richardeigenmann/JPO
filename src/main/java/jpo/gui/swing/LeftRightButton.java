@@ -52,7 +52,7 @@ public class LeftRightButton extends NavBarButton {
          * Indicates that we are at the end of set
          */
         END
-    };
+    }
 
     private static final ClassLoader CLASS_LOADER = LeftRightButton.class.getClassLoader();
 

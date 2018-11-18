@@ -33,21 +33,21 @@ public interface PictureControllerImage {
      *
      * @return the scale factor
      */
-    public double getScaleFactor();
+    double getScaleFactor();
 
     /**
      * return the width of the original image or Zero if there is none
      *
      * @return the original width of the image
      */
-    public int getOriginalWidth();
+    int getOriginalWidth();
 
     /**
      * return the height of the original image or Zero if there is none
      *
      * @return the original height of the image
      */
-    public int getOriginalHeight();
+    int getOriginalHeight();
 
     /**
      * Set the scale factor to the new desired value. The scale factor is a
@@ -62,7 +62,7 @@ public interface PictureControllerImage {
      *
      * @param newFactor new facture
      */
-    public void setScaleFactor( double newFactor );
+    void setScaleFactor(double newFactor);
 
     /**
      * The expectation is that when this method is called on the implementing class that
@@ -71,7 +71,7 @@ public interface PictureControllerImage {
      *
      * @param priority The Thread priority
      */
-    public void createScaledPictureInThread( int priority );
+    void createScaledPictureInThread(int priority);
 
     /**
      * invoke this method to tell the scale process to figure out the scale
@@ -80,13 +80,13 @@ public interface PictureControllerImage {
      *
      * @param newSize new size
      */
-    public void setScaleSize( Dimension newSize );
+    void setScaleSize(Dimension newSize);
 
     /**
      * Must return the scaled image for drawing.
      *
      * @return the scaled image
      */
-    public BufferedImage getScaledPicture();
+    BufferedImage getScaledPicture();
 
 }

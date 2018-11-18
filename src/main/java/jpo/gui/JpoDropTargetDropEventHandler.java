@@ -13,6 +13,6 @@ public interface JpoDropTargetDropEventHandler {
      * The implementing class must handle the drop event if one occurs.
      * @param event The drop event
      */
-    public void handleJpoDropTargetDropEvent ( DropTargetDropEvent event );
+    void handleJpoDropTargetDropEvent(DropTargetDropEvent event);
     
 }
