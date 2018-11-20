@@ -117,19 +117,11 @@ public class DirectoryChooser
      * Add listeners to the GUI components
      */
     private void addBehaviour() {
-        directoryJComboBox.addActionListener(( ActionEvent e ) -> {
-            sendChangeNotification();
-        });
+        directoryJComboBox.addActionListener(( ActionEvent e ) -> sendChangeNotification());
 
         directoryJTextField.setInputVerifier( new InputVerifier() {
 
             @Override
-            /**
-             * Verifies if the field points to a valid directory
-             *
-             * @param input the input field
-             * @return true if so, false if not.
-             */
             public boolean verify( JComponent input ) {
                 sendChangeNotification();
                 return true;
@@ -186,7 +178,7 @@ public class DirectoryChooser
      * @return returns true if the directory passes the validation, false if it
      * doesn't
      */
-    public boolean setColor() {
+    private boolean setColor() {
         if ( checkDirectory( getDirectory(), validationType ) ) {
             directoryJTextField.setForeground( COLOR_GOOD );
             return true;
@@ -196,10 +188,10 @@ public class DirectoryChooser
         }
     }
     
-        /**
+    /**
      * Constant that indicates that the directory must exist
      */
-    public static final int DIR_MUST_EXIST = 1;
+    static final int DIR_MUST_EXIST = 1;
     /**
      * Constant that indicates that the directory must exist and be writable;
      */
@@ -213,7 +205,7 @@ public class DirectoryChooser
      * @param validationType the flag for which test is to be performed
      * @return true if good, false if bad
      */
-    public static boolean checkDirectory( File testDir, int validationType ) {
+    private static boolean checkDirectory(File testDir, int validationType) {
         switch ( validationType ) {
             case DIR_MUST_EXIST:
                 return testDir.exists() && testDir.isDirectory();
@@ -250,9 +242,9 @@ public class DirectoryChooser
             setColor();
             oldFieldContents = newFieldContents;
             synchronized ( changeListeners ) {
-                changeListeners.stream().forEach( ( changeListener ) -> {
-                    changeListener.stateChanged( new ChangeEvent( this ) );
-                } );
+                for (ChangeListener changeListener : changeListeners) {
+                    changeListener.stateChanged(new ChangeEvent(this));
+                }
             }
         }
     }
@@ -328,7 +320,7 @@ public class DirectoryChooser
      * @param directory The directory to be added to the dropdown list
      * @return true if the directory was added, false if not.
      */
-    public boolean addDirToDropdown( String directory ) {
+    private boolean addDirToDropdown(String directory) {
         if ( directory == null ) {
             return false;
         }

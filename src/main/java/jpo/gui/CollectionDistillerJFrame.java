@@ -25,7 +25,7 @@ import jpo.dataModel.SortableDefaultMutableTreeNode;
 import net.miginfocom.swing.MigLayout;
 
 /*
- Copyright (C) 2002 - 2017  Richard Eigenmann.
+ Copyright (C) 2002 - 2018  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -43,11 +43,6 @@ import net.miginfocom.swing.MigLayout;
  * Frame to capture the details of the collection export
  */
 public class CollectionDistillerJFrame extends JFrame {
-
-    /**
-     * Defines a logger for this class
-     */
-    //private static final Logger LOGGER = Logger.getLogger( CollectionDistillerJFrame.class.getName() );
 
     /**
      * Size for this frame
@@ -86,7 +81,7 @@ public class CollectionDistillerJFrame extends JFrame {
      * @param startNode The group node that the user wants the export to be done
      * on.
      */
-    public CollectionDistillerJFrame( SortableDefaultMutableTreeNode startNode ) {
+    CollectionDistillerJFrame(SortableDefaultMutableTreeNode startNode) {
         super( Settings.jpoResources.getString( "CollectionDistillerJFrameFrameHeading" ) );
         this.startNode = startNode;
         initComponents();
@@ -155,9 +150,7 @@ public class CollectionDistillerJFrame extends JFrame {
         cancelJButton.setPreferredSize( Settings.defaultButtonDimension );
         cancelJButton.setMinimumSize( Settings.defaultButtonDimension );
         cancelJButton.setMaximumSize( Settings.defaultButtonDimension );
-        cancelJButton.addActionListener( ( ActionEvent e ) -> {
-            getRid();
-        } );
+        cancelJButton.addActionListener( ( ActionEvent e ) -> getRid());
         buttonJPanel.add( cancelJButton );
 
         contentJPanel.add( buttonJPanel, "spanx 2, wrap" );

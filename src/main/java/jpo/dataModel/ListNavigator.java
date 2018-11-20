@@ -34,8 +34,8 @@ public class ListNavigator
      * @param title Title
      * @param nodes Nodes
      */
-    public ListNavigator( String title,
-            List<SortableDefaultMutableTreeNode> nodes ) {
+    private ListNavigator(String title,
+                          List<SortableDefaultMutableTreeNode> nodes) {
         this.title = title;
         //setTitle( title );
         allPictures = nodes;
@@ -60,15 +60,6 @@ public class ListNavigator
      */
     private String title;
 
-    /**
-     * Sets the title to be returned if any component tried to display the title
-     * of the list
-     *
-     * @param newTitle The title of the list
-     */
-    //public void setTitle( String newTitle ) {
-    //    title = newTitle;
-    //}
 
     /**
      * Returns the title of the node set
@@ -118,17 +109,8 @@ public class ListNavigator
     /**
      * This List holds a reference to the nodes that make up the navigator
      */
-    protected List<SortableDefaultMutableTreeNode> allPictures;
+    List<SortableDefaultMutableTreeNode> allPictures;
 
-    /**
-     * Sets the List of nodes for this navigator
-     *
-     * @param newList the new List with the nodes to display.
-     */
-    //public void setList(
-    //        List<SortableDefaultMutableTreeNode> newList ) {
-    //    allPictures = newList;
-    //}
 
     /**
      * adds a node to the List

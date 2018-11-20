@@ -10,7 +10,7 @@ import net.javaprog.ui.wizard.AbstractStep;
 import net.miginfocom.swing.MigLayout;
 
 /*
- * Copyright (C) 2012-2017 Richard Eigenmann. Zürich
+ * Copyright (C) 2012-2018 Richard Eigenmann. Zürich
  *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -31,10 +31,6 @@ import net.miginfocom.swing.MigLayout;
 public class PicasaUploaderWizard2Confirm extends AbstractStep {
 
     /**
-     * Defines a logger for this class
-     */
-    //private static final Logger LOGGER = Logger.getLogger( PicasaUploaderWizard2Confirm.class.getName() );
-    /**
      * The link to the values that this panel should change
      */
     private final PicasaUploadRequest myRequest;
@@ -43,7 +39,7 @@ public class PicasaUploaderWizard2Confirm extends AbstractStep {
      * Upload the album
      * @param myRequest My request
      */
-    public PicasaUploaderWizard2Confirm( PicasaUploadRequest myRequest ) {
+    PicasaUploaderWizard2Confirm(PicasaUploadRequest myRequest) {
         super( "Confirm upload", "Confirm upload" );
         this.myRequest = myRequest;
     }

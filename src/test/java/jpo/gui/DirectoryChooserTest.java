@@ -14,7 +14,7 @@ import org.junit.Test;
  *
  * @author Richard Eigenmann
  */
-public class DirectoryChooserTest {
+class DirectoryChooserTest {
 
     private int changesReceived;
     private File result;
@@ -23,13 +23,11 @@ public class DirectoryChooserTest {
      * Test the listener
      */
     @Test
-    public void testListener() {
+    void testListener() {
         try {
             SwingUtilities.invokeAndWait( () -> {
                 final DirectoryChooser dc = new DirectoryChooser( "Title", DirectoryChooser.DIR_MUST_EXIST );
-                dc.addChangeListener( ( ChangeEvent e ) -> {
-                    changesReceived++;
-                } );
+                dc.addChangeListener( ( ChangeEvent e ) -> changesReceived++);
                 dc.setText( "/" );
                 result = dc.getDirectory();
                 assertEquals( "Checking that what went in is what comes out", new File( "/" ), result );

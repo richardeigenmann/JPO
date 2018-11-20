@@ -25,7 +25,7 @@ import net.miginfocom.swing.MigLayout;
 /*
  IntegrityCheckerJFrame.java:  creates a frame and checks the integrity of the collection
 
- Copyright (C) 2002-2014  Richard Eigenmann, Zurich, Switzerland
+ Copyright (C) 2002-2018  Richard Eigenmann, Zurich, Switzerland
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -67,7 +67,7 @@ public class IntegrityCheckerJFrame
      *
      * @param startNode The node from which to start
      */
-    public IntegrityCheckerJFrame( SortableDefaultMutableTreeNode startNode ) {
+    IntegrityCheckerJFrame(SortableDefaultMutableTreeNode startNode) {
         this.startNode = startNode;
 
         // set up widgets
@@ -93,15 +93,9 @@ public class IntegrityCheckerJFrame
                 getRid();
             }
         } );
-        okJButton.addActionListener(( ActionEvent e ) -> {
-            getRid();
-        });
-        correctChecksumsJButton.addActionListener(( ActionEvent e ) -> {
-            correctChecksums();
-        });
-        interruptJButton.addActionListener(( ActionEvent e ) -> {
-            interruptWorkers();
-        });
+        okJButton.addActionListener(( ActionEvent e ) -> getRid());
+        correctChecksumsJButton.addActionListener(( ActionEvent e ) -> correctChecksums());
+        interruptJButton.addActionListener(( ActionEvent e ) -> interruptWorkers());
 
 
         pack();
@@ -176,59 +170,8 @@ public class IntegrityCheckerJFrame
 
         @Override
         protected void process( List<String> chunks ) {
-            chunks.stream().forEach(resultJTextArea::append);
+            chunks.forEach(resultJTextArea::append);
         }
     }
 
-    /**
-     * This method iterates through all the nodes in the collection and fixes
-     * issues where the same thumbnail is being referred to by different nodes
-     *
-    private void fixThumbnailReferences() {
-        thumbnailWorker = new FixThumbnailReferencesSwingWorker();
-        thumbnailWorker.execute();
-    }
-    private FixThumbnailReferencesSwingWorker thumbnailWorker;
-
-    private class FixThumbnailReferencesSwingWorker extends SwingWorker<Integer, String> {
-
-        @Override
-        protected Integer doInBackground() {
-            HashMap<String, SortableDefaultMutableTreeNode> thumbnailNodeMap = new HashMap<String, SortableDefaultMutableTreeNode>();
-
-            SortableDefaultMutableTreeNode testNode;
-            String thumbnailLocation;
-            int conflicts = 0;
-            for ( Enumeration e = startNode.breadthFirstEnumeration(); e.hasMoreElements() && ( !isCancelled() ); ) {
-                testNode = (SortableDefaultMutableTreeNode) e.nextElement();
-                thumbnailLocation = testNode.getThumbnailLocation();
-                if ( !thumbnailNodeMap.containsKey( thumbnailLocation ) ) {
-                    thumbnailNodeMap.put( thumbnailLocation, testNode );
-                } else {
-                    conflicts++;
-                    String newThumbnailFilename = testNode.assignNewThumbnailLocation();
-                    SortableDefaultMutableTreeNode conflictNode = thumbnailNodeMap.get( thumbnailLocation );
-                    JpoEventBus.getInstance().post( new RefreshThumbnailRequest(conflictNode, ThumbnailQueueRequest.LOWEST_PRIORITY));
-
-                    String logMessage = String.format(
-                            "Conflict on the following two nodes:\n%s\n%s\nboth refer to the same thumbnail: %s\nNew thumbnail assigned to second node:%s\n",
-                            conflictNode.toString(),
-                            testNode.toString(),
-                            thumbnailLocation,
-                            newThumbnailFilename );
-                    publish( logMessage );
-                    LOGGER.severe( logMessage );
-                }
-            }
-            publish( String.format( "Number of conflicts: %d\n", conflicts ) );
-            return conflicts;
-        }
-
-        @Override
-        protected void process( List<String> chunks ) {
-            for ( String s : chunks ) {
-                resultJTextArea.append( s );
-            }
-        }
-    }*/
 }

@@ -90,7 +90,7 @@ public class ExifInfo {
     /**
      * The parsed GPS coordinates
      */
-    public Point2D.Double latLng = new Point2D.Double( 0, 0 );
+    Point2D.Double latLng = new Point2D.Double( 0, 0 );
     /**
      * The parsed width
      */
@@ -109,7 +109,7 @@ public class ExifInfo {
     /**
      * A full dump of the Exif information
      */
-    private final StringBuffer exifDump = new StringBuffer( "" );
+    private final StringBuffer exifDump = new StringBuffer();
 
     /**
      * Constructor to create the object. Call
@@ -201,7 +201,7 @@ public class ExifInfo {
             }
 
             for ( Directory directory : metadata.getDirectories() ) {
-                directory.getTags().stream().forEach( tag
+                directory.getTags().forEach(tag
                         -> exifDump.append( tag.getTagTypeHex() ).append( " - " ).append( tag.getTagName() ).append( ":\t" ).append( tag.getDirectoryName() ).append( ":\t" ).append( tag.getDescription() ).append( "\n" )
                 );
             }
@@ -256,13 +256,7 @@ public class ExifInfo {
      * @return Returns a comprehensive summary of the photographic settings
      */
     public String getComprehensivePhotographicSummary() {
-        /**
-         * The Longitude
-         */
         String longitude = "";
-        /**
-         * Whether it's W or E
-         */
         String longitudeRef = "";
         return Settings.jpoResources.getString( "ExifInfoCamera" ) + "\t" + camera + "\n"
                 + Settings.jpoResources.getString( "ExifInfoLens" ) + "\t" + lens + "\n"
@@ -300,7 +294,7 @@ public class ExifInfo {
      * @param s String to rtrim
      * @return the rtrimmed string
      */
-    public static String rtrim( String s ) {
+    private static String rtrim(String s) {
         int i = s.length() - 1;
         while ( i >= 0 && Character.isWhitespace( s.charAt( i ) ) ) {
             i--;

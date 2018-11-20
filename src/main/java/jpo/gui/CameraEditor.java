@@ -27,7 +27,7 @@ public class CameraEditor
     /**
      * Constructor for the editor gui
      */
-    public CameraEditor() {
+    CameraEditor() {
         setLayout( new MigLayout( "nogrid" ) );
         JLabel cameraNameJLabel = new JLabel( Settings.jpoResources.getString( "cameraNameJLabel" ) );
         add( cameraNameJLabel, "wrap" );
@@ -62,17 +62,12 @@ public class CameraEditor
         });
         add( zeroJButton, "wrap unrel" );
 
-        /**
-         * Button to save the camera information
-         */
         JButton saveJButton = new JButton("Save");
         saveJButton.setPreferredSize( Settings.defaultButtonDimension );
         saveJButton.setMinimumSize( Settings.defaultButtonDimension );
         saveJButton.setMaximumSize( Settings.defaultButtonDimension );
         saveJButton.setBorder( BorderFactory.createRaisedBevelBorder() );
-        saveJButton.addActionListener((ActionEvent e ) -> {
-            saveCamera();
-        });
+        saveJButton.addActionListener((ActionEvent e ) -> saveCamera());
         add(saveJButton, "align right" );
     }
 
@@ -135,7 +130,7 @@ public class CameraEditor
     /**
      * save the currently edited camera details into the set of cameras
      */
-    public void saveCamera() {
+    void saveCamera() {
         if ( getCamera() != null ) {
             getCamera().setDescription( cameraNameJTextField.getText() );
             getCamera().setCameraMountPoint( cameraDirJTextField.getDirectory().toString() );
@@ -150,7 +145,7 @@ public class CameraEditor
     /**
      * Updates the memorised pictures label
      */
-    public void updateMemorisedPicturesJLabel() {
+    private void updateMemorisedPicturesJLabel() {
         memorisedPicturesJLabel.setText( getCamera().getOldIndexCountAsString() );
     }
 
@@ -227,12 +222,10 @@ public class CameraEditor
     /**
      * Notifies the listeners
      */
-    public void notifyActionListeners() {
+    private void notifyActionListeners() {
         ActionEvent event = new ActionEvent( this, 0, "save" );
         synchronized ( listeners ) {
-            listeners.stream().forEach( ( actionListener ) -> {
-                actionListener.actionPerformed( event );
-            } );
+            listeners.forEach( (actionListener) -> actionListener.actionPerformed( event ));
         }
     }
 }
