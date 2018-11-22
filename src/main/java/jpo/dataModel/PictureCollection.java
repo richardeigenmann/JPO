@@ -51,7 +51,7 @@ public class PictureCollection {
      * Constructs a new PictureCollection object with a root object
      */
     public PictureCollection() {
-        setRootNode( new SortableDefaultMutableTreeNode( new Object() ) );
+        setRootNode( new SortableDefaultMutableTreeNode() );
         treeModel = new DefaultTreeModel( getRootNode() );
         categories = new HashMap<>();
         mailSelection = new ArrayList<>();
@@ -910,7 +910,7 @@ public class PictureCollection {
                 }
             }
         }
-        return parentGroups.toArray( new SortableDefaultMutableTreeNode[parentGroups.size()] );
+        return parentGroups.toArray(new SortableDefaultMutableTreeNode[0]);
     }
     /**
      * A reference to the selected nodes.
@@ -984,7 +984,7 @@ public class PictureCollection {
      * @return an array of the selected nodes
      */
     public SortableDefaultMutableTreeNode[] getSelectedNodes() {
-        return selection.toArray( new SortableDefaultMutableTreeNode[selection.size()] );
+        return selection.toArray(new SortableDefaultMutableTreeNode[0]);
     }
 
     /**

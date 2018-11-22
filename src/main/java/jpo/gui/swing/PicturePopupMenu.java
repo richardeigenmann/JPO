@@ -382,7 +382,7 @@ public class PicturePopupMenu extends JPopupMenu {
             final int dropnode = i;
             recentDropNodeJMenuItems[i] = new JMenuItem();
             recentDropNodeJMenuItems[i].addActionListener(( ActionEvent event ) -> {
-                SortableDefaultMutableTreeNode targetNode = Settings.recentDropNodes[dropnode];
+                SortableDefaultMutableTreeNode targetNode = Settings.recentDropNodes.toArray(new SortableDefaultMutableTreeNode[0])[dropnode];
                 List<SortableDefaultMutableTreeNode> movingNodes = new ArrayList<>();
                 if ( ( Settings.getPictureCollection().countSelectedNodes() > 0 ) && ( Settings.getPictureCollection().isSelected( popupNode ) ) ) {
                     movingNodes.addAll( Settings.getPictureCollection().getSelectedNodesAsList() );
@@ -392,7 +392,7 @@ public class PicturePopupMenu extends JPopupMenu {
                 }
                 JpoEventBus.getInstance().post( new MoveNodeToNodeRequest( movingNodes, targetNode ) );
                 
-                Settings.memorizeGroupOfDropLocation( Settings.recentDropNodes[dropnode] );
+                Settings.memorizeGroupOfDropLocation( Settings.recentDropNodes.toArray(new SortableDefaultMutableTreeNode[0])[dropnode] );
                 JpoEventBus.getInstance().post( new RecentDropNodesChangedEvent() );
             } /**
              * Moves the selected nodes to the picked destination. If no
@@ -725,10 +725,11 @@ public class PicturePopupMenu extends JPopupMenu {
      */
     private void labelRecentDropNodes() {
         boolean dropNodesVisible = false;
+        SortableDefaultMutableTreeNode nodes[] = Settings.recentDropNodes.toArray(new SortableDefaultMutableTreeNode[0]);
         for ( int i = 0; i < Settings.MAX_DROPNODES; i++ ) {
-            if ( Settings.recentDropNodes[i] != null ) {
+            if ( i<nodes.length && nodes[i] != null ) {
                 recentDropNodeJMenuItems[i].setText(
-                        Settings.jpoResources.getString( "recentDropNodePrefix" ) + Settings.recentDropNodes[i].toString() );
+                        Settings.jpoResources.getString( "recentDropNodePrefix" ) + nodes[i].toString() );
                 recentDropNodeJMenuItems[i].setVisible( true );
                 dropNodesVisible = true;
             } else {

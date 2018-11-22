@@ -5,20 +5,15 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.logging.Logger;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileSystemView;
+
+import com.google.common.collect.EvictingQueue;
 import jpo.export.HtmlDistillerOptions;
 import jpo.gui.swing.MainWindow;
 
@@ -35,14 +30,13 @@ import jpo.gui.swing.MainWindow;
  * - Suite 330, Boston, MA 02111-1307, USA. The license is in gpl.txt. See
  * http://www.gnu.org/copyleft/gpl.html for the details.
  */
+
 /**
  * This class defines all the settings for the JPO application. In order for it
  * to be valid for all objects it's components are all static as is the Settings
  * object itself when created.<p>
- *
+ * <p>
  * The SettingsDialog is the editor for these settings.
- *
- *
  */
 public class Settings {
 
@@ -50,12 +44,11 @@ public class Settings {
     /**
      * Defines a logger for this class
      */
-    private static final Logger LOGGER = Logger.getLogger( Settings.class.getName() );
+    private static final Logger LOGGER = Logger.getLogger(Settings.class.getName());
 
     /**
      * A static reference to the Collection being displayed. In future perhaps
      * we will allow multiple collections to be loaded.
-     *
      */
     private static PictureCollection pictureCollection = new PictureCollection();
 
@@ -69,7 +62,7 @@ public class Settings {
     /**
      * @param pictureCollection the pictureCollection to set
      */
-    public static void setPictureCollection( PictureCollection pictureCollection ) {
+    public static void setPictureCollection(PictureCollection pictureCollection) {
         Settings.pictureCollection = pictureCollection;
     }
 
@@ -98,7 +91,7 @@ public class Settings {
      * A set of window sizes that the user can choose his preferred size from.
      * The first option will be to maximise the window
      */
-    public static final Dimension[] windowSizes = { new Dimension( 0, 0 ), new Dimension( 1050, 760 ), new Dimension( 1250, 900 ), new Dimension( 1450, 1190 ), new Dimension( 2150, 1300 ) };
+    public static final Dimension[] windowSizes = {new Dimension(0, 0), new Dimension(1050, 760), new Dimension(1250, 900), new Dimension(1450, 1190), new Dimension(2150, 1300)};
 
     /**
      * Flag to indicate whether the JPO window should be maximised on startup or
@@ -119,32 +112,27 @@ public class Settings {
 
     /**
      * the default place for the divider.
-     *
      */
     public static int preferredMasterDividerSpot = 350;
 
     /**
      * the default place for the left side divider.
-     *
      */
     public static int preferredLeftDividerSpot;
 
     /**
      * the default width of the divider
-     *
      */
     public static int dividerWidth = 12;
 
     /**
      * the default value for maxThumbnails
-     *
      */
     public final static int defaultMaxThumbnails = 50;
 
     /**
      * a variable that sets the maximum number of thumbnails that shall be
      * displayed at one time.
-     *
      */
     public static int maxThumbnails = defaultMaxThumbnails;
 
@@ -156,7 +144,7 @@ public class Settings {
     /**
      * the dimension of mini thumbnails in the group folders
      */
-    public static final Dimension miniThumbnailSize = new Dimension( 100, 75 );
+    public static final Dimension miniThumbnailSize = new Dimension(100, 75);
 
     /**
      * The minimum width for the left panels
@@ -165,41 +153,41 @@ public class Settings {
     /**
      * the minimum Dimension for the InfoPanel
      */
-    public static final Dimension INFO_PANEL_MINIMUM_DIMENSION = new Dimension( LEFT_PANEL_MINIMUM_WIDTH, 100 );
+    public static final Dimension INFO_PANEL_MINIMUM_DIMENSION = new Dimension(LEFT_PANEL_MINIMUM_WIDTH, 100);
     /**
      * the preferred Dimension for the InfoPanel
      */
-    public static final Dimension INFO_PANEL_PREFERRED_SIZE = new Dimension( LEFT_PANEL_MINIMUM_WIDTH, 100 );
+    public static final Dimension INFO_PANEL_PREFERRED_SIZE = new Dimension(LEFT_PANEL_MINIMUM_WIDTH, 100);
     /**
      * the minimum Dimension for the Navigator Panel
      */
-    public static final Dimension JPO_NAVIGATOR_JTABBEDPANE_MINIMUM_SIZE = new Dimension( LEFT_PANEL_MINIMUM_WIDTH, 450 );
+    public static final Dimension JPO_NAVIGATOR_JTABBEDPANE_MINIMUM_SIZE = new Dimension(LEFT_PANEL_MINIMUM_WIDTH, 450);
     /**
      * the preferred Dimension for the Navigator Panel
      */
-    public static final Dimension jpoNavigatorJTabbedPanePreferredSize = new Dimension( preferredMasterDividerSpot, 800 );
+    public static final Dimension jpoNavigatorJTabbedPanePreferredSize = new Dimension(preferredMasterDividerSpot, 800);
     /**
      * the minimum Dimension for the Thumbnail Panel
      */
-    public static final Dimension THUMBNAIL_JSCROLLPANE_MINIMUM_SIZE = new Dimension( (int) ( thumbnailSize * 1.4f ), (int) ( thumbnailSize * 1.8f ) );
+    public static final Dimension THUMBNAIL_JSCROLLPANE_MINIMUM_SIZE = new Dimension((int) (thumbnailSize * 1.4f), (int) (thumbnailSize * 1.8f));
     /**
      * the preferred Dimension for the Thumbnail Panel
      */
-    public static final Dimension thumbnailJScrollPanePreferredSize = new Dimension( (int) ( thumbnailSize * 2.2f ), 800 );
+    public static final Dimension thumbnailJScrollPanePreferredSize = new Dimension((int) (thumbnailSize * 2.2f), 800);
     /**
      * the minimum Dimension for the JPO Window
      */
     public static final Dimension jpoJFrameMinimumSize
-            = new Dimension( JPO_NAVIGATOR_JTABBEDPANE_MINIMUM_SIZE.width + dividerWidth + THUMBNAIL_JSCROLLPANE_MINIMUM_SIZE.width,
-                    Math.max( JPO_NAVIGATOR_JTABBEDPANE_MINIMUM_SIZE.height + dividerWidth + INFO_PANEL_MINIMUM_DIMENSION.height,
-                            THUMBNAIL_JSCROLLPANE_MINIMUM_SIZE.height ) );
+            = new Dimension(JPO_NAVIGATOR_JTABBEDPANE_MINIMUM_SIZE.width + dividerWidth + THUMBNAIL_JSCROLLPANE_MINIMUM_SIZE.width,
+            Math.max(JPO_NAVIGATOR_JTABBEDPANE_MINIMUM_SIZE.height + dividerWidth + INFO_PANEL_MINIMUM_DIMENSION.height,
+                    THUMBNAIL_JSCROLLPANE_MINIMUM_SIZE.height));
     /**
      * the preferred Dimension for the JPO Window
      */
     public static final Dimension jpoJFramePreferredSize
-            = new Dimension( jpoNavigatorJTabbedPanePreferredSize.width + dividerWidth + thumbnailJScrollPanePreferredSize.width,
-                    Math.max( jpoNavigatorJTabbedPanePreferredSize.height + dividerWidth + INFO_PANEL_PREFERRED_SIZE.height,
-                            thumbnailJScrollPanePreferredSize.height ) );
+            = new Dimension(jpoNavigatorJTabbedPanePreferredSize.width + dividerWidth + thumbnailJScrollPanePreferredSize.width,
+            Math.max(jpoNavigatorJTabbedPanePreferredSize.height + dividerWidth + INFO_PANEL_PREFERRED_SIZE.height,
+                    thumbnailJScrollPanePreferredSize.height));
     /**
      * The polling interval in milliseconds for the ThumbnailCreationThreads to
      * check Whether there is something new to render.
@@ -215,12 +203,10 @@ public class Settings {
      * The KDE Panel has the unfortunate habit of insisting on being on top so
      * this parameter allows you to specify how much space should be left from
      * the bottom of the screen for Full screen windows.
-     *
      */
     public static int leaveForPanel;
     /**
      * The collection that should be loaded automatically
-     *
      */
     public static String autoLoad;
 
@@ -230,6 +216,7 @@ public class Settings {
     public static void clearAutoLoad() {
         autoLoad = "";
     }
+
     /**
      * number of recent files shown in the file menu
      */
@@ -237,7 +224,7 @@ public class Settings {
     /**
      * Array of recently used files
      */
-    public static String[] recentCollections = new String[MAX_MEMORISE];
+    public static final String[] recentCollections = new String[MAX_MEMORISE];
     /**
      * A counter that keeps track of the number of thumbnails created
      */
@@ -266,7 +253,7 @@ public class Settings {
     public static JFrame anchorFrame = null;
     /**
      * The maximum number of pictures to keep in memory
-     *
+     * <p>
      * public static int maxCache;
      */
 
@@ -280,61 +267,61 @@ public class Settings {
     /**
      * standard size for all JTextFields that need to record a filename.
      */
-    public static final Dimension filenameFieldPreferredSize = new Dimension( 300, 20 );
+    public static final Dimension filenameFieldPreferredSize = new Dimension(300, 20);
     /**
      * standard size for all JTextFields that need to record a filename
      */
-    public static final Dimension filenameFieldMinimumSize = new Dimension( 150, 20 );
+    public static final Dimension filenameFieldMinimumSize = new Dimension(150, 20);
     /**
      * standard size for all JTextFields that need to record a filename
      */
-    public static final Dimension filenameFieldMaximumSize = new Dimension( 600, 20 );
+    public static final Dimension filenameFieldMaximumSize = new Dimension(600, 20);
     /**
      * standard size for all JTextFields that need to record a short text.
      */
-    public static final Dimension shortFieldPreferredSize = new Dimension( 350, 20 );
+    public static final Dimension shortFieldPreferredSize = new Dimension(350, 20);
     /**
      * standard size for all JTextFields that need to record a short text
      */
-    public static final Dimension shortFieldMinimumSize = new Dimension( 150, 20 );
+    public static final Dimension shortFieldMinimumSize = new Dimension(150, 20);
     /**
      * standard size for all JTextFields that need to record a short text
      */
-    public static final Dimension shortFieldMaximumSize = new Dimension( 1000, 20 );
+    public static final Dimension shortFieldMaximumSize = new Dimension(1000, 20);
     /**
      * standard size for all JTextFields that need to record a normal length
      * text
      */
-    public static final Dimension textfieldPreferredSize = new Dimension( 350, 20 );
+    public static final Dimension textfieldPreferredSize = new Dimension(350, 20);
     /**
      * standard size for all JTextFields that need to record a normal length
      * text
      */
-    public static final Dimension textfieldMinimumSize = new Dimension( 150, 20 );
+    public static final Dimension textfieldMinimumSize = new Dimension(150, 20);
     /**
      * standard size for all JTextFields that need to record a normal length
      * text
      */
-    public static final Dimension textfieldMaximumSize = new Dimension( 1000, 20 );
+    public static final Dimension textfieldMaximumSize = new Dimension(1000, 20);
     /**
      * standard size for all JTextFields that need to record a normal length
      * text
      */
-    public static final Dimension shortNumberPreferredSize = new Dimension( 60, 20 );
+    public static final Dimension shortNumberPreferredSize = new Dimension(60, 20);
     /**
      * standard size for all JTextFields that need to record a normal length
      * text
      */
-    public static final Dimension shortNumberMinimumSize = new Dimension( 60, 20 );
+    public static final Dimension shortNumberMinimumSize = new Dimension(60, 20);
     /**
      * standard size for all JTextFields that need to record a normal length
      * text
      */
-    public static final Dimension shortNumberMaximumSize = new Dimension( 100, 20 );
+    public static final Dimension shortNumberMaximumSize = new Dimension(100, 20);
     /**
      * fixed size for the threeDotButton which opens the JFileChooser dialog
      */
-    public static final Dimension threeDotButtonSize = new Dimension( 25, 20 );
+    public static final Dimension threeDotButtonSize = new Dimension(25, 20);
     /**
      * the font used to display the title. Currently Arial Bold 20.
      */
@@ -494,11 +481,11 @@ public class Settings {
     /**
      * Default size for buttons such as OK, cancel etc.
      */
-    public static Dimension defaultButtonDimension = new Dimension( 80, 25 );
+    public static Dimension defaultButtonDimension = new Dimension(80, 25);
     /**
      * Default size for buttons such as OK, cancel etc.
      */
-    public static Dimension threeDotButtonDimension = new Dimension( 25, 25 );
+    public static Dimension threeDotButtonDimension = new Dimension(25, 25);
 
     /**
      * Codes to indicate the field
@@ -529,25 +516,25 @@ public class Settings {
      */
     public static List<SortOption> getSortOptions() {
         List<SortOption> sortOptions = new ArrayList<>();
-        sortOptions.add( new SortOption( "No Sorting", FieldCodes.NO_SORTING ) );
-        sortOptions.add( new SortOption( Settings.jpoResources.getString( "sortByDescriptionJMenuItem" ), FieldCodes.DESCRIPTION ) );
-        sortOptions.add( new SortOption( Settings.jpoResources.getString( "sortByFilmReferenceJMenuItem" ), FieldCodes.FILM_REFERENCE ) );
-        sortOptions.add( new SortOption( Settings.jpoResources.getString( "sortByCreationTimeJMenuItem" ), FieldCodes.CREATION_TIME ) );
-        sortOptions.add( new SortOption( Settings.jpoResources.getString( "sortByCommentJMenuItem" ), FieldCodes.COMMENT ) );
-        sortOptions.add( new SortOption( Settings.jpoResources.getString( "sortByPhotographerJMenuItem" ), FieldCodes.PHOTOGRAPHER ) );
-        sortOptions.add( new SortOption( Settings.jpoResources.getString( "sortByCopyrightHolderTimeJMenuItem" ), FieldCodes.COPYRIGHT_HOLDER ) );
+        sortOptions.add(new SortOption("No Sorting", FieldCodes.NO_SORTING));
+        sortOptions.add(new SortOption(Settings.jpoResources.getString("sortByDescriptionJMenuItem"), FieldCodes.DESCRIPTION));
+        sortOptions.add(new SortOption(Settings.jpoResources.getString("sortByFilmReferenceJMenuItem"), FieldCodes.FILM_REFERENCE));
+        sortOptions.add(new SortOption(Settings.jpoResources.getString("sortByCreationTimeJMenuItem"), FieldCodes.CREATION_TIME));
+        sortOptions.add(new SortOption(Settings.jpoResources.getString("sortByCommentJMenuItem"), FieldCodes.COMMENT));
+        sortOptions.add(new SortOption(Settings.jpoResources.getString("sortByPhotographerJMenuItem"), FieldCodes.PHOTOGRAPHER));
+        sortOptions.add(new SortOption(Settings.jpoResources.getString("sortByCopyrightHolderTimeJMenuItem"), FieldCodes.COPYRIGHT_HOLDER));
         return sortOptions;
     }
 
     /**
      * The color to use when the thumbnail has been selected
      */
-    public static final Color SELECTED_COLOR = new Color( 45, 47, 84 );
+    public static final Color SELECTED_COLOR = new Color(45, 47, 84);
 
     /**
      * The color to use for text background when the thumbnail has been selected
      */
-    public static final Color SELECTED_COLOR_TEXT = new Color( 145, 149, 153 );
+    public static final Color SELECTED_COLOR_TEXT = new Color(145, 149, 153);
 
     /**
      * The color to use when the thumbnail has been selected
@@ -569,9 +556,9 @@ public class Settings {
      */
     public static TreeSet<Object> emailSenders = new TreeSet<Object>() {
         @Override
-        public boolean add( Object o ) {
-            boolean b = super.add( o );
-            if ( b ) {
+        public boolean add(Object o) {
+            boolean b = super.add(o);
+            if (b) {
                 unsavedSettingChanges = true;
             }
             return b;
@@ -582,9 +569,9 @@ public class Settings {
      */
     public static TreeSet<Object> emailRecipients = new TreeSet<Object>() {
         @Override
-        public boolean add( Object o ) {
-            boolean b = super.add( o );
-            if ( b ) {
+        public boolean add(Object o) {
+            boolean b = super.add(o);
+            if (b) {
                 unsavedSettingChanges = true;
             }
             return b;
@@ -617,7 +604,7 @@ public class Settings {
     /**
      * The last size we scaled images to in the email dialog
      */
-    public static Dimension emailDimensions = new Dimension( 350, 300 );
+    public static Dimension emailDimensions = new Dimension(350, 300);
     /**
      * Should emails contain the original images
      */
@@ -637,7 +624,7 @@ public class Settings {
     /**
      * The PictureViewer minimum size
      */
-    public static final Dimension PICTUREVIEWER_MINIMUM_SIZE = new Dimension( 300, 300 );
+    public static final Dimension PICTUREVIEWER_MINIMUM_SIZE = new Dimension(300, 300);
 
     /**
      * The number of Words that the TagCloud should show.
@@ -668,131 +655,132 @@ public class Settings {
      * method that set the default parameters
      */
     public static void setDefaults() {
-        setLocale( currentLocale );
+        setLocale(currentLocale);
 
         clearAutoLoad();
-        logfile = new File( new File( System.getProperty( "java.io.tmpdir" ) ), "JPO.log" );
+        logfile = new File(new File(System.getProperty("java.io.tmpdir")), "JPO.log");
 
-        mainFrameDimensions = new Dimension( windowSizes[4] );
+        mainFrameDimensions = new Dimension(windowSizes[4]);
         //LOGGER.info( String.format( "mainFrameDimension: width %d, height: %d", mainFrameDimensions.width, mainFrameDimensions.height ) );
         preferredLeftDividerSpot = mainFrameDimensions.height - 200;
-        if ( preferredLeftDividerSpot < 0 ) {
+        if (preferredLeftDividerSpot < 0) {
             preferredLeftDividerSpot = 150;
         }
         //LOGGER.info( String.format( "preferredLeftDividerSpot: %d", preferredLeftDividerSpot ) );
 
         maximumPictureSize = 6000;
-        thumbnailCacheDirectory = System.getProperty( "java.io.tmpdir" )
-                + System.getProperty( "file.separator" )
+        thumbnailCacheDirectory = System.getProperty("java.io.tmpdir")
+                + System.getProperty("file.separator")
                 + "Jpo-Thumbnail-Cache";
 
-        pictureViewerDefaultDimensions = new Dimension( windowSizes[1] );
+        pictureViewerDefaultDimensions = new Dimension(windowSizes[1]);
         dontEnlargeSmallImages = true;
     }
+
     /**
      * handle to the user Preferences
      */
-    public static Preferences prefs = Preferences.userNodeForPackage( Settings.class );
+    public static Preferences prefs = Preferences.userNodeForPackage(Settings.class);
 
     /**
      * This method reads the settings from the preferences.
      */
     public static void loadSettings() {
         setDefaults();
-        
-        setLocale( new Locale( prefs.get( "currentLocale", getCurrentLocale().toString() ) ) );
-        maximumPictureSize = prefs.getInt( "maximumPictureSize", maximumPictureSize );
-        maxThumbnails = prefs.getInt( "maxThumbnails", maxThumbnails );
-        thumbnailSize = prefs.getInt( "thumbnailSize", thumbnailSize );
-        maximiseJpoOnStartup = prefs.getBoolean( "maximiseJpoOnStartup", maximiseJpoOnStartup );
-        mainFrameDimensions.width = prefs.getInt( "mainFrameDimensions.width", mainFrameDimensions.width );
-        mainFrameDimensions.height = prefs.getInt( "mainFrameDimensions.height", mainFrameDimensions.height );
-        preferredMasterDividerSpot = prefs.getInt( "preferredMasterDividerSpot", preferredMasterDividerSpot );
-        preferredLeftDividerSpot = prefs.getInt( "preferredLeftDividerSpot", preferredLeftDividerSpot );
 
-        dividerWidth = prefs.getInt( "dividerWidth", dividerWidth );
-        autoLoad = prefs.get( "autoload", autoLoad );
+        setLocale(new Locale(prefs.get("currentLocale", getCurrentLocale().toString())));
+        maximumPictureSize = prefs.getInt("maximumPictureSize", maximumPictureSize);
+        maxThumbnails = prefs.getInt("maxThumbnails", maxThumbnails);
+        thumbnailSize = prefs.getInt("thumbnailSize", thumbnailSize);
+        maximiseJpoOnStartup = prefs.getBoolean("maximiseJpoOnStartup", maximiseJpoOnStartup);
+        mainFrameDimensions.width = prefs.getInt("mainFrameDimensions.width", mainFrameDimensions.width);
+        mainFrameDimensions.height = prefs.getInt("mainFrameDimensions.height", mainFrameDimensions.height);
+        preferredMasterDividerSpot = prefs.getInt("preferredMasterDividerSpot", preferredMasterDividerSpot);
+        preferredLeftDividerSpot = prefs.getInt("preferredLeftDividerSpot", preferredLeftDividerSpot);
 
-        maximisePictureViewerWindow = prefs.getBoolean( "maximisePictureViewerWindow", maximisePictureViewerWindow );
-        pictureViewerDefaultDimensions.width = prefs.getInt( "pictureViewerDefaultDimensions.width", pictureViewerDefaultDimensions.width );
-        pictureViewerDefaultDimensions.height = prefs.getInt( "pictureViewerDefaultDimensions.height", pictureViewerDefaultDimensions.height );
+        dividerWidth = prefs.getInt("dividerWidth", dividerWidth);
+        autoLoad = prefs.get("autoload", autoLoad);
+
+        maximisePictureViewerWindow = prefs.getBoolean("maximisePictureViewerWindow", maximisePictureViewerWindow);
+        pictureViewerDefaultDimensions.width = prefs.getInt("pictureViewerDefaultDimensions.width", pictureViewerDefaultDimensions.width);
+        pictureViewerDefaultDimensions.height = prefs.getInt("pictureViewerDefaultDimensions.height", pictureViewerDefaultDimensions.height);
 
         int i;
-        for ( i = 0; i < MAX_MEMORISE; i++ ) {
-            copyLocations[i] = prefs.get( "copyLocations-" + Integer.toString( i ), null );
+        for (i = 0; i < MAX_MEMORISE; i++) {
+            copyLocations[i] = prefs.get("copyLocations-" + Integer.toString(i), null);
         }
-        for ( i = 0; i < Settings.MAX_MEMORISE; i++ ) {
-            recentCollections[i] = prefs.get( "recentCollections-" + Integer.toString( i ), null );
+        for (i = 0; i < Settings.MAX_MEMORISE; i++) {
+            recentCollections[i] = prefs.get("recentCollections-" + Integer.toString(i), null);
         }
-        for ( i = 0; i < Settings.maxUserFunctions; i++ ) {
-            userFunctionNames[i] = prefs.get( "userFunctionName-" + Integer.toString( i ), null );
-            userFunctionCmd[i] = prefs.get( "userFunctionCmd-" + Integer.toString( i ), null );
+        for (i = 0; i < Settings.maxUserFunctions; i++) {
+            userFunctionNames[i] = prefs.get("userFunctionName-" + Integer.toString(i), null);
+            userFunctionCmd[i] = prefs.get("userFunctionCmd-" + Integer.toString(i), null);
         }
-        dontEnlargeSmallImages = prefs.getBoolean( "dontEnlargeSmallImages", dontEnlargeSmallImages );
-        thumbnailCounter = prefs.getInt( "thumbnailCounter", thumbnailCounter );
-        writeLog = prefs.getBoolean( "writeLog", writeLog );
-        logfile = new File( prefs.get( "logfile", logfile.getPath() ) ); // inefficient, RE, 11.11.2006
-        thumbnailCacheDirectory = prefs.get( "thumbnailCacheDirectory", thumbnailCacheDirectory );
-        defaultHtmlPicsPerRow = prefs.getInt( "defaultHtmlPicsPerRow", defaultHtmlPicsPerRow );
-        defaultHtmlThumbnailWidth = prefs.getInt( "defaultHtmlThumbnailWidth", defaultHtmlThumbnailWidth );
-        defaultHtmlThumbnailHeight = prefs.getInt( "defaultHtmlThumbnailHeight", defaultHtmlThumbnailHeight );
-        defaultGenerateMidresHtml = prefs.getBoolean( "defaultGenerateMidresHtml", defaultGenerateMidresHtml );
-        String defaultHtmlPictureNamingString = prefs.get( "defaultHtmlPictureNamingString", defaultHtmlPictureNaming.name() );
-        defaultHtmlPictureNaming = HtmlDistillerOptions.PictureNamingType.valueOf( defaultHtmlPictureNamingString );
-        String defaultHtmlOutputTargetString = prefs.get( "defaultHtmlOutputTarget", defaultHtmlOutputTarget.name() );
-        defaultHtmlOutputTarget = HtmlDistillerOptions.OutputTarget.valueOf( defaultHtmlOutputTargetString );
-        String defaultHtmlSshAuthTypeString = prefs.get( "defaultHtmlSshAuthType", defaultHtmlSshAuthType.name() );
-        defaultHtmlSshAuthType = HtmlDistillerOptions.SshAuthType.valueOf( defaultHtmlSshAuthTypeString );
+        dontEnlargeSmallImages = prefs.getBoolean("dontEnlargeSmallImages", dontEnlargeSmallImages);
+        thumbnailCounter = prefs.getInt("thumbnailCounter", thumbnailCounter);
+        writeLog = prefs.getBoolean("writeLog", writeLog);
+        logfile = new File(prefs.get("logfile", logfile.getPath())); // inefficient, RE, 11.11.2006
+        thumbnailCacheDirectory = prefs.get("thumbnailCacheDirectory", thumbnailCacheDirectory);
+        defaultHtmlPicsPerRow = prefs.getInt("defaultHtmlPicsPerRow", defaultHtmlPicsPerRow);
+        defaultHtmlThumbnailWidth = prefs.getInt("defaultHtmlThumbnailWidth", defaultHtmlThumbnailWidth);
+        defaultHtmlThumbnailHeight = prefs.getInt("defaultHtmlThumbnailHeight", defaultHtmlThumbnailHeight);
+        defaultGenerateMidresHtml = prefs.getBoolean("defaultGenerateMidresHtml", defaultGenerateMidresHtml);
+        String defaultHtmlPictureNamingString = prefs.get("defaultHtmlPictureNamingString", defaultHtmlPictureNaming.name());
+        defaultHtmlPictureNaming = HtmlDistillerOptions.PictureNamingType.valueOf(defaultHtmlPictureNamingString);
+        String defaultHtmlOutputTargetString = prefs.get("defaultHtmlOutputTarget", defaultHtmlOutputTarget.name());
+        defaultHtmlOutputTarget = HtmlDistillerOptions.OutputTarget.valueOf(defaultHtmlOutputTargetString);
+        String defaultHtmlSshAuthTypeString = prefs.get("defaultHtmlSshAuthType", defaultHtmlSshAuthType.name());
+        defaultHtmlSshAuthType = HtmlDistillerOptions.SshAuthType.valueOf(defaultHtmlSshAuthTypeString);
 
-        defaultGenerateMap = prefs.getBoolean( "defaultGenerateMap", defaultGenerateMap );
-        defaultGenerateDHTML = prefs.getBoolean( "defaultGenerateDHTML", defaultGenerateDHTML );
-        defaultGenerateZipfile = prefs.getBoolean( "defaultGenerateZipfile", defaultGenerateZipfile );
-        defaultLinkToHighres = prefs.getBoolean( "defaultLinkToHighres", defaultLinkToHighres );
-        defaultExportHighres = prefs.getBoolean( "defaultExportHighres", defaultExportHighres );
-        defaultRotateHighres = prefs.getBoolean( "defaultRotateHighres", defaultRotateHighres );
-        defaultHtmlMidresWidth = prefs.getInt( "defaultHtmlMidresWidth", defaultHtmlMidresWidth );
-        defaultHtmlMidresHeight = prefs.getInt( "defaultHtmlMidresHeight", defaultHtmlMidresHeight );
-        defaultHtmlLowresQuality = prefs.getFloat( "defaultHtmlLowresQuality", defaultHtmlLowresQuality );
-        defaultHtmlMidresQuality = prefs.getFloat( "defaultHtmlMidresQuality", defaultHtmlMidresQuality );
-        writeRobotsTxt = prefs.getBoolean( "writeRobotsTxt", writeRobotsTxt );
-        defaultHtmlFtpServer = prefs.get( "defaultHtmlFtpServer", defaultHtmlFtpServer );
-        defaultHtmlFtpPort = prefs.getInt( "defaultHtmlFtpPort", defaultHtmlFtpPort );
-        defaultHtmlFtpUser = prefs.get( "defaultHtmlFtpUser", defaultHtmlFtpUser );
-        defaultHtmlFtpPassword = prefs.get( "defaultHtmlFtpPassword", defaultHtmlFtpPassword );
-        defaultHtmlFtpTargetDir = prefs.get( "defaultHtmlFtpTargetDir", defaultHtmlFtpTargetDir );
-        defaultHtmlSshServer = prefs.get( "defaultHtmlSshServer", defaultHtmlSshServer );
-        defaultHtmlSshPort = prefs.getInt( "defaultHtmlSshPort", defaultHtmlSshPort );
-        defaultHtmlSshUser = prefs.get( "defaultHtmlSshUser", defaultHtmlSshUser );
-        defaultHtmlSshPassword = prefs.get( "defaultHtmlSshPassword", defaultHtmlSshPassword );
-        defaultHtmlSshTargetDir = prefs.get( "defaultHtmlSshTargetDir", defaultHtmlSshTargetDir );
-        defaultHtmlSshKeyFile = prefs.get( "defaultHtmlSshKeyFile", defaultHtmlSshKeyFile );
-        thumbnailFastScale = prefs.getBoolean( "thumbnailFastScale", thumbnailFastScale );
-        pictureViewerFastScale = prefs.getBoolean( "pictureViewerFastScale", pictureViewerFastScale );
-        defaultLinkToHighres = prefs.getBoolean( "showThumbOnFileChooser", showThumbOnFileChooser );
-        int n = prefs.getInt( "emailSenders", 0 );
-        for ( i = 0; i < n; i++ ) {
-            emailSenders.add( prefs.get( "emailSender-" + Integer.toString( i ), "" ) );
+        defaultGenerateMap = prefs.getBoolean("defaultGenerateMap", defaultGenerateMap);
+        defaultGenerateDHTML = prefs.getBoolean("defaultGenerateDHTML", defaultGenerateDHTML);
+        defaultGenerateZipfile = prefs.getBoolean("defaultGenerateZipfile", defaultGenerateZipfile);
+        defaultLinkToHighres = prefs.getBoolean("defaultLinkToHighres", defaultLinkToHighres);
+        defaultExportHighres = prefs.getBoolean("defaultExportHighres", defaultExportHighres);
+        defaultRotateHighres = prefs.getBoolean("defaultRotateHighres", defaultRotateHighres);
+        defaultHtmlMidresWidth = prefs.getInt("defaultHtmlMidresWidth", defaultHtmlMidresWidth);
+        defaultHtmlMidresHeight = prefs.getInt("defaultHtmlMidresHeight", defaultHtmlMidresHeight);
+        defaultHtmlLowresQuality = prefs.getFloat("defaultHtmlLowresQuality", defaultHtmlLowresQuality);
+        defaultHtmlMidresQuality = prefs.getFloat("defaultHtmlMidresQuality", defaultHtmlMidresQuality);
+        writeRobotsTxt = prefs.getBoolean("writeRobotsTxt", writeRobotsTxt);
+        defaultHtmlFtpServer = prefs.get("defaultHtmlFtpServer", defaultHtmlFtpServer);
+        defaultHtmlFtpPort = prefs.getInt("defaultHtmlFtpPort", defaultHtmlFtpPort);
+        defaultHtmlFtpUser = prefs.get("defaultHtmlFtpUser", defaultHtmlFtpUser);
+        defaultHtmlFtpPassword = prefs.get("defaultHtmlFtpPassword", defaultHtmlFtpPassword);
+        defaultHtmlFtpTargetDir = prefs.get("defaultHtmlFtpTargetDir", defaultHtmlFtpTargetDir);
+        defaultHtmlSshServer = prefs.get("defaultHtmlSshServer", defaultHtmlSshServer);
+        defaultHtmlSshPort = prefs.getInt("defaultHtmlSshPort", defaultHtmlSshPort);
+        defaultHtmlSshUser = prefs.get("defaultHtmlSshUser", defaultHtmlSshUser);
+        defaultHtmlSshPassword = prefs.get("defaultHtmlSshPassword", defaultHtmlSshPassword);
+        defaultHtmlSshTargetDir = prefs.get("defaultHtmlSshTargetDir", defaultHtmlSshTargetDir);
+        defaultHtmlSshKeyFile = prefs.get("defaultHtmlSshKeyFile", defaultHtmlSshKeyFile);
+        thumbnailFastScale = prefs.getBoolean("thumbnailFastScale", thumbnailFastScale);
+        pictureViewerFastScale = prefs.getBoolean("pictureViewerFastScale", pictureViewerFastScale);
+        defaultLinkToHighres = prefs.getBoolean("showThumbOnFileChooser", showThumbOnFileChooser);
+        int n = prefs.getInt("emailSenders", 0);
+        for (i = 0; i < n; i++) {
+            emailSenders.add(prefs.get("emailSender-" + Integer.toString(i), ""));
         }
-        n = prefs.getInt( "emailRecipients", 0 );
-        for ( i = 0; i < n; i++ ) {
-            emailRecipients.add( prefs.get( "emailRecipient-" + Integer.toString( i ), "" ) );
+        n = prefs.getInt("emailRecipients", 0);
+        for (i = 0; i < n; i++) {
+            emailRecipients.add(prefs.get("emailRecipient-" + Integer.toString(i), ""));
         }
-        emailServer = prefs.get( "emailServer", emailServer );
-        emailPort = prefs.get( "emailPort", emailPort );
-        emailAuthentication = prefs.getInt( "emailAuthentication", emailAuthentication );
-        emailUser = prefs.get( "emailUser", emailUser );
-        emailPassword = prefs.get( "emailPassword", emailPassword );
-        emailScaleImages = prefs.getBoolean( "emailScaleImages", emailScaleImages );
-        emailSendOriginal = prefs.getBoolean( "emailSendOriginal", emailSendOriginal );
-        emailDimensions.width = prefs.getInt( "emailDimensions.width", emailDimensions.width );
-        emailDimensions.height = prefs.getInt( "emailDimensions.height", emailDimensions.height );
-        tagCloudWords = prefs.getInt( "tagCloudWords", tagCloudWords );
-        lastSortChoice = FieldCodes.valueOf( prefs.get( "lastSortChoiceString", lastSortChoice.toString() ) );
-        lastCameraWizardCopyMode = prefs.getBoolean( "lastCameraWizardCopyMode", lastCameraWizardCopyMode );
+        emailServer = prefs.get("emailServer", emailServer);
+        emailPort = prefs.get("emailPort", emailPort);
+        emailAuthentication = prefs.getInt("emailAuthentication", emailAuthentication);
+        emailUser = prefs.get("emailUser", emailUser);
+        emailPassword = prefs.get("emailPassword", emailPassword);
+        emailScaleImages = prefs.getBoolean("emailScaleImages", emailScaleImages);
+        emailSendOriginal = prefs.getBoolean("emailSendOriginal", emailSendOriginal);
+        emailDimensions.width = prefs.getInt("emailDimensions.width", emailDimensions.width);
+        emailDimensions.height = prefs.getInt("emailDimensions.height", emailDimensions.height);
+        tagCloudWords = prefs.getInt("tagCloudWords", tagCloudWords);
+        lastSortChoice = FieldCodes.valueOf(prefs.get("lastSortChoiceString", lastSortChoice.toString()));
+        lastCameraWizardCopyMode = prefs.getBoolean("lastCameraWizardCopyMode", lastCameraWizardCopyMode);
 
-        rememberGoogleCredentials = prefs.getBoolean( "rememberGoogleCredentials", rememberGoogleCredentials );
-        googleUsername = prefs.get( "googleUsername", "" );
-        googlePassword = prefs.get( "googlePassword", "" );
+        rememberGoogleCredentials = prefs.getBoolean("rememberGoogleCredentials", rememberGoogleCredentials);
+        googleUsername = prefs.get("googleUsername", "");
+        googlePassword = prefs.get("googlePassword", "");
 
         validateCopyLocations();
         validateSettings();
@@ -805,40 +793,40 @@ public class Settings {
      * not ok
      */
     public static void validateSettings() {
-        if ( maxThumbnails < 1 ) { //how can this happen?
+        if (maxThumbnails < 1) { //how can this happen?
             maxThumbnails = defaultMaxThumbnails;
         }
 
-        if ( writeLog ) {
-            if ( logfile.exists() ) {
-                if ( !logfile.canWrite() ) {
-                    JOptionPane.showMessageDialog( Settings.anchorFrame,
-                            Settings.jpoResources.getString( "logFileCanWriteError" ),
-                            Settings.jpoResources.getString( "settingsError" ),
-                            JOptionPane.ERROR_MESSAGE );
+        if (writeLog) {
+            if (logfile.exists()) {
+                if (!logfile.canWrite()) {
+                    JOptionPane.showMessageDialog(Settings.anchorFrame,
+                            Settings.jpoResources.getString("logFileCanWriteError"),
+                            Settings.jpoResources.getString("settingsError"),
+                            JOptionPane.ERROR_MESSAGE);
                     writeLog = false;
                 }
-                if ( !logfile.isFile() ) {
-                    JOptionPane.showMessageDialog( Settings.anchorFrame,
-                            Settings.jpoResources.getString( "logFileIsFileError" ),
-                            Settings.jpoResources.getString( "settingsError" ),
-                            JOptionPane.ERROR_MESSAGE );
+                if (!logfile.isFile()) {
+                    JOptionPane.showMessageDialog(Settings.anchorFrame,
+                            Settings.jpoResources.getString("logFileIsFileError"),
+                            Settings.jpoResources.getString("settingsError"),
+                            JOptionPane.ERROR_MESSAGE);
                     writeLog = false;
                 }
             } else {
                 File testFileParent = logfile.getParentFile();
-                if ( testFileParent == null ) {
+                if (testFileParent == null) {
                     // the parent of root dir is null
-                    JOptionPane.showMessageDialog( Settings.anchorFrame,
-                            Settings.jpoResources.getString( "logFileIsFileError" ),
-                            Settings.jpoResources.getString( "settingsError" ),
-                            JOptionPane.ERROR_MESSAGE );
+                    JOptionPane.showMessageDialog(Settings.anchorFrame,
+                            Settings.jpoResources.getString("logFileIsFileError"),
+                            Settings.jpoResources.getString("settingsError"),
+                            JOptionPane.ERROR_MESSAGE);
                     writeLog = false;
-                } else if ( !testFileParent.canWrite() ) {
-                    JOptionPane.showMessageDialog( Settings.anchorFrame,
-                            Settings.jpoResources.getString( "logFileCanWriteError" ),
-                            Settings.jpoResources.getString( "settingsError" ),
-                            JOptionPane.ERROR_MESSAGE );
+                } else if (!testFileParent.canWrite()) {
+                    JOptionPane.showMessageDialog(Settings.anchorFrame,
+                            Settings.jpoResources.getString("logFileCanWriteError"),
+                            Settings.jpoResources.getString("settingsError"),
+                            JOptionPane.ERROR_MESSAGE);
                     writeLog = false;
                 }
             }
@@ -851,15 +839,15 @@ public class Settings {
      * to Java with 1.4
      */
     public static void writeSettings() {
-        prefs.put( "currentLocale", getCurrentLocale().toString() );
-        prefs.putInt( "maximumPictureSize", maximumPictureSize );
-        prefs.putInt( "maxThumbnails", maxThumbnails );
-        prefs.putInt( "thumbnailSize", thumbnailSize );
-        prefs.putBoolean( "maximiseJpoOnStartup", maximiseJpoOnStartup );
-        prefs.putInt( "mainFrameDimensions.width", mainFrameDimensions.width );
-        prefs.putInt( "mainFrameDimensions.height", mainFrameDimensions.height );
-        prefs.putInt( "preferredMasterDividerSpot", preferredMasterDividerSpot );
-        prefs.putInt( "preferredLeftDividerSpot", preferredLeftDividerSpot );
+        prefs.put("currentLocale", getCurrentLocale().toString());
+        prefs.putInt("maximumPictureSize", maximumPictureSize);
+        prefs.putInt("maxThumbnails", maxThumbnails);
+        prefs.putInt("thumbnailSize", thumbnailSize);
+        prefs.putBoolean("maximiseJpoOnStartup", maximiseJpoOnStartup);
+        prefs.putInt("mainFrameDimensions.width", mainFrameDimensions.width);
+        prefs.putInt("mainFrameDimensions.height", mainFrameDimensions.height);
+        prefs.putInt("preferredMasterDividerSpot", preferredMasterDividerSpot);
+        prefs.putInt("preferredLeftDividerSpot", preferredLeftDividerSpot);
 
         // bother, the windows layout is a rather long string....
 //        int size = myDoggyWindowsLayout.length();
@@ -877,119 +865,119 @@ public class Settings {
 
 
         //LOGGER.info( String.format( "Writing preferredLeftDividerSpot: %d", preferredLeftDividerSpot ) );
-        prefs.putInt( "dividerWidth", dividerWidth );
-        if ( autoLoad != null ) {
-            prefs.put( "autoload", autoLoad );
+        prefs.putInt("dividerWidth", dividerWidth);
+        if (autoLoad != null) {
+            prefs.put("autoload", autoLoad);
         }
-        prefs.putBoolean( "maximisePictureViewerWindow", maximisePictureViewerWindow );
-        prefs.putInt( "pictureViewerDefaultDimensions.width", pictureViewerDefaultDimensions.width );
-        prefs.putInt( "pictureViewerDefaultDimensions.height", pictureViewerDefaultDimensions.height );
+        prefs.putBoolean("maximisePictureViewerWindow", maximisePictureViewerWindow);
+        prefs.putInt("pictureViewerDefaultDimensions.width", pictureViewerDefaultDimensions.width);
+        prefs.putInt("pictureViewerDefaultDimensions.height", pictureViewerDefaultDimensions.height);
 
         // copy locations
         int n = 0;
-        for ( int i = 0; i < MAX_MEMORISE; i++ ) {
-            if ( copyLocations[i] != null ) {
-                prefs.put( String.format( "copyLocations-%d", n ), copyLocations[i] );
+        for (int i = 0; i < MAX_MEMORISE; i++) {
+            if (copyLocations[i] != null) {
+                prefs.put(String.format("copyLocations-%d", n), copyLocations[i]);
                 n++;
             }
         }
-        for ( int x = n; x < MAX_MEMORISE; x++ ) {
-            prefs.remove( String.format( "copyLocations-%d", x ) );
+        for (int x = n; x < MAX_MEMORISE; x++) {
+            prefs.remove(String.format("copyLocations-%d", x));
         }
 
         // recent collections
         n = 0;
-        for ( int i = 0; i < Settings.MAX_MEMORISE; i++ ) {
-            if ( recentCollections[i] != null ) {
-                prefs.put( String.format( "recentCollections-%d", n ), recentCollections[i] );
+        for (int i = 0; i < Settings.MAX_MEMORISE; i++) {
+            if (recentCollections[i] != null) {
+                prefs.put(String.format("recentCollections-%d", n), recentCollections[i]);
                 n++;
             }
         }
-        for ( int x = n; x < MAX_MEMORISE; x++ ) {
-            prefs.remove( String.format( "recentCollections-%d", x ) );
+        for (int x = n; x < MAX_MEMORISE; x++) {
+            prefs.remove(String.format("recentCollections-%d", x));
         }
 
         int i;
         n = 0;
-        for ( i = 0; i < Settings.maxUserFunctions; i++ ) {
-            if ( ( userFunctionNames[i] != null ) && ( userFunctionNames[i].length() > 0 ) && ( userFunctionCmd[i] != null ) && ( userFunctionCmd[i].length() > 0 ) ) {
-                prefs.put( "userFunctionName-" + Integer.toString( n ), userFunctionNames[i] );
-                prefs.put( "userFunctionCmd-" + Integer.toString( n ), userFunctionCmd[i] );
+        for (i = 0; i < Settings.maxUserFunctions; i++) {
+            if ((userFunctionNames[i] != null) && (userFunctionNames[i].length() > 0) && (userFunctionCmd[i] != null) && (userFunctionCmd[i].length() > 0)) {
+                prefs.put("userFunctionName-" + Integer.toString(n), userFunctionNames[i]);
+                prefs.put("userFunctionCmd-" + Integer.toString(n), userFunctionCmd[i]);
                 n++;
             }
         }
-        prefs.putBoolean( "dontEnlargeSmallImages", dontEnlargeSmallImages );
-        prefs.putInt( "thumbnailCounter", thumbnailCounter );
-        prefs.putBoolean( "writeLog", writeLog );
-        prefs.put( "logfile", logfile.getPath() );
-        prefs.put( "thumbnailCacheDirectory", thumbnailCacheDirectory );
-        prefs.putInt( "defaultHtmlPicsPerRow", defaultHtmlPicsPerRow );
-        prefs.putInt( "defaultHtmlThumbnailWidth", defaultHtmlThumbnailWidth );
-        prefs.putInt( "defaultHtmlThumbnailHeight", defaultHtmlThumbnailHeight );
-        prefs.putBoolean( "defaultGenerateMidresHtml", defaultGenerateMidresHtml );
-        prefs.put( "defaultHtmlPictureNamingString", defaultHtmlPictureNaming.name() );
-        prefs.put( "defaultHtmlOutputTarget", defaultHtmlOutputTarget.name() );
-        prefs.putBoolean( "defaultGenerateMap", defaultGenerateMap );
-        prefs.putBoolean( "defaultGenerateDHTML", defaultGenerateDHTML );
-        prefs.putBoolean( "defaultGenerateZipfile", defaultGenerateZipfile );
-        prefs.putBoolean( "defaultLinkToHighres", defaultLinkToHighres );
-        prefs.putBoolean( "defaultExportHighres", defaultExportHighres );
-        prefs.putBoolean( "defaultRotateHighres", defaultRotateHighres );
-        prefs.putInt( "defaultHtmlMidresWidth", defaultHtmlMidresWidth );
-        prefs.putInt( "defaultHtmlMidresHeight", defaultHtmlMidresHeight );
-        prefs.putFloat( "defaultHtmlLowresQuality", defaultHtmlLowresQuality );
-        prefs.putFloat( "defaultHtmlMidresQuality", defaultHtmlMidresQuality );
-        prefs.putBoolean( "writeRobotsTxt", writeRobotsTxt );
-        prefs.put( "defaultHtmlFtpServer", defaultHtmlFtpServer );
-        prefs.putInt( "defaultHtmlFtpPort", defaultHtmlFtpPort );
-        prefs.put( "defaultHtmlFtpUser", defaultHtmlFtpUser );
-        prefs.put( "defaultHtmlFtpPassword", defaultHtmlFtpPassword );
-        prefs.put( "defaultHtmlFtpTargetDir", defaultHtmlFtpTargetDir );
-        prefs.put( "defaultHtmlSshServer", defaultHtmlSshServer );
-        prefs.putInt( "defaultHtmlSshPort", defaultHtmlSshPort );
-        prefs.put( "defaultHtmlSshUser", defaultHtmlSshUser );
-        prefs.put( "defaultHtmlSshAuthType", defaultHtmlSshAuthType.name() );
-        prefs.put( "defaultHtmlSshPassword", defaultHtmlSshPassword );
-        prefs.put( "defaultHtmlSshTargetDir", defaultHtmlSshTargetDir );
-        prefs.put( "defaultHtmlSshKeyFile", defaultHtmlSshKeyFile );
+        prefs.putBoolean("dontEnlargeSmallImages", dontEnlargeSmallImages);
+        prefs.putInt("thumbnailCounter", thumbnailCounter);
+        prefs.putBoolean("writeLog", writeLog);
+        prefs.put("logfile", logfile.getPath());
+        prefs.put("thumbnailCacheDirectory", thumbnailCacheDirectory);
+        prefs.putInt("defaultHtmlPicsPerRow", defaultHtmlPicsPerRow);
+        prefs.putInt("defaultHtmlThumbnailWidth", defaultHtmlThumbnailWidth);
+        prefs.putInt("defaultHtmlThumbnailHeight", defaultHtmlThumbnailHeight);
+        prefs.putBoolean("defaultGenerateMidresHtml", defaultGenerateMidresHtml);
+        prefs.put("defaultHtmlPictureNamingString", defaultHtmlPictureNaming.name());
+        prefs.put("defaultHtmlOutputTarget", defaultHtmlOutputTarget.name());
+        prefs.putBoolean("defaultGenerateMap", defaultGenerateMap);
+        prefs.putBoolean("defaultGenerateDHTML", defaultGenerateDHTML);
+        prefs.putBoolean("defaultGenerateZipfile", defaultGenerateZipfile);
+        prefs.putBoolean("defaultLinkToHighres", defaultLinkToHighres);
+        prefs.putBoolean("defaultExportHighres", defaultExportHighres);
+        prefs.putBoolean("defaultRotateHighres", defaultRotateHighres);
+        prefs.putInt("defaultHtmlMidresWidth", defaultHtmlMidresWidth);
+        prefs.putInt("defaultHtmlMidresHeight", defaultHtmlMidresHeight);
+        prefs.putFloat("defaultHtmlLowresQuality", defaultHtmlLowresQuality);
+        prefs.putFloat("defaultHtmlMidresQuality", defaultHtmlMidresQuality);
+        prefs.putBoolean("writeRobotsTxt", writeRobotsTxt);
+        prefs.put("defaultHtmlFtpServer", defaultHtmlFtpServer);
+        prefs.putInt("defaultHtmlFtpPort", defaultHtmlFtpPort);
+        prefs.put("defaultHtmlFtpUser", defaultHtmlFtpUser);
+        prefs.put("defaultHtmlFtpPassword", defaultHtmlFtpPassword);
+        prefs.put("defaultHtmlFtpTargetDir", defaultHtmlFtpTargetDir);
+        prefs.put("defaultHtmlSshServer", defaultHtmlSshServer);
+        prefs.putInt("defaultHtmlSshPort", defaultHtmlSshPort);
+        prefs.put("defaultHtmlSshUser", defaultHtmlSshUser);
+        prefs.put("defaultHtmlSshAuthType", defaultHtmlSshAuthType.name());
+        prefs.put("defaultHtmlSshPassword", defaultHtmlSshPassword);
+        prefs.put("defaultHtmlSshTargetDir", defaultHtmlSshTargetDir);
+        prefs.put("defaultHtmlSshKeyFile", defaultHtmlSshKeyFile);
 
-        prefs.putBoolean( "thumbnailFastScale", thumbnailFastScale );
-        prefs.putBoolean( "pictureViewerFastScale", pictureViewerFastScale );
-        prefs.putBoolean( "showThumbOnFileChooser", showThumbOnFileChooser );
+        prefs.putBoolean("thumbnailFastScale", thumbnailFastScale);
+        prefs.putBoolean("pictureViewerFastScale", pictureViewerFastScale);
+        prefs.putBoolean("showThumbOnFileChooser", showThumbOnFileChooser);
         n = 0;
         Iterator itr = emailSenders.iterator();
-        while ( itr.hasNext() ) {
-            prefs.put( "emailSender-" + Integer.toString( n ), (String) itr.next() );
+        while (itr.hasNext()) {
+            prefs.put("emailSender-" + Integer.toString(n), (String) itr.next());
             n++;
         }
-        prefs.putInt( "emailSenders", n );
+        prefs.putInt("emailSenders", n);
         n = 0;
         itr = emailRecipients.iterator();
-        while ( itr.hasNext() ) {
-            prefs.put( "emailRecipient-" + Integer.toString( n ), (String) itr.next() );
+        while (itr.hasNext()) {
+            prefs.put("emailRecipient-" + Integer.toString(n), (String) itr.next());
             n++;
         }
-        prefs.putInt( "emailRecipients", n );
-        prefs.put( "emailServer", emailServer );
-        prefs.put( "emailPort", emailPort );
-        prefs.putInt( "emailAuthentication", emailAuthentication );
-        prefs.put( "emailUser", emailUser );
-        prefs.put( "emailPassword", emailPassword );
-        prefs.putBoolean( "emailScaleImages", emailScaleImages );
-        prefs.putBoolean( "emailSendOriginal", emailSendOriginal );
-        prefs.putInt( "emailDimensions.width", emailDimensions.width );
-        prefs.putInt( "emailDimensions.height", emailDimensions.height );
-        prefs.putInt( "tagCloudWords", tagCloudWords );
-        prefs.put( "lastSortChoiceString", lastSortChoice.toString() );
-        prefs.putBoolean( "lastCameraWizardCopyMode", lastCameraWizardCopyMode );
+        prefs.putInt("emailRecipients", n);
+        prefs.put("emailServer", emailServer);
+        prefs.put("emailPort", emailPort);
+        prefs.putInt("emailAuthentication", emailAuthentication);
+        prefs.put("emailUser", emailUser);
+        prefs.put("emailPassword", emailPassword);
+        prefs.putBoolean("emailScaleImages", emailScaleImages);
+        prefs.putBoolean("emailSendOriginal", emailSendOriginal);
+        prefs.putInt("emailDimensions.width", emailDimensions.width);
+        prefs.putInt("emailDimensions.height", emailDimensions.height);
+        prefs.putInt("tagCloudWords", tagCloudWords);
+        prefs.put("lastSortChoiceString", lastSortChoice.toString());
+        prefs.putBoolean("lastCameraWizardCopyMode", lastCameraWizardCopyMode);
 
-        prefs.putBoolean( "rememberGoogleCredentials", rememberGoogleCredentials );
-        if ( rememberGoogleCredentials ) {
-            prefs.put( "googleUsername", googleUsername );
-            prefs.put( "googlePassword", googlePassword );
+        prefs.putBoolean("rememberGoogleCredentials", rememberGoogleCredentials);
+        if (rememberGoogleCredentials) {
+            prefs.put("googleUsername", googleUsername);
+            prefs.put("googlePassword", googlePassword);
         } else {
-            prefs.put( "googleUsername", "" );
-            prefs.put( "googlePassword", "" );
+            prefs.put("googleUsername", "");
+            prefs.put("googlePassword", "");
         }
 
         unsavedSettingChanges = false;
@@ -1002,17 +990,17 @@ public class Settings {
      */
     public static void writeCameraSettings() {
         //logger.info( "Writing cameras" );
-        prefs.putInt( "NumberOfCameras", cameras.size() );
+        prefs.putInt("NumberOfCameras", cameras.size());
         int i = 0;
-        for ( Camera c : cameras ) {
-            prefs.put( "Camera[" + Integer.toString( i ) + "].description", c.getDescription() );
-            prefs.put( "Camera[" + Integer.toString( i ) + "].cameraMountPoint", c.getCameraMountPoint() );
-            prefs.putBoolean( "Camera[" + Integer.toString( i ) + "].useFilename", c.getUseFilename() );
-            prefs.putBoolean( "Camera[" + Integer.toString( i ) + "].monitor", c.getMonitorForNewPictures() );
+        for (Camera c : cameras) {
+            prefs.put("Camera[" + Integer.toString(i) + "].description", c.getDescription());
+            prefs.put("Camera[" + Integer.toString(i) + "].cameraMountPoint", c.getCameraMountPoint());
+            prefs.putBoolean("Camera[" + Integer.toString(i) + "].useFilename", c.getUseFilename());
+            prefs.putBoolean("Camera[" + Integer.toString(i) + "].monitor", c.getMonitorForNewPictures());
             try {
-                PrefObj.putObject( prefs, "Camera[" + Integer.toString( i ) + "].oldImage", c.getOldImage() );
-            } catch ( IOException | BackingStoreException | ClassNotFoundException ex ) {
-                LOGGER.severe( ex.getLocalizedMessage() );
+                PrefObj.putObject(prefs, "Camera[" + Integer.toString(i) + "].oldImage", c.getOldImage());
+            } catch (IOException | BackingStoreException | ClassNotFoundException ex) {
+                LOGGER.severe(ex.getLocalizedMessage());
             }
             i++;
         }
@@ -1021,23 +1009,23 @@ public class Settings {
     /**
      * this method attempts to load the cameras
      */
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public static void loadCameraSettings() {
-        int numberOfCameras = prefs.getInt( "NumberOfCameras", 0 );
-        for ( int i = 0; i < numberOfCameras; i++ ) {
+        int numberOfCameras = prefs.getInt("NumberOfCameras", 0);
+        for (int i = 0; i < numberOfCameras; i++) {
             Camera camera = new Camera();
-            camera.setDescription( prefs.get( "Camera[" + Integer.toString( i ) + "].description", "unknown" ) );
-            camera.setCameraMountPoint( prefs.get( "Camera[" + Integer.toString( i ) + "].cameraMountPoint", FileSystemView.getFileSystemView().getHomeDirectory().toString() ) );
-            camera.setUseFilename( prefs.getBoolean( "Camera[" + Integer.toString( i ) + "].useFilename", true ) );
-            camera.setMonitorForNewPictures( prefs.getBoolean( "Camera[" + Integer.toString( i ) + "].monitor", true ) );
+            camera.setDescription(prefs.get("Camera[" + Integer.toString(i) + "].description", "unknown"));
+            camera.setCameraMountPoint(prefs.get("Camera[" + Integer.toString(i) + "].cameraMountPoint", FileSystemView.getFileSystemView().getHomeDirectory().toString()));
+            camera.setUseFilename(prefs.getBoolean("Camera[" + Integer.toString(i) + "].useFilename", true));
+            camera.setMonitorForNewPictures(prefs.getBoolean("Camera[" + Integer.toString(i) + "].monitor", true));
 
-            camera.setOldImage( new HashMap<>() );
+            camera.setOldImage(new HashMap<>());
             try {
-                camera.setOldImage( (HashMap) PrefObj.getObject( prefs, "Camera[" + Integer.toString( i ) + "].oldImage" ) );
-            } catch ( IOException | BackingStoreException | ClassNotFoundException ex ) {
-                LOGGER.severe( ex.getLocalizedMessage() );
+                camera.setOldImage((HashMap) PrefObj.getObject(prefs, "Camera[" + Integer.toString(i) + "].oldImage"));
+            } catch (IOException | BackingStoreException | ClassNotFoundException ex) {
+                LOGGER.severe(ex.getLocalizedMessage());
             }
-            cameras.add( camera );
+            cameras.add(camera);
         }
     }
 
@@ -1046,28 +1034,24 @@ public class Settings {
      * menu.
      * <p>
      * The caller should notify any listeners that the recentCollections changed
-     * by sending a 
+     * by sending a
      * {@code JpoEventBus.getInstance().post( new RecentCollectionsChangedEvent() ); }
      *
      * @param recentFile The collection file name to be memorised
      */
-    public static void pushRecentCollection( String recentFile ) {
-        for ( int i = 0; i < Settings.MAX_MEMORISE; i++ ) {
-            if ( ( recentCollections[i] != null )
-                    && ( recentCollections[i].equals( recentFile ) ) ) {
+    public static void pushRecentCollection(String recentFile) {
+        for (int i = 0; i < Settings.MAX_MEMORISE; i++) {
+            if ((recentCollections[i] != null)
+                    && (recentCollections[i].equals(recentFile))) {
                 // it was already in the list make it the first one
-                for ( int j = i; j > 0; j-- ) {
-                    recentCollections[j] = recentCollections[j - 1];
-                }
+                System.arraycopy(recentCollections, 0, recentCollections, 1, i);
                 recentCollections[0] = recentFile;
                 return;
             }
         }
 
         // move all the elements down by one
-        for ( int i = Settings.MAX_MEMORISE - 1; i > 0; i-- ) {
-            recentCollections[i] = recentCollections[i - 1];
-        }
+        System.arraycopy(recentCollections, 0, recentCollections, 1, Settings.MAX_MEMORISE - 1);
         recentCollections[0] = recentFile;
         writeSettings();
     }
@@ -1076,11 +1060,11 @@ public class Settings {
      * This method clears all the recent collection file names.
      * <p>
      * The caller should notify any listeners that the recentCollections changed
-     * by sending a 
+     * by sending a
      * {@code JpoEventBus.getInstance().post( new RecentCollectionsChangedEvent() ); }
      */
     public static void clearRecentCollection() {
-        for ( int i = 0; i < Settings.MAX_MEMORISE; i++ ) {
+        for (int i = 0; i < Settings.MAX_MEMORISE; i++) {
             recentCollections[i] = null;
             writeSettings();
         }
@@ -1119,14 +1103,15 @@ public class Settings {
     public static String getCurrentLanguage() {
         return currentLocale.getDisplayLanguage();
     }
+
     /**
      * Supported Languages
      */
-    public static final String[] supportedLanguages = { "English", "Deutsch", "Simplified Chinese", "Traditional Chinese" };
+    public static final String[] supportedLanguages = {"English", "Deutsch", "Simplified Chinese", "Traditional Chinese"};
     /**
      * Locales for the languages in supportedLanguages
      */
-    public static final Locale[] supportedLocale = { Locale.ENGLISH, Locale.GERMAN, Locale.SIMPLIFIED_CHINESE, Locale.TRADITIONAL_CHINESE };
+    public static final Locale[] supportedLocale = {Locale.ENGLISH, Locale.GERMAN, Locale.SIMPLIFIED_CHINESE, Locale.TRADITIONAL_CHINESE};
 
     /**
      * Sets the new locale. As of 3 Apr 2014 this doesn't send a
@@ -1136,20 +1121,20 @@ public class Settings {
      * @param newLocale the new locale
      * @return true if the locale was changed, false if not.
      */
-    public static boolean setLocale( Locale newLocale ) {
+    public static boolean setLocale(Locale newLocale) {
         Locale oldLocale = currentLocale;
         try {
-            jpoResources = ResourceBundle.getBundle( "jpo.gui.JpoResources", newLocale );
+            jpoResources = ResourceBundle.getBundle("jpo.gui.JpoResources", newLocale);
             currentLocale = newLocale;
-        } catch ( MissingResourceException mre ) {
-            LOGGER.info( mre.getMessage() );
-            jpoResources = ResourceBundle.getBundle( "jpo.gui.JpoResources", DEFAULT_LOCALE );
+        } catch (MissingResourceException mre) {
+            LOGGER.info(mre.getMessage());
+            jpoResources = ResourceBundle.getBundle("jpo.gui.JpoResources", DEFAULT_LOCALE);
             currentLocale = DEFAULT_LOCALE;
         }
-        titleFont = Font.decode( Settings.jpoResources.getString( "SettingsTitleFont" ) );
-        captionFont = Font.decode( Settings.jpoResources.getString( "SettingsCaptionFont" ) );
+        titleFont = Font.decode(Settings.jpoResources.getString("SettingsTitleFont"));
+        captionFont = Font.decode(Settings.jpoResources.getString("SettingsCaptionFont"));
 
-        return (! currentLocale.equals(oldLocale) );
+        return (!currentLocale.equals(oldLocale));
     }
 
     /**
@@ -1163,7 +1148,7 @@ public class Settings {
      * and caused me frustration and headaches. RE, 20.1.2007
      */
     static {
-        setLocale( currentLocale );
+        setLocale(currentLocale);
     }
     /*
      * ------------------------------------------------------------------------------
@@ -1176,15 +1161,12 @@ public class Settings {
     /**
      * Array of recently used Drop Nodes
      */
-    public static SortableDefaultMutableTreeNode[] recentDropNodes = new SortableDefaultMutableTreeNode[MAX_DROPNODES];
+    //public static SortableDefaultMutableTreeNode[] recentDropNodes = new SortableDefaultMutableTreeNode[MAX_DROPNODES];
+    public static Queue<SortableDefaultMutableTreeNode> recentDropNodes = EvictingQueue.create(MAX_DROPNODES);
 
     /**
      * This method memorizes the recent drop targets so that they can be
-     * accessed more quickly next time round.
-     * <p>
-     * As of 4 April 2014 this method no longer sends notifications about the
-     * change as this is a GUI thing and doesn't belong in the data model.
-     * Instead send a
+     * accessed more quickly next time round. After calling this method send a
      * {@link jpo.EventBus.RecentDropNodesChangedEvent RecentDropNodesChangedEvent}
      * onto the EventBus so that GUI widgets can update themselves.
      * <p>
@@ -1192,14 +1174,14 @@ public class Settings {
      *
      * @param recentNode The recent drop target to add
      */
-    public static void memorizeGroupOfDropLocation( SortableDefaultMutableTreeNode recentNode ) {
-        for ( int i = 0; i < MAX_DROPNODES; i++ ) {
+    public static void memorizeGroupOfDropLocation(SortableDefaultMutableTreeNode recentNode) {
+        if (!recentDropNodes.contains(recentNode)) {
+            recentDropNodes.add(recentNode);
+        }
+        /*for ( int i = 0; i < MAX_DROPNODES; i++ ) {
             if ( ( recentDropNodes[i] != null )
                     && ( recentDropNodes[i].hashCode() == recentNode.hashCode() ) ) {
-                //logger.info( "Settings.memorizeGroupOfDropLocation: node was already in the list make it the first one.");
-                for ( int j = i; j > 0; j-- ) {
-                    recentDropNodes[j] = recentDropNodes[j - 1];
-                }
+                System.arraycopy(recentDropNodes, 0, recentDropNodes, 1, i);
                 recentDropNodes[0] = recentNode;
                 return;
             }
@@ -1210,6 +1192,7 @@ public class Settings {
             recentDropNodes[i] = recentDropNodes[i - 1];
         }
         recentDropNodes[0] = recentNode;
+        */
     }
 
     /**
@@ -1225,12 +1208,14 @@ public class Settings {
      *
      * @param deathNode the node to remove
      */
-    public static void removeRecentDropNode( SortableDefaultMutableTreeNode deathNode ) {
-        for ( int i = 0; i < recentDropNodes.length; i++ ) {
+    public static void removeRecentDropNode(SortableDefaultMutableTreeNode deathNode) {
+        recentDropNodes.remove(deathNode);
+        /*for ( int i = 0; i < recentDropNodes.length; i++ ) {
             if ( deathNode == recentDropNodes[i] ) {
                 recentDropNodes[i] = null;
             }
-        }
+        }*/
+
     }
 
     /**
@@ -1241,10 +1226,10 @@ public class Settings {
      * onto the EventBus so that GUI widgets can update themselves.
      * <p>
      * {@code JpoEventBus.getInstance().post( new RecentDropNodesChangedEvent() );}
-     *
      */
     public static void clearRecentDropNodes() {
-        recentDropNodes = new SortableDefaultMutableTreeNode[MAX_DROPNODES];
+        //recentDropNodes = new SortableDefaultMutableTreeNode[MAX_DROPNODES];
+        recentDropNodes.clear();
     }
     /*
      * ------------------------------------------------------------------------------
@@ -1271,10 +1256,10 @@ public class Settings {
      *
      * @param location The new location to memorise
      */
-    public static void memorizeCopyLocation( String location ) {
-        for ( int i = 0; i < MAX_MEMORISE; i++ ) {
-            if ( ( copyLocations[i] != null ) && ( copyLocations[i].equals( location ) ) ) {
-                for ( int j = i; j > 0; j-- ) {
+    public static void memorizeCopyLocation(String location) {
+        for (int i = 0; i < MAX_MEMORISE; i++) {
+            if ((copyLocations[i] != null) && (copyLocations[i].equals(location))) {
+                for (int j = i; j > 0; j--) {
                     copyLocations[j] = copyLocations[j - 1];
                 }
                 copyLocations[0] = location;
@@ -1283,7 +1268,7 @@ public class Settings {
         }
 
         // move all the elements down by one
-        for ( int i = MAX_MEMORISE - 1; i > 0; i-- ) {
+        for (int i = MAX_MEMORISE - 1; i > 0; i--) {
             copyLocations[i] = copyLocations[i - 1];
         }
         copyLocations[0] = location;
@@ -1298,10 +1283,10 @@ public class Settings {
      *
      * @param location The new zip file to memorise
      */
-    public static void memorizeZipFile( String location ) {
-        for ( int i = 0; i < MAX_MEMORISE; i++ ) {
-            if ( ( memorizedZipFiles[i] != null ) && ( memorizedZipFiles[i].equals( location ) ) ) {
-                for ( int j = i; j > 0; j-- ) {
+    public static void memorizeZipFile(String location) {
+        for (int i = 0; i < MAX_MEMORISE; i++) {
+            if ((memorizedZipFiles[i] != null) && (memorizedZipFiles[i].equals(location))) {
+                for (int j = i; j > 0; j--) {
                     memorizedZipFiles[j] = memorizedZipFiles[j - 1];
                 }
                 memorizedZipFiles[0] = location;
@@ -1310,7 +1295,7 @@ public class Settings {
         }
 
         // move all the elements down by one
-        for ( int i = MAX_MEMORISE - 1; i > 0; i-- ) {
+        for (int i = MAX_MEMORISE - 1; i > 0; i--) {
             memorizedZipFiles[i] = memorizedZipFiles[i - 1];
         }
         memorizedZipFiles[0] = location;
@@ -1325,10 +1310,10 @@ public class Settings {
     public static boolean validateCopyLocations() {
         File file;
         boolean arrayChanged = false;
-        for ( int i = 0; i < MAX_MEMORISE; i++ ) {
-            if ( copyLocations[i] != null ) {
-                file = new File( copyLocations[i] );
-                if ( !file.exists() ) {
+        for (int i = 0; i < MAX_MEMORISE; i++) {
+            if (copyLocations[i] != null) {
+                file = new File(copyLocations[i]);
+                if (!file.exists()) {
                     copyLocations[i] = null;
                     arrayChanged = true;
                 }
@@ -1341,8 +1326,8 @@ public class Settings {
      * This method clears the copy locations
      */
     public static void clearCopyLocations() {
-        LOGGER.info( "Should Clear Memorised Directories" );
-        for ( int i = 0; i < MAX_MEMORISE; i++ ) {
+        LOGGER.info("Should Clear Memorised Directories");
+        for (int i = 0; i < MAX_MEMORISE; i++) {
             copyLocations[i] = null;
         }
         writeSettings();
@@ -1356,12 +1341,12 @@ public class Settings {
      * home directory
      */
     public static File getMostRecentCopyLocation() {
-        for ( String copyLocation : copyLocations ) {
-            if ( copyLocation != null ) {
-                return new File( copyLocation );
+        for (String copyLocation : copyLocations) {
+            if (copyLocation != null) {
+                return new File(copyLocation);
             }
         }
-        return new File( System.getProperty( "user.dir" ) );
+        return new File(System.getProperty("user.dir"));
     }
     /*
      * ------------------------------------------------------------------------------
@@ -1382,7 +1367,7 @@ public class Settings {
 
     private static MainWindow mainWindow;
 
-    public static void setMainWindow( MainWindow newMainWindow ) {
+    public static void setMainWindow(MainWindow newMainWindow) {
         mainWindow = newMainWindow;
     }
 

@@ -192,10 +192,10 @@ public class OverlayedPictureController extends PictureController implements Sca
         g2d.setColor( INFO_FONT_COLOR );
         switch ( showInfo ) {
             case PHOTOGRAPHIC_OVERLAY:
-                g2d.drawString( Settings.jpoResources.getString( "ExifInfoCamera" ), INFO_COORDINATES.x, INFO_COORDINATES.y + ( 0 * LINE_SPACING ) );
-                g2d.drawString( exifInfo.camera, INFO_COORDINATES.x + TABSTOP, INFO_COORDINATES.y + ( 0 * LINE_SPACING ) );
-                g2d.drawString( Settings.jpoResources.getString( "ExifInfoLens" ), INFO_COORDINATES.x, INFO_COORDINATES.y + ( 1 * LINE_SPACING ) );
-                g2d.drawString( exifInfo.lens, INFO_COORDINATES.x + TABSTOP, INFO_COORDINATES.y + ( 1 * LINE_SPACING ) );
+                g2d.drawString( Settings.jpoResources.getString( "ExifInfoCamera" ), INFO_COORDINATES.x, INFO_COORDINATES.y);
+                g2d.drawString( exifInfo.camera, INFO_COORDINATES.x + TABSTOP, INFO_COORDINATES.y);
+                g2d.drawString( Settings.jpoResources.getString( "ExifInfoLens" ), INFO_COORDINATES.x, INFO_COORDINATES.y + (LINE_SPACING) );
+                g2d.drawString( exifInfo.lens, INFO_COORDINATES.x + TABSTOP, INFO_COORDINATES.y + (LINE_SPACING) );
                 g2d.drawString( Settings.jpoResources.getString( "ExifInfoShutterSpeed" ), INFO_COORDINATES.x, INFO_COORDINATES.y + ( 2 * LINE_SPACING ) );
                 g2d.drawString( exifInfo.shutterSpeed, INFO_COORDINATES.x + TABSTOP, INFO_COORDINATES.y + ( 2 * LINE_SPACING ) );
                 g2d.drawString( Settings.jpoResources.getString( "ExifInfoAperture" ), INFO_COORDINATES.x, INFO_COORDINATES.y + ( 3 * LINE_SPACING ) );
@@ -208,8 +208,18 @@ public class OverlayedPictureController extends PictureController implements Sca
                 g2d.drawString( exifInfo.getCreateDateTime(), INFO_COORDINATES.x + TABSTOP, INFO_COORDINATES.y + ( 6 * LINE_SPACING ) );
                 break;
             case APPLICATION_OVERLAY:
-                g2d.drawString( legend, INFO_COORDINATES.x, INFO_COORDINATES.y + ( 0 * LINE_SPACING ) );
-                g2d.drawString( Settings.jpoResources.getString( "PicturePaneSize" ) + Integer.toString( scalablePicture.getOriginalWidth() ) + " x " + Integer.toString( scalablePicture.getOriginalHeight() ) + Settings.jpoResources.getString( "PicturePaneMidpoint" ) + Integer.toString( focusPoint.x ) + " x " + Integer.toString( focusPoint.y ) + " Scale: " + TWO_DECIMAL_FORMATTER.format( scalablePicture.getScaleFactor() ), INFO_COORDINATES.x, INFO_COORDINATES.y + ( 1 * LINE_SPACING ) );
+                g2d.drawString( legend, INFO_COORDINATES.x, INFO_COORDINATES.y);
+                g2d.drawString( Settings.jpoResources.getString( "PicturePaneSize" )
+                        + Integer.toString( scalablePicture.getOriginalWidth() )
+                        + " x "
+                        + Integer.toString( scalablePicture.getOriginalHeight() )
+                        + Settings.jpoResources.getString( "PicturePaneMidpoint" )
+                        + Integer.toString( focusPoint.x )
+                        + " x "
+                        + Integer.toString( focusPoint.y )
+                        + " Scale: "
+                        + TWO_DECIMAL_FORMATTER.format( scalablePicture.getScaleFactor() ), INFO_COORDINATES.x, INFO_COORDINATES.y
+                        + (LINE_SPACING) );
                 g2d.drawString( "File: " + scalablePicture.getFilename(), INFO_COORDINATES.x, INFO_COORDINATES.y + ( 2 * LINE_SPACING ) );
                 g2d.drawString( Settings.jpoResources.getString( "PicturePaneLoadTime" ) + TWO_DECIMAL_FORMATTER.format( scalablePicture.getSourcePicture().loadTime / 1000F ) + Settings.jpoResources.getString( "PicturePaneSeconds" ), INFO_COORDINATES.x, INFO_COORDINATES.y + ( 3 * LINE_SPACING ) );
                 g2d.drawString( Settings.jpoResources.getString( "PicturePaneFreeMemory" ) + Tools.freeMemory(), INFO_COORDINATES.x, INFO_COORDINATES.y + ( 4 * LINE_SPACING ) );

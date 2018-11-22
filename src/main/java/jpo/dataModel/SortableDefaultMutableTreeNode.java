@@ -82,12 +82,26 @@ public class SortableDefaultMutableTreeNode
     }
 
     /**
-     * Constructor for a new node including a user object. The user object must
-     * be a PictureInfo or GroupInfo object
-     *
+     * Constructor for a new node.
      * @param userObject User Object
      */
-    public SortableDefaultMutableTreeNode( Object userObject ) {
+    public SortableDefaultMutableTreeNode(GroupInfo userObject) {
+        this((Object) userObject);
+    }
+
+    /**
+     * Constructor for a new node.
+     * @param userObject User Object
+     */
+    public SortableDefaultMutableTreeNode(PictureInfo userObject) {
+        this((Object) userObject);
+    }
+
+    /**
+     * Constructor for a new node including a user object. The user object must
+     * be a PictureInfo or GroupInfo object. Set to private so that this constructor
+     */
+    private SortableDefaultMutableTreeNode( Object userObject ) {
         super();
         setUserObject( userObject );
     }

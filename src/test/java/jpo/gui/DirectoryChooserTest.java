@@ -14,7 +14,7 @@ import org.junit.Test;
  *
  * @author Richard Eigenmann
  */
-class DirectoryChooserTest {
+public class DirectoryChooserTest {
 
     private int changesReceived;
     private File result;
@@ -23,7 +23,7 @@ class DirectoryChooserTest {
      * Test the listener
      */
     @Test
-    void testListener() {
+    public void testListener() {
         try {
             SwingUtilities.invokeAndWait( () -> {
                 final DirectoryChooser dc = new DirectoryChooser( "Title", DirectoryChooser.DIR_MUST_EXIST );
