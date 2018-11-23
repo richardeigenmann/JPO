@@ -675,7 +675,7 @@ public class SortableDefaultMutableTreeNode
          */
         Enumeration e = this.breadthFirstEnumeration();
         while ( e.hasMoreElements() ) {
-            Settings.removeRecentDropNode( (SortableDefaultMutableTreeNode) e.nextElement() );
+            Settings.recentDropNodes.remove( (SortableDefaultMutableTreeNode) e.nextElement() );
         }
 
         return true;

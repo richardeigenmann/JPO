@@ -1178,59 +1178,8 @@ public class Settings {
         if (!recentDropNodes.contains(recentNode)) {
             recentDropNodes.add(recentNode);
         }
-        /*for ( int i = 0; i < MAX_DROPNODES; i++ ) {
-            if ( ( recentDropNodes[i] != null )
-                    && ( recentDropNodes[i].hashCode() == recentNode.hashCode() ) ) {
-                System.arraycopy(recentDropNodes, 0, recentDropNodes, 1, i);
-                recentDropNodes[0] = recentNode;
-                return;
-            }
-        }
-
-        // move all the elements down by one
-        for ( int i = MAX_DROPNODES - 1; i > 0; i-- ) {
-            recentDropNodes[i] = recentDropNodes[i - 1];
-        }
-        recentDropNodes[0] = recentNode;
-        */
     }
 
-    /**
-     * Method to remove one of the recent Drop Nodes. It is important to check
-     * each time a node is deleted whether it or one of it's descendents is a
-     * drop target as this would no longer be a valid target.
-     * <p>
-     * Don't forget to send a
-     * {@link jpo.EventBus.RecentDropNodesChangedEvent RecentDropNodesChangedEvent}
-     * onto the EventBus so that GUI widgets can update themselves.
-     * <p>
-     * {@code JpoEventBus.getInstance().post( new RecentDropNodesChangedEvent() );}
-     *
-     * @param deathNode the node to remove
-     */
-    public static void removeRecentDropNode(SortableDefaultMutableTreeNode deathNode) {
-        recentDropNodes.remove(deathNode);
-        /*for ( int i = 0; i < recentDropNodes.length; i++ ) {
-            if ( deathNode == recentDropNodes[i] ) {
-                recentDropNodes[i] = null;
-            }
-        }*/
-
-    }
-
-    /**
-     * Clears the list of recent drop nodes
-     * <p>
-     * Don't forget to send a
-     * {@link jpo.EventBus.RecentDropNodesChangedEvent RecentDropNodesChangedEvent}
-     * onto the EventBus so that GUI widgets can update themselves.
-     * <p>
-     * {@code JpoEventBus.getInstance().post( new RecentDropNodesChangedEvent() );}
-     */
-    public static void clearRecentDropNodes() {
-        //recentDropNodes = new SortableDefaultMutableTreeNode[MAX_DROPNODES];
-        recentDropNodes.clear();
-    }
     /*
      * ------------------------------------------------------------------------------
      * Stuff for memorizing the copy target locations
