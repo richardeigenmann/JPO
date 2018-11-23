@@ -7,6 +7,8 @@ import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import static junit.framework.TestCase.assertEquals;
+import static org.junit.Assert.fail;
+
 import org.junit.Test;
 
 /**
@@ -35,6 +37,7 @@ public class DirectoryChooserTest {
             } );
         } catch ( InterruptedException | InvocationTargetException ex ) {
             Logger.getLogger( DirectoryChooserTest.class.getName() ).log( Level.SEVERE, null, ex );
+            fail("This was not supposed to land in the catch clause");
         }
 
     }
