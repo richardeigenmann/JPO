@@ -17,4 +17,7 @@ gradlew.bat
 .idea
 out
 Jpo.iml
+.project
+bin
+.settings
 
