@@ -8,7 +8,7 @@ import org.junit.Test;
 /*
  ExifInfoTest.java: This class interacts with Drew Noake's library and extracts the Exif information
 
- Copyright (C) 2013-2017  Richard Eigenmann.
+ Copyright (C) 2013-2018  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2

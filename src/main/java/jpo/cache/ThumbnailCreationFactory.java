@@ -46,7 +46,6 @@ public class ThumbnailCreationFactory implements Runnable {
     private static final ImageIcon BROKEN_THUMBNAIL_PICTURE;
 
     static {
-        //final String BROKEN_THUMBNAIL_PICTURE_FILE = "jpo/images/broken_thumbnail.gif";
         final String BROKEN_THUMBNAIL_PICTURE_FILE = "broken_thumbnail.gif";
         URL resource = ThumbnailCreationFactory.class.getClassLoader().getResource( BROKEN_THUMBNAIL_PICTURE_FILE );
         if ( resource == null ) {

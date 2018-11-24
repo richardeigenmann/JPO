@@ -29,7 +29,7 @@ import org.apache.commons.jcs.engine.control.CompositeCacheManager;
 
 
 /*
- Copyright (C) 2014 - 2017  Richard Eigenmann.
+ Copyright (C) 2014 - 2018  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -76,7 +76,7 @@ public class JpoCache {
     private Dimension groupThumbnailDimension;
 
     private JpoCache() {
-        LOGGER.info( "Creating JpoCache" );
+        LOGGER.fine( "Creating JpoCache" );
         CompositeCacheManager ccm = CompositeCacheManager.getUnconfiguredInstance();
         Properties props = loadProperties();
         ccm.configure( props );
@@ -103,20 +103,18 @@ public class JpoCache {
             LOGGER.severe( "Classloader didn't find file " + CACHE_DEFINITION_FILE );
             return null;
         } else {
-            LOGGER.info( "Cache definition file found at: " + ccfUrl.toString() );
+            LOGGER.fine( "Cache definition file found at: " + ccfUrl.toString() );
         }
 
         Properties props = new Properties();
         try {
-            // load a properties file
-            //InputStream cacheCcf = JpoCache.class.getClassLoader().getResourceAsStream(CACHE_DEFINITION_FILE );
             props.load( ccfUrl.openStream() );
         } catch ( IOException e ) {
             LOGGER.severe( "Failed to load " + CACHE_DEFINITION_FILE + "IOException: " + e.getLocalizedMessage() );
             return null;
         }
 
-        LOGGER.info( "setting jcs.auxiliary.DC.attributes.DiskPath to: " + Settings.thumbnailCacheDirectory );
+        LOGGER.fine( "setting jcs.auxiliary.DC.attributes.DiskPath to: " + Settings.thumbnailCacheDirectory );
         props.setProperty( "jcs.auxiliary.DC.attributes.DiskPath", Settings.thumbnailCacheDirectory );
 
         return props;
@@ -172,9 +170,8 @@ public class JpoCache {
      * @param rotation The rotation in degrees (0..360) for the thumbnail
      * @param size The maximum size of the thumbnail
      * @return The ImageBytes of the thumbnail
-     * @throws IOException If something went wrong
      */
-    public ImageBytes getThumbnailImageBytes( URL url, double rotation, Dimension size ) throws IOException {
+    public ImageBytes getThumbnailImageBytes( URL url, double rotation, Dimension size ) {
         int maxWidth = size.width;
         int maxHeight = size.height;
         String key = String.format( "%s-%fdeg-w:%dpx-h:%dpx", url, rotation, maxWidth, maxHeight );

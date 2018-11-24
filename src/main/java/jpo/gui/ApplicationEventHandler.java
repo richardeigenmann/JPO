@@ -184,18 +184,13 @@ public class ApplicationEventHandler {
     public void handleApplicationStartupRequest( ApplicationStartupRequest request ) {
         LOGGER.info( "------------------------------------------------------------\n      Starting JPO" );
 
-        // Check for EDT violations
-        // RepaintManager.setCurrentManager( new CheckThreadViolationRepaintManager() );
         Settings.loadSettings();
 
         // JpoEventBus.getInstance().register( new DebugEventListener() );
         JpoEventBus.getInstance().post( new OpenMainWindowRequest() );
-
         JpoEventBus.getInstance().post( new StartCameraWatchDaemonRequest() );
 
-        //final List<ThumbnailCreationFactory> THUMBNAIL_FACTORIES = new ArrayList<>();
         for ( int i = 1; i <= Settings.numberOfThumbnailCreationThreads; i++ ) {
-            //THUMBNAIL_FACTORIES.add( new ThumbnailCreationFactory() );
             new ThumbnailCreationFactory( Settings.ThumbnailCreationThreadPollingTime );
         }
 
@@ -205,7 +200,6 @@ public class ApplicationEventHandler {
         } else {
             JpoEventBus.getInstance().post( new StartNewCollectionRequest() );
         }
-
     }
 
     /**
@@ -354,7 +348,7 @@ public class ApplicationEventHandler {
         int index = 0;
 
         if ( userObject instanceof PictureInfo ) {
-            navigator = new FlatGroupNavigator( (SortableDefaultMutableTreeNode) node.getParent() );
+            navigator = new FlatGroupNavigator(node.getParent());
             for ( int i = 0; i < navigator.getNumberOfNodes(); i++ ) {
                 if ( navigator.getNode( i ).equals( node ) ) {
                     index = i;
@@ -1096,7 +1090,7 @@ public class ApplicationEventHandler {
     public void handleMoveNodeToTopRequest( MoveNodeToTopRequest request ) {
         SortableDefaultMutableTreeNode popupNode = request.getNode();
         popupNode.moveNodeToTop();
-        JpoEventBus.getInstance().post( new RefreshThumbnailRequest( (SortableDefaultMutableTreeNode) popupNode.getParent(), QUEUE_PRIORITY.MEDIUM_PRIORITY ) );
+        JpoEventBus.getInstance().post( new RefreshThumbnailRequest(popupNode.getParent(), QUEUE_PRIORITY.MEDIUM_PRIORITY ) );
     }
 
     /**
@@ -1108,7 +1102,7 @@ public class ApplicationEventHandler {
     public void handleMoveNodeUpRequest( MoveNodeUpRequest request ) {
         SortableDefaultMutableTreeNode popupNode = request.getNode();
         popupNode.moveNodeUp();
-        JpoEventBus.getInstance().post( new RefreshThumbnailRequest( (SortableDefaultMutableTreeNode) popupNode.getParent(), QUEUE_PRIORITY.MEDIUM_PRIORITY ) );
+        JpoEventBus.getInstance().post( new RefreshThumbnailRequest(popupNode.getParent(), QUEUE_PRIORITY.MEDIUM_PRIORITY ) );
     }
 
     /**
@@ -1120,7 +1114,7 @@ public class ApplicationEventHandler {
     public void handleMoveNodeDownRequest( MoveNodeDownRequest request ) {
         SortableDefaultMutableTreeNode popupNode = request.getNode();
         popupNode.moveNodeDown();
-        JpoEventBus.getInstance().post( new RefreshThumbnailRequest( (SortableDefaultMutableTreeNode) popupNode.getParent(), QUEUE_PRIORITY.MEDIUM_PRIORITY ) );
+        JpoEventBus.getInstance().post( new RefreshThumbnailRequest(popupNode.getParent(), QUEUE_PRIORITY.MEDIUM_PRIORITY ) );
     }
 
     /**
@@ -1132,7 +1126,7 @@ public class ApplicationEventHandler {
     public void handleMoveNodeToBottomRequest( MoveNodeToBottomRequest request ) {
         SortableDefaultMutableTreeNode popupNode = request.getNode();
         popupNode.moveNodeToBottom();
-        JpoEventBus.getInstance().post( new RefreshThumbnailRequest( (SortableDefaultMutableTreeNode) popupNode.getParent(), QUEUE_PRIORITY.MEDIUM_PRIORITY ) );
+        JpoEventBus.getInstance().post( new RefreshThumbnailRequest(popupNode.getParent(), QUEUE_PRIORITY.MEDIUM_PRIORITY ) );
     }
 
     /**
@@ -1174,7 +1168,7 @@ public class ApplicationEventHandler {
     @Subscribe
     public void handleRemoveNodeRequest( RemoveNodeRequest request ) {
         List<SortableDefaultMutableTreeNode> nodesToRemove = request.getNodes();
-        SortableDefaultMutableTreeNode firstParentNode = (SortableDefaultMutableTreeNode) nodesToRemove.get( 0 ).getParent();
+        SortableDefaultMutableTreeNode firstParentNode = nodesToRemove.get( 0 ).getParent();
         for ( SortableDefaultMutableTreeNode deleteNode : nodesToRemove ) {
             deleteNode.deleteNode();
         }
@@ -1446,19 +1440,17 @@ public class ApplicationEventHandler {
             switch ( option ) {
                 case 0:
                     JpoEventBus.getInstance().post( request.getNextRequest() );
-                    return;
+                    break;
                 case 1:
                     FileSaveRequest fileSaveRequest = new FileSaveRequest();
                     fileSaveRequest.setOnSuccessNextRequest( request.getNextRequest() );
                     JpoEventBus.getInstance().post( fileSaveRequest );
-                    return;
+                    break;
                 case 2:
                     FileSaveAsRequest fileSaveAsRequest = new FileSaveAsRequest();
                     fileSaveAsRequest.setOnSuccessNextRequest( request.getNextRequest() );
                     JpoEventBus.getInstance().post( fileSaveAsRequest );
-                    return;
-                default: //case 3:
-                    return;
+                    break;
             }
         } else {
             JpoEventBus.getInstance().post( request.getNextRequest() );
@@ -1497,7 +1489,7 @@ public class ApplicationEventHandler {
         pictureInfo.rotate( request.getAngle() );
         LOGGER.info( "Changed the rotation" );
         JpoEventBus.getInstance().post( new RefreshThumbnailRequest( request.getNode(), request.getPriority() ) );
-        JpoEventBus.getInstance().post( new RefreshThumbnailRequest( (SortableDefaultMutableTreeNode) request.getNode().getParent(), request.getPriority() ) );
+        JpoEventBus.getInstance().post( new RefreshThumbnailRequest(request.getNode().getParent(), request.getPriority() ) );
     }
 
     /**
@@ -1511,7 +1503,7 @@ public class ApplicationEventHandler {
         PictureInfo pictureInfo = (PictureInfo) request.getNode().getUserObject();
         pictureInfo.setRotation( request.getAngle() );
         JpoEventBus.getInstance().post( new RefreshThumbnailRequest( request.getNode(), request.getPriority() ) );
-        JpoEventBus.getInstance().post( new RefreshThumbnailRequest( (SortableDefaultMutableTreeNode) request.getNode().getParent(), request.getPriority() ) );
+        JpoEventBus.getInstance().post( new RefreshThumbnailRequest(request.getNode().getParent(), request.getPriority() ) );
     }
 
     /**

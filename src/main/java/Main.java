@@ -8,7 +8,7 @@ import jpo.gui.ApplicationEventHandler;
 /*
  Main.java:  starting point for the JPO application
 
- Copyright (C) 2002 - 2017  Richard Eigenmann.
+ Copyright (C) 2002 - 2018  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -35,7 +35,7 @@ public class Main {
      * The method verifies that the user has the correct Java Virtual Machine (&gt;
      * 1.7.0) and then creates a new {@link ApplicationEventHandler} object which
      * it asks to post a {@link ApplicationStartupRequest} to.
-     * @returns true is good, false if bad
+     * @return true is good, false if bad
      */
     private static boolean verifyJavaVersion() {
         String jvmVersion = System.getProperty( "java.version" );
@@ -47,7 +47,7 @@ public class Main {
             jvmMainVersion = jvmVersion;
         }
         float jvmVersionFloat = Float.parseFloat( jvmMainVersion );
-        return ( jvmVersionFloat >= 1.7f );
+        return ( jvmVersionFloat >= 1.8f );
     }
 
     /**
@@ -58,7 +58,7 @@ public class Main {
      */
     public static void main( String[] args ) {
         if (! verifyJavaVersion() ) {
-            String message = "The JPO application uses new features\nthat were added to the Java language in version 1.7.\nYour Java installation reports version " + System.getProperty( "java.version" ) + "\n";
+            String message = "The JPO application uses new features\nthat were added to the Java language in version 1.8.\nYour Java installation reports version " + System.getProperty( "java.version" ) + "\n";
             System.out.println( message );
             JOptionPane.showMessageDialog( Settings.anchorFrame, message, "Old Version Error", JOptionPane.ERROR_MESSAGE );
             System.exit( 1 );
@@ -68,7 +68,7 @@ public class Main {
         System.setSecurityManager( null );
 
         System.out.println( "\nJPO version 0.13\n" 
-                + "Copyright (C) 2000-2016 Richard Eigenmann,\nZurich, Switzerland\n"
+                + "Copyright (C) 2000-2018 Richard Eigenmann,\nZurich, Switzerland\n"
                 + "JPO comes with ABSOLUTELY NO WARRANTY;\n"
                 + "for details Look at the Help | License menu item.\n"
                 + "This is free software, and you are welcome\n"

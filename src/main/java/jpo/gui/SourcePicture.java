@@ -19,10 +19,12 @@ import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import javax.imageio.event.IIOReadProgressListener;
 import javax.imageio.stream.ImageInputStream;
+
 import jpo.cache.ImageBytes;
 import jpo.cache.JpoCache;
 import jpo.dataModel.Settings;
 import jpo.dataModel.Tools;
+
 import static jpo.gui.SourcePicture.SourcePictureStatus.SOURCE_PICTURE_ERROR;
 import static jpo.gui.SourcePicture.SourcePictureStatus.SOURCE_PICTURE_LOADING;
 import static jpo.gui.SourcePicture.SourcePictureStatus.SOURCE_PICTURE_LOADING_COMPLETED;
@@ -36,7 +38,7 @@ import static jpo.gui.SourcePicture.SourcePictureStatus.SOURCE_PICTURE_UNINITIAL
 /*
  SourcePicture.java:  class that can load a picture from a URL
 
- Copyright (C) 2002 - 2017  Richard Eigenmann.
+ Copyright (C) 2002 - 2018  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -50,6 +52,7 @@ import static jpo.gui.SourcePicture.SourcePictureStatus.SOURCE_PICTURE_UNINITIAL
  The license is in gpl.txt.
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
+
 /**
  * This class can load and rotate a digital picture either immediately or in a
  * separate thread from a URL
@@ -59,7 +62,7 @@ public class SourcePicture {
     /**
      * the Buffered Image that this class protects and provides features for.
      */
-    public BufferedImage sourcePictureBufferedImage;
+    private BufferedImage sourcePictureBufferedImage;
 
     /**
      * the URL of the picture
@@ -132,7 +135,7 @@ public class SourcePicture {
     /**
      * Defines a logger for this class
      */
-    private static final Logger LOGGER = Logger.getLogger( SourcePicture.class.getName() );
+    private static final Logger LOGGER = Logger.getLogger(SourcePicture.class.getName());
 
     /**
      * method to invoke with a filename or URL of a picture that is to be loaded
@@ -141,9 +144,9 @@ public class SourcePicture {
      * @param imageUrl Image URL
      * @param rotation Image rotation
      */
-    public void loadPicture( URL imageUrl, double rotation ) {
-        if ( pictureStatusCode == SOURCE_PICTURE_LOADING ) {
-            stopLoadingExcept( imageUrl );
+    public void loadPicture(URL imageUrl, double rotation) {
+        if (pictureStatusCode == SOURCE_PICTURE_LOADING) {
+            stopLoadingExcept(imageUrl);
         }
         this.imageUrl = imageUrl;
         this.rotation = rotation;
@@ -155,25 +158,25 @@ public class SourcePicture {
      * a new thread. This is handy to update the screen while the loading chugs
      * along in the background.
      *
-     * @param	imageUrl	The URL of the image to be loaded
-     * @param	priority	The Thread priority for this thread.
-     * @param	rotation	The rotation 0-360 to be used on this picture
+     * @param imageUrl The URL of the image to be loaded
+     * @param priority The Thread priority for this thread.
+     * @param rotation The rotation 0-360 to be used on this picture
      */
-    public void loadPictureInThread( URL imageUrl, int priority, double rotation ) {
-        if ( pictureStatusCode == SOURCE_PICTURE_LOADING ) {
-            stopLoadingExcept( imageUrl );
+    public void loadPictureInThread(URL imageUrl, int priority, double rotation) {
+        if (pictureStatusCode == SOURCE_PICTURE_LOADING) {
+            stopLoadingExcept(imageUrl);
         }
 
         this.imageUrl = imageUrl;
         this.rotation = rotation;
-        Thread t = new Thread( "SourcePicture.loadPictureInThread" ) {
+        Thread t = new Thread("SourcePicture.loadPictureInThread") {
 
             @Override
             public void run() {
                 loadPicture();
             }
         };
-        t.setPriority( priority );
+        t.setPriority(priority);
         t.start();
     }
 
@@ -182,79 +185,79 @@ public class SourcePicture {
      * sourcePictureBufferedImage object and updates the status when done or
      * failed.
      */
-    public void loadPicture() {
-        setStatus( SOURCE_PICTURE_LOADING, Settings.jpoResources.getString( "ScalablePictureLoadingStatus" ) );
+    private void loadPicture() {
+        setStatus(SOURCE_PICTURE_LOADING, Settings.jpoResources.getString("ScalablePictureLoadingStatus"));
         long start = System.currentTimeMillis();
         loadTime = 0;
 
         try {
-            ImageBytes imageBytes = JpoCache.getInstance().getHighresImageBytes( imageUrl );
+            ImageBytes imageBytes = JpoCache.getInstance().getHighresImageBytes(imageUrl);
             ByteArrayInputStream bis = imageBytes.getByteArrayInputStream();
 
-            ImageInputStream iis = ImageIO.createImageInputStream( bis );
-            LOGGER.fine( "Searching for ImageIO readers..." );
-            Iterator readerIterator = ImageIO.getImageReaders( iis );
-            while ( readerIterator.hasNext() ) {
+            ImageInputStream iis = ImageIO.createImageInputStream(bis);
+            LOGGER.fine("Searching for ImageIO readers...");
+            Iterator readerIterator = ImageIO.getImageReaders(iis);
+            while (readerIterator.hasNext()) {
                 reader = (ImageReader) readerIterator.next();
-                LOGGER.fine( String.format( "Found reader: %s", reader.toString() ) );
+                LOGGER.fine(String.format("Found reader: %s", reader.toString()));
             }
-            Iterator i = ImageIO.getImageReaders( iis );
-            if ( !i.hasNext() ) {
-                throw new IOException( "No Readers Available!" );
+            Iterator i = ImageIO.getImageReaders(iis);
+            if (!i.hasNext()) {
+                throw new IOException("No Readers Available!");
             }
             reader = (ImageReader) i.next();  // grab the first one
 
-            reader.addIIOReadProgressListener( myIIOReadProgressListener );
-            reader.setInput( iis );
+            reader.addIIOReadProgressListener(myIIOReadProgressListener);
+            reader.setInput(iis);
             sourcePictureBufferedImage = null;
             try {
-                sourcePictureBufferedImage = reader.read( 0 ); // just get the first image
+                sourcePictureBufferedImage = reader.read(0); // just get the first image
                 //LOGGER.info( sourcePictureBufferedImage.getColorModel().toString() );
-                
-                if ( sourcePictureBufferedImage.getType() != BufferedImage.TYPE_3BYTE_BGR ) {
-                    LOGGER.fine( String.format( "Got wrong image type: %d instead of %d. Trying to convert...", sourcePictureBufferedImage.getType(), BufferedImage.TYPE_3BYTE_BGR ) );
 
-                    BufferedImage newImage = new BufferedImage( sourcePictureBufferedImage.getWidth(),
-                            sourcePictureBufferedImage.getHeight(), BufferedImage.TYPE_3BYTE_BGR );
+                if (sourcePictureBufferedImage.getType() != BufferedImage.TYPE_3BYTE_BGR) {
+                    LOGGER.fine(String.format("Got wrong image type: %d instead of %d. Trying to convert...", sourcePictureBufferedImage.getType(), BufferedImage.TYPE_3BYTE_BGR));
+
+                    BufferedImage newImage = new BufferedImage(sourcePictureBufferedImage.getWidth(),
+                            sourcePictureBufferedImage.getHeight(), BufferedImage.TYPE_3BYTE_BGR);
                     Graphics2D g = newImage.createGraphics();
-                    g.drawImage( sourcePictureBufferedImage, 0, 0, null );
+                    g.drawImage(sourcePictureBufferedImage, 0, 0, null);
                     g.dispose();
                     sourcePictureBufferedImage = newImage;
                 }
 
-            } catch ( OutOfMemoryError e ) {
-                LOGGER.severe( "SourcePicture caught an OutOfMemoryError while loading an image." );
+            } catch (OutOfMemoryError e) {
+                LOGGER.severe("SourcePicture caught an OutOfMemoryError while loading an image.");
                 iis.close();
-                reader.removeIIOReadProgressListener( myIIOReadProgressListener );
+                reader.removeIIOReadProgressListener(myIIOReadProgressListener);
                 reader.dispose();
 
-                setStatus( SOURCE_PICTURE_ERROR, Settings.jpoResources.getString( "ScalablePictureErrorStatus" ) );
+                setStatus(SOURCE_PICTURE_ERROR, Settings.jpoResources.getString("ScalablePictureErrorStatus"));
                 sourcePictureBufferedImage = null;
 
                 Tools.dealOutOfMemoryError();
                 return;
             }
-            reader.removeIIOReadProgressListener( myIIOReadProgressListener );
+            reader.removeIIOReadProgressListener(myIIOReadProgressListener);
             reader.dispose();
             iis.close();
 
-            if ( !abortFlag ) {
-                if ( rotation != 0 ) {
-                    setStatus( SOURCE_PICTURE_ROTATING, "Rotating: " + imageUrl.toString() );
+            if (!abortFlag) {
+                if (rotation != 0) {
+                    setStatus(SOURCE_PICTURE_ROTATING, "Rotating: " + imageUrl.toString());
                     int xRot = sourcePictureBufferedImage.getWidth() / 2;
                     int yRot = sourcePictureBufferedImage.getHeight() / 2;
-                    AffineTransform rotateAf = AffineTransform.getRotateInstance( Math.toRadians( rotation ), xRot, yRot );
-                    AffineTransformOp op = new AffineTransformOp( rotateAf, AffineTransformOp.TYPE_BILINEAR );
-                    Rectangle2D newBounds = op.getBounds2D( sourcePictureBufferedImage );
+                    AffineTransform rotateAf = AffineTransform.getRotateInstance(Math.toRadians(rotation), xRot, yRot);
+                    AffineTransformOp op = new AffineTransformOp(rotateAf, AffineTransformOp.TYPE_BILINEAR);
+                    Rectangle2D newBounds = op.getBounds2D(sourcePictureBufferedImage);
                     // a simple AffineTransform would give negative top left coordinates -->
                     // do another transform to get 0,0 as top coordinates again.
                     double minX = newBounds.getMinX();
                     double minY = newBounds.getMinY();
 
-                    AffineTransform translateAf = AffineTransform.getTranslateInstance( minX * ( -1 ), minY * ( -1 ) );
-                    rotateAf.preConcatenate( translateAf );
-                    op = new AffineTransformOp( rotateAf, AffineTransformOp.TYPE_BILINEAR );
-                    newBounds = op.getBounds2D( sourcePictureBufferedImage );
+                    AffineTransform translateAf = AffineTransform.getTranslateInstance(minX * (-1), minY * (-1));
+                    rotateAf.preConcatenate(translateAf);
+                    op = new AffineTransformOp(rotateAf, AffineTransformOp.TYPE_BILINEAR);
+                    newBounds = op.getBounds2D(sourcePictureBufferedImage);
 
                     // this piece of code is so essential!!! Otherwise the internal image format
                     // is totally altered and either the AffineTransformOp decides it doesn't
@@ -262,21 +265,21 @@ public class SourcePicture {
                     BufferedImage targetImage = new BufferedImage(
                             (int) newBounds.getWidth(),
                             (int) newBounds.getHeight(),
-                            BufferedImage.TYPE_3BYTE_BGR );
+                            BufferedImage.TYPE_3BYTE_BGR);
 
-                    sourcePictureBufferedImage = op.filter( sourcePictureBufferedImage, targetImage );
+                    sourcePictureBufferedImage = op.filter(sourcePictureBufferedImage, targetImage);
                 }
 
-                setStatus( SOURCE_PICTURE_READY, "Loaded: " + imageUrl.toString() );
+                setStatus(SOURCE_PICTURE_READY, "Loaded: " + imageUrl.toString());
                 long end = System.currentTimeMillis();
                 loadTime = end - start;
             } else {
                 loadTime = 0;
-                setStatus( SOURCE_PICTURE_ERROR, "Aborted!" );
+                setStatus(SOURCE_PICTURE_ERROR, "Aborted!");
                 sourcePictureBufferedImage = null;
             }
-        } catch ( IOException e ) {
-            setStatus( SOURCE_PICTURE_ERROR, "Error while reading " + imageUrl.toString() );
+        } catch (IOException e) {
+            setStatus(SOURCE_PICTURE_ERROR, "Error while reading " + imageUrl.toString());
             sourcePictureBufferedImage = null;
         }
 
@@ -297,19 +300,19 @@ public class SourcePicture {
      * @param exemptionURL The exemption URL
      * @return True if loading in progress, false if not
      */
-    public boolean stopLoadingExcept( URL exemptionURL ) {
-        if ( ( imageUrl == null ) || ( exemptionURL == null ) ) {
-            LOGGER.fine( "exiting on a null parameter. How did this happen?" );
+    public boolean stopLoadingExcept(URL exemptionURL) {
+        if ((imageUrl == null) || (exemptionURL == null)) {
+            LOGGER.fine("exiting on a null parameter. How did this happen?");
             return false; // has never been used yet
         }
 
-        if ( pictureStatusCode != SOURCE_PICTURE_LOADING ) {
-            LOGGER.log( Level.FINE, "called but pointless since image is not LOADING: {0}", imageUrl.toString());
+        if (pictureStatusCode != SOURCE_PICTURE_LOADING) {
+            LOGGER.log(Level.FINE, "called but pointless since image is not LOADING: {0}", imageUrl.toString());
             return false;
         }
 
-        if ( !exemptionURL.equals( imageUrl ) ) {
-            LOGGER.log( Level.FINE, "called with Url {0} --> stopping loading of {1}", new Object[]{ exemptionURL.toString(), imageUrl.toString() });
+        if (!exemptionURL.equals(imageUrl)) {
+            LOGGER.log(Level.FINE, "called with Url {0} --> stopping loading of {1}", new Object[]{exemptionURL.toString(), imageUrl.toString()});
             stopLoading();
             return true;
         } else {
@@ -319,16 +322,12 @@ public class SourcePicture {
 
 
     /**
-     * return the size of the image or Zero if there is none
+     * return the size of the image or Dimension(0,0) if there is none
      *
      * @return the Dimension of the sourceBufferedImage
      */
     public Dimension getSize() {
-        if ( sourcePictureBufferedImage != null ) {
-            return new Dimension( sourcePictureBufferedImage.getWidth(), sourcePictureBufferedImage.getHeight() );
-        } else {
-            return new Dimension( 0, 0 );
-        }
+        return new Dimension(getWidth(),getHeight());
 
     }
 
@@ -338,7 +337,7 @@ public class SourcePicture {
      * @return the height of the image
      */
     public int getHeight() {
-        if ( sourcePictureBufferedImage != null ) {
+        if (sourcePictureBufferedImage != null) {
             return sourcePictureBufferedImage.getHeight();
         } else {
             return 0;
@@ -351,7 +350,7 @@ public class SourcePicture {
      * @return the width of the image
      */
     public int getWidth() {
-        if ( sourcePictureBufferedImage != null ) {
+        if (sourcePictureBufferedImage != null) {
             return sourcePictureBufferedImage.getWidth();
         } else {
             return 0;
@@ -388,15 +387,15 @@ public class SourcePicture {
     /**
      * The listeners to notify about changes on this SourcePicture.
      */
-    private final Set<SourcePictureListener> sourcePictureListeners = Collections.synchronizedSet(new HashSet<>() );
+    private final Set<SourcePictureListener> sourcePictureListeners = Collections.synchronizedSet(new HashSet<>());
 
     /**
      * Adds a listener
      *
      * @param listener Listener
      */
-    public void addListener( SourcePictureListener listener ) {
-        sourcePictureListeners.add( listener );
+    public void addListener(SourcePictureListener listener) {
+        sourcePictureListeners.add(listener);
     }
 
     /**
@@ -404,8 +403,8 @@ public class SourcePicture {
      *
      * @param listener the listener to remove
      */
-    public void removeListener( SourcePictureListener listener ) {
-        sourcePictureListeners.remove( listener );
+    public void removeListener(SourcePictureListener listener) {
+        sourcePictureListeners.remove(listener);
     }
 
     /**
@@ -425,17 +424,18 @@ public class SourcePicture {
     /**
      * Method that sets the status of the ScalablePicture object and notifies
      * interested objects of a change in status (not built yet).
-     * @param statusCode status code
+     *
+     * @param statusCode    status code
      * @param statusMessage status message
      */
-    private void setStatus( SourcePictureStatus statusCode, String statusMessage ) {
-        LOGGER.fine( String.format( "Sending status code %s with message %s to %d listeners", statusCode, statusMessage, sourcePictureListeners.size() ) );
+    private void setStatus(SourcePictureStatus statusCode, String statusMessage) {
+        LOGGER.fine(String.format("Sending status code %s with message %s to %d listeners", statusCode, statusMessage, sourcePictureListeners.size()));
         pictureStatusCode = statusCode;
         pictureStatusMessage = statusMessage;
-        synchronized ( sourcePictureListeners ) {
-            sourcePictureListeners.stream().forEach( ( sourcePictureListener ) -> {
-                sourcePictureListener.sourceStatusChange( statusCode, statusMessage, this );
-            } );
+        synchronized (sourcePictureListeners) {
+            sourcePictureListeners.forEach(sourcePictureListener ->
+                    sourcePictureListener.sourceStatusChange(statusCode, statusMessage, this)
+            );
         }
     }
 
@@ -474,7 +474,7 @@ public class SourcePicture {
     /**
      * returns the buffered image that was loaded or null if there is no image.
      *
-     * @return	the <code>BufferedImage</code> that was loaded or null if there
+     * @return the <code>BufferedImage</code> that was loaded or null if there
      * is no image.
      */
     public BufferedImage getSourceBufferedImage() {
@@ -488,58 +488,56 @@ public class SourcePicture {
     private class MyIIOReadProgressListener
             implements IIOReadProgressListener {
 
-        private void notifySourceLoadProgressListeners( SourcePictureStatus statusCode,
-                int percentage ) {
+        private void notifySourceLoadProgressListeners(SourcePictureStatus statusCode,
+                                                       int percentage) {
             percentLoaded = percentage;
-            sourcePictureListeners.stream().forEach( ( sourcePictureListener ) -> {
-                sourcePictureListener.sourceLoadProgressNotification( statusCode, percentage );
-            } );
+            sourcePictureListeners.forEach((sourcePictureListener) -> sourcePictureListener.sourceLoadProgressNotification(statusCode, percentage));
         }
 
         @Override
-        public void imageComplete( ImageReader source ) {
-            notifySourceLoadProgressListeners( SOURCE_PICTURE_LOADING_COMPLETED, 100 );
+        public void imageComplete(ImageReader source) {
+            notifySourceLoadProgressListeners(SOURCE_PICTURE_LOADING_COMPLETED, 100);
         }
 
         @Override
-        public void imageProgress( ImageReader source, float percentageDone ) {
-            if ( abortFlag ) {
+        public void imageProgress(ImageReader source, float percentageDone) {
+            if (abortFlag) {
                 reader.abort();
             }
-            notifySourceLoadProgressListeners( SOURCE_PICTURE_LOADING_PROGRESS, (  Float.valueOf( percentageDone ) ).intValue() );
+            notifySourceLoadProgressListeners(SOURCE_PICTURE_LOADING_PROGRESS, (Float.valueOf(percentageDone)).intValue());
         }
 
         @Override
-        public void imageStarted( ImageReader source, int imageIndex ) {
-            notifySourceLoadProgressListeners( SOURCE_PICTURE_LOADING_STARTED, 0 );
+        public void imageStarted(ImageReader source, int imageIndex) {
+            notifySourceLoadProgressListeners(SOURCE_PICTURE_LOADING_STARTED, 0);
         }
 
         @Override
-        public void readAborted( ImageReader source ) {
+        public void readAborted(ImageReader source) {
         }
 
         @Override
-        public void sequenceComplete( ImageReader source ) {
+        public void sequenceComplete(ImageReader source) {
         }
 
         @Override
-        public void sequenceStarted( ImageReader source, int minIndex ) {
+        public void sequenceStarted(ImageReader source, int minIndex) {
         }
 
         @Override
-        public void thumbnailComplete( ImageReader source ) {
+        public void thumbnailComplete(ImageReader source) {
         }
 
         @Override
-        public void thumbnailProgress( ImageReader source, float percentageDone ) {
-            if ( abortFlag ) {
+        public void thumbnailProgress(ImageReader source, float percentageDone) {
+            if (abortFlag) {
                 reader.abort();
             }
         }
 
         @Override
-        public void thumbnailStarted( ImageReader source, int imageIndex,
-                int thumbnailIndex ) {
+        public void thumbnailStarted(ImageReader source, int imageIndex,
+                                     int thumbnailIndex) {
         }
     }
 }

@@ -299,7 +299,7 @@ public class Thumbnail extends JComponent {
     /**
      * This flag indicates whether the offline icon should be drawn or not.
      */
-    private boolean drawOfflineIcon;  // default is false
+    public boolean drawOfflineIcon;  // default is false
 
     /**
      * Indicates to the Thumbnail that it should or should not draw it's Offline

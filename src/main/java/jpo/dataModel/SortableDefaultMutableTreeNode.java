@@ -17,12 +17,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Enumeration;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -41,6 +36,7 @@ import static jpo.dataModel.Tools.copyBufferedStream;
 import jpo.gui.JpoTransferable;
 import jpo.gui.ProgressGui;
 import org.apache.commons.io.FilenameUtils;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 
 /*
@@ -164,7 +160,7 @@ public class SortableDefaultMutableTreeNode
      * @return the usual compareTo value used for sorting.
      */
     @Override
-    public int compareTo( Object o ) {
+    public int compareTo( @NonNull Object o ) {
         Object myObject = getUserObject();
         Object otherObject = ( (DefaultMutableTreeNode) o ).getUserObject();
 
@@ -498,7 +494,7 @@ public class SortableDefaultMutableTreeNode
                 dropcomplete = true;
             } else if ( ( sourceNode.getUserObject() instanceof PictureInfo ) && ( this.getUserObject() instanceof PictureInfo ) ) {
                 // a picture is being dropped onto a picture and should be inserted before the target node
-                SortableDefaultMutableTreeNode parentNode = (SortableDefaultMutableTreeNode) this.getParent();
+                SortableDefaultMutableTreeNode parentNode = this.getParent();
                 if ( event.getDropAction() == DnDConstants.ACTION_MOVE ) {
                     LOGGER.info( "Moving Picture node " + sourceNode.toString() + " before Picture node " + this.toString() );
                     sourceNode.removeFromParent();
@@ -589,7 +585,7 @@ public class SortableDefaultMutableTreeNode
                 final SortableDefaultMutableTreeNode sourceNode,
                 final SortableDefaultMutableTreeNode targetNode ) {
             dropBefore.addActionListener( ( ActionEvent e ) -> {
-                SortableDefaultMutableTreeNode parentNode = (SortableDefaultMutableTreeNode) targetNode.getParent();
+                SortableDefaultMutableTreeNode parentNode = targetNode.getParent();
                 sourceNode.removeFromParent();
                 int currentIndex = parentNode.getIndex( targetNode );
                 parentNode.insert( sourceNode, currentIndex );
@@ -599,7 +595,7 @@ public class SortableDefaultMutableTreeNode
             add( dropBefore );
 
             dropAfter.addActionListener( ( ActionEvent e ) -> {
-                SortableDefaultMutableTreeNode parentNode = (SortableDefaultMutableTreeNode) targetNode.getParent();
+                SortableDefaultMutableTreeNode parentNode = targetNode.getParent();
                 sourceNode.removeFromParent();
                 int currentIndex = parentNode.getIndex( targetNode );
                 parentNode.insert( sourceNode, currentIndex + 1 );
@@ -657,7 +653,7 @@ public class SortableDefaultMutableTreeNode
         getPictureCollection().setUnsavedUpdates();
         synchronized ( this.getRoot() ) {
 
-            SortableDefaultMutableTreeNode parentNode = (SortableDefaultMutableTreeNode) this.getParent();
+            SortableDefaultMutableTreeNode parentNode = this.getParent();
 
             int[] childIndices = { parentNode.getIndex( this ) };
             Object[] removedChildren = { this };
@@ -670,12 +666,10 @@ public class SortableDefaultMutableTreeNode
             }
         }
 
-        /**
-         * removeThumbnailRequest the move targets here *
-         */
+        //removeThumbnailRequest the move targets here *
         Enumeration e = this.breadthFirstEnumeration();
         while ( e.hasMoreElements() ) {
-            Settings.recentDropNodes.remove( (SortableDefaultMutableTreeNode) e.nextElement() );
+            Settings.recentDropNodes.remove(e.nextElement());
         }
 
         return true;
@@ -688,7 +682,7 @@ public class SortableDefaultMutableTreeNode
     public void removeFromParent() {
         synchronized ( this.getRoot() ) {
 
-            SortableDefaultMutableTreeNode oldParentNode = (SortableDefaultMutableTreeNode) this.getParent();
+            SortableDefaultMutableTreeNode oldParentNode = this.getParent();
             if ( oldParentNode == null ) {
                 LOGGER.info( String.format( "Why would you try to remove node %s from it's parent when it has none?", toString() ) );
                 return;
@@ -797,7 +791,8 @@ public class SortableDefaultMutableTreeNode
      * @param targetFile The target location for the new Picture.
      * @return true if successful, false if not
      */
-    public boolean validateAndCopyPicture( File targetFile ) {
+    public boolean validateAndCopyPicture( @NonNull File targetFile ) {
+        Objects.requireNonNull(targetFile, "targetFile must not be null");
         if ( !( this.getUserObject() instanceof PictureInfo ) ) {
             LOGGER.severe( "Only PictureInfo nodes can be copied! Copy for this picture aborted." );
             return false;
@@ -880,7 +875,7 @@ public class SortableDefaultMutableTreeNode
             return;  // don't do anything with a root node.
         }
         synchronized ( this.getRoot() ) {
-            SortableDefaultMutableTreeNode parentNode = (SortableDefaultMutableTreeNode) this.getParent();
+            SortableDefaultMutableTreeNode parentNode = this.getParent();
             // abort if this action was attempted on the top node
             if ( parentNode.getIndex( this ) < 1 ) {
                 return;
@@ -900,7 +895,7 @@ public class SortableDefaultMutableTreeNode
             return;  // don't do anything with a root node.
         }
         synchronized ( this.getRoot() ) {
-            SortableDefaultMutableTreeNode parentNode = (SortableDefaultMutableTreeNode) this.getParent();
+            SortableDefaultMutableTreeNode parentNode = this.getParent();
             int currentIndex = parentNode.getIndex( this );
             // abort if this action was attempted on the top node or not a child
             if ( currentIndex < 1 ) {
@@ -920,7 +915,7 @@ public class SortableDefaultMutableTreeNode
             return;  // don't do anything with a root node.
         }
         synchronized ( this.getRoot() ) {
-            SortableDefaultMutableTreeNode parentNode = (SortableDefaultMutableTreeNode) this.getParent();
+            SortableDefaultMutableTreeNode parentNode = this.getParent();
             int childCount = parentNode.getChildCount();
             int currentIndex = parentNode.getIndex( this );
             // abort if this action was attempted on the bootom node
@@ -943,7 +938,7 @@ public class SortableDefaultMutableTreeNode
         }
 
         synchronized ( this.getRoot() ) {
-            SortableDefaultMutableTreeNode parentNode = (SortableDefaultMutableTreeNode) this.getParent();
+            SortableDefaultMutableTreeNode parentNode = this.getParent();
             int childCount = parentNode.getChildCount();
             // abort if this action was attempted on the bootom node
             if ( ( parentNode.getIndex( this ) == -1 )
@@ -966,7 +961,7 @@ public class SortableDefaultMutableTreeNode
         }
 
         synchronized ( this.getRoot() ) {
-            SortableDefaultMutableTreeNode parentNode = (SortableDefaultMutableTreeNode) this.getParent();
+            SortableDefaultMutableTreeNode parentNode = this.getParent();
             SortableDefaultMutableTreeNode childBefore = this;
             do {
                 childBefore = (SortableDefaultMutableTreeNode) parentNode.getChildBefore( childBefore );
@@ -995,13 +990,13 @@ public class SortableDefaultMutableTreeNode
         if ( this.isRoot() ) {
             return;  // don't do anything with a root node.
         }
-        SortableDefaultMutableTreeNode parentNode = (SortableDefaultMutableTreeNode) this.getParent();
+        SortableDefaultMutableTreeNode parentNode = this.getParent();
         if ( parentNode.isRoot() ) {
             return;  // don't do anything with a root parent node.
         }
 
         synchronized ( this.getRoot() ) {
-            SortableDefaultMutableTreeNode grandParentNode = (SortableDefaultMutableTreeNode) parentNode.getParent();
+            SortableDefaultMutableTreeNode grandParentNode = parentNode.getParent();
             int index = grandParentNode.getIndex( parentNode );
 
             this.removeFromParent();
@@ -1054,7 +1049,7 @@ public class SortableDefaultMutableTreeNode
         }
 
         synchronized ( targetNode.getRoot() ) {
-            SortableDefaultMutableTreeNode targetParentNode = (SortableDefaultMutableTreeNode) targetNode.getParent();
+            SortableDefaultMutableTreeNode targetParentNode = targetNode.getParent();
             int targetIndex = targetParentNode.getIndex( targetNode );
             return moveToIndex( targetParentNode, targetIndex );
         }
