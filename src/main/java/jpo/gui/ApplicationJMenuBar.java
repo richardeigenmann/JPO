@@ -8,36 +8,14 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
-import jpo.EventBus.CheckDirectoriesRequest;
-import jpo.EventBus.CheckIntegrityRequest;
-import jpo.EventBus.ChooseAndAddPicturesToGroupRequest;
-import jpo.EventBus.CloseApplicationRequest;
-import jpo.EventBus.EditCamerasRequest;
-import jpo.EventBus.EditSettingsRequest;
-import jpo.EventBus.FileLoadDialogRequest;
-import jpo.EventBus.FileSaveAsRequest;
-import jpo.EventBus.FileSaveRequest;
-import jpo.EventBus.FindDuplicatesRequest;
-import jpo.EventBus.JpoEventBus;
-import jpo.EventBus.LocaleChangedEvent;
-import jpo.EventBus.OpenCategoryEditorRequest;
-import jpo.EventBus.OpenHelpAboutFrameRequest;
-import jpo.EventBus.OpenLicenceFrameRequest;
-import jpo.EventBus.OpenPrivacyFrameRequest;
-import jpo.EventBus.OpenRecentCollectionRequest;
-import jpo.EventBus.OpenSearchDialogRequest;
-import jpo.EventBus.RecentCollectionsChangedEvent;
-import jpo.EventBus.RestoreDockablesPositionsRequest;
-import jpo.EventBus.SendEmailRequest;
-import jpo.EventBus.StartDoublePanelSlideshowRequest;
-import jpo.EventBus.StartNewCollectionRequest;
-import jpo.EventBus.UnsavedUpdatesDialogRequest;
+
+import jpo.EventBus.*;
 import jpo.dataModel.Settings;
 
 /*
  ApplicationJMenuBar.java:  main menu for the application
 
- Copyright (C) 2002 -2017 Richard Eigenmann.
+ Copyright (C) 2002 -2018 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -181,10 +159,22 @@ public class ApplicationJMenuBar extends JMenuBar {
     private final JMenuItem EditCheckIntegrityJMenuItem = new JMenuItem();
 
     /**
+     * Menu item that allows the user to find Duplicates
+     */
+    private final JMenuItem FindDuplicatesJMenuItem = new JMenuItem();
+
+
+    /**
      * Menu item that allows the user to change the categories.
      *
      */
     private final JMenuItem EditCategoriesJMenuItem = new JMenuItem();
+
+    /**
+     * Menu item that allows the user to start a new ThumbnailCreationThread
+     *
+     */
+    private final JMenuItem StartThumbnailCreationThreadJMenuItem = new JMenuItem();
 
     /**
      * Menu item that brings up the Help About screen.
@@ -260,16 +250,18 @@ public class ApplicationJMenuBar extends JMenuBar {
         emailJMenuItem.setText( Settings.jpoResources.getString( "emailJMenuItem" ) );
         RandomSlideshowJMenuItem.setText( Settings.jpoResources.getString( "RandomSlideshowJMenuItem" ) );
 
-        ExtrasJMenu.setText( "Extras" );
+        ExtrasJMenu.setText( Settings.jpoResources.getString("ExtrasJMenu" ));
         EditCheckDirectoriesJMenuItem.setText( Settings.jpoResources.getString( "EditCheckDirectoriesJMenuItemText" ) );
         EditCheckIntegrityJMenuItem.setText( Settings.jpoResources.getString( "EditCheckIntegrityJMenuItem" ) );
+        FindDuplicatesJMenuItem.setText(Settings.jpoResources.getString( "FindDuplicatesJMenuItem" ) );
         EditCategoriesJMenuItem.setText( Settings.jpoResources.getString( "EditCategoriesJMenuItem" ) );
+        StartThumbnailCreationThreadJMenuItem.setText( Settings.jpoResources.getString( "StartThumbnailCreationThreadJMenuItem" ));
 
         HelpJMenu.setText( Settings.jpoResources.getString( "HelpJMenuText" ) );
         HelpAboutJMenuItem.setText( Settings.jpoResources.getString( "HelpAboutMenuItemText" ) );
         HelpLicenseJMenuItem.setText( Settings.jpoResources.getString( "HelpLicenseMenuItemText" ) );
         HelpPrivacyJMenuItem.setText( Settings.jpoResources.getString( "HelpPrivacyMenuItemText" ) );
-        HelpResetWindowsJMenuItem.setText( "Reset Windows" );
+        HelpResetWindowsJMenuItem.setText( Settings.jpoResources.getString("HelpResetWindowsJMenuItem" ));
     }
 
     /**
@@ -422,17 +414,24 @@ public class ApplicationJMenuBar extends JMenuBar {
         });
         ExtrasJMenu.add( EditCheckIntegrityJMenuItem );
 
-        JMenuItem findDuplicates = new JMenuItem( "Find Duplicates" );
-        findDuplicates.addActionListener(( ActionEvent e ) -> {
+        FindDuplicatesJMenuItem.addActionListener((ActionEvent e ) -> {
             JpoEventBus.getInstance().post( new FindDuplicatesRequest() );
         });
-        ExtrasJMenu.add( findDuplicates );
+        ExtrasJMenu.add(FindDuplicatesJMenuItem);
 
         EditCategoriesJMenuItem.setMnemonic( KeyEvent.VK_D );
         EditCategoriesJMenuItem.addActionListener(( ActionEvent e ) -> {
             JpoEventBus.getInstance().post( new OpenCategoryEditorRequest() );
         });
         ExtrasJMenu.add( EditCategoriesJMenuItem );
+
+
+        StartThumbnailCreationThreadJMenuItem.setMnemonic( KeyEvent.VK_T );
+        StartThumbnailCreationThreadJMenuItem.addActionListener(( ActionEvent e ) -> {
+            JpoEventBus.getInstance().post( new StartThumbnailCreationFactoryRequest() );
+        });
+        ExtrasJMenu.add( StartThumbnailCreationThreadJMenuItem );
+
 
         // Build the Help menu.
         HelpJMenu.setMnemonic( KeyEvent.VK_H );
