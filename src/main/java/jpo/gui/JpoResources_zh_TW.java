@@ -348,6 +348,8 @@ public class JpoResources_zh_TW extends ListResourceBundle {
             {"copyToNewZipfileJMenuItem", "壓縮文件"},
             {"copyToNewLocationSuccess", "複製％d張照片的％d"},
             {"FileOperations", "文件操作"},
+            {"fileMoveJMenu", "移動文件"},
+            {"moveToNewLocationJMenuItem", "選擇复制的文件夾位置"},
             {"fileRenameJMenuItem", "重命名"},
             {"FileRenameLabel1", "重命名 \n"},
             {"FileRenameLabel2", "\n成: "},

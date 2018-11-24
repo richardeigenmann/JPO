@@ -59,7 +59,7 @@ import jpo.dataModel.SortableDefaultMutableTreeNode;
 /*
  PicturePopupMenu.java:  a popup menu for pictures
 
- Copyright (C) 2002 - 2015  Richard Eigenmann.
+ Copyright (C) 2002 - 2018  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -95,6 +95,11 @@ public class PicturePopupMenu extends JPopupMenu {
      */
     private final JMenuItem[] copyLocationJMenuItems = new JMenuItem[Settings.MAX_MEMORISE];
 
+    /**
+     * array of menu items that allows the user to copy the picture to a
+     * memorised file location
+     */
+    private final JMenuItem[] moveLocationJMenuItems = new JMenuItem[Settings.MAX_MEMORISE];
 
     /**
      * a separator for the Move menu. Declared here because other class methods
@@ -152,16 +157,7 @@ public class PicturePopupMenu extends JPopupMenu {
         for (SortableDefaultMutableTreeNode parentNode : parentNodes) {
             JMenuItem navigateTargetRoute = new JMenuItem(parentNode.getUserObject().toString());
             final SortableDefaultMutableTreeNode targetNode = parentNode;
-            navigateTargetRoute.addActionListener(new ActionListener() {
-
-                final SortableDefaultMutableTreeNode node = targetNode;
-
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    JpoEventBus.getInstance().post(new ShowGroupRequest(node));
-
-                }
-            });
+            navigateTargetRoute.addActionListener(e -> JpoEventBus.getInstance().post(new ShowGroupRequest(targetNode)));
             navigateMenuItem.add(navigateTargetRoute);
         }
 
@@ -591,6 +587,42 @@ public class PicturePopupMenu extends JPopupMenu {
         JMenu fileOperationsJMenu = new JMenu(Settings.jpoResources.getString("FileOperations"));
         add(fileOperationsJMenu);
 
+
+        JMenu fileMoveJMenu = new JMenu(Settings.jpoResources.getString("moveToNewLocationJMenuItem"));
+        fileOperationsJMenu.add(fileMoveJMenu);
+
+
+        final JMenuItem moveToNewLocationJMenuItem = new JMenuItem(Settings.jpoResources.getString("moveToNewLocationJMenuItem"));
+        moveToNewLocationJMenuItem.addActionListener((ActionEvent e) -> {
+            if (Settings.getPictureCollection().countSelectedNodes() < 1) {
+                SortableDefaultMutableTreeNode[] nodes = new SortableDefaultMutableTreeNode[1];
+                nodes[0] = popupNode;
+                JpoEventBus.getInstance().post(new CopyToNewLocationRequest(nodes));
+            } else {
+                JpoEventBus.getInstance().post(new CopyToNewLocationRequest(Settings.getPictureCollection().getSelectedNodes()));
+            }
+        });
+        fileMoveJMenu.add(moveToNewLocationJMenuItem);
+
+        fileMoveJMenu.addSeparator();
+
+        final String[] moveLocationsArray = Settings.copyLocations.toArray(new String[0]);
+        for (int i = 0; i < Settings.MAX_MEMORISE; i++) {
+            final File loc = i < moveLocationsArray.length ? new File(moveLocationsArray[i]) : new File(".");
+            moveLocationJMenuItems[i] = new JMenuItem();
+            moveLocationJMenuItems[i].addActionListener((ActionEvent ae) -> {
+                if (Settings.getPictureCollection().countSelectedNodes() < 1) {
+                    SortableDefaultMutableTreeNode[] nodes = new SortableDefaultMutableTreeNode[1];
+                    nodes[0] = popupNode;
+                    JpoEventBus.getInstance().post(new CopyToDirRequest(nodes, loc));
+                } else {
+                    JpoEventBus.getInstance().post(new CopyToDirRequest(Settings.getPictureCollection().getSelectedNodes(), loc));
+                }
+            });
+            fileMoveJMenu.add(moveLocationJMenuItems[i]);
+        }
+        labelMoveLocations();
+
         JMenuItem fileRenameJMenuItem = new JMenuItem(Settings.jpoResources.getString("fileRenameJMenuItem"));
         fileRenameJMenuItem.addActionListener((ActionEvent e) -> {
             if (Settings.getPictureCollection().countSelectedNodes() < 1) {
@@ -732,7 +764,7 @@ public class PicturePopupMenu extends JPopupMenu {
         @Subscribe
         public void handleCopyLocationsChangedEvent(CopyLocationsChangedEvent event) {
             SwingUtilities.invokeLater(PicturePopupMenu.this::labelCopyLocations);
-
+            SwingUtilities.invokeLater(PicturePopupMenu.this::labelMoveLocations);
         }
     }
 
@@ -747,6 +779,22 @@ public class PicturePopupMenu extends JPopupMenu {
                 copyLocationJMenuItems[i].setVisible(true);
             } else {
                 copyLocationJMenuItems[i].setVisible(false);
+
+            }
+        }
+    }
+
+    /**
+     * Here we update the labels of the move locations.
+     */
+    private void labelMoveLocations() {
+        String[] moveLocationsAsArray = Settings.copyLocations.toArray(new String[0]);
+        for (int i = 0; i < moveLocationJMenuItems.length; i++) {
+            if (i < moveLocationsAsArray.length) {
+                moveLocationJMenuItems[i].setText(moveLocationsAsArray[i]);
+                moveLocationJMenuItems[i].setVisible(true);
+            } else {
+                moveLocationJMenuItems[i].setVisible(false);
 
             }
         }

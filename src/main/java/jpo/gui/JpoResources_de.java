@@ -344,6 +344,8 @@ public class JpoResources_de extends ListResourceBundle {
             {"copyToNewZipfileJMenuItem", "in eine Zip Datei"},
             {"copyToNewLocationSuccess", "%d von %d Bildern kopiert"},
             {"FileOperations", "Datei Operationen"},
+            {"fileMoveJMenu", "Datei verschieben"},
+            {"moveToNewLocationJMenuItem", "Zielverzeichnis auswählen"},
             {"fileRenameJMenuItem", "Umbenennen"},
             {"FileRenameLabel1", "Benenne \n"},
             {"FileRenameLabel2", "\nun in: "},

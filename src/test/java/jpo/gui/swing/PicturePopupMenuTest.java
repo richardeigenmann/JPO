@@ -173,8 +173,8 @@ public class PicturePopupMenuTest {
             copyToClipboard = copyImage.getItem( 13 );
             removeNode = (JMenuItem) myPicturePopupMenu.getComponent( 14 );
             fileOperations = (JMenu) myPicturePopupMenu.getComponent( 15 );
-            fileOperationsRename = fileOperations.getItem( 0 );
-            fileoperationsDelete = fileOperations.getItem( 1 );
+            fileOperationsRename = fileOperations.getItem( 1 );
+            fileoperationsDelete = fileOperations.getItem( 2 );
             properties = (JMenuItem) myPicturePopupMenu.getComponent( 16 );
             consolidateHere = (JMenuItem) myPicturePopupMenu.getComponent( 17 );
         } );
@@ -513,7 +513,6 @@ public class PicturePopupMenuTest {
         JpoEventBus.getInstance().register( new Object() {
             @Subscribe
             public void handleDeleteNodeFileRequest( DeleteNodeFileRequest request ) {
-
                 deleteEventCount++;
             }
         } );
