@@ -18,7 +18,7 @@ import jpo.export.HtmlDistillerOptions;
 import jpo.gui.swing.MainWindow;
 
 /*
- * Copyright (C) 2002 - 2017 Richard Eigenmann, Zürich, Switzerland This program
+ * Copyright (C) 2002 - 2018 Richard Eigenmann, Zürich, Switzerland This program
  * is free software; you can redistribute it and/or modify it under the terms of
  * the GNU General Public License as published by the Free Software Foundation;
  * either version 2 of the License, or any later version. This program is
@@ -370,7 +370,7 @@ public class Settings {
      */
     public static boolean defaultGenerateZipfile = false;
     /**
-     * Whether to generate a link to highre pictures at the current location or
+     * Whether to generate a link to highres pictures at the current location or
      * not
      */
     public static boolean defaultLinkToHighres = false;
@@ -554,7 +554,7 @@ public class Settings {
     /**
      * list of email senders
      */
-    public static TreeSet<Object> emailSenders = new TreeSet<Object>() {
+    public static final TreeSet<Object> emailSenders = new TreeSet<Object>() {
         @Override
         public boolean add(Object o) {
             boolean b = super.add(o);
@@ -567,7 +567,7 @@ public class Settings {
     /**
      * list of email senders
      */
-    public static TreeSet<Object> emailRecipients = new TreeSet<Object>() {
+    public static final TreeSet<Object> emailRecipients = new TreeSet<Object>() {
         @Override
         public boolean add(Object o) {
             boolean b = super.add(o);
@@ -661,12 +661,10 @@ public class Settings {
         logfile = new File(new File(System.getProperty("java.io.tmpdir")), "JPO.log");
 
         mainFrameDimensions = new Dimension(windowSizes[4]);
-        //LOGGER.info( String.format( "mainFrameDimension: width %d, height: %d", mainFrameDimensions.width, mainFrameDimensions.height ) );
         preferredLeftDividerSpot = mainFrameDimensions.height - 200;
         if (preferredLeftDividerSpot < 0) {
             preferredLeftDividerSpot = 150;
         }
-        //LOGGER.info( String.format( "preferredLeftDividerSpot: %d", preferredLeftDividerSpot ) );
 
         maximumPictureSize = 6000;
         thumbnailCacheDirectory = System.getProperty("java.io.tmpdir")
@@ -675,12 +673,13 @@ public class Settings {
 
         pictureViewerDefaultDimensions = new Dimension(windowSizes[1]);
         dontEnlargeSmallImages = true;
+        maxThumbnails = defaultMaxThumbnails;
     }
 
     /**
      * handle to the user Preferences
      */
-    public static Preferences prefs = Preferences.userNodeForPackage(Settings.class);
+    public static final Preferences prefs = Preferences.userNodeForPackage(Settings.class);
 
     /**
      * This method reads the settings from the preferences.
@@ -705,14 +704,17 @@ public class Settings {
         pictureViewerDefaultDimensions.width = prefs.getInt("pictureViewerDefaultDimensions.width", pictureViewerDefaultDimensions.width);
         pictureViewerDefaultDimensions.height = prefs.getInt("pictureViewerDefaultDimensions.height", pictureViewerDefaultDimensions.height);
 
-        int i;
-        for (i = 0; i < MAX_MEMORISE; i++) {
-            copyLocations[i] = prefs.get("copyLocations-" + Integer.toString(i), null);
+        for (int i = 0; i < MAX_MEMORISE; i++) {
+            String key = "copyLocations-" + Integer.toString(i);
+            String loc = prefs.get(key, null);
+            if (loc != null) {
+                copyLocations.add(loc);
+            }
         }
-        for (i = 0; i < Settings.MAX_MEMORISE; i++) {
+        for (int i = 0; i < Settings.MAX_MEMORISE; i++) {
             recentCollections[i] = prefs.get("recentCollections-" + Integer.toString(i), null);
         }
-        for (i = 0; i < Settings.maxUserFunctions; i++) {
+        for (int i = 0; i < Settings.maxUserFunctions; i++) {
             userFunctionNames[i] = prefs.get("userFunctionName-" + Integer.toString(i), null);
             userFunctionCmd[i] = prefs.get("userFunctionCmd-" + Integer.toString(i), null);
         }
@@ -758,11 +760,11 @@ public class Settings {
         pictureViewerFastScale = prefs.getBoolean("pictureViewerFastScale", pictureViewerFastScale);
         defaultLinkToHighres = prefs.getBoolean("showThumbOnFileChooser", showThumbOnFileChooser);
         int n = prefs.getInt("emailSenders", 0);
-        for (i = 0; i < n; i++) {
+        for (int i = 0; i < n; i++) {
             emailSenders.add(prefs.get("emailSender-" + Integer.toString(i), ""));
         }
         n = prefs.getInt("emailRecipients", 0);
-        for (i = 0; i < n; i++) {
+        for (int i = 0; i < n; i++) {
             emailRecipients.add(prefs.get("emailRecipient-" + Integer.toString(i), ""));
         }
         emailServer = prefs.get("emailServer", emailServer);
@@ -848,23 +850,6 @@ public class Settings {
         prefs.putInt("mainFrameDimensions.height", mainFrameDimensions.height);
         prefs.putInt("preferredMasterDividerSpot", preferredMasterDividerSpot);
         prefs.putInt("preferredLeftDividerSpot", preferredLeftDividerSpot);
-
-        // bother, the windows layout is a rather long string....
-//        int size = myDoggyWindowsLayout.length();
-//        int cnt = 0;
-//        for ( int idx = 0; idx < size; cnt++ ) {
-//            if ( ( size - idx ) > Preferences.MAX_VALUE_LENGTH ) {
-//                prefs.put( "myDoggyWindowsLayout." + cnt, myDoggyWindowsLayout.substring( idx, idx + Preferences.MAX_VALUE_LENGTH ));
-//                idx += Preferences.MAX_VALUE_LENGTH;
-//            } else {
-//                prefs.put( "myDoggyWindowsLayout." + cnt, myDoggyWindowsLayout.substring( idx ));
-//                idx = size;
-//            }
-//        }
-//        prefs.putInt( "myDoggyWindowsLayout.stringSegments", cnt);
-
-
-        //LOGGER.info( String.format( "Writing preferredLeftDividerSpot: %d", preferredLeftDividerSpot ) );
         prefs.putInt("dividerWidth", dividerWidth);
         if (autoLoad != null) {
             prefs.put("autoload", autoLoad);
@@ -872,21 +857,13 @@ public class Settings {
         prefs.putBoolean("maximisePictureViewerWindow", maximisePictureViewerWindow);
         prefs.putInt("pictureViewerDefaultDimensions.width", pictureViewerDefaultDimensions.width);
         prefs.putInt("pictureViewerDefaultDimensions.height", pictureViewerDefaultDimensions.height);
-
-        // copy locations
-        int n = 0;
-        for (int i = 0; i < MAX_MEMORISE; i++) {
-            if (copyLocations[i] != null) {
-                prefs.put(String.format("copyLocations-%d", n), copyLocations[i]);
-                n++;
-            }
-        }
-        for (int x = n; x < MAX_MEMORISE; x++) {
-            prefs.remove(String.format("copyLocations-%d", x));
+        final Iterator<String> iterator = copyLocations.iterator();
+        for (int ordinal = 0; iterator.hasNext(); ordinal++) {
+            prefs.put(String.format("copyLocations-%d", ordinal), iterator.next());
         }
 
         // recent collections
-        n = 0;
+        int n = 0;
         for (int i = 0; i < Settings.MAX_MEMORISE; i++) {
             if (recentCollections[i] != null) {
                 prefs.put(String.format("recentCollections-%d", n), recentCollections[i]);
@@ -1142,7 +1119,7 @@ public class Settings {
      */
     public static ResourceBundle jpoResources;
 
-    /**
+    /*
      * I'm using a class block initializer here so that we don't ever end up
      * without a ResourceBundle. This proves highly annoying to the Unit Tests
      * and caused me frustration and headaches. RE, 20.1.2007
@@ -1150,25 +1127,22 @@ public class Settings {
     static {
         setLocale(currentLocale);
     }
-    /*
-     * ------------------------------------------------------------------------------
-     * Stuff for memorizing the drop locations
-     */
+
     /**
      * MAX number of recent Drop Nodes
      */
-    public static final int MAX_DROPNODES = 6;
+    public static final int MAX_DROPNODES = 12;
+
     /**
-     * Array of recently used Drop Nodes
+     * Recently used Drop Nodes to make it simple to re-use
      */
-    //public static SortableDefaultMutableTreeNode[] recentDropNodes = new SortableDefaultMutableTreeNode[MAX_DROPNODES];
-    public static Queue<SortableDefaultMutableTreeNode> recentDropNodes = EvictingQueue.create(MAX_DROPNODES);
+    public static final Queue<SortableDefaultMutableTreeNode> recentDropNodes = EvictingQueue.create(MAX_DROPNODES);
 
     /**
      * This method memorizes the recent drop targets so that they can be
-     * accessed more quickly next time round. After calling this method send a
+     * accessed more quickly in subsequent move operations. After calling this method send a
      * {@link jpo.EventBus.RecentDropNodesChangedEvent RecentDropNodesChangedEvent}
-     * onto the EventBus so that GUI widgets can update themselves.
+     * onto the EventBus so that GUI widgets can update themselves. Nodes are only added once.
      * <p>
      * {@code JpoEventBus.getInstance().post( new RecentDropNodesChangedEvent() );}
      *
@@ -1185,14 +1159,14 @@ public class Settings {
      * Stuff for memorizing the copy target locations
      */
     /**
-     * Array of recently used directories in copy operations and other file
+     * Queue of recently used directories in copy operations and other file
      * selections.
      */
-    public static String[] copyLocations = new String[MAX_MEMORISE];
+    public static final Queue<String> copyLocations = EvictingQueue.create(MAX_MEMORISE);
     /**
      * Array of recently used zip files operations and other file selections.
      */
-    public final static String[] memorizedZipFiles = new String[MAX_MEMORISE];
+    public static final Queue<String> memorizedZipFiles = EvictingQueue.create(MAX_MEMORISE);
 
     /**
      * This method memorises the directories used in copy operations so that
@@ -1206,7 +1180,7 @@ public class Settings {
      * @param location The new location to memorise
      */
     public static void memorizeCopyLocation(String location) {
-        for (int i = 0; i < MAX_MEMORISE; i++) {
+        /*for (int i = 0; i < MAX_MEMORISE; i++) {
             if ((copyLocations[i] != null) && (copyLocations[i].equals(location))) {
                 for (int j = i; j > 0; j--) {
                     copyLocations[j] = copyLocations[j - 1];
@@ -1220,8 +1194,11 @@ public class Settings {
         for (int i = MAX_MEMORISE - 1; i > 0; i--) {
             copyLocations[i] = copyLocations[i - 1];
         }
-        copyLocations[0] = location;
+        copyLocations[0] = location;*/
 
+        if (!copyLocations.contains(location)) {
+            copyLocations.add(location);
+        }
         validateCopyLocations();
         writeSettings();
     }
@@ -1233,7 +1210,7 @@ public class Settings {
      * @param location The new zip file to memorise
      */
     public static void memorizeZipFile(String location) {
-        for (int i = 0; i < MAX_MEMORISE; i++) {
+        /*for (int i = 0; i < MAX_MEMORISE; i++) {
             if ((memorizedZipFiles[i] != null) && (memorizedZipFiles[i].equals(location))) {
                 for (int j = i; j > 0; j--) {
                     memorizedZipFiles[j] = memorizedZipFiles[j - 1];
@@ -1247,38 +1224,27 @@ public class Settings {
         for (int i = MAX_MEMORISE - 1; i > 0; i--) {
             memorizedZipFiles[i] = memorizedZipFiles[i - 1];
         }
-        memorizedZipFiles[0] = location;
+        memorizedZipFiles[0] = location; */
+        if (!memorizedZipFiles.contains(location)) {
+            memorizedZipFiles.add(location);
+        }
     }
 
     /**
      * This method validates that the copy locations are valid directories and
-     * if not sets the entry in the copyLocations array to null.
+     * removes those that don't exist
      *
-     * @return Returns true if the array was changed, false if not.
+     * @return Returns true if the collection was changed, false if not.
      */
     public static boolean validateCopyLocations() {
-        File file;
-        boolean arrayChanged = false;
-        for (int i = 0; i < MAX_MEMORISE; i++) {
-            if (copyLocations[i] != null) {
-                file = new File(copyLocations[i]);
-                if (!file.exists()) {
-                    copyLocations[i] = null;
-                    arrayChanged = true;
-                }
-            }
-        }
-        return arrayChanged;
+        return copyLocations.removeIf(location -> !new File(location).exists());
     }
 
     /**
-     * This method clears the copy locations
+     * This method clears the copy locations and saves the settings
      */
     public static void clearCopyLocations() {
-        LOGGER.info("Should Clear Memorised Directories");
-        for (int i = 0; i < MAX_MEMORISE; i++) {
-            copyLocations[i] = null;
-        }
+        copyLocations.clear();
         writeSettings();
     }
 
@@ -1308,11 +1274,11 @@ public class Settings {
     /**
      * Array of user function names
      */
-    public static String[] userFunctionNames = new String[maxUserFunctions];
+    public static final String[] userFunctionNames = new String[maxUserFunctions];
     /**
      * Array of user function commands
      */
-    public static String[] userFunctionCmd = new String[maxUserFunctions];
+    public static final String[] userFunctionCmd = new String[maxUserFunctions];
 
     private static MainWindow mainWindow;
 

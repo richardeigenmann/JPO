@@ -137,7 +137,7 @@ public class GroupPopupMenu extends JPopupMenu {
 
         if (popupNode.getPictureCollection().getAllowEdits()) {
 
-            JMenuItem categoryUsagetJMenuItem = new JMenuItem(Settings.jpoResources.getString("categoryUsagetJMenuItem"));
+            JMenuItem categoryUsagetJMenuItem = new JMenuItem(Settings.jpoResources.getString("categoryUsageJMenuItem"));
             categoryUsagetJMenuItem.addActionListener((ActionEvent e) -> {
                 HashSet<SortableDefaultMutableTreeNode> hs = new HashSet<>();
                 hs.add(popupNode);

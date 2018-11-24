@@ -382,7 +382,7 @@ public class JpoResources_de extends ListResourceBundle {
 		{"movePictureDownJMenuItem", "runter"},
 		{"movePictureToBottomJMenuItem", "zuunterst"},
 		{"recentDropNodePrefix", "Zu Gruppe: "},
-		{"categoryUsagetJMenuItem", "Kategorien"},
+		{"categoryUsageJMenuItem", "Kategorien"},
                 {"navigationJMenu", "Springe zu"},
 
 

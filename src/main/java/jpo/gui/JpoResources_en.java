@@ -347,7 +347,7 @@ public class JpoResources_en extends ListResourceBundle {
         { "movePictureDownJMenuItem", "Down" },
         { "movePictureToBottomJMenuItem", "to Bottom" },
         { "recentDropNodePrefix", "To Group: " },
-        { "categoryUsagetJMenuItem", "Categories" },
+        { "categoryUsageJMenuItem", "Categories" },
         { "navigationJMenu", "Navigate to" },
         // ThumbnailJScrollPane
         { "ThumbnailSearchResults", "Search Results for " },

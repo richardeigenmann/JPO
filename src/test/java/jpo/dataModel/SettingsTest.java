@@ -114,7 +114,7 @@ public class SettingsTest {
         int saveMaxThumbnails = Settings.maxThumbnails;
         Settings.maxThumbnails = -1; //a value that it never should have
         Settings.loadSettings();
-        assertTrue("testReadWriteMaxThumbnails: After loading the settings the maxThumbnails should not be -1 any more!", (-1 != Settings.maxThumbnails));
+        assertTrue("After loading the settings the maxThumbnails should not be -1 any more!", (-1 != Settings.maxThumbnails));
 
         Settings.maxThumbnails = -2; //another value that it never should never have
         Settings.writeSettings();
@@ -166,9 +166,7 @@ public class SettingsTest {
         assertEquals("First Element should now be our new node", n1, Settings.recentDropNodes.element());
 
         range(1, Settings.MAX_DROPNODES).forEach(
-                itr -> {
-                    Settings.memorizeGroupOfDropLocation(new SortableDefaultMutableTreeNode(new GroupInfo("Any other node")));
-                });
+                itr -> Settings.memorizeGroupOfDropLocation(new SortableDefaultMutableTreeNode(new GroupInfo("Any other node"))));
 
         assertTrue("The n1 node should still be on the queue", Settings.recentDropNodes.contains(n1));
 

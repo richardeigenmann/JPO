@@ -389,7 +389,7 @@ public class JpoResources_zh_CN extends ListResourceBundle {
 		{"movePictureDownJMenuItem", "向下移动"},
 		{"movePictureToBottomJMenuItem", "置底"},
 		{"recentDropNodePrefix", "移到图组： "},
-		{"categoryUsagetJMenuItem", "类目"},
+		{"categoryUsageJMenuItem", "类目"},
                 {"navigationJMenu", "Navigate to"},  //Franklin, please change
 
 
