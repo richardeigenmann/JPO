@@ -1,7 +1,16 @@
 package jpo.gui;
 
-import java.awt.Dimension;
-import java.awt.FlowLayout;
+import jpo.dataModel.ListNavigator;
+import jpo.dataModel.Settings;
+import jpo.dataModel.SortableDefaultMutableTreeNode;
+import jpo.gui.swing.Thumbnail;
+import jpo.gui.swing.WholeNumberField;
+import net.miginfocom.swing.MigLayout;
+
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.WindowAdapter;
@@ -9,27 +18,6 @@ import java.awt.event.WindowEvent;
 import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Logger;
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
-import javax.swing.ScrollPaneConstants;
-import static javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE;
-import jpo.dataModel.ListNavigator;
-import jpo.dataModel.Settings;
-import jpo.dataModel.SortableDefaultMutableTreeNode;
-import jpo.gui.swing.Thumbnail;
-import jpo.gui.swing.WholeNumberField;
-import net.miginfocom.swing.MigLayout;
 
 /*
  Copyright (C) 2004-2017  Richard Eigenmann.
@@ -374,7 +362,7 @@ public class EmailerGui extends JFrame {
             ThumbnailController thumbnailController = new ThumbnailController(new Thumbnail(), thumbnailSize );
             thumbnailController.setNode( listNavigator, i );
             thumbnailController.setDecorateThumbnails( false );
-            thumbnailController.determineMailSlectionStatus();
+            thumbnailController.determineMailSelectionStatus();
             thumbnailController.setFactor( factor );
             imagesJPanel.add( thumbnailController.getThumbnail() );
             thumbnailController.getThumbnail().setVisible( true );

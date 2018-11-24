@@ -1,50 +1,23 @@
 package jpo.gui.swing;
 
 import com.google.common.eventbus.Subscribe;
+import jpo.EventBus.*;
+import jpo.dataModel.*;
+import org.junit.Before;
+import org.junit.Test;
+
+import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
-import javax.swing.SwingUtilities;
-import jpo.EventBus.AddPictureNodesToEmailSelectionRequest;
-import jpo.EventBus.ClearEmailSelectionRequest;
-import jpo.EventBus.ConsolidateGroupRequest;
-import jpo.EventBus.CopyToClipboardRequest;
-import jpo.EventBus.DeleteNodeFileRequest;
-import jpo.EventBus.JpoEventBus;
-import jpo.EventBus.MoveIndentRequest;
-import jpo.EventBus.MoveNodeDownRequest;
-import jpo.EventBus.MoveNodeToBottomRequest;
-import jpo.EventBus.MoveNodeToTopRequest;
-import jpo.EventBus.MoveNodeUpRequest;
-import jpo.EventBus.MoveOutdentRequest;
-import jpo.EventBus.RefreshThumbnailRequest;
-import jpo.EventBus.RemoveNodeRequest;
-import jpo.EventBus.RemovePictureNodesFromEmailSelectionRequest;
-import jpo.EventBus.RenamePictureRequest;
-import jpo.EventBus.RotatePictureRequest;
-import jpo.EventBus.RunUserFunctionRequest;
-import jpo.EventBus.SetPictureRotationRequest;
-import jpo.EventBus.ShowCategoryUsageEditorRequest;
-import jpo.EventBus.ShowGroupRequest;
-import jpo.EventBus.ShowPictureInfoEditorRequest;
-import jpo.EventBus.ShowPictureOnMapRequest;
-import jpo.EventBus.ShowPictureRequest;
-import jpo.dataModel.GroupInfo;
-import jpo.dataModel.PictureInfo;
-import jpo.dataModel.Settings;
-import jpo.dataModel.SingleNodeNavigator;
-import jpo.dataModel.SortableDefaultMutableTreeNode;
-import static org.junit.Assert.*;
-import org.junit.Before;
-import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 /*
- Copyright (C) 2017  Richard Eigenmann.
+ Copyright (C) 2017-2018  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -60,7 +33,7 @@ import org.junit.Test;
  */
 
 /**
- * Tests for the GroupPopupMenu Class
+ * Tests for the PicturePopupMenu Class
  *
  * @author Richard Eigenmann
  */
@@ -114,6 +87,8 @@ public class PicturePopupMenuTest {
     private JMenuItem copyToClipboard;
     private JMenuItem removeNode;
     private JMenu fileOperations;
+    private JMenu moveImage;
+    private JMenuItem moveToNewLocation;
     private JMenuItem fileOperationsRename;
     private JMenuItem fileoperationsDelete;
     private JMenuItem properties;
@@ -173,6 +148,8 @@ public class PicturePopupMenuTest {
             copyToClipboard = copyImage.getItem( 13 );
             removeNode = (JMenuItem) myPicturePopupMenu.getComponent( 14 );
             fileOperations = (JMenu) myPicturePopupMenu.getComponent( 15 );
+            moveImage = (JMenu) fileOperations.getItem( 0 );
+            moveToNewLocation = moveImage.getItem( 0 );
             fileOperationsRename = fileOperations.getItem( 1 );
             fileoperationsDelete = fileOperations.getItem( 2 );
             properties = (JMenuItem) myPicturePopupMenu.getComponent( 16 );
@@ -490,6 +467,22 @@ public class PicturePopupMenuTest {
         removeNode.doClick();
         assertEquals( "After clicking on the node the event count should be 1", 1, removeEventCount );
     }
+
+    private int moveToNewLocationEventCount = 0;
+
+    @Test
+    public void testMoveToNewLocation() {
+        JpoEventBus.getInstance().register( new Object() {
+            @Subscribe
+            public void handleMoveToNewLocation( MoveToNewLocationRequest request ) {
+                moveToNewLocationEventCount++;
+            }
+        } );
+        assertEquals( "Before clicking on the node the event count should be 0", 0, moveToNewLocationEventCount );
+        moveToNewLocation.doClick();
+        assertEquals( "After clicking on the node the event count should be 1", 1, moveToNewLocationEventCount );
+    }
+
 
     private int renameEventCount = 0;
 

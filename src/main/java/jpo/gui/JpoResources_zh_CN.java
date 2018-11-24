@@ -1,6 +1,6 @@
 package jpo.gui;
 
-import java.util.*;
+import java.util.ListResourceBundle;
 
 /*
 JpoResources_cn.java:  class that holds the generic labels for the JPO application
@@ -398,6 +398,8 @@ public class JpoResources_zh_CN extends ListResourceBundle {
             {"DefaultRootNodeText", "新建图片集"},
             {"CopyImageDialogButton", "复制"},
             {"CopyImageDialogTitle", "指定复制的位置："},
+            {"MoveImageDialogButton", "移动"},
+            {"MoveImageDialogTitle", "指定移动目标目录"},
             {"CopyImageDirError", "不能创建目标文件夹，复制终止。\n"},
             {"fileOpenButtonText", "打开"},
             {"fileOpenHeading", "打开图片集"},

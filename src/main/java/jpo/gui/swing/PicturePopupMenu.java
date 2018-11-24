@@ -1,60 +1,18 @@
 package jpo.gui.swing;
 
 import com.google.common.eventbus.Subscribe;
+import jpo.EventBus.*;
+import jpo.cache.ThumbnailQueueRequest.QUEUE_PRIORITY;
+import jpo.dataModel.*;
 
+import javax.swing.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.logging.Logger;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
-import javax.swing.JPopupMenu;
-import javax.swing.JSeparator;
-import javax.swing.SwingUtilities;
-
-import jpo.EventBus.AddPictureNodesToEmailSelectionRequest;
-import jpo.EventBus.ClearEmailSelectionRequest;
-import jpo.EventBus.ConsolidateGroupRequest;
-import jpo.EventBus.CopyLocationsChangedEvent;
-import jpo.EventBus.CopyToClipboardRequest;
-import jpo.EventBus.CopyToDirRequest;
-import jpo.EventBus.CopyToNewLocationRequest;
-import jpo.EventBus.CopyToNewZipfileRequest;
-import jpo.EventBus.CopyToZipfileRequest;
-import jpo.EventBus.DeleteMultiNodeFileRequest;
-import jpo.EventBus.DeleteNodeFileRequest;
-import jpo.EventBus.JpoEventBus;
-import jpo.EventBus.MoveIndentRequest;
-import jpo.EventBus.MoveNodeDownRequest;
-import jpo.EventBus.MoveNodeToBottomRequest;
-import jpo.EventBus.MoveNodeToNodeRequest;
-import jpo.EventBus.MoveNodeToTopRequest;
-import jpo.EventBus.MoveNodeUpRequest;
-import jpo.EventBus.MoveOutdentRequest;
-import jpo.EventBus.RecentDropNodesChangedEvent;
-import jpo.EventBus.RefreshThumbnailRequest;
-import jpo.EventBus.RemoveNodeRequest;
-import jpo.EventBus.RemovePictureNodesFromEmailSelectionRequest;
-import jpo.EventBus.RenamePictureRequest;
-import jpo.EventBus.RotatePictureRequest;
-import jpo.EventBus.RunUserFunctionRequest;
-import jpo.EventBus.SetPictureRotationRequest;
-import jpo.EventBus.ShowCategoryUsageEditorRequest;
-import jpo.EventBus.ShowGroupRequest;
-import jpo.EventBus.ShowPictureInfoEditorRequest;
-import jpo.EventBus.ShowPictureOnMapRequest;
-import jpo.EventBus.ShowPictureRequest;
-import jpo.EventBus.UserFunctionsChangedEvent;
-import jpo.cache.ThumbnailQueueRequest.QUEUE_PRIORITY;
-import jpo.dataModel.NodeNavigatorInterface;
-import jpo.dataModel.PictureCollection;
-import jpo.dataModel.PictureInfo;
-import jpo.dataModel.Settings;
-import jpo.dataModel.SortableDefaultMutableTreeNode;
 
 /*
  PicturePopupMenu.java:  a popup menu for pictures
@@ -588,7 +546,7 @@ public class PicturePopupMenu extends JPopupMenu {
         add(fileOperationsJMenu);
 
 
-        JMenu fileMoveJMenu = new JMenu(Settings.jpoResources.getString("moveToNewLocationJMenuItem"));
+        JMenu fileMoveJMenu = new JMenu(Settings.jpoResources.getString("fileMoveJMenu"));
         fileOperationsJMenu.add(fileMoveJMenu);
 
 
@@ -597,9 +555,9 @@ public class PicturePopupMenu extends JPopupMenu {
             if (Settings.getPictureCollection().countSelectedNodes() < 1) {
                 SortableDefaultMutableTreeNode[] nodes = new SortableDefaultMutableTreeNode[1];
                 nodes[0] = popupNode;
-                JpoEventBus.getInstance().post(new CopyToNewLocationRequest(nodes));
+                JpoEventBus.getInstance().post(new MoveToNewLocationRequest(nodes));
             } else {
-                JpoEventBus.getInstance().post(new CopyToNewLocationRequest(Settings.getPictureCollection().getSelectedNodes()));
+                JpoEventBus.getInstance().post(new MoveToNewLocationRequest(Settings.getPictureCollection().getSelectedNodes()));
             }
         });
         fileMoveJMenu.add(moveToNewLocationJMenuItem);

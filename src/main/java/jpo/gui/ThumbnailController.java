@@ -1,29 +1,5 @@
 package jpo.gui;
 
-import java.awt.Dimension;
-import java.awt.Point;
-import java.awt.dnd.DnDConstants;
-import java.awt.dnd.DragGestureEvent;
-import java.awt.dnd.DragGestureListener;
-import java.awt.dnd.DragSource;
-import java.awt.dnd.DragSourceContext;
-import java.awt.dnd.DragSourceDragEvent;
-import java.awt.dnd.DragSourceDropEvent;
-import java.awt.dnd.DragSourceEvent;
-import java.awt.dnd.DragSourceListener;
-import java.awt.dnd.DropTarget;
-import java.awt.dnd.DropTargetDropEvent;
-import java.awt.dnd.InvalidDnDOperationException;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.JViewport;
-import javax.swing.tree.DefaultMutableTreeNode;
-
 import jpo.EventBus.JpoEventBus;
 import jpo.EventBus.ShowGroupRequest;
 import jpo.EventBus.ShowPictureRequest;
@@ -31,18 +7,22 @@ import jpo.cache.ThumbnailCreationQueue;
 import jpo.cache.ThumbnailQueueRequest;
 import jpo.cache.ThumbnailQueueRequest.QUEUE_PRIORITY;
 import jpo.cache.ThumbnailQueueRequestCallbackHandler;
-import jpo.dataModel.GroupInfo;
-import jpo.dataModel.GroupInfoChangeEvent;
-import jpo.dataModel.GroupInfoChangeListener;
-import jpo.dataModel.NodeNavigatorInterface;
-import jpo.dataModel.PictureInfo;
-import jpo.dataModel.PictureInfoChangeEvent;
-import jpo.dataModel.PictureInfoChangeListener;
-import jpo.dataModel.Settings;
-import jpo.dataModel.SortableDefaultMutableTreeNode;
+import jpo.dataModel.*;
 import jpo.gui.swing.GroupPopupMenu;
 import jpo.gui.swing.PicturePopupMenu;
 import jpo.gui.swing.Thumbnail;
+
+import javax.swing.*;
+import javax.swing.tree.DefaultMutableTreeNode;
+import java.awt.*;
+import java.awt.dnd.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /*
  Copyright (C) 2002 - 2018  Richard Eigenmann.
@@ -202,14 +182,14 @@ public class ThumbnailController
                     }
                 }
             } catch (NullPointerException npe) {
-                LOGGER.severe("Something is wrong - Thumbnail Controller being used in an unexpected context. Optimisation to prioretise visible Thumbnails didn't work correctly. Check the code!");
+                LOGGER.severe("Something is wrong - Thumbnail Controller being used in an unexpected context. Optimisation to prioritise visible Thumbnails didn't work correctly. Check the code!");
                 Thread.dumpStack();
             }
             myThumbnailQueueRequest = requestThumbnailCreation(priority);
         }
 
-        showSlectionStatus();
-        determineMailSlectionStatus();
+        showSelectionStatus();
+        determineMailSelectionStatus();
         drawOfflineIcon(myNode);
     }
 
@@ -231,12 +211,12 @@ public class ThumbnailController
      * Unattaches the ThumbnailController from the previously linked
      * PictureInfoChangeListener or GroupInfoChangeListener (if any) and
      * attaches it to the new PictureInfoChangeListener or
-     * GroupInfoChangeListerner.
+     * GroupInfoChangeListener.
      */
     private void attachChangeListeners() {
         // unattach from the change Listener
         if (registeredPictureInfoChangeListener != null) {
-            LOGGER.fine(String.format("unattaching MyPictureInfoChangeEventHandler %d from Picturinfo %d", myPictureInfoChangeEventHandler.hashCode(), registeredPictureInfoChangeListener.hashCode()));
+            LOGGER.fine(String.format("unattaching MyPictureInfoChangeEventHandler %d from PictureInfo %d", myPictureInfoChangeEventHandler.hashCode(), registeredPictureInfoChangeListener.hashCode()));
             registeredPictureInfoChangeListener.removePictureInfoChangeListener(myPictureInfoChangeEventHandler);
             registeredPictureInfoChangeListener = null;
         }
@@ -250,7 +230,7 @@ public class ThumbnailController
         if (myNode != null) {
             if (myNode.getUserObject() instanceof PictureInfo) {
                 PictureInfo pictureInfo = (PictureInfo) myNode.getUserObject();
-                LOGGER.fine(String.format("attaching ThumbnailController %d to Picturinfo %d", this.hashCode(), pictureInfo.hashCode()));
+                LOGGER.fine(String.format("attaching ThumbnailController %d to PictureInfo %d", this.hashCode(), pictureInfo.hashCode()));
                 pictureInfo.addPictureInfoChangeListener(myPictureInfoChangeEventHandler);
                 registeredPictureInfoChangeListener = pictureInfo; //remember so we can poll
             } else if (myNode.getUserObject() instanceof GroupInfo) {
@@ -439,7 +419,7 @@ public class ThumbnailController
             } else if (pictureInfoChangeEvent.getWasUnselected()) {
                 myThumbnail.showAsUnselected();
             } else if ((pictureInfoChangeEvent.getWasMailSelected()) || (pictureInfoChangeEvent.getWasMailUnselected())) {
-                determineMailSlectionStatus();
+                determineMailSelectionStatus();
             } else if (pictureInfoChangeEvent.getRotationChanged()) {
                 requestThumbnailCreation(QUEUE_PRIORITY.HIGH_PRIORITY);
             }
@@ -469,7 +449,7 @@ public class ThumbnailController
      * changes the colour so that the user sees whether the thumbnail is part of
      * the selection
      */
-    public void showSlectionStatus() {
+    public void showSelectionStatus() {
         if (Settings.getPictureCollection().isSelected(myNode)) {
             myThumbnail.showAsSelected();
         } else {
@@ -508,7 +488,7 @@ public class ThumbnailController
      * drawMailIcon flag to ensure that the mail icon will be place over the
      * image.
      */
-    public void determineMailSlectionStatus() {
+    public void determineMailSelectionStatus() {
         if ((myNode != null) && decorateThumbnails && Settings.getPictureCollection().isMailSelected(myNode)) {
             myThumbnail.drawMailIcon(true);
         } else {
@@ -561,7 +541,7 @@ public class ThumbnailController
             implements DragSourceListener {
 
         /**
-         * this callback method is invoked after the dropTaget had a chance to
+         * this callback method is invoked after the dropTarget had a chance to
          * evaluate the drag event and was given the option of rejecting or
          * modifying the event. This method sets the cursor to reflect whether a
          * copy, move or no drop is possible.
@@ -572,7 +552,7 @@ public class ThumbnailController
         }
 
         /**
-         * this callback method is invoked after the dropTaget had a chance to
+         * this callback method is invoked after the dropTraget had a chance to
          * evaluate the dragOver event and was given the option of rejecting or
          * modifying the event. This method sets the cursor to reflect whether a
          * copy, move or no drop is possible.

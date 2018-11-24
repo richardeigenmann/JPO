@@ -1,18 +1,23 @@
 package jpo.dataModel;
 
+import jpo.EventBus.CopyLocationsChangedEvent;
+import jpo.EventBus.JpoEventBus;
+import jpo.dataModel.Settings.FieldCodes;
+import jpo.gui.JpoTransferable;
+import jpo.gui.ProgressGui;
+import org.apache.commons.io.FilenameUtils;
+import org.checkerframework.checker.nullness.qual.NonNull;
+
+import javax.swing.*;
+import javax.swing.event.TreeModelEvent;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreePath;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DropTargetDropEvent;
 import java.awt.event.ActionEvent;
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -21,22 +26,8 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.JPopupMenu;
-import javax.swing.JProgressBar;
-import javax.swing.SwingUtilities;
-import javax.swing.event.TreeModelEvent;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.TreePath;
-import jpo.EventBus.CopyLocationsChangedEvent;
-import jpo.EventBus.JpoEventBus;
-import jpo.dataModel.Settings.FieldCodes;
+
 import static jpo.dataModel.Tools.copyBufferedStream;
-import jpo.gui.JpoTransferable;
-import jpo.gui.ProgressGui;
-import org.apache.commons.io.FilenameUtils;
-import org.checkerframework.checker.nullness.qual.NonNull;
 
 
 /*
@@ -803,10 +794,10 @@ public class SortableDefaultMutableTreeNode
         try {
             originalUrl = pictureInfo.getImageURL();
         } catch ( MalformedURLException x ) {
-            LOGGER.log( Level.INFO, "MarformedURLException trapped on: {0}\nReason: {1}", new Object[]{ pictureInfo.getImageLocation(), x.getMessage() } );
+            LOGGER.log( Level.INFO, "MalformedURLException trapped on: {0}\nReason: {1}", new Object[]{ pictureInfo.getImageLocation(), x.getMessage() } );
             JOptionPane.showMessageDialog(
                     Settings.anchorFrame,
-                    "MarformedURLException trapped on: " + ( (PictureInfo) this.getUserObject() ).getImageLocation() + "\nReason: " + x.getMessage(),
+                    "MalformedURLException trapped on: " + ( (PictureInfo) this.getUserObject() ).getImageLocation() + "\nReason: " + x.getMessage(),
                     Settings.jpoResources.getString( "genericError" ),
                     JOptionPane.ERROR_MESSAGE );
             return false;
@@ -918,7 +909,7 @@ public class SortableDefaultMutableTreeNode
             SortableDefaultMutableTreeNode parentNode = this.getParent();
             int childCount = parentNode.getChildCount();
             int currentIndex = parentNode.getIndex( this );
-            // abort if this action was attempted on the bootom node
+            // abort if this action was attempted on the bottom node
             if ( ( currentIndex == -1 )
                     || ( currentIndex == childCount - 1 ) ) {
                 return;
@@ -940,7 +931,7 @@ public class SortableDefaultMutableTreeNode
         synchronized ( this.getRoot() ) {
             SortableDefaultMutableTreeNode parentNode = this.getParent();
             int childCount = parentNode.getChildCount();
-            // abort if this action was attempted on the bootom node
+            // abort if this action was attempted on the bottom node
             if ( ( parentNode.getIndex( this ) == -1 )
                     || ( parentNode.getIndex( this ) == childCount - 1 ) ) {
                 return;
@@ -953,7 +944,7 @@ public class SortableDefaultMutableTreeNode
 
     /**
      * When this method is invoked on a node it becomes a sub-node of it's
-     * preceeding group.
+     * preceding group.
      */
     public void indentNode() {
         if ( this.isRoot() ) {
@@ -1009,7 +1000,7 @@ public class SortableDefaultMutableTreeNode
      * Method that moves a node to bottom of the specified target group node. It
      * sets the collection's unsaved updates to true.
      *
-     * @param targetNode The target node you whish to attach the node to
+     * @param targetNode The target node you wish to attach the node to
      * @return true if the move was successful, false if not
      */
     public boolean moveToLastChild( SortableDefaultMutableTreeNode targetNode ) {
@@ -1034,12 +1025,12 @@ public class SortableDefaultMutableTreeNode
     /**
      * Method that moves the node to the spot before the indicated node
      *
-     * @param targetNode The before which you whish to insert the node to
+     * @param targetNode The before which you wish to insert the node to
      * @return true if the move was successful, false if not
      */
     public boolean moveBefore( SortableDefaultMutableTreeNode targetNode ) {
         if ( isNodeDescendant( targetNode ) ) {
-            LOGGER.fine( "Can't move to a descendent node. Aborting move." );
+            LOGGER.fine( "Can't move to a descendant node. Aborting move." );
             return false;
         }
 
@@ -1065,7 +1056,7 @@ public class SortableDefaultMutableTreeNode
     public boolean moveToIndex( SortableDefaultMutableTreeNode parentNode,
             int index ) {
         if ( isNodeDescendant( parentNode ) ) {
-            LOGGER.fine( "Can't move to a descendent node. Aborting move." );
+            LOGGER.fine( "Can't move to a descendant node. Aborting move." );
             return false;
         }
 
@@ -1087,7 +1078,7 @@ public class SortableDefaultMutableTreeNode
      * PictureInfo it does not allow child nodes, if it holds a GroupInfo, it
      * does.
      *
-     * @return ture if child nodes are allowed, false if not
+     * @return true if child nodes are allowed, false if not
      */
     @Override
     public boolean getAllowsChildren() {
@@ -1423,13 +1414,13 @@ public class SortableDefaultMutableTreeNode
     }
 
     /**
-     * This method returns whether the supplied node is a descendent of the
+     * This method returns whether the supplied node is a descendant of the
      * deletions that have been detected in the TreeModelListener delivered
      * TreeModelEvent.
      *
-     * @param affectedNode The node to check whether it is or is a descendent of
+     * @param affectedNode The node to check whether it is or is a descendant of
      * the deleted node.
-     * @param e the TreenModelEvent that was detected
+     * @param e the TreeModelEvent that was detected
      * @return true if successful, false if not
      */
     public static boolean wasNodeDeleted(

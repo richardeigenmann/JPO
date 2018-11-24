@@ -1,69 +1,37 @@
 package jpo.gui;
 
 import com.google.common.eventbus.Subscribe;
+import jpo.EventBus.*;
+import jpo.cache.JpoCache;
+import jpo.cache.ThumbnailCreationFactory;
+import jpo.cache.ThumbnailQueueRequest.QUEUE_PRIORITY;
+import jpo.dataModel.*;
+import jpo.dataModel.Settings.FieldCodes;
+import jpo.export.GenerateWebsiteWizard;
+import jpo.export.PicasaUploadRequest;
+import jpo.export.PicasaUploaderWizard;
+import jpo.gui.swing.*;
+import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
+import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
+import org.apache.commons.compress.archivers.zip.ZipFile;
 
-import java.awt.Toolkit;
+import javax.swing.*;
+import javax.swing.event.TreeModelEvent;
+import javax.swing.event.TreeModelListener;
+import javax.swing.tree.TreePath;
+import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.Transferable;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.BoxLayout;
-import javax.swing.JCheckBox;
-import javax.swing.JFileChooser;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JTextArea;
-import javax.swing.SwingUtilities;
-import javax.swing.event.TreeModelEvent;
-import javax.swing.event.TreeModelListener;
-import javax.swing.tree.TreePath;
-
-import jpo.EventBus.*;
-import jpo.cache.JpoCache;
-import jpo.cache.ThumbnailCreationFactory;
-import jpo.cache.ThumbnailQueueRequest.QUEUE_PRIORITY;
-import jpo.dataModel.DuplicatesQuery;
-import jpo.dataModel.FlatFileReader;
-import jpo.dataModel.FlatGroupNavigator;
-import jpo.dataModel.GroupInfo;
-import jpo.dataModel.NodeNavigatorInterface;
-import jpo.dataModel.PictureCollection;
-import jpo.dataModel.PictureInfo;
-import jpo.dataModel.QueryNavigator;
-import jpo.dataModel.RandomNavigator;
-import jpo.dataModel.Settings;
-import jpo.dataModel.Settings.FieldCodes;
-import jpo.dataModel.SingleNodeNavigator;
-import jpo.dataModel.SortableDefaultMutableTreeNode;
-import jpo.dataModel.TextQuery;
-import jpo.dataModel.Tools;
-import jpo.export.GenerateWebsiteWizard;
-import jpo.export.PicasaUploadRequest;
-import jpo.export.PicasaUploaderWizard;
-import jpo.gui.swing.FindJPanel;
-import jpo.gui.swing.FlatFileDistiller;
-import jpo.gui.swing.HelpAboutWindow;
-import jpo.gui.swing.MainWindow;
-import jpo.gui.swing.PrivacyJFrame;
 
 import static jpo.gui.swing.ResizableJFrame.WindowSize.WINDOW_LEFT;
 import static jpo.gui.swing.ResizableJFrame.WindowSize.WINDOW_RIGHT;
-
-import jpo.gui.swing.Thumbnail;
-import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
-import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
-import org.apache.commons.compress.archivers.zip.ZipFile;
 
 /*
  Copyright (C) 2014-2018  Richard Eigenmann.
@@ -408,6 +376,27 @@ public class ApplicationEventHandler {
     }
 
     /**
+     *
+     *
+     * @param request the request
+     */
+    @Subscribe
+    public static void handleMoveToNewLocationRequest(MoveToNewLocationRequest request) {
+        JFileChooser jFileChooser = new JFileChooser();
+
+        jFileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        jFileChooser.setDialogTitle(Settings.jpoResources.getString("MoveImageDialogTitle"));
+        jFileChooser.setCurrentDirectory(Settings.getMostRecentCopyLocation());
+
+        int returnVal = jFileChooser.showDialog(Settings.anchorFrame,Settings.jpoResources.getString("MoveImageDialogButton")) ;
+        if (returnVal != JFileChooser.APPROVE_OPTION) {
+            return;
+        }
+
+        JpoEventBus.getInstance().post(new CopyToDirRequest(request.getNodes(), jFileChooser.getSelectedFile()));
+    }
+
+    /**
      * Bring up a Dialog where the user can input a new name for a file and
      * rename it.
      *
@@ -434,7 +423,7 @@ public class ApplicationEventHandler {
         if (selectedValue != null) {
             File newName = new File(selectedValue);
             if (imageFile.renameTo(newName)) {
-                LOGGER.log(Level.INFO, "Sucessufully renamed: {0} to: {1}", new Object[]{imageFile.toString(), selectedValue});
+                LOGGER.log(Level.INFO, "Successfully renamed: {0} to: {1}", new Object[]{imageFile.toString(), selectedValue});
                 pi.setImageLocation(newName);
             } else {
                 LOGGER.log(Level.INFO, "Rename failed from : {0} to: {1}", new Object[]{imageFile.toString(), selectedValue});
@@ -533,7 +522,7 @@ public class ApplicationEventHandler {
                 } catch (final FileNotFoundException ex) {
 
                     SwingUtilities.invokeLater(() -> {
-                                LOGGER.log(Level.INFO, "FileNotFoundExecption: {0}", ex.getMessage());
+                                LOGGER.log(Level.INFO, "FileNotFoundException: {0}", ex.getMessage());
                                 JOptionPane.showMessageDialog(Settings.anchorFrame,
                                         ex.getMessage(),
                                         Settings.jpoResources.getString("genericError"),
@@ -679,7 +668,7 @@ public class ApplicationEventHandler {
         try {
             PictureCollection.fileLoad(fileToLoad, newNode);
         } catch (FileNotFoundException x) {
-            LOGGER.log(Level.INFO, "{0}.fileToLoad: FileNotFoundExecption: {1}", new Object[]{this.getClass().toString(), x.getMessage()});
+            LOGGER.log(Level.INFO, "{0}.fileToLoad: FileNotFoundException: {1}", new Object[]{this.getClass().toString(), x.getMessage()});
             JOptionPane.showMessageDialog(Settings.anchorFrame,
                     "File not found:\n" + fileToLoad.getPath(),
                     Settings.jpoResources.getString("genericError"),
@@ -975,7 +964,6 @@ public class ApplicationEventHandler {
                 }
             }
             zipArchiveOutputStream.finish();
-            zipArchiveOutputStream.close();
         } catch (IOException ex) {
             LOGGER.severe(ex.getMessage());
             tempfile.delete();
@@ -1237,7 +1225,7 @@ public class ApplicationEventHandler {
                     Settings.getPictureCollection().fileLoad(fileToLoad);
                 } catch (FileNotFoundException ex) {
                     Logger.getLogger(ApplicationEventHandler.class.getName()).log(Level.SEVERE, null, ex);
-                    LOGGER.log(Level.INFO, "FileNotFoundExecption: {0}", ex.getMessage());
+                    LOGGER.log(Level.INFO, "FileNotFoundException: {0}", ex.getMessage());
                     JOptionPane.showMessageDialog(Settings.anchorFrame,
                             ex.getMessage(),
                             Settings.jpoResources.getString("genericError"),
@@ -1408,14 +1396,12 @@ public class ApplicationEventHandler {
     public void handleRefreshThumbnailRequest(RefreshThumbnailRequest request) {
         for (SortableDefaultMutableTreeNode node : request.getNodes()) {
             if (node.isRoot()) {
-                LOGGER.fine("Ingnoring the request for a thumbnail refresh on the Root Node as the query for it's parent's children will fail");
+                LOGGER.fine("Ignoring the request for a thumbnail refresh on the Root Node as the query for it's parent's children will fail");
                 return;
             }
-            LOGGER.fine(String.format("refreshing the thumbnail on the node %s%nAbout to create the thubnail", this.toString()));
+            LOGGER.fine(String.format("refreshing the thumbnail on the node %s%nAbout to create the thumbnail", this.toString()));
             ThumbnailController t = new ThumbnailController(new Thumbnail(), Settings.thumbnailSize);
             t.setNode(new SingleNodeNavigator(node), 0);
-            //ThumbnailCreationQueue.requestThumbnailCreation( t, node, 
-            //        request.getPriority() );
         }
     }
 
