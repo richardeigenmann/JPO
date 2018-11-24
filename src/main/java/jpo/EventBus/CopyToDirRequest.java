@@ -1,10 +1,13 @@
 package jpo.EventBus;
 
-import java.io.File;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
+import org.checkerframework.checker.nullness.qual.NonNull;
+
+import java.io.File;
+import java.util.Objects;
 
 /*
- Copyright (C) 2017  Richard Eigenmann.
+ Copyright (C) 2017-2018  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -36,7 +39,9 @@ public class CopyToDirRequest implements Request {
      * @param nodes The nodes for which the user would like copy the pictures
      * @param targetLocation The target directory
      */
-    public CopyToDirRequest( SortableDefaultMutableTreeNode[] nodes, File targetLocation ) {
+    public CopyToDirRequest(@NonNull SortableDefaultMutableTreeNode[] nodes, @NonNull File targetLocation ) {
+        Objects.requireNonNull(nodes);
+        Objects.requireNonNull(targetLocation);
         this.nodes = nodes;
         this.targetLocation = targetLocation;
     }
@@ -46,6 +51,7 @@ public class CopyToDirRequest implements Request {
      *
      * @return the node
      */
+    @NonNull
     public SortableDefaultMutableTreeNode[] getNodes() {
         return nodes;
     }
@@ -54,6 +60,7 @@ public class CopyToDirRequest implements Request {
      * Returns the target directory
      * @return the target directory
      */
+    @NonNull
     public File getTargetLocation() {
         return targetLocation;
     }

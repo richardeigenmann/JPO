@@ -1,8 +1,10 @@
 package jpo.EventBus;
 
+import com.drew.lang.annotations.NotNull;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
+import java.io.File;
 import java.util.Objects;
 
 /*
@@ -26,29 +28,41 @@ import java.util.Objects;
  *
  * @author Richard Eigenmann
  */
-public class MoveToNewLocationRequest implements Request {
+public class MoveToDirRequest implements Request {
 
     private final SortableDefaultMutableTreeNode[] nodes;
+    private final File targetLocation;
 
     /**
-     * Request to indicate that the user would like to move the pictures in the
-     * selected nodes to a target directory
+     * Request to move the pictures in the selected nodes to a target directory
      *
-     * @param nodes The nodes for which the user would like move the pictures
+     * @param nodes The nodes with the pictures to move
+     * @param targetLocation The target directory
      */
-    public MoveToNewLocationRequest(@NonNull SortableDefaultMutableTreeNode[] nodes ) {
+    public MoveToDirRequest(@NonNull SortableDefaultMutableTreeNode[] nodes,@NonNull File targetLocation ) {
         Objects.requireNonNull(nodes);
+        Objects.requireNonNull(targetLocation);
         this.nodes = nodes;
+        this.targetLocation = targetLocation;
     }
 
     /**
-     * The nodes for which the dialog should be executed
+     * The nodes whose pictures move
      *
      * @return the node
      */
+    @NotNull
     public SortableDefaultMutableTreeNode[] getNodes() {
         return nodes;
     }
 
+    /**
+     * Returns the target directory
+     * @return the target directory
+     */
+    @NotNull
+    public File getTargetLocation() {
+        return targetLocation;
+    }
 
 }

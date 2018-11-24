@@ -572,9 +572,9 @@ public class PicturePopupMenu extends JPopupMenu {
                 if (Settings.getPictureCollection().countSelectedNodes() < 1) {
                     SortableDefaultMutableTreeNode[] nodes = new SortableDefaultMutableTreeNode[1];
                     nodes[0] = popupNode;
-                    JpoEventBus.getInstance().post(new CopyToDirRequest(nodes, loc));
+                    JpoEventBus.getInstance().post(new MoveToDirRequest(nodes, loc));
                 } else {
-                    JpoEventBus.getInstance().post(new CopyToDirRequest(Settings.getPictureCollection().getSelectedNodes(), loc));
+                    JpoEventBus.getInstance().post(new MoveToDirRequest(Settings.getPictureCollection().getSelectedNodes(), loc));
                 }
             });
             fileMoveJMenu.add(moveLocationJMenuItems[i]);

@@ -327,6 +327,7 @@ public class JpoResources_en extends ListResourceBundle {
             {"copyToNewLocationJMenuItem", "choose target directory"},
             {"copyToNewZipfileJMenuItem", "to zip file"},
             {"copyToNewLocationSuccess", "%d of %d pictures copied"},
+            {"moveToNewLocationSuccess", "%d of %d pictures moved"},
             {"FileOperations", "File operations"},
             {"fileMoveJMenu", "Move File"},
             {"moveToNewLocationJMenuItem", "choose target directory"},

@@ -347,6 +347,7 @@ public class JpoResources_zh_CN extends ListResourceBundle {
             {"pictureEditJMenuItemLabel", "属性"},
             {"copyImageJMenuLabel", "复制图片"},
             {"copyToNewLocationJMenuItem", "选择复制的文件夹位置"},
+            {"moveToNewLocationSuccess", "%d of %d pictures moved"},
             {"copyToNewZipfileJMenuItem", "压缩文件"},
             {"copyToNewLocationSuccess", "复制％d张照片的％d"},
             {"FileOperations", "文件操作"},

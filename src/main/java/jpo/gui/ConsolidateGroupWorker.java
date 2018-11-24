@@ -1,18 +1,21 @@
 package jpo.gui;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.logging.Logger;
-import javax.swing.JOptionPane;
-import javax.swing.SwingWorker;
 import jpo.dataModel.PictureInfo;
 import jpo.dataModel.Settings;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
 import jpo.dataModel.Tools;
-import static jpo.dataModel.Tools.warnOnEDT;
 import org.apache.commons.io.FileExistsException;
+import org.checkerframework.checker.nullness.qual.NonNull;
+
+import javax.swing.*;
+import java.io.File;
+import java.io.IOException;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.Objects;
+import java.util.logging.Logger;
+
+import static jpo.dataModel.Tools.warnOnEDT;
 import static org.apache.commons.io.FileUtils.moveFile;
 
 /*
@@ -178,7 +181,10 @@ public class ConsolidateGroupWorker extends SwingWorker<String, String> {
      * @param targetDirectory the target directory
      * @return True if a real move was done False if not.
      */
-    public static boolean movePicture( PictureInfo pictureInfo, File targetDirectory ) {
+    public static boolean movePicture(@NonNull PictureInfo pictureInfo, @NonNull File targetDirectory ) {
+        Objects.requireNonNull(pictureInfo);
+        Objects.requireNonNull(targetDirectory);
+
         File pictureFile = pictureInfo.getImageFile();
 
         // don't move if the file is already in the correct directory but report true to move
@@ -193,6 +199,8 @@ public class ConsolidateGroupWorker extends SwingWorker<String, String> {
         try {
             moveFile( pictureFile, newFile );
         } catch ( FileExistsException ex ) {
+            LOGGER.severe( String.format( "Failed to move file %s to %s.\nException: ", pictureFile.toString(), newFile.toString(), ex.getLocalizedMessage() ) );
+            return false;
         } catch ( IOException ex ) {
             LOGGER.severe( String.format( "Failed to move file %s to %s.\nException: ", pictureFile.toString(), newFile.toString(), ex.getLocalizedMessage() ) );
             return false;

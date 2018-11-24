@@ -393,7 +393,7 @@ public class ApplicationEventHandler {
             return;
         }
 
-        JpoEventBus.getInstance().post(new CopyToDirRequest(request.getNodes(), jFileChooser.getSelectedFile()));
+        JpoEventBus.getInstance().post(new MoveToDirRequest(request.getNodes(), jFileChooser.getSelectedFile()));
     }
 
     /**
@@ -877,6 +877,46 @@ public class ApplicationEventHandler {
                 Settings.jpoResources.getString("genericInfo"),
                 JOptionPane.INFORMATION_MESSAGE);
 
+    }
+
+    /**
+     * Moves the pictures of the supplied nodes to the target directory
+     *
+     * @param request The request
+     */
+    @Subscribe
+    public static void handleMoveToDirRequest(MoveToDirRequest request) {
+        if (!request.getTargetLocation().isDirectory()) {
+            JOptionPane.showMessageDialog(Settings.anchorFrame,
+                    Settings.jpoResources.getString("htmlDistIsDirError"),
+                    Settings.jpoResources.getString("genericError"),
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        if (!request.getTargetLocation().canWrite()) {
+            JOptionPane.showMessageDialog(Settings.anchorFrame,
+                    Settings.jpoResources.getString("htmlDistCanWriteError"),
+                    Settings.jpoResources.getString("genericError"),
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        int picsMoved = 0;
+        for (SortableDefaultMutableTreeNode node : request.getNodes()) {
+            Object userObject = node.getUserObject();
+            if ( userObject instanceof PictureInfo) {
+                if (ConsolidateGroupWorker.movePicture((PictureInfo) userObject, request.getTargetLocation())) {
+                    picsMoved++;
+                }
+            } else {
+                LOGGER.info(String.format("Skipping non PictureInfo node %s", node.toString()));
+            }
+        }
+        JOptionPane.showMessageDialog(Settings.anchorFrame,
+                String.format(Settings.jpoResources.getString("moveToNewLocationSuccess"), picsMoved, request.getNodes().length),
+                Settings.jpoResources.getString("genericInfo"),
+                JOptionPane.INFORMATION_MESSAGE);
     }
 
     /**
