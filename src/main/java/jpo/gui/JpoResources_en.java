@@ -55,7 +55,7 @@ public class JpoResources_en extends ListResourceBundle {
             {"internalError", "or"},
             {"genericWarning", "Warning"},
             {"genericExit", "Exit"},
-            {"outOfMemoryError", "An out of Memory error has occured"},
+            {"outOfMemoryError", "An out of Memory error has occurred"},
             {"areYouSure", "Are you sure?"},
 
             // Help About Dialog
@@ -64,7 +64,7 @@ public class JpoResources_en extends ListResourceBundle {
                     + "Copyright 2000 - 2018\n"
                     + "richard.eigenmann@gmail.com\n"
                     + "http://j-po.sourceforge.net\n"
-                    + "\nThe Exif extration is courtesy of Drew Noakes\n"
+                    + "\nThe Exif extraction is courtesy of Drew Noakes\n"
                     + "The Table sorter is courtesy of Philip Milne\n"
                     + "Mikael Grev develops MiG Layout\n"
                     + "Michael Rudolf develops JWizz\n"
@@ -136,7 +136,7 @@ public class JpoResources_en extends ListResourceBundle {
             {"thumbDirChooserTitle", "Choose Directory for Thumbnails"},
             {"settingsError", "Settings Error"},
             {"generalLogFileError", "There is a problem with the logfile. Logging was disabled."},
-            {"thumbnailDirError", "Something is seriousely wrong with your thumbnail directory"},
+            {"thumbnailDirError", "Something is seriously wrong with your thumbnail directory"},
             {"userFunctionJPanel", "User Functions"},
             {"userFunction1JLabel", "User Function 1"},
             {"userFunction2JLabel", "User Function 2"},
@@ -157,9 +157,9 @@ public class JpoResources_en extends ListResourceBundle {
 
             // Settings
             {"thumbNoExistError", "The directory for the thumbnails doesn't exist.\nPlease select Edit | Settings to set this correctly.\nThumbnail caching has been turned off."},
-            {"thumbNoWriteError", "The directory for the thumbnails is not writeable.\nPlease select Edit | Settings to set this correctly.\nThumbnail caching has been turned off."},
+            {"thumbNoWriteError", "The directory for the thumbnails is not writable.\nPlease select Edit | Settings to set this correctly.\nThumbnail caching has been turned off."},
             {"thumbNoDirError", "The location for the thumbnails is not a directory.\nPlease select Edit | Settings to set this correctly.\nThumbnail caching has been turned off."},
-            {"logFileCanWriteError", "The logfile in the Settings is not writeable.\nPlease select Edit | Settings to set this correctly.\nLogging has been disabled"},
+            {"logFileCanWriteError", "The logfile in the Settings is not writable.\nPlease select Edit | Settings to set this correctly.\nLogging has been disabled"},
             {"logFileIsFileError", "The location for the logfile is not a File.\nPlease select Edit | Settings to set this to a file.\nLogging has been disabled"},
             {"generalLogFileError", "There is a problem with the logfile. Logging was disabled."},
             {"cantWriteIniFile", "Error while writing ini file:\n"},
@@ -174,11 +174,11 @@ public class JpoResources_en extends ListResourceBundle {
             {"HtmlDistThumbnails", "Thumbnails"},
             {"exportHighresJCheckBox", "Export high resolution pictures"},
             {"rotateHighresJCheckBox", "Rotate high resolution pictures"},
-            {"linkToHighresJCheckBox", "Link to high resoloution pictures at current locations"},
+            {"linkToHighresJCheckBox", "Link to high resolution pictures at current locations"},
             {"jpo.export.GenerateWebsiteWizard3Midres.generateMouseoverJCheckBox", "Generate mouseover effects"},
             {"generateZipfileJCheckBox", "Generate Zipfile for download of Highres Pictures"},
             {"picsPerRowText", "Columns: "},
-            {"thubnailSizeJLabel", "Thumbnail size:"},
+            {"thumbnailSizeJLabel", "Thumbnail size:"},
             {"scalingSteps", "Scaling steps: "},
             {"htmlDistCrtDirError", "Could not create Export directory!"},
             {"htmlDistIsDirError", "This is not a directory!"},
@@ -246,8 +246,8 @@ public class JpoResources_en extends ListResourceBundle {
             {"ConsolidateGroupJFrameHeading", "Consolidate / Move Pictures"},
             {"ConsolidateButton", "Consolidate"},
             {"ConsolidateFailure", "Consolidation generated a failure and has aborted."},
-            {"ConsolitdateProgBarTitle", "Running Consolidation"},
-            {"ConsolitdateProgBarDone", "%d pictures Consolidated"},
+            {"ConsolidateProgBarTitle", "Running Consolidation"},
+            {"ConsolidateProgBarDone", "%d pictures Consolidated"},
             {"lowresJCheckBox", "consolidate Lowres too"},
             {"ConsolidateCreateDirFailure", "Aborted because directory %s can't be created."},
             {"ConsolidateCantWrite", "Aborted because directory %s is not writable."},
@@ -269,7 +269,7 @@ public class JpoResources_en extends ListResourceBundle {
             {"latitudeLabel", "Latitude:"},
             {"longitudeLabel", "Longitude:"},
             {"commentLabel", "Comment:"},
-            {"copyrightHolderLabel", "Copyright statment:"},
+            {"copyrightHolderLabel", "Copyright statement:"},
             {"photographerLabel", "Photographer:"},
             {"resetLabel", "Reset"},
             {"checksumJButton", "refresh"},
@@ -334,6 +334,8 @@ public class JpoResources_en extends ListResourceBundle {
             {"fileRenameJMenuItem", "Rename"},
             {"FileRenameLabel1", "Rename \n"},
             {"FileRenameLabel2", "\nto: "},
+            {"FileRenameTargetExistsTitle", "Target File Exists"},
+            {"FileRenameTargetExistsText", "The file %s exists and would be overwritten\nOK to change to %s ?"},
             {"fileDeleteJMenuItem", "Delete"},
             {"pictureRefreshJMenuItem", "Refresh Thumbnail"},
             {"pictureMailSelectJMenuItem", "Select for email"},
@@ -390,7 +392,7 @@ public class JpoResources_en extends ListResourceBundle {
             {"addFlatFileTitle", "Choose Flat File Picture List"},
             {"saveFlatFileTitle", "Save List of Pictures as Flat File"},
             {"saveFlatFileButtonLabel", "Save"},
-            {"moveNodeError", "Target is decendant of source. Move aborted."},
+            {"moveNodeError", "Target is descendant of source. Move aborted."},
             {"unsavedChanges", "Unsaved changes exist."},
             {"confirmSaveAs", "Target file exists!\nContinue and overwrite it?"},
             {"discardChanges", "Discard"},
@@ -446,7 +448,7 @@ public class JpoResources_en extends ListResourceBundle {
             {"notADir", "Not a directory:\n"},
             {"notGroupInfo", "Node is not a group node."},
             {"fileChooserAddButtonLabel", "Add"},
-            {"recurseSubdirectoriesTitle", "Recurse Sbdirectories"},
+            {"recurseSubdirectoriesTitle", "Recurse Subdirectories"},
             {"recurseSubdirectoriesMessage", "There are nested subdirectories in your selection.\nDo you want to add these too?"},
             {"recurseSubdirectoriesOk", "Add"},
             {"recurseSubdirectoriesNo", "No"},
@@ -568,7 +570,7 @@ public class JpoResources_en extends ListResourceBundle {
             {"emailSize5", "Originals only"},
             {"emailOriginals", "Attach Original Images"},
             {"emailNoNodes", "No pictures to send. Select images with the right-click popup menu."},
-            {"emailNoServer", "No Email Server configured. Configur the server unter Edit > Settings > Email Server."},
+            {"emailNoServer", "No Email Server configured. Configure the server under Edit > Settings > Email Server."},
             //Emailer Thread
             {"EmailerLoading", "Loading:  "},
             {"EmailerScaling", "Scaling:  "},

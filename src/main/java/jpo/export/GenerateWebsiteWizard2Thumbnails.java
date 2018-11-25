@@ -1,16 +1,12 @@
 package jpo.export;
 
-import java.util.Hashtable;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JSlider;
-import javax.swing.JSpinner;
-import javax.swing.SpinnerNumberModel;
-import javax.swing.event.ChangeEvent;
 import jpo.dataModel.Settings;
 import net.javaprog.ui.wizard.AbstractStep;
 import net.miginfocom.swing.MigLayout;
+
+import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import java.util.Hashtable;
 
 /*
  GenerateWebsiteWizard2Thumbnails.java:  Specify stuff about the Thumbnails
@@ -106,7 +102,7 @@ public class GenerateWebsiteWizard2Thumbnails extends AbstractStep {
         } );
         wizardPanel.add( picsPerRow, "wrap" );
 
-        wizardPanel.add( new JLabel( Settings.jpoResources.getString( "thubnailSizeJLabel" ) ), "align label" );
+        wizardPanel.add( new JLabel( Settings.jpoResources.getString( "thumbnailSizeJLabel" ) ), "align label" );
         thumbWidth.addChangeListener( ( ChangeEvent arg0 ) -> {
             options.setThumbnailWidth( ( (SpinnerNumberModel) ( thumbWidth.getModel() ) ).getNumber().intValue() );
         } );

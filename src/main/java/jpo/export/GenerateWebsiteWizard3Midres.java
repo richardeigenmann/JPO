@@ -1,18 +1,13 @@
 package jpo.export;
 
-import java.util.Dictionary;
-import java.util.Hashtable;
-import javax.swing.JCheckBox;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JSlider;
-import javax.swing.JSpinner;
-import javax.swing.SpinnerNumberModel;
-import javax.swing.event.ChangeEvent;
 import jpo.dataModel.Settings;
 import net.javaprog.ui.wizard.AbstractStep;
 import net.miginfocom.swing.MigLayout;
+
+import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import java.util.Dictionary;
+import java.util.Hashtable;
 
 /*
  GenerateWebsiteWizard3Midres.java:  Midres stuff
@@ -132,7 +127,7 @@ public class GenerateWebsiteWizard3Midres extends AbstractStep {
         });
         wizardPanel.add( mouseoverJCheckBox, "spanx, wrap" );
 
-        wizardPanel.add( new JLabel( Settings.jpoResources.getString( "thubnailSizeJLabel" ) ), "align label" );
+        wizardPanel.add( new JLabel( Settings.jpoResources.getString( "thumbnailSizeJLabel" ) ), "align label" );
         midresWidthJSpinner.addChangeListener(( ChangeEvent arg0 ) -> {
             options.setMidresWidth( ( (SpinnerNumberModel) ( midresWidthJSpinner.getModel() ) ).getNumber().intValue() );
         });

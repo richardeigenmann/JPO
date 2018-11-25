@@ -1,8 +1,5 @@
 package jpo.gui;
 
-import java.io.File;
-import java.util.logging.Logger;
-import javax.swing.JOptionPane;
 import jpo.EventBus.ConsolidateGroupRequest;
 import jpo.EventBus.CopyLocationsChangedEvent;
 import jpo.EventBus.JpoEventBus;
@@ -10,6 +7,10 @@ import jpo.dataModel.GroupInfo;
 import jpo.dataModel.NodeStatistics;
 import jpo.dataModel.Settings;
 import jpo.gui.swing.ConsolidateGroupJFrame;
+
+import javax.swing.*;
+import java.io.File;
+import java.util.logging.Logger;
 
 /*
  Copyright (C) 2017  Richard Eigenmann.
@@ -110,8 +111,8 @@ public class ConsolidateGroupController implements ConsolidateGroupActionCallbac
                 request.getNode(),
                 rescurseSubgroups,
                 new ProgressGui(NodeStatistics.countPictures(request.getNode(), rescurseSubgroups),
-                        Settings.jpoResources.getString("ConsolitdateProgBarTitle"),
-                        Settings.jpoResources.getString("ConsolitdateProgBarDone")));
+                        Settings.jpoResources.getString("ConsolidateProgBarTitle"),
+                        Settings.jpoResources.getString("ConsolidateProgBarDone")));
         
         JpoEventBus.getInstance().post(new CopyLocationsChangedEvent());
 

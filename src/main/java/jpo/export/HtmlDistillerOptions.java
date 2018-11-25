@@ -1,10 +1,10 @@
 package jpo.export;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.io.File;
 import jpo.dataModel.Settings;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
+
+import java.awt.*;
+import java.io.File;
 
 /*
  Copyright (C) 2008-2018,  Richard Eigenmann, Zürich
@@ -806,7 +806,7 @@ public class HtmlDistillerOptions {
     public String toString() {
         StringBuilder sb = new StringBuilder( Settings.jpoResources.getString( "HtmlDistThumbnails" ) + "\n" );
         sb.append( Settings.jpoResources.getString( "picsPerRowText" ) ).append( " " ).append( getPicsPerRow() ).append( "\n" );
-        sb.append( Settings.jpoResources.getString( "thubnailSizeJLabel" ) ).append( " " ).append( Integer.toString( getThumbnailWidth() ) ).append( " x " ).append( Integer.toString( getThumbnailHeight() ) ).append( "\n" );
+        sb.append( Settings.jpoResources.getString( "thumbnailSizeJLabel" ) ).append( " " ).append( Integer.toString( getThumbnailWidth() ) ).append( " x " ).append( Integer.toString( getThumbnailHeight() ) ).append( "\n" );
         sb.append( Settings.jpoResources.getString( "lowresJpgQualitySlider" ) ).append( " " ).append( Integer.toString( getLowresJpgQualityPercent() ) ).append( "\n" );
         sb.append( Settings.jpoResources.getString( "scalingSteps" ) ).append( " " ).append( Integer.toString( getScalingSteps() ) ).append( "\n" );
 

@@ -1,9 +1,13 @@
 package jpo.EventBus;
 
+import jpo.dataModel.PictureInfo;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
+import org.checkerframework.checker.nullness.qual.NonNull;
+
+import java.util.Objects;
 
 /*
- Copyright (C) 2017  Richard Eigenmann.
+ Copyright (C) 2017-2018  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -31,7 +35,11 @@ public class RenamePictureRequest implements Request {
      * A request to rename the supplied node 
      * @param node The node to rename
      */
-    public RenamePictureRequest( SortableDefaultMutableTreeNode node ) {
+    public RenamePictureRequest( @NonNull SortableDefaultMutableTreeNode node ) {
+        Objects.requireNonNull(node);
+        if ( ! (node.getUserObject() instanceof PictureInfo )) {
+            throw new RuntimeException("The node must be of type PictureInfo");
+        }
         this.node = node;
     }
 

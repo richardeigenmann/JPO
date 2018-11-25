@@ -14,6 +14,7 @@ import jpo.gui.swing.*;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
 import org.apache.commons.compress.archivers.zip.ZipFile;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 import javax.swing.*;
 import javax.swing.event.TreeModelEvent;
@@ -376,8 +377,6 @@ public class ApplicationEventHandler {
     }
 
     /**
-     *
-     *
      * @param request the request
      */
     @Subscribe
@@ -388,7 +387,7 @@ public class ApplicationEventHandler {
         jFileChooser.setDialogTitle(Settings.jpoResources.getString("MoveImageDialogTitle"));
         jFileChooser.setCurrentDirectory(Settings.getMostRecentCopyLocation());
 
-        int returnVal = jFileChooser.showDialog(Settings.anchorFrame,Settings.jpoResources.getString("MoveImageDialogButton")) ;
+        int returnVal = jFileChooser.showDialog(Settings.anchorFrame, Settings.jpoResources.getString("MoveImageDialogButton"));
         if (returnVal != JFileChooser.APPROVE_OPTION) {
             return;
         }
@@ -398,30 +397,43 @@ public class ApplicationEventHandler {
 
     /**
      * Bring up a Dialog where the user can input a new name for a file and
-     * rename it.
+     * rename it. If the taget file already exists and would overwrite the existing file
+     * A new name is suggested that the user can accept or abort the rename.
      *
      * @param request the request
      */
     @Subscribe
-    public static void handleRenamePictureRequest(RenamePictureRequest request) {
+    public static void handleRenamePictureRequest(@NonNull RenamePictureRequest request) {
         SortableDefaultMutableTreeNode node = request.getNode();
-        Object userObject = node.getUserObject();
-        if (!(userObject instanceof PictureInfo)) {
-            return;
-        }
+        PictureInfo pi = (PictureInfo) node.getUserObject();
 
-        PictureInfo pi = (PictureInfo) userObject;
         File imageFile = pi.getImageFile();
         if (imageFile == null) {
             return;
         }
 
-        Object object = Settings.jpoResources.getString("FileRenameLabel1") + imageFile.toString() + Settings.jpoResources.getString("FileRenameLabel2");
+        Object object = Settings.jpoResources.getString("FileRenameLabel1")
+                + imageFile.toString()
+                + Settings.jpoResources.getString("FileRenameLabel2");
         String selectedValue = JOptionPane.showInputDialog(Settings.anchorFrame,
                 object,
                 imageFile.toString());
         if (selectedValue != null) {
             File newName = new File(selectedValue);
+
+            if (newName.exists()) {
+                File alternativeNewName = Tools.inventPicFilename(newName.getParentFile(), newName.getName());
+                int alternativeAnswer = JOptionPane.showConfirmDialog(Settings.anchorFrame,
+                        String.format(Settings.jpoResources.getString("FileRenameTargetExistsText"),newName.toString(), alternativeNewName.toString() ),
+                        Settings.jpoResources.getString("FileRenameTargetExistsTitle"),
+                        JOptionPane.OK_CANCEL_OPTION);
+                if ( alternativeAnswer == JOptionPane.OK_OPTION) {
+                    newName = alternativeNewName;
+                } else {
+                    LOGGER.log(Level.INFO, "File exists and new name was not accepted by user");
+                    return;
+                }
+            }
             if (imageFile.renameTo(newName)) {
                 LOGGER.log(Level.INFO, "Successfully renamed: {0} to: {1}", new Object[]{imageFile.toString(), selectedValue});
                 pi.setImageLocation(newName);
@@ -905,7 +917,7 @@ public class ApplicationEventHandler {
         int picsMoved = 0;
         for (SortableDefaultMutableTreeNode node : request.getNodes()) {
             Object userObject = node.getUserObject();
-            if ( userObject instanceof PictureInfo) {
+            if (userObject instanceof PictureInfo) {
                 if (ConsolidateGroupWorker.movePicture((PictureInfo) userObject, request.getTargetLocation())) {
                     picsMoved++;
                 }
