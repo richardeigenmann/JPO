@@ -1,23 +1,19 @@
 package jpo.export;
 
-import com.jcraft.jsch.Channel;
-import com.jcraft.jsch.ChannelExec;
-import com.jcraft.jsch.JSch;
-import com.jcraft.jsch.JSchException;
-import com.jcraft.jsch.Session;
-import java.awt.Desktop;
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.SocketException;
+import com.jcraft.jsch.*;
+import jpo.dataModel.*;
+import jpo.gui.ProgressGui;
+import jpo.gui.ScalablePicture;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.net.ftp.FTP;
+import org.apache.commons.net.ftp.FTPClient;
+import org.apache.commons.net.ftp.FTPReply;
+import org.apache.commons.text.StringEscapeUtils;
+
+import javax.swing.*;
+import javax.swing.tree.DefaultMutableTreeNode;
+import java.awt.*;
+import java.io.*;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -29,24 +25,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
-import javax.swing.JOptionPane;
-import javax.swing.SwingWorker;
-import javax.swing.tree.DefaultMutableTreeNode;
-import jpo.dataModel.GroupInfo;
-import jpo.dataModel.JpoWriter;
-import jpo.dataModel.NodeStatistics;
-import jpo.dataModel.PictureInfo;
-import jpo.dataModel.Settings;
-import jpo.dataModel.SortableDefaultMutableTreeNode;
-import jpo.dataModel.Tools;
-import jpo.gui.ProgressGui;
-import jpo.gui.ScalablePicture;
+
 import static jpo.gui.ScalablePicture.ScalablePictureStatus.SCALABLE_PICTURE_ERROR;
-import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.net.ftp.FTP;
-import org.apache.commons.net.ftp.FTPClient;
-import org.apache.commons.net.ftp.FTPReply;
-import org.apache.commons.text.StringEscapeUtils;
 
 /*
  * Copyright (C) 2002-2018 Richard Eigenmann. 
@@ -443,7 +423,7 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
 
         LOGGER.info( String.format( "Done Loading: %s", pictureInfo.getImageLocation() ) );
         if ( scp.getStatusCode() == SCALABLE_PICTURE_ERROR ) {
-            LOGGER.log( Level.SEVERE, "Problem reading image {0} using brokenThumbnailPicture instead", pictureInfo.getImageLocation() );
+            LOGGER.log( Level.SEVERE, "Problem reading image {0} using bnailPicture instead", pictureInfo.getImageLocation() );
             scp.loadPictureImd( HtmlDistiller.class.getClassLoader().getResource( "jpo/images/broken_thumbnail.gif" ), 0f );
         }
 

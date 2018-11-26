@@ -1,25 +1,18 @@
 package jpo.dataModel;
 
+import org.apache.commons.text.StringEscapeUtils;
+import org.checkerframework.checker.nullness.qual.NonNull;
+
 import java.awt.geom.Point2D;
-import java.io.BufferedInputStream;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.Serializable;
+import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.text.NumberFormat;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.apache.commons.text.StringEscapeUtils;
 
 /*
  PictureInfo.java:  the definitions for picture data
@@ -38,6 +31,7 @@ import org.apache.commons.text.StringEscapeUtils;
  The license is in gpl.txt.
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
+
 /**
  * Objects of this type represent a single picture in the collection. Since
  * SortableDefaultMutableTreeNodes allow user objects to be attached to the node
@@ -61,7 +55,7 @@ public class PictureInfo implements Serializable {
     /**
      * Defines a LOGGER for this class
      */
-    private static final Logger LOGGER = Logger.getLogger( PictureInfo.class.getName() );
+    private static final Logger LOGGER = Logger.getLogger(PictureInfo.class.getName());
 
     /**
      * Constructor method. Creates the object and sets up the variables.
@@ -69,8 +63,8 @@ public class PictureInfo implements Serializable {
      * TODO: What a strange signature. When would I ever use this?? RE, 2015
      *
      * @param highresLocation The highres location
-     * @param description	The description of the image
-     * @param filmReference	The reference to the film if any
+     * @param description    The description of the image
+     * @param filmReference    The reference to the film if any
      *
      * public PictureInfo( String highresLocation, String description, String
      * filmReference ) { this.imageLocation = highresLocation; this.description
@@ -82,20 +76,21 @@ public class PictureInfo implements Serializable {
      */
     /**
      * Constructor method. Creates the object and sets up the variables.
-     *
+     * <p>
      * TODO: What a strange signature. When would I erver use this?? RE, 2015
      *
-     * @param highresURL The filename of the high resolution image
-     * @param description	The description of the image
+     * @param highresURL  The filename of the high resolution image
+     * @param description The description of the image
+     * @deprecated
      */
-    public PictureInfo( URL highresURL,
-            String description ) {
+    public PictureInfo(URL highresURL,
+                       String description) {
         this.imageLocation = highresURL.toString();
         this.description = description;
         //this.filmReference = filmReference;
 
-        LOGGER.log( Level.FINE, "Highres_Name: {0}", imageLocation );
-        LOGGER.log( Level.FINE, "description: {0}", description );
+        LOGGER.log(Level.FINE, "Highres_Name: {0}", imageLocation);
+        LOGGER.log(Level.FINE, "description: {0}", description);
         //LOGGER.log( Level.FINE, "filmReference: {0}", filmReference );
 
     }
@@ -113,10 +108,23 @@ public class PictureInfo implements Serializable {
      * Constructor with just filename as option.
      *
      * @param highresLocation The highres location as a String
+     * @param description     Description
+     * @deprecated
+     */
+    public PictureInfo(String highresLocation, String description) {
+        setImageLocation(highresLocation);
+        setDescription(description);
+        filmReference = "";
+    }
+
+    /**
+     * Constructor with just filename as option.
+     *
+     * @param imageFile   The file of the image
      * @param description Description
      */
-    public PictureInfo( String highresLocation, String description ) {
-        this.imageLocation = highresLocation;
+    public PictureInfo(File imageFile, String description) {
+        setImageLocation(imageFile);
         this.description = description;
         filmReference = "";
     }
@@ -136,12 +144,12 @@ public class PictureInfo implements Serializable {
      * this method writes all attributes of the picture in the JPO xml data
      * format.
      *
-     * @param out	The Bufferer Writer receiving the xml data
+     * @param out The Bufferer Writer receiving the xml data
      * @throws IOException if there is a drama writing the file.
      */
-    public void dumpToXml( BufferedWriter out )
+    public void dumpToXml(BufferedWriter out)
             throws IOException {
-        dumpToXml( out, getImageLocation() );
+        dumpToXml(out, getImageLocation());
     }
 
     /**
@@ -151,74 +159,74 @@ public class PictureInfo implements Serializable {
      * to a new location we don't want to write the URLs of the original
      * pictures whilst all other attributes are retained.
      *
-     * @param out	The Bufferer Writer receiving the xml data
-     * @param highres	The URL of the highres file
+     * @param out     The Bufferer Writer receiving the xml data
+     * @param highres The URL of the highres file
      * @throws IOException If there was an IO error
      */
-    public void dumpToXml( BufferedWriter out, String highres )
+    public void dumpToXml(BufferedWriter out, String highres)
             throws IOException {
-        out.write( "<picture>" );
+        out.write("<picture>");
         out.newLine();
-        out.write( "\t<description><![CDATA[" + getDescription() + "]]></description>" );
+        out.write("\t<description><![CDATA[" + getDescription() + "]]></description>");
         out.newLine();
 
-        if ( ( getCreationTime() != null ) && ( getCreationTime().length() > 0 ) ) {
-            out.write( "\t<CREATION_TIME><![CDATA[" + getCreationTime() + "]]></CREATION_TIME>" );
+        if ((getCreationTime() != null) && (getCreationTime().length() > 0)) {
+            out.write("\t<CREATION_TIME><![CDATA[" + getCreationTime() + "]]></CREATION_TIME>");
             out.newLine();
         }
 
-        if ( highres.length() > 0 ) {
-            out.write( "\t<file_URL>" + StringEscapeUtils.escapeXml11( highres ) + "</file_URL>" );
+        if (highres.length() > 0) {
+            out.write("\t<file_URL>" + StringEscapeUtils.escapeXml11(highres) + "</file_URL>");
             out.newLine();
         }
 
-        if ( checksum > Long.MIN_VALUE ) {
-            out.write( "\t<checksum>" + Long.toString( checksum ) + "</checksum>" );
+        if (checksum > Long.MIN_VALUE) {
+            out.write("\t<checksum>" + Long.toString(checksum) + "</checksum>");
             out.newLine();
         }
 
-        if ( getComment().length() > 0 ) {
-            out.write( "\t<COMMENT>" + StringEscapeUtils.escapeXml11( getComment() ) + "</COMMENT>" );
+        if (getComment().length() > 0) {
+            out.write("\t<COMMENT>" + StringEscapeUtils.escapeXml11(getComment()) + "</COMMENT>");
             out.newLine();
         }
 
-        if ( getPhotographer().length() > 0 ) {
-            out.write( "\t<PHOTOGRAPHER>" + StringEscapeUtils.escapeXml11( getPhotographer() ) + "</PHOTOGRAPHER>" );
+        if (getPhotographer().length() > 0) {
+            out.write("\t<PHOTOGRAPHER>" + StringEscapeUtils.escapeXml11(getPhotographer()) + "</PHOTOGRAPHER>");
             out.newLine();
         }
 
-        if ( getFilmReference().length() > 0 ) {
-            out.write( "\t<film_reference>" + StringEscapeUtils.escapeXml11( getFilmReference() ) + "</film_reference>" );
+        if (getFilmReference().length() > 0) {
+            out.write("\t<film_reference>" + StringEscapeUtils.escapeXml11(getFilmReference()) + "</film_reference>");
             out.newLine();
         }
 
-        if ( getCopyrightHolder().length() > 0 ) {
-            out.write( "\t<COPYRIGHT_HOLDER>" + StringEscapeUtils.escapeXml11( getCopyrightHolder() ) + "</COPYRIGHT_HOLDER>" );
+        if (getCopyrightHolder().length() > 0) {
+            out.write("\t<COPYRIGHT_HOLDER>" + StringEscapeUtils.escapeXml11(getCopyrightHolder()) + "</COPYRIGHT_HOLDER>");
             out.newLine();
         }
 
-        if ( getRotation() != 0 ) {
+        if (getRotation() != 0) {
             //out.write( "\t<ROTATION>" + ( new Double( getRotation() ) ).toString() + "</ROTATION>" );
-            out.write( String.format( "\t<ROTATION>%f</ROTATION>", getRotation() ) );
+            out.write(String.format("\t<ROTATION>%f</ROTATION>", getRotation()));
             out.newLine();
         }
 
-        if ( latLng != null ) {
-            out.write( String.format( "\t<LATLNG>%fx%f</LATLNG>", latLng.x, latLng.y ) );
+        if (latLng != null) {
+            out.write(String.format("\t<LATLNG>%fx%f</LATLNG>", latLng.x, latLng.y));
             out.newLine();
         }
 
-        if ( categoryAssignments != null ) {
+        if (categoryAssignments != null) {
             Iterator i = categoryAssignments.iterator();
             Integer assignment;
-            while ( i.hasNext() ) {
+            while (i.hasNext()) {
                 assignment = (Integer) i.next();
-                out.write( "\t<categoryAssignment index=\"" + assignment.toString() + "\"/>" );
+                out.write("\t<categoryAssignment index=\"" + assignment.toString() + "\"/>");
                 out.newLine();
             }
         }
 
-        out.write( "</picture>" );
+        out.write("</picture>");
         out.newLine();
     }
 
@@ -231,7 +239,7 @@ public class PictureInfo implements Serializable {
     /**
      * Returns the description of the image.
      *
-     * @return	The description of the image.
+     * @return The description of the image.
      * @see #setDescription
      */
     public synchronized String getDescription() {
@@ -244,9 +252,9 @@ public class PictureInfo implements Serializable {
      * @param desc New description of the image.
      * @see #getDescription
      */
-    public synchronized void setDescription( String desc ) {
-        LOGGER.log( Level.FINE, "setting description to: {0}", desc );
-        if ( !desc.equals( description ) ) {
+    public synchronized void setDescription(String desc) {
+        LOGGER.log(Level.FINE, "setting description to: {0}", desc);
+        if (!desc.equals(description)) {
             description = desc;
             sendDescriptionChangedEvent();
         }
@@ -255,11 +263,11 @@ public class PictureInfo implements Serializable {
     /**
      * Appends the text fragment to the description.
      *
-     * @param s	The text fragment to append.
+     * @param s The text fragment to append.
      */
-    public synchronized void appendToDescription( String s ) {
-        if ( s.length() > 0 ) {
-            description = description.concat( s );
+    public synchronized void appendToDescription(String s) {
+        if (s.length() > 0) {
+            description = description.concat(s);
             sendDescriptionChangedEvent();
         }
     }
@@ -268,11 +276,11 @@ public class PictureInfo implements Serializable {
      * Checks whether the searchString parameter is contained in the
      * description. The search is case insensitive.
      *
-     * @param	searchString	The string to search for.
-     * @return	true if found. false if not.
+     * @param searchString The string to search for.
+     * @return true if found. false if not.
      */
-    public synchronized boolean descriptionContains( String searchString ) {
-        return description.toUpperCase().contains( searchString.toUpperCase() );
+    public synchronized boolean descriptionContains(String searchString) {
+        return description.toUpperCase().contains(searchString.toUpperCase());
     }
 
     /**
@@ -280,12 +288,12 @@ public class PictureInfo implements Serializable {
      * that the description was updated.
      */
     private void sendDescriptionChangedEvent() {
-        LOGGER.fine( "preparing to send description changed event" );
-        if ( Settings.getPictureCollection().getSendModelUpdates() ) {
-            PictureInfoChangeEvent pce = new PictureInfoChangeEvent( this );
+        LOGGER.fine("preparing to send description changed event");
+        if (Settings.getPictureCollection().getSendModelUpdates()) {
+            PictureInfoChangeEvent pce = new PictureInfoChangeEvent(this);
             pce.setDescriptionChanged();
-            sendPictureInfoChangedEvent( pce );
-            LOGGER.fine( "sent description changed event" );
+            sendPictureInfoChangedEvent(pce);
+            LOGGER.fine("sent description changed event");
             Settings.getPictureCollection().setUnsavedUpdates();
         }
     }
@@ -293,10 +301,10 @@ public class PictureInfo implements Serializable {
     //----------------------------------------
     /**
      * The full path to the high resolution version of the picture.
-     *
-     *
+     * TODO: In What format?
      */
     private String imageLocation = "";
+    private File imageFile;
 
     /**
      * Returns the full path to the highres picture.
@@ -311,18 +319,19 @@ public class PictureInfo implements Serializable {
     /**
      * returns the file handle to the highres picture.
      *
-     * @see	#getImageURL()
      * @return the highres location or null if there is a failure
+     * @see #getImageURL()
      */
     public synchronized File getImageFile() {
-        File returnFile;
+        /*File returnFile;
         try {
             returnFile = new File( new URI( imageLocation ) );
         } catch ( IllegalArgumentException | URISyntaxException x ) {
             LOGGER.severe( x.getMessage() );
             return null;
         }
-        return returnFile;
+        return returnFile;*/
+        return imageFile;
     }
 
     /**
@@ -330,10 +339,10 @@ public class PictureInfo implements Serializable {
      *
      * @return the image location
      * @throws MalformedURLException if the location could not be converted to a
-     * URL.
+     *                               URL.
      */
     public synchronized URL getImageURL() throws MalformedURLException {
-        URL highresURL = new URL( imageLocation );
+        URL highresURL = new URL(imageLocation);
         return highresURL;
     }
 
@@ -346,10 +355,10 @@ public class PictureInfo implements Serializable {
      */
     public synchronized URL getImageURLOrNull() {
         try {
-            URL highresURL = new URL( imageLocation );
+            URL highresURL = new URL(imageLocation);
             return highresURL;
-        } catch ( MalformedURLException x ) {
-            LOGGER.log( Level.FINE, "Caught an unexpected MalformedURLException: {0}", x.getMessage() );
+        } catch (MalformedURLException x) {
+            LOGGER.log(Level.FINE, "Caught an unexpected MalformedURLException: {0}", x.getMessage());
             return null;
         }
     }
@@ -361,8 +370,8 @@ public class PictureInfo implements Serializable {
      */
     public synchronized URI getImageURIOrNull() {
         try {
-            return new URI( imageLocation );
-        } catch ( IllegalArgumentException | URISyntaxException x ) {
+            return new URI(imageLocation);
+        } catch (IllegalArgumentException | URISyntaxException x) {
             return null;
         }
     }
@@ -372,10 +381,24 @@ public class PictureInfo implements Serializable {
      *
      * @param s The new location for the picture.
      * @see #getImageLocation
+     * @deprecated
      */
-    public synchronized void setImageLocation( String s ) {
-        if ( !imageLocation.equals( s ) ) {
+    public synchronized void setImageLocation(String s) {
+        if (!imageLocation.equals(s)) {
             imageLocation = s;
+            try {
+                imageFile = new File(new URL(imageLocation).toURI());
+            } catch (URISyntaxException e) {
+                final String BROKEN_THUMBNAIL_PICTURE_FILE = "broken_thumbnail.gif";
+                URL resource = PictureInfo.class.getClassLoader().getResource(BROKEN_THUMBNAIL_PICTURE_FILE);
+                try {
+                    imageFile = new File(resource.toURI());
+                } catch (URISyntaxException e1) {
+                    e1.printStackTrace();
+                }
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
             sendImageLocationChangedEvent();
         }
         getImageFile(); // just so that it creates a failure if the filename is not conform.
@@ -385,11 +408,17 @@ public class PictureInfo implements Serializable {
      * Sets the full path to the picture.
      *
      * @param u The new location for the picture.
+     * @deprecated
      */
-    public synchronized void setImageLocation( URL u ) {
+    public synchronized void setImageLocation(URL u) {
         String s = u.toString();
-        if ( !imageLocation.equals( s ) ) {
+        if (!imageLocation.equals(s)) {
             imageLocation = s;
+            try {
+                imageFile = new File(u.toURI());
+            } catch (URISyntaxException e) {
+                LOGGER.severe("Error registering url as file: " + u.toString() + "\n" + e.getMessage());
+            }
             sendImageLocationChangedEvent();
         }
     }
@@ -399,11 +428,13 @@ public class PictureInfo implements Serializable {
      *
      * @param file The new file of the picture.
      */
-    public synchronized void setImageLocation( File file ) {
+    public synchronized void setImageLocation(@NonNull File file) {
+        Objects.requireNonNull(file);
         try {
-            PictureInfo.this.setImageLocation( file.toURI().toURL() );
-        } catch ( MalformedURLException ex ) {
-            LOGGER.severe( "How could we get a MalformedURLException if java is doing the toURI and toURL itself? " + ex.getMessage() );
+            imageFile = file;
+            setImageLocation(file.toURI().toURL());
+        } catch (MalformedURLException ex) {
+            LOGGER.severe("How could we get a MalformedURLException if java is doing the toURI and toURL itself? " + ex.getMessage());
         }
     }
 
@@ -412,20 +443,35 @@ public class PictureInfo implements Serializable {
      *
      * @param s The text fragment to be added to the image Location
      */
-    public synchronized void appendToImageLocation( String s ) {
-        if ( s.length() > 0 ) {
-            imageLocation = imageLocation.concat( s );
+    public synchronized void appendToImageLocation(String s) {
+        if (s.length() > 0) {
+            imageLocation = imageLocation.concat(s);
+            try {
+                imageFile = new File(new URL(imageLocation).toURI());
+            } catch (URISyntaxException e) {
+                final String BROKEN_THUMBNAIL_PICTURE_FILE = "broken_thumbnail.gif";
+                URL resource = PictureInfo.class.getClassLoader().getResource(BROKEN_THUMBNAIL_PICTURE_FILE);
+                try {
+                    imageFile = new File(resource.toURI());
+                } catch (URISyntaxException e1) {
+                    e1.printStackTrace();
+                }
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
             sendImageLocationChangedEvent();
         }
+
     }
 
     /**
      * Returns just the Filename of the picture.
      *
      * @return the Filename
+     * @deprecated get the file and do the get Name yourself!
      */
     public synchronized String getImageFilename() {
-        return new File( imageLocation ).getName();
+        return new File(imageLocation).getName();
 
     }
 
@@ -434,10 +480,10 @@ public class PictureInfo implements Serializable {
      * that the image location was updated.
      */
     private void sendImageLocationChangedEvent() {
-        if ( Settings.getPictureCollection().getSendModelUpdates() ) {
-            PictureInfoChangeEvent pce = new PictureInfoChangeEvent( this );
+        if (Settings.getPictureCollection().getSendModelUpdates()) {
+            PictureInfoChangeEvent pce = new PictureInfoChangeEvent(this);
             pce.setHighresLocationChanged();
-            sendPictureInfoChangedEvent( pce );
+            sendPictureInfoChangedEvent(pce);
             Settings.getPictureCollection().setUnsavedUpdates();
         }
     }
@@ -463,8 +509,8 @@ public class PictureInfo implements Serializable {
      * @return the checksum
      */
     public synchronized String getChecksumAsString() {
-        if ( checksum != Long.MIN_VALUE ) {
-            return Long.toString( checksum );
+        if (checksum != Long.MIN_VALUE) {
+            return Long.toString(checksum);
         } else {
             return "N/A";
         }
@@ -475,7 +521,7 @@ public class PictureInfo implements Serializable {
      *
      * @param newValue the new value
      */
-    public synchronized void setChecksum( long newValue ) {
+    public synchronized void setChecksum(long newValue) {
         checksum = newValue;
         sendChecksumChangedEvent();
     }
@@ -485,24 +531,24 @@ public class PictureInfo implements Serializable {
      */
     public synchronized void calculateChecksum() {
         URL pictureURL = getImageURLOrNull();
-        if ( pictureURL == null ) {
-            LOGGER.log( Level.SEVERE, "Aborting due to bad URL: {0}", getImageLocation() );
+        if (pictureURL == null) {
+            LOGGER.log(Level.SEVERE, "Aborting due to bad URL: {0}", getImageLocation());
             return;
         }
 
         InputStream in;
         try {
             in = pictureURL.openStream();
-        } catch ( IOException x ) {
-            LOGGER.severe( String.format( "Couldn't open URL %s. Leaving Checksum unchanged.", pictureURL.toString() ) );
+        } catch (IOException x) {
+            LOGGER.severe(String.format("Couldn't open URL %s. Leaving Checksum unchanged.", pictureURL.toString()));
             return;
         }
 
-        BufferedInputStream bin = new BufferedInputStream( in );
+        BufferedInputStream bin = new BufferedInputStream(in);
 
-        checksum = Tools.calculateChecksum( bin );
+        checksum = Tools.calculateChecksum(bin);
 
-        LOGGER.log( Level.FINE, "Checksum is: {0}", Long.toString( checksum ) );
+        LOGGER.log(Level.FINE, "Checksum is: {0}", Long.toString(checksum));
         sendChecksumChangedEvent();
     }
 
@@ -511,10 +557,10 @@ public class PictureInfo implements Serializable {
      * that the checksum was updated.
      */
     private void sendChecksumChangedEvent() {
-        if ( Settings.getPictureCollection().getSendModelUpdates() ) {
-            PictureInfoChangeEvent pce = new PictureInfoChangeEvent( this );
+        if (Settings.getPictureCollection().getSendModelUpdates()) {
+            PictureInfoChangeEvent pce = new PictureInfoChangeEvent(this);
             pce.setChecksumChanged();
-            sendPictureInfoChangedEvent( pce );
+            sendPictureInfoChangedEvent(pce);
             Settings.getPictureCollection().setUnsavedUpdates();
         }
     }
@@ -530,9 +576,9 @@ public class PictureInfo implements Serializable {
      *
      * @param s Text fragment
      */
-    public synchronized void appendToChecksum( String s ) {
-        if ( s.length() > 0 ) {
-            checksumString = checksumString.concat( s );
+    public synchronized void appendToChecksum(String s) {
+        if (s.length() > 0) {
+            checksumString = checksumString.concat(s);
             sendChecksumChangedEvent();
         }
     }
@@ -542,26 +588,27 @@ public class PictureInfo implements Serializable {
      */
     public synchronized void parseChecksum() {
         try {
-            LOGGER.log( Level.FINE, "PictureInfo.parseChecksum: {0}", checksumString );
-            checksum = ( new Long( checksumString ) );
+            LOGGER.log(Level.FINE, "PictureInfo.parseChecksum: {0}", checksumString);
+            checksum = (new Long(checksumString));
             checksumString = "";
-        } catch ( NumberFormatException x ) {
-            LOGGER.log( Level.INFO, "PictureInfo.parseChecksum: invalid checksum: {0} on picture: {1} --> Set to MIN", new Object[]{ checksumString, getImageFilename() } );
+        } catch (NumberFormatException x) {
+            LOGGER.log(Level.INFO, "PictureInfo.parseChecksum: invalid checksum: {0} on picture: {1} --> Set to MIN", new Object[]{checksumString, getImageFilename()});
             checksum = Long.MIN_VALUE;
         }
         sendChecksumChangedEvent();
     }
 
     //----------------------------------------
+
     /**
      * Creates a PictureChangedEvent and sends it to inform listening objects
      * that the thumbnail was updated.
      */
     public void sendThumbnailChangedEvent() {
-        if ( Settings.getPictureCollection().getSendModelUpdates() ) {
-            PictureInfoChangeEvent pce = new PictureInfoChangeEvent( this );
+        if (Settings.getPictureCollection().getSendModelUpdates()) {
+            PictureInfoChangeEvent pce = new PictureInfoChangeEvent(this);
             pce.setThumbnailChanged();
-            sendPictureInfoChangedEvent( pce );
+            sendPictureInfoChangedEvent(pce);
         }
     }
 
@@ -576,9 +623,9 @@ public class PictureInfo implements Serializable {
      *
      * @param s Fragment to append to Film Reference
      */
-    public synchronized void appendToFilmReference( String s ) {
-        if ( s.length() > 0 ) {
-            filmReference = filmReference.concat( s );
+    public synchronized void appendToFilmReference(String s) {
+        if (s.length() > 0) {
+            filmReference = filmReference.concat(s);
             sendFilmReferenceChangedEvent();
         }
     }
@@ -597,8 +644,8 @@ public class PictureInfo implements Serializable {
      *
      * @param s The new film reference.
      */
-    public synchronized void setFilmReference( String s ) {
-        if ( !filmReference.equals( s ) ) {
+    public synchronized void setFilmReference(String s) {
+        if (!filmReference.equals(s)) {
             filmReference = s;
             sendFilmReferenceChangedEvent();
         }
@@ -609,10 +656,10 @@ public class PictureInfo implements Serializable {
      * that the film reference was updated.
      */
     private void sendFilmReferenceChangedEvent() {
-        if ( Settings.getPictureCollection().getSendModelUpdates() ) {
-            PictureInfoChangeEvent pce = new PictureInfoChangeEvent( this );
+        if (Settings.getPictureCollection().getSendModelUpdates()) {
+            PictureInfoChangeEvent pce = new PictureInfoChangeEvent(this);
             pce.setFilmReferenceChanged();
-            sendPictureInfoChangedEvent( pce );
+            sendPictureInfoChangedEvent(pce);
             Settings.getPictureCollection().setUnsavedUpdates();
         }
     }
@@ -629,8 +676,8 @@ public class PictureInfo implements Serializable {
      *
      * @param s The new creation time.
      */
-    public synchronized void setCreationTime( String s ) {
-        if ( ( s != null ) && ( !creationTime.equals( s ) ) ) {
+    public synchronized void setCreationTime(String s) {
+        if ((s != null) && (!creationTime.equals(s))) {
             creationTime = s;
             sendCreationTimeChangedEvent();
         }
@@ -641,9 +688,9 @@ public class PictureInfo implements Serializable {
      *
      * @param s The text fragment to add.
      */
-    public synchronized void appendToCreationTime( String s ) {
-        if ( s.length() > 0 ) {
-            creationTime = creationTime.concat( s );
+    public synchronized void appendToCreationTime(String s) {
+        if (s.length() > 0) {
+            creationTime = creationTime.concat(s);
             sendCreationTimeChangedEvent();
         }
     }
@@ -663,7 +710,7 @@ public class PictureInfo implements Serializable {
      * @return the creation time
      */
     public synchronized Calendar getCreationTimeAsDate() {
-        return ( Tools.parseDate( creationTime ) );
+        return (Tools.parseDate(creationTime));
     }
 
     /**
@@ -675,7 +722,7 @@ public class PictureInfo implements Serializable {
      */
     public synchronized String getFormattedCreationTime() {
         Calendar dateTime = getCreationTimeAsDate();
-        return getFormattedCreationTime( dateTime );
+        return getFormattedCreationTime(dateTime);
     }
 
     /**
@@ -685,13 +732,13 @@ public class PictureInfo implements Serializable {
      * @param dateTime the Calendar to format
      * @return the creation time as a formatted string
      */
-    public static String getFormattedCreationTime( Calendar dateTime ) {
+    public static String getFormattedCreationTime(Calendar dateTime) {
         String formattedDate;
-        if ( dateTime == null ) {
-            formattedDate = Settings.jpoResources.getString( "failedToParse" );
+        if (dateTime == null) {
+            formattedDate = Settings.jpoResources.getString("failedToParse");
         } else {
-            formattedDate = Settings.jpoResources.getString( "parsedAs" )
-                    + String.format( "%tc", dateTime );
+            formattedDate = Settings.jpoResources.getString("parsedAs")
+                    + String.format("%tc", dateTime);
         }
         return formattedDate;
     }
@@ -701,10 +748,10 @@ public class PictureInfo implements Serializable {
      * that the film reference was updated.
      */
     private void sendCreationTimeChangedEvent() {
-        if ( Settings.getPictureCollection().getSendModelUpdates() ) {
-            PictureInfoChangeEvent pce = new PictureInfoChangeEvent( this );
+        if (Settings.getPictureCollection().getSendModelUpdates()) {
+            PictureInfoChangeEvent pce = new PictureInfoChangeEvent(this);
             pce.setCreationTimeChanged();
-            sendPictureInfoChangedEvent( pce );
+            sendPictureInfoChangedEvent(pce);
             Settings.getPictureCollection().setUnsavedUpdates();
         }
     }
@@ -721,8 +768,8 @@ public class PictureInfo implements Serializable {
      *
      * @param s The new comment
      */
-    public synchronized void setComment( String s ) {
-        if ( !comment.equals( s ) ) {
+    public synchronized void setComment(String s) {
+        if (!comment.equals(s)) {
             comment = s;
             sendCommentChangedEvent();
         }
@@ -733,9 +780,9 @@ public class PictureInfo implements Serializable {
      *
      * @param s the text fragment
      */
-    public synchronized void appendToComment( String s ) {
-        if ( s.length() > 0 ) {
-            comment = comment.concat( s );
+    public synchronized void appendToComment(String s) {
+        if (s.length() > 0) {
+            comment = comment.concat(s);
             sendCommentChangedEvent();
         }
     }
@@ -754,10 +801,10 @@ public class PictureInfo implements Serializable {
      * that the comment was updated.
      */
     private void sendCommentChangedEvent() {
-        if ( Settings.getPictureCollection().getSendModelUpdates() ) {
-            PictureInfoChangeEvent pce = new PictureInfoChangeEvent( this );
+        if (Settings.getPictureCollection().getSendModelUpdates()) {
+            PictureInfoChangeEvent pce = new PictureInfoChangeEvent(this);
             pce.setCommentChanged();
-            sendPictureInfoChangedEvent( pce );
+            sendPictureInfoChangedEvent(pce);
             Settings.getPictureCollection().setUnsavedUpdates();
         }
     }
@@ -774,8 +821,8 @@ public class PictureInfo implements Serializable {
      *
      * @param s The new Photographer
      */
-    public synchronized void setPhotographer( String s ) {
-        if ( !photographer.equals( s ) ) {
+    public synchronized void setPhotographer(String s) {
+        if (!photographer.equals(s)) {
             photographer = s;
             sendPhotographerChangedEvent();
         }
@@ -786,9 +833,9 @@ public class PictureInfo implements Serializable {
      *
      * @param s The photographer.
      */
-    public synchronized void appendToPhotographer( String s ) {
-        if ( s.length() > 0 ) {
-            photographer = photographer.concat( s );
+    public synchronized void appendToPhotographer(String s) {
+        if (s.length() > 0) {
+            photographer = photographer.concat(s);
             sendPhotographerChangedEvent();
         }
     }
@@ -807,10 +854,10 @@ public class PictureInfo implements Serializable {
      * that the photographer was updated.
      */
     private void sendPhotographerChangedEvent() {
-        if ( Settings.getPictureCollection().getSendModelUpdates() ) {
-            PictureInfoChangeEvent pce = new PictureInfoChangeEvent( this );
+        if (Settings.getPictureCollection().getSendModelUpdates()) {
+            PictureInfoChangeEvent pce = new PictureInfoChangeEvent(this);
             pce.setPhotographerChanged();
-            sendPictureInfoChangedEvent( pce );
+            sendPictureInfoChangedEvent(pce);
             Settings.getPictureCollection().setUnsavedUpdates();
         }
     }
@@ -826,8 +873,8 @@ public class PictureInfo implements Serializable {
      *
      * @param s The copyright holder
      */
-    public synchronized void setCopyrightHolder( String s ) {
-        if ( !copyrightHolder.equals( s ) ) {
+    public synchronized void setCopyrightHolder(String s) {
+        if (!copyrightHolder.equals(s)) {
             copyrightHolder = s;
             sendCopyrightHolderChangedEvent();
         }
@@ -838,9 +885,9 @@ public class PictureInfo implements Serializable {
      *
      * @param s The text fragment.
      */
-    public synchronized void appendToCopyrightHolder( String s ) {
-        if ( s.length() > 0 ) {
-            copyrightHolder = copyrightHolder.concat( s );
+    public synchronized void appendToCopyrightHolder(String s) {
+        if (s.length() > 0) {
+            copyrightHolder = copyrightHolder.concat(s);
             sendCopyrightHolderChangedEvent();
         }
     }
@@ -859,10 +906,10 @@ public class PictureInfo implements Serializable {
      * that the copyright holder was updated.
      */
     private void sendCopyrightHolderChangedEvent() {
-        if ( Settings.getPictureCollection().getSendModelUpdates() ) {
-            PictureInfoChangeEvent pce = new PictureInfoChangeEvent( this );
+        if (Settings.getPictureCollection().getSendModelUpdates()) {
+            PictureInfoChangeEvent pce = new PictureInfoChangeEvent(this);
             pce.setCopyrightHolderChanged();
-            sendPictureInfoChangedEvent( pce );
+            sendPictureInfoChangedEvent(pce);
             Settings.getPictureCollection().setUnsavedUpdates();
         }
     }
@@ -884,9 +931,9 @@ public class PictureInfo implements Serializable {
      *
      * @param s Text fragment
      */
-    public synchronized void appendToRotation( String s ) {
-        if ( s.length() > 0 ) {
-            rotationString = rotationString.concat( s );
+    public synchronized void appendToRotation(String s) {
+        if (s.length() > 0) {
+            rotationString = rotationString.concat(s);
             sendRotationChangedEvent();
         }
     }
@@ -896,10 +943,10 @@ public class PictureInfo implements Serializable {
      */
     public synchronized void parseRotation() {
         try {
-            rotation = ( new Double( rotationString ) );
+            rotation = (new Double(rotationString));
             rotationString = null;
-        } catch ( NumberFormatException x ) {
-            LOGGER.log( Level.INFO, "invalid rotation: {0} on picture: {1} --> Set to Zero", new Object[]{ rotationString, getImageFilename() } );
+        } catch (NumberFormatException x) {
+            LOGGER.log(Level.INFO, "invalid rotation: {0} on picture: {1} --> Set to Zero", new Object[]{rotationString, getImageFilename()});
             rotation = 0;
         }
         sendRotationChangedEvent();
@@ -920,8 +967,8 @@ public class PictureInfo implements Serializable {
      *
      * @param rotation The new rotation for the PictureInfo.
      */
-    public synchronized void setRotation( double rotation ) {
-        if ( this.rotation != rotation ) {
+    public synchronized void setRotation(double rotation) {
+        if (this.rotation != rotation) {
             this.rotation = rotation;
             sendRotationChangedEvent();
         }
@@ -932,8 +979,8 @@ public class PictureInfo implements Serializable {
      *
      * @param angle the new angle
      */
-    public synchronized void rotate( double angle ) {
-        setRotation( ( getRotation() + angle ) % 360 );
+    public synchronized void rotate(double angle) {
+        setRotation((getRotation() + angle) % 360);
     }
 
     /**
@@ -941,8 +988,8 @@ public class PictureInfo implements Serializable {
      *
      * @param rotation The new rotation for the PictureInfo.
      */
-    public synchronized void setRotation( int rotation ) {
-        setRotation( (double) rotation );
+    public synchronized void setRotation(int rotation) {
+        setRotation((double) rotation);
     }
 
     /**
@@ -950,10 +997,10 @@ public class PictureInfo implements Serializable {
      * that the copyright holder was updated.
      */
     private void sendRotationChangedEvent() {
-        if ( Settings.getPictureCollection().getSendModelUpdates() ) {
-            PictureInfoChangeEvent pce = new PictureInfoChangeEvent( this );
+        if (Settings.getPictureCollection().getSendModelUpdates()) {
+            PictureInfoChangeEvent pce = new PictureInfoChangeEvent(this);
             pce.setRotationChanged();
-            sendPictureInfoChangedEvent( pce );
+            sendPictureInfoChangedEvent(pce);
             Settings.getPictureCollection().setUnsavedUpdates();
         }
     }
@@ -969,8 +1016,8 @@ public class PictureInfo implements Serializable {
      *
      * @param newLatLng The latitude and longitude holder
      */
-    public synchronized void setLatLng( Point2D.Double newLatLng ) {
-        if ( ( latLng == null ) || ( latLng.x != newLatLng.x ) || ( latLng.y != newLatLng.y ) ) {
+    public synchronized void setLatLng(Point2D.Double newLatLng) {
+        if ((latLng == null) || (latLng.x != newLatLng.x) || (latLng.y != newLatLng.y)) {
             latLng = newLatLng;
             sendLatLngChangedEvent();
         }
@@ -980,9 +1027,9 @@ public class PictureInfo implements Serializable {
      * Sets the Latitude and Longitude.
      *
      * @param newLatLng The latitude and longitude in the format of 2 doubles
-     * with an x
+     *                  with an x
      */
-    public synchronized void setLatLng( String newLatLng ) {
+    public synchronized void setLatLng(String newLatLng) {
         this.latLngString = newLatLng;
         parseLatLng();
     }
@@ -998,9 +1045,9 @@ public class PictureInfo implements Serializable {
      *
      * @param s The text fragment.
      */
-    public synchronized void appendToLatLng( String s ) {
-        if ( s.length() > 0 ) {
-            latLngString = latLngString.concat( s );
+    public synchronized void appendToLatLng(String s) {
+        if (s.length() > 0) {
+            latLngString = latLngString.concat(s);
         }
     }
 
@@ -1009,13 +1056,13 @@ public class PictureInfo implements Serializable {
      */
     public synchronized void parseLatLng() {
         try {
-            String[] latLngArray = latLngString.split( "x" );
-            Double lat = ( new Double( latLngArray[0] ) );
-            Double lng = ( new Double( latLngArray[1] ) );
-            setLatLng( new Point2D.Double( lat, lng ) );
+            String[] latLngArray = latLngString.split("x");
+            Double lat = (new Double(latLngArray[0]));
+            Double lng = (new Double(latLngArray[1]));
+            setLatLng(new Point2D.Double(lat, lng));
             latLngString = null;
-        } catch ( NumberFormatException x ) {
-            LOGGER.info( String.format( "Failed to parse string %s into latitude and longitude", latLngString ) );
+        } catch (NumberFormatException x) {
+            LOGGER.info(String.format("Failed to parse string %s into latitude and longitude", latLngString));
         }
     }
 
@@ -1025,8 +1072,8 @@ public class PictureInfo implements Serializable {
      * @return The Latitude and Longitude
      */
     public synchronized Point2D.Double getLatLng() {
-        if ( latLng == null ) {
-            setLatLng( new Point2D.Double( 0, 0 ) );
+        if (latLng == null) {
+            setLatLng(new Point2D.Double(0, 0));
         }
         return latLng;
     }
@@ -1040,7 +1087,7 @@ public class PictureInfo implements Serializable {
         Point2D.Double latLang = getLatLng();
         NumberFormat numberFormatter;
         numberFormatter = NumberFormat.getNumberInstance();
-        String formattedString = numberFormatter.format( latLang.x ) + "x" + numberFormatter.format( latLang.y );
+        String formattedString = numberFormatter.format(latLang.x) + "x" + numberFormatter.format(latLang.y);
         return formattedString;
 
     }
@@ -1050,10 +1097,10 @@ public class PictureInfo implements Serializable {
      * that the copyright holder was updated.
      */
     private void sendLatLngChangedEvent() {
-        if ( Settings.getPictureCollection().getSendModelUpdates() ) {
-            PictureInfoChangeEvent pce = new PictureInfoChangeEvent( this );
+        if (Settings.getPictureCollection().getSendModelUpdates()) {
+            PictureInfoChangeEvent pce = new PictureInfoChangeEvent(this);
             pce.setLatLngChanged();
-            sendPictureInfoChangedEvent( pce );
+            sendPictureInfoChangedEvent(pce);
             Settings.getPictureCollection().setUnsavedUpdates();
         }
     }
@@ -1068,7 +1115,7 @@ public class PictureInfo implements Serializable {
      * removes all category Assignments
      */
     public synchronized void clearCategoryAssignments() {
-        if ( categoryAssignments != null ) {
+        if (categoryAssignments != null) {
             sendCategoryAssignmentsChangedEvent();
             categoryAssignments.clear();
         }
@@ -1094,9 +1141,9 @@ public class PictureInfo implements Serializable {
      *
      * @param string Text fragment
      */
-    public synchronized void appendToCategoryAssignment( String string ) {
-        if ( string.length() > 0 ) {
-            categoryAssignmentString = categoryAssignmentString.concat( string );
+    public synchronized void appendToCategoryAssignment(String string) {
+        if (string.length() > 0) {
+            categoryAssignmentString = categoryAssignmentString.concat(string);
         }
     }
 
@@ -1105,8 +1152,8 @@ public class PictureInfo implements Serializable {
      *
      * @param string Text fragment
      */
-    public synchronized void addCategoryAssignment( String string ) {
-        if ( string.length() > 0 ) {
+    public synchronized void addCategoryAssignment(String string) {
+        if (string.length() > 0) {
             categoryAssignmentString = string;
             parseCategoryAssignment();
         }
@@ -1118,11 +1165,11 @@ public class PictureInfo implements Serializable {
      *
      * @param key the key to add
      */
-    public synchronized void addCategoryAssignment( Object key ) {
-        if ( categoryAssignments == null ) {
+    public synchronized void addCategoryAssignment(Object key) {
+        if (categoryAssignments == null) {
             categoryAssignments = new HashSet<>();
         }
-        if ( categoryAssignments.add( key ) ) {
+        if (categoryAssignments.add(key)) {
             sendCategoryAssignmentsChangedEvent();
         }
     }
@@ -1133,8 +1180,8 @@ public class PictureInfo implements Serializable {
      *
      * @param ca the supplied hash set
      */
-    public synchronized void setCategoryAssignment( HashSet<Object> ca ) {
-        if ( ca != null ) {
+    public synchronized void setCategoryAssignment(HashSet<Object> ca) {
+        if (ca != null) {
             categoryAssignments = ca;
         }
     }
@@ -1144,11 +1191,11 @@ public class PictureInfo implements Serializable {
      */
     public synchronized void parseCategoryAssignment() {
         try {
-            Integer category = new Integer( categoryAssignmentString );
+            Integer category = new Integer(categoryAssignmentString);
             categoryAssignmentString = "";
-            addCategoryAssignment( category );
-        } catch ( NumberFormatException x ) {
-            LOGGER.log( Level.INFO, "PictureInfo.parseCategoryAssignment: NumberFormatException: {0} on picture: {1} because: {2}", new Object[]{ categoryAssignmentString, getImageFilename(), x.getMessage() } );
+            addCategoryAssignment(category);
+        } catch (NumberFormatException x) {
+            LOGGER.log(Level.INFO, "PictureInfo.parseCategoryAssignment: NumberFormatException: {0} on picture: {1} because: {2}", new Object[]{categoryAssignmentString, getImageFilename(), x.getMessage()});
         }
         sendCategoryAssignmentsChangedEvent();
     }
@@ -1159,11 +1206,11 @@ public class PictureInfo implements Serializable {
      * @param key the key
      * @return true if the key was in the categories
      */
-    public synchronized boolean containsCategory( Object key ) {
-        if ( categoryAssignments == null ) {
+    public synchronized boolean containsCategory(Object key) {
+        if (categoryAssignments == null) {
             return false;
         }
-        return categoryAssignments.contains( key );
+        return categoryAssignments.contains(key);
     }
 
     /**
@@ -1171,8 +1218,8 @@ public class PictureInfo implements Serializable {
      *
      * @param key the key to search for
      */
-    public synchronized void removeCategory( Object key ) {
-        if ( categoryAssignments != null && categoryAssignments.remove( key ) ) {
+    public synchronized void removeCategory(Object key) {
+        if (categoryAssignments != null && categoryAssignments.remove(key)) {
             sendCategoryAssignmentsChangedEvent();
         }
     }
@@ -1182,15 +1229,16 @@ public class PictureInfo implements Serializable {
      * that the copyright holder was updated.
      */
     private void sendCategoryAssignmentsChangedEvent() {
-        if ( Settings.getPictureCollection().getSendModelUpdates() ) {
-            PictureInfoChangeEvent pce = new PictureInfoChangeEvent( this );
+        if (Settings.getPictureCollection().getSendModelUpdates()) {
+            PictureInfoChangeEvent pce = new PictureInfoChangeEvent(this);
             pce.setCategoryAssignmentsChanged();
-            sendPictureInfoChangedEvent( pce );
+            sendPictureInfoChangedEvent(pce);
             Settings.getPictureCollection().setUnsavedUpdates();
         }
     }
 
     //-------------------------------------------
+
     /**
      * Creates a PictureChangedEvent and sends it to inform listening objects
      * that the node was selected. Strictly speaking this is not a PictureInfo
@@ -1199,12 +1247,13 @@ public class PictureInfo implements Serializable {
      * this notification.
      */
     public void sendWasSelectedEvent() {
-        PictureInfoChangeEvent pce = new PictureInfoChangeEvent( this );
+        PictureInfoChangeEvent pce = new PictureInfoChangeEvent(this);
         pce.setWasSelected();
-        sendPictureInfoChangedEvent( pce );
+        sendPictureInfoChangedEvent(pce);
     }
 
     //-------------------------------------------
+
     /**
      * Creates a PictureChangedEvent and sends it to inform listening objects
      * that the node was unselected. Strictly speaking this is not a PictureInfo
@@ -1213,12 +1262,13 @@ public class PictureInfo implements Serializable {
      * this notification.
      */
     public void sendWasUnselectedEvent() {
-        PictureInfoChangeEvent pce = new PictureInfoChangeEvent( this );
+        PictureInfoChangeEvent pce = new PictureInfoChangeEvent(this);
         pce.setWasUnselected();
-        sendPictureInfoChangedEvent( pce );
+        sendPictureInfoChangedEvent(pce);
     }
 
     //-------------------------------------------
+
     /**
      * Creates a PictureChangedEvent and sends it to inform listening objects
      * that the node was mailSelected. Strictly speaking this is not a
@@ -1227,12 +1277,13 @@ public class PictureInfo implements Serializable {
      * this notification.
      */
     public void sendWasMailSelectedEvent() {
-        PictureInfoChangeEvent pce = new PictureInfoChangeEvent( this );
+        PictureInfoChangeEvent pce = new PictureInfoChangeEvent(this);
         pce.setWasMailSelected();
-        sendPictureInfoChangedEvent( pce );
+        sendPictureInfoChangedEvent(pce);
     }
 
     //-------------------------------------------
+
     /**
      * Creates a PictureChangedEvent and sends it to inform listening objects
      * that the node was mailUnselected. Strictly speaking this is not a
@@ -1241,12 +1292,13 @@ public class PictureInfo implements Serializable {
      * this notification.
      */
     public void sendWasMailUnselectedEvent() {
-        PictureInfoChangeEvent pce = new PictureInfoChangeEvent( this );
+        PictureInfoChangeEvent pce = new PictureInfoChangeEvent(this);
         pce.setWasMailUnselected();
-        sendPictureInfoChangedEvent( pce );
+        sendPictureInfoChangedEvent(pce);
     }
 
     //-------------------------------------------
+
     /**
      * Returns a new PictureInfo object which is identical to the current one.
      *
@@ -1254,41 +1306,41 @@ public class PictureInfo implements Serializable {
      */
     public PictureInfo getClone() {
         PictureInfo clone = new PictureInfo();
-        clone.setDescription( this.getDescription() );
-        clone.setImageLocation( this.getImageLocation() );
-        clone.setFilmReference( this.getFilmReference() );
-        clone.setCreationTime( this.getCreationTime() );
-        clone.setComment( this.getComment() );
-        clone.setPhotographer( this.getPhotographer() );
-        clone.setCopyrightHolder( this.getCopyrightHolder() );
-        clone.setRotation( this.getRotation() );
+        clone.setDescription(this.getDescription());
+        clone.setImageLocation(this.getImageLocation());
+        clone.setFilmReference(this.getFilmReference());
+        clone.setCreationTime(this.getCreationTime());
+        clone.setComment(this.getComment());
+        clone.setPhotographer(this.getPhotographer());
+        clone.setCopyrightHolder(this.getCopyrightHolder());
+        clone.setRotation(this.getRotation());
         return clone;
     }
 
     /**
      * The listeners to be notified about changes to this PictureInfo object.
      */
-    private final transient Set<PictureInfoChangeListener> pictureInfoListeners = Collections.synchronizedSet(new HashSet<>() );
+    private final transient Set<PictureInfoChangeListener> pictureInfoListeners = Collections.synchronizedSet(new HashSet<>());
 
     /**
      * Registers a listener for picture info change events
      *
-     * @param pictureInfoChangeListener	The object that will receive
-     * notifications.
+     * @param pictureInfoChangeListener The object that will receive
+     *                                  notifications.
      */
-    public void addPictureInfoChangeListener( PictureInfoChangeListener pictureInfoChangeListener ) {
-        pictureInfoListeners.add( pictureInfoChangeListener );
+    public void addPictureInfoChangeListener(PictureInfoChangeListener pictureInfoChangeListener) {
+        pictureInfoListeners.add(pictureInfoChangeListener);
     }
 
     /**
      * Removes the supplied listener
      *
-     * @param pictureInfoChangeListener	The listener that doesn't want to
-     * notifications any more.
+     * @param pictureInfoChangeListener The listener that doesn't want to
+     *                                  notifications any more.
      */
     public void removePictureInfoChangeListener(
-            PictureInfoChangeListener pictureInfoChangeListener ) {
-        pictureInfoListeners.remove( pictureInfoChangeListener );
+            PictureInfoChangeListener pictureInfoChangeListener) {
+        pictureInfoListeners.remove(pictureInfoChangeListener);
     }
 
     /**
@@ -1296,35 +1348,36 @@ public class PictureInfo implements Serializable {
      *
      * @param pce The Event we want to notify.
      */
-    private void sendPictureInfoChangedEvent( PictureInfoChangeEvent pce ) {
-        if ( Settings.getPictureCollection().getSendModelUpdates() ) {
-            synchronized ( pictureInfoListeners ) {
-                pictureInfoListeners.stream().forEach( pictureInfoChangeListener
-                        -> pictureInfoChangeListener.pictureInfoChangeEvent( pce )
+    private void sendPictureInfoChangedEvent(PictureInfoChangeEvent pce) {
+        if (Settings.getPictureCollection().getSendModelUpdates()) {
+            synchronized (pictureInfoListeners) {
+                pictureInfoListeners.stream().forEach(pictureInfoChangeListener
+                        -> pictureInfoChangeListener.pictureInfoChangeEvent(pce)
                 );
             }
         }
     }
 
     //-------------------------------------------
+
     /**
      * Checks whether the searchString parameter is contained in any of the
      * fields. It doesn't check the checksum, lowres filename, rotation. It does
      * check the description, highres name, film reference, creation time,
      * comment and copyright holder
      *
-     * @param	searchString	The string to search for.
-     * @return	true if found. false if not.
+     * @param searchString The string to search for.
+     * @return true if found. false if not.
      */
-    public synchronized boolean anyMatch( String searchString ) {
+    public synchronized boolean anyMatch(String searchString) {
         String uppercaseSearchString = searchString.toUpperCase();
-        boolean found = descriptionContains( searchString )
-                || ( getPhotographer().toUpperCase().contains( uppercaseSearchString ) )
-                || ( imageLocation.toUpperCase().contains( uppercaseSearchString ) )
-                || ( getFilmReference().toUpperCase().contains( uppercaseSearchString ) )
-                || ( getCreationTime().toUpperCase().contains( uppercaseSearchString ) )
-                || ( getComment().toUpperCase().contains( uppercaseSearchString ) )
-                || ( getCopyrightHolder().toUpperCase().contains( uppercaseSearchString ) );
+        boolean found = descriptionContains(searchString)
+                || (getPhotographer().toUpperCase().contains(uppercaseSearchString))
+                || (imageLocation.toUpperCase().contains(uppercaseSearchString))
+                || (getFilmReference().toUpperCase().contains(uppercaseSearchString))
+                || (getCreationTime().toUpperCase().contains(uppercaseSearchString))
+                || (getComment().toUpperCase().contains(uppercaseSearchString))
+                || (getCopyrightHolder().toUpperCase().contains(uppercaseSearchString));
 
         return found;
     }

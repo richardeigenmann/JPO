@@ -1,20 +1,18 @@
 package jpo.dataModel;
 
-import java.io.File;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.event.TreeModelEvent;
-import javax.swing.event.TreeModelListener;
-import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertFalse;
-import static junit.framework.TestCase.assertNotNull;
-import static junit.framework.TestCase.assertNull;
-import static junit.framework.TestCase.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 
+import javax.swing.event.TreeModelEvent;
+import javax.swing.event.TreeModelListener;
+import java.io.File;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import static junit.framework.TestCase.*;
+
 /*
- Copyright (C) 2017  Richard Eigenmann.
+ Copyright (C) 2017-2018  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -38,21 +36,16 @@ import org.junit.Test;
 public class PictureCollectionTest {
 
     /**
-     * Defines a logger for this class
-     */
-    //private static final Logger LOGGER = Logger.getLogger( PictureCollectionTest.class.getName() );
-
-    /**
      * Let's have a nice little collection for some tests....
      */
     private PictureCollection pictureCollection;
-    private final PictureInfo pi1 = new PictureInfo( "/images/image1.jpg", "Picture 1" );
-    // deliberately re-using image1.jpg so that we can find multiple groups refering to the same image.
-    private final PictureInfo pi2 = new PictureInfo( "/images/image1.jpg", "Picture 2");
-    private final PictureInfo pi3 = new PictureInfo( "/images/image1.jpg", "Picture 3" );
-    private final PictureInfo pi4 = new PictureInfo( "/images/image1.jpg", "Picture 4" );
-    private final PictureInfo pi5 = new PictureInfo( "/images/image5.jpg", "Picture 5" );
-    private final PictureInfo pi6 = new PictureInfo( "/images/image6.jpg", "Picture 6" );
+    private final PictureInfo pi1 = new PictureInfo( new File("/images/image1.jpg"), "Picture 1" );
+    // deliberately re-using image1.jpg so that we can find multiple groups referring to the same image.
+    private final PictureInfo pi2 = new PictureInfo( new File("/images/image1.jpg"), "Picture 2");
+    private final PictureInfo pi3 = new PictureInfo( new File("/images/image1.jpg"), "Picture 3" );
+    private final PictureInfo pi4 = new PictureInfo( new File("/images/image1.jpg"), "Picture 4" );
+    private final PictureInfo pi5 = new PictureInfo( new File("/images/image5.jpg"), "Picture 5" );
+    private final PictureInfo pi6 = new PictureInfo( new File("/images/image6.jpg"), "Picture 6" );
     private final SortableDefaultMutableTreeNode picture1 = new SortableDefaultMutableTreeNode( pi1 );
     private final SortableDefaultMutableTreeNode picture2 = new SortableDefaultMutableTreeNode( pi2 );
     private final SortableDefaultMutableTreeNode picture3 = new SortableDefaultMutableTreeNode( pi3 );

@@ -11,10 +11,12 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 /*
  Copyright (C) 2017-2018  Richard Eigenmann.
@@ -87,6 +89,7 @@ public class PicturePopupMenuTest {
     private JMenuItem copyToClipboard;
     private JMenuItem removeNode;
     private JMenu fileOperations;
+    private JMenu renameJMenu;
     private JMenu moveImage;
     private JMenuItem moveToNewLocation;
     private JMenuItem fileOperationsRename;
@@ -148,10 +151,11 @@ public class PicturePopupMenuTest {
             copyToClipboard = copyImage.getItem( 13 );
             removeNode = (JMenuItem) myPicturePopupMenu.getComponent( 14 );
             fileOperations = (JMenu) myPicturePopupMenu.getComponent( 15 );
-            moveImage = (JMenu) fileOperations.getItem( 0 );
+            moveImage = (JMenu) fileOperations.getItem( 2 );
             moveToNewLocation = moveImage.getItem( 0 );
-            fileOperationsRename = fileOperations.getItem( 1 );
-            fileoperationsDelete = fileOperations.getItem( 2 );
+            renameJMenu = (JMenu) fileOperations.getItem( 3 );
+            fileOperationsRename = (JMenuItem) renameJMenu.getItem( 0 );
+            fileoperationsDelete = (JMenuItem) fileOperations.getItem( 4 );
             properties = (JMenuItem) myPicturePopupMenu.getComponent( 16 );
             consolidateHere = (JMenuItem) myPicturePopupMenu.getComponent( 17 );
         } );
@@ -544,4 +548,26 @@ public class PicturePopupMenuTest {
         assertEquals( "After clicking on the node the event count should be 1", 1, consolidateHereEventCount );
     }
 
+    @Test
+    public void replaceEscapedSpaces() {
+        String s = "filename%20extension.jpg";
+        Optional<String> o = PicturePopupMenu.replaceEscapedSpaces(s);
+        assert(o.isPresent());
+        assertEquals("filename extension.jpg", o.get() );
+    }
+
+    @Test
+    public void replaceDoubleEscapedSpaces() {
+        String s = "filename%20%20extension.jpg";
+        Optional<String> o = PicturePopupMenu.replaceEscapedSpaces(s);
+        assert(o.isPresent());
+        assertEquals("filename extension.jpg", o.get() );
+    }
+
+    @Test
+    public void replaceNoEscapedSpaces() {
+        String s = "filenameExtension.jpg";
+        Optional<String> o = PicturePopupMenu.replaceEscapedSpaces(s);
+        assertFalse(o.isPresent());
+    }
 }

@@ -424,24 +424,44 @@ public class ApplicationEventHandler {
             if (newName.exists()) {
                 File alternativeNewName = Tools.inventPicFilename(newName.getParentFile(), newName.getName());
                 int alternativeAnswer = JOptionPane.showConfirmDialog(Settings.anchorFrame,
-                        String.format(Settings.jpoResources.getString("FileRenameTargetExistsText"),newName.toString(), alternativeNewName.toString() ),
+                        String.format(Settings.jpoResources.getString("FileRenameTargetExistsText"), newName.toString(), alternativeNewName.toString()),
                         Settings.jpoResources.getString("FileRenameTargetExistsTitle"),
                         JOptionPane.OK_CANCEL_OPTION);
-                if ( alternativeAnswer == JOptionPane.OK_OPTION) {
+                if (alternativeAnswer == JOptionPane.OK_OPTION) {
                     newName = alternativeNewName;
                 } else {
                     LOGGER.log(Level.INFO, "File exists and new name was not accepted by user");
                     return;
                 }
             }
-            if (imageFile.renameTo(newName)) {
-                LOGGER.log(Level.INFO, "Successfully renamed: {0} to: {1}", new Object[]{imageFile.toString(), selectedValue});
-                pi.setImageLocation(newName);
-            } else {
-                LOGGER.log(Level.INFO, "Rename failed from : {0} to: {1}", new Object[]{imageFile.toString(), selectedValue});
-            }
+            JpoEventBus.getInstance().post(new RenameFileRequest(request.getNode(), newName.getName()));
         }
     }
+
+
+    /**
+     * Bring up a Dialog where the user can input a new name for a file and
+     * rename it. If the taget file already exists and would overwrite the existing file
+     * A new name is suggested that the user can accept or abort the rename.
+     *
+     * @param request the request
+     */
+    @Subscribe
+    public static void handleRenameFileRequest(@NonNull RenameFileRequest request) {
+        PictureInfo pi = (PictureInfo) request.getNode().getUserObject();
+        LOGGER.info(String.format("Renaming node %s (%s) to new filename: %s", request.getNode().toString(), pi.getImageFile().getPath(), request.getNewFileName()));
+        File imageFile = pi.getImageFile();
+        String newName = request.getNewFileName();
+        File newFile = new File(imageFile.getParentFile(), newName);
+        if (imageFile.renameTo(newFile)) {
+            LOGGER.log(Level.INFO, "Successfully renamed: {0} to: {1}", new Object[]{imageFile.toString(), newName});
+            pi.setImageLocation(newFile);
+        } else {
+            LOGGER.log(Level.INFO, "Rename failed from : {0} to: {1}", new Object[]{imageFile.toString(), newName});
+        }
+
+    }
+
 
     /**
      * When the app sees a ChooseAndAddCollectionRequest it will open the a

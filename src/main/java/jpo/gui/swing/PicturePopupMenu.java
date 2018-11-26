@@ -4,14 +4,12 @@ import com.google.common.eventbus.Subscribe;
 import jpo.EventBus.*;
 import jpo.cache.ThumbnailQueueRequest.QUEUE_PRIORITY;
 import jpo.dataModel.*;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 import java.util.logging.Logger;
 
 /*
@@ -87,6 +85,22 @@ public class PicturePopupMenu extends JPopupMenu {
         JpoEventBus.getInstance().register(new UserFunctionsChangedEventHandler());
 
         initComponents();
+    }
+
+    /**
+     * Method to replace the %20 that the consolidate function creates with a space
+     * @param s
+     * @return an Optional with the replaced string.
+     */
+    public static Optional<String> replaceEscapedSpaces(@NonNull String s) {
+        Objects.requireNonNull(s);
+
+        String newString = s.replaceAll("[%20]+", " ");
+        if ( newString.equals(s)) {
+            return Optional.empty();
+        } else {
+            return Optional.of(newString);
+        }
     }
 
     /**
@@ -545,6 +559,16 @@ public class PicturePopupMenu extends JPopupMenu {
         JMenu fileOperationsJMenu = new JMenu(Settings.jpoResources.getString("FileOperations"));
         add(fileOperationsJMenu);
 
+        JMenuItem filenameJMenuItem = new JMenuItem();
+        filenameJMenuItem.setEnabled(false);
+        if (Settings.getPictureCollection().countSelectedNodes() < 1) {
+            filenameJMenuItem.setText( ((PictureInfo) popupNode.getUserObject()).getImageFile().getPath() );
+        } else {
+            filenameJMenuItem.setText( Settings.getPictureCollection().countSelectedNodes() + " pictures");
+        }
+        fileOperationsJMenu.add(filenameJMenuItem);
+        fileOperationsJMenu.addSeparator();
+
 
         JMenu fileMoveJMenu = new JMenu(Settings.jpoResources.getString("fileMoveJMenu"));
         fileOperationsJMenu.add(fileMoveJMenu);
@@ -581,6 +605,11 @@ public class PicturePopupMenu extends JPopupMenu {
         }
         labelMoveLocations();
 
+
+        JMenu renameJMenu = new JMenu(Settings.jpoResources.getString("renameJMenu"));
+        fileOperationsJMenu.add(renameJMenu);
+
+
         JMenuItem fileRenameJMenuItem = new JMenuItem(Settings.jpoResources.getString("fileRenameJMenuItem"));
         fileRenameJMenuItem.addActionListener((ActionEvent e) -> {
             if (Settings.getPictureCollection().countSelectedNodes() < 1) {
@@ -593,7 +622,20 @@ public class PicturePopupMenu extends JPopupMenu {
                 }
             }
         });
-        fileOperationsJMenu.add(fileRenameJMenuItem);
+        renameJMenu.add(fileRenameJMenuItem);
+
+        if  (Settings.getPictureCollection().countSelectedNodes() < 1) {
+            PictureInfo pi = (PictureInfo) popupNode.getUserObject();
+            Optional<String> potentialNewFilename  = replaceEscapedSpaces(pi.getImageFile().getName());
+            if ( potentialNewFilename.isPresent() ) {
+                File suggestedFileName = Tools.inventPicFilename(pi.getImageFile().getParentFile(), potentialNewFilename.get());
+                JMenuItem renameSpaceJMenuItem = new JMenuItem( "To: " + suggestedFileName.getName());
+                renameSpaceJMenuItem.addActionListener(e -> {
+                    JpoEventBus.getInstance().post(new RenameFileRequest(popupNode,suggestedFileName.getName()));
+                });
+                renameJMenu.add(renameSpaceJMenuItem);
+            }
+        }
 
         JMenuItem fileDeleteJMenuItem = new JMenuItem(Settings.jpoResources.getString("fileDeleteJMenuItem"));
         fileDeleteJMenuItem.addActionListener((ActionEvent e) -> {

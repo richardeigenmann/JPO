@@ -1,5 +1,7 @@
 package jpo.dataModel;
 
+import org.junit.Test;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
@@ -10,12 +12,10 @@ import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.junit.Test;
-
 import static junit.framework.TestCase.*;
 
 /*
- Copyright (C) 2017 - 2017 Richard Eigenmann.
+ Copyright (C) 2017 - 2018 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -123,20 +123,20 @@ public class PictureInfoTest {
      * Test of getImageLocation method, of class PictureInfo.
      */
     @Test
-    public void testGetHighresLocation() {
+    public void testGetImageLocation() {
         PictureInfo pi = new PictureInfo( "file:///dir/picture.jpg", "My Sample Picture" );
         String highresLocation = pi.getImageLocation();
-        assertEquals( "Checking getHighresLocation", "file:///dir/picture.jpg", highresLocation );
+        assertEquals( "file:///dir/picture.jpg", highresLocation );
     }
 
     /**
      * Test of getImageFile method, of class PictureInfo.
      */
     @Test
-    public void testGetHighresFile() {
+    public void testGetImageFile() {
         PictureInfo pi = new PictureInfo( "file:///dir/picture.jpg", "My Sample Picture" );
-        File highresFile = pi.getImageFile();
-        assertEquals( "Checking getHighresFile", new File( "/dir/picture.jpg" ), highresFile );
+        File f = pi.getImageFile();
+        assertEquals( "Checking getHighresFile", new File( "/dir/picture.jpg" ), f );
     }
 
     /**
@@ -146,9 +146,9 @@ public class PictureInfoTest {
      */
     @Test
     public void testGetHighresURL() throws Exception {
-        PictureInfo pi = new PictureInfo( "file://dir/picture.jpg", "My Sample Picture" );
+        PictureInfo pi = new PictureInfo( "file:///dir/picture.jpg", "My Sample Picture" );
         URL highresURL = pi.getImageURL();
-        assertEquals( "Checking getHighresURL", new URL( "file://dir/picture.jpg" ), highresURL );
+        assertEquals( "Checking getHighresURL", new URL( "file:///dir/picture.jpg" ), highresURL );
     }
 
     /**
@@ -156,15 +156,15 @@ public class PictureInfoTest {
      */
     @Test
     public void testGetImageURLOrNull() {
-        PictureInfo pi1 = new PictureInfo( "file://dir/picture.jpg", "My Sample Picture" );
+        PictureInfo pi1 = new PictureInfo( "file:///dir/picture.jpg", "My Sample Picture" );
         URL highresURL1 = pi1.getImageURLOrNull();
         try {
-            assertEquals( "Checking getImageURLOrNull", new URL( "file://dir/picture.jpg" ), highresURL1 );
+            assertEquals( "Checking getImageURLOrNull", new URL( "file:///dir/picture.jpg" ), highresURL1 );
         } catch ( MalformedURLException ex ) {
             fail( "Test should not have thrown an exception: " + ex.getMessage() );
         }
 
-        PictureInfo pi2 = new PictureInfo( "noProtocol://dir/picture.jpg", "My Sample Picture" );
+        PictureInfo pi2 = new PictureInfo( "noProtocol:///dir/picture.jpg", "My Sample Picture" );
         URL highresURL2 = pi2.getImageURLOrNull();
         assertNull( "Checking getHighresURLOrNull", highresURL2 );
     }
@@ -175,7 +175,7 @@ public class PictureInfoTest {
     @Test
     public void testGetImageURIOrNull() {
         PictureInfo pi = new PictureInfo();
-        String goodLocation = "file://image.jpg";
+        String goodLocation = "file:///image.jpg";
         pi.setImageLocation( goodLocation );
         URI pulledUri = pi.getImageURIOrNull();
         assertEquals( goodLocation, pulledUri.toString() );
@@ -192,15 +192,20 @@ public class PictureInfoTest {
 
     }
 
-    /**
-     * Test of setImageLocation method, of class PictureInfo.
-     */
     @Test
-    public void testSetHighresLocation_String() {
+    public void testSetImageLocationString() {
         PictureInfo pi = new PictureInfo();
         pi.setImageLocation( "file:///dir/picture.jpg" );
         File f = pi.getImageFile();
-        assertEquals( "Testing that the Highres Location was memorised correctly", f.toString(), "/dir/picture.jpg" );
+        assertEquals( "Testing what went in comes out", f.toString(), "/dir/picture.jpg" );
+    }
+
+    @Test
+    public void testSetImageLocationWithSpace() {
+        PictureInfo pi = new PictureInfo();
+        pi.setImageLocation( "file:///dir/picture%20file.jpg" );
+        File f = pi.getImageFile();
+        assertEquals( "Testing what went in comes out", f.toString(), "/dir/picture file.jpg" );
     }
 
     /**
@@ -209,7 +214,7 @@ public class PictureInfoTest {
      * @throws MalformedURLException
      */
     @Test
-    public void testSetHighresLocationUrl() throws MalformedURLException {
+    public void testSetImageLocationUrl() throws MalformedURLException {
         PictureInfo pi = new PictureInfo();
         pi.setImageLocation( new URL( "file:///dir/picture.jpg" ) );
         File f = pi.getImageFile();
@@ -220,7 +225,7 @@ public class PictureInfoTest {
      * Test of appendToImageLocation method, of class PictureInfo.
      */
     @Test
-    public void testAppendToHighresLocation() {
+    public void testAppendToImageLocation() {
         PictureInfo pi = new PictureInfo();
         pi.setImageLocation( "file:///dir/picture" );
         pi.appendToImageLocation( ".jpg" );

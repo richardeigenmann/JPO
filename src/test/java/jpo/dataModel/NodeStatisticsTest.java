@@ -4,11 +4,12 @@
  */
 package jpo.dataModel;
 
-import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertNull;
-import static junit.framework.TestCase.fail;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.io.File;
+
+import static junit.framework.TestCase.*;
 
 /**
  *
@@ -31,23 +32,23 @@ public class NodeStatisticsTest{
 
     private SortableDefaultMutableTreeNode group3;
 
-    private final PictureInfo pi1 = new PictureInfo(NodeStatisticsTest.class.getClassLoader().getResource( "exif-test-canon-eos-350d.jpg" ), "First Picture");
+    private final PictureInfo pi1 = new PictureInfo();
 
     private SortableDefaultMutableTreeNode picture1;
 
-    private final PictureInfo pi2 = new PictureInfo(NodeStatisticsTest.class.getClassLoader().getResource( "exif-test-canon-eos-60d.jpg" ), "Second Picture");
+    private final PictureInfo pi2 = new PictureInfo();
 
     private SortableDefaultMutableTreeNode picture2;
 
-    private final PictureInfo pi3 = new PictureInfo("images/image3.jpg", "Third Picture");
+    private final PictureInfo pi3 = new PictureInfo(new File("images/image3.jpg"), "Third Picture");
 
     private SortableDefaultMutableTreeNode picture3;
 
-    private final PictureInfo pi4 = new PictureInfo("images/image4.jpg", "Fourth Picture");
+    private final PictureInfo pi4 = new PictureInfo(new File("images/image4.jpg"), "Fourth Picture");
 
     private SortableDefaultMutableTreeNode picture4;
 
-    private final PictureInfo pi5 = new PictureInfo("images/image5.jpg", "Fifth Picture");
+    private final PictureInfo pi5 = new PictureInfo(new File("images/image5.jpg"), "Fifth Picture");
 
     private SortableDefaultMutableTreeNode picture5;
 
@@ -61,6 +62,10 @@ public class NodeStatisticsTest{
         rootNode = new SortableDefaultMutableTreeNode();
         group1 = new SortableDefaultMutableTreeNode(gr1);
         group2 = new SortableDefaultMutableTreeNode(gr2);
+        pi1.setImageLocation(new File(NodeStatisticsTest.class.getClassLoader().getResource( "exif-test-canon-eos-350d.jpg" ).toURI()));
+        pi1.setDescription( "First Picture");
+        pi2.setImageLocation(new File(NodeStatisticsTest.class.getClassLoader().getResource( "exif-test-canon-eos-60d.jpg" ).toURI()));
+        pi2.setDescription("Second Picture");
         picture1 = new SortableDefaultMutableTreeNode(pi1);
         picture2 = new SortableDefaultMutableTreeNode(pi2);
         group3 = new SortableDefaultMutableTreeNode(gr3);

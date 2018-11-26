@@ -1,27 +1,21 @@
 package jpo.dataModel;
 
+import jpo.EventBus.JpoEventBus;
+import jpo.EventBus.RecentCollectionsChangedEvent;
+import jpo.cache.ThumbnailCreationQueue;
+
+import javax.swing.*;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreeNode;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.SwingUtilities;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.TreeNode;
-import jpo.EventBus.JpoEventBus;
-import jpo.EventBus.RecentCollectionsChangedEvent;
-import jpo.cache.ThumbnailCreationQueue;
 
 
 /*
@@ -699,7 +693,7 @@ public class PictureCollection {
             if ( nodeObject instanceof PictureInfo ) {
                 highresFile = ( (PictureInfo) nodeObject ).getImageFile();
                 //lowresFile = ( (PictureInfo) nodeObject ).getLowresFile();
-                LOGGER.log( Level.FINE, "Checking: {0}", ( (PictureInfo) nodeObject ).getImageLocation() );
+                LOGGER.log( Level.FINE, "Checking: {0}", ( (PictureInfo) nodeObject ).getImageFile().toString() );
                 if ( ( highresFile != null ) && ( highresFile.compareTo( file ) == 0 ) ) {
                     LOGGER.log( Level.INFO, "Found a match on: {0}", ( (PictureInfo) nodeObject ).getDescription() );
                     return true;
@@ -731,7 +725,7 @@ public class PictureCollection {
             node = (SortableDefaultMutableTreeNode) e.nextElement();
             nodeObject = node.getUserObject();
             if ( nodeObject instanceof PictureInfo ) {
-                LOGGER.log( Level.FINE, "Checking: {0}", ( (PictureInfo) nodeObject ).getImageLocation() );
+                LOGGER.log( Level.FINE, "Checking: {0}", ( (PictureInfo) nodeObject ).getImageFile().toString() );
                 if ( ( (PictureInfo) nodeObject ).getChecksum() == checksum ) {
                     LOGGER.log( Level.FINE, "Found a match on: {0}", ( (PictureInfo) nodeObject ).getDescription() );
                     return true;
@@ -891,7 +885,7 @@ public class PictureCollection {
 
         List<SortableDefaultMutableTreeNode> parentGroups = new ArrayList<>();
 
-        String comparingFilename = ( (PictureInfo) userObject ).getImageLocation();
+        File comparingFile = ( (PictureInfo) userObject ).getImageFile();
         SortableDefaultMutableTreeNode testNode;
         SortableDefaultMutableTreeNode testNodeParent;
         Object nodeObject;
@@ -901,7 +895,7 @@ public class PictureCollection {
             nodeObject = testNode.getUserObject();
             if ( ( nodeObject instanceof PictureInfo ) ) {
                 pi = (PictureInfo) nodeObject;
-                if ( pi.getImageLocation().equals( comparingFilename ) ) {
+                if ( pi.getImageFile().equals( comparingFile ) ) {
                     testNodeParent = (SortableDefaultMutableTreeNode) testNode.getParent();
                     if ( !parentGroups.contains( testNodeParent ) ) {
                         LOGGER.log( Level.FINE, "adding node: {0}", testNodeParent.toString() );
