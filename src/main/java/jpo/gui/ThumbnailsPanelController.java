@@ -1,47 +1,23 @@
 package jpo.gui;
 
 import com.google.common.eventbus.Subscribe;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.dnd.DropTargetDropEvent;
-import java.awt.event.ActionEvent;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
-import java.util.logging.Logger;
-import javax.swing.JLayeredPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollBar;
-import javax.swing.JScrollPane;
-import javax.swing.JSlider;
-import javax.swing.OverlayLayout;
-import javax.swing.SwingUtilities;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.MouseInputAdapter;
 import jpo.EventBus.JpoEventBus;
 import jpo.EventBus.ShowGroupRequest;
 import jpo.EventBus.ShowQueryRequest;
-import jpo.dataModel.GroupInfo;
-import jpo.dataModel.GroupInfoChangeEvent;
-import jpo.dataModel.GroupInfoChangeListener;
-import jpo.dataModel.GroupNavigator;
-import jpo.dataModel.NodeNavigatorInterface;
-import jpo.dataModel.NodeNavigatorListener;
-import jpo.dataModel.QueryNavigator;
-import jpo.dataModel.Settings;
-import jpo.dataModel.SortableDefaultMutableTreeNode;
-import jpo.dataModel.Tools;
+import jpo.dataModel.*;
 import jpo.gui.swing.Thumbnail;
 import jpo.gui.swing.ThumbnailPanelTitle;
 
+import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.MouseInputAdapter;
+import java.awt.*;
+import java.awt.dnd.DropTargetDropEvent;
+import java.awt.event.*;
+import java.util.logging.Logger;
+
 /*
- Copyright (C) 2002 - 2017  Richard Eigenmann.
+ Copyright (C) 2002 - 2018  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2

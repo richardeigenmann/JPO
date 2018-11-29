@@ -1,22 +1,14 @@
 package jpo.gui.swing;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JSlider;
-import javax.swing.SwingUtilities;
-import javax.swing.border.BevelBorder;
 import jpo.dataModel.Settings;
 import jpo.dataModel.Tools;
 
+import javax.swing.*;
+import javax.swing.border.BevelBorder;
+import java.awt.*;
+
 /*
-Copyright (C) 2009-2017  Richard Eigenmann, Zürich, Switzerland
+Copyright (C) 2009-2018  Richard Eigenmann, Zürich, Switzerland
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2

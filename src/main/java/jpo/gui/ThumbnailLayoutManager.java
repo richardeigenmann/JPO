@@ -17,12 +17,9 @@ package jpo.gui;
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 
-import java.awt.Component;
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.LayoutManager;
+import javax.swing.*;
+import java.awt.*;
 import java.util.logging.Logger;
-import javax.swing.JComponent;
 
 /**
  * a Layout Manager for the Thumbnail pane
@@ -90,13 +87,11 @@ public class ThumbnailLayoutManager implements LayoutManager {
                 if ( ( logicalThumbnail % columns ) == 0 ) {
                     rowComponentHeight = getHeightOfRow( parent, i, columns ) // Thumbnails
                             + getHeightOfRow( parent, i + 1, columns ); // Descriptions
-                    //LOGGER.log( Level.INFO, "Description height of row {0} is {1}", new Object[]{ Integer.toString( ( logicalThumbnail / columns ) ), Integer.toString( getHeightOfRow( parent, i + 1, columns ) ) } );
                     if ( rowComponentHeight > 0 ) {
                         height += rowComponentHeight + ( 2 * getVerticalGutter() );
                     }
                 }
             }
-            //LOGGER.log( Level.INFO, "Returning preferredLayoutSize width: {0} height: {1}", new Object[]{ Integer.toString( width ), Integer.toString( height ) } );
             return new Dimension( width, height );
         }
     }
@@ -234,13 +229,10 @@ public class ThumbnailLayoutManager implements LayoutManager {
      * @return The height of the row
      */
     private int getHeightOfRow( Container parent, int index, int cols ) {
-        //LOGGER.log( Level.FINE, "Called for index={0} and columns: {1}", new Object[]{ Integer.toString( index ), Integer.toString( cols ) } );
         int height = 0;
         for ( int i = 0; ( ( 2 * i ) + index < parent.getComponentCount() ) && ( i < cols ); i++ ) {
             height = Math.max( height, parent.getComponent( index + ( 2 * i ) ).getPreferredSize().height );
-            //LOGGER.log( Level.FINE, "Height of component {0} is {1}", new Object[]{ Integer.toString( index + ( 2 * i ) ), parent.getComponent( index + ( 2 * i ) ).getPreferredSize().height } );
         }
-        //LOGGER.log( Level.FINE, "index={0} / height={1}", new Object[]{ Integer.toString( index ), Integer.toString( height ) } );
         return height;
     }
 

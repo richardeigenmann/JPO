@@ -1,26 +1,19 @@
 package jpo.gui.swing;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.Rectangle;
+import jpo.dataModel.Settings;
+import jpo.dataModel.Tools;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
 import java.awt.image.RescaleOp;
 import java.net.URL;
 import java.util.logging.Logger;
-import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
-import javax.swing.JComponent;
-import javax.swing.SwingUtilities;
-import jpo.dataModel.Settings;
-import jpo.dataModel.Tools;
 
 /*
- Copyright (C) 2010-2017  Richard Eigenmann, Zurich, Switzerland
+ Copyright (C) 2010-2018  Richard Eigenmann, Zurich, Switzerland
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2

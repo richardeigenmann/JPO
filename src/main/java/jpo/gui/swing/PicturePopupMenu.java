@@ -88,20 +88,43 @@ public class PicturePopupMenu extends JPopupMenu {
     }
 
     /**
-     * Method to replace the %20 that the consolidate function creates with a space
+     * Method to replace the %20 that some filenames may have instead of a space char
      * @param s
-     * @return an Optional with the replaced string.
+     * @return an Optional with the replaced string. The Optional isPresent() and can be
+     * retrieved with get() if the name was different. If there was nothing to translate the
+     * isPresent() method returns false. This allows the caller to easily tell if there is any
+     * point in proposing a rename.
      */
     public static Optional<String> replaceEscapedSpaces(@NonNull String s) {
         Objects.requireNonNull(s);
 
-        String newString = s.replaceAll("[%20]+", " ");
+        String newString = s.replaceAll("(%20)+", " ");
         if ( newString.equals(s)) {
             return Optional.empty();
         } else {
             return Optional.of(newString);
         }
     }
+
+    /**
+     * Method to replace the underscores that some filenames may have instead of a space char
+     * @param s
+     * @return an Optional with the replaced string. The Optional isPresent() and can be
+     * retrieved with get() if the name was different. If there was nothing to translate the
+     * isPresent() method returns false. This allows the caller to easily tell if there is any
+     * point in proposing a rename.
+     */
+    public static Optional<String> replaceUnderscore(@NonNull String s) {
+        Objects.requireNonNull(s);
+
+        String newString = s.replaceAll("_+", " ");
+        if ( newString.equals(s)) {
+            return Optional.empty();
+        } else {
+            return Optional.of(newString);
+        }
+    }
+
 
     /**
      * initialises the GUI components
@@ -634,6 +657,19 @@ public class PicturePopupMenu extends JPopupMenu {
                     JpoEventBus.getInstance().post(new RenameFileRequest(popupNode,suggestedFileName.getName()));
                 });
                 renameJMenu.add(renameSpaceJMenuItem);
+            }
+        }
+
+        if  (Settings.getPictureCollection().countSelectedNodes() < 1) {
+            PictureInfo pi = (PictureInfo) popupNode.getUserObject();
+            Optional<String> potentialNewFilename  = replaceUnderscore(pi.getImageFile().getName());
+            if ( potentialNewFilename.isPresent() ) {
+                File suggestedFileName = Tools.inventPicFilename(pi.getImageFile().getParentFile(), potentialNewFilename.get());
+                JMenuItem renameUnderscoreJMenuItem = new JMenuItem( "To: " + suggestedFileName.getName());
+                renameUnderscoreJMenuItem.addActionListener(e -> {
+                    JpoEventBus.getInstance().post(new RenameFileRequest(popupNode,suggestedFileName.getName()));
+                });
+                renameJMenu.add(renameUnderscoreJMenuItem);
             }
         }
 
