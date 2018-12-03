@@ -21,9 +21,9 @@
                 Have you installed Netbeans? <a href="http://netbeans.org/downloads/index.html">Link</a><br>
                 And does your Netbeans have the CVS plugin?<br>
 
-            <p>Start Netbeans and click the menu item <pre>Team > Other CVS > Checkout</pre>. Into the CVS Root field 
+            <p>Start Netbeans and click the menu item <pre>Team > Git > Clone</pre>. Into the CVS Root field
             paste the following:<br>
-            <pre>:pserver:anonymous@j-po.cvs.sourceforge.net:/cvsroot/j-po</pre>
+            <pre>github.com:richardeigenmann/JPO.git</pre>
             Click Next Click Finish. 
             On the dialog that appears click Open Project. To compile and run the application press the F6 key.</p>
 
@@ -33,9 +33,8 @@
             <p>Do you have the prerequisites?</p>
             <ul>
                 <li>Java Software Development Kit (SDK) 1.8 or later</li>
-                <li>Apache Ant</li>
-                <li>CVS</li>
-                <li>Junit</li>
+                <li>Gradle</li>
+                <li>Git</li>
             </ul>
 
 
@@ -56,45 +55,30 @@
             <code>javac -version<br><br>
                 javac 1.8.0_65</code>
 
-            <p>Now check that your ant works properly (and you might have to set the ANT_HOME environment variable):</p>
-            <code>ant -version<br><br>
-                Apache Ant(TM) version 1.9.2 compiled on October 2 2013</code>
+            <p>Now check that your Gradle works properly:</p>
+            <code>gradle -version<br><br>
+<br>
+------------------------------------------------------------<br>
+Gradle 5.0<br>
+------------------------------------------------------------<br>
+<br>
+Build time:   2018-11-26 11:48:43 UTC<br>
+Revision:     7fc6e5abf2fc5fe0824aec8a0f5462664dbcd987<br>
+<br>
+Kotlin DSL:   1.0.4<br>
+Kotlin:       1.3.10<br>
+Groovy:       2.5.4<br>
+Ant:          Apache Ant(TM) version 1.9.13 compiled on July 10 2018<br>
+JVM:          1.8.0_181 (Oracle Corporation 25.181-b13)<br>
+OS:           Linux 4.12.14-lp150.12.25-default amd64</code>
 
-            <p>Use the following command to checkout the latest cvs source from sourceforge:</p>
-            <code>cvs -z3 -d:pserver:anonymous@j-po.cvs.sourceforge.net:/cvsroot/j-po checkout -P Jpo</code>
+            <p>Use the following command to checkout the latest cvs source from Github:</p>
+            <code>git clone https://github.com/richardeigenmann/JPO.git</code>
 
             <p>You would then cd to the Jpo directory:</p>
             <code>cd /wherever/you/put/the/code/.../Jpo</code>
 
-            <p>In order to run the unit tests (without which you can't build) you need
-                a working JUnit installation. Check this out with the following command:</p>
-            <code>ant JUNIT
-                Buildfile: /home/richi/Downloads/Jpo/build.xml<br>
-                [echo] Apache Ant(TM) version 1.9.2 compiled on October 2 2013 is using the <br>
-                [echo] build file /wherever/you/put/the/code/Jpo/build.xml to build the project<br>
-                [echo] "Java Picture Organizer" Use the "-debug" switch to see loads of<br>
-                [echo] debug information, "ant --help" reminds you of what other options<br>
-                [echo] there are and "ant -p" tells you what targets this build file supports.<br>
-                <br>
-                JUNIT:<br>
-                [echo] Testing if JUnit is present: true<br>
-                <br>
-                BUILD SUCCESSFUL<br>
-                Total time: 0 seconds<br>
-            </code>
-
-            <p>The line with "Testing if JUnit is present: true" is the key here.</p>
-            <code>JUNIT:<br><br>BUILD SUCCESSFUL<br>Total time: 0 seconds</code>
-
-
-            <p>The command <code>ant -diagnostics</code> might
-                be helpful. I wish someone had told be about this years ago. Also <code>ant -debug target</code>.
-                Well actually, read the <a href = "http://www.oreilly.com/catalog/anttdg/">O'Reilly Ant book</a>.</p>
-
-            <p>Now compile the code:</p>
-            <code>ant compile</code>
-            <p>And then run it with</p>
-            <code>ant go</code>
+            <code>gradle run</code>
 
             <p>In order to build and deply the jar files you need to generate a key with
                 which you can sign the jar files</p>
@@ -145,25 +129,14 @@ cd /path_to_my_sources/Jpo
 
 
             <h2 id="eclipse">Using Eclipse</h2>
-            <p>Set up Eclipse and install the CVS plug-in</p>
-            <p>File > New > Other... > expand CVS > Projects from CVS</p>
-            <p>Host: j-po.cvs.sourceforge.net</p>
-            <p>Repository path: /cvsroot/j-po</p>
-            <p>User: anyonymous</p>
-            <p>Password: leave empty</p>
-            <p>Connection type: leave on pserver</p>
-            <p>leave radio button on "Use default port"</p>
-            <p>Next Panel</p>
-            <p>Use specified module name: Jpo</p>
-            <p>Next Panel</p>
-            <p>Put radiobutton into "Check out as a project in the workspace"</p>
-            <p>Project Name: Jpo</p>
-            <p>Next right-click on the build.xml file > Run/Debug Settings > Make sure you have a JRE selected.</p>
-            <p>To run right-click on the build.xml file and click run-as Ant Build file.
+            <p>Set up Eclipse and install the Git plug-in</p>
+            <p>File > Import > Git > Projects from Git > Next > Clone URI > Next</p>
+            <p>URI: https://github.com/richardeigenmann/JPO.git</p>
+            <p>You have to have the Gradle plug in enabled and it should find all the build targets</p>
 
             <hr>
-            <p>Last update to this page: 4 July 2014<br>
-                Copyright 2003-2014 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
+            <p>Last update to this page: 3 Dec 2018<br>
+                Copyright 2003-2018 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
         </td>
     </tr>
 

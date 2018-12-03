@@ -101,7 +101,7 @@
         with which you can touch up your pictures. You can make JPO open such a program 
         for you.</p>
 
-    <p>Richard Eigenmann from Z&uuml;rich has spent the last 14 years building and improving
+    <p>Richard Eigenmann from Z&uuml;rich has spent the last 18 years building and improving
         JPO as an OpenSource project. He hopes you will find it useful and enjoys feedback.</p>
 
     <hr>
@@ -143,8 +143,9 @@
         is not a world-trusted key so you need to consider if you can trust me.</p>
     <p>I can assure you that JPO doesn't "phone home", doesn't spy on you, doesn't send 
         spam and doesn't try to sell you anything. Better than that, it's open source 
-        software so you can go and read the 53'534 lines of code (23.3.2014) and compile 
-        your own version!</p>
+        software so you can go and read the lines of source code and compile
+        your own version! Check out the linked Code analysis tools and their reports to see
+        how JPO is doing in terms of code quality, test coverage and other developer metrics.</p>
     <p>If you like the convenience of the pre-packaged Java Web Start bundles then you
         need to go to your Java installation (Start > Control Panel > Java) and reduce the
         security setting to something less paranoid and accept the risk.</p>
@@ -181,11 +182,11 @@
         technology for easy installation and upgrading.</p>
 
     <hr>
-    <span class="para-heading" id="Like">Do you like JPO?</span>>
+    <span class="para-heading" id="Like">Do you like JPO?</span>
     <p>Why don't you let the author know? Send him an encouraging email at <a href="mailto:richard.eigenmann@gmail.com">richard.eigenmann@gmail.com</a></p>
     <hr>
 
-    <p>Last update to this page: 31 May 2015<br>
-        Copyright 2003-2016 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
+    <p>Last update to this page: 3 Dec 2018<br>
+        Copyright 2003-2018 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
 </div>
 <?php include("page-end.php"); ?>

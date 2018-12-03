@@ -39,7 +39,7 @@
     <p>Richard uses JPO to manage private collection of around 20'000 pictures.</p>
 
     <hr>
-    <span class="para-heading" id="License">License</span>
+    <span class="para-heading" id="License"><h1>License</h1></span>
     <p>JPO is licensed under the GPL license. It is explained here: <a href="http://www.gnu.org/copyleft/gpl.html">http://www.gnu.org/copyleft/gpl.html</a></p>
     <p>JPO uses a number of third party libraries because it is better to reuse well written well tested 
         code from others instead of re-inventing the wheel:</p>
@@ -62,7 +62,7 @@
 
 
     <hr>
-    <p>Last update to this page: 30 Dec 2015<br>
-        Copyright 2003-2017 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
+    <p>Last update to this page: 3 Dec 2018<br>
+        Copyright 2003-2018 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
 </div>
 <?php include("page-end.php"); ?>

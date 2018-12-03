@@ -20,11 +20,19 @@
         http://java.sun.com/javase/downloads/index.jsp#jre</a>. You need the Java Runtime Environment (JRE). The other downloads are for
     those that want to develop Java programs.</p>
 
-<p>The simplest way to start JPO is by clicking on the "Start now!" hyperlink at the top left of this page. This fires up "Java Web Start"
-    which in turn downloads all the bits and pieces from the Sourceforge web site and then runs JPO on your computer.</p>
+<p>The simplest way to start JPO is by used to be the Java Web Start way using the hyperlink on the Downloads tab.
+    This would fires up "Java Web Start" which in turn would downloads all the bits and pieces from the Sourceforge web
+    site and then runs JPO on your computer.</p>
+
+<p>Unfortunately Java Web Start is now plagued with scary security warnings and doesn't work well for infosec reasons.</p>
 
 <p>You will get a warning about the digital certificate. Since this is not a commercial project I am not going to buy a certificate and
     you must simply click the message away.</p>
+
+<p>You can download the pre-build Windows package which should install on your computer.</p>
+
+<p>Or you install the Java Software Developer kit (SDK) along with Gradle and do a <pre>gradle run</pre> on the
+source code. This keeps you up to date with the latest enhancements.</p>
 
 <p>The application window should pop up like this:</p>
 <img src="tutorial_newcollection.png" width="800" height="601" alt="New Collection Welcome Screen"/>
@@ -151,6 +159,6 @@
 
 
 <hr>
-<p>Last update to this page: 13.9.2009<br>
-    Copyright 2009 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
+<p>Last update to this page: 3 Dec 2018<br>
+    Copyright 2009-2018 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
 </div>    <?php include("page-end.php"); ?>

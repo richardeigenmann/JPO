@@ -24,6 +24,7 @@ import java.util.List;
  The license is in gpl.txt.
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
+
 /**
  * This class stores the parameters for a search and can return a List of the
  * search results.
@@ -34,11 +35,6 @@ public class YearQuery implements Serializable, Query {
      * Keep serialisation happy
      */
     private static final long serialVersionUID = 1;
-
-    /**
-     * Define a logger
-     */
-    //private static final Logger LOGGER = Logger.getLogger( YearQuery.class.getName() );
 
     /**
      * This flag indicates whether dates that can't be parsed should be treaded
@@ -215,23 +211,22 @@ public class YearQuery implements Serializable, Query {
         PictureInfo pi = (PictureInfo) nodeObject;
 
         boolean match = true;
-
         Calendar testNodeDate = pi.getCreationTimeAsDate();
-        if ( match && ( lowerDateRange != null ) ) {
+        if ( lowerDateRange != null ) {
             // test for the lower date range
             if ( testNodeDate == null ) {
-                match = match && includeNullDates;
+                match = includeNullDates;
             } else {
-                match = match && ( testNodeDate.compareTo( lowerDateRange ) >= 0 );
+                match = testNodeDate.compareTo( lowerDateRange ) >= 0 ;
             }
         }
 
         if ( match && ( upperDateRange != null ) ) {
             // test for the lower date range
             if ( testNodeDate == null ) {
-                match = match && includeNullDates;
+                match = includeNullDates;
             } else {
-                match = match && ( testNodeDate.compareTo( upperDateRange ) <= 0 );
+                match = testNodeDate.compareTo( upperDateRange ) <= 0;
             }
         }
 

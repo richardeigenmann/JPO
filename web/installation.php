@@ -3,8 +3,8 @@
 <div class="container">
     <h2>Installing on Windows</h2>
 
-    <a href="https://sourceforge.net/projects/j-po/files/latest/download" rel="nofollow">
-        <img alt="Download JPO Java Picture Organizer" src="https://a.fsdn.com/con/app/sf-download-button">
+    <a href="https://sourceforge.net/projects/j-po/files/JPO-Installer-0.13.exe/download" rel="nofollow">
+        <img alt="Download JPO Java Picture Organizer for Windows" src="https://a.fsdn.com/con/app/sf-download-button">
     </a>
 
     <img src="https://travis-ci.org/richardeigenmann/JPO.svg?branch=master" alt="Travis Build Status">
@@ -58,6 +58,14 @@
 
     <p>If you have any suggestions on how to improve on this state of affairs,
         please get in touch with me.</p>
+
+
+<p>As of 2018 you need to whitelist the jpo source in the Java Console. Find the Java Console program
+called jconsole and run it. Go to the Web Settings > Exception Site List and add the jpo URL there:</p>
+
+    <p><img src="Java_Control_Panel.png" width="902" height="575" border="0"></p>
+    <p><img src="Java_Control_Panel_add_jpo.png" width="894" height="532" border="0"></p>
+    <p><img src="Java_Control_Panel_jpo_added.png" width="892" height="527" border="0"></p>
 
     <p><strong>Note:</strong> You will see the following warning screen:</p>
 
@@ -160,7 +168,7 @@
 
 
     <hr>
-    <p>Last update to this page: 5 Dec 2015<br>
+    <p>Last update to this page: 3 Dec 2018<br>
         Copyright 2003-2016 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
 </div>
 <?php include("page-end.php"); ?>
