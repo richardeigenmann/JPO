@@ -20,4 +20,6 @@ Jpo.iml
 .project
 bin
 .settings
+cache.properties
+.vscode
 
