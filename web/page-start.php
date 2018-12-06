@@ -5,56 +5,58 @@
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
         <link rel="shortcut icon" href="favicon.ico" />
     </head>
     <body>
+    <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+        <a class="navbar-brand mb-0 h1" href="index.php">JPO Java Picture Organizer</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+            <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+                <li class="nav-item active">
+                    <a class="nav-link" href="installation.php">Download</a>
+                </li>
 
-        <div class="navbar-wrapper">
-            <div class="container">
-
-                <nav class="navbar navbar-inverse navbar-static-top" role="navigation">
-                    <div class="container">
-                        <div class="navbar-header">
-                            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-                                <span class="sr-only">Toggle navigation</span>
-                                <span class="icon-bar"></span>
-                                <span class="icon-bar"></span>
-                                <span class="icon-bar"></span>
-                            </button>
-                            <a class="navbar-brand" href="index.php">JPO Java Picture Organizer</a>
-                        </div>
-                        <div id="navbar" class="navbar-collapse collapse">
-                            <ul class="nav navbar-nav">
-                                <li><a href="installation.php">Download</a></li>
-                                
-                                <li class="dropdown">
-                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Tutorials<span class="caret"></span></a>
-                                    <ul class="dropdown-menu" role="menu">
-                                        <li><a href="tutorial_gettingstarted.php">Getting Started</a></li>
-                                        <li><a href="tutorial_download_from_camera.php">Download from Camera</a></li>
-                                        <li><a href="tutorial_order_prints.php">Order prints from a lab</a></li>
-                                    </ul>
-                                </li>
-                                <li><a href="installation.php#problems">Support</a></li>
-                                <li><a href="about.php#license">License</a></li>
-                                <li><a href="about.php">About the Project</a></li>
-                                <li class="dropdown">
-                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Code<span class="caret"></span></a>
-                                    <ul class="dropdown-menu" role="menu">
-                                        <li><a href="changelog.php">Changelog</a></li>
-                                        <li><a href="developer.php">Set up Dev environment</a></li>
-                                        <li><a href="https://sourceforge.net/p/j-po/git/ci/master/tree/">Source Code Sourceforge.net</a></li>
-                                        <li><a href="https://github.com/richardeigenmann/JPO">Source Code Github</a></li>
-                                        <li><a href="https://sourceforge.net/projects/j-po/">SourceForge project page</a></li>
-                                        <li><a href="https://travis-ci.org/">Travis CI</a></li>
-                                    </ul>
-                                </li>
-                            </ul>
-                        </div>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Tutorials
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="tutorial_gettingstarted.php">Getting Started</a>
+                        <a class="dropdown-item" href="tutorial_download_from_camera.php">Download from Camera</a>
+                        <a class="dropdown-item" href="tutorial_order_prints.php">Order prints from a lab</a>
                     </div>
-                </nav>
+                </li>
 
-            </div>
+                <li class="nav-item">
+                    <a class="nav-link" href="installation.php#problems">Support</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="about.php#license">License</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="about.php">About the Project</a>
+                </li>
+
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Code
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="changelog.php">Changelog</a>
+                        <a class="dropdown-item" href="developer.php">Set up Dev environment</a>
+                        <a class="dropdown-item" href="https://sourceforge.net/p/j-po/git/ci/master/tree/">Source Code Sourceforge.net</a>
+                        <a class="dropdown-item" href="https://github.com/richardeigenmann/JPO">Source Code Github</a>
+                        <a class="dropdown-item" href="https://sourceforge.net/projects/j-po/">SourceForge project page</a>
+                        <a class="dropdown-item" href="https://travis-ci.org/">Travis CI</a>
+                    </div>
+                </li>
+
+            </ul>
         </div>
-
+    </nav>
