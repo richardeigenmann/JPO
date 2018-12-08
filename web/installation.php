@@ -28,19 +28,7 @@
         <button type="button" class="btn btn-success">Current version (0.13)</button>
     </a></p>
     
-    <p><a href="jpo-devel.jnlp">
-        <button type="button" class="btn btn-success">Development version (0.13)</button>
-    </a></p>
-
-    <p><a href="jpo-0.12.jnlp">
-        <button type="button" class="btn btn-success">Old version (0.12)</button>
-    </a></p>
-
-    <p><a href="jpo-stable.jnlp">
-        <button type="button" class="btn btn-success">Old "stable" version</button>
-    </a></p>
-
-
+    
     <hr>
     <h3>Scary Warnings?</h3>
     <img src="jpo_scr_5.png" width=658 height=591 alt="Java Scary Error"><br>
@@ -84,25 +72,22 @@
     <hr>
     <h3>Local Installation</h3>
     <p>First download the jar file and save it in your program directory:<br>
-        <a href="http://j-po.sourceforge.net/jpo-0.12.jar">jpo-0.12.jar</a> or <a href="http://j-po.sourceforge.net/jpo-0.12.jar">jpo-0.13.jar</a><br>
+        <a href="http://j-po.sourceforge.net/jpo-0.13-all.jar">jpo-0.13-all.jar</a><br>
     </p>
     <p><strong>Note:</strong> Make sure they retain the <code>.jar</code> file extension.
 
     <p> Then you need to create a script or batch file to run everything. On Linux the script would look like this:</p>
-    <p><code>/PATH/TO/YOUR/JAVA/bin/java -XX:+AggressiveHeap -classpath /PATH/TO/YOUR/JPO/JAR/jpo-0.13.jar Main</code></p>
-    <!-- -Xms80M -Xmx2000M -->
+    <p><code>/PATH/TO/YOUR/JAVA/bin/java -XX:+AggressiveHeap -jar /PATH/TO/YOUR/JPO/JAR/jpo-0.13-all.jar Main</code></p>
 
     <p><strong>Note:</strong> Put everything on one long line.</p>
 
     <p>On a particular Windows machine I installed JPO into c:\Program Files\Jpo. The resulting 
         <code>JPO.bat</code> file looks like this: (you can download it here: <a href="Jpo.bat">Jpo.bat</a></p>
 
-    <p><code>c:\windows\system32\java -XX:+AggressiveHeap -jar "c:\Program Files\Jpo\jpo-0.13.jar"</code></p>
-    <!-- -Xms80M -Xmx2000M -->
-
+    <p><code>c:\windows\system32\java -XX:+AggressiveHeap -jar "c:\Program Files\Jpo\jpo-0.13-all.jar"</code></p>
 
     <hr>
-    <p>Last update to this page: 7 Dec 2018<br>
+    <p>Last update to this page: 8 Dec 2018<br>
         Copyright 2003-2016 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
 </div>
 <?php include("page-end.php"); ?>

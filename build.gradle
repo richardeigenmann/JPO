@@ -3,13 +3,14 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.github.jengelman.gradle.plugins:shadow:4.0.1'
+        classpath 'com.github.jengelman.gradle.plugins:shadow:4.0.3'
     }
 }
 
 plugins {
     id "org.sonarqube" version "2.6.2"
     id "com.github.ben-manes.versions" version "0.20.0"
+    id 'signing'
 }
 
 apply plugin: "com.github.johnrengelman.shadow"
@@ -21,6 +22,7 @@ repositories {
     mavenCentral()
 }
 
+def jpoVersion = '0.13'
 
 dependencies {
     compile 'org.apache.commons:commons-compress:1.18'
@@ -104,7 +106,7 @@ test {
 
 jar {
     baseName = 'jpo'
-    version =  '0.13'
+    version =  jpoVersion
     
     manifest {
         attributes(
@@ -119,10 +121,37 @@ jar {
     into ('jpo/images') { from 'src/images' }
 }
 
-
 // this task creates the FatJar whith everything in it
 shadowJar {
+    baseName = 'jpo'
+    classifier = 'all'
+    version = jpoVersion
     into ('jpo/images') { from 'src/images' }
+}
+
+
+
+task signJar(dependsOn: 'shadowJar',description: 'Sign shadowJar.',group: 'build'){
+    doLast{
+        def props = new Properties()
+        file("/richi/Privat/Documents/jpo.private.gradle.properties").withInputStream { props.load(it) }
+        println 'Keystore file name: ' + props.getProperty("keystoreFileName")
+
+        def signdir  = new File("$buildDir/jars/signed")
+        signdir.mkdirs()
+
+        ant.signjar(
+            destDir: "${signdir.absolutePath}",
+                  jar: 'build/libs/jpo-' + jpoVersion + '-all.jar',
+                  alias: props.getProperty("keyalias"),
+                  storetype: "jks",
+                  keystore: props.getProperty("keystoreFileName"),
+                  storepass: props.getProperty("keystorepass"),
+                  verbose: true,
+                  preservelastmodified: "true",
+                  tsaurl: "http://timestamp.digicert.com"
+      )
+    }
 }
 
 
@@ -130,7 +159,7 @@ task run(type: JavaExec) {
     group 'build'
     description 'Runs JPO from the shadowJar'
     dependsOn shadowJar
-    classpath = files( 'build/libs/JPO-all.jar' )
+    classpath = files( 'build/libs/jpo-' + jpoVersion + '-all.jar' )
     main = 'Main'
 }
 
@@ -157,9 +186,9 @@ ant.taskdef(
     classname: 'org.apache.tools.ant.taskdefs.optional.ssh.Scp',
     classpath: configurations.sshAntTask.asPath)
 
-task uploadWebsite() {
+task uploadWebsitePages() {
     group 'website'
-    description 'Publishes the JPO website'
+    description 'Publishes the JPO website pages'
     doLast  {
         ant.scp(
             todir: 'richieigenmann,j-po@web.sourceforge.net:/home/groups/j/j-/j-po/htdocs',
@@ -185,3 +214,34 @@ task uploadWebsite() {
     }
 }
 
+task uploadWebStartFiles() {
+    group 'website'
+    description 'Publishes the JPO webstart files'
+    dependsOn signJar
+    doLast  {
+        ant.scp(
+            todir: 'richieigenmann,j-po@web.sourceforge.net:/home/groups/j/j-/j-po/htdocs',
+            keyfile: '${user.home}/.ssh/id_rsa',
+            passphrase: '',
+            trust: 'yes',
+            verbose: 'yes',
+            sftp: 'true', {
+                fileset(dir: 'build/jars/signed') {
+                    modified()
+                    files( 'jpo-' + jpoVersion + '-all.jar' )
+                }
+                fileset(dir: 'web') {
+                    modified()
+                    files( 'jpo-' + jpoVersion + '.jnlp' )
+                }
+            }
+        )
+    }
+}
+
+
+task uploadWebsite() {
+    group 'website'
+    description 'Publishes the JPO website'
+    dependsOn uploadWebStartFiles, uploadWebsitePages
+}
