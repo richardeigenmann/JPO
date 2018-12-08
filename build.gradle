@@ -127,6 +127,8 @@ shadowJar {
 
 
 task run(type: JavaExec) {
+    group 'build'
+    description 'Runs JPO from the shadowJar'
     dependsOn shadowJar
     classpath = files( 'build/libs/JPO-all.jar' )
     main = 'Main'
