@@ -58,6 +58,7 @@
                         <a class="dropdown-item" href="https://github.com/richardeigenmann/JPO">Source Code Github</a>
                         <a class="dropdown-item" href="https://sourceforge.net/projects/j-po/">SourceForge project page</a>
                         <a class="dropdown-item" href="https://travis-ci.org/">Travis CI</a>
+                        <a class="dropdown-item" href="https://sonarcloud.io/dashboard?id=Jpo">Sonarcloud Dashboard</a>
                     </div>
                 </li>
 
