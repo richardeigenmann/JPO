@@ -32,11 +32,15 @@
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="installation.php#problems">Support</a>
+                    <a class="nav-link" href="support.php">Support</a>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="about.php#license">License</a>
+                    <a class="nav-link" href="license.php">License</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="privacy.php">Privacy</a>
                 </li>
 
                 <li class="nav-item">

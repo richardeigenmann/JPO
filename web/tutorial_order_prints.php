@@ -1,6 +1,6 @@
 <?php include("page-start.php"); ?>
 <div class="container">
-    <span class="para-heading"  id="title">Tutorial: Order prints from a lab</span>
+    <h2>Tutorial: Order prints from a lab</h2>
     <h3>Objective:</h3>
     <p>In this tutorial you will learn:<ul><li>How to order prints from from a lab that has a website with upload</li>
         <li>How to copy the pictures onto a Memory Stick</li>

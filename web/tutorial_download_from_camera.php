@@ -1,6 +1,6 @@
     <?php include("page-start.php"); ?>
 <div class="container">
-        <span class="para-heading" id="title">Tutorial: Download images from your digital camera</span>
+        <h2>Tutorial: Download images from your digital camera</h2>
                     <h3>Objective:</h3>
                     <p>In this tutorial you will learn:<ul><li>How to set up JPO to scan for your digital camera</li>
                         <li>Download images when you connect the camera</li>
@@ -11,6 +11,6 @@
 
                     <hr>
                     <p>Last update to this page: 13.9.2009<br>
-			Copyright 2009-2014 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
+			Copyright 2009-2018 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
 </div>
     <?php include("page-end.php"); ?>

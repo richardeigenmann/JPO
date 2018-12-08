@@ -1,75 +1,71 @@
 <?php include("page-start.php"); ?>
-
 <div class="container">
-    <h2>Installing on Windows</h2>
+    <h3>System Requirements</h3>
+
+    <p>JPO is a pure Java application so it runs on any computer that runs Java.</p>
+
+    <p>You must have Java 1.8.0 or later. Use the command <code>java -version</code> to find out 
+    what version you are running if you aren't sure.</p>
+
+    <p>You can download the Java Runtime Environment (JRE) or the Java Software Development Kit (SDK)
+        here: <a href="http://www.java.com/en/download/index.jsp">http://www.java.com/en/download/index.jsp</a>
+        Get the JRE is you just want to run java programs. Get the SDK if you want to develop code.</p>
+
+
+    <hr>
+    <h3>Installing on Windows</h3>
 
     <a href="https://sourceforge.net/projects/j-po/files/JPO-Installer-0.13.exe/download" rel="nofollow">
         <img alt="Download JPO Java Picture Organizer for Windows" src="https://a.fsdn.com/con/app/sf-download-button">
     </a>
 
-    <img src="https://travis-ci.org/richardeigenmann/JPO.svg?branch=master" alt="Travis Build Status">
-
-    <a href="http://sourceforge.net/projects/j-po/files"> 
-        <h2><span class="label label-success">
-                <span class="glyphicon glyphicon-save" aria-hidden="true"></span>
-                SourceForge download area
-            </span>
-        </h2></a>
+    <a href="http://sourceforge.net/projects/j-po/files">SourceForge download area</a>
 
     <hr>
-    <span class="para-heading" id="javawebstart">Java Web Start</span>
+    <h3>Java Web Start</h3>
 
-    <a href="jpo-devel.jnlp">
-        <h2><span class="label label-success">
-                <span class="glyphicon glyphicon-play" aria-hidden="true"></span>
-                Development Version (0.13)
-            </span>
-        </h2>
-    </a><br>
-    <a href="jpo-0.13.jnlp">
-        <h2><span class="label label-success">
-                <span class="glyphicon glyphicon-play" aria-hidden="true"></span>
-                Current Version (0.13)
-            </span>
-        </h2>
-    </a><br>
-    <a href="jpo-0.12.jnlp">
-        <h2><span class="label label-success">
-                <span class="glyphicon glyphicon-play" aria-hidden="true"></span>
-                Old Version (0.12)
-            </span>
-        </h2>
-    </a><br>
-    <a href="jpo-stable.jnlp">
-        <h2><span class="label label-default">
-                <span class="glyphicon glyphicon-play" aria-hidden="true"></span>
-                Old Version (0.9)
-            </span>
-        </h2>
-    </a>
+    <p><a href="jpo-0.13.jnlp">
+        <button type="button" class="btn btn-success">Current version (0.13)</button>
+    </a></p>
+    
+    <p><a href="jpo-devel.jnlp">
+        <button type="button" class="btn btn-success">Development version (0.13)</button>
+    </a></p>
+
+    <p><a href="jpo-0.12.jnlp">
+        <button type="button" class="btn btn-success">Old version (0.12)</button>
+    </a></p>
+
+    <p><a href="jpo-stable.jnlp">
+        <button type="button" class="btn btn-success">Old "stable" version</button>
+    </a></p>
 
 
-    <h2>Scary Warnings</h2>
-    <p>I have not figured out how do get a certificate with which to sign
-        this Free Open Source Software. Consequently Java, your browser and everyone 
-        else feel they are at liberty to pop up increasingly alarmist messages 
-        warning against the use of this software. At this point all I can recommend
-        is that you click away the warnings and use JPO if you find it useful.</p>
+    <hr>
+    <h3>Scary Warnings?</h3>
+    <img src="jpo_scr_5.png" width=658 height=591 alt="Java Scary Error"><br>
+    <p>The latest versions of Java default to ultra paranoid security 
+        settings. Given the state of the world this is a good thing but it can 
+        stop you from running JPO. JPO does need to read the pictures on your filesystem and does need to 
+        write to your disk as that pretty much is the point of a software to organise your
+        pictures. I have not bought a certificate from an issuer which makes JPO 'untrustworthy'. 
+        I don't know why you should trust software simply because someone paid money to someone else 
+        for a digital certificate unless that somehow involves a code review and 
+        ongoing good practices.</p>
+    <p>I can assure you that JPO doesn't spy on you, doesn't send spam and doesn't try to sell you 
+        anything. Better than that, it's open source software so you or someone you trust can go and
+        analyse the lines of source code and compile your own version! Check out the linked code analysis tool reports to see
+        how JPO is doing in terms of code quality, test coverage and other developer metrics.</p>
 
-    <p>If you have any suggestions on how to improve on this state of affairs,
-        please get in touch with me.</p>
+    <hr>
+    <h3>Setting up Java Web Start to run JPO</h3>
 
-
-<p>As of 2018 you need to whitelist the jpo source in the Java Console. Find the Java Console program
-called jconsole and run it. Go to the Web Settings > Exception Site List and add the jpo URL there:</p>
+    <p>As of 2018 you need to whitelist the JPO site URL in the Java Console. Find the Java Console program
+    (called jconsole) and run it. Go to the Web Settings > Exception Site List and add the JPO URL there:</p>
 
     <p><img src="Java_Control_Panel.png" width="902" height="575" border="0"></p>
     <p><img src="Java_Control_Panel_add_jpo.png" width="894" height="532" border="0"></p>
     <p><img src="Java_Control_Panel_jpo_added.png" width="892" height="527" border="0"></p>
-
-    <p><strong>Note:</strong> You will see the following warning screen:</p>
-
-    <p><img src="jpo_scr_4.jpg" width="493" height="240" border="0"></p>
 
 
     <p><strong>Potential problem:</strong> Your browser needs to know that it should
@@ -85,90 +81,28 @@ called jconsole and run it. Go to the Web Settings > Exception Site List and add
             find / -name javaws -print</font></code></p>
 
 
-    <span class="para-heading" id="requirements">System Requirements</span>
-
-    <p>JPO is a pure Java application so it runs on any computer that runs Java.</p>
-
-    <p>You need <strong>a recent Java runtime installation</strong>. You must have Java 
-        1.8.0 or later. Use the command <code>java -version</code> to find out 
-        what version you are running if you aren't sure.</p>
-
-
-    <p>You can download the Java Runtime Environment (JRE) or the Java Software Development Kit (SDK)
-        here: <a href="http://www.java.com/en/download/index.jsp">http://www.java.com/en/download/index.jsp</a>
-        Get the JRE is you just want to run java programs. Get the SDK if you want to develop code.</p>
-
-    <p>Dealing with bitmaps inside the JVM consumes huge amounts of memory. On low specified
-        machines this can become frustrating when the operating system decides to spend minutes 
-        swapping memory around. You should be OK if you have more than 512MB and are 
-        dealing with 6 Megapixel images. You can tweak things by changing the amount of 
-        pictures JPO is allowed to cache in the settings. You can also tweak the amount of
-        memory allocated to the JVM but you will need to make a local installation described
-        below.</p>
-
-
-
     <hr>
-    <span class="para-heading" id="local">Local Installation</span>
+    <h3>Local Installation</h3>
     <p>First download the jar file and save it in your program directory:<br>
-        <a href="http://j-po.sourceforge.net/jpo-0.12.jar">jpo-0.13.jar</a> or <a href="http://j-po.sourceforge.net/jpo-0.12.jar">jpo-0.13.jar</a><br>
+        <a href="http://j-po.sourceforge.net/jpo-0.12.jar">jpo-0.12.jar</a> or <a href="http://j-po.sourceforge.net/jpo-0.12.jar">jpo-0.13.jar</a><br>
     </p>
-
-    <p><strong>Note:</strong> Make sure they retain the <code>.jar</code> file extension. 
-        One Microsoft XP computer I saw saved the file with a <code>.zip</code> extension.
-        Java then was not able to read the code.
-
+    <p><strong>Note:</strong> Make sure they retain the <code>.jar</code> file extension.
 
     <p> Then you need to create a script or batch file to run everything. On Linux the script would look like this:</p>
-    <p><font color="darkRed"><code>/PATH/TO/YOUR/JAVA/bin/java -XX:+AggressiveHeap -classpath /PATH/TO/YOUR/JPO/JAR/jpo-0.13.jar Main</code></font></p>
+    <p><code>/PATH/TO/YOUR/JAVA/bin/java -XX:+AggressiveHeap -classpath /PATH/TO/YOUR/JPO/JAR/jpo-0.13.jar Main</code></p>
     <!-- -Xms80M -Xmx2000M -->
 
     <p><strong>Note:</strong> Put everything on one long line.</p>
 
-    <p>On a particular Windows XP machine I installed Jpo into c:\Program Files\Jpo. The resulting Batch
-        file looks like this: (you can download it here: <a href="Jpo.bat">Jpo.bat</a></p>
+    <p>On a particular Windows machine I installed JPO into c:\Program Files\Jpo. The resulting 
+        <code>JPO.bat</code> file looks like this: (you can download it here: <a href="Jpo.bat">Jpo.bat</a></p>
 
     <p><code>c:\windows\system32\java -XX:+AggressiveHeap -jar "c:\Program Files\Jpo\jpo-0.13.jar"</code></p>
     <!-- -Xms80M -Xmx2000M -->
 
 
     <hr>
-    <span class="para-heading" id="problems">Potential problems:</span>
-
-    <h2>Memory settings:</h2>
-    <p>If you get <font color="red">out of Memory</font> errors then you are probably best off
-        using the local jar way of starting this application as you can then set the initial memory heap with 
-        the -Xms and the maximum memory heap with the -Xmx parameters. Of course this can also be done on 
-        the web start version but you would have to set Jpo up on your own webserver so that you 
-        could specify the memory settings in the .jnlp configuration file.</p>
-    <p>I have discovered the option -XX:+AggressiveHeap which sounds great for what JPO needs. Please let me know if you have issues with this.</p>
-
-    <h2>Chinese Font</h2>
-    <p>Franklin He has been kind enough to translate the User Interface to Traditional and Simplified
-        Chinese. This looks really cool but poses some installation hassles if your Java system 
-        is not correctly configured.
-        When I had a SuSE 10 system I had to create a /usr/java/jdk1.5.0_07/jre/lib/fontconfig.SuSE.properties 
-        file. Click <a href="fontconfig">here</a> to download my version.</p>
-
-    <h2>Java Version</h2>
-    <p>I develop on Linux with the latest Oracle Java. You should always keep your software
-        up-to-date too because of the the vulnerabilities that keep getting fixed. But sometimes
-        there are reasons (that <a href="http://en.wikipedia.org/wiki/List_of_Dilbert_characters#Mordac">Mordac</a>
-        , the preventer of Information Services in Dilbert can justify)
-        that prevent you from having a current Java installation. What happens then is that the 
-        code I compiled is not compatible with your Java Virtual Machine and you get an error. Java 
-        still gives you half a page full of cryptic junk. If the first line says 
-        <code>Unsupported major.minor version 51.0</code> then that is the problem. If you can't 
-        upgrade your Java due to "Mordac" or don't want to get dirty with the source-code and compile 
-        your own send me an email and perhaps I can compile for an old 
-        version for you. Currently I am compiling to Java version 1.8 on a Java 8 compiler.</p>
-
-    <p>Please let me know of specific installation issues you have so that I may extend this section for the benefit of other users who might have the same issue.</p>
-
-
-
-    <hr>
-    <p>Last update to this page: 3 Dec 2018<br>
+    <p>Last update to this page: 7 Dec 2018<br>
         Copyright 2003-2016 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
 </div>
 <?php include("page-end.php"); ?>

@@ -10,84 +10,52 @@
             <li data-target="#myCarousel" data-slide-to="1"></li>
             <li data-target="#myCarousel" data-slide-to="2"></li>
             <li data-target="#myCarousel" data-slide-to="3"></li>
-            <li data-target="#myCarousel" data-slide-to="4"></li>
-            <li data-target="#myCarousel" data-slide-to="5"></li>
-            <li data-target="#myCarousel" data-slide-to="6"></li>
         </ol>
 
         <!-- Wrapper for slides -->
-        <div class="carousel-inner" role="listbox">
-            <div class="item active">
-                <img src="jpo_scr_3.png" width=700 height=580 alt="Screenshot of JPO">
-                <div class="carousel-caption">
-                    <h3>Organize your Pictures</h3>
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <img src="jpo_scr_1.png" width=697 height=510 alt="Screenshot of JPO">
+                <div class="carousel-caption bg-dark">
+                    Organize your Pictures
                 </div>
             </div>
 
-            <div class="item">
-                <img src="jpo_scr_3.png" width=700 height=580 alt="Screenshot of JPO">
-                <div class="carousel-caption">
-                    <h3>Present your Pictures</h3>
+            <div class="carousel-item">
+                <img src="jpo_scr_2.jpg" width=659 height=505 alt="Screenshot of JPO">
+                <div class="carousel-caption bg-dark">
+                    Present your Pictures
                 </div>
             </div>
 
-            <div class="item">
+            <div class="carousel-item">
                 <img src="jpo_scr_6_foss.png" width=700 height=580 alt="JPO is Free Open Source Software">
-                <div class="carousel-caption">
-                    <h3>Free Open Source Software</h3>
-                    <p><a href="about.php#License">GPL License</a></p>
+                <div class="carousel-caption bg-dark">
+                    Free Open Source Software
                 </div>
             </div>
 
-            <div class="item">
+            <div class="carousel-item">
                 <img src="jpo_scr_3.png" width=700 height=580 alt="Screenshot of JPO">
-                <div class="carousel-caption">
-                    <h3>Share your Pictures</h3>
-                    <p>Use Email, Generate a Website or upload them to the Google Photos Cloud</p>
-                </div>
-            </div>
-
-            <div class="item">
-                <img src="jpo_scr_3.png" width=700 height=580 alt="Screenshot of JPO">
-                <div class="carousel-caption">
-                    <h3>Cross Platform</h3>
-                    <p>Runs on any Java enabled computer</p>
-                </div>
-            </div>
-
-            <div class="item">
-                <img src="jpo_scr_3.png" width=700 height=580 alt="Screenshot of JPO">
-                <div class="carousel-caption">
-                    <h3>See where the Picture was taken</h3>
-                    <p>Inspect Exif Data and view on Map</p>
-                </div>
-            </div>
-
-            <div class="item">
-                <img src="jpo_scr_3.png" width=700 height=580 alt="Screenshot of JPO">
-                <div class="carousel-caption">
-                    <h3>Non destructive</h3>
-                    <p>Never changes your image files</p>
+                <div class="carousel-caption bg-dark">
+                    Cross Platform because of Java
                 </div>
             </div>
 
         </div>
 
         <!-- Left and right controls -->
-        <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
-            <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+        <a class="carousel-control-prev" href="#myCarousel" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
             <span class="sr-only">Previous</span>
         </a>
-        <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
-            <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+        <a class="carousel-control-next" href="#myCarousel" role="button" data-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
             <span class="sr-only">Next</span>
         </a>
     </div>
 
 
-
-
-    <span class="para-heading" id="Introduction">Introduction</span><br>
     <p>JPO is a program that helps you organise your digital pictures by putting them in
         collections. There you can browse the pictures, skip through the thumbnails, share
         them by email or upload to Google Picasa. A powerful picture viewer allows you to 
@@ -105,11 +73,11 @@
         JPO as an OpenSource project. He hopes you will find it useful and enjoys feedback.</p>
 
     <hr>
-    <span class="para-heading" id="Features">Features</span>
+    <h3>Features</h3>
     <ul>
         <li> Quickly Organize digital images into collections and groups </li>
         <li> Creates web pages from your collection </li>
-        <li> Can upload to Google's Picasa (TM) </li>
+        <!-- <li> Can upload to Google's Picasa (TM) </li> -->
         <li> Download pictures from Camera with the ability to load only the new ones</li>
         <li> Send rescaled images and originals via email</li>
         <li> View pictures as a slide show </li>
@@ -131,38 +99,9 @@
     </ul>
 
 
-    <hr>
-    <span class="para-heading" id="scaryerror">What's that scary Java error?</span><br>
-    <img src="jpo_scr_5.png" width=658 height=591 alt="Java Scary Error"><br>
-    <p>The latest versions of Java seem to be defaulting to ultra paranoid security 
-        settings. This might be a good thing but it can stop you from running JPO with Java 
-        Web Start. JPO does need to read the pictures on your filesystem and does need to 
-        write to your disk as that pretty much is the point of a software to organise your
-        pictures. As such it can't run in the Java Sandbox and needs the "all" permission.
-        I have self-signed the application that I upload to Sourceforge. Obviously that 
-        is not a world-trusted key so you need to consider if you can trust me.</p>
-    <p>I can assure you that JPO doesn't "phone home", doesn't spy on you, doesn't send 
-        spam and doesn't try to sell you anything. Better than that, it's open source 
-        software so you can go and read the lines of source code and compile
-        your own version! Check out the linked Code analysis tools and their reports to see
-        how JPO is doing in terms of code quality, test coverage and other developer metrics.</p>
-    <p>If you like the convenience of the pre-packaged Java Web Start bundles then you
-        need to go to your Java installation (Start > Control Panel > Java) and reduce the
-        security setting to something less paranoid and accept the risk.</p>
-
 
     <hr>
-    <span class="para-heading" id="Screenshot">Screenshots</span>
-
-    <p>The Thumbnail Browser:</p>
-    <img src="jpo_scr_1.png" width=697 height=510 alt="Screenshot of JPO">
-    <p>The slide show window:</p>
-    <img src="jpo_scr_2.jpg" width=659 height=505 alt="Screenshot of JPO">
-
-
-
-    <hr>
-    <span class="para-heading" id="Reviews">Reviews</span>
+    <h3>Reviews</h3>
     <p>I was totally amazed when I discovered that people were writing reviews about
         JPO and positive reviews at that!</p>
     <p>
@@ -182,7 +121,7 @@
         technology for easy installation and upgrading.</p>
 
     <hr>
-    <span class="para-heading" id="Like">Do you like JPO?</span>
+    <h3>Do you like JPO?</h3>
     <p>Why don't you let the author know? Send him an encouraging email at <a href="mailto:richard.eigenmann@gmail.com">richard.eigenmann@gmail.com</a></p>
     <hr>
 
