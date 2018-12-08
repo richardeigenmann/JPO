@@ -153,34 +153,35 @@ dependencies {
 }
 
 ant.taskdef(
-  name: 'scp',
-  classname: 'org.apache.tools.ant.taskdefs.optional.ssh.Scp',
-  classpath: configurations.sshAntTask.asPath)
+    name: 'scp',
+    classname: 'org.apache.tools.ant.taskdefs.optional.ssh.Scp',
+    classpath: configurations.sshAntTask.asPath)
 
 task uploadWebsite() {
-  doLast  {
-    ant.scp(
-      todir: 'richieigenmann,j-po@web.sourceforge.net:/home/groups/j/j-/j-po/htdocs',
-      keyfile: '${user.home}/.ssh/id_rsa',
-      passphrase: '',
-      trust: 'yes',
-      verbose: 'yes',
-      sftp: 'true', {
-          fileset(dir: 'web')
-            {
-            modified()
-            include(name: '*.html')
-            include(name: '*.css')
-            include(name: '*.php')
-            include(name: 'fontconfig')
-            include(name: '*.gif')
-            include(name: '*.png')
-            include(name: '*.jpg')
-            include(name: '*.jnlp')
-            include(name: '*.bat')
-          }
-      }
-    )
-  }
+    group 'website'
+    description 'Publishes the JPO website'
+    doLast  {
+        ant.scp(
+            todir: 'richieigenmann,j-po@web.sourceforge.net:/home/groups/j/j-/j-po/htdocs',
+            keyfile: '${user.home}/.ssh/id_rsa',
+            passphrase: '',
+            trust: 'yes',
+            verbose: 'yes',
+            sftp: 'true', {
+                fileset(dir: 'web') {
+                    modified()
+                    include(name: '*.html')
+                    include(name: '*.css')
+                    include(name: '*.php')
+                    include(name: 'fontconfig')
+                    include(name: '*.gif')
+                    include(name: '*.png')
+                    include(name: '*.jpg')
+                    include(name: '*.jnlp')
+                    include(name: '*.bat')
+                }
+            }
+        )
+    }
 }
 
