@@ -7,14 +7,21 @@
         <li>Have you downloaded a JDK and Eclipse and does Eclipse start up?</li>
         <li>Have you installed The Git Repositories Plug-In?</li>
         <li>Have you got Gradle installed and running?</li>
+        <li>Have you got the Buildship Gradle Integration Plug In? <
+            <a href="https://marketplace.eclipse.org/content/buildship-gradle-integration#group-details">link</a></li>
     </ul>
 
     <p>Open the Git Repositories window Window > Show View > Other > Git > Git Repositories</p>
 
     <p>Click "Clone a Git repository" then Clone URI > Next</p>
 
-    <p>Enter the URI <code>https://github.com/richardeigenmann/JPO.git</code> and click Next then pick Branch "master"</p>
+    <p>Enter the URI <code>https://github.com/richardeigenmann/JPO.git</code> and click Next 
+    then pick Branch "master" then Next and specify the directory to use > Finish</p>
 
+    <p>Expand JPO > Branches > Local > doubleclick on master</p>
+
+    <p>File > Import > Gradle > Existing Gradle Project > Next > 
+        Enter the Project root directory from your git checkout above > Finish</p>
 
 
     <p>Contact: <a href="mailto:richard.eigenmann@gmail.com">richard.eigenmann@gmail.com</a><br>
