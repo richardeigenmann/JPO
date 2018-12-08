@@ -32,18 +32,10 @@
     <p>In the Gradle Tasks Window click JPO > build > build and it should download dependencies, 
     compile and run the tests. See the output in the "Console" tab.
 
-    <p>Contact: <a href="mailto:richard.eigenmann@gmail.com">richard.eigenmann@gmail.com</a><br>
-        Homepage: <a href="http://richieigenmann.users.sourceforge.net">http://richieigenmann.users.sourceforge.net</a></p>
+    <p>To run the project go to the Gradle Tasks Window click JPO > build > run.
 
     <hr>
-    <h2>About the Project</h2>
-    <p>JPO was written in Z&uuml;rich, Switzerland but also while on vacation in South Africa and the 
-        Caribbean. The sites JPO was coded at include aeroplanes, trains, cars, safari camps, sail boats, 
-        botanical gardens, restaurants, bars and swimming pools.</p>
-    <p>Download statistics of the Windows Installer on <a href="https://sourceforge.net/projects/j-po/files/JPO-Installer-0.13.exe/stats/timeline?dates=2015-01-01+to+2018-12-07">Sourceforge</a></p>
-
-    <hr>
-    <p>Last update to this page: 7 Dec 2018<br>
+    <p>Last update to this page: 8 Dec 2018<br>
         Copyright 2003-2018 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
 </div>
 <?php include("page-end.php"); ?>
