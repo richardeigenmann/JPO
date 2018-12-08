@@ -1,7 +1,8 @@
 <?php include("page-start.php"); ?>
 <div class="container">
 
-    <span class="para-heading" id="Changelog">Changelog</span>
+    <h2>Changelog</h2>
+    <p>See the commit log on <a href="https://github.com/richardeigenmann/JPO/commits/master">GitHub</a></p>
 
     <table class="changelog">
         <tr><td colspan=2><b>Development Version 0.13</b></td></tr>
