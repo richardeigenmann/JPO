@@ -53,6 +53,7 @@
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                         <a class="dropdown-item" href="changelog.php">Changelog</a>
+                        <a class="dropdown-item" href="javadoc/index.html">Javadoc</a>
                         <a class="dropdown-item" href="commandLineDev.php">Command Line Development</a>
                         <a class="dropdown-item" href="eclipse.php">Set up Eclipse Dev environment</a>
                         <a class="dropdown-item" href="intellij.php">Set up IntelliJ IDEA Dev environment</a>

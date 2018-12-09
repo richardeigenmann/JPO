@@ -3,17 +3,12 @@
  
 Name "Jpo Launcher"
 Caption "Jpo Launcher"
-;Icon "Java Launcher.ico"
-OutFile "Jpo.exe"
  
 SilentInstall silent
 AutoCloseWindow true
 ShowInstDetails nevershow
  
-!define CLASSPATH "jpo-0.13.jar"
-!define CLASS "Main"
-; Careful here: I tried Xmx4000M and it refused to start.
-;define OPTIONS "-Xms80M -Xmx1000M"
+!define JAR "jpo-0.13-all.jar"
 !define OPTIONS "-XX:+AggressiveHeap"
  
 Section ""
@@ -21,7 +16,7 @@ Section ""
   Pop $R0
  
   ; change for your purpose (-jar etc.)
-  StrCpy $0 '"$R0" ${OPTIONS} -classpath "${CLASSPATH}" ${CLASS}'
+  StrCpy $0 '"$R0" ${OPTIONS} -jar "${JAR}"'
  
   SetOutPath $EXEDIR
   
@@ -46,7 +41,7 @@ Function GetJRE
 
   ; use javaw.exe to avoid dosbox.
   ; use java.exe to keep stdout/stderr
-  !define JAVAEXE "javaw.exe"
+  !define JAVAEXE "java.exe"
   
   ClearErrors
   StrCpy $R0 "$EXEDIR\jre\bin\${JAVAEXE}"

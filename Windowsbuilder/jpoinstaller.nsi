@@ -49,7 +49,6 @@ SetCompressor lzma
 ; MUI end ------
 
 Name "${PRODUCT_NAME} ${PRODUCT_VERSION}"
-OutFile "JPO-Installer-0.13.exe"
 InstallDir "$PROGRAMFILES\JPO"
 ShowInstDetails show
 ShowUnInstDetails show
@@ -63,8 +62,8 @@ FunctionEnd
 Section "MainSection" SEC01
   SetOutPath "$INSTDIR"
   SetOverwrite ifnewer
-  File "jpo.exe"
-  File "..\build\jars\jpo-0.13.jar"
+  File "..\build\executables\Jpo.exe"
+  File "..\build\libs\jpo-0.13-all.jar"
 SectionEnd
 
 Section -AdditionalIcons
@@ -103,8 +102,8 @@ FunctionEnd
 Section Uninstall
   Delete "$INSTDIR\${PRODUCT_NAME}.url"
   Delete "$INSTDIR\uninst.exe"
-  Delete "$INSTDIR\jpo.exe"
-  Delete "$INSTDIR\jpo-0.13.jar"
+  Delete "$INSTDIR\Jpo.exe"
+  Delete "$INSTDIR\jpo-0.13-all.jar"
   RMDir  "$INSTDIR"
   Delete "$SMPROGRAMS\Java Picture Organizer\Uninstall.lnk"
   Delete "$SMPROGRAMS\Java Picture Organizer\Website.lnk"

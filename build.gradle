@@ -154,6 +154,22 @@ task signJar(dependsOn: 'shadowJar',description: 'Sign shadowJar.',group: 'build
     }
 }
 
+task buildWindowsExecutable(type: Exec) {
+    dependsOn shadowJar
+    def exedir  = new File("$buildDir/executables")
+    exedir.mkdirs()
+    commandLine '/usr/bin/makensis', '-XOutFile ' + exedir + '/Jpo.exe', 'Windowsbuilder/jpoexe.nsi'
+}
+
+task buildWindowsInstaller(type: Exec) {
+    dependsOn buildWindowsExecutable
+    def exedir  = new File("$buildDir/executables")
+    workingDir exedir
+    commandLine '/usr/bin/makensis', 
+        '-XOutFile ' + exedir + '/JPO-Installer-0.13.exe', 
+        projectDir.absolutePath + '/Windowsbuilder/jpoinstaller.nsi'
+}
+
 
 task run(type: JavaExec) {
     group 'build'
@@ -239,9 +255,50 @@ task uploadWebStartFiles() {
     }
 }
 
+task uploadJavadoc() {
+    group 'website'
+    description 'Publishes the JPO website pages'
+    dependsOn javadoc
+    doLast  {
+        ant.scp(
+            todir: 'richieigenmann,j-po@web.sourceforge.net:/home/groups/j/j-/j-po/htdocs/',
+            keyfile: '${user.home}/.ssh/id_rsa',
+            passphrase: '',
+            trust: 'yes',
+            verbose: 'yes',
+            sftp: 'true', {
+                fileset(dir: 'build/docs/') {
+                    modified()
+                }
+            }
+        )
+    }
+}
+
+task uploadWindowsInstaller() {
+    group 'website'
+    description 'Publishes the JPO Windows Installer files'
+    dependsOn buildWindowsInstaller
+    doLast  {
+        ant.scp(
+            todir: 'richieigenmann,j-po@web.sourceforge.net:/home/frs/project/j-po/',
+            keyfile: '${user.home}/.ssh/id_rsa',
+            passphrase: '',
+            trust: 'yes',
+            verbose: 'yes',
+            sftp: 'true', {
+                fileset(dir: 'build/executables') {
+                    modified()
+                    include(name: 'JPO-Installer-' + jpoVersion + '.exe' )
+                }
+            }
+        )
+    }
+}
+
 
 task uploadWebsite() {
     group 'website'
     description 'Publishes the JPO website'
-    dependsOn uploadWebStartFiles, uploadWebsitePages
+    dependsOn uploadWebStartFiles, uploadWebsitePages, uploadJavadoc, uploadWindowsInstaller
 }
