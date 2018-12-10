@@ -104,11 +104,11 @@ public class PictureInfoEditor extends JFrame {
     /**
      * The description of the picture
      */
-    private JTextArea descriptionJTextArea = new JTextArea();
+    private final JTextArea descriptionJTextArea = new JTextArea();
     /**
      * The location of the image file
      */
-    private JTextField creationTimeJTextField = new JTextField();
+    private final JTextField creationTimeJTextField = new JTextField();
     /**
      * This label will hold the parsed date of what was in the creation time.
      */
@@ -116,7 +116,7 @@ public class PictureInfoEditor extends JFrame {
     /**
      * The location of the image file
      */
-    private JTextField highresLocationJTextField = new JTextField();
+    private final JTextField highresLocationJTextField = new JTextField();
     /**
      * An informative message about what sort of error we have if any on the
      * highres image
@@ -127,7 +127,7 @@ public class PictureInfoEditor extends JFrame {
      * Label to display the checksum of the image file. Gets updated so it's
      * here.
      */
-    private JLabel checksumJLabel = new JLabel();
+    private final JLabel checksumJLabel = new JLabel();
     /**
      * The location of the lowres image file
      */
@@ -135,7 +135,7 @@ public class PictureInfoEditor extends JFrame {
     /**
      * The location of the image file
      */
-    private JTextField filmReferenceJTextField = new JTextField();
+    private final JTextField filmReferenceJTextField = new JTextField();
     /**
      * The latitude of the image
      */
@@ -147,15 +147,15 @@ public class PictureInfoEditor extends JFrame {
     /**
      * The comment field
      */
-    private JTextField commentJTextField = new JTextField();
+    private final JTextField commentJTextField = new JTextField();
     /**
      * The photographer field
      */
-    private JTextField photographerJTextField = new JTextField();
+    private final JTextField photographerJTextField = new JTextField();
     /**
      * The copyright field
      */
-    private JTextField copyrightHolderJTextField = new JTextField();
+    private final JTextField copyrightHolderJTextField = new JTextField();
     /**
      * Shows the Exif size
      */
@@ -183,11 +183,11 @@ public class PictureInfoEditor extends JFrame {
     /**
      * the node being edited
      */
-    private SortableDefaultMutableTreeNode myNode;
+    private final SortableDefaultMutableTreeNode myNode;
     /**
      * the PictureInfo object being displayed
      */
-    private PictureInfo pictureInfo;
+    private final PictureInfo pictureInfo;
     /**
      * Font used to show the error label
      */

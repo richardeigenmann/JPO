@@ -75,7 +75,7 @@ public class Emailer
     /**
      * Label to show what is being processed.
      */
-    private JLabel progressLabel;
+    private final JLabel progressLabel;
 
     /**
      * Progress Indicator.

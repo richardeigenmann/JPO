@@ -178,13 +178,11 @@ public class DirectoryChooser
      * @return returns true if the directory passes the validation, false if it
      * doesn't
      */
-    private boolean setColor() {
+    private void setColor() {
         if ( checkDirectory( getDirectory(), validationType ) ) {
             directoryJTextField.setForeground( COLOR_GOOD );
-            return true;
         } else {
             directoryJTextField.setForeground( COLOR_BAD );
-            return false;
         }
     }
     

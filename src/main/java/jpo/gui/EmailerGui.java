@@ -138,12 +138,12 @@ public class EmailerGui extends JFrame {
     /**
      * tickbox that indicates whether to send the originals
      */
-    private JCheckBox sendOriginalsJCheckBox = new JCheckBox( Settings.jpoResources.getString( "emailOriginals" ) );
+    private final JCheckBox sendOriginalsJCheckBox = new JCheckBox( Settings.jpoResources.getString( "emailOriginals" ) );
 
     /**
      * The Jscrollpane to show the images panel
      */
-    private JScrollPane imagesJScrollPane = new JScrollPane( imagesJPanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS );
+    private final JScrollPane imagesJScrollPane = new JScrollPane( imagesJPanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS );
 
     private void initComponents() {
         setTitle( Settings.jpoResources.getString( "EmailerJFrame" ) );
@@ -358,7 +358,7 @@ public class EmailerGui extends JFrame {
         ListNavigator listNavigator = new ListNavigator();
 
         for ( int i = 0; i < emailSelected.size(); i++ ) {
-            listNavigator.addNode( emailSelected.get( i ) );
+            listNavigator.add( emailSelected.get( i ) );
             ThumbnailController thumbnailController = new ThumbnailController(new Thumbnail(), thumbnailSize );
             thumbnailController.setNode( listNavigator, i );
             thumbnailController.setDecorateThumbnails( false );

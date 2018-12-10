@@ -66,7 +66,7 @@ public class PictureController extends JComponent {
      * component. The coordinates are in x,y in the coordinate space of the
      * picture.
      */
-    public Point focusPoint = new Point();
+    public final Point focusPoint = new Point();
 
     private final PictureControllerImage pictureControllerImage;
 

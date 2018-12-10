@@ -60,7 +60,7 @@ public class CameraDownloadWorker
 
     private final JProgressBar progressBar;
 
-    private CameraDownloadWizardStep7 step7;
+    private final CameraDownloadWizardStep7 step7;
 
     @Override
     protected String doInBackground() throws Exception {

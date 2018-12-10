@@ -44,31 +44,31 @@ public class ThumbnailPanelTitle
     /**
      *  a button to navigate back to the first page
      **/
-    public JButton firstThumbnailsPageButton =
+    public final JButton firstThumbnailsPageButton =
             new JButton( new ImageIcon( ThumbnailPanelTitle.class.getClassLoader().getResource( "jpo/images/icon_first.gif" ) ) );
 
     /**
      *  a button to navigate to the next page
      **/
-    public JButton nextThumbnailsPageButton =
+    public final JButton nextThumbnailsPageButton =
             new JButton( new ImageIcon( ThumbnailPanelTitle.class.getClassLoader().getResource( "jpo/images/Forward24.gif" ) ) );
 
     /**
      *  a button to navigate to the last page
      **/
-    public JButton lastThumbnailsPageButton =
+    public final JButton lastThumbnailsPageButton =
             new JButton( new ImageIcon( ThumbnailPanelTitle.class.getClassLoader().getResource( "jpo/images/icon_last.gif" ) ) );
 
     /**
      *  a button to navigate to the first page
      **/
-    public JButton previousThumbnailsPageButton =
+    public final JButton previousThumbnailsPageButton =
             new JButton( new ImageIcon( ThumbnailPanelTitle.class.getClassLoader().getResource( "jpo/images/Back24.gif" ) ) );
 
     /**
      * JLabel for holding the thumbnail counts
      * */
-    public JLabel lblPage = new JLabel();
+    public final JLabel lblPage = new JLabel();
 
     /**
      *  the JLabel that holds the description of what is being shown in the TubnmailPanel
@@ -93,7 +93,7 @@ public class ThumbnailPanelTitle
     /**
      *   Slider to control the size of the thumbnails
      */
-    public JSlider resizeJSlider = new JSlider( JSlider.HORIZONTAL,
+    public final JSlider resizeJSlider = new JSlider( JSlider.HORIZONTAL,
             THUMBNAILSIZE_MIN, THUMBNAILSIZE_MAX, THUMBNAILSIZE_INIT );
 
 

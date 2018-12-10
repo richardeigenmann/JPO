@@ -90,7 +90,7 @@ public class ExifInfo {
     /**
      * The parsed GPS coordinates
      */
-    Point2D.Double latLng = new Point2D.Double( 0, 0 );
+    final Point2D.Double latLng = new Point2D.Double( 0, 0 );
     /**
      * The parsed width
      */

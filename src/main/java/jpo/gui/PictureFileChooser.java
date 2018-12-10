@@ -124,7 +124,7 @@ public class PictureFileChooser
      * Checkbox that allows the user to specify that pictures already in the
      * collection should be ignored.
      */
-    private JCheckBox showThumbnailJCheckBox = new JCheckBox( Settings.jpoResources.getString( "showThumbnailJCheckBox" ) );
+    private final JCheckBox showThumbnailJCheckBox = new JCheckBox( Settings.jpoResources.getString( "showThumbnailJCheckBox" ) );
 
     /**
      * preferred size of accessory panel
@@ -154,7 +154,7 @@ public class PictureFileChooser
      * This component shows the thumbnail. It is a JLabel as we can thus use the
      * ImageIcon to display the picture.
      */
-    private JLabel thumbnailJLabel = new JLabel();
+    private final JLabel thumbnailJLabel = new JLabel();
 
     /**
      * Allow the user to choose categories

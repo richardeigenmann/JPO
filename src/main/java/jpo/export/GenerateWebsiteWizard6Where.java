@@ -107,7 +107,7 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
      * The ftp Server
      *
      */
-    private JTextField ftpServer = new JTextField();
+    private final JTextField ftpServer = new JTextField();
     /**
      * The FTP port
      */
@@ -116,27 +116,27 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
      * The ftp user
      *
      */
-    private JTextField ftpUser = new JTextField();
+    private final JTextField ftpUser = new JTextField();
     /**
      * The ftp password
      *
      */
-    private JTextField ftpPassword = new JTextField();
+    private final JTextField ftpPassword = new JTextField();
     /**
      * The ftp target dir
      *
      */
-    private JTextField ftpTargetDir = new JTextField();
+    private final JTextField ftpTargetDir = new JTextField();
     /**
      * The ftp error message
      *
      */
-    private JMultilineLabel ftpError = new JMultilineLabel();
+    private final JMultilineLabel ftpError = new JMultilineLabel();
     /**
      * The ssh Server
      *
      */
-    private JTextField sshServer = new JTextField();
+    private final JTextField sshServer = new JTextField();
     /**
      * ssh Port
      */
@@ -145,7 +145,7 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
      * The ssh user
      *
      */
-    private JTextField sshUser = new JTextField();
+    private final JTextField sshUser = new JTextField();
     /**
      * SSH Authentication Options
      */
@@ -158,22 +158,22 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
      * The ssh password
      *
      */
-    private JTextField sshPassword = new JTextField();
+    private final JTextField sshPassword = new JTextField();
     /**
      * The ssh key file
      *
      */
-    private JTextField sshKeyFile = new JTextField();
+    private final JTextField sshKeyFile = new JTextField();
     /**
      * The ssh target dir
      *
      */
-    private JTextField sshTargetDir = new JTextField();
+    private final JTextField sshTargetDir = new JTextField();
     /**
      * The ssh error message
      *
      */
-    private JMultilineLabel sshError = new JMultilineLabel();
+    private final JMultilineLabel sshError = new JMultilineLabel();
 
     /**
      * Creates the GUI widgets

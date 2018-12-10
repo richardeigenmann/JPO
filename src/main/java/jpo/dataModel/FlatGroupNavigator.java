@@ -55,8 +55,8 @@ public class FlatGroupNavigator
      * Builds the list of nodes from the group.
      */
     private void buildFromScratch() {
-        allPictures.clear();
-        allPictures = groupNode.getChildPictureNodes( true );
+        clear();
+        add(groupNode.getChildPictureNodes( true ));
     }
 
     /**
@@ -121,7 +121,7 @@ public class FlatGroupNavigator
                 LOGGER.fine( String.format( "Deleted child[%d] has path: %s", i, removedChild.toString() ) );
                 if ( removedChild.isDescendant( currentNodeTreePath ) ) {
                     LOGGER.info( String.format( "Oh dear, our group has just disappeared." ) );
-                    allPictures.clear();
+                    clear();
                     notifyNodeNavigatorListeners();
                     return; // no point in continuing the loop; the group is gone.
                 }

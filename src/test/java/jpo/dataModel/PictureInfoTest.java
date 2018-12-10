@@ -247,7 +247,7 @@ public class PictureInfoTest {
     /**
      * A dumb PictureInfoChangeListener that only counts the events received
      */
-    private PictureInfoChangeListener pictureInfoChangeListener = new PictureInfoChangeListener() {
+    private final PictureInfoChangeListener pictureInfoChangeListener = new PictureInfoChangeListener() {
 
         @Override
         public void pictureInfoChangeEvent( PictureInfoChangeEvent pice ) {

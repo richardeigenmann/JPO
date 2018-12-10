@@ -60,14 +60,14 @@ public class CamerasEditor        extends JFrame {
     /**
      * The root node of the JTree of cameras
      */
-    private DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode( "Cameras" );
+    private final DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode( "Cameras" );
 
     /**
      * The default tree model with a special handler to save default editor changes
      * into the userObjects instead of replacing the user objects with a String.
      * @see <a href="http://www.informit.com/articles/article.aspx?p=26327&seqNum=25">InformIT article</a>
      */
-    private DefaultTreeModel treeModel = new DefaultTreeModel( rootNode ) {
+    private final DefaultTreeModel treeModel = new DefaultTreeModel( rootNode ) {
 
         @Override
         public void valueForPathChanged( TreePath path, Object newValue ) {
@@ -92,7 +92,7 @@ public class CamerasEditor        extends JFrame {
     /**
      *  This component handles all the editing of the camera information.
      */
-    private CameraEditor singleCameraEditor = new CameraEditor();
+    private final CameraEditor singleCameraEditor = new CameraEditor();
 
 
     /**

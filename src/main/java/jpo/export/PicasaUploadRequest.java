@@ -116,7 +116,7 @@ public class PicasaUploadRequest {
     /** 
      * The Picasa Web Service
      */
-    public PicasawebService picasaWebService = new PicasawebService ( "org.richinet.dyndns-jpo-1" );
+    public final PicasawebService picasaWebService = new PicasawebService ( "org.richinet.dyndns-jpo-1" );
     
     /**
      * The URL of the album

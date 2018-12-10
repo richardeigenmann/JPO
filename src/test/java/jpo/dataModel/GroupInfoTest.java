@@ -79,7 +79,7 @@ public class GroupInfoTest {
     /**
      * A dumb PictureInfoChangeListener that only counts the events received
      */
-    private GroupInfoChangeListener groupInfoChangeListener = new GroupInfoChangeListener() {
+    private final GroupInfoChangeListener groupInfoChangeListener = new GroupInfoChangeListener() {
 
         @Override
         public void groupInfoChangeEvent( GroupInfoChangeEvent pice ) {

@@ -85,17 +85,17 @@ public class GenerateWebsiteWizard5Options extends AbstractStep {
      * Radio Button to indicate that the java hash code should be used to get
      * the image name
      */
-    private JRadioButton hashcodeRadioButton = new JRadioButton( Settings.jpoResources.getString( "hashcodeRadioButton" ) );
+    private final JRadioButton hashcodeRadioButton = new JRadioButton( Settings.jpoResources.getString( "hashcodeRadioButton" ) );
     /**
      * Radio Button to indicate that the original name should be used to get the
      * image name
      */
-    private JRadioButton originalNameRadioButton = new JRadioButton( Settings.jpoResources.getString( "originalNameRadioButton" ) );
+    private final JRadioButton originalNameRadioButton = new JRadioButton( Settings.jpoResources.getString( "originalNameRadioButton" ) );
     /**
      * Radio Button to indicate that a sequential number should be used to get
      * the image name
      */
-    private JRadioButton sequentialRadioButton = new JRadioButton( Settings.jpoResources.getString( "sequentialRadioButton" ) );
+    private final JRadioButton sequentialRadioButton = new JRadioButton( Settings.jpoResources.getString( "sequentialRadioButton" ) );
     /**
      * Allow the user to specify a start number for the sequential numbering,
      * 1..999999999, start 1, increment 1 Requested by Jay Christopherson, Nov
@@ -106,7 +106,7 @@ public class GenerateWebsiteWizard5Options extends AbstractStep {
      * Tickbox that indicates whether to write a robots.txt
      *
      */
-    private JCheckBox generateRobotsJCheckBox = new JCheckBox( Settings.jpoResources.getString( "generateRobotsJCheckBox" ) );
+    private final JCheckBox generateRobotsJCheckBox = new JCheckBox( Settings.jpoResources.getString( "generateRobotsJCheckBox" ) );
 
     /**
      * Creates the GUI widgets

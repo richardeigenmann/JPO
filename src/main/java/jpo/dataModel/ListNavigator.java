@@ -7,7 +7,7 @@ import java.util.logging.Logger;
 /*
  ListNavigator.java:  an implementation of the NodeNavigator for browsing pictures.
 
- Copyright (C) 2006-2017 Richard Eigenmann, Zürich, Switzerland
+ Copyright (C) 2006-2018 Richard Eigenmann, Zürich, Switzerland
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -21,6 +21,7 @@ import java.util.logging.Logger;
  The license is in gpl.txt.
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
+
 /**
  * This class implements the NodeNavigator Interface so that all the pictures of
  * a specified List can be browsed sequentially.
@@ -29,36 +30,9 @@ public class ListNavigator
         extends NodeNavigator {
 
     /**
-     * Optional Constructor for a ListNavigator.
-     *
-     * @param title Title
-     * @param nodes Nodes
-     */
-    private ListNavigator(String title,
-                          List<SortableDefaultMutableTreeNode> nodes) {
-        this.title = title;
-        //setTitle( title );
-        allPictures = nodes;
-        //setList( nodes );
-    }
-
-    /**
-     * Optional Constructor for a ListNavigator.
-     */
-    public ListNavigator() {
-        this("", new ArrayList<>());
-        //setTitle( "" );
-        //setList( new ArrayList<>() );
-    }
-    /**
      * Logger for this class
      */
-    private static final Logger LOGGER = Logger.getLogger( ListNavigator.class.getName() );
-    
-    /**
-     * title for this List of images.
-     */
-    private String title;
+    private static final Logger LOGGER = Logger.getLogger(ListNavigator.class.getName());
 
 
     /**
@@ -68,11 +42,7 @@ public class ListNavigator
      */
     @Override
     public String getTitle() {
-        try {
-            return title;
-        } catch ( NullPointerException ex ) {
-            return "";
-        }
+        return "";
     }
 
     /**
@@ -85,8 +55,8 @@ public class ListNavigator
     public int getNumberOfNodes() {
         try {
             return allPictures.size();
-        } catch ( NullPointerException ex ) {
-            LOGGER.severe( String.format( "Why did we get a NullPointerExecption for the ListNavigator %s?", getTitle() ) );
+        } catch (NullPointerException ex) {
+            LOGGER.severe(String.format("Why did we get a NullPointerExecption for the ListNavigator %s?", getTitle()));
             return 0;
         }
     }
@@ -95,21 +65,22 @@ public class ListNavigator
      * This method returns the node for the indicated position in the group.
      *
      * @param index The component index that is to be returned. The number is
-     * from 0 to {@link #getNumberOfNodes}.
+     *              from 0 to {@link #getNumberOfNodes}.
      * @return The node for the specified index.
      */
     @Override
-    public SortableDefaultMutableTreeNode getNode( int index ) {
+    public SortableDefaultMutableTreeNode getNode(int index) {
         try {
-            return allPictures.get( index );
-        } catch ( IndexOutOfBoundsException x ) {
+            return allPictures.get(index);
+        } catch (IndexOutOfBoundsException x) {
             return null;
         }
     }
+
     /**
      * This List holds a reference to the nodes that make up the navigator
      */
-    List<SortableDefaultMutableTreeNode> allPictures;
+    private List<SortableDefaultMutableTreeNode> allPictures = new ArrayList<>();
 
 
     /**
@@ -117,8 +88,17 @@ public class ListNavigator
      *
      * @param addNode a node to add to the allPictures List
      */
-    public void addNode( SortableDefaultMutableTreeNode addNode ) {
-        allPictures.add( addNode );
+    public void add(SortableDefaultMutableTreeNode addNode) {
+        allPictures.add(addNode);
+    }
+
+    /**
+     * adds a node to the List
+     *
+     * @param nodes a node to add to the allPictures List
+     */
+    public void add(List<SortableDefaultMutableTreeNode> nodes) {
+        allPictures.addAll(nodes);
     }
 
     /**
@@ -126,10 +106,17 @@ public class ListNavigator
      *
      * @param removeNode a node to add to the allPictures List
      */
-    public void removeNode( SortableDefaultMutableTreeNode removeNode ) {
-        allPictures.remove( removeNode );
+    public void removeNode(SortableDefaultMutableTreeNode removeNode) {
+        allPictures.remove(removeNode);
     }
 
+    /**
+     * Celars all nodes from the List
+     *
+     */
+    public void clear() {
+        allPictures.clear();
+    }
     /**
      * Returns a description of the navigator
      *
@@ -137,7 +124,7 @@ public class ListNavigator
      */
     @Override
     public String toString() {
-        return String.format( "ListNavigator %d Title: %s  with %d nodes",
-                hashCode(), getTitle(), getNumberOfNodes() );
+        return String.format("ListNavigator %d Title: %s  with %d nodes",
+                hashCode(), getTitle(), getNumberOfNodes());
     }
 }
