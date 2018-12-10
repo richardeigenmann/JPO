@@ -4,10 +4,11 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import jpo.export.HtmlDistiller;
+import jpo.export.WebsiteGenerator;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.fail;
+
 import org.junit.Test;
 
 /*
@@ -29,27 +30,27 @@ import org.junit.Test;
  *
  * @author Richard Eigenmann
  */
-public class HtmlDistillerTest {
+public class WebsiteGeneratorTest {
 
     /**
-     * Test of cleanupFilename method, of class HtmlDistiller.
+     * Test of cleanupFilename method, of class WebsiteGenerator.
      */
     @Test
     public void testCleanupFilename() {
         String filename = "directory\\file.xml";  // actually contains directoy\file.xml
         String wanted = "directory_file.xml";  // actually contains directoy\file.xml
-        String got = HtmlDistiller.cleanupFilename( filename );
+        String got = WebsiteGenerator.cleanupFilename( filename );
         assertEquals( "A backslash could be made into an underscore", wanted, got );
     }
 
     /**
-     * Test of writeCss method, of class HtmlDistiller.
+     * Test of writeCss method, of class WebsiteGenerator.
      */
     @Test
     public void testWriteCss() {
         try {
             Path path = Files.createTempDirectory( "UnitTestsTempDir" );
-            HtmlDistiller.writeCss( path.toFile() );
+            WebsiteGenerator.writeCss( path.toFile() );
             File cssFile = new File( path.toFile(), "jpo.css" );
             assertTrue( "jpo.css was supposed to exists in directory " + path.toString(), cssFile.exists() );
             assertTrue( "The jpo.css file could not be deleted", cssFile.delete() );
@@ -60,13 +61,13 @@ public class HtmlDistillerTest {
     }
 
     /**
-     * Test of writeRobotsTxt method, of class HtmlDistiller.
+     * Test of writeRobotsTxt method, of class WebsiteGenerator.
      */
     @Test
     public void testWriteRobotsTxt() {
         try {
             Path path = Files.createTempDirectory( "UnitTestsTempDir" );
-            HtmlDistiller.writeRobotsTxt( path.toFile() );
+            WebsiteGenerator.writeRobotsTxt( path.toFile() );
             File cssFile = new File( path.toFile(), "robots.txt" );
             assertTrue( "robots.txt was supposed to exists in directory " + path.toString(), cssFile.exists() );
             assertTrue( "The robots.txt file could not be deleted", cssFile.delete() );
@@ -77,13 +78,13 @@ public class HtmlDistillerTest {
     }
 
     /**
-     * Test of writeJpoJs method, of class HtmlDistiller.
+     * Test of writeJpoJs method, of class WebsiteGenerator.
      */
     @Test
     public void testWriteJpoJs() {
         try {
             Path path = Files.createTempDirectory( "UnitTestsTempDir" );
-            HtmlDistiller.writeJpoJs( path.toFile() );
+            WebsiteGenerator.writeJpoJs( path.toFile() );
             File cssFile = new File( path.toFile(), "jpo.js" );
             assertTrue( "jpo.js was supposed to exists in directory " + path.toString(), cssFile.exists() );
             assertTrue( "The jpo.js file could not be deleted", cssFile.delete() );

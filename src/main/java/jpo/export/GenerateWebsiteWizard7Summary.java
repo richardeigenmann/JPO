@@ -4,6 +4,8 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+
+import jpo.EventBus.GenerateWebsiteRequest;
 import jpo.dataModel.Settings;
 import net.javaprog.ui.wizard.AbstractStep;
 import net.miginfocom.swing.MigLayout;
@@ -35,14 +37,14 @@ public class GenerateWebsiteWizard7Summary extends AbstractStep {
     /**
      * The link to the values that this panel should change
      */
-    private final HtmlDistillerOptions options;
+    private final GenerateWebsiteRequest options;
 
     /**
      * This Wizard step summarises the settings and then goes off and does them
      *
      * @param options Options
      */
-    public GenerateWebsiteWizard7Summary( HtmlDistillerOptions options ) {
+    public GenerateWebsiteWizard7Summary( GenerateWebsiteRequest options ) {
         super( Settings.jpoResources.getString( "summary" ), Settings.jpoResources.getString( "summary" ) );
         this.options = options;
     }

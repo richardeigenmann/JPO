@@ -2,6 +2,10 @@ package jpo.export;
 
 import java.awt.Dimension;
 import javax.swing.SwingUtilities;
+
+import jpo.EventBus.GenerateWebsiteRequest;
+import jpo.EventBus.JpoEventBus;
+import jpo.EventBus.RecentDropNodesChangedEvent;
 import jpo.dataModel.Settings;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
 import net.javaprog.ui.wizard.DefaultWizardModel;
@@ -43,7 +47,7 @@ public class GenerateWebsiteWizard {
      * Options. Since we are creating a new DefaultOptions Object the
      * instantiated class will pull in the defaults from the Settings object.
      */
-    private final HtmlDistillerOptions options = new HtmlDistillerDefaultOptions();
+    private final GenerateWebsiteRequest options = new GenerateWebsiteRequestDefaultOptions();
     /**
      * Defines the maximum size for horizontally combined objects on a step
      * panel
@@ -81,8 +85,7 @@ public class GenerateWebsiteWizard {
             @Override
             public void wizardFinished( WizardModelEvent arg0 ) {
                 options.saveToSettings();
-                HtmlDistiller h = new HtmlDistiller( options );
-                SwingUtilities.invokeLater( h );
+                JpoEventBus.getInstance().post(options);
             }
 
             @Override

@@ -13,7 +13,6 @@ import java.awt.event.FocusEvent;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.SocketException;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -28,10 +27,12 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
+
+import jpo.EventBus.GenerateWebsiteRequest;
 import jpo.dataModel.Settings;
-import static jpo.export.HtmlDistillerOptions.OutputTarget.OUTPUT_FTP_LOCATION;
-import static jpo.export.HtmlDistillerOptions.OutputTarget.OUTPUT_LOCAL_DIRECTORY;
-import static jpo.export.HtmlDistillerOptions.OutputTarget.OUTPUT_SSH_LOCATION;
+import static jpo.EventBus.GenerateWebsiteRequest.OutputTarget.OUTPUT_FTP_LOCATION;
+import static jpo.EventBus.GenerateWebsiteRequest.OutputTarget.OUTPUT_LOCAL_DIRECTORY;
+import static jpo.EventBus.GenerateWebsiteRequest.OutputTarget.OUTPUT_SSH_LOCATION;
 import jpo.gui.DirectoryChooser;
 import net.javaprog.ui.wizard.AbstractStep;
 import net.miginfocom.swing.MigLayout;
@@ -68,14 +69,14 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
     /**
      * The link to the values that this panel should change
      */
-    private final HtmlDistillerOptions options;
+    private final GenerateWebsiteRequest options;
 
     /**
      * This Wizard prompts for the options regarding Highres
      *
      * @param options The data object with all the settings
      */
-    public GenerateWebsiteWizard6Where( HtmlDistillerOptions options ) {
+    public GenerateWebsiteWizard6Where( GenerateWebsiteRequest options ) {
         super( Settings.jpoResources.getString( "HtmlDistTarget" ), Settings.jpoResources.getString( "HtmlDistTarget" ) );
         this.options = options;
 
@@ -336,14 +337,14 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
                     sshPassword.setVisible( false );
                     sshKeyfileLabel.setVisible( true );
                     sshKeyFile.setVisible( true );
-                    GenerateWebsiteWizard6Where.this.options.setSshAuthType( HtmlDistillerOptions.SshAuthType.SSH_AUTH_KEYFILE );
+                    GenerateWebsiteWizard6Where.this.options.setSshAuthType( GenerateWebsiteRequest.SshAuthType.SSH_AUTH_KEYFILE );
                     break;
                 default: // case 0:
                     sshPasswordLabel.setVisible( true );
                     sshPassword.setVisible( true );
                     sshKeyfileLabel.setVisible( false );
                     sshKeyFile.setVisible( false );
-                    GenerateWebsiteWizard6Where.this.options.setSshAuthType( HtmlDistillerOptions.SshAuthType.SSH_AUTH_PASSWORD );
+                    GenerateWebsiteWizard6Where.this.options.setSshAuthType( GenerateWebsiteRequest.SshAuthType.SSH_AUTH_PASSWORD );
                     break;
             }
         });
@@ -428,7 +429,7 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
      * Loads the data from the options into the GUI widgets
      * @param options options
      */
-    private void setWidgets( HtmlDistillerOptions options ) {
+    private void setWidgets( GenerateWebsiteRequest options ) {
         // load the options into the GUI components
         switch ( options.getOutputTarget() ) {
             case OUTPUT_FTP_LOCATION:
@@ -532,7 +533,7 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
         try {
             LOGGER.info( String.format( "Setting up session for user: %s server: %s port: %d and connecting...", options.getSshUser(), options.getSshServer(), options.getSshPort() ) );
             Session session = jsch.getSession( options.getSshUser(), options.getSshServer(), options.getSshPort() );
-            if ( options.getSshAuthType().equals( HtmlDistillerOptions.SshAuthType.SSH_AUTH_PASSWORD ) ) {
+            if ( options.getSshAuthType().equals( GenerateWebsiteRequest.SshAuthType.SSH_AUTH_PASSWORD ) ) {
                 session.setPassword( options.getSshPassword() );
             } else {
                 jsch.addIdentity( options.getSshKeyFile() );

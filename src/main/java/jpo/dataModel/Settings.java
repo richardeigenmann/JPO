@@ -14,7 +14,7 @@ import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileSystemView;
 
 import com.google.common.collect.EvictingQueue;
-import jpo.export.HtmlDistillerOptions;
+import jpo.EventBus.GenerateWebsiteRequest;
 import jpo.gui.swing.MainWindow;
 
 /*
@@ -393,11 +393,11 @@ public class Settings {
     /**
      * Picture naming convention on HTML output
      */
-    public static HtmlDistillerOptions.PictureNamingType defaultHtmlPictureNaming = HtmlDistillerOptions.PictureNamingType.PICTURE_NAMING_BY_HASH_CODE;
+    public static GenerateWebsiteRequest.PictureNamingType defaultHtmlPictureNaming = GenerateWebsiteRequest.PictureNamingType.PICTURE_NAMING_BY_HASH_CODE;
     /**
      * OutputTarget convention for HTML output
      */
-    public static HtmlDistillerOptions.OutputTarget defaultHtmlOutputTarget = HtmlDistillerOptions.OutputTarget.OUTPUT_LOCAL_DIRECTORY;
+    public static GenerateWebsiteRequest.OutputTarget defaultHtmlOutputTarget = GenerateWebsiteRequest.OutputTarget.OUTPUT_LOCAL_DIRECTORY;
     /**
      * The default color for the background on the web page is white.
      */
@@ -453,7 +453,7 @@ public class Settings {
     /**
      * OutputTarget convention for HTML output
      */
-    public static HtmlDistillerOptions.SshAuthType defaultHtmlSshAuthType = HtmlDistillerOptions.SshAuthType.SSH_AUTH_PASSWORD;
+    public static GenerateWebsiteRequest.SshAuthType defaultHtmlSshAuthType = GenerateWebsiteRequest.SshAuthType.SSH_AUTH_PASSWORD;
     /**
      * The default ssh password for Html export
      */
@@ -728,11 +728,11 @@ public class Settings {
         defaultHtmlThumbnailHeight = prefs.getInt("defaultHtmlThumbnailHeight", defaultHtmlThumbnailHeight);
         defaultGenerateMidresHtml = prefs.getBoolean("defaultGenerateMidresHtml", defaultGenerateMidresHtml);
         String defaultHtmlPictureNamingString = prefs.get("defaultHtmlPictureNamingString", defaultHtmlPictureNaming.name());
-        defaultHtmlPictureNaming = HtmlDistillerOptions.PictureNamingType.valueOf(defaultHtmlPictureNamingString);
+        defaultHtmlPictureNaming = GenerateWebsiteRequest.PictureNamingType.valueOf(defaultHtmlPictureNamingString);
         String defaultHtmlOutputTargetString = prefs.get("defaultHtmlOutputTarget", defaultHtmlOutputTarget.name());
-        defaultHtmlOutputTarget = HtmlDistillerOptions.OutputTarget.valueOf(defaultHtmlOutputTargetString);
+        defaultHtmlOutputTarget = GenerateWebsiteRequest.OutputTarget.valueOf(defaultHtmlOutputTargetString);
         String defaultHtmlSshAuthTypeString = prefs.get("defaultHtmlSshAuthType", defaultHtmlSshAuthType.name());
-        defaultHtmlSshAuthType = HtmlDistillerOptions.SshAuthType.valueOf(defaultHtmlSshAuthTypeString);
+        defaultHtmlSshAuthType = GenerateWebsiteRequest.SshAuthType.valueOf(defaultHtmlSshAuthTypeString);
 
         defaultGenerateMap = prefs.getBoolean("defaultGenerateMap", defaultGenerateMap);
         defaultGenerateDHTML = prefs.getBoolean("defaultGenerateDHTML", defaultGenerateDHTML);

@@ -4,6 +4,8 @@ import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.event.ChangeEvent;
+
+import jpo.EventBus.GenerateWebsiteRequest;
 import jpo.dataModel.Settings;
 import net.javaprog.ui.wizard.AbstractStep;
 import net.miginfocom.swing.MigLayout;
@@ -36,14 +38,14 @@ public class GenerateWebsiteWizard4Highres extends AbstractStep {
     /**
      * The link to the values that this panel should change
      */
-    private final HtmlDistillerOptions options;
+    private final GenerateWebsiteRequest options;
 
     /**
      * This Wizard prompts for the options regarding Highres
      *
      * @param options The data object with all the settings
      */
-    public GenerateWebsiteWizard4Highres( HtmlDistillerOptions options ) {
+    public GenerateWebsiteWizard4Highres( GenerateWebsiteRequest options ) {
         super( Settings.jpoResources.getString( "HtmlDistHighres" ), Settings.jpoResources.getString( "HtmlDistHighres" ) );
         this.options = options;
 

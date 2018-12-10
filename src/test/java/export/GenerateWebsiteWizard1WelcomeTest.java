@@ -2,8 +2,10 @@ package export;
 
 import java.lang.reflect.InvocationTargetException;
 import javax.swing.SwingUtilities;
+
+import jpo.EventBus.GenerateWebsiteRequest;
 import jpo.export.GenerateWebsiteWizard1Welcome;
-import jpo.export.HtmlDistillerOptions;
+
 import static junit.framework.TestCase.fail;
 import org.junit.Assert;
 import org.junit.Test;
@@ -23,8 +25,8 @@ public class GenerateWebsiteWizard1WelcomeTest {
     public void testGenerateWebsiteWizard1WelcomeTestConstrutor() {
         try {
             SwingUtilities.invokeAndWait( () -> {
-                HtmlDistillerOptions htmlDistillerOptions = new HtmlDistillerOptions();
-                GenerateWebsiteWizard1Welcome generateWebsiteWizard1Welcome = new GenerateWebsiteWizard1Welcome(htmlDistillerOptions );
+                GenerateWebsiteRequest generateWebsiteRequest = new GenerateWebsiteRequest();
+                GenerateWebsiteWizard1Welcome generateWebsiteWizard1Welcome = new GenerateWebsiteWizard1Welcome(generateWebsiteRequest);
                 Assert.assertNotNull(generateWebsiteWizard1Welcome);
             } );
         } catch ( InterruptedException | InvocationTargetException ex ) {

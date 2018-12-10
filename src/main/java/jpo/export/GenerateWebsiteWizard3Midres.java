@@ -1,5 +1,6 @@
 package jpo.export;
 
+import jpo.EventBus.GenerateWebsiteRequest;
 import jpo.dataModel.Settings;
 import net.javaprog.ui.wizard.AbstractStep;
 import net.miginfocom.swing.MigLayout;
@@ -36,14 +37,14 @@ public class GenerateWebsiteWizard3Midres extends AbstractStep {
     /**
      * The link to the values that this panel should change
      */
-    private final HtmlDistillerOptions options;
+    private final GenerateWebsiteRequest options;
 
     /**
      * This step asks for all the midres stuff for the webpage generation
      *
      * @param options The link to the options object with all the settings
      */
-    public GenerateWebsiteWizard3Midres( HtmlDistillerOptions options ) {
+    public GenerateWebsiteWizard3Midres( GenerateWebsiteRequest options ) {
         super( Settings.jpoResources.getString( "HtmlDistMidres" ), Settings.jpoResources.getString( "HtmlDistMidres" ) );
         this.options = options;
 

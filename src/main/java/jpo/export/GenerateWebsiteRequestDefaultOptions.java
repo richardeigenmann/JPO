@@ -1,10 +1,12 @@
 package jpo.export;
 
 import java.io.File;
+
+import jpo.EventBus.GenerateWebsiteRequest;
 import jpo.dataModel.Settings;
 
 /*
- HtmlDistillerDefaultOptions.java:  Extends an HtmlDistillerOptions class and 
+ GenerateWebsiteRequestDefaultOptions.java:  Extends an GenerateWebsiteRequest class and
  pre-populates the options with default values.
 
  Copyright (C) 2008-2012  Richard Eigenmann, Zürich
@@ -22,18 +24,18 @@ import jpo.dataModel.Settings;
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 /**
- * Extends an HtmlDistillerOptions class and pre-populates the options with
+ * Extends an GenerateWebsiteRequest class and pre-populates the options with
  * default values.
  *
  * @author Richard Eigenmann
  */
-public class HtmlDistillerDefaultOptions extends HtmlDistillerOptions {
+public class GenerateWebsiteRequestDefaultOptions extends GenerateWebsiteRequest {
 
     /**
-     * Constructor that creates a HtmlDistillerOptions object and sets default
+     * Constructor that creates a GenerateWebsiteRequest object and sets default
      * values.
      */
-    public HtmlDistillerDefaultOptions() {
+    public GenerateWebsiteRequestDefaultOptions() {
         super();
         setFolderIconRequired( false );
         setDownloadZipFileName( "download.zip" );

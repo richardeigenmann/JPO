@@ -1,5 +1,6 @@
-package jpo.export;
+package jpo.EventBus;
 
+import jpo.EventBus.Request;
 import jpo.dataModel.Settings;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
 
@@ -23,11 +24,11 @@ import java.io.File;
  */
 
 /**
- * This object holds the details of how the HtmlDistiller is supposed to
+ * This object holds the details of how the WebsiteGenerator is supposed to
  * generate the output pages. It simplifies the interaction between the GUI and
  * the worker thread significantly.
  */
-public class HtmlDistillerOptions {
+public class GenerateWebsiteRequest implements Request {
 
     /**
      * The directory into which the web page will be generated.
@@ -46,7 +47,7 @@ public class HtmlDistillerOptions {
      * Sets the background color for the webpage
      * @param backgroundColor background color for the website
      */
-    void setBackgroundColor(Color backgroundColor) {
+    public void setBackgroundColor(Color backgroundColor) {
         this.backgroundColor = backgroundColor;
     }
 
@@ -54,7 +55,7 @@ public class HtmlDistillerOptions {
      * returns the Cellspacing
      * @return the cellspacing
      */
-    int getCellspacing() {
+    public int getCellspacing() {
         return cellspacing;
     }
 
@@ -62,7 +63,7 @@ public class HtmlDistillerOptions {
      * sets the Cellspacing
      * @param cellspacing Cellspacing in the output
      */
-    void setCellspacing(int cellspacing) {
+    public void setCellspacing(int cellspacing) {
         this.cellspacing = cellspacing;
     }
 
@@ -70,11 +71,11 @@ public class HtmlDistillerOptions {
      * Returns if we should export highres pictures
      * @return true if highres pictures are to be exported
      */
-    boolean isExportHighres() {
+    public boolean isExportHighres() {
         return exportHighres;
     }
 
-    void setExportHighres(boolean exportHighres) {
+    public void setExportHighres(boolean exportHighres) {
         this.exportHighres = exportHighres;
     }
 
@@ -82,7 +83,7 @@ public class HtmlDistillerOptions {
         return fontColor;
     }
 
-    void setFontColor(Color fontColor) {
+    public void setFontColor(Color fontColor) {
         this.fontColor = fontColor;
     }
     /**
@@ -93,38 +94,38 @@ public class HtmlDistillerOptions {
     /**
      * @return the generateMidresHtml
      */
-    boolean isGenerateMidresHtml() {
+    public boolean isGenerateMidresHtml() {
         return generateMidresHtml;
     }
 
     /**
      * @param generateMidresHtml the generateMidresHtml to set
      */
-    void setGenerateMidresHtml(boolean generateMidresHtml) {
+    public void setGenerateMidresHtml(boolean generateMidresHtml) {
         this.generateMidresHtml = generateMidresHtml;
     }
 
-    boolean isGenerateMap() {
+    public boolean isGenerateMap() {
         return generateMap;
     }
 
-    void setGenerateMap(boolean generateMap) {
+    public void setGenerateMap(boolean generateMap) {
         this.generateMap = generateMap;
     }
 
-    boolean isGenerateMouseover() {
+    public boolean isGenerateMouseover() {
         return generateMouseover;
     }
 
-    void setGenerateMouseover(boolean generateDHTML) {
+    public void setGenerateMouseover(boolean generateDHTML) {
         this.generateMouseover = generateDHTML;
     }
 
-    boolean isGenerateZipfile() {
+    public boolean isGenerateZipfile() {
         return generateZipfile;
     }
 
-    void setGenerateZipfile(boolean generateZipfile) {
+    public void setGenerateZipfile(boolean generateZipfile) {
         this.generateZipfile = generateZipfile;
     }
 
@@ -133,36 +134,36 @@ public class HtmlDistillerOptions {
      *
      * @return The directory where the web pages should be written to
      */
-    File getTargetDirectory() {
+    public File getTargetDirectory() {
         return targetDirectory;
     }
 
-    void setTargetDirectory(File htmlDirectory) {
+    public void setTargetDirectory(File htmlDirectory) {
         this.targetDirectory = htmlDirectory;
     }
 
-    boolean isLinkToHighres() {
+    public boolean isLinkToHighres() {
         return linkToHighres;
     }
 
-    void setLinkToHighres(boolean linkToHighres) {
+    public void setLinkToHighres(boolean linkToHighres) {
         this.linkToHighres = linkToHighres;
     }
 
     //------------------Lowres-------------------
-    int getThumbnailHeight() {
+    public int getThumbnailHeight() {
         return thumbnailHeight;
     }
 
-    void setThumbnailHeight(int thumbnailHeight) {
+    public void setThumbnailHeight(int thumbnailHeight) {
         this.thumbnailHeight = thumbnailHeight;
     }
 
-    int getThumbnailWidth() {
+    public int getThumbnailWidth() {
         return thumbnailWidth;
     }
 
-    void setThumbnailWidth( int thumbnailWidth ) {
+    public void setThumbnailWidth(int thumbnailWidth) {
         this.thumbnailWidth = thumbnailWidth;
     }
 
@@ -172,7 +173,7 @@ public class HtmlDistillerOptions {
      *
      * @return The desired dimensions of the Thumbnail size and width.
      */
-    Dimension getThumbnailDimension() {
+    public Dimension getThumbnailDimension() {
         return new Dimension( getThumbnailWidth(), getThumbnailHeight() );
     }
     /**
@@ -187,7 +188,7 @@ public class HtmlDistillerOptions {
      *
      * @return the number of scaling steps
      */
-    int getScalingSteps() {
+    public int getScalingSteps() {
         return scalingSteps;
     }
 
@@ -197,7 +198,7 @@ public class HtmlDistillerOptions {
      *
      * @param scalingSteps the new number of scaling Steps
      */
-    void setScalingSteps(int scalingSteps) {
+    public void setScalingSteps(int scalingSteps) {
         this.scalingSteps = scalingSteps;
     }
     /**
@@ -471,14 +472,14 @@ public class HtmlDistillerOptions {
     /**
      * @param ftpTargetDir the ftpTargetDir to set
      */
-    void setFtpTargetDir(String ftpTargetDir) {
+    public void setFtpTargetDir(String ftpTargetDir) {
         this.ftpTargetDir = ftpTargetDir;
     }
 
     /**
      * @return the sshServer
      */
-    String getSshServer() {
+    public String getSshServer() {
         return sshServer;
     }
 
@@ -524,7 +525,7 @@ public class HtmlDistillerOptions {
     /**
      * @return the sshTargetDir
      */
-    String getSshTargetDir() {
+    public String getSshTargetDir() {
         return sshTargetDir;
     }
 
@@ -662,7 +663,7 @@ public class HtmlDistillerOptions {
      *
      * @return the output target choice
      */
-    SshAuthType getSshAuthType() {
+    public SshAuthType getSshAuthType() {
         return sshAuthType;
     }
 
@@ -671,7 +672,7 @@ public class HtmlDistillerOptions {
      *
      * @param sshAuthType see the documentation of ssh
      */
-    void setSshAuthType(SshAuthType sshAuthType) {
+    public void setSshAuthType(SshAuthType sshAuthType) {
         this.sshAuthType = sshAuthType;
     }
 
@@ -688,7 +689,7 @@ public class HtmlDistillerOptions {
      *
      * @return the ftp port
      */
-    int getFtpPort() {
+    public int getFtpPort() {
         return ftpPort;
     }
 
@@ -697,7 +698,7 @@ public class HtmlDistillerOptions {
      *
      * @param ftpPort the ftp port
      */
-    void setFtpPort(int ftpPort) {
+    public void setFtpPort(int ftpPort) {
         this.ftpPort = ftpPort;
     }
     /**
@@ -710,7 +711,7 @@ public class HtmlDistillerOptions {
      *
      * @return the ssh port
      */
-    int getSshPort() {
+    public int getSshPort() {
         return sshPort;
     }
 
@@ -719,7 +720,7 @@ public class HtmlDistillerOptions {
      *
      * @param sshPort the ssh port
      */
-    void setSshPort(int sshPort) {
+    public void setSshPort(int sshPort) {
         this.sshPort = sshPort;
     }
     /**
@@ -730,14 +731,14 @@ public class HtmlDistillerOptions {
     /**
      * @return the ftpServer
      */
-    String getFtpServer() {
+    public String getFtpServer() {
         return ftpServer;
     }
 
     /**
      * @param ftpServer the server address
      */
-    void setFtpServer(String ftpServer) {
+    public void setFtpServer(String ftpServer) {
         this.ftpServer = ftpServer;
     }
     /**
@@ -748,14 +749,14 @@ public class HtmlDistillerOptions {
     /**
      * @return the ftpUser
      */
-    String getFtpUser() {
+    public String getFtpUser() {
         return ftpUser;
     }
 
     /**
      * @param ftpUser the ftpUser to set
      */
-    void setFtpUser(String ftpUser) {
+    public void setFtpUser(String ftpUser) {
         this.ftpUser = ftpUser;
     }
     /**
@@ -766,14 +767,14 @@ public class HtmlDistillerOptions {
     /**
      * @param ftpPassword the ftpPassword to set
      */
-    void setFtpPassword(String ftpPassword) {
+    public void setFtpPassword(String ftpPassword) {
         this.ftpPassword = ftpPassword;
     }
 
     /**
      * @return the ftpUser
      */
-    String getFtpPassword() {
+    public String getFtpPassword() {
         return ftpPassword;
     }
     /**
@@ -873,7 +874,7 @@ public class HtmlDistillerOptions {
      * This optional method saves the options into the Settings object so that
      * they can be remembered for the next time Note: Not all of them (yet?)
      */
-    void saveToSettings() {
+    public void saveToSettings() {
         Settings.memorizeCopyLocation( getTargetDirectory().getPath() );
         Settings.defaultHtmlPicsPerRow = getPicsPerRow();
         Settings.defaultHtmlThumbnailWidth = getThumbnailWidth();

@@ -1,6 +1,7 @@
 package jpo.export;
 
 import com.jcraft.jsch.*;
+import jpo.EventBus.GenerateWebsiteRequest;
 import jpo.dataModel.*;
 import jpo.gui.ProgressGui;
 import jpo.gui.ScalablePicture;
@@ -48,12 +49,12 @@ import static jpo.gui.ScalablePicture.ScalablePictureStatus.SCALABLE_PICTURE_ERR
  * of pictures in a web-browser. The resulting html pages can be posted to the
  * Internet. Relative addressing has been used throughout.
  */
-public class HtmlDistiller extends SwingWorker<Integer, String> {
+public class WebsiteGenerator extends SwingWorker<Integer, String> {
 
     /**
      * Defines a logger for this class
      */
-    private static final Logger LOGGER = Logger.getLogger( HtmlDistiller.class.getName() );
+    private static final Logger LOGGER = Logger.getLogger( WebsiteGenerator.class.getName() );
 
     /**
      * Temporary object to scale the image for the html output.
@@ -84,7 +85,7 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
     /**
      * The preferences that define how to render the Html page.
      */
-    private final HtmlDistillerOptions options;
+    private final GenerateWebsiteRequest options;
 
     /**
      * Creates and starts a Swing Worker that renders the web page files to the
@@ -92,7 +93,7 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
      *
      * @param options The parameters the user chose on how to render the pages
      */
-    public HtmlDistiller( final HtmlDistillerOptions options ) {
+    public WebsiteGenerator(final GenerateWebsiteRequest options ) {
         this.options = options;
         Tools.checkEDT();
         progGui = new ProgressGui( Integer.MAX_VALUE,
@@ -164,7 +165,7 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
         if ( folderIconRequired ) {
             File folderIconFile = new File( options.getTargetDirectory(), "jpo_folder_icon.gif" );
             try (
-                    InputStream inStream = HtmlDistiller.class.getClassLoader().getResource( "jpo/images/icon_folder.gif" ).openStream();
+                    InputStream inStream = WebsiteGenerator.class.getClassLoader().getResource( "jpo/images/icon_folder.gif" ).openStream();
                     FileOutputStream outStream = new FileOutputStream( folderIconFile );
                     BufferedInputStream bin = new BufferedInputStream( inStream );
                     BufferedOutputStream bout = new BufferedOutputStream( outStream )) {
@@ -402,7 +403,7 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
                 highresFile = new File( options.getTargetDirectory(), root + "_h." + extension );
                 midresHtmlFileName = "jpo_" + formattedNumber + ".htm";
                 break;
-            default:  //case HtmlDistillerOptions.PICTURE_NAMING_BY_HASH_CODE:
+            default:  //case GenerateWebsiteRequest.PICTURE_NAMING_BY_HASH_CODE:
                 String fn = "jpo_" + Integer.toString( pictureNode.hashCode() );
                 lowresFile = new File( options.getTargetDirectory(), fn + "_l." + extension );
                 midresFile = new File( options.getTargetDirectory(), fn + "_m." + extension );
@@ -424,7 +425,7 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
         LOGGER.info( String.format( "Done Loading: %s", pictureInfo.getImageLocation() ) );
         if ( scp.getStatusCode() == SCALABLE_PICTURE_ERROR ) {
             LOGGER.log( Level.SEVERE, "Problem reading image {0} using bnailPicture instead", pictureInfo.getImageLocation() );
-            scp.loadPictureImd( HtmlDistiller.class.getClassLoader().getResource( "jpo/images/broken_thumbnail.gif" ), 0f );
+            scp.loadPictureImd( WebsiteGenerator.class.getClassLoader().getResource( "jpo/images/broken_thumbnail.gif" ), 0f );
         }
 
         // copy the picture to the target directory
@@ -602,7 +603,7 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
                                     nodeUrl = "jpo_" + root + ".htm";
                                     lowresFn = "jpo_" + root + "_l." + extension;
                                     break;
-                                default:  //case HtmlDistillerOptions.PICTURE_NAMING_BY_HASH_CODE:
+                                default:  //case GenerateWebsiteRequest.PICTURE_NAMING_BY_HASH_CODE:
                                     int hashCode = nde.hashCode();
                                     nodeUrl = "jpo_" + Integer.toString( hashCode ) + ".htm";
                                     lowresFn = "jpo_" + nde.hashCode() + "_l." + extension;
@@ -675,7 +676,7 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
                                 String formattedNumber = padding.substring( convertedNumber.length() ) + convertedNumber;
                                 previousHtmlFilename = "jpo_" + formattedNumber + ".htm";
                                 break;
-                            default:  //case HtmlDistillerOptions.PICTURE_NAMING_BY_HASH_CODE:
+                            default:  //case GenerateWebsiteRequest.PICTURE_NAMING_BY_HASH_CODE:
                                 int hashCode = ( pictureNode.getParent() ).getChildAt( childNumber - 2 ).hashCode();
                                 previousHtmlFilename = "jpo_" + Integer.toString( hashCode ) + ".htm";
                                 break;
@@ -710,7 +711,7 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
                                 String formattedNumber = padding.substring( convertedNumber.length() ) + convertedNumber;
                                 nextHtmlFilename = "jpo_" + formattedNumber + ".htm";
                                 break;
-                            default:  //case HtmlDistillerOptions.PICTURE_NAMING_BY_HASH_CODE:
+                            default:  //case GenerateWebsiteRequest.PICTURE_NAMING_BY_HASH_CODE:
                                 int hashCode = ( pictureNode.getParent() ).getChildAt( childNumber ).hashCode();
                                 nextHtmlFilename = "jpo_" + Integer.toString( hashCode ) + ".htm";
                                 break;
@@ -1000,7 +1001,7 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
         try {
             LOGGER.info( String.format( "Setting up session for user: %s server: %s port: %d and connecting...", options.getSshUser(), options.getSshServer(), options.getSshPort() ) );
             Session session = jsch.getSession( options.getSshUser(), options.getSshServer(), options.getSshPort() );
-            if ( options.getSshAuthType().equals( HtmlDistillerOptions.SshAuthType.SSH_AUTH_PASSWORD ) ) {
+            if ( options.getSshAuthType().equals( GenerateWebsiteRequest.SshAuthType.SSH_AUTH_PASSWORD ) ) {
                 session.setPassword( options.getSshPassword() );
             } else {
                 jsch.addIdentity( options.getSshKeyFile() );
@@ -1162,7 +1163,7 @@ public class HtmlDistiller extends SwingWorker<Integer, String> {
             }
 
         } catch ( IOException ex ) {
-            Logger.getLogger( HtmlDistiller.class.getName() ).log( Level.SEVERE, null, ex );
+            Logger.getLogger( WebsiteGenerator.class.getName() ).log( Level.SEVERE, null, ex );
         }
     }
 

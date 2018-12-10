@@ -12,6 +12,8 @@ import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+
+import jpo.EventBus.GenerateWebsiteRequest;
 import jpo.dataModel.Settings;
 import net.javaprog.ui.wizard.AbstractStep;
 import net.miginfocom.swing.MigLayout;
@@ -43,14 +45,14 @@ public class GenerateWebsiteWizard5Options extends AbstractStep {
     /**
      * The link to the values that this panel should change
      */
-    private final HtmlDistillerOptions options;
+    private final GenerateWebsiteRequest options;
 
     /**
      * This step asks about the options that we require to generate a website
      *
      * @param options options
      */
-    public GenerateWebsiteWizard5Options( HtmlDistillerOptions options ) {
+    public GenerateWebsiteWizard5Options( GenerateWebsiteRequest options ) {
         super( Settings.jpoResources.getString( "HtmlDistOptions" ), Settings.jpoResources.getString( "HtmlDistOptions" ) );
         this.options = options;
 
@@ -127,11 +129,11 @@ public class GenerateWebsiteWizard5Options extends AbstractStep {
         wizardPanel.add( sequentialRadioButton, "wrap" );
         ChangeListener radioButtonChangeListener = ( ChangeEvent arg0 ) -> {
             if ( hashcodeRadioButton.isSelected() ) {
-                options.setPictureNaming( HtmlDistillerOptions.PictureNamingType.PICTURE_NAMING_BY_HASH_CODE );
+                options.setPictureNaming( GenerateWebsiteRequest.PictureNamingType.PICTURE_NAMING_BY_HASH_CODE );
             } else if ( originalNameRadioButton.isSelected() ) {
-                options.setPictureNaming( HtmlDistillerOptions.PictureNamingType.PICTURE_NAMING_BY_ORIGINAL_NAME );
+                options.setPictureNaming( GenerateWebsiteRequest.PictureNamingType.PICTURE_NAMING_BY_ORIGINAL_NAME );
             } else {
-                options.setPictureNaming( HtmlDistillerOptions.PictureNamingType.PICTURE_NAMING_BY_SEQUENTIAL_NUMBER );
+                options.setPictureNaming( GenerateWebsiteRequest.PictureNamingType.PICTURE_NAMING_BY_SEQUENTIAL_NUMBER );
             }
             if ( sequentialStartJSpinner.isEnabled() != sequentialRadioButton.isSelected() ) {
                 sequentialStartJSpinner.setEnabled( sequentialRadioButton.isSelected() );

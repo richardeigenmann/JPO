@@ -1,5 +1,6 @@
 package jpo.export;
 
+import jpo.EventBus.GenerateWebsiteRequest;
 import jpo.dataModel.Settings;
 import net.javaprog.ui.wizard.AbstractStep;
 import net.miginfocom.swing.MigLayout;
@@ -37,7 +38,7 @@ public class GenerateWebsiteWizard2Thumbnails extends AbstractStep {
     /**
      * The link to the values that this panel should change
      */
-    private final HtmlDistillerOptions options;
+    private final GenerateWebsiteRequest options;
 
     /**
      * Asks all the questions we need to know in regards to the thumbnails on
@@ -45,7 +46,7 @@ public class GenerateWebsiteWizard2Thumbnails extends AbstractStep {
      *
      * @param options Options
      */
-    public GenerateWebsiteWizard2Thumbnails( HtmlDistillerOptions options ) {
+    public GenerateWebsiteWizard2Thumbnails( GenerateWebsiteRequest options ) {
         super( Settings.jpoResources.getString( "HtmlDistThumbnails" ), Settings.jpoResources.getString( "HtmlDistThumbnails" ) );
         this.options = options;
 
@@ -137,7 +138,9 @@ public class GenerateWebsiteWizard2Thumbnails extends AbstractStep {
             options.setLowresJpgQualityPercent( lowresJpgQualityJSlider.getValue() );
         } );
 
-        wizardPanel.add( lowresJpgQualityJSlider, "growx, wrap" );
+        JPanel sliderOwningPanel = new JPanel();
+        sliderOwningPanel.add(lowresJpgQualityJSlider);
+        wizardPanel.add( sliderOwningPanel, "growx, wrap" );
         wizardPanel.add( new JLabel( Settings.jpoResources.getString( "scalingSteps" ) ) );
 
         scalingSteps.addChangeListener( ( ChangeEvent arg0 ) -> {

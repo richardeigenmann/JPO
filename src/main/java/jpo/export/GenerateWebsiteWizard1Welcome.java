@@ -5,6 +5,8 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingWorker;
+
+import jpo.EventBus.GenerateWebsiteRequest;
 import jpo.dataModel.NodeStatistics;
 import jpo.dataModel.Settings;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
@@ -48,7 +50,7 @@ public class GenerateWebsiteWizard1Welcome extends AbstractStep {
      *
      * @param options Options
      */
-    public GenerateWebsiteWizard1Welcome( final HtmlDistillerOptions options ) {
+    public GenerateWebsiteWizard1Welcome( final GenerateWebsiteRequest options ) {
         super( Settings.jpoResources.getString( "welcomeTitle" ), Settings.jpoResources.getString( "HtmlDistillerJFrameHeading" ) );
 
         final SortableDefaultMutableTreeNode startNode = options.getStartNode();

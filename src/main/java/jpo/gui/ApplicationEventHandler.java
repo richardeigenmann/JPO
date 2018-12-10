@@ -10,6 +10,7 @@ import jpo.dataModel.Settings.FieldCodes;
 import jpo.export.GenerateWebsiteWizard;
 import jpo.export.PicasaUploadRequest;
 import jpo.export.PicasaUploaderWizard;
+import jpo.export.WebsiteGenerator;
 import jpo.gui.swing.*;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
@@ -751,6 +752,17 @@ public class ApplicationEventHandler {
     public void handleExportGroupToHtmlRequest(ExportGroupToHtmlRequest request) {
         SortableDefaultMutableTreeNode nodeToExport = request.getNode();
         new GenerateWebsiteWizard(nodeToExport);
+    }
+
+    /**
+     * The Creates the Website
+     *
+     * @param request the request
+     */
+    @Subscribe
+    public void handleGenerateWebsiteRequest(GenerateWebsiteRequest request) {
+        WebsiteGenerator h = new WebsiteGenerator( request );
+        SwingUtilities.invokeLater( h );
     }
 
     /**
