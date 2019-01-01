@@ -26,11 +26,7 @@ public class NodeStatisticsTest{
 
     private final GroupInfo gr2 = new GroupInfo("Group2");
 
-    private SortableDefaultMutableTreeNode group2;
-
     private final GroupInfo gr3 = new GroupInfo("Group3");
-
-    private SortableDefaultMutableTreeNode group3;
 
     private final PictureInfo pi1 = new PictureInfo();
 
@@ -38,19 +34,11 @@ public class NodeStatisticsTest{
 
     private final PictureInfo pi2 = new PictureInfo();
 
-    private SortableDefaultMutableTreeNode picture2;
-
     private final PictureInfo pi3 = new PictureInfo(new File("images/image3.jpg"), "Third Picture");
-
-    private SortableDefaultMutableTreeNode picture3;
 
     private final PictureInfo pi4 = new PictureInfo(new File("images/image4.jpg"), "Fourth Picture");
 
-    private SortableDefaultMutableTreeNode picture4;
-
     private final PictureInfo pi5 = new PictureInfo(new File("images/image5.jpg"), "Fifth Picture");
-
-    private SortableDefaultMutableTreeNode picture5;
 
     /**
      * Set up tests
@@ -61,17 +49,17 @@ public class NodeStatisticsTest{
     public void setUp() throws Exception {
         rootNode = new SortableDefaultMutableTreeNode();
         group1 = new SortableDefaultMutableTreeNode(gr1);
-        group2 = new SortableDefaultMutableTreeNode(gr2);
+        SortableDefaultMutableTreeNode group2 = new SortableDefaultMutableTreeNode(gr2);
         pi1.setImageLocation(new File(NodeStatisticsTest.class.getClassLoader().getResource( "exif-test-canon-eos-350d.jpg" ).toURI()));
         pi1.setDescription( "First Picture");
         pi2.setImageLocation(new File(NodeStatisticsTest.class.getClassLoader().getResource( "exif-test-canon-eos-60d.jpg" ).toURI()));
         pi2.setDescription("Second Picture");
         picture1 = new SortableDefaultMutableTreeNode(pi1);
-        picture2 = new SortableDefaultMutableTreeNode(pi2);
-        group3 = new SortableDefaultMutableTreeNode(gr3);
-        picture3 = new SortableDefaultMutableTreeNode(pi3);
-        picture4 = new SortableDefaultMutableTreeNode(pi4);
-        picture5 = new SortableDefaultMutableTreeNode(pi5);
+        SortableDefaultMutableTreeNode picture2 = new SortableDefaultMutableTreeNode(pi2);
+        SortableDefaultMutableTreeNode group3 = new SortableDefaultMutableTreeNode(gr3);
+        SortableDefaultMutableTreeNode picture3 = new SortableDefaultMutableTreeNode(pi3);
+        SortableDefaultMutableTreeNode picture4 = new SortableDefaultMutableTreeNode(pi4);
+        SortableDefaultMutableTreeNode picture5 = new SortableDefaultMutableTreeNode(pi5);
         rootNode.add(group1);
         rootNode.add(group2);
         group1.add(picture1);

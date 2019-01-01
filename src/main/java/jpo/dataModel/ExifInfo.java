@@ -157,8 +157,6 @@ public class ExifInfo {
             if ( exifSubIFD0directory != null ) {
                 camera = rtrim( tryToGetTag( exifSubIFD0directory, ExifIFD0Directory.TAG_MODEL, camera ) );
                 String rotationString = rtrim( tryToGetTag( exifSubIFD0directory, ExifIFD0Directory.TAG_ORIENTATION, "" ) );
-                // so far have only got definitions for the Samsung Galaxy S4 phone
-                // so far have only got definitions for the Samsung Galaxy S4 phone
 
                 switch ( rotationString ) {
                     case "Top, left side (Horizontal / normal)":

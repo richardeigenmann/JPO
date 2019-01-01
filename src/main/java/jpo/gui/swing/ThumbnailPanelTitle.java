@@ -6,6 +6,7 @@ import jpo.dataModel.Tools;
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
 import java.awt.*;
+import java.util.Objects;
 
 /*
 Copyright (C) 2009-2018  Richard Eigenmann, Zürich, Switzerland
@@ -45,25 +46,25 @@ public class ThumbnailPanelTitle
      *  a button to navigate back to the first page
      **/
     public final JButton firstThumbnailsPageButton =
-            new JButton( new ImageIcon( ThumbnailPanelTitle.class.getClassLoader().getResource( "jpo/images/icon_first.gif" ) ) );
+            new JButton( new ImageIcon(Objects.requireNonNull(ThumbnailPanelTitle.class.getClassLoader().getResource("jpo/images/icon_first.gif"))) );
 
     /**
      *  a button to navigate to the next page
      **/
     public final JButton nextThumbnailsPageButton =
-            new JButton( new ImageIcon( ThumbnailPanelTitle.class.getClassLoader().getResource( "jpo/images/Forward24.gif" ) ) );
+            new JButton( new ImageIcon(Objects.requireNonNull(ThumbnailPanelTitle.class.getClassLoader().getResource("jpo/images/Forward24.gif"))) );
 
     /**
      *  a button to navigate to the last page
      **/
     public final JButton lastThumbnailsPageButton =
-            new JButton( new ImageIcon( ThumbnailPanelTitle.class.getClassLoader().getResource( "jpo/images/icon_last.gif" ) ) );
+            new JButton( new ImageIcon(Objects.requireNonNull(ThumbnailPanelTitle.class.getClassLoader().getResource("jpo/images/icon_last.gif"))) );
 
     /**
      *  a button to navigate to the first page
      **/
     public final JButton previousThumbnailsPageButton =
-            new JButton( new ImageIcon( ThumbnailPanelTitle.class.getClassLoader().getResource( "jpo/images/Back24.gif" ) ) );
+            new JButton( new ImageIcon(Objects.requireNonNull(ThumbnailPanelTitle.class.getClassLoader().getResource("jpo/images/Back24.gif"))) );
 
     /**
      * JLabel for holding the thumbnail counts

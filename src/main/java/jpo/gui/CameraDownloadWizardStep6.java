@@ -76,7 +76,7 @@ public class CameraDownloadWizardStep6 extends AbstractStep {
     }
 
     /**
-     * Required by the AbstractSetp but not used.
+     * Required by the AbstractStep but not used.
      */
     @Override
     public void prepareRendering() {

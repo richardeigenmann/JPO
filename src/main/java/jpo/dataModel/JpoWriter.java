@@ -11,6 +11,7 @@ import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.Enumeration;
 import java.util.Iterator;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -168,7 +169,7 @@ public class JpoWriter {
         PictureInfo pictureInfo = (PictureInfo) pictureNode.getUserObject();
 
         if ( copyPics ) {
-            File targetHighresFile = Tools.inventPicFilename( highresTargetDir, pictureInfo.getImageFilename() );
+            File targetHighresFile = Tools.inventPicFilename( highresTargetDir, pictureInfo.getImageFile().getName() );
             Tools.copyPicture( pictureInfo.getImageURL(), targetHighresFile );
             pictureInfo.dumpToXml( bufferedWriter,
                     targetHighresFile.toURI().toURL().toString()
@@ -186,7 +187,7 @@ public class JpoWriter {
     public static void writeCollectionDTD( File directory ) {
         ClassLoader cl = JpoWriter.class.getClassLoader();
         try (
-                InputStream in = cl.getResource( "collection.dtd" ).openStream();
+                InputStream in = Objects.requireNonNull(cl.getResource("collection.dtd")).openStream();
                 FileOutputStream outStream = new FileOutputStream( new File( directory, "collection.dtd" ) );
                 BufferedInputStream bin = new BufferedInputStream( in );
                 BufferedOutputStream bout = new BufferedOutputStream( outStream )) {
@@ -195,10 +196,6 @@ public class JpoWriter {
             while ( ( c = bin.read() ) != -1 ) {
                 outStream.write( c );
             }
-
-            in.close();
-            outStream.close();
-
         } catch ( IOException e ) {
             JOptionPane.showMessageDialog(
                     Settings.anchorFrame,

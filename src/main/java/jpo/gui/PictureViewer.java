@@ -35,7 +35,6 @@ import static jpo.gui.ScalablePicture.ScalablePictureStatus.SCALABLE_PICTURE_REA
 import jpo.gui.SourcePicture.SourcePictureStatus;
 import jpo.gui.swing.ChangeWindowPopupMenu;
 import jpo.gui.swing.PictureFrame;
-import jpo.gui.swing.PicturePopupMenu;
 import jpo.gui.swing.ResizableJFrame.WindowSize;
 
 
@@ -391,7 +390,7 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
     /**
      * brings up the indicated picture on the display.
      *
-     * @param pictureInfo The PicutreInfo object that should be displayed
+     * @param pictureInfo The PictureInfo object that should be displayed
      */
     private void setPicture( PictureInfo pictureInfo ) {
         LOGGER.log( Level.FINE, "Set picture to PictureInfo: {0}", pictureInfo.toString() );
@@ -454,21 +453,15 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
      * If the call returned a non null node {@link #showNode} is called to
      * request the loading and display of the new picture.
      *
-     * @return true if the next picture was located, false if none available
-     *
      * @see #requestPriorPicture()
      */
-    private boolean requestNextPicture() {
+    private void requestNextPicture() {
         if ( mySetOfNodes.getNumberOfNodes() > myIndex + 1 ) {
 
             SwingUtilities.invokeLater(
                     () -> showNode( mySetOfNodes, myIndex + 1 )
             );
-            return true;
-        } else {
-            return false;
         }
-
     }
 
     /**
@@ -476,15 +469,11 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
      * asked for the prior image and if one is returned it is displayed.
      *
      * @see #requestNextPicture()
-     * @return true if successful, false if not.
      */
-    private boolean requestPriorPicture() {
+    private void requestPriorPicture() {
         if ( myIndex > 0 ) {
-
             SwingUtilities.invokeLater( () -> showNode( mySetOfNodes, myIndex - 1 ));
-            return true;
         }
-        return false;
     }
 
     /**
@@ -623,7 +612,7 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
         if ( currentNode.getPreviousSibling() != null ) {
             pictureFrame.getPictureViewerNavBar().setPreviousButtonHasLeft();
         } else {
-            // deterine if there are any previous nodes that are not groups.
+            // determine if there are any previous nodes that are not groups.
             DefaultMutableTreeNode testNode;
             testNode = currentNode.getPreviousNode();
             while ( ( testNode != null ) && ( !( testNode.getUserObject() instanceof PictureInfo ) ) ) {

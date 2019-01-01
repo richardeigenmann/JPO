@@ -6,8 +6,6 @@ import jpo.cache.ThumbnailQueueRequest;
 import jpo.cache.ThumbnailQueueRequest.QUEUE_PRIORITY;
 import jpo.cache.ThumbnailQueueRequestCallbackHandler;
 import jpo.dataModel.*;
-import jpo.gui.swing.GroupPopupMenu;
-import jpo.gui.swing.PicturePopupMenu;
 import jpo.gui.swing.Thumbnail;
 
 import javax.swing.*;
@@ -19,6 +17,7 @@ import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -150,10 +149,10 @@ public class ThumbnailController
      * @param index        The position of this object to be displayed.
      */
     public void setNode(NodeNavigatorInterface mySetOfNodes, int index) {
-        this.myNodeNavigator = mySetOfNodes;
+        this.myNodeNavigator = Objects.requireNonNull(mySetOfNodes);
         this.myIndex = index;
-        SortableDefaultMutableTreeNode node = mySetOfNodes.getNode(index);
 
+        SortableDefaultMutableTreeNode node = mySetOfNodes.getNode(index);
         this.myNode = node;
 
         // remove and silence the old request if it is still alive
@@ -180,7 +179,7 @@ public class ThumbnailController
                     }
                 }
             } catch (NullPointerException npe) {
-                LOGGER.severe("Something is wrong - Thumbnail Controller being used in an unexpected context. Optimisation to prioritise visible Thumbnails didn't work correctly. Check the code!");
+                LOGGER.severe("Something is wrong - Thumbnail Controller being used in an unexpected context. Optimisation to prioritise visible Thumbnails didn't work correctly. Check the code! Perhaps the thumbnail is not attached to the JViewport. This might be normal.");
                 Thread.dumpStack();
             }
             myThumbnailQueueRequest = requestThumbnailCreation(priority);
@@ -251,11 +250,6 @@ public class ThumbnailController
         myThumbnail.setQueueIcon();
         return ThumbnailCreationQueue.requestThumbnailCreation(
                 this, myNode, priority, getMaximumUnscaledSize());
-        /*if ( newRequest ) {
-         setPendingIcon();
-         } else {
-         LOGGER.fine( String.format( "Why have we just sent in a request for Thumbnail creation for %s when it's already on the queue?", toString() ) );
-         }*/
     }
 
     /**
@@ -330,7 +324,7 @@ public class ThumbnailController
 
         /**
          * overridden to analyse the mouse event and decide whether to display
-         * the picture right away (doubleclick) or show the popupMenu.
+         * the picture right away (double click) or show the popupMenu.
          */
         @Override
         public void mouseClicked(MouseEvent e) {
@@ -356,7 +350,7 @@ public class ThumbnailController
                 if (Settings.getPictureCollection().isSelected(myNode)) {
                     Settings.getPictureCollection().removeFromSelection(myNode);
                 } else {
-                    LOGGER.fine(String.format("Adding; Now Selected: %d", Settings.getPictureCollection().getSelectedNodes().length));
+                    LOGGER.fine(String.format("Adding; Now Selected: %d", Settings.getPictureCollection().getSelection().size()));
                     Settings.getPictureCollection().addToSelectedNodes(myNode);
                 }
             } else {
@@ -365,7 +359,7 @@ public class ThumbnailController
                 } else {
                     Settings.getPictureCollection().clearSelection();
                     Settings.getPictureCollection().addToSelectedNodes(myNode);
-                    LOGGER.fine(String.format("1 selection added; Now Selected: %d", Settings.getPictureCollection().getSelectedNodes().length));
+                    LOGGER.fine(String.format("1 selection added; Now Selected: %d", Settings.getPictureCollection().getSelection().size()));
                 }
             }
         }
@@ -386,7 +380,7 @@ public class ThumbnailController
         }
 
         /**
-         * Logic for processing a doubleclick on the thumbnail
+         * Logic for processing a double click on the thumbnail
          */
         private void doubleClickResponse() {
             if (myNode.getUserObject() instanceof PictureInfo) {
@@ -517,7 +511,7 @@ public class ThumbnailController
                 transferableNodes.add(myNode);
                 transferable = new JpoTransferable(transferableNodes);
             } else {
-                transferable = new JpoTransferable(Settings.getPictureCollection().getSelectedNodesAsList());
+                transferable = new JpoTransferable(Settings.getPictureCollection().getSelection());
             }
 
             try {
@@ -548,7 +542,7 @@ public class ThumbnailController
         }
 
         /**
-         * this callback method is invoked after the dropTraget had a chance to
+         * this callback method is invoked after the dropTarget had a chance to
          * evaluate the dragOver event and was given the option of rejecting or
          * modifying the event. This method sets the cursor to reflect whether a
          * copy, move or no drop is possible.

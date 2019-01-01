@@ -54,11 +54,6 @@ public class SaxEventHandler extends DefaultHandler {
      */
     private SortableDefaultMutableTreeNode currentGroup;
 
-    /**
-     * Temporary variable to hold the GroupInfo of the group being created.
-     */
-    private GroupInfo groupInfo;
-
     private final StringBuilder lowresUrls;
     /**
      * variable used to interpret what the text is that is coming in through the
@@ -92,6 +87,7 @@ public class SaxEventHandler extends DefaultHandler {
             String qName,
             Attributes attrs )
             throws SAXException {
+        GroupInfo groupInfo;
         if ( ( "collection".equals( qName ) ) && ( attrs != null ) ) {
             groupInfo = new GroupInfo( attrs.getValue( "collection_name" ) );
             if ( attrs.getValue( "collection_icon" ).length() > 1 ) {
@@ -99,7 +95,7 @@ public class SaxEventHandler extends DefaultHandler {
                 lowresUrls.append( attrs.getValue( "collection_icon" ) );
                 lowresUrls.append( System.getProperty( "line.separator" ) );
             }
-            currentGroup.setUserObject( groupInfo );
+            currentGroup.setUserObject(groupInfo);
             currentGroup.getPictureCollection().setAllowEdits( attrs.getValue( "collection_protected" ).equals( "No" ) );
         } else if ( "group".equals( qName ) && attrs != null ) {
             incrementGroupCount();
@@ -109,7 +105,7 @@ public class SaxEventHandler extends DefaultHandler {
                 lowresUrls.append( System.getProperty( "line.separator" ) );
             }
             SortableDefaultMutableTreeNode nextCurrentGroup
-                    = new SortableDefaultMutableTreeNode( groupInfo );
+                    = new SortableDefaultMutableTreeNode(groupInfo);
             currentGroup.add( nextCurrentGroup );
             currentGroup = nextCurrentGroup;
         } else if ( "picture".equals( qName ) ) {

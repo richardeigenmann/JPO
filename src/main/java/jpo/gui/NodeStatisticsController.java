@@ -95,7 +95,7 @@ public class NodeStatisticsController {
                 if ( Settings.writeLog ) {
                     nodeStatisticsBean.setFreeMemory( Tools.freeMemory() );
                     nodeStatisticsBean.setQueueCount( Settings.jpoResources.getString( "queCountJLabel" ) + ThumbnailCreationQueue.size() );
-                    nodeStatisticsBean.setSelectedCount( String.format( "Selected: %d", Settings.getPictureCollection().getSelectedNodes().length ) ); 
+                    nodeStatisticsBean.setSelectedCount( String.format( "Selected: %d", Settings.getPictureCollection().getSelection().size() ) );
                 }
                 return "done";
             }

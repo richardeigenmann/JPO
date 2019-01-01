@@ -2,6 +2,7 @@ package jpo.dataModel;
 
 import java.lang.reflect.InvocationTargetException;
 import java.text.SimpleDateFormat;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
@@ -93,7 +94,7 @@ public class ToolsTest {
         String d = "2017:01:28 12:26:04";
         String expected = "2017-01-28 12:26:04";
         SimpleDateFormat format = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" );
-        String result = format.format( Tools.parseDate( d ).getTime() );
+        String result = format.format( Objects.requireNonNull(Tools.parseDate(d)).getTime() );
         assertEquals( expected, result );
     }
 
@@ -105,7 +106,7 @@ public class ToolsTest {
         String d = "2017:01:28";
         String expected = "2017-01-28 00:00:00";
         SimpleDateFormat format = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" );
-        String result = format.format( Tools.parseDate( d ).getTime() );
+        String result = format.format( Objects.requireNonNull(Tools.parseDate(d)).getTime() );
         assertEquals( expected, result );
     }
 
@@ -117,7 +118,7 @@ public class ToolsTest {
         String d = "15.01.2017";
         String expected = "2017-01-15 00:00:00";
         SimpleDateFormat format = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" );
-        String result = format.format( Tools.parseDate( d ).getTime() );
+        String result = format.format( Objects.requireNonNull(Tools.parseDate(d)).getTime() );
         assertEquals( expected, result );
     }
 
@@ -129,7 +130,7 @@ public class ToolsTest {
         String d = "15.01.2017 18:11";
         String expected = "2017-01-15 18:11:00";
         SimpleDateFormat format = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" );
-        String result = format.format( Tools.parseDate( d ).getTime() );
+        String result = format.format( Objects.requireNonNull(Tools.parseDate(d)).getTime() );
         assertEquals( expected, result );
     }
 
@@ -141,7 +142,7 @@ public class ToolsTest {
         String d = "15.01.2017 18:11:33";
         String expected = "2017-01-15 18:11:33";
         SimpleDateFormat format = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" );
-        String result = format.format( Tools.parseDate( d ).getTime() );
+        String result = format.format( Objects.requireNonNull(Tools.parseDate(d)).getTime() );
         assertEquals( expected, result );
     }
 
@@ -153,7 +154,7 @@ public class ToolsTest {
         String d = "9/11/2001";
         String expected = "2001-09-11 00:00:00";
         SimpleDateFormat format = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" );
-        String result = format.format( Tools.parseDate( d ).getTime() );
+        String result = format.format( Objects.requireNonNull(Tools.parseDate(d)).getTime() );
         assertEquals( expected, result );
     }
 
@@ -165,7 +166,7 @@ public class ToolsTest {
         String d = "9/11/2001 08:46";
         String expected = "2001-09-11 08:46:00";
         SimpleDateFormat format = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" );
-        String result = format.format( Tools.parseDate( d ).getTime() );
+        String result = format.format( Objects.requireNonNull(Tools.parseDate(d)).getTime() );
         assertEquals( expected, result );
     }
 

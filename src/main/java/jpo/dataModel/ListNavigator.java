@@ -80,7 +80,7 @@ public class ListNavigator
     /**
      * This List holds a reference to the nodes that make up the navigator
      */
-    private List<SortableDefaultMutableTreeNode> allPictures = new ArrayList<>();
+    private final List<SortableDefaultMutableTreeNode> allPictures = new ArrayList<>();
 
 
     /**

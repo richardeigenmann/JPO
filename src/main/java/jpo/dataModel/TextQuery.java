@@ -38,13 +38,13 @@ public class TextQuery implements Serializable, Query {
      * If defined this String will be checked against any field on the nodes
      *
      */
-    public String anyField;
+    public final String anyField;
 
     /**
      * This flag indicates whether dates that can't be parsed should be treaded
      * as matches or fails	;
      */
-    public boolean includeNullDates = true;
+    public final boolean includeNullDates = true;
 
     /**
      * Constructor to create a new Query object.
@@ -246,8 +246,7 @@ public class TextQuery implements Serializable, Query {
     public String getTitle() {
         String nodeDescription = ( startNode == null ) ? "" : startNode.getUserObject().toString();
 
-        String title = Settings.jpoResources.getString( "ThumbnailSearchResults" ) + anyField + Settings.jpoResources.getString( "ThumbnailSearchResults2" ) + nodeDescription;
-        return title;
+        return Settings.jpoResources.getString( "ThumbnailSearchResults" ) + anyField + Settings.jpoResources.getString( "ThumbnailSearchResults2" ) + nodeDescription;
     }
 
     /**

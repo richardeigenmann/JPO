@@ -1,6 +1,10 @@
 package jpo.gui.swing;
 
+import org.jetbrains.annotations.TestOnly;
+
 import javax.swing.ImageIcon;
+import java.net.URL;
+import java.util.logging.Logger;
 
 /*
  Copyright (C) 2017  Richard Eigenmann.
@@ -25,17 +29,56 @@ import javax.swing.ImageIcon;
  */
 public class ClockButton extends NavBarButton {
 
+
+    /**
+     * Defines a logger for this class
+     */
+    private static final Logger LOGGER = Logger.getLogger(ClockButton.class.getName());
+
     private static final ClassLoader CLASS_LOADER = LeftRightButton.class.getClassLoader();
+
 
     /**
      * Icon to indicate that the timer is active
      */
-    private static final ImageIcon ICON_CLOCK_ON = new ImageIcon( CLASS_LOADER.getResource( "icon_clock_on.gif" ) );
+    private static final ImageIcon ICON_CLOCK_ON;
+
+    static {
+        final String ICON_CLOCK_ON_FILE = "icon_clock_on.gif";
+        URL resource = CollectionJTree.class.getClassLoader().getResource(ICON_CLOCK_ON_FILE);
+        if (resource == null) {
+            LOGGER.severe("Classloader could not find the file: " + ICON_CLOCK_ON_FILE);
+            ICON_CLOCK_ON = null;
+        } else {
+            ICON_CLOCK_ON = new ImageIcon(resource);
+        }
+    }
+
+    @TestOnly
+    ImageIcon getClockIconOn() {
+        return ICON_CLOCK_ON;
+    }
 
     /**
      * Icon to indicate that the timer is available
      */
-    private static final ImageIcon ICON_CLOCK_OFF = new ImageIcon( CLASS_LOADER.getResource( "icon_clock_off.gif" ) );
+    private static final ImageIcon ICON_CLOCK_OFF;
+
+    static {
+        final String ICON_CLOCK_OFF_FILE = "icon_clock_off.gif";
+        URL resource = CollectionJTree.class.getClassLoader().getResource(ICON_CLOCK_OFF_FILE);
+        if (resource == null) {
+            LOGGER.severe("Classloader could not find the file: " + ICON_CLOCK_OFF_FILE);
+            ICON_CLOCK_OFF = null;
+        } else {
+            ICON_CLOCK_OFF = new ImageIcon(resource);
+        }
+    }
+
+    @TestOnly
+    ImageIcon getClockIconOff() {
+        return ICON_CLOCK_OFF;
+    }
 
     /**
      * Constructs clock icon in the off state.

@@ -64,15 +64,12 @@ public class SortableDefaultMutableTreeNodeTest {
 
     private final PictureInfo pi5 = new PictureInfo("file:///images/image5.jpg", "Fifth Picture");
 
-    private SortableDefaultMutableTreeNode picture5;
-
     /**
      * Set up for each test
      *
-     * @throws Exception
      */
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
 
         rootNode = new SortableDefaultMutableTreeNode();
         group1 = new SortableDefaultMutableTreeNode(gr1);
@@ -84,7 +81,7 @@ public class SortableDefaultMutableTreeNodeTest {
         picture2 = new SortableDefaultMutableTreeNode(pi2);
         picture3 = new SortableDefaultMutableTreeNode(pi3);
         picture4 = new SortableDefaultMutableTreeNode(pi4);
-        picture5 = new SortableDefaultMutableTreeNode(pi5);
+        SortableDefaultMutableTreeNode picture5 = new SortableDefaultMutableTreeNode(pi5);
 
         /*
          rootNode
@@ -314,7 +311,7 @@ public class SortableDefaultMutableTreeNodeTest {
         assertNotSame("The clone must be a new Object", picture1, cloneNode);
         assertNotSame("The user object must be a new Object", picture1.getUserObject(), cloneNode.getUserObject());
         assertNull("The clone has no parent", cloneNode.getParent());
-        assertEquals("The clone node has the same highres picture as the original", pi1.getImageLocation(), ((PictureInfo) cloneNode.getUserObject()).getImageLocation());
+        assertEquals("The clone node has the same highres picture as the original", pi1.getImageFile(), ((PictureInfo) cloneNode.getUserObject()).getImageFile());
     }
 
     /**
@@ -337,8 +334,8 @@ public class SortableDefaultMutableTreeNodeTest {
     public void testGetChildPictureNodes() {
         List<SortableDefaultMutableTreeNode> allPicturesFromRoot = rootNode.getChildPictureNodes(true);
         assertEquals("There should be 5 pictures in the result set from root, recursive", 5, allPicturesFromRoot.size());
-        assertEquals("There should be 0 pictures under the root node when nonrecursive", 0, rootNode.getChildPictureNodes(false).size());
-        assertEquals("There should be 2 pictures under the group1 node when nonrecursive", 2, group1.getChildPictureNodes(false).size());
+        assertEquals("There should be 0 pictures under the root node when non recursive", 0, rootNode.getChildPictureNodes(false).size());
+        assertEquals("There should be 2 pictures under the group1 node when non recursive", 2, group1.getChildPictureNodes(false).size());
         assertEquals("There should be 2 pictures under the group1 node when recursive", 2, group1.getChildPictureNodes(true).size());
     }
 
@@ -377,10 +374,8 @@ public class SortableDefaultMutableTreeNodeTest {
                 assertEquals("D", ((SortableDefaultMutableTreeNode) root.getChildAt(3)).getUserObject().toString());
                 assertEquals("E", ((SortableDefaultMutableTreeNode) root.getChildAt(4)).getUserObject().toString());
             });
-        } catch (InterruptedException e) {
-            fail();
-        } catch (InvocationTargetException e) {
-            fail();
+        } catch (InterruptedException | InvocationTargetException e) {
+            fail(e.getMessage());
         }
     }
 
@@ -408,10 +403,8 @@ public class SortableDefaultMutableTreeNodeTest {
                 assertEquals("B", ((SortableDefaultMutableTreeNode) root.getChildAt(3)).getUserObject().toString());
                 assertEquals("A", ((SortableDefaultMutableTreeNode) root.getChildAt(4)).getUserObject().toString());
             });
-        } catch (InterruptedException e) {
-            fail();
-        } catch (InvocationTargetException e) {
-            fail();
+        } catch (InterruptedException | InvocationTargetException e) {
+            fail(e.getMessage());
         }
     }
 
@@ -443,10 +436,8 @@ public class SortableDefaultMutableTreeNodeTest {
                 assertEquals("D", ((SortableDefaultMutableTreeNode) root.getChildAt(3)).getUserObject().toString());
                 assertEquals("E", ((SortableDefaultMutableTreeNode) root.getChildAt(4)).getUserObject().toString());
             });
-        } catch (InterruptedException e) {
-            fail();
-        } catch (InvocationTargetException e) {
-            fail();
+        } catch (InterruptedException | InvocationTargetException e) {
+            fail(e.getMessage());
         }
     }
 
@@ -483,10 +474,8 @@ public class SortableDefaultMutableTreeNodeTest {
                 assertEquals("D", ((SortableDefaultMutableTreeNode) root.getChildAt(3)).getUserObject().toString());
                 assertEquals("E", ((SortableDefaultMutableTreeNode) root.getChildAt(4)).getUserObject().toString());
             });
-        } catch (InterruptedException e) {
-            fail();
-        } catch (InvocationTargetException e) {
-            fail();
+        } catch (InterruptedException | InvocationTargetException e) {
+            fail(e.getMessage());
         }
     }
 
@@ -522,10 +511,8 @@ public class SortableDefaultMutableTreeNodeTest {
                 assertEquals("D", ((SortableDefaultMutableTreeNode) root.getChildAt(3)).getUserObject().toString());
                 assertEquals("E", ((SortableDefaultMutableTreeNode) root.getChildAt(4)).getUserObject().toString());
             });
-        } catch (InterruptedException e) {
-            fail();
-        } catch (InvocationTargetException e) {
-            fail();
+        } catch (InterruptedException | InvocationTargetException e) {
+            fail(e.getMessage());
         }
     }
 
@@ -562,10 +549,8 @@ public class SortableDefaultMutableTreeNodeTest {
                 assertEquals("D", ((SortableDefaultMutableTreeNode) root.getChildAt(3)).getUserObject().toString());
                 assertEquals("E", ((SortableDefaultMutableTreeNode) root.getChildAt(4)).getUserObject().toString());
             });
-        } catch (InterruptedException e) {
-            fail();
-        } catch (InvocationTargetException e) {
-            fail();
+        } catch (InterruptedException | InvocationTargetException e) {
+            fail(e.getMessage());
         }
     }
 
@@ -602,10 +587,8 @@ public class SortableDefaultMutableTreeNodeTest {
                 assertEquals("D", ((SortableDefaultMutableTreeNode) root.getChildAt(3)).getUserObject().toString());
                 assertEquals("E", ((SortableDefaultMutableTreeNode) root.getChildAt(4)).getUserObject().toString());
             });
-        } catch (InterruptedException e) {
-            fail();
-        } catch (InvocationTargetException e) {
-            fail();
+        } catch (InterruptedException | InvocationTargetException e) {
+            fail(e.getMessage());
         }
     }
 
@@ -642,10 +625,8 @@ public class SortableDefaultMutableTreeNodeTest {
                 assertEquals("D", ((SortableDefaultMutableTreeNode) root.getChildAt(3)).getUserObject().toString());
                 assertEquals("E", ((SortableDefaultMutableTreeNode) root.getChildAt(4)).getUserObject().toString());
             });
-        } catch (InterruptedException e) {
-            fail();
-        } catch (InvocationTargetException e) {
-            fail();
+        } catch (InterruptedException | InvocationTargetException e) {
+            fail(e.getMessage());
         }
     }
 
@@ -675,10 +656,8 @@ public class SortableDefaultMutableTreeNodeTest {
                 assertEquals("D", ((SortableDefaultMutableTreeNode) root.getChildAt(3)).getUserObject().toString());
                 assertEquals("E", ((SortableDefaultMutableTreeNode) root.getChildAt(4)).getUserObject().toString());
             });
-        } catch (InterruptedException e) {
-            fail();
-        } catch (InvocationTargetException e) {
-            fail();
+        } catch (InterruptedException | InvocationTargetException e) {
+            fail(e.getMessage());
         }
     }
 

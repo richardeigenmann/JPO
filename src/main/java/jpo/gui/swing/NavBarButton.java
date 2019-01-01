@@ -14,8 +14,6 @@ import jpo.dataModel.Settings;
  */
 public class NavBarButton extends JButton {
 
-    private final Dimension navButtonSize = new Dimension( 24, 24 );
-
     /**
      * Constructs the NavBarButton
      * @param icon The icon to show
@@ -24,9 +22,10 @@ public class NavBarButton extends JButton {
         super( icon );
         setBorderPainted( false );
         setBackground( Settings.PICTUREVIEWER_BACKGROUND_COLOR );
-        setMinimumSize( navButtonSize );
-        setPreferredSize( navButtonSize );
-        setMaximumSize( navButtonSize );
+        Dimension navButtonSize = new Dimension(24, 24);
+        setMinimumSize(navButtonSize);
+        setPreferredSize(navButtonSize);
+        setMaximumSize(navButtonSize);
     }
 
     /**

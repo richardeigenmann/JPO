@@ -195,14 +195,14 @@ public class ConsolidateGroupWorker extends SwingWorker<String, String> {
 
         // make sure that we get a new filename. Some cameras might keep reusing the name DSC_01234.jpg 
         // over and over again which would overwrite pictures in the worst case.
-        File newFile = Tools.inventPicFilename( targetDirectory, pictureInfo.getImageFilename() );
+        File newFile = Tools.inventPicFilename( targetDirectory, pictureInfo.getImageFile().getName() );
         try {
             moveFile( pictureFile, newFile );
         } catch ( FileExistsException ex ) {
-            LOGGER.severe( String.format( "Failed to move file %s to %s.\nException: ", pictureFile.toString(), newFile.toString(), ex.getLocalizedMessage() ) );
+            LOGGER.severe( String.format( "Failed to move file %s to %s.\nException: %s", pictureFile.toString(), newFile.toString(), ex.getLocalizedMessage() ) );
             return false;
         } catch ( IOException ex ) {
-            LOGGER.severe( String.format( "Failed to move file %s to %s.\nException: ", pictureFile.toString(), newFile.toString(), ex.getLocalizedMessage() ) );
+            LOGGER.severe( String.format( "Failed to move file %s to %s.\nException: %s", pictureFile.toString(), newFile.toString(), ex.getLocalizedMessage() ) );
             return false;
         }
         pictureInfo.setImageLocation( newFile );

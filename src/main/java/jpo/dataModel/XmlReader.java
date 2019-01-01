@@ -38,8 +38,6 @@ import java.util.logging.Logger;
  * SortableDefaultMutableTreeNodes
  */
 public class XmlReader {
-    
-    private LabelFrame loadProgressGui = new LabelFrame( Settings.jpoResources.getString( "jpo.dataModel.XmlReader.loadProgressGuiTitle" ) );
 
     /**
      * Defines a LOGGER for this class
@@ -70,6 +68,7 @@ public class XmlReader {
             return;
         }
 
+        LabelFrame loadProgressGui = new LabelFrame(Settings.jpoResources.getString("jpo.dataModel.XmlReader.loadProgressGuiTitle"));
         try {
             saxParser.parse( bufferedInputStream, new SaxEventHandler( startNode, loadProgressGui, lowresUrls ) );
         } catch ( SAXParseException spe ) {
@@ -97,7 +96,6 @@ public class XmlReader {
         }
 
         correctJarReferences( startNode );
-        // new IntegrityChecker( startNode );
         loadProgressGui.getRid();
         loadProgressGui = null;
 

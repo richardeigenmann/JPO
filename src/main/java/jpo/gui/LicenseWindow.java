@@ -5,6 +5,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JDialog;
@@ -58,7 +59,7 @@ public class LicenseWindow {
         String textLine;
         try (
                 InputStream in = LicenseWindow.class.getClassLoader().getResourceAsStream( "gpl.txt" );
-                BufferedReader bin = new BufferedReader( new InputStreamReader( in ) )) {
+                BufferedReader bin = new BufferedReader( new InputStreamReader(Objects.requireNonNull(in)) )) {
             while ( ( textLine = bin.readLine() ) != null ) {
                 sb.append( textLine ).append( "\n" );
             }

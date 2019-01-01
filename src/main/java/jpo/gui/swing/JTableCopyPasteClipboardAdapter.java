@@ -30,8 +30,6 @@ public class JTableCopyPasteClipboardAdapter implements ActionListener {
 
     private final Clipboard systemClipboard;
 
-    private StringSelection stringSelection;
-
     private JTable jTable;
 
 
@@ -122,9 +120,8 @@ public class JTableCopyPasteClipboardAdapter implements ActionListener {
                 }
                 sbf.append( "\n" );
             }
-            stringSelection = new StringSelection( sbf.toString() );
-            //systemClipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-            systemClipboard.setContents( stringSelection, stringSelection );
+            StringSelection stringSelection = new StringSelection(sbf.toString());
+            systemClipboard.setContents(stringSelection, stringSelection);
         }
 
         if ( event.getActionCommand().compareTo( "Paste" ) == 0 ) {

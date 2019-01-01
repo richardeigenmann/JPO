@@ -24,10 +24,10 @@ import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.Transferable;
-import java.awt.event.MouseEvent;
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.logging.Level;
@@ -69,10 +69,6 @@ public class ApplicationEventHandler {
      * This class handles most of the events flying around the JPO application
      */
     public ApplicationEventHandler() {
-        registerOnEventBus();
-    }
-
-    private void registerOnEventBus() {
         JpoEventBus.getInstance().register(this);
     }
 
@@ -226,7 +222,7 @@ public class ApplicationEventHandler {
     }
 
     /**
-     * Starts a double panel slideshow
+     * Starts a double panel slide show
      *
      * @param request The request
      */
@@ -399,7 +395,7 @@ public class ApplicationEventHandler {
 
     /**
      * Bring up a Dialog where the user can input a new name for a file and
-     * rename it. If the taget file already exists and would overwrite the existing file
+     * rename it. If the target file already exists and would overwrite the existing file
      * A new name is suggested that the user can accept or abort the rename.
      *
      * @param request the request
@@ -443,7 +439,7 @@ public class ApplicationEventHandler {
 
     /**
      * Bring up a Dialog where the user can input a new name for a file and
-     * rename it. If the taget file already exists and would overwrite the existing file
+     * rename it. If the target file already exists and would overwrite the existing file
      * A new name is suggested that the user can accept or abort the rename.
      *
      * @param request the request
@@ -514,7 +510,7 @@ public class ApplicationEventHandler {
      *
      * @return the xml file or null
      */
-    public static File chooseXmlFile() {
+    private static File chooseXmlFile() {
         JFileChooser jFileChooser = new JFileChooser();
         jFileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         jFileChooser.setApproveButtonText(Settings.jpoResources.getString("fileOpenButtonText"));
@@ -721,9 +717,10 @@ public class ApplicationEventHandler {
     public void handleSortGroupRequest(SortGroupRequest request) {
         SortableDefaultMutableTreeNode popupNode = request.getNode();
         FieldCodes sortCriteria = request.getSortCriteria();
-        //logger.info( "Sort requested on " + myPopupNode.toString() + " for Criteria: " + Integer.toString( sortCriteria ) );
         popupNode.sortChildren(sortCriteria);
-        JpoEventBus.getInstance().post(new RefreshThumbnailRequest(popupNode, QUEUE_PRIORITY.MEDIUM_PRIORITY));
+        List<SortableDefaultMutableTreeNode> nodes = new ArrayList<>();
+        nodes.add(popupNode);
+        JpoEventBus.getInstance().post(new RefreshThumbnailRequest(nodes, QUEUE_PRIORITY.MEDIUM_PRIORITY));
     }
 
     /**
@@ -1075,7 +1072,7 @@ public class ApplicationEventHandler {
      * @param output the output stream
      * @throws IOException The exception it can throw
      */
-    public static void streamcopy(InputStream input, OutputStream output) throws IOException {
+    private static void streamcopy(InputStream input, OutputStream output) throws IOException {
         // 4MB buffer
         byte[] buffer = new byte[4096 * 1024];
         int bytesRead;
@@ -1105,7 +1102,9 @@ public class ApplicationEventHandler {
     public void handleMoveNodeToTopRequest(MoveNodeToTopRequest request) {
         SortableDefaultMutableTreeNode popupNode = request.getNode();
         popupNode.moveNodeToTop();
-        JpoEventBus.getInstance().post(new RefreshThumbnailRequest(popupNode.getParent(), QUEUE_PRIORITY.MEDIUM_PRIORITY));
+        List<SortableDefaultMutableTreeNode> nodes = new ArrayList<>();
+        nodes.add(popupNode.getParent());
+        JpoEventBus.getInstance().post(new RefreshThumbnailRequest(nodes, QUEUE_PRIORITY.MEDIUM_PRIORITY));
     }
 
     /**
@@ -1117,7 +1116,9 @@ public class ApplicationEventHandler {
     public void handleMoveNodeUpRequest(MoveNodeUpRequest request) {
         SortableDefaultMutableTreeNode popupNode = request.getNode();
         popupNode.moveNodeUp();
-        JpoEventBus.getInstance().post(new RefreshThumbnailRequest(popupNode.getParent(), QUEUE_PRIORITY.MEDIUM_PRIORITY));
+        List<SortableDefaultMutableTreeNode> nodes = new ArrayList<>();
+        nodes.add(popupNode.getParent());
+        JpoEventBus.getInstance().post(new RefreshThumbnailRequest(nodes, QUEUE_PRIORITY.MEDIUM_PRIORITY));
     }
 
     /**
@@ -1129,7 +1130,9 @@ public class ApplicationEventHandler {
     public void handleMoveNodeDownRequest(MoveNodeDownRequest request) {
         SortableDefaultMutableTreeNode popupNode = request.getNode();
         popupNode.moveNodeDown();
-        JpoEventBus.getInstance().post(new RefreshThumbnailRequest(popupNode.getParent(), QUEUE_PRIORITY.MEDIUM_PRIORITY));
+        List<SortableDefaultMutableTreeNode> nodes = new ArrayList<>();
+        nodes.add(popupNode.getParent());
+        JpoEventBus.getInstance().post(new RefreshThumbnailRequest(nodes, QUEUE_PRIORITY.MEDIUM_PRIORITY));
     }
 
     /**
@@ -1141,7 +1144,9 @@ public class ApplicationEventHandler {
     public void handleMoveNodeToBottomRequest(MoveNodeToBottomRequest request) {
         SortableDefaultMutableTreeNode popupNode = request.getNode();
         popupNode.moveNodeToBottom();
-        JpoEventBus.getInstance().post(new RefreshThumbnailRequest(popupNode.getParent(), QUEUE_PRIORITY.MEDIUM_PRIORITY));
+        List<SortableDefaultMutableTreeNode> nodes = new ArrayList<>();
+        nodes.add(popupNode.getParent());
+        JpoEventBus.getInstance().post(new RefreshThumbnailRequest(nodes, QUEUE_PRIORITY.MEDIUM_PRIORITY));
     }
 
     /**
@@ -1500,8 +1505,10 @@ public class ApplicationEventHandler {
         PictureInfo pictureInfo = (PictureInfo) request.getNode().getUserObject();
         pictureInfo.rotate(request.getAngle());
         LOGGER.info("Changed the rotation");
-        JpoEventBus.getInstance().post(new RefreshThumbnailRequest(request.getNode(), request.getPriority()));
-        JpoEventBus.getInstance().post(new RefreshThumbnailRequest(request.getNode().getParent(), request.getPriority()));
+        List<SortableDefaultMutableTreeNode> nodes = new ArrayList<>();
+        nodes.add(request.getNode());
+        nodes.add(request.getNode().getParent());
+        JpoEventBus.getInstance().post(new RefreshThumbnailRequest(nodes, request.getPriority()));
     }
 
     /**
@@ -1514,8 +1521,10 @@ public class ApplicationEventHandler {
     public void handleSetPictureRotationRequest(SetPictureRotationRequest request) {
         PictureInfo pictureInfo = (PictureInfo) request.getNode().getUserObject();
         pictureInfo.setRotation(request.getAngle());
-        JpoEventBus.getInstance().post(new RefreshThumbnailRequest(request.getNode(), request.getPriority()));
-        JpoEventBus.getInstance().post(new RefreshThumbnailRequest(request.getNode().getParent(), request.getPriority()));
+        List<SortableDefaultMutableTreeNode> nodes = new ArrayList<>();
+        nodes.add(request.getNode());
+        nodes.add(request.getNode().getParent());
+        JpoEventBus.getInstance().post(new RefreshThumbnailRequest(nodes, request.getPriority()));
     }
 
     /**
@@ -1590,7 +1599,7 @@ public class ApplicationEventHandler {
      * @param myObject     The PictureInfo upon which the user function should be
      *                     executed.
      */
-    public static void runUserFunction(int userFunction, PictureInfo myObject) {
+    private static void runUserFunction(int userFunction, PictureInfo myObject) {
         if ((userFunction < 0) || (userFunction >= Settings.maxUserFunctions)) {
             LOGGER.info("Error: called with an out of bounds index");
             return;

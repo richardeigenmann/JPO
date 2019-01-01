@@ -3,10 +3,12 @@ package jpo.gui.swing;
 import java.lang.reflect.InvocationTargetException;
 import javax.swing.SwingUtilities;
 import static org.junit.Assert.*;
+
+import org.junit.Assert;
 import org.junit.Test;
 
 /*
- Copyright (C) 2017-2017,  Richard Eigenmann, Zürich
+ Copyright (C) 2017-2019,  Richard Eigenmann, Zürich
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -31,11 +33,14 @@ public class ClockButtonTest {
      * Test constructor
      */
     @Test
-    public void testConstructor() {
+    public void testImageInitialisation() {
         try {
             SwingUtilities.invokeAndWait( () -> {
                 ClockButton clockButton = new ClockButton( );
                 assertNotNull( clockButton );
+
+                Assert.assertNotNull("ICON_CLOCK_ON must not be null", clockButton.getClockIconOn());
+                Assert.assertNotNull("ICON_CLOCK_OFF must not be null", clockButton.getClockIconOff());
             } );
         } catch ( InterruptedException | InvocationTargetException ex ) {
             fail("Failed to create a PictureFrame");

@@ -67,10 +67,8 @@ public class CameraDownloadWizardStep5
      */
     @Override
     protected JComponent createComponent() {
-        //return component shown to the user
         JPanel stepComponent = new JPanel();
         stepComponent.setLayout( new BoxLayout( stepComponent, BoxLayout.PAGE_AXIS ) );
-        //JLabel label1 = new JLabel( Settings.jpoResources.getString( "DownloadCameraWizardStep4Text1" ) );
         JLabel label1 = new JLabel( "After loading, sort by:" );
         label1.setAlignmentX( Component.LEFT_ALIGNMENT );
         stepComponent.add( label1 );
@@ -91,13 +89,14 @@ public class CameraDownloadWizardStep5
         sortChoice.addActionListener(( ActionEvent e ) -> {
             JComboBox cb = (JComboBox) e.getSource();
             SortOption sortOption = (SortOption) cb.getSelectedItem();
+            if ( sortOption == null ) {
+                sortOption = sortOptions.get(3); // by creation time
+            }
             sortOptionPicked( sortOption );
         });
 
 
         stepComponent.add( Box.createVerticalGlue() );
-        //JPanel fillerPanel = new JPanel();
-        //stepComponent.add( fillerPanel ); // helps with the layout...
 
         return stepComponent;
     }

@@ -5,14 +5,14 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.logging.Logger;
 import jpo.gui.InterruptSemaphore;
 import jpo.gui.ProgressGui;
 import jpo.gui.ProgressListener;
 
-
 /*
- Copyright (C) 2002 - 2017  Richard Eigenmann.
+ Copyright (C) 2002 - 2019  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -162,7 +162,7 @@ public class Camera implements Serializable {
      * @param f the file to store
      * @param checksum the file's checksum
      */
-    public static void storePicture( HashMap<File, Long> hm, File f, long checksum ) {
+    private static void storePicture(HashMap<File, Long> hm, File f, long checksum) {
         hm.put( f, checksum );
     }
 
@@ -177,18 +177,6 @@ public class Camera implements Serializable {
     }
 
     /**
-     * returns whether the provided checksum or file is registered in the old
-     * camera image.
-     *
-     * @param f The file
-     * @param checksum The checksum
-     * @return true if the file was known before
-     */
-    public boolean inOldImage( File f, long checksum ) {
-        return inOldImage( f ) || inOldImage( checksum );
-    }
-
-    /**
      * returns whether the provided checksum registered in the old camera image.
      * it determines whether to check by checksum or file based on the
      * useChecksum and useFilename flags.
@@ -197,7 +185,6 @@ public class Camera implements Serializable {
      * @return true if the image was known before based on the checksum
      */
     public boolean inOldImage( long checksum ) {
-        //logger.info("Camera.inOldImage: Checking Checksum: " + Long.toString(checksum) );
         return getOldImage().containsValue( checksum );
     }
 
@@ -210,7 +197,6 @@ public class Camera implements Serializable {
      * @return true if file is found in old camera
      */
     public boolean inOldImage( File f ) {
-        //logger.info("Camera.inOldImage: Checking File: " + f.toString() );
         return getOldImage().containsKey( f );
     }
 
@@ -247,7 +233,7 @@ public class Camera implements Serializable {
      *
      * @return the root directory or null if the directory is not good
      */
-    public File getRootDir() {
+    private File getRootDir() {
         File rootDir = new File( this.cameraMountPoint );
         if ( !rootDir.isDirectory() ) {
             LOGGER.info( String.format( "%s is not a directory", this.cameraMountPoint ) );
@@ -263,7 +249,7 @@ public class Camera implements Serializable {
      * @return the number of files in the camera directory tree
      */
     public int countFiles() {
-        return Tools.countfiles( getRootDir().listFiles() );
+        return Tools.countfiles( Objects.requireNonNull(getRootDir()).listFiles() );
     }
 
     /**
@@ -302,7 +288,7 @@ public class Camera implements Serializable {
         }
         zapOldImage();
         buildOldImage(
-                rootDir.listFiles(), progressListener, interrupter );
+                Objects.requireNonNull(rootDir.listFiles()), progressListener, interrupter );
     }
 
     /**
@@ -311,12 +297,10 @@ public class Camera implements Serializable {
      *
      * @param files The files to add to the old image
      * @param progressListener an object that would like to get
-     * prgoressIncrements
+     * progressIncrements
      * @param interrupter a object that signals to abort the thread.
      */
-    protected void buildOldImage( File[] files, ProgressListener progressListener, InterruptSemaphore interrupter ) {
-        //for ( int i = 0; ( i < files.length ) && ( !interrupter.getShouldInterrupt() ); i++ ) {
-        //  File f = files[i];
+    private void buildOldImage(File[] files, ProgressListener progressListener, InterruptSemaphore interrupter) {
         for ( File f : files ) {
             if ( interrupter.getShouldInterrupt() ) {
                 break;
@@ -330,7 +314,7 @@ public class Camera implements Serializable {
                 }
             } else {
                 if ( Tools.hasPictures( f ) ) {
-                    buildOldImage( f.listFiles(), progressListener, interrupter );
+                    buildOldImage(Objects.requireNonNull(f.listFiles()), progressListener, interrupter );
                 }
 
             }
@@ -350,7 +334,7 @@ public class Camera implements Serializable {
         }
 
         File rootDir = new File( getCameraMountPoint() );
-        return getNewPicturesLoop( rootDir.listFiles(), newPics );
+        return getNewPicturesLoop(Objects.requireNonNull(rootDir.listFiles()), newPics );
     }
 
     /**
@@ -361,14 +345,14 @@ public class Camera implements Serializable {
      * @param newFiles The collection to which to add them
      * @return a collection of new picture files
      */
-    protected Collection<File> getNewPicturesLoop( File[] files, Collection<File> newFiles ) {
+    private Collection<File> getNewPicturesLoop(File[] files, Collection<File> newFiles) {
         for ( File f : files ) {
             if ( !f.isDirectory() ) {
                 if ( Tools.jvmHasReader( f ) && !inOldImage( f ) ) {
                     newFiles.add( f );
                 }
             } else {
-                getNewPicturesLoop( f.listFiles(), newFiles );
+                getNewPicturesLoop(Objects.requireNonNull(f.listFiles()), newFiles );
             }
 
         }

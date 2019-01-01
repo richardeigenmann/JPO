@@ -249,7 +249,6 @@ public class GroupInfo implements Serializable {
      * @return a clone of the current PictureInfo object.
      */
     public GroupInfo getClone() {
-        GroupInfo clone = new GroupInfo( this.getGroupName() );
-        return clone;
+        return new GroupInfo( this.getGroupName() );
     }
 }

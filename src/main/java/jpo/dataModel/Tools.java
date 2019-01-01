@@ -170,9 +170,8 @@ public class Tools {
      *
      * @param sourceUrl source URL
      * @param targetFile target file
-     * @return the CRC
      */
-    public static long copyPicture( URL sourceUrl, File targetFile ) {
+    public static void copyPicture(URL sourceUrl, File targetFile ) {
         try (
                 InputStream in = sourceUrl.openStream();
                 OutputStream out = new FileOutputStream( targetFile )) {
@@ -180,7 +179,7 @@ public class Tools {
             BufferedInputStream bin = new BufferedInputStream( in );
             BufferedOutputStream bout = new BufferedOutputStream( out );
 
-            return copyBufferedStream( bin, bout );
+            copyBufferedStream(bin, bout);
         } catch ( IOException e ) {
             JOptionPane.showMessageDialog(
                     Settings.anchorFrame,
@@ -192,7 +191,6 @@ public class Tools {
                     + e.getMessage(),
                     Settings.jpoResources.getString( "genericError" ),
                     JOptionPane.ERROR_MESSAGE );
-            return Long.MIN_VALUE;
         }
     }
 
@@ -270,13 +268,10 @@ public class Tools {
 
     /**
      * convenience method to log the amount of free memory
-     *
-     * @return the free memory
      */
-    public static int freeMem() {
+    public static void freeMem() {
         int memory = (int) (Runtime.getRuntime().freeMemory() / 1024 / 1024);
         LOGGER.log( Level.INFO, "Free memory: {0}MB", memory );
-        return memory;
     }
 
     /**

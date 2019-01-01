@@ -239,16 +239,11 @@ public class ThumbnailLayoutManager implements LayoutManager {
     /**
      * Calculates the number of columns we have on the panel and saves the
      * result.
-     *
-     * @return true if the number of columns changed, false if not changed
      */
-    public boolean calculateCols() {
+    public void calculateCols() {
         int newCols = calculateCols( widthProvider.getWidth() );
         if ( newCols != getCols() ) {
             setCols( newCols );
-            return true;
-        } else {
-            return false;
         }
     }
 

@@ -35,11 +35,6 @@ public class FlatGroupNavigator
     private static final Logger LOGGER = Logger.getLogger( FlatGroupNavigator.class.getName() );
 
     /**
-     * Listener for tree model events
-     */
-    private final MyTreeModelListener myTreeModelListener = new MyTreeModelListener();
-    
-    /**
      * Constructor for a FlatGroupNavigator.
      *
      * @param groupNode The groupNode under which the pictures should be
@@ -47,7 +42,8 @@ public class FlatGroupNavigator
      */
     public FlatGroupNavigator( SortableDefaultMutableTreeNode groupNode ) {
         this.groupNode = groupNode;
-        Settings.getPictureCollection().getTreeModel().addTreeModelListener( myTreeModelListener );
+        MyTreeModelListener myTreeModelListener = new MyTreeModelListener();
+        Settings.getPictureCollection().getTreeModel().addTreeModelListener(myTreeModelListener);
         buildFromScratch();
     }
 

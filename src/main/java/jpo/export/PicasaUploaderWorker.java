@@ -143,9 +143,8 @@ public class PicasaUploaderWorker extends SwingWorker<Boolean, Integer> {
     /**
      * Uploads a picture to Picasa
      * @param pictureInfo the picture to upload
-     * @return true if success, false if not
      */
-    public boolean postPicture( PictureInfo pictureInfo ) {
+    public void postPicture(PictureInfo pictureInfo ) {
         LOGGER.log( Level.INFO, "Posting Picture: {0}", pictureInfo.getDescription());
         PhotoEntry myPhoto = new PhotoEntry();
         myPhoto.setTitle( new PlainTextConstruct( pictureInfo.getDescription() ) );
@@ -158,8 +157,6 @@ public class PicasaUploaderWorker extends SwingWorker<Boolean, Integer> {
             myRequest.picasaWebService.insert( albumUrl, myPhoto );
         } catch ( IOException | ServiceException ex ) {
             LOGGER.severe( ex.getMessage() );
-            return false;
         }
-        return true;
     }
 }

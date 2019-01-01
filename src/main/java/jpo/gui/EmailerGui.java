@@ -17,6 +17,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.logging.Logger;
 
 /*
@@ -211,7 +212,7 @@ public class EmailerGui extends JFrame {
         sizesJComboBox.addActionListener(( ActionEvent e ) -> {
             JComboBox cb = (JComboBox) e.getSource();
             String cbSelection = (String) cb.getSelectedItem();
-            if ( cbSelection.equals( Settings.jpoResources.getString( "emailSize1" ) ) ) {
+            if ( Objects.requireNonNull(cbSelection).equals( Settings.jpoResources.getString( "emailSize1" ) ) ) {
                 imageWidthWholeNumberField.setText( "350" );
                 imageHeightWholeNumberField.setText( "300" );
                 scalePicturesJCheckBox.setSelected( true );
@@ -341,8 +342,8 @@ public class EmailerGui extends JFrame {
      * of the Settings.
      */
     private void putSettings() {
-        Settings.emailSenders.add( fromJComboBox.getSelectedItem().toString() );
-        Settings.emailRecipients.add( toJComboBox.getSelectedItem().toString() );
+        Settings.emailSenders.add( Objects.requireNonNull(fromJComboBox.getSelectedItem()).toString() );
+        Settings.emailRecipients.add( Objects.requireNonNull(toJComboBox.getSelectedItem()).toString() );
         Settings.emailScaleImages = scalePicturesJCheckBox.isSelected();
         Settings.emailSendOriginal = sendOriginalsJCheckBox.isSelected();
         Settings.emailDimensions = new Dimension( imageWidthWholeNumberField.getValue(), imageHeightWholeNumberField.getValue() );
@@ -384,7 +385,7 @@ public class EmailerGui extends JFrame {
 
         InternetAddress senderAddress;
         try {
-            senderAddress = new InternetAddress( fromJComboBox.getSelectedItem().toString() );
+            senderAddress = new InternetAddress( Objects.requireNonNull(fromJComboBox.getSelectedItem()).toString() );
         } catch ( AddressException x ) {
             JOptionPane.showMessageDialog( this,
                     x.getLocalizedMessage(),
@@ -395,7 +396,7 @@ public class EmailerGui extends JFrame {
 
         InternetAddress destinationAddress;
         try {
-            destinationAddress = new InternetAddress( toJComboBox.getSelectedItem().toString() );
+            destinationAddress = new InternetAddress( Objects.requireNonNull(toJComboBox.getSelectedItem()).toString() );
         } catch ( AddressException x ) {
             JOptionPane.showMessageDialog( this,
                     x.getLocalizedMessage(),

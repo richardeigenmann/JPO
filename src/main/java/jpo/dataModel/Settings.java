@@ -481,11 +481,11 @@ public class Settings {
     /**
      * Default size for buttons such as OK, cancel etc.
      */
-    public static Dimension defaultButtonDimension = new Dimension(80, 25);
+    public static final Dimension defaultButtonDimension = new Dimension(80, 25);
     /**
      * Default size for buttons such as OK, cancel etc.
      */
-    public static Dimension threeDotButtonDimension = new Dimension(25, 25);
+    public static final Dimension threeDotButtonDimension = new Dimension(25, 25);
 
     /**
      * Codes to indicate the field
@@ -544,7 +544,7 @@ public class Settings {
     /**
      * date format for adding new pictures from the camera
      */
-    public static String addFromCameraDateFormat = "dd.MM.yyyy  HH:mm";
+    public static final String addFromCameraDateFormat = "dd.MM.yyyy  HH:mm";
 
     /**
      * Collection of cameras
@@ -1233,11 +1233,9 @@ public class Settings {
     /**
      * This method validates that the copy locations are valid directories and
      * removes those that don't exist
-     *
-     * @return Returns true if the collection was changed, false if not.
      */
-    public static boolean validateCopyLocations() {
-        return copyLocations.removeIf(location -> !new File(location).exists());
+    public static void validateCopyLocations() {
+        copyLocations.removeIf(location -> !new File(location).exists());
     }
 
     /**

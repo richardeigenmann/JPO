@@ -18,12 +18,13 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import jpo.dataModel.Settings;
 import jpo.dataModel.Tools;
+import org.jetbrains.annotations.NotNull;
 
 /*
  DirectoryChooserTest.java:  a object that displays a JTextFiled and has a button
  next to it which allows you to bring up a filechooser
 
- Copyright (C) 2002 - 2014  Richard Eigenmann.
+ Copyright (C) 2002 - 2019  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -174,9 +175,6 @@ public class DirectoryChooser
      * This method checks the path specified in the directory chooser and sets
      * the color to red if it doesn't meet the validation criteria or black if
      * it does.
-     *
-     * @return returns true if the directory passes the validation, false if it
-     * doesn't
      */
     private void setColor() {
         if ( checkDirectory( getDirectory(), validationType ) ) {
@@ -316,19 +314,11 @@ public class DirectoryChooser
      * directory
      *
      * @param directory The directory to be added to the dropdown list
-     * @return true if the directory was added, false if not.
      */
-    private boolean addDirToDropdown(String directory) {
-        if ( directory == null ) {
-            return false;
-        }
-
+    private void addDirToDropdown(@NotNull String directory) {
         File f = new File( directory );
         if ( f.exists() && f.isDirectory() ) {
             directoryJComboBox.addItem( makeObj( directory ) );
-            return true;
-        } else {
-            return false;
         }
     }
 

@@ -91,8 +91,7 @@ public class PrefObj {
             throws IOException, ClassNotFoundException {
         ByteArrayInputStream bais = new ByteArrayInputStream( raw );
         ObjectInputStream ois = new ObjectInputStream( bais );
-        Object o = ois.readObject();
-        return o;
+        return ois.readObject();
     }
 
     /**
@@ -126,7 +125,6 @@ public class PrefObj {
             throws IOException, BackingStoreException, ClassNotFoundException {
         byte[][] pieces = readPieces(prefs, key);
         byte[] raw = combinePieces(pieces);
-        Object o = bytes2Object( raw );
-        return o;
+        return bytes2Object( raw );
     }
 }

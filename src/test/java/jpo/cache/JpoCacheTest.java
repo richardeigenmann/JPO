@@ -1,5 +1,6 @@
 package jpo.cache;
 
+import java.util.Objects;
 import java.util.Properties;
 import jpo.dataModel.Settings;
 import org.junit.Test;
@@ -33,6 +34,6 @@ public class JpoCacheTest {
     public void testLoadProperties() {
         Settings.loadSettings();
         Properties props = JpoCache.loadProperties();
-        assertTrue( "Expecting more than 30 properties to be defined", props.entrySet().size()  > 30);
+        assertTrue( "Expecting more than 30 properties to be defined", Objects.requireNonNull(props).entrySet().size()  > 30);
     }
 }

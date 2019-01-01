@@ -12,7 +12,8 @@ Copyright (C) 2007-2017  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
-of the License, or any later version. This program is distributedin the hope that it will be useful, but WITHOUT ANY WARRANTY;
+of the License, or any later version. This program is distributed
+in the hope that it will be useful, but WITHOUT ANY WARRANTY;
 without even the implied warranty of MERCHANTABILITY or FITNESS
 FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
 more details. You should have received a copy of the GNU General Public License
@@ -47,7 +48,7 @@ public class CameraDownloadWizardStep7
 
 
     /**
-     *  Returns the component that visualises the user interactable stuff for this step of the wizard.
+     *  Returns the component that visualises the user interactionable stuff for this step of the wizard.
      * @return the component
      */
     @Override
@@ -70,7 +71,7 @@ public class CameraDownloadWizardStep7
 
 
     /**
-     *  Required by the AbstractSetp but not used.
+     *  Required by the AbstractStep
      */
     @Override
     public void prepareRendering() {

@@ -8,7 +8,9 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -43,8 +45,8 @@ public class PictureInfoTest {
      */
     @Test
     public void testToString() {
-        PictureInfo pi = new PictureInfo( "c:\\picture.jpg", "My Sample Picture" );
-        assertEquals( "Should return the description", "My Sample Picture", pi.toString() );
+        PictureInfo pi = new PictureInfo(new File("c:\\picture.jpg"), "My Sample Picture");
+        assertEquals("Should return the description", "My Sample Picture", pi.toString());
     }
 
     /**
@@ -52,8 +54,8 @@ public class PictureInfoTest {
      */
     @Test
     public void testGetDescription() {
-        PictureInfo pi = new PictureInfo( "c:\\picture.jpg", "My Sample Picture" );
-        assertEquals( "Should return the description", "My Sample Picture", pi.getDescription() );
+        PictureInfo pi = new PictureInfo(new File("c:\\picture.jpg"), "My Sample Picture");
+        assertEquals("Should return the description", "My Sample Picture", pi.getDescription());
     }
 
     private int changeEvents;
@@ -65,16 +67,16 @@ public class PictureInfoTest {
     public void testSetDescription() {
         PictureInfo pi = new PictureInfo();
         changeEvents = 0;
-        PictureInfoChangeListener picl = ( PictureInfoChangeEvent arg0 ) -> {
+        PictureInfoChangeListener picl = (PictureInfoChangeEvent arg0) -> {
             changeEvents += 1;
         };
-        pi.addPictureInfoChangeListener( picl );
-        pi.setDescription( "Rubbish" );
-        assertEquals( "Expecting what went in to come out", "Rubbish", pi.getDescription() );
-        assertEquals( "Expecting 1 change event", 1, changeEvents );
-        pi.setDescription( "More Rubbish" );
-        assertEquals( "Expecting what went in to come out", "More Rubbish", pi.getDescription() );
-        assertEquals( "Expecting a second change event", 2, changeEvents );
+        pi.addPictureInfoChangeListener(picl);
+        pi.setDescription("Rubbish");
+        assertEquals("Expecting what went in to come out", "Rubbish", pi.getDescription());
+        assertEquals("Expecting 1 change event", 1, changeEvents);
+        pi.setDescription("More Rubbish");
+        assertEquals("Expecting what went in to come out", "More Rubbish", pi.getDescription());
+        assertEquals("Expecting a second change event", 2, changeEvents);
     }
 
     private int countEvents;
@@ -86,16 +88,16 @@ public class PictureInfoTest {
     public void testSetDescriptionSame() {
         PictureInfo pi = new PictureInfo();
         countEvents = 0;
-        PictureInfoChangeListener picl = ( PictureInfoChangeEvent arg0 ) -> {
+        PictureInfoChangeListener picl = (PictureInfoChangeEvent arg0) -> {
             countEvents += 1;
         };
-        pi.addPictureInfoChangeListener( picl );
-        pi.setDescription( "Rubbish" );
-        assertEquals( "Expecting what went in to come out", "Rubbish", pi.getDescription() );
-        assertEquals( "Expecting 1 change event", 1, countEvents );
-        pi.setDescription( "Rubbish" );
-        assertEquals( "Expecting what went in to come out", "Rubbish", pi.getDescription() );
-        assertEquals( "Expecting no new change event because it was the same that went in", 1, countEvents );
+        pi.addPictureInfoChangeListener(picl);
+        pi.setDescription("Rubbish");
+        assertEquals("Expecting what went in to come out", "Rubbish", pi.getDescription());
+        assertEquals("Expecting 1 change event", 1, countEvents);
+        pi.setDescription("Rubbish");
+        assertEquals("Expecting what went in to come out", "Rubbish", pi.getDescription());
+        assertEquals("Expecting no new change event because it was the same that went in", 1, countEvents);
     }
 
     /**
@@ -104,9 +106,9 @@ public class PictureInfoTest {
     @Test
     public void testAppendToDescription() {
         PictureInfo pi = new PictureInfo();
-        pi.setDescription( "Rubbish" );
-        pi.appendToDescription( "Bin" );
-        assertEquals( "Expecting that the description concatenated", "RubbishBin", pi.getDescription() );
+        pi.setDescription("Rubbish");
+        pi.appendToDescription("Bin");
+        assertEquals("Expecting that the description concatenated", "RubbishBin", pi.getDescription());
     }
 
     /**
@@ -115,7 +117,7 @@ public class PictureInfoTest {
     @Test
     public void testDescriptionContains() {
         PictureInfo pi = new PictureInfo();
-        pi.setDescription( "RubbishBinTrash" );
+        pi.setDescription("RubbishBinTrash");
         assertTrue("Expecting to find a substring", pi.descriptionContains("Bin"));
     }
 
@@ -124,9 +126,9 @@ public class PictureInfoTest {
      */
     @Test
     public void testGetImageLocation() {
-        PictureInfo pi = new PictureInfo( "file:///dir/picture.jpg", "My Sample Picture" );
+        PictureInfo pi = new PictureInfo("file:///dir/picture.jpg", "My Sample Picture");
         String highresLocation = pi.getImageLocation();
-        assertEquals( "file:///dir/picture.jpg", highresLocation );
+        assertEquals("file:///dir/picture.jpg", highresLocation);
     }
 
     /**
@@ -134,9 +136,9 @@ public class PictureInfoTest {
      */
     @Test
     public void testGetImageFile() {
-        PictureInfo pi = new PictureInfo( "file:///dir/picture.jpg", "My Sample Picture" );
+        PictureInfo pi = new PictureInfo("file:///dir/picture.jpg", "My Sample Picture");
         File f = pi.getImageFile();
-        assertEquals( "Checking getHighresFile", new File( "/dir/picture.jpg" ), f );
+        assertEquals("Checking getHighresFile", new File("/dir/picture.jpg"), f);
     }
 
     /**
@@ -146,9 +148,9 @@ public class PictureInfoTest {
      */
     @Test
     public void testGetHighresURL() throws Exception {
-        PictureInfo pi = new PictureInfo( "file:///dir/picture.jpg", "My Sample Picture" );
+        PictureInfo pi = new PictureInfo("file:///dir/picture.jpg", "My Sample Picture");
         URL highresURL = pi.getImageURL();
-        assertEquals( "Checking getHighresURL", new URL( "file:///dir/picture.jpg" ), highresURL );
+        assertEquals("Checking getHighresURL", new URL("file:///dir/picture.jpg"), highresURL);
     }
 
     /**
@@ -156,17 +158,17 @@ public class PictureInfoTest {
      */
     @Test
     public void testGetImageURLOrNull() {
-        PictureInfo pi1 = new PictureInfo( "file:///dir/picture.jpg", "My Sample Picture" );
+        PictureInfo pi1 = new PictureInfo("file:///dir/picture.jpg", "My Sample Picture");
         URL highresURL1 = pi1.getImageURLOrNull();
         try {
-            assertEquals( "Checking getImageURLOrNull", new URL( "file:///dir/picture.jpg" ), highresURL1 );
-        } catch ( MalformedURLException ex ) {
-            fail( "Test should not have thrown an exception: " + ex.getMessage() );
+            assertEquals("Checking getImageURLOrNull", new URL("file:///dir/picture.jpg"), highresURL1);
+        } catch (MalformedURLException ex) {
+            fail("Test should not have thrown an exception: " + ex.getMessage());
         }
 
-        PictureInfo pi2 = new PictureInfo( "noProtocol:///dir/picture.jpg", "My Sample Picture" );
+        PictureInfo pi2 = new PictureInfo("noProtocol:///dir/picture.jpg", "My Sample Picture");
         URL highresURL2 = pi2.getImageURLOrNull();
-        assertNull( "Checking getHighresURLOrNull", highresURL2 );
+        assertNull("Checking getHighresURLOrNull", highresURL2);
     }
 
     /**
@@ -176,36 +178,36 @@ public class PictureInfoTest {
     public void testGetImageURIOrNull() {
         PictureInfo pi = new PictureInfo();
         String goodLocation = "file:///image.jpg";
-        pi.setImageLocation( goodLocation );
+        pi.setImageLocation(goodLocation);
         URI pulledUri = pi.getImageURIOrNull();
-        assertEquals( goodLocation, pulledUri.toString() );
+        assertEquals(goodLocation, pulledUri.toString());
 
         PictureInfo pi2 = new PictureInfo();
         URI nullUri = pi2.getImageURIOrNull();
-        assertEquals( "", nullUri.toString() );
+        assertEquals("", nullUri.toString());
 
         PictureInfo pi3 = new PictureInfo();
         String badLocation = "?äöü&~`";
-        pi3.setImageLocation( badLocation );
+        pi3.setImageLocation(badLocation);
         URI nullUri2 = pi3.getImageURIOrNull();
-        assertNull( nullUri2 );
+        assertNull(nullUri2);
 
     }
 
     @Test
     public void testSetImageLocationString() {
         PictureInfo pi = new PictureInfo();
-        pi.setImageLocation( "file:///dir/picture.jpg" );
+        pi.setImageLocation("file:///dir/picture.jpg");
         File f = pi.getImageFile();
-        assertEquals( "Testing what went in comes out", f.toString(), "/dir/picture.jpg" );
+        assertEquals("Testing what went in comes out", f.toString(), "/dir/picture.jpg");
     }
 
     @Test
     public void testSetImageLocationWithSpace() {
         PictureInfo pi = new PictureInfo();
-        pi.setImageLocation( "file:///dir/picture%20file.jpg" );
+        pi.setImageLocation("file:///dir/picture%20file.jpg");
         File f = pi.getImageFile();
-        assertEquals( "Testing what went in comes out", f.toString(), "/dir/picture file.jpg" );
+        assertEquals("Testing what went in comes out", f.toString(), "/dir/picture file.jpg");
     }
 
     /**
@@ -216,9 +218,9 @@ public class PictureInfoTest {
     @Test
     public void testSetImageLocationUrl() throws MalformedURLException {
         PictureInfo pi = new PictureInfo();
-        pi.setImageLocation( new URL( "file:///dir/picture.jpg" ) );
+        pi.setImageLocation(new URL("file:///dir/picture.jpg"));
         File f = pi.getImageFile();
-        assertEquals( "Testing that the Highres Location was memorised correctly", f.toString(), "/dir/picture.jpg" );
+        assertEquals("Testing that the Highres Location was memorised correctly", f.toString(), "/dir/picture.jpg");
     }
 
     /**
@@ -227,10 +229,10 @@ public class PictureInfoTest {
     @Test
     public void testAppendToImageLocation() {
         PictureInfo pi = new PictureInfo();
-        pi.setImageLocation( "file:///dir/picture" );
-        pi.appendToImageLocation( ".jpg" );
+        pi.setImageLocation("file:///dir/picture");
+        pi.appendToImageLocation(".jpg");
         File f = pi.getImageFile();
-        assertEquals( "Testing that the Highres Location was memorised correctly", f.toString(), "/dir/picture.jpg" );
+        assertEquals("Testing that the Highres Location was memorised correctly", f.toString(), "/dir/picture.jpg");
     }
 
     /**
@@ -239,9 +241,9 @@ public class PictureInfoTest {
     @Test
     public void testGetHighresFilename() {
         PictureInfo pi = new PictureInfo();
-        pi.setImageLocation( "file:///dir/picture.jpg" );
-        String filename = pi.getImageFilename();
-        assertEquals( "Testing that the filename can be derived from the Highres Location correctly", filename, "picture.jpg" );
+        pi.setImageLocation("file:///dir/picture.jpg");
+        String filename = pi.getImageFile().getName();
+        assertEquals("Testing that the filename can be derived from the Highres Location correctly", filename, "picture.jpg");
     }
 
     /**
@@ -250,7 +252,7 @@ public class PictureInfoTest {
     private final PictureInfoChangeListener pictureInfoChangeListener = new PictureInfoChangeListener() {
 
         @Override
-        public void pictureInfoChangeEvent( PictureInfoChangeEvent pice ) {
+        public void pictureInfoChangeEvent(PictureInfoChangeEvent pice) {
             eventsReceived++;
         }
     };
@@ -264,15 +266,15 @@ public class PictureInfoTest {
     public void testPictureInfoChangeListener() {
         eventsReceived = 0;
         PictureInfo pi = new PictureInfo();
-        assertEquals( "To start off there should be no events", 0, eventsReceived );
-        pi.setDescription( "Step 1" );
-        assertEquals( "There is no listener attached so there is no event", 0, eventsReceived );
-        pi.addPictureInfoChangeListener( pictureInfoChangeListener );
-        pi.setDescription( "Step 2" );
-        assertEquals( "The listener should have fired and we should have 1 event", 1, eventsReceived );
-        pi.removePictureInfoChangeListener( pictureInfoChangeListener );
-        pi.setDescription( "Step 3" );
-        assertEquals( "The detached listener should not have fired", 1, eventsReceived );
+        assertEquals("To start off there should be no events", 0, eventsReceived);
+        pi.setDescription("Step 1");
+        assertEquals("There is no listener attached so there is no event", 0, eventsReceived);
+        pi.addPictureInfoChangeListener(pictureInfoChangeListener);
+        pi.setDescription("Step 2");
+        assertEquals("The listener should have fired and we should have 1 event", 1, eventsReceived);
+        pi.removePictureInfoChangeListener(pictureInfoChangeListener);
+        pi.setDescription("Step 3");
+        assertEquals("The detached listener should not have fired", 1, eventsReceived);
     }
 
     /**
@@ -280,32 +282,31 @@ public class PictureInfoTest {
      */
     @Test
     public void testDumpToXml() {
-        final PictureInfo pi = new PictureInfo( PictureInfoTest.class.getClassLoader().getResource( "exif-test-canon-eos-350d.jpg" ), "First <Picture> & difficult xml chars ' \"" );
-        pi.setComment( "Comment <<&>'\">" );
-        pi.setFilmReference( "Reference <<&>'\">" );
-        pi.setRotation( 45.1 );
-        pi.setPhotographer( "Richard Eigenmann <<&>'\">" );
-        pi.setLatLng( "22.67x33.89" );
-        pi.setCopyrightHolder( "Sandra Keller <<&>'\">" );
-        pi.addCategoryAssignment( "1" );
-        pi.setChecksum( 1234 );
+        URL u = PictureInfoTest.class.getClassLoader().getResource("exif-test-canon-eos-350d.jpg");
+        final PictureInfo pi = new PictureInfo(Objects.requireNonNull(u).toString(), "First <Picture> & difficult xml chars ' \"");
+        pi.setComment("Comment <<&>'\">");
+        pi.setFilmReference("Reference <<&>'\">");
+        pi.setRotation(45.1);
+        pi.setPhotographer("Richard Eigenmann <<&>'\">");
+        pi.setLatLng("22.67x33.89");
+        pi.setCopyrightHolder("Sandra Keller <<&>'\">");
+        pi.addCategoryAssignment("1");
+        pi.setChecksum(1234);
 
         StringWriter sw = new StringWriter();
-        try (
-                //FileWriter sw = new FileWriter( "/tmp/output.xml" );
-                BufferedWriter bw = new BufferedWriter( sw )) {
-            pi.dumpToXml( bw );
-        } catch ( IOException ex ) {
-            Logger.getLogger( PictureInfoTest.class.getName() ).log( Level.SEVERE, "The dumpToXml should really not throw an IOException", ex );
-            fail( "Unexpected IOException" );
+        try (BufferedWriter bw = new BufferedWriter(sw)) {
+            pi.dumpToXml(bw);
+        } catch (IOException ex) {
+            Logger.getLogger(PictureInfoTest.class.getName()).log(Level.SEVERE, "The dumpToXml should really not throw an IOException", ex);
+            fail("Unexpected IOException");
         }
 
-        URL jpgResource = PictureInfoTest.class.getClassLoader().getResource( "exif-test-canon-eos-350d.jpg" );
+        URL jpgResource = PictureInfoTest.class.getClassLoader().getResource("exif-test-canon-eos-350d.jpg");
 
         String expected = "<picture>\n"
                 + "\t<description><![CDATA[First <Picture> & difficult xml chars ' \"]]></description>\n"
                 + "\t<file_URL>"
-                + jpgResource.toString()
+                + Objects.requireNonNull(jpgResource).toString()
                 + "</file_URL>\n"
                 + "\t<checksum>1234</checksum>\n"
                 + "\t<COMMENT>Comment &lt;&lt;&amp;&gt;&apos;&quot;&gt;</COMMENT>\n"
@@ -318,28 +319,33 @@ public class PictureInfoTest {
                 + "</picture>\n";
 
         String result = sw.toString();
-        assertEquals( expected, result );
+        assertEquals(expected, result);
     }
 
     @Test
     public void testChecksum() {
         PictureInfo pi = new PictureInfo();
-        pi.setChecksum( 123456789 );
-        assertEquals( 123456789, pi.getChecksum() );
-        assertEquals( "123456789", pi.getChecksumAsString() );
+        pi.setChecksum(123456789);
+        assertEquals(123456789, pi.getChecksum());
+        assertEquals("123456789", pi.getChecksumAsString());
 
-        pi.setChecksum( Long.MIN_VALUE );
-        assertEquals( Long.MIN_VALUE, pi.getChecksum() );
-        assertEquals( "N/A", pi.getChecksumAsString() );
+        pi.setChecksum(Long.MIN_VALUE);
+        assertEquals(Long.MIN_VALUE, pi.getChecksum());
+        assertEquals("N/A", pi.getChecksumAsString());
     }
 
     @Test
     public void testCalculateChecksum() {
-        URL image = PictureInfoTest.class.getClassLoader().getResource( "exif-test-canon-eos-350d.jpg" );
-        PictureInfo pi = new PictureInfo( image, "Sample Picture" );
-        assertEquals( "N/A", pi.getChecksumAsString() );
+        URL image = PictureInfoTest.class.getClassLoader().getResource("exif-test-canon-eos-350d.jpg");
+        PictureInfo pi = null;
+        try {
+            pi = new PictureInfo(new File(image.toURI()), "Sample Picture");
+        } catch (URISyntaxException e) {
+            fail(e.getMessage());
+        }
+        assertEquals("N/A", pi.getChecksumAsString());
         pi.calculateChecksum();
-        assertEquals( "778423829", pi.getChecksumAsString() );
+        assertEquals("778423829", pi.getChecksumAsString());
     }
 
 }

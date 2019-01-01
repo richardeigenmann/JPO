@@ -1,7 +1,6 @@
 package jpo.EventBus;
 
 import jpo.dataModel.NodeNavigatorInterface;
-import jpo.dataModel.SortableDefaultMutableTreeNode;
 
 import java.awt.*;
 
@@ -60,7 +59,7 @@ public class ShowPicturePopUpMenuRequest implements Request {
     }
 
     /**
-     * Retruns the index
+     * Returns the index
      * @return the index
      */
     public int getIndex() {return index;}

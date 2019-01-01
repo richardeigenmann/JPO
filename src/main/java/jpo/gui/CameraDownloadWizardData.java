@@ -210,18 +210,7 @@ public class CameraDownloadWizardData {
      * than one collection you could specify which collection to add the
      * pictures to here.
      */
-    private TreeModel treeModel = Settings.getPictureCollection().getTreeModel();
-
-    /**
-     * Sets the TreeModel of the collection to which the pictures should be
-     * added. For the time being this need not be set since JPO only supports a
-     * single collection at any one time.
-     *
-     * @param treeModel The Treemodel of the collection to add the node to
-     */
-    public void setTreeModel( TreeModel treeModel ) {
-        this.treeModel = treeModel;
-    }
+    private final TreeModel treeModel = Settings.getPictureCollection().getTreeModel();
 
     /**
      * Returns the TreeModel of the collection for which the Wizard is running.

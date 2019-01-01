@@ -10,6 +10,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
 import java.util.List;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -271,18 +272,18 @@ public class Emailer
                 mp.addBodyPart( pictureDescriptionMimeBodyPart );
 
                 if ( scaleImages ) {
-                    LOGGER.log( Level.INFO, "{0}{1}", new Object[]{ Settings.jpoResources.getString( "EmailerLoading" ), pi.getImageFilename() } );
+                    LOGGER.log( Level.INFO, "{0}{1}", new Object[]{ Settings.jpoResources.getString( "EmailerLoading" ), pi.getImageFile().toString() } );
                     scalablePicture.loadPictureImd( pi.getImageURLOrNull(), pi.getRotation() );
-                    LOGGER.log( Level.INFO, "{0}{1}", new Object[]{ Settings.jpoResources.getString( "EmailerScaling" ), pi.getImageFilename() } );
+                    LOGGER.log( Level.INFO, "{0}{1}", new Object[]{ Settings.jpoResources.getString( "EmailerScaling" ), pi.getImageFile().toString() } );
                     scalablePicture.scalePicture();
                     baos = new ByteArrayOutputStream();
-                    LOGGER.log( Level.INFO, "{0}{1}", new Object[]{ Settings.jpoResources.getString( "EmailerWriting" ), pi.getImageFilename() } );
+                    LOGGER.log( Level.INFO, "{0}{1}", new Object[]{ Settings.jpoResources.getString( "EmailerWriting" ), pi.getImageFile().toString() } );
                     scalablePicture.writeScaledJpg( baos );
-                    encds = new EncodedDataSource( "image/jpeg", pi.getImageFilename(), baos );
+                    encds = new EncodedDataSource( "image/jpeg", pi.getImageFile().getName(), baos );
                     scaledPictureMimeBodyPart = new MimeBodyPart();
                     scaledPictureMimeBodyPart.setDataHandler( new DataHandler( encds ) );
-                    scaledPictureMimeBodyPart.setFileName( pi.getImageFilename() );
-                    LOGGER.log( Level.INFO, "{0}{1}", new Object[]{ Settings.jpoResources.getString( "EmailerAdding" ), pi.getImageFilename() } );
+                    scaledPictureMimeBodyPart.setFileName( pi.getImageFile().getName() );
+                    LOGGER.log( Level.INFO, "{0}{1}", new Object[]{ Settings.jpoResources.getString( "EmailerAdding" ), pi.getImageFile().toString() } );
                     mp.addBodyPart( scaledPictureMimeBodyPart );
                 }
 
@@ -293,9 +294,9 @@ public class Emailer
                     // attach the file to the message
                     ds = new URLDataSource( highresURL );
                     originalPictureMimeBodyPart.setDataHandler( new DataHandler( ds ) );
-                    originalPictureMimeBodyPart.setFileName( pi.getImageFilename() );
+                    originalPictureMimeBodyPart.setFileName( pi.getImageFile().getName() );
                     // create the Multipart and add its parts to it
-                    LOGGER.log( Level.INFO, "{0}{1}", new Object[]{ Settings.jpoResources.getString( "EmailerAdding" ), pi.getImageFilename() } );
+                    LOGGER.log( Level.INFO, "{0}{1}", new Object[]{ Settings.jpoResources.getString( "EmailerAdding" ), pi.getImageFile().toString() } );
                     mp.addBodyPart( originalPictureMimeBodyPart );
                 }
 
@@ -329,7 +330,9 @@ public class Emailer
         } else {
             try {
                 publish( Settings.jpoResources.getString( "EmailerSending" ) );
-                Transport.send( buildMessage( session ) );
+                MimeMessage msg = buildMessage(session);
+                Objects.requireNonNull(msg, "msg must not be null");
+                Transport.send(msg);
                 publish( Settings.jpoResources.getString( "EmailerSent" ) );
             } catch ( MessagingException x ) {
                 LOGGER.severe( x.getMessage() );
@@ -366,7 +369,9 @@ public class Emailer
         } else {
             try {
                 publish( Settings.jpoResources.getString( "EmailerSending" ) );
-                Transport.send( buildMessage( session ) );
+                MimeMessage msg = buildMessage(session);
+                Objects.requireNonNull(msg, "msg must not be null");
+                Transport.send(msg);
                 publish( Settings.jpoResources.getString( "EmailerSent" ) );
             } catch ( MessagingException x ) {
                 LOGGER.severe( x.getLocalizedMessage() );
@@ -402,7 +407,9 @@ public class Emailer
         } else {
             try {
                 publish( Settings.jpoResources.getString( "EmailerSending" ) );
-                Transport.send( buildMessage( session ) );
+                MimeMessage msg = buildMessage(session);
+                Objects.requireNonNull(msg, "msg must not be null");
+                Transport.send(msg);
                 publish( Settings.jpoResources.getString( "EmailerSent" ) );
             } catch ( MessagingException x ) {
                 LOGGER.severe( x.getLocalizedMessage() );

@@ -20,7 +20,6 @@ import javax.swing.JPanel;
 import static javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE;
 import jpo.EventBus.ShowCategoryUsageEditorRequest;
 import jpo.dataModel.Category;
-import jpo.dataModel.GroupInfo;
 import jpo.dataModel.PictureInfo;
 import jpo.dataModel.Settings;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
@@ -115,18 +114,14 @@ public class CategoryUsageJFrame extends JFrame {
         modifyCategoryJButton.setPreferredSize( defaultButtonSize );
         modifyCategoryJButton.setMinimumSize( defaultButtonSize );
         modifyCategoryJButton.setMaximumSize( maxButtonSize );
-        modifyCategoryJButton.addActionListener( ( ActionEvent evt ) -> {
-            new CategoryEditorJFrame();
-        } );
+        modifyCategoryJButton.addActionListener( ( ActionEvent evt ) -> new CategoryEditorJFrame());
         buttonJPanel.add( modifyCategoryJButton, "wrap" );
 
         final JButton refreshJButton = new JButton( Settings.jpoResources.getString( "refreshJButtonCUJF" ) );
         refreshJButton.setPreferredSize( defaultButtonSize );
         refreshJButton.setMinimumSize( defaultButtonSize );
         refreshJButton.setMaximumSize( maxButtonSize );
-        refreshJButton.addActionListener( ( ActionEvent evt ) -> {
-            updateCategories();
-        } );
+        refreshJButton.addActionListener( ( ActionEvent evt ) -> updateCategories());
         buttonJPanel.add( refreshJButton, "wrap" );
 
         final JButton updateJButton = new JButton( Settings.jpoResources.getString( "updateJButton" ) );
@@ -143,9 +138,7 @@ public class CategoryUsageJFrame extends JFrame {
         cancelJButton.setPreferredSize( defaultButtonSize );
         cancelJButton.setMinimumSize( defaultButtonSize );
         cancelJButton.setMaximumSize( maxButtonSize );
-        cancelJButton.addActionListener( ( ActionEvent evt ) -> {
-            getRid();
-        } );
+        cancelJButton.addActionListener( ( ActionEvent evt ) -> getRid());
         buttonJPanel.add( cancelJButton, "wrap" );
 
         jPanel.add( buttonJPanel, "aligny top" );
@@ -170,39 +163,15 @@ public class CategoryUsageJFrame extends JFrame {
      *
      * @param nodes The nodes
      */
-    public void setSelection( Set<SortableDefaultMutableTreeNode> nodes ) {
+    private void setSelection(Set<SortableDefaultMutableTreeNode> nodes) {
         selectedNodes = nodes;
-        updateCategories();
-    }
-
-    /**
-     * This method receives the selection the Category Editor is to work on.
-     * Here we can pass a Group node and a flag whether the nodes are to be
-     * recursively searched for the pictures.
-     *
-     * @param groupNode The node from which to add the pictures
-     * @param recurse	A flag whether to recurse the search into sub groups
-     */
-    public void setGroupSelection( SortableDefaultMutableTreeNode groupNode,
-            boolean recurse ) {
-        selectedNodes = new HashSet<>();
-        SortableDefaultMutableTreeNode n;
-        Enumeration nodes = groupNode.children();
-        while ( nodes.hasMoreElements() ) {
-            n = (SortableDefaultMutableTreeNode) nodes.nextElement();
-            if ( n.getUserObject() instanceof PictureInfo ) {
-                selectedNodes.add( n );
-            } else if ( ( n.getUserObject() instanceof GroupInfo ) && recurse ) {
-                LOGGER.info( "recurse not currently implemented" );
-            }
-        }
         updateCategories();
     }
 
     /**
      * This method reads the nodes and sets the categories accordingly
      */
-    public void updateCategories() {
+    private void updateCategories() {
         if ( selectedNodes == null ) {
             LOGGER.info( "selectedNodes is null!" );
             return;
@@ -222,10 +191,8 @@ public class CategoryUsageJFrame extends JFrame {
             listModel.setElementAt( c, listModel.indexOf( c ) );
         }
 
-        Object[] pictureCategories;
         int currentStatus;
         PictureInfo pi;
-        Enumeration pictureNodes;
         Object myObject;
 
         // loop through each category on the list and check we have a node that
@@ -275,14 +242,14 @@ public class CategoryUsageJFrame extends JFrame {
      * This method updates the selected pictures with the new category
      * classification.
      */
-    public void storeSelection() {
+    private void storeSelection() {
         int status;
         Category c;
         Enumeration e;
 
         HashSet<Object> selectedCategories = categoryJScrollPane.getSelectedCategories();
         synchronized ( categoryGuiListeners ) {
-            categoryGuiListeners.stream().forEach( ( listener )
+            categoryGuiListeners.forEach( (listener )
                     -> listener.categoriesChosen( selectedCategories )
             );
         }
@@ -317,21 +284,4 @@ public class CategoryUsageJFrame extends JFrame {
      */
     private final Set<CategoryGuiListenerInterface> categoryGuiListeners = Collections.synchronizedSet( new HashSet<>() );
 
-    /**
-     * This method registers the categoryGuiListener
-     *
-     * @param listener The listener to register
-     */
-    public void addCategoryGuiListener( CategoryGuiListenerInterface listener ) {
-        categoryGuiListeners.add( listener );
-    }
-
-    /**
-     * This method deregisters the categoryGuiListener
-     *
-     * @param listener the listener
-     */
-    public void removeCategoryGuiListener( CategoryGuiListenerInterface listener ) {
-        categoryGuiListeners.remove( listener );
-    }
 }

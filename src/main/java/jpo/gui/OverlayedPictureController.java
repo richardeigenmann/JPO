@@ -74,7 +74,7 @@ public class OverlayedPictureController extends PictureController implements Sca
     /**
      * The currently displayed ScalablePicture.
      */
-    public final ScalablePicture scalablePicture;
+    private final ScalablePicture scalablePicture;
 
     /**
      * The type of overlay that should be shown
@@ -321,6 +321,6 @@ public class OverlayedPictureController extends PictureController implements Sca
      * The legend of the picture. Is sent to the listener when the image is
      * ready.
      */
-    public String legend;
+    private String legend;
 
 }

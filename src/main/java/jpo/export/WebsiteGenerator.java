@@ -17,10 +17,8 @@ import java.awt.*;
 import java.io.*;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.Enumeration;
+import java.util.*;
 import java.util.List;
-import java.util.Properties;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -166,7 +164,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
         if (folderIconRequired) {
             File folderIconFile = new File(options.getTargetDirectory(), "jpo_folder_icon.gif");
             try (
-                    InputStream inStream = WebsiteGenerator.class.getClassLoader().getResource("jpo/images/icon_folder.gif").openStream();
+                    InputStream inStream = Objects.requireNonNull(WebsiteGenerator.class.getClassLoader().getResource("jpo/images/icon_folder.gif")).openStream();
                     FileOutputStream outStream = new FileOutputStream(folderIconFile);
                     BufferedInputStream bin = new BufferedInputStream(inStream);
                     BufferedOutputStream bout = new BufferedOutputStream(outStream)) {
@@ -185,13 +183,10 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
                         JOptionPane.ERROR_MESSAGE);
             }
         }
-        switch (options.getOutputTarget()) {
-            case OUTPUT_SSH_LOCATION:
-                sshCopyToServer(files);
-                break;
-            default: // case OUTPUT_FTP_LOCATION:
-                ftpCopyToServer(files);
-                break;
+        if (options.getOutputTarget() == GenerateWebsiteRequest.OutputTarget.OUTPUT_SSH_LOCATION) {
+            sshCopyToServer(files);
+        } else {
+            ftpCopyToServer(files);
         }
 
         return Integer.MAX_VALUE;
@@ -379,7 +374,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
         PictureInfo pictureInfo = (PictureInfo) pictureNode.getUserObject();
         publish(String.format("Writing picture node %d: %s", picsWroteCounter, pictureInfo.toString()));
 
-        String extension = FilenameUtils.getExtension(pictureInfo.getImageFilename());
+        String extension = FilenameUtils.getExtension(pictureInfo.getImageFile().getName());
         File lowresFile;
         File midresFile;
         File highresFile;
@@ -388,7 +383,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
         LOGGER.info("Before Switch");
         switch (options.getPictureNaming()) {
             case PICTURE_NAMING_BY_ORIGINAL_NAME:
-                String rootName = cleanupFilename(getFilenameRoot(pictureInfo.getImageFilename()));
+                String rootName = cleanupFilename(getFilenameRoot(pictureInfo.getImageFile().getName()));
                 lowresFile = new File(options.getTargetDirectory(), rootName + "_l." + extension);
                 midresFile = new File(options.getTargetDirectory(), rootName + "_m." + extension);
                 highresFile = new File(options.getTargetDirectory(), rootName + "_h." + extension);
@@ -593,7 +588,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
                             switch (options.getPictureNaming()) {
                                 case PICTURE_NAMING_BY_ORIGINAL_NAME:
                                     PictureInfo pi = (PictureInfo) nde.getUserObject();
-                                    String rootName = cleanupFilename(getFilenameRoot(pi.getImageFilename()));
+                                    String rootName = cleanupFilename(getFilenameRoot(pi.getImageFile().getName()));
                                     nodeUrl = rootName + ".htm";
                                     lowresFn = rootName + "_l." + extension;
                                     break;
@@ -666,7 +661,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
                                 SortableDefaultMutableTreeNode priorNode = (SortableDefaultMutableTreeNode) (pictureNode.getParent()).getChildAt(childNumber - 2);
                                 Object userObject = priorNode.getUserObject();
                                 if (userObject instanceof PictureInfo) {
-                                    previousHtmlFilename = cleanupFilename(getFilenameRoot(((PictureInfo) userObject).getImageFilename())) + ".htm";
+                                    previousHtmlFilename = cleanupFilename(getFilenameRoot(((PictureInfo) userObject).getImageFile().getName())) + ".htm";
                                 } else {
                                     previousHtmlFilename = "index.htm"; // actually something has gone horribly wrong
                                 }
@@ -701,7 +696,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
                                 SortableDefaultMutableTreeNode priorNode = (SortableDefaultMutableTreeNode) (pictureNode.getParent()).getChildAt(childNumber);
                                 Object userObject = priorNode.getUserObject();
                                 if (userObject instanceof PictureInfo) {
-                                    nextHtmlFilename = cleanupFilename(getFilenameRoot(((PictureInfo) userObject).getImageFilename())) + ".htm";
+                                    nextHtmlFilename = cleanupFilename(getFilenameRoot(((PictureInfo) userObject).getImageFile().getName())) + ".htm";
                                 } else {
                                     nextHtmlFilename = "index.htm"; // actually something has gone horribly wrong
                                 }
@@ -1201,7 +1196,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
     public static void writeCss(File directory) {
         ClassLoader cl = JpoWriter.class.getClassLoader();
         try (
-                InputStream in = cl.getResource("jpo.css").openStream();
+                InputStream in = Objects.requireNonNull(cl.getResource("jpo.css")).openStream();
                 FileOutputStream outStream = new FileOutputStream(new File(directory, "jpo.css"));
                 BufferedInputStream bin = new BufferedInputStream(in);
                 BufferedOutputStream bout = new BufferedOutputStream(outStream)) {
@@ -1210,9 +1205,6 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
             while ((c = bin.read()) != -1) {
                 outStream.write(c);
             }
-
-            in.close();
-            outStream.close();
 
         } catch (IOException e) {
             JOptionPane.showMessageDialog(
@@ -1231,7 +1223,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
     public static void writeRobotsTxt(File directory) {
         ClassLoader cl = JpoWriter.class.getClassLoader();
         try (
-                InputStream in = cl.getResource("robots.txt").openStream();
+                InputStream in = Objects.requireNonNull(cl.getResource("robots.txt")).openStream();
                 FileOutputStream outStream = new FileOutputStream(new File(directory, "robots.txt"));
                 BufferedInputStream bin = new BufferedInputStream(in);
                 BufferedOutputStream bout = new BufferedOutputStream(outStream)) {
@@ -1242,7 +1234,6 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
             }
 
             in.close();
-            outStream.close();
 
         } catch (IOException e) {
             JOptionPane.showMessageDialog(
@@ -1261,7 +1252,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
     public static void writeJpoJs(File directory) {
         ClassLoader cl = JpoWriter.class.getClassLoader();
         try (
-                InputStream in = cl.getResource("jpo.js").openStream();
+                InputStream in = Objects.requireNonNull(cl.getResource("jpo.js")).openStream();
                 FileOutputStream outStream = new FileOutputStream(new File(directory, "jpo.js"));
                 BufferedInputStream bin = new BufferedInputStream(in);
                 BufferedOutputStream bout = new BufferedOutputStream(outStream)) {
@@ -1272,7 +1263,6 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
             }
 
             in.close();
-            outStream.close();
 
         } catch (IOException e) {
             JOptionPane.showMessageDialog(

@@ -189,12 +189,10 @@ public class TableJFrame extends JFrame {
                 }
             } else {
                 // GroupInfo
-                switch ( col ) {
-                    case 1:
-                        return ( (GroupInfo) userObject ).getGroupName();
-                    default:
-                        return "";
+                if (col == 1) {
+                    return ((GroupInfo) userObject).getGroupName();
                 }
+                return "";
             }
         }
 
@@ -239,13 +237,10 @@ public class TableJFrame extends JFrame {
                 }
             } else {
                 // GroupInfo
-                switch ( col ) {
-                    case 1:
-                        ( (GroupInfo) userObject ).setGroupName( newString );
-                        break;
-                    default:
-                        LOGGER.log( Level.INFO, "Bad column: {0}", Integer.toString( col ));
-                        break;
+                if (col == 1) {
+                    ((GroupInfo) userObject).setGroupName(newString);
+                } else {
+                    LOGGER.log(Level.INFO, "Bad column: {0}", Integer.toString(col));
                 }
             }
             queryNode.getPictureCollection().setUnsavedUpdates();

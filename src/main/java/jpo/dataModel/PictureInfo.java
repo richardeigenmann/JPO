@@ -17,7 +17,7 @@ import java.util.logging.Logger;
 /*
  PictureInfo.java:  the definitions for picture data
 
- Copyright (C) 2002-2018  Richard Eigenmann.
+ Copyright (C) 2002-2019  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -57,43 +57,6 @@ public class PictureInfo implements Serializable {
      */
     private static final Logger LOGGER = Logger.getLogger(PictureInfo.class.getName());
 
-    /**
-     * Constructor method. Creates the object and sets up the variables.
-     *
-     * TODO: What a strange signature. When would I ever use this?? RE, 2015
-     *
-     * @param highresLocation The highres location
-     * @param description    The description of the image
-     * @param filmReference    The reference to the film if any
-     *
-     * public PictureInfo( String highresLocation, String description, String
-     * filmReference ) { this.imageLocation = highresLocation; this.description
-     * = description; this.filmReference = filmReference;
-     *
-     * LOGGER.log( Level.FINE, "Highres_Name: {0}", highresLocation );
-     * LOGGER.log( Level.FINE, "description: {0}", description ); LOGGER.log(
-     * Level.FINE, "filmReference: {0}", filmReference ); }
-     */
-    /**
-     * Constructor method. Creates the object and sets up the variables.
-     * <p>
-     * TODO: What a strange signature. When would I erver use this?? RE, 2015
-     *
-     * @param highresURL  The filename of the high resolution image
-     * @param description The description of the image
-     * @deprecated
-     */
-    public PictureInfo(URL highresURL,
-                       String description) {
-        this.imageLocation = highresURL.toString();
-        this.description = description;
-        //this.filmReference = filmReference;
-
-        LOGGER.log(Level.FINE, "Highres_Name: {0}", imageLocation);
-        LOGGER.log(Level.FINE, "description: {0}", description);
-        //LOGGER.log( Level.FINE, "filmReference: {0}", filmReference );
-
-    }
 
     /**
      * Constructor without options. All strings are set to blanks
@@ -323,14 +286,6 @@ public class PictureInfo implements Serializable {
      * @see #getImageURL()
      */
     public synchronized File getImageFile() {
-        /*File returnFile;
-        try {
-            returnFile = new File( new URI( imageLocation ) );
-        } catch ( IllegalArgumentException | URISyntaxException x ) {
-            LOGGER.severe( x.getMessage() );
-            return null;
-        }
-        return returnFile;*/
         return imageFile;
     }
 
@@ -342,8 +297,7 @@ public class PictureInfo implements Serializable {
      *                               URL.
      */
     public synchronized URL getImageURL() throws MalformedURLException {
-        URL highresURL = new URL(imageLocation);
-        return highresURL;
+        return new URL(imageLocation);
     }
 
     /**
@@ -355,8 +309,7 @@ public class PictureInfo implements Serializable {
      */
     public synchronized URL getImageURLOrNull() {
         try {
-            URL highresURL = new URL(imageLocation);
-            return highresURL;
+            return new URL(imageLocation);
         } catch (MalformedURLException x) {
             LOGGER.log(Level.FINE, "Caught an unexpected MalformedURLException: {0}", x.getMessage());
             return null;
@@ -401,7 +354,6 @@ public class PictureInfo implements Serializable {
             }
             sendImageLocationChangedEvent();
         }
-        getImageFile(); // just so that it creates a failure if the filename is not conform.
     }
 
     /**
@@ -461,17 +413,6 @@ public class PictureInfo implements Serializable {
             }
             sendImageLocationChangedEvent();
         }
-
-    }
-
-    /**
-     * Returns just the Filename of the picture.
-     *
-     * @return the Filename
-     * @deprecated get the file and do the get Name yourself!
-     */
-    public synchronized String getImageFilename() {
-        return new File(imageLocation).getName();
 
     }
 
@@ -592,7 +533,7 @@ public class PictureInfo implements Serializable {
             checksum = (new Long(checksumString));
             checksumString = "";
         } catch (NumberFormatException x) {
-            LOGGER.log(Level.INFO, "PictureInfo.parseChecksum: invalid checksum: {0} on picture: {1} --> Set to MIN", new Object[]{checksumString, getImageFilename()});
+            LOGGER.log(Level.INFO, "PictureInfo.parseChecksum: invalid checksum: {0} on picture: {1} --> Set to MIN", new Object[]{checksumString, getImageFile().getName()});
             checksum = Long.MIN_VALUE;
         }
         sendChecksumChangedEvent();
@@ -946,7 +887,7 @@ public class PictureInfo implements Serializable {
             rotation = (new Double(rotationString));
             rotationString = null;
         } catch (NumberFormatException x) {
-            LOGGER.log(Level.INFO, "invalid rotation: {0} on picture: {1} --> Set to Zero", new Object[]{rotationString, getImageFilename()});
+            LOGGER.log(Level.INFO, "invalid rotation: {0} on picture: {1} --> Set to Zero", new Object[]{rotationString, getImageFile().toString()});
             rotation = 0;
         }
         sendRotationChangedEvent();
@@ -1087,8 +1028,7 @@ public class PictureInfo implements Serializable {
         Point2D.Double latLang = getLatLng();
         NumberFormat numberFormatter;
         numberFormatter = NumberFormat.getNumberInstance();
-        String formattedString = numberFormatter.format(latLang.x) + "x" + numberFormatter.format(latLang.y);
-        return formattedString;
+        return numberFormatter.format(latLang.x) + "x" + numberFormatter.format(latLang.y);
 
     }
 
@@ -1195,7 +1135,7 @@ public class PictureInfo implements Serializable {
             categoryAssignmentString = "";
             addCategoryAssignment(category);
         } catch (NumberFormatException x) {
-            LOGGER.log(Level.INFO, "PictureInfo.parseCategoryAssignment: NumberFormatException: {0} on picture: {1} because: {2}", new Object[]{categoryAssignmentString, getImageFilename(), x.getMessage()});
+            LOGGER.log(Level.INFO, "NumberFormatException: {0} on picture: {1} because: {2}", new Object[]{categoryAssignmentString, getImageFile().toString(), x.getMessage()});
         }
         sendCategoryAssignmentsChangedEvent();
     }
@@ -1307,7 +1247,7 @@ public class PictureInfo implements Serializable {
     public PictureInfo getClone() {
         PictureInfo clone = new PictureInfo();
         clone.setDescription(this.getDescription());
-        clone.setImageLocation(this.getImageLocation());
+        clone.setImageLocation(this.getImageFile());
         clone.setFilmReference(this.getFilmReference());
         clone.setCreationTime(this.getCreationTime());
         clone.setComment(this.getComment());
@@ -1371,14 +1311,13 @@ public class PictureInfo implements Serializable {
      */
     public synchronized boolean anyMatch(String searchString) {
         String uppercaseSearchString = searchString.toUpperCase();
-        boolean found = descriptionContains(searchString)
+
+        return descriptionContains(searchString)
                 || (getPhotographer().toUpperCase().contains(uppercaseSearchString))
                 || (imageLocation.toUpperCase().contains(uppercaseSearchString))
                 || (getFilmReference().toUpperCase().contains(uppercaseSearchString))
                 || (getCreationTime().toUpperCase().contains(uppercaseSearchString))
                 || (getComment().toUpperCase().contains(uppercaseSearchString))
                 || (getCopyrightHolder().toUpperCase().contains(uppercaseSearchString));
-
-        return found;
     }
 }

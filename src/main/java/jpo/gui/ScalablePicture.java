@@ -40,7 +40,7 @@ import jpo.gui.swing.PictureControllerImage;
 /*
  ScalablePicture.java:  class that can load and save images
 
- Copyright (C) 2002 - 2017  Richard Eigenmann.
+ Copyright (C) 2002 - 2019  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -300,15 +300,6 @@ public class ScalablePicture
         t.start();
     }
 
-    /* Taking these variables here to be friendlier on the heap */
-    private AffineTransform afStep;
-
-    private AffineTransformOp opStep;
-
-    private Point2D pStep;
-
-    private BufferedImage biStep;
-
     /**
      * call this method when the affine transform op is to be executed.
      *
@@ -345,12 +336,12 @@ public class ScalablePicture
                     factor = Math.pow( scaleFactor, 1f / getScaleSteps() );
                 }
 
-                afStep = AffineTransform.getScaleInstance( factor, factor );
-                opStep = new AffineTransformOp( afStep, affineTransformType );
+                AffineTransform afStep = AffineTransform.getScaleInstance(factor, factor);
+                AffineTransformOp opStep = new AffineTransformOp(afStep, affineTransformType);
                 scaledPicture = sourcePicture.getSourceBufferedImage();
                 for ( int i = 0; i < getScaleSteps(); i++ ) {
-                    pStep = new Point2D.Float( scaledPicture.getWidth(), scaledPicture.getHeight() );
-                    pStep = afStep.transform( pStep, null );
+                    Point2D pStep = new Point2D.Float(scaledPicture.getWidth(), scaledPicture.getHeight());
+                    pStep = afStep.transform(pStep, null );
                     int x = (int) Math.rint( pStep.getX() );
                     int y = (int) Math.rint( pStep.getY() );
                     int imageType = sourcePicture.getSourceBufferedImage().getType();
@@ -365,8 +356,8 @@ public class ScalablePicture
                         imageType = BufferedImage.TYPE_3BYTE_BGR;
                         LOGGER.fine( String.format( "Becuase we don't like imageType 0 we are setting the target type to BufferedImage.TYPE_3BYTE_BGR which has code: %d", BufferedImage.TYPE_3BYTE_BGR ) );
                     }
-                    biStep = new BufferedImage( x, y, imageType );
-                    scaledPicture = opStep.filter( scaledPicture, biStep );
+                    BufferedImage biStep = new BufferedImage(x, y, imageType);
+                    scaledPicture = opStep.filter( scaledPicture, biStep);
                 }
                 setStatus( SCALABLE_PICTURE_READY, "Scaled Picture is ready." );
             } else if ( getStatusCode() != SCALABLE_PICTURE_LOADING ) {

@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Objects;
 import java.util.logging.Logger;
 import jpo.dataModel.PictureInfo;
 import junit.framework.TestCase;
@@ -91,7 +92,8 @@ public class ConsolidateGroupWorkerTest {
 
         try ( InputStream in = ConsolidateGroupWorkerTest.class.getClassLoader().getResourceAsStream( "exif-test-nikon-d100-1.jpg" );
                 FileOutputStream fout = new FileOutputStream( sourceImageFile ) ) {
-            IOUtils.copy( in, fout );
+            Objects.requireNonNull(in, "The input stream of the image must not be null!");
+            IOUtils.copy(Objects.requireNonNull(in), fout );
         } catch ( IOException ex ) {
             LOGGER.severe( ex.getMessage() );
             fail( "Failed to create test image file" );
@@ -118,7 +120,8 @@ public class ConsolidateGroupWorkerTest {
 
         try ( InputStream in = ConsolidateGroupWorkerTest.class.getClassLoader().getResourceAsStream( "exif-test-nikon-d100-1.jpg" );
                 FileOutputStream fout = new FileOutputStream( imageFile ) ) {
-            IOUtils.copy( in, fout );
+            Objects.requireNonNull(in, "The input stream of the image must not be null!");
+            IOUtils.copy(Objects.requireNonNull(in), fout );
         } catch ( IOException ex ) {
             LOGGER.severe( ex.getMessage() );
             fail( "Failed to create test image file" );
@@ -155,7 +158,8 @@ public class ConsolidateGroupWorkerTest {
 
         try ( InputStream in = ConsolidateGroupWorkerTest.class.getClassLoader().getResourceAsStream( "exif-test-nikon-d100-1.jpg" );
                 FileOutputStream fout = new FileOutputStream( sourceImageFile ) ) {
-            IOUtils.copy( in, fout );
+            Objects.requireNonNull(in, "The input stream of the image must not be null!");
+            IOUtils.copy(Objects.requireNonNull(in), fout );
         } catch ( IOException ex ) {
             LOGGER.severe( ex.getMessage() );
             fail( "Failed to create test image file" );
@@ -212,7 +216,8 @@ public class ConsolidateGroupWorkerTest {
 
         try ( InputStream in = ConsolidateGroupWorkerTest.class.getClassLoader().getResourceAsStream( "exif-test-nikon-d100-1.jpg" );
                 FileOutputStream fout = new FileOutputStream( sourceImageFile ) ) {
-            IOUtils.copy( in, fout );
+            Objects.requireNonNull(in, "The input stream of the image must not be null!");
+            IOUtils.copy(Objects.requireNonNull(in), fout );
         } catch ( IOException ex ) {
             LOGGER.severe( ex.getMessage() );
             fail( "Failed to create test image file in test testMovePictureSameDirectory." );
@@ -241,7 +246,8 @@ public class ConsolidateGroupWorkerTest {
 
         try ( InputStream in = ConsolidateGroupWorkerTest.class.getClassLoader().getResourceAsStream( "exif-test-nikon-d100-1.jpg" );
                 FileOutputStream fout = new FileOutputStream( sopurceImageFile ) ) {
-            IOUtils.copy( in, fout );
+            Objects.requireNonNull(in, "The input stream of the image must not be null!");
+            IOUtils.copy(Objects.requireNonNull(in), fout );
         } catch ( IOException ex ) {
             LOGGER.severe( ex.getMessage() );
             fail( "Failed to create test image file" );
@@ -277,7 +283,8 @@ public class ConsolidateGroupWorkerTest {
 
         try ( InputStream in = ConsolidateGroupWorkerTest.class.getClassLoader().getResourceAsStream( "exif-test-nikon-d100-1.jpg" );
                 FileOutputStream fout = new FileOutputStream( sourceImageFile ) ) {
-            IOUtils.copy( in, fout );
+            Objects.requireNonNull(in, "The input stream of the image must not be null!");
+            IOUtils.copy(Objects.requireNonNull(in), fout );
         } catch ( IOException ex ) {
             LOGGER.severe( ex.getMessage() );
             fail( "Failed to create test image file" );

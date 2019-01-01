@@ -171,8 +171,8 @@ public class CollectionJTree
     @TestOnly
     ImageIcon getOpenFolderIcon() {
         return OPEN_FOLDER_ICON;
-
     }
+
     /**
      * Icon of a picture for use on picture bearing nodes in the JTree.
      */

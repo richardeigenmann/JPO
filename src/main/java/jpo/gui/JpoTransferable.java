@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.logging.Logger;
 import jpo.dataModel.PictureInfo;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
+import org.jetbrains.annotations.NotNull;
 
 /*
  JpoTransferable.java:  a transferable to drag and drop nodes of the Jpo application
@@ -121,6 +122,7 @@ public class JpoTransferable
      * something that is not supported
      * @throws IOException There could also be an io exception thrown
      */
+    @NotNull
     @Override
     public Object getTransferData( DataFlavor flavor )
             throws UnsupportedFlavorException, IOException {

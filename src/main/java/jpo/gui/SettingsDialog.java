@@ -28,6 +28,7 @@ import java.awt.event.WindowEvent;
 import java.io.File;
 import java.util.Hashtable;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.BorderFactory;
@@ -469,7 +470,7 @@ public class SettingsDialog extends JDialog {
         authenticationJComboBox.addActionListener(( ActionEvent e ) -> {
             JComboBox cb = (JComboBox) e.getSource();
             String cbSelection = (String) cb.getSelectedItem();
-            switch ( cbSelection ) {
+            switch (Objects.requireNonNull(cbSelection)) {
                 case "Password":
                     userNameJLabel.setVisible( true );
                     emailUserJTextField.setVisible( true );
@@ -757,34 +758,31 @@ public class SettingsDialog extends JDialog {
 
     /**
      * this method verifies that the file specified in the AutoLoadJTextField is
-     * valid. It sets the color of the font to red if this is not OK and returns
-     * false to the caller. If all is fine it returns true;
+     * valid. It sets the color of the font to red if this is not OK.
      *
      * @param validationFile the file to validate
-     * @return true if good, false if not
      */
-    public boolean checkAutoLoad( String validationFile ) {
+    public void checkAutoLoad(String validationFile ) {
         LOGGER.log( Level.FINE, "SettingsDialog.checkAutoLoad: called on: {0}", validationFile );
         File testFile = new File( validationFile );
 
         if ( "".equals( validationFile ) ) {
             autoLoadJTextField.setForeground( Color.black );
-            return false;
+            return;
         }
 
         if ( !testFile.exists() ) {
             LOGGER.log( Level.WARNING, "SettingsDialog.checkAutoLoad: {0} doesn''t exist.", testFile.toString() );
             autoLoadJTextField.setForeground( Color.red );
-            return false;
+            return;
         } else {
             if ( !testFile.canRead() ) {
                 LOGGER.log( Level.WARNING, "SettingsDialog.checkAutoLoad: {0} can''t read.", testFile.toString() );
                 autoLoadJTextField.setForeground( Color.red );
-                return false;
+                return;
             }
         }
         autoLoadJTextField.setForeground( Color.black );
-        return true;
     }
 
     /**

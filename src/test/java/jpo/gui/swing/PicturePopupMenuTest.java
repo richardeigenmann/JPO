@@ -574,21 +574,15 @@ public class PicturePopupMenuTest {
     public void testReplaceNoEscapedSpacesSingeChars() {
         String s1 = "filename2Extension.jpg";
         Optional<String> o1 = PicturePopupMenu.replaceEscapedSpaces(s1);
-        if (o1.isPresent()) {
-            fail(String.format("There wasn't supposed to be anything that changed between\n%s and\n%s", s1, o1.get()));
-        }
+        o1.ifPresent(s -> fail(String.format("There wasn't supposed to be anything that changed between\n%s and\n%s", s1, s)));
 
         String s2 = "filename0Extension_.jpg";
         Optional<String> o2 = PicturePopupMenu.replaceEscapedSpaces(s2);
-        if (o2.isPresent()) {
-            fail(String.format("There wasn't supposed to be anything that changed between\n%s and\n%s", s2, o2.get()));
-        }
+        o2.ifPresent(s -> fail(String.format("There wasn't supposed to be anything that changed between\n%s and\n%s", s2, s)));
 
         String s3 = "filename%Extension.jpg";
         Optional<String> o3 = PicturePopupMenu.replaceEscapedSpaces(s3);
-        if (o3.isPresent()) {
-            fail(String.format("There wasn't supposed to be anything that changed between\n%s and\n%s", s3, o3.get()));
-        }
+        o3.ifPresent(s -> fail(String.format("There wasn't supposed to be anything that changed between\n%s and\n%s", s3, s)));
     }
 
     @Test

@@ -5,6 +5,7 @@ import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
+
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -13,6 +14,7 @@ import java.awt.event.FocusEvent;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -30,9 +32,11 @@ import javax.swing.event.ChangeEvent;
 
 import jpo.EventBus.GenerateWebsiteRequest;
 import jpo.dataModel.Settings;
+
 import static jpo.EventBus.GenerateWebsiteRequest.OutputTarget.OUTPUT_FTP_LOCATION;
 import static jpo.EventBus.GenerateWebsiteRequest.OutputTarget.OUTPUT_LOCAL_DIRECTORY;
 import static jpo.EventBus.GenerateWebsiteRequest.OutputTarget.OUTPUT_SSH_LOCATION;
+
 import jpo.gui.DirectoryChooser;
 import net.javaprog.ui.wizard.AbstractStep;
 import net.miginfocom.swing.MigLayout;
@@ -55,6 +59,7 @@ import org.apache.commons.net.ftp.FTPReply;
  The license is in gpl.txt.
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
+
 /**
  * Asks where we should create the website
  *
@@ -65,7 +70,7 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
     /**
      * Defines a logger for this class
      */
-    private static final Logger LOGGER = Logger.getLogger( GenerateWebsiteWizard6Where.class.getName() );
+    private static final Logger LOGGER = Logger.getLogger(GenerateWebsiteWizard6Where.class.getName());
     /**
      * The link to the values that this panel should change
      */
@@ -76,102 +81,91 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
      *
      * @param options The data object with all the settings
      */
-    public GenerateWebsiteWizard6Where( GenerateWebsiteRequest options ) {
-        super( Settings.jpoResources.getString( "HtmlDistTarget" ), Settings.jpoResources.getString( "HtmlDistTarget" ) );
+    public GenerateWebsiteWizard6Where(GenerateWebsiteRequest options) {
+        super(Settings.jpoResources.getString("HtmlDistTarget"), Settings.jpoResources.getString("HtmlDistTarget"));
         this.options = options;
 
         // load the options into the GUI components
-        switch ( options.getOutputTarget() ) {
+        switch (options.getOutputTarget()) {
             case OUTPUT_FTP_LOCATION:
-                finalTarget.setSelectedIndex( 1 );
+                finalTarget.setSelectedIndex(1);
                 break;
             case OUTPUT_SSH_LOCATION:
-                finalTarget.setSelectedIndex( 2 );
+                finalTarget.setSelectedIndex(2);
                 break;
-            default : // case OUTPUT_LOCAL_DIRECTORY:
-                finalTarget.setSelectedIndex( 0 );
+            default: // case OUTPUT_LOCAL_DIRECTORY:
+                finalTarget.setSelectedIndex(0);
                 break;
         }
 
     }
-    private static final String[] TARGET_OPTIONS = { "Local Directory", "FTP Location", "SSH Location" };
-    private final JComboBox finalTarget = new JComboBox<>( TARGET_OPTIONS );
+
+    private static final String[] TARGET_OPTIONS = {"Local Directory", "FTP Location", "SSH Location"};
+    private final JComboBox finalTarget = new JComboBox<>(TARGET_OPTIONS);
     /**
      * Text field that holds the directory that the html is to be exported to.
-     *
      */
     private final DirectoryChooser targetDirJTextField
-            = new DirectoryChooser( Settings.jpoResources.getString( "HtmlDistillerChooserTitle" ),
-                    DirectoryChooser.DIR_MUST_BE_WRITABLE );
+            = new DirectoryChooser(Settings.jpoResources.getString("HtmlDistillerChooserTitle"),
+            DirectoryChooser.DIR_MUST_BE_WRITABLE);
     /**
      * The ftp Server
-     *
      */
     private final JTextField ftpServer = new JTextField();
     /**
      * The FTP port
      */
-    private final JSpinner ftpPort = new JSpinner( new SpinnerNumberModel( 21, 0, 65_535, 1 ) );
+    private final JSpinner ftpPort = new JSpinner(new SpinnerNumberModel(21, 0, 65_535, 1));
     /**
      * The ftp user
-     *
      */
     private final JTextField ftpUser = new JTextField();
     /**
      * The ftp password
-     *
      */
     private final JTextField ftpPassword = new JTextField();
     /**
      * The ftp target dir
-     *
      */
     private final JTextField ftpTargetDir = new JTextField();
     /**
      * The ftp error message
-     *
      */
     private final JMultilineLabel ftpError = new JMultilineLabel();
     /**
      * The ssh Server
-     *
      */
     private final JTextField sshServer = new JTextField();
     /**
      * ssh Port
      */
-    private final JSpinner sshPort = new JSpinner( new SpinnerNumberModel( 22, 0, 65_535, 1 ) );
+    private final JSpinner sshPort = new JSpinner(new SpinnerNumberModel(22, 0, 65_535, 1));
     /**
      * The ssh user
-     *
      */
     private final JTextField sshUser = new JTextField();
     /**
      * SSH Authentication Options
      */
-    private static final String[] SSH_AUTH_OPTIONS = { "Password", "SSH KEY File" };
+    private static final String[] SSH_AUTH_OPTIONS = {"Password", "SSH KEY File"};
     /**
      * SSH Authentication Options
      */
-    private final JComboBox sshAuthOoptionChooser = new JComboBox<>( SSH_AUTH_OPTIONS );
+    private final JComboBox sshAuthOoptionChooser = new JComboBox<>(SSH_AUTH_OPTIONS);
     /**
      * The ssh password
-     *
      */
     private final JTextField sshPassword = new JTextField();
     /**
      * The ssh key file
-     *
      */
     private final JTextField sshKeyFile = new JTextField();
     /**
      * The ssh target dir
-     *
      */
     private final JTextField sshTargetDir = new JTextField();
     /**
      * The ssh error message
-     *
      */
     private final JMultilineLabel sshError = new JMultilineLabel();
 
@@ -182,238 +176,235 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
      */
     @Override
     protected JComponent createComponent() {
-        final JPanel wizardPanel = new JPanel( new MigLayout() );
-        final JPanel ftpPanel = new JPanel( new MigLayout( "", "[][250:250:800]", "" ) );
-        final JPanel sshPanel = new JPanel( new MigLayout( "", "[][250:250:800]", "" ) );
+        final JPanel wizardPanel = new JPanel(new MigLayout());
+        final JPanel ftpPanel = new JPanel(new MigLayout("", "[][250:250:800]", ""));
+        final JPanel sshPanel = new JPanel(new MigLayout("", "[][250:250:800]", ""));
 
-        finalTarget.addActionListener(( ActionEvent arg0 ) -> {
-            switch ( finalTarget.getSelectedIndex() ) {
+        finalTarget.addActionListener((ActionEvent arg0) -> {
+            switch (finalTarget.getSelectedIndex()) {
                 case 1:
-                    ftpPanel.setVisible( true );
-                    sshPanel.setVisible( false );
-                    GenerateWebsiteWizard6Where.this.options.setOutputTarget( OUTPUT_FTP_LOCATION );
+                    ftpPanel.setVisible(true);
+                    sshPanel.setVisible(false);
+                    GenerateWebsiteWizard6Where.this.options.setOutputTarget(OUTPUT_FTP_LOCATION);
                     break;
                 case 2:
-                    ftpPanel.setVisible( false );
-                    sshPanel.setVisible( true );
-                    GenerateWebsiteWizard6Where.this.options.setOutputTarget( OUTPUT_SSH_LOCATION );
+                    ftpPanel.setVisible(false);
+                    sshPanel.setVisible(true);
+                    GenerateWebsiteWizard6Where.this.options.setOutputTarget(OUTPUT_SSH_LOCATION);
                     break;
                 default: // case 0:
-                    ftpPanel.setVisible( false );
-                    sshPanel.setVisible( false );
-                    GenerateWebsiteWizard6Where.this.options.setOutputTarget( OUTPUT_LOCAL_DIRECTORY );
+                    ftpPanel.setVisible(false);
+                    sshPanel.setVisible(false);
+                    GenerateWebsiteWizard6Where.this.options.setOutputTarget(OUTPUT_LOCAL_DIRECTORY);
                     break;
             }
         });
 
-        wizardPanel.add( finalTarget, "wrap" );
-        wizardPanel.add( new JLabel( Settings.jpoResources.getString( "genericTargetDirText" ) ), "align label, wrap" );
+        wizardPanel.add(finalTarget, "wrap");
+        wizardPanel.add(new JLabel(Settings.jpoResources.getString("genericTargetDirText")), "align label, wrap");
 
-        wizardPanel.add( targetDirJTextField, "wrap" );
+        wizardPanel.add(targetDirJTextField, "wrap");
 
-        JButton checkButton = new JButton( Settings.jpoResources.getString( "check" ) );
-        checkButton.setAlignmentX( Component.LEFT_ALIGNMENT );
-        checkButton.setMaximumSize( Settings.defaultButtonDimension );
-        checkButton.addActionListener(( ActionEvent arg0 ) -> {
-            options.setTargetDirectory( targetDirJTextField.getDirectory() );
-            setCanGoNext( check( options.getTargetDirectory() ) );
+        JButton checkButton = new JButton(Settings.jpoResources.getString("check"));
+        checkButton.setAlignmentX(Component.LEFT_ALIGNMENT);
+        checkButton.setMaximumSize(Settings.defaultButtonDimension);
+        checkButton.addActionListener((ActionEvent arg0) -> {
+            options.setTargetDirectory(targetDirJTextField.getDirectory());
+            setCanGoNext(check(options.getTargetDirectory()));
         });
-        wizardPanel.add( checkButton, "wrap" );
+        wizardPanel.add(checkButton, "wrap");
 
-        ftpPanel.add( new JLabel( "Ftp Server:" ), "align label" );
+        ftpPanel.add(new JLabel("Ftp Server:"), "align label");
 
-        ftpServer.setAlignmentX( Component.LEFT_ALIGNMENT );
-        ftpServer.addFocusListener( new FocusAdapter() {
+        ftpServer.setAlignmentX(Component.LEFT_ALIGNMENT);
+        ftpServer.addFocusListener(new FocusAdapter() {
             @Override
-            public void focusLost( FocusEvent e ) {
-                options.setFtpServer( ftpServer.getText() );
+            public void focusLost(FocusEvent e) {
+                options.setFtpServer(ftpServer.getText());
             }
-        } );
-        ftpPanel.add( ftpServer, "growx, wrap" );
+        });
+        ftpPanel.add(ftpServer, "growx, wrap");
 
-        ftpPanel.add( new JLabel( "FTP Port " ), "align label" );
+        ftpPanel.add(new JLabel("FTP Port "), "align label");
         // Records the ftp port number, 0 to 65535, start at 21 increment 1
 
-        ftpPort.addChangeListener(( ChangeEvent arg0 ) -> {
-            options.setFtpPort( ( (SpinnerNumberModel) ( ftpPort.getModel() ) ).getNumber().intValue() );
+        ftpPort.addChangeListener((ChangeEvent arg0) -> {
+            options.setFtpPort(((SpinnerNumberModel) (ftpPort.getModel())).getNumber().intValue());
         });
-        ftpPanel.add( ftpPort, "wrap" );
+        ftpPanel.add(ftpPort, "wrap");
 
-        ftpPanel.add( new JLabel( "FTP user:" ), "align label" );
-        ftpUser.addFocusListener( new FocusAdapter() {
+        ftpPanel.add(new JLabel("FTP user:"), "align label");
+        ftpUser.addFocusListener(new FocusAdapter() {
             @Override
-            public void focusLost( FocusEvent e ) {
-                options.setFtpUser( ftpUser.getText() );
+            public void focusLost(FocusEvent e) {
+                options.setFtpUser(ftpUser.getText());
             }
-        } );
+        });
 
-        ftpPanel.add( ftpUser, "growx, wrap" );
+        ftpPanel.add(ftpUser, "growx, wrap");
 
-        ftpPanel.add( new JLabel( "FTP password:" ), "align label" );
-        ftpPassword.addFocusListener( new FocusAdapter() {
+        ftpPanel.add(new JLabel("FTP password:"), "align label");
+        ftpPassword.addFocusListener(new FocusAdapter() {
             @Override
-            public void focusLost( FocusEvent e ) {
-                options.setFtpPassword( ftpPassword.getText() );
+            public void focusLost(FocusEvent e) {
+                options.setFtpPassword(ftpPassword.getText());
             }
-        } );
-        ftpPanel.add( ftpPassword, "growx, wrap" );
+        });
+        ftpPanel.add(ftpPassword, "growx, wrap");
 
-        ftpPanel.add( new JLabel( "Target directory:" ), "align label" );
-        ftpTargetDir.addFocusListener( new FocusAdapter() {
+        ftpPanel.add(new JLabel("Target directory:"), "align label");
+        ftpTargetDir.addFocusListener(new FocusAdapter() {
             @Override
-            public void focusLost( FocusEvent e ) {
+            public void focusLost(FocusEvent e) {
                 String targetDir = ftpTargetDir.getText();
-                if ( !( targetDir.endsWith( "/" ) || targetDir.endsWith( "\\" ) ) ) {
+                if (!(targetDir.endsWith("/") || targetDir.endsWith("\\"))) {
                     targetDir += '/';
-                    ftpTargetDir.setText( targetDir );
+                    ftpTargetDir.setText(targetDir);
                 }
-                options.setFtpTargetDir( targetDir );
+                options.setFtpTargetDir(targetDir);
             }
-        } );
-        ftpPanel.add( ftpTargetDir,
-                "growx, wrap" );
+        });
+        ftpPanel.add(ftpTargetDir,
+                "growx, wrap");
 
-        final JButton ftpTestJButton = new JButton( "Test" );
-        ftpTestJButton.addActionListener(( ActionEvent e ) -> {
+        final JButton ftpTestJButton = new JButton("Test");
+        ftpTestJButton.addActionListener((ActionEvent e) -> {
             String returnString = testFtpConnection();
-            ftpError.setText( returnString );
+            ftpError.setText(returnString);
         });
-        ftpPanel.add( ftpTestJButton, "align label" );
+        ftpPanel.add(ftpTestJButton, "align label");
 
-        ftpPanel.add( ftpError,
-                "grow, spany2, wrap" );
+        ftpPanel.add(ftpError,
+                "grow, spany2, wrap");
 
-        final JButton ftpMkdirJButton = new JButton( "mkdir" );
-        ftpMkdirJButton.addActionListener(( ActionEvent e ) -> {
+        final JButton ftpMkdirJButton = new JButton("mkdir");
+        ftpMkdirJButton.addActionListener((ActionEvent e) -> {
             String returnString = ftpMkdir();
-            ftpError.setText( returnString );
+            ftpError.setText(returnString);
         });
-        ftpPanel.add( ftpMkdirJButton, "align label, wrap" );
+        ftpPanel.add(ftpMkdirJButton, "align label, wrap");
 
-        wizardPanel.add( ftpPanel,
-                "hidemode 3, wrap" );
+        wizardPanel.add(ftpPanel,
+                "hidemode 3, wrap");
 
         sshPanel.add(
-                new JLabel( "SSH Server:" ), "align label" );
+                new JLabel("SSH Server:"), "align label");
         sshServer.addFocusListener(
                 new FocusAdapter() {
                     @Override
-                    public void focusLost( FocusEvent e ) {
-                        options.setSshServer( sshServer.getText() );
+                    public void focusLost(FocusEvent e) {
+                        options.setSshServer(sshServer.getText());
                     }
-                } );
-        sshPanel.add( sshServer,
-                "growx, wrap" );
+                });
+        sshPanel.add(sshServer,
+                "growx, wrap");
 
         sshPanel.add(
-                new JLabel( "SSH Port " ), "align label" );
-        sshPort.addChangeListener(( ChangeEvent arg0 ) -> {
-            options.setSshPort( ( (SpinnerNumberModel) ( sshPort.getModel() ) ).getNumber().intValue() );
+                new JLabel("SSH Port "), "align label");
+        sshPort.addChangeListener((ChangeEvent arg0) -> {
+            options.setSshPort(((SpinnerNumberModel) (sshPort.getModel())).getNumber().intValue());
         });
-        sshPanel.add( sshPort,
-                "wrap" );
+        sshPanel.add(sshPort,
+                "wrap");
 
         sshPanel.add(
-                new JLabel( "SSH user:" ), "align label" );
+                new JLabel("SSH user:"), "align label");
         sshUser.addFocusListener(
                 new FocusAdapter() {
                     @Override
-                    public void focusLost( FocusEvent e ) {
-                        options.setSshUser( sshUser.getText() );
+                    public void focusLost(FocusEvent e) {
+                        options.setSshUser(sshUser.getText());
                     }
-                } );
-        sshPanel.add( sshUser,
-                "growx, wrap" );
+                });
+        sshPanel.add(sshUser,
+                "growx, wrap");
 
-        final JLabel sshPasswordLabel = new JLabel( "SSH password:" );
-        final JLabel sshKeyfileLabel = new JLabel( "SSH keyfile:" );
+        final JLabel sshPasswordLabel = new JLabel("SSH password:");
+        final JLabel sshKeyfileLabel = new JLabel("SSH keyfile:");
 
         sshPanel.add(
-                new JLabel( "SSH Auth:" ), "align label" );
-        sshAuthOoptionChooser.addActionListener(( ActionEvent arg0 ) -> {
-            switch ( sshAuthOoptionChooser.getSelectedIndex() ) {
-                case 1:
-                    sshPasswordLabel.setVisible( false );
-                    sshPassword.setVisible( false );
-                    sshKeyfileLabel.setVisible( true );
-                    sshKeyFile.setVisible( true );
-                    GenerateWebsiteWizard6Where.this.options.setSshAuthType( GenerateWebsiteRequest.SshAuthType.SSH_AUTH_KEYFILE );
-                    break;
-                default: // case 0:
-                    sshPasswordLabel.setVisible( true );
-                    sshPassword.setVisible( true );
-                    sshKeyfileLabel.setVisible( false );
-                    sshKeyFile.setVisible( false );
-                    GenerateWebsiteWizard6Where.this.options.setSshAuthType( GenerateWebsiteRequest.SshAuthType.SSH_AUTH_PASSWORD );
-                    break;
+                new JLabel("SSH Auth:"), "align label");
+        sshAuthOoptionChooser.addActionListener((ActionEvent arg0) -> {
+            if (sshAuthOoptionChooser.getSelectedIndex() == 1) {
+                sshPasswordLabel.setVisible(false);
+                sshPassword.setVisible(false);
+                sshKeyfileLabel.setVisible(true);
+                sshKeyFile.setVisible(true);
+                GenerateWebsiteWizard6Where.this.options.setSshAuthType(GenerateWebsiteRequest.SshAuthType.SSH_AUTH_KEYFILE);
+            } else {
+                sshPasswordLabel.setVisible(true);
+                sshPassword.setVisible(true);
+                sshKeyfileLabel.setVisible(false);
+                sshKeyFile.setVisible(false);
+                GenerateWebsiteWizard6Where.this.options.setSshAuthType(GenerateWebsiteRequest.SshAuthType.SSH_AUTH_PASSWORD);
             }
         });
-        sshPanel.add( sshAuthOoptionChooser,
-                "wrap" );
+        sshPanel.add(sshAuthOoptionChooser,
+                "wrap");
 
-        sshPanel.add( sshPasswordLabel,
-                "hidemode 3, align label" );
+        sshPanel.add(sshPasswordLabel,
+                "hidemode 3, align label");
         sshPassword.addFocusListener(
                 new FocusAdapter() {
                     @Override
-                    public void focusLost( FocusEvent e ) {
-                        options.setSshPassword( sshPassword.getText() );
-                        LOGGER.info( String.format( "Saving SSH Password: %s into options: %s", sshPassword.getText(), options.getSshPassword() ) );
+                    public void focusLost(FocusEvent e) {
+                        options.setSshPassword(sshPassword.getText());
+                        LOGGER.info(String.format("Saving SSH Password: %s into options: %s", sshPassword.getText(), options.getSshPassword()));
                     }
-                } );
-        sshPanel.add( sshPassword,
-                "hidemode 3, growx, wrap" );
+                });
+        sshPanel.add(sshPassword,
+                "hidemode 3, growx, wrap");
 
-        sshPanel.add( sshKeyfileLabel,
-                "hidemode 3, align label" );
+        sshPanel.add(sshKeyfileLabel,
+                "hidemode 3, align label");
         sshKeyFile.addFocusListener(
                 new FocusAdapter() {
                     @Override
-                    public void focusLost( FocusEvent e ) {
-                        options.setSshKeyFile( sshKeyFile.getText() );
+                    public void focusLost(FocusEvent e) {
+                        options.setSshKeyFile(sshKeyFile.getText());
                     }
-                } );
-        sshPanel.add( sshKeyFile,
-                "hidemode 3, growx, wrap" );
+                });
+        sshPanel.add(sshKeyFile,
+                "hidemode 3, growx, wrap");
 
         sshPanel.add(
-                new JLabel( "SSH Target dir:" ), "align label" );
+                new JLabel("SSH Target dir:"), "align label");
         sshTargetDir.addFocusListener(
                 new FocusAdapter() {
                     @Override
-                    public void focusLost( FocusEvent e ) {
-                        options.setSshTargetDir( sshTargetDir.getText() );
+                    public void focusLost(FocusEvent e) {
+                        options.setSshTargetDir(sshTargetDir.getText());
                     }
-                } );
-        sshPanel.add( sshTargetDir,
-                "growx, wrap" );
+                });
+        sshPanel.add(sshTargetDir,
+                "growx, wrap");
 
-        final JButton sshTestJButton = new JButton( "Test" );
+        final JButton sshTestJButton = new JButton("Test");
 
-        sshTestJButton.addActionListener(( ActionEvent e ) -> {
+        sshTestJButton.addActionListener((ActionEvent e) -> {
             testSshConnection();
         });
-        sshPanel.add( sshTestJButton,
-                "align label" );
-        sshPanel.add( sshError,
-                "grow, spany2, wrap" );
+        sshPanel.add(sshTestJButton,
+                "align label");
+        sshPanel.add(sshError,
+                "grow, spany2, wrap");
 
-        JButton sshMkdirJButton = new JButton( "mkdir" );
+        JButton sshMkdirJButton = new JButton("mkdir");
 
-        sshMkdirJButton.addActionListener(( ActionEvent e ) -> {
+        sshMkdirJButton.addActionListener((ActionEvent e) -> {
             sshMkdir();
         });
-        sshPanel.add( sshMkdirJButton,
-                "align label, wrap" );
+        sshPanel.add(sshMkdirJButton,
+                "align label, wrap");
 
-        final Font errorLabelFont = Font.decode( Settings.jpoResources.getString( "ThumbnailDescriptionJPanelLargeFont" ) );
+        final Font errorLabelFont = Font.decode(Settings.jpoResources.getString("ThumbnailDescriptionJPanelLargeFont"));
 
-        sshError.setFont( errorLabelFont );
+        sshError.setFont(errorLabelFont);
 
-        wizardPanel.add( sshPanel,
-                "hidemode 3, wrap" );
+        wizardPanel.add(sshPanel,
+                "hidemode 3, wrap");
 
-        setWidgets( options );
+        setWidgets(options);
         return wizardPanel;
     }
 
@@ -422,47 +413,45 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
      */
     @Override
     public void prepareRendering() {
-        setCanGoNext( false );
+        setCanGoNext(false);
     }
 
     /**
      * Loads the data from the options into the GUI widgets
+     *
      * @param options options
      */
-    private void setWidgets( GenerateWebsiteRequest options ) {
+    private void setWidgets(GenerateWebsiteRequest options) {
         // load the options into the GUI components
-        switch ( options.getOutputTarget() ) {
+        switch (options.getOutputTarget()) {
             case OUTPUT_FTP_LOCATION:
-                finalTarget.setSelectedIndex( 1 );
+                finalTarget.setSelectedIndex(1);
                 break;
             case OUTPUT_SSH_LOCATION:
-                finalTarget.setSelectedIndex( 2 );
+                finalTarget.setSelectedIndex(2);
                 break;
-            default : //case OUTPUT_LOCAL_DIRECTORY:
-                finalTarget.setSelectedIndex( 0 );
+            default: //case OUTPUT_LOCAL_DIRECTORY:
+                finalTarget.setSelectedIndex(0);
                 break;
         }
 
-        ftpServer.setText( options.getFtpServer() );
-        ftpPort.setValue( options.getFtpPort() );
-        ftpUser.setText( options.getFtpUser() );
-        ftpPassword.setText( options.getFtpPassword() );
-        ftpTargetDir.setText( options.getFtpTargetDir() );
+        ftpServer.setText(options.getFtpServer());
+        ftpPort.setValue(options.getFtpPort());
+        ftpUser.setText(options.getFtpUser());
+        ftpPassword.setText(options.getFtpPassword());
+        ftpTargetDir.setText(options.getFtpTargetDir());
 
-        sshServer.setText( options.getSshServer() );
-        sshPort.setValue( options.getSshPort() );
-        sshUser.setText( options.getSshUser() );
-        switch ( options.getSshAuthType() ) {
-            case SSH_AUTH_KEYFILE:
-                sshAuthOoptionChooser.setSelectedIndex( 1 );
-                break;
-            default: // case SSH_AUTH_PASSWORD:
-                sshAuthOoptionChooser.setSelectedIndex( 0 );
-                break;
+        sshServer.setText(options.getSshServer());
+        sshPort.setValue(options.getSshPort());
+        sshUser.setText(options.getSshUser());
+        if (options.getSshAuthType() == GenerateWebsiteRequest.SshAuthType.SSH_AUTH_KEYFILE) {
+            sshAuthOoptionChooser.setSelectedIndex(1);
+        } else {
+            sshAuthOoptionChooser.setSelectedIndex(0);
         }
-        sshPassword.setText( options.getSshPassword() );
-        sshTargetDir.setText( options.getSshTargetDir() );
-        sshKeyFile.setText( options.getSshKeyFile() );
+        sshPassword.setText(options.getSshPassword());
+        sshTargetDir.setText(options.getSshTargetDir());
+        sshKeyFile.setText(options.getSshKeyFile());
     }
 
     /**
@@ -472,42 +461,42 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
      * @param targetDirectory Target directory
      * @return true if ok, false if not
      */
-    public static boolean check( File targetDirectory ) {
-        if ( !targetDirectory.exists() ) {
+    public static boolean check(File targetDirectory) {
+        if (!targetDirectory.exists()) {
             try {
                 targetDirectory.mkdirs();
-            } catch ( SecurityException e ) {
+            } catch (SecurityException e) {
                 JOptionPane.showMessageDialog(
                         Settings.anchorFrame,
-                        Settings.jpoResources.getString( "htmlDistCrtDirError" ) + "\n" + e.getMessage(),
-                        Settings.jpoResources.getString( "genericSecurityException" ),
-                        JOptionPane.ERROR_MESSAGE );
+                        Settings.jpoResources.getString("htmlDistCrtDirError") + "\n" + e.getMessage(),
+                        Settings.jpoResources.getString("genericSecurityException"),
+                        JOptionPane.ERROR_MESSAGE);
                 return false;
             }
         } else {
-            if ( !targetDirectory.isDirectory() ) {
+            if (!targetDirectory.isDirectory()) {
                 JOptionPane.showMessageDialog(
                         Settings.anchorFrame,
-                        Settings.jpoResources.getString( "htmlDistIsDirError" ),
-                        Settings.jpoResources.getString( "genericError" ),
-                        JOptionPane.ERROR_MESSAGE );
+                        Settings.jpoResources.getString("htmlDistIsDirError"),
+                        Settings.jpoResources.getString("genericError"),
+                        JOptionPane.ERROR_MESSAGE);
                 return false;
             }
-            if ( !targetDirectory.canWrite() ) {
+            if (!targetDirectory.canWrite()) {
                 JOptionPane.showMessageDialog(
                         Settings.anchorFrame,
-                        Settings.jpoResources.getString( "htmlDistCanWriteError" ),
-                        Settings.jpoResources.getString( "genericError" ),
-                        JOptionPane.ERROR_MESSAGE );
+                        Settings.jpoResources.getString("htmlDistCanWriteError"),
+                        Settings.jpoResources.getString("genericError"),
+                        JOptionPane.ERROR_MESSAGE);
                 return false;
             }
-            if ( targetDirectory.listFiles().length > 0 ) {
+            if (Objects.requireNonNull(targetDirectory.listFiles()).length > 0) {
                 int option = JOptionPane.showConfirmDialog(
                         Settings.anchorFrame,
-                        Settings.jpoResources.getString( "htmlDistIsNotEmptyWarning" ),
-                        Settings.jpoResources.getString( "genericError" ),
+                        Settings.jpoResources.getString("htmlDistIsNotEmptyWarning"),
+                        Settings.jpoResources.getString("genericError"),
                         JOptionPane.OK_CANCEL_OPTION,
-                        JOptionPane.WARNING_MESSAGE );
+                        JOptionPane.WARNING_MESSAGE);
                 return option != JOptionPane.CANCEL_OPTION;
             }
         }
@@ -516,63 +505,63 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
 
     private void testSshConnection() {
         String command = "if [ -d " + options.getSshTargetDir() + " ]; then  echo \"Directory exists\"; else echo \"No such directory\"; fi;\n";
-        sshError.setText( executeSshCommand( command ) );
+        sshError.setText(executeSshCommand(command));
     }
 
     private void sshMkdir() {
         String command = "mkdir -pv " + options.getSshTargetDir();
-        sshError.setText( executeSshCommand( command ) );
+        sshError.setText(executeSshCommand(command));
     }
 
-    private String executeSshCommand( String command ) {
-        LOGGER.info( "Testing ssh connection:" );
+    private String executeSshCommand(String command) {
+        LOGGER.info("Testing ssh connection:");
         String response = "";
         JSch jsch = new JSch();
         try {
-            LOGGER.info( String.format( "Setting up session for user: %s server: %s port: %d and connecting...", options.getSshUser(), options.getSshServer(), options.getSshPort() ) );
-            Session session = jsch.getSession( options.getSshUser(), options.getSshServer(), options.getSshPort() );
-            if ( options.getSshAuthType().equals( GenerateWebsiteRequest.SshAuthType.SSH_AUTH_PASSWORD ) ) {
-                session.setPassword( options.getSshPassword() );
+            LOGGER.info(String.format("Setting up session for user: %s server: %s port: %d and connecting...", options.getSshUser(), options.getSshServer(), options.getSshPort()));
+            Session session = jsch.getSession(options.getSshUser(), options.getSshServer(), options.getSshPort());
+            if (options.getSshAuthType().equals(GenerateWebsiteRequest.SshAuthType.SSH_AUTH_PASSWORD)) {
+                session.setPassword(options.getSshPassword());
             } else {
-                jsch.addIdentity( options.getSshKeyFile() );
+                jsch.addIdentity(options.getSshKeyFile());
             }
             //jsch.setKnownHosts( "/home"+ options.getSshUser() + "/.ssh/known_hosts");
             Properties config = new Properties();
-            config.put( "StrictHostKeyChecking", "no" );
-            session.setConfig( config );
+            config.put("StrictHostKeyChecking", "no");
+            session.setConfig(config);
             session.connect();
 
-            LOGGER.info( "Opening Channel \"exec\"..." );
-            Channel channel = session.openChannel( "exec" );
-            LOGGER.log( Level.INFO, "Setting command: {0}", command );
-            ( (ChannelExec) channel ).setCommand( command );
+            LOGGER.info("Opening Channel \"exec\"...");
+            Channel channel = session.openChannel("exec");
+            LOGGER.log(Level.INFO, "Setting command: {0}", command);
+            ((ChannelExec) channel).setCommand(command);
 
             InputStream in = channel.getInputStream();
 
-            LOGGER.info( "Connecting Channel..." );
+            LOGGER.info("Connecting Channel...");
             channel.connect();
 
             byte[] tmp = new byte[1024];
-            while ( true ) {
-                while ( in.available() > 0 ) {
-                    int i = in.read( tmp, 0, 1024 );
-                    if ( i < 0 ) {
+            while (true) {
+                while (in.available() > 0) {
+                    int i = in.read(tmp, 0, 1024);
+                    if (i < 0) {
                         break;
                     }
-                    response = new String( tmp, 0, i );
-                    LOGGER.info( response );
+                    response = new String(tmp, 0, i);
+                    LOGGER.info(response);
                 }
-                if ( channel.isClosed() ) {
+                if (channel.isClosed()) {
                     response += "exit-status: " + channel.getExitStatus();
-                    LOGGER.log( Level.INFO, "exit-status: {0}", channel.getExitStatus() );
+                    LOGGER.log(Level.INFO, "exit-status: {0}", channel.getExitStatus());
                     break;
                 }
             }
 
             channel.disconnect();
             session.disconnect();
-        } catch ( JSchException | IOException ex ) {
-            LOGGER.severe( ex.getMessage() );
+        } catch (JSchException | IOException ex) {
+            LOGGER.severe(ex.getMessage());
             response = ex.getMessage();
         }
         return response;
@@ -589,47 +578,47 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
 
         JMultilineLabel() {
             super();
-            setEditable( false );
-            setCursor( null );
-            setOpaque( false );
-            setFocusable( false );
-            setWrapStyleWord( true );
-            setLineWrap( true );
+            setEditable(false);
+            setCursor(null);
+            setOpaque(false);
+            setFocusable(false);
+            setWrapStyleWord(true);
+            setLineWrap(true);
         }
     }
 
     private String testFtpConnection() {
-        LOGGER.info( "Setting up ftp connection:" );
+        LOGGER.info("Setting up ftp connection:");
         String returnString = "Connection OK.";
         final FTPClient ftp = new FTPClient();
         int reply;
         try {
-            ftp.connect( options.getFtpServer(), options.getFtpPort() );
+            ftp.connect(options.getFtpServer(), options.getFtpPort());
             reply = ftp.getReplyCode();
-            if ( !FTPReply.isPositiveCompletion( reply ) ) {
+            if (!FTPReply.isPositiveCompletion(reply)) {
                 ftp.disconnect();
-                LOGGER.severe( "FTP server refused connection." );
+                LOGGER.severe("FTP server refused connection.");
                 return "FTP server refused connection.";
             }
 
-            LOGGER.info( "Good connection:" );
+            LOGGER.info("Good connection:");
             boolean error = false;
             __main:
             {
-                if ( !ftp.login( options.getFtpUser(), options.getFtpPassword() ) ) {
+                if (!ftp.login(options.getFtpUser(), options.getFtpPassword())) {
                     ftp.logout();
                     error = true;
-                    LOGGER.info( "Could not log in." );
+                    LOGGER.info("Could not log in.");
                     returnString += " But could not log in.";
                     break __main;
                 }
 
-                LOGGER.log( Level.INFO, "Remote system is {0}", ftp.getSystemType());
-                ftp.setFileType( FTP.BINARY_FILE_TYPE );
+                LOGGER.log(Level.INFO, "Remote system is {0}", ftp.getSystemType());
+                ftp.setFileType(FTP.BINARY_FILE_TYPE);
                 ftp.enterLocalPassiveMode();
 
-                boolean dirExists = ftp.changeWorkingDirectory( options.getFtpTargetDir() );
-                if ( !dirExists ) {
+                boolean dirExists = ftp.changeWorkingDirectory(options.getFtpTargetDir());
+                if (!dirExists) {
                     returnString += " But directory doesn't exist.";
                 } else {
                     returnString += " And directory exists.";
@@ -637,45 +626,45 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
             }
             ftp.disconnect();
 
-        } catch ( IOException ex ) {
-            LOGGER.severe( ex.getMessage() );
+        } catch (IOException ex) {
+            LOGGER.severe(ex.getMessage());
             return ex.getMessage();
         }
         return returnString;
     }
 
     private String ftpMkdir() {
-        LOGGER.info( "Setting up ftp connection:" );
+        LOGGER.info("Setting up ftp connection:");
         String returnString = "Connection OK.";
         final FTPClient ftp = new FTPClient();
         int reply;
         try {
-            ftp.connect( options.getFtpServer(), options.getFtpPort() );
+            ftp.connect(options.getFtpServer(), options.getFtpPort());
             reply = ftp.getReplyCode();
-            if ( !FTPReply.isPositiveCompletion( reply ) ) {
+            if (!FTPReply.isPositiveCompletion(reply)) {
                 ftp.disconnect();
-                LOGGER.severe( "FTP server refused connection." );
+                LOGGER.severe("FTP server refused connection.");
                 return "FTP server refused connection.";
             }
 
-            LOGGER.info( "Good connection:" );
+            LOGGER.info("Good connection:");
             boolean error = false;
             __main:
             {
-                if ( !ftp.login( options.getFtpUser(), options.getFtpPassword() ) ) {
+                if (!ftp.login(options.getFtpUser(), options.getFtpPassword())) {
                     ftp.logout();
                     error = true;
-                    LOGGER.info( "Could not log in." );
+                    LOGGER.info("Could not log in.");
                     returnString += " But could not log in.";
                     break __main;
                 }
 
-                LOGGER.log( Level.INFO, "Remote system is {0}", ftp.getSystemType());
-                ftp.setFileType( FTP.BINARY_FILE_TYPE );
+                LOGGER.log(Level.INFO, "Remote system is {0}", ftp.getSystemType());
+                ftp.setFileType(FTP.BINARY_FILE_TYPE);
                 ftp.enterLocalPassiveMode();
 
-                boolean dirExists = ftp.makeDirectory( options.getFtpTargetDir() );
-                if ( !dirExists ) {
+                boolean dirExists = ftp.makeDirectory(options.getFtpTargetDir());
+                if (!dirExists) {
                     returnString += " But could not make the directory.";
                 } else {
                     returnString += " And created die directory.";
@@ -683,8 +672,8 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
             }
             ftp.disconnect();
 
-        } catch ( IOException ex ) {
-            LOGGER.severe( ex.getMessage() );
+        } catch (IOException ex) {
+            LOGGER.severe(ex.getMessage());
             return ex.getMessage();
         }
         return returnString;

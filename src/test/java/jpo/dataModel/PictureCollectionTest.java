@@ -142,30 +142,30 @@ public class PictureCollectionTest {
      */
     @Test
     public void testSelections() {
-        assertEquals( "Testing that the selection array is empty before we start", 0, pictureCollection.getSelectedNodes().length );
+        assertEquals( "Testing that the selection array is empty before we start", 0, pictureCollection.getSelection().size() );
         pictureCollection.addToSelectedNodes( group1 );
         pictureCollection.addToSelectedNodes( picture1 );
-        assertEquals( "We should have 2 nodes selected now", 2, pictureCollection.getSelectedNodes().length );
+        assertEquals( "We should have 2 nodes selected now", 2, pictureCollection.getSelection().size() );
         assertEquals( "We should have 2 nodes selected now", 2, pictureCollection.countSelectedNodes() );
         assertTrue( "We sould find that the node we selected is actually in the selected set", pictureCollection.isSelected( group1 ) );
         assertTrue( "We sould find that the second node we selected is actually in the selected set", pictureCollection.isSelected( picture1 ) );
         assertFalse( "A Node that was not selected should not be in the selection", pictureCollection.isSelected( group2 ) );
 
         pictureCollection.removeFromSelection( group1 );
-        assertEquals( "We should have 1 nodes selected now", 1, pictureCollection.getSelectedNodes().length );
+        assertEquals( "We should have 1 nodes selected now", 1, pictureCollection.getSelection().size() );
         assertFalse( "We sould find that the node we deselected is actually gone", pictureCollection.isSelected( group1 ) );
         assertTrue( "We sould find that the second node we selected is still in the selected set", pictureCollection.isSelected( picture1 ) );
         assertFalse( "A Node that was not selected should not be in the selection", pictureCollection.isSelected( group2 ) );
 
         pictureCollection.addToSelectedNodes( group1 );
         pictureCollection.addToSelectedNodes( group1 ); //why not add it again?
-        assertEquals( "Twice the same node plus one equals 2", 2, pictureCollection.getSelectedNodes().length );
+        assertEquals( "Twice the same node plus one equals 2", 2, pictureCollection.getSelection().size() );
 
         pictureCollection.clearSelection(); // this is where we the concurrent modification happened
-        assertEquals( "Testing that the selection array is empty again", 0, pictureCollection.getSelectedNodes().length );
+        assertEquals( "Testing that the selection array is empty again", 0, pictureCollection.getSelection().size() );
 
         pictureCollection.removeFromSelection( group1 ); // How about removing somehting that is not there?
-        assertEquals( "Testing that the selection array stayed", 0, pictureCollection.getSelectedNodes().length );
+        assertEquals( "Testing that the selection array stayed", 0, pictureCollection.getSelection().size() );
     }
 
     /**

@@ -25,7 +25,7 @@ import net.miginfocom.swing.MigLayout;
 /*
  IntegrityCheckerJFrame.java:  creates a frame and checks the integrity of the collection
 
- Copyright (C) 2002-2018  Richard Eigenmann, Zurich, Switzerland
+ Copyright (C) 2002-2019  Richard Eigenmann, Zurich, Switzerland
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -54,9 +54,6 @@ public class IntegrityCheckerJFrame
      */
     private static final Logger LOGGER = Logger.getLogger( IntegrityCheckerJFrame.class.getName() );
     private final JTextArea resultJTextArea = new JTextArea( 25, 80 );
-    private final JButton okJButton = new JButton( Settings.jpoResources.getString( "genericOKText" ) );
-    private final JButton correctChecksumsJButton = new JButton( "Correct picture checksums" );
-    private final JButton interruptJButton = new JButton( "Interrupt" );
     /**
      * reference to the node that should be checked
      */
@@ -74,15 +71,17 @@ public class IntegrityCheckerJFrame
         setTitle( Settings.jpoResources.getString( "IntegrityCheckerTitle" ) );
         JPanel jPanel = new JPanel( new MigLayout( "insets 15" ) );
         jPanel.add( new JLabel( Settings.jpoResources.getString( "integrityCheckerLabel" ) ), "wrap" );
+        JButton okJButton = new JButton(Settings.jpoResources.getString("genericOKText"));
         okJButton.setMaximumSize( Settings.defaultButtonDimension );
         okJButton.setMinimumSize( Settings.defaultButtonDimension );
         okJButton.setPreferredSize( Settings.defaultButtonDimension );
-        //jPanel.add( fixThumbnailReferencesJButton, "wrap" );
-        jPanel.add( correctChecksumsJButton, "wrap" );
+        JButton correctChecksumsJButton = new JButton("Correct picture checksums");
+        jPanel.add(correctChecksumsJButton, "wrap" );
         final JScrollPane resultScrollPane = new JScrollPane( resultJTextArea );
         jPanel.add( resultScrollPane, "wrap" );
-        jPanel.add( interruptJButton, "split 2" );
-        jPanel.add( okJButton, "wrap, tag ok" );
+        JButton interruptJButton = new JButton("Interrupt");
+        jPanel.add(interruptJButton, "split 2" );
+        jPanel.add(okJButton, "wrap, tag ok" );
         getContentPane().add( jPanel );
 
         // connect behaviour to widgets
@@ -93,9 +92,9 @@ public class IntegrityCheckerJFrame
                 getRid();
             }
         } );
-        okJButton.addActionListener(( ActionEvent e ) -> getRid());
-        correctChecksumsJButton.addActionListener(( ActionEvent e ) -> correctChecksums());
-        interruptJButton.addActionListener(( ActionEvent e ) -> interruptWorkers());
+        okJButton.addActionListener((ActionEvent e ) -> getRid());
+        correctChecksumsJButton.addActionListener((ActionEvent e ) -> correctChecksums());
+        interruptJButton.addActionListener((ActionEvent e ) -> interruptWorkers());
 
 
         pack();
