@@ -120,7 +120,7 @@ public class CameraDownloadWizardStep1
                 } else {
                     setCanGoNext( false );
                 }
-                progressJLabel.setText( Integer.toString( dataModel.getNewPictures().size() ) + Settings.jpoResources.getString( "DownloadCameraWizardStep1Text3" ) );
+                progressJLabel.setText(dataModel.getNewPictures().size() + Settings.jpoResources.getString( "DownloadCameraWizardStep1Text3" ) );
             };
             if ( SwingUtilities.isEventDispatchThread() ) {
                 r.run();

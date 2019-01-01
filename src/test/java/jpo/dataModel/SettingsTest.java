@@ -121,7 +121,7 @@ public class SettingsTest {
         assertEquals("After saving the settings the maxThumbnails should still be -2", -2, Settings.maxThumbnails);
 
         Settings.loadSettings();
-        assertEquals("After loading the negative value should have been replaced with" + Integer.toString(Settings.defaultMaxThumbnails), Settings.defaultMaxThumbnails, Settings.maxThumbnails);
+        assertEquals("After loading the negative value should have been replaced with" + Settings.defaultMaxThumbnails, Settings.defaultMaxThumbnails, Settings.maxThumbnails);
 
         Settings.maxThumbnails = 53;
         Settings.writeSettings();

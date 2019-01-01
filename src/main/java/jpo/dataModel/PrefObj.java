@@ -36,9 +36,9 @@ public class PrefObj {
         return baos.toByteArray();
     }
 
-    static private byte[][] breakIntoPieces( byte raw[] ) {
+    static private byte[][] breakIntoPieces(byte[] raw) {
         int numPieces = ( raw.length + pieceLength - 1 ) / pieceLength;
-        byte pieces[][] = new byte[numPieces][];
+        byte[][] pieces = new byte[numPieces][];
         for ( int i = 0; i < numPieces; ++i ) {
             int startByte = i * pieceLength;
             int endByte = startByte + pieceLength;
@@ -53,7 +53,7 @@ public class PrefObj {
     }
 
     static private void writePieces( Preferences prefs, String key,
-            byte pieces[][] ) throws BackingStoreException {
+                                     byte[][] pieces) throws BackingStoreException {
         Preferences node = prefs.node( key );
         node.clear();
         for ( int i = 0; i < pieces.length; ++i ) {
@@ -64,21 +64,21 @@ public class PrefObj {
     static private byte[][] readPieces( Preferences prefs, String key )
             throws BackingStoreException {
         Preferences node = prefs.node( key );
-        String keys[] = node.keys();
+        String[] keys = node.keys();
         int numPieces = keys.length;
-        byte pieces[][] = new byte[numPieces][];
+        byte[][] pieces = new byte[numPieces][];
         for ( int i = 0; i < numPieces; ++i ) {
             pieces[i] = node.getByteArray( "" + i, null );
         }
         return pieces;
     }
 
-    static private byte[] combinePieces( byte pieces[][] ) {
+    static private byte[] combinePieces(byte[][] pieces) {
         int length = 0;
         for (byte[] piece : pieces) {
             length += piece.length;
         }
-        byte raw[] = new byte[length];
+        byte[] raw = new byte[length];
         int cursor = 0;
         for (byte[] piece : pieces) {
             System.arraycopy(piece, 0, raw, cursor, piece.length);
@@ -87,7 +87,7 @@ public class PrefObj {
         return raw;
     }
 
-    static private Object bytes2Object( byte raw[] )
+    static private Object bytes2Object(byte[] raw)
             throws IOException, ClassNotFoundException {
         ByteArrayInputStream bais = new ByteArrayInputStream( raw );
         ObjectInputStream ois = new ObjectInputStream( bais );
@@ -107,8 +107,8 @@ public class PrefObj {
      */
     static public void putObject( Preferences prefs, String key, Object o )
             throws IOException, BackingStoreException, ClassNotFoundException {
-        byte raw[] = object2Bytes( o );
-        byte pieces[][] = breakIntoPieces( raw );
+        byte[] raw = object2Bytes(o);
+        byte[][] pieces = breakIntoPieces(raw);
         writePieces( prefs, key, pieces );
     }
 
@@ -124,8 +124,8 @@ public class PrefObj {
      */
     static public Object getObject( Preferences prefs, String key )
             throws IOException, BackingStoreException, ClassNotFoundException {
-        byte pieces[][] = readPieces( prefs, key );
-        byte raw[] = combinePieces( pieces );
+        byte[][] pieces = readPieces(prefs, key);
+        byte[] raw = combinePieces(pieces);
         Object o = bytes2Object( raw );
         return o;
     }

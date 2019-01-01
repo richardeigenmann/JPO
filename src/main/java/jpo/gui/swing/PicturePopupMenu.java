@@ -513,13 +513,12 @@ public class PicturePopupMenu extends JPopupMenu {
 
         final JMenuItem copyToNewZipfileJMenuItem = new JMenuItem(Settings.jpoResources.getString("copyToNewZipfileJMenuItem"));
         copyToNewZipfileJMenuItem.addActionListener((ActionEvent e) -> {
-            // TODO: Refactor this to be a List
             if (Settings.getPictureCollection().countSelectedNodes() < 1) {
-                SortableDefaultMutableTreeNode[] nodes = new SortableDefaultMutableTreeNode[1];
-                nodes[0] = popupNode;
-                JpoEventBus.getInstance().post(new CopyToNewZipfileRequest(nodes));
+                List<SortableDefaultMutableTreeNode> selection = new ArrayList<>();
+                selection.add(popupNode);
+                JpoEventBus.getInstance().post(new CopyToNewZipfileRequest(selection));
             } else {
-                JpoEventBus.getInstance().post(new CopyToNewZipfileRequest(Settings.getPictureCollection().getSelectedNodes()));
+                JpoEventBus.getInstance().post(new CopyToNewZipfileRequest(Settings.getPictureCollection().getSelecton()));
             }
         });
         copyJMenu.add(copyToNewZipfileJMenuItem);
@@ -544,11 +543,11 @@ public class PicturePopupMenu extends JPopupMenu {
             memorizedZipFileJMenuItems[i] = new JMenuItem();
             memorizedZipFileJMenuItems[i].addActionListener((ActionEvent ae) -> {
                 if (Settings.getPictureCollection().countSelectedNodes() < 1) {
-                    SortableDefaultMutableTreeNode[] nodes = new SortableDefaultMutableTreeNode[1];
-                    nodes[0] = popupNode;
-                    JpoEventBus.getInstance().post(new CopyToZipfileRequest(nodes, loc));
+                    List<SortableDefaultMutableTreeNode> selection = new ArrayList<>();
+                    selection.add(popupNode);
+                    JpoEventBus.getInstance().post(new CopyToZipfileRequest(selection, loc));
                 } else {
-                    JpoEventBus.getInstance().post(new CopyToZipfileRequest(Settings.getPictureCollection().getSelectedNodes(), loc));
+                    JpoEventBus.getInstance().post(new CopyToZipfileRequest(Settings.getPictureCollection().getSelecton(), loc));
                 }
             });
             copyJMenu.add(memorizedZipFileJMenuItems[i]);
@@ -768,7 +767,7 @@ public class PicturePopupMenu extends JPopupMenu {
      */
     private void labelRecentDropNodes() {
         boolean dropNodesVisible = false;
-        SortableDefaultMutableTreeNode nodes[] = Settings.recentDropNodes.toArray(new SortableDefaultMutableTreeNode[0]);
+        SortableDefaultMutableTreeNode[] nodes = Settings.recentDropNodes.toArray(new SortableDefaultMutableTreeNode[0]);
         for (int i = 0; i < Settings.MAX_DROPNODES; i++) {
             if (i < nodes.length && nodes[i] != null) {
                 recentDropNodeJMenuItems[i].setText(

@@ -275,7 +275,7 @@ public class ScreenHelper {
         }
 
         GraphicsDevice[] gd = ge.getScreenDevices();
-        sbadd( "There are " + Integer.toString( gd.length ) + " Screen Devices: " );
+        sbadd( "There are " + gd.length + " Screen Devices: " );
 
 
         sbadd( "The Graphics Environment Maximum Window Bounds are: " + ge.getMaximumWindowBounds().toString() );
@@ -319,12 +319,12 @@ public class ScreenHelper {
         } else {
             sbadd( "DisplayChangeSupported is not supported" );
         }
-        sbadd( "AvailableAcceleratedMemory: " + Integer.toString( d.getAvailableAcceleratedMemory() ) );
+        sbadd( "AvailableAcceleratedMemory: " + d.getAvailableAcceleratedMemory());
         explainDisplayMode( id, d.getDisplayMode() );
 
         DisplayMode[] dm = d.getDisplayModes();
         for ( int i = 0; i < dm.length; i++ ) {
-            explainDisplayMode( id + " possibleMode [" + Integer.toString( i ) + "]", dm[i] );
+            explainDisplayMode( id + " possibleMode [" + i + "]", dm[i] );
         }
 
 
@@ -333,7 +333,7 @@ public class ScreenHelper {
         sbadd( "**Available GraphicsConfigurations:" );
         GraphicsConfiguration[] gc = d.getConfigurations();
         for ( int i = 0; i < gc.length; i++ ) {
-            explainGraphicsConfiguration( id + " Available Configuration [" + Integer.toString( i ) + "] ", gc[i] );
+            explainGraphicsConfiguration( id + " Available Configuration [" + i + "] ", gc[i] );
         }
     }
 
@@ -344,7 +344,7 @@ public class ScreenHelper {
      * @param dm DisplayMode
      */
     public static void explainDisplayMode( String id, DisplayMode dm ) {
-        sbadd( "DisplayMode for Device: " + id + " Bit Depth: " + Integer.toString( dm.getBitDepth() ) + " RefreshRate: " + Integer.toString( dm.getRefreshRate() ) + " Width: " + Integer.toString( dm.getWidth() ) + " Height: " + Integer.toString( dm.getHeight() ) );
+        sbadd( "DisplayMode for Device: " + id + " Bit Depth: " + dm.getBitDepth() + " RefreshRate: " + dm.getRefreshRate() + " Width: " + dm.getWidth() + " Height: " + dm.getHeight());
     }
 
 

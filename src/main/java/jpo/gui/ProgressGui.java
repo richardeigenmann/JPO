@@ -187,7 +187,7 @@ public class ProgressGui extends JFrame implements ProgressListener {
     public void progressIncrement() {
         Tools.checkEDT();
         progBar.setValue( progBar.getValue() + 1 );
-        progLabel.setText( Integer.toString( progBar.getValue() ) + " / " + Integer.toString( progBar.getMaximum() ) );
+        progLabel.setText(progBar.getValue() + " / " + progBar.getMaximum());
     }
 
     /**
@@ -195,7 +195,7 @@ public class ProgressGui extends JFrame implements ProgressListener {
      */
     public void decrementTotal() {
         progBar.setMaximum( progBar.getMaximum() - 1 );
-        progLabel.setText( Integer.toString( progBar.getValue() ) + " / " + Integer.toString( progBar.getMaximum() ) );
+        progLabel.setText(progBar.getValue() + " / " + progBar.getMaximum());
     }
 
     /**
@@ -205,7 +205,7 @@ public class ProgressGui extends JFrame implements ProgressListener {
      */
     public void setMaxiumum( int max ) {
         progBar.setMaximum( max );
-        progLabel.setText( Integer.toString( progBar.getValue() ) + " / " + Integer.toString( progBar.getMaximum() ) );
+        progLabel.setText(progBar.getValue() + " / " + progBar.getMaximum());
     }
 
     /**

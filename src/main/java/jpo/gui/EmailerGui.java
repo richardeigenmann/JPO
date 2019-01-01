@@ -151,7 +151,7 @@ public class EmailerGui extends JFrame {
         jPanel.setLayout( new MigLayout() );
 
         final JLabel imagesCountJLabel
-                = new JLabel( Settings.jpoResources.getString( "imagesCountJLabel" ) + Integer.toString( emailSelected.size() ) );
+                = new JLabel( Settings.jpoResources.getString( "imagesCountJLabel" ) + emailSelected.size());
         jPanel.add( imagesCountJLabel, "spanx 2, wrap" );
 
 

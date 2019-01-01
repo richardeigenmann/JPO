@@ -54,7 +54,7 @@ public class GroupInfo implements Serializable {
      * The description of the GroupInfo.
      *
      */
-    private StringBuffer groupName = new StringBuffer( "" );
+    private StringBuffer groupName = new StringBuffer();
 
     /**
      * Constructor to create a new GroupInfo object.

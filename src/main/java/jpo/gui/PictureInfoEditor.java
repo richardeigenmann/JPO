@@ -523,7 +523,7 @@ public class PictureInfoEditor extends JFrame {
             }
         } );
 
-        int selectionsArray[] = new int[selections.size()];
+        int[] selectionsArray = new int[selections.size()];
         int j = 0;
         for ( Integer key : selections ) {
             selectionsArray[j] = ( key );
@@ -606,7 +606,7 @@ public class PictureInfoEditor extends JFrame {
      * @return a string for the selected categories
      */
     private static String selectedJListCategoriesToString( JList<Category> theList ) {
-        StringBuilder resultString = new StringBuilder( "" );
+        StringBuilder resultString = new StringBuilder();
         if ( !theList.isSelectionEmpty() ) {
             List<Category> selectedCategories = theList.getSelectedValuesList();
             String comma = "";

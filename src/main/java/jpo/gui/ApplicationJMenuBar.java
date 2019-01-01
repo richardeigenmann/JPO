@@ -289,7 +289,7 @@ public class ApplicationJMenuBar extends JMenuBar {
         Runnable runnable = () -> {
             for ( int i = 0; i < Settings.recentCollections.length; i++ ) {
                 if ( Settings.recentCollections[i] != null ) {
-                    recentOpenedfileJMenuItem[i].setText( Integer.toString( i + 1 ) + ": " + Settings.recentCollections[i] );
+                    recentOpenedfileJMenuItem[i].setText((i + 1) + ": " + Settings.recentCollections[i] );
                     recentOpenedfileJMenuItem[i].setVisible( true );
                 } else {
                     recentOpenedfileJMenuItem[i].setVisible( false );

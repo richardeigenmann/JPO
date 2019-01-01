@@ -896,7 +896,7 @@ public class PictureCollection {
             if ( ( nodeObject instanceof PictureInfo ) ) {
                 pi = (PictureInfo) nodeObject;
                 if ( pi.getImageFile().equals( comparingFile ) ) {
-                    testNodeParent = (SortableDefaultMutableTreeNode) testNode.getParent();
+                    testNodeParent = testNode.getParent();
                     if ( !parentGroups.contains( testNodeParent ) ) {
                         LOGGER.log( Level.FINE, "adding node: {0}", testNodeParent.toString() );
                         parentGroups.add( testNodeParent );
@@ -977,8 +977,18 @@ public class PictureCollection {
      *
      * @return an array of the selected nodes
      */
+    @Deprecated
     public SortableDefaultMutableTreeNode[] getSelectedNodes() {
         return selection.toArray(new SortableDefaultMutableTreeNode[0]);
+    }
+
+    /**
+     * returns an array of the selected nodes.
+     *
+     * @return an array of the selected nodes
+     */
+    public List<SortableDefaultMutableTreeNode> getSelecton() {
+        return selection;
     }
 
     /**

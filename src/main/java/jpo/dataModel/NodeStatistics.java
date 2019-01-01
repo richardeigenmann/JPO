@@ -114,7 +114,7 @@ public class NodeStatistics {
      * of the number
      */
     public String getNumberOfNodesString() {
-        return Settings.jpoResources.getString( "CollectionNodeCountLabel" ) + Integer.toString( getNumberOfNodes() );
+        return Settings.jpoResources.getString( "CollectionNodeCountLabel" ) + getNumberOfNodes();
     }
 
     /**
@@ -160,7 +160,7 @@ public class NodeStatistics {
      * @return Returns a multilingual label with the number of Groups
      */
     public String getNumberOfGroupsString() {
-        return Settings.jpoResources.getString( "CollectionGroupCountLabel" ) + Integer.toString( getNumberOfGroups() );
+        return Settings.jpoResources.getString( "CollectionGroupCountLabel" ) + getNumberOfGroups();
     }
 
     /**
@@ -180,7 +180,7 @@ public class NodeStatistics {
      * prefixed with the multilingual label
      */
     public String getNumberOfPicturesString() {
-        return Settings.jpoResources.getString( "CollectionPictureCountLabel" ) + Integer.toString( getNumberOfPictures() );
+        return Settings.jpoResources.getString( "CollectionPictureCountLabel" ) + getNumberOfPictures();
     }
 
     /**

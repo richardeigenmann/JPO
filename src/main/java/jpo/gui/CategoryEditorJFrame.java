@@ -159,7 +159,7 @@ public class CategoryEditorJFrame
             int count = PictureCollection.countCategoryUsage( cat.getKey(), Settings.getPictureCollection().getRootNode() );
             if ( count > 0 ) {
                 int answer = JOptionPane.showConfirmDialog( CategoryEditorJFrame.this,
-                        Settings.jpoResources.getString( "countCategoryUsageWarning1" ) + Integer.toString( count ) + Settings.jpoResources.getString( "countCategoryUsageWarning2" ),
+                        Settings.jpoResources.getString( "countCategoryUsageWarning1" ) + count + Settings.jpoResources.getString( "countCategoryUsageWarning2" ),
                         Settings.jpoResources.getString( "genericWarning" ),
                         JOptionPane.OK_CANCEL_OPTION,
                         JOptionPane.QUESTION_MESSAGE );

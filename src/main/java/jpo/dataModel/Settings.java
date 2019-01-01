@@ -705,18 +705,18 @@ public class Settings {
         pictureViewerDefaultDimensions.height = prefs.getInt("pictureViewerDefaultDimensions.height", pictureViewerDefaultDimensions.height);
 
         for (int i = 0; i < MAX_MEMORISE; i++) {
-            String key = "copyLocations-" + Integer.toString(i);
+            String key = "copyLocations-" + i;
             String loc = prefs.get(key, null);
             if (loc != null) {
                 copyLocations.add(loc);
             }
         }
         for (int i = 0; i < Settings.MAX_MEMORISE; i++) {
-            recentCollections[i] = prefs.get("recentCollections-" + Integer.toString(i), null);
+            recentCollections[i] = prefs.get("recentCollections-" + i, null);
         }
         for (int i = 0; i < Settings.maxUserFunctions; i++) {
-            userFunctionNames[i] = prefs.get("userFunctionName-" + Integer.toString(i), null);
-            userFunctionCmd[i] = prefs.get("userFunctionCmd-" + Integer.toString(i), null);
+            userFunctionNames[i] = prefs.get("userFunctionName-" + i, null);
+            userFunctionCmd[i] = prefs.get("userFunctionCmd-" + i, null);
         }
         dontEnlargeSmallImages = prefs.getBoolean("dontEnlargeSmallImages", dontEnlargeSmallImages);
         thumbnailCounter = prefs.getInt("thumbnailCounter", thumbnailCounter);
@@ -761,11 +761,11 @@ public class Settings {
         defaultLinkToHighres = prefs.getBoolean("showThumbOnFileChooser", showThumbOnFileChooser);
         int n = prefs.getInt("emailSenders", 0);
         for (int i = 0; i < n; i++) {
-            emailSenders.add(prefs.get("emailSender-" + Integer.toString(i), ""));
+            emailSenders.add(prefs.get("emailSender-" + i, ""));
         }
         n = prefs.getInt("emailRecipients", 0);
         for (int i = 0; i < n; i++) {
-            emailRecipients.add(prefs.get("emailRecipient-" + Integer.toString(i), ""));
+            emailRecipients.add(prefs.get("emailRecipient-" + i, ""));
         }
         emailServer = prefs.get("emailServer", emailServer);
         emailPort = prefs.get("emailPort", emailPort);
@@ -878,8 +878,8 @@ public class Settings {
         n = 0;
         for (i = 0; i < Settings.maxUserFunctions; i++) {
             if ((userFunctionNames[i] != null) && (userFunctionNames[i].length() > 0) && (userFunctionCmd[i] != null) && (userFunctionCmd[i].length() > 0)) {
-                prefs.put("userFunctionName-" + Integer.toString(n), userFunctionNames[i]);
-                prefs.put("userFunctionCmd-" + Integer.toString(n), userFunctionCmd[i]);
+                prefs.put("userFunctionName-" + n, userFunctionNames[i]);
+                prefs.put("userFunctionCmd-" + n, userFunctionCmd[i]);
                 n++;
             }
         }
@@ -924,14 +924,14 @@ public class Settings {
         n = 0;
         Iterator itr = emailSenders.iterator();
         while (itr.hasNext()) {
-            prefs.put("emailSender-" + Integer.toString(n), (String) itr.next());
+            prefs.put("emailSender-" + n, (String) itr.next());
             n++;
         }
         prefs.putInt("emailSenders", n);
         n = 0;
         itr = emailRecipients.iterator();
         while (itr.hasNext()) {
-            prefs.put("emailRecipient-" + Integer.toString(n), (String) itr.next());
+            prefs.put("emailRecipient-" + n, (String) itr.next());
             n++;
         }
         prefs.putInt("emailRecipients", n);
@@ -970,12 +970,12 @@ public class Settings {
         prefs.putInt("NumberOfCameras", cameras.size());
         int i = 0;
         for (Camera c : cameras) {
-            prefs.put("Camera[" + Integer.toString(i) + "].description", c.getDescription());
-            prefs.put("Camera[" + Integer.toString(i) + "].cameraMountPoint", c.getCameraMountPoint());
-            prefs.putBoolean("Camera[" + Integer.toString(i) + "].useFilename", c.getUseFilename());
-            prefs.putBoolean("Camera[" + Integer.toString(i) + "].monitor", c.getMonitorForNewPictures());
+            prefs.put("Camera[" + i + "].description", c.getDescription());
+            prefs.put("Camera[" + i + "].cameraMountPoint", c.getCameraMountPoint());
+            prefs.putBoolean("Camera[" + i + "].useFilename", c.getUseFilename());
+            prefs.putBoolean("Camera[" + i + "].monitor", c.getMonitorForNewPictures());
             try {
-                PrefObj.putObject(prefs, "Camera[" + Integer.toString(i) + "].oldImage", c.getOldImage());
+                PrefObj.putObject(prefs, "Camera[" + i + "].oldImage", c.getOldImage());
             } catch (IOException | BackingStoreException | ClassNotFoundException ex) {
                 LOGGER.severe(ex.getLocalizedMessage());
             }
@@ -991,14 +991,14 @@ public class Settings {
         int numberOfCameras = prefs.getInt("NumberOfCameras", 0);
         for (int i = 0; i < numberOfCameras; i++) {
             Camera camera = new Camera();
-            camera.setDescription(prefs.get("Camera[" + Integer.toString(i) + "].description", "unknown"));
-            camera.setCameraMountPoint(prefs.get("Camera[" + Integer.toString(i) + "].cameraMountPoint", FileSystemView.getFileSystemView().getHomeDirectory().toString()));
-            camera.setUseFilename(prefs.getBoolean("Camera[" + Integer.toString(i) + "].useFilename", true));
-            camera.setMonitorForNewPictures(prefs.getBoolean("Camera[" + Integer.toString(i) + "].monitor", true));
+            camera.setDescription(prefs.get("Camera[" + i + "].description", "unknown"));
+            camera.setCameraMountPoint(prefs.get("Camera[" + i + "].cameraMountPoint", FileSystemView.getFileSystemView().getHomeDirectory().toString()));
+            camera.setUseFilename(prefs.getBoolean("Camera[" + i + "].useFilename", true));
+            camera.setMonitorForNewPictures(prefs.getBoolean("Camera[" + i + "].monitor", true));
 
             camera.setOldImage(new HashMap<>());
             try {
-                camera.setOldImage((HashMap) PrefObj.getObject(prefs, "Camera[" + Integer.toString(i) + "].oldImage"));
+                camera.setOldImage((HashMap) PrefObj.getObject(prefs, "Camera[" + i + "].oldImage"));
             } catch (IOException | BackingStoreException | ClassNotFoundException ex) {
                 LOGGER.severe(ex.getLocalizedMessage());
             }

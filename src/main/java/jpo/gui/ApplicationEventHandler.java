@@ -1062,7 +1062,7 @@ public class ApplicationEventHandler {
         tempfile.renameTo(request.getTargetZipfile());
 
         JOptionPane.showMessageDialog(Settings.anchorFrame,
-                String.format("Copied %d files of %d to zipfile %s", picsCopied, request.getNodes().length, request.getTargetZipfile().toString()),
+                String.format("Copied %d files of %d to zipfile %s", picsCopied, request.getNodes().size(), request.getTargetZipfile().toString()),
                 Settings.jpoResources.getString("genericInfo"),
                 JOptionPane.INFORMATION_MESSAGE);
 

@@ -508,9 +508,7 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
                         Settings.jpoResources.getString( "genericError" ),
                         JOptionPane.OK_CANCEL_OPTION,
                         JOptionPane.WARNING_MESSAGE );
-                if ( option == JOptionPane.CANCEL_OPTION ) {
-                    return false;
-                }
+                return option != JOptionPane.CANCEL_OPTION;
             }
         }
         return true;

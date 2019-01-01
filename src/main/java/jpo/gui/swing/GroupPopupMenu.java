@@ -221,7 +221,7 @@ public class GroupPopupMenu extends JPopupMenu {
             JMenu moveGroupNodeJMenu = new JMenu(Settings.jpoResources.getString("moveNodeJMenuLabel"));
             add(moveGroupNodeJMenu);
 
-            SortableDefaultMutableTreeNode nodes[] = Settings.recentDropNodes.toArray(new SortableDefaultMutableTreeNode[0]);
+            SortableDefaultMutableTreeNode[] nodes = Settings.recentDropNodes.toArray(new SortableDefaultMutableTreeNode[0]);
             for (int i = 0; i < Settings.MAX_DROPNODES; i++) {
                 final int dropnode = i;
                 recentDropNodes[i] = new JMenuItem();
@@ -423,7 +423,7 @@ public class GroupPopupMenu extends JPopupMenu {
      */
     public void populateRecentDropNodeMenuItems() {
         boolean dropNodesVisible = false;
-        SortableDefaultMutableTreeNode nodes[] = Settings.recentDropNodes.toArray(new SortableDefaultMutableTreeNode[0]);
+        SortableDefaultMutableTreeNode[] nodes = Settings.recentDropNodes.toArray(new SortableDefaultMutableTreeNode[0]);
         for (int i = 0; i < Settings.MAX_DROPNODES; i++) {
             if (i < nodes.length && nodes[i] != null) {
                 recentDropNodes[i].setText("To Group: " + nodes[i].toString());
@@ -467,7 +467,7 @@ public class GroupPopupMenu extends JPopupMenu {
         Tools.checkEDT();
         for (int i = 0; i < Settings.recentCollections.length; i++) {
             if (Settings.recentCollections[i] != null) {
-                recentOpenedfileJMenuItem[i].setText(Integer.toString(i + 1) + ": " + Settings.recentCollections[i]);
+                recentOpenedfileJMenuItem[i].setText((i + 1) + ": " + Settings.recentCollections[i]);
                 recentOpenedfileJMenuItem[i].setVisible(true);
             } else {
                 recentOpenedfileJMenuItem[i].setVisible(false);

@@ -181,7 +181,7 @@ public class PictureInfo implements Serializable {
         }
 
         if (checksum > Long.MIN_VALUE) {
-            out.write("\t<checksum>" + Long.toString(checksum) + "</checksum>");
+            out.write("\t<checksum>" + checksum + "</checksum>");
             out.newLine();
         }
 

@@ -233,7 +233,7 @@ public class SettingsDialog extends JDialog {
         final String[] windowSizeChoices = new String[Settings.windowSizes.length];
         windowSizeChoices[0] = Settings.jpoResources.getString( "windowSizeChoicesMaximum" );
         for ( int i = 1; i < Settings.windowSizes.length; i++ ) {
-            windowSizeChoices[i] = Integer.toString( Settings.windowSizes[i].width ) + " x " + Integer.toString( Settings.windowSizes[i].height );
+            windowSizeChoices[i] = Settings.windowSizes[i].width + " x " + Settings.windowSizes[i].height;
         }
         final DefaultComboBoxModel<String> dcbm = new DefaultComboBoxModel<>( windowSizeChoices );
         startupSizeDropdown.setModel( dcbm );

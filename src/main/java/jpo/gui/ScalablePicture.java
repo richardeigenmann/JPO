@@ -499,7 +499,7 @@ public class ScalablePicture
      */
     public String getScaledSizeString() {
         if ( scaledPicture != null ) {
-            return Integer.toString( scaledPicture.getWidth() ) + " x " + Integer.toString( scaledPicture.getHeight() );
+            return scaledPicture.getWidth() + " x " + scaledPicture.getHeight();
         } else {
             return "0 x 0";
         }

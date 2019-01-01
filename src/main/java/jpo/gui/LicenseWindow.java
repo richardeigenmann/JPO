@@ -54,7 +54,7 @@ public class LicenseWindow {
                 JScrollPane.HORIZONTAL_SCROLLBAR_NEVER );
         jScrollPane.setPreferredSize( new Dimension( 500, 400 ) );
 
-        StringBuilder sb = new StringBuilder( "" );
+        StringBuilder sb = new StringBuilder();
         String textLine;
         try (
                 InputStream in = LicenseWindow.class.getClassLoader().getResourceAsStream( "gpl.txt" );

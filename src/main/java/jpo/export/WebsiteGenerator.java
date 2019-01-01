@@ -173,7 +173,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
                 files.add(folderIconFile);
 
                 int count;
-                byte data[] = new byte[BUFFER_SIZE];
+                byte[] data = new byte[BUFFER_SIZE];
                 while ((count = bin.read(data, 0, BUFFER_SIZE)) != -1) {
                     bout.write(data, 0, count);
                 }
@@ -251,7 +251,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
                 groupFile = new File(options.getTargetDirectory(), "index.htm");
             } else {
                 int hashCode = groupNode.hashCode();
-                groupFile = new File(options.getTargetDirectory(), "jpo_" + Integer.toString(hashCode) + ".htm");
+                groupFile = new File(options.getTargetDirectory(), "jpo_" + hashCode + ".htm");
             }
             files.add(groupFile);
             BufferedWriter out = new BufferedWriter(new FileWriter(groupFile));
@@ -273,9 +273,9 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
             out.newLine();
 
             //out.write( "<table border=\"0\" cellpadding=\"0\" cellspacing=\"" + Integer.toString( options.getCellspacing() ) + "\" width=\"" + Integer.toString( options.getPicsPerRow() * options.getThumbnailWidth() + ( options.getPicsPerRow() - 1 ) * options.getCellspacing() ) + "\">" );
-            out.write("<table  style=\"border-spacing: " + Integer.toString(options.getCellspacing())
+            out.write("<table  style=\"border-spacing: " + options.getCellspacing()
                     + "px; width: "
-                    + Integer.toString(options.getPicsPerRow() * options.getThumbnailWidth() + (options.getPicsPerRow() - 1) * options.getCellspacing())
+                    + (options.getPicsPerRow() * options.getThumbnailWidth() + (options.getPicsPerRow() - 1) * options.getCellspacing())
                     + "px\">");
             out.newLine();
 
@@ -291,8 +291,8 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
                 }
             } else {
                 //link to parent
-                SortableDefaultMutableTreeNode parentNode = (SortableDefaultMutableTreeNode) groupNode.getParent();
-                String parentLink = "jpo_" + Integer.toString(parentNode.hashCode()) + ".htm";
+                SortableDefaultMutableTreeNode parentNode = groupNode.getParent();
+                String parentLink = "jpo_" + parentNode.hashCode() + ".htm";
                 if (parentNode.equals(options.getStartNode())) {
                     parentLink = "index.htm";
                 }
@@ -313,7 +313,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
 
                     out.write("<td class=\"groupThumbnailCell\" valign=\"bottom\" align=\"left\">");
 
-                    out.write("<a href=\"jpo_" + Integer.toString(node.hashCode()) + ".htm\">"
+                    out.write("<a href=\"jpo_" + node.hashCode() + ".htm\">"
                             + "<img src=\"jpo_folder_icon.gif\" width=\"32\" height=\"27\" /></a>");
 
                     out.write("</td>");
@@ -405,7 +405,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
                 midresHtmlFileName = "jpo_" + formattedNumber + ".htm";
                 break;
             default:  //case GenerateWebsiteRequest.PICTURE_NAMING_BY_HASH_CODE:
-                String fn = "jpo_" + Integer.toString(pictureNode.hashCode());
+                String fn = "jpo_" + pictureNode.hashCode();
                 lowresFile = new File(options.getTargetDirectory(), fn + "_l." + extension);
                 midresFile = new File(options.getTargetDirectory(), fn + "_m." + extension);
                 highresFile = new File(options.getTargetDirectory(), fn + "_h." + extension);
@@ -466,9 +466,9 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
         out.write("\">" + "<img src=\""
                 + lowresFile.getName()
                 + "\" width=\""
-                + Integer.toString(w)
+                + w
                 + "\" height=\""
-                + Integer.toString(h)
+                + h
                 + "\" alt=\""
                 + StringEscapeUtils.escapeHtml4(pictureInfo.getDescription())
                 + "\" "
@@ -496,7 +496,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
             try (
                     BufferedWriter midresHtmlWriter = new BufferedWriter(new FileWriter(midresHtmlFile))) {
                 String groupDescriptionHtml
-                        = StringEscapeUtils.escapeHtml4(((DefaultMutableTreeNode) pictureNode.getParent()).getUserObject().toString());
+                        = StringEscapeUtils.escapeHtml4(pictureNode.getParent().getUserObject().toString());
 
                 midresHtmlWriter.write("<!DOCTYPE HTML>");
                 midresHtmlWriter.newLine();
@@ -509,8 +509,8 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
                 midresHtmlWriter.newLine();
                 midresHtmlWriter.newLine();
                 midresHtmlWriter.write("<tr><td class=\"midresPictureCell\">");
-                String imgTag = "<img src=\"" + midresFile.getName() + "\" width= \"" + Integer.toString(w) + "\" height=\""
-                        + Integer.toString(h) + "\" alt=\""
+                String imgTag = "<img src=\"" + midresFile.getName() + "\" width= \"" + w + "\" height=\""
+                        + h + "\" alt=\""
                         + StringEscapeUtils.escapeHtml4(pictureInfo.getDescription()) + "\" />";
 
                 if (options.isLinkToHighres()) {
@@ -606,7 +606,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
                                     break;
                                 default:  //case GenerateWebsiteRequest.PICTURE_NAMING_BY_HASH_CODE:
                                     int hashCode = nde.hashCode();
-                                    nodeUrl = "jpo_" + Integer.toString(hashCode) + ".htm";
+                                    nodeUrl = "jpo_" + hashCode + ".htm";
                                     lowresFn = "jpo_" + nde.hashCode() + "_l." + extension;
                                     break;
                             }
@@ -679,7 +679,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
                                 break;
                             default:  //case GenerateWebsiteRequest.PICTURE_NAMING_BY_HASH_CODE:
                                 int hashCode = (pictureNode.getParent()).getChildAt(childNumber - 2).hashCode();
-                                previousHtmlFilename = "jpo_" + Integer.toString(hashCode) + ".htm";
+                                previousHtmlFilename = "jpo_" + hashCode + ".htm";
                                 break;
                         }
                         midresHtmlWriter.write(String.format("<a href=\"%s\">Previous</a>", previousHtmlFilename));
@@ -714,7 +714,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
                                 break;
                             default:  //case GenerateWebsiteRequest.PICTURE_NAMING_BY_HASH_CODE:
                                 int hashCode = (pictureNode.getParent()).getChildAt(childNumber).hashCode();
-                                nextHtmlFilename = "jpo_" + Integer.toString(hashCode) + ".htm";
+                                nextHtmlFilename = "jpo_" + hashCode + ".htm";
                                 break;
                         }
 
@@ -733,9 +733,9 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
                 midresHtmlWriter.newLine();
 
                 if (options.isGenerateMouseover()) {
-                    midresHtmlWriter.write("<ilayer id=\"d1\" width=\"" + Integer.toString(matrixWidth) + "\" height=\"200\" visibility=\"hide\">");
+                    midresHtmlWriter.write("<ilayer id=\"d1\" width=\"" + matrixWidth + "\" height=\"200\" visibility=\"hide\">");
                     midresHtmlWriter.newLine();
-                    midresHtmlWriter.write("<layer id=\"d2\" width=\"" + Integer.toString(matrixWidth) + "\" height=\"200\">");
+                    midresHtmlWriter.write("<layer id=\"d2\" width=\"" + matrixWidth + "\" height=\"200\">");
                     midresHtmlWriter.newLine();
                     midresHtmlWriter.write("<div id=\"descriptions\" class=\"sidepanelMouseover\">");
                     midresHtmlWriter.newLine();
@@ -1183,7 +1183,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
             zipFile.putNextEntry(entry);
 
             int count;
-            byte data[] = new byte[BUFFER_SIZE];
+            byte[] data = new byte[BUFFER_SIZE];
             while ((count = bin.read(data, 0, BUFFER_SIZE)) != -1) {
                 zipFile.write(data, 0, count);
             }

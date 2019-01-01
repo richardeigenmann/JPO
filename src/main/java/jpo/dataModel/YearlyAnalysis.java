@@ -227,7 +227,7 @@ public class YearlyAnalysis implements Serializable {
             "March", "April", "May", "June", "July",
             "August", "September", "October", "November",
             "December" };
-        StringBuilder sb = new StringBuilder( "" );
+        StringBuilder sb = new StringBuilder();
         for ( Integer year : getYears() ) {
             sb.append( String.format( "Year: %4d%n", year ) );
             for ( Integer month : getMonths( year ) ) {

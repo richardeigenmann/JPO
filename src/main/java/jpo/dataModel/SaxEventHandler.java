@@ -180,7 +180,7 @@ public class SaxEventHandler extends DefaultHandler {
         if ( null != qName ) {
             switch ( qName ) {
                 case "group":
-                    currentGroup = (SortableDefaultMutableTreeNode) currentGroup.getParent();
+                    currentGroup = currentGroup.getParent();
                     break;
                 case "file_lowres_URL":
                     lowresUrls.append( System.getProperty( "line.separator" ) );
@@ -217,7 +217,7 @@ public class SaxEventHandler extends DefaultHandler {
      * @throws SAXException Throws and exception if parsing doesn't work
      */
     @Override
-    public void characters( char buf[], int offset, int len ) throws SAXException {
+    public void characters(char[] buf, int offset, int len ) throws SAXException {
         String s = new String( buf, offset, len );
         switch ( currentField ) {
             case DESCRIPTION:

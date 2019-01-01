@@ -807,16 +807,16 @@ public class GenerateWebsiteRequest implements Request {
     public String toString() {
         StringBuilder sb = new StringBuilder( Settings.jpoResources.getString( "HtmlDistThumbnails" ) + "\n" );
         sb.append( Settings.jpoResources.getString( "picsPerRowText" ) ).append( " " ).append( getPicsPerRow() ).append( "\n" );
-        sb.append( Settings.jpoResources.getString( "thumbnailSizeJLabel" ) ).append( " " ).append( Integer.toString( getThumbnailWidth() ) ).append( " x " ).append( Integer.toString( getThumbnailHeight() ) ).append( "\n" );
-        sb.append( Settings.jpoResources.getString( "lowresJpgQualitySlider" ) ).append( " " ).append( Integer.toString( getLowresJpgQualityPercent() ) ).append( "\n" );
-        sb.append( Settings.jpoResources.getString( "scalingSteps" ) ).append( " " ).append( Integer.toString( getScalingSteps() ) ).append( "\n" );
+        sb.append( Settings.jpoResources.getString( "thumbnailSizeJLabel" ) ).append( " " ).append(getThumbnailWidth()).append( " x " ).append(getThumbnailHeight()).append( "\n" );
+        sb.append( Settings.jpoResources.getString( "lowresJpgQualitySlider" ) ).append( " " ).append(getLowresJpgQualityPercent()).append( "\n" );
+        sb.append( Settings.jpoResources.getString( "scalingSteps" ) ).append( " " ).append(getScalingSteps()).append( "\n" );
 
         sb.append( "\n" ).append( Settings.jpoResources.getString( "HtmlDistMidres" ) ).append( "\n" );
         sb.append( isGenerateMidresHtml() ? Settings.jpoResources.getString( "HtmlDistMidresHtml" ) + "\n" : "No medium size navigation pages\n" );
         sb.append( isGenerateMap() ? Settings.jpoResources.getString( "GenerateMap" ) + "\n" : "No map\n" );
         sb.append( isGenerateMouseover() ? Settings.jpoResources.getString( "jpo.export.GenerateWebsiteWizard3Midres.generateMouseoverJCheckBox" ) + "\n" : "No  DHTML mouseover effects\n" );
-        sb.append( Settings.jpoResources.getString( "midresSizeJLabel" ) ).append( " " ).append( Integer.toString( getMidresWidth() ) ).append( " x " ).append( Integer.toString( getMidresHeight() ) ).append( "\n" );
-        sb.append( Settings.jpoResources.getString( "midresJpgQualitySlider" ) ).append( " " ).append( Integer.toString( getMidresJpgQualityPercent() ) ).append( "\n" );
+        sb.append( Settings.jpoResources.getString( "midresSizeJLabel" ) ).append( " " ).append(getMidresWidth()).append( " x " ).append(getMidresHeight()).append( "\n" );
+        sb.append( Settings.jpoResources.getString( "midresJpgQualitySlider" ) ).append( " " ).append(getMidresJpgQualityPercent()).append( "\n" );
 
         sb.append( "\n" ).append( Settings.jpoResources.getString( "HtmlDistHighres" ) ).append( "\n" );
         sb.append( isExportHighres() ? "Export Highres Pictures\n" : "Do not export Highres Pictures\n" );
@@ -858,7 +858,7 @@ public class GenerateWebsiteRequest implements Request {
                 break;
             default: // case PICTURE_NAMING_BY_SEQUENTIAL_NUMBER:
                 sb.append( Settings.jpoResources.getString( "sequentialRadioButton" ) );
-                sb.append( Settings.jpoResources.getString( "sequentialRadioButtonStart" ) ).append( " " ).append( Integer.toString( getSequentialStartNumber() ) );
+                sb.append( Settings.jpoResources.getString( "sequentialRadioButtonStart" ) ).append( " " ).append(getSequentialStartNumber());
                 break;
         }
 

@@ -185,7 +185,7 @@ public class TableJFrame extends JFrame {
                     case 8:
                         return ( (PictureInfo) userObject ).getLatLngString();
                     default:
-                        return "Unknown Column: " + Integer.toString( col );
+                        return "Unknown Column: " + col;
                 }
             } else {
                 // GroupInfo

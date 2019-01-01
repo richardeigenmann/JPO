@@ -62,7 +62,7 @@ public class CameraDownloadWizardStep2 extends AbstractStep {
         JPanel stepComponent = new JPanel();
         stepComponent.setLayout( new BoxLayout( stepComponent, BoxLayout.PAGE_AXIS ) );
         stepComponent.add( new JLabel( Settings.jpoResources.getString( "DownloadCameraWizardStep2Text1" )
-                + Integer.toString( dataModel.getNewPictures().size() )
+                + dataModel.getNewPictures().size()
                 + Settings.jpoResources.getString( "DownloadCameraWizardStep2Text2" ) ) );
         stepComponent.add( Box.createVerticalStrut( 8 ) );
 

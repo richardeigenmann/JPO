@@ -83,9 +83,9 @@ public class CameraDownloadWizardStep6 extends AbstractStep {
 
         // Move|Copy xx pictures from
         if ( dataModel.getCopyMode() ) {
-            label1.setText( Settings.jpoResources.getString( "DownloadCameraWizardStep5Text1" ) + Integer.toString( dataModel.getNewPictures().size() ) + Settings.jpoResources.getString( "DownloadCameraWizardStep5Text3" ) );
+            label1.setText( Settings.jpoResources.getString( "DownloadCameraWizardStep5Text1" ) + dataModel.getNewPictures().size() + Settings.jpoResources.getString( "DownloadCameraWizardStep5Text3" ) );
         } else {
-            label1.setText( Settings.jpoResources.getString( "DownloadCameraWizardStep5Text2" ) + Integer.toString( dataModel.getNewPictures().size() ) + Settings.jpoResources.getString( "DownloadCameraWizardStep5Text3" ) );
+            label1.setText( Settings.jpoResources.getString( "DownloadCameraWizardStep5Text2" ) + dataModel.getNewPictures().size() + Settings.jpoResources.getString( "DownloadCameraWizardStep5Text3" ) );
         }
 
         // Camera xxxx

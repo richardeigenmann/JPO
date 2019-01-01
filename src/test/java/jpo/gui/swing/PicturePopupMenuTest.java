@@ -153,8 +153,8 @@ public class PicturePopupMenuTest {
             moveImage = (JMenu) fileOperations.getItem(2);
             moveToNewLocation = moveImage.getItem(0);
             renameJMenu = (JMenu) fileOperations.getItem(3);
-            fileOperationsRename = (JMenuItem) renameJMenu.getItem(0);
-            fileoperationsDelete = (JMenuItem) fileOperations.getItem(4);
+            fileOperationsRename = renameJMenu.getItem(0);
+            fileoperationsDelete = fileOperations.getItem(4);
             properties = (JMenuItem) myPicturePopupMenu.getComponent(16);
             consolidateHere = (JMenuItem) myPicturePopupMenu.getComponent(17);
         });

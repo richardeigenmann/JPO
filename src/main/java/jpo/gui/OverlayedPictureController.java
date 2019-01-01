@@ -210,13 +210,13 @@ public class OverlayedPictureController extends PictureController implements Sca
             case APPLICATION_OVERLAY:
                 g2d.drawString( legend, INFO_COORDINATES.x, INFO_COORDINATES.y);
                 g2d.drawString( Settings.jpoResources.getString( "PicturePaneSize" )
-                        + Integer.toString( scalablePicture.getOriginalWidth() )
+                        + scalablePicture.getOriginalWidth()
                         + " x "
-                        + Integer.toString( scalablePicture.getOriginalHeight() )
+                        + scalablePicture.getOriginalHeight()
                         + Settings.jpoResources.getString( "PicturePaneMidpoint" )
-                        + Integer.toString( focusPoint.x )
+                        + focusPoint.x
                         + " x "
-                        + Integer.toString( focusPoint.y )
+                        + focusPoint.y
                         + " Scale: "
                         + TWO_DECIMAL_FORMATTER.format( scalablePicture.getScaleFactor() ), INFO_COORDINATES.x, INFO_COORDINATES.y
                         + (LINE_SPACING) );

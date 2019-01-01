@@ -31,7 +31,7 @@ import javax.swing.table.TableModel;
  */
 public final class TableSorter extends TableMap {
 
-    int indexes[];
+    int[] indexes;
     final List<Integer> sortingColumns = new ArrayList<>();
     boolean ascending = true;
     int compares;
@@ -85,43 +85,23 @@ public final class TableSorter extends TableMap {
             Number n2 = (Number) data.getValueAt( row2, column );
             double d2 = n2.doubleValue();
 
-            if ( d1 < d2 ) {
-                return -1;
-            } else if ( d1 > d2 ) {
-                return 1;
-            } else {
-                return 0;
-            }
+            return Double.compare(d1, d2);
         } else if ( type == java.util.Date.class ) {
             Date d1 = (Date) data.getValueAt( row1, column );
             long n1 = d1.getTime();
             Date d2 = (Date) data.getValueAt( row2, column );
             long n2 = d2.getTime();
 
-            if ( n1 < n2 ) {
-                return -1;
-            } else if ( n1 > n2 ) {
-                return 1;
-            } else {
-                return 0;
-            }
+            return Long.compare(n1, n2);
         } else if ( type == String.class ) {
             String s1 = (String) data.getValueAt( row1, column );
             String s2 = (String) data.getValueAt( row2, column );
             int result = s1.compareTo( s2 );
 
-            if ( result < 0 ) {
-                return -1;
-            } else if ( result > 0 ) {
-                return 1;
-            } else {
-                return 0;
-            }
+            return Integer.compare(result, 0);
         } else if ( type == Boolean.class ) {
-            Boolean bool1 = (Boolean) data.getValueAt( row1, column );
-            boolean b1 = bool1;
-            Boolean bool2 = (Boolean) data.getValueAt( row2, column );
-            boolean b2 = bool2;
+            boolean b1 = (Boolean) data.getValueAt( row1, column );
+            boolean b2 = (Boolean) data.getValueAt( row2, column );
 
             if ( b1 == b2 ) {
                 return 0;
@@ -137,13 +117,7 @@ public final class TableSorter extends TableMap {
             String s2 = v2.toString();
             int result = s1.compareTo( s2 );
 
-            if ( result < 0 ) {
-                return -1;
-            } else if ( result > 0 ) {
-                return 1;
-            } else {
-                return 0;
-            }
+            return Integer.compare(result, 0);
         }
     }
 
@@ -217,7 +191,7 @@ public final class TableSorter extends TableMap {
      * @param low Low
      * @param high Hight
      */
-    public void shuttlesort( int from[], int to[], int low, int high ) {
+    public void shuttlesort(int[] from, int[] to, int low, int high ) {
         if ( high - low < 2 ) {
             return;
         }

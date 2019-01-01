@@ -145,7 +145,7 @@ public class JpoTransferable
      * @return the transfer data as a String
      */
     private Object getStringTransferData() {
-        StringBuilder filenames = new StringBuilder( "" );
+        StringBuilder filenames = new StringBuilder();
         for ( SortableDefaultMutableTreeNode node : transferableNodes ) {
             Object userObject = node.getUserObject();
             if ( userObject instanceof PictureInfo ) {
