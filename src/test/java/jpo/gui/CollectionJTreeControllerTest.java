@@ -1,5 +1,6 @@
 package jpo.gui;
 
+import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
 import javax.swing.SwingUtilities;
 import jpo.dataModel.PictureCollection;
@@ -36,6 +37,10 @@ public class CollectionJTreeControllerTest {
      */
     @Test
     public void testConstructor() {
+        // TravisCI runs headless so we can't execute the below test
+        if ( GraphicsEnvironment.isHeadless() ) {
+            return;
+        }
         try {
             SwingUtilities.invokeAndWait( () -> {
                 PictureCollection pc = new PictureCollection();
