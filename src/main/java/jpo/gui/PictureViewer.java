@@ -19,6 +19,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import jpo.EventBus.JpoEventBus;
 import jpo.EventBus.RotatePictureRequest;
 import jpo.EventBus.ShowAutoAdvanceDialogRequest;
+import jpo.EventBus.ShowPicturePopUpMenuRequest;
 import jpo.cache.ThumbnailQueueRequest.QUEUE_PRIORITY;
 import jpo.dataModel.NodeNavigatorInterface;
 import jpo.dataModel.NodeNavigatorListener;
@@ -39,7 +40,7 @@ import jpo.gui.swing.ResizableJFrame.WindowSize;
 
 
 /*
- Copyright (C) 2002 - 2017  Richard Eigenmann, Zürich, Switzerland
+ Copyright (C) 2002 - 2019  Richard Eigenmann, Zürich, Switzerland
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -99,8 +100,8 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
              * the image starting to load the progress bar is made visible. Any
              * other status hides the progress bar.
              *
-             * @param pictureStatusCode
-             * @param pictureStatusMessage
+             * @param pictureStatusCode the status code
+             * @param pictureStatusMessage the status message
              */
             @Override
             public void scalableStatusChange( final ScalablePictureStatus pictureStatusCode,
@@ -145,8 +146,8 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
              * method that gets invoked from the PicturePane object to notify of
              * status changes
              *
-             * @param statusCode
-             * @param percentage
+             * @param statusCode the status code
+             * @param percentage the percentage
              */
             @Override
             public void sourceLoadProgressNotification( final SourcePictureStatus statusCode,
@@ -204,8 +205,8 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
                     requestNextPicture();
                     keyEvent.consume();
                 } else if ( ( k == KeyEvent.VK_M ) ) {
-                    requestPopupMenu();
                     keyEvent.consume();
+                    JpoEventBus.getInstance().post(new ShowPicturePopUpMenuRequest( mySetOfNodes, myIndex, pictureFrame.getPictureViewerNavBar(), 120, 0 ) );
                 } else if ( ( k == KeyEvent.VK_P ) ) {
                     requestPriorPicture();
                     keyEvent.consume();
@@ -232,29 +233,17 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
             pictureFrame.getPictureController().requestFocusInWindow();
         } );
 
-        pictureFrame.getPictureViewerNavBar().zoomInJButton.addActionListener( ( ActionEvent e ) -> {
-            pictureFrame.getPictureController().zoomIn();
-        } );
+        pictureFrame.getPictureViewerNavBar().zoomInJButton.addActionListener( ( ActionEvent e ) -> pictureFrame.getPictureController().zoomIn());
 
-        pictureFrame.getPictureViewerNavBar().zoomOutJButton.addActionListener( ( ActionEvent e ) -> {
-            pictureFrame.getPictureController().zoomOut();
-        } );
+        pictureFrame.getPictureViewerNavBar().zoomOutJButton.addActionListener( ( ActionEvent e ) -> pictureFrame.getPictureController().zoomOut());
 
-        pictureFrame.getPictureViewerNavBar().fullScreenJButton.addActionListener( ( ActionEvent e ) -> {
-            requestScreenSizeMenu();
-        } );
+        pictureFrame.getPictureViewerNavBar().fullScreenJButton.addActionListener( ( ActionEvent e ) -> requestScreenSizeMenu());
 
-        pictureFrame.getPictureViewerNavBar().popupMenuJButton.addActionListener( ( ActionEvent e ) -> {
-            requestPopupMenu();
-        } );
+        pictureFrame.getPictureViewerNavBar().popupMenuJButton.addActionListener( ( ActionEvent e ) -> JpoEventBus.getInstance().post(new ShowPicturePopUpMenuRequest( mySetOfNodes, myIndex, pictureFrame.getPictureViewerNavBar(), 120, 0 ) ));
 
-        pictureFrame.getPictureViewerNavBar().infoJButton.addActionListener( ( ActionEvent e ) -> {
-            cycleInfoDisplay();
-        } );
+        pictureFrame.getPictureViewerNavBar().infoJButton.addActionListener( ( ActionEvent e ) -> cycleInfoDisplay());
 
-        pictureFrame.getPictureViewerNavBar().resetJButton.addActionListener( ( ActionEvent e ) -> {
-            pictureFrame.getPictureController().resetPicture();
-        } );
+        pictureFrame.getPictureViewerNavBar().resetJButton.addActionListener( ( ActionEvent e ) -> pictureFrame.getPictureController().resetPicture());
 
         pictureFrame.getPictureViewerNavBar().speedSlider.addChangeListener( ( ChangeEvent ce ) -> {
             if ( !pictureFrame.getPictureViewerNavBar().speedSlider.getValueIsAdjusting() ) {
@@ -262,21 +251,13 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
             }
         } );
 
-        pictureFrame.getPictureViewerNavBar().closeJButton.addActionListener( ( ActionEvent e ) -> {
-            closeViewer();
-        } );
+        pictureFrame.getPictureViewerNavBar().closeJButton.addActionListener( ( ActionEvent e ) -> closeViewer());
 
-        pictureFrame.getPictureViewerNavBar().previousJButton.addActionListener( ( ActionEvent e ) -> {
-            requestPriorPicture();
-        } );
+        pictureFrame.getPictureViewerNavBar().previousJButton.addActionListener( ( ActionEvent e ) -> requestPriorPicture());
 
-        pictureFrame.getPictureViewerNavBar().getNextJButton().addActionListener( ( ActionEvent e ) -> {
-            requestNextPicture();
-        } );
+        pictureFrame.getPictureViewerNavBar().getNextJButton().addActionListener( ( ActionEvent e ) -> requestNextPicture());
 
-        pictureFrame.getPictureViewerNavBar().clockJButton.addActionListener( ( ActionEvent e ) -> {
-            requestAutoAdvance();
-        } );
+        pictureFrame.getPictureViewerNavBar().clockJButton.addActionListener( ( ActionEvent e ) -> requestAutoAdvance());
 
     }
 
@@ -344,16 +325,6 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
      */
     private void requestScreenSizeMenu() {
         changeWindowPopupMenu.show( pictureFrame.getPictureViewerNavBar(), 96, (int) ( 0 - changeWindowPopupMenu.getSize().getHeight() ) );
-        pictureFrame.getPictureController().requestFocusInWindow();
-    }
-
-    /**
-     * Requests that the popup menu be shown
-     *
-     */
-    private void requestPopupMenu() {
-        PicturePopupMenu picturePopupMenu = new PicturePopupMenu( mySetOfNodes, myIndex );
-        picturePopupMenu.show( pictureFrame.getPictureViewerNavBar(), 120, (int) ( 0 - picturePopupMenu.getSize().getHeight() ) );
         pictureFrame.getPictureController().requestFocusInWindow();
     }
 
@@ -472,7 +443,7 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
      */
     @Override
     public void nodeLayoutChanged() {
-        LOGGER.info( String.format( "Got notified to relayout" ) );
+        LOGGER.info( "Got notified to relayout" );
         showNode( mySetOfNodes, myIndex );
 
     }
@@ -510,9 +481,7 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
     private boolean requestPriorPicture() {
         if ( myIndex > 0 ) {
 
-            SwingUtilities.invokeLater( () -> {
-                showNode( mySetOfNodes, myIndex - 1 );
-            } );
+            SwingUtilities.invokeLater( () -> showNode( mySetOfNodes, myIndex - 1 ));
             return true;
         }
         return false;

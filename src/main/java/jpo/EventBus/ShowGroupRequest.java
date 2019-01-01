@@ -3,7 +3,7 @@ package jpo.EventBus;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
 
 /*
- Copyright (C) 2008-2017,  Richard Eigenmann, Zürich
+ Copyright (C) 2008-2019,  Richard Eigenmann, Zürich
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2

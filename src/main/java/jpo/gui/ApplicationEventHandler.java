@@ -24,6 +24,7 @@ import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.Transferable;
+import java.awt.event.MouseEvent;
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
@@ -761,8 +762,8 @@ public class ApplicationEventHandler {
      */
     @Subscribe
     public void handleGenerateWebsiteRequest(GenerateWebsiteRequest request) {
-        WebsiteGenerator h = new WebsiteGenerator( request );
-        SwingUtilities.invokeLater( h );
+        WebsiteGenerator h = new WebsiteGenerator(request);
+        SwingUtilities.invokeLater(h);
     }
 
     /**
@@ -1525,6 +1526,43 @@ public class ApplicationEventHandler {
     @Subscribe
     public void handleOpenCategoryEditorRequest(OpenCategoryEditorRequest request) {
         new CategoryEditorJFrame();
+    }
+
+    /**
+     * Handles the ShowGroupPopUpMenuRequest request
+     *
+     * @param request The request
+     */
+    @Subscribe
+    public void handleShowGroupPopUpMenuRequest(ShowGroupPopUpMenuRequest request) {
+        Runnable r = () -> {
+            GroupPopupMenu groupPopupMenu = new GroupPopupMenu(request.getNode());
+            groupPopupMenu.show(request.getInvoker(), request.getX(), request.getY());
+        };
+        if (SwingUtilities.isEventDispatchThread()) {
+            r.run();
+        } else {
+            SwingUtilities.invokeLater(r);
+        }
+    }
+
+    /**
+     * Handles the ShowPicturePopUpMenuRequest request
+     *
+     * @param request The request
+     */
+    @Subscribe
+    public void handleShowPicturePopUpMenuRequest(ShowPicturePopUpMenuRequest request) {
+        Runnable r = () -> {
+            PicturePopupMenu picturePopupMenu = new PicturePopupMenu(request.getNodes(), request.getIndex());
+            picturePopupMenu.show(request.getInvoker(), request.getX(), request.getY());
+        };
+        if (SwingUtilities.isEventDispatchThread()) {
+            r.run();
+        } else {
+            SwingUtilities.invokeLater(r);
+        }
+
     }
 
     /**

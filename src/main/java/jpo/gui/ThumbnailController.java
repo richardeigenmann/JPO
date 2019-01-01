@@ -1,8 +1,6 @@
 package jpo.gui;
 
-import jpo.EventBus.JpoEventBus;
-import jpo.EventBus.ShowGroupRequest;
-import jpo.EventBus.ShowPictureRequest;
+import jpo.EventBus.*;
 import jpo.cache.ThumbnailCreationQueue;
 import jpo.cache.ThumbnailQueueRequest;
 import jpo.cache.ThumbnailQueueRequest.QUEUE_PRIORITY;
@@ -25,7 +23,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /*
- Copyright (C) 2002 - 2018  Richard Eigenmann.
+ Copyright (C) 2002 - 2019  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -379,11 +377,9 @@ public class ThumbnailController
          */
         private void rightClickResponse(MouseEvent e) {
             if (myNode.getUserObject() instanceof PictureInfo) {
-                PicturePopupMenu picturePopupMenu = new PicturePopupMenu(myNodeNavigator, myIndex);
-                picturePopupMenu.show(e.getComponent(), e.getX(), e.getY());
+                JpoEventBus.getInstance().post(new ShowPicturePopUpMenuRequest( myNodeNavigator, myIndex, e.getComponent(), e.getX(), e.getY() ) );
             } else if (myNode.getUserObject() instanceof GroupInfo) {
-                GroupPopupMenu groupPopupMenu = new GroupPopupMenu(myNode);
-                groupPopupMenu.show(e.getComponent(), e.getX(), e.getY());
+                JpoEventBus.getInstance().post(new ShowGroupPopUpMenuRequest( myNode, e.getComponent(), e.getX(), e.getY() ) );
             } else {
                 LOGGER.severe(String.format("Processing a right click response on an unknown node type: %s", myNode.getUserObject().getClass().toString()));
             }

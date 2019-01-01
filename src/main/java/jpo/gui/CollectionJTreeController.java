@@ -1,12 +1,15 @@
 package jpo.gui;
 
 import com.google.common.eventbus.Subscribe;
+
+import java.awt.*;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DropMode;
@@ -21,11 +24,8 @@ import static javax.swing.TransferHandler.COPY_OR_MOVE;
 import javax.swing.TransferHandler.TransferSupport;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
-import jpo.EventBus.GroupSelectionEvent;
-import jpo.EventBus.JpoEventBus;
-import jpo.EventBus.RecentDropNodesChangedEvent;
-import jpo.EventBus.ShowGroupRequest;
-import jpo.EventBus.ShowPictureRequest;
+
+import jpo.EventBus.*;
 import jpo.dataModel.GroupInfo;
 import jpo.dataModel.PictureCollection;
 import jpo.dataModel.PictureInfo;
@@ -39,7 +39,7 @@ import jpo.gui.swing.PicturePopupMenu;
 import org.apache.commons.io.FileUtils;
 
 /*
- * Copyright (C) 2002 - 2017 Richard Eigenmann, Zurich, Switzerland This
+ * Copyright (C) 2002 - 2019 Richard Eigenmann, Zurich, Switzerland This
  * program is free software; you can redistribute it and/or modify it under the
  * terms of the GNU General Public License as published by the Free Software
  * Foundation; either version 2 of the License, or any later version. This
@@ -52,9 +52,7 @@ import org.apache.commons.io.FileUtils;
  * http://www.gnu.org/copyleft/gpl.html for the details.
  */
 /**
- * The is one of the main classes in the JPO application as it manages the JTree
- * that deals with most of the logic surrounding the collection and the user
- * interactions with it.
+ * This class deals with the tree representation of the picture collection
  */
 public class CollectionJTreeController {
 
@@ -64,9 +62,7 @@ public class CollectionJTreeController {
     private static final Logger LOGGER = Logger.getLogger( CollectionJTreeController.class.getName() );
 
     /**
-     * The Controller class for the JTree. This class no longer extends the
-     * JTree. Instead it is a plain simple old class that does all the things to
-     * respond to or instruct the JTree to do and show.
+     * The Controller class for the tree representation of the picture collection.
      *
      * @param pictureCollection the PictureCollection to control
      */
@@ -167,8 +163,7 @@ public class CollectionJTreeController {
             //final Object t[] = { node };
             List<SortableDefaultMutableTreeNode> transferableNodes = new ArrayList<>();
             transferableNodes.add( node );
-            JpoTransferable draggedNode = new JpoTransferable( transferableNodes );
-            return draggedNode;
+            return new JpoTransferable( transferableNodes );
         }
 
         /**
@@ -243,7 +238,7 @@ public class CollectionJTreeController {
                 groupOfDropLocation = targetNode;
             } else {
                 // the parent must be a group node
-                groupOfDropLocation = (SortableDefaultMutableTreeNode) targetNode.getParent();
+                groupOfDropLocation = targetNode.getParent();
             }
             if ( ( groupOfDropLocation != null ) && ( groupOfDropLocation.getUserObject() instanceof GroupInfo ) ) {
                 Settings.memorizeGroupOfDropLocation( groupOfDropLocation );
@@ -252,7 +247,7 @@ public class CollectionJTreeController {
                 LOGGER.info( "Failed to find the group of the drop location. Not memorizing." );
             }
 
-            transferableNodes.stream().forEach( ( sourceNode ) -> {
+            transferableNodes.forEach( (sourceNode ) -> {
                 //sourceNode = (SortableDefaultMutableTreeNode) arrayOfNode;
                 if ( actionType == TransferHandler.MOVE ) {
                     if ( dropLocation.getChildIndex() == -1 ) {
@@ -298,7 +293,7 @@ public class CollectionJTreeController {
                 return null;
             }
             TreePath curPath = collectionJTree.getPathForLocation( mouseEvent.getX(), mouseEvent.getY() );
-            SortableDefaultMutableTreeNode node = (SortableDefaultMutableTreeNode) curPath.getLastPathComponent();
+            SortableDefaultMutableTreeNode node = (SortableDefaultMutableTreeNode) Objects.requireNonNull(curPath).getLastPathComponent();
             Object userObject = node.getUserObject();
             String toolTip = "";
             if ( userObject instanceof GroupInfo ) {
@@ -341,8 +336,9 @@ public class CollectionJTreeController {
             extends MouseAdapter {
 
         /**
-         * If the mouse was clicked more than once using the left mouse button
-         * over a valid picture node then the picture editor is opened.
+         * Handle click events on the tree. Find out what notde was clicked.
+         * If it was a single click on a group show the group.
+         * If it was multi-click open the (first) picture.
          */
         @Override
         public void mouseClicked( MouseEvent e ) {
@@ -357,7 +353,6 @@ public class CollectionJTreeController {
                     JpoEventBus.getInstance().post( new ShowGroupRequest( clickNode ) );
                 }
             } else if ( e.getClickCount() > 1 && ( !e.isPopupTrigger() ) ) {
-                //Jpo.browsePictures( clickNode );
                 JpoEventBus.getInstance().post( new ShowPictureRequest( clickNode ) );
             }
         }
@@ -390,25 +385,16 @@ public class CollectionJTreeController {
                 if ( popupPath == null ) {
                     return;
                 } // happens
+
                 final SortableDefaultMutableTreeNode popupNode = (SortableDefaultMutableTreeNode) popupPath.getLastPathComponent();
                 ( (JTree) e.getSource() ).setSelectionPath( popupPath );
                 Object nodeInfo = popupNode.getUserObject();
 
                 if ( nodeInfo instanceof GroupInfo ) {
-                    final MouseEvent fe = e;
-                    Runnable r = () -> {
-                        GroupPopupMenu groupPopupMenu = new GroupPopupMenu( popupNode );
-                        groupPopupMenu.show( fe.getComponent(), fe.getX(), fe.getY() );
-                    };
-                    if ( SwingUtilities.isEventDispatchThread() ) {
-                        r.run();
-                    } else {
-                        SwingUtilities.invokeLater( r );
-                    }
+                    JpoEventBus.getInstance().post(new ShowGroupPopUpMenuRequest( popupNode, e.getComponent(), e.getX(), e.getY() ));
                 } else if ( nodeInfo instanceof PictureInfo ) {
                     SingleNodeNavigator sb = new SingleNodeNavigator( popupNode );
-                    PicturePopupMenu picturePopupMenu = new PicturePopupMenu( sb, 0 );
-                    picturePopupMenu.show( e.getComponent(), e.getX(), e.getY() );
+                    JpoEventBus.getInstance().post(new ShowPicturePopUpMenuRequest( sb, 0, e.getComponent(), e.getX(), e.getY() ));
                 }
             }
         }

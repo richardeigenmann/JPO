@@ -2,6 +2,7 @@ package jpo.gui;
 
 import com.google.common.eventbus.Subscribe;
 import jpo.EventBus.JpoEventBus;
+import jpo.EventBus.ShowGroupPopUpMenuRequest;
 import jpo.EventBus.ShowGroupRequest;
 import jpo.EventBus.ShowQueryRequest;
 import jpo.dataModel.*;
@@ -65,7 +66,7 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
      * This object refers to the set of Nodes that is being browsed in the
      * ThumbnailPanelController
      */
-    public NodeNavigatorInterface mySetOfNodes;
+    private NodeNavigatorInterface mySetOfNodes;
 
     /**
      * a variable to hold the current starting position of thumbnailControllers
@@ -196,11 +197,22 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
 
             @Override
             public void mousePressed( MouseEvent e ) {
+                System.out.println("Mouse Pressed");
+                if ( e.isPopupTrigger() && mySetOfNodes instanceof GroupNavigator ) {
+                    JpoEventBus.getInstance().post(new ShowGroupPopUpMenuRequest( ((GroupNavigator) mySetOfNodes).getGroupNode(), e.getComponent(), e.getX(), e.getY() ));
+                    return;
+                }
+
                 mousePressedPoint = e.getPoint();
             }
 
             @Override
             public void mouseReleased( MouseEvent e ) {
+                if ( e.isPopupTrigger() && mySetOfNodes instanceof GroupNavigator ) {
+                    JpoEventBus.getInstance().post(new ShowGroupPopUpMenuRequest( ((GroupNavigator) mySetOfNodes).getGroupNode(), e.getComponent(), e.getX(), e.getY() ));
+                    return;
+                }
+
                 thumbnailJScrollPane.requestFocusInWindow();
 
                 // undo the overlay painting

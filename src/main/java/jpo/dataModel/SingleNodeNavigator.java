@@ -3,7 +3,7 @@ package jpo.dataModel;
 /*
 SingleNodeBrower.java:  an implementation of the ThumbnailBrowserInterface for "browsing" a single picture.
 
-Copyright (C) 2006-2017  Richard Eigenmann, Zürich, Switzerland
+Copyright (C) 2006-2019  Richard Eigenmann, Zürich, Switzerland
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -23,11 +23,6 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 public class SingleNodeNavigator
         extends NodeNavigator {
-
-    /**
-     * Logger for this class
-     */
-    //private static final Logger LOGGER = Logger.getLogger( SingleNodeNavigator.class.getName() );
 
     /**
      *  Constructor for a SingleNodeNavigator.

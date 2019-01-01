@@ -22,6 +22,8 @@ import javax.imageio.stream.FileImageInputStream;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import jpo.gui.swing.EdtViolationException;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.jetbrains.annotations.NotNull;
 
 
 /*
@@ -236,6 +238,7 @@ public class Tools {
      * @param startName the name to start from
      * @return the new picture filename
      */
+    @NotNull
     public static File inventPicFilename( File targetDir, String startName ) {
         File testFile = new File( targetDir, startName );
         if ( !testFile.exists() ) {
@@ -247,13 +250,22 @@ public class Tools {
         String startNameSuffix = startName.substring( dotPoint );
 
         for ( int i = 1; i < 50; i++ ) {
-            testFile = new File( targetDir, startNameRoot + "_" + Integer.toString( i ) + startNameSuffix );
+            testFile = new File( targetDir, startNameRoot + "_" + i + startNameSuffix );
             if ( !testFile.exists() ) {
                 return testFile;
             }
         }
-        LOGGER.severe( String.format( "Could not invent a picture filename for the directory %s and the name %s", targetDir.toString(), startName ) );
-        return null;
+
+        for ( int i = 1; i < 50; i++ ) {
+            testFile = new File( targetDir, startNameRoot + "_" + RandomStringUtils.random(10, true, true ));
+            if ( !testFile.exists() ) {
+                return testFile;
+            }
+        }
+
+        LOGGER.severe( String.format( "Could not invent a picture filename for the directory %s and the name %s returning any long string", targetDir.toString(), startName ) );
+
+        return new File( targetDir, RandomStringUtils.random(50, true, true ));
     }
 
     /**
@@ -277,7 +289,7 @@ public class Tools {
         int freeMemory = (int) Runtime.getRuntime().freeMemory() / 1024 / 1024;
         int totalMemory = (int) Runtime.getRuntime().totalMemory() / 1024 / 1024;
         int maxMemory = (int) Runtime.getRuntime().maxMemory() / 1024 / 1024;
-        return ( Settings.jpoResources.getString( "freeMemory" ) + Integer.toString( freeMemory ) + "MB/" + Integer.toString( totalMemory ) + "MB/" + Integer.toString( maxMemory ) + "MB" );
+        return ( Settings.jpoResources.getString( "freeMemory" ) + freeMemory + "MB/" + totalMemory + "MB/" + maxMemory + "MB" );
     }
 
     /**
