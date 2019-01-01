@@ -7,7 +7,7 @@ import java.net.URL;
 import java.util.logging.Logger;
 
 /*
- Copyright (C) 2017  Richard Eigenmann.
+ Copyright (C) 2017-2019  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -34,8 +34,6 @@ public class ClockButton extends NavBarButton {
      * Defines a logger for this class
      */
     private static final Logger LOGGER = Logger.getLogger(ClockButton.class.getName());
-
-    private static final ClassLoader CLASS_LOADER = LeftRightButton.class.getClassLoader();
 
 
     /**

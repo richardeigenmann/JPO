@@ -4,7 +4,6 @@ import java.lang.reflect.InvocationTargetException;
 import javax.swing.SwingUtilities;
 import static org.junit.Assert.*;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 /*
@@ -39,8 +38,8 @@ public class ClockButtonTest {
                 ClockButton clockButton = new ClockButton( );
                 assertNotNull( clockButton );
 
-                Assert.assertNotNull("ICON_CLOCK_ON must not be null", clockButton.getClockIconOn());
-                Assert.assertNotNull("ICON_CLOCK_OFF must not be null", clockButton.getClockIconOff());
+                assertNotNull("ICON_CLOCK_ON must not be null", clockButton.getClockIconOn());
+                assertNotNull("ICON_CLOCK_OFF must not be null", clockButton.getClockIconOff());
             } );
         } catch ( InterruptedException | InvocationTargetException ex ) {
             fail("Failed to create a PictureFrame");
