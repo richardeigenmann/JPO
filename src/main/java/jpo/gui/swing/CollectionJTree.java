@@ -1,6 +1,8 @@
 package jpo.gui.swing;
 
 import java.awt.Component;
+import java.net.URL;
+import java.util.logging.Logger;
 import javax.swing.DefaultCellEditor;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -10,15 +12,17 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellEditor;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.TreeCellEditor;
+
 import jpo.dataModel.GroupInfo;
 import jpo.dataModel.PictureInfo;
 import jpo.dataModel.Settings;
 import jpo.dataModel.Tools;
+import org.jetbrains.annotations.TestOnly;
 
 /*
 CollectionJTree.java:  class that creates a JTree for the collection
 
-Copyright (C) 2002 - 2018  Richard Eigenmann, Zurich, Switzerland
+Copyright (C) 2002 - 2019  Richard Eigenmann, Zurich, Switzerland
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -32,25 +36,33 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 The license is in gpl.txt.
 See http://www.gnu.org/copyleft/gpl.html for the details.
  */
+
 /**
- *  This is the View object of the CollectionJTreeController.
- *  All it can do is display the nodes of the data model and add a non standard set of icons depending on
- *  the userObject in the TreeNodes.
+ * This is the View object of the CollectionJTreeController.
+ * All it can do is display the nodes of the data model and add a non standard set of icons depending on
+ * the userObject in the TreeNodes.
+ *
  * @author Richard Eigenmann
  */
 public class CollectionJTree
         extends JTree {
+
+
+    /**
+     * Defines a logger for this class
+     */
+    private static final Logger LOGGER = Logger.getLogger(CollectionJTree.class.getName());
 
     /**
      * Constructor for the CollectionJTree, sets styles, cellrenderer, minimum size.
      */
     public CollectionJTree() {
         Tools.checkEDT();
-        putClientProperty( "JTree.lineStyle", "Angled" );
-        setShowsRootHandles( true );
-        setOpaque( true );
-        setBackground( Settings.JPO_BACKGROUND_COLOR );
-        setMinimumSize( Settings.JPO_NAVIGATOR_JTABBEDPANE_MINIMUM_SIZE );
+        putClientProperty("JTree.lineStyle", "Angled");
+        setShowsRootHandles(true);
+        setOpaque(true);
+        setBackground(Settings.JPO_BACKGROUND_COLOR);
+        setMinimumSize(Settings.JPO_NAVIGATOR_JTABBEDPANE_MINIMUM_SIZE);
 
         final DefaultTreeCellRenderer renderer = new DefaultTreeCellRenderer() {
 
@@ -72,30 +84,29 @@ public class CollectionJTree
                     boolean expanded,
                     boolean leaf,
                     int row,
-                    boolean hasFocus ) {
-                Object userObject = ( (DefaultMutableTreeNode) value ).getUserObject();
+                    boolean hasFocus) {
+                Object userObject = ((DefaultMutableTreeNode) value).getUserObject();
                 super.getTreeCellRendererComponent(
                         tree, value, sel,
                         expanded, leaf, row,
-                        hasFocus );
-                if ( userObject instanceof PictureInfo ) {
-                    setIcon( PICTURE_ICON );
-                } else if ( userObject instanceof GroupInfo ) {
-                    if ( expanded ) {
-                        setIcon( OPEN_FOLDER_ICON );
+                        hasFocus);
+                if (userObject instanceof PictureInfo) {
+                    setIcon(PICTURE_ICON);
+                } else if (userObject instanceof GroupInfo) {
+                    if (expanded) {
+                        setIcon(OPEN_FOLDER_ICON);
                     } else {
-                        setIcon( CLOSED_FOLDER_ICON );
-                        //else let the L&F take over
+                        setIcon(CLOSED_FOLDER_ICON);
                     }
                 }
-                //else let the L&F take over
+                //else let the look and feel take over
 
                 return this;
             }
         };
 
-        TreeCellEditor localCellEditor = new DefaultCellEditor( new JTextField() );
-        TreeCellEditor treeCellEditor = new DefaultTreeCellEditor( this, renderer, localCellEditor ) {
+        TreeCellEditor localCellEditor = new DefaultCellEditor(new JTextField());
+        TreeCellEditor treeCellEditor = new DefaultTreeCellEditor(this, renderer, localCellEditor) {
 
             /**
              *  This solution to the bug 4745084 found on
@@ -104,41 +115,81 @@ public class CollectionJTree
              *  fall back on the default icon set.
              */
             @Override
-            protected void determineOffset( JTree tree, Object value,
-                    boolean isSelected, boolean isExpanded, boolean isLeaf,
-                    int row ) {
-                super.determineOffset( tree, value, isSelected, isExpanded, isLeaf, row );
-                Component rendererComponent = super.renderer.getTreeCellRendererComponent( tree, value, isSelected, isExpanded, isLeaf, row, true );
-                if ( rendererComponent instanceof JLabel ) {
-                    super.editingIcon = ( (JLabel) rendererComponent ).getIcon();
+            protected void determineOffset(JTree tree, Object value,
+                                           boolean isSelected, boolean isExpanded, boolean isLeaf,
+                                           int row) {
+                super.determineOffset(tree, value, isSelected, isExpanded, isLeaf, row);
+                Component rendererComponent = super.renderer.getTreeCellRendererComponent(tree, value, isSelected, isExpanded, isLeaf, row, true);
+                if (rendererComponent instanceof JLabel) {
+                    super.editingIcon = ((JLabel) rendererComponent).getIcon();
                 }
             }
         };
-        setCellRenderer( renderer );
-        setCellEditor( treeCellEditor );
+        setCellRenderer(renderer);
+        setCellEditor(treeCellEditor);
 
     }
 
 
-    /*@Override
-    public JToolTip createToolTip() {
-        MultiLineToolTip tip = new MultiLineToolTip();
-        tip.setComponent( this );
-        return tip;
-    }*/
+    /**
+     * Icon of a closed folder to be used on groups that are not expanded in the JTree.
+     */
+    private static final ImageIcon CLOSED_FOLDER_ICON;
+
+    static {
+        final String CLOSED_FOLDER_ICON_FILE = "icon_folder_closed.gif";
+        URL resource = CollectionJTree.class.getClassLoader().getResource(CLOSED_FOLDER_ICON_FILE);
+        if (resource == null) {
+            LOGGER.severe("Classloader could not find the file: " + CLOSED_FOLDER_ICON_FILE);
+            CLOSED_FOLDER_ICON = null;
+        } else {
+            CLOSED_FOLDER_ICON = new ImageIcon(resource);
+        }
+    }
+
+    @TestOnly
+    ImageIcon getClosedFolderIcon() {
+        return CLOSED_FOLDER_ICON;
+    }
 
     /**
-     *  Icon of a closed folder to be used on groups that are not expanded in the JTree.
+     * Icon of an open folder to be used on groups that are expanded in the JTree.
      */
-    private static final ImageIcon CLOSED_FOLDER_ICON = new ImageIcon( CollectionJTree.class.getClassLoader().getResource( "jpo/images/icon_folder_closed.gif" ) );
+    private static final ImageIcon OPEN_FOLDER_ICON;
 
-    /**
-     *  Icon of an open folder to be used on groups that are expanded in the JTree.
-     */
-    private static final ImageIcon OPEN_FOLDER_ICON = new ImageIcon( CollectionJTree.class.getClassLoader().getResource( "jpo/images/icon_folder_open.gif" ) );
+    static {
+        final String OPEN_FOLDER_ICON_FILE = "icon_folder_open.gif";
+        URL resource = CollectionJTree.class.getClassLoader().getResource(OPEN_FOLDER_ICON_FILE);
+        if (resource == null) {
+            LOGGER.severe("Classloader could not find the file: " + OPEN_FOLDER_ICON_FILE);
+            OPEN_FOLDER_ICON = null;
+        } else {
+            OPEN_FOLDER_ICON = new ImageIcon(resource);
+        }
+    }
 
+    @TestOnly
+    ImageIcon getOpenFolderIcon() {
+        return OPEN_FOLDER_ICON;
+
+    }
     /**
-     *  Icon of a picture for use on picture bearing nodes in the JTree.
+     * Icon of a picture for use on picture bearing nodes in the JTree.
      */
-    private static final ImageIcon PICTURE_ICON = new ImageIcon( CollectionJTree.class.getClassLoader().getResource( "jpo/images/icon_picture.gif" ) );
+    private static final ImageIcon PICTURE_ICON;
+    static {
+        final String PICTURE_ICON_FILE = "icon_picture.gif";
+        URL resource = CollectionJTree.class.getClassLoader().getResource(PICTURE_ICON_FILE);
+        if (resource == null) {
+            LOGGER.severe("Classloader could not find the file: " + PICTURE_ICON_FILE);
+            PICTURE_ICON = null;
+        } else {
+            PICTURE_ICON = new ImageIcon(resource);
+        }
+    }
+
+    @TestOnly
+    ImageIcon getPictureIcon() {
+        return PICTURE_ICON;
+    }
 }

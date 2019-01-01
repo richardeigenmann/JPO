@@ -11,7 +11,7 @@ import org.junit.Test;
 
 
 /*
- Copyright (C) 2017-2017  Richard Eigenmann.
+ Copyright (C) 2017-2019  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -35,7 +35,6 @@ public class CollectionJTreeControllerTest {
      * Test Constructor
      */
     @Test
-    @Ignore ("Why is there an NPE?")
     public void testConstructor() {
         try {
             SwingUtilities.invokeAndWait( () -> {

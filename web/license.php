@@ -24,11 +24,12 @@
 <br><a href="http://www.miglayout.com/">MigLayout</a> by Mikael Grev is licensed under a BSD style license or GPL
 <br><a href="http://www.adobe.com/devnet/xmp.html">Adobe XMPCore</a> is licensed under the BSD license. It is needed for the Metadata-Extractor
 <br><a href="http://www.docking-frames.org/index.html">Docking Frames</a> is licensed under LGPL 2.1
+<br><a href="https://github.com/JetBrains/java-annotations">JetBrains Java Annotations</a> is licensed under Apache 2.0
 </p>
 
 <hr>
-<p>Last update to this page: 3 Dec 2018<br>
-Copyright 2003-2018 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
+<p>Last update to this page: 1 Jan 2019<br>
+Copyright 2003-2019 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
 
 </div>
 <?php include("page-end.php"); ?>

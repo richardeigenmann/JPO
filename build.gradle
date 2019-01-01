@@ -61,6 +61,7 @@ dependencies {
     
     //used by Metadata Extractor. Note only 5.x seems to be compatible
     compile 'com.adobe.xmp:xmpcore:5.1.3'
+    compile 'org.jetbrains:annotations:16.0.3'
 
     testCompile "junit:junit:4.12"
 
@@ -89,6 +90,7 @@ sourceSets {
         }
     }
     test {
+        main
         resources  {
             srcDir 'src/test/images'
             include '**/*.jpg'

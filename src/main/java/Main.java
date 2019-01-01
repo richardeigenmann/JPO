@@ -107,6 +107,8 @@ public class Main {
 
         if ( missingClasses.length() > 80 ) {
             System.out.println(missingClasses.toString() );
+        } else {
+            System.out.println("No missing classes identified.");
         }
 
         new ApplicationEventHandler();

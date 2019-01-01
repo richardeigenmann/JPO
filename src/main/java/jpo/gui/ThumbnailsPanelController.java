@@ -17,7 +17,7 @@ import java.awt.event.*;
 import java.util.logging.Logger;
 
 /*
- Copyright (C) 2002 - 2018  Richard Eigenmann.
+ Copyright (C) 2002 - 2019  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -173,18 +173,10 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
         initThumbnailsArray();
 
         // Wire up the events
-        titleJPanel.firstThumbnailsPageButton.addActionListener(( ActionEvent e ) -> {
-            goToFirstPage();
-        });
-        titleJPanel.previousThumbnailsPageButton.addActionListener(( ActionEvent e ) -> {
-            goToPreviousPage();
-        });
-        titleJPanel.nextThumbnailsPageButton.addActionListener(( ActionEvent e ) -> {
-            goToNextPage();
-        });
-        titleJPanel.lastThumbnailsPageButton.addActionListener(( ActionEvent e ) -> {
-            goToLastPage();
-        });
+        titleJPanel.firstThumbnailsPageButton.addActionListener(( ActionEvent e ) -> goToFirstPage());
+        titleJPanel.previousThumbnailsPageButton.addActionListener(( ActionEvent e ) -> goToPreviousPage());
+        titleJPanel.nextThumbnailsPageButton.addActionListener(( ActionEvent e ) -> goToNextPage());
+        titleJPanel.lastThumbnailsPageButton.addActionListener(( ActionEvent e ) -> goToLastPage());
 
         titleJPanel.resizeJSlider.addChangeListener(( ChangeEvent e ) -> {
             JSlider source = (JSlider) e.getSource();
