@@ -1,19 +1,19 @@
 package jpo.dataModel;
 
+import jpo.gui.swing.EdtViolationException;
+import org.junit.Test;
+
+import javax.swing.*;
 import java.lang.reflect.InvocationTargetException;
 import java.text.SimpleDateFormat;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.SwingUtilities;
-import jpo.gui.swing.EdtViolationException;
-import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertTrue;
-import static junit.framework.TestCase.fail;
-import org.junit.Test;
+
+import static junit.framework.TestCase.*;
 
 /*
- Copyright (C) 2017-2018  Richard Eigenmann.
+ Copyright (C) 2017-2019  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -169,6 +169,7 @@ public class ToolsTest {
         String result = format.format( Objects.requireNonNull(Tools.parseDate(d)).getTime() );
         assertEquals( expected, result );
     }
+
 
 
 

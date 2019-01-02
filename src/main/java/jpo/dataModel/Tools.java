@@ -17,17 +17,17 @@ import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.Adler32;
-import javax.imageio.ImageIO;
-import javax.imageio.stream.FileImageInputStream;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
+
+import jpo.gui.SourcePicture;
 import jpo.gui.swing.EdtViolationException;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.jetbrains.annotations.NotNull;
 
 
 /*
- Copyright (C) 2002-2018  Richard Eigenmann.
+ Copyright (C) 2002-2019  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -41,10 +41,10 @@ import org.jetbrains.annotations.NotNull;
  The license is in gpl.txt.
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
+
 /**
  * separate class to hold a collection of static methods that are frequently
  * needed.
- *
  */
 public class Tools {
 
@@ -53,20 +53,19 @@ public class Tools {
      * classes, which are collections of static members, are not meant to be
      * instantiated. Even abstract utility classes, which can be extended,
      * should not have public constructors. From Sonarcloud bug report
-     *
+     * <p>
      * Java adds an implicit public constructor to every class which does not
      * define at least one explicitly. Hence, at least one non-public
      * constructor should be defined.
      */
     private Tools() {
-        throw new IllegalStateException( "Utility class" );
+        throw new IllegalStateException("Utility class");
     }
 
     /**
      * Defines a logger for this class
      */
-    private static final Logger LOGGER = Logger.getLogger( Tools.class.getName() );
-
+    private static final Logger LOGGER = Logger.getLogger(Tools.class.getName());
 
 
     /**
@@ -76,12 +75,12 @@ public class Tools {
      * added. The case of the extension is ignored.
      *
      * @param extension The extension
-     * @param testFile File to test
+     * @param testFile  File to test
      * @return the file
      */
-    public static File correctFilenameExtension( String extension, File testFile ) {
-        if ( !testFile.getName().toUpperCase().endsWith( extension.toUpperCase() ) ) {
-            return new File( testFile.getPath() + "." + extension );
+    public static File correctFilenameExtension(String extension, File testFile) {
+        if (!testFile.getName().toUpperCase().endsWith(extension.toUpperCase())) {
+            return new File(testFile.getPath() + "." + extension);
         }
         return testFile;
     }
@@ -92,22 +91,22 @@ public class Tools {
      * @param fileArray The files to count
      * @return the number of real files in the array of files
      */
-    public static int countfiles( File[] fileArray ) {
-        if ( fileArray == null ) {
+    public static int countfiles(File[] fileArray) {
+        if (fileArray == null) {
             return 0;
         }
 
         int numFiles = 0;
-        for ( File fileEntry : fileArray ) {
+        for (File fileEntry : fileArray) {
             try {
-                if ( !fileEntry.isDirectory() ) {
+                if (!fileEntry.isDirectory()) {
                     numFiles++;
                 } else {
-                    numFiles += countfiles( fileEntry.listFiles() );
+                    numFiles += countfiles(fileEntry.listFiles());
                 }
-            } catch ( SecurityException x ) {
+            } catch (SecurityException x) {
                 // Log the error and ignore it and continue
-                LOGGER.log( Level.INFO, "Tools.countfiles: got a SecurityException on file: {0} \n{1}", new Object[]{ fileEntry.toString(), x.getMessage() } );
+                LOGGER.log(Level.INFO, "Tools.countfiles: got a SecurityException on file: {0} \n{1}", new Object[]{fileEntry.toString(), x.getMessage()});
             }
         }
         return numFiles;
@@ -115,47 +114,27 @@ public class Tools {
 
 
     /**
-     * This method checks whether the JVM has an image reader for the supplied
-     * File.
-     *
-     * @param testFile	The file to be checked
-     * @return true if the JVM has a reader false if not.
-     */
-    public static boolean jvmHasReader( File testFile ) {
-
-        boolean hasReader;
-        try ( FileImageInputStream testStream = new FileImageInputStream( testFile ) ) {
-            hasReader = ImageIO.getImageReaders( testStream ).hasNext();
-            return hasReader;
-
-        } catch ( IOException x ) {
-            LOGGER.log( Level.INFO, x.getLocalizedMessage() );
-            return false;
-        }
-    }
-
-    /**
      * This method looks into the supplied subdirectory and tries to see if
      * there is at least one picture in it for which our Java Environment has a
      * decoder.
      *
-     * @param subDirectory	The File representing the subdirectory to be
-     * recursively searched
+     * @param subDirectory The File representing the subdirectory to be
+     *                     recursively searched
      * @return true if there is at least one picture in the subdirectory, false
      * if there is nothing.
      */
-    public static boolean hasPictures( File subDirectory ) {
+    public static boolean hasPictures(File subDirectory) {
         File[] fileArray = subDirectory.listFiles();
-        if ( fileArray == null ) {
+        if (fileArray == null) {
             return false;
         }
 
-        for ( File file : fileArray ) {
-            if ( file.isDirectory() ) {
-                if ( hasPictures( file ) ) {
+        for (File file : fileArray) {
+            if (file.isDirectory()) {
+                if (hasPictures(file)) {
                     return true;
                 }
-            } else if ( Tools.jvmHasReader( file ) ) {
+            } else if (SourcePicture.jvmHasReader(file)) {
                 return true;
             }
         }
@@ -168,54 +147,51 @@ public class Tools {
      * target File location. Works better because files are writable whilst most
      * URL are read only.
      *
-     * @param sourceUrl source URL
+     * @param sourceUrl  source URL
      * @param targetFile target file
      */
-    public static void copyPicture(URL sourceUrl, File targetFile ) {
+    public static void copyPicture(URL sourceUrl, File targetFile) {
         try (
                 InputStream in = sourceUrl.openStream();
-                OutputStream out = new FileOutputStream( targetFile )) {
+                OutputStream out = new FileOutputStream(targetFile)) {
 
-            BufferedInputStream bin = new BufferedInputStream( in );
-            BufferedOutputStream bout = new BufferedOutputStream( out );
+            BufferedInputStream bin = new BufferedInputStream(in);
+            BufferedOutputStream bout = new BufferedOutputStream(out);
 
             copyBufferedStream(bin, bout);
-        } catch ( IOException e ) {
+        } catch (IOException e) {
             JOptionPane.showMessageDialog(
                     Settings.anchorFrame,
-                    Settings.jpoResources.getString( "copyPictureError1" )
-                    + sourceUrl.toString()
-                    + Settings.jpoResources.getString( "copyPictureError2" )
-                    + targetFile.toString()
-                    + Settings.jpoResources.getString( "copyPictureError3" )
-                    + e.getMessage(),
-                    Settings.jpoResources.getString( "genericError" ),
-                    JOptionPane.ERROR_MESSAGE );
+                    Settings.jpoResources.getString("copyPictureError1")
+                            + sourceUrl.toString()
+                            + Settings.jpoResources.getString("copyPictureError2")
+                            + targetFile.toString()
+                            + Settings.jpoResources.getString("copyPictureError3")
+                            + e.getMessage(),
+                    Settings.jpoResources.getString("genericError"),
+                    JOptionPane.ERROR_MESSAGE);
         }
     }
-
-
-
 
 
     /**
      * method to copy any file from a source stream to a output stream
      *
-     * @param bin Buffered Input Stream
+     * @param bin  Buffered Input Stream
      * @param bout Buffered Output Stream
      * @return the crc of the file
      * @throws IOException Exception of error
      */
-    public static long copyBufferedStream( BufferedInputStream bin,
-            BufferedOutputStream bout )
+    public static long copyBufferedStream(BufferedInputStream bin,
+                                          BufferedOutputStream bout)
             throws IOException {
 
         Adler32 crc = new Adler32();
         int c;
 
-        while ( ( c = bin.read() ) != -1 ) {
-            bout.write( c );
-            crc.update( c );
+        while ((c = bin.read()) != -1) {
+            bout.write(c);
+            crc.update(c);
         }
 
         bin.close();
@@ -223,7 +199,6 @@ public class Tools {
         return crc.getValue();
 
     }
-
 
 
     /**
@@ -237,33 +212,33 @@ public class Tools {
      * @return the new picture filename
      */
     @NotNull
-    public static File inventPicFilename( File targetDir, String startName ) {
-        File testFile = new File( targetDir, startName );
-        if ( !testFile.exists() ) {
+    public static File inventPicFilename(File targetDir, String startName) {
+        File testFile = new File(targetDir, startName);
+        if (!testFile.exists()) {
             return testFile;
         }
 
-        int dotPoint = startName.lastIndexOf( '.' );
-        String startNameRoot = startName.substring( 0, dotPoint );
-        String startNameSuffix = startName.substring( dotPoint );
+        int dotPoint = startName.lastIndexOf('.');
+        String startNameRoot = startName.substring(0, dotPoint);
+        String startNameSuffix = startName.substring(dotPoint);
 
-        for ( int i = 1; i < 50; i++ ) {
-            testFile = new File( targetDir, startNameRoot + "_" + i + startNameSuffix );
-            if ( !testFile.exists() ) {
+        for (int i = 1; i < 50; i++) {
+            testFile = new File(targetDir, startNameRoot + "_" + i + startNameSuffix);
+            if (!testFile.exists()) {
                 return testFile;
             }
         }
 
-        for ( int i = 1; i < 50; i++ ) {
-            testFile = new File( targetDir, startNameRoot + "_" + RandomStringUtils.random(10, true, true ));
-            if ( !testFile.exists() ) {
+        for (int i = 1; i < 50; i++) {
+            testFile = new File(targetDir, startNameRoot + "_" + RandomStringUtils.random(10, true, true));
+            if (!testFile.exists()) {
                 return testFile;
             }
         }
 
-        LOGGER.severe( String.format( "Could not invent a picture filename for the directory %s and the name %s returning any long string", targetDir.toString(), startName ) );
+        LOGGER.severe(String.format("Could not invent a picture filename for the directory %s and the name %s returning any long string", targetDir.toString(), startName));
 
-        return new File( targetDir, RandomStringUtils.random(50, true, true ));
+        return new File(targetDir, RandomStringUtils.random(50, true, true));
     }
 
     /**
@@ -271,7 +246,7 @@ public class Tools {
      */
     public static void freeMem() {
         int memory = (int) (Runtime.getRuntime().freeMemory() / 1024 / 1024);
-        LOGGER.log( Level.INFO, "Free memory: {0}MB", memory );
+        LOGGER.log(Level.INFO, "Free memory: {0}MB", memory);
     }
 
     /**
@@ -284,7 +259,7 @@ public class Tools {
         int freeMemory = (int) Runtime.getRuntime().freeMemory() / 1024 / 1024;
         int totalMemory = (int) Runtime.getRuntime().totalMemory() / 1024 / 1024;
         int maxMemory = (int) Runtime.getRuntime().maxMemory() / 1024 / 1024;
-        return ( Settings.jpoResources.getString( "freeMemory" ) + freeMemory + "MB/" + totalMemory + "MB/" + maxMemory + "MB" );
+        return (Settings.jpoResources.getString("freeMemory") + freeMemory + "MB/" + totalMemory + "MB/" + maxMemory + "MB");
     }
 
     /**
@@ -294,17 +269,17 @@ public class Tools {
     public static void dealOutOfMemoryError() {
         Tools.freeMem();
         SwingUtilities.invokeLater(
-                () -> JOptionPane.showMessageDialog( Settings.anchorFrame,
-                        Settings.jpoResources.getString( "outOfMemoryError" ),
-                        Settings.jpoResources.getString( "genericError" ),
-                        JOptionPane.ERROR_MESSAGE )
+                () -> JOptionPane.showMessageDialog(Settings.anchorFrame,
+                        Settings.jpoResources.getString("outOfMemoryError"),
+                        Settings.jpoResources.getString("genericError"),
+                        JOptionPane.ERROR_MESSAGE)
         );
 
         // Sonar says not to run gc - don't be smarter than the garbage collector
         //System.gc();
         System.runFinalization();
 
-        LOGGER.info( "ScalablePicture.scalePicture: JPO has now run a garbage collection and finalization." );
+        LOGGER.info("ScalablePicture.scalePicture: JPO has now run a garbage collection and finalization.");
         Tools.freeMem();
     }
 
@@ -316,11 +291,11 @@ public class Tools {
      * @return returns the checksum as a Long or Long.MIN_VALUE to indicate
      * failure.
      */
-    public static long calculateChecksum( File file ) {
+    public static long calculateChecksum(File file) {
         long checksum;
         try {
-            checksum = calculateChecksum( new BufferedInputStream( new FileInputStream( file ) ) );
-        } catch ( FileNotFoundException x ) {
+            checksum = calculateChecksum(new BufferedInputStream(new FileInputStream(file)));
+        } catch (FileNotFoundException x) {
             checksum = Long.MIN_VALUE;
         }
         return checksum;
@@ -336,23 +311,23 @@ public class Tools {
      * @return returns the checksum as a Long or Long.MIN_VALUE to indicate
      * failure.
      */
-    public static long calculateChecksum( InputStream inputStream ) {
+    public static long calculateChecksum(InputStream inputStream) {
         warnOnEDT();
         Adler32 crc = new Adler32();
         int blockLen;
 
         try {
-            while ( ( blockLen = inputStream.available() ) > 0 ) {
+            while ((blockLen = inputStream.available()) > 0) {
                 byte[] ba = new byte[blockLen];
-                int read = inputStream.read( ba );
-                crc.update( ba, 0, read );
+                int read = inputStream.read(ba);
+                crc.update(ba, 0, read);
             }
             return crc.getValue();
-        } catch ( IOException x ) {
-            LOGGER.log( Level.INFO, "Tools.calculateChecksum trapped an IOException. Aborting. Reason:\n{0}", x.getMessage() );
+        } catch (IOException x) {
+            LOGGER.log(Level.INFO, "Tools.calculateChecksum trapped an IOException. Aborting. Reason:\n{0}", x.getMessage());
             return Long.MIN_VALUE;
         }
-        
+
     }
 
     /**
@@ -362,10 +337,10 @@ public class Tools {
      * @param formatString The format string
      * @return current date and time
      */
-    public static String currentDate( String formatString ) {
-        SimpleDateFormat formatter = new SimpleDateFormat( formatString );
+    public static String currentDate(String formatString) {
+        SimpleDateFormat formatter = new SimpleDateFormat(formatString);
         Date currentTime = new Date();
-        return formatter.format( currentTime );
+        return formatter.format(currentTime);
     }
 
     /**
@@ -375,52 +350,52 @@ public class Tools {
      * @param dateString the String to be parsed
      * @return the Java Calendar object or null if it could not be parsed.
      */
-    public static Calendar parseDate( String dateString ) {
+    public static Calendar parseDate(String dateString) {
         SimpleDateFormat df = new SimpleDateFormat();
-        df.setLenient( true );
-        String[] patterns = { 
-            "dd.MM.yyyy HH:mm:ss",
-            "dd.MM.yyyy HH:mm",
-            "dd.MM.yyyy",
-            "yyyy:MM:dd HH:mm:ss",
-            "yyyy:MM:dd HH:mm",
-            "yyyy:MM:dd",
-            "MM.yyyy",
-            "MM-yyyy",
-            "dd-MM-yyyy",
-            "dd.MM.yy",
-            "dd-MM-yy",
-            "MM/dd/yy HH:mm:ss",
-            "MM/dd/yy HH:mm",
-            "MM/dd/yy",
-            "MM/dd/yyyy HH:mm:ss",
-            "MM/dd/yyyy HH:mm",
-            "MM/dd/yyyy",
-            "dd MMM yyyy",
-            "dd MMM yy",
-            "yyyy"
+        df.setLenient(true);
+        String[] patterns = {
+                "dd.MM.yyyy HH:mm:ss",
+                "dd.MM.yyyy HH:mm",
+                "dd.MM.yyyy",
+                "yyyy:MM:dd HH:mm:ss",
+                "yyyy:MM:dd HH:mm",
+                "yyyy:MM:dd",
+                "MM.yyyy",
+                "MM-yyyy",
+                "dd-MM-yyyy",
+                "dd.MM.yy",
+                "dd-MM-yy",
+                "MM/dd/yy HH:mm:ss",
+                "MM/dd/yy HH:mm",
+                "MM/dd/yy",
+                "MM/dd/yyyy HH:mm:ss",
+                "MM/dd/yyyy HH:mm",
+                "MM/dd/yyyy",
+                "dd MMM yyyy",
+                "dd MMM yy",
+                "yyyy"
         };
         Date d = null;
         boolean notFound = true;
-        for ( int i = 0; ( i < patterns.length ) && notFound; i++ ) {
+        for (int i = 0; (i < patterns.length) && notFound; i++) {
             try {
-                df.applyPattern( patterns[i] );
-                d = df.parse( dateString );
+                df.applyPattern(patterns[i]);
+                d = df.parse(dateString);
                 notFound = false;
-            } catch ( ParseException x ) {
+            } catch (ParseException x) {
                 // skip and continue with next pattern
             }
         }
-        if ( d != null ) {
+        if (d != null) {
             Calendar cal = Calendar.getInstance();
-            cal.setTime( d );
+            cal.setTime(d);
             return cal;
         } else {
             return null;
         }
     }
 
-   
+
     /**
      * This helper method checks if the execution is on the EventDisplayThread
      * and throws an Error if it is not. All Swing operations must be done on
@@ -428,8 +403,8 @@ public class Tools {
      * <code>Tools.checkEDT()</code>
      */
     public static void checkEDT() throws EdtViolationException {
-        if ( !SwingUtilities.isEventDispatchThread() ) {
-            throw new EdtViolationException( "Not on EDT! Throwing error." );
+        if (!SwingUtilities.isEventDispatchThread()) {
+            throw new EdtViolationException("Not on EDT! Throwing error.");
         }
     }
 
@@ -439,11 +414,11 @@ public class Tools {
      * processes that should not be on the EDT.
      */
     public static void warnOnEDT() {
-        if ( SwingUtilities.isEventDispatchThread() ) {
-            LOGGER.warning( "We are on the EDT and should not be! This is inefficient Continuing normally." );
+        if (SwingUtilities.isEventDispatchThread()) {
+            LOGGER.warning("We are on the EDT and should not be! This is inefficient Continuing normally.");
             Thread.dumpStack();
-            for ( StackTraceElement trace : new Throwable().getStackTrace() ) {
-                LOGGER.fine( trace.toString() );
+            for (StackTraceElement trace : new Throwable().getStackTrace()) {
+                LOGGER.fine(trace.toString());
             }
         }
     }

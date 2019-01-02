@@ -10,6 +10,9 @@ import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertTrue;
 import static junit.framework.TestCase.fail;
+
+import jpo.dataModel.Settings;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
@@ -18,6 +21,11 @@ import org.junit.Test;
  * @author Richard Eigenmann
  */
 public class ScalablePictureTest {
+
+    @BeforeClass
+    public static void beforeClass() {
+        Settings.loadSettings(); // We need to start the cache
+    }
 
 
     /**

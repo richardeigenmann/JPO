@@ -29,7 +29,7 @@ import org.apache.commons.jcs.engine.control.CompositeCacheManager;
 
 
 /*
- Copyright (C) 2014 - 2018  Richard Eigenmann.
+ Copyright (C) 2014 - 2019  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2

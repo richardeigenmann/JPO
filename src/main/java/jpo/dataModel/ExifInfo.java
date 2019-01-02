@@ -11,6 +11,8 @@ import com.drew.metadata.exif.GpsDirectory;
 import com.drew.metadata.exif.makernotes.CanonMakernoteDirectory;
 import com.drew.metadata.exif.makernotes.NikonType2MakernoteDirectory;
 import com.drew.metadata.jpeg.JpegDirectory;
+import org.apache.commons.lang3.StringUtils;
+
 import java.awt.geom.Point2D;
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -21,7 +23,7 @@ import java.util.logging.Logger;
 /*
  ExifInfo.java: This class interacts with Drew Noake's library and extracts the Exif information
 
- Copyright (C) 2002 - 2017  Richard Eigenmann.
+ Copyright (C) 2002 - 2019  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -128,12 +130,12 @@ public class ExifInfo {
     public void decodeExifTags() {
         if ( pictureUrl == null ) {
             LOGGER.severe( "Can't decode Exif tags on a null URL!" );
-            Thread.dumpStack();
+            //Thread.dumpStack();
             return;
         }
         try {
-            InputStream highresStream = pictureUrl.openStream();
-            Metadata metadata = ImageMetadataReader.readMetadata( new BufferedInputStream( highresStream ) );
+            InputStream imageStream = pictureUrl.openStream();
+            Metadata metadata = ImageMetadataReader.readMetadata( new BufferedInputStream( imageStream ) );
 
             JpegDirectory jpegDirectory = metadata.getFirstDirectoryOfType( JpegDirectory.class );
             if ( jpegDirectory != null ) {
@@ -155,8 +157,8 @@ public class ExifInfo {
 
             ExifIFD0Directory exifSubIFD0directory = metadata.getFirstDirectoryOfType( ExifIFD0Directory.class );
             if ( exifSubIFD0directory != null ) {
-                camera = rtrim( tryToGetTag( exifSubIFD0directory, ExifIFD0Directory.TAG_MODEL, camera ) );
-                String rotationString = rtrim( tryToGetTag( exifSubIFD0directory, ExifIFD0Directory.TAG_ORIENTATION, "" ) );
+                camera = StringUtils.stripEnd( tryToGetTag( exifSubIFD0directory, ExifIFD0Directory.TAG_MODEL, camera ), " " );
+                String rotationString = StringUtils.stripEnd( tryToGetTag( exifSubIFD0directory, ExifIFD0Directory.TAG_ORIENTATION, "" ), " " );
 
                 switch ( rotationString ) {
                     case "Top, left side (Horizontal / normal)":
@@ -205,7 +207,7 @@ public class ExifInfo {
             }
         } catch ( ImageProcessingException | NullPointerException | IOException x ) {
             LOGGER.severe( x.getMessage() );
-            Thread.dumpStack();
+            //Thread.dumpStack();
         }
 
     }
@@ -285,18 +287,4 @@ public class ExifInfo {
         this.createDateTime = dateTime;
     }
 
-    /**
-     * Nicked from
-     * http://stackoverflow.com/questions/15567010/what-is-a-good-alternative-of-ltrim-and-rtrim-in-java
-     *
-     * @param s String to rtrim
-     * @return the rtrimmed string
-     */
-    private static String rtrim(String s) {
-        int i = s.length() - 1;
-        while ( i >= 0 && Character.isWhitespace( s.charAt( i ) ) ) {
-            i--;
-        }
-        return s.substring( 0, i + 1 );
-    }
 }

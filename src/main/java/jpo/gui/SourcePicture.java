@@ -7,23 +7,23 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import javax.imageio.event.IIOReadProgressListener;
+import javax.imageio.stream.FileImageInputStream;
 import javax.imageio.stream.ImageInputStream;
 
 import jpo.cache.ImageBytes;
 import jpo.cache.JpoCache;
 import jpo.dataModel.Settings;
 import jpo.dataModel.Tools;
+import org.jetbrains.annotations.TestOnly;
 
 import static jpo.gui.SourcePicture.SourcePictureStatus.SOURCE_PICTURE_ERROR;
 import static jpo.gui.SourcePicture.SourcePictureStatus.SOURCE_PICTURE_LOADING;
@@ -38,7 +38,7 @@ import static jpo.gui.SourcePicture.SourcePictureStatus.SOURCE_PICTURE_UNINITIAL
 /*
  SourcePicture.java:  class that can load a picture from a URL
 
- Copyright (C) 2002 - 2018  Richard Eigenmann.
+ Copyright (C) 2002 - 2019  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -68,6 +68,7 @@ public class SourcePicture {
      * the URL of the picture
      */
     private URL imageUrl;
+
 
     /**
      * States of the source picture
@@ -189,30 +190,29 @@ public class SourcePicture {
         setStatus(SOURCE_PICTURE_LOADING, Settings.jpoResources.getString("ScalablePictureLoadingStatus"));
         long start = System.currentTimeMillis();
         loadTime = 0;
-
+        ImageBytes imageBytes;
         try {
-            ImageBytes imageBytes = JpoCache.getInstance().getHighresImageBytes(imageUrl);
-            ByteArrayInputStream bis = imageBytes.getByteArrayInputStream();
-
-            ImageInputStream iis = ImageIO.createImageInputStream(bis);
-            LOGGER.fine("Searching for ImageIO readers...");
-            Iterator readerIterator = ImageIO.getImageReaders(iis);
-            while (readerIterator.hasNext()) {
-                reader = (ImageReader) readerIterator.next();
-                LOGGER.fine(String.format("Found reader: %s", reader.toString()));
+            imageBytes = JpoCache.getInstance().getHighresImageBytes(imageUrl);
+        } catch (IOException e) {
+            setStatus(SOURCE_PICTURE_ERROR, "Error while reading " + imageUrl.toString());
+            sourcePictureBufferedImage = null;
+            return;
+        }
+        try (ByteArrayInputStream bis = imageBytes.getByteArrayInputStream();
+             ImageInputStream iis = ImageIO.createImageInputStream(bis)) {
+            reader = getImageIOReader(iis);
+            if (reader == null) {
+                LOGGER.severe(String.format("No reader found for URL: %s", imageUrl.toString()));
+                setStatus(SOURCE_PICTURE_ERROR, String.format("No reader found for URL: %s", imageUrl.toString()));
+                sourcePictureBufferedImage = null;
+                return;
             }
-            Iterator i = ImageIO.getImageReaders(iis);
-            if (!i.hasNext()) {
-                throw new IOException("No Readers Available!");
-            }
-            reader = (ImageReader) i.next();  // grab the first one
 
             reader.addIIOReadProgressListener(myIIOReadProgressListener);
             reader.setInput(iis);
             sourcePictureBufferedImage = null;
             try {
-                sourcePictureBufferedImage = reader.read(0); // just get the first image
-                //LOGGER.info( sourcePictureBufferedImage.getColorModel().toString() );
+                sourcePictureBufferedImage = reader.read(0);
 
                 if (sourcePictureBufferedImage.getType() != BufferedImage.TYPE_3BYTE_BGR) {
                     LOGGER.fine(String.format("Got wrong image type: %d instead of %d. Trying to convert...", sourcePictureBufferedImage.getType(), BufferedImage.TYPE_3BYTE_BGR));
@@ -226,7 +226,7 @@ public class SourcePicture {
                 }
 
             } catch (OutOfMemoryError e) {
-                LOGGER.severe("SourcePicture caught an OutOfMemoryError while loading an image.");
+                LOGGER.severe("Caught an OutOfMemoryError while loading an image: " + e.getMessage());
                 iis.close();
                 reader.removeIIOReadProgressListener(myIIOReadProgressListener);
                 reader.dispose();
@@ -239,50 +239,72 @@ public class SourcePicture {
             }
             reader.removeIIOReadProgressListener(myIIOReadProgressListener);
             reader.dispose();
-            iis.close();
-
-            if (!abortFlag) {
-                if (rotation != 0) {
-                    setStatus(SOURCE_PICTURE_ROTATING, "Rotating: " + imageUrl.toString());
-                    int xRot = sourcePictureBufferedImage.getWidth() / 2;
-                    int yRot = sourcePictureBufferedImage.getHeight() / 2;
-                    AffineTransform rotateAf = AffineTransform.getRotateInstance(Math.toRadians(rotation), xRot, yRot);
-                    AffineTransformOp op = new AffineTransformOp(rotateAf, AffineTransformOp.TYPE_BILINEAR);
-                    Rectangle2D newBounds = op.getBounds2D(sourcePictureBufferedImage);
-                    // a simple AffineTransform would give negative top left coordinates -->
-                    // do another transform to get 0,0 as top coordinates again.
-                    double minX = newBounds.getMinX();
-                    double minY = newBounds.getMinY();
-
-                    AffineTransform translateAf = AffineTransform.getTranslateInstance(minX * (-1), minY * (-1));
-                    rotateAf.preConcatenate(translateAf);
-                    op = new AffineTransformOp(rotateAf, AffineTransformOp.TYPE_BILINEAR);
-                    newBounds = op.getBounds2D(sourcePictureBufferedImage);
-
-                    // this piece of code is so essential!!! Otherwise the internal image format
-                    // is totally altered and either the AffineTransformOp decides it doesn't
-                    // want to rotate the image or web browsers can't read the resulting image.
-                    BufferedImage targetImage = new BufferedImage(
-                            (int) newBounds.getWidth(),
-                            (int) newBounds.getHeight(),
-                            BufferedImage.TYPE_3BYTE_BGR);
-
-                    sourcePictureBufferedImage = op.filter(sourcePictureBufferedImage, targetImage);
-                }
-
-                setStatus(SOURCE_PICTURE_READY, "Loaded: " + imageUrl.toString());
-                long end = System.currentTimeMillis();
-                loadTime = end - start;
-            } else {
-                loadTime = 0;
-                setStatus(SOURCE_PICTURE_ERROR, "Aborted!");
-                sourcePictureBufferedImage = null;
-            }
+            //iis.close();
         } catch (IOException e) {
             setStatus(SOURCE_PICTURE_ERROR, "Error while reading " + imageUrl.toString());
             sourcePictureBufferedImage = null;
         }
 
+        if (!abortFlag) {
+            if (rotation != 0) {
+                setStatus(SOURCE_PICTURE_ROTATING, "Rotating: " + imageUrl.toString());
+                int xRot = sourcePictureBufferedImage.getWidth() / 2;
+                int yRot = sourcePictureBufferedImage.getHeight() / 2;
+                AffineTransform rotateAf = AffineTransform.getRotateInstance(Math.toRadians(rotation), xRot, yRot);
+                AffineTransformOp op = new AffineTransformOp(rotateAf, AffineTransformOp.TYPE_BILINEAR);
+                Rectangle2D newBounds = op.getBounds2D(sourcePictureBufferedImage);
+                // a simple AffineTransform would give negative top left coordinates -->
+                // do another transform to get 0,0 as top coordinates again.
+                double minX = newBounds.getMinX();
+                double minY = newBounds.getMinY();
+
+                AffineTransform translateAf = AffineTransform.getTranslateInstance(minX * (-1), minY * (-1));
+                rotateAf.preConcatenate(translateAf);
+                op = new AffineTransformOp(rotateAf, AffineTransformOp.TYPE_BILINEAR);
+                newBounds = op.getBounds2D(sourcePictureBufferedImage);
+
+                // this piece of code is so essential!!! Otherwise the internal image format
+                // is totally altered and either the AffineTransformOp decides it doesn't
+                // want to rotate the image or web browsers can't read the resulting image.
+                BufferedImage targetImage = new BufferedImage(
+                        (int) newBounds.getWidth(),
+                        (int) newBounds.getHeight(),
+                        BufferedImage.TYPE_3BYTE_BGR);
+
+                sourcePictureBufferedImage = op.filter(sourcePictureBufferedImage, targetImage);
+            }
+
+            setStatus(SOURCE_PICTURE_READY, "Loaded: " + imageUrl.toString());
+            long end = System.currentTimeMillis();
+            loadTime = end - start;
+        } else {
+            loadTime = 0;
+            setStatus(SOURCE_PICTURE_ERROR, "Aborted!");
+            sourcePictureBufferedImage = null;
+        }
+    }
+
+    /**
+     * This method checks whether the JVM has an image reader for the supplied
+     * File.
+     *
+     * @param file The file to be checked
+     * @return true if the JVM has a reader false if not.
+     */
+    public static boolean jvmHasReader(File file) {
+        try (FileImageInputStream testStream = new FileImageInputStream(file)) {
+            return ImageIO.getImageReaders(testStream).hasNext();
+        } catch (IOException x) {
+            LOGGER.log(Level.INFO, x.getLocalizedMessage());
+            return false;
+        }
+    }
+
+
+    @TestOnly
+    public static ImageReader getImageIOReader(ImageInputStream iis) {
+        Iterator readerIterator = ImageIO.getImageReaders(iis);
+        return (ImageReader) readerIterator.next();
     }
 
     /**
@@ -327,7 +349,7 @@ public class SourcePicture {
      * @return the Dimension of the sourceBufferedImage
      */
     public Dimension getSize() {
-        return new Dimension(getWidth(),getHeight());
+        return new Dimension(getWidth(), getHeight());
 
     }
 
@@ -357,23 +379,6 @@ public class SourcePicture {
         }
     }
 
-    /**
-     * return the URL of the original image as a string
-     *
-     * @return the url of the name
-     */
-    public String getUrlString() {
-        return imageUrl.toString();
-    }
-
-    /**
-     * return the URL of the original image
-     *
-     * @return the url of the name
-     */
-    public URL getUrl() {
-        return imageUrl;
-    }
 
     /**
      * return the rotation of the image

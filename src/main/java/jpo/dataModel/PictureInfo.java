@@ -107,7 +107,7 @@ public class PictureInfo implements Serializable {
      * this method writes all attributes of the picture in the JPO xml data
      * format.
      *
-     * @param out The Bufferer Writer receiving the xml data
+     * @param out The Buffered Writer receiving the xml data
      * @throws IOException if there is a drama writing the file.
      */
     public void dumpToXml(BufferedWriter out)
@@ -122,7 +122,7 @@ public class PictureInfo implements Serializable {
      * to a new location we don't want to write the URLs of the original
      * pictures whilst all other attributes are retained.
      *
-     * @param out     The Bufferer Writer receiving the xml data
+     * @param out     The Buffered Writer receiving the xml data
      * @param highres The URL of the highres file
      * @throws IOException If there was an IO error
      */
@@ -169,7 +169,6 @@ public class PictureInfo implements Serializable {
         }
 
         if (getRotation() != 0) {
-            //out.write( "\t<ROTATION>" + ( new Double( getRotation() ) ).toString() + "</ROTATION>" );
             out.write(String.format("\t<ROTATION>%f</ROTATION>", getRotation()));
             out.newLine();
         }
@@ -539,28 +538,15 @@ public class PictureInfo implements Serializable {
         sendChecksumChangedEvent();
     }
 
-    //----------------------------------------
-
-    /**
-     * Creates a PictureChangedEvent and sends it to inform listening objects
-     * that the thumbnail was updated.
-     */
-    public void sendThumbnailChangedEvent() {
-        if (Settings.getPictureCollection().getSendModelUpdates()) {
-            PictureInfoChangeEvent pce = new PictureInfoChangeEvent(this);
-            pce.setThumbnailChanged();
-            sendPictureInfoChangedEvent(pce);
-        }
-    }
 
     //----------------------------------------
     /**
      * The film reference of the image.
      */
-    private String filmReference = "";
+    private String filmReference;
 
     /**
-     * Appends the string to the filmRreference field.
+     * Appends the string to the filmReference field.
      *
      * @param s Fragment to append to Film Reference
      */
@@ -625,7 +611,7 @@ public class PictureInfo implements Serializable {
     }
 
     /**
-     * appends the text fragement to the creation time.
+     * appends the text fragment to the creation time.
      *
      * @param s The text fragment to add.
      */
@@ -1067,14 +1053,6 @@ public class PictureInfo implements Serializable {
      */
     private String categoryAssignmentString = "";
 
-    /**
-     * Returns an Array of the category assignments associated with this picture
-     *
-     * @return the category assignments as an array
-     */
-    public synchronized Object[] getCategoryAssignmentsAsArray() {
-        return categoryAssignments.toArray();
-    }
 
     /**
      * Appends the text fragment to the categoryAssignmentString field.
@@ -1291,7 +1269,7 @@ public class PictureInfo implements Serializable {
     private void sendPictureInfoChangedEvent(PictureInfoChangeEvent pce) {
         if (Settings.getPictureCollection().getSendModelUpdates()) {
             synchronized (pictureInfoListeners) {
-                pictureInfoListeners.stream().forEach(pictureInfoChangeListener
+                pictureInfoListeners.forEach(pictureInfoChangeListener
                         -> pictureInfoChangeListener.pictureInfoChangeEvent(pce)
                 );
             }
@@ -1302,7 +1280,7 @@ public class PictureInfo implements Serializable {
 
     /**
      * Checks whether the searchString parameter is contained in any of the
-     * fields. It doesn't check the checksum, lowres filename, rotation. It does
+     * fields. It doesn't check the checksum or rotation. It does
      * check the description, highres name, film reference, creation time,
      * comment and copyright holder
      *

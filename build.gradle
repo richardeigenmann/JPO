@@ -63,7 +63,30 @@ dependencies {
     compile 'com.adobe.xmp:xmpcore:5.1.3'
     compile 'org.jetbrains:annotations:16.0.3'
 
+    compile 'com.twelvemonkeys.imageio:imageio-batik:3.4.1'  //OK
+    compile 'org.apache.xmlgraphics:batik-transcoder:1.10'
+    compile 'org.apache.xmlgraphics:batik-anim:1.10'
+    compile 'org.apache.xmlgraphics:batik-rasterizer-ext:1.10'
+    compile 'org.apache.xmlgraphics:batik-extension:1.10'
+    compile 'org.apache.xmlgraphics:xmlgraphics-commons:2.2'
+    compile 'org.apache.xmlgraphics:batik-svggen:1.10'
+    compile 'com.twelvemonkeys.imageio:imageio-bmp:3.4.1' //OK
+    //compile 'com.twelvemonkeys.imageio:imageio-clippath:3.4.1' //OK -- But what does it do?
+    compile 'com.twelvemonkeys.imageio:imageio-icns:3.4.1' //OK
+    compile 'com.twelvemonkeys.imageio:imageio-iff:3.4.1' //OK
+    compile 'com.twelvemonkeys.imageio:imageio-jpeg:3.4.1' //OK
+    compile 'com.twelvemonkeys.imageio:imageio-hdr:3.4.1' //OK
+    compile 'com.twelvemonkeys.imageio:imageio-pcx:3.4.1' //OK
+    compile 'com.twelvemonkeys.imageio:imageio-pdf:3.4.1'  // doesn't work
+    compile 'com.twelvemonkeys.imageio:imageio-pict:3.4.1' //OK
+    compile 'com.twelvemonkeys.imageio:imageio-pnm:3.4.1' //OK
+    compile 'com.twelvemonkeys.imageio:imageio-psd:3.4.1' //OK
+    compile 'com.twelvemonkeys.imageio:imageio-sgi:3.4.1' //OK
+    compile 'com.twelvemonkeys.imageio:imageio-tiff:3.4.1' //OK
+    compile 'com.twelvemonkeys.imageio:imageio-tga:3.4.1' //OK
+    compile 'com.twelvemonkeys.imageio:imageio-thumbsdb:3.4.1' //OK
     testCompile "junit:junit:4.12"
+
 
 }
 
@@ -94,6 +117,23 @@ sourceSets {
         resources  {
             srcDir 'src/test/images'
             include '**/*.jpg'
+            include '**/*.tiff'
+            include '**/*.hdr'
+            include '**/*.pdf'
+            include '**/*.svg'
+            include '**/*.bmp'
+            include '**/*.pnm'
+            include '**/*.sgi'
+            include '**/*.tga'
+            include '**/*.psd'
+            include '**/*.ico'
+            include '**/*.png'
+            include '**/*.gif'
+            include '**/*.iff'
+            include '**/*.pcx'
+            include '**/*.pct'
+            include '**/*.icns'
+            include '**/*.db'
         }
     }
 }
@@ -112,23 +152,24 @@ jar {
     
     manifest {
         attributes(
-            "Class-Path": configurations.compile.collect { it.getName() }.join(' '),
+            "Class-Path": configurations.runtimeClasspath.collect { it.getName() }.join(' '),
             "Main-Class": 'Main',
             'Permissions': 'all-permissions'
         )
         attributes(
-            [ "Copy": "(c) 2001-2018, Richard Eigenmann, Zürich, Switzerland" ], "Copyright"
+            [ "Copy": "(c) 2001-2019, Richard Eigenmann, Zürich, Switzerland" ], "Copyright"
         )
     }
     into ('jpo/images') { from 'src/images' }
 }
 
-// this task creates the FatJar whith everything in it
+// this task creates the FatJar with everything in it
 shadowJar {
     baseName = 'jpo'
     classifier = 'all'
     version = jpoVersion
     into ('jpo/images') { from 'src/images' }
+    mergeServiceFiles()
 }
 
 

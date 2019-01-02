@@ -104,6 +104,9 @@ public class Main {
         isClassLoadable("com.drew.imaging.jpeg.JpegMetadataReader", "metadata-extractor-2.8.1.jar", foundClasses, missingClasses );
         isClassLoadable("net.miginfocom.swing.MigLayout", "miglayout-4.0.jar", foundClasses, missingClasses );
         isClassLoadable("com.adobe.xmp.XMPUtils", "xmpcore.jar", foundClasses, missingClasses );
+        isClassLoadable("com.twelvemonkeys.imageio.plugins.jpeg.JPEGImageReader","imageio-jpeg-3.4.1.jar", foundClasses, missingClasses );
+        isClassLoadable("com.twelvemonkeys.imageio.plugins.hdr.HDRImageReaderSpi","imageio-hdr-3.4.1.jar", foundClasses, missingClasses );
+        isClassLoadable("com.twelvemonkeys.imageio.plugins.tiff.TIFFImageReaderSpi","imageio-tiff-3.4.1.jar", foundClasses, missingClasses );
 
         if ( missingClasses.length() > 80 ) {
             System.out.println(missingClasses.toString() );

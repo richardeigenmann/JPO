@@ -175,7 +175,7 @@ public class ScalablePicture
     /**
      * method to invoke with a filename or URL of a picture that is to be loaded
      * and scaled in a new thread. This is handy to update the screen while the
-     * loading chuggs along in the background. Make sure you invoked
+     * loading chugs along in the background. Make sure you invoked
      * setScaleFactor or setScaleSize before invoking this method.
      *
      * Step 1: Am I already loading what I need somewhere? If yes -&gt; use it.
@@ -229,7 +229,6 @@ public class ScalablePicture
             if ( !isCurrentlyLoading ) {
                 sourcePicture.removeListener( this );
             }
-            //PictureCache.stopBackgroundLoadingExcept( url );
         }
     }
 
@@ -246,28 +245,22 @@ public class ScalablePicture
     @Override
     public void sourceStatusChange( SourcePictureStatus statusCode, String statusMessage,
             SourcePicture sp ) {
-        //logger.info("ScalablePicture.sourceStatusChange: status received from SourceImage: " + statusMessage);
 
         switch ( statusCode ) {
             case SOURCE_PICTURE_UNINITIALISED:
-                // logger.info("ScalablePicture.sourceStatusChange: pictureStatus was: UNINITIALISED message: " + statusMessage );
                 setStatus( SCALABLE_PICTURE_UNINITIALISED, statusMessage );
                 break;
             case SOURCE_PICTURE_ERROR:
-                // logger.info("ScalablePicture.sourceStatusChange: pictureStatus was: ERROR message: " + statusMessage );
                 setStatus( SCALABLE_PICTURE_ERROR, statusMessage );
                 sourcePicture.removeListener( this );
                 break;
             case SOURCE_PICTURE_LOADING:
-                // logger.info("ScalablePicture.sourceStatusChange: pictureStatus was: LOADING message: " + statusMessage );
                 setStatus( SCALABLE_PICTURE_LOADING, statusMessage );
                 break;
             case SOURCE_PICTURE_ROTATING:
-                // logger.info("ScalablePicture.sourceStatusChange: pictureStatus was: ROTATING message: " + statusMessage );
                 setStatus( SCALABLE_PICTURE_LOADING, statusMessage );
                 break;
             case SOURCE_PICTURE_READY:
-                // logger.info("ScalablePicture.sourceStatusChange: pictureStatus was: READY message: " + statusMessage );
                 setStatus( SCALABLE_PICTURE_LOADED, statusMessage );
                 sourcePicture.removeListener( this );
                 if ( scaleAfterLoad ) {
@@ -276,7 +269,6 @@ public class ScalablePicture
                 }
                 break;
             default:
-                // logger.info("ScalablePicture.sourceStatusChange: Don't recognize this status: " + statusMessage );
                 break;
 
         }
@@ -354,7 +346,7 @@ public class ScalablePicture
                     }
                     if ( ( imageType == 0 ) || ( imageType == 13 ) ) {
                         imageType = BufferedImage.TYPE_3BYTE_BGR;
-                        LOGGER.fine( String.format( "Becuase we don't like imageType 0 we are setting the target type to BufferedImage.TYPE_3BYTE_BGR which has code: %d", BufferedImage.TYPE_3BYTE_BGR ) );
+                        LOGGER.fine( String.format( "Because we don't like imageType 0 we are setting the target type to BufferedImage.TYPE_3BYTE_BGR which has code: %d", BufferedImage.TYPE_3BYTE_BGR ) );
                     }
                     BufferedImage biStep = new BufferedImage(x, y, imageType);
                     scaledPicture = opStep.filter( scaledPicture, biStep);
@@ -699,9 +691,7 @@ public class ScalablePicture
         pictureStatusMessage = statusMessage;
 
         synchronized ( scalablePictureStatusListeners ) {
-            scalablePictureStatusListeners.stream().forEach( ( scalablePictureListener ) -> {
-                scalablePictureListener.scalableStatusChange( pictureStatusCode, pictureStatusMessage );
-            } );
+            scalablePictureStatusListeners.forEach( (scalablePictureListener ) -> scalablePictureListener.scalableStatusChange( pictureStatusCode, pictureStatusMessage ));
         }
     }
 
@@ -713,9 +703,7 @@ public class ScalablePicture
      */
     @Override
     public void sourceLoadProgressNotification( SourcePictureStatus statusCode, int percentage ) {
-        scalablePictureStatusListeners.stream().forEach( ( scalablePictureListener ) -> {
-            scalablePictureListener.sourceLoadProgressNotification( statusCode, percentage );
-        } );
+        scalablePictureStatusListeners.forEach( (scalablePictureListener ) -> scalablePictureListener.sourceLoadProgressNotification( statusCode, percentage ));
     }
 
     /**

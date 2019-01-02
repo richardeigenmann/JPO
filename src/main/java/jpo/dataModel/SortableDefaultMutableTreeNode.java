@@ -5,6 +5,7 @@ import jpo.EventBus.JpoEventBus;
 import jpo.dataModel.Settings.FieldCodes;
 import jpo.gui.JpoTransferable;
 import jpo.gui.ProgressGui;
+import jpo.gui.SourcePicture;
 import org.apache.commons.io.FilenameUtils;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.jetbrains.annotations.NotNull;
@@ -1377,7 +1378,7 @@ public class SortableDefaultMutableTreeNode
         LOGGER.fine(String.format("Adding file %s to the node %s", addFile.toString(), toString()));
         PictureInfo newPictureInfo = new PictureInfo();
 
-        if (!Tools.jvmHasReader(addFile)) {
+        if (!SourcePicture.jvmHasReader(addFile)) {
             LOGGER.info(String.format("Not adding file %s because the Java Virtual Machine has not got a reader for the file.", addFile.toString()));
             return false; // don't add if there is no reader.
         }

@@ -10,6 +10,7 @@ import java.util.logging.Logger;
 import jpo.gui.InterruptSemaphore;
 import jpo.gui.ProgressGui;
 import jpo.gui.ProgressListener;
+import jpo.gui.SourcePicture;
 
 /*
  Copyright (C) 2002 - 2019  Richard Eigenmann.
@@ -348,7 +349,7 @@ public class Camera implements Serializable {
     private Collection<File> getNewPicturesLoop(File[] files, Collection<File> newFiles) {
         for ( File f : files ) {
             if ( !f.isDirectory() ) {
-                if ( Tools.jvmHasReader( f ) && !inOldImage( f ) ) {
+                if ( SourcePicture.jvmHasReader( f ) && !inOldImage( f ) ) {
                     newFiles.add( f );
                 }
             } else {
