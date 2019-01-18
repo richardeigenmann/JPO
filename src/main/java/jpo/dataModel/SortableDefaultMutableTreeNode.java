@@ -33,7 +33,7 @@ import static jpo.dataModel.Tools.copyBufferedStream;
 
 
 /*
- Copyright (C) 2003 - 2018  Richard Eigenmann, Zurich, Switzerland
+ Copyright (C) 2003 - 2019  Richard Eigenmann, Zurich, Switzerland
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -178,23 +178,29 @@ public class SortableDefaultMutableTreeNode
         }
 
         // at this point there can only two PictureInfo Objects
-        PictureInfo myPi = (PictureInfo) myObject;
-        PictureInfo otherPi = (PictureInfo) otherObject;
-        switch (sortfield) {
-            case DESCRIPTION:
-                return myPi.getDescription().compareTo(otherPi.getDescription());
-            case FILM_REFERENCE:
-                return myPi.getFilmReference().compareTo(otherPi.getFilmReference());
-            case CREATION_TIME:
-                return myPi.getCreationTime().compareTo(otherPi.getCreationTime());
-            case COMMENT:
-                return myPi.getComment().compareTo(otherPi.getComment());
-            case PHOTOGRAPHER:
-                return myPi.getPhotographer().compareTo(otherPi.getPhotographer());
-            case COPYRIGHT_HOLDER:
-                return myPi.getCopyrightHolder().compareTo(otherPi.getCopyrightHolder());
-            default:
-                return myPi.getDescription().compareTo(otherPi.getDescription());
+        if ((myObject instanceof PictureInfo) && (otherObject instanceof PictureInfo)) {
+            PictureInfo myPi = (PictureInfo) myObject;
+            PictureInfo otherPi = (PictureInfo) otherObject;
+            switch (sortfield) {
+                case DESCRIPTION:
+                    return myPi.getDescription().compareTo(otherPi.getDescription());
+                case FILM_REFERENCE:
+                    return myPi.getFilmReference().compareTo(otherPi.getFilmReference());
+                case CREATION_TIME:
+                    return myPi.getCreationTime().compareTo(otherPi.getCreationTime());
+                case COMMENT:
+                    return myPi.getComment().compareTo(otherPi.getComment());
+                case PHOTOGRAPHER:
+                    return myPi.getPhotographer().compareTo(otherPi.getPhotographer());
+                case COPYRIGHT_HOLDER:
+                    return myPi.getCopyrightHolder().compareTo(otherPi.getCopyrightHolder());
+                default:
+                    return myPi.getDescription().compareTo(otherPi.getDescription());
+            }
+        } else {
+            LOGGER.severe("We are not supposed to hit this else branch!");
+            Thread.dumpStack();
+            return 0;
         }
     }
 
@@ -292,7 +298,7 @@ public class SortableDefaultMutableTreeNode
         while (kids.hasMoreElements()) {
             node = (SortableDefaultMutableTreeNode) kids.nextElement();
             if (recursive && node.getUserObject() instanceof GroupInfo) {
-                pictureNodes.addAll(node.getChildPictureNodes(recursive));
+                pictureNodes.addAll(node.getChildPictureNodes(true));
             } else if (node.getUserObject() instanceof PictureInfo) {
                 pictureNodes.add(node);
             }

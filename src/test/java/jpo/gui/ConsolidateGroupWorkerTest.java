@@ -18,7 +18,7 @@ import org.junit.Test;
 /*
  ConsolidateGroupWorkerTest.java: 
 
- Copyright (C) 2016-2017  Richard Eigenmann.
+ Copyright (C) 2016-2019  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -242,10 +242,10 @@ public class ConsolidateGroupWorkerTest {
     @Test
     public void testMovePictureNewDirectory() {
         File tempSourceDirectory = Files.createTempDir();
-        File sopurceImageFile = new File( tempSourceDirectory, "Image1.jpg" );
+        File sourceImageFile = new File( tempSourceDirectory, "Image1.jpg" );
 
         try ( InputStream in = ConsolidateGroupWorkerTest.class.getClassLoader().getResourceAsStream( "exif-test-nikon-d100-1.jpg" );
-                FileOutputStream fout = new FileOutputStream( sopurceImageFile ) ) {
+                FileOutputStream fout = new FileOutputStream( sourceImageFile ) ) {
             Objects.requireNonNull(in, "The input stream of the image must not be null!");
             IOUtils.copy(Objects.requireNonNull(in), fout );
         } catch ( IOException ex ) {
@@ -253,10 +253,10 @@ public class ConsolidateGroupWorkerTest {
             fail( "Failed to create test image file" );
         }
         // test that is really exists
-        assertTrue( "The image File must exist and be readable", sopurceImageFile.canRead() );
+        assertTrue( "The image File must exist and be readable", sourceImageFile.canRead() );
 
         PictureInfo pi = new PictureInfo();
-        pi.setImageLocation( sopurceImageFile );
+        pi.setImageLocation( sourceImageFile );
 
         File tempTargetDirectory = new File( tempSourceDirectory, "subdir" );
         tempTargetDirectory.mkdir();
@@ -264,7 +264,7 @@ public class ConsolidateGroupWorkerTest {
         boolean returnCode = ConsolidateGroupWorker.movePicture( pi, tempTargetDirectory );
         assertTrue( "Consolidation of a PictureInfo to a new directory should succeed", returnCode );
 
-        assertFalse( "The old image File must be gone", sopurceImageFile.canRead() );
+        assertFalse( "The old image File must be gone", sourceImageFile.canRead() );
         File newFile = pi.getImageFile();
         assertTrue( "The PictureInfo points to the new file where it is readable", newFile.canRead() );
         newFile.delete();
@@ -292,7 +292,7 @@ public class ConsolidateGroupWorkerTest {
         sourceImageFile.setReadOnly();
         assertTrue( "The source image File must exist and be readable but we can't read file: " + sourceImageFile, sourceImageFile.canRead() );
         if ( !System.getProperty( "user.name" ).equals( "root" ) ) {
-            // on Linux as root a file is always writable therefore bypassing this non-essentical check
+            // on Linux as root a file is always writable therefore bypassing this non-essential check
             assertFalse( "The source image File must exist and must not be writable but we can write to file: " + sourceImageFile, sourceImageFile.canWrite() );
         }
 
@@ -303,7 +303,7 @@ public class ConsolidateGroupWorkerTest {
         tempTargetDirectory.mkdir();
 
         boolean returnCode = ConsolidateGroupWorker.movePicture(pictureInfo, tempTargetDirectory );
-        assertTrue( "Consolidation of a readonly PictureInfo to a new directory should succed but the move from " + sourceImageFile + " to " + tempTargetDirectory + " seems to have failed!", returnCode );
+        assertTrue( "Consolidation of a readonly PictureInfo to a new directory should succeed but the move from " + sourceImageFile + " to " + tempTargetDirectory + " seems to have failed!", returnCode );
 
         assertFalse( "The old image File must be gone", sourceImageFile.exists() );
         File piFile = pictureInfo.getImageFile();

@@ -157,7 +157,7 @@ public class ResizableJFrame
     public void switchWindowMode( final WindowSize newMode ) {
         LOGGER.info( String.format( "old mode: %s new: %s", windowMode, newMode ) );
         windowMode = newMode;
-        boolean newDecoration = decorateWindow;
+        boolean newDecoration;
         // some intelligence as to when to have window decorations and when not.
         switch ( newMode ) {
             case WINDOW_FULLSCREEN:

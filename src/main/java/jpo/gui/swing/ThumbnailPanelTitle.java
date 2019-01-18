@@ -9,7 +9,7 @@ import java.awt.*;
 import java.util.Objects;
 
 /*
-Copyright (C) 2009-2018  Richard Eigenmann, Zürich, Switzerland
+Copyright (C) 2009-2019  Richard Eigenmann, Zürich, Switzerland
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -37,10 +37,6 @@ public class ThumbnailPanelTitle
         initComponents();
     }
 
-    /**
-     * Defines a logger for this class
-     */
-    //private static final Logger LOGGER = Logger.getLogger( ThumbnailPanelTitle.class.getName() );
 
     /**
      *  a button to navigate back to the first page

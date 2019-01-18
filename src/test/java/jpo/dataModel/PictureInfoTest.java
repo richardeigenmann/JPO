@@ -143,14 +143,16 @@ public class PictureInfoTest {
 
     /**
      * Test of getImageURL method, of class PictureInfo.
-     *
-     * @throws Exception
      */
     @Test
-    public void testGetHighresURL() throws Exception {
-        PictureInfo pi = new PictureInfo("file:///dir/picture.jpg", "My Sample Picture");
-        URL highresURL = pi.getImageURL();
-        assertEquals("Checking getHighresURL", new URL("file:///dir/picture.jpg"), highresURL);
+    public void testGetHighresURL() {
+        try {
+            PictureInfo pi = new PictureInfo("file:///dir/picture.jpg", "My Sample Picture");
+            URL highresURL = pi.getImageURL();
+            assertEquals("Checking getHighresURL", new URL("file:///dir/picture.jpg"), highresURL);
+        } catch (MalformedURLException e) {
+            fail(e.getMessage());
+        }
     }
 
     /**
@@ -212,15 +214,18 @@ public class PictureInfoTest {
 
     /**
      * Test of setImageLocation method, of class PictureInfo.
-     *
-     * @throws MalformedURLException
      */
     @Test
-    public void testSetImageLocationUrl() throws MalformedURLException {
-        PictureInfo pi = new PictureInfo();
-        pi.setImageLocation(new URL("file:///dir/picture.jpg"));
-        File f = pi.getImageFile();
-        assertEquals("Testing that the Highres Location was memorised correctly", f.toString(), "/dir/picture.jpg");
+    public void testSetImageLocationUrl() {
+        try {
+            PictureInfo pi = new PictureInfo();
+            pi.setImageLocation(new URL("file:///dir/picture.jpg"));
+            File f = pi.getImageFile();
+            assertEquals("Testing that the Highres Location was memorised correctly", f.toString(), "/dir/picture.jpg");
+        } catch (MalformedURLException e) {
+            fail(e.getMessage());
+        }
+        ;
     }
 
     /**
@@ -339,7 +344,7 @@ public class PictureInfoTest {
         URL image = PictureInfoTest.class.getClassLoader().getResource("exif-test-canon-eos-350d.jpg");
         PictureInfo pi = null;
         try {
-            pi = new PictureInfo(new File(image.toURI()), "Sample Picture");
+            pi = new PictureInfo(new File(Objects.requireNonNull(image).toURI()), "Sample Picture");
         } catch (URISyntaxException e) {
             fail(e.getMessage());
         }

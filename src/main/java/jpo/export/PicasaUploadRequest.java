@@ -4,7 +4,7 @@ import com.google.gdata.client.photos.PicasawebService;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
 
 /*
- * Copyright (C) 2012-2017 RichardEigenmann. 
+ * Copyright (C) 2012-2019 RichardEigenmann.
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or any later
@@ -21,11 +21,6 @@ import jpo.dataModel.SortableDefaultMutableTreeNode;
  * @author Richard Eigenmann
  */
 public class PicasaUploadRequest {
-    /**
-     * Defines a logger for this class
-     */
-    //private static final Logger LOGGER = Logger.getLogger ( PicasaUploadRequest.class.getName () );
-
     /**
      * The Group Node that is to be uploaded
      */

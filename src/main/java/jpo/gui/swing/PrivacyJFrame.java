@@ -14,7 +14,7 @@ import jpo.dataModel.Tools;
 import net.miginfocom.swing.MigLayout;
 
 /*
-Copyright (C) 2002 - 2017 Richard Eigenmann.
+Copyright (C) 2002 - 2019 Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -51,11 +51,6 @@ public class PrivacyJFrame
      * Handler for the clicks
      */
     private final PrivacyController privacyController = new PrivacyController();
-
-    /**
-     * Defines a logger for this class
-     */
-    //private static final Logger LOGGER = Logger.getLogger( PrivacyJFrame.class.getName() );
 
 
     /**
@@ -136,11 +131,6 @@ public class PrivacyJFrame
      * I wanted to maintain a semblance of MVC.
      */
     private class PrivacyController {
-
-        /**
-         * Defines a logger for this class
-         */
-        //private final Logger LOGGER = Logger.getLogger( getClass().getName() );
 
 
         /**

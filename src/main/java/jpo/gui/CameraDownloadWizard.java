@@ -11,7 +11,7 @@ import net.javaprog.ui.wizard.WizardModel;
 CameraDownloadWizard.java:  A Wizard based on the JWizz framework by Michael Rudolf
  
  
-Copyright (C) 2007 - 2009  Richard Eigenmann.
+Copyright (C) 2007 - 2019  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -66,7 +66,7 @@ public class CameraDownloadWizard {
             new CameraDownloadWizardStep6( dataModel ),
             new CameraDownloadWizardStep7( dataModel ),
         });
-        //instanciate wizard
+        //instaniate wizard
         Wizard wizard = new Wizard( model, Settings.jpoResources.getString("CameraDownloadWizard") );
         //show wizard
         wizard.setAlwaysOnTop( true );

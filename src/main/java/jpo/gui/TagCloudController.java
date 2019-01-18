@@ -22,7 +22,7 @@ import org.TagCloud.TagCloud;
 import org.TagCloud.WeightedWord;
 
 /*
- Copyright (C) 2009-2017  Richard Eigenmann.
+ Copyright (C) 2009-2019  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -55,10 +55,6 @@ public class TagCloudController implements TagClickListener {
         tagCloud.setMaxWordsToShow( Settings.tagCloudWords );
     }
 
-    /**
-     * Defines a logger for this class
-     */
-    //private static final Logger LOGGER = Logger.getLogger( TagCloudController.class.getName() );
 
     /**
      * Returns the tag cloud component

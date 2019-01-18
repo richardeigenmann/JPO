@@ -64,10 +64,10 @@ public class ConsolidateGroupController implements ConsolidateGroupActionCallbac
             return;
         }
 
-        ConsolidateGroupJFrame conslidateGroupJFrame = new ConsolidateGroupJFrame(this );
+        ConsolidateGroupJFrame consolidateGroupJFrame = new ConsolidateGroupJFrame(this );
 
         if (request.getTargetDir() != null) {
-            conslidateGroupJFrame.setTargetDir(request.getTargetDir());
+            consolidateGroupJFrame.setTargetDir(request.getTargetDir());
         }
     }
 
@@ -76,7 +76,7 @@ public class ConsolidateGroupController implements ConsolidateGroupActionCallbac
      * @param targetDirectory target directory
      */
     @Override
-    public void consolidateGroupCallback(File targetDirectory, boolean rescurseSubgroups) {
+    public void consolidateGroupCallback(File targetDirectory, boolean recurseSubgroups) {
         if (!targetDirectory.exists()) {
             try {
                 if (!targetDirectory.mkdirs()) {
@@ -109,8 +109,8 @@ public class ConsolidateGroupController implements ConsolidateGroupActionCallbac
         new ConsolidateGroupWorker(
                 targetDirectory,
                 request.getNode(),
-                rescurseSubgroups,
-                new ProgressGui(NodeStatistics.countPictures(request.getNode(), rescurseSubgroups),
+                recurseSubgroups,
+                new ProgressGui(NodeStatistics.countPictures(request.getNode(), recurseSubgroups),
                         Settings.jpoResources.getString("ConsolidateProgBarTitle"),
                         Settings.jpoResources.getString("ConsolidateProgBarDone")));
         

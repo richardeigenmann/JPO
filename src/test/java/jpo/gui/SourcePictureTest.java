@@ -15,6 +15,7 @@ import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
 import static junit.framework.TestCase.assertTrue;
 import static junit.framework.TestCase.fail;
@@ -121,7 +122,7 @@ public class SourcePictureTest {
     @Test
     public void testGetJpgImageIOReader() {
         final String TIFF_IMAGE_FILE = "exif-test-nikon-d100-1.jpg";
-        URL imageUrl = SourcePictureTest.class.getClassLoader().getResource(TIFF_IMAGE_FILE);
+        URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(TIFF_IMAGE_FILE));
         try (InputStream input = imageUrl.openStream();
              ImageInputStream iis = ImageIO.createImageInputStream(input)) {
             ImageReader reader = SourcePicture.getImageIOReader(iis);
@@ -137,7 +138,7 @@ public class SourcePictureTest {
     @Test
     public void testHasJpgImageReader() {
         final String JPG_IMAGE_FILE = "exif-test-nikon-d100-1.jpg";
-        URL imageUrl = SourcePictureTest.class.getClassLoader().getResource(JPG_IMAGE_FILE);
+        URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(JPG_IMAGE_FILE));
         try {
             File image = new File( imageUrl.toURI());
             assertTrue("We were trying to load a jpg image but the JVM doesn't think it has a reader for it", SourcePicture.jvmHasReader(image));
@@ -161,7 +162,7 @@ public class SourcePictureTest {
     @Test
     public void testGetBmpImageIOReader() {
         final String BMP_IMAGE_FILE = "bmp.bmp";
-        URL imageUrl = SourcePictureTest.class.getClassLoader().getResource(BMP_IMAGE_FILE);
+        URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(BMP_IMAGE_FILE));
         try (InputStream input = imageUrl.openStream();
              ImageInputStream iis = ImageIO.createImageInputStream(input)) {
             ImageReader reader = SourcePicture.getImageIOReader(iis);
@@ -177,7 +178,7 @@ public class SourcePictureTest {
     @Test
     public void testHasBmpImageReader() {
         final String BMP_IMAGE_FILE = "bmp.bmp";
-        URL imageUrl = SourcePictureTest.class.getClassLoader().getResource(BMP_IMAGE_FILE);
+        URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(BMP_IMAGE_FILE));
         try {
             File image = new File( imageUrl.toURI());
             assertTrue("We were trying to load a bmp image but the JVM doesn't think it has a reader for it", SourcePicture.jvmHasReader(image));
@@ -218,7 +219,7 @@ public class SourcePictureTest {
     @Test
     public void testHasTiffImageReader() {
         final String TIFF_IMAGE_FILE = "tiff_image.tiff";
-        URL imageUrl = SourcePictureTest.class.getClassLoader().getResource(TIFF_IMAGE_FILE);
+        URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(TIFF_IMAGE_FILE));
         try {
             File image = new File( imageUrl.toURI());
             assertTrue("We were trying to load a tiff image but the JVM doesn't think it has a reader for it", SourcePicture.jvmHasReader(image));
@@ -259,7 +260,7 @@ public class SourcePictureTest {
     @Test
     public void testHasHdrImageReader() {
         final String HDR_IMAGE_FILE = "memorial_o876.hdr";
-        URL imageUrl = SourcePictureTest.class.getClassLoader().getResource(HDR_IMAGE_FILE);
+        URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(HDR_IMAGE_FILE));
         try {
             File image = new File( imageUrl.toURI());
             assertTrue("We were trying to load a hdf image but the JVM doesn't think it has a reader for it", SourcePicture.jvmHasReader(image));
@@ -301,7 +302,7 @@ public class SourcePictureTest {
     @Ignore("ImageIO PDF doesn't seem to work")
     public void testHasPdfImageReader() {
         final String PDF_IMAGE_FILE = "pdf-document.pdf";
-        URL imageUrl = SourcePictureTest.class.getClassLoader().getResource(PDF_IMAGE_FILE);
+        URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(PDF_IMAGE_FILE));
         try {
             File image = new File( imageUrl.toURI());
             assertTrue("We were trying to load a pdf document but the JVM doesn't think it has a reader for it", SourcePicture.jvmHasReader(image));
@@ -342,7 +343,7 @@ public class SourcePictureTest {
     @Test
     public void testHasSvgImageReader() {
         final String SVG_IMAGE_FILE = "Ghostscript_Tiger.svg";
-        URL imageUrl = SourcePictureTest.class.getClassLoader().getResource(SVG_IMAGE_FILE);
+        URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(SVG_IMAGE_FILE));
         try {
             File image = new File( imageUrl.toURI());
             assertTrue("We were trying to load a svg image but the JVM doesn't think it has a reader for it", SourcePicture.jvmHasReader(image));
@@ -383,7 +384,7 @@ public class SourcePictureTest {
     @Test
     public void testHasPnmImageReader() {
         final String PNM_IMAGE_FILE = "pnm.pnm";
-        URL imageUrl = SourcePictureTest.class.getClassLoader().getResource(PNM_IMAGE_FILE);
+        URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(PNM_IMAGE_FILE));
         try {
             File image = new File( imageUrl.toURI());
             assertTrue("We were trying to load a pnm image but the JVM doesn't think it has a reader for it", SourcePicture.jvmHasReader(image));
@@ -425,7 +426,7 @@ public class SourcePictureTest {
     @Test
     public void testHasSgiImageReader() {
         final String SGI_IMAGE_FILE = "sgi.sgi";
-        URL imageUrl = SourcePictureTest.class.getClassLoader().getResource(SGI_IMAGE_FILE);
+        URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(SGI_IMAGE_FILE));
         try {
             File image = new File( imageUrl.toURI());
             assertTrue("We were trying to load a sgi image but the JVM doesn't think it has a reader for it", SourcePicture.jvmHasReader(image));
@@ -465,7 +466,7 @@ public class SourcePictureTest {
     @Test
     public void testHasTgaImageReader() {
         final String TGA_IMAGE_FILE = "tga.tga";
-        URL imageUrl = SourcePictureTest.class.getClassLoader().getResource(TGA_IMAGE_FILE);
+        URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(TGA_IMAGE_FILE));
         try {
             File image = new File( imageUrl.toURI());
             assertTrue("We were trying to load a tga image but the JVM doesn't think it has a reader for it", SourcePicture.jvmHasReader(image));
@@ -506,7 +507,7 @@ public class SourcePictureTest {
     @Test
     public void testHasPsdImageReader() {
         final String PSD_IMAGE_FILE = "psd.psd";
-        URL imageUrl = SourcePictureTest.class.getClassLoader().getResource(PSD_IMAGE_FILE);
+        URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(PSD_IMAGE_FILE));
         try {
             File image = new File( imageUrl.toURI());
             assertTrue("We were trying to load a psd image but the JVM doesn't think it has a reader for it", SourcePicture.jvmHasReader(image));
@@ -546,7 +547,7 @@ public class SourcePictureTest {
     @Test
     public void testHasIcoImageReader() {
         final String ICO_IMAGE_FILE = "favicon.ico";
-        URL imageUrl = SourcePictureTest.class.getClassLoader().getResource(ICO_IMAGE_FILE);
+        URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(ICO_IMAGE_FILE));
         try {
             File image = new File( imageUrl.toURI());
             assertTrue("We were trying to load an ico image but the JVM doesn't think it has a reader for it", SourcePicture.jvmHasReader(image));
@@ -587,7 +588,7 @@ public class SourcePictureTest {
     @Test
     public void testHasPngImageReader() {
         final String PNG_IMAGE_FILE = "png.png";
-        URL imageUrl = SourcePictureTest.class.getClassLoader().getResource(PNG_IMAGE_FILE);
+        URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(PNG_IMAGE_FILE));
         try {
             File image = new File( imageUrl.toURI());
             assertTrue("We were trying to load a png image but the JVM doesn't think it has a reader for it", SourcePicture.jvmHasReader(image));
@@ -628,7 +629,7 @@ public class SourcePictureTest {
     @Test
     public void testHasGifImageReader() {
         final String GIF_IMAGE_FILE = "gif.gif";
-        URL imageUrl = SourcePictureTest.class.getClassLoader().getResource(GIF_IMAGE_FILE);
+        URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(GIF_IMAGE_FILE));
         try {
             File image = new File( imageUrl.toURI());
             assertTrue("We were trying to load a gif image but the JVM doesn't think it has a reader for it", SourcePicture.jvmHasReader(image));
@@ -668,7 +669,7 @@ public class SourcePictureTest {
     @Test
     public void testHasIffImageReader() {
         final String IFF_IMAGE_FILE = "AmigaAmiga.iff";
-        URL imageUrl = SourcePictureTest.class.getClassLoader().getResource(IFF_IMAGE_FILE);
+        URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(IFF_IMAGE_FILE));
         try {
             File image = new File( imageUrl.toURI());
             assertTrue("We were trying to load a iff image but the JVM doesn't think it has a reader for it", SourcePicture.jvmHasReader(image));
@@ -708,7 +709,7 @@ public class SourcePictureTest {
     @Test
     public void testHasPcxImageReader() {
         final String PCX_IMAGE_FILE = "pcx.pcx";
-        URL imageUrl = SourcePictureTest.class.getClassLoader().getResource(PCX_IMAGE_FILE);
+        URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(PCX_IMAGE_FILE));
         try {
             File image = new File( imageUrl.toURI());
             assertTrue("We were trying to load a pcx image but the JVM doesn't think it has a reader for it", SourcePicture.jvmHasReader(image));
@@ -748,7 +749,7 @@ public class SourcePictureTest {
     @Test
     public void testHasPctImageReader() {
         final String PICT_IMAGE_FILE = "food.pct";
-        URL imageUrl = SourcePictureTest.class.getClassLoader().getResource(PICT_IMAGE_FILE);
+        URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(PICT_IMAGE_FILE));
         try {
             File image = new File( imageUrl.toURI());
             assertTrue("We were trying to load a pct image but the JVM doesn't think it has a reader for it", SourcePicture.jvmHasReader(image));
@@ -761,7 +762,7 @@ public class SourcePictureTest {
     public void testClipPathImage() {
         SourcePicture s = new SourcePicture();
         final String CLIP_PATH_IMAGE_FILE = "grape_with_path.jpg";
-        URL imageUrl = SourcePictureTest.class.getClassLoader().getResource(CLIP_PATH_IMAGE_FILE);
+        URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(CLIP_PATH_IMAGE_FILE));
 
         s.loadPicture(imageUrl, 0.0);
         assertNotNull("We were trying to load a clipPath image but it was null!", s.getSourceBufferedImage());
@@ -772,7 +773,7 @@ public class SourcePictureTest {
     @Test
     public void testGetClipPathImageIOReader() {
         final String CLIP_PATH_IMAGE_FILE = "grape_with_path.jpg";
-        URL imageUrl = SourcePictureTest.class.getClassLoader().getResource(CLIP_PATH_IMAGE_FILE);
+        URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(CLIP_PATH_IMAGE_FILE));
         try (InputStream input = imageUrl.openStream();
              ImageInputStream iis = ImageIO.createImageInputStream(input)) {
             ImageReader reader = SourcePicture.getImageIOReader(iis);
@@ -788,7 +789,7 @@ public class SourcePictureTest {
     @Test
     public void testHasClipPathImageReader() {
         final String CLIP_PATH_IMAGE_FILE = "grape_with_path.jpg";
-        URL imageUrl = SourcePictureTest.class.getClassLoader().getResource(CLIP_PATH_IMAGE_FILE);
+        URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(CLIP_PATH_IMAGE_FILE));
         try {
             File image = new File( imageUrl.toURI());
             assertTrue("We were trying to load a clipPath image but the JVM doesn't think it has a reader for it", SourcePicture.jvmHasReader(image));
@@ -812,7 +813,7 @@ public class SourcePictureTest {
     @Test
     public void testGetIcnsImageIOReader() {
         final String ICNS_IMAGE_FILE = "7zIcon.icns";
-        URL imageUrl = SourcePictureTest.class.getClassLoader().getResource(ICNS_IMAGE_FILE);
+        URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(ICNS_IMAGE_FILE));
         try (InputStream input = imageUrl.openStream();
              ImageInputStream iis = ImageIO.createImageInputStream(input)) {
             ImageReader reader = SourcePicture.getImageIOReader(iis);
@@ -828,7 +829,7 @@ public class SourcePictureTest {
     @Test
     public void testHasIcnsImageReader() {
         final String ICNS_IMAGE_FILE = "7zIcon.icns";
-        URL imageUrl = SourcePictureTest.class.getClassLoader().getResource(ICNS_IMAGE_FILE);
+        URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(ICNS_IMAGE_FILE));
         try {
             File image = new File( imageUrl.toURI());
             assertTrue("We were trying to load a icns image but the JVM doesn't think it has a reader for it", SourcePicture.jvmHasReader(image));
@@ -841,7 +842,7 @@ public class SourcePictureTest {
     public void testThumbsDbImage() {
         SourcePicture s = new SourcePicture();
         final String THUMBS_DB_IMAGE_FILE = "Thumbs.db";
-        URL imageUrl = SourcePictureTest.class.getClassLoader().getResource(THUMBS_DB_IMAGE_FILE);
+        URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(THUMBS_DB_IMAGE_FILE));
 
         s.loadPicture(imageUrl, 0.0);
         assertNotNull("We were trying to load a ThumbsDb image but it was null!", s.getSourceBufferedImage());
@@ -852,7 +853,7 @@ public class SourcePictureTest {
     @Test
     public void testGetThumbsDbImageIOReader() {
         final String THUMBS_DB_IMAGE_FILE = "Thumbs.db";
-        URL imageUrl = SourcePictureTest.class.getClassLoader().getResource(THUMBS_DB_IMAGE_FILE);
+        URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(THUMBS_DB_IMAGE_FILE));
         try (InputStream input = imageUrl.openStream();
              ImageInputStream iis = ImageIO.createImageInputStream(input)) {
             ImageReader reader = SourcePicture.getImageIOReader(iis);
@@ -868,7 +869,7 @@ public class SourcePictureTest {
     @Test
     public void testHasThumbsDbImageReader() {
         final String THUMBS_DB_IMAGE_FILE = "Thumbs.db";
-        URL imageUrl = SourcePictureTest.class.getClassLoader().getResource(THUMBS_DB_IMAGE_FILE);
+        URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(THUMBS_DB_IMAGE_FILE));
         try {
             File image = new File( imageUrl.toURI());
             assertTrue("We were trying to load a ThumbsDb image but the JVM doesn't think it has a reader for it", SourcePicture.jvmHasReader(image));

@@ -99,10 +99,9 @@ public class PicturePopupMenuTest {
     /**
      * Creates the objects for testing. Runs on the EDT.
      *
-     * @throws Exception
      */
     @Before
-    public void setUp() throws Exception {
+    public void setUp()  {
         myPictureInfo.setDescription("My Picture");
         try {
             File temp = File.createTempFile("JPO-Unit-Test", ".jpg");
@@ -117,47 +116,51 @@ public class PicturePopupMenuTest {
 
         myPicturePopupMenu = new PicturePopupMenu(myNavigator, 0);
 
-        SwingUtilities.invokeAndWait(() -> {
-            title = (JMenuItem) myPicturePopupMenu.getComponent(0);
-            showPicture = (JMenuItem) myPicturePopupMenu.getComponent(2);
-            showMap = (JMenuItem) myPicturePopupMenu.getComponent(3);
-            navigateTo = (JMenu) myPicturePopupMenu.getComponent(4);
-            navigateTo_0 = navigateTo.getItem(0);
-            categories = (JMenuItem) myPicturePopupMenu.getComponent(5);
-            selectForEmail = (JMenuItem) myPicturePopupMenu.getComponent(6);
-            unselectForEmail = (JMenuItem) myPicturePopupMenu.getComponent(7);
-            clearEmailSelection = (JMenuItem) myPicturePopupMenu.getComponent(8);
-            userFunction = (JMenu) myPicturePopupMenu.getComponent(9);
-            userFunction_0 = userFunction.getItem(0);
-            userFunction_1 = userFunction.getItem(1);
-            userFunction_2 = userFunction.getItem(2);
-            rotation = (JMenu) myPicturePopupMenu.getComponent(10);
-            rotate90 = rotation.getItem(0);
-            rotate180 = rotation.getItem(1);
-            rotate270 = rotation.getItem(2);
-            rotate0 = rotation.getItem(3);
-            refreshThumbnail = (JMenuItem) myPicturePopupMenu.getComponent(11);
-            move = (JMenu) myPicturePopupMenu.getComponent(12);
-            moveToTop = move.getItem(Settings.MAX_DROPNODES + 1);
-            moveUp = move.getItem(Settings.MAX_DROPNODES + 2);
-            moveDown = move.getItem(Settings.MAX_DROPNODES + 3);
-            moveToBottom = move.getItem(Settings.MAX_DROPNODES + 4);
-            moveIndent = move.getItem(Settings.MAX_DROPNODES + 5);
-            moveOutdent = move.getItem(Settings.MAX_DROPNODES + 6);
-            copyImage = (JMenu) myPicturePopupMenu.getComponent(13);
-            copyImageChooseTargetDir = copyImage.getItem(0);
-            copyImageToZipFile = copyImage.getItem(12);
-            copyToClipboard = copyImage.getItem(13);
-            removeNode = (JMenuItem) myPicturePopupMenu.getComponent(14);
-            fileOperations = (JMenu) myPicturePopupMenu.getComponent(15);
-            moveImage = (JMenu) fileOperations.getItem(2);
-            moveToNewLocation = moveImage.getItem(0);
-            renameJMenu = (JMenu) fileOperations.getItem(3);
-            fileOperationsRename = renameJMenu.getItem(0);
-            fileoperationsDelete = fileOperations.getItem(4);
-            properties = (JMenuItem) myPicturePopupMenu.getComponent(16);
-            consolidateHere = (JMenuItem) myPicturePopupMenu.getComponent(17);
-        });
+        try {
+            SwingUtilities.invokeAndWait(() -> {
+                title = (JMenuItem) myPicturePopupMenu.getComponent(0);
+                showPicture = (JMenuItem) myPicturePopupMenu.getComponent(2);
+                showMap = (JMenuItem) myPicturePopupMenu.getComponent(3);
+                navigateTo = (JMenu) myPicturePopupMenu.getComponent(4);
+                navigateTo_0 = navigateTo.getItem(0);
+                categories = (JMenuItem) myPicturePopupMenu.getComponent(5);
+                selectForEmail = (JMenuItem) myPicturePopupMenu.getComponent(6);
+                unselectForEmail = (JMenuItem) myPicturePopupMenu.getComponent(7);
+                clearEmailSelection = (JMenuItem) myPicturePopupMenu.getComponent(8);
+                userFunction = (JMenu) myPicturePopupMenu.getComponent(9);
+                userFunction_0 = userFunction.getItem(0);
+                userFunction_1 = userFunction.getItem(1);
+                userFunction_2 = userFunction.getItem(2);
+                rotation = (JMenu) myPicturePopupMenu.getComponent(10);
+                rotate90 = rotation.getItem(0);
+                rotate180 = rotation.getItem(1);
+                rotate270 = rotation.getItem(2);
+                rotate0 = rotation.getItem(3);
+                refreshThumbnail = (JMenuItem) myPicturePopupMenu.getComponent(11);
+                move = (JMenu) myPicturePopupMenu.getComponent(12);
+                moveToTop = move.getItem(Settings.MAX_DROPNODES + 1);
+                moveUp = move.getItem(Settings.MAX_DROPNODES + 2);
+                moveDown = move.getItem(Settings.MAX_DROPNODES + 3);
+                moveToBottom = move.getItem(Settings.MAX_DROPNODES + 4);
+                moveIndent = move.getItem(Settings.MAX_DROPNODES + 5);
+                moveOutdent = move.getItem(Settings.MAX_DROPNODES + 6);
+                copyImage = (JMenu) myPicturePopupMenu.getComponent(13);
+                copyImageChooseTargetDir = copyImage.getItem(0);
+                copyImageToZipFile = copyImage.getItem(12);
+                copyToClipboard = copyImage.getItem(13);
+                removeNode = (JMenuItem) myPicturePopupMenu.getComponent(14);
+                fileOperations = (JMenu) myPicturePopupMenu.getComponent(15);
+                moveImage = (JMenu) fileOperations.getItem(2);
+                moveToNewLocation = moveImage.getItem(0);
+                renameJMenu = (JMenu) fileOperations.getItem(3);
+                fileOperationsRename = renameJMenu.getItem(0);
+                fileoperationsDelete = fileOperations.getItem(4);
+                properties = (JMenuItem) myPicturePopupMenu.getComponent(16);
+                consolidateHere = (JMenuItem) myPicturePopupMenu.getComponent(17);
+            });
+        } catch (InterruptedException | InvocationTargetException e) {
+            fail(e.getMessage());
+        }
 
     }
 

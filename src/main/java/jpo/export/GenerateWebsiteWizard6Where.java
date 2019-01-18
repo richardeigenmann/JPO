@@ -607,7 +607,6 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
             {
                 if (!ftp.login(options.getFtpUser(), options.getFtpPassword())) {
                     ftp.logout();
-                    error = true;
                     LOGGER.info("Could not log in.");
                     returnString += " But could not log in.";
                     break __main;
@@ -653,7 +652,6 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
             {
                 if (!ftp.login(options.getFtpUser(), options.getFtpPassword())) {
                     ftp.logout();
-                    error = true;
                     LOGGER.info("Could not log in.");
                     returnString += " But could not log in.";
                     break __main;

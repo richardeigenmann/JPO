@@ -1,6 +1,8 @@
 package jpo.cache;
 
 import java.awt.Dimension;
+import java.util.Objects;
+
 import jpo.dataModel.SortableDefaultMutableTreeNode;
 import org.junit.Assert;
 import org.junit.Test;
@@ -69,8 +71,8 @@ public class ThumbnailCreationQueueTest {
         Assert.assertEquals( "Queue should have two entries after 2 requests", 2, ThumbnailCreationQueue.size() );
         ThumbnailQueueRequest pollResult1 = ThumbnailCreationQueue.QUEUE.poll();
         ThumbnailQueueRequest pollResult2 = ThumbnailCreationQueue.QUEUE.poll();
-        Assert.assertEquals( "The higher priority request should come first", mtqrch2, pollResult1.getThumbnailQueueRequestCallbackHandler() );
-        Assert.assertEquals( "The lower priority request should come second", mtqrch1, pollResult2.getThumbnailQueueRequestCallbackHandler() );
+        Assert.assertEquals( "The higher priority request should come first", mtqrch2, Objects.requireNonNull(pollResult1).getThumbnailQueueRequestCallbackHandler() );
+        Assert.assertEquals( "The lower priority request should come second", mtqrch1, Objects.requireNonNull(pollResult2).getThumbnailQueueRequestCallbackHandler() );
         ThumbnailCreationQueue.clear();
     }
 

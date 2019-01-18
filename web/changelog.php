@@ -116,9 +116,9 @@
         <tr><td valign="top">11.11.2007</td><td> Improved Camera Editor</td></tr>
         <tr><td valign="top">11.11.2007</td><td> Camera Watch Deamon and Wizard</td></tr>
         <tr><td valign="top">6.11.2007</td><td> Added ability to edit the nodes in the JTree</td></tr>
-        <tr><td valign="top">4.11.2007</td><td> Cameras are now saves in the preferences too. Unfortunately all older Camera settings will be lost and the users must set up their cameras again. This is not as bad as it sounds becaus saving the cameras didn't work proerply anyway!</td></tr>
+        <tr><td valign="top">4.11.2007</td><td> Cameras are now saves in the preferences too. Unfortunately all older Camera settings will be lost and the users must set up their cameras again. This is not as bad as it sounds because saving the cameras didn't work proerply anyway!</td></tr>
         <tr><td colspan=2><b>Version 0.8.5</b></td></tr>
-        <tr><td valign="top">25.8.2007</td><td> After saving the user now has the option to make the selection an Autostart</td></tr>
+        <tr><td valign="top">25.8.2007</td><td> After saving the user now has the option to make the collection autostart</td></tr>
         <tr><td valign="top">23.8.2007</td><td> Tried to fix the stupid bug with the full screen PictureViewer that never accounted for the taskbar</td></tr>
         <tr><td valign="top">14.7.2007</td><td> Add from Camera now can go direct to Edit Camera and Edit Camera close window saves the changes</td></tr>
         <tr><td valign="top">10.7.2007</td><td> Changed speed of ToolTipManager to make the ToolTips snappier</td></tr>

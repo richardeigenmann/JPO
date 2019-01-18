@@ -1,7 +1,7 @@
 package jpo.gui;
 
 /*
- Copyright (C) 2002-2017  Richard Eigenmann, Zürich, Switzerland
+ Copyright (C) 2002-2019  Richard Eigenmann, Zürich, Switzerland
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -106,13 +106,7 @@ public class SettingsDialog extends JDialog {
      * tickbox that indicates whether to scale the thumbnails quickly
      */
     private final JCheckBox pictureViewerFastScaleJCheckBox = new JCheckBox( Settings.jpoResources.getString( "pictureViewerFastScale" ) );
-    /**
-     * fields that allows the user to capture the path for the thumbnails
-     *
-     * private final DirectoryChooser thumbnailPathChooser = new
-     * DirectoryChooser( Settings.jpoResources.getString( "genericSelectText" ),
-     * DirectoryChooser.DIR_MUST_BE_WRITABLE );
-     */
+
     /**
      * User picks the thumbnail cache directory here
      */
@@ -120,12 +114,6 @@ public class SettingsDialog extends JDialog {
             = new DirectoryChooser( Settings.jpoResources.getString( "genericSelectText" ),
                     DirectoryChooser.DIR_MUST_BE_WRITABLE );
 
-    /**
-     * tickbox that indicates whether thumbnails should be written to disk
-     *
-     * private final JCheckBox keepThumbnailsJCheckBox = new JCheckBox(
-     * Settings.jpoResources.getString( "keepThumbnailsJCheckBoxLabel" ) );
-     */
     /**
      * field that allows the user to capture the maximum number of thumbnails to
      * be displayed
@@ -569,11 +557,7 @@ public class SettingsDialog extends JDialog {
 
         getContentPane().add( tabbedPanel, BorderLayout.NORTH );
 
-        /**
-         * container to neatly group the 2 buttons
-         */
         Container buttonContainer = new Container();
-
         buttonContainer.setLayout( new FlowLayout() );
 
         JButton saveButton = new JButton( Settings.jpoResources.getString( "genericSaveButtonLabel" ) );

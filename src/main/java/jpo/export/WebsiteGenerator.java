@@ -580,8 +580,8 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
                     }
                     midresHtmlWriter.write("<td class=\"numberPickCell\">");
                     if (i <= childCount) {
-                        String nodeUrl = "";
-                        String lowresFn = "";
+                        String nodeUrl;
+                        String lowresFn;
 
                         nde = (SortableDefaultMutableTreeNode) pictureNode.getParent().getChildAt(i - 1);
                         if (nde.getUserObject() instanceof PictureInfo) {
@@ -655,7 +655,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
                     midresHtmlWriter.newLine();
                     // Link to Previous
                     if (childNumber != 1) {
-                        String previousHtmlFilename = "";
+                        String previousHtmlFilename;
                         switch (options.getPictureNaming()) {
                             case PICTURE_NAMING_BY_ORIGINAL_NAME:
                                 SortableDefaultMutableTreeNode priorNode = (SortableDefaultMutableTreeNode) (pictureNode.getParent()).getChildAt(childNumber - 2);
@@ -690,7 +690,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
                     }
                     // Linkt to Next
                     if (childNumber != childCount) {
-                        String nextHtmlFilename = "";
+                        String nextHtmlFilename;
                         switch (options.getPictureNaming()) {
                             case PICTURE_NAMING_BY_ORIGINAL_NAME:
                                 SortableDefaultMutableTreeNode priorNode = (SortableDefaultMutableTreeNode) (pictureNode.getParent()).getChildAt(childNumber);
@@ -1138,7 +1138,6 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
             {
                 if (!ftp.login(options.getFtpUser(), options.getFtpPassword())) {
                     ftp.logout();
-                    error = true;
                     LOGGER.info("Could not log in.");
                     break __main;
                 }

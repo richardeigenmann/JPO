@@ -344,7 +344,7 @@ public class PictureInfo implements Serializable {
                 final String BROKEN_THUMBNAIL_PICTURE_FILE = "broken_thumbnail.gif";
                 URL resource = PictureInfo.class.getClassLoader().getResource(BROKEN_THUMBNAIL_PICTURE_FILE);
                 try {
-                    imageFile = new File(resource.toURI());
+                    imageFile = new File(Objects.requireNonNull(resource).toURI());
                 } catch (URISyntaxException e1) {
                     e1.printStackTrace();
                 }
@@ -403,7 +403,7 @@ public class PictureInfo implements Serializable {
                 final String BROKEN_THUMBNAIL_PICTURE_FILE = "broken_thumbnail.gif";
                 URL resource = PictureInfo.class.getClassLoader().getResource(BROKEN_THUMBNAIL_PICTURE_FILE);
                 try {
-                    imageFile = new File(resource.toURI());
+                    imageFile = new File(Objects.requireNonNull(resource).toURI());
                 } catch (URISyntaxException e1) {
                     e1.printStackTrace();
                 }

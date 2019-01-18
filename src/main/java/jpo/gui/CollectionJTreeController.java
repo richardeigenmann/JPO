@@ -95,7 +95,7 @@ public class CollectionJTreeController {
      * @param event The GroupSelectionEvent
      */
     @Subscribe
-    public void handleGroupSlectionEvent( GroupSelectionEvent event ) {
+    public void handleGroupSelectionEvent(GroupSelectionEvent event ) {
         expandAndScroll( event.getNode() );
     }
 
@@ -318,7 +318,7 @@ public class CollectionJTreeController {
     /**
      * Returns the JScrollPane that holds the JTree.
      *
-     * @return the JSCrollPane that holds the tree
+     * @return the JScrollPane that holds the tree
      */
     public JScrollPane getJScrollPane() {
         return collectionJScrollPane;
@@ -336,7 +336,7 @@ public class CollectionJTreeController {
             extends MouseAdapter {
 
         /**
-         * Handle click events on the tree. Find out what notde was clicked.
+         * Handle click events on the tree. Find out what node was clicked.
          * If it was a single click on a group show the group.
          * If it was multi-click open the (first) picture.
          */

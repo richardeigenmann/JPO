@@ -1,5 +1,7 @@
 package jpo.gui.swing;
 
+//import jdk.internal.util.xml.impl.Input;
+
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
@@ -7,6 +9,7 @@ import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.util.StringTokenizer;
@@ -42,12 +45,12 @@ public class JTableCopyPasteClipboardAdapter implements ActionListener {
      */
     public JTableCopyPasteClipboardAdapter( JTable myJTable ) {
         jTable = myJTable;
-        KeyStroke copy1 = KeyStroke.getKeyStroke( KeyEvent.VK_C, ActionEvent.CTRL_MASK, false );
-        KeyStroke copy2 = KeyStroke.getKeyStroke( KeyEvent.VK_INSERT, ActionEvent.CTRL_MASK, false );
+        KeyStroke copy1 = KeyStroke.getKeyStroke( KeyEvent.VK_C, InputEvent.CTRL_MASK, false );
+        KeyStroke copy2 = KeyStroke.getKeyStroke( KeyEvent.VK_INSERT, InputEvent.CTRL_MASK, false );
         // Identifying the copy KeyStroke user can modify this
         // to copy on some other Key combination.
-        KeyStroke paste1 = KeyStroke.getKeyStroke( KeyEvent.VK_V, ActionEvent.CTRL_MASK, false );
-        KeyStroke paste2 = KeyStroke.getKeyStroke( KeyEvent.VK_INSERT, ActionEvent.SHIFT_MASK, false );
+        KeyStroke paste1 = KeyStroke.getKeyStroke( KeyEvent.VK_V, InputEvent.CTRL_MASK, false );
+        KeyStroke paste2 = KeyStroke.getKeyStroke( KeyEvent.VK_INSERT, InputEvent.SHIFT_MASK, false );
         // Identifying the Paste KeyStroke user can modify this
         //to copy on some other Key combination.
         jTable.registerKeyboardAction( JTableCopyPasteClipboardAdapter.this, "Copy", copy1, JComponent.WHEN_FOCUSED );

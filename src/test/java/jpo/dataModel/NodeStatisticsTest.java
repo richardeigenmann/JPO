@@ -8,6 +8,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
+import java.net.URISyntaxException;
+import java.util.Objects;
 
 import static junit.framework.TestCase.*;
 
@@ -40,19 +42,18 @@ public class NodeStatisticsTest{
 
     private final PictureInfo pi5 = new PictureInfo(new File("images/image5.jpg"), "Fifth Picture");
 
-    /**
-     * Set up tests
-     *
-     * @throws Exception
-     */
     @Before
-    public void setUp() throws Exception {
+    public void setUp()  {
         rootNode = new SortableDefaultMutableTreeNode();
         group1 = new SortableDefaultMutableTreeNode(gr1);
         SortableDefaultMutableTreeNode group2 = new SortableDefaultMutableTreeNode(gr2);
-        pi1.setImageLocation(new File(NodeStatisticsTest.class.getClassLoader().getResource( "exif-test-canon-eos-350d.jpg" ).toURI()));
+        try {
+            pi1.setImageLocation(new File(Objects.requireNonNull(NodeStatisticsTest.class.getClassLoader().getResource("exif-test-canon-eos-350d.jpg")).toURI()));
+            pi2.setImageLocation(new File(Objects.requireNonNull(NodeStatisticsTest.class.getClassLoader().getResource("exif-test-canon-eos-60d.jpg")).toURI()));
+        } catch (URISyntaxException e) {
+            fail(e.getMessage());
+        }
         pi1.setDescription( "First Picture");
-        pi2.setImageLocation(new File(NodeStatisticsTest.class.getClassLoader().getResource( "exif-test-canon-eos-60d.jpg" ).toURI()));
         pi2.setDescription("Second Picture");
         picture1 = new SortableDefaultMutableTreeNode(pi1);
         SortableDefaultMutableTreeNode picture2 = new SortableDefaultMutableTreeNode(pi2);

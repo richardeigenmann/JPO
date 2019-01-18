@@ -220,18 +220,18 @@ public class TextQuery implements Serializable, Query {
         if ( match && ( lowerDateRange != null ) ) {
             // test for the lower date range
             if ( testNodeDate == null ) {
-                match = match && includeNullDates;
+                match = includeNullDates;
             } else {
-                match = match && ( testNodeDate.compareTo( lowerDateRange ) >= 0 );
+                match =  testNodeDate.compareTo( lowerDateRange ) >= 0;
             }
         }
 
         if ( match && ( upperDateRange != null ) ) {
             // test for the lower date range
             if ( testNodeDate == null ) {
-                match = match && includeNullDates;
+                match = includeNullDates;
             } else {
-                match = match && ( testNodeDate.compareTo( upperDateRange ) <= 0 );
+                match = testNodeDate.compareTo( upperDateRange ) <= 0 ;
             }
         }
 

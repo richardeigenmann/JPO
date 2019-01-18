@@ -9,7 +9,7 @@ import javax.swing.tree.TreePath;
  FlatGroupNavigator.java:  an implementation of the NodeNavigator for 
 browsing all the pictures of a group sequentially.
 
- Copyright (C) 2006-2017 Richard Eigenmann, Zürich, Switzerland
+ Copyright (C) 2006-2019 Richard Eigenmann, Zürich, Switzerland
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -23,6 +23,7 @@ browsing all the pictures of a group sequentially.
  The license is in gpl.txt.
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
+
 /**
  * Converts a tree of notes into a flat list of pictures
  */
@@ -32,15 +33,15 @@ public class FlatGroupNavigator
     /**
      * Logger for this class
      */
-    private static final Logger LOGGER = Logger.getLogger( FlatGroupNavigator.class.getName() );
+    private static final Logger LOGGER = Logger.getLogger(FlatGroupNavigator.class.getName());
 
     /**
      * Constructor for a FlatGroupNavigator.
      *
      * @param groupNode The groupNode under which the pictures should be
-     * displayed.
+     *                  displayed.
      */
-    public FlatGroupNavigator( SortableDefaultMutableTreeNode groupNode ) {
+    public FlatGroupNavigator(SortableDefaultMutableTreeNode groupNode) {
         this.groupNode = groupNode;
         MyTreeModelListener myTreeModelListener = new MyTreeModelListener();
         Settings.getPictureCollection().getTreeModel().addTreeModelListener(myTreeModelListener);
@@ -52,7 +53,7 @@ public class FlatGroupNavigator
      */
     private void buildFromScratch() {
         clear();
-        add(groupNode.getChildPictureNodes( true ));
+        add(groupNode.getChildPictureNodes(true));
     }
 
     /**
@@ -67,8 +68,8 @@ public class FlatGroupNavigator
      */
     @Override
     public String getTitle() {
-        if ( ( groupNode != null ) && ( groupNode.getUserObject() instanceof GroupInfo ) ) {
-            return ( (GroupInfo) groupNode.getUserObject() ).getGroupName();
+        if ((groupNode != null) && (groupNode.getUserObject() instanceof GroupInfo)) {
+            return ((GroupInfo) groupNode.getUserObject()).getGroupName();
         } else {
             return "No title available";
         }
@@ -82,7 +83,7 @@ public class FlatGroupNavigator
          * @param e The notification event details
          */
         @Override
-        public void treeNodesChanged( TreeModelEvent e ) {
+        public void treeNodesChanged(TreeModelEvent e) {
         }
 
         /**
@@ -91,7 +92,7 @@ public class FlatGroupNavigator
          * @param e The event that we will be notified on
          */
         @Override
-        public void treeNodesInserted( TreeModelEvent e ) {
+        public void treeNodesInserted(TreeModelEvent e) {
         }
 
         /**
@@ -102,31 +103,31 @@ public class FlatGroupNavigator
          * @param e The Notification event
          */
         @Override
-        public void treeNodesRemoved( TreeModelEvent e ) {
-            LOGGER.info( String.format( "Investigating a remove event: %s", e.toString() ) );
+        public void treeNodesRemoved(TreeModelEvent e) {
+            LOGGER.info(String.format("Investigating a remove event: %s", e.toString()));
 
             // Problem here is that if the current node was removed we are no longer on the node that was removed
-            TreePath currentNodeTreePath = new TreePath( groupNode.getPath() );
-            LOGGER.fine( String.format( "The current group node has this path: %s", currentNodeTreePath.toString() ) );
+            TreePath currentNodeTreePath = new TreePath(groupNode.getPath());
+            LOGGER.fine(String.format("The current group node has this path: %s", currentNodeTreePath.toString()));
 
             // step through the array of removed nodes
             Object[] children = e.getChildren();
             TreePath removedChild;
-            for ( int i = 0; i < children.length; i++ ) {
-                removedChild = new TreePath( children[i] );
-                LOGGER.fine( String.format( "Deleted child[%d] has path: %s", i, removedChild.toString() ) );
-                if ( removedChild.isDescendant( currentNodeTreePath ) ) {
-                    LOGGER.info( String.format( "Oh dear, our group has just disappeared." ) );
+            for (int i = 0; i < children.length; i++) {
+                removedChild = new TreePath(children[i]);
+                LOGGER.fine(String.format("Deleted child[%d] has path: %s", i, removedChild.toString()));
+                if (removedChild.isDescendant(currentNodeTreePath)) {
+                    LOGGER.info("Oh dear, our group has just disappeared.");
                     clear();
                     notifyNodeNavigatorListeners();
                     return; // no point in continuing the loop; the group is gone.
                 }
 
                 TreePath parentOfRemoved = e.getTreePath();
-                if ( currentNodeTreePath.equals( parentOfRemoved ) ) {
+                if (currentNodeTreePath.equals(parentOfRemoved)) {
                     int[] childIndices = e.getChildIndices();
                     int myNodeCount = getNumberOfNodes();
-                    LOGGER.info( String.format( "The removed %d node(s) are children of the current group (which has %d nodes)", childIndices.length, myNodeCount ) );
+                    LOGGER.info(String.format("The removed %d node(s) are children of the current group (which has %d nodes)", childIndices.length, myNodeCount));
                     buildFromScratch();
                     notifyNodeNavigatorListeners();
                 }
@@ -139,7 +140,7 @@ public class FlatGroupNavigator
          * @param e The event
          */
         @Override
-        public void treeStructureChanged( TreeModelEvent e ) {
+        public void treeStructureChanged(TreeModelEvent e) {
         }
     }
 }

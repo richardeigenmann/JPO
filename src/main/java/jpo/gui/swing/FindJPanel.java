@@ -98,12 +98,8 @@ public class FindJPanel extends JPanel {
         String savedUpperDateValue = Tools.currentDate( "dd.MM.yyyy" );
 
         if ( dateRangeJLabel.isVisible() ) {
-            savedLowerDateValue = lowerDateJTextField.getText();
             lowerDateJTextField.setText( "" );
-
-            savedUpperDateValue = upperDateJTextField.getText();
             upperDateJTextField.setText( "" );
-
             advancedFindJButton.setText( Settings.jpoResources.getString( "advancedFindJButtonOpen" ) );
         } else {
             lowerDateJTextField.setText( savedLowerDateValue );

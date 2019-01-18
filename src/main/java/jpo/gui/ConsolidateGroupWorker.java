@@ -19,7 +19,7 @@ import static jpo.dataModel.Tools.warnOnEDT;
 import static org.apache.commons.io.FileUtils.moveFile;
 
 /*
- Copyright (C) 2002 - 2017  Richard Eigenmann.
+ Copyright (C) 2002 - 2019  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -177,7 +177,7 @@ public class ConsolidateGroupWorker extends SwingWorker<String, String> {
      * This method moves a PictureInfo's file to the target directory if it
      * exists and can be moved necessary.
      *
-     * @param pictureInfo the PictureInfopointing to the highres file to move
+     * @param pictureInfo the PictureInfo pointing to the highres file to move
      * @param targetDirectory the target directory
      * @return True if a real move was done False if not.
      */

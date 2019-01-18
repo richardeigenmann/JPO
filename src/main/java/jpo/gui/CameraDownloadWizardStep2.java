@@ -15,7 +15,7 @@ import net.javaprog.ui.wizard.AbstractStep;
 /*
  CameraDownloadWizardStep2.java: the second step in the download from Camera Wizard
  
- Copyright (C) 2007-2014  Richard Eigenmann.
+ Copyright (C) 2007-2019  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -89,7 +89,7 @@ public class CameraDownloadWizardStep2 extends AbstractStep {
     }
 
     /**
-     * Required by the AbstractSetp but not used.
+     * Required by the AbstractStep but not used.
      */
     @Override
     public void prepareRendering() {

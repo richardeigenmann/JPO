@@ -19,7 +19,7 @@ import net.miginfocom.swing.MigLayout;
 /*
  PictureFrame.java:  Class that manages the frame and display of the Picutre
 
- Copyright (C) 2002-2017  Richard Eigenmann.
+ Copyright (C) 2002-2019  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -40,11 +40,7 @@ import net.miginfocom.swing.MigLayout;
  */
 public class PictureFrame {
 
-    /**
-     * Defines a logger for this class
-     */
-    //private static final Logger LOGGER = Logger.getLogger( PictureFrame.class.getName() );
-    
+
     /**
      * The pane that handles the image drawing aspects.
      *

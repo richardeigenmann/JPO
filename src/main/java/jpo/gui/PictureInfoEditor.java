@@ -69,7 +69,7 @@ import org.jxmapviewer.input.MapClickListener;
 import org.jxmapviewer.viewer.GeoPosition;
 
 /*
- Copyright (C) 2002-2017  Richard Eigenmann.
+ Copyright (C) 2002-2019  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -131,10 +131,7 @@ public class PictureInfoEditor extends JFrame {
      * here.
      */
     private final JLabel checksumJLabel = new JLabel();
-    /**
-     * The location of the lowres image file
-     */
-    //private JTextField lowresLocationJTextField = new JTextField();
+
     /**
      * The location of the image file
      */
@@ -274,10 +271,7 @@ public class PictureInfoEditor extends JFrame {
         rotateLeftJButton.setToolTipText(Settings.jpoResources.getString("rotateLeftJButton.ToolTipText"));
         rotationPanel.add(rotateLeftJButton);
 
-        /**
-         * Button to rotate right
-         */
-        JButton rotateRightJButton = new JButton(new ImageIcon(PictureInfoEditor.class.getClassLoader().getResource("jpo/images/icon_RotCWDown.gif")));
+        JButton rotateRightJButton = new JButton(new ImageIcon(Objects.requireNonNull(PictureInfoEditor.class.getClassLoader().getResource("jpo/images/icon_RotCWDown.gif"))));
         rotateRightJButton.setMnemonic(KeyEvent.VK_R);
         rotateRightJButton.addActionListener((ActionEvent e) -> {
             angleModel.setValue(((Double) angleModel.getValue() + 90) % 360);
@@ -456,12 +450,7 @@ public class PictureInfoEditor extends JFrame {
                         categoriesJList.clearSelection();
                     }
                     categoryAssignmentsJLabel.setText(selectedJListCategoriesToString(categoriesJList));
-                } /**
-                 * Method from the ListSelectionListener implementation that tracks when
-                 * an element was selected.
-                 *
-                 * @param e
-                 */
+                }
         );
 
         categoriesTab.add(listJScrollPane, "push, grow, wrap");
@@ -640,10 +629,8 @@ public class PictureInfoEditor extends JFrame {
     }
 
     /**
-     * Returns true if the file is good, an Exception if bad.
+     * Returns if the file is good, throws an Exception if bad.
      *
-     * @param fileToTest File to test
-     * @return true if the file is good, an Exception if bad.
      * @throws Exception if inputs were no good
      */
     private void testFile(String fileToTest) throws Exception {
@@ -788,16 +775,16 @@ public class PictureInfoEditor extends JFrame {
      * Set up a TreeModelListener to learn of updates to the tree and be able to
      * close the window if the node we are editing has been removed or to update
      * the fields if it was changed.
+     * Here we are not that interested in TreeModel change events other than to find out if our
+     * current node was removed in which case we close the Window.
      */
     private final TreeModelListener myTreeModelListener = new TreeModelListener() {
-        // Here we are not that interested in TreeModel change events other than to find out if our
-        // current node was removed in which case we close the Window.
 
         /**
          * implemented here to satisfy the TreeModelListener interface; not
          * used.
          *
-         * @param e
+         * @param e The event
          */
         @Override
         public void treeNodesChanged(TreeModelEvent e) {
@@ -807,7 +794,7 @@ public class PictureInfoEditor extends JFrame {
          * implemented here to satisfy the TreeModelListener interface; not
          * used.
          *
-         * @param e
+         * @param e The event
          */
         @Override
         public void treeNodesInserted(TreeModelEvent e) {
@@ -819,7 +806,7 @@ public class PictureInfoEditor extends JFrame {
          * removed or whether it is a child of the removed nodes. If so we close
          * the window.
          *
-         * @param e
+         * @param e The event
          */
         @Override
         public void treeNodesRemoved(TreeModelEvent e) {
@@ -833,7 +820,7 @@ public class PictureInfoEditor extends JFrame {
          * implemented here to satisfy the TreeModelListener interface; not
          * used.
          *
-         * @param e
+         * @param e The event
          */
         @Override
         public void treeStructureChanged(TreeModelEvent e) {
