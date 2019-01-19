@@ -18,7 +18,7 @@ import java.util.logging.Logger;
 import static org.junit.Assert.*;
 
 /*
- Copyright (C) 2017-2018  Richard Eigenmann.
+ Copyright (C) 2017-2019  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -59,6 +59,7 @@ public class PicturePopupMenuTest {
     private JMenuItem title;
     private JMenuItem showPicture;
     private JMenuItem showMap;
+    private JMenuItem openFolder;
     private JMenu navigateTo;
     private JMenuItem navigateTo_0;
     private JMenuItem categories;
@@ -121,42 +122,43 @@ public class PicturePopupMenuTest {
                 title = (JMenuItem) myPicturePopupMenu.getComponent(0);
                 showPicture = (JMenuItem) myPicturePopupMenu.getComponent(2);
                 showMap = (JMenuItem) myPicturePopupMenu.getComponent(3);
-                navigateTo = (JMenu) myPicturePopupMenu.getComponent(4);
+                openFolder = (JMenuItem) myPicturePopupMenu.getComponent(4);
+                navigateTo = (JMenu) myPicturePopupMenu.getComponent(5);
                 navigateTo_0 = navigateTo.getItem(0);
-                categories = (JMenuItem) myPicturePopupMenu.getComponent(5);
-                selectForEmail = (JMenuItem) myPicturePopupMenu.getComponent(6);
-                unselectForEmail = (JMenuItem) myPicturePopupMenu.getComponent(7);
-                clearEmailSelection = (JMenuItem) myPicturePopupMenu.getComponent(8);
-                userFunction = (JMenu) myPicturePopupMenu.getComponent(9);
+                categories = (JMenuItem) myPicturePopupMenu.getComponent(6);
+                selectForEmail = (JMenuItem) myPicturePopupMenu.getComponent(7);
+                unselectForEmail = (JMenuItem) myPicturePopupMenu.getComponent(8);
+                clearEmailSelection = (JMenuItem) myPicturePopupMenu.getComponent(9);
+                userFunction = (JMenu) myPicturePopupMenu.getComponent(10);
                 userFunction_0 = userFunction.getItem(0);
                 userFunction_1 = userFunction.getItem(1);
                 userFunction_2 = userFunction.getItem(2);
-                rotation = (JMenu) myPicturePopupMenu.getComponent(10);
+                rotation = (JMenu) myPicturePopupMenu.getComponent(11);
                 rotate90 = rotation.getItem(0);
                 rotate180 = rotation.getItem(1);
                 rotate270 = rotation.getItem(2);
                 rotate0 = rotation.getItem(3);
-                refreshThumbnail = (JMenuItem) myPicturePopupMenu.getComponent(11);
-                move = (JMenu) myPicturePopupMenu.getComponent(12);
+                refreshThumbnail = (JMenuItem) myPicturePopupMenu.getComponent(12);
+                move = (JMenu) myPicturePopupMenu.getComponent(13);
                 moveToTop = move.getItem(Settings.MAX_DROPNODES + 1);
                 moveUp = move.getItem(Settings.MAX_DROPNODES + 2);
                 moveDown = move.getItem(Settings.MAX_DROPNODES + 3);
                 moveToBottom = move.getItem(Settings.MAX_DROPNODES + 4);
                 moveIndent = move.getItem(Settings.MAX_DROPNODES + 5);
                 moveOutdent = move.getItem(Settings.MAX_DROPNODES + 6);
-                copyImage = (JMenu) myPicturePopupMenu.getComponent(13);
+                copyImage = (JMenu) myPicturePopupMenu.getComponent(14);
                 copyImageChooseTargetDir = copyImage.getItem(0);
                 copyImageToZipFile = copyImage.getItem(12);
                 copyToClipboard = copyImage.getItem(13);
-                removeNode = (JMenuItem) myPicturePopupMenu.getComponent(14);
-                fileOperations = (JMenu) myPicturePopupMenu.getComponent(15);
+                removeNode = (JMenuItem) myPicturePopupMenu.getComponent(15);
+                fileOperations = (JMenu) myPicturePopupMenu.getComponent(16);
                 moveImage = (JMenu) fileOperations.getItem(2);
                 moveToNewLocation = moveImage.getItem(0);
                 renameJMenu = (JMenu) fileOperations.getItem(3);
                 fileOperationsRename = renameJMenu.getItem(0);
                 fileoperationsDelete = fileOperations.getItem(4);
-                properties = (JMenuItem) myPicturePopupMenu.getComponent(16);
-                consolidateHere = (JMenuItem) myPicturePopupMenu.getComponent(17);
+                properties = (JMenuItem) myPicturePopupMenu.getComponent(17);
+                consolidateHere = (JMenuItem) myPicturePopupMenu.getComponent(18);
             });
         } catch (InterruptedException | InvocationTargetException e) {
             fail(e.getMessage());
@@ -265,6 +267,23 @@ public class PicturePopupMenuTest {
         assertEquals("Before clicking on the node the event count should be 0", 0, showMapEventCount);
         showMap.doClick();
         assertEquals("After clicking on the node the event count should be 1", 1, showMapEventCount);
+    }
+
+    private int openFolderEventCount = 0;
+    /**
+     * Test clicking showMap
+     */
+    @Test
+    public void testOpenFolder() {
+        JpoEventBus.getInstance().register(new Object() {
+            @Subscribe
+            public void handleOpenFileExplorerRequest(OpenFileExplorerRequest request) {
+                openFolderEventCount++;
+            }
+        });
+        assertEquals("Before clicking on the node the event count should be 0", 0, openFolderEventCount);
+        openFolder.doClick();
+        assertEquals("After clicking on the node the event count should be 1", 1, openFolderEventCount);
     }
 
     private int navigateToEventCount = 0;
@@ -559,7 +578,7 @@ public class PicturePopupMenuTest {
     }
 
     @Test
-    public void testRplaceDoubleEscapedSpaces() {
+    public void testReplaceDoubleEscapedSpaces() {
         String s = "filename%20%20extension.jpg";
         Optional<String> o = PicturePopupMenu.replaceEscapedSpaces(s);
         assert (o.isPresent());
