@@ -8,7 +8,7 @@ import static junit.framework.TestCase.fail;
 import org.junit.Test;
 
 /**
- * Tests for the Directory Chooser
+ * Tests for the PictureViewe
  *
  * @author Richard Eigenmann
  */

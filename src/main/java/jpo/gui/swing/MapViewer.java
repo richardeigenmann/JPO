@@ -11,6 +11,7 @@ import java.util.Set;
 import javax.swing.event.MouseInputListener;
 import org.jxmapviewer.JXMapViewer;
 import org.jxmapviewer.OSMTileFactoryInfo;
+import org.jxmapviewer.cache.FileBasedLocalCache;
 import org.jxmapviewer.input.CenterMapListener;
 import org.jxmapviewer.input.PanKeyListener;
 import org.jxmapviewer.input.PanMouseInputListener;
@@ -20,13 +21,12 @@ import org.jxmapviewer.painter.Painter;
 import org.jxmapviewer.viewer.DefaultTileFactory;
 import org.jxmapviewer.viewer.DefaultWaypoint;
 import org.jxmapviewer.viewer.GeoPosition;
-import org.jxmapviewer.viewer.LocalResponseCache;
 import org.jxmapviewer.viewer.TileFactoryInfo;
 import org.jxmapviewer.viewer.Waypoint;
 import org.jxmapviewer.viewer.WaypointPainter;
 
 /*
-Copyright (C) 2017-2018  Richard Eigenmann.
+Copyright (C) 2017-2019  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -43,11 +43,25 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 
 
 /**
- *
+ * A controller for the Map Component which can be retrieved by @see getJXMapViewer
  * @author Richard Eigenmann
  */
 public class MapViewer {
 
+    /**
+     * Use 8 threads in parallel to load the tiles
+     */
+    private static final int THREAD_POOL_SIZE = 8;
+
+    /**
+     * Default Zoom
+     */
+    private static final int DEFAULT_ZOOM = 7;
+
+    /**
+     * Constructs the controller which creates the Component and wires up the
+     * mouse listeners to it.
+     */
     public MapViewer() {
         // Create a TileFactoryInfo for OpenStreetMap
         TileFactoryInfo info = new OSMTileFactoryInfo();
@@ -56,28 +70,23 @@ public class MapViewer {
 
         // Setup local file cache
         File cacheDir = new File( System.getProperty( "java.io.tmpdir" ) + File.separator + ".jxmapviewer2" );
-        LocalResponseCache.installResponseCache( info.getBaseURL(), cacheDir, false );
+        tileFactory.setLocalCache(new FileBasedLocalCache(cacheDir, false));
 
-        // Use 8 threads in parallel to load the tiles
-        tileFactory.setThreadPoolSize( 8 );
 
-        jxMapViewer.setZoom( 7 );
+        tileFactory.setThreadPoolSize(THREAD_POOL_SIZE);
+
+        jxMapViewer.setZoom(DEFAULT_ZOOM);
 
         // Add interactions
-        MouseInputListener mia = new PanMouseInputListener( jxMapViewer );
-        jxMapViewer.addMouseListener( mia );
-        jxMapViewer.addMouseMotionListener( mia );
-
+        MouseInputListener mouseInputListener = new PanMouseInputListener( jxMapViewer );
+        jxMapViewer.addMouseListener( mouseInputListener );
+        jxMapViewer.addMouseMotionListener( mouseInputListener );
         jxMapViewer.addMouseListener( new CenterMapListener( jxMapViewer ) );
-
         jxMapViewer.addMouseWheelListener( new ZoomMouseWheelListenerCursor( jxMapViewer ) );
-
         jxMapViewer.addKeyListener( new PanKeyListener( jxMapViewer ) );
-
         jxMapViewer.setCursor( new Cursor( CROSSHAIR_CURSOR ) );
 
         // Create waypoints from the geo-positions
-        //Set<Waypoint> waypoints = new HashSet<Waypoint>( Arrays.asList( new DefaultWaypoint( location ) ) );
         Set<Waypoint> waypoints = new HashSet<>();
         waypoints.add( defaultWaypoint );
 
@@ -85,34 +94,33 @@ public class MapViewer {
         WaypointPainter<Waypoint> waypointPainter = new WaypointPainter<>();
         waypointPainter.setWaypoints( waypoints );
 
-        // Create a compound painter that uses both the route-painter and the waypoint-painter
         List<Painter<JXMapViewer>> painters = new ArrayList<>();
-        //painters.add( routePainter );
         painters.add( waypointPainter );
 
         CompoundPainter<JXMapViewer> painter = new CompoundPainter<>( painters );
         jxMapViewer.setOverlayPainter( painter );
-
     }
-
-    /**
-     * Defines a LOGGER for this class
-     */
-    //private static final Logger LOGGER = Logger.getLogger( MapViewer.class.getName() );
 
     private final JXMapViewer jxMapViewer = new JXMapViewer();
     private final DefaultWaypoint defaultWaypoint = new DefaultWaypoint();
 
+    /**
+     * Returns the Swing Component showing the map
+     * @return the Swing Component showing the map
+     */
     public JXMapViewer getJXMapViewer() {
         return jxMapViewer;
     }
 
+    /**
+     * Places a marker on the map at the X and Y latitude and longitude and moves the
+     * map to show it in the middle.
+     * @param latLng the latitude as X and longitude as Y
+     */
     public void setMarker( Point2D.Double latLng ) {
-        // Set the focus
         GeoPosition location = new GeoPosition( latLng.getX(), latLng.getY() );
         defaultWaypoint.setPosition( location );
         jxMapViewer.setAddressLocation( location );
-
     }
 
 }

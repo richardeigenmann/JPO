@@ -4,10 +4,11 @@ import jpo.dataModel.SortableDefaultMutableTreeNode;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.io.File;
+import java.util.List;
 import java.util.Objects;
 
 /*
- Copyright (C) 2017-2018  Richard Eigenmann.
+ Copyright (C) 2017-2019  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -29,7 +30,7 @@ import java.util.Objects;
  */
 public class CopyToDirRequest implements Request {
 
-    private final SortableDefaultMutableTreeNode[] nodes;
+    private final List<SortableDefaultMutableTreeNode> nodes;
     private final File targetLocation;
 
     /**
@@ -39,7 +40,7 @@ public class CopyToDirRequest implements Request {
      * @param nodes The nodes for which the user would like copy the pictures
      * @param targetLocation The target directory
      */
-    public CopyToDirRequest(@NonNull SortableDefaultMutableTreeNode[] nodes, @NonNull File targetLocation ) {
+    public CopyToDirRequest(@NonNull List<SortableDefaultMutableTreeNode> nodes, @NonNull File targetLocation ) {
         Objects.requireNonNull(nodes);
         Objects.requireNonNull(targetLocation);
         this.nodes = nodes;
@@ -52,7 +53,7 @@ public class CopyToDirRequest implements Request {
      * @return the node
      */
     @NonNull
-    public SortableDefaultMutableTreeNode[] getNodes() {
+    public List<SortableDefaultMutableTreeNode> getNodes() {
         return nodes;
     }
 

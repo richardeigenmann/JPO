@@ -62,23 +62,11 @@ public class PictureInfo implements Serializable {
      * Constructor without options. All strings are set to blanks
      */
     public PictureInfo() {
-        imageLocation = "";
+        //imageLocation = "";
         description = "";
         filmReference = "";
     }
 
-    /**
-     * Constructor with just filename as option.
-     *
-     * @param highresLocation The highres location as a String
-     * @param description     Description
-     * @deprecated
-     */
-    public PictureInfo(String highresLocation, String description) {
-        setImageLocation(highresLocation);
-        setDescription(description);
-        filmReference = "";
-    }
 
     /**
      * Constructor with just filename as option.
@@ -103,17 +91,6 @@ public class PictureInfo implements Serializable {
         return description;
     }
 
-    /**
-     * this method writes all attributes of the picture in the JPO xml data
-     * format.
-     *
-     * @param out The Buffered Writer receiving the xml data
-     * @throws IOException if there is a drama writing the file.
-     */
-    public void dumpToXml(BufferedWriter out)
-            throws IOException {
-        dumpToXml(out, getImageLocation());
-    }
 
     /**
      * this method writes all attributes of the picture in the JPO xml data
@@ -123,10 +100,9 @@ public class PictureInfo implements Serializable {
      * pictures whilst all other attributes are retained.
      *
      * @param out     The Buffered Writer receiving the xml data
-     * @param highres The URL of the highres file
      * @throws IOException If there was an IO error
      */
-    public void dumpToXml(BufferedWriter out, String highres)
+    public void dumpToXml(BufferedWriter out)
             throws IOException {
         out.write("<picture>");
         out.newLine();
@@ -138,8 +114,8 @@ public class PictureInfo implements Serializable {
             out.newLine();
         }
 
-        if (highres.length() > 0) {
-            out.write("\t<file_URL>" + StringEscapeUtils.escapeXml11(highres) + "</file_URL>");
+        if (getImageFile().toURI().toString().length() > 0) {
+            out.write("\t<file_URL>" + StringEscapeUtils.escapeXml11(getImageFile().toURI().toString()) + "</file_URL>");
             out.newLine();
         }
 
@@ -261,11 +237,6 @@ public class PictureInfo implements Serializable {
     }
 
     //----------------------------------------
-    /**
-     * The full path to the high resolution version of the picture.
-     * TODO: In What format?
-     */
-    private String imageLocation = "";
     private File imageFile;
 
     /**
@@ -275,7 +246,7 @@ public class PictureInfo implements Serializable {
      * @see #setImageLocation
      */
     public synchronized String getImageLocation() {
-        return imageLocation;
+        return getImageFile().toURI().toString();
     }
 
     /**
@@ -294,9 +265,10 @@ public class PictureInfo implements Serializable {
      * @return the image location
      * @throws MalformedURLException if the location could not be converted to a
      *                               URL.
+     * @deprecated
      */
     public synchronized URL getImageURL() throws MalformedURLException {
-        return new URL(imageLocation);
+        return getImageFile().toURI().toURL();
     }
 
     /**
@@ -305,10 +277,11 @@ public class PictureInfo implements Serializable {
      * thrown.
      *
      * @return the image location
+     * @deprecated
      */
     public synchronized URL getImageURLOrNull() {
         try {
-            return new URL(imageLocation);
+            return getImageFile().toURI().toURL();
         } catch (MalformedURLException x) {
             LOGGER.log(Level.FINE, "Caught an unexpected MalformedURLException: {0}", x.getMessage());
             return null;
@@ -322,57 +295,12 @@ public class PictureInfo implements Serializable {
      */
     public synchronized URI getImageURIOrNull() {
         try {
-            return new URI(imageLocation);
-        } catch (IllegalArgumentException | URISyntaxException x) {
+            return getImageFile().toURI();
+        } catch (IllegalArgumentException ex) {
             return null;
         }
     }
 
-    /**
-     * Sets the full path to the picture.
-     *
-     * @param s The new location for the picture.
-     * @see #getImageLocation
-     * @deprecated
-     */
-    public synchronized void setImageLocation(String s) {
-        if (!imageLocation.equals(s)) {
-            imageLocation = s;
-            try {
-                imageFile = new File(new URL(imageLocation).toURI());
-            } catch (URISyntaxException e) {
-                final String BROKEN_THUMBNAIL_PICTURE_FILE = "broken_thumbnail.gif";
-                URL resource = PictureInfo.class.getClassLoader().getResource(BROKEN_THUMBNAIL_PICTURE_FILE);
-                try {
-                    imageFile = new File(Objects.requireNonNull(resource).toURI());
-                } catch (URISyntaxException e1) {
-                    e1.printStackTrace();
-                }
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            }
-            sendImageLocationChangedEvent();
-        }
-    }
-
-    /**
-     * Sets the full path to the picture.
-     *
-     * @param u The new location for the picture.
-     * @deprecated
-     */
-    public synchronized void setImageLocation(URL u) {
-        String s = u.toString();
-        if (!imageLocation.equals(s)) {
-            imageLocation = s;
-            try {
-                imageFile = new File(u.toURI());
-            } catch (URISyntaxException e) {
-                LOGGER.severe("Error registering url as file: " + u.toString() + "\n" + e.getMessage());
-            }
-            sendImageLocationChangedEvent();
-        }
-    }
 
     /**
      * Sets the image location
@@ -381,14 +309,10 @@ public class PictureInfo implements Serializable {
      */
     public synchronized void setImageLocation(@NonNull File file) {
         Objects.requireNonNull(file);
-        try {
-            imageFile = file;
-            setImageLocation(file.toURI().toURL());
-        } catch (MalformedURLException ex) {
-            LOGGER.severe("How could we get a MalformedURLException if java is doing the toURI and toURL itself? " + ex.getMessage());
-        }
+        imageFile = file;
     }
 
+    private String myImageLocation = "";
     /**
      * Appends the text to the field (used by XML parser).
      *
@@ -396,23 +320,13 @@ public class PictureInfo implements Serializable {
      */
     public synchronized void appendToImageLocation(String s) {
         if (s.length() > 0) {
-            imageLocation = imageLocation.concat(s);
+            myImageLocation = myImageLocation.concat(s);
             try {
-                imageFile = new File(new URL(imageLocation).toURI());
-            } catch (URISyntaxException e) {
-                final String BROKEN_THUMBNAIL_PICTURE_FILE = "broken_thumbnail.gif";
-                URL resource = PictureInfo.class.getClassLoader().getResource(BROKEN_THUMBNAIL_PICTURE_FILE);
-                try {
-                    imageFile = new File(Objects.requireNonNull(resource).toURI());
-                } catch (URISyntaxException e1) {
-                    e1.printStackTrace();
-                }
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
+                imageFile = new File(new URL(myImageLocation).toURI());
+            } catch (URISyntaxException | MalformedURLException e) {
             }
             sendImageLocationChangedEvent();
         }
-
     }
 
     /**
@@ -470,26 +384,17 @@ public class PictureInfo implements Serializable {
      * calculates the Adler32 checksum of the current picture.
      */
     public synchronized void calculateChecksum() {
-        URL pictureURL = getImageURLOrNull();
-        if (pictureURL == null) {
-            LOGGER.log(Level.SEVERE, "Aborting due to bad URL: {0}", getImageLocation());
+        try (
+                InputStream in = new FileInputStream(getImageFile());
+                BufferedInputStream bin = new BufferedInputStream(in)
+        ) {
+            checksum = Tools.calculateChecksum(bin);
+            LOGGER.log(Level.FINE, "Checksum is: {0}", Long.toString(checksum));
+            sendChecksumChangedEvent();
+        } catch (IOException e) {
+            LOGGER.severe("Leaving Checksum unchanged. Exception reads: " + e.getMessage());
             return;
         }
-
-        InputStream in;
-        try {
-            in = pictureURL.openStream();
-        } catch (IOException x) {
-            LOGGER.severe(String.format("Couldn't open URL %s. Leaving Checksum unchanged.", pictureURL.toString()));
-            return;
-        }
-
-        BufferedInputStream bin = new BufferedInputStream(in);
-
-        checksum = Tools.calculateChecksum(bin);
-
-        LOGGER.log(Level.FINE, "Checksum is: {0}", Long.toString(checksum));
-        sendChecksumChangedEvent();
     }
 
     /**
@@ -1292,7 +1197,7 @@ public class PictureInfo implements Serializable {
 
         return descriptionContains(searchString)
                 || (getPhotographer().toUpperCase().contains(uppercaseSearchString))
-                || (imageLocation.toUpperCase().contains(uppercaseSearchString))
+                || (getImageFile().toString().toUpperCase().contains(uppercaseSearchString))
                 || (getFilmReference().toUpperCase().contains(uppercaseSearchString))
                 || (getCreationTime().toUpperCase().contains(uppercaseSearchString))
                 || (getComment().toUpperCase().contains(uppercaseSearchString))

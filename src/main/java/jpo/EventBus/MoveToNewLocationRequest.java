@@ -3,10 +3,11 @@ package jpo.EventBus;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
+import java.util.List;
 import java.util.Objects;
 
 /*
- Copyright (C) 2018 Richard Eigenmann.
+ Copyright (C) 2018-2019 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -28,7 +29,7 @@ import java.util.Objects;
  */
 public class MoveToNewLocationRequest implements Request {
 
-    private final SortableDefaultMutableTreeNode[] nodes;
+    private final List<SortableDefaultMutableTreeNode> nodes;
 
     /**
      * Request to indicate that the user would like to move the pictures in the
@@ -36,7 +37,7 @@ public class MoveToNewLocationRequest implements Request {
      *
      * @param nodes The nodes for which the user would like move the pictures
      */
-    public MoveToNewLocationRequest(@NonNull SortableDefaultMutableTreeNode[] nodes ) {
+    public MoveToNewLocationRequest(@NonNull List<SortableDefaultMutableTreeNode> nodes ) {
         Objects.requireNonNull(nodes);
         this.nodes = nodes;
     }
@@ -46,7 +47,7 @@ public class MoveToNewLocationRequest implements Request {
      *
      * @return the node
      */
-    public SortableDefaultMutableTreeNode[] getNodes() {
+    public List<SortableDefaultMutableTreeNode> getNodes() {
         return nodes;
     }
 

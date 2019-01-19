@@ -6,6 +6,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
@@ -20,7 +21,7 @@ import jpo.dataModel.SortableDefaultMutableTreeNode;
  Originally lifted from the Swing Tutorial on the java.sun.com website. In as far as no prior copyright
  exists the following copyright shall apply. (This code was heavily modified.)
 
- Copyright (C) 2002 - 2017  Richard Eigenmann.
+ Copyright (C) 2002 - 2019  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -156,7 +157,7 @@ public class TableJFrame extends JFrame {
         }
 
         /**
-         * method that interfaces between the row and colum of the table and the
+         * method that interfaces between the row and column of the table and the
          * underlying data model in the JTree
          */
         @Override
@@ -197,7 +198,7 @@ public class TableJFrame extends JFrame {
         }
 
         /**
-         * method that interfaces between the row and colum of the table and the
+         * method that interfaces between the row and column of the table and the
          * underlying data model in the JTree
          */
         @Override
@@ -211,7 +212,7 @@ public class TableJFrame extends JFrame {
                         ( (PictureInfo) userObject ).setDescription( newString );
                         break;
                     case 2:
-                        ( (PictureInfo) userObject ).setImageLocation( newString );
+                        ( (PictureInfo) userObject ).setImageLocation( new File( newString ) );
                         break;
                     case 3:
                         ( (PictureInfo) userObject ).setFilmReference( newString );

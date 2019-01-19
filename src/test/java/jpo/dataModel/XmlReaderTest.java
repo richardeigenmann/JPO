@@ -17,11 +17,8 @@ import org.junit.Test;
  */
 public class XmlReaderTest {
 
-    /**
-     * Test the correction of a Jar reference where it is not needed
-     */
     @Test
-    public void testCorrectJarReferences() {
+    public void testReader() {
         final SortableDefaultMutableTreeNode rootNode = new SortableDefaultMutableTreeNode();
 
         URL image = XmlReaderTest.class.getClassLoader().getResource( "exif-test-canon-eos-350d.jpg" );
@@ -37,9 +34,6 @@ public class XmlReaderTest {
         final SortableDefaultMutableTreeNode picture1 = new SortableDefaultMutableTreeNode( pi );
 
         rootNode.add( picture1 );
-
-        XmlReader.correctJarReferences( rootNode );
-
         assertEquals( ( (PictureInfo) picture1.getUserObject() ).getImageFile().getName(), pi.getImageFile().getName() );
     }
 

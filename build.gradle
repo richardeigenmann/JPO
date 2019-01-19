@@ -208,7 +208,7 @@ task buildWindowsExecutable(type: Exec) {
 task buildWindowsInstaller(type: Exec) {
     dependsOn buildWindowsExecutable
     def exedir  = new File("$buildDir/executables")
-    workingDir exedir
+    workingDir exedir.toString()
     commandLine '/usr/bin/makensis', 
         '-XOutFile ' + exedir + '/JPO-Installer-0.13.exe', 
         projectDir.absolutePath + '/Windowsbuilder/jpoinstaller.nsi'

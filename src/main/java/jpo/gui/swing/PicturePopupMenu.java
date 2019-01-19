@@ -478,11 +478,11 @@ public class PicturePopupMenu extends JPopupMenu {
         final JMenuItem copyToNewLocationJMenuItem = new JMenuItem(Settings.jpoResources.getString("copyToNewLocationJMenuItem"));
         copyToNewLocationJMenuItem.addActionListener((ActionEvent e) -> {
             if (Settings.getPictureCollection().countSelectedNodes() < 1) {
-                SortableDefaultMutableTreeNode[] nodes = new SortableDefaultMutableTreeNode[1];
-                nodes[0] = popupNode;
+                List<SortableDefaultMutableTreeNode> nodes = new ArrayList<>();
+                nodes.add(popupNode);
                 JpoEventBus.getInstance().post(new CopyToNewLocationRequest(nodes));
             } else {
-                JpoEventBus.getInstance().post(new CopyToNewLocationRequest(Settings.getPictureCollection().getSelectedNodes()));
+                JpoEventBus.getInstance().post(new CopyToNewLocationRequest(Settings.getPictureCollection().getSelection()));
             }
         });
         copyJMenu.add(copyToNewLocationJMenuItem);
@@ -495,11 +495,11 @@ public class PicturePopupMenu extends JPopupMenu {
             copyLocationJMenuItems[i] = new JMenuItem();
             copyLocationJMenuItems[i].addActionListener((ActionEvent ae) -> {
                 if (Settings.getPictureCollection().countSelectedNodes() < 1) {
-                    SortableDefaultMutableTreeNode[] nodes = new SortableDefaultMutableTreeNode[1];
-                    nodes[0] = popupNode;
+                    List<SortableDefaultMutableTreeNode> nodes = new ArrayList<>();
+                    nodes.add(popupNode);
                     JpoEventBus.getInstance().post(new CopyToDirRequest(nodes, loc));
                 } else {
-                    JpoEventBus.getInstance().post(new CopyToDirRequest(Settings.getPictureCollection().getSelectedNodes(), loc));
+                    JpoEventBus.getInstance().post(new CopyToDirRequest(Settings.getPictureCollection().getSelection(), loc));
                 }
             });
             copyJMenu.add(copyLocationJMenuItems[i]);
@@ -596,11 +596,11 @@ public class PicturePopupMenu extends JPopupMenu {
         final JMenuItem moveToNewLocationJMenuItem = new JMenuItem(Settings.jpoResources.getString("moveToNewLocationJMenuItem"));
         moveToNewLocationJMenuItem.addActionListener((ActionEvent e) -> {
             if (Settings.getPictureCollection().countSelectedNodes() < 1) {
-                SortableDefaultMutableTreeNode[] nodes = new SortableDefaultMutableTreeNode[1];
-                nodes[0] = popupNode;
+                List<SortableDefaultMutableTreeNode> nodes = new ArrayList<>();
+                nodes.add(popupNode);
                 JpoEventBus.getInstance().post(new MoveToNewLocationRequest(nodes));
             } else {
-                JpoEventBus.getInstance().post(new MoveToNewLocationRequest(Settings.getPictureCollection().getSelectedNodes()));
+                JpoEventBus.getInstance().post(new MoveToNewLocationRequest(Settings.getPictureCollection().getSelection()));
             }
         });
         fileMoveJMenu.add(moveToNewLocationJMenuItem);
@@ -613,11 +613,11 @@ public class PicturePopupMenu extends JPopupMenu {
             moveLocationJMenuItems[i] = new JMenuItem();
             moveLocationJMenuItems[i].addActionListener((ActionEvent ae) -> {
                 if (Settings.getPictureCollection().countSelectedNodes() < 1) {
-                    SortableDefaultMutableTreeNode[] nodes = new SortableDefaultMutableTreeNode[1];
-                    nodes[0] = popupNode;
+                    List<SortableDefaultMutableTreeNode> nodes = new ArrayList<>();
+                    nodes.add(popupNode);
                     JpoEventBus.getInstance().post(new MoveToDirRequest(nodes, loc));
                 } else {
-                    JpoEventBus.getInstance().post(new MoveToDirRequest(Settings.getPictureCollection().getSelectedNodes(), loc));
+                    JpoEventBus.getInstance().post(new MoveToDirRequest(Settings.getPictureCollection().getSelection(), loc));
                 }
             });
             fileMoveJMenu.add(moveLocationJMenuItems[i]);

@@ -915,7 +915,7 @@ public class ApplicationEventHandler {
             }
         }
         JOptionPane.showMessageDialog(Settings.anchorFrame,
-                String.format(Settings.jpoResources.getString("copyToNewLocationSuccess"), picsCopied, request.getNodes().length),
+                String.format(Settings.jpoResources.getString("copyToNewLocationSuccess"), picsCopied, request.getNodes().size()),
                 Settings.jpoResources.getString("genericInfo"),
                 JOptionPane.INFORMATION_MESSAGE);
 
@@ -956,7 +956,7 @@ public class ApplicationEventHandler {
             }
         }
         JOptionPane.showMessageDialog(Settings.anchorFrame,
-                String.format(Settings.jpoResources.getString("moveToNewLocationSuccess"), picsMoved, request.getNodes().length),
+                String.format(Settings.jpoResources.getString("moveToNewLocationSuccess"), picsMoved, request.getNodes().size()),
                 Settings.jpoResources.getString("genericInfo"),
                 JOptionPane.INFORMATION_MESSAGE);
     }

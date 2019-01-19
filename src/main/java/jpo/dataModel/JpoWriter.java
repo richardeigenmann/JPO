@@ -1,5 +1,7 @@
 package jpo.dataModel;
 
+import org.apache.commons.io.FileUtils;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedWriter;
@@ -170,10 +172,8 @@ public class JpoWriter {
 
         if ( copyPics ) {
             File targetHighresFile = Tools.inventPicFilename( highresTargetDir, pictureInfo.getImageFile().getName() );
-            Tools.copyPicture( pictureInfo.getImageURL(), targetHighresFile );
-            pictureInfo.dumpToXml( bufferedWriter,
-                    targetHighresFile.toURI().toURL().toString()
-            );
+            FileUtils.copyFile(pictureInfo.getImageFile(), targetHighresFile);
+            pictureInfo.dumpToXml( bufferedWriter );
         } else {
             pictureInfo.dumpToXml( bufferedWriter );
         }

@@ -110,8 +110,8 @@ public class SourcePictureTest {
     @Test
     public void testJpgImage() {
         SourcePicture s = new SourcePicture();
-        final String TIFF_IMAGE_FILE = "exif-test-nikon-d100-1.jpg";
-        URL imageUrl = SourcePictureTest.class.getClassLoader().getResource(TIFF_IMAGE_FILE);
+        final String JPG_IMAGE_FILE = "exif-test-nikon-d100-1.jpg";
+        URL imageUrl = SourcePictureTest.class.getClassLoader().getResource(JPG_IMAGE_FILE);
 
         s.loadPicture(imageUrl, 0.0);
         assertNotNull("We were trying to load a jpg image but it was null!", s.getSourceBufferedImage());
@@ -121,8 +121,8 @@ public class SourcePictureTest {
 
     @Test
     public void testGetJpgImageIOReader() {
-        final String TIFF_IMAGE_FILE = "exif-test-nikon-d100-1.jpg";
-        URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(TIFF_IMAGE_FILE));
+        final String JPG_IMAGE_FILE = "exif-test-nikon-d100-1.jpg";
+        URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(JPG_IMAGE_FILE));
         try (InputStream input = imageUrl.openStream();
              ImageInputStream iis = ImageIO.createImageInputStream(input)) {
             ImageReader reader = SourcePicture.getImageIOReader(iis);
@@ -192,7 +192,7 @@ public class SourcePictureTest {
     public void testTiffImage() {
         SourcePicture s = new SourcePicture();
         final String TIFF_IMAGE_FILE = "tiff_image.tiff";
-        URL imageUrl = SourcePictureTest.class.getClassLoader().getResource(TIFF_IMAGE_FILE);
+        URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(TIFF_IMAGE_FILE));
 
         s.loadPicture(imageUrl, 0.0);
         assertNotNull("We were trying to load a tiff image but it was null!", s.getSourceBufferedImage());
@@ -203,7 +203,7 @@ public class SourcePictureTest {
     @Test
     public void testGetTiffImageIOReader() {
         final String TIFF_IMAGE_FILE = "tiff_image.tiff";
-        URL imageUrl = SourcePictureTest.class.getClassLoader().getResource(TIFF_IMAGE_FILE);
+        URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(TIFF_IMAGE_FILE));
         try (InputStream input = imageUrl.openStream();
              ImageInputStream iis = ImageIO.createImageInputStream(input)) {
             ImageReader reader = SourcePicture.getImageIOReader(iis);
@@ -233,7 +233,7 @@ public class SourcePictureTest {
     public void testHdrImage() {
         SourcePicture s = new SourcePicture();
         final String HDR_IMAGE_FILE = "memorial_o876.hdr";
-        URL imageUrl = SourcePictureTest.class.getClassLoader().getResource(HDR_IMAGE_FILE);
+        URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(HDR_IMAGE_FILE));
 
         s.loadPicture(imageUrl, 0.0);
         assertNotNull("We were trying to load a hdr image but it was null!", s.getSourceBufferedImage());
@@ -244,7 +244,7 @@ public class SourcePictureTest {
     @Test
     public void testGetHdrImageIOReader() {
         final String HDR_IMAGE_FILE = "memorial_o876.hdr";
-        URL imageUrl = SourcePictureTest.class.getClassLoader().getResource(HDR_IMAGE_FILE);
+        URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(HDR_IMAGE_FILE));
         try (InputStream input = imageUrl.openStream();
              ImageInputStream iis = ImageIO.createImageInputStream(input)) {
             ImageReader reader = SourcePicture.getImageIOReader(iis);
@@ -273,7 +273,7 @@ public class SourcePictureTest {
     public void testPdfImage() {
         SourcePicture s = new SourcePicture();
         final String PDF_IMAGE_FILE = "pdf-document.pdf";
-        URL imageUrl = SourcePictureTest.class.getClassLoader().getResource(PDF_IMAGE_FILE);
+        URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(PDF_IMAGE_FILE));
 
         s.loadPicture(imageUrl, 0.0);
         assertNotNull("We were trying to load a pdf image but it was null!", s.getSourceBufferedImage());
@@ -285,7 +285,7 @@ public class SourcePictureTest {
     @Ignore("ImageIO PDF doesn't seem to work")
     public void testGetPdfImageIOReader() {
         final String PDF_IMAGE_FILE = "pdf-document.pdf";
-        URL imageUrl = SourcePictureTest.class.getClassLoader().getResource(PDF_IMAGE_FILE);
+        URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(PDF_IMAGE_FILE));
         try (InputStream input = imageUrl.openStream();
              ImageInputStream iis = ImageIO.createImageInputStream(input)) {
             ImageReader reader = SourcePicture.getImageIOReader(iis);
@@ -316,7 +316,7 @@ public class SourcePictureTest {
     public void testSvgImage() {
         SourcePicture s = new SourcePicture();
         final String SVG_IMAGE_FILE = "Ghostscript_Tiger.svg";
-        URL imageUrl = SourcePictureTest.class.getClassLoader().getResource(SVG_IMAGE_FILE);
+        URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(SVG_IMAGE_FILE));
 
         s.loadPicture(imageUrl, 0.0);
         assertNotNull("We were trying to load a svg image but it was null!", s.getSourceBufferedImage());
@@ -327,7 +327,7 @@ public class SourcePictureTest {
     @Test
     public void testGetSvgImageIOReader() {
         final String SVG_IMAGE_FILE = "Ghostscript_Tiger.svg";
-        URL imageUrl = SourcePictureTest.class.getClassLoader().getResource(SVG_IMAGE_FILE);
+        URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(SVG_IMAGE_FILE));
         try (InputStream input = imageUrl.openStream();
              ImageInputStream iis = ImageIO.createImageInputStream(input)) {
             ImageReader reader = SourcePicture.getImageIOReader(iis);
@@ -357,7 +357,7 @@ public class SourcePictureTest {
     public void testPnmImage() {
         SourcePicture s = new SourcePicture();
         final String PNM_IMAGE_FILE = "pnm.pnm";
-        URL imageUrl = SourcePictureTest.class.getClassLoader().getResource(PNM_IMAGE_FILE);
+        URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(PNM_IMAGE_FILE));
 
         s.loadPicture(imageUrl, 0.0);
         assertNotNull("We were trying to load a pnm image but it was null!", s.getSourceBufferedImage());
@@ -368,7 +368,7 @@ public class SourcePictureTest {
     @Test
     public void testGetPnmImageIOReader() {
         final String PNM_IMAGE_FILE = "pnm.pnm";
-        URL imageUrl = SourcePictureTest.class.getClassLoader().getResource(PNM_IMAGE_FILE);
+        URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(PNM_IMAGE_FILE));
         try (InputStream input = imageUrl.openStream();
              ImageInputStream iis = ImageIO.createImageInputStream(input)) {
             ImageReader reader = SourcePicture.getImageIOReader(iis);
@@ -410,7 +410,7 @@ public class SourcePictureTest {
     @Test
     public void testGetSgiImageIOReader() {
         final String SGI_IMAGE_FILE = "sgi.sgi";
-        URL imageUrl = SourcePictureTest.class.getClassLoader().getResource(SGI_IMAGE_FILE);
+        URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(SGI_IMAGE_FILE));
         try (InputStream input = imageUrl.openStream();
              ImageInputStream iis = ImageIO.createImageInputStream(input)) {
             ImageReader reader = SourcePicture.getImageIOReader(iis);
@@ -439,7 +439,7 @@ public class SourcePictureTest {
     public void testTgaImage() {
         SourcePicture s = new SourcePicture();
         final String TGA_IMAGE_FILE = "tga.tga";
-        URL imageUrl = SourcePictureTest.class.getClassLoader().getResource(TGA_IMAGE_FILE);
+        URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(TGA_IMAGE_FILE));
 
         s.loadPicture(imageUrl, 0.0);
         assertNotNull("We were trying to load a tga image but it was null!", s.getSourceBufferedImage());
@@ -450,7 +450,7 @@ public class SourcePictureTest {
     @Test
     public void testGetTgaImageIOReader() {
         final String TGA_IMAGE_FILE = "tga.tga";
-        URL imageUrl = SourcePictureTest.class.getClassLoader().getResource(TGA_IMAGE_FILE);
+        URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(TGA_IMAGE_FILE));
         try (InputStream input = imageUrl.openStream();
              ImageInputStream iis = ImageIO.createImageInputStream(input)) {
             ImageReader reader = SourcePicture.getImageIOReader(iis);
@@ -480,7 +480,7 @@ public class SourcePictureTest {
     public void testPsdImage() {
         SourcePicture s = new SourcePicture();
         final String PSD_IMAGE_FILE = "psd.psd";
-        URL imageUrl = SourcePictureTest.class.getClassLoader().getResource(PSD_IMAGE_FILE);
+        URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(PSD_IMAGE_FILE));
 
         s.loadPicture(imageUrl, 0.0);
         assertNotNull("We were trying to load a psd image but it was null!", s.getSourceBufferedImage());
@@ -491,7 +491,7 @@ public class SourcePictureTest {
     @Test
     public void testGetPsdImageIOReader() {
         final String PSD_IMAGE_FILE = "psd.psd";
-        URL imageUrl = SourcePictureTest.class.getClassLoader().getResource(PSD_IMAGE_FILE);
+        URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(PSD_IMAGE_FILE));
         try (InputStream input = imageUrl.openStream();
              ImageInputStream iis = ImageIO.createImageInputStream(input)) {
             ImageReader reader = SourcePicture.getImageIOReader(iis);
@@ -531,7 +531,7 @@ public class SourcePictureTest {
     @Test
     public void testGetIcoImageIOReader() {
         final String ICO_IMAGE_FILE = "favicon.ico";
-        URL imageUrl = SourcePictureTest.class.getClassLoader().getResource(ICO_IMAGE_FILE);
+        URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(ICO_IMAGE_FILE));
         try (InputStream input = imageUrl.openStream();
              ImageInputStream iis = ImageIO.createImageInputStream(input)) {
             ImageReader reader = SourcePicture.getImageIOReader(iis);
@@ -560,7 +560,7 @@ public class SourcePictureTest {
     public void testPngImage() {
         SourcePicture s = new SourcePicture();
         final String PNG_IMAGE_FILE = "png.png";
-        URL imageUrl = SourcePictureTest.class.getClassLoader().getResource(PNG_IMAGE_FILE);
+        URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(PNG_IMAGE_FILE));
 
         s.loadPicture(imageUrl, 0.0);
         assertNotNull("We were trying to load a png image but it was null!", s.getSourceBufferedImage());
@@ -571,7 +571,7 @@ public class SourcePictureTest {
     @Test
     public void testGetPngImageIOReader() {
         final String PNG_IMAGE_FILE = "png.png";
-        URL imageUrl = SourcePictureTest.class.getClassLoader().getResource(PNG_IMAGE_FILE);
+        URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(PNG_IMAGE_FILE));
         try (InputStream input = imageUrl.openStream();
              ImageInputStream iis = ImageIO.createImageInputStream(input)) {
             ImageReader reader = SourcePicture.getImageIOReader(iis);
@@ -601,7 +601,7 @@ public class SourcePictureTest {
     public void testGifImage() {
         SourcePicture s = new SourcePicture();
         final String GIF_IMAGE_FILE = "gif.gif";
-        URL imageUrl = SourcePictureTest.class.getClassLoader().getResource(GIF_IMAGE_FILE);
+        URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(GIF_IMAGE_FILE));
 
         s.loadPicture(imageUrl, 0.0);
         assertNotNull("We were trying to load a gif image but it was null!", s.getSourceBufferedImage());
@@ -612,7 +612,7 @@ public class SourcePictureTest {
     @Test
     public void testGetGifImageIOReader() {
         final String GIF_IMAGE_FILE = "gif.gif";
-        URL imageUrl = SourcePictureTest.class.getClassLoader().getResource(GIF_IMAGE_FILE);
+        URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(GIF_IMAGE_FILE));
         try (InputStream input = imageUrl.openStream();
              ImageInputStream iis = ImageIO.createImageInputStream(input)) {
             ImageReader reader = SourcePicture.getImageIOReader(iis);
@@ -642,7 +642,7 @@ public class SourcePictureTest {
     public void testIffImage() {
         SourcePicture s = new SourcePicture();
         final String IFF_IMAGE_FILE = "AmigaAmiga.iff";
-        URL imageUrl = SourcePictureTest.class.getClassLoader().getResource(IFF_IMAGE_FILE);
+        URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(IFF_IMAGE_FILE));
 
         s.loadPicture(imageUrl, 0.0);
         assertNotNull("We were trying to load a iff image but it was null!", s.getSourceBufferedImage());
@@ -653,7 +653,7 @@ public class SourcePictureTest {
     @Test
     public void testGetIffImageIOReader() {
         final String IFF_IMAGE_FILE = "AmigaAmiga.iff";
-        URL imageUrl = SourcePictureTest.class.getClassLoader().getResource(IFF_IMAGE_FILE);
+        URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(IFF_IMAGE_FILE));
         try (InputStream input = imageUrl.openStream();
              ImageInputStream iis = ImageIO.createImageInputStream(input)) {
             ImageReader reader = SourcePicture.getImageIOReader(iis);
@@ -693,7 +693,7 @@ public class SourcePictureTest {
     @Test
     public void testGetPcxImageIOReader() {
         final String PCX_IMAGE_FILE = "pcx.pcx";
-        URL imageUrl = SourcePictureTest.class.getClassLoader().getResource(PCX_IMAGE_FILE);
+        URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(PCX_IMAGE_FILE));
         try (InputStream input = imageUrl.openStream();
              ImageInputStream iis = ImageIO.createImageInputStream(input)) {
             ImageReader reader = SourcePicture.getImageIOReader(iis);
@@ -722,7 +722,7 @@ public class SourcePictureTest {
     public void testPctImage() {
         SourcePicture s = new SourcePicture();
         final String PICT_IMAGE_FILE = "food.pct";
-        URL imageUrl = SourcePictureTest.class.getClassLoader().getResource(PICT_IMAGE_FILE);
+        URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(PICT_IMAGE_FILE));
 
         s.loadPicture(imageUrl, 0.0);
         assertNotNull("We were trying to load a pct image but it was null!", s.getSourceBufferedImage());
@@ -733,7 +733,7 @@ public class SourcePictureTest {
     @Test
     public void testGetPctImageIOReader() {
         final String PICT_IMAGE_FILE = "food.pct";
-        URL imageUrl = SourcePictureTest.class.getClassLoader().getResource(PICT_IMAGE_FILE);
+        URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(PICT_IMAGE_FILE));
         try (InputStream input = imageUrl.openStream();
              ImageInputStream iis = ImageIO.createImageInputStream(input)) {
             ImageReader reader = SourcePicture.getImageIOReader(iis);

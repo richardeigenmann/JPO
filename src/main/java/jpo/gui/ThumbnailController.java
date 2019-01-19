@@ -98,11 +98,6 @@ public class ThumbnailController
      */
     private int myIndex;  // default is 0
 
-    /**
-     * The priority this ThumbnailController should have on the
-     * ThumbnailCreationQueue
-     */
-    private final QUEUE_PRIORITY DEFAULT_QUEUE_PRIORITY = QUEUE_PRIORITY.MEDIUM_PRIORITY;
 
     /**
      * returns the Thumbnail that is being controlled by this Controller.
@@ -166,21 +161,11 @@ public class ThumbnailController
             myThumbnail.setVisible(false);
             myThumbnailQueueRequest = null;
         } else {
-            QUEUE_PRIORITY priority = QUEUE_PRIORITY.MEDIUM_PRIORITY;
-            try {
-                if (getThumbnail().getParent().getParent().getParent() instanceof JViewport) {
-                    JViewport viewport = (JViewport) getThumbnail().getParent().getParent().getParent();
-                    Thumbnail thumbnail = getThumbnail();
-                    if (thumbnail != null) {
-                        Point point = thumbnail.getLocation();
-                        if (viewport.getViewRect().contains(point)) {
-                            priority = QUEUE_PRIORITY.HIGH_PRIORITY;
-                        }
-                    }
-                }
-            } catch (NullPointerException npe) {
-                LOGGER.severe("Something is wrong - Thumbnail Controller being used in an unexpected context. Optimisation to prioritise visible Thumbnails didn't work correctly. Check the code! Perhaps the thumbnail is not attached to the JViewport. This might be normal.");
-                Thread.dumpStack();
+            QUEUE_PRIORITY priority;
+            if ( thumbnailIsInVisibleArea() ) {
+                priority = QUEUE_PRIORITY.HIGH_PRIORITY;
+            } else {
+                 priority = QUEUE_PRIORITY.MEDIUM_PRIORITY;
             }
             myThumbnailQueueRequest = requestThumbnailCreation(priority);
         }
@@ -188,6 +173,27 @@ public class ThumbnailController
         showSelectionStatus();
         determineMailSelectionStatus();
         drawOfflineIcon(myNode);
+    }
+
+    /**
+     * This code tries to find out if the thumbnail is being shown in a JViewport where it is visible
+     */
+    private boolean thumbnailIsInVisibleArea() {
+        try {
+            if (getThumbnail().getParent().getParent().getParent() instanceof JViewport) {
+                JViewport viewport = (JViewport) getThumbnail().getParent().getParent().getParent();
+                Thumbnail thumbnail = getThumbnail();
+                if (thumbnail != null) {
+                    Point point = thumbnail.getLocation();
+                    if (viewport.getViewRect().contains(point)) {
+                        return true;
+                    }
+                }
+            }
+        } catch (NullPointerException npe) {
+            // the thumbnail is not in the JViewport hierarchy so we can't say
+        }
+        return false;
     }
 
     /**
@@ -246,27 +252,12 @@ public class ThumbnailController
      *                 the queue
      * @return the request
      */
-    public ThumbnailQueueRequest requestThumbnailCreation(QUEUE_PRIORITY priority) {
+    private ThumbnailQueueRequest requestThumbnailCreation(QUEUE_PRIORITY priority) {
         myThumbnail.setQueueIcon();
         return ThumbnailCreationQueue.requestThumbnailCreation(
                 this, myNode, priority, getMaximumUnscaledSize());
     }
 
-    /**
-     * Sets an icon for a pending state before a final icon is put in place by a
-     * ThumbnailCreation
-     */
-    public void setPendingIcon() {
-        if (myNode == null) {
-            LOGGER.severe("Referring node is null! How did this happen?");
-            return;
-        }
-        if (myNode.getUserObject() instanceof PictureInfo) {
-            myThumbnail.setQueueIcon();
-        } else {
-            myThumbnail.setLargeFolderIcon();
-        }
-    }
 
     /**
      * Returns the maximum unscaled size for the ThumbnailController as a
@@ -274,7 +265,7 @@ public class ThumbnailController
      *
      * @return The maximum unscaled size of the ThumbnailController
      */
-    public Dimension getMaximumUnscaledSize() {
+    private Dimension getMaximumUnscaledSize() {
         return new Dimension(myThumbnail.getThumbnailSize(), myThumbnail.getThumbnailSize());
     }
 
@@ -286,7 +277,7 @@ public class ThumbnailController
      *
      * @param nodeToCheck The Node to check
      */
-    public void drawOfflineIcon(DefaultMutableTreeNode nodeToCheck) {
+    private void drawOfflineIcon(DefaultMutableTreeNode nodeToCheck) {
         if (nodeToCheck == null) {
             myThumbnail.drawOfflineIcon(false);
             return;
@@ -439,7 +430,7 @@ public class ThumbnailController
      * changes the colour so that the user sees whether the thumbnail is part of
      * the selection
      */
-    public void showSelectionStatus() {
+    private void showSelectionStatus() {
         if (Settings.getPictureCollection().isSelected(myNode)) {
             myThumbnail.showAsSelected();
         } else {

@@ -6,6 +6,7 @@ import jpo.dataModel.Settings.FieldCodes;
 import jpo.gui.JpoTransferable;
 import jpo.gui.ProgressGui;
 import jpo.gui.SourcePicture;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.jetbrains.annotations.NotNull;
@@ -850,7 +851,15 @@ public class SortableDefaultMutableTreeNode
             targetFile.getParentFile().mkdirs();
         }
 
-        Tools.copyPicture(originalUrl, targetFile);
+        try {
+            FileUtils.copyFile(pictureInfo.getImageFile(), targetFile);
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(Settings.anchorFrame,
+                    "IOException: " + e.getMessage(),
+                    Settings.jpoResources.getString("genericError"),
+                    JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
         Settings.memorizeCopyLocation(targetFile.getParent());
         JpoEventBus.getInstance().post(new CopyLocationsChangedEvent());
         return true;

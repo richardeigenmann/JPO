@@ -12,14 +12,13 @@ import javax.xml.parsers.SAXParserFactory;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Enumeration;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /*
  XmlReader.java:  class that reads the xml file
 
- Copyright (C) 2002 - 2018  Richard Eigenmann.
+ Copyright (C) 2002 - 2019  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -86,7 +85,6 @@ public class XmlReader {
             LOGGER.severe( "IOException: " + ex.getMessage() );
         }
 
-        correctJarReferences( startNode );
         loadProgressGui.getRid();
 
         if ( lowresUrls.length() > 1 ) {
@@ -96,29 +94,4 @@ public class XmlReader {
         }
     }
 
-    /**
-     * This method runs through all the URL strings and changes the jar:
-     * references with the path to the jar. 
-     *
-     * @param startNode Start Node
-     */
-    public static void correctJarReferences( SortableDefaultMutableTreeNode startNode ) {
-        Enumeration kids = startNode.children();
-        while ( kids.hasMoreElements() ) {
-            SortableDefaultMutableTreeNode n = (SortableDefaultMutableTreeNode) kids.nextElement();
-
-            if ( n.getUserObject() instanceof PictureInfo ) {
-                PictureInfo pi = (PictureInfo) n.getUserObject();
-                if ( pi.getImageLocation().startsWith( "jar:!" ) ) {
-                    pi.setImageLocation(
-                            pi.getImageLocation().replaceFirst( "jar:!", Settings.jarRoot ) );
-                }
-            }
-
-            if ( n.getChildCount() > 0 ) {
-                correctJarReferences( n );
-            }
-        }
-
-    }
 }

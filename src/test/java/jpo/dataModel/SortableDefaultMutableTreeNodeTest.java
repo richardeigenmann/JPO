@@ -1,5 +1,6 @@
 package jpo.dataModel;
 
+import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
@@ -46,23 +47,23 @@ public class SortableDefaultMutableTreeNodeTest {
 
     private SortableDefaultMutableTreeNode group5;
 
-    private final PictureInfo pi1 = new PictureInfo("file:///images/image1.jpg", "Fist Picture");
+    private final PictureInfo pi1 = new PictureInfo(new File("/images/image1.jpg"), "Fist Picture");
 
     private SortableDefaultMutableTreeNode picture1;
 
-    private final PictureInfo pi2 = new PictureInfo("file:///images/image2.jpg", "Second Picture");
+    private final PictureInfo pi2 = new PictureInfo(new File("/images/image2.jpg"), "Second Picture");
 
     private SortableDefaultMutableTreeNode picture2;
 
-    private final PictureInfo pi3 = new PictureInfo("file:///images/image3.jpg", "Third Picture");
+    private final PictureInfo pi3 = new PictureInfo(new File("/images/image3.jpg"), "Third Picture");
 
     private SortableDefaultMutableTreeNode picture3;
 
-    private final PictureInfo pi4 = new PictureInfo("file:///images/image4.jpg", "Fourth Picture");
+    private final PictureInfo pi4 = new PictureInfo(new File("/images/image4.jpg"), "Fourth Picture");
 
     private SortableDefaultMutableTreeNode picture4;
 
-    private final PictureInfo pi5 = new PictureInfo("file:///images/image5.jpg", "Fifth Picture");
+    private final PictureInfo pi5 = new PictureInfo(new File("/images/image5.jpg"), "Fifth Picture");
 
     /**
      * Set up for each test

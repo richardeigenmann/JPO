@@ -82,14 +82,6 @@ public class ExifInfo {
      */
     private String createDateTime = "";
     /**
-     * The latitude
-     */
-    private final String latitude = "";
-    /**
-     * Whether it's N or S
-     */
-    private final String latitudeRef = "";
-    /**
      * The parsed GPS coordinates
      */
     final Point2D.Double latLng = new Point2D.Double( 0, 0 );
@@ -238,17 +230,6 @@ public class ExifInfo {
         return exifDump.toString();
     }
 
-    /**
-     * This method returns a brief summary of the photographic settings
-     *
-     * @return Returns a brief summary of the photographic settings
-     */
-    public String getBriefPhotographicSummary() {
-        return Settings.jpoResources.getString( "ExifInfoCamera" ) + "\t" + camera + "\n"
-                + Settings.jpoResources.getString( "ExifInfoShutterSpeed" ) + "\t" + shutterSpeed + "\n"
-                + Settings.jpoResources.getString( "ExifInfoAperture" ) + "\t" + aperture + "\n"
-                + Settings.jpoResources.getString( "ExifInfoTimeStamp" ) + "\t" + getCreateDateTime() + "\n";
-    }
 
     /**
      * This method returns a comprehensive summary of the photographic settings
@@ -258,6 +239,9 @@ public class ExifInfo {
     public String getComprehensivePhotographicSummary() {
         String longitude = "";
         String longitudeRef = "";
+        String latitude = "";
+        // Whether it's N or S
+        String latitudeRef = "";
         return Settings.jpoResources.getString( "ExifInfoCamera" ) + "\t" + camera + "\n"
                 + Settings.jpoResources.getString( "ExifInfoLens" ) + "\t" + lens + "\n"
                 + Settings.jpoResources.getString( "ExifInfoShutterSpeed" ) + "\t" + shutterSpeed + "\n"

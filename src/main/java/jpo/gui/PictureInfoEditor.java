@@ -12,10 +12,9 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.geom.Point2D;
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Files;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -41,7 +40,6 @@ import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
-import javax.swing.event.ChangeEvent;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
@@ -64,6 +62,7 @@ import jpo.gui.swing.NonFocussedCaret;
 import jpo.gui.swing.ThreeDotButton;
 import jpo.gui.swing.Thumbnail;
 import net.miginfocom.swing.MigLayout;
+import org.jetbrains.annotations.TestOnly;
 import org.jxmapviewer.JXMapViewer;
 import org.jxmapviewer.input.MapClickListener;
 import org.jxmapviewer.viewer.GeoPosition;
@@ -95,31 +94,42 @@ public class PictureInfoEditor extends JFrame {
      * Dimension for the edit fields
      */
     private final static Dimension TEXT_FIELD_DIMENSION = new Dimension(400, 20);
+
     /**
      * Dimension for the time, latitude and longitude
      */
     private final static Dimension SHORT_FIELD_DIMENSION = new Dimension(180, 20);
+
     /**
      * Defines a logger for this class
      */
     private static final Logger LOGGER = Logger.getLogger(PictureInfoEditor.class.getName());
+
+    /**
+     * The Thumbnail Controller for the thumbnail being shown
+     */
     private final ThumbnailController thumbnailController = new ThumbnailController(new Thumbnail(), Settings.thumbnailSize);
+
     /**
      * The description of the picture
      */
     private final JTextArea descriptionJTextArea = new JTextArea();
+
     /**
      * The location of the image file
      */
     private final JTextField creationTimeJTextField = new JTextField();
+
     /**
      * This label will hold the parsed date of what was in the creation time.
      */
     private final JLabel parsedCreationTimeJLabel = new JLabel();
+
     /**
      * The location of the image file
      */
     private final JTextField highresLocationJTextField = new JTextField();
+
     /**
      * An informative message about what sort of error we have if any on the
      * highres image
@@ -194,7 +204,17 @@ public class PictureInfoEditor extends JFrame {
     private static final Font ERROR_LABEL_FONT = Font.decode(Settings.jpoResources.getString("ThumbnailDescriptionJPanelLargeFont"));
 
     /**
-     * Constructs a Picture Properties Dialog
+     * The icon to rotate the picture to the left
+     */
+    private static final ImageIcon ROTATE_LEFT_ICON = new ImageIcon(Objects.requireNonNull(PictureInfoEditor.class.getClassLoader().getResource("icon_RotCCDown.gif")));
+
+    /**
+     * The icon to rotate the picture to the right
+     */
+    private static final ImageIcon ROTATE_RIGHT_ICON = new ImageIcon(Objects.requireNonNull(PictureInfoEditor.class.getClassLoader().getResource("icon_RotCWDown.gif")));
+
+    /**
+     * Constructs a Picture Info Editor
      *
      * @param setOfNodes Set of nodes
      * @param index      index
@@ -204,14 +224,14 @@ public class PictureInfoEditor extends JFrame {
     }
 
     /**
-     * Constructor that creates the JFrame and objects.
+     * Constructor a Picture Info Editor
      *
      * @param editNode The node being edited.
      */
     public PictureInfoEditor(final SortableDefaultMutableTreeNode editNode) {
         super(Settings.jpoResources.getString("PictureInfoEditorHeading"));
 
-        pictureInfo = (PictureInfo) editNode.getUserObject();
+        pictureInfo = (PictureInfo) Objects.requireNonNull(editNode.getUserObject());
         this.myNode = editNode;
 
         // set this up so that we can close the GUI if the picture node is removed while we
@@ -255,14 +275,12 @@ public class PictureInfoEditor extends JFrame {
 
         //NumberFormat nf = new DecimalFormat( "###.##" );
         JSpinner spinner = new JSpinner(angleModel);
-        spinner.addChangeListener((ChangeEvent e) -> {
-            //saveRotation();
-        });
+
         //Make the angle formatted without a thousands separator.
         spinner.setEditor(new JSpinner.NumberEditor(spinner, "###.##"));
         rotationPanel.add(spinner);
 
-        JButton rotateLeftJButton = new JButton(new ImageIcon(Objects.requireNonNull(PictureInfoEditor.class.getClassLoader().getResource("jpo/images/icon_RotCCDown.gif"))));
+        JButton rotateLeftJButton = new JButton(ROTATE_LEFT_ICON);
         rotateLeftJButton.setMnemonic(KeyEvent.VK_L);
         rotateLeftJButton.addActionListener((ActionEvent e) -> {
             angleModel.setValue(((Double) angleModel.getValue() + 270) % 360);
@@ -271,7 +289,7 @@ public class PictureInfoEditor extends JFrame {
         rotateLeftJButton.setToolTipText(Settings.jpoResources.getString("rotateLeftJButton.ToolTipText"));
         rotationPanel.add(rotateLeftJButton);
 
-        JButton rotateRightJButton = new JButton(new ImageIcon(Objects.requireNonNull(PictureInfoEditor.class.getClassLoader().getResource("jpo/images/icon_RotCWDown.gif"))));
+        JButton rotateRightJButton = new JButton(ROTATE_RIGHT_ICON);
         rotateRightJButton.setMnemonic(KeyEvent.VK_R);
         rotateRightJButton.addActionListener((ActionEvent e) -> {
             angleModel.setValue(((Double) angleModel.getValue() + 90) % 360);
@@ -303,9 +321,7 @@ public class PictureInfoEditor extends JFrame {
         CancelButton.setMinimumSize(Settings.defaultButtonDimension);
         CancelButton.setMaximumSize(Settings.defaultButtonDimension);
         CancelButton.setBorder(BorderFactory.createRaisedBevelBorder());
-        CancelButton.addActionListener((ActionEvent e) -> {
-            getRid();
-        });
+        CancelButton.addActionListener((ActionEvent e) -> getRid());
         buttonJPanel.add(CancelButton);
 
         JButton resetJButton = new JButton(Settings.jpoResources.getString("resetLabel"));
@@ -313,9 +329,7 @@ public class PictureInfoEditor extends JFrame {
         resetJButton.setMinimumSize(Settings.defaultButtonDimension);
         resetJButton.setMaximumSize(Settings.defaultButtonDimension);
         resetJButton.setBorder(BorderFactory.createRaisedBevelBorder());
-        resetJButton.addActionListener((ActionEvent e) -> {
-            loadData();
-        });
+        resetJButton.addActionListener((ActionEvent e) -> loadData());
         buttonJPanel.add(resetJButton);
         mainPanel.add(buttonJPanel);
 
@@ -358,9 +372,7 @@ public class PictureInfoEditor extends JFrame {
 
         JButton reparseButton = new JButton("reparse");
         infoTab.add(reparseButton, "wrap");
-        reparseButton.addActionListener((ActionEvent e) -> {
-            doReparseDate();
-        });
+        reparseButton.addActionListener((ActionEvent e) -> doReparseDate());
 
         JLabel filmReferenceJLabel = new JLabel(Settings.jpoResources.getString("filmReferenceLabel"));
         infoTab.add(filmReferenceJLabel, "span 2, wrap");
@@ -414,9 +426,7 @@ public class PictureInfoEditor extends JFrame {
 
         //JButton highresLocationJButton = new JButton( Settings.jpoResources.getString( "threeDotText" ) );
         JButton highresLocationJButton = new ThreeDotButton();
-        highresLocationJButton.addActionListener((ActionEvent e) -> {
-            chooseFile();
-        });
+        highresLocationJButton.addActionListener((ActionEvent e) -> chooseFile());
         fileTab.add(highresLocationJButton, "wrap");
         fileTab.add(highresErrorJLabel, "span 2, wrap");
 
@@ -424,9 +434,7 @@ public class PictureInfoEditor extends JFrame {
         refreshChecksumJButton.setPreferredSize(new Dimension(80, 25));
         refreshChecksumJButton.setMinimumSize(new Dimension(80, 25));
         refreshChecksumJButton.setMaximumSize(new Dimension(80, 25));
-        refreshChecksumJButton.addActionListener((ActionEvent e) -> {
-            new Thread(() -> pictureInfo.calculateChecksum()).start();
-        });
+        refreshChecksumJButton.addActionListener((ActionEvent e) -> new Thread(pictureInfo::calculateChecksum).start());
 
         fileTab.add(checksumJLabel);
         fileTab.add(refreshChecksumJButton, "wrap");
@@ -489,7 +497,7 @@ public class PictureInfoEditor extends JFrame {
         creationTimeJTextField.setText(pictureInfo.getCreationTime());
         parsedCreationTimeJLabel.setText(pictureInfo.getFormattedCreationTime());
         descriptionJTextArea.setText(pictureInfo.getDescription());
-        highresLocationJTextField.setText(pictureInfo.getImageLocation());
+        highresLocationJTextField.setText(pictureInfo.getImageFile().toString());
         checksumJLabel.setText(Settings.jpoResources.getString("checksumJLabel") + pictureInfo.getChecksumAsString());
         filmReferenceJTextField.setText(pictureInfo.getFilmReference());
         LOGGER.info(String.format("Retrieving angle: %f", pictureInfo.getRotation()));
@@ -506,7 +514,7 @@ public class PictureInfoEditor extends JFrame {
         listModel.addElement(noCategories);
 
         List<Integer> selections = new ArrayList<>();
-        myNode.getPictureCollection().getCategoryKeySet().stream().forEach((key) -> {
+        myNode.getPictureCollection().getCategoryKeySet().forEach((key) -> {
             String category = myNode.getPictureCollection().getCategory(key);
             Category categoryObject = new Category(key, category);
             listModel.addElement(categoryObject);
@@ -557,9 +565,6 @@ public class PictureInfoEditor extends JFrame {
             if (e.getChecksumChanged()) {
                 checksumJLabel.setText(Settings.jpoResources.getString("checksumJLabel") + pictureInfo.getChecksumAsString());
             }
-            /*if ( e.getLowresLocationChanged() ) {
-             lowresLocationJTextField.setText( pictureInfo.getLowresLocation() );
-             }*/
             if (e.getCreationTimeChanged()) {
                 creationTimeJTextField.setText(pictureInfo.getCreationTime());
                 parsedCreationTimeJLabel.setText(pictureInfo.getFormattedCreationTime());
@@ -618,35 +623,16 @@ public class PictureInfoEditor extends JFrame {
      * if the URL is not a valid URL
      */
     private void setColorIfError() {
-        try {
-            testFile(highresLocationJTextField.getText());
+        File f = new File(highresLocationJTextField.getText());
+        if (Files.isReadable(f.toPath())) {
             highresLocationJTextField.setForeground(Color.black);
             highresErrorJLabel.setText("");
-        } catch (Exception ex) {
+        } else {
             highresLocationJTextField.setForeground(Color.red);
-            highresErrorJLabel.setText(ex.getMessage());
+            highresErrorJLabel.setText("File is not readable");
         }
     }
 
-    /**
-     * Returns if the file is good, throws an Exception if bad.
-     *
-     * @throws Exception if inputs were no good
-     */
-    private void testFile(String fileToTest) throws Exception {
-        try {
-            URL pictureUrl = new URL(fileToTest);
-            InputStream inputStream = pictureUrl.openStream();
-            inputStream.close();
-        } catch (MalformedURLException x) {
-            LOGGER.log(Level.INFO, "MalformedURLException: {0}", x.getMessage());
-            throw new Exception(x);
-        } catch (IOException x) {
-            LOGGER.log(Level.INFO, "IOException: {0}", x.getMessage());
-            throw new Exception(x);
-        }
-
-    }
 
     /**
      * Close the editor window and release all listeners.
@@ -712,6 +698,12 @@ public class PictureInfoEditor extends JFrame {
         }
     }
 
+    @TestOnly
+    public void callSaveFieldData() {
+        saveFieldData();
+    }
+
+
     /**
      * Returns a point with the latitude and longitude of the values in the
      * textfields. If the text can't be parsed properly the previous value is
@@ -720,7 +712,7 @@ public class PictureInfoEditor extends JFrame {
      * @return the point on the globe
      */
     private Point2D.Double getLatLng() {
-        Double latitude;
+        double latitude;
         try {
             latitude = Double.parseDouble(latitudeJTextField.getText());
 
@@ -728,7 +720,7 @@ public class PictureInfoEditor extends JFrame {
             latitude = pictureInfo.getLatLng().x;
             LOGGER.info(String.format("Latitude String %s could not be parsed: %s --> leaving at old value: %f", latitudeJTextField.getText(), ex.getMessage(), latitude));
         }
-        Double longitude;
+        double longitude;
         try {
             longitude = Double.parseDouble(longitudeJTextField.getText());
         } catch (NumberFormatException ex) {
