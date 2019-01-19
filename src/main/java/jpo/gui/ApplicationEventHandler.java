@@ -1657,6 +1657,21 @@ public class ApplicationEventHandler {
     }
 
     /**
+     * Handles the OpenFileExplorerRequest request
+     *
+     * @param request The request
+     */
+    @Subscribe
+    public void handleOpenFileExplorerRequest(final OpenFileExplorerRequest request) {
+        try {
+            Desktop.getDesktop().open(request.getDirectory());
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
+    }
+
+
+    /**
      * Inner class that monitors the collection for changes and figures out
      * whether the root node changed and asks the application to change the
      * title of the Window accordingly

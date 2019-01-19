@@ -4,7 +4,7 @@ import java.util.ListResourceBundle;
 
 
 /*
-Copyright (C) 2002-2018  Richard Eigenmann, Zürich, Switzerland
+Copyright (C) 2002-2019  Richard Eigenmann, Zürich, Switzerland
  
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -372,7 +372,7 @@ public class JpoResources_de extends ListResourceBundle {
             {"recentDropNodePrefix", "Zu Gruppe: "},
             {"categoryUsageJMenuItem", "Kategorien"},
             {"navigationJMenu", "Springe zu"},
-
+            {"openFolderJMenuItem", "Ordner Oeffnen"},
 
             // ThumbnailJScrollPane
             {"ThumbnailSearchResults", "Suchresultate für: "},

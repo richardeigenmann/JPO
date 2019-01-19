@@ -142,6 +142,11 @@ public class PicturePopupMenu extends JPopupMenu {
         showMapMenuItem.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new ShowPictureOnMapRequest(popupNode)));
         add(showMapMenuItem);
 
+        JMenuItem openFolderJMenuItem = new JMenuItem(Settings.jpoResources.getString("openFolderJMenuItem") );
+        openFolderJMenuItem.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new OpenFileExplorerRequest(((PictureInfo)popupNode.getUserObject()).getImageFile().getParentFile())));
+        add(openFolderJMenuItem);
+
+
         JMenu navigateMenuItem = new JMenu(Settings.jpoResources.getString("navigationJMenu"));
         SortableDefaultMutableTreeNode[] parentNodes = Settings.getPictureCollection().findParentGroups(popupNode);
         for (SortableDefaultMutableTreeNode parentNode : parentNodes) {
