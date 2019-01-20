@@ -8,7 +8,7 @@ import java.util.logging.Logger;
 /*
  DuplicatesQuery.java:  Finds duplicates and adds them to a query object
 
- Copyright (C) 2010-2014  Richard Eigenmann.
+ Copyright (C) 2010-2019  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -102,31 +102,27 @@ public class DuplicatesQuery
      */
     private void extractSearchResults() {
         List<SortableDefaultMutableTreeNode> results = new ArrayList<>();
-        List<SortableDefaultMutableTreeNode> nodeList = new ArrayList<>();
+        List<SortableDefaultMutableTreeNode> nodeList = Settings.getPictureCollection().getRootNode().getChildPictureNodes(true);
         SortableDefaultMutableTreeNode pictureNode;
-        for ( Enumeration e = Settings.getPictureCollection().getRootNode().preorderEnumeration(); e.hasMoreElements(); ) {
-            pictureNode = (SortableDefaultMutableTreeNode) e.nextElement();
-            if ( pictureNode.getUserObject() instanceof PictureInfo ) {
-                nodeList.add( pictureNode );
-            }
-        }
-        LOGGER.info( String.format( "Build list of %d picture nodes", nodeList.size() ) );
+        int size = nodeList.size();
+        LOGGER.info( String.format( "Built a list of %d picture nodes.", size) );
 
         SortableDefaultMutableTreeNode baseNode;
         PictureInfo baseNodePictureInfo;
-        SortableDefaultMutableTreeNode compareNode;
         PictureInfo compareNodePictureInfo;
-        for ( int i = 0; i < nodeList.size(); i++ ) {
+        for (int i = 0; i < size; i++ ) {
             baseNode = nodeList.get( i );
-            for ( int j = i + 1; j < nodeList.size(); j++ ) {
-                compareNode = nodeList.get( j );
-                baseNodePictureInfo = (PictureInfo) baseNode.getUserObject();
-                compareNodePictureInfo = (PictureInfo) compareNode.getUserObject();
-                if ( ( baseNodePictureInfo.getImageLocation().equals( compareNodePictureInfo.getImageLocation() ) )
+            baseNodePictureInfo = (PictureInfo) baseNode.getUserObject();
+            if ( i % 250 == 0 ) {
+                LOGGER.info("Processed "+ i + " potential duplicates out of " + size);
+            }
+            for (int j = i + 1; j < size; j++ ) {
+                compareNodePictureInfo = (PictureInfo) nodeList.get( j ).getUserObject();
+                if ( ( baseNodePictureInfo.getImageFile().equals( compareNodePictureInfo.getImageFile() ) )
                         || ( ( baseNodePictureInfo.getChecksum() != Long.MIN_VALUE ) && ( baseNodePictureInfo.getChecksum() == compareNodePictureInfo.getChecksum() ) ) ) {
-                    LOGGER.info( String.format( "Found a duplicate: %s = %s", baseNode.toString(), compareNode.toString() ) );
+                    LOGGER.info( String.format( "Found a duplicate: %s = %s", baseNode.toString(), nodeList.get( j ).toString() ) );
                     results.add( baseNode );
-                    results.add( compareNode );
+                    results.add(nodeList.get( j ));
                 }
             }
         }

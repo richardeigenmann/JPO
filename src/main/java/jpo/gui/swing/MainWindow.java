@@ -7,7 +7,6 @@ import bibliothek.gui.dock.common.DefaultSingleCDockable;
 import bibliothek.gui.dock.common.SingleCDockable;
 import com.google.common.eventbus.Subscribe;
 import java.awt.Component;
-import static java.awt.Frame.MAXIMIZED_BOTH;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -35,11 +34,7 @@ import jpo.EventBus.UnsavedUpdatesDialogRequest;
 import jpo.EventBus.UpdateApplicationTitleRequest;
 import jpo.dataModel.Settings;
 import jpo.dataModel.Tools;
-import jpo.gui.ApplicationJMenuBar;
-import jpo.gui.CollectionJTreeController;
-import jpo.gui.InfoPanelController;
-import jpo.gui.TagCloudController;
-import jpo.gui.ThumbnailsPanelController;
+import jpo.gui.*;
 
 /*
  MainWindow.java:  main window of the JPO application
@@ -66,6 +61,7 @@ import jpo.gui.ThumbnailsPanelController;
  *
  * @author Richard Eigenmann
  */
+@SuppressWarnings("UnstableApiUsage")
 public class MainWindow extends JFrame {
 
     /**
@@ -156,20 +152,14 @@ public class MainWindow extends JFrame {
                 new CollectionJTreeController(Settings.getPictureCollection()).getJScrollPane() );
         searches = new DefaultSingleCDockable( "SearchId",
                 Settings.jpoResources.getString( "jpoTabbedPaneSearches" ),
-                new QueriesJTree().getJComponent() );
+                new QueriesJTreeController().getJComponent() );
 
         JButton loadJButton = new JButton( "Properties - Load" );
-        loadJButton.addActionListener(( ActionEvent e ) -> {
-            JpoEventBus.getInstance().post( new LoadDockablesPositionsRequest() );
-        });
+        loadJButton.addActionListener(( ActionEvent e ) -> JpoEventBus.getInstance().post( new LoadDockablesPositionsRequest() ));
         JButton saveJbutton = new JButton( "Save" );
-        saveJbutton.addActionListener(( ActionEvent e ) -> {
-            JpoEventBus.getInstance().post( new SaveDockablesPositionsRequest() );
-        });
+        saveJbutton.addActionListener(( ActionEvent e ) -> JpoEventBus.getInstance().post( new SaveDockablesPositionsRequest() ));
         JButton resetJbutton = new JButton( "Reset" );
-        resetJbutton.addActionListener(( ActionEvent e ) -> {
-            JpoEventBus.getInstance().post( new RestoreDockablesPositionsRequest() );
-        });
+        resetJbutton.addActionListener(( ActionEvent e ) -> JpoEventBus.getInstance().post( new RestoreDockablesPositionsRequest() ));
 
         JPanel propertiesJPanel = new JPanel();
         propertiesJPanel.setLayout( new BoxLayout( propertiesJPanel, BoxLayout.Y_AXIS ) );

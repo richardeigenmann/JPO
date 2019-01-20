@@ -26,6 +26,7 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.Transferable;
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -37,7 +38,7 @@ import static jpo.gui.swing.ResizableJFrame.WindowSize.WINDOW_LEFT;
 import static jpo.gui.swing.ResizableJFrame.WindowSize.WINDOW_RIGHT;
 
 /*
- Copyright (C) 2014-2018  Richard Eigenmann.
+ Copyright (C) 2014-2019  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -58,6 +59,7 @@ import static jpo.gui.swing.ResizableJFrame.WindowSize.WINDOW_RIGHT;
  *
  * @author Richard Eigenmann
  */
+@SuppressWarnings("UnstableApiUsage")
 public class ApplicationEventHandler {
 
     /**
@@ -143,7 +145,6 @@ public class ApplicationEventHandler {
     public void handleFindDuplicatesRequest(FindDuplicatesRequest request) {
         DuplicatesQuery duplicatesQuery = new DuplicatesQuery();
         Settings.getPictureCollection().addQueryToTreeModel(duplicatesQuery);
-        new QueryNavigator(duplicatesQuery);
         JpoEventBus.getInstance().post(new ShowQueryRequest(duplicatesQuery));
     }
 
@@ -1065,15 +1066,24 @@ public class ApplicationEventHandler {
             zipArchiveOutputStream.finish();
         } catch (IOException ex) {
             LOGGER.severe(ex.getMessage());
-            tempfile.delete();
+            boolean ok = tempfile.delete();
+            if (!ok) {
+                LOGGER.severe("could not delete tempfile: " + tempfile.toString());
+            }
         }
 
         if (request.getTargetZipfile().exists()) {
             LOGGER.info(String.format("Deleting old file %s", request.getTargetZipfile().getAbsolutePath()));
-            request.getTargetZipfile().delete();
+            boolean ok = request.getTargetZipfile().delete();
+            if (!ok) {
+                LOGGER.severe(String.format("Failed to delete file %s", request.getTargetZipfile().getAbsolutePath()));
+            }
         }
         LOGGER.info(String.format("Renaming temp file %s to %s", tempfile.getAbsolutePath(), request.getTargetZipfile().getAbsolutePath()));
-        tempfile.renameTo(request.getTargetZipfile());
+        boolean ok = tempfile.renameTo(request.getTargetZipfile());
+        if (!ok) {
+            LOGGER.severe(String.format("Failed to rename temp file %s to %s", tempfile.getAbsolutePath(), request.getTargetZipfile().getAbsolutePath()));
+        }
 
         JOptionPane.showMessageDialog(Settings.anchorFrame,
                 String.format("Copied %d files of %d to zipfile %s", picsCopied, request.getNodes().size(), request.getTargetZipfile().toString()),
@@ -1633,12 +1643,14 @@ public class ApplicationEventHandler {
         String escapedFilename = filename.replaceAll("\\s", "\\\\\\\\ ");
         command = command.replaceAll("%e", escapedFilename);
 
-        URL pictureURL = (myObject).getImageURLOrNull();
-        if (pictureURL == null) {
-            LOGGER.info("The picture doesn't have a valid URL. This is bad. Aborted.");
+        try {
+            URL pictureURL = myObject.getImageFile().toURI().toURL();
+            command = command.replaceAll("%u", pictureURL.toString());
+        } catch (MalformedURLException x) {
+            LOGGER.log(Level.SEVERE, "Could not substitute %u with the URL: {0}", x.getMessage());
             return;
         }
-        command = command.replaceAll("%u", pictureURL.toString());
+
 
         LOGGER.log(Level.INFO, "Command to run is: {0}", command);
         try {
@@ -1741,3 +1753,4 @@ public class ApplicationEventHandler {
     }
 
 }
+

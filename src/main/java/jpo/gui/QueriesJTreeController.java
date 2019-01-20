@@ -1,4 +1,4 @@
-package jpo.gui.swing;
+package jpo.gui;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -8,6 +8,7 @@ import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
+
 import jpo.EventBus.JpoEventBus;
 import jpo.EventBus.ShowQueryRequest;
 import jpo.dataModel.Query;
@@ -15,9 +16,9 @@ import jpo.dataModel.Settings;
 import jpo.dataModel.Tools;
 
 /*
- QueriesJTree.java:  Controller for the Searches JTree
+ QueriesJTreeController.java:  Controller for the Searches JTree
 
- Copyright (C) 2006 - 2015  Richard Eigenmann, Zurich, Switzerland
+ Copyright (C) 2006 - 2019  Richard Eigenmann, Zurich, Switzerland
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -34,49 +35,50 @@ import jpo.dataModel.Tools;
 
 /**
  * Controller for the Searches JTree
- * 
+ *
  * @author Richard Eigenmann
- * 
  */
-public class QueriesJTree
-        extends JTree {
+public class QueriesJTreeController {
+
+    /**
+     * The private reference to the JTree representing the collection
+     */
+    private final JTree queriesJTree = new JTree();
+
+
 
     /**
      * Constructs a JTree for the queries
      */
-    public QueriesJTree() {
+    public QueriesJTreeController() {
         Tools.checkEDT();
-        getSelectionModel().setSelectionMode( TreeSelectionModel.SINGLE_TREE_SELECTION );
-        putClientProperty( "JTree.lineStyle", "Angled" );
-        setOpaque( true );
-        setEditable( false );
-        setShowsRootHandles( true );
-        setMinimumSize( Settings.JPO_NAVIGATOR_JTABBEDPANE_MINIMUM_SIZE );
-        setModel( Settings.getPictureCollection().getQueriesTreeModel() );
+        queriesJTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+        queriesJTree.putClientProperty("JTree.lineStyle", "Angled");
+        queriesJTree.setOpaque(true);
+        queriesJTree.setEditable(false);
+        queriesJTree.setShowsRootHandles(true);
+        queriesJTree.setMinimumSize(Settings.JPO_NAVIGATOR_JTABBEDPANE_MINIMUM_SIZE);
+        queriesJTree.setModel(Settings.getPictureCollection().getQueriesTreeModel());
 
-        addMouseListener( new MouseAdapter() {
-            /**
-             * If the mouse was clicked more than once using the left mouse
-             * button over a valid picture node then the picture editor is
-             * opened.
-             */
+        queriesJTree.addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseClicked( MouseEvent e ) {
-                TreePath clickPath = getPathForLocation( e.getX(), e.getY() );
-                if ( clickPath == null ) {
-                    return; // happens
-                }
-                DefaultMutableTreeNode clickNode = (DefaultMutableTreeNode) clickPath.getLastPathComponent();
-                
-                if ( e.getClickCount() == 1 && ( !e.isPopupTrigger() ) ) {
-                    if ( ( clickNode == null ) || ( clickNode.getUserObject() == null ) || ( !( clickNode.getUserObject() instanceof Query ) ) ) {
-                        return;
+            public void mouseClicked(MouseEvent e) {
+                TreePath clickPath = queriesJTree.getPathForLocation(e.getX(), e.getY());
+                if (clickPath != null && e.getClickCount() == 1 && (!e.isPopupTrigger())) {
+                    DefaultMutableTreeNode clickNode = (DefaultMutableTreeNode) clickPath.getLastPathComponent();
+                    if ((clickNode != null) && (clickNode.getUserObject() != null) && ((clickNode.getUserObject() instanceof Query))) {
+                        JpoEventBus.getInstance().post(new ShowQueryRequest((Query) clickNode.getUserObject()));
                     }
-                    JpoEventBus.getInstance().post( new ShowQueryRequest((Query) clickNode.getUserObject()  ));
                 }
             }
-        } );
+        });
     }
+
+    /**
+     * The private reference to the JScrollPane that holds the JTree.
+     */
+    private final JScrollPane jScrollPane = new JScrollPane( queriesJTree );
+
 
     /**
      * Returns a a new view component with the JTree embedded in a JScrollpane
@@ -84,7 +86,7 @@ public class QueriesJTree
      * @return the view
      */
     public JComponent getJComponent() {
-        return new JScrollPane( this );
+        return jScrollPane;
     }
 
     /**
@@ -94,10 +96,10 @@ public class QueriesJTree
      *
      * @param node The node which should be highlighted
      */
-    public void setSelectedNode( final DefaultMutableTreeNode node ) {
+    public void setSelectedNode(final DefaultMutableTreeNode node) {
         Tools.checkEDT();
-        TreePath tp = new TreePath( node.getPath() );
-        setSelectionPath( tp );
-        scrollPathToVisible( tp );
+        TreePath tp = new TreePath(node.getPath());
+        queriesJTree.setSelectionPath(tp);
+        queriesJTree.scrollPathToVisible(tp);
     }
 }

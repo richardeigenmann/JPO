@@ -1,9 +1,7 @@
 package jpo.dataModel;
 
 /*
-QueryBrower.java:  an implementation of the NodeNavigator for browsing groups.
-
-Copyright (C) 2006-2017  Richard Eigenmann, Zürich Switzerland
+Copyright (C) 2006-2019  Richard Eigenmann, Zürich Switzerland
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -17,41 +15,44 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 The license is in gpl.txt.
 See http://www.gnu.org/copyleft/gpl.html for the details.
  */
-/** 
- *  This class implements the {@link jpo.dataModel.NodeNavigator}  in the specific manner that is required for
- *  displaying {@link Query} in the {@link jpo.gui.ThumbnailsPanelController}.
+
+/**
+ * This class implements the {@link jpo.dataModel.NodeNavigator}  in the specific manner that is required for
+ * displaying {@link Query} in the {@link jpo.gui.ThumbnailsPanelController}.
  */
 public class QueryNavigator
         extends NodeNavigator {
 
     /**
-     *  A reference to the query group that shall be browsed
+     * A reference to the query group that shall be browsed
      */
+    @SuppressWarnings("WeakerAccess")
     protected Query myQuery;
 
 
     /**
-     *  Constructs a new Group Browser object
+     * Constructs a new Group Browser object
+     *
      * @param queryToBrowse the Query for the browser
      */
-    public QueryNavigator( Query queryToBrowse ) {
-        setQuery( queryToBrowse );
+    public QueryNavigator(Query queryToBrowse) {
+        setQuery(queryToBrowse);
     }
 
 
     /**
-     *  call this method to specify the query that should be browsed.
+     * call this method to specify the query that should be browsed.
      *
-     *  @param  queryToBrowse   The {@link Query} which should be browsed.
+     * @param queryToBrowse The {@link Query} which should be browsed.
      */
-    public void setQuery( Query queryToBrowse ) {
+    public void setQuery(Query queryToBrowse) {
         myQuery = queryToBrowse;
         myQuery.refresh();
     }
 
 
     /**
-     *  returns the {@link Query} for this QueryNavigator
+     * returns the {@link Query} for this QueryNavigator
      *
      * @return the query for the browser
      */
@@ -61,7 +62,7 @@ public class QueryNavigator
 
 
     /**
-     *  returns the title of the Query being displayed
+     * returns the title of the Query being displayed
      *
      * @return The title of the query
      */
@@ -72,13 +73,13 @@ public class QueryNavigator
 
 
     /**
-     *  On a group we return the number of children in the group.
+     * On a group we return the number of children in the group.
      *
      * @return the number of nodes
      */
     @Override
     public int getNumberOfNodes() {
-        if ( myQuery == null ) {
+        if (myQuery == null) {
             return 0;
         } else {
             return myQuery.getNumberOfResults();
@@ -87,18 +88,18 @@ public class QueryNavigator
 
 
     /**
-     *  This method returns the SDMTN node for the indicated position in the group
-     *  If there are more Thumbnails than nodes in the group it returns null.
+     * This method returns the {@link SortableDefaultMutableTreeNode} node for the indicated position in the group
+     * If there are more Thumbnails than nodes in the group it returns null.
      *
-     *  @param index   The component index that is to be returned.
+     * @param index The component index that is to be returned.
      * @return the node for the index
      */
     @Override
-    public SortableDefaultMutableTreeNode getNode( int index ) {
-        if ( myQuery == null ) {
+    public SortableDefaultMutableTreeNode getNode(int index) {
+        if (myQuery == null) {
             return null;
         } else {
-            return myQuery.getIndex( index );
+            return myQuery.getIndex(index);
         }
     }
 
