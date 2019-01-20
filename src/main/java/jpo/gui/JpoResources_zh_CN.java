@@ -269,7 +269,7 @@ public class JpoResources_zh_CN extends ListResourceBundle {
             {"ConsolidateButton", "整合"},
             {"ConsolidateFailure", "图片整合失败，退出"},
             {"ConsolidateProgBarTitle", "图片正在整合中"},
-            {"ConsolidateProgBarDone", "%d 图片集整合完毕"},
+            {"ConsolidateProgBarDone", "%d 图片集整合完毕 - %d 图片感动了"},
             {"lowresJCheckBox", "连同低分辨率图片也整合"},
             {"ConsolidateCreateDirFailure", "因为无法创建目录％s而中止"},
             {"ConsolidateCantWrite", "因为目录％s不可写而中止"},

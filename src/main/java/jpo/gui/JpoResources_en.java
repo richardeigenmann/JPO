@@ -247,7 +247,7 @@ public class JpoResources_en extends ListResourceBundle {
             {"ConsolidateButton", "Consolidate"},
             {"ConsolidateFailure", "Consolidation generated a failure and has aborted."},
             {"ConsolidateProgBarTitle", "Running Consolidation"},
-            {"ConsolidateProgBarDone", "%d pictures Consolidated"},
+            {"ConsolidateProgBarDone", "%d pictures Consolidated - %d pictures Moved"},
             {"lowresJCheckBox", "consolidate Lowres too"},
             {"ConsolidateCreateDirFailure", "Aborted because directory %s can't be created."},
             {"ConsolidateCantWrite", "Aborted because directory %s is not writable."},

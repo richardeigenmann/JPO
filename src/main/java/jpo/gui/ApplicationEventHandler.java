@@ -862,9 +862,26 @@ public class ApplicationEventHandler {
      * @param request The request
      */
     @Subscribe
-    public void handleConsolidateGroupRequest(ConsolidateGroupRequest request) {
+    public void handleConsolidateGroupDialogRequest(ConsolidateGroupDialogRequest request) {
         new ConsolidateGroupController(request);
     }
+
+    /**
+     * Consolidates the files
+     *
+     * @param request The request
+     */
+    @Subscribe
+    public void handleConsolidateGroupRequest(ConsolidateGroupRequest request) {
+        new ConsolidateGroupWorker(
+                request.getTargetDir(),
+                request.getNode(),
+                request.getRecurseSubgroups(),
+                new ProgressGui(NodeStatistics.countPictures(request.getNode(), request.getRecurseSubgroups()),
+                        Settings.jpoResources.getString("ConsolidateProgBarTitle"),
+                        ""));
+    }
+
 
     /**
      * Brings up a JFileChooser to select the target location and then copies

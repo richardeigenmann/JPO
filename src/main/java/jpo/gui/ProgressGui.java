@@ -13,7 +13,7 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
-import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
+
 import jpo.dataModel.Settings;
 import jpo.dataModel.Tools;
 import net.miginfocom.swing.MigLayout;
@@ -22,7 +22,7 @@ import net.miginfocom.swing.MigLayout;
 /*
  ProgressGui.java:  a class that shows the progress in adding pictures
 
- Copyright (C) 2002-2015  Richard Eigenmann.
+ Copyright (C) 2002-2019  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -54,16 +54,16 @@ public class ProgressGui extends JFrame implements ProgressListener {
     /**
      * Progress Indicator
      */
-    private JProgressBar progBar;
+    private JProgressBar progressBar;
     /**
      * Label
      */
-    private JLabel progLabel;
+    private JLabel progressLabel;
     /**
      * variable that is checked periodically that stops the addDirectory loop in
      * a controlled way
      */
-    private final InterruptSemaphore interruptor = new InterruptSemaphore();
+    private final InterruptSemaphore interruptSemaphore = new InterruptSemaphore();
     
     /**
      * how long the gui should show after it has finished.
@@ -114,7 +114,7 @@ public class ProgressGui extends JFrame implements ProgressListener {
                 if ( okJButton.isVisible() ) {
                     getRid();
                 } else {
-                    interruptor.setShouldInterrupt( true );
+                    interruptSemaphore.setShouldInterrupt( true );
                 }
             }
         } );
@@ -126,25 +126,23 @@ public class ProgressGui extends JFrame implements ProgressListener {
 
         getContentPane().add( contentJPanel );
 
-        progBar = new JProgressBar( 0, max );
-        progBar.setBorder( BorderFactory.createLineBorder( Color.gray, 1 ) );
-        progBar.setStringPainted( true );
-        progBar.setValue( 0 );
-        contentJPanel.add( progBar, "push, wrap" );
+        progressBar = new JProgressBar( 0, max );
+        progressBar.setBorder( BorderFactory.createLineBorder( Color.gray, 1 ) );
+        progressBar.setStringPainted( true );
+        progressBar.setValue( 0 );
+        contentJPanel.add(progressBar, "push, wrap" );
 
-        progLabel = new JLabel();
-        progLabel.setBorder( BorderFactory.createEmptyBorder( 5, 5, 5, 5 ) );
-        progLabel.setHorizontalAlignment( javax.swing.SwingConstants.CENTER );
-        contentJPanel.add( progLabel, "wrap" );
+        progressLabel = new JLabel();
+        progressLabel.setBorder( BorderFactory.createEmptyBorder( 5, 5, 5, 5 ) );
+        progressLabel.setHorizontalAlignment( javax.swing.SwingConstants.CENTER );
+        contentJPanel.add(progressLabel, "wrap" );
 
         okJButton.setPreferredSize( Settings.defaultButtonDimension );
         okJButton.setMinimumSize( Settings.defaultButtonDimension );
         okJButton.setMaximumSize( Settings.defaultButtonDimension );
         okJButton.setBorder( BorderFactory.createRaisedBevelBorder() );
         okJButton.setDefaultCapable( true );
-        okJButton.addActionListener(( ActionEvent e ) -> {
-            getRid();
-        });
+        okJButton.addActionListener(( ActionEvent e ) -> getRid());
         contentJPanel.add( okJButton, "wrap" );
 
         cancelJButton.setPreferredSize( Settings.defaultButtonDimension );
@@ -152,9 +150,7 @@ public class ProgressGui extends JFrame implements ProgressListener {
         cancelJButton.setMaximumSize( Settings.defaultButtonDimension );
         cancelJButton.setBorder( BorderFactory.createRaisedBevelBorder() );
         cancelJButton.setDefaultCapable( true );
-        cancelJButton.addActionListener(( ActionEvent e ) -> {
-            interruptor.setShouldInterrupt( true );
-        });
+        cancelJButton.addActionListener(( ActionEvent e ) -> interruptSemaphore.setShouldInterrupt( true ));
         contentJPanel.add( cancelJButton, "wrap" );
 
         okJButton.setVisible( false );
@@ -186,16 +182,16 @@ public class ProgressGui extends JFrame implements ProgressListener {
     @Override
     public void progressIncrement() {
         Tools.checkEDT();
-        progBar.setValue( progBar.getValue() + 1 );
-        progLabel.setText(progBar.getValue() + " / " + progBar.getMaximum());
+        progressBar.setValue( progressBar.getValue() + 1 );
+        progressLabel.setText(progressBar.getValue() + " / " + progressBar.getMaximum());
     }
 
     /**
      * decreases the total by 1
      */
     public void decrementTotal() {
-        progBar.setMaximum( progBar.getMaximum() - 1 );
-        progLabel.setText(progBar.getValue() + " / " + progBar.getMaximum());
+        progressBar.setMaximum( progressBar.getMaximum() - 1 );
+        progressLabel.setText(progressBar.getValue() + " / " + progressBar.getMaximum());
     }
 
     /**
@@ -203,9 +199,9 @@ public class ProgressGui extends JFrame implements ProgressListener {
      *
      * @param max maximum
      */
-    public void setMaxiumum( int max ) {
-        progBar.setMaximum( max );
-        progLabel.setText(progBar.getValue() + " / " + progBar.getMaximum());
+    public void setMaximum(int max ) {
+        progressBar.setMaximum( max );
+        progressLabel.setText(progressBar.getValue() + " / " + progressBar.getMaximum());
     }
 
     /**
@@ -215,11 +211,9 @@ public class ProgressGui extends JFrame implements ProgressListener {
         Tools.checkEDT();
         okJButton.setVisible( true );
         cancelJButton.setVisible( false );
-        progLabel.setText( String.format( doneString, progBar.getValue() ) );
+        progressLabel.setText( String.format( doneString, progressBar.getValue() ) );
         validate();
-        Timer timer = new Timer( TIMEOUT, ( ActionEvent evt ) -> {
-            getRid();
-        });
+        Timer timer = new Timer( TIMEOUT, ( ActionEvent evt ) -> getRid());
         timer.setRepeats( false );
         timer.start();
     }
@@ -229,7 +223,7 @@ public class ProgressGui extends JFrame implements ProgressListener {
      *
      * @return true if the thread should be interrupted
      */
-    public InterruptSemaphore getInterruptor() {
-        return interruptor;
+    public InterruptSemaphore getInterruptSemaphore() {
+        return interruptSemaphore;
     }
 }

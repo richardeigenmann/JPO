@@ -560,7 +560,7 @@ public class PicturePopupMenuTest {
     public void consolidateHere() {
         JpoEventBus.getInstance().register(new Object() {
             @Subscribe
-            public void handleConsolidateGroupRequest(ConsolidateGroupRequest request) {
+            public void handleConsolidateGroupRequest(ConsolidateGroupDialogRequest request) {
                 consolidateHereEventCount++;
             }
         });

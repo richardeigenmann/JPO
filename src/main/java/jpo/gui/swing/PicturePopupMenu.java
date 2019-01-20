@@ -693,7 +693,7 @@ public class PicturePopupMenu extends JPopupMenu {
         JMenuItem consolidateHereMenuItem = new JMenuItem("Consolidate Here");
 
         consolidateHereMenuItem.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(
-                new ConsolidateGroupRequest(
+                new ConsolidateGroupDialogRequest(
                         popupNode.getParent(),
                         ((PictureInfo) popupNode.getUserObject()).getImageFile().getParentFile())
         ));

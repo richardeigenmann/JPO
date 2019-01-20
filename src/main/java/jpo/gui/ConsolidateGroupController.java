@@ -1,8 +1,6 @@
 package jpo.gui;
 
-import jpo.EventBus.ConsolidateGroupRequest;
-import jpo.EventBus.CopyLocationsChangedEvent;
-import jpo.EventBus.JpoEventBus;
+import jpo.EventBus.*;
 import jpo.dataModel.GroupInfo;
 import jpo.dataModel.NodeStatistics;
 import jpo.dataModel.Settings;
@@ -13,7 +11,7 @@ import java.io.File;
 import java.util.logging.Logger;
 
 /*
- Copyright (C) 2017  Richard Eigenmann.
+ Copyright (C) 2017 -2019  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -37,7 +35,7 @@ public class ConsolidateGroupController implements ConsolidateGroupActionCallbac
     /**
      * The request to consolidate is memorised here
      */
-    private final ConsolidateGroupRequest request;
+    private final ConsolidateGroupDialogRequest request;
 
     /**
      * Defines a logger for this class
@@ -50,7 +48,7 @@ public class ConsolidateGroupController implements ConsolidateGroupActionCallbac
      *
      * @param request The details of the request
      */
-    public ConsolidateGroupController(ConsolidateGroupRequest request) {
+    public ConsolidateGroupController(ConsolidateGroupDialogRequest request) {
         this.request = request;
 
         Object userObject = request.getNode().getUserObject();
@@ -105,15 +103,9 @@ public class ConsolidateGroupController implements ConsolidateGroupActionCallbac
         }
 
         Settings.memorizeCopyLocation(targetDirectory.toString());
-        
-        new ConsolidateGroupWorker(
-                targetDirectory,
-                request.getNode(),
-                recurseSubgroups,
-                new ProgressGui(NodeStatistics.countPictures(request.getNode(), recurseSubgroups),
-                        Settings.jpoResources.getString("ConsolidateProgBarTitle"),
-                        Settings.jpoResources.getString("ConsolidateProgBarDone")));
-        
+
+        JpoEventBus.getInstance().post(new ConsolidateGroupRequest(request.getNode(), targetDirectory, recurseSubgroups));
+
         JpoEventBus.getInstance().post(new CopyLocationsChangedEvent());
 
     }

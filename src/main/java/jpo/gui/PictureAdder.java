@@ -106,7 +106,7 @@ public class PictureAdder
     @Override
     public Integer doInBackground() {
         // add all the files from the array as nodes to the start node.
-        for (int i = 0; (i < chosenFiles.length) && (!progGui.getInterruptor().getShouldInterrupt()); i++) {
+        for (int i = 0; (i < chosenFiles.length) && (!progGui.getInterruptSemaphore().getShouldInterrupt()); i++) {
             File addFile = chosenFiles[i];
             LOGGER.fine(String.format("File %d of %d: %s", i + 1, chosenFiles.length, addFile.toString()));
             if (!addFile.isDirectory()) {
@@ -151,7 +151,7 @@ public class PictureAdder
 
         File[] fileArray = dir.listFiles();
         if (fileArray != null) {
-            for (int i = 0; (i < fileArray.length) && (!progGui.getInterruptor().getShouldInterrupt()); i++) {
+            for (int i = 0; (i < fileArray.length) && (!progGui.getInterruptSemaphore().getShouldInterrupt()); i++) {
                 if (fileArray[i].isDirectory() && recurseDirectories) {
                     if (Tools.hasPictures(fileArray[i])) {
                         addDirectory(directoryNode, fileArray[i]);

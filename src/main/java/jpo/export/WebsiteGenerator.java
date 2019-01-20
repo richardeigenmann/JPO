@@ -12,7 +12,6 @@ import org.apache.commons.net.ftp.FTPReply;
 import org.apache.commons.text.StringEscapeUtils;
 
 import javax.swing.*;
-import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.*;
 import java.io.*;
 import java.net.URI;
@@ -109,7 +108,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
             @Override
             protected void done() {
                 try {
-                    progGui.setMaxiumum(get());
+                    progGui.setMaximum(get());
                     progGui.setDoneString(String.format(Settings.jpoResources.getString("HtmlDistDone"), get()));
                 } catch (InterruptedException | ExecutionException ignore) {
                 }
@@ -302,7 +301,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
             int childCount = groupNode.getChildCount();
             int childNumber = 1;
             Enumeration kids = groupNode.children();
-            while (kids.hasMoreElements() && (!progGui.getInterruptor().getShouldInterrupt())) {
+            while (kids.hasMoreElements() && (!progGui.getInterruptSemaphore().getShouldInterrupt())) {
                 SortableDefaultMutableTreeNode node = (SortableDefaultMutableTreeNode) kids.nextElement();
                 if (node.getUserObject() instanceof GroupInfo) {
 
@@ -324,7 +323,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
                 }
                 childNumber++;
             }
-            if (progGui.getInterruptor().getShouldInterrupt()) {
+            if (progGui.getInterruptSemaphore().getShouldInterrupt()) {
                 progGui.setDoneString(Settings.jpoResources.getString("htmlDistillerInterrupt"));
             }
 

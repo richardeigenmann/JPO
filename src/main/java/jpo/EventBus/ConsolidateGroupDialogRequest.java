@@ -1,8 +1,7 @@
 package jpo.EventBus;
 
-import jpo.dataModel.SortableDefaultMutableTreeNode;
-
 import java.io.File;
+import jpo.dataModel.SortableDefaultMutableTreeNode;
 
 /*
  Copyright (C) 2017 - 2019  Richard Eigenmann.
@@ -21,31 +20,30 @@ import java.io.File;
  */
 
 /**
- * Request to consolidate a group
+ * Request to indicate that the user would like bring up the Consolidate Group
+ * dialog
  *
  * @author Richard Eigenmann
  */
-public class ConsolidateGroupRequest implements Request {
+public class ConsolidateGroupDialogRequest implements Request {
 
     private final SortableDefaultMutableTreeNode node;
     private final File targetDir;
-    private final boolean recurseSubgroups;
 
     /**
-     * Request to consolidate a group
+     * Request to indicate that the user would like to bring up the consolidate
+     * Group dialog
      *
-     * @param node The node to consolidate
-     * @param targetDir the target directory.
-     * @param  recurseSubgroups whether to recurse into sub groups
+     * @param node The node for which the user would like the dialog to be done
+     * @param targetDir the target directory. 
      */
-    public ConsolidateGroupRequest(SortableDefaultMutableTreeNode node, File targetDir, boolean recurseSubgroups ) {
+    public ConsolidateGroupDialogRequest(SortableDefaultMutableTreeNode node, File targetDir ) {
         this.node = node;
         this.targetDir = targetDir;
-        this.recurseSubgroups = recurseSubgroups;
     }
 
     /**
-     * The node to consolidate
+     * The node for which the dialog should be executed
      *
      * @return the node
      */
@@ -61,10 +59,6 @@ public class ConsolidateGroupRequest implements Request {
     public File getTargetDir() {
         return targetDir;
     }
-
-    /**
-     * Whether to recurse into sub groups
-     * @return true if it should recurse, false if not
-     */
-    public boolean getRecurseSubgroups() { return recurseSubgroups; }
+    
+    
 }

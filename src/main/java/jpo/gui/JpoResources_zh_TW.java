@@ -266,7 +266,7 @@ public class JpoResources_zh_TW extends ListResourceBundle {
             {"ConsolidateButton", "整合"},
             {"ConsolidateFailure", "圖片整合失敗，退出"},
             {"ConsolidateProgBarTitle", "圖片正在整合中"},
-            {"ConsolidateProgBarDone", "%d 圖片集整合完畢"},
+            {"ConsolidateProgBarDone", "%d 圖片集整合完畢 - %d 圖片感動了"},
             {"lowresJCheckBox", "連同低分辨率圖片也整合"},
             {"ConsolidateCreateDirFailure", "因為無法創建目錄％s而中止"},
             {"ConsolidateCantWrite", "因為目錄％s不可寫而中止"},

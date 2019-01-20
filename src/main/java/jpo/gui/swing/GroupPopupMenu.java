@@ -19,7 +19,7 @@ import jpo.EventBus.AddGroupToEmailSelectionRequest;
 import jpo.EventBus.ChooseAndAddCollectionRequest;
 import jpo.EventBus.ChooseAndAddFlatfileRequest;
 import jpo.EventBus.ChooseAndAddPicturesToGroupRequest;
-import jpo.EventBus.ConsolidateGroupRequest;
+import jpo.EventBus.ConsolidateGroupDialogRequest;
 import jpo.EventBus.ExportGroupToFlatFileRequest;
 import jpo.EventBus.ExportGroupToHtmlRequest;
 import jpo.EventBus.ExportGroupToNewCollectionRequest;
@@ -262,7 +262,7 @@ public class GroupPopupMenu extends JPopupMenu {
 
             // menu item that brings a dialog to ask where to consolidate the files to
             JMenuItem consolidateMoveJMenuItem = new JMenuItem(Settings.jpoResources.getString("consolidateMoveLabel"));
-            consolidateMoveJMenuItem.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new ConsolidateGroupRequest(popupNode, null)));
+            consolidateMoveJMenuItem.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new ConsolidateGroupDialogRequest(popupNode, null)));
             add(consolidateMoveJMenuItem);
 
             addSeparator();

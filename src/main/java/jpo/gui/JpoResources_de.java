@@ -263,7 +263,7 @@ public class JpoResources_de extends ListResourceBundle {
             {"ConsolidateButton", "Konsolidieren"},
             {"ConsolidateFailure", "Konsolidierung generierte einen Fehler und wurde abgebrochen"},
             {"ConsolidateProgBarTitle", "Konsolidierung läuft"},
-            {"ConsolidateProgBarDone", "%d Bilder konsolidiert"},
+            {"ConsolidateProgBarDone", "%d Bilder konsolidiert - %d Bilder verschoben"},
             {"lowresJCheckBox", "Auch Verkleinerungen konsolidieren"},
             {"ConsolidateCreateDirFailure", "Abbruch. Verzeichnis %s kann nicht erstellt werden."},
             {"ConsolidateCantWrite", "Abbruch. Verzeichnis %s ist nicht beschreibbar."},

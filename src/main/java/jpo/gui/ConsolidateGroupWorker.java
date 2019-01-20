@@ -4,7 +4,6 @@ import jpo.dataModel.PictureInfo;
 import jpo.dataModel.Settings;
 import jpo.dataModel.SortableDefaultMutableTreeNode;
 import jpo.dataModel.Tools;
-import org.apache.commons.io.FileExistsException;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 import javax.swing.*;
@@ -62,8 +61,7 @@ public class ConsolidateGroupWorker extends SwingWorker<String, String> {
      *
      * @param targetDirectory	Where we want the files moved to
      * @param startNode	The node from which this is all to be built.
-     * @param recurseGroups Flag indicating subgroups should be included if the
-     * moveLowres flag is true
+     * @param recurseGroups Flag indicating subgroups should be included
      * @param progGui A Progress Gui
      */
     public ConsolidateGroupWorker( File targetDirectory,
@@ -105,14 +103,18 @@ public class ConsolidateGroupWorker extends SwingWorker<String, String> {
 
     @Override
     protected void process( List<String> messages ) {
-        messages.stream().forEach( ( _item ) -> {
-            progGui.progressIncrement();
-        } );
+        for (String _item : messages) progGui.progressIncrement();
     }
 
     @Override
     protected void done() {
+        String done = String.format(Settings.jpoResources.getString("ConsolidateProgBarDone"), consolidatedCount, movedCount);
+        progGui.setDoneString(done);
         progGui.switchToDoneMode();
+
+        if ( movedCount > 0 ) {
+            startNode.getPictureCollection().setUnsavedUpdates();
+        }
 
         if ( errorCount > 0 ) {
             JOptionPane.showMessageDialog( progGui,
@@ -124,6 +126,8 @@ public class ConsolidateGroupWorker extends SwingWorker<String, String> {
     }
 
     private int errorCount;
+    private int movedCount;
+    private int consolidatedCount;
 
     /**
      * This method consolidates all the nodes of the supplied group.
@@ -133,11 +137,13 @@ public class ConsolidateGroupWorker extends SwingWorker<String, String> {
     private void consolidateGroup( SortableDefaultMutableTreeNode groupNode ) {
         List<SortableDefaultMutableTreeNode> nodes = groupNode.getChildPictureNodes( recurseGroups );
         LOGGER.info( "List Size: " + nodes.size() );
-        nodes.stream().forEach( ( node ) -> {
+        nodes.forEach( (node ) -> {
             PictureInfo pictureInfo = (PictureInfo) node.getUserObject();
+            consolidatedCount++;
             LOGGER.info( "node: " + pictureInfo.toString() );
             if ( needToMovePicture( pictureInfo, targetDirectory ) ) {
                 if ( movePicture( pictureInfo, targetDirectory ) ) {
+                    movedCount++;
                     LOGGER.info( String.format( "Successfully Moved Highres file of node %s", pictureInfo.toString() ) );
                     publish( String.format( "Consolidated node: %s", node.toString() ) );
                 } else {
@@ -198,9 +204,6 @@ public class ConsolidateGroupWorker extends SwingWorker<String, String> {
         File newFile = Tools.inventPicFilename( targetDirectory, pictureInfo.getImageFile().getName() );
         try {
             moveFile( pictureFile, newFile );
-        } catch ( FileExistsException ex ) {
-            LOGGER.severe( String.format( "Failed to move file %s to %s.\nException: %s", pictureFile.toString(), newFile.toString(), ex.getLocalizedMessage() ) );
-            return false;
         } catch ( IOException ex ) {
             LOGGER.severe( String.format( "Failed to move file %s to %s.\nException: %s", pictureFile.toString(), newFile.toString(), ex.getLocalizedMessage() ) );
             return false;
@@ -218,7 +221,7 @@ public class ConsolidateGroupWorker extends SwingWorker<String, String> {
      * @param oldReference The file that was moved
      * @param newReference The new location of the source file
      */
-    public static void correctReferences( File oldReference, File newReference ) {
+    private static void correctReferences(File oldReference, File newReference) {
         warnOnEDT();
         //  search for other picture nodes in the tree using this image file
         SortableDefaultMutableTreeNode node;

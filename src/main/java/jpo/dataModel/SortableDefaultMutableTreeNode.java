@@ -1164,7 +1164,7 @@ public class SortableDefaultMutableTreeNode
         boolean picturesAdded = false;
         // add all the files from the array as nodes to the start node.
         for (int i = 0;
-             (i < files.length) && (!progGui.getInterruptor().getShouldInterrupt()); i++) {
+             (i < files.length) && (!progGui.getInterruptSemaphore().getShouldInterrupt()); i++) {
             File addFile = files[i];
             if (!addFile.isDirectory()) {
                 File targetFile = Tools.inventPicFilename(targetDir, addFile.getName());
@@ -1325,7 +1325,7 @@ public class SortableDefaultMutableTreeNode
         boolean picturesAdded = false;
         // add all the files from the array as nodes to the start node.
         for (int i = 0;
-             (i < files.length) && (!progGui.getInterruptor().getShouldInterrupt()); i++) {
+             (i < files.length) && (!progGui.getInterruptSemaphore().getShouldInterrupt()); i++) {
             File addFile = files[i];
             if (!addFile.isDirectory()) {
                 if (cam.getUseFilename() && cam.inOldImage(addFile)) {

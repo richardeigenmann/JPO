@@ -269,7 +269,7 @@ public class Camera implements Serializable {
                 Settings.jpoResources.getString( "countingChecksumComplete" ) );
 
         buildOldImage(
-                progGui, progGui.getInterruptor() );
+                progGui, progGui.getInterruptSemaphore() );
 
         progGui.switchToDoneMode();
     }
