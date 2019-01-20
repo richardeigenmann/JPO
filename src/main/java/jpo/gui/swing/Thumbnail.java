@@ -9,7 +9,6 @@ import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
-import java.awt.image.RescaleOp;
 import java.net.URL;
 import java.util.logging.Logger;
 
@@ -28,6 +27,7 @@ import java.util.logging.Logger;
  The license is in gpl.txt.
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
+
 /**
  * This class extends a JComponent showing and ImageIcon. The ImageIcon can be
  * scaled down with the {@link #setFactor} method.
@@ -37,12 +37,13 @@ public class Thumbnail extends JComponent {
     /**
      * Defines a logger for this class
      */
-    private static final Logger LOGGER = Logger.getLogger( Thumbnail.class.getName() );
+    private static final Logger LOGGER = Logger.getLogger(Thumbnail.class.getName());
 
     /**
-     * Constructor. Make sure you are on the EDT before calling.
+     * Constructor to be called on the EDT.
      */
     public Thumbnail() {
+        Tools.checkEDT();
         initComponents();
     }
 
@@ -50,10 +51,9 @@ public class Thumbnail extends JComponent {
      * Initialises the Component
      */
     private void initComponents() {
-        Tools.checkEDT();
-        setVisible( false );
-        setOpaque( false );
-        setBackground( Settings.UNSELECTED_COLOR );
+        setVisible(false);
+        setOpaque(false);
+        setBackground(Settings.UNSELECTED_COLOR);
     }
 
     /**
@@ -62,32 +62,32 @@ public class Thumbnail extends JComponent {
      *
      * @param icon The ImageIcon that should be displayed
      */
-    public void setImageIcon( final ImageIcon icon ) {
-        LOGGER.fine( String.format( "Setting image on thumbnail %d", hashCode() ) );
+    public void setImageIcon(final ImageIcon icon) {
+        LOGGER.fine(String.format("Setting image on thumbnail %d", hashCode()));
         Runnable runnable = () -> {
-            if ( icon == null ) {
+            if (icon == null) {
                 return;
             }
             img = icon.getImage();
-            if ( img == null ) {
+            if (img == null) {
                 return;
             }
             imgOb = icon.getImageObserver();
-            thumbnailHeight = img.getHeight( imgOb );
+            thumbnailHeight = img.getHeight(imgOb);
 
-            RescaleOp darkenOp = new RescaleOp( .6f, 0, null );
-            BufferedImage source = new BufferedImage( img.getWidth( imgOb ), thumbnailHeight, BufferedImage.TYPE_INT_BGR );
-            source.createGraphics().drawImage( img, 0, 0, null );
-            selectedThumbnail = darkenOp.filter( source, null );
+            //RescaleOp darkenOp = new RescaleOp( .6f, 0, null );
+            BufferedImage source = new BufferedImage(img.getWidth(imgOb), thumbnailHeight, BufferedImage.TYPE_INT_BGR);
+            source.createGraphics().drawImage(img, 0, 0, null);
+            //selectedThumbnail = darkenOp.filter( source, null );
 
             // force update of layout
-            setVisible( false );
-            setVisible( true );
+            setVisible(false);
+            setVisible(true);
         };
-        if ( SwingUtilities.isEventDispatchThread() ) {
+        if (SwingUtilities.isEventDispatchThread()) {
             runnable.run();
         } else {
-            SwingUtilities.invokeLater( runnable );
+            SwingUtilities.invokeLater(runnable);
         }
     }
 
@@ -99,14 +99,14 @@ public class Thumbnail extends JComponent {
      * @param visibility true for visible, false for non visible.
      */
     @Override
-    public void setVisible( final boolean visibility ) {
+    public void setVisible(final boolean visibility) {
         Tools.checkEDT();
-        super.setVisible( visibility );
-        if ( visibility && getSize().height != thumbnailHeight ) {
+        super.setVisible(visibility);
+        if (visibility && getSize().height != thumbnailHeight) {
             // finally I found the solution to the size issue! Unless it's set to
             // non visible the whole rendering engine sees no point in fixing the size.
-            Thumbnail.super.setVisible( false );
-            Thumbnail.super.setVisible( true );
+            Thumbnail.super.setVisible(false);
+            Thumbnail.super.setVisible(true);
         }
     }
 
@@ -114,7 +114,7 @@ public class Thumbnail extends JComponent {
      * The factor which is multiplied with the ThumbnailController to determine
      * how large it is shown.
      */
-    private float thumbnailSizeFactor = 1;
+    private float thumbnailScaleFactor = 1;
 
     /**
      * This method sets the scaling factor for the display of a thumbnail. 0 ..
@@ -122,15 +122,14 @@ public class Thumbnail extends JComponent {
      *
      * @param thumbnailSizeFactor factor
      */
-    public void setFactor( float thumbnailSizeFactor ) {
-        LOGGER.fine( String.format( "Scaling factor is being set to %f", thumbnailSizeFactor ) );
-        this.thumbnailSizeFactor = thumbnailSizeFactor;
-        setVisible( isVisible() );  //Todo wouldn't revalidate be better to force relayout and repainting?
+    public void setFactor(float thumbnailSizeFactor) {
+        LOGGER.fine(String.format("Scaling factor is being set to %f", thumbnailSizeFactor));
+        this.thumbnailScaleFactor = thumbnailSizeFactor;
+        setVisible(isVisible());  //Todo wouldn't revalidate be better to force relayout and repainting?
     }
 
     /**
-     * the desired size for the thumbnail
-     *
+     * the maximum size for the thumbnail in unscaled pixels
      */
     private int thumbnailSize;
 
@@ -139,7 +138,7 @@ public class Thumbnail extends JComponent {
      *
      * @param thumbnailSize the maximum thumbnail size
      */
-    public void setThumbnailSize( int thumbnailSize ) {
+    public void setThumbnailSize(int thumbnailSize) {
         this.thumbnailSize = thumbnailSize;
     }
 
@@ -158,34 +157,34 @@ public class Thumbnail extends JComponent {
      * @return the thumbnail dimension
      */
     public Dimension getThumbnailDimension() {
-        return new Dimension( thumbnailSize, thumbnailSize );
+        return new Dimension(thumbnailSize, thumbnailSize);
     }
 
     /**
-     * Returns the preferred size for the Thumbnail as a Dimension using the
+     * Returns the preferred size for the scaled Thumbnail as a Dimension using the
      * thumbnailSize as width and height.
      *
-     * @return Returns the preferred size for the Thumbnail as a Dimension using
+     * @return Returns the preferred size for the scaled Thumbnail as a Dimension using
      * the thumbnailSize as width and height.
      */
     @Override
     public Dimension getPreferredSize() {
         int height = 0;
-        if ( isVisible() ) {
-            height = (int) ( thumbnailHeight * thumbnailSizeFactor );
+        if (isVisible()) {
+            height = (int) (thumbnailHeight * thumbnailScaleFactor);
         }
-        return new Dimension( (int) ( thumbnailSize * thumbnailSizeFactor ), height );
+        return new Dimension((int) (thumbnailSize * thumbnailScaleFactor), height);
     }
 
     /**
      * Returns the maximum (scaled) size for the Thumbnail as a Dimension using
      * the thumbnailSize as width and height.
      *
-     * @return maximus side for the Thumbnail
+     * @return maximum size for the Thumbnail
      */
     @Override
     public Dimension getMaximumSize() {
-        return new Dimension( (int) ( thumbnailSize * thumbnailSizeFactor ), (int) ( thumbnailSize * thumbnailSizeFactor ) );
+        return new Dimension((int) (thumbnailSize * thumbnailScaleFactor), (int) (thumbnailSize * thumbnailScaleFactor));
     }
 
     /**
@@ -206,24 +205,18 @@ public class Thumbnail extends JComponent {
     private ImageObserver imgOb;
 
     /**
-     * This variable will hold the darkend or otherwise processed Thumbnail that
-     * will be painted when the ThumbnailController is on a selected node.
-     */
-    private transient BufferedImage selectedThumbnail;
-
-    /**
      * This icon indicates that the thumbnail creation is sitting on the queue.
      */
     private static final ImageIcon QUEUE_ICON;
 
     static {
         final String QUEUE_ICON_FILE = "queued_thumbnail.gif";
-        URL resource = Thumbnail.class.getClassLoader().getResource( QUEUE_ICON_FILE );
-        if ( resource == null ) {
-            LOGGER.severe( "Classloader failed to load file: " + QUEUE_ICON_FILE );
+        URL resource = Thumbnail.class.getClassLoader().getResource(QUEUE_ICON_FILE);
+        if (resource == null) {
+            LOGGER.severe("Classloader failed to load file: " + QUEUE_ICON_FILE);
             QUEUE_ICON = null;
         } else {
-            QUEUE_ICON = new ImageIcon( resource );
+            QUEUE_ICON = new ImageIcon(resource);
         }
     }
 
@@ -240,12 +233,12 @@ public class Thumbnail extends JComponent {
 
     static {
         final String LARGE_FOLDER_ICON_FILE = "icon_folder_large.jpg";
-        URL resource = Thumbnail.class.getClassLoader().getResource( LARGE_FOLDER_ICON_FILE );
-        if ( resource == null ) {
-            LOGGER.severe( "Classloader failed to load file: " + LARGE_FOLDER_ICON_FILE );
+        URL resource = Thumbnail.class.getClassLoader().getResource(LARGE_FOLDER_ICON_FILE);
+        if (resource == null) {
+            LOGGER.severe("Classloader failed to load file: " + LARGE_FOLDER_ICON_FILE);
             LARGE_FOLDER_ICON = null;
         } else {
-            LARGE_FOLDER_ICON = new ImageIcon( resource );
+            LARGE_FOLDER_ICON = new ImageIcon(resource);
         }
     }
 
@@ -264,12 +257,12 @@ public class Thumbnail extends JComponent {
 
     static {
         final String OFFLINE_ICON_FILE = "icon_offline.gif";
-        URL resource = Thumbnail.class.getClassLoader().getResource( OFFLINE_ICON_FILE );
-        if ( resource == null ) {
-            LOGGER.severe( "Classloader failed to load file: " + OFFLINE_ICON_FILE );
+        URL resource = Thumbnail.class.getClassLoader().getResource(OFFLINE_ICON_FILE);
+        if (resource == null) {
+            LOGGER.severe("Classloader failed to load file: " + OFFLINE_ICON_FILE);
             OFFLINE_ICON = null;
         } else {
-            OFFLINE_ICON = new ImageIcon( resource );
+            OFFLINE_ICON = new ImageIcon(resource);
         }
     }
 
@@ -285,12 +278,12 @@ public class Thumbnail extends JComponent {
 
     static {
         final String MAIL_ICON_FILE = "icon_mail.gif";
-        URL resource = Thumbnail.class.getClassLoader().getResource( MAIL_ICON_FILE );
-        if ( resource == null ) {
-            LOGGER.severe( "Classloader failed to load file: " + MAIL_ICON_FILE );
+        URL resource = Thumbnail.class.getClassLoader().getResource(MAIL_ICON_FILE);
+        if (resource == null) {
+            LOGGER.severe("Classloader failed to load file: " + MAIL_ICON_FILE);
             MAIL_ICON = null;
         } else {
-            MAIL_ICON = new ImageIcon( resource );
+            MAIL_ICON = new ImageIcon(resource);
         }
     }
 
@@ -307,12 +300,12 @@ public class Thumbnail extends JComponent {
 
     static {
         final String SELECTED_ICON_FILE = "icon_selected.gif";
-        URL resource = Thumbnail.class.getClassLoader().getResource( SELECTED_ICON_FILE );
-        if ( resource == null ) {
-            LOGGER.severe( "Classloader failed to load file: " + SELECTED_ICON_FILE );
+        URL resource = Thumbnail.class.getClassLoader().getResource(SELECTED_ICON_FILE);
+        if (resource == null) {
+            LOGGER.severe("Classloader failed to load file: " + SELECTED_ICON_FILE);
             SELECTED_ICON = null;
         } else {
-            SELECTED_ICON = new ImageIcon( resource );
+            SELECTED_ICON = new ImageIcon(resource);
         }
     }
 
@@ -326,20 +319,20 @@ public class Thumbnail extends JComponent {
      * Sets an icon of a clock to indicate being on a queue
      */
     public void setQueueIcon() {
-        setImageIcon( QUEUE_ICON );
+        setImageIcon(QUEUE_ICON);
     }
 
     /**
      * Sets an icon showing a large yellow folder
      */
     public void setLargeFolderIcon() {
-        setImageIcon( LARGE_FOLDER_ICON );
+        setImageIcon(LARGE_FOLDER_ICON);
     }
 
     /**
      * This flag indicates whether the offline icon should be drawn or not.
      */
-    public boolean drawOfflineIcon;  // default is false
+    private boolean drawOfflineIcon;  // default is false
 
     /**
      * Indicates to the Thumbnail that it should or should not draw it's Offline
@@ -347,8 +340,8 @@ public class Thumbnail extends JComponent {
      *
      * @param flag true if the little CD-rom icon should be drawn, false if not.
      */
-    public void drawOfflineIcon( boolean flag ) {
-        if ( drawOfflineIcon != flag ) {
+    public void drawOfflineIcon(boolean flag) {
+        if (drawOfflineIcon != flag) {
             drawOfflineIcon = flag;
             repaint();  // throw a repaint request on the EDT
         }
@@ -365,8 +358,8 @@ public class Thumbnail extends JComponent {
      *
      * @param flag true if it should be drawn, false if not
      */
-    public void drawMailIcon( boolean flag ) {
-        if ( drawMailIcon != flag ) {
+    public void drawMailIcon(boolean flag) {
+        if (drawMailIcon != flag) {
             drawMailIcon = flag;
             repaint();  // throw a repaint request on the EDT
         }
@@ -379,103 +372,85 @@ public class Thumbnail extends JComponent {
     private boolean isSelected;  // default is false
 
     /**
-     * changes the color so that the user sees that the thumbnail is part of the
-     * selection.<p>
-     * This method is EDT safe.
+     * Tells the thumbnail to render itself as a selected thumbnail
      */
-    public void showAsSelected() {
-        Runnable runnable = () -> {
-            setBorder( BorderFactory.createLineBorder( Settings.SELECTED_COLOR, 12 ) );
-            setBackground( Settings.SELECTED_COLOR_TEXT );
+    public void setSelected() {
+        if (!isSelected) {
             isSelected = true;
-        };
-        if ( SwingUtilities.isEventDispatchThread() ) {
-            runnable.run();
-        } else {
-            SwingUtilities.invokeLater( runnable );
+            repaint();
         }
-
     }
 
     /**
-     * Changes the color so that the user sees that the thumbnail is not part of
-     * the selection<p>
-     * This method is EDT safe
+     * Tells the thumbnail to stop rendering itself as a selected thumbnail
      */
-    public void showAsUnselected() {
-        Runnable runnable = () -> {
-            setBorder( BorderFactory.createEmptyBorder() );
-            setBackground( Settings.UNSELECTED_COLOR );
+    public void setUnSelected() {
+        if (isSelected) {
             isSelected = false;
-        };
-        if ( SwingUtilities.isEventDispatchThread() ) {
-            runnable.run();
-        } else {
-            SwingUtilities.invokeLater( runnable );
+            repaint();
         }
-
     }
 
     /**
      * we are overriding the default paintComponent method, grabbing the
      * Graphics handle and doing our own drawing here. Essentially this method
-     * draws a large black rectangle. A drawImage is then painted doing an
+     * draws a large white rectangle. A drawImage is then painted doing an
      * affine transformation on the image to position it so the the desired
      * point is in the middle of the Graphics object.
      *
      * @param graphics Graphics
      */
     @Override
-    public void paintComponent( Graphics graphics ) {
-        if ( !SwingUtilities.isEventDispatchThread() ) {
-            LOGGER.severe( "Not running on EDT!" );
+    public void paintComponent(Graphics graphics) {
+        if (!SwingUtilities.isEventDispatchThread()) {
+            LOGGER.severe("Not running on EDT!");
         }
 
         int WindowWidth = getSize().width;
         int WindowHeight = getSize().height;
 
-        if ( img != null ) {
+        if (img != null) {
             Graphics2D g2d = (Graphics2D) graphics;
 
-            int focusPointx = (int) ( img.getWidth( imgOb ) * thumbnailSizeFactor / 2 );
-            int focusPointy = (int) ( img.getHeight( imgOb ) * thumbnailSizeFactor / 2 );
+            int focusPointx = (int) (img.getWidth(imgOb) * thumbnailScaleFactor / 2);
+            int focusPointy = (int) (img.getHeight(imgOb) * thumbnailScaleFactor / 2);
 
-            int X_Offset = (int) ( ( WindowWidth / (double) 2 ) - ( focusPointx ) );
-            int Y_Offset = (int) ( ( WindowHeight / (double) 2 ) - ( focusPointy ) );
+            int X_Offset = (int) ((WindowWidth / (double) 2) - (focusPointx));
+            int Y_Offset = (int) ((WindowHeight / (double) 2) - (focusPointy));
 
             // clear damaged component area
             Rectangle clipBounds = g2d.getClipBounds();
-            g2d.setColor( getBackground() );
-            g2d.fillRect( clipBounds.x,
+            g2d.setColor(getBackground());
+            g2d.fillRect(clipBounds.x,
                     clipBounds.y,
                     clipBounds.width,
-                    clipBounds.height );
+                    clipBounds.height);
 
-            AffineTransform af1 = AffineTransform.getTranslateInstance( X_Offset, Y_Offset );
-            AffineTransform af2 = AffineTransform.getScaleInstance( thumbnailSizeFactor, thumbnailSizeFactor );
-            af2.concatenate( af1 );
+            AffineTransform af1 = AffineTransform.getTranslateInstance(X_Offset, Y_Offset);
+            AffineTransform af2 = AffineTransform.getScaleInstance(thumbnailScaleFactor, thumbnailScaleFactor);
+            af2.concatenate(af1);
             //op = new AffineTransformOp( af2, AffineTransformOp.TYPE_NEAREST_NEIGHBOR );
 
-            if ( isSelected ) {
-                g2d.drawImage( selectedThumbnail, af2, imgOb );
-                int additionalOffset = drawOfflineIcon ? 40 : 0;
-                g2d.drawImage( SELECTED_ICON.getImage(), X_Offset + 10 + additionalOffset, Y_Offset + 10, SELECTED_ICON.getImageObserver() );
-            } else {
-                g2d.drawImage( img, af2, imgOb );
+            g2d.drawImage(img, af2, imgOb);
+            if (isSelected) {
+                //g2d.drawImage( selectedThumbnail, af2, imgOb );
+                //int additionalOffset = drawOfflineIcon ? 40 : 0;
+                int x = X_Offset + (int) (img.getWidth(imgOb) * thumbnailScaleFactor) - SELECTED_ICON.getIconWidth();
+                g2d.drawImage(SELECTED_ICON.getImage(), x, Y_Offset, SELECTED_ICON.getImageObserver());
             }
 
-            if ( drawOfflineIcon ) {
-                g2d.drawImage( OFFLINE_ICON.getImage(), X_Offset + 10, Y_Offset + 10, OFFLINE_ICON.getImageObserver() );
+            if (drawOfflineIcon) {
+                g2d.drawImage(OFFLINE_ICON.getImage(), X_Offset + 10, Y_Offset + 10, OFFLINE_ICON.getImageObserver());
             }
-            if ( drawMailIcon ) {
+            if (drawMailIcon) {
                 int additionalOffset = drawOfflineIcon ? 40 : 0;
-                g2d.drawImage( MAIL_ICON.getImage(), X_Offset + 10 + additionalOffset, Y_Offset + 10, MAIL_ICON.getImageObserver() );
+                g2d.drawImage(MAIL_ICON.getImage(), X_Offset + 10 + additionalOffset, Y_Offset + 10, MAIL_ICON.getImageObserver());
             }
         } else {
             // paint a black square
-            graphics.setClip( 0, 0, WindowWidth, WindowHeight );
-            graphics.setColor( Color.black );
-            graphics.fillRect( 0, 0, WindowWidth, WindowHeight );
+            graphics.setClip(0, 0, WindowWidth, WindowHeight);
+            graphics.setColor(Color.black);
+            graphics.fillRect(0, 0, WindowWidth, WindowHeight);
         }
     }
 }

@@ -7,6 +7,7 @@ import jpo.cache.ThumbnailQueueRequest.QUEUE_PRIORITY;
 import jpo.cache.ThumbnailQueueRequestCallbackHandler;
 import jpo.dataModel.*;
 import jpo.gui.swing.Thumbnail;
+import org.apache.commons.io.FileUtils;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -15,6 +16,7 @@ import java.awt.dnd.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -272,8 +274,7 @@ public class ThumbnailController
     /**
      * This method checks if the node is set and whether the highres image is
      * available. If there is a problem the offline icon is drawn over the
-     * thumbnail. sets the {@link Thumbnail#drawOfflineIcon} indicator
-     * accordingly.
+     * thumbnail.
      *
      * @param nodeToCheck The Node to check
      */
@@ -285,12 +286,7 @@ public class ThumbnailController
 
         Object userObject = nodeToCheck.getUserObject();
         if (userObject instanceof PictureInfo) {
-            try {
-                ((PictureInfo) userObject).getImageURL().openStream().close();
-                myThumbnail.drawOfflineIcon(false);
-            } catch (IOException x) {
-                myThumbnail.drawOfflineIcon(true);
-            }
+            myThumbnail.drawOfflineIcon(!Files.isReadable(((PictureInfo) userObject).getImageFile().toPath()));
         } else {
             myThumbnail.drawOfflineIcon(false);
         }
@@ -396,9 +392,9 @@ public class ThumbnailController
             if (pictureInfoChangeEvent.getHighresLocationChanged() || pictureInfoChangeEvent.getChecksumChanged() || pictureInfoChangeEvent.getThumbnailChanged()) {
                 requestThumbnailCreation(QUEUE_PRIORITY.HIGH_PRIORITY);
             } else if (pictureInfoChangeEvent.getWasSelected()) {
-                myThumbnail.showAsSelected();
+                myThumbnail.setSelected();
             } else if (pictureInfoChangeEvent.getWasUnselected()) {
-                myThumbnail.showAsUnselected();
+                myThumbnail.setUnSelected();
             } else if ((pictureInfoChangeEvent.getWasMailSelected()) || (pictureInfoChangeEvent.getWasMailUnselected())) {
                 determineMailSelectionStatus();
             } else if (pictureInfoChangeEvent.getRotationChanged()) {
@@ -419,9 +415,9 @@ public class ThumbnailController
         public void groupInfoChangeEvent(GroupInfoChangeEvent groupInfoChangeEvent) {
             LOGGER.fine(String.format("Got a Group Change event: %s", groupInfoChangeEvent.toString()));
             if (groupInfoChangeEvent.getWasSelected()) {
-                myThumbnail.showAsSelected();
+                myThumbnail.setSelected();
             } else if (groupInfoChangeEvent.getWasUnselected()) {
-                myThumbnail.showAsUnselected();
+                myThumbnail.setUnSelected();
             }
         }
     }
@@ -432,9 +428,9 @@ public class ThumbnailController
      */
     private void showSelectionStatus() {
         if (Settings.getPictureCollection().isSelected(myNode)) {
-            myThumbnail.showAsSelected();
+            myThumbnail.setSelected();
         } else {
-            myThumbnail.showAsUnselected();
+            myThumbnail.setUnSelected();
         }
 
     }

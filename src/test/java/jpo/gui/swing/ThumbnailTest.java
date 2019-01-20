@@ -3,6 +3,7 @@ package jpo.gui.swing;
 import org.junit.Test;
 
 import javax.swing.*;
+import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
 
 import static org.junit.Assert.assertNotNull;
@@ -35,6 +36,10 @@ public class ThumbnailTest {
      */
     @Test
     public void testImageInitialisation() {
+        // TravisCI runs headless so we can't execute the below test
+        if ( GraphicsEnvironment.isHeadless() ) {
+            return;
+        }
         try {
             SwingUtilities.invokeAndWait( () -> {
                 Thumbnail thumbnail = new Thumbnail( );
