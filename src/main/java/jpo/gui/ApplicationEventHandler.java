@@ -455,6 +455,7 @@ public class ApplicationEventHandler {
         if (imageFile.renameTo(newFile)) {
             LOGGER.log(Level.INFO, "Successfully renamed: {0} to: {1}", new Object[]{imageFile.toString(), newName});
             pi.setImageLocation(newFile);
+            request.getNode().getPictureCollection().setUnsavedUpdates();
         } else {
             LOGGER.log(Level.INFO, "Rename failed from : {0} to: {1}", new Object[]{imageFile.toString(), newName});
         }

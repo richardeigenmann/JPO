@@ -7,7 +7,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import java.util.Objects;
 
 /*
- Copyright (C) 2018  Richard Eigenmann.
+ Copyright (C) 2018 - 2019 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
