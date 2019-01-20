@@ -2,6 +2,7 @@ package jpo.gui.swing;
 
 import jpo.dataModel.Settings;
 import jpo.dataModel.Tools;
+import org.jetbrains.annotations.TestOnly;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,7 +14,7 @@ import java.net.URL;
 import java.util.logging.Logger;
 
 /*
- Copyright (C) 2010-2018  Richard Eigenmann, Zurich, Switzerland
+ Copyright (C) 2010-2019  Richard Eigenmann, Zurich, Switzerland
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -226,6 +227,12 @@ public class Thumbnail extends JComponent {
         }
     }
 
+    @TestOnly
+    ImageIcon getQueueIcon() {
+        return QUEUE_ICON;
+    }
+
+
     /**
      * This icon shows a large yellow folder.
      */
@@ -241,6 +248,13 @@ public class Thumbnail extends JComponent {
             LARGE_FOLDER_ICON = new ImageIcon( resource );
         }
     }
+
+
+    @TestOnly
+    ImageIcon getLargeFolderIcon() {
+        return LARGE_FOLDER_ICON;
+    }
+
 
     /**
      * The icon to superimpose on the picture if the highres picture is not
@@ -259,6 +273,11 @@ public class Thumbnail extends JComponent {
         }
     }
 
+    @TestOnly
+    ImageIcon getOfflineIcon() {
+        return OFFLINE_ICON;
+    }
+
     /**
      * The mail icon to superimpose on the picture
      */
@@ -274,6 +293,34 @@ public class Thumbnail extends JComponent {
             MAIL_ICON = new ImageIcon( resource );
         }
     }
+
+    @TestOnly
+    ImageIcon getMailIcon() {
+        return MAIL_ICON;
+    }
+
+
+    /**
+     * The mail icon to superimpose on the picture
+     */
+    private static final ImageIcon SELECTED_ICON;
+
+    static {
+        final String SELECTED_ICON_FILE = "icon_selected.gif";
+        URL resource = Thumbnail.class.getClassLoader().getResource( SELECTED_ICON_FILE );
+        if ( resource == null ) {
+            LOGGER.severe( "Classloader failed to load file: " + SELECTED_ICON_FILE );
+            SELECTED_ICON = null;
+        } else {
+            SELECTED_ICON = new ImageIcon( resource );
+        }
+    }
+
+    @TestOnly
+    ImageIcon getSelectedIcon() {
+        return SELECTED_ICON;
+    }
+
 
     /**
      * Sets an icon of a clock to indicate being on a queue
@@ -411,6 +458,8 @@ public class Thumbnail extends JComponent {
 
             if ( isSelected ) {
                 g2d.drawImage( selectedThumbnail, af2, imgOb );
+                int additionalOffset = drawOfflineIcon ? 40 : 0;
+                g2d.drawImage( SELECTED_ICON.getImage(), X_Offset + 10 + additionalOffset, Y_Offset + 10, SELECTED_ICON.getImageObserver() );
             } else {
                 g2d.drawImage( img, af2, imgOb );
             }
