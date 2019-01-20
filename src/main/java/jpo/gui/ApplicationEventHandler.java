@@ -782,8 +782,17 @@ public class ApplicationEventHandler {
      */
     @Subscribe
     public void handleExportGroupToNewCollectionRequest(ExportGroupToNewCollectionRequest request) {
-        SortableDefaultMutableTreeNode nodeToExport = request.getNode();
-        new CollectionDistillerJFrame(nodeToExport);
+        new CollectionDistillerJFrame(request);
+    }
+
+    /**
+     * Fulfill the export to new collection request
+     *
+     * @param request the request
+     */
+    @Subscribe
+    public void handleExportGroupToCollectionRequest(ExportGroupToCollectionRequest request) {
+        new JpoWriter( request );
     }
 
     /**

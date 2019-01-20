@@ -2,8 +2,10 @@ package jpo.EventBus;
 
 import jpo.dataModel.SortableDefaultMutableTreeNode;
 
+import java.io.File;
+
 /*
- Copyright (C) 2017 - 2019 Richard Eigenmann.
+ Copyright (C) 2019 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -19,29 +21,49 @@ import jpo.dataModel.SortableDefaultMutableTreeNode;
  */
 
 /**
- * Request to indicate that the user would like to export the pictures to a new collection
+ * Request to fulfill the ExportGroupToCollectionRequest
+ *
  * @author Richard Eigenmann
  */
-public class ExportGroupToNewCollectionRequest implements Request {
+public class ExportGroupToCollectionRequest implements Request {
 
     private final SortableDefaultMutableTreeNode node;
+    private final File targetFile;
+    private final boolean exportPictures;
 
     /**
-     * Request to indicate that the user would like to export the pictures to a new collection
+     * Request to fulfill the ExportGroupToCollectionRequest
+     *
      * @param node The node for which the user would like the dialog to be done
      */
-    public ExportGroupToNewCollectionRequest( SortableDefaultMutableTreeNode node) {
+    public ExportGroupToCollectionRequest(SortableDefaultMutableTreeNode node, File targetFile, boolean exportPictures) {
         this.node = node;
+        this.targetFile = targetFile;
+        this.exportPictures = exportPictures;
     }
 
     /**
-     * The node for which the dialog should be executed
+     * The node to be exported
      * @return the node
      */
     public SortableDefaultMutableTreeNode getNode() {
         return node;
     }
 
+    /**
+     * Returns the target directory
+     * @return the target directory
+     */
+    public File getTargetFile() {
+        return targetFile;
+    }
 
+    /**
+     * Returns if pictures should be exported.
+     * @return True if pictures should be exported
+     */
+    public boolean getExportPictures() {
+        return exportPictures;
+    }
 
 }

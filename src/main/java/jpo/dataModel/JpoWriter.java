@@ -1,25 +1,19 @@
 package jpo.dataModel;
 
+import jpo.EventBus.ExportGroupToCollectionRequest;
 import org.apache.commons.io.FileUtils;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStreamWriter;
+import javax.swing.*;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JOptionPane;
 
 /*
- Copyright (C) 2002-2017  Richard Eigenmann.
+ Copyright (C) 2002-2019  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -44,6 +38,7 @@ public class JpoWriter {
     private static final Logger LOGGER = Logger.getLogger( JpoWriter.class.getName() );
 
     /**
+     * Writes the collection to disk.
      * @param xmlOutputFile The name of the file that is to be created
      * @param startNode	The node from which this is all to be built.
      * @param copyPics	Flag which instructs pictures to be copied too
@@ -53,6 +48,17 @@ public class JpoWriter {
 
         write( xmlOutputFile, startNode, copyPics );
     }
+
+    /**
+     * Writes the collection in a thread to the file.
+     * @param request The request
+     */
+    public JpoWriter(ExportGroupToCollectionRequest request) {
+        Thread t = new Thread( ()
+                -> write(request.getTargetFile(), request.getNode(), request.getExportPictures())
+        );
+        t.start();
+   }
 
     /**
      * method that is invoked by the thread to do things asynchronously
@@ -66,8 +72,7 @@ public class JpoWriter {
             if ( copyPics ) {
                 highresTargetDir = new File( xmlOutputFile.getParentFile(), "Highres" );
 
-                highresTargetDir.mkdirs();
-                if ( !( highresTargetDir.canWrite() ) ) {
+                if ( (! highresTargetDir.mkdirs() ) && (! highresTargetDir.canWrite() ) ) {
                     LOGGER.severe( String.format( "There was a problem creating dir %s", highresTargetDir.toString() ) );
                     return;
                 }
@@ -114,7 +119,7 @@ public class JpoWriter {
                 //x.printStackTrace();
                 LOGGER.log( Level.INFO, "IOException: {0}", x.getMessage() );
                 JOptionPane.showMessageDialog( null, x.getMessage(),
-                        "JpoWriter: IOExeption",
+                        "JpoWriter: IOException",
                         JOptionPane.ERROR_MESSAGE );
             }
 
@@ -132,7 +137,7 @@ public class JpoWriter {
      *
      * @param groupNode The group node
      * @param bufferedWriter The writer
-     * @throws IOException bubbel-up IOException
+     * @throws IOException bubble-up IOException
      */
     private static void enumerateGroup( SortableDefaultMutableTreeNode startNode, SortableDefaultMutableTreeNode groupNode,
             BufferedWriter bufferedWriter,
@@ -161,7 +166,7 @@ public class JpoWriter {
      *
      * @param pictureNode the picture to write
      * @param bufferedWriter the writer to which to write
-     * @throws IOException bubbel-up IOException
+     * @throws IOException bubble-up IOException
      */
     private static void writePicture( SortableDefaultMutableTreeNode pictureNode,
             BufferedWriter bufferedWriter,
@@ -173,7 +178,9 @@ public class JpoWriter {
         if ( copyPics ) {
             File targetHighresFile = Tools.inventPicFilename( highresTargetDir, pictureInfo.getImageFile().getName() );
             FileUtils.copyFile(pictureInfo.getImageFile(), targetHighresFile);
-            pictureInfo.dumpToXml( bufferedWriter );
+            PictureInfo tempPi = pictureInfo.getClone();
+            tempPi.setImageLocation(targetHighresFile);
+            tempPi.dumpToXml( bufferedWriter );
         } else {
             pictureInfo.dumpToXml( bufferedWriter );
         }
@@ -194,7 +201,7 @@ public class JpoWriter {
             int c;
 
             while ( ( c = bin.read() ) != -1 ) {
-                outStream.write( c );
+                bout.write( c );
             }
         } catch ( IOException e ) {
             JOptionPane.showMessageDialog(

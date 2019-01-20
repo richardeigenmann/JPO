@@ -1,14 +1,15 @@
 package jpo.gui;
 
-import java.awt.*;
-import java.lang.reflect.InvocationTargetException;
-import javax.swing.SwingUtilities;
 import jpo.dataModel.PictureCollection;
 import junit.framework.TestCase;
-import static junit.framework.TestCase.fail;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
+
+import javax.swing.*;
+import java.awt.*;
+import java.lang.reflect.InvocationTargetException;
+
+import static junit.framework.TestCase.fail;
 
 
 /*
