@@ -1,6 +1,10 @@
 <?php include("page-start.php"); ?>
 
 <div class="container">
+    <h3>Pictures with Umlauts don't load on Linux</h3>
+    <p>Linux is perfectly happy to have Umlauts in the file name line Z&uuml;rich.jpg. Yet The Java JFileChooser
+    refuses to see this as a valid filename. Not sure how to fix this.</p>
+
     <h3>Java Web Start doesn't launch</h3>
     <p>Your browser may not know that it should start "Java Web Start" when it downloads a
         <code>.jnlp</code> extension file (Mimetype  <code>application/x-java-jnlp-file</code>).
