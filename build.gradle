@@ -18,6 +18,13 @@ apply plugin: 'java'
 apply plugin: "jacoco"
 apply plugin: "eclipse"
 
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+compileJava {options.encoding = "UTF-8"}
+compileTestJava {options.encoding = "UTF-8"}
+
+
 repositories {
     mavenCentral()
 }
@@ -87,13 +94,7 @@ dependencies {
     compile 'com.twelvemonkeys.imageio:imageio-tga:3.4.1' //OK
     compile 'com.twelvemonkeys.imageio:imageio-thumbsdb:3.4.1' //OK
     testCompile "junit:junit:4.13-beta-1"
-
-
 }
-
-
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
 
 
 sourceSets {
@@ -181,7 +182,7 @@ task signJar(dependsOn: 'shadowJar',description: 'Sign shadowJar.',group: 'build
         file("/richi/Privat/Documents/jpo.private.gradle.properties").withInputStream { props.load(it) }
         println 'Keystore file name: ' + props.getProperty("keystoreFileName")
 
-        def signdir  = new File("$buildDir/jars/signed")
+        File signdir  = new File("$buildDir/jars/signed") as File
         signdir.mkdirs()
 
         ant.signjar(
@@ -200,14 +201,14 @@ task signJar(dependsOn: 'shadowJar',description: 'Sign shadowJar.',group: 'build
 
 task buildWindowsExecutable(type: Exec) {
     dependsOn shadowJar
-    def exedir  = new File("$buildDir/executables")
+    File exedir  = new File("$buildDir/executables") as File
     exedir.mkdirs()
     commandLine '/usr/bin/makensis', '-XOutFile ' + exedir + '/Jpo.exe', 'Windowsbuilder/jpoexe.nsi'
 }
 
 task buildWindowsInstaller(type: Exec) {
     dependsOn buildWindowsExecutable
-    def exedir  = new File("$buildDir/executables")
+    File exedir  = new File("$buildDir/executables") as File
     workingDir exedir.toString()
     commandLine '/usr/bin/makensis', 
         '-XOutFile ' + exedir + '/JPO-Installer-0.13.exe', 

@@ -23,6 +23,7 @@ import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
@@ -792,7 +793,7 @@ public class ApplicationEventHandler {
      */
     @Subscribe
     public void handleExportGroupToCollectionRequest(ExportGroupToCollectionRequest request) {
-        new JpoWriter( request );
+        new JpoWriter(request);
     }
 
     /**
@@ -1124,11 +1125,33 @@ public class ApplicationEventHandler {
      * @param request The request
      */
     @Subscribe
-    public void handleCopyToClipboardRequest(CopyToClipboardRequest request) {
+    public void handleCopyImageToClipboardRequest(CopyImageToClipboardRequest request) {
         Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
         JpoTransferable transferable = new JpoTransferable(request.getNodes());
         clipboard.setContents(transferable, (Clipboard clipboard1, Transferable contents) -> LOGGER.info("Lost Ownership of clipboard - not an issue"));
     }
+
+    /**
+     * Copies the path(s) of the supplied picture node(s) to the system clipboard
+     *
+     * @param request The request
+     */
+    @Subscribe
+    public void handleCopyPathToClipboardRequest(CopyPathToClipboardRequest request) {
+        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+        StringBuilder sb = new StringBuilder();
+        for (SortableDefaultMutableTreeNode s : request.getNodes()) {
+            Object o = s.getUserObject();
+            if (o instanceof PictureInfo) {
+                PictureInfo pi = (PictureInfo) o;
+                sb.append(pi.getImageFile().getAbsoluteFile().toString());
+                sb.append(System.lineSeparator());
+            }
+        }
+        StringSelection stringSelection = new StringSelection(sb.toString());
+        clipboard.setContents(stringSelection, (Clipboard clipboard1, Transferable contents) -> LOGGER.info("Lost Ownership of clipboard - not an issue"));
+    }
+
 
     /**
      * Moves the node to the first position in the group

@@ -469,7 +469,7 @@ public class PicturePopupMenuTest {
     public void testCopyToClipboard() {
         JpoEventBus.getInstance().register(new Object() {
             @Subscribe
-            public void handleCopyToClipboardRequest(CopyToClipboardRequest request) {
+            public void handleCopyToClipboardRequest(CopyImageToClipboardRequest request) {
                 clipboardEventCount++;
             }
         });

@@ -24,7 +24,7 @@ import jpo.dataModel.SortableDefaultMutableTreeNode;
  *
  * @author Richard Eigenmann
  */
-public class CopyToClipboardRequest implements Request {
+public class CopyImageToClipboardRequest implements Request {
 
     private final List<SortableDefaultMutableTreeNode>nodes;
 
@@ -33,7 +33,7 @@ public class CopyToClipboardRequest implements Request {
      *
      * @param nodes The nodes
      */
-    public CopyToClipboardRequest( List<SortableDefaultMutableTreeNode>nodes ) {
+    public CopyImageToClipboardRequest(List<SortableDefaultMutableTreeNode>nodes ) {
         this.nodes = nodes;
     }
 

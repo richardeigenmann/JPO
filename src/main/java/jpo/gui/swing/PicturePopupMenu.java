@@ -314,19 +314,23 @@ public class PicturePopupMenu extends JPopupMenu {
             JMenu rotationMenu = new JMenu(Settings.jpoResources.getString("rotation"));
 
             JMenuItem rotate90JMenuItem = new JMenuItem(Settings.jpoResources.getString("rotate90"));
-            rotate90JMenuItem.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new RotatePictureRequest(popupNode, 90, QUEUE_PRIORITY.HIGH_PRIORITY)));
+            rotate90JMenuItem.addActionListener((ActionEvent e) ->
+                    JpoEventBus.getInstance().post(new RotatePictureRequest(popupNode, 90, QUEUE_PRIORITY.HIGH_PRIORITY)));
             rotationMenu.add(rotate90JMenuItem);
 
             JMenuItem rotate180JMenuItem = new JMenuItem(Settings.jpoResources.getString("rotate180"));
-            rotate180JMenuItem.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new RotatePictureRequest(popupNode, 180, QUEUE_PRIORITY.HIGH_PRIORITY)));
+            rotate180JMenuItem.addActionListener((ActionEvent e) ->
+                    JpoEventBus.getInstance().post(new RotatePictureRequest(popupNode, 180, QUEUE_PRIORITY.HIGH_PRIORITY)));
             rotationMenu.add(rotate180JMenuItem);
 
             JMenuItem rotate270JMenuItem = new JMenuItem(Settings.jpoResources.getString("rotate270"));
-            rotate270JMenuItem.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new RotatePictureRequest(popupNode, 270, QUEUE_PRIORITY.HIGH_PRIORITY)));
+            rotate270JMenuItem.addActionListener((ActionEvent e) ->
+                    JpoEventBus.getInstance().post(new RotatePictureRequest(popupNode, 270, QUEUE_PRIORITY.HIGH_PRIORITY)));
             rotationMenu.add(rotate270JMenuItem);
 
             JMenuItem rotate0JMenuItem = new JMenuItem(Settings.jpoResources.getString("rotate0"));
-            rotate0JMenuItem.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new SetPictureRotationRequest(popupNode, 0f, QUEUE_PRIORITY.HIGH_PRIORITY)));
+            rotate0JMenuItem.addActionListener((ActionEvent e) ->
+                    JpoEventBus.getInstance().post(new SetPictureRotationRequest(popupNode, 0f, QUEUE_PRIORITY.HIGH_PRIORITY)));
             rotationMenu.add(rotate0JMenuItem);
             add(rotationMenu);
         }
@@ -525,18 +529,30 @@ public class PicturePopupMenu extends JPopupMenu {
         });
         copyJMenu.add(copyToNewZipfileJMenuItem);
 
-        final JMenuItem copyToClipboard = new JMenuItem("Copy to Clipboard");
+        final JMenuItem copyToClipboard = new JMenuItem("Copy Image to Clipboard");
         copyToClipboard.addActionListener((ActionEvent e) -> {
-            ArrayList<SortableDefaultMutableTreeNode> nodes = new ArrayList<>();
             if (Settings.getPictureCollection().countSelectedNodes() < 1) {
+                ArrayList<SortableDefaultMutableTreeNode> nodes = new ArrayList<>();
                 nodes.add(popupNode);
-
+                JpoEventBus.getInstance().post(new CopyImageToClipboardRequest(nodes));
             } else {
-                JpoEventBus.getInstance().post(new CopyToClipboardRequest(Settings.getPictureCollection().getSelection()));
+                JpoEventBus.getInstance().post(new CopyImageToClipboardRequest(Settings.getPictureCollection().getSelection()));
             }
-            JpoEventBus.getInstance().post(new CopyToClipboardRequest(nodes));
         });
         copyJMenu.add(copyToClipboard);
+
+        final JMenuItem copyPathToClipboard = new JMenuItem("Copy Image Path to Clipboard");
+        copyPathToClipboard.addActionListener((ActionEvent e) -> {
+            if (Settings.getPictureCollection().countSelectedNodes() < 1) {
+                ArrayList<SortableDefaultMutableTreeNode> nodes = new ArrayList<>();
+                nodes.add(popupNode);
+                JpoEventBus.getInstance().post(new CopyPathToClipboardRequest(nodes));
+            } else {
+                JpoEventBus.getInstance().post(new CopyPathToClipboardRequest(Settings.getPictureCollection().getSelection()));
+            }
+        });
+        copyJMenu.add(copyPathToClipboard);
+
 
         JMenuItem[] memorizedZipFileJMenuItems = new JMenuItem[Settings.MAX_MEMORISE];
         String[] memorizedZipFilesArray = Settings.memorizedZipFiles.toArray(new String[0]);
