@@ -36,6 +36,7 @@ public class RenameFileRequest implements Request {
      * A request to rename the supplied node
      *
      * @param node The node to rename
+     * @param newFileName the new file name
      */
     public RenameFileRequest(@NonNull SortableDefaultMutableTreeNode node, String newFileName) {
         Objects.requireNonNull(node);

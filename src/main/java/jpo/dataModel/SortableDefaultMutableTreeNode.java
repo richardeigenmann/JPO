@@ -406,6 +406,8 @@ public class SortableDefaultMutableTreeNode
      *
      * @param event the drop event
      * @return a list of the transferable nodes
+     * @throws UnsupportedFlavorException when a bad transferable is received
+     * @throws IOException when an IO error occurs
      */
     @NotNull
     public static List<SortableDefaultMutableTreeNode> extractTransferableNodes(DropTargetDropEvent event)

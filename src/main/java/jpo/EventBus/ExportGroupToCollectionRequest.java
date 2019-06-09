@@ -35,6 +35,8 @@ public class ExportGroupToCollectionRequest implements Request {
      * Request to fulfill the ExportGroupToCollectionRequest
      *
      * @param node The node for which the user would like the dialog to be done
+     * @param targetFile the target file
+     * @param exportPictures whether to export pictures
      */
     public ExportGroupToCollectionRequest(SortableDefaultMutableTreeNode node, File targetFile, boolean exportPictures) {
         this.node = node;

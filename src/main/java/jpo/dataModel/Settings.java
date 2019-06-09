@@ -34,7 +34,7 @@ import jpo.gui.swing.MainWindow;
 /**
  * This class defines all the settings for the JPO application. In order for it
  * to be valid for all objects it's components are all static as is the Settings
- * object itself when created.<p>
+ * object itself when created.
  * <p>
  * The SettingsDialog is the editor for these settings.
  */
