@@ -8,12 +8,9 @@ report/
 report.xml
 .gradle
 nbproject
-gradle
 .nbproject/
 nbproject
 .nb-gradle/
-gradlew
-gradlew.bat
 .idea
 out
 Jpo.iml
