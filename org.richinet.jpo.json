@@ -1,0 +1,45 @@
+{
+    "app-id": "org.richinet.jpo",
+    "runtime": "org.freedesktop.Platform",
+    "runtime-version": "18.08",
+    "sdk": "org.freedesktop.Sdk",
+    "sdk-extensions" : [ "org.freedesktop.Sdk.Extension.openjdk11" ],
+    "command" : "flatpak-run.sh",
+    "modules": [
+	{
+            "name" : "openjdk",
+            "buildsystem" : "simple",
+            "build-commands" : [ "/usr/lib/sdk/openjdk11/install.sh" ]
+        }, {
+            "name": "jpo-launcher",
+            "buildsystem": "simple",
+            "build-commands": [
+                "install -D flatpak-run.sh /app/bin/flatpak-run.sh"
+            ],
+            "sources": [
+                {
+                    "type": "file",
+                    "path": "flatpak-run.sh"
+                }
+            ]
+        }, {
+            "name": "jpo",
+            "buildsystem": "simple",
+            "build-commands": [
+                "install -D jpo-0.13-all.jar /app/bin/jpo-0.13-all.jar"
+            ],
+            "sources": [
+                {
+                    "type": "file",
+                    "path": "build/jars/signed/jpo-0.13-all.jar"
+                }
+            ]
+        }
+    ],
+    "finish-args" : [ 
+        "--socket=x11",
+        "--filesystem=host",
+        "--share=network",
+        "--env=PATH=/app/jre/bin:/app/bin"
+     ]
+}

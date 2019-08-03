@@ -14,3 +14,16 @@ Homepage: http://j-po.sourceforge.net/
 
 Sonacloud: https://sonarcloud.io/dashboard?id=Jpo
 
+
+## Experimental: Running with Flatpak
+
+```bash
+flatpak-builder build-dir --force-clean org.richinet.jpo.json
+flatpak-builder --run build-dir org.richinet.jpo.json flatpak-run.sh
+flatpak-builder --repo=repo --force-clean build-dir org.richinet.jpo.json
+flatpak --user remote-add --no-gpg-verify --if-not-exists tutorial-repo repo
+flatpak --user install tutorial-repo org.richinet.jpo
+flatpak run org.richinet.jpo
+flatpak remove org.richinet.jpo
+```
+
