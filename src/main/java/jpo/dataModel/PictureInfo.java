@@ -265,7 +265,7 @@ public class PictureInfo implements Serializable {
      * @return the image location
      * @throws MalformedURLException if the location could not be converted to a
      *                               URL.
-     * @deprecated
+     * @Deprecated
      */
     public synchronized URL getImageURL() throws MalformedURLException {
         return getImageFile().toURI().toURL();
@@ -277,7 +277,7 @@ public class PictureInfo implements Serializable {
      * thrown.
      *
      * @return the image location
-     * @deprecated
+     * @Deprecated
      */
     public synchronized URL getImageURLOrNull() {
         try {

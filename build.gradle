@@ -19,8 +19,8 @@ apply plugin: 'java'
 apply plugin: "jacoco"
 apply plugin: "eclipse"
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+sourceCompatibility = 1.12
+targetCompatibility = 1.12
 
 compileJava {options.encoding = "UTF-8"}
 compileTestJava {options.encoding = "UTF-8"}
@@ -30,7 +30,7 @@ repositories {
     mavenCentral()
 }
 
-def jpoVersion = '0.13'
+def jpoVersion = '0.14'
 
 dependencies {
     compile 'org.apache.commons:commons-compress:1.18'
