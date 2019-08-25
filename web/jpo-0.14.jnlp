@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<jnlp
+    spec="1.0+"
+    codebase="http://j-po.sourceforge.net/"
+    href="jpo-0.14.jnlp"
+    version="0.14" >
+  
+    <information>
+        <title>Java Picture Organizer 0.14</title>
+        <vendor>Richard Eigenmann</vendor>
+        <homepage href="http://j-po.sourceforge.net"/>
+        <description>JPO Java Picture Organizer</description>
+        <description kind="short">Organize and Share your Picture Collections</description>
+        <icon href="jpo_icon.gif"/>
+        <icon kind="splash" href="jpo_splash.gif"/>
+        <offline-allowed/>
+    </information>
+
+    <security>
+        <all-permissions/>
+    </security>
+
+    <resources>
+        <java version="1.8+" java-vm-args="-XX:+AggressiveHeap" />
+        <jar href="org.jpo-0.14-all.jar" download="eager" main="true"/>
+    </resources>
+
+    <application-desc 
+        name="Java Picture Organizer"
+        main-class="org.jpo.Main"
+    />
+</jnlp>

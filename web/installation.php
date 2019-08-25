@@ -15,7 +15,7 @@
     <hr>
     <h3>Installing on Windows</h3>
 
-    <a href="https://sourceforge.net/projects/j-po/files/JPO-Installer-0.13.exe/download" rel="nofollow">
+    <a href="https://sourceforge.net/projects/j-po/files/JPO-Installer-0.14.exe/download" rel="nofollow">
         <img alt="Download JPO Java Picture Organizer for Windows" src="https://a.fsdn.com/con/app/sf-download-button">
     </a>
 
@@ -24,8 +24,8 @@
     <hr>
     <h3>Java Web Start</h3>
 
-    <p><a href="jpo-0.13.jnlp">
-        <button type="button" class="btn btn-success">Current version (0.13)</button>
+    <p><a href="org.jpo-0.14.jnlp">
+        <button type="button" class="btn btn-success">Current version (0.14)</button>
     </a></p>
     
     
@@ -61,7 +61,7 @@
         <code>application/x-java-jnlp-file</code>). If your browser doesn't have the right
         association you can run it from the command line or by creating a desktop icon. The command 
         looks like this:</p>
-    <p><font color="darkRed"><code>javaws http://j-po.sourceforge.net/jpo-stable.jnlp</code></font></p>
+    <p><font color="darkRed"><code>javaws http://j-po.sourceforge.net/org.jpo-stable.jnlp</code></font></p>
 
     <p>Often you will need to know where the javaws program was installed. On
         Windows do a search for javaws.exe. On Linux you can do <br>
@@ -72,22 +72,22 @@
     <hr>
     <h3>Local Installation</h3>
     <p>First download the jar file and save it in your program directory:<br>
-        <a href="http://j-po.sourceforge.net/jpo-0.13-all.jar">jpo-0.13-all.jar</a><br>
+        <a href="http://j-po.sourceforge.net/Jpo-all.jar">Jpo-all.jar</a><br>
     </p>
     <p><strong>Note:</strong> Make sure they retain the <code>.jar</code> file extension.
 
     <p> Then you need to create a script or batch file to run everything. On Linux the script would look like this:</p>
-    <p><code>/PATH/TO/YOUR/JAVA/bin/java -XX:+AggressiveHeap -jar /PATH/TO/YOUR/JPO/JAR/jpo-0.13-all.jar Main</code></p>
+    <p><code>/PATH/TO/YOUR/JAVA/bin/java -XX:+AggressiveHeap -jar /PATH/TO/YOUR/JPO/JAR/Jpo-all.jar org.jpo.Main</code></p>
 
     <p><strong>Note:</strong> Put everything on one long line.</p>
 
     <p>On a particular Windows machine I installed JPO into c:\Program Files\Jpo. The resulting 
         <code>JPO.bat</code> file looks like this: (you can download it here: <a href="Jpo.bat">Jpo.bat</a></p>
 
-    <p><code>c:\windows\system32\java -XX:+AggressiveHeap -jar "c:\Program Files\Jpo\jpo-0.13-all.jar"</code></p>
+    <p><code>c:\windows\system32\java -XX:+AggressiveHeap -jar "c:\Program Files\Jpo\Jpo-all.jar"</code></p>
 
     <hr>
-    <p>Last update to this page: 8 Dec 2018<br>
-        Copyright 2003-2016 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
+    <p>Last update to this page: 26 Aug 2019<br>
+        Copyright 2003-2019 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
 </div>
 <?php include("page-end.php"); ?>
