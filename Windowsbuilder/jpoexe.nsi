@@ -8,7 +8,7 @@ SilentInstall silent
 AutoCloseWindow true
 ShowInstDetails nevershow
  
-!define JAR "jpo-0.13-all.jar"
+!define JAR "Jpo-all.jar"
 !define OPTIONS "-XX:+AggressiveHeap"
  
 Section ""

@@ -2,7 +2,7 @@
 
 ; HM NIS Edit Wizard helper defines
 !define PRODUCT_NAME "Java Picture Organizer"
-!define PRODUCT_VERSION "0.13"
+!define PRODUCT_VERSION "0.14"
 !define PRODUCT_PUBLISHER "Richard Eigenmann"
 !define PRODUCT_WEB_SITE "http://j-po.sourceforge.net"
 !define PRODUCT_UNINST_KEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}"
@@ -32,7 +32,7 @@ SetCompressor lzma
 ; Instfiles page
 !insertmacro MUI_PAGE_INSTFILES
 ; Finish page
-!define MUI_FINISHPAGE_RUN "jpo.exe"
+!define MUI_FINISHPAGE_RUN "org.jpo.exe"
 !define MUI_FINISHPAGE_RUN_PARAMETERS ""
 !insertmacro MUI_PAGE_FINISH
 
@@ -63,18 +63,18 @@ Section "MainSection" SEC01
   SetOutPath "$INSTDIR"
   SetOverwrite ifnewer
   File "..\build\executables\Jpo.exe"
-  File "..\build\libs\jpo-0.13-all.jar"
+  File "..\build\libs\Jpo-all.jar"
 SectionEnd
 
 Section -AdditionalIcons
   WriteIniStr "$INSTDIR\${PRODUCT_NAME}.url" "InternetShortcut" "URL" "${PRODUCT_WEB_SITE}"
   CreateDirectory "$SMPROGRAMS\Java Picture Organizer"
-  CreateShortCut "$SMPROGRAMS\Java Picture Organizer\Jpo.lnk" "$INSTDIR\jpo.exe"
+  CreateShortCut "$SMPROGRAMS\Java Picture Organizer\Jpo.lnk" "$INSTDIR\org.jpo.exe"
   CreateShortCut "$SMPROGRAMS\Java Picture Organizer\Website.lnk" "$INSTDIR\${PRODUCT_NAME}.url"
   CreateShortCut "$SMPROGRAMS\Java Picture Organizer\Uninstall.lnk" "$INSTDIR\uninst.exe"
   
   ;create desktop shortcut
-  CreateShortCut "$DESKTOP\Jpo.lnk" "$INSTDIR\jpo.exe" "$INSTDIR"
+  CreateShortCut "$DESKTOP\Jpo.lnk" "$INSTDIR\org.jpo.exe" "$INSTDIR"
 SectionEnd
 
 Section -Post
@@ -103,7 +103,7 @@ Section Uninstall
   Delete "$INSTDIR\${PRODUCT_NAME}.url"
   Delete "$INSTDIR\uninst.exe"
   Delete "$INSTDIR\Jpo.exe"
-  Delete "$INSTDIR\jpo-0.13-all.jar"
+  Delete "$INSTDIR\org.jpo-0.13-all.jar"
   RMDir  "$INSTDIR"
   Delete "$SMPROGRAMS\Java Picture Organizer\Uninstall.lnk"
   Delete "$SMPROGRAMS\Java Picture Organizer\Website.lnk"
