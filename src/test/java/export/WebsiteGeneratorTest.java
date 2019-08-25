@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import jpo.export.WebsiteGenerator;
+import org.jpo.export.WebsiteGenerator;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.fail;
@@ -52,8 +52,8 @@ public class WebsiteGeneratorTest {
             Path path = Files.createTempDirectory( "UnitTestsTempDir" );
             WebsiteGenerator.writeCss( path.toFile() );
             File cssFile = new File( path.toFile(), "jpo.css" );
-            assertTrue( "jpo.css was supposed to exists in directory " + path.toString(), cssFile.exists() );
-            assertTrue( "The jpo.css file could not be deleted", cssFile.delete() );
+            assertTrue( "org.jpo.css was supposed to exists in directory " + path.toString(), cssFile.exists() );
+            assertTrue( "The org.jpo.css file could not be deleted", cssFile.delete() );
             assertTrue( "The temporary directory could not be deleted", path.toFile().delete() );
         } catch ( IOException ex ) {
             fail( "Was not supposed to fail with the following Exception: " + ex.getMessage() );
@@ -86,8 +86,8 @@ public class WebsiteGeneratorTest {
             Path path = Files.createTempDirectory( "UnitTestsTempDir" );
             WebsiteGenerator.writeJpoJs( path.toFile() );
             File cssFile = new File( path.toFile(), "jpo.js" );
-            assertTrue( "jpo.js was supposed to exists in directory " + path.toString(), cssFile.exists() );
-            assertTrue( "The jpo.js file could not be deleted", cssFile.delete() );
+            assertTrue( "org.jpo.js was supposed to exists in directory " + path.toString(), cssFile.exists() );
+            assertTrue( "The org.jpo.js file could not be deleted", cssFile.delete() );
             assertTrue( "The temporary directory could not be deleted", path.toFile().delete() );
         } catch ( IOException ex ) {
             fail( "Was not supposed to fail with the following Exception: " + ex.getMessage() );

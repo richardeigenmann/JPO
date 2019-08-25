@@ -11,18 +11,18 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
-import jpo.dataModel.Settings;
-import jpo.gui.swing.NonFocussedCaret;
-import jpo.gui.swing.ResizableJFrame;
-import static jpo.gui.swing.ResizableJFrame.WindowSize.WINDOW_BOTTOM_LEFT;
-import static jpo.gui.swing.ResizableJFrame.WindowSize.WINDOW_BOTTOM_RIGHT;
-import static jpo.gui.swing.ResizableJFrame.WindowSize.WINDOW_DEFAULT;
-import static jpo.gui.swing.ResizableJFrame.WindowSize.WINDOW_FULLSCREEN;
-import static jpo.gui.swing.ResizableJFrame.WindowSize.WINDOW_LEFT;
-import static jpo.gui.swing.ResizableJFrame.WindowSize.WINDOW_RIGHT;
-import static jpo.gui.swing.ResizableJFrame.WindowSize.WINDOW_TOP_LEFT;
-import static jpo.gui.swing.ResizableJFrame.WindowSize.WINDOW_TOP_RIGHT;
-import jpo.gui.swing.ScreenHelper;
+import org.jpo.dataModel.Settings;
+import org.jpo.gui.swing.NonFocussedCaret;
+import org.jpo.gui.swing.ResizableJFrame;
+import static org.jpo.gui.swing.ResizableJFrame.WindowSize.WINDOW_BOTTOM_LEFT;
+import static org.jpo.gui.swing.ResizableJFrame.WindowSize.WINDOW_BOTTOM_RIGHT;
+import static org.jpo.gui.swing.ResizableJFrame.WindowSize.WINDOW_DEFAULT;
+import static org.jpo.gui.swing.ResizableJFrame.WindowSize.WINDOW_FULLSCREEN;
+import static org.jpo.gui.swing.ResizableJFrame.WindowSize.WINDOW_LEFT;
+import static org.jpo.gui.swing.ResizableJFrame.WindowSize.WINDOW_RIGHT;
+import static org.jpo.gui.swing.ResizableJFrame.WindowSize.WINDOW_TOP_LEFT;
+import static org.jpo.gui.swing.ResizableJFrame.WindowSize.WINDOW_TOP_RIGHT;
+import org.jpo.gui.swing.ScreenHelper;
 
 
 /*

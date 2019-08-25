@@ -1,9 +1,11 @@
 
 import java.lang.reflect.InvocationTargetException;
 import javax.swing.SwingUtilities;
-import jpo.EventBus.CloseApplicationRequest;
-import jpo.EventBus.JpoEventBus;
+import org.jpo.EventBus.CloseApplicationRequest;
+import org.jpo.EventBus.JpoEventBus;
 import static junit.framework.TestCase.fail;
+
+import org.jpo.Main;
 import org.junit.Ignore;
 import org.junit.Test;
 

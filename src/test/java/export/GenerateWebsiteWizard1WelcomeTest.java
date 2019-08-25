@@ -3,8 +3,8 @@ package export;
 import java.lang.reflect.InvocationTargetException;
 import javax.swing.SwingUtilities;
 
-import jpo.EventBus.GenerateWebsiteRequest;
-import jpo.export.GenerateWebsiteWizard1Welcome;
+import org.jpo.EventBus.GenerateWebsiteRequest;
+import org.jpo.export.GenerateWebsiteWizard1Welcome;
 
 import static junit.framework.TestCase.fail;
 import org.junit.Assert;

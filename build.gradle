@@ -4,13 +4,13 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.github.jengelman.gradle.plugins:shadow:5.0.0'
+        classpath 'com.github.jengelman.gradle.plugins:shadow:5.1.0'
     }
 }
 
 plugins {
     id "org.sonarqube" version "2.7.1"
-    id "com.github.ben-manes.versions" version "0.21.0"
+    id "com.github.ben-manes.versions" version "0.22.0"
     id 'signing'
 }
 
@@ -19,11 +19,34 @@ apply plugin: 'java'
 apply plugin: "jacoco"
 apply plugin: "eclipse"
 
-sourceCompatibility = 1.12
-targetCompatibility = 1.12
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
 
-compileJava {options.encoding = "UTF-8"}
-compileTestJava {options.encoding = "UTF-8"}
+//ext.moduleName = 'Main'
+
+compileJava {
+    options.encoding = "UTF-8"
+//    inputs.property("moduleName", moduleName)
+//    doFirst {
+//        options.compilerArgs = [
+//            '--module-path', classpath.asPath,
+//        ]
+//        classpath = files()
+//    }
+}
+compileTestJava {
+    options.encoding = "UTF-8"
+//    inputs.property("moduleName", moduleName)
+//    doFirst {
+//        options.compilerArgs = [
+//            '--module-path', classpath.asPath,
+//            '--add-modules', 'junit',
+//            '--add-reads', "$moduleName=junit",
+//            '--patch-module', "$moduleName=" + files(sourceSets.test.java.srcDirs).asPath,
+//        ]
+//        classpath = files()
+//    }
+}
 javadoc {options.encoding = "UTF-8"}
 
 repositories {
@@ -38,7 +61,7 @@ dependencies {
     compile 'org.apache.commons:commons-jcs-core:2.2.1'
     compile 'org.apache.commons:commons-jcs-jcache:2.2.1'
     compile 'org.apache.commons:commons-lang3:3.9'
-    compile 'org.apache.commons:commons-text:1.6'
+    compile 'org.apache.commons:commons-text:1.7'
     compile 'commons-logging:commons-logging:1.2'
     compile 'commons-net:commons-net:3.6'
     compile 'commons-io:commons-io:2.6'
@@ -48,14 +71,14 @@ dependencies {
     compile files('libs/gdata-media-1.0.jar')
     compile files('libs/gdata-photos-2.0.jar')
     
-    compile 'com.google.guava:guava:27.1-jre'
+    compile 'com.google.guava:guava:28.0-jre'
     compile 'javax.mail:javax.mail-api:1.6.2'
     compile 'com.jcraft:jsch:0.1.55'
 
     compile files('libs/jwizz-0.1.4.jar')
     
     compile 'org.jxmapviewer:jxmapviewer2:2.4'
-    compile 'com.drewnoakes:metadata-extractor:2.11.0'
+    compile 'com.drewnoakes:metadata-extractor:2.12.0'
 
     compile 'com.miglayout:miglayout-swing:5.2'
 
@@ -72,28 +95,28 @@ dependencies {
     //compile 'com.adobe.xmp:xmpcore:6.1.10'
     compile 'org.jetbrains:annotations:17.0.0'
 
-    compile 'com.twelvemonkeys.imageio:imageio-batik:3.4.1'  //OK
+    compile 'com.twelvemonkeys.imageio:imageio-batik:3.4.2'
     compile 'org.apache.xmlgraphics:batik-transcoder:1.11'
     compile 'org.apache.xmlgraphics:batik-anim:1.11'
     compile 'org.apache.xmlgraphics:batik-rasterizer-ext:1.11'
     compile 'org.apache.xmlgraphics:batik-extension:1.11'
     compile 'org.apache.xmlgraphics:xmlgraphics-commons:2.3'
     compile 'org.apache.xmlgraphics:batik-svggen:1.11'
-    compile 'com.twelvemonkeys.imageio:imageio-bmp:3.4.1' //OK
+    compile 'com.twelvemonkeys.imageio:imageio-bmp:3.4.2'
     //compile 'com.twelvemonkeys.imageio:imageio-clippath:3.4.1' //OK -- But what does it do?
-    compile 'com.twelvemonkeys.imageio:imageio-icns:3.4.1' //OK
-    compile 'com.twelvemonkeys.imageio:imageio-iff:3.4.1' //OK
-    compile 'com.twelvemonkeys.imageio:imageio-jpeg:3.4.1' //OK
-    compile 'com.twelvemonkeys.imageio:imageio-hdr:3.4.1' //OK
-    compile 'com.twelvemonkeys.imageio:imageio-pcx:3.4.1' //OK
-    compile 'com.twelvemonkeys.imageio:imageio-pdf:3.4.1'  // doesn't work
-    compile 'com.twelvemonkeys.imageio:imageio-pict:3.4.1' //OK
-    compile 'com.twelvemonkeys.imageio:imageio-pnm:3.4.1' //OK
-    compile 'com.twelvemonkeys.imageio:imageio-psd:3.4.1' //OK
-    compile 'com.twelvemonkeys.imageio:imageio-sgi:3.4.1' //OK
-    compile 'com.twelvemonkeys.imageio:imageio-tiff:3.4.1' //OK
-    compile 'com.twelvemonkeys.imageio:imageio-tga:3.4.1' //OK
-    compile 'com.twelvemonkeys.imageio:imageio-thumbsdb:3.4.1' //OK
+    compile 'com.twelvemonkeys.imageio:imageio-icns:3.4.2'
+    compile 'com.twelvemonkeys.imageio:imageio-iff:3.4.2'
+    compile 'com.twelvemonkeys.imageio:imageio-jpeg:3.4.2'
+    compile 'com.twelvemonkeys.imageio:imageio-hdr:3.4.2'
+    compile 'com.twelvemonkeys.imageio:imageio-pcx:3.4.2'
+    compile 'com.twelvemonkeys.imageio:imageio-pdf:3.4.2'
+    compile 'com.twelvemonkeys.imageio:imageio-pict:3.4.2'
+    compile 'com.twelvemonkeys.imageio:imageio-pnm:3.4.2'
+    compile 'com.twelvemonkeys.imageio:imageio-psd:3.4.2'
+    compile 'com.twelvemonkeys.imageio:imageio-sgi:3.4.2'
+    compile 'com.twelvemonkeys.imageio:imageio-tiff:3.4.2'
+    compile 'com.twelvemonkeys.imageio:imageio-tga:3.4.2'
+    compile 'com.twelvemonkeys.imageio:imageio-thumbsdb:3.4.2'
     testCompile "junit:junit:4.13-beta-3"
 }
 
@@ -111,7 +134,7 @@ sourceSets {
             include '**/*.css'
             include '**/*.js'
                 
-            srcDir 'src/main/java/jpo/cache'
+            srcDir 'src/main/java/org/jpo/cache'
             include '**/*.ccf'
         }
     }
@@ -150,28 +173,28 @@ test {
 }
 
 jar {
-    baseName = 'jpo'
-    version =  jpoVersion
+//    baseName = 'org.jpo'
+//    version =  jpoVersion
     
     manifest {
         attributes(
             "Class-Path": configurations.runtimeClasspath.collect { it.getName() }.join(' '),
-            "Main-Class": 'Main',
+            "Main-Class": 'org.jpo.Main',
             'Permissions': 'all-permissions'
         )
         attributes(
             [ "Copy": "(c) 2001-2019, Richard Eigenmann, Zürich, Switzerland" ], "Copyright"
         )
     }
-    into ('jpo/images') { from 'src/images' }
+    into ('org/jpo/images') { from 'src/images' }
 }
 
 // this task creates the FatJar with everything in it
 shadowJar {
-    baseName = 'jpo'
-    classifier = 'all'
-    version = jpoVersion
-    into ('jpo/images') { from 'src/images' }
+//    baseName = 'org.jpo'
+//    classifier = 'all'
+//    version = jpoVersion
+    into ('org/jpo/images') { from 'src/images' }
     mergeServiceFiles()
 }
 
@@ -180,7 +203,7 @@ shadowJar {
 task signJar(dependsOn: 'shadowJar',description: 'Sign shadowJar.',group: 'build'){
     doLast{
         def props = new Properties()
-        file("/richi/Privat/Documents/jpo.private.gradle.properties").withInputStream { props.load(it) }
+        file("/richi/Privat/Documents/org.jpo.private.gradle.properties").withInputStream { props.load(it) }
         println 'Keystore file name: ' + props.getProperty("keystoreFileName")
 
         File signdir  = new File("$buildDir/jars/signed") as File
@@ -188,7 +211,7 @@ task signJar(dependsOn: 'shadowJar',description: 'Sign shadowJar.',group: 'build
 
         ant.signjar(
             destDir: "${signdir.absolutePath}",
-                  jar: 'build/libs/jpo-' + jpoVersion + '-all.jar',
+                  jar: 'build/libs/org.jpo-all.jar',
                   alias: props.getProperty("keyalias"),
                   storetype: "jks",
                   keystore: props.getProperty("keystoreFileName"),
@@ -212,7 +235,7 @@ task buildWindowsInstaller(type: Exec) {
     File exedir  = new File("$buildDir/executables") as File
     workingDir exedir.toString()
     commandLine '/usr/bin/makensis', 
-        '-XOutFile ' + exedir + '/JPO-Installer-0.13.exe', 
+        '-XOutFile ' + exedir + '/JPO-Installer-0.14.exe',
         projectDir.absolutePath + '/Windowsbuilder/jpoinstaller.nsi'
 }
 
@@ -221,8 +244,8 @@ task run(type: JavaExec) {
     group 'build'
     description 'Runs JPO from the shadowJar'
     dependsOn shadowJar
-    classpath = files( 'build/libs/jpo-' + jpoVersion + '-all.jar' )
-    main = 'Main'
+    classpath = files( 'build/libs/Jpo-all.jar' )
+    main = 'org.jpo.Main'
 }
 
 jacocoTestReport {
@@ -290,11 +313,11 @@ task uploadWebStartFiles() {
             sftp: 'true', {
                 fileset(dir: 'build/jars/signed') {
                     modified()
-                    files( 'jpo-' + jpoVersion + '-all.jar' )
+                    files( 'org.jpo-' + jpoVersion + '-all.jar' )
                 }
                 fileset(dir: 'web') {
                     modified()
-                    files( 'jpo-' + jpoVersion + '.jnlp' )
+                    files( 'org.jpo-' + jpoVersion + '.jnlp' )
                 }
             }
         )
