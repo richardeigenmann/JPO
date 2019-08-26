@@ -13,6 +13,7 @@ import java.awt.event.WindowEvent;
 import java.awt.geom.Point2D;
 import java.io.File;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.text.DecimalFormat;
@@ -532,7 +533,7 @@ public class PictureInfoEditor extends JFrame {
         categoriesJList.setSelectedIndices(selectionsArray);
         categoryAssignmentsJLabel.setText(selectedJListCategoriesToString(categoriesJList));
 
-        ExifInfo exifInfo = new ExifInfo(pictureInfo.getImageURLOrNull());
+        ExifInfo exifInfo = new ExifInfo(pictureInfo.getImageFile());
         exifInfo.decodeExifTags();
 
         sizeJLabel.setText(String.format("%s x %s", exifInfo.exifWidth, exifInfo.exifHeight));
@@ -651,13 +652,14 @@ public class PictureInfoEditor extends JFrame {
      */
     private void doReparseDate() {
         try {
-            ExifInfo exifInfo = new ExifInfo(new URL(highresLocationJTextField.getText()));
-            exifInfo.decodeExifTags();
+            URL url = new URL(highresLocationJTextField.getText());
+            File file = new File(url.toURI());
+            ExifInfo exifInfo = new ExifInfo(file);
             String timestamp = exifInfo.getCreateDateTime();
             creationTimeJTextField.setText(timestamp);
             parseTimestamp(timestamp);
 
-        } catch (MalformedURLException ex) {
+        } catch (MalformedURLException | URISyntaxException ex) {
             Logger.getLogger(PictureInfoEditor.class
                     .getName()).log(Level.SEVERE, null, ex);
         }
@@ -819,7 +821,7 @@ public class PictureInfoEditor extends JFrame {
         }
     };
 
-    private class MySpinnerNumberModel
+    private static class MySpinnerNumberModel
             extends SpinnerNumberModel {
 
         MySpinnerNumberModel() {

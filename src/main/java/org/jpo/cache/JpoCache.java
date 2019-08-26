@@ -1,12 +1,19 @@
 package org.jpo.cache;
 
-import java.awt.Dimension;
-import java.awt.Graphics2D;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.jcs.JCS;
+import org.apache.commons.jcs.access.CacheAccess;
+import org.apache.commons.jcs.access.exception.CacheException;
+import org.apache.commons.jcs.engine.control.CompositeCacheManager;
+import org.jpo.dataModel.PictureInfo;
+import org.jpo.dataModel.Settings;
+import org.jpo.dataModel.SortableDefaultMutableTreeNode;
+import org.jpo.gui.ScalablePicture;
+
+import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.BufferedInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.net.URISyntaxException;
+import java.io.*;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -16,16 +23,6 @@ import java.util.List;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.imageio.ImageIO;
-import org.jpo.dataModel.PictureInfo;
-import org.jpo.dataModel.Settings;
-import org.jpo.dataModel.SortableDefaultMutableTreeNode;
-import org.jpo.gui.ScalablePicture;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.jcs.JCS;
-import org.apache.commons.jcs.access.CacheAccess;
-import org.apache.commons.jcs.access.exception.CacheException;
-import org.apache.commons.jcs.engine.control.CompositeCacheManager;
 
 
 /*
@@ -68,7 +65,7 @@ public class JpoCache {
 
     }
 
-    private CacheAccess<URL, ImageBytes> highresMemoryCache;
+    private CacheAccess<File, ImageBytes> highresMemoryCache;
     private CacheAccess<String, ImageBytes> thumbnailMemoryAndDiskCache;
     /**
      * The dimension for the group thumbnail
@@ -127,34 +124,32 @@ public class JpoCache {
         try {
             CompositeCacheManager.getInstance().shutDown();
         } catch ( CacheException ex ) {
-            Logger.getLogger( JpoCache.class.getName() ).log( Level.SEVERE, null, ex );
+            Logger.getLogger( JpoCache.class.getName() ).log(Level.SEVERE, null, ex );
         }
     }
 
     /**
      * Returns the highres image bytes from the cache or disk
      *
-     * @param url the url of the image
+     * @param file The file of the image
      * @return and ImageBytes object
      * @throws IOException if something went wrong
      */
-    public ImageBytes getHighresImageBytes( URL url ) throws IOException {
-        ImageBytes imageBytes = highresMemoryCache.get( url );
+    public ImageBytes getHighresImageBytes( File file ) throws IOException {
+        ImageBytes imageBytes = highresMemoryCache.get( file );
         if ( imageBytes != null ) {
             try {
-                Path imagePath = Paths.get( url.toURI() );
-                FileTime lastModification = ( Files.getLastModifiedTime( imagePath ) );
+                FileTime lastModification = ( Files.getLastModifiedTime(file.toPath() ) );
                 if ( lastModification.compareTo( imageBytes.getLastModification() ) > 0 ) {
-                    imageBytes = new ImageBytes( IOUtils.toByteArray( url.openStream() ) );
-
+                    imageBytes = new ImageBytes( IOUtils.toByteArray(  new BufferedInputStream(new FileInputStream(file)) ) );
                 }
-            } catch ( URISyntaxException | IOException ex ) {
+            } catch (  IOException ex ) {
                 LOGGER.severe( ex.getLocalizedMessage() );
             }
         } else {
-            imageBytes = new ImageBytes( IOUtils.toByteArray( url.openStream() ) );
+            imageBytes = new ImageBytes( IOUtils.toByteArray( new BufferedInputStream(new FileInputStream(file) )));
             try {
-                highresMemoryCache.put( url, imageBytes );
+                highresMemoryCache.put( file, imageBytes );
             } catch ( CacheException ex ) {
                 LOGGER.severe( ex.getLocalizedMessage() );
             }
@@ -164,32 +159,32 @@ public class JpoCache {
 
     /**
      * Returns an ImageBytes object with thumbnail image data for the supplied
-     * url
+     * file
      *
-     * @param url The url of the highres picture for which a thumbnail is needed
+     * @param file The file of the highres picture for which a thumbnail is needed
      * @param rotation The rotation in degrees (0..360) for the thumbnail
      * @param size The maximum size of the thumbnail
      * @return The ImageBytes of the thumbnail
      */
-    public ImageBytes getThumbnailImageBytes( URL url, double rotation, Dimension size ) {
+    public ImageBytes getThumbnailImageBytes( File file, double rotation, Dimension size ) {
         int maxWidth = size.width;
         int maxHeight = size.height;
-        String key = String.format( "%s-%fdeg-w:%dpx-h:%dpx", url, rotation, maxWidth, maxHeight );
+        String key = String.format( "%s-%fdeg-w:%dpx-h:%dpx", file, rotation, maxWidth, maxHeight );
         ImageBytes imageBytes = thumbnailMemoryAndDiskCache.get( key );
         if ( imageBytes != null ) {
             try {
-                Path imagePath = Paths.get( url.toURI() );
+                Path imagePath = Paths.get( file.toURI() );
                 FileTime lastModification = ( Files.getLastModifiedTime( imagePath ) );
                 if ( lastModification.compareTo( imageBytes.getLastModification() ) > 0 ) {
-                    imageBytes = createThumbnailAndStoreInCache( key, url, rotation, maxWidth, maxHeight );
+                    imageBytes = createThumbnailAndStoreInCache( key, file, rotation, maxWidth, maxHeight );
 
                 }
-            } catch ( URISyntaxException | IOException ex ) {
+            } catch (  IOException ex ) {
                 LOGGER.severe( ex.getLocalizedMessage() );
             }
 
         } else {
-            imageBytes = createThumbnailAndStoreInCache( key, url, rotation, maxWidth, maxHeight );
+            imageBytes = createThumbnailAndStoreInCache( key, file, rotation, maxWidth, maxHeight );
         }
         return imageBytes;
     }
@@ -198,14 +193,14 @@ public class JpoCache {
      * Creates a thumbnail and stores it in the cache
      *
      * @param key the key to store it in the cache
-     * @param imageURL The url of the picture
+     * @param imageFile The file of the picture
      * @param rotation the rotation to apply
      * @param maxWidth the maximum width
      * @param maxHeight the maximum height
      * @return the thumbnail
      */
-    private ImageBytes createThumbnailAndStoreInCache( String key, URL imageURL, double rotation, int maxWidth, int maxHeight ) {
-        ImageBytes imageBytes = createThumbnail( imageURL, rotation, maxWidth, maxHeight );
+    private ImageBytes createThumbnailAndStoreInCache( String key, File imageFile, double rotation, int maxWidth, int maxHeight ) {
+        ImageBytes imageBytes = createThumbnail( imageFile, rotation, maxWidth, maxHeight );
         try {
             thumbnailMemoryAndDiskCache.put( key, imageBytes );
         } catch ( CacheException ex ) {
@@ -217,13 +212,13 @@ public class JpoCache {
     /**
      * Creates a thumbnail
      *
-     * @param imageURL The url of the picture
+     * @param file The the picture file
      * @param rotation the rotation to apply
      * @param maxWidth the maximum width
      * @param maxHeight the maximum height
      * @return the thumbnail
      */
-    private ImageBytes createThumbnail( URL imageURL, double rotation, int maxWidth, int maxHeight ) {
+    private ImageBytes createThumbnail( File file, double rotation, int maxWidth, int maxHeight ) {
         Dimension maxDimension = new Dimension( maxWidth, maxHeight );
 
         // create a new thumbnail from the highres
@@ -234,7 +229,7 @@ public class JpoCache {
             scalablePicture.setQualityScale();
         }
         scalablePicture.setScaleSize( maxDimension );
-        scalablePicture.loadPictureImd( imageURL, rotation );
+        scalablePicture.loadPictureImd( file, rotation );
         if ( scalablePicture.sourcePicture == null ) {
             return null;
         }
@@ -249,10 +244,10 @@ public class JpoCache {
         ImageBytes imageBytes = new ImageBytes( bos.toByteArray() );
 
         try {
-            Path imagePath = Paths.get( imageURL.toURI() );
+            Path imagePath = Paths.get( file.toURI() );
             imageBytes.setLastModification( Files.getLastModifiedTime( imagePath ) );
 
-        } catch ( URISyntaxException | IOException ex ) {
+        } catch (  IOException ex ) {
             Logger.getLogger( JpoCache.class
                     .getName() ).log( Level.SEVERE, null, ex );
         }
@@ -300,7 +295,7 @@ public class JpoCache {
         StringBuilder sb = new StringBuilder( "Group-" );
         for ( int i = 0; ( i < numberOfPics ) && ( i < childPictureNodes.size() ); i++ ) {
             PictureInfo pictureInfo = (PictureInfo) childPictureNodes.get( i ).getUserObject();
-            sb.append( String.format( "%s-%fdeg-", pictureInfo.getImageURL().toString(), pictureInfo.getRotation() ) );
+            sb.append( String.format( "%s-%fdeg-", pictureInfo.getImageFile().toString(), pictureInfo.getRotation() ) );
         }
 
         String key = sb.toString();
@@ -373,7 +368,7 @@ public class JpoCache {
             int yPos = (int) Math.round( ( picsProcessed / (double) horizontalPics ) - 0.5f );
             int y = topMargin + ( yPos * ( Settings.miniThumbnailSize.height + margin ) );
 
-            scalablePicture.loadPictureImd( pi.getImageURL(), pi.getRotation() );
+            scalablePicture.loadPictureImd( pi.getImageFile(), pi.getRotation() );
 
             scalablePicture.setScaleSize( Settings.miniThumbnailSize );
             scalablePicture.scalePicture();

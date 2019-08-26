@@ -204,10 +204,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
      */
     @Override
     protected void process(List<String> messages) {
-        messages.stream().map(message -> {
-            LOGGER.info(String.format("messge: %s", message));
-            return message;
-        }).forEachOrdered(_item
+        messages.stream().peek(message -> LOGGER.info(String.format("messge: %s", message))).forEachOrdered(_item
                 -> progGui.progressIncrement()
         );
     }
@@ -415,12 +412,19 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
         }
 
         LOGGER.info(String.format("Loading: %s", pictureInfo.getImageLocation()));
-        scp.loadPictureImd(pictureInfo.getImageURL(), pictureInfo.getRotation());
+        scp.loadPictureImd(pictureInfo.getImageFile(), pictureInfo.getRotation());
 
         LOGGER.info(String.format("Done Loading: %s", pictureInfo.getImageLocation()));
         if (scp.getStatusCode() == SCALABLE_PICTURE_ERROR) {
-            LOGGER.log(Level.SEVERE, "Problem reading image {0} using bnailPicture instead", pictureInfo.getImageLocation());
-            scp.loadPictureImd(WebsiteGenerator.class.getClassLoader().getResource("org/jpo/images/broken_thumbnail.gif"), 0f);
+            LOGGER.log(Level.SEVERE, "Problem reading image {0} using ThumbnailPicture instead", pictureInfo.getImageLocation());
+            File file = null;
+            try {
+                file = new File(Objects.requireNonNull(WebsiteGenerator.class.getClassLoader().getResource("org/jpo/images/broken_thumbnail.gif")).toURI());
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+                throw new IOException ("Could not load the broken_thumbnail.gif resource");
+            }
+            scp.loadPictureImd(file, 0f);
         }
 
         // copy the picture to the target directory
@@ -434,7 +438,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
                 scp.writeScaledJpg(highresFile);
             } else {
                 LOGGER.fine(String.format("Copying picture %s to %s", pictureInfo.getImageLocation(), highresFile.toString()));
-                Tools.copyPicture(pictureInfo.getImageURL(), highresFile);
+                Tools.copyPicture(pictureInfo.getImageFile(), highresFile);
             }
         }
 
@@ -1169,7 +1173,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
     public static void addToZipFile(ZipOutputStream zipFile, PictureInfo pictureInfo, File highresFile) {
         LOGGER.fine(String.format("Adding to zipfile: %s", highresFile.toString()));
         try (
-                InputStream in = pictureInfo.getImageURL().openStream();
+                InputStream in = new FileInputStream (pictureInfo.getImageFile());
                 BufferedInputStream bin = new BufferedInputStream(in)) {
 
             ZipEntry entry = new ZipEntry(highresFile.getName());
@@ -1231,8 +1235,6 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
                 outStream.write(c);
             }
 
-            in.close();
-
         } catch (IOException e) {
             JOptionPane.showMessageDialog(
                     Settings.anchorFrame,
@@ -1259,8 +1261,6 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
             while ((c = bin.read()) != -1) {
                 outStream.write(c);
             }
-
-            in.close();
 
         } catch (IOException e) {
             JOptionPane.showMessageDialog(

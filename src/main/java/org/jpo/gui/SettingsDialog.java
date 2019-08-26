@@ -262,9 +262,7 @@ public class SettingsDialog extends JDialog {
         autoLoadJButton.setPreferredSize( Settings.threeDotButtonSize );
         autoLoadJButton.setMinimumSize( Settings.threeDotButtonSize );
         autoLoadJButton.setMaximumSize( Settings.threeDotButtonSize );
-        autoLoadJButton.addActionListener(( ActionEvent e ) -> {
-            autoLoadChooser();
-        });
+        autoLoadJButton.addActionListener(( ActionEvent e ) -> autoLoadChooser());
         generalJPanel.add( autoLoadJButton, "wrap" );
 
         final JLabel wordCloudWordJLabel = new JLabel( "Max Word Cloud Words" );
@@ -501,9 +499,7 @@ public class SettingsDialog extends JDialog {
         emailPasswordJTextField.setMaximumSize( Settings.textfieldMaximumSize );
         emailServerJPanel.add( emailPasswordJTextField, "wrap" );
 
-        showPasswordButton.addActionListener(( ActionEvent ae ) -> {
-            showPasswordLabel.setText( new String( emailPasswordJTextField.getPassword() ) );
-        });
+        showPasswordButton.addActionListener(( ActionEvent ae ) -> showPasswordLabel.setText( new String( emailPasswordJTextField.getPassword() ) ));
 
         emailServerJPanel.add( showPasswordButton );
         emailServerJPanel.add( showPasswordLabel, "wrap" );
@@ -522,22 +518,16 @@ public class SettingsDialog extends JDialog {
         cacheJPanel.add( new JScrollPane( lowresStatsJTA ), "wrap" );
 
         JButton clearHighresCacheJButton = new JButton( "Clear" );
-        clearHighresCacheJButton.addActionListener(( ActionEvent e ) -> {
-            clearHighresCache();
-        });
+        clearHighresCacheJButton.addActionListener(( ActionEvent e ) -> clearHighresCache());
 
         JButton clearThumbnailCacheJButton = new JButton( "Clear" );
-        clearThumbnailCacheJButton.addActionListener(( ActionEvent e ) -> {
-            clearThumbnailCache();
-        });
+        clearThumbnailCacheJButton.addActionListener(( ActionEvent e ) -> clearThumbnailCache());
 
         cacheJPanel.add( clearHighresCacheJButton );
         cacheJPanel.add( clearThumbnailCacheJButton );
 
         JButton updateCacheStatsJButton = new JButton( "Update" );
-        updateCacheStatsJButton.addActionListener(( ActionEvent e ) -> {
-            updateCacheStats();
-        });
+        updateCacheStatsJButton.addActionListener(( ActionEvent e ) -> updateCacheStats());
         cacheJPanel.add( updateCacheStatsJButton );
 
         // set up the main part of the dialog
@@ -577,9 +567,7 @@ public class SettingsDialog extends JDialog {
         cancelButton.setMinimumSize( Settings.defaultButtonDimension );
         cancelButton.setMaximumSize( Settings.defaultButtonDimension );
         cancelButton.setBorder( BorderFactory.createRaisedBevelBorder() );
-        cancelButton.addActionListener(( ActionEvent e ) -> {
-            getRid();
-        });
+        cancelButton.addActionListener(( ActionEvent e ) -> getRid());
         buttonContainer.add( cancelButton );
 
         getContentPane().add( buttonContainer, BorderLayout.SOUTH );
@@ -804,13 +792,13 @@ public class SettingsDialog extends JDialog {
             extends InputVerifier {
 
         @Override
-        public boolean shouldYieldFocus( JComponent input ) {
-            String validationFile = ( (JTextComponent) input ).getText();
+        public boolean shouldYieldFocus( JComponent source, JComponent target ) {
+            String validationFile = ( (JTextComponent) source ).getText();
             LOGGER.log( Level.INFO, "SettingsDialog.FileTextFieldVerifyer.shouldYieldFocus: called with: {0}", validationFile );
-            LOGGER.log( Level.INFO, "JComponent = {0}", Integer.toString( input.hashCode() ) );
+            LOGGER.log( Level.INFO, "JComponent = {0}", Integer.toString( source.hashCode() ) );
             LOGGER.log( Level.INFO, "autoLoadJTextField = {0}", Integer.toString( autoLoadJTextField.hashCode() ) );
 
-            if ( input.hashCode() == autoLoadJTextField.hashCode() ) {
+            if ( source.hashCode() == autoLoadJTextField.hashCode() ) {
                 checkAutoLoad( validationFile );
             }
 

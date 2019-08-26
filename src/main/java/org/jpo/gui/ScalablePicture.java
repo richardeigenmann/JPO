@@ -11,7 +11,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.net.URL;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -82,9 +81,9 @@ public class ScalablePicture
     private double scaleFactor;
 
     /**
-     * the URL of the picture
+     * the File of the picture
      */
-    public URL imageUrl;
+    public File imageFile;
 
     /**
      * variable to compose the status message
@@ -182,13 +181,13 @@ public class ScalablePicture
      * Has it finished loading? If no -&gt; wait for it If yes -&gt; use it Else
      * -&gt; load it
      *
-     * @param imageUrl	The URL of the image you want to load
+     * @param file	The URL of the image you want to load
      * @param priority	The Thread priority
      * @param rotation	The rotation 0-360 that the image should be put through
      * after loading.
      */
-    public void loadAndScalePictureInThread( URL imageUrl, int priority, double rotation ) {
-        this.imageUrl = imageUrl;
+    public void loadAndScalePictureInThread( File file, int priority, double rotation ) {
+        this.imageFile = file;
         if ( sourcePicture != null ) {
             sourcePicture.removeListener( this );
         }
@@ -196,7 +195,7 @@ public class ScalablePicture
         sourcePicture.addListener( this );
         setStatus( SCALABLE_PICTURE_LOADING, Settings.jpoResources.getString( "ScalablePictureLoadingStatus" ) );
         scaleAfterLoad = true;
-        sourcePicture.loadPictureInThread( imageUrl, priority, rotation );
+        sourcePicture.loadPictureInThread( file, priority, rotation );
         // when the thread is done it sends a sourceStatusChange message to us
     }
 
@@ -206,26 +205,26 @@ public class ScalablePicture
      * this intended for large batch operations this bypasses the cache. There
      * are no status updates
      *
-     * @param imageUrl The Url of the image to be loaded
+     * @param imageFile The Url of the image to be loaded
      * @param rotation The angle by which it is to be rotated upon loading.
      */
-    public void loadPictureImd( URL imageUrl, double rotation ) {
+    public void loadPictureImd( File imageFile, double rotation ) {
         if ( sourcePicture != null ) {
             sourcePicture.removeListener( this );
         }
         sourcePicture = new SourcePicture();
         scaleAfterLoad = false;
-        sourcePicture.loadPicture( imageUrl, rotation );
+        sourcePicture.loadPicture( imageFile, rotation );
     }
 
     /**
      * stops all picture loading except if the Url we desire is being loaded
      *
-     * @param url	The URL of the image which is to be loaded.
+     * @param file	The URL of the image which is to be loaded.
      */
-    public void stopLoadingExcept( URL url ) {
+    public void stopLoadingExcept( File file ) {
         if ( sourcePicture != null ) {
-            boolean isCurrentlyLoading = sourcePicture.stopLoadingExcept( url );
+            boolean isCurrentlyLoading = sourcePicture.stopLoadingExcept( file );
             if ( !isCurrentlyLoading ) {
                 sourcePicture.removeListener( this );
             }
@@ -357,7 +356,7 @@ public class ScalablePicture
             }
         } catch ( OutOfMemoryError e ) {
             LOGGER.log( Level.SEVERE, "Caught an OutOfMemoryError while scaling an image.\n{0}", e.getMessage() );
-            setStatus( SCALABLE_PICTURE_ERROR, "Out of Memory Error while scaling " + imageUrl.toString() );
+            setStatus( SCALABLE_PICTURE_ERROR, "Out of Memory Error while scaling " + imageFile.toString() );
             scaledPicture = null;
             Tools.dealOutOfMemoryError();
         }
@@ -567,7 +566,7 @@ public class ScalablePicture
      * @return the filename of the original image
      */
     public String getFilename() {
-        return imageUrl.toString();
+        return imageFile.toString();
     }
 
     /**

@@ -172,7 +172,7 @@ public class PictureInfo implements Serializable {
     /**
      * The description of the image.
      */
-    private String description = "";
+    private String description;
 
     /**
      * Returns the description of the image.
@@ -265,8 +265,9 @@ public class PictureInfo implements Serializable {
      * @return the image location
      * @throws MalformedURLException if the location could not be converted to a
      *                               URL.
-     * @Deprecated
+     * @deprecated
      */
+    @Deprecated
     public synchronized URL getImageURL() throws MalformedURLException {
         return getImageFile().toURI().toURL();
     }
@@ -277,8 +278,9 @@ public class PictureInfo implements Serializable {
      * thrown.
      *
      * @return the image location
-     * @Deprecated
+     * @deprecated
      */
+    @Deprecated
     public synchronized URL getImageURLOrNull() {
         try {
             return getImageFile().toURI().toURL();
@@ -324,6 +326,7 @@ public class PictureInfo implements Serializable {
             try {
                 imageFile = new File(new URL(myImageLocation).toURI());
             } catch (URISyntaxException | MalformedURLException e) {
+                // Ignore it
             }
             sendImageLocationChangedEvent();
         }
@@ -393,7 +396,6 @@ public class PictureInfo implements Serializable {
             sendChecksumChangedEvent();
         } catch (IOException e) {
             LOGGER.severe("Leaving Checksum unchanged. Exception reads: " + e.getMessage());
-            return;
         }
     }
 
@@ -434,7 +436,7 @@ public class PictureInfo implements Serializable {
     public synchronized void parseChecksum() {
         try {
             LOGGER.log(Level.FINE, "PictureInfo.parseChecksum: {0}", checksumString);
-            checksum = (new Long(checksumString));
+            checksum = Long.parseLong(checksumString);
             checksumString = "";
         } catch (NumberFormatException x) {
             LOGGER.log(Level.INFO, "PictureInfo.parseChecksum: invalid checksum: {0} on picture: {1} --> Set to MIN", new Object[]{checksumString, getImageFile().getName()});
@@ -775,7 +777,7 @@ public class PictureInfo implements Serializable {
      */
     public synchronized void parseRotation() {
         try {
-            rotation = (new Double(rotationString));
+            rotation = Double.parseDouble(rotationString);
             rotationString = null;
         } catch (NumberFormatException x) {
             LOGGER.log(Level.INFO, "invalid rotation: {0} on picture: {1} --> Set to Zero", new Object[]{rotationString, getImageFile().toString()});
@@ -889,8 +891,8 @@ public class PictureInfo implements Serializable {
     public synchronized void parseLatLng() {
         try {
             String[] latLngArray = latLngString.split("x");
-            Double lat = (new Double(latLngArray[0]));
-            Double lng = (new Double(latLngArray[1]));
+            double lat = Double.parseDouble(latLngArray[0]);
+            double lng = Double.parseDouble(latLngArray[1]);
             setLatLng(new Point2D.Double(lat, lng));
             latLngString = null;
         } catch (NumberFormatException x) {
@@ -1014,7 +1016,7 @@ public class PictureInfo implements Serializable {
      */
     public synchronized void parseCategoryAssignment() {
         try {
-            Integer category = new Integer(categoryAssignmentString);
+            Integer category = Integer.valueOf(categoryAssignmentString);
             categoryAssignmentString = "";
             addCategoryAssignment(category);
         } catch (NumberFormatException x) {

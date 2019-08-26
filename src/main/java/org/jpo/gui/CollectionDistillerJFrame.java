@@ -100,10 +100,10 @@ public class CollectionDistillerJFrame extends JFrame {
         xmlFileNameJTextField.setInputVerifier(new InputVerifier() {
 
             @Override
-            public boolean shouldYieldFocus(JComponent input) {
-                String validationFile = ((JTextComponent) input).getText();
+            public boolean shouldYieldFocus(JComponent source, JComponent target) {
+                String validationFile = ((JTextComponent) source).getText();
                 if (!validationFile.toUpperCase().endsWith(".XML")) {
-                    ((JTextComponent) input).setText(validationFile + ".xml");
+                    ((JTextComponent) source).setText(validationFile + ".xml");
                 }
                 return true;
             }

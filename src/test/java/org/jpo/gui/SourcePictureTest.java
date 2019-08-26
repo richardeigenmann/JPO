@@ -33,8 +33,14 @@ public class SourcePictureTest {
         SourcePicture s = new SourcePicture();
         final String NIKON_D100_IMAGE = "exif-test-nikon-d100-1.jpg";
         URL imageUrl = SourcePictureTest.class.getClassLoader().getResource(NIKON_D100_IMAGE);
-
-        s.loadPicture(imageUrl, 0.0);
+        File imageFile = null;
+        try {
+            imageFile = new File(Objects.requireNonNull(imageUrl).toURI());
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+            fail("Could not convert resource to File");
+        }
+        s.loadPicture(imageFile, 0.0);
         assertEquals("Height", 233, s.getHeight());
     }
 
@@ -43,8 +49,15 @@ public class SourcePictureTest {
         SourcePicture s = new SourcePicture();
         final String NIKON_D100_IMAGE = "exif-test-nikon-d100-1.jpg";
         URL imageUrl = SourcePictureTest.class.getClassLoader().getResource(NIKON_D100_IMAGE);
+        File imageFile = null;
+        try {
+            imageFile = new File(Objects.requireNonNull(imageUrl).toURI());
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+            fail("Could not convert resource to File");
+        }
 
-        s.loadPicture(imageUrl, 90.0);
+        s.loadPicture(imageFile, 90.0);
         assertEquals("Height", 350, s.getHeight());
     }
 
@@ -60,8 +73,15 @@ public class SourcePictureTest {
         SourcePicture s = new SourcePicture();
         final String NIKON_D100_IMAGE = "exif-test-nikon-d100-1.jpg";
         URL imageUrl = SourcePictureTest.class.getClassLoader().getResource(NIKON_D100_IMAGE);
+        File imageFile = null;
+        try {
+            imageFile = new File(Objects.requireNonNull(imageUrl).toURI());
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+            fail("Could not convert resource to File");
+        }
 
-        s.loadPicture(imageUrl, 0.0);
+        s.loadPicture(imageFile, 0.0);
         assertEquals("Width", 350, s.getWidth());
     }
 
@@ -70,8 +90,15 @@ public class SourcePictureTest {
         SourcePicture s = new SourcePicture();
         final String NIKON_D100_IMAGE = "exif-test-nikon-d100-1.jpg";
         URL imageUrl = SourcePictureTest.class.getClassLoader().getResource(NIKON_D100_IMAGE);
+        File imageFile = null;
+        try {
+            imageFile = new File(Objects.requireNonNull(imageUrl).toURI());
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+            fail("Could not convert resource to File");
+        }
 
-        s.loadPicture(imageUrl, 90.0);
+        s.loadPicture(imageFile, 90.0);
         assertEquals("Height", 233, s.getWidth());
     }
 
@@ -86,8 +113,15 @@ public class SourcePictureTest {
         SourcePicture s = new SourcePicture();
         final String NIKON_D100_IMAGE = "exif-test-nikon-d100-1.jpg";
         URL imageUrl = SourcePictureTest.class.getClassLoader().getResource(NIKON_D100_IMAGE);
+        File imageFile = null;
+        try {
+            imageFile = new File(Objects.requireNonNull(imageUrl).toURI());
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+            fail("Could not convert resource to File");
+        }
 
-        s.loadPicture(imageUrl, 0.0);
+        s.loadPicture(imageFile, 0.0);
         assertEquals("Size", new Dimension(350, 233), s.getSize());
     }
 
@@ -96,8 +130,15 @@ public class SourcePictureTest {
         SourcePicture s = new SourcePicture();
         final String NIKON_D100_IMAGE = "exif-test-nikon-d100-1.jpg";
         URL imageUrl = SourcePictureTest.class.getClassLoader().getResource(NIKON_D100_IMAGE);
+        File imageFile = null;
+        try {
+            imageFile = new File(Objects.requireNonNull(imageUrl).toURI());
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+            fail("Could not convert resource to File");
+        }
 
-        s.loadPicture(imageUrl, 270.0);
+        s.loadPicture(imageFile, 270.0);
         assertEquals("Size", new Dimension(233, 350), s.getSize());
     }
 
@@ -112,8 +153,15 @@ public class SourcePictureTest {
         SourcePicture s = new SourcePicture();
         final String JPG_IMAGE_FILE = "exif-test-nikon-d100-1.jpg";
         URL imageUrl = SourcePictureTest.class.getClassLoader().getResource(JPG_IMAGE_FILE);
+        File imageFile = null;
+        try {
+            imageFile = new File(Objects.requireNonNull(imageUrl).toURI());
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+            fail("Could not convert resource to File");
+        }
 
-        s.loadPicture(imageUrl, 0.0);
+        s.loadPicture(imageFile, 0.0);
         assertNotNull("We were trying to load a jpg image but it was null!", s.getSourceBufferedImage());
         assertEquals("Height", 233, s.getHeight());
         assertEquals("Width", 350, s.getWidth());
@@ -152,8 +200,15 @@ public class SourcePictureTest {
         SourcePicture s = new SourcePicture();
         final String BMP_IMAGE_FILE = "bmp.bmp";
         URL imageUrl = SourcePictureTest.class.getClassLoader().getResource(BMP_IMAGE_FILE);
+        File imageFile = null;
+        try {
+            imageFile = new File(Objects.requireNonNull(imageUrl).toURI());
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+            fail("Could not convert resource to File");
+        }
 
-        s.loadPicture(imageUrl, 0.0);
+        s.loadPicture(imageFile, 0.0);
         assertNotNull("We were trying to load a bmp image but it was null!", s.getSourceBufferedImage());
         assertEquals("Height", 100, s.getHeight());
         assertEquals("Width", 150, s.getWidth());
@@ -193,8 +248,15 @@ public class SourcePictureTest {
         SourcePicture s = new SourcePicture();
         final String TIFF_IMAGE_FILE = "tiff_image.tiff";
         URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(TIFF_IMAGE_FILE));
+        File imageFile = null;
+        try {
+            imageFile = new File(imageUrl.toURI());
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+            fail("Could not convert resource to File");
+        }
 
-        s.loadPicture(imageUrl, 0.0);
+        s.loadPicture(imageFile, 0.0);
         assertNotNull("We were trying to load a tiff image but it was null!", s.getSourceBufferedImage());
         assertEquals("Height", 100, s.getHeight());
         assertEquals("Width", 200, s.getWidth());
@@ -234,8 +296,15 @@ public class SourcePictureTest {
         SourcePicture s = new SourcePicture();
         final String HDR_IMAGE_FILE = "memorial_o876.hdr";
         URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(HDR_IMAGE_FILE));
+        File imageFile = null;
+        try {
+            imageFile = new File(imageUrl.toURI());
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+            fail("Could not convert resource to File");
+        }
 
-        s.loadPicture(imageUrl, 0.0);
+        s.loadPicture(imageFile, 0.0);
         assertNotNull("We were trying to load a hdr image but it was null!", s.getSourceBufferedImage());
         assertEquals("Height", 768, s.getHeight());
         assertEquals("Width", 512, s.getWidth());
@@ -274,8 +343,15 @@ public class SourcePictureTest {
         SourcePicture s = new SourcePicture();
         final String PDF_IMAGE_FILE = "pdf-document.pdf";
         URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(PDF_IMAGE_FILE));
+        File imageFile = null;
+        try {
+            imageFile = new File(imageUrl.toURI());
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+            fail("Could not convert resource to File");
+        }
 
-        s.loadPicture(imageUrl, 0.0);
+        s.loadPicture(imageFile, 0.0);
         assertNotNull("We were trying to load a pdf image but it was null!", s.getSourceBufferedImage());
         assertEquals("Height", 768, s.getHeight());
         assertEquals("Width", 512, s.getWidth());
@@ -317,8 +393,15 @@ public class SourcePictureTest {
         SourcePicture s = new SourcePicture();
         final String SVG_IMAGE_FILE = "Ghostscript_Tiger.svg";
         URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(SVG_IMAGE_FILE));
+        File imageFile = null;
+        try {
+            imageFile = new File(imageUrl.toURI());
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+            fail("Could not convert resource to File");
+        }
 
-        s.loadPicture(imageUrl, 0.0);
+        s.loadPicture(imageFile, 0.0);
         assertNotNull("We were trying to load a svg image but it was null!", s.getSourceBufferedImage());
         assertEquals("Height", 400, s.getHeight());
         assertEquals("Width", 400, s.getWidth());
@@ -358,8 +441,15 @@ public class SourcePictureTest {
         SourcePicture s = new SourcePicture();
         final String PNM_IMAGE_FILE = "pnm.pnm";
         URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(PNM_IMAGE_FILE));
+        File imageFile = null;
+        try {
+            imageFile = new File(imageUrl.toURI());
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+            fail("Could not convert resource to File");
+        }
 
-        s.loadPicture(imageUrl, 0.0);
+        s.loadPicture(imageFile, 0.0);
         assertNotNull("We were trying to load a pnm image but it was null!", s.getSourceBufferedImage());
         assertEquals("Height", 100, s.getHeight());
         assertEquals("Width", 150, s.getWidth());
@@ -400,8 +490,15 @@ public class SourcePictureTest {
         SourcePicture s = new SourcePicture();
         final String SGI_IMAGE_FILE = "sgi.sgi";
         URL imageUrl = SourcePictureTest.class.getClassLoader().getResource(SGI_IMAGE_FILE);
+        File imageFile = null;
+        try {
+            imageFile = new File(Objects.requireNonNull(imageUrl).toURI());
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+            fail("Could not convert resource to File");
+        }
 
-        s.loadPicture(imageUrl, 0.0);
+        s.loadPicture(imageFile, 0.0);
         assertNotNull("We were trying to load a sgi image but it was null!", s.getSourceBufferedImage());
         assertEquals("Height", 100, s.getHeight());
         assertEquals("Width", 150, s.getWidth());
@@ -440,8 +537,15 @@ public class SourcePictureTest {
         SourcePicture s = new SourcePicture();
         final String TGA_IMAGE_FILE = "tga.tga";
         URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(TGA_IMAGE_FILE));
+        File imageFile = null;
+        try {
+            imageFile = new File(imageUrl.toURI());
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+            fail("Could not convert resource to File");
+        }
 
-        s.loadPicture(imageUrl, 0.0);
+        s.loadPicture(imageFile, 0.0);
         assertNotNull("We were trying to load a tga image but it was null!", s.getSourceBufferedImage());
         assertEquals("Height", 100, s.getHeight());
         assertEquals("Width", 150, s.getWidth());
@@ -481,8 +585,15 @@ public class SourcePictureTest {
         SourcePicture s = new SourcePicture();
         final String PSD_IMAGE_FILE = "psd.psd";
         URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(PSD_IMAGE_FILE));
+        File imageFile = null;
+        try {
+            imageFile = new File(imageUrl.toURI());
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+            fail("Could not convert resource to File");
+        }
 
-        s.loadPicture(imageUrl, 0.0);
+        s.loadPicture(imageFile, 0.0);
         assertNotNull("We were trying to load a psd image but it was null!", s.getSourceBufferedImage());
         assertEquals("Height", 100, s.getHeight());
         assertEquals("Width", 150, s.getWidth());
@@ -521,8 +632,15 @@ public class SourcePictureTest {
         SourcePicture s = new SourcePicture();
         final String ICO_IMAGE_FILE = "favicon.ico";
         URL imageUrl = SourcePictureTest.class.getClassLoader().getResource(ICO_IMAGE_FILE);
+        File imageFile = null;
+        try {
+            imageFile = new File(Objects.requireNonNull(imageUrl).toURI());
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+            fail("Could not convert resource to File");
+        }
 
-        s.loadPicture(imageUrl, 0.0);
+        s.loadPicture(imageFile, 0.0);
         assertNotNull("We were trying to load an ico image but it was null!", s.getSourceBufferedImage());
         assertEquals("Height", 64, s.getHeight());
         assertEquals("Width", 64, s.getWidth());
@@ -561,8 +679,15 @@ public class SourcePictureTest {
         SourcePicture s = new SourcePicture();
         final String PNG_IMAGE_FILE = "png.png";
         URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(PNG_IMAGE_FILE));
+        File imageFile = null;
+        try {
+            imageFile = new File(imageUrl.toURI());
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+            fail("Could not convert resource to File");
+        }
 
-        s.loadPicture(imageUrl, 0.0);
+        s.loadPicture(imageFile, 0.0);
         assertNotNull("We were trying to load a png image but it was null!", s.getSourceBufferedImage());
         assertEquals("Height", 100, s.getHeight());
         assertEquals("Width", 150, s.getWidth());
@@ -602,8 +727,15 @@ public class SourcePictureTest {
         SourcePicture s = new SourcePicture();
         final String GIF_IMAGE_FILE = "gif.gif";
         URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(GIF_IMAGE_FILE));
+        File imageFile = null;
+        try {
+            imageFile = new File(imageUrl.toURI());
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+            fail("Could not convert resource to File");
+        }
 
-        s.loadPicture(imageUrl, 0.0);
+        s.loadPicture(imageFile, 0.0);
         assertNotNull("We were trying to load a gif image but it was null!", s.getSourceBufferedImage());
         assertEquals("Height", 100, s.getHeight());
         assertEquals("Width", 150, s.getWidth());
@@ -643,8 +775,15 @@ public class SourcePictureTest {
         SourcePicture s = new SourcePicture();
         final String IFF_IMAGE_FILE = "AmigaAmiga.iff";
         URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(IFF_IMAGE_FILE));
+        File imageFile = null;
+        try {
+            imageFile = new File(imageUrl.toURI());
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+            fail("Could not convert resource to File");
+        }
 
-        s.loadPicture(imageUrl, 0.0);
+        s.loadPicture(imageFile, 0.0);
         assertNotNull("We were trying to load a iff image but it was null!", s.getSourceBufferedImage());
         assertEquals("Height", 150, s.getHeight());
         assertEquals("Width", 200, s.getWidth());
@@ -683,8 +822,15 @@ public class SourcePictureTest {
         SourcePicture s = new SourcePicture();
         final String PCX_IMAGE_FILE = "pcx.pcx";
         URL imageUrl = SourcePictureTest.class.getClassLoader().getResource(PCX_IMAGE_FILE);
+        File imageFile = null;
+        try {
+            imageFile = new File(Objects.requireNonNull(imageUrl).toURI());
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+            fail("Could not convert resource to File");
+        }
 
-        s.loadPicture(imageUrl, 0.0);
+        s.loadPicture(imageFile, 0.0);
         assertNotNull("We were trying to load a pcx image but it was null!", s.getSourceBufferedImage());
         assertEquals("Height", 100, s.getHeight());
         assertEquals("Width", 150, s.getWidth());
@@ -723,8 +869,15 @@ public class SourcePictureTest {
         SourcePicture s = new SourcePicture();
         final String PICT_IMAGE_FILE = "food.pct";
         URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(PICT_IMAGE_FILE));
+        File imageFile = null;
+        try {
+            imageFile = new File(imageUrl.toURI());
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+            fail("Could not convert resource to File");
+        }
 
-        s.loadPicture(imageUrl, 0.0);
+        s.loadPicture(imageFile, 0.0);
         assertNotNull("We were trying to load a pct image but it was null!", s.getSourceBufferedImage());
         assertEquals("Height", 194, s.getHeight());
         assertEquals("Width", 146, s.getWidth());
@@ -763,8 +916,15 @@ public class SourcePictureTest {
         SourcePicture s = new SourcePicture();
         final String CLIP_PATH_IMAGE_FILE = "grape_with_path.jpg";
         URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(CLIP_PATH_IMAGE_FILE));
+        File imageFile = null;
+        try {
+            imageFile = new File(imageUrl.toURI());
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+            fail("Could not convert resource to File");
+        }
 
-        s.loadPicture(imageUrl, 0.0);
+        s.loadPicture(imageFile, 0.0);
         assertNotNull("We were trying to load a clipPath image but it was null!", s.getSourceBufferedImage());
         assertEquals("Height", 1800, s.getHeight());
         assertEquals("Width", 857, s.getWidth());
@@ -803,8 +963,15 @@ public class SourcePictureTest {
         SourcePicture s = new SourcePicture();
         final String ICNS_IMAGE_FILE = "7zIcon.icns";
         URL imageUrl = SourcePictureTest.class.getClassLoader().getResource(ICNS_IMAGE_FILE);
+        File imageFile = null;
+        try {
+            imageFile = new File(Objects.requireNonNull(imageUrl).toURI());
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+            fail("Could not convert resource to File");
+        }
 
-        s.loadPicture(imageUrl, 0.0);
+        s.loadPicture(imageFile, 0.0);
         assertNotNull("We were trying to load a icns image but it was null!", s.getSourceBufferedImage());
         assertEquals("Height", 16, s.getHeight());
         assertEquals("Width", 16, s.getWidth());
@@ -843,8 +1010,15 @@ public class SourcePictureTest {
         SourcePicture s = new SourcePicture();
         final String THUMBS_DB_IMAGE_FILE = "Thumbs.db";
         URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(THUMBS_DB_IMAGE_FILE));
+        File imageFile = null;
+        try {
+            imageFile = new File(imageUrl.toURI());
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+            fail("Could not convert resource to File");
+        }
 
-        s.loadPicture(imageUrl, 0.0);
+        s.loadPicture(imageFile, 0.0);
         assertNotNull("We were trying to load a ThumbsDb image but it was null!", s.getSourceBufferedImage());
         assertEquals("Height", 96, s.getHeight());
         assertEquals("Width", 96, s.getWidth());

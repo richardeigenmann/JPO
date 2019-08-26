@@ -5,7 +5,7 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
-import java.net.URL;
+import java.io.File;
 import java.text.DecimalFormat;
 import java.util.Collections;
 import java.util.HashSet;
@@ -163,20 +163,20 @@ public class OverlayedPictureController extends PictureController implements Sca
     /**
      * Brings up the indicated picture on the display.
      *
-     * @param filenameURL The URL of the picture to display
+     * @param file The URL of the picture to display
      * @param description	The description of the picture
      * @param rotation The rotation that should be applied
      */
-    public void setPicture( URL filenameURL, String description,
-            double rotation ) {
-        scalablePicture.stopLoadingExcept( filenameURL );
+    public void setPicture(File file, String description,
+                           double rotation ) {
+        scalablePicture.stopLoadingExcept( file );
 
         centerWhenScaled = true;
         scalablePicture.setScaleSize( getSize() );
-        scalablePicture.loadAndScalePictureInThread( filenameURL, Thread.MAX_PRIORITY, rotation );
+        scalablePicture.loadAndScalePictureInThread( file, Thread.MAX_PRIORITY, rotation );
 
         legend = description;
-        exifInfo = new ExifInfo( filenameURL );
+        exifInfo = new ExifInfo( file );
         exifInfo.decodeExifTags();
     }
 

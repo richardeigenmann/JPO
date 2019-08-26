@@ -2,6 +2,7 @@ package org.jpo.gui;
 
 import com.google.common.eventbus.Subscribe;
 import java.awt.event.ActionEvent;
+import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -103,7 +104,7 @@ public class ApplicationJMenuBar extends JMenuBar {
     /**
      * An array of recently opened collections.
      */
-    private final JMenuItem[] recentOpenedfileJMenuItem = new JMenuItem[Settings.MAX_MEMORISE];
+    private final JMenuItem[] recentOpenedFileJMenuItem = new JMenuItem[Settings.MAX_MEMORISE];
 
     /**
      * Menu item that allows the user to save the picture list.
@@ -289,10 +290,10 @@ public class ApplicationJMenuBar extends JMenuBar {
         Runnable runnable = () -> {
             for ( int i = 0; i < Settings.recentCollections.length; i++ ) {
                 if ( Settings.recentCollections[i] != null ) {
-                    recentOpenedfileJMenuItem[i].setText((i + 1) + ": " + Settings.recentCollections[i] );
-                    recentOpenedfileJMenuItem[i].setVisible( true );
+                    recentOpenedFileJMenuItem[i].setText((i + 1) + ": " + Settings.recentCollections[i] );
+                    recentOpenedFileJMenuItem[i].setVisible( true );
                 } else {
-                    recentOpenedfileJMenuItem[i].setVisible( false );
+                    recentOpenedFileJMenuItem[i].setVisible( false );
                 }
             }
         };
@@ -309,7 +310,7 @@ public class ApplicationJMenuBar extends JMenuBar {
         add( FileJMenu );
 
         FileNewJMenuItem.setMnemonic( KeyEvent.VK_N );
-        FileNewJMenuItem.setAccelerator( KeyStroke.getKeyStroke( 'N', java.awt.event.InputEvent.CTRL_MASK ) );
+        FileNewJMenuItem.setAccelerator( KeyStroke.getKeyStroke( 'N', InputEvent.CTRL_DOWN_MASK ) );
         FileNewJMenuItem.addActionListener(( ActionEvent e ) -> JpoEventBus.getInstance().post( new UnsavedUpdatesDialogRequest( new StartNewCollectionRequest() ) ));
         FileJMenu.add( FileNewJMenuItem );
 
@@ -318,7 +319,7 @@ public class ApplicationJMenuBar extends JMenuBar {
         FileJMenu.add( FileAddJMenuItem );
 
         FileLoadJMenuItem.setMnemonic( KeyEvent.VK_O );
-        FileLoadJMenuItem.setAccelerator( KeyStroke.getKeyStroke( 'O', java.awt.event.InputEvent.CTRL_MASK ) );
+        FileLoadJMenuItem.setAccelerator( KeyStroke.getKeyStroke( 'O', InputEvent.CTRL_DOWN_MASK ) );
         FileLoadJMenuItem.addActionListener(( ActionEvent e ) -> JpoEventBus.getInstance().post( new UnsavedUpdatesDialogRequest( new FileLoadDialogRequest() ) ));
         FileJMenu.add( FileLoadJMenuItem );
 
@@ -326,25 +327,25 @@ public class ApplicationJMenuBar extends JMenuBar {
         FileJMenu.add( FileOpenRecentJMenu );
 
         for ( int i = 0; i < Settings.MAX_MEMORISE; i++ ) {
-            recentOpenedfileJMenuItem[i] = new JMenuItem();
+            recentOpenedFileJMenuItem[i] = new JMenuItem();
             final int index = i;  // the anonymous inner class needs a final variable
-            recentOpenedfileJMenuItem[i].addActionListener(( ActionEvent e ) -> JpoEventBus.getInstance().post( new UnsavedUpdatesDialogRequest( new OpenRecentCollectionRequest( index ) ) ));
-            recentOpenedfileJMenuItem[i].setVisible( false );
-            recentOpenedfileJMenuItem[i].setAccelerator( KeyStroke.getKeyStroke( "control " + Integer.toString( i ).substring( 1, 1 ) ) );
-            FileOpenRecentJMenu.add( recentOpenedfileJMenuItem[i] );
+            recentOpenedFileJMenuItem[i].addActionListener((ActionEvent e ) -> JpoEventBus.getInstance().post( new UnsavedUpdatesDialogRequest( new OpenRecentCollectionRequest( index ) ) ));
+            recentOpenedFileJMenuItem[i].setVisible( false );
+            recentOpenedFileJMenuItem[i].setAccelerator( KeyStroke.getKeyStroke( "control " + Integer.toString( i ).substring( 1, 1 ) ) );
+            FileOpenRecentJMenu.add( recentOpenedFileJMenuItem[i] );
         }
 
         FileSaveJMenuItem.setMnemonic( KeyEvent.VK_S );
-        FileSaveJMenuItem.setAccelerator( KeyStroke.getKeyStroke( 'S', java.awt.event.InputEvent.CTRL_MASK ) );
+        FileSaveJMenuItem.setAccelerator( KeyStroke.getKeyStroke( 'S', InputEvent.CTRL_DOWN_MASK ) );
         FileSaveJMenuItem.addActionListener(( ActionEvent e ) -> JpoEventBus.getInstance().post( new FileSaveRequest() ));
         FileJMenu.add( FileSaveJMenuItem );
 
         FileSaveAsJMenuItem.setMnemonic( KeyEvent.VK_A );
-        FileSaveAsJMenuItem.setAccelerator( KeyStroke.getKeyStroke( 'A', java.awt.event.InputEvent.ALT_MASK ) );
+        FileSaveAsJMenuItem.setAccelerator( KeyStroke.getKeyStroke( 'A', InputEvent.ALT_DOWN_MASK ) );
         FileSaveAsJMenuItem.addActionListener(( ActionEvent e ) -> JpoEventBus.getInstance().post( new FileSaveAsRequest() ));
         FileJMenu.add( FileSaveAsJMenuItem );
 
-        FileExitJMenuItem.setAccelerator( KeyStroke.getKeyStroke( KeyEvent.VK_F4, java.awt.event.InputEvent.ALT_MASK ) );
+        FileExitJMenuItem.setAccelerator( KeyStroke.getKeyStroke( KeyEvent.VK_F4, InputEvent.ALT_DOWN_MASK ) );
         FileExitJMenuItem.addActionListener(( ActionEvent e ) -> JpoEventBus.getInstance().post( new UnsavedUpdatesDialogRequest( new CloseApplicationRequest() ) ));
         FileJMenu.add( FileExitJMenuItem );
 
@@ -353,7 +354,7 @@ public class ApplicationJMenuBar extends JMenuBar {
         add( EditJMenu );
 
         EditFindJMenuItem.setMnemonic( KeyEvent.VK_F );
-        EditFindJMenuItem.setAccelerator( KeyStroke.getKeyStroke( 'F', java.awt.event.InputEvent.CTRL_MASK ) );
+        EditFindJMenuItem.setAccelerator( KeyStroke.getKeyStroke( 'F', InputEvent.CTRL_DOWN_MASK ) );
         EditFindJMenuItem.addActionListener(( ActionEvent e ) -> JpoEventBus.getInstance().post( new OpenSearchDialogRequest( Settings.getPictureCollection().getRootNode() ) ));
         EditJMenu.add( EditFindJMenuItem );
 

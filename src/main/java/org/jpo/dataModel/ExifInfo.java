@@ -14,10 +14,7 @@ import com.drew.metadata.jpeg.JpegDirectory;
 import org.apache.commons.lang3.StringUtils;
 
 import java.awt.geom.Point2D;
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
+import java.io.*;
 import java.util.logging.Logger;
 
 /*
@@ -50,9 +47,9 @@ public class ExifInfo {
      */
     private static final Logger LOGGER = Logger.getLogger( ExifInfo.class.getName() );
     /**
-     * The URL or the image to be decoded
+     * The File of the image to be decoded
      */
-    private final URL pictureUrl;
+    private final File pictureFile;
     /**
      * The brand and model of the camera
      */
@@ -110,23 +107,23 @@ public class ExifInfo {
      *
      * @see #decodeExifTags() next.
      *
-     * @param pictureUrl The URL of the picture
+     * @param pictureFile The URL of the picture
      */
-    public ExifInfo( URL pictureUrl ) {
-        this.pictureUrl = pictureUrl;
+    public ExifInfo( File pictureFile ) {
+        this.pictureFile = pictureFile;
     }
 
     /**
      * This method decodes the Exif tags and stores the data
      */
     public void decodeExifTags() {
-        if ( pictureUrl == null ) {
-            LOGGER.severe( "Can't decode Exif tags on a null URL!" );
+        if ( pictureFile == null ) {
+            LOGGER.severe( "Can't decode Exif tags on a null File!" );
             //Thread.dumpStack();
             return;
         }
         try {
-            InputStream imageStream = pictureUrl.openStream();
+            InputStream imageStream = new FileInputStream(pictureFile);
             Metadata metadata = ImageMetadataReader.readMetadata( new BufferedInputStream( imageStream ) );
 
             JpegDirectory jpegDirectory = metadata.getFirstDirectoryOfType( JpegDirectory.class );

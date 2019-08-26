@@ -125,7 +125,7 @@ public class ThumbnailCreationFactory implements Runnable {
             if ( userObject instanceof PictureInfo ) {
                 PictureInfo pictureinfo = (PictureInfo) userObject;
 
-                ImageBytes imageBytes = JpoCache.getInstance().getThumbnailImageBytes( pictureinfo.getImageURL(),
+                ImageBytes imageBytes = JpoCache.getInstance().getThumbnailImageBytes( pictureinfo.getImageFile(),
                         pictureinfo.getRotation(),
                         request.getSize() );
                 if ( imageBytes == null ) {

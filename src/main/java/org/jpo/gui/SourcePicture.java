@@ -9,7 +9,6 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -65,9 +64,9 @@ public class SourcePicture {
     private BufferedImage sourcePictureBufferedImage;
 
     /**
-     * the URL of the picture
+     * the File of the picture
      */
-    private URL imageUrl;
+    private File imageFile;
 
 
     /**
@@ -142,14 +141,14 @@ public class SourcePicture {
      * method to invoke with a filename or URL of a picture that is to be loaded
      * in the main thread.
      *
-     * @param imageUrl Image URL
+     * @param file Image URL
      * @param rotation Image rotation
      */
-    public void loadPicture(URL imageUrl, double rotation) {
+    public void loadPicture(File file, double rotation) {
         if (pictureStatusCode == SOURCE_PICTURE_LOADING) {
-            stopLoadingExcept(imageUrl);
+            stopLoadingExcept(file);
         }
-        this.imageUrl = imageUrl;
+        this.imageFile = file;
         this.rotation = rotation;
         loadPicture();
     }
@@ -159,16 +158,16 @@ public class SourcePicture {
      * a new thread. This is handy to update the screen while the loading chugs
      * along in the background.
      *
-     * @param imageUrl The URL of the image to be loaded
+     * @param imageFile The URL of the image to be loaded
      * @param priority The Thread priority for this thread.
      * @param rotation The rotation 0-360 to be used on this picture
      */
-    public void loadPictureInThread(URL imageUrl, int priority, double rotation) {
+    public void loadPictureInThread(File imageFile, int priority, double rotation) {
         if (pictureStatusCode == SOURCE_PICTURE_LOADING) {
-            stopLoadingExcept(imageUrl);
+            stopLoadingExcept(imageFile);
         }
 
-        this.imageUrl = imageUrl;
+        this.imageFile = imageFile;
         this.rotation = rotation;
         Thread t = new Thread("SourcePicture.loadPictureInThread") {
 
@@ -192,9 +191,9 @@ public class SourcePicture {
         loadTime = 0;
         ImageBytes imageBytes;
         try {
-            imageBytes = JpoCache.getInstance().getHighresImageBytes(imageUrl);
+            imageBytes = JpoCache.getInstance().getHighresImageBytes(imageFile);
         } catch (IOException e) {
-            setStatus(SOURCE_PICTURE_ERROR, "Error while reading " + imageUrl.toString());
+            setStatus(SOURCE_PICTURE_ERROR, "Error while reading " + imageFile.toString());
             sourcePictureBufferedImage = null;
             return;
         }
@@ -202,8 +201,8 @@ public class SourcePicture {
              ImageInputStream iis = ImageIO.createImageInputStream(bis)) {
             reader = getImageIOReader(iis);
             if (reader == null) {
-                LOGGER.severe(String.format("No reader found for URL: %s", imageUrl.toString()));
-                setStatus(SOURCE_PICTURE_ERROR, String.format("No reader found for URL: %s", imageUrl.toString()));
+                LOGGER.severe(String.format("No reader found for URL: %s", imageFile.toString()));
+                setStatus(SOURCE_PICTURE_ERROR, String.format("No reader found for URL: %s", imageFile.toString()));
                 sourcePictureBufferedImage = null;
                 return;
             }
@@ -241,13 +240,13 @@ public class SourcePicture {
             reader.dispose();
             //iis.close();
         } catch (IOException e) {
-            setStatus(SOURCE_PICTURE_ERROR, "Error while reading " + imageUrl.toString());
+            setStatus(SOURCE_PICTURE_ERROR, "Error while reading " + imageFile.toString());
             sourcePictureBufferedImage = null;
         }
 
         if (!abortFlag) {
             if (rotation != 0) {
-                setStatus(SOURCE_PICTURE_ROTATING, "Rotating: " + imageUrl.toString());
+                setStatus(SOURCE_PICTURE_ROTATING, "Rotating: " + imageFile.toString());
                 int xRot = sourcePictureBufferedImage.getWidth() / 2;
                 int yRot = sourcePictureBufferedImage.getHeight() / 2;
                 AffineTransform rotateAf = AffineTransform.getRotateInstance(Math.toRadians(rotation), xRot, yRot);
@@ -274,7 +273,7 @@ public class SourcePicture {
                 sourcePictureBufferedImage = op.filter(sourcePictureBufferedImage, targetImage);
             }
 
-            setStatus(SOURCE_PICTURE_READY, "Loaded: " + imageUrl.toString());
+            setStatus(SOURCE_PICTURE_READY, "Loaded: " + imageFile.toString());
             long end = System.currentTimeMillis();
             loadTime = end - start;
         } else {
@@ -319,22 +318,22 @@ public class SourcePicture {
      * reading the desired file. It returns true is the desired file is being
      * loaded. Otherwise it returns false.
      *
-     * @param exemptionURL The exemption URL
+     * @param exemptionFile The exemption URL
      * @return True if loading in progress, false if not
      */
-    public boolean stopLoadingExcept(URL exemptionURL) {
-        if ((imageUrl == null) || (exemptionURL == null)) {
+    public boolean stopLoadingExcept(File exemptionFile) {
+        if ((imageFile == null) || (exemptionFile == null)) {
             LOGGER.fine("exiting on a null parameter. How did this happen?");
             return false; // has never been used yet
         }
 
         if (pictureStatusCode != SOURCE_PICTURE_LOADING) {
-            LOGGER.log(Level.FINE, "called but pointless since image is not LOADING: {0}", imageUrl.toString());
+            LOGGER.log(Level.FINE, "called but pointless since image is not LOADING: {0}", imageFile.toString());
             return false;
         }
 
-        if (!exemptionURL.equals(imageUrl)) {
-            LOGGER.log(Level.FINE, "called with Url {0} --> stopping loading of {1}", new Object[]{exemptionURL.toString(), imageUrl.toString()});
+        if (!exemptionFile.equals(imageFile)) {
+            LOGGER.log(Level.FINE, "called with Url {0} --> stopping loading of {1}", new Object[]{exemptionFile.toString(), imageFile.toString()});
             stopLoading();
             return true;
         } else {

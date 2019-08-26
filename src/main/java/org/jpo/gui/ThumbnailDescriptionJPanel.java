@@ -155,7 +155,7 @@ public class ThumbnailDescriptionJPanel
             }
 
             @Override
-            public boolean shouldYieldFocus(JComponent component) {
+            public boolean shouldYieldFocus(JComponent source, JComponent target) {
                 doUpdate();
                 return true;
             }
@@ -209,9 +209,7 @@ public class ThumbnailDescriptionJPanel
             }
         });
 
-        pictureDescriptionJSP.getVerticalScrollBar().addAdjustmentListener((AdjustmentEvent e) -> {
-            setTextAreaSize();
-        });
+        pictureDescriptionJSP.getVerticalScrollBar().addAdjustmentListener((AdjustmentEvent e) -> setTextAreaSize());
 
         setVisible(false);
         add(pictureDescriptionJSP);
@@ -371,9 +369,7 @@ public class ThumbnailDescriptionJPanel
      * This method is EDT safe.
      */
     public void showAsSelected() {
-        Runnable r = () -> {
-            pictureDescriptionJTA.setBackground(Settings.SELECTED_COLOR_TEXT);
-        };
+        Runnable r = () -> pictureDescriptionJTA.setBackground(Settings.SELECTED_COLOR_TEXT);
         if (SwingUtilities.isEventDispatchThread()) {
             r.run();
         } else {
@@ -388,9 +384,7 @@ public class ThumbnailDescriptionJPanel
      * This method is EDT safe
      */
     public void showAsUnselected() {
-        Runnable runnable = () -> {
-            pictureDescriptionJTA.setBackground(Settings.UNSELECTED_COLOR);
-        };
+        Runnable runnable = () -> pictureDescriptionJTA.setBackground(Settings.UNSELECTED_COLOR);
         if (SwingUtilities.isEventDispatchThread()) {
             runnable.run();
         } else {

@@ -2,9 +2,12 @@ package org.jpo.gui;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Objects;
+
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertNotNull;
@@ -36,7 +39,14 @@ public class ScalablePictureTest {
         ScalablePicture scalablePicture = new ScalablePicture();
         assertNotNull( "Checking that the scalablePicture is not null", scalablePicture );
         URL imageUrl = ScalablePictureTest.class.getClassLoader().getResource( "exif-test-nikon-d100-1.jpg" );
-        scalablePicture.loadPictureImd( imageUrl, 0.0 );
+        File imageFile = null;
+        try {
+            imageFile = new File(Objects.requireNonNull(imageUrl).toURI());
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+            fail("Could not convert resource to File");
+        }
+        scalablePicture.loadPictureImd( imageFile, 0.0 );
         assertEquals( "Check that the image is 350 pixels wide", 350, scalablePicture.getSourcePicture().getWidth() );
         assertEquals( "Check that the image is 233 pixels high", 233, scalablePicture.getSourcePicture().getHeight() );
     }
@@ -49,7 +59,14 @@ public class ScalablePictureTest {
         ScalablePicture scalablePicture = new ScalablePicture();
         assertNotNull( "Checking that the scalablePicture is not null", scalablePicture );
         URL imageUrl = ScalablePictureTest.class.getClassLoader().getResource( "exif-test-nikon-d100-1.jpg" );
-        scalablePicture.loadPictureImd( imageUrl, 90.0 );
+        File imageFile = null;
+        try {
+            imageFile = new File(Objects.requireNonNull(imageUrl).toURI());
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+            fail("Could not convert resource to File");
+        }
+        scalablePicture.loadPictureImd( imageFile, 90.0 );
         assertEquals( "Check that the image is 233 pixels wide", 233, scalablePicture.getSourcePicture().getWidth() );
         assertEquals( "Check that the image is 350 pixels high", 350, scalablePicture.getSourcePicture().getHeight() );
     }
@@ -63,7 +80,14 @@ public class ScalablePictureTest {
         assertNotNull( "Checking that the scalablePicture is not null", scalablePicture );
 
         URL imageUrl = ScalablePictureTest.class.getClassLoader().getResource( "exif-test-nikon-d100-1.jpg" );
-        scalablePicture.loadPictureImd( imageUrl, 90.0 );
+        File imageFile = null;
+        try {
+            imageFile = new File(Objects.requireNonNull(imageUrl).toURI());
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+            fail("Could not convert resource to File");
+        }
+        scalablePicture.loadPictureImd( imageFile, 90.0 );
         assertEquals( "Check that the image is 233 pixels wide", 233, scalablePicture.getSourcePicture().getWidth() );
         assertEquals( "Check that the image is 350 pixels high", 350, scalablePicture.getSourcePicture().getHeight() );
 
@@ -83,7 +107,14 @@ public class ScalablePictureTest {
 
         //Settings.loadSettings();
         URL imageUrl = ScalablePictureTest.class.getClassLoader().getResource( "exif-test-nikon-d100-1.jpg" );
-        scalablePicture.loadPictureImd( imageUrl, 0.0 );
+        File imageFile = null;
+        try {
+            imageFile = new File(Objects.requireNonNull(imageUrl).toURI());
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+            fail("Could not convert resource to File");
+        }
+        scalablePicture.loadPictureImd( imageFile, 0.0 );
         assertEquals( "Check that the image is 350 pixels wide", 350, scalablePicture.getSourcePicture().getWidth() );
         assertEquals( "Check that the image is 233 pixels high", 233, scalablePicture.getSourcePicture().getHeight() );
 
@@ -102,7 +133,7 @@ public class ScalablePictureTest {
             assertTrue( "Checking if output file was created", outputFile.exists() );
 
             SourcePicture sourcePicture = new SourcePicture();
-            sourcePicture.loadPicture( outputFile.toURI().toURL(), 0.0 );
+            sourcePicture.loadPicture( outputFile, 0.0 );
             assertEquals( "Check that the image is 700 pixels wide", 700, sourcePicture.getWidth() );
             assertEquals( "Check that the image is 466 pixels high", 466, sourcePicture.getHeight() );
 

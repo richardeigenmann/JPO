@@ -135,7 +135,7 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
         final JLayeredPane layeredPane = new JLayeredPane();
 
         layeredPane.setLayout( new OverlayLayout( layeredPane ) );
-        layeredPane.add( thumbnailsPane, new Integer( 1 ) );
+        layeredPane.add( thumbnailsPane, Integer.valueOf(1));
 
         final JPanel overlayPanel = new JPanel() {
             @Override
@@ -155,7 +155,7 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
         };
         overlayPanel.setOpaque( false );
 
-        layeredPane.add( overlayPanel, new Integer( 2 ) );
+        layeredPane.add( overlayPanel, Integer.valueOf(2));
 
         thumbnailJScrollPane.setViewportView( layeredPane );
         thumbnailsPane.setBackground( Settings.JPO_BACKGROUND_COLOR );

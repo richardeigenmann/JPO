@@ -19,8 +19,8 @@ apply plugin: 'java'
 apply plugin: "jacoco"
 apply plugin: "eclipse"
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+sourceCompatibility = 1.9
+targetCompatibility = 1.9
 
 //ext.moduleName = 'Main'
 
@@ -371,4 +371,14 @@ task uploadWebsite() {
     group 'website'
     description 'Publishes the JPO website'
     dependsOn uploadWebStartFiles, uploadWebsitePages, uploadJavadoc, uploadWindowsInstaller
+}
+
+
+allprojects { // Projects
+    gradle.projectsEvaluated {
+        tasks.withType(JavaCompile) {
+            options.encoding = 'UTF-8'
+            options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+        }
+    }
 }

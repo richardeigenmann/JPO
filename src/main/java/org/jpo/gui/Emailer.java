@@ -3,12 +3,7 @@ package org.jpo.gui;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.URL;
+import java.io.*;
 import java.util.List;
 import java.util.Objects;
 import java.util.Properties;
@@ -16,7 +11,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
-import javax.activation.URLDataSource;
+import javax.activation.FileDataSource;
 import javax.mail.Authenticator;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -179,10 +174,9 @@ public class Emailer
      * This is where the SwingWorker does it's stuff
      *
      * @return "Done"
-     * @throws Exception An Exception if something went wrong
      */
     @Override
-    protected String doInBackground() throws Exception {
+    protected String doInBackground() {
         switch ( Settings.emailAuthentication ) {
             case 1:
                 sendEmailAuth();
@@ -258,7 +252,7 @@ public class Emailer
             ScalablePicture scalablePicture = new ScalablePicture();
             scalablePicture.setScaleSize( scaleSize );
 
-            URL highresURL;
+            File highresFile;
             PictureInfo pi;
             DataSource ds;
             ByteArrayOutputStream baos;
@@ -273,13 +267,13 @@ public class Emailer
 
                 if ( scaleImages ) {
                     LOGGER.log( Level.INFO, "{0}{1}", new Object[]{ Settings.jpoResources.getString( "EmailerLoading" ), pi.getImageFile().toString() } );
-                    scalablePicture.loadPictureImd( pi.getImageURLOrNull(), pi.getRotation() );
+                    scalablePicture.loadPictureImd( pi.getImageFile(), pi.getRotation() );
                     LOGGER.log( Level.INFO, "{0}{1}", new Object[]{ Settings.jpoResources.getString( "EmailerScaling" ), pi.getImageFile().toString() } );
                     scalablePicture.scalePicture();
                     baos = new ByteArrayOutputStream();
                     LOGGER.log( Level.INFO, "{0}{1}", new Object[]{ Settings.jpoResources.getString( "EmailerWriting" ), pi.getImageFile().toString() } );
                     scalablePicture.writeScaledJpg( baos );
-                    encds = new EncodedDataSource( "image/jpeg", pi.getImageFile().getName(), baos );
+                    encds = new EncodedDataSource("image/jpeg", pi.getImageFile().getName(), baos);
                     scaledPictureMimeBodyPart = new MimeBodyPart();
                     scaledPictureMimeBodyPart.setDataHandler( new DataHandler( encds ) );
                     scaledPictureMimeBodyPart.setFileName( pi.getImageFile().getName() );
@@ -290,9 +284,9 @@ public class Emailer
                 if ( sendOriginal ) {
                     // create the message part fro the original image
                     originalPictureMimeBodyPart = new MimeBodyPart();
-                    highresURL = pi.getImageURLOrNull();
+                    highresFile = pi.getImageFile();
                     // attach the file to the message
-                    ds = new URLDataSource( highresURL );
+                    ds = new FileDataSource( highresFile );
                     originalPictureMimeBodyPart.setDataHandler( new DataHandler( ds ) );
                     originalPictureMimeBodyPart.setFileName( pi.getImageFile().getName() );
                     // create the Multipart and add its parts to it
@@ -421,7 +415,7 @@ public class Emailer
     /**
      * A class that somehow helps with the emailing
      */
-    private class EncodedDataSource
+    private static class EncodedDataSource
             implements DataSource {
 
         EncodedDataSource( String contentType, String filename,
@@ -438,12 +432,12 @@ public class Emailer
         private final ByteArrayOutputStream baos;
 
         @Override
-        public InputStream getInputStream() throws IOException {
+        public InputStream getInputStream() {
             return new ByteArrayInputStream( baos.toByteArray() );
         }
 
         @Override
-        public OutputStream getOutputStream() throws IOException {
+        public OutputStream getOutputStream() {
             return null;//new OutputStream();
         }
 

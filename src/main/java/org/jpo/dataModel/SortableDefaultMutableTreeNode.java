@@ -21,10 +21,6 @@ import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DropTargetDropEvent;
 import java.awt.event.ActionEvent;
 import java.io.*;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -779,31 +775,11 @@ public class SortableDefaultMutableTreeNode
         }
 
         PictureInfo pictureInfo = (PictureInfo) this.getUserObject();
-        URL originalUrl;
-        try {
-            originalUrl = pictureInfo.getImageURL();
-        } catch (MalformedURLException x) {
-            LOGGER.log(Level.INFO, "MalformedURLException trapped on: {0}\nReason: {1}", new Object[]{pictureInfo.getImageLocation(), x.getMessage()});
-            JOptionPane.showMessageDialog(
-                    Settings.anchorFrame,
-                    "MalformedURLException trapped on: " + ((PictureInfo) this.getUserObject()).getImageLocation() + "\nReason: " + x.getMessage(),
-                    Settings.jpoResources.getString("genericError"),
-                    JOptionPane.ERROR_MESSAGE);
-            return false;
-        }
+        File originalFile = pictureInfo.getImageFile();
 
         if (targetFile.exists()) {
             if (!targetFile.isDirectory()) {
-                try {
-                    String sourceFilename = new File(new URI(originalUrl.toString())).getName();
-                    targetFile = Tools.inventPicFilename(targetFile.getParentFile(), sourceFilename);
-                } catch (URISyntaxException x) {
-                    JOptionPane.showMessageDialog(Settings.anchorFrame,
-                            "URISyntaxException: " + x,
-                            Settings.jpoResources.getString("genericError"),
-                            JOptionPane.ERROR_MESSAGE);
-                    return false;
-                }
+                targetFile = Tools.inventPicFilename(targetFile.getParentFile(), originalFile.getName());
             }
         } else // it doesn't exist
             if (!targetFile.mkdirs()) {
@@ -822,19 +798,10 @@ public class SortableDefaultMutableTreeNode
                         JOptionPane.ERROR_MESSAGE);
                 return false;
             }
-            try {
-                String sourceFilename = new File(new URI(originalUrl.toString())).getName();
-                targetFile = Tools.inventPicFilename(targetFile, sourceFilename);
-            } catch (URISyntaxException x) {
-                JOptionPane.showMessageDialog(Settings.anchorFrame,
-                        "URISyntaxException: " + x,
-                        Settings.jpoResources.getString("genericError"),
-                        JOptionPane.ERROR_MESSAGE);
-                return false;
-            }
+            targetFile = Tools.inventPicFilename(targetFile, originalFile.getName());
         }
 
-        targetFile = Tools.correctFilenameExtension(FilenameUtils.getExtension(originalUrl.getFile()), targetFile);
+        targetFile = Tools.correctFilenameExtension(FilenameUtils.getExtension(String.valueOf(originalFile)), targetFile);
 
         if (!targetFile.getParentFile().exists()) {
             targetFile.getParentFile().mkdirs();
@@ -1397,7 +1364,7 @@ public class SortableDefaultMutableTreeNode
         this.add(newNode);
         getPictureCollection().setUnsavedUpdates();
 
-        ExifInfo exifInfo = new ExifInfo(newPictureInfo.getImageURLOrNull());
+        ExifInfo exifInfo = new ExifInfo(newPictureInfo.getImageFile());
         exifInfo.decodeExifTags();
         newPictureInfo.setCreationTime(exifInfo.getCreateDateTime());
         newPictureInfo.setLatLng(exifInfo.latLng);

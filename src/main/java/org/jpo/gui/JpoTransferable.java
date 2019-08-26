@@ -121,12 +121,11 @@ public class JpoTransferable
      * @return The transferable
      * @throws UnsupportedFlavorException You get this exception if you request
      *                                    something that is not supported
-     * @throws IOException                There could also be an io exception thrown
      */
     @NotNull
     @Override
     public Object getTransferData(DataFlavor flavor)
-            throws UnsupportedFlavorException, IOException {
+            throws UnsupportedFlavorException {
         LOGGER.fine(String.format("Transferable requested as DataFlavor: %s", flavor.toString()));
         if (flavor.equals(jpoNodeFlavor)) {
             LOGGER.fine("returning the Java array of nodes as a transferable");
@@ -196,7 +195,7 @@ public class JpoTransferable
                 if (userObject instanceof PictureInfo) {
                     PictureInfo pictureInfo = (PictureInfo) userObject;
                     SourcePicture sourcePicture = new SourcePicture();
-                    sourcePicture.loadPicture(pictureInfo.getImageURLOrNull(), pictureInfo.getRotation());
+                    sourcePicture.loadPicture(pictureInfo.getImageFile(), pictureInfo.getRotation());
                     imageList.add(sourcePicture.getSourceBufferedImage());
                 }
             }
@@ -214,9 +213,7 @@ public class JpoTransferable
     public String toString() {
         StringBuilder objectDescriptions = new StringBuilder(String.format("JpoTransferable for %d nodes: ", transferableNodes.size()));
 
-        transferableNodes.stream().forEach((o) -> {
-            objectDescriptions.append(o.toString()).append(", ");
-        });
+        transferableNodes.forEach((o) -> objectDescriptions.append(o.toString()).append(", "));
         return objectDescriptions.toString();
     }
 

@@ -1,5 +1,7 @@
 package org.jpo.dataModel;
 
+import java.io.File;
+import java.net.URISyntaxException;
 import java.net.URL;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.fail;
@@ -67,7 +69,13 @@ public class ExifInfoTest {
         if ( imageUrl == null ) {
             fail("Unable to locate the test image: " + NIKON_D100_IMAGE);
         }
-        ExifInfo exifInfo = new ExifInfo( imageUrl );
+        ExifInfo exifInfo = null;
+        try {
+            exifInfo = new ExifInfo( new File(imageUrl.toURI()) );
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+            fail("Unable to locate the test image: " + NIKON_D100_IMAGE);
+        }
         exifInfo.decodeExifTags();
         assertEquals( "Aperture parsing verification", "f/11.0", exifInfo.aperture );
         assertEquals( "Camera parsing verification", "NIKON D100", exifInfo.camera );
@@ -94,7 +102,13 @@ public class ExifInfoTest {
         if ( imageUrl == null ) {
             fail("Unable to locate the test image: " + SAMSUNG_S4_IMAGE);
         }
-        ExifInfo exifInfo = new ExifInfo( imageUrl );
+        ExifInfo exifInfo = null;
+        try {
+            exifInfo = new ExifInfo( new File(imageUrl.toURI()) );
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+            fail("Unable to locate the test image: " + SAMSUNG_S4_IMAGE);
+        }
         exifInfo.decodeExifTags();
         assertEquals( "Aperture parsing verification", "f/2.2", exifInfo.aperture );
         assertEquals( "Camera parsing verification", "GT-I9505", exifInfo.camera );
@@ -121,7 +135,13 @@ public class ExifInfoTest {
         if ( imageUrl == null ) {
             fail("Unable to locate the test image: " + SAMSUNG_S4_LOC_IMAGE);
         }
-        ExifInfo exifInfo = new ExifInfo( imageUrl );
+        ExifInfo exifInfo = null;
+        try {
+            exifInfo = new ExifInfo( new File(imageUrl.toURI()) );
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+            fail("Unable to locate the test image: " + SAMSUNG_S4_LOC_IMAGE);
+        }
         exifInfo.decodeExifTags();
         assertEquals( "Aperture parsing verification", "f/2.2", exifInfo.aperture );
         assertEquals( "Camera parsing verification", "GT-I9505", exifInfo.camera );
@@ -148,7 +168,13 @@ public class ExifInfoTest {
         if ( imageUrl == null ) {
             fail("Unable to locate the test image: " + SAMSUNG_S4_ROT0_IMAGE);
         }
-        ExifInfo exifInfo = new ExifInfo( imageUrl );
+        ExifInfo exifInfo = null;
+        try {
+            exifInfo = new ExifInfo( new File(imageUrl.toURI()) );
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+            fail("Unable to locate the test image: " + SAMSUNG_S4_ROT0_IMAGE);
+        }
         exifInfo.decodeExifTags();
         assertEquals( "Aperture parsing verification", "", exifInfo.aperture );
         assertEquals( "Camera parsing verification", "GT-I9505", exifInfo.camera );
@@ -175,7 +201,13 @@ public class ExifInfoTest {
         if ( imageUrl == null ) {
             fail("Unable to locate the test image: " + SAMSUNG_S4_ROT_LEFT_IMAGE);
         }
-        ExifInfo exifInfo = new ExifInfo( imageUrl );
+        ExifInfo exifInfo = null;
+        try {
+            exifInfo = new ExifInfo( new File(imageUrl.toURI()) );
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+            fail("Unable to locate the test image: " + SAMSUNG_S4_ROT_LEFT_IMAGE);
+        }
         exifInfo.decodeExifTags();
         assertEquals( "Aperture parsing verification", "", exifInfo.aperture );
         assertEquals( "Camera parsing verification", "GT-I9505", exifInfo.camera );
@@ -202,7 +234,13 @@ public class ExifInfoTest {
         if ( imageUrl == null ) {
             fail("Unable to locate the test image: " + SAMSUNG_S4_ROT_RIGHT_IMAGE);
         }
-        ExifInfo exifInfo = new ExifInfo( imageUrl );
+        ExifInfo exifInfo = null;
+        try {
+            exifInfo = new ExifInfo( new File(imageUrl.toURI()) );
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+            fail("Unable to locate the test image: " + SAMSUNG_S4_ROT_RIGHT_IMAGE);
+        }
         exifInfo.decodeExifTags();
         assertEquals( "Aperture parsing verification", "", exifInfo.aperture );
         assertEquals( "Camera parsing verification", "GT-I9505", exifInfo.camera );
@@ -229,7 +267,13 @@ public class ExifInfoTest {
         if ( imageUrl == null ) {
             fail("Unable to locate the test image: " + SAMSUNG_S4_ROT_UPSIDEDOWN_IMAGE);
         }
-        ExifInfo exifInfo = new ExifInfo( imageUrl );
+        ExifInfo exifInfo = null;
+        try {
+            exifInfo = new ExifInfo( new File(imageUrl.toURI()) );
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+            fail("Unable to locate the test image: " + SAMSUNG_S4_ROT_UPSIDEDOWN_IMAGE);
+        }
         exifInfo.decodeExifTags();
         assertEquals( "Aperture parsing verification", "", exifInfo.aperture );
         assertEquals( "Camera parsing verification", "GT-I9505", exifInfo.camera );
@@ -255,7 +299,13 @@ public class ExifInfoTest {
         if ( imageUrl == null ) {
             fail("Unable to locate the test image: " + CANON_EOS350D_IMAGE);
         }
-        ExifInfo exifInfo = new ExifInfo( imageUrl );
+        ExifInfo exifInfo = null;
+        try {
+            exifInfo = new ExifInfo( new File(imageUrl.toURI()) );
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+            fail("Unable to locate the test image: " + CANON_EOS350D_IMAGE);
+        }
         exifInfo.decodeExifTags();
         assertEquals( "Aperture parsing verification", "f/20.0", exifInfo.aperture );
         assertEquals( "ShutterSpeed parsing verification", "1/200 sec", exifInfo.shutterSpeed );
@@ -282,7 +332,13 @@ public class ExifInfoTest {
         if ( imageUrl == null ) {
             fail("Unable to locate the test image: " + CANON_EOS60D_IMAGE);
         }
-        ExifInfo exifInfo = new ExifInfo( imageUrl );
+        ExifInfo exifInfo = null;
+        try {
+            exifInfo = new ExifInfo( new File(imageUrl.toURI()) );
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+            fail("Unable to locate the test image: " + CANON_EOS60D_IMAGE);
+        }
         exifInfo.decodeExifTags();
         assertEquals( "Aperture parsing verification", "f/11.3", exifInfo.aperture );
         assertEquals( "ShutterSpeed parsing verification", "1/511 sec", exifInfo.shutterSpeed );
@@ -309,7 +365,13 @@ public class ExifInfoTest {
         if ( imageUrl == null ) {
             fail("Unable to locate the test image: " + CANON_CYBERSHOT1_IMAGE);
         }
-        ExifInfo exifInfo = new ExifInfo( imageUrl );
+        ExifInfo exifInfo = null;
+        try {
+            exifInfo = new ExifInfo( new File(imageUrl.toURI() ));
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+            fail("Unable to locate the test image: " + CANON_CYBERSHOT1_IMAGE);
+        }
         exifInfo.decodeExifTags();
         assertEquals( "Aperture parsing verification", "f/4.0", exifInfo.aperture );
         assertEquals( "ShutterSpeed parsing verification", "1/480 sec", exifInfo.shutterSpeed );
@@ -335,7 +397,13 @@ public class ExifInfoTest {
         if ( imageUrl == null ) {
             fail("Unable to locate the test image: " + SONY_D700_IMAGE);
         }
-        ExifInfo exifInfo = new ExifInfo( imageUrl );
+        ExifInfo exifInfo = null;
+        try {
+            exifInfo = new ExifInfo( new File(imageUrl.toURI() ));
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+            fail("Unable to locate the test image: " + SONY_D700_IMAGE);
+        }
         exifInfo.decodeExifTags();
         assertEquals( "Aperture parsing verification", "f/2.4", exifInfo.aperture );
         assertEquals( "ShutterSpeed parsing verification", "1/32 sec", exifInfo.shutterSpeed );
@@ -361,7 +429,13 @@ public class ExifInfoTest {
         if ( imageUrl == null ) {
             fail("Unable to locate the test image: " + SONY_P200_IMAGE);
         }
-        ExifInfo exifInfo = new ExifInfo( imageUrl );
+        ExifInfo exifInfo = null;
+        try {
+            exifInfo = new ExifInfo( new File( imageUrl.toURI()) );
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+            fail("Unable to locate the test image: " + SONY_P200_IMAGE);
+        }
         exifInfo.decodeExifTags();
         //System.out.println( exifInfo.getAllTags() );
         assertEquals( "Aperture parsing verification", "f/5.6", exifInfo.aperture );

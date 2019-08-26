@@ -139,43 +139,10 @@ public class PictureInfoTest {
     }
 
     /**
-     * Test of getImageURL method, of class PictureInfo.
-     */
-    @Test
-    public void testGetHighresURL() {
-        try {
-            PictureInfo pi = new PictureInfo(new File("/dir/picture.jpg"), "My Sample Picture");
-            URL highresURL = pi.getImageURL();
-            assertEquals("Checking getHighresURL", new URL("file:///dir/picture.jpg"), highresURL);
-        } catch (MalformedURLException e) {
-            fail(e.getMessage());
-        }
-    }
-
-    /**
-     * Test of getImageURLOrNull method, of class PictureInfo.
-     */
-    @Test
-    @Ignore
-    public void testGetImageURLOrNull() {
-        PictureInfo pi1 = new PictureInfo(new File("/dir/picture.jpg"), "My Sample Picture");
-        URL highresURL1 = pi1.getImageURLOrNull();
-        try {
-            assertEquals("Checking getImageURLOrNull", new URL("file:///dir/picture.jpg"), highresURL1);
-        } catch (MalformedURLException ex) {
-            fail("Test should not have thrown an exception: " + ex.getMessage());
-        }
-
-        PictureInfo pi2 = new PictureInfo(new File ("noProtocol:///dir/picture.jpg"), "My Sample Picture");
-        URL highresURL2 = pi2.getImageURLOrNull();
-        assertNull("Checking getHighresURLOrNull", highresURL2);
-    }
-
-    /**
      * Test of getImageURIOrNull method, of class PictureInfo.
      */
     @Test
-    @Ignore
+    @Ignore ("Was Deprecated")
     public void testGetImageURIOrNull() {
         PictureInfo pi = new PictureInfo();
         String goodLocation = "/image.jpg";

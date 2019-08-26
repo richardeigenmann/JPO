@@ -9,7 +9,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -147,13 +146,13 @@ public class Tools {
      * target File location. Works better because files are writable whilst most
      * URL are read only.
      *
-     * @param sourceUrl  source URL
+     * @param sourceFile  source URL
      * @param targetFile target file
      */
-    public static void copyPicture(URL sourceUrl, File targetFile) {
+    public static void copyPicture(File sourceFile, File targetFile) {
         try (
-                InputStream in = sourceUrl.openStream();
-                OutputStream out = new FileOutputStream(targetFile)) {
+            InputStream in = new FileInputStream(sourceFile);
+            OutputStream out = new FileOutputStream(targetFile)) {
 
             BufferedInputStream bin = new BufferedInputStream(in);
             BufferedOutputStream bout = new BufferedOutputStream(out);
@@ -163,7 +162,7 @@ public class Tools {
             JOptionPane.showMessageDialog(
                     Settings.anchorFrame,
                     Settings.jpoResources.getString("copyPictureError1")
-                            + sourceUrl.toString()
+                            + sourceFile.toString()
                             + Settings.jpoResources.getString("copyPictureError2")
                             + targetFile.toString()
                             + Settings.jpoResources.getString("copyPictureError3")

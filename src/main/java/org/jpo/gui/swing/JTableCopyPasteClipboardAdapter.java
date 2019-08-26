@@ -45,12 +45,12 @@ public class JTableCopyPasteClipboardAdapter implements ActionListener {
      */
     public JTableCopyPasteClipboardAdapter( JTable myJTable ) {
         jTable = myJTable;
-        KeyStroke copy1 = KeyStroke.getKeyStroke( KeyEvent.VK_C, InputEvent.CTRL_MASK, false );
-        KeyStroke copy2 = KeyStroke.getKeyStroke( KeyEvent.VK_INSERT, InputEvent.CTRL_MASK, false );
+        KeyStroke copy1 = KeyStroke.getKeyStroke( KeyEvent.VK_C, InputEvent.CTRL_DOWN_MASK, false );
+        KeyStroke copy2 = KeyStroke.getKeyStroke( KeyEvent.VK_INSERT, InputEvent.CTRL_DOWN_MASK, false );
         // Identifying the copy KeyStroke user can modify this
         // to copy on some other Key combination.
-        KeyStroke paste1 = KeyStroke.getKeyStroke( KeyEvent.VK_V, InputEvent.CTRL_MASK, false );
-        KeyStroke paste2 = KeyStroke.getKeyStroke( KeyEvent.VK_INSERT, InputEvent.SHIFT_MASK, false );
+        KeyStroke paste1 = KeyStroke.getKeyStroke( KeyEvent.VK_V, InputEvent.CTRL_DOWN_MASK, false );
+        KeyStroke paste2 = KeyStroke.getKeyStroke( KeyEvent.VK_INSERT, InputEvent.SHIFT_DOWN_MASK, false );
         // Identifying the Paste KeyStroke user can modify this
         //to copy on some other Key combination.
         jTable.registerKeyboardAction( JTableCopyPasteClipboardAdapter.this, "Copy", copy1, JComponent.WHEN_FOCUSED );
@@ -172,6 +172,7 @@ public class JTableCopyPasteClipboardAdapter implements ActionListener {
                     }
                 }
             } catch ( UnsupportedFlavorException | IOException ex ) {
+                // Ignore it then
             }
         }
     }
