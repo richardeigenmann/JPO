@@ -12,16 +12,24 @@ plugins {
     id "org.sonarqube" version "2.7.1"
     id "com.github.ben-manes.versions" version "0.22.0"
     id 'signing'
+    id 'java'
+    //id 'application'
+    id 'jacoco'
+    //id 'org.gradle.java.experimental-jigsaw' version '0.1.1'
+    //id 'com.zyxist.chainsaw' version '0.3.1'
 }
 
 apply plugin: "com.github.johnrengelman.shadow"
-apply plugin: 'java'
-apply plugin: "jacoco"
+//apply plugin: 'java'
+//apply plugin: "jacoco"
 
 sourceCompatibility = 1.9
 targetCompatibility = 1.9
+//version = '0.14'
 
 //ext.moduleName = 'org.jpo.dataModel'
+
+//javaModule.name = 'org.jpo.cache'
 
 compileJava {
     options.encoding = "UTF-8"
@@ -50,6 +58,7 @@ javadoc {options.encoding = "UTF-8"}
 
 repositories {
     mavenCentral()
+    jcenter()
 }
 
 def jpoVersion = '0.14'
@@ -213,7 +222,7 @@ shadowJar {
 task signJar(dependsOn: 'shadowJar',description: 'Sign shadowJar.',group: 'build'){
     doLast{
         def props = new Properties()
-        file("/richi/Privat/Documents/org.jpo.private.gradle.properties").withInputStream { props.load(it) }
+        file("/richi/Privat/Documents/jpo.private.gradle.properties").withInputStream { props.load(it) }
         println 'Keystore file name: ' + props.getProperty("keystoreFileName")
 
         File signdir  = new File("$buildDir/jars/signed") as File
