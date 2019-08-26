@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
 import org.jpo.EventBus.JpoEventBus;
@@ -17,9 +18,10 @@ import org.jpo.dataModel.PictureInfo;
 import org.jpo.dataModel.Settings;
 import org.jpo.dataModel.SortableDefaultMutableTreeNode;
 import org.jpo.dataModel.TextQuery;
-import org.TagCloud.TagClickListener;
-import org.TagCloud.TagCloud;
-import org.TagCloud.WeightedWord;
+import org.tagcloud.TagClickListener;
+import org.tagcloud.TagCloud;
+import org.tagcloud.WeightedWord;
+import org.tagcloud.WeightedWordInterface;
 
 /*
  Copyright (C) 2009-2019  Richard Eigenmann.
@@ -40,6 +42,10 @@ import org.TagCloud.WeightedWord;
  * Manages the Tag Cloud
  */
 public class TagCloudController implements TagClickListener {
+    /**
+     * Defines a logger for this class
+     */
+    private static final Logger LOGGER = Logger.getLogger(TagCloudController.class.getName());
 
     /**
      * Reference to the TagCloud widget
@@ -81,7 +87,7 @@ public class TagCloudController implements TagClickListener {
     }
 
     @Override
-    public void tagClicked( WeightedWord weightedWord ) {
+    public void tagClicked( WeightedWordInterface weightedWord ) {
         if ( nodeWordMapper == null ) {
             return;
         }
@@ -240,9 +246,10 @@ public class TagCloudController implements TagClickListener {
         "Washington State"
     };
 
+
     private class NodeWordMapper {
 
-        private final List<WeightedWord> weightedWordList = new ArrayList<>();
+        private final List<WeightedWordInterface> weightedWordList = new ArrayList<>();
 
         private final SortableDefaultMutableTreeNode rootNode;
 
@@ -251,7 +258,7 @@ public class TagCloudController implements TagClickListener {
             buildList();
         }
 
-        public List<WeightedWord> getWeightedWords() {
+        public List<WeightedWordInterface> getWeightedWords() {
             return weightedWordList;
         }
 
