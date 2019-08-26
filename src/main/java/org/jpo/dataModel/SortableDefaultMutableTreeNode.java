@@ -183,8 +183,6 @@ public class SortableDefaultMutableTreeNode
             PictureInfo myPi = (PictureInfo) myObject;
             PictureInfo otherPi = (PictureInfo) otherObject;
             switch (sortfield) {
-                case DESCRIPTION:
-                    return myPi.getDescription().compareTo(otherPi.getDescription());
                 case FILM_REFERENCE:
                     return myPi.getFilmReference().compareTo(otherPi.getFilmReference());
                 case CREATION_TIME:
@@ -195,7 +193,7 @@ public class SortableDefaultMutableTreeNode
                     return myPi.getPhotographer().compareTo(otherPi.getPhotographer());
                 case COPYRIGHT_HOLDER:
                     return myPi.getCopyrightHolder().compareTo(otherPi.getCopyrightHolder());
-                default:
+                default:  // case DESCRIPTION
                     return myPi.getDescription().compareTo(otherPi.getDescription());
             }
         } else {
@@ -414,7 +412,11 @@ public class SortableDefaultMutableTreeNode
             throws UnsupportedFlavorException, IOException, ClassCastException {
         Transferable t = event.getTransferable();
         Object o = t.getTransferData(JpoTransferable.jpoNodeFlavor);
-        return (List<SortableDefaultMutableTreeNode>) o;
+        List<?> l = (List) o;
+        return l.stream()
+                .filter(element->element instanceof SortableDefaultMutableTreeNode)
+                .map(element->(SortableDefaultMutableTreeNode)element)
+                .collect(Collectors.toList());
     }
 
     /**
@@ -547,31 +549,6 @@ public class SortableDefaultMutableTreeNode
             extends JPopupMenu {
 
         /**
-         * menu item that allows the user to edit the group description
-         */
-        private final JMenuItem dropBefore = new JMenuItem(Settings.jpoResources.getString("GDPMdropBefore"));
-
-        /**
-         * menu item that allows the user to edit the group description
-         */
-        private final JMenuItem dropAfter = new JMenuItem(Settings.jpoResources.getString("GDPMdropAfter"));
-
-        /**
-         * menu item that allows the user to edit the group description
-         */
-        private final JMenuItem dropIntoFirst = new JMenuItem(Settings.jpoResources.getString("GDPMdropIntoFirst"));
-
-        /**
-         * menu item that allows the user to edit the group description
-         */
-        private final JMenuItem dropIntoLast = new JMenuItem(Settings.jpoResources.getString("GDPMdropIntoLast"));
-
-        /**
-         * menu item that allows the user to edit the group description
-         */
-        private final JMenuItem dropCancel = new JMenuItem(Settings.jpoResources.getString("GDPMdropCancel"));
-
-        /**
          * This inner class creates a popup menu for group drop events to find
          * out whether to drop into before or after the drop node.
          *
@@ -582,6 +559,9 @@ public class SortableDefaultMutableTreeNode
         private GroupDropPopupMenu(final DropTargetDropEvent event,
                                    final SortableDefaultMutableTreeNode sourceNode,
                                    final SortableDefaultMutableTreeNode targetNode) {
+
+            // menu item that allows the user to edit the group description
+            JMenuItem dropBefore = new JMenuItem(Settings.jpoResources.getString("GDPMdropBefore"));
             dropBefore.addActionListener((ActionEvent e) -> {
                 SortableDefaultMutableTreeNode parentNode = targetNode.getParent();
                 sourceNode.removeFromParent();
@@ -592,6 +572,8 @@ public class SortableDefaultMutableTreeNode
             });
             add(dropBefore);
 
+            // menu item that allows the user to edit the group description
+            JMenuItem dropAfter = new JMenuItem(Settings.jpoResources.getString("GDPMdropAfter"));
             dropAfter.addActionListener((ActionEvent e) -> {
                 SortableDefaultMutableTreeNode parentNode = targetNode.getParent();
                 sourceNode.removeFromParent();
@@ -602,6 +584,8 @@ public class SortableDefaultMutableTreeNode
             });
             add(dropAfter);
 
+            // menu item that allows the user to edit the group description
+            JMenuItem dropIntoFirst = new JMenuItem(Settings.jpoResources.getString("GDPMdropIntoFirst"));
             dropIntoFirst.addActionListener((ActionEvent e) -> {
                 synchronized (targetNode.getRoot()) {
                     sourceNode.removeFromParent();
@@ -612,6 +596,8 @@ public class SortableDefaultMutableTreeNode
             });
             add(dropIntoFirst);
 
+            // menu item that allows the user to edit the group description
+            JMenuItem dropIntoLast = new JMenuItem(Settings.jpoResources.getString("GDPMdropIntoLast"));
             dropIntoLast.addActionListener((ActionEvent e) -> {
                 synchronized (targetNode.getRoot()) {
                     sourceNode.removeFromParent();
@@ -623,6 +609,8 @@ public class SortableDefaultMutableTreeNode
             });
             add(dropIntoLast);
 
+            // menu item that allows the user to edit the group description
+            JMenuItem dropCancel = new JMenuItem(Settings.jpoResources.getString("GDPMdropCancel"));
             dropCancel.addActionListener((ActionEvent e) -> {
                 LOGGER.info("cancel drop");
                 event.dropComplete(false);
@@ -661,7 +649,6 @@ public class SortableDefaultMutableTreeNode
             }
         }
 
-        //removeThumbnailRequest the move targets here *
         Enumeration e = this.breadthFirstEnumeration();
         while (e.hasMoreElements()) {
             Settings.recentDropNodes.remove(e.nextElement());
@@ -1102,7 +1089,7 @@ public class SortableDefaultMutableTreeNode
         return super.getAllowsChildren();
     }
 
-    /**
+    /*
      * Copies the pictures from the source tree to the target directory and adds
      * them to the collection creating a progress GUI.
      *
@@ -1116,7 +1103,7 @@ public class SortableDefaultMutableTreeNode
      * @param selectedCategories the categories to be applied to the newly
      *                           loaded pictures.
      * @return the new group
-     */
+     *
     public SortableDefaultMutableTreeNode copyAddPictures(File sourceDir,
                                                           File targetDir, String groupName, boolean newOnly,
                                                           boolean retainDirectories, HashSet<Object> selectedCategories) {
@@ -1139,7 +1126,7 @@ public class SortableDefaultMutableTreeNode
             newGroup = null;
         }
         return newGroup;
-    }
+    }*/
 
     /**
      * Copies the pictures from the source tree to the target directory and adds
@@ -1228,7 +1215,7 @@ public class SortableDefaultMutableTreeNode
         }
     }
 
-    /**
+    /*
      * Copies the pictures from the source tree to the target directory and adds
      * them to the collection only if they have not been seen by the camera
      * before.
@@ -1241,7 +1228,7 @@ public class SortableDefaultMutableTreeNode
      * @param retainDirectories  whether to retain the directory structure
      * @param selectedCategories categories to apply
      * @return the new group
-     */
+     *
     public SortableDefaultMutableTreeNode copyAddPictures(File sourceDir,
                                                           File targetDir, String groupName, Camera cam,
                                                           boolean retainDirectories, HashSet<Object> selectedCategories) {
@@ -1269,7 +1256,7 @@ public class SortableDefaultMutableTreeNode
             newGroup = null;
         }
         return newGroup;
-    }
+    }*/
 
     /**
      * Copies the pictures from the source File collection into the target node
