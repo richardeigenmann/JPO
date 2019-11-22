@@ -4,9 +4,13 @@
 
     <p>Ensure you have Netbeans set up:</p>
     <ul>
-        <li>Have you downloaded a JDK? <a href="https://www.oracle.com/technetwork/java/javase/downloads/index.html">Oracle Java SDK</a></li>
-        <li>Have you installed Netbeans does it start up? <a href="https://netbeans.org/">https://netbeans.org/</a></li>
+        <li>Have you downloaded a JDK? <a href="https://www.oracle.com/technetwork/java/javase/downloads/index.html">Oracle Java SDK</a> for instance 13.0.1?</li>
+        <li>Have you installed Netbeans does it start up? <a href="https://netbeans.org/">https://netbeans.org/</a> Like Version 11.2?</li>
+        <li>Have you got Gradle installed? <a href="https://gradle.org/install">https://gradle.org/install</a> Use SDKMan for Linux, follow the "Installing manually" for Windows</li>
     </ul>
+
+
+    <p>Check that Netbeans is using the correct version of Gradle by opening Tools > Options > Java > Gradle > Execution . The Gradle Distribution should be Custom and point at your Gradle directory i.e. C:\Gradle\gradle-6.0.1 (knowing that the gradle.exe is actually in C:\Gradle\gradle-6.0.1\bin\gradle.exe)</p>
 
     <p>On the menu pick Team > Git > Clone</p>
 
@@ -14,10 +18,10 @@
 
     <p>Pick the branch "master" > Next > Finish</p>
 
-    <p> To compile and run the application press the F6 key.</p>
+    <p>To run the application, expand the JPO project in the left panel and click on the green build.gradle item. In the Navigator panel underneath the various Gradle tasks will appear. Click on Build > run to launch the app.</p>
 
     <hr>
-    <p>Last update to this page: 8 Dec 2018<br>
-        Copyright 2003-2018 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
+    <p>Last update to this page: 22 Nov 2019<br>
+        Copyright 2003-2019 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
 </div>
 <?php include("page-end.php"); ?>

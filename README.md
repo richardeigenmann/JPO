@@ -27,3 +27,20 @@ flatpak run org.richinet.jpo
 flatpak remove org.richinet.jpo
 ```
 
+## Developing JPO with Netbeans
+
+Ensure you have Netbeans set up:
+
+* Have you downloaded a JDK? [Oracle Java SDK](https://www.oracle.com/technetwork/java/javase/downloads/index.html) for instance 13.0.1?
+* Have you installed Netbeans does it start up? <https://netbeans.org> Like Version 11.2?
+* Have you got Gradle installed? <https://gradle.org/install> Use SDKMan for Linux, follow the "Installing manually" for Windows
+
+Check that Netbeans is using the correct version of Gradle by opening Tools > Options > Java > Gradle > Execution . The Gradle Distribution should be Custom and point at your Gradle directory i.e. C:\Gradle\gradle-6.0.1 (knowing that the gradle.exe is actually in C:\Gradle\gradle-6.0.1\bin\gradle.exe)
+
+On the menu pick Team > Git > Clone
+
+Enter the Repository URL `https://github.com/richardeigenmann/JPO.git` and click Next
+
+On the panel the tick should be on the "master" branch. Click Next > Finish
+
+To run the application, click on Projects in the left Panel and expand the JPO project in the left panel, expand the Build Scripts item and click on the green build.gradle item. In the Navigator panel underneath, the various Gradle tasks will appear. Click on Build > run to launch the app.
