@@ -82,7 +82,7 @@ public class Main {
         StringBuilder missingClasses = new StringBuilder( "The Installation is faulty! The following classes and libraries are missing:\n" );
 
         isClassLoadable("org.jpo.gui.ApplicationEventHandler", "Jpo-0.13.jar", foundClasses, missingClasses );
-        isClassLoadable("org.TagCloud.TagCloud", "TagCloud.jar", foundClasses, missingClasses );
+        isClassLoadable("org.tagcloud.TagCloud", "TagCloud.jar", foundClasses, missingClasses );
         isClassLoadable("org.apache.commons.compress.archivers.zip.ZipArchiveEntry", "commons-compress-1.8.jar", foundClasses, missingClasses );
         isClassLoadable("org.apache.commons.io.IOUtils", "commons-io-2.4.jar", foundClasses, missingClasses );
         isClassLoadable("org.apache.commons.jcs.JCS", "commons-jcs-core-2.0-beta-1.jar", foundClasses, missingClasses );
