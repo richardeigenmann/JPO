@@ -44,9 +44,6 @@ import java.util.logging.Logger;
  */
 public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDropTargetDropEventHandler {
 
-    /**
-     * Defines a LOGGER for this class
-     */
     private static final Logger LOGGER = Logger.getLogger( ThumbnailsPanelController.class.getName() );
 
     private boolean paintOverlay;  // default is false
@@ -197,7 +194,6 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
 
             @Override
             public void mousePressed( MouseEvent e ) {
-                System.out.println("Mouse Pressed");
                 if ( e.isPopupTrigger() && mySetOfNodes instanceof GroupNavigator ) {
                     JpoEventBus.getInstance().post(new ShowGroupPopUpMenuRequest( ((GroupNavigator) mySetOfNodes).getGroupNode(), e.getComponent(), e.getX(), e.getY() ));
                     return;

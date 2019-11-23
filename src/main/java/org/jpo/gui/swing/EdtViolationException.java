@@ -1,7 +1,7 @@
 package org.jpo.gui.swing;
 
 /*
- Copyright (C) 2017 - 2017 Richard Eigenmann.
+ Copyright (C) 2017 - 2019 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -16,12 +16,20 @@ package org.jpo.gui.swing;
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 
+import org.jpo.gui.ThumbnailsPanelController;
+
+import java.util.logging.Logger;
+
 /**
  * Error thrown when a Swing EDT violation is detected.
  */
 public class EdtViolationException extends RuntimeException {
+
+    private static final Logger LOGGER = Logger.getLogger( EdtViolationException.class.getName() );
+
     public EdtViolationException(String exception) {
         super(exception);
-        System.out.println( "got it" );
+        LOGGER.severe("Java Swing EDT violation: " + exception);
+        Thread.dumpStack();
     }
 }

@@ -24,6 +24,7 @@ import java.util.logging.Logger;
 
 /**
  *
+ * @see <a href="https://github.com/google/guava/wiki/EventBusExplained">https://github.com/google/guava/wiki/EventBusExplained</a>
  * @author Richard Eigenmann
  */
 public class JpoEventBus extends EventBus {

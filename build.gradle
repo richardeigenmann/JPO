@@ -56,6 +56,13 @@ compileTestJava {
 }
 javadoc {options.encoding = "UTF-8"}
 
+task openJavadocInBrowser {
+    dependsOn 'javadoc'
+    doLast {
+        java.awt.Desktop.desktop.open(new File(buildDir, "/docs/javadoc/index.html"))
+    }
+}
+
 repositories {
     mavenCentral()
     jcenter()

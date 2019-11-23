@@ -44,3 +44,8 @@ Enter the Repository URL `https://github.com/richardeigenmann/JPO.git` and click
 On the panel the tick should be on the "master" branch. Click Next > Finish
 
 To run the application, click on Projects in the left Panel and expand the JPO project in the left panel, expand the Build Scripts item and click on the green build.gradle item. In the Navigator panel underneath, the various Gradle tasks will appear. Click on Build > run to launch the app.
+
+## Architecture
+
+JPO is a Java Swing application which uses the Guava [EventBus](https://github.com/google/guava/wiki/EventBusExplained) 
+to order and fulfil the GUI tasks.
