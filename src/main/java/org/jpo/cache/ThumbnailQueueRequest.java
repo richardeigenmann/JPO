@@ -1,11 +1,12 @@
 package org.jpo.cache;
 
-import java.awt.Dimension;
-import javax.swing.ImageIcon;
 import org.jpo.dataModel.SortableDefaultMutableTreeNode;
 
+import javax.swing.*;
+import java.awt.*;
+
 /*
- Copyright (C) 2002 - 2017  Richard Eigenmann.
+ Copyright (C) 2002 - 2019  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -19,6 +20,7 @@ import org.jpo.dataModel.SortableDefaultMutableTreeNode;
  The license is in gpl.txt.
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
+
 /**
  * The ThumbnailQueueRequest is the type of object that will sit on the
  * {@link ThumbnailCreationQueue} with a references to the
@@ -34,6 +36,7 @@ public class ThumbnailQueueRequest implements Comparable<ThumbnailQueueRequest> 
      *
      */
     protected ThumbnailQueueRequestCallbackHandler callbackHandler;
+
     /**
      * the priority the request has on the queue.
      */
@@ -61,21 +64,21 @@ public class ThumbnailQueueRequest implements Comparable<ThumbnailQueueRequest> 
     /**
      * Constructs a ThumbnailQueueRequest object
      *
-     * @param callbackHandler	The callback handler that will be notified when
-     * the image icon is ready
-     * @param node the node for which the image is to be created
-     * @param priority	The queue priority with which the thumbnail is to be
-     * created Possible values are
-     * {@link QUEUE_PRIORITY#HIGH_PRIORITY}, {@link QUEUE_PRIORITY#MEDIUM_PRIORITY}, 
-     * {@link QUEUE_PRIORITY#LOW_PRIORITY}
-     * and {@link QUEUE_PRIORITY#LOWEST_PRIORITY}. 
-     * @param size the maximum size of the thumbnail
+     * @param callbackHandler The callback handler that will be notified when
+     *                        the image icon is ready
+     * @param node            the node for which the image is to be created
+     * @param priority        The queue priority with which the thumbnail is to be
+     *                        created Possible values are
+     *                        {@link QUEUE_PRIORITY#HIGH_PRIORITY}, {@link QUEUE_PRIORITY#MEDIUM_PRIORITY},
+     *                        {@link QUEUE_PRIORITY#LOW_PRIORITY}
+     *                        and {@link QUEUE_PRIORITY#LOWEST_PRIORITY}.
+     * @param size            the maximum size of the thumbnail
      */
     public ThumbnailQueueRequest(
             ThumbnailQueueRequestCallbackHandler callbackHandler,
             SortableDefaultMutableTreeNode node,
             QUEUE_PRIORITY priority,
-            Dimension size ) {
+            Dimension size) {
         this.callbackHandler = callbackHandler;
         this.node = node;
         this.priority = priority;
@@ -97,22 +100,22 @@ public class ThumbnailQueueRequest implements Comparable<ThumbnailQueueRequest> 
      * if the request was not canceled in the mean time.
      */
     public void notifyCallbackHandler() {
-        if ( !isCanceled() ) {
-            callbackHandler.callbackThumbnailCreated( this );
-        } 
+        if (!isCanceled()) {
+            callbackHandler.callbackThumbnailCreated(this);
+        }
     }
 
     /**
      * sets the priority in which the {@link org.jpo.gui.ThumbnailController} is to be
      * created. The possible values are
-     * {@link QUEUE_PRIORITY#LOWEST_PRIORITY}, {@link QUEUE_PRIORITY#LOW_PRIORITY}, 
+     * {@link QUEUE_PRIORITY#LOWEST_PRIORITY}, {@link QUEUE_PRIORITY#LOW_PRIORITY},
      * {@link QUEUE_PRIORITY#MEDIUM_PRIORITY}
      * or {@link QUEUE_PRIORITY#HIGH_PRIORITY}. A high numeric value means less priority.
      *
      * @param newPriority The priority of the request:
-     * {@link QUEUE_PRIORITY#LOW_PRIORITY}, {@link QUEUE_PRIORITY#MEDIUM_PRIORITY} or {@link QUEUE_PRIORITY#HIGH_PRIORITY}
+     *                    {@link QUEUE_PRIORITY#LOW_PRIORITY}, {@link QUEUE_PRIORITY#MEDIUM_PRIORITY} or {@link QUEUE_PRIORITY#HIGH_PRIORITY}
      */
-    public void setPriority( QUEUE_PRIORITY newPriority ) {
+    public void setPriority(QUEUE_PRIORITY newPriority) {
         priority = newPriority;
     }
 
@@ -124,8 +127,8 @@ public class ThumbnailQueueRequest implements Comparable<ThumbnailQueueRequest> 
      * interface
      */
     @Override
-    public int compareTo( ThumbnailQueueRequest thumbnailQueueRequest ) {
-        return priority.compareTo( thumbnailQueueRequest.priority );
+    public int compareTo(ThumbnailQueueRequest thumbnailQueueRequest) {
+        return priority.compareTo(thumbnailQueueRequest.priority);
     }
 
     /**
@@ -134,9 +137,9 @@ public class ThumbnailQueueRequest implements Comparable<ThumbnailQueueRequest> 
      *
      * @param newPriority the new, possibly higher priority
      */
-    public void increasePriorityTo( QUEUE_PRIORITY newPriority ) {
-        if ( priority.compareTo( newPriority ) > 0 ) {
-            setPriority( newPriority );
+    public void increasePriorityTo(QUEUE_PRIORITY newPriority) {
+        if (priority.compareTo(newPriority) > 0) {
+            setPriority(newPriority);
         }
 
     }
@@ -171,21 +174,20 @@ public class ThumbnailQueueRequest implements Comparable<ThumbnailQueueRequest> 
      *
      * @param icon the new icon
      */
-    public void setIcon( ImageIcon icon ) {
+    public void setIcon(ImageIcon icon) {
         this.icon = icon;
     }
 
-/**
- * @see https://www.securecoding.cert.org/confluence/display/java/LCK01-J.+Do+not+synchronize+on+objects+that+may+be+reused
- */
-    private final Object lock = new Object();
-    
     /**
-     *
+     * @see https://www.securecoding.cert.org/confluence/display/java/LCK01-J.+Do+not+synchronize+on+objects+that+may+be+reused
+     */
+    private final Object lock = new Object();
+
+    /**
      * @return true is the request is canceled
      */
     public boolean isCanceled() {
-        synchronized ( lock ) {
+        synchronized (lock) {
             return isCanceled;
         }
     }
@@ -194,39 +196,11 @@ public class ThumbnailQueueRequest implements Comparable<ThumbnailQueueRequest> 
      * Cancel the request
      */
     public void cancel() {
-        synchronized ( lock ) {
+        synchronized (lock) {
             this.isCanceled = true;
         }
     }
 
-    /**
-     * Priority enum
-     */
-    public enum QUEUE_PRIORITY {
-        
-        /**
-         *
-         */
-        HIGH_PRIORITY( 0 ),
 
-        /**
-         *
-         */
-        MEDIUM_PRIORITY( 1 ),
-
-        /**
-         *
-         */
-        LOW_PRIORITY( 2 ),
-
-        /**
-         *
-         */
-        LOWEST_PRIORITY( 3 );
-        
-        
-        private QUEUE_PRIORITY( int priority ) {
-        }
-    }
 
 }

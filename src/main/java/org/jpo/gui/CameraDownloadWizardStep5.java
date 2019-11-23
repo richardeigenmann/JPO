@@ -1,19 +1,14 @@
 package org.jpo.gui;
 
-import java.awt.Component;
-import java.awt.Dimension;
+import net.javaprog.ui.wizard.AbstractStep;
+import org.jpo.dataModel.Settings;
+import org.jpo.dataModel.SortOption;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.List;
 import java.util.logging.Logger;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import org.jpo.dataModel.Settings;
-import org.jpo.dataModel.SortOption;
-import net.javaprog.ui.wizard.AbstractStep;
 
 /*
 CameraDownloadWizardStep5.java: the fourth step in the download from Camera Wizard

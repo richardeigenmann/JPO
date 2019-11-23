@@ -1,14 +1,16 @@
 package org.jpo.gui;
 
-import java.awt.GraphicsEnvironment;
+import org.jpo.gui.swing.Thumbnail;
+import org.junit.Test;
+
+import javax.swing.*;
+import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.SwingUtilities;
-import org.jpo.gui.swing.Thumbnail;
+
 import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertNull;
-import org.junit.Test;
 
 /*
  Copyright (C) 2017  Richard Eigenmann.

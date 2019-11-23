@@ -1,8 +1,8 @@
 package org.jpo.gui.swing;
 
+import org.jetbrains.annotations.TestOnly;
 import org.jpo.dataModel.Settings;
 import org.jpo.dataModel.Tools;
-import org.jetbrains.annotations.TestOnly;
 
 import javax.swing.*;
 import java.awt.*;

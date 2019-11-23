@@ -1,6 +1,6 @@
 package org.jpo.gui;
 
-import org.jpo.EventBus.ExportGroupToNewCollectionRequest;
+import org.jpo.eventBus.ExportGroupToNewCollectionRequest;
 import org.jpo.dataModel.SortableDefaultMutableTreeNode;
 import org.junit.Assert;
 import org.junit.Test;

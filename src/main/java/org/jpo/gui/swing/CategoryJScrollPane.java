@@ -1,17 +1,15 @@
 package org.jpo.gui.swing;
 
-import java.awt.Dimension;
+import org.jpo.dataModel.Category;
+import org.jpo.dataModel.Settings;
+
+import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import java.awt.*;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Iterator;
-import javax.swing.DefaultListModel;
-import javax.swing.JList;
-import javax.swing.JScrollPane;
-import javax.swing.ListSelectionModel;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import org.jpo.dataModel.Category;
-import org.jpo.dataModel.Settings;
 
 /*
  CategoryJScrollPane.java:  creates a JPanel in a JScrollPane that lists categories

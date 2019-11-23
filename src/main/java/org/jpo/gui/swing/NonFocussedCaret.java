@@ -1,7 +1,7 @@
 package org.jpo.gui.swing;
 
-import java.awt.Rectangle;
 import javax.swing.text.DefaultCaret;
+import java.awt.*;
 
 
 /*

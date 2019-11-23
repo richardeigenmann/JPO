@@ -1,7 +1,12 @@
 package org.jpo.gui;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
+import org.jpo.dataModel.GroupInfo;
+import org.jpo.dataModel.PictureInfo;
+import org.jpo.dataModel.SortableDefaultMutableTreeNode;
+
+import javax.swing.*;
+import javax.swing.table.AbstractTableModel;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
@@ -9,13 +14,6 @@ import java.awt.event.WindowEvent;
 import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JFrame;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.table.AbstractTableModel;
-import org.jpo.dataModel.GroupInfo;
-import org.jpo.dataModel.PictureInfo;
-import org.jpo.dataModel.SortableDefaultMutableTreeNode;
 
 /*
  Originally lifted from the Swing Tutorial on the java.sun.com website. In as far as no prior copyright

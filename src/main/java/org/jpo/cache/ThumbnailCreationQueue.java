@@ -1,11 +1,12 @@
 package org.jpo.cache;
 
-import java.awt.Dimension;
+import org.jpo.cache.QUEUE_PRIORITY;
+import org.jpo.dataModel.SortableDefaultMutableTreeNode;
+
+import java.awt.*;
 import java.util.Iterator;
 import java.util.concurrent.PriorityBlockingQueue;
 import java.util.logging.Logger;
-import org.jpo.cache.ThumbnailQueueRequest.QUEUE_PRIORITY;
-import org.jpo.dataModel.SortableDefaultMutableTreeNode;
 
 
 /*

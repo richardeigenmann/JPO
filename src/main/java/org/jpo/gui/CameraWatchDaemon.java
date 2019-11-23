@@ -1,9 +1,10 @@
 package org.jpo.gui;
 
+import org.jpo.dataModel.Settings;
+
+import javax.swing.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.SwingUtilities;
-import org.jpo.dataModel.Settings;
 
 /*
  CameraWatchDaemon.java: Daemon Thread that monitors when a camera has been connected.
@@ -63,7 +64,7 @@ public class CameraWatchDaemon implements Runnable {
 
         while ( !gracefullyInterrupt ) {
             synchronized ( Settings.cameras ) {
-                Settings.cameras.stream().forEach( ( c ) -> {
+                Settings.cameras.forEach( (c ) -> {
                     boolean isConnected = c.isCameraConnected();
                     if ( c.getMonitorForNewPictures() && isConnected && ( !c.getLastConnectionStatus() ) ) {
                         LOGGER.log( Level.INFO, "{0}: Camera {1} has been connected ", new Object[]{ getClass().toString(), c.toString() } );

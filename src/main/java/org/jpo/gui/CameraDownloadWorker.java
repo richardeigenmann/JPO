@@ -1,20 +1,14 @@
 package org.jpo.gui;
 
+import org.jpo.eventBus.*;
+import org.jpo.cache.QUEUE_PRIORITY;
+import org.jpo.dataModel.Settings;
+import org.jpo.dataModel.SortableDefaultMutableTreeNode;
+
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
-import javax.swing.JProgressBar;
-import javax.swing.SwingUtilities;
-import javax.swing.SwingWorker;
-
-import org.jpo.EventBus.CopyLocationsChangedEvent;
-import org.jpo.EventBus.GroupSelectionEvent;
-import org.jpo.EventBus.JpoEventBus;
-import org.jpo.EventBus.RecentDropNodesChangedEvent;
-import org.jpo.EventBus.RefreshThumbnailRequest;
-import org.jpo.cache.ThumbnailQueueRequest.QUEUE_PRIORITY;
-import org.jpo.dataModel.Settings;
-import org.jpo.dataModel.SortableDefaultMutableTreeNode;
 
 
 /*

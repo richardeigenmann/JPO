@@ -61,11 +61,9 @@ public class PictureCollectionTest {
 
     /**
      * Set up tests
-     *
-     * @throws Exception can throw an Exception
      */
     @Before
-    public void setUp() throws Exception {
+    public void setUp()  {
         pictureCollection = new PictureCollection();
         pictureCollection.getRootNode().add( group1 );
         pictureCollection.getRootNode().add( group2 );

@@ -1,15 +1,24 @@
 package org.jpo.gui;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import net.miginfocom.swing.MigLayout;
+import org.jetbrains.annotations.TestOnly;
+import org.jpo.eventBus.JpoEventBus;
+import org.jpo.eventBus.SetPictureRotationRequest;
+import org.jpo.dataModel.*;
+import org.jpo.gui.swing.MapViewer;
+import org.jpo.gui.swing.NonFocussedCaret;
+import org.jpo.gui.swing.ThreeDotButton;
+import org.jpo.gui.swing.Thumbnail;
+import org.jxmapviewer.JXMapViewer;
+import org.jxmapviewer.input.MapClickListener;
+import org.jxmapviewer.viewer.GeoPosition;
+
+import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.TreeModelEvent;
+import javax.swing.event.TreeModelListener;
+import java.awt.*;
+import java.awt.event.*;
 import java.awt.geom.Point2D;
 import java.io.File;
 import java.net.MalformedURLException;
@@ -23,50 +32,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.BorderFactory;
-import javax.swing.DefaultListModel;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JFileChooser;
-import javax.swing.JFormattedTextField;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JSpinner;
-import javax.swing.JTabbedPane;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
-import javax.swing.ListSelectionModel;
-import javax.swing.SpinnerModel;
-import javax.swing.SpinnerNumberModel;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.TreeModelEvent;
-import javax.swing.event.TreeModelListener;
-
-import org.jpo.EventBus.JpoEventBus;
-import org.jpo.EventBus.SetPictureRotationRequest;
-import org.jpo.cache.ThumbnailQueueRequest.QUEUE_PRIORITY;
-import org.jpo.dataModel.Category;
-import org.jpo.dataModel.ExifInfo;
-import org.jpo.dataModel.NodeNavigatorInterface;
-import org.jpo.dataModel.PictureInfo;
-import org.jpo.dataModel.PictureInfoChangeEvent;
-import org.jpo.dataModel.PictureInfoChangeListener;
-import org.jpo.dataModel.Settings;
-import org.jpo.dataModel.SingleNodeNavigator;
-import org.jpo.dataModel.SortableDefaultMutableTreeNode;
-import org.jpo.dataModel.Tools;
-import org.jpo.gui.swing.MapViewer;
-import org.jpo.gui.swing.NonFocussedCaret;
-import org.jpo.gui.swing.ThreeDotButton;
-import org.jpo.gui.swing.Thumbnail;
-import net.miginfocom.swing.MigLayout;
-import org.jetbrains.annotations.TestOnly;
-import org.jxmapviewer.JXMapViewer;
-import org.jxmapviewer.input.MapClickListener;
-import org.jxmapviewer.viewer.GeoPosition;
+import org.jpo.cache.QUEUE_PRIORITY;
 
 /*
  Copyright (C) 2002-2019  Richard Eigenmann.
@@ -736,7 +702,13 @@ public class PictureInfoEditor extends JFrame {
      * This method saves the rotation value
      */
     private void saveRotation() {
-        JpoEventBus.getInstance().post(new SetPictureRotationRequest(myNode, (double) angleModel.getValue(), QUEUE_PRIORITY.HIGH_PRIORITY));
+        JpoEventBus.getInstance().post(
+                new SetPictureRotationRequest(
+                        myNode,
+                    (double) angleModel.getValue(),
+                        QUEUE_PRIORITY.HIGH_PRIORITY
+                )
+        );
     }
 
     /**

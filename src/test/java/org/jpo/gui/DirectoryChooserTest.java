@@ -1,15 +1,16 @@
 package org.jpo.gui;
 
+import org.junit.Test;
+
+import javax.swing.*;
+import javax.swing.event.ChangeEvent;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.SwingUtilities;
-import javax.swing.event.ChangeEvent;
+
 import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.fail;
-
-import org.junit.Test;
 
 /**
  * Tests for the Directory Chooser

@@ -1,13 +1,18 @@
 package org.jpo.export;
 
-import com.jcraft.jsch.Channel;
-import com.jcraft.jsch.ChannelExec;
-import com.jcraft.jsch.JSch;
-import com.jcraft.jsch.JSchException;
-import com.jcraft.jsch.Session;
+import com.jcraft.jsch.*;
+import net.javaprog.ui.wizard.AbstractStep;
+import net.miginfocom.swing.MigLayout;
+import org.apache.commons.net.ftp.FTP;
+import org.apache.commons.net.ftp.FTPClient;
+import org.apache.commons.net.ftp.FTPReply;
+import org.jpo.eventBus.GenerateWebsiteRequest;
+import org.jpo.dataModel.Settings;
+import org.jpo.gui.DirectoryChooser;
 
-import java.awt.Component;
-import java.awt.Font;
+import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
@@ -18,31 +23,8 @@ import java.util.Objects;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JSpinner;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
-import javax.swing.SpinnerNumberModel;
-import javax.swing.event.ChangeEvent;
 
-import org.jpo.EventBus.GenerateWebsiteRequest;
-import org.jpo.dataModel.Settings;
-
-import static org.jpo.EventBus.GenerateWebsiteRequest.OutputTarget.OUTPUT_FTP_LOCATION;
-import static org.jpo.EventBus.GenerateWebsiteRequest.OutputTarget.OUTPUT_LOCAL_DIRECTORY;
-import static org.jpo.EventBus.GenerateWebsiteRequest.OutputTarget.OUTPUT_SSH_LOCATION;
-
-import org.jpo.gui.DirectoryChooser;
-import net.javaprog.ui.wizard.AbstractStep;
-import net.miginfocom.swing.MigLayout;
-import org.apache.commons.net.ftp.FTP;
-import org.apache.commons.net.ftp.FTPClient;
-import org.apache.commons.net.ftp.FTPReply;
+import static org.jpo.eventBus.GenerateWebsiteRequest.OutputTarget.*;
 
 /*
  Copyright (C) 2008-2017  Richard Eigenmann.
@@ -228,9 +210,7 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
         ftpPanel.add(new JLabel("FTP Port "), "align label");
         // Records the ftp port number, 0 to 65535, start at 21 increment 1
 
-        ftpPort.addChangeListener((ChangeEvent arg0) -> {
-            options.setFtpPort(((SpinnerNumberModel) (ftpPort.getModel())).getNumber().intValue());
-        });
+        ftpPort.addChangeListener((ChangeEvent arg0) -> options.setFtpPort(((SpinnerNumberModel) (ftpPort.getModel())).getNumber().intValue()));
         ftpPanel.add(ftpPort, "wrap");
 
         ftpPanel.add(new JLabel("FTP user:"), "align label");
@@ -301,9 +281,7 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
 
         sshPanel.add(
                 new JLabel("SSH Port "), "align label");
-        sshPort.addChangeListener((ChangeEvent arg0) -> {
-            options.setSshPort(((SpinnerNumberModel) (sshPort.getModel())).getNumber().intValue());
-        });
+        sshPort.addChangeListener((ChangeEvent arg0) -> options.setSshPort(((SpinnerNumberModel) (sshPort.getModel())).getNumber().intValue()));
         sshPanel.add(sshPort,
                 "wrap");
 
@@ -381,9 +359,7 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
 
         final JButton sshTestJButton = new JButton("Test");
 
-        sshTestJButton.addActionListener((ActionEvent e) -> {
-            testSshConnection();
-        });
+        sshTestJButton.addActionListener((ActionEvent e) -> testSshConnection());
         sshPanel.add(sshTestJButton,
                 "align label");
         sshPanel.add(sshError,
@@ -391,9 +367,7 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
 
         JButton sshMkdirJButton = new JButton("mkdir");
 
-        sshMkdirJButton.addActionListener((ActionEvent e) -> {
-            sshMkdir();
-        });
+        sshMkdirJButton.addActionListener((ActionEvent e) -> sshMkdir());
         sshPanel.add(sshMkdirJButton,
                 "align label, wrap");
 
@@ -572,7 +546,7 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
      * From
      * http://stackoverflow.com/questions/2152742/java-swing-multiline-labels
      */
-    private class JMultilineLabel extends JTextArea {
+    private static class JMultilineLabel extends JTextArea {
 
         private static final long serialVersionUID = 1L;
 

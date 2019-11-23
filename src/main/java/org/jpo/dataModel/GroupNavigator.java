@@ -1,11 +1,11 @@
 package org.jpo.dataModel;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /*
  GroupBrower.java:  an implementation of the NodeNavigator for browsing groups.

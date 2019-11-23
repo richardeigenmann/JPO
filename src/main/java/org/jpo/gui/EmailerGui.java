@@ -1,11 +1,11 @@
 package org.jpo.gui;
 
+import net.miginfocom.swing.MigLayout;
 import org.jpo.dataModel.ListNavigator;
 import org.jpo.dataModel.Settings;
 import org.jpo.dataModel.SortableDefaultMutableTreeNode;
 import org.jpo.gui.swing.Thumbnail;
 import org.jpo.gui.swing.WholeNumberField;
-import net.miginfocom.swing.MigLayout;
 
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
@@ -293,9 +293,7 @@ public class EmailerGui extends JFrame {
         buttonJPanel.add( emailJButton );
 
         final JButton cancelJButton = new JButton( Settings.jpoResources.getString( "genericCancelText" ) );
-        cancelJButton.addActionListener(( ActionEvent evt ) -> {
-            getRid();
-        });
+        cancelJButton.addActionListener(( ActionEvent evt ) -> getRid());
         buttonJPanel.add( cancelJButton );
 
         jPanel.add( buttonJPanel, "spanx 2, wrap" );

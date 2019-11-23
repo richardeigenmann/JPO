@@ -1,10 +1,11 @@
 package org.jpo.gui.swing;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.JOptionPane;
 import org.jpo.dataModel.Settings;
 import org.jpo.dataModel.Tools;
+
+import javax.swing.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /*
 HelpAboutWindow.java:  Creates the Help about window

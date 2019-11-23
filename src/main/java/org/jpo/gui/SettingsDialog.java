@@ -15,12 +15,18 @@ package org.jpo.gui;
  The license is in gpl.txt.
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Frame;
+
+import net.miginfocom.swing.MigLayout;
+import org.jpo.eventBus.JpoEventBus;
+import org.jpo.eventBus.LocaleChangedEvent;
+import org.jpo.eventBus.UserFunctionsChangedEvent;
+import org.jpo.cache.JpoCache;
+import org.jpo.dataModel.Settings;
+import org.jpo.gui.swing.WholeNumberField;
+
+import javax.swing.*;
+import javax.swing.text.JTextComponent;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -31,35 +37,6 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.BorderFactory;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.InputVerifier;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JDialog;
-import javax.swing.JFileChooser;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JPasswordField;
-import javax.swing.JScrollPane;
-import javax.swing.JSlider;
-import javax.swing.JSpinner;
-import javax.swing.JTabbedPane;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
-import javax.swing.SpinnerModel;
-import javax.swing.SpinnerNumberModel;
-import javax.swing.WindowConstants;
-import javax.swing.text.JTextComponent;
-import org.jpo.EventBus.JpoEventBus;
-import org.jpo.EventBus.LocaleChangedEvent;
-import org.jpo.EventBus.UserFunctionsChangedEvent;
-import org.jpo.cache.JpoCache;
-import org.jpo.dataModel.Settings;
-import org.jpo.gui.swing.WholeNumberField;
-import net.miginfocom.swing.MigLayout;
 
 /**
  * GUI that allows the settings to be changed.

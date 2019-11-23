@@ -1,10 +1,10 @@
 package org.jpo.gui.swing;
 
 import com.google.common.eventbus.Subscribe;
-import org.jpo.EventBus.*;
-import org.jpo.cache.ThumbnailQueueRequest.QUEUE_PRIORITY;
-import org.jpo.dataModel.*;
 import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jpo.eventBus.*;
+import org.jpo.cache.QUEUE_PRIORITY;
+import org.jpo.dataModel.*;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

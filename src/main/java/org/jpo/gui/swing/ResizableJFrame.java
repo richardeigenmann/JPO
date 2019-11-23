@@ -1,15 +1,12 @@
 package org.jpo.gui.swing;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Frame;
-import java.awt.Rectangle;
-import java.util.logging.Logger;
-import javax.swing.JFrame;
 import org.jpo.dataModel.Settings;
 import org.jpo.dataModel.Tools;
 import org.jpo.gui.ChangeWindowInterface;
+
+import javax.swing.*;
+import java.awt.*;
+import java.util.logging.Logger;
 
 import static org.jpo.gui.swing.ResizableJFrame.WindowSize.WINDOW_DEFAULT;
 import static org.jpo.gui.swing.ResizableJFrame.WindowSize.WINDOW_FULLSCREEN;

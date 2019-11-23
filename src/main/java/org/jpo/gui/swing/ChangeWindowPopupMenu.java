@@ -1,20 +1,13 @@
 package org.jpo.gui.swing;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.JPopupMenu;
 import org.jpo.dataModel.Settings;
 import org.jpo.gui.ChangeWindowInterface;
-import static org.jpo.gui.swing.ResizableJFrame.WindowSize.WINDOW_BOTTOM_LEFT;
-import static org.jpo.gui.swing.ResizableJFrame.WindowSize.WINDOW_BOTTOM_RIGHT;
-import static org.jpo.gui.swing.ResizableJFrame.WindowSize.WINDOW_DEFAULT;
-import static org.jpo.gui.swing.ResizableJFrame.WindowSize.WINDOW_FULLSCREEN;
-import static org.jpo.gui.swing.ResizableJFrame.WindowSize.WINDOW_LEFT;
-import static org.jpo.gui.swing.ResizableJFrame.WindowSize.WINDOW_RIGHT;
-import static org.jpo.gui.swing.ResizableJFrame.WindowSize.WINDOW_TOP_LEFT;
-import static org.jpo.gui.swing.ResizableJFrame.WindowSize.WINDOW_TOP_RIGHT;
+
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import static org.jpo.gui.swing.ResizableJFrame.WindowSize.*;
 
 /*
  GroupPopupMenu.java: popup menu for groups

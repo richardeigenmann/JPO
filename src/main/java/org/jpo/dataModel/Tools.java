@@ -1,14 +1,12 @@
 package org.jpo.dataModel;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jpo.gui.SourcePicture;
+import org.jpo.gui.swing.EdtViolationException;
+
+import javax.swing.*;
+import java.io.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -16,13 +14,6 @@ import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.Adler32;
-import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
-
-import org.jpo.gui.SourcePicture;
-import org.jpo.gui.swing.EdtViolationException;
-import org.apache.commons.lang3.RandomStringUtils;
-import org.jetbrains.annotations.NotNull;
 
 
 /*

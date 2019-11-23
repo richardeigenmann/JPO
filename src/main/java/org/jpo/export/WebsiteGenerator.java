@@ -1,23 +1,23 @@
 package org.jpo.export;
 
 import com.jcraft.jsch.*;
-import org.jpo.EventBus.GenerateWebsiteRequest;
-import org.jpo.dataModel.*;
-import org.jpo.gui.ProgressGui;
-import org.jpo.gui.ScalablePicture;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPReply;
 import org.apache.commons.text.StringEscapeUtils;
+import org.jpo.eventBus.GenerateWebsiteRequest;
+import org.jpo.dataModel.*;
+import org.jpo.gui.ProgressGui;
+import org.jpo.gui.ScalablePicture;
 
 import javax.swing.*;
 import java.awt.*;
 import java.io.*;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -417,7 +417,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
         LOGGER.info(String.format("Done Loading: %s", pictureInfo.getImageLocation()));
         if (scp.getStatusCode() == SCALABLE_PICTURE_ERROR) {
             LOGGER.log(Level.SEVERE, "Problem reading image {0} using ThumbnailPicture instead", pictureInfo.getImageLocation());
-            File file = null;
+            File file;
             try {
                 file = new File(Objects.requireNonNull(WebsiteGenerator.class.getClassLoader().getResource("org/jpo/images/broken_thumbnail.gif")).toURI());
             } catch (URISyntaxException e) {

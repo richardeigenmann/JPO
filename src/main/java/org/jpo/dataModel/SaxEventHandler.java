@@ -1,29 +1,17 @@
 package org.jpo.dataModel;
 
+import org.jpo.gui.LabelFrame;
+import org.xml.sax.Attributes;
+import org.xml.sax.InputSource;
+import org.xml.sax.helpers.DefaultHandler;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import static org.jpo.dataModel.Settings.FieldCodes.CATEGORIES;
-import static org.jpo.dataModel.Settings.FieldCodes.CATEGORY;
-import static org.jpo.dataModel.Settings.FieldCodes.CATEGORY_DESCRIPTION;
-import static org.jpo.dataModel.Settings.FieldCodes.CHECKSUM;
-import static org.jpo.dataModel.Settings.FieldCodes.COMMENT;
-import static org.jpo.dataModel.Settings.FieldCodes.COPYRIGHT_HOLDER;
-import static org.jpo.dataModel.Settings.FieldCodes.CREATION_TIME;
-import static org.jpo.dataModel.Settings.FieldCodes.DESCRIPTION;
-import static org.jpo.dataModel.Settings.FieldCodes.FILE_LOWRES_URL;
-import static org.jpo.dataModel.Settings.FieldCodes.FILE_URL;
-import static org.jpo.dataModel.Settings.FieldCodes.FILM_REFERENCE;
-import static org.jpo.dataModel.Settings.FieldCodes.LATLNG;
-import static org.jpo.dataModel.Settings.FieldCodes.PHOTOGRAPHER;
-import static org.jpo.dataModel.Settings.FieldCodes.ROTATION;
-import org.jpo.gui.LabelFrame;
-import org.xml.sax.Attributes;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.DefaultHandler;
+
+import static org.jpo.dataModel.Settings.FieldCodes.*;
 
 /*
  Copyright (C) 2017-2018  Richard Eigenmann.
@@ -79,14 +67,13 @@ public class SaxEventHandler extends DefaultHandler {
      * @param lName local name
      * @param qName qualified name
      * @param attrs attributes
-     * @throws SAXException Exception if bad
      */
     @Override
     public void startElement( String namespaceURI,
             String lName,
             String qName,
             Attributes attrs )
-            throws SAXException {
+            {
         GroupInfo groupInfo;
         if ( ( "collection".equals( qName ) ) && ( attrs != null ) ) {
             groupInfo = new GroupInfo( attrs.getValue( "collection_name" ) );
@@ -165,14 +152,12 @@ public class SaxEventHandler extends DefaultHandler {
      * @param namespaceURI the URI
      * @param sName the simple name
      * @param qName the qualified name
-     * @throws SAXException Exception if it went wrong
      */
     @Override
     public void endElement( String namespaceURI,
             String sName, // simple name
             String qName // qualified name
-    )
-            throws SAXException {
+    ) {
         if ( null != qName ) {
             switch ( qName ) {
                 case "group":
@@ -210,10 +195,9 @@ public class SaxEventHandler extends DefaultHandler {
      * @param buf The buffer
      * @param offset Start offset
      * @param len Length
-     * @throws SAXException Throws and exception if parsing doesn't work
      */
     @Override
-    public void characters(char[] buf, int offset, int len ) throws SAXException {
+    public void characters(char[] buf, int offset, int len ) {
         String s = new String( buf, offset, len );
         switch ( currentField ) {
             case DESCRIPTION:

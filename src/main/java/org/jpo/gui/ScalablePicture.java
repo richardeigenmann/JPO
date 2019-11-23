@@ -1,6 +1,15 @@
 package org.jpo.gui;
 
-import java.awt.Dimension;
+import org.jpo.dataModel.Settings;
+import org.jpo.dataModel.Tools;
+import org.jpo.gui.SourcePicture.SourcePictureStatus;
+import org.jpo.gui.swing.PictureControllerImage;
+
+import javax.imageio.*;
+import javax.imageio.plugins.jpeg.JPEGImageWriteParam;
+import javax.imageio.stream.ImageOutputStream;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.image.AffineTransformOp;
@@ -17,24 +26,8 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.imageio.IIOImage;
-import javax.imageio.ImageIO;
-import javax.imageio.ImageTypeSpecifier;
-import javax.imageio.ImageWriteParam;
-import javax.imageio.ImageWriter;
-import javax.imageio.plugins.jpeg.JPEGImageWriteParam;
-import javax.imageio.stream.ImageOutputStream;
-import javax.swing.ImageIcon;
-import org.jpo.dataModel.Settings;
-import org.jpo.dataModel.Tools;
-import static org.jpo.gui.ScalablePicture.ScalablePictureStatus.SCALABLE_PICTURE_ERROR;
-import static org.jpo.gui.ScalablePicture.ScalablePictureStatus.SCALABLE_PICTURE_LOADED;
-import static org.jpo.gui.ScalablePicture.ScalablePictureStatus.SCALABLE_PICTURE_LOADING;
-import static org.jpo.gui.ScalablePicture.ScalablePictureStatus.SCALABLE_PICTURE_READY;
-import static org.jpo.gui.ScalablePicture.ScalablePictureStatus.SCALABLE_PICTURE_SCALING;
-import static org.jpo.gui.ScalablePicture.ScalablePictureStatus.SCALABLE_PICTURE_UNINITIALISED;
-import org.jpo.gui.SourcePicture.SourcePictureStatus;
-import org.jpo.gui.swing.PictureControllerImage;
+
+import static org.jpo.gui.ScalablePicture.ScalablePictureStatus.*;
 
 /*
  ScalablePicture.java:  class that can load and save images

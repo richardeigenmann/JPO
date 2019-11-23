@@ -1,21 +1,20 @@
 package org.jpo.dataModel;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
+import com.google.common.collect.EvictingQueue;
+import org.jpo.eventBus.GenerateWebsiteRequest;
+import org.jpo.gui.swing.MainWindow;
+
+import javax.swing.*;
+import javax.swing.filechooser.FileSystemView;
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
+import java.util.Queue;
 import java.util.*;
 import java.util.logging.Logger;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.filechooser.FileSystemView;
-
-import com.google.common.collect.EvictingQueue;
-import org.jpo.EventBus.GenerateWebsiteRequest;
-import org.jpo.gui.swing.MainWindow;
 
 /*
  * Copyright (C) 2002 - 2018 Richard Eigenmann, Zürich, Switzerland This program
@@ -195,8 +194,6 @@ public class Settings {
     public static final int ThumbnailCreationThreadPollingTime = 200;
     /**
      * The number of thumbnail creation threads to spawn.
-     *
-     * @see org.jpo.cache.ThumbnailCreationQueue
      */
     public static final int numberOfThumbnailCreationThreads = 5;
     /**
@@ -554,7 +551,7 @@ public class Settings {
     /**
      * list of email senders
      */
-    public static final TreeSet<Object> emailSenders = new TreeSet<Object>() {
+    public static final TreeSet<Object> emailSenders = new TreeSet<>() {
         @Override
         public boolean add(Object o) {
             boolean b = super.add(o);
@@ -567,7 +564,7 @@ public class Settings {
     /**
      * list of email senders
      */
-    public static final TreeSet<Object> emailRecipients = new TreeSet<Object>() {
+    public static final TreeSet<Object> emailRecipients = new TreeSet<>() {
         @Override
         public boolean add(Object o) {
             boolean b = super.add(o);
@@ -976,7 +973,7 @@ public class Settings {
             prefs.putBoolean("Camera[" + i + "].monitor", c.getMonitorForNewPictures());
             try {
                 PrefObj.putObject(prefs, "Camera[" + i + "].oldImage", c.getOldImage());
-            } catch (IOException | BackingStoreException | ClassNotFoundException ex) {
+            } catch (IOException | BackingStoreException ex) {
                 LOGGER.severe(ex.getLocalizedMessage());
             }
             i++;
@@ -1141,7 +1138,7 @@ public class Settings {
     /**
      * This method memorizes the recent drop targets so that they can be
      * accessed more quickly in subsequent move operations. After calling this method send a
-     * {@link org.jpo.EventBus.RecentDropNodesChangedEvent RecentDropNodesChangedEvent}
+     * {@link org.jpo.eventBus.RecentDropNodesChangedEvent RecentDropNodesChangedEvent}
      * onto the EventBus so that GUI widgets can update themselves. Nodes are only added once.
      * <p>
      * {@code JpoEventBus.getInstance().post( new RecentDropNodesChangedEvent() );}

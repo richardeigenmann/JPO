@@ -1,14 +1,11 @@
 package org.jpo.gui;
 
-import java.util.List;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
+import net.javaprog.ui.wizard.AbstractStep;
 import org.jpo.dataModel.Settings;
 import org.jpo.dataModel.SortOption;
-import net.javaprog.ui.wizard.AbstractStep;
+
+import javax.swing.*;
+import java.util.List;
 
 /*
  CameraDownloadWizardStep6.java: the fifth step in the download from Camera Wizard

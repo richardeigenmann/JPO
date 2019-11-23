@@ -1,16 +1,12 @@
 package org.jpo.gui;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
+import net.javaprog.ui.wizard.AbstractStep;
 import org.jpo.dataModel.Settings;
 import org.jpo.dataModel.Tools;
-import net.javaprog.ui.wizard.AbstractStep;
+
+import javax.swing.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 /*

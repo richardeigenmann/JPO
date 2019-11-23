@@ -1,15 +1,15 @@
 package org.jpo.dataModel;
 
-import org.jpo.EventBus.CopyLocationsChangedEvent;
-import org.jpo.EventBus.JpoEventBus;
-import org.jpo.dataModel.Settings.FieldCodes;
-import org.jpo.gui.JpoTransferable;
-import org.jpo.gui.ProgressGui;
-import org.jpo.gui.SourcePicture;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.jetbrains.annotations.NotNull;
+import org.jpo.eventBus.CopyLocationsChangedEvent;
+import org.jpo.eventBus.JpoEventBus;
+import org.jpo.dataModel.Settings.FieldCodes;
+import org.jpo.gui.JpoTransferable;
+import org.jpo.gui.ProgressGui;
+import org.jpo.gui.SourcePicture;
 
 import javax.swing.*;
 import javax.swing.event.TreeModelEvent;

@@ -1,30 +1,20 @@
 package org.jpo.gui;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
+import net.miginfocom.swing.MigLayout;
+import org.jpo.dataModel.Category;
+import org.jpo.dataModel.PictureCollection;
+import org.jpo.dataModel.Settings;
+import org.jpo.dataModel.Tools;
+
+import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.Iterator;
 import java.util.logging.Logger;
-import javax.swing.BorderFactory;
-import javax.swing.DefaultListModel;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextField;
-import javax.swing.ListSelectionModel;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import org.jpo.dataModel.Category;
-import org.jpo.dataModel.PictureCollection;
-import org.jpo.dataModel.Settings;
-import org.jpo.dataModel.Tools;
-import net.miginfocom.swing.MigLayout;
 
 /*
  CategoryEditorJFrame.java:  creates a GUI to allow the user to specify his search
@@ -198,9 +188,7 @@ public class CategoryEditorJFrame
         doneJButton.setPreferredSize( defaultButtonSize );
         doneJButton.setMinimumSize( defaultButtonSize );
         doneJButton.setMaximumSize( maxButtonSize );
-        doneJButton.addActionListener(( ActionEvent evt ) -> {
-            getRid();
-        });
+        doneJButton.addActionListener(( ActionEvent evt ) -> getRid());
         buttonJPanel.add( doneJButton, "wrap" );
 
         jPanel.add( buttonJPanel, "aligny top, wrap" );

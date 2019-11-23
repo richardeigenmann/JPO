@@ -1,11 +1,9 @@
 package org.jpo.gui;
 
-import javax.swing.BoxLayout;
-import javax.swing.JComponent;
-import javax.swing.JPanel;
-import javax.swing.JProgressBar;
-import org.jpo.dataModel.Settings;
 import net.javaprog.ui.wizard.AbstractStep;
+import org.jpo.dataModel.Settings;
+
+import javax.swing.*;
 
 /*
 Copyright (C) 2007-2017  Richard Eigenmann.

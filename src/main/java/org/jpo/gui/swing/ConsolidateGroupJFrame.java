@@ -1,9 +1,9 @@
 package org.jpo.gui.swing;
 
+import net.miginfocom.swing.MigLayout;
 import org.jpo.dataModel.Settings;
 import org.jpo.gui.ConsolidateGroupActionCallback;
 import org.jpo.gui.DirectoryChooser;
-import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import java.awt.*;
@@ -104,9 +104,7 @@ public class ConsolidateGroupJFrame extends JFrame {
             consolidateGroupAction.consolidateGroupCallback(highresDirectoryChooser.getDirectory(), recurseSubgroupsJCheckBox.isSelected());
             getRid();
         });
-        cancelJButton.addActionListener(( ActionEvent e ) -> {
-            getRid();
-        });
+        cancelJButton.addActionListener(( ActionEvent e ) -> getRid());
     }
 
     /**

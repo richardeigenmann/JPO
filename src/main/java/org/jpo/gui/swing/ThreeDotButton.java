@@ -1,7 +1,8 @@
 package org.jpo.gui.swing;
 
-import javax.swing.JButton;
 import org.jpo.dataModel.Settings;
+
+import javax.swing.*;
 
 /*
  ThreeDotButton.java:  This class ovewrrides a JButton and sets the size and text.

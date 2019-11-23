@@ -1,11 +1,13 @@
 package org.jpo.gui;
 
-import java.awt.GraphicsEnvironment;
+import org.junit.Test;
+
+import javax.swing.*;
+import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
-import javax.swing.SwingUtilities;
+
 import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.fail;
-import org.junit.Test;
 
 /**
  * Tests for the PictureViewe

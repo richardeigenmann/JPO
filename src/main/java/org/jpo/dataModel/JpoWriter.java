@@ -1,7 +1,7 @@
 package org.jpo.dataModel;
 
-import org.jpo.EventBus.ExportGroupToCollectionRequest;
 import org.apache.commons.io.FileUtils;
+import org.jpo.eventBus.ExportGroupToCollectionRequest;
 
 import javax.swing.*;
 import java.io.*;

@@ -1,19 +1,12 @@
 package org.jpo.gui;
 
-import java.awt.Component;
-import java.awt.Dimension;
-import java.util.logging.Logger;
-import javax.swing.ButtonGroup;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JRadioButton;
-import org.jpo.EventBus.ShowAutoAdvanceDialogRequest;
-import org.jpo.dataModel.FlatGroupNavigator;
-import org.jpo.dataModel.NodeNavigator;
-import org.jpo.dataModel.RandomNavigator;
-import org.jpo.dataModel.Settings;
-import org.jpo.dataModel.SortableDefaultMutableTreeNode;
+import org.jpo.eventBus.ShowAutoAdvanceDialogRequest;
+import org.jpo.dataModel.*;
 import org.jpo.gui.swing.WholeNumberField;
+
+import javax.swing.*;
+import java.awt.*;
+import java.util.logging.Logger;
 
 
 /*

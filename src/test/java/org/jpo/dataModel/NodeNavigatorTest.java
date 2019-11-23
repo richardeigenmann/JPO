@@ -1,7 +1,8 @@
 package org.jpo.dataModel;
 
-import static junit.framework.TestCase.assertEquals;
 import org.junit.Test;
+
+import static junit.framework.TestCase.assertEquals;
 
 /**
  *
@@ -9,7 +10,7 @@ import org.junit.Test;
  */
 public class NodeNavigatorTest {
 
-    private class NodeNavigatorImpl extends NodeNavigator {
+    private static class NodeNavigatorImpl extends NodeNavigator {
 
         @Override
         public String getTitle() {
@@ -27,7 +28,7 @@ public class NodeNavigatorTest {
         }
     }
 
-    private class MyNodeNavigatorListener implements NodeNavigatorListener {
+    private static class MyNodeNavigatorListener implements NodeNavigatorListener {
 
         public int nodeLayoutChangedCount;
 

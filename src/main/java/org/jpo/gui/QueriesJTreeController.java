@@ -1,19 +1,17 @@
 package org.jpo.gui;
 
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import javax.swing.JComponent;
-import javax.swing.JScrollPane;
-import javax.swing.JTree;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.TreePath;
-import javax.swing.tree.TreeSelectionModel;
-
-import org.jpo.EventBus.JpoEventBus;
-import org.jpo.EventBus.ShowQueryRequest;
+import org.jpo.eventBus.JpoEventBus;
+import org.jpo.eventBus.ShowQueryRequest;
 import org.jpo.dataModel.Query;
 import org.jpo.dataModel.Settings;
 import org.jpo.dataModel.Tools;
+
+import javax.swing.*;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreePath;
+import javax.swing.tree.TreeSelectionModel;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 /*
  QueriesJTreeController.java:  Controller for the Searches JTree

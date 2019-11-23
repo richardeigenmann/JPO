@@ -1,6 +1,6 @@
 package org.jpo.gui;
 
-import java.awt.Component;
+import java.awt.*;
 
 /*
  Copyright (C) 2017-2017,  Richard Eigenmann, Zürich

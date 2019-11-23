@@ -1,40 +1,19 @@
 package org.jpo.gui.swing;
 
-import bibliothek.gui.dock.common.CContentArea;
-import bibliothek.gui.dock.common.CControl;
-import bibliothek.gui.dock.common.CGrid;
-import bibliothek.gui.dock.common.DefaultSingleCDockable;
-import bibliothek.gui.dock.common.SingleCDockable;
+import bibliothek.gui.dock.common.*;
 import com.google.common.eventbus.Subscribe;
-import java.awt.Component;
+import org.jpo.eventBus.*;
+import org.jpo.dataModel.Settings;
+import org.jpo.dataModel.Tools;
+import org.jpo.gui.*;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.util.logging.Logger;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.SwingUtilities;
-import javax.swing.ToolTipManager;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
-import javax.swing.WindowConstants;
-import org.jpo.EventBus.CloseApplicationRequest;
-import org.jpo.EventBus.JpoEventBus;
-import org.jpo.EventBus.LoadDockablesPositionsRequest;
-import org.jpo.EventBus.RestoreDockablesPositionsRequest;
-import org.jpo.EventBus.SaveDockablesPositionsRequest;
-import org.jpo.EventBus.ShowGroupRequest;
-import org.jpo.EventBus.ShowQueryRequest;
-import org.jpo.EventBus.UnsavedUpdatesDialogRequest;
-import org.jpo.EventBus.UpdateApplicationTitleRequest;
-import org.jpo.dataModel.Settings;
-import org.jpo.dataModel.Tools;
-import org.jpo.gui.*;
 
 /*
  MainWindow.java:  main window of the JPO application
@@ -55,8 +34,8 @@ import org.jpo.gui.*;
  */
 /**
  *
- * org.jpo.Main Window of the JPO application. It uses the
- * <a href="http://dock.javaforge.com">Docking Frames</a> framework to handle
+ * Main Window of the JPO application. It uses the
+ * <a href="http://www.docking-frames.org/">Docking Frames</a> framework to handle
  * the internal windows.
  *
  * @author Richard Eigenmann
@@ -82,10 +61,11 @@ public class MainWindow extends JFrame {
 
     /**
      * Creates the JPO window and lays out the components. It registers itself
-     * on the Eventbus and handles the below events. If the window close handles
+     * on the {@link JpoEventBus} and handles the below events. If the window close handles
      * are activated it sends an {@link UnsavedUpdatesDialogRequest} with an
      * embedded {@link CloseApplicationRequest} to the event handlers.
      *
+     * @see JpoEventBus
      * @see ShowGroupRequest
      * @see ShowQueryRequest
      * @see SaveDockablesPositionsRequest
@@ -161,7 +141,7 @@ public class MainWindow extends JFrame {
         JButton resetJbutton = new JButton( "Reset" );
         resetJbutton.addActionListener(( ActionEvent e ) -> JpoEventBus.getInstance().post( new RestoreDockablesPositionsRequest() ));
 
-        JPanel propertiesJPanel = new JPanel();
+        JPanel propertiesJPanel = new JPanel();http://dock.javaforge.com
         propertiesJPanel.setLayout( new BoxLayout( propertiesJPanel, BoxLayout.Y_AXIS ) );
         propertiesJPanel.add( loadJButton );
         propertiesJPanel.add( saveJbutton );
@@ -189,13 +169,10 @@ public class MainWindow extends JFrame {
         tree.setVisible( true );
         searches.setVisible( true );
         tagDockable.setVisible( true );
-        //properties.setVisible( true );
-        //map.setVisible( true );
 
         getContentPane().add( control.getContentArea() );
 
         setVisible( true );
-
     }
 
     /**

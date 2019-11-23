@@ -1,14 +1,11 @@
 package org.jpo.export;
 
-import javax.swing.JComponent;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-
-import org.jpo.EventBus.GenerateWebsiteRequest;
-import org.jpo.dataModel.Settings;
 import net.javaprog.ui.wizard.AbstractStep;
 import net.miginfocom.swing.MigLayout;
+import org.jpo.eventBus.GenerateWebsiteRequest;
+import org.jpo.dataModel.Settings;
+
+import javax.swing.*;
 
 /*
  GenerateWebsiteWizard7Summary.java:  Summarise before you go and do it

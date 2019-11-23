@@ -1,7 +1,8 @@
 package org.jpo.dataModel;
 
-import static junit.framework.TestCase.assertEquals;
 import org.junit.Test;
+
+import static junit.framework.TestCase.assertEquals;
 
 
 

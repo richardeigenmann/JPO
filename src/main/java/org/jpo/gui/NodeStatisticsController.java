@@ -1,15 +1,15 @@
 package org.jpo.gui;
 
-import java.util.logging.Logger;
-import javax.swing.JComponent;
-import javax.swing.SwingWorker;
-import javax.swing.tree.DefaultMutableTreeNode;
 import org.jpo.cache.ThumbnailCreationQueue;
 import org.jpo.dataModel.NodeStatistics;
 import org.jpo.dataModel.NodeStatisticsBean;
 import org.jpo.dataModel.Settings;
 import org.jpo.dataModel.Tools;
 import org.jpo.gui.swing.NodeStatisticsPanel;
+
+import javax.swing.*;
+import javax.swing.tree.DefaultMutableTreeNode;
+import java.util.logging.Logger;
 
 /*
 NodeStatisticsController.java: a controller that makes the NodeStatisticsPanel show interesting stats

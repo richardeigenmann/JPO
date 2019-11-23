@@ -1,7 +1,17 @@
 package org.jpo.gui;
 
-import java.awt.Dimension;
-import java.awt.Graphics2D;
+import org.jetbrains.annotations.TestOnly;
+import org.jpo.cache.ImageBytes;
+import org.jpo.cache.JpoCache;
+import org.jpo.dataModel.Settings;
+import org.jpo.dataModel.Tools;
+
+import javax.imageio.ImageIO;
+import javax.imageio.ImageReader;
+import javax.imageio.event.IIOReadProgressListener;
+import javax.imageio.stream.FileImageInputStream;
+import javax.imageio.stream.ImageInputStream;
+import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.AffineTransformOp;
@@ -9,29 +19,14 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.imageio.ImageIO;
-import javax.imageio.ImageReader;
-import javax.imageio.event.IIOReadProgressListener;
-import javax.imageio.stream.FileImageInputStream;
-import javax.imageio.stream.ImageInputStream;
 
-import org.jpo.cache.ImageBytes;
-import org.jpo.cache.JpoCache;
-import org.jpo.dataModel.Settings;
-import org.jpo.dataModel.Tools;
-import org.jetbrains.annotations.TestOnly;
-
-import static org.jpo.gui.SourcePicture.SourcePictureStatus.SOURCE_PICTURE_ERROR;
-import static org.jpo.gui.SourcePicture.SourcePictureStatus.SOURCE_PICTURE_LOADING;
-import static org.jpo.gui.SourcePicture.SourcePictureStatus.SOURCE_PICTURE_LOADING_COMPLETED;
-import static org.jpo.gui.SourcePicture.SourcePictureStatus.SOURCE_PICTURE_LOADING_PROGRESS;
-import static org.jpo.gui.SourcePicture.SourcePictureStatus.SOURCE_PICTURE_LOADING_STARTED;
-import static org.jpo.gui.SourcePicture.SourcePictureStatus.SOURCE_PICTURE_READY;
-import static org.jpo.gui.SourcePicture.SourcePictureStatus.SOURCE_PICTURE_ROTATING;
-import static org.jpo.gui.SourcePicture.SourcePictureStatus.SOURCE_PICTURE_UNINITIALISED;
+import static org.jpo.gui.SourcePicture.SourcePictureStatus.*;
 
 
 /*

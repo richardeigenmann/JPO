@@ -1,5 +1,12 @@
 package org.jpo.gui;
 
+import net.miginfocom.swing.MigLayout;
+import org.jpo.dataModel.PictureInfo;
+import org.jpo.dataModel.Settings;
+import org.jpo.dataModel.SortableDefaultMutableTreeNode;
+import org.jpo.dataModel.Tools;
+
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -7,19 +14,6 @@ import java.io.File;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.logging.Logger;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.SwingWorker;
-
-import org.jpo.dataModel.PictureInfo;
-import org.jpo.dataModel.Settings;
-import org.jpo.dataModel.SortableDefaultMutableTreeNode;
-import org.jpo.dataModel.Tools;
-import net.miginfocom.swing.MigLayout;
 
 
 /*

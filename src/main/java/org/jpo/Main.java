@@ -1,10 +1,11 @@
 package org.jpo;
 
-import javax.swing.JOptionPane;
-import org.jpo.EventBus.ApplicationStartupRequest;
-import org.jpo.EventBus.JpoEventBus;
+import org.jpo.eventBus.ApplicationStartupRequest;
+import org.jpo.eventBus.JpoEventBus;
 import org.jpo.dataModel.Settings;
 import org.jpo.gui.ApplicationEventHandler;
+
+import javax.swing.*;
 
 
 /*
@@ -54,8 +55,11 @@ public class Main {
 
     /**
      * The main method is the entry point for this application (or any) Java
-     * application. No parameter passing is used in the Jpo application.  
+     * application. No parameter passing is used in the Jpo application. It checks if
+     * the most important classes can be loaded and then posts the
+     * ApplicationStartupRequest.
      *
+     * @see ApplicationStartupRequest
      * @param args The command line arguments
      */
     public static void main( String[] args ) {

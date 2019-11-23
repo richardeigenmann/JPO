@@ -1,11 +1,10 @@
 package org.jpo.gui.swing;
 
-import java.awt.Dimension;
-import java.awt.Point;
-import java.awt.event.MouseEvent;
-import javax.swing.Icon;
-import javax.swing.JButton;
 import org.jpo.dataModel.Settings;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.MouseEvent;
 
 /**
  * Extends the default JButton with no border, standard background color,

@@ -1,14 +1,12 @@
 package org.jpo.gui.swing;
 
-import java.awt.Dimension;
-import java.awt.event.KeyEvent;
-import java.util.Objects;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JSlider;
-import javax.swing.JToolBar;
 import org.jpo.dataModel.Settings;
 import org.jpo.dataModel.Tools;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.util.Objects;
 
 /*
  Copyright (C) 2002-2017  Richard Eigenmann, Zürich, Switzerland

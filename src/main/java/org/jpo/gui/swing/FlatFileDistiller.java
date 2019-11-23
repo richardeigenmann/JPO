@@ -1,5 +1,10 @@
 package org.jpo.gui.swing;
 
+import org.jpo.eventBus.ExportGroupToFlatFileRequest;
+import org.jpo.dataModel.*;
+import org.jpo.gui.swing.FlatFileDistiller.DistillerResult;
+
+import javax.swing.*;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -7,17 +12,6 @@ import java.io.IOException;
 import java.util.Enumeration;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Logger;
-import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
-import javax.swing.SwingWorker;
-
-import org.jpo.EventBus.ExportGroupToFlatFileRequest;
-import org.jpo.dataModel.GroupInfo;
-import org.jpo.dataModel.PictureInfo;
-import org.jpo.dataModel.Settings;
-import org.jpo.dataModel.SortableDefaultMutableTreeNode;
-import org.jpo.dataModel.Tools;
-import org.jpo.gui.swing.FlatFileDistiller.DistillerResult;
 
 /*
  FlatFileDistiller.java:  class that writes the filenames of the pictures to a flat file
@@ -185,7 +179,7 @@ public class FlatFileDistiller extends SwingWorker<DistillerResult, String> {
     /**
      * Distiller Result
      */
-    public class DistillerResult {
+    public static class DistillerResult {
 
         private final boolean success;
         private final Exception exception;

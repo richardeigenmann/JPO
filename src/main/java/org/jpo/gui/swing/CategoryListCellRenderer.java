@@ -1,10 +1,9 @@
 package org.jpo.gui.swing;
 
-import java.awt.Component;
-import javax.swing.JCheckBox;
-import javax.swing.JList;
-import javax.swing.ListCellRenderer;
 import org.jpo.dataModel.Category;
+
+import javax.swing.*;
+import java.awt.*;
 
 /*
  CategoryListCellRenderer.java:  A class which formats Category for use in a JList

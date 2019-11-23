@@ -1,8 +1,9 @@
 package org.jpo.dataModel;
 
 import org.junit.Test;
-import static org.junit.Assert.*;
 import org.xml.sax.InputSource;
+
+import static org.junit.Assert.assertNotNull;
 
 /**
  *

@@ -167,9 +167,7 @@ public class ThumbnailPanelTitle
      *				the name of the group
      */
     public void setTitle( final String titleString ) {
-        Runnable runnable = () -> {
-            title.setText( titleString );
-        };
+        Runnable runnable = () -> title.setText( titleString );
         if ( ! SwingUtilities.isEventDispatchThread() ) {
             SwingUtilities.invokeLater(runnable );
         } else {

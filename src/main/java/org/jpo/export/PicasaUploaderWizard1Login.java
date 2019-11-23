@@ -1,20 +1,14 @@
 package org.jpo.export;
 
 import com.google.gdata.util.AuthenticationException;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.util.logging.Logger;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JPasswordField;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
-import org.jpo.dataModel.Settings;
 import net.javaprog.ui.wizard.AbstractStep;
 import net.miginfocom.swing.MigLayout;
+import org.jpo.dataModel.Settings;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.util.logging.Logger;
 
 /*
  * PicasaUploaderWizard1Login.java: Login stuff for Picasa

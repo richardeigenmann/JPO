@@ -5,17 +5,17 @@ import com.google.gdata.data.media.MediaFileSource;
 import com.google.gdata.data.photos.AlbumEntry;
 import com.google.gdata.data.photos.PhotoEntry;
 import com.google.gdata.util.ServiceException;
+import org.jpo.dataModel.GroupInfo;
+import org.jpo.dataModel.PictureInfo;
+import org.jpo.dataModel.SortableDefaultMutableTreeNode;
+
+import javax.swing.*;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JProgressBar;
-import javax.swing.SwingWorker;
-import org.jpo.dataModel.GroupInfo;
-import org.jpo.dataModel.PictureInfo;
-import org.jpo.dataModel.SortableDefaultMutableTreeNode;
 
 /*
  * PicasaUploaderWorker.java: service using Google provided code. Copyright (C)
@@ -86,9 +86,7 @@ public class PicasaUploaderWorker extends SwingWorker<Boolean, Integer> {
 
     @Override
     protected void process( List<Integer> chunks ) {
-        chunks.stream().forEach( ( _item ) -> {
-            progressBar.setValue( progressBar.getValue() + 1 );
-        } );
+        chunks.forEach( (_item ) -> progressBar.setValue( progressBar.getValue() + 1 ));
     }
 
     @Override

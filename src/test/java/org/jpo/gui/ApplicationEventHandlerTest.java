@@ -1,9 +1,10 @@
 package org.jpo.gui;
 
 
-import org.jpo.EventBus.JpoEventBus;
-import static org.junit.Assert.assertNotNull;
+import org.jpo.eventBus.JpoEventBus;
 import org.junit.Test;
+
+import static org.junit.Assert.assertNotNull;
 
 
 /*

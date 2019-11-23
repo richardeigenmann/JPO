@@ -2,7 +2,10 @@ package org.jpo.gui.swing;
 
 //import jdk.internal.util.xml.impl.Input;
 
-import java.awt.Toolkit;
+import javax.swing.*;
+import javax.swing.event.TableModelEvent;
+import javax.swing.table.AbstractTableModel;
+import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
@@ -13,12 +16,6 @@ import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.util.StringTokenizer;
-import javax.swing.JComponent;
-import javax.swing.JOptionPane;
-import javax.swing.JTable;
-import javax.swing.KeyStroke;
-import javax.swing.event.TableModelEvent;
-import javax.swing.table.AbstractTableModel;
 
 /**
  *  JTableCopyPasteClipboardAdapter enables Copy-Paste Clipboard functionality on JTables.

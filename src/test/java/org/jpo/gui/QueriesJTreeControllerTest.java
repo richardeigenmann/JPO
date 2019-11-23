@@ -6,7 +6,7 @@ import org.junit.Test;
 import javax.swing.*;
 import java.lang.reflect.InvocationTargetException;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.fail;
 
 /*
  Copyright (C) 2019,  Richard Eigenmann, Zürich

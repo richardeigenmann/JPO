@@ -1,10 +1,11 @@
 package org.jpo.dataModel;
 
 import junit.framework.TestCase;
-import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertFalse;
 import org.junit.Assert;
 import org.junit.Test;
+
+import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertFalse;
 
 /**
  * Tests for the PictureInfo class

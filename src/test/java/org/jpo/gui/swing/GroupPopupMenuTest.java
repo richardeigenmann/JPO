@@ -1,18 +1,18 @@
 package org.jpo.gui.swing;
 
+import org.jpo.dataModel.GroupInfo;
+import org.jpo.dataModel.SortableDefaultMutableTreeNode;
+import org.junit.Before;
+import org.junit.Test;
+
+import javax.swing.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JMenuItem;
-import javax.swing.SwingUtilities;
-import org.jpo.dataModel.GroupInfo;
-import org.jpo.dataModel.SortableDefaultMutableTreeNode;
+
 import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.fail;
-
-import org.junit.Before;
-import org.junit.Test;
 
 /**
  * Tests for the GroupPopupMenu Class

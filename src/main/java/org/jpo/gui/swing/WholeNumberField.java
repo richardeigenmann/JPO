@@ -1,15 +1,15 @@
 package org.jpo.gui.swing;
 
+import javax.swing.*;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
+import javax.swing.text.PlainDocument;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JTextField;
-import javax.swing.text.AttributeSet;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.Document;
-import javax.swing.text.PlainDocument;
 
 
 /*
@@ -130,7 +130,7 @@ public class WholeNumberField extends JTextField {
     /**
      * part of the inner workings
      */
-    protected class WholeNumberDocument extends PlainDocument {
+    protected static class WholeNumberDocument extends PlainDocument {
 
         /**
          * Inserts String

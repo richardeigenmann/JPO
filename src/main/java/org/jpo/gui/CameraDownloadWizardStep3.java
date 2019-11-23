@@ -1,27 +1,19 @@
 package org.jpo.gui;
 
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
-import java.util.logging.Logger;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JCheckBox;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextField;
-import javax.swing.JTree;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.tree.TreePath;
+import net.javaprog.ui.wizard.AbstractStep;
 import org.jpo.dataModel.GroupInfo;
 import org.jpo.dataModel.Settings;
 import org.jpo.dataModel.SortableDefaultMutableTreeNode;
 import org.jpo.gui.swing.CollectionJTree;
-import net.javaprog.ui.wizard.AbstractStep;
+
+import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.tree.TreePath;
+import java.awt.*;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.util.logging.Logger;
 
 
 /* CameraDownloadWizardStep3.java: the third step in the download from Camera Wizard

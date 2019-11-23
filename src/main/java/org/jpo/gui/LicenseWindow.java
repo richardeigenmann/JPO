@@ -1,6 +1,9 @@
 package org.jpo.gui;
 
-import java.awt.Dimension;
+import org.jpo.dataModel.Settings;
+
+import javax.swing.*;
+import java.awt.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -8,11 +11,6 @@ import java.io.InputStreamReader;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JDialog;
-import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import org.jpo.dataModel.Settings;
 
 
 /*

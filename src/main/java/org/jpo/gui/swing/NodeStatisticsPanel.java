@@ -1,11 +1,11 @@
 package org.jpo.gui.swing;
 
-import javax.swing.JLabel;
-import javax.swing.JPanel;
+import net.miginfocom.swing.MigLayout;
 import org.jpo.dataModel.NodeStatisticsBean;
 import org.jpo.dataModel.Settings;
 import org.jpo.dataModel.Tools;
-import net.miginfocom.swing.MigLayout;
+
+import javax.swing.*;
 
 
 /*

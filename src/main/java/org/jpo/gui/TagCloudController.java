@@ -1,19 +1,9 @@
 package org.jpo.gui;
 
 import com.google.common.eventbus.Subscribe;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Logger;
-import javax.swing.JComponent;
-import javax.swing.SwingUtilities;
-import org.jpo.EventBus.JpoEventBus;
-import org.jpo.EventBus.ShowGroupRequest;
-import org.jpo.EventBus.ShowQueryRequest;
+import org.jpo.eventBus.JpoEventBus;
+import org.jpo.eventBus.ShowGroupRequest;
+import org.jpo.eventBus.ShowQueryRequest;
 import org.jpo.dataModel.PictureInfo;
 import org.jpo.dataModel.Settings;
 import org.jpo.dataModel.SortableDefaultMutableTreeNode;
@@ -22,6 +12,10 @@ import org.tagcloud.TagClickListener;
 import org.tagcloud.TagCloud;
 import org.tagcloud.WeightedWord;
 import org.tagcloud.WeightedWordInterface;
+
+import javax.swing.*;
+import java.util.*;
+import java.util.logging.Logger;
 
 /*
  Copyright (C) 2009-2019  Richard Eigenmann.
@@ -81,7 +75,7 @@ public class TagCloudController implements TagClickListener {
     @Subscribe
     public void handleGroupSelectionEvent( final ShowGroupRequest event ) {
         SwingUtilities.invokeLater( () -> {
-            nodeWordMapper = new NodeWordMapper( event.getNode() );
+            nodeWordMapper = new NodeWordMapper(event.getNode());
             tagCloud.setWordsList( nodeWordMapper.getWeightedWords() );
         } );
     }
@@ -247,7 +241,7 @@ public class TagCloudController implements TagClickListener {
     };
 
 
-    private class NodeWordMapper {
+    private static class NodeWordMapper {
 
         private final List<WeightedWordInterface> weightedWordList = new ArrayList<>();
 
@@ -281,9 +275,7 @@ public class TagCloudController implements TagClickListener {
                     splitAndAdd( description );
                 }
             }
-            wordCountMap.keySet().stream().forEach( ( key ) -> {
-                weightedWordList.add( new WeightedWord( key, wordCountMap.get( key ) ) );
-            } );
+            wordCountMap.keySet().forEach( (key ) -> weightedWordList.add( new WeightedWord( key, wordCountMap.get( key ) ) ));
         }
 
         /**

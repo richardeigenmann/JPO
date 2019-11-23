@@ -2,7 +2,7 @@ package org.jpo.gui.swing;
 
 import org.jetbrains.annotations.TestOnly;
 
-import javax.swing.ImageIcon;
+import javax.swing.*;
 import java.net.URL;
 import java.util.logging.Logger;
 

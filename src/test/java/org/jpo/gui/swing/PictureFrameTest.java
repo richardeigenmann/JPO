@@ -1,10 +1,13 @@
 package org.jpo.gui.swing;
 
-import java.awt.GraphicsEnvironment;
-import java.lang.reflect.InvocationTargetException;
-import javax.swing.SwingUtilities;
-import static org.junit.Assert.*;
 import org.junit.Test;
+
+import javax.swing.*;
+import java.awt.*;
+import java.lang.reflect.InvocationTargetException;
+
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 
 /*
  Copyright (C) 2017-2017,  Richard Eigenmann, Zürich

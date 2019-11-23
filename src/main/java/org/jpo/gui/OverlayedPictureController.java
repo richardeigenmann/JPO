@@ -1,10 +1,11 @@
 package org.jpo.gui;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Point;
+import org.jpo.dataModel.ExifInfo;
+import org.jpo.dataModel.Settings;
+import org.jpo.dataModel.Tools;
+import org.jpo.gui.swing.PictureController;
+
+import java.awt.*;
 import java.io.File;
 import java.text.DecimalFormat;
 import java.util.Collections;
@@ -12,14 +13,9 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.jpo.dataModel.ExifInfo;
-import org.jpo.dataModel.Settings;
-import org.jpo.dataModel.Tools;
-import static org.jpo.gui.OverlayedPictureController.InfoOverlay.APPLICATION_OVERLAY;
-import static org.jpo.gui.OverlayedPictureController.InfoOverlay.NO_OVERLAY;
-import static org.jpo.gui.OverlayedPictureController.InfoOverlay.PHOTOGRAPHIC_OVERLAY;
+
+import static org.jpo.gui.OverlayedPictureController.InfoOverlay.*;
 import static org.jpo.gui.ScalablePicture.ScalablePictureStatus.SCALABLE_PICTURE_READY;
-import org.jpo.gui.swing.PictureController;
 
 /*
 Copyright (C) 2017  Richard Eigenmann.

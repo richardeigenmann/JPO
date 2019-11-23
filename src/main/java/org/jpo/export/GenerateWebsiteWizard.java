@@ -1,17 +1,12 @@
 package org.jpo.export;
 
-import java.awt.Dimension;
-
-import org.jpo.EventBus.GenerateWebsiteRequest;
-import org.jpo.EventBus.JpoEventBus;
+import net.javaprog.ui.wizard.*;
+import org.jpo.eventBus.GenerateWebsiteRequest;
+import org.jpo.eventBus.JpoEventBus;
 import org.jpo.dataModel.Settings;
 import org.jpo.dataModel.SortableDefaultMutableTreeNode;
-import net.javaprog.ui.wizard.DefaultWizardModel;
-import net.javaprog.ui.wizard.Step;
-import net.javaprog.ui.wizard.Wizard;
-import net.javaprog.ui.wizard.WizardModel;
-import net.javaprog.ui.wizard.WizardModelEvent;
-import net.javaprog.ui.wizard.WizardModelListener;
+
+import java.awt.*;
 
 /*
  GenerateWebsiteWizard.java: Creates a Wizard for generating a web page

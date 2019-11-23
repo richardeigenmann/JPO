@@ -1,11 +1,11 @@
 package org.jpo.cache;
 
-import java.awt.Dimension;
-import java.util.Objects;
-
 import org.jpo.dataModel.SortableDefaultMutableTreeNode;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.awt.*;
+import java.util.Objects;
 
 /**
  *
@@ -18,7 +18,7 @@ public class ThumbnailCreationQueueTest {
         Assert.assertEquals( "Queue should be empty to start off with", 0, ThumbnailCreationQueue.size() );
         MyThumbnailQueueRequestCallbackHandler mtqrch = new MyThumbnailQueueRequestCallbackHandler();
         SortableDefaultMutableTreeNode node = new SortableDefaultMutableTreeNode();
-        ThumbnailCreationQueue.requestThumbnailCreation( mtqrch, node, ThumbnailQueueRequest.QUEUE_PRIORITY.LOW_PRIORITY, new Dimension( 350, 350 ) );
+        ThumbnailCreationQueue.requestThumbnailCreation( mtqrch, node, QUEUE_PRIORITY.LOW_PRIORITY, new Dimension( 350, 350 ) );
         Assert.assertEquals( "Queue should have one entry after request", 1, ThumbnailCreationQueue.size() );
         ThumbnailCreationQueue.clear();
     }
@@ -28,12 +28,12 @@ public class ThumbnailCreationQueueTest {
         Assert.assertEquals( "Queue should be empty to start off with", 0, ThumbnailCreationQueue.size() );
         MyThumbnailQueueRequestCallbackHandler mtqrch = new MyThumbnailQueueRequestCallbackHandler();
         SortableDefaultMutableTreeNode node = new SortableDefaultMutableTreeNode();
-        ThumbnailCreationQueue.requestThumbnailCreation( mtqrch, node, ThumbnailQueueRequest.QUEUE_PRIORITY.LOW_PRIORITY, new Dimension( 350, 350 ) );
+        ThumbnailCreationQueue.requestThumbnailCreation( mtqrch, node, QUEUE_PRIORITY.LOW_PRIORITY, new Dimension( 350, 350 ) );
         Assert.assertEquals( "Queue should have one entry after request", 1, ThumbnailCreationQueue.size() );
-        ThumbnailCreationQueue.requestThumbnailCreation( mtqrch, node, ThumbnailQueueRequest.QUEUE_PRIORITY.MEDIUM_PRIORITY, new Dimension( 350, 350 ) );
+        ThumbnailCreationQueue.requestThumbnailCreation( mtqrch, node, QUEUE_PRIORITY.MEDIUM_PRIORITY, new Dimension( 350, 350 ) );
         Assert.assertEquals( "Queue should have one entry after-re requesting for the same callback handler", 1, ThumbnailCreationQueue.size() );
         ThumbnailQueueRequest findResult1 = ThumbnailCreationQueue.findThumbnailQueueRequest( mtqrch );
-        Assert.assertEquals( "Priority should have increased with second request", ThumbnailQueueRequest.QUEUE_PRIORITY.MEDIUM_PRIORITY, findResult1.priority );
+        Assert.assertEquals( "Priority should have increased with second request", QUEUE_PRIORITY.MEDIUM_PRIORITY, findResult1.priority );
         ThumbnailCreationQueue.clear();
     }
 
@@ -42,11 +42,11 @@ public class ThumbnailCreationQueueTest {
         Assert.assertEquals( "Queue should be empty to start off with", 0, ThumbnailCreationQueue.size() );
         MyThumbnailQueueRequestCallbackHandler mtqrch = new MyThumbnailQueueRequestCallbackHandler();
         SortableDefaultMutableTreeNode node = new SortableDefaultMutableTreeNode();
-        ThumbnailCreationQueue.requestThumbnailCreation( mtqrch, node, ThumbnailQueueRequest.QUEUE_PRIORITY.LOW_PRIORITY, new Dimension( 350, 350 ) );
+        ThumbnailCreationQueue.requestThumbnailCreation( mtqrch, node, QUEUE_PRIORITY.LOW_PRIORITY, new Dimension( 350, 350 ) );
         Assert.assertEquals( "Queue should have one entry after request", 1, ThumbnailCreationQueue.size() );
         ThumbnailQueueRequest findResult1 = ThumbnailCreationQueue.findThumbnailQueueRequest( mtqrch );
 
-        ThumbnailCreationQueue.requestThumbnailCreation( mtqrch, node, ThumbnailQueueRequest.QUEUE_PRIORITY.MEDIUM_PRIORITY, new Dimension( 400, 350 ) );
+        ThumbnailCreationQueue.requestThumbnailCreation( mtqrch, node, QUEUE_PRIORITY.MEDIUM_PRIORITY, new Dimension( 400, 350 ) );
         Assert.assertEquals( "Queue should have one entry after-re requesting for the same callback handler", 1, ThumbnailCreationQueue.size() );
 
         ThumbnailQueueRequest findResult2 = ThumbnailCreationQueue.findThumbnailQueueRequest( mtqrch );
@@ -66,8 +66,8 @@ public class ThumbnailCreationQueueTest {
         MyThumbnailQueueRequestCallbackHandler mtqrch2 = new MyThumbnailQueueRequestCallbackHandler();
         SortableDefaultMutableTreeNode node1 = new SortableDefaultMutableTreeNode();
         SortableDefaultMutableTreeNode node2 = new SortableDefaultMutableTreeNode();
-        ThumbnailCreationQueue.requestThumbnailCreation( mtqrch1, node1, ThumbnailQueueRequest.QUEUE_PRIORITY.LOW_PRIORITY, new Dimension( 350, 350 ) );
-        ThumbnailCreationQueue.requestThumbnailCreation( mtqrch2, node2, ThumbnailQueueRequest.QUEUE_PRIORITY.MEDIUM_PRIORITY, new Dimension( 350, 350 ) );
+        ThumbnailCreationQueue.requestThumbnailCreation( mtqrch1, node1, QUEUE_PRIORITY.LOW_PRIORITY, new Dimension( 350, 350 ) );
+        ThumbnailCreationQueue.requestThumbnailCreation( mtqrch2, node2, QUEUE_PRIORITY.MEDIUM_PRIORITY, new Dimension( 350, 350 ) );
         Assert.assertEquals( "Queue should have two entries after 2 requests", 2, ThumbnailCreationQueue.size() );
         ThumbnailQueueRequest pollResult1 = ThumbnailCreationQueue.QUEUE.poll();
         ThumbnailQueueRequest pollResult2 = ThumbnailCreationQueue.QUEUE.poll();
@@ -81,7 +81,7 @@ public class ThumbnailCreationQueueTest {
         Assert.assertEquals( "Queue should be empty to start off with", 0, ThumbnailCreationQueue.size() );
         MyThumbnailQueueRequestCallbackHandler mtqrch = new MyThumbnailQueueRequestCallbackHandler();
         SortableDefaultMutableTreeNode node = new SortableDefaultMutableTreeNode();
-        ThumbnailCreationQueue.requestThumbnailCreation( mtqrch, node, ThumbnailQueueRequest.QUEUE_PRIORITY.LOW_PRIORITY, new Dimension( 350, 350 ) );
+        ThumbnailCreationQueue.requestThumbnailCreation( mtqrch, node, QUEUE_PRIORITY.LOW_PRIORITY, new Dimension( 350, 350 ) );
         Assert.assertEquals( "Queue should have one entry after request", 1, ThumbnailCreationQueue.size() );
         ThumbnailCreationQueue.clear();
         Assert.assertEquals( "Queue should be empty after clear", 0, ThumbnailCreationQueue.size() );
@@ -95,8 +95,8 @@ public class ThumbnailCreationQueueTest {
         MyThumbnailQueueRequestCallbackHandler mtqrch2 = new MyThumbnailQueueRequestCallbackHandler();
         SortableDefaultMutableTreeNode node1 = new SortableDefaultMutableTreeNode();
         SortableDefaultMutableTreeNode node2 = new SortableDefaultMutableTreeNode();
-        ThumbnailCreationQueue.requestThumbnailCreation( mtqrch1, node1, ThumbnailQueueRequest.QUEUE_PRIORITY.LOW_PRIORITY, new Dimension( 350, 350 ) );
-        ThumbnailCreationQueue.requestThumbnailCreation( mtqrch2, node2, ThumbnailQueueRequest.QUEUE_PRIORITY.MEDIUM_PRIORITY, new Dimension( 350, 350 ) );
+        ThumbnailCreationQueue.requestThumbnailCreation( mtqrch1, node1, QUEUE_PRIORITY.LOW_PRIORITY, new Dimension( 350, 350 ) );
+        ThumbnailCreationQueue.requestThumbnailCreation( mtqrch2, node2, QUEUE_PRIORITY.MEDIUM_PRIORITY, new Dimension( 350, 350 ) );
         Assert.assertEquals( "Queue should have two entries after 2 requests", 2, ThumbnailCreationQueue.size() );
 
         ThumbnailQueueRequest findResult1 = ThumbnailCreationQueue.findThumbnailQueueRequest( mtqrch1 );
@@ -115,8 +115,8 @@ public class ThumbnailCreationQueueTest {
         MyThumbnailQueueRequestCallbackHandler mtqrch2 = new MyThumbnailQueueRequestCallbackHandler();
         SortableDefaultMutableTreeNode node1 = new SortableDefaultMutableTreeNode();
         SortableDefaultMutableTreeNode node2 = new SortableDefaultMutableTreeNode();
-        ThumbnailQueueRequest req1 = ThumbnailCreationQueue.requestThumbnailCreation( mtqrch1, node1, ThumbnailQueueRequest.QUEUE_PRIORITY.LOW_PRIORITY, new Dimension( 350, 350 ) );
-        ThumbnailQueueRequest req2 = ThumbnailCreationQueue.requestThumbnailCreation( mtqrch2, node2, ThumbnailQueueRequest.QUEUE_PRIORITY.MEDIUM_PRIORITY, new Dimension( 350, 350 ) );
+        ThumbnailQueueRequest req1 = ThumbnailCreationQueue.requestThumbnailCreation( mtqrch1, node1, QUEUE_PRIORITY.LOW_PRIORITY, new Dimension( 350, 350 ) );
+        ThumbnailQueueRequest req2 = ThumbnailCreationQueue.requestThumbnailCreation( mtqrch2, node2, QUEUE_PRIORITY.MEDIUM_PRIORITY, new Dimension( 350, 350 ) );
         Assert.assertEquals( "Queue should have two entries after 2 requests", 2, ThumbnailCreationQueue.size() );
 
         ThumbnailCreationQueue.remove( req1 );
@@ -130,7 +130,7 @@ public class ThumbnailCreationQueueTest {
         ThumbnailCreationQueue.clear();
     }
 
-    private class MyThumbnailQueueRequestCallbackHandler implements ThumbnailQueueRequestCallbackHandler {
+    private static class MyThumbnailQueueRequestCallbackHandler implements ThumbnailQueueRequestCallbackHandler {
 
         public int notificationsCount = 0;
 

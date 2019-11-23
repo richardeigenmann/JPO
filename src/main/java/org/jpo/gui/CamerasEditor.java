@@ -1,32 +1,20 @@
 package org.jpo.gui;
 
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Logger;
-import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
-import javax.swing.JTree;
+import org.jpo.dataModel.Camera;
+import org.jpo.dataModel.Settings;
+import org.jpo.dataModel.Tools;
 
+import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
-
-import org.jpo.dataModel.Camera;
-import org.jpo.dataModel.Settings;
-import org.jpo.dataModel.Tools;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Logger;
 
 /*
 CamerasEditor.java: A Controller and View of the cameras allows adding and removing
@@ -170,9 +158,7 @@ public class CamerasEditor extends JFrame {
         addJButton.setMinimumSize(Settings.defaultButtonDimension);
         addJButton.setMaximumSize(Settings.defaultButtonDimension);
         addJButton.setBorder(BorderFactory.createRaisedBevelBorder());
-        addJButton.addActionListener((ActionEvent e) -> {
-            addCameraAction();
-        });
+        addJButton.addActionListener((ActionEvent e) -> addCameraAction());
         addDeleteButtonPanel.add(addJButton);
 
         JButton deleteJButton = new JButton(Settings.jpoResources.getString("deleteJButton"));
@@ -180,9 +166,7 @@ public class CamerasEditor extends JFrame {
         deleteJButton.setMinimumSize(Settings.defaultButtonDimension);
         deleteJButton.setMaximumSize(Settings.defaultButtonDimension);
         deleteJButton.setBorder(BorderFactory.createRaisedBevelBorder());
-        deleteJButton.addActionListener((ActionEvent e) -> {
-            deleteCameraAction();
-        });
+        deleteJButton.addActionListener((ActionEvent e) -> deleteCameraAction());
         addDeleteButtonPanel.add(deleteJButton);
 
         JPanel leftPanel = new JPanel();
@@ -309,7 +293,7 @@ public class CamerasEditor extends JFrame {
      * to that the daemon can scan them afresh.
      */
     private void getRid() {
-        Settings.cameras.stream().forEach((c) -> {
+        Settings.cameras.forEach((c) -> {
             c.setLastConnectionStatus(false); // so that the daemon gets a chance
         });
 

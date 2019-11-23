@@ -16,8 +16,6 @@ package org.jpo.gui.swing;
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 
-import org.jpo.gui.ThumbnailsPanelController;
-
 import java.util.logging.Logger;
 
 /**

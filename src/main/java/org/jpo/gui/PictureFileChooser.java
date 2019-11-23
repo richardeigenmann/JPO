@@ -1,27 +1,18 @@
 package org.jpo.gui;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.Image;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.io.File;
-import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
-import javax.swing.JCheckBox;
-import javax.swing.JFileChooser;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JTabbedPane;
-import org.jpo.EventBus.CopyLocationsChangedEvent;
-import org.jpo.EventBus.JpoEventBus;
+import org.jpo.eventBus.CopyLocationsChangedEvent;
+import org.jpo.eventBus.JpoEventBus;
 import org.jpo.dataModel.GroupInfo;
 import org.jpo.dataModel.Settings;
 import org.jpo.dataModel.SortableDefaultMutableTreeNode;
 import org.jpo.dataModel.Tools;
 import org.jpo.gui.swing.CategoryJScrollPane;
+
+import javax.swing.*;
+import java.awt.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.io.File;
 
 
 /*

@@ -1,9 +1,9 @@
 package org.jpo.dataModel;
 
-import java.util.logging.Logger;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreePath;
+import java.util.logging.Logger;
 
 /*
  FlatGroupNavigator.java:  an implementation of the NodeNavigator for 

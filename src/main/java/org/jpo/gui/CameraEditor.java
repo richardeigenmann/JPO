@@ -1,19 +1,15 @@
 package org.jpo.gui;
 
+import net.miginfocom.swing.MigLayout;
+import org.jpo.dataModel.Camera;
+import org.jpo.dataModel.Settings;
+
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import org.jpo.dataModel.Camera;
-import org.jpo.dataModel.Settings;
-import net.miginfocom.swing.MigLayout;
 
 /**
  * This class creates a JPanel and allows attributes of a single camera to be

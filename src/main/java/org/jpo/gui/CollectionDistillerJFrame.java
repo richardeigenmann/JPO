@@ -1,8 +1,8 @@
 package org.jpo.gui;
 
-import org.jpo.EventBus.*;
-import org.jpo.dataModel.Settings;
 import net.miginfocom.swing.MigLayout;
+import org.jpo.eventBus.*;
+import org.jpo.dataModel.Settings;
 
 import javax.swing.*;
 import javax.swing.text.JTextComponent;

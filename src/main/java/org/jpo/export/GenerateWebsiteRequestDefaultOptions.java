@@ -1,9 +1,9 @@
 package org.jpo.export;
 
-import java.io.File;
-
-import org.jpo.EventBus.GenerateWebsiteRequest;
+import org.jpo.eventBus.GenerateWebsiteRequest;
 import org.jpo.dataModel.Settings;
+
+import java.io.File;
 
 /*
  GenerateWebsiteRequestDefaultOptions.java:  Extends an GenerateWebsiteRequest class and

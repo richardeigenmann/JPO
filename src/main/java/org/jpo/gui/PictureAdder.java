@@ -1,15 +1,15 @@
 package org.jpo.gui;
 
-import java.io.File;
-import java.util.HashSet;
-import java.util.List;
-import java.util.logging.Logger;
-import javax.swing.SwingWorker;
-
 import org.jpo.dataModel.GroupInfo;
 import org.jpo.dataModel.Settings;
 import org.jpo.dataModel.SortableDefaultMutableTreeNode;
 import org.jpo.dataModel.Tools;
+
+import javax.swing.*;
+import java.io.File;
+import java.util.HashSet;
+import java.util.List;
+import java.util.logging.Logger;
 
 /*
 PictureAdder.java:  A Class which brings up a progress bar and adds pictures to the specified node.
@@ -179,7 +179,7 @@ public class PictureAdder
      */
     @Override
     protected void process(List<Integer> chunks) {
-        chunks.stream().forEach((i) -> {
+        chunks.forEach((i) -> {
             if (i > 0) {
                 progGui.progressIncrement();
             } else {

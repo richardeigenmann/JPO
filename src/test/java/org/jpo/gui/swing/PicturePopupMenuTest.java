@@ -1,7 +1,7 @@
 package org.jpo.gui.swing;
 
 import com.google.common.eventbus.Subscribe;
-import org.jpo.EventBus.*;
+import org.jpo.eventBus.*;
 import org.jpo.dataModel.*;
 import org.junit.Before;
 import org.junit.Test;

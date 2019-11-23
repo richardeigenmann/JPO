@@ -1,19 +1,19 @@
 package org.jpo.gui;
 
 import com.google.common.io.Files;
+import junit.framework.TestCase;
+import org.apache.commons.compress.utils.IOUtils;
+import org.jpo.dataModel.PictureInfo;
+import org.junit.Test;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Objects;
 import java.util.logging.Logger;
-import org.jpo.dataModel.PictureInfo;
-import junit.framework.TestCase;
-import static junit.framework.TestCase.assertFalse;
-import static junit.framework.TestCase.assertTrue;
-import static junit.framework.TestCase.fail;
-import org.apache.commons.compress.utils.IOUtils;
-import org.junit.Test;
+
+import static junit.framework.TestCase.*;
 
 /*
  ConsolidateGroupWorkerTest.java: 

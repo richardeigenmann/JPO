@@ -1,13 +1,11 @@
 package org.jpo.gui.swing;
 
-import java.awt.event.ActionEvent;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
+import net.miginfocom.swing.MigLayout;
 import org.jpo.dataModel.Settings;
 import org.jpo.dataModel.Tools;
-import net.miginfocom.swing.MigLayout;
+
+import javax.swing.*;
+import java.awt.event.ActionEvent;
 
 /*
  FindJPanel.java:  creates a GUI to allow the user to specify the search criteria
@@ -69,9 +67,7 @@ public class FindJPanel extends JPanel {
         add( new JLabel( Settings.jpoResources.getString( "searchDialogLabel" ) ) );
         add( searchStringJTextField, "wrap, pushx, growx" );
 
-        advancedFindJButton.addActionListener(( ActionEvent evt ) -> {
-            toggleAdvancedCriteria();
-        });
+        advancedFindJButton.addActionListener(( ActionEvent evt ) -> toggleAdvancedCriteria());
         add( advancedFindJButton, "wrap" );
 
         add( dateRangeJLabel, "hidemode 0" );

@@ -1,11 +1,13 @@
 package org.jpo.dataModel;
 
+import org.junit.Test;
+
 import java.io.File;
 import java.net.URISyntaxException;
 import java.net.URL;
+
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.fail;
-import org.junit.Test;
 
 /*
  ExifInfoTest.java: This class interacts with Drew Noake's library and extracts the Exif information

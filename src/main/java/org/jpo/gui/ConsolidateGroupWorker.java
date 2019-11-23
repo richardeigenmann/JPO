@@ -1,10 +1,10 @@
 package org.jpo.gui;
 
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.jpo.dataModel.PictureInfo;
 import org.jpo.dataModel.Settings;
 import org.jpo.dataModel.SortableDefaultMutableTreeNode;
 import org.jpo.dataModel.Tools;
-import org.checkerframework.checker.nullness.qual.NonNull;
 
 import javax.swing.*;
 import java.io.File;
@@ -14,8 +14,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.logging.Logger;
 
-import static org.jpo.dataModel.Tools.warnOnEDT;
 import static org.apache.commons.io.FileUtils.moveFile;
+import static org.jpo.dataModel.Tools.warnOnEDT;
 
 /*
  Copyright (C) 2002 - 2019  Richard Eigenmann.

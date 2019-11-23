@@ -1,14 +1,16 @@
 package org.jpo.dataModel;
 
+import org.junit.Test;
+
 import java.io.File;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import static junit.framework.TestCase.fail;
 import static org.junit.Assert.assertEquals;
-import org.junit.Test;
 
 /**
  * Tests for the XmlReader class

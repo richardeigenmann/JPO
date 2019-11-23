@@ -1,14 +1,10 @@
 package org.jpo.dataModel;
 
+import javax.swing.tree.DefaultMutableTreeNode;
 import java.io.Serializable;
-import java.util.Calendar;
-import java.util.Enumeration;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.tree.DefaultMutableTreeNode;
 
 /*
  Copyright (C) 2009-2017  Richard Eigenmann.

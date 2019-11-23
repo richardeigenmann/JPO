@@ -1,5 +1,10 @@
 package org.jpo.dataModel;
 
+import org.jpo.gui.InterruptSemaphore;
+import org.jpo.gui.ProgressGui;
+import org.jpo.gui.ProgressListener;
+import org.jpo.gui.SourcePicture;
+
 import java.io.File;
 import java.io.Serializable;
 import java.util.Collection;
@@ -7,10 +12,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.logging.Logger;
-import org.jpo.gui.InterruptSemaphore;
-import org.jpo.gui.ProgressGui;
-import org.jpo.gui.ProgressListener;
-import org.jpo.gui.SourcePicture;
 
 /*
  Copyright (C) 2002 - 2019  Richard Eigenmann.

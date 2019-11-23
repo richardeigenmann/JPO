@@ -1,23 +1,17 @@
 package org.jpo.gui;
 
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTabbedPane;
-import javax.swing.JTextArea;
+import net.miginfocom.swing.MigLayout;
 import org.jpo.dataModel.GroupInfo;
 import org.jpo.dataModel.Settings;
 import org.jpo.dataModel.SingleNodeNavigator;
 import org.jpo.dataModel.SortableDefaultMutableTreeNode;
 import org.jpo.gui.swing.Thumbnail;
-import net.miginfocom.swing.MigLayout;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 /*
  GroupInfoEditor.java:  Controller and Vie for editing group properties
@@ -95,9 +89,7 @@ public class GroupInfoEditor {
         OkJButton.setMaximumSize( Settings.defaultButtonDimension );
         OkJButton.setBorder( BorderFactory.createRaisedBevelBorder() );
         OkJButton.setAlignmentX( Component.LEFT_ALIGNMENT );
-        OkJButton.addActionListener(( ActionEvent e ) -> {
-            handleOkButtonClick();
-        });
+        OkJButton.addActionListener(( ActionEvent e ) -> handleOkButtonClick());
         OkJButton.setDefaultCapable( true );
         jFrame.getRootPane().setDefaultButton( OkJButton );
         jPanel.add( OkJButton, "tag ok, span, split 2" );
@@ -108,9 +100,7 @@ public class GroupInfoEditor {
         CancelButton.setMaximumSize( Settings.defaultButtonDimension );
         CancelButton.setBorder( BorderFactory.createRaisedBevelBorder() );
         CancelButton.setAlignmentX( Component.RIGHT_ALIGNMENT );
-        CancelButton.addActionListener(( ActionEvent e ) -> {
-            getRid();
-        });
+        CancelButton.addActionListener(( ActionEvent e ) -> getRid());
         jPanel.add( CancelButton, "tag cancel" );
 
         JTabbedPane tabbedPane = new JTabbedPane();

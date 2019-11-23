@@ -1,17 +1,15 @@
 package org.jpo.gui.swing;
 
+import net.miginfocom.swing.MigLayout;
+import org.jpo.eventBus.JpoEventBus;
+import org.jpo.eventBus.RecentCollectionsChangedEvent;
+import org.jpo.dataModel.Settings;
+import org.jpo.dataModel.Tools;
+
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import org.jpo.EventBus.JpoEventBus;
-import org.jpo.EventBus.RecentCollectionsChangedEvent;
-import org.jpo.dataModel.Settings;
-import org.jpo.dataModel.Tools;
-import net.miginfocom.swing.MigLayout;
 
 /*
 Copyright (C) 2002 - 2019 Richard Eigenmann.
@@ -63,31 +61,23 @@ public class PrivacyJFrame
         final JCheckBox clearRecentFiles = new JCheckBox( Settings.jpoResources.getString( "PrivacyClearRecentFiles" ) );
         privacyPanel.add( clearRecentFiles );
         final JButton clearRecentFilesButton = new JButton( Settings.jpoResources.getString( "PrivacyClear" ) );
-        clearRecentFilesButton.addActionListener(( ActionEvent e ) -> {
-            privacyController.clearRecentFiles();
-        });
+        clearRecentFilesButton.addActionListener(( ActionEvent e ) -> privacyController.clearRecentFiles());
         privacyPanel.add( clearRecentFilesButton, "wrap" );
 
         final JCheckBox clearAutoload = new JCheckBox( Settings.jpoResources.getString( "PrivacyClearAutoload" ) );
         privacyPanel.add( clearAutoload );
         final JButton clearAutoloadButton = new JButton( Settings.jpoResources.getString( "PrivacyClear" ) );
-        clearAutoloadButton.addActionListener(( ActionEvent e ) -> {
-            privacyController.clearAutoload();
-        });
+        clearAutoloadButton.addActionListener(( ActionEvent e ) -> privacyController.clearAutoload());
         privacyPanel.add( clearAutoloadButton, "wrap" );
 
         final JCheckBox clearMemorisedDirs = new JCheckBox( Settings.jpoResources.getString( "PrivacyClearMemorisedDirs" ) );
         privacyPanel.add( clearMemorisedDirs );
         final JButton clearMemorisedDirsButton = new JButton( Settings.jpoResources.getString( "PrivacyClear" ) );
-        clearMemorisedDirsButton.addActionListener(( ActionEvent e ) -> {
-            privacyController.clearMemorisedDirs();
-        });
+        clearMemorisedDirsButton.addActionListener(( ActionEvent e ) -> privacyController.clearMemorisedDirs());
         privacyPanel.add( clearMemorisedDirsButton, "wrap" );
 
         final JButton selected = new JButton( Settings.jpoResources.getString( "PrivacySelected" ) );
-        selected.addActionListener(( ActionEvent e ) -> {
-            privacyController.clearSelected( clearRecentFiles.isSelected(), clearAutoload.isSelected(), clearMemorisedDirs.isSelected() );
-        });
+        selected.addActionListener(( ActionEvent e ) -> privacyController.clearSelected( clearRecentFiles.isSelected(), clearAutoload.isSelected(), clearMemorisedDirs.isSelected() ));
         privacyPanel.add( selected, "split 2" );
 
         /*final JButton cancel = new JButton( Settings.jpoResources.getString( "PrivacyClose" ) );
@@ -97,9 +87,7 @@ public class PrivacyJFrame
         privacyPanel.add( cancel );*/
 
         final JButton all = new JButton( Settings.jpoResources.getString( "PrivacyAll" ) );
-        all.addActionListener(( ActionEvent e ) -> {
-            privacyController.clearAll();
-        });
+        all.addActionListener(( ActionEvent e ) -> privacyController.clearAll());
         privacyPanel.add( all );
 
 
@@ -130,7 +118,7 @@ public class PrivacyJFrame
      * Implemented as an inner class as it is quite specific to the GUI but
      * I wanted to maintain a semblance of MVC.
      */
-    private class PrivacyController {
+    private static class PrivacyController {
 
 
         /**

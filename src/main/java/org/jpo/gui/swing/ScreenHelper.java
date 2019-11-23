@@ -1,11 +1,6 @@
 package org.jpo.gui.swing;
 
-import java.awt.DisplayMode;
-import java.awt.GraphicsConfiguration;
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
-import java.awt.Rectangle;
-import java.awt.Toolkit;
+import java.awt.*;
 
 
 /*

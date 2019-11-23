@@ -1,10 +1,6 @@
 package org.jpo.dataModel;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
@@ -102,10 +98,9 @@ public class PrefObj {
      * @param o the object Object to store
      * @throws IOException Error when no good
      * @throws BackingStoreException Error when no good
-     * @throws ClassNotFoundException Error when no good
      */
     static public void putObject( Preferences prefs, String key, Object o )
-            throws IOException, BackingStoreException, ClassNotFoundException {
+            throws IOException, BackingStoreException {
         byte[] raw = object2Bytes(o);
         byte[][] pieces = breakIntoPieces(raw);
         writePieces( prefs, key, pieces );

@@ -1,20 +1,14 @@
 package org.jpo.gui.swing;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Font;
-import javax.swing.BorderFactory;
-import javax.swing.JPanel;
-import javax.swing.JProgressBar;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.border.EmptyBorder;
+import net.miginfocom.swing.MigLayout;
 import org.jpo.dataModel.Settings;
 import org.jpo.dataModel.Tools;
 import org.jpo.gui.OverlayedPictureController;
 import org.jpo.gui.ScalablePicture;
-import net.miginfocom.swing.MigLayout;
+
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import java.awt.*;
 
 /*
  PictureFrame.java:  Class that manages the frame and display of the Picutre

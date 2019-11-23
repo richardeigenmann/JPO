@@ -1,15 +1,16 @@
 package export;
 
+import org.jpo.export.WebsiteGenerator;
+import org.junit.Test;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import org.jpo.export.WebsiteGenerator;
+
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.fail;
-
-import org.junit.Test;
 
 /*
  Copyright (C) 2018 - 2018  Richard Eigenmann, Zurich, Switzerland

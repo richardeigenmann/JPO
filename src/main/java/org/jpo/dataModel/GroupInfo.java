@@ -1,5 +1,7 @@
 package org.jpo.dataModel;
 
+import org.apache.commons.text.StringEscapeUtils;
+
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.Serializable;
@@ -9,7 +11,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Logger;
-import org.apache.commons.text.StringEscapeUtils;
 
 
 /*
@@ -236,7 +237,7 @@ public class GroupInfo implements Serializable {
     private void sendGroupInfoChangedEvent( GroupInfoChangeEvent groupInfoChangeEvent ) {
         if ( Settings.getPictureCollection().getSendModelUpdates() ) {
             synchronized ( groupInfoListeners ) {
-                groupInfoListeners.stream().forEach( groupInfoChangeListener
+                groupInfoListeners.forEach(groupInfoChangeListener
                         -> groupInfoChangeListener.groupInfoChangeEvent( groupInfoChangeEvent )
                 );
             }

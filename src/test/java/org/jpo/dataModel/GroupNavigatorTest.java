@@ -1,12 +1,14 @@
 package org.jpo.dataModel;
 
+import org.junit.Before;
+import org.junit.Test;
+
+import javax.swing.*;
 import java.lang.reflect.InvocationTargetException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.SwingUtilities;
+
 import static junit.framework.TestCase.assertEquals;
-import org.junit.Before;
-import org.junit.Test;
 
 /**
  *

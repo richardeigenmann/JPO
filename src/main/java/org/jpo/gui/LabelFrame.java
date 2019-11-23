@@ -1,12 +1,10 @@
 package org.jpo.gui;
 
-import java.awt.Dimension;
-import java.lang.reflect.InvocationTargetException;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.SwingUtilities;
-import javax.swing.WindowConstants;
 import org.jpo.dataModel.Settings;
+
+import javax.swing.*;
+import java.awt.*;
+import java.lang.reflect.InvocationTargetException;
 
 /**
  * Creates a JFrame that holds a centred JLabel.
@@ -35,9 +33,7 @@ public class LabelFrame {
      * @param title The title for the JFrame
      */
     public LabelFrame( final String title ) {
-        Runnable runnable = () -> {
-            initComponents( title );
-        };
+        Runnable runnable = () -> initComponents( title );
         if ( SwingUtilities.isEventDispatchThread() ) {
             runnable.run();
         } else {
@@ -74,9 +70,7 @@ public class LabelFrame {
      * @param message the message to show in the label
      */
     public void update( final String message ) {
-        Runnable runnable = () -> {
-            progressJLabel.setText( message );
-        };
+        Runnable runnable = () -> progressJLabel.setText( message );
         if ( SwingUtilities.isEventDispatchThread() ) {
             runnable.run();
         } else {

@@ -1,13 +1,12 @@
 package org.jpo.export;
 
-import javax.swing.JComponent;
-import javax.swing.JPanel;
-import javax.swing.JTextArea;
+import net.javaprog.ui.wizard.AbstractStep;
+import net.miginfocom.swing.MigLayout;
 import org.jpo.dataModel.GroupInfo;
 import org.jpo.dataModel.NodeStatistics;
 import org.jpo.dataModel.SortableDefaultMutableTreeNode;
-import net.javaprog.ui.wizard.AbstractStep;
-import net.miginfocom.swing.MigLayout;
+
+import javax.swing.*;
 
 /*
  * Copyright (C) 2012-2018 Richard Eigenmann. Zürich

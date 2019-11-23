@@ -1,11 +1,12 @@
 package org.jpo.dataModel;
 
+import org.apache.commons.io.FileUtils;
+
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreeNode;
 import java.io.File;
 import java.util.Enumeration;
 import java.util.logging.Logger;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.TreeNode;
-import org.apache.commons.io.FileUtils;
 
 /*
  Copyright (C) 2002 - 2018  Richard Eigenmann.

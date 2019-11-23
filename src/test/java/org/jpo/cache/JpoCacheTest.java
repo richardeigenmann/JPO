@@ -1,10 +1,12 @@
 package org.jpo.cache;
 
-import java.util.Objects;
-import java.util.Properties;
 import org.jpo.dataModel.Settings;
 import org.junit.Test;
-import static org.junit.Assert.*;
+
+import java.util.Objects;
+import java.util.Properties;
+
+import static org.junit.Assert.assertTrue;
 
 /*
  Copyright (C) 2017  Richard Eigenmann.

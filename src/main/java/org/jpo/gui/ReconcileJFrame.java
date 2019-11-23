@@ -1,6 +1,12 @@
 package org.jpo.gui;
 
-import java.awt.Dimension;
+import net.miginfocom.swing.MigLayout;
+import org.jpo.dataModel.PictureInfo;
+import org.jpo.dataModel.Settings;
+import org.jpo.dataModel.SortableDefaultMutableTreeNode;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -11,21 +17,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.SwingWorker;
-
-import org.jpo.dataModel.PictureInfo;
-import org.jpo.dataModel.Settings;
-import org.jpo.dataModel.SortableDefaultMutableTreeNode;
-import net.miginfocom.swing.MigLayout;
 
 /*
  ReconcileJFrame.java:  
@@ -294,7 +285,7 @@ public class ReconcileJFrame extends JFrame {
         private final HashSet<URI> collectionUris = new HashSet<>();
 
         @Override
-        protected String doInBackground() throws Exception {
+        protected String doInBackground() {
             //Build HashSet of all of the URIs know to the collection
             SortableDefaultMutableTreeNode node;
             Object nodeObject;
@@ -348,7 +339,7 @@ public class ReconcileJFrame extends JFrame {
 
         @Override
         protected void process( List<String> chunks ) {
-            chunks.stream().forEach(outputTextArea::append);
+            chunks.forEach(outputTextArea::append);
         }
 
         @Override

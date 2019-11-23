@@ -1,17 +1,13 @@
 package org.jpo.gui;
 
 import com.google.common.eventbus.Subscribe;
+import org.jpo.eventBus.*;
+import org.jpo.dataModel.Settings;
+
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.KeyStroke;
-import javax.swing.SwingUtilities;
-
-import org.jpo.EventBus.*;
-import org.jpo.dataModel.Settings;
 
 /*
  ApplicationJMenuBar.java:  main menu for the application

@@ -1,21 +1,14 @@
 package org.jpo.gui.swing;
 
-import java.awt.Cursor;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
-import java.awt.geom.AffineTransform;
-import java.util.logging.Logger;
-import javax.swing.JComponent;
-import javax.swing.event.MouseInputAdapter;
 import org.jpo.dataModel.Settings;
 import org.jpo.gui.ScalablePicture;
+
+import javax.swing.*;
+import javax.swing.event.MouseInputAdapter;
+import java.awt.*;
+import java.awt.event.*;
+import java.awt.geom.AffineTransform;
+import java.util.logging.Logger;
 
 
 /*

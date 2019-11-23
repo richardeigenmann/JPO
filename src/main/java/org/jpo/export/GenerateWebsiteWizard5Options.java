@@ -1,22 +1,14 @@
 package org.jpo.export;
 
-import java.awt.Container;
-import java.awt.FlowLayout;
-import javax.swing.ButtonGroup;
-import javax.swing.JCheckBox;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-import javax.swing.JSpinner;
-import javax.swing.SpinnerNumberModel;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-
-import org.jpo.EventBus.GenerateWebsiteRequest;
-import org.jpo.dataModel.Settings;
 import net.javaprog.ui.wizard.AbstractStep;
 import net.miginfocom.swing.MigLayout;
+import org.jpo.eventBus.GenerateWebsiteRequest;
+import org.jpo.dataModel.Settings;
+
+import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import java.awt.*;
 
 
 /*
@@ -150,15 +142,11 @@ public class GenerateWebsiteWizard5Options extends AbstractStep {
         sequentialNumberJPanel.setMaximumSize( GenerateWebsiteWizard.normalComponentSize );
         sequentialNumberJPanel.setAlignmentX( Container.LEFT_ALIGNMENT );
         sequentialNumberJPanel.add( sequentialStartLabel );
-        sequentialStartJSpinner.addChangeListener( ( ChangeEvent arg0 ) -> {
-            options.setSequentialStartNumber( ( (SpinnerNumberModel) sequentialStartJSpinner.getModel() ).getNumber().intValue() );
-        } );
+        sequentialStartJSpinner.addChangeListener( ( ChangeEvent arg0 ) -> options.setSequentialStartNumber( ( (SpinnerNumberModel) sequentialStartJSpinner.getModel() ).getNumber().intValue() ));
         sequentialNumberJPanel.add( sequentialStartJSpinner );
         wizardPanel.add( sequentialNumberJPanel, "wrap" );
 
-        generateRobotsJCheckBox.addChangeListener( ( ChangeEvent arg0 ) -> {
-            options.setWriteRobotsTxt( generateRobotsJCheckBox.isSelected() );
-        } );
+        generateRobotsJCheckBox.addChangeListener( ( ChangeEvent arg0 ) -> options.setWriteRobotsTxt( generateRobotsJCheckBox.isSelected() ));
         wizardPanel.add( generateRobotsJCheckBox, "wrap" );
 
         return wizardPanel;

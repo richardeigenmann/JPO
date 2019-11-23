@@ -1,5 +1,7 @@
 package org.jpo.dataModel;
 
+import org.junit.Test;
+
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.StringWriter;
@@ -7,9 +9,9 @@ import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.fail;
-import org.junit.Test;
 
 /*
  Copyright (C) 2017  Richard Eigenmann.

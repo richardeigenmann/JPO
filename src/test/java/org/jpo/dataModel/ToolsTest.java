@@ -76,7 +76,7 @@ public class ToolsTest {
                 } catch ( EdtViolationException ex ) {
                     onEDTErrorThrown = true;
                 }
-                assertTrue( "When on EDT must not throw an error", !onEDTErrorThrown );
+                assertFalse("When on EDT must not throw an error", onEDTErrorThrown);
             } );
         } catch ( InterruptedException | InvocationTargetException ex ) {
             fail( "Something went wrong with the EDT thread test" );

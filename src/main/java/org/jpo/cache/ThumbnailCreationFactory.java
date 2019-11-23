@@ -1,13 +1,14 @@
 package org.jpo.cache;
 
+import org.jpo.dataModel.GroupInfo;
+import org.jpo.dataModel.PictureInfo;
+import org.jpo.dataModel.SortableDefaultMutableTreeNode;
+
+import javax.swing.*;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.logging.Logger;
-import javax.swing.ImageIcon;
-import org.jpo.dataModel.GroupInfo;
-import org.jpo.dataModel.PictureInfo;
-import org.jpo.dataModel.SortableDefaultMutableTreeNode;
 
 /*
  ThumbnailCreationFactory.java:  A factory that creates thumbnails

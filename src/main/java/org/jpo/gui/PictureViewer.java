@@ -1,42 +1,26 @@
 package org.jpo.gui;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
-import javax.swing.Timer;
-import javax.swing.event.ChangeEvent;
-import javax.swing.tree.DefaultMutableTreeNode;
-
-import org.jpo.EventBus.JpoEventBus;
-import org.jpo.EventBus.RotatePictureRequest;
-import org.jpo.EventBus.ShowAutoAdvanceDialogRequest;
-import org.jpo.EventBus.ShowPicturePopUpMenuRequest;
-import org.jpo.cache.ThumbnailQueueRequest.QUEUE_PRIORITY;
-import org.jpo.dataModel.NodeNavigatorInterface;
-import org.jpo.dataModel.NodeNavigatorListener;
-import org.jpo.dataModel.PictureInfo;
-import org.jpo.dataModel.PictureInfoChangeEvent;
-import org.jpo.dataModel.PictureInfoChangeListener;
-import org.jpo.dataModel.Settings;
-import org.jpo.dataModel.SortableDefaultMutableTreeNode;
-import org.jpo.dataModel.Tools;
+import org.jpo.eventBus.JpoEventBus;
+import org.jpo.eventBus.RotatePictureRequest;
+import org.jpo.eventBus.ShowAutoAdvanceDialogRequest;
+import org.jpo.eventBus.ShowPicturePopUpMenuRequest;
+import org.jpo.cache.QUEUE_PRIORITY;
+import org.jpo.dataModel.*;
 import org.jpo.gui.ScalablePicture.ScalablePictureStatus;
-
-import static org.jpo.gui.ScalablePicture.ScalablePictureStatus.SCALABLE_PICTURE_ERROR;
-import static org.jpo.gui.ScalablePicture.ScalablePictureStatus.SCALABLE_PICTURE_READY;
-
 import org.jpo.gui.SourcePicture.SourcePictureStatus;
 import org.jpo.gui.swing.ChangeWindowPopupMenu;
 import org.jpo.gui.swing.PictureFrame;
 import org.jpo.gui.swing.ResizableJFrame.WindowSize;
+
+import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.tree.DefaultMutableTreeNode;
+import java.awt.event.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import static org.jpo.gui.ScalablePicture.ScalablePictureStatus.SCALABLE_PICTURE_ERROR;
+import static org.jpo.gui.ScalablePicture.ScalablePictureStatus.SCALABLE_PICTURE_READY;
 
 
 /*

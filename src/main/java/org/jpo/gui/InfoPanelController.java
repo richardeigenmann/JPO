@@ -1,16 +1,15 @@
 package org.jpo.gui;
 
 import com.google.common.eventbus.Subscribe;
+import org.jpo.eventBus.GroupSelectionEvent;
+import org.jpo.eventBus.JpoEventBus;
+import org.jpo.eventBus.ShowGroupRequest;
+import org.jpo.dataModel.PictureInfo;
+
+import javax.swing.*;
+import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.event.ActionEvent;
 import java.util.logging.Logger;
-import javax.swing.JComponent;
-import javax.swing.SwingUtilities;
-import javax.swing.Timer;
-import javax.swing.tree.DefaultMutableTreeNode;
-import org.jpo.EventBus.GroupSelectionEvent;
-import org.jpo.EventBus.JpoEventBus;
-import org.jpo.EventBus.ShowGroupRequest;
-import org.jpo.dataModel.PictureInfo;
 
 /*
  InfoPanelController.java:  The Controller for the Info Panel
@@ -57,9 +56,7 @@ public class InfoPanelController {
      * A timer to fire off the refresh of the Thumbnail Queue display. Is only
      * alive if the InfoPanel is showing the statistics panel.
      */
-    private final Timer statsUpdateTimer = new Timer( DELAY, ( ActionEvent ae ) -> {
-        nodeStatisticsController.updateStats();
-    });
+    private final Timer statsUpdateTimer = new Timer( DELAY, ( ActionEvent ae ) -> nodeStatisticsController.updateStats());
 
     /**
      * Returns the InfoPanel Widget

@@ -9,7 +9,6 @@ report.xml
 .gradle
 nbproject
 .nbproject/
-nbproject
 .nb-gradle/
 .idea
 out

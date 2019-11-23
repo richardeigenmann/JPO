@@ -1,7 +1,7 @@
 package org.jpo.dataModel;
 
-import org.jpo.EventBus.JpoEventBus;
-import org.jpo.EventBus.RecentCollectionsChangedEvent;
+import org.jpo.eventBus.JpoEventBus;
+import org.jpo.eventBus.RecentCollectionsChangedEvent;
 import org.jpo.cache.ThumbnailCreationQueue;
 
 import javax.swing.*;

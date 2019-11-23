@@ -1,24 +1,19 @@
 package org.jpo.gui;
 
-import java.awt.Color;
+import org.jetbrains.annotations.NotNull;
+import org.jpo.dataModel.Settings;
+import org.jpo.dataModel.Tools;
+
+import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Logger;
-import javax.swing.InputVerifier;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JFileChooser;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import org.jpo.dataModel.Settings;
-import org.jpo.dataModel.Tools;
-import org.jetbrains.annotations.NotNull;
 
 /*
  DirectoryChooserTest.java:  a object that displays a JTextFiled and has a button

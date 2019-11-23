@@ -46,7 +46,7 @@ public class StaticNodesQuery implements Query {
         return nodes.get( index );
     }
 
-    private String title;
+    private final String title;
     
     @Override
     public String getTitle() {

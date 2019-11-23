@@ -1,5 +1,9 @@
 package org.jpo.gui;
 
+import org.jpo.dataModel.Settings;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -8,15 +12,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Objects;
 
-import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertFalse;
-import static junit.framework.TestCase.assertNotNull;
-import static junit.framework.TestCase.assertTrue;
-import static junit.framework.TestCase.fail;
-
-import org.jpo.dataModel.Settings;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import static junit.framework.TestCase.*;
 
 /**
  * Tests for the Scalable Picture Class

@@ -1,14 +1,14 @@
 package export;
 
-import java.lang.reflect.InvocationTargetException;
-import javax.swing.SwingUtilities;
-
-import org.jpo.EventBus.GenerateWebsiteRequest;
+import org.jpo.eventBus.GenerateWebsiteRequest;
 import org.jpo.export.GenerateWebsiteWizard1Welcome;
-
-import static junit.framework.TestCase.fail;
 import org.junit.Assert;
 import org.junit.Test;
+
+import javax.swing.*;
+import java.lang.reflect.InvocationTargetException;
+
+import static junit.framework.TestCase.fail;
 
 /**
  * Tests for the GroupPopupMenu Class

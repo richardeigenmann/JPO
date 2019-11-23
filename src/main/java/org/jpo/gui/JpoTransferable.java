@@ -1,20 +1,15 @@
 package org.jpo.gui;
 
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.ClipboardOwner;
-import java.awt.datatransfer.DataFlavor;
-import java.awt.datatransfer.Transferable;
-import java.awt.datatransfer.UnsupportedFlavorException;
+import org.jetbrains.annotations.NotNull;
+import org.jpo.dataModel.PictureInfo;
+import org.jpo.dataModel.SortableDefaultMutableTreeNode;
+
+import java.awt.datatransfer.*;
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
-
-import org.jpo.dataModel.PictureInfo;
-import org.jpo.dataModel.SortableDefaultMutableTreeNode;
-import org.jetbrains.annotations.NotNull;
 
 /*
  JpoTransferable.java:  a transferable to drag and drop nodes of the Jpo application

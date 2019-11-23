@@ -1,17 +1,14 @@
 package org.jpo.export;
 
-import java.util.concurrent.ExecutionException;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.SwingWorker;
-
-import org.jpo.EventBus.GenerateWebsiteRequest;
+import net.javaprog.ui.wizard.AbstractStep;
+import net.miginfocom.swing.MigLayout;
+import org.jpo.eventBus.GenerateWebsiteRequest;
 import org.jpo.dataModel.NodeStatistics;
 import org.jpo.dataModel.Settings;
 import org.jpo.dataModel.SortableDefaultMutableTreeNode;
-import net.javaprog.ui.wizard.AbstractStep;
-import net.miginfocom.swing.MigLayout;
+
+import javax.swing.*;
+import java.util.concurrent.ExecutionException;
 
 /*
  Copyright (C) 2008-2017  Richard Eigenmann.

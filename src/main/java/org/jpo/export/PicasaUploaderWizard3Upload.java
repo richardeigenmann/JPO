@@ -1,22 +1,20 @@
 package org.jpo.export;
 
-import java.awt.Desktop;
-import java.awt.Dimension;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.JComponent;
-import javax.swing.JPanel;
-import javax.swing.JProgressBar;
-import org.jpo.dataModel.NodeStatistics;
-import org.jpo.dataModel.SortableDefaultMutableTreeNode;
 import net.javaprog.ui.wizard.AbstractStep;
 import net.javaprog.ui.wizard.WizardModel;
 import net.javaprog.ui.wizard.WizardModelEvent;
 import net.javaprog.ui.wizard.WizardModelListener;
 import net.miginfocom.swing.MigLayout;
+import org.jpo.dataModel.NodeStatistics;
+import org.jpo.dataModel.SortableDefaultMutableTreeNode;
+
+import javax.swing.*;
+import java.awt.*;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /*
  * Copyright (C) 2012 -2017 Richard Eigenmann. Zürich

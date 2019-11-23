@@ -1,23 +1,19 @@
 package org.jpo.gui.swing;
 
-import java.awt.Component;
-import java.net.URL;
-import java.util.logging.Logger;
-import javax.swing.DefaultCellEditor;
-import javax.swing.ImageIcon;
-import javax.swing.JLabel;
-import javax.swing.JTextField;
-import javax.swing.JTree;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeCellEditor;
-import javax.swing.tree.DefaultTreeCellRenderer;
-import javax.swing.tree.TreeCellEditor;
-
+import org.jetbrains.annotations.TestOnly;
 import org.jpo.dataModel.GroupInfo;
 import org.jpo.dataModel.PictureInfo;
 import org.jpo.dataModel.Settings;
 import org.jpo.dataModel.Tools;
-import org.jetbrains.annotations.TestOnly;
+
+import javax.swing.*;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeCellEditor;
+import javax.swing.tree.DefaultTreeCellRenderer;
+import javax.swing.tree.TreeCellEditor;
+import java.awt.*;
+import java.net.URL;
+import java.util.logging.Logger;
 
 /*
 CollectionJTree.java:  class that creates a JTree for the collection

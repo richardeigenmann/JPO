@@ -1,9 +1,9 @@
 package org.jpo.export;
 
-import org.jpo.EventBus.GenerateWebsiteRequest;
-import org.jpo.dataModel.Settings;
 import net.javaprog.ui.wizard.AbstractStep;
 import net.miginfocom.swing.MigLayout;
+import org.jpo.eventBus.GenerateWebsiteRequest;
+import org.jpo.dataModel.Settings;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -118,25 +118,17 @@ public class GenerateWebsiteWizard3Midres extends AbstractStep {
         });
         wizardPanel.add( generateMidresHtmlJCheckBox, "spanx, wrap" );
 
-        generateMapJCheckBox.addChangeListener(( ChangeEvent arg0 ) -> {
-            options.setGenerateMap( generateMapJCheckBox.isSelected() );
-        });
+        generateMapJCheckBox.addChangeListener(( ChangeEvent arg0 ) -> options.setGenerateMap( generateMapJCheckBox.isSelected() ));
         wizardPanel.add( generateMapJCheckBox, "spanx, wrap" );
 
-        mouseoverJCheckBox.addChangeListener(( ChangeEvent arg0 ) -> {
-            options.setGenerateMouseover( mouseoverJCheckBox.isSelected() );
-        });
+        mouseoverJCheckBox.addChangeListener(( ChangeEvent arg0 ) -> options.setGenerateMouseover( mouseoverJCheckBox.isSelected() ));
         wizardPanel.add( mouseoverJCheckBox, "spanx, wrap" );
 
         wizardPanel.add( new JLabel( Settings.jpoResources.getString( "thumbnailSizeJLabel" ) ), "align label" );
-        midresWidthJSpinner.addChangeListener(( ChangeEvent arg0 ) -> {
-            options.setMidresWidth( ( (SpinnerNumberModel) ( midresWidthJSpinner.getModel() ) ).getNumber().intValue() );
-        });
+        midresWidthJSpinner.addChangeListener(( ChangeEvent arg0 ) -> options.setMidresWidth( ( (SpinnerNumberModel) ( midresWidthJSpinner.getModel() ) ).getNumber().intValue() ));
         wizardPanel.add( midresWidthJSpinner, "split 3" );
         wizardPanel.add( new JLabel( " x " ) );
-        midresHeightJSpinner.addChangeListener(( ChangeEvent arg0 ) -> {
-            options.setMidresHeight( ( (SpinnerNumberModel) ( midresHeightJSpinner.getModel() ) ).getNumber().intValue() );
-        });
+        midresHeightJSpinner.addChangeListener(( ChangeEvent arg0 ) -> options.setMidresHeight( ( (SpinnerNumberModel) ( midresHeightJSpinner.getModel() ) ).getNumber().intValue() ));
         wizardPanel.add( midresHeightJSpinner, "wrap" );
 
         // Midres Quality Slider
@@ -151,9 +143,7 @@ public class GenerateWebsiteWizard3Midres extends AbstractStep {
         midresJpgQualityJSlider.setMinorTickSpacing( 5 );
         midresJpgQualityJSlider.setPaintTicks( true );
         midresJpgQualityJSlider.setPaintLabels( true );
-        midresJpgQualityJSlider.addChangeListener(( ChangeEvent arg0 ) -> {
-            options.setMidresJpgQualityPercent( midresJpgQualityJSlider.getValue() );
-        });
+        midresJpgQualityJSlider.addChangeListener(( ChangeEvent arg0 ) -> options.setMidresJpgQualityPercent( midresJpgQualityJSlider.getValue() ));
         wizardPanel.add( midresJpgQualityJSlider, "growx, wrap" );
         return wizardPanel;
     }

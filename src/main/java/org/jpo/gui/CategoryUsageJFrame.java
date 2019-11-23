@@ -1,7 +1,15 @@
 package org.jpo.gui;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
+import net.miginfocom.swing.MigLayout;
+import org.jpo.eventBus.ShowCategoryUsageEditorRequest;
+import org.jpo.dataModel.Category;
+import org.jpo.dataModel.PictureInfo;
+import org.jpo.dataModel.Settings;
+import org.jpo.dataModel.SortableDefaultMutableTreeNode;
+import org.jpo.gui.swing.CategoryJScrollPane;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -11,20 +19,6 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.BorderFactory;
-import javax.swing.DefaultListModel;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-
-import org.jpo.EventBus.ShowCategoryUsageEditorRequest;
-import org.jpo.dataModel.Category;
-import org.jpo.dataModel.PictureInfo;
-import org.jpo.dataModel.Settings;
-import org.jpo.dataModel.SortableDefaultMutableTreeNode;
-import org.jpo.gui.swing.CategoryJScrollPane;
-import net.miginfocom.swing.MigLayout;
 
 /*
  Copyright (C) 2002-2017  Richard Eigenmann.

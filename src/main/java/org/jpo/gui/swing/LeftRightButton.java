@@ -1,6 +1,6 @@
 package org.jpo.gui.swing;
 
-import javax.swing.ImageIcon;
+import javax.swing.*;
 import java.util.Objects;
 /*
  Copyright (C) 2017  Richard Eigenmann.

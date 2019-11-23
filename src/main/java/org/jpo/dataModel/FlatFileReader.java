@@ -1,23 +1,20 @@
 package org.jpo.dataModel;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import org.apache.commons.io.FilenameUtils;
+import org.jpo.eventBus.AddFlatFileRequest;
+import org.jpo.eventBus.JpoEventBus;
+import org.jpo.eventBus.ShowGroupRequest;
+
+import javax.imageio.ImageIO;
+import javax.imageio.stream.ImageInputStream;
+import javax.swing.*;
+import java.io.*;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.imageio.ImageIO;
-import javax.imageio.stream.ImageInputStream;
-import javax.swing.JOptionPane;
-import org.jpo.EventBus.AddFlatFileRequest;
-import org.jpo.EventBus.JpoEventBus;
-import org.jpo.EventBus.ShowGroupRequest;
-import org.apache.commons.io.FilenameUtils;
 
 /*
  * Copyright (C) 2017 - 2019 Richard Eigenmann, Zurich, Switzerland This program

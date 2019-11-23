@@ -1,50 +1,19 @@
 package org.jpo.gui.swing;
 
 import com.google.common.eventbus.Subscribe;
+import org.jpo.eventBus.*;
+import org.jpo.cache.QUEUE_PRIORITY;
+import org.jpo.dataModel.Settings;
+import org.jpo.dataModel.SortOption;
+import org.jpo.dataModel.SortableDefaultMutableTreeNode;
+import org.jpo.dataModel.Tools;
 
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
-import javax.swing.JPopupMenu;
-import javax.swing.JSeparator;
-import javax.swing.SwingUtilities;
-
-import org.jpo.EventBus.AddCollectionToGroupRequest;
-import org.jpo.EventBus.AddEmptyGroupRequest;
-import org.jpo.EventBus.AddGroupToEmailSelectionRequest;
-import org.jpo.EventBus.ChooseAndAddCollectionRequest;
-import org.jpo.EventBus.ChooseAndAddFlatfileRequest;
-import org.jpo.EventBus.ChooseAndAddPicturesToGroupRequest;
-import org.jpo.EventBus.ConsolidateGroupDialogRequest;
-import org.jpo.EventBus.ExportGroupToFlatFileRequest;
-import org.jpo.EventBus.ExportGroupToHtmlRequest;
-import org.jpo.EventBus.ExportGroupToNewCollectionRequest;
-import org.jpo.EventBus.ExportGroupToPicasaRequest;
-import org.jpo.EventBus.JpoEventBus;
-import org.jpo.EventBus.MoveNodeDownRequest;
-import org.jpo.EventBus.MoveNodeToBottomRequest;
-import org.jpo.EventBus.MoveNodeToTopRequest;
-import org.jpo.EventBus.MoveNodeUpRequest;
-import org.jpo.EventBus.OpenSearchDialogRequest;
-import org.jpo.EventBus.RecentCollectionsChangedEvent;
-import org.jpo.EventBus.RecentDropNodesChangedEvent;
-import org.jpo.EventBus.RefreshThumbnailRequest;
-import org.jpo.EventBus.RemoveNodeRequest;
-import org.jpo.EventBus.ShowCategoryUsageEditorRequest;
-import org.jpo.EventBus.ShowGroupAsTableRequest;
-import org.jpo.EventBus.ShowGroupInfoEditorRequest;
-import org.jpo.EventBus.ShowGroupRequest;
-import org.jpo.EventBus.ShowPictureRequest;
-import org.jpo.EventBus.SortGroupRequest;
-import org.jpo.cache.ThumbnailQueueRequest.QUEUE_PRIORITY;
-import org.jpo.dataModel.Settings;
-import org.jpo.dataModel.SortOption;
-import org.jpo.dataModel.SortableDefaultMutableTreeNode;
-import org.jpo.dataModel.Tools;
 
 /*
  GroupPopupMenu.java: popup menu for groups

@@ -1,10 +1,14 @@
 package org.jpo.gui;
 
 import com.google.common.eventbus.Subscribe;
-import org.jpo.EventBus.*;
+import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
+import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
+import org.apache.commons.compress.archivers.zip.ZipFile;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jpo.eventBus.*;
 import org.jpo.cache.JpoCache;
 import org.jpo.cache.ThumbnailCreationFactory;
-import org.jpo.cache.ThumbnailQueueRequest.QUEUE_PRIORITY;
+import org.jpo.cache.QUEUE_PRIORITY;
 import org.jpo.dataModel.*;
 import org.jpo.dataModel.Settings.FieldCodes;
 import org.jpo.export.GenerateWebsiteWizard;
@@ -12,10 +16,6 @@ import org.jpo.export.PicasaUploadRequest;
 import org.jpo.export.PicasaUploaderWizard;
 import org.jpo.export.WebsiteGenerator;
 import org.jpo.gui.swing.*;
-import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
-import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
-import org.apache.commons.compress.archivers.zip.ZipFile;
-import org.checkerframework.checker.nullness.qual.NonNull;
 
 import javax.swing.*;
 import javax.swing.event.TreeModelEvent;
@@ -76,9 +76,22 @@ public class ApplicationEventHandler {
     }
 
     /**
-     * Handles the application startup.
+     * Handles the application startup by posting an {@link OpenMainWindowRequest},
+     * starting the {@link StartCameraWatchDaemonRequest}, starting the
+     * {@link StartThumbnailCreationFactoryRequest}. If an autoLoad is defined in the Settings it
+     * will load that or start a new collection with {@link StartNewCollectionRequest}.
      *
      * @param request the startup request
+     * @see OpenMainWindowRequest
+     * @see ApplicationEventHandler#handleOpenMainWindowRequest(OpenMainWindowRequest)
+     * @see StartCameraWatchDaemonRequest
+     * @see ApplicationEventHandler#handleStartCameraWatchDaemonRequest(StartCameraWatchDaemonRequest)
+     * @see StartThumbnailCreationFactoryRequest
+     * @see ApplicationEventHandler#handleStartThumbnailCreationFactoryRequest(StartThumbnailCreationFactoryRequest)
+     * @see FileLoadRequest
+     * @see ApplicationEventHandler#handleFileLoadRequest(FileLoadRequest)
+     * @see StartNewCollectionRequest
+     * @see ApplicationEventHandler#handleStartNewCollectionRequest(StartNewCollectionRequest)
      */
     @Subscribe
     public void handleApplicationStartupRequest(ApplicationStartupRequest request) {
@@ -91,7 +104,6 @@ public class ApplicationEventHandler {
         JpoEventBus.getInstance().post(new StartCameraWatchDaemonRequest());
 
         for (int i = 1; i <= Settings.numberOfThumbnailCreationThreads; i++) {
-            //new ThumbnailCreationFactory(Settings.ThumbnailCreationThreadPollingTime);
             JpoEventBus.getInstance().post(new StartThumbnailCreationFactoryRequest());
         }
 
@@ -116,9 +128,13 @@ public class ApplicationEventHandler {
 
 
     /**
-     * Opens the MainWindow
+     * Opens the MainWindow on the EDT thread by constructing a {@link MainWindow}. We then fire a
+     * {@link LoadDockablesPositionsRequest}. We connect the picture collection with the {@link MainAppModelListener}
      *
      * @param request The request
+     * @see MainWindow
+     * @see LoadDockablesPositionsRequest
+     * @see MainAppModelListener
      */
     @Subscribe
     public void handleOpenMainWindowRequest(OpenMainWindowRequest request) {
@@ -245,11 +261,11 @@ public class ApplicationEventHandler {
     }
 
     /**
-     * When we see a ShowPictureRequest this method will open a PictureViewer
-     * and will tell it to show the FlatGroupNavigator based on the pictures
+     * When we see a ShowPictureRequest this method will open a {@link PictureViewer}
+     * and will tell it to show the {@link FlatGroupNavigator} based on the pictures
      * parent node starting at the current position
      *
-     * @param request the ShowPictureRequest
+     * @param request the {@link ShowPictureRequest}
      */
     @Subscribe
     public void handleShowPictureRequest(ShowPictureRequest request) {
@@ -1738,7 +1754,7 @@ public class ApplicationEventHandler {
      * whether the root node changed and asks the application to change the
      * title of the Window accordingly
      */
-    private class MainAppModelListener
+    private static class MainAppModelListener
             implements TreeModelListener {
 
         @Override

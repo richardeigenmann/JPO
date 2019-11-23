@@ -1,13 +1,13 @@
-
-import java.lang.reflect.InvocationTargetException;
-import javax.swing.SwingUtilities;
-import org.jpo.EventBus.CloseApplicationRequest;
-import org.jpo.EventBus.JpoEventBus;
-import static junit.framework.TestCase.fail;
-
+import org.jpo.eventBus.CloseApplicationRequest;
+import org.jpo.eventBus.JpoEventBus;
 import org.jpo.Main;
 import org.junit.Ignore;
 import org.junit.Test;
+
+import javax.swing.*;
+import java.lang.reflect.InvocationTargetException;
+
+import static junit.framework.TestCase.fail;
 
 /**
  *

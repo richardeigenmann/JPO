@@ -1,7 +1,14 @@
 package org.jpo.gui;
 
 import com.google.common.eventbus.Subscribe;
+import org.apache.commons.io.FileUtils;
+import org.jpo.eventBus.*;
+import org.jpo.dataModel.*;
+import org.jpo.gui.swing.CollectionJTree;
 
+import javax.swing.*;
+import javax.swing.tree.TreePath;
+import javax.swing.tree.TreeSelectionModel;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -11,27 +18,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.DropMode;
-import javax.swing.JComponent;
-import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
-import javax.swing.JTree;
-import javax.swing.SwingUtilities;
-import javax.swing.ToolTipManager;
-import javax.swing.TransferHandler;
-import javax.swing.tree.TreePath;
-import javax.swing.tree.TreeSelectionModel;
-
-import org.jpo.EventBus.*;
-import org.jpo.dataModel.GroupInfo;
-import org.jpo.dataModel.PictureCollection;
-import org.jpo.dataModel.PictureInfo;
-import org.jpo.dataModel.Settings;
-import org.jpo.dataModel.SingleNodeNavigator;
-import org.jpo.dataModel.SortableDefaultMutableTreeNode;
-import org.jpo.dataModel.Tools;
-import org.jpo.gui.swing.CollectionJTree;
-import org.apache.commons.io.FileUtils;
 
 /*
  * Copyright (C) 2002 - 2019 Richard Eigenmann, Zurich, Switzerland This
@@ -327,7 +313,7 @@ public class CollectionJTreeController {
      * CollectionJTreeController. the groupPopupJPopupMenu menu must exist.
      *
      */
-    private class CollectionMouseAdapter
+    private static class CollectionMouseAdapter
             extends MouseAdapter {
 
         /**

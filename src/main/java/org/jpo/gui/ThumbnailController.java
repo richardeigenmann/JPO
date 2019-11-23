@@ -1,9 +1,9 @@
 package org.jpo.gui;
 
-import org.jpo.EventBus.*;
+import org.jpo.eventBus.*;
 import org.jpo.cache.ThumbnailCreationQueue;
 import org.jpo.cache.ThumbnailQueueRequest;
-import org.jpo.cache.ThumbnailQueueRequest.QUEUE_PRIORITY;
+import org.jpo.cache.QUEUE_PRIORITY;
 import org.jpo.cache.ThumbnailQueueRequestCallbackHandler;
 import org.jpo.dataModel.*;
 import org.jpo.gui.swing.Thumbnail;
@@ -512,7 +512,7 @@ public class ThumbnailController
      * This class extends a DragSourceListener for tracking the drag operation
      * originating from this thumbnail.
      */
-    private class ThumbnailDragSourceListener
+    private static class ThumbnailDragSourceListener
             implements DragSourceListener {
 
         /**
