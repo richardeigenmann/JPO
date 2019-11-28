@@ -564,6 +564,10 @@ public class PicturePopupMenuTest {
 
     @Test
     public void testMoveToNewLocation() {
+        // TravisCI runs headless so we can't execute the below test
+        if ( GraphicsEnvironment.isHeadless() ) {
+            return;
+        }
         JpoEventBus.getInstance().register(new Object() {
             @Subscribe
             public void handleMoveToNewLocation(MoveToNewLocationRequest request) {
