@@ -580,6 +580,10 @@ public class PicturePopupMenuTest {
 
     @Test
     public void testFileRename() {
+        // TravisCI runs headless so we can't execute the below test
+        if ( GraphicsEnvironment.isHeadless() ) {
+            return;
+        }
         JpoEventBus.getInstance().register(new Object() {
             @Subscribe
             public void handleRenamePictureRequest(RenamePictureRequest request) {
@@ -595,6 +599,10 @@ public class PicturePopupMenuTest {
 
     @Test
     public void testFileDelete() {
+        // TravisCI runs headless so we can't execute the below test
+        if ( GraphicsEnvironment.isHeadless() ) {
+            return;
+        }
         JpoEventBus.getInstance().register(new Object() {
             @Subscribe
             public void handleDeleteNodeFileRequest(DeleteNodeFileRequest request) {
@@ -609,7 +617,11 @@ public class PicturePopupMenuTest {
     private int propertiesEventCount = 0;
 
     @Test
-    public void properties() {
+    public void testProperties() {
+        // TravisCI runs headless so we can't execute the below test
+        if ( GraphicsEnvironment.isHeadless() ) {
+            return;
+        }
         JpoEventBus.getInstance().register(new Object() {
             @Subscribe
             public void handleShowPictureInfoEditorRequest(ShowPictureInfoEditorRequest request) {
@@ -624,7 +636,11 @@ public class PicturePopupMenuTest {
     private int consolidateHereEventCount = 0;
 
     @Test
-    public void consolidateHere() {
+    public void testConsolidateHere() {
+        // TravisCI runs headless so we can't execute the below test
+        if ( GraphicsEnvironment.isHeadless() ) {
+            return;
+        }
         JpoEventBus.getInstance().register(new Object() {
             @Subscribe
             public void handleConsolidateGroupRequest(ConsolidateGroupDialogRequest request) {
