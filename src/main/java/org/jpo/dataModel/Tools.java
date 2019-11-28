@@ -388,8 +388,9 @@ public class Tools {
 
     /**
      * This helper method checks if the execution is on the EventDisplayThread
-     * and throws an Error if it is not. All Swing operations must be done on
-     * the EDT. This method allows easy checking by writing:
+     * and throws an Error if it is not. It is a Java Swing requirement that
+     * graphical operations must be done on the EDT or strange things SOMETIMES
+     * happen. This method allows easy checking by writing:
      * <code>Tools.checkEDT()</code>
      */
     public static void checkEDT() throws EdtViolationException {

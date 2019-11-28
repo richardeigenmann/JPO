@@ -58,7 +58,12 @@
 
                     <span class="para-heading">Reorganising your pictures</span>
                     <h3>Using the "Move" popup menu</h3>
-                    <p>Often when you are reorganising pictures you have multiple groups your pictures will get sorted to. Perhaps you are weeding out a long day's shooting session and have created three folders: "Amazing Highlights", "Not so sure" and "Utter Rubbish". After you have dragged a picture to a different folder the move menu remembers the target folder. This makes it quite easy to move another picture to that folder. Point at the picture with the mouse, right-click on the image and pick the target folder off the move menu. This pop-up menu is also available in the full screen picutre viewer.</p>
+                    <p>Often when you are reorganising pictures you have multiple groups your pictures will get sorted
+                    to. Perhaps you are weeding out a long day's shooting session and have created three folders: "Amazing
+                    Highlights", "Not so sure" and "Utter Rubbish". After you have dragged a picture to a different folder
+                    the move menu remembers the target folder. This is convenient as you can then move the next picture to
+                    the same folder. Point at the picture with the mouse, right-click on the image and pick the target
+                    folder off the move menu. This pop-up menu is also available in the full screen picutre viewer.</p>
 
                     <h2>How to create a web-page from your pictures</h2>
                     <p>If you have a web-server somewhere to host your pictures you can use JPO to create all the files that need to go on that web-server for you. Start off by creating a group, sort the pictures into the desired sequence and label them carefully.</p>

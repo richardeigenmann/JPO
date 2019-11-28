@@ -115,10 +115,9 @@
         that lets a user build collections of images that they can then search, browse,
         show and share with others. An HTML export facility is available that allows
         web pages to be built from collections. JPO uses an open XML file format to store
-        collection information. Picture groups can be exported to a directory for CD burning
-        and sharing by other means. JPO supports all picture formats of your Java installation.
-        By default this is JPEG and GIF. The application makes use of Sun's Java Web Start (TM)
-        technology for easy installation and upgrading.</p>
+        collection information. Picture groups can be exported to a directory for backups
+        and sharing by other means. JPO supports a large amount of picture formats.
+     </p>
 
     <hr>
     <h3>Do you like JPO?</h3>
@@ -126,6 +125,6 @@
     <hr>
 
     <p>Last update to this page: 3 Dec 2018<br>
-        Copyright 2003-2018 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
+        Copyright 2003-2019 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
 </div>
 <?php include("page-end.php"); ?>

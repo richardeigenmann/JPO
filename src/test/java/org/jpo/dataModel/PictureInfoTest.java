@@ -70,11 +70,11 @@ public class PictureInfoTest {
         changeEvents = 0;
         PictureInfoChangeListener picl = (PictureInfoChangeEvent arg0) -> changeEvents += 1;
         pi.addPictureInfoChangeListener(picl);
-        pi.setDescription("Rubbish");
-        assertEquals("Expecting what went in to come out", "Rubbish", pi.getDescription());
+        pi.setDescription("A description");
+        assertEquals("Expecting what went in to come out", "A description", pi.getDescription());
         assertEquals("Expecting 1 change event", 1, changeEvents);
-        pi.setDescription("More Rubbish");
-        assertEquals("Expecting what went in to come out", "More Rubbish", pi.getDescription());
+        pi.setDescription("A different description");
+        assertEquals("Expecting what went in to come out", "A different description", pi.getDescription());
         assertEquals("Expecting a second change event", 2, changeEvents);
     }
 
@@ -89,11 +89,11 @@ public class PictureInfoTest {
         countEvents = 0;
         PictureInfoChangeListener picl = (PictureInfoChangeEvent arg0) -> countEvents += 1;
         pi.addPictureInfoChangeListener(picl);
-        pi.setDescription("Rubbish");
-        assertEquals("Expecting what went in to come out", "Rubbish", pi.getDescription());
+        pi.setDescription("A picture description");
+        assertEquals("Expecting what went in to come out", "A picture description", pi.getDescription());
         assertEquals("Expecting 1 change event", 1, countEvents);
-        pi.setDescription("Rubbish");
-        assertEquals("Expecting what went in to come out", "Rubbish", pi.getDescription());
+        pi.setDescription("A picture description");
+        assertEquals("Expecting what went in to come out", "A picture description", pi.getDescription());
         assertEquals("Expecting no new change event because it was the same that went in", 1, countEvents);
     }
 
@@ -103,9 +103,9 @@ public class PictureInfoTest {
     @Test
     public void testAppendToDescription() {
         PictureInfo pi = new PictureInfo();
-        pi.setDescription("Rubbish");
-        pi.appendToDescription("Bin");
-        assertEquals("Expecting that the description concatenated", "RubbishBin", pi.getDescription());
+        pi.setDescription("A picture description");
+        pi.appendToDescription(" concatenated from two texts");
+        assertEquals("Expecting that the description concatenated", "A picture description concatenated from two texts", pi.getDescription());
     }
 
     /**
@@ -114,8 +114,8 @@ public class PictureInfoTest {
     @Test
     public void testDescriptionContains() {
         PictureInfo pi = new PictureInfo();
-        pi.setDescription("RubbishBinTrash");
-        assertTrue("Expecting to find a substring", pi.descriptionContains("Bin"));
+        pi.setDescription("A picture of a big town at sunset");
+        assertTrue("Expecting to find a substring", pi.descriptionContains("town"));
     }
 
     /**

@@ -85,7 +85,7 @@ public class Main {
         StringBuilder foundClasses = new StringBuilder( "These classes were found:\n" );
         StringBuilder missingClasses = new StringBuilder( "The Installation is faulty! The following classes and libraries are missing:\n" );
 
-        isClassLoadable("org.jpo.gui.ApplicationEventHandler", "Jpo-0.13.jar", foundClasses, missingClasses );
+        isClassLoadable("org.jpo.gui.ApplicationEventHandler", "Jpo-0.14.jar", foundClasses, missingClasses );
         isClassLoadable("org.tagcloud.TagCloud", "TagCloud.jar", foundClasses, missingClasses );
         isClassLoadable("org.apache.commons.compress.archivers.zip.ZipArchiveEntry", "commons-compress-1.8.jar", foundClasses, missingClasses );
         isClassLoadable("org.apache.commons.io.IOUtils", "commons-io-2.4.jar", foundClasses, missingClasses );

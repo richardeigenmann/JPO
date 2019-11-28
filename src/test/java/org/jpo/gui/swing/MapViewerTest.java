@@ -47,7 +47,7 @@ public class MapViewerTest {
                 assertNotNull( result );
             } );
         } catch ( InterruptedException | InvocationTargetException ex ) {
-            Logger.getLogger( PicturePopupMenuTest.class.getName() ).log( Level.SEVERE, null, ex );
+            Logger.getLogger( MapViewerTest.class.getName() ).log( Level.SEVERE, null, ex );
             fail("Was not supposed to throw exception: " + ex.getMessage());
         }
     }
@@ -67,7 +67,7 @@ public class MapViewerTest {
                 assertEquals( 7.797439, mapPosition.getLongitude(), 0.00000000001 );
             } );
         } catch ( InterruptedException | InvocationTargetException ex ) {
-            Logger.getLogger( PicturePopupMenuTest.class.getName() ).log( Level.SEVERE, null, ex );
+            Logger.getLogger( MapViewerTest.class.getName() ).log( Level.SEVERE, null, ex );
             fail("Was not supposed to throw exception: " + ex.getMessage());
         }
 
