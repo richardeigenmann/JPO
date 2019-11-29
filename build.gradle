@@ -13,50 +13,27 @@ plugins {
     id "com.github.ben-manes.versions" version "0.27.0"
     id 'signing'
     id 'java'
-    //id 'application'
     id 'jacoco'
-    //id 'org.gradle.java.experimental-jigsaw' version '0.1.1'
-    //id 'com.zyxist.chainsaw' version '0.3.1'
-    id 'org.hidetake.ssh' version '2.10.1'
 }
 
 apply plugin: "com.github.johnrengelman.shadow"
-//apply plugin: 'java'
-//apply plugin: "jacoco"
 
 sourceCompatibility = 1.9
 targetCompatibility = 1.9
-//version = '0.14'
-
-//ext.moduleName = 'org.jpo.dataModel'
-
-//javaModule.name = 'org.jpo.cache'
 
 compileJava {
     group = 'build'
     options.encoding = "UTF-8"
-//    inputs.property("moduleName", moduleName)
-//    doFirst {
-//        options.compilerArgs = [
-//            '--module-path', classpath.asPath,
-//        ]
-//        classpath = files()
-//    }
 }
 compileTestJava {
     group = 'build'
     options.encoding = "UTF-8"
-//    inputs.property("moduleName", moduleName)
-//    doFirst {
-//        options.compilerArgs = [
-//            '--module-path', classpath.asPath,
-//            '--add-modules', 'junit',
-//            '--add-reads', "$moduleName=junit",
-//            '--patch-module', "$moduleName=" + files(sourceSets.test.java.srcDirs).asPath,
-//        ]
-//        classpath = files()
-//    }
 }
+
+test {
+    //systemProperty 'java.awt.headless', 'true'
+}
+
 javadoc {options.encoding = "UTF-8"}
 
 task openJavadocInBrowser {
@@ -190,22 +167,9 @@ test {
         events "passed", "skipped", "failed"
         exceptionFormat "full"
     }
-//    inputs.property("moduleName", moduleName)
-//    doFirst {
-//        jvmArgs = [
-//                '--module-path', classpath.asPath,
-//                '--add-modules', 'ALL-MODULE-PATH',
-//                '--add-reads', "$moduleName=junit",
-//                '--patch-module', "$moduleName=" + files(sourceSets.test.java.outputDir).asPath,
-//        ]
-//        classpath = files()
-//    }
 }
 
 jar {
-//    baseName = 'org.jpo'
-//    version =  jpoVersion
-    
     manifest {
         attributes(
             "Class-Path": configurations.runtimeClasspath.collect { it.getName() }.join(' '),
@@ -221,14 +185,10 @@ jar {
 
 // this task creates the FatJar with everything in it
 shadowJar {
-//    baseName = 'org.jpo'
-//    classifier = 'all'
-//    version = jpoVersion
+    dependsOn(build)
     into ('org/jpo/images') { from 'src/images' }
     mergeServiceFiles()
 }
-
-
 
 task signJar(dependsOn: 'shadowJar',description: 'Sign shadowJar.',group: 'build'){
     doLast{
@@ -290,146 +250,49 @@ jacocoTestReport {
 
 check.dependsOn jacocoTestReport
 
-
-configurations {
-  sshAntTask
-}
-
-dependencies {
-    sshAntTask 'org.apache.ant:ant-jsch:1.10.7', 'com.jcraft:jsch:0.1.55'
-}
-
-ant.taskdef(
-    name: 'scp',
-    classname: 'org.apache.tools.ant.taskdefs.optional.ssh.Scp',
-    classpath: configurations.sshAntTask.asPath
-)
-
-
-
-remotes {
-    sourceforgeServer {
-        host = 'web.sourceforge.net'
-        user = 'richieigenmann'
-        identity = file('/home/richi/.ssh/id_rsa')
-    }
-}
-
-
-task uploadWebsitePages() {
-    group 'website'
-    description 'Publishes the JPO website pages'
-    doLast  {
-        ant.scp(
-            todir: 'richieigenmann,j-po@web.sourceforge.net:/home/groups/j/j-/j-po/htdocs',
-            keyfile: '${user.home}/.ssh/id_rsa',
-            passphrase: '',
-            trust: 'yes',
-            verbose: 'yes',
-            sftp: 'true', {
-                fileset(dir: 'web') {
-                    modified()
-                    include(name: '*.html')
-                    include(name: '*.css')
-                    include(name: '*.php')
-                    include(name: 'fontconfig')
-                    include(name: '*.gif')
-                    include(name: '*.png')
-                    include(name: '*.jpg')
-                    include(name: '*.jnlp')
-                    include(name: '*.bat')
-                }
-            }
-        )
-    }
-}
-
-task uploadWebStartFiles() {
-    group 'website'
-    description 'Publishes the JPO webstart files'
-    dependsOn signJar
-    doLast  {
-        ant.scp(
-            todir: 'richieigenmann,j-po@web.sourceforge.net:/home/groups/j/j-/j-po/htdocs',
-            keyfile: '${user.home}/.ssh/id_rsa',
-            passphrase: '',
-            trust: 'yes',
-            verbose: 'yes',
-            sftp: 'true', {
-                fileset(dir: 'build/jars/signed') {
-                    modified()
-                    files( 'org.jpo-' + jpoVersion + '-all.jar' )
-                }
-                fileset(dir: 'web') {
-                    modified()
-                    files( 'org.jpo-' + jpoVersion + '.jnlp' )
-                }
-            }
-        )
-    }
-}
-
-task uploadJavadocAnt() {
+task uploadWebsitePages(type:Exec) {
     group 'website'
     description 'Publishes the JPO website pages'
     dependsOn javadoc
-    doLast  {
-        ant.scp(
-            todir: 'richieigenmann,j-po@web.sourceforge.net:/home/groups/j/j-/j-po/htdocs/',
-            keyfile: '${user.home}/.ssh/id_rsa',
-            passphrase: '',
-            trust: 'yes',
-            verbose: 'yes',
-            sftp: 'true', {
-                fileset(dir: 'build/docs/') {
-                    modified()
-                }
-            }
-        )
-    }
+    // note that the ssh key of sourceforge needs to be in /home/richi/.ssh/id_rsa
+    // and that the known_hosts needs to have the host key ssh-keyscan -t rsa web.sourceforge.net
+    commandLine ('rsync', '-avP',
+            '--exclude="*"',
+            '--include="*.php"',
+            '--include="*.html"',
+            '--include="*.css"',
+            '--include="*.php"',
+            '--include="fontconfig"',
+            '--include="*.gif"',
+            '--include="*.png"',
+            '--include="*.jpg"',
+            '--include="*.jnlp"',
+            '--include="*.bat"',
+            "${projectDir}/web", 'richieigenmann@web.sourceforge.net:/home/project-web/j-po/htdocs/')
 }
 
-
-
-task uploadJavadoc() {
+task uploadJavadoc(type:Exec) {
     group 'website'
     description 'Publishes the JPO website pages'
     dependsOn javadoc
-    doLast {
-        ssh.run {
-            session(remotes.sourceforgeServer) {
-                put from: 'build/docs/', into: '/home/groups/j/j-/j-po/htdocs/'
-            }
-        }
-    }
+    // note that the ssh key of sourceforge needs to be in /home/richi/.ssh/id_rsa
+    // and that the known_hosts needs to have the host key ssh-keyscan -t rsa web.sourceforge.net
+    commandLine ('rsync', '-avP', "${buildDir}/docs/javadoc", 'richieigenmann@web.sourceforge.net:/home/project-web/j-po/htdocs/')
 }
 
-task uploadWindowsInstaller() {
+task uploadWindowsInstaller(type:Exec) {
     group 'website'
-    description 'Publishes the JPO Windows Installer files'
+    description 'Publishes the JPO windows installer bundle'
     dependsOn buildWindowsInstaller
-    doLast  {
-        ant.scp(
-            todir: 'richieigenmann,j-po@web.sourceforge.net:/home/frs/project/j-po/',
-            keyfile: '${user.home}/.ssh/id_rsa',
-            passphrase: '',
-            trust: 'yes',
-            verbose: 'yes',
-            sftp: 'true', {
-                fileset(dir: 'build/executables') {
-                    modified()
-                    include(name: 'JPO-Installer-' + jpoVersion + '.exe' )
-                }
-            }
-        )
-    }
+    // note that the ssh key of sourceforge needs to be in /home/richi/.ssh/id_rsa
+    // and that the known_hosts needs to have the host key ssh-keyscan -t rsa web.sourceforge.net
+    commandLine ('rsync', '-avP', "${buildDir}/executables/JPO-Installer-${jpoVersion}.exe", 'richieigenmann@web.sourceforge.net:/home/frs/project/j-po/')
 }
-
 
 task uploadWebsite() {
     group 'website'
     description 'Publishes the JPO website'
-    dependsOn uploadWebStartFiles, uploadWebsitePages, uploadJavadoc, uploadWindowsInstaller
+    dependsOn uploadWebsitePages, uploadJavadoc, uploadWindowsInstaller
 }
 
 
