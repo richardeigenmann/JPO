@@ -519,7 +519,7 @@ public class PicturePopupMenuTest {
         moveToBottom.doClick();
         moveIndent.doClick();
         moveOutdent.doClick();
-        assertEquals("After clicking on the node the event count should be 1", 6, moveEventCount);
+        assertEquals("After clicking on the nodes the event count should be 6", 6, moveEventCount);
     }
 
     private int clipboardEventCount = 0;
