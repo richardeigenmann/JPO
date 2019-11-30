@@ -31,7 +31,10 @@ compileTestJava {
 }
 
 test {
-    systemProperty 'java.awt.headless', 'true'
+    // this tells the tests that we don't have a graphical environment TravisCI, SemaphoreCI etc need this.
+    //systemProperty 'java.awt.headless', 'true'
+    // copy the Gradle JVM properties down to the test JVM so that SemaphoreCI can ignore the tests that don't work in the headless environment
+    systemProperties = System.getProperties()
 }
 
 javadoc {options.encoding = "UTF-8"}
