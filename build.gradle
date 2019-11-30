@@ -31,7 +31,7 @@ compileTestJava {
 }
 
 test {
-    //systemProperty 'java.awt.headless', 'true'
+    systemProperty 'java.awt.headless', 'true'
 }
 
 javadoc {options.encoding = "UTF-8"}
