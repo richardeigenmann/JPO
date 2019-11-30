@@ -31,7 +31,7 @@ compileTestJava {
 }
 
 test {
-    //systemProperty 'java.awt.headless', 'true'
+    systemProperty 'java.awt.headless', 'true'
 }
 
 javadoc {options.encoding = "UTF-8"}
@@ -114,7 +114,7 @@ dependencies {
     implementation 'com.twelvemonkeys.imageio:imageio-tiff:3.4.2'
     implementation 'com.twelvemonkeys.imageio:imageio-tga:3.4.2'
     implementation 'com.twelvemonkeys.imageio:imageio-thumbsdb:3.4.2'
-    testImplementation "junit:junit:4.13-rc-1"
+    testImplementation 'junit:junit:4.13-rc-1'
 }
 
 

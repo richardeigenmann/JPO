@@ -1,8 +1,8 @@
 package org.jpo.gui.swing;
 
 import com.google.common.eventbus.Subscribe;
-import org.jpo.eventBus.*;
 import org.jpo.dataModel.*;
+import org.jpo.eventBus.*;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -17,6 +17,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static org.junit.Assert.*;
+import static org.junit.Assume.assumeFalse;
 
 /*
  Copyright (C) 2017-2019  Richard Eigenmann.
@@ -104,10 +105,7 @@ public class PicturePopupMenuTest {
      */
     @Before
     public void setUp()  {
-        // TravisCI runs headless so we can't execute the below test
-        if ( GraphicsEnvironment.isHeadless() ) {
-            return;
-        }
+        assumeFalse( GraphicsEnvironment.isHeadless() );
         myPictureInfo.setDescription("My Picture");
         try {
             final File temp = File.createTempFile("JPO-Unit-Test", ".jpg");
@@ -176,10 +174,7 @@ public class PicturePopupMenuTest {
      */
     @Test
     public void testRememberingPopupNode() {
-        // TravisCI runs headless so we can't execute the below test
-        if ( GraphicsEnvironment.isHeadless() ) {
-            return;
-        }
+        assumeFalse( GraphicsEnvironment.isHeadless() );
         try {
             SwingUtilities.invokeAndWait(() -> {
                 try {
