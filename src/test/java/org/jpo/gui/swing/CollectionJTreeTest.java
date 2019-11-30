@@ -24,6 +24,7 @@ import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
 
 import static org.junit.Assert.fail;
+import static org.junit.Assume.assumeFalse;
 
 /**
  * @author Richard Eigenmann
@@ -33,10 +34,7 @@ import static org.junit.Assert.fail;
 public class CollectionJTreeTest {
     @Test
     public void testImageInitialisation() {
-        // TravisCI runs headless so we can't execute the below test
-        if ( GraphicsEnvironment.isHeadless() ) {
-            return;
-        }
+        assumeFalse( GraphicsEnvironment.isHeadless() );
         try {
             SwingUtilities.invokeAndWait(() -> {
                 final CollectionJTree c = new CollectionJTree();

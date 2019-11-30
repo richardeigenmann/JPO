@@ -12,6 +12,7 @@ import java.util.logging.Logger;
 
 import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.fail;
+import static org.junit.Assume.assumeFalse;
 
 /**
  * Tests for the Directory Chooser
@@ -28,10 +29,7 @@ public class DirectoryChooserTest {
      */
     @Test
     public void testListener() {
-        // TravisCI runs headless so we can't execute the below test
-        if ( GraphicsEnvironment.isHeadless() ) {
-            return;
-        }
+        assumeFalse( GraphicsEnvironment.isHeadless() );
         try {
             SwingUtilities.invokeAndWait( () -> {
                 final DirectoryChooser dc = new DirectoryChooser( "Title", DirectoryChooser.DIR_MUST_EXIST );

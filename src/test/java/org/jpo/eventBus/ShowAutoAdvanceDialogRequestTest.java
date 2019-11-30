@@ -12,6 +12,7 @@ import java.lang.reflect.InvocationTargetException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
+import static org.junit.Assume.assumeFalse;
 
 /*
  Copyright (C) 2017  Richard Eigenmann.
@@ -49,10 +50,7 @@ public class ShowAutoAdvanceDialogRequestTest {
      */
     @Test
     public void testReceivingEvent() {
-        // TravisCI runs headless so we can't execute the below test
-        if ( GraphicsEnvironment.isHeadless() ) {
-            return;
-        }
+        assumeFalse( GraphicsEnvironment.isHeadless() );
 
         EventBusSubscriber myEventBusSubscriber = new EventBusSubscriber();
         jpoEventBus.register( myEventBusSubscriber );

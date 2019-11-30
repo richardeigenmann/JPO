@@ -8,9 +8,10 @@ import java.lang.reflect.InvocationTargetException;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
+import static org.junit.Assume.assumeFalse;
 
 /*
- Copyright (C) 2017-2017,  Richard Eigenmann, Zürich
+ Copyright (C) 2017-2019,  Richard Eigenmann, Zürich
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -36,10 +37,7 @@ public class LeftRightButtonTest {
      */
     @Test
     public void testConstructor() {
-        // TravisCI runs headless so we can't execute the below test
-        if ( GraphicsEnvironment.isHeadless() ) {
-            return;
-        }
+        assumeFalse( GraphicsEnvironment.isHeadless() );
         try {
             SwingUtilities.invokeAndWait( () -> {
                 final LeftRightButton leftRightButton = new LeftRightButton();

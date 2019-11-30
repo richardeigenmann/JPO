@@ -37,7 +37,6 @@ public class PictureFrameTest {
     @Test
     public void testConstructor() {
         assumeFalse( GraphicsEnvironment.isHeadless() );
-        System.out.println(GraphicsEnvironment.isHeadless());
         try {
             SwingUtilities.invokeAndWait( () -> {
                 final PictureFrame pictureFrame = new PictureFrame();

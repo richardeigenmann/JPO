@@ -13,6 +13,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static junit.framework.TestCase.fail;
+import static org.junit.Assume.assumeFalse;
 
 /**
  *
@@ -22,11 +23,7 @@ public class ThumbnailQueueRequestTest {
 
     @Test
     public void increasePriorityToTest() {
-        // TravisCI runs headless so we can't execute the below test
-        if ( GraphicsEnvironment.isHeadless() ) {
-            return;
-        }
-
+        assumeFalse( GraphicsEnvironment.isHeadless() );
         try {
             SwingUtilities.invokeAndWait( () -> {
                 ThumbnailController controller = new ThumbnailController( new Thumbnail(), 350 );

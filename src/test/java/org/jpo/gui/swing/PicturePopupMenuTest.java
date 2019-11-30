@@ -199,10 +199,7 @@ public class PicturePopupMenuTest {
      */
     @Test
     public void testGetChildren() {
-        // TravisCI runs headless so we can't execute the below test
-        if ( GraphicsEnvironment.isHeadless() ) {
-            return;
-        }
+        assumeFalse( GraphicsEnvironment.isHeadless() );
         try {
             SwingUtilities.invokeAndWait(() -> {
                 assertEquals("My Picture", title.getText());
@@ -246,10 +243,7 @@ public class PicturePopupMenuTest {
      */
     @Test
     public void testShowPicture() {
-        // TravisCI runs headless so we can't execute the below test
-        if ( GraphicsEnvironment.isHeadless() ) {
-            return;
-        }
+        assumeFalse( GraphicsEnvironment.isHeadless() );
         JpoEventBus.getInstance().register(new Object() {
             @Subscribe
             public void handleShowPictureRequest(ShowPictureRequest request) {
@@ -268,10 +262,7 @@ public class PicturePopupMenuTest {
      */
     @Test
     public void testShowMap() {
-        // TravisCI runs headless so we can't execute the below test
-        if ( GraphicsEnvironment.isHeadless() ) {
-            return;
-        }
+        assumeFalse( GraphicsEnvironment.isHeadless() );
         JpoEventBus.getInstance().register(new Object() {
             @Subscribe
             public void handleShowPictureOnMapRequest(ShowPictureOnMapRequest request) {
@@ -289,10 +280,7 @@ public class PicturePopupMenuTest {
      */
     @Test
     public void testOpenFolder() {
-        // TravisCI runs headless so we can't execute the below test
-        if ( GraphicsEnvironment.isHeadless() ) {
-            return;
-        }
+        assumeFalse( GraphicsEnvironment.isHeadless() );
         JpoEventBus.getInstance().register(new Object() {
             @Subscribe
             public void handleOpenFileExplorerRequest(OpenFileExplorerRequest request) {
@@ -308,10 +296,7 @@ public class PicturePopupMenuTest {
 
     @Test
     public void testNavigateTo() {
-        // TravisCI runs headless so we can't execute the below test
-        if ( GraphicsEnvironment.isHeadless() ) {
-            return;
-        }
+        assumeFalse( GraphicsEnvironment.isHeadless() );
         JpoEventBus.getInstance().register(new Object() {
             @Subscribe
             public void handleShowGroupRequest(ShowGroupRequest request) {
@@ -327,10 +312,7 @@ public class PicturePopupMenuTest {
 
     @Test
     public void testCategories() {
-        // TravisCI runs headless so we can't execute the below test
-        if ( GraphicsEnvironment.isHeadless() ) {
-            return;
-        }
+        assumeFalse( GraphicsEnvironment.isHeadless() );
         JpoEventBus.getInstance().register(new Object() {
             @Subscribe
             public void handleShowCategoryUsageEditorRequest(ShowCategoryUsageEditorRequest request) {
@@ -346,10 +328,7 @@ public class PicturePopupMenuTest {
 
     @Test
     public void testSelectForEmail() {
-        // TravisCI runs headless so we can't execute the below test
-        if ( GraphicsEnvironment.isHeadless() ) {
-            return;
-        }
+        assumeFalse( GraphicsEnvironment.isHeadless() );
         JpoEventBus.getInstance().register(new Object() {
             @Subscribe
             public void handleAddPictureModesToEmailSelectionRequest(AddPictureNodesToEmailSelectionRequest request) {
@@ -365,10 +344,7 @@ public class PicturePopupMenuTest {
 
     @Test
     public void testUnselectForEmail() {
-        // TravisCI runs headless so we can't execute the below test
-        if ( GraphicsEnvironment.isHeadless() ) {
-            return;
-        }
+        assumeFalse( GraphicsEnvironment.isHeadless() );
         JpoEventBus.getInstance().register(new Object() {
             @Subscribe
             public void handleRemovePictureModesFromEmailSelectionRequest(RemovePictureNodesFromEmailSelectionRequest request) {
@@ -384,10 +360,7 @@ public class PicturePopupMenuTest {
 
     @Test
     public void testClearEmailSelection() {
-        // TravisCI runs headless so we can't execute the below test
-        if ( GraphicsEnvironment.isHeadless() ) {
-            return;
-        }
+        assumeFalse( GraphicsEnvironment.isHeadless() );
         JpoEventBus.getInstance().register(new Object() {
             @Subscribe
             public void handleClearEmailSelectionRequest(ClearEmailSelectionRequest request) {
@@ -404,10 +377,7 @@ public class PicturePopupMenuTest {
 
     @Test
     public void testUserFunctions() {
-        // TravisCI runs headless so we can't execute the below test
-        if ( GraphicsEnvironment.isHeadless() ) {
-            return;
-        }
+        assumeFalse( GraphicsEnvironment.isHeadless() );
         JpoEventBus.getInstance().register(new Object() {
             @Subscribe
             public void handleRunUserFunctionRequest(RunUserFunctionRequest request) {
@@ -425,10 +395,7 @@ public class PicturePopupMenuTest {
 
     @Test
     public void testRotation() {
-        // TravisCI runs headless so we can't execute the below test
-        if ( GraphicsEnvironment.isHeadless() ) {
-            return;
-        }
+        assumeFalse( GraphicsEnvironment.isHeadless() );
         JpoEventBus.getInstance().register(new Object() {
             @Subscribe
             public void handleRotatePictureRequestRequest(RotatePictureRequest request) {
@@ -453,10 +420,7 @@ public class PicturePopupMenuTest {
 
     @Test
     public void testRefresh() {
-        // TravisCI runs headless so we can't execute the below test
-        if ( GraphicsEnvironment.isHeadless() ) {
-            return;
-        }
+        assumeFalse( GraphicsEnvironment.isHeadless() );
         JpoEventBus.getInstance().register(new Object() {
             @Subscribe
             public void handleRefreshThumbnailRequest(RefreshThumbnailRequest request) {
@@ -472,10 +436,7 @@ public class PicturePopupMenuTest {
 
     @Test
     public void testMove() {
-        // TravisCI runs headless so we can't execute the below test
-        if ( GraphicsEnvironment.isHeadless() ) {
-            return;
-        }
+        assumeFalse( GraphicsEnvironment.isHeadless() );
         JpoEventBus.getInstance().register(new Object() {
             @Subscribe
             public void handleMoveNodeToTopRequest(MoveNodeToTopRequest request) {
@@ -521,10 +482,7 @@ public class PicturePopupMenuTest {
 
     @Test
     public void testCopyToClipboard() {
-        // TravisCI runs headless so we can't execute the below test
-        if ( GraphicsEnvironment.isHeadless() ) {
-            return;
-        }
+        assumeFalse( GraphicsEnvironment.isHeadless() );
         JpoEventBus.getInstance().register(new Object() {
             @Subscribe
             public void handleCopyToClipboardRequest(CopyImageToClipboardRequest request) {
@@ -540,10 +498,7 @@ public class PicturePopupMenuTest {
 
     @Test
     public void testRemoveNode() {
-        // TravisCI runs headless so we can't execute the below test
-        if ( GraphicsEnvironment.isHeadless() ) {
-            return;
-        }
+        assumeFalse( GraphicsEnvironment.isHeadless() );
         JpoEventBus.getInstance().register(new Object() {
             @Subscribe
             public void handleRemoveNodeRequest(RemoveNodeRequest request) {
@@ -559,10 +514,7 @@ public class PicturePopupMenuTest {
 
     @Test
     public void testMoveToNewLocation() {
-        // TravisCI runs headless so we can't execute the below test
-        if ( GraphicsEnvironment.isHeadless() ) {
-            return;
-        }
+        assumeFalse( GraphicsEnvironment.isHeadless() );
         JpoEventBus.getInstance().register(new Object() {
             @Subscribe
             public void handleMoveToNewLocation(MoveToNewLocationRequest request) {
@@ -579,10 +531,7 @@ public class PicturePopupMenuTest {
 
     @Test
     public void testFileRename() {
-        // TravisCI runs headless so we can't execute the below test
-        if ( GraphicsEnvironment.isHeadless() ) {
-            return;
-        }
+        assumeFalse( GraphicsEnvironment.isHeadless() );
         JpoEventBus.getInstance().register(new Object() {
             @Subscribe
             public void handleRenamePictureRequest(RenamePictureRequest request) {
@@ -598,10 +547,7 @@ public class PicturePopupMenuTest {
 
     @Test
     public void testFileDelete() {
-        // TravisCI runs headless so we can't execute the below test
-        if ( GraphicsEnvironment.isHeadless() ) {
-            return;
-        }
+        assumeFalse( GraphicsEnvironment.isHeadless() );
         JpoEventBus.getInstance().register(new Object() {
             @Subscribe
             public void handleDeleteNodeFileRequest(DeleteNodeFileRequest request) {
@@ -617,10 +563,7 @@ public class PicturePopupMenuTest {
 
     @Test
     public void testProperties() {
-        // TravisCI runs headless so we can't execute the below test
-        if ( GraphicsEnvironment.isHeadless() ) {
-            return;
-        }
+        assumeFalse( GraphicsEnvironment.isHeadless() );
         JpoEventBus.getInstance().register(new Object() {
             @Subscribe
             public void handleShowPictureInfoEditorRequest(ShowPictureInfoEditorRequest request) {
@@ -636,10 +579,7 @@ public class PicturePopupMenuTest {
 
     @Test
     public void testConsolidateHere() {
-        // TravisCI runs headless so we can't execute the below test
-        if ( GraphicsEnvironment.isHeadless() ) {
-            return;
-        }
+        assumeFalse( GraphicsEnvironment.isHeadless() );
         JpoEventBus.getInstance().register(new Object() {
             @Subscribe
             public void handleConsolidateGroupRequest(ConsolidateGroupDialogRequest request) {

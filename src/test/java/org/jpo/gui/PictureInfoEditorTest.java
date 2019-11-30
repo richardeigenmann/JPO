@@ -13,6 +13,7 @@ import java.net.URL;
 import java.util.Objects;
 
 import static junit.framework.TestCase.*;
+import static org.junit.Assume.assumeFalse;
 
 /**
  * Tests for the PictureInfoEditor
@@ -23,10 +24,7 @@ public class PictureInfoEditorTest {
 
     @Test
     public void testConstructor() {
-        // TravisCI runs headless so we can't execute the below test
-        if ( GraphicsEnvironment.isHeadless() ) {
-            return;
-        }
+        assumeFalse( GraphicsEnvironment.isHeadless() );
         try {
             SwingUtilities.invokeAndWait( () -> {
                 final PictureInfo pictureInfo = new PictureInfo();
@@ -47,10 +45,7 @@ public class PictureInfoEditorTest {
 
     @Test
     public void testFileNameCorruption() {
-        // TravisCI runs headless so we can't execute the below test
-        if ( GraphicsEnvironment.isHeadless() ) {
-            return;
-        }
+        assumeFalse( GraphicsEnvironment.isHeadless() );
         try {
             SwingUtilities.invokeAndWait( () -> {
                 final PictureInfo pictureInfo = new PictureInfo();

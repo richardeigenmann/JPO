@@ -10,6 +10,7 @@ import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
 
 import static junit.framework.TestCase.fail;
+import static org.junit.Assume.assumeFalse;
 
 /*
  Copyright (C) 2019  Richard Eigenmann.
@@ -38,10 +39,7 @@ public class CollectionDistillerJFrameTest {
      */
     @Test
     public void testConstructor() {
-        // TravisCI runs headless so we can't execute the below test
-        if (GraphicsEnvironment.isHeadless()) {
-            return;
-        }
+        assumeFalse( GraphicsEnvironment.isHeadless() );
         try {
             SwingUtilities.invokeAndWait(() -> {
                 final SortableDefaultMutableTreeNode node = new SortableDefaultMutableTreeNode();

@@ -8,6 +8,7 @@ import java.lang.reflect.InvocationTargetException;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
+import static org.junit.Assume.assumeFalse;
 
 /*
  Copyright (C) 2017-2019,  Richard Eigenmann, Zürich
@@ -36,10 +37,7 @@ public class ClockButtonTest {
      */
     @Test
     public void testImageInitialisation() {
-        // TravisCI runs headless so we can't execute the below test
-        if ( GraphicsEnvironment.isHeadless() ) {
-            return;
-        }
+        assumeFalse( GraphicsEnvironment.isHeadless() );
         try {
             SwingUtilities.invokeAndWait( () -> {
                 final ClockButton clockButton = new ClockButton( );

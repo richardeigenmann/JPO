@@ -10,6 +10,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static junit.framework.TestCase.assertNotNull;
+import static org.junit.Assume.assumeFalse;
 
 /*
  Copyright (C) 2017-2019  Richard Eigenmann.
@@ -35,11 +36,7 @@ public class ThumbnailControllerTest {
 
     @Test
     public void testConstructor() {
-        // TravisCI runs headless so we can't execute the below test
-        if ( GraphicsEnvironment.isHeadless() ) {
-            return;
-        }
-
+        assumeFalse( GraphicsEnvironment.isHeadless() );
         try {
             SwingUtilities.invokeAndWait( () -> {
                 final Thumbnail thumbnail = new Thumbnail();

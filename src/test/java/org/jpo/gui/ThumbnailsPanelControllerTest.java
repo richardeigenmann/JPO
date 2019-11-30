@@ -10,6 +10,7 @@ import java.lang.reflect.Method;
 import java.util.logging.Logger;
 
 import static org.junit.Assert.*;
+import static org.junit.Assume.assumeFalse;
 
 
 /*
@@ -47,10 +48,7 @@ public class ThumbnailsPanelControllerTest {
      */
     @Test
     public void testConstructor() {
-        // TravisCI runs headless so we can't execute the below test
-        if ( GraphicsEnvironment.isHeadless() ) {
-            return;
-        }
+        assumeFalse( GraphicsEnvironment.isHeadless() );
         try {
             SwingUtilities.invokeAndWait( () -> {
                 final ThumbnailsPanelController thumbnailsPanelController = new ThumbnailsPanelController();
@@ -65,10 +63,7 @@ public class ThumbnailsPanelControllerTest {
 
     @Test
     public void testGetMouseRectangle() {
-        // TravisCI runs headless so we can't execute the below test
-        if ( GraphicsEnvironment.isHeadless() ) {
-            return;
-        }
+        assumeFalse( GraphicsEnvironment.isHeadless() );
         try {
             SwingUtilities.invokeAndWait( () -> {
                 try {

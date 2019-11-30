@@ -12,6 +12,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static org.junit.Assert.*;
+import static org.junit.Assume.assumeFalse;
 
 
 /*
@@ -41,10 +42,7 @@ public class MapViewerTest {
      */
     @Test
     public void testGetJXMapViewer() {
-        // TravisCI runs headless so we can't execute the below test
-        if ( GraphicsEnvironment.isHeadless() ) {
-            return;
-        }
+        assumeFalse( GraphicsEnvironment.isHeadless() );
         try {
             SwingUtilities.invokeAndWait( () -> {
                 final MapViewer instance = new MapViewer();
@@ -62,10 +60,7 @@ public class MapViewerTest {
      */
     @Test
     public void testSetMarker() {
-        // TravisCI runs headless so we can't execute the below test
-        if ( GraphicsEnvironment.isHeadless() ) {
-            return;
-        }
+        assumeFalse( GraphicsEnvironment.isHeadless() );
         try {
             SwingUtilities.invokeAndWait( () -> {
                 final Point2D.Double latLng = new Point2D.Double( 47.557306, 7.797439 );

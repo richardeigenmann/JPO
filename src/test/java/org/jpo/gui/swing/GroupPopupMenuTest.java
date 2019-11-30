@@ -14,6 +14,7 @@ import java.util.logging.Logger;
 
 import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.fail;
+import static org.junit.Assume.assumeFalse;
 
 /**
  * Tests for the GroupPopupMenu Class
@@ -47,10 +48,7 @@ public class GroupPopupMenuTest {
 
     @Before
     public void setUp()  {
-        // TravisCI runs headless so we can't execute the below test
-        if ( GraphicsEnvironment.isHeadless() ) {
-            return;
-        }
+        assumeFalse( GraphicsEnvironment.isHeadless() );
         myGroupPopupMenu = new GroupPopupMenu( myNode );
 
         try {
@@ -84,10 +82,7 @@ public class GroupPopupMenuTest {
      */
     @Test
     public void testRememberingPopupNode() {
-        // TravisCI runs headless so we can't execute the below test
-        if ( GraphicsEnvironment.isHeadless() ) {
-            return;
-        }
+        assumeFalse( GraphicsEnvironment.isHeadless() );
         try {
             SwingUtilities.invokeAndWait( () -> {
                 try {
@@ -112,10 +107,7 @@ public class GroupPopupMenuTest {
      */
     @Test
     public void testGetChildren() {
-        // TravisCI runs headless so we can't execute the below test
-        if ( GraphicsEnvironment.isHeadless() ) {
-            return;
-        }
+        assumeFalse( GraphicsEnvironment.isHeadless() );
         try {
             SwingUtilities.invokeAndWait( () -> {
                 assertEquals( "Show Group", showGroup.getText() );

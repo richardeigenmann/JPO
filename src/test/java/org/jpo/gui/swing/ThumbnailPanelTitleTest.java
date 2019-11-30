@@ -8,6 +8,7 @@ import java.lang.reflect.InvocationTargetException;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
+import static org.junit.Assume.assumeFalse;
 
 /*
  ThumbnailsPanelControllerTest.java:  Tests for the ThumbnailsPanelController
@@ -33,10 +34,7 @@ public class ThumbnailPanelTitleTest {
      */
     @Test
     public void testConstructor() {
-        // TravisCI runs headless so we can't execute the below test
-        if ( GraphicsEnvironment.isHeadless() ) {
-            return;
-        }
+        assumeFalse( GraphicsEnvironment.isHeadless() );
         try {
             SwingUtilities.invokeAndWait( () -> {
                 final ThumbnailPanelTitle thumbnailPanelTitle = new ThumbnailPanelTitle();
