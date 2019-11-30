@@ -141,7 +141,7 @@ public class MainWindow extends JFrame {
         JButton resetJbutton = new JButton( "Reset" );
         resetJbutton.addActionListener(( ActionEvent e ) -> JpoEventBus.getInstance().post( new RestoreDockablesPositionsRequest() ));
 
-        JPanel propertiesJPanel = new JPanel();http://dock.javaforge.com
+        JPanel propertiesJPanel = new JPanel();
         propertiesJPanel.setLayout( new BoxLayout( propertiesJPanel, BoxLayout.Y_AXIS ) );
         propertiesJPanel.add( loadJButton );
         propertiesJPanel.add( saveJbutton );

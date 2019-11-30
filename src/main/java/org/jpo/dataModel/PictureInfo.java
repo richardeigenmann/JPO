@@ -155,7 +155,7 @@ public class PictureInfo implements Serializable {
         }
 
         if (categoryAssignments != null) {
-            Iterator i = categoryAssignments.iterator();
+            final Iterator i = categoryAssignments.iterator();
             Integer assignment;
             while (i.hasNext()) {
                 assignment = (Integer) i.next();

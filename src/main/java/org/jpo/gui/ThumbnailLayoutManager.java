@@ -191,7 +191,7 @@ public class ThumbnailLayoutManager implements LayoutManager {
             int columns = getCols();
 
             int column = 0;
-            int rowBaseline = 0 - getVerticalGutter();
+            int rowBaseline = -getVerticalGutter();
             int previousDescriptionRowHeight = 0;
             int logicalThumbnail;
             for ( int i = 0; i < parent.getComponentCount(); i += 2 ) {

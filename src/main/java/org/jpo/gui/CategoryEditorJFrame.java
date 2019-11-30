@@ -116,7 +116,7 @@ public class CategoryEditorJFrame
         categoriesJList.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
         categoriesJList.addListSelectionListener( this );
 
-        Iterator i = Settings.getPictureCollection().getCategoryIterator();
+        final Iterator i = Settings.getPictureCollection().getCategoryIterator();
         Integer key;
         String category;
         Category categoryObject;
@@ -144,7 +144,7 @@ public class CategoryEditorJFrame
             if ( index < 0 ) {
                 return; // nothing selected
             } // nothing selected
-            Category cat = categoriesJList.getModel().getElementAt( index );
+            final Category cat = categoriesJList.getModel().getElementAt( index );
             int count = PictureCollection.countCategoryUsage( cat.getKey(), Settings.getPictureCollection().getRootNode() );
             if ( count > 0 ) {
                 int answer = JOptionPane.showConfirmDialog( CategoryEditorJFrame.this,

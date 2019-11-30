@@ -22,7 +22,7 @@ public class GenerateWebsiteWizard1WelcomeTest {
      * test Constructor
      */
     @Test
-    public void testGenerateWebsiteWizard1WelcomeTestConstrutor() {
+    public void testGenerateWebsiteWizard1WelcomeTestConstructor() {
         try {
             SwingUtilities.invokeAndWait( () -> {
                 GenerateWebsiteRequest generateWebsiteRequest = new GenerateWebsiteRequest();

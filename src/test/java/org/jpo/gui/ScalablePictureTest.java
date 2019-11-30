@@ -32,9 +32,9 @@ public class ScalablePictureTest {
      */
     @Test
     public void testLoading() {
-        ScalablePicture scalablePicture = new ScalablePicture();
+        final ScalablePicture scalablePicture = new ScalablePicture();
         assertNotNull( "Checking that the scalablePicture is not null", scalablePicture );
-        URL imageUrl = ScalablePictureTest.class.getClassLoader().getResource( "exif-test-nikon-d100-1.jpg" );
+        final URL imageUrl = ScalablePictureTest.class.getClassLoader().getResource( "exif-test-nikon-d100-1.jpg" );
         File imageFile = null;
         try {
             imageFile = new File(Objects.requireNonNull(imageUrl).toURI());
@@ -52,9 +52,9 @@ public class ScalablePictureTest {
      */
     @Test
     public void testLoadingWithRotation() {
-        ScalablePicture scalablePicture = new ScalablePicture();
+        final ScalablePicture scalablePicture = new ScalablePicture();
         assertNotNull( "Checking that the scalablePicture is not null", scalablePicture );
-        URL imageUrl = ScalablePictureTest.class.getClassLoader().getResource( "exif-test-nikon-d100-1.jpg" );
+        final URL imageUrl = ScalablePictureTest.class.getClassLoader().getResource( "exif-test-nikon-d100-1.jpg" );
         File imageFile = null;
         try {
             imageFile = new File(Objects.requireNonNull(imageUrl).toURI());
@@ -72,7 +72,7 @@ public class ScalablePictureTest {
      */
     @Test
     public void testLoadingWithRotationAndUpscaling() {
-        ScalablePicture scalablePicture = new ScalablePicture();
+        final ScalablePicture scalablePicture = new ScalablePicture();
         assertNotNull( "Checking that the scalablePicture is not null", scalablePicture );
 
         URL imageUrl = ScalablePictureTest.class.getClassLoader().getResource( "exif-test-nikon-d100-1.jpg" );
@@ -98,7 +98,7 @@ public class ScalablePictureTest {
      */
     @Test
     public void testLoadingScalingWriting() {
-        ScalablePicture scalablePicture = new ScalablePicture();
+        final ScalablePicture scalablePicture = new ScalablePicture();
         assertNotNull( "Checking that the scalablePicture is not null", scalablePicture );
 
         //Settings.loadSettings();
@@ -122,7 +122,7 @@ public class ScalablePictureTest {
         try {
             Path tempFile = Files.createTempFile( null, null );
             File outputFile = tempFile.toFile();
-            outputFile.delete();
+            assertTrue(outputFile.delete());
             assertFalse( "Checking that output file does not exit", outputFile.exists() );
             scalablePicture.writeScaledJpg( outputFile );
 
@@ -133,7 +133,7 @@ public class ScalablePictureTest {
             assertEquals( "Check that the image is 700 pixels wide", 700, sourcePicture.getWidth() );
             assertEquals( "Check that the image is 466 pixels high", 466, sourcePicture.getHeight() );
 
-            outputFile.delete();
+            assertTrue(outputFile.delete());
             assertFalse( "Checking that output file was removed", outputFile.exists() );
         } catch ( IOException x ) {
             fail( "We hit an IOException. This must not happen. Exception: " + x.getMessage() );
@@ -147,8 +147,7 @@ public class ScalablePictureTest {
     @Test
     public void scaleUp() {
         double scaleFactor = ScalablePicture.calcScaleSourceToTarget( 100, 100, 200, 200 );
-        double two = 2;
-        assertEquals( "Expecting a scale factor of 2", two, scaleFactor, 0.001 );
+        assertEquals( "Expecting a scale factor of 2", 2, scaleFactor, 0.001 );
     }
 
     /**
@@ -157,8 +156,7 @@ public class ScalablePictureTest {
     @Test
     public void scaleDown() {
         double scaleFactor = ScalablePicture.calcScaleSourceToTarget( 200, 200, 100, 100 );
-        double half = 0.5;
-        assertEquals( "Expecting a scale factor of 0.5", half, scaleFactor, 0.001 );
+        assertEquals( "Expecting a scale factor of 0.5", 0.5, scaleFactor, 0.001 );
     }
 
     /**
@@ -167,8 +165,7 @@ public class ScalablePictureTest {
     @Test
     public void scaleHorizontally() {
         double scaleFactor = ScalablePicture.calcScaleSourceToTarget( 200, 100, 400, 400 );
-        double two = 2;
-        assertEquals( "Expecting a scale factor of 2", two, scaleFactor, 0.001 );
+        assertEquals( "Expecting a scale factor of 2", 2, scaleFactor, 0.001 );
     }
 
     /**
@@ -177,8 +174,7 @@ public class ScalablePictureTest {
     @Test
     public void scaleVertically() {
         double scaleFactor = ScalablePicture.calcScaleSourceToTarget( 100, 200, 400, 400 );
-        double two = 2;
-        assertEquals( "Expecting a scale factor of 2", two, scaleFactor, 0.001 );
+        assertEquals( "Expecting a scale factor of 2", 2, scaleFactor, 0.001 );
     }
 
 }

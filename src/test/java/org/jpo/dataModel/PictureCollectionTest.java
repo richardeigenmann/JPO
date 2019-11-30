@@ -12,7 +12,7 @@ import java.util.logging.Logger;
 import static junit.framework.TestCase.*;
 
 /*
- Copyright (C) 2017-2018  Richard Eigenmann.
+ Copyright (C) 2017-2019  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -116,7 +116,7 @@ public class PictureCollectionTest {
     public void testFindParentGroups3() {
         //test that the 4 groups which refer to the same picture are returned
         SortableDefaultMutableTreeNode[] sdmtns = pictureCollection.findParentGroups( picture1 );
-        assertEquals( "Test that the 3 groups refering to the same picture are found", 4, sdmtns.length );
+        assertEquals( "Test that the 3 groups referring to the same picture are found", 4, sdmtns.length );
     }
 
     /**
@@ -145,14 +145,14 @@ public class PictureCollectionTest {
         pictureCollection.addToSelectedNodes( picture1 );
         assertEquals( "We should have 2 nodes selected now", 2, pictureCollection.getSelection().size() );
         assertEquals( "We should have 2 nodes selected now", 2, pictureCollection.countSelectedNodes() );
-        assertTrue( "We sould find that the node we selected is actually in the selected set", pictureCollection.isSelected( group1 ) );
-        assertTrue( "We sould find that the second node we selected is actually in the selected set", pictureCollection.isSelected( picture1 ) );
+        assertTrue( "We should find that the node we selected is actually in the selected set", pictureCollection.isSelected( group1 ) );
+        assertTrue( "We should find that the second node we selected is actually in the selected set", pictureCollection.isSelected( picture1 ) );
         assertFalse( "A Node that was not selected should not be in the selection", pictureCollection.isSelected( group2 ) );
 
         pictureCollection.removeFromSelection( group1 );
         assertEquals( "We should have 1 nodes selected now", 1, pictureCollection.getSelection().size() );
-        assertFalse( "We sould find that the node we deselected is actually gone", pictureCollection.isSelected( group1 ) );
-        assertTrue( "We sould find that the second node we selected is still in the selected set", pictureCollection.isSelected( picture1 ) );
+        assertFalse( "We should find that the node we deselected is actually gone", pictureCollection.isSelected( group1 ) );
+        assertTrue( "We should find that the second node we selected is still in the selected set", pictureCollection.isSelected( picture1 ) );
         assertFalse( "A Node that was not selected should not be in the selection", pictureCollection.isSelected( group2 ) );
 
         pictureCollection.addToSelectedNodes( group1 );
@@ -162,7 +162,7 @@ public class PictureCollectionTest {
         pictureCollection.clearSelection(); // this is where we the concurrent modification happened
         assertEquals( "Testing that the selection array is empty again", 0, pictureCollection.getSelection().size() );
 
-        pictureCollection.removeFromSelection( group1 ); // How about removing somehting that is not there?
+        pictureCollection.removeFromSelection( group1 ); // How about removing something that is not there?
         assertEquals( "Testing that the selection array stayed", 0, pictureCollection.getSelection().size() );
     }
 
@@ -176,14 +176,14 @@ public class PictureCollectionTest {
         pictureCollection.addToMailSelection( group1 );
         pictureCollection.addToMailSelection( picture1 );
         assertEquals( "We should have 2 nodes selected now", 2, pictureCollection.getMailSelectedNodes().size() );
-        assertTrue( "We sould find that the node we selected is actually in the selected set", pictureCollection.isMailSelected( group1 ) );
-        assertTrue( "We sould find that the second node we selected is actually in the selected set", pictureCollection.isMailSelected( picture1 ) );
+        assertTrue( "We should find that the node we selected is actually in the selected set", pictureCollection.isMailSelected( group1 ) );
+        assertTrue( "We should find that the second node we selected is actually in the selected set", pictureCollection.isMailSelected( picture1 ) );
         assertFalse( "A Node that was not selected should not be in the selection", pictureCollection.isMailSelected( group2 ) );
 
         pictureCollection.removeFromMailSelection( group1 );
         assertEquals( "We should have 1 nodes selected now", 1, pictureCollection.getMailSelectedNodes().size() );
-        assertFalse( "We sould find that the node we deselected is actually gone", pictureCollection.isMailSelected( group1 ) );
-        assertTrue( "We sould find that the second node we selected is still in the selected set", pictureCollection.isMailSelected( picture1 ) );
+        assertFalse( "We should find that the node we deselected is actually gone", pictureCollection.isMailSelected( group1 ) );
+        assertTrue( "We should find that the second node we selected is still in the selected set", pictureCollection.isMailSelected( picture1 ) );
         assertFalse( "A Node that was not selected should not be in the selection", pictureCollection.isMailSelected( group2 ) );
 
         pictureCollection.addToMailSelection( group1 );
@@ -196,7 +196,7 @@ public class PictureCollectionTest {
         pictureCollection.clearMailSelection(); // this is where we the concurrent modification happened
         assertEquals( "Testing that the selection array is empty again", 0, pictureCollection.getMailSelectedNodes().size() );
 
-        pictureCollection.removeFromMailSelection( group1 ); // How about removing somehting that is not there?
+        pictureCollection.removeFromMailSelection( group1 ); // How about removing something that is not there?
         assertEquals( "Testing that the selection array stayed", 0, pictureCollection.getMailSelectedNodes().size() );
     }
 
@@ -325,10 +325,10 @@ public class PictureCollectionTest {
 
     }
 
-    private int nodeschanged;  // default is 0
-    private int nodesinserted;
-    private int nodesremoved;
-    private int nodestructurechanged;
+    private int nodesChanged;  // default is 0
+    private int nodesInserted;
+    private int nodesRemoved;
+    private int nodeStructureChanged;
 
     /**
      * In this test we want to see whether a change to an attribute in the
@@ -336,47 +336,47 @@ public class PictureCollectionTest {
      */
     @Test
     public void testChangeNotification() {
-        nodeschanged = 0;
-        nodesinserted = 0;
-        nodesremoved = 0;
-        nodestructurechanged = 0;
+        nodesChanged = 0;
+        nodesInserted = 0;
+        nodesRemoved = 0;
+        nodeStructureChanged = 0;
         pictureCollection.getTreeModel().addTreeModelListener( new TreeModelListener() {
 
             @Override
             public void treeNodesChanged( TreeModelEvent e ) {
-                nodeschanged++;
+                nodesChanged++;
             }
 
             @Override
             public void treeNodesInserted( TreeModelEvent e ) {
-                nodesinserted++;
+                nodesInserted++;
             }
 
             @Override
             public void treeNodesRemoved( TreeModelEvent e ) {
-                nodesremoved++;
+                nodesRemoved++;
             }
 
             @Override
             public void treeStructureChanged( TreeModelEvent e ) {
-                nodestructurechanged++;
+                nodeStructureChanged++;
             }
         } );
 
-        //TODO: review this; why does the root node, the model and the picturecollection have to be tied together
+        //TODO: review this; why does the root node, the model and the picture collection have to be tied together
         // via the Settings?
         Settings.setPictureCollection( pictureCollection );
-        assertEquals( "Before updating the description we should have 0 nodes changed: ", 0, nodeschanged );
+        assertEquals( "Before updating the description we should have 0 nodes changed: ", 0, nodesChanged);
         pi1.setDescription( "Changed Description" );
         try {
             Thread.sleep( 80 );  // give the threads some time to do the notifications.
         } catch ( InterruptedException ex ) {
             Logger.getLogger( PictureCollectionTest.class.getName() ).log( Level.SEVERE, null, ex );
         }
-        assertEquals( "After updating the description we should have 1 node changed: ", 1, nodeschanged );
-        assertEquals( "No nodes should have been inserted: ", 0, nodesinserted );
-        assertEquals( "No nodes should have been removed: ", 0, nodesremoved );
-        assertEquals( "No nodes structure change should have been notified: ", 0, nodestructurechanged );
+        assertEquals( "After updating the description we should have 1 node changed: ", 1, nodesChanged);
+        assertEquals( "No nodes should have been inserted: ", 0, nodesInserted);
+        assertEquals( "No nodes should have been removed: ", 0, nodesRemoved);
+        assertEquals( "No nodes structure change should have been notified: ", 0, nodeStructureChanged);
     }
     
      /**

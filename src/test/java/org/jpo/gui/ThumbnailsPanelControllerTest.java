@@ -9,8 +9,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.logging.Logger;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 
 /*
@@ -47,19 +46,41 @@ public class ThumbnailsPanelControllerTest {
      * ThumbnailsPanelController.
      */
     @Test
+    public void testConstructor() {
+        // TravisCI runs headless so we can't execute the below test
+        if ( GraphicsEnvironment.isHeadless() ) {
+            return;
+        }
+        try {
+            SwingUtilities.invokeAndWait( () -> {
+                final ThumbnailsPanelController thumbnailsPanelController = new ThumbnailsPanelController();
+                assertNotNull(thumbnailsPanelController);
+            } );
+        } catch (final InterruptedException | InvocationTargetException ex  ) {
+            LOGGER.severe(ex.getMessage());
+            Thread.dumpStack();
+            fail(ex.getMessage());
+        }
+    }
+
+    @Test
     public void testGetMouseRectangle() {
+        // TravisCI runs headless so we can't execute the below test
+        if ( GraphicsEnvironment.isHeadless() ) {
+            return;
+        }
         try {
             SwingUtilities.invokeAndWait( () -> {
                 try {
-                    ThumbnailsPanelController thumbnailsPanelController = new ThumbnailsPanelController();
-                    Field mousePressedPoint = thumbnailsPanelController.getClass().getDeclaredField( "mousePressedPoint" );
+                    final ThumbnailsPanelController thumbnailsPanelController = new ThumbnailsPanelController();
+                    final Field mousePressedPoint = thumbnailsPanelController.getClass().getDeclaredField( "mousePressedPoint" );
                     mousePressedPoint.setAccessible( true );
-                    Point topLeft = new Point( 50, 200 );
+                    final Point topLeft = new Point( 50, 200 );
                     mousePressedPoint.set( thumbnailsPanelController, topLeft );
 
-                    Method getMouseRectangle = thumbnailsPanelController.getClass().getDeclaredMethod( "getMouseRectangle", Point.class );
+                    final Method getMouseRectangle = thumbnailsPanelController.getClass().getDeclaredMethod( "getMouseRectangle", Point.class );
                     getMouseRectangle.setAccessible( true );
-                    Point bottomRight = new Point( 70, 230 );
+                    final Point bottomRight = new Point( 70, 230 );
                     Rectangle r1 = (Rectangle) getMouseRectangle.invoke( thumbnailsPanelController, bottomRight );
 
                     assertEquals( "Checking top left x", topLeft.x, r1.x );
@@ -67,18 +88,16 @@ public class ThumbnailsPanelControllerTest {
                     assertEquals( "Checking width", bottomRight.x - topLeft.x, r1.width );
                     assertEquals( "Checking height", bottomRight.y - topLeft.y, r1.height );
 
-                    Point higherLeftPoint = new Point( 20, 30 );
-                    Rectangle r2 = (Rectangle) getMouseRectangle.invoke( thumbnailsPanelController, higherLeftPoint );
+                    final Point higherLeftPoint = new Point( 20, 30 );
+                    final Rectangle r2 = (Rectangle) getMouseRectangle.invoke( thumbnailsPanelController, higherLeftPoint );
 
                     assertEquals( "Checking top left x of r2", higherLeftPoint.x, r2.x );
                     assertEquals( "Checking top left y or r2", higherLeftPoint.y, r2.y );
                     assertEquals( "Checking width", topLeft.x - higherLeftPoint.x, r2.width );
                     assertEquals( "Checking height", topLeft.y - higherLeftPoint.y, r2.height );
-                } catch ( NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException | NoSuchMethodException | InvocationTargetException ex ) {
+                } catch ( final NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException | NoSuchMethodException | InvocationTargetException ex ) {
                     LOGGER.severe( ex.getMessage() );
                     fail( ex.getMessage() );
-                } catch ( HeadlessException ex ) {
-                    LOGGER.severe( "The tests are running in a headless environment. This test can't be executed. Letting it pass." );
                 }
             } );
         } catch ( InterruptedException ex  ) {
@@ -87,8 +106,7 @@ public class ThumbnailsPanelControllerTest {
         } catch ( InvocationTargetException ex ) {
             LOGGER.severe( "InvocationTargetException: " + ex.getMessage() );
             LOGGER.severe( "Source: " + ex.getTargetException().getMessage() );
-            //fail( ex.getMessage() );
-            // ToDo: Don't know how why this is going wrong with gradle test
+            fail( ex.getMessage() );
         }
 
     }

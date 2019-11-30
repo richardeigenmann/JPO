@@ -82,7 +82,7 @@ public class CameraDownloadWizardStep5
         sortChoice.setMaximumSize( new Dimension( 220, 30 ) );
         stepComponent.add( sortChoice );
         sortChoice.addActionListener(( ActionEvent e ) -> {
-            JComboBox cb = (JComboBox) e.getSource();
+            final JComboBox cb = (JComboBox) e.getSource();
             SortOption sortOption = (SortOption) cb.getSelectedItem();
             if ( sortOption == null ) {
                 sortOption = sortOptions.get(3); // by creation time
@@ -109,7 +109,7 @@ public class CameraDownloadWizardStep5
      * Respond to a pick of a sort option
      * @param sortOption the SortOption that was picked
      */
-    private void sortOptionPicked( SortOption sortOption ) {
+    private void sortOptionPicked( final SortOption sortOption ) {
         LOGGER.fine( String.format( "Option %s with sortCode %s picked", sortOption.getDescription(), sortOption.getSortCode() ) );
         dataModel.setSortCode( sortOption.getSortCode() );
         Settings.lastSortChoice = sortOption.getSortCode();

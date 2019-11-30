@@ -5,6 +5,7 @@ import org.jxmapviewer.JXMapViewer;
 import org.jxmapviewer.viewer.GeoPosition;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.geom.Point2D;
 import java.lang.reflect.InvocationTargetException;
 import java.util.logging.Level;
@@ -40,13 +41,17 @@ public class MapViewerTest {
      */
     @Test
     public void testGetJXMapViewer() {
+        // TravisCI runs headless so we can't execute the below test
+        if ( GraphicsEnvironment.isHeadless() ) {
+            return;
+        }
         try {
             SwingUtilities.invokeAndWait( () -> {
-                MapViewer instance = new MapViewer();
-                JXMapViewer result = instance.getJXMapViewer();
+                final MapViewer instance = new MapViewer();
+                final JXMapViewer result = instance.getJXMapViewer();
                 assertNotNull( result );
             } );
-        } catch ( InterruptedException | InvocationTargetException ex ) {
+        } catch ( final InterruptedException | InvocationTargetException ex ) {
             Logger.getLogger( MapViewerTest.class.getName() ).log( Level.SEVERE, null, ex );
             fail("Was not supposed to throw exception: " + ex.getMessage());
         }
@@ -57,16 +62,20 @@ public class MapViewerTest {
      */
     @Test
     public void testSetMarker() {
+        // TravisCI runs headless so we can't execute the below test
+        if ( GraphicsEnvironment.isHeadless() ) {
+            return;
+        }
         try {
             SwingUtilities.invokeAndWait( () -> {
-                Point2D.Double latLng = new Point2D.Double( 47.557306, 7.797439 );
-                MapViewer mapViewer = new MapViewer();
+                final Point2D.Double latLng = new Point2D.Double( 47.557306, 7.797439 );
+                final MapViewer mapViewer = new MapViewer();
                 mapViewer.setMarker( latLng );
-                GeoPosition mapPosition = mapViewer.getJXMapViewer().getCenterPosition();
+                final GeoPosition mapPosition = mapViewer.getJXMapViewer().getCenterPosition();
                 assertEquals( 47.557306, mapPosition.getLatitude(), 0.00000000001 );
                 assertEquals( 7.797439, mapPosition.getLongitude(), 0.00000000001 );
             } );
-        } catch ( InterruptedException | InvocationTargetException ex ) {
+        } catch ( final InterruptedException | InvocationTargetException ex ) {
             Logger.getLogger( MapViewerTest.class.getName() ).log( Level.SEVERE, null, ex );
             fail("Was not supposed to throw exception: " + ex.getMessage());
         }

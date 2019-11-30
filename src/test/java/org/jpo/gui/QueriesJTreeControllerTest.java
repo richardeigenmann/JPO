@@ -4,6 +4,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import javax.swing.*;
+import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
 
 import static org.junit.Assert.fail;
@@ -29,9 +30,13 @@ public class QueriesJTreeControllerTest {
 
     @Test
     public void testImageInitialisation() {
+        // TravisCI runs headless so we can't execute the below test
+        if ( GraphicsEnvironment.isHeadless() ) {
+            return;
+        }
         try {
             SwingUtilities.invokeAndWait(() -> {
-                QueriesJTreeController c = new QueriesJTreeController();
+                final QueriesJTreeController c = new QueriesJTreeController();
                 Assert.assertNotNull(c);
             });
         } catch (InterruptedException | InvocationTargetException ex) {

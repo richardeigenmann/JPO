@@ -20,6 +20,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import javax.swing.*;
+import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
 
 import static org.junit.Assert.fail;
@@ -32,9 +33,13 @@ import static org.junit.Assert.fail;
 public class CollectionJTreeTest {
     @Test
     public void testImageInitialisation() {
+        // TravisCI runs headless so we can't execute the below test
+        if ( GraphicsEnvironment.isHeadless() ) {
+            return;
+        }
         try {
             SwingUtilities.invokeAndWait(() -> {
-                CollectionJTree c = new CollectionJTree();
+                final CollectionJTree c = new CollectionJTree();
                 Assert.assertNotNull(c);
 
                 Assert.assertNotNull("PICTURE_ICON must not be null", c.getPictureIcon());
@@ -42,7 +47,7 @@ public class CollectionJTreeTest {
                 Assert.assertNotNull("OPEN_FOLDER_ICON must not be null", c.getOpenFolderIcon());
 
             });
-        } catch (InterruptedException | InvocationTargetException ex) {
+        } catch (final InterruptedException | InvocationTargetException ex) {
             fail(ex.getCause().getMessage());
         }
     }

@@ -44,9 +44,9 @@ public class CollectionJTreeControllerTest {
         }
         try {
             SwingUtilities.invokeAndWait( () -> {
-                PictureCollection pc = new PictureCollection();
+                final PictureCollection pc = new PictureCollection();
                 TestCase.assertNotNull(pc.getRootNode());
-                CollectionJTreeController cjtc = new CollectionJTreeController(pc);
+                final CollectionJTreeController cjtc = new CollectionJTreeController(pc);
                 Assert.assertNotNull( cjtc );
             } );
         } catch ( InterruptedException | InvocationTargetException ex ) {

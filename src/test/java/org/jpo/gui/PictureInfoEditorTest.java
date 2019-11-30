@@ -29,12 +29,12 @@ public class PictureInfoEditorTest {
         }
         try {
             SwingUtilities.invokeAndWait( () -> {
-                PictureInfo pictureInfo = new PictureInfo();
+                final PictureInfo pictureInfo = new PictureInfo();
                 final String JPG_IMAGE_FILE = "exif-test-nikon-d100-1.jpg";
-                URL imageUrl = Objects.requireNonNull(PictureInfoEditorTest.class.getClassLoader().getResource(JPG_IMAGE_FILE));
+                final URL imageUrl = Objects.requireNonNull(PictureInfoEditorTest.class.getClassLoader().getResource(JPG_IMAGE_FILE));
                 pictureInfo.setImageLocation(new File(imageUrl.getFile()));
 
-                SortableDefaultMutableTreeNode n = new SortableDefaultMutableTreeNode( pictureInfo );
+                final SortableDefaultMutableTreeNode n = new SortableDefaultMutableTreeNode( pictureInfo );
                 PictureInfoEditor pictureInfoEditor = new PictureInfoEditor(n);
                 assertNotNull( pictureInfoEditor );
                 ThumbnailCreationQueue.clear(); // the created request confuses other tests
@@ -53,16 +53,16 @@ public class PictureInfoEditorTest {
         }
         try {
             SwingUtilities.invokeAndWait( () -> {
-                PictureInfo pictureInfo = new PictureInfo();
+                final PictureInfo pictureInfo = new PictureInfo();
                 final String JPG_IMAGE_FILE = "exif-test-nikon-d100-1.jpg";
-                URL imageUrl = Objects.requireNonNull(PictureInfoEditorTest.class.getClassLoader().getResource(JPG_IMAGE_FILE));
+                final URL imageUrl = Objects.requireNonNull(PictureInfoEditorTest.class.getClassLoader().getResource(JPG_IMAGE_FILE));
 
-                File imageFile = new File(imageUrl.getFile());
+                final File imageFile = new File(imageUrl.getFile());
                 pictureInfo.setImageLocation(imageFile);
                 assertEquals(pictureInfo.getImageFile(), imageFile);
 
-                SortableDefaultMutableTreeNode n = new SortableDefaultMutableTreeNode( pictureInfo );
-                PictureInfoEditor pictureInfoEditor = new PictureInfoEditor(n);
+                final SortableDefaultMutableTreeNode n = new SortableDefaultMutableTreeNode( pictureInfo );
+                final PictureInfoEditor pictureInfoEditor = new PictureInfoEditor(n);
                 assertNotNull( pictureInfoEditor );
 
                 pictureInfoEditor.callSaveFieldData();

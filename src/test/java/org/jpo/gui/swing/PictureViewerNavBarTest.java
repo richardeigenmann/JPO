@@ -3,13 +3,14 @@ package org.jpo.gui.swing;
 import org.junit.Test;
 
 import javax.swing.*;
+import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
 /*
- Copyright (C) 2017-2017,  Richard Eigenmann, Zürich
+ Copyright (C) 2017-2019,  Richard Eigenmann, Zürich
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -35,12 +36,16 @@ public class PictureViewerNavBarTest {
      */
     @Test
     public void testConstructor() {
+        // TravisCI runs headless so we can't execute the below test
+        if ( GraphicsEnvironment.isHeadless() ) {
+            return;
+        }
         try {
             SwingUtilities.invokeAndWait( () -> {
-                PictureViewerNavBar pictureViewerNavBar = new PictureViewerNavBar();
+                final PictureViewerNavBar pictureViewerNavBar = new PictureViewerNavBar();
                 assertNotNull( pictureViewerNavBar );
             } );
-        } catch ( InterruptedException | InvocationTargetException ex ) {
+        } catch ( final InterruptedException | InvocationTargetException ex ) {
             fail("Failed to create a PictureViewerNavBar");
         }
     }

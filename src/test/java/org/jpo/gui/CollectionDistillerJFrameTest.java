@@ -44,12 +44,12 @@ public class CollectionDistillerJFrameTest {
         }
         try {
             SwingUtilities.invokeAndWait(() -> {
-                SortableDefaultMutableTreeNode node = new SortableDefaultMutableTreeNode();
-                ExportGroupToNewCollectionRequest exportGroupToNewCollectionRequest = new ExportGroupToNewCollectionRequest(node);
-                CollectionDistillerJFrame collectionDistillerJFrame = new CollectionDistillerJFrame(exportGroupToNewCollectionRequest);
+                final SortableDefaultMutableTreeNode node = new SortableDefaultMutableTreeNode();
+                final ExportGroupToNewCollectionRequest exportGroupToNewCollectionRequest = new ExportGroupToNewCollectionRequest(node);
+                final CollectionDistillerJFrame collectionDistillerJFrame = new CollectionDistillerJFrame(exportGroupToNewCollectionRequest);
                 Assert.assertNotNull(collectionDistillerJFrame);
             });
-        } catch (InterruptedException | InvocationTargetException ex) {
+        } catch (final InterruptedException | InvocationTargetException ex) {
             fail(ex.getCause().getMessage());
         }
     }

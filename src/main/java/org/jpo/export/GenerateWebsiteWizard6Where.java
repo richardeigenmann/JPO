@@ -438,7 +438,15 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
     public static boolean check(File targetDirectory) {
         if (!targetDirectory.exists()) {
             try {
-                targetDirectory.mkdirs();
+                if( ! targetDirectory.mkdirs() ) {
+                    JOptionPane.showMessageDialog(
+                            Settings.anchorFrame,
+                             "Could not create directory",
+                            Settings.jpoResources.getString("genericSecurityException"),
+                            JOptionPane.ERROR_MESSAGE);
+                    return false;
+
+                }
             } catch (SecurityException e) {
                 JOptionPane.showMessageDialog(
                         Settings.anchorFrame,

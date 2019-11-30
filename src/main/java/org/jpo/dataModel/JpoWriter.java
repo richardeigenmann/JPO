@@ -148,7 +148,7 @@ public class JpoWriter {
         groupInfo.dumpToXml( bufferedWriter, groupNode.equals( startNode), groupNode.getPictureCollection().getAllowEdits() );
 
         SortableDefaultMutableTreeNode childNode;
-        Enumeration kids = groupNode.children();
+        final Enumeration kids = groupNode.children();
         while ( kids.hasMoreElements() ) {
             childNode = (SortableDefaultMutableTreeNode) kids.nextElement();
             if ( childNode.getUserObject() instanceof GroupInfo ) {

@@ -3,6 +3,7 @@ package org.jpo.gui.swing;
 import org.junit.Test;
 
 import javax.swing.*;
+import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
 
 import static org.junit.Assert.assertNotNull;
@@ -35,15 +36,19 @@ public class ClockButtonTest {
      */
     @Test
     public void testImageInitialisation() {
+        // TravisCI runs headless so we can't execute the below test
+        if ( GraphicsEnvironment.isHeadless() ) {
+            return;
+        }
         try {
             SwingUtilities.invokeAndWait( () -> {
-                ClockButton clockButton = new ClockButton( );
+                final ClockButton clockButton = new ClockButton( );
                 assertNotNull( clockButton );
 
                 assertNotNull("ICON_CLOCK_ON must not be null", clockButton.getClockIconOn());
                 assertNotNull("ICON_CLOCK_OFF must not be null", clockButton.getClockIconOff());
             } );
-        } catch ( InterruptedException | InvocationTargetException ex ) {
+        } catch ( final InterruptedException | InvocationTargetException ex ) {
             fail("Failed to create a PictureFrame");
         }
     }

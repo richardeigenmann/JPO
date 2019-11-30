@@ -832,10 +832,10 @@ public class ApplicationEventHandler {
      * @param request the request
      */
     @Subscribe
-    public void handleAddGroupToEmailSelectionRequest(AddGroupToEmailSelectionRequest request) {
-        SortableDefaultMutableTreeNode groupNode = request.getNode();
+    public void handleAddGroupToEmailSelectionRequest(final AddGroupToEmailSelectionRequest request) {
+        final SortableDefaultMutableTreeNode groupNode = request.getNode();
         SortableDefaultMutableTreeNode n;
-        for (Enumeration e = groupNode.breadthFirstEnumeration(); e.hasMoreElements(); ) {
+        for (final Enumeration e = groupNode.breadthFirstEnumeration(); e.hasMoreElements(); ) {
             n = (SortableDefaultMutableTreeNode) e.nextElement();
             if (n.getUserObject() instanceof PictureInfo) {
                 Settings.getPictureCollection().addToMailSelection(n);
@@ -849,9 +849,9 @@ public class ApplicationEventHandler {
      * @param request the request
      */
     @Subscribe
-    public void handleAddPictureModesToEmailSelectionRequest(AddPictureNodesToEmailSelectionRequest request) {
-        List<SortableDefaultMutableTreeNode> nodesList = request.getNodesList();
-        for (SortableDefaultMutableTreeNode n : nodesList) {
+    public void handleAddPictureModesToEmailSelectionRequest(final AddPictureNodesToEmailSelectionRequest request) {
+        final List<SortableDefaultMutableTreeNode> nodesList = request.getNodesList();
+        for (final SortableDefaultMutableTreeNode n : nodesList) {
             if (n.getUserObject() instanceof PictureInfo) {
                 Settings.getPictureCollection().addToMailSelection(n);
             }
@@ -865,9 +865,9 @@ public class ApplicationEventHandler {
      * @param request the request
      */
     @Subscribe
-    public void handleRemovePictureModesFromEmailSelectionRequest(RemovePictureNodesFromEmailSelectionRequest request) {
-        List<SortableDefaultMutableTreeNode> nodesList = request.getNodesList();
-        for (SortableDefaultMutableTreeNode n : nodesList) {
+    public void handleRemovePictureModesFromEmailSelectionRequest(final RemovePictureNodesFromEmailSelectionRequest request) {
+        final List<SortableDefaultMutableTreeNode> nodesList = request.getNodesList();
+        for (final SortableDefaultMutableTreeNode n : nodesList) {
             if (n.getUserObject() instanceof PictureInfo) {
                 Settings.getPictureCollection().removeFromMailSelection(n);
             }
@@ -1077,10 +1077,10 @@ public class ApplicationEventHandler {
             if (request.getTargetZipfile().exists()) {
                 // copy the old entries over
                 try (
-                        ZipFile oldzip = new ZipFile(request.getTargetZipfile())) {
-                    Enumeration entries = oldzip.getEntries();
+                        final ZipFile oldzip = new ZipFile(request.getTargetZipfile())) {
+                    final Enumeration entries = oldzip.getEntries();
                     while (entries.hasMoreElements()) {
-                        ZipArchiveEntry e = (ZipArchiveEntry) entries.nextElement();
+                        final ZipArchiveEntry e = (ZipArchiveEntry) entries.nextElement();
                         LOGGER.info(String.format("streamcopy: %s", e.getName()));
                         zipArchiveOutputStream.putArchiveEntry(e);
                         if (!e.isDirectory()) {
@@ -1091,7 +1091,7 @@ public class ApplicationEventHandler {
                 }
             }
             zipArchiveOutputStream.finish();
-        } catch (IOException ex) {
+        } catch (final IOException ex) {
             LOGGER.severe(ex.getMessage());
             boolean ok = tempfile.delete();
             if (!ok) {

@@ -165,7 +165,7 @@ public class ExifInfoTest {
      */
     @Test
     public void testExifInfoS4Rot0() {
-        final String SAMSUNG_S4_ROT0_IMAGE = "exif-test-samsung-s4-roation-0.jpg";
+        final String SAMSUNG_S4_ROT0_IMAGE = "exif-test-samsung-s4-rotation-0.jpg";
         URL imageUrl = ExifInfoTest.class.getClassLoader().getResource( SAMSUNG_S4_ROT0_IMAGE );
         if ( imageUrl == null ) {
             fail("Unable to locate the test image: " + SAMSUNG_S4_ROT0_IMAGE);
@@ -198,7 +198,7 @@ public class ExifInfoTest {
      */
     @Test
     public void testExifInfoS4RotLeft() {
-        final String SAMSUNG_S4_ROT_LEFT_IMAGE = "exif-test-samsung-s4-roation-left.jpg";
+        final String SAMSUNG_S4_ROT_LEFT_IMAGE = "exif-test-samsung-s4-rotation-left.jpg";
         URL imageUrl = ExifInfoTest.class.getClassLoader().getResource( SAMSUNG_S4_ROT_LEFT_IMAGE );
         if ( imageUrl == null ) {
             fail("Unable to locate the test image: " + SAMSUNG_S4_ROT_LEFT_IMAGE);
@@ -231,7 +231,7 @@ public class ExifInfoTest {
      */
     @Test
     public void testExifInfoS4RotRight() {
-        final String SAMSUNG_S4_ROT_RIGHT_IMAGE = "exif-test-samsung-s4-roation-right.jpg";
+        final String SAMSUNG_S4_ROT_RIGHT_IMAGE = "exif-test-samsung-s4-rotation-right.jpg";
         URL imageUrl = ExifInfoTest.class.getClassLoader().getResource( SAMSUNG_S4_ROT_RIGHT_IMAGE );
         if ( imageUrl == null ) {
             fail("Unable to locate the test image: " + SAMSUNG_S4_ROT_RIGHT_IMAGE);

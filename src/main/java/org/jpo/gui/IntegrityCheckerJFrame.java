@@ -134,7 +134,7 @@ public class IntegrityCheckerJFrame
             Object nodeObject;
             long oldChecksum;
             long newChecksum;
-            for ( Enumeration e = startNode.breadthFirstEnumeration(); e.hasMoreElements() && ( !isCancelled() ); ) {
+            for ( final Enumeration e = startNode.breadthFirstEnumeration(); e.hasMoreElements() && ( !isCancelled() ); ) {
                 nodesProcessed++;
                 if ( nodesProcessed % 1000 == 0 ) {
                     publish( String.format( "%d nodes processed%n", nodesProcessed ) );

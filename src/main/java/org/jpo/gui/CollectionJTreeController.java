@@ -141,7 +141,6 @@ public class CollectionJTreeController {
                 LOGGER.info( "The Root node must not be dragged. Dragging disabled." );
                 return null;
             }
-            //final Object t[] = { node };
             List<SortableDefaultMutableTreeNode> transferableNodes = new ArrayList<>();
             transferableNodes.add( node );
             return new JpoTransferable( transferableNodes );

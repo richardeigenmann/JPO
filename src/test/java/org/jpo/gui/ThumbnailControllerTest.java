@@ -10,10 +10,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static junit.framework.TestCase.assertNotNull;
-import static junit.framework.TestCase.assertNull;
 
 /*
- Copyright (C) 2017  Richard Eigenmann.
+ Copyright (C) 2017-2019  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -34,12 +33,8 @@ import static junit.framework.TestCase.assertNull;
  */
 public class ThumbnailControllerTest {
 
-    private Thumbnail thumbnail = null;
-
     @Test
     public void testConstructor() {
-        assertNull( thumbnail );
-
         // TravisCI runs headless so we can't execute the below test
         if ( GraphicsEnvironment.isHeadless() ) {
             return;
@@ -47,13 +42,13 @@ public class ThumbnailControllerTest {
 
         try {
             SwingUtilities.invokeAndWait( () -> {
-                thumbnail = new Thumbnail();
+                final Thumbnail thumbnail = new Thumbnail();
                 assertNotNull( thumbnail );
 
-                ThumbnailController thumbnailController = new ThumbnailController( thumbnail, 350 );
+                final ThumbnailController thumbnailController = new ThumbnailController( thumbnail, 350 );
                 assertNotNull( thumbnailController );
             } );
-        } catch ( InterruptedException | InvocationTargetException ex ) {
+        } catch ( final InterruptedException | InvocationTargetException ex ) {
             Logger.getLogger( ThumbnailControllerTest.class.getName() ).log( Level.SEVERE, null, ex );
         }
 

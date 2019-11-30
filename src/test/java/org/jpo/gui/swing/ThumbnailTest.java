@@ -42,7 +42,7 @@ public class ThumbnailTest {
         }
         try {
             SwingUtilities.invokeAndWait( () -> {
-                Thumbnail thumbnail = new Thumbnail( );
+                final Thumbnail thumbnail = new Thumbnail( );
                 assertNotNull( thumbnail );
 
                 assertNotNull("SELECTED_ICON must not be null", thumbnail.getSelectedIcon());
@@ -51,7 +51,7 @@ public class ThumbnailTest {
                 assertNotNull("LARGE_FOLDER_ICON must not be null", thumbnail.getLargeFolderIcon());
                 assertNotNull("QUEUE_ICON must not be null", thumbnail.getQueueIcon());
             } );
-        } catch ( InterruptedException | InvocationTargetException ex ) {
+        } catch ( final InterruptedException | InvocationTargetException ex ) {
             fail("Failed to create a PictureFrame");
         }
     }

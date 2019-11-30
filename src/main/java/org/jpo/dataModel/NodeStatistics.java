@@ -1,6 +1,7 @@
 package org.jpo.dataModel;
 
 import org.apache.commons.io.FileUtils;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
@@ -45,7 +46,7 @@ public class NodeStatistics {
      *
      * @param nodeToAnalyse The node for which to perform the analysis
      */
-    public NodeStatistics( DefaultMutableTreeNode nodeToAnalyse ) {
+    public NodeStatistics( @NotNull DefaultMutableTreeNode nodeToAnalyse ) {
         setNode( nodeToAnalyse );
     }
 
@@ -86,16 +87,12 @@ public class NodeStatistics {
      * @return The number of nodes including the root node or 0 if null is
      * supplied.
      */
-    public static int countNodes( TreeNode start ) {
+    public static int countNodes( @NotNull TreeNode start ) {
         Tools.warnOnEDT();
-        //never trust inputs
-        if ( start == null ) {
-            return 0;
-        }
 
         int count = 1;
         TreeNode n;
-        Enumeration nodes = start.children();
+        final Enumeration nodes = start.children();
         while ( nodes.hasMoreElements() ) {
             n = (TreeNode) nodes.nextElement();
             if ( n.getChildCount() > 0 ) {
@@ -138,7 +135,7 @@ public class NodeStatistics {
         Tools.warnOnEDT();
         int count = 0;
         DefaultMutableTreeNode n;
-        Enumeration nodes = startNode.children();
+        final Enumeration nodes = startNode.children();
         while ( nodes.hasMoreElements() ) {
             try {
                 n = (DefaultMutableTreeNode) nodes.nextElement();

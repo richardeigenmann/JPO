@@ -42,25 +42,25 @@ public class ThumbnailPanelTitle
      *  a button to navigate back to the first page
      **/
     public final JButton firstThumbnailsPageButton =
-            new JButton( new ImageIcon(Objects.requireNonNull(ThumbnailPanelTitle.class.getClassLoader().getResource("org/jpo/images/icon_first.gif"))) );
-
+            //new JButton( new ImageIcon(Objects.requireNonNull(ThumbnailPanelTitle.class.getClassLoader().getResource("org/jpo/images/icon_first.gif"))) );
+            new JButton( new ImageIcon(Objects.requireNonNull(ThumbnailPanelTitle.class.getClassLoader().getResource("icon_first.gif"))) );
     /**
      *  a button to navigate to the next page
      **/
     public final JButton nextThumbnailsPageButton =
-            new JButton( new ImageIcon(Objects.requireNonNull(ThumbnailPanelTitle.class.getClassLoader().getResource("org/jpo/images/Forward24.gif"))) );
+            new JButton( new ImageIcon(Objects.requireNonNull(ThumbnailPanelTitle.class.getClassLoader().getResource("Forward24.gif"))) );
 
     /**
      *  a button to navigate to the last page
      **/
     public final JButton lastThumbnailsPageButton =
-            new JButton( new ImageIcon(Objects.requireNonNull(ThumbnailPanelTitle.class.getClassLoader().getResource("org/jpo/images/icon_last.gif"))) );
+            new JButton( new ImageIcon(Objects.requireNonNull(ThumbnailPanelTitle.class.getClassLoader().getResource("icon_last.gif"))) );
 
     /**
      *  a button to navigate to the first page
      **/
     public final JButton previousThumbnailsPageButton =
-            new JButton( new ImageIcon(Objects.requireNonNull(ThumbnailPanelTitle.class.getClassLoader().getResource("org/jpo/images/Back24.gif"))) );
+            new JButton( new ImageIcon(Objects.requireNonNull(ThumbnailPanelTitle.class.getClassLoader().getResource("Back24.gif"))) );
 
     /**
      * JLabel for holding the thumbnail counts
@@ -151,7 +151,6 @@ public class ThumbnailPanelTitle
         resizeJSlider.setPaintTicks( true );
         resizeJSlider.setPaintLabels( false );
         add( resizeJSlider );
-
 
         title.setFont( Settings.titleFont );
     }

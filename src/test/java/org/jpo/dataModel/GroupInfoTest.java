@@ -42,7 +42,7 @@ public class GroupInfoTest {
     @Test
     public void testToString() {
         GroupInfo gi = new GroupInfo( "Test" );
-        assertEquals( "To String should give back what whent in", "Test", gi.toString() );
+        assertEquals( "To String should give back what went in", "Test", gi.toString() );
     }
 
     /**
@@ -53,7 +53,7 @@ public class GroupInfoTest {
         GroupInfo gi = new GroupInfo( "Test" );
         String expected = "Tarrantino";
         gi.setGroupName( expected );
-        assertEquals( "To String should give back what whent in", expected, gi.getGroupName() );
+        assertEquals( "To String should give back what went in", expected, gi.getGroupName() );
     }
     
     /**
@@ -64,15 +64,15 @@ public class GroupInfoTest {
         GroupInfo gi = new GroupInfo( "Test" );
         String expected = "Tarrantino";
         gi.setGroupName( expected );
-        assertEquals( "To String should give back what whent in", expected, gi.getGroupNameHtml() );
+        assertEquals( "To String should give back what went in", expected, gi.getGroupNameHtml() );
         
         String quotedString = "Holiday in <Cambodia> a 1970's Hit by Kim Wilde";
         String expectedQuotedString = "Holiday in &lt;Cambodia&gt; a 1970's Hit by Kim Wilde";
         gi.setGroupName( quotedString);
         assertEquals( "Special chars are to be escaped", expectedQuotedString, gi.getGroupNameHtml() );
         
-        String umlautString = "Rüeblitorten gären im Brötlikorb";
-        String expectedUmlautString = "R&uuml;eblitorten g&auml;ren im Br&ouml;tlikorb";
+        String umlautString = "Rüeblitorten gären im Brötlichorb";
+        String expectedUmlautString = "R&uuml;eblitorten g&auml;ren im Br&ouml;tlichorb";
         gi.setGroupName( umlautString);
         assertEquals( "German umlauts are to be escaped", expectedUmlautString, gi.getGroupNameHtml() );
         
@@ -84,7 +84,7 @@ public class GroupInfoTest {
     private final GroupInfoChangeListener groupInfoChangeListener = new GroupInfoChangeListener() {
 
         @Override
-        public void groupInfoChangeEvent( GroupInfoChangeEvent pice ) {
+        public void groupInfoChangeEvent( final GroupInfoChangeEvent event ) {
             eventsReceived++;
         }
     };
@@ -117,80 +117,74 @@ public class GroupInfoTest {
     
     /**
      * Test dumpToXml
-     * TODO: Is the collectionprotected done correctly? Is it used for anything?
      */
     @Test
     public void testDumpToXmlRootNotProtected() {
         final GroupInfo gi = new GroupInfo( "Holiday in <Cambodia> with Kim Wilde = 1970's music & a \" sign" );
 
-        StringWriter sw = new StringWriter();
+        final StringWriter sw = new StringWriter();
         try (
-                //FileWriter sw = new FileWriter( "/tmp/output.xml" );
-                BufferedWriter bw = new BufferedWriter( sw )) {
+                final BufferedWriter bw = new BufferedWriter( sw )) {
             gi.dumpToXml( bw, true, false );
             gi.endGroupXML (bw, true);
-        } catch ( IOException ex ) {
+        } catch ( final IOException ex ) {
             Logger.getLogger( GroupInfoTest.class.getName() ).log( Level.SEVERE, "The dumpToXml should really not throw an IOException", ex );
             fail( "Unexpected IOException" );
         }
 
-        String expected = "<collection collection_name=\"Holiday in &lt;Cambodia&gt; with Kim Wilde = 1970&apos;s music &amp; a &quot; sign\" collection_created=\"" 
+        final String expected = "<collection collection_name=\"Holiday in &lt;Cambodia&gt; with Kim Wilde = 1970&apos;s music &amp; a &quot; sign\" collection_created=\""
                 + DateFormat.getDateInstance().format( Calendar.getInstance().getTime() ) 
                 + "\" collection_protected=\"Yes\"\n>\n\n";
         
-        String result = sw.toString();
+        final String result = sw.toString();
         assertEquals( expected, result );
     }
 
     /**
      * Test dumpToXml
-     * TODO: Is the collectionprotected done correctly? Is it used for anything?
      */
     @Test
     public void testDumpToXmlRootProtected() {
         final GroupInfo gi = new GroupInfo( "Holiday in <Cambodia> with Kim Wilde = 1970's music & a \" sign" );
 
-        StringWriter sw = new StringWriter();
+        final StringWriter sw = new StringWriter();
         try (
-                //FileWriter sw = new FileWriter( "/tmp/output.xml" );
-                BufferedWriter bw = new BufferedWriter( sw )) {
+                final BufferedWriter bw = new BufferedWriter( sw )) {
             gi.dumpToXml( bw, true, true );
             gi.endGroupXML (bw, true);
-        } catch ( IOException ex ) {
+        } catch ( final  IOException ex ) {
             Logger.getLogger( GroupInfoTest.class.getName() ).log( Level.SEVERE, "The dumpToXml should really not throw an IOException", ex );
             fail( "Unexpected IOException" );
         }
 
-        String expected = "<collection collection_name=\"Holiday in &lt;Cambodia&gt; with Kim Wilde = 1970&apos;s music &amp; a &quot; sign\" collection_created=\"" 
+        final String expected = "<collection collection_name=\"Holiday in &lt;Cambodia&gt; with Kim Wilde = 1970&apos;s music &amp; a &quot; sign\" collection_created=\""
                 + DateFormat.getDateInstance().format( Calendar.getInstance().getTime() ) 
                 + "\" collection_protected=\"No\"\n>\n\n";
         
-        String result = sw.toString();
+        final String result = sw.toString();
         assertEquals( expected, result );
     }
 
     /**
      * Test dumpToXml
-     * TODO: Is the collectionprotected done correctly? Is it used for anything?
      */
     @Test
     public void testDumpToXmlNormalNodeProtected() {
         final GroupInfo gi = new GroupInfo( "Holiday in <Cambodia> with Kim Wilde = 1970's music & a \" sign" );
 
-        StringWriter sw = new StringWriter();
+        final StringWriter sw = new StringWriter();
         try (
-                //FileWriter sw = new FileWriter( "/tmp/output.xml" );
-                BufferedWriter bw = new BufferedWriter( sw )) {
+                final BufferedWriter bw = new BufferedWriter( sw )) {
             gi.dumpToXml( bw, false, true );
             gi.endGroupXML (bw, false);
-        } catch ( IOException ex ) {
+        } catch ( final IOException ex ) {
             Logger.getLogger( GroupInfoTest.class.getName() ).log( Level.SEVERE, "The dumpToXml should really not throw an IOException", ex );
             fail( "Unexpected IOException" );
         }
 
-        String expected = "<group group_name=\"Holiday in &lt;Cambodia&gt; with Kim Wilde = 1970&apos;s music &amp; a &quot; sign\"\n>\n</group>\n";
+        final String expected = "<group group_name=\"Holiday in &lt;Cambodia&gt; with Kim Wilde = 1970&apos;s music &amp; a &quot; sign\"\n>\n</group>\n";
         
-        String result = sw.toString();
+        final String result = sw.toString();
         assertEquals( expected, result );
     }
 

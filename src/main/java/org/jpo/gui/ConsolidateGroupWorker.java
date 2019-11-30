@@ -163,20 +163,9 @@ public class ConsolidateGroupWorker extends SwingWorker<String, String> {
      * @param targetDirectory the target directory to move it to
      * @return True if a move is needed False if not.
      */
-    public static boolean needToMovePicture( PictureInfo pictureInfo, File targetDirectory ) {
-        File pictureFile = pictureInfo.getImageFile();
-        // don't move if the pictureInfo points at a null file
-        if ( pictureFile == null ) {
-            return false;
-        }
-
-        if ( !pictureFile.exists() ) {
-            return false;
-        }
-
-        // don't move if the file is already in the correct directory
-        File parentDirectory = pictureFile.getParentFile();
-        return ( !( parentDirectory != null && ( parentDirectory.equals( targetDirectory ) ) ) );
+    public static boolean needToMovePicture( @NonNull final PictureInfo pictureInfo, @NonNull final File targetDirectory ) {
+        final File parentDirectory = Objects.requireNonNull(pictureInfo.getImageFile().getParentFile());
+        return ! parentDirectory.equals( targetDirectory );
     }
 
     /**
@@ -187,7 +176,7 @@ public class ConsolidateGroupWorker extends SwingWorker<String, String> {
      * @param targetDirectory the target directory
      * @return True if a real move was done False if not.
      */
-    public static boolean movePicture(@NonNull PictureInfo pictureInfo, @NonNull File targetDirectory ) {
+    public static boolean movePicture(@NonNull final PictureInfo pictureInfo, @NonNull final File targetDirectory ) {
         Objects.requireNonNull(pictureInfo);
         Objects.requireNonNull(targetDirectory);
 
@@ -221,13 +210,13 @@ public class ConsolidateGroupWorker extends SwingWorker<String, String> {
      * @param oldReference The file that was moved
      * @param newReference The new location of the source file
      */
-    private static void correctReferences(File oldReference, File newReference) {
+    private static void correctReferences(final File oldReference, final File newReference) {
         warnOnEDT();
         //  search for other picture nodes in the tree using this image file
         SortableDefaultMutableTreeNode node;
         Object nodeObject;
         int count = 0;
-        Enumeration e = Settings.getPictureCollection().getRootNode().preorderEnumeration();
+        final Enumeration e = Settings.getPictureCollection().getRootNode().preorderEnumeration();
         while ( e.hasMoreElements() ) {
             node = (SortableDefaultMutableTreeNode) e.nextElement();
             nodeObject = node.getUserObject();

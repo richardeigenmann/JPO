@@ -6,6 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import javax.swing.*;
+import java.awt.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.logging.Level;
@@ -46,6 +47,10 @@ public class GroupPopupMenuTest {
 
     @Before
     public void setUp()  {
+        // TravisCI runs headless so we can't execute the below test
+        if ( GraphicsEnvironment.isHeadless() ) {
+            return;
+        }
         myGroupPopupMenu = new GroupPopupMenu( myNode );
 
         try {
@@ -79,23 +84,25 @@ public class GroupPopupMenuTest {
      */
     @Test
     public void testRememberingPopupNode() {
+        // TravisCI runs headless so we can't execute the below test
+        if ( GraphicsEnvironment.isHeadless() ) {
+            return;
+        }
         try {
             SwingUtilities.invokeAndWait( () -> {
                 try {
-                    Field popupNodeField;
+                    final Field popupNodeField;
                     popupNodeField = GroupPopupMenu.class.getDeclaredField( "popupNode" );
                     popupNodeField.setAccessible( true );
-                    SortableDefaultMutableTreeNode verifyNode = (SortableDefaultMutableTreeNode) popupNodeField.get( myGroupPopupMenu );
-                    GroupInfo verifyGroupInfo = (GroupInfo) verifyNode.getUserObject();
+                    final SortableDefaultMutableTreeNode verifyNode = (SortableDefaultMutableTreeNode) popupNodeField.get( myGroupPopupMenu );
+                    final GroupInfo verifyGroupInfo = (GroupInfo) verifyNode.getUserObject();
                     assertEquals( myGroupInfo, verifyGroupInfo );
                 } catch ( NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException ex ) {
                     Logger.getLogger( GroupPopupMenuTest.class.getName() ).log( Level.SEVERE, null, ex );
                 }
             } );
-        } catch ( InterruptedException ex ) {
-            Logger.getLogger( GroupPopupMenuTest.class.getName() ).log( Level.SEVERE, null, "Why were we interrupted? " + ex );
-        } catch ( InvocationTargetException ex ) {
-            Logger.getLogger( GroupPopupMenuTest.class.getName() ).log( Level.SEVERE, null, "InvocationTargetException: " + ex );
+        } catch ( final InterruptedException | InvocationTargetException ex ) {
+            Logger.getLogger( GroupPopupMenuTest.class.getName() ).log( Level.SEVERE, null,  ex );
         }
 
     }
@@ -105,6 +112,10 @@ public class GroupPopupMenuTest {
      */
     @Test
     public void testGetChildren() {
+        // TravisCI runs headless so we can't execute the below test
+        if ( GraphicsEnvironment.isHeadless() ) {
+            return;
+        }
         try {
             SwingUtilities.invokeAndWait( () -> {
                 assertEquals( "Show Group", showGroup.getText() );
@@ -125,10 +136,8 @@ public class GroupPopupMenuTest {
                 assertEquals( "Export to Picasa", exportToPicasa.getText() );
                 assertEquals( "Properties", properties.getText() );
             } );
-        } catch ( InterruptedException ex ) {
-            Logger.getLogger( GroupPopupMenuTest.class.getName() ).log( Level.SEVERE, null, "Why were we interrupted? " + ex );
-        } catch ( InvocationTargetException ex ) {
-            Logger.getLogger( GroupPopupMenuTest.class.getName() ).log( Level.SEVERE, null, "InvocationTargetException: " + ex );
+        } catch ( final InterruptedException | InvocationTargetException ex ) {
+            Logger.getLogger( GroupPopupMenuTest.class.getName() ).log( Level.SEVERE, null,  ex );
         }
     }
 }

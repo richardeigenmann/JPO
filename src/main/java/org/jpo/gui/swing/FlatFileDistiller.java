@@ -130,13 +130,13 @@ public class FlatFileDistiller extends SwingWorker<DistillerResult, String> {
      */
     private static void enumerateGroup(SortableDefaultMutableTreeNode groupNode, BufferedWriter out) throws IOException {
         //GroupInfo groupInfo = (GroupInfo) groupNode.getUserObject();
-        Enumeration kids = groupNode.children();
+        final Enumeration kids = groupNode.children();
         while (kids.hasMoreElements()) {
-            SortableDefaultMutableTreeNode childNode = (SortableDefaultMutableTreeNode) kids.nextElement();
+            final SortableDefaultMutableTreeNode childNode = (SortableDefaultMutableTreeNode) kids.nextElement();
             if (childNode.getUserObject() instanceof GroupInfo) {
                 enumerateGroup(childNode, out);
             } else {
-                PictureInfo pictureInfo = (PictureInfo) childNode.getUserObject();
+                final PictureInfo pictureInfo = (PictureInfo) childNode.getUserObject();
                 out.write(pictureInfo.getImageLocation());
                 out.newLine();
 

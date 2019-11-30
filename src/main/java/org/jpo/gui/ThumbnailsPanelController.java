@@ -111,7 +111,6 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
      * objects and hooks itself up so that thumbnails can be shown
      */
     public ThumbnailsPanelController() {
-        Tools.checkEDT();
         titleJPanel = new ThumbnailPanelTitle();
         thumbnailsPane = new JPanel();
         thumbnailJScrollPane = new JScrollPane();
@@ -126,6 +125,7 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
      * Initialises the components for the ThumbnailController Pane
      */
     private void init() {
+        Tools.checkEDT();
         final ThumbnailLayoutManager thumbnailLayoutManager = new ThumbnailLayoutManager( thumbnailJScrollPane.getViewport() );
         thumbnailsPane.setLayout( thumbnailLayoutManager );
 

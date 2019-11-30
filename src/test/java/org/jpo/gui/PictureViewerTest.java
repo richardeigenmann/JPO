@@ -10,7 +10,7 @@ import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.fail;
 
 /**
- * Tests for the PictureViewe
+ * Tests for the PictureViewer
  *
  * @author Richard Eigenmann
  */
@@ -27,10 +27,10 @@ public class PictureViewerTest {
         }
         try {
             SwingUtilities.invokeAndWait( () -> {
-                PictureViewer pictureViewer = new PictureViewer();
+                final PictureViewer pictureViewer = new PictureViewer();
                 assertNotNull( pictureViewer );
             } );
-        } catch ( InterruptedException | InvocationTargetException ex ) {
+        } catch ( final InterruptedException | InvocationTargetException ex ) {
             fail( "This test didn't work. Exception: " + ex.getMessage() );
         }
 

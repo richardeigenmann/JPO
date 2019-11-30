@@ -71,7 +71,7 @@ public class FlatFileReader {
 
                 try ( FileInputStream fis = new FileInputStream( testFile );
                         ImageInputStream iis = ImageIO.createImageInputStream( fis )) {
-                    Iterator i = ImageIO.getImageReaders( iis );
+                    final Iterator i = ImageIO.getImageReaders( iis );
                     if ( !i.hasNext() ) {
                         LOGGER.log( Level.INFO, "No reader for file: {0}", line);
                         continue;

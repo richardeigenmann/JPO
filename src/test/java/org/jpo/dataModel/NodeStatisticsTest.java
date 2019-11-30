@@ -89,12 +89,8 @@ public class NodeStatisticsTest{
      */
     @Test
     public void testGetNumberOfNodes() {
-        NodeStatistics ns = new NodeStatistics(null);
-        assertEquals("Counting nodes on a null node should return 0 nodes", 0, ns.getNumberOfNodes());
-
         NodeStatistics ns1 = new NodeStatistics(rootNode);
         assertEquals("Counting number of nodes", 9, ns1.getNumberOfNodes());
-
     }
 
     /**
@@ -146,7 +142,7 @@ public class NodeStatisticsTest{
         } catch (NullPointerException ex) {
             return;
         }
-        fail("Should have thown a NPE!");
+        fail("Should have thrown a NPE!");
     }
     
     /**

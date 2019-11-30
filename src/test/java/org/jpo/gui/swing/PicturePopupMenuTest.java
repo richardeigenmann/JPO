@@ -94,7 +94,7 @@ public class PicturePopupMenuTest {
     private JMenu moveImage;
     private JMenuItem moveToNewLocation;
     private JMenuItem fileOperationsRename;
-    private JMenuItem fileoperationsDelete;
+    private JMenuItem fileOperationsDelete;
     private JMenuItem properties;
     private JMenuItem consolidateHere;
 
@@ -110,10 +110,10 @@ public class PicturePopupMenuTest {
         }
         myPictureInfo.setDescription("My Picture");
         try {
-            File temp = File.createTempFile("JPO-Unit-Test", ".jpg");
+            final File temp = File.createTempFile("JPO-Unit-Test", ".jpg");
             temp.deleteOnExit();
             myPictureInfo.setImageLocation(temp);
-        } catch (IOException ex) {
+        } catch (final IOException ex) {
             Logger.getLogger(PicturePopupMenuTest.class.getName()).log(Level.SEVERE, null, ex);
         }
 
@@ -161,7 +161,7 @@ public class PicturePopupMenuTest {
                 moveToNewLocation = moveImage.getItem(0);
                 renameJMenu = (JMenu) fileOperations.getItem(3);
                 fileOperationsRename = renameJMenu.getItem(0);
-                fileoperationsDelete = fileOperations.getItem(4);
+                fileOperationsDelete = fileOperations.getItem(4);
                 properties = (JMenuItem) myPicturePopupMenu.getComponent(17);
                 consolidateHere = (JMenuItem) myPicturePopupMenu.getComponent(18);
             });
@@ -183,17 +183,17 @@ public class PicturePopupMenuTest {
         try {
             SwingUtilities.invokeAndWait(() -> {
                 try {
-                    Field popupNodeField;
+                    final Field popupNodeField;
                     popupNodeField = PicturePopupMenu.class.getDeclaredField("popupNode");
                     popupNodeField.setAccessible(true);
-                    SortableDefaultMutableTreeNode verifyNode = (SortableDefaultMutableTreeNode) popupNodeField.get(myPicturePopupMenu);
-                    PictureInfo verifyPictureInfo = (PictureInfo) verifyNode.getUserObject();
+                    final SortableDefaultMutableTreeNode verifyNode = (SortableDefaultMutableTreeNode) popupNodeField.get(myPicturePopupMenu);
+                    final PictureInfo verifyPictureInfo = (PictureInfo) verifyNode.getUserObject();
                     assertEquals(myPictureInfo, verifyPictureInfo);
                 } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException ex) {
                     Logger.getLogger(PicturePopupMenuTest.class.getName()).log(Level.SEVERE, null, ex);
                 }
             });
-        } catch (InterruptedException | InvocationTargetException ex) {
+        } catch (final InterruptedException | InvocationTargetException ex) {
             Logger.getLogger(PicturePopupMenuTest.class.getName()).log(Level.SEVERE, null, ex);
         }
 
@@ -614,7 +614,7 @@ public class PicturePopupMenuTest {
             }
         });
         assertEquals("Before clicking on the node the event count should be 0", 0, deleteEventCount);
-        fileoperationsDelete.doClick();
+        fileOperationsDelete.doClick();
         assertEquals("After clicking on the node the event count should be 1", 1, deleteEventCount);
     }
 

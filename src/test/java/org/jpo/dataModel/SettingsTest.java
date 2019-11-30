@@ -78,7 +78,7 @@ public class SettingsTest {
      */
     @Test
     public void testReadWriteSettingsLocale() {
-        // load the settings first or we have unititialised objects which crash the writing
+        // load the settings first or we have uninitialised objects which crash the writing
         Settings.loadSettings();
         // memorise the locale so that we can write it back in the end
         Locale saveLocale = Settings.getCurrentLocale();
@@ -87,7 +87,7 @@ public class SettingsTest {
         //System.out.println("testReadWriteSettingsLocale: Setting Locale to English and writing settings");
         Settings.setLocale(Locale.ENGLISH);
         Settings.writeSettings();
-        assertEquals("Locale should not have changed after wrtiting settings!", Locale.ENGLISH, Settings.getCurrentLocale());
+        assertEquals("Locale should not have changed after writing settings!", Locale.ENGLISH, Settings.getCurrentLocale());
         //System.out.println("testReadWriteSettingsLocale: now changing the Locale to German and loading the settings");
         Settings.setLocale(Locale.GERMAN);
         Settings.loadSettings();
@@ -96,7 +96,7 @@ public class SettingsTest {
         // and do it all again to be sure that the saved Settings aren't tricking us here:
         Settings.setLocale(Locale.GERMAN);
         Settings.writeSettings();
-        assertEquals("Locale should not have changed after wrtiting settings #2", Locale.GERMAN, Settings.getCurrentLocale());
+        assertEquals("Locale should not have changed after writing settings #2", Locale.GERMAN, Settings.getCurrentLocale());
         Settings.setLocale(Locale.SIMPLIFIED_CHINESE);
         Settings.loadSettings();
         assertEquals("Locale should be back to German after the second load!", Locale.GERMAN, Settings.getCurrentLocale());
@@ -202,7 +202,7 @@ public class SettingsTest {
         Settings.memorizeGroupOfDropLocation(n1);
         assertTrue("First Element should be our new node", Settings.recentDropNodes.contains(n1));
         Settings.recentDropNodes.clear();
-        assertFalse("First Element should no longer be our nnode", Settings.recentDropNodes.contains(n1));
+        assertFalse("First Element should no longer be our node", Settings.recentDropNodes.contains(n1));
     }
 
 }

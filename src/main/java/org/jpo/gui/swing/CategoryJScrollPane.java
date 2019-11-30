@@ -84,7 +84,7 @@ public class CategoryJScrollPane extends JScrollPane implements ListSelectionLis
      * Load Categories
      * @param i the categories
      */
-    public void loadCategories(Iterator i) {
+    public void loadCategories(final Iterator i) {
         // load categories
         defaultListModel.clear();
         //Iterator i = Settings.getPictureCollection().getCategoryIterator();
