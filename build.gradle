@@ -315,4 +315,4 @@ allprojects { // Projects
         name = 'hello'
         jvmArgs = ['-Dlog4j.configurationFile=./log4j2.xml']
     }
-}*/.circleci
+}*/
