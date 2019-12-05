@@ -1,6 +1,7 @@
-module org.jpo.dataModel {
-    exports org.jpo.dataModel;
+module org.jpo.gui {
+    //exports org.jpo.dataModel;
 
+    requires org.tagcloud;
     //requires java.desktop;
     //requires java.logging;
     //requires java.prefs;

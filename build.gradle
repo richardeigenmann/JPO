@@ -14,6 +14,7 @@ plugins {
     id 'signing'
     id 'java'
     id 'jacoco'
+    //id 'org.beryx.jlink' version '2.16.4'
 }
 
 apply plugin: "com.github.johnrengelman.shadow"
@@ -66,9 +67,9 @@ dependencies {
     implementation 'commons-io:commons-io:2.6'
     implementation 'com.google.gdata:core:1.47.1'
 
-    implementation files('libs/gdata-maps-2.0.jar')
-    implementation files('libs/gdata-media-1.0.jar')
-    implementation files('libs/gdata-photos-2.0.jar')
+    //implementation files('libs/gdata-maps-2.0.jar')
+    //implementation files('libs/gdata-media-1.0.jar')
+    //implementation files('libs/gdata-photos-2.0.jar')
 
     implementation 'com.google.guava:guava:28.1-jre'
     implementation 'javax.mail:javax.mail-api:1.6.2'
@@ -307,3 +308,11 @@ allprojects { // Projects
         }
     }
 }
+
+/*jlink {
+    options = ['--strip-debug', '--compress', '2', '--no-header-files', '--no-man-pages']
+    launcher{
+        name = 'hello'
+        jvmArgs = ['-Dlog4j.configurationFile=./log4j2.xml']
+    }
+}*/.circleci
