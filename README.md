@@ -10,9 +10,31 @@ Java Picture Organizer
 [![Sonarcloud LinesOfCode](https://sonarcloud.io/api/project_badges/measure?project=Jpo&metric=ncloc)](https://sonarcloud.io/dashboard?id=Jpo)
 [![Sonarcloud Maintainability](https://sonarcloud.io/api/project_badges/measure?project=Jpo&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=Jpo)
 
-
 Homepage: http://j-po.sourceforge.net/
 
+## Exploring the code - with SourceTrail
+
+See https://sourcetrail.com
+
+```bash
+export LANG=en_US.UTF-8
+sourcetrail
+
+# Project > New Project
+# give it a name: JPO
+# tell it where you want it to create it's working files
+# Add Source Groups
+# Pick Java > Java Source Group from Gradle > Next
+# Java Standard: 12
+# Gradle Project File: Jpo/build.gradle
+# Next > Next 
+# on the New Project screen click on the plus (+) icon
+# Add a new Source Group Type - Java - Empty Java Source Group
+# Java Standard: 12
+# Files and Directoris to index: src/main/java
+# Next > Create
+# Classes > Main > ApplicationStartupRequest > ApplicationEventHandler > handleApplicationStartupRequest
+```
 
 ## Experimental: Running with Flatpak
 
@@ -42,7 +64,6 @@ On the right margin you have a tab `Gradle` which gives you access to the tasks
 Pick `JPO > Tasks > build > build` and it should download dependencies compile and run the tests
 
 To run the project go to the Gradle Tasks Window click `JPO > build > run`.
-
 
 ## Developing JPO with Netbeans
 
