@@ -60,7 +60,7 @@
                         <a class="dropdown-item" href="netbeans.php">Set up Netbeans Dev environment</a>
                         <a class="dropdown-item" href="https://sourceforge.net/p/j-po/git/ci/master/tree/">Source Code Sourceforge.net</a>
                         <a class="dropdown-item" href="https://sourceforge.net/projects/j-po/">SourceForge project page</a>
-                        <a class="dropdown-item" href="https://travis-ci.org/">Travis CI</a>
+                        <a class="dropdown-item" href="https://travis-ci.org/github/richardeigenmann/JPO">Travis CI Build status</a>
                         <a class="dropdown-item" href="https://sonarcloud.io/dashboard?id=Jpo">Sonarcloud Dashboard</a>
                     </div>
                 </li>

@@ -22,17 +22,17 @@
     picture collection.</p>
 
     <p>Contact: <a href="mailto:richard.eigenmann@gmail.com">richard.eigenmann@gmail.com</a><br>
-        Homepage: <a href="http://richieigenmann.users.sourceforge.net">http://richieigenmann.users.sourceforge.net</a></p>
+        Personal homepage: <a href="http://richieigenmann.users.sourceforge.net">http://richieigenmann.users.sourceforge.net</a></p>
 
     <hr>
     <h2>About the Project</h2>
     <p>JPO was written in Z&uuml;rich, Switzerland but also while on vacation in South Africa and the 
         Caribbean. The sites JPO was coded at include aeroplanes, trains, cars, safari camps, sail boats, 
         botanical gardens, restaurants, bars and swimming pools.</p>
-    <p>Download statistics of the Windows Installer on <a href="https://sourceforge.net/projects/j-po/files/JPO-Installer-0.13.exe/stats/timeline?dates=2015-01-01+to+2018-12-07">Sourceforge</a></p>
+    <p>Download stats <a href="https://sourceforge.net/projects/j-po/files/JPO-Installer-0.14.exe/stats/timeline?dates=2019-12-01%20to%202020-03-01&period=monthly">Sourceforge</a></p>
 
     <hr>
-    <p>Last update to this page: 7 Dec 2018<br>
-        Copyright 2003-2018 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
+    <p>Last update to this page: 15 March 2020<br>
+        Copyright 2003-2020 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
 </div>
 <?php include("page-end.php"); ?>
