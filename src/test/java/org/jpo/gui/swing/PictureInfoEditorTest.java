@@ -1,4 +1,4 @@
-package org.jpo.gui;
+package org.jpo.gui.swing;
 
 import org.jpo.cache.ThumbnailCreationQueue;
 import org.jpo.dataModel.PictureInfo;

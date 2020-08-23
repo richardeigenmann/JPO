@@ -1,5 +1,6 @@
 package org.jpo.dataModel;
 
+import com.google.common.hash.HashCode;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -11,6 +12,8 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -18,7 +21,7 @@ import java.util.logging.Logger;
 import static junit.framework.TestCase.*;
 
 /*
- Copyright (C) 2017 - 2019 Richard Eigenmann.
+ Copyright (C) 2017 - 2020 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -71,11 +74,11 @@ public class PictureInfoTest {
         PictureInfoChangeListener picl = (PictureInfoChangeEvent arg0) -> changeEvents += 1;
         pi.addPictureInfoChangeListener(picl);
         pi.setDescription("A description");
-        assertEquals("Expecting what went in to come out", "A description", pi.getDescription());
-        assertEquals("Expecting 1 change event", 1, changeEvents);
+        assertEquals("A description", pi.getDescription());
+        assertEquals(1, changeEvents);
         pi.setDescription("A different description");
-        assertEquals("Expecting what went in to come out", "A different description", pi.getDescription());
-        assertEquals("Expecting a second change event", 2, changeEvents);
+        assertEquals("A different description", pi.getDescription());
+        assertEquals(2, changeEvents);
     }
 
     private int countEvents;
@@ -123,7 +126,7 @@ public class PictureInfoTest {
      */
     @Test
     public void testGetImageLocation() {
-        PictureInfo pi = new PictureInfo( new File("/dir/picture.jpg"), "My Sample Picture");
+        PictureInfo pi = new PictureInfo(new File("/dir/picture.jpg"), "My Sample Picture");
         String highresLocation = pi.getImageLocation();
         assertEquals("file:/dir/picture.jpg", highresLocation);
     }
@@ -142,7 +145,7 @@ public class PictureInfoTest {
      * Test of getImageURIOrNull method, of class PictureInfo.
      */
     @Test
-    @Ignore ("Was Deprecated")
+    @Ignore("Was Deprecated")
     public void testGetImageURIOrNull() {
         PictureInfo pi = new PictureInfo();
         String goodLocation = "/image.jpg";
@@ -165,7 +168,7 @@ public class PictureInfoTest {
     @Test
     public void testSetImageLocationString() {
         PictureInfo pi = new PictureInfo();
-        pi.setImageLocation(new File ("/dir/picture.jpg"));
+        pi.setImageLocation(new File("/dir/picture.jpg"));
         File f = pi.getImageFile();
         assertEquals("Testing what went in comes out", f.toString(), "/dir/picture.jpg");
     }
@@ -211,7 +214,7 @@ public class PictureInfoTest {
     @Test
     public void testGetHighresFilename() {
         PictureInfo pi = new PictureInfo();
-        pi.setImageLocation(new File ("/dir/picture.jpg"));
+        pi.setImageLocation(new File("/dir/picture.jpg"));
         String filename = pi.getImageFile().getName();
         assertEquals("Testing that the filename can be derived from the Highres Location correctly", filename, "picture.jpg");
     }
@@ -292,6 +295,7 @@ public class PictureInfoTest {
         assertEquals(expected, result);
     }
 
+
     @Test
     public void testChecksum() {
         PictureInfo pi = new PictureInfo();
@@ -307,15 +311,160 @@ public class PictureInfoTest {
     @Test
     public void testCalculateChecksum() {
         URL image = Objects.requireNonNull(PictureInfoTest.class.getClassLoader().getResource("exif-test-canon-eos-350d.jpg"));
-        PictureInfo pi = null;
         try {
-            pi = new PictureInfo(new File(image.toURI()), "Sample Picture");
+            PictureInfo pi = new PictureInfo(new File(image.toURI()), "Sample Picture");
+            assertEquals("N/A", pi.getChecksumAsString());
+            TestPictureInfoChangeListener listener = new TestPictureInfoChangeListener();
+            pi.addPictureInfoChangeListener(listener);
+            pi.calculateChecksum();
+            assertEquals("778423829", pi.getChecksumAsString());
+            assertEquals(1, listener.events.size());
+            assertTrue(listener.events.get(0).getChecksumChanged());
+            pi.removePictureInfoChangeListener(listener);
         } catch (URISyntaxException e) {
             fail(e.getMessage());
         }
-        assertEquals("N/A", pi.getChecksumAsString());
-        pi.calculateChecksum();
-        assertEquals("778423829", pi.getChecksumAsString());
+
+    }
+
+    @Test
+    public void calculateSha256() {
+        URL u = Objects.requireNonNull(PictureInfoTest.class.getClassLoader().getResource("exif-test-canon-eos-350d.jpg"));
+        try {
+            PictureInfo pi = new PictureInfo(new File(u.toURI()), "Sample Picture");
+            HashCode hashCode = pi.calculateSha256();
+            assertEquals("E7D7D40A06D1B974F741920A6489FDDA4CA4A05C55ED122C602B360640E9E67C", hashCode.toString().toUpperCase());
+
+        } catch (URISyntaxException | IOException e) {
+            fail(e.getMessage());
+        }
+    }
+
+    @Test
+    public void getSetFileHash() {
+        URL u = Objects.requireNonNull(PictureInfoTest.class.getClassLoader().getResource("exif-test-canon-eos-350d.jpg"));
+        try {
+            PictureInfo pi = new PictureInfo(new File(u.toURI()), "Sample Picture");
+            TestPictureInfoChangeListener listener = new TestPictureInfoChangeListener();
+            pi.addPictureInfoChangeListener(listener);
+            assertNull(pi.getFileHash());
+            assertEquals(0, listener.events.size());
+            assertEquals("N/A", pi.getFileHashAsString());
+            pi.setSha256();
+            assertEquals("E7D7D40A06D1B974F741920A6489FDDA4CA4A05C55ED122C602B360640E9E67C", pi.getFileHashAsString());
+            assertEquals(1, listener.events.size());
+            assertTrue(listener.events.get(0).getFileHashChanged());
+
+        } catch (URISyntaxException e) {
+            fail(e.getMessage());
+        }
+    }
+
+    @Test
+    public void getSetFileHashBadFile() {
+        PictureInfo pi = new PictureInfo(new File("NoSuchFile.txt"), "Sample Picture");
+        TestPictureInfoChangeListener listener = new TestPictureInfoChangeListener();
+        pi.addPictureInfoChangeListener(listener);
+        assertNull(pi.getFileHash());
+        pi.setSha256();
+        assertEquals(0, listener.events.size());
+        assertEquals("N/A", pi.getFileHashAsString());
+    }
+
+    @Test
+    public void getSetFileHashGoodToBadFile() {
+        URL u = Objects.requireNonNull(PictureInfoTest.class.getClassLoader().getResource("exif-test-canon-eos-350d.jpg"));
+        try {
+            PictureInfo pi = new PictureInfo(new File(u.toURI()), "Sample Picture");
+            TestPictureInfoChangeListener listener = new TestPictureInfoChangeListener();
+            pi.addPictureInfoChangeListener(listener);
+            assertNull(pi.getFileHash());
+            pi.setSha256();
+            assertEquals(1, listener.events.size());
+            assertEquals("E7D7D40A06D1B974F741920A6489FDDA4CA4A05C55ED122C602B360640E9E67C", pi.getFileHashAsString());
+            pi.setImageLocation(new File("NoSuchFile.txt"));
+            // odd: setImageLocation does not send a PictureInfoChangedEvent
+            assertEquals(1, listener.events.size());
+            pi.setSha256();
+            assertEquals(2, listener.events.size());
+            assertEquals("N/A", pi.getFileHashAsString());
+            assertTrue(listener.events.get(1).getFileHashChanged());
+
+        } catch (URISyntaxException e) {
+            fail(e.getMessage());
+        }
+    }
+
+
+    @Test
+    public void getSetRotation() {
+        PictureInfo pi = new PictureInfo();
+        assertEquals(0.0, pi.getRotation());
+        pi.setRotation(45.5);
+        assertEquals(45.5, pi.getRotation());
+
+        pi.setRotation(90);
+        assertEquals(90.0, pi.getRotation());
+
+        pi.rotate(15.0);
+        assertEquals(105.0, pi.getRotation());
+    }
+
+    @Test
+    public void appendParseRotation() {
+        PictureInfo pi = new PictureInfo();
+        pi.appendToRotation("270");
+        pi.parseRotation();
+        assertEquals(270.0, pi.getRotation());
+
+        pi.appendToRotation("");
+        assertEquals(270.0, pi.getRotation());
+
+        pi.appendToRotation("5");
+        pi.appendToRotation("6");
+        pi.parseRotation();
+        assertEquals(56.0, pi.getRotation());
+
+        pi.appendToRotation("ABCD is not a number");
+        pi.parseRotation();
+        assertEquals(0.0, pi.getRotation());
+    }
+
+    @Test
+    public void setRotationEvent() {
+        PictureInfo pi = new PictureInfo();
+        TestPictureInfoChangeListener listener = new TestPictureInfoChangeListener();
+        pi.addPictureInfoChangeListener(listener);
+        pi.setRotation(45.5);
+        assertEquals(45.5, pi.getRotation());
+        assertEquals(1, listener.events.size());
+        assertTrue(listener.events.get(0).getRotationChanged());
+        pi.removePictureInfoChangeListener(listener);
+    }
+
+    @Test
+    public void setRotationEventTwice() {
+        PictureInfo pi = new PictureInfo();
+        TestPictureInfoChangeListener listener = new TestPictureInfoChangeListener();
+        pi.addPictureInfoChangeListener(listener);
+        pi.setRotation(45.5);
+        assertEquals(45.5, pi.getRotation());
+        assertEquals(1, listener.events.size());
+        pi.setRotation(280.0);
+        assertEquals(280.0, pi.getRotation());
+        assertEquals(2, listener.events.size());
+        assertTrue(listener.events.get(1).getRotationChanged());
+        pi.removePictureInfoChangeListener(listener);
+    }
+
+    class TestPictureInfoChangeListener implements PictureInfoChangeListener {
+
+        List<PictureInfoChangeEvent> events = new ArrayList<>();
+
+        @Override
+        public void pictureInfoChangeEvent(PictureInfoChangeEvent pictureInfoChangeEvent) {
+            events.add(pictureInfoChangeEvent);
+        }
     }
 
 }

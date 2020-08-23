@@ -1,14 +1,13 @@
-package org.jpo.gui;
+package org.jpo.gui.swing;
 
 import net.miginfocom.swing.MigLayout;
 import org.jetbrains.annotations.TestOnly;
 import org.jpo.eventBus.JpoEventBus;
 import org.jpo.eventBus.SetPictureRotationRequest;
 import org.jpo.dataModel.*;
-import org.jpo.gui.swing.MapViewer;
-import org.jpo.gui.swing.NonFocussedCaret;
-import org.jpo.gui.swing.ThreeDotButton;
-import org.jpo.gui.swing.Thumbnail;
+import org.jpo.gui.CategoryEditorJFrame;
+import org.jpo.gui.ImageFilter;
+import org.jpo.gui.ThumbnailController;
 import org.jxmapviewer.JXMapViewer;
 import org.jxmapviewer.input.MapClickListener;
 import org.jxmapviewer.viewer.GeoPosition;
@@ -32,10 +31,11 @@ import java.util.List;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.jpo.cache.QUEUE_PRIORITY;
 
 /*
- Copyright (C) 2002-2019  Richard Eigenmann.
+ Copyright (C) 2002-2020  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -108,6 +108,11 @@ public class PictureInfoEditor extends JFrame {
      * here.
      */
     private final JLabel checksumJLabel = new JLabel();
+
+    /**
+     * Label to display the SHA-256 fileHash of the image file
+     */
+    private final JLabel fileHashJLabel = new JLabel();
 
     /**
      * The location of the image file
@@ -401,9 +406,15 @@ public class PictureInfoEditor extends JFrame {
         refreshChecksumJButton.setPreferredSize(new Dimension(80, 25));
         refreshChecksumJButton.setMinimumSize(new Dimension(80, 25));
         refreshChecksumJButton.setMaximumSize(new Dimension(80, 25));
-        refreshChecksumJButton.addActionListener((ActionEvent e) -> new Thread(pictureInfo::calculateChecksum).start());
+        refreshChecksumJButton.addActionListener((ActionEvent e) -> new Thread(
+                () -> {
+                    pictureInfo.setSha256();
+                    pictureInfo.calculateChecksum();
+                }
+        ).start());
 
-        fileTab.add(checksumJLabel);
+        fileTab.add(checksumJLabel, "wrap");
+        fileTab.add(fileHashJLabel, "wrap");
         fileTab.add(refreshChecksumJButton, "wrap");
 
         tabs.add("File", fileTab);
@@ -466,6 +477,7 @@ public class PictureInfoEditor extends JFrame {
         descriptionJTextArea.setText(pictureInfo.getDescription());
         highresLocationJTextField.setText(pictureInfo.getImageFile().toString());
         checksumJLabel.setText(Settings.jpoResources.getString("checksumJLabel") + pictureInfo.getChecksumAsString());
+        fileHashJLabel.setText(Settings.jpoResources.getString("fileHashJLabel") + pictureInfo.getFileHashAsString());
         filmReferenceJTextField.setText(pictureInfo.getFilmReference());
         LOGGER.info(String.format("Retrieving angle: %f", pictureInfo.getRotation()));
         angleModel.setValue(pictureInfo.getRotation());
@@ -531,6 +543,9 @@ public class PictureInfoEditor extends JFrame {
             }
             if (e.getChecksumChanged()) {
                 checksumJLabel.setText(Settings.jpoResources.getString("checksumJLabel") + pictureInfo.getChecksumAsString());
+            }
+            if (e.getFileHashChanged()) {
+                fileHashJLabel.setText(Settings.jpoResources.getString("fileHashJLabel") + pictureInfo.getFileHashAsString());
             }
             if (e.getCreationTimeChanged()) {
                 creationTimeJTextField.setText(pictureInfo.getCreationTime());
@@ -705,7 +720,7 @@ public class PictureInfoEditor extends JFrame {
         JpoEventBus.getInstance().post(
                 new SetPictureRotationRequest(
                         myNode,
-                    (double) angleModel.getValue(),
+                        (double) angleModel.getValue(),
                         QUEUE_PRIORITY.HIGH_PRIORITY
                 )
         );

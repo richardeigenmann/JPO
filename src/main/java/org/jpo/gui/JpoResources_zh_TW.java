@@ -293,6 +293,7 @@ public class JpoResources_zh_TW extends ListResourceBundle {
             {"resetLabel", "重置"},
             {"checksumJButton", "刷新"},
             {"checksumJLabel", "Adler32校檢和"},
+            {"fileHashJLabel", "SHA-256: "},
             {"parsedAs", "解析成： "},
             {"failedToParse", "不能解析日期"},
             {"categoriesJLabel-2", "類目："},

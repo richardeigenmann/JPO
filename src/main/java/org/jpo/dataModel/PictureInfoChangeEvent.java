@@ -139,6 +139,31 @@ public class PictureInfoChangeEvent {
         return checksumChanged;
     }
 
+    /**
+     *  indicates that the fileHqsh was changed.
+     */
+    private boolean fileHashChanged;  // default is false
+
+
+    /**
+     *  sets the event to reflect that the fileHash changed
+     **/
+    public void setFileHashChanged() {
+        fileHashChanged = true;
+    }
+
+
+    /**
+     *  returns whether the fileHash was changed
+     *
+     * @return true if the fileHash was changed
+     */
+    public boolean getFileHashChanged() {
+        return fileHashChanged;
+    }
+
+
+
 
     /**
      *  indicates whether the thumbnail was changed.

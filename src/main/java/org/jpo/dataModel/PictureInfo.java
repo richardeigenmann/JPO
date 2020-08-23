@@ -1,5 +1,8 @@
 package org.jpo.dataModel;
 
+import com.google.common.hash.HashCode;
+import com.google.common.hash.Hashing;
+import com.google.common.io.Files;
 import org.apache.commons.text.StringEscapeUtils;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
@@ -17,7 +20,7 @@ import java.util.logging.Logger;
 /*
  PictureInfo.java:  the definitions for picture data
 
- Copyright (C) 2002-2019  Richard Eigenmann.
+ Copyright (C) 2002-2020  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -99,7 +102,7 @@ public class PictureInfo implements Serializable {
      * to a new location we don't want to write the URLs of the original
      * pictures whilst all other attributes are retained.
      *
-     * @param out     The Buffered Writer receiving the xml data
+     * @param out The Buffered Writer receiving the xml data
      * @throws IOException If there was an IO error
      */
     public void dumpToXml(BufferedWriter out)
@@ -305,7 +308,7 @@ public class PictureInfo implements Serializable {
 
 
     /**
-     * Sets the image location
+     * Sets the image location. Why does it not send a sendImageLocationChangedEvent?
      *
      * @param file The new file of the picture.
      */
@@ -315,6 +318,7 @@ public class PictureInfo implements Serializable {
     }
 
     private String myImageLocation = "";
+
     /**
      * Appends the text to the field (used by XML parser).
      *
@@ -352,6 +356,11 @@ public class PictureInfo implements Serializable {
     private long checksum = Long.MIN_VALUE;
 
     /**
+     * the hasch code of the contents of the file. We use SHA-256 here in 2020.
+     */
+    private HashCode fileHash = null;
+
+    /**
      * Returns the value of the checksum or Long.MIN_VALUE if it is not set.
      *
      * @return the Checksum
@@ -359,6 +368,29 @@ public class PictureInfo implements Serializable {
     public synchronized long getChecksum() {
         return checksum;
     }
+
+    /**
+     * Returns the SHA-256 of the contents of the file
+     *
+     * @return the SHA-256 of the image file or null if not calculated
+     */
+    public synchronized HashCode getFileHash() {
+        return fileHash;
+    }
+
+    /**
+     * Returns the SHA-256 of the contents of the file as a String
+     *
+     * @return the SHA-256 of the image file or "N/A" if not available
+     */
+    public synchronized String getFileHashAsString() {
+        if ( fileHash != null ) {
+            return fileHash.toString().toUpperCase();
+        } else {
+            return "N/A";
+        }
+    }
+
 
     /**
      * returns the value of the checksum or the text "N/A" if not defined.
@@ -384,7 +416,7 @@ public class PictureInfo implements Serializable {
     }
 
     /**
-     * calculates the Adler32 checksum of the current picture.
+     * calculates the Adler32 checksum of the current picture and sets the checksum and sends a PictureInfoChangedEvent
      */
     public synchronized void calculateChecksum() {
         try (
@@ -395,9 +427,39 @@ public class PictureInfo implements Serializable {
             LOGGER.log(Level.FINE, "Checksum is: {0}", Long.toString(checksum));
             sendChecksumChangedEvent();
         } catch (IOException e) {
-            LOGGER.severe("Leaving Checksum unchanged. Exception reads: " + e.getMessage());
+            LOGGER.severe("Failed to calculate Adler32 checksum. Exception reads: " + e.getMessage());
         }
     }
+
+    /**
+     * calculates the SHA-256 hash of the picture.
+     */
+    public HashCode calculateSha256() throws IOException {
+        HashCode hash = Files.asByteSource(getImageFile()).hash(Hashing.sha256());
+        LOGGER.fine(String.format("SHA-256 of file %s is %s", getImageFile().toString(), hash.toString().toUpperCase()));
+        return hash;
+    }
+
+    /**
+     * calculates the SHA-256 hash of the picture and saves it to the fileHash member
+     * variable. If the value changes it sends a PictureInfoChangedEvent
+     */
+    public synchronized void setSha256()  {
+        try {
+            HashCode newHash = calculateSha256();
+            if ( fileHash != newHash ) {
+                fileHash = newHash;
+                sendFileHashChangedEvent();
+            }
+        } catch (IOException e) {
+            LOGGER.severe("Could not create SHA-256 code: " + e.getMessage());
+            if (fileHash != null) {
+                fileHash = null;
+                sendFileHashChangedEvent();
+            }
+        }
+    }
+
 
     /**
      * Creates a PictureChangedEvent and sends it to inform listening objects
@@ -411,6 +473,20 @@ public class PictureInfo implements Serializable {
             Settings.getPictureCollection().setUnsavedUpdates();
         }
     }
+
+    /**
+     * Creates a PictureChangedEvent and sends it to inform listening objects
+     * that the fileHash was updated.
+     */
+    private void sendFileHashChangedEvent() {
+        if (Settings.getPictureCollection().getSendModelUpdates()) {
+            PictureInfoChangeEvent pce = new PictureInfoChangeEvent(this);
+            pce.setFileHashChanged();
+            sendPictureInfoChangedEvent(pce);
+            Settings.getPictureCollection().setUnsavedUpdates();
+        }
+    }
+
 
     /**
      * Temporary variable to allow appending of characters as the XML file is
@@ -762,13 +838,14 @@ public class PictureInfo implements Serializable {
 
     /**
      * Appends the text fragment to the rotation field.
+     * does not sent a rotationChangedEvent as the rotation has not yet been parsed
      *
      * @param s Text fragment
      */
     public synchronized void appendToRotation(String s) {
         if (s.length() > 0) {
             rotationString = rotationString.concat(s);
-            sendRotationChangedEvent();
+            //sendRotationChangedEvent();
         }
     }
 
@@ -778,9 +855,9 @@ public class PictureInfo implements Serializable {
     public synchronized void parseRotation() {
         try {
             rotation = Double.parseDouble(rotationString);
-            rotationString = null;
+            rotationString = "";
         } catch (NumberFormatException x) {
-            LOGGER.log(Level.INFO, "invalid rotation: {0} on picture: {1} --> Set to Zero", new Object[]{rotationString, getImageFile().toString()});
+            LOGGER.severe(String.format("Can't parse rotation: %s", rotationString));
             rotation = 0;
         }
         sendRotationChangedEvent();

@@ -290,6 +290,7 @@ public class JpoResources_de extends ListResourceBundle {
             {"resetLabel", "Reset"},
             {"checksumJButton", "erneuern"},
             {"checksumJLabel", "Adler32 Checksum: "},
+            {"fileHashJLabel", "SHA-256: "},
             {"parsedAs", "Entschlüsselt als: "},
             {"failedToParse", "Kann nicht als Datum entschlüsselt werden"},
             {"categoriesJLabel-2", "Kategorien:"},
