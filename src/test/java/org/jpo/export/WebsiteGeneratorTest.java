@@ -1,6 +1,6 @@
-package export;
+package org.jpo.export;
 
-import org.jpo.export.WebsiteGenerator;
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.File;
@@ -10,27 +10,8 @@ import java.nio.file.Path;
 
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
-/*
- Copyright (C) 2018 - 2018  Richard Eigenmann, Zurich, Switzerland
- This program is free software; you can redistribute it and/or
- modify it under the terms of the GNU General Public License
- as published by the Free Software Foundation; either version 2
- of the License, or any later version. This program is distributed
- in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- without even the implied warranty of MERCHANTABILITY or FITNESS
- FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
- more details. You should have received a copy of the GNU General Public License
- along with this program; if not, write to the Free Software
- Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
- The license is in gpl.txt.
- See http://www.gnu.org/copyleft/gpl.html for the details.
- */
-/**
- *
- * @author Richard Eigenmann
- */
 public class WebsiteGeneratorTest {
 
     /**
@@ -93,6 +74,12 @@ public class WebsiteGeneratorTest {
         } catch ( IOException ex ) {
             fail( "Was not supposed to fail with the following Exception: " + ex.getMessage() );
         }
+    }
+
+    @Test
+    public void getFilenameRoot() {
+        String root = WebsiteGenerator.getFilenameRoot("gaga.txt");
+        Assert.assertEquals("gaga", root);
     }
 
 }

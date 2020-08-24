@@ -7,7 +7,7 @@ import java.util.logging.Logger;
 /*
  ListNavigator.java:  an implementation of the NodeNavigator for browsing pictures.
 
- Copyright (C) 2006-2018 Richard Eigenmann, Zürich, Switzerland
+ Copyright (C) 2006-2020 Richard Eigenmann, Zürich, Switzerland
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -53,12 +53,7 @@ public class ListNavigator
      */
     @Override
     public int getNumberOfNodes() {
-        try {
-            return allPictures.size();
-        } catch (NullPointerException ex) {
-            LOGGER.severe(String.format("Why did we get a NullPointerExecption for the ListNavigator %s?", getTitle()));
-            return 0;
-        }
+        return allPictures.size();
     }
 
     /**
@@ -70,11 +65,7 @@ public class ListNavigator
      */
     @Override
     public SortableDefaultMutableTreeNode getNode(int index) {
-        try {
-            return allPictures.get(index);
-        } catch (IndexOutOfBoundsException x) {
-            return null;
-        }
+        return allPictures.get(index);
     }
 
     /**
@@ -112,11 +103,11 @@ public class ListNavigator
 
     /**
      * Celars all nodes from the List
-     *
      */
     public void clear() {
         allPictures.clear();
     }
+
     /**
      * Returns a description of the navigator
      *

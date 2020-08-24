@@ -1,7 +1,6 @@
-package export;
+package org.jpo.export;
 
 import org.jpo.eventbus.GenerateWebsiteRequest;
-import org.jpo.export.GenerateWebsiteWizard1Welcome;
 import org.junit.Assert;
 import org.junit.Test;
 
