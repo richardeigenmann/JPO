@@ -8,7 +8,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
 /*
- Copyright (C) 2017  Richard Eigenmann.
+ Copyright (C) 2017-2020  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -49,26 +49,26 @@ public class GroupSelectionEventTest {
         final GroupInfo groupInfo = new GroupInfo( "Empty Group" );
         final SortableDefaultMutableTreeNode node = new SortableDefaultMutableTreeNode( groupInfo );
 
-        GroupSelectionEvent myGroupSelectionEvent = new GroupSelectionEvent( node );
-        jpoEventBus.post( myGroupSelectionEvent );
+        GroupSelectionEvent newEvent = new GroupSelectionEvent( node );
+        jpoEventBus.post( newEvent );
         assertEquals( "After firing a GroupSelectionEvent we expect it to be received by the listener",
-                myGroupSelectionEvent, responseEvent );
-        assertEquals( node, responseEvent.getNode() );
+                newEvent, receivedEvent);
+        assertEquals( node, receivedEvent.getNode() );
     }
 
     /**
      * Receives the event.
      */
-    private GroupSelectionEvent responseEvent;
+    private GroupSelectionEvent receivedEvent;
 
     /**
-     * Subscribes to the vent.
+     * Subscribes to the event.
      */
     private class EventBusSubscriber {
 
         @Subscribe
         public void handleGroupSelectionEvent( GroupSelectionEvent event ) {
-            responseEvent = event;
+            receivedEvent = event;
         }
     }
 
