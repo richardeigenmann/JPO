@@ -5,8 +5,8 @@ import net.javaprog.ui.wizard.WizardModel;
 import net.javaprog.ui.wizard.WizardModelEvent;
 import net.javaprog.ui.wizard.WizardModelListener;
 import net.miginfocom.swing.MigLayout;
-import org.jpo.dataModel.NodeStatistics;
-import org.jpo.dataModel.SortableDefaultMutableTreeNode;
+import org.jpo.datamodel.NodeStatistics;
+import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 
 import javax.swing.*;
 import java.awt.*;

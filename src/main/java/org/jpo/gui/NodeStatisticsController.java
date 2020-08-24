@@ -1,10 +1,10 @@
 package org.jpo.gui;
 
 import org.jpo.cache.ThumbnailCreationQueue;
-import org.jpo.dataModel.NodeStatistics;
-import org.jpo.dataModel.NodeStatisticsBean;
-import org.jpo.dataModel.Settings;
-import org.jpo.dataModel.Tools;
+import org.jpo.datamodel.NodeStatistics;
+import org.jpo.datamodel.NodeStatisticsBean;
+import org.jpo.datamodel.Settings;
+import org.jpo.datamodel.Tools;
 import org.jpo.gui.swing.NodeStatisticsPanel;
 
 import javax.swing.*;

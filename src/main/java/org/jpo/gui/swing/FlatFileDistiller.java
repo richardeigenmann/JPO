@@ -1,7 +1,7 @@
 package org.jpo.gui.swing;
 
-import org.jpo.eventBus.ExportGroupToFlatFileRequest;
-import org.jpo.dataModel.*;
+import org.jpo.eventbus.ExportGroupToFlatFileRequest;
+import org.jpo.datamodel.*;
 import org.jpo.gui.swing.FlatFileDistiller.DistillerResult;
 
 import javax.swing.*;

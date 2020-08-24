@@ -1,10 +1,10 @@
 package org.jpo.gui;
 
-import org.jpo.dataModel.Camera;
-import org.jpo.dataModel.Settings;
-import org.jpo.dataModel.Settings.FieldCodes;
-import org.jpo.dataModel.SortableDefaultMutableTreeNode;
-import org.jpo.dataModel.Tools;
+import org.jpo.datamodel.Camera;
+import org.jpo.datamodel.Settings;
+import org.jpo.datamodel.Settings.FieldCodes;
+import org.jpo.datamodel.SortableDefaultMutableTreeNode;
+import org.jpo.datamodel.Tools;
 
 import javax.swing.tree.TreeModel;
 import java.awt.*;

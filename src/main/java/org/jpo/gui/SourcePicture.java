@@ -3,8 +3,8 @@ package org.jpo.gui;
 import org.jetbrains.annotations.TestOnly;
 import org.jpo.cache.ImageBytes;
 import org.jpo.cache.JpoCache;
-import org.jpo.dataModel.Settings;
-import org.jpo.dataModel.Tools;
+import org.jpo.datamodel.Settings;
+import org.jpo.datamodel.Tools;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;

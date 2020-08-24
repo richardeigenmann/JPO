@@ -2,8 +2,8 @@ package org.jpo.export;
 
 import net.javaprog.ui.wizard.AbstractStep;
 import net.miginfocom.swing.MigLayout;
-import org.jpo.eventBus.GenerateWebsiteRequest;
-import org.jpo.dataModel.Settings;
+import org.jpo.eventbus.GenerateWebsiteRequest;
+import org.jpo.datamodel.Settings;
 
 import javax.swing.*;
 

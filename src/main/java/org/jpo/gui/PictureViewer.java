@@ -1,11 +1,11 @@
 package org.jpo.gui;
 
-import org.jpo.eventBus.JpoEventBus;
-import org.jpo.eventBus.RotatePictureRequest;
-import org.jpo.eventBus.ShowAutoAdvanceDialogRequest;
-import org.jpo.eventBus.ShowPicturePopUpMenuRequest;
+import org.jpo.eventbus.JpoEventBus;
+import org.jpo.eventbus.RotatePictureRequest;
+import org.jpo.eventbus.ShowAutoAdvanceDialogRequest;
+import org.jpo.eventbus.ShowPicturePopUpMenuRequest;
 import org.jpo.cache.QUEUE_PRIORITY;
-import org.jpo.dataModel.*;
+import org.jpo.datamodel.*;
 import org.jpo.gui.ScalablePicture.ScalablePictureStatus;
 import org.jpo.gui.SourcePicture.SourcePictureStatus;
 import org.jpo.gui.swing.ChangeWindowPopupMenu;

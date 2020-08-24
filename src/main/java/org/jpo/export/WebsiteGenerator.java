@@ -6,8 +6,8 @@ import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPReply;
 import org.apache.commons.text.StringEscapeUtils;
-import org.jpo.eventBus.GenerateWebsiteRequest;
-import org.jpo.dataModel.*;
+import org.jpo.eventbus.GenerateWebsiteRequest;
+import org.jpo.datamodel.*;
 import org.jpo.gui.ProgressGui;
 import org.jpo.gui.ScalablePicture;
 

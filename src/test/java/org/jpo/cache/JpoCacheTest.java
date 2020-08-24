@@ -1,6 +1,6 @@
 package org.jpo.cache;
 
-import org.jpo.dataModel.Settings;
+import org.jpo.datamodel.Settings;
 import org.junit.Test;
 
 import java.util.Objects;

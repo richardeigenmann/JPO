@@ -1,9 +1,9 @@
 package org.jpo.gui;
 
 import net.miginfocom.swing.MigLayout;
-import org.jpo.dataModel.ListNavigator;
-import org.jpo.dataModel.Settings;
-import org.jpo.dataModel.SortableDefaultMutableTreeNode;
+import org.jpo.datamodel.ListNavigator;
+import org.jpo.datamodel.Settings;
+import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 import org.jpo.gui.swing.Thumbnail;
 import org.jpo.gui.swing.WholeNumberField;
 

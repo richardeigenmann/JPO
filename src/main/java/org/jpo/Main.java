@@ -1,8 +1,8 @@
 package org.jpo;
 
-import org.jpo.eventBus.ApplicationStartupRequest;
-import org.jpo.eventBus.JpoEventBus;
-import org.jpo.dataModel.Settings;
+import org.jpo.eventbus.ApplicationStartupRequest;
+import org.jpo.eventbus.JpoEventBus;
+import org.jpo.datamodel.Settings;
 import org.jpo.gui.ApplicationEventHandler;
 
 import javax.swing.*;

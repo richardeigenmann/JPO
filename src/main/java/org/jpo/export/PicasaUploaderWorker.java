@@ -5,9 +5,9 @@ import com.google.gdata.data.media.MediaFileSource;
 import com.google.gdata.data.photos.AlbumEntry;
 import com.google.gdata.data.photos.PhotoEntry;
 import com.google.gdata.util.ServiceException;
-import org.jpo.dataModel.GroupInfo;
-import org.jpo.dataModel.PictureInfo;
-import org.jpo.dataModel.SortableDefaultMutableTreeNode;
+import org.jpo.datamodel.GroupInfo;
+import org.jpo.datamodel.PictureInfo;
+import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 
 import javax.swing.*;
 import java.io.IOException;

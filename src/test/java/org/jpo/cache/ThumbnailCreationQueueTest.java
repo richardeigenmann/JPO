@@ -1,6 +1,6 @@
 package org.jpo.cache;
 
-import org.jpo.dataModel.SortableDefaultMutableTreeNode;
+import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 import org.junit.Assert;
 import org.junit.Test;
 

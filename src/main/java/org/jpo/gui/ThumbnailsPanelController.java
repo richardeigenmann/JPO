@@ -1,11 +1,11 @@
 package org.jpo.gui;
 
 import com.google.common.eventbus.Subscribe;
-import org.jpo.eventBus.JpoEventBus;
-import org.jpo.eventBus.ShowGroupPopUpMenuRequest;
-import org.jpo.eventBus.ShowGroupRequest;
-import org.jpo.eventBus.ShowQueryRequest;
-import org.jpo.dataModel.*;
+import org.jpo.eventbus.JpoEventBus;
+import org.jpo.eventbus.ShowGroupPopUpMenuRequest;
+import org.jpo.eventbus.ShowGroupRequest;
+import org.jpo.eventbus.ShowQueryRequest;
+import org.jpo.datamodel.*;
 import org.jpo.gui.swing.Thumbnail;
 import org.jpo.gui.swing.ThumbnailPanelTitle;
 

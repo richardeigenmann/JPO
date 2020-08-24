@@ -1,5 +1,5 @@
-import org.jpo.eventBus.CloseApplicationRequest;
-import org.jpo.eventBus.JpoEventBus;
+import org.jpo.eventbus.CloseApplicationRequest;
+import org.jpo.eventbus.JpoEventBus;
 import org.jpo.Main;
 import org.junit.Ignore;
 import org.junit.Test;

@@ -1,7 +1,7 @@
 package org.jpo.gui.swing;
 
-import org.jpo.dataModel.Category;
-import org.jpo.dataModel.Settings;
+import org.jpo.datamodel.Category;
+import org.jpo.datamodel.Settings;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;

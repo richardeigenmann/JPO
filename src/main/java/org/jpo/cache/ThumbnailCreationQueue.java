@@ -1,7 +1,7 @@
 package org.jpo.cache;
 
 import org.jpo.cache.QUEUE_PRIORITY;
-import org.jpo.dataModel.SortableDefaultMutableTreeNode;
+import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 
 import java.awt.*;
 import java.util.Iterator;

@@ -1,6 +1,6 @@
 package org.jpo.gui;
 
-import org.jpo.dataModel.NodeNavigatorInterface;
+import org.jpo.datamodel.NodeNavigatorInterface;
 
 /**
  *

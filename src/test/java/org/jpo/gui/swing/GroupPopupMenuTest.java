@@ -1,7 +1,7 @@
 package org.jpo.gui.swing;
 
-import org.jpo.dataModel.GroupInfo;
-import org.jpo.dataModel.SortableDefaultMutableTreeNode;
+import org.jpo.datamodel.GroupInfo;
+import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 import org.junit.Before;
 import org.junit.Test;
 

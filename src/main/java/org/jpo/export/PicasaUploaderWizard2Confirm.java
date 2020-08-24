@@ -2,9 +2,9 @@ package org.jpo.export;
 
 import net.javaprog.ui.wizard.AbstractStep;
 import net.miginfocom.swing.MigLayout;
-import org.jpo.dataModel.GroupInfo;
-import org.jpo.dataModel.NodeStatistics;
-import org.jpo.dataModel.SortableDefaultMutableTreeNode;
+import org.jpo.datamodel.GroupInfo;
+import org.jpo.datamodel.NodeStatistics;
+import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 
 import javax.swing.*;
 

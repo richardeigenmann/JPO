@@ -1,11 +1,11 @@
 package org.jpo.gui;
 
 import net.miginfocom.swing.MigLayout;
-import org.jpo.eventBus.ShowCategoryUsageEditorRequest;
-import org.jpo.dataModel.Category;
-import org.jpo.dataModel.PictureInfo;
-import org.jpo.dataModel.Settings;
-import org.jpo.dataModel.SortableDefaultMutableTreeNode;
+import org.jpo.eventbus.ShowCategoryUsageEditorRequest;
+import org.jpo.datamodel.Category;
+import org.jpo.datamodel.PictureInfo;
+import org.jpo.datamodel.Settings;
+import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 import org.jpo.gui.swing.CategoryJScrollPane;
 
 import javax.swing.*;

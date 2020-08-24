@@ -1,6 +1,6 @@
 package org.jpo.gui.swing;
 
-import org.jpo.dataModel.Settings;
+import org.jpo.datamodel.Settings;
 import org.jpo.gui.ChangeWindowInterface;
 
 import javax.swing.*;

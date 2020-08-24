@@ -2,9 +2,9 @@ package org.jpo.gui.swing;
 
 import net.miginfocom.swing.MigLayout;
 import org.jetbrains.annotations.TestOnly;
-import org.jpo.eventBus.JpoEventBus;
-import org.jpo.eventBus.SetPictureRotationRequest;
-import org.jpo.dataModel.*;
+import org.jpo.eventbus.JpoEventBus;
+import org.jpo.eventbus.SetPictureRotationRequest;
+import org.jpo.datamodel.*;
 import org.jpo.gui.CategoryEditorJFrame;
 import org.jpo.gui.ImageFilter;
 import org.jpo.gui.ThumbnailController;

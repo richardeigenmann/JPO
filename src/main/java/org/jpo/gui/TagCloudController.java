@@ -1,13 +1,13 @@
 package org.jpo.gui;
 
 import com.google.common.eventbus.Subscribe;
-import org.jpo.eventBus.JpoEventBus;
-import org.jpo.eventBus.ShowGroupRequest;
-import org.jpo.eventBus.ShowQueryRequest;
-import org.jpo.dataModel.PictureInfo;
-import org.jpo.dataModel.Settings;
-import org.jpo.dataModel.SortableDefaultMutableTreeNode;
-import org.jpo.dataModel.TextQuery;
+import org.jpo.eventbus.JpoEventBus;
+import org.jpo.eventbus.ShowGroupRequest;
+import org.jpo.eventbus.ShowQueryRequest;
+import org.jpo.datamodel.PictureInfo;
+import org.jpo.datamodel.Settings;
+import org.jpo.datamodel.SortableDefaultMutableTreeNode;
+import org.jpo.datamodel.TextQuery;
 import org.tagcloud.TagClickListener;
 import org.tagcloud.TagCloud;
 import org.tagcloud.WeightedWord;

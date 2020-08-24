@@ -1,8 +1,8 @@
 package org.jpo.gui;
 
 import net.miginfocom.swing.MigLayout;
-import org.jpo.dataModel.Camera;
-import org.jpo.dataModel.Settings;
+import org.jpo.datamodel.Camera;
+import org.jpo.datamodel.Settings;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

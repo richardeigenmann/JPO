@@ -17,11 +17,11 @@ package org.jpo.gui;
  */
 
 import net.miginfocom.swing.MigLayout;
-import org.jpo.eventBus.JpoEventBus;
-import org.jpo.eventBus.LocaleChangedEvent;
-import org.jpo.eventBus.UserFunctionsChangedEvent;
+import org.jpo.eventbus.JpoEventBus;
+import org.jpo.eventbus.LocaleChangedEvent;
+import org.jpo.eventbus.UserFunctionsChangedEvent;
 import org.jpo.cache.JpoCache;
-import org.jpo.dataModel.Settings;
+import org.jpo.datamodel.Settings;
 import org.jpo.gui.swing.WholeNumberField;
 
 import javax.swing.*;

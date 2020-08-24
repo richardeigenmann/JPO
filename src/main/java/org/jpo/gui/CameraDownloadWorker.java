@@ -1,9 +1,9 @@
 package org.jpo.gui;
 
-import org.jpo.eventBus.*;
+import org.jpo.eventbus.*;
 import org.jpo.cache.QUEUE_PRIORITY;
-import org.jpo.dataModel.Settings;
-import org.jpo.dataModel.SortableDefaultMutableTreeNode;
+import org.jpo.datamodel.Settings;
+import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 
 import javax.swing.*;
 import java.util.ArrayList;

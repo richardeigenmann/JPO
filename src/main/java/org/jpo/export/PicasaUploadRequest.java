@@ -1,7 +1,7 @@
 package org.jpo.export;
 
 import com.google.gdata.client.photos.PicasawebService;
-import org.jpo.dataModel.SortableDefaultMutableTreeNode;
+import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 
 /*
  * Copyright (C) 2012-2019 RichardEigenmann.

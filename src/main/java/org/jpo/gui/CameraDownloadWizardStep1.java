@@ -1,8 +1,8 @@
 package org.jpo.gui;
 
 import net.javaprog.ui.wizard.AbstractStep;
-import org.jpo.dataModel.Settings;
-import org.jpo.dataModel.Tools;
+import org.jpo.datamodel.Settings;
+import org.jpo.datamodel.Tools;
 
 import javax.swing.*;
 import java.util.logging.Level;

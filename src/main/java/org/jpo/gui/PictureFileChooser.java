@@ -1,11 +1,11 @@
 package org.jpo.gui;
 
-import org.jpo.eventBus.CopyLocationsChangedEvent;
-import org.jpo.eventBus.JpoEventBus;
-import org.jpo.dataModel.GroupInfo;
-import org.jpo.dataModel.Settings;
-import org.jpo.dataModel.SortableDefaultMutableTreeNode;
-import org.jpo.dataModel.Tools;
+import org.jpo.eventbus.CopyLocationsChangedEvent;
+import org.jpo.eventbus.JpoEventBus;
+import org.jpo.datamodel.GroupInfo;
+import org.jpo.datamodel.Settings;
+import org.jpo.datamodel.SortableDefaultMutableTreeNode;
+import org.jpo.datamodel.Tools;
 import org.jpo.gui.swing.CategoryJScrollPane;
 
 import javax.swing.*;

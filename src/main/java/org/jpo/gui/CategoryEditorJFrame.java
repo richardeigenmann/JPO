@@ -1,10 +1,10 @@
 package org.jpo.gui;
 
 import net.miginfocom.swing.MigLayout;
-import org.jpo.dataModel.Category;
-import org.jpo.dataModel.PictureCollection;
-import org.jpo.dataModel.Settings;
-import org.jpo.dataModel.Tools;
+import org.jpo.datamodel.Category;
+import org.jpo.datamodel.PictureCollection;
+import org.jpo.datamodel.Settings;
+import org.jpo.datamodel.Tools;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;

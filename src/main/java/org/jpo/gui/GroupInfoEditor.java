@@ -1,10 +1,10 @@
 package org.jpo.gui;
 
 import net.miginfocom.swing.MigLayout;
-import org.jpo.dataModel.GroupInfo;
-import org.jpo.dataModel.Settings;
-import org.jpo.dataModel.SingleNodeNavigator;
-import org.jpo.dataModel.SortableDefaultMutableTreeNode;
+import org.jpo.datamodel.GroupInfo;
+import org.jpo.datamodel.Settings;
+import org.jpo.datamodel.SingleNodeNavigator;
+import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 import org.jpo.gui.swing.Thumbnail;
 
 import javax.swing.*;

@@ -1,7 +1,7 @@
 package org.jpo.export;
 
-import org.jpo.eventBus.GenerateWebsiteRequest;
-import org.jpo.dataModel.Settings;
+import org.jpo.eventbus.GenerateWebsiteRequest;
+import org.jpo.datamodel.Settings;
 
 import java.io.File;
 

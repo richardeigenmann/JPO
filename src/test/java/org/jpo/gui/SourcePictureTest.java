@@ -1,6 +1,6 @@
 package org.jpo.gui;
 
-import org.jpo.dataModel.Settings;
+import org.jpo.datamodel.Settings;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;

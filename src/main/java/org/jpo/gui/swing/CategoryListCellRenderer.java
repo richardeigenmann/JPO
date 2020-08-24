@@ -1,6 +1,6 @@
 package org.jpo.gui.swing;
 
-import org.jpo.dataModel.Category;
+import org.jpo.datamodel.Category;
 
 import javax.swing.*;
 import java.awt.*;

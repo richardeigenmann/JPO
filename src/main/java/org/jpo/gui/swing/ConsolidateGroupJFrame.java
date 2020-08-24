@@ -1,7 +1,7 @@
 package org.jpo.gui.swing;
 
 import net.miginfocom.swing.MigLayout;
-import org.jpo.dataModel.Settings;
+import org.jpo.datamodel.Settings;
 import org.jpo.gui.ConsolidateGroupActionCallback;
 import org.jpo.gui.DirectoryChooser;
 

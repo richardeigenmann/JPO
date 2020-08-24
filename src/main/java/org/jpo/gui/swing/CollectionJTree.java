@@ -1,10 +1,10 @@
 package org.jpo.gui.swing;
 
 import org.jetbrains.annotations.TestOnly;
-import org.jpo.dataModel.GroupInfo;
-import org.jpo.dataModel.PictureInfo;
-import org.jpo.dataModel.Settings;
-import org.jpo.dataModel.Tools;
+import org.jpo.datamodel.GroupInfo;
+import org.jpo.datamodel.PictureInfo;
+import org.jpo.datamodel.Settings;
+import org.jpo.datamodel.Tools;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;

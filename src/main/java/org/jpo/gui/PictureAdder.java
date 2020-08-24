@@ -1,9 +1,9 @@
 package org.jpo.gui;
 
-import org.jpo.dataModel.GroupInfo;
-import org.jpo.dataModel.Settings;
-import org.jpo.dataModel.SortableDefaultMutableTreeNode;
-import org.jpo.dataModel.Tools;
+import org.jpo.datamodel.GroupInfo;
+import org.jpo.datamodel.Settings;
+import org.jpo.datamodel.SortableDefaultMutableTreeNode;
+import org.jpo.datamodel.Tools;
 
 import javax.swing.*;
 import java.io.File;

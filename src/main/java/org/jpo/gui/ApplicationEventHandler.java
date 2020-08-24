@@ -5,12 +5,12 @@ import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
 import org.apache.commons.compress.archivers.zip.ZipFile;
 import org.checkerframework.checker.nullness.qual.NonNull;
-import org.jpo.eventBus.*;
+import org.jpo.eventbus.*;
 import org.jpo.cache.JpoCache;
 import org.jpo.cache.ThumbnailCreationFactory;
 import org.jpo.cache.QUEUE_PRIORITY;
-import org.jpo.dataModel.*;
-import org.jpo.dataModel.Settings.FieldCodes;
+import org.jpo.datamodel.*;
+import org.jpo.datamodel.Settings.FieldCodes;
 import org.jpo.export.GenerateWebsiteWizard;
 import org.jpo.export.PicasaUploadRequest;
 import org.jpo.export.PicasaUploaderWizard;
@@ -602,7 +602,7 @@ public class ApplicationEventHandler {
     }
 
     /**
-     * Calls the {@link org.jpo.dataModel.PictureCollection#fileSave} method that
+     * Calls the {@link org.jpo.datamodel.PictureCollection#fileSave} method that
      * saves the current collection under it's present name and if it was never
      * saved before brings up a popup window.
      *

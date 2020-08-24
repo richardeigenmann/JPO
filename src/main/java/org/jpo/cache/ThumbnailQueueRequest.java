@@ -1,6 +1,6 @@
 package org.jpo.cache;
 
-import org.jpo.dataModel.SortableDefaultMutableTreeNode;
+import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 
 import javax.swing.*;
 import java.awt.*;

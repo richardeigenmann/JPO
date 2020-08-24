@@ -2,8 +2,8 @@ package org.jpo.gui;
 
 import com.google.common.eventbus.Subscribe;
 import org.apache.commons.io.FileUtils;
-import org.jpo.eventBus.*;
-import org.jpo.dataModel.*;
+import org.jpo.eventbus.*;
+import org.jpo.datamodel.*;
 import org.jpo.gui.swing.CollectionJTree;
 
 import javax.swing.*;

@@ -1,12 +1,12 @@
 package org.jpo.gui.swing;
 
 import com.google.common.eventbus.Subscribe;
-import org.jpo.eventBus.*;
+import org.jpo.eventbus.*;
 import org.jpo.cache.QUEUE_PRIORITY;
-import org.jpo.dataModel.Settings;
-import org.jpo.dataModel.SortOption;
-import org.jpo.dataModel.SortableDefaultMutableTreeNode;
-import org.jpo.dataModel.Tools;
+import org.jpo.datamodel.Settings;
+import org.jpo.datamodel.SortOption;
+import org.jpo.datamodel.SortableDefaultMutableTreeNode;
+import org.jpo.datamodel.Tools;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

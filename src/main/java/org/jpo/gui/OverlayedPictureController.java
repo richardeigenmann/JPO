@@ -1,8 +1,8 @@
 package org.jpo.gui;
 
-import org.jpo.dataModel.ExifInfo;
-import org.jpo.dataModel.Settings;
-import org.jpo.dataModel.Tools;
+import org.jpo.datamodel.ExifInfo;
+import org.jpo.datamodel.Settings;
+import org.jpo.datamodel.Tools;
 import org.jpo.gui.swing.PictureController;
 
 import java.awt.*;

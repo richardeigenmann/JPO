@@ -1,8 +1,8 @@
 package org.jpo.gui;
 
 import org.jetbrains.annotations.NotNull;
-import org.jpo.dataModel.PictureInfo;
-import org.jpo.dataModel.SortableDefaultMutableTreeNode;
+import org.jpo.datamodel.PictureInfo;
+import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 
 import java.awt.datatransfer.*;
 import java.io.File;

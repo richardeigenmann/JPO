@@ -1,7 +1,7 @@
 package org.jpo.gui;
 
 import junit.framework.TestCase;
-import org.jpo.dataModel.PictureCollection;
+import org.jpo.datamodel.PictureCollection;
 import org.junit.Assert;
 import org.junit.Test;
 

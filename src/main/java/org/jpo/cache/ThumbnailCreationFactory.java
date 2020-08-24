@@ -1,8 +1,8 @@
 package org.jpo.cache;
 
-import org.jpo.dataModel.GroupInfo;
-import org.jpo.dataModel.PictureInfo;
-import org.jpo.dataModel.SortableDefaultMutableTreeNode;
+import org.jpo.datamodel.GroupInfo;
+import org.jpo.datamodel.PictureInfo;
+import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 
 import javax.swing.*;
 import java.io.IOException;

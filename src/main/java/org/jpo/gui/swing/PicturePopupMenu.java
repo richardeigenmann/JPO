@@ -2,9 +2,9 @@ package org.jpo.gui.swing;
 
 import com.google.common.eventbus.Subscribe;
 import org.checkerframework.checker.nullness.qual.NonNull;
-import org.jpo.eventBus.*;
+import org.jpo.eventbus.*;
 import org.jpo.cache.QUEUE_PRIORITY;
-import org.jpo.dataModel.*;
+import org.jpo.datamodel.*;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

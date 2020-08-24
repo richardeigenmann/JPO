@@ -6,8 +6,8 @@ import net.miginfocom.swing.MigLayout;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPReply;
-import org.jpo.eventBus.GenerateWebsiteRequest;
-import org.jpo.dataModel.Settings;
+import org.jpo.eventbus.GenerateWebsiteRequest;
+import org.jpo.datamodel.Settings;
 import org.jpo.gui.DirectoryChooser;
 
 import javax.swing.*;
@@ -24,7 +24,7 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static org.jpo.eventBus.GenerateWebsiteRequest.OutputTarget.*;
+import static org.jpo.eventbus.GenerateWebsiteRequest.OutputTarget.*;
 
 /*
  Copyright (C) 2008-2017  Richard Eigenmann.

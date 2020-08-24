@@ -1,8 +1,8 @@
 package org.jpo.gui.swing;
 
 import net.miginfocom.swing.MigLayout;
-import org.jpo.dataModel.Settings;
-import org.jpo.dataModel.Tools;
+import org.jpo.datamodel.Settings;
+import org.jpo.datamodel.Tools;
 import org.jpo.gui.OverlayedPictureController;
 import org.jpo.gui.ScalablePicture;
 

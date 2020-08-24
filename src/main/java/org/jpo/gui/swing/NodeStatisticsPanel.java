@@ -1,9 +1,9 @@
 package org.jpo.gui.swing;
 
 import net.miginfocom.swing.MigLayout;
-import org.jpo.dataModel.NodeStatisticsBean;
-import org.jpo.dataModel.Settings;
-import org.jpo.dataModel.Tools;
+import org.jpo.datamodel.NodeStatisticsBean;
+import org.jpo.datamodel.Settings;
+import org.jpo.datamodel.Tools;
 
 import javax.swing.*;
 

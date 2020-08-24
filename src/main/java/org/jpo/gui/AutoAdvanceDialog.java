@@ -1,7 +1,7 @@
 package org.jpo.gui;
 
-import org.jpo.eventBus.ShowAutoAdvanceDialogRequest;
-import org.jpo.dataModel.*;
+import org.jpo.eventbus.ShowAutoAdvanceDialogRequest;
+import org.jpo.datamodel.*;
 import org.jpo.gui.swing.WholeNumberField;
 
 import javax.swing.*;

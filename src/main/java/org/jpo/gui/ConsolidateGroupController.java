@@ -1,11 +1,11 @@
 package org.jpo.gui;
 
-import org.jpo.eventBus.ConsolidateGroupDialogRequest;
-import org.jpo.eventBus.ConsolidateGroupRequest;
-import org.jpo.eventBus.CopyLocationsChangedEvent;
-import org.jpo.eventBus.JpoEventBus;
-import org.jpo.dataModel.GroupInfo;
-import org.jpo.dataModel.Settings;
+import org.jpo.eventbus.ConsolidateGroupDialogRequest;
+import org.jpo.eventbus.ConsolidateGroupRequest;
+import org.jpo.eventbus.CopyLocationsChangedEvent;
+import org.jpo.eventbus.JpoEventBus;
+import org.jpo.datamodel.GroupInfo;
+import org.jpo.datamodel.Settings;
 import org.jpo.gui.swing.ConsolidateGroupJFrame;
 
 import javax.swing.*;

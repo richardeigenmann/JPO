@@ -1,8 +1,8 @@
 package org.jpo.gui.swing;
 
 import org.jpo.cache.ThumbnailCreationQueue;
-import org.jpo.dataModel.PictureInfo;
-import org.jpo.dataModel.SortableDefaultMutableTreeNode;
+import org.jpo.datamodel.PictureInfo;
+import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 import org.junit.Test;
 
 import javax.swing.*;

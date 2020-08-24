@@ -3,7 +3,7 @@ package org.jpo.gui;
 import com.google.common.io.Files;
 import junit.framework.TestCase;
 import org.apache.commons.compress.utils.IOUtils;
-import org.jpo.dataModel.PictureInfo;
+import org.jpo.datamodel.PictureInfo;
 import org.junit.Test;
 
 import java.io.File;

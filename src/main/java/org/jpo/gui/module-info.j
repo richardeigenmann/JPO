@@ -1,5 +1,5 @@
 module org.jpo.gui {
-    //exports org.jpo.dataModel;
+    //exports org.jpo.datamodel;
 
     requires org.tagcloud;
     //requires java.desktop;
