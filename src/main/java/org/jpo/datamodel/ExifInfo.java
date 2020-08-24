@@ -53,7 +53,10 @@ public class ExifInfo {
     /**
      * The brand and model of the camera
      */
-    public String camera = "";
+    private String camera = "";
+    public String getCamera() {
+        return camera;
+    }
     /**
      * The lens used
      */

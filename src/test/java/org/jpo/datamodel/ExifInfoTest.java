@@ -48,7 +48,7 @@ public class ExifInfoTest {
         ExifInfo exifInfo = new ExifInfo( null );
         exifInfo.decodeExifTags();
         assertEquals( "Aperture parsing verification", "", exifInfo.aperture );
-        assertEquals( "Camera parsing verification", "", exifInfo.camera );
+        assertEquals( "Camera parsing verification", "", exifInfo.getCamera() );
         assertEquals( "CreateDateTime parsing verification", "", exifInfo.getCreateDateTime() );
         assertEquals( "ExifHeight parsing verification", "", exifInfo.exifHeight );
         assertEquals( "ExifWidth parsing verification", "", exifInfo.exifWidth );
@@ -80,7 +80,7 @@ public class ExifInfoTest {
         }
         exifInfo.decodeExifTags();
         assertEquals( "Aperture parsing verification", "f/11.0", exifInfo.aperture );
-        assertEquals( "Camera parsing verification", "NIKON D100", exifInfo.camera );
+        assertEquals( "Camera parsing verification", "NIKON D100", exifInfo.getCamera() );
         assertEquals( "CreateDateTime parsing verification", "2008:11:07 16:23:25", exifInfo.getCreateDateTime() );
         assertEquals( "ExifHeight parsing verification", "233 pixels", exifInfo.exifHeight );
         assertEquals( "ExifWidth parsing verification", "350 pixels", exifInfo.exifWidth );
@@ -113,7 +113,7 @@ public class ExifInfoTest {
         }
         exifInfo.decodeExifTags();
         assertEquals( "Aperture parsing verification", "f/2.2", exifInfo.aperture );
-        assertEquals( "Camera parsing verification", "GT-I9505", exifInfo.camera );
+        assertEquals( "Camera parsing verification", "GT-I9505", exifInfo.getCamera() );
         assertEquals( "CreateDateTime parsing verification", "2013:08:27 23:37:56", exifInfo.getCreateDateTime() );
         assertEquals( "ExifHeight parsing verification", "1836 pixels", exifInfo.exifHeight );
         assertEquals( "ExifWidth parsing verification", "3264 pixels", exifInfo.exifWidth );
@@ -146,7 +146,7 @@ public class ExifInfoTest {
         }
         exifInfo.decodeExifTags();
         assertEquals( "Aperture parsing verification", "f/2.2", exifInfo.aperture );
-        assertEquals( "Camera parsing verification", "GT-I9505", exifInfo.camera );
+        assertEquals( "Camera parsing verification", "GT-I9505", exifInfo.getCamera() );
         assertEquals( "CreateDateTime parsing verification", "2014:01:15 12:11:46", exifInfo.getCreateDateTime() );
         assertEquals( "ExifHeight parsing verification", "1836 pixels", exifInfo.exifHeight );
         assertEquals( "ExifWidth parsing verification", "3264 pixels", exifInfo.exifWidth );
@@ -179,7 +179,7 @@ public class ExifInfoTest {
         }
         exifInfo.decodeExifTags();
         assertEquals( "Aperture parsing verification", "", exifInfo.aperture );
-        assertEquals( "Camera parsing verification", "GT-I9505", exifInfo.camera );
+        assertEquals( "Camera parsing verification", "GT-I9505", exifInfo.getCamera() );
         assertEquals( "CreateDateTime parsing verification", "2014:04:21 09:30:13", exifInfo.getCreateDateTime() );
         assertEquals( "ExifWidth parsing verification", "2048 pixels", exifInfo.exifWidth );
         assertEquals( "ExifHeight parsing verification", "1152 pixels", exifInfo.exifHeight );
@@ -212,7 +212,7 @@ public class ExifInfoTest {
         }
         exifInfo.decodeExifTags();
         assertEquals( "Aperture parsing verification", "", exifInfo.aperture );
-        assertEquals( "Camera parsing verification", "GT-I9505", exifInfo.camera );
+        assertEquals( "Camera parsing verification", "GT-I9505", exifInfo.getCamera() );
         assertEquals( "CreateDateTime parsing verification", "2014:04:21 09:30:22", exifInfo.getCreateDateTime() );
         assertEquals( "ExifWidth parsing verification", "2048 pixels", exifInfo.exifWidth );
         assertEquals( "ExifHeight parsing verification", "1152 pixels", exifInfo.exifHeight );
@@ -245,7 +245,7 @@ public class ExifInfoTest {
         }
         exifInfo.decodeExifTags();
         assertEquals( "Aperture parsing verification", "", exifInfo.aperture );
-        assertEquals( "Camera parsing verification", "GT-I9505", exifInfo.camera );
+        assertEquals( "Camera parsing verification", "GT-I9505", exifInfo.getCamera() );
         assertEquals( "CreateDateTime parsing verification", "2014:04:21 09:30:39", exifInfo.getCreateDateTime() );
         assertEquals( "ExifWidth parsing verification", "2048 pixels", exifInfo.exifWidth );
         assertEquals( "ExifHeight parsing verification", "1152 pixels", exifInfo.exifHeight );
@@ -278,7 +278,7 @@ public class ExifInfoTest {
         }
         exifInfo.decodeExifTags();
         assertEquals( "Aperture parsing verification", "", exifInfo.aperture );
-        assertEquals( "Camera parsing verification", "GT-I9505", exifInfo.camera );
+        assertEquals( "Camera parsing verification", "GT-I9505", exifInfo.getCamera() );
         assertEquals( "CreateDateTime parsing verification", "2014:04:21 09:30:29", exifInfo.getCreateDateTime() );
         assertEquals( "ExifWidth parsing verification", "2048 pixels", exifInfo.exifWidth );
         assertEquals( "ExifHeight parsing verification", "1152 pixels", exifInfo.exifHeight );
@@ -311,7 +311,7 @@ public class ExifInfoTest {
         exifInfo.decodeExifTags();
         assertEquals( "Aperture parsing verification", "f/20.0", exifInfo.aperture );
         assertEquals( "ShutterSpeed parsing verification", "1/200 sec", exifInfo.shutterSpeed );
-        assertEquals( "Camera parsing verification", "Canon EOS 350D DIGITAL", exifInfo.camera );
+        assertEquals( "Camera parsing verification", "Canon EOS 350D DIGITAL", exifInfo.getCamera() );
         assertEquals( "CreateDateTime parsing verification", "2006:10:06 15:13:54", exifInfo.getCreateDateTime() );
         assertEquals( "ExifHeight parsing verification", "1664 pixels", exifInfo.exifHeight );
         assertEquals( "ExifWidth parsing verification", "2496 pixels", exifInfo.exifWidth );
@@ -344,7 +344,7 @@ public class ExifInfoTest {
         exifInfo.decodeExifTags();
         assertEquals( "Aperture parsing verification", "f/11.3", exifInfo.aperture );
         assertEquals( "ShutterSpeed parsing verification", "1/511 sec", exifInfo.shutterSpeed );
-        assertEquals( "Camera parsing verification", "Canon EOS 60D", exifInfo.camera );
+        assertEquals( "Camera parsing verification", "Canon EOS 60D", exifInfo.getCamera() );
         assertEquals( "CreateDateTime parsing verification", "2013:05:09 13:55:16", exifInfo.getCreateDateTime() );
         assertEquals( "ExifHeight parsing verification", "3456 pixels", exifInfo.exifHeight );
         assertEquals( "ExifWidth parsing verification", "5184 pixels", exifInfo.exifWidth );
@@ -377,7 +377,7 @@ public class ExifInfoTest {
         exifInfo.decodeExifTags();
         assertEquals( "Aperture parsing verification", "f/4.0", exifInfo.aperture );
         assertEquals( "ShutterSpeed parsing verification", "1/480 sec", exifInfo.shutterSpeed );
-        assertEquals( "Camera parsing verification", "CYBERSHOT", exifInfo.camera );
+        assertEquals( "Camera parsing verification", "CYBERSHOT", exifInfo.getCamera() );
         assertEquals( "CreateDateTime parsing verification", "2002:02:20 16:17:37", exifInfo.getCreateDateTime() );
         assertEquals( "ExifHeight parsing verification", "768 pixels", exifInfo.exifHeight );
         assertEquals( "ExifWidth parsing verification", "1024 pixels", exifInfo.exifWidth );
@@ -409,7 +409,7 @@ public class ExifInfoTest {
         exifInfo.decodeExifTags();
         assertEquals( "Aperture parsing verification", "f/2.4", exifInfo.aperture );
         assertEquals( "ShutterSpeed parsing verification", "1/32 sec", exifInfo.shutterSpeed );
-        assertEquals( "Camera parsing verification", "DSC-D700", exifInfo.camera );
+        assertEquals( "Camera parsing verification", "DSC-D700", exifInfo.getCamera() );
         assertEquals( "CreateDateTime parsing verification", "1998:12:01 14:22:36", exifInfo.getCreateDateTime() );
         assertEquals( "ExifHeight parsing verification", "512 pixels", exifInfo.exifHeight );
         assertEquals( "ExifWidth parsing verification", "672 pixels", exifInfo.exifWidth );
@@ -442,7 +442,7 @@ public class ExifInfoTest {
         //System.out.println( exifInfo.getAllTags() );
         assertEquals( "Aperture parsing verification", "f/5.6", exifInfo.aperture );
         assertEquals( "ShutterSpeed parsing verification", "1/400 sec", exifInfo.shutterSpeed );
-        assertEquals( "Camera parsing verification", "DSC-P200", exifInfo.camera );
+        assertEquals( "Camera parsing verification", "DSC-P200", exifInfo.getCamera() );
         assertEquals( "CreateDateTime parsing verification", "2013:07:04 13:44:46", exifInfo.getCreateDateTime() );
         assertEquals( "ExifHeight parsing verification", "2304 pixels", exifInfo.exifHeight );
         assertEquals( "ExifWidth parsing verification", "3072 pixels", exifInfo.exifWidth );

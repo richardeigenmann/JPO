@@ -189,7 +189,7 @@ public class OverlayedPictureController extends PictureController implements Sca
         switch ( showInfo ) {
             case PHOTOGRAPHIC_OVERLAY:
                 g2d.drawString( Settings.jpoResources.getString( "ExifInfoCamera" ), INFO_COORDINATES.x, INFO_COORDINATES.y);
-                g2d.drawString( exifInfo.camera, INFO_COORDINATES.x + TABSTOP, INFO_COORDINATES.y);
+                g2d.drawString( exifInfo.getCamera(), INFO_COORDINATES.x + TABSTOP, INFO_COORDINATES.y);
                 g2d.drawString( Settings.jpoResources.getString( "ExifInfoLens" ), INFO_COORDINATES.x, INFO_COORDINATES.y + (LINE_SPACING) );
                 g2d.drawString( exifInfo.lens, INFO_COORDINATES.x + TABSTOP, INFO_COORDINATES.y + (LINE_SPACING) );
                 g2d.drawString( Settings.jpoResources.getString( "ExifInfoShutterSpeed" ), INFO_COORDINATES.x, INFO_COORDINATES.y + ( 2 * LINE_SPACING ) );
