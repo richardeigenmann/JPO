@@ -459,7 +459,7 @@ public class PictureInfoTest {
 
     class TestPictureInfoChangeListener implements PictureInfoChangeListener {
 
-        List<PictureInfoChangeEvent> events = new ArrayList<>();
+        final List<PictureInfoChangeEvent> events = new ArrayList<>();
 
         @Override
         public void pictureInfoChangeEvent(PictureInfoChangeEvent pictureInfoChangeEvent) {
