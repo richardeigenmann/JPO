@@ -2,7 +2,7 @@ package org.jpo.datamodel;
 
 import org.jpo.eventbus.JpoEventBus;
 import org.jpo.eventbus.RemoveOldLowresThumbnailsRequest;
-import org.jpo.gui.LabelFrame;
+import org.jpo.gui.swing.LabelFrame;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 

@@ -111,6 +111,8 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
                     progGui.setMaximum(get());
                     progGui.setDoneString(String.format(Settings.jpoResources.getString("HtmlDistDone"), get()));
                 } catch (InterruptedException | ExecutionException ignore) {
+                    // Restore interrupted state...
+                    Thread.currentThread().interrupt();
                 }
             }
         }

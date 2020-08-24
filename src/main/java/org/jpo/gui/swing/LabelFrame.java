@@ -1,4 +1,4 @@
-package org.jpo.gui;
+package org.jpo.gui.swing;
 
 import org.jpo.datamodel.Settings;
 
@@ -40,7 +40,8 @@ public class LabelFrame {
             try {
                 SwingUtilities.invokeAndWait(runnable );
             } catch ( InterruptedException | InvocationTargetException ex ) {
-                // don't care
+                // Restore interrupted state...
+                Thread.currentThread().interrupt();
             }
         }
     }

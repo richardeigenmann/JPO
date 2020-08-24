@@ -182,7 +182,6 @@ public class ThumbnailDescriptionJPanel
         pictureDescriptionJTA.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
-                //super.mouseReleased(e);
                 Optional<String> oSpace = PicturePopupMenu.replaceEscapedSpaces(pictureDescriptionJTA.getText());
                 Optional<String> oUnderstore = PicturePopupMenu.replaceUnderscore(pictureDescriptionJTA.getText());
                 if (e.getButton() == BUTTON3 && (oSpace.isPresent() || oUnderstore.isPresent())) {
@@ -198,7 +197,7 @@ public class ThumbnailDescriptionJPanel
                         replaceUnderscore.addActionListener(e1 -> pictureDescriptionJTA.setText(oUnderstore.get()));
                         popupmenu.add(replaceUnderscore);
                     }
-                    if (oUnderstore.isPresent()  && oSpace.isPresent()) {
+                    if (oUnderstore.isPresent() && oSpace.isPresent()) {
                         Optional<String> spaceUnderscore = PicturePopupMenu.replaceUnderscore(oSpace.get());
                         JMenuItem replaceSpaceAndUnderscore = new JMenuItem("Replace with: " + spaceUnderscore.get());
                         replaceSpaceAndUnderscore.addActionListener(e1 -> pictureDescriptionJTA.setText(spaceUnderscore.get()));

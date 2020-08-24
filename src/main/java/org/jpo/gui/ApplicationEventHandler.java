@@ -150,6 +150,8 @@ public class ApplicationEventHandler {
             );
         } catch (InterruptedException | InvocationTargetException ex) {
             LOGGER.log(Level.SEVERE, null, ex);
+            // Restore interrupted state...
+            Thread.currentThread().interrupt();
         }
     }
 

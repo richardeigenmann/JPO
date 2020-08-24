@@ -63,6 +63,8 @@ public class GenerateWebsiteWizard1Welcome extends AbstractStep {
                 try {
                     welcomeLabel.setText( String.format( Settings.jpoResources.getString( "welcomeMsg" ), get() ) );
                 } catch ( InterruptedException | ExecutionException ignore ) {
+                    // Restore interrupted state...
+                    Thread.currentThread().interrupt();
                 }
             }
         }

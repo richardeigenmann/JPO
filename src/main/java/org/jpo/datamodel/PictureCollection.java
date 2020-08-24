@@ -19,7 +19,7 @@ import java.util.logging.Logger;
 
 
 /*
- * Copyright (C) 2006 - 2018 Richard Eigenmann, Zurich, Switzerland This program
+ * Copyright (C) 2006 - 2020 Richard Eigenmann, Zurich, Switzerland This program
  * is free software; you can redistribute it and/or modify it under the terms of
  * the GNU General Public License as published by the Free Software Foundation;
  * either version 2 of the License, or any later version. This program is
@@ -78,7 +78,8 @@ public class PictureCollection {
             try {
                 SwingUtilities.invokeAndWait(runnable);
             } catch (InterruptedException | InvocationTargetException ex) {
-                // ignore
+                // Restore interrupted state...
+                Thread.currentThread().interrupt();
             }
         }
     }

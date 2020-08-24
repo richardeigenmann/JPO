@@ -1,6 +1,6 @@
 package org.jpo.datamodel;
 
-import org.jpo.gui.LabelFrame;
+import org.jpo.gui.swing.LabelFrame;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.helpers.DefaultHandler;
