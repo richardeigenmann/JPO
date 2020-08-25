@@ -45,6 +45,7 @@ public class LeftRightButtonTest {
             } );
         } catch ( final InterruptedException | InvocationTargetException ex ) {
             fail("Failed to create a PictureFrame");
+            Thread.currentThread().interrupt();
         }
     }
 

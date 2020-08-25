@@ -131,6 +131,14 @@ public class PictureInfoTest {
         assertEquals("file:/dir/picture.jpg", highresLocation);
     }
 
+    @Test
+    public void testGetImageLocationNull() {
+        PictureInfo pi = new PictureInfo();
+        String highresLocation = pi.getImageLocation();
+        assertEquals("", highresLocation);
+    }
+
+
     /**
      * Test of getImageFile method, of class PictureInfo.
      */

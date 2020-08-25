@@ -30,6 +30,7 @@ public class PictureViewerTest {
             } );
         } catch ( final InterruptedException | InvocationTargetException ex ) {
             fail( "This test didn't work. Exception: " + ex.getMessage() );
+            Thread.currentThread().interrupt();
         }
 
     }

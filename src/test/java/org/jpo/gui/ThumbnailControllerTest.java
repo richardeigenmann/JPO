@@ -47,6 +47,7 @@ public class ThumbnailControllerTest {
             } );
         } catch ( final InterruptedException | InvocationTargetException ex ) {
             Logger.getLogger( ThumbnailControllerTest.class.getName() ).log( Level.SEVERE, null, ex );
+            Thread.currentThread().interrupt();
         }
 
     }

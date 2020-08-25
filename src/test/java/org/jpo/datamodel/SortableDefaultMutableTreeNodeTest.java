@@ -370,6 +370,7 @@ public class SortableDefaultMutableTreeNodeTest {
             });
         } catch (InterruptedException | InvocationTargetException e) {
             fail(e.getMessage());
+            Thread.currentThread().interrupt();
         }
     }
 
@@ -399,6 +400,7 @@ public class SortableDefaultMutableTreeNodeTest {
             });
         } catch (InterruptedException | InvocationTargetException e) {
             fail(e.getMessage());
+            Thread.currentThread().interrupt();
         }
     }
 
@@ -432,6 +434,7 @@ public class SortableDefaultMutableTreeNodeTest {
             });
         } catch (InterruptedException | InvocationTargetException e) {
             fail(e.getMessage());
+            Thread.currentThread().interrupt();
         }
     }
 
@@ -470,6 +473,7 @@ public class SortableDefaultMutableTreeNodeTest {
             });
         } catch (InterruptedException | InvocationTargetException e) {
             fail(e.getMessage());
+            Thread.currentThread().interrupt();
         }
     }
 
@@ -507,6 +511,7 @@ public class SortableDefaultMutableTreeNodeTest {
             });
         } catch (InterruptedException | InvocationTargetException e) {
             fail(e.getMessage());
+            Thread.currentThread().interrupt();
         }
     }
 
@@ -545,6 +550,7 @@ public class SortableDefaultMutableTreeNodeTest {
             });
         } catch (InterruptedException | InvocationTargetException e) {
             fail(e.getMessage());
+            Thread.currentThread().interrupt();
         }
     }
 
@@ -583,6 +589,7 @@ public class SortableDefaultMutableTreeNodeTest {
             });
         } catch (InterruptedException | InvocationTargetException e) {
             fail(e.getMessage());
+            Thread.currentThread().interrupt();
         }
     }
 
@@ -621,6 +628,7 @@ public class SortableDefaultMutableTreeNodeTest {
             });
         } catch (InterruptedException | InvocationTargetException e) {
             fail(e.getMessage());
+            Thread.currentThread().interrupt();
         }
     }
 
@@ -652,6 +660,7 @@ public class SortableDefaultMutableTreeNodeTest {
             });
         } catch (InterruptedException | InvocationTargetException e) {
             fail(e.getMessage());
+            Thread.currentThread().interrupt();
         }
     }
 

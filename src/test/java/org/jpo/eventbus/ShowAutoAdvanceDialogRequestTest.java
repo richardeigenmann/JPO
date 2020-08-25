@@ -70,7 +70,8 @@ public class ShowAutoAdvanceDialogRequestTest {
                 assertEquals( pictureViewer, responseEvent.autoAdvanceTarget );
             } );
         } catch ( InterruptedException | InvocationTargetException ex ) {
-            fail( "Failed to send the ShowAutoAdvanceDialogRequest. Exception was: " + ex.getMessage() );
+            fail( ex.getMessage() );
+            Thread.currentThread().interrupt();
         }
     }
 

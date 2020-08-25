@@ -73,6 +73,7 @@ public class GroupPopupMenuTest {
             } );
         } catch (InterruptedException | InvocationTargetException e) {
             fail (e.getMessage());
+            Thread.currentThread().interrupt();
         }
 
     }
@@ -98,6 +99,7 @@ public class GroupPopupMenuTest {
             } );
         } catch ( final InterruptedException | InvocationTargetException ex ) {
             Logger.getLogger( GroupPopupMenuTest.class.getName() ).log( Level.SEVERE, null,  ex );
+            Thread.currentThread().interrupt();
         }
 
     }
@@ -130,6 +132,7 @@ public class GroupPopupMenuTest {
             } );
         } catch ( final InterruptedException | InvocationTargetException ex ) {
             Logger.getLogger( GroupPopupMenuTest.class.getName() ).log( Level.SEVERE, null,  ex );
+            Thread.currentThread().interrupt();
         }
     }
 }

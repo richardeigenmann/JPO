@@ -42,6 +42,7 @@ public class ThumbnailPanelTitleTest {
             } );
         } catch (final InterruptedException | InvocationTargetException ex  ) {
             fail(ex.getMessage());
+            Thread.currentThread().interrupt();
         }
     }
 }

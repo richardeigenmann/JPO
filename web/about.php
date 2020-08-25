@@ -2,16 +2,16 @@
 <div class="container">
     <h2>Thanks go out to</h2>
     <ul>
-        <li><b>Jarno Elonen</b> for NanoHTTPD See: <a href="https://github.com/NanoHttpd/nanohttpd">https://github.com/NanoHttpd/nanohttpd</a></li>
-        <li><b>Mikael Grev</b> for the MiG Layout. See: <a href="http://miglayout.com">http://miglayout.com</a></li>
-        <li><b>Michael Rudolf</b> for the JWizz framework. See: <a href="http://javaprog.net/jwizz/">http://javaprog.net/jwizz/</a></li>
-        <li><b>Franklin He</b> for the Simplified and Traditional Chinese translations</li>
-        <li><b>Drew Noakes</b> for posting the Exif decoder software on his homepage <a href="http://drewnoakes.com">http://drewnoakes.com</a></li>
-        <li><b>Philip Milne</b> for contributing the Table sorter code via the Java Tutorial</li>
-        <li><b>Lode Leroy</b> for helping with the run-from-jar</li>
-        <li><b>Joe Azure</b> for the Page Count display in the Thumbnail pane</li>
-        <li><b>Dean S. Jones</b> for his icon collection on <a href="http://sourceforge.net/projects/icon-collection/">http://sourceforge.net/projects/icon-collection/</a> that I have modified to suit my needs.</li>
-        <li><b>Sandra Keller</b> for putting up with me while I was developing this software which she would "Delete right away after downloading it from the internet"</li>
+        <li><strong>Jarno Elonen</strong> for NanoHTTPD See: <a href="https://github.com/NanoHttpd/nanohttpd">https://github.com/NanoHttpd/nanohttpd</a></li>
+        <li><strong>Mikael Grev</strong> for the MiG Layout. See: <a href="http://miglayout.com">http://miglayout.com</a></li>
+        <li><strong>Michael Rudolf</strong> for the JWizz framework. See: <a href="http://javaprog.net/jwizz/">http://javaprog.net/jwizz/</a></li>
+        <li><strong>Franklin He</strong> for the Simplified and Traditional Chinese translations</li>
+        <li><strong>Drew Noakes</strong> for posting the Exif decoder software on his homepage <a href="http://drewnoakes.com">http://drewnoakes.com</a></li>
+        <li><strong>Philip Milne</strong> for contributing the Table sorter code via the Java Tutorial</li>
+        <li><strong>Lode Leroy</strong> for helping with the run-from-jar</li>
+        <li><strong>Joe Azure</strong> for the Page Count display in the Thumbnail pane</li>
+        <li><strong>Dean S. Jones</strong> for his icon collection on <a href="http://sourceforge.net/projects/icon-collection/">http://sourceforge.net/projects/icon-collection/</a> that I have modified to suit my needs.</li>
+        <li><strong>Sandra Keller</strong> for putting up with me while I was developing this software which she would "Delete right away after downloading it from the internet"</li>
     </ul>
 
 
@@ -32,7 +32,7 @@
     <p>Download stats <a href="https://sourceforge.net/projects/j-po/files/JPO-Installer-0.14.exe/stats/timeline?dates=2019-12-01%20to%202020-03-01&period=monthly">Sourceforge</a></p>
 
     <hr>
-    <p>Last update to this page: 15 March 2020<br>
+    <p>Last update to this page: 25 August 2020<br>
         Copyright 2003-2020 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
 </div>
 <?php include("page-end.php"); ?>

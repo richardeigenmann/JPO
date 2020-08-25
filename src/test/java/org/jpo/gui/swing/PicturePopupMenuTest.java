@@ -165,6 +165,7 @@ public class PicturePopupMenuTest {
             });
         } catch (InterruptedException | InvocationTargetException e) {
             fail(e.getMessage());
+            Thread.currentThread().interrupt();
         }
 
     }
@@ -190,6 +191,7 @@ public class PicturePopupMenuTest {
             });
         } catch (final InterruptedException | InvocationTargetException ex) {
             Logger.getLogger(PicturePopupMenuTest.class.getName()).log(Level.SEVERE, null, ex);
+            Thread.currentThread().interrupt();
         }
 
     }
@@ -233,6 +235,7 @@ public class PicturePopupMenuTest {
             });
         } catch (InterruptedException | InvocationTargetException ex) {
             Logger.getLogger(PicturePopupMenuTest.class.getName()).log(Level.SEVERE, null, ex);
+            Thread.currentThread().interrupt();
         }
     }
 

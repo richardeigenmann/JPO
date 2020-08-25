@@ -39,6 +39,7 @@ public class PictureInfoEditorTest {
             } );
         } catch ( InterruptedException | InvocationTargetException ex ) {
             fail( "This test didn't work. Exception: " + ex.getMessage() );
+            Thread.currentThread().interrupt();
         }
     }
 
@@ -66,6 +67,7 @@ public class PictureInfoEditorTest {
             } );
         } catch ( InterruptedException | InvocationTargetException ex ) {
             fail( "This test didn't work. Exception: " + ex.getMessage() );
+            Thread.currentThread().interrupt();
         }
     }
 

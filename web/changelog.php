@@ -5,9 +5,11 @@
     <p>See the commit log on <a href="https://github.com/richardeigenmann/JPO/commits/master">GitHub</a></p>
 
     <table class="changelog">
-        <tr><td colspan=2><b>Development Version 0.13</b></td></tr>
+        <caption>List of changes pre-git</caption>
+        <tr><th>Date</th><th>Change</th></tr>
+        <tr><td colspan=2><strong>Development Version 0.13</strong></td></tr>
         <tr><td valign="top">24.3.2016</td><td>Upgrade to Java 8; introduce Lambdas</td></tr>
-        <tr><td colspan=2><b>Development Version 0.12</b></td></tr>
+        <tr><td colspan=2><strong>Development Version 0.12</strong></td></tr>
         <tr><td valign="top">6.12.2015</td><td>Changed memory settings, synchronized Nodes and Improved Consolidate</td></tr>
         <tr><td valign="top">9.10.2015</td><td>Changed the Find dialog to have the cursor on the text field</td></tr>
         <tr><td valign="top">13.7.2015</td><td>Refactored code to ensure that we no longer have odd thumbnails appearing after changing the groups</td></tr>
@@ -44,7 +46,7 @@
         <tr><td valign="top">13.4.2014</td><td>Improved Flat file Import</td></tr>
         <tr><td valign="top">6.4.2014</td><td>Improved Flat file Export</td></tr>
         <tr><td valign="top">30.3.2014</td><td>Started transition to EventBus</td></tr>
-        <tr><td colspan=2><b>Development Version 0.11</b></td></tr>
+        <tr><td colspan=2><strong>Development Version 0.11</strong></td></tr>
         <tr><td valign="top">22.3.2014</td><td>Upgraded to javax.mail-1.5.1.jar</td></tr>
         <tr><td valign="top">22.3.2014</td><td>Lots of refactoring to get rid of * imports and Netbeans warnings</td></tr>
         <tr><td valign="top">22.3.2014</td><td>removed dependency on activation.jar as Java now includes it</td></tr>
@@ -55,7 +57,7 @@
         <tr><td valign="top">12.7.2013</td><td>Add unit tests for the Exif Extraction library, some refactoring and fixed the Netbeans setup so that Test File works again.</td></tr>
         <tr><td valign="top">6.4.2013</td><td>Improved installation check at startup.</td></tr>
         <tr><td valign="top">3.4.2013</td><td>Shortened File Combobox after user feedback.</td></tr>
-        <tr><td colspan=2><b>Development Version 0.10</b></td></tr>
+        <tr><td colspan=2><strong>Development Version 0.10</strong></td></tr>
         <tr><td valign="top">2.11.2013</td><td> Dusted off the Windows installer, repackaged the Windows installer and pushed it to the download area. </td></tr>
         <tr><td valign="top">30.12.2012</td><td> Fix for looping bug when file modification date is in the future (reported and fixed by Tom) </td></tr>
         <tr><td valign="top">29.12.2012</td><td> Added a reparse button for the date to the Picture Properties window. </td></tr>
@@ -117,7 +119,7 @@
         <tr><td valign="top">11.11.2007</td><td> Camera Watch Deamon and Wizard</td></tr>
         <tr><td valign="top">6.11.2007</td><td> Added ability to edit the nodes in the JTree</td></tr>
         <tr><td valign="top">4.11.2007</td><td> Cameras are now saves in the preferences too. Unfortunately all older Camera settings will be lost and the users must set up their cameras again. This is not as bad as it sounds because saving the cameras didn't work proerply anyway!</td></tr>
-        <tr><td colspan=2><b>Version 0.8.5</b></td></tr>
+        <tr><td colspan=2><strong>Version 0.8.5</strong></td></tr>
         <tr><td valign="top">25.8.2007</td><td> After saving the user now has the option to make the collection autostart</td></tr>
         <tr><td valign="top">23.8.2007</td><td> Tried to fix the stupid bug with the full screen PictureViewer that never accounted for the taskbar</td></tr>
         <tr><td valign="top">14.7.2007</td><td> Add from Camera now can go direct to Edit Camera and Edit Camera close window saves the changes</td></tr>
@@ -189,7 +191,7 @@
         <tr><td valign="top">06.10.2004</td><td> Fixed a bug in the Pictureviewer: Image would not rotate if user chose a rotate function</td></tr>
         <tr><td valign="top">06.10.2004</td><td> Added a display of how many thumbnails are on the queue</td></tr>
         <tr><td valign="top">28.09.2004</td><td> Fixed the logic of what happens when you are showing an image and then remove it's node or it's parent node</td></tr>
-        <tr><td colspan=2><b>Version 0.8.4</b></td></tr>
+        <tr><td colspan=2><strong>Version 0.8.4</strong></td></tr>
         <tr><td valign="top">20.08.2004</td><td> Consolidate now also consolidates the group thumbnails</td></tr>
         <tr><td valign="top">20.08.2004</td><td> Bugfix: im thumbnail size was not exactly specified thumbnail size or original image was smaller than thumbnail then thumbnail creation could loop</td></tr>
         <tr><td valign="top">20.08.2004</td><td> Tried to improve code regarding synchronisation which caused GUI freeze</td></tr>
@@ -226,7 +228,7 @@
         <tr><td valign="top">10.05.2004</td><td> Added Multiple select drag and drop</td></tr>
         <tr><td valign="top">10.05.2004</td><td> Added Page display as per Joe Azure's suggestion</td></tr>
         <tr><td valign="top">06.05.2004</td><td> Add from Camera now remembers the target directory properly. Even when cancel is pressed. This improves user friendlyness. </td></tr>
-        <tr><td valign="top">04.05.2004</td><td> Introduced <b>Apache-Ant</b>-way of building the application. Make now no longer works. Thanks to Csaba Nagy for gettimg me started.</td></tr>
+        <tr><td valign="top">04.05.2004</td><td> Introduced <strong>Apache-Ant</strong>-way of building the application. Make now no longer works. Thanks to Csaba Nagy for gettimg me started.</td></tr>
         <tr><td valign="top">22.03.2004</td><td> Find Dialog improved visually </td></tr>
         <tr><td valign="top">22.03.2004</td><td> The user can now specify the background and text color when generating a web page. </td></tr>
         <tr><td valign="top">22.03.2004</td><td> The info panel now shows the Thumbnail when an image is selected </td></tr>
@@ -255,7 +257,7 @@
         <tr><td valign="top">17.11.2003</td><td> The title of the Collection was not XML Special Character escaped which cause bad xml and hence load failures. Bug reported by Eugen</td></tr>
         <tr><td valign="top">17.11.2003</td><td> Option write Thumbnails to disk was not saved.</td></tr>
         <tr><td valign="top">16.10.2003</td><td> Drop of a node on itself should simply cancel the drop not present error. Enhancement for Eugen Keller.</td></tr>
-        <tr><td colspan=2><b>Version 0.8.3</b></td></tr>
+        <tr><td colspan=2><strong>Version 0.8.3</strong></td></tr>
         <tr><td valign="top">29.08.2003</td><td> Re-Release of 0.8.3 with source</td></tr>
         <tr><td valign="top">24.08.2003</td><td> Added the ability to call up user defined programs</td></tr>
         <tr><td valign="top">24.08.2003</td><td> Fixed a bug in the Collection Properties where groups were double counted</td></tr>
@@ -278,7 +280,7 @@
         <tr><td valign="top">10.05.2003</td><td> Internal notification architecture introduced</td></tr>
         <tr><td valign="top">10.05.2003</td><td> Faster rotation of thumbnails</td></tr>
 
-        <tr><td colspan=2><b>Version 0.8.2</b></td></tr>
+        <tr><td colspan=2><strong>Version 0.8.2</strong></td></tr>
         <tr><td valign="top">22.03.2003</td><td> Added ability to change descriptions in the Thumbnail Pane</td></tr>
         <tr><td valign="top">22.03.2003</td><td> Responsiveness of Thumbnail pane improved by major redesign</td></tr>
         <tr><td valign="top">20.03.2003</td><td> Added an option to the JFileChooser that adds only new pictures</td></tr>
@@ -300,13 +302,13 @@
         <tr><td valign="top">18.01.2003</td><td> Consolidation wasn't monitoring for failures </td></tr>
         <tr><td valign="top">18.01.2003</td><td> If an image has a faulty URL the HtmlDistiller now uses the broken thumbnail icon </td></tr>
 
-        <tr><td colspan=2><b>Version 0.8.1</b></td></tr>
+        <tr><td colspan=2><strong>Version 0.8.1</strong></td></tr>
         <tr><td valign="top">15.01.2003</td><td> The JFileChooser in Copy to Target Directory was not behaving as specified </td></tr>
         <tr><td valign="top">15.01.2003</td><td> The copy picture could overwrite a picture file in the target directory. Now a new name is given. </td></tr>
         <tr><td valign="top">15.01.2003</td><td> Open Recent was't always getting files that were opened or saved fixed </td></tr>
         <tr><td valign="top">15.01.2003</td><td> Recently used directories was not being updated correctly in all places </td></tr>
         <tr><td valign="top">15.01.2003</td><td> Added a popup after save to confirm successful saving </td></tr>
-        <tr><td colspan=2><b>Version 0.8</b></td></tr>
+        <tr><td colspan=2><strong>Version 0.8</strong></td></tr>
         <tr><td valign="top">14.01.2003</td><td> Edit | Collection Properties | Protect collection from Edits is now saved with the collecton. Required DTD change. </td></tr>
         <tr><td valign="top">14.01.2003</td><td> Upgraded to Drew Noakes' 2.1 version of the EXIF and IPTC extractor library </td></tr>
         <tr><td valign="top">14.01.2003</td><td> Consolidate screen has Export instead of Consolidate in the button. Also fixed some comments. </td></tr>
@@ -361,7 +363,7 @@
         <tr><td valign="top">01.09.2002</td><td> Added ability to drag thumbnails</td></tr>
         <tr><td valign="top">01.09.2002</td><td> Re-Introduced Caching</td></tr>
 
-        <tr><td colspan=2><b>Release 0.7</b></td></tr>
+        <tr><td colspan=2><strong>Release 0.7</strong></td></tr>
         <tr><td valign="top">24.08.2002</td><td> Added reconcile function to Tools Menu</td></tr>
         <tr><td valign="top">10.08.2002</td><td> Sorted out Drag and Drop on the JTree</td></tr>
         <tr><td valign="top">01.08.2002</td><td> Reworked the logic behind maximising the fullscreen window (fullscreen, left only, right only etc.)</td></tr>
@@ -369,7 +371,7 @@
         <tr><td valign="top">31.07.2002</td><td> Added ability to consolidate all pictures of a group structure into the same directory</td></tr>
         <tr><td valign="top">31.07.2002</td><td> Improved display handling of the node updates when adding a directory of pictures</td></tr>
 
-        <tr><td colspan=2><b>Release 0.6</b></td></tr>
+        <tr><td colspan=2><strong>Release 0.6</strong></td></tr>
         <tr><td valign="top">16.06.2002</td><td> Added ability to choose whether Window position and size should be saved on exit.</td></tr>
         <tr><td valign="top">14.06.2002</td><td> Added Add Flatfile function.</td></tr>
         <tr><td valign="top">21.04.2002</td><td> Added tickbox to Settings screen to allow thumbnail storing to be turned off.</td></tr>
@@ -380,7 +382,7 @@
         <tr><td valign="top">12.04.2002</td><td> Changed logic in thumbnail creation to validate URLs before attempting to read and write to them, avoiding ugly and unnecessary errors.</td></tr>
         <tr><td valign="top">05.04.2002</td><td> Changed "Edit Group Description" popup menu item to "Rename"</td></tr>
 
-        <tr><td colspan=2><b>Release 0.5</b></td></tr>
+        <tr><td colspan=2><strong>Release 0.5</strong></td></tr>
         <tr><td valign="top">15.3.2002</td><td> Fixed bug in add collection in that empty group was created if filechooser was closed</td></tr>
         <tr><td valign="top">14.3.2002</td><td> Added logic to identify where the same filename was being used in JAR export and rename it</td></tr>
         <tr><td valign="top">14.3.2002</td><td> Changed several dialogs to anchor themselves off the main application frame.</td></tr>
@@ -388,7 +390,7 @@
         <tr><td valign="top">11.3.2002</td><td> Image Copy has improved validation, file extensions are preserved, filename of source is picked up correctly.</td></tr>
         <tr><td valign="top">11.3.2002</td><td> Push directory names validation works properly.</td></tr>
 
-        <tr><td colspan=2><b>Release 0.4</b><br>
+        <tr><td colspan=2><strong>Release 0.4</strong><br>
         <tr><td valign="top">8.3.2002</td><td> Thumbnails now consider where they are stored and will create new filenames in the thumbnail directory if they are not from local filesystem</td></tr>
         <tr><td valign="top">8.3.2002</td><td> Added jar export and jar autostart feature</td></tr>
         <tr><td valign="top">5.3.2002</td><td> Fixed bug in thumbnail name assignment</td></tr>
@@ -397,7 +399,7 @@
         <tr><td valign="top">3.3.2002</td><td> Fixed bug where full screen image would not close</td></tr>
         <tr><td valign="top">3.3.2002</td><td> Added export to flat file</td></tr>
 
-        <tr><td colspan=2><b>Release 0.3</b></td></tr>
+        <tr><td colspan=2><strong>Release 0.3</strong></td></tr>
         <tr><td valign="top">2.3.2002</td><td> Added Auto Timer functionality</td></tr>
         <tr><td valign="top">28.2.2002</td><td> Added license dialog and started adding copyright tags to source</td></tr>
         <tr><td valign="top">28.2.2002</td><td> Added functionality that when an image doesn't exist a thumbnail of a broken image is displayed</td></tr>
@@ -410,13 +412,13 @@
         <tr><td valign="top">26.2.2002</td><td> File | Open menu item was linked to wrong command</td></tr>
         <tr><td valign="top">26.2.2002</td><td> Out of Memory Problem tracked down to the way the -Xms and -Xmx commands were submitted</td></tr>
 
-        <tr><td colspan=2><b>Release 0.2</b></td></tr>
+        <tr><td colspan=2><strong>Release 0.2</strong></td></tr>
         <tr><td valign="top">23.2.2002</td><td> Picture Popup menu is now a separate group</td></tr>
         <tr><td valign="top">23.2.2002</td><td> Main Menu is a separate group</td></tr>
         <tr><td valign="top">23.2.2002</td><td> Move of functions from Fotoalbum class to Clever JTree class, encapsulating the methods and functions.</td></tr>
         <tr><td valign="top">23.2.2002</td><td> The Picture pane no longer automatically opens when the row selection in the JTree moves to a picture.</td></tr>
 
-        <tr><td colspan=2><b>Release 0.1</b></td></tr>
+        <tr><td colspan=2><strong>Release 0.1</strong></td></tr>
         <tr><td valign="top">20.2.2002</td><td> First Release with core functionality</td></tr>
     </table>
 

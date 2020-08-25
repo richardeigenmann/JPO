@@ -49,6 +49,7 @@ public class CollectionDistillerJFrameTest {
             });
         } catch (final InterruptedException | InvocationTargetException ex) {
             fail(ex.getCause().getMessage());
+            Thread.currentThread().interrupt();
         }
     }
 }

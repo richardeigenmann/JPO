@@ -45,6 +45,7 @@ public class PictureViewerNavBarTest {
             } );
         } catch ( final InterruptedException | InvocationTargetException ex ) {
             fail("Failed to create a PictureViewerNavBar");
+            Thread.currentThread().interrupt();
         }
     }
 

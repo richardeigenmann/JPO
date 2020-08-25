@@ -243,13 +243,19 @@ public class PictureInfo implements Serializable {
     private File imageFile;
 
     /**
-     * Returns the full path to the highres picture.
+     * Returns the full path to the highres picture. If the PictureInto doesn't have an image location an empty
+     * String is returned.
      *
      * @return The highres location
      * @see #setImageLocation
      */
     public synchronized String getImageLocation() {
-        return getImageFile().toURI().toString();
+        File file = getImageFile();
+        if ( file != null ) {
+            return file.toURI().toString();
+        } else {
+            return "";
+        }
     }
 
     /**

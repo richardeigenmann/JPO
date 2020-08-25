@@ -29,7 +29,8 @@ public class GenerateWebsiteWizard1WelcomeTest {
                 Assert.assertNotNull(generateWebsiteWizard1Welcome);
             } );
         } catch ( InterruptedException | InvocationTargetException ex ) {
-            fail("Hit an Exception: " + ex.getMessage());
+            fail(ex.getMessage());
+            Thread.currentThread().interrupt();
         }
 
     }

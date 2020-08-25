@@ -51,6 +51,7 @@ public class ThumbnailTest {
             } );
         } catch ( final InterruptedException | InvocationTargetException ex ) {
             fail("Failed to create a PictureFrame");
+            Thread.currentThread().interrupt();
         }
     }
 

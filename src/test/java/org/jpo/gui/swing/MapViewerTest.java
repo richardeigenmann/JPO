@@ -52,6 +52,7 @@ public class MapViewerTest {
         } catch ( final InterruptedException | InvocationTargetException ex ) {
             Logger.getLogger( MapViewerTest.class.getName() ).log( Level.SEVERE, null, ex );
             fail("Was not supposed to throw exception: " + ex.getMessage());
+            Thread.currentThread().interrupt();
         }
     }
 
@@ -73,6 +74,7 @@ public class MapViewerTest {
         } catch ( final InterruptedException | InvocationTargetException ex ) {
             Logger.getLogger( MapViewerTest.class.getName() ).log( Level.SEVERE, null, ex );
             fail("Was not supposed to throw exception: " + ex.getMessage());
+            Thread.currentThread().interrupt();
         }
 
     }

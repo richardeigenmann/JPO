@@ -1,5 +1,6 @@
 package org.jpo.gui;
 
+import org.jetbrains.annotations.TestOnly;
 import org.jpo.datamodel.*;
 import org.jpo.gui.swing.NonFocussedCaret;
 import org.jpo.gui.swing.PicturePopupMenu;
@@ -224,7 +225,7 @@ public class ThumbnailDescriptionJPanel
             return;
         }
         Object userObject = referringNode.getUserObject();
-        if (!pictureDescriptionJTA.getText().equals(userObject.toString())) {
+        if (userObject != null  && !pictureDescriptionJTA.getText().equals(userObject.toString())) {
             // the description was changed
             if (userObject instanceof PictureInfo) {
                 ((PictureInfo) referringNode.getUserObject()).setDescription(pictureDescriptionJTA.getText());
@@ -272,9 +273,12 @@ public class ThumbnailDescriptionJPanel
             legend = pi.getDescription();
             highresLocationJTextField.setText(pi.getImageLocation());
             setVisible(true);
-        } else {
-            // GroupInfo
+        } else if (referringNode.getUserObject() instanceof GroupInfo) {
             legend = ((GroupInfo) referringNode.getUserObject()).getGroupName();
+            highresLocationJTextField.setText("");
+            setVisible(true);
+        } else {
+            legend = "Error";
             highresLocationJTextField.setText("");
             setVisible(true);
         }
@@ -282,6 +286,11 @@ public class ThumbnailDescriptionJPanel
 
         formatDescription();
         showSlectionStatus();
+    }
+
+    @TestOnly
+    public String getDescription() {
+        return pictureDescriptionJTA.getText();
     }
 
     /**

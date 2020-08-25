@@ -39,6 +39,7 @@ public class QueriesJTreeControllerTest {
             });
         } catch (InterruptedException | InvocationTargetException ex) {
             fail(ex.getCause().getMessage());
+            Thread.currentThread().interrupt();
         }
     }
 

@@ -47,6 +47,7 @@ public class CollectionJTreeTest {
             });
         } catch (final InterruptedException | InvocationTargetException ex) {
             fail(ex.getCause().getMessage());
+            Thread.currentThread().interrupt();
         }
     }
 }

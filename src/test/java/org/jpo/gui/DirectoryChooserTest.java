@@ -7,8 +7,6 @@ import javax.swing.event.ChangeEvent;
 import java.awt.*;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.fail;
@@ -40,8 +38,8 @@ public class DirectoryChooserTest {
                 assertEquals( "Checking that the changeEvent was fired", 1, changesReceived );
             } );
         } catch ( InterruptedException | InvocationTargetException ex ) {
-            Logger.getLogger( DirectoryChooserTest.class.getName() ).log( Level.SEVERE, null, ex );
-            fail("This was not supposed to land in the catch clause");
+            fail("This was not supposed to land in the catch clause: " + ex.getMessage());
+            Thread.currentThread().interrupt();
         }
 
     }

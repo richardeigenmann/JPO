@@ -7,8 +7,6 @@ import javax.swing.*;
 import java.lang.reflect.InvocationTargetException;
 import java.text.SimpleDateFormat;
 import java.util.Objects;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import static junit.framework.TestCase.*;
 
@@ -55,8 +53,8 @@ public class ToolsTest {
             t.join();
             assertTrue( "When not on EDT must throw an error", notOnEDT_ErrorThrown );
         } catch ( InterruptedException ex ) {
-            Logger.getLogger( ToolsTest.class.getName() ).log( Level.SEVERE, null, ex );
             fail( "EDT violation not thrown" );
+            Thread.currentThread().interrupt();
         }
     }
 
@@ -80,6 +78,7 @@ public class ToolsTest {
             } );
         } catch ( InterruptedException | InvocationTargetException ex ) {
             fail( "Something went wrong with the EDT thread test" );
+            Thread.currentThread().interrupt();
         }
 
     }

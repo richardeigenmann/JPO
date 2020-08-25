@@ -42,10 +42,6 @@ public class ThumbnailsPanelControllerTest {
      */
     private static final Logger LOGGER = Logger.getLogger( ThumbnailsPanelControllerTest.class.getName() );
 
-    /**
-     * Test of nodeLayoutChanged getMouseRectangle, of class
-     * ThumbnailsPanelController.
-     */
     @Test
     public void testConstructor() {
         assumeFalse( GraphicsEnvironment.isHeadless() );
@@ -55,9 +51,8 @@ public class ThumbnailsPanelControllerTest {
                 assertNotNull(thumbnailsPanelController);
             } );
         } catch (final InterruptedException | InvocationTargetException ex  ) {
-            LOGGER.severe(ex.getMessage());
-            Thread.dumpStack();
             fail(ex.getMessage());
+            Thread.currentThread().interrupt();
         }
     }
 

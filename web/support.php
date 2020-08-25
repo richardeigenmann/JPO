@@ -18,7 +18,7 @@
 
     <hr>
     <h3>Memory settings:</h3>
-    <p>If you get <font color="red">out of Memory</font> errors then you are probably best off
+    <p>If you get <span style="color:red">out of Memory</span> errors then you are probably best off
         using the local jar way of starting this application as you can then set the initial memory heap with 
         the -Xms and the maximum memory heap with the -Xmx parameters. Of course this can also be done on 
         the web start version but you would have to set Jpo up on your own webserver so that you 

@@ -31,7 +31,7 @@
     
     <hr>
     <h3>Scary Warnings?</h3>
-    <img src="jpo_scr_5.png" width=658 height=591 alt="Java Scary Error"><br>
+    <img src="jpo_scr_5.pngjpo_scr_5.png" width=658 height=591 alt="Java Scary Error"><br>
     <p>The latest versions of Java default to ultra paranoid security 
         settings. Given the state of the world this is a good thing but it can 
         stop you from running JPO. JPO does need to read the pictures on your filesystem and does need to 
@@ -51,9 +51,9 @@
     <p>As of 2018 you need to whitelist the JPO site URL in the Java Console. Find the Java Console program
     (called jconsole) and run it. Go to the Web Settings > Exception Site List and add the JPO URL there:</p>
 
-    <p><img src="Java_Control_Panel.png" width="902" height="575" border="0"></p>
-    <p><img src="Java_Control_Panel_add_jpo.png" width="894" height="532" border="0"></p>
-    <p><img src="Java_Control_Panel_jpo_added.png" width="892" height="527" border="0"></p>
+    <p><img src="Java_Control_Panel.png" width="902" height="575" border="0" alt="Java Control Panel"></p>
+    <p><img src="Java_Control_Panel_add_jpo.png" width="894" height="532" border="0" alt="Add exception"></p>
+    <p><img src="Java_Control_Panel_jpo_added.png" width="892" height="527" border="0" alt="Exception added"></p>
 
 
     <p><strong>Potential problem:</strong> Your browser needs to know that it should
@@ -61,12 +61,11 @@
         <code>application/x-java-jnlp-file</code>). If your browser doesn't have the right
         association you can run it from the command line or by creating a desktop icon. The command 
         looks like this:</p>
-    <p><font color="darkRed"><code>javaws http://j-po.sourceforge.net/org.jpo-stable.jnlp</code></font></p>
+    <p><<code>javaws http://j-po.sourceforge.net/org.jpo-stable.jnlp</code></p>
 
     <p>Often you will need to know where the javaws program was installed. On
         Windows do a search for javaws.exe. On Linux you can do <br>
-        <code><font color="darkRed">
-            find / -name javaws -print</font></code></p>
+        <code>find / -name javaws -print</code></p>
 
 
     <hr>
