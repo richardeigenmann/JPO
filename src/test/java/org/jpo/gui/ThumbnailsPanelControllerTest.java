@@ -86,13 +86,12 @@ public class ThumbnailsPanelControllerTest {
                     assertEquals( "Checking width", topLeft.x - higherLeftPoint.x, r2.width );
                     assertEquals( "Checking height", topLeft.y - higherLeftPoint.y, r2.height );
                 } catch ( final NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException | NoSuchMethodException | InvocationTargetException ex ) {
-                    LOGGER.severe( ex.getMessage() );
                     fail( ex.getMessage() );
                 }
             } );
         } catch ( InterruptedException ex  ) {
-            LOGGER.severe( ex.getMessage() );
             fail( ex.getMessage() );
+            Thread.currentThread().interrupt();
         } catch ( InvocationTargetException ex ) {
             LOGGER.severe( "InvocationTargetException: " + ex.getMessage() );
             LOGGER.severe( "Source: " + ex.getTargetException().getMessage() );

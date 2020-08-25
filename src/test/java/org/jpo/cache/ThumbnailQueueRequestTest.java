@@ -40,8 +40,8 @@ public class ThumbnailQueueRequestTest {
                 Assert.assertEquals( "Priority should stay at HIGH_PRIORITY when increasing to MEDIUM_PRIORITY", QUEUE_PRIORITY.HIGH_PRIORITY, tqr.priority );
             } );
         } catch ( InterruptedException | InvocationTargetException ex ) {
-            Logger.getLogger( ThumbnailQueueRequestTest.class.getName() ).log( Level.SEVERE, null, ex );
             fail( ex.getMessage() );
+            Thread.currentThread().interrupt();
         }
     }
 }

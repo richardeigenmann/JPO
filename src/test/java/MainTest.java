@@ -25,7 +25,8 @@ public class MainTest {
                 JpoEventBus.getInstance().post( new CloseApplicationRequest() );
             } );
         } catch ( InterruptedException | InvocationTargetException ex ) {
-            fail("This test didn't work. Exception: " + ex.getMessage());
+            fail(ex.getMessage());
+            Thread.currentThread().interrupt();
         }
 
     }

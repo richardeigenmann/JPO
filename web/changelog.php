@@ -6,7 +6,7 @@
 
     <table class="changelog">
         <caption>List of changes pre-git</caption>
-        <tr><th>Date</th><th>Change</th></tr>
+        <tr><th scope="col">Date</th><th scope="col">Change</th></tr>
         <tr><td colspan=2><strong>Development Version 0.13</strong></td></tr>
         <tr><td valign="top">24.3.2016</td><td>Upgrade to Java 8; introduce Lambdas</td></tr>
         <tr><td colspan=2><strong>Development Version 0.12</strong></td></tr>

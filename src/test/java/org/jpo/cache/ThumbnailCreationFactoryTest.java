@@ -24,6 +24,7 @@ public class ThumbnailCreationFactoryTest {
             } );
         } catch ( InterruptedException | InvocationTargetException ex ) {
             fail( ex.getMessage() );
+            Thread.currentThread().interrupt();
         }
     }
 }

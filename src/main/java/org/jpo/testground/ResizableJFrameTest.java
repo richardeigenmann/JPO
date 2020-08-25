@@ -49,6 +49,7 @@ public class ResizableJFrameTest {
             );
         } catch ( InterruptedException | InvocationTargetException ex ) {
             Logger.getLogger( ResizableJFrameTest.class.getName() ).log( Level.SEVERE, null, ex );
+            Thread.currentThread().interrupt();
         }
     }
 

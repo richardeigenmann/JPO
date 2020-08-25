@@ -372,6 +372,7 @@ public class PictureCollectionTest {
             Thread.sleep( 80 );  // give the threads some time to do the notifications.
         } catch ( InterruptedException ex ) {
             Logger.getLogger( PictureCollectionTest.class.getName() ).log( Level.SEVERE, null, ex );
+            Thread.currentThread().interrupt();
         }
         assertEquals( "After updating the description we should have 1 node changed: ", 1, nodesChanged);
         assertEquals( "No nodes should have been inserted: ", 0, nodesInserted);

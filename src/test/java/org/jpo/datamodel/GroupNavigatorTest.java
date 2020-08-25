@@ -63,6 +63,7 @@ public class GroupNavigatorTest {
             SwingUtilities.invokeAndWait(groupNode::removeAllChildren);
         } catch ( InterruptedException | InvocationTargetException ex ) {
             Logger.getLogger( GroupNavigatorTest.class.getName() ).log( Level.SEVERE, null, ex );
+            Thread.currentThread().interrupt();
         }
 
         assertEquals( "After removing all children we expect to have 0 nodes", 0, gn.getNumberOfNodes() );
