@@ -80,9 +80,7 @@ public class JpoCache {
 
         try {
             highresMemoryCache = JCS.getInstance( HIGHRES_CACHE_REGION_NAME );
-            //setCache(highresMemoryCache);
             thumbnailMemoryAndDiskCache = JCS.getInstance( THUMBNAIL_CACHE_REGION_NAME );
-            //setCache(thumbnailMemoryAndDiskCache);
         } catch ( CacheException ex ) {
             LOGGER.severe( ex.getLocalizedMessage() );
         }
@@ -320,7 +318,6 @@ public class JpoCache {
 
                 }
             } catch ( IOException ex ) {
-                LOGGER.severe( ex.getLocalizedMessage() );
                 throw ( ex );
             }
         } else {
