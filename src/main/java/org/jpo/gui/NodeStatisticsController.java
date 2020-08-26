@@ -64,7 +64,7 @@ public class NodeStatisticsController {
      *  @param  statisticsNode   The node that is being analysed.
      */
     public void updateStats( DefaultMutableTreeNode statisticsNode ) {
-        if ( Settings.getPictureCollection().fileLoading ) {
+        if ( Settings.getPictureCollection().isFileLoading() ) {
             LOGGER.info( "Still busy loading the file. Aborting" );
             return;
         }

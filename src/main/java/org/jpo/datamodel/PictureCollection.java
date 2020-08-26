@@ -710,9 +710,17 @@ public class PictureCollection {
     }
 
     /**
+     * Is a thread loading a file?
+     * @return true if a thread is loading a file
+     */
+    public boolean isFileLoading() {
+        return fileLoading;
+    }
+
+    /**
      * status variable to find out if a thread is loading a file
      */
-    public boolean fileLoading;  // default is false
+    private boolean fileLoading;  // default is false
     /**
      * A file reference to the file that was loaded. It will come in handy when
      * a save instruction comes along.
@@ -828,13 +836,21 @@ public class PictureCollection {
         } else {
             File temporaryFile = new File(xmlFile.getPath() + ".!!!");
             new JpoWriter(temporaryFile, getRootNode(), false);
-            File originalFile = new File(xmlFile.getPath() + ".orig");
-            xmlFile.renameTo(originalFile);
-            temporaryFile.renameTo(xmlFile);
-            setUnsavedUpdates(false);
-            originalFile.delete();
-            Settings.pushRecentCollection(xmlFile.toString());
-            JpoEventBus.getInstance().post(new RecentCollectionsChangedEvent());
+            File backupOriginalFile = new File(xmlFile.getPath() + ".orig");
+            if ( ! xmlFile.renameTo(backupOriginalFile) ) {
+                LOGGER.severe("Could not rename original file to " + backupOriginalFile);
+            } else {
+                if ( ! temporaryFile.renameTo(xmlFile) ) {
+                    LOGGER.severe("Could not rename temp file " + temporaryFile.toString() + " to " + xmlFile);
+                } else {
+                    setUnsavedUpdates(false);
+                    if ( ! backupOriginalFile.delete() ) {
+                        LOGGER.severe("Could not delete backed up original file " + backupOriginalFile);
+                    }
+                    Settings.pushRecentCollection(xmlFile.toString());
+                    JpoEventBus.getInstance().post(new RecentCollectionsChangedEvent());
+                }
+            }
         }
     }
 
