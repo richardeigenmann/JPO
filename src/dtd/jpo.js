@@ -24,7 +24,7 @@ function changetext(newtext){
 
         var markerLatLng= new google.maps.LatLng(lat, lng);
 
-        var marker = new google.maps.Marker({
+        new google.maps.Marker({
             position: markerLatLng,
             map: map,
             draggable: false

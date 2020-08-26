@@ -1,6 +1,5 @@
 package org.jpo.cache;
 
-import org.jpo.cache.QUEUE_PRIORITY;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 
 import java.awt.*;
@@ -29,6 +28,11 @@ import java.util.logging.Logger;
  *
  */
 public class ThumbnailCreationQueue {
+
+    // prevent a public constructor from being created by the compiler
+    private ThumbnailCreationQueue() {
+        throw new IllegalStateException("Utility class");
+    }
 
     /**
      * Implemented using a PriorityBlockingQueue
@@ -88,8 +92,7 @@ public class ThumbnailCreationQueue {
      * @return The highest priority queue request
      */
     public static ThumbnailQueueRequest poll() {
-        ThumbnailQueueRequest thumbnailQueueRequest = QUEUE.poll();
-        return thumbnailQueueRequest;
+        return QUEUE.poll();
     }
 
     /**

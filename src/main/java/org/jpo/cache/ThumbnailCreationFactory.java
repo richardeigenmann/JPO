@@ -4,10 +4,11 @@ import org.jpo.datamodel.GroupInfo;
 import org.jpo.datamodel.PictureInfo;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 
-import javax.swing.*;
+import javax.swing.ImageIcon;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /*
@@ -50,7 +51,7 @@ public class ThumbnailCreationFactory implements Runnable {
         final String BROKEN_THUMBNAIL_PICTURE_FILE = "broken_thumbnail.gif";
         URL resource = ThumbnailCreationFactory.class.getClassLoader().getResource( BROKEN_THUMBNAIL_PICTURE_FILE );
         if ( resource == null ) {
-            LOGGER.severe( "Classloader could not find the file: " + BROKEN_THUMBNAIL_PICTURE_FILE );
+            LOGGER.log(Level.SEVERE, "Classloader could not find the file: {}", BROKEN_THUMBNAIL_PICTURE_FILE );
             BROKEN_THUMBNAIL_PICTURE = null;
         } else {
             BROKEN_THUMBNAIL_PICTURE = new ImageIcon( resource );
