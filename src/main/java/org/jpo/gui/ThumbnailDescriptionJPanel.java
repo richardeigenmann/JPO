@@ -1,5 +1,6 @@
 package org.jpo.gui;
 
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.jetbrains.annotations.TestOnly;
 import org.jpo.datamodel.*;
 import org.jpo.gui.swing.NonFocussedCaret;
@@ -183,28 +184,12 @@ public class ThumbnailDescriptionJPanel
         pictureDescriptionJTA.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
-                Optional<String> oSpace = PicturePopupMenu.replaceEscapedSpaces(pictureDescriptionJTA.getText());
-                Optional<String> oUnderstore = PicturePopupMenu.replaceUnderscore(pictureDescriptionJTA.getText());
-                if (e.getButton() == BUTTON3 && (oSpace.isPresent() || oUnderstore.isPresent())) {
-                    JPopupMenu popupmenu = new JPopupMenu();
-
-                    if (oSpace.isPresent()) {
-                        JMenuItem replaceSpace = new JMenuItem("Replace with: " + oSpace.get());
-                        replaceSpace.addActionListener(e1 -> pictureDescriptionJTA.setText(oSpace.get()));
-                        popupmenu.add(replaceSpace);
+                if (e.getButton() == BUTTON3) {
+                    Optional<JPopupMenu> optional = correctTextPopupMenu(pictureDescriptionJTA.getText(), pictureDescriptionJTA);
+                    if (optional.isPresent()) {
+                        JPopupMenu popupmenu = optional.get();
+                        popupmenu.show(pictureDescriptionJTA, e.getX(), e.getY());
                     }
-                    if (oUnderstore.isPresent()) {
-                        JMenuItem replaceUnderscore = new JMenuItem("Replace with: " + oUnderstore.get());
-                        replaceUnderscore.addActionListener(e1 -> pictureDescriptionJTA.setText(oUnderstore.get()));
-                        popupmenu.add(replaceUnderscore);
-                    }
-                    if (oUnderstore.isPresent() && oSpace.isPresent()) {
-                        Optional<String> spaceUnderscore = PicturePopupMenu.replaceUnderscore(oSpace.get());
-                        JMenuItem replaceSpaceAndUnderscore = new JMenuItem("Replace with: " + spaceUnderscore.get());
-                        replaceSpaceAndUnderscore.addActionListener(e1 -> pictureDescriptionJTA.setText(spaceUnderscore.get()));
-                        popupmenu.add(replaceSpaceAndUnderscore);
-                    }
-                    popupmenu.show(pictureDescriptionJTA, e.getX(), e.getY());
                 }
             }
         });
@@ -213,6 +198,35 @@ public class ThumbnailDescriptionJPanel
 
         setVisible(false);
         add(pictureDescriptionJSP);
+    }
+    public static Optional<JPopupMenu> correctTextPopupMenu (@NonNull String text, @NonNull JTextArea textArea) {
+        Optional<String> oSpace = PicturePopupMenu.replaceEscapedSpaces(text);
+        Optional<String> oUnderstore = PicturePopupMenu.replaceUnderscore(text);
+        if (oSpace.isPresent() || oUnderstore.isPresent()) {
+            JPopupMenu popupmenu = new JPopupMenu();
+
+            if (oSpace.isPresent()) {
+                JMenuItem replaceSpace = new JMenuItem("Replace with: " + oSpace.get());
+                replaceSpace.addActionListener(e1 -> textArea.setText(oSpace.get()));
+                popupmenu.add(replaceSpace);
+            }
+            if (oUnderstore.isPresent()) {
+                JMenuItem replaceUnderscore = new JMenuItem("Replace with: " + oUnderstore.get());
+                replaceUnderscore.addActionListener(e1 -> textArea.setText(oUnderstore.get()));
+                popupmenu.add(replaceUnderscore);
+            }
+            if (oUnderstore.isPresent() && oSpace.isPresent()) {
+                Optional<String> spaceUnderscore = PicturePopupMenu.replaceUnderscore(oSpace.get());
+                if (spaceUnderscore.isPresent()) {
+                    // to be expected...
+                    JMenuItem replaceSpaceAndUnderscore = new JMenuItem("Replace with: " + spaceUnderscore.get());
+                    replaceSpaceAndUnderscore.addActionListener(e1 -> textArea.setText(spaceUnderscore.get()));
+                    popupmenu.add(replaceSpaceAndUnderscore);
+                }
+            }
+            return Optional.of(popupmenu);
+        }
+        return Optional.empty();
     }
 
     /**
@@ -485,13 +499,16 @@ public class ThumbnailDescriptionJPanel
         }
 
         for (Object child : children) {
-            if (child.equals(referringNode)) {
-                // we are displaying a changed node. What changed?
-                Object userObject = referringNode.getUserObject();
-                if (userObject instanceof GroupInfo) {
-                    String legend = ((GroupInfo) userObject).getGroupName();
-                    if (!legend.equals(pictureDescriptionJTA.getText())) {
-                        pictureDescriptionJTA.setText(legend);
+            if ( child instanceof  SortableDefaultMutableTreeNode ) {
+                SortableDefaultMutableTreeNode childNode = (SortableDefaultMutableTreeNode) child;
+                if (childNode.equals(referringNode)) {
+                    // we are displaying a changed node. What changed?
+                    Object userObject = referringNode.getUserObject();
+                    if (userObject instanceof GroupInfo) {
+                        String legend = ((GroupInfo) userObject).getGroupName();
+                        if (!legend.equals(pictureDescriptionJTA.getText())) {
+                            pictureDescriptionJTA.setText(legend);
+                        }
                     }
                 }
             }

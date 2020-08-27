@@ -8,6 +8,7 @@ import org.junit.Test;
 import javax.swing.*;
 import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Optional;
 
 import static org.junit.Assert.*;
 import static org.junit.Assume.assumeFalse;
@@ -164,6 +165,95 @@ public class ThumbnailDescriptionJPanelTest {
             Thread.currentThread().interrupt();
         }
     }
+
+    @Test
+    public void testCorrectTextPopupMenuNoSpecialChars() {
+        assumeFalse( GraphicsEnvironment.isHeadless() );
+        try {
+            SwingUtilities.invokeAndWait( () -> {
+                final JTextArea area = new JTextArea();
+                final String STRING_WITHOUT_SPECIAL_CHARS = "No special chars in this string";
+                Optional<JPopupMenu> optional = ThumbnailDescriptionJPanel.correctTextPopupMenu(STRING_WITHOUT_SPECIAL_CHARS, area);
+                assertTrue(!optional.isPresent());
+            } );
+        } catch (final InterruptedException | InvocationTargetException ex  ) {
+            fail(ex.getMessage());
+            Thread.currentThread().interrupt();
+        }
+    }
+
+    @Test
+    public void testCorrectTextPopupMenuUnderscore() {
+        assumeFalse( GraphicsEnvironment.isHeadless() );
+        try {
+            SwingUtilities.invokeAndWait( () -> {
+                final JTextArea area = new JTextArea();
+                final String STRING_WITH_UNDERSCORE = "Text_with_underscores";
+                final String EXPECTED_RESULT = "Text with underscores";
+                Optional<JPopupMenu> optional = ThumbnailDescriptionJPanel.correctTextPopupMenu(STRING_WITH_UNDERSCORE, area);
+                assertTrue(optional.isPresent());
+
+                JPopupMenu menu = optional.get();
+                assertEquals(1,menu.getComponentCount());
+
+                JMenuItem item = (JMenuItem) menu.getComponent(0);
+                item.doClick();
+                assertEquals(area.getText(), EXPECTED_RESULT);
+            } );
+        } catch (final InterruptedException | InvocationTargetException ex  ) {
+            fail(ex.getMessage());
+            Thread.currentThread().interrupt();
+        }
+    }
+
+    @Test
+    public void testCorrectTextPopupMenuUnicodeSpace() {
+        assumeFalse( GraphicsEnvironment.isHeadless() );
+        try {
+            SwingUtilities.invokeAndWait( () -> {
+                final JTextArea area = new JTextArea();
+                final String STRING_WITH_UNICODE_SPACE = "Text%20with%20unicode%20spaces";
+                final String EXPECTED_RESULT = "Text with unicode spaces";
+                Optional<JPopupMenu> optional = ThumbnailDescriptionJPanel.correctTextPopupMenu(STRING_WITH_UNICODE_SPACE, area);
+                assertTrue(optional.isPresent());
+
+                JPopupMenu menu = optional.get();
+                assertEquals(1,menu.getComponentCount());
+
+                JMenuItem item = (JMenuItem) menu.getComponent(0);
+                item.doClick();
+                assertEquals(area.getText(), EXPECTED_RESULT);
+            } );
+        } catch (final InterruptedException | InvocationTargetException ex  ) {
+            fail(ex.getMessage());
+            Thread.currentThread().interrupt();
+        }
+    }
+
+    @Test
+    public void testCorrectTextPopupMenuUnicodeSpaceAndUnderscores() {
+        assumeFalse( GraphicsEnvironment.isHeadless() );
+        try {
+            SwingUtilities.invokeAndWait( () -> {
+                final JTextArea area = new JTextArea();
+                final String STRING_WITH_UNICODE_SPACE_AND_UNDERSCORES = "Text%20with%20unicode%20spaces_and_underscores";
+                final String EXPECTED_RESULT = "Text with unicode spaces and underscores";
+                Optional<JPopupMenu> optional = ThumbnailDescriptionJPanel.correctTextPopupMenu(STRING_WITH_UNICODE_SPACE_AND_UNDERSCORES, area);
+                assertTrue(optional.isPresent());
+
+                JPopupMenu menu = optional.get();
+                assertEquals(3,menu.getComponentCount());
+
+                JMenuItem item = (JMenuItem) menu.getComponent(2);
+                item.doClick();
+                assertEquals(area.getText(), EXPECTED_RESULT);
+            } );
+        } catch (final InterruptedException | InvocationTargetException ex  ) {
+            fail(ex.getMessage());
+            Thread.currentThread().interrupt();
+        }
+    }
+
 
 
 }
