@@ -51,10 +51,11 @@ public class ThumbnailDescriptionJPanelTest {
             SwingUtilities.invokeAndWait( () -> {
                 final ThumbnailDescriptionJPanel panel = new ThumbnailDescriptionJPanel();
                 PictureInfo pictureInfo = new PictureInfo();
-                pictureInfo.setDescription("A PictureInfo description");
+                final String pictureInfoDescription = "A PictureInfo description";
+                pictureInfo.setDescription(pictureInfoDescription);
                 SortableDefaultMutableTreeNode node = new SortableDefaultMutableTreeNode(pictureInfo);
                 panel.setNode(node);
-                assertEquals("A PictureInfo description", panel.getDescription());
+                assertEquals(pictureInfoDescription, panel.getDescription());
             } );
         } catch (final InterruptedException | InvocationTargetException ex  ) {
             fail(ex.getMessage());
@@ -68,10 +69,11 @@ public class ThumbnailDescriptionJPanelTest {
         try {
             SwingUtilities.invokeAndWait( () -> {
                 final ThumbnailDescriptionJPanel panel = new ThumbnailDescriptionJPanel();
-                GroupInfo groupInfo = new GroupInfo("A GroupInfo description");
+                final String groupDescription = "A GroupInfo description";
+                GroupInfo groupInfo = new GroupInfo(groupDescription);
                 SortableDefaultMutableTreeNode node = new SortableDefaultMutableTreeNode(groupInfo);
                 panel.setNode(node);
-                assertEquals("A GroupInfo description", panel.getDescription());
+                assertEquals(groupDescription, panel.getDescription());
             } );
         } catch (final InterruptedException | InvocationTargetException ex  ) {
             fail(ex.getMessage());
@@ -88,7 +90,6 @@ public class ThumbnailDescriptionJPanelTest {
                 SortableDefaultMutableTreeNode node = new SortableDefaultMutableTreeNode();
                 panel.setNode(node);
                 panel.setNode(null);
-                System.out.println(panel.getDescription());
                 assertEquals("No node for this position.", panel.getDescription());
             } );
         } catch (final InterruptedException | InvocationTargetException ex  ) {
@@ -121,16 +122,18 @@ public class ThumbnailDescriptionJPanelTest {
                 final ThumbnailDescriptionJPanel panel = new ThumbnailDescriptionJPanel();
                 // First attach a pictureInfo
                 PictureInfo pictureInfo = new PictureInfo();
-                pictureInfo.setDescription("A PictureInfo description");
+                final String pictureInfoDescription = "A PictureInfo description";
+                pictureInfo.setDescription(pictureInfoDescription);
                 SortableDefaultMutableTreeNode pinode = new SortableDefaultMutableTreeNode(pictureInfo);
                 panel.setNode(pinode);
-                assertEquals("A PictureInfo description", panel.getDescription());
+                assertEquals(pictureInfoDescription, panel.getDescription());
 
                 // then replace the node with a GroupInfo node
-                GroupInfo groupInfo = new GroupInfo("A GroupInfo description");
+                final String groupInfoDescription = "A GroupInfo description";
+                GroupInfo groupInfo = new GroupInfo(groupInfoDescription);
                 SortableDefaultMutableTreeNode ginode = new SortableDefaultMutableTreeNode(groupInfo);
                 panel.setNode(ginode);
-                assertEquals("A GroupInfo description", panel.getDescription());
+                assertEquals(groupInfoDescription, panel.getDescription());
 
             } );
         } catch (final InterruptedException | InvocationTargetException ex  ) {
@@ -146,13 +149,15 @@ public class ThumbnailDescriptionJPanelTest {
             SwingUtilities.invokeAndWait( () -> {
                 final ThumbnailDescriptionJPanel panel = new ThumbnailDescriptionJPanel();
                 PictureInfo pictureInfo = new PictureInfo();
-                pictureInfo.setDescription("A PictureInfo description");
+                final String pictureInfoDescription ="A PictureInfo description";
+                pictureInfo.setDescription(pictureInfoDescription);
                 SortableDefaultMutableTreeNode node = new SortableDefaultMutableTreeNode(pictureInfo);
                 panel.setNode(node);
-                assertEquals("A PictureInfo description", panel.getDescription());
+                assertEquals(pictureInfoDescription, panel.getDescription());
 
-                pictureInfo.setDescription("A changed description");
-                assertEquals("A changed description", panel.getDescription());
+                final String newDescription = "A changed description";
+                pictureInfo.setDescription(newDescription);
+                assertEquals(newDescription, panel.getDescription());
             } );
         } catch (final InterruptedException | InvocationTargetException ex  ) {
             fail(ex.getMessage());

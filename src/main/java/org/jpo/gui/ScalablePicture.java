@@ -61,12 +61,12 @@ public class ScalablePicture
     /**
      * the source picture for the scalable picture
      */
-    public SourcePicture sourcePicture;
+    private SourcePicture sourcePicture;
 
     /**
      * The scaled version of the image
      */
-    public BufferedImage scaledPicture;
+    private BufferedImage scaledPicture;
 
     /**
      * The scaling factor
@@ -134,7 +134,7 @@ public class ScalablePicture
      * the quality with which the JPG pictures shall be written. A value of 0
      * means poor 1 means great.
      */
-    public float jpgQuality = 0.8f;
+    private float jpgQuality = 0.8f;
 
     /**
      * which method to use on scaling, a fast one or a good quality one.
@@ -142,7 +142,7 @@ public class ScalablePicture
      * colorspace in the output JPEG file which most programs can't read so this
      * flag is currently not considered. RE 7.9.2005
      */
-    public boolean fastScale = true;
+    private boolean fastScale = true;
 
     /**
      * Variable that indicates how often to scale down the image. Multiple steps

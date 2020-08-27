@@ -6,11 +6,10 @@ import org.jpo.gui.swing.Thumbnail;
 import org.junit.Assert;
 import org.junit.Test;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.SwingUtilities;
+import java.awt.Dimension;
+import java.awt.GraphicsEnvironment;
 import java.lang.reflect.InvocationTargetException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import static junit.framework.TestCase.fail;
 import static org.junit.Assume.assumeFalse;

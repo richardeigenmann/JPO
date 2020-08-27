@@ -130,7 +130,7 @@ public class PictureCollection {
      */
     public void sendNodeStructureChanged(
             final TreeNode changedNode) {
-        LOGGER.log(Level.FINE, "Sending a node structure change on node: {0}", changedNode.toString());
+        LOGGER.log(Level.FINE, "Sending a node structure change on node: {0}", changedNode);
         if (SwingUtilities.isEventDispatchThread()) {
             getTreeModel().nodeStructureChanged(changedNode);
         } else {
@@ -148,7 +148,7 @@ public class PictureCollection {
      */
     public void sendNodeChanged(
             final TreeNode changedNode) {
-        LOGGER.log(Level.FINE, "Sending a node change on node: {0}", changedNode.toString());
+        LOGGER.log(Level.FINE, "Sending a node change on node: {0}", changedNode);
         if (SwingUtilities.isEventDispatchThread()) {
             getTreeModel().nodeChanged(changedNode);
         } else {
@@ -170,7 +170,7 @@ public class PictureCollection {
     public void sendNodesWereInserted(
             final TreeNode changedNode,
             final int[] childIndices) {
-        LOGGER.log(Level.FINE, "Sending a node was inserted notification on node: {0}", changedNode.toString());
+        LOGGER.log(Level.FINE, "Sending a node was inserted notification on node: {0}", changedNode);
         getTreeModel().nodesWereInserted(changedNode, childIndices);
 
         /*if ( SwingUtilities.isEventDispatchThread() ) {
@@ -197,7 +197,7 @@ public class PictureCollection {
     public void sendNodesWereRemoved(final TreeNode node,
                                      final int[] childIndices,
                                      final Object[] removedChildren) {
-        LOGGER.log(Level.FINE, "Sending a node was removed change on node: {0}", node.toString());
+        LOGGER.log(Level.FINE, "Sending a node was removed change on node: {0}", node);
         if (SwingUtilities.isEventDispatchThread()) {
             getTreeModel().nodesWereRemoved(node, childIndices, removedChildren);
         } else {
@@ -343,9 +343,9 @@ public class PictureCollection {
     public void createQueriesTreeModel() {
         setQueriesTreeModel(new DefaultTreeModel(new DefaultMutableTreeNode(Settings.jpoResources.getString("queriesTreeModelRootNode"))));
 
-        DefaultMutableTreeNode yearsTreeNode = new DefaultMutableTreeNode("By Year");
-        rememberYearsTreeNode(yearsTreeNode);
-        getQueriesRootNode().add(yearsTreeNode);
+        DefaultMutableTreeNode byYearsTreeNode = new DefaultMutableTreeNode("By Year");
+        rememberYearsTreeNode(byYearsTreeNode);
+        getQueriesRootNode().add(byYearsTreeNode);
     }
 
     private DefaultMutableTreeNode yearsTreeNode;

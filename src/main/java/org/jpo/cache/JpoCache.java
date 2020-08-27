@@ -228,13 +228,13 @@ public class JpoCache {
         }
         scalablePicture.setScaleSize( maxDimension );
         scalablePicture.loadPictureImd( file, rotation );
-        if ( scalablePicture.sourcePicture == null ) {
+        if ( scalablePicture.getSourcePicture() == null ) {
             return null;
         }
 
         scalablePicture.scalePicture();
 
-        if ( scalablePicture.scaledPicture == null ) {
+        if ( scalablePicture.getScaledPicture() == null ) {
             return null;
         }
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
