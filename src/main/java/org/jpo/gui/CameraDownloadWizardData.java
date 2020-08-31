@@ -271,9 +271,17 @@ public class CameraDownloadWizardData {
         return sortCode;
     }
 
+    public File getTargetDir() {
+        return targetDir;
+    }
+
+    public void setTargetDir(File targetDir) {
+        this.targetDir = targetDir;
+    }
+
     /**
      * Holds the target directory where the images are to be copied to.
      */
-    public File targetDir;
+    private File targetDir;
 
 }

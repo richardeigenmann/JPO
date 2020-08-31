@@ -60,9 +60,9 @@ public class CameraDownloadWizardStep4 extends AbstractStep {
                 DirectoryChooser.DIR_MUST_BE_WRITABLE);
         dirChooser.setAlignmentX(Component.LEFT_ALIGNMENT);
         stepComponent.add(dirChooser);
-        dirChooser.addChangeListener(( ChangeEvent e ) -> dataModel.targetDir = dirChooser.getDirectory());
+        dirChooser.addChangeListener(( ChangeEvent e ) -> dataModel.setTargetDir(dirChooser.getDirectory()));
         // get default value from the dirChooser
-        dataModel.targetDir = dirChooser.getDirectory();
+        dataModel.setTargetDir(dirChooser.getDirectory());
 
         return stepComponent;
     }

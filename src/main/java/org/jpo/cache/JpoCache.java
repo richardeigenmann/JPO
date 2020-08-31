@@ -148,7 +148,7 @@ public class JpoCache {
             imageBytes = new ImageBytes( IOUtils.toByteArray( new BufferedInputStream(new FileInputStream(file) )));
             try {
                 highresMemoryCache.put( file, imageBytes );
-            } catch ( CacheException ex ) {
+            } catch ( NullPointerException | CacheException ex ) {
                 LOGGER.severe( ex.getLocalizedMessage() );
             }
         }

@@ -48,11 +48,19 @@ public class PictureController extends JComponent {
      */
     private static final Logger LOGGER = Logger.getLogger( PictureController.class.getName() );
 
+    public boolean isCenterWhenScaled() {
+        return centerWhenScaled;
+    }
+
+    public void setCenterWhenScaled(boolean centerWhenScaled) {
+        this.centerWhenScaled = centerWhenScaled;
+    }
+
     /**
      * Flag that lets this JComponent know if the picture is to be fitted into
      * the available space when the threads return the scaled picture.
      */
-    public boolean centerWhenScaled;
+    private boolean centerWhenScaled;
 
     /**
      * This point of the picture will be put at the middle of the screen

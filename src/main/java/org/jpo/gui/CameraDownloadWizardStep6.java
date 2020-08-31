@@ -106,21 +106,21 @@ public class CameraDownloadWizardStep6 extends AbstractStep {
         label3a.setText( "Sorting by: " + sortingDescription );
 
         // Storing in xxx
-        label4.setText( Settings.jpoResources.getString( "DownloadCameraWizardStep5Text7" ) + dataModel.targetDir.toString() );
-        if ( !dataModel.targetDir.exists() ) {
-            if ( ! dataModel.targetDir.mkdirs() ) {
-                label4.setText( String.format( "Could not create directory", dataModel.targetDir.toString() ) );
+        label4.setText( Settings.jpoResources.getString( "DownloadCameraWizardStep5Text7" ) + dataModel.getTargetDir().toString() );
+        if ( !dataModel.getTargetDir().exists() ) {
+            if ( ! dataModel.getTargetDir().mkdirs() ) {
+                label4.setText( String.format( "Could not create directory", dataModel.getTargetDir().toString() ) );
                 setCanGoNext( false );
             }
         }
-        if ( !dataModel.targetDir.exists() ) {
-            label4.setText( String.format( "Error: %s  doesn't exist.", dataModel.targetDir.toString() ) );
+        if ( !dataModel.getTargetDir().exists() ) {
+            label4.setText( String.format( "Error: %s  doesn't exist.", dataModel.getTargetDir().toString() ) );
             setCanGoNext( false );
-        } else if ( !dataModel.targetDir.isDirectory() ) {
-            label4.setText( String.format( "Error: %s  must be a directory.", dataModel.targetDir.toString() ) );
+        } else if ( !dataModel.getTargetDir().isDirectory() ) {
+            label4.setText( String.format( "Error: %s  must be a directory.", dataModel.getTargetDir().toString() ) );
             setCanGoNext( false );
-        } else if ( !dataModel.targetDir.canWrite() ) {
-            label4.setText( String.format( "Error: Can't write to %s", dataModel.targetDir.toString() ) );
+        } else if ( !dataModel.getTargetDir().canWrite() ) {
+            label4.setText( String.format( "Error: Can't write to %s", dataModel.getTargetDir().toString() ) );
             setCanGoNext( false );
         } else {
             setCanGoNext( true );

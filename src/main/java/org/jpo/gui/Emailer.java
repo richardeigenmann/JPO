@@ -68,7 +68,7 @@ public class Emailer
     /**
      * Variable that signals to the thread to stop immediately.
      */
-    public boolean interrupted;  // default is false
+    private boolean interrupted;  // default is false
 
     private final List<SortableDefaultMutableTreeNode> emailSelected;
 

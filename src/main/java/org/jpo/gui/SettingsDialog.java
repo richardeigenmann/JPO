@@ -196,10 +196,10 @@ public class SettingsDialog extends JDialog {
 
         // Initial Windowsize stuff
         generalJPanel.add( new JLabel( Settings.jpoResources.getString( "windowSizeChoicesJlabel" ) ) );
-        final String[] windowSizeChoices = new String[Settings.windowSizes.length];
+        final String[] windowSizeChoices = new String[Settings.getWindowSizes().length];
         windowSizeChoices[0] = Settings.jpoResources.getString( "windowSizeChoicesMaximum" );
-        for ( int i = 1; i < Settings.windowSizes.length; i++ ) {
-            windowSizeChoices[i] = Settings.windowSizes[i].width + " x " + Settings.windowSizes[i].height;
+        for ( int i = 1; i < Settings.getWindowSizes().length; i++ ) {
+            windowSizeChoices[i] = Settings.getWindowSizes()[i].width + " x " + Settings.getWindowSizes()[i].height;
         }
         final DefaultComboBoxModel<String> dcbm = new DefaultComboBoxModel<>( windowSizeChoices );
         startupSizeDropdown.setModel( dcbm );
@@ -218,7 +218,7 @@ public class SettingsDialog extends JDialog {
                         Settings.anchorFrame.setExtendedState( Frame.MAXIMIZED_BOTH );
                     } else {
                         Settings.anchorFrame.setExtendedState( Frame.NORMAL );
-                        Settings.anchorFrame.setSize( Settings.windowSizes[startupSizeDropdown.getSelectedIndex()] );
+                        Settings.anchorFrame.setSize( Settings.getWindowSizes()[startupSizeDropdown.getSelectedIndex()] );
                     }
                 }
             }
@@ -623,8 +623,8 @@ public class SettingsDialog extends JDialog {
         } else {
             int settingsArea = targetDimension.width * targetDimension.height;
             int index = 1;
-            for ( int i = 1; i < Settings.windowSizes.length; i++ ) {
-                if ( Settings.windowSizes[i].width * Settings.windowSizes[i].height <= settingsArea ) {
+            for ( int i = 1; i < Settings.getWindowSizes().length; i++ ) {
+                if ( Settings.getWindowSizes()[i].width * Settings.getWindowSizes()[i].height <= settingsArea ) {
                     index = i;
                 } else {
                     break;
@@ -655,7 +655,7 @@ public class SettingsDialog extends JDialog {
             Settings.mainFrameDimensions = new Dimension( 0, 0 );
         } else {
             Settings.maximiseJpoOnStartup = false;
-            Settings.mainFrameDimensions = new Dimension( Settings.windowSizes[startupSizeDropdown.getSelectedIndex()] );
+            Settings.mainFrameDimensions = new Dimension( Settings.getWindowSizes()[startupSizeDropdown.getSelectedIndex()] );
         }
 
         Settings.maximumPictureSize = maximumPictureSizeJTextField.getValue();
@@ -666,7 +666,7 @@ public class SettingsDialog extends JDialog {
             Settings.pictureViewerDefaultDimensions = new Dimension( 0, 0 );
         } else {
             Settings.maximisePictureViewerWindow = false;
-            Settings.pictureViewerDefaultDimensions = new Dimension( Settings.windowSizes[viewerSizeDropdown.getSelectedIndex()] );
+            Settings.pictureViewerDefaultDimensions = new Dimension( Settings.getWindowSizes()[viewerSizeDropdown.getSelectedIndex()] );
         }
 
         Settings.pictureViewerFastScale = pictureViewerFastScaleJCheckBox.isSelected();

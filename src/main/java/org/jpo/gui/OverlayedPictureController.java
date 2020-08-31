@@ -167,7 +167,7 @@ public class OverlayedPictureController extends PictureController implements Sca
                            double rotation ) {
         scalablePicture.stopLoadingExcept( file );
 
-        centerWhenScaled = true;
+        setCenterWhenScaled(true);
         scalablePicture.setScaleSize( getSize() );
         scalablePicture.loadAndScalePictureInThread( file, Thread.MAX_PRIORITY, rotation );
 
@@ -247,7 +247,7 @@ public class OverlayedPictureController extends PictureController implements Sca
             LOGGER.fine( "READY status" );
             //pictureStatusMessage = legend;
             pictureStatusMessage = Settings.jpoResources.getString( "PicturePaneReadyStatus" );
-            if ( centerWhenScaled ) {
+            if ( isCenterWhenScaled() ) {
                 LOGGER.fine( "centering image" );
                 centerImage();
             }

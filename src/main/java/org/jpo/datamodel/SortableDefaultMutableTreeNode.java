@@ -1107,7 +1107,7 @@ public class SortableDefaultMutableTreeNode
      * @param retainDirectories  Whether to retain the directory structure
      * @param selectedCategories Categories to add
      * @return true if pictures were added, false if not.
-     */
+     *
     protected static boolean copyAddPictures1(File[] files,
                                               File targetDir,
                                               SortableDefaultMutableTreeNode receivingNode,
@@ -1147,7 +1147,7 @@ public class SortableDefaultMutableTreeNode
             }
         }
         return picturesAdded;
-    }
+    }*/
 
     /**
      * Copy any file from sourceFile source File to sourceFile target File
@@ -1182,63 +1182,20 @@ public class SortableDefaultMutableTreeNode
         }
     }
 
-    /*
-     * Copies the pictures from the source tree to the target directory and adds
-     * them to the collection only if they have not been seen by the camera
-     * before.
-     *
-     * @param sourceDir          source directory
-     * @param targetDir          target directory
-     * @param cam                The camera object with knows the checksums of the pictures
-     *                           seen before.
-     * @param groupName          name of the new group
-     * @param retainDirectories  whether to retain the directory structure
-     * @param selectedCategories categories to apply
-     * @return the new group
-     *
-    public SortableDefaultMutableTreeNode copyAddPictures(File sourceDir,
-                                                          File targetDir, String groupName, Camera cam,
-                                                          boolean retainDirectories, HashSet<Object> selectedCategories) {
-        File[] files = sourceDir.listFiles();
-        ProgressGui progGui = new ProgressGui(Tools.countfiles(files),
-                Settings.jpoResources.getString("PictureAdderProgressDialogTitle"),
-                Settings.jpoResources.getString("picturesAdded"));
-        SortableDefaultMutableTreeNode newGroup
-                = new SortableDefaultMutableTreeNode(
-                new GroupInfo(groupName));
-
-        getPictureCollection().setSendModelUpdates(false);
-
-        cam.zapNewImage();
-        boolean picturesAdded = copyAddPictures1(Objects.requireNonNull(files), targetDir, newGroup, progGui, cam, retainDirectories, selectedCategories);
-
-        cam.storeNewImage();
-        Settings.writeCameraSettings();
-
-        getPictureCollection().setSendModelUpdates(true);
-        progGui.switchToDoneMode();
-        if (picturesAdded) {
-            add(newGroup);
-        } else {
-            newGroup = null;
-        }
-        return newGroup;
-    }*/
-
     /**
      * Copies the pictures from the source File collection into the target node
      *
-     * @param newPictures A Collection framework of the new picture Files
+     * @param fileCollection A Collection framework of the new picture Files
      * @param targetDir   The target directory for the copy operation
      * @param copyMode    Set to true if you want to copy, false if you want to
      *                    move the pictures.
      * @param progressBar The optional progressBar that should be incremented.
      */
-    public void copyAddPictures(Collection<File> newPictures, File targetDir,
+    public void copyAddPictures(Collection<File> fileCollection, File targetDir,
                                 boolean copyMode, final JProgressBar progressBar) {
-        LOGGER.fine(String.format("Copy/Moving %d pictures to target directory %s", newPictures.size(), targetDir.toString()));
+        LOGGER.fine(String.format("Copy/Moving %d pictures to target directory %s", fileCollection.size(), targetDir.toString()));
         getPictureCollection().setSendModelUpdates(false);
-        for (File file : newPictures) {
+        for (File file : fileCollection) {
             LOGGER.fine(String.format("Processing file %s", file.toString()));
             if (progressBar != null) {
                 SwingUtilities.invokeLater(
@@ -1250,7 +1207,9 @@ public class SortableDefaultMutableTreeNode
             copyPicture(file, targetFile);
 
             if (!copyMode) {
-                file.delete();
+                if (! file.delete() ) {
+                    LOGGER.log(Level.SEVERE, "File {} could not be deleted!", file);
+                }
             }
             addPicture(targetFile, null);
         }

@@ -154,7 +154,7 @@ public class ScalablePicture
      * flag that indicates that the image should be scaled after a status
      * message is received from the SourcePicture that the picture was loaded.
      */
-    public boolean scaleAfterLoad;  // default is false
+    private boolean scaleAfterLoad;  // default is false
 
     /**
      * Constructor

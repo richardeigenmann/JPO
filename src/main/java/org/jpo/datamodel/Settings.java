@@ -90,7 +90,11 @@ public class Settings {
      * A set of window sizes that the user can choose his preferred size from.
      * The first option will be to maximise the window
      */
-    public static final Dimension[] windowSizes = {new Dimension(0, 0), new Dimension(1050, 760), new Dimension(1250, 900), new Dimension(1450, 1190), new Dimension(2150, 1300)};
+    private static final Dimension[] windowSizes = {new Dimension(0, 0), new Dimension(1050, 760), new Dimension(1250, 900), new Dimension(1450, 1190), new Dimension(2150, 1300)};
+
+    public static Dimension[] getWindowSizes() {
+        return windowSizes;
+    }
 
     /**
      * Flag to indicate whether the JPO window should be maximised on startup or

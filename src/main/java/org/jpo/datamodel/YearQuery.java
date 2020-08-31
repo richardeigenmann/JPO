@@ -40,7 +40,7 @@ public class YearQuery implements Serializable, Query {
      * This flag indicates whether dates that can't be parsed should be treaded
      * as matches or fails
      */
-    public boolean includeNullDates;  // default is false
+    private boolean includeNullDates;  // default is false
 
     private final String year;
 

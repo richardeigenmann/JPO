@@ -63,7 +63,7 @@ public class CameraDownloadWorker
 
     @Override
     protected String doInBackground() {
-        Settings.memorizeCopyLocation(dataModel.targetDir.toString());
+        Settings.memorizeCopyLocation(dataModel.getTargetDir().toString());
         JpoEventBus.getInstance().post(new CopyLocationsChangedEvent());
         if (dataModel.getShouldCreateNewGroup()) {
             LOGGER.fine(String.format("Adding a new group %s to node %s", dataModel.getNewGroupDescription(), dataModel.getTargetNode().toString()));
@@ -75,7 +75,7 @@ public class CameraDownloadWorker
 
         LOGGER.fine(String.format("About to copyAddPictures to node %s", dataModel.getTargetNode().toString()));
         dataModel.getTargetNode().copyAddPictures(dataModel.getNewPictures(),
-                dataModel.targetDir,
+                dataModel.getTargetDir(),
                 dataModel.getCopyMode(),
                 progressBar);
         LOGGER.fine(String.format("Sorting node %s by code %s", dataModel.getTargetNode().toString(), dataModel.getSortCode()));
