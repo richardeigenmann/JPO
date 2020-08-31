@@ -6,8 +6,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 import static org.junit.Assume.assumeFalse;
 
 /*
@@ -39,6 +38,27 @@ public class ThumbnailPanelTitleTest {
             SwingUtilities.invokeAndWait( () -> {
                 final ThumbnailPanelTitle thumbnailPanelTitle = new ThumbnailPanelTitle();
                 assertNotNull(thumbnailPanelTitle);
+            } );
+        } catch (final InterruptedException | InvocationTargetException ex  ) {
+            fail(ex.getMessage());
+            Thread.currentThread().interrupt();
+        }
+    }
+
+    /**
+     * Tests setting the title
+     */
+    @Test
+    public void testSetTitle() {
+        assumeFalse( GraphicsEnvironment.isHeadless() );
+        try {
+            SwingUtilities.invokeAndWait( () -> {
+                final ThumbnailPanelTitle thumbnailPanelTitle = new ThumbnailPanelTitle();
+                assertNotNull(thumbnailPanelTitle);
+
+                final String TITLE = "This is a title";
+                thumbnailPanelTitle.setTitle(TITLE);
+                assertEquals(TITLE, thumbnailPanelTitle.getTitle());
             } );
         } catch (final InterruptedException | InvocationTargetException ex  ) {
             fail(ex.getMessage());

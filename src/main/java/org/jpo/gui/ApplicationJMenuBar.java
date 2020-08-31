@@ -284,9 +284,9 @@ public class ApplicationJMenuBar extends JMenuBar {
      */
     private void recentFilesChanged() {
         Runnable runnable = () -> {
-            for ( int i = 0; i < Settings.recentCollections.length; i++ ) {
-                if ( Settings.recentCollections[i] != null ) {
-                    recentOpenedFileJMenuItem[i].setText((i + 1) + ": " + Settings.recentCollections[i] );
+            for (int i = 0; i < Settings.getRecentCollections().length; i++ ) {
+                if ( Settings.getRecentCollections()[i] != null ) {
+                    recentOpenedFileJMenuItem[i].setText((i + 1) + ": " + Settings.getRecentCollections()[i] );
                     recentOpenedFileJMenuItem[i].setVisible( true );
                 } else {
                     recentOpenedFileJMenuItem[i].setVisible( false );

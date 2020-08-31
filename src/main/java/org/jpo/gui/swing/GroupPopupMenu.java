@@ -156,7 +156,7 @@ public class GroupPopupMenu extends JPopupMenu {
             for (int i = 0; i < Settings.MAX_MEMORISE; i++) {
                 recentOpenedfileJMenuItem[i] = new JMenuItem();
                 final int index = i;  // the anonymous inner class needs a final variable
-                recentOpenedfileJMenuItem[i].addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new AddCollectionToGroupRequest(popupNode, new File(Settings.recentCollections[index]))));
+                recentOpenedfileJMenuItem[i].addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new AddCollectionToGroupRequest(popupNode, new File(Settings.getRecentCollections()[index]))));
                 recentOpenedfileJMenuItem[i].setVisible(false);
                 addCollectionJMenu.add(recentOpenedfileJMenuItem[i]);
             }
@@ -375,9 +375,9 @@ public class GroupPopupMenu extends JPopupMenu {
      */
     private void populateRecentFilesMenuItems() {
         Tools.checkEDT();
-        for (int i = 0; i < Settings.recentCollections.length; i++) {
-            if (Settings.recentCollections[i] != null) {
-                recentOpenedfileJMenuItem[i].setText((i + 1) + ": " + Settings.recentCollections[i]);
+        for (int i = 0; i < Settings.getRecentCollections().length; i++) {
+            if (Settings.getRecentCollections()[i] != null) {
+                recentOpenedfileJMenuItem[i].setText((i + 1) + ": " + Settings.getRecentCollections()[i]);
                 recentOpenedfileJMenuItem[i].setVisible(true);
             } else {
                 recentOpenedfileJMenuItem[i].setVisible(false);

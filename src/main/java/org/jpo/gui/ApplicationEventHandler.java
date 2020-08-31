@@ -1388,7 +1388,7 @@ public class ApplicationEventHandler {
 
             @Override
             public void run() {
-                final File fileToLoad = new File(Settings.recentCollections[i]);
+                final File fileToLoad = new File(Settings.getRecentCollections()[i]);
                 try {
                     Settings.getPictureCollection().fileLoad(fileToLoad);
                 } catch (FileNotFoundException ex) {

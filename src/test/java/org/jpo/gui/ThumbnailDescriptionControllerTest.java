@@ -13,14 +13,14 @@ import java.util.Optional;
 import static org.junit.Assert.*;
 import static org.junit.Assume.assumeFalse;
 
-public class ThumbnailDescriptionJPanelTest {
+public class ThumbnailDescriptionControllerTest {
 
     @Test
     public void testConstructor() {
         assumeFalse( GraphicsEnvironment.isHeadless() );
         try {
             SwingUtilities.invokeAndWait( () -> {
-                final ThumbnailDescriptionJPanel panel = new ThumbnailDescriptionJPanel();
+                final ThumbnailDescriptionController panel = new ThumbnailDescriptionController();
                 assertNotNull(panel);
             } );
         } catch (final InterruptedException | InvocationTargetException ex  ) {
@@ -34,7 +34,7 @@ public class ThumbnailDescriptionJPanelTest {
         assumeFalse( GraphicsEnvironment.isHeadless() );
         try {
             SwingUtilities.invokeAndWait( () -> {
-                final ThumbnailDescriptionJPanel panel = new ThumbnailDescriptionJPanel();
+                final ThumbnailDescriptionController panel = new ThumbnailDescriptionController();
                 SortableDefaultMutableTreeNode node = new SortableDefaultMutableTreeNode();
                 panel.setNode(node);
                 assertEquals("Error", panel.getDescription());
@@ -50,7 +50,7 @@ public class ThumbnailDescriptionJPanelTest {
         assumeFalse( GraphicsEnvironment.isHeadless() );
         try {
             SwingUtilities.invokeAndWait( () -> {
-                final ThumbnailDescriptionJPanel panel = new ThumbnailDescriptionJPanel();
+                final ThumbnailDescriptionController panel = new ThumbnailDescriptionController();
                 PictureInfo pictureInfo = new PictureInfo();
                 final String pictureInfoDescription = "A PictureInfo description";
                 pictureInfo.setDescription(pictureInfoDescription);
@@ -69,7 +69,7 @@ public class ThumbnailDescriptionJPanelTest {
         assumeFalse( GraphicsEnvironment.isHeadless() );
         try {
             SwingUtilities.invokeAndWait( () -> {
-                final ThumbnailDescriptionJPanel panel = new ThumbnailDescriptionJPanel();
+                final ThumbnailDescriptionController panel = new ThumbnailDescriptionController();
                 final String groupDescription = "A GroupInfo description";
                 GroupInfo groupInfo = new GroupInfo(groupDescription);
                 SortableDefaultMutableTreeNode node = new SortableDefaultMutableTreeNode(groupInfo);
@@ -87,7 +87,7 @@ public class ThumbnailDescriptionJPanelTest {
         assumeFalse( GraphicsEnvironment.isHeadless() );
         try {
             SwingUtilities.invokeAndWait( () -> {
-                final ThumbnailDescriptionJPanel panel = new ThumbnailDescriptionJPanel();
+                final ThumbnailDescriptionController panel = new ThumbnailDescriptionController();
                 SortableDefaultMutableTreeNode node = new SortableDefaultMutableTreeNode();
                 panel.setNode(node);
                 panel.setNode(null);
@@ -104,7 +104,7 @@ public class ThumbnailDescriptionJPanelTest {
         assumeFalse( GraphicsEnvironment.isHeadless() );
         try {
             SwingUtilities.invokeAndWait( () -> {
-                final ThumbnailDescriptionJPanel panel = new ThumbnailDescriptionJPanel();
+                final ThumbnailDescriptionController panel = new ThumbnailDescriptionController();
                 panel.setNode(null);
                 assertEquals("", panel.getDescription());
             } );
@@ -120,7 +120,7 @@ public class ThumbnailDescriptionJPanelTest {
         assumeFalse( GraphicsEnvironment.isHeadless() );
         try {
             SwingUtilities.invokeAndWait( () -> {
-                final ThumbnailDescriptionJPanel panel = new ThumbnailDescriptionJPanel();
+                final ThumbnailDescriptionController panel = new ThumbnailDescriptionController();
                 // First attach a pictureInfo
                 PictureInfo pictureInfo = new PictureInfo();
                 final String pictureInfoDescription = "A PictureInfo description";
@@ -148,7 +148,7 @@ public class ThumbnailDescriptionJPanelTest {
         assumeFalse( GraphicsEnvironment.isHeadless() );
         try {
             SwingUtilities.invokeAndWait( () -> {
-                final ThumbnailDescriptionJPanel panel = new ThumbnailDescriptionJPanel();
+                final ThumbnailDescriptionController panel = new ThumbnailDescriptionController();
                 PictureInfo pictureInfo = new PictureInfo();
                 final String pictureInfoDescription ="A PictureInfo description";
                 pictureInfo.setDescription(pictureInfoDescription);
@@ -173,7 +173,7 @@ public class ThumbnailDescriptionJPanelTest {
             SwingUtilities.invokeAndWait( () -> {
                 final JTextArea area = new JTextArea();
                 final String STRING_WITHOUT_SPECIAL_CHARS = "No special chars in this string";
-                Optional<JPopupMenu> optional = ThumbnailDescriptionJPanel.correctTextPopupMenu(STRING_WITHOUT_SPECIAL_CHARS, area);
+                Optional<JPopupMenu> optional = ThumbnailDescriptionController.correctTextPopupMenu(STRING_WITHOUT_SPECIAL_CHARS, area);
                 assertTrue(!optional.isPresent());
             } );
         } catch (final InterruptedException | InvocationTargetException ex  ) {
@@ -190,7 +190,7 @@ public class ThumbnailDescriptionJPanelTest {
                 final JTextArea area = new JTextArea();
                 final String STRING_WITH_UNDERSCORE = "Text_with_underscores";
                 final String EXPECTED_RESULT = "Text with underscores";
-                Optional<JPopupMenu> optional = ThumbnailDescriptionJPanel.correctTextPopupMenu(STRING_WITH_UNDERSCORE, area);
+                Optional<JPopupMenu> optional = ThumbnailDescriptionController.correctTextPopupMenu(STRING_WITH_UNDERSCORE, area);
                 assertTrue(optional.isPresent());
 
                 JPopupMenu menu = optional.get();
@@ -214,7 +214,7 @@ public class ThumbnailDescriptionJPanelTest {
                 final JTextArea area = new JTextArea();
                 final String STRING_WITH_UNICODE_SPACE = "Text%20with%20unicode%20spaces";
                 final String EXPECTED_RESULT = "Text with unicode spaces";
-                Optional<JPopupMenu> optional = ThumbnailDescriptionJPanel.correctTextPopupMenu(STRING_WITH_UNICODE_SPACE, area);
+                Optional<JPopupMenu> optional = ThumbnailDescriptionController.correctTextPopupMenu(STRING_WITH_UNICODE_SPACE, area);
                 assertTrue(optional.isPresent());
 
                 JPopupMenu menu = optional.get();
@@ -238,7 +238,7 @@ public class ThumbnailDescriptionJPanelTest {
                 final JTextArea area = new JTextArea();
                 final String STRING_WITH_UNICODE_SPACE_AND_UNDERSCORES = "Text%20with%20unicode%20spaces_and_underscores";
                 final String EXPECTED_RESULT = "Text with unicode spaces and underscores";
-                Optional<JPopupMenu> optional = ThumbnailDescriptionJPanel.correctTextPopupMenu(STRING_WITH_UNICODE_SPACE_AND_UNDERSCORES, area);
+                Optional<JPopupMenu> optional = ThumbnailDescriptionController.correctTextPopupMenu(STRING_WITH_UNICODE_SPACE_AND_UNDERSCORES, area);
                 assertTrue(optional.isPresent());
 
                 JPopupMenu menu = optional.get();

@@ -24,9 +24,6 @@ public class ListNavigatorTest {
         assertEquals(0,n.getNumberOfNodes());
     }
 
-    @Test
-    public void getNode() {
-    }
 
     @Test
     public void addNodeTest() {

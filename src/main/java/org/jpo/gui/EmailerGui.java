@@ -317,7 +317,7 @@ public class EmailerGui extends JFrame {
      * Populates the comboboxes with values that came from the Settings.
      */
     private void getSettings() {
-        Iterator i = Settings.emailSenders.iterator();
+        Iterator i = Settings.getEmailSenders().iterator();
         while ( i.hasNext() ) {
             fromJComboBox.addItem( (String) i.next() );
         }
@@ -340,7 +340,7 @@ public class EmailerGui extends JFrame {
      * of the Settings.
      */
     private void putSettings() {
-        Settings.emailSenders.add( Objects.requireNonNull(fromJComboBox.getSelectedItem()).toString() );
+        Settings.getEmailSenders().add( Objects.requireNonNull(fromJComboBox.getSelectedItem()).toString() );
         Settings.emailRecipients.add( Objects.requireNonNull(toJComboBox.getSelectedItem()).toString() );
         Settings.emailScaleImages = scalePicturesJCheckBox.isSelected();
         Settings.emailSendOriginal = sendOriginalsJCheckBox.isSelected();

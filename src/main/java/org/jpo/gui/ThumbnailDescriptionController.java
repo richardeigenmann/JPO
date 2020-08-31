@@ -3,12 +3,10 @@ package org.jpo.gui;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.jetbrains.annotations.TestOnly;
 import org.jpo.datamodel.*;
-import org.jpo.gui.swing.NonFocussedCaret;
 import org.jpo.gui.swing.PicturePopupMenu;
+import org.jpo.gui.swing.ThumbnailDescriptionPanel;
 
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 import java.awt.*;
@@ -16,17 +14,16 @@ import java.awt.event.AdjustmentEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Optional;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static java.awt.event.MouseEvent.BUTTON3;
-import static org.jpo.gui.ThumbnailDescriptionJPanel.DescriptionSize.LARGE_DESCRIPTION;
-import static org.jpo.gui.ThumbnailDescriptionJPanel.DescriptionSize.MINI_INFO;
+import static org.jpo.gui.ThumbnailDescriptionController.DescriptionSize.LARGE_DESCRIPTION;
+import static org.jpo.gui.ThumbnailDescriptionController.DescriptionSize.MINI_INFO;
 
 /*
- ThumbnailDescriptionJPanel.java:  class that creates a panel showing the description of a thumbnail
+ ThumbnailDescriptionController.java:  class that creates a panel showing the description of a thumbnail
 
- Copyright (C) 2002 - 2018  Richard Eigenmann, Zürich, Switzerland
+ Copyright (C) 2002 - 2020  Richard Eigenmann, Zürich, Switzerland
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -47,15 +44,14 @@ import static org.jpo.gui.ThumbnailDescriptionJPanel.DescriptionSize.MINI_INFO;
  * node it is showing. It can be mute. It knows it's x and y position in the
  * grid
  */
-public class ThumbnailDescriptionJPanel
-        extends JPanel
+public class ThumbnailDescriptionController
         implements PictureInfoChangeListener,
         TreeModelListener {
 
     /**
      * Defines a logger for this class
      */
-    private static final Logger LOGGER = Logger.getLogger(ThumbnailDescriptionJPanel.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(ThumbnailDescriptionController.class.getName());
 
     /**
      * a link to the SortableDefaultMutableTreeNode in the data model. This
@@ -64,30 +60,15 @@ public class ThumbnailDescriptionJPanel
      */
     protected SortableDefaultMutableTreeNode referringNode;
 
-    /**
-     * This object holds the description
-     */
-    private final JTextArea pictureDescriptionJTA = new JTextArea();
+    private final ThumbnailDescriptionPanel panel = new ThumbnailDescriptionPanel();
 
-    /**
-     * This JScrollPane holds the JTextArea pictureDescriptionJTA so that it can
-     * have multiple lines of text if this is required.
-     */
-    private final JScrollPane pictureDescriptionJSP = new JScrollPane(pictureDescriptionJTA,
-            JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
-            JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+    public JPanel getPanel() {
+        return panel;
+    }
 
-    /**
-     * The location of the image file
-     */
-    private final JTextField highresLocationJTextField = new JTextField();
 
-    /**
-     * create a dumbCaret object which prevents undesirable scrolling behaviour
-     *
-     * @see NonFocussedCaret
-     */
-    private final NonFocussedCaret dumbCaret = new NonFocussedCaret();
+
+
 
     /**
      * choices for the Description size
@@ -111,26 +92,14 @@ public class ThumbnailDescriptionJPanel
      */
     private DescriptionSize displayMode = LARGE_DESCRIPTION;
 
-    /**
-     * Font to be used for Large Texts:
-     */
-    private static final Font LARGE_FONT = Font.decode(Settings.jpoResources.getString("ThumbnailDescriptionJPanelLargeFont"));
 
-    /**
-     * Font to be used for small texts:
-     */
-    private static final Font SMALL_FONT = Font.decode(Settings.jpoResources.getString("ThumbnailDescriptionJPanelSmallFont"));
 
-    /**
-     * The factor which is multiplied with the ThumbnailDescription to determine
-     * how large it is shown.
-     */
-    private float thumbnailSizeFactor = 1;
+
 
     /**
      * Construct a new ThumbnailDescrciptionJPanel
      */
-    public ThumbnailDescriptionJPanel() {
+    public ThumbnailDescriptionController() {
         initComponents();
     }
 
@@ -138,18 +107,8 @@ public class ThumbnailDescriptionJPanel
         // attach this panel to the tree model so that it is notified about changes
         Settings.getPictureCollection().getTreeModel().addTreeModelListener(this);
 
-        setBackground(Color.WHITE);
 
-        pictureDescriptionJTA.setWrapStyleWord(true);
-        pictureDescriptionJTA.setLineWrap(true);
-        pictureDescriptionJTA.setEditable(true);
-        pictureDescriptionJTA.setCaret(dumbCaret);
-
-        // it is the Scrollpane you must constrain, not the TextArea
-        pictureDescriptionJSP.setMinimumSize(new Dimension(Settings.thumbnailSize, 25));
-        pictureDescriptionJSP.setMaximumSize(new Dimension(Settings.thumbnailSize, 250));
-
-        pictureDescriptionJTA.setInputVerifier(new InputVerifier() {
+        panel.getPictureDescriptionJTA().setInputVerifier(new InputVerifier() {
 
             @Override
             public boolean verify(JComponent component) {
@@ -163,41 +122,25 @@ public class ThumbnailDescriptionJPanel
             }
         });
 
-        pictureDescriptionJTA.getDocument().addDocumentListener(new DocumentListener() {
 
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                setTextAreaSize();
-            }
 
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                setTextAreaSize();
-            }
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                setTextAreaSize();
-            }
-        });
-
-        pictureDescriptionJTA.addMouseListener(new MouseAdapter() {
+        panel.getPictureDescriptionJTA().addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
                 if (e.getButton() == BUTTON3) {
-                    Optional<JPopupMenu> optional = correctTextPopupMenu(pictureDescriptionJTA.getText(), pictureDescriptionJTA);
+                    Optional<JPopupMenu> optional = correctTextPopupMenu(panel.getDescription(), panel.getPictureDescriptionJTA());
                     if (optional.isPresent()) {
                         JPopupMenu popupmenu = optional.get();
-                        popupmenu.show(pictureDescriptionJTA, e.getX(), e.getY());
+                        popupmenu.show(panel.getPictureDescriptionJTA(), e.getX(), e.getY());
                     }
                 }
             }
         });
 
-        pictureDescriptionJSP.getVerticalScrollBar().addAdjustmentListener((AdjustmentEvent e) -> setTextAreaSize());
+        panel.getPictureDescriptionJSP().getVerticalScrollBar().addAdjustmentListener((AdjustmentEvent e) -> panel.setTextAreaSize());
 
         setVisible(false);
-        add(pictureDescriptionJSP);
+
     }
     public static Optional<JPopupMenu> correctTextPopupMenu (@NonNull String text, @NonNull JTextArea textArea) {
         Optional<String> oSpace = PicturePopupMenu.replaceEscapedSpaces(text);
@@ -239,12 +182,12 @@ public class ThumbnailDescriptionJPanel
             return;
         }
         Object userObject = referringNode.getUserObject();
-        if (userObject != null  && !pictureDescriptionJTA.getText().equals(userObject.toString())) {
+        if (userObject != null  && !panel.getDescription().equals(userObject.toString())) {
             // the description was changed
             if (userObject instanceof PictureInfo) {
-                ((PictureInfo) referringNode.getUserObject()).setDescription(pictureDescriptionJTA.getText());
+                ((PictureInfo) referringNode.getUserObject()).setDescription(panel.getDescription());
             } else if (userObject instanceof GroupInfo) {
-                ((GroupInfo) referringNode.getUserObject()).setGroupName(pictureDescriptionJTA.getText());
+                ((GroupInfo) referringNode.getUserObject()).setGroupName(panel.getDescription());
             }
         }
     }
@@ -285,18 +228,18 @@ public class ThumbnailDescriptionJPanel
         } else if (referringNode.getUserObject() instanceof PictureInfo) {
             PictureInfo pi = (PictureInfo) referringNode.getUserObject();
             legend = pi.getDescription();
-            highresLocationJTextField.setText(pi.getImageLocation());
+            panel.getHighresLocationJTextField().setText(pi.getImageLocation());
             setVisible(true);
         } else if (referringNode.getUserObject() instanceof GroupInfo) {
             legend = ((GroupInfo) referringNode.getUserObject()).getGroupName();
-            highresLocationJTextField.setText("");
+            panel.getHighresLocationJTextField().setText("");
             setVisible(true);
         } else {
             legend = "Error";
-            highresLocationJTextField.setText("");
+            panel.getHighresLocationJTextField().setText("");
             setVisible(true);
         }
-        pictureDescriptionJTA.setText(legend);
+        panel.setDescription(legend);
 
         formatDescription();
         showSlectionStatus();
@@ -304,7 +247,7 @@ public class ThumbnailDescriptionJPanel
 
     @TestOnly
     public String getDescription() {
-        return pictureDescriptionJTA.getText();
+        return panel.getDescription();
     }
 
     /**
@@ -323,54 +266,32 @@ public class ThumbnailDescriptionJPanel
      */
     public void formatDescription() {
         if (displayMode == LARGE_DESCRIPTION) {
-            pictureDescriptionJTA.setFont(LARGE_FONT);
+            panel.getPictureDescriptionJTA().setFont(panel.getLargeFont());
         } else {
             // i.e.  MINI_INFO
-            pictureDescriptionJTA.setFont(SMALL_FONT);
+            panel.getPictureDescriptionJTA().setFont(panel.getSmallFont());
         }
-        setTextAreaSize();
+        panel.setTextAreaSize();
 
         if ((referringNode != null) && (referringNode.getUserObject() instanceof PictureInfo) && (displayMode == MINI_INFO)) {
-            highresLocationJTextField.setVisible(true);
+            panel.getHighresLocationJTextField().setVisible(true);
         } else {
-            highresLocationJTextField.setVisible(false);
+            panel.getHighresLocationJTextField().setVisible(false);
         }
 
     }
 
-    /**
-     * sets the size of the TextArea
-     */
-    public void setTextAreaSize() {
-        Dimension textAreaSize = pictureDescriptionJTA.getPreferredSize();
 
-        int targetHeight;
-        if (textAreaSize.height < pictureDescriptionJSP.getMinimumSize().height) {
-            targetHeight = pictureDescriptionJSP.getMinimumSize().height;
-        } else if (textAreaSize.height > pictureDescriptionJSP.getMaximumSize().height) {
-            targetHeight = pictureDescriptionJSP.getMaximumSize().height;
-        } else {
-            targetHeight = (((textAreaSize.height / 30) + 1) * 30);
-        }
-
-        Dimension scrollPaneSize = pictureDescriptionJSP.getPreferredSize();
-        int targetWidth = (int) (Settings.thumbnailSize * thumbnailSizeFactor);
-        if ((targetHeight != scrollPaneSize.height) || (targetWidth != scrollPaneSize.width)) {
-            pictureDescriptionJSP.setPreferredSize(new Dimension(targetWidth, targetHeight));
-            LOGGER.log(Level.FINE, "ThumbnailDescriptionJPanel.setTextAreaSize set to: {0} / {1}", new Object[]{Integer.toString(targetWidth), Integer.toString(targetHeight)});
-        }
-    }
 
     /**
      * Overridden method to allow the better tuning of visibility
      *
      * @param visibility Send in true or false
      */
-    @Override
     public void setVisible(boolean visibility) {
-        super.setVisible(visibility);
-        pictureDescriptionJTA.setVisible(visibility);
-        pictureDescriptionJSP.setVisible(visibility);
+        panel.setVisible(visibility);
+        panel.getPictureDescriptionJTA().setVisible(visibility);
+        panel.getPictureDescriptionJSP().setVisible(visibility);
     }
 
     /**
@@ -378,42 +299,10 @@ public class ThumbnailDescriptionJPanel
      * the selection
      */
     public void showSlectionStatus() {
-        if (Settings.getPictureCollection().isSelected(referringNode)) {
-            showAsSelected();
-        } else {
-            showAsUnselected();
-        }
+        panel.showAsSelected(Settings.getPictureCollection().isSelected(referringNode));
     }
 
-    /**
-     * changes the color so that the user sees that the thumbnail is part of the
-     * selection.<p>
-     * This method is EDT safe.
-     */
-    public void showAsSelected() {
-        Runnable r = () -> pictureDescriptionJTA.setBackground(Settings.SELECTED_COLOR_TEXT);
-        if (SwingUtilities.isEventDispatchThread()) {
-            r.run();
-        } else {
-            SwingUtilities.invokeLater(r);
-        }
 
-    }
-
-    /**
-     * Changes the color so that the user sees that the thumbnail is not part of
-     * the selection<p>
-     * This method is EDT safe
-     */
-    public void showAsUnselected() {
-        Runnable runnable = () -> pictureDescriptionJTA.setBackground(Settings.UNSELECTED_COLOR);
-        if (SwingUtilities.isEventDispatchThread()) {
-            runnable.run();
-        } else {
-            SwingUtilities.invokeLater(runnable);
-        }
-
-    }
 
     /**
      * Returns the preferred size for the ThumbnailDescription as a Dimension
@@ -422,11 +311,10 @@ public class ThumbnailDescriptionJPanel
      * @return Returns the preferred size for the ThumbnailDescription as a
      * Dimension using the thumbnailSize as width and height.
      */
-    @Override
     public Dimension getPreferredSize() {
-        Dimension d = super.getPreferredSize();
+        Dimension d = panel.getPreferredSize();
         int height = 0;
-        if (isVisible()) {
+        if (panel.isVisible()) {
             height = d.height;
         }
         return new Dimension(d.width, height);
@@ -439,8 +327,7 @@ public class ThumbnailDescriptionJPanel
      * @param thumbnailSizeFactor Factor
      */
     public void setFactor(float thumbnailSizeFactor) {
-        this.thumbnailSizeFactor = thumbnailSizeFactor;
-        setTextAreaSize();
+        panel.setThumbnailSizeFactor(thumbnailSizeFactor);
     }
 
     /**
@@ -460,17 +347,17 @@ public class ThumbnailDescriptionJPanel
     public void pictureInfoChangeEvent(final PictureInfoChangeEvent pictureInfoChangeEvent) {
         Runnable runnable = () -> {
             if (pictureInfoChangeEvent.getDescriptionChanged()) {
-                pictureDescriptionJTA.setText(pictureInfoChangeEvent.getPictureInfo().getDescription());
+                panel.setDescription(pictureInfoChangeEvent.getPictureInfo().getDescription());
             }
 
             if (pictureInfoChangeEvent.getHighresLocationChanged()) {
-                highresLocationJTextField.setText(pictureInfoChangeEvent.getPictureInfo().getImageLocation());
+                panel.getHighresLocationJTextField().setText(pictureInfoChangeEvent.getPictureInfo().getImageLocation());
             }
 
             if (pictureInfoChangeEvent.getWasSelected()) {
-                showAsSelected();
+                panel.showAsSelected();
             } else if (pictureInfoChangeEvent.getWasUnselected()) {
-                showAsUnselected();
+                panel.showAsUnselected();
             }
         };
         if (SwingUtilities.isEventDispatchThread()) {
@@ -506,8 +393,8 @@ public class ThumbnailDescriptionJPanel
                     Object userObject = referringNode.getUserObject();
                     if (userObject instanceof GroupInfo) {
                         String legend = ((GroupInfo) userObject).getGroupName();
-                        if (!legend.equals(pictureDescriptionJTA.getText())) {
-                            pictureDescriptionJTA.setText(legend);
+                        if (!legend.equals(panel.getDescription())) {
+                            panel.setDescription(legend);
                         }
                     }
                 }

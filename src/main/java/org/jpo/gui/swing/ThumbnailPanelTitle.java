@@ -1,15 +1,17 @@
 package org.jpo.gui.swing;
 
+import org.jetbrains.annotations.TestOnly;
 import org.jpo.datamodel.Settings;
 import org.jpo.datamodel.Tools;
 
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.util.Objects;
 
 /*
-Copyright (C) 2009-2019  Richard Eigenmann, Zürich, Switzerland
+Copyright (C) 2009-2020  Richard Eigenmann, Zürich, Switzerland
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -72,27 +74,35 @@ public class ThumbnailPanelTitle
      */
     private final JLabel title = new JLabel();
 
+    @TestOnly
+    public String getTitle() {
+        return title.getText();
+    }
+
     /**
      *  The largest size for the thumbnail slider
      */
-    private static final int THUMBNAILSIZE_MIN = 5;
+    private static final int THUMBNAILSIZE_SLIDER_MIN = 5;
 
     /**
      *  The smallest size for the thumbnail slider
      */
-    public static final int THUMBNAILSIZE_MAX = 20;
+    public static final int THUMBNAILSIZE_SLIDER_MAX = 20;
 
     /**
      *  The starting position for the thumbnail slider
      */
-    private static final int THUMBNAILSIZE_INIT = 20;
+    private static final int THUMBNAILSIZE_SLIDER_INIT = 20;
 
     /**
      *   Slider to control the size of the thumbnails
      */
-    public final JSlider resizeJSlider = new JSlider( JSlider.HORIZONTAL,
-            THUMBNAILSIZE_MIN, THUMBNAILSIZE_MAX, THUMBNAILSIZE_INIT );
+    private final JSlider resizeJSlider = new JSlider( JSlider.HORIZONTAL,
+            THUMBNAILSIZE_SLIDER_MIN, THUMBNAILSIZE_SLIDER_MAX, THUMBNAILSIZE_SLIDER_INIT);
 
+    public void addResizeChangeListener(ChangeListener cl) {
+        resizeJSlider.addChangeListener(cl);
+    }
 
     /**
      * Sets up the components. Must be on the EDT.
@@ -172,6 +182,5 @@ public class ThumbnailPanelTitle
         } else {
             runnable.run();
         }
-
     }
 }

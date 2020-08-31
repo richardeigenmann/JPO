@@ -222,10 +222,15 @@ public class Settings {
      * number of recent files shown in the file menu
      */
     public static final int MAX_MEMORISE = 9;
+
+    public static String[] getRecentCollections() {
+        return recentCollections;
+    }
+
     /**
      * Array of recently used files
      */
-    public static final String[] recentCollections = new String[MAX_MEMORISE];
+    private static final String[] recentCollections = new String[MAX_MEMORISE];
     /**
      * A counter that keeps track of the number of thumbnails created
      */
@@ -552,10 +557,14 @@ public class Settings {
      */
     public static List<Camera> cameras = new ArrayList<>();
 
+    public static TreeSet<Object> getEmailSenders() {
+        return emailSenders;
+    }
+
     /**
      * list of email senders
      */
-    public static final TreeSet<Object> emailSenders = new TreeSet<>() {
+    private static final TreeSet<Object> emailSenders = new TreeSet<>() {
         @Override
         public boolean add(Object o) {
             boolean b = super.add(o);

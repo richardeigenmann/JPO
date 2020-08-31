@@ -439,6 +439,8 @@ public class PictureInfo implements Serializable {
 
     /**
      * calculates the SHA-256 hash of the picture.
+     * @return returns a HashCode object containing the SHA256 of the Image File
+     * @throws IOException if the underlying library encounters and {@link IOException}
      */
     public HashCode calculateSha256() throws IOException {
         HashCode hash = Files.asByteSource(getImageFile()).hash(Hashing.sha256());
