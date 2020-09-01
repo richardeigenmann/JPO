@@ -48,8 +48,8 @@ public class ThumbnailDescriptionPanel extends JPanel {
      * have multiple lines of text if this is required.
      */
     private final JScrollPane pictureDescriptionJSP = new JScrollPane(pictureDescriptionJTA,
-            JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
-            JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+            ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+            ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
     public JTextField getHighresLocationJTextField() {
         return highresLocationJTextField;

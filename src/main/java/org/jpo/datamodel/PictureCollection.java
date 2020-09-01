@@ -839,12 +839,9 @@ public class PictureCollection {
                 LOGGER.log(Level.SEVERE,"Could not rename original file to {0}", backupOriginalFile);
             } else {
                 if ( ! temporaryFile.renameTo(xmlFile) ) {
-                    LOGGER.severe("Could not rename temp file " + temporaryFile.toString() + " to " + xmlFile);
+                    LOGGER.log(Level.SEVERE,"Could not rename temp file {0} to {1}", new Object[]{temporaryFile, xmlFile});
                 } else {
                     setUnsavedUpdates(false);
-                    /*if ( ! backupOriginalFile.delete() ) {
-                        LOGGER.log(Level.SEVERE,"Could not delete backed up original file {0}", backupOriginalFile);
-                    }*/
                     try {
                         Files.delete(backupOriginalFile.toPath());
                     } catch (IOException e) {

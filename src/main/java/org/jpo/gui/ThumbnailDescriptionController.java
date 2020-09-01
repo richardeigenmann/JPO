@@ -67,9 +67,6 @@ public class ThumbnailDescriptionController
     }
 
 
-
-
-
     /**
      * choices for the Description size
      */
@@ -91,9 +88,6 @@ public class ThumbnailDescriptionController
      * ThumbnailDescriptionJPanel.MINI_INFO,
      */
     private DescriptionSize displayMode = LARGE_DESCRIPTION;
-
-
-
 
 
     /**
@@ -123,7 +117,6 @@ public class ThumbnailDescriptionController
         });
 
 
-
         panel.getPictureDescriptionJTA().addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
@@ -142,7 +135,8 @@ public class ThumbnailDescriptionController
         setVisible(false);
 
     }
-    public static Optional<JPopupMenu> correctTextPopupMenu (@NonNull String text, @NonNull JTextArea textArea) {
+
+    public static Optional<JPopupMenu> correctTextPopupMenu(@NonNull String text, @NonNull JTextArea textArea) {
         Optional<String> oSpace = PicturePopupMenu.replaceEscapedSpaces(text);
         Optional<String> oUnderstore = PicturePopupMenu.replaceUnderscore(text);
         if (oSpace.isPresent() || oUnderstore.isPresent()) {
@@ -182,7 +176,7 @@ public class ThumbnailDescriptionController
             return;
         }
         Object userObject = referringNode.getUserObject();
-        if (userObject != null  && !panel.getDescription().equals(userObject.toString())) {
+        if (userObject != null && !panel.getDescription().equals(userObject.toString())) {
             // the description was changed
             if (userObject instanceof PictureInfo) {
                 ((PictureInfo) referringNode.getUserObject()).setDescription(panel.getDescription());
@@ -273,14 +267,13 @@ public class ThumbnailDescriptionController
         }
         panel.setTextAreaSize();
 
-        if ((referringNode != null) && (referringNode.getUserObject() instanceof PictureInfo) && (displayMode == MINI_INFO)) {
-            panel.getHighresLocationJTextField().setVisible(true);
-        } else {
-            panel.getHighresLocationJTextField().setVisible(false);
-        }
+        panel.getHighresLocationJTextField().setVisible(
+                (referringNode != null)
+                        && (referringNode.getUserObject() instanceof PictureInfo)
+                        && (displayMode == MINI_INFO)
+        );
 
     }
-
 
 
     /**
@@ -301,7 +294,6 @@ public class ThumbnailDescriptionController
     public void showSlectionStatus() {
         panel.showAsSelected(Settings.getPictureCollection().isSelected(referringNode));
     }
-
 
 
     /**
@@ -386,7 +378,7 @@ public class ThumbnailDescriptionController
         }
 
         for (Object child : children) {
-            if ( child instanceof  SortableDefaultMutableTreeNode ) {
+            if (child instanceof SortableDefaultMutableTreeNode) {
                 SortableDefaultMutableTreeNode childNode = (SortableDefaultMutableTreeNode) child;
                 if (childNode.equals(referringNode)) {
                     // we are displaying a changed node. What changed?
@@ -409,6 +401,7 @@ public class ThumbnailDescriptionController
      */
     @Override
     public void treeNodesInserted(TreeModelEvent e) {
+        //implemented here to satisfy the TreeModelListener interface; not used.
     }
 
     /**
@@ -418,6 +411,7 @@ public class ThumbnailDescriptionController
      */
     @Override
     public void treeNodesRemoved(TreeModelEvent e) {
+        //implemented here to satisfy the TreeModelListener interface; not used.
     }
 
     /**
@@ -427,5 +421,6 @@ public class ThumbnailDescriptionController
      */
     @Override
     public void treeStructureChanged(TreeModelEvent e) {
+        //implemented here to satisfy the TreeModelListener interface; not used.
     }
 }

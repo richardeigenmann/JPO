@@ -137,7 +137,7 @@ public class SettingsDialog extends JDialog {
     /**
      * Drop down box that shows the languages
      */
-    private final JComboBox<String> languageJComboBox = new JComboBox<>( Settings.supportedLanguages );
+    private final JComboBox<String> languageJComboBox = new JComboBox<>(Settings.getSupportedLanguages());
     /**
      * Text Field that holds the address of the email server
      */
@@ -564,8 +564,8 @@ public class SettingsDialog extends JDialog {
      * object's values are
      */
     private void initValues() {
-        for ( int i = 0; i < Settings.supportedLanguages.length; i++ ) {
-            if ( Settings.getCurrentLocale().equals( Settings.supportedLocale[i] ) ) {
+        for (int i = 0; i < Settings.getSupportedLanguages().length; i++ ) {
+            if ( Settings.getCurrentLocale().equals( Settings.getSupportedLocale()[i] ) ) {
                 languageJComboBox.setSelectedIndex( i );
                 break;
             }
@@ -587,13 +587,13 @@ public class SettingsDialog extends JDialog {
         jpgQualityJSlider.setValue( (int) ( Settings.defaultHtmlLowresQuality * 100 ) );
         thumbnailFastScaleJCheckBox.setSelected( Settings.thumbnailFastScale );
 
-        userFunction1NameJTextField.setText( Settings.userFunctionNames[0] );
-        userFunction2NameJTextField.setText( Settings.userFunctionNames[1] );
-        userFunction3NameJTextField.setText( Settings.userFunctionNames[2] );
+        userFunction1NameJTextField.setText( Settings.getUserFunctionNames()[0] );
+        userFunction2NameJTextField.setText( Settings.getUserFunctionNames()[1] );
+        userFunction3NameJTextField.setText( Settings.getUserFunctionNames()[2] );
 
-        userFunction1CmdJTextField.setText( Settings.userFunctionCmd[0] );
-        userFunction2CmdJTextField.setText( Settings.userFunctionCmd[1] );
-        userFunction3CmdJTextField.setText( Settings.userFunctionCmd[2] );
+        userFunction1CmdJTextField.setText( Settings.getUserFunctionCmd()[0] );
+        userFunction2CmdJTextField.setText( Settings.getUserFunctionCmd()[1] );
+        userFunction3CmdJTextField.setText( Settings.getUserFunctionCmd()[2] );
 
         emailServerJTextField.setText( Settings.emailServer );
         emailPortJTextField.setText( Settings.emailPort );
@@ -639,7 +639,7 @@ public class SettingsDialog extends JDialog {
      * object.
      */
     private void writeValues() {
-        Locale comboBoxLocale = Settings.supportedLocale[languageJComboBox.getSelectedIndex()];
+        Locale comboBoxLocale = Settings.getSupportedLocale()[languageJComboBox.getSelectedIndex()];
         boolean localeChanged = Settings.setLocale( comboBoxLocale );
         if ( localeChanged ) {
             LOGGER.info( "Locale changed!" );
@@ -686,13 +686,13 @@ public class SettingsDialog extends JDialog {
         Settings.defaultHtmlLowresQuality = ( (float) jpgQualityJSlider.getValue() ) / 100;
         Settings.thumbnailFastScale = thumbnailFastScaleJCheckBox.isSelected();
 
-        Settings.userFunctionNames[0] = userFunction1NameJTextField.getText();
-        Settings.userFunctionNames[1] = userFunction2NameJTextField.getText();
-        Settings.userFunctionNames[2] = userFunction3NameJTextField.getText();
+        Settings.getUserFunctionNames()[0] = userFunction1NameJTextField.getText();
+        Settings.getUserFunctionNames()[1] = userFunction2NameJTextField.getText();
+        Settings.getUserFunctionNames()[2] = userFunction3NameJTextField.getText();
 
-        Settings.userFunctionCmd[0] = userFunction1CmdJTextField.getText();
-        Settings.userFunctionCmd[1] = userFunction2CmdJTextField.getText();
-        Settings.userFunctionCmd[2] = userFunction3CmdJTextField.getText();
+        Settings.getUserFunctionCmd()[0] = userFunction1CmdJTextField.getText();
+        Settings.getUserFunctionCmd()[1] = userFunction2CmdJTextField.getText();
+        Settings.getUserFunctionCmd()[2] = userFunction3CmdJTextField.getText();
 
         Settings.emailServer = emailServerJTextField.getText();
         Settings.emailPort = emailPortJTextField.getText();

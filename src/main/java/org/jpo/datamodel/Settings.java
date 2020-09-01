@@ -574,10 +574,15 @@ public class Settings {
             return b;
         }
     };
+
+    public static SortedSet<Object> getEmailRecipients() {
+        return emailRecipients;
+    }
+
     /**
      * list of email senders
      */
-    public static final TreeSet<Object> emailRecipients = new TreeSet<>() {
+    private static final TreeSet<Object> emailRecipients = new TreeSet<>() {
         @Override
         public boolean add(Object o) {
             boolean b = super.add(o);
@@ -1090,14 +1095,22 @@ public class Settings {
         return currentLocale.getDisplayLanguage();
     }
 
+    public static String[] getSupportedLanguages() {
+        return supportedLanguages;
+    }
+
+    public static Locale[] getSupportedLocale() {
+        return supportedLocale;
+    }
+
     /**
      * Supported Languages
      */
-    public static final String[] supportedLanguages = {"English", "Deutsch", "Simplified Chinese", "Traditional Chinese"};
+    private static final String[] supportedLanguages = {"English", "Deutsch", "Simplified Chinese", "Traditional Chinese"};
     /**
      * Locales for the languages in supportedLanguages
      */
-    public static final Locale[] supportedLocale = {Locale.ENGLISH, Locale.GERMAN, Locale.SIMPLIFIED_CHINESE, Locale.TRADITIONAL_CHINESE};
+    private static final Locale[] supportedLocale = {Locale.ENGLISH, Locale.GERMAN, Locale.SIMPLIFIED_CHINESE, Locale.TRADITIONAL_CHINESE};
 
     /**
      * Sets the new locale. As of 3 Apr 2014 this doesn't send a
@@ -1219,21 +1232,6 @@ public class Settings {
      * @param location The new zip file to memorise
      */
     public static void memorizeZipFile(String location) {
-        /*for (int i = 0; i < MAX_MEMORISE; i++) {
-            if ((memorizedZipFiles[i] != null) && (memorizedZipFiles[i].equals(location))) {
-                for (int j = i; j > 0; j--) {
-                    memorizedZipFiles[j] = memorizedZipFiles[j - 1];
-                }
-                memorizedZipFiles[0] = location;
-                return;
-            }
-        }
-
-        // move all the elements down by one
-        for (int i = MAX_MEMORISE - 1; i > 0; i--) {
-            memorizedZipFiles[i] = memorizedZipFiles[i - 1];
-        }
-        memorizedZipFiles[0] = location; */
         if (!memorizedZipFiles.contains(location)) {
             memorizedZipFiles.add(location);
         }
@@ -1278,14 +1276,23 @@ public class Settings {
      * number of user Functions
      */
     public static final int maxUserFunctions = 3;
+
+    public static String[] getUserFunctionNames() {
+        return userFunctionNames;
+    }
+
+    public static String[] getUserFunctionCmd() {
+        return userFunctionCmd;
+    }
+
     /**
      * Array of user function names
      */
-    public static final String[] userFunctionNames = new String[maxUserFunctions];
+    private static final String[] userFunctionNames = new String[maxUserFunctions];
     /**
      * Array of user function commands
      */
-    public static final String[] userFunctionCmd = new String[maxUserFunctions];
+    private static final String[] userFunctionCmd = new String[maxUserFunctions];
 
     private static MainWindow mainWindow;
 

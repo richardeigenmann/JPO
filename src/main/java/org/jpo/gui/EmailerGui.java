@@ -322,7 +322,7 @@ public class EmailerGui extends JFrame {
             fromJComboBox.addItem( (String) i.next() );
         }
 
-        i = Settings.emailRecipients.iterator();
+        i = Settings.getEmailRecipients().iterator();
         while ( i.hasNext() ) {
             toJComboBox.addItem( (String) i.next() );
         }
@@ -341,7 +341,7 @@ public class EmailerGui extends JFrame {
      */
     private void putSettings() {
         Settings.getEmailSenders().add( Objects.requireNonNull(fromJComboBox.getSelectedItem()).toString() );
-        Settings.emailRecipients.add( Objects.requireNonNull(toJComboBox.getSelectedItem()).toString() );
+        Settings.getEmailRecipients().add( Objects.requireNonNull(toJComboBox.getSelectedItem()).toString() );
         Settings.emailScaleImages = scalePicturesJCheckBox.isSelected();
         Settings.emailSendOriginal = sendOriginalsJCheckBox.isSelected();
         Settings.emailDimensions = new Dimension( imageWidthWholeNumberField.getValue(), imageHeightWholeNumberField.getValue() );

@@ -22,14 +22,9 @@ import org.jpo.datamodel.Settings;
 import org.jpo.gui.swing.ThumbnailDescriptionPanel;
 import org.jpo.gui.swing.ThumbnailPanelTitle;
 
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JSlider;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 import javax.swing.event.ChangeEvent;
-import java.awt.BorderLayout;
-import java.awt.Dimension;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.lang.reflect.InvocationTargetException;
 import java.util.logging.Level;
@@ -62,7 +57,7 @@ public class ThumbnailDescriptionTester {
         p.setLayout(new BorderLayout());
 
         final JFrame frame = new JFrame("ThumbnailDescriptionTester");
-        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
         ThumbnailDescriptionPanel panel = new ThumbnailDescriptionPanel();
 
@@ -76,24 +71,15 @@ public class ThumbnailDescriptionTester {
         buttonPanel.add(showAsUnselectedButton);
 
         JButton setDescription1Button = new JButton("Set description 1");
-        setDescription1Button.addActionListener((ActionEvent e) -> {
-            panel.setDescription("This is a description text");
-            //panel.revalidate();
-        });
+        setDescription1Button.addActionListener(e -> panel.setDescription("This is a description text"));
         buttonPanel.add(setDescription1Button);
 
         JButton setDescription2Button = new JButton("Set description 2");
-        setDescription2Button.addActionListener((ActionEvent e) -> {
-            panel.setDescription("This is a different description");
-            //panel.revalidate();
-        });
+        setDescription2Button.addActionListener((ActionEvent e) -> panel.setDescription("This is a different description"));
         buttonPanel.add(setDescription2Button);
 
         JButton setDescription3Button = new JButton("Set long description");
-        setDescription3Button.addActionListener((ActionEvent e) -> {
-            panel.setDescription("A very long description\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce et libero accumsan, molestie velit sed, tincidunt erat. Vivamus a justo finibus, suscipit tellus sed, imperdiet quam. Integer consequat porttitor scelerisque. Aenean pulvinar tortor vitae est euismod dapibus. Fusce efficitur tortor ac tempor ultricies. Phasellus rhoncus placerat dui et convallis. Vivamus sit amet neque sit amet tortor ornare ultricies nec suscipit magna. Fusce est urna, fermentum ac metus vitae, maximus tempor ex. Duis scelerisque blandit tempor. Phasellus sagittis volutpat dolor, in mollis eros finibus in. Donec efficitur pellentesque mauris sit amet elementum. Duis mollis ex ut iaculis pretium. In hac habitasse platea dictumst.");
-            //panel.revalidate();
-        });
+        setDescription3Button.addActionListener((ActionEvent e) -> panel.setDescription("A very long description\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce et libero accumsan, molestie velit sed, tincidunt erat. Vivamus a justo finibus, suscipit tellus sed, imperdiet quam. Integer consequat porttitor scelerisque. Aenean pulvinar tortor vitae est euismod dapibus. Fusce efficitur tortor ac tempor ultricies. Phasellus rhoncus placerat dui et convallis. Vivamus sit amet neque sit amet tortor ornare ultricies nec suscipit magna. Fusce est urna, fermentum ac metus vitae, maximus tempor ex. Duis scelerisque blandit tempor. Phasellus sagittis volutpat dolor, in mollis eros finibus in. Donec efficitur pellentesque mauris sit amet elementum. Duis mollis ex ut iaculis pretium. In hac habitasse platea dictumst."));
         buttonPanel.add(setDescription3Button);
 
         JButton callSetTextAreaSizeButton = new JButton("call setTextAreaSize");

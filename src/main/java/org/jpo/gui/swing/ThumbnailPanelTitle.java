@@ -97,7 +97,7 @@ public class ThumbnailPanelTitle
     /**
      *   Slider to control the size of the thumbnails
      */
-    private final JSlider resizeJSlider = new JSlider( JSlider.HORIZONTAL,
+    private final JSlider resizeJSlider = new JSlider( SwingConstants.HORIZONTAL,
             THUMBNAILSIZE_SLIDER_MIN, THUMBNAILSIZE_SLIDER_MAX, THUMBNAILSIZE_SLIDER_INIT);
 
     public void addResizeChangeListener(ChangeListener cl) {

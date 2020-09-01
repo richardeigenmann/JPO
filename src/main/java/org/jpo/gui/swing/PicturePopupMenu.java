@@ -871,8 +871,8 @@ public class PicturePopupMenu extends JPopupMenu {
      */
     private void labelUserFunctions() {
         for (int i = 0; i < Settings.maxUserFunctions; i++) {
-            if ((Settings.userFunctionNames[i] != null) && (Settings.userFunctionNames[i].length() > 0) && (Settings.userFunctionCmd[i] != null) && (Settings.userFunctionCmd[i].length() > 0)) {
-                userFunctionJMenuItems[i].setText(Settings.userFunctionNames[i]);
+            if ((Settings.getUserFunctionNames()[i] != null) && (Settings.getUserFunctionNames()[i].length() > 0) && (Settings.getUserFunctionCmd()[i] != null) && (Settings.getUserFunctionCmd()[i].length() > 0)) {
+                userFunctionJMenuItems[i].setText(Settings.getUserFunctionNames()[i]);
                 userFunctionJMenuItems[i].setVisible(true);
             } else {
                 userFunctionJMenuItems[i].setVisible(false);

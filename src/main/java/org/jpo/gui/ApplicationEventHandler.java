@@ -1682,7 +1682,7 @@ public class ApplicationEventHandler {
             LOGGER.info("Error: called with an out of bounds index");
             return;
         }
-        String command = Settings.userFunctionCmd[userFunction];
+        String command = Settings.getUserFunctionCmd()[userFunction];
         if ((command == null) || (command.length() == 0)) {
             LOGGER.log(Level.INFO, "Command {0} is not properly defined", Integer.toString(userFunction));
             return;

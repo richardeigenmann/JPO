@@ -21,6 +21,7 @@ import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DropTargetDropEvent;
 import java.awt.event.ActionEvent;
 import java.io.*;
+import java.nio.file.Files;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -1196,7 +1197,7 @@ public class SortableDefaultMutableTreeNode
         LOGGER.log(Level.FINE, "Copy/Moving {0} pictures to target directory {1}", new Object[]{fileCollection.size(), targetDir.toString()});
         getPictureCollection().setSendModelUpdates(false);
         for (File file : fileCollection) {
-            LOGGER.fine(String.format("Processing file %s", file.toString()));
+            LOGGER.log(Level.FINE, "Processing file {}", file);
             if (progressBar != null) {
                 SwingUtilities.invokeLater(
                         () -> progressBar.setValue(progressBar.getValue() + 1)
@@ -1207,7 +1208,9 @@ public class SortableDefaultMutableTreeNode
             copyPicture(file, targetFile);
 
             if (!copyMode) {
-                if (! file.delete() ) {
+                try {
+                    Files.delete(file.toPath());
+                } catch (IOException e) {
                     LOGGER.log(Level.SEVERE, "File {} could not be deleted!", file);
                 }
             }
@@ -1252,7 +1255,11 @@ public class SortableDefaultMutableTreeNode
                     long crc = copyPicture(addFile, targetFile);
                     cam.storePictureNewImage(addFile, crc); // remember it next time
                     if (cam.inOldImage(crc)) {
-                        targetFile.delete();
+                        try {
+                            Files.delete(targetFile.toPath());
+                        } catch (IOException e) {
+                            LOGGER.log(Level.SEVERE, "Could not delete {0}\nException: {1}", new Object[]{targetFile, e.getMessage()});
+                        }
                         progGui.decrementTotal();
                     } else {
                         receivingNode.addPicture(targetFile, selectedCategories);
