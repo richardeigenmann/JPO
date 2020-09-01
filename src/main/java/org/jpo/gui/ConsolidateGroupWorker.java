@@ -75,11 +75,11 @@ public class ConsolidateGroupWorker extends SwingWorker<String, String> {
         this.progGui = progGui;
 
         if ( !targetDirectory.exists() ) {
-            LOGGER.log(Level.SEVERE, "Aborting because target directory {0} doesn't exist", targetDirectory.getPath() );
+            LOGGER.log(Level.SEVERE, "Aborting because target directory {0} doesn''t exist", targetDirectory.getPath() );
             return;
         }
         if ( !targetDirectory.canWrite() ) {
-            LOGGER.log(Level.SEVERE, "Aborting because directory {0} can't be written to", targetDirectory.getPath() );
+            LOGGER.log(Level.SEVERE, "Aborting because directory {0} can''t be written to", targetDirectory.getPath() );
             return;
         }
 
@@ -196,7 +196,7 @@ public class ConsolidateGroupWorker extends SwingWorker<String, String> {
         try {
             moveFile( pictureFile, newFile );
         } catch ( IOException ex ) {
-            LOGGER.log(Level.SEVERE, "Failed to move file {0} to {0}.\nException: {0}", new Object[]{pictureFile, newFile, ex.getLocalizedMessage()} );
+            LOGGER.log(Level.SEVERE, "Failed to move file {0} to {1}.\nException: {2}", new Object[]{pictureFile, newFile, ex.getLocalizedMessage()} );
             return false;
         }
         pictureInfo.setImageLocation( newFile );

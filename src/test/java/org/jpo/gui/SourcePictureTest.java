@@ -38,8 +38,7 @@ public class SourcePictureTest {
         try {
             imageFile = new File(Objects.requireNonNull(imageUrl).toURI());
         } catch (URISyntaxException e) {
-            e.printStackTrace();
-            fail("Could not convert resource to File");
+            fail("Could not convert resource to File: " + e.getMessage());
         }
         s.loadPicture(imageFile, 0.0);
         assertEquals("Height", 233, s.getHeight());
@@ -54,8 +53,7 @@ public class SourcePictureTest {
         try {
             imageFile = new File(Objects.requireNonNull(imageUrl).toURI());
         } catch (URISyntaxException e) {
-            e.printStackTrace();
-            fail("Could not convert resource to File");
+            fail("Could not convert resource to File: "+e.getMessage());
         }
 
         s.loadPicture(imageFile, 90.0);
@@ -78,8 +76,7 @@ public class SourcePictureTest {
         try {
             imageFile = new File(Objects.requireNonNull(imageUrl).toURI());
         } catch (URISyntaxException e) {
-            e.printStackTrace();
-            fail("Could not convert resource to File");
+            fail("Could not convert resource to File: " + e.getMessage());
         }
 
         s.loadPicture(imageFile, 0.0);
@@ -95,8 +92,7 @@ public class SourcePictureTest {
         try {
             imageFile = new File(Objects.requireNonNull(imageUrl).toURI());
         } catch (URISyntaxException e) {
-            e.printStackTrace();
-            fail("Could not convert resource to File");
+            fail("Could not convert resource to File: "+e.getMessage());
         }
 
         s.loadPicture(imageFile, 90.0);
@@ -118,8 +114,7 @@ public class SourcePictureTest {
         try {
             imageFile = new File(Objects.requireNonNull(imageUrl).toURI());
         } catch (URISyntaxException e) {
-            e.printStackTrace();
-            fail("Could not convert resource to File");
+            fail("Could not convert resource to File: "+e.getMessage());
         }
 
         s.loadPicture(imageFile, 0.0);
@@ -135,8 +130,7 @@ public class SourcePictureTest {
         try {
             imageFile = new File(Objects.requireNonNull(imageUrl).toURI());
         } catch (URISyntaxException e) {
-            e.printStackTrace();
-            fail("Could not convert resource to File");
+            fail("Could not convert resource to File: "+e.getMessage());
         }
 
         s.loadPicture(imageFile, 270.0);
@@ -158,8 +152,7 @@ public class SourcePictureTest {
         try {
             imageFile = new File(Objects.requireNonNull(imageUrl).toURI());
         } catch (URISyntaxException e) {
-            e.printStackTrace();
-            fail("Could not convert resource to File");
+            fail("Could not convert resource to File: "+e.getMessage());
         }
 
         s.loadPicture(imageFile, 0.0);
@@ -205,8 +198,7 @@ public class SourcePictureTest {
         try {
             imageFile = new File(Objects.requireNonNull(imageUrl).toURI());
         } catch (URISyntaxException e) {
-            e.printStackTrace();
-            fail("Could not convert resource to File");
+            fail("Could not convert resource to File: "+e.getMessage());
         }
 
         s.loadPicture(imageFile, 0.0);
@@ -253,8 +245,7 @@ public class SourcePictureTest {
         try {
             imageFile = new File(imageUrl.toURI());
         } catch (URISyntaxException e) {
-            e.printStackTrace();
-            fail("Could not convert resource to File");
+            fail("Could not convert resource to File: " + e.getMessage());
         }
 
         s.loadPicture(imageFile, 0.0);
@@ -301,8 +292,7 @@ public class SourcePictureTest {
         try {
             imageFile = new File(imageUrl.toURI());
         } catch (URISyntaxException e) {
-            e.printStackTrace();
-            fail("Could not convert resource to File");
+            fail("Could not convert resource to File: "+e.getMessage());
         }
 
         s.loadPicture(imageFile, 0.0);
@@ -348,8 +338,7 @@ public class SourcePictureTest {
         try {
             imageFile = new File(imageUrl.toURI());
         } catch (URISyntaxException e) {
-            e.printStackTrace();
-            fail("Could not convert resource to File");
+            fail("Could not convert resource to File: "+e.getMessage());
         }
 
         s.loadPicture(imageFile, 0.0);
@@ -444,8 +433,7 @@ public class SourcePictureTest {
         try {
             imageFile = new File(imageUrl.toURI());
         } catch (URISyntaxException e) {
-            e.printStackTrace();
-            fail("Could not convert resource to File");
+            fail("Could not convert resource to File: "+e.getMessage());
         }
 
         s.loadPicture(imageFile, 0.0);
@@ -493,8 +481,7 @@ public class SourcePictureTest {
         try {
             imageFile = new File(Objects.requireNonNull(imageUrl).toURI());
         } catch (URISyntaxException e) {
-            e.printStackTrace();
-            fail("Could not convert resource to File");
+            fail("Could not convert resource to File: " +e.getMessage());
         }
 
         s.loadPicture(imageFile, 0.0);
@@ -540,8 +527,7 @@ public class SourcePictureTest {
         try {
             imageFile = new File(imageUrl.toURI());
         } catch (URISyntaxException e) {
-            e.printStackTrace();
-            fail("Could not convert resource to File");
+            fail("Could not convert resource to File: "+e.getMessage());
         }
 
         s.loadPicture(imageFile, 0.0);
@@ -588,8 +574,7 @@ public class SourcePictureTest {
         try {
             imageFile = new File(imageUrl.toURI());
         } catch (final URISyntaxException e) {
-            e.printStackTrace();
-            fail("Could not convert resource to File");
+            fail("Could not convert resource to File: "+e.getMessage());
         }
 
         s.loadPicture(imageFile, 0.0);
@@ -635,8 +620,7 @@ public class SourcePictureTest {
         try {
             imageFile = new File(Objects.requireNonNull(imageUrl).toURI());
         } catch (final URISyntaxException e) {
-            e.printStackTrace();
-            fail("Could not convert resource to File");
+            fail("Could not convert resource to File: "+e.getMessage());
         }
 
         s.loadPicture(imageFile, 0.0);
@@ -682,8 +666,7 @@ public class SourcePictureTest {
         try {
             imageFile = new File(imageUrl.toURI());
         } catch (final URISyntaxException e) {
-            e.printStackTrace();
-            fail("Could not convert resource to File");
+            fail("Could not convert resource to File: "+e.getMessage());
         }
 
         s.loadPicture(imageFile, 0.0);
@@ -730,8 +713,7 @@ public class SourcePictureTest {
         try {
             imageFile = new File(imageUrl.toURI());
         } catch (final URISyntaxException e) {
-            e.printStackTrace();
-            fail("Could not convert resource to File");
+            fail("Could not convert resource to File: "+e.getMessage());
         }
 
         s.loadPicture(imageFile, 0.0);
@@ -778,8 +760,7 @@ public class SourcePictureTest {
         try {
             imageFile = new File(imageUrl.toURI());
         } catch (final URISyntaxException e) {
-            e.printStackTrace();
-            fail("Could not convert resource to File");
+            fail("Could not convert resource to File: "+e.getMessage());
         }
 
         s.loadPicture(imageFile, 0.0);
@@ -825,8 +806,7 @@ public class SourcePictureTest {
         try {
             imageFile = new File(Objects.requireNonNull(imageUrl).toURI());
         } catch (final URISyntaxException e) {
-            e.printStackTrace();
-            fail("Could not convert resource to File");
+            fail("Could not convert resource to File: "+e.getMessage());
         }
 
         s.loadPicture(imageFile, 0.0);
@@ -872,8 +852,7 @@ public class SourcePictureTest {
         try {
             imageFile = new File(imageUrl.toURI());
         } catch (final URISyntaxException e) {
-            e.printStackTrace();
-            fail("Could not convert resource to File");
+            fail("Could not convert resource to File: "+e.getMessage());
         }
 
         s.loadPicture(imageFile, 0.0);
@@ -919,8 +898,7 @@ public class SourcePictureTest {
         try {
             imageFile = new File(imageUrl.toURI());
         } catch (final URISyntaxException e) {
-            e.printStackTrace();
-            fail("Could not convert resource to File");
+            fail("Could not convert resource to File: "+e.getMessage());
         }
 
         s.loadPicture(imageFile, 0.0);
@@ -966,8 +944,7 @@ public class SourcePictureTest {
         try {
             imageFile = new File(Objects.requireNonNull(imageUrl).toURI());
         } catch (final URISyntaxException e) {
-            e.printStackTrace();
-            fail("Could not convert resource to File");
+            fail("Could not convert resource to File: "+e.getMessage());
         }
 
         s.loadPicture(imageFile, 0.0);
@@ -1013,8 +990,7 @@ public class SourcePictureTest {
         try {
             imageFile = new File(imageUrl.toURI());
         } catch (final URISyntaxException e) {
-            e.printStackTrace();
-            fail("Could not convert resource to File");
+            fail("Could not convert resource to File: "+e.getMessage());
         }
 
         s.loadPicture(imageFile, 0.0);

@@ -21,18 +21,20 @@ package org.jpo.gui.swing;
 
 import org.jpo.datamodel.Settings;
 
-import javax.swing.*;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import java.awt.*;
-import java.util.logging.Logger;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
 
 public class ThumbnailDescriptionPanel extends JPanel {
 
-    /**
-     * Defines a logger for this class
-     */
-    private static final Logger LOGGER = Logger.getLogger(ThumbnailDescriptionPanel.class.getName());
 
     /**
      * This object holds the description

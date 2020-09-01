@@ -423,8 +423,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
             try {
                 file = new File(Objects.requireNonNull(WebsiteGenerator.class.getClassLoader().getResource("org/jpo/images/broken_thumbnail.gif")).toURI());
             } catch (URISyntaxException e) {
-                e.printStackTrace();
-                throw new IOException ("Could not load the broken_thumbnail.gif resource");
+                throw new IOException ("Could not load the broken_thumbnail.gif resource: " + e.getMessage());
             }
             scp.loadPictureImd(file, 0f);
         }

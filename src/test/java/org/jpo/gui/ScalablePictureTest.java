@@ -39,8 +39,7 @@ public class ScalablePictureTest {
         try {
             imageFile = new File(Objects.requireNonNull(imageUrl).toURI());
         } catch (URISyntaxException e) {
-            e.printStackTrace();
-            fail("Could not convert resource to File");
+            fail("Could not convert resource to File: " + e.getMessage());
         }
         scalablePicture.loadPictureImd( imageFile, 0.0 );
         assertEquals( "Check that the image is 350 pixels wide", 350, scalablePicture.getSourcePicture().getWidth() );
@@ -59,8 +58,7 @@ public class ScalablePictureTest {
         try {
             imageFile = new File(Objects.requireNonNull(imageUrl).toURI());
         } catch (URISyntaxException e) {
-            e.printStackTrace();
-            fail("Could not convert resource to File");
+            fail("Could not convert resource to File: " + e.getMessage());
         }
         scalablePicture.loadPictureImd( imageFile, 90.0 );
         assertEquals( "Check that the image is 233 pixels wide", 233, scalablePicture.getSourcePicture().getWidth() );
@@ -80,8 +78,7 @@ public class ScalablePictureTest {
         try {
             imageFile = new File(Objects.requireNonNull(imageUrl).toURI());
         } catch (URISyntaxException e) {
-            e.printStackTrace();
-            fail("Could not convert resource to File");
+            fail("Could not convert resource to File: " + e.getMessage());
         }
         scalablePicture.loadPictureImd( imageFile, 90.0 );
         assertEquals( "Check that the image is 233 pixels wide", 233, scalablePicture.getSourcePicture().getWidth() );
@@ -107,8 +104,7 @@ public class ScalablePictureTest {
         try {
             imageFile = new File(Objects.requireNonNull(imageUrl).toURI());
         } catch (URISyntaxException e) {
-            e.printStackTrace();
-            fail("Could not convert resource to File");
+            fail("Could not convert resource to File: "+e.getMessage());
         }
         scalablePicture.loadPictureImd( imageFile, 0.0 );
         assertEquals( "Check that the image is 350 pixels wide", 350, scalablePicture.getSourcePicture().getWidth() );

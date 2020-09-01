@@ -1745,8 +1745,8 @@ public class ApplicationEventHandler {
     public void handleOpenFileExplorerRequest(final OpenFileExplorerRequest request) {
         try {
             Desktop.getDesktop().open(request.getDirectory());
-        } catch (IOException e1) {
-            e1.printStackTrace();
+        } catch (IOException e) {
+            LOGGER.log(Level.SEVERE, "handleOpenFileExplorerRequest Exception: {0}", e.getMessage());
         }
     }
 

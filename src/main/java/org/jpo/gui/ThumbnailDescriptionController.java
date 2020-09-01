@@ -135,14 +135,14 @@ public class ThumbnailDescriptionController
         Optional<String> oUnderstore = PicturePopupMenu.replaceUnderscore(text);
         if (oSpace.isPresent() || oUnderstore.isPresent()) {
             JPopupMenu popupmenu = new JPopupMenu();
-
+            final String REPLACE_WITH = Settings.jpoResources.getString("ReplaceWith");
             if (oSpace.isPresent()) {
-                JMenuItem replaceSpace = new JMenuItem(Settings.jpoResources.getString("ReplaceWith") + oSpace.get());
+                JMenuItem replaceSpace = new JMenuItem(REPLACE_WITH + oSpace.get());
                 replaceSpace.addActionListener(e1 -> textArea.setText(oSpace.get()));
                 popupmenu.add(replaceSpace);
             }
             if (oUnderstore.isPresent()) {
-                JMenuItem replaceUnderscore = new JMenuItem(Settings.jpoResources.getString("ReplaceWith") + oUnderstore.get());
+                JMenuItem replaceUnderscore = new JMenuItem(REPLACE_WITH + oUnderstore.get());
                 replaceUnderscore.addActionListener(e1 -> textArea.setText(oUnderstore.get()));
                 popupmenu.add(replaceUnderscore);
             }
@@ -150,7 +150,7 @@ public class ThumbnailDescriptionController
                 Optional<String> spaceUnderscore = PicturePopupMenu.replaceUnderscore(oSpace.get());
                 if (spaceUnderscore.isPresent()) {
                     // to be expected...
-                    JMenuItem replaceSpaceAndUnderscore = new JMenuItem(Settings.jpoResources.getString("ReplaceWith") + spaceUnderscore.get());
+                    JMenuItem replaceSpaceAndUnderscore = new JMenuItem(REPLACE_WITH + spaceUnderscore.get());
                     replaceSpaceAndUnderscore.addActionListener(e1 -> textArea.setText(spaceUnderscore.get()));
                     popupmenu.add(replaceSpaceAndUnderscore);
                 }
