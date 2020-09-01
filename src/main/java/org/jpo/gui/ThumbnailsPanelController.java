@@ -181,7 +181,7 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
 
         titleJPanel.addResizeChangeListener((ChangeEvent e) -> {
             JSlider source = (JSlider) e.getSource();
-            thumbnailSizeFactor = (float) source.getValue() / ThumbnailPanelTitle.THUMBNAILSIZE_SLIDER_MAX;
+            thumbnailSizeFactor = ((float) source.getValue()) / ThumbnailPanelTitle.THUMBNAILSIZE_SLIDER_MAX;
             resizeAllThumbnails(thumbnailSizeFactor);
         });
 

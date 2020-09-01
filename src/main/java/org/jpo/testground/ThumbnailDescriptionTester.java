@@ -83,10 +83,7 @@ public class ThumbnailDescriptionTester {
         buttonPanel.add(setDescription3Button);
 
         JButton callSetTextAreaSizeButton = new JButton("call setTextAreaSize");
-        callSetTextAreaSizeButton.addActionListener((ActionEvent e) -> {
-            panel.setTextAreaSize();
-            //panel.revalidate();
-        });
+        callSetTextAreaSizeButton.addActionListener((ActionEvent e) ->  panel.setTextAreaSize());
         buttonPanel.add(callSetTextAreaSizeButton);
 
         /**
@@ -104,7 +101,7 @@ public class ThumbnailDescriptionTester {
          */
         final int THUMBNAILSIZE_SLIDER_INIT = 20;
 
-        final JSlider resizeJSlider = new JSlider(JSlider.HORIZONTAL,
+        final JSlider resizeJSlider = new JSlider(SwingConstants.HORIZONTAL,
                 THUMBNAILSIZE_SLIDER_MIN, THUMBNAILSIZE_SLIDER_MAX, THUMBNAILSIZE_SLIDER_INIT);
         resizeJSlider.setSnapToTicks(false);
         resizeJSlider.setMaximumSize(new Dimension(150, 40));
@@ -117,7 +114,6 @@ public class ThumbnailDescriptionTester {
             float thumbnailSizeFactor = (float) source.getValue() / ThumbnailPanelTitle.THUMBNAILSIZE_SLIDER_MAX;
             panel.setThumbnailSizeFactor(thumbnailSizeFactor);
             panel.setTextAreaSize();
-            //panel.revalidate();
         });
         buttonPanel.add(resizeJSlider);
 

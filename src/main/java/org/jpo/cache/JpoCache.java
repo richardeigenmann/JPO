@@ -40,6 +40,7 @@ import java.util.logging.Logger;
  The license is in gpl.txt.
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
+
 /**
  * Cache for the Jpo application
  *
@@ -50,7 +51,7 @@ public class JpoCache {
     /**
      * Defines a logger for this class
      */
-    private static final Logger LOGGER = Logger.getLogger( JpoCache.class.getName() );
+    private static final Logger LOGGER = Logger.getLogger(JpoCache.class.getName());
 
     private static final String HIGHRES_CACHE_REGION_NAME = "highresCache";
     private static final String THUMBNAIL_CACHE_REGION_NAME = "thumbnailCache";
@@ -73,16 +74,16 @@ public class JpoCache {
     private Dimension groupThumbnailDimension;
 
     private JpoCache() {
-        LOGGER.fine( "Creating JpoCache" );
+        LOGGER.fine("Creating JpoCache");
         CompositeCacheManager ccm = CompositeCacheManager.getUnconfiguredInstance();
         Properties props = loadProperties();
-        ccm.configure( props );
+        ccm.configure(props);
 
         try {
-            highresMemoryCache = JCS.getInstance( HIGHRES_CACHE_REGION_NAME );
-            thumbnailMemoryAndDiskCache = JCS.getInstance( THUMBNAIL_CACHE_REGION_NAME );
-        } catch ( CacheException ex ) {
-            LOGGER.severe( ex.getLocalizedMessage() );
+            highresMemoryCache = JCS.getInstance(HIGHRES_CACHE_REGION_NAME);
+            thumbnailMemoryAndDiskCache = JCS.getInstance(THUMBNAIL_CACHE_REGION_NAME);
+        } catch (CacheException ex) {
+            LOGGER.severe(ex.getLocalizedMessage());
         }
     }
 
@@ -93,24 +94,24 @@ public class JpoCache {
      */
     public static Properties loadProperties() {
         final String CACHE_DEFINITION_FILE = "cache.ccf";
-        URL ccfUrl = JpoCache.class.getClassLoader().getResource( CACHE_DEFINITION_FILE );
-        if ( ccfUrl == null ) {
-            LOGGER.severe( "Classloader didn't find file " + CACHE_DEFINITION_FILE );
+        URL ccfUrl = JpoCache.class.getClassLoader().getResource(CACHE_DEFINITION_FILE);
+        if (ccfUrl == null) {
+            LOGGER.severe("Classloader didn't find file " + CACHE_DEFINITION_FILE);
             return null;
         } else {
-            LOGGER.fine( "Cache definition file found at: " + ccfUrl.toString() );
+            LOGGER.fine("Cache definition file found at: " + ccfUrl.toString());
         }
 
         Properties props = new Properties();
-        try {
-            props.load( ccfUrl.openStream() );
-        } catch ( IOException e ) {
-            LOGGER.severe( "Failed to load " + CACHE_DEFINITION_FILE + "IOException: " + e.getLocalizedMessage() );
+        try (final InputStream inStream = ccfUrl.openStream();) {
+            props.load(inStream);
+        } catch (IOException e) {
+            LOGGER.severe("Failed to load " + CACHE_DEFINITION_FILE + "IOException: " + e.getLocalizedMessage());
             return null;
         }
 
-        LOGGER.fine( "setting jcs.auxiliary.DC.attributes.DiskPath to: " + Settings.thumbnailCacheDirectory );
-        props.setProperty( "jcs.auxiliary.DC.attributes.DiskPath", Settings.thumbnailCacheDirectory );
+        LOGGER.fine("setting jcs.auxiliary.DC.attributes.DiskPath to: " + Settings.thumbnailCacheDirectory);
+        props.setProperty("jcs.auxiliary.DC.attributes.DiskPath", Settings.thumbnailCacheDirectory);
 
         return props;
     }
@@ -121,8 +122,8 @@ public class JpoCache {
     public void shutdown() {
         try {
             CompositeCacheManager.getInstance().shutDown();
-        } catch ( CacheException ex ) {
-            Logger.getLogger( JpoCache.class.getName() ).log(Level.SEVERE, null, ex );
+        } catch (CacheException ex) {
+            Logger.getLogger(JpoCache.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -133,23 +134,23 @@ public class JpoCache {
      * @return and ImageBytes object
      * @throws IOException if something went wrong
      */
-    public ImageBytes getHighresImageBytes( File file ) throws IOException {
-        ImageBytes imageBytes = highresMemoryCache.get( file );
-        if ( imageBytes != null ) {
+    public ImageBytes getHighresImageBytes(File file) throws IOException {
+        ImageBytes imageBytes = highresMemoryCache.get(file);
+        if (imageBytes != null) {
             try {
-                FileTime lastModification = ( Files.getLastModifiedTime(file.toPath() ) );
-                if ( lastModification.compareTo( imageBytes.getLastModification() ) > 0 ) {
-                    imageBytes = new ImageBytes( IOUtils.toByteArray(  new BufferedInputStream(new FileInputStream(file)) ) );
+                FileTime lastModification = (Files.getLastModifiedTime(file.toPath()));
+                if (lastModification.compareTo(imageBytes.getLastModification()) > 0) {
+                    imageBytes = new ImageBytes(IOUtils.toByteArray(new BufferedInputStream(new FileInputStream(file))));
                 }
-            } catch (  IOException ex ) {
-                LOGGER.severe( ex.getLocalizedMessage() );
+            } catch (IOException ex) {
+                LOGGER.severe(ex.getLocalizedMessage());
             }
         } else {
-            imageBytes = new ImageBytes( IOUtils.toByteArray( new BufferedInputStream(new FileInputStream(file) )));
+            imageBytes = new ImageBytes(IOUtils.toByteArray(new BufferedInputStream(new FileInputStream(file))));
             try {
-                highresMemoryCache.put( file, imageBytes );
-            } catch ( NullPointerException | CacheException ex ) {
-                LOGGER.severe( ex.getLocalizedMessage() );
+                highresMemoryCache.put(file, imageBytes);
+            } catch (NullPointerException | CacheException ex) {
+                LOGGER.severe(ex.getLocalizedMessage());
             }
         }
         return imageBytes;
@@ -159,30 +160,30 @@ public class JpoCache {
      * Returns an ImageBytes object with thumbnail image data for the supplied
      * file
      *
-     * @param file The file of the highres picture for which a thumbnail is needed
+     * @param file     The file of the highres picture for which a thumbnail is needed
      * @param rotation The rotation in degrees (0..360) for the thumbnail
-     * @param size The maximum size of the thumbnail
+     * @param size     The maximum size of the thumbnail
      * @return The ImageBytes of the thumbnail
      */
-    public ImageBytes getThumbnailImageBytes( File file, double rotation, Dimension size ) {
+    public ImageBytes getThumbnailImageBytes(File file, double rotation, Dimension size) {
         int maxWidth = size.width;
         int maxHeight = size.height;
-        String key = String.format( "%s-%fdeg-w:%dpx-h:%dpx", file, rotation, maxWidth, maxHeight );
-        ImageBytes imageBytes = thumbnailMemoryAndDiskCache.get( key );
-        if ( imageBytes != null ) {
+        String key = String.format("%s-%fdeg-w:%dpx-h:%dpx", file, rotation, maxWidth, maxHeight);
+        ImageBytes imageBytes = thumbnailMemoryAndDiskCache.get(key);
+        if (imageBytes != null) {
             try {
-                Path imagePath = Paths.get( file.toURI() );
-                FileTime lastModification = ( Files.getLastModifiedTime( imagePath ) );
-                if ( lastModification.compareTo( imageBytes.getLastModification() ) > 0 ) {
-                    imageBytes = createThumbnailAndStoreInCache( key, file, rotation, maxWidth, maxHeight );
+                Path imagePath = Paths.get(file.toURI());
+                FileTime lastModification = (Files.getLastModifiedTime(imagePath));
+                if (lastModification.compareTo(imageBytes.getLastModification()) > 0) {
+                    imageBytes = createThumbnailAndStoreInCache(key, file, rotation, maxWidth, maxHeight);
 
                 }
-            } catch (  IOException ex ) {
-                LOGGER.severe( ex.getLocalizedMessage() );
+            } catch (IOException ex) {
+                LOGGER.severe(ex.getLocalizedMessage());
             }
 
         } else {
-            imageBytes = createThumbnailAndStoreInCache( key, file, rotation, maxWidth, maxHeight );
+            imageBytes = createThumbnailAndStoreInCache(key, file, rotation, maxWidth, maxHeight);
         }
         return imageBytes;
     }
@@ -190,19 +191,19 @@ public class JpoCache {
     /**
      * Creates a thumbnail and stores it in the cache
      *
-     * @param key the key to store it in the cache
+     * @param key       the key to store it in the cache
      * @param imageFile The file of the picture
-     * @param rotation the rotation to apply
-     * @param maxWidth the maximum width
+     * @param rotation  the rotation to apply
+     * @param maxWidth  the maximum width
      * @param maxHeight the maximum height
      * @return the thumbnail
      */
-    private ImageBytes createThumbnailAndStoreInCache( String key, File imageFile, double rotation, int maxWidth, int maxHeight ) {
-        ImageBytes imageBytes = createThumbnail( imageFile, rotation, maxWidth, maxHeight );
+    private ImageBytes createThumbnailAndStoreInCache(String key, File imageFile, double rotation, int maxWidth, int maxHeight) {
+        ImageBytes imageBytes = createThumbnail(imageFile, rotation, maxWidth, maxHeight);
         try {
-            thumbnailMemoryAndDiskCache.put( key, imageBytes );
-        } catch ( CacheException ex ) {
-            LOGGER.severe( ex.getLocalizedMessage() );
+            thumbnailMemoryAndDiskCache.put(key, imageBytes);
+        } catch (CacheException ex) {
+            LOGGER.severe(ex.getLocalizedMessage());
         }
         return imageBytes;
     }
@@ -210,44 +211,44 @@ public class JpoCache {
     /**
      * Creates a thumbnail
      *
-     * @param file The the picture file
-     * @param rotation the rotation to apply
-     * @param maxWidth the maximum width
+     * @param file      The the picture file
+     * @param rotation  the rotation to apply
+     * @param maxWidth  the maximum width
      * @param maxHeight the maximum height
      * @return the thumbnail
      */
-    private ImageBytes createThumbnail( File file, double rotation, int maxWidth, int maxHeight ) {
-        Dimension maxDimension = new Dimension( maxWidth, maxHeight );
+    private ImageBytes createThumbnail(File file, double rotation, int maxWidth, int maxHeight) {
+        Dimension maxDimension = new Dimension(maxWidth, maxHeight);
 
         // create a new thumbnail from the highres
         ScalablePicture scalablePicture = new ScalablePicture();
-        if ( Settings.thumbnailFastScale ) {
+        if (Settings.thumbnailFastScale) {
             scalablePicture.setFastScale();
         } else {
             scalablePicture.setQualityScale();
         }
-        scalablePicture.setScaleSize( maxDimension );
-        scalablePicture.loadPictureImd( file, rotation );
-        if ( scalablePicture.getSourcePicture() == null ) {
+        scalablePicture.setScaleSize(maxDimension);
+        scalablePicture.loadPictureImd(file, rotation);
+        if (scalablePicture.getSourcePicture() == null) {
             return null;
         }
 
         scalablePicture.scalePicture();
 
-        if ( scalablePicture.getScaledPicture() == null ) {
+        if (scalablePicture.getScaledPicture() == null) {
             return null;
         }
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        scalablePicture.writeScaledJpg( bos );
-        ImageBytes imageBytes = new ImageBytes( bos.toByteArray() );
+        scalablePicture.writeScaledJpg(bos);
+        ImageBytes imageBytes = new ImageBytes(bos.toByteArray());
 
         try {
-            Path imagePath = Paths.get( file.toURI() );
-            imageBytes.setLastModification( Files.getLastModifiedTime( imagePath ) );
+            Path imagePath = Paths.get(file.toURI());
+            imageBytes.setLastModification(Files.getLastModifiedTime(imagePath));
 
-        } catch (  IOException ex ) {
-            Logger.getLogger( JpoCache.class
-                    .getName() ).log( Level.SEVERE, null, ex );
+        } catch (IOException ex) {
+            Logger.getLogger(JpoCache.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
 
         return imageBytes;
@@ -260,16 +261,16 @@ public class JpoCache {
      * @return the dimension for the icon folder image
      */
     private Dimension getThumbnailDimensions() {
-        if ( groupThumbnailDimension == null ) {
+        if (groupThumbnailDimension == null) {
             BufferedImage groupThumbnail;
-            try ( BufferedInputStream bis = new BufferedInputStream( JpoCache.class.getClassLoader().getResourceAsStream("org/jpo/images/icon_folder_large.jpg") ) ) {
-                groupThumbnail = ImageIO.read( bis );
-                groupThumbnailDimension = new Dimension( groupThumbnail.getWidth(), groupThumbnail.getHeight() );
+            try (BufferedInputStream bis = new BufferedInputStream(JpoCache.class.getClassLoader().getResourceAsStream("org/jpo/images/icon_folder_large.jpg"))) {
+                groupThumbnail = ImageIO.read(bis);
+                groupThumbnailDimension = new Dimension(groupThumbnail.getWidth(), groupThumbnail.getHeight());
 
-            } catch ( IOException ex ) {
-                Logger.getLogger( JpoCache.class
-                        .getName() ).log( Level.SEVERE, null, ex );
-                groupThumbnailDimension = new Dimension( Settings.thumbnailSize, Settings.thumbnailSize );
+            } catch (IOException ex) {
+                Logger.getLogger(JpoCache.class
+                        .getName()).log(Level.SEVERE, null, ex);
+                groupThumbnailDimension = new Dimension(Settings.thumbnailSize, Settings.thumbnailSize);
             }
         }
         return groupThumbnailDimension;
@@ -282,46 +283,46 @@ public class JpoCache {
      * @return The thumbnail
      * @throws IOException if something went wrong
      */
-    public ImageBytes getGroupThumbnailImageBytes( List<SortableDefaultMutableTreeNode> childPictureNodes ) throws IOException {
+    public ImageBytes getGroupThumbnailImageBytes(List<SortableDefaultMutableTreeNode> childPictureNodes) throws IOException {
         int leftMargin = 15;
         int margin = 10;
         int topMargin = 65;
-        int horizontalPics = ( getThumbnailDimensions().width - leftMargin ) / ( Settings.miniThumbnailSize.width + margin );
-        int verticalPics = ( getThumbnailDimensions().height - topMargin ) / ( Settings.miniThumbnailSize.height + margin );
+        int horizontalPics = (getThumbnailDimensions().width - leftMargin) / (Settings.miniThumbnailSize.width + margin);
+        int verticalPics = (getThumbnailDimensions().height - topMargin) / (Settings.miniThumbnailSize.height + margin);
         int numberOfPics = horizontalPics * verticalPics;
 
-        StringBuilder sb = new StringBuilder( "Group-" );
-        for ( int i = 0; ( i < numberOfPics ) && ( i < childPictureNodes.size() ); i++ ) {
-            PictureInfo pictureInfo = (PictureInfo) childPictureNodes.get( i ).getUserObject();
-            sb.append( String.format( "%s-%fdeg-", pictureInfo.getImageFile().toString(), pictureInfo.getRotation() ) );
+        StringBuilder sb = new StringBuilder("Group-");
+        for (int i = 0; (i < numberOfPics) && (i < childPictureNodes.size()); i++) {
+            PictureInfo pictureInfo = (PictureInfo) childPictureNodes.get(i).getUserObject();
+            sb.append(String.format("%s-%fdeg-", pictureInfo.getImageFile().toString(), pictureInfo.getRotation()));
         }
 
         String key = sb.toString();
-        ImageBytes imageBytes = thumbnailMemoryAndDiskCache.get( key );
+        ImageBytes imageBytes = thumbnailMemoryAndDiskCache.get(key);
 
-        if ( imageBytes != null ) {
+        if (imageBytes != null) {
             try {
                 FileTime thumbnailLastModification = imageBytes.getLastModification();
 
                 boolean thumbnailNeedsRefresh = false;
-                for ( int i = 0; ( i < numberOfPics ) && ( i < childPictureNodes.size() ); i++ ) {
-                    PictureInfo pictureInfo = (PictureInfo) childPictureNodes.get( i ).getUserObject();
-                    Path imagePath = Paths.get( pictureInfo.getImageURIOrNull() );
-                    FileTime lastModification = ( Files.getLastModifiedTime( imagePath ) );
-                    if ( lastModification.compareTo( thumbnailLastModification ) > 0 ) {
+                for (int i = 0; (i < numberOfPics) && (i < childPictureNodes.size()); i++) {
+                    PictureInfo pictureInfo = (PictureInfo) childPictureNodes.get(i).getUserObject();
+                    Path imagePath = Paths.get(pictureInfo.getImageURIOrNull());
+                    FileTime lastModification = (Files.getLastModifiedTime(imagePath));
+                    if (lastModification.compareTo(thumbnailLastModification) > 0) {
                         thumbnailNeedsRefresh = true;
                         break;
                     }
                 }
-                if ( thumbnailNeedsRefresh ) {
-                    imageBytes = createGroupThumbnailAndStoreInCache( key, numberOfPics, childPictureNodes );
+                if (thumbnailNeedsRefresh) {
+                    imageBytes = createGroupThumbnailAndStoreInCache(key, numberOfPics, childPictureNodes);
 
                 }
-            } catch ( IOException ex ) {
-                throw ( ex );
+            } catch (IOException ex) {
+                throw (ex);
             }
         } else {
-            imageBytes = createGroupThumbnailAndStoreInCache( key, numberOfPics, childPictureNodes );
+            imageBytes = createGroupThumbnailAndStoreInCache(key, numberOfPics, childPictureNodes);
         }
         return imageBytes;
     }
@@ -330,61 +331,61 @@ public class JpoCache {
      * Create a Group ThumbnailController by loading the nodes component images
      * and creating a folder icon with embedded images
      *
-     * @throws IOException when things go wrong
-     * @param key The key for the image in the cache
-     * @param numberOfPics the number of pictures to include
+     * @param key               The key for the image in the cache
+     * @param numberOfPics      the number of pictures to include
      * @param childPictureNodes The nodes from which to create the mini
-     * thumbnails
+     *                          thumbnails
      * @return the image
+     * @throws IOException when things go wrong
      */
     private ImageBytes createGroupThumbnailAndStoreInCache(
             String key,
             int numberOfPics,
-            List<SortableDefaultMutableTreeNode> childPictureNodes )
+            List<SortableDefaultMutableTreeNode> childPictureNodes)
             throws IOException {
-        BufferedImage groupThumbnail = ImageIO.read( new BufferedInputStream( JpoCache.class.getClassLoader().getResourceAsStream( "icon_folder_large.jpg" ) ) );
+        BufferedImage groupThumbnail = ImageIO.read(new BufferedInputStream(JpoCache.class.getClassLoader().getResourceAsStream("icon_folder_large.jpg")));
         Graphics2D groupThumbnailGraphics = groupThumbnail.createGraphics();
 
         int leftMargin = 15;
         int margin = 10;
         int topMargin = 65;
-        int horizontalPics = ( groupThumbnail.getWidth() - leftMargin ) / ( Settings.miniThumbnailSize.width + margin );
+        int horizontalPics = (groupThumbnail.getWidth() - leftMargin) / (Settings.miniThumbnailSize.width + margin);
 
         ScalablePicture scalablePicture = new ScalablePicture();
-        FileTime mostRecentPictureModification = FileTime.fromMillis( 0 );
-        for ( int picsProcessed = 0; ( picsProcessed < numberOfPics ) && ( picsProcessed < childPictureNodes.size() ); picsProcessed++ ) {
-            PictureInfo pi = (PictureInfo) childPictureNodes.get( picsProcessed ).getUserObject();
+        FileTime mostRecentPictureModification = FileTime.fromMillis(0);
+        for (int picsProcessed = 0; (picsProcessed < numberOfPics) && (picsProcessed < childPictureNodes.size()); picsProcessed++) {
+            PictureInfo pi = (PictureInfo) childPictureNodes.get(picsProcessed).getUserObject();
 
-            Path imagePath = Paths.get( pi.getImageURIOrNull() );
-            FileTime lastModification = ( Files.getLastModifiedTime( imagePath ) );
-            if ( lastModification.compareTo( mostRecentPictureModification ) > 0 ) {
+            Path imagePath = Paths.get(pi.getImageURIOrNull());
+            FileTime lastModification = (Files.getLastModifiedTime(imagePath));
+            if (lastModification.compareTo(mostRecentPictureModification) > 0) {
                 mostRecentPictureModification = lastModification;
             }
 
-            int x = margin + ( ( picsProcessed % horizontalPics ) * ( Settings.miniThumbnailSize.width + margin ) );
-            int yPos = (int) Math.round( ( picsProcessed / (double) horizontalPics ) - 0.5f );
-            int y = topMargin + ( yPos * ( Settings.miniThumbnailSize.height + margin ) );
+            int x = margin + ((picsProcessed % horizontalPics) * (Settings.miniThumbnailSize.width + margin));
+            int yPos = (int) Math.round((picsProcessed / (double) horizontalPics) - 0.5f);
+            int y = topMargin + (yPos * (Settings.miniThumbnailSize.height + margin));
 
-            scalablePicture.loadPictureImd( pi.getImageFile(), pi.getRotation() );
+            scalablePicture.loadPictureImd(pi.getImageFile(), pi.getRotation());
 
-            scalablePicture.setScaleSize( Settings.miniThumbnailSize );
+            scalablePicture.setScaleSize(Settings.miniThumbnailSize);
             scalablePicture.scalePicture();
-            x += ( Settings.miniThumbnailSize.width - scalablePicture.getScaledWidth() ) / 2;
+            x += (Settings.miniThumbnailSize.width - scalablePicture.getScaledWidth()) / 2;
             y += Settings.miniThumbnailSize.height - scalablePicture.getScaledHeight();
 
-            groupThumbnailGraphics.drawImage( scalablePicture.getScaledPicture(), x, y, null );
+            groupThumbnailGraphics.drawImage(scalablePicture.getScaledPicture(), x, y, null);
         }
 
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        ScalablePicture.writeJpg( bos, groupThumbnail, 0.8f );
-        ImageBytes imageBytes = new ImageBytes( bos.toByteArray() );
+        ScalablePicture.writeJpg(bos, groupThumbnail, 0.8f);
+        ImageBytes imageBytes = new ImageBytes(bos.toByteArray());
 
-        imageBytes.setLastModification( mostRecentPictureModification );
+        imageBytes.setLastModification(mostRecentPictureModification);
 
         try {
-            thumbnailMemoryAndDiskCache.put( key, imageBytes );
-        } catch ( CacheException ex ) {
-            LOGGER.severe( ex.getLocalizedMessage() );
+            thumbnailMemoryAndDiskCache.put(key, imageBytes);
+        } catch (CacheException ex) {
+            LOGGER.severe(ex.getLocalizedMessage());
         }
 
         return imageBytes;
@@ -414,8 +415,8 @@ public class JpoCache {
     public void clearHighresCache() {
         try {
             highresMemoryCache.clear();
-        } catch ( CacheException ex ) {
-            LOGGER.severe( ex.getLocalizedMessage() );
+        } catch (CacheException ex) {
+            LOGGER.severe(ex.getLocalizedMessage());
         }
     }
 
@@ -425,8 +426,8 @@ public class JpoCache {
     public void clearThumbnailCache() {
         try {
             thumbnailMemoryAndDiskCache.clear();
-        } catch ( CacheException ex ) {
-            LOGGER.severe( ex.getLocalizedMessage() );
+        } catch (CacheException ex) {
+            LOGGER.severe(ex.getLocalizedMessage());
 
         }
     }

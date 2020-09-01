@@ -1194,7 +1194,7 @@ public class SortableDefaultMutableTreeNode
      */
     public void copyAddPictures(Collection<File> fileCollection, File targetDir,
                                 boolean copyMode, final JProgressBar progressBar) {
-        LOGGER.log(Level.FINE, "Copy/Moving {0} pictures to target directory {1}", new Object[]{fileCollection.size(), targetDir.toString()});
+        LOGGER.log(Level.FINE, "Copy/Moving {0} pictures to target directory {1}", new Object[]{fileCollection.size(), targetDir});
         getPictureCollection().setSendModelUpdates(false);
         for (File file : fileCollection) {
             LOGGER.log(Level.FINE, "Processing file {}", file);
