@@ -132,11 +132,7 @@ public class ThumbnailQueueRequest implements Comparable<ThumbnailQueueRequest> 
     }
 
     /**
-     * Compares to another request based on priority.
-     *
-     * @param thumbnailQueueRequest The request to compare against
-     * @return a negative 0 or positive number as defined by the compareTo
-     * interface
+     * We must override equals if we provide a compareTpo
      */
     @Override
     public boolean equals(Object obj) {
@@ -144,6 +140,14 @@ public class ThumbnailQueueRequest implements Comparable<ThumbnailQueueRequest> 
             return priority == ((ThumbnailQueueRequest) obj).priority;
         }
         return false;
+    }
+
+    /**
+     * We must override hashCode if we override equals
+     */
+    @Override
+    public int hashCode() {
+        return priority.hashCode();
     }
 
 
