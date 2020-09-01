@@ -7,8 +7,6 @@ import org.jpo.gui.swing.PicturePopupMenu;
 import org.jpo.gui.swing.ThumbnailDescriptionPanel;
 
 import javax.swing.*;
-import javax.swing.event.TreeModelEvent;
-import javax.swing.event.TreeModelListener;
 import java.awt.*;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.MouseAdapter;
@@ -44,8 +42,7 @@ import static org.jpo.gui.ThumbnailDescriptionController.DescriptionSize.MINI_IN
  * grid
  */
 public class ThumbnailDescriptionController
-        implements PictureInfoChangeListener,
-        TreeModelListener {
+        implements PictureInfoChangeListener, GroupInfoChangeListener {
 
     /**
      * a link to the SortableDefaultMutableTreeNode in the data model. This
@@ -59,6 +56,7 @@ public class ThumbnailDescriptionController
     public JPanel getPanel() {
         return panel;
     }
+
 
 
     /**
@@ -92,10 +90,6 @@ public class ThumbnailDescriptionController
     }
 
     private void initComponents() {
-        // attach this panel to the tree model so that it is notified about changes
-        Settings.getPictureCollection().getTreeModel().addTreeModelListener(this);
-
-
         panel.getPictureDescriptionJTA().setInputVerifier(new InputVerifier() {
 
             @Override
@@ -196,17 +190,27 @@ public class ThumbnailDescriptionController
         doUpdate();
 
         // unattach the change Listener
-        if ((this.referringNode != null) && (this.referringNode.getUserObject() instanceof PictureInfo)) {
-            PictureInfo pi = (PictureInfo) this.referringNode.getUserObject();
-            pi.removePictureInfoChangeListener(this);
+        if (this.referringNode != null)  {
+            if  (this.referringNode.getUserObject() instanceof PictureInfo){
+                PictureInfo pi = (PictureInfo) this.referringNode.getUserObject();
+                pi.removePictureInfoChangeListener(this);
+            } else if (this.referringNode.getUserObject() instanceof GroupInfo){
+                GroupInfo gi = (GroupInfo) this.referringNode.getUserObject();
+                gi.removeGroupInfoChangeListener(this);
+            }
         }
 
         this.referringNode = referringNode;
 
         // attach the change Listener
-        if ((referringNode != null) && (referringNode.getUserObject() instanceof PictureInfo)) {
-            PictureInfo pictureInfo = (PictureInfo) referringNode.getUserObject();
-            pictureInfo.addPictureInfoChangeListener(this);
+        if (referringNode != null) {
+            if (referringNode.getUserObject() instanceof PictureInfo) {
+                PictureInfo pictureInfo = (PictureInfo) referringNode.getUserObject();
+                pictureInfo.addPictureInfoChangeListener(this);
+            } else if (referringNode.getUserObject() instanceof GroupInfo) {
+                GroupInfo gi = (GroupInfo) referringNode.getUserObject();
+                gi.addGroupInfoChangeListener(this);
+            }
         }
 
         String legend;
@@ -354,66 +358,19 @@ public class ThumbnailDescriptionController
 
     }
 
-
-    /**
-     * Find out if our node was changed and if so update the screen
-     *
-     * @param e event
-     */
     @Override
-    public void treeNodesChanged(TreeModelEvent e) {
-        // find out whether our node was changed
-        Object[] children = e.getChildren();
-        if (children == null) {
-            // the root node does not have children as it doesn't have a parent
-            return;
-        }
-
-        for (Object child : children) {
-            // TODO: Can we access the child that is us directly? Build test and then refactor
-            if (child instanceof SortableDefaultMutableTreeNode) {
-                SortableDefaultMutableTreeNode childNode = (SortableDefaultMutableTreeNode) child;
-                if (childNode.equals(referringNode)) {
-                    // we are displaying a changed node. What changed?
-                    Object userObject = referringNode.getUserObject();
-                    if (userObject instanceof GroupInfo) {
-                        String legend = ((GroupInfo) userObject).getGroupName();
-                        if (!legend.equals(panel.getDescription())) {
-                            panel.setDescription(legend);
-                        }
-                    }
-                }
+    public void groupInfoChangeEvent(GroupInfoChangeEvent groupInfoChangeEvent) {
+        Runnable runnable = () -> {
+            if (groupInfoChangeEvent.getGroupNameChanged()) {
+                panel.setDescription(groupInfoChangeEvent.getGroupeInfo().getGroupName());
             }
+        };
+        if (SwingUtilities.isEventDispatchThread()) {
+            runnable.run();
+        } else {
+            SwingUtilities.invokeLater(runnable);
         }
+
     }
 
-    /**
-     * implemented here to satisfy the TreeModelListener interface; not used.
-     *
-     * @param e event
-     */
-    @Override
-    public void treeNodesInserted(TreeModelEvent e) {
-        //implemented here to satisfy the TreeModelListener interface; not used.
-    }
-
-    /**
-     * The TreeModelListener interface tells us of tree node removal events.
-     *
-     * @param e event
-     */
-    @Override
-    public void treeNodesRemoved(TreeModelEvent e) {
-        //implemented here to satisfy the TreeModelListener interface; not used.
-    }
-
-    /**
-     * implemented here to satisfy the TreeModelListener interface; not used.
-     *
-     * @param e event
-     */
-    @Override
-    public void treeStructureChanged(TreeModelEvent e) {
-        //implemented here to satisfy the TreeModelListener interface; not used.
-    }
 }

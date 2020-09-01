@@ -2,7 +2,6 @@ package org.jpo.datamodel;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 /*
  ListNavigator.java:  an implementation of the NodeNavigator for browsing pictures.
@@ -28,12 +27,6 @@ import java.util.logging.Logger;
  */
 public class ListNavigator
         extends NodeNavigator {
-
-    /**
-     * Logger for this class
-     */
-    private static final Logger LOGGER = Logger.getLogger(ListNavigator.class.getName());
-
 
     /**
      * Returns the title of the node set

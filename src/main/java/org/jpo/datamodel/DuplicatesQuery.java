@@ -2,6 +2,7 @@ package org.jpo.datamodel;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /*
@@ -102,9 +103,8 @@ public class DuplicatesQuery
     private void extractSearchResults() {
         List<SortableDefaultMutableTreeNode> results = new ArrayList<>();
         List<SortableDefaultMutableTreeNode> nodeList = Settings.getPictureCollection().getRootNode().getChildPictureNodes(true);
-        SortableDefaultMutableTreeNode pictureNode;
         int size = nodeList.size();
-        LOGGER.info( String.format( "Built a list of %d picture nodes.", size) );
+        LOGGER.log(Level.INFO, "Built a list of {0} picture nodes.", size );
 
         SortableDefaultMutableTreeNode baseNode;
         PictureInfo baseNodePictureInfo;
@@ -113,13 +113,13 @@ public class DuplicatesQuery
             baseNode = nodeList.get( i );
             baseNodePictureInfo = (PictureInfo) baseNode.getUserObject();
             if ( i % 250 == 0 ) {
-                LOGGER.info("Processed "+ i + " potential duplicates out of " + size);
+                LOGGER.log(Level.INFO, "Processed {0} potential duplicates out of [1]", new Object[]{i, size});
             }
             for (int j = i + 1; j < size; j++ ) {
                 compareNodePictureInfo = (PictureInfo) nodeList.get( j ).getUserObject();
                 if ( ( baseNodePictureInfo.getImageFile().equals( compareNodePictureInfo.getImageFile() ) )
                         || ( ( baseNodePictureInfo.getChecksum() != Long.MIN_VALUE ) && ( baseNodePictureInfo.getChecksum() == compareNodePictureInfo.getChecksum() ) ) ) {
-                    LOGGER.info( String.format( "Found a duplicate: %s = %s", baseNode.toString(), nodeList.get( j ).toString() ) );
+                    LOGGER.log(Level.INFO, "Found a duplicate: {0} = {1}", new Object[]{baseNode, nodeList.get( j )} );
                     results.add( baseNode );
                     results.add(nodeList.get( j ));
                 }

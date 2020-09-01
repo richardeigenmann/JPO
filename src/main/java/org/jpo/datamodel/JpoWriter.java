@@ -112,11 +112,8 @@ public class JpoWriter {
                 bufferedWriter.write( "</collection>" );
                 bufferedWriter.newLine();
 
-                bufferedWriter.close();
-
                 writeCollectionDTD( xmlOutputFile.getParentFile() );
             } catch ( IOException x ) {
-                //x.printStackTrace();
                 LOGGER.log( Level.INFO, "IOException: {0}", x.getMessage() );
                 JOptionPane.showMessageDialog( null, x.getMessage(),
                         "JpoWriter: IOException",

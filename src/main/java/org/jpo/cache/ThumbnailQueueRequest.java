@@ -128,8 +128,25 @@ public class ThumbnailQueueRequest implements Comparable<ThumbnailQueueRequest> 
      */
     @Override
     public int compareTo(ThumbnailQueueRequest thumbnailQueueRequest) {
+        System.out.println("my priority: " + priority + " request: " + thumbnailQueueRequest.priority + " result: " + priority.compareTo(thumbnailQueueRequest.priority));
         return priority.compareTo(thumbnailQueueRequest.priority);
     }
+
+    /**
+     * Compares to another request based on priority.
+     *
+     * @param thumbnailQueueRequest The request to compare against
+     * @return a negative 0 or positive number as defined by the compareTo
+     * interface
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof ThumbnailQueueRequest) {
+            return priority == ((ThumbnailQueueRequest) obj).priority;
+        }
+        return false;
+    }
+
 
     /**
      * Increases the priority of the request to the supplied higher priority if

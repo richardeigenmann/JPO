@@ -16,41 +16,13 @@ package org.jpo.cache;
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 
-
-
 /**
- * Priority enum for the Thumbnail Queue
+ * Priority enum for the Thumbnail Queue.
+ * Enums use natural ordering.
  */
 public enum QUEUE_PRIORITY {
-
-    /**
-     *
-     */
-    HIGH_PRIORITY(0),
-
-    /**
-     *
-     */
-    MEDIUM_PRIORITY(1),
-
-    /**
-     *
-     */
-    LOW_PRIORITY(2),
-
-    /**
-     *
-     */
-    LOWEST_PRIORITY(3);
-
-    private final int myPriority;
-
-    /**
-     * The constructor for the enum
-     *
-     * @param priority The integer for the pirority
-     */
-    private QUEUE_PRIORITY(int priority) {
-        myPriority = priority;
-    }
+    HIGH_PRIORITY,
+    MEDIUM_PRIORITY,
+    LOW_PRIORITY,
+    LOWEST_PRIORITY;
 }

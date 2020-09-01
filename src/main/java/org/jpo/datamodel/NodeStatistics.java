@@ -7,6 +7,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
 import java.io.File;
 import java.util.Enumeration;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /*
@@ -75,7 +76,7 @@ public class NodeStatistics {
      */
     public int getNumberOfNodes() {
         int count = countNodes( myNode );
-        LOGGER.fine( String.format( "Number of nodes counted: %d", count ) );
+        LOGGER.log(Level.FINE,"Number of nodes counted: {0}", count );
         return count;
     }
 
@@ -260,7 +261,6 @@ public class NodeStatistics {
         Tools.warnOnEDT();
 
         long size = 0;
-        File testfile;
         DefaultMutableTreeNode n;
 
         if ( startNode.getUserObject() instanceof Query ) {

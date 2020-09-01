@@ -61,7 +61,6 @@ public class CategoryQuery implements Query {
     public int getNumberOfResults() {
         if ( resultList == null ) {
             LOGGER.severe( "CategoryQuery.getNumberOfResults: called on a null result set." );
-            //Thread.dumpStack();
             return 0;
         }
         return resultList.size();

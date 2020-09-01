@@ -170,18 +170,6 @@ public class PictureCollection {
             final int[] childIndices) {
         LOGGER.log(Level.FINE, "Sending a node was inserted notification on node: {0}", changedNode);
         getTreeModel().nodesWereInserted(changedNode, childIndices);
-
-        /*if ( SwingUtilities.isEventDispatchThread() ) {
-            getTreeModel().nodesWereInserted( changedNode, childIndices );
-        } else {
-            Runnable r = new Runnable() {
-                @Override
-                public void run() {
-                    getTreeModel().nodesWereInserted( changedNode, childIndices );
-                }
-            };
-            SwingUtilities.invokeLater( r );
-        }*/
     }
 
     /**

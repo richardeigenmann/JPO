@@ -19,8 +19,8 @@ plugins {
 
 apply plugin: "com.github.johnrengelman.shadow"
 
-sourceCompatibility = 1.9
-targetCompatibility = 1.9
+sourceCompatibility = 1.11
+targetCompatibility = 1.11
 
 compileJava {
     group = 'build'

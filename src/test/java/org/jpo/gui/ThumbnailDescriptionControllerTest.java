@@ -1,8 +1,6 @@
 package org.jpo.gui;
 
-import org.jpo.datamodel.GroupInfo;
-import org.jpo.datamodel.PictureInfo;
-import org.jpo.datamodel.SortableDefaultMutableTreeNode;
+import org.jpo.datamodel.*;
 import org.junit.Test;
 
 import javax.swing.*;
@@ -14,6 +12,7 @@ import static org.junit.Assert.*;
 import static org.junit.Assume.assumeFalse;
 
 public class ThumbnailDescriptionControllerTest {
+
 
     @Test
     public void testConstructor() {
@@ -50,13 +49,13 @@ public class ThumbnailDescriptionControllerTest {
         assumeFalse( GraphicsEnvironment.isHeadless() );
         try {
             SwingUtilities.invokeAndWait( () -> {
-                final ThumbnailDescriptionController panel = new ThumbnailDescriptionController();
+                final ThumbnailDescriptionController controller = new ThumbnailDescriptionController();
                 PictureInfo pictureInfo = new PictureInfo();
                 final String pictureInfoDescription = "A PictureInfo description";
                 pictureInfo.setDescription(pictureInfoDescription);
                 SortableDefaultMutableTreeNode node = new SortableDefaultMutableTreeNode(pictureInfo);
-                panel.setNode(node);
-                assertEquals(pictureInfoDescription, panel.getDescription());
+                controller.setNode(node);
+                assertEquals(pictureInfoDescription, controller.getDescription());
             } );
         } catch (final InterruptedException | InvocationTargetException ex  ) {
             fail(ex.getMessage());
@@ -69,12 +68,12 @@ public class ThumbnailDescriptionControllerTest {
         assumeFalse( GraphicsEnvironment.isHeadless() );
         try {
             SwingUtilities.invokeAndWait( () -> {
-                final ThumbnailDescriptionController panel = new ThumbnailDescriptionController();
+                final ThumbnailDescriptionController controller = new ThumbnailDescriptionController();
                 final String groupDescription = "A GroupInfo description";
                 GroupInfo groupInfo = new GroupInfo(groupDescription);
                 SortableDefaultMutableTreeNode node = new SortableDefaultMutableTreeNode(groupInfo);
-                panel.setNode(node);
-                assertEquals(groupDescription, panel.getDescription());
+                controller.setNode(node);
+                assertEquals(groupDescription, controller.getDescription());
             } );
         } catch (final InterruptedException | InvocationTargetException ex  ) {
             fail(ex.getMessage());
@@ -149,16 +148,55 @@ public class ThumbnailDescriptionControllerTest {
         try {
             SwingUtilities.invokeAndWait( () -> {
                 final ThumbnailDescriptionController panel = new ThumbnailDescriptionController();
-                PictureInfo pictureInfo = new PictureInfo();
+                final PictureInfo pictureInfo = new PictureInfo();
                 final String pictureInfoDescription ="A PictureInfo description";
                 pictureInfo.setDescription(pictureInfoDescription);
-                SortableDefaultMutableTreeNode node = new SortableDefaultMutableTreeNode(pictureInfo);
+                final SortableDefaultMutableTreeNode node = new SortableDefaultMutableTreeNode(pictureInfo);
                 panel.setNode(node);
                 assertEquals(pictureInfoDescription, panel.getDescription());
 
                 final String newDescription = "A changed description";
                 pictureInfo.setDescription(newDescription);
                 assertEquals(newDescription, panel.getDescription());
+            } );
+        } catch (final InterruptedException | InvocationTargetException ex  ) {
+            fail(ex.getMessage());
+            Thread.currentThread().interrupt();
+        }
+    }
+
+    @Test
+    public void testNodeListenerWorksElaborate() {
+        assumeFalse( GraphicsEnvironment.isHeadless() );
+        try {
+            SwingUtilities.invokeAndWait( () -> {
+                // set up a Picture collection and bind it to the Settings
+                final PictureCollection pc = new PictureCollection();
+                Settings.setPictureCollection(pc);
+                // The controller binds to the TreeModelListener of the Settings.getPictureCopllection root node.
+                final ThumbnailDescriptionController controller = new ThumbnailDescriptionController();
+
+                final SortableDefaultMutableTreeNode childNode1 = new SortableDefaultMutableTreeNode(new GroupInfo("First Child is a GroupInfo node"));
+                pc.getRootNode().add(childNode1);
+                final String CHILD_GROUP_INFO_TEXT = "Second Child is a GroupInfo node";
+                final SortableDefaultMutableTreeNode childNode2= new SortableDefaultMutableTreeNode(new GroupInfo(CHILD_GROUP_INFO_TEXT));
+                pc.getRootNode().add(childNode2);
+                final PictureInfo pictureInfo = new PictureInfo();
+                final String pictureInfoDescription ="A PictureInfo description";
+                pictureInfo.setDescription(pictureInfoDescription);
+                final SortableDefaultMutableTreeNode pictureNode = new SortableDefaultMutableTreeNode(pictureInfo);
+                childNode2.add(pictureNode);
+                System.out.println("gaga");
+                controller.setNode(childNode2);
+                assertEquals(CHILD_GROUP_INFO_TEXT, controller.getDescription());
+
+                final String CHANGED_GROUP_NAME = "A new group name";
+                ((GroupInfo) childNode2.getUserObject()).setGroupName(CHANGED_GROUP_NAME);
+                assertEquals(CHANGED_GROUP_NAME, controller.getDescription());
+
+                pc.getRootNode().remove(0);
+
+
             } );
         } catch (final InterruptedException | InvocationTargetException ex  ) {
             fail(ex.getMessage());

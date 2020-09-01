@@ -7,14 +7,12 @@ import org.jpo.gui.SourcePicture;
 
 import java.io.File;
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Objects;
+import java.util.*;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /*
- Copyright (C) 2002 - 2019  Richard Eigenmann.
+ Copyright (C) 2002 - 2020  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -121,14 +119,14 @@ public class Camera implements Serializable {
      * This HashMap records the old images held on the camera so that we can
      * determine which pictures are new.
      */
-    private HashMap<File, Long> oldImage = new HashMap<>();
+    private AbstractMap<File, Long> oldImage = new HashMap<>();
 
     /**
      * The old images held on the camera
      *
      * @return the old images held on the camera
      */
-    public HashMap<File, Long> getOldImage() {
+    public AbstractMap<File, Long> getOldImage() {
         return oldImage;
     }
 
@@ -137,7 +135,7 @@ public class Camera implements Serializable {
      *
      * @param oldImage the old images on the camera
      */
-    public void setOldImage( HashMap<File, Long> oldImage ) {
+    public void setOldImage( AbstractMap<File, Long> oldImage ) {
         this.oldImage = oldImage;
     }
 
@@ -164,7 +162,7 @@ public class Camera implements Serializable {
      * @param f the file to store
      * @param checksum the file's checksum
      */
-    private static void storePicture(HashMap<File, Long> hm, File f, long checksum) {
+    private static void storePicture(AbstractMap<File, Long> hm, File f, long checksum) {
         hm.put( f, checksum );
     }
 
@@ -238,7 +236,7 @@ public class Camera implements Serializable {
     private File getRootDir() {
         File rootDir = new File( this.cameraMountPoint );
         if ( !rootDir.isDirectory() ) {
-            LOGGER.info( String.format( "%s is not a directory", this.cameraMountPoint ) );
+            LOGGER.log(Level.INFO, "{0} is not a directory", this.cameraMountPoint );
             return null;
         }
         return rootDir;
@@ -285,7 +283,7 @@ public class Camera implements Serializable {
     public void buildOldImage( ProgressListener progressListener, InterruptSemaphore interrupter ) {
         File rootDir = new File( this.cameraMountPoint );
         if ( !rootDir.isDirectory() ) {
-            LOGGER.info( String.format( "%s is not a directory: ", this.cameraMountPoint ) );
+            LOGGER.log(Level.INFO, "{0} is not a directory: ", this.cameraMountPoint );
             return;
         }
         zapOldImage();

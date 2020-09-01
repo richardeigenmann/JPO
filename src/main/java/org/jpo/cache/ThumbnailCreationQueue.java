@@ -134,7 +134,7 @@ public class ThumbnailCreationQueue {
             ThumbnailQueueRequestCallbackHandler callbackHandler ) {
         ThumbnailQueueRequest req = null;
         ThumbnailQueueRequest test;
-        for ( Iterator i = QUEUE.iterator(); i.hasNext(); ) {
+        for ( Iterator<ThumbnailQueueRequest> i = QUEUE.iterator(); i.hasNext(); ) {
             test = (ThumbnailQueueRequest) i.next();
             if ( ( callbackHandler != null ) && ( test.getThumbnailQueueRequestCallbackHandler().equals( callbackHandler ) ) ) {
                 req = test;

@@ -96,10 +96,10 @@ public class JpoCache {
         final String CACHE_DEFINITION_FILE = "cache.ccf";
         URL ccfUrl = JpoCache.class.getClassLoader().getResource(CACHE_DEFINITION_FILE);
         if (ccfUrl == null) {
-            LOGGER.severe("Classloader didn't find file " + CACHE_DEFINITION_FILE);
+            LOGGER.log(Level.SEVERE,"Classloader didn''t find file {0}", CACHE_DEFINITION_FILE);
             return null;
         } else {
-            LOGGER.fine("Cache definition file found at: " + ccfUrl.toString());
+            LOGGER.log(Level.FINE,"Cache definition file found at: {0}", ccfUrl);
         }
 
         Properties props = new Properties();
@@ -110,7 +110,7 @@ public class JpoCache {
             return null;
         }
 
-        LOGGER.fine("setting jcs.auxiliary.DC.attributes.DiskPath to: " + Settings.thumbnailCacheDirectory);
+        LOGGER.log(Level.FINE,"setting jcs.auxiliary.DC.attributes.DiskPath to: {0}", Settings.thumbnailCacheDirectory);
         props.setProperty("jcs.auxiliary.DC.attributes.DiskPath", Settings.thumbnailCacheDirectory);
 
         return props;

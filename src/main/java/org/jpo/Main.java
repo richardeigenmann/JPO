@@ -98,7 +98,6 @@ public class Main {
         isClassLoadable("bibliothek.gui.dock.common.CControl", "docking-frames-common.jar", foundClasses, missingClasses );
         isClassLoadable("bibliothek.gui.Dockable", "docking-frames-core.jar", foundClasses, missingClasses );
         isClassLoadable("com.google.gdata.util.AuthenticationException", "gdata-core-1.0.jar", foundClasses, missingClasses );
-        //isClassLoadable("com.google.gdata.client.maps.MapsService", "gdata-maps-2.0.jar", foundClasses, missingClasses );
         isClassLoadable("com.google.gdata.client.media.MediaService", "gdata-media-1.0.jar", foundClasses, missingClasses );
         isClassLoadable("com.google.gdata.client.photos.PicasawebService", "gdata-photos-2.0.jar", foundClasses, missingClasses );
         isClassLoadable("com.google.common.math.IntMath", "guava-16.0.1.jar", foundClasses, missingClasses );
@@ -109,7 +108,6 @@ public class Main {
         isClassLoadable("org.jxmapviewer.JXMapViewer", "jxmapviewer2-2.0.jar", foundClasses, missingClasses );
         isClassLoadable("com.drew.imaging.jpeg.JpegMetadataReader", "metadata-extractor-2.8.1.jar", foundClasses, missingClasses );
         isClassLoadable("net.miginfocom.swing.MigLayout", "miglayout-4.0.jar", foundClasses, missingClasses );
-        //isClassLoadable("com.adobe.xmp.XMPUtils", "xmpcore.jar", foundClasses, missingClasses );
         isClassLoadable("com.twelvemonkeys.imageio.plugins.jpeg.JPEGImageReader","imageio-jpeg-3.4.1.jar", foundClasses, missingClasses );
         isClassLoadable("com.twelvemonkeys.imageio.plugins.hdr.HDRImageReaderSpi","imageio-hdr-3.4.1.jar", foundClasses, missingClasses );
         isClassLoadable("com.twelvemonkeys.imageio.plugins.tiff.TIFFImageReaderSpi","imageio-tiff-3.4.1.jar", foundClasses, missingClasses );

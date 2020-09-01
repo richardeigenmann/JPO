@@ -122,7 +122,6 @@ public class ExifInfo {
     public void decodeExifTags() {
         if ( pictureFile == null ) {
             LOGGER.severe( "Can't decode Exif tags on a null File!" );
-            //Thread.dumpStack();
             return;
         }
         try {
@@ -199,7 +198,6 @@ public class ExifInfo {
             }
         } catch ( ImageProcessingException | NullPointerException | IOException x ) {
             LOGGER.severe( x.getMessage() );
-            //Thread.dumpStack();
         }
 
     }
