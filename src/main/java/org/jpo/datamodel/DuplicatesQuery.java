@@ -113,7 +113,7 @@ public class DuplicatesQuery
             baseNode = nodeList.get( i );
             baseNodePictureInfo = (PictureInfo) baseNode.getUserObject();
             if ( i % 250 == 0 ) {
-                LOGGER.log(Level.INFO, "Processed {0} potential duplicates out of [1]", new Object[]{i, size});
+                LOGGER.log(Level.INFO, "Processed {0} potential duplicates out of {1}]", new Object[]{i, size});
             }
             for (int j = i + 1; j < size; j++ ) {
                 compareNodePictureInfo = (PictureInfo) nodeList.get( j ).getUserObject();
