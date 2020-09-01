@@ -1,18 +1,16 @@
 package org.jpo.datamodel;
 
+import org.jpo.cache.ThumbnailCreationQueue;
 import org.jpo.eventbus.JpoEventBus;
 import org.jpo.eventbus.RecentCollectionsChangedEvent;
-import org.jpo.cache.ThumbnailCreationQueue;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
+import java.io.*;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.file.Files;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -838,14 +836,19 @@ public class PictureCollection {
             new JpoWriter(temporaryFile, getRootNode(), false);
             File backupOriginalFile = new File(xmlFile.getPath() + ".orig");
             if ( ! xmlFile.renameTo(backupOriginalFile) ) {
-                LOGGER.severe("Could not rename original file to " + backupOriginalFile);
+                LOGGER.log(Level.SEVERE,"Could not rename original file to {0}", backupOriginalFile);
             } else {
                 if ( ! temporaryFile.renameTo(xmlFile) ) {
                     LOGGER.severe("Could not rename temp file " + temporaryFile.toString() + " to " + xmlFile);
                 } else {
                     setUnsavedUpdates(false);
-                    if ( ! backupOriginalFile.delete() ) {
-                        LOGGER.severe("Could not delete backed up original file " + backupOriginalFile);
+                    /*if ( ! backupOriginalFile.delete() ) {
+                        LOGGER.log(Level.SEVERE,"Could not delete backed up original file {0}", backupOriginalFile);
+                    }*/
+                    try {
+                        Files.delete(backupOriginalFile.toPath());
+                    } catch (IOException e) {
+                        LOGGER.log(Level.SEVERE,"Could not delete backed up original file {0}\n{1}", new Object[]{backupOriginalFile, e.getMessage()});
                     }
                     Settings.pushRecentCollection(xmlFile.toString());
                     JpoEventBus.getInstance().post(new RecentCollectionsChangedEvent());

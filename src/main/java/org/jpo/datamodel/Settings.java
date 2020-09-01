@@ -557,7 +557,7 @@ public class Settings {
      */
     public static List<Camera> cameras = new ArrayList<>();
 
-    public static TreeSet<Object> getEmailSenders() {
+    public static SortedSet<Object> getEmailSenders() {
         return emailSenders;
     }
 
