@@ -7,11 +7,13 @@ import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 import org.jpo.datamodel.Tools;
 
 import javax.swing.*;
+import javax.swing.tree.TreeNode;
 import java.io.File;
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Objects;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static org.apache.commons.io.FileUtils.moveFile;
@@ -73,11 +75,11 @@ public class ConsolidateGroupWorker extends SwingWorker<String, String> {
         this.progGui = progGui;
 
         if ( !targetDirectory.exists() ) {
-            LOGGER.severe( String.format( "Aborting because target directory %s doesn't exist", targetDirectory.getPath() ) );
+            LOGGER.log(Level.SEVERE, "Aborting because target directory {0} doesn't exist", targetDirectory.getPath() );
             return;
         }
         if ( !targetDirectory.canWrite() ) {
-            LOGGER.severe( String.format( "Aborting because directory %s can't be written to", targetDirectory.getPath() ) );
+            LOGGER.log(Level.SEVERE, "Aborting because directory {0} can't be written to", targetDirectory.getPath() );
             return;
         }
 
@@ -103,7 +105,7 @@ public class ConsolidateGroupWorker extends SwingWorker<String, String> {
 
     @Override
     protected void process( List<String> messages ) {
-        for (String _item : messages) progGui.progressIncrement();
+        progGui.progressIncrement(messages.size());
     }
 
     @Override
@@ -136,8 +138,8 @@ public class ConsolidateGroupWorker extends SwingWorker<String, String> {
      */
     private void consolidateGroup( SortableDefaultMutableTreeNode groupNode ) {
         List<SortableDefaultMutableTreeNode> nodes = groupNode.getChildPictureNodes( recurseGroups );
-        LOGGER.info( "List Size: " + nodes.size() );
-        nodes.forEach( (node ) -> {
+        LOGGER.log(Level.INFO, "List Size: {0}", nodes.size() );
+        nodes.forEach( node  -> {
             PictureInfo pictureInfo = (PictureInfo) node.getUserObject();
             consolidatedCount++;
             LOGGER.info( "node: " + pictureInfo.toString() );
@@ -194,12 +196,11 @@ public class ConsolidateGroupWorker extends SwingWorker<String, String> {
         try {
             moveFile( pictureFile, newFile );
         } catch ( IOException ex ) {
-            LOGGER.severe( String.format( "Failed to move file %s to %s.\nException: %s", pictureFile.toString(), newFile.toString(), ex.getLocalizedMessage() ) );
+            LOGGER.log(Level.SEVERE, "Failed to move file {0} to {0}.\nException: {0}", new Object[]{pictureFile, newFile, ex.getLocalizedMessage()} );
             return false;
         }
         pictureInfo.setImageLocation( newFile );
         correctReferences( pictureFile, newFile );
-
         return true;
     }
 
@@ -216,7 +217,7 @@ public class ConsolidateGroupWorker extends SwingWorker<String, String> {
         SortableDefaultMutableTreeNode node;
         Object nodeObject;
         int count = 0;
-        final Enumeration e = Settings.getPictureCollection().getRootNode().preorderEnumeration();
+        final Enumeration<TreeNode> e = Settings.getPictureCollection().getRootNode().preorderEnumeration();
         while ( e.hasMoreElements() ) {
             node = (SortableDefaultMutableTreeNode) e.nextElement();
             nodeObject = node.getUserObject();
@@ -228,6 +229,6 @@ public class ConsolidateGroupWorker extends SwingWorker<String, String> {
                 }
             }
         }
-        LOGGER.info( String.format( "%d other Picture Nodes were pointing at the same picture and were corrected", count ) );
+        LOGGER.log(Level.INFO, "{0} other Picture Nodes were pointing at the same picture and were corrected", count );
     }
 }

@@ -173,10 +173,18 @@ public class ProgressGui extends JFrame implements ProgressListener {
      */
     @Override
     public void progressIncrement() {
+        progressIncrement(1);
+    }
+
+    /**
+     * Adds n to the progress counter
+     */
+    public void progressIncrement(int n) {
         Tools.checkEDT();
-        progressBar.setValue( progressBar.getValue() + 1 );
+        progressBar.setValue( progressBar.getValue() + n );
         progressLabel.setText(progressBar.getValue() + " / " + progressBar.getMaximum());
     }
+
 
     /**
      * decreases the total by 1

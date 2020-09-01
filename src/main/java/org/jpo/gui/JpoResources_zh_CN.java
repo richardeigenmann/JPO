@@ -639,6 +639,7 @@ public class JpoResources_zh_CN extends ListResourceBundle {
             {"ThumbnailDescriptionJPanelLargeFont", ""},
             {"ThumbnailDescriptionJPanelSmallFont", ""},
             {"ThumbnailDescriptionNoNodeError", "此位置上没有图片。"},
+            {"ReplaceWith", "Replace with: "},
 
             // ScalablePicture
             {"ScalablePictureUninitialisedStatus", "没有初始化"},

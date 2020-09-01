@@ -632,6 +632,7 @@ public class JpoResources_de extends ListResourceBundle {
             {"ThumbnailDescriptionJPanelLargeFont", "Arial-PLAIN-12"},
             {"ThumbnailDescriptionJPanelSmallFont", "Arial-PLAIN-9"},
             {"ThumbnailDescriptionNoNodeError", "Kein Knoten fuer diese Position."},
+            {"ReplaceWith", "Replace with: "},
 
             // ScalablePicture
             {"ScalablePictureUninitialisedStatus", "Unbekannt"},

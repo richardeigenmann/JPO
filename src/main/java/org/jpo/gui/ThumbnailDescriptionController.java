@@ -14,7 +14,6 @@ import java.awt.event.AdjustmentEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Optional;
-import java.util.logging.Logger;
 
 import static java.awt.event.MouseEvent.BUTTON3;
 import static org.jpo.gui.ThumbnailDescriptionController.DescriptionSize.LARGE_DESCRIPTION;
@@ -47,11 +46,6 @@ import static org.jpo.gui.ThumbnailDescriptionController.DescriptionSize.MINI_IN
 public class ThumbnailDescriptionController
         implements PictureInfoChangeListener,
         TreeModelListener {
-
-    /**
-     * Defines a logger for this class
-     */
-    private static final Logger LOGGER = Logger.getLogger(ThumbnailDescriptionController.class.getName());
 
     /**
      * a link to the SortableDefaultMutableTreeNode in the data model. This
@@ -143,12 +137,12 @@ public class ThumbnailDescriptionController
             JPopupMenu popupmenu = new JPopupMenu();
 
             if (oSpace.isPresent()) {
-                JMenuItem replaceSpace = new JMenuItem("Replace with: " + oSpace.get());
+                JMenuItem replaceSpace = new JMenuItem(Settings.jpoResources.getString("ReplaceWith") + oSpace.get());
                 replaceSpace.addActionListener(e1 -> textArea.setText(oSpace.get()));
                 popupmenu.add(replaceSpace);
             }
             if (oUnderstore.isPresent()) {
-                JMenuItem replaceUnderscore = new JMenuItem("Replace with: " + oUnderstore.get());
+                JMenuItem replaceUnderscore = new JMenuItem(Settings.jpoResources.getString("ReplaceWith") + oUnderstore.get());
                 replaceUnderscore.addActionListener(e1 -> textArea.setText(oUnderstore.get()));
                 popupmenu.add(replaceUnderscore);
             }
@@ -156,7 +150,7 @@ public class ThumbnailDescriptionController
                 Optional<String> spaceUnderscore = PicturePopupMenu.replaceUnderscore(oSpace.get());
                 if (spaceUnderscore.isPresent()) {
                     // to be expected...
-                    JMenuItem replaceSpaceAndUnderscore = new JMenuItem("Replace with: " + spaceUnderscore.get());
+                    JMenuItem replaceSpaceAndUnderscore = new JMenuItem(Settings.jpoResources.getString("ReplaceWith") + spaceUnderscore.get());
                     replaceSpaceAndUnderscore.addActionListener(e1 -> textArea.setText(spaceUnderscore.get()));
                     popupmenu.add(replaceSpaceAndUnderscore);
                 }
@@ -360,11 +354,9 @@ public class ThumbnailDescriptionController
 
     }
 
-    // Here we are not that interested in TreeModel change events other than to find out if our
-    // current node was removed in which case we close the Window.
 
     /**
-     * implemented here to satisfy the TreeModelListener interface; not used.
+     * Find out if our node was changed and if so update the screen
      *
      * @param e event
      */
@@ -378,6 +370,7 @@ public class ThumbnailDescriptionController
         }
 
         for (Object child : children) {
+            // TODO: Can we access the child that is us directly? Build test and then refactor
             if (child instanceof SortableDefaultMutableTreeNode) {
                 SortableDefaultMutableTreeNode childNode = (SortableDefaultMutableTreeNode) child;
                 if (childNode.equals(referringNode)) {

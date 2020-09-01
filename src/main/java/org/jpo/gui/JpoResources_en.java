@@ -607,6 +607,8 @@ public class JpoResources_en extends ListResourceBundle {
             {"ThumbnailDescriptionJPanelLargeFont", "Arial-PLAIN-12"},
             {"ThumbnailDescriptionJPanelSmallFont", "Arial-PLAIN-9"},
             {"ThumbnailDescriptionNoNodeError", "No node for this position."},
+            {"ReplaceWith", "Replace with: "},
+
             // ScalablePicture
             {"ScalablePictureUninitialisedStatus", "Uninitialised"},
             {"ScalablePictureLoadingStatus", "Loading"},
