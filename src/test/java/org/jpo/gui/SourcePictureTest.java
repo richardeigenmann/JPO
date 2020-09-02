@@ -76,7 +76,7 @@ public class SourcePictureTest {
         try {
             imageFile = new File(Objects.requireNonNull(imageUrl).toURI());
         } catch (URISyntaxException e) {
-            fail("Could not convert resource to File: " + e.getMessage());
+            fail(e.getMessage());
         }
 
         s.loadPicture(imageFile, 0.0);
@@ -245,7 +245,7 @@ public class SourcePictureTest {
         try {
             imageFile = new File(imageUrl.toURI());
         } catch (URISyntaxException e) {
-            fail("Could not convert resource to File: " + e.getMessage());
+            fail(e.getMessage());
         }
 
         s.loadPicture(imageFile, 0.0);
@@ -480,7 +480,7 @@ public class SourcePictureTest {
         try {
             imageFile = new File(Objects.requireNonNull(imageUrl).toURI());
         } catch (URISyntaxException e) {
-            fail("Could not convert resource to File: " +e.getMessage());
+            fail(e.getMessage());
         }
 
         s.loadPicture(imageFile, 0.0);

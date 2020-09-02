@@ -119,14 +119,14 @@ public class Camera implements Serializable {
      * This HashMap records the old images held on the camera so that we can
      * determine which pictures are new.
      */
-    private AbstractMap<File, Long> oldImage = new HashMap<>();
+    private Map<File, Long> oldImage = new HashMap<>();
 
     /**
      * The old images held on the camera
      *
      * @return the old images held on the camera
      */
-    public AbstractMap<File, Long> getOldImage() {
+    public Map<File, Long> getOldImage() {
         return oldImage;
     }
 
@@ -135,7 +135,7 @@ public class Camera implements Serializable {
      *
      * @param oldImage the old images on the camera
      */
-    public void setOldImage( AbstractMap<File, Long> oldImage ) {
+    public void setOldImage( Map<File, Long> oldImage ) {
         this.oldImage = oldImage;
     }
 
@@ -162,7 +162,7 @@ public class Camera implements Serializable {
      * @param f the file to store
      * @param checksum the file's checksum
      */
-    private static void storePicture(AbstractMap<File, Long> hm, File f, long checksum) {
+    private static void storePicture(Map<File, Long> hm, File f, long checksum) {
         hm.put( f, checksum );
     }
 

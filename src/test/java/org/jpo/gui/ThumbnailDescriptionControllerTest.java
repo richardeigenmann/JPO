@@ -186,7 +186,6 @@ public class ThumbnailDescriptionControllerTest {
                 pictureInfo.setDescription(pictureInfoDescription);
                 final SortableDefaultMutableTreeNode pictureNode = new SortableDefaultMutableTreeNode(pictureInfo);
                 childNode2.add(pictureNode);
-                System.out.println("gaga");
                 controller.setNode(childNode2);
                 assertEquals(CHILD_GROUP_INFO_TEXT, controller.getDescription());
 
