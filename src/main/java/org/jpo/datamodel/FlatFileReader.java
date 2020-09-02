@@ -87,7 +87,6 @@ public class FlatFileReader {
                         new PictureInfo( new File(line), FilenameUtils.getBaseName( testFile.getName() ) ) );
                 newNode.add( newPictureNode );
             }
-            in.close();
             request.getNode().add( newNode );
             request.getNode().getPictureCollection().sendNodeStructureChanged( request.getNode() );
             request.getNode().getPictureCollection().setUnsavedUpdates( false );

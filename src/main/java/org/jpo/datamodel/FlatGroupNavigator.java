@@ -3,6 +3,7 @@ package org.jpo.datamodel;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreePath;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /*
@@ -104,18 +105,18 @@ public class FlatGroupNavigator
          */
         @Override
         public void treeNodesRemoved(TreeModelEvent e) {
-            LOGGER.info(String.format("Investigating a remove event: %s", e.toString()));
+            LOGGER.log(Level.INFO, "Investigating a remove event: {0}", e);
 
             // Problem here is that if the current node was removed we are no longer on the node that was removed
             TreePath currentNodeTreePath = new TreePath(groupNode.getPath());
-            LOGGER.fine(String.format("The current group node has this path: %s", currentNodeTreePath.toString()));
+            LOGGER.log(Level.FINE,"The current group node has this path: {0}", currentNodeTreePath);
 
             // step through the array of removed nodes
             Object[] children = e.getChildren();
             TreePath removedChild;
             for (int i = 0; i < children.length; i++) {
                 removedChild = new TreePath(children[i]);
-                LOGGER.fine(String.format("Deleted child[%d] has path: %s", i, removedChild.toString()));
+                LOGGER.log(Level.FINE,"Deleted child[{0}] has path: {1}", new Object[]{i, removedChild});
                 if (removedChild.isDescendant(currentNodeTreePath)) {
                     LOGGER.info("Oh dear, our group has just disappeared.");
                     clear();
@@ -127,7 +128,7 @@ public class FlatGroupNavigator
                 if (currentNodeTreePath.equals(parentOfRemoved)) {
                     int[] childIndices = e.getChildIndices();
                     int myNodeCount = getNumberOfNodes();
-                    LOGGER.info(String.format("The removed %d node(s) are children of the current group (which has %d nodes)", childIndices.length, myNodeCount));
+                    LOGGER.log(Level.INFO, "The removed {0} node(s) are children of the current group (which has {1} nodes)", new Object[]{childIndices.length, myNodeCount});
                     buildFromScratch();
                     notifyNodeNavigatorListeners();
                 }
@@ -141,6 +142,7 @@ public class FlatGroupNavigator
          */
         @Override
         public void treeStructureChanged(TreeModelEvent e) {
+            // Not interested in this event
         }
     }
 }

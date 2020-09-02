@@ -140,7 +140,7 @@ public class GroupNavigator extends NodeNavigator {
          */
         @Override
         public void treeNodesChanged( TreeModelEvent treeModelEvent ) {
-            LOGGER.log( Level.FINE, "treeNodesChanged: {0}", treeModelEvent.toString() );
+            LOGGER.log( Level.FINE, "treeNodesChanged: {0}", treeModelEvent );
             if ( myNode == null ) {
                 return;
             }
@@ -149,7 +149,7 @@ public class GroupNavigator extends NodeNavigator {
             // of the current group
             TreePath myPath = new TreePath( myNode.getPath() );
             if ( myPath.equals( treeModelEvent.getTreePath() ) ) {
-                LOGGER.fine( String.format( "A Node was changed. No need to get excited at the group level. myNode: %s, notification node %s", myPath.toString(), treeModelEvent.getTreePath().getLastPathComponent().toString() ) );
+                LOGGER.log( Level.FINE, "A Node was changed. No need to get excited at the group level. myNode: {0}, notification node {1}", new Object[]{myPath, treeModelEvent.getTreePath().getLastPathComponent()} );
             }
         }
 
@@ -198,7 +198,7 @@ public class GroupNavigator extends NodeNavigator {
             // if the current node is part of the tree that was deleted then we need to
             //  reposition the group at the parent node that remains.
             if ( SortableDefaultMutableTreeNode.wasNodeDeleted( myNode, treeModelEvent ) ) {
-                LOGGER.info( String.format( "Determined that our current node has died. Moving to the last node still present: %s", treeModelEvent.getTreePath().getLastPathComponent().toString() ) );
+                LOGGER.log( Level.INFO, "Determined that our current node has died. Moving to the last node still present: {0}", treeModelEvent.getTreePath().getLastPathComponent()  );
                 setNode( (SortableDefaultMutableTreeNode) treeModelEvent.getTreePath().getLastPathComponent() );
                 notifyNodeNavigatorListeners();
             } else {
@@ -206,7 +206,7 @@ public class GroupNavigator extends NodeNavigator {
                 // node is the current group
                 TreePath myPath = new TreePath( myNode.getPath() );
                 if ( myPath.equals( treeModelEvent.getTreePath() ) ) {
-                    LOGGER.fine( String.format( "Children were removed from the current node. We must therefore relayout the children; myPath: %s, lastPathComponent: [%s]", myPath.toString(), treeModelEvent.getTreePath().getLastPathComponent().toString() ) );
+                    LOGGER.log( Level.FINE, "Children were removed from the current node. We must therefore relayout the children; myPath: {0}, lastPathComponent: [{1}]", new Object[]{myPath, treeModelEvent.getTreePath().getLastPathComponent()} );
                     notifyNodeNavigatorListeners();
                 }
             }
@@ -222,7 +222,7 @@ public class GroupNavigator extends NodeNavigator {
          */
         @Override
         public void treeStructureChanged( TreeModelEvent treeModelEvent ) {
-            LOGGER.fine( String.format( "We've teen told that the Tree structure changed Event: %s", treeModelEvent.toString() ) );
+            LOGGER.log( Level.FINE, "We''ve teen told that the Tree structure changed Event: {0}", treeModelEvent );
             if ( myNode == null ) {
                 return;
             }
