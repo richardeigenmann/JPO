@@ -948,15 +948,6 @@ public class PictureCollection {
         }
     }
 
-    /**
-     * returns an array of the selected nodes.
-     *
-     * @return an array of the selected nodes
-     */
-    @Deprecated
-    public SortableDefaultMutableTreeNode[] getSelectedNodes() {
-        return selection.toArray(new SortableDefaultMutableTreeNode[0]);
-    }
 
     /**
      * returns an array of the selected nodes.

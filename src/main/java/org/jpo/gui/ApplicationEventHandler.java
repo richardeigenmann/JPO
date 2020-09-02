@@ -103,7 +103,7 @@ public class ApplicationEventHandler {
         JpoEventBus.getInstance().post(new OpenMainWindowRequest());
         JpoEventBus.getInstance().post(new StartCameraWatchDaemonRequest());
 
-        for (int i = 1; i <= Settings.numberOfThumbnailCreationThreads; i++) {
+        for (int i = 1; i <= Settings.NUMBER_OF_THUMBNAIL_CREATION_THREADS; i++) {
             JpoEventBus.getInstance().post(new StartThumbnailCreationFactoryRequest());
         }
 
@@ -123,7 +123,7 @@ public class ApplicationEventHandler {
      */
     @Subscribe
     public void handleStartThumbnailCreationFactoryRequest(StartThumbnailCreationFactoryRequest request) {
-        new ThumbnailCreationFactory(Settings.ThumbnailCreationThreadPollingTime);
+        new ThumbnailCreationFactory(Settings.THUMBNAIL_CREATION_THREAD_POLLING_TIME);
     }
 
 

@@ -262,42 +262,11 @@ public class PictureInfo implements Serializable {
      * returns the file handle to the highres picture.
      *
      * @return the highres location or null if there is a failure
-     * @see #getImageURL()
      */
     public synchronized File getImageFile() {
         return imageFile;
     }
 
-    /**
-     * returns the URL handle to the picture.
-     *
-     * @return the image location
-     * @throws MalformedURLException if the location could not be converted to a
-     *                               URL.
-     * @deprecated
-     */
-    @Deprecated
-    public synchronized URL getImageURL() throws MalformedURLException {
-        return getImageFile().toURI().toURL();
-    }
-
-    /**
-     * returns the URL handle to the picture or null. I invented this because I
-     * got fed up trying and catching the MalformedURLException that could be
-     * thrown.
-     *
-     * @return the image location
-     * @deprecated
-     */
-    @Deprecated
-    public synchronized URL getImageURLOrNull() {
-        try {
-            return getImageFile().toURI().toURL();
-        } catch (MalformedURLException x) {
-            LOGGER.log(Level.FINE, "Caught an unexpected MalformedURLException: {0}", x.getMessage());
-            return null;
-        }
-    }
 
     /**
      * returns the URI handle to the picture.

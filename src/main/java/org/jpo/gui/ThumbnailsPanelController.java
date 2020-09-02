@@ -220,7 +220,7 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
                 boolean ctrlpressed = (e.getModifiersEx() & MouseEvent.CTRL_DOWN_MASK) == MouseEvent.CTRL_DOWN_MASK;
                 boolean shiftpressed = (e.getModifiersEx() & MouseEvent.SHIFT_DOWN_MASK) == MouseEvent.SHIFT_DOWN_MASK;
 
-                if (!(ctrlpressed | shiftpressed)) {
+                if (!(ctrlpressed || shiftpressed)) {
                     Settings.getPictureCollection().clearSelection();
                 }
 

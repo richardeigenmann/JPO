@@ -131,13 +131,13 @@ public class Settings {
     /**
      * the default value for maxThumbnails
      */
-    public final static int defaultMaxThumbnails = 50;
+    public final static int DEFAULT_MAX_THUMBNAILS = 50;
 
     /**
      * a variable that sets the maximum number of thumbnails that shall be
      * displayed at one time.
      */
-    public static int maxThumbnails = defaultMaxThumbnails;
+    public static int maxThumbnails = DEFAULT_MAX_THUMBNAILS;
 
     /**
      * Setting for the width of the thumbnails. Set by default to 350 pixels.
@@ -195,11 +195,11 @@ public class Settings {
      * The polling interval in milliseconds for the ThumbnailCreationThreads to
      * check Whether there is something new to render.
      */
-    public static final int ThumbnailCreationThreadPollingTime = 200;
+    public static final int THUMBNAIL_CREATION_THREAD_POLLING_TIME = 200;
     /**
      * The number of thumbnail creation threads to spawn.
      */
-    public static final int numberOfThumbnailCreationThreads = 5;
+    public static final int NUMBER_OF_THUMBNAIL_CREATION_THREADS = 5;
     /**
      * The KDE Panel has the unfortunate habit of insisting on being on top so
      * this parameter allows you to specify how much space should be left from
@@ -339,14 +339,14 @@ public class Settings {
     /**
      * the height of the Thumbnail descriptions
      */
-    public static final int thumbnailDescriptionHeight = 200;
+    public static final int THUMBNAIL_DESCRIPTION_HEIGHT = 200;
     /**
      * The interval between the timer checking to see if the picture is ready
      * before the main delay loop should be waited. You want to give the user
      * the specified seconds to look at the picture and not subtract from that
      * the time it took the program to load the image.
      */
-    public static final int advanceTimerPollingInterval = 500;
+    public static final int ADVANCE_TIMER_POLLING_INTERVAL = 500;
     /**
      * The default number of pictures per row for the Html export
      */
@@ -688,7 +688,7 @@ public class Settings {
 
         pictureViewerDefaultDimensions = new Dimension(windowSizes[1]);
         dontEnlargeSmallImages = true;
-        maxThumbnails = defaultMaxThumbnails;
+        maxThumbnails = DEFAULT_MAX_THUMBNAILS;
     }
 
     /**
@@ -811,7 +811,7 @@ public class Settings {
      */
     public static void validateSettings() {
         if (maxThumbnails < 1) { //how can this happen?
-            maxThumbnails = defaultMaxThumbnails;
+            maxThumbnails = DEFAULT_MAX_THUMBNAILS;
         }
 
         if (writeLog) {
