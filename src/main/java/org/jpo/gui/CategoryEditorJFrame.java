@@ -80,7 +80,7 @@ public class CategoryEditorJFrame
         jPanel.setLayout( new MigLayout("") );
 
         final JLabel categoryJLabel = new JLabel( Settings.jpoResources.getString( "categoryJLabel" ) );
-        categoryJLabel.setHorizontalAlignment( JLabel.LEFT );
+        categoryJLabel.setHorizontalAlignment( SwingConstants.LEFT );
         jPanel.add( categoryJLabel );
 
         categoryJTextField.setPreferredSize( new Dimension( 200, 25 ) );
@@ -107,7 +107,7 @@ public class CategoryEditorJFrame
         jPanel.add( addCategoryJButton, "alignx center, wrap" );
 
         final JLabel categoriesJLabel = new JLabel( Settings.jpoResources.getString( "categoriesJLabel" ) );
-        categoriesJLabel.setHorizontalAlignment( JLabel.LEFT );
+        categoriesJLabel.setHorizontalAlignment( SwingConstants.LEFT );
         jPanel.add( categoriesJLabel );
 
         final JList<Category> categoriesJList = new JList<>( listModel );

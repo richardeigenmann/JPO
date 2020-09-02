@@ -550,7 +550,7 @@ public class Settings {
     /**
      * date format for adding new pictures from the camera
      */
-    public static final String addFromCameraDateFormat = "dd.MM.yyyy  HH:mm";
+    public static final String ADD_FROM_CAMERA_DATE_FORMAT = "dd.MM.yyyy  HH:mm";
 
     /**
      * Collection of cameras
@@ -729,7 +729,7 @@ public class Settings {
         for (int i = 0; i < Settings.MAX_MEMORISE; i++) {
             recentCollections[i] = prefs.get("recentCollections-" + i, null);
         }
-        for (int i = 0; i < Settings.maxUserFunctions; i++) {
+        for (int i = 0; i < Settings.MAX_USER_FUNCTIONS; i++) {
             userFunctionNames[i] = prefs.get("userFunctionName-" + i, null);
             userFunctionCmd[i] = prefs.get("userFunctionCmd-" + i, null);
         }
@@ -891,7 +891,7 @@ public class Settings {
 
         int i;
         n = 0;
-        for (i = 0; i < Settings.maxUserFunctions; i++) {
+        for (i = 0; i < Settings.MAX_USER_FUNCTIONS; i++) {
             if ((userFunctionNames[i] != null) && (userFunctionNames[i].length() > 0) && (userFunctionCmd[i] != null) && (userFunctionCmd[i].length() > 0)) {
                 prefs.put("userFunctionName-" + n, userFunctionNames[i]);
                 prefs.put("userFunctionCmd-" + n, userFunctionCmd[i]);
@@ -1275,7 +1275,7 @@ public class Settings {
     /**
      * number of user Functions
      */
-    public static final int maxUserFunctions = 3;
+    public static final int MAX_USER_FUNCTIONS = 3;
 
     public static String[] getUserFunctionNames() {
         return userFunctionNames;
@@ -1288,11 +1288,11 @@ public class Settings {
     /**
      * Array of user function names
      */
-    private static final String[] userFunctionNames = new String[maxUserFunctions];
+    private static final String[] userFunctionNames = new String[MAX_USER_FUNCTIONS];
     /**
      * Array of user function commands
      */
-    private static final String[] userFunctionCmd = new String[maxUserFunctions];
+    private static final String[] userFunctionCmd = new String[MAX_USER_FUNCTIONS];
 
     private static MainWindow mainWindow;
 

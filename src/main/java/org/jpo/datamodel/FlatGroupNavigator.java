@@ -85,6 +85,7 @@ public class FlatGroupNavigator
          */
         @Override
         public void treeNodesChanged(TreeModelEvent e) {
+            // Not interested in this event
         }
 
         /**
@@ -94,6 +95,7 @@ public class FlatGroupNavigator
          */
         @Override
         public void treeNodesInserted(TreeModelEvent e) {
+            // Not interested in this event
         }
 
         /**
@@ -108,15 +110,8 @@ public class FlatGroupNavigator
             LOGGER.log(Level.INFO, "Investigating a remove event: {0}", e);
 
             // Problem here is that if the current node was removed we are no longer on the node that was removed
-            TreePath currentNodeTreePath = new TreePath(groupNode.getPath());
-            LOGGER.log(Level.FINE,"The current group node has this path: {0}", currentNodeTreePath);
-
-            // step through the array of removed nodes
-            Object[] children = e.getChildren();
-            TreePath removedChild;
-            for (int i = 0; i < children.length; i++) {
-                removedChild = new TreePath(children[i]);
-                LOGGER.log(Level.FINE,"Deleted child[{0}] has path: {1}", new Object[]{i, removedChild});
+            final TreePath currentNodeTreePath = new TreePath(groupNode.getPath());
+            for (TreePath removedChild : (TreePath[]) e.getChildren()) {
                 if (removedChild.isDescendant(currentNodeTreePath)) {
                     LOGGER.info("Oh dear, our group has just disappeared.");
                     clear();

@@ -190,8 +190,8 @@ public class EmailerGui extends JFrame {
         //messageJTextArea.setRows( 12 );
         JScrollPane messageJScrollPane = new JScrollPane( messageJTextArea );
         messageJScrollPane.setBorder( BorderFactory.createEmptyBorder( 0, 0, 0, 0 ) );
-        messageJScrollPane.setHorizontalScrollBarPolicy( JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED );
-        messageJScrollPane.setVerticalScrollBarPolicy( JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED );
+        messageJScrollPane.setHorizontalScrollBarPolicy( ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED );
+        messageJScrollPane.setVerticalScrollBarPolicy( ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED );
         messageJTextArea.setWrapStyleWord( true );
         messageJTextArea.setLineWrap( true );
         messageJTextArea.setEditable( true );

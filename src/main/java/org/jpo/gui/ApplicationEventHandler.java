@@ -1678,7 +1678,7 @@ public class ApplicationEventHandler {
      *                     executed.
      */
     private static void runUserFunction(int userFunction, PictureInfo myObject) {
-        if ((userFunction < 0) || (userFunction >= Settings.maxUserFunctions)) {
+        if ((userFunction < 0) || (userFunction >= Settings.MAX_USER_FUNCTIONS)) {
             LOGGER.info("Error: called with an out of bounds index");
             return;
         }

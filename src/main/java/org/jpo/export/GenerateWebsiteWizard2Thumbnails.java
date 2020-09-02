@@ -79,7 +79,7 @@ public class GenerateWebsiteWizard2Thumbnails extends AbstractStep {
      */
     private final JSlider lowresJpgQualityJSlider
             = new JSlider(
-                    JSlider.HORIZONTAL,
+            SwingConstants.HORIZONTAL,
                     0, 100,
                     (int) ( Settings.defaultHtmlLowresQuality * 100 ) );
     /**

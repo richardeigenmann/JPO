@@ -38,7 +38,7 @@ public class PicturePopupMenu extends JPopupMenu {
     /**
      * array of menu items that allows the user to call up a user function
      */
-    private final JMenuItem[] userFunctionJMenuItems = new JMenuItem[Settings.maxUserFunctions];
+    private final JMenuItem[] userFunctionJMenuItems = new JMenuItem[Settings.MAX_USER_FUNCTIONS];
 
     /**
      * array of menu items that allows the user to copy the picture to a
@@ -298,7 +298,7 @@ public class PicturePopupMenu extends JPopupMenu {
 
         JMenu userFunctionsJMenu = new JMenu(Settings.jpoResources.getString("userFunctionsJMenu"));
         for (int i = 0;
-             i < Settings.maxUserFunctions;
+             i < Settings.MAX_USER_FUNCTIONS;
              i++) {
             final int userFunction = i;
             userFunctionJMenuItems[i] = new JMenuItem();
@@ -870,7 +870,7 @@ public class PicturePopupMenu extends JPopupMenu {
      * This method populates the user functions sub entries on the menu.
      */
     private void labelUserFunctions() {
-        for (int i = 0; i < Settings.maxUserFunctions; i++) {
+        for (int i = 0; i < Settings.MAX_USER_FUNCTIONS; i++) {
             if ((Settings.getUserFunctionNames()[i] != null) && (Settings.getUserFunctionNames()[i].length() > 0) && (Settings.getUserFunctionCmd()[i] != null) && (Settings.getUserFunctionCmd()[i].length() > 0)) {
                 userFunctionJMenuItems[i].setText(Settings.getUserFunctionNames()[i]);
                 userFunctionJMenuItems[i].setVisible(true);

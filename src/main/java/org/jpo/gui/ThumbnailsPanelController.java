@@ -186,7 +186,7 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
         });
 
         JPanel whiteArea = new JPanel();
-        thumbnailJScrollPane.setCorner(JScrollPane.UPPER_RIGHT_CORNER, whiteArea);
+        thumbnailJScrollPane.setCorner(ScrollPaneConstants.UPPER_RIGHT_CORNER, whiteArea);
 
         thumbnailsPane.addMouseListener(new MouseInputAdapter() {
 
@@ -217,8 +217,8 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
 
                 // I wonder why they don't put the following two lines into the SWING library but
                 // let you work out this binary math on your own from the unhelpful description?
-                boolean ctrlpressed = (e.getModifiersEx() & MouseEvent.CTRL_DOWN_MASK) == MouseEvent.CTRL_DOWN_MASK;
-                boolean shiftpressed = (e.getModifiersEx() & MouseEvent.SHIFT_DOWN_MASK) == MouseEvent.SHIFT_DOWN_MASK;
+                boolean ctrlpressed = (e.getModifiersEx() & InputEvent.CTRL_DOWN_MASK) == InputEvent.CTRL_DOWN_MASK;
+                boolean shiftpressed = (e.getModifiersEx() & InputEvent.SHIFT_DOWN_MASK) == InputEvent.SHIFT_DOWN_MASK;
 
                 if (!(ctrlpressed || shiftpressed)) {
                     Settings.getPictureCollection().clearSelection();

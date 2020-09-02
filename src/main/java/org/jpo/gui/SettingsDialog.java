@@ -104,7 +104,7 @@ public class SettingsDialog extends JDialog {
      * slider that allows the quality of the jpg's to be specified Should this
      * really be the same as the HTLM Quality Field?
      */
-    private final JSlider jpgQualityJSlider = new JSlider( JSlider.HORIZONTAL,
+    private final JSlider jpgQualityJSlider = new JSlider( SwingConstants.HORIZONTAL,
             0, 100, (int) ( Settings.defaultHtmlLowresQuality * 100 ) );
     /**
      * tickbox that indicates whether to scale the thumbnails quickly

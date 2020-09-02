@@ -101,7 +101,7 @@ public class CategoryUsageJFrame extends JFrame {
         final JPanel buttonJPanel = new JPanel();
         buttonJPanel.setLayout( new MigLayout() );
 
-        numberOfPicturesJLabel.setHorizontalAlignment( JLabel.LEFT );
+        numberOfPicturesJLabel.setHorizontalAlignment( SwingConstants.LEFT );
         buttonJPanel.add( numberOfPicturesJLabel, "wrap" );
 
         final JButton modifyCategoryJButton = new JButton( Settings.jpoResources.getString( "modifyCategoryJButton" ) );

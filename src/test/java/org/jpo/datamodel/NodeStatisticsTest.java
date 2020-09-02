@@ -164,4 +164,48 @@ public class NodeStatisticsTest{
         assertEquals( 9061284, ns.getSizeOfPictures() );
     }
 
+    @Test
+    public void getSizeOfPicturesSinglePictureInfo() {
+        final String NIKON_D100_IMAGE = "exif-test-nikon-d100-1.jpg";
+        try {
+            final File imageFile = new File(NodeStatisticsTest.class.getClassLoader().getResource(NIKON_D100_IMAGE).toURI());
+            final PictureInfo pi = new PictureInfo();
+            pi.setImageLocation(imageFile);
+            final SortableDefaultMutableTreeNode node = new SortableDefaultMutableTreeNode(pi);
+            final NodeStatistics ns = new NodeStatistics(node);
+            assertEquals(21599, ns.getSizeOfPictures());
+        } catch (URISyntaxException e) {
+            fail(e.getMessage());
+        }
+    }
+
+    @Test
+    public void getSizeOfPicturesSingleGroupInfo() {
+        final String NIKON_D100_IMAGE = "exif-test-nikon-d100-1.jpg";
+        final String SAMSUNG_S4_IMAGE = "exif-test-samsung-s4.jpg";
+        try {
+            final SortableDefaultMutableTreeNode rootNode = new SortableDefaultMutableTreeNode(new GroupInfo("Root Node"));
+            final SortableDefaultMutableTreeNode g1 = new SortableDefaultMutableTreeNode(new GroupInfo("Group 1"));
+            rootNode.add(g1);
+            final File imageFile1 = new File(NodeStatisticsTest.class.getClassLoader().getResource(NIKON_D100_IMAGE).toURI());
+            final PictureInfo pi = new PictureInfo();
+            pi.setImageLocation(imageFile1);
+            final SortableDefaultMutableTreeNode piNode1 = new SortableDefaultMutableTreeNode(pi);
+            g1.add(piNode1);
+
+            final SortableDefaultMutableTreeNode g2 = new SortableDefaultMutableTreeNode(new GroupInfo("Group 2"));
+            rootNode.add(g2);
+            final File imageFile2 = new File(NodeStatisticsTest.class.getClassLoader().getResource(SAMSUNG_S4_IMAGE).toURI());
+            final PictureInfo pi2 = new PictureInfo();
+            pi2.setImageLocation(imageFile2);
+            final SortableDefaultMutableTreeNode piNode2 = new SortableDefaultMutableTreeNode(pi2);
+            g2.add(piNode2);
+
+            final NodeStatistics ns = new NodeStatistics(rootNode);
+            assertEquals(21599 + 2354328, ns.getSizeOfPictures());
+        } catch (URISyntaxException e) {
+            fail(e.getMessage());
+        }
+    }
+
 }

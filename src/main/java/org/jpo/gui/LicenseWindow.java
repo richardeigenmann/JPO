@@ -49,8 +49,8 @@ public class LicenseWindow {
         licenseJTextArea.setLineWrap( true );
         licenseJTextArea.setEditable( false );
         JScrollPane jScrollPane = new JScrollPane( licenseJTextArea,
-                JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
-                JScrollPane.HORIZONTAL_SCROLLBAR_NEVER );
+                ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+                ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER );
         jScrollPane.setPreferredSize( new Dimension( 500, 400 ) );
 
         StringBuilder sb = new StringBuilder();

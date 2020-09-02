@@ -62,7 +62,7 @@ public class ResizableJFrameTest {
         p.setLayout( new BorderLayout() );
 
         final ResizableJFrame resizableJFrame = new ResizableJFrame( "ResizableJFrameTest", p );
-        resizableJFrame.setDefaultCloseOperation( JFrame.DISPOSE_ON_CLOSE );
+        resizableJFrame.setDefaultCloseOperation( WindowConstants.DISPOSE_ON_CLOSE );
 
         JPanel buttonPanel = new JPanel();
         JButton fullScreen = new JButton( "FullScreen" );

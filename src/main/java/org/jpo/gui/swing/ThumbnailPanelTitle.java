@@ -111,7 +111,7 @@ public class ThumbnailPanelTitle
         Tools.checkEDT();
         firstThumbnailsPageButton.setBorder( BorderFactory.createEmptyBorder( 1, 1, 1, 1 ) );
         firstThumbnailsPageButton.setPreferredSize( new Dimension( 25, 25 ) );
-        firstThumbnailsPageButton.setVerticalAlignment( JLabel.CENTER );
+        firstThumbnailsPageButton.setVerticalAlignment( SwingConstants.CENTER );
         firstThumbnailsPageButton.setOpaque( false );
         firstThumbnailsPageButton.setEnabled( false );
         firstThumbnailsPageButton.setFocusPainted( false );
@@ -119,7 +119,7 @@ public class ThumbnailPanelTitle
 
         previousThumbnailsPageButton.setBorder( BorderFactory.createEmptyBorder( 1, 1, 1, 1 ) );
         previousThumbnailsPageButton.setPreferredSize( new Dimension( 25, 25 ) );
-        previousThumbnailsPageButton.setVerticalAlignment( JLabel.CENTER );
+        previousThumbnailsPageButton.setVerticalAlignment( SwingConstants.CENTER );
         previousThumbnailsPageButton.setOpaque( false );
         previousThumbnailsPageButton.setEnabled( false );
         previousThumbnailsPageButton.setFocusPainted( false );
@@ -127,7 +127,7 @@ public class ThumbnailPanelTitle
 
         nextThumbnailsPageButton.setBorder( BorderFactory.createEmptyBorder( 1, 1, 1, 1 ) );
         nextThumbnailsPageButton.setPreferredSize( new Dimension( 25, 25 ) );
-        nextThumbnailsPageButton.setVerticalAlignment( JLabel.CENTER );
+        nextThumbnailsPageButton.setVerticalAlignment( SwingConstants.CENTER );
         nextThumbnailsPageButton.setOpaque( false );
         nextThumbnailsPageButton.setEnabled( false );
         nextThumbnailsPageButton.setFocusPainted( false );
@@ -135,7 +135,7 @@ public class ThumbnailPanelTitle
 
         lastThumbnailsPageButton.setBorder( BorderFactory.createEmptyBorder( 1, 1, 1, 1 ) );
         lastThumbnailsPageButton.setPreferredSize( new Dimension( 25, 25 ) );
-        lastThumbnailsPageButton.setVerticalAlignment( JLabel.CENTER );
+        lastThumbnailsPageButton.setVerticalAlignment( SwingConstants.CENTER );
         lastThumbnailsPageButton.setOpaque( false );
         lastThumbnailsPageButton.setEnabled( false );
         lastThumbnailsPageButton.setFocusPainted( false );

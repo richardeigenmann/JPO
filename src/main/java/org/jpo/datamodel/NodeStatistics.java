@@ -7,6 +7,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
 import java.io.File;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -258,7 +259,7 @@ public class NodeStatistics {
      * @return The number of bytes
      */
     private static long sizeOfPicturesLong( DefaultMutableTreeNode startNode ) {
-        Tools.warnOnEDT();
+        Tools.warnOnEDT(); // really?
 
         long size = 0;
         DefaultMutableTreeNode n;
@@ -273,19 +274,12 @@ public class NodeStatistics {
             }
         } else if ( startNode.getUserObject() instanceof PictureInfo ) {
             size = sizeOfPictureInfo( (PictureInfo) startNode.getUserObject() );
-        } else {
-            Enumeration nodes = startNode.children();
-            while ( nodes.hasMoreElements() ) {
-                n = (DefaultMutableTreeNode) nodes.nextElement();
-                if ( n.getUserObject() instanceof PictureInfo ) {
-                    size += sizeOfPictureInfo( (PictureInfo) n.getUserObject() );
-                }
-                if ( n.getChildCount() > 0 ) {
-                    size += sizeOfPicturesLong( n );
-                }
+        } else if ( startNode instanceof SortableDefaultMutableTreeNode && startNode.getUserObject() instanceof GroupInfo ) {
+            final List<SortableDefaultMutableTreeNode> pictureNodes = ((SortableDefaultMutableTreeNode) startNode).getChildPictureNodes(true);
+            for ( SortableDefaultMutableTreeNode node : pictureNodes ) {
+                size += sizeOfPictureInfo( (PictureInfo) node.getUserObject() );
             }
         }
-
         return size;
     }
 
@@ -296,7 +290,7 @@ public class NodeStatistics {
      * @return The number of bytes
      */
     private static long sizeOfPictureInfo( PictureInfo pictureInfo ) {
-        File testfile = ( pictureInfo.getImageFile() );
+        final File testfile = ( pictureInfo.getImageFile() );
         if ( testfile != null ) {
             return testfile.length();
         }

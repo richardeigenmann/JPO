@@ -155,7 +155,7 @@ public class CameraDownloadWizardData {
     /**
      * The description of the new Group. It defaults to "Download &lt;&lt;date&gt;&gt;"
      */
-    private String newGroupDescription = "Download " + Tools.currentDate( Settings.addFromCameraDateFormat );
+    private String newGroupDescription = "Download " + Tools.currentDate( Settings.ADD_FROM_CAMERA_DATE_FORMAT);
 
     /**
      * Sets the name for the new group, if a new group should be created. If

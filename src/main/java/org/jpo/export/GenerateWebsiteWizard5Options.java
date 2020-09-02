@@ -140,7 +140,7 @@ public class GenerateWebsiteWizard5Options extends AbstractStep {
 
         JPanel sequentialNumberJPanel = new JPanel( new FlowLayout( FlowLayout.LEFT ) );
         sequentialNumberJPanel.setMaximumSize( GenerateWebsiteWizard.normalComponentSize );
-        sequentialNumberJPanel.setAlignmentX( Container.LEFT_ALIGNMENT );
+        sequentialNumberJPanel.setAlignmentX( Component.LEFT_ALIGNMENT );
         sequentialNumberJPanel.add( sequentialStartLabel );
         sequentialStartJSpinner.addChangeListener( ( ChangeEvent arg0 ) -> options.setSequentialStartNumber( ( (SpinnerNumberModel) sequentialStartJSpinner.getModel() ).getNumber().intValue() ));
         sequentialNumberJPanel.add( sequentialStartJSpinner );
@@ -157,5 +157,6 @@ public class GenerateWebsiteWizard5Options extends AbstractStep {
      */
     @Override
     public void prepareRendering() {
+        //Required but not used here
     }
 }

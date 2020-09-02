@@ -239,7 +239,7 @@ public class PictureController extends JComponent {
      * This is the factor by how much the scrollxxx methods will scroll.
      * Currently set to a fixed 5%.
      */
-    private static final float scrollFactor = 0.05f;
+    private static final float SCROLL_FACTOR = 0.05f;
 
     /**
      * method that moves the image up by 10% of the pixels shown on the screen.
@@ -256,7 +256,7 @@ public class PictureController extends JComponent {
     public void scrollUp() {
         // if the bottom edge of the picture is visible, do not scroll
         if ( ( ( pictureControllerImage.getOriginalHeight() - focusPoint.y ) * pictureControllerImage.getScaleFactor() ) + getSize().height / (double) 2 > getSize().height ) {
-            focusPoint.y += (int) ( getSize().height * scrollFactor / pictureControllerImage.getScaleFactor() );
+            focusPoint.y += (int) ( getSize().height * SCROLL_FACTOR / pictureControllerImage.getScaleFactor() );
             repaint();
         } else {
             LOGGER.warning( "scrollUp rejected because bottom of picture is already showing." );
@@ -275,7 +275,7 @@ public class PictureController extends JComponent {
      */
     public void scrollDown() {
         if ( getSize().height / (double) 2 - focusPoint.y * pictureControllerImage.getScaleFactor() < 0 ) {
-            focusPoint.y -= (int) ( getSize().height * scrollFactor / pictureControllerImage.getScaleFactor() );
+            focusPoint.y -= (int) ( getSize().height * SCROLL_FACTOR / pictureControllerImage.getScaleFactor() );
             repaint();
         } else {
             LOGGER.warning( "PicturePane.scrollDown rejected because top edge is aready visible" );
@@ -296,7 +296,7 @@ public class PictureController extends JComponent {
     public void scrollLeft() {
         // if the bottom edge of the picture is visible, do not scroll
         if ( ( ( pictureControllerImage.getOriginalWidth() - focusPoint.x ) * pictureControllerImage.getScaleFactor() ) + getSize().width / (double) 2 > getSize().width ) {
-            focusPoint.x += (int) ( getSize().width * scrollFactor / pictureControllerImage.getScaleFactor() );
+            focusPoint.x += (int) ( getSize().width * SCROLL_FACTOR / pictureControllerImage.getScaleFactor() );
             repaint();
         } else {
             LOGGER.warning( "scrollLeft rejected because right edge of picture is already showing." );
@@ -316,7 +316,7 @@ public class PictureController extends JComponent {
      */
     public void scrollRight() {
         if ( getSize().width / (double) 2 - focusPoint.x * pictureControllerImage.getScaleFactor() < 0 ) {
-            focusPoint.x -= (int) ( getSize().width * scrollFactor / pictureControllerImage.getScaleFactor() );
+            focusPoint.x -= (int) ( getSize().width * SCROLL_FACTOR / pictureControllerImage.getScaleFactor() );
             repaint();
         } else {
             LOGGER.warning( "scrollRight rejected because left edge is aready visible" );
