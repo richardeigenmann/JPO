@@ -65,7 +65,6 @@ public class PictureInfo implements Serializable {
      * Constructor without options. All strings are set to blanks
      */
     public PictureInfo() {
-        //imageLocation = "";
         description = "";
         filmReference = "";
     }
@@ -822,7 +821,6 @@ public class PictureInfo implements Serializable {
     public synchronized void appendToRotation(String s) {
         if (s.length() > 0) {
             rotationString = rotationString.concat(s);
-            //sendRotationChangedEvent();
         }
     }
 
@@ -996,7 +994,7 @@ public class PictureInfo implements Serializable {
     /**
      * The category assignments are held in the categoryAssignments HashSet.
      */
-    public HashSet<Object> categoryAssignments;
+    public Set<Object> categoryAssignments;
 
     /**
      * removes all category Assignments

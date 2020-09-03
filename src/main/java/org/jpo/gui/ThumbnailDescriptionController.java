@@ -79,7 +79,7 @@ public class ThumbnailDescriptionController
      * ThumbnailDescriptionJPanel.LARGE_DESCRIPTION,
      * ThumbnailDescriptionJPanel.MINI_INFO,
      */
-    private DescriptionSize displayMode = LARGE_DESCRIPTION;
+    private DescriptionSize displayMode = MINI_INFO;
 
 
     /**

@@ -514,7 +514,7 @@ public class PictureInfoEditor extends JFrame {
         ExifInfo exifInfo = new ExifInfo(pictureInfo.getImageFile());
         exifInfo.decodeExifTags();
 
-        sizeJLabel.setText(String.format("%s x %s", exifInfo.exifWidth, exifInfo.exifHeight));
+        sizeJLabel.setText(String.format("%s x %s", exifInfo.getExifWidth(), exifInfo.getExifHeight()));
 
         exifTagsJTextArea.append(Settings.jpoResources.getString("ExifTitle"));
         exifTagsJTextArea.append(exifInfo.getComprehensivePhotographicSummary());

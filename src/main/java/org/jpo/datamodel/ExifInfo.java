@@ -102,19 +102,34 @@ public class ExifInfo {
      * The camera timestamp
      */
     private String createDateTime = "";
+
+    public Point2D.Double getLatLng() {
+        return latLng;
+    }
+
     /**
      * The parsed GPS coordinates
      */
-    final Point2D.Double latLng = new Point2D.Double( 0, 0 );
+    private final Point2D.Double latLng = new Point2D.Double( 0, 0 );
+
+    public String getExifWidth() {
+        return exifWidth;
+    }
+
     /**
      * The parsed width
      */
-    public String exifWidth = "";
+    private String exifWidth = "";
+
+    public String getExifHeight() {
+        return exifHeight;
+    }
+
     /**
      * The parsed width
      */
 
-    public String exifHeight = "";
+    private  String exifHeight = "";
     /**
      * A full dump of the Exif information
      */
@@ -124,7 +139,7 @@ public class ExifInfo {
     /**
      * A full dump of the Exif information
      */
-    private final StringBuffer exifDump = new StringBuffer();
+    private final StringBuilder exifDump = new StringBuilder();
 
     /**
      * Constructor to create the object. Call

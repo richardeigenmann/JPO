@@ -18,6 +18,7 @@ package org.jpo.testground;
  */
 
 
+import net.miginfocom.swing.MigLayout;
 import org.jpo.datamodel.Settings;
 import org.jpo.gui.swing.ThumbnailDescriptionPanel;
 import org.jpo.gui.swing.ThumbnailPanelTitle;
@@ -55,6 +56,7 @@ public class ThumbnailDescriptionTester {
 
         final JPanel p = new JPanel();
         p.setLayout(new BorderLayout());
+        p.setPreferredSize( new Dimension(600, 500));
 
         final JFrame frame = new JFrame("ThumbnailDescriptionTester");
         frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
@@ -62,13 +64,23 @@ public class ThumbnailDescriptionTester {
         ThumbnailDescriptionPanel panel = new ThumbnailDescriptionPanel();
 
         JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new MigLayout());
         JButton showAsSelectedButton = new JButton("call showAsSelected");
         showAsSelectedButton.addActionListener((ActionEvent e) -> panel.showAsSelected());
         buttonPanel.add(showAsSelectedButton);
 
         JButton showAsUnselectedButton = new JButton("call showAsUnselected");
         showAsUnselectedButton.addActionListener((ActionEvent e) -> panel.showAsUnselected());
-        buttonPanel.add(showAsUnselectedButton);
+        buttonPanel.add(showAsUnselectedButton, "wrap");
+
+        JButton showFilenameButton = new JButton("show filename");
+        showFilenameButton.addActionListener((ActionEvent e) -> panel.showFilename(true));
+        buttonPanel.add(showFilenameButton);
+
+        JButton hideFilenameButton = new JButton("hide filename");
+        hideFilenameButton.addActionListener((ActionEvent e) -> panel.showFilename(false));
+        buttonPanel.add(hideFilenameButton, "wrap");
+
 
         JButton setDescription1Button = new JButton("Set description 1");
         setDescription1Button.addActionListener(e -> panel.setDescription("This is a description text"));
@@ -80,7 +92,7 @@ public class ThumbnailDescriptionTester {
 
         JButton setDescription3Button = new JButton("Set long description");
         setDescription3Button.addActionListener((ActionEvent e) -> panel.setDescription("A very long description\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce et libero accumsan, molestie velit sed, tincidunt erat. Vivamus a justo finibus, suscipit tellus sed, imperdiet quam. Integer consequat porttitor scelerisque. Aenean pulvinar tortor vitae est euismod dapibus. Fusce efficitur tortor ac tempor ultricies. Phasellus rhoncus placerat dui et convallis. Vivamus sit amet neque sit amet tortor ornare ultricies nec suscipit magna. Fusce est urna, fermentum ac metus vitae, maximus tempor ex. Duis scelerisque blandit tempor. Phasellus sagittis volutpat dolor, in mollis eros finibus in. Donec efficitur pellentesque mauris sit amet elementum. Duis mollis ex ut iaculis pretium. In hac habitasse platea dictumst."));
-        buttonPanel.add(setDescription3Button);
+        buttonPanel.add(setDescription3Button, "wrap");
 
         JButton callSetTextAreaSizeButton = new JButton("call setTextAreaSize");
         callSetTextAreaSizeButton.addActionListener((ActionEvent e) ->  panel.setTextAreaSize());

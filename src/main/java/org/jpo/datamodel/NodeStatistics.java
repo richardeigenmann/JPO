@@ -94,7 +94,7 @@ public class NodeStatistics {
 
         int count = 1;
         TreeNode n;
-        final Enumeration nodes = start.children();
+        final Enumeration<? extends TreeNode> nodes = start.children();
         while ( nodes.hasMoreElements() ) {
             n = (TreeNode) nodes.nextElement();
             if ( n.getChildCount() > 0 ) {
@@ -133,11 +133,11 @@ public class NodeStatistics {
      * @param startNode The node from which to start
      * @return the number of GroupInfo nodes underneath the start node.
      */
-    private synchronized static int countGroups( TreeNode startNode ) {
+    private static synchronized  int countGroups( TreeNode startNode ) {
         Tools.warnOnEDT();
         int count = 0;
         DefaultMutableTreeNode n;
-        final Enumeration nodes = startNode.children();
+        final Enumeration<? extends TreeNode> nodes = startNode.children();
         while ( nodes.hasMoreElements() ) {
             try {
                 n = (DefaultMutableTreeNode) nodes.nextElement();
@@ -204,7 +204,7 @@ public class NodeStatistics {
      * groups should be counted too or not.
      * @return the number of PictureInfo nodes
      */
-    public synchronized static int countPictures( DefaultMutableTreeNode startNode, boolean recurseSubgroups ) {
+    public static synchronized int countPictures( DefaultMutableTreeNode startNode, boolean recurseSubgroups ) {
         if ( startNode == null ) {
             return 0;
         }
@@ -215,7 +215,7 @@ public class NodeStatistics {
 
         int count = 0;
         Object nextElement;
-        Enumeration nodes = startNode.children();
+        Enumeration<? extends TreeNode> nodes = startNode.children();
         DefaultMutableTreeNode node;
         while ( nodes.hasMoreElements() ) {
             nextElement = nodes.nextElement();

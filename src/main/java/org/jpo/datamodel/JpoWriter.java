@@ -37,17 +37,6 @@ public class JpoWriter {
      */
     private static final Logger LOGGER = Logger.getLogger( JpoWriter.class.getName() );
 
-    /**
-     * Writes the collection to disk.
-     * @param xmlOutputFile The name of the file that is to be created
-     * @param startNode	The node from which this is all to be built.
-     * @param copyPics	Flag which instructs pictures to be copied too
-     */
-    public JpoWriter( File xmlOutputFile,
-            SortableDefaultMutableTreeNode startNode, boolean copyPics ) {
-
-        write( xmlOutputFile, startNode, copyPics );
-    }
 
     /**
      * Don't use the constructor call JpoWriter.write directly.
@@ -81,7 +70,7 @@ public class JpoWriter {
                 highresTargetDir = new File( xmlOutputFile.getParentFile(), "Highres" );
 
                 if ( (! highresTargetDir.mkdirs() ) && (! highresTargetDir.canWrite() ) ) {
-                    LOGGER.severe( String.format( "There was a problem creating dir %s", highresTargetDir.toString() ) );
+                    LOGGER.log(Level.SEVERE, "There was a problem creating dir {0}", highresTargetDir );
                     return;
                 }
             }

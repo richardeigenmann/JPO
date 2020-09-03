@@ -1333,7 +1333,7 @@ public class SortableDefaultMutableTreeNode
         ExifInfo exifInfo = new ExifInfo(newPictureInfo.getImageFile());
         exifInfo.decodeExifTags();
         newPictureInfo.setCreationTime(exifInfo.getCreateDateTime());
-        newPictureInfo.setLatLng(exifInfo.latLng);
+        newPictureInfo.setLatLng(exifInfo.getLatLng());
         newPictureInfo.setRotation(exifInfo.rotation);
 
         return true;

@@ -442,7 +442,7 @@ public class PictureCollection {
      *
      * @return an iterator over the categories keys
      */
-    public Iterator getCategoryIterator() {
+    public Iterator<Integer> getCategoryIterator() {
         return categories.keySet().iterator();
     }
 
@@ -559,10 +559,9 @@ public class PictureCollection {
      */
     public void addToMailSelection(SortableDefaultMutableTreeNode node) {
         if (isMailSelected(node)) {
-            LOGGER.fine(String.format("The node %s is already selected. Leaving it selected.", node.toString()));
+            LOGGER.log(Level.FINE, "The node {0} is already selected. Leaving it selected.", node);
             return;
         }
-        //LOGGER.info("Adding node: " + node.toString() );
         mailSelection.add(node);
         Object userObject = node.getUserObject();
         if (userObject instanceof PictureInfo) {
@@ -650,7 +649,7 @@ public class PictureCollection {
      * @return true if found, false if not
      */
     public boolean isInCollection(File file) {
-        LOGGER.fine(String.format("Checking if File %s exists in the collection", file.toString()));
+        LOGGER.log(Level.FINE, "Checking if File {0} exists in the collection", file);
         SortableDefaultMutableTreeNode node;
         Object nodeObject;
         File highresFile;
@@ -742,7 +741,7 @@ public class PictureCollection {
      */
     public void fileLoad(File file) throws FileNotFoundException {
         if (fileLoading) {
-            LOGGER.log(Level.INFO, "{0}.fileLoad: already busy loading another file. Aborting", this.getClass().toString());
+            LOGGER.log(Level.INFO, "{0}.fileLoad: already busy loading another file. Aborting", this.getClass());
             return;
         }
         fileLoading = true;
@@ -766,7 +765,7 @@ public class PictureCollection {
      * @throws FileNotFoundException When no good
      */
     public static void fileLoad(File fileToLoad, SortableDefaultMutableTreeNode node) throws FileNotFoundException {
-        LOGGER.info("Loading file: " + fileToLoad.toString());
+        LOGGER.log(Level.INFO,"Loading file: {0}", fileToLoad);
         InputStream is = new FileInputStream(fileToLoad);
         streamLoad(is, node);
     }
@@ -821,7 +820,7 @@ public class PictureCollection {
             LOGGER.severe("xmlFile is null. Not saving!");
         } else {
             File temporaryFile = new File(xmlFile.getPath() + ".!!!");
-            new JpoWriter(temporaryFile, getRootNode(), false);
+            JpoWriter.write(temporaryFile, getRootNode(), false);
             File backupOriginalFile = new File(xmlFile.getPath() + ".orig");
             if ( ! xmlFile.renameTo(backupOriginalFile) ) {
                 LOGGER.log(Level.SEVERE,"Could not rename original file to {0}", backupOriginalFile);

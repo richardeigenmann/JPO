@@ -19,19 +19,13 @@ package org.jpo.gui.swing;
  */
 
 
+import net.miginfocom.swing.MigLayout;
 import org.jpo.datamodel.Settings;
 
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
+import java.awt.*;
 
 public class ThumbnailDescriptionPanel extends JPanel {
 
@@ -93,6 +87,12 @@ public class ThumbnailDescriptionPanel extends JPanel {
 
     private void initComponents() {
         this.setBackground(Color.WHITE);
+        this.setLayout(new MigLayout());
+
+        highresLocationJTextField.setText("gaga.txt");
+        highresLocationJTextField.setEditable(false);
+        highresLocationJTextField.setBorder(BorderFactory.createEmptyBorder());
+        this.add(highresLocationJTextField, "hidemode 2, wrap");
 
         pictureDescriptionJTA.setWrapStyleWord(true);
         pictureDescriptionJTA.setLineWrap(true);
@@ -240,7 +240,10 @@ public class ThumbnailDescriptionPanel extends JPanel {
             Dimension scrollPaneSize = getPictureDescriptionJSP().getPreferredSize();
             int targetWidth = (int) (Settings.thumbnailSize * thumbnailSizeFactor);
             if ((targetHeight != scrollPaneSize.height) || (targetWidth != scrollPaneSize.width)) {
+                highresLocationJTextField.setPreferredSize(new Dimension(targetWidth, 30));
+                highresLocationJTextField.setMaximumSize(new Dimension(targetWidth, 30));
                 getPictureDescriptionJSP().setPreferredSize(new Dimension(targetWidth, targetHeight));
+                getPictureDescriptionJSP().setMaximumSize(new Dimension(targetWidth, 250));
                 this.revalidate();
             }
         };
@@ -251,4 +254,8 @@ public class ThumbnailDescriptionPanel extends JPanel {
         }
     }
 
+    public void showFilename(boolean showFilename) {
+        highresLocationJTextField.setVisible((showFilename));
+        this.revalidate();
+    }
 }
