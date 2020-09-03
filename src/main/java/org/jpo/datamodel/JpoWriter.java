@@ -50,15 +50,23 @@ public class JpoWriter {
     }
 
     /**
+     * Don't use the constructor call JpoWriter.write directly.
+     */
+    private JpoWriter() {
+        throw new IllegalStateException("Utility class");
+   }
+
+    /**
      * Writes the collection in a thread to the file.
      * @param request The request
      */
-    public JpoWriter(ExportGroupToCollectionRequest request) {
+    public static void write(ExportGroupToCollectionRequest request) {
         Thread t = new Thread( ()
                 -> write(request.getTargetFile(), request.getNode(), request.getExportPictures())
         );
         t.start();
-   }
+    }
+
 
     /**
      * method that is invoked by the thread to do things asynchronously

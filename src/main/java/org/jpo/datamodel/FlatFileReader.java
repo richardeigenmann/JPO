@@ -43,11 +43,14 @@ public class FlatFileReader {
      */
     private static final Logger LOGGER = Logger.getLogger( FlatFileReader.class.getName() );
 
+    private FlatFileReader () {
+        throw new IllegalStateException("Utility class");
+    }
     /**
      * Constructs a FlatFileReader and imports the pictures listed in the file
      * @param request The request
      */
-    public FlatFileReader( AddFlatFileRequest request ) {
+    public static void handleRequest( AddFlatFileRequest request ) {
         SortableDefaultMutableTreeNode newNode = new SortableDefaultMutableTreeNode(
                 new GroupInfo( request.getFile().getName() ) );
 

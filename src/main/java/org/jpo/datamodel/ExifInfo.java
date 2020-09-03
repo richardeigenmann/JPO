@@ -57,26 +57,47 @@ public class ExifInfo {
     public String getCamera() {
         return camera;
     }
+
+    public String getLens() {
+        return lens;
+    }
+
+    public String getAperture() {
+        return aperture;
+    }
+
+    public String getShutterSpeed() {
+        return shutterSpeed;
+    }
+
+    public String getFocalLength() {
+        return focalLength;
+    }
+
+    public String getIso() {
+        return iso;
+    }
+
     /**
      * The lens used
      */
-    public String lens = "";
+    private String lens = "";
     /**
      * The aperture setting
      */
-    public String aperture = "";
+    private String aperture = "";
     /**
      * The shutter speed
      */
-    public String shutterSpeed = "";
+    private String shutterSpeed = "";
     /**
      * The focal length
      */
-    public String focalLength = "";
+    private String focalLength = "";
     /**
      * The ISO sensitivity
      */
-    public String iso = "";
+    private String iso = "";
     /**
      * The camera timestamp
      */

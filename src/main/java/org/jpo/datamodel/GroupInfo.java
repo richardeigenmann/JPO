@@ -55,7 +55,7 @@ public class GroupInfo implements Serializable {
      * The description of the GroupInfo.
      *
      */
-    private StringBuffer groupName = new StringBuffer();
+    private StringBuilder groupName = new StringBuilder();
 
     /**
      * Constructor to create a new GroupInfo object.
@@ -109,7 +109,7 @@ public class GroupInfo implements Serializable {
      */
     public void setGroupName( String name ) {
         if ( !groupName.toString().equals( name ) ) {
-            groupName = new StringBuffer( name );
+            groupName = new StringBuilder( name );
             sendGroupNameChangedEvent();
         }
 

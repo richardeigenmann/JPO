@@ -811,7 +811,7 @@ public class ApplicationEventHandler {
      */
     @Subscribe
     public void handleExportGroupToCollectionRequest(ExportGroupToCollectionRequest request) {
-        new JpoWriter(request);
+        JpoWriter.write(request);
     }
 
     /**
@@ -1446,7 +1446,7 @@ public class ApplicationEventHandler {
      */
     @Subscribe
     public void handleAddFlatFileRequest(AddFlatFileRequest request) {
-        new FlatFileReader(request);
+        FlatFileReader.handleRequest(request);
     }
 
     /**

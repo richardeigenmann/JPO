@@ -47,17 +47,17 @@ public class ExifInfoTest {
     public void testExifInfoNull() {
         ExifInfo exifInfo = new ExifInfo(null);
         exifInfo.decodeExifTags();
-        assertEquals("Aperture parsing verification", "", exifInfo.aperture);
+        assertEquals("Aperture parsing verification", "", exifInfo.getAperture());
         assertEquals("Camera parsing verification", "", exifInfo.getCamera());
         assertEquals("CreateDateTime parsing verification", "", exifInfo.getCreateDateTime());
         assertEquals("ExifHeight parsing verification", "", exifInfo.exifHeight);
         assertEquals("ExifWidth parsing verification", "", exifInfo.exifWidth);
-        assertEquals("FocalLength parsing verification", "", exifInfo.focalLength);
-        assertEquals("ISO parsing verification", "", exifInfo.iso);
+        assertEquals("FocalLength parsing verification", "", exifInfo.getFocalLength());
+        assertEquals("ISO parsing verification", "", exifInfo.getIso());
         assertEquals("Longitude parsing verification", ZERO, exifInfo.latLng.getX());
         assertEquals("Latitude parsing verification", ZERO, exifInfo.latLng.getY());
-        assertEquals("Lens parsing verification", "", exifInfo.lens);
-        assertEquals("ShutterSpeed parsing verification", "", exifInfo.shutterSpeed);
+        assertEquals("Lens parsing verification", "", exifInfo.getLens());
+        assertEquals("ShutterSpeed parsing verification", "", exifInfo.getShutterSpeed());
         assertEquals("Rotation parsing verification", 0, exifInfo.rotation);
     }
 
@@ -70,17 +70,17 @@ public class ExifInfoTest {
         try {
             ExifInfo exifInfo = new ExifInfo(new File(ExifInfoTest.class.getClassLoader().getResource(NIKON_D100_IMAGE).toURI()));
             exifInfo.decodeExifTags();
-            assertEquals("Aperture parsing verification", "f/11.0", exifInfo.aperture);
+            assertEquals("Aperture parsing verification", "f/11.0", exifInfo.getAperture());
             assertEquals("Camera parsing verification", "NIKON D100", exifInfo.getCamera());
             assertEquals("CreateDateTime parsing verification", "2008:11:07 16:23:25", exifInfo.getCreateDateTime());
             assertEquals("ExifHeight parsing verification", "233 pixels", exifInfo.exifHeight);
             assertEquals("ExifWidth parsing verification", "350 pixels", exifInfo.exifWidth);
-            assertEquals("FocalLength parsing verification", "82 mm", exifInfo.focalLength);
-            assertEquals("ISO parsing verification", "ISO 640", exifInfo.iso);
+            assertEquals("FocalLength parsing verification", "82 mm", exifInfo.getFocalLength());
+            assertEquals("ISO parsing verification", "ISO 640", exifInfo.getIso());
             assertEquals("Longitude parsing verification", ZERO, exifInfo.latLng.getX());
             assertEquals("Latitude parsing verification", ZERO, exifInfo.latLng.getY());
-            assertEquals("Lens parsing verification", "24-120mm f/3.5-5.6", exifInfo.lens);
-            assertEquals("ShutterSpeed parsing verification", "1/750 sec", exifInfo.shutterSpeed);
+            assertEquals("Lens parsing verification", "24-120mm f/3.5-5.6", exifInfo.getLens());
+            assertEquals("ShutterSpeed parsing verification", "1/750 sec", exifInfo.getShutterSpeed());
             assertEquals("Rotation parsing verification", 0, exifInfo.rotation);
         } catch (NullPointerException | URISyntaxException e) {
             fail(e.getMessage());
@@ -97,17 +97,17 @@ public class ExifInfoTest {
         try {
             ExifInfo exifInfo = new ExifInfo(new File(ExifInfoTest.class.getClassLoader().getResource(SAMSUNG_S4_IMAGE).toURI()));
             exifInfo.decodeExifTags();
-            assertEquals("Aperture parsing verification", "f/2.2", exifInfo.aperture);
+            assertEquals("Aperture parsing verification", "f/2.2", exifInfo.getAperture());
             assertEquals("Camera parsing verification", "GT-I9505", exifInfo.getCamera());
             assertEquals("CreateDateTime parsing verification", "2013:08:27 23:37:56", exifInfo.getCreateDateTime());
             assertEquals("ExifHeight parsing verification", "1836 pixels", exifInfo.exifHeight);
             assertEquals("ExifWidth parsing verification", "3264 pixels", exifInfo.exifWidth);
-            assertEquals("FocalLength parsing verification", "4.2 mm", exifInfo.focalLength);
-            assertEquals("ISO parsing verification", "50", exifInfo.iso);
+            assertEquals("FocalLength parsing verification", "4.2 mm", exifInfo.getFocalLength());
+            assertEquals("ISO parsing verification", "50", exifInfo.getIso());
             assertEquals("Longitude parsing verification", ZERO, exifInfo.latLng.getX());
             assertEquals("Latitude parsing verification", ZERO, exifInfo.latLng.getY());
-            assertEquals("Lens parsing verification", "", exifInfo.lens);
-            assertEquals("ShutterSpeed parsing verification", "1/1883 sec", exifInfo.shutterSpeed);
+            assertEquals("Lens parsing verification", "", exifInfo.getLens());
+            assertEquals("ShutterSpeed parsing verification", "1/1883 sec", exifInfo.getShutterSpeed());
             assertEquals("Rotation parsing verification", 0, exifInfo.rotation);
         } catch (NullPointerException | URISyntaxException e) {
             fail(e.getMessage());
@@ -124,17 +124,17 @@ public class ExifInfoTest {
         try {
             ExifInfo exifInfo = new ExifInfo(new File(ExifInfoTest.class.getClassLoader().getResource(SAMSUNG_S4_LOC_IMAGE).toURI()));
             exifInfo.decodeExifTags();
-            assertEquals("Aperture parsing verification", "f/2.2", exifInfo.aperture);
+            assertEquals("Aperture parsing verification", "f/2.2", exifInfo.getAperture());
             assertEquals("Camera parsing verification", "GT-I9505", exifInfo.getCamera());
             assertEquals("CreateDateTime parsing verification", "2014:01:15 12:11:46", exifInfo.getCreateDateTime());
             assertEquals("ExifHeight parsing verification", "1836 pixels", exifInfo.exifHeight);
             assertEquals("ExifWidth parsing verification", "3264 pixels", exifInfo.exifWidth);
-            assertEquals("FocalLength parsing verification", "4.2 mm", exifInfo.focalLength);
-            assertEquals("ISO parsing verification", "50", exifInfo.iso);
+            assertEquals("FocalLength parsing verification", "4.2 mm", exifInfo.getFocalLength());
+            assertEquals("ISO parsing verification", "50", exifInfo.getIso());
             assertEquals("Longitude parsing verification", 46.80724713888888, exifInfo.latLng.getX());
             assertEquals("Latitude parsing verification", 9.812583916666668, exifInfo.latLng.getY());
-            assertEquals("Lens parsing verification", "", exifInfo.lens);
-            assertEquals("ShutterSpeed parsing verification", "1/1879 sec", exifInfo.shutterSpeed);
+            assertEquals("Lens parsing verification", "", exifInfo.getLens());
+            assertEquals("ShutterSpeed parsing verification", "1/1879 sec", exifInfo.getShutterSpeed());
             assertEquals("Rotation parsing verification", 0, exifInfo.rotation);
         } catch (NullPointerException | URISyntaxException e) {
             fail(e.getMessage());
@@ -151,17 +151,17 @@ public class ExifInfoTest {
         try {
             ExifInfo exifInfo = new ExifInfo(new File(ExifInfoTest.class.getClassLoader().getResource(SAMSUNG_S4_ROT0_IMAGE).toURI()));
             exifInfo.decodeExifTags();
-            assertEquals("Aperture parsing verification", "", exifInfo.aperture);
+            assertEquals("Aperture parsing verification", "", exifInfo.getAperture());
             assertEquals("Camera parsing verification", "GT-I9505", exifInfo.getCamera());
             assertEquals("CreateDateTime parsing verification", "2014:04:21 09:30:13", exifInfo.getCreateDateTime());
             assertEquals("ExifWidth parsing verification", "2048 pixels", exifInfo.exifWidth);
             assertEquals("ExifHeight parsing verification", "1152 pixels", exifInfo.exifHeight);
-            assertEquals("FocalLength parsing verification", "", exifInfo.focalLength);
-            assertEquals("ISO parsing verification", "", exifInfo.iso);
+            assertEquals("FocalLength parsing verification", "", exifInfo.getFocalLength());
+            assertEquals("ISO parsing verification", "", exifInfo.getIso());
             assertEquals("Longitude parsing verification", ZERO, exifInfo.latLng.getX());
             assertEquals("Latitude parsing verification", ZERO, exifInfo.latLng.getY());
-            assertEquals("Lens parsing verification", "", exifInfo.lens);
-            assertEquals("ShutterSpeed parsing verification", "", exifInfo.shutterSpeed);
+            assertEquals("Lens parsing verification", "", exifInfo.getLens());
+            assertEquals("ShutterSpeed parsing verification", "", exifInfo.getShutterSpeed());
             assertEquals("Rotation parsing verification", 0, exifInfo.rotation);
         } catch (NullPointerException | URISyntaxException e) {
             fail(e.getMessage());
@@ -178,17 +178,17 @@ public class ExifInfoTest {
         try {
             ExifInfo exifInfo = new ExifInfo(new File(ExifInfoTest.class.getClassLoader().getResource(SAMSUNG_S4_ROT_LEFT_IMAGE).toURI()));
             exifInfo.decodeExifTags();
-            assertEquals("Aperture parsing verification", "", exifInfo.aperture);
+            assertEquals("Aperture parsing verification", "", exifInfo.getAperture());
             assertEquals("Camera parsing verification", "GT-I9505", exifInfo.getCamera());
             assertEquals("CreateDateTime parsing verification", "2014:04:21 09:30:22", exifInfo.getCreateDateTime());
             assertEquals("ExifWidth parsing verification", "2048 pixels", exifInfo.exifWidth);
             assertEquals("ExifHeight parsing verification", "1152 pixels", exifInfo.exifHeight);
-            assertEquals("FocalLength parsing verification", "", exifInfo.focalLength);
-            assertEquals("ISO parsing verification", "", exifInfo.iso);
+            assertEquals("FocalLength parsing verification", "", exifInfo.getFocalLength());
+            assertEquals("ISO parsing verification", "", exifInfo.getIso());
             assertEquals("Longitude parsing verification", ZERO, exifInfo.latLng.getX());
             assertEquals("Latitude parsing verification", ZERO, exifInfo.latLng.getY());
-            assertEquals("Lens parsing verification", "", exifInfo.lens);
-            assertEquals("ShutterSpeed parsing verification", "", exifInfo.shutterSpeed);
+            assertEquals("Lens parsing verification", "", exifInfo.getLens());
+            assertEquals("ShutterSpeed parsing verification", "", exifInfo.getShutterSpeed());
             assertEquals("Rotation parsing verification", 90, exifInfo.rotation);
         } catch (URISyntaxException e) {
             fail(e.getMessage());
@@ -205,17 +205,17 @@ public class ExifInfoTest {
         try {
             ExifInfo exifInfo = new ExifInfo(new File(ExifInfoTest.class.getClassLoader().getResource(SAMSUNG_S4_ROT_RIGHT_IMAGE).toURI()));
             exifInfo.decodeExifTags();
-            assertEquals("Aperture parsing verification", "", exifInfo.aperture);
+            assertEquals("Aperture parsing verification", "", exifInfo.getAperture());
             assertEquals("Camera parsing verification", "GT-I9505", exifInfo.getCamera());
             assertEquals("CreateDateTime parsing verification", "2014:04:21 09:30:39", exifInfo.getCreateDateTime());
             assertEquals("ExifWidth parsing verification", "2048 pixels", exifInfo.exifWidth);
             assertEquals("ExifHeight parsing verification", "1152 pixels", exifInfo.exifHeight);
-            assertEquals("FocalLength parsing verification", "", exifInfo.focalLength);
-            assertEquals("ISO parsing verification", "", exifInfo.iso);
+            assertEquals("FocalLength parsing verification", "", exifInfo.getFocalLength());
+            assertEquals("ISO parsing verification", "", exifInfo.getIso());
             assertEquals("Longitude parsing verification", ZERO, exifInfo.latLng.getX());
             assertEquals("Latitude parsing verification", ZERO, exifInfo.latLng.getY());
-            assertEquals("Lens parsing verification", "", exifInfo.lens);
-            assertEquals("ShutterSpeed parsing verification", "", exifInfo.shutterSpeed);
+            assertEquals("Lens parsing verification", "", exifInfo.getLens());
+            assertEquals("ShutterSpeed parsing verification", "", exifInfo.getShutterSpeed());
             assertEquals("Rotation parsing verification", 270, exifInfo.rotation);
         } catch (URISyntaxException e) {
             fail(e.getMessage());
@@ -232,17 +232,17 @@ public class ExifInfoTest {
         try {
             ExifInfo exifInfo = new ExifInfo(new File(ExifInfoTest.class.getClassLoader().getResource(SAMSUNG_S4_ROT_UPSIDEDOWN_IMAGE).toURI()));
             exifInfo.decodeExifTags();
-            assertEquals("Aperture parsing verification", "", exifInfo.aperture);
+            assertEquals("Aperture parsing verification", "", exifInfo.getAperture());
             assertEquals("Camera parsing verification", "GT-I9505", exifInfo.getCamera());
             assertEquals("CreateDateTime parsing verification", "2014:04:21 09:30:29", exifInfo.getCreateDateTime());
             assertEquals("ExifWidth parsing verification", "2048 pixels", exifInfo.exifWidth);
             assertEquals("ExifHeight parsing verification", "1152 pixels", exifInfo.exifHeight);
-            assertEquals("FocalLength parsing verification", "", exifInfo.focalLength);
-            assertEquals("ISO parsing verification", "", exifInfo.iso);
+            assertEquals("FocalLength parsing verification", "", exifInfo.getFocalLength());
+            assertEquals("ISO parsing verification", "", exifInfo.getIso());
             assertEquals("Longitude parsing verification", ZERO, exifInfo.latLng.getX());
             assertEquals("Latitude parsing verification", ZERO, exifInfo.latLng.getY());
-            assertEquals("Lens parsing verification", "", exifInfo.lens);
-            assertEquals("ShutterSpeed parsing verification", "", exifInfo.shutterSpeed);
+            assertEquals("Lens parsing verification", "", exifInfo.getLens());
+            assertEquals("ShutterSpeed parsing verification", "", exifInfo.getShutterSpeed());
             assertEquals("Rotation parsing verification", 180, exifInfo.rotation);
         } catch (URISyntaxException e) {
             fail(e.getMessage());
@@ -258,19 +258,19 @@ public class ExifInfoTest {
         try {
             ExifInfo exifInfo = new ExifInfo(new File(ExifInfoTest.class.getClassLoader().getResource(CANON_EOS350D_IMAGE).toURI()));
             exifInfo.decodeExifTags();
-            assertEquals("Aperture parsing verification", "f/20.0", exifInfo.aperture);
-            assertEquals("ShutterSpeed parsing verification", "1/200 sec", exifInfo.shutterSpeed);
+            assertEquals("Aperture parsing verification", "f/20.0", exifInfo.getAperture());
+            assertEquals("ShutterSpeed parsing verification", "1/200 sec", exifInfo.getShutterSpeed());
             assertEquals("Camera parsing verification", "Canon EOS 350D DIGITAL", exifInfo.getCamera());
             assertEquals("CreateDateTime parsing verification", "2006:10:06 15:13:54", exifInfo.getCreateDateTime());
             assertEquals("ExifHeight parsing verification", "1664 pixels", exifInfo.exifHeight);
             assertEquals("ExifWidth parsing verification", "2496 pixels", exifInfo.exifWidth);
-            assertEquals("FocalLength parsing verification", "18 mm", exifInfo.focalLength);
-            assertEquals("ISO parsing verification", "200", exifInfo.iso);
+            assertEquals("FocalLength parsing verification", "18 mm", exifInfo.getFocalLength());
+            assertEquals("ISO parsing verification", "200", exifInfo.getIso());
             assertEquals("Longitude parsing verification", ZERO, exifInfo.latLng.getX());
             assertEquals("Latitude parsing verification", ZERO, exifInfo.latLng.getY());
             //TODO exiftool finds the lens but ExifInfo doesn't
             //assertEquals("Lens parsing verification", "18.0 - 55.0 mm (35 mm equivalent: 29.2 - 89.2 mm)", exifInfo.lens);
-            assertEquals("Lens parsing verification", "", exifInfo.lens);
+            assertEquals("Lens parsing verification", "", exifInfo.getLens());
         } catch (URISyntaxException e) {
             fail(e.getMessage());
         }
@@ -285,17 +285,17 @@ public class ExifInfoTest {
         try {
             ExifInfo exifInfo = new ExifInfo(new File(ExifInfoTest.class.getClassLoader().getResource(CANON_EOS60D_IMAGE).toURI()));
             exifInfo.decodeExifTags();
-            assertEquals("Aperture parsing verification", "f/11.3", exifInfo.aperture);
-            assertEquals("ShutterSpeed parsing verification", "1/511 sec", exifInfo.shutterSpeed);
+            assertEquals("Aperture parsing verification", "f/11.3", exifInfo.getAperture());
+            assertEquals("ShutterSpeed parsing verification", "1/511 sec", exifInfo.getShutterSpeed());
             assertEquals("Camera parsing verification", "Canon EOS 60D", exifInfo.getCamera());
             assertEquals("CreateDateTime parsing verification", "2013:05:09 13:55:16", exifInfo.getCreateDateTime());
             assertEquals("ExifHeight parsing verification", "3456 pixels", exifInfo.exifHeight);
             assertEquals("ExifWidth parsing verification", "5184 pixels", exifInfo.exifWidth);
-            assertEquals("FocalLength parsing verification", "85 mm", exifInfo.focalLength);
-            assertEquals("ISO parsing verification", "400", exifInfo.iso);
+            assertEquals("FocalLength parsing verification", "85 mm", exifInfo.getFocalLength());
+            assertEquals("ISO parsing verification", "400", exifInfo.getIso());
             assertEquals("Longitude parsing verification", ZERO, exifInfo.latLng.getX());
             assertEquals("Latitude parsing verification", ZERO, exifInfo.latLng.getY());
-            assertEquals("Lens parsing verification", "EF-S17-85mm f/4-5.6 IS USM", exifInfo.lens);
+            assertEquals("Lens parsing verification", "EF-S17-85mm f/4-5.6 IS USM", exifInfo.getLens());
             assertEquals("Rotation parsing verification", 0, exifInfo.rotation);
         } catch (URISyntaxException e) {
             fail(e.getMessage());
@@ -311,17 +311,17 @@ public class ExifInfoTest {
         try {
             ExifInfo exifInfo = new ExifInfo(new File(ExifInfoTest.class.getClassLoader().getResource(CANON_CYBERSHOT1_IMAGE).toURI()));
             exifInfo.decodeExifTags();
-            assertEquals("Aperture parsing verification", "f/4.0", exifInfo.aperture);
-            assertEquals("ShutterSpeed parsing verification", "1/480 sec", exifInfo.shutterSpeed);
+            assertEquals("Aperture parsing verification", "f/4.0", exifInfo.getAperture());
+            assertEquals("ShutterSpeed parsing verification", "1/480 sec", exifInfo.getShutterSpeed());
             assertEquals("Camera parsing verification", "CYBERSHOT", exifInfo.getCamera());
             assertEquals("CreateDateTime parsing verification", "2002:02:20 16:17:37", exifInfo.getCreateDateTime());
             assertEquals("ExifHeight parsing verification", "768 pixels", exifInfo.exifHeight);
             assertEquals("ExifWidth parsing verification", "1024 pixels", exifInfo.exifWidth);
-            assertEquals("FocalLength parsing verification", "6.1 mm", exifInfo.focalLength);
-            assertEquals("ISO parsing verification", "80", exifInfo.iso);
+            assertEquals("FocalLength parsing verification", "6.1 mm", exifInfo.getFocalLength());
+            assertEquals("ISO parsing verification", "80", exifInfo.getIso());
             assertEquals("Longitude parsing verification", ZERO, exifInfo.latLng.getX());
             assertEquals("Latitude parsing verification", ZERO, exifInfo.latLng.getY());
-            assertEquals("Lens parsing verification", "", exifInfo.lens);
+            assertEquals("Lens parsing verification", "", exifInfo.getLens());
             assertEquals("Rotation parsing verification", 0, exifInfo.rotation);
         } catch (URISyntaxException e) {
             fail(e.getMessage());
@@ -337,17 +337,17 @@ public class ExifInfoTest {
         try {
             ExifInfo exifInfo = new ExifInfo(new File(ExifInfoTest.class.getClassLoader().getResource(SONY_D700_IMAGE).toURI()));
             exifInfo.decodeExifTags();
-            assertEquals("Aperture parsing verification", "f/2.4", exifInfo.aperture);
-            assertEquals("ShutterSpeed parsing verification", "1/32 sec", exifInfo.shutterSpeed);
+            assertEquals("Aperture parsing verification", "f/2.4", exifInfo.getAperture());
+            assertEquals("ShutterSpeed parsing verification", "1/32 sec", exifInfo.getShutterSpeed());
             assertEquals("Camera parsing verification", "DSC-D700", exifInfo.getCamera());
             assertEquals("CreateDateTime parsing verification", "1998:12:01 14:22:36", exifInfo.getCreateDateTime());
             assertEquals("ExifHeight parsing verification", "512 pixels", exifInfo.exifHeight);
             assertEquals("ExifWidth parsing verification", "672 pixels", exifInfo.exifWidth);
-            assertEquals("FocalLength parsing verification", "", exifInfo.focalLength);
-            assertEquals("ISO parsing verification", "200", exifInfo.iso);
+            assertEquals("FocalLength parsing verification", "", exifInfo.getFocalLength());
+            assertEquals("ISO parsing verification", "200", exifInfo.getIso());
             assertEquals("Longitude parsing verification", ZERO, exifInfo.latLng.getX());
             assertEquals("Latitude parsing verification", ZERO, exifInfo.latLng.getY());
-            assertEquals("Lens parsing verification", "", exifInfo.lens);
+            assertEquals("Lens parsing verification", "", exifInfo.getLens());
             assertEquals("Rotation parsing verification", 0, exifInfo.rotation);
         } catch (URISyntaxException e) {
             fail(e.getMessage());
@@ -363,17 +363,17 @@ public class ExifInfoTest {
         try {
             ExifInfo exifInfo = new ExifInfo(new File(ExifInfoTest.class.getClassLoader().getResource(SONY_P200_IMAGE).toURI()));
             exifInfo.decodeExifTags();
-            assertEquals("Aperture parsing verification", "f/5.6", exifInfo.aperture);
-            assertEquals("ShutterSpeed parsing verification", "1/400 sec", exifInfo.shutterSpeed);
+            assertEquals("Aperture parsing verification", "f/5.6", exifInfo.getAperture());
+            assertEquals("ShutterSpeed parsing verification", "1/400 sec", exifInfo.getShutterSpeed());
             assertEquals("Camera parsing verification", "DSC-P200", exifInfo.getCamera());
             assertEquals("CreateDateTime parsing verification", "2013:07:04 13:44:46", exifInfo.getCreateDateTime());
             assertEquals("ExifHeight parsing verification", "2304 pixels", exifInfo.exifHeight);
             assertEquals("ExifWidth parsing verification", "3072 pixels", exifInfo.exifWidth);
-            assertEquals("FocalLength parsing verification", "7.9 mm", exifInfo.focalLength);
-            assertEquals("ISO parsing verification", "100", exifInfo.iso);
+            assertEquals("FocalLength parsing verification", "7.9 mm", exifInfo.getFocalLength());
+            assertEquals("ISO parsing verification", "100", exifInfo.getIso());
             assertEquals("Longitude parsing verification", ZERO, exifInfo.latLng.getX());
             assertEquals("Latitude parsing verification", ZERO, exifInfo.latLng.getY());
-            assertEquals("Lens parsing verification", "", exifInfo.lens);
+            assertEquals("Lens parsing verification", "", exifInfo.getLens());
             assertEquals("Rotation parsing verification", 0, exifInfo.rotation);
         } catch (URISyntaxException e) {
             fail(e.getMessage());
